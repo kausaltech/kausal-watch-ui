@@ -1,12 +1,17 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Helmet from 'react-helmet'
+
 import { StaticQuery, graphql } from 'gatsby'
 
 import { Container } from 'reactstrap';
+import { ThemeProvider } from 'styled-components';
 
 import Header from './header'
 import "../styles/main.scss"
+
+const theme = require('sass-extract-loader?{"plugins": ["sass-extract-js"]}!open-city-design/src/scss/helsinki/_colors.scss');
+
 
 const Layout = ({ children }) => (
   <StaticQuery
@@ -20,6 +25,7 @@ const Layout = ({ children }) => (
       }
     `}
     render={data => (
+      <ThemeProvider theme={theme}>
       <>
         <Helmet
           title={data.site.siteMetadata.title}
@@ -35,6 +41,7 @@ const Layout = ({ children }) => (
           {children}
         </Container>
       </>
+      </ThemeProvider>
     )}
   />
 )

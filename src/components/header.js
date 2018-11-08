@@ -6,23 +6,27 @@ import helLogo from 'open-city-design/src/assets/helsinki-logo-white.svg';
 
 import styled from 'styled-components';
 
+const TopNav = styled(Navbar)`
+  background-color: ${props => props.theme.helTram};
+`
+
 const Logo = styled.img`
   height: 2em;
 `
 
 const Header = ({ siteTitle }) => (
-  <nav>
-    <Navbar expand="md" dark color="secondary">
+  <div>
+    <TopNav expand="md">
       <NavbarBrand href="/" aria-label="Helsinki, palvelun etusivu">
         <Logo src={`${helLogo}`} aria-hidden="true" />
       </NavbarBrand>
-    </Navbar>
+    </TopNav>
     <Navbar color="light" light expand="md">
       <NavbarBrand href="/">
         Hiilineutraali Helsinki
       </NavbarBrand>
     </Navbar>
-  </nav>
+  </div>
 )
 
 export default Header

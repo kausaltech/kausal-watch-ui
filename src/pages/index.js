@@ -11,7 +11,7 @@ const IndexPage = () => (
       <hr className="my-2" />
       <p>It uses Gatsby static site genereator for fast kick-off React App.</p>
       <p className="lead">
-        <Button color="secondary" href="https://www.gatsbyjs.org">Learn More</Button>
+        <Button color="success" href="https://www.gatsbyjs.org">Learn More</Button>
       </p>
     </Jumbotron>
   </Layout>
