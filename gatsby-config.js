@@ -1,6 +1,6 @@
 module.exports = {
   siteMetadata: {
-    title: 'Gatsby Default Starter',
+    title: 'Carbon Neutral Helsinki',
   },
   plugins: [
     'gatsby-plugin-react-helmet',
@@ -16,11 +16,11 @@ module.exports = {
     {
       resolve: `gatsby-plugin-manifest`,
       options: {
-        name: 'gatsby-starter-default',
-        short_name: 'starter',
+        name: 'Carbon Neutral Helsinki',
+        short_name: 'CNH',
         start_url: '/',
-        background_color: '#663399',
-        theme_color: '#663399',
+        background_color: '#009246',
+        theme_color: '#009246',
         display: 'minimal-ui',
         icon: 'src/images/hel-icon.png', // This path is relative to the root of the site.
       },
