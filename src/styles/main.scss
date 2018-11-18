@@ -22,6 +22,26 @@
 // Import city specific bootstrap variable overrides:
 @import "~open-city-design/src/scss/helsinki/variables";
 
+// Service specific brand color defaults
+$brand-light:  $hel-summer;
+$brand-dark:   $hel-tram;
+
+// Map the variables to the values
+
+// TODO: These do not seem to get inherited properly to the Bootstrap styles. Hence many further explicit overrides underneath. See if this is environment specific problem.
+
+// Application color mappings:
+$theme-colors: (
+  "primary":    $hel-black,
+  "secondary":  $brand-dark,
+  "success":    $green,
+  "info":       $cyan,
+  "warning":    $yellow,
+  "danger":     $red,
+  "light":      $hel-light,
+  "dark":       $hel-dark
+);
+
 @import "~bootstrap/scss/mixins";
 @import "~bootstrap/scss/root";
 @import "~bootstrap/scss/reboot";

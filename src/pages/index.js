@@ -2,7 +2,7 @@ import React from 'react'
 import { Jumbotron, Button } from 'reactstrap';
 
 import Layout from '../components/layout'
-import ActionList from '../components/ActionList'
+import ActionListFiltered from '../components/ActionListFiltered'
 
 const IndexPage = () => (
   <Layout>
@@ -15,7 +15,7 @@ const IndexPage = () => (
         <Button color="success" href="https://www.gatsbyjs.org">Learn More</Button>
       </p>
     </Jumbotron>
-    <ActionList />
+    <ActionListFiltered />
   </Layout>
 )
 

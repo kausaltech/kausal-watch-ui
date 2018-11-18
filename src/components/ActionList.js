@@ -1,6 +1,6 @@
 import React from 'react'
-import { Card, CardImg, CardText, CardBody,
-  CardTitle, CardSubtitle, Button, Col, Row } from 'reactstrap';
+import { Card, CardImgOverlay, CardBody,
+  CardTitle, CardSubtitle, Col, Row } from 'reactstrap';
 
 import ActionImage from './ActionImage';
 
@@ -8,52 +8,30 @@ class ActionList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      error: null,
+      data: this.props.data,
       isLoaded: false,
-      items: []
+      error: false
     };
   }
 
-  componentDidMount() {
-    fetch("https://jsonplaceholder.typicode.com/posts")
-      .then(res => res.json())
-      .then(
-        (result) => {
-          this.setState({
-            isLoaded: true,
-            items: result
-          });
-        },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
-        (error) => {
-          this.setState({
-            isLoaded: true,
-            error
-          });
-        }
-      )
-  }
-
   render() {
-    const { error, isLoaded, items } = this.state;
-    if (error) {
-      return <div>Error: {error.message}</div>;
-    } else if (!isLoaded) {
+    if (this.props.error) {
+      return <div>Error: {this.props.error.message}</div>;
+    } else if (!this.props.isLoaded) {
       return <div>Loading...</div>;
     } else {
       return (
         <Row>
-          {items.map(item => (
-            <Col md="4" sm="6">
-              <Card key={item.id}>
+          {this.props.data.map(item => (
+            <Col md="4" sm="6" key={item.id}>
+              <Card className="mb-4">
                 <ActionImage id={item.id} />
+                <CardImgOverlay>
+                  <h3>{item.id}</h3>
+                </CardImgOverlay>
                 <CardBody>
-                  <h6>#{item.id}</h6>
-                  <CardTitle>{item.title}</CardTitle>
-                  <CardSubtitle>Theme {item.userId}</CardSubtitle>
-                  
+                  <CardTitle>{item.attributes.name}</CardTitle>
+                  <CardSubtitle>Theme {item.relationships.categories.data.id}</CardSubtitle>
                 </CardBody>
               </Card>
             </Col>
@@ -63,5 +41,6 @@ class ActionList extends React.Component {
     }
   }
 }
+
 
 export default ActionList
