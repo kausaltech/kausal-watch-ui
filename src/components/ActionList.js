@@ -1,8 +1,7 @@
 import React from 'react'
-import { Card, CardImgOverlay, CardBody,
-  CardTitle, CardSubtitle, Col, Row } from 'reactstrap';
+import { Row } from 'reactstrap';
 
-import ActionImage from './ActionImage';
+import ActionCard from './ActionCard';
 
 class ActionList extends React.Component {
   constructor(props) {
@@ -23,18 +22,7 @@ class ActionList extends React.Component {
       return (
         <Row>
           {this.props.data.map(item => (
-            <Col md="4" sm="6" key={item.id}>
-              <Card className="mb-4">
-                <ActionImage id={item.id} />
-                <CardImgOverlay>
-                  <h3>{item.id}</h3>
-                </CardImgOverlay>
-                <CardBody>
-                  <CardTitle>{item.attributes.name}</CardTitle>
-                  <CardSubtitle>Theme {item.relationships.categories.data.id}</CardSubtitle>
-                </CardBody>
-              </Card>
-            </Col>
+            <ActionCard key={item.id} id={item.id} name={item.attributes.name} theme={item.relationships.categories.data.id}/>
           ))}
         </Row>
       );
