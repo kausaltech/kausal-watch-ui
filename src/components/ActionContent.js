@@ -1,24 +1,57 @@
 import React from 'react'
-import { Jumbotron } from 'reactstrap';
+import { Jumbotron, Container } from 'reactstrap';
 
 class ActionContent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: this.props.data,
       isLoaded: false,
-      error: false
+      error: null,
+      data: []
     };
   }
 
+  componentDidMount() {
+    fetch("https://hnh.teamy.fi/v1/action/" + this.props.action + "/")
+      .then(res => res.json())
+      .then(
+        (result) => {
+          this.setState({
+            isLoaded: true,
+            data: result.data
+          });
+        },
+        (error) => {
+          this.setState({
+            isLoaded: true,
+            error
+          });
+        }
+      )
+  }
+  
   render() {
+    const { error, isLoaded, data } = this.state;
+    if (error) {
+      return <div>Error: {error.message}</div>;
+    } else if (!isLoaded) {
+      return <div>Loading..........</div>;
+    } else {
     return (
-      <Jumbotron>
-        <h1>{this.props.uid}</h1>
-      </Jumbotron>
+      <div>
+        <Jumbotron>
+          <Container>
+            <h2>{this.props.action}</h2>
+            <h1>{data.attributes.name}</h1>
+          </Container>
+        </Jumbotron>
+        <Container>
+          <p>{data.attributes.name}</p>
+        </Container>
+      </div>
     );
   }
 }
-
+}
 
 export default ActionContent
