@@ -1,5 +1,6 @@
 import React from 'react'
 import { Jumbotron, Container } from 'reactstrap';
+import TimeSeries from './Graphs/TimeSeries';
 
 class ActionContent extends React.Component {
   constructor(props) {
@@ -47,6 +48,7 @@ class ActionContent extends React.Component {
         </Jumbotron>
         <Container>
           <p>{data.attributes.name}</p>
+          <TimeSeries />
         </Container>
       </div>
     );
