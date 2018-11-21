@@ -16,7 +16,7 @@ class ActionListFiltered extends React.Component {
   }
 
   componentDidMount() {
-    fetch("https://hnh.teamy.fi/v1/action/")
+    fetch(process.env.HNH_API_BASE + "/action/")
       .then(res => res.json())
       .then(
         (result) => {
