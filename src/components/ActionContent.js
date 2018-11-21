@@ -12,7 +12,7 @@ class ActionContent extends React.Component {
   }
 
   componentDidMount() {
-    fetch(process.env.HNH_API_BASE + "/action/" + this.props.action + "/")
+    fetch(process.env.GATSBY_HNH_API + "/action/" + this.props.action + "/")
       .then(res => res.json())
       .then(
         (result) => {
