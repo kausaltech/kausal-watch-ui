@@ -16,10 +16,11 @@ class ActionListFilters extends React.Component {
   }
 
   render() {
+    let rootCategories = this.props.themes.filter(cat => cat.relationships.parent.data == null);
     return (
       <select value={this.state.theme} onChange={this.handleChange} className="custom-select mb-5"> 
-        <option value=""></option>
-        {this.props.themes.map(category => (
+        <option value="">Kaikki teemat</option>
+        {rootCategories.map(category => (
             <option key={category.id} value={category.id}>{category.attributes.name}</option>
           ))}
       </select> 

@@ -41,7 +41,7 @@ class ActionContent extends React.Component {
       <div>
         <Jumbotron>
           <Container>
-            <h2>{this.props.action}</h2>
+            <h2>{data.attributes.identifier}</h2>
             <h1>{data.attributes.name}</h1>
           </Container>
         </Jumbotron>

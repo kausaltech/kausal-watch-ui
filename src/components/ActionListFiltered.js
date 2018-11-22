@@ -9,21 +9,25 @@ class ActionListFiltered extends React.Component {
     this.state = {
       error: null,
       isLoaded: false,
+      rawData: [],
       data: [],
       included: [],
       theme: ''
     };
     this.handleChange = this.handleChange.bind(this);
+    this.getRootCategory = this.getRootCategory.bind(this);
   }
 
   componentDidMount() {
-    fetch(process.env.GATSBY_HNH_API + "/action/?include=categories")
+    fetch(process.env.GATSBY_HNH_API + "/action/?include=categories,categories.parent,categories.parent.parent")
       .then(res => res.json())
       .then(
         (result) => {
+          result.data.map(item => item.rootCategory = this.getRootCategory(item.relationships.categories.data[0].id, result.included));
           this.setState({
             isLoaded: true,
             data: result.data,
+            rawData: result.data,
             included: result.included
           });
         },
@@ -36,15 +40,24 @@ class ActionListFiltered extends React.Component {
       )
   }
   
+  getRootCategory(catId, categories) {
+    let category = categories.find(cat => cat.id === catId);
+    if (category.relationships.parent.data != null) {
+      let parentId = category.relationships.parent.data.id;
+      return this.getRootCategory(parentId, categories);
+    }
+    else return catId;
+  }
+  
   handleChange(val) {
     this.setState({theme: val});
     let filteredData;
     if(val === ""){
-      filteredData = this.state.data;
+      filteredData = this.state.rawData;
     }
     else {
-      filteredData = this.state.data.filter(function(item) {
-        return item.relationships.categories.data[0].id === val;
+      filteredData = this.state.rawData.filter(function(item) {
+        return item.rootCategory === val;
       });
     }
     this.setState({theme: val});
