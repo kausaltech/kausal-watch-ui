@@ -21,7 +21,7 @@ class ActionCard extends React.Component {
             <Link to={actionSlug} ><h3>{this.props.id}</h3></Link>
           </CardImgOverlay>
           <CardBody>
-            <CardTitle>{this.props.name}</CardTitle>
+            <CardTitle>{this.props.name.substring(0,100)}</CardTitle>
             <Badge color="secondary">{this.props.theme}</Badge>
           </CardBody>
         </Card>

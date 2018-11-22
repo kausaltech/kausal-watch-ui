@@ -44,7 +44,7 @@ class ActionListFiltered extends React.Component {
     }
     else {
       filteredData = this.state.data.filter(function(item) {
-        return item.userId === val;
+        return item.relationships.categories.data[0].id === val;
       });
     }
     this.setState({theme: val});
@@ -55,7 +55,7 @@ class ActionListFiltered extends React.Component {
 
       return (
         <div>
-          <ActionListFilters data={this.state.data} changeOption={this.handleChange} /> 
+          <ActionListFilters themes={this.state.included} changeOption={this.handleChange} /> 
           <ActionList data={this.state.data} included={this.state.included} error={this.state.error} isLoaded={this.state.isLoaded} />
         </div>
       );

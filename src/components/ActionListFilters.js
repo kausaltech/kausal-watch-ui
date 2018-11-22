@@ -17,11 +17,13 @@ class ActionListFilters extends React.Component {
 
   render() {
     return (
-      <select value={this.state.theme} onChange={this.handleChange}>
+      <select value={this.state.theme} onChange={this.handleChange} className="custom-select mb-5"> 
         <option value=""></option>
-        <option value="1">Theme 1</option>
-        <option value="2">Theme 2</option> 
+        {this.props.themes.map(category => (
+            <option key={category.id} value={category.id}>{category.attributes.name}</option>
+          ))}
       </select> 
+
     );
   }
 }
