@@ -1,6 +1,6 @@
 import React from 'react'
 import { Card, CardImgOverlay, CardBody,
-  CardTitle, CardSubtitle, Col } from 'reactstrap';
+  CardTitle, CardSubtitle, Col, Badge } from 'reactstrap';
 import { Link } from "@reach/router";
 import ActionImage from './ActionImage';
 
@@ -22,7 +22,7 @@ class ActionCard extends React.Component {
           </CardImgOverlay>
           <CardBody>
             <CardTitle>{this.props.name}</CardTitle>
-            <CardSubtitle>Theme {this.props.theme}</CardSubtitle>
+            <Badge color="secondary">{this.props.theme}</Badge>
           </CardBody>
         </Card>
       </Col>

@@ -10,19 +10,21 @@ class ActionListFiltered extends React.Component {
       error: null,
       isLoaded: false,
       data: [],
+      included: [],
       theme: ''
     };
     this.handleChange = this.handleChange.bind(this);
   }
 
   componentDidMount() {
-    fetch(process.env.GATSBY_HNH_API + "/action/")
+    fetch(process.env.GATSBY_HNH_API + "/action/?include=categories")
       .then(res => res.json())
       .then(
         (result) => {
           this.setState({
             isLoaded: true,
-            data: result.data
+            data: result.data,
+            included: result.included
           });
         },
         (error) => {
@@ -47,7 +49,6 @@ class ActionListFiltered extends React.Component {
     }
     this.setState({theme: val});
     this.setState({data: filteredData});
-    console.log(filteredData);
   }
 
   render() {
@@ -55,7 +56,7 @@ class ActionListFiltered extends React.Component {
       return (
         <div>
           <ActionListFilters data={this.state.data} changeOption={this.handleChange} /> 
-          <ActionList data={this.state.data} error={this.state.error} isLoaded={this.state.isLoaded} />
+          <ActionList data={this.state.data} included={this.state.included} error={this.state.error} isLoaded={this.state.isLoaded} />
         </div>
       );
     }
