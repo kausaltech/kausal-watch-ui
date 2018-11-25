@@ -23,7 +23,7 @@ class TimeSeries extends React.Component {
     let colorIndex = index;
     let colorsAvailable = this.plotColors.length;
     if (colorIndex >= colorsAvailable)
-      colorIndex=colorIndex-(Math.floor(colorIndex/colorsAvailable)*colorsAvailable); 
+      colorIndex=index % this.plotColors.length; 
     return this.plotColors[colorIndex];
   }
   

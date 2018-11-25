@@ -50,6 +50,7 @@ class ActionContent extends React.Component {
           <p>{data.attributes.name}</p>
           <Row>
             <Col style={{height: '400px'}}>
+              <h2>Esimerkkigraafi</h2>
               <TimeSeries />
             </Col>
           </Row> 
