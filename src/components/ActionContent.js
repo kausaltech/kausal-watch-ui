@@ -3,6 +3,7 @@ import { Container, Row, Col, Progress, Button } from 'reactstrap';
 import TimeSeries from './Graphs/TimeSeries';
 import ResponsibleList from './ResponsibleList';
 import ContentLoader from './ContentLoader';
+import CommentList from './Comments/CommentList';
 
 import styled from 'styled-components';
 
@@ -14,6 +15,10 @@ const ActionHero = styled.div`
 
 const ActionSection = styled.div`
   margin-bottom: 2rem;
+`
+
+const CommentsSection = styled.div`
+  background-color: ${props => props.theme.helTram}; 
 `
 
 class ActionContent extends React.Component {
@@ -110,6 +115,16 @@ class ActionContent extends React.Component {
             </Col>
           </Row> 
         </Container>
+        <CommentsSection className="comments-section">
+          <Container>
+            <Row>
+              <Col sm="12" md={{ size: 8, offset: 2 }}>
+                <h2>Kommentoi toimenpidettä</h2>
+                <CommentList />
+              </Col>
+            </Row>
+          </Container>
+        </CommentsSection>
       </div>
     );
   }
