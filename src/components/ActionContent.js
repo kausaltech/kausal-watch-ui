@@ -1,6 +1,8 @@
 import React from 'react'
+import { Link } from "gatsby";
 import { Container, Row, Col, Progress, Button } from 'reactstrap';
 import TimeSeries from './Graphs/TimeSeries';
+import Timeline from './Graphs/Timeline';
 import ResponsibleList from './ResponsibleList';
 import ContentLoader from './ContentLoader';
 import CommentList from './Comments/CommentList';
@@ -71,8 +73,10 @@ class ActionContent extends React.Component {
           <Container>
             <Row>
               <Col md="10">
+                <Link to="/">Toimenpiteet</Link>
                 <h2 className="display-4">{data.data.attributes.identifier}</h2>
                 <h1>{ data.data.attributes.name.substring(0,100) }[…]</h1>
+                <p>3 kommenttia | osallistu keskusteluun</p>
               </Col>
             </Row>
           </Container>
@@ -81,7 +85,6 @@ class ActionContent extends React.Component {
           <Row>
             <Col md="6">
               <ActionSection>
-                <p>3 kommenttia | osallistu keskusteluun</p>
                 <h5>Tämä on Toimenpiteen ymmärrettävä tiivistelmä. Tämä saattaa poiketa virallisesta tekstistä niin että tämä on ymmärrettävä kaikille.</h5>
               </ActionSection>
               <ActionSection>
@@ -89,7 +92,7 @@ class ActionContent extends React.Component {
               </ActionSection>
               <ActionSection>
                 <h5>Aikajänne</h5>
-                <Progress value={75} />
+                <Timeline />
               </ActionSection>
             </Col>
             <Col md="6">
