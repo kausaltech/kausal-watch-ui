@@ -1,8 +1,20 @@
 import React from 'react'
 import { Card, CardImgOverlay, CardBody,
-  CardTitle, Col, Badge } from 'reactstrap';
+  CardTitle, Badge } from 'reactstrap';
 import { Link } from "gatsby";
 import ActionImage from './ActionImage';
+import styled from 'styled-components';
+
+
+const ActionNumber = styled.div`
+  font-size: 5em;
+  font-weight: 700;
+  color: rgba(255,255,255,0.5);
+`
+
+const ThemeBadge = styled(Badge)`
+  white-space: normal !important;
+`
 
 class ActionCard extends React.Component {
   constructor(props) {
@@ -14,20 +26,18 @@ class ActionCard extends React.Component {
   render() {
     let actionSlug = "action/" + this.props.id;
     return (
-      <Col md="4" sm="6" key={this.props.id}>
-        <Card className="mb-4">
-          <Link to={actionSlug} >
-            <ActionImage id={this.props.number} category={this.props.themeId}/>
-            <CardImgOverlay>
-              <h3>{this.props.number}</h3>
-            </CardImgOverlay>
-          </Link>
-          <CardBody>
-            <CardTitle>{this.props.name.substring(0,100)}</CardTitle>
-            <Badge color="secondary">{this.props.theme}</Badge>
-          </CardBody>
-        </Card>
-      </Col>
+      <Card>
+        <Link to={actionSlug} >
+          <ActionImage id={this.props.number} category={this.props.themeId}/>
+          <CardImgOverlay>
+            <ActionNumber className="action-number">{this.props.number}</ActionNumber>
+          </CardImgOverlay>
+        </Link>
+        <CardBody>
+          <CardTitle>{this.props.name.substring(0,100)}</CardTitle>
+          <ThemeBadge color="secondary">{this.props.theme}</ThemeBadge>
+        </CardBody>
+      </Card>
     );
   }
 }

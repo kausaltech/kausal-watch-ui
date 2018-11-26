@@ -17,7 +17,7 @@ class ActionImage extends React.Component {
       75:"KnevlsuWxzk",
       77:"b8Mwo34avAo"
     };
-    let imageURL= "https://source.unsplash.com/" + catImages[this.props.category] + "/400x300";
+    let imageURL= "https://source.unsplash.com/" + catImages[this.props.category] + "/400x200";
     
     return (
       <CardImg top width="100%" src={ imageURL } alt="Action Image" />

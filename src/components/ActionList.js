@@ -1,5 +1,6 @@
-import React from 'react'
-import { Row } from 'reactstrap';
+import React from 'react';
+import LazyLoad from 'react-lazyload';
+import { Row, Col } from 'reactstrap';
 
 import ActionCard from './ActionCard';
 import ContentLoader from './ContentLoader';
@@ -38,13 +39,17 @@ class ActionList extends React.Component {
       return (
         <Row>
           {this.props.data.map(item => (
-            <ActionCard 
-              key={item.id} 
-              id={item.id}
-              number={item.attributes.identifier} 
-              name={item.attributes.name} 
-              theme={this.getCategory(item)} 
-              themeId={item.rootCategory} />
+            <Col md="4" sm="6" key={item.id} className="mb-4 d-flex align-items-stretch">
+              <LazyLoad height={200}>
+              <ActionCard 
+                key={item.id} 
+                id={item.id}
+                number={item.attributes.identifier} 
+                name={item.attributes.name} 
+                theme={this.getCategory(item)} 
+                themeId={item.rootCategory} />
+              </LazyLoad>
+            </Col>
           ))}
         </Row>
       );
