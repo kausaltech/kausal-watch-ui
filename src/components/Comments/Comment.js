@@ -22,7 +22,7 @@ class Comment extends React.Component {
           </div>
         </div>
         <div className="hearing-comment-body">
-          <p>dsfkhsdfkshdfkjsdhfkjhsdfkjhsdfkjsdhfkh</p>
+          <p>{this.props.content}</p>
         </div>
       </div>
     );

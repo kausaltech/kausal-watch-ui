@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from "gatsby";
-import { Container, Row, Col, Progress, Button } from 'reactstrap';
+import { Container, Row, Col, Button } from 'reactstrap';
 import TimeSeries from './Graphs/TimeSeries';
 import Timeline from './Graphs/Timeline';
 import ResponsibleList from './ResponsibleList';
@@ -124,7 +124,7 @@ class ActionContent extends React.Component {
           <Container>
             <Row>
               <Col sm="12" md={{ size: 8, offset: 2 }}>
-                <h2>Kommentoi toimenpidettä</h2>
+                <h2 className="mb-4">Kommentoi toimenpidettä <sup>nro</sup>{data.data.attributes.identifier}</h2>
                 <CommentList />
               </Col>
             </Row>
