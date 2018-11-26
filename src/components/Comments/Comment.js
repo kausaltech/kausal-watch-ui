@@ -2,12 +2,8 @@ import React from 'react';
 import { Button } from 'reactstrap';
 
 class Comment extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
+  
   render() {
-
     return (
       <div className="hearing-comment">
         <div className="hearing-comment-header clearfix">
