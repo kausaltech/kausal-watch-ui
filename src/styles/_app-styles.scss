@@ -7,6 +7,10 @@ h1, h2, h3 , h4, h5 {
   line-height: 1;
 }
 
+.badge-pill {
+  border-radius: 10rem;
+}
+
 .index-page {
   background-color: $hel-summer;
 }
@@ -59,6 +63,9 @@ h1, h2, h3 , h4, h5 {
   }
 }
 
+.official-text {
+  color: $hel-tram;
+}
 
 .site-footer {
   position: relative;
@@ -67,6 +74,7 @@ h1, h2, h3 , h4, h5 {
   background-color: $hel-tram;
   color: #ffffff;
   padding: 6rem 0;
+  
     &::before {
       content: " ";
       @include koro("storm", $hel-tram, 600);

@@ -2,6 +2,7 @@ import React from 'react'
 import { Row } from 'reactstrap';
 
 import ActionCard from './ActionCard';
+import ContentLoader from './ContentLoader';
 
 class ActionList extends React.Component {
   constructor(props) {
@@ -32,7 +33,7 @@ class ActionList extends React.Component {
     if (this.props.error) {
       return <div>Error: {this.props.error.message}</div>;
     } else if (!this.props.isLoaded) {
-      return <div>Loading...</div>;
+      return <ContentLoader />;
     } else {
       return (
         <Row>

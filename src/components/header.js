@@ -1,6 +1,6 @@
 import React from 'react'
-
-import { Navbar, NavbarBrand } from 'reactstrap';
+import { Link } from "gatsby";
+import { Navbar } from 'reactstrap';
 
 import helLogo from 'open-city-design/src/assets/helsinki-logo-white.svg';
 
@@ -17,14 +17,10 @@ const Logo = styled.img`
 const Header = ({ siteTitle }) => (
   <div>
     <TopNav expand="md">
-      <NavbarBrand href="/" aria-label="Helsinki, palvelun etusivu">
-        <Logo src={`${helLogo}`} aria-hidden="true" />
-      </NavbarBrand>
+      <Link to="/" aria-label="Helsinki, palvelun etusivu" className="navbar-brand"><Logo src={`${helLogo}`} aria-hidden="true" /></Link>
     </TopNav>
     <Navbar color="light" light expand="md">
-      <NavbarBrand href="/">
-        Hiilineutraali Helsinki
-      </NavbarBrand>
+      <Link to="/" className="navbar-brand">Hiilineutraali Helsinki</Link>
     </Navbar>
   </div>
 )

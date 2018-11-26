@@ -11,7 +11,7 @@ const Logo = styled.img`
 `
 
 const SiteFooter = ({ siteTitle }) => (
-  <footer class="site-footer">
+  <footer className="site-footer">
     <Container fluid>
       <Row>
         <Col  sm="12" md={{ size: 8, offset: 2 }} className="footer-column">
@@ -30,10 +30,10 @@ const SiteFooter = ({ siteTitle }) => (
           </div>
         </Col>
         <Col md="4" className="footer-column">
-          <div class="page-footer-block">
+          <div className="page-footer-block">
             <Nav vertical>
               <NavItem>
-                <NavLink class="nav-link active" href="/">Etusivu</NavLink>
+                <NavLink className="nav-link active" href="/">Etusivu</NavLink>
               </NavItem>
             </Nav>
           </div>
@@ -41,12 +41,12 @@ const SiteFooter = ({ siteTitle }) => (
       </Row>
       <Row>
         <Col className="footer-column">
-          <div class="site-footer-small-print">
+          <div className="site-footer-small-print">
             <Nav vertical>
               <NavItem>Creative Commons</NavItem>
             </Nav>
             <Nav vertical>
-              <NavItem class="list-inline-item">2018 Helsingin kaupunki</NavItem>
+              <NavItem className="list-inline-item">2018 Helsingin kaupunki</NavItem>
             </Nav>
           </div>
         </Col>

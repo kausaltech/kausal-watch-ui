@@ -1,7 +1,7 @@
 import React from 'react'
 import { Card, CardImgOverlay, CardBody,
   CardTitle, Col, Badge } from 'reactstrap';
-import { Link } from "@reach/router";
+import { Link } from "gatsby";
 import ActionImage from './ActionImage';
 
 class ActionCard extends React.Component {
