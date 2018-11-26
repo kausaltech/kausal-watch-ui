@@ -27,18 +27,20 @@ class ActionContent extends React.Component {
     this.state = {
       isLoaded: false,
       error: null,
-      data: []
+      data: [],
+      included: [],
     };
   }
 
   componentDidMount() {
-    fetch(process.env.GATSBY_HNH_API + "/action/" + this.props.action + "/")
+    fetch(process.env.GATSBY_HNH_API + "/action/" + this.props.action + "/?include=responsible_parties")
       .then(res => res.json())
       .then(
         (result) => {
           this.setState({
             isLoaded: true,
-            data: result.data
+            data: result.data,
+            included: result.included
           });
         },
         (error) => {
@@ -51,7 +53,7 @@ class ActionContent extends React.Component {
   }
   
   render() {
-    const { error, isLoaded, data } = this.state;
+    const { error, isLoaded, data, included } = this.state;
     let plot;
 
     if (typeof window !== 'undefined') {
@@ -81,11 +83,11 @@ class ActionContent extends React.Component {
           <Row>
             <Col md="6">
               <ActionSection>
-                <p lead>3 kommenttia | osallistu keskusteluun</p>
+                <p>3 kommenttia | osallistu keskusteluun</p>
                 <h5>Tämä on Toimenpiteen ymmärrettävä tiivistelmä. Tämä saattaa poiketa virallisesta tekstistä niin että tämä on ymmärrettävä kaikille.</h5>
               </ActionSection>
               <ActionSection>
-                <p lead>Tämä on Toimenpiteen ymmärrettävä tiivistelmä. Tämä saattaa poiketa virallisesta tekstistä niin että tämä on ymmärrettävä kaikille.</p>
+                <p>Tämä on Toimenpiteen ymmärrettävä tiivistelmä. Tämä saattaa poiketa virallisesta tekstistä niin että tämä on ymmärrettävä kaikille.</p>
               </ActionSection>
               <ActionSection>
                 <h5>Aikajänne</h5>
@@ -94,7 +96,7 @@ class ActionContent extends React.Component {
             </Col>
             <Col md="6">
               <ActionSection>
-                <ResponsibleList />
+                <ResponsibleList data={included}/>
               </ActionSection>
               <ActionSection>
                 <h5>Yhteyshenkilö</h5>
