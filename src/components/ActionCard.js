@@ -1,6 +1,8 @@
 import React from 'react'
 import { Card, CardImgOverlay, CardBody,
   CardTitle, Badge } from 'reactstrap';
+import LazyLoad from 'react-lazyload';
+
 import { Link } from "gatsby";
 import ActionImage from './ActionImage';
 import styled from 'styled-components';
@@ -28,7 +30,9 @@ class ActionCard extends React.Component {
     return (
       <Card>
         <Link to={actionSlug} >
-          <ActionImage id={this.props.number} category={this.props.themeId}/>
+          <LazyLoad height={200}>
+            <ActionImage id={this.props.number} category={this.props.themeId}/>
+          </LazyLoad>
           <CardImgOverlay>
             <ActionNumber className="action-number">{this.props.number}</ActionNumber>
           </CardImgOverlay>
