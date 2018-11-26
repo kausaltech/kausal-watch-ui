@@ -1,5 +1,5 @@
 import React from 'react'
-import { Container, Row, Col, Nav, NavItem, NavLink } from 'reactstrap';
+import { Container, Row, Col, Nav, NavItem, NavLink, Alert } from 'reactstrap';
 
 import helLogo from 'open-city-design/src/assets/helsinki-logo-white.svg';
 
@@ -13,6 +13,11 @@ const Logo = styled.img`
 const SiteFooter = ({ siteTitle }) => (
   <footer class="site-footer">
     <Container fluid>
+      <Row>
+        <Col  sm="12" md={{ size: 8, offset: 2 }} className="footer-column">
+          <Alert className="mb-5">Tämä on palvelun Alpha-kehitysversio. Sivustolla saattaa esiintyä esimerkinomaisia sisältöjä ja toiminnallisuuksia jotka eivät ole oikeita.</Alert>
+        </Col>
+      </Row>
       <Row>
         <Col md="4" className="footer-column">
           <h5>Hiilineutraali Helsinki</h5>
