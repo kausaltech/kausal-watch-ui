@@ -1,7 +1,8 @@
 import React from 'react';
 import { withTheme } from 'styled-components';
-import Plot from 'react-plotly.js';
 import plotData from '../../data/hsy-paastodata.json';
+import createPlotlyComponent from 'react-plotly.js/factory';
+
 
 class TimeSeries extends React.Component {
  
@@ -28,6 +29,7 @@ class TimeSeries extends React.Component {
   }
   
   render() {
+    const Plot = createPlotlyComponent(window.Plotly);
     let styledData = plotData.data.map((bar, ndx) => {
       bar.marker = { color: this.mapColor(ndx) };
       return bar;
