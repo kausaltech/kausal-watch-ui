@@ -7,6 +7,7 @@ import { StaticQuery, graphql } from 'gatsby'
 import { ThemeProvider } from 'styled-components';
 
 import Header from './header'
+import SiteFooter from './SiteFooter'
 import "../styles/main.scss"
 
 const theme = require('sass-extract-loader?{"plugins": ["sass-extract-js"]}!open-city-design/src/scss/helsinki/_colors.scss');
@@ -37,6 +38,7 @@ const Layout = ({ children }) => (
         </Helmet>
         <Header siteTitle={data.site.siteMetadata.title} />
         {children}
+        <SiteFooter />
       </>
       </ThemeProvider>
     )}
