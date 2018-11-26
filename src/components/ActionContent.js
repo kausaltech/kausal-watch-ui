@@ -28,7 +28,6 @@ class ActionContent extends React.Component {
       isLoaded: false,
       error: null,
       data: [],
-      included: [],
     };
   }
 
@@ -39,8 +38,7 @@ class ActionContent extends React.Component {
         (result) => {
           this.setState({
             isLoaded: true,
-            data: result.data,
-            included: result.included
+            data: result,
           });
         },
         (error) => {
@@ -53,7 +51,7 @@ class ActionContent extends React.Component {
   }
   
   render() {
-    const { error, isLoaded, data, included } = this.state;
+    const { error, isLoaded, data } = this.state;
     let plot;
 
     if (typeof window !== 'undefined') {
@@ -73,8 +71,8 @@ class ActionContent extends React.Component {
           <Container>
             <Row>
               <Col md="10">
-                <h2 className="display-4">{data.attributes.identifier}</h2>
-                <h1>{ data.attributes.name.substring(0,100) }[…]</h1>
+                <h2 className="display-4">{data.data.attributes.identifier}</h2>
+                <h1>{ data.data.attributes.name.substring(0,100) }[…]</h1>
               </Col>
             </Row>
           </Container>
@@ -95,9 +93,11 @@ class ActionContent extends React.Component {
               </ActionSection>
             </Col>
             <Col md="6">
-              <ActionSection>
-                <ResponsibleList data={included}/>
-              </ActionSection>
+              {data.included  &&
+                <ActionSection>
+                  <ResponsibleList data={data.included}/>
+                </ActionSection>
+              }
               <ActionSection>
                 <h5>Yhteyshenkilö</h5>
                 <p><strong>Eini Eksamble</strong></p>
@@ -106,7 +106,7 @@ class ActionContent extends React.Component {
               <ActionSection className="official-text">
                 <h5>Virallinen kuvaus</h5>
                 <strong>Toimenpideohjelman mukaisesti</strong>
-                <p>{data.attributes.name}</p>
+                <p>{data.data.attributes.name}</p>
               </ActionSection>
             </Col>
           </Row> 
