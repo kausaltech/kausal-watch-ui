@@ -15,6 +15,10 @@ h1, h2, h3 , h4, h5 {
   background-color: $hel-summer;
 }
 
+.hel-logo-summer {
+  @include helsinki-logo($hel-summer);
+}
+
 .hero-banner-top {
   position: relative;
   padding: $spacer * 3 0;
