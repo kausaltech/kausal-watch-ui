@@ -33,6 +33,14 @@ class ActionContent extends React.Component {
   
   render() {
     const { error, isLoaded, data } = this.state;
+    let plot;
+
+    if (typeof window !== 'undefined') {
+      plot = <TimeSeries />
+    } else {
+      plot = <Container />
+    }
+
     if (error) {
       return <div>Error: {error.message}</div>;
     } else if (!isLoaded) {
@@ -51,7 +59,7 @@ class ActionContent extends React.Component {
           <Row>
             <Col style={{height: '400px'}}>
               <h2>Esimerkkigraafi</h2>
-              <TimeSeries />
+              {plot}
             </Col>
           </Row> 
         </Container>
