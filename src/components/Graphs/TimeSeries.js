@@ -38,6 +38,7 @@ class TimeSeries extends React.Component {
       <Plot
         data={styledData}
         layout={{
+          title: "Päästöjen jakauma",
           autosize: true,
           barmode: 'stack',
           separators: ", ",

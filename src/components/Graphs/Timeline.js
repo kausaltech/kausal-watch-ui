@@ -9,12 +9,18 @@ const ProgressYears = styled.div`
   justify-content: space-between;
 `
 
+const ProgressBar = styled(Progress)`
+  .progress-bar {
+    background-color: ${props => props.theme.helTram};
+  }
+`
+
 class Timeline extends React.Component {
   
   render() {
     return (
       <div>
-        <Progress color="success" value={75} />
+        <ProgressBar value={75} />
         <ProgressYears>
           <div>2010</div>
           <div>2011</div>
