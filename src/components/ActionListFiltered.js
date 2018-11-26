@@ -68,6 +68,7 @@ class ActionListFiltered extends React.Component {
 
       return (
         <div>
+          <h1 className="mb-4">Toimenpiteet</h1>
           <ActionListFilters themes={this.state.included} changeOption={this.handleChange} /> 
           <ActionList data={this.state.data} included={this.state.included} error={this.state.error} isLoaded={this.state.isLoaded} />
         </div>
