@@ -18,7 +18,7 @@ const IndexPage = () => (
       <Container>
         <Row>
           <Col  sm="12" md={{ size: 8, offset: 2 }} className="footer-column">
-            <Alert color="warning" className="mb-5"><strong>HUOM:</strong> Tämä on palvelun Alpha-kehitysversio. Sivustolla saattaa esiintyä esimerkinomaisia sisältöjä ja toiminnallisuuksia jotka eivät ole oikeita.</Alert>
+            <Alert color="warning" className="mb-5"><strong>HUOM:</strong>Tämä on palvelun Alpha-kehitysversio. Sivustolla saattaa esiintyä esimerkinomaisia sisältöjä jotka eivät perustu todellisiin tietoihin sekä toiminnallisuuksia jotka ovat vielä kehitysvaiheessa.</Alert>
           </Col>
         </Row>
         <Row>
