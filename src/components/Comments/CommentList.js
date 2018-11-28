@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 
 import Comment from './Comment';
 import ContentLoader from '../ContentLoader';
@@ -15,26 +16,29 @@ class CommentList extends React.Component {
   }
 
   componentDidMount() {
-    fetch(process.env.GATSBY_KK_API + "/comment/?authorization_code=&section=5rIcblAyv2TDP881lLeUiruj1DSllMUh&hearing=")
-      .then(res => res.json())
-      .then(
-        (result) => {
-          console.log('comments loaded');
-          this.setState({
-            isLoaded: true,
-            comments: result.results,
-            commentCount: result.count
-          });
-        },
-        (error) => {
-          this.setState({
-            isLoaded: true,
-            error
-          });
-        }
-      )
+    axios.get(process.env.GATSBY_KK_API + "/comment", {
+      params: {
+        section: '5rIcblAyv2TDP881lLeUiruj1DSllMUh'
+      }
+    })
+    .then(
+      (result) => {
+        this.setState({
+          isLoaded: true,
+          comments: result.data.results,
+          commentCount: result.data.count
+        });
+      })
+    .catch(
+      (error) => {
+        this.setState({
+          isLoaded: true,
+          error
+        });
+      }
+    );
   }
-  
+
   render() {
     if (this.error) {
       return <div>Error: {this.state.error.message}</div>;
