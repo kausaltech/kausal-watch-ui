@@ -1,0 +1,2 @@
+# Redirect action pages on Netlify host to avoid flash of 404 on page load
+/action/:id /action 200
