@@ -1,4 +1,5 @@
-import React from 'react'
+import React from 'react';
+import axios from 'axios';
 
 import ActionListFilters from './ActionListFilters';
 import ActionList from './ActionList';
@@ -19,25 +20,31 @@ class ActionListFiltered extends React.Component {
   }
 
   componentDidMount() {
-    fetch(process.env.GATSBY_HNH_API + "/action/?include=categories,categories.parent,categories.parent.parent")
-      .then(res => res.json())
-      .then(
-        (result) => {
-          result.data.map(item => item.rootCategory = this.getRootCategory(item.relationships.categories.data[0].id, result.included));
-          this.setState({
-            isLoaded: true,
-            data: result.data,
-            rawData: result.data,
-            included: result.included
-          });
-        },
-        (error) => {
-          this.setState({
-            isLoaded: true,
-            error
-          });
-        }
-      )
+    const apiUrl= `${process.env.GATSBY_HNH_API}/action/`;
+    axios.get(apiUrl, {
+      params: {
+        include: "categories,categories.parent,categories.parent.parent"
+      }
+    })
+    .then(
+      (result) => {
+        result.data.data.map(item => item.rootCategory = this.getRootCategory(item.relationships.categories.data[0].id, result.data.included));
+        this.setState({
+          isLoaded: true,
+          data: result.data.data,
+          rawData: result.data.data,
+          included: result.data.included
+        });
+      }
+    )
+    .catch(
+      (error) => {
+        this.setState({
+          isLoaded: true,
+          error: error
+        });
+      }
+    );
   }
   
   getRootCategory(catId, categories) {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Col } from 'reactstrap';
+import { Row, Col, Alert } from 'reactstrap';
 
 import ActionCard from './ActionCard';
 import ContentLoader from './ContentLoader';
@@ -31,7 +31,7 @@ class ActionList extends React.Component {
   
   render() {
     if (this.props.error) {
-      return <div>Error: {this.props.error.message}</div>;
+      return <Alert color="danger">Error: {this.props.error.message}</Alert>;
     } else if (!this.props.isLoaded) {
       return <ContentLoader />;
     } else {
