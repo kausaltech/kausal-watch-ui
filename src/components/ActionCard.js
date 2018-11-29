@@ -39,7 +39,9 @@ class ActionCard extends React.Component {
         </Link>
         <CardBody>
           <CardTitle>{this.props.name.substring(0,100)}</CardTitle>
-          <ThemeBadge color="secondary">{this.props.theme}</ThemeBadge>
+          {this.props.themes.map(item => (
+            <ThemeBadge color="secondary">{item.name}</ThemeBadge>
+          ))}
         </CardBody>
       </Card>
     );

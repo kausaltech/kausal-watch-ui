@@ -8,16 +8,29 @@ class ActionList extends React.Component {
   constructor(props) {
     super(props);
     
-    this.getCategory = this.getCategory.bind(this);
+    this.getCategories = this.getCategories.bind(this);
+    this.getCategoryName = this.getCategoryName.bind(this);
     this.getRootCategory = this.getRootCategory.bind(this);
   }
 
-  getCategory(action) {
-    let cat = this.props.included.filter(inc => inc.id === action.relationships.categories.data[0].id);
+  getCategoryName(catId) {
+    let cat = this.props.included.filter(inc => inc.id === catId);
     if (cat[0] != null) {
       return cat[0].attributes.name;
     }
-    else return "no category";
+    else return "Unknown";
+  }
+
+  getCategories(action) {
+    let cats = [];
+    let catNames = this.props.included;
+    action.relationships.categories.data.map((cat, index) => (
+            cats[index] = {
+              id: cat.id,
+              name: this.getCategoryName(cat.id)
+            }
+          ))
+    return cats;
   }
 
   getRootCategory(catId) {
@@ -44,7 +57,7 @@ class ActionList extends React.Component {
                 id={item.id}
                 number={item.attributes.identifier} 
                 name={item.attributes.name} 
-                theme={this.getCategory(item)} 
+                themes={this.getCategories(item)} 
                 themeId={item.rootCategory} />
             </Col>
           ))}
