@@ -5,6 +5,7 @@ import TimeSeries from './Graphs/TimeSeries';
 import Timeline from './Graphs/Timeline';
 import ResponsibleList from './ResponsibleList';
 import ContentLoader from './ContentLoader';
+import CommentForm from './Comments/CommentForm';
 import CommentList from './Comments/CommentList';
 
 import styled from 'styled-components';
@@ -43,26 +44,32 @@ class ActionContent extends React.Component {
       isLoaded: false,
       error: null,
       data: [],
+      newComments: false
     };
+    this.reloadComments = this.reloadComments.bind(this);
   }
 
+  reloadComments() {
+    this.setState({ newComments: !this.state.newComments });
+  }
+  
   componentDidMount() {
     fetch(process.env.GATSBY_HNH_API + "/action/" + this.props.action + "/?include=responsible_parties")
-      .then(res => res.json())
-      .then(
-        (result) => {
-          this.setState({
-            isLoaded: true,
-            data: result,
-          });
-        },
-        (error) => {
-          this.setState({
-            isLoaded: true,
-            error
-          });
-        }
-      )
+    .then(res => res.json())
+    .then(
+      (result) => {
+        this.setState({
+          isLoaded: true,
+          data: result,
+        });
+      },
+      (error) => {
+        this.setState({
+          isLoaded: true,
+          error
+        });
+      }
+    )
   }
   
   render() {
@@ -166,7 +173,8 @@ class ActionContent extends React.Component {
             <Row>
               <Col sm="12" md={{ size: 8, offset: 2 }}>
                 <h2 className="mb-4">Kommentoi toimenpidettä <sup>nro</sup>{data.data.attributes.identifier}</h2>
-                <CommentList />
+                <CommentForm section="hFz7Xjt0JJzMkKFslq1JqMwAusPeJ1er" onPost={this.reloadComments}/>
+                <CommentList section="hFz7Xjt0JJzMkKFslq1JqMwAusPeJ1er" newMessages={this.state.newMessages} refresh={this.state.newComments}/>
               </Col>
             </Row>
           </Container>
