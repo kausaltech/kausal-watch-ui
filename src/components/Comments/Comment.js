@@ -16,7 +16,7 @@ class Comment extends React.Component {
   }
   
   parseTimestamp = (timestamp) => {
-    const timeFormat = 'DD.MM.YYYY hh:mm';
+    const timeFormat = 'DD.MM.YYYY HH:mm';
     return moment(timestamp).format(timeFormat);
   }
     
