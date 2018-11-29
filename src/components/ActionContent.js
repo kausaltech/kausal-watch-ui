@@ -1,6 +1,7 @@
-import React from 'react'
+import React from 'react';
+import axios from 'axios';
 import { Link } from "gatsby";
-import { Container, Row, Col } from 'reactstrap';
+import { Container, Row, Col, Alert } from 'reactstrap';
 import TimeSeries from './Graphs/TimeSeries';
 import Timeline from './Graphs/Timeline';
 import ResponsibleList from './ResponsibleList';
@@ -54,22 +55,27 @@ class ActionContent extends React.Component {
   }
   
   componentDidMount() {
-    fetch(process.env.GATSBY_HNH_API + "/action/" + this.props.action + "/?include=responsible_parties")
-    .then(res => res.json())
+    const apiUrl = `${process.env.GATSBY_HNH_API}/action/${this.props.action}/`;
+    axios.get(apiUrl,{
+      params: {
+        include: "responsible_parties"
+      }})
     .then(
       (result) => {
+        console.log(JSON.stringify(result));
         this.setState({
           isLoaded: true,
-          data: result,
+          data: result.data,
         });
-      },
+      })
+     .catch(
       (error) => {
         this.setState({
           isLoaded: true,
-          error
+          error: error
         });
       }
-    )
+    );
   }
   
   render() {
@@ -83,7 +89,7 @@ class ActionContent extends React.Component {
     }
 
     if (error) {
-      return <div>Error: {error.message}</div>;
+      return <Alert color="danger">Error: {error.message}</Alert>;
     } else if (!isLoaded) {
       return <ContentLoader />;
     } else {
