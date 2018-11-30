@@ -2,7 +2,7 @@ import React from 'react';
 import { Row, Col, Alert } from 'reactstrap';
 
 import ActionCard from './ActionCard';
-import ContentLoader from './ContentLoader';
+import ContentLoader from '../Common/ContentLoader';
 
 class ActionList extends React.Component {
   constructor(props) {

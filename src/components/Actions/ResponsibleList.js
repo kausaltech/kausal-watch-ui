@@ -1,5 +1,5 @@
 import React from 'react'
-import BadgeTooltip from './BadgeTooltip';
+import BadgeTooltip from '../Common/BadgeTooltip';
 import styled from 'styled-components';
 
 const Responsibles = styled.div`

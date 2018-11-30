@@ -2,12 +2,12 @@ import React from 'react';
 import axios from 'axios';
 import { Link } from "gatsby";
 import { Container, Row, Col, Alert } from 'reactstrap';
-import TimeSeries from './Graphs/TimeSeries';
-import Timeline from './Graphs/Timeline';
+import TimeSeries from '../Graphs/TimeSeries';
+import Timeline from '../Graphs/Timeline';
 import ResponsibleList from './ResponsibleList';
-import ContentLoader from './ContentLoader';
-import CommentForm from './Comments/CommentForm';
-import CommentList from './Comments/CommentList';
+import ContentLoader from '../Common/ContentLoader';
+import CommentForm from '../Comments/CommentForm';
+import CommentList from '../Comments/CommentList';
 
 import styled from 'styled-components';
 
@@ -62,7 +62,6 @@ class ActionContent extends React.Component {
       }})
     .then(
       (result) => {
-        console.log(JSON.stringify(result));
         this.setState({
           isLoaded: true,
           data: result.data,

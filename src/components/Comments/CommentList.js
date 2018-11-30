@@ -3,7 +3,7 @@ import axios from 'axios';
 
 import { Alert }  from 'reactstrap';
 import Comment from './Comment';
-import ContentLoader from '../ContentLoader';
+import ContentLoader from '../Common/ContentLoader';
 
 class CommentList extends React.Component {
   constructor(props) {

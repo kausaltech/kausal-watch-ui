@@ -2,7 +2,7 @@ import React from 'react'
 import { Container, Row, Col, Alert } from 'reactstrap';
 
 import Layout from '../components/layout'
-import ActionListFiltered from '../components/ActionListFiltered'
+import ActionListFiltered from '../components/Actions/ActionListFiltered'
 import IndexHero from '../components/IndexHero'
 
 import styled from 'styled-components';

@@ -2,7 +2,7 @@ import React from 'react';
 import { Router } from '@reach/router';
 
 import Layout from '../../components/layout'
-import ActionContent from '../../components/ActionContent';
+import ActionContent from '../../components/Actions/ActionContent';
 
 class ActionPage extends React.Component {
   
