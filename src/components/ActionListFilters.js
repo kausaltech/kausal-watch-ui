@@ -2,36 +2,45 @@ import React from 'react'
 
 import { Button, ButtonGroup } from 'reactstrap';
 
+import HelIcon from './Common/helIcon';
+import ActionIcon from './Actions/ACtionIcon';
+
 class ActionListFilters extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      theme: ''
+      theme: '',
+      themeName: this.getCategoryName('')
     };
-    this.handleChange = this.handleChange.bind(this);
   }
   
   onRadioBtnClick(rSelected) {
-    this.setState({ theme: rSelected });
+    this.setState({ 
+      theme: rSelected,
+      themeName: this.getCategoryName(rSelected) 
+    });
     this.props.changeOption(rSelected);
   }
-  
-  handleChange(event) {
-    this.setState({theme: event.target.value});
-    console.log("change to theme " + this.state.theme );
-    this.props.changeOption(event.target.value);
-  }
 
+  getCategoryName(catId) {
+    let cat = this.props.themes.find(cat => cat.id === catId);
+    return cat ? cat.attributes.name : 'Kaikki';
+  }
+  
   render() {
     let rootCategories = this.props.themes.filter(cat => cat.relationships.parent.data == null);
     return (
-      <ButtonGroup vertical className="mb-5"> 
-        <Button color="primary" outline onClick={() => this.onRadioBtnClick("")} active={this.state.theme === ""}>Kaikki teemat</Button>
-        {rootCategories.map(category => (
-            <Button outline key={category.id} color="primary" onClick={() => this.onRadioBtnClick(category.id)} active={this.state.theme === category.id}>{category.attributes.name}</Button>
-          ))}
-      </ButtonGroup> 
-
+      <div className="filters mb-4">
+        <ButtonGroup className="mb-4"> 
+          <Button color="primary" outline onClick={() => this.onRadioBtnClick("")} active={this.state.theme === ""}><HelIcon iconName="bars" /></Button>
+          {rootCategories.map(category => (
+              <Button outline key={category.id} color="primary" size="lg" onClick={() => this.onRadioBtnClick(category.id)} active={this.state.theme === category.id}>
+                <ActionIcon category={category.id} /> 
+              </Button>
+            ))}
+        </ButtonGroup> 
+        <h5>{ this.state.themeName }</h5>
+      </div>
     );
   }
 }

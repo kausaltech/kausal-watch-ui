@@ -40,7 +40,7 @@ class ActionCard extends React.Component {
         <CardBody>
           <CardTitle>{this.props.name.substring(0,100)}</CardTitle>
           {this.props.themes.map(item => (
-            <ThemeBadge color="secondary">{item.name}</ThemeBadge>
+            <ThemeBadge key={item.id} color="secondary">{item.name}</ThemeBadge>
           ))}
         </CardBody>
       </Card>

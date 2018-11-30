@@ -23,7 +23,6 @@ class ActionList extends React.Component {
 
   getCategories(action) {
     let cats = [];
-    let catNames = this.props.included;
     action.relationships.categories.data.map((cat, index) => (
             cats[index] = {
               id: cat.id,
