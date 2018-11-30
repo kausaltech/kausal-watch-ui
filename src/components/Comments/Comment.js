@@ -1,6 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import { Button } from 'reactstrap';
+import HelIcon from '../Common/helIcon'
 
 class Comment extends React.Component {
   constructor(props) {
@@ -33,7 +34,7 @@ class Comment extends React.Component {
           </div>
           <div className="hearing-comment-publisher">
             <span className="hearing-comment-user">
-              {this.showAuthor(comment.author_name)}
+              <HelIcon iconName="user-o" /> {this.showAuthor(comment.author_name)}
             </span>
             <span className="hearing-comment-date">
               {this.parseTimestamp(comment.created_at)}
