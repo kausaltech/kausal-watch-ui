@@ -14,7 +14,7 @@ class HelIcon extends React.Component {
   render() {
     let iconUrl = `${helIcons}#${this.props.iconName}`
     return (
-      <StyledIcon aria-hidden="true"><use xlinkHref={iconUrl}></use></StyledIcon>
+      <StyledIcon aria-hidden="true" className={this.props.className}><use xlinkHref={iconUrl}></use></StyledIcon>
     );
   }
 }
