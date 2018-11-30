@@ -1,20 +1,12 @@
 import React from 'react';
 import helIcons from 'hel-icons/dist/symbol/svg/hel-icons.svg';
-import styled from 'styled-components';
-
-const StyledIcon = styled.svg`
-  fill: currentColor;
-  width: 1em !important;
-  height: 1em !important;
-  vertical-align: -0.1em;
-  overflow: hidden;
-`
 
 class HelIcon extends React.Component {
   render() {
-    let iconUrl = `${helIcons}#${this.props.iconName}`
+    let iconUrl = `${helIcons}#${this.props.iconName}`;
+    let styles = `icon ${this.props.className}`;
     return (
-      <StyledIcon aria-hidden="true" className={this.props.className}><use xlinkHref={iconUrl}></use></StyledIcon>
+      <svg className={styles} aria-hidden="true"><use xlinkHref={iconUrl}></use></svg>
     );
   }
 }

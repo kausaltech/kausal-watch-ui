@@ -2,7 +2,6 @@ import React from 'react'
 
 import { Button, ButtonGroup } from 'reactstrap';
 
-import HelIcon from '../Common/HelIcon';
 import ActionIcon from './ActionIcon';
 
 class ActionListFilters extends React.Component {
@@ -32,7 +31,7 @@ class ActionListFilters extends React.Component {
     return (
       <div className="filters mb-4">
         <ButtonGroup className="mb-4"> 
-          <Button color="primary" outline onClick={() => this.onRadioBtnClick("")} active={this.state.theme === ""}><HelIcon iconName="bars" /></Button>
+          <Button color="primary" size="lg" outline onClick={() => this.onRadioBtnClick("")} active={this.state.theme === ""}><ActionIcon category="0" /></Button>
           {rootCategories.map(category => (
               <Button outline key={category.id} color="primary" size="lg" onClick={() => this.onRadioBtnClick(category.id)} active={this.state.theme === category.id}>
                 <ActionIcon category={category.id} /> 

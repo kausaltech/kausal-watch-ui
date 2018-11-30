@@ -1,7 +1,10 @@
 .icon {
-    width:1em;
-    height:1em
-  }
+  fill: currentColor;
+  width: 1em !important;
+  height: 1em !important;
+  vertical-align: -0.1em;
+  overflow: hidden;
+}
 
 h1, h2, h3 , h4, h5 {
   line-height: 1;

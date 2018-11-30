@@ -7,6 +7,7 @@ class ActionIcon extends React.Component {
 
   render() {
     let actionIcons = {
+      0:"bars",
       58:"home",
       59:"sync",
       64:"heart-o",
