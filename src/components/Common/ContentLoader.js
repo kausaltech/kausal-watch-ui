@@ -1,7 +1,7 @@
 import React from 'react'
 
 import styled, { keyframes } from 'styled-components';
-import HelIcon from './HelIcon';
+import helIcons from 'hel-icons/dist/symbol/svg/hel-icons.svg';
 
 const Loader = styled.div`
   height: 300px;
@@ -19,16 +19,17 @@ const rotate360 = keyframes`
   }
 `
 
-const SpinIcon = styled(HelIcon) `
+const SpinIcon = styled.svg `
   animation: ${rotate360} infinite 3s linear;
 `
 
 class ContentLoader extends React.Component {
 
   render() {
+    let iconUrl = `${helIcons}#sync`;
     return (
       <Loader>
-        <h3 className="display-2"><SpinIcon iconName="sync" /></h3>
+        <h3 className="display-2"><SpinIcon className="icon"><use xlinkHref={iconUrl}></use></SpinIcon></h3>
         <h5>Ladataan</h5>
       </Loader>
     );
