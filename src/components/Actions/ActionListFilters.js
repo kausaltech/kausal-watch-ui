@@ -2,7 +2,7 @@ import React from 'react'
 
 import { Button, ButtonGroup } from 'reactstrap';
 
-import HelIcon from '../Common/helIcon';
+import HelIcon from '../Common/HelIcon';
 import ActionIcon from './ActionIcon';
 
 class ActionListFilters extends React.Component {

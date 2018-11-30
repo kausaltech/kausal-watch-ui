@@ -1,7 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import { Button } from 'reactstrap';
-import HelIcon from '../Common/helIcon'
+import HelIcon from '../Common/HelIcon'
 
 class Comment extends React.Component {
   constructor(props) {
