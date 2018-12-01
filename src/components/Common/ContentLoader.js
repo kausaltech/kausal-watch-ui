@@ -8,6 +8,7 @@ const Loader = styled.div`
   padding: 6rem 0;
   margin-bottom: 4rem;
   text-align: center;
+  font-size: 4em;
 `
 
 const rotate360 = keyframes`
@@ -20,7 +21,12 @@ const rotate360 = keyframes`
 `
 
 const SpinIcon = styled.svg `
-  animation: ${rotate360} infinite 3s linear;
+  animation: ${rotate360} infinite 2s linear;
+  fill: #000000;
+  width: 1em !important;
+  height: 1em !important;
+  vertical-align: -0.1em;
+  overflow: hidden;
 `
 
 class ContentLoader extends React.Component {
@@ -29,7 +35,7 @@ class ContentLoader extends React.Component {
     let iconUrl = `${helIcons}#sync`;
     return (
       <Loader>
-        <h3 className="display-2"><SpinIcon className="icon"><use xlinkHref={iconUrl}></use></SpinIcon></h3>
+        <div><SpinIcon><use xlinkHref={iconUrl}></use></SpinIcon></div>
         <h5>Ladataan</h5>
       </Loader>
     );
