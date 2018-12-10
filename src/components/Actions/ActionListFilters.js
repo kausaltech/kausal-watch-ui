@@ -35,6 +35,11 @@ class ActionListFilters extends React.Component {
     let cat = this.props.cats.find(cat => cat.id === catId);
     return cat ? cat.attributes.name : 'Kaikki teemat';
   }
+
+  getOrganizationName(orgId) {
+    let org = this.props.orgs.find(org => org.id === orgId);
+    return org ? org.attributes.name : '?';
+  }
   
   render() {
     let rootCategories = this.props.cats.filter(cat => cat.relationships.parent.data == null);
@@ -50,9 +55,9 @@ class ActionListFilters extends React.Component {
         </ButtonGroup>
         <h5 className="mb-4">{ this.state.activeCatName }</h5>
         <CustomInput type="select" id="exampleCustomSelect" name="customSelect" value={this.state.activeOrg} onChange={this.onOrgBtnClick} className="mb-4">
-          <option value="">Kaikki Organisaatiot</option>
+          <option value="">Kaikki organisaatiot</option>
           {this.props.orgs.map(org => (
-              <option value={org.id} key={org.id}>{org.id}</option>
+              <option value={org.id} key={org.id}>{ this.getOrganizationName(org.id) }</option>
             ))}
         </CustomInput> 
       </div>
