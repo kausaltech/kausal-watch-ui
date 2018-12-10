@@ -14,7 +14,7 @@ class ActionList extends React.Component {
   }
 
   getCategoryName(catId) {
-    let cat = this.props.included.filter(inc => inc.id === catId);
+    let cat = this.props.cats.filter(inc => inc.id === catId);
     if (cat[0] != null) {
       return cat[0].attributes.name;
     }
@@ -33,7 +33,7 @@ class ActionList extends React.Component {
   }
 
   getRootCategory(catId) {
-    let category = this.props.included.find(cat => cat.id === catId);
+    let category = this.props.cats.find(cat => cat.id === catId);
     if (category.relationships.parent.data != null) {
       let parentId = category.relationships.parent.data.id;
       return this.getRootCategory(parentId);

@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-
+ 
 import ActionListFilters from './ActionListFilters';
 import ActionList from './ActionList';
 
@@ -12,8 +12,10 @@ class ActionListFiltered extends React.Component {
       isLoaded: false,
       rawData: [],
       data: [],
-      included: [],
-      theme: ''
+      categories: [],
+      orgs: [],
+      activeCategory: '',
+      activeOrganization: ''
     };
     this.handleChange = this.handleChange.bind(this);
     this.getRootCategory = this.getRootCategory.bind(this);
@@ -23,17 +25,29 @@ class ActionListFiltered extends React.Component {
     const apiUrl= `${process.env.GATSBY_HNH_API}/action/`;
     axios.get(apiUrl, {
       params: {
-        include: "categories,categories.parent,categories.parent.parent"
+        include: "categories,categories.parent,categories.parent.parent,responsible_parties"
       }
     })
     .then(
       (result) => {
-        result.data.data.map(item => item.rootCategory = this.getRootCategory(item.relationships.categories.data[0].id, result.data.included));
+        const categories = result.data.included.filter(function(item) {
+          return item.type === "Category";
+        });
+        
+        const orgs = result.data.included.filter(function(item) {
+          return item.type === "Organization";
+        });
+        
+        this.setState({
+          categories: categories,
+          orgs: orgs
+        });
+        
+        result.data.data.map(item => item.rootCategory = this.getRootCategory(item.relationships.categories.data[0].id, categories));
         this.setState({
           isLoaded: true,
           data: result.data.data,
-          rawData: result.data.data,
-          included: result.data.included
+          rawData: result.data.data
         });
       }
     )
@@ -47,37 +61,55 @@ class ActionListFiltered extends React.Component {
     );
   }
   
-  getRootCategory(catId, categories) {
-    let category = categories.find(cat => cat.id === catId);
+  getRootCategory(catId, cats) {
+    let category = cats.find(cat => cat.id === catId);
     if (category.relationships.parent.data != null) {
       let parentId = category.relationships.parent.data.id;
-      return this.getRootCategory(parentId, categories);
+      return this.getRootCategory(parentId, cats);
     }
     else return catId;
   }
   
-  handleChange(val) {
-    this.setState({theme: val});
-    let filteredData;
-    if(val === ""){
-      filteredData = this.state.rawData;
-    }
-    else {
-      filteredData = this.state.rawData.filter(function(item) {
-        return item.rootCategory === val;
-      });
-    }
-    this.setState({theme: val});
-    this.setState({data: filteredData});
+  handleChange(filterType, val) {
+    const change = "active" + filterType;
+    console.log("Filtering: " + change + " to " + val);
+    this.setState({
+      [change]: val
+    });
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.activeCategory !== this.state.activeCategory || prevState.activeOrganization !== this.state.activeOrganization ) {
+      this.applyFilters(this.state.activeCategory, this.state.activeOrganization);
+    }
+  }
+  
+  applyFilters(activeCat, activeOrg) {
+
+    let filteredData = this.state.rawData;
+
+    if(activeCat !== ""){
+      filteredData = this.state.rawData.filter(function(item) {
+        return item.rootCategory === activeCat;
+      });
+    }
+    if(activeOrg !== ""){
+      filteredData = filteredData.filter(function(item) {
+        return item.relationships.responsible_parties.data.find(org => org.id === activeOrg);
+      });
+    }
+    this.setState({data: filteredData});
+    
+    return null;
+  }
+  
   render() {
 
       return (
         <div>
           <h1 className="mb-4">Toimenpiteet</h1>
-          <ActionListFilters themes={this.state.included} changeOption={this.handleChange} /> 
-          <ActionList data={this.state.data} included={this.state.included} error={this.state.error} isLoaded={this.state.isLoaded} />
+          <ActionListFilters cats={this.state.categories} orgs={this.state.orgs} changeOption={this.handleChange} /> 
+          <ActionList data={this.state.data} cats={this.state.categories}  error={this.state.error} isLoaded={this.state.isLoaded} />
         </div>
       );
     }
