@@ -107,7 +107,7 @@ class Opasnet extends React.Component {
   }
   
   render() {
-    const { error, isLoaded, data } = this.state;
+    const { error, isLoaded } = this.state;
     const Plot = createPlotlyComponent(window.Plotly);
     const plotData = {
       data: [
