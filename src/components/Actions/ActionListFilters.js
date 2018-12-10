@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Button, ButtonGroup } from 'reactstrap';
+import { Button, ButtonGroup, CustomInput } from 'reactstrap';
 
 import ActionIcon from './ActionIcon';
 
@@ -12,7 +12,8 @@ class ActionListFilters extends React.Component {
       activeCatName: this.getCategoryName(''),
       activeOrg: '',
     };
-    console.log("cats as filters:"+this.props.cats);
+    
+    this.onOrgBtnClick = this.onOrgBtnClick.bind(this);
   }
   
   onRadioBtnClick(rSelected) {
@@ -23,23 +24,23 @@ class ActionListFilters extends React.Component {
     this.props.changeOption("Category", rSelected);
   }
 
-  onOrgBtnClick(oSelected) {
+  onOrgBtnClick(evt) {
     this.setState({ 
-      activeOrg: oSelected
+      activeOrg: evt.target.value
     });
-    this.props.changeOption("Organization", oSelected);
+    this.props.changeOption("Organization", evt.target.value);
   }
 
   getCategoryName(catId) {
     let cat = this.props.cats.find(cat => cat.id === catId);
-    return cat ? cat.attributes.name : 'Kaikki';
+    return cat ? cat.attributes.name : 'Kaikki teemat';
   }
   
   render() {
     let rootCategories = this.props.cats.filter(cat => cat.relationships.parent.data == null);
     return (
-      <div className="filters mb-4">
-        <ButtonGroup className="mb-4"> 
+      <div className="filters mb-5">
+        <ButtonGroup className="mb-2"> 
           <Button color="primary" size="lg" outline onClick={() => this.onRadioBtnClick("")} active={this.state.activeCat === ""}><ActionIcon category="0" /></Button>
           {rootCategories.map(category => (
               <Button outline key={category.id} color="primary" size="lg" onClick={() => this.onRadioBtnClick(category.id)} active={this.state.activeCat === category.id}>
@@ -47,16 +48,13 @@ class ActionListFilters extends React.Component {
               </Button>
             ))}
         </ButtonGroup>
-        <h5>{ this.state.activeCatName }</h5>
-        <ButtonGroup className="mb-4"> 
-          <Button color="primary" size="lg" outline onClick={() => this.onOrgBtnClick("")} active={this.state.activeOrg === ""}><ActionIcon category="0" /></Button>
+        <h5 className="mb-4">{ this.state.activeCatName }</h5>
+        <CustomInput type="select" id="exampleCustomSelect" name="customSelect" value={this.state.activeOrg} onChange={this.onOrgBtnClick} className="mb-4">
+          <option value="">Kaikki Organisaatiot</option>
           {this.props.orgs.map(org => (
-              <Button outline key={org.id} color="primary" size="lg" onClick={() => this.onOrgBtnClick(org.id)} active={this.state.activeOrg === org.id}>
-                 {org.id}
-              </Button>
+              <option value={org.id} key={org.id}>{org.id}</option>
             ))}
-        </ButtonGroup> 
-        <h5>{ this.state.activeOrg }</h5>
+        </CustomInput> 
       </div>
     );
   }
