@@ -1,8 +1,20 @@
 import React from 'react'
 
-import { Button, ButtonGroup, CustomInput } from 'reactstrap';
+import { Button, ButtonGroup as BaseButtonGroup, CustomInput  as BaseCustomInput} from 'reactstrap';
 
 import ActionIcon from './ActionIcon';
+
+import styled from 'styled-components';
+
+
+const ButtonGroup = styled(BaseButtonGroup)`
+  flex-wrap: wrap;
+  justify-content: center;
+`
+
+const CustomInput = styled(BaseCustomInput)`
+  background-color: transparent !important;
+`
 
 class ActionListFilters extends React.Component {
   constructor(props) {

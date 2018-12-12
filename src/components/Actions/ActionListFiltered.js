@@ -43,7 +43,10 @@ class ActionListFiltered extends React.Component {
           orgs: orgs
         });
         
-        result.data.data.map(item => item.rootCategory = this.getRootCategory(item.relationships.categories.data[0].id, categories));
+        result.data.data.map(item => {
+          item.rootCategory = this.getRootCategory(item.relationships.categories.data[0].id, categories);
+          item.progress = Math.floor(Math.random() * Math.floor(100));
+        });
         this.setState({
           isLoaded: true,
           data: result.data.data,
@@ -109,7 +112,7 @@ class ActionListFiltered extends React.Component {
         <div>
           <h1 className="mb-4">Toimenpiteet</h1>
           <ActionListFilters cats={this.state.categories} orgs={this.state.orgs} changeOption={this.handleChange} /> 
-          <ActionList data={this.state.data} cats={this.state.categories}  error={this.state.error} isLoaded={this.state.isLoaded} />
+          <ActionList data={this.state.data} cats={this.state.categories} orgs={this.state.orgs} error={this.state.error} isLoaded={this.state.isLoaded} />
         </div>
       );
     }

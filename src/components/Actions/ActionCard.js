@@ -1,21 +1,26 @@
 import React from 'react'
 import { Card, CardImgOverlay, CardBody,
-  CardTitle, Badge } from 'reactstrap';
-import LazyLoad from 'react-lazyload';
+  CardTitle, Badge, Progress } from 'reactstrap';
 
 import { Link } from "gatsby";
 import ActionImage from './ActionImage';
+import ActionIcon from './ActionIcon';
 import styled from 'styled-components';
 
 
 const ActionNumber = styled.div`
-  font-size: 5em;
+  font-size: 4em;
   font-weight: 700;
-  color: rgba(255,255,255,0.5);
+  color: rgba(255,255,255,0.8);
 `
 
 const ThemeBadge = styled(Badge)`
   white-space: normal !important;
+`
+
+const StyledCardTitle = styled(CardTitle)`
+  font-size: 1.2em;
+  
 `
 
 class ActionCard extends React.Component {
@@ -30,18 +35,17 @@ class ActionCard extends React.Component {
     return (
       <Card>
         <Link to={actionSlug} >
-          <LazyLoad height={200}>
-            <ActionImage id={this.props.number} category={this.props.themeId}/>
-          </LazyLoad>
+          <ActionImage id={this.props.number} category={this.props.themeId}/>
           <CardImgOverlay>
             <ActionNumber className="action-number">{this.props.number}</ActionNumber>
           </CardImgOverlay>
+          <Progress value={this.props.progress} />
         </Link>
         <CardBody>
-          <CardTitle>{this.props.name.substring(0,100)}</CardTitle>
-          {this.props.themes.map(item => (
-            <ThemeBadge key={item.id} color="secondary">{item.name}</ThemeBadge>
-          ))}
+          <Link to={actionSlug} >
+          <StyledCardTitle>{this.props.number}: {this.props.name.substring(0,60)}&#8230;</StyledCardTitle>
+          
+          </Link>    
         </CardBody>
       </Card>
     );

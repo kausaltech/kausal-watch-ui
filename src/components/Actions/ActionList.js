@@ -21,6 +21,14 @@ class ActionList extends React.Component {
     else return "Unknown";
   }
 
+  getOrganizationName(orgId) {
+    let org = this.props.orgs.filter(inc => inc.id === orgId);
+    if (org[0] != null) {
+      return org[0].attributes.name;
+    }
+    else return "Unknown";
+  }
+  
   getCategories(action) {
     let cats = [];
     action.relationships.categories.data.map((cat, index) => (
@@ -32,6 +40,17 @@ class ActionList extends React.Component {
     return cats;
   }
 
+  getOrganizations(action) {
+    let orgs = [];
+    action.relationships.responsible_parties.data.map((org, index) => (
+            orgs[index] = {
+              id: org.id,
+              name: this.getOrganizationName(org.id)
+            }
+          ))
+    return orgs;
+  }
+  
   getRootCategory(catId) {
     let category = this.props.cats.find(cat => cat.id === catId);
     if (category.relationships.parent.data != null) {
@@ -50,14 +69,17 @@ class ActionList extends React.Component {
       return (
         <Row>
           {this.props.data.map(item => (
-            <Col md="4" sm="6" key={item.id} className="mb-4 d-flex align-items-stretch">
+            <Col lg="4" md="6" key={item.id} className="mb-4 d-flex align-items-stretch">
               <ActionCard 
                 key={item.id} 
                 id={item.id}
                 number={item.attributes.identifier} 
                 name={item.attributes.name} 
                 themes={this.getCategories(item)} 
-                themeId={item.rootCategory} />
+                themeId={item.rootCategory} 
+                orgs={this.getOrganizations(item)} 
+                progress={item.progress} 
+                />
             </Col>
           ))}
         </Row>
