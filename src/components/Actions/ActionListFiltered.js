@@ -46,6 +46,7 @@ class ActionListFiltered extends React.Component {
         result.data.data.map(item => {
           item.rootCategory = this.getRootCategory(item.relationships.categories.data[0].id, categories);
           item.progress = Math.floor(Math.random() * Math.floor(100));
+          return item;
         });
         this.setState({
           isLoaded: true,

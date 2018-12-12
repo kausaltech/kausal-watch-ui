@@ -128,3 +128,23 @@ h1, h2, h3 , h4, h5 {
     color: $white;
   }
 }
+
+.bg-not_started {
+  background-color: #999999;
+}
+
+.bg-on_time {
+  background-color: $hel-tram;
+}
+
+.bg-late {
+  background-color: $hel-summer;
+}
+
+.bg-severely_late {
+  background-color: $hel-metro;
+}
+
+.bg-status {
+  background-color: $hel-tram;
+}
