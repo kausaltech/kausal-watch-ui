@@ -1,7 +1,16 @@
 import React from 'react'
+import LazyLoad from 'react-lazyload';
 
-import { CardImg } from 'reactstrap';
+import { CardImg as BaseCardImg } from 'reactstrap';
+import styled from 'styled-components';
 
+const CardImg = styled(BaseCardImg)`
+  mix-blend-mode: multiply;
+`
+
+const ImgBg = styled.div`
+  background-color: ${props => props.theme.helTram};
+`
 
 class ActionImage extends React.Component {
 
@@ -17,10 +26,14 @@ class ActionImage extends React.Component {
       75:"KnevlsuWxzk",
       77:"b8Mwo34avAo"
     };
-    let imageURL= "https://source.unsplash.com/" + catImages[this.props.category] + "/400x200";
+    let imageURL= "https://source.unsplash.com/" + catImages[this.props.category] + "/400x150";
     
     return (
-      <CardImg top width="100%" src={ imageURL } alt="Action Image" />
+      <LazyLoad height={150}>
+        <ImgBg>
+          <CardImg top width="100%" src={ imageURL } alt="Action Image" />
+        </ImgBg>
+      </LazyLoad>
     )
   }
 }
