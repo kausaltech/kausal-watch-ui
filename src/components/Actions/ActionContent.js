@@ -99,7 +99,7 @@ class ActionContent extends React.Component {
         </ActionHero>
         <Container className="mb-5">
           <Row>
-            <Col md="6">
+            <Col md="6" lg="8">
               <ActionSection>
                 <h5>Tämä on Toimenpiteen ymmärrettävä tiivistelmä. Tämä saattaa poiketa virallisesta tekstistä niin että tämä on ymmärrettävä kaikille.</h5>
                 <p>Tämä on Toimenpiteen ymmärrettävä sisältö. Tämä saattaa poiketa virallisesta tekstistä niin että tämä on ymmärrettävä kaikille. Toimenpiteen ymmärrettävää sisältöä voidaan myös tarpeen vaatiessa päivittää ymmärryksen lisääntyessä toimenpiteen toteutuksesta. </p>
@@ -111,7 +111,7 @@ class ActionContent extends React.Component {
                 <small>(Hiilineutraali Helsinki 2035 toimenpideohjelmasta)</small>
               </ActionSection>
             </Col>
-            <Col md="6">
+            <Col md="6" lg="4">
               {data.included  &&
                 <ActionSection>
                   <ResponsibleList data={data.included}/>
@@ -172,9 +172,11 @@ class ActionContent extends React.Component {
                 {plot}
               </Col>
               <Col sm="12">
-                <p>Tämä mittari liittyy myös toimenpiteisiin: <Badge>25</Badge> <Badge>28</Badge> <Badge>30</Badge>
+                <p>
+                  <a href="/indicator/1">Katso mittarin tarkemmat tiedot</a>
+                  {' '}|{' '}
+                  Tämä mittari liittyy myös toimenpiteisiin: <Badge>25</Badge> <Badge>28</Badge> <Badge>30</Badge>
                 </p>
-                <p><a href="/indicator/1">Katso mittarin tarkemmat tiedot</a></p>
               </Col>
               </CardBody>
             </Card>
