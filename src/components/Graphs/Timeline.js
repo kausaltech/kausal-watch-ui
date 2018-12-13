@@ -22,22 +22,16 @@ class Timeline extends React.Component {
       <div>
         <ProgressBar value={75} />
         <ProgressYears>
-          <div>2010</div>
-          <div>2011</div>
-          <div>2012</div>
-          <div>2013</div>
-          <div>2014</div>
-          <div>2015</div>
-          <div>2016</div>
           <div>2017</div>
-          <div>2018</div>
           <div>2019</div>
-          <div>2020</div>
           <div>2021</div>
-          <div>2022</div>
           <div>2023</div>
-          <div>2024</div>
           <div>2025</div>
+          <div>2027</div>
+          <div>2029</div>
+          <div>2031</div>
+          <div>2033</div>
+          <div>2035</div>
         </ProgressYears>
       </div>
     );

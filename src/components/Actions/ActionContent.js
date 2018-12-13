@@ -1,9 +1,10 @@
 import React from 'react';
 import axios from 'axios';
 import { Link } from "gatsby";
-import { Container, Row, Col, Alert } from 'reactstrap';
+import { Container, Row, Col, Alert, Badge, Card, CardBody, Progress } from 'reactstrap';
 import TimeSeries from '../Graphs/TimeSeries';
 import Timeline from '../Graphs/Timeline';
+import TaskList from './TaskList';
 import ResponsibleList from './ResponsibleList';
 import ContentLoader from '../Common/ContentLoader';
 import CommentForm from '../Comments/CommentForm';
@@ -26,16 +27,6 @@ const ActionSection = styled.section`
 
 const CommentsSection = styled.section`
   background-color: ${props => props.theme.helTram}; 
-`
-
-const EventList = styled.ul`
-  margin-top: 1em;
-`
-
-const Event = styled.li`
-  .date {
-    font-weight: 600;
-  }
 `
 
 class ActionContent extends React.Component {
@@ -113,18 +104,11 @@ class ActionContent extends React.Component {
                 <h5>Tämä on Toimenpiteen ymmärrettävä tiivistelmä. Tämä saattaa poiketa virallisesta tekstistä niin että tämä on ymmärrettävä kaikille.</h5>
                 <p>Tämä on Toimenpiteen ymmärrettävä sisältö. Tämä saattaa poiketa virallisesta tekstistä niin että tämä on ymmärrettävä kaikille. Toimenpiteen ymmärrettävää sisältöä voidaan myös tarpeen vaatiessa päivittää ymmärryksen lisääntyessä toimenpiteen toteutuksesta. </p>
               </ActionSection>
-              <ActionSection>
-                <h5>Mitä on tehty?</h5>
-                <EventList>
-                  <Event>
-                    <div className="date">1.12.2018</div>
-                    <div>Selvityksen valmistelu on aloitettu.</div>
-                  </Event>
-                  <Event>
-                    <div className="date">12.12.2019</div>
-                    <div>Selvitys valmistunut. <a href="http://hel.fi">Lue selvitys.</a></div>
-                  </Event>
-                </EventList>
+              <ActionSection className="official-text">
+                <h5>Virallinen kuvaus</h5>
+                <strong>Toimenpideohjelman mukaisesti</strong>
+                <p>{data.data.attributes.name}</p>
+                <small>(Hiilineutraali Helsinki 2035 toimenpideohjelmasta)</small>
               </ActionSection>
             </Col>
             <Col md="6">
@@ -137,41 +121,65 @@ class ActionContent extends React.Component {
                 <h5>Yhteyshenkilö</h5>
                 <p><strong>Eini Eksamble</strong> [Ota yhteyttä]</p>
               </ActionSection>
-              <ActionSection className="official-text">
-                <h5>Virallinen kuvaus</h5>
-                <strong>Toimenpideohjelman mukaisesti</strong>
-                <p>{data.data.attributes.name}</p>
-                <small>(Hiilineutraali Helsinki 2035 toimenpideohjelmasta)</small>
+              <ActionSection>
+                <h5>Eteneminen</h5>
+                <strong>20% valmis</strong>
+                <Progress value={20} color="status" />
+                <strong>Etenee aikataulussa</strong>
               </ActionSection>
-            </Col>
-          </Row> 
-          <Row>
-            <Col>
-              <h2 className="mb-5">Kuvaajat</h2>
-            </Col>
-          </Row>
-          <Row>
-            <Col md={6}>
               <ActionSection>
                 <h5>Aikajänne</h5>
                 <Timeline />
               </ActionSection>
+
+            </Col>
+          </Row> 
+          <Row>
+            <Col>
+              <h2 className="mb-5">Tehtävät</h2>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <ActionSection>
+                <h5>Mitä on tehty?</h5>
+                <TaskList timing="done"/>
+              </ActionSection>
+              <ActionSection>
+                <h5>Mitä on tehtävä?</h5>
+                <TaskList timing="todo"/>
+              </ActionSection>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <h2 className="mb-5">Mittarit</h2>
+            </Col>
+          </Row>
+          <Row>
+            <Col md={6}>
+              
             </Col>
             <Col md={6}>
  
             </Col>
           </Row> 
           <Row>
-            <Col md={6} style={{height: '400px'}}>
-              <h5>Esimerkkigraafi</h5>
-              {plot}
-            </Col>
-            <Col md={6} style={{height: '400px'}}>
-              <h5>Esimerkkigraafi</h5>
-              {plot}
+            <Col sm="12">
+            <Card>
+              <CardBody>
+              <Col sm="12" style={{height: '400px'}}>
+                {plot}
+              </Col>
+              <Col sm="12">
+                <p>Tämä mittari liittyy myös toimenpiteisiin: <Badge>25</Badge> <Badge>28</Badge> <Badge>30</Badge>
+                </p>
+                <p><a href="/indicator/1">Katso mittarin tarkemmat tiedot</a></p>
+              </Col>
+              </CardBody>
+            </Card>
             </Col>
           </Row> 
-          
         </Container>
         <CommentsSection className="comments-section" id="comments">
           <Container>
