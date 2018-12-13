@@ -25,17 +25,20 @@ class ActionListFiltered extends React.Component {
     const apiUrl= `${process.env.GATSBY_HNH_API}/action/`;
     axios.get(apiUrl, {
       params: {
-        include: "categories,categories.parent,categories.parent.parent,responsible_parties"
+        include: "categories,categories.parent,categories.parent.parent,responsible_parties",
+        "fields[action]": "identifier,name,categories,responsible_parties",
+        "fields[category]": "identifier,name,parent",
+        "fields[organization]": "name,abbreviation,parent"
       }
     })
     .then(
       (result) => {
         const categories = result.data.included.filter(function(item) {
-          return item.type === "Category";
+          return item.type === "category";
         });
         
         const orgs = result.data.included.filter(function(item) {
-          return item.type === "Organization";
+          return item.type === "organization";
         });
         
         this.setState({
