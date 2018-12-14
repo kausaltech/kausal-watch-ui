@@ -46,7 +46,7 @@ class IndicatorContent extends React.Component {
   }
   
   render() {
-    const { error, isLoaded, data } = this.state;
+    const { error, isLoaded } = this.state;
     let plot;
     let bars;
     let opasnet;
@@ -87,7 +87,7 @@ class IndicatorContent extends React.Component {
             <Row>
               <Col style={{height: '500px'}}>
                 <h5>Autoliikenteen kehitys</h5>
-                <Opasnet />
+                {opasnet}
               </Col>
             </Row>
             <Row>

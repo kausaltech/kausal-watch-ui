@@ -61,7 +61,7 @@ class Opasnet extends React.Component {
     .then(
       (result) => {
         let jsonResult = JSON.parse(result.data);
-        console.log("parsed: " + JSON.stringify(jsonResult));
+        //console.log("parsed: " + JSON.stringify(jsonResult));
         this.setState({
           isLoaded: true,
           data: jsonResult,
@@ -90,7 +90,7 @@ class Opasnet extends React.Component {
   
   getSeriesBars(source, city) {
     let filtered = this.state.data.filter( datum => datum[0] === city);
-    console.log("sources= " + this.getSources(filtered));
+    //console.log("sources= " + this.getSources(filtered));
     filtered = filtered.filter( datum => datum[2] === source);
     let x = filtered.map(bar => bar[1]);
     let y = filtered.map(bar => Number(bar.res));

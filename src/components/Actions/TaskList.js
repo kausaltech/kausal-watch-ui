@@ -30,7 +30,7 @@ class TaskList extends React.Component {
             <Date>12.12.2018</Date> | Kuvauksen selkeyttäminen
           </ListGroupItem>
           <ListGroupItem>
-            <Date>12.12.2018</Date> | Järjestetään koulutus taloyhtiöille [<a href="#">Linkki</a>]
+            <Date>12.12.2018</Date> | Järjestetään koulutus taloyhtiöille [<a href="https://hel.fi">Linkki</a>]
           </ListGroupItem>
         </ListGroup>
           }
