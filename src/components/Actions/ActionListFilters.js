@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Button, ButtonGroup as BaseButtonGroup, CustomInput  as BaseCustomInput} from 'reactstrap';
+import { Button, ButtonGroup as BaseButtonGroup, CustomInput  as BaseCustomInput, Input} from 'reactstrap';
 
 import ActionIcon from './ActionIcon';
 
@@ -23,9 +23,11 @@ class ActionListFilters extends React.Component {
       activeCat: '',
       activeCatName: this.getCategoryName(''),
       activeOrg: '',
+      activeSearch: '',
     };
     
     this.onOrgBtnClick = this.onOrgBtnClick.bind(this);
+    this.onSearchChange = this.onSearchChange.bind(this);
   }
   
   onRadioBtnClick(rSelected) {
@@ -43,6 +45,13 @@ class ActionListFilters extends React.Component {
     this.props.changeOption("Organization", evt.target.value);
   }
 
+  onSearchChange(evt) {
+    this.setState({ 
+      activeSearch: evt.target.value
+    });
+    this.props.changeOption("Search", evt.target.value);
+  }
+  
   getCategoryName(catId) {
     let cat = this.props.cats.find(cat => cat.id === catId);
     return cat ? cat.attributes.name : 'Kaikki teemat';
@@ -66,12 +75,13 @@ class ActionListFilters extends React.Component {
             ))}
         </ButtonGroup>
         <h5 className="mb-4">{ this.state.activeCatName }</h5>
-        <CustomInput type="select" id="exampleCustomSelect" name="customSelect" value={this.state.activeOrg} onChange={this.onOrgBtnClick} className="mb-4">
+        <CustomInput type="select" id="orgfierld" name="organization" value={this.state.activeOrg} onChange={this.onOrgBtnClick} className="mb-4">
           <option value="">Kaikki organisaatiot</option>
           {this.props.orgs.map(org => (
               <option value={org.id} key={org.id}>{ this.getOrganizationName(org.id) }</option>
             ))}
         </CustomInput> 
+        <Input name="search" id="searchfield" placeholder="Hae kuvauksista"  onChange={this.onSearchChange}/>
       </div>
     );
   }

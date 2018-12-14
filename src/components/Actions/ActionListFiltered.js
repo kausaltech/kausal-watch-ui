@@ -15,7 +15,8 @@ class ActionListFiltered extends React.Component {
       categories: [],
       orgs: [],
       activeCategory: '',
-      activeOrganization: ''
+      activeOrganization: '',
+      activeSearch: '',
     };
     this.handleChange = this.handleChange.bind(this);
     this.getRootCategory = this.getRootCategory.bind(this);
@@ -79,19 +80,19 @@ class ActionListFiltered extends React.Component {
   
   handleChange(filterType, val) {
     const change = "active" + filterType;
-    console.log("Filtering: " + change + " to " + val);
+    //console.log("Filtering: " + change + " to " + val);
     this.setState({
       [change]: val
     });
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevState.activeCategory !== this.state.activeCategory || prevState.activeOrganization !== this.state.activeOrganization ) {
-      this.applyFilters(this.state.activeCategory, this.state.activeOrganization);
+    if (prevState.activeCategory !== this.state.activeCategory || prevState.activeOrganization !== this.state.activeOrganization || prevState.activeSearch !== this.state.activeSearch ) {
+      this.applyFilters(this.state.activeCategory, this.state.activeOrganization, this.state.activeSearch);
     }
   }
   
-  applyFilters(activeCat, activeOrg) {
+  applyFilters(activeCat, activeOrg, activeSearch) {
 
     let filteredData = this.state.rawData;
 
@@ -103,6 +104,12 @@ class ActionListFiltered extends React.Component {
     if(activeOrg !== ""){
       filteredData = filteredData.filter(function(item) {
         return item.relationships.responsible_parties.data.find(org => org.id === activeOrg);
+      });
+    }
+    if(activeSearch !== ""){
+      filteredData = filteredData.filter(function(item) {
+        return item.attributes.name.toLowerCase().search(
+          activeSearch.toLowerCase()) !== -1;
       });
     }
     this.setState({data: filteredData});
