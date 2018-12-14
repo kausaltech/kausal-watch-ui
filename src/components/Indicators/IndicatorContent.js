@@ -4,6 +4,7 @@ import { Jumbotron, Alert, Container, Row, Col } from 'reactstrap';
 import ContentLoader from '../Common/ContentLoader';
 import TimeSeries from '../Graphs/TimeSeries';
 import Opasnet from '../Graphs/Opasnet';
+import BarGraph from '../Graphs/BarGraph';
 
 import styled from 'styled-components';
 
@@ -47,11 +48,17 @@ class IndicatorContent extends React.Component {
   render() {
     const { error, isLoaded, data } = this.state;
     let plot;
+    let bars;
+    let opasnet;
 
     if (typeof window !== 'undefined') {
-      plot = <TimeSeries />
+      plot = <TimeSeries />;
+      bars = <BarGraph />;
+      opasnet = <Opasnet />;
     } else {
-      plot = <Container />
+      plot = <Container />;
+      bars = <Container />;
+      opasnet = <Container />;
     }
     
     if (error) {
@@ -62,8 +69,10 @@ class IndicatorContent extends React.Component {
       return (
         <div className="mb-5">
           <IndicatorHero>
-            <h5>Indikaattorit</h5>
-            <h1>{data.attributes.name}</h1>
+            <Container>
+              <h5>Indikaattorit</h5>
+              <h1>Sähköautojen latauspaikat</h1>
+            </Container>
           </IndicatorHero>
           <Container>
             <Row><Col>
@@ -76,15 +85,15 @@ class IndicatorContent extends React.Component {
               </Col>
             </Row>
             <Row>
-              <Col style={{height: '400px'}}>
-                <h5>Päästövaikutukset</h5>
+              <Col style={{height: '500px'}}>
+                <h5>Autoliikenteen kehitys</h5>
                 <Opasnet />
               </Col>
             </Row>
             <Row>
               <Col style={{height: '400px'}}>
-                <h5>Kustannukset</h5>
-                {plot}
+                <h5>Päästövaikutukset</h5>
+                {bars}
               </Col>
             </Row>
           </Container>
