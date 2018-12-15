@@ -30,7 +30,8 @@ class ActionListFiltered extends React.Component {
         "fields[action]": "identifier,name,categories,responsible_parties",
         "fields[category]": "identifier,name,parent",
         "fields[organization]": "name,abbreviation,parent"
-      }
+      },
+      headers: {'Accept': 'application/vnd.api+json'}
     })
     .then(
       (result) => {

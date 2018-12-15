@@ -50,7 +50,9 @@ class ActionContent extends React.Component {
     axios.get(apiUrl,{
       params: {
         include: "responsible_parties"
-      }})
+      },
+      headers: {'Accept': 'application/vnd.api+json'}
+    })
     .then(
       (result) => {
         this.setState({
