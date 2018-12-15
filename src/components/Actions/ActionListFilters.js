@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { CustomInput  as BaseCustomInput, Input, FormGroup, Label } from 'reactstrap';
+import { CustomInput  as BaseCustomInput, Input, FormGroup, Label, Row, Col } from 'reactstrap';
 
 import styled from 'styled-components';
 
@@ -59,28 +59,39 @@ class ActionListFilters extends React.Component {
     let rootCategories = this.props.cats.filter(cat => cat.relationships.parent.data == null);
     return (
       <div className="filters mb-5 text-left">
-        <FormGroup>
-          <Label for="catfield">Rajaa teeman mukaan</Label>
-          <CustomInput type="select" id="catfield" name="category" value={this.state.activeCat} onChange={this.onCatBtnClick} className="mb-2">
-          <option value="">Kaikki teemat</option>
-          {rootCategories.map(cat => (
-              <option value={cat.id} key={cat.id}>{ this.getCategoryName(cat.id) }</option>
-            ))}
-        </CustomInput>
-        </FormGroup>
-        <FormGroup>
-          <Label for="orgfield">Rajaa vastuuorganisaation mukaan</Label>
-          <CustomInput type="select" id="orgfield" name="organization" value={this.state.activeOrg} onChange={this.onOrgBtnClick} className="mb-2">
-            <option value="">Kaikki organisaatiot</option>
-            {this.props.orgs.map(org => (
-                <option value={org.id} key={org.id}>{ this.getOrganizationName(org.id) }</option>
-              ))}
-          </CustomInput> 
-        </FormGroup>
-        <FormGroup>
-          <Label for="searchfield">Etsi tekstistä</Label>
-          <Input name="search" id="searchfield" placeholder="Hae kuvauksista"  onChange={this.onSearchChange}/>
-        </FormGroup>
+        <Row>
+         <Col sm="12" md={{ size: 6}}>
+            <FormGroup>
+              <Label for="catfield">Rajaa teeman mukaan</Label>
+              <CustomInput type="select" id="catfield" name="category" value={this.state.activeCat} onChange={this.onCatBtnClick} className="mb-2">
+              <option value="">Kaikki teemat</option>
+              {rootCategories.map(cat => (
+                  <option value={cat.id} key={cat.id}>{ this.getCategoryName(cat.id) }</option>
+                ))}
+            </CustomInput>
+
+            </FormGroup>
+          </Col>
+          <Col sm="12" md={{ size: 6 }}>
+            <FormGroup>
+              <Label for="orgfield">Rajaa vastuuorganisaation mukaan</Label>
+              <CustomInput type="select" id="orgfield" name="organization" value={this.state.activeOrg} onChange={this.onOrgBtnClick} className="mb-2">
+                <option value="">Kaikki organisaatiot</option>
+                {this.props.orgs.map(org => (
+                    <option value={org.id} key={org.id}>{ this.getOrganizationName(org.id) }</option>
+                  ))}
+              </CustomInput> 
+            </FormGroup>
+          </Col>
+        </Row>
+        <Row>
+          <Col sm="12">
+            <FormGroup>
+              <Label for="searchfield">Etsi tekstistä</Label>
+              <Input name="search" id="searchfield" placeholder="Hae kuvauksista"  onChange={this.onSearchChange}/>
+            </FormGroup>
+          </Col>
+        </Row>
       </div>
     );
   }
