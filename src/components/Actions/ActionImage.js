@@ -16,6 +16,7 @@ class ActionImage extends React.Component {
 
   render() {
     let catImages = {
+      "default":"T30H0AcxthY",
       58:"hZxv71OrD7E",
       59:"yp71rK_ymvU",
       64:"mN4sEfN79SE",
@@ -26,7 +27,7 @@ class ActionImage extends React.Component {
       75:"KnevlsuWxzk",
       77:"b8Mwo34avAo"
     };
-    let imageURL= "https://source.unsplash.com/" + catImages[this.props.category] + "/400x150";
+    let imageURL= "https://source.unsplash.com/" + catImages["default"] + "/400x150";
     
     return (
       <LazyLoad height={150}>
