@@ -1,16 +1,8 @@
 import React from 'react'
 
-import { Button, ButtonGroup as BaseButtonGroup, CustomInput  as BaseCustomInput, Input} from 'reactstrap';
-
-import ActionIcon from './ActionIcon';
+import { CustomInput  as BaseCustomInput, Input, FormGroup, Label } from 'reactstrap';
 
 import styled from 'styled-components';
-
-
-const ButtonGroup = styled(BaseButtonGroup)`
-  flex-wrap: wrap;
-  justify-content: center;
-`
 
 const CustomInput = styled(BaseCustomInput)`
   background-color: transparent !important;
@@ -27,17 +19,10 @@ class ActionListFilters extends React.Component {
     };
     
     this.onOrgBtnClick = this.onOrgBtnClick.bind(this);
+    this.onCatBtnClick = this.onCatBtnClick.bind(this);
     this.onSearchChange = this.onSearchChange.bind(this);
   }
   
-  onRadioBtnClick(rSelected) {
-    this.setState({ 
-      activeCat: rSelected,
-      activeCatName: this.getCategoryName(rSelected) 
-    });
-    this.props.changeOption("Category", rSelected);
-  }
-
   onOrgBtnClick(evt) {
     this.setState({ 
       activeOrg: evt.target.value
@@ -45,6 +30,14 @@ class ActionListFilters extends React.Component {
     this.props.changeOption("Organization", evt.target.value);
   }
 
+  onCatBtnClick(evt) {
+    this.setState({ 
+      activeCat: evt.target.value,
+      activeCatName: this.getCategoryName(evt.target.value) 
+    });
+    this.props.changeOption("Category", evt.target.value);
+  }
+  
   onSearchChange(evt) {
     this.setState({ 
       activeSearch: evt.target.value
@@ -65,23 +58,29 @@ class ActionListFilters extends React.Component {
   render() {
     let rootCategories = this.props.cats.filter(cat => cat.relationships.parent.data == null);
     return (
-      <div className="filters mb-5">
-        <ButtonGroup className="mb-2"> 
-          <Button color="primary" size="lg" outline onClick={() => this.onRadioBtnClick("")} active={this.state.activeCat === ""}><ActionIcon category="0" /></Button>
-          {rootCategories.map(category => (
-              <Button outline key={category.id} color="primary" size="lg" onClick={() => this.onRadioBtnClick(category.id)} active={this.state.activeCat === category.id}>
-                <ActionIcon category={category.id} /> 
-              </Button>
+      <div className="filters mb-5 text-left">
+        <FormGroup>
+          <Label for="catfield">Rajaa teeman mukaan</Label>
+          <CustomInput type="select" id="catfield" name="category" value={this.state.activeCat} onChange={this.onCatBtnClick} className="mb-2">
+          <option value="">Kaikki teemat</option>
+          {rootCategories.map(cat => (
+              <option value={cat.id} key={cat.id}>{ this.getCategoryName(cat.id) }</option>
             ))}
-        </ButtonGroup>
-        <h5 className="mb-4">{ this.state.activeCatName }</h5>
-        <CustomInput type="select" id="orgfierld" name="organization" value={this.state.activeOrg} onChange={this.onOrgBtnClick} className="mb-4">
-          <option value="">Kaikki organisaatiot</option>
-          {this.props.orgs.map(org => (
-              <option value={org.id} key={org.id}>{ this.getOrganizationName(org.id) }</option>
-            ))}
-        </CustomInput> 
-        <Input name="search" id="searchfield" placeholder="Hae kuvauksista"  onChange={this.onSearchChange}/>
+        </CustomInput>
+        </FormGroup>
+        <FormGroup>
+          <Label for="orgfield">Rajaa vastuuorganisaation mukaan</Label>
+          <CustomInput type="select" id="orgfield" name="organization" value={this.state.activeOrg} onChange={this.onOrgBtnClick} className="mb-2">
+            <option value="">Kaikki organisaatiot</option>
+            {this.props.orgs.map(org => (
+                <option value={org.id} key={org.id}>{ this.getOrganizationName(org.id) }</option>
+              ))}
+          </CustomInput> 
+        </FormGroup>
+        <FormGroup>
+          <Label for="searchfield">Etsi tekstistä</Label>
+          <Input name="search" id="searchfield" placeholder="Hae kuvauksista"  onChange={this.onSearchChange}/>
+        </FormGroup>
       </div>
     );
   }
