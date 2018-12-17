@@ -2,9 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import { Jumbotron, Alert, Container, Row, Col } from 'reactstrap';
 import ContentLoader from '../Common/ContentLoader';
-import TimeSeries from '../Graphs/TimeSeries';
-import Opasnet from '../Graphs/Opasnet';
-import BarGraph from '../Graphs/BarGraph';
+import IndicatorGraph from '../Graphs/IndicatorGraph';
 
 import styled from 'styled-components';
 
@@ -21,18 +19,41 @@ class IndicatorContent extends React.Component {
     this.state = {
       isLoaded: false,
       error: null,
-      data: []
+      data: [],
+      relatedIndicators: [], 
+      indicatorGraphs: [], 
+      indicators: []
     };
   }
 
   componentDidMount() {
     const apiUrl = `${process.env.GATSBY_HNH_API}/indicator/${this.props.indicator}/`;
-    axios.get(apiUrl)
+    axios.get(apiUrl, {
+      params: {
+        include: "related_effects.effect_indicator,related_effects.effect_indicator.latest_graph,related_causes.causal_indicator,related_causes.causal_indicator.latest_graph"
+      },
+      headers: {'Accept': 'application/vnd.api+json'}
+    })
     .then(
       (result) => {
+        let relatedIndicators, indicatorGraphs, indicators = [];
+        if (result.data.included) {
+          relatedIndicators = result.data.included.filter(function(item) {
+            return item.type === "related_indicator";
+          });
+          indicatorGraphs = result.data.included.filter(function(item) {
+            return item.type === "indicator_graph";
+          });
+          indicators = result.data.included.filter(function(item) {
+            return item.type === "indicator";
+          });
+        };
         this.setState({
           isLoaded: true,
-          data: result.data.data,
+          data: result.data,
+          relatedIndicators: relatedIndicators, 
+          indicatorGraphs: indicatorGraphs, 
+          indicators: indicators
         });
       })
      .catch(
@@ -46,20 +67,7 @@ class IndicatorContent extends React.Component {
   }
   
   render() {
-    const { error, isLoaded } = this.state;
-    let plot;
-    let bars;
-    let opasnet;
-
-    if (typeof window !== 'undefined') {
-      plot = <TimeSeries />;
-      bars = <BarGraph />;
-      opasnet = <Opasnet />;
-    } else {
-      plot = <Container />;
-      bars = <Container />;
-      opasnet = <Container />;
-    }
+    const { error, isLoaded, data } = this.state;
     
     if (error) {
       return <Alert color="danger">Error: {error.message}</Alert>;
@@ -71,31 +79,22 @@ class IndicatorContent extends React.Component {
           <IndicatorHero>
             <Container>
               <h5>Indikaattorit</h5>
-              <h1>Sähköautojen latauspaikat</h1>
+              <h1>{data.data.attributes.name}</h1>
+              <div className="mt-4" dangerouslySetInnerHTML={{__html: data.data.attributes.description}}/>
             </Container>
           </IndicatorHero>
           <Container>
-            <Row><Col>
-              <p>Indicator description goes here</p>
-            </Col></Row>
             <Row>
-              <Col style={{height: '400px'}}>
-                <h5>Kehitysennuste</h5>
-                {plot}
+              <Col className="mb-5">
+                <h2>Kuvaaja</h2>
+                {data.data.relationships.latest_graph.data ?
+                  <IndicatorGraph graphId={data.data.relationships.latest_graph.data.id} />
+                  :
+                  <h5>Ei kuvaajaa</h5>}
               </Col>
             </Row>
-            <Row>
-              <Col style={{height: '500px'}}>
-                <h5>Autoliikenteen kehitys</h5>
-                {opasnet}
-              </Col>
-            </Row>
-            <Row>
-              <Col style={{height: '400px'}}>
-                <h5>Päästövaikutukset</h5>
-                {bars}
-              </Col>
-            </Row>
+
+
           </Container>
         </div>
       );
