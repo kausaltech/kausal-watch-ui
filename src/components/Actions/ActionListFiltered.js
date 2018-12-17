@@ -27,9 +27,10 @@ class ActionListFiltered extends React.Component {
     axios.get(apiUrl, {
       params: {
         include: "categories,categories.parent,categories.parent.parent,responsible_parties",
-        "fields[action]": "identifier,name,categories,responsible_parties",
+        "fields[action]": "identifier,name,categories,responsible_parties,status",
         "fields[category]": "identifier,name,parent",
-        "fields[organization]": "name,abbreviation,parent"
+        "fields[organization]": "name,abbreviation,parent",
+        "fields[action_status]": "identifier,name",
       },
       headers: {'Accept': 'application/vnd.api+json'}
     })

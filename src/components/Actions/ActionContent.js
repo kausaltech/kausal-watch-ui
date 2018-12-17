@@ -36,6 +36,8 @@ class ActionContent extends React.Component {
       isLoaded: false,
       error: null,
       data: [],
+      responsibles: [],
+      tasks: [],
       newComments: false
     };
     this.reloadComments = this.reloadComments.bind(this);
@@ -49,15 +51,23 @@ class ActionContent extends React.Component {
     const apiUrl = `${process.env.GATSBY_HNH_API}/action/${this.props.action}/`;
     axios.get(apiUrl,{
       params: {
-        include: "responsible_parties"
+        include: "responsible_parties,tasks"
       },
       headers: {'Accept': 'application/vnd.api+json'}
     })
     .then(
       (result) => {
+        const responsibles = result.data.included.filter(function(item) {
+          return item.type === "organization";
+        });
+        const tasks = result.data.included.filter(function(item) {
+          return item.type === "action_task";
+        })
         this.setState({
           isLoaded: true,
-          data: result.data,
+          data: result.data.data,
+          responsibles: responsibles,
+          tasks: tasks
         });
       })
      .catch(
@@ -71,7 +81,7 @@ class ActionContent extends React.Component {
   }
   
   render() {
-    const { error, isLoaded, data } = this.state;
+    const { error, isLoaded, data, responsibles, tasks } = this.state;
     let plot;
 
     if (typeof window !== 'undefined') {
@@ -92,8 +102,8 @@ class ActionContent extends React.Component {
             <Row>
               <Col md="10">
                 <Link to="/"><h4>Toimenpiteet</h4></Link>
-                <h2 className="display-4">{data.data.attributes.identifier}</h2>
-                <h1 className="mb-4">{ data.data.attributes.name.substring(0,100) }…</h1>
+                <h2 className="display-4">{data.attributes.identifier}</h2>
+                <h1 className="mb-4">{ data.attributes.name.substring(0,100) }…</h1>
                 <p>7 kommenttia | <a href="#comments">osallistu keskusteluun</a></p>
               </Col>
             </Row>
@@ -109,14 +119,14 @@ class ActionContent extends React.Component {
               <ActionSection className="official-text">
                 <h5>Virallinen kuvaus</h5>
                 <strong>Toimenpideohjelman mukaisesti</strong>
-                <p>{data.data.attributes.name}</p>
+                <p>{data.attributes.name}</p>
                 <small>(Hiilineutraali Helsinki 2035 toimenpideohjelmasta)</small>
               </ActionSection>
             </Col>
             <Col md="6" lg="4">
-              {data.included  &&
+              {responsibles  &&
                 <ActionSection>
-                  <ResponsibleList data={data.included}/>
+                  <ResponsibleList data={responsibles}/>
                 </ActionSection>
               }
               <ActionSection>
@@ -144,12 +154,7 @@ class ActionContent extends React.Component {
           <Row>
             <Col>
               <ActionSection>
-                <h5>Mitä on tehty?</h5>
-                <TaskList timing="done"/>
-              </ActionSection>
-              <ActionSection>
-                <h5>Mitä on tehtävä?</h5>
-                <TaskList timing="todo"/>
+                <TaskList data={tasks}/>
               </ActionSection>
             </Col>
           </Row>
@@ -189,7 +194,7 @@ class ActionContent extends React.Component {
           <Container>
             <Row>
               <Col sm="12" md={{ size: 8, offset: 2 }}>
-                <h2 className="mb-4">Kommentoi toimenpidettä <sup>nro</sup>{data.data.attributes.identifier}</h2>
+                <h2 className="mb-4">Kommentoi toimenpidettä <sup>nro</sup>{data.attributes.identifier}</h2>
                 <CommentForm section="hFz7Xjt0JJzMkKFslq1JqMwAusPeJ1er" onPost={this.reloadComments}/>
                 <CommentList section="hFz7Xjt0JJzMkKFslq1JqMwAusPeJ1er" newMessages={this.state.newMessages} refresh={this.state.newComments}/>
               </Col>
