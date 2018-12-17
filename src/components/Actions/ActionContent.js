@@ -7,6 +7,7 @@ import Timeline from '../Graphs/Timeline';
 import TaskList from './TaskList';
 import ResponsibleList from './ResponsibleList';
 import ContactPersons from './ContactPersons';
+import ActionStatus from './ActionStatus';
 import ContentLoader from '../Common/ContentLoader';
 import CommentForm from '../Comments/CommentForm';
 import CommentList from '../Comments/CommentList';
@@ -39,6 +40,7 @@ class ActionContent extends React.Component {
       data: [],
       responsibles: [],
       tasks: [],
+      statuses: [],
       newComments: false
     };
     this.reloadComments = this.reloadComments.bind(this);
@@ -52,14 +54,13 @@ class ActionContent extends React.Component {
     const apiUrl = `${process.env.GATSBY_HNH_API}/action/${this.props.action}/`;
     axios.get(apiUrl,{
       params: {
-        include: "responsible_parties,tasks"
+        include: "responsible_parties,tasks,status"
       },
       headers: {'Accept': 'application/vnd.api+json'}
     })
     .then(
       (result) => {
-        let responsibles, tasks = []; 
-        console.log(JSON.stringify(result.data));
+        let responsibles, tasks, statuses = []; 
         if (result.data.included) {
           responsibles = result.data.included.filter(function(item) {
             return item.type === "organization";
@@ -67,13 +68,17 @@ class ActionContent extends React.Component {
           tasks = result.data.included.filter(function(item) {
             return item.type === "action_task";
           });
+          statuses = result.data.included.filter(function(item) {
+            return item.type === "action_status";
+          });
         };
-        console.log("responsibles: " + responsibles + "  tasks: " + tasks);
+
         this.setState({
           isLoaded: true,
           data: result.data.data,
           responsibles: responsibles,
-          tasks: tasks
+          tasks: tasks,
+          statuses: statuses
         });
       })
      .catch(
@@ -109,7 +114,7 @@ class ActionContent extends React.Component {
               <Col md="10">
                 <Link to="/"><h4>Toimenpiteet</h4></Link>
                 <h2 className="display-4">{data.attributes.identifier}</h2>
-                <h1 className="mb-4">{ data.attributes.name.substring(0,100) }…</h1>
+                <h1 className="mb-4">{ data.attributes.name }</h1>
                 <p>7 kommenttia | <a href="#comments">osallistu keskusteluun</a></p>
               </Col>
             </Row>
@@ -119,8 +124,9 @@ class ActionContent extends React.Component {
           <Row>
             <Col md="6" lg="8">
               <ActionSection>
-                <h5>Tämä on Toimenpiteen ymmärrettävä tiivistelmä. Tämä saattaa poiketa virallisesta tekstistä niin että tämä on ymmärrettävä kaikille.</h5>
-                <p>Tämä on Toimenpiteen ymmärrettävä sisältö. Tämä saattaa poiketa virallisesta tekstistä niin että tämä on ymmärrettävä kaikille. Toimenpiteen ymmärrettävää sisältöä voidaan myös tarpeen vaatiessa päivittää ymmärryksen lisääntyessä toimenpiteen toteutuksesta. </p>
+                { data.attributes.description ? 
+                data.attributes.description :
+                <h6>-</h6>}
               </ActionSection>
               <ActionSection className="official-text">
                 <h5>Virallinen kuvaus</h5>
@@ -138,9 +144,12 @@ class ActionContent extends React.Component {
               </ActionSection>
               <ActionSection>
                 <h5>Eteneminen</h5>
-                <strong>20% valmis</strong>
-                <Progress value={20} color="status" />
-                <strong>Etenee aikataulussa</strong>
+                { data.attributes.completion > 0 &&
+                <strong>{data.attributes.completion}% valmis</strong> }
+                <Progress value={data.attributes.completion} color="status" />
+                { data.relationships.status.data &&
+                  <ActionStatus name={this.state.statuses[0].attributes.name} identifier={this.state.statuses[0].attributes.identifier} />
+                }
               </ActionSection>
               <ActionSection>
                 <h5>Aikajänne</h5>

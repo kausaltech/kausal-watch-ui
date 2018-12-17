@@ -58,8 +58,6 @@ class TaskList extends React.Component {
             </ListGroupItem>
           ));
     
-    console.log("undone: " + undoneTasks.length);
-    
     return (
         <div>
         { doneTasks.length > 0 ?

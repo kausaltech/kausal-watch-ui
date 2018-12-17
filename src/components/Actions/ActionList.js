@@ -78,7 +78,7 @@ class ActionList extends React.Component {
                 themes={this.getCategories(item)} 
                 themeId={item.rootCategory} 
                 orgs={this.getOrganizations(item)} 
-                progress={item.progress} 
+                progress={this.attributes.completion} 
                 />
             </Col>
           ))}
