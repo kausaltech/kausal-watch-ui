@@ -1,6 +1,6 @@
 import React from 'react'
 import { Card, CardImgOverlay, CardBody,
-  CardTitle, Badge, Progress } from 'reactstrap';
+  CardTitle, Progress } from 'reactstrap';
 
 import { Link } from "gatsby";
 import ActionImage from './ActionImage';
@@ -48,7 +48,7 @@ class ActionCard extends React.Component {
               :
               <StyledCardTitle>{this.props.name}</StyledCardTitle> }
           
-            { (this.props.statusIdentifier == "late" || this.props.statusIdentifier == "severely_late") &&
+            { (this.props.statusIdentifier === "late" || this.props.statusIdentifier === "severely_late") &&
               <ActionStatus name={this.props.statusName} identifier={this.props.statusIdentifier} />
             }
           </Link>    

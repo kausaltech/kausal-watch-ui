@@ -1,13 +1,14 @@
 import React from 'react';
 import axios from 'axios';
 import { Link } from "gatsby";
-import { Container, Row, Col, Alert, Badge, Card, CardBody, Progress } from 'reactstrap';
-import TimeSeries from '../Graphs/TimeSeries';
+import { Container, Row, Col, Alert, Progress } from 'reactstrap';
+
 import Timeline from '../Graphs/Timeline';
 import TaskList from './TaskList';
 import ResponsibleList from './ResponsibleList';
 import ContactPersons from './ContactPersons';
 import ActionStatus from './ActionStatus';
+import ActionIndicators from './ActionIndicators';
 import ContentLoader from '../Common/ContentLoader';
 import CommentForm from '../Comments/CommentForm';
 import CommentList from '../Comments/CommentList';
@@ -99,13 +100,6 @@ class ActionContent extends React.Component {
   
   render() {
     const { error, isLoaded, data, responsibles, tasks } = this.state;
-    let plot;
-
-    if (typeof window !== 'undefined') {
-      plot = <TimeSeries />
-    } else {
-      plot = <Container />
-    }
 
     if (error) {
       return <Alert color="danger">Error: {error.message}</Alert>;
@@ -188,29 +182,8 @@ class ActionContent extends React.Component {
             </Col>
           </Row>
           <Row>
-            <Col md={6}>
-              
-            </Col>
-            <Col md={6}>
- 
-            </Col>
-          </Row> 
-          <Row>
             <Col sm="12">
-            <Card>
-              <CardBody>
-              <Col sm="12" style={{height: '400px'}}>
-                {plot}
-              </Col>
-              <Col sm="12">
-                <p>
-                  <a href="/indicator/1">Katso mittarin tarkemmat tiedot</a>
-                  {' '}|{' '}
-                  Tämä mittari liittyy myös toimenpiteisiin: <Badge>25</Badge> <Badge>28</Badge> <Badge>30</Badge>
-                </p>
-              </Col>
-              </CardBody>
-            </Card>
+              <ActionIndicators />
             </Col>
           </Row> 
         </Container>
