@@ -43,7 +43,8 @@ class ActionContent extends React.Component {
       tasks: [],
       statuses: [],
       newComments: false,
-      commentCount: 0
+      commentCount: 0,
+      indicators: []
     };
     this.reloadComments = this.reloadComments.bind(this);
     this.countComments = this.countComments.bind(this);
@@ -61,13 +62,13 @@ class ActionContent extends React.Component {
     const apiUrl = `${process.env.GATSBY_HNH_API}/action/${this.props.action}/`;
     axios.get(apiUrl,{
       params: {
-        include: "responsible_parties,tasks,status"
+        include: "responsible_parties,tasks,status,indicators"
       },
       headers: {'Accept': 'application/vnd.api+json'}
     })
     .then(
       (result) => {
-        let responsibles, tasks, statuses = []; 
+        let responsibles, tasks, statuses, indicators = []; 
         if (result.data.included) {
           responsibles = result.data.included.filter(function(item) {
             return item.type === "organization";
@@ -78,6 +79,9 @@ class ActionContent extends React.Component {
           statuses = result.data.included.filter(function(item) {
             return item.type === "action_status";
           });
+          indicators = result.data.included.filter(function(item) {
+            return item.type === "indicator";
+          });
         };
 
         this.setState({
@@ -85,7 +89,8 @@ class ActionContent extends React.Component {
           data: result.data.data,
           responsibles: responsibles,
           tasks: tasks,
-          statuses: statuses
+          statuses: statuses,
+          indicators: indicators
         });
       })
      .catch(
@@ -183,7 +188,11 @@ class ActionContent extends React.Component {
           </Row>
           <Row>
             <Col sm="12">
-              <ActionIndicators />
+              {this.state.indicators.length > 0 ?
+                <ActionIndicators indicators={this.state.indicators}/>
+                :
+                <h6>Ei määriteltyjä mittareita</h6>
+                }
             </Col>
           </Row> 
         </Container>
