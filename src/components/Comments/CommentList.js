@@ -31,6 +31,7 @@ class CommentList extends React.Component {
           comments: result.data.results,
           commentCount: result.data.count
         });
+        this.props.updateCount(result.data.count);
       })
     .catch(
       (error) => {

@@ -41,13 +41,19 @@ class ActionContent extends React.Component {
       responsibles: [],
       tasks: [],
       statuses: [],
-      newComments: false
+      newComments: false,
+      commentCount: 0
     };
     this.reloadComments = this.reloadComments.bind(this);
+    this.countComments = this.countComments.bind(this);
   }
 
   reloadComments() {
     this.setState({ newComments: !this.state.newComments });
+  }
+
+  countComments(count) {
+    this.setState({ commentCount: count });
   }
   
   componentDidMount() {
@@ -115,7 +121,14 @@ class ActionContent extends React.Component {
                 <Link to="/"><h4>Toimenpiteet</h4></Link>
                 <h2 className="display-4">{data.attributes.identifier}</h2>
                 <h1 className="mb-4">{ data.attributes.name }</h1>
-                <p>7 kommenttia | <a href="#comments">osallistu keskusteluun</a></p>
+                <div> 
+                  {this.state.commentCount > 0 ? 
+                    <span>{this.state.commentCount} kommenttia</span>
+                    :
+                    <span>Ei kommentteja</span>
+                    }
+                  {' '}| <a href="#comments">osallistu keskusteluun</a>
+                </div>
               </Col>
             </Row>
           </Container>
@@ -123,11 +136,10 @@ class ActionContent extends React.Component {
         <Container className="mb-5">
           <Row>
             <Col md="6" lg="8">
-              <ActionSection>
-                { data.attributes.description ? 
-                <div dangerouslySetInnerHTML={{__html: data.attributes.description}}/> :
-                <h6>-</h6>}
-              </ActionSection>
+              
+              { data.attributes.description && 
+              <ActionSection dangerouslySetInnerHTML={{__html: data.attributes.description}}/>}
+              
               <ActionSection className="official-text">
                 <h5>Virallinen kuvaus</h5>
                 <strong>Toimenpideohjelman mukaisesti</strong>
@@ -208,7 +220,7 @@ class ActionContent extends React.Component {
               <Col sm="12" md={{ size: 8, offset: 2 }}>
                 <h2 className="mb-4">Kommentoi toimenpidettä <sup>nro</sup>{data.attributes.identifier}</h2>
                 <CommentForm section="hFz7Xjt0JJzMkKFslq1JqMwAusPeJ1er" onPost={this.reloadComments}/>
-                <CommentList section="hFz7Xjt0JJzMkKFslq1JqMwAusPeJ1er" newMessages={this.state.newMessages} refresh={this.state.newComments}/>
+                <CommentList section="hFz7Xjt0JJzMkKFslq1JqMwAusPeJ1er" newMessages={this.state.newMessages} refresh={this.state.newComments} updateCount={this.countComments}/>
               </Col>
             </Row>
           </Container>
