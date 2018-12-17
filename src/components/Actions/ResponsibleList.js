@@ -16,9 +16,12 @@ class ResponsibleList extends React.Component {
     return (
       <Responsibles>
         <h5>Vastuuorganisaatiot</h5>
-        {this.props.data.map((item,index) => (
-          <BadgeTooltip key={index} name={item.attributes.name} abbreviation={item.attributes.abbreviation}/>
-          ))}
+        { this.props.data ?
+          this.props.data.map((item,index) => (
+            <BadgeTooltip key={index} name={item.attributes.name} abbreviation={item.attributes.abbreviation}/>
+            )) :
+          <h6>Ei merkittyjä vastuuorganisaatioita</h6>
+        }
       </Responsibles>
     );
   }

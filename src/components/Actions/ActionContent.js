@@ -6,6 +6,7 @@ import TimeSeries from '../Graphs/TimeSeries';
 import Timeline from '../Graphs/Timeline';
 import TaskList from './TaskList';
 import ResponsibleList from './ResponsibleList';
+import ContactPersons from './ContactPersons';
 import ContentLoader from '../Common/ContentLoader';
 import CommentForm from '../Comments/CommentForm';
 import CommentList from '../Comments/CommentList';
@@ -57,12 +58,17 @@ class ActionContent extends React.Component {
     })
     .then(
       (result) => {
-        const responsibles = result.data.included.filter(function(item) {
-          return item.type === "organization";
-        });
-        const tasks = result.data.included.filter(function(item) {
-          return item.type === "action_task";
-        })
+        let responsibles, tasks = []; 
+        console.log(JSON.stringify(result.data));
+        if (result.data.included) {
+          responsibles = result.data.included.filter(function(item) {
+            return item.type === "organization";
+          });
+          tasks = result.data.included.filter(function(item) {
+            return item.type === "action_task";
+          });
+        };
+        console.log("responsibles: " + responsibles + "  tasks: " + tasks);
         this.setState({
           isLoaded: true,
           data: result.data.data,
@@ -124,14 +130,11 @@ class ActionContent extends React.Component {
               </ActionSection>
             </Col>
             <Col md="6" lg="4">
-              {responsibles  &&
-                <ActionSection>
-                  <ResponsibleList data={responsibles}/>
-                </ActionSection>
-              }
               <ActionSection>
-                <h5>Yhteyshenkilö</h5>
-                <p><strong>Eini Eksamble</strong> [Ota yhteyttä]</p>
+                <ResponsibleList data={responsibles}/>
+              </ActionSection>
+              <ActionSection>
+                <ContactPersons data={data.attributes.contact_persons}/>
               </ActionSection>
               <ActionSection>
                 <h5>Eteneminen</h5>
