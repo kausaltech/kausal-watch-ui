@@ -40,9 +40,9 @@ class TaskList extends React.Component {
               <div className="task-header">
                 <Date>{this.parseTimestamp(item.attributes.due_at)}</Date>
                 {' '}|{' '}
-                { item.attributes.name }
+                <span dangerouslySetInnerHTML={{__html: item.attributes.name}}/>
               </div>
-              <div><small>{ item.attributes.comment }</small></div>
+              <div><small><span dangerouslySetInnerHTML={{__html: item.attributes.comment}}/></small></div>
             </ListGroupItem>
           ));
     
@@ -52,9 +52,9 @@ class TaskList extends React.Component {
               <div className="task-header">
                 <Date>{this.parseTimestamp(item.attributes.due_at)}</Date>
                 {' '}|{' '}
-                { item.attributes.name }
+                <span dangerouslySetInnerHTML={{__html: item.attributes.name}}/>
               </div>
-              <div><small>{ item.attributes.comment }</small></div>
+              <div><small><span dangerouslySetInnerHTML={{__html: item.attributes.comment}}/></small></div>
             </ListGroupItem>
           ));
     

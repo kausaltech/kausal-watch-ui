@@ -125,13 +125,13 @@ class ActionContent extends React.Component {
             <Col md="6" lg="8">
               <ActionSection>
                 { data.attributes.description ? 
-                data.attributes.description :
+                <div dangerouslySetInnerHTML={{__html: data.attributes.description}}/> :
                 <h6>-</h6>}
               </ActionSection>
               <ActionSection className="official-text">
                 <h5>Virallinen kuvaus</h5>
                 <strong>Toimenpideohjelman mukaisesti</strong>
-                <p>{data.attributes.name}</p>
+                <div dangerouslySetInnerHTML={{__html: data.attributes.official_name}}/>
                 <small>(Hiilineutraali Helsinki 2035 toimenpideohjelmasta)</small>
               </ActionSection>
             </Col>
