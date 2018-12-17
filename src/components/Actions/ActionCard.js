@@ -42,9 +42,12 @@ class ActionCard extends React.Component {
         </Link>
         <CardBody>
           <Link to={actionSlug} >
-          <StyledCardTitle>
-            {this.props.name.substring(0,120)}&#8230;
-          </StyledCardTitle>
+          
+            { this.props.name.length > 120 ?
+              <StyledCardTitle>{this.props.name.substring(0,120)}&#8230;</StyledCardTitle>
+              :
+              <StyledCardTitle>{this.props.name}</StyledCardTitle> }
+          
             { (this.props.statusIdentifier == "late" || this.props.statusIdentifier == "severely_late") &&
               <ActionStatus name={this.props.statusName} identifier={this.props.statusIdentifier} />
             }
