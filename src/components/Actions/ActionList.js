@@ -11,6 +11,7 @@ class ActionList extends React.Component {
     this.getCategories = this.getCategories.bind(this);
     this.getCategoryName = this.getCategoryName.bind(this);
     this.getRootCategory = this.getRootCategory.bind(this);
+    this.getStatusInfo = this.getStatusInfo.bind(this);
   }
 
   getCategoryName(catId) {
@@ -21,6 +22,19 @@ class ActionList extends React.Component {
     else return "Unknown";
   }
 
+  getStatusInfo(action) {
+    let stat = this.props.statuses.filter(inc => inc.id === action.relationships.status.data.id);
+    let statName = "Ei määritelty";
+    let statIdentifier = "unknown";
+    
+    if (stat[0] != null) {
+      statName = stat[0].attributes.name;
+      statIdentifier = stat[0].attributes.identifier;
+    }
+    
+    return { name: statName, identifier: statIdentifier };
+  }
+  
   getOrganizationName(orgId) {
     let org = this.props.orgs.filter(inc => inc.id === orgId);
     if (org[0] != null) {
@@ -79,6 +93,8 @@ class ActionList extends React.Component {
                 themeId={item.rootCategory} 
                 orgs={this.getOrganizations(item)} 
                 progress={item.attributes.completion} 
+                statusName={this.getStatusInfo(item).name}
+                statusIdentifier={this.getStatusInfo(item).identifier}
                 />
             </Col>
           ))}

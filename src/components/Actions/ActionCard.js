@@ -4,6 +4,7 @@ import { Card, CardImgOverlay, CardBody,
 
 import { Link } from "gatsby";
 import ActionImage from './ActionImage';
+import ActionStatus from './ActionStatus';
 import styled from 'styled-components';
 
 
@@ -29,9 +30,7 @@ class ActionCard extends React.Component {
 
   render() {
     let actionSlug = "action/" + this.props.id;
-    let progressStatuses = ["not_started", "on_time", "late", "severely_late"];
-    let progressVerbose = ["Ei aloitettu", "Etenee ajallaan", "Myöhässä", "Pahasti myöhässä"];
-    let progressLottery = Math.floor(Math.random() * Math.floor(4));
+
     return (
       <Card>
         <Link to={actionSlug} >
@@ -44,11 +43,11 @@ class ActionCard extends React.Component {
         <CardBody>
           <Link to={actionSlug} >
           <StyledCardTitle>
-            {this.props.name.substring(0,60)}&#8230;
+            {this.props.name.substring(0,120)}&#8230;
           </StyledCardTitle>
-          { progressLottery > 1 && 
-              <Badge className={`bg-${progressStatuses[progressLottery]}`}>{progressVerbose[progressLottery]}</Badge>
-          }
+            { (this.props.statusIdentifier == "late" || this.props.statusIdentifier == "severely_late") &&
+              <ActionStatus name={this.props.statusName} identifier={this.props.statusIdentifier} />
+            }
           </Link>    
         </CardBody>
       </Card>

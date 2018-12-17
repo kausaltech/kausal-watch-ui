@@ -14,6 +14,7 @@ class ActionListFiltered extends React.Component {
       data: [],
       categories: [],
       orgs: [],
+      statuses: [],  
       activeCategory: '',
       activeOrganization: '',
       activeSearch: '',
@@ -26,7 +27,7 @@ class ActionListFiltered extends React.Component {
     const apiUrl= `${process.env.GATSBY_HNH_API}/action/`;
     axios.get(apiUrl, {
       params: {
-        include: "categories,categories.parent,categories.parent.parent,responsible_parties",
+        include: "status,categories,categories.parent,categories.parent.parent,responsible_parties",
         "fields[action]": "identifier,name,categories,responsible_parties,status,completion",
         "fields[category]": "identifier,name,parent",
         "fields[organization]": "name,abbreviation,parent",
@@ -44,9 +45,14 @@ class ActionListFiltered extends React.Component {
           return item.type === "organization";
         });
         
+        const statuses = result.data.included.filter(function(item) {
+          return item.type === "action_status";
+        });
+        
         this.setState({
           categories: categories,
-          orgs: orgs
+          orgs: orgs,
+          statuses: statuses
         });
         
         result.data.data.map(item => {
@@ -120,12 +126,11 @@ class ActionListFiltered extends React.Component {
   }
   
   render() {
-
       return (
         <div>
           <h1 className="mb-4">Toimenpiteet</h1>
           <ActionListFilters cats={this.state.categories} orgs={this.state.orgs} changeOption={this.handleChange} /> 
-          <ActionList data={this.state.data} cats={this.state.categories} orgs={this.state.orgs} error={this.state.error} isLoaded={this.state.isLoaded} />
+          <ActionList data={this.state.data} cats={this.state.categories} orgs={this.state.orgs} error={this.state.error} statuses={this.state.statuses} isLoaded={this.state.isLoaded} />
         </div>
       );
     }
