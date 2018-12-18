@@ -10,6 +10,12 @@ h1, h2, h3 , h4, h5 {
   line-height: 1;
 }
 
+blockquote {
+  margin-left: 2em;
+  padding-left: 1em;
+  border-left: #cccccc 3px solid;
+}
+
 .badge-pill {
   border-radius: 10rem;
 }
