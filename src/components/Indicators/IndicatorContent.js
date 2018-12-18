@@ -1,15 +1,14 @@
 import React from 'react';
 import axios from 'axios';
-import { Jumbotron, Alert, Container, Row, Col } from 'reactstrap';
+import { Jumbotron as BaseJumbotron, Alert, Container, Row, Col } from 'reactstrap';
 import ContentLoader from '../Common/ContentLoader';
 import IndicatorGraph from '../Graphs/IndicatorGraph';
 
 import styled from 'styled-components';
 
 
-const IndicatorHero = styled(Jumbotron)`
-  margin-bottom: 3rem;
-  background-color: #998866;
+const IndicatorHero = styled(BaseJumbotron)`
+  margin-bottom: 2rem;
 `
 
 
