@@ -1,6 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import { ListGroup, ListGroupItem as BaseListGroupItem} from 'reactstrap';
+import HelIcon from '../Common/HelIcon';
 
 import styled from 'styled-components';
 
@@ -32,13 +33,19 @@ class TaskList extends React.Component {
   }
 
   render() {
-    const sortedTasks = this.props.data.sort((a,b) => moment(a.attributes.due_at).diff(moment(b.attributes.due_at)));
+    const sortedTasks = this.props.data.sort((a,b) => {
+      let bdate, adate;
+      a.attributes.completed_at ? adate=a.attributes.completed_at : adate=a.attributes.due_at;
+      b.attributes.completed_at ? bdate=b.attributes.completed_at : bdate=b.attributes.due_at;
+      return moment(adate).diff(moment(bdate));
+    });
     
     const doneTasks = sortedTasks.map((item,index) => (
             item.attributes.completed_at !== null &&
             <ListGroupItem key={item.id} className={`state--${item.attributes.state}`}>
               <div className="task-header">
-                <Date>{this.parseTimestamp(item.attributes.due_at)}</Date>
+                <HelIcon iconName="check" className="text-black-50 mr-3"/>
+                <Date>{this.parseTimestamp(item.attributes.completed_at)}</Date>
                 {' '}|{' '}
                 <span dangerouslySetInnerHTML={{__html: item.attributes.name}}/>
               </div>
@@ -50,6 +57,7 @@ class TaskList extends React.Component {
             item.attributes.completed_at === null &&
             <ListGroupItem key={item.id} className={`state--${item.attributes.state}`}>
               <div className="task-header">
+                <HelIcon iconName="calendar" className="text-black-50 mr-3" />
                 <Date>{this.parseTimestamp(item.attributes.due_at)}</Date>
                 {' '}|{' '}
                 <span dangerouslySetInnerHTML={{__html: item.attributes.name}}/>
