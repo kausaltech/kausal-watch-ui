@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from 'axios';
+import { aplans } from '../../common/api';
 import { Jumbotron as BaseJumbotron, Alert, Container, Row, Col } from 'reactstrap';
 import ContentLoader from '../Common/ContentLoader';
 import IndicatorGraph from '../Graphs/IndicatorGraph';
@@ -26,12 +26,10 @@ class IndicatorContent extends React.Component {
   }
 
   componentDidMount() {
-    const apiUrl = `${process.env.GATSBY_HNH_API}/indicator/${this.props.indicator}/`;
-    axios.get(apiUrl, {
+    aplans.get(`indicator/${this.props.id}`, {
       params: {
         include: "related_effects.effect_indicator,related_effects.effect_indicator.latest_graph,related_causes.causal_indicator,related_causes.causal_indicator.latest_graph"
       },
-      headers: {'Accept': 'application/vnd.api+json'}
     })
     .then(
       (result) => {

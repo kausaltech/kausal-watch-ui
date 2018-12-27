@@ -1,8 +1,11 @@
 import React from 'react';
-import axios from 'axios';
- 
+import getConfig from 'next/config';
+
 import ActionListFilters from './ActionListFilters';
 import ActionList from './ActionList';
+
+import {aplans} from '../../common/api';
+
 
 class ActionListFiltered extends React.Component {
   constructor(props) {
@@ -24,16 +27,14 @@ class ActionListFiltered extends React.Component {
   }
 
   componentDidMount() {
-    const apiUrl= `${process.env.GATSBY_HNH_API}/action/`;
-    axios.get(apiUrl, {
+    aplans.get('action', {
       params: {
         include: "status,categories,categories.parent,categories.parent.parent,responsible_parties",
         "fields[action]": "identifier,name,categories,responsible_parties,status,completion",
         "fields[category]": "identifier,name,parent",
         "fields[organization]": "name,abbreviation,parent",
         "fields[action_status]": "identifier,name",
-      },
-      headers: {'Accept': 'application/vnd.api+json'}
+      }
     })
     .then(
       (result) => {
@@ -60,10 +61,11 @@ class ActionListFiltered extends React.Component {
           item.progress = Math.floor(Math.random() * Math.floor(100));
           return item;
         });
+        const data = result.data.data;
         this.setState({
           isLoaded: true,
-          data: result.data.data,
-          rawData: result.data.data
+          data: data,
+          rawData: data
         });
       }
     )

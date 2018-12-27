@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from 'axios';
+import { kerrokantasi as kkAPI } from '../../common/api';
 
 import { Alert }  from 'reactstrap';
 import Comment from './Comment';
@@ -19,7 +19,7 @@ class CommentList extends React.Component {
   }
 
   fetchComments(section) {
-    axios.get(process.env.GATSBY_KK_API + "/comment", {
+    kkAPI.get("comment", {
       params: {
         section: section
       }

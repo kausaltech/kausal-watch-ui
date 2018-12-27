@@ -1,6 +1,7 @@
 import React from 'react';
-import axios from 'axios';
-import { Link } from "gatsby";
+import PropTypes from 'prop-types';
+import { Link } from '../../routes';
+import { aplans } from '../../common/api';
 import { Container, Row, Col, Alert, Progress } from 'reactstrap';
 
 import Timeline from '../Graphs/Timeline';
@@ -59,12 +60,10 @@ class ActionContent extends React.Component {
   }
   
   componentDidMount() {
-    const apiUrl = `${process.env.GATSBY_HNH_API}/action/${this.props.action}/`;
-    axios.get(apiUrl,{
+    aplans.get(`action/${this.props.id}`, {
       params: {
         include: "responsible_parties,tasks,status,indicators"
       },
-      headers: {'Accept': 'application/vnd.api+json'}
     })
     .then(
       (result) => {
@@ -82,7 +81,7 @@ class ActionContent extends React.Component {
           indicators = result.data.included.filter(function(item) {
             return item.type === "indicator";
           });
-        };
+        }
 
         this.setState({
           isLoaded: true,
@@ -117,7 +116,11 @@ class ActionContent extends React.Component {
           <Container>
             <Row>
               <Col md="10">
-                <Link to="/"><h4>Toimenpiteet</h4></Link>
+                <Link route="/">
+                  <a>
+                    <h4>Toimenpiteet</h4>
+                  </a>
+                </Link>
                 <h2 className="display-4">{data.attributes.identifier}</h2>
                 <h1 className="mb-4">{ data.attributes.name }</h1>
                 <div> 
@@ -212,5 +215,9 @@ class ActionContent extends React.Component {
   }
 }
 }
+
+ActionContent.propTypes = {
+  id: PropTypes.string
+};
 
 export default ActionContent

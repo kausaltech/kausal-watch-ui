@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, CardBody, Col, Alert } from 'reactstrap';
-import axios from 'axios';
+import { aplans } from '../../common/api';
 import createPlotlyComponent from 'react-plotly.js/factory';
 
 import ContentLoader from '../Common/ContentLoader';
@@ -16,17 +16,12 @@ class IndicatorGraph extends React.Component {
   }
   
   componentDidMount() {
-    const apiUrl = `${process.env.GATSBY_HNH_API}/indicator_graph/${this.props.graphId}/`;
-    axios.get(apiUrl,{
-      headers: {'Accept': 'application/json'}
-    })
-    .then(
+    aplans.get(`indicator_graph/${this.props.graphId}/`).then(
       (result) => {
         this.setState({
           isLoaded: true,
-          data: result.data.data,
+          data: result.data.data.attributes.data,
         });
-        //console.log("indicator data:" + JSON.stringify(result.data.data));
       })
      .catch(
       (error) => {
@@ -40,7 +35,6 @@ class IndicatorGraph extends React.Component {
   
   render() {
     const { error, isLoaded, data } = this.state;
-
     if (error) {
       return <Alert color="danger">Error: {error.message}</Alert>;
     } else if (!isLoaded) {

@@ -1,20 +1,20 @@
 import React from 'react';
-import { Router } from '@reach/router';
 
 import Layout from '../../components/layout'
 import ActionContent from '../../components/Actions/ActionContent';
 
 class ActionPage extends React.Component {
-  
+  static async getInitialProps({ query }) {
+    return {id: query.id}
+  }
   render() {
+    const id = this.props.id
     return (
       <Layout>
-        <Router>
-          <ActionContent path="action/:action" />
-        </Router>
+        <ActionContent id={id} />
       </Layout>
     );
   }
-};
+}
 
 export default ActionPage;
