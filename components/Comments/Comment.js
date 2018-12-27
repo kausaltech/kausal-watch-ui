@@ -1,5 +1,5 @@
 import React from 'react';
-import moment from 'moment';
+import moment from '../../common/moment';
 import { Button } from 'reactstrap';
 import HelIcon from '../Common/HelIcon'
 

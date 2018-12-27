@@ -1,12 +1,13 @@
 const {resolve} = require('path');
-
+const webpack = require('webpack');
 const withSass = require('@zeit/next-sass')
 const withImages = require('next-images')
 const withManifest = require('next-manifest')
+const withBundleAnalyzer = require("@zeit/next-bundle-analyzer");
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin')
 
 
-const config = withManifest(withImages(withSass({
+const config = withBundleAnalyzer(withManifest(withImages(withSass({
   publicRuntimeConfig: { // Will be available on both server and client
     aplansApiBaseURL: process.env.APLANS_API_BASE_URL || 'https://hnh.teamy.fi/v1',
     kerrokantasiApiBaseURL: process.env.KERROKANTASI_API_BASE_URL || 'https://api.hel.fi/kerrokantasi-test/v1'
@@ -29,6 +30,18 @@ const config = withManifest(withImages(withSass({
       cache: true
     }
   },
+  analyzeServer: ["server", "both"].includes(process.env.BUNDLE_ANALYZE),
+  analyzeBrowser: ["browser", "both"].includes(process.env.BUNDLE_ANALYZE),
+  bundleAnalyzerConfig: {
+    server: {
+      analyzerMode: 'static',
+      reportFilename: '../bundles/server.html'
+    },
+    browser: {
+      analyzerMode: 'static',
+      reportFilename: '../bundles/client.html'
+    }
+  },
   webpack(config, { isServer, dev }) {
     // remove friendlyerrorsplugin
     config.plugins = config.plugins.filter((plugin) => plugin.constructor.name !== 'FriendlyErrorsWebpackPlugin')
@@ -37,8 +50,10 @@ const config = withManifest(withImages(withSass({
     if (dev && !isServer) {
       config.plugins.push(new FriendlyErrorsWebpackPlugin({ clearConsole: false }))
     }
+    // Ignore all locale files of moment.js
+    config.plugins.push(new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/))
     return config
   }
-})))
+}))))
 
 module.exports = config

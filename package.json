@@ -4,9 +4,11 @@
   "version": "1.0.0",
   "author": "Tero Tikkanen <tero.tikkanen@gmail.com>",
   "dependencies": {
+    "@zeit/next-bundle-analyzer": "^0.1.2",
     "@zeit/next-sass": "^1.0.1",
     "axios": "^0.18.0",
     "bootstrap": "^4.2.1",
+    "cachios": "^2.1.0",
     "dotenv": "^6.2.0",
     "express": "^4.16.4",
     "hel-icons": "^1.0.0-beta.3",
@@ -34,6 +36,7 @@
   "scripts": {
     "dev": "node server.js",
     "build": "next build",
+    "now-build": "yarn build",
     "start": "NODE_ENV=production node server.js"
   },
   "devDependencies": {

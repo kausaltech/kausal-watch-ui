@@ -5,13 +5,15 @@ import Layout from '../components/layout'
 import ActionListFiltered from '../components/Actions/ActionListFiltered'
 import IndexHero from '../components/IndexHero'
 
-import styled from 'styled-components';
+import { aplans } from '../common/api'
+import styled from 'styled-components'
+
 
 const ActionsSection = styled.div`
   background-color: ${props => props.theme.helSummer};
 `
 
-const IndexPage = () => (
+const IndexPage = (props) => (
   <Layout>
     <IndexHero />
     <ActionsSection className="actions-section">
@@ -29,10 +31,24 @@ const IndexPage = () => (
             </div>
           </Col>
         </Row>
-        <ActionListFiltered />
+        <ActionListFiltered initialData={props.actionData} />
       </Container>
     </ActionsSection>
   </Layout>
 )
+
+IndexPage.getInitialProps = async function({req}) {
+  let props = {}
+
+  /* When rendering on the server, load initial data here to pass to the
+   * component. This is better for social media shares and SEO. */
+  if (req) {
+    await aplans.enableCache()
+    const resp = await aplans.getActionList()
+    const actionData = resp.data
+    props.actionData = actionData
+  }
+  return props
+}
 
 export default IndexPage
