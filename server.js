@@ -7,16 +7,16 @@ const express = require('express')
 const app = next({dev: process.env.NODE_ENV !== 'production'})
 const handler = routes.getRequestHandler(app)
 
-const PORT = 3000
+const port = process.env.PORT || 3000
 
 app.prepare().then(() => {
   const server = express()
 
   server.use(morgan('dev'))
     .use(handler)
-    .listen(PORT, err => {
+    .listen(port, err => {
       if (err)
         throw err
-      console.log(`Ready on http://localhost:${PORT}`)
+      console.log(`Ready on http://localhost:${port}`)
     })
 })
