@@ -37,7 +37,6 @@ class ActionListFiltered extends React.Component {
       "fields[category]": ["identifier", "name", "parent"],
       "fields[organization]": ["name", "abbreviation", "parent"],
       "fields[action_status]": ["identifier", "name"],
-      "page[size]": 50
     })
 
     const props = {
