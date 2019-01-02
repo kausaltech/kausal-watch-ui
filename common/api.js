@@ -124,6 +124,39 @@ const betterResponseMiddleware = {
   }
 }
 
+const fixCyclicObjectsMiddleware = {
+  name: 'fix-cyclic-objects',
+  res: (payload) => {
+    function detect(path, obj) {
+      if (Array.isArray(obj)) {
+        for (const val of obj)
+          detect(path, val)
+        return
+      }
+      if (typeof obj !== 'object')
+        return
+      if (!obj)
+        return
+      if (!('id' in obj) || !('type' in obj))
+        return
+      const objId = `${obj.type}:${obj.id}`
+      if (path.indexOf(objId) !== -1) {
+        return true
+      }
+      path = path.concat([objId])
+      for (const key of Object.keys(obj)) {
+        if (detect(path, obj[key])) {
+          delete obj[key]
+        }
+      }
+      return false
+    }
+
+    detect([], payload.data)
+    return payload
+  }
+}
+
 class BetterJsonApi extends JsonApi {
   constructor(...args) {
     super(...args)
@@ -132,6 +165,7 @@ class BetterJsonApi extends JsonApi {
     this.insertMiddlewareAfter('datetime-deserializer', generateObjectStoreMiddleware)
     this._defaultResponseMiddleware = this.middleware.filter((mw) => { return mw.name == 'response'})[0]
     this.replaceMiddleware('response', betterResponseMiddleware)
+    this.insertMiddlewareAfter('better-response', fixCyclicObjectsMiddleware)
   }
 }
 
