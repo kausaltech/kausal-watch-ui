@@ -18,10 +18,10 @@ class ActionIndicators extends React.Component {
       <div>
         {this.props.indicators.map((indicator) =>
         <div key={indicator.id}>
-           {indicator.relationships.latest_graph.data  ?            
-              <IndicatorGraph graphId={indicator.relationships.latest_graph.data.id}/>
+           {(indicator.latest_graph && indicator.latest_graph.data) ?
+              <IndicatorGraph graphId={indicator.latest_graph.id}/>
                 :
-              <h2>{indicator.attributes.name} (ei graafia)</h2>
+              <h2>{indicator.name} (ei graafia)</h2>
             }
           <Alert className="mt-3 mb-5">
             Tämä mittari liittyy myös toimenpiteisiin: <Badge>25</Badge> <Badge>28</Badge> <Badge>30</Badge>

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from '../../routes';
 import { aplans } from '../../common/api';
-import { Container, Row, Col, Alert, Progress } from 'reactstrap';
+import { Container, Row, Col, Progress } from 'reactstrap';
 
 import Timeline from '../Graphs/Timeline';
 import TaskList from './TaskList';
@@ -10,7 +10,6 @@ import ResponsibleList from './ResponsibleList';
 import ContactPersons from './ContactPersons';
 import ActionStatus from './ActionStatus';
 import ActionIndicators from './ActionIndicators';
-import ContentLoader from '../Common/ContentLoader';
 import CommentForm from '../Comments/CommentForm';
 import CommentList from '../Comments/CommentList';
 
@@ -39,13 +38,8 @@ class ActionContent extends React.Component {
     this.state = {
       isLoaded: false,
       error: null,
-      data: [],
-      responsibles: [],
-      tasks: [],
-      statuses: [],
       newComments: false,
       commentCount: 0,
-      indicators: []
     };
     this.reloadComments = this.reloadComments.bind(this);
     this.countComments = this.countComments.bind(this);
@@ -58,58 +52,21 @@ class ActionContent extends React.Component {
   countComments(count) {
     this.setState({ commentCount: count });
   }
-  
-  componentDidMount() {
-    aplans.get(`action/${this.props.id}`, {
-      params: {
-        include: "responsible_parties,tasks,status,indicators"
-      },
-    })
-    .then(
-      (result) => {
-        let responsibles, tasks, statuses, indicators = []; 
-        if (result.data.included) {
-          responsibles = result.data.included.filter(function(item) {
-            return item.type === "organization";
-          });
-          tasks = result.data.included.filter(function(item) {
-            return item.type === "action_task";
-          });
-          statuses = result.data.included.filter(function(item) {
-            return item.type === "action_status";
-          });
-          indicators = result.data.included.filter(function(item) {
-            return item.type === "indicator";
-          });
-        }
 
-        this.setState({
-          isLoaded: true,
-          data: result.data.data,
-          responsibles: responsibles,
-          tasks: tasks,
-          statuses: statuses,
-          indicators: indicators
-        });
-      })
-     .catch(
-      (error) => {
-        this.setState({
-          isLoaded: true,
-          error: error
-        });
-      }
-    );
+  static async fetchData(actionId) {
+    // Fetches the data needed by this component from the API and
+    // returns them as props suitable for the component.
+    const resp = await aplans.find('action', actionId, {
+      include: ["responsible_parties", "tasks", "status", "indicators", "indicators.latest_graph"]
+    })
+    return {
+      action: resp.data
+    }
   }
   
   render() {
-    const { error, isLoaded, data, responsibles, tasks } = this.state;
+    const action = this.props.action
 
-    if (error) {
-      return <Alert color="danger">Error: {error.message}</Alert>;
-    } else if (!isLoaded) {
-      return <ContentLoader />;
-    } else {
     return (
       <div>
         <ActionHero>
@@ -121,8 +78,8 @@ class ActionContent extends React.Component {
                     <h4>Toimenpiteet</h4>
                   </a>
                 </Link>
-                <h2 className="display-4">{data.attributes.identifier}</h2>
-                <h1 className="mb-4">{ data.attributes.name }</h1>
+                <h2 className="display-4">{action.identifier}</h2>
+                <h1 className="mb-4">{action.name}</h1>
                 <div> 
                   {this.state.commentCount > 0 ? 
                     <span>{this.state.commentCount} kommenttia</span>
@@ -139,30 +96,30 @@ class ActionContent extends React.Component {
           <Row>
             <Col md="6" lg="8">
               
-              { data.attributes.description && 
-              <ActionSection dangerouslySetInnerHTML={{__html: data.attributes.description}}/>}
-              
+              {action.description && 
+              <ActionSection dangerouslySetInnerHTML={{__html: action.description}}/>}
+
               <ActionSection className="official-text">
                 <h5>Virallinen kuvaus</h5>
                 <strong>Toimenpideohjelman mukaisesti</strong>
-                <div dangerouslySetInnerHTML={{__html: data.attributes.official_name}}/>
-                <small>(Hiilineutraali Helsinki 2035 toimenpideohjelmasta)</small>
+                <div dangerouslySetInnerHTML={{__html: action.official_name}}/>
+                <small>(Hiilineutraali Helsinki 2035 -toimenpideohjelmasta)</small>
               </ActionSection>
             </Col>
             <Col md="6" lg="4">
               <ActionSection>
-                <ResponsibleList data={responsibles}/>
+                <ResponsibleList data={action.responsible_parties}/>
               </ActionSection>
               <ActionSection>
-                <ContactPersons data={data.attributes.contact_persons}/>
+                <ContactPersons data={action.contact_persons}/>
               </ActionSection>
               <ActionSection>
                 <h5>Eteneminen</h5>
-                { data.attributes.completion > 0 &&
-                <strong>{data.attributes.completion}% valmis</strong> }
-                <Progress value={data.attributes.completion} color="status" />
-                { data.relationships.status.data &&
-                  <ActionStatus name={this.state.statuses[0].attributes.name} identifier={this.state.statuses[0].attributes.identifier} />
+                { action.completion > 0 &&
+                <strong>{action.completion}% valmis</strong> }
+                <Progress value={action.completion} color="status" />
+                { action.status &&
+                  <ActionStatus name={action.status.name} identifier={action.status.identifier} />
                 }
               </ActionSection>
               <ActionSection>
@@ -180,7 +137,7 @@ class ActionContent extends React.Component {
           <Row>
             <Col>
               <ActionSection>
-                <TaskList data={tasks}/>
+                <TaskList data={action.tasks}/>
               </ActionSection>
             </Col>
           </Row>
@@ -191,8 +148,8 @@ class ActionContent extends React.Component {
           </Row>
           <Row>
             <Col sm="12">
-              {this.state.indicators.length > 0 ?
-                <ActionIndicators indicators={this.state.indicators}/>
+              {action.indicators.length > 0 ?
+                <ActionIndicators indicators={action.indicators}/>
                 :
                 <h6>Ei määriteltyjä mittareita</h6>
                 }
@@ -203,7 +160,7 @@ class ActionContent extends React.Component {
           <Container>
             <Row>
               <Col sm="12" md={{ size: 8, offset: 2 }}>
-                <h2 className="mb-4">Kommentoi toimenpidettä <sup>nro</sup>{data.attributes.identifier}</h2>
+                <h2 className="mb-4">Kommentoi toimenpidettä <sup>nro</sup>{action.identifier}</h2>
                 <CommentForm section="hFz7Xjt0JJzMkKFslq1JqMwAusPeJ1er" onPost={this.reloadComments}/>
                 <CommentList section="hFz7Xjt0JJzMkKFslq1JqMwAusPeJ1er" newMessages={this.state.newMessages} refresh={this.state.newComments} updateCount={this.countComments}/>
               </Col>
@@ -214,10 +171,9 @@ class ActionContent extends React.Component {
     );
   }
 }
-}
 
 ActionContent.propTypes = {
-  id: PropTypes.string
+  action: PropTypes.object.isRequired
 };
 
 export default ActionContent

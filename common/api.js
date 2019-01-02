@@ -247,6 +247,10 @@ aplans.define('action_task', {
 aplans.define('action_status', {
   name: '',
   identifier: '',
+  plan: {
+    jsonApi: 'hasOne',
+    type: 'plan'
+  },
 })
 
 aplans.define('category', {
@@ -262,6 +266,54 @@ aplans.define('category', {
     jsonApi: 'hasOne',
     type: 'category'
   },
+})
+
+aplans.define('indicator', {
+  name: '',
+  unit_name: '',
+  description: '',
+  time_resolution: '',
+  plan: {
+    jsonApi: 'hasOne',
+    type: 'plan'
+  },
+  unit: {
+    jsonApi: 'hasOne',
+    type: 'unit'
+  },
+  categories: {
+    jsonApi: 'hasMany',
+    type: 'category'
+  },
+  related_effects: {
+    jsonApi: 'hasMany',
+    type: 'indicator'
+  },
+  related_causes: {
+    jsonApi: 'hasMany',
+    type: 'indicator'
+  },
+  latest_graph: {
+    jsonApi: 'hasOne',
+    type: 'indicator_graph'
+  },
+  estimates: {
+    jsonApi: 'hasMany',
+    type: 'indicator_estimate',
+  },
+})
+
+aplans.define('indicator_graph', {
+  data: '',
+  created_at: 'datetime',
+  indicator: {
+    jsonApi: 'hasOne',
+    type: 'indicator'
+  },
+})
+
+aplans.define('unit', {
+  name: '',
 })
 
 class KerrokantasiAPI {
