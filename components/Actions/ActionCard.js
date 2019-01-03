@@ -38,11 +38,11 @@ class ActionCard extends React.Component {
       <Card>
         <Link route='action' params={{id: action.id}}>
           <a>
-            <ActionImage id={action.number} category={this.root_category}/>
+            <ActionImage id={action.identifier} category={this.root_category}/>
             <CardImgOverlay>
-              <ActionNumber className="action-number">{action.number}</ActionNumber>
+              <ActionNumber className="action-number">{action.identifier}</ActionNumber>
             </CardImgOverlay>
-            <Progress value={action.progress} color="status" />
+            <Progress value={action.completion} color="status" />
           </a>
         </Link>
         <CardBody>

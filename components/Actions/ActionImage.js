@@ -29,7 +29,7 @@ class ActionImage extends React.Component {
     let imageURL= "https://source.unsplash.com/" + catImages["default"] + "/400x150";
     
     return (
-      <ImgBg style={{height: 150}}>
+      <ImgBg>
         <CardImg top width="100%" src={ imageURL } alt="Action Image" />
       </ImgBg>
     )
