@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import ActionListFilters from './ActionListFilters';
 import ActionList from './ActionList';
@@ -11,75 +12,40 @@ class ActionListFiltered extends React.Component {
     super(props);
     this.state = {
       error: null,
-      isLoaded: false,
       activeCategory: '',
       activeOrganization: '',
       activeSearch: '',
-      actions: [],
-      orgs: [],
-      categories: []
     };
-    Object.assign(this.state, this.processResponse(props.initialData))
     this.handleChange = this.handleChange.bind(this);
-    this.getRootCategory = this.getRootCategory.bind(this);
-  }
 
-  processResponse(data) {
-    if (!data)
-      return {}
+    // Determine root categories
+    props.actions.forEach((action) => {
+      let category = action.categories[0]
 
-    const categories = data.included.filter(function(item) {
-      return item.type === "category";
-    });
-
-    const orgs = data.included.filter(function(item) {
-      return item.type === "organization";
-    });
-
-    const statuses = data.included.filter(function(item) {
-      return item.type === "action_status";
-    });
-
-    const actions = data.data.map(item => {
-      const rootCategory = this.getRootCategory(item.relationships.categories.data[0].id, categories);
-      const newItem = {...item, rootCategory}
-      return newItem
+      while (category.parent != null)
+        category = category.parent
+      action.root_category = category
     })
-    return {
-      categories,
-      orgs,
-      statuses,
-      actions,
-      isLoaded: true
-    }
   }
 
-  componentDidMount() {
-    if (this.state.isLoaded)
-      return
+  static async fetchData() {
+    // Fetches the data needed by this component from the API and
+    // returns them as props suitable for the component.
+    const resp = await aplans.findAll('action', {
+      include: ["status", "categories", "categories.parent", "categories.parent.parent", "responsible_parties"],
+      "fields[action]": ["identifier", "name", "categories", "responsible_parties", "status", "completion"],
+      "fields[category]": ["identifier", "name", "parent"],
+      "fields[organization]": ["name", "abbreviation", "parent"],
+      "fields[action_status]": ["identifier", "name"],
+    })
 
-    aplans.getActionList().then(
-      (result) => {
-        const newState = this.processResponse(result.data)
-        this.setState(newState)
-      }
-    ).catch(
-      (error) => {
-        this.setState({
-          isLoaded: true,
-          error: error
-        });
-      }
-    );
-  }
-  
-  getRootCategory(catId, cats) {
-    let category = cats.find(cat => cat.id === catId);
-    if (category.relationships.parent.data != null) {
-      let parentId = category.relationships.parent.data.id;
-      return this.getRootCategory(parentId, cats);
+    const props = {
+      actions: resp.data,
+      orgs: resp.store.getAll('organization'),
+      cats: resp.store.getAll('category')
     }
-    else return catId;
+
+    return props
   }
   
   handleChange(filterType, val) {
@@ -90,19 +56,19 @@ class ActionListFiltered extends React.Component {
   }
 
   filterActions() {
-    const actions = this.state.actions.filter(item => {
+    const actions = this.props.actions.filter(item => {
       const activeCat = this.state.activeCategory;
       const activeOrg = this.state.activeOrganization;
       const activeSearch = this.state.activeSearch;
 
-      if (activeCat && item.rootCategory != activeCat)
+      if (activeCat && item.root_category.id != activeCat)
         return false
       if (activeOrg) {
-        if (!item.relationships.responsible_parties.data.find(org => org.id == activeOrg))
+        if (!item.responsible_parties.find(org => org.id == activeOrg))
           return false
       }
       if (activeSearch) {
-        if (item.attributes.name.toLowerCase().search(activeSearch.toLowerCase()) == -1)
+        if (item.name.toLowerCase().search(activeSearch.toLowerCase()) == -1)
           return false
       }
       return true
@@ -113,15 +79,21 @@ class ActionListFiltered extends React.Component {
   
   render() {
     const actions = this.filterActions()
+
     return (
       <div>
         <h1 className="mb-4">Toimenpiteet</h1>
-        <ActionListFilters cats={this.state.categories} orgs={this.state.orgs} changeOption={this.handleChange} />
-        <ActionList data={actions} cats={this.state.categories} orgs={this.state.orgs} error={this.state.error} statuses={this.state.statuses} isLoaded={this.state.isLoaded} />
+        <ActionListFilters cats={this.props.cats} orgs={this.props.orgs} changeOption={this.handleChange} />
+        <ActionList actions={actions} error={this.state.error} />
       </div>
     );
   }
 }
 
+ActionListFiltered.propTypes = {
+  actions: PropTypes.arrayOf(PropTypes.object),
+  orgs: PropTypes.arrayOf(PropTypes.object),
+  cats: PropTypes.arrayOf(PropTypes.object)
+}
 
 export default ActionListFiltered

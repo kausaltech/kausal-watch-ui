@@ -1,5 +1,4 @@
 import React from 'react'
-import LazyLoad from 'react-lazyload';
 
 import { CardImg as BaseCardImg } from 'reactstrap';
 import styled from 'styled-components';
@@ -30,11 +29,9 @@ class ActionImage extends React.Component {
     let imageURL= "https://source.unsplash.com/" + catImages["default"] + "/400x150";
     
     return (
-      <LazyLoad height={150}>
-        <ImgBg>
-          <CardImg top width="100%" src={ imageURL } alt="Action Image" />
-        </ImgBg>
-      </LazyLoad>
+      <ImgBg>
+        <CardImg top width="100%" src={ imageURL } alt="Action Image" />
+      </ImgBg>
     )
   }
 }

@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types';
 import {Card, CardImgOverlay, CardBody,
   CardTitle, Progress} from 'reactstrap';
 import {Link} from '../../routes'
@@ -24,31 +25,32 @@ const StyledCardTitle = styled(CardTitle)`
 class ActionCard extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-    };
   }
 
   render() {
+    const action = this.props.action
+    let actionName = action.name
+
+    if (actionName.length > 120)
+      actionName = action.name.substring(0, 120) + '…'
+
     return (
       <Card>
-        <Link route='action' params={{id: this.props.id}}>
+        <Link route='action' params={{id: action.id}}>
           <a>
-            <ActionImage id={this.props.number} category={this.props.themeId}/>
+            <ActionImage id={action.identifier} category={this.root_category}/>
             <CardImgOverlay>
-              <ActionNumber className="action-number">{this.props.number}</ActionNumber>
+              <ActionNumber className="action-number">{action.identifier}</ActionNumber>
             </CardImgOverlay>
-            <Progress value={this.props.progress} color="status" />
+            <Progress value={action.completion} color="status" />
           </a>
         </Link>
         <CardBody>
-          <Link route='action' params={{id: this.props.id}}>
+          <Link route='action' params={{id: action.id}}>
             <a>
-              { this.props.name.length > 120 ?
-                <StyledCardTitle>{this.props.name.substring(0,120)}&#8230;</StyledCardTitle>
-                :
-                <StyledCardTitle>{this.props.name}</StyledCardTitle> }
-              { (this.props.statusIdentifier === "late" || this.props.statusIdentifier === "severely_late") &&
-                <ActionStatus name={this.props.statusName} identifier={this.props.statusIdentifier} />
+              <StyledCardTitle>{actionName}</StyledCardTitle>
+              { (action.status.identifier !== "late" || action.status.identifier === "severely_late") &&
+                <ActionStatus name={action.status.name} identifier={action.status.identifier} />
               }
             </a>
           </Link>
@@ -56,6 +58,9 @@ class ActionCard extends React.Component {
       </Card>
     );
   }
+}
+ActionCard.propTypes = {
+  action: PropTypes.object,
 }
 
 
