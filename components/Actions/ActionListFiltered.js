@@ -38,7 +38,6 @@ class ActionListFiltered extends React.Component {
       "fields[organization]": ["name", "abbreviation", "parent"],
       "fields[action_status]": ["identifier", "name"],
     })
-
     const props = {
       actions: resp.data,
       orgs: resp.store.getAll('organization'),
@@ -91,9 +90,9 @@ class ActionListFiltered extends React.Component {
 }
 
 ActionListFiltered.propTypes = {
-  actions: PropTypes.arrayOf(PropTypes.object),
-  orgs: PropTypes.arrayOf(PropTypes.object),
-  cats: PropTypes.arrayOf(PropTypes.object)
+  actions: PropTypes.arrayOf(PropTypes.object).isRequired,
+  orgs: PropTypes.arrayOf(PropTypes.object).isRequired,
+  cats: PropTypes.arrayOf(PropTypes.object).isRequired
 }
 
 export default ActionListFiltered
