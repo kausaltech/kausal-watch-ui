@@ -15,10 +15,10 @@ const Layout = ({ children }) => (
   <ThemeProvider theme={theme}>
     <div>
       <Head>
-        <title>Carbon Neutral Helsinki</title>
+        <title>Hiilineutraali Helsinki</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      <Header siteTitle="Carbon Neutral Helsinki" />
+      <Header siteTitle="Hiilineutraali Helsinki" />
       {children}
       <SiteFooter />
     </div>
