@@ -7,16 +7,16 @@ class BadgeTooltip extends React.Component {
 
     this.toggle = this.toggle.bind(this);
     this.state = {
-      tooltipOpen: false
+      tooltipOpen: false,
     };
   }
 
   toggle() {
     this.setState({
-      tooltipOpen: !this.state.tooltipOpen
+      tooltipOpen: !this.state.tooltipOpen,
     });
   }
-  
+
   render() {
     return (
       <span>

@@ -24,6 +24,6 @@ class ActionList extends React.Component {
 
 ActionList.propTypes = {
   actions: PropTypes.arrayOf(PropTypes.object),
-}
+};
 
-export default ActionList
+export default ActionList;

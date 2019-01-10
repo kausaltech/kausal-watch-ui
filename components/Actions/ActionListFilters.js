@@ -1,12 +1,14 @@
-import React from 'react'
+import React from 'react';
 
-import { CustomInput  as BaseCustomInput, Input, FormGroup, Label, Row, Col } from 'reactstrap';
+import {
+  CustomInput as BaseCustomInput, Input, FormGroup, Label, Row, Col,
+} from 'reactstrap';
 
 import styled from 'styled-components';
 
 const CustomInput = styled(BaseCustomInput)`
   background-color: transparent !important;
-`
+`;
 
 class ActionListFilters extends React.Component {
   constructor(props) {
@@ -17,58 +19,58 @@ class ActionListFilters extends React.Component {
       activeOrg: '',
       activeSearch: '',
     };
-    
+
     this.onOrgBtnClick = this.onOrgBtnClick.bind(this);
     this.onCatBtnClick = this.onCatBtnClick.bind(this);
     this.onSearchChange = this.onSearchChange.bind(this);
   }
-  
+
   onOrgBtnClick(evt) {
-    this.setState({ 
-      activeOrg: evt.target.value
+    this.setState({
+      activeOrg: evt.target.value,
     });
-    this.props.changeOption("Organization", evt.target.value);
+    this.props.changeOption('Organization', evt.target.value);
   }
 
   onCatBtnClick(evt) {
-    this.setState({ 
+    this.setState({
       activeCat: evt.target.value,
-      activeCatName: this.getCategoryName(evt.target.value) 
+      activeCatName: this.getCategoryName(evt.target.value),
     });
-    this.props.changeOption("Category", evt.target.value);
+    this.props.changeOption('Category', evt.target.value);
   }
-  
+
   onSearchChange(evt) {
-    this.setState({ 
-      activeSearch: evt.target.value
+    this.setState({
+      activeSearch: evt.target.value,
     });
-    this.props.changeOption("Search", evt.target.value);
+    this.props.changeOption('Search', evt.target.value);
   }
-  
+
   getCategoryName(catId) {
-    let cat = this.props.cats.find(cat => cat.id === catId);
+    const cat = this.props.cats.find(cat => cat.id === catId);
     return cat ? cat.attributes.name : 'Kaikki teemat';
   }
 
   getOrganizationName(orgId) {
-    let org = this.props.orgs.find(org => org.id === orgId);
+    const org = this.props.orgs.find(org => org.id === orgId);
     return org ? org.attributes.name : '?';
   }
-  
+
   render() {
-    let rootCategories = this.props.cats.filter(cat => cat.relationships.parent.data == null);
+    const rootCategories = this.props.cats.filter(cat => cat.relationships.parent.data == null);
     return (
       <div className="filters mb-5 text-left">
         <Row>
-         <Col sm="12" md={{ size: 6}}>
+          <Col sm="12" md={{ size: 6 }}>
             <FormGroup>
               <Label for="catfield">Rajaa teeman mukaan</Label>
               <CustomInput type="select" id="catfield" name="category" value={this.state.activeCat} onChange={this.onCatBtnClick} className="mb-2">
-              <option value="">Kaikki teemat</option>
-              {rootCategories.map(cat => (
+                <option value="">Kaikki teemat</option>
+                {rootCategories.map(cat => (
                   <option value={cat.id} key={cat.id}>{ this.getCategoryName(cat.id) }</option>
                 ))}
-            </CustomInput>
+              </CustomInput>
 
             </FormGroup>
           </Col>
@@ -78,9 +80,9 @@ class ActionListFilters extends React.Component {
               <CustomInput type="select" id="orgfield" name="organization" value={this.state.activeOrg} onChange={this.onOrgBtnClick} className="mb-2">
                 <option value="">Kaikki organisaatiot</option>
                 {this.props.orgs.map(org => (
-                    <option value={org.id} key={org.id}>{ this.getOrganizationName(org.id) }</option>
-                  ))}
-              </CustomInput> 
+                  <option value={org.id} key={org.id}>{ this.getOrganizationName(org.id) }</option>
+                ))}
+              </CustomInput>
             </FormGroup>
           </Col>
         </Row>
@@ -88,7 +90,7 @@ class ActionListFilters extends React.Component {
           <Col sm="12">
             <FormGroup>
               <Label for="searchfield">Etsi tekstistä</Label>
-              <Input name="search" id="searchfield" placeholder="Hae kuvauksista"  onChange={this.onSearchChange}/>
+              <Input name="search" id="searchfield" placeholder="Hae kuvauksista" onChange={this.onSearchChange} />
             </FormGroup>
           </Col>
         </Row>
@@ -97,4 +99,4 @@ class ActionListFilters extends React.Component {
   }
 }
 
-export default ActionListFilters
+export default ActionListFilters;

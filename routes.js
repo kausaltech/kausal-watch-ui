@@ -1,7 +1,7 @@
-const routes = require('next-routes')
+const routes = require('next-routes');
 
 
 module.exports = routes()
-.add('action', '/action/:id')
-.add('indicator', '/indicator/:id')
-.add('index', '/')
+  .add('action', '/action/:id')
+  .add('indicator', '/indicator/:id')
+  .add('index', '/');

@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 
 import styled, { keyframes } from 'styled-components';
 import helIcons from 'hel-icons/dist/symbol/svg/hel-icons.svg';
@@ -9,7 +9,7 @@ const Loader = styled.div`
   margin-bottom: 4rem;
   text-align: center;
   font-size: 4em;
-`
+`;
 
 const rotate360 = keyframes`
   from {
@@ -18,16 +18,16 @@ const rotate360 = keyframes`
   to {
     transform: rotate(360deg);
   }
-`
+`;
 
-const SpinIcon = styled.svg `
+const SpinIcon = styled.svg`
   animation: ${rotate360} infinite 2s linear;
   fill: #000000;
   width: 1em !important;
   height: 1em !important;
   vertical-align: -0.1em;
   overflow: hidden;
-`
+`;
 
 class ContentLoader extends React.Component {
   constructor(props) {
@@ -49,24 +49,24 @@ class ContentLoader extends React.Component {
   }
 
   enableMessage() {
-    this.setState({displayMessage: true});
+    this.setState({ displayMessage: true });
   }
 
   render() {
-    const {displayMessage} = this.state;
+    const { displayMessage } = this.state;
 
     if (!displayMessage) {
       return null;
     }
 
-    let iconUrl = `${helIcons}#sync`;
+    const iconUrl = `${helIcons}#sync`;
     return (
       <Loader>
-        <div><SpinIcon><use xlinkHref={iconUrl}></use></SpinIcon></div>
+        <div><SpinIcon><use xlinkHref={iconUrl} /></SpinIcon></div>
         <h5>Ladataan</h5>
       </Loader>
     );
   }
 }
 
-export default ContentLoader
+export default ContentLoader;

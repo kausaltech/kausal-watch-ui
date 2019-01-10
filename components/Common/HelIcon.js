@@ -3,12 +3,12 @@ import helIcons from 'hel-icons/dist/symbol/svg/hel-icons.svg';
 
 class HelIcon extends React.Component {
   render() {
-    let iconUrl = `${helIcons}#${this.props.iconName}`;
-    let styles = `icon ${this.props.className}`;
+    const iconUrl = `${helIcons}#${this.props.iconName}`;
+    const styles = `icon ${this.props.className}`;
     return (
-      <svg className={styles} aria-hidden="true"><use xlinkHref={iconUrl}></use></svg>
+      <svg className={styles} aria-hidden="true"><use xlinkHref={iconUrl} /></svg>
     );
   }
 }
 
-export default HelIcon
+export default HelIcon;

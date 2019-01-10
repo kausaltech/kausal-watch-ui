@@ -1,8 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {
+  Container, Row, Col, Progress,
+} from 'reactstrap';
+import styled from 'styled-components';
 import { Link } from '../../routes';
 import { aplans } from '../../common/api';
-import { Container, Row, Col, Progress } from 'reactstrap';
 
 import Timeline from '../Graphs/Timeline';
 import TaskList from './TaskList';
@@ -13,7 +16,6 @@ import ActionIndicators from './ActionIndicators';
 import CommentForm from '../Comments/CommentForm';
 import CommentList from '../Comments/CommentList';
 
-import styled from 'styled-components';
 
 const ActionHero = styled.div`
   background-color: ${props => props.theme.helSummer}; 
@@ -22,15 +24,15 @@ const ActionHero = styled.div`
   a {
     color: ${props => props.theme.helTram};
   }
-`
+`;
 
 const ActionSection = styled.section`
   margin-bottom: 3rem;
-`
+`;
 
 const CommentsSection = styled.section`
   background-color: ${props => props.theme.helTram}; 
-`
+`;
 
 class ActionContent extends React.Component {
   constructor(props) {
@@ -57,17 +59,17 @@ class ActionContent extends React.Component {
     // Fetches the data needed by this component from the API and
     // returns them as props suitable for the component.
     const resp = await aplans.findAll('action', {
-      "filter[identifier]": actionIdentifier,
-      "filter[plan.identifier]": "hnh2035",
-      include: ["responsible_parties", "tasks", "status", "indicators", "indicators.latest_graph"]
-    })
+      'filter[identifier]': actionIdentifier,
+      'filter[plan.identifier]': 'hnh2035',
+      include: ['responsible_parties', 'tasks', 'status', 'indicators', 'indicators.latest_graph'],
+    });
     return {
-      action: resp.data[0]
-    }
+      action: resp.data[0],
+    };
   }
-  
+
   render() {
-    const action = this.props.action
+    const action = this.props.action;
 
     return (
       <div>
@@ -82,13 +84,20 @@ class ActionContent extends React.Component {
                 </Link>
                 <h2 className="display-4">{action.identifier}</h2>
                 <h1 className="mb-4">{action.name}</h1>
-                <div> 
-                  {this.state.commentCount > 0 ? 
-                    <span>{this.state.commentCount} kommenttia</span>
-                    :
-                    <span>Ei kommentteja</span>
+                <div>
+                  {this.state.commentCount > 0
+                    ? (
+                      <span>
+                        {this.state.commentCount}
+                        {' '}
+kommenttia
+                      </span>
+                    )
+                    : <span>Ei kommentteja</span>
                     }
-                  {' '}| <a href="#comments">osallistu keskusteluun</a>
+                  {' '}
+|
+                  <a href="#comments">osallistu keskusteluun</a>
                 </div>
               </Col>
             </Row>
@@ -97,31 +106,36 @@ class ActionContent extends React.Component {
         <Container className="mb-5">
           <Row>
             <Col md="6" lg="8">
-              
-              {action.description && 
-              <ActionSection dangerouslySetInnerHTML={{__html: action.description}}/>}
+
+              {action.description
+              && <ActionSection dangerouslySetInnerHTML={{ __html: action.description }} />}
 
               <ActionSection className="official-text">
                 <h5>Virallinen kuvaus</h5>
                 <strong>Toimenpideohjelman mukaisesti</strong>
-                <div dangerouslySetInnerHTML={{__html: action.official_name}}/>
+                <div dangerouslySetInnerHTML={{ __html: action.official_name }} />
                 <small>(Hiilineutraali Helsinki 2035 -toimenpideohjelmasta)</small>
               </ActionSection>
             </Col>
             <Col md="6" lg="4">
               <ActionSection>
-                <ResponsibleList data={action.responsible_parties}/>
+                <ResponsibleList data={action.responsible_parties} />
               </ActionSection>
               <ActionSection>
-                <ContactPersons data={action.contact_persons}/>
+                <ContactPersons data={action.contact_persons} />
               </ActionSection>
               <ActionSection>
                 <h5>Eteneminen</h5>
-                { action.completion > 0 &&
-                <strong>{action.completion}% valmis</strong> }
+                { action.completion > 0
+                && (
+                <strong>
+                  {action.completion}
+% valmis
+                </strong>
+                ) }
                 <Progress value={action.completion} color="status" />
-                { action.status &&
-                  <ActionStatus name={action.status.name} identifier={action.status.identifier} />
+                { action.status
+                  && <ActionStatus name={action.status.name} identifier={action.status.identifier} />
                 }
               </ActionSection>
               <ActionSection>
@@ -130,7 +144,7 @@ class ActionContent extends React.Component {
               </ActionSection>
 
             </Col>
-          </Row> 
+          </Row>
           <Row>
             <Col>
               <h2 className="mb-5">Tehtävät</h2>
@@ -139,7 +153,7 @@ class ActionContent extends React.Component {
           <Row>
             <Col>
               <ActionSection>
-                <TaskList data={action.tasks}/>
+                <TaskList data={action.tasks} />
               </ActionSection>
             </Col>
           </Row>
@@ -150,21 +164,24 @@ class ActionContent extends React.Component {
           </Row>
           <Row>
             <Col sm="12">
-              {action.indicators.length > 0 ?
-                <ActionIndicators indicators={action.indicators}/>
-                :
-                <h6>Ei määriteltyjä mittareita</h6>
+              {action.indicators.length > 0
+                ? <ActionIndicators indicators={action.indicators} />
+                : <h6>Ei määriteltyjä mittareita</h6>
                 }
             </Col>
-          </Row> 
+          </Row>
         </Container>
         <CommentsSection className="comments-section" id="comments">
           <Container>
             <Row>
               <Col sm="12" md={{ size: 8, offset: 2 }}>
-                <h2 className="mb-4">Kommentoi toimenpidettä <sup>nro</sup>{action.identifier}</h2>
-                <CommentForm section="hFz7Xjt0JJzMkKFslq1JqMwAusPeJ1er" onPost={this.reloadComments}/>
-                <CommentList section="hFz7Xjt0JJzMkKFslq1JqMwAusPeJ1er" newMessages={this.state.newMessages} refresh={this.state.newComments} updateCount={this.countComments}/>
+                <h2 className="mb-4">
+Kommentoi toimenpidettä
+                  <sup>nro</sup>
+                  {action.identifier}
+                </h2>
+                <CommentForm section="hFz7Xjt0JJzMkKFslq1JqMwAusPeJ1er" onPost={this.reloadComments} />
+                <CommentList section="hFz7Xjt0JJzMkKFslq1JqMwAusPeJ1er" newMessages={this.state.newMessages} refresh={this.state.newComments} updateCount={this.countComments} />
               </Col>
             </Row>
           </Container>
@@ -175,7 +192,7 @@ class ActionContent extends React.Component {
 }
 
 ActionContent.propTypes = {
-  action: PropTypes.object.isRequired
+  action: PropTypes.object.isRequired,
 };
 
-export default ActionContent
+export default ActionContent;

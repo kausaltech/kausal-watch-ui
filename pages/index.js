@@ -1,42 +1,44 @@
-import React from 'react'
-import { Container, Row, Col, Alert } from 'reactstrap';
+import React from 'react';
+import {
+  Container, Row, Col, Alert,
+} from 'reactstrap';
 
-import Layout from '../components/layout'
-import ActionListFiltered from '../components/Actions/ActionListFiltered'
-import IndexHero from '../components/IndexHero'
+import styled from 'styled-components';
+import Layout from '../components/layout';
+import ActionListFiltered from '../components/Actions/ActionListFiltered';
+import IndexHero from '../components/IndexHero';
 import ContentLoader from '../components/Common/ContentLoader';
-
-import styled from 'styled-components'
 
 
 const ActionsSection = styled.div`
   background-color: ${props => props.theme.helSummer};
-`
+`;
 
 class IndexPage extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
-      actionListProps: props.actionListProps
-    }
+      actionListProps: props.actionListProps,
+    };
   }
+
   static async getInitialProps({ req }) {
-    let props = {}
+    const props = {};
 
     // When rendering on the server, load initial data here to pass to the
     // list component. Server-side-rendered content works better for social media
     // shares and SEO.
     if (req) {
-      props.actionListProps = await ActionListFiltered.fetchData()
+      props.actionListProps = await ActionListFiltered.fetchData();
     }
-    return props
+    return props;
   }
 
   async componentDidMount() {
     if (!this.state.actionListProps) {
       this.setState({
-        actionListProps: await ActionListFiltered.fetchData()
-      })
+        actionListProps: await ActionListFiltered.fetchData(),
+      });
     }
   }
 
@@ -44,9 +46,9 @@ class IndexPage extends React.Component {
     let actionList;
 
     if (this.state.actionListProps) {
-      actionList = <ActionListFiltered {...this.state.actionListProps} />
+      actionList = <ActionListFiltered {...this.state.actionListProps} />;
     } else {
-      actionList = <ContentLoader />
+      actionList = <ContentLoader />;
     }
     return (
       <Layout>
@@ -56,7 +58,8 @@ class IndexPage extends React.Component {
             <Row>
               <Col sm="12" md={{ size: 8, offset: 2 }} className="footer-column">
                 <Alert color="warning" className="mb-5">
-                  <strong>HUOM:</strong>Tämä on palvelun Alpha-kehitysversio. Sivustolla saattaa esiintyä
+                  <strong>HUOM:</strong>
+Tämä on palvelun Alpha-kehitysversio. Sivustolla saattaa esiintyä
                   esimerkinomaisia sisältöjä jotka eivät perustu todellisiin tietoihin sekä toiminnallisuuksia,
                   jotka ovat vielä kehitysvaiheessa.
                 </Alert>
@@ -81,8 +84,8 @@ class IndexPage extends React.Component {
           </Container>
         </ActionsSection>
       </Layout>
-    )
+    );
   }
 }
 
-export default IndexPage
+export default IndexPage;

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import ActionListFilters from './ActionListFilters';
 import ActionList from './ActionList';
 
-import {aplans} from '../../common/api';
+import { aplans } from '../../common/api';
 
 
 class ActionListFiltered extends React.Component {
@@ -20,64 +20,60 @@ class ActionListFiltered extends React.Component {
 
     // Determine root categories
     props.actions.forEach((action) => {
-      let category = action.categories[0]
+      let category = action.categories[0];
 
-      while (category.parent != null)
-        category = category.parent
-      action.root_category = category
-    })
+      while (category.parent != null) category = category.parent;
+      action.root_category = category;
+    });
   }
 
   static async fetchData() {
     // Fetches the data needed by this component from the API and
     // returns them as props suitable for the component.
     const resp = await aplans.findAll('action', {
-      include: ["status", "categories", "categories.parent", "categories.parent.parent", "responsible_parties"],
-      "fields[action]": ["identifier", "name", "categories", "responsible_parties", "status", "completion"],
-      "fields[category]": ["identifier", "name", "parent"],
-      "fields[organization]": ["name", "abbreviation", "parent"],
-      "fields[action_status]": ["identifier", "name"],
-    })
+      include: ['status', 'categories', 'categories.parent', 'categories.parent.parent', 'responsible_parties'],
+      'fields[action]': ['identifier', 'name', 'categories', 'responsible_parties', 'status', 'completion'],
+      'fields[category]': ['identifier', 'name', 'parent'],
+      'fields[organization]': ['name', 'abbreviation', 'parent'],
+      'fields[action_status]': ['identifier', 'name'],
+    });
     const props = {
       actions: resp.data,
       orgs: resp.store.getAll('organization'),
-      cats: resp.store.getAll('category')
-    }
+      cats: resp.store.getAll('category'),
+    };
 
-    return props
+    return props;
   }
-  
+
   handleChange(filterType, val) {
-    const change = "active" + filterType;
+    const change = `active${filterType}`;
     this.setState({
-      [change]: val
+      [change]: val,
     });
   }
 
   filterActions() {
-    const actions = this.props.actions.filter(item => {
+    const actions = this.props.actions.filter((item) => {
       const activeCat = this.state.activeCategory;
       const activeOrg = this.state.activeOrganization;
       const activeSearch = this.state.activeSearch;
 
-      if (activeCat && item.root_category.id != activeCat)
-        return false
+      if (activeCat && item.root_category.id != activeCat) return false;
       if (activeOrg) {
-        if (!item.responsible_parties.find(org => org.id == activeOrg))
-          return false
+        if (!item.responsible_parties.find(org => org.id == activeOrg)) return false;
       }
       if (activeSearch) {
-        if (item.name.toLowerCase().search(activeSearch.toLowerCase()) == -1)
-          return false
+        if (item.name.toLowerCase().search(activeSearch.toLowerCase()) == -1) return false;
       }
-      return true
-    })
+      return true;
+    });
 
     return actions;
   }
-  
+
   render() {
-    const actions = this.filterActions()
+    const actions = this.filterActions();
 
     return (
       <div>
@@ -92,7 +88,7 @@ class ActionListFiltered extends React.Component {
 ActionListFiltered.propTypes = {
   actions: PropTypes.arrayOf(PropTypes.object).isRequired,
   orgs: PropTypes.arrayOf(PropTypes.object).isRequired,
-  cats: PropTypes.arrayOf(PropTypes.object).isRequired
-}
+  cats: PropTypes.arrayOf(PropTypes.object).isRequired,
+};
 
-export default ActionListFiltered
+export default ActionListFiltered;

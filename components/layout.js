@@ -1,12 +1,12 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import Head from 'next/head'
+import React from 'react';
+import PropTypes from 'prop-types';
+import Head from 'next/head';
 
 import { ThemeProvider } from 'styled-components';
 
-import Header from './header'
-import SiteFooter from './SiteFooter'
-import "../styles/main.scss"
+import Header from './header';
+import SiteFooter from './SiteFooter';
+import '../styles/main.scss';
 
 const theme = require('sass-extract-loader?{"plugins": ["sass-extract-js"]}!open-city-design/src/scss/helsinki/_colors.scss');
 
@@ -23,10 +23,10 @@ const Layout = ({ children }) => (
       <SiteFooter />
     </div>
   </ThemeProvider>
-)
+);
 
 Layout.propTypes = {
   children: PropTypes.node.isRequired,
-}
+};
 
-export default Layout
+export default Layout;

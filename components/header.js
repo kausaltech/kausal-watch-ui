@@ -1,30 +1,30 @@
-import React from 'react'
+import React from 'react';
 import PropTypes from 'prop-types';
-import {Link} from '../routes'
-import {Navbar} from 'reactstrap';
+import { Navbar } from 'reactstrap';
 
 import styled from 'styled-components';
+import { Link } from '../routes';
 
 const TopNav = styled(Navbar)`
   background-color: ${props => props.theme.helTram};
-`
+`;
 
 const BotNav = styled(Navbar)`
   background-color: ${props => props.theme.white};
   color: ${props => props.theme.helTram};
-`
+`;
 
 const Logo = styled.div`
   width: 5em;
   height: 2em;
-`
+`;
 
-const Header = ({siteTitle}) => (
+const Header = ({ siteTitle }) => (
   <div>
     <TopNav expand="md">
       <Link route="/">
         <a aria-label="Helsinki, palvelun etusivu" className="navbar-brand">
-          <Logo aria-hidden="true" className="hel-logo-summer"/>
+          <Logo aria-hidden="true" className="hel-logo-summer" />
         </a>
       </Link>
     </TopNav>
@@ -34,9 +34,9 @@ const Header = ({siteTitle}) => (
       </Link>
     </BotNav>
   </div>
-)
+);
 Header.propTypes = {
-  siteTitle: PropTypes.string.isRequired
-}
+  siteTitle: PropTypes.string.isRequired,
+};
 
-export default Header
+export default Header;
