@@ -1,13 +1,22 @@
 import React from 'react'
-import { Container } from 'reactstrap';
+import {Link} from '../routes';
 
+import { Container } from 'reactstrap';
 import styled from 'styled-components';
+import HelIcon from './Common/HelIcon';
 
 const TimeScaleBanner = styled.div`
   background-color: ${props => props.theme.helSummer};
 `
+
 const EmissionScaleBanner = styled.div`
   background-color: ${props => props.theme.helTram};
+`
+
+const ReadMoreLink = styled.a`
+  color: inherit;
+  text-decoration: none;
+  font-weight: 600;
 `
 
 const IndexHero = () => (
@@ -16,15 +25,22 @@ const IndexHero = () => (
       <Container>
         <p className="lead">Nykyisellä vähennysnopeudella</p>
         <h1 className="display-5">Helsinki on Hiilineutraali</h1>
-        <h2 className="display-4">23.3.2076</h2>
-        <p>Lue lisää >></p>
+        <h2 className="display-4">29.1.2079</h2>
+        <Link route='indicator' params={{id: 5}}><ReadMoreLink>
+        Lue lisää <HelIcon iconName="arrow-right" />
+        </ReadMoreLink></Link>
+
       </Container>
     </TimeScaleBanner>
     <EmissionScaleBanner className="hero-banner-bottom">
       <Container>
-        <h1 className="display-5">Vähennettävää vielä</h1>
-        <h2 className="display-4">1 780 0000 t CO<sub>2</sub>e</h2>
-        <p>Lue lisää >></p>
+        <p className="lead">Tavoitteen saavuttamiseksi</p>
+        <h1 className="display-5">vuositasolla vähennettävä vielä</h1>
+        <h2 className="display-4">3 814 000 t CO<sub>2</sub>e</h2>
+        <Link route='indicator' params={{id: 5}}><ReadMoreLink>
+        Lue lisää <HelIcon iconName="arrow-right" />
+        </ReadMoreLink></Link>
+
       </Container>
     </EmissionScaleBanner>
   </div>
