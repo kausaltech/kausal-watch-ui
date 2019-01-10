@@ -53,14 +53,16 @@ class ActionContent extends React.Component {
     this.setState({ commentCount: count });
   }
 
-  static async fetchData(actionId) {
+  static async fetchData(actionIdentifier) {
     // Fetches the data needed by this component from the API and
     // returns them as props suitable for the component.
-    const resp = await aplans.find('action', actionId, {
+    const resp = await aplans.findAll('action', {
+      "filter[identifier]": actionIdentifier,
+      "filter[plan.identifier]": "hnh2035",
       include: ["responsible_parties", "tasks", "status", "indicators", "indicators.latest_graph"]
     })
     return {
-      action: resp.data
+      action: resp.data[0]
     }
   }
   

@@ -36,7 +36,7 @@ class ActionCard extends React.Component {
 
     return (
       <Card>
-        <Link route='action' params={{id: action.id}}>
+        <Link route='action' params={{id: action.identifier}}>
           <a>
             <ActionImage id={action.identifier} category={this.root_category}/>
             <CardImgOverlay>
