@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from '../../routes';
 import {
   Jumbotron as BaseJumbotron, Alert, Container, Row, Col,
 } from 'reactstrap';
@@ -77,7 +78,7 @@ Error:
       <div className="mb-5">
         <IndicatorHero>
           <Container>
-            <h5>Indikaattorit</h5>
+            <h5><Link route="indicators"><a>Indikaattorit</a></Link></h5>
             <h1>{data.data.attributes.name}</h1>
             <div className="mt-4" dangerouslySetInnerHTML={{ __html: data.data.attributes.description }} />
           </Container>
