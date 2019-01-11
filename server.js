@@ -48,7 +48,9 @@ function handleRoute({
     return res.send(ssrCache.get(cacheKey));
   }
   app.renderToHTML(req, res, route.page, query).then((html) => {
-    ssrCache.set(req.url, html);
+    if (res.statusCode === 200) {
+      ssrCache.set(req.url, html);
+    }
     res.setHeader('x-cache', 'MISS');
     res.send(html);
   })

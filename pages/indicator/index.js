@@ -1,25 +1,10 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-
-import Layout from '../../components/layout';
 import IndicatorContent from '../../components/Indicators/IndicatorContent';
+import DetailPage from '../../components/DetailPage';
 
-class IndicatorPage extends React.Component {
-  static async getInitialProps({ query }) {
-    console.log(query);
-    return { id: query.id };
-  }
 
-  render() {
-    return (
-      <Layout>
-        <IndicatorContent id={this.props.id} />
-      </Layout>
-    );
-  }
+class IndicatorPage extends DetailPage {
 }
-IndicatorPage.propTypes = {
-  id: PropTypes.string.isRequired,
-};
+
+IndicatorPage.PageContentComponent = IndicatorContent;
 
 export default IndicatorPage;

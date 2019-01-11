@@ -49,7 +49,7 @@ class ActionCard extends React.Component {
         <CardBody>
           <Link route="action" params={{ id: action.id }} passHref={ true }>
             <a>
-              <StyledCardTitle>{actionName}</StyledCardTitle>
+              <StyledCardTitle tag='h5'>{actionName}</StyledCardTitle>
               { (action.status.identifier !== 'late' || action.status.identifier === 'severely_late')
                 && <ActionStatus name={action.status.name} identifier={action.status.identifier} />
               }

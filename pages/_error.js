@@ -12,12 +12,12 @@ export default class Error extends React.Component {
     const statusCode = this.props.statusCode;
 
     if (statusCode) {
-      errorMessage = `An error ${statusCode} occurred `;
-      if (statusCode == 404) {
-        errorMessage = 'Page not found';
+      errorMessage = `Virhe ${statusCode}`;
+      if (statusCode === 404) {
+        errorMessage = 'Sivua ei löydy';
       }
     } else {
-      errorMessage = 'An error occurred on the client';
+      errorMessage = 'Tapahtui virhe';
     }
     return (
       <Layout>

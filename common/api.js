@@ -9,7 +9,7 @@ const { publicRuntimeConfig } = getConfig();
 const paramsArraySerializerMiddleware = {
   name: 'params-serializer',
   req: (payload) => {
-    const req = payload.req;
+    const { req } = payload;
 
     if (req.method === 'GET') {
       const params = { ...req.params };
@@ -27,9 +27,9 @@ const paramsArraySerializerMiddleware = {
 };
 
 function forEachObject(payload, func) {
-  const jsonApi = payload.jsonApi;
+  const { jsonApi } = payload;
   const resData = payload.res.data;
-  const included = resData.included;
+  const { included } = resData;
   let objects = resData.data;
 
   if (!Array.isArray(objects)) objects = [objects];
@@ -39,9 +39,9 @@ function forEachObject(payload, func) {
   });
 
   if (included) {
-    resData.included.forEach((included) => {
-      const model = jsonApi.modelFor(included.type);
-      func(model, included);
+    resData.included.forEach((item) => {
+      const model = jsonApi.modelFor(item.type);
+      func(model, item);
     });
   }
 }
@@ -50,7 +50,7 @@ const datetimeDeserializerMiddleware = {
   name: 'datetime-deserializer',
   res: (payload) => {
     function deserializeModel(model, object) {
-      const attributes = object.attributes;
+      const { attributes } = object;
 
       Object.entries(model.attributes).forEach(([key, type]) => {
         const value = attributes[key];
@@ -78,7 +78,7 @@ class ObjectStore {
   }
 
   add(object) {
-    const type = object.type;
+    const { type } = object;
     const store = this._objects[type] || (this._objects[type] = {});
 
     store[object.id] = object;
@@ -126,22 +126,24 @@ const fixCyclicObjectsMiddleware = {
   res: (payload) => {
     function detect(path, obj) {
       if (Array.isArray(obj)) {
-        for (const val of obj) detect(path, val);
-        return;
+        obj.forEach((item) => {
+          detect(path, item);
+        });
+        return false;
       }
-      if (typeof obj !== 'object') return;
-      if (!obj) return;
-      if (!('id' in obj) || !('type' in obj)) return;
+      if (typeof obj !== 'object') return false;
+      if (!obj) return false;
+      if (!('id' in obj) || !('type' in obj)) return false;
       const objId = `${obj.type}:${obj.id}`;
       if (path.indexOf(objId) !== -1) {
         return true;
       }
-      path = path.concat([objId]);
-      for (const key of Object.keys(obj)) {
-        if (detect(path, obj[key])) {
+      const newPath = path.concat([objId]);
+      Object.keys(obj).forEach((key) => {
+        if (detect(newPath, obj[key])) {
           delete obj[key];
         }
-      }
+      });
       return false;
     }
 
@@ -185,7 +187,7 @@ aplans.getActionList = async function getActionList() {
 aplans.get = async function get(path, configIn) {
   let url = `${publicRuntimeConfig.aplansApiBaseURL}/${path}`;
   const config = { ...configIn, method: 'get' };
-  const headers = { ...headers };
+  const headers = { ...config.headers };
 
   if (!url.endsWith('/')) url += '/';
   config.url = url;
@@ -193,12 +195,13 @@ aplans.get = async function get(path, configIn) {
   headers.Accept = headers.Accept || 'application/vnd.api+json';
   config.headers = headers;
 
-  return await axios.request(config);
+  return axios.request(config);
 };
 
 
 aplans.define('plan', {
   name: '',
+  identifier: '',
 });
 
 aplans.define('action', {
@@ -208,6 +211,7 @@ aplans.define('action', {
   description: '',
   impact: 0,
   completion: 0,
+  updated_at: 'datetime',
   contact_persons: [],
   tasks: {
     jsonApi: 'hasMany',
@@ -298,6 +302,8 @@ aplans.define('indicator', {
   unit_name: '',
   description: '',
   time_resolution: '',
+  level: '',
+  updated_at: 'datetime',
   plan: {
     jsonApi: 'hasOne',
     type: 'plan',
@@ -332,6 +338,19 @@ aplans.define('indicator_graph', {
   data: '',
   created_at: 'datetime',
   indicator: {
+    jsonApi: 'hasOne',
+    type: 'indicator',
+  },
+});
+
+aplans.define('related_indicator', {
+  effect_type: '',
+  confidence_level: '',
+  causal_indicator: {
+    jsonApi: 'hasOne',
+    type: 'indicator',
+  },
+  effect_indicator: {
     jsonApi: 'hasOne',
     type: 'indicator',
   },

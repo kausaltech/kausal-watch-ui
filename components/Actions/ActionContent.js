@@ -35,11 +35,36 @@ const CommentsSection = styled.section`
 `;
 
 class ActionContent extends React.Component {
+  static async fetchData(actionIdentifier) {
+    // Fetches the data needed by this component from the API and
+    // returns them as props suitable for the component.
+    if (!actionIdentifier) {
+      throw new Error('Identifier not supplied');
+    }
+    const resp = await aplans.findAll('action', {
+      'filter[identifier]': actionIdentifier,
+      'filter[plan.identifier]': 'hnh2035',
+      include: ['responsible_parties', 'tasks', 'status', 'indicators', 'indicators.latest_graph'],
+    });
+    if (!resp.data || resp.data.length < 1) {
+      return null;
+    }
+    return {
+      action: resp.data[0],
+    };
+  }
+
+  static getHeadTags(props) {
+    const { action } = props;
+
+    return {
+      subPageName: action.name,
+    };
+  }
+
   constructor(props) {
     super(props);
     this.state = {
-      isLoaded: false,
-      error: null,
       newComments: false,
       commentCount: 0,
     };
@@ -48,28 +73,17 @@ class ActionContent extends React.Component {
   }
 
   reloadComments() {
-    this.setState({ newComments: !this.state.newComments });
+    const { newComments } = this.state;
+    this.setState({ newComments: !newComments });
   }
 
   countComments(count) {
     this.setState({ commentCount: count });
   }
 
-  static async fetchData(actionIdentifier) {
-    // Fetches the data needed by this component from the API and
-    // returns them as props suitable for the component.
-    const resp = await aplans.findAll('action', {
-      'filter[identifier]': actionIdentifier,
-      'filter[plan.identifier]': 'hnh2035',
-      include: ['responsible_parties', 'tasks', 'status', 'indicators', 'indicators.latest_graph'],
-    });
-    return {
-      action: resp.data[0],
-    };
-  }
-
   render() {
-    const action = this.props.action;
+    const { action } = this.props;
+    const { commentCount, newMessages, newComments } = this.state;
 
     return (
       <div>
@@ -85,10 +99,10 @@ class ActionContent extends React.Component {
                 <h2 className="display-4">{action.identifier}</h2>
                 <h1 className="mb-4">{action.name}</h1>
                 <div>
-                  {this.state.commentCount > 0
+                  {commentCount > 0
                     ? (
                       <span>
-                        {this.state.commentCount}
+                        {commentCount}
                         {' '}
 kommenttia
                       </span>
@@ -181,7 +195,7 @@ Kommentoi toimenpidettä
                   {action.identifier}
                 </h2>
                 <CommentForm section="hFz7Xjt0JJzMkKFslq1JqMwAusPeJ1er" onPost={this.reloadComments} />
-                <CommentList section="hFz7Xjt0JJzMkKFslq1JqMwAusPeJ1er" newMessages={this.state.newMessages} refresh={this.state.newComments} updateCount={this.countComments} />
+                <CommentList section="hFz7Xjt0JJzMkKFslq1JqMwAusPeJ1er" newMessages={newMessages} refresh={newComments} updateCount={this.countComments} />
               </Col>
             </Row>
           </Container>
