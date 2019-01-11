@@ -22,7 +22,7 @@ export default class MyDocument extends Document {
 
   render() {
     return (
-      <html>
+      <html lang="fi">
         <Head>
           {this.props.styleTags}
           <Manifest />
