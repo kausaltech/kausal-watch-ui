@@ -7,7 +7,7 @@ const originalUrl = require('original-url');
 
 const routes = require('./routes');
 
-const port = process.env.PORT || 3000;
+const serverPort = process.env.PORT || 3000;
 
 const ssrCache = new LRUCache({
   length(n, key) {
@@ -25,9 +25,9 @@ app.prepare().then(() => {
 
   server.use(morgan('dev'));
   server.use(handler)
-    .listen(port, (err) => {
+    .listen(serverPort, (err) => {
       if (err) throw err;
-      console.log(`Ready on http://localhost:${port}`);
+      console.log(`Ready on http://localhost:${serverPort}`);
     });
 });
 
@@ -39,6 +39,22 @@ function getCacheKey(req) {
   return `${req.url}`;
 }
 
+function getCurrentURL(req) {
+  const obj = originalUrl(req);
+  let port;
+
+  if (obj.protocol === 'http:' && obj.port === 80) {
+    port = '';
+  } else if (obj.protocol === 'https:' && obj.port === 443) {
+    port = '';
+  } else {
+    port = `:${obj.port}`;
+  }
+  const path = obj.pathname.replace(/\/$/, ''); // strip trailing slash
+  const domain = `${obj.protocol}//${obj.hostname}${port}`;
+  return { domain, path };
+}
+
 function handleRoute({
   req, res, route, query,
 }) {
@@ -48,7 +64,7 @@ function handleRoute({
     res.setHeader('x-cache', 'HIT');
     return res.send(ssrCache.get(cacheKey));
   }
-  req.originalUrl = originalUrl(req);
+  req.currentURL = getCurrentURL(req);
   app.renderToHTML(req, res, route.page, query).then((html) => {
     if (res.statusCode === 200) {
       ssrCache.set(req.url, html);

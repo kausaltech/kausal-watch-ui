@@ -36,7 +36,7 @@ export default class AplansApp extends App {
 
     if (ctx.req) {
       // The current, full URL is used in SSR to render the opengraph tags.
-      plan.currentURL = ctx.req.originalUrl;
+      plan.currentURL = ctx.req.currentURL;
     }
 
     if (Component.getInitialProps) {

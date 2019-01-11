@@ -23,7 +23,7 @@ const Layout = ({ children, subPageName }) => (
             <meta name="viewport" content="initial-scale=1.0, width=device-width" />
             <meta property="og:title" content={subPageName || plan.name} />
             {plan.currentURL &&
-              <meta property="og:url" content={plan.currentURL.full} />
+              <meta property="og:url" content={plan.currentURL.domain + plan.currentURL.path} />
             }
             <meta property="og:site_name" content={plan.name} />
           </Head>
