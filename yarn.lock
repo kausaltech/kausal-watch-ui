@@ -3092,6 +3092,11 @@ form-data@~2.3.2:
     combined-stream "^1.0.6"
     mime-types "^2.1.12"
 
+forwarded-parse@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/forwarded-parse/-/forwarded-parse-2.1.0.tgz#1ae9d7a4be3af884f74d936d856f7d8c6abd0439"
+  integrity sha512-as9a7Xelt0CvdUy7/qxrY73dZq2vMx49F556fwjjFrUyzq5uHHfeLgD2cCq/6P4ZvusGZzjD6aL2NdgGdS5Cew==
+
 forwarded@~0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/forwarded/-/forwarded-0.1.2.tgz#98c23dab1175657b8c0573e8ceccd91b0ff18c84"
@@ -5106,6 +5111,13 @@ optionator@^0.8.2:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
     wordwrap "~1.0.0"
+
+original-url@^1.2.2:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/original-url/-/original-url-1.2.2.tgz#e413171c69815b14f670c23ddca9bf29cb793c6b"
+  integrity sha512-/KlnD8SZqTIx0pU4JSVlnAv9U0VQRK5gMCA8PMwebR5afL5c88PZJIg6oHFxVDXj5b3P18MQ1zrFLoGdCzpp7Q==
+  dependencies:
+    forwarded-parse "^2.1.0"
 
 os-browserify@^0.3.0:
   version "0.3.0"

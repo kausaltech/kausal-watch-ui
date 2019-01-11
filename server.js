@@ -3,10 +3,11 @@ const next = require('next');
 const morgan = require('morgan');
 const express = require('express');
 const LRUCache = require('lru-cache');
+const originalUrl = require('original-url');
+
 const routes = require('./routes');
 
 const port = process.env.PORT || 3000;
-const memcachedUrl = process.env.MEMCACHED_URL;
 
 const ssrCache = new LRUCache({
   length(n, key) {
@@ -47,6 +48,7 @@ function handleRoute({
     res.setHeader('x-cache', 'HIT');
     return res.send(ssrCache.get(cacheKey));
   }
+  req.originalUrl = originalUrl(req);
   app.renderToHTML(req, res, route.page, query).then((html) => {
     if (res.statusCode === 200) {
       ssrCache.set(req.url, html);

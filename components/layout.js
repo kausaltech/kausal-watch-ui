@@ -19,10 +19,15 @@ const Layout = ({ children, subPageName }) => (
       {plan => (
         <div>
           <Head>
-            <title>{(subPageName ? `${subPageName} | ` : '') + (plan ? plan.name : 'Toimenpideohjelman seuranta')}</title>
+            <title>{(subPageName ? `${subPageName} | ` : '') + plan.name}</title>
             <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+            <meta property="og:title" content={subPageName || plan.name} />
+            {plan.currentURL &&
+              <meta property="og:url" content={plan.currentURL.full} />
+            }
+            <meta property="og:site_name" content={plan.name} />
           </Head>
-          <Header siteTitle={plan ? plan.name : 'Toimenpideohjelma'} />
+          <Header siteTitle={plan.name} />
           {children}
           <SiteFooter />
         </div>
