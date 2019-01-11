@@ -37,7 +37,7 @@ class ActionCard extends React.Component {
 
     return (
       <Card>
-        <Link route="action" params={{ id: action.identifier }}>
+        <Link route="action" params={{ id: action.identifier }} passHref={ true }>
           <a>
             <ActionImage id={action.identifier} category={this.root_category} />
             <CardImgOverlay>
@@ -47,7 +47,7 @@ class ActionCard extends React.Component {
           </a>
         </Link>
         <CardBody>
-          <Link route="action" params={{ id: action.id }}>
+          <Link route="action" params={{ id: action.id }} passHref={ true }>
             <a>
               <StyledCardTitle>{actionName}</StyledCardTitle>
               { (action.status.identifier !== 'late' || action.status.identifier === 'severely_late')
