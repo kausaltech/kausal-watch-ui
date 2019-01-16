@@ -44,26 +44,6 @@ function wordWrap(inputStr, maxWidth) {
   return res + str;
 }
 
-function calculateDepth(node, depth) {
-  if (node.type === 'action') {
-    return 0;
-  }
-  if (node.indicator_level === 'operational') {
-    return 1;
-  }
-  const causeDepths = node.causes.map(cause => calculateDepth(cause));
-
-  let maxDepth = 0;
-
-  for (let i = 0; i < causeDepths.length; i += 1) {
-    if (causeDepths[i] > maxDepth) {
-      maxDepth = causeDepths[i];
-    }
-  }
-  return 1 + maxDepth;
-}
-
-
 class CytoGraph extends React.Component {
   constructor(props) {
     super(props);
@@ -115,12 +95,15 @@ class CytoGraph extends React.Component {
           label: wordWrap(node.name, 40),
           type: node.type,
           level: node.indicator_level,
+          depth: node.depth,
+          node,
         },
       };
-      out.data.depth = calculateDepth(node);
+      /*
       if (node.parent && node.indicator_level === 'strategic') {
-        //out.data.parent = node.parent.id;
+        out.data.parent = node.parent.id;
       }
+      */
       elements.push(out);
     });
 
@@ -161,22 +144,32 @@ class CytoGraph extends React.Component {
       elements.push(out);
     });
 
-    cytoscape.use(cytoscapeCoseBilkent);
-    cytoscape.use(cytoscapeDagre);
-
-    console.log(visNode);
-    console.log(elements);
+    cytoscape.use(window.cytoscapeCoseBilkent);
+    cytoscape.use(window.cytoscapeDagre);
 
     const cy = cytoscape({
       container: visNode,
       elements,
       layout: {
         name: 'dagre',
+        ranker: 'longest-path',
+        edgeWeight: (edge) => {
+          let weight = 1;
+
+          if (edge.source().data('level') === 'strategic') {
+            weight += 1;
+          }
+          if (edge.target().data('level') === 'strategic') {
+            weight += 1;
+          }
+          return weight;
+        },
         nodeDimensionsIncludeLabels: true,
-        animate: true,
+        animate: false,
         animateDuration: 2000,
-        concentric: node => node.depth,
       },
+      maxZoom: 2,
+      minZoom: 0.1,
       style: [ // the stylesheet for the graph
         {
           selector: '*',
@@ -201,9 +194,13 @@ class CytoGraph extends React.Component {
             'target-arrow-color': 'data(color)',
             'arrow-scale': 2,
             'line-color': 'data(color)',
-            'text-rotation': 'autorotate',
             'text-outline-width': 1,
             'text-outline-color': '#eee',
+            'curve-style': 'bezier',
+            'text-margin-x': '10px',
+            'text-halign': 'right',
+            'font-size': '24px',
+            'font-weight': 'bold',
           },
         },
         {
