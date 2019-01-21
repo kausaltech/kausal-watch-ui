@@ -1,7 +1,11 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import { CardImg as BaseCardImg } from 'reactstrap';
 import styled from 'styled-components';
+
+import PlanContext from '../../context/plan';
+
 
 const CardImg = styled(BaseCardImg)`
   mix-blend-mode: multiply;
@@ -11,28 +15,59 @@ const ImgBg = styled.div`
   background-color: ${props => props.theme.helTram};
 `;
 
-class ActionImage extends React.Component {
-  render() {
-    const catImages = {
-      default: 'T30H0AcxthY',
-      58: 'hZxv71OrD7E',
-      59: 'yp71rK_ymvU',
-      64: 'mN4sEfN79SE',
-      67: 'H5K6HXkZXdw',
-      68: '_rrroSmRdeo',
-      69: 'VxoE4nUnOtI',
-      73: '023T4jyCRqA',
-      75: 'KnevlsuWxzk',
-      77: 'b8Mwo34avAo',
-    };
-    const imageURL = `https://source.unsplash.com/${catImages.default}/400x150`;
 
+class ActionImage extends React.Component {
+  getImageURL(plan) {
+    const { action, height, width } = this.props;
+    let url;
+    if (action.image_url) {
+      url = action.image_url;
+    } else {
+      action.categories.forEach((cat) => {
+        if (url)
+          return;
+        while (cat) {
+          if (cat.image_url) {
+            url = cat.image_url;
+            return;
+          }
+          cat = cat.parent;
+        }
+      });
+    }
+    if (!url) {
+      url = plan.image_url;
+    }
+
+    const params = [];
+    if (height) {
+      params.push(`height=${height}`);
+    }
+    if (width) {
+      params.push(`width=${width}`);
+    }
+    if (params.length) {
+      url += `?${params.join('&')}`
+    }
+    return url;
+  }
+  render() {
     return (
       <ImgBg>
-        <CardImg top width="100%" src={imageURL} alt="Action Image" />
+        <PlanContext.Consumer>
+          {plan => (
+            <CardImg top width="100%" src={this.getImageURL(plan)} alt="Action Image" />
+          )}
+        </PlanContext.Consumer>
       </ImgBg>
     );
   }
 }
+
+ActionImage.propTypes = {
+  action: PropTypes.object.isRequired,
+  height: PropTypes.number,
+  width: PropTypes.number
+};
 
 export default ActionImage;

@@ -202,11 +202,13 @@ aplans.get = async function get(path, configIn) {
 aplans.define('plan', {
   name: '',
   identifier: '',
+  image_url: '',
 });
 
 aplans.define('action', {
   name: '',
   identifier: '',
+  image_url: '',
   official_name: '',
   description: '',
   impact: 0,
@@ -286,6 +288,7 @@ aplans.define('category', {
   name: '',
   order: 0,
   identifier: '',
+  image_url: '',
   // relationships
   type: {
     jsonApi: 'hasOne',

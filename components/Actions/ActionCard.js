@@ -39,7 +39,7 @@ class ActionCard extends React.Component {
       <Card>
         <Link route="action" params={{ id: action.identifier }} passHref={ true }>
           <a>
-            <ActionImage id={action.identifier} category={this.root_category} />
+            <ActionImage action={action} width={520} height={250} />
             <CardImgOverlay>
               <ActionNumber className="action-number">{action.identifier}</ActionNumber>
             </CardImgOverlay>

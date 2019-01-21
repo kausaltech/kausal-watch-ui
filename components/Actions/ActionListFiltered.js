@@ -32,8 +32,8 @@ class ActionListFiltered extends React.Component {
     // returns them as props suitable for the component.
     const resp = await aplans.findAll('action', {
       include: ['status', 'categories', 'categories.parent', 'categories.parent.parent', 'responsible_parties'],
-      'fields[action]': ['identifier', 'name', 'categories', 'responsible_parties', 'status', 'completion'],
-      'fields[category]': ['identifier', 'name', 'parent'],
+      'fields[action]': ['identifier', 'name', 'image_url', 'categories', 'responsible_parties', 'status', 'completion'],
+      'fields[category]': ['identifier', 'name', 'parent', 'image_url'],
       'fields[organization]': ['name', 'abbreviation', 'parent'],
       'fields[action_status]': ['identifier', 'name'],
     });
