@@ -1,13 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Row, Col, Card, CardBody, Badge
+  Row, Col, Card, CardBody, Badge,
 } from 'reactstrap';
+
 import styled from 'styled-components';
 import { Link } from '../../routes';
 
 import { aplans } from '../../common/api';
-import HelIcon from '../Common/HelIcon';
+import Icon from '../Common/Icon';
 
 const IndicatorType = styled.div`
   line-height: 1.5rem;
@@ -81,7 +82,7 @@ class IndicatorList extends React.Component {
                   {item.latest_graph !== null
                   && (
                     <span>
-                      <HelIcon iconName="map" />
+                      <Icon name="chartLine" />
                     </span>
                   )
                   }

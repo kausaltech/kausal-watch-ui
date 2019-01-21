@@ -3,7 +3,7 @@ import React from 'react';
 import { Container } from 'reactstrap';
 import styled from 'styled-components';
 import { Link } from '../routes';
-import HelIcon from './Common/HelIcon';
+import Icon from './Common/Icon';
 
 const TimeScaleBanner = styled.div`
   background-color: ${props => props.theme.helSummer};
@@ -28,9 +28,9 @@ const IndexHero = () => (
         <h2 className="display-4">29.1.2079</h2>
         <Link route="indicator" params={{ id: 5 }} passHref={ true }>
           <ReadMoreLink>
-        Lue lisää
+            Lue lisää
             {' '}
-            <HelIcon iconName="arrow-right" />
+            <Icon name="arrowRight" />
           </ReadMoreLink>
         </Link>
 
@@ -47,9 +47,9 @@ e
         </h2>
         <Link route="indicator" params={{ id: 5 }} passHref={ true }>
           <ReadMoreLink>
-        Lue lisää
+            Lue lisää
             {' '}
-            <HelIcon iconName="arrow-right" />
+            <Icon name="arrowRight" color="white"/>
           </ReadMoreLink>
         </Link>
 

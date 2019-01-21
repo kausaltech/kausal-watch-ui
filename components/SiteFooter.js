@@ -3,11 +3,11 @@ import {
   Container, Row, Col, Nav, NavItem, NavLink,
 } from 'reactstrap';
 
-import helLogo from 'open-city-design/src/assets/helsinki-logo-white.svg';
+import HelLogo from 'open-city-design/src/assets/helsinki-logo-white.svg';
 
 import styled from 'styled-components';
 
-const Logo = styled.img`
+const Logo = styled(HelLogo)`
   height: 4em;
   margin-bottom: 4rem;
 `;
@@ -27,7 +27,7 @@ const SiteFooter = ({ siteTitle }) => (
         <Col md="4" className="footer-column">
           <div className="footer-branding footer-branding-helsinki">
             <a href="http://www.hel.fi">
-              <Logo src={`${helLogo}`} aria-hidden="true" />
+              <Logo aria-hidden="true" />
             </a>
           </div>
         </Col>
