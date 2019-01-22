@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Navbar } from 'reactstrap';
+import { Navbar, Nav, NavItem } from 'reactstrap';
 
 import styled from 'styled-components';
 import { Link } from '../routes';
@@ -32,6 +32,18 @@ const Header = ({ siteTitle }) => (
       <Link route="/">
         <a className="navbar-brand">{siteTitle}</a>
       </Link>
+      <Nav navbar>
+        <NavItem>
+          <Link route="/#actions" passHref={ true }>
+            <a className="nav-link">Toimenpiteet</a>
+          </Link>
+        </NavItem>
+        <NavItem>
+          <Link route="indicators" passHref={ true }>
+            <a className="nav-link">Mittarit</a>
+          </Link>
+        </NavItem>
+      </Nav>
     </BotNav>
   </div>
 );
