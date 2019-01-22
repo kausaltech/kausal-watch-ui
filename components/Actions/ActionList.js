@@ -13,7 +13,7 @@ class ActionList extends React.Component {
     return (
       <Row>
         {this.props.actions.map(item => (
-          <Col lg="4" md="6" key={item.id} className="mb-4 d-flex align-items-stretch">
+          <Col lg="4" sm="6" key={item.id} className="mb-4 d-flex align-items-stretch">
             <ActionCard action={item} />
           </Col>
         ))}

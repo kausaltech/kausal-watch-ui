@@ -10,6 +10,9 @@ import { Link } from '../../routes';
 import ActionImage from './ActionImage';
 import ActionStatus from './ActionStatus';
 
+const StyledCard = styled(Card)`
+  width: 100%;
+`;
 
 const ActionNumber = styled.div`
   font-size: 4em;
@@ -25,21 +28,18 @@ const StyledCardTitle = styled(CardTitle)`
 `;
 
 class ActionCard extends React.Component {
-  constructor(props) {
-    super(props);
-  }
 
   render() {
-    const action = this.props.action;
+    const { action } = this.props;
     let actionName = action.name;
 
     if (actionName.length > 120) actionName = `${action.name.substring(0, 120)}…`;
 
     return (
-      <Card>
+      <StyledCard>
         <Link route="action" params={{ id: action.identifier }} passHref={ true }>
           <a>
-            <ActionImage action={action} width={520} height={250} />
+            <ActionImage action={action} width={520} height={200} />
             <CardImgOverlay>
               <ActionNumber className="action-number">{action.identifier}</ActionNumber>
             </CardImgOverlay>
@@ -49,14 +49,14 @@ class ActionCard extends React.Component {
         <CardBody>
           <Link route="action" params={{ id: action.id }} passHref={ true }>
             <a>
-              <StyledCardTitle tag='h5'>{actionName}</StyledCardTitle>
+              <StyledCardTitle tag="h5">{actionName}</StyledCardTitle>
               { (action.status.identifier !== 'late' || action.status.identifier === 'severely_late')
                 && <ActionStatus name={action.status.name} identifier={action.status.identifier} />
               }
             </a>
           </Link>
         </CardBody>
-      </Card>
+      </StyledCard>
     );
   }
 }
