@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Row, Col, Card, CardBody, Badge,
+  Row, Col, CardDeck, Card, CardBody, CardTitle, CardText, Badge,
 } from 'reactstrap';
 
 import styled from 'styled-components';
@@ -28,12 +28,22 @@ const IndicatorType = styled.div`
   }};
 `;
 
-const IndicatorHeader = styled.h4`
+const StyledBadge = styled(Badge)`
+  white-space: normal;
+`;
+
+const StyledCardTitle = styled(CardTitle)`
   hyphens: auto;
   &:hover {
     text-decoration: underline;
+    color: inherit;
     cursor: pointer;
   }
+`;
+
+const IndicatorCard = styled(Card)`
+  width: 100%;
+  margin-bottom: 1.5em;
 `;
 
 class IndicatorList extends React.Component {
@@ -71,13 +81,20 @@ class IndicatorList extends React.Component {
     return (
       <Row className="mb-5">
         {this.sortIndicators(indicators).map(item => (
-          <Col lg="4" md="6" key={item.id} className="mb-4 d-flex align-items-stretch">
-            <Card>
+          <Col key={item.id} sm="6" md="4" lg="3" className="d-flex align-items-stretch">
+            <IndicatorCard>
               <IndicatorType level={item.level}>{item.level || <span>no level</span>}</IndicatorType>
               <CardBody>
-                <Link route="indicator" params={{ id: item.id }} href>
-                  <IndicatorHeader>{item.name}</IndicatorHeader>
-                </Link>
+                <StyledCardTitle tag="h6">
+                  <Link route="indicator" params={{ id: item.id }} href>
+                    <a>{item.name}</a>
+                  </Link>
+                </StyledCardTitle>
+                <div className="mb-3">
+                  {item.categories.map(cat => (
+                    <StyledBadge color="light" key={cat.id}>{cat.name}</StyledBadge>
+                  ))}
+                </div>
                 <div>
                   {item.latest_graph !== null
                   && (
@@ -87,11 +104,8 @@ class IndicatorList extends React.Component {
                   )
                   }
                 </div>
-                {item.categories.map(cat => (
-                  <Badge color="light" key={cat.id}>{cat.name}</Badge>
-                ))}
               </CardBody>
-            </Card>
+            </IndicatorCard>
           </Col>
         ))}
       </Row>
