@@ -6,7 +6,7 @@ import VisGraph from '../components/insight/VisGraph';
 import CytoGraph from '../components/insight/CytoGraph';
 import ContentLoader from '../components/Common/ContentLoader';
 import { aplans } from '../common/api';
-
+import IndicatorsHero from '../components/Indicators/IndicatorsHero';
 
 class VisPage extends React.Component {
   constructor(props) {
@@ -29,6 +29,7 @@ class VisPage extends React.Component {
     content = <CytoGraph edges={edges} nodes={nodes} />;
     return (
       <Layout>
+        <IndicatorsHero />
         {content}
       </Layout>
     );

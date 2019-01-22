@@ -1,14 +1,10 @@
 import React from 'react';
-import { Container, Jumbotron } from 'reactstrap';
-import styled from 'styled-components';
+import { Container } from 'reactstrap';
 import Layout from '../../components/layout';
+import IndicatorsHero from '../../components/Indicators/IndicatorsHero';
 import IndicatorList from '../../components/Indicators/IndicatorList';
 
 import ContentLoader from '../../components/Common/ContentLoader';
-
-const IndicatorsHero = styled(Jumbotron)`
-  margin-bottom: 2rem;
-`;
 
 class IndicatorsPage extends React.Component {
   constructor(props) {
@@ -23,9 +19,6 @@ class IndicatorsPage extends React.Component {
   }) {
     const props = {};
 
-    // When rendering on the server, load initial data here to pass to the
-    // list component. Server-side-rendered content works better for social media
-    // shares and SEO.
     if (req) {
       props.indicatorListProps = await IndicatorList.fetchData();
     }
@@ -33,7 +26,8 @@ class IndicatorsPage extends React.Component {
   }
 
   async componentDidMount() {
-    if (!this.state.indicatorListProps) {
+    const { indicatorListProps } = this.state;
+    if (!indicatorListProps) {
       this.setState({
         indicatorListProps: await IndicatorList.fetchData(),
       });
@@ -42,25 +36,18 @@ class IndicatorsPage extends React.Component {
 
   render() {
     let indicatorList;
+    const { indicatorListProps } = this.state;
 
-    if (this.state.indicatorListProps) {
+    if (indicatorListProps) {
       indicatorList = (
-        <IndicatorList {...this.state.indicatorListProps
-      }
-        />
+        <IndicatorList {...indicatorListProps} />
       );
     } else {
       indicatorList = <ContentLoader />;
     }
     return (
       <Layout>
-        <IndicatorsHero>
-          <Container>
-            <h1>
-              Indikaattorit
-            </h1>
-          </Container>
-        </IndicatorsHero>
+        <IndicatorsHero />
         <Container>
           { indicatorList }
         </Container>
