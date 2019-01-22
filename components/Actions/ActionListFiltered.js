@@ -76,7 +76,7 @@ class ActionListFiltered extends React.Component {
     const actions = this.filterActions();
 
     return (
-      <div>
+      <div id="actions">
         <h1 className="mb-4">Toimenpiteet</h1>
         <ActionListFilters cats={this.props.cats} orgs={this.props.orgs} changeOption={this.handleChange} />
         <ActionList actions={actions} error={this.state.error} />

@@ -44,9 +44,9 @@ class IndexPage extends React.Component {
 
   render() {
     let actionList;
-
-    if (this.state.actionListProps) {
-      actionList = <ActionListFiltered {...this.state.actionListProps} />;
+    const { actionListProps } = this.state;
+    if (actionListProps) {
+      actionList = <ActionListFiltered {...actionListProps} />;
     } else {
       actionList = <ContentLoader />;
     }
