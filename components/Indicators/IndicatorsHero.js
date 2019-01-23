@@ -4,7 +4,7 @@ import {
 } from 'reactstrap';
 import styled, { withTheme } from 'styled-components';
 import { withRouter } from 'next/router';
-import { Link } from '../../routes';
+import ActiveLink from '../../common/ActiveLink';
 
 const IndicatorsJumbo = styled.div`
   background-color: ${props => props.theme.helSummer};
@@ -14,6 +14,21 @@ const IndicatorsJumbo = styled.div`
 const IndicatorsTabs = styled.div`
   background-color: ${props => props.theme.helSummer};
   margin-bottom: 2rem;
+`;
+
+const StyledActiveLink = styled(ActiveLink)`
+  background: ${props => props.theme.helTram};
+  color: white;
+  &:hover {
+    color: ${props => props.theme.helSummer};
+  }
+  &.active {
+    color: ${props => props.theme.helTram};
+    background: white;
+    &:hover {
+      color: black;
+    }
+  }
 `;
 
 class IndicatorsHero extends React.Component {
@@ -32,14 +47,14 @@ class IndicatorsHero extends React.Component {
           <Container>
             <Nav>
               <NavItem>
-                <Link route="indicators" passHref={ true }>
-                  <a className="nav-link">Listana</a>
-                </Link>
+                <StyledActiveLink href="/indicators" passHref className="nav-link">
+                  Listana
+                </StyledActiveLink>
               </NavItem>
               <NavItem>
-                <Link route="insight" passHref={ true }>
-                  <a className="nav-link">Näkemysverkossa</a>
-                </Link>
+                <StyledActiveLink href="/insight" passHref className="nav-link">
+                  Näkemysverkossa
+                </StyledActiveLink>
               </NavItem>
             </Nav>
           </Container>
