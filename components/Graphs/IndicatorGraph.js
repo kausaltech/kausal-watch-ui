@@ -1,6 +1,7 @@
 import React from 'react';
+import { withTheme } from 'styled-components';
 import {
-  Card, CardBody, Col, Alert,
+  Card, CardBody, Alert,
 } from 'reactstrap';
 import createPlotlyComponent from 'react-plotly.js/factory';
 import { aplans } from '../../common/api';
@@ -15,6 +16,15 @@ class IndicatorGraph extends React.Component {
       error: null,
       data: [],
     };
+    this.plotColors = [
+      props.theme.helTram,
+      props.theme.helSummer,
+      props.theme.helFog,
+      props.theme.helGold,
+      props.theme.helCopper,
+      props.theme.helCoat,
+      props.theme.helGold,
+    ];
   }
 
   componentDidMount() {
@@ -24,6 +34,7 @@ class IndicatorGraph extends React.Component {
           isLoaded: true,
           data: result.data.data.attributes.data,
         });
+        console.log(result.data.data.attributes.data);
       },
     )
       .catch(
@@ -41,7 +52,7 @@ class IndicatorGraph extends React.Component {
     if (error) {
       return (
         <Alert color="danger">
-Error:
+          Error:
           {error.message}
         </Alert>
       );
@@ -49,16 +60,25 @@ Error:
       return <ContentLoader />;
     }
     const Plot = createPlotlyComponent(window.Plotly);
+    data.layout.autosize = true;
+    data.layout.colorway = this.plotColors;
+    data.layout.font = {family: '"HelsinkiGrotesk", Arial', size: 12};
+    //data.layout.titlefont = {size:36};
+    //data.layout.legend = {orientation: 'h', bordercolor: '#ffffff', borderwidth: 2, bgcolor: '#efefef'};
+    //data.layout.title = {text:`<b>${data.layout.title}</b>`, xref: 'paper', x: 0.05, font: { size: 24}};
+    data.layout.title = {text:`<b>${data.layout.title}</b>`};
+    console.log(data);
     return (
       <Card>
-        <CardBody>
-          <Col sm="12" style={{ height: '400px' }}>
-            <Plot
-              data={data.data}
-              layout={data.layout}
-              style={{ width: '100%', height: '100%' }}
-            />
-          </Col>
+        <CardBody style={{ height: '400px' }}>
+          <Plot
+            data={data.data}
+            layout={data.layout}
+            style={{ width: '100%', height: '100%' }}
+            useResizeHandler
+            staticPlot
+            displayModeBar={false}
+          />
         </CardBody>
       </Card>
     );
@@ -66,4 +86,4 @@ Error:
 }
 
 
-export default IndicatorGraph;
+export default withTheme(IndicatorGraph);
