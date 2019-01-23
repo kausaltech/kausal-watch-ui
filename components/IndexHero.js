@@ -41,7 +41,7 @@ const IndexHero = () => (
         <p className="lead">Tavoitteen saavuttamiseksi</p>
         <h1 className="display-5">vuositasolla vähennettävä vielä</h1>
         <h2 className="display-4">
-3 814 000 t CO
+1 963 000 t CO
           <sub>2</sub>
 e
         </h2>
