@@ -16,6 +16,7 @@ import ActionIndicators from './ActionIndicators';
 import ActionBgImage from './ActionBgImage';
 import CommentForm from '../Comments/CommentForm';
 import CommentList from '../Comments/CommentList';
+import Icon from '../Common/Icon';
 
 
 const ActionHero = styled.div`
@@ -113,6 +114,8 @@ class ActionContent extends React.Component {
                       {commentCount > 0
                         ? (
                           <span>
+                            <Icon name="commenting" color="#ffffff"/>
+                            {' '}
                             {commentCount}
                             {' '}
     kommenttia

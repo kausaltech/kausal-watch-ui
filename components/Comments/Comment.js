@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from 'reactstrap';
 import moment from '../../common/moment';
-import HelIcon from '../Common/HelIcon';
+import Icon from '../Common/Icon';
 
 class Comment extends React.Component {
   constructor(props) {
@@ -29,14 +29,14 @@ class Comment extends React.Component {
         <div className="hearing-comment-header clearfix">
           <div className="hearing-comment-votes">
             <Button className="btn-sm hearing-comment-vote-link">
-              <span name="thumbs-o-up" />
+              <Icon name="heart" />
               {' '}
               {comment.n_votes}
             </Button>
           </div>
           <div className="hearing-comment-publisher">
             <span className="hearing-comment-user">
-              <HelIcon iconName="user-o" />
+              <Icon name="user" />
               {' '}
               {this.showAuthor(comment.author_name)}
             </span>
