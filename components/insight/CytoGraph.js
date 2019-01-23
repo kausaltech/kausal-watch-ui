@@ -170,7 +170,6 @@ class CytoGraph extends React.Component {
       },
       maxZoom: 2,
       minZoom: 0.1,
-      wheelSensitivity: 0.25,
       style: [ // the stylesheet for the graph
         {
           selector: '*',
