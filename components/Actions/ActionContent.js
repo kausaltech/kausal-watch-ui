@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {
   Container, Row, Col, Progress,
 } from 'reactstrap';
-import styled from 'styled-components';
+import styled, { withTheme } from 'styled-components';
 import { Link } from '../../routes';
 import { aplans } from '../../common/api';
 
@@ -13,17 +13,27 @@ import ResponsibleList from './ResponsibleList';
 import ContactPersons from './ContactPersons';
 import ActionStatus from './ActionStatus';
 import ActionIndicators from './ActionIndicators';
+import ActionBgImage from './ActionBgImage';
 import CommentForm from '../Comments/CommentForm';
 import CommentList from '../Comments/CommentList';
 
 
 const ActionHero = styled.div`
-  background-color: ${props => props.theme.helSummer}; 
-  padding: 5rem 0;
-  margin-bottom: 4rem;
+  position: relative;
+  margin-bottom: 3rem;
   a {
-    color: ${props => props.theme.helTram};
+    color: ${props => props.theme.helSummer};
   }
+`;
+
+const OverlayContainer = styled.div`
+  color: white;
+  padding: 2rem 0;
+`;
+
+const ActionHeadline = styled.h1`
+  hyphens: auto;
+  margin-bottom: 2rem;
 `;
 
 const ActionSection = styled.section`
@@ -44,7 +54,7 @@ class ActionContent extends React.Component {
     const resp = await aplans.findAll('action', {
       'filter[identifier]': actionIdentifier,
       'filter[plan.identifier]': 'hnh2035',
-      include: ['responsible_parties', 'tasks', 'status', 'indicators', 'indicators.latest_graph'],
+      include: ['responsible_parties', 'tasks', 'status', 'indicators', 'indicators.latest_graph', 'categories', 'categories.parent', 'categories.parent.parent'],
     });
     if (!resp.data || resp.data.length < 1) {
       return null;
@@ -82,40 +92,44 @@ class ActionContent extends React.Component {
   }
 
   render() {
-    const { action } = this.props;
+    const { action, theme } = this.props;
     const { commentCount, newMessages, newComments } = this.state;
-
     return (
       <div>
         <ActionHero>
-          <Container>
-            <Row>
-              <Col md="10">
-                <Link route="/">
-                  <a>
-                    <h4>Toimenpiteet</h4>
-                  </a>
-                </Link>
-                <h2 className="display-4">{action.identifier}</h2>
-                <h1 className="mb-4">{action.name}</h1>
-                <div>
-                  {commentCount > 0
-                    ? (
-                      <span>
-                        {commentCount}
-                        {' '}
-kommenttia
-                      </span>
-                    )
-                    : <span>Ei kommentteja</span>
-                    }
-                  {' '}
-|
-                  <a href="#comments">osallistu keskusteluun</a>
-                </div>
-              </Col>
-            </Row>
-          </Container>
+          <ActionBgImage action={action} width={1200} height={600} color={theme.helTram}>
+            <OverlayContainer>
+              <Container>
+                <Row>
+                  <Col md="10">
+                    <Link route="/#actions">
+                      <a>
+                        <h4>Toimenpiteet</h4>
+                      </a>
+                    </Link>
+                    <h2 className="display-4">{action.identifier}</h2>
+                    <ActionHeadline>{action.name}</ActionHeadline>
+                    <div>
+                      {commentCount > 0
+                        ? (
+                          <span>
+                            {commentCount}
+                            {' '}
+    kommenttia
+                          </span>
+                        )
+                        : <span>Ei kommentteja</span>
+                        }
+                      {' '}
+                      |
+                      {' '}
+                      <a href="#comments">osallistu keskusteluun</a>
+                    </div>
+                  </Col>
+                </Row>
+              </Container>
+            </OverlayContainer>
+          </ActionBgImage>
         </ActionHero>
         <Container className="mb-5">
           <Row>
@@ -209,4 +223,4 @@ ActionContent.propTypes = {
   action: PropTypes.object.isRequired,
 };
 
-export default ActionContent;
+export default withTheme(ActionContent);
