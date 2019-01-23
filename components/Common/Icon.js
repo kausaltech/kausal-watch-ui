@@ -12,6 +12,7 @@ import arrowRight from 'hel-icons/dist/shapes/arrow-right.svg';
 import heart from 'hel-icons/dist/shapes/heart-o.svg';
 import sync from 'hel-icons/dist/shapes/sync.svg';
 import user from 'hel-icons/dist/shapes/user-o.svg';
+import bars from 'hel-icons/dist/shapes/bars.svg';
 import exclamationCircle from './icons/exclamation-circle.svg';
 import chartPie from './icons/chart-pie.svg';
 import chartLine from './icons/chart-line.svg';
@@ -32,6 +33,7 @@ const icons = {
   sync,
   user,
   heart,
+  bars,
 };
 
 class Icon extends React.Component {
