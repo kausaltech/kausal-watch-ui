@@ -10,6 +10,7 @@ import times from 'hel-icons/dist/shapes/times.svg';
 import commenting from 'hel-icons/dist/shapes/commenting-o.svg';
 import arrowRight from 'hel-icons/dist/shapes/arrow-right.svg';
 import exclamationCircle from './icons/exclamation-circle.svg';
+import sync from 'hel-icons/dist/shapes/sync.svg';
 import chartPie from './icons/chart-pie.svg';
 import chartLine from './icons/chart-line.svg';
 
@@ -26,6 +27,7 @@ const icons = {
   exclamationCircle,
   chartPie,
   chartLine,
+  sync
 };
 
 class Icon extends React.Component {

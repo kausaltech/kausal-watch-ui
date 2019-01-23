@@ -1,7 +1,7 @@
 import React from 'react';
 
 import styled, { keyframes } from 'styled-components';
-import helIcons from 'hel-icons/dist/symbol/svg/hel-icons.svg';
+import Icon from './Icon';
 
 const Loader = styled.div`
   height: 300px;
@@ -20,13 +20,9 @@ const rotate360 = keyframes`
   }
 `;
 
-const SpinIcon = styled.svg`
+const SpinIcon = styled.div`
+  display: inline-block;
   animation: ${rotate360} infinite 2s linear;
-  fill: #000000;
-  width: 1em !important;
-  height: 1em !important;
-  vertical-align: -0.1em;
-  overflow: hidden;
 `;
 
 class ContentLoader extends React.Component {
@@ -59,10 +55,9 @@ class ContentLoader extends React.Component {
       return null;
     }
 
-    const iconUrl = `${helIcons}#sync`;
     return (
       <Loader>
-        <div><SpinIcon><use xlinkHref={iconUrl} /></SpinIcon></div>
+        <SpinIcon><Icon name="sync" /></SpinIcon>
         <h5>Ladataan</h5>
       </Loader>
     );
