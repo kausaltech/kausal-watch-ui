@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Row, Col, CardDeck, Card, CardBody, CardTitle, CardText, Badge,
+  Row, Col, Card, CardBody, CardTitle, Badge,
 } from 'reactstrap';
 
 import styled from 'styled-components';
@@ -17,9 +17,9 @@ const IndicatorType = styled.div`
   background-color: ${(props) => {
     switch (props.level) {
       case 'tactical':
-        return props.theme.helCopper;
-      case 'operational':
         return props.theme.helFog;
+      case 'operational':
+        return props.theme.helCopper;
       case 'strategic':
         return props.theme.helCoat;
       default:
@@ -46,6 +46,12 @@ const IndicatorCard = styled(Card)`
   margin-bottom: 1.5em;
 `;
 
+const levels = {
+  operational: { fi: 'toiminnallinen', index: 1 },
+  tactical: { fi: 'taktinen', index: 2 },
+  strategic: { fi: 'strateginen', index: 3 },
+};
+
 class IndicatorList extends React.Component {
   static async fetchData() {
     // Fetches the data needed by this component from the API and
@@ -65,10 +71,10 @@ class IndicatorList extends React.Component {
   sortIndicators(indicators) {
     let sorted = indicators;
     sorted = indicators.sort((a, b) => {
-      if (a.level < b.level) {
+      if (levels[a.level].index < levels[b.level].index) {
         return -1;
       }
-      if (a.level > b.level) {
+      if (levels[a.level].index > levels[b.level].index) {
         return 1;
       }
       return 0;
@@ -83,7 +89,7 @@ class IndicatorList extends React.Component {
         {this.sortIndicators(indicators).map(item => (
           <Col key={item.id} sm="6" md="4" lg="3" className="d-flex align-items-stretch">
             <IndicatorCard>
-              <IndicatorType level={item.level}>{item.level || <span>no level</span>}</IndicatorType>
+              <IndicatorType level={item.level}>{levels[item.level].fi || <span>-</span>}</IndicatorType>
               <CardBody>
                 <StyledCardTitle tag="h6">
                   <Link route="indicator" params={{ id: item.id }} href>
