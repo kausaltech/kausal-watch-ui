@@ -32,9 +32,7 @@ class ActionCard extends React.Component {
   render() {
     const { action } = this.props;
     let actionName = action.name;
-
     if (actionName.length > 120) actionName = `${action.name.substring(0, 120)}…`;
-
     return (
       <StyledCard>
         <Link route="action" params={{ id: action.identifier }} passHref={ true }>
@@ -50,7 +48,8 @@ class ActionCard extends React.Component {
           <Link route="action" params={{ id: action.id }} passHref={ true }>
             <a>
               <StyledCardTitle tag="h5">{actionName}</StyledCardTitle>
-              { (action.status.identifier !== 'late' || action.status.identifier === 'severely_late')
+              {
+                (action.status !== null) && (action.status.identifier === 'late' || action.status.identifier === 'severely_late')
                 && <ActionStatus name={action.status.name} identifier={action.status.identifier} />
               }
             </a>
@@ -60,9 +59,9 @@ class ActionCard extends React.Component {
     );
   }
 }
+
 ActionCard.propTypes = {
   action: PropTypes.object,
 };
-
 
 export default ActionCard;

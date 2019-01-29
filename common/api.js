@@ -331,6 +331,10 @@ aplans.define('indicator', {
     jsonApi: 'hasOne',
     type: 'indicator_graph',
   },
+  actions: {
+    jsonApi: 'hasMany',
+    type: 'action',
+  },
   estimates: {
     jsonApi: 'hasMany',
     type: 'indicator_estimate',
