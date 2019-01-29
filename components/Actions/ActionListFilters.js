@@ -58,7 +58,12 @@ class ActionListFilters extends React.Component {
   }
 
   render() {
-    const rootCategories = this.props.cats.filter(cat => cat.relationships.parent.data == null);
+    const rootCategories = this.props.cats
+      .filter(cat => cat.relationships.parent.data == null)
+      .sort((a, b) => a.attributes.name.localeCompare(b.attributes.name));
+    const orgs = this.props.orgs.slice(0)
+      .sort((a, b) => a.attributes.name.localeCompare(b.attributes.name));
+
     return (
       <div className="filters mb-5 text-left">
         <Row>
@@ -79,7 +84,7 @@ class ActionListFilters extends React.Component {
               <Label for="orgfield">Rajaa vastuuorganisaation mukaan</Label>
               <CustomInput type="select" id="orgfield" name="organization" value={this.state.activeOrg} onChange={this.onOrgBtnClick} className="mb-2">
                 <option value="">Kaikki organisaatiot</option>
-                {this.props.orgs.map(org => (
+                {orgs.map(org => (
                   <option value={org.id} key={org.id}>{ this.getOrganizationName(org.id) }</option>
                 ))}
               </CustomInput>
