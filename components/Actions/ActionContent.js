@@ -46,7 +46,7 @@ const CommentsSection = styled.section`
 `;
 
 class ActionContent extends React.Component {
-  static async fetchData(actionIdentifier) {
+  static async fetchData(actionIdentifier, plan) {
     // Fetches the data needed by this component from the API and
     // returns them as props suitable for the component.
     if (!actionIdentifier) {
@@ -54,7 +54,7 @@ class ActionContent extends React.Component {
     }
     const resp = await aplans.findAll('action', {
       'filter[identifier]': actionIdentifier,
-      'filter[plan.identifier]': 'hnh2035',
+      'filter[plan.identifier]': plan.identifier,
       include: ['responsible_parties', 'tasks', 'status', 'indicators', 'indicators.latest_graph', 'categories', 'categories.parent', 'categories.parent.parent'],
     });
     if (!resp.data || resp.data.length < 1) {

@@ -14,13 +14,12 @@ class IndicatorsPage extends React.Component {
     };
   }
 
-  static async getInitialProps({
-    req,
-  }) {
+  static async getInitialProps({ req, plan }) {
     const props = {};
 
+    props.plan = plan;
     if (req) {
-      props.indicatorListProps = await IndicatorList.fetchData();
+      props.indicatorListProps = await IndicatorList.fetchData(plan);
     }
     return props;
   }
@@ -29,7 +28,7 @@ class IndicatorsPage extends React.Component {
     const { indicatorListProps } = this.state;
     if (!indicatorListProps) {
       this.setState({
-        indicatorListProps: await IndicatorList.fetchData(),
+        indicatorListProps: await IndicatorList.fetchData(this.props.plan),
       });
     }
   }

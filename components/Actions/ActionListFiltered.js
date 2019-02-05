@@ -8,6 +8,26 @@ import { aplans } from '../../common/api';
 
 
 class ActionListFiltered extends React.Component {
+  static async fetchData(plan) {
+    // Fetches the data needed by this component from the API and
+    // returns them as props suitable for the component.
+    const resp = await aplans.findAll('action', {
+      'filter[plan__identifier]': plan.identifier,
+      include: ['status', 'categories', 'categories.parent', 'categories.parent.parent', 'responsible_parties'],
+      'fields[action]': ['identifier', 'name', 'image_url', 'categories', 'responsible_parties', 'status', 'completion'],
+      'fields[category]': ['identifier', 'name', 'parent', 'image_url'],
+      'fields[organization]': ['name', 'abbreviation', 'parent'],
+      'fields[action_status]': ['identifier', 'name'],
+    });
+    const props = {
+      actions: resp.data,
+      orgs: resp.store.getAll('organization'),
+      cats: resp.store.getAll('category'),
+    };
+
+    return props;
+  }
+
   constructor(props) {
     super(props);
     this.state = {
@@ -25,25 +45,6 @@ class ActionListFiltered extends React.Component {
       while (category.parent != null) category = category.parent;
       action.root_category = category;
     });
-  }
-
-  static async fetchData() {
-    // Fetches the data needed by this component from the API and
-    // returns them as props suitable for the component.
-    const resp = await aplans.findAll('action', {
-      include: ['status', 'categories', 'categories.parent', 'categories.parent.parent', 'responsible_parties'],
-      'fields[action]': ['identifier', 'name', 'image_url', 'categories', 'responsible_parties', 'status', 'completion'],
-      'fields[category]': ['identifier', 'name', 'parent', 'image_url'],
-      'fields[organization]': ['name', 'abbreviation', 'parent'],
-      'fields[action_status]': ['identifier', 'name'],
-    });
-    const props = {
-      actions: resp.data,
-      orgs: resp.store.getAll('organization'),
-      cats: resp.store.getAll('category'),
-    };
-
-    return props;
   }
 
   handleChange(filterType, val) {

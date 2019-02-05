@@ -315,6 +315,10 @@ aplans.define('indicator', {
     jsonApi: 'hasOne',
     type: 'unit',
   },
+  levels: {
+    jsonApi: 'hasMany',
+    type: 'indicator_level',
+  },
   categories: {
     jsonApi: 'hasMany',
     type: 'category',
@@ -339,6 +343,18 @@ aplans.define('indicator', {
     jsonApi: 'hasMany',
     type: 'indicator_estimate',
   },
+});
+
+aplans.define('indicator_level', {
+  indicator: {
+    jsonApi: 'hasOne',
+    type: 'indicator',
+  },
+  plan: {
+    jsonApi: 'hasOne',
+    type: 'plan',
+  },
+  level: '',
 });
 
 aplans.define('indicator_graph', {

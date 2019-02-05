@@ -53,13 +53,29 @@ const levels = {
 };
 
 class IndicatorList extends React.Component {
-  static async fetchData() {
+  static async fetchData(plan) {
     // Fetches the data needed by this component from the API and
     // returns them as props suitable for the component.
     const resp = await aplans.findAll('indicator', {
-      include: ['latest_graph', 'categories'],
-      'fields[indicator]': ['name', 'unit_name', 'updated_at', 'level', 'categories', 'latest_graph'],
+      'filter[plans]': plan.identifier,
+      include: ['categories', 'levels'],
+      'fields[indicator]': ['name', 'unit_name', 'updated_at', 'levels', 'categories', 'latest_graph'],
       'fields[category]': ['identifier', 'name', 'parent'],
+    });
+
+    const store = resp.store;
+    resp.data.forEach((indicator) => {
+      const obj = store.get('indicator', indicator.id);
+      let planLevel;
+
+      // FUUUUUU
+      obj.relationships.levels.data.forEach((level) => {
+        const levelObj = store.get('indicator_level', level.id);
+        if (levelObj.relationships.plan.data.id === plan.id) {
+          planLevel = levelObj.attributes.level;
+        }
+      });
+      indicator.level = planLevel;
     });
     const props = {
       indicators: resp.data,

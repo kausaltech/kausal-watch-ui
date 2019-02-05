@@ -1,8 +1,11 @@
 import React from 'react';
 import App, { Container } from 'next/app';
+import getConfig from 'next/config';
 import { aplans } from '../common/api';
 import PlanContext from '../context/plan';
 
+
+const { publicRuntimeConfig } = getConfig();
 
 // cache the global plan object here
 let globalPlan;
@@ -27,12 +30,13 @@ export default class AplansApp extends App {
       plan = globalPlan;
     } else {
       const resp = await aplans.findAll('plan', {
-        'filter[identifier]': 'hnh2035',
+        'filter[identifier]': publicRuntimeConfig.planIdentifier,
       });
       if (resp && resp.data) {
         [plan] = resp.data;
       }
     }
+    ctx.plan = plan;
 
     if (ctx.req) {
       // The current, full URL is used in SSR to render the opengraph tags.

@@ -10,7 +10,8 @@ const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin')
 const config = withBundleAnalyzer(withManifest(withImages(withSass({
   publicRuntimeConfig: { // Will be available on both server and client
     aplansApiBaseURL: process.env.APLANS_API_BASE_URL || 'https://aplans.api.hel.ninja/v1',
-    kerrokantasiApiBaseURL: process.env.KERROKANTASI_API_BASE_URL || 'https://api.hel.fi/kerrokantasi-test/v1'
+    kerrokantasiApiBaseURL: process.env.KERROKANTASI_API_BASE_URL || 'https://api.hel.fi/kerrokantasi-test/v1',
+    planIdentifier: process.env.PLAN_IDENTIFIER || 'hnh2035',
   },
   manifest: {
     // if src value is exist, icon image will be generated from src image, and ovwewritten

@@ -22,14 +22,15 @@ class IndexPage extends React.Component {
     };
   }
 
-  static async getInitialProps({ req }) {
+  static async getInitialProps({ req, plan }) {
     const props = {};
 
     // When rendering on the server, load initial data here to pass to the
     // list component. Server-side-rendered content works better for social media
     // shares and SEO.
+    props.plan = plan;
     if (req) {
-      props.actionListProps = await ActionListFiltered.fetchData();
+      props.actionListProps = await ActionListFiltered.fetchData(plan);
     }
     return props;
   }
@@ -37,7 +38,7 @@ class IndexPage extends React.Component {
   async componentDidMount() {
     if (!this.state.actionListProps) {
       this.setState({
-        actionListProps: await ActionListFiltered.fetchData(),
+        actionListProps: await ActionListFiltered.fetchData(this.props.plan),
       });
     }
   }

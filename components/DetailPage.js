@@ -20,12 +20,14 @@ class DetailPage extends React.Component {
     };
   }
 
-  static async getInitialProps({ res, req, query }) {
+  static async getInitialProps(ctx) {
+    const { res, req, query, plan } = ctx;
     const props = {};
 
     props.id = query.id;
+    props.plan = plan;
     if (req) {
-      const data = await this.PageContentComponent.fetchData(props.id);
+      const data = await this.PageContentComponent.fetchData(props.id, plan);
       if (!data) {
         if (res) {
           res.statusCode = 404;
@@ -42,7 +44,7 @@ class DetailPage extends React.Component {
     const { childProps, id } = this.state;
 
     if (!childProps) {
-      const data = await this.constructor.PageContentComponent.fetchData(id);
+      const data = await this.constructor.PageContentComponent.fetchData(id, this.props.plan);
       if (!data) {
         this.setState({
           error: 404,
@@ -80,6 +82,7 @@ class DetailPage extends React.Component {
 
 DetailPage.propTypes = {
   id: PropTypes.string.isRequired,
+  plan: PropTypes.object.isRequired,
   childProps: PropTypes.object,
   error: PropTypes.number,
 };
