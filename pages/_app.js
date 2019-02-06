@@ -31,6 +31,7 @@ export default class AplansApp extends App {
     } else {
       const resp = await aplans.findAll('plan', {
         'filter[identifier]': publicRuntimeConfig.planIdentifier,
+        include: 'action_schedules',
       });
       if (resp && resp.data) {
         [plan] = resp.data;

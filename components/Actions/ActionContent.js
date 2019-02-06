@@ -6,6 +6,7 @@ import {
 import styled, { withTheme } from 'styled-components';
 import { Link } from '../../routes';
 import { aplans } from '../../common/api';
+import PlanContext from '../../context/plan';
 
 import Timeline from '../Graphs/Timeline';
 import TaskList from './TaskList';
@@ -55,7 +56,7 @@ class ActionContent extends React.Component {
     const resp = await aplans.findAll('action', {
       'filter[identifier]': actionIdentifier,
       'filter[plan.identifier]': plan.identifier,
-      include: ['responsible_parties', 'tasks', 'status', 'indicators', 'indicators.latest_graph', 'categories', 'categories.parent', 'categories.parent.parent'],
+      include: ['responsible_parties', 'tasks', 'status', 'schedule', 'indicators', 'indicators.latest_graph', 'categories', 'categories.parent', 'categories.parent.parent'],
     });
     if (!resp.data || resp.data.length < 1) {
       return null;
@@ -94,7 +95,9 @@ class ActionContent extends React.Component {
 
   render() {
     const { action, theme } = this.props;
+    const plan = this.context;
     const { commentCount, newMessages, newComments } = this.state;
+
     return (
       <div>
         <ActionHero>
@@ -171,7 +174,7 @@ class ActionContent extends React.Component {
               </ActionSection>
               <ActionSection>
                 <h5>Aikajänne</h5>
-                <Timeline />
+                <Timeline schedules={action.schedule} allSchedules={plan.action_schedules} />
               </ActionSection>
 
             </Col>
@@ -225,5 +228,6 @@ Kommentoi toimenpidettä
 ActionContent.propTypes = {
   action: PropTypes.object.isRequired,
 };
+ActionContent.contextType = PlanContext;
 
 export default withTheme(ActionContent);

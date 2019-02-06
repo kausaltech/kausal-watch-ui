@@ -203,6 +203,10 @@ aplans.define('plan', {
   name: '',
   identifier: '',
   image_url: '',
+  action_schedules: {
+    jsonApi: 'hasMany',
+    type: 'action_schedule',
+  },
 });
 
 aplans.define('action', {
@@ -236,7 +240,7 @@ aplans.define('action', {
     type: 'action_decision_level',
   },
   schedule: {
-    jsonApi: 'hasOne',
+    jsonApi: 'hasMany',
     type: 'action_schedule',
   },
   categories: {
@@ -278,6 +282,16 @@ aplans.define('action_task', {
 aplans.define('action_status', {
   name: '',
   identifier: '',
+  plan: {
+    jsonApi: 'hasOne',
+    type: 'plan',
+  },
+});
+aplans.define('action_schedule', {
+  name: '',
+  order: 0,
+  begins_at: '',
+  ends_at: '',
   plan: {
     jsonApi: 'hasOne',
     type: 'plan',

@@ -1,40 +1,88 @@
 import React from 'react';
 import { Progress } from 'reactstrap';
+import createPlotlyComponent from 'react-plotly.js/factory';
+import { withSize } from 'react-sizeme';
+import styled, { withTheme } from 'styled-components';
 
-import styled from 'styled-components';
 
-const ProgressYears = styled.div`
-  font-size: 10px;
-  display: flex;
-  justify-content: space-between;
-`;
-
-const ProgressBar = styled(Progress)`
-  .progress-bar {
-    background-color: ${props => props.theme.helTram};
+const Timeline = ({ schedules, allSchedules, size, theme }) => {
+  if (typeof window === 'undefined') {
+    return null;
   }
-`;
 
-class Timeline extends React.Component {
-  render() {
-    return (
-      <div>
-        <ProgressBar value={75} />
-        <ProgressYears>
-          <div>2017</div>
-          <div>2019</div>
-          <div>2021</div>
-          <div>2023</div>
-          <div>2025</div>
-          <div>2027</div>
-          <div>2029</div>
-          <div>2031</div>
-          <div>2033</div>
-          <div>2035</div>
-        </ProgressYears>
-      </div>
-    );
-  }
-}
+  let minDate;
+  let maxDate;
+  allSchedules.forEach((sch) => {
+    if (!minDate || sch.begins_at < minDate) {
+      minDate = sch.begins_at;
+    }
+    if (!maxDate || sch.ends_at > maxDate) {
+      maxDate = sch.ends_at;
+    }
+  });
 
-export default Timeline;
+  let actStartDate;
+  let actEndDate;
+  schedules.forEach((sch) => {
+    if (!actStartDate || sch.begins_at < actStartDate) {
+      actStartDate = sch.begins_at;
+    }
+    if (!actEndDate || sch.ends_at > actEndDate) {
+      actEndDate = sch.ends_at;
+    }
+  });
+
+  const startYear = parseInt(minDate.split('-')[0], 10);
+  const endYear = parseInt(maxDate.split('-')[0], 10);
+
+  const Plot = createPlotlyComponent(window.Plotly);
+  const data = [
+    {
+      x: [actStartDate, actEndDate],
+      y: [1, 1],
+      type: 'scatter',
+      mode: 'lines',
+      line: {
+        width: 18,
+        color: theme.helTram,
+      },
+    },
+  ];
+  const layout = {
+    showlegend: false,
+    showline: true,
+    zeroline: true,
+    margin: {
+      l: 0,
+      r: 0,
+      t: 0,
+      b: 12,
+    },
+    xaxis: {
+      range: [minDate, maxDate],
+      autorange: false,
+      tickformat: '         %Y', // FUUUUUU
+      dtick: endYear - startYear > 10 ? 'M36' : 'M12',
+      ticks: '',
+      showgrid: false,
+      tickfont: {
+        family: 'HelsinkiGrotesk',
+        size: 10,
+      },
+    },
+    yaxis: {
+      ticks: '',
+      visible: false,
+    },
+    plot_bgcolor: '#e9ecef',
+    width: size.width,
+    height: 28,
+    autosize: true,
+  };
+
+  return (
+    <Plot data={data} layout={layout} config={{ staticPlot: true }} />
+  );
+};
+
+export default withTheme(withSize()(Timeline));

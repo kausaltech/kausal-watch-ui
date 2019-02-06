@@ -67,7 +67,6 @@ class IndicatorGraph extends React.Component {
     //data.layout.legend = {orientation: 'h', bordercolor: '#ffffff', borderwidth: 2, bgcolor: '#efefef'};
     //data.layout.title = {text:`<b>${data.layout.title}</b>`, xref: 'paper', x: 0.05, font: { size: 24}};
     data.layout.title = {text:`<b>${data.layout.title}</b>`};
-    console.log(data);
     return (
       <Card>
         <CardBody style={{ height: '400px' }}>
