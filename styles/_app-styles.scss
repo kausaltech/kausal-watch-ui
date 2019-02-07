@@ -25,8 +25,8 @@ blockquote {
   background-color: $hel-summer;
 }
 
-.hel-logo-summer {
-  @include helsinki-logo($hel-summer);
+.hel-logo {
+  @include helsinki-logo($hel-white);
 }
 
 .hero-banner-top {
@@ -37,51 +37,6 @@ blockquote {
   .container {
     text-align: center;
   }
-}
-
-.hero-banner-bottom {
-  color: $white;
-  position: relative;
-  padding: $spacer * 6 0 $spacer * 3;
-  background-color: $hel-tram;
-  
-  .container {
-    text-align: center;
-  }
-  
-  &::before {
-    content: " ";
-    @include koro("storm", $hel-summer, 600);
-    width: 100%;
-    height: $spacer * 3;
-    position: absolute;
-    top: -5px;
-    transform: rotate(180deg);
-  }
-}
-
-.actions-section {
-  position: relative;
-  padding: $spacer * 8 0;
-  background-color: $hel-summer;
-  
-  .container {
-    text-align: center;
-  }
-  
-  &::before {
-    content: " ";
-    @include koro("storm", $hel-tram, 600);
-    width: 100%;
-    height: $spacer * 3;
-    position: absolute;
-    top: -5px;
-    transform: rotate(180deg);
-  }
-}
-
-.official-text {
-  color: $hel-tram;
 }
 
 .comments-section {
@@ -99,32 +54,6 @@ blockquote {
       height: $spacer * 3;
       position: absolute;
       top: -5px;
-    }
-  
-  .footer-column {
-    text-align: center;
-  }
-  
-  a {
-    color: $white;
-  }
-}
-
-.site-footer {
-  position: relative;
-  min-height: 14em;
-  clear: both;
-  background-color: $hel-tram;
-  color: #ffffff;
-  padding: 6rem 0;
-  
-    &::before {
-      content: " ";
-      @include koro("storm", $hel-tram, 600);
-      width: 100%;
-      height: $spacer * 3;
-      position: absolute;
-      top: $spacer * -3;
     }
   
   .footer-column {

@@ -11,7 +11,23 @@ import ContentLoader from '../components/Common/ContentLoader';
 
 
 const ActionsSection = styled.div`
-  background-color: ${props => props.theme.helSummer};
+  background-color: ${props => props.theme.brandLight};
+  position: relative;
+  padding: 8rem 0;
+  
+  .container {
+    text-align: center;
+  }
+  
+  &::before {
+    content: " ";
+    @include koro("storm", $hel-tram, 600);
+    width: 100%;
+    height: 3rem;
+    position: absolute;
+    top: -5px;
+    transform: rotate(180deg);
+  }
 `;
 
 class IndexPage extends React.Component {
@@ -44,6 +60,7 @@ class IndexPage extends React.Component {
   }
 
   render() {
+    console.log(this.props.theme);
     let actionList;
     const { actionListProps } = this.state;
     if (actionListProps) {
@@ -54,7 +71,7 @@ class IndexPage extends React.Component {
     return (
       <Layout>
         <IndexHero />
-        <ActionsSection className="actions-section">
+        <ActionsSection>
           <Container>
             <Row>
               <Col sm="12" md={{ size: 8, offset: 2 }} className="footer-column">

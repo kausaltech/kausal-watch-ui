@@ -7,23 +7,23 @@ import { withRouter } from 'next/router';
 import ActiveLink from '../../common/ActiveLink';
 
 const IndicatorsJumbo = styled.div`
-  background-color: ${props => props.theme.helSummer};
+  background-color: ${props => props.theme.brandLight};
   padding: 3em 0;
 `;
 
 const IndicatorsTabs = styled.div`
-  background-color: ${props => props.theme.helSummer};
+  background-color: ${props => props.theme.brandLight};
   margin-bottom: 2rem;
 `;
 
 const StyledActiveLink = styled(ActiveLink)`
-  background: ${props => props.theme.helTram};
+  background: ${props => props.theme.brandDark};
   color: white;
   &:hover {
-    color: ${props => props.theme.helSummer};
+    color: ${props => props.theme.brandLight};
   }
   &.active {
-    color: ${props => props.theme.helTram};
+    color: ${props => props.theme.brandDark};
     background: white;
     &:hover {
       color: black;

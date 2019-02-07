@@ -12,8 +12,34 @@ const Logo = styled(HelLogo)`
   margin-bottom: 4rem;
 `;
 
+const StyledFooter = styled.footer`
+  position: relative;
+  min-height: 14em;
+  clear: both;
+  background-color: ${props => props.theme.brandDark};
+  color: #ffffff;
+  padding: 6rem 0;
+  
+    &::before {
+      content: " ";
+      @include koro("storm", $hel-tram, 600);
+      width: 100%;
+      height: $spacer * 3;
+      position: absolute;
+      top: $spacer * -3;
+    }
+  
+  .footer-column {
+    text-align: center;
+  }
+  
+  a {
+    color: $white;
+  }
+`;
+
 const SiteFooter = ({ siteTitle }) => (
-  <footer className="site-footer">
+  <StyledFooter className="site-footer">
     <Container fluid>
       <Row>
         <Col sm="12" md={{ size: 8, offset: 2 }} className="footer-column">
@@ -54,7 +80,7 @@ const SiteFooter = ({ siteTitle }) => (
         </Col>
       </Row>
     </Container>
-  </footer>
+  </StyledFooter>
 );
 
 export default SiteFooter;

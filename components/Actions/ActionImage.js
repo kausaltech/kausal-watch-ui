@@ -12,7 +12,7 @@ const CardImg = styled(BaseCardImg)`
 `;
 
 const ImgBg = styled.div`
-  background-color: ${props => props.theme.helTram};
+  background-color: ${props => props.theme.brandDark};
 `;
 
 
