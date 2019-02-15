@@ -66,23 +66,25 @@ class IndicatorContent extends React.Component {
             </Col>
           </Row>
         </Container>
-        <Section>
-          <Container>
-            <Row>
-              <h2>Tähän mittariin vaikuttavat toimenpiteet</h2>
-            </Row>
-            <Row>
-              { indicator.actions
-                ? indicator.actions.map((action, index) => (
-                  <Col lg="4" md="6" className="mb-4 d-flex align-items-stretch" key={index}>
-                    <ActionCard action={action} />
-                  </Col>
-                ))
-                : <h6>Ei suoria toimenpiteitä</h6>
-              }
-            </Row>
-          </Container>
-        </Section>
+        { indicator.actions.length > 0 && (
+          <Section>
+            <Container>
+              <Row>
+                <h2>Tähän mittariin vaikuttavat toimenpiteet</h2>
+              </Row>
+              <Row>
+                { indicator.actions
+                  ? indicator.actions.map((action, index) => (
+                    <Col lg="4" md="6" className="mb-4 d-flex align-items-stretch" key={index}>
+                      <ActionCard action={action} />
+                    </Col>
+                  ))
+                  : <h6>Ei suoria toimenpiteitä</h6>
+                }
+              </Row>
+            </Container>
+          </Section>
+        )}
       </div>
     );
   }

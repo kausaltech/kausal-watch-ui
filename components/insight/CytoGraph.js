@@ -258,7 +258,7 @@ class CytoGraph extends React.Component {
 
   render() {
     return (
-      <Container style={{ paddingBottom: 3150 }}>
+      <Container>
         <Head>
           <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.3.1/cytoscape.umd.js" integrity="sha256-hn9fGJip8ICOwvaxGFKOtn4tfZtg1GShai5exCVKclM=" crossOrigin="anonymous" />
           <script src="https://cdn.jsdelivr.net/npm/cytoscape-cose-bilkent@4.0.0/cytoscape-cose-bilkent.min.js" />
