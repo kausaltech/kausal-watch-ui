@@ -1,7 +1,8 @@
 import React from 'react';
 import { Container, Row } from 'reactstrap';
 import Head from 'next/head';
-import styled from 'styled-components'
+import styled from 'styled-components';
+import { Router } from '../../routes';
 
 
 const VisContainer = styled.div`
@@ -96,6 +97,7 @@ class CytoGraph extends React.Component {
           type: node.type,
           level: node.indicator_level,
           depth: node.depth,
+          identifier: node.identifier,
           node,
         },
       };
@@ -242,6 +244,16 @@ class CytoGraph extends React.Component {
       ],
     });
     this.cy = cy;
+    function nodeTapHandler() {
+      if (this.data('type') === 'action') {
+        const id = this.data('identifier');
+        Router.pushRoute('action', { id });
+      } else {
+        const id = this.data('id').substr(1);
+        Router.pushRoute('indicator', { id });
+      }
+    }
+    cy.on('tap', 'node', nodeTapHandler);
   }
 
   render() {
