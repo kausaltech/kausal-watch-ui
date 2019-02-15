@@ -60,12 +60,15 @@ class ActionListFiltered extends React.Component {
       const activeOrg = this.state.activeOrganization;
       const activeSearch = this.state.activeSearch;
 
-      if (activeCat && item.root_category.id != activeCat) return false;
+      if (activeCat && item.root_category.id !== activeCat) return false;
       if (activeOrg) {
-        if (!item.responsible_parties.find(org => org.id == activeOrg)) return false;
+        if (!item.responsible_parties.find(org => org.id === activeOrg)) return false;
       }
       if (activeSearch) {
-        if (item.name.toLowerCase().search(activeSearch.toLowerCase()) == -1) return false;
+        const searchStr = activeSearch.toLowerCase();
+        if (item.identifier.toLowerCase().startsWith(searchStr)) return true;
+        if (item.name.toLowerCase().search(searchStr) !== -1) return true;
+        return false;
       }
       return true;
     });
