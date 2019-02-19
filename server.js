@@ -4,6 +4,7 @@ const morgan = require('morgan');
 const express = require('express');
 const LRUCache = require('lru-cache');
 const originalUrl = require('original-url');
+const parseCacheControl = require('parse-cache-control');
 
 const routes = require('./routes');
 
@@ -14,7 +15,7 @@ const ssrCache = new LRUCache({
     return n.toString().length + key.toString().length;
   },
   max: 50 * 1000 * 1000, // 50MB cache soft limit
-  maxAge: 1000 * 60 * 60, // 1hour
+  maxAge: 1000 * 60 * 5, // 5 minutes
 });
 
 const app = next({ dev: process.env.NODE_ENV !== 'production' });
@@ -59,8 +60,10 @@ function handleRoute({
   req, res, route, query,
 }) {
   const cacheKey = getCacheKey(req);
+  const cacheControl = parseCacheControl(req.headers['cache-control']);
+  const skipCache = cacheControl && cacheControl['max-age'] === 0;
 
-  if (ssrCache.has(cacheKey)) {
+  if (ssrCache.has(cacheKey) && !skipCache) {
     res.setHeader('x-cache', 'HIT');
     return res.send(ssrCache.get(cacheKey));
   }
