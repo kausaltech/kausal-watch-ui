@@ -17,6 +17,12 @@ const ReadMoreLink = styled.a`
   color: inherit;
   text-decoration: none;
   font-weight: 600;
+  
+  &:hover {
+    color: inherit;
+    text-decoration: none;
+    opacity: .8;
+  }
 `;
 
 const IndexHero = () => (
