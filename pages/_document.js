@@ -30,7 +30,6 @@ export default class MyDocument extends Document {
         <body>
           <Main />
           <NextScript />
-          <script src="https://cdn.plot.ly/plotly-latest.min.js" />
         </body>
       </html>
     );

@@ -1,9 +1,9 @@
 import React from 'react';
+import dynamic from 'next/dynamic';
 import { withTheme } from 'styled-components';
 import {
   Card, CardBody, Alert,
 } from 'reactstrap';
-import createPlotlyComponent from 'react-plotly.js/factory';
 import { aplans } from '../../common/api';
 
 import ContentLoader from '../Common/ContentLoader';
@@ -56,10 +56,11 @@ class IndicatorGraph extends React.Component {
           {error.message}
         </Alert>
       );
-    } if (!isLoaded) {
+    }
+    if (!process.browser || !isLoaded) {
       return <ContentLoader />;
     }
-    const Plot = createPlotlyComponent(window.Plotly);
+    const Plot = dynamic(import('react-plotly.js'));
     data.layout.autosize = true;
     data.layout.colorway = this.plotColors;
     data.layout.font = {family: '"HelsinkiGrotesk", Arial', size: 12};

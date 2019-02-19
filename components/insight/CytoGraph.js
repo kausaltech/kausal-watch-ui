@@ -2,8 +2,12 @@ import React from 'react';
 import { Container, Row } from 'reactstrap';
 import Head from 'next/head';
 import styled from 'styled-components';
+import cytoscape from 'cytoscape';
+import dagre from 'cytoscape-dagre';
 import { Router } from '../../routes';
 
+
+cytoscape.use(dagre);
 
 const VisContainer = styled.div`
   width: 100%;
@@ -67,7 +71,6 @@ class CytoGraph extends React.Component {
 
   renderNetwork() {
     const visNode = this.visRef.current;
-    const { cytoscape } = window;
     const { nodes, edges } = this.props;
     const elements = [];
     const nodeMap = {};
@@ -145,9 +148,6 @@ class CytoGraph extends React.Component {
       };
       elements.push(out);
     });
-
-    cytoscape.use(window.cytoscapeCoseBilkent);
-    cytoscape.use(window.cytoscapeDagre);
 
     const cy = cytoscape({
       container: visNode,
@@ -259,12 +259,6 @@ class CytoGraph extends React.Component {
   render() {
     return (
       <Container>
-        <Head>
-          <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.3.1/cytoscape.umd.js" integrity="sha256-hn9fGJip8ICOwvaxGFKOtn4tfZtg1GShai5exCVKclM=" crossOrigin="anonymous" />
-          <script src="https://cdn.jsdelivr.net/npm/cytoscape-cose-bilkent@4.0.0/cytoscape-cose-bilkent.min.js" />
-          <script src="https://cdnjs.cloudflare.com/ajax/libs/dagre/0.8.4/dagre.js" integrity="sha256-8Bl575vPNIbhjI9ksUdwQyoV6LtDc9AWQ8M4EGJNnPI=" crossOrigin="anonymous" />
-          <script src="https://cdn.jsdelivr.net/npm/cytoscape-dagre@2.2.2/cytoscape-dagre.min.js" />
-        </Head>
         <Row>
           <VisContainer ref={this.visRef} />
         </Row>

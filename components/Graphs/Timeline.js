@@ -1,12 +1,12 @@
 import React from 'react';
+import dynamic from 'next/dynamic';
 import { Progress } from 'reactstrap';
-import createPlotlyComponent from 'react-plotly.js/factory';
 import { withSize } from 'react-sizeme';
 import styled, { withTheme } from 'styled-components';
 
 
 const Timeline = ({ schedules, allSchedules, size, theme }) => {
-  if (typeof window === 'undefined') {
+  if (!process.browser) {
     return null;
   }
 
@@ -35,7 +35,7 @@ const Timeline = ({ schedules, allSchedules, size, theme }) => {
   const startYear = parseInt(minDate.split('-')[0], 10);
   const endYear = parseInt(maxDate.split('-')[0], 10);
 
-  const Plot = createPlotlyComponent(window.Plotly);
+  const Plot = dynamic(import('react-plotly.js'));
   const data = [
     {
       x: [actStartDate, actEndDate],

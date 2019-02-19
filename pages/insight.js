@@ -1,9 +1,9 @@
 import React from 'react';
 import Layout from '../components/layout';
-import CytoGraph from '../components/insight/CytoGraph';
 import { aplans } from '../common/api';
 import IndicatorsHero from '../components/Indicators/IndicatorsHero';
 import PlanContext from '../context/plan';
+import dynamic from 'next/dynamic'
 
 
 class VisPage extends React.Component {
@@ -30,8 +30,12 @@ class VisPage extends React.Component {
 
   render() {
     const { edges, nodes } = this.state;
-    const content = <CytoGraph edges={edges} nodes={nodes} />;
+    let content;
 
+    if (process.browser) {
+      const CytoGraph = dynamic(import('../components/insight/CytoGraph'));
+      content = <CytoGraph edges={edges} nodes={nodes} />;
+    }
     return (
       <Layout>
         <IndicatorsHero />
