@@ -15,6 +15,7 @@ import ContactPersons from './ContactPersons';
 import ActionStatus from './ActionStatus';
 import ActionIndicators from './ActionIndicators';
 import ActionBgImage from './ActionBgImage';
+import ActionPager from './ActionPager';
 import CommentForm from '../Comments/CommentForm';
 import CommentList from '../Comments/CommentList';
 import Icon from '../Common/Icon';
@@ -209,6 +210,9 @@ class ActionContent extends React.Component {
                 : <h6>Ei määriteltyjä mittareita</h6>
                 }
             </Col>
+          </Row>
+          <Row>
+            <ActionPager current={action.identifier} />
           </Row>
         </Container>
         <CommentsSection className="comments-section" id="comments">
