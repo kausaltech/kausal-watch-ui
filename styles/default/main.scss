@@ -20,7 +20,7 @@
 // Ocds specific variable overrides are not currently in use
 
 // Import city specific bootstrap variable overrides:
-@import "./default/variables";
+@import "./variables";
 
 @import "~bootstrap/scss/mixins";
 @import "~bootstrap/scss/root";
@@ -59,7 +59,7 @@
 // Import city specific style overrides.
 
 @import "~open-city-design/src/scss/helsinki/mixins";
-@import "./default/custom-styles";
+@import "./custom-styles";
 
-@import "./app-styles";
-@import "./comments";
+@import "../app-styles";
+@import "../comments";

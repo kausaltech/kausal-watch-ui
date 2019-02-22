@@ -22,17 +22,13 @@ blockquote {
 }
 
 .index-page {
-  background-color: $hel-summer;
-}
-
-.hel-logo {
-  @include helsinki-logo($hel-white);
+  background-color: $brand-light;
 }
 
 .hero-banner-top {
   position: relative;
   padding: $spacer * 3 0;
-  background-color: $hel-summer;
+  background-color: $brand-light;
 
   .container {
     text-align: center;
@@ -43,7 +39,7 @@ blockquote {
   position: relative;
   min-height: 14em;
   clear: both;
-  background-color: $hel-tram;
+  background-color: $brand-dark;
   padding: 8rem 0;
   
     &::before {
@@ -70,17 +66,17 @@ blockquote {
 }
 
 .bg-on_time {
-  background-color: $hel-tram;
+  background-color: $brand-dark;
 }
 
 .bg-late {
-  background-color: $hel-summer;
+  background-color: $brand-light;
 }
 
 .bg-severely_late {
-  background-color: $hel-metro;
+  background-color: $red;
 }
 
 .bg-status {
-  background-color: $hel-tram;
+  background-color: $green;
 }
