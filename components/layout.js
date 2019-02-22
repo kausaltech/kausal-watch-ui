@@ -1,13 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Head from 'next/head';
+import dynamic from 'next/dynamic';
 
 import { ThemeProvider } from 'styled-components';
 
 import Header from './header';
 import SiteFooter from './SiteFooter';
 import PlanContext from '../context/plan';
-import '../styles/main.scss';
+
+dynamic(import('../styles/' + process.env.PLAN_IDENTIFIER + '.scss'));
 
 
 const theme = require('sass-extract-loader?{"plugins": ["sass-extract-js"]}!open-city-design/src/scss/helsinki/_colors.scss');

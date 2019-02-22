@@ -11,7 +11,8 @@ const config = withBundleAnalyzer(withManifest(withImages(withSass({
   publicRuntimeConfig: { // Will be available on both server and client
     aplansApiBaseURL: process.env.APLANS_API_BASE_URL || 'https://aplans.api.hel.ninja/v1',
     kerrokantasiApiBaseURL: process.env.KERROKANTASI_API_BASE_URL || 'https://api.hel.fi/kerrokantasi-test/v1',
-    planIdentifier: process.env.PLAN_IDENTIFIER || 'hnh2035',
+    // the default value for PLAN_IDENTIFIER is set below in webpack config
+    planIdentifier: process.env.PLAN_IDENTIFIER,
   },
   manifest: {
     // if src value is exist, icon image will be generated from src image, and ovwewritten
@@ -54,6 +55,10 @@ const config = withBundleAnalyzer(withManifest(withImages(withSass({
     }
     // Ignore all locale files of moment.js
     cfg.plugins.push(new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/));
+
+    cfg.plugins.push(new webpack.EnvironmentPlugin({
+      PLAN_IDENTIFIER: 'hnh2035',
+    }));
     return cfg;
   },
 }))));
