@@ -172,11 +172,12 @@ class ActionContent extends React.Component {
                   && <ActionStatus name={action.status.name} identifier={action.status.identifier} />
                 }
               </ActionSection>
-              <ActionSection>
-                <h5>Aikajänne</h5>
-                <Timeline schedules={action.schedule} allSchedules={plan.action_schedules} />
-              </ActionSection>
-
+              { action.schedule.length ? (
+                <ActionSection>
+                  <h5>Aikajänne</h5>
+                  <Timeline schedules={action.schedule} allSchedules={plan.action_schedules} />
+                </ActionSection>
+              ) : null}
             </Col>
           </Row>
           <Row>
