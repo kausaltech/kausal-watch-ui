@@ -17,8 +17,6 @@ let theme = require('sass-extract-loader?{"plugins": ["sass-extract-js"]}!../sty
 const Layout = ({ children, subPageName }) => 
 
 {
-  console.log(theme);
-  console.log(process.env.PLAN_IDENTIFIER);
   return(
   <ThemeProvider theme={theme}>
     <PlanContext.Consumer>

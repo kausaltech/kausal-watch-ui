@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import Layout from '../components/layout';
 import ActionListFiltered from '../components/Actions/ActionListFiltered';
 import IndexHero from '../components/IndexHero';
+import ThlHero from '../components/ThlHero';
 import ContentLoader from '../components/Common/ContentLoader';
 
 
@@ -60,7 +61,6 @@ class IndexPage extends React.Component {
   }
 
   render() {
-    console.log(this.props.theme);
     let actionList;
     const { actionListProps } = this.state;
     if (actionListProps) {
@@ -70,7 +70,10 @@ class IndexPage extends React.Component {
     }
     return (
       <Layout>
-        <IndexHero />
+        {process.env.PLAN_IDENTIFIER === 'hnh2035' &&
+        <IndexHero />}
+        {process.env.PLAN_IDENTIFIER === 'ktstrat' &&
+        <ThlHero />}
         <ActionsSection>
           <Container>
             <Row>
