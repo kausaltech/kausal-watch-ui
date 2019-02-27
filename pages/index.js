@@ -63,6 +63,19 @@ class IndexPage extends React.Component {
   render() {
     let actionList;
     const { actionListProps } = this.state;
+    
+    var {planHeaderText, planIntroText} = "";
+    
+    if (process.env.PLAN_IDENTIFIER === 'hnh2035') {
+      planHeaderText = "Hiilineutraali Helsinki 2035 -toimenpideohjelma";
+      planIntroText= "Helsinki on sitoutunut kantamaan vastuunsa ilmastonmuutoksen hillinnässä. Helsingin kaupunkistrategiassa 2017–2021 tavoitteeksi on asetettu hiilineutraali Helsinki vuoteen 2035 mennessä. Ilmastotavoitteet koskevat kaupunkiorganisaation lisäksi kaupunkilaisia ja Helsingissä toimivia organisaatioita. Helsingistä saadaan  hiilineutraali yhteistyöllä. Hiilineutraali Helsinki 2035 –toimenpideohjelma on esitys siitä, miten päästövähennykset käytännössä saavutetaan."
+    };
+
+    if (process.env.PLAN_IDENTIFIER === 'ktstrat') {
+      planHeaderText = "Kansanterveystrategia";
+      planIntroText= "Kansasta saadaan terve yhteistyöllä."
+    };
+
     if (actionListProps) {
       actionList = <ActionListFiltered {...actionListProps} />;
     } else {
@@ -89,14 +102,9 @@ Tämä on palvelun Alpha-kehitysversio. Sivustolla saattaa esiintyä
             <Row>
               <Col sm="12" md={{ size: 10, offset: 1 }} className="footer-column">
                 <div className="mb-5">
-                  <h1 className="mb-4">Hiilineutraali Helsinki 2035 -toimenpideohjelma</h1>
+                  <h1 className="mb-4">{planHeaderText}</h1>
                   <p>
-                    Helsinki on sitoutunut kantamaan vastuunsa ilmastonmuutoksen hillinnässä.
-                    Helsingin kaupunkistrategiassa 2017–2021 tavoitteeksi on asetettu hiilineutraali
-                    Helsinki vuoteen 2035 mennessä. Ilmastotavoitteet koskevat kaupunkiorganisaation
-                    lisäksi kaupunkilaisia ja Helsingissä toimivia organisaatioita. Helsingistä saadaan
-                    hiilineutraali yhteistyöllä. Hiilineutraali Helsinki 2035 –toimenpideohjelma on esitys
-                    siitä, miten päästövähennykset käytännössä saavutetaan.
+                    {planIntroText}
                   </p>
                 </div>
               </Col>
