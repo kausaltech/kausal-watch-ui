@@ -9,12 +9,17 @@ import Header from './header';
 import SiteFooter from './SiteFooter';
 import PlanContext from '../context/plan';
 
-dynamic(import('../styles/' + process.env.PLAN_IDENTIFIER + '.scss'));
+dynamic(import('../styles/' + process.env.PLAN_IDENTIFIER + '/main.scss'));
 
-const theme = require('sass-extract-loader?{"plugins": ["sass-extract-js"]}!open-city-design/src/scss/helsinki/_colors.scss');
+let theme = require('sass-extract-loader?{"plugins": ["sass-extract-js"]}!../styles/' + process.env.PLAN_IDENTIFIER + '/_variables.scss');
 
+//theme = {brandDark: '#333', brandLight: '#ccc'}
+const Layout = ({ children, subPageName }) => 
 
-const Layout = ({ children, subPageName }) => (
+{
+  console.log(theme);
+  console.log(process.env.PLAN_IDENTIFIER);
+  return(
   <ThemeProvider theme={theme}>
     <PlanContext.Consumer>
       {plan => (
@@ -30,12 +35,12 @@ const Layout = ({ children, subPageName }) => (
           </Head>
           <Header siteTitle={plan.name} />
           {children}
-          <SiteFooter />
+          <SiteFooter siteTitle={plan.name} />
         </div>
       )}
     </PlanContext.Consumer>
   </ThemeProvider>
-);
+)};
 
 
 Layout.propTypes = {

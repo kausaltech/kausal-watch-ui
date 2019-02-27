@@ -1,93 +1,33 @@
-// Variables-hel
-//
-// Helsinki-specific fonts, color variables and defaults.
-//
-// You can find variable files (in sake for good documentation) split in the helsinki/ folder.
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,700');
+
+// font-family: 'Source Sans', sans-serif;
+
+$thl-green: #7bc143;
+$thl-green-darker: #519b2f;
+$thl-light-gray: #f2f2f2;
+$thl-gray: #606060;
+$thl-black: #303030;
+$thl-blue: #0060a6;
+$thl-orange: #faa61a;
+
+$thl-turqoise: #079e9e;
+$thl-blue: #2472b2;
+$thl-violet: #9171bc;
+$thl-pink: #bc4ba7;
+$thl-red: #d64176;
+$thl-brown: #b26d09;
+$thl-cyan: #29a0c1;
+
+$black: $thl-black;
+$white: #ffffff;
 
 $border-radius:          0;
 $border-radius-lg:       0;
 $border-radius-sm:       0;
 
-// Variables-hel
-//
-// Helsinki-specific fonts, color variables and defaults.
-
-// Import Helsinki font files here. For licencing reasons font files are not publicly shared.
-@font-face {
-  font-family: 'HelsinkiGrotesk';
-  src: url('https://makasiini.hel.ninja/delivery/HelsinkiGrotesk/565d73a693abe0776c801607ac28f0bf.woff') format('woff');
-  font-weight: 400;
-  font-style: normal;
-  text-rendering: optimizeLegibility;
-}
-@font-face {
-  font-family: 'HelsinkiGrotesk';
-  src: url('https://makasiini.hel.ninja/delivery/HelsinkiGrotesk/5bb29e3b7b1d3ef30121229bbe67c3e1.woff') format('woff');
-  font-weight: 400;
-  font-style: italic;
-  text-rendering: optimizeLegibility;
-}
-
-@font-face {
-  font-family: 'HelsinkiGrotesk';
-  src: url('https://makasiini.hel.ninja/delivery/HelsinkiGrotesk/7c46f288e8133b87e6b12b45dac71865.woff') format('woff');
-  font-weight: 500;
-  font-style: normal;
-  text-rendering: optimizeLegibility;
-}
-
-@font-face {
-  font-family: 'HelsinkiGrotesk';
-  src: url('https://makasiini.hel.ninja/delivery/HelsinkiGrotesk/e62dc97e83a385e4d8cdc939cf1e4213.woff') format('woff');
-  font-weight: 500;
-  font-style: italic;
-  text-rendering: optimizeLegibility;
-}
-
-@font-face {
-  font-family: 'HelsinkiGrotesk';
-  src: url('https://makasiini.hel.ninja/delivery/HelsinkiGrotesk/533af26cf28d7660f24c2884d3c27eac.woff') format('woff');
-  font-weight: 700;
-  font-style: normal;
-  text-rendering: optimizeLegibility;
-}
-@font-face {
-  font-family: 'HelsinkiGrotesk';
-  src: url('https://makasiini.hel.ninja/delivery/HelsinkiGrotesk/20d494430c87e15e194932b729d48270.woff') format('woff');
-  font-weight: 700;
-  font-style: italic;
-  text-rendering: optimizeLegibility;
-}
-
-@font-face {
-  font-family: 'HelsinkiGrotesk';
-  src: url('https://makasiini.hel.ninja/delivery/HelsinkiGrotesk/a50a1bd245ce63abcc0d1da80ff790d2.woff') format('woff');
-  font-weight: 900;
-  font-style: normal;
-  text-rendering: optimizeLegibility;
-}
-@font-face {
-  font-family: 'HelsinkiGrotesk';
-  src: url('https://makasiini.hel.ninja/delivery/HelsinkiGrotesk/62a1781d8b396fbb025b0552cf6304d2.woff') format('woff');
-  font-weight: 900;
-  font-style: italic;
-  text-rendering: optimizeLegibility;
-}
-
-
-$hel-grotesk: "HelsinkiGrotesk", Arial, -apple-system, BlinkMacSystemFont,
-    "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
-    "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
-
-// Helsinki Brand Variables
-// Do not use these variables directly.
-// Map them to application or theme variables instead.
-// --------------------------------------------------
-
 // Application font:
-$font-family-sans-serif: $hel-grotesk;
-$font-family-base: $hel-grotesk;
+$font-family-sans-serif: 'Source Sans Pro', sans-serif;
+$font-family-base: 'Source Sans Pro', sans-serif;
 
 // Fonts
 //
@@ -150,36 +90,6 @@ $list-inline-padding: 5px !default;
 $mark-bg: #fcf8e3 !default;
 
 
-/// COLOR
-
-
-// Helsinki Brand Color Variables
-// Do not use these variables directly.
-// Map them to application or theme variables instead.
-// --------------------------------------------------
-
-// Brand colors
-
-$hel-copper:        #00d7a7;
-$hel-bus:           #0000bf;
-$hel-coat:          #0072c6;
-$hel-fog:           #9fc9eb;
-$hel-metro:         #fd4f00;
-$hel-brick:         #bd2719;
-$hel-suomenlinna:   #f5a3c7;
-$hel-engel:         #ffe977;
-$hel-tram:          #009246;
-$hel-summer:        #ffc61e;
-$hel-silver:        #dedfe1;
-$hel-gold:          #c2a251;
-
-// Brand monochromes
-// Not brand loyal $hel-black (#000000) –optimized for digital use.
-$hel-black:         #231f20;
-$hel-dark:          #525a65;
-$hel-gray:          #abb2bd;
-$hel-light:         #ebedf1;
-$hel-white:         #ffffff;
 
 // Helper colors
 $red:     #e05563;
@@ -188,8 +98,8 @@ $green:   #3cd55f;
 $cyan:    #52a4ca;
 
 // Service specific brand color defaults
-$brand-light:  $hel-suomenlinna !default;
-$brand-dark:   $hel-bus !default;
+$brand-light:  $thl-green;
+$brand-dark:   $thl-green-darker;
 
 // Map the variables to the values
 
@@ -197,14 +107,14 @@ $brand-dark:   $hel-bus !default;
 
 // Application color mappings:
 $theme-colors: (
-  "primary":    $hel-black,
+  "primary":    $thl-black,
   "secondary":  $brand-dark,
   "success":    $green,
   "info":       $cyan,
   "warning":    $yellow,
   "danger":     $red,
-  "light":      $hel-light,
-  "dark":       $hel-dark
+  "light":      $thl-light-gray,
+  "dark":       $thl-gray
 );
 
 // Links
@@ -275,8 +185,9 @@ $btn-border-width:  2px;
   letter-spacing: .02rem;
 }
 
-/////// NAVA
+/////// NAV
 
+$brand-nav-background:              #ffffff;
 $navbar-brand-font-size:            $font-size-base;
 
 $navbar-dark-color:                 rgba($white, .5);
@@ -304,12 +215,12 @@ $navbar-light-toggler-border-color: transparent;
 $label-margin-bottom:                   0;
 
 $input-bg:                              transparent;
-$input-disabled-bg:                     rgba($hel-black, 0.1);
+$input-disabled-bg:                     rgba($black, 0.1);
 
-$input-border-color:                    $hel-black;
+$input-border-color:                    $black;
 $input-box-shadow:                      0;
 
-$input-placeholder-color:               lighten($hel-black, 40%);
+$input-placeholder-color:               lighten($black, 40%);
 
 $form-group-margin-bottom:              2rem;
 $custom-control-gutter:                 1.75rem;
@@ -323,7 +234,7 @@ $custom-control-indicator-bg-size:      60% 60%;
 $custom-control-indicator-box-shadow:   none;
 
 $custom-control-indicator-disabled-bg:    transparent;
-$custom-control-label-disabled-color:     lighten($hel-black,40%);
+$custom-control-label-disabled-color:     lighten($black,40%);
 
 $custom-control-indicator-checked-bg:           #ffffff;
 $custom-control-indicator-checked-disabled-bg:  #ffffff;
@@ -333,8 +244,8 @@ $custom-checkbox-indicator-indeterminate-color: "990000";
 
 $custom-select-indicator-color:     #990000;
 
-$custom-checkbox-indicator-icon-checked:        str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath fill='#{$hel-black}' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26 2.974 7.25 8 2.193z'/%3E%3C/svg%3E"), "#", "%23");
-$custom-radio-indicator-icon-checked:           str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3E%3Ccircle r='3' fill='#{$hel-black}'/%3E%3C/svg%3E"), "#", "%23");
+$custom-checkbox-indicator-icon-checked:        str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath fill='#{$black}' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26 2.974 7.25 8 2.193z'/%3E%3C/svg%3E"), "#", "%23");
+$custom-radio-indicator-icon-checked:           str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3E%3Ccircle r='3' fill='#{$black}'/%3E%3C/svg%3E"), "#", "%23");
 
 
 $custom-file-text: (

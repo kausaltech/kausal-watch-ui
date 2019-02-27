@@ -8,7 +8,7 @@ import { Link } from '../routes';
 import Icon from './Common/Icon';
 
 const TopNav = styled(Navbar)`
-  background-color: ${props => props.theme.brandDark};
+  background-color: ${props => props.theme.brandNavBackground};
 `;
 
 const BotNav = styled(Navbar)`
@@ -17,7 +17,6 @@ const BotNav = styled(Navbar)`
 `;
 
 const Logo = styled.div`
-  width: 5em;
   height: 2em;
 `;
 
@@ -44,7 +43,7 @@ class Header extends React.Component {
         <TopNav expand="md">
           <Link route="/">
             <a aria-label="Helsinki, palvelun etusivu" className="navbar-brand">
-              <Logo aria-hidden="true" className="hel-logo" />
+              <Logo aria-hidden="true" className="nav-org-logo" />
             </a>
           </Link>
         </TopNav>
