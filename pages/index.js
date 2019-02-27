@@ -72,8 +72,8 @@ class IndexPage extends React.Component {
     };
 
     if (process.env.PLAN_IDENTIFIER === 'ktstrat') {
-      planHeaderText = "Kansanterveystrategia";
-      planIntroText= "Kansasta saadaan terve yhteistyöllä."
+      planHeaderText = "Terveyden ja hyvinvoinnin laitoksen kansanterveysstrategia";
+      planIntroText= "THL:n tehtävänä on tuottaa tietoa päätöksenteon tueksi ja kansanterveyden parantamiseksi. THL päivittää osaamistaan jatkuvasti ja pyrkii varmistamaan, että oikeita asioita tehdään sekä talon sisällä että yhteiskunnassa yleisesti. Tällä sivustolla kokeillaan ajatusta, että kansanterveysstrategian sisältöä mietittäisiin avoimen verkkotyökalun avulla. Tarkoituksena on tunnistaa tarpeellisia toimenpiteitä, joilla THL voisi edistää kansanterveyttä. Lisäksi mietitään mittareita, joiden avulla toimenpiteiden toteutusta ja vaikutuksia voidaan seurata ja ohjata."
     };
 
     if (actionListProps) {

@@ -16,7 +16,10 @@ const HeroBanner = styled.div`
 const BannerContent = styled.div`
   padding: 5em 0;
   max-width: 48em;
+  margin: 0 auto;
   color: #ffffff;
+  text-align: center;
+  text-shadow: 3px 3px 8px rgba(0,0,0, 0.3);
   h1 {
     font-size: 48px;
   }
@@ -26,8 +29,12 @@ const ThlHero = () => (
   <HeroBanner>
     <Container>
       <BannerContent>
-        <h1>Terveyden ja hyvinvoinnin laitoksen kansanterveystrategia</h1>
-        <p className="lead">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>
+        <h2>Suomessa on tautitaakkaa vielä</h2>
+        <h1>1 605 238</h1>
+        <h2>haittapainotettua elinvuotta</h2>
+        <h1>—</h1>
+        <h2>Se on kasvanut vuodesta</h2>
+        <h1>2016 vuoteen 2017 1,1 %</h1>
       </BannerContent>
     </Container>
   </HeroBanner>
