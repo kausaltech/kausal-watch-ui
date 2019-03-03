@@ -5,7 +5,7 @@ const express = require('express');
 const LRUCache = require('lru-cache');
 const originalUrl = require('original-url');
 const parseCacheControl = require('parse-cache-control');
-
+const sentry = require('./common/sentry');
 const routes = require('./routes');
 
 const serverPort = process.env.PORT || 3000;
@@ -19,17 +19,30 @@ const ssrCache = new LRUCache({
 });
 
 const app = next({ dev: process.env.NODE_ENV !== 'production' });
+let Sentry;
+
+if (process.env.SENTRY_DSN) {
+  Sentry = sentry({ release: app.buildId }).Sentry;
+  console.log('Sentry initialized');
+}
+
 const handler = routes.getRequestHandler(app, handleRoute);
 
 app.prepare().then(() => {
   const server = express();
 
+  if (Sentry) {
+    server.use(Sentry.Handlers.requestHandler());
+  }
   server.use(morgan('dev'));
-  server.use(handler)
-    .listen(serverPort, (err) => {
-      if (err) throw err;
-      console.log(`Ready on http://localhost:${serverPort}`);
-    });
+  server.use(handler);
+  if (Sentry) {
+    server.use(Sentry.Handlers.errorHandler());
+  }
+  server.listen(serverPort, (err) => {
+    if (err) throw err;
+    console.log(`Ready on http://localhost:${serverPort}`);
+  });
 });
 
 /*

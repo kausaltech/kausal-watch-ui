@@ -10,6 +10,7 @@
   ],
   "rules": {
     "max-len": [1, 120, 2, {ignoreComments: true}],
+    "curly": ["off"],
     "react/prop-types": [2],
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }]
   },
