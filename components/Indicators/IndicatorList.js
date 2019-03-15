@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Row, Col, Card, CardBody, CardTitle, Badge,
+  Badge, Table,
 } from 'reactstrap';
 
 import styled from 'styled-components';
@@ -10,10 +10,9 @@ import { Link } from '../../routes';
 import { aplans } from '../../common/api';
 import Icon from '../Common/Icon';
 
-const IndicatorType = styled.div`
-  line-height: 1.5rem;
-  text-align: center;
-  color: #ffffff;
+import IndicatorListFilters from './IndicatorListFilters';
+
+const IndicatorType = styled(Badge)`
   background-color: ${(props) => {
     switch (props.level) {
       case 'tactical':
@@ -30,20 +29,7 @@ const IndicatorType = styled.div`
 
 const StyledBadge = styled(Badge)`
   white-space: normal;
-`;
-
-const StyledCardTitle = styled(CardTitle)`
-  hyphens: auto;
-  &:hover {
-    text-decoration: underline;
-    color: inherit;
-    cursor: pointer;
-  }
-`;
-
-const IndicatorCard = styled(Card)`
-  width: 100%;
-  margin-bottom: 1.5em;
+  margin-right: .5em;
 `;
 
 const levels = {
@@ -63,12 +49,11 @@ class IndicatorList extends React.Component {
       'fields[category]': ['identifier', 'name', 'parent'],
     });
 
-    const store = resp.store;
+    const { store } = resp;
     resp.data.forEach((indicator) => {
       const obj = store.get('indicator', indicator.id);
       let planLevel;
 
-      // FUUUUUU
       obj.relationships.levels.data.forEach((level) => {
         const levelObj = store.get('indicator_level', level.id);
         if (levelObj.relationships.plan.data.id === plan.id) {
@@ -79,13 +64,30 @@ class IndicatorList extends React.Component {
     });
     const props = {
       indicators: resp.data,
+      cats: resp.store.getAll('category'),
     };
-
     return props;
+  }
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      activeCategory: '',
+      activeSearch: '',
+    };
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleChange(filterType, val) {
+    const change = `active${filterType}`;
+    this.setState({
+      [change]: val,
+    });
   }
 
   sortIndicators(indicators) {
     let sorted = indicators;
+    sorted = indicators.sort((a, b) => a.name.localeCompare(b.name));
     sorted = indicators.sort((a, b) => {
       if (levels[a.level].index < levels[b.level].index) {
         return -1;
@@ -98,26 +100,55 @@ class IndicatorList extends React.Component {
     return sorted;
   }
 
+  filterIndicators() {
+    let i;
+    const indicators = this.props.indicators.filter((item) => {
+      const { activeCategory } = this.state;
+      const { activeSearch } = this.state;
+
+      if (activeCategory) {
+        let catMatch = false;
+        for (i = 0; i < item.categories.length; i += 1) {
+          if (item.categories[i].id === activeCategory) catMatch = true;
+        }
+        if (!catMatch) return false;
+      }
+
+      if (activeSearch) {
+        if (item.name.toLowerCase().search(activeSearch.toLowerCase()) !== -1) return true;
+        return false;
+      }
+      return true;
+    });
+
+    return indicators;
+  }
+
   render() {
-    const { indicators } = this.props;
+    const indicators = this.filterIndicators();
     return (
-      <Row className="mb-5">
-        {this.sortIndicators(indicators).map(item => (
-          <Col key={item.id} sm="6" md="4" lg="3" className="d-flex align-items-stretch">
-            <IndicatorCard>
-              <IndicatorType level={item.level}>{levels[item.level].fi || <span>-</span>}</IndicatorType>
-              <CardBody>
-                <StyledCardTitle tag="h6">
+      <div className="mb-5 pb-5">
+        <IndicatorListFilters cats={this.props.cats} changeOption={this.handleChange} />
+        <Table hover>
+          <tbody>
+            {this.sortIndicators(indicators).map(item => (
+              <tr key={item.id}>
+                <td>
+                  <IndicatorType pill level={item.level}>
+                    { levels[item.level].fi || <span>-</span> }
+                  </IndicatorType>
+                </td>
+                <td>
                   <Link route="indicator" params={{ id: item.id }} href>
-                    <a>{item.name}</a>
+                    <a>{ item.name }</a>
                   </Link>
-                </StyledCardTitle>
-                <div className="mb-3">
+                </td>
+                <td>
                   {item.categories.map(cat => (
                     <StyledBadge color="light" key={cat.id}>{cat.name}</StyledBadge>
                   ))}
-                </div>
-                <div>
+                </td>
+                <td>
                   {item.latest_graph !== null
                   && (
                     <span>
@@ -125,12 +156,12 @@ class IndicatorList extends React.Component {
                     </span>
                   )
                   }
-                </div>
-              </CardBody>
-            </IndicatorCard>
-          </Col>
-        ))}
-      </Row>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+      </div>
     );
   }
 }
