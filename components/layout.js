@@ -11,7 +11,7 @@ import PlanContext from '../context/plan';
 
 dynamic(import('../styles/' + process.env.PLAN_IDENTIFIER + '/main.scss'));
 
-let theme = require('sass-extract-loader?{"plugins": ["sass-extract-js"]}!../styles/' + process.env.PLAN_IDENTIFIER + '/_variables.scss');
+let theme = require('sass-extract-loader?{"plugins": ["sass-extract-js"]}!../styles/' + process.env.PLAN_IDENTIFIER + '/_theme-variables.scss');
 
 //theme = {brandDark: '#333', brandLight: '#ccc'}
 const Layout = ({ children, subPageName }) => 

@@ -1,0 +1,9 @@
+.nav-org-logo  {
+  @include helsinki-logo($hel-summer);
+  width: 5em;
+}
+
+.footer-org-logo  {
+  @include helsinki-logo(#ffffff);
+  background-position: center;
+}

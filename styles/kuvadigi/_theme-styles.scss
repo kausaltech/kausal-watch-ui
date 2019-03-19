@@ -1,0 +1,9 @@
+.nav-org-logo  {
+  @include helsinki-logo($hel-engel);
+  width: 5em;
+}
+
+.footer-org-logo  {
+  @include helsinki-logo(#ffffff);
+  background-position: center;
+}
