@@ -3,19 +3,21 @@ import PropTypes from 'prop-types';
 import Head from 'next/head';
 import dynamic from 'next/dynamic';
 
-import { ThemeProvider } from 'styled-components';
+import { ThemeProvider, createGlobalStyle } from 'styled-components';
 
 import Header from './header';
 import SiteFooter from './SiteFooter';
 import PlanContext from '../context/plan';
 
-dynamic(import('../styles/' + process.env.PLAN_IDENTIFIER + '.scss'));
+dynamic(import('../styles/' + process.env.PLAN_IDENTIFIER + '/main.scss'));
 
+let theme = require('sass-extract-loader?{"plugins": ["sass-extract-js"]}!../styles/' + process.env.PLAN_IDENTIFIER + '/_theme-variables.scss');
 
-const theme = require('sass-extract-loader?{"plugins": ["sass-extract-js"]}!open-city-design/src/scss/helsinki/_colors.scss');
+//theme = {brandDark: '#333', brandLight: '#ccc'}
+const Layout = ({ children, subPageName }) => 
 
-
-const Layout = ({ children, subPageName }) => (
+{
+  return(
   <ThemeProvider theme={theme}>
     <PlanContext.Consumer>
       {plan => (
@@ -31,12 +33,13 @@ const Layout = ({ children, subPageName }) => (
           </Head>
           <Header siteTitle={plan.name} />
           {children}
-          <SiteFooter />
+          <SiteFooter siteTitle={plan.name} />
         </div>
       )}
     </PlanContext.Consumer>
   </ThemeProvider>
-);
+)};
+
 
 Layout.propTypes = {
   children: PropTypes.node.isRequired,

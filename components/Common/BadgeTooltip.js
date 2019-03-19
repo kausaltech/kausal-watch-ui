@@ -1,5 +1,10 @@
 import React from 'react';
 import { Badge, Tooltip } from 'reactstrap';
+import styled from 'styled-components';
+
+const StyledBadge = styled(Badge)`
+  background-color: ${props => props.theme.brandDark};
+`;
 
 class BadgeTooltip extends React.Component {
   constructor(props) {
@@ -20,7 +25,7 @@ class BadgeTooltip extends React.Component {
   render() {
     return (
       <span>
-        <Badge pill href="#" id={this.props.abbreviation}>{this.props.abbreviation}</Badge>
+        <StyledBadge pill href="#" id={this.props.abbreviation}>{this.props.abbreviation}</StyledBadge>
         <Tooltip placement="top" isOpen={this.state.tooltipOpen} target={this.props.abbreviation} toggle={this.toggle}>
           {this.props.name}
         </Tooltip>

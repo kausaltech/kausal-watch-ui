@@ -1,9 +1,22 @@
+import * as Sentry from '@sentry/browser';
+import getConfig from 'next/config';
 import React from 'react';
+
 import Layout from '../components/layout';
 
 export default class Error extends React.Component {
-  static getInitialProps({ res, err }) {
-    const statusCode = res ? res.statusCode : err ? err.statusCode : null;
+  static getInitialProps(context) {
+    let statusCode;
+    const { req, res, err } = context;
+
+    if (res) {
+      ({ statusCode } = res);
+    } else if (err) {
+      ({ statusCode } = err);
+    } else {
+      statusCode = null;
+    }
+
     return { statusCode };
   }
 

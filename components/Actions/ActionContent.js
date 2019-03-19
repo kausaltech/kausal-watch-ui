@@ -24,7 +24,7 @@ const ActionHero = styled.div`
   position: relative;
   margin-bottom: 3rem;
   a {
-    color: ${props => props.theme.helSummer};
+    color: ${props => props.theme.brandLight};
   }
 `;
 
@@ -42,8 +42,13 @@ const ActionSection = styled.section`
   margin-bottom: 3rem;
 `;
 
+const OfficialText = styled.section`
+  color: ${props => props.theme.brandDark}; 
+  margin-bottom: 3rem;
+`;
+
 const CommentsSection = styled.section`
-  background-color: ${props => props.theme.helTram}; 
+  background-color: ${props => props.theme.brandDark}; 
 `;
 
 class ActionContent extends React.Component {
@@ -101,7 +106,7 @@ class ActionContent extends React.Component {
     return (
       <div>
         <ActionHero>
-          <ActionBgImage action={action} width={1200} height={600} color={theme.helTram}>
+          <ActionBgImage action={action} width={1200} height={600} color={theme.brandDark}>
             <OverlayContainer>
               <Container>
                 <Row>
@@ -144,12 +149,12 @@ class ActionContent extends React.Component {
               {action.description
               && <ActionSection dangerouslySetInnerHTML={{ __html: action.description }} />}
 
-              <ActionSection className="official-text">
+              <OfficialText>
                 <h5>Virallinen kuvaus</h5>
                 <strong>Toimenpideohjelman mukaisesti</strong>
                 <div dangerouslySetInnerHTML={{ __html: action.official_name }} />
                 <small>(Hiilineutraali Helsinki 2035 -toimenpideohjelmasta)</small>
-              </ActionSection>
+              </OfficialText>
             </Col>
             <Col md="6" lg="4">
               <ActionSection>

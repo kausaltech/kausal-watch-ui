@@ -3,11 +3,15 @@ const webpack = require('webpack');
 const withSass = require('@zeit/next-sass');
 const withImages = require('next-images');
 const withManifest = require('next-manifest');
+const withSourceMaps = require('@zeit/next-source-maps');
 const withBundleAnalyzer = require('@zeit/next-bundle-analyzer');
-const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin')
+const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 
 
-const config = withBundleAnalyzer(withManifest(withImages(withSass({
+const config = withBundleAnalyzer(withSourceMaps(withManifest(withImages(withSass({
+  env: {
+    SENTRY_DSN: process.env.SENTRY_DSN,
+  },
   publicRuntimeConfig: { // Will be available on both server and client
     aplansApiBaseURL: process.env.APLANS_API_BASE_URL || 'https://aplans.api.hel.ninja/v1',
     kerrokantasiApiBaseURL: process.env.KERROKANTASI_API_BASE_URL || 'https://api.hel.fi/kerrokantasi-test/v1',
@@ -45,7 +49,7 @@ const config = withBundleAnalyzer(withManifest(withImages(withSass({
     },
   },
   /* eslint no-param-reassign: ["error", { "props": true, "ignorePropertyModificationsFor": ["cfg"] }] */
-  webpack(cfg, { isServer, dev }) {
+  webpack(cfg, { isServer, buildId, dev }) {
     // remove friendlyerrorsplugin
     cfg.plugins = cfg.plugins.filter(plugin => plugin.constructor.name !== 'FriendlyErrorsWebpackPlugin');
 
@@ -53,6 +57,15 @@ const config = withBundleAnalyzer(withManifest(withImages(withSass({
     if (dev && !isServer) {
       cfg.plugins.push(new FriendlyErrorsWebpackPlugin({ clearConsole: false }));
     }
+    cfg.plugins.push(
+      new webpack.DefinePlugin({
+        'process.env.SENTRY_RELEASE': JSON.stringify(buildId),
+      }),
+    );
+    if (!isServer) {
+      cfg.resolve.alias['@sentry/node'] = '@sentry/browser';
+    }
+
     // Ignore all locale files of moment.js
     cfg.plugins.push(new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/));
 
@@ -61,6 +74,6 @@ const config = withBundleAnalyzer(withManifest(withImages(withSass({
     }));
     return cfg;
   },
-}))));
+})))));
 
 module.exports = config;

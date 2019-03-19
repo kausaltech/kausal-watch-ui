@@ -8,16 +8,15 @@ import { Link } from '../routes';
 import Icon from './Common/Icon';
 
 const TopNav = styled(Navbar)`
-  background-color: ${props => props.theme.helTram};
+  background-color: ${props => props.theme.brandNavBackground};
 `;
 
 const BotNav = styled(Navbar)`
   background-color: ${props => props.theme.white};
-  color: ${props => props.theme.helTram};
+  color: ${props => props.theme.brandDark};
 `;
 
 const Logo = styled.div`
-  width: 5em;
   height: 2em;
 `;
 
@@ -44,7 +43,7 @@ class Header extends React.Component {
         <TopNav expand="md">
           <Link route="/">
             <a aria-label="Helsinki, palvelun etusivu" className="navbar-brand">
-              <Logo aria-hidden="true" className="hel-logo-summer" />
+              <Logo aria-hidden="true" className="nav-org-logo" />
             </a>
           </Link>
         </TopNav>
@@ -52,7 +51,7 @@ class Header extends React.Component {
           <Link route="/">
             <a className="navbar-brand">{siteTitle}</a>
           </Link>
-          <NavbarToggler onClick={this.toggle}><Icon name="bars" color={theme.helTram}/></NavbarToggler>
+          <NavbarToggler onClick={this.toggle}><Icon name="bars" color={theme.brandDark}/></NavbarToggler>
           <Collapse isOpen={this.state.isOpen} navbar>
             <Nav navbar>
               <NavItem>
