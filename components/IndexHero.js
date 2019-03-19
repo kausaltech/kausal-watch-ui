@@ -59,7 +59,7 @@ const IndexHero = () => (
 
       </Container>
     </TimeScaleBanner>
-    <EmissionScaleBanner>
+    <EmissionScaleBanner className="hero-banner-bottom">
       <Container>
         <p className="lead">Tavoitteen saavuttamiseksi</p>
         <h1 className="display-5">vuositasolla vähennettävä vielä</h1>

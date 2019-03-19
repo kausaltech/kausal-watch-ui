@@ -87,7 +87,7 @@ class IndexPage extends React.Component {
         <IndexHero />}
         {process.env.PLAN_IDENTIFIER === 'ktstrat' &&
         <ThlHero />}
-        <ActionsSection>
+        <ActionsSection className="actions-section">
           <Container>
             <Row>
               <Col sm="12" md={{ size: 8, offset: 2 }} className="footer-column">

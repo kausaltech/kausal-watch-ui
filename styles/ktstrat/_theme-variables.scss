@@ -1,0 +1,88 @@
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,700');
+
+$thl-green: #7bc143;
+$thl-green-darker: #519b2f;
+$thl-light-gray: #f2f2f2;
+$thl-gray: #606060;
+$thl-black: #303030;
+$thl-blue: #0060a6;
+$thl-orange: #faa61a;
+
+$thl-turqoise: #079e9e;
+$thl-blue: #2472b2;
+$thl-violet: #9171bc;
+$thl-pink: #bc4ba7;
+$thl-red: #d64176;
+$thl-brown: #b26d09;
+$thl-cyan: #29a0c1;
+
+$black: $thl-black;
+$white: #ffffff;
+
+// Application font:
+$font-family-sans-serif: 'Source Sans Pro', sans-serif;
+$font-family-base: 'Source Sans Pro', sans-serif;
+
+$font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !default;
+$font-family-monospace:  Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !default;
+$font-family-base:       $font-family-sans-serif !default;
+
+// Helper colors
+$red:     #e05563;
+$yellow:  #eca10c;
+$green:   #3cd55f;
+$cyan:    #52a4ca;
+
+// Service specific brand color defaults
+$brand-light:  $thl-green;
+$brand-dark:   $thl-green-darker;
+
+// Application color mappings:
+$theme-colors: (
+  "primary":    $thl-black,
+  "secondary":  $brand-dark,
+  "success":    $green,
+  "info":       $cyan,
+  "warning":    $yellow,
+  "danger":     $red,
+  "light":      $thl-light-gray,
+  "dark":       $thl-gray
+);
+
+// Links
+//
+// Style anchor elements.
+
+$link-color: $brand-dark;
+$link-hover-color: darken($brand-dark, 7%);
+
+// Components
+//
+// Define common padding and border radius sizes and more.
+
+//$component-active-color:      $white !default;
+$component-active-bg:         $brand-dark;
+
+$nav-pills-link-active-bg: $brand-dark;
+
+$list-group-active-bg:  $component-active-bg;
+$list-group-active-border-color:  $list-group-active-bg;
+
+$brand-nav-background:              #ffffff;
+
+$navbar-dark-color:                 rgba($white, .5);
+$navbar-dark-hover-color:           rgba($white, .75);
+$navbar-dark-active-color:          $white;
+$navbar-dark-disabled-color:        rgba($white, .25);
+
+$navbar-dark-toggler-icon-bg:       str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='#{$white}' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E"), "#", "%23");
+$navbar-dark-toggler-border-color:  transparent;
+
+$navbar-light-color:                $black;
+$navbar-light-hover-color:          rgba($black, .7);
+$navbar-light-active-color:         rgba($black, .9);
+$navbar-light-disabled-color:       rgba($black, .3);
+
+$navbar-light-toggler-icon-bg:      str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='#{$black}' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E"), "#", "%23");
+
+$navbar-light-toggler-border-color: transparent;

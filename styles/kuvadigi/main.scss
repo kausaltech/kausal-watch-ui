@@ -1,10 +1,8 @@
-
-@import "../ocd/ocd-init";
-
+// import default variables
+@import "../app/init";
+// import theme specific variables
 @import "./theme-variables";
-
-@import "../ocd/ocd-components";
+// import app component styles
 @import "../app/app-styles";
-
+// import theme specific styles
 @import "./theme-styles";
- 

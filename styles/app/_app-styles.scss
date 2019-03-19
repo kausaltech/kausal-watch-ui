@@ -1,3 +1,4 @@
+@import "ocd-components";
 @import "comments";
 
 .icon {
@@ -43,16 +44,6 @@ blockquote {
   clear: both;
   background-color: $brand-dark;
   padding: 8rem 0;
-  
-    &::before {
-      content: " ";
-      @include koro("storm", $white, 600);
-      transform: rotate(180deg);
-      width: 100%;
-      height: $spacer * 3;
-      position: absolute;
-      top: -5px;
-    }
   
   .footer-column {
     text-align: center;

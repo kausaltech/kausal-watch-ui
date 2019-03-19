@@ -1,7 +1,7 @@
 @import "~open-city-design/src/scss/helsinki/mixins";
 
 .nav-org-logo  {
-  @include helsinki-logo($hel-suomenlinna);
+  @include helsinki-logo(#ffffff);
   width: 5em;
 }
 
@@ -13,7 +13,7 @@
 .comments-section {
     &::before {
       content: " ";
-      @include koro("wave", $white, 420);
+      @include koro("beat", $white, 600);
       transform: rotate(180deg);
       width: 100%;
       height: $spacer * 3;
@@ -25,7 +25,7 @@
 .hero-banner-bottom {
   &::before {
     content: " ";
-    @include koro("wave", $brand-light, 420);
+    @include koro("beat", $hel-summer, 600);
     width: 100%;
     height: $spacer * 3;
     position: absolute;
@@ -37,7 +37,7 @@
 .actions-section {
   &::before {
     content: " ";
-    @include koro("wave", $brand-dark, 420);
+    @include koro("beat", $hel-tram, 600);
     width: 100%;
     height: $spacer * 3;
     position: absolute;
