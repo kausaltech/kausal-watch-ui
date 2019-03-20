@@ -34,7 +34,6 @@ class IndicatorGraph extends React.Component {
           isLoaded: true,
           data: result.data.data.attributes.data,
         });
-        console.log(result.data.data.attributes.data);
       },
     )
       .catch(
@@ -67,7 +66,12 @@ class IndicatorGraph extends React.Component {
     //data.layout.titlefont = {size:36};
     //data.layout.legend = {orientation: 'h', bordercolor: '#ffffff', borderwidth: 2, bgcolor: '#efefef'};
     //data.layout.title = {text:`<b>${data.layout.title}</b>`, xref: 'paper', x: 0.05, font: { size: 24}};
-    data.layout.title = {text:`<b>${data.layout.title}</b>`};
+    console.log(data.layout.title);
+    if (typeof data.layout.title === 'object' && data.layout.title !== null) {
+      data.layout.title.text = `<b>${data.layout.title.text}</b>`;
+    } else if (typeof data.layout.title === 'string') {
+      data.layout.title = { text: `<b>${data.layout.title}</b>` };
+    }
     return (
       <Card>
         <CardBody style={{ height: '400px' }}>

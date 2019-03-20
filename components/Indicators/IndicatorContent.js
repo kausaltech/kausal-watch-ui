@@ -46,7 +46,6 @@ class IndicatorContent extends React.Component {
 
   render() {
     const { indicator } = this.props;
-    console.log(indicator.actions);
     return (
       <div className="mb-5">
         <IndicatorHero>
