@@ -32,6 +32,17 @@ const handler = routes.getRequestHandler(app, handleRoute);
 app.prepare().then(() => {
   const server = express();
 
+  server.get('/p/:id', (req, res) => {
+    const actualPage = '/content'
+    const queryParams = { title: req.params.id }
+    app.render(req, res, actualPage, queryParams)
+    console.log(`wtf!!!!!!`);
+  })
+
+  server.get('*', (req, res) => {
+    return handler(req, res)
+  })
+  
   if (Sentry) {
     server.use(Sentry.Handlers.requestHandler());
   }
@@ -40,6 +51,7 @@ app.prepare().then(() => {
   if (Sentry) {
     server.use(Sentry.Handlers.errorHandler());
   }
+
   server.listen(serverPort, (err) => {
     if (err) throw err;
     console.log(`Ready on http://localhost:${serverPort}`);

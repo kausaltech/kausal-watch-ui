@@ -20,6 +20,14 @@ const Logo = styled.div`
   height: 2em;
 `;
 
+const DynamicNavItem = props => (
+  <NavItem>
+    <Link as={`/p/${props.id}`} href={`/content?title=${props.title}`}>
+      <a className="nav-link">{props.title}</a>
+    </Link>
+  </NavItem>
+)
+
 class Header extends React.Component {
   constructor(props) {
     super(props);
@@ -64,6 +72,7 @@ class Header extends React.Component {
                   <a className="nav-link">Mittarit</a>
                 </Link>
               </NavItem>
+              <DynamicNavItem id="faq" title="Usein kysyttyä"/>
             </Nav>
           </Collapse>
         </BotNav>
