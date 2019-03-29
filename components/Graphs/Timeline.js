@@ -44,7 +44,7 @@ const Timeline = ({ schedules, allSchedules, size, theme }) => {
       mode: 'lines',
       line: {
         width: 18,
-        color: theme.helTram,
+        color: theme.brandDark,
       },
     },
   ];

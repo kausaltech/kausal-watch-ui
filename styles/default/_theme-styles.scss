@@ -1,0 +1,47 @@
+@import "~open-city-design/src/scss/helsinki/mixins";
+
+.nav-org-logo  {
+  @include helsinki-logo(#ffffff);
+  width: 5em;
+}
+
+.footer-org-logo  {
+  @include helsinki-logo(#ffffff);
+  background-position: center;
+}
+
+.comments-section {
+    &::before {
+      content: " ";
+      @include koro("beat", $white, 600);
+      transform: rotate(180deg);
+      width: 100%;
+      height: $spacer * 3;
+      position: absolute;
+      top: -5px;
+    }
+}
+
+.hero-banner-bottom {
+  &::before {
+    content: " ";
+    @include koro("beat", $hel-summer, 600);
+    width: 100%;
+    height: $spacer * 3;
+    position: absolute;
+    top: -5px;
+    transform: rotate(180deg);
+  }
+}
+
+.actions-section {
+  &::before {
+    content: " ";
+    @include koro("beat", $hel-tram, 600);
+    width: 100%;
+    height: $spacer * 3;
+    position: absolute;
+    top: -5px;
+    transform: rotate(180deg);
+  }
+}

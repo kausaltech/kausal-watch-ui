@@ -4,7 +4,7 @@
   background-color: $white;
 
   &-header {
-    border-bottom: 1px solid $hel-gray;
+    border-bottom: 1px solid $gray-500;
   }
 
   &-body {
@@ -77,7 +77,7 @@
 }
 
 .comment-form {
-  background-color: $hel-silver;
+  background-color: $gray-200;
   padding: 1em;
   margin-bottom: 2rem;
 
@@ -109,7 +109,7 @@
   font-size: 1rem;
 
   a {
-    color: $hel-tram;
+    color: $brand-dark;
   }
 }
 

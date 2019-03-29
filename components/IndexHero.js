@@ -6,11 +6,28 @@ import { Link } from '../routes';
 import Icon from './Common/Icon';
 
 const TimeScaleBanner = styled.div`
-  background-color: ${props => props.theme.helSummer};
+  background-color: ${props => props.theme.brandLight};
 `;
 
 const EmissionScaleBanner = styled.div`
-  background-color: ${props => props.theme.helTram};
+  background-color: ${props => props.theme.brandDark};
+  color: #fff;
+  position: relative;
+  padding: 6rem 0 3rem;
+  
+  .container {
+    text-align: center;
+  }
+  
+  &::before {
+    content: " ";
+    @include koro("storm", $hel-summer, 600);
+    width: 100%;
+    height: 3rem;
+    position: absolute;
+    top: -5px;
+    transform: rotate(180deg);
+  }
 `;
 
 const ReadMoreLink = styled.a`

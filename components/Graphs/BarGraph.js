@@ -8,8 +8,8 @@ class BarGraph extends React.Component {
   constructor(props) {
     super(props);
     this.plotColors = [
-      props.theme.helTram,
-      props.theme.helSummer,
+      props.theme.brandDark,
+      props.theme.brandLight,
       props.theme.helFog,
       props.theme.helGold,
       props.theme.helCopper,
