@@ -103,7 +103,8 @@ class ActionContent extends React.Component {
     const { action, theme } = this.props;
     const plan = this.context;
     const { commentCount, newMessages, newComments } = this.state;
-
+    const nextActionIdentifier = Number(action.identifier) + 1;
+    const prevActionIdentifier = Number(action.identifier) - 1;
     return (
       <div>
         <ActionHero>
@@ -212,7 +213,7 @@ class ActionContent extends React.Component {
             </Col>
           </Row>
           <Row>
-            <ActionPager current={action.identifier} />
+            <ActionPager previous={ prevActionIdentifier } next={ nextActionIdentifier } />
           </Row>
         </Container>
         <CommentsSection className="comments-section" id="comments">

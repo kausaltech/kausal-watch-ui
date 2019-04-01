@@ -203,6 +203,7 @@ aplans.define('plan', {
   name: '',
   identifier: '',
   image_url: '',
+  last_action_identifier: '',
   action_schedules: {
     jsonApi: 'hasMany',
     type: 'action_schedule',
@@ -332,6 +333,10 @@ aplans.define('indicator', {
   levels: {
     jsonApi: 'hasMany',
     type: 'indicator_level',
+  },
+  plans: {
+    jsonApi: 'hasMany',
+    type: 'plan',
   },
   categories: {
     jsonApi: 'hasMany',

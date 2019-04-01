@@ -10,13 +10,17 @@ import { Link } from '../../routes';
 class ActionPager extends React.Component {
 
   render() {
-    const { action } = this.props;
-    
+    const { next, previous } = this.props;
     return (
-      <diV><Link>Prev</Link> | Next</diV>
+      <div>
+        <Link route="action" params={{ id: previous }} passHref={ true }><a>Edellinen toimenpide</a></Link>
+        {' '}|{' '}
+        <Link route="action" params={{ id: next }} passHref={ true }><a>Seuraava toimenpide</a></Link>
+      </div>
     );
   }
 }
 
 
 export default ActionPager;
+ 
