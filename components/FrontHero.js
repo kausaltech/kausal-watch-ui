@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { Link } from '../routes';
 
 const HeroBanner = styled.div`
-  background-image: url('https://source.unsplash.com/5zp0jym2w9M');
+  background-image: url(${props => props.bgImage});
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -25,19 +25,19 @@ const BannerContent = styled.div`
   }
 `;
 
-const ThlHero = () => (
-  <HeroBanner>
-    <Container>
-      <BannerContent>
-        <h2>Suomessa on tautitaakkaa vielä</h2>
-        <h1>1 605 238</h1>
-        <h2>haittapainotettua elinvuotta</h2>
-        <h1>—</h1>
-        <h2>Se on kasvanut vuodesta</h2>
-        <h1>2016 vuoteen 2017 1,1 %</h1>
-      </BannerContent>
-    </Container>
-  </HeroBanner>
-);
+class FrontHero extends React.Component {
+  render() {
+    const { bgImage, heroText } = this.props;
+    return (
+      <HeroBanner bgImage={bgImage}>
+        <Container>
+          <BannerContent>
+            <h1>{ heroText }</h1>
+          </BannerContent>
+        </Container>
+      </HeroBanner>
+    );
+  }
+}
 
-export default ThlHero;
+export default FrontHero;

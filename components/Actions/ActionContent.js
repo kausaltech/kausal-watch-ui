@@ -106,7 +106,7 @@ class ActionContent extends React.Component {
     return (
       <div>
         <ActionHero>
-          <ActionBgImage action={action} width={1200} height={600} color={theme.brandDark}>
+          <ActionBgImage action={action} width={1200} height={600} color={theme.imageOverlay}>
             <OverlayContainer>
               <Container>
                 <Row>
