@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import Layout from '../components/layout';
 import ActionListFiltered from '../components/Actions/ActionListFiltered';
 import IndexHero from '../components/IndexHero';
+import FrontHero from '../components/FrontHero';
 import ThlHero from '../components/ThlHero';
 import ContentLoader from '../components/Common/ContentLoader';
 
@@ -18,16 +19,6 @@ const ActionsSection = styled.div`
   
   .container {
     text-align: center;
-  }
-  
-  &::before {
-    content: " ";
-    @include koro("storm", $hel-tram, 600);
-    width: 100%;
-    height: 3rem;
-    position: absolute;
-    top: -5px;
-    transform: rotate(180deg);
   }
 `;
 
@@ -63,7 +54,7 @@ class IndexPage extends React.Component {
   render() {
     let actionList;
     const { actionListProps } = this.state;
-    
+    const { plan } = this.props;
     var {planHeaderText, planIntroText} = "";
     
     if (process.env.PLAN_IDENTIFIER === 'hnh2035') {
@@ -81,12 +72,14 @@ class IndexPage extends React.Component {
     } else {
       actionList = <ContentLoader />;
     }
+    
+    let heroComponent = <FrontHero bgImage={plan.image_url} heroText={plan.name}/>;
+    
+    if (process.env.PLAN_IDENTIFIER === 'hnh2035') heroComponent = <IndexHero />;
+    if (process.env.PLAN_IDENTIFIER === 'ktstrat') heroComponent = <ThlHero />;
     return (
       <Layout>
-        {process.env.PLAN_IDENTIFIER === 'hnh2035' &&
-        <IndexHero />}
-        {process.env.PLAN_IDENTIFIER === 'ktstrat' &&
-        <ThlHero />}
+        { heroComponent }
         <ActionsSection className="actions-section">
           <Container>
             <Row>

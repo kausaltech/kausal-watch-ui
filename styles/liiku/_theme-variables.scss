@@ -118,8 +118,8 @@ $green:   #3cd55f;
 $cyan:    #52a4ca;
 
 // Service specific brand color defaults
-$brand-light:  $hel-suomenlinna;
-$brand-dark:   $hel-black;
+$brand-light:  $hel-copper;
+$brand-dark:   $hel-copper;
 
 // Map the variables to the values
 
@@ -143,7 +143,7 @@ $image-overlay: $hel-dark;
 //
 // Style anchor elements.
 
-$link-color: $brand-dark;
+$link-color: $hel-black;
 $link-hover-color: darken($brand-dark, 7%);
 
 // Components

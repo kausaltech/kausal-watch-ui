@@ -1,22 +1,22 @@
 @import "~open-city-design/src/scss/helsinki/mixins";
 
 .nav-org-logo  {
-  @include helsinki-logo($hel-suomenlinna);
+  @include helsinki-logo($hel-black);
   width: 5em;
 }
 
 .footer-org-logo  {
-  @include helsinki-logo(#ffffff);
+  @include helsinki-logo($hel-black);
   background-position: center;
 }
 
 .comments-section {
     &::before {
       content: " ";
-      @include koro("wave", $white, 420);
+      @include koro("beat", $white, 420);
       transform: rotate(180deg);
       width: 100%;
-      height: $spacer * 3;
+      height: $spacer * 4;
       position: absolute;
       top: -5px;
     }
@@ -25,22 +25,21 @@
 .hero-banner-bottom {
   &::before {
     content: " ";
-    @include koro("wave", $brand-light, 420);
+    @include koro("beat", $brand-light, 420);
     width: 100%;
-    height: $spacer * 3;
+    height: $spacer * 4;
     position: absolute;
     top: -5px;
-    transform: rotate(180deg);
   }
 }
 
 .actions-section {
   &::before {
     content: " ";
-    @include koro("wave", $brand-light, 420);
+    @include koro("beat", $brand-dark, 420);
     width: 100%;
-    height: $spacer * 3;
+    height: $spacer * 5;
     position: absolute;
-    top: $spacer * -3;
+    top: $spacer * -5;
   }
 }
