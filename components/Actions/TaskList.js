@@ -2,7 +2,7 @@ import React from 'react';
 import { ListGroup, ListGroupItem as BaseListGroupItem } from 'reactstrap';
 import styled from 'styled-components';
 import moment from '../../common/moment';
-import HelIcon from '../Common/HelIcon';
+import Icon from '../Common/Icon';
 
 
 const Date = styled.span`
@@ -45,7 +45,7 @@ class TaskList extends React.Component {
             && (
             <ListGroupItem key={item.id} className={`state--${item.state}`}>
               <div className="task-header">
-                <HelIcon iconName="check" className="text-black-50 mr-3" />
+                <Icon name="check" className="text-black-50 mr-3" />
                 <Date>{this.parseTimestamp(item.completed_at)}</Date>
                 {' '}
 |
@@ -62,7 +62,7 @@ class TaskList extends React.Component {
             && (
             <ListGroupItem key={item.id} className={`state--${item.state}`}>
               <div className="task-header">
-                <HelIcon iconName="calendar" className="text-black-50 mr-3" />
+                <Icon name="calendar" className="text-black-50 mr-3" />
                 <Date>{this.parseTimestamp(item.due_at)}</Date>
                 {' '}
 |

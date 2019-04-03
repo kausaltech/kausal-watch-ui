@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Badge, Alert } from 'reactstrap';
 import IndicatorGraph from '../Graphs/IndicatorGraph';
 
-import HelIcon from '../Common/HelIcon';
+import Icon from '../Common/Icon';
 
 class ActionIndicators extends React.Component {
   constructor(props) {
@@ -42,7 +42,7 @@ class ActionIndicators extends React.Component {
               <a href={`/indicator/${indicator.id}`}>
                 <strong>
 Katso mittarin tarkemmat tiedot
-                  <HelIcon iconName="arrow-right" />
+                  <Icon name="arrowRight" color="props.theme.brandDark" />
                 </strong>
               </a>
             </Alert>

@@ -1,26 +1,80 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  Card, CardImgOverlay, CardBody,
-  CardTitle, Progress,
-} from 'reactstrap';
+import { Button } from 'reactstrap';
+import Router, { withRouter } from 'next/router';
 import styled from 'styled-components';
-import { Link } from '../../routes';
 
-class ActionPager extends React.Component {
+import Icon from '../Common/Icon';
 
-  render() {
-    const { next, previous } = this.props;
-    return (
-      <div>
-        <Link route="action" params={{ id: previous }} passHref={ true }><a>Edellinen toimenpide</a></Link>
-        {' '}|{' '}
-        <Link route="action" params={{ id: next }} passHref={ true }><a>Seuraava toimenpide</a></Link>
-      </div>
-    );
+const Pager = styled.div`
+  display: flex;
+`;
+
+const Previous = styled.div`
+  flex: 1;
+`;
+
+const Next = styled.div`
+  flex: 1;
+  text-align: right;
+`;
+
+const PageButton = styled(Button)`
+  .icon {
+    fill: ${props => props.theme.brandDark} !important;
   }
-}
+  
+  &:hover {
+    .icon {
+      fill: #ffffff !important;
+    }
+  }
+`;
 
+const ActionPager = (props) => {
+  const { nextId, previousId } = props;
 
-export default ActionPager;
- 
+  const handleClick = (e) => {
+    const targetAction = e.target.attributes.params.value;
+    const href = `/action/${targetAction}`;
+    const as = href;
+    Router.push(href, as, { shallow: true });
+  };
+
+  return (
+    <Pager>
+      <Previous>
+        { previousId
+          && (
+            <PageButton params={previousId} onClick={handleClick} outline color="primary">
+              <Icon name="arrowLeft" />
+              Edellinen toimenpide
+            </PageButton>
+          )
+        }
+      </Previous>
+      <Next>
+        { nextId
+          && (
+            <PageButton params={nextId} onClick={handleClick} outline color="primary">
+              Seuraava toimenpide
+              <Icon name="arrowRight" />
+            </PageButton>
+          )
+        }
+      </Next>
+    </Pager>
+  );
+};
+
+ActionPager.defaultProps = {
+  previousId: false,
+  nextId: false,
+};
+
+ActionPager.propTypes = {
+  previousId: PropTypes.string,
+  nextId: PropTypes.string,
+};
+
+export default withRouter(ActionPager);

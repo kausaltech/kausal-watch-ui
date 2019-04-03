@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Container, Row, Col, Progress,
+  Container, Row, Col, Progress, Alert,
 } from 'reactstrap';
 import styled, { withTheme } from 'styled-components';
+import { withRouter } from 'next/router';
 import { Link } from '../../routes';
 import { aplans } from '../../common/api';
 import PlanContext from '../../context/plan';
@@ -103,8 +104,9 @@ class ActionContent extends React.Component {
     const { action, theme } = this.props;
     const plan = this.context;
     const { commentCount, newMessages, newComments } = this.state;
-    const nextActionIdentifier = Number(action.identifier) + 1;
-    const prevActionIdentifier = Number(action.identifier) - 1;
+    const prevActionIdentifier = (Number(action.identifier) > 1) ? `${Number(action.identifier) - 1}` : null;
+    const nextActionIdentifier = (Number(action.identifier) < plan.last_action_identifier) ? `${Number(action.identifier) + 1}` : null;
+
     return (
       <div>
         <ActionHero>
@@ -124,11 +126,11 @@ class ActionContent extends React.Component {
                       {commentCount > 0
                         ? (
                           <span>
-                            <Icon name="commenting" color="#ffffff"/>
+                            <Icon name="commenting" color="#ffffff" />
                             {' '}
                             {commentCount}
                             {' '}
-    kommenttia
+                            kommenttia
                           </span>
                         )
                         : <span>Ei kommentteja</span>
@@ -208,12 +210,14 @@ class ActionContent extends React.Component {
             <Col sm="12">
               {action.indicators.length > 0
                 ? <ActionIndicators indicators={action.indicators} />
-                : <h6>Ei määriteltyjä mittareita</h6>
+                : <Alert color="light" className="mb-5"><h6>Ei määriteltyjä mittareita</h6></Alert>
                 }
             </Col>
           </Row>
           <Row>
-            <ActionPager previous={ prevActionIdentifier } next={ nextActionIdentifier } />
+            <Col sm="12">
+              <ActionPager previousId={prevActionIdentifier} nextId={nextActionIdentifier} />
+            </Col>
           </Row>
         </Container>
         <CommentsSection className="comments-section" id="comments">
@@ -241,4 +245,4 @@ ActionContent.propTypes = {
 };
 ActionContent.contextType = PlanContext;
 
-export default withTheme(ActionContent);
+export default withRouter(withTheme(ActionContent));
