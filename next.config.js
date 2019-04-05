@@ -5,10 +5,9 @@ const withImages = require('next-images');
 const withManifest = require('next-manifest');
 const withSourceMaps = require('@zeit/next-source-maps');
 const withBundleAnalyzer = require('@zeit/next-bundle-analyzer');
-const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 
 
-const config = withBundleAnalyzer(withSourceMaps(withManifest(withImages(withSass({
+const config = withBundleAnalyzer(withSourceMaps(withImages(withSass({
   env: {
     SENTRY_DSN: process.env.SENTRY_DSN,
   },
@@ -18,6 +17,7 @@ const config = withBundleAnalyzer(withSourceMaps(withManifest(withImages(withSas
     // the default value for PLAN_IDENTIFIER is set below in webpack config
     planIdentifier: process.env.PLAN_IDENTIFIER,
   },
+  /*
   manifest: {
     // if src value is exist, icon image will be generated from src image, and ovwewritten
     // icons value exist in the properties. if you want to keep your own icons path? do not pass
@@ -36,6 +36,7 @@ const config = withBundleAnalyzer(withSourceMaps(withManifest(withImages(withSas
       cache: true,
     },
   },
+  */
   analyzeServer: ['server', 'both'].includes(process.env.BUNDLE_ANALYZE),
   analyzeBrowser: ['browser', 'both'].includes(process.env.BUNDLE_ANALYZE),
   bundleAnalyzerConfig: {
@@ -50,13 +51,6 @@ const config = withBundleAnalyzer(withSourceMaps(withManifest(withImages(withSas
   },
   /* eslint no-param-reassign: ["error", { "props": true, "ignorePropertyModificationsFor": ["cfg"] }] */
   webpack(cfg, { isServer, buildId, dev }) {
-    // remove friendlyerrorsplugin
-    cfg.plugins = cfg.plugins.filter(plugin => plugin.constructor.name !== 'FriendlyErrorsWebpackPlugin');
-
-    // add it back in with custom options
-    if (dev && !isServer) {
-      cfg.plugins.push(new FriendlyErrorsWebpackPlugin({ clearConsole: false }));
-    }
     cfg.plugins.push(
       new webpack.DefinePlugin({
         'process.env.SENTRY_RELEASE': JSON.stringify(buildId),
@@ -74,6 +68,6 @@ const config = withBundleAnalyzer(withSourceMaps(withManifest(withImages(withSas
     }));
     return cfg;
   },
-})))));
+}))));
 
 module.exports = config;
