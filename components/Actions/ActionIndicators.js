@@ -21,21 +21,22 @@ class ActionIndicators extends React.Component {
             {(indicator.latest_graph && indicator.latest_graph.data)
               ? <IndicatorGraph graphId={indicator.latest_graph.id} />
               : (
-                <h2>
-                  {indicator.name}
-                  {' '}
-(ei graafia)
-                </h2>
+                <div>
+                  <h4>
+                    {indicator.name}
+                  </h4>
+                  <Badge color="light">ei graafia</Badge>
+                </div>
               )
             }
             <Alert className="mt-3 mb-5">
             Tämä mittari liittyy myös toimenpiteisiin:
               {' '}
-              <Badge>25</Badge>
+              <Badge>-</Badge>
               {' '}
-              <Badge>28</Badge>
+              <Badge>-</Badge>
               {' '}
-              <Badge>30</Badge>
+              <Badge>-</Badge>
               {' '}
 |
               {' '}
