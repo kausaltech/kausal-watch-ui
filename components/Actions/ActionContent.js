@@ -4,7 +4,6 @@ import {
   Container, Row, Col, Progress, Alert,
 } from 'reactstrap';
 import styled, { withTheme } from 'styled-components';
-import { withRouter } from 'next/router';
 import { Link } from '../../routes';
 import { aplans } from '../../common/api';
 import PlanContext from '../../context/plan';
@@ -218,7 +217,7 @@ class ActionContent extends React.Component {
           <Row>
             <Col sm="12">
               <h2 className="mb-5">Vaikutusketju</h2>
-              <IndicatorCausal actionId={action.id} />
+              <IndicatorCausal action={action} />
             </Col>
           </Row>
           <Row>
@@ -252,4 +251,4 @@ ActionContent.propTypes = {
 };
 ActionContent.contextType = PlanContext;
 
-export default withRouter(withTheme(ActionContent));
+export default withTheme(ActionContent);

@@ -3,7 +3,6 @@ import {
   Container, Nav, NavItem,
 } from 'reactstrap';
 import styled, { withTheme } from 'styled-components';
-import { withRouter } from 'next/router';
 import ActiveLink from '../../common/ActiveLink';
 
 const IndicatorsJumbo = styled.div`
@@ -64,4 +63,4 @@ class IndicatorsHero extends React.Component {
   }
 }
 
-export default withRouter(withTheme(IndicatorsHero));
+export default withTheme(IndicatorsHero);

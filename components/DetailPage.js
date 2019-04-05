@@ -14,7 +14,6 @@ class DetailPage extends React.Component {
     }
 
     this.state = {
-      id: props.id,
       childProps: props.childProps,
       error: props.error,
     };
@@ -41,19 +40,31 @@ class DetailPage extends React.Component {
   }
 
   async componentDidMount() {
-    const { childProps, id } = this.state;
+    const { childProps } = this.state;
 
     if (!childProps) {
-      const data = await this.constructor.PageContentComponent.fetchData(id, this.props.plan);
-      if (!data) {
-        this.setState({
-          error: 404,
-        });
-      } else {
-        this.setState({
-          childProps: data,
-        });
-      }
+      await this.fetchContentData();
+    }
+  }
+
+  async componentDidUpdate(prevProps) {
+    if (this.props.id !== prevProps.id) {
+      await this.fetchContentData();
+    }
+  }
+
+  async fetchContentData() {
+    const { id } = this.props;
+    const data = await this.constructor.PageContentComponent.fetchData(id, this.props.plan);
+
+    if (!data) {
+      this.setState({
+        error: 404,
+      });
+    } else {
+      this.setState({
+        childProps: data,
+      });
     }
   }
 
