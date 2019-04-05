@@ -1,10 +1,11 @@
 import React from 'react';
 import { Container, Row } from 'reactstrap';
-import Head from 'next/head';
 import styled from 'styled-components';
 import cytoscape from 'cytoscape';
 import dagre from 'cytoscape-dagre';
 import { Router } from '../../routes';
+
+import InsightFilter from './InsightFilter';
 
 
 cytoscape.use(dagre);
@@ -53,6 +54,10 @@ class CytoGraph extends React.Component {
   constructor(props) {
     super(props);
     this.visRef = React.createRef();
+    this.handleFilterNode = this.handleFilterNode.bind(this);
+    this.state = {
+      nodeFilter: null
+    };
   }
 
   componentDidMount() {
@@ -67,6 +72,10 @@ class CytoGraph extends React.Component {
       return;
     }
     this.renderNetwork();
+  }
+
+  handleFilterNode(nodeId) {
+    this.setState({ nodeFilter: nodeId });
   }
 
   renderNetwork() {
@@ -149,27 +158,29 @@ class CytoGraph extends React.Component {
       elements.push(out);
     });
 
+    const cyLayoutOptions = {
+      name: 'dagre',
+      ranker: 'longest-path',
+      edgeWeight: (edge) => {
+        let weight = 1;
+
+        if (edge.source().data('level') === 'strategic') {
+          weight += 1;
+        }
+        if (edge.target().data('level') === 'strategic') {
+          weight += 1;
+        }
+        return weight;
+      },
+      nodeDimensionsIncludeLabels: true,
+      animate: false,
+      animateDuration: 2000,
+    };
+
     const cy = cytoscape({
       container: visNode,
       elements,
-      layout: {
-        name: 'dagre',
-        ranker: 'longest-path',
-        edgeWeight: (edge) => {
-          let weight = 1;
-
-          if (edge.source().data('level') === 'strategic') {
-            weight += 1;
-          }
-          if (edge.target().data('level') === 'strategic') {
-            weight += 1;
-          }
-          return weight;
-        },
-        nodeDimensionsIncludeLabels: true,
-        animate: false,
-        animateDuration: 2000,
-      },
+      layout: cyLayoutOptions,
       maxZoom: 2,
       minZoom: 0.1,
       style: [ // the stylesheet for the graph
@@ -244,6 +255,14 @@ class CytoGraph extends React.Component {
       ],
     });
     this.cy = cy;
+    const { nodeFilter } = this.state;
+    if (nodeFilter) {
+      const rootNode = cy.$(`#${nodeFilter}`);
+      const selectedNodes = rootNode.predecessors();
+      const removeNodes = cy.nodes().difference(selectedNodes).filter(node => node.id() != rootNode.id());
+      removeNodes.remove();
+      cy.layout(cyLayoutOptions).run();
+    }
     function nodeTapHandler() {
       if (this.data('type') === 'action') {
         const id = this.data('identifier');
@@ -259,6 +278,9 @@ class CytoGraph extends React.Component {
   render() {
     return (
       <Container>
+        <Row>
+          <InsightFilter nodes={this.props.nodes || []} onFilterNode={this.handleFilterNode} />
+        </Row>
         <Row>
           <VisContainer ref={this.visRef} />
         </Row>
