@@ -188,8 +188,7 @@ aplans.get = async function get(path, configIn) {
   let url = `${publicRuntimeConfig.aplansApiBaseURL}/${path}`;
   const config = { ...configIn, method: 'get' };
   const headers = { ...config.headers };
-
-  if (!url.endsWith('/')) url += '/';
+  
   config.url = url;
 
   headers.Accept = headers.Accept || 'application/vnd.api+json';

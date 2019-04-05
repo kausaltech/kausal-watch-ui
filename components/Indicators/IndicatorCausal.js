@@ -1,31 +1,43 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
 import {
-  Card, CardBody
+  Card, CardBody, Alert,
 } from 'reactstrap';
 import styled from 'styled-components';
+import { Link } from '../../routes';
 
-import HelIcon from '../Common/HelIcon';
+import { aplans } from '../../common/api';
+import ContentLoader from '../Common/ContentLoader';
 
 const CausalChain = styled.div`
   background-color: #eeeeee;
   display: flex;
-  flex-warp: nowrap;
+  flex-wrap: nowrap;
   overflow-x: auto;
-  padding: 2em;
-  margin: 1em 0;
+  padding: 1em;
+  margin-bottom: 3em;
+`;
+
+const Column = styled.div`
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: column;
 `;
 
 const Indicator = styled(Card)`
-  flex: 0 0 auto;
+  flex: 1 1 auto;
   width: 240px;
   hyphens: auto;
+  margin: 10px 20px;
+  line-height: 1;
+  min-height: 140px;
   background-color: ${(props) => {
     switch (props.level) {
-      case 'tactical':
-        return props.theme.helCopper;
+      case 'action':
+        return props.theme.helTram;
       case 'operational':
+        return props.theme.helCopper;
+      case 'tactical':
         return props.theme.helFog;
       case 'strategic':
         return props.theme.helCoat;
@@ -33,103 +45,278 @@ const Indicator = styled(Card)`
         return '#cccccc';
     }
   }};
+  
+  a {
+    color: #000000;
+  }
 `;
 
-const Relation = styled.div`
-  display: flex;
-  flex: 0 0 auto;
-  align-items: center;
-  margin: 0 0.5em 0 -0.3em;
+const Connection = styled.div`
+  position: absolute;
   z-index: 300;
-  font-size: 38px;
-  color: ${(props) => {
+  font-size: 3px;
+  border-color: ${(props) => {
     switch (props.type) {
-      case 'tactical':
-        return props.theme.helCopper;
-      case 'operational':
-        return props.theme.helFog;
-      case 'strategic':
-        return props.theme.helCoat;
+      case 'increases':
+        return props.theme.helTram;
+      case 'decreases':
+        return props.theme.helBrick;
+      case 'part_of':
+        return props.theme.helGold;
       default:
         return '#333333';
     }
   }};
-
+  transform: ${props => `rotate(${props.rotate * 90}deg)`};
   &:before {
-    content: '+';
-    height: 1.2em;
-    width: 1.2em;
-    background: black;
-    font-size: 20px;
-    color: white;
-    border-radius: 50%;
-    text-align: center;
-    line-height: 1.2em;
+    content: '';
+    position: absolute;
+    width: ${props => `${46 - props.widthAdjust + ((props.hLength - 1) * 280)}px`};
+    left: ${props => `${-46 + props.widthAdjust + ((props.hLength - 1) * -280)}px`};
+    bottom: ${props => (props.vLength < 0) ? '0px' : 'none'};
+    border-top: 6px solid black;
+    border-top-color: ${(props) => {
+    switch (props.type) {
+      case 'increases':
+        return props.theme.helTram;
+      case 'decreases':
+        return props.theme.helBrick;
+      case 'part_of':
+        return props.theme.helGold;
+      default:
+        return '#333333';
+    }
+  }};
+  }
+  &:after {
+    content: '';
+    position: absolute;
+    right: -5px;
+    bottom: ${props => (props.vLength >= 0) ? '-13px' : 'auto'};
+    top: ${props => (props.vLength < 0) ? '-13px' : 'auto'};
+    width: 0; 
+    height: 0;
+    transform: ${props => `rotate(${props.direction * 90}deg)`};
+    transform-origin: center left;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-left: 10px solid;
+    border-left-color: ${(props) => {
+    switch (props.type) {
+      case 'increases':
+        return props.theme.helTram;
+      case 'decreases':
+        return props.theme.helBrick;
+      case 'part_of':
+        return props.theme.helGold;
+      default:
+        return '#333333';
+    }
+  }};
   }
 `;
 
 class IndicatorCausal extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isLoaded: false,
+      error: null,
+    };
+  }
+
+  componentDidMount() {
+    aplans.get(`insight/?plan=hnh2035&action=${this.props.actionId}`).then(
+      (result) => {
+        this.setState({
+          isLoaded: true,
+          nodes: result.data.data.nodes,
+          edges: result.data.data.edges,
+        });
+      },
+    )
+      .catch(
+        (error) => {
+          this.setState({
+            isLoaded: true,
+            error,
+          });
+        },
+      );
+  }
+
+  setColumns(nodes, index, column) {
+    // Assign indicators with columns
+    const columned = nodes;
+    columned[index].column = column;
+    if (columned[index].indicator_level !== 'strategic') {
+      columned[index].from.forEach((edge) => {
+        const nodeIndex = columned.findIndex(item => item.id === edge.to);
+        this.setColumns(columned, nodeIndex, column + 1);
+      });
+    }
+    return columned;
+  }
+
+  setRows(nodes) {
+    // Assign columned indicators with rows
+    this.columnIndicators = nodes;
+    this.griddedIndicators = [];
+    let column = 0;
+    while (this.columnIndicators.length !== 0) {
+      this.columnIndicators = nodes.filter(item => item.column === column);
+      this.columnIndicators.forEach((indicator, row) => {
+        const rowIndicator = indicator;
+        rowIndicator.row = row;
+        this.griddedIndicators.push(rowIndicator);
+      });
+      column += 1;
+    }
+    return this.griddedIndicators;
+  }
+
+  combineData(nodes, edges) {
+    // Combine edges data to indicator nodes
+    this.indicators = nodes;
+    this.indicators.forEach((item, index) => {
+      this.indicators[index].from = edges.filter(edge => edge.from === item.id);
+      this.indicators[index].to = edges.filter(edge => edge.to === item.id);
+    });
+
+    this.rootIndex = this.indicators.findIndex(item => item.to.length === 0);
+    this.indicators = this.setColumns(this.indicators, this.rootIndex, 0);
+    this.indicators = this.setRows(this.indicators);
+
+    return this.indicators;
+  }
+
+  drawEdge(nodes, edge, index) {
+    const fromNode = nodes.find(item => edge.from === item.id);
+    const toNode = nodes.find(item => edge.to === item.id);
+
+    const edgeLength = toNode.column - fromNode.column;
+    const edgeHeight = toNode.row - fromNode.row;
+    const averageHeight = 140;
+    const hOffset = (20 * edgeLength) + (index * 10);
+    const vOffset = (15 * edgeLength) + (index * 20);
+
+    let direction = 0;
+
+    const edgeStyle = {
+      left: `${-hOffset}px`,
+      width: `${hOffset}px`,
+      height: `${averageHeight * Math.abs(edgeHeight)}px`,
+      borderLeftWidth: '6px',
+      borderRightWidth: '0px',
+      borderStyle: 'solid',
+    };
+
+    if (edgeHeight >= 0) {
+      edgeStyle.top = `${vOffset - (averageHeight * edgeHeight)}px`;
+      edgeStyle.borderBottomWidth = '6px';
+      edgeStyle.borderTopWidth = '0px';
+    }
+
+    if (edgeHeight < 0) {
+      edgeStyle.height = `${(averageHeight + 20) * Math.abs(edgeHeight)}px`;
+      edgeStyle.top = `${vOffset}px`;
+      edgeStyle.borderBottomWidth = '0px';
+      edgeStyle.borderTopWidth = '6px';
+    }
+
+    if (edgeLength === 0) {
+      edgeStyle.width = '1px';
+      edgeStyle.height = `${24}px`;
+      edgeStyle.top = '-24px';
+      edgeStyle.left = `${40 + (vOffset * 5)}px`;
+      direction = (edgeHeight >= 0) ? 1 : -1;
+    }
+
+    return (
+      <Connection
+        key={edge.id}
+        type={edge.effect_type}
+        style={edgeStyle}
+        hLength={edgeLength}
+        vLength={edgeHeight}
+        widthAdjust={hOffset}
+        direction={direction}
+      />
+    );
+  }
+
+  createChain(nodes) {
+    let column = 0;
+    const chain = [];
+    let columnIndicators = nodes;
+
+    while (columnIndicators.length !== 0) {
+      const children = [];
+
+      columnIndicators = nodes.filter(item => item.column === column);
+
+      columnIndicators.forEach((indicator) => {
+        let indicatorLevel = 'action';
+        if (indicator.type !== 'action') indicatorLevel = indicator.indicator_level;
+        const connectionsTo = [];
+        indicator.to.forEach((edge, index) => {
+          connectionsTo.push(
+            <span key={edge.id}>
+              {this.drawEdge(nodes, edge, index)}
+            </span>,
+          );
+        });
+        children.push(
+          <Indicator level={indicatorLevel} key={indicator.id}>
+            <CardBody>
+              { indicatorLevel !== 'action'
+                ? (
+                  <Link route={`/indicator/${indicator.object_id}`}>
+                    <a><b>{ indicator.name }</b></a>
+                  </Link>
+                )
+                : (<b>{ indicator.name }</b>)
+              }
+            </CardBody>
+            {connectionsTo}
+          </Indicator>,
+        );
+      });
+      chain.push(<Column key={column}>{children}</Column>);
+      column += 1;
+    }
+    return chain;
+  }
 
   render() {
+    const {
+      error,
+      isLoaded,
+      nodes,
+      edges,
+    } = this.state;
+    if (error) {
+      return (
+        <Alert color="danger">
+          Error:
+          {error.message}
+        </Alert>
+      );
+    }
+    if (!process.browser || !isLoaded) {
+      return <ContentLoader />;
+    }
+    const combinedData = this.combineData(nodes, edges);
     return (
       <CausalChain>
-        <Indicator level="tactical">
-          <CardBody>
-          <h4>Rakennusala lämmitysmuodoittain</h4>
-          </CardBody>
-        </Indicator>
-        <Relation>
-          <HelIcon iconName="arrow-right" />
-        </Relation>
-        <Indicator level="tactical">
-          <CardBody>
-          <h4>Rakennusala lämmitysmuodoittain</h4>
-          </CardBody>
-        </Indicator>
-        <Relation>
-          <HelIcon iconName="arrow-right" />
-        </Relation>
-        <Indicator level="operational">
-          <CardBody>
-          <h4>Rakennusala lämmitysmuodoittain</h4>
-          </CardBody>
-        </Indicator>
-        <Relation>
-          <HelIcon iconName="arrow-right" />
-        </Relation>
-        <Indicator level="operational">
-          <CardBody>
-          <h4>Rakennusala lämmitysmuodoittain</h4>
-          </CardBody>
-        </Indicator>
-        <Relation>
-          <HelIcon iconName="arrow-right" />
-        </Relation>
-        <Indicator level="strategic">
-          <CardBody>
-          <h4>Rakennusala lämmitysmuodoittain</h4>
-          </CardBody>
-        </Indicator>
-        <Relation>
-          <HelIcon iconName="arrow-right" />
-        </Relation>
-        <Indicator level="strategic">
-          <CardBody>
-          <h4>Rakennusala lämmitysmuodoittain</h4>
-          </CardBody>
-        </Indicator>
-        <Relation>
-          <HelIcon iconName="arrow-right" />
-        </Relation>
-        <Indicator level="strategic">
-          <CardBody>
-          <h4>Rakennusala lämmitysmuodoittain</h4>
-          </CardBody>
-        </Indicator>
+        { this.createChain(combinedData) }
       </CausalChain>
     );
   }
 }
 
+IndicatorCausal.propTypes = {
+  actionId: PropTypes.string.isRequired,
+};
 
 export default IndicatorCausal;

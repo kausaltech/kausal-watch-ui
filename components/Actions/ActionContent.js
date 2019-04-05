@@ -9,6 +9,7 @@ import { Link } from '../../routes';
 import { aplans } from '../../common/api';
 import PlanContext from '../../context/plan';
 
+import IndicatorCausal from '../Indicators/IndicatorCausal';
 import Timeline from '../Graphs/Timeline';
 import TaskList from './TaskList';
 import ResponsibleList from './ResponsibleList';
@@ -212,6 +213,12 @@ class ActionContent extends React.Component {
                 ? <ActionIndicators indicators={action.indicators} />
                 : <Alert color="light" className="mb-5"><h6>Ei määriteltyjä mittareita</h6></Alert>
                 }
+            </Col>
+          </Row>
+          <Row>
+            <Col sm="12">
+              <h2 className="mb-5">Vaikutusketju</h2>
+              <IndicatorCausal actionId={action.id} />
             </Col>
           </Row>
           <Row>
