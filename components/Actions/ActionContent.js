@@ -217,7 +217,7 @@ class ActionContent extends React.Component {
           <Row>
             <Col sm="12">
               <h2 className="mb-5">Vaikutusketju</h2>
-              <IndicatorCausal action={action} />
+              <IndicatorCausal actionId={action.id} />
             </Col>
           </Row>
           <Row>

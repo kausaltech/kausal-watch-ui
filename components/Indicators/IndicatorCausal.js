@@ -127,29 +127,13 @@ class IndicatorCausal extends React.Component {
   }
 
   componentDidMount() {
-    const plan = this.context;
+    this.fetchData();
+  }
 
-    aplans.get('insight', {
-      params: {
-        plan: plan.identifier, action: this.props.action.id,
-      },
-    }).then(
-      (result) => {
-        this.setState({
-          isLoaded: true,
-          nodes: result.data.data.nodes,
-          edges: result.data.data.edges,
-        });
-      },
-    )
-      .catch(
-        (error) => {
-          this.setState({
-            isLoaded: true,
-            error,
-          });
-        },
-      );
+  componentDidUpdate(prevProps) {
+    if (prevProps.actionId !== this.props.actionId) {
+      this.fetchData();
+    }
   }
 
   setColumns(nodes, index, column) {
@@ -180,6 +164,31 @@ class IndicatorCausal extends React.Component {
       column += 1;
     }
     return this.griddedIndicators;
+  }
+
+  fetchData() {
+    const plan = this.context;
+
+    aplans.get('insight', {
+      params: {
+        plan: plan.identifier, action: this.props.actionId,
+      },
+    }).then(
+      (result) => {
+        this.setState({
+          isLoaded: true,
+          nodes: result.data.data.nodes,
+          edges: result.data.data.edges,
+        });
+      },
+    ).catch(
+      (error) => {
+        this.setState({
+          isLoaded: true,
+          error,
+        });
+      },
+    );
   }
 
   combineData(nodes, edges) {
@@ -323,7 +332,7 @@ class IndicatorCausal extends React.Component {
 }
 
 IndicatorCausal.propTypes = {
-  action: PropTypes.object.isRequired,
+  actionId: PropTypes.string.isRequired,
 };
 IndicatorCausal.contextType = PlanContext;
 
