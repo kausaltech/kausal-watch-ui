@@ -22,7 +22,8 @@ const app = next({ dev: process.env.NODE_ENV !== 'production' });
 let Sentry;
 
 if (process.env.SENTRY_DSN) {
-  Sentry = sentry({ release: app.buildId }).Sentry;
+  // { release: app.buildId }
+  Sentry = sentry.Sentry;
   console.log('Sentry initialized');
 }
 
