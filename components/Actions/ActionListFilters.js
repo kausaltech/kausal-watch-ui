@@ -49,20 +49,20 @@ class ActionListFilters extends React.Component {
 
   getCategoryName(catId) {
     const cat = this.props.cats.find(cat => cat.id === catId);
-    return cat ? cat.attributes.name : 'Kaikki teemat';
+    return cat ? cat.name : 'Kaikki teemat';
   }
 
   getOrganizationName(orgId) {
     const org = this.props.orgs.find(org => org.id === orgId);
-    return org ? org.attributes.name : '?';
+    return org ? org.name : '?';
   }
 
   render() {
     const rootCategories = this.props.cats
-      .filter(cat => cat.relationships.parent.data == null)
-      .sort((a, b) => a.attributes.name.localeCompare(b.attributes.name));
+      .filter(cat => cat.parent == null)
+      .sort((a, b) => a.name.localeCompare(b.name));
     const orgs = this.props.orgs.slice(0)
-      .sort((a, b) => a.attributes.name.localeCompare(b.attributes.name));
+      .sort((a, b) => a.name.localeCompare(b.name));
 
     return (
       <div className="filters mb-5 text-left">

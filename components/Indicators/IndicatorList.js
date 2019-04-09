@@ -3,14 +3,51 @@ import PropTypes from 'prop-types';
 import {
   Badge, Table,
 } from 'reactstrap';
-
+import { Query } from 'react-apollo';
+import gql from 'graphql-tag';
 import styled from 'styled-components';
-import { Link } from '../../routes';
 
+import { Link } from '../../routes';
 import { aplans } from '../../common/api';
 import Icon from '../Common/Icon';
+import ContentLoader from '../Common/ContentLoader';
+import PlanContext from '../../context/plan';
+import { SubpageTitle } from '../layout';
+import ErrorMessage from '../Common/ErrorMessage';
 
 import IndicatorListFilters from './IndicatorListFilters';
+
+
+const GET_INDICATOR_LIST = gql`
+  query IndicatorList($plan: ID!) {
+    plan(id: $plan) {
+      id
+      indicatorLevels {
+        level,
+        indicator {
+          id
+          name
+          categories {
+            id
+          }
+          latestGraph {
+            id
+          }
+        }
+      }
+      categoryTypes {
+        categories {
+          id
+          identifier
+          name
+          parent {
+            id
+          }
+        }
+      }
+    }
+  }
+`;
 
 const IndicatorType = styled(Badge)`
   background-color: ${(props) => {
@@ -38,37 +75,7 @@ const levels = {
   strategic: { fi: 'strateginen', index: 3 },
 };
 
-class IndicatorList extends React.Component {
-  static async fetchData(plan) {
-    // Fetches the data needed by this component from the API and
-    // returns them as props suitable for the component.
-    const resp = await aplans.findAll('indicator', {
-      'filter[plans]': plan.identifier,
-      include: ['categories', 'levels'],
-      'fields[indicator]': ['name', 'unit_name', 'updated_at', 'levels', 'categories', 'latest_graph'],
-      'fields[category]': ['identifier', 'name', 'parent'],
-    });
-
-    const { store } = resp;
-    resp.data.forEach((indicator) => {
-      const obj = store.get('indicator', indicator.id);
-      let planLevel;
-
-      obj.relationships.levels.data.forEach((level) => {
-        const levelObj = store.get('indicator_level', level.id);
-        if (levelObj.relationships.plan.data.id === plan.id) {
-          planLevel = levelObj.attributes.level;
-        }
-      });
-      indicator.level = planLevel;
-    });
-    const props = {
-      indicators: resp.data,
-      cats: resp.store.getAll('category'),
-    };
-    return props;
-  }
-
+class FilteredIndicatorList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -87,6 +94,7 @@ class IndicatorList extends React.Component {
 
   sortIndicators(indicators) {
     let sorted = indicators;
+
     sorted = indicators.sort((a, b) => a.name.localeCompare(b.name));
     sorted = indicators.sort((a, b) => {
       if (levels[a.level].index < levels[b.level].index) {
@@ -121,17 +129,18 @@ class IndicatorList extends React.Component {
       return true;
     });
 
-    return indicators;
+    return this.sortIndicators(indicators);
   }
 
   render() {
     const indicators = this.filterIndicators();
+
     return (
       <div className="mb-5 pb-5">
-        <IndicatorListFilters cats={this.props.cats} changeOption={this.handleChange} />
+        <IndicatorListFilters cats={this.props.categories} changeOption={this.handleChange} />
         <Table hover>
           <tbody>
-            {this.sortIndicators(indicators).map(item => (
+            {indicators.map(item => (
               <tr key={item.id}>
                 <td>
                   <IndicatorType pill level={item.level}>
@@ -149,13 +158,11 @@ class IndicatorList extends React.Component {
                   ))}
                 </td>
                 <td>
-                  {item.latest_graph !== null
-                  && (
+                  {item.latestGraph && (
                     <span>
                       <Icon name="chartLine" />
                     </span>
-                  )
-                  }
+                  )}
                 </td>
               </tr>
             ))}
@@ -166,8 +173,50 @@ class IndicatorList extends React.Component {
   }
 }
 
-IndicatorList.propTypes = {
-  indicators: PropTypes.arrayOf(PropTypes.object),
+FilteredIndicatorList.propTypes = {
+  indicators: PropTypes.arrayOf(PropTypes.object).isRequired,
+  categories: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
+
+
+class IndicatorList extends React.Component {
+  static contextType = PlanContext;
+
+  processDataToProps(data) {
+    const { plan } = data;
+    const { indicatorLevels, categoryTypes } = plan;
+
+    const indicators = indicatorLevels.map((il) => {
+      const { indicator, level } = il;
+
+      indicator.level = level.toLowerCase();
+      return indicator;
+    });
+
+    let categories = [];
+    categoryTypes.forEach((ct) => {
+      ct.categories.forEach((cat) => {
+        categories.push(cat);
+      });
+    });
+
+    return { indicators, categories }
+  }
+
+  render() {
+    const plan = this.context;
+
+    return (
+      <Query query={GET_INDICATOR_LIST} variables={{ plan: plan.identifier }}>
+        {({ loading, error, data }) => {
+          if (loading) return <ContentLoader />;
+          if (error) return <ErrorMessage message={error.message} />;
+          const props = this.processDataToProps(data);
+          return <FilteredIndicatorList {...props} />
+        }}
+      </Query>
+    )
+  }
+}
 
 export default IndicatorList;

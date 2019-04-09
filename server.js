@@ -72,6 +72,8 @@ function getCurrentURL(req) {
 function handleRoute({
   req, res, route, query,
 }) {
+  req.currentURL = getCurrentURL(req);
+
   const cacheKey = getCacheKey(req);
   const cacheControl = parseCacheControl(req.headers['cache-control']);
   const skipCache = cacheControl && cacheControl['max-age'] === 0;
@@ -80,7 +82,6 @@ function handleRoute({
     res.setHeader('x-cache', 'HIT');
     return res.send(ssrCache.get(cacheKey));
   }
-  req.currentURL = getCurrentURL(req);
   app.renderToHTML(req, res, route.page, query).then((html) => {
     if (res.statusCode === 200) {
       ssrCache.set(req.url, html);

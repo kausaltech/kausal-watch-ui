@@ -16,25 +16,25 @@ const ImgBg = styled.div`
 
 class ActionBgImage extends React.Component {
   getImageURL(plan) {
-    const { action, height, width, children } = this.props;
+    const { action, height, width } = this.props;
     let url;
-    if (action.image_url) {
-      url = action.image_url;
+    if (action.imageUrl) {
+      url = action.imageUrl;
     } else {
       action.categories.forEach((cat) => {
-        if (url)
-          return;
-        while (cat) {
-          if (cat.image_url) {
-            url = cat.image_url;
+        if (url) return;
+        let parent = cat;
+        while (parent) {
+          if (parent.imageUrl) {
+            url = parent.imageUrl;
             return;
           }
-          cat = cat.parent;
+          parent = parent.parent;
         }
       });
     }
     if (!url) {
-      url = plan.image_url;
+      url = plan.imageUrl;
     }
 
     const params = [];

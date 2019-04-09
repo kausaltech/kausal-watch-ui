@@ -1,35 +1,69 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
+import gql from 'graphql-tag';
 import ActionListFilters from './ActionListFilters';
 import ActionList from './ActionList';
 
-import { aplans } from '../../common/api';
+import PlanContext from '../../context/plan';
+
+
+export const GET_ACTION_LIST = gql`
+  query ActionList($plan: ID!) {
+    planActions(plan: $plan) {
+      id
+      identifier
+      name
+      officialName
+      plan {
+        id
+      }
+      schedule {
+        id
+      }
+      status {
+        id
+        identifier
+        name
+      }
+      categories {
+        id
+      }
+      responsibleParties {
+        id
+        abbreviation
+        name
+      }
+    }
+    planCategories(plan: $plan) {
+      id
+      identifier
+      name
+      parent {
+        id
+      }
+      type {
+        id
+      }
+    }
+    planOrganizations(plan: $plan) {
+      id
+      abbreviation
+      name
+    }
+  }
+`;
 
 
 class ActionListFiltered extends React.Component {
-  static async fetchData(plan) {
-    // Fetches the data needed by this component from the API and
-    // returns them as props suitable for the component.
-    const resp = await aplans.findAll('action', {
-      'filter[plan__identifier]': plan.identifier,
-      include: ['status', 'categories', 'categories.parent', 'categories.parent.parent', 'responsible_parties'],
-      'fields[action]': ['identifier', 'name', 'image_url', 'categories', 'responsible_parties', 'status', 'completion'],
-      'fields[category]': ['identifier', 'name', 'parent', 'image_url'],
-      'fields[organization]': ['name', 'abbreviation', 'parent'],
-      'fields[action_status]': ['identifier', 'name'],
-    });
-    const props = {
-      actions: resp.data,
-      orgs: resp.store.getAll('organization'),
-      cats: resp.store.getAll('category'),
-    };
-
-    return props;
-  }
+  static contextType = PlanContext;
 
   constructor(props) {
     super(props);
+
+    this.actions = props.planActions;
+    this.cats = props.planCategories;
+    this.orgs = props.planOrganizations;
+
     this.state = {
       error: null,
       activeCategory: '',
@@ -39,11 +73,11 @@ class ActionListFiltered extends React.Component {
     this.handleChange = this.handleChange.bind(this);
 
     // Determine root categories
-    props.actions.forEach((action) => {
+    this.actions.forEach((action) => {
       let category = action.categories[0];
 
-      while (category.parent != null) category = category.parent;
-      action.root_category = category;
+      while (category.parent) category = category.parent;
+      action.rootCategory = category;
     });
   }
 
@@ -55,14 +89,14 @@ class ActionListFiltered extends React.Component {
   }
 
   filterActions() {
-    const actions = this.props.actions.filter((item) => {
+    const actions = this.actions.filter((item) => {
       const activeCat = this.state.activeCategory;
       const activeOrg = this.state.activeOrganization;
       const activeSearch = this.state.activeSearch;
 
-      if (activeCat && item.root_category.id !== activeCat) return false;
+      if (activeCat && item.rootCategory.id !== activeCat) return false;
       if (activeOrg) {
-        if (!item.responsible_parties.find(org => org.id === activeOrg)) return false;
+        if (!item.responsibleParties.find(org => org.id === activeOrg)) return false;
       }
       if (activeSearch) {
         const searchStr = activeSearch.toLowerCase();
@@ -82,7 +116,7 @@ class ActionListFiltered extends React.Component {
     return (
       <div id="actions">
         <h1 className="mb-4">Toimenpiteet</h1>
-        <ActionListFilters cats={this.props.cats} orgs={this.props.orgs} changeOption={this.handleChange} />
+        <ActionListFilters cats={this.cats} orgs={this.orgs} changeOption={this.handleChange} />
         <ActionList actions={actions} error={this.state.error} />
       </div>
     );
@@ -90,9 +124,9 @@ class ActionListFiltered extends React.Component {
 }
 
 ActionListFiltered.propTypes = {
-  actions: PropTypes.arrayOf(PropTypes.object).isRequired,
-  orgs: PropTypes.arrayOf(PropTypes.object).isRequired,
-  cats: PropTypes.arrayOf(PropTypes.object).isRequired,
+  planActions: PropTypes.arrayOf(PropTypes.object).isRequired,
+  planOrganizations: PropTypes.arrayOf(PropTypes.object).isRequired,
+  planCategories: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default ActionListFiltered;

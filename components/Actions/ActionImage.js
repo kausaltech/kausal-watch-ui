@@ -20,15 +20,14 @@ class ActionImage extends React.Component {
   getImageURL(plan) {
     const { action, height, width } = this.props;
     let url;
-    if (action.image_url) {
-      url = action.image_url;
+    if (action.imageUrl) {
+      url = action.imageUrl;
     } else {
       action.categories.forEach((cat) => {
-        if (url)
-          return;
+        if (url) return;
         while (cat) {
-          if (cat.image_url) {
-            url = cat.image_url;
+          if (cat.imageUrl) {
+            url = cat.imageUrl;
             return;
           }
           cat = cat.parent;
@@ -36,7 +35,7 @@ class ActionImage extends React.Component {
       });
     }
     if (!url) {
-      url = plan.image_url;
+      url = plan.imageUrl;
     }
 
     const params = [];
@@ -51,6 +50,7 @@ class ActionImage extends React.Component {
     }
     return url;
   }
+
   render() {
     return (
       <ImgBg>

@@ -1,27 +1,46 @@
 import React from 'react';
 import App, { Container } from 'next/app';
 import getConfig from 'next/config';
+import { ApolloProvider, Query } from 'react-apollo';
+import gql from 'graphql-tag';
+
 import { aplans } from '../common/api';
-import sentry from '../common/sentry';
+import { captureException } from '../common/sentry';
 import PlanContext from '../context/plan';
+import withApollo from '../common/apollo';
+import Error from './_error';
 
 
 const { publicRuntimeConfig } = getConfig();
-const { captureException } = sentry({ release: process.env.SENTRY_RELEASE });
 
+const GET_PLAN = gql`
+  query Plan($plan: ID!) {
+    plan(id: $plan) {
+      id
+      identifier
+      name
+      imageUrl
+      actionSchedules {
+        id,
+        beginsAt,
+        endsAt
+      }
+    }
+  }
+`;
 
 // cache the global plan object here
 let globalPlan;
 
 
-export default class AplansApp extends App {
+class AplansApp extends App {
   constructor(props) {
     super(props);
     // This might be a little bit naughty, but we're setting the global
     // plan here so that we don't need to fetch the data client-side.
-    const planContext = { props };
-    if (!globalPlan && planContext.plan) {
-      globalPlan = planContext.plan;
+    const { plan } = props;
+    if (!globalPlan && plan) {
+      globalPlan = plan;
     }
     this.state = {
       hasError: false,
@@ -29,26 +48,14 @@ export default class AplansApp extends App {
     };
   }
 
-  static async getInitialProps({ Component, ctx }) {
+  static async getInitialProps(args) {
+    const { Component, ctx } = args;
     let pageProps = {};
-    let plan;
-
-    if (globalPlan) {
-      plan = globalPlan;
-    } else {
-      const resp = await aplans.findAll('plan', {
-        'filter[identifier]': publicRuntimeConfig.planIdentifier,
-        include: 'action_schedules',
-      });
-      if (resp && resp.data) {
-        [plan] = resp.data;
-      }
-    }
-    ctx.plan = plan;
+    let currentURL;
 
     if (ctx.req) {
       // The current, full URL is used in SSR to render the opengraph tags.
-      plan.currentURL = ctx.req.currentURL;
+      currentURL = ctx.req.currentURL;
     }
 
     try {
@@ -62,7 +69,7 @@ export default class AplansApp extends App {
       throw error;
     }
 
-    return { pageProps, plan };
+    return { pageProps, currentURL };
   }
 
   componentDidCatch(error, errorInfo) {
@@ -71,14 +78,33 @@ export default class AplansApp extends App {
   }
 
   render() {
-    const { Component, pageProps, plan } = this.props;
+    const {
+      Component, pageProps, apollo, currentURL,
+    } = this.props;
+    const { planIdentifier } = publicRuntimeConfig;
 
     return (
       <Container>
-        <PlanContext.Provider value={plan}>
-          <Component {...pageProps} />
-        </PlanContext.Provider>
+        <ApolloProvider client={apollo}>
+          <Query query={GET_PLAN} variables={{ plan: planIdentifier }}>
+            {({ data, loading, error }) => {
+              if (error) return <Error message={error} />;
+              if (loading) return null;
+
+              const { plan } = data;
+              if (currentURL) plan.currentURL = currentURL;
+              return (
+                <PlanContext.Provider value={data.plan}>
+                  <Component {...pageProps} />
+                </PlanContext.Provider>
+              );
+            }}
+          </Query>
+        </ApolloProvider>
       </Container>
     );
   }
 }
+
+
+export default withApollo(AplansApp);

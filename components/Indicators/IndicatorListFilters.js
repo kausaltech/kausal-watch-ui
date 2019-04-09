@@ -37,19 +37,19 @@ class IndicatorListFilters extends React.Component {
   getCategoryName(catId) {
     const { cats } = this.props;
     const category = cats.find(cat => cat.id === catId);
-    return category ? category.attributes.name : 'Kaikki teemat';
+    return category ? category.name : 'Kaikki teemat';
   }
 
   getCategoryIdentifier(catId) {
     const { cats } = this.props;
     const category = cats.find(cat => cat.id === catId);
-    return category ? category.attributes.identifier : '';
+    return category ? category.identifier : '';
   }
 
   render() {
     const { cats } = this.props;
     const { activeCat } = this.state;
-    const sortedCats = cats.sort((a, b) => a.attributes.identifier.localeCompare(b.attributes.identifier));
+    const sortedCats = cats.sort((a, b) => a.identifier.localeCompare(b.identifier));
 
     return (
       <div className="filters mb-5 mt-5">

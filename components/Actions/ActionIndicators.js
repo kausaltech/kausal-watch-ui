@@ -5,57 +5,60 @@ import IndicatorGraph from '../Graphs/IndicatorGraph';
 
 import Icon from '../Common/Icon';
 
-class ActionIndicators extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      data: [],
-    };
-  }
+function ActionIndicator(props) {
+  const { relatedIndicator, actionId } = props;
+  const { indicator } = relatedIndicator;
+  const actions = indicator.actions.filter(action => action.id !== actionId);
 
-  render() {
-    return (
-      <div>
-        {this.props.indicators.map(indicator => (
-          <div key={indicator.id}>
-            {(indicator.latest_graph && indicator.latest_graph.data)
-              ? <IndicatorGraph graphId={indicator.latest_graph.id} />
-              : (
-                <div>
-                  <h4>
-                    {indicator.name}
-                  </h4>
-                  <Badge color="light">ei graafia</Badge>
-                </div>
-              )
-            }
-            <Alert className="mt-3 mb-5">
-            Tämä mittari liittyy myös toimenpiteisiin:
-              {' '}
-              <Badge>-</Badge>
-              {' '}
-              <Badge>-</Badge>
-              {' '}
-              <Badge>-</Badge>
-              {' '}
-|
-              {' '}
-              <a href={`/indicator/${indicator.id}`}>
-                <strong>
-Katso mittarin tarkemmat tiedot
-                  <Icon name="arrowRight" color="props.theme.brandDark" />
-                </strong>
-              </a>
-            </Alert>
+  return (
+    <div>
+      {(indicator.latestGraph && indicator.latestGraph.data)
+        ? <IndicatorGraph graphId={indicator.latestGraph.id} />
+        : (
+          <div>
+            <h4>
+              {indicator.name}
+            </h4>
+            <Badge color="light">ei graafia</Badge>
           </div>
-        ))}
-      </div>
-    );
-  }
+        )
+      }
+      <Alert className="mt-3 mb-5">
+        {actions.length > 0 && (
+          <span>
+            Tämä mittari liittyy myös toimenpiteisiin:
+            {' '}
+            {actions.map(action => (
+              <Badge>{action.identifier}</Badge>
+            ))}
+            {' | '}
+          </span>
+        )}
+        <a href={`/indicator/${indicator.id}`}>
+          <strong>
+            Katso mittarin tarkemmat tiedot
+            <Icon name="arrowRight" color="" />
+          </strong>
+        </a>
+      </Alert>
+    </div>
+  );
+}
+
+function ActionIndicators(props) {
+  const { actionId, relatedIndicators } = props;
+  return (
+    <div>
+      {relatedIndicators.map(relatedIndicator => (
+        <ActionIndicator key={relatedIndicator.indicator.id} actionId={actionId} relatedIndicator={relatedIndicator} />
+      ))}
+    </div>
+  );
 }
 
 ActionIndicators.propTypes = {
-  indicators: PropTypes.array,
+  actionId: PropTypes.string.isRequired,
+  relatedIndicators: PropTypes.array.isRequired,
 };
 
 export default ActionIndicators;

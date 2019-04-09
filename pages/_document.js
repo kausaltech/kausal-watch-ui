@@ -2,7 +2,6 @@ import React from 'react';
 import Document, { Head, Main, NextScript } from 'next/document';
 // Import styled components ServerStyleSheet
 import { ServerStyleSheet } from 'styled-components';
-import Manifest from 'next-manifest/manifest';
 
 
 export default class MyDocument extends Document {
@@ -21,13 +20,16 @@ export default class MyDocument extends Document {
   }
 
   render() {
+    // Ugly hack to include polyfills for IE
+    const iePolyfill = '<!--[if lte IE 11]><script src=”https://cdn.polyfill.io/v2/polyfill.min.js?features=es6"></script><![endif]-->';
+
     return (
       <html lang="fi">
         <Head>
           {this.props.styleTags}
-          <Manifest />
         </Head>
         <body>
+          <div style={{display: "none"}} id="ie-polyfill-hack" dangerouslySetInnerHTML={{__html: iePolyfill}} />
           <Main />
           <NextScript />
         </body>

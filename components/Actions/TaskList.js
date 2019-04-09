@@ -18,55 +18,43 @@ const ListGroupItem = styled(BaseListGroupItem)`
 `;
 
 class TaskList extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      tasks: [],
-    };
-    this.parseTimestamp = this.parseTimestamp.bind(this);
-  }
-
-  parseTimestamp = (timestamp) => {
+  static parseTimestamp(timestamp) {
     const timeFormat = 'DD.MM.YYYY';
     return moment(timestamp).format(timeFormat);
   }
 
   render() {
-    const sortedTasks = this.props.data.sort((a, b) => {
-      let bdate; let
-        adate;
-      a.completed_at ? adate = a.completed_at : adate = a.due_at;
-      b.completed_at ? bdate = b.completed_at : bdate = b.due_at;
+    const sortedTasks = this.props.tasks.sort((a, b) => {
+      let bdate;
+      let adate;
+
+      a.completedAt ? adate = a.completedAt : adate = a.dueAt;
+      b.completedAt ? bdate = b.completedAt : bdate = b.dueAt;
       return moment(adate).diff(moment(bdate));
     });
 
-    const doneTasks = sortedTasks.map((item, index) => (
-      item.completed_at !== null
-            && (
-            <ListGroupItem key={item.id} className={`state--${item.state}`}>
-              <div className="task-header">
-                <Icon name="check" className="text-black-50 mr-3" />
-                <Date>{this.parseTimestamp(item.completed_at)}</Date>
-                {' '}
-|
-                {' '}
-                <span dangerouslySetInnerHTML={{ __html: item.name }} />
-              </div>
-              <div><small><span dangerouslySetInnerHTML={{ __html: item.comment }} /></small></div>
-            </ListGroupItem>
-            )
-    ));
+    const doneTasks = sortedTasks
+      .filter(item => item.completedAt !== null)
+      .map((item, index) => (
+        <ListGroupItem key={item.id} className={`state--${item.state}`}>
+          <div className="task-header">
+            <Icon name="check" className="text-black-50 mr-3" />
+            <Date>{TaskList.parseTimestamp(item.completedAt)}</Date>
+            {' | '}
+            <span dangerouslySetInnerHTML={{ __html: item.name }} />
+          </div>
+          <div><small><span dangerouslySetInnerHTML={{ __html: item.comment }} /></small></div>
+        </ListGroupItem>
+      ));
 
     const undoneTasks = sortedTasks.map((item, index) => (
-      item.completed_at === null
+      item.completedAt === null
             && (
             <ListGroupItem key={item.id} className={`state--${item.state}`}>
               <div className="task-header">
                 <Icon name="calendar" className="text-black-50 mr-3" />
-                <Date>{this.parseTimestamp(item.due_at)}</Date>
-                {' '}
-|
-                {' '}
+                <Date>{TaskList.parseTimestamp(item.dueAt)}</Date>
+                {' | '}
                 <span dangerouslySetInnerHTML={{ __html: item.name }} />
               </div>
               <div><small><span dangerouslySetInnerHTML={{ __html: item.comment }} /></small></div>
@@ -76,15 +64,12 @@ class TaskList extends React.Component {
 
     return (
       <div>
-        { doneTasks.length > 0
-          ? (
-            <ListGroup className="mb-4">
-              <h5>Mitä on tehty?</h5>
-              {doneTasks}
-            </ListGroup>
-          )
-          : <h5>Ei tehtyjä tehtäviä</h5>
-        }
+        { doneTasks.length > 0 && (
+          <ListGroup className="mb-4">
+            <h5>Mitä on tehty?</h5>
+            {doneTasks}
+          </ListGroup>
+        )}
         { undoneTasks.length > 0
           ? (
             <ListGroup className="mb-4">

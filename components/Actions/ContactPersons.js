@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 const Responsibles = styled.div`
@@ -14,27 +15,32 @@ const Avatar = styled.img`
   height: 4em;
 `;
 
-class ContactPersons extends React.Component {
-  render() {
-    return (
-      <Responsibles>
-        <h5>Yhteyshenkilöt</h5>
-        { this.props.data.length !== 0
-          ? this.props.data.map((person, index) => (
-            <div key={index}>
-              <Avatar src={person.avatar_url} className="rounded-circle border my-3" />
-              <h6>
-                {person.first_name}
-                {' '}
-                {person.last_name}
-              </h6>
-            </div>
-          ))
-          : <h6>Ei merkittyjä yhteyshenkilöitä</h6>
-        }
-      </Responsibles>
-    );
-  }
+
+function ContactPersons(props) {
+  const { persons } = props;
+  return (
+    <Responsibles>
+      <h5>Yhteyshenkilöt</h5>
+      { persons.length !== 0
+        ? persons.map((person, index) => (
+          <div key={index}>
+            <Avatar src={person.avatarUrl} className="rounded-circle border my-3" />
+            <h6>
+              {`${person.firstName} ${person.lastName}`}
+            </h6>
+          </div>
+        ))
+        : <h6>Ei merkittyjä yhteyshenkilöitä</h6>
+      }
+    </Responsibles>
+  );
 }
+ContactPersons.propTypes = {
+  persons: PropTypes.arrayOf(PropTypes.shape({
+    firstName: PropTypes.string.isRequired,
+    lastName: PropTypes.string.isRequired,
+    avatarUrl: PropTypes.string,
+  })).isRequired,
+};
 
 export default ContactPersons;

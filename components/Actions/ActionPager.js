@@ -40,24 +40,23 @@ const ActionPager = (props) => {
       <Previous>
         { previousId
           && (
-            <Link route="action" params={{ id: previousId }} passHref={ true }><PageButton>Edellinen toimenpide</PageButton></Link>
+            <Link route="action" params={{ id: previousId }} passHref={ true }>
+              <PageButton>Edellinen toimenpide</PageButton>
+            </Link>
           )
         }
       </Previous>
       <Next>
         { nextId
           && (
-            <Link route="action" params={{ id: nextId }} passHref={ true }><PageButton>Seuraava toimenpide</PageButton></Link>
+            <Link route="action" params={{ id: nextId }} passHref={ true }>
+              <PageButton>Seuraava toimenpide</PageButton>
+            </Link>
           )
         }
       </Next>
     </Pager>
   );
-};
-
-ActionPager.defaultProps = {
-  previousId: false,
-  nextId: false,
 };
 
 ActionPager.propTypes = {

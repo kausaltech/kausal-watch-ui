@@ -1,11 +1,21 @@
 import React from 'react';
 import ActionContent from '../../components/Actions/ActionContent';
-import DetailPage from '../../components/DetailPage';
+import Layout from '../../components/layout';
 
 
-class ActionPage extends DetailPage {
+class ActionPage extends React.Component {
+  static async getInitialProps({ query }) {
+    return { id: query.id };
+  }
+
+  render() {
+    const { id } = this.props;
+    return (
+      <Layout>
+        <ActionContent id={id} />
+      </Layout>
+    );
+  }
 }
-
-ActionPage.PageContentComponent = ActionContent;
 
 export default ActionPage;

@@ -13,41 +13,54 @@ dynamic(import('../styles/' + process.env.PLAN_IDENTIFIER + '/main.scss'));
 
 let theme = require('sass-extract-loader?{"plugins": ["sass-extract-js"]}!../styles/' + process.env.PLAN_IDENTIFIER + '/_theme-variables.scss');
 
-//theme = {brandDark: '#333', brandLight: '#ccc'}
-const Layout = ({ children, subPageName }) => 
 
-{
-  return(
-  <ThemeProvider theme={theme}>
-    <PlanContext.Consumer>
-      {plan => (
-        <div>
-          <Head>
-            <title>{(subPageName ? `${subPageName} | ` : '') + plan.name}</title>
-            <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-            <meta property="og:title" content={subPageName || plan.name} />
-            {plan.currentURL &&
-              <meta property="og:url" content={plan.currentURL.domain + plan.currentURL.path} />
-            }
-            <meta property="og:site_name" content={plan.name} />
-          </Head>
-          <Header siteTitle={plan.name} />
-          {children}
-          <SiteFooter siteTitle={plan.name} />
-        </div>
-      )}
-    </PlanContext.Consumer>
-  </ThemeProvider>
-)};
-
-
+function Layout({ children }) {
+  return (
+    <ThemeProvider theme={theme}>
+      <PlanContext.Consumer>
+        {plan => (
+          <div>
+            <Head>
+              <title key="head-title">{plan.name}</title>
+              <meta property="og:title" key="head-og-title" content={plan.name} />
+              <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+              {plan.currentURL &&
+                <meta property="og:url" content={plan.currentURL.domain + plan.currentURL.path} />
+              }
+              <meta property="og:site_name" content={plan.name} />
+            </Head>
+            <Header siteTitle={plan.name} />
+            {children}
+            <SiteFooter siteTitle={plan.name} />
+          </div>
+        )}
+      </PlanContext.Consumer>
+    </ThemeProvider>
+  );
+}
 Layout.propTypes = {
   children: PropTypes.node.isRequired,
-  subPageName: PropTypes.string,
-};
-
-Layout.defaultProps = {
-  subPageName: undefined,
 };
 
 export default Layout;
+
+
+export class SubpageTitle extends React.Component {
+  static contextType = PlanContext;
+
+  render() {
+    const { title } = this.props;
+    const plan = this.context;
+
+    return (
+      <Head>
+        <title key="head-title">{`${title} | ${plan.name}`}</title>
+        <meta property="og:title" key="head-og-title" content={title} />
+      </Head>
+    );
+  }
+}
+
+SubpageTitle.propTypes = {
+  title: PropTypes.string.isRequired,
+};

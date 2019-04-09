@@ -2,7 +2,6 @@ const { resolve } = require('path');
 const webpack = require('webpack');
 const withSass = require('@zeit/next-sass');
 const withImages = require('next-images');
-const withManifest = require('next-manifest');
 const withSourceMaps = require('@zeit/next-source-maps');
 const withBundleAnalyzer = require('@zeit/next-bundle-analyzer');
 
@@ -15,7 +14,7 @@ const config = withBundleAnalyzer(withSourceMaps(withImages(withSass({
     aplansApiBaseURL: process.env.APLANS_API_BASE_URL || 'https://aplans.api.hel.ninja/v1',
     kerrokantasiApiBaseURL: process.env.KERROKANTASI_API_BASE_URL || 'https://api.hel.fi/kerrokantasi-test/v1',
     // the default value for PLAN_IDENTIFIER is set below in webpack config
-    planIdentifier: process.env.PLAN_IDENTIFIER,
+    planIdentifier: process.env.PLAN_IDENTIFIER || 'hnh2035',
   },
   /*
   manifest: {

@@ -13,22 +13,22 @@ const Timeline = ({ schedules, allSchedules, size, theme }) => {
   let minDate;
   let maxDate;
   allSchedules.forEach((sch) => {
-    if (!minDate || sch.begins_at < minDate) {
-      minDate = sch.begins_at;
+    if (!minDate || sch.beginsAt < minDate) {
+      minDate = sch.beginsAt;
     }
-    if (!maxDate || sch.ends_at > maxDate) {
-      maxDate = sch.ends_at;
+    if (!maxDate || sch.endsAt > maxDate) {
+      maxDate = sch.endsAt;
     }
   });
 
   let actStartDate;
   let actEndDate;
   schedules.forEach((sch) => {
-    if (!actStartDate || sch.begins_at < actStartDate) {
-      actStartDate = sch.begins_at;
+    if (!actStartDate || sch.beginsAt < actStartDate) {
+      actStartDate = sch.beginsAt;
     }
-    if (!actEndDate || sch.ends_at > actEndDate) {
-      actEndDate = sch.ends_at;
+    if (!actEndDate || sch.endsAt > actEndDate) {
+      actEndDate = sch.endsAt;
     }
   });
 

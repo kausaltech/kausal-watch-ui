@@ -151,6 +151,7 @@ class CytoGraph extends React.Component {
           id: edge.id,
           source: edge.from,
           target: edge.to,
+          confidenceLevel: edge.confidence_level,
           label,
           color,
         },
@@ -214,6 +215,13 @@ class CytoGraph extends React.Component {
             'text-halign': 'right',
             'font-size': '24px',
             'font-weight': 'bold',
+            width: 2,
+          },
+        },
+        {
+          selector: 'edge[confidenceLevel="high"]',
+          style: {
+            width: 4,
           },
         },
         {

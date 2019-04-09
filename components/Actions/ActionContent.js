@@ -3,7 +3,10 @@ import PropTypes from 'prop-types';
 import {
   Container, Row, Col, Progress, Alert,
 } from 'reactstrap';
+import { ApolloConsumer, Query } from 'react-apollo';
 import styled, { withTheme } from 'styled-components';
+import gql from 'graphql-tag';
+
 import { Link } from '../../routes';
 import { aplans } from '../../common/api';
 import PlanContext from '../../context/plan';
@@ -17,10 +20,72 @@ import ActionStatus from './ActionStatus';
 import ActionIndicators from './ActionIndicators';
 import ActionBgImage from './ActionBgImage';
 import ActionPager from './ActionPager';
-import CommentForm from '../Comments/CommentForm';
-import CommentList from '../Comments/CommentList';
-import Icon from '../Common/Icon';
+import ContentLoader from '../Common/ContentLoader';
+import { SubpageTitle } from '../layout';
+import ErrorMessage from '../Common/ErrorMessage';
 
+
+const GET_ACTION_DETAILS = gql`
+query ActionDetails($plan: ID!, $id: ID!) {
+  action(plan: $plan, identifier: $id) {
+    id
+    identifier
+    name
+    officialName
+    description
+    imageUrl
+
+    categories {
+      id
+      name
+      imageUrl
+      parent {
+        id
+        name
+        imageUrl
+      }
+    }
+    contactPersons {
+      firstName
+      lastName
+      avatarUrl
+    }
+    responsibleParties {
+      id
+      abbreviation
+      name
+    }
+    tasks {
+      id, name, dueAt, completedAt
+    }
+    status {
+      id, identifier, name
+    }
+    schedule {
+      id, name, beginsAt, endsAt
+    }
+    relatedIndicators {
+      indicator {
+        id
+        name
+        latestGraph {
+          id
+        }
+        actions {
+          id
+          identifier
+          name
+        }
+      }
+    }
+    nextAction {
+      identifier
+    }
+    previousAction {
+      identifier
+    }
+  }
+}`;
 
 const ActionHero = styled.div`
   position: relative;
@@ -53,202 +118,142 @@ const CommentsSection = styled.section`
   background-color: ${props => props.theme.brandDark}; 
 `;
 
-class ActionContent extends React.Component {
-  static async fetchData(actionIdentifier, plan) {
-    // Fetches the data needed by this component from the API and
-    // returns them as props suitable for the component.
-    if (!actionIdentifier) {
-      throw new Error('Identifier not supplied');
-    }
-    const resp = await aplans.findAll('action', {
-      'filter[identifier]': actionIdentifier,
-      'filter[plan.identifier]': plan.identifier,
-      include: ['responsible_parties', 'tasks', 'status', 'schedule', 'indicators', 'indicators.latest_graph', 'categories', 'categories.parent', 'categories.parent.parent'],
-    });
-    if (!resp.data || resp.data.length < 1) {
-      return null;
-    }
-    return {
-      action: resp.data[0],
-    };
-  }
 
-  static getHeadTags(props) {
-    const { action } = props;
+function ActionDetails(props) {
+  const { action, plan, theme } = props;
 
-    return {
-      subPageName: action.name,
-    };
-  }
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      newComments: false,
-      commentCount: 0,
-    };
-    this.reloadComments = this.reloadComments.bind(this);
-    this.countComments = this.countComments.bind(this);
-  }
-
-  reloadComments() {
-    const { newComments } = this.state;
-    this.setState({ newComments: !newComments });
-  }
-
-  countComments(count) {
-    this.setState({ commentCount: count });
-  }
-
-  render() {
-    const { action, theme } = this.props;
-    const plan = this.context;
-    const { commentCount, newMessages, newComments } = this.state;
-    const prevActionIdentifier = (Number(action.identifier) > 1) ? `${Number(action.identifier) - 1}` : null;
-    const nextActionIdentifier = (Number(action.identifier) < plan.last_action_identifier) ? `${Number(action.identifier) + 1}` : null;
-
-    return (
-      <div>
-        <ActionHero>
-          <ActionBgImage action={action} width={1200} height={600} color={theme.imageOverlay}>
-            <OverlayContainer>
-              <Container>
-                <Row>
-                  <Col md="10">
-                    <Link route="/#actions">
-                      <a>
-                        <h4>Toimenpiteet</h4>
-                      </a>
-                    </Link>
-                    <h2 className="display-4">{action.identifier}</h2>
-                    <ActionHeadline>{action.name}</ActionHeadline>
-                    <div>
-                      {commentCount > 0
-                        ? (
-                          <span>
-                            <Icon name="commenting" color="#ffffff" />
-                            {' '}
-                            {commentCount}
-                            {' '}
-                            kommenttia
-                          </span>
-                        )
-                        : <span>Ei kommentteja</span>
-                        }
-                      {' '}
-                      |
-                      {' '}
-                      <a href="#comments">osallistu keskusteluun</a>
-                    </div>
-                  </Col>
-                </Row>
-              </Container>
-            </OverlayContainer>
-          </ActionBgImage>
-        </ActionHero>
-        <Container className="mb-5">
-          <Row>
-            <Col md="6" lg="8">
-
-              {action.description
-              && <ActionSection dangerouslySetInnerHTML={{ __html: action.description }} />}
-
-              <OfficialText>
-                <h5>Virallinen kuvaus</h5>
-                <strong>Toimenpideohjelman mukaisesti</strong>
-                <div dangerouslySetInnerHTML={{ __html: action.official_name }} />
-                <small>(Hiilineutraali Helsinki 2035 -toimenpideohjelmasta)</small>
-              </OfficialText>
-            </Col>
-            <Col md="6" lg="4">
+  return (
+    <div>
+      <SubpageTitle title={action.name} />
+      <ActionHero>
+        <ActionBgImage action={action} width={1200} height={600} color={theme.imageOverlay}>
+          <OverlayContainer>
+            <Container>
+              <Row>
+                <Col md="10">
+                  <Link route="/#actions">
+                    <a>
+                      <h4>Toimenpiteet</h4>
+                    </a>
+                  </Link>
+                  <h2 className="display-4">{action.identifier}</h2>
+                  <ActionHeadline>{action.name}</ActionHeadline>
+                </Col>
+              </Row>
+            </Container>
+          </OverlayContainer>
+        </ActionBgImage>
+      </ActionHero>
+      <Container className="mb-5">
+        <Row>
+          <Col md="6" lg="8">
+            {action.description
+            && <ActionSection dangerouslySetInnerHTML={{ __html: action.description }} />}
+            <OfficialText>
+              <h5>Virallinen kuvaus</h5>
+              <strong>Toimenpideohjelman mukaisesti</strong>
+              <div dangerouslySetInnerHTML={{ __html: action.officialName }} />
+              <small>(Hiilineutraali Helsinki 2035 -toimenpideohjelmasta)</small>
+            </OfficialText>
+          </Col>
+          <Col md="6" lg="4">
+            <ActionSection>
+              <ResponsibleList data={action.responsibleParties} />
+            </ActionSection>
+            <ActionSection>
+              <ContactPersons persons={action.contactPersons} />
+            </ActionSection>
+            <ActionSection>
+              <h5>Eteneminen</h5>
+              { action.completion > 0
+              && (
+              <strong>
+                {action.completion}
+                % valmis
+              </strong>
+              ) }
+              <Progress value={action.completion} color="status" />
+              { action.status
+                && <ActionStatus name={action.status.name} identifier={action.status.identifier} />
+              }
+            </ActionSection>
+            { action.schedule.length ? (
               <ActionSection>
-                <ResponsibleList data={action.responsible_parties} />
+                <h5>Aikajänne</h5>
+                <Timeline schedules={action.schedule} allSchedules={plan.actionSchedules} />
               </ActionSection>
-              <ActionSection>
-                <ContactPersons data={action.contact_persons} />
-              </ActionSection>
-              <ActionSection>
-                <h5>Eteneminen</h5>
-                { action.completion > 0
-                && (
-                <strong>
-                  {action.completion}
-% valmis
-                </strong>
-                ) }
-                <Progress value={action.completion} color="status" />
-                { action.status
-                  && <ActionStatus name={action.status.name} identifier={action.status.identifier} />
-                }
-              </ActionSection>
-              { action.schedule.length ? (
-                <ActionSection>
-                  <h5>Aikajänne</h5>
-                  <Timeline schedules={action.schedule} allSchedules={plan.action_schedules} />
-                </ActionSection>
-              ) : null}
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <h2 className="mb-5">Tehtävät</h2>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <ActionSection>
-                <TaskList data={action.tasks} />
-              </ActionSection>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <h2 className="mb-5">Mittarit</h2>
-            </Col>
-          </Row>
-          <Row>
-            <Col sm="12">
-              {action.indicators.length > 0
-                ? <ActionIndicators indicators={action.indicators} />
-                : <Alert color="light" className="mb-5"><h6>Ei määriteltyjä mittareita</h6></Alert>
-                }
-            </Col>
-          </Row>
+            ) : null}
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <h2 className="mb-5">Tehtävät</h2>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <ActionSection>
+              <TaskList tasks={action.tasks} />
+            </ActionSection>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <h2 className="mb-5">Mittarit</h2>
+          </Col>
+        </Row>
+        <Row>
+          <Col sm="12">
+            {action.relatedIndicators && action.relatedIndicators.length > 0
+              ? <ActionIndicators actionId={action.id} relatedIndicators={action.relatedIndicators} />
+              : <Alert color="light" className="mb-5"><h6>Ei määriteltyjä mittareita</h6></Alert>
+              }
+          </Col>
+        </Row>
+        {action.relatedIndicators && action.relatedIndicators.length > 0 && (
           <Row>
             <Col sm="12">
               <h2 className="mb-5">Vaikutusketju</h2>
               <IndicatorCausal actionId={action.id} />
             </Col>
           </Row>
-          <Row>
-            <Col sm="12">
-              <ActionPager previousId={prevActionIdentifier} nextId={nextActionIdentifier} />
-            </Col>
-          </Row>
-        </Container>
-        <CommentsSection className="comments-section" id="comments">
-          <Container>
-            <Row>
-              <Col sm="12" md={{ size: 8, offset: 2 }}>
-                <h2 className="mb-4">
-Kommentoi toimenpidettä
-                  <sup>nro</sup>
-                  {action.identifier}
-                </h2>
-                <CommentForm section="hFz7Xjt0JJzMkKFslq1JqMwAusPeJ1er" onPost={this.reloadComments} />
-                <CommentList section="hFz7Xjt0JJzMkKFslq1JqMwAusPeJ1er" newMessages={newMessages} refresh={newComments} updateCount={this.countComments} />
-              </Col>
-            </Row>
-          </Container>
-        </CommentsSection>
-      </div>
+        )}
+        <Row>
+          <Col sm="12">
+            <ActionPager
+              nextId={action.nextAction ? action.nextAction.identifier : undefined}
+              previousId={action.previousAction ? action.previousAction.identifier : undefined}
+            />
+          </Col>
+        </Row>
+      </Container>
+    </div>
+  );
+}
+
+class ActionContent extends React.Component {
+  static contextType = PlanContext;
+
+  render() {
+    const { theme, id } = this.props;
+    const plan = this.context;
+
+    return (
+      <Query query={GET_ACTION_DETAILS} variables={{ id, plan: plan.identifier }}>
+        {({ loading, error, data }) => {
+          if (loading) return <ContentLoader />;
+          if (error) return <ErrorMessage message={error.message} />;
+          const { action } = data;
+          return <ActionDetails action={action} theme={theme} plan={plan} />;
+          /* ActionContent action={data.action} theme={ theme } /> */
+        }}
+      </Query>
     );
   }
 }
 
 ActionContent.propTypes = {
-  action: PropTypes.object.isRequired,
+  id: PropTypes.string.isRequired,
 };
-ActionContent.contextType = PlanContext;
 
 export default withTheme(ActionContent);
