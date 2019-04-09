@@ -38,6 +38,7 @@ export const GET_ACTION_LIST = gql`
       id
       identifier
       name
+      imageUrl
       parent {
         id
       }
@@ -63,6 +64,20 @@ class ActionListFiltered extends React.Component {
     this.actions = props.planActions;
     this.cats = props.planCategories;
     this.orgs = props.planOrganizations;
+
+    const catsById = {};
+    this.cats.forEach((cat) => {
+      catsById[cat.id] = cat;
+    });
+    this.cats.forEach((cat) => {
+      if (cat.parent) {
+        cat.parent = catsById[cat.parent.id];
+      }
+    });
+
+    this.actions.forEach((act) => {
+      act.categories = act.categories.map(cat => catsById[cat.id]);
+    });
 
     this.state = {
       error: null,
