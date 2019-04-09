@@ -14,6 +14,7 @@ export const GET_ACTION_LIST = gql`
       identifier
       name
       officialName
+      completion
       plan {
         id
       }

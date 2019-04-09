@@ -29,6 +29,7 @@ const GET_INDICATOR_LIST = gql`
           name
           categories {
             id
+            name
           }
           latestGraph {
             id

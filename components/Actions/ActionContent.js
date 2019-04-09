@@ -33,6 +33,7 @@ query ActionDetails($plan: ID!, $id: ID!) {
     name
     officialName
     description
+    completion
     imageUrl
 
     categories {
