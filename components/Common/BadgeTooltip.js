@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 const StyledBadge = styled(Badge)`
   background-color: ${props => props.theme.brandDark};
+  color: #ffffff;
 `;
 
 class BadgeTooltip extends React.Component {
