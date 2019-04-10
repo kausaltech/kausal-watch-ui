@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 import { Button } from 'reactstrap';
 import styled from 'styled-components';
 import { Link } from '../../routes';
-
-import { Router } from '../../routes';
 import Icon from '../Common/Icon';
 
 const Pager = styled.div`
@@ -41,7 +39,7 @@ const ActionPager = (props) => {
         { previousId
           && (
             <Link route="action" params={{ id: previousId }} passHref={ true }>
-              <PageButton>Edellinen toimenpide</PageButton>
+              <PageButton color="primary" outline><Icon name="arrowLeft" />Edellinen toimenpide</PageButton>
             </Link>
           )
         }
@@ -50,7 +48,7 @@ const ActionPager = (props) => {
         { nextId
           && (
             <Link route="action" params={{ id: nextId }} passHref={ true }>
-              <PageButton>Seuraava toimenpide</PageButton>
+              <PageButton color="primary" outline>Seuraava toimenpide <Icon name="arrowRight" /></PageButton>
             </Link>
           )
         }
@@ -62,6 +60,11 @@ const ActionPager = (props) => {
 ActionPager.propTypes = {
   previousId: PropTypes.string,
   nextId: PropTypes.string,
+};
+
+ActionPager.defaultProps = {
+  previousId: '',
+  nextId: '',
 };
 
 export default ActionPager;
