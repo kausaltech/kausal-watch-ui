@@ -21,6 +21,7 @@ import ActionIndicators from './ActionIndicators';
 import ActionBgImage from './ActionBgImage';
 import ActionPager from './ActionPager';
 import ContentLoader from '../Common/ContentLoader';
+import Icon from '../Common/Icon';
 import { SubpageTitle } from '../layout';
 import ErrorMessage from '../Common/ErrorMessage';
 
@@ -136,9 +137,25 @@ function ActionDetails(props) {
                     <a>
                       <h4>Toimenpiteet</h4>
                     </a>
-                  </Link>
+                  </Link> 
                   <h2 className="display-4">{action.identifier}</h2>
                   <ActionHeadline>{action.name}</ActionHeadline>
+                  <p>
+                  { action.previousAction
+                    && (
+                      <Link route="action" params={{ id: action.previousAction.identifier }} passHref={ true }>
+                        <a><Icon name="arrowLeft" color={theme.brandLight}  /> Edellinen</a>
+                      </Link>
+                    )
+                  }{ action.nextAction
+                    && action.previousAction && <span>{' '}|{' '}</span>}{ action.nextAction
+                    && (
+                      <Link route="action" params={{ id: action.nextAction.identifier }} passHref={ true }>
+                        <a>Seuraava <Icon name="arrowRight" color={theme.brandLight} /></a>
+                      </Link>
+                    )
+                  }
+                  </p>
                 </Col>
               </Row>
             </Container>
