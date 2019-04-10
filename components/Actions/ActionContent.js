@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Container, Row, Col, Progress, Alert,
+  Container, Row, Col, Progress, Alert, Badge
 } from 'reactstrap';
 import { ApolloConsumer, Query } from 'react-apollo';
 import styled, { withTheme } from 'styled-components';
@@ -116,6 +116,13 @@ const OfficialText = styled.section`
   margin-bottom: 3rem;
 `;
 
+const CategoryBadge = styled(Badge)`
+  margin-right: 1em;
+  white-space: normal;
+  text-align: left;
+  font-size: 1rem;
+`;
+
 const CommentsSection = styled.section`
   background-color: ${props => props.theme.brandDark}; 
 `;
@@ -123,7 +130,7 @@ const CommentsSection = styled.section`
 
 function ActionDetails(props) {
   const { action, plan, theme } = props;
-
+  console.log(action.categories);
   return (
     <div>
       <SubpageTitle title={action.name} />
@@ -175,6 +182,11 @@ function ActionDetails(props) {
             </OfficialText>
           </Col>
           <Col md="6" lg="4">
+            <ActionSection>
+            {action.categories.map((item) => (
+              <CategoryBadge className="mr-3">{item.name}</CategoryBadge>
+            ))}
+            </ActionSection>
             <ActionSection>
               <ResponsibleList data={action.responsibleParties} />
             </ActionSection>
