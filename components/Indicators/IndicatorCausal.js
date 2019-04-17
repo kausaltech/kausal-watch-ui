@@ -32,6 +32,8 @@ const Indicator = styled(Card)`
   margin: 10px 20px;
   line-height: 1;
   min-height: 140px;
+  border-radius: 6px;
+  color: #ffffff;
   background-color: ${(props) => {
     switch (props.level) {
       case 'action':
@@ -48,7 +50,7 @@ const Indicator = styled(Card)`
   }};
   
   a {
-    color: #000000;
+    color: #ffffff;
   }
 `;
 

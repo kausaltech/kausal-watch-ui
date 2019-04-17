@@ -169,7 +169,7 @@ function ActionDetails(props) {
           </OverlayContainer>
         </ActionBgImage>
       </ActionHero>
-      <Container className="mb-5">
+      <Container>
         <Row>
           <Col md="6" lg="8">
             {action.description
@@ -233,21 +233,27 @@ function ActionDetails(props) {
           </Col>
         </Row>
         <Row>
-          <Col sm="12">
+          <Col sm="12" className="mb-5">
             {action.relatedIndicators && action.relatedIndicators.length > 0
               ? <ActionIndicators actionId={action.id} relatedIndicators={action.relatedIndicators} />
               : <Alert color="light" className="mb-5"><h6>Ei määriteltyjä mittareita</h6></Alert>
               }
           </Col>
         </Row>
+        </Container>
         {action.relatedIndicators && action.relatedIndicators.length > 0 && (
-          <Row>
-            <Col sm="12">
-              <h2 className="mb-5">Vaikutusketju</h2>
-              <IndicatorCausal actionId={action.id} />
-            </Col>
-          </Row>
+          <div>
+            <Container>
+              <Row>
+                <Col sm="12">
+                  <h2 className="mb-5">Vaikutusketju</h2>
+                </Col>
+              </Row>
+            </Container>
+            <IndicatorCausal actionId={action.id} />
+          </div>
         )}
+        <Container className="mb-5">
         <Row>
           <Col sm="12">
             <ActionPager

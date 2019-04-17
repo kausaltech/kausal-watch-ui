@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Badge, Alert } from 'reactstrap';
+import { Badge, Alert, Card, CardBody, CardTitle, CardFooter } from 'reactstrap';
+import { Link } from '../../routes';
+
 import IndicatorGraph from '../Graphs/IndicatorGraph';
 
 import Icon from '../Common/Icon';
@@ -11,37 +13,34 @@ function ActionIndicator(props) {
   const actions = indicator.actions.filter(action => action.id !== actionId);
 
   return (
-    <div>
+    <Card className="mb-3">
       {(indicator.latestGraph && indicator.latestGraph.data)
         ? <IndicatorGraph graphId={indicator.latestGraph.id} />
         : (
-          <div>
-            <h4>
-              {indicator.name}
-            </h4>
-            <Badge color="light">ei graafia</Badge>
-          </div>
+          <CardBody>
+            <CardTitle>
+              <h5>{indicator.name}</h5>
+            </CardTitle>
+          </CardBody>
         )
       }
-      <Alert className="mt-3 mb-5">
+      <CardFooter>
         {actions.length > 0 && (
           <span>
-            Tämä mittari liittyy myös toimenpiteisiin:
+            Liittyy myös toimenpiteisiin:
             {' '}
             {actions.map(action => (
-              <Badge>{action.identifier}</Badge>
+              <Link route={`/action/${action.identifier}`}><a><Badge>{action.identifier}</Badge></a></Link>
             ))}
             {' | '}
           </span>
         )}
         <a href={`/indicator/${indicator.id}`}>
-          <strong>
-            Katso mittarin tarkemmat tiedot
+            Mittarin tarkemmat tiedot
             <Icon name="arrowRight" color="" />
-          </strong>
         </a>
-      </Alert>
-    </div>
+      </CardFooter>
+    </Card>
   );
 }
 
