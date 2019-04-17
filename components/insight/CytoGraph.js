@@ -13,6 +13,8 @@ cytoscape.use(dagre);
 const VisContainer = styled.div`
   width: 100%;
   height: 800px;
+  background-color: #f6f6f6;
+  margin: 2em 0;
 `;
 
 
@@ -176,12 +178,15 @@ class CytoGraph extends React.Component {
       nodeDimensionsIncludeLabels: true,
       animate: false,
       animateDuration: 2000,
+      zoom: .5,
+      pan: { x: 0, y: 0 },
     };
 
     const cy = cytoscape({
       container: visNode,
       elements,
       layout: cyLayoutOptions,
+      zoomingEnabled: true,
       maxZoom: 2,
       minZoom: 0.1,
       style: [ // the stylesheet for the graph
@@ -196,39 +201,44 @@ class CytoGraph extends React.Component {
           style: {
             label: 'data(label)',
             'text-wrap': 'wrap',
-            'text-outline-width': 1,
-            'text-outline-color': '#eee',
+            'text-outline-width': 0,
+            'color': '#ffffff',
+            'font-weight': '500',
           },
         },
         {
           selector: 'edge',
           style: {
             label: 'data(label)',
+            'target-text-offset': 1,
             'target-arrow-shape': 'triangle',
             'target-arrow-color': 'data(color)',
             'arrow-scale': 2,
             'line-color': 'data(color)',
-            'text-outline-width': 1,
-            'text-outline-color': '#eee',
+            'text-outline-width': 3,
+            'text-outline-color': 'data(color)',
+            'color': '#ffffff',
             'curve-style': 'bezier',
-            'text-margin-x': '10px',
-            'text-halign': 'right',
-            'font-size': '24px',
-            'font-weight': 'bold',
+            'font-size': '18px',
+            'font-weight': '600',
             width: 2,
           },
         },
         {
           selector: 'edge[confidenceLevel="high"]',
           style: {
-            width: 4,
+            width: 5,
           },
         },
         {
           selector: 'node[type="action"]',
           style: {
-            shape: 'hexagon',
+            shape: 'rectangle',
             'background-color': '#009246',
+            width: 'label',
+            height: 'label',
+            'text-valign': 'center',
+            padding: '24px',
           },
         },
         {
@@ -236,10 +246,11 @@ class CytoGraph extends React.Component {
           style: {
             shape: 'rectangle',
             'background-color': '#00d7a7',
+            'color': '#000000',
             width: 'label',
             height: 'label',
             'text-valign': 'center',
-            padding: '20px',
+            padding: '12px',
           },
         },
         {
@@ -247,17 +258,22 @@ class CytoGraph extends React.Component {
           style: {
             shape: 'rectangle',
             'background-color': '#9fc9eb',
+            'color': '#000000',
             width: 'label',
             height: 'label',
             'text-valign': 'center',
-            padding: '20px',
+            padding: '12px',
           },
         },
         {
           selector: 'node[level="strategic"]',
           style: {
-            shape: 'diamond',
-            'background-color': '#9fc9eb',
+            shape: 'rectangle',
+            'background-color': '#0072c6',
+            width: 'label',
+            height: 'label',
+            'text-valign': 'center',
+            padding: '24px',
           },
         },
       ],
@@ -270,6 +286,7 @@ class CytoGraph extends React.Component {
       const removeNodes = cy.nodes().difference(selectedNodes).filter(node => node.id() != rootNode.id());
       removeNodes.remove();
       cy.layout(cyLayoutOptions).run();
+      cy.center(rootNode);
     }
     function nodeTapHandler() {
       if (this.data('type') === 'action') {
@@ -285,14 +302,14 @@ class CytoGraph extends React.Component {
 
   render() {
     return (
-      <Container>
-        <Row>
-          <InsightFilter nodes={this.props.nodes || []} onFilterNode={this.handleFilterNode} />
-        </Row>
-        <Row>
-          <VisContainer ref={this.visRef} />
-        </Row>
-      </Container>
+      <div>
+        <Container>
+          <Row>
+            <InsightFilter nodes={this.props.nodes || []} onFilterNode={this.handleFilterNode} />
+          </Row>
+        </Container>
+        <VisContainer ref={this.visRef} />
+      </div>
     );
   }
 }
