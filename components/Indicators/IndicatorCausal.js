@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Card, CardBody, Alert,
+  Card, CardBody, CardTitle, Alert,
 } from 'reactstrap';
 import styled from 'styled-components';
 import { Link } from '../../routes';
+import moment from '../../common/moment';
 
 import PlanContext from '../../context/plan';
 import { aplans } from '../../common/api';
@@ -52,6 +53,32 @@ const Indicator = styled(Card)`
   a {
     color: #ffffff;
   }
+`;
+
+const IndicatorType = styled.div`
+  opacity: .75;
+  font-size: 75%;
+  margin-bottom: .5em;
+`;
+
+const IndicatorTitle = styled(CardTitle)`
+  font-weight: 600;
+`;
+
+const IndicatorValue = styled.div`
+  margin-top: 1em;
+  font-weight: 600;
+  opacity: .75;
+`;
+
+const IndicatorValueUnit = styled.span`
+  font-size: 75%;
+  font-weight: 400;
+`;
+
+const IndicatorValueTime = styled.div`
+  font-size: 75%;
+  font-weight: 400;
 `;
 
 const Connection = styled.div`
@@ -133,7 +160,8 @@ class IndicatorCausal extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.actionId !== this.props.actionId) {
+    const { actionId } = this.props;
+    if (prevProps.actionId !== actionId) {
       this.fetchData();
     }
   }
@@ -170,10 +198,11 @@ class IndicatorCausal extends React.Component {
 
   fetchData() {
     const plan = this.context;
+    const { actionId } = this.props;
 
     aplans.get('insight', {
       params: {
-        plan: plan.identifier, action: this.props.actionId,
+        plan: plan.identifier, action: actionId,
       },
     }).then(
       (result) => {
@@ -289,11 +318,35 @@ class IndicatorCausal extends React.Component {
             <CardBody>
               { indicatorLevel !== 'action'
                 ? (
-                  <Link route={`/indicator/${indicator.object_id}`}>
-                    <a><b>{ indicator.name }</b></a>
-                  </Link>
+                  <div>
+                    <IndicatorType>Mittari</IndicatorType>
+                    <Link route={`/indicator/${indicator.object_id}`}>
+                      <a><IndicatorTitle>{ indicator.name }</IndicatorTitle></a>
+                    </Link>
+                  </div>
                 )
-                : (<b>{ indicator.name }</b>)
+                : (
+                  <div>
+                    <IndicatorType>Toimenpide</IndicatorType>
+                    <IndicatorTitle>{ indicator.name }</IndicatorTitle>
+                  </div>
+                )
+              }
+              { indicator.latest_value
+                && (
+                  <IndicatorValue>
+                    {indicator.latest_value.value.toFixed(2).replace('.', ',')}
+                    {' '}
+                    <IndicatorValueUnit>
+                      {indicator.latest_value.unit}
+                    </IndicatorValueUnit>
+                    <IndicatorValueTime>
+                      (<time dateTime={indicator.latest_value.time}>
+                        {moment(indicator.latest_value.time).format('DD.MM.YYYY')}
+                      </time>)
+                    </IndicatorValueTime>
+                  </IndicatorValue>
+                )
               }
             </CardBody>
             {connectionsTo}
