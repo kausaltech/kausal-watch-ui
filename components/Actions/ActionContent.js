@@ -184,7 +184,7 @@ function ActionDetails(props) {
           <Col md="6" lg="4">
             <ActionSection>
             {action.categories.map((item) => (
-              <CategoryBadge className="mr-3">{item.name}</CategoryBadge>
+              <CategoryBadge key={item.id} className="mr-3">{item.name}</CategoryBadge>
             ))}
             </ActionSection>
             <ActionSection>
