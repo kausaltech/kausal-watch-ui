@@ -146,6 +146,42 @@ const Connection = styled.div`
   }
 `;
 
+function IndicatorLatestValue(props) {
+  const { indicator } = props;
+
+  const latestValue = indicator.latest_value;
+  if (!latestValue) return null;
+
+  const timeResolution = indicator.time_resolution;
+  const time = moment(latestValue.date, 'YYYY-MM-DD');
+  let tagVal;
+  let formattedTime;
+
+  if (timeResolution === 'year') {
+    formattedTime = time.format('YYYY');
+    tagVal = formattedTime;
+  } else if (timeResolution === 'month') {
+    formattedTime = time.format('YYYY-MM');
+    tagVal = 'MMMM YYYY';
+  } else {
+    formattedTime = time.format('DD.MM.YYYY');
+    tagVal = time.format(); // ISO format
+  }
+
+  return (
+    <IndicatorValue>
+      {indicator.latest_value.value.toFixed(2).replace('.', ',')}
+      {' '}
+      <IndicatorValueUnit>
+        {indicator.latest_value.unit}
+      </IndicatorValueUnit>
+      <IndicatorValueTime>
+        (<time dateTime={tagVal}>{formattedTime}</time>)
+      </IndicatorValueTime>
+    </IndicatorValue>
+  );
+}
+
 class IndicatorCausal extends React.Component {
   constructor(props) {
     super(props);
@@ -332,22 +368,7 @@ class IndicatorCausal extends React.Component {
                   </div>
                 )
               }
-              { indicator.latest_value
-                && (
-                  <IndicatorValue>
-                    {indicator.latest_value.value.toFixed(2).replace('.', ',')}
-                    {' '}
-                    <IndicatorValueUnit>
-                      {indicator.latest_value.unit}
-                    </IndicatorValueUnit>
-                    <IndicatorValueTime>
-                      (<time dateTime={indicator.latest_value.time}>
-                        {moment(indicator.latest_value.time).format('DD.MM.YYYY')}
-                      </time>)
-                    </IndicatorValueTime>
-                  </IndicatorValue>
-                )
-              }
+              <IndicatorLatestValue indicator={indicator} />
             </CardBody>
             {connectionsTo}
           </Indicator>,
