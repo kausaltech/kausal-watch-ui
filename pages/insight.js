@@ -57,7 +57,7 @@ class VisPage extends React.Component {
     const { indicator } = filters;
     this.setState({ filters });
 
-    let queryParams = {};
+    const queryParams = {};
     if (indicator) {
       queryParams.indicator = indicator;
     }
