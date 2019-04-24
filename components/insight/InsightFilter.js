@@ -7,7 +7,7 @@ import { Typeahead } from 'react-bootstrap-typeahead';
 function InsightFilter(props) {
   const { nodes, activeFilterNode } = props;
   const options = nodes
-    .filter(node => node.indicator_level === 'strategic')
+    .filter(node => node.indicator_level === 'strategic' || node.id == activeFilterNode)
     .map((node) => {
       const out = {};
       out.id = node.id;
