@@ -5,7 +5,8 @@ import { Typeahead } from 'react-bootstrap-typeahead';
 
 
 function InsightFilter(props) {
-  const options = props.nodes
+  const { nodes, activeFilterNode } = props;
+  const options = nodes
     .filter(node => node.indicator_level === 'strategic')
     .map((node) => {
       const out = {};
@@ -26,6 +27,13 @@ function InsightFilter(props) {
     props.onFilterNode(nodeId);
   }
 
+  let defaultSelected;
+  if (activeFilterNode) {
+    defaultSelected = options.filter(opt => opt.id === activeFilterNode);
+  } else {
+    defaultSelected = [];
+  }
+
   return (
     <Container>
       <Row>
@@ -35,11 +43,13 @@ function InsightFilter(props) {
       </Row>
       <Row>
         <Col md="6">
-          <Typeahead id="insight-filter"
+          <Typeahead
+            id="insight-filter"
             onChange={handleChange}
             ignoreDiacritics={false}
             clearButton
             emptyLabel="Ei osumia"
+            defaultSelected={defaultSelected}
             options={options}
            />
         </Col>

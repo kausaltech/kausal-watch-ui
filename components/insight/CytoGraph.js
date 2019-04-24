@@ -1,10 +1,11 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Container, Row } from 'reactstrap';
 import styled from 'styled-components';
 import cytoscape from 'cytoscape';
 import dagre from 'cytoscape-dagre';
-import { Router } from '../../routes';
 
+import { Router } from '../../routes';
 import InsightFilter from './InsightFilter';
 
 
@@ -53,31 +54,61 @@ function wordWrap(inputStr, maxWidth) {
 }
 
 class CytoGraph extends React.Component {
+  static propTypes = {
+    filters: PropTypes.shape({
+      indicator: PropTypes.number,
+    }),
+    nodes: PropTypes.arrayOf(PropTypes.object).isRequired,
+    edges: PropTypes.arrayOf(PropTypes.object).isRequired,
+    onFilterChange: PropTypes.func.isRequired,
+  };
+
+  static defaultProps = {
+    filters: {
+      indicator: null,
+    },
+  };
+
   constructor(props) {
     super(props);
     this.visRef = React.createRef();
     this.handleFilterNode = this.handleFilterNode.bind(this);
     this.state = {
-      nodeFilter: null
+      filters: props.filters,
     };
   }
 
   componentDidMount() {
-    if (!this.props.nodes) {
+    const { nodes } = this.props;
+
+    if (!nodes) {
       return;
     }
     this.renderNetwork();
   }
 
   componentDidUpdate() {
-    if (!this.props.nodes) {
+    const { nodes } = this.props;
+
+    if (!nodes) {
       return;
     }
     this.renderNetwork();
   }
 
   handleFilterNode(nodeId) {
-    this.setState({ nodeFilter: nodeId });
+    const { onFilterChange } = this.props;
+
+    if (!nodeId) {
+      onFilterChange({ indicator: null });
+      return;
+    }
+    const { nodes } = this.props;
+    const node = nodes.filter(obj => obj.id === nodeId);
+    if (node.length !== 1) {
+      throw new Error(`Node with id ${nodeId} not found`);
+    }
+    onFilterChange({ indicator: parseInt(node[0].id.substr(1), 10) });
   }
 
   renderNetwork() {
@@ -178,7 +209,7 @@ class CytoGraph extends React.Component {
       nodeDimensionsIncludeLabels: true,
       animate: false,
       animateDuration: 2000,
-      zoom: .5,
+      zoom: 0.5,
       pan: { x: 0, y: 0 },
     };
 
@@ -279,14 +310,18 @@ class CytoGraph extends React.Component {
       ],
     });
     this.cy = cy;
-    const { nodeFilter } = this.state;
-    if (nodeFilter) {
-      const rootNode = cy.$(`#${nodeFilter}`);
-      const selectedNodes = rootNode.predecessors();
-      const removeNodes = cy.nodes().difference(selectedNodes).filter(node => node.id() != rootNode.id());
-      removeNodes.remove();
-      cy.layout(cyLayoutOptions).run();
-      cy.center(rootNode);
+    const { filters } = this.state;
+    const { indicator } = filters;
+    if (indicator) {
+      const rootNode = cy.$(`#i${indicator}`);
+
+      if (rootNode) {
+        const selectedNodes = rootNode.predecessors();
+        const removeNodes = cy.nodes().difference(selectedNodes).filter(node => node.id() != rootNode.id());
+        removeNodes.remove();
+        cy.layout(cyLayoutOptions).run();
+        cy.center(rootNode);
+      }
     }
     function nodeTapHandler() {
       if (this.data('type') === 'action') {
@@ -301,11 +336,23 @@ class CytoGraph extends React.Component {
   }
 
   render() {
+    const { nodes, filters } = this.props;
+    const { indicator } = filters;
+    let activeFilterNode;
+
+    if (indicator != null) {
+      activeFilterNode = `i${indicator.toString()}`;
+    }
+
     return (
       <div>
         <Container>
           <Row>
-            <InsightFilter nodes={this.props.nodes || []} onFilterNode={this.handleFilterNode} />
+            <InsightFilter
+              nodes={nodes}
+              activeFilterNode={activeFilterNode}
+              onFilterNode={this.handleFilterNode}
+            />
           </Row>
         </Container>
         <VisContainer ref={this.visRef} />
