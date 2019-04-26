@@ -1,14 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Container, Row, Col, Progress, Alert, Badge
+  Container, Row, Col, Progress, Alert, Badge,
 } from 'reactstrap';
-import { ApolloConsumer, Query } from 'react-apollo';
+import { Query } from 'react-apollo';
 import styled, { withTheme } from 'styled-components';
 import gql from 'graphql-tag';
 
 import { Link } from '../../routes';
-import { aplans } from '../../common/api';
 import PlanContext from '../../context/plan';
 
 import IndicatorCausal from '../Indicators/IndicatorCausal';
@@ -130,7 +129,6 @@ const CommentsSection = styled.section`
 
 function ActionDetails(props) {
   const { action, plan, theme } = props;
-  console.log(action.categories);
   return (
     <div>
       <SubpageTitle title={action.name} />
