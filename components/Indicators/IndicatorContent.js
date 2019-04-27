@@ -28,6 +28,9 @@ query IndicatorDetails($id: ID, $plan: ID, $identifier: ID) {
     level(plan: $plan)
     description
     timeResolution
+    unit {
+      name
+    }
     latestGraph {
       id
     }
