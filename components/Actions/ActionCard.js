@@ -5,10 +5,36 @@ import {
   CardTitle, Progress,
 } from 'reactstrap';
 import styled from 'styled-components';
-import { Link } from '../../routes';
+import gql from 'graphql-tag';
 
+import { Link } from '../../routes';
 import ActionImage from './ActionImage';
 import ActionStatus from './ActionStatus';
+
+const ACTION_CARD_FRAGMENT = gql`
+  fragment ActionCard on Action {
+    id
+    identifier
+    name
+    status {
+      id
+      identifier
+      name
+    }
+    completion
+    categories {
+      id
+      identifier
+      name
+      imageUrl
+    }
+    status {
+      id
+      identifier
+      name
+    }
+  }
+`;
 
 const StyledCard = styled(Card)`
   width: 100%;
@@ -27,41 +53,42 @@ const StyledCardTitle = styled(CardTitle)`
   hyphens: auto;
 `;
 
-class ActionCard extends React.Component {
-
-  render() {
-    const { action } = this.props;
-    let actionName = action.name;
-    if (actionName.length > 120) actionName = `${action.name.substring(0, 120)}…`;
-    return (
-      <StyledCard>
-        <Link route="action" params={{ id: action.identifier }} passHref={ true }>
+function ActionCard(props) {
+  const { action } = props;
+  let actionName = action.name;
+  if (actionName.length > 120) actionName = `${action.name.substring(0, 120)}…`;
+  return (
+    <StyledCard>
+      <Link route="action" params={{ id: action.identifier }} passHref={ true }>
+        <a>
+          <ActionImage action={action} width={520} height={200} />
+          <CardImgOverlay>
+            <ActionNumber className="action-number">{action.identifier}</ActionNumber>
+          </CardImgOverlay>
+          <Progress value={action.completion} color="status" />
+        </a>
+      </Link>
+      <CardBody>
+        <Link route="action" params={{ id: action.id }} passHref={ true }>
           <a>
-            <ActionImage action={action} width={520} height={200} />
-            <CardImgOverlay>
-              <ActionNumber className="action-number">{action.identifier}</ActionNumber>
-            </CardImgOverlay>
-            <Progress value={action.completion} color="status" />
+            <StyledCardTitle tag="h5">{actionName}</StyledCardTitle>
+            {
+              (action.status !== null) && (action.status.identifier === 'late' || action.status.identifier === 'severely_late')
+              && <ActionStatus name={action.status.name} identifier={action.status.identifier} />
+            }
           </a>
         </Link>
-        <CardBody>
-          <Link route="action" params={{ id: action.id }} passHref={ true }>
-            <a>
-              <StyledCardTitle tag="h5">{actionName}</StyledCardTitle>
-              {
-                (action.status !== null) && (action.status.identifier === 'late' || action.status.identifier === 'severely_late')
-                && <ActionStatus name={action.status.name} identifier={action.status.identifier} />
-              }
-            </a>
-          </Link>
-        </CardBody>
-      </StyledCard>
-    );
-  }
+      </CardBody>
+    </StyledCard>
+  );
 }
 
 ActionCard.propTypes = {
   action: PropTypes.object,
+};
+
+ActionCard.fragments = {
+  action: ACTION_CARD_FRAGMENT,
 };
 
 export default ActionCard;

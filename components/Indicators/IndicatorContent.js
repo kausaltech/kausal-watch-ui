@@ -20,46 +20,34 @@ import ActionCard from '../Actions/ActionCard';
 
 
 const GET_INDICATOR_DETAILS = gql`
-query IndicatorDetails($id: ID, $plan: ID, $identifier: ID) {
-  indicator(plan: $plan, id: $id, identifier: $identifier) {
-    id
-    identifier
-    name
-    level(plan: $plan)
-    description
-    timeResolution
-    unit {
-      name
-    }
-    latestGraph {
-      id
-    }
-    values {
-      time
-      value
-    }
-    goals(plan: $plan) {
-      date
-      value
-    }
-    actions(plan: $plan) {
+  query IndicatorDetails($id: ID, $plan: ID, $identifier: ID) {
+    indicator(plan: $plan, id: $id, identifier: $identifier) {
       id
       identifier
       name
-      status {
-        id
-        identifier
+      level(plan: $plan)
+      description
+      timeResolution
+      unit {
         name
       }
-      categories {
+      latestGraph {
         id
-        identifier
-        name
-        imageUrl
+      }
+      values {
+        time
+        value
+      }
+      goals(plan: $plan) {
+        date
+        value
+      }
+      actions(plan: $plan) {
+        ...ActionCard
       }
     }
   }
-}
+  ${ActionCard.fragments.action}
 `;
 
 const IndicatorHero = styled(BaseJumbotron)`

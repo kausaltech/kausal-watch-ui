@@ -35,10 +35,12 @@ function ActionIndicator(props) {
             {' | '}
           </span>
         )}
-        <a href={`/indicator/${indicator.id}`}>
+        <Link route={`/indicator/${indicator.id}`}>
+          <a>
             Mittarin tarkemmat tiedot
             <Icon name="arrowRight" color="" />
-        </a>
+          </a>
+        </Link>
       </CardFooter>
     </Card>
   );
