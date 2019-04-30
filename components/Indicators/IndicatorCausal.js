@@ -38,13 +38,13 @@ const Indicator = styled(Card)`
   background-color: ${(props) => {
     switch (props.level) {
       case 'action':
-        return props.theme.helTram;
+        return props.theme.actionColor;
       case 'operational':
-        return props.theme.helCopper;
+        return props.theme.operationalIndicatorColor;
       case 'tactical':
-        return props.theme.helFog;
+        return props.theme.tacticalIndicatorColor;
       case 'strategic':
-        return props.theme.helCoat;
+        return props.theme.strategicIndicatorColor;
       default:
         return '#cccccc';
     }
@@ -88,11 +88,11 @@ const Connection = styled.div`
   border-color: ${(props) => {
     switch (props.type) {
       case 'increases':
-        return props.theme.helTram;
+        return props.theme.causalityIncreasesColor;
       case 'decreases':
-        return props.theme.helBrick;
+        return props.theme.causalityDecreasesColor;
       case 'part_of':
-        return props.theme.helGold;
+        return props.theme.causalityIsPartOfColor;
       default:
         return '#333333';
     }
@@ -108,11 +108,11 @@ const Connection = styled.div`
     border-top-color: ${(props) => {
     switch (props.type) {
       case 'increases':
-        return props.theme.helTram;
+        return props.theme.causalityIncreasesColor;
       case 'decreases':
-        return props.theme.helBrick;
+        return props.theme.causalityDecreasesColor;
       case 'part_of':
-        return props.theme.helGold;
+        return props.theme.causalityIsPartOfColor;
       default:
         return '#333333';
     }
@@ -134,11 +134,11 @@ const Connection = styled.div`
     border-left-color: ${(props) => {
     switch (props.type) {
       case 'increases':
-        return props.theme.helTram;
+        return props.theme.causalityIncreasesColor;
       case 'decreases':
-        return props.theme.helBrick;
+        return props.theme.causalityDecreasesColor;
       case 'part_of':
-        return props.theme.helGold;
+        return props.theme.causalityIsPartOfColor;
       default:
         return '#333333';
     }

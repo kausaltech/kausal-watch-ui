@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Container, Row } from 'reactstrap';
-import styled from 'styled-components';
+import styled, { withTheme } from 'styled-components';
 import cytoscape from 'cytoscape';
 import dagre from 'cytoscape-dagre';
 
@@ -113,7 +113,7 @@ class CytoGraph extends React.Component {
 
   renderNetwork() {
     const visNode = this.visRef.current;
-    const { nodes, edges } = this.props;
+    const { nodes, edges, theme } = this.props;
     const elements = [];
     const nodeMap = {};
 
@@ -165,15 +165,15 @@ class CytoGraph extends React.Component {
       */
       switch (edge.effect_type) {
         case 'increases':
-          color = '#009246';
+          color = theme.causalityIncreasesColor;
           label = '+';
           break;
         case 'decreases':
-          color = '#bd2719';
+          color = theme.causalityDecreasesColor;
           label = '–';
           break;
         case 'part_of':
-          color = 'grey';
+          color = theme.causalityIsPartOfColor;
           label = '';
           break;
         default:
@@ -265,7 +265,8 @@ class CytoGraph extends React.Component {
           selector: 'node[type="action"]',
           style: {
             shape: 'rectangle',
-            'background-color': '#009246',
+            'background-color': theme.actionColor,
+            color: theme.actionColorFg,
             width: 'label',
             height: 'label',
             'text-valign': 'center',
@@ -276,8 +277,8 @@ class CytoGraph extends React.Component {
           selector: 'node[level="operational"]',
           style: {
             shape: 'rectangle',
-            'background-color': '#00d7a7',
-            'color': '#000000',
+            'background-color': theme.operationalIndicatorColor,
+            color: theme.operationalIndicatorColorFg,
             width: 'label',
             height: 'label',
             'text-valign': 'center',
@@ -288,8 +289,8 @@ class CytoGraph extends React.Component {
           selector: 'node[level="tactical"]',
           style: {
             shape: 'rectangle',
-            'background-color': '#9fc9eb',
-            'color': '#000000',
+            'background-color': theme.tacticalIndicatorColor,
+            color: theme.tacticalIndicatorColorFg,
             width: 'label',
             height: 'label',
             'text-valign': 'center',
@@ -300,7 +301,7 @@ class CytoGraph extends React.Component {
           selector: 'node[level="strategic"]',
           style: {
             shape: 'rectangle',
-            'background-color': '#0072c6',
+            'background-color': theme.strategicIndicatorColor,
             width: 'label',
             height: 'label',
             'text-valign': 'center',
@@ -361,4 +362,4 @@ class CytoGraph extends React.Component {
   }
 }
 
-export default CytoGraph;
+export default withTheme(CytoGraph);
