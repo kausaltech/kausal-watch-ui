@@ -20,7 +20,6 @@
     "bootstrap": "^4.3.1",
     "cytoscape": "^3.5.4",
     "cytoscape-dagre": "^2.2.2",
-    "devour-client": "^2.0.17",
     "dotenv": "^7.0.0",
     "express": "^4.16.4",
     "graphql": "^14.2.1",
