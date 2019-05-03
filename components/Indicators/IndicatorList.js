@@ -8,7 +8,6 @@ import gql from 'graphql-tag';
 import styled from 'styled-components';
 
 import { Link } from '../../routes';
-import { aplans } from '../../common/api';
 import Icon from '../Common/Icon';
 import ContentLoader from '../Common/ContentLoader';
 import PlanContext from '../../context/plan';
