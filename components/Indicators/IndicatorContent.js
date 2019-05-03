@@ -77,7 +77,7 @@ function IndicatorDetails(props) {
           <h1>{indicator.name}</h1>
           <div className="mt-4" dangerouslySetInnerHTML={{ __html: indicator.description }} />
           { (indicator.goals.length > 0  || indicator.goals.length > 0) && 
-          <IndicatorValueSummary values={indicator.values} unit={indicator.unit} goals={indicator.goals}/>}
+          <IndicatorValueSummary timeResolution={indicator.timeResolution} values={indicator.values} unit={indicator.unit} goals={indicator.goals}/>}
         </Container>
       </IndicatorHero>
       <Container>
