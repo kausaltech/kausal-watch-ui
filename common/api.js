@@ -1,7 +1,7 @@
 import axios from 'axios';
 import getConfig from 'next/config';
 
-
+export const { CancelToken } = axios;
 const { publicRuntimeConfig } = getConfig();
 
 export const aplans = {};
@@ -36,4 +36,5 @@ export const kerrokantasi = new KerrokantasiAPI();
 export default {
   aplans,
   kerrokantasi,
+  CancelToken,
 };

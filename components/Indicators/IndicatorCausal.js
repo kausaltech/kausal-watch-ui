@@ -8,7 +8,7 @@ import { Link } from '../../routes';
 import moment from '../../common/moment';
 
 import PlanContext from '../../context/plan';
-import { aplans } from '../../common/api';
+import { aplans, CancelToken } from '../../common/api';
 import ContentLoader from '../Common/ContentLoader';
 
 const CausalChain = styled.div`
@@ -176,7 +176,7 @@ function IndicatorLatestValue(props) {
         {indicator.latest_value.unit}
       </IndicatorValueUnit>
       <IndicatorValueTime>
-        (<time dateTime={tagVal}>{formattedTime}</time>)
+        <time dateTime={tagVal}>{formattedTime}</time>
       </IndicatorValueTime>
     </IndicatorValue>
   );
@@ -185,6 +185,7 @@ function IndicatorLatestValue(props) {
 class IndicatorCausal extends React.Component {
   constructor(props) {
     super(props);
+    this.cancelToken = CancelToken.source();
     this.state = {
       isLoaded: false,
       error: null,
@@ -200,6 +201,15 @@ class IndicatorCausal extends React.Component {
     if (prevProps.actionId !== actionId) {
       this.fetchData();
     }
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return true;
+  }
+
+  componentWillUnmount() {
+    this.cancelToken.cancel();
+    this.cancelled = true;
   }
 
   setColumns(nodes, index, column) {
@@ -240,22 +250,20 @@ class IndicatorCausal extends React.Component {
       params: {
         plan: plan.identifier, action: actionId,
       },
-    }).then(
-      (result) => {
-        this.setState({
-          isLoaded: true,
-          nodes: result.data.data.nodes,
-          edges: result.data.data.edges,
-        });
-      },
-    ).catch(
-      (error) => {
-        this.setState({
-          isLoaded: true,
-          error,
-        });
-      },
-    );
+      cancelToken: this.cancelToken.token,
+    }).then((result) => {
+      this.setState({
+        isLoaded: true,
+        nodes: result.data.data.nodes,
+        edges: result.data.data.edges,
+      });
+    }).catch((error) => {
+      if (this.cancelled) return;
+      this.setState({
+        isLoaded: true,
+        error,
+      });
+    });
   }
 
   combineData(nodes, edges) {
