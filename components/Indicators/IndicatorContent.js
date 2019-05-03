@@ -2,11 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import {
-  Jumbotron as BaseJumbotron, Container, Row, Col,
+  Jumbotron as BaseJumbotron, Container, Row, Col, Alert
 } from 'reactstrap';
 import styled from 'styled-components';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
+import moment from '../../common/moment';
 
 import { Link } from '../../routes';
 import PlanContext from '../../context/plan';
@@ -16,6 +17,7 @@ import ErrorMessage from '../Common/ErrorMessage';
 import { SubpageTitle } from '../layout';
 
 import IndicatorGraph from '../Graphs/IndicatorGraph';
+import IndicatorValueSummary from './IndicatorValueSummary';
 import ActionCard from '../Actions/ActionCard';
 
 
@@ -63,9 +65,9 @@ const Section = styled.section`
   }
 `;
 
-
 function IndicatorDetails(props) {
   const { indicator } = props;
+  
   return (
     <div className="mb-5">
       <SubpageTitle title={indicator.name} />
@@ -74,6 +76,8 @@ function IndicatorDetails(props) {
           <h5><Link route="indicators"><a>Mittarit</a></Link></h5>
           <h1>{indicator.name}</h1>
           <div className="mt-4" dangerouslySetInnerHTML={{ __html: indicator.description }} />
+          { (indicator.goals.length > 0  || indicator.goals.length > 0) && 
+          <IndicatorValueSummary values={indicator.values} unit={indicator.unit} goals={indicator.goals}/>}
         </Container>
       </IndicatorHero>
       <Container>
@@ -82,7 +86,7 @@ function IndicatorDetails(props) {
             <h2>Kuvaaja</h2>
             {indicator.latestGraph
               ? <IndicatorGraph graphId={indicator.latestGraph.id} />
-              : <h5>Ei kuvaajaa</h5>}
+              : <Alert><h5>Ei kuvaajaa</h5></Alert>}
           </Col>
         </Row>
       </Container>
@@ -112,11 +116,11 @@ function IndicatorDetails(props) {
 
 class IndicatorContent extends React.Component {
   static contextType = PlanContext;
-
+  
   render() {
-    const { id } = this.props;
+    const { id, indicator } = this.props;
     const plan = this.context;
-
+    
     return (
       <Query query={GET_INDICATOR_DETAILS} variables={{ id, plan: plan.identifier }}>
         {({ loading, error, data }) => {
