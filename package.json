@@ -52,7 +52,7 @@
     "sentry-testkit": "^2.2.0",
     "styled-components": "^4.2.0"
   },
-  "license": "MIT",
+  "license": "AGPLv3",
   "main": "next.config.js",
   "scripts": {
     "dev": "node server.js",
