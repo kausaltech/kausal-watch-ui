@@ -48,7 +48,7 @@ const IndexHero = () => (
       <Container>
         <p className="lead">Nykyisellä vähennysnopeudella</p>
         <h1 className="display-5">Helsinki on Hiilineutraali</h1>
-        <h2 className="display-4">29.1.2079</h2>
+        <h2 className="display-4">27.8.2073</h2>
         <Link route="indicator" params={{ id: 5 }} passHref={ true }>
           <ReadMoreLink>
             Lue lisää
