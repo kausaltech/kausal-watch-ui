@@ -52,7 +52,7 @@
     "sentry-testkit": "^2.2.0",
     "styled-components": "^4.2.0"
   },
-  "license": "AGPLv3",
+  "license": "AGPL-3.0-or-later",
   "main": "next.config.js",
   "scripts": {
     "dev": "node server.js",
