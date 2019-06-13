@@ -138,7 +138,6 @@ class CytoGraph extends React.Component {
       const out = {
         data: {
           id: node.id,
-          label: wordWrap(node.name, 40),
           type: node.type,
           level: node.indicator_level,
           depth: node.depth,
@@ -146,6 +145,13 @@ class CytoGraph extends React.Component {
           node,
         },
       };
+
+      if (node.type === 'action') {
+        out.data.label = wordWrap(`${node.identifier}. ${node.name}`, 40);
+      } else {
+        out.data.label = wordWrap(node.name, 40);
+      }
+
       /*
       if (node.parent && node.indicator_level === 'strategic') {
         out.data.parent = node.parent.id;
