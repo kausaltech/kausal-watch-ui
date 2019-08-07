@@ -24,14 +24,17 @@ class BadgeTooltip extends React.Component {
   }
 
   render() {
+    const id = (this.props.abbreviation || this.props.name).replace(/[ &]/g, '_')
+
     return (
       <span>
-        <StyledBadge pill href="#" id={this.props.abbreviation}>{this.props.abbreviation}</StyledBadge>
-        <Tooltip placement="top" isOpen={this.state.tooltipOpen} target={this.props.abbreviation} toggle={this.toggle}>
+        <StyledBadge pill href="#" id={id}>{this.props.abbreviation || this.props.name}</StyledBadge>
+        <Tooltip placement="top" isOpen={this.state.tooltipOpen} target={id} toggle={this.toggle}>
           {this.props.name}
         </Tooltip>
       </span>
     );
+    return ret;
   }
 }
 
