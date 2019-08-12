@@ -41,7 +41,7 @@ class TaskList extends React.Component {
             <Icon name="check" className="text-black-50 mr-3" />
             <Date>{TaskList.parseTimestamp(item.completedAt)}</Date>
             {' | '}
-            <span dangerouslySetInnerHTML={{ __html: item.name }} />
+            <span>{item.name}</span>
           </div>
           <div><small><span dangerouslySetInnerHTML={{ __html: item.comment }} /></small></div>
         </ListGroupItem>
@@ -55,7 +55,7 @@ class TaskList extends React.Component {
                 <Icon name="calendar" className="text-black-50 mr-3" />
                 <Date>{TaskList.parseTimestamp(item.dueAt)}</Date>
                 {' | '}
-                <span dangerouslySetInnerHTML={{ __html: item.name }} />
+                <span>{item.name}</span>
               </div>
               <div><small><span dangerouslySetInnerHTML={{ __html: item.comment }} /></small></div>
             </ListGroupItem>
