@@ -25,6 +25,12 @@ const GET_PLAN = gql`
         beginsAt,
         endsAt
       }
+      actionImpacts {
+        id,
+        identifier,
+        name,
+        order
+      }
     }
   }
 `;
