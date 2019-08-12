@@ -10,20 +10,18 @@ const Responsibles = styled.div`
   }
 `;
 
-class ResponsibleList extends React.Component {
-  render() {
-    return (
-      <Responsibles>
-        <h5>Vastuuorganisaatiot</h5>
-        { this.props.data
-          ? this.props.data.map((item, index) => (
-            <BadgeTooltip key={index} name={item.name} abbreviation={item.abbreviation} />
-          ))
-          : <h6>Ei merkittyjä vastuuorganisaatioita</h6>
-        }
-      </Responsibles>
-    );
-  }
+function ResponsibleList(props) {
+  return (
+    <Responsibles>
+      <h5>Vastuuorganisaatiot</h5>
+      { props.data
+        ? props.data.map((item, index) => (
+          <BadgeTooltip key={index} id={item.id} name={item.name} abbreviation={item.abbreviation} />
+        ))
+        : <h6>Ei merkittyjä vastuuorganisaatioita</h6>
+      }
+    </Responsibles>
+  );
 }
 
 export default ResponsibleList;
