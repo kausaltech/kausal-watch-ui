@@ -36,7 +36,6 @@ app.prepare().then(() => {
     const actualPage = '/content'
     const queryParams = { title: req.params.id }
     app.render(req, res, actualPage, queryParams)
-    console.log(`wtf!!!!!!`);
   })
 
   server.get('*', (req, res) => {

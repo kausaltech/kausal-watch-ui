@@ -6,6 +6,8 @@ import {
 import styled, { withTheme } from 'styled-components';
 import { Link } from '../routes';
 import Icon from './Common/Icon';
+// TODO: get page content from API
+import mockData from '../pages/mock-content-data.json';
 
 const TopNav = styled(Navbar)`
   background-color: ${props => props.theme.brandNavBackground};
@@ -22,7 +24,7 @@ const Logo = styled.div`
 
 const DynamicNavItem = props => (
   <NavItem>
-    <Link as={`/p/${props.id}`} href={`/content?title=${props.title}`}>
+    <Link as={`/p/${props.id}`} href={`/content?title=${props.id}`}>
       <a className="nav-link">{props.title}</a>
     </Link>
   </NavItem>
@@ -72,7 +74,7 @@ class Header extends React.Component {
                   <a className="nav-link">Mittarit</a>
                 </Link>
               </NavItem>
-              <DynamicNavItem id="faq" title="Usein kysyttyä"/>
+              {mockData.data.map(item => <DynamicNavItem id={item.attributes.slug} title={item.attributes.name} key={item.id}/>)}
             </Nav>
           </Collapse>
         </BotNav>
