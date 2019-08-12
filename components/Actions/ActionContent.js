@@ -6,6 +6,7 @@ import {
 import { Query } from 'react-apollo';
 import styled, { withTheme } from 'styled-components';
 import gql from 'graphql-tag';
+import moment from '../../common/moment';
 
 import { Link } from '../../routes';
 import PlanContext from '../../context/plan';
@@ -36,6 +37,7 @@ query ActionDetails($plan: ID!, $id: ID!) {
     description
     completion
     imageUrl
+    updatedAt
 
     categories {
       id
@@ -110,6 +112,11 @@ const ActionHeadline = styled.h1`
   margin-bottom: 2rem;
 `;
 
+const LastUpdated = styled.div`
+  margin-bottom: 1em;
+  color: #aaaaaa;
+`;
+
 const ActionSection = styled.section`
   margin-bottom: 3rem;
 `;
@@ -133,7 +140,9 @@ const CommentsSection = styled.section`
 
 function ActionDetails(props) {
   const { action, plan, theme } = props;
-  console.log(action);
+
+  const updated = moment(action.updatedAt).format('DD.MM.YYYY');
+
   return (
     <div>
       <SubpageTitle title={action.name} />
@@ -183,6 +192,7 @@ function ActionDetails(props) {
               <div dangerouslySetInnerHTML={{ __html: action.officialName }} />
               <small>(Hiilineutraali Helsinki 2035 -toimenpideohjelmasta)</small>
             </OfficialText>
+            <LastUpdated>Tietoja päivitetty {updated}</LastUpdated>
           </Col>
           <Col md="6" lg="4">
             {action.impact &&
