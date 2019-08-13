@@ -21,26 +21,27 @@ const ImpactIcon = styled(Icon)`
 `;
 
 function ActionImpact(props) {
-  const { identifier, name } = props
-  const max = 5
-  const [impact] = useState([])
+  const { identifier, name } = props;
+  const max = 5;
+  const bullets = [];
+  const num = Number(identifier);
 
-  if (Number(identifier) < 0) {
-    impact.push(-1)
+  if (num < 0) {
+    bullets.push({ type: 'bad', idx: 0 });
   } else {
     for (let x = 0; x < max; x += 1) {
-      if (x < Number(identifier)) impact.push(1)
-      if (x >= Number(identifier)) impact.push(0)
+      if (x < num) bullets.push({ type: 'on', idx: x });
+      else if (x >= num) bullets.push({ type: 'off', idx: x });
     }
   }
 
   return (
     <div>
-      {impact.map((item) => (
+      {bullets.map((item) => (
         <>
-          {item < 0 && <ImpactIcon name="exclamationCircle" className="icon-bad" />}
-          {item === 0 && <ImpactIcon name="circleOutline" className="icon-off" />}
-          {item > 0 && <ImpactIcon name="circleFull" className="icon-on" />}
+          {item.type === 'bad' && <ImpactIcon key={item.idx} name="exclamationCircle" className="icon-bad" />}
+          {item.type === 'off' && <ImpactIcon key={item.idx} name="circleOutline" className="icon-off" />}
+          {item.type === 'on' && <ImpactIcon key={item.idx} name="circleFull" className="icon-on" />}
         </>
       ))}
       <h6>
