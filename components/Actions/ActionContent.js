@@ -133,7 +133,6 @@ const CommentsSection = styled.section`
 
 function ActionDetails(props) {
   const { action, plan, theme } = props;
-  console.log(action);
   return (
     <div>
       <SubpageTitle title={action.name} />
