@@ -6,6 +6,7 @@ import {
 import { Query } from 'react-apollo';
 import styled, { withTheme } from 'styled-components';
 import gql from 'graphql-tag';
+import moment from '../../common/moment';
 
 import { Link } from '../../routes';
 import PlanContext from '../../context/plan';
@@ -16,6 +17,7 @@ import TaskList from './TaskList';
 import ResponsibleList from './ResponsibleList';
 import ContactPersons from './ContactPersons';
 import ActionStatus from './ActionStatus';
+import ActionImpact from './ActionImpact';
 import ActionIndicators from './ActionIndicators';
 import ActionBgImage from './ActionBgImage';
 import ActionPager from './ActionPager';
@@ -35,6 +37,7 @@ query ActionDetails($plan: ID!, $id: ID!) {
     description
     completion
     imageUrl
+    updatedAt
 
     categories {
       id
@@ -57,13 +60,16 @@ query ActionDetails($plan: ID!, $id: ID!) {
       name
     }
     tasks {
-      id, name, dueAt, completedAt
+      id, name, dueAt, completedAt, comment
     }
     status {
       id, identifier, name
     }
     schedule {
       id, name, beginsAt, endsAt
+    }
+    impact {
+      id, identifier, name
     }
     relatedIndicators {
       indicator {
@@ -106,12 +112,17 @@ const ActionHeadline = styled.h1`
   margin-bottom: 2rem;
 `;
 
+const LastUpdated = styled.div`
+  margin-bottom: 1em;
+  color: #aaaaaa;
+`;
+
 const ActionSection = styled.section`
   margin-bottom: 3rem;
 `;
 
 const OfficialText = styled.section`
-  color: ${props => props.theme.brandDark}; 
+  color: ${props => props.theme.brandDark};
   margin-bottom: 3rem;
 `;
 
@@ -123,12 +134,15 @@ const CategoryBadge = styled(Badge)`
 `;
 
 const CommentsSection = styled.section`
-  background-color: ${props => props.theme.brandDark}; 
+  background-color: ${props => props.theme.brandDark};
 `;
 
 
 function ActionDetails(props) {
   const { action, plan, theme } = props;
+
+  const updated = moment(action.updatedAt).format('DD.MM.YYYY');
+
   return (
     <div>
       <SubpageTitle title={action.name} />
@@ -142,7 +156,7 @@ function ActionDetails(props) {
                     <a>
                       <h4>Toimenpiteet</h4>
                     </a>
-                  </Link> 
+                  </Link>
                   <h2 className="display-4">{action.identifier}</h2>
                   <ActionHeadline>{action.name}</ActionHeadline>
                   <p>
@@ -178,8 +192,14 @@ function ActionDetails(props) {
               <div dangerouslySetInnerHTML={{ __html: action.officialName }} />
               <small>(Hiilineutraali Helsinki 2035 -toimenpideohjelmasta)</small>
             </OfficialText>
+            <LastUpdated>Tietoja päivitetty {updated}</LastUpdated>
           </Col>
           <Col md="6" lg="4">
+            {action.impact &&
+              <ActionSection>
+                <ActionImpact name={action.impact.name} identifier={action.impact.identifier} />
+              </ActionSection>
+            }
             <ActionSection>
             {action.categories.map((item) => (
               <CategoryBadge key={item.id} className="mr-3">{item.name}</CategoryBadge>

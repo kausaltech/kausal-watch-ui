@@ -10,14 +10,36 @@ const ValueSummary = styled.section`
   border-bottom: 1px solid #333;
 `;
 
-function IndicatorValueSummary({ timeResolution, values, goals, unit }) {
-  function beautifyValue(x) {
-    const s = x.toString();
-    const displayNumber = s.replace('.', ',');
-    return displayNumber.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-  }
 
+function beautifyValue(x) {
+  let out;
+
+  if (!Number.isInteger(x)) {
+    out = x.toFixed(2);
+  } else {
+    out = x;
+  }
+  const s = out.toString();
+  const displayNumber = s.replace('.', ',');
+  return displayNumber.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+}
+
+function determineDesirableDirection(values, goals) {
+  if (!values.length || !goals.length) return null;
+
+  const latestValue = values[values.length - 1];
+  const latestGoal = goals[goals.length - 1];
+
+  if (latestGoal.value - latestValue.value >= 0) {
+    return '+';
+  }
+  return '-';
+}
+
+function IndicatorValueSummary({ timeResolution, values, goals, unit }) {
+  const desirableDirection = determineDesirableDirection(values, goals);
   let timeFormat = 'D.M.YYYY';
+
   if (timeResolution === 'YEAR') {
     timeFormat = 'YYYY';
   }
@@ -25,15 +47,51 @@ function IndicatorValueSummary({ timeResolution, values, goals, unit }) {
   let valueDisplay = <h6>Ei arvoja</h6>;
   if (values.length > 0) {
     const latestValue = values[values.length - 1];
-    const latestValueDisplay = beautifyValue(latestValue.value.toFixed(2));
+    let absChange;
+    let relChange;
+    let desirableChange;
+    let changeColor;
+    let changeSymbol;
+
+    if (values.length > 1) {
+      absChange = latestValue.value - values[values.length - 2].value;
+      relChange = latestValue.value ? absChange / latestValue.value : 0;
+      if (desirableDirection) {
+        if ((absChange > 0 && desirableDirection == '+') ||
+            (absChange < 0 && desirableDirection == '-')) {
+          desirableChange = true;
+          changeColor = 'green';
+        } else if (absChange == 0) {
+          desirableChange = null;
+          changeColor = 'grey';
+        } else {
+          desirableChange = false;
+          changeColor = 'red';
+        }
+      }
+      if (absChange < 0) {
+        changeSymbol = '▼';
+      } else if (absChange > 0) {
+        changeSymbol = '▲';
+      }
+    }
+
+    const latestValueDisplay = beautifyValue(latestValue.value);
     valueDisplay = (
       <div>
         <div><strong>Viimeisin mittaus</strong></div>
         <small>{moment(latestValue.time).format(timeFormat)}</small>
         <h3>
           {latestValueDisplay}
-          {" "}
+          {' '}
           <small>{unit.name}</small>
+          {absChange && (
+            <span style={{ color: changeColor }}>
+              <strong>{changeSymbol}</strong>
+              <span>{beautifyValue(absChange)}</span> <small>{unit.name}</small>
+              <small>({(relChange * 100).toFixed(1) + ' %'})</small>
+            </span>
+          )}
         </h3>
       </div>
     );
@@ -42,15 +100,15 @@ function IndicatorValueSummary({ timeResolution, values, goals, unit }) {
   let goalDisplay = <h6>Ei tavoitearvoja</h6>;
   if (goals.length > 0) {
     const nextGoal = goals[0];
-    const nextGoalDate = moment(nextGoal.date).format(timeFormat) ;
-    const nextGoalValue = beautifyValue(nextGoal.value.toFixed(2));
+    const nextGoalDate = moment(nextGoal.date).format(timeFormat);
+    const nextGoalValue = beautifyValue(nextGoal.value);
     goalDisplay = (
       <div>
         <div><strong>Tavoite</strong></div>
         <small>{nextGoalDate}</small>
         <h3>
           {nextGoalValue}
-          {" "}
+          {' '}
           <small>{unit.name}</small>
         </h3>
       </div>
@@ -59,7 +117,7 @@ function IndicatorValueSummary({ timeResolution, values, goals, unit }) {
 
   let differenceDisplay = <h6>-</h6>;
   if (values.length > 0 && goals.length > 0) {
-    const difference = Number(goals[0].value) - Number(values[values.length - 1].value).toFixed(2);
+    const difference = goals[0].value - values[values.length - 1].value;
     const now = moment();
     const timeToGoal = moment(goals[0].date).diff(now, 'years', true).toFixed(0) + " vuotta";
     differenceDisplay = (
@@ -68,7 +126,7 @@ function IndicatorValueSummary({ timeResolution, values, goals, unit }) {
         <small>{timeToGoal}</small>
         <h3>
           {beautifyValue(difference)}
-          {" "}
+          {' '}
           <small>{unit.name}</small>
         </h3>
       </div>

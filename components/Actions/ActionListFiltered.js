@@ -26,6 +26,10 @@ export const GET_ACTION_LIST = gql`
         identifier
         name
       }
+      impact {
+        id
+        identifier
+      }
       categories {
         id
       }
@@ -85,6 +89,7 @@ class ActionListFiltered extends React.Component {
       activeCategory: '',
       activeOrganization: '',
       activeSearch: '',
+      activeImpact: '',
     };
     this.handleChange = this.handleChange.bind(this);
 
@@ -109,6 +114,7 @@ class ActionListFiltered extends React.Component {
       const activeCat = this.state.activeCategory;
       const activeOrg = this.state.activeOrganization;
       const activeSearch = this.state.activeSearch;
+      const activeImpact = this.state.activeImpact;
 
       if (activeCat && item.rootCategory.id !== activeCat) return false;
       if (activeOrg) {
@@ -120,6 +126,7 @@ class ActionListFiltered extends React.Component {
         if (item.name.toLowerCase().search(searchStr) !== -1) return true;
         return false;
       }
+      if (activeImpact && (!item.impact || (item.impact.id !== activeImpact))) return false;
       return true;
     });
 
@@ -128,11 +135,12 @@ class ActionListFiltered extends React.Component {
 
   render() {
     const actions = this.filterActions();
+    const impacts = this.context.actionImpacts;
 
     return (
       <div id="actions">
         <h1 className="mb-4">Toimenpiteet</h1>
-        <ActionListFilters cats={this.cats} orgs={this.orgs} changeOption={this.handleChange} />
+        <ActionListFilters cats={this.cats} orgs={this.orgs} impacts={impacts} changeOption={this.handleChange} />
         <ActionList actions={actions} error={this.state.error} />
       </div>
     );
