@@ -69,7 +69,7 @@ query ActionDetails($plan: ID!, $id: ID!) {
       id, name, beginsAt, endsAt
     }
     impact {
-      identifier, name
+      id, identifier, name
     }
     relatedIndicators {
       indicator {

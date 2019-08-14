@@ -27,11 +27,11 @@ function ActionImpact(props) {
   const num = Number(identifier);
 
   if (num < 0) {
-    bullets.push({ type: 'bad', idx: 0 });
+    bullets.push({ type: 'bad', key: '0-bad' });
   } else {
     for (let x = 0; x < max; x += 1) {
-      if (x < num) bullets.push({ type: 'on', idx: x });
-      else if (x >= num) bullets.push({ type: 'off', idx: x });
+      if (x < num) bullets.push({ type: 'on', key: `${x}-on` });
+      else if (x >= num) bullets.push({ type: 'off', key: `${x}-off` });
     }
   }
 
@@ -39,9 +39,9 @@ function ActionImpact(props) {
     <div>
       {bullets.map((item) => (
         <>
-          {item.type === 'bad' && <ImpactIcon key={item.idx} name="exclamationCircle" className="icon-bad" />}
-          {item.type === 'off' && <ImpactIcon key={item.idx} name="circleOutline" className="icon-off" />}
-          {item.type === 'on' && <ImpactIcon key={item.idx} name="circleFull" className="icon-on" />}
+          {item.type === 'bad' && <ImpactIcon key={item.key} name="exclamationCircle" className="icon-bad" />}
+          {item.type === 'off' && <ImpactIcon key={item.key} name="circleOutline" className="icon-off" />}
+          {item.type === 'on' && <ImpactIcon key={item.key} name="circleFull" className="icon-on" />}
         </>
       ))}
       <h6>
