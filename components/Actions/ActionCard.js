@@ -84,9 +84,7 @@ function ActionCard(props) {
         completion={action.completion}
       />
       <CardBody>
-        { // TODO: Change the ready criteria when the information is available in api
-          action.status.identifier === 'on_time'
-          && action.completion === 100
+        { action.completion === 100
           && (
             <ReadyBadge color="success" pill>
               <Icon name="check" color="#fff" width="2em" height="2em" />
