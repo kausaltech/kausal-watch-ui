@@ -9,7 +9,7 @@ const Status = styled.div`
   background-color: ${(props) => props.theme.themeColors.dark};
   font-size: 0.8em;
   font-weight: 600;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.03em;
   text-align: left;
   line-height: 2;
 `;
@@ -25,23 +25,23 @@ const ActionProgress = styled(Progress)`
   background-color: ${(props) => props.theme.themeColors.light};
 
   &.bg-not_started {
-    background-color: ${(props) => props.theme.themeColors.dark};
+    background-color: ${(props) => props.theme.themeColors.light};
 
     .progress-bar {
-      color: ${(props) => props.theme.themeColors.light};
+      color: ${(props) => props.theme.themeColors.dark};
     }
   }
 
   &.bg-on_time, &.bg-ready {
-    background-color:  ${(props) => darken(0.3, props.theme.themeColors.success)};
+    background-color:  ${(props) => darken(0.15, props.theme.themeColors.success)};
   }
 
   &.bg-late {
-    background-color:  ${(props) => darken(0.2, props.theme.themeColors.warning)};
+    background-color:  ${(props) => darken(0.15, props.theme.themeColors.warning)};
   }
 
   &.bg-severely_late {
-    background-color:  ${(props) => darken(0.2, props.theme.themeColors.danger)};
+    background-color:  ${(props) => darken(0.15, props.theme.themeColors.danger)};
   }
 `;
 
