@@ -84,7 +84,7 @@ function ActionCard(props) {
         completion={action.completion}
       />
       <CardBody>
-        { action.completion === 100
+        { action.status.identifier === "completed"
           && (
             <ReadyBadge color="success" pill>
               <Icon name="check" color="#fff" width="2em" height="2em" />

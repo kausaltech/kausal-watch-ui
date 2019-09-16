@@ -32,7 +32,7 @@ const ActionProgress = styled(Progress)`
     }
   }
 
-  &.bg-on_time, &.bg-ready {
+  &.bg-on_time, &.bg-completed {
     background-color:  ${(props) => darken(0.15, props.theme.themeColors.success)};
   }
 
@@ -55,7 +55,7 @@ function ActionStatus(props) {
       statusColor = '';
       break;
     case 'on_time':
-    case 'ready':
+    case 'completed':
       statusColor = 'success';
       break;
     case 'late':
