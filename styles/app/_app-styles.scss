@@ -5,8 +5,6 @@
 
 .icon {
   fill: currentColor;
-  width: 1em !important;
-  height: 1em !important;
   vertical-align: -0.1em;
   overflow: hidden;
 }
@@ -46,11 +44,11 @@ blockquote {
   clear: both;
   background-color: $brand-dark;
   padding: 8rem 0;
-  
+
   .footer-column {
     text-align: center;
   }
-  
+
   a {
     color: $white;
   }

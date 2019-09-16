@@ -38,6 +38,7 @@
     "original-url": "^1.2.3",
     "parse-cache-control": "^1.0.1",
     "plotly.js": "^1.49.1",
+    "polished": "^3.4.1",
     "prop-types": "^15.7.2",
     "react": "^16.9.0",
     "react-apollo": "^3.0.0",
@@ -75,5 +76,8 @@
     "type": "git",
     "url": ""
   },
-  "browsers": ["> 1%", "last 4 versions"]
+  "browsers": [
+    "> 1%",
+    "last 4 versions"
+  ]
 }

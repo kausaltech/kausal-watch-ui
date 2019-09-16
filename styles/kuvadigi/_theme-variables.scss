@@ -179,3 +179,19 @@ $navbar-light-disabled-color:       rgba($hel-black, .3);
 $navbar-light-toggler-icon-bg:      str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='#{$hel-black}' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E"), "#", "%23");
 
 $navbar-light-toggler-border-color: transparent;
+
+
+// Indicators
+$action-color: $hel-tram;
+$operational-indicator-color: $hel-copper;
+$tactical-indicator-color: $hel-fog;
+$strategic-indicator-color: $hel-coat;
+
+$action-color-fg: $hel-white;
+$operational-indicator-color-fg: $hel-black;
+$tactical-indicator-color-fg: $hel-black;
+$strategic-indicator-color-fg: $hel-white;
+
+$causality-increases-color: $hel-tram;
+$causality-decreases-color: $hel-brick;
+$causality-is-part-of-color: grey;

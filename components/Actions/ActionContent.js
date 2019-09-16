@@ -220,10 +220,11 @@ function ActionDetails(props) {
                 % valmis
               </strong>
               ) }
-              <Progress value={action.completion} color="status" />
-              { action.status
-                && <ActionStatus name={action.status.name} identifier={action.status.identifier} />
-              }
+              <ActionStatus
+                name={action.status.name}
+                identifier={action.status.identifier}
+                completion={action.completion}
+              />
             </ActionSection>
             { action.schedule.length ? (
               <ActionSection>
