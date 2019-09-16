@@ -29,7 +29,7 @@ $cyan:    #52a4ca;
 
 // Service specific brand color defaults
 $brand-light:  $hel-summer;
-$brand-dark:   $hel-tram;
+$brand-dark:   #00792D; //modified hel-tram for a11y
 
 // Application color mappings:
 $theme-colors: (
@@ -88,7 +88,7 @@ $navbar-light-toggler-border-color: transparent;
 
 
 // Indicators
-$action-color: $hel-tram;
+$action-color: $brand-dark;
 $operational-indicator-color: $hel-copper;
 $tactical-indicator-color: $hel-fog;
 $strategic-indicator-color: $hel-coat;

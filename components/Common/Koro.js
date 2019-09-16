@@ -6,7 +6,7 @@ const StyledKoro = styled.section`
 
   &::before {
     content: " ";
-    @include koro("storm", $hel-tram, 600);
+    @include koro("storm", brand-dark, 600);
     background-image: ${props => props.koroShape};
     background-size: ${props => ((props.scale / 100 * 20))}px ${props => ((props.scale / 100 * 800))}px;
     background-position: top;
