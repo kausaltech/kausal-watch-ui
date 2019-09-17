@@ -4,7 +4,6 @@ import getConfig from 'next/config';
 import { ApolloProvider, Query } from 'react-apollo';
 import gql from 'graphql-tag';
 
-import { aplans } from '../common/api';
 import { captureException } from '../common/sentry';
 import PlanContext from '../context/plan';
 import withApollo from '../common/apollo';
@@ -31,23 +30,19 @@ const GET_PLAN = gql`
         name,
         order
       }
+      staticPages {
+        id,
+        title,
+        slug
+      }
     }
   }
 `;
-
-// cache the global plan object here
-let globalPlan;
 
 
 class AplansApp extends App {
   constructor(props) {
     super(props);
-    // This might be a little bit naughty, but we're setting the global
-    // plan here so that we don't need to fetch the data client-side.
-    const { plan } = props;
-    if (!globalPlan && plan) {
-      globalPlan = plan;
-    }
     this.state = {
       hasError: false,
       errorEventId: undefined,
