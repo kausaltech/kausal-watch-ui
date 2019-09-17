@@ -26,6 +26,9 @@ const ActionsSection = styled.div`
 
 function ActionList(props) {
   const { plan } = props;
+  if (!process.browser) {
+    return <ContentLoader />;
+  }
   return (
     <Query query={GET_ACTION_LIST} variables={{ plan: plan.identifier }}>
       {({ data, loading, error }) => {
