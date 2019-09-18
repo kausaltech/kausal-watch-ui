@@ -35,8 +35,11 @@ export const GET_ACTION_LIST = gql`
       }
       responsibleParties {
         id
-        abbreviation
-        name
+        organization {
+          id
+          abbreviation
+          name
+        }
       }
     }
     planCategories(plan: $plan) {
@@ -118,7 +121,7 @@ class ActionListFiltered extends React.Component {
 
       if (activeCat && item.rootCategory.id !== activeCat) return false;
       if (activeOrg) {
-        if (!item.responsibleParties.find(org => org.id === activeOrg)) return false;
+        if (!item.responsibleParties.find(rp => rp.organization.id === activeOrg)) return false;
       }
       if (activeSearch) {
         const searchStr = activeSearch.toLowerCase();

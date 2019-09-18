@@ -5,6 +5,8 @@ import {
 } from 'reactstrap';
 import styled, { withTheme } from 'styled-components';
 import { Link } from '../routes';
+import PlanContext from '../context/plan';
+
 import Icon from './Common/Icon';
 // TODO: get page content from API
 import mockData from '../pages/mock-content-data.json';
@@ -31,6 +33,8 @@ const DynamicNavItem = props => (
 )
 
 class Header extends React.Component {
+  static contextType = PlanContext;
+
   constructor(props) {
     super(props);
 
@@ -48,6 +52,8 @@ class Header extends React.Component {
 
   render() {
     const { theme, siteTitle } = this.props;
+    const plan = this.context;
+
     return (
       <div>
         <TopNav expand="md">
@@ -64,17 +70,23 @@ class Header extends React.Component {
           <NavbarToggler onClick={this.toggle}><Icon name="bars" color={theme.brandDark}/></NavbarToggler>
           <Collapse isOpen={this.state.isOpen} navbar>
             <Nav navbar>
-              <NavItem>
+              <NavItem key='actions'>
                 <Link route="/#actions" passHref={ true }>
                   <a className="nav-link">Toimenpiteet</a>
                 </Link>
               </NavItem>
-              <NavItem>
+              <NavItem key='indicators'>
                 <Link route="indicators" passHref={ true }>
                   <a className="nav-link">Mittarit</a>
                 </Link>
               </NavItem>
-              {mockData.data.map(item => <DynamicNavItem id={item.attributes.slug} title={item.attributes.name} key={item.id}/>)}
+              { plan.staticPages && plan.staticPages.map((page) => (
+                <NavItem key={page.slug}>
+                  <Link route={page.slug} passHref={ true }>
+                    <a className="nav-link">{page.title}</a>
+                  </Link>
+                </NavItem>
+              ))}
             </Nav>
           </Collapse>
         </BotNav>
