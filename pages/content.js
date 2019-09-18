@@ -3,7 +3,9 @@ import Layout from '../components/layout';
 import { Container, Row, Col } from 'reactstrap';
 import styled, { withTheme } from 'styled-components';
 // TODO: get page content from API
-import mockData from '../pages/mock-content-data.json'; 
+
+import { Accordion } from '../components/Common/Accordion';
+import mockData from '../pages/mock-content-data.json';
 
 const HeaderBg = styled.div`
   background-color: ${props => props.theme.brandDark};
@@ -49,6 +51,20 @@ class Page extends React.Component {
                   <ContentMarkup dangerouslySetInnerHTML={pageMarkup} />
                   </Col>
                 </Row>
+                <Row>
+                  <Accordion>
+                    { pageData.attributes.faqs.map(faq => (
+                      <Accordion.Item>
+                        <Accordion.Header>
+                          {faq.question}
+                        </Accordion.Header>
+                        <Accordion.Body>
+                          {faq.answer}
+                        </Accordion.Body>
+                      </Accordion.Item>
+                    ))}
+                  </Accordion>
+                </Row>
               </Container>
             </div>
           </article> )
@@ -57,7 +73,7 @@ class Page extends React.Component {
       <h1>NOT FOUND</h1>
     )
     return(
-      <Layout>   
+      <Layout>
           {pageContent}
       </Layout>
     )
