@@ -9,7 +9,7 @@ import Header from './header';
 import SiteFooter from './SiteFooter';
 import PlanContext from '../context/plan';
 
-dynamic(import('../styles/' + process.env.PLAN_IDENTIFIER + '/main.scss'));
+import('../styles/' + process.env.PLAN_IDENTIFIER + '/main.scss');
 
 let theme = require('sass-extract-loader?{"plugins": ["sass-extract-js"]}!../styles/' + process.env.PLAN_IDENTIFIER + '/_theme-variables.scss');
 

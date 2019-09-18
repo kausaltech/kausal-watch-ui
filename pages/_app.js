@@ -32,7 +32,7 @@ const GET_PLAN = gql`
       }
       staticPages {
         id,
-        title,
+        name,
         slug
       }
     }

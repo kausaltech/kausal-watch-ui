@@ -72,8 +72,8 @@ class Header extends React.Component {
               </NavItem>
               { plan.staticPages && plan.staticPages.map((page) => (
                 <NavItem key={page.slug}>
-                  <Link route={page.slug} passHref={ true }>
-                    <a className="nav-link">{page.title}</a>
+                  <Link route={`/${page.slug}`} passHref={ true }>
+                    <a className="nav-link">{page.name}</a>
                   </Link>
                 </NavItem>
               ))}
