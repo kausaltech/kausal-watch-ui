@@ -4,7 +4,6 @@ import Layout from '../../components/layout';
 import IndicatorsHero from '../../components/Indicators/IndicatorsHero';
 import IndicatorList from '../../components/Indicators/IndicatorList';
 
-import ContentLoader from '../../components/Common/ContentLoader';
 import PlanContext from '../../context/plan';
 
 

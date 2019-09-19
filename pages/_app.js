@@ -1,5 +1,5 @@
 import React from 'react';
-import App, { Container } from 'next/app';
+import App from 'next/app';
 import getConfig from 'next/config';
 import { ApolloProvider, Query } from 'react-apollo';
 import gql from 'graphql-tag';
@@ -9,6 +9,7 @@ import PlanContext from '../context/plan';
 import withApollo from '../common/apollo';
 import Error from './_error';
 
+require('../styles/' + process.env.PLAN_IDENTIFIER + '/main.scss')
 
 const { publicRuntimeConfig } = getConfig();
 
