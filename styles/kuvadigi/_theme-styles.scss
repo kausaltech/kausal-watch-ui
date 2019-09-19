@@ -44,3 +44,17 @@
     top: $spacer * -3;
   }
 }
+
+.content-area {
+    position: relative;
+    padding-top: $spacer * 3;
+    &::before {
+      content: " ";
+      @include koro("wave", $brand-dark, 420);
+      transform: rotate(180deg);
+      width: 100%;
+      height: $spacer * 3;
+      position: absolute;
+      top: -5px;
+    }
+}

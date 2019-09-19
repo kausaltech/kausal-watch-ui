@@ -8,6 +8,8 @@ import { Link } from '../routes';
 import PlanContext from '../context/plan';
 
 import Icon from './Common/Icon';
+// TODO: get page content from API
+import mockData from '../pages/mock-content-data.json';
 
 const TopNav = styled(Navbar)`
   background-color: ${props => props.theme.brandNavBackground};
@@ -21,6 +23,14 @@ const BotNav = styled(Navbar)`
 const Logo = styled.div`
   height: 2em;
 `;
+
+const DynamicNavItem = props => (
+  <NavItem>
+    <Link as={`/p/${props.id}`} href={`/content?title=${props.id}`}>
+      <a className="nav-link">{props.title}</a>
+    </Link>
+  </NavItem>
+)
 
 class Header extends React.Component {
   static contextType = PlanContext;
