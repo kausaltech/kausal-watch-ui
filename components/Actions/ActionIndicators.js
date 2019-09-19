@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Badge, Alert, Card, CardBody, CardTitle, CardFooter } from 'reactstrap';
 import { Link } from '../../routes';
+import { ActionLink, IndicatorLink } from '../../common/links';
 
 import IndicatorGraph from '../Graphs/IndicatorGraph';
 
@@ -30,19 +31,19 @@ function ActionIndicator(props) {
             Liittyy myös toimenpiteisiin:
             {' '}
             {actions.map(action => (
-              <Link key={action.identifier} route={`/action/${action.identifier}`}>
+              <ActionLink key={action.identifier} id={action.identifier}>
                 <a><Badge>{action.identifier}</Badge></a>
-              </Link>
+              </ActionLink>
             ))}
             {' | '}
           </span>
         )}
-        <Link route={`/indicator/${indicator.id}`}>
+        <IndicatorLink id={indicator.id}>
           <a>
             Mittarin tarkemmat tiedot
             <Icon name="arrowRight" color="" />
           </a>
-        </Link>
+        </IndicatorLink>
       </CardFooter>
     </Card>
   );

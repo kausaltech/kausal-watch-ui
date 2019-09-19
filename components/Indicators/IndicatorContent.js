@@ -73,7 +73,7 @@ function IndicatorDetails(props) {
       <SubpageTitle title={indicator.name} />
       <IndicatorHero>
         <Container>
-          <h5><Link route="indicators"><a>Mittarit</a></Link></h5>
+          <h5><Link href="/indicators"><a>Mittarit</a></Link></h5>
           <h1>{indicator.name}</h1>
           <div className="mt-4" dangerouslySetInnerHTML={{ __html: indicator.description }} />
           { (indicator.goals.length > 0  || indicator.goals.length > 0) && 

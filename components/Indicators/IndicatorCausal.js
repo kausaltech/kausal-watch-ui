@@ -4,7 +4,7 @@ import {
   Card, CardBody, CardTitle, Alert,
 } from 'reactstrap';
 import styled from 'styled-components';
-import { Link } from '../../routes';
+import { IndicatorLink } from '../../common/links';
 import moment from '../../common/moment';
 
 import PlanContext from '../../context/plan';
@@ -364,9 +364,9 @@ class IndicatorCausal extends React.Component {
                 ? (
                   <div>
                     <IndicatorType>Mittari</IndicatorType>
-                    <Link route={`/indicator/${indicator.object_id}`}>
+                    <IndicatorLink id={indicator.object_id}>
                       <a><IndicatorTitle>{ indicator.name }</IndicatorTitle></a>
-                    </Link>
+                    </IndicatorLink>
                   </div>
                 )
                 : (

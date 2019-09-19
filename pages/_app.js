@@ -5,6 +5,8 @@ import { ApolloProvider, Query } from 'react-apollo';
 import gql from 'graphql-tag';
 
 import { captureException } from '../common/sentry';
+import { appWithTranslation } from '../common/i18n';
+
 import PlanContext from '../context/plan';
 import withApollo from '../common/apollo';
 import Error from './_error';
@@ -107,4 +109,4 @@ class AplansApp extends App {
 }
 
 
-export default withApollo(AplansApp);
+export default appWithTranslation(withApollo(AplansApp));

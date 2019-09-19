@@ -9,6 +9,8 @@ import gql from 'graphql-tag';
 import moment from '../../common/moment';
 
 import { Link } from '../../routes';
+import { ActionLink } from '../../common/links';
+
 import PlanContext from '../../context/plan';
 
 import IndicatorCausal from '../Indicators/IndicatorCausal';
@@ -160,7 +162,7 @@ function ActionDetails(props) {
             <Container>
               <Row>
                 <Col md="10">
-                  <Link route="/#actions">
+                  <Link href="/#actions">
                     <a>
                       <h4>Toimenpiteet</h4>
                     </a>
@@ -170,16 +172,16 @@ function ActionDetails(props) {
                   <p>
                   { action.previousAction
                     && (
-                      <Link route="action" params={{ id: action.previousAction.identifier }} passHref={ true }>
+                      <ActionLink id={action.previousAction.identifier}>
                         <a><Icon name="arrowLeft" color={theme.brandLight}  /> Edellinen</a>
-                      </Link>
+                      </ActionLink>
                     )
                   }{ action.nextAction
                     && action.previousAction && <span>{' '}|{' '}</span>}{ action.nextAction
                     && (
-                      <Link route="action" params={{ id: action.nextAction.identifier }} passHref={ true }>
+                      <ActionLink id={action.nextAction.identifier}>
                         <a>Seuraava <Icon name="arrowRight" color={theme.brandLight} /></a>
-                      </Link>
+                      </ActionLink>
                     )
                   }
                   </p>

@@ -2,11 +2,13 @@
 const next = require('next');
 const morgan = require('morgan');
 const express = require('express');
+const nextI18NextMiddleware = require('next-i18next/middleware').default;
 const LRUCache = require('lru-cache');
 const originalUrl = require('original-url');
 const parseCacheControl = require('parse-cache-control');
+
 const sentry = require('./common/sentry');
-const routes = require('./routes');
+const nextI18next = require('./common/i18n')
 
 const serverPort = process.env.PORT || 3000;
 
@@ -27,8 +29,6 @@ if (process.env.SENTRY_DSN) {
   console.log('Sentry initialized');
 }
 
-const handler = routes.getRequestHandler(app, handleRoute);
-
 app.prepare().then(() => {
   const server = express();
 
@@ -36,10 +36,14 @@ app.prepare().then(() => {
     server.use(Sentry.Handlers.requestHandler());
   }
   server.use(morgan('dev'));
-  server.use(handler);
+  server.use(nextI18NextMiddleware(nextI18next));
   if (Sentry) {
     server.use(Sentry.Handlers.errorHandler());
   }
+
+  const handle = app.getRequestHandler();
+  server.get('*', (req, res) => handle(req, res))
+
   server.listen(serverPort, (err) => {
     if (err) throw err;
     console.log(`Ready on http://localhost:${serverPort}`);

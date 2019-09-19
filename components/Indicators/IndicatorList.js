@@ -7,7 +7,7 @@ import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 import styled from 'styled-components';
 
-import { Link } from '../../routes';
+import { IndicatorLink } from '../../common/links';
 import Icon from '../Common/Icon';
 import ContentLoader from '../Common/ContentLoader';
 import PlanContext from '../../context/plan';
@@ -148,9 +148,9 @@ class FilteredIndicatorList extends React.Component {
                   </IndicatorType>
                 </td>
                 <td>
-                  <Link route="indicator" params={{ id: item.id }} href>
-                    <a>{ item.name }</a>
-                  </Link>
+                  <IndicatorLink id={item.id}>
+                    <a>{item.name}</a>
+                  </IndicatorLink>
                 </td>
                 <td>
                   {item.categories.map(cat => (

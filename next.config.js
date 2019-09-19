@@ -65,6 +65,7 @@ const config = withBundleAnalyzer(withSourceMaps(withImages(withSass({
     cfg.plugins.push(new webpack.EnvironmentPlugin({
       PLAN_IDENTIFIER: 'hnh2035',
     }));
+    // cfg.optimization.minimize = false;
     return cfg;
   },
 }))));

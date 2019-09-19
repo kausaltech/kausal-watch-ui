@@ -7,7 +7,7 @@ import {
 import styled from 'styled-components';
 import gql from 'graphql-tag';
 
-import { Link } from '../../routes';
+import { ActionLink } from '../../common/links';
 import Icon from '../Common/Icon';
 import ActionImage from './ActionImage';
 import ActionStatus from './ActionStatus';
@@ -66,18 +66,14 @@ function ActionCard(props) {
   if (actionName.length > 120) actionName = `${action.name.substring(0, 120)}…`;
   return (
     <StyledCard>
-      <Link
-        route="action"
-        params={{ id: action.identifier }}
-        passHref
-      >
+      <ActionLink id={action.identifier}>
         <a>
           <ActionImage action={action} width={520} height={200} />
           <CardImgOverlay>
             <ActionNumber className="action-number">{action.identifier}</ActionNumber>
           </CardImgOverlay>
         </a>
-      </Link>
+      </ActionLink>
       <ActionStatus
         name={action.status.name}
         identifier={action.status.identifier}
@@ -91,11 +87,11 @@ function ActionCard(props) {
             </ReadyBadge>
           )
         }
-        <Link route="action" params={{ id: action.id }} passHref>
+        <ActionLink id={action.identifier}>
           <a>
             <StyledCardTitle tag="h5">{actionName}</StyledCardTitle>
           </a>
-        </Link>
+        </ActionLink>
       </CardBody>
     </StyledCard>
   );

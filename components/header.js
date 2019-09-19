@@ -47,32 +47,32 @@ class Header extends React.Component {
     return (
       <div>
         <TopNav expand="md">
-          <Link route="/">
+          <Link href="/">
             <a aria-label="Helsinki, palvelun etusivu" className="navbar-brand">
               <Logo aria-hidden="true" className="nav-org-logo" />
             </a>
           </Link>
         </TopNav>
         <BotNav expand="md">
-          <Link route="/">
+          <Link href="/">
             <a className="navbar-brand">{siteTitle}</a>
           </Link>
           <NavbarToggler onClick={this.toggle}><Icon name="bars" color={theme.brandDark}/></NavbarToggler>
           <Collapse isOpen={this.state.isOpen} navbar>
             <Nav navbar>
               <NavItem key='actions'>
-                <Link route="/#actions" passHref={ true }>
+                <Link href="/#actions">
                   <a className="nav-link">Toimenpiteet</a>
                 </Link>
               </NavItem>
               <NavItem key='indicators'>
-                <Link route="indicators" passHref={ true }>
+                <Link href="/indicators">
                   <a className="nav-link">Mittarit</a>
                 </Link>
               </NavItem>
               { plan.staticPages && plan.staticPages.map((page) => (
                 <NavItem key={page.slug}>
-                  <Link route={`/${page.slug}`} passHref={ true }>
+                  <Link href={`/${page.slug}`}>
                     <a className="nav-link">{page.name}</a>
                   </Link>
                 </NavItem>
