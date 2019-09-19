@@ -30,7 +30,9 @@ function ActionIndicator(props) {
             Liittyy myös toimenpiteisiin:
             {' '}
             {actions.map(action => (
-              <Link route={`/action/${action.identifier}`}><a><Badge>{action.identifier}</Badge></a></Link>
+              <Link key={action.identifier} route={`/action/${action.identifier}`}>
+                <a><Badge>{action.identifier}</Badge></a>
+              </Link>
             ))}
             {' | '}
           </span>
