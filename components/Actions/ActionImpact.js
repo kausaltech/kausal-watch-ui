@@ -37,13 +37,14 @@ function ActionImpact(props) {
 
   return (
     <div>
-      {bullets.map((item) => (
-        <>
-          {item.type === 'bad' && <ImpactIcon key={item.key} name="exclamationCircle" className="icon-bad" />}
-          {item.type === 'off' && <ImpactIcon key={item.key} name="circleOutline" className="icon-off" />}
-          {item.type === 'on' && <ImpactIcon key={item.key} name="circleFull" className="icon-on" />}
-        </>
-      ))}
+      {bullets.map((item) => {
+        if (item.type === 'bad')
+          return <ImpactIcon key={item.key} name="exclamationCircle" className="icon-bad" />
+        else if (item.type === 'off')
+          return <ImpactIcon key={item.key} name="circleOutline" className="icon-off" />
+        else if (item.type === 'on')
+          return <ImpactIcon key={item.key} name="circleFull" className="icon-on" />
+      })}
       <h6>
         {name}
         {' '}
