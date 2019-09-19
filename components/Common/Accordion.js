@@ -34,7 +34,6 @@ const QuestionTrigger = styled(Button)`
 
 const AccordionContent = styled(Collapse)`
   margin-bottom: 2em;
-  margin-left: 32px;
 `;
 
 export class Accordion extends React.Component {

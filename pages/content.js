@@ -7,6 +7,16 @@ import styled, { withTheme } from 'styled-components';
 import { Accordion } from '../components/Common/Accordion';
 import mockData from '../pages/mock-content-data.json';
 
+const HeaderImage = styled.div`
+  background-image: url(${props => props.image});
+  background-size: cover;
+  background-position: center;
+  color: #fff;
+  height: 300px;
+  background-color: ${props => props.theme.brandDark};
+  background-blend-mode: multiply;
+`;
+
 const HeaderBg = styled.div`
   background-color: ${props => props.theme.brandDark};
   color: #fff;
@@ -32,10 +42,12 @@ class Page extends React.Component {
   if (pageData) {
     const pageMarkup = {__html: pageData.attributes.content};
     pageContent = ( <article>
+            <HeaderImage image="https://source.unsplash.com/JE2Oo1SZpps/1600x900">
+            </HeaderImage>
             <HeaderBg>
               <Container>
                 <Row>
-                  <Col lg={{ size: 8, offset: 2 }}  md={{ size: 10, offset: 1 }}>
+                  <Col>
                     <ContentHeader>
                       <h1>{pageData.attributes.title}</h1>
                       <p className="lead">{pageData.attributes.tagline}</p>
@@ -47,8 +59,8 @@ class Page extends React.Component {
             <div className="content-area">
               <Container className="mb-5">
                 <Row>
-                  <Col lg={{ size: 8, offset: 2 }}  md={{ size: 10, offset: 1 }}>
-                  <ContentMarkup dangerouslySetInnerHTML={pageMarkup} />
+                  <Col lg={{ size:8, offset: 2 }} md={{ size: 10, offset: 1 }}>
+                    <ContentMarkup dangerouslySetInnerHTML={pageMarkup} />
                   </Col>
                 </Row>
                 <Row>
@@ -59,7 +71,11 @@ class Page extends React.Component {
                           {faq.question}
                         </Accordion.Header>
                         <Accordion.Body>
-                          {faq.answer}
+                        <Row>
+                          <Col lg={{ size:8, offset: 2 }} md={{ size: 10, offset: 1 }}>
+                            {faq.answer}
+                          </Col>
+                        </Row>
                         </Accordion.Body>
                       </Accordion.Item>
                     ))}
