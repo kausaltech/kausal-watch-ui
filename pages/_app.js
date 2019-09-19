@@ -86,24 +86,22 @@ class AplansApp extends App {
     const { planIdentifier } = publicRuntimeConfig;
 
     return (
-      <Container>
-        <ApolloProvider client={apollo}>
-          <Query query={GET_PLAN} variables={{ plan: planIdentifier }}>
-            {({ data, loading, error }) => {
-              if (error) return <Error message={error} />;
-              if (loading) return null;
+      <ApolloProvider client={apollo}>
+        <Query query={GET_PLAN} variables={{ plan: planIdentifier }}>
+          {({ data, loading, error }) => {
+            if (error) return <Error message={error} />;
+            if (loading) return null;
 
-              const { plan } = data;
-              if (currentURL) plan.currentURL = currentURL;
-              return (
-                <PlanContext.Provider value={data.plan}>
-                  <Component {...pageProps} />
-                </PlanContext.Provider>
-              );
-            }}
-          </Query>
-        </ApolloProvider>
-      </Container>
+            const { plan } = data;
+            if (currentURL) plan.currentURL = currentURL;
+            return (
+              <PlanContext.Provider value={data.plan}>
+                <Component {...pageProps} />
+              </PlanContext.Provider>
+            );
+          }}
+        </Query>
+      </ApolloProvider>
     );
   }
 }
