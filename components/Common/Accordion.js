@@ -5,6 +5,7 @@ import styled from 'styled-components';
 
 const Header = styled.h3`
   display: flex;
+  font-size: 1.4em;
 
   &:before {
     display: block;
@@ -33,7 +34,8 @@ const QuestionTrigger = styled(Button)`
 `;
 
 const AccordionContent = styled(Collapse)`
-  margin-bottom: 2em;
+  margin-bottom: 3em;
+  margin-left: 32px;
 `;
 
 export class Accordion extends React.Component {
@@ -74,7 +76,7 @@ Accordion.propTypes = {
 const AccordionItem = ({
   children, isOpen, onClick, identifier
 }) => (
-  <div>
+  <div id={`q${identifier}`}>
     {React.Children.map(children, child => {
       if (child.type === AccordionHeader) {
         return React.cloneElement(child, { onClick, isOpen, identifier });

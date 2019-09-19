@@ -1,30 +1,35 @@
+import React from 'react';
 import { withRouter } from 'next/router';
-import Layout from '../components/layout';
+
 import { Container, Row, Col } from 'reactstrap';
-import styled, { withTheme } from 'styled-components';
-// TODO: get page content from API
+import styled from 'styled-components';
+import { Query } from 'react-apollo';
+import gql from 'graphql-tag';
+
+import Layout from '../components/layout';
+import PlanContext from '../context/plan';
 
 import { Accordion } from '../components/Common/Accordion';
-import mockData from '../pages/mock-content-data.json';
+import ContentLoader from '../components/Common/ContentLoader';
 
 const HeaderImage = styled.div`
-  background-image: url(${props => props.image});
+  background-image: url(${(props) => props.image});
   background-size: cover;
   background-position: center;
   color: #fff;
   height: 300px;
-  background-color: ${props => props.theme.brandDark};
+  background-color: ${(props) => props.theme.brandDark};
   background-blend-mode: multiply;
 `;
 
 const HeaderBg = styled.div`
-  background-color: ${props => props.theme.brandDark};
+  background-color: ${(props) => props.theme.brandDark};
   color: #fff;
   position: relative;
 `;
 
 const ContentHeader = styled.header`
-  padding: 3em 0;
+  padding: 5em 0 3em;
   h1 {
     margin-bottom: .5em;
   }
@@ -34,66 +39,116 @@ const ContentMarkup = styled.div`
   padding: 3em 0;
 `;
 
+const FaqSection = styled.section`
+  padding: 4em 0;
+  background: ${(props) => props.theme.themeColors.light};
+
+  h2 {
+    text-align: center;
+    margin-bottom: 2em;
+  }
+`;
+
+
+const GET_CONTENT = gql`
+query ActionDetails($plan: ID!) {
+  plan(id: $plan) {
+    staticPages {
+      id
+      slug
+      name
+      title
+      tagline
+      content
+      modifiedAt
+      imageUrl
+      questions {
+        id
+        title
+        answer
+      }
+    }
+  }
+}`;
+
 class Page extends React.Component {
+  static contextType = PlanContext;
+
   render() {
-  const { router } = this.props;
-  const pageData = mockData.data.find(item => item.attributes.slug == router.query.title);
-  var pageContent;
-  if (pageData) {
-    const pageMarkup = {__html: pageData.attributes.content};
-    pageContent = ( <article>
-            <HeaderImage image="https://source.unsplash.com/JE2Oo1SZpps/1600x900">
-            </HeaderImage>
-            <HeaderBg>
-              <Container>
-                <Row>
-                  <Col>
-                    <ContentHeader>
-                      <h1>{pageData.attributes.title}</h1>
-                      <p className="lead">{pageData.attributes.tagline}</p>
-                    </ContentHeader>
-                  </Col>
-                </Row>
-              </Container>
-            </HeaderBg>
-            <div className="content-area">
-              <Container className="mb-5">
-                <Row>
-                  <Col lg={{ size:8, offset: 2 }} md={{ size: 10, offset: 1 }}>
-                    <ContentMarkup dangerouslySetInnerHTML={pageMarkup} />
-                  </Col>
-                </Row>
-                <Row>
+    const plan = this.context;
+
+    return (
+      <Query query={GET_CONTENT} variables={{ plan: plan.identifier }}>
+        {({ loading, error, data }) => {
+          if (loading) return <ContentLoader />;
+          if (error) return <div>{error.message}</div>;
+          console.log(data.plan);
+          return (
+            <Layout>
+              <Content page={data.plan.staticPages[0]} />
+            </Layout>
+          );
+          /* ActionContent action={data.action} theme={ theme } /> */
+        }}
+      </Query>
+    );
+  }
+}
+
+const Content = (props) => {
+  const { page } = props;
+  const { title, tagline, imageUrl, content, questions } = page;
+
+  return (
+    <article>
+      { imageUrl && <HeaderImage image={imageUrl} /> }
+      <HeaderBg>
+        <Container>
+          <Row>
+            <Col>
+              <ContentHeader>
+                <h1>{title}</h1>
+                <p className="lead">{tagline}</p>
+              </ContentHeader>
+            </Col>
+          </Row>
+        </Container>
+      </HeaderBg>
+      <div className="content-area">
+        <Container>
+          <Row>
+            <Col lg={{ size:8, offset: 2 }} md={{ size: 10, offset: 1 }}>
+              <ContentMarkup dangerouslySetInnerHTML={{ __html: content }} />
+            </Col>
+          </Row>
+        </Container>
+        { questions.length > 0 &&
+          (
+          <FaqSection>
+            <Container>
+              <Row>
+                <Col lg={{ size:8, offset: 2 }} md={{ size: 10, offset: 1 }}>
+                  <h2>Usein kysytyt kysymykset</h2>
                   <Accordion>
-                    { pageData.attributes.faqs.map(faq => (
-                      <Accordion.Item>
+                    { questions.map(faq => (
+                      <Accordion.Item key={faq.id}>
                         <Accordion.Header>
-                          {faq.question}
+                          {faq.title}
                         </Accordion.Header>
                         <Accordion.Body>
-                        <Row>
-                          <Col lg={{ size:8, offset: 2 }} md={{ size: 10, offset: 1 }}>
-                            {faq.answer}
-                          </Col>
-                        </Row>
+                          <div dangerouslySetInnerHTML={{ __html: faq.answer }}/>
                         </Accordion.Body>
                       </Accordion.Item>
                     ))}
                   </Accordion>
-                </Row>
-              </Container>
-            </div>
-          </article> )
-  }
-  else pageContent = (
-      <h1>NOT FOUND</h1>
-    )
-    return(
-      <Layout>
-          {pageContent}
-      </Layout>
-    )
-  }
+                </Col>
+              </Row>
+            </Container>
+          </FaqSection>
+          )}
+      </div>
+    </article>
+  )
 }
 
 export default withRouter(Page)
