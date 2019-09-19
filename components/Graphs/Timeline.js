@@ -1,11 +1,10 @@
 import React from 'react';
 import dynamic from 'next/dynamic';
 import { Progress } from 'reactstrap';
-import { withSize } from 'react-sizeme';
 import styled, { withTheme } from 'styled-components';
 
 
-const Timeline = ({ schedules, allSchedules, size, theme }) => {
+const Timeline = ({ schedules, allSchedules, theme }) => {
   if (!process.browser) {
     return null;
   }
@@ -43,7 +42,7 @@ const Timeline = ({ schedules, allSchedules, size, theme }) => {
       type: 'scatter',
       mode: 'lines',
       line: {
-        width: 18,
+        width: 24,
         color: theme.brandDark,
       },
     },
@@ -75,14 +74,14 @@ const Timeline = ({ schedules, allSchedules, size, theme }) => {
       visible: false,
     },
     plot_bgcolor: '#e9ecef',
-    width: size.width,
-    height: 28,
+    width: null,  // Is resized automatically by plotly
+    height: 36,
     autosize: true,
   };
 
   return (
-    <Plot data={data} layout={layout} config={{ staticPlot: true }} />
+    <Plot data={data} layout={layout} config={{ staticPlot: true }} style={{ width: '100%' }} useResizeHandler />
   );
 };
 
-export default withTheme(withSize()(Timeline));
+export default withTheme(Timeline);
