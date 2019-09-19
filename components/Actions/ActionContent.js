@@ -50,9 +50,14 @@ query ActionDetails($plan: ID!, $id: ID!) {
       }
     }
     contactPersons {
+      id
       firstName
       lastName
       avatarUrl
+      title
+      organization {
+        name
+      }
     }
     responsibleParties {
       id
