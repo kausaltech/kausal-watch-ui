@@ -6,8 +6,6 @@ import gql from 'graphql-tag';
 
 import { Media, Button, Collapse } from 'reactstrap';
 
-import AvatarImage from '../../images/default-avatar.png';
-
 const Person = styled.div`
   margin-top: 1em;
   padding-bottom: 1em;
@@ -100,7 +98,7 @@ class ContactPerson extends React.Component {
         <Media key={person.id}>
           <Media left>
             <Avatar
-              src={person.avatarUrl ? person.avatarUrl : AvatarImage}
+              src={person.avatarUrl || '/static/images/default-avatar.png'}
               className="rounded-circle"
               alt={`${person.firstName} ${person.lastName}`}
             />
