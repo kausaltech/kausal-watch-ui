@@ -110,7 +110,9 @@ class ContactPerson extends React.Component {
               {`${person.firstName} ${person.lastName}`}
             </Name>
             <PersonRole>{person.title}</PersonRole>
-            <PersonOrg>{person.organization.name}</PersonOrg>
+            {person.organization && (
+              <PersonOrg>{person.organization.name}</PersonOrg>
+            )}
             <CollapseButton
               onClick={this.toggle}
               color="link"
