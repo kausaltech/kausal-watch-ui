@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from 'reactstrap';
 import moment from '../../common/moment';
-import Icon from '../Common/Icon';
+import Icon from '../common/Icon';
 
 class Comment extends React.Component {
   constructor(props) {

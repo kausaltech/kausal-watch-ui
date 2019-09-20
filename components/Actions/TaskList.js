@@ -2,7 +2,7 @@ import React from 'react';
 import { ListGroup, ListGroupItem as BaseListGroupItem } from 'reactstrap';
 import styled from 'styled-components';
 import moment from '../../common/moment';
-import Icon from '../Common/Icon';
+import Icon from '../common/Icon';
 
 
 const Date = styled.span`

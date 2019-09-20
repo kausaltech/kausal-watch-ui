@@ -3,7 +3,7 @@ import { Alert } from 'reactstrap';
 import { kerrokantasi as kkAPI } from '../../common/api';
 
 import Comment from './Comment';
-import ContentLoader from '../Common/ContentLoader';
+import ContentLoader from '../common/ContentLoader';
 
 class CommentList extends React.Component {
   constructor(props) {

@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 
-import Icon from '../Common/Icon'
+import Icon from '../common/Icon'
 
 const ImpactIcon = styled(Icon)`
   font-size: 1.5em;

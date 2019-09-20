@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Layout from './layout';
-import ContentLoader from './Common/ContentLoader';
+import ContentLoader from './common/ContentLoader';
 import ErrorComponent from '../pages/_error';
 
 

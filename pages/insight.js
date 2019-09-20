@@ -7,7 +7,7 @@ import { Router } from '../routes';
 import { aplans } from '../common/api';
 import IndicatorsHero from '../components/Indicators/IndicatorsHero';
 import PlanContext from '../context/plan';
-import ContentLoader from '../components/Common/ContentLoader';
+import ContentLoader from '../components/common/ContentLoader';
 
 
 class VisPage extends React.Component {

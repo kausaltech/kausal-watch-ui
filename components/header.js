@@ -8,7 +8,7 @@ import { Link } from '../routes';
 import { withTranslation } from '../common/i18n';
 import PlanContext from '../context/plan';
 
-import Icon from './Common/Icon';
+import Icon from './common/Icon';
 // TODO: get page content from API
 
 const TopNav = styled(Navbar)`

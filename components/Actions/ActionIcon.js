@@ -1,6 +1,6 @@
 import React from 'react';
 
-import HelIcon from '../Common/HelIcon';
+import HelIcon from '../common/HelIcon';
 
 
 class ActionIcon extends React.Component {

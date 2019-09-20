@@ -8,7 +8,7 @@ import styled from 'styled-components';
 import gql from 'graphql-tag';
 
 import { ActionLink } from '../../common/links';
-import Icon from '../Common/Icon';
+import Icon from '../common/Icon';
 import ActionImage from './ActionImage';
 import ActionStatus from './ActionStatus';
 

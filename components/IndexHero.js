@@ -4,7 +4,7 @@ import { Container } from 'reactstrap';
 import styled from 'styled-components';
 import { Link } from '../routes';
 import { IndicatorLink } from '../common/links';
-import Icon from './Common/Icon';
+import Icon from './common/Icon';
 
 const TimeScaleBanner = styled.div`
   background-color: ${props => props.theme.brandLight};

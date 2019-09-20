@@ -8,11 +8,11 @@ import gql from 'graphql-tag';
 import styled from 'styled-components';
 
 import { IndicatorLink } from '../../common/links';
-import Icon from '../Common/Icon';
-import ContentLoader from '../Common/ContentLoader';
+import Icon from '../common/Icon';
+import ContentLoader from '../common/ContentLoader';
 import PlanContext from '../../context/plan';
 import { SubpageTitle } from '../layout';
-import ErrorMessage from '../Common/ErrorMessage';
+import ErrorMessage from '../common/ErrorMessage';
 
 import IndicatorListFilters from './IndicatorListFilters';
 

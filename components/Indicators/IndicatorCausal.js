@@ -9,7 +9,7 @@ import moment from '../../common/moment';
 
 import PlanContext from '../../context/plan';
 import { aplans, CancelToken } from '../../common/api';
-import ContentLoader from '../Common/ContentLoader';
+import ContentLoader from '../common/ContentLoader';
 
 const CausalChain = styled.div`
   background-color: #eeeeee;

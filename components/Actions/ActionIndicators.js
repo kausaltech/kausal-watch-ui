@@ -6,7 +6,7 @@ import { ActionLink, IndicatorLink } from '../../common/links';
 
 import IndicatorGraph from '../Graphs/IndicatorGraph';
 
-import Icon from '../Common/Icon';
+import Icon from '../common/Icon';
 
 function ActionIndicator(props) {
   const { relatedIndicator, actionId } = props;

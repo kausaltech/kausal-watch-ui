@@ -23,10 +23,10 @@ import ActionImpact from './ActionImpact';
 import ActionIndicators from './ActionIndicators';
 import ActionBgImage from './ActionBgImage';
 import ActionPager from './ActionPager';
-import ContentLoader from '../Common/ContentLoader';
-import Icon from '../Common/Icon';
+import ContentLoader from '../common/ContentLoader';
+import Icon from '../common/Icon';
 import { SubpageTitle } from '../layout';
-import ErrorMessage from '../Common/ErrorMessage';
+import ErrorMessage from '../common/ErrorMessage';
 
 
 const GET_ACTION_DETAILS = gql`

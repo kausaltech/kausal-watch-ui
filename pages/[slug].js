@@ -7,9 +7,9 @@ import gql from 'graphql-tag';
 
 import Layout from '../components/layout';
 import PlanContext from '../context/plan';
-import ErrorMessage from '../components/Common/ErrorMessage';
-import { Accordion } from '../components/Common/Accordion';
-import ContentLoader from '../components/Common/ContentLoader';
+import ErrorMessage from '../components/common/ErrorMessage';
+import { Accordion } from '../components/common/Accordion';
+import ContentLoader from '../components/common/ContentLoader';
 
 const HeaderImage = styled.div`
   background-image: url(${(props) => props.image});

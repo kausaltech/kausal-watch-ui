@@ -4,7 +4,7 @@ import { Button } from 'reactstrap';
 import styled from 'styled-components';
 import { Link } from '../../routes';
 import { ActionLink } from '../../common/links';
-import Icon from '../Common/Icon';
+import Icon from '../common/Icon';
 
 const Pager = styled.div`
   display: flex;

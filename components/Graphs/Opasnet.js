@@ -5,7 +5,7 @@ import createPlotlyComponent from 'react-plotly.js/factory';
 import { Alert } from 'reactstrap';
 
 import styled from 'styled-components';
-import ContentLoader from '../Common/ContentLoader';
+import ContentLoader from '../common/ContentLoader';
 
 
 const GraphSection = styled.section`

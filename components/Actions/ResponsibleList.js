@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import BadgeTooltip from '../Common/BadgeTooltip';
+import BadgeTooltip from '../common/BadgeTooltip';
 
 const Responsibles = styled.div`
   font-size: 1.5em;

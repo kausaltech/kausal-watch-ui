@@ -6,7 +6,7 @@ import {
 } from 'reactstrap';
 import { aplans } from '../../common/api';
 
-import ContentLoader from '../Common/ContentLoader';
+import ContentLoader from '../common/ContentLoader';
 
 class IndicatorGraph extends React.Component {
   constructor(props) {

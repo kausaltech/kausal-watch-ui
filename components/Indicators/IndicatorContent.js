@@ -12,8 +12,8 @@ import moment from '../../common/moment';
 import { Link } from '../../routes';
 import PlanContext from '../../context/plan';
 
-import ContentLoader from '../Common/ContentLoader';
-import ErrorMessage from '../Common/ErrorMessage';
+import ContentLoader from '../common/ContentLoader';
+import ErrorMessage from '../common/ErrorMessage';
 import { SubpageTitle } from '../layout';
 
 import IndicatorGraph from '../Graphs/IndicatorGraph';

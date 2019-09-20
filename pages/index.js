@@ -13,7 +13,7 @@ import ActionListFiltered, { GET_ACTION_LIST } from '../components/Actions/Actio
 import IndexHero from '../components/IndexHero';
 import FrontHero from '../components/FrontHero';
 import ThlHero from '../components/ThlHero';
-import ContentLoader from '../components/Common/ContentLoader';
+import ContentLoader from '../components/common/ContentLoader';
 import PlanContext from '../context/plan';
 
 
