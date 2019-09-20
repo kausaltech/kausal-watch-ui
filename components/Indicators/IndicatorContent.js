@@ -127,6 +127,9 @@ class IndicatorContent extends React.Component {
           if (loading) return <ContentLoader />;
           if (error) return <ErrorMessage message={error.message} />;
           const { indicator } = data;
+          if (!indicator) {
+            return <ErrorMessage statusCode={404} message="Mittaria ei löydy" />
+          }
           return <IndicatorDetails indicator={indicator} plan={plan} />;
         }}
       </Query>

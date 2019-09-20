@@ -1,5 +1,4 @@
 import React from 'react';
-import { withRouter } from 'next/router';
 
 import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
@@ -8,7 +7,7 @@ import gql from 'graphql-tag';
 
 import Layout from '../components/layout';
 import PlanContext from '../context/plan';
-
+import ErrorMessage from '../components/Common/ErrorMessage';
 import { Accordion } from '../components/Common/Accordion';
 import ContentLoader from '../components/Common/ContentLoader';
 
@@ -51,41 +50,49 @@ const FaqSection = styled.section`
 
 
 const GET_CONTENT = gql`
-query ActionDetails($plan: ID!) {
-  plan(id: $plan) {
-    staticPages {
+query GetStaticPage($plan: ID!, $slug: ID!) {
+  staticPage(plan: $plan, slug: $slug) {
+    id
+    slug
+    name
+    title
+    tagline
+    content
+    modifiedAt
+    imageUrl
+    questions {
       id
-      slug
-      name
       title
-      tagline
-      content
-      modifiedAt
-      imageUrl
-      questions {
-        id
-        title
-        answer
-      }
+      answer
     }
   }
 }`;
 
-class Page extends React.Component {
+class StaticPage extends React.Component {
   static contextType = PlanContext;
+
+  static async getInitialProps({ query }) {
+    return { slug: query.slug };
+  }
 
   render() {
     const plan = this.context;
+    const { slug } = this.props;
 
     return (
-      <Query query={GET_CONTENT} variables={{ plan: plan.identifier }}>
+      <Query query={GET_CONTENT} variables={{ plan: plan.identifier, slug: slug }}>
         {({ loading, error, data }) => {
           if (loading) return <ContentLoader />;
-          if (error) return <div>{error.message}</div>;
-          console.log(data.plan);
+          if (error) return <ErrorMessage message={error.message} />;
+
+          const { staticPage } = data;
+          if (!staticPage) {
+            return <ErrorMessage statusCode={404} message="Sivua ei löydy" />
+          }
+
           return (
             <Layout>
-              <Content page={data.plan.staticPages[0]} />
+              <Content page={data.staticPage} />
             </Layout>
           );
           /* ActionContent action={data.action} theme={ theme } /> */
@@ -151,4 +158,4 @@ const Content = (props) => {
   )
 }
 
-export default withRouter(Page)
+export default StaticPage;

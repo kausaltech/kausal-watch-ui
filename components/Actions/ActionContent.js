@@ -309,6 +309,9 @@ class ActionContent extends React.Component {
           if (loading) return <ContentLoader />;
           if (error) return <ErrorMessage message={error.message} />;
           const { action } = data;
+          if (!action) {
+            return <ErrorMessage statusCode={404} message="Toimenpidettä ei löydy" />
+          }
           return <ActionDetails action={action} theme={theme} plan={plan} />;
           /* ActionContent action={data.action} theme={ theme } /> */
         }}
