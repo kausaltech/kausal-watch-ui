@@ -9,7 +9,7 @@ import styled from 'styled-components';
 import { withTranslation } from '../common/i18n';
 
 import Layout from '../components/layout';
-import ActionListFiltered, { GET_ACTION_LIST } from '../components/Actions/ActionListFiltered';
+import ActionListFiltered, { GET_ACTION_LIST } from '../components/actions/ActionListFiltered';
 import IndexHero from '../components/IndexHero';
 import FrontHero from '../components/FrontHero';
 import ThlHero from '../components/ThlHero';

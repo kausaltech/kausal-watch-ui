@@ -1,5 +1,5 @@
 import React from 'react';
-import ActionContent from '../../components/Actions/ActionContent';
+import ActionContent from '../../components/actions/ActionContent';
 import Layout from '../../components/layout';
 
 

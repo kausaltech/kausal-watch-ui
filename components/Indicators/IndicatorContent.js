@@ -18,7 +18,7 @@ import { SubpageTitle } from '../layout';
 
 import IndicatorGraph from '../Graphs/IndicatorGraph';
 import IndicatorValueSummary from './IndicatorValueSummary';
-import ActionCard from '../Actions/ActionCard';
+import ActionCard from '../actions/ActionCard';
 
 
 const GET_INDICATOR_DETAILS = gql`
