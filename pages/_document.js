@@ -1,5 +1,5 @@
 import React from 'react';
-import Document from 'next/document';
+import Document, { Html, Head, Main, NextScript } from 'next/document';
 // Import styled components ServerStyleSheet
 import { ServerStyleSheet } from 'styled-components';
 
@@ -19,14 +19,26 @@ export default class MyDocument extends Document {
       return {
         ...initialProps,
         styles: (
-          <>
+          <React.Fragment>
             {initialProps.styles}
             {sheet.getStyleElement()}
-          </>
+          </React.Fragment>
         )
       }
     } finally {
-      sheet.seal()
+      sheet.seal();
     }
+  }
+
+  render() {
+    return (
+      <Html lang={this.props.__NEXT_DATA__.props.initialLanguage}>
+        <Head />
+        <body>
+          <Main />
+          <NextScript />
+        </body>
+      </Html>
+    );
   }
 }

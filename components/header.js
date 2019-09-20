@@ -5,11 +5,11 @@ import {
 } from 'reactstrap';
 import styled, { withTheme } from 'styled-components';
 import { Link } from '../routes';
+import { withTranslation } from '../common/i18n';
 import PlanContext from '../context/plan';
 
 import Icon from './Common/Icon';
 // TODO: get page content from API
-import mockData from '../pages/mock-content-data.json';
 
 const TopNav = styled(Navbar)`
   background-color: ${props => props.theme.brandNavBackground};
@@ -24,13 +24,6 @@ const Logo = styled.div`
   height: 2em;
 `;
 
-const DynamicNavItem = props => (
-  <NavItem>
-    <Link as={`/p/${props.id}`} href={`/content?title=${props.id}`}>
-      <a className="nav-link">{props.title}</a>
-    </Link>
-  </NavItem>
-)
 
 class Header extends React.Component {
   static contextType = PlanContext;
@@ -51,7 +44,7 @@ class Header extends React.Component {
   }
 
   render() {
-    const { theme, siteTitle } = this.props;
+    const { t, i18n, theme, siteTitle } = this.props;
     const plan = this.context;
 
     return (
@@ -70,14 +63,14 @@ class Header extends React.Component {
           <NavbarToggler onClick={this.toggle}><Icon name="bars" color={theme.brandDark}/></NavbarToggler>
           <Collapse isOpen={this.state.isOpen} navbar>
             <Nav navbar>
-              <NavItem key='actions'>
+              <NavItem key="actions">
                 <Link href="/#actions">
-                  <a className="nav-link">Toimenpiteet</a>
+                  <a className="nav-link">{t('actions')}</a>
                 </Link>
               </NavItem>
-              <NavItem key='indicators'>
+              <NavItem key="indicators">
                 <Link href="/indicators">
-                  <a className="nav-link">Mittarit</a>
+                  <a className="nav-link">{t('indicators')}</a>
                 </Link>
               </NavItem>
               { plan.staticPages && plan.staticPages.map((page) => (
@@ -97,6 +90,7 @@ class Header extends React.Component {
 
 Header.propTypes = {
   siteTitle: PropTypes.string.isRequired,
+  t: PropTypes.func.isRequired,
 };
 
-export default withTheme(Header);
+export default withTranslation('common')(withTheme(Header));
