@@ -16,7 +16,7 @@ import ContentLoader from '../common/ContentLoader';
 import ErrorMessage from '../common/ErrorMessage';
 import { SubpageTitle } from '../layout';
 
-import IndicatorGraph from '../Graphs/IndicatorGraph';
+import IndicatorGraph from '../graphs/IndicatorGraph';
 import IndicatorValueSummary from './IndicatorValueSummary';
 import ActionCard from '../actions/ActionCard';
 

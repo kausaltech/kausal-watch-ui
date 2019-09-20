@@ -13,8 +13,8 @@ import { ActionLink } from '../../common/links';
 
 import PlanContext from '../../context/plan';
 
-import IndicatorCausal from '../Indicators/IndicatorCausal';
-import Timeline from '../Graphs/Timeline';
+import IndicatorCausal from '../indicators/IndicatorCausal';
+import Timeline from '../graphs/Timeline';
 import TaskList from './TaskList';
 import ResponsibleList from './ResponsibleList';
 import ContactPersons from './ContactPersons';

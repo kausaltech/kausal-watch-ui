@@ -1,6 +1,6 @@
 import React from 'react';
 import Layout from '../../components/layout';
-import IndicatorContent from '../../components/Indicators/IndicatorContent';
+import IndicatorContent from '../../components/indicators/IndicatorContent';
 
 
 class IndicatorPage extends React.Component {

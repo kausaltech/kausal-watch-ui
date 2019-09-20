@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic';
 import Layout from '../components/layout';
 import { Router } from '../routes';
 import { aplans } from '../common/api';
-import IndicatorsHero from '../components/Indicators/IndicatorsHero';
+import IndicatorsHero from '../components/indicators/IndicatorsHero';
 import PlanContext from '../context/plan';
 import ContentLoader from '../components/common/ContentLoader';
 

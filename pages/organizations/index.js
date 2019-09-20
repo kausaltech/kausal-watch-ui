@@ -2,7 +2,7 @@ import React from 'react';
 import Layout from '../../components/layout';
 import CytoGraph from '../../components/insight/CytoGraph';
 import { aplans } from '../../common/api';
-import IndicatorsHero from '../../components/Indicators/IndicatorsHero';
+import IndicatorsHero from '../../components/indicators/IndicatorsHero';
 import PlanContext from '../../context/plan';
 
 

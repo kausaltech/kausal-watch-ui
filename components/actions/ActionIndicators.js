@@ -4,7 +4,7 @@ import { Badge, Alert, Card, CardBody, CardTitle, CardFooter } from 'reactstrap'
 import { Link } from '../../routes';
 import { ActionLink, IndicatorLink } from '../../common/links';
 
-import IndicatorGraph from '../Graphs/IndicatorGraph';
+import IndicatorGraph from '../graphs/IndicatorGraph';
 
 import Icon from '../common/Icon';
 
