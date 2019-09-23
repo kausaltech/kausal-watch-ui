@@ -5,7 +5,10 @@ import Layout from '../../components/layout';
 
 class ActionPage extends React.Component {
   static async getInitialProps({ query }) {
-    return { id: query.id };
+    return {
+      id: query.id,
+      namespacesRequired: ['common'], // for translations
+    };
   }
 
   render() {
