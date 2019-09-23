@@ -37,7 +37,7 @@ const GET_INDICATOR_DETAILS = gql`
         id
       }
       values {
-        time
+        date
         value
       }
       goals(plan: $plan) {
