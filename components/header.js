@@ -75,7 +75,7 @@ class Header extends React.Component {
               </NavItem>
               { plan.staticPages && plan.staticPages.map((page) => (
                 <NavItem key={page.slug}>
-                  <Link href={`/${page.slug}`}>
+                  <Link href="/[slug]" as={`/${page.slug}`}>
                     <a className="nav-link">{page.name}</a>
                   </Link>
                 </NavItem>
