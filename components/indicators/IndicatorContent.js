@@ -7,13 +7,13 @@ import {
 import styled from 'styled-components';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
-import moment from '../../common/moment';
 
 import { Link } from '../../routes';
 import PlanContext from '../../context/plan';
 
 import ContentLoader from '../common/ContentLoader';
 import ErrorMessage from '../common/ErrorMessage';
+import ErrorBoundary from '../common/ErrorBoundary';
 import { SubpageTitle } from '../layout';
 
 import IndicatorGraph from '../graphs/IndicatorGraph';
@@ -84,7 +84,7 @@ function IndicatorDetails(props) {
           <Col className="mb-5">
             <h2>Kuvaaja</h2>
             {(indicator.latestGraph || indicator.values.length)
-              ? <IndicatorGraph indicator={indicator} plan={plan} />
+              ? <ErrorBoundary><IndicatorGraph indicator={indicator} plan={plan} /></ErrorBoundary>
               : <Alert><h5>Ei kuvaajaa</h5></Alert>}
           </Col>
         </Row>
