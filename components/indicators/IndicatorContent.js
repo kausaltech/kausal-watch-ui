@@ -66,8 +66,7 @@ const Section = styled.section`
 `;
 
 function IndicatorDetails(props) {
-  const { indicator } = props;
-  
+  const { indicator, plan } = props;
   return (
     <div className="mb-5">
       <SubpageTitle title={indicator.name} />
@@ -84,8 +83,8 @@ function IndicatorDetails(props) {
         <Row>
           <Col className="mb-5">
             <h2>Kuvaaja</h2>
-            {indicator.latestGraph
-              ? <IndicatorGraph graphId={indicator.latestGraph.id} />
+            {(indicator.latestGraph || indicator.values)
+              ? <IndicatorGraph indicator={indicator} plan={plan} />
               : <Alert><h5>Ei kuvaajaa</h5></Alert>}
           </Col>
         </Row>
@@ -113,14 +112,23 @@ function IndicatorDetails(props) {
   );
 }
 
+IndicatorDetails.propTypes = {
+  indicator: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    goals: PropTypes.arrayOf(PropTypes.shape({
+      value: PropTypes.number.isRequired,
+    })),
+  }).isRequired,
+};
+
 
 class IndicatorContent extends React.Component {
   static contextType = PlanContext;
-  
+
   render() {
-    const { id, indicator } = this.props;
+    const { id } = this.props;
     const plan = this.context;
-    
+
     return (
       <Query query={GET_INDICATOR_DETAILS} variables={{ id, plan: plan.identifier }}>
         {({ loading, error, data }) => {

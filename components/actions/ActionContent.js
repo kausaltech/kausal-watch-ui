@@ -88,6 +88,10 @@ query ActionDetails($plan: ID!, $id: ID!) {
         latestGraph {
           id
         }
+        latestValue {
+          date
+          value
+        }
         actions {
           id
           identifier

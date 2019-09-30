@@ -75,12 +75,11 @@ function IndicatorValueSummary({ timeResolution, values, goals, unit }) {
         changeSymbol = '▲';
       }
     }
-
     const latestValueDisplay = beautifyValue(latestValue.value);
     valueDisplay = (
       <div>
         <div><strong>Viimeisin mittaus</strong></div>
-        <small>{moment(latestValue.time).format(timeFormat)}</small>
+        <small>{moment(latestValue.date).format(timeFormat)}</small>
         <h3>
           {latestValueDisplay}
           {' '}

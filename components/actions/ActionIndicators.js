@@ -15,8 +15,8 @@ function ActionIndicator(props) {
 
   return (
     <Card className="mb-3">
-      {(indicator.latestGraph && indicator.latestGraph.data)
-        ? <IndicatorGraph graphId={indicator.latestGraph.id} />
+      {(indicator.latestGraph || indicator.latestValue)
+        ? <IndicatorGraph indicator={indicator} />
         : (
           <CardBody>
             <CardTitle>
