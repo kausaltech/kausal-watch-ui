@@ -83,7 +83,7 @@ function IndicatorDetails(props) {
         <Row>
           <Col className="mb-5">
             <h2>Kuvaaja</h2>
-            {(indicator.latestGraph || indicator.values)
+            {(indicator.latestGraph || indicator.values.length)
               ? <IndicatorGraph indicator={indicator} plan={plan} />
               : <Alert><h5>Ei kuvaajaa</h5></Alert>}
           </Col>
