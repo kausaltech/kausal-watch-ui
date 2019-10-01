@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import {
-  Jumbotron as BaseJumbotron, Container, Row, Col, Alert
+  Jumbotron as BaseJumbotron, Container, Row, Col, Alert, Badge
 } from 'reactstrap';
 import styled from 'styled-components';
 import { Query } from 'react-apollo';
@@ -18,6 +18,7 @@ import { Meta } from '../layout';
 
 import IndicatorGraph from '../graphs/IndicatorGraph';
 import IndicatorValueSummary from './IndicatorValueSummary';
+import IndicatorCard from './IndicatorCard';
 import ActionCard from '../actions/ActionCard';
 
 
@@ -53,6 +54,26 @@ const GET_INDICATOR_DETAILS = gql`
       actions(plan: $plan) {
         ...ActionCard
       }
+      relatedCauses {
+        id
+        effectType
+        confidenceLevel
+        causalIndicator {
+          id
+          name
+          level(plan: $plan)
+        }
+      }
+      relatedEffects {
+        id
+        effectType
+        confidenceLevel
+        effectIndicator {
+          id
+          name
+          level(plan: $plan)
+        }
+      }
     }
   }
   ${ActionCard.fragments.action}
@@ -60,6 +81,45 @@ const GET_INDICATOR_DETAILS = gql`
 
 const IndicatorHero = styled(BaseJumbotron)`
   margin-bottom: 2rem;
+  
+  a {
+    color: inherit;
+  }
+`;
+
+const IndicatorLevel = styled.h6 `
+  display: inline-block;
+  border-radius: .75em;
+  padding: .25em 1em;
+  margin-bottom: 1em;
+  color: ${(props) => {
+    switch (props.level) {
+      case 'action':
+        return '#ffffff';
+      case 'operational':
+        return '#000000';
+      case 'tactical':
+        return '#000000';
+      case 'strategic':
+        return '#ffffff';
+      default:
+        return '#000000';
+    }
+  }};
+  background-color: ${(props) => {
+    switch (props.level) {
+      case 'action':
+        return props.theme.actionColor;
+      case 'operational':
+        return props.theme.operationalIndicatorColor;
+      case 'tactical':
+        return props.theme.tacticalIndicatorColor;
+      case 'strategic':
+        return props.theme.strategicIndicatorColor;
+      default:
+        return '#cccccc';
+    }
+  }};
 `;
 
 const Section = styled.section`
@@ -71,24 +131,48 @@ const Section = styled.section`
   }
 `;
 
+const CausalNavigation = styled.div `
+  background-color: ${props => props.theme.themeColors.light};
+`;
+
+function getLevelName(level) {
+  switch (level) {
+    case 'action':
+      return 'Toimenpide';
+    case 'operational':
+      return 'Toiminnallinen mittari';
+    case 'tactical':
+      return 'Taktinen mittari';
+    case 'strategic':
+      return 'Strateginen mittari';
+    default:
+      return '';
+  }
+}
+
 function IndicatorDetails(props) {
   const { indicator, plan } = props;
+
   return (
     <div className="mb-5">
       <Meta
         title={`Mittarit`}
         description={`${indicator.name}`}
         />
-      <IndicatorHero>
+      <IndicatorHero level={indicator.level}>
         <Container>
-          <h5><Link href="/indicators"><a>Mittarit</a></Link></h5>
+          <IndicatorLevel level={indicator.level}><Link href="/indicators"><a>{ getLevelName(indicator.level) }</a></Link></IndicatorLevel>
           <h1>{indicator.name}</h1>
-          <div className="mt-4" dangerouslySetInnerHTML={{ __html: indicator.description }} />
           { (indicator.goals.length > 0  || indicator.goals.length > 0) && 
           <IndicatorValueSummary timeResolution={indicator.timeResolution} values={indicator.values} unit={indicator.unit} goals={indicator.goals}/>}
         </Container>
       </IndicatorHero>
       <Container>
+        <Row>
+          <Col md="10"  className="mb-5">
+            <div className="mt-4" dangerouslySetInnerHTML={{ __html: indicator.description }} />
+          </Col>
+        </Row>
         <Row>
           <Col className="mb-5">
             <h2>Kuvaaja</h2>
@@ -98,17 +182,55 @@ function IndicatorDetails(props) {
           </Col>
         </Row>
       </Container>
+      <CausalNavigation>
+        <Container>
+          <Row>
+            <Col md="6" className="mb-5">
+              <h4>->Tähän vaikuttaa</h4>
+              { indicator.relatedCauses
+                ? indicator.relatedCauses.map(cause => (
+                <IndicatorCard
+                  objectid={ cause.causalIndicator.id }
+                  name={ cause.causalIndicator.name }
+                  level={ cause.causalIndicator.level }
+                  />
+              )) : <Alert>Ei vaikuttavia</Alert>
+            }
+            </Col>
+
+            <Col md="6" className="mb-5">
+              <h4>Tämä vaikuttaa-></h4>
+              { indicator.relatedEffects.length
+                ? indicator.relatedEffects.map(effect => (
+                  <IndicatorCard
+                    objectid={ effect.effectIndicator.id }
+                    name={ effect.effectIndicator.name }
+                    level={ effect.effectIndicator.level }
+                    />
+              )) : <Alert>Ei vaikutusta</Alert>
+            }
+            </Col>
+          </Row>
+        </Container>
+      </CausalNavigation>
       { indicator.actions.length > 0 && (
         <Section>
           <Container>
             <Row>
-              <h2>Tähän mittariin vaikuttavat toimenpiteet</h2>
+              <Col>
+                <h3>Mittariin liittyvät toimenpiteet</h3>
+              </Col>
             </Row>
             <Row>
               { indicator.actions
                 ? indicator.actions.map(action => (
-                  <Col lg="4" md="6" className="mb-4 d-flex align-items-stretch" key={action.id}>
-                    <ActionCard action={action} />
+                  <Col lg="4" md="4" key={action.id}>
+                    <IndicatorCard
+                      objectid={ action.identifier }
+                      name={ action.name }
+                      level="action"
+                      number={ action.identifier }
+                      />
                   </Col>
                 ))
                 : <h6>Ei suoria toimenpiteitä</h6>
