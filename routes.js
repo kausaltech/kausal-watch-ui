@@ -1,9 +1,4 @@
-const routes = require('next-routes');
+const { Link, Router } = require('./common/i18n');
 
 
-module.exports = routes()
-  .add('action', '/action/:id')
-  .add('indicator', '/indicator/:id')
-  .add('index', '/')
-  .add('insight', '/insight')
-  .add('indicators');
+module.exports = { Link, Router };

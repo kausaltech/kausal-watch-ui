@@ -6,7 +6,6 @@ yarn-error.log
 # Build directory
 /public
 /.next
-/static
 
 .DS_Store
 *~

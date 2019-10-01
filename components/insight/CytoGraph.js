@@ -333,10 +333,10 @@ class CytoGraph extends React.Component {
     function nodeTapHandler() {
       if (this.data('type') === 'action') {
         const id = this.data('identifier');
-        Router.pushRoute('action', { id });
+        Router.push('/action/[id]', `/action/${id}`);
       } else {
         const id = this.data('id').substr(1);
-        Router.pushRoute('indicator', { id });
+        Router.push('/indicator/[id]', `/indicator/${id}`);
       }
     }
     cy.on('tap', 'node', nodeTapHandler);

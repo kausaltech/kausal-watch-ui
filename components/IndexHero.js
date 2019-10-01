@@ -3,7 +3,8 @@ import React from 'react';
 import { Container } from 'reactstrap';
 import styled from 'styled-components';
 import { Link } from '../routes';
-import Icon from './Common/Icon';
+import { IndicatorLink } from '../common/links';
+import Icon from './common/Icon';
 
 const TimeScaleBanner = styled.div`
   background-color: ${props => props.theme.brandLight};
@@ -49,13 +50,13 @@ const IndexHero = () => (
         <p className="lead">Nykyisellä vähennysnopeudella</p>
         <h1 className="display-5">Helsinki on Hiilineutraali</h1>
         <h2 className="display-4">27.8.2073</h2>
-        <Link route="indicator" params={{ id: 5 }} passHref={ true }>
+        <IndicatorLink id={5}>
           <ReadMoreLink>
             Lue lisää
             {' '}
             <Icon name="arrowRight" />
           </ReadMoreLink>
-        </Link>
+        </IndicatorLink>
 
       </Container>
     </TimeScaleBanner>
@@ -68,13 +69,13 @@ const IndexHero = () => (
           <sub>2</sub>
 e
         </h2>
-        <Link route="indicator" params={{ id: 5 }} passHref={ true }>
+        <IndicatorLink id={5}>
           <ReadMoreLink>
             Lue lisää
             {' '}
             <Icon name="arrowRight" color="white"/>
           </ReadMoreLink>
-        </Link>
+        </IndicatorLink>
 
       </Container>
     </EmissionScaleBanner>

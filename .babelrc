@@ -3,13 +3,25 @@
     "next/babel"
   ],
   "plugins": [
-    "inline-react-svg",
     [
+      "inline-react-svg",
+      {
+        "svgo": {
+          "plugins": [
+            {
+              "removeAttrs": { "attrs": "(data-name)" }
+            },
+            {
+              "cleanupIDs": true
+            }
+          ]
+
+        }
+      }
+    ], [
       "styled-components",
       {
-        "ssr": true,
-        "displayName": true,
-        "preprocess": false
+        "ssr": true
       }
     ]
   ]

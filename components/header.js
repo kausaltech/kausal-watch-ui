@@ -5,7 +5,11 @@ import {
 } from 'reactstrap';
 import styled, { withTheme } from 'styled-components';
 import { Link } from '../routes';
-import Icon from './Common/Icon';
+import { withTranslation } from '../common/i18n';
+import PlanContext from '../context/plan';
+
+import Icon from './common/Icon';
+// TODO: get page content from API
 
 const TopNav = styled(Navbar)`
   background-color: ${props => props.theme.brandNavBackground};
@@ -20,7 +24,10 @@ const Logo = styled.div`
   height: 2em;
 `;
 
+
 class Header extends React.Component {
+  static contextType = PlanContext;
+
   constructor(props) {
     super(props);
 
@@ -37,33 +44,42 @@ class Header extends React.Component {
   }
 
   render() {
-    const { theme, siteTitle } = this.props;
+    const { t, i18n, theme, siteTitle } = this.props;
+    const plan = this.context;
+
     return (
       <div>
         <TopNav expand="md">
-          <Link route="/">
+          <Link href="/">
             <a aria-label="Helsinki, palvelun etusivu" className="navbar-brand">
               <Logo aria-hidden="true" className="nav-org-logo" />
             </a>
           </Link>
         </TopNav>
         <BotNav expand="md">
-          <Link route="/">
+          <Link href="/">
             <a className="navbar-brand">{siteTitle}</a>
           </Link>
           <NavbarToggler onClick={this.toggle}><Icon name="bars" color={theme.brandDark}/></NavbarToggler>
           <Collapse isOpen={this.state.isOpen} navbar>
             <Nav navbar>
-              <NavItem>
-                <Link route="/#actions" passHref={ true }>
-                  <a className="nav-link">Toimenpiteet</a>
+              <NavItem key="actions">
+                <Link href="/#actions">
+                  <a className="nav-link">{t('actions')}</a>
                 </Link>
               </NavItem>
-              <NavItem>
-                <Link route="indicators" passHref={ true }>
-                  <a className="nav-link">Mittarit</a>
+              <NavItem key="indicators">
+                <Link href="/indicators">
+                  <a className="nav-link">{t('indicators')}</a>
                 </Link>
               </NavItem>
+              { plan.staticPages && plan.staticPages.map((page) => (
+                <NavItem key={page.slug}>
+                  <Link href="/[slug]" as={`/${page.slug}`}>
+                    <a className="nav-link">{page.name}</a>
+                  </Link>
+                </NavItem>
+              ))}
             </Nav>
           </Collapse>
         </BotNav>
@@ -74,6 +90,7 @@ class Header extends React.Component {
 
 Header.propTypes = {
   siteTitle: PropTypes.string.isRequired,
+  t: PropTypes.func.isRequired,
 };
 
-export default withTheme(Header);
+export default withTranslation('common')(withTheme(Header));

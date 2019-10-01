@@ -5,9 +5,9 @@ import dynamic from 'next/dynamic';
 import Layout from '../components/layout';
 import { Router } from '../routes';
 import { aplans } from '../common/api';
-import IndicatorsHero from '../components/Indicators/IndicatorsHero';
+import IndicatorsHero from '../components/indicators/IndicatorsHero';
 import PlanContext from '../context/plan';
-import ContentLoader from '../components/Common/ContentLoader';
+import ContentLoader from '../components/common/ContentLoader';
 
 
 class VisPage extends React.Component {
@@ -29,14 +29,16 @@ class VisPage extends React.Component {
     const { indicator } = query;
     const indicatorId = parseInt(indicator, 10);
 
-    return { filters: { indicator: isNaN(indicatorId) ? null : indicatorId } };
+    return {
+      filters: { indicator: isNaN(indicatorId) ? null : indicatorId },
+      namespacesRequired: ['common'], // for translations
+    };
   }
 
   constructor(props) {
-    const { filters } = props;
     super(props);
     this.handleFilterChange = this.handleFilterChange.bind(this);
-    this.state = { filters, loading: true };
+    this.state = { loading: true };
   }
 
   async componentDidMount() {
@@ -55,19 +57,19 @@ class VisPage extends React.Component {
 
   handleFilterChange(filters) {
     const { indicator } = filters;
-    this.setState({ filters });
 
-    const queryParams = {};
+    let queryParams = '';
     if (indicator) {
-      queryParams.indicator = indicator;
+      queryParams = `?indicator=${indicator}`;
     }
-    Router.pushRoute('insight', queryParams, { shallow: true });
+    Router.replace('/insight' + queryParams, '/insight' + queryParams);
   }
 
   render() {
     const {
-      edges, nodes, loading, filters,
+      edges, nodes, loading,
     } = this.state;
+    const { filters } = this.props;
 
     let content;
 

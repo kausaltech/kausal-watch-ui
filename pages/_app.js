@@ -1,15 +1,17 @@
 import React from 'react';
-import App, { Container } from 'next/app';
+import App from 'next/app';
 import getConfig from 'next/config';
 import { ApolloProvider, Query } from 'react-apollo';
 import gql from 'graphql-tag';
 
-import { aplans } from '../common/api';
 import { captureException } from '../common/sentry';
+import { appWithTranslation } from '../common/i18n';
+
 import PlanContext from '../context/plan';
 import withApollo from '../common/apollo';
 import Error from './_error';
 
+require('../styles/' + process.env.PLAN_IDENTIFIER + '/main.scss')
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -31,23 +33,19 @@ const GET_PLAN = gql`
         name,
         order
       }
+      staticPages {
+        id,
+        name,
+        slug
+      }
     }
   }
 `;
-
-// cache the global plan object here
-let globalPlan;
 
 
 class AplansApp extends App {
   constructor(props) {
     super(props);
-    // This might be a little bit naughty, but we're setting the global
-    // plan here so that we don't need to fetch the data client-side.
-    const { plan } = props;
-    if (!globalPlan && plan) {
-      globalPlan = plan;
-    }
     this.state = {
       hasError: false,
       errorEventId: undefined,
@@ -90,27 +88,25 @@ class AplansApp extends App {
     const { planIdentifier } = publicRuntimeConfig;
 
     return (
-      <Container>
-        <ApolloProvider client={apollo}>
-          <Query query={GET_PLAN} variables={{ plan: planIdentifier }}>
-            {({ data, loading, error }) => {
-              if (error) return <Error message={error} />;
-              if (loading) return null;
+      <ApolloProvider client={apollo}>
+        <Query query={GET_PLAN} variables={{ plan: planIdentifier }}>
+          {({ data, loading, error }) => {
+            if (error) return <Error message={error} />;
+            if (loading) return null;
 
-              const { plan } = data;
-              if (currentURL) plan.currentURL = currentURL;
-              return (
-                <PlanContext.Provider value={data.plan}>
-                  <Component {...pageProps} />
-                </PlanContext.Provider>
-              );
-            }}
-          </Query>
-        </ApolloProvider>
-      </Container>
+            const { plan } = data;
+            if (currentURL) plan.currentURL = currentURL;
+            return (
+              <PlanContext.Provider value={data.plan}>
+                <Component {...pageProps} />
+              </PlanContext.Provider>
+            );
+          }}
+        </Query>
+      </ApolloProvider>
     );
   }
 }
 
 
-export default withApollo(AplansApp);
+export default appWithTranslation(withApollo(AplansApp));

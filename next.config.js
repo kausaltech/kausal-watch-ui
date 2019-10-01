@@ -1,12 +1,10 @@
-const { resolve } = require('path');
 const webpack = require('webpack');
 const withSass = require('@zeit/next-sass');
 const withImages = require('next-images');
-const withSourceMaps = require('@zeit/next-source-maps');
 const withBundleAnalyzer = require('@zeit/next-bundle-analyzer');
 
 
-const config = withBundleAnalyzer(withSourceMaps(withImages(withSass({
+const config = withBundleAnalyzer(withImages(withSass({
   env: {
     SENTRY_DSN: process.env.SENTRY_DSN,
   },
@@ -49,7 +47,9 @@ const config = withBundleAnalyzer(withSourceMaps(withImages(withSass({
     },
   },
   /* eslint no-param-reassign: ["error", { "props": true, "ignorePropertyModificationsFor": ["cfg"] }] */
-  webpack(cfg, { isServer, buildId, dev }) {
+  webpack(cfg, options) {
+    const { isServer, buildId, dev } = options;
+
     cfg.plugins.push(
       new webpack.DefinePlugin({
         'process.env.SENTRY_RELEASE': JSON.stringify(buildId),
@@ -65,8 +65,30 @@ const config = withBundleAnalyzer(withSourceMaps(withImages(withSass({
     cfg.plugins.push(new webpack.EnvironmentPlugin({
       PLAN_IDENTIFIER: 'hnh2035',
     }));
+    // cfg.optimization.minimize = false;
+
+    // SOURCEMAPS
+    if (!dev && !isServer) {
+      cfg.devtool = 'source-map';
+      for (const plugin of cfg.plugins) {
+        if (plugin.constructor.name === 'UglifyJsPlugin') {
+          plugin.options.sourceMap = true;
+          break;
+        }
+      }
+
+      if (cfg.optimization && cfg.optimization.minimizer) {
+        for (const plugin of cfg.optimization.minimizer) {
+          if (plugin.constructor.name === 'TerserPlugin') {
+            plugin.options.sourceMap = true;
+            break;
+          }
+        }
+      }
+    }
+
     return cfg;
   },
-}))));
+})));
 
 module.exports = config;

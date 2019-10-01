@@ -3,13 +3,12 @@ import PropTypes from 'prop-types';
 import Head from 'next/head';
 import dynamic from 'next/dynamic';
 
-import { ThemeProvider, createGlobalStyle } from 'styled-components';
+import { ThemeProvider } from 'styled-components';
 
 import Header from './header';
 import SiteFooter from './SiteFooter';
 import PlanContext from '../context/plan';
 
-dynamic(import('../styles/' + process.env.PLAN_IDENTIFIER + '/main.scss'));
 
 let theme = require('sass-extract-loader?{"plugins": ["sass-extract-js"]}!../styles/' + process.env.PLAN_IDENTIFIER + '/_theme-variables.scss');
 

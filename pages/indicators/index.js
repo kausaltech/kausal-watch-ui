@@ -1,10 +1,9 @@
 import React from 'react';
 import { Container } from 'reactstrap';
 import Layout from '../../components/layout';
-import IndicatorsHero from '../../components/Indicators/IndicatorsHero';
-import IndicatorList from '../../components/Indicators/IndicatorList';
+import IndicatorsHero from '../../components/indicators/IndicatorsHero';
+import IndicatorList from '../../components/indicators/IndicatorList';
 
-import ContentLoader from '../../components/Common/ContentLoader';
 import PlanContext from '../../context/plan';
 
 

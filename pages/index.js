@@ -1,16 +1,19 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   Container, Row, Col, Alert,
 } from 'reactstrap';
 import { Query } from 'react-apollo';
 
 import styled from 'styled-components';
+import { withTranslation } from '../common/i18n';
+
 import Layout from '../components/layout';
-import ActionListFiltered, { GET_ACTION_LIST } from '../components/Actions/ActionListFiltered';
+import ActionListFiltered, { GET_ACTION_LIST } from '../components/actions/ActionListFiltered';
 import IndexHero from '../components/IndexHero';
 import FrontHero from '../components/FrontHero';
 import ThlHero from '../components/ThlHero';
-import ContentLoader from '../components/Common/ContentLoader';
+import ContentLoader from '../components/common/ContentLoader';
 import PlanContext from '../context/plan';
 
 
@@ -26,6 +29,9 @@ const ActionsSection = styled.div`
 
 function ActionList(props) {
   const { plan } = props;
+  if (!process.browser) {
+    return <ContentLoader />;
+  }
   return (
     <Query query={GET_ACTION_LIST} variables={{ plan: plan.identifier }}>
       {({ data, loading, error }) => {
@@ -38,20 +44,19 @@ function ActionList(props) {
 }
 
 
-class IndexPage extends React.Component {
+class HomePage extends React.Component {
   static contextType = PlanContext;
 
   render() {
+    const { t } = this.props;
     const plan = this.context;
-    let { planHeaderText, planIntroText } = "";
+    let { planIntroText } = "";
 
     if (plan.identifier === 'hnh2035') {
-      planHeaderText = "Hiilineutraali Helsinki 2035 -toimenpideohjelma";
       planIntroText= "Helsinki on sitoutunut kantamaan vastuunsa ilmastonmuutoksen hillinnässä. Helsingin kaupunkistrategiassa 2017–2021 tavoitteeksi on asetettu hiilineutraali Helsinki vuoteen 2035 mennessä. Ilmastotavoitteet koskevat kaupunkiorganisaation lisäksi kaupunkilaisia ja Helsingissä toimivia organisaatioita. Helsingistä saadaan  hiilineutraali yhteistyöllä. Hiilineutraali Helsinki 2035 –toimenpideohjelma on esitys siitä, miten päästövähennykset käytännössä saavutetaan."
     }
 
     if (plan.identifier === 'ktstrat') {
-      planHeaderText = "Terveyden ja hyvinvoinnin laitoksen kansanterveysstrategia";
       planIntroText= "THL:n tehtävänä on tuottaa tietoa päätöksenteon tueksi ja kansanterveyden parantamiseksi. THL päivittää osaamistaan jatkuvasti ja pyrkii varmistamaan, että oikeita asioita tehdään sekä talon sisällä että yhteiskunnassa yleisesti. Tällä sivustolla kokeillaan ajatusta, että kansanterveysstrategian sisältöä mietittäisiin avoimen verkkotyökalun avulla. Tarkoituksena on tunnistaa tarpeellisia toimenpiteitä, joilla THL voisi edistää kansanterveyttä. Lisäksi mietitään mittareita, joiden avulla toimenpiteiden toteutusta ja vaikutuksia voidaan seurata ja ohjata."
     }
 
@@ -77,7 +82,7 @@ class IndexPage extends React.Component {
             <Row>
               <Col sm="12" md={{ size: 10, offset: 1 }} className="footer-column">
                 <div className="mb-5">
-                  <h1 className="mb-4">{planHeaderText}</h1>
+                  <h1 className="mb-4">{plan.name}</h1>
                   <p>
                     {planIntroText}
                   </p>
@@ -92,4 +97,12 @@ class IndexPage extends React.Component {
   }
 }
 
-export default IndexPage;
+
+HomePage.propTypes = {
+  t: PropTypes.func.isRequired,
+};
+HomePage.getInitialProps = async () => ({
+  namespacesRequired: ['common'],
+});
+
+export default withTranslation('common')(HomePage);
