@@ -52,13 +52,15 @@ query ActionDetails($plan: ID!, $id: ID!) {
       }
     }
     contactPersons {
-      id
-      firstName
-      lastName
-      avatarUrl
-      title
-      organization {
-        name
+      person {
+        id
+        firstName
+        lastName
+        avatarUrl
+        title
+        organization {
+          name
+        }
       }
     }
     responsibleParties {
@@ -223,7 +225,7 @@ function ActionDetails(props) {
               <ResponsibleList data={action.responsibleParties.map((item) => item.organization)} />
             </ActionSection>
             <ActionSection>
-              <ContactPersons persons={action.contactPersons} />
+              <ContactPersons persons={action.contactPersons.map((item) => item.person)} />
             </ActionSection>
             <ActionSection>
               <h5>Eteneminen</h5>
