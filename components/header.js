@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Collapse, Navbar, Nav, NavItem, NavbarToggler,
+  Collapse, Container, Navbar, Nav, NavItem, NavbarToggler
 } from 'reactstrap';
 import styled, { withTheme } from 'styled-components';
 import { Link } from '../routes';
@@ -9,6 +9,8 @@ import { withTranslation } from '../common/i18n';
 import PlanContext from '../context/plan';
 
 import Icon from './common/Icon';
+import ApplicationStateBanner from './common/ApplicationStateBanner';
+
 // TODO: get page content from API
 
 const TopNav = styled(Navbar)`
@@ -49,14 +51,18 @@ class Header extends React.Component {
 
     return (
       <div>
+        <ApplicationStateBanner />
         <TopNav expand="md">
-          <Link href="/">
-            <a aria-label="Helsinki, palvelun etusivu" className="navbar-brand">
-              <Logo aria-hidden="true" className="nav-org-logo" />
-            </a>
-          </Link>
+          <Container>
+            <Link href="/">
+              <a aria-label="Helsinki, palvelun etusivu" className="navbar-brand">
+                <Logo aria-hidden="true" className="nav-org-logo" />
+              </a>
+            </Link>
+          </Container>
         </TopNav>
         <BotNav expand="md">
+        <Container>
           <Link href="/">
             <a className="navbar-brand">{siteTitle}</a>
           </Link>
@@ -82,6 +88,7 @@ class Header extends React.Component {
               ))}
             </Nav>
           </Collapse>
+          </Container>
         </BotNav>
       </div>
     );

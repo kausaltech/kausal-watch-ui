@@ -5,6 +5,7 @@ import {
 } from 'reactstrap';
 
 import styled, { withTheme } from 'styled-components';
+import ApplicationStateBanner from './common/ApplicationStateBanner';
 
 const Logo = styled.div`
   height: 4em;
@@ -42,13 +43,10 @@ class SiteFooter extends React.Component {
   render() {
     const { theme, siteTitle } = this.props;
     return(
+      <>
+      <ApplicationStateBanner />
       <StyledFooter className="site-footer">
         <Container fluid>
-          <Row>
-            <Col sm="12" md={{ size: 8, offset: 2 }} className="footer-column">
-              <div className="mb-5">Tämä on palvelun Alpha-kehitysversio. Sivustolla saattaa esiintyä esimerkinomaisia sisältöjä jotka eivät perustu todellisiin tietoihin sekä toiminnallisuuksia jotka ovat vielä kehitysvaiheessa.</div>
-            </Col>
-          </Row>
           <Row>
             <Col md="4" className="footer-column">
               <h5>{siteTitle}</h5>
@@ -84,6 +82,7 @@ class SiteFooter extends React.Component {
           </Row>
         </Container>
       </StyledFooter>
+      </>
     );
   };
 };
