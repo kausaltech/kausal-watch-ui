@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Col, Container, Row, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem,
+  Col, Container, Row, UncontrolledButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem,
 } from 'reactstrap';
 import moment from 'moment';
 import styled, { withTheme } from 'styled-components';
@@ -75,10 +75,8 @@ class CytoGraph extends React.Component {
     super(props);
     this.visRef = React.createRef();
     this.handleFilterNode = this.handleFilterNode.bind(this);
-    this.toggleDownload = this.toggleDownload.bind(this);
     this.state = {
       filters: props.filters,
-      downloadOpen: false,
     };
   }
 
@@ -116,7 +114,7 @@ class CytoGraph extends React.Component {
   }
 
   downloadAs(el) {
-    const cygraph = this.renderNetwork();
+    const cygraph = this.cy;
     const { target } = el;
     const exportOptions = {
       full: true,
@@ -129,13 +127,6 @@ class CytoGraph extends React.Component {
     target.href = url;
     target.target = '_blank';
     target.download = `nakemysverkko-${moment().format('YYYY-MM-DD-HH-mm-ss')}.png`;
-  }
-
-  toggleDownload() {
-    const { downloadOpen } = this.state;
-    this.setState({
-      downloadOpen: !downloadOpen,
-    });
   }
 
   renderNetwork() {
@@ -266,6 +257,7 @@ class CytoGraph extends React.Component {
             label: 'data(label)',
             'text-wrap': 'wrap',
             'text-outline-width': 0,
+            'color': '#ffffff',
             'font-weight': '500',
           },
         },
@@ -366,12 +358,10 @@ class CytoGraph extends React.Component {
       }
     }
     cy.on('tap', 'node', nodeTapHandler);
-    return cy;
   }
 
   render() {
     const { nodes, filters } = this.props;
-    const { downloadOpen } = this.state;
     const { indicator } = filters;
     let activeFilterNode;
 
@@ -391,7 +381,7 @@ class CytoGraph extends React.Component {
               />
             </Col>
             <Col sm="4" lg="6">
-              <ButtonDropdown isOpen={downloadOpen} toggle={this.toggleDownload} className="float-right">
+              <UncontrolledButtonDropdown className="float-right">
                 <DropdownToggle caret color="secondary">
                   Lataa
                 </DropdownToggle>
@@ -400,7 +390,7 @@ class CytoGraph extends React.Component {
                     Tallenna kuva (png)
                   </DropdownItem>
                 </DropdownMenu>
-              </ButtonDropdown>
+              </UncontrolledButtonDropdown>
             </Col>
           </Row>
         </Container>
