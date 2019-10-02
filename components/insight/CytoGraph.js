@@ -1,13 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Container, Row } from 'reactstrap';
+import {
+  Col, Container, Row, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem,
+} from 'reactstrap';
+import moment from 'moment';
 import styled, { withTheme } from 'styled-components';
 import cytoscape from 'cytoscape';
 import dagre from 'cytoscape-dagre';
 
 import { Router } from '../../routes';
 import InsightFilter from './InsightFilter';
-
 
 cytoscape.use(dagre);
 
@@ -73,8 +75,10 @@ class CytoGraph extends React.Component {
     super(props);
     this.visRef = React.createRef();
     this.handleFilterNode = this.handleFilterNode.bind(this);
+    this.toggleDownload = this.toggleDownload.bind(this);
     this.state = {
       filters: props.filters,
+      downloadOpen: false,
     };
   }
 
@@ -109,6 +113,29 @@ class CytoGraph extends React.Component {
       throw new Error(`Node with id ${nodeId} not found`);
     }
     onFilterChange({ indicator: parseInt(node[0].id.substr(1), 10) });
+  }
+
+  downloadAs(el) {
+    const cygraph = this.renderNetwork();
+    const { target } = el;
+    const exportOptions = {
+      full: true,
+      output: 'blob',
+      maxWidth: 25000,
+      bg: '#ffffff',
+    };
+    const blob = cygraph.png(exportOptions);
+    const url = window.URL.createObjectURL(blob);
+    target.href = url;
+    target.target = '_blank';
+    target.download = `nakemysverkko-${moment().format('YYYY-MM-DD-HH-mm-ss')}.png`;
+  }
+
+  toggleDownload() {
+    const { downloadOpen } = this.state;
+    this.setState({
+      downloadOpen: !downloadOpen,
+    });
   }
 
   renderNetwork() {
@@ -239,7 +266,6 @@ class CytoGraph extends React.Component {
             label: 'data(label)',
             'text-wrap': 'wrap',
             'text-outline-width': 0,
-            'color': '#ffffff',
             'font-weight': '500',
           },
         },
@@ -340,10 +366,12 @@ class CytoGraph extends React.Component {
       }
     }
     cy.on('tap', 'node', nodeTapHandler);
+    return cy;
   }
 
   render() {
     const { nodes, filters } = this.props;
+    const { downloadOpen } = this.state;
     const { indicator } = filters;
     let activeFilterNode;
 
@@ -355,11 +383,25 @@ class CytoGraph extends React.Component {
       <div>
         <Container>
           <Row>
-            <InsightFilter
-              nodes={nodes}
-              activeFilterNode={activeFilterNode}
-              onFilterNode={this.handleFilterNode}
-            />
+            <Col sm="8" lg="6">
+              <InsightFilter
+                nodes={nodes}
+                activeFilterNode={activeFilterNode}
+                onFilterNode={this.handleFilterNode}
+              />
+            </Col>
+            <Col sm="4" lg="6">
+              <ButtonDropdown isOpen={downloadOpen} toggle={this.toggleDownload} className="float-right">
+                <DropdownToggle caret color="secondary">
+                  Lataa
+                </DropdownToggle>
+                <DropdownMenu right>
+                  <DropdownItem tag="a" href="#" onClick={(e) => this.downloadAs(e)}>
+                    Tallenna kuva (png)
+                  </DropdownItem>
+                </DropdownMenu>
+              </ButtonDropdown>
+            </Col>
           </Row>
         </Container>
         <VisContainer ref={this.visRef} />

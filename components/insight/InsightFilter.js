@@ -35,26 +35,19 @@ function InsightFilter(props) {
   }
 
   return (
-    <Container>
-      <Row>
-        <Col>
-          <h5>Suodata mittarin perusteella</h5>
-        </Col>
-      </Row>
-      <Row>
-        <Col md="6">
-          <Typeahead
-            id="insight-filter"
-            onChange={handleChange}
-            ignoreDiacritics={false}
-            clearButton
-            emptyLabel="Ei osumia"
-            defaultSelected={defaultSelected}
-            options={options}
-           />
-        </Col>
-      </Row>
-    </Container>
+    <div className="mb-4">
+      <h5>Suodata mittarin perusteella</h5>
+
+      <Typeahead
+        id="insight-filter"
+        onChange={handleChange}
+        ignoreDiacritics={false}
+        clearButton
+        emptyLabel="Ei osumia"
+        defaultSelected={defaultSelected}
+        options={options}
+      />
+    </div>
   );
 }
 
