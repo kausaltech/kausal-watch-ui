@@ -172,7 +172,6 @@ function ActionDetails(props) {
                     </a>
                   </Link>
                   <h2 className="display-4">{action.identifier}</h2>
-                  <ActionHeadline>{action.name}</ActionHeadline>
                   <p>
                   { action.previousAction
                     && (
@@ -189,6 +188,7 @@ function ActionDetails(props) {
                     )
                   }
                   </p>
+                  <ActionHeadline>{action.name}</ActionHeadline>
                 </Col>
               </Row>
             </Container>
