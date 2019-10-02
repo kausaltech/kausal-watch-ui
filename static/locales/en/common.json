@@ -4,5 +4,9 @@
     "instance-type-testing-label": "Testing",
     "instance-type-testing-message": "This is a test version of the service",
     "instance-type-development-label": "Development",
-    "instance-type-development-message": "This is a development version of the service"
+    "instance-type-development-message": "This is a development version of the service",
+    "insight-download-label": "Download",
+    "insight-download-png": "Image (png)",
+    "insight-filter-label": "Filter by indicator",
+    "insight-filter-no-results": "No results"
 }

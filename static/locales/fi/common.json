@@ -4,5 +4,9 @@
     "instance-type-testing-label": "Testi",
     "instance-type-testing-message": "Tämä on palvelun testiversio",
     "instance-type-development-label": "Kehitys",
-    "instance-type-development-message": "Tämä on palvelun kehitysversio"
+    "instance-type-development-message": "Tämä on palvelun kehitysversio",
+    "insight-download-label": "Lataa",
+    "insight-download-png": "Kuva (png)",
+    "insight-filter-label": "Suodata mittarin perusteella",
+    "insight-filter-no-results": "Ei tuloksia"
 }

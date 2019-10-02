@@ -7,6 +7,7 @@ import moment from 'moment';
 import styled, { withTheme } from 'styled-components';
 import cytoscape from 'cytoscape';
 import dagre from 'cytoscape-dagre';
+import { withTranslation } from '../../common/i18n';
 
 import { Router } from '../../routes';
 import InsightFilter from './InsightFilter';
@@ -361,7 +362,7 @@ class CytoGraph extends React.Component {
   }
 
   render() {
-    const { nodes, filters } = this.props;
+    const { nodes, filters, t } = this.props;
     const { indicator } = filters;
     let activeFilterNode;
 
@@ -383,11 +384,11 @@ class CytoGraph extends React.Component {
             <Col sm="4" lg="6">
               <UncontrolledButtonDropdown className="float-right">
                 <DropdownToggle caret color="secondary">
-                  Lataa
+                  {t('insight-download-label')}
                 </DropdownToggle>
                 <DropdownMenu right>
                   <DropdownItem tag="a" href="#" onClick={(e) => this.downloadAs(e)}>
-                    Tallenna kuva (png)
+                    {t('insight-download-png')}
                   </DropdownItem>
                 </DropdownMenu>
               </UncontrolledButtonDropdown>
@@ -400,4 +401,4 @@ class CytoGraph extends React.Component {
   }
 }
 
-export default withTheme(CytoGraph);
+export default withTranslation('common')(withTheme(CytoGraph));
