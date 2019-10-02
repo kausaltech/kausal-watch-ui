@@ -47,6 +47,10 @@ const Address = styled.address`
   margin-bottom: 0;
 `;
 
+const OrgAncestorList = styled.div`
+  margin-top: 1em;
+`;
+
 const CollapseButton = styled(Button)`
   padding: 0;
 `;
@@ -55,6 +59,17 @@ const GET_CONTACT_DETAILS = gql`
 query ContactDetails($id: ID!) {
   person(id: $id) {
     email
+    organization {
+      id
+      name
+      ancestors {
+        name
+        classification {
+          id
+          name
+        }
+      }
+    }
   }
 }`;
 
@@ -66,17 +81,32 @@ const ContactDetails = (props) => {
         if (loading) return <span>Ladataan</span>;
         if (error) return <span>{error.message}</span>;
         const { person } = data;
+
+        const orgAncestors = person.organization.ancestors
+          .filter((org) => org.classification.name !== 'Valtuusto' && org.classification.name !== 'Hallitus')
+          .map((org) => ({ id: org.id, name: org.name }));
+        orgAncestors.push({ id: person.organization.id, name: person.organization.name });
+
         return (
-          <Address>
-            Sähköposti:
-            {' '}
-            <a href={`mailto:${person.email}`}>{person.email}</a>
-          </Address>
+          <>
+            {orgAncestors.length > 1 && (
+              <OrgAncestorList>
+                {orgAncestors.map((item) => (
+                  <div key={item.key}>{item.name}</div>
+                ))}
+              </OrgAncestorList>
+            )}
+            <Address>
+              Sähköposti:
+              {' '}
+              <a href={`mailto:${person.email}`}>{person.email}</a>
+            </Address>
+          </>
         );
       }}
     </Query>
   );
-}
+};
 
 class ContactPerson extends React.Component {
   constructor(props) {
