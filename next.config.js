@@ -13,6 +13,7 @@ const config = withBundleAnalyzer(withImages(withSass({
     kerrokantasiApiBaseURL: process.env.KERROKANTASI_API_BASE_URL || 'https://api.hel.fi/kerrokantasi-test/v1',
     // the default value for PLAN_IDENTIFIER is set below in webpack config
     planIdentifier: process.env.PLAN_IDENTIFIER || 'hnh2035',
+    instanceType: process.env.INSTANCE_TYPE || 'development',
   },
   /*
   manifest: {

@@ -1,4 +1,8 @@
 {
     "indicators": "Indicators",
-    "actions": "Actions"
+    "actions": "Actions",
+    "instance-type-testing-label": "Testing",
+    "instance-type-testing-message": "This is a test version of the service",
+    "instance-type-development-label": "Development",
+    "instance-type-development-message": "This is a development version of the service"
 }

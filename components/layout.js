@@ -30,7 +30,7 @@ function Layout({ children }) {
             </Head>
             <Header siteTitle={plan.name} />
             {children}
-            <SiteFooter siteTitle={plan.name} />
+            <SiteFooter siteTitle={plan.name} instanceType={plan.instanceType} />
           </div>
         )}
       </PlanContext.Consumer>

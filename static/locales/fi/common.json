@@ -1,4 +1,8 @@
 {
     "indicators": "Mittarit",
-    "actions": "Toimenpiteet"
+    "actions": "Toimenpiteet",
+    "instance-type-testing-label": "Testi",
+    "instance-type-testing-message": "Tämä on palvelun testiversio",
+    "instance-type-development-label": "Kehitys",
+    "instance-type-development-message": "Tämä on palvelun kehitysversio"
 }

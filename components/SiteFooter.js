@@ -38,13 +38,12 @@ const StyledFooter = styled.footer`
   }
 `;
 
-class SiteFooter extends React.Component {
-  
-  render() {
-    const { theme, siteTitle } = this.props;
-    return(
-      <>
-      <ApplicationStateBanner />
+
+function SiteFooter(props) {
+  const { siteTitle, instanceType } = props;
+  return (
+    <>
+      <ApplicationStateBanner instanceType={instanceType} />
       <StyledFooter className="site-footer">
         <Container fluid>
           <Row>
@@ -54,7 +53,7 @@ class SiteFooter extends React.Component {
             <Col md="4" className="footer-column">
               <div className="footer-branding footer-branding-helsinki">
                 <a href="http://www.hel.fi">
-                  <Logo aria-hidden="true" className="footer-org-logo"/>
+                  <Logo aria-hidden="true" className="footer-org-logo" />
                 </a>
               </div>
             </Col>
@@ -82,13 +81,13 @@ class SiteFooter extends React.Component {
           </Row>
         </Container>
       </StyledFooter>
-      </>
-    );
-  };
-};
+    </>
+  );
+}
 
 SiteFooter.propTypes = {
   siteTitle: PropTypes.string.isRequired,
+  instanceType: PropTypes.string.isRequired,
 };
 
 export default withTheme(SiteFooter);

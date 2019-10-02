@@ -46,16 +46,18 @@ class Header extends React.Component {
   }
 
   render() {
-    const { t, i18n, theme, siteTitle } = this.props;
+    const {
+      t, i18n, theme, siteTitle,
+    } = this.props;
     const plan = this.context;
 
     return (
       <div>
-        <ApplicationStateBanner />
+        <ApplicationStateBanner instanceType={plan.instanceType} />
         <TopNav expand="md">
           <Container>
             <Link href="/">
-              <a aria-label="Helsinki, palvelun etusivu" className="navbar-brand">
+              <a aria-label={`${siteTitle}, palvelun etusivu`} className="navbar-brand">
                 <Logo aria-hidden="true" className="nav-org-logo" />
               </a>
             </Link>

@@ -85,7 +85,7 @@ class AplansApp extends App {
     const {
       Component, pageProps, apollo, currentURL,
     } = this.props;
-    const { planIdentifier } = publicRuntimeConfig;
+    const { planIdentifier, instanceType } = publicRuntimeConfig;
 
     return (
       <ApolloProvider client={apollo}>
@@ -95,9 +95,10 @@ class AplansApp extends App {
             if (loading) return null;
 
             const { plan } = data;
+            plan.instanceType = instanceType;
             if (currentURL) plan.currentURL = currentURL;
             return (
-              <PlanContext.Provider value={data.plan}>
+              <PlanContext.Provider value={plan}>
                 <Component {...pageProps} />
               </PlanContext.Provider>
             );
