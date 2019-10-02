@@ -34,7 +34,20 @@ const Indicator = styled(Card)`
   line-height: 1;
   min-height: 140px;
   border-radius: 6px;
-  color: #ffffff;
+  color: ${(props) => {
+    switch (props.level) {
+      case 'action':
+        return props.theme.themeColors.white;
+      case 'operational':
+        return props.theme.themeColors.black;
+      case 'tactical':
+        return props.theme.themeColors.black;
+      case 'strategic':
+        return props.theme.themeColors.white;
+      default:
+        return props.theme.themeColors.dark;
+    }
+  }};
   background-color: ${(props) => {
     switch (props.level) {
       case 'action':
@@ -51,7 +64,7 @@ const Indicator = styled(Card)`
   }};
   
   a {
-    color: #ffffff;
+    color: inherit;
   }
 `;
 
@@ -121,7 +134,7 @@ const Connection = styled.div`
   &:after {
     content: '';
     position: absolute;
-    right: -5px;
+    right: -7px;
     bottom: ${props => (props.vLength >= 0) ? '-13px' : 'auto'};
     top: ${props => (props.vLength < 0) ? '-13px' : 'auto'};
     width: 0; 
@@ -145,6 +158,22 @@ const Connection = styled.div`
   }};
   }
 `;
+
+function getIndicatorLevelName(level) {
+  switch (level) {
+    case 'action':
+      return 'Toimenpide';
+    case 'operational':
+      return 'Toiminnallinen mittari';
+    case 'tactical':
+      return 'Taktinen mittari';
+    case 'strategic':
+      return 'Strateginen mittari';
+    default:
+      return '';
+  }
+
+}
 
 function IndicatorLatestValue(props) {
   const { indicator } = props;
@@ -363,7 +392,7 @@ class IndicatorCausal extends React.Component {
               { indicatorLevel !== 'action'
                 ? (
                   <div>
-                    <IndicatorType>Mittari</IndicatorType>
+                    <IndicatorType>{ getIndicatorLevelName(indicatorLevel) }</IndicatorType>
                     <IndicatorLink id={indicator.object_id}>
                       <a><IndicatorTitle>{ indicator.name }</IndicatorTitle></a>
                     </IndicatorLink>

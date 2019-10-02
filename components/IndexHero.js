@@ -10,6 +10,12 @@ const TimeScaleBanner = styled.div`
   background-color: ${props => props.theme.brandLight};
 `;
 
+const MainPoint = styled.p`
+  font-size: 2.5rem;
+  line-height: 1;
+  font-weight: 600;
+`;
+
 const EmissionScaleBanner = styled.div`
   background-color: ${props => props.theme.brandDark};
   color: #fff;
@@ -48,8 +54,8 @@ const IndexHero = () => (
     <TimeScaleBanner className="hero-banner-top">
       <Container>
         <p className="lead">Nykyisellä vähennysnopeudella</p>
-        <h1 className="display-5">Helsinki on Hiilineutraali</h1>
-        <h2 className="display-4">27.8.2073</h2>
+        <MainPoint>Helsinki on Hiilineutraali</MainPoint>
+        <p className="display-4">27.8.2073</p>
         <IndicatorLink id={5}>
           <ReadMoreLink>
             Lue lisää
@@ -63,12 +69,12 @@ const IndexHero = () => (
     <EmissionScaleBanner className="hero-banner-bottom">
       <Container>
         <p className="lead">Tavoitteen saavuttamiseksi</p>
-        <h1 className="display-5">vuositasolla vähennettävä vielä</h1>
-        <h2 className="display-4">
+        <MainPoint>vuositasolla vähennettävä vielä</MainPoint>
+        <p className="display-4">
 1 857 000 t CO
           <sub>2</sub>
 e
-        </h2>
+        </p>
         <IndicatorLink id={5}>
           <ReadMoreLink>
             Lue lisää

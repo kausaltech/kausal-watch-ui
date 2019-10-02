@@ -28,19 +28,24 @@ $green:   #3cd55f;
 $cyan:    #52a4ca;
 
 // Service specific brand color defaults
-$brand-light:  $hel-summer;
-$brand-dark:   $hel-tram;
+// brand-light/brand-dark should have contrast ratio over 4.5
+// brand-light/theme.dark should have contrast ratio over 4.5
+// brand-dark/theme.light should have contrast ratio over 4.5
+$brand-light:  #ffce43;
+$brand-dark:   #00792D; //modified hel-tram for a11y
 
 // Application color mappings:
 $theme-colors: (
-  "primary":    $hel-tram,
-  "secondary":  $hel-summer,
+  "primary":    $brand-dark,
+  "secondary":  $brand-light,
   "success":    $green,
   "info":       $cyan,
   "warning":    $yellow,
   "danger":     $red,
   "light":      $hel-light,
-  "dark":       $hel-dark
+  "dark":       $hel-dark,
+  "black":      $hel-black,
+  "white":      #ffffff,
 );
 
 $image-overlay: $brand-dark;
@@ -88,16 +93,16 @@ $navbar-light-toggler-border-color: transparent;
 
 
 // Indicators
-$action-color: $hel-tram;
-$operational-indicator-color: $hel-copper;
-$tactical-indicator-color: $hel-fog;
-$strategic-indicator-color: $hel-coat;
+$action-color: #00792D; //modified hel-tram for a11y
+$operational-indicator-color: #17ebba; // modified hel-copper for a11y
+$tactical-indicator-color: #b7dbf7; // modified hel-fog for a11y
+$strategic-indicator-color: #006EB2; // modified hel-coat for a11y
 
 $action-color-fg: $hel-white;
 $operational-indicator-color-fg: $hel-black;
 $tactical-indicator-color-fg: $hel-black;
 $strategic-indicator-color-fg: $hel-white;
 
-$causality-increases-color: $hel-tram;
-$causality-decreases-color: $hel-brick;
+$causality-increases-color: darken($green, 10%);
+$causality-decreases-color: darken($red, 10%);
 $causality-is-part-of-color: grey;

@@ -70,16 +70,6 @@ class HomePage extends React.Component {
         <ActionsSection className="actions-section">
           <Container>
             <Row>
-              <Col sm="12" md={{ size: 8, offset: 2 }} className="footer-column">
-                <Alert color="warning" className="mb-5">
-                  <strong>HUOM:</strong>
-                  Tämä on palvelun Alpha-kehitysversio. Sivustolla saattaa esiintyä
-                  esimerkinomaisia sisältöjä jotka eivät perustu todellisiin tietoihin sekä toiminnallisuuksia,
-                  jotka ovat vielä kehitysvaiheessa.
-                </Alert>
-              </Col>
-            </Row>
-            <Row>
               <Col sm="12" md={{ size: 10, offset: 1 }} className="footer-column">
                 <div className="mb-5">
                   <h1 className="mb-4">{plan.name}</h1>
