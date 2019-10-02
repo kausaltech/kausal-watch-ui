@@ -50,14 +50,30 @@ const GET_INDICATOR_LIST = gql`
 `;
 
 const IndicatorType = styled(Badge)`
+  color: ${(props) => {
+    switch (props.level) {
+      case 'action':
+        return props.theme.themeColors.white;
+      case 'operational':
+        return props.theme.themeColors.black;
+      case 'tactical':
+        return props.theme.themeColors.black;
+      case 'strategic':
+        return props.theme.themeColors.white;
+      default:
+        return props.theme.themeColors.dark;
+    }
+  }};
   background-color: ${(props) => {
     switch (props.level) {
-      case 'tactical':
-        return props.theme.helFog;
+      case 'action':
+        return props.theme.actionColor;
       case 'operational':
-        return props.theme.helCopper;
+        return props.theme.operationalIndicatorColor;
+      case 'tactical':
+        return props.theme.tacticalIndicatorColor;
       case 'strategic':
-        return props.theme.helCoat;
+        return props.theme.strategicIndicatorColor;
       default:
         return '#cccccc';
     }
