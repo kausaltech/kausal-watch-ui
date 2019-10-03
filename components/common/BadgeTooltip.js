@@ -1,10 +1,16 @@
 import React from 'react';
 import { Badge, Tooltip } from 'reactstrap';
 import styled from 'styled-components';
+import { lighten } from 'polished';
 
 const StyledBadge = styled(Badge)`
   background-color: ${props => props.theme.brandDark};
   color: #ffffff;
+  
+  &.badge-pill.badge-secondary:hover {
+    background-color:  ${(props) => lighten(0.05, props.theme.brandDark)};
+    color: ${props => props.theme.themeColors.white};
+  }
 `;
 
 class BadgeTooltip extends React.Component {

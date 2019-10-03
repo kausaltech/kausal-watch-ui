@@ -130,14 +130,14 @@ const ActionHeadline = styled.h1`
 
 const LastUpdated = styled.div`
   margin-bottom: 1em;
-  color: #aaaaaa;
+  color: ${props => props.theme.themeColors.dark};
 `;
 
-const ActionSection = styled.section`
-  margin-bottom: 3rem;
+const ActionSection = styled.div`
+  margin-bottom: 2.5rem;
 `;
 
-const OfficialText = styled.section`
+const OfficialText = styled.div`
   color: ${props => props.theme.brandDark};
   margin-bottom: 3rem;
 `;
@@ -149,10 +149,16 @@ const CategoryBadge = styled(Badge)`
   font-size: 1rem;
 `;
 
-const CommentsSection = styled.section`
-  background-color: ${props => props.theme.brandDark};
+const CausalSection = styled.div`
+  background-color: ${props => props.theme.themeColors.light};
 `;
 
+const ActionUpdate = styled.div`
+  padding: 1em;
+  margin: 0 0 2em;
+  border-top: solid 2px ${props => props.theme.brandDark};
+  border-bottom: solid 2px ${props => props.theme.brandDark};
+`;
 
 function ActionDetails(props) {
   const { action, plan, theme } = props;
@@ -173,7 +179,6 @@ function ActionDetails(props) {
                       <h4>Toimenpiteet</h4>
                     </a>
                   </Link>
-                  <h2 className="display-4">{action.identifier}</h2>
                   <p>
                   { action.previousAction
                     && (
@@ -190,7 +195,11 @@ function ActionDetails(props) {
                     )
                   }
                   </p>
+                  <h2 className="display-4">{action.identifier}</h2>
                   <ActionHeadline>{action.name}</ActionHeadline>
+                  {action.categories.map((item) => (
+                    <CategoryBadge key={item.id} className="mr-3">{item.name}</CategoryBadge>
+                  ))}
                 </Col>
               </Row>
             </Container>
@@ -199,7 +208,7 @@ function ActionDetails(props) {
       </ActionHero>
       <Container>
         <Row>
-          <Col md="6" lg="8">
+          <Col md="7" lg="8">
             {action.description
             && <ActionSection dangerouslySetInnerHTML={{ __html: action.description }} />}
             <OfficialText>
@@ -208,25 +217,14 @@ function ActionDetails(props) {
               <div dangerouslySetInnerHTML={{ __html: action.officialName }} />
               <small>(Hiilineutraali Helsinki 2035 -toimenpideohjelmasta)</small>
             </OfficialText>
-            <LastUpdated>Tietoja päivitetty {updated}</LastUpdated>
           </Col>
-          <Col md="6" lg="4">
+          <Col md="5" lg="4">
             {action.impact &&
               <ActionSection>
+                <h5>Vaikutus</h5>
                 <ActionImpact name={action.impact.name} identifier={action.impact.identifier} />
               </ActionSection>
             }
-            <ActionSection>
-            {action.categories.map((item) => (
-              <CategoryBadge key={item.id} className="mr-3">{item.name}</CategoryBadge>
-            ))}
-            </ActionSection>
-            <ActionSection>
-              <ResponsibleList data={action.responsibleParties.map((item) => item.organization)} />
-            </ActionSection>
-            <ActionSection>
-              <ContactPersons persons={action.contactPersons.map((item) => item.person)} />
-            </ActionSection>
             <ActionSection>
               <h5>Eteneminen</h5>
               { action.completion > 0
@@ -250,6 +248,15 @@ function ActionDetails(props) {
                 <Timeline schedules={action.schedule} allSchedules={plan.actionSchedules} />
               </ActionSection>
             ) : null}
+            <ActionSection>
+              <ResponsibleList data={action.responsibleParties.map((item) => item.organization)} />
+            </ActionSection>
+            <ActionSection>
+              <ContactPersons persons={action.contactPersons.map((item) => item.person)} />
+            </ActionSection>
+            <ActionSection>
+              <LastUpdated>Tietoja päivitetty {updated}</LastUpdated>
+            </ActionSection>
           </Col>
         </Row>
         <Row>
@@ -259,22 +266,9 @@ function ActionDetails(props) {
         </Row>
         <Row>
           <Col>
-            <ActionSection>
+            <ActionSection className="mb-5">
               <TaskList tasks={action.tasks} />
             </ActionSection>
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <h2 className="mb-5">Mittarit</h2>
-          </Col>
-        </Row>
-        <Row>
-          <Col sm="12" className="mb-5">
-            {action.relatedIndicators && action.relatedIndicators.length > 0
-              ? <ActionIndicators actionId={action.id} relatedIndicators={action.relatedIndicators} />
-              : <Alert color="light" className="mb-5"><h6>Ei määriteltyjä mittareita</h6></Alert>
-              }
           </Col>
         </Row>
         </Container>
@@ -283,7 +277,7 @@ function ActionDetails(props) {
             <Container>
               <Row>
                 <Col sm="12">
-                  <h2 className="mb-5">Vaikutusketju</h2>
+                  <h2 className="mb-3">Miten tämä vaikuttaa?</h2>
                 </Col>
               </Row>
             </Container>
@@ -291,6 +285,19 @@ function ActionDetails(props) {
           </div>
         )}
         <Container className="mb-5">
+        <Row>
+          <Col md="8" className="mb-5">
+            <h2 className="mb-5">Viimeisimmät päivitykset</h2>
+            <ActionUpdate>
+              <p><strong>5.10.2019</strong></p>
+              Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
+            </ActionUpdate>
+            <ActionUpdate>
+              <p><strong>5.10.2019</strong></p>
+              Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
+            </ActionUpdate>
+          </Col>
+        </Row>
         <Row>
           <Col sm="12">
             <ActionPager

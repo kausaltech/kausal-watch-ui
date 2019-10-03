@@ -12,7 +12,7 @@ import { aplans, CancelToken } from '../../common/api';
 import ContentLoader from '../common/ContentLoader';
 
 const CausalChain = styled.div`
-  background-color: #eeeeee;
+  background-color: ${props => props.theme.themeColors.light};
   display: flex;
   flex-wrap: nowrap;
   overflow-x: auto;
