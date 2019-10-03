@@ -1,13 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Container, Row } from 'reactstrap';
+import {
+  Col, Container, Row, UncontrolledButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem,
+} from 'reactstrap';
+import moment from 'moment';
 import styled, { withTheme } from 'styled-components';
 import cytoscape from 'cytoscape';
 import dagre from 'cytoscape-dagre';
+import { withTranslation } from '../../common/i18n';
 
 import { Router } from '../../routes';
 import InsightFilter from './InsightFilter';
-
 
 cytoscape.use(dagre);
 
@@ -109,6 +112,22 @@ class CytoGraph extends React.Component {
       throw new Error(`Node with id ${nodeId} not found`);
     }
     onFilterChange({ indicator: parseInt(node[0].id.substr(1), 10) });
+  }
+
+  downloadAs(el) {
+    const cygraph = this.cy;
+    const { target } = el;
+    const exportOptions = {
+      full: true,
+      output: 'blob',
+      maxWidth: 25000,
+      bg: '#ffffff',
+    };
+    const blob = cygraph.png(exportOptions);
+    const url = window.URL.createObjectURL(blob);
+    target.href = url;
+    target.target = '_blank';
+    target.download = `nakemysverkko-${moment().format('YYYY-MM-DD-HH-mm-ss')}.png`;
   }
 
   renderNetwork() {
@@ -343,7 +362,7 @@ class CytoGraph extends React.Component {
   }
 
   render() {
-    const { nodes, filters } = this.props;
+    const { nodes, filters, t } = this.props;
     const { indicator } = filters;
     let activeFilterNode;
 
@@ -355,11 +374,25 @@ class CytoGraph extends React.Component {
       <div>
         <Container>
           <Row>
-            <InsightFilter
-              nodes={nodes}
-              activeFilterNode={activeFilterNode}
-              onFilterNode={this.handleFilterNode}
-            />
+            <Col sm="8" lg="6">
+              <InsightFilter
+                nodes={nodes}
+                activeFilterNode={activeFilterNode}
+                onFilterNode={this.handleFilterNode}
+              />
+            </Col>
+            <Col sm="4" lg="6">
+              <UncontrolledButtonDropdown className="float-right">
+                <DropdownToggle caret color="secondary">
+                  {t('insight-download-label')}
+                </DropdownToggle>
+                <DropdownMenu right>
+                  <DropdownItem tag="a" href="#" onClick={(e) => this.downloadAs(e)}>
+                    {t('insight-download-png')}
+                  </DropdownItem>
+                </DropdownMenu>
+              </UncontrolledButtonDropdown>
+            </Col>
           </Row>
         </Container>
         <VisContainer ref={this.visRef} />
@@ -368,4 +401,4 @@ class CytoGraph extends React.Component {
   }
 }
 
-export default withTheme(CytoGraph);
+export default withTranslation('common')(withTheme(CytoGraph));
