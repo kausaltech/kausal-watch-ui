@@ -38,8 +38,8 @@ const PersonOrg = styled.p`
 `;
 
 const Avatar = styled.img`
-  width: 6em;
-  height: 6em;
+  width: 5em;
+  height: 5em;
 `;
 
 const Address = styled.address`
@@ -88,20 +88,20 @@ const ContactDetails = (props) => {
         orgAncestors.push({ id: person.organization.id, name: person.organization.name });
 
         return (
-          <>
+          <div className="mt-2">
             {orgAncestors.length > 1 && (
-              <OrgAncestorList>
+              <PersonOrg>
                 {orgAncestors.map((item) => (
-                  <div key={item.key}>{item.name}</div>
+                  <span key={item.key}>{item.name} / </span>
                 ))}
-              </OrgAncestorList>
+              </PersonOrg>
             )}
             <Address>
               Sähköposti:
               {' '}
               <a href={`mailto:${person.email}`}>{person.email}</a>
             </Address>
-          </>
+          </div>
         );
       }}
     </Query>
