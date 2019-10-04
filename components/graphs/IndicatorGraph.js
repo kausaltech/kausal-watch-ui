@@ -159,8 +159,12 @@ function IndicatorGraph(props) {
                 style={{ width: '100%', height: '100%' }}
                 useResizeHandler
                 staticPlot
-                displayModeBar={false}
-                config={{ locale: 'fi' }}
+                config={{
+                  locale: 'fi',
+                  displayModeBar: true,
+                  showSendToCloud: true,
+                  staticPlot: false,
+                }}
               />
             </CardBody>
           );
