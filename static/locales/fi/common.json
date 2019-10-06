@@ -9,5 +9,6 @@
     "insight-download-png": "Kuva (png)",
     "insight-filter-label": "Suodata mittarin perusteella",
     "insight-filter-no-results": "Ei tuloksia",
-    "goal": "tavoite"
+    "goal": "tavoite",
+    "forecast": "ennuste"
 }

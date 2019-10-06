@@ -9,5 +9,6 @@
     "insight-download-png": "Image (png)",
     "insight-filter-label": "Filter by indicator",
     "insight-filter-no-results": "No results",
-    "goal": "goal"
+    "goal": "goal",
+    "forecast": "forecast"
 }

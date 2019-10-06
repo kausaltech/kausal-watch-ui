@@ -50,7 +50,7 @@ function makeLayout(indicator) {
       b: 30,
     },
     yaxis: {
-      //rangemode: 'tozero',
+      zeroline: false,
       hoverformat: '.3r',
       separatethousands: true,
       anchor: 'free',
@@ -74,6 +74,13 @@ function makeLayout(indicator) {
       namelength: 0,
     },
   };
+
+  if (indicator.quantity) {
+    if (indicator.quantity.name === 'päästöt') {
+      out.yaxis.rangemode = 'tozero';
+    }
+  }
+
   return out;
 }
 
@@ -197,7 +204,9 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
   }
 
   if (indicator.timeResolution === 'YEAR' && indicator.values.length >= 5) {
-    const regData = indicator.values.map((item) => [parseInt(item.date.split('-')[0], 0), item.value]);
+    const numberOfYears = Math.min(values.length, 10);
+    const regData = values.slice(values.length - numberOfYears, values.length)
+      .map((item) => [parseInt(item.date, 0), item.value]);
     const model = linearRegression(regData);
     const predictedTrace = {
       x: regData.map((item) => item[0]),
@@ -209,8 +218,8 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
         color: plotColors[0],
         dash: 'dash',
       },
+      name: dataTrace.name ? `${dataTrace.name} (${i18n.t('forecast')})` : i18n.t('forecast'),
       hoverinfo: 'none',
-      showlegend: false,
     };
 
     if (goals) {
@@ -237,7 +246,7 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
         hoverinfo: 'none',
         showlegend: false,
       };
-      // traces.push(goalLineTrace);
+      traces.push(goalLineTrace);
     }
 
     predictedTrace.y = predictedTrace.x.map((year) => model.m * year + model.b);
@@ -330,10 +339,9 @@ function IndicatorGraph(props) {
                 layout={plot.layout}
                 style={{ width: '100%', height: '100%' }}
                 useResizeHandler
-                staticPlot
                 config={{
                   locale: 'fi',
-                  displayModeBar: true,
+                  displayModeBar: false,
                   showSendToCloud: true,
                   staticPlot: false,
                 }}
