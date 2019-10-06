@@ -2,6 +2,7 @@ import React from 'react';
 import { Row, Col } from 'reactstrap';
 import styled from 'styled-components';
 import moment from '../../common/moment';
+import { withTranslation } from '../../common/i18n';
 
 const ValueSummary = styled.section`
   margin: 2em 0 0;
@@ -36,8 +37,9 @@ function determineDesirableDirection(values, goals) {
   return '-';
 }
 
-function IndicatorValueSummary({ timeResolution, values, goals, unit }) {
+function IndicatorValueSummary({ timeResolution, values, goals, unit, t }) {
   const desirableDirection = determineDesirableDirection(values, goals);
+  const diffUnitName = unit.name == '%' ? t('percent-point-abbreviation') : unit.name;
   let timeFormat = 'D.M.YYYY';
 
   if (timeResolution === 'YEAR') {
@@ -87,8 +89,7 @@ function IndicatorValueSummary({ timeResolution, values, goals, unit }) {
           {absChange && (
             <span style={{ color: changeColor }}>
               <strong>{changeSymbol}</strong>
-              <span>{beautifyValue(absChange)}</span> <small>{unit.name}</small>
-              <small>({(relChange * 100).toFixed(1) + ' %'})</small>
+              <span>{beautifyValue(absChange)}</span> <small>{diffUnitName}</small>
             </span>
           )}
         </h3>
@@ -126,7 +127,7 @@ function IndicatorValueSummary({ timeResolution, values, goals, unit }) {
         <h3>
           {beautifyValue(difference)}
           {' '}
-          <small>{unit.name}</small>
+          <small>{diffUnitName}</small>
         </h3>
       </div>
     );
@@ -148,4 +149,4 @@ function IndicatorValueSummary({ timeResolution, values, goals, unit }) {
   );
 }
 
-export default IndicatorValueSummary;
+export default withTranslation()(IndicatorValueSummary);

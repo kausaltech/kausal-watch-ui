@@ -10,5 +10,6 @@
     "insight-filter-label": "Filter by indicator",
     "insight-filter-no-results": "No results",
     "goal": "goal",
-    "forecast": "forecast"
+    "forecast": "forecast",
+    "percent-point-abbreviation": "p.p."
 }

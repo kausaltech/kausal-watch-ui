@@ -10,5 +10,6 @@
     "insight-filter-label": "Suodata mittarin perusteella",
     "insight-filter-no-results": "Ei tuloksia",
     "goal": "tavoite",
-    "forecast": "ennuste"
+    "forecast": "ennuste",
+    "percent-point-abbreviation": "%-yks."
 }
