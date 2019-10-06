@@ -51,6 +51,7 @@
     "sass-extract-js": "^0.4.0",
     "sass-extract-loader": "^1.1.0",
     "sentry-testkit": "^3.0.2",
+    "simple-statistics": "^7.0.5",
     "styled-components": "^4.3.2"
   },
   "license": "AGPL-3.0-or-later",

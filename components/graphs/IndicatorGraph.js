@@ -7,6 +7,7 @@ import { withTheme } from 'styled-components';
 import {
   Card, CardBody, Alert,
 } from 'reactstrap';
+import { linearRegression } from 'simple-statistics';
 
 import ContentLoader from '../common/ContentLoader';
 import { withTranslation } from '../../common/i18n';
@@ -21,6 +22,9 @@ const GET_INDICATOR_GRAPH_DATA = gql`
       latestGraph {
         id
         data
+      }
+      quantity {
+        name
       }
       values {
         date
@@ -46,45 +50,212 @@ function makeLayout(indicator) {
       b: 30,
     },
     yaxis: {
-      rangemode: 'tozero',
+      //rangemode: 'tozero',
       hoverformat: '.3r',
       separatethousands: true,
       anchor: 'free',
       domain: [0.02, 1],
+      fixedrange: true,
     },
     xaxis: {
       showgrid: false,
       showline: false,
       anchor: 'free',
-      domain: [0.01, 1],
+      //domain: [0.01, 1],
       tickfont: {
       },
-      type: 'category',
+      type: 'linear',
+      fixedrange: true,
+      tickformat: 'd',
     },
-    showlegend: false,
+    //showlegend: false,
     separators: ', ',
+    hoverlabel: {
+      namelength: 0,
+    },
   };
   return out;
 }
 
-function generatePlotFromValues(indicator) {
-  const trace = {
-    x: indicator.values.map((item) => {
-      const { date } = item;
 
-      if (indicator.timeResolution === 'YEAR') {
-        return date.split('-')[0];
-      }
-      return date;
-    }),
-    y: indicator.values.map((item) => item.value),
-    type: 'bar',
+const log10 = Math.log(10);
+
+function capitalizeFirstLetter(s) {
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
+function getSignificantDigitCount(n) {
+  n = Math.abs(String(n).replace('.', '')); // remove decimal and make positive
+  if (n == 0) return 0;
+  while (n != 0 && n % 10 == 0) n /= 10; // kill the 0s at the end of n
+
+  return Math.floor(Math.log(n) / log10) + 1; // get number of digits
+}
+
+function shouldDrawLine(trace) {
+  if (trace.x.length > 2) return true;
+  return false;
+}
+
+function generatePlotFromValues(indicator, i18n, plotColors) {
+  let onlyIntegers = true;
+  let maxDigits = 0;
+
+  function analyzeData(item) {
+    const val = item.value;
+    return val;
+  }
+  function processItem(item) {
+    let { date, value } = item;
+
+    if (indicator.timeResolution === 'YEAR') {
+      // Strip the month-day part
+      date = date.split('-')[0];
+    }
+    if (!Number.isInteger(value)) {
+      onlyIntegers = false;
+    }
+    // Determine the highest number of significant digits in the dataset
+    // to be able to set suitable number formating.
+    const digitCount = getSignificantDigitCount(value);
+    if (digitCount > maxDigits) maxDigits = digitCount;
+    return { date, value };
+  }
+
+  const values = indicator.values.sort((a, b) => a.date - b.date).map(processItem);
+  const goals = indicator.goals.length ? indicator.goals.sort((a, b) => a.date - b.date).map(processItem) : null;
+
+  const dataTrace = {
+    y: values.map((item) => item.value),
+    x: values.map((item) => item.date),
+    name: indicator.quantity ? capitalizeFirstLetter(indicator.quantity.name) : null,
+    color: plotColors[0],
+    hovertemplate: '%{x}: %{y}',
+    hoverinfo: 'x+y',
+    hoverlabel: {
+      namelength: 0,
+      bgcolor: plotColors[0],
+    },
+    showlegend: indicator.quantity != null,
   };
-  const data = [trace];
+  let attrs;
+  const lineGraph = shouldDrawLine(dataTrace);
+  if (lineGraph) {
+    attrs = {
+      type: 'scatter',
+      line: {
+        width: 3,
+        shape: 'spline',
+        color: plotColors[0],
+      },
+      marker: {
+        size: 6,
+        line: {
+          width: 3,
+          color: plotColors[0],
+        },
+        symbol: 'circle',
+        gradient: {
+          type: 'none',
+        },
+        color: '#ffffff',
+      },
+    };
+  } else {
+    attrs = {
+      type: 'bar',
+    };
+  }
+  const traces = [{ ...dataTrace, ...attrs }];
+  let goalTrace;
+
+  if (goals) {
+    goalTrace = {
+      y: goals.map((item) => item.value),
+      x: goals.map((item) => item.date),
+      type: 'scatter',
+      name: dataTrace.name ? `${dataTrace.name} (${i18n.t('goal')})` : i18n.t('goal'),
+      line: {
+        width: 3,
+        dash: 'dash',
+      },
+      marker: {
+        size: 12,
+        symbol: 'x',
+      },
+      color: plotColors[1],
+      hoverinfo: 'x+y',
+      hovertemplate: '%{x}: %{y}',
+      hoverlabel: {
+        namelength: 0,
+        bgcolor: plotColors[1],
+      },
+    };
+    traces.push(goalTrace);
+  }
+
+  if (indicator.timeResolution === 'YEAR' && indicator.values.length >= 5) {
+    const regData = indicator.values.map((item) => [parseInt(item.date.split('-')[0], 0), item.value]);
+    const model = linearRegression(regData);
+    const predictedTrace = {
+      x: regData.map((item) => item[0]),
+      type: 'scatter',
+      mode: 'lines',
+      opacity: 0.7,
+      line: {
+        width: 3,
+        color: plotColors[0],
+        dash: 'dash',
+      },
+      hoverinfo: 'none',
+      showlegend: false,
+    };
+
+    if (goals) {
+      const highestDataYear = values[values.length - 1];
+      const highestGoalYear = goals[goals.length - 1];
+      const lowestGoalYear = goals[0];
+
+      // If the latest goal is in the future, draw the prediction line until
+      // that year.
+      if (highestGoalYear.date > highestDataYear.date) {
+        predictedTrace.x.push(highestGoalYear.date);
+      }
+      const goalLineTrace = {
+        x: [highestDataYear.date, lowestGoalYear.date],
+        y: [highestDataYear.value, lowestGoalYear.value],
+        type: 'scatter',
+        mode: 'lines',
+        opacity: 0.7,
+        line: {
+          width: 3,
+          color: plotColors[1],
+          dash: 'dash',
+        },
+        hoverinfo: 'none',
+        showlegend: false,
+      };
+      // traces.push(goalLineTrace);
+    }
+
+    predictedTrace.y = predictedTrace.x.map((year) => model.m * year + model.b);
+
+    traces.push(predictedTrace);
+  }
+
   const layout = makeLayout(indicator);
   layout.title = indicator.name;
   layout.yaxis.title = indicator.unit.name;
-  return { data, layout };
+  if (!goalTrace) {
+    layout.showlegend = false;
+  }
+
+  if (maxDigits > 3) maxDigits = 3;
+  if (onlyIntegers) {
+    layout.yaxis.hoverformat = `${onlyIntegers ? '' : '.'}${maxDigits}r`;
+  }
+  const plot = { data: traces, layout };
+  return plot;
 }
 
 function IndicatorGraph(props) {
@@ -94,13 +265,12 @@ function IndicatorGraph(props) {
 
   const { theme, indicator, plan, i18n } = props;
   const plotColors = [
-    theme.brandDark,
-    theme.brandLight,
-    theme.helFog,
-    theme.helGold,
-    theme.helCopper,
-    theme.helCoat,
-    theme.helGold,
+    theme.themeColors.danger,
+    theme.themeColors.primary,
+    theme.themeColors.warning,
+    theme.themeColors.success,
+    theme.themeColors.dark,
+    theme.themeColors.info,
   ];
 
   function fixLayout(indicator, data) {
@@ -147,7 +317,7 @@ function IndicatorGraph(props) {
           if (indicator.latestGraph) {
             plot = JSON.parse(indicator.latestGraph.data);
           } else {
-            plot = generatePlotFromValues(indicator);
+            plot = generatePlotFromValues(indicator, i18n, plotColors);
           }
           fixLayout(indicator, plot);
 

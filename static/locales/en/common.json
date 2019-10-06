@@ -8,5 +8,6 @@
     "insight-download-label": "Download",
     "insight-download-png": "Image (png)",
     "insight-filter-label": "Filter by indicator",
-    "insight-filter-no-results": "No results"
+    "insight-filter-no-results": "No results",
+    "goal": "goal"
 }
