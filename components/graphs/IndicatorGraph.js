@@ -143,6 +143,7 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
   if (lineGraph) {
     attrs = {
       type: 'scatter',
+      mode: 'lines+markers',
       line: {
         width: 3,
         shape: 'spline',
@@ -174,6 +175,7 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
       y: goals.map((item) => item.value),
       x: goals.map((item) => item.date),
       type: 'scatter',
+      mode: 'lines+markers',
       name: dataTrace.name ? `${dataTrace.name} (${i18n.t('goal')})` : i18n.t('goal'),
       line: {
         width: 3,
