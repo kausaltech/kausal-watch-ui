@@ -33,6 +33,10 @@ const GET_INDICATOR_LIST = gql`
           latestGraph {
             id
           }
+          latestValue {
+            id
+            date
+          }
         }
       }
       categoryTypes {
@@ -174,7 +178,7 @@ class FilteredIndicatorList extends React.Component {
                   ))}
                 </td>
                 <td>
-                  {item.latestGraph && (
+                  {(item.latestGraph || item.latestValue) && (
                     <span>
                       <Icon name="chartLine" />
                     </span>
