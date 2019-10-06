@@ -140,7 +140,7 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
     hoverinfo: 'x+y',
     hoverlabel: {
       namelength: 0,
-      bgcolor: plotColors[0],
+      bgcolor: '#fff',
     },
     showlegend: indicator.quantity != null,
   };
@@ -193,10 +193,10 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
       },
       color: plotColors[1],
       hoverinfo: 'x+y',
-      hovertemplate: '%{x}: %{y}',
+      hovertemplate: `%{x}: %{y} (${i18n.t('goal')})`,
       hoverlabel: {
         namelength: 0,
-        bgcolor: plotColors[1],
+        bgcolor: '#fff',
       },
     };
     traces.push(goalTrace);
