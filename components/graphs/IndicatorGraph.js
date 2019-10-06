@@ -50,7 +50,6 @@ function makeLayout(indicator) {
       b: 30,
     },
     yaxis: {
-      zeroline: false,
       hoverformat: '.3r',
       separatethousands: true,
       anchor: 'free',
