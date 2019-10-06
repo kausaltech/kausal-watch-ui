@@ -191,6 +191,7 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
         size: 12,
         symbol: 'x',
       },
+      opacity: 0.7,
       color: plotColors[1],
       hoverinfo: 'x+y',
       hovertemplate: `%{x}: %{y} (${i18n.t('goal')})`,
