@@ -50,7 +50,7 @@ function makeLayout(indicator) {
       t: 30,
       r: 15,
       l: 60,
-      b: 30,
+      b: 35,
     },
     yaxis: {
       hoverformat: '.3r',
@@ -64,11 +64,9 @@ function makeLayout(indicator) {
       showline: false,
       anchor: 'free',
       //domain: [0.01, 1],
-      tickfont: {
-      },
-      type: 'linear',
+      type: indicator.timeResolution === 'YEAR' ? 'linear' : 'date',
       fixedrange: true,
-      tickformat: 'd',
+      tickformat: indicator.timeResolution === 'YEAR' ? 'd' : null,
     },
     //showlegend: false,
     separators: ', ',
