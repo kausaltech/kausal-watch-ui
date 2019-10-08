@@ -36,6 +36,9 @@ const GET_INDICATOR_GRAPH_DATA = gql`
       }
       unit {
         name
+        shortName
+        verboseName
+        verboseNamePlural
       }
     }
   }
@@ -106,11 +109,9 @@ function shouldDrawLine(trace) {
 function generatePlotFromValues(indicator, i18n, plotColors) {
   let onlyIntegers = true;
   let maxDigits = 0;
+  const { unit } = indicator;
+  const unitLabel = unit.name === 'no unit' ? '' : (unit.shortName || unit.name)
 
-  function analyzeData(item) {
-    const val = item.value;
-    return val;
-  }
   function processItem(item) {
     let { date, value } = item;
 
@@ -136,7 +137,7 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
     x: values.map((item) => item.date),
     name: indicator.quantity ? capitalizeFirstLetter(indicator.quantity.name) : null,
     color: plotColors[0],
-    hovertemplate: '%{x}: %{y}',
+    hovertemplate: `%{x}: %{y} ${unitLabel}`,
     hoverinfo: 'x+y',
     hoverlabel: {
       namelength: 0,
@@ -194,7 +195,7 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
       opacity: 0.7,
       color: plotColors[1],
       hoverinfo: 'x+y',
-      hovertemplate: `%{x}: %{y} (${i18n.t('goal')})`,
+      hovertemplate: `%{x}: %{y} ${unitLabel} (${i18n.t('goal')})`,
       hoverlabel: {
         namelength: 0,
         bgcolor: '#fff',
@@ -256,7 +257,7 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
 
   const layout = makeLayout(indicator);
   layout.title = indicator.name;
-  layout.yaxis.title = indicator.unit.name;
+  layout.yaxis.title = unitLabel;
   if (!goalTrace) {
     layout.showlegend = false;
   }

@@ -32,6 +32,9 @@ const GET_INDICATOR_DETAILS = gql`
       timeResolution
       unit {
         name
+        shortName
+        verboseName
+        verboseNamePlural
       }
       latestGraph {
         id

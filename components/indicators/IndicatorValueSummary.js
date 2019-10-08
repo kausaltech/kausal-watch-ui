@@ -39,7 +39,9 @@ function determineDesirableDirection(values, goals) {
 
 function IndicatorValueSummary({ timeResolution, values, goals, unit, t }) {
   const desirableDirection = determineDesirableDirection(values, goals);
-  const diffUnitName = unit.name == '%' ? t('percent-point-abbreviation') : unit.name;
+  const pluralUnitName = unit.verboseNamePlural || unit.verboseName || unit.shortName || unit.name;
+  const shortUnitName = unit.shortName || unit.name;
+  const diffUnitName = unit.name === '%' ? t('percent-point-abbreviation') : shortUnitName;
   let timeFormat = 'D.M.YYYY';
 
   if (timeResolution === 'YEAR') {
@@ -85,7 +87,7 @@ function IndicatorValueSummary({ timeResolution, values, goals, unit, t }) {
         <h3>
           {latestValueDisplay}
           {' '}
-          <small>{unit.name}</small>
+          <small>{shortUnitName}</small>
           {absChange && (
             <span style={{ color: changeColor }}>
               <strong>{changeSymbol}</strong>
@@ -109,7 +111,7 @@ function IndicatorValueSummary({ timeResolution, values, goals, unit, t }) {
         <h3>
           {nextGoalValue}
           {' '}
-          <small>{unit.name}</small>
+          <small>{shortUnitName}</small>
         </h3>
       </div>
     );
