@@ -218,7 +218,7 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
         color: plotColors[0],
         dash: 'dash',
       },
-      name: dataTrace.name ? `${dataTrace.name} (${i18n.t('forecast')})` : i18n.t('forecast'),
+      name: dataTrace.name ? `${dataTrace.name} (${i18n.t('current-trend')})` : i18n.t('current-trend'),
       hoverinfo: 'none',
     };
 
