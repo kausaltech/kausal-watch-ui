@@ -10,7 +10,7 @@ import { withTranslation } from '../common/i18n';
 
 import Layout from '../components/layout';
 import ActionListFiltered, { GET_ACTION_LIST } from '../components/actions/ActionListFiltered';
-import IndexHero from '../components/IndexHero';
+import HnhHero from '../components/HnhHero';
 import FrontHero from '../components/FrontHero';
 import ThlHero from '../components/ThlHero';
 import ContentLoader from '../components/common/ContentLoader';
@@ -62,23 +62,13 @@ class HomePage extends React.Component {
 
     let heroComponent = <FrontHero bgImage={plan.imageUrl} heroText={plan.name} />;
 
-    if (plan.identifier === 'hnh2035') heroComponent = <IndexHero />;
+    if (plan.identifier === 'hnh2035') heroComponent = <HnhHero />;
     if (plan.identifier === 'ktstrat') heroComponent = <ThlHero />;
     return (
       <Layout>
         { heroComponent }
         <ActionsSection className="actions-section">
           <Container>
-            <Row>
-              <Col sm="12" md={{ size: 10, offset: 1 }} className="footer-column">
-                <div className="mb-5">
-                  <h1 className="mb-4">{plan.name}</h1>
-                  <p>
-                    {planIntroText}
-                  </p>
-                </div>
-              </Col>
-            </Row>
             <ActionList plan={plan} />
           </Container>
         </ActionsSection>
