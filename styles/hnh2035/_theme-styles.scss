@@ -25,7 +25,7 @@
 .hero-banner-bottom {
   &::before {
     content: " ";
-    @include koro("storm", $brand-light, 600);
+    @include koro("storm", #ffffff, 600);
     width: 100%;
     height: $spacer * 3;
     position: absolute;

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="165px" height="281px" viewBox="0 0 165 281" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 58 (84663) - https://sketch.com -->
+    <title>main-progress-graph</title>
+    <desc>Created with Sketch.</desc>
+    <g id="main-progress-graph" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect id="Rectangle" stroke="#FFFFFF" stroke-width="2" fill="#FFFFFF" x="86" y="5" width="54" height="276"></rect>
+        <text id="702" font-family="HelsinkiGrotesk-Bold, Helsinki Grotesk" font-size="21" font-weight="bold" fill="#FFFFFF">
+            <tspan x="21.615" y="239">702</tspan>
+        </text>
+        <text id="2559" font-family="HelsinkiGrotesk-Bold, Helsinki Grotesk" font-size="21" font-weight="bold" fill="#FFFFFF">
+            <tspan x="8" y="89">2559</tspan>
+        </text>
+        <text id="3514" font-family="HelsinkiGrotesk-Bold, Helsinki Grotesk" font-size="21" font-weight="bold" fill="#FFFFFF">
+            <tspan x="9.908" y="15">3514</tspan>
+        </text>
+        <text id="kt-CO₂e" opacity="0.8" font-family="HelsinkiGrotesk-Medium, Helsinki Grotesk" font-size="16" font-weight="400" fill="#FFFFFF">
+            <tspan x="2" y="107">kt CO₂e</tspan>
+        </text>
+        <text id="kt-CO₂e-Copy-2" opacity="0.8" font-family="HelsinkiGrotesk-Medium, Helsinki Grotesk" font-size="16" font-weight="400" fill="#FFFFFF">
+            <tspan x="0" y="32">kt CO₂e</tspan>
+        </text>
+        <text id="(1990)" opacity="0.75" font-family="HelsinkiGrotesk-Medium, Helsinki Grotesk" font-size="14" font-weight="400" fill="#FFFFFF">
+            <tspan x="15" y="50">(1990)</tspan>
+        </text>
+        <text id="(2018)" opacity="0.75" font-family="HelsinkiGrotesk-Medium, Helsinki Grotesk" font-size="14" font-weight="400" fill="#FFFFFF">
+            <tspan x="17" y="127">(2018)</tspan>
+        </text>
+        <text id="(2035)" opacity="0.75" font-family="HelsinkiGrotesk-Medium, Helsinki Grotesk" font-size="14" font-weight="400" fill="#FFFFFF">
+            <tspan x="16" y="274">(2035)</tspan>
+        </text>
+        <text id="kt-CO₂e-Copy" opacity="0.8" font-family="HelsinkiGrotesk-Medium, Helsinki Grotesk" font-size="16" font-weight="400" fill="#FFFFFF">
+            <tspan x="3" y="256">kt CO₂e</tspan>
+        </text>
+        <rect id="Rectangle-Copy-7" stroke="#FFFFFF" stroke-width="2" fill="#06783B" x="89" y="7" width="48" height="272"></rect>
+        <rect id="Rectangle-Copy-8" stroke="#FFFFFF" stroke-width="2" fill="#FFC61E" x="89" y="81" width="48" height="198"></rect>
+        <polygon id="Triangle" fill="#FFFFFF" transform="translate(156.500000, 81.000000) rotate(-90.000000) translate(-156.500000, -81.000000) " points="156.5 73 165 89 148 89"></polygon>
+        <rect id="Rectangle-Copy-9" stroke="#FFFFFF" stroke-width="2" fill="#2FAB69" x="89" y="233" width="48" height="46"></rect>
+        <path d="M64,81.5 L137,81.5" id="Line" stroke="#FFFFFF" stroke-width="2" stroke-linecap="square"></path>
+        <path d="M64,8.5 L137,8.5" id="Line-Copy-2" stroke="#FFFFFF" stroke-width="2" stroke-linecap="square"></path>
+        <path d="M64,233.5 L137,233.5" id="Line-Copy" stroke="#FFFFFF" stroke-width="2" stroke-linecap="square"></path>
+    </g>
+</svg>
