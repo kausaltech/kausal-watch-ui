@@ -154,7 +154,7 @@ class FilteredIndicatorList extends React.Component {
 
   render() {
     const indicators = this.filterIndicators();
-    console.log(indicators.length);
+
     return (
       <div className="mb-5 pb-5">
         <IndicatorListFilters cats={this.props.categories} changeOption={this.handleChange} />
