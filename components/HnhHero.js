@@ -11,10 +11,14 @@ import Icon from './common/Icon';
 
 const SiteHero = styled.div`
   margin: 6em 0 3em;
-  background-color: ${props => props.theme.themeColors.white};
+  background-color: ${(props) => props.theme.themeColors.white};
 
   h1 {
-    color: ${props => props.theme.brandDark};
+    color: ${(props) => props.theme.brandDark};
+  }
+
+  a {
+    color: inherit;
   }
 
   a:hover {
@@ -43,7 +47,7 @@ const ProgressGraph = styled.div`
   margin-bottom: 4em;
 
   img {
-    max-width: 500px;
+    max-width: 600px;
   }
 `;
 
@@ -57,23 +61,23 @@ const Highlight = styled.div`
   background: #fff;
 
   &:hover {
-    box-shadow: 6px 6px 10px ${props => props.theme.brandDark};
+    box-shadow: 6px 6px 10px ${(props) => props.theme.brandDark};
     transform: translate(0, -10px);
     transition: all 0.5s ease;
   }
 
   h3 {
-      color: ${props => props.theme.brandDark};
-    }
+    color: ${(props) => props.theme.brandDark};
+  }
 
-    p {
-      hyphens: auto;
-      margin-bottom: 0;
-    }
+  p {
+    hyphens: auto;
+    margin-bottom: 0;
+  }
 `;
 
 const EmissionScaleBanner = styled.div`
-  background-color: ${props => props.theme.brandDark};
+  background-color: ${(props) => props.theme.brandDark};
   color: #fff;
   position: relative;
   padding: 9rem 0 6rem;
@@ -113,7 +117,10 @@ const HnhHero = () => (
         <Row>
           <Col sm="12" md={{ size: 10, offset: 1 }}>
             <MainIllustration>
-              <img src="/static/images/hnh2035/main-illustration.svg" alt="ilmastovahti-kuvitus"/>
+              <img
+                src="/static/images/hnh2035/main-illustration.svg"
+                alt="ilmastovahti-kuvitus"
+              />
             </MainIllustration>
             <SiteTitle>
               <h1>Helsingin Ilmastovahti</h1>
@@ -130,7 +137,11 @@ const HnhHero = () => (
                 </Illustration>
                 <div>
                   <h3>Toimenpiteet</h3>
-                  <p>Toimenpiteet ovat ilmastotekoja joita toteuttamalla kaupunki vähentää kasvihuonekaasupäästöjään.</p>
+                  <p>
+                    Toimenpiteet ovat ilmastotekoja joita toteuttamalla kaupunki
+                    {' '}
+                    vähentää kasvihuonekaasupäästöjään.
+                  </p>
                 </div>
               </Highlight>
             </a>
@@ -144,7 +155,11 @@ const HnhHero = () => (
                   </Illustration>
                   <div>
                     <h3>Mittarit</h3>
-                    <p>Mittarit ovat mitattavia ilmiöitä joiden avulla arvioimme toimenpiteiden vaikutuksen kokonaispäästöihin.</p>
+                    <p>
+                      Mittarit ovat mitattavia ilmiöitä joiden avulla arvioimme
+                      {' '}
+                      toimenpiteiden vaikutuksen kokonaispäästöihin.
+                    </p>
                   </div>
                 </Highlight>
               </a>
@@ -159,22 +174,39 @@ const HnhHero = () => (
           <Col sm="12" md={{ size: 8, offset: 2 }}>
             <h2>Hiilineutraaliksi 2035 mennessä</h2>
             <p>
-              Hiiineutraalissa Helsingissä kasvihuonekaasupäästöt saavat olla enintään 702 kt CO₂e vuodessa, ja nämä päästöt kompensoidaan. Tällä hetkellä päästöjä kertyy vuodessa 2559 kt CO₂e, joten vuosipäästöjä pitää vähentää vielä 1857 kt CO₂e. Tällä sivustolla seuraamme, kuinka kaupungin
+              Hiiineutraalissa Helsingissä kasvihuonekaasupäästöt saavat olla
+              {' '}
+              enintään 702 kt CO
+              <sub>2</sub>
+              e vuodessa, ja nämä päästöt kompensoidaan.
+              {' '}
+              Tällä hetkellä
+              {' '}
+              <IndicatorLink id={5}>päästöjä kertyy</IndicatorLink>
+              {' '}
+              vuodessa 2559 kt CO
+              <sub>2</sub>
+              e, joten vuosipäästöjä pitää vähentää vielä 1857 kt CO
+              <sub>2</sub>
+              e. Tällä sivustolla seuraamme, kuinka kaupungin
               {' '}
               <a href="#actions">147 ilmastotekoa</a>
               {' '}
               auttavat meitä pääsemään oikeaan suuntaan kohti hiilineutraaliutta.
             </p>
             <ProgressGraph>
-              <img src="/static/images/hnh2035/main-graph-horizontal.svg" alt="Helsingin vuosipäästöt tällä hetkellä 2559 ktCO2e" />
+              <img
+                src="/static/images/hnh2035/main-graph-horizontal.svg"
+                alt="Helsingin vuosipäästöt tällä hetkellä 2559 ktCO2e"
+              />
             </ProgressGraph>
-            <IndicatorLink id={5}>
+            <Link href="/tietoa">
               <Button outline color="light">
                 Lue lisää tavoitteesta ja tästä palvelusta
                 {' '}
-                <Icon name="arrowRight" color="white"/>
+                <Icon name="arrowRight" color="white" />
               </Button>
-            </IndicatorLink>
+            </Link>
           </Col>
         </Row>
       </Container>
