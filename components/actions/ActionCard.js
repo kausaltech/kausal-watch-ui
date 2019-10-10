@@ -74,13 +74,15 @@ function ActionCard(props) {
           </CardImgOverlay>
         </a>
       </ActionLink>
-      <ActionStatus
-        name={action.status.name}
-        identifier={action.status.identifier}
-        completion={action.completion}
-      />
+      {action.status && (
+        <ActionStatus
+          name={action.status.name}
+          identifier={action.status.identifier}
+          completion={action.completion}
+        />
+      )}
       <CardBody>
-        { action.status.identifier === "completed"
+        { action.status && action.status.identifier === "completed"
           && (
             <ReadyBadge color="success" pill>
               <Icon name="check" color="#fff" width="2em" height="2em" />
