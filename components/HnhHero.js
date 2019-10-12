@@ -158,9 +158,8 @@ const HnhHero = () => (
                   <div>
                     <h3>Mittarit</h3>
                     <p>
-                      Mittarit ovat mitattavia ilmiöitä joiden avulla arvioimme
-                      {' '}
-                      toimenpiteiden vaikutuksen kokonaispäästöihin.
+                      Mittareiden avulla seuraamme toimenpiteiden etenemistä ja
+                      vaikuttavuutta sekä kaupungin päästökehitystä.
                     </p>
                   </div>
                 </Highlight>
