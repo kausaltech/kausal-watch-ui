@@ -89,7 +89,7 @@ function IndicatorValueSummary({ timeResolution, values, goals, unit, t }) {
           {' '}
           <small>{shortUnitName}</small>
           {absChange && (
-            <span style={{ color: changeColor }}>
+            <span style={{ color: changeColor, fontSize: '1.2rem' }}>
               <strong>{changeSymbol}</strong>
               <span>{beautifyValue(absChange)}</span> <small>{diffUnitName}</small>
             </span>
