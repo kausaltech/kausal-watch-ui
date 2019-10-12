@@ -13,14 +13,6 @@ const CustomInput = styled(BaseCustomInput)`
 class ActionListFilters extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      activeCat: '',
-      activeCatName: this.getCategoryName(''),
-      activeOrg: '',
-      activeSearch: '',
-      activeImpact: '',
-    };
-
     this.onOrgBtnClick = this.onOrgBtnClick.bind(this);
     this.onCatBtnClick = this.onCatBtnClick.bind(this);
     this.onSearchChange = this.onSearchChange.bind(this);
@@ -28,32 +20,19 @@ class ActionListFilters extends React.Component {
   }
 
   onOrgBtnClick(evt) {
-    this.setState({
-      activeOrg: evt.target.value,
-    });
-    this.props.changeOption('Organization', evt.target.value);
+    this.props.onChange('organization', evt.target.value);
   }
 
   onCatBtnClick(evt) {
-    this.setState({
-      activeCat: evt.target.value,
-      activeCatName: this.getCategoryName(evt.target.value),
-    });
-    this.props.changeOption('Category', evt.target.value);
+    this.props.onChange('category', evt.target.value);
   }
 
   onImpactBtnClick(evt) {
-    this.setState({
-      activeImpact: evt.target.value,
-    });
-    this.props.changeOption('Impact', evt.target.value);
+    this.props.onChange('impact', evt.target.value);
   }
 
   onSearchChange(evt) {
-    this.setState({
-      activeSearch: evt.target.value,
-    });
-    this.props.changeOption('Search', evt.target.value);
+    this.props.onChange('text', evt.target.value);
   }
 
   getCategoryName(catId) {
@@ -67,17 +46,12 @@ class ActionListFilters extends React.Component {
   }
 
   render() {
-    const {
-      activeCat,
-      activeOrg,
-      activeImpact,
-    } = this.state;
+    const { filters, impacts } = this.props;
     const rootCategories = this.props.cats
       .filter(cat => cat.parent == null)
       .sort((a, b) => a.name.localeCompare(b.name));
     const orgs = this.props.orgs.slice(0)
       .sort((a, b) => a.name.localeCompare(b.name));
-    const impacts = this.props.impacts;
 
     return (
       <div className="filters mb-5 text-left">
@@ -85,7 +59,7 @@ class ActionListFilters extends React.Component {
           <Col sm="12" md={{ size: 6 }}>
             <FormGroup>
               <Label for="catfield">Rajaa teeman mukaan</Label>
-              <CustomInput type="select" id="catfield" name="category" value={activeCat} onChange={this.onCatBtnClick} className="mb-2">
+              <CustomInput type="select" id="catfield" name="category" value={filters.category} onChange={this.onCatBtnClick} className="mb-2">
                 <option value="">Kaikki teemat</option>
                 {rootCategories.map(cat => (
                   <option value={cat.id} key={cat.id}>{ this.getCategoryName(cat.id) }</option>
@@ -97,7 +71,7 @@ class ActionListFilters extends React.Component {
           <Col sm="12" md={{ size: 6 }}>
             <FormGroup>
               <Label for="orgfield">Rajaa vastuuorganisaation mukaan</Label>
-              <CustomInput type="select" id="orgfield" name="organization" value={activeOrg} onChange={this.onOrgBtnClick} className="mb-2">
+              <CustomInput type="select" id="orgfield" name="organization" value={filters.organization} onChange={this.onOrgBtnClick} className="mb-2">
                 <option value="">Kaikki organisaatiot</option>
                 {orgs.map((org) => (
                   <option value={org.id} key={org.id}>{ this.getOrganizationName(org.id) }</option>
@@ -108,7 +82,7 @@ class ActionListFilters extends React.Component {
           <Col sm="12" md={{ size: 6 }}>
             <FormGroup>
               <Label for="impactfield">Rajaa vaikuttavuuden mukaan</Label>
-              <CustomInput type="select" id="impactfield" name="impact" value={activeImpact} onChange={this.onImpactBtnClick} className="mb-2">
+              <CustomInput type="select" id="impactfield" name="impact" value={filters.impact} onChange={this.onImpactBtnClick} className="mb-2">
                 <option value="">Ei vaikuttavuusrajausta</option>
                 {impacts.map((impact) => (
                   <option value={impact.id} key={impact.id}>{ impact.name }</option>
@@ -121,7 +95,7 @@ class ActionListFilters extends React.Component {
           <Col sm="12">
             <FormGroup>
               <Label for="searchfield">Etsi tekstistä</Label>
-              <Input name="search" id="searchfield" placeholder="Hae kuvauksista" onChange={this.onSearchChange} />
+              <Input name="search" id="searchfield" placeholder="Hae kuvauksista" value={filters.text || ''} onChange={this.onSearchChange} />
             </FormGroup>
           </Col>
         </Row>

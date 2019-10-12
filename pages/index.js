@@ -1,24 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Container, Row, Col, Alert,
+  Container,
 } from 'reactstrap';
-import { Query } from 'react-apollo';
 
 import styled from 'styled-components';
 import { withTranslation } from '../common/i18n';
 
 import Layout from '../components/layout';
-import ActionListFiltered, { GET_ACTION_LIST } from '../components/actions/ActionListFiltered';
+import ActionList from '../components/actions/ActionList';
 import HnhHero from '../components/HnhHero';
 import FrontHero from '../components/FrontHero';
 import ThlHero from '../components/ThlHero';
-import ContentLoader from '../components/common/ContentLoader';
 import PlanContext from '../context/plan';
 
 
 const ActionsSection = styled.div`
-  background-color: ${props => props.theme.brandLight};
+  background-color: ${(props) => props.theme.brandLight};
   position: relative;
   padding: 8rem 0;
   
@@ -27,28 +25,27 @@ const ActionsSection = styled.div`
   }
 `;
 
-function ActionList(props) {
-  const { plan } = props;
-  if (!process.browser) {
-    return <ContentLoader />;
-  }
-  return (
-    <Query query={GET_ACTION_LIST} variables={{ plan: plan.identifier }}>
-      {({ data, loading, error }) => {
-        if (loading) return <ContentLoader />;
-        if (error) return <p>Virhe</p>;
-        return <ActionListFiltered plan={plan} {...data} />;
-      }}
-    </Query>
-  );
-}
-
 
 class HomePage extends React.Component {
   static contextType = PlanContext;
 
+  constructor(props) {
+    super(props);
+    this.handleFilterChange = this.handleFilterChange.bind(this);
+    this.state = {
+      filters: ActionList.getFiltersFromQuery({}),
+    };
+  }
+
+  handleFilterChange(filters) {
+    this.setState({
+      filters,
+    });
+  }
+
   render() {
     const { t } = this.props;
+    const { filters } = this.state;
     const plan = this.context;
     let { planIntroText } = "";
 
@@ -64,14 +61,17 @@ class HomePage extends React.Component {
 
     if (plan.identifier === 'hnh2035') heroComponent = <HnhHero />;
     if (plan.identifier === 'ktstrat') heroComponent = <ThlHero />;
+
     return (
       <Layout>
         { heroComponent }
-        <ActionsSection className="actions-section">
-          <Container>
-            <ActionList plan={plan} />
-          </Container>
-        </ActionsSection>
+          <ActionsSection className="actions-section">
+            <Container>
+              { process.browser && (
+                <ActionList plan={plan} filters={filters} onFilterChange={this.handleFilterChange} />
+              )}
+            </Container>
+          </ActionsSection>
       </Layout>
     );
   }

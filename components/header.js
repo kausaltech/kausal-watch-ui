@@ -5,6 +5,7 @@ import {
 } from 'reactstrap';
 import styled, { withTheme } from 'styled-components';
 import { Link } from '../routes';
+import { IndicatorListLink, ActionListLink } from '../common/links';
 import { withTranslation } from '../common/i18n';
 import PlanContext from '../context/plan';
 
@@ -72,14 +73,14 @@ class Header extends React.Component {
           <Collapse isOpen={this.state.isOpen} navbar>
             <Nav navbar>
               <NavItem key="actions">
-                <Link href="/#actions">
+                <ActionListLink>
                   <a className="nav-link">{t('actions')}</a>
-                </Link>
+                </ActionListLink>
               </NavItem>
               <NavItem key="indicators">
-                <Link href="/indicators">
+                <IndicatorListLink>
                   <a className="nav-link">{t('indicators')}</a>
-                </Link>
+                </IndicatorListLink>
               </NavItem>
               { plan.staticPages && plan.staticPages.map((page) => (
                 <NavItem key={page.slug}>

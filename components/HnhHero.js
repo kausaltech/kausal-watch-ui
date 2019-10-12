@@ -6,7 +6,7 @@ import {
   from 'reactstrap';
 import styled from 'styled-components';
 import { Link } from '../routes';
-import { IndicatorLink } from '../common/links';
+import { IndicatorLink, IndicatorListLink, ActionListLink } from '../common/links';
 import Icon from './common/Icon';
 
 const SiteHero = styled.div`
@@ -130,25 +130,27 @@ const HnhHero = () => (
         </Row>
         <Row>
           <Col md="6" lg={{ size: 5, offset: 1 }}>
-            <a href="#actions">
-              <Highlight className="d-flex p-3 bd-highlight flex-row justify-content-center justify-content-md-start">
-                <Illustration className="mr-4 w-50">
-                  <img src="/static/images/hnh2035/actions-illustration.svg" alt="toimenpitteet-kuvitus" />
-                </Illustration>
-                <div>
-                  <h3>Toimenpiteet</h3>
-                  <p>
-                    Toimenpiteet ovat ilmastotekoja joita toteuttamalla kaupunki
-                    {' '}
-                    vähentää kasvihuonekaasupäästöjään.
-                  </p>
-                </div>
-              </Highlight>
-            </a>
+            <ActionListLink>
+              <a>
+                <Highlight className="d-flex p-3 bd-highlight flex-row justify-content-center justify-content-md-start">
+                  <Illustration className="mr-4 w-50">
+                    <img src="/static/images/hnh2035/actions-illustration.svg" alt="toimenpitteet-kuvitus" />
+                  </Illustration>
+                  <div>
+                    <h3>Toimenpiteet</h3>
+                    <p>
+                      Toimenpiteet ovat ilmastotekoja joita toteuttamalla kaupunki
+                      {' '}
+                      vähentää kasvihuonekaasupäästöjään.
+                    </p>
+                  </div>
+                </Highlight>
+              </a>
+            </ActionListLink>
           </Col>
           <Col md="6" lg="5">
-            <Link href="/indicators">
-              <a href>
+            <IndicatorListLink>
+              <a>
                 <Highlight className="d-flex p-3 bd-highlight flex-row justify-content-center justify-content-md-start">
                   <Illustration className="mr-4 w-50">
                     <img src="/static/images/hnh2035/indicators-illustration.svg" alt="mittarit-kuvitus" />
@@ -163,7 +165,7 @@ const HnhHero = () => (
                   </div>
                 </Highlight>
               </a>
-            </Link>
+            </IndicatorListLink>
           </Col>
         </Row>
       </Container>

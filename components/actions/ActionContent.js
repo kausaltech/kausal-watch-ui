@@ -236,11 +236,13 @@ function ActionDetails(props) {
                 % valmis
               </strong>
               ) }
-              <ActionStatus
-                name={action.status.name}
-                identifier={action.status.identifier}
-                completion={action.completion}
-              />
+              {action.status && (
+                <ActionStatus
+                  name={action.status.name}
+                  identifier={action.status.identifier}
+                  completion={action.completion}
+                />
+              )}
             </ActionSection>
             { action.schedule.length ? (
               <ActionSection>
