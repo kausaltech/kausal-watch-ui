@@ -184,7 +184,7 @@ const HnhHero = () => (
               {' '}
               Tällä hetkellä
               {' '}
-              <IndicatorLink id={5}>päästöjä kertyy</IndicatorLink>
+              <IndicatorLink id={5}><a>päästöjä kertyy</a></IndicatorLink>
               {' '}
               vuodessa 2559 kt CO
               <sub>2</sub>
@@ -192,7 +192,7 @@ const HnhHero = () => (
               <sub>2</sub>
               e. Tällä sivustolla seuraamme, kuinka kaupungin
               {' '}
-              <a href="#actions">147 ilmastotekoa</a>
+              <ActionListLink><a>147 ilmastotekoa</a></ActionListLink>
               {' '}
               auttavat meitä pääsemään oikeaan suuntaan kohti hiilineutraaliutta.
             </p>
