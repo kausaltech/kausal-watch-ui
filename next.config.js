@@ -2,6 +2,7 @@ const webpack = require('webpack');
 const withSass = require('@zeit/next-sass');
 const withImages = require('next-images');
 const withBundleAnalyzer = require('@zeit/next-bundle-analyzer');
+const SentryWebpackPlugin = require('@sentry/webpack-plugin');
 
 
 const config = withBundleAnalyzer(withImages(withSass({
@@ -85,6 +86,17 @@ const config = withBundleAnalyzer(withImages(withSass({
             break;
           }
         }
+      }
+
+      if (process.env.SENTRY_AUTH_TOKEN && process.env.SENTRY_PROJECT && process.env.SENTRY_ORG) {
+        cfg.plugins.push(new SentryWebpackPlugin({
+          include: '.next',
+          ignore: ['node_modules'],
+          release: buildId,
+          rewrite: true,
+          stripCommonPrefix: true,
+          urlPrefix: '_next',
+        }));
       }
     }
 

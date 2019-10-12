@@ -6,6 +6,7 @@
   "dependencies": {
     "@sentry/browser": "^5.7.0",
     "@sentry/node": "^5.7.0",
+    "@sentry/webpack-plugin": "^1.9.1",
     "@zeit/next-bundle-analyzer": "^0.1.2",
     "@zeit/next-sass": "^1.0.1",
     "apollo-cache-inmemory": "^1.6.3",
@@ -62,7 +63,6 @@
     "start": "NODE_ENV=production node server.js"
   },
   "devDependencies": {
-    "@sentry/webpack-plugin": "^1.9.1",
     "babel-eslint": "^10.0.3",
     "babel-plugin-styled-components": "^1.10.6",
     "eslint": "^6.5.1",
