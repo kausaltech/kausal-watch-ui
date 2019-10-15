@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { withTranslation } from '../../common/i18n';
 
 import ContactPerson from './ContactPerson';
 
@@ -15,10 +16,10 @@ const Note = styled.div`
 `;
 
 function ContactPersons(props) {
-  const { persons } = props;
+  const { t, persons } = props;
   return (
     <>
-      <h5>Yhteyshenkilöt</h5>
+      <h5>{ t('contact-persons') }</h5>
       <ContactList>
         { persons.length !== 0
           ? persons.map((person, index) => (
@@ -26,7 +27,7 @@ function ContactPersons(props) {
               <ContactPerson person={person} leader={index===0}/>
             </li>
           ))
-          : <Note>Ei merkittyjä yhteyshenkilöitä</Note>}
+          : <Note>{ t('contact-persons-missing') }</Note>}
       </ContactList>
     </>
   );
@@ -41,6 +42,7 @@ ContactPersons.propTypes = {
       name: PropTypes.string,
     }),
   })).isRequired,
+  t: PropTypes.func.isRequired,
 };
 
-export default ContactPersons;
+export default withTranslation('common')(ContactPersons);

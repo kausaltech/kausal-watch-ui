@@ -11,6 +11,7 @@ import moment from '../../common/moment';
 import { Link } from '../../routes';
 import { ActionLink } from '../../common/links';
 
+import { withTranslation } from '../../common/i18n';
 import PlanContext from '../../context/plan';
 
 import IndicatorCausal from '../indicators/IndicatorCausal';
@@ -122,7 +123,7 @@ const ActionHero = styled.div`
   position: relative;
   margin-bottom: 3rem;
   a {
-    color: ${props => props.theme.brandLight};
+    color: ${(props) => props.theme.brandLight};
   }
 `;
 
@@ -135,21 +136,21 @@ const ActionHeadline = styled.h1`
   hyphens: auto;
   margin-bottom: 2rem;
 
-  @media (max-width: ${props => props.theme.breakpointMd}) {
+  @media (max-width: ${(props) => props.theme.breakpointMd}) {
     font-size: 1.75em;
   }
 `;
 
 const ActionNumber = styled.span`
   font-size: 3.5rem;
-  @media (max-width: ${props => props.theme.breakpointMd}) {
+  @media (max-width: ${(props) => props.theme.breakpointMd}) {
     font-size: 2.5rem;
   }
 `;
 
 const LastUpdated = styled.div`
   margin-bottom: 1em;
-  color: ${props => props.theme.themeColors.dark};
+  color: ${(props) => props.theme.themeColors.dark};
 `;
 
 const ActionSection = styled.div`
@@ -157,7 +158,7 @@ const ActionSection = styled.div`
 `;
 
 const OfficialText = styled.div`
-  color: ${props => props.theme.brandDark};
+  color: ${(props) => props.theme.brandDark};
   margin-bottom: 3rem;
 `;
 
@@ -170,12 +171,17 @@ const CategoryBadge = styled(Badge)`
 
 const SolidSection = styled.div`
   padding: 2rem 0;
-  background-color: ${props => props.theme.themeColors.light};
+
   margin-bottom: 3rem;
 `;
 
 function ActionDetails(props) {
-  const { action, plan, theme } = props;
+  const {
+    t,
+    action,
+    plan,
+    theme,
+  } = props;
 
   const updated = moment(action.updatedAt).format('DD.MM.YYYY');
 
@@ -189,29 +195,43 @@ function ActionDetails(props) {
               <Row>
                 <Col md="10">
                   <Link href="/#actions">
-                    <a>
-                      <h4>Toimenpiteet</h4>
+                    <a href>
+                      <h4>{ t('actions') }</h4>
                     </a>
                   </Link>
                   <p>
-                  { action.previousAction
-                    && (
-                      <ActionLink id={action.previousAction.identifier}>
-                        <a><Icon name="arrowLeft" color={theme.brandLight}  /> Edellinen</a>
-                      </ActionLink>
-                    )
-                  }{ action.nextAction
-                    && action.previousAction && <span>{' '}|{' '}</span>}{ action.nextAction
-                    && (
-                      <ActionLink id={action.nextAction.identifier}>
-                        <a>Seuraava <Icon name="arrowRight" color={theme.brandLight} /></a>
-                      </ActionLink>
-                    )
-                  }
+                    { action.previousAction
+                      && (
+                        <ActionLink id={action.previousAction.identifier}>
+                          <a href>
+                            <Icon name="arrowLeft" color={theme.brandLight} />
+                            {' '}
+                            { t('previous') }
+                          </a>
+                        </ActionLink>
+                      )}
+                    { action.nextAction
+                      && action.previousAction
+                      && (
+                        <span>
+                          {' '}
+                          |
+                          {' '}
+                        </span>
+                      )}
+                    { action.nextAction
+                      && (
+                        <ActionLink id={action.nextAction.identifier}>
+                          <a href>
+                            { t('next') }
+                            <Icon name="arrowRight" color={theme.brandLight} />
+                          </a>
+                        </ActionLink>
+                      )}
                   </p>
                   <ActionHeadline>
                     <ActionNumber>{action.identifier}</ActionNumber>
-                    <br/>
+                    <br />
                     {action.name}
                   </ActionHeadline>
                   {action.categories.map((item) => (
@@ -229,26 +249,29 @@ function ActionDetails(props) {
             {action.description
             && <ActionSection dangerouslySetInnerHTML={{ __html: action.description }} />}
             <OfficialText>
-              <h5>Virallinen kuvaus</h5>
-              <strong>Toimenpideohjelman mukaisesti</strong>
+              <h5>{ t('action-description-official') }</h5>
+              <strong>{ t('action-as-in-plan') }</strong>
               <div dangerouslySetInnerHTML={{ __html: action.officialName }} />
               <small>(Hiilineutraali Helsinki 2035 -toimenpideohjelmasta)</small>
             </OfficialText>
           </Col>
           <Col md="5" lg="4">
-            {action.impact &&
+            { action.impact
+              && (
               <ActionSection>
-                <h5>Vaikutus</h5>
+                <h5>{ t('action-impact') }</h5>
                 <ActionImpact name={action.impact.name} identifier={action.impact.identifier} />
               </ActionSection>
-            }
+              )}
             <ActionSection>
-              <h5>Eteneminen</h5>
+              <h5>{ t('action-progress') }</h5>
               { action.completion > 0
               && (
               <strong>
                 {action.completion}
-                % valmis
+                %
+                {' '}
+                { t('action-percent-ready') }
               </strong>
               ) }
               {action.status && (
@@ -261,7 +284,7 @@ function ActionDetails(props) {
             </ActionSection>
             { action.schedule.length ? (
               <ActionSection>
-                <h5>Aikajänne</h5>
+                <h5>{ t('action-timeline') }</h5>
                 <Timeline schedules={action.schedule} allSchedules={plan.actionSchedules} />
               </ActionSection>
             ) : null}
@@ -272,28 +295,32 @@ function ActionDetails(props) {
               <ContactPersons persons={action.contactPersons.map((item) => item.person)} />
             </ActionSection>
             <ActionSection>
-              <LastUpdated>Tietoja päivitetty {updated}</LastUpdated>
+              <LastUpdated>
+                { t('action-last-updated') }
+                {' '}
+                { updated }
+              </LastUpdated>
             </ActionSection>
           </Col>
         </Row>
-            </Container>
-            { action.statusUpdates.length > 0 &&
-              (
-            <SolidSection>
-              <Container>
-              <Row>
-                <Col>
-                  <h2 className="mb-5">Viimeisimmät päivitykset</h2>
-                </Col>
-              </Row>
-              <ActionUpdatesList id={action.id} className="mb-5" />
-            </Container>
-            </SolidSection>
-              )}
-            <Container>
+      </Container>
+      { action.statusUpdates.length > 0
+        && (
+        <SolidSection>
+          <Container>
+            <Row>
+              <Col>
+                <h2 className="mb-5">{ t('action-status-updates') }</h2>
+              </Col>
+            </Row>
+            <ActionUpdatesList id={action.id} className="mb-5" />
+          </Container>
+        </SolidSection>
+        )}
+      <Container>
         <Row>
           <Col>
-            <h2 className="mb-5">Tehtävät</h2>
+            <h2 className="mb-5">{ t('action-tasks') }</h2>
           </Col>
         </Row>
         <Row>
@@ -303,29 +330,29 @@ function ActionDetails(props) {
             </ActionSection>
           </Col>
         </Row>
-        </Container>
-        {action.relatedIndicators && action.relatedIndicators.length > 0 && (
-          <div>
-            <Container>
-              <Row>
-                <Col sm="12">
-                  <h2 className="mb-3">Miten tämä vaikuttaa?</h2>
-                </Col>
-              </Row>
-            </Container>
-            <IndicatorCausal actionId={action.id} />
-          </div>
-        )}
-        <Container>
-          <Row>
-            <Col sm="12" className="mb-5">
-              <ActionPager
-                nextId={action.nextAction ? action.nextAction.identifier : undefined}
-                previousId={action.previousAction ? action.previousAction.identifier : undefined}
-              />
-            </Col>
-          </Row>
-        </Container>
+      </Container>
+      {action.relatedIndicators && action.relatedIndicators.length > 0 && (
+        <div>
+          <Container>
+            <Row>
+              <Col sm="12">
+                <h2 className="mb-3">{ t('action-what-effect-this-has') }</h2>
+              </Col>
+            </Row>
+          </Container>
+          <IndicatorCausal actionId={action.id} />
+        </div>
+      )}
+      <Container>
+        <Row>
+          <Col sm="12" className="mb-5">
+            <ActionPager
+              nextId={action.nextAction ? action.nextAction.identifier : undefined}
+              previousId={action.previousAction ? action.previousAction.identifier : undefined}
+            />
+          </Col>
+        </Row>
+      </Container>
     </div>
   );
 }
@@ -334,7 +361,7 @@ class ActionContent extends React.Component {
   static contextType = PlanContext;
 
   render() {
-    const { theme, id } = this.props;
+    const { t, theme, id } = this.props;
     const plan = this.context;
 
     return (
@@ -344,9 +371,9 @@ class ActionContent extends React.Component {
           if (error) return <ErrorMessage message={error.message} />;
           const { action } = data;
           if (!action) {
-            return <ErrorMessage statusCode={404} message="Toimenpidettä ei löydy" />
+            return <ErrorMessage statusCode={404} message={t('action-not-found')} />;
           }
-          return <ActionDetails action={action} theme={theme} plan={plan} />;
+          return <ActionDetails action={action} theme={theme} plan={plan} t={t} />;
           /* ActionContent action={data.action} theme={ theme } /> */
         }}
       </Query>
@@ -354,8 +381,20 @@ class ActionContent extends React.Component {
   }
 }
 
-ActionContent.propTypes = {
-  id: PropTypes.string.isRequired,
+ActionDetails.propTypes = {
+  action: PropTypes.string.isRequired,
+  plan: PropTypes.string.isRequired,
+  t: PropTypes.func.isRequired,
+  theme: PropTypes.shape({
+    brandLight: PropTypes.string.isRequired,
+    imageOverlay: PropTypes.string.isRequired,
+  }).isRequired,
 };
 
-export default withTheme(ActionContent);
+ActionContent.propTypes = {
+  id: PropTypes.string.isRequired,
+  t: PropTypes.func.isRequired,
+  theme: PropTypes.shape({}).isRequired,
+};
+
+export default withTranslation('common')(withTheme(ActionContent));

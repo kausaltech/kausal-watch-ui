@@ -3,7 +3,7 @@ import { ListGroup, ListGroupItem as BaseListGroupItem } from 'reactstrap';
 import styled from 'styled-components';
 import moment from '../../common/moment';
 import Icon from '../common/Icon';
-
+import { withTranslation } from '../../common/i18n';
 
 const Date = styled.span`
   font-weight: 700;
@@ -24,6 +24,7 @@ class TaskList extends React.Component {
   }
 
   render() {
+    const t = this.props.t;
     const sortedTasks = this.props.tasks.sort((a, b) => {
       let bdate;
       let adate;
@@ -66,18 +67,18 @@ class TaskList extends React.Component {
       <div>
         { doneTasks.length > 0 && (
           <ListGroup className="mb-4">
-            <h5>Mitä on tehty?</h5>
+            <h5>{ t('action-tasks-done') }</h5>
             {doneTasks}
           </ListGroup>
         )}
         { undoneTasks.length > 0
           ? (
             <ListGroup className="mb-4">
-              <h5>Mitä on tehtävä?</h5>
+              <h5>{ t('action-tasks-todo') }</h5>
               {undoneTasks}
             </ListGroup>
           )
-          : <h5>Ei tekemättömiä tehtäviä</h5>
+          : <h5>{ t('action-tasks-todo-empty') }</h5>
         }
       </div>
 
@@ -86,4 +87,4 @@ class TaskList extends React.Component {
 }
 
 
-export default TaskList;
+export default withTranslation('common')(TaskList);

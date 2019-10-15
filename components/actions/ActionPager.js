@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { Link } from '../../routes';
 import { ActionLink } from '../../common/links';
 import Icon from '../common/Icon';
+import { withTranslation } from '../../common/i18n';
 
 const Pager = styled.div`
   display: flex;
@@ -32,7 +33,7 @@ const PageButton = styled(Button)`
 `;
 
 const ActionPager = (props) => {
-  const { nextId, previousId } = props;
+  const { t, nextId, previousId } = props;
 
   return (
     <Pager>
@@ -40,7 +41,7 @@ const ActionPager = (props) => {
         { previousId
           && (
             <ActionLink id={previousId}>
-              <PageButton color="primary" outline><Icon name="arrowLeft" />Edellinen toimenpide</PageButton>
+              <PageButton color="primary" outline><Icon name="arrowLeft" />{ t('action-previous') }</PageButton>
             </ActionLink>
           )
         }
@@ -49,7 +50,7 @@ const ActionPager = (props) => {
         { nextId
           && (
             <ActionLink id={nextId}>
-              <PageButton color="primary" outline>Seuraava toimenpide <Icon name="arrowRight" /></PageButton>
+              <PageButton color="primary" outline>{ t('action-next') } <Icon name="arrowRight" /></PageButton>
             </ActionLink>
           )
         }
@@ -61,6 +62,7 @@ const ActionPager = (props) => {
 ActionPager.propTypes = {
   previousId: PropTypes.string,
   nextId: PropTypes.string,
+  t: PropTypes.func.isRequired,
 };
 
 ActionPager.defaultProps = {
@@ -68,4 +70,4 @@ ActionPager.defaultProps = {
   nextId: '',
 };
 
-export default ActionPager;
+export default withTranslation('common')(ActionPager);

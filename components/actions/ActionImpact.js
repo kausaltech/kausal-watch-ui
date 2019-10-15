@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import styled from 'styled-components'
 
 import Icon from '../common/Icon'
+import { withTranslation } from '../../common/i18n';
 
 const ImpactIcon = styled(Icon)`
   font-size: 1.5em;
@@ -21,7 +22,7 @@ const ImpactIcon = styled(Icon)`
 `;
 
 function ActionImpact(props) {
-  const { identifier, name } = props;
+  const { t, identifier, name } = props;
   const max = 5;
   const bullets = [];
   const num = Number(identifier);
@@ -34,21 +35,23 @@ function ActionImpact(props) {
       else if (x >= num) bullets.push({ type: 'off', key: `${x}-off` });
     }
   }
+  
+  const impactVisual = bullets.map((item) => {
+    if (item.type === 'bad')
+      return <ImpactIcon key={item.key} name="exclamationCircle" className="icon-bad" />
+    else if (item.type === 'off')
+      return <ImpactIcon key={item.key} name="circleOutline" className="icon-off" />
+    else if (item.type === 'on')
+      return <ImpactIcon key={item.key} name="circleFull" className="icon-on" />
+  });
 
   return (
     <div>
-      {bullets.map((item) => {
-        if (item.type === 'bad')
-          return <ImpactIcon key={item.key} name="exclamationCircle" className="icon-bad" />
-        else if (item.type === 'off')
-          return <ImpactIcon key={item.key} name="circleOutline" className="icon-off" />
-        else if (item.type === 'on')
-          return <ImpactIcon key={item.key} name="circleFull" className="icon-on" />
-      })}
+      { impactVisual }
       <h6>
         {name}
         {' '}
-        vaikutus
+        { t('impact') }
       </h6>
     </div>
   )
@@ -57,6 +60,7 @@ function ActionImpact(props) {
 ActionImpact.propTypes = {
   identifier: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
+  t: PropTypes.func.isRequired,
 }
 
-export default ActionImpact
+export default withTranslation('common')(ActionImpact);

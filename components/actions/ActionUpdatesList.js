@@ -7,12 +7,13 @@ import { Row, Col, Media } from 'reactstrap';
 
 import moment from '../../common/moment';
 import PlanContext from '../../context/plan';
-
+import { withTranslation } from '../../common/i18n';
 
 const ActionUpdate = styled.article`
   padding: .75rem;
   margin: 0 0 1.5rem;
   background: ${(props) => props.theme.themeColors.white};
+  border: 2px solid  ${(props) => props.theme.themeColors.light};
 `;
 
 const ActionUpdateHeader = styled.header`
@@ -101,26 +102,25 @@ class ActionUpdatesList extends React.Component {
   static contextType = PlanContext;
 
   render() {
-    const { id } = this.props;
+    const { t, id } = this.props;
     const plan = this.context;
 
     return (
       <Query query={GET_ACTION_UPDATES} variables={{ id, plan: plan.identifier }}>
         {({ loading, error, data }) => {
-          if (loading) return <span>Ladataan</span>;
+          if (loading) return <span>{ t('loading') }</span>;
           if (error) return <span>{error.message}</span>;
 
           const { action } = data;
           return (
             <Row>
               { action.statusUpdates.map((update) => (
-                <Col sm="12" md={{ size: 10, offset: 0 }}>
+                <Col sm="12" md={{ size: 10, offset: 0 }} key={update.id}>
                   <ActionStatusUpdate
                     author={update.author}
                     date={update.date}
                     title={update.title}
                     content={update.content}
-                    key={update.id}
                   />
                 </Col>
               ))}
@@ -132,13 +132,17 @@ class ActionUpdatesList extends React.Component {
   }
 }
 
+ActionStatusUpdate.defaultProps = {
+  author: null,
+};
+
 ActionStatusUpdate.propTypes = {
   author: PropTypes.shape({
     id: PropTypes.string.isRequired,
     firstName: PropTypes.string.isRequired,
     lastName: PropTypes.string.isRequired,
     avatarUrl: PropTypes.string,
-  }).isRequired,
+  }),
   date: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   content: PropTypes.string.isRequired,
@@ -148,4 +152,4 @@ ActionUpdatesList.propTypes = {
   id: PropTypes.string.isRequired,
 };
 
-export default ActionUpdatesList;
+export default withTranslation('common')(ActionUpdatesList);
