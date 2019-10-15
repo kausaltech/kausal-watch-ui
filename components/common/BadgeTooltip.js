@@ -3,6 +3,13 @@ import { Badge, Tooltip } from 'reactstrap';
 import styled from 'styled-components';
 import { lighten } from 'polished';
 
+const BadgeWrapper = styled.span`
+  &.leader {
+    font-size: 1.75rem;
+    display: block;
+  }
+`;
+
 const StyledBadge = styled(Badge)`
   background-color: ${props => props.theme.brandDark};
   color: #ffffff;
@@ -30,16 +37,16 @@ class BadgeTooltip extends React.Component {
   }
 
   render() {
-    const { abbreviation, name } = this.props;
+    const { abbreviation, name, leader } = this.props;
     const id = this.props.id.replace(/[: ]/g, '_');
 
     return (
-      <span>
+      <BadgeWrapper className={leader && `leader`}>
         <StyledBadge pill href="#" id={id}>{abbreviation || name}</StyledBadge>
         <Tooltip placement="top" isOpen={this.state.tooltipOpen} target={id} toggle={this.toggle}>
           {name}
         </Tooltip>
-      </span>
+      </BadgeWrapper>
     );
   }
 }

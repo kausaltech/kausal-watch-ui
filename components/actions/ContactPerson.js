@@ -10,6 +10,11 @@ const Person = styled.div`
   margin-top: 1em;
   padding-bottom: 1em;
   border-bottom: 2px solid ${(props) => props.theme.themeColors.light};
+  &.leader {
+    img {
+      border: 2px solid ${(props) => props.theme.brandDark};
+    }
+  }
 `;
 
 const PersonDetails = styled(Media)`
@@ -121,15 +126,17 @@ class ContactPerson extends React.Component {
   }
 
   render() {
-    const { person } = this.props;
+    const { person, leader } = this.props;
     const { collapse } = this.state;
+    let isLeader = '';
+    isLeader = leader ? 'leader' : '';
     return (
-      <Person>
+      <Person className={isLeader}>
         <Media key={person.id}>
           <Media left>
             <Avatar
               src={person.avatarUrl || '/static/images/default-avatar.png'}
-              className="rounded-circle"
+              className={`rounded-circle ${isLeader}`}
               alt={`${person.firstName} ${person.lastName}`}
             />
           </Media>

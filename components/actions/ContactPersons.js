@@ -21,9 +21,9 @@ function ContactPersons(props) {
       <h5>Yhteyshenkilöt</h5>
       <ContactList>
         { persons.length !== 0
-          ? persons.map((person) => (
+          ? persons.map((person, index) => (
             <li key={person.id}>
-              <ContactPerson person={person} />
+              <ContactPerson person={person} leader={index===0}/>
             </li>
           ))
           : <Note>Ei merkittyjä yhteyshenkilöitä</Note>}
