@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Container, Row, Col, Progress, Alert, Badge,
+  Container, Row, Col, Badge,
 } from 'reactstrap';
 import { Query } from 'react-apollo';
 import styled, { withTheme } from 'styled-components';
@@ -20,9 +20,9 @@ import ResponsibleList from './ResponsibleList';
 import ContactPersons from './ContactPersons';
 import ActionStatus from './ActionStatus';
 import ActionImpact from './ActionImpact';
-import ActionIndicators from './ActionIndicators';
 import ActionBgImage from './ActionBgImage';
 import ActionPager from './ActionPager';
+import ActionUpdatesList from './ActionUpdatesList';
 import ContentLoader from '../common/ContentLoader';
 import Icon from '../common/Icon';
 import { SubpageTitle } from '../layout';
@@ -83,6 +83,9 @@ query ActionDetails($plan: ID!, $id: ID!) {
     impact {
       id, identifier, name
     }
+    statusUpdates {
+      id
+    }
     relatedIndicators {
       indicator {
         id
@@ -126,6 +129,17 @@ const OverlayContainer = styled.div`
 const ActionHeadline = styled.h1`
   hyphens: auto;
   margin-bottom: 2rem;
+
+  @media (max-width: ${props => props.theme.breakpointMd}) {
+    font-size: 1.75em;
+  }
+`;
+
+const ActionNumber = styled.span`
+  font-size: 3.5rem;
+  @media (max-width: ${props => props.theme.breakpointMd}) {
+    font-size: 2.5rem;
+  }
 `;
 
 const LastUpdated = styled.div`
@@ -149,15 +163,10 @@ const CategoryBadge = styled(Badge)`
   font-size: 1rem;
 `;
 
-const CausalSection = styled.div`
+const SolidSection = styled.div`
+  padding: 2rem 0;
   background-color: ${props => props.theme.themeColors.light};
-`;
-
-const ActionUpdate = styled.div`
-  padding: 1em;
-  margin: 0 0 2em;
-  border-top: solid 2px ${props => props.theme.brandDark};
-  border-bottom: solid 2px ${props => props.theme.brandDark};
+  margin-bottom: 3rem;
 `;
 
 function ActionDetails(props) {
@@ -195,8 +204,11 @@ function ActionDetails(props) {
                     )
                   }
                   </p>
-                  <h2 className="display-4">{action.identifier}</h2>
-                  <ActionHeadline>{action.name}</ActionHeadline>
+                  <ActionHeadline>
+                    <ActionNumber>{action.identifier}</ActionNumber>
+                    <br/>
+                    {action.name}
+                  </ActionHeadline>
                   {action.categories.map((item) => (
                     <CategoryBadge key={item.id} className="mr-3">{item.name}</CategoryBadge>
                   ))}
@@ -259,6 +271,21 @@ function ActionDetails(props) {
             </ActionSection>
           </Col>
         </Row>
+            </Container>
+            { action.statusUpdates.length > 0 &&
+              (
+            <SolidSection>
+              <Container>
+              <Row>
+                <Col>
+                  <h2 className="mb-5">Viimeisimmät päivitykset</h2>
+                </Col>
+              </Row>
+              <ActionUpdatesList id={action.id} className="mb-5" />
+            </Container>
+            </SolidSection>
+              )}
+            <Container>
         <Row>
           <Col>
             <h2 className="mb-5">Tehtävät</h2>
@@ -284,29 +311,16 @@ function ActionDetails(props) {
             <IndicatorCausal actionId={action.id} />
           </div>
         )}
-        <Container className="mb-5">
-        <Row>
-          <Col md="8" className="mb-5">
-            <h2 className="mb-5">Viimeisimmät päivitykset</h2>
-            <ActionUpdate>
-              <p><strong>5.10.2019</strong></p>
-              Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
-            </ActionUpdate>
-            <ActionUpdate>
-              <p><strong>5.10.2019</strong></p>
-              Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
-            </ActionUpdate>
-          </Col>
-        </Row>
-        <Row>
-          <Col sm="12">
-            <ActionPager
-              nextId={action.nextAction ? action.nextAction.identifier : undefined}
-              previousId={action.previousAction ? action.previousAction.identifier : undefined}
-            />
-          </Col>
-        </Row>
-      </Container>
+        <Container>
+          <Row>
+            <Col sm="12" className="mb-5">
+              <ActionPager
+                nextId={action.nextAction ? action.nextAction.identifier : undefined}
+                previousId={action.previousAction ? action.previousAction.identifier : undefined}
+              />
+            </Col>
+          </Row>
+        </Container>
     </div>
   );
 }

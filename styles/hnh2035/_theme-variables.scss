@@ -106,3 +106,9 @@ $strategic-indicator-color-fg: $hel-white;
 $causality-increases-color: darken($green, 10%);
 $causality-decreases-color: darken($red, 10%);
 $causality-is-part-of-color: grey;
+
+// Breakpoints
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 992px;
+$breakpoint-xl: 1200px;
