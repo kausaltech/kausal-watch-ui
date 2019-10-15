@@ -12,5 +12,13 @@
     "goal": "goal",
     "forecast": "forecast",
     "current-trend": "trend",
-    "percent-point-abbreviation": "p.p."
+    "percent-point-abbreviation": "p.p.",
+    "responsible-parties": "Responsible parties",
+    "responsible-parties-missing": "Ei merkittyjä vastuuorganisaatioita",
+    "responsible-party-main": "Main responsible",
+    "contact-persons": "Contact persons",
+    "contact-persons-missing": "Ei merkittyjä yhteyshenkilöitä",
+    "contact-person-main": "Main contact person",
+    "contact-info": "Contact informaton",
+    "email": "E-mail"
 }

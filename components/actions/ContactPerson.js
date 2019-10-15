@@ -5,11 +5,17 @@ import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 
 import { Media, Button, Collapse } from 'reactstrap';
+import { withTranslation } from '../../common/i18n';
 
 const Person = styled.div`
   margin-top: 1em;
   padding-bottom: 1em;
   border-bottom: 2px solid ${(props) => props.theme.themeColors.light};
+
+  img {
+    border: 2px solid ${(props) => props.theme.themeColors.light};
+  }
+
   &.leader {
     img {
       border: 2px solid ${(props) => props.theme.brandDark};
@@ -52,10 +58,6 @@ const Address = styled.address`
   margin-bottom: 0;
 `;
 
-const OrgAncestorList = styled.div`
-  margin-top: 1em;
-`;
-
 const CollapseButton = styled(Button)`
   padding: 0;
 `;
@@ -79,11 +81,11 @@ query ContactDetails($id: ID!) {
 }`;
 
 const ContactDetails = (props) => {
-  const { id } = props;
+  const { t, id } = props;
   return (
     <Query query={GET_CONTACT_DETAILS} variables={{ id }}>
       {({ loading, error, data }) => {
-        if (loading) return <span>Ladataan</span>;
+        if (loading) return <span>{ t('loading') }</span>;
         if (error) return <span>{error.message}</span>;
         const { person } = data;
 
@@ -97,12 +99,18 @@ const ContactDetails = (props) => {
             {orgAncestors.length > 1 && (
               <PersonOrg>
                 {orgAncestors.map((item) => (
-                  <span key={item.key}>{item.name} / </span>
+                  <span key={item.key}>
+                    {item.name}
+                    {' '}
+                    /
+                    {' '}
+                  </span>
                 ))}
               </PersonOrg>
             )}
             <Address>
-              Sähköposti:
+              { t('email') }
+              :
               {' '}
               <a href={`mailto:${person.email}`}>{person.email}</a>
             </Address>
@@ -117,16 +125,15 @@ class ContactPerson extends React.Component {
   constructor(props) {
     super(props);
     this.toggle = this.toggle.bind(this);
+    this.state = { collapse: false };
   }
-
-  state = { collapse: false };
 
   toggle() {
     this.setState((state) => ({ collapse: !state.collapse }));
   }
 
   render() {
-    const { person, leader } = this.props;
+    const { t, person, leader } = this.props;
     const { collapse } = this.state;
     let isLeader = '';
     isLeader = leader ? 'leader' : '';
@@ -155,17 +162,26 @@ class ContactPerson extends React.Component {
               aria-expanded={collapse}
               aria-controls={`contact-${person.id}`}
             >
-              Yhteystiedot
+              { t('contact-info') }
             </CollapseButton>
+            <Collapse isOpen={collapse} id={`contact-${person.id}`}>
+              {collapse && <ContactDetails id={person.id} t={t} />}
+            </Collapse>
           </PersonDetails>
         </Media>
-        <Collapse isOpen={collapse} id={`contact-${person.id}`}>
-          {collapse && <ContactDetails id={person.id}/>}
-        </Collapse>
       </Person>
     );
   }
 }
+
+ContactPerson.defaultProps = {
+  leader: false,
+};
+
+ContactDetails.propTypes = {
+  id: PropTypes.string.isRequired,
+  t: PropTypes.func.isRequired,
+};
 
 ContactPerson.propTypes = {
   person: PropTypes.shape({
@@ -178,6 +194,8 @@ ContactPerson.propTypes = {
       name: PropTypes.string,
     }),
   }).isRequired,
+  leader: PropTypes.bool,
+  t: PropTypes.func.isRequired,
 };
 
-export default ContactPerson;
+export default withTranslation('common')(ContactPerson);

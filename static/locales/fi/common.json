@@ -12,5 +12,13 @@
     "goal": "tavoite",
     "forecast": "ennuste",
     "current-trend": "nykytrendi",
-    "percent-point-abbreviation": "%-yks."
+    "percent-point-abbreviation": "%-yks.",
+    "responsible-parties": "Vastuuorganisaatiot",
+    "responsible-parties-missing": "Ei merkittyjä vastuuorganisaatioita",
+    "responsible-party-main": "Päävastuuorganisaatio",
+    "contact-persons": "Yhteyshewnkilöt",
+    "contact-persons-missing": "Ei merkittyjä yhteyshenkilöitä",
+    "contact-person-main": "Pääyhteyshenkilö",
+    "contact-info": "Yhteystiedot",
+    "email": "Sähköposti"
 }
