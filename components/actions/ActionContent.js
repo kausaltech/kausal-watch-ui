@@ -194,8 +194,8 @@ function ActionDetails(props) {
             <Container>
               <Row>
                 <Col md="10">
-                  <Link href="/#actions">
-                    <a href>
+                  <Link href="/actions/">
+                    <a>
                       <h4>{ t('actions') }</h4>
                     </a>
                   </Link>
@@ -382,8 +382,8 @@ class ActionContent extends React.Component {
 }
 
 ActionDetails.propTypes = {
-  action: PropTypes.string.isRequired,
-  plan: PropTypes.string.isRequired,
+  action: PropTypes.shape({}).isRequired,
+  plan: PropTypes.shape({}).isRequired,
   t: PropTypes.func.isRequired,
   theme: PropTypes.shape({
     brandLight: PropTypes.string.isRequired,
