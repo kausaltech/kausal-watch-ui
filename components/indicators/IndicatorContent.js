@@ -31,6 +31,7 @@ const GET_INDICATOR_DETAILS = gql`
       description
       timeResolution
       unit {
+        id
         name
         shortName
         verboseName
@@ -40,10 +41,12 @@ const GET_INDICATOR_DETAILS = gql`
         id
       }
       values {
+        id
         date
         value
       }
       goals(plan: $plan) {
+        id
         date
         value
       }

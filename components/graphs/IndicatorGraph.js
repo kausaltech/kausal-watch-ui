@@ -24,17 +24,21 @@ const GET_INDICATOR_GRAPH_DATA = gql`
         data
       }
       quantity {
+        id
         name
       }
       values {
+        id
         date
         value
       }
       goals(plan: $plan) {
+        id
         date
         value
       }
       unit {
+        id
         name
         shortName
         verboseName

@@ -52,6 +52,7 @@ query ActionDetails($plan: ID!, $id: ID!) {
       }
     }
     contactPersons {
+      id
       person {
         id
         firstName
@@ -87,6 +88,7 @@ query ActionDetails($plan: ID!, $id: ID!) {
       id
     }
     relatedIndicators {
+      id
       indicator {
         id
         name
@@ -94,6 +96,7 @@ query ActionDetails($plan: ID!, $id: ID!) {
           id
         }
         latestValue {
+          id
           date
           value
         }
@@ -105,9 +108,11 @@ query ActionDetails($plan: ID!, $id: ID!) {
       }
     }
     nextAction {
+      id
       identifier
     }
     previousAction {
+      id
       identifier
     }
   }
