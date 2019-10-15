@@ -199,10 +199,10 @@ function IndicatorLatestValue(props) {
 
   return (
     <IndicatorValue>
-      {indicator.latest_value.value.toFixed(2).replace('.', ',')}
+      {Number.isInteger(latestValue.value) ? latestValue.value : latestValue.value.toFixed(2).replace('.', ',')}
       {' '}
       <IndicatorValueUnit>
-        {indicator.latest_value.unit}
+        {latestValue.unit}
       </IndicatorValueUnit>
       <IndicatorValueTime>
         <time dateTime={tagVal}>{formattedTime}</time>
