@@ -80,8 +80,10 @@ BadgeTooltip.propTypes = {
   name: PropTypes.string.isRequired,
   id: PropTypes.string.isRequired,
   size: PropTypes.string,
-  link: PropTypes.string,
-
+  link: PropTypes.PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.object,
+  ]),
 };
 
 export default BadgeTooltip;

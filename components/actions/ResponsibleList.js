@@ -52,6 +52,7 @@ function ResponsibleList(props) {
       { data
         ? data.map((item, index) => (
           <ResponsibleBadge
+            key={item.id}
             index={index}
             id={item.id}
             name={item.name}
@@ -65,7 +66,7 @@ function ResponsibleList(props) {
 
 ResponsibleBadge.propTypes = {
   id: PropTypes.string.isRequired,
-  index: PropTypes.string.isRequired,
+  index: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
   abbreviation: PropTypes.string.isRequired,
 };
