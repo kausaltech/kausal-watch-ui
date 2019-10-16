@@ -51,11 +51,9 @@ class ActionListPage extends React.Component {
 
     return (
       <Layout>
-        <Container>
-          {!process.browser ? <ContentLoader /> : (
-            <ActionList plan={plan} filters={filters} onFilterChange={this.handleFilterChange} />
-          )}
-        </Container>
+        {!process.browser ? <ContentLoader /> : (
+          <ActionList plan={plan} filters={filters} onFilterChange={this.handleFilterChange} />
+        )}
       </Layout>
     );
   }

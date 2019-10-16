@@ -3,11 +3,20 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
+import {
+  Container
+} from 'reactstrap';
+import styled from 'styled-components';
+import { withTranslation } from '../../common/i18n';
 import ContentLoader from '../common/ContentLoader';
 import PlanContext from '../../context/plan';
 import ActionListFilters from './ActionListFilters';
 import ActionCardList from './ActionCardList';
 
+const ActionListHeader = styled.div`
+  padding-top: 3rem;
+  background-color: ${(props) => props.theme.brandLight};
+`;
 
 export const GET_ACTION_LIST = gql`
   query ActionList($plan: ID!) {
@@ -128,13 +137,13 @@ class ActionListFiltered extends React.Component {
       if (organization) {
         if (!item.responsibleParties.find(rp => rp.organization.id === organization)) return false;
       }
+      if (impact && (!item.impact || (item.impact.id !== impact))) return false;
       if (text) {
         const searchStr = text.toLowerCase();
         if (item.identifier.toLowerCase().startsWith(searchStr)) return true;
         if (item.name.toLowerCase().search(searchStr) !== -1) return true;
         return false;
       }
-      if (impact && (!item.impact || (item.impact.id !== impact))) return false;
       return true;
     });
 
@@ -142,15 +151,27 @@ class ActionListFiltered extends React.Component {
   }
 
   render() {
-    const { filters } = this.props;
+    const { t, filters } = this.props;
     const actions = this.filterActions();
     const impacts = this.context.actionImpacts;
-
     return (
       <div id="actions">
-        <h2 className="mb-5">Toimenpiteet</h2>
-        <ActionListFilters cats={this.cats} orgs={this.orgs} impacts={impacts} filters={filters} onChange={this.handleChange} />
-        <ActionCardList actions={actions} />
+        <ActionListHeader>
+          <Container>
+            <h1 className="mb-5">{ t('actions') }</h1>
+            <ActionListFilters
+              cats={this.cats}
+              orgs={this.orgs}
+              impacts={impacts}
+              filters={filters}
+              onChange={this.handleChange}
+              actionCount={actions.length}
+            />
+          </Container>
+        </ActionListHeader>
+        <Container>
+          <ActionCardList actions={actions} />
+        </Container>
       </div>
     );
   }
@@ -175,17 +196,17 @@ class ActionList extends React.Component {
   }
 
   render() {
-    const { plan, filters, onFilterChange } = this.props;
+    const { t, plan, filters, onFilterChange } = this.props;
     return (
       <Query query={GET_ACTION_LIST} variables={{ plan: plan.identifier }}>
         {({ data, loading, error }) => {
           if (loading) return <ContentLoader />;
-          if (error) return <p>Virhe</p>;
-          return <ActionListFiltered plan={plan} filters={filters} onFilterChange={onFilterChange} {...data} />;
+          if (error) return <p>{ t('error-loading-actions') }</p>;
+          return <ActionListFiltered t={t} plan={plan} filters={filters} onFilterChange={onFilterChange} {...data} />;
         }}
       </Query>
     );
   }
 }
 
-export default ActionList;
+export default withTranslation('common')(ActionList);

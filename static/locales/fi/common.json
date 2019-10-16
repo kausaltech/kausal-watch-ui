@@ -39,5 +39,15 @@
     "next": "Seuraava",
     "action-previous": "Edellinen toimenpide",
     "action-next": "Seuraava toimenpide",
-    "impact": "vaikutus"
+    "impact": "vaikutus",
+    "filter-category": "Rajaa teeman mukaan",
+    "filter-all-categories": "Kaikki teemat",
+    "filter-all-organizations": "Kaikki organisaatiot",
+    "filter-all-impacts": "Ei vaikutusrajausta",
+    "filter-organization": "Rajaa vastuuorganisaation mukaan",
+    "filter-impact": "Rajaa vaikuttavuuden mukaan",
+    "filter-text": "Tekstihaku",
+    "filter-text-default": "Etsi otsikoista",
+    "filter-result-actions": "toimenpidettä",
+    "error-loading-actions": "Virhe toimenpiteiden latauksessa"
 }

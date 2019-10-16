@@ -39,5 +39,15 @@
     "next": "Next",
     "action-previous": "Previous action",
     "action-next": "Next action",
-    "impact": "impact"
+    "impact": "impact",
+    "filter-category": "Filter by theme",
+    "filter-all-categories": "All themes",
+    "filter-all-organizations": "All organizations",
+    "filter-all-impacts": "No impact filter",
+    "filter-organization": "Filter by organization",
+    "filter-impact": "Filter by impact",
+    "filter-text": "Text search",
+    "filter-text-default": "Search from headers",
+    "filter-result-actions": "actions",
+    "error-loading-actions": "Error loading the actions list"
 }
