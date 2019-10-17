@@ -14,7 +14,7 @@ import PlanContext from '../../context/plan';
 import ContentLoader from '../common/ContentLoader';
 import ErrorMessage from '../common/ErrorMessage';
 import ErrorBoundary from '../common/ErrorBoundary';
-import { SubpageTitle } from '../layout';
+import { Meta } from '../layout';
 
 import IndicatorGraph from '../graphs/IndicatorGraph';
 import IndicatorValueSummary from './IndicatorValueSummary';
@@ -75,7 +75,10 @@ function IndicatorDetails(props) {
   const { indicator, plan } = props;
   return (
     <div className="mb-5">
-      <SubpageTitle title={indicator.name} />
+      <Meta
+        title={`Mittarit`}
+        description={`${indicator.name}`}
+        />
       <IndicatorHero>
         <Container>
           <h5><Link href="/indicators"><a>Mittarit</a></Link></h5>

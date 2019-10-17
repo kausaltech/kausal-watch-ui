@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Head from 'next/head';
-import dynamic from 'next/dynamic';
 
 import { ThemeProvider } from 'styled-components';
 
@@ -17,12 +16,12 @@ function Layout({ children }) {
   return (
     <ThemeProvider theme={theme}>
       <PlanContext.Consumer>
-        {plan => (
+        {(plan) => (
           <div>
+            <Meta />
             <Head>
-              <title key="head-title">{plan.name}</title>
-              <meta property="og:title" key="head-og-title" content={plan.name} />
               <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+              <meta property="og:type" content="website" />
               {plan.currentURL &&
                 <meta property="og:url" content={plan.currentURL.domain + plan.currentURL.path} />
               }
@@ -44,22 +43,36 @@ Layout.propTypes = {
 export default Layout;
 
 
-export class SubpageTitle extends React.Component {
+export class Meta extends React.Component {
   static contextType = PlanContext;
 
   render() {
-    const { title } = this.props;
+    const { title, shareImageUrl, description } = this.props;
     const plan = this.context;
+    const pageTitle = title ? `${title} | ${plan.name}` : plan.name;
+    const ogTitle = pageTitle;
+    const ogDescription = description ? description : 'Hiilineutraali Helsinki 2035 toimenpideohjelman seurantapalvelu';
+    const ogImage = shareImageUrl ? shareImageUrl : plan.imageUrl;
 
     return (
       <Head>
-        <title key="head-title">{`${title} | ${plan.name}`}</title>
-        <meta property="og:title" key="head-og-title" content={title} />
+        <title key="head-title">{pageTitle}</title>
+        <meta property="og:title" key="head-og-title" content={ogTitle} />
+        <meta property="og:description" content={ogDescription} />
+        <meta property="og:image" content={ogImage} />
       </Head>
     );
   }
 }
 
-SubpageTitle.propTypes = {
-  title: PropTypes.string.isRequired,
+Meta.defaultProps = {
+  title: null,
+  shareImageUrl: null,
+  description: null,
+};
+
+Meta.propTypes = {
+  title: PropTypes.string,
+  shareImageUrl: PropTypes.string,
+  description: PropTypes.string,
 };

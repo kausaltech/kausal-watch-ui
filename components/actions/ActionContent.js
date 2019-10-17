@@ -26,7 +26,7 @@ import ActionPager from './ActionPager';
 import ActionUpdatesList from './ActionUpdatesList';
 import ContentLoader from '../common/ContentLoader';
 import Icon from '../common/Icon';
-import { SubpageTitle } from '../layout';
+import { Meta } from '../layout';
 import ErrorMessage from '../common/ErrorMessage';
 
 
@@ -175,6 +175,40 @@ const SolidSection = styled.div`
   margin-bottom: 3rem;
 `;
 
+function getImageURL(plan, action, width, height) {
+  let url;
+  if (action.imageUrl) {
+    url = action.imageUrl;
+  } else {
+    action.categories.forEach((cat) => {
+      if (url) return;
+      let parent = cat;
+      while (parent) {
+        if (parent.imageUrl) {
+          url = parent.imageUrl;
+          return;
+        }
+        parent = parent.parent;
+      }
+    });
+  }
+  if (!url) {
+    url = plan.imageUrl;
+  }
+
+  const params = [];
+  if (height) {
+    params.push(`height=${height}`);
+  }
+  if (width) {
+    params.push(`width=${width}`);
+  }
+  if (params.length) {
+    url += `?${params.join('&')}`;
+  }
+  return url;
+}
+
 function ActionDetails(props) {
   const {
     t,
@@ -187,7 +221,11 @@ function ActionDetails(props) {
 
   return (
     <div>
-      <SubpageTitle title={action.name} />
+      <Meta
+        title={`${t('action')} ${action.identifier}`}
+        shareImageUrl={getImageURL(plan, action, 1200, 630)}
+        description={`${action.name}`}
+        />
       <ActionHero>
         <ActionBgImage action={action} width={1200} height={600} color={theme.imageOverlay}>
           <OverlayContainer>

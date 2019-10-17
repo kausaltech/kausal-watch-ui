@@ -6,6 +6,7 @@ import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 
 import Layout from '../components/layout';
+import { Meta } from '../components/layout';
 import PlanContext from '../context/plan';
 import ErrorMessage from '../components/common/ErrorMessage';
 import { Accordion } from '../components/common/Accordion';
@@ -108,6 +109,11 @@ const Content = (props) => {
 
   return (
     <article>
+      <Meta
+        title={`${title}`}
+        shareImageUrl={imageUrl}
+        description={`${tagline}`}
+        />
       { imageUrl && <HeaderImage image={imageUrl} /> }
       <HeaderBg>
         <Container>

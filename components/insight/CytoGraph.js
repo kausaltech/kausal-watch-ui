@@ -8,7 +8,7 @@ import styled, { withTheme } from 'styled-components';
 import cytoscape from 'cytoscape';
 import dagre from 'cytoscape-dagre';
 import { withTranslation } from '../../common/i18n';
-
+import { Meta } from '../../components/layout';
 import { Router } from '../../routes';
 import InsightFilter from './InsightFilter';
 
@@ -372,6 +372,10 @@ class CytoGraph extends React.Component {
 
     return (
       <div>
+        <Meta
+          title={`${t('indicators')}`}
+          description={`Toimenpiteiden edistymistä ja kasvihuonekaasupäästöjen kehitystä seurataan mittareilla`}
+          />
         <Container>
           <Row>
             <Col sm="8" lg="6">

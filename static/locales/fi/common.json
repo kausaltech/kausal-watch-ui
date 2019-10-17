@@ -1,6 +1,7 @@
 {
     "indicators": "Mittarit",
     "actions": "Toimenpiteet",
+    "action": "Toimenpide",
     "instance-type-testing-label": "Testi",
     "instance-type-testing-message": "Tämä on palvelun testiversio",
     "instance-type-development-label": "Kehitys",

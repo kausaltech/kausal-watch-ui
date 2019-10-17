@@ -11,7 +11,7 @@ import { IndicatorLink } from '../../common/links';
 import Icon from '../common/Icon';
 import ContentLoader from '../common/ContentLoader';
 import PlanContext from '../../context/plan';
-import { SubpageTitle } from '../layout';
+import { Meta } from '../layout';
 import ErrorMessage from '../common/ErrorMessage';
 
 import IndicatorListFilters from './IndicatorListFilters';
@@ -157,6 +157,10 @@ class FilteredIndicatorList extends React.Component {
 
     return (
       <div className="mb-5 pb-5">
+        <Meta
+          title={`Mittarit`}
+          description={`Toimenpiteiden edistymistä ja kasvihuonekaasupäästöjen kehitystä seurataan mittareilla`}
+          />
         <IndicatorListFilters cats={this.props.categories} changeOption={this.handleChange} />
         <Table hover>
           <tbody>
