@@ -75,13 +75,17 @@ class ActionListFilters extends React.Component {
     const orgs = this.props.orgs.slice(0)
       .sort((a, b) => a.name.localeCompare(b.name));
 
+    const category = filters.category === undefined ? '' : filters.category;
+    const organization = filters.organization === undefined ? '' : filters.organization;
+    const impact = filters.impact === undefined ? '' : filters.impact;
+
     return (
       <div className="filters mb-5 text-left">
         <Row>
           <Col sm="12" md={{ size: 6 }}>
             <FormGroup>
               <Label for="catfield">{ t('filter-category') }</Label>
-              <CustomInput type="select" id="catfield" name="category" value={filters.category} onChange={this.onCatBtnClick} className="mb-2">
+              <CustomInput type="select" id="catfield" name="category" value={category} onChange={this.onCatBtnClick} className="mb-2">
                 <option value="">{ t('filter-all-categories') }</option>
                 {rootCategories.map(cat => (
                   <option value={cat.id} key={cat.id}>{ this.getCategoryName(cat.id) }</option>
@@ -93,7 +97,7 @@ class ActionListFilters extends React.Component {
           <Col sm="12" md={{ size: 6 }}>
             <FormGroup>
               <Label for="orgfield">{ t('filter-organization') }</Label>
-              <CustomInput type="select" id="orgfield" name="organization" value={filters.organization} onChange={this.onOrgBtnClick} className="mb-2">
+              <CustomInput type="select" id="orgfield" name="organization" value={organization} onChange={this.onOrgBtnClick} className="mb-2">
                 <option value="">{ t('filter-all-organizations') }</option>
                 {orgs.map((org) => (
                   <option value={org.id} key={org.id}>{ this.getOrganizationName(org.id) }</option>
@@ -104,7 +108,7 @@ class ActionListFilters extends React.Component {
           <Col sm="12" md={{ size: 6 }}>
             <FormGroup>
               <Label for="impactfield">{ t('filter-impact') }</Label>
-              <CustomInput type="select" id="impactfield" name="impact" value={filters.impact} onChange={this.onImpactBtnClick} className="mb-2">
+              <CustomInput type="select" id="impactfield" name="impact" value={impact} onChange={this.onImpactBtnClick} className="mb-2">
                 <option value="">{ t('filter-all-impacts') }</option>
                 {impacts.map((impact) => (
                   <option value={impact.id} key={impact.id}>{ impact.name }</option>
