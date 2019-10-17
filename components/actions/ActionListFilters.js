@@ -112,9 +112,7 @@ class ActionListFilters extends React.Component {
               </CustomInput>
             </FormGroup>
           </Col>
-        </Row>
-        <Row>
-          <Col sm="12">
+          <Col sm="12" md={{ size: 6 }}>
             <FormGroup>
               <Label for="searchfield">{ t('filter-text') }</Label>
               <Input name="search" id="searchfield" placeholder={t('filter-text-default')} value={filters.text || ''} onChange={this.onSearchChange} />

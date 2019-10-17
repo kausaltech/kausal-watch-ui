@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
 import {
-  Container
+  Container, Row, Col
 } from 'reactstrap';
 import styled from 'styled-components';
 import { withTranslation } from '../../common/i18n';
@@ -15,6 +15,7 @@ import ActionCardList from './ActionCardList';
 
 const ActionListHeader = styled.div`
   padding-top: 3rem;
+  margin-bottom: 3rem;
   background-color: ${(props) => props.theme.brandLight};
 `;
 
@@ -159,14 +160,18 @@ class ActionListFiltered extends React.Component {
         <ActionListHeader>
           <Container>
             <h1 className="mb-5">{ t('actions') }</h1>
-            <ActionListFilters
-              cats={this.cats}
-              orgs={this.orgs}
-              impacts={impacts}
-              filters={filters}
-              onChange={this.handleChange}
-              actionCount={actions.length}
-            />
+            <Row>
+              <Col sm="12" md={{ size: 10 }}>
+                <ActionListFilters
+                  cats={this.cats}
+                  orgs={this.orgs}
+                  impacts={impacts}
+                  filters={filters}
+                  onChange={this.handleChange}
+                  actionCount={actions.length}
+                />
+              </Col>
+            </Row>
           </Container>
         </ActionListHeader>
         <Container>
