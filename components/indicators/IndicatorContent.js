@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import {
-  Jumbotron as BaseJumbotron, Container, Row, Col, Alert, Badge
+  Jumbotron as BaseJumbotron, Container, Row, Col, Alert, Badge, Table
 } from 'reactstrap';
 import styled from 'styled-components';
 import { Query } from 'react-apollo';
@@ -14,12 +14,14 @@ import PlanContext from '../../context/plan';
 import ContentLoader from '../common/ContentLoader';
 import ErrorMessage from '../common/ErrorMessage';
 import ErrorBoundary from '../common/ErrorBoundary';
+import { ActionLink } from '../../common/links';
 import { Meta } from '../layout';
 
 import IndicatorGraph from '../graphs/IndicatorGraph';
 import IndicatorValueSummary from './IndicatorValueSummary';
 import IndicatorCard from './IndicatorCard';
-import ActionCard from '../actions/ActionCard';
+import ActionImpact from '../actions/ActionImpact';
+import ActionStatus from '../actions/ActionStatus';
 
 
 const GET_INDICATOR_DETAILS = gql`
@@ -52,7 +54,20 @@ const GET_INDICATOR_DETAILS = gql`
         value
       }
       actions(plan: $plan) {
-        ...ActionCard
+        id
+        identifier
+        name
+        status {
+          id
+          identifier
+          name
+        }
+        completion
+        impact {
+          id
+          identifier
+          name
+        }
       }
       relatedCauses {
         id
@@ -76,12 +91,11 @@ const GET_INDICATOR_DETAILS = gql`
       }
     }
   }
-  ${ActionCard.fragments.action}
 `;
 
 const IndicatorHero = styled(BaseJumbotron)`
   margin-bottom: 2rem;
-  
+
   a {
     color: inherit;
   }
@@ -163,7 +177,7 @@ function IndicatorDetails(props) {
         <Container>
           <IndicatorLevel level={indicator.level}><Link href="/indicators"><a>{ getLevelName(indicator.level) }</a></Link></IndicatorLevel>
           <h1>{indicator.name}</h1>
-          { (indicator.goals.length > 0  || indicator.goals.length > 0) && 
+          { (indicator.goals.length > 0  || indicator.goals.length > 0) &&
           <IndicatorValueSummary timeResolution={indicator.timeResolution} values={indicator.values} unit={indicator.unit} goals={indicator.goals}/>}
         </Container>
       </IndicatorHero>
@@ -217,24 +231,45 @@ function IndicatorDetails(props) {
         <Section>
           <Container>
             <Row>
-              <Col>
+              <Col className="mb-4">
                 <h3>Mittariin liittyvät toimenpiteet</h3>
               </Col>
             </Row>
             <Row>
-              { indicator.actions
-                ? indicator.actions.map(action => (
-                  <Col lg="4" md="4" key={action.id}>
-                    <IndicatorCard
-                      objectid={ action.identifier }
-                      name={ action.name }
-                      level="action"
-                      number={ action.identifier }
-                      />
-                  </Col>
-                ))
-                : <h6>Ei suoria toimenpiteitä</h6>
-              }
+              <Col>
+                <Table hover responsive>
+                  <thead>
+                    <tr>
+                      <th colSpan="2" scope="col">Toimenpide</th>
+                      <th scope="col">Eteneminen</th>
+                      <th scope="col">Vaikuttavuus</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    { indicator.actions.map((action) => (
+                      <ActionLink id={action.identifier} key={action.id}>
+                        <tr>
+                          <td><strong>{ action.identifier }</strong></td>
+                          <td>{ action.name }</td>
+                          <td width="200">
+                            <ActionStatus
+                              identifier={action.status.identifier}
+                              name={action.status.name}
+                              completion={action.status.completion}
+                            />
+                          </td>
+                          <td>
+                            <ActionImpact
+                              identifier={action.impact.identifier}
+                              name={action.impact.name}
+                            />
+                          </td>
+                        </tr>
+                      </ActionLink>
+                    ))}
+                  </tbody>
+                </Table>
+              </Col>
             </Row>
           </Container>
         </Section>
@@ -279,5 +314,11 @@ class IndicatorContent extends React.Component {
 IndicatorContent.propTypes = {
   id: PropTypes.string.isRequired,
 };
+
+IndicatorDetails.propTypes = {
+  indicator: PropTypes.shape({
+    actions: PropTypes.shape({}).isRequired,
+  }).isRequired,
+}
 
 export default IndicatorContent;
