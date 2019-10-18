@@ -11,6 +11,7 @@ import gql from 'graphql-tag';
 import { Link } from '../../routes';
 import PlanContext from '../../context/plan';
 
+import { withTranslation } from '../../common/i18n';
 import ContentLoader from '../common/ContentLoader';
 import ErrorMessage from '../common/ErrorMessage';
 import ErrorBoundary from '../common/ErrorBoundary';
@@ -150,28 +151,17 @@ const CausalNavigation = styled.div`
   background-color: ${(props) => props.theme.themeColors.light};
 `;
 
-function getLevelName(level) {
-  switch (level) {
-    case 'action':
-      return 'Toimenpide';
-    case 'operational':
-      return 'Toiminnallinen mittari';
-    case 'tactical':
-      return 'Taktinen mittari';
-    case 'strategic':
-      return 'Strateginen mittari';
-    default:
-      return '';
-  }
+function getLevelName(level, t) {
+  return t(level);
 }
 
 function IndicatorDetails(props) {
-  const { indicator, plan } = props;
+  const { t, indicator, plan } = props;
 
   return (
     <div className="mb-5">
       <Meta
-        title={`Mittarit`}
+        title={t('indicators')}
         description={`${indicator.name}`}
         />
       <IndicatorHero level={indicator.level}>
@@ -179,7 +169,7 @@ function IndicatorDetails(props) {
           <IndicatorLevel level={indicator.level}>
             <Link href="/indicators">
               <a>
-                { getLevelName(indicator.level) }
+                { getLevelName(indicator.level, t) }
               </a>
             </Link>
           </IndicatorLevel>
@@ -203,10 +193,10 @@ function IndicatorDetails(props) {
         </Row>
         <Row>
           <Col className="mb-5">
-            <h2>Kuvaaja</h2>
+            <h2>{ t('graph') }</h2>
             {(indicator.latestGraph || indicator.values.length)
               ? <ErrorBoundary><IndicatorGraph indicator={indicator} plan={plan} /></ErrorBoundary>
-              : <Alert><h5>Ei kuvaajaa</h5></Alert>}
+              : <Alert><h5>{ t('no-graph') }</h5></Alert>}
           </Col>
         </Row>
       </Container>
@@ -215,7 +205,7 @@ function IndicatorDetails(props) {
           <Container>
             <Row>
               <Col className="mb-4">
-                <h3>Mittariin liittyvät toimenpiteet</h3>
+                <h3>{t('indicator-related-actions')}</h3>
               </Col>
             </Row>
             <Row>
@@ -223,9 +213,9 @@ function IndicatorDetails(props) {
                 <Table hover responsive>
                   <thead>
                     <tr>
-                      <th colSpan="2" scope="col">Toimenpide</th>
-                      <th scope="col">Eteneminen</th>
-                      <th scope="col">Vaikuttavuus</th>
+                      <th colSpan="2" scope="col">{ t('action') }</th>
+                      <th scope="col">{ t('action-progress') }</th>
+                      <th scope="col">{ t('action-impact') }</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -261,27 +251,29 @@ function IndicatorDetails(props) {
         <Container>
           <Row>
             <Col sm="6" lg={{ size: 5 }} className="mb-5">
-              <h4 className="mb-4">Mittariin vaikuttavat</h4>
+              <h4 className="mb-4">{ t('indicator-affected-by') }</h4>
               { indicator.relatedCauses
                 ? indicator.relatedCauses.map((cause) => (
                   <IndicatorCard
                     objectid={cause.causalIndicator.id}
                     name={cause.causalIndicator.name}
                     level={cause.causalIndicator.level}
+                    key={cause.causalIndicator.id}
                   />
-                )) : <Alert>Ei vaikuttavia</Alert>}
+                )) : <div />}
             </Col>
 
             <Col sm="6" lg={{ size: 5, offset: 2 }} className="mb-5">
-              <h4 className="mb-4">Mittari vaikuttaa</h4>
+              <h4 className="mb-4">{ t('indicator-has-effect-on') }</h4>
               { indicator.relatedEffects.length
                 ? indicator.relatedEffects.map((effect) => (
                   <IndicatorCard
                     objectid={effect.effectIndicator.id}
                     name={effect.effectIndicator.name}
                     level={effect.effectIndicator.level}
+                    key={effect.effectIndicator.id}
                   />
-                )) : <Alert>Ei vaikutusta</Alert>}
+                )) : <div />}
             </Col>
           </Row>
         </Container>
@@ -304,7 +296,7 @@ class IndicatorContent extends React.Component {
   static contextType = PlanContext;
 
   render() {
-    const { id } = this.props;
+    const { t, id } = this.props;
     const plan = this.context;
 
     return (
@@ -314,9 +306,9 @@ class IndicatorContent extends React.Component {
           if (error) return <ErrorMessage message={error.message} />;
           const { indicator } = data;
           if (!indicator) {
-            return <ErrorMessage statusCode={404} message="Mittaria ei löydy" />
+            return <ErrorMessage statusCode={404} message={ t('indicator-not-found') } />
           }
-          return <IndicatorDetails indicator={indicator} plan={plan} />;
+          return <IndicatorDetails indicator={indicator} plan={plan} t={t}/>;
         }}
       </Query>
     );
@@ -328,15 +320,15 @@ IndicatorContent.propTypes = {
 };
 
 IndicatorDetails.propTypes = {
-  plan: PropTypes.string.isRequired,
+  plan: PropTypes.shape({}).isRequired,
   indicator: PropTypes.shape({
-    actions: PropTypes.shape({}).isRequired,
-    relatedCauses: PropTypes.shape({}).isRequired,
-    relatedEffects: PropTypes.shape({}).isRequired,
+    actions: PropTypes.array.isRequired,
+    relatedCauses: PropTypes.array.isRequired,
+    relatedEffects: PropTypes.array.isRequired,
     name: PropTypes.string.isRequired,
     level: PropTypes.string.isRequired,
     timeResolution: PropTypes.string.isRequired,
   }).isRequired,
 }
 
-export default IndicatorContent;
+export default withTranslation('common')(IndicatorContent);

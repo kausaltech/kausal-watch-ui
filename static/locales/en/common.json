@@ -2,6 +2,9 @@
     "indicators": "Indicators",
     "actions": "Actions",
     "action": "Action",
+    "operational": "Operational indicator",
+    "tactical": "Tactical indicator",
+    "strategic": "Strategic indicator",
     "instance-type-testing-label": "Testing",
     "instance-type-testing-message": "This is a test version of the service",
     "instance-type-development-label": "Development",
@@ -50,5 +53,11 @@
     "filter-text": "Text search",
     "filter-text-default": "Search from headers",
     "filter-result-actions": "actions",
-    "error-loading-actions": "Error loading the actions list"
+    "error-loading-actions": "Error loading the actions list",
+    "indicator-related-actions": "Actions that have effect on this indicator",
+    "indicator-affected-by": "Indicator affected by",
+    "indicator-has-effect-on": "Indicator has effect on",
+    "indicator-not-found": "Indicator not found",
+    "graph": "Graph",
+    "no-graph": "No graph"
 }

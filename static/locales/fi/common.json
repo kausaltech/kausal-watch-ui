@@ -2,6 +2,9 @@
     "indicators": "Mittarit",
     "actions": "Toimenpiteet",
     "action": "Toimenpide",
+    "operational": "Toiminnallinen mittari",
+    "tactical": "Taktinen mittari",
+    "strategic": "Strateginen mittari",
     "instance-type-testing-label": "Testi",
     "instance-type-testing-message": "Tämä on palvelun testiversio",
     "instance-type-development-label": "Kehitys",
@@ -50,5 +53,11 @@
     "filter-text": "Tekstihaku",
     "filter-text-default": "Etsi otsikoista",
     "filter-result-actions": "toimenpidettä",
-    "error-loading-actions": "Virhe toimenpiteiden latauksessa"
+    "error-loading-actions": "Virhe toimenpiteiden latauksessa",
+    "indicator-related-actions": "Mittariin liittyvät toimenpiteet",
+    "indicator-affected-by": "Mittariin vaikuttavat",
+    "indicator-has-effect-on": "Mittari vaikuttaa",
+    "indicator-not-found": "Mittaria ei löydy",
+    "graph": "Kuvaaja",
+    "no-graph": "Ei kuvaajaa"
 }
