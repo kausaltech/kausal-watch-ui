@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import {
-  Jumbotron as BaseJumbotron, Container, Row, Col, Alert, Badge, Table
+  Jumbotron as BaseJumbotron, Container, Row, Col, Alert, Table,
 } from 'reactstrap';
 import styled from 'styled-components';
 import { Query } from 'react-apollo';
@@ -145,8 +145,9 @@ const Section = styled.section`
   }
 `;
 
-const CausalNavigation = styled.div `
-  background-color: ${props => props.theme.themeColors.light};
+const CausalNavigation = styled.div`
+  padding-top: 2rem;
+  background-color: ${(props) => props.theme.themeColors.light};
 `;
 
 function getLevelName(level) {
@@ -175,15 +176,28 @@ function IndicatorDetails(props) {
         />
       <IndicatorHero level={indicator.level}>
         <Container>
-          <IndicatorLevel level={indicator.level}><Link href="/indicators"><a>{ getLevelName(indicator.level) }</a></Link></IndicatorLevel>
+          <IndicatorLevel level={indicator.level}>
+            <Link href="/indicators">
+              <a>
+                { getLevelName(indicator.level) }
+              </a>
+            </Link>
+          </IndicatorLevel>
           <h1>{indicator.name}</h1>
           { (indicator.goals.length > 0  || indicator.goals.length > 0) &&
-          <IndicatorValueSummary timeResolution={indicator.timeResolution} values={indicator.values} unit={indicator.unit} goals={indicator.goals}/>}
+          (
+            <IndicatorValueSummary
+              timeResolution={indicator.timeResolution}
+              values={indicator.values}
+              unit={indicator.unit}
+              goals={indicator.goals}
+            />
+          )}
         </Container>
       </IndicatorHero>
       <Container>
         <Row>
-          <Col md="10"  className="mb-5">
+          <Col md="10" className="mb-5">
             <div className="mt-4" dangerouslySetInnerHTML={{ __html: indicator.description }} />
           </Col>
         </Row>
@@ -196,37 +210,6 @@ function IndicatorDetails(props) {
           </Col>
         </Row>
       </Container>
-      <CausalNavigation>
-        <Container>
-          <Row>
-            <Col md="6" className="mb-5">
-              <h4>->Tähän vaikuttaa</h4>
-              { indicator.relatedCauses
-                ? indicator.relatedCauses.map(cause => (
-                <IndicatorCard
-                  objectid={ cause.causalIndicator.id }
-                  name={ cause.causalIndicator.name }
-                  level={ cause.causalIndicator.level }
-                  />
-              )) : <Alert>Ei vaikuttavia</Alert>
-            }
-            </Col>
-
-            <Col md="6" className="mb-5">
-              <h4>Tämä vaikuttaa-></h4>
-              { indicator.relatedEffects.length
-                ? indicator.relatedEffects.map(effect => (
-                  <IndicatorCard
-                    objectid={ effect.effectIndicator.id }
-                    name={ effect.effectIndicator.name }
-                    level={ effect.effectIndicator.level }
-                    />
-              )) : <Alert>Ei vaikutusta</Alert>
-            }
-            </Col>
-          </Row>
-        </Container>
-      </CausalNavigation>
       { indicator.actions.length > 0 && (
         <Section>
           <Container>
@@ -274,6 +257,35 @@ function IndicatorDetails(props) {
           </Container>
         </Section>
       )}
+      <CausalNavigation>
+        <Container>
+          <Row>
+            <Col sm="6" lg={{ size: 5 }} className="mb-5">
+              <h4 className="mb-4">Mittariin vaikuttavat</h4>
+              { indicator.relatedCauses
+                ? indicator.relatedCauses.map((cause) => (
+                  <IndicatorCard
+                    objectid={cause.causalIndicator.id}
+                    name={cause.causalIndicator.name}
+                    level={cause.causalIndicator.level}
+                  />
+                )) : <Alert>Ei vaikuttavia</Alert>}
+            </Col>
+
+            <Col sm="6" lg={{ size: 5, offset: 2 }} className="mb-5">
+              <h4 className="mb-4">Mittari vaikuttaa</h4>
+              { indicator.relatedEffects.length
+                ? indicator.relatedEffects.map((effect) => (
+                  <IndicatorCard
+                    objectid={effect.effectIndicator.id}
+                    name={effect.effectIndicator.name}
+                    level={effect.effectIndicator.level}
+                  />
+                )) : <Alert>Ei vaikutusta</Alert>}
+            </Col>
+          </Row>
+        </Container>
+      </CausalNavigation>
     </div>
   );
 }
@@ -316,8 +328,14 @@ IndicatorContent.propTypes = {
 };
 
 IndicatorDetails.propTypes = {
+  plan: PropTypes.string.isRequired,
   indicator: PropTypes.shape({
     actions: PropTypes.shape({}).isRequired,
+    relatedCauses: PropTypes.shape({}).isRequired,
+    relatedEffects: PropTypes.shape({}).isRequired,
+    name: PropTypes.string.isRequired,
+    level: PropTypes.string.isRequired,
+    timeResolution: PropTypes.string.isRequired,
   }).isRequired,
 }
 
