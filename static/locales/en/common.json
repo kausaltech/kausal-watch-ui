@@ -54,9 +54,10 @@
     "filter-text-default": "Search from headers",
     "filter-result-actions": "actions",
     "error-loading-actions": "Error loading the actions list",
-    "indicator-related-actions": "Actions that have effect on this indicator",
-    "indicator-affected-by": "Indicator affected by",
-    "indicator-has-effect-on": "Indicator has effect on",
+    "indicator-related-actions": "Actions that impact this indicator",
+    "indicator-direct-impacts": "Direct effects",
+    "indicator-affected-by": "This indicator is affected by",
+    "indicator-has-effect-on": "This indicator has effect on",
     "indicator-not-found": "Indicator not found",
     "graph": "Graph",
     "no-graph": "No graph"

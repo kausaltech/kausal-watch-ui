@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import {
-  Jumbotron as BaseJumbotron, Container, Row, Col, Alert, Table,
+  Jumbotron as BaseJumbotron, Container, Row, Col, Alert,
 } from 'reactstrap';
 import styled from 'styled-components';
 import { Query } from 'react-apollo';
@@ -15,14 +15,12 @@ import { withTranslation } from '../../common/i18n';
 import ContentLoader from '../common/ContentLoader';
 import ErrorMessage from '../common/ErrorMessage';
 import ErrorBoundary from '../common/ErrorBoundary';
-import { ActionLink } from '../../common/links';
 import { Meta } from '../layout';
 
 import IndicatorGraph from '../graphs/IndicatorGraph';
 import IndicatorValueSummary from './IndicatorValueSummary';
 import IndicatorCard from './IndicatorCard';
-import ActionImpact from '../actions/ActionImpact';
-import ActionStatus from '../actions/ActionStatus';
+import ActionsTable from '../actions/ActionsTable';
 
 
 const GET_INDICATOR_DETAILS = gql`
@@ -55,20 +53,7 @@ const GET_INDICATOR_DETAILS = gql`
         value
       }
       actions(plan: $plan) {
-        id
-        identifier
-        name
-        status {
-          id
-          identifier
-          name
-        }
-        completion
-        impact {
-          id
-          identifier
-          name
-        }
+        ...ActionsTable
       }
       relatedCauses {
         id
@@ -92,6 +77,7 @@ const GET_INDICATOR_DETAILS = gql`
       }
     }
   }
+  ${ActionsTable.fragments.action}
 `;
 
 const IndicatorHero = styled(BaseJumbotron)`
@@ -102,7 +88,7 @@ const IndicatorHero = styled(BaseJumbotron)`
   }
 `;
 
-const IndicatorLevel = styled.h6 `
+const IndicatorLevel = styled.h6`
   display: inline-block;
   border-radius: .75em;
   padding: .25em 1em;
@@ -163,7 +149,7 @@ function IndicatorDetails(props) {
       <Meta
         title={t('indicators')}
         description={`${indicator.name}`}
-        />
+      />
       <IndicatorHero level={indicator.level}>
         <Container>
           <IndicatorLevel level={indicator.level}>
@@ -205,75 +191,59 @@ function IndicatorDetails(props) {
           <Container>
             <Row>
               <Col className="mb-4">
-                <h3>{t('indicator-related-actions')}</h3>
+                <h2>{t('indicator-related-actions')}</h2>
               </Col>
             </Row>
             <Row>
               <Col>
-                <Table hover responsive>
-                  <thead>
-                    <tr>
-                      <th colSpan="2" scope="col">{ t('action') }</th>
-                      <th scope="col">{ t('action-progress') }</th>
-                      <th scope="col">{ t('action-impact') }</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    { indicator.actions.map((action) => (
-                      <ActionLink id={action.identifier} key={action.id}>
-                        <tr>
-                          <td><strong>{ action.identifier }</strong></td>
-                          <td>{ action.name }</td>
-                          <td width="200">
-                            <ActionStatus
-                              identifier={action.status.identifier}
-                              name={action.status.name}
-                              completion={action.status.completion}
-                            />
-                          </td>
-                          <td>
-                            <ActionImpact
-                              identifier={action.impact.identifier}
-                              name={action.impact.name}
-                            />
-                          </td>
-                        </tr>
-                      </ActionLink>
-                    ))}
-                  </tbody>
-                </Table>
+                <ActionsTable
+                  actions={indicator.actions}
+                />
               </Col>
             </Row>
           </Container>
         </Section>
       )}
+      <Container>
+        <Row>
+          <Col className="mb-4">
+            <h2>{ t('indicator-direct-impacts') }</h2>
+          </Col>
+        </Row>
+      </Container>
       <CausalNavigation>
         <Container>
           <Row>
             <Col sm="6" lg={{ size: 5 }} className="mb-5">
-              <h4 className="mb-4">{ t('indicator-affected-by') }</h4>
-              { indicator.relatedCauses
-                ? indicator.relatedCauses.map((cause) => (
-                  <IndicatorCard
-                    objectid={cause.causalIndicator.id}
-                    name={cause.causalIndicator.name}
-                    level={cause.causalIndicator.level}
-                    key={cause.causalIndicator.id}
-                  />
-                )) : <div />}
+              { indicator.relatedCauses.length > 0 && (
+                <div>
+                  <h3 className="mb-4">{ t('indicator-affected-by') }</h3>
+                  { indicator.relatedCauses.map((cause) => (
+                    <IndicatorCard
+                      objectid={cause.causalIndicator.id}
+                      name={cause.causalIndicator.name}
+                      level={cause.causalIndicator.level}
+                      key={cause.causalIndicator.id}
+                    />
+                  ))}
+                </div>
+              )}
             </Col>
 
             <Col sm="6" lg={{ size: 5, offset: 2 }} className="mb-5">
-              <h4 className="mb-4">{ t('indicator-has-effect-on') }</h4>
-              { indicator.relatedEffects.length
-                ? indicator.relatedEffects.map((effect) => (
-                  <IndicatorCard
-                    objectid={effect.effectIndicator.id}
-                    name={effect.effectIndicator.name}
-                    level={effect.effectIndicator.level}
-                    key={effect.effectIndicator.id}
-                  />
-                )) : <div />}
+              { indicator.relatedEffects.length > 0 && (
+                <div>
+                  <h3 className="mb-4">{ t('indicator-has-effect-on') }</h3>
+                  { indicator.relatedEffects.map((effect) => (
+                    <IndicatorCard
+                      objectid={effect.effectIndicator.id}
+                      name={effect.effectIndicator.name}
+                      level={effect.effectIndicator.level}
+                      key={effect.effectIndicator.id}
+                    />
+                  ))}
+                </div>
+              )}
             </Col>
           </Row>
         </Container>
@@ -317,6 +287,7 @@ class IndicatorContent extends React.Component {
 
 IndicatorContent.propTypes = {
   id: PropTypes.string.isRequired,
+  t: PropTypes.func.isRequired,
 };
 
 IndicatorDetails.propTypes = {
@@ -329,6 +300,7 @@ IndicatorDetails.propTypes = {
     level: PropTypes.string.isRequired,
     timeResolution: PropTypes.string.isRequired,
   }).isRequired,
+  t: PropTypes.func.isRequired,
 }
 
 export default withTranslation('common')(IndicatorContent);
