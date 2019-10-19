@@ -17,7 +17,10 @@ export default class Error extends React.Component {
       statusCode = null;
     }
 
-    return { statusCode };
+    return {
+      statusCode,
+      namespacesRequired: ['common'],
+    };
   }
 
   render() {
