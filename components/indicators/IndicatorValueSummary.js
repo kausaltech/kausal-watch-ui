@@ -42,6 +42,7 @@ function IndicatorValueSummary({ timeResolution, values, goals, unit, t }) {
   const pluralUnitName = unit.verboseNamePlural || unit.verboseName || unit.shortName || unit.name;
   const shortUnitName = unit.shortName || unit.name;
   const diffUnitName = unit.name === '%' ? t('percent-point-abbreviation') : shortUnitName;
+  const now = moment();
   let timeFormat = 'D.M.YYYY';
 
   if (timeResolution === 'YEAR') {
@@ -61,11 +62,11 @@ function IndicatorValueSummary({ timeResolution, values, goals, unit, t }) {
       absChange = latestValue.value - values[values.length - 2].value;
       relChange = latestValue.value ? absChange / latestValue.value : 0;
       if (desirableDirection) {
-        if ((absChange > 0 && desirableDirection == '+') ||
-            (absChange < 0 && desirableDirection == '-')) {
+        if ((absChange > 0 && desirableDirection === '+') ||
+            (absChange < 0 && desirableDirection === '-')) {
           desirableChange = true;
           changeColor = 'green';
-        } else if (absChange == 0) {
+        } else if (absChange === 0) {
           desirableChange = null;
           changeColor = 'grey';
         } else {
@@ -99,9 +100,10 @@ function IndicatorValueSummary({ timeResolution, values, goals, unit, t }) {
     );
   }
 
+  const nextGoal = goals.find((goal) => moment(goal.date).isSameOrAfter(now));
   let goalDisplay = <h6>Ei tavoitearvoja</h6>;
-  if (goals.length > 0) {
-    const nextGoal = goals[0];
+
+  if (nextGoal) {
     const nextGoalDate = moment(nextGoal.date).format(timeFormat);
     const nextGoalValue = beautifyValue(nextGoal.value);
     goalDisplay = (
@@ -117,11 +119,11 @@ function IndicatorValueSummary({ timeResolution, values, goals, unit, t }) {
     );
   }
 
+  // Find the next upcoming goal
   let differenceDisplay = <h6>-</h6>;
-  if (values.length > 0 && goals.length > 0) {
-    const difference = goals[0].value - values[values.length - 1].value;
-    const now = moment();
-    const timeToGoal = moment(goals[0].date).diff(now, 'years', true).toFixed(0) + " vuotta";
+  if (values.length > 0 && nextGoal) {
+    const difference = nextGoal.value - values[values.length - 1].value;
+    const timeToGoal = moment(nextGoal.date).diff(now, 'years', true).toFixed(0) + " vuotta";
     differenceDisplay = (
       <div>
         <div><strong>Tavoitteeseen matkaa</strong></div>
