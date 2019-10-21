@@ -38,6 +38,13 @@ const GET_PLAN = gql`
         name,
         slug
       }
+      generalContent {
+        siteTitle
+        siteDescription
+        officialNameDescription
+        copyrightText
+        creativeCommonsLicense
+      }
     }
   }
 `;

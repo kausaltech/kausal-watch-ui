@@ -6,6 +6,7 @@ import {
 
 import styled, { withTheme } from 'styled-components';
 import ApplicationStateBanner from './common/ApplicationStateBanner';
+import PlanContext from '../context/plan';
 
 const Logo = styled.div`
   height: 4em;
@@ -40,7 +41,10 @@ const StyledFooter = styled.footer`
 
 
 function SiteFooter(props) {
+  const plan = React.useContext(PlanContext);
+  const generalContent = plan.generalContent || {};
   const { siteTitle, instanceType } = props;
+
   return (
     <>
       <ApplicationStateBanner instanceType={instanceType} />
@@ -70,12 +74,16 @@ function SiteFooter(props) {
           <Row>
             <Col className="footer-column">
               <div className="site-footer-small-print">
-                <Nav vertical>
-                  <NavItem>Creative Commons</NavItem>
-                </Nav>
-                <Nav vertical>
-                  <NavItem className="list-inline-item">2019 Helsingin kaupunki</NavItem>
-                </Nav>
+                { generalContent.creativeCommonsLicense && (
+                  <Nav vertical>
+                    <NavItem>{ generalContent.creativeCommonsLicense }</NavItem>
+                  </Nav>
+                )}
+                { generalContent.copyrightText && (
+                  <Nav vertical>
+                    <NavItem className="list-inline-item">{ generalContent.copyrightText }</NavItem>
+                  </Nav>
+                )}
               </div>
             </Col>
           </Row>

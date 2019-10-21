@@ -218,6 +218,7 @@ function ActionDetails(props) {
   } = props;
 
   const updated = moment(action.updatedAt).format('DD.MM.YYYY');
+  const generalContent = plan.generalContent || {};
 
   return (
     <div>
@@ -290,7 +291,9 @@ function ActionDetails(props) {
               <h5>{ t('action-description-official') }</h5>
               <strong>{ t('action-as-in-plan') }</strong>
               <div dangerouslySetInnerHTML={{ __html: action.officialName }} />
-              <small>(Hiilineutraali Helsinki 2035 -toimenpideohjelmasta)</small>
+              {generalContent.officialNameDescription && (
+                <small>{`(${generalContent.officialNameDescription})`}</small>
+              )}
             </OfficialText>
           </Col>
           <Col md="5" lg="4">

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import Head from 'next/head';
 
@@ -13,26 +13,26 @@ let theme = require('sass-extract-loader?{"plugins": ["sass-extract-js"]}!../sty
 
 
 function Layout({ children }) {
+  const plan = useContext(PlanContext);
+  const generalContent = plan.generalContent || {};
+  const siteTitle = generalContent.siteTitle || plan.name;
+
   return (
     <ThemeProvider theme={theme}>
-      <PlanContext.Consumer>
-        {(plan) => (
-          <div>
-            <Meta />
-            <Head>
-              <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-              <meta property="og:type" content="website" />
-              {plan.currentURL &&
-                <meta property="og:url" content={plan.currentURL.domain + plan.currentURL.path} />
-              }
-              <meta property="og:site_name" content={plan.name} />
-            </Head>
-            <Header siteTitle={plan.name} />
-            {children}
-            <SiteFooter siteTitle={plan.name} instanceType={plan.instanceType} />
-          </div>
-        )}
-      </PlanContext.Consumer>
+      <div>
+        <Meta />
+        <Head>
+          <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+          <meta property="og:type" content="website" />
+          {plan.currentURL &&
+            <meta property="og:url" content={plan.currentURL.domain + plan.currentURL.path} />
+          }
+          <meta property="og:site_name" content={siteTitle} />
+        </Head>
+        <Header siteTitle={siteTitle} />
+        {children}
+        <SiteFooter siteTitle={siteTitle} instanceType={plan.instanceType} />
+      </div>
     </ThemeProvider>
   );
 }
@@ -49,17 +49,23 @@ export class Meta extends React.Component {
   render() {
     const { title, shareImageUrl, description } = this.props;
     const plan = this.context;
-    const pageTitle = title ? `${title} | ${plan.name}` : plan.name;
+    const generalContent = plan.generalContent || {};
+    const siteTitle = generalContent.siteTitle || plan.name;
+    const pageTitle = title ? `${title} | ${siteTitle}` : siteTitle;
     const ogTitle = pageTitle;
-    const ogDescription = description ? description : 'Hiilineutraali Helsinki 2035 toimenpideohjelman seurantapalvelu';
-    const ogImage = shareImageUrl ? shareImageUrl : plan.imageUrl;
+    const ogDescription = description || generalContent.siteDescription;
+    const ogImage = shareImageUrl || plan.imageUrl;
 
     return (
       <Head>
         <title key="head-title">{pageTitle}</title>
         <meta property="og:title" key="head-og-title" content={ogTitle} />
-        <meta property="og:description" content={ogDescription} />
-        <meta property="og:image" content={ogImage} />
+        {ogDescription && (
+          <meta property="og:description" content={ogDescription} />
+        )}
+        {ogImage && (
+          <meta property="og:image" content={ogImage} />
+        )}
       </Head>
     );
   }
