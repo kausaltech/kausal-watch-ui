@@ -40,7 +40,7 @@ const UpdateDate = styled.div`
 `;
 
 const GET_ACTION_UPDATES = gql`
-query ActionDetails($plan: ID!, $id: ID!) {
+query ActionUpdates($plan: ID!, $id: ID!) {
   action(plan: $plan, id: $id) {
     statusUpdates {
         id
