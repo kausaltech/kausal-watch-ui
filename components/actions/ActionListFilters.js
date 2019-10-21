@@ -80,7 +80,7 @@ class ActionListFilters extends React.Component {
     const impact = filters.impact === undefined ? '' : filters.impact;
 
     return (
-      <div className="filters mb-5 text-left">
+      <div className="filters mb-2 text-left">
         <Row>
           <Col sm="12" md={{ size: 6 }}>
             <FormGroup>

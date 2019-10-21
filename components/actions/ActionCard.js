@@ -1,16 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { lighten, darken } from 'polished';
 import {
-  Card, CardImgOverlay, CardBody,
-  CardTitle, Badge,
+  Progress,
 } from 'reactstrap';
 import styled from 'styled-components';
 import gql from 'graphql-tag';
 
 import { ActionLink } from '../../common/links';
-import Icon from '../common/Icon';
-import ActionImage from './ActionImage';
-import ActionStatus from './ActionStatus';
 
 const ACTION_CARD_FRAGMENT = gql`
   fragment ActionCard on Action {
@@ -37,25 +34,103 @@ const ACTION_CARD_FRAGMENT = gql`
   }
 `;
 
-const StyledCard = styled(Card)`
+const ActionCardElement = styled.div`
+  background: #ffffff;
+  height: 100%;
+  box-shadow: 2px 2px 8px rgba(82,90,101,0.1);
+  transition: all 0.5s ease;
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 4px 4px 8px rgba(82,90,101,0.5);
+  }
+`;
+
+const StretchLink = styled.a`
+  display: block;
   width: 100%;
+  height: 100%;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: none;
+  }
 `;
 
 const ActionNumber = styled.div`
-  font-size: 4em;
+  align-self: flex-start;
+  padding: .5rem;
+  font-size: 1rem;
   font-weight: 700;
   line-height: 1;
-  color: rgba(255,255,255,0.8);
+  color: #000000;
+  background: #ffffff;
 `;
 
-const ReadyBadge = styled(Badge)`
-  position: absolute;
-  top: 1em;
-  left: 1em;
+const ActionStatusArea = styled.div`
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  color: ${(props) => props.theme.themeColors.black};
+  background-color: ${(props) => props.theme.themeColors.success};
+  min-height: 100px;
+
+  &.bg-not_started {
+    background-color: ${(props) => props.theme.themeColors.light};
+  }
+
+  &.bg-completed {
+    background-color:  ${(props) => darken(0.15, props.theme.themeColors.success)};
+    color: ${(props) => props.theme.themeColors.white};
+    .progress-bar {
+      background-color: ${(props) => darken(0.15, props.theme.themeColors.success)};
+    }
+  }
+
+  &.bg-on_time {
+    background-color:  ${(props) => lighten(0.10, props.theme.themeColors.success)};
+    .progress-bar {
+      background-color: ${(props) => darken(0.15, props.theme.themeColors.success)};
+    }
+  }
+
+  &.bg-late {
+    background-color:  ${(props) => lighten(0.10, props.theme.themeColors.warning)};
+    .progress-bar {
+      background-color: ${(props) => darken(0.15, props.theme.themeColors.warning)};
+    }
+  }
+
+  &.bg-severely_late {
+    background-color:  ${(props) => lighten(0.15, props.theme.themeColors.danger)};
+    .progress-bar {
+      background-color: ${(props) => darken(0.15, props.theme.themeColors.danger)};
+    }
+  }
 `;
 
-const StyledCardTitle = styled(CardTitle)`
-  font-size: 1.2em;
+const ActionStatus = styled.div`
+`;
+
+const StatusName = styled.div`
+  margin-left: .5rem;
+  font-size: 1rem;
+  font-weight: 600
+`;
+
+const StatusProgress = styled(Progress)`
+  height: .5em;
+  background-color: transparent;
+
+`;
+
+const StyledCardTitle = styled.div`
+  min-height: 4.8rem;
+  margin-bottom: 0;
+  padding: .5rem;
+  color: #000000;
+  background: #ffffff;
+  font-size: 1rem;
+  line-height: 1.2;
   text-align: left;
   hyphens: auto;
 `;
@@ -64,43 +139,38 @@ function ActionCard(props) {
   const { action } = props;
   let actionName = action.name;
   if (actionName.length > 120) actionName = `${action.name.substring(0, 120)}…`;
+
   return (
-    <StyledCard>
-      <ActionLink id={action.identifier}>
-        <a>
-          <ActionImage action={action} width={520} height={200} />
-          <CardImgOverlay>
+    <ActionLink id={action.identifier}>
+      <StretchLink>
+        <ActionCardElement>
+          <ActionStatusArea className={`bg-${action.status.identifier}`}>
             <ActionNumber className="action-number">{action.identifier}</ActionNumber>
-          </CardImgOverlay>
-        </a>
-      </ActionLink>
-      {action.status && (
-        <ActionStatus
-          name={action.status.name}
-          identifier={action.status.identifier}
-          completion={action.completion}
-        />
-      )}
-      <CardBody>
-        { action.status && action.status.identifier === "completed"
-          && (
-            <ReadyBadge color="success" pill>
-              <Icon name="check" color="#fff" width="2em" height="2em" />
-            </ReadyBadge>
-          )
-        }
-        <ActionLink id={action.identifier}>
-          <a>
-            <StyledCardTitle tag="h5">{actionName}</StyledCardTitle>
-          </a>
-        </ActionLink>
-      </CardBody>
-    </StyledCard>
+            <ActionStatus>
+              <StatusName>{ action.status.name }</StatusName>
+              <StatusProgress
+                value={action.completion}
+                className={`bg-${action.status.identifier}`}
+              />
+            </ActionStatus>
+          </ActionStatusArea>
+          <StyledCardTitle>{actionName}</StyledCardTitle>
+        </ActionCardElement>
+      </StretchLink>
+    </ActionLink>
   );
 }
 
 ActionCard.propTypes = {
-  action: PropTypes.object,
+  action: PropTypes.shape({
+    identifier: PropTypes.string,
+    name: PropTypes.string,
+    completion: PropTypes.number,
+    status: PropTypes.shape({
+      identifier: PropTypes.string,
+      name: PropTypes.string,
+    }),
+  }).isRequired,
 };
 
 ActionCard.fragments = {

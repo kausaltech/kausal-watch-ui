@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
 import {
-  Container, Row, Col
+  Container, Row, Col,
 } from 'reactstrap';
 import styled from 'styled-components';
 import { withTranslation } from '../../common/i18n';
@@ -13,9 +13,14 @@ import PlanContext from '../../context/plan';
 import ActionListFilters from './ActionListFilters';
 import ActionCardList from './ActionCardList';
 
+const ActionListSection = styled.div`
+  padding-bottom: 4rem;
+  background-color: ${(props) => props.theme.brandLight};
+`;
+
 const ActionListHeader = styled.div`
   padding-top: 3rem;
-  margin-bottom: 3rem;
+  margin-bottom: 1rem;
   background-color: ${(props) => props.theme.brandLight};
 `;
 
@@ -130,8 +135,10 @@ class ActionListFiltered extends React.Component {
   }
 
   filterActions() {
-    const { filters } = this.props;
-    const { category, organization, text, impact } = filters;
+    const { filters } = this.props;
+    const {
+      category, organization, text, impact,
+    } = filters;
 
     const actions = this.actions.filter((item) => {
       if (category && item.rootCategory.id !== category) return false;
@@ -156,7 +163,7 @@ class ActionListFiltered extends React.Component {
     const actions = this.filterActions();
     const impacts = this.context.actionImpacts;
     return (
-      <div id="actions">
+      <ActionListSection id="actions">
         <ActionListHeader>
           <Container>
             <h1 className="mb-5">{ t('actions') }</h1>
@@ -177,7 +184,7 @@ class ActionListFiltered extends React.Component {
         <Container>
           <ActionCardList actions={actions} />
         </Container>
-      </div>
+      </ActionListSection>
     );
   }
 }
@@ -201,7 +208,9 @@ class ActionList extends React.Component {
   }
 
   render() {
-    const { t, plan, filters, onFilterChange } = this.props;
+    const {
+      t, plan, filters, onFilterChange,
+    } = this.props;
     return (
       <Query query={GET_ACTION_LIST} variables={{ plan: plan.identifier }}>
         {({ data, loading, error }) => {
@@ -213,5 +222,14 @@ class ActionList extends React.Component {
     );
   }
 }
+
+ActionList.propTypes = {
+  t: PropTypes.func.isRequired,
+  plan: PropTypes.shape({
+    identifier: PropTypes.string,
+  }).isRequired,
+  filters: PropTypes.shape({}).isRequired,
+  onFilterChange: PropTypes.func.isRequired,
+};
 
 export default withTranslation('common')(ActionList);
