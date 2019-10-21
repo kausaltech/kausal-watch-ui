@@ -39,10 +39,15 @@ const ACTION_CARD_FRAGMENT = gql`
 
 const StyledCard = styled(Card)`
   width: 100%;
+  transition: all 0.5s ease;
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 4px 4px 8px rgba(82,90,101,0.5);
+  }
 `;
 
 const ActionNumber = styled.div`
-  font-size: 4em;
+  font-size: 3.5em;
   font-weight: 700;
   line-height: 1;
   color: rgba(255,255,255,0.8);
@@ -67,7 +72,7 @@ function ActionCard(props) {
   return (
     <StyledCard>
       <ActionLink id={action.identifier}>
-        <a>
+        <a href>
           <ActionImage action={action} width={520} height={200} />
           <CardImgOverlay>
             <ActionNumber className="action-number">{action.identifier}</ActionNumber>
@@ -82,13 +87,12 @@ function ActionCard(props) {
         />
       )}
       <CardBody>
-        { action.status && action.status.identifier === "completed"
+        { action.status && action.status.identifier === 'completed'
           && (
             <ReadyBadge color="success" pill>
               <Icon name="check" color="#fff" width="2em" height="2em" />
             </ReadyBadge>
-          )
-        }
+          )}
         <ActionLink id={action.identifier}>
           <a>
             <StyledCardTitle tag="h5">{actionName}</StyledCardTitle>
@@ -100,7 +104,15 @@ function ActionCard(props) {
 }
 
 ActionCard.propTypes = {
-  action: PropTypes.object,
+  action: PropTypes.shape({
+    identifier: PropTypes.string,
+    name: PropTypes.string,
+    status: PropTypes.shape({
+      name: PropTypes.string,
+      identifier: PropTypes.string,
+    }),
+    completion: PropTypes.number,
+  }).isRequired,
 };
 
 ActionCard.fragments = {

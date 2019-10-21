@@ -5,6 +5,8 @@
     "operational": "Toiminnallinen mittari",
     "tactical": "Taktinen mittari",
     "strategic": "Strateginen mittari",
+    "recently-updated-actions": "Viimeksi muokatut toimenpiteet",
+    "see-all-actions": "Katso kaikki toimenpiteet",
     "instance-type-testing-label": "Testi",
     "instance-type-testing-message": "Tämä on palvelun testiversio",
     "instance-type-development-label": "Kehitys",

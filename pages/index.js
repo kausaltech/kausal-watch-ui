@@ -8,7 +8,7 @@ import styled from 'styled-components';
 import { withTranslation } from '../common/i18n';
 
 import Layout from '../components/layout';
-import ActionList from '../components/actions/ActionList';
+import ActionHighlightsList from '../components/actions/ActionHighlightsList';
 import HnhHero from '../components/HnhHero';
 import FrontHero from '../components/FrontHero';
 import ThlHero from '../components/ThlHero';
@@ -31,21 +31,10 @@ class HomePage extends React.Component {
 
   constructor(props) {
     super(props);
-    this.handleFilterChange = this.handleFilterChange.bind(this);
-    this.state = {
-      filters: ActionList.getFiltersFromQuery({}),
-    };
-  }
-
-  handleFilterChange(filters) {
-    this.setState({
-      filters,
-    });
   }
 
   render() {
     const { t } = this.props;
-    const { filters } = this.state;
     const plan = this.context;
     let { planIntroText } = "";
 
@@ -68,7 +57,7 @@ class HomePage extends React.Component {
           <ActionsSection className="actions-section">
             <Container>
               { process.browser && (
-                <ActionList plan={plan} filters={filters} onFilterChange={this.handleFilterChange} />
+                <ActionHighlightsList plan={plan} />
               )}
             </Container>
           </ActionsSection>
