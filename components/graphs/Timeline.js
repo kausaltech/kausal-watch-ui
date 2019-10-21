@@ -34,7 +34,7 @@ const Timeline = ({ schedules, allSchedules, theme }) => {
   const startYear = parseInt(minDate.split('-')[0], 10);
   const endYear = parseInt(maxDate.split('-')[0], 10);
 
-  const Plot = dynamic(import('react-plotly.js'));
+  const Plot = dynamic(import('./Plot'));
   const data = [
     {
       x: [actStartDate, actEndDate],
