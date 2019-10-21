@@ -3,22 +3,15 @@ const next = require('next');
 const morgan = require('morgan');
 const express = require('express');
 const nextI18NextMiddleware = require('next-i18next/middleware').default;
-const LRUCache = require('lru-cache');
 const originalUrl = require('original-url');
 const parseCacheControl = require('parse-cache-control');
+const cacheableResponse = require('cacheable-response');
 
 const sentry = require('./common/sentry');
-const nextI18next = require('./common/i18n')
+const nextI18next = require('./common/i18n');
+
 
 const serverPort = process.env.PORT || 3000;
-
-const ssrCache = new LRUCache({
-  length(n, key) {
-    return n.toString().length + key.toString().length;
-  },
-  max: 50 * 1000 * 1000, // 50MB cache soft limit
-  maxAge: 1000 * 60 * 5, // 5 minutes
-});
 
 const app = next({ dev: process.env.NODE_ENV !== 'production' });
 let Sentry;
@@ -29,6 +22,20 @@ if (process.env.SENTRY_DSN) {
   console.log('Sentry initialized');
 }
 
+let ssrCache;
+if (('ENABLE_CACHE' in process.env)
+  ? (process.env.ENABLE_CACHE === '1') : process.env.NODE_ENV === 'production') {
+  console.log('SSR cache initialized');
+  ssrCache = cacheableResponse({
+    ttl: 1000 * 60, // 1 min
+    get: async ({ req, res, pagePath, queryParams }) => ({
+      data: await app.renderToHTML(req, res, pagePath, queryParams),
+    }),
+    send: ({ data, res }) => res.send(data),
+  });
+}
+
+
 app.prepare().then(() => {
   const server = express();
 
@@ -37,26 +44,29 @@ app.prepare().then(() => {
   }
   server.use(morgan('dev'));
   server.use(nextI18NextMiddleware(nextI18next));
+
+  const handle = app.getRequestHandler();
+  server.get('*', (req, res) => {
+    req.currentURL = getCurrentURL(req);
+
+    if (ssrCache) {
+      if (req.path === '/' || req.path.startsWith('/actions') || req.path.startsWith('/indicators')) {
+        return ssrCache({ req, res, pagePath: req.path });
+      }
+    }
+
+    return handle(req, res);
+  });
+
   if (Sentry) {
     server.use(Sentry.Handlers.errorHandler());
   }
-
-  const handle = app.getRequestHandler();
-  server.get('*', (req, res) => handle(req, res))
 
   server.listen(serverPort, (err) => {
     if (err) throw err;
     console.log(`Ready on http://localhost:${serverPort}`);
   });
 });
-
-/*
- * NB: make sure to modify this to take into account anything that should trigger
- * an immediate page change (e.g a locale stored in req.session)
- */
-function getCacheKey(req) {
-  return `${req.url}`;
-}
 
 function getCurrentURL(req) {
   const obj = originalUrl(req);
@@ -72,29 +82,4 @@ function getCurrentURL(req) {
   const path = obj.pathname.replace(/\/$/, ''); // strip trailing slash
   const domain = `${obj.protocol}//${obj.hostname}${port}`;
   return { domain, path };
-}
-
-function handleRoute({
-  req, res, route, query,
-}) {
-  req.currentURL = getCurrentURL(req);
-
-  const cacheKey = getCacheKey(req);
-  const cacheControl = parseCacheControl(req.headers['cache-control']);
-  const skipCache = cacheControl && cacheControl['max-age'] === 0;
-
-  if (ssrCache.has(cacheKey) && !skipCache) {
-    res.setHeader('x-cache', 'HIT');
-    return res.send(ssrCache.get(cacheKey));
-  }
-  app.renderToHTML(req, res, route.page, query).then((html) => {
-    if (res.statusCode === 200) {
-      ssrCache.set(req.url, html);
-    }
-    res.setHeader('x-cache', 'MISS');
-    res.send(html);
-  })
-    .catch((err) => {
-      app.renderError(err, req, res, route.page, query);
-    });
 }
