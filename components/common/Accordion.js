@@ -38,7 +38,7 @@ const AccordionContent = styled(Collapse)`
   margin-left: 32px;
 `;
 
-export class Accordion extends React.Component {
+export default class Accordion extends React.Component {
   state = {
     open: this.props.open
   };
@@ -74,7 +74,7 @@ Accordion.propTypes = {
 };
 
 const AccordionItem = ({
-  children, isOpen, onClick, identifier
+  children, isOpen, onClick, identifier,
 }) => (
   <div id={`q${identifier}`}>
     {React.Children.map(children, child => {
@@ -93,14 +93,13 @@ const AccordionItem = ({
 
 
 AccordionItem.propTypes = {
-  children: PropTypes.element.isRequired,
-  isOpen: PropTypes.bool.isRequired,
-  onClick: PropTypes.func.isRequired,
-  identifier: PropTypes.number.isRequired,
+  isOpen: PropTypes.bool,
+  onClick: PropTypes.func,
+  identifier: PropTypes.number,
 };
 
 const AccordionHeader = ({
-  children, onClick, isOpen, identifier
+  children, onClick, isOpen, identifier,
 }) => (
   <Header className={isOpen && 'is-open'}>
     <QuestionTrigger
@@ -116,10 +115,10 @@ const AccordionHeader = ({
 );
 
 AccordionHeader.propTypes = {
-  children: PropTypes.element.isRequired,
-  isOpen: PropTypes.bool.isRequired,
-  onClick: PropTypes.func.isRequired,
-  identifier: PropTypes.number.isRequired,
+  children: PropTypes.oneOfType([PropTypes.element, PropTypes.string]).isRequired,
+  isOpen: PropTypes.bool,
+  onClick: PropTypes.func,
+  identifier: PropTypes.number,
 };
 
 const AccordionBody = ({ children, isOpen, identifier }) => (
@@ -135,9 +134,8 @@ const AccordionBody = ({ children, isOpen, identifier }) => (
 );
 
 AccordionBody.propTypes = {
-  children: PropTypes.element.isRequired,
-  isOpen: PropTypes.bool.isRequired,
-  identifier: PropTypes.number.isRequired,
+  isOpen: PropTypes.bool,
+  identifier: PropTypes.number,
 };
 
 Accordion.Item = AccordionItem;

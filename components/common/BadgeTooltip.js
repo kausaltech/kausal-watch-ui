@@ -3,9 +3,8 @@ import PropTypes from 'prop-types';
 import { Badge, Tooltip } from 'reactstrap';
 import styled from 'styled-components';
 import { lighten } from 'polished';
-import { Link } from '../../routes';
 
-const BadgeWrapper = styled.span`
+const BadgeWrapper = styled.a`
   &.lg {
     font-size: 1.75rem;
   }
@@ -40,39 +39,24 @@ class BadgeTooltip extends React.Component {
 
   render() {
     const {
-      abbreviation,
-      name,
-      size,
-      link,
-      id,
+      abbreviation, name, size, id, href,
     } = this.props;
     const { tooltipOpen } = this.state;
     const badgeId = id.replace(/[: ]/g, '_');
 
-    const badgeElement = (
-      <BadgeWrapper className={size}>
-        <StyledBadge pill href="#" id={badgeId}>{abbreviation || name}</StyledBadge>
+    return (
+      <BadgeWrapper className={size} href={href}>
+        <StyledBadge pill id={badgeId}>{abbreviation || name}</StyledBadge>
         <Tooltip placement="top" isOpen={tooltipOpen} target={badgeId} toggle={this.toggle}>
           {name}
         </Tooltip>
       </BadgeWrapper>
-    )
-
-    if (link) {
-      return (
-        <Link href={link}>
-          { badgeElement }
-        </Link>
-      );
-    }
-
-    return badgeElement;
+    );
   }
 }
 
 BadgeTooltip.defaultProps = {
   size: 'md',
-  link: null,
 };
 
 BadgeTooltip.propTypes = {
@@ -80,10 +64,7 @@ BadgeTooltip.propTypes = {
   name: PropTypes.string.isRequired,
   id: PropTypes.string.isRequired,
   size: PropTypes.string,
-  link: PropTypes.PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.object,
-  ]),
+  href: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
 };
 
 export default BadgeTooltip;

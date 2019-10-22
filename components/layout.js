@@ -43,32 +43,28 @@ Layout.propTypes = {
 export default Layout;
 
 
-export class Meta extends React.Component {
-  static contextType = PlanContext;
+export function Meta(props) {
+  const plan = React.useContext(PlanContext);
+  const { title, shareImageUrl, description } = props;
+  const generalContent = plan.generalContent || {};
+  const siteTitle = generalContent.siteTitle || plan.name;
+  const pageTitle = title ? `${title} | ${siteTitle}` : siteTitle;
+  const ogTitle = pageTitle;
+  const ogDescription = description || generalContent.siteDescription;
+  const ogImage = shareImageUrl || plan.imageUrl;
 
-  render() {
-    const { title, shareImageUrl, description } = this.props;
-    const plan = this.context;
-    const generalContent = plan.generalContent || {};
-    const siteTitle = generalContent.siteTitle || plan.name;
-    const pageTitle = title ? `${title} | ${siteTitle}` : siteTitle;
-    const ogTitle = pageTitle;
-    const ogDescription = description || generalContent.siteDescription;
-    const ogImage = shareImageUrl || plan.imageUrl;
-
-    return (
-      <Head>
-        <title key="head-title">{pageTitle}</title>
-        <meta property="og:title" key="head-og-title" content={ogTitle} />
-        {ogDescription && (
-          <meta property="og:description" content={ogDescription} />
-        )}
-        {ogImage && (
-          <meta property="og:image" content={ogImage} />
-        )}
-      </Head>
-    );
-  }
+  return (
+    <Head>
+      <title key="head-title">{pageTitle}</title>
+      <meta property="og:title" key="head-og-title" content={ogTitle} />
+      {ogDescription && (
+        <meta property="og:description" content={ogDescription} />
+      )}
+      {ogImage && (
+        <meta property="og:image" content={ogImage} />
+      )}
+    </Head>
+  );
 }
 
 Meta.defaultProps = {

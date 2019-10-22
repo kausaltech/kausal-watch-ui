@@ -9,6 +9,7 @@ import {
 import { withTranslation } from '../../common/i18n';
 import ContentLoader from '../common/ContentLoader';
 import { Link } from '../../routes';
+import { ActionListLink } from '../../common/links';
 
 import ActionHighlightCard from './ActionHighlightCard';
 import Icon from '../common/Icon';
@@ -56,7 +57,7 @@ function ActionCardList({ t, actions }) {
         </Col>
       ))}
       <Col xs="12" className="mt-5 mb-5">
-        <Link href="/actions">
+        <ActionListLink>
           <a>
             <Button outline color="dark">
               { t('see-all-actions') }
@@ -64,7 +65,7 @@ function ActionCardList({ t, actions }) {
               <Icon name="arrowRight" color="black" />
             </Button>
           </a>
-        </Link>
+        </ActionListLink>
       </Col>
     </Row>
   );

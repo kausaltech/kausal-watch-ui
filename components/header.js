@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Collapse, Container, Navbar, Nav, NavItem, NavbarToggler
+  Collapse, Container, Navbar, Nav, NavItem, NavbarToggler,
 } from 'reactstrap';
 import styled, { withTheme } from 'styled-components';
 import { Link } from '../routes';
+import { StaticPageLink } from '../common/links';
 import { IndicatorListLink, ActionListLink } from '../common/links';
 import { withTranslation } from '../common/i18n';
 import PlanContext from '../context/plan';
@@ -84,9 +85,9 @@ class Header extends React.Component {
               </NavItem>
               { plan.staticPages && plan.staticPages.map((page) => (
                 <NavItem key={page.slug}>
-                  <Link href="/[slug]" as={`/${page.slug}`}>
+                  <StaticPageLink slug={page.slug}>
                     <a className="nav-link">{page.name}</a>
-                  </Link>
+                  </StaticPageLink>
                 </NavItem>
               ))}
             </Nav>

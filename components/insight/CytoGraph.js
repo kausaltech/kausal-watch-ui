@@ -8,7 +8,8 @@ import styled, { withTheme } from 'styled-components';
 import cytoscape from 'cytoscape';
 import dagre from 'cytoscape-dagre';
 import { withTranslation } from '../../common/i18n';
-import { Meta } from '../../components/layout';
+import { getIndicatorLinkProps, getActionLinkProps } from '../../common/links';
+import { Meta } from '../layout';
 import { Router } from '../../routes';
 import InsightFilter from './InsightFilter';
 
@@ -56,6 +57,7 @@ function wordWrap(inputStr, maxWidth) {
   return res + str;
 }
 
+/* eslint-disable react/static-property-placement */
 class CytoGraph extends React.Component {
   static propTypes = {
     filters: PropTypes.shape({
@@ -352,10 +354,12 @@ class CytoGraph extends React.Component {
     function nodeTapHandler() {
       if (this.data('type') === 'action') {
         const id = this.data('identifier');
-        Router.push('/actions/[id]', `/actions/${id}`);
+        const link = getActionLinkProps(id);
+        Router.push(link.href, link.as);
       } else {
         const id = this.data('id').substr(1);
-        Router.push('/indicators/[id]', `/indicators/${id}`);
+        const link = getIndicatorLinkProps(id);
+        Router.push(link.href, link.as);
       }
     }
     cy.on('tap', 'node', nodeTapHandler);

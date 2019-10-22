@@ -9,7 +9,7 @@ import Layout from '../components/layout';
 import { Meta } from '../components/layout';
 import PlanContext from '../context/plan';
 import ErrorMessage from '../components/common/ErrorMessage';
-import { Accordion } from '../components/common/Accordion';
+import Accordion from '../components/common/Accordion';
 import ContentLoader from '../components/common/ContentLoader';
 
 const HeaderImage = styled.div`
@@ -140,7 +140,7 @@ const Content = (props) => {
           <FaqSection>
             <Container>
               <Row>
-                <Col lg={{ size:8, offset: 2 }} md={{ size: 10, offset: 1 }}>
+                <Col lg={{ size: 8, offset: 2 }} md={{ size: 10, offset: 1 }}>
                   <h2>Usein kysytyt kysymykset</h2>
                   <Accordion>
                     { questions.map(faq => (

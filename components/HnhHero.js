@@ -6,7 +6,7 @@ import {
   from 'reactstrap';
 import styled from 'styled-components';
 import { Link } from '../routes';
-import { IndicatorLink, IndicatorListLink, ActionListLink } from '../common/links';
+import { IndicatorLink, IndicatorListLink, ActionListLink, StaticPageLink } from '../common/links';
 import Icon from './common/Icon';
 
 const SiteHero = styled.div`
@@ -201,13 +201,13 @@ const HnhHero = () => (
                 alt="Helsingin vuosipäästöt tällä hetkellä 2559 ktCO2e"
               />
             </ProgressGraph>
-            <Link href="/tietoa">
+            <StaticPageLink slug="tietoa">
               <Button outline color="light">
                 Lue lisää tavoitteesta ja tästä palvelusta
                 {' '}
                 <Icon name="arrowRight" color="white" />
               </Button>
-            </Link>
+            </StaticPageLink>
           </Col>
         </Row>
       </Container>

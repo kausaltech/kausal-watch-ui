@@ -9,7 +9,7 @@ import gql from 'graphql-tag';
 import moment from '../../common/moment';
 
 import { Link } from '../../routes';
-import { ActionLink } from '../../common/links';
+import { ActionLink, ActionListLink } from '../../common/links';
 
 import { withTranslation } from '../../common/i18n';
 import PlanContext from '../../context/plan';
@@ -234,11 +234,11 @@ function ActionDetails(props) {
             <Container>
               <Row>
                 <Col md="10">
-                  <Link href="/actions/">
+                  <ActionListLink>
                     <a>
                       <h4>{ t('actions') }</h4>
                     </a>
-                  </Link>
+                  </ActionListLink>
                   <p>
                     { action.previousAction
                       && (

@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Container } from 'reactstrap';
-import styled from 'styled-components';
 import { withTranslation } from '../../common/i18n';
 import { Router } from '../../routes';
+import { getActionListLinkProps } from '../../common/links';
 import PlanContext from '../../context/plan';
 
 import ContentLoader from '../../components/common/ContentLoader';
@@ -12,8 +11,6 @@ import ActionList from '../../components/actions/ActionList';
 
 
 class ActionListPage extends React.Component {
-  static contextType = PlanContext;
-
   static async getInitialProps({ query }) {
     const filters = ActionList.getFiltersFromQuery(query);
 
@@ -29,20 +26,19 @@ class ActionListPage extends React.Component {
     this.handleFilterChange = this.handleFilterChange.bind(this);
   }
 
+  /* eslint-disable class-methods-use-this */
   handleFilterChange(filters) {
     // navigate to new page
     const query = {};
 
-    for (let [key, val] of Object.entries(filters)) {
-      if (!val)
-        continue
+    Object.entries(filters).forEach((item) => {
+      const [key, val] = item;
+      if (!val) return;
       query[key] = val;
-    }
-
-    Router.replace({
-      pathname: '/actions',
-      query,
     });
+
+    const link = getActionListLinkProps(query);
+    Router.replace(link.href);
   }
 
   render() {

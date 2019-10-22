@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 
@@ -10,15 +10,15 @@ const ImpactIcon = styled(Icon)`
   font-size: 1.5em;
 
   &.icon-on {
-    fill: ${props => props.theme.brandDark} !important;
+    fill: ${(props) => props.theme.brandDark} !important;
   }
 
   &.icon-off {
-    fill: ${props => props.theme.themeColors.light} !important;
+    fill: ${(props) => props.theme.themeColors.light} !important;
   }
 
   &.icon-bad {
-    fill: ${props => props.theme.themeColors.danger} !important;
+    fill: ${(props) => props.theme.themeColors.danger} !important;
   }
 `;
 

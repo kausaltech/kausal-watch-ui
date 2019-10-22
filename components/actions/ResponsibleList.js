@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { withTranslation } from '../../common/i18n';
+import { ActionListLink } from '../../common/links';
 import BadgeTooltip from '../common/BadgeTooltip';
 
 const Responsibles = styled.div`
@@ -25,7 +26,6 @@ function ResponsibleBadge(props) {
   } = props;
   let size = 'md';
   let fullName = name;
-  const actionLink = { pathname: '/actions', query: { organization: id } };
 
   if (index === 0) {
     size = 'lg';
@@ -33,13 +33,14 @@ function ResponsibleBadge(props) {
   }
 
   return (
-    <BadgeTooltip
-      id={id}
-      name={fullName}
-      abbreviation={abbreviation}
-      size={size}
-      link={actionLink}
-    />
+    <ActionListLink query={{ organization: id }}>
+      <BadgeTooltip
+        id={id}
+        name={fullName}
+        abbreviation={abbreviation}
+        size={size}
+      />
+    </ActionListLink>
   );
 }
 
