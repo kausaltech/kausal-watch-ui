@@ -60,8 +60,6 @@ function ActionImpact(props) {
       { impactVisual }
       <h6>
         {name}
-        {' '}
-        { t('impact') }
       </h6>
     </div>
   );

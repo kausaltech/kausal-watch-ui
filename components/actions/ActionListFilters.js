@@ -128,7 +128,7 @@ class ActionListFilters extends React.Component {
             <FiltersList className="mb-4 mt-3">
               { filters.organization && <div><Badge color="primary" className="mr-3"><Button close size="sm" onClick={this.onOrgBtnClick} />{ this.getOrganizationName(filters.organization) }</Badge></div> }
               { filters.category && <div><Badge color="primary" className="mr-3"><Button close onClick={this.onCatBtnClick} />{ this.getCategoryName(filters.category) }</Badge></div> }
-              { filters.impact && <div><Badge color="primary" className="mr-3"><Button close onClick={this.onImpactBtnClick} />{ this.getImpactName(filters.impact) } { t('impact') }</Badge></div> }
+              { filters.impact && <div><Badge color="primary" className="mr-3"><Button close onClick={this.onImpactBtnClick} />{ t('impact') }: { this.getImpactName(filters.impact) }</Badge></div> }
               { filters.text && <div> <Badge color="primary" className="mr-3"><Button close onClick={this.onSearchChange} />"{ filters.text }"</Badge></div> }
               <div className="count"> { actionCount} {t('filter-result-actions')}</div>
             </FiltersList>
