@@ -1,28 +1,50 @@
 import React from 'react';
-
+import PropTypes from 'prop-types';
 import styled, { keyframes } from 'styled-components';
-import Icon from './Icon';
+import { withTranslation } from '../../common/i18n';
+
+const pulse = keyframes`
+  33% { transform: translateY(10px); }
+  66% { transform: translateY(-10px); }
+  100% { transform: translateY(0); }
+`;
 
 const Loader = styled.div`
-  height: 300px;
-  padding: 6rem 0;
-  margin-bottom: 4rem;
+  margin 3rem;
   text-align: center;
-  font-size: 4em;
+
+  div:nth-child(1) {
+    animation: ${pulse} .8s -0.20s infinite ease-in-out;
+  }
+  div:nth-child(2) {
+    animation: ${pulse} .8s -0.10s infinite ease-in-out;
+  }
+  div:nth-child(3) {
+    animation: ${pulse} .8s 0s infinite ease-in-out;
+  }
 `;
 
-const rotate360 = keyframes`
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-`;
-
-const SpinIcon = styled.div`
+const LoaderSpinner = styled.div`
+  background-color: ${(props) => props.theme.brandDark};
+  width: 10px;
+  height: 10px;
+  border-radius: 100%;
+  margin: 3px;
+  animation-fill-mode: both;
   display: inline-block;
-  animation: ${rotate360} infinite 2s linear;
+`;
+
+const ScreenReaders = styled.div`
+  border: 0;
+  clip: rect(0 0 0 0);
+  clip-path: polygon(0px 0px, 0px 0px, 0px 0px);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+  white-space: nowrap;
 `;
 
 class ContentLoader extends React.Component {
@@ -50,6 +72,7 @@ class ContentLoader extends React.Component {
 
   render() {
     const { displayMessage } = this.state;
+    const { t } = this.props;
 
     if (!displayMessage) {
       return null;
@@ -57,11 +80,17 @@ class ContentLoader extends React.Component {
 
     return (
       <Loader>
-        <SpinIcon><Icon name="sync" /></SpinIcon>
-        <h5>Ladataan</h5>
+        <LoaderSpinner />
+        <LoaderSpinner />
+        <LoaderSpinner />
+        <ScreenReaders>{ t('loading') }</ScreenReaders>
       </Loader>
     );
   }
 }
 
-export default ContentLoader;
+ContentLoader.propTypes = {
+  t: PropTypes.func.isRequired,
+};
+
+export default withTranslation('common')(ContentLoader);

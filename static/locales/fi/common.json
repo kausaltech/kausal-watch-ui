@@ -60,5 +60,6 @@
     "indicator-has-effect-on": "Tämä mittari vaikuttaa",
     "indicator-not-found": "Mittaria ei löydy",
     "graph": "Kuvaaja",
-    "no-graph": "Ei kuvaajaa"
+    "no-graph": "Ei kuvaajaa",
+    "loading": "Ladataan",
 }

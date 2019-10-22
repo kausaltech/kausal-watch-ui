@@ -60,5 +60,6 @@
     "indicator-has-effect-on": "This indicator has effect on",
     "indicator-not-found": "Indicator not found",
     "graph": "Graph",
-    "no-graph": "No graph"
+    "no-graph": "No graph",
+    "loading": "Loading",
 }
