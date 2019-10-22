@@ -10,7 +10,7 @@ import { IndicatorLink, IndicatorListLink, ActionListLink, StaticPageLink } from
 import Icon from './common/Icon';
 
 const SiteHero = styled.div`
-  margin: 6em 0 3em;
+  margin: 3em 0 2em;
   background-color: ${(props) => props.theme.themeColors.white};
 
   h1 {
@@ -27,7 +27,7 @@ const SiteHero = styled.div`
 `;
 
 const MainIllustration = styled.div`
-  margin: 0 2em 3em;
+  margin: 0 2em 2em;
   text-align: center;
 
   img {
@@ -52,7 +52,7 @@ const ProgressGraph = styled.div`
 `;
 
 const SiteTitle = styled.div`
-  margin-bottom: 5em;
+  margin-bottom: 3em;
   text-align: center;
 `;
 
@@ -139,9 +139,7 @@ const HnhHero = () => (
                   <div>
                     <h3>Toimenpiteet</h3>
                     <p>
-                      Toimenpiteet ovat ilmastotekoja joita toteuttamalla kaupunki
-                      {' '}
-                      vähentää kasvihuonekaasupäästöjään.
+                      Helsingin kaupunki vähentää kasvihuonekaasupäästöjä 147 toimenpiteen avulla.
                     </p>
                   </div>
                 </Highlight>
@@ -158,8 +156,7 @@ const HnhHero = () => (
                   <div>
                     <h3>Mittarit</h3>
                     <p>
-                      Mittareiden avulla seuraamme toimenpiteiden etenemistä ja
-                      vaikuttavuutta sekä kaupungin päästökehitystä.
+                      Seuraamme toimenpiteiden edistymistä ja kasvihuonekaasupäästöjen kehitystä mittareilla. 
                     </p>
                   </div>
                 </Highlight>
