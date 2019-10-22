@@ -59,7 +59,7 @@ export const GET_ACTION_LIST = gql`
         }
       }
     }
-    plan(id: $plan) {
+    planWithContent: plan(id: $plan) {
       id
       generalContent {
         actionListLeadContent
@@ -226,13 +226,17 @@ class ActionList extends React.Component {
           if (loading) return <ContentLoader />;
           if (error) return <p>{ t('error-loading-actions') }</p>;
 
-          const generalContent = data.plan.generalContent || {};
-          delete data.plan;
+          const { planWithContent, ...otherProps } = data;
+          const generalContent = planWithContent.generalContent || {};
 
           return (
             <ActionListFiltered
-              t={t} plan={plan} leadContent={generalContent.actionListLeadContent} filters={filters}
-              onFilterChange={onFilterChange} {...data}
+              t={t}
+              plan={plan}
+              leadContent={generalContent.actionListLeadContent}
+              filters={filters}
+              onFilterChange={onFilterChange}
+              {...otherProps}
             />
           );
         }}
