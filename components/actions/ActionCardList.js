@@ -8,7 +8,7 @@ function ActionCardList({ actions }) {
   return (
     <Row>
       {actions.map((item) => (
-        <Col lg="4" sm="6" key={item.id} className="mb-4 d-flex align-items-stretch">
+        <Col xs="6" sm="4" lg="3" xl="2" key={item.id} className="mb-4 d-flex align-items-stretch" style={{'transition': 'all 0.5s ease'}}>
           <ActionCard action={item} />
         </Col>
       ))}
