@@ -45,3 +45,15 @@
     transform: rotate(180deg);
   }
 }
+
+.indicators-section {
+  &::before {
+    content: " ";
+    @include koro("storm", $brand-light, 600);
+    width: 100%;
+    height: $spacer * 3;
+    position: absolute;
+    top: -5px;
+    transform: rotate(180deg);
+  }
+}

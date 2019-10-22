@@ -6,10 +6,23 @@ import {
 import styled from 'styled-components';
 import { IndicatorLink } from '../../common/links';
 
+const CardWrapper = styled.div`
+  width: 100%;
+
+  a {
+    color: inherit;
+    
+    &:hover {
+      text-decoration: none;
+    }
+  }
+`;
+
 const Indicator = styled(Card)`
+  text-align: left;
   hyphens: auto;
   line-height: 1;
-  margin-bottom: 1em;
+  margin-bottom: .5rem;
   border-radius: 6px;
   color: ${(props) => {
     switch (props.level) {
@@ -40,8 +53,10 @@ const Indicator = styled(Card)`
     }
   }};
 
-  a {
-    color: inherit;
+  transition: all 0.25s ease;
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 4px 4px 8px rgba(82,90,101,0.5);
   }
 `;
 
@@ -81,21 +96,23 @@ function IndicatorCard(props) {
 
 
   return (
-    <IndicatorLink id={objectid}>
-      <a href>
-        <Indicator level={level} key={objectid}>
-          <CardBody>
-            <div>
-              <IndicatorType>{ getLevelName(level) }</IndicatorType>
-              <IndicatorTitle>
-                { number && <IndicatorNumber>{ number }</IndicatorNumber> }
-                { name }
-              </IndicatorTitle>
-            </div>
-          </CardBody>
-        </Indicator>
-      </a>
-    </IndicatorLink>
+    <CardWrapper>
+      <IndicatorLink id={objectid}>
+        <a href>
+          <Indicator level={level} key={objectid}>
+            <CardBody>
+              <div>
+                <IndicatorType>{ getLevelName(level) }</IndicatorType>
+                <IndicatorTitle>
+                  { number && <IndicatorNumber>{ number }</IndicatorNumber> }
+                  { name }
+                </IndicatorTitle>
+              </div>
+            </CardBody>
+          </Indicator>
+        </a>
+      </IndicatorLink>
+    </CardWrapper>
   );
 }
 

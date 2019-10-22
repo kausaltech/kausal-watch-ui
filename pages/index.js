@@ -9,6 +9,7 @@ import { withTranslation } from '../common/i18n';
 
 import Layout from '../components/layout';
 import ActionHighlightsList from '../components/actions/ActionHighlightsList';
+import IndicatorHighlightsList from '../components/indicators/IndicatorHighlightsList';
 import HnhHero from '../components/HnhHero';
 import FrontHero from '../components/FrontHero';
 import ThlHero from '../components/ThlHero';
@@ -18,13 +19,23 @@ import PlanContext from '../context/plan';
 const ActionsSection = styled.div`
   background-color: ${(props) => props.theme.brandLight};
   position: relative;
-  padding: 8rem 0;
+  padding: 8rem 0 4rem;
   
   .container {
     text-align: center;
   }
 `;
 
+const IndicatorsSection = styled.div`
+  background-color: ${(props) => props.theme.themeColors.white};
+  color: ${(props) => props.theme.brandDark};
+  position: relative;
+  padding: 7rem 0;
+  
+  .container {
+    text-align: center;
+  }
+`;
 
 class HomePage extends React.Component {
   static contextType = PlanContext;
@@ -59,6 +70,11 @@ class HomePage extends React.Component {
             <ActionHighlightsList plan={plan} />
           </Container>
         </ActionsSection>
+        <IndicatorsSection className="indicators-section">
+          <Container>
+            <IndicatorHighlightsList plan={plan} />
+          </Container>
+        </IndicatorsSection>
       </Layout>
     );
   }
