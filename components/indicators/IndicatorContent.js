@@ -177,14 +177,15 @@ function IndicatorDetails(props) {
             <div className="mt-4" dangerouslySetInnerHTML={{ __html: indicator.description }} />
           </Col>
         </Row>
-        <Row>
-          <Col className="mb-5">
-            <h2>{ t('graph') }</h2>
-            {(indicator.latestGraph || indicator.values.length)
-              ? <ErrorBoundary><IndicatorGraph indicator={indicator} plan={plan} /></ErrorBoundary>
-              : <Alert><h5>{ t('no-graph') }</h5></Alert>}
-          </Col>
-        </Row>
+        {(indicator.latestGraph || indicator.values.length > 0) &&
+          (
+          <Row>
+            <Col className="mb-5">
+              <h2 className="mb-4">{ t('graph') }</h2>
+              <ErrorBoundary><IndicatorGraph indicator={indicator} plan={plan} /></ErrorBoundary>
+            </Col>
+          </Row>
+          )}
       </Container>
       { indicator.actions.length > 0 && (
         <Section>
