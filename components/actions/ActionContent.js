@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Container, Row, Col, Badge,
+  Container, Row, Col, Badge, Alert,
 } from 'reactstrap';
 import { Query } from 'react-apollo';
 import styled, { withTheme } from 'styled-components';
@@ -21,6 +21,7 @@ import ResponsibleList from './ResponsibleList';
 import ContactPersons from './ContactPersons';
 import ActionStatus from './ActionStatus';
 import ActionImpact from './ActionImpact';
+import ActionIndicators from './ActionIndicators';
 import ActionBgImage from './ActionBgImage';
 import ActionPager from './ActionPager';
 import ActionUpdatesList from './ActionUpdatesList';
@@ -365,10 +366,23 @@ function ActionDetails(props) {
           </Col>
         </Row>
         <Row>
-          <Col>
+          <Col className="mb-5">
             <ActionSection className="mb-5">
               <TaskList tasks={action.tasks} />
             </ActionSection>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <h2 className="mb-5">{ t('indicators') }</h2>
+          </Col>
+        </Row>
+        <Row>
+          <Col sm="12" className="mb-5">
+            {action.relatedIndicators && action.relatedIndicators.length > 0
+              ? <ActionIndicators actionId={action.id} relatedIndicators={action.relatedIndicators} />
+              : <Alert color="light" className="mb-5"><h6>Ei määriteltyjä mittareita</h6></Alert>
+              }
           </Col>
         </Row>
       </Container>

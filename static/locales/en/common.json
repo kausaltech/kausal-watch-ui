@@ -61,6 +61,10 @@
     "indicator-affected-by": "This indicator is affected by",
     "indicator-has-effect-on": "This indicator has effect on",
     "indicator-not-found": "Indicator not found",
+    "type": "Type",
+    "name": "Name",
+    "themes": "Themes",
     "graph": "Graph",
-    "no-graph": "No graph"
+    "no-graph": "No graph",
+    "loading": "Loading"
 }
