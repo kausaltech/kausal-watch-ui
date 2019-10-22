@@ -54,13 +54,11 @@ class HomePage extends React.Component {
     return (
       <Layout>
         { heroComponent }
-          <ActionsSection className="actions-section">
-            <Container>
-              { process.browser && (
-                <ActionHighlightsList plan={plan} />
-              )}
-            </Container>
-          </ActionsSection>
+        <ActionsSection className="actions-section">
+          <Container>
+            <ActionHighlightsList plan={plan} />
+          </Container>
+        </ActionsSection>
       </Layout>
     );
   }

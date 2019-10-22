@@ -14,8 +14,8 @@ import ActionHighlightCard from './ActionHighlightCard';
 import Icon from '../common/Icon';
 
 export const GET_ACTION_LIST = gql`
-  query ActionList($plan: ID!) {
-    planActions(plan: $plan) {
+  query ActionHightlightList($plan: ID!, $first: Int!, $orderBy: String!) {
+    planActions(plan: $plan, first: $first, orderBy: $orderBy) {
       id
       identifier
       name
@@ -38,14 +38,12 @@ export const GET_ACTION_LIST = gql`
 `;
 
 function ActionCardList({ t, actions }) {
-  const selectedActions = actions.sort((a, b) => a.updatedAt < b.updatedAt);
-  selectedActions.length = 6;
   return (
     <Row>
       <Col xs="12">
         <h2 className="mb-5">{ t('recently-updated-actions') }</h2>
       </Col>
-      {selectedActions.map((item) => (
+      {actions.map((item) => (
         <Col
           xs="12"
           md="6"
@@ -81,9 +79,14 @@ function ActionHighlightsList(props) {
   const {
     t, plan,
   } = props;
+  const queryParams = {
+    plan: plan.identifier,
+    first: 6,
+    orderBy: '-updatedAt',
+  };
 
   return (
-    <Query query={GET_ACTION_LIST} variables={{ plan: plan.identifier }}>
+    <Query query={GET_ACTION_LIST} variables={queryParams}>
       {({ data, loading, error }) => {
         if (loading) return <ContentLoader />;
         if (error) return <p>{ t('error-loading-actions') }</p>;
