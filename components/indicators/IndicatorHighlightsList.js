@@ -11,7 +11,7 @@ import { withTranslation } from '../../common/i18n';
 import ContentLoader from '../common/ContentLoader';
 import { IndicatorListLink } from '../../common/links';
 
-import IndicatorCard from './IndicatorCard';
+import IndicatorHighlightCard from './IndicatorHighlightCard';
 import Icon from '../common/Icon';
 
 export const GET_INDICATOR_HIGHLIGHTS = gql`
@@ -63,12 +63,18 @@ function IndicatorCardList(props) {
           className="mb-4 d-flex align-items-stretch"
           style={{ transition: 'all 0.5s ease' }}
         >
-          <IndicatorCard objectid={item.id} level={item.level} name={item.name} />
+          <IndicatorHighlightCard
+            objectid={item.id}
+            level={item.level}
+            name={item.name}
+            value={item.latestValue.value}
+            unit={item.unit.shortName || item.unit.name}
+          />
         </Col>
       ))}
       <Col xs="12" className="mt-5 mb-3">
         <IndicatorListLink>
-          <a>
+          <a href>
             <LinkButton outline color="primary">
               { t('see-all-indicators') }
               {' '}
