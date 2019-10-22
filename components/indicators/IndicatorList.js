@@ -34,6 +34,9 @@ const GET_INDICATOR_LIST = gql`
           }
         }
       }
+      generalContent {
+        indicatorListLeadContent
+      }
       categoryTypes {
         categories {
           id

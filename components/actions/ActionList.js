@@ -59,6 +59,12 @@ export const GET_ACTION_LIST = gql`
         }
       }
     }
+    plan(id: $plan) {
+      id
+      generalContent {
+        actionListLeadContent
+      }
+    }
     planCategories(plan: $plan) {
       id
       identifier
@@ -159,7 +165,7 @@ class ActionListFiltered extends React.Component {
   }
 
   render() {
-    const { t, filters } = this.props;
+    const { t, filters, leadContent } = this.props;
     const actions = this.filterActions();
     const impacts = this.context.actionImpacts;
     return (
@@ -167,6 +173,9 @@ class ActionListFiltered extends React.Component {
         <ActionListHeader>
           <Container>
             <h1 className="mb-5">{ t('actions') }</h1>
+            {leadContent && (
+              <div dangerouslySetInnerHTML={{ __html: leadContent }} />
+            )}
             <Row>
               <Col sm="12" md={{ size: 10 }}>
                 <ActionListFilters
@@ -216,7 +225,16 @@ class ActionList extends React.Component {
         {({ data, loading, error }) => {
           if (loading) return <ContentLoader />;
           if (error) return <p>{ t('error-loading-actions') }</p>;
-          return <ActionListFiltered t={t} plan={plan} filters={filters} onFilterChange={onFilterChange} {...data} />;
+
+          const generalContent = data.plan.generalContent || {};
+          delete data.plan;
+
+          return (
+            <ActionListFiltered
+              t={t} plan={plan} leadContent={generalContent.actionListLeadContent} filters={filters}
+              onFilterChange={onFilterChange} {...data}
+            />
+          );
         }}
       </Query>
     );
