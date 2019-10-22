@@ -6,6 +6,7 @@ import { Query } from 'react-apollo';
 import {
   Row, Col, Button,
 } from 'reactstrap';
+import styled from 'styled-components';
 import { withTranslation } from '../../common/i18n';
 import ContentLoader from '../common/ContentLoader';
 import { Link } from '../../routes';
@@ -38,6 +39,18 @@ export const GET_ACTION_LIST = gql`
   }
 `;
 
+const LinkButton = styled(Button)`
+  svg {
+    fill: ${(props) => props.theme.brandDark} !important;
+  }
+
+  &:hover {
+    svg {
+      fill: ${(props) => props.theme.themeColors.white} !important;
+    }
+  }
+`;
+
 function ActionCardList({ t, actions }) {
   return (
     <Row>
@@ -59,11 +72,11 @@ function ActionCardList({ t, actions }) {
       <Col xs="12" className="mt-5 mb-5">
         <ActionListLink>
           <a>
-            <Button outline color="dark">
+            <LinkButton outline color="primary">
               { t('see-all-actions') }
               {' '}
               <Icon name="arrowRight" color="black" />
-            </Button>
+            </LinkButton>
           </a>
         </ActionListLink>
       </Col>
