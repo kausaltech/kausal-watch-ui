@@ -174,10 +174,11 @@ class ActionListFiltered extends React.Component {
           <Container>
             <h1 className="mb-5">{ t('actions') }</h1>
             {leadContent && (
-              <div dangerouslySetInnerHTML={{ __html: leadContent }} />
+              <div className="mb-5" dangerouslySetInnerHTML={{ __html: leadContent }} />
             )}
             <Row>
               <Col sm="12" md={{ size: 10 }}>
+                <h2 className="mb-4">{ t('browse-actions') }</h2>
                 <ActionListFilters
                   cats={this.cats}
                   orgs={this.orgs}

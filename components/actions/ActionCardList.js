@@ -29,6 +29,7 @@ function ActionCardList({ actions }) {
       group = groupMap[cat.id];
     } else {
       group = {
+        id: cat.id,
         name: cat.name,
         elements: [],
       };
@@ -41,7 +42,7 @@ function ActionCardList({ actions }) {
   return (
     <div>
       {groups.map((group) => (
-        <ActionGroup>
+        <ActionGroup key={group.id}>
           <Col xs="12">
             <ActionGroupHeader>{group.name}</ActionGroupHeader>
           </Col>
