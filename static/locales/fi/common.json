@@ -36,6 +36,8 @@
     "action-tasks": "Tehtävät",
     "action-tasks-done": "Mitä on tehty?",
     "action-tasks-todo": "Mitä on tehtävä?",
+    "action-task-done": "Tehty",
+    "action-task-todo": "Tehtävä",
     "action-tasks-todo-empty": "Ei tekemättömiä tehtäviä",
     "action-status-updates": "Viimeisimmät päivitykset",
     "action-last-updated": "Tietoja päivitetty",

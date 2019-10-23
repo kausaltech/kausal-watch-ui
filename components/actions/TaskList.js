@@ -10,6 +10,24 @@ const Date = styled.span`
   font-size: 75%;
 `;
 
+const TaskWrapper = styled.div`
+  display: flex;
+`;
+
+const TaskMeta = styled.div`
+  flex: 0 0 6rem;
+
+  @media (max-width: ${(props) => props.theme.breakpointMd}) {
+    flex: 0 0 3rem;
+  }
+`;
+
+const TaskContent = styled.div`
+  border-left: 1px solid #333;
+  margin-left: 1rem;
+  padding-left: 1rem;
+`;
+
 const ListGroupItem = styled(BaseListGroupItem)`
 
   &.state--cancelled .task-header {
@@ -38,13 +56,16 @@ class TaskList extends React.Component {
       .filter(item => item.completedAt !== null)
       .map((item, index) => (
         <ListGroupItem key={item.id} className={`state--${item.state}`}>
-          <div className="task-header">
-            <Icon name="check" className="text-black-50 mr-3" />
-            <Date>{TaskList.parseTimestamp(item.completedAt)}</Date>
-            {' | '}
-            <span>{item.name}</span>
-          </div>
-          <div><small><span dangerouslySetInnerHTML={{ __html: item.comment }} /></small></div>
+          <TaskWrapper>
+            <TaskMeta>
+              <Icon name="check" className="text-black-50 mr-2" alt={t('action-task-done')}/>
+              <Date>{TaskList.parseTimestamp(item.completedAt)}</Date>
+            </TaskMeta>
+            <TaskContent>
+              <h6>{item.name}</h6>
+              <div className="text-content"><small><span dangerouslySetInnerHTML={{ __html: item.comment }} /></small></div>
+            </TaskContent>
+          </TaskWrapper>
         </ListGroupItem>
       ));
 
@@ -52,13 +73,16 @@ class TaskList extends React.Component {
       item.completedAt === null
             && (
             <ListGroupItem key={item.id} className={`state--${item.state}`}>
-              <div className="task-header">
-                <Icon name="calendar" className="text-black-50 mr-3" />
-                <Date>{TaskList.parseTimestamp(item.dueAt)}</Date>
-                {' | '}
-                <span>{item.name}</span>
-              </div>
-              <div><small><span dangerouslySetInnerHTML={{ __html: item.comment }} /></small></div>
+              <TaskWrapper>
+                <TaskMeta>
+                  <Icon name="calendar" className="text-black-50 mr-2" alt={t('action-task-todo')}/>
+                  <Date>{TaskList.parseTimestamp(item.dueAt)}</Date>
+                </TaskMeta>
+                <TaskContent>
+                  <h6>{item.name}</h6>
+                  <div className="text-content"><small><span dangerouslySetInnerHTML={{ __html: item.comment }} /></small></div>
+                </TaskContent>
+              </TaskWrapper>
             </ListGroupItem>
             )
     ));
@@ -66,15 +90,15 @@ class TaskList extends React.Component {
     return (
       <div>
         { doneTasks.length > 0 && (
-          <ListGroup className="mb-4">
-            <h5>{ t('action-tasks-done') }</h5>
+          <ListGroup className="mb-5">
+            <h5 className="mb-3">{ t('action-tasks-done') }</h5>
             {doneTasks}
           </ListGroup>
         )}
         { undoneTasks.length > 0
           ? (
-            <ListGroup className="mb-4">
-              <h5>{ t('action-tasks-todo') }</h5>
+            <ListGroup className="mb-5">
+              <h5 className="mb-3">{ t('action-tasks-todo') }</h5>
               {undoneTasks}
             </ListGroup>
           )

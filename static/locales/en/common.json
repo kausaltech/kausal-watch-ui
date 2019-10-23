@@ -36,6 +36,8 @@
     "action-tasks": "Tasks",
     "action-tasks-done": "What has been done?",
     "action-tasks-todo": "What's left to do?",
+    "action-task-done": "Done",
+    "action-task-todo": "Todo",
     "action-tasks-todo-empty": "No to-dos",
     "action-status-updates": "Latest updates",
     "action-last-updated": "Information updated",
