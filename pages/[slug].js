@@ -73,7 +73,10 @@ class StaticPage extends React.Component {
   static contextType = PlanContext;
 
   static async getInitialProps({ query }) {
-    return { slug: query.slug };
+    return {
+      slug: query.slug,
+      namespacesRequired: ['common'],
+    };
   }
 
   render() {

@@ -6,7 +6,7 @@ import { getActionListLinkProps } from '../../common/links';
 import PlanContext from '../../context/plan';
 
 import ContentLoader from '../../components/common/ContentLoader';
-import Layout from '../../components/layout';
+import Layout, { Meta } from '../../components/layout';
 import ActionList from '../../components/actions/ActionList';
 
 
@@ -43,10 +43,11 @@ class ActionListPage extends React.Component {
 
   render() {
     const plan = this.context;
-    const { filters } = this.props;
+    const { filters, t } = this.props;
 
     return (
       <Layout>
+        <Meta title={t('actions')} />
         {!process.browser ? <ContentLoader /> : (
           <ActionList plan={plan} filters={filters} onFilterChange={this.handleFilterChange} />
         )}

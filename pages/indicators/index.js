@@ -1,6 +1,7 @@
 import React from 'react';
 import { Container } from 'reactstrap';
-import Layout from '../../components/layout';
+import { withTranslation } from '../../common/i18n';
+import Layout, { Meta } from '../../components/layout';
 import IndicatorsHero from '../../components/indicators/IndicatorsHero';
 import IndicatorList from '../../components/indicators/IndicatorList';
 
@@ -8,9 +9,18 @@ import PlanContext from '../../context/plan';
 
 
 class IndicatorsPage extends React.Component {
+  static async getInitialProps() {
+    const ret = {
+      namespacesRequired: ['common'],
+    };
+    return ret;
+  }
+
   render() {
+    const { t } = this.props;
     return (
       <Layout>
+        <Meta title={t('indicators')} />
         <IndicatorsHero />
         <Container>
           <IndicatorList />
@@ -22,4 +32,4 @@ class IndicatorsPage extends React.Component {
 
 IndicatorsPage.contextType = PlanContext;
 
-export default IndicatorsPage;
+export default withTranslation('common')(IndicatorsPage);

@@ -8,12 +8,11 @@ import styled, { withTheme } from 'styled-components';
 import gql from 'graphql-tag';
 import moment from '../../common/moment';
 
-import { Link } from '../../routes';
 import { ActionLink, ActionListLink } from '../../common/links';
-
 import { withTranslation } from '../../common/i18n';
 import PlanContext from '../../context/plan';
 
+import { Meta } from '../layout';
 import IndicatorCausal from '../indicators/IndicatorCausal';
 import Timeline from '../graphs/Timeline';
 import TaskList from './TaskList';
@@ -27,7 +26,6 @@ import ActionPager from './ActionPager';
 import ActionUpdatesList from './ActionUpdatesList';
 import ContentLoader from '../common/ContentLoader';
 import Icon from '../common/Icon';
-import { Meta } from '../layout';
 import ErrorMessage from '../common/ErrorMessage';
 
 
@@ -234,7 +232,7 @@ function ActionDetails(props) {
         title={`${t('action')} ${action.identifier}`}
         shareImageUrl={getImageURL(plan, action, 1200, 630)}
         description={`${action.name}`}
-        />
+      />
       <ActionHero>
         <ActionBgImage action={action} width={1200} height={600} color={theme.imageOverlay}>
           <OverlayContainer>

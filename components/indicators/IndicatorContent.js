@@ -2,13 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import {
-  Jumbotron as BaseJumbotron, Container, Row, Col, Alert,
+  Jumbotron as BaseJumbotron, Container, Row, Col,
 } from 'reactstrap';
 import styled from 'styled-components';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 
-import { Link } from '../../routes';
+import { IndicatorListLink } from '../../common/links';
 import PlanContext from '../../context/plan';
 
 import { withTranslation } from '../../common/i18n';
@@ -152,17 +152,16 @@ function IndicatorDetails(props) {
   return (
     <div className="mb-5">
       <Meta
-        title={t('indicators')}
-        description={`${indicator.name}`}
+        title={indicator.name}
       />
       <IndicatorHero level={indicator.level}>
         <Container>
           <IndicatorLevel level={indicator.level}>
-            <Link href="/indicators">
+            <IndicatorListLink>
               <a>
                 { t(indicator.level) }
               </a>
-            </Link>
+            </IndicatorListLink>
           </IndicatorLevel>
           <h1>{indicator.name}</h1>
           { (indicator.goals.length > 0  || indicator.goals.length > 0) &&

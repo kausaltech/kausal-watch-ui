@@ -24,13 +24,13 @@ function Layout({ children }) {
         <Head>
           <meta name="viewport" content="initial-scale=1.0, width=device-width" />
           <meta property="og:type" content="website" />
-          {plan.currentURL &&
+          {plan.currentURL && (
             <meta property="og:url" content={plan.currentURL.domain + plan.currentURL.path} />
-          }
+          )}
           <meta property="og:site_name" content={siteTitle} />
           <link rel="apple-touch-icon" sizes="180x180" href="/static/favicon/apple-touch-icon.png" />
           <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon/favicon-32x32.png" />
-          <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon/favicon-16x16.png"/ >
+          <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon/favicon-16x16.png" />
           <link rel="manifest" href="/static/favicon/site.webmanifest" />
           <link rel="mask-icon" href="/static/favicon/safari-pinned-tab.svg" color="#000000" />
           <meta name="msapplication-TileColor" content="#ffc40d" />
@@ -56,7 +56,8 @@ export function Meta(props) {
   const generalContent = plan.generalContent || {};
   const siteTitle = generalContent.siteTitle || plan.name;
   const pageTitle = title ? `${title} | ${siteTitle}` : siteTitle;
-  const ogTitle = pageTitle;
+  // In ogTitle we don't want to repeat the site name.
+  const ogTitle = title || siteTitle;
   const ogDescription = description || generalContent.siteDescription;
   const ogImage = shareImageUrl || plan.imageUrl;
 
@@ -65,10 +66,10 @@ export function Meta(props) {
       <title key="head-title">{pageTitle}</title>
       <meta property="og:title" key="head-og-title" content={ogTitle} />
       {ogDescription && (
-        <meta property="og:description" content={ogDescription} />
+        <meta property="og:description" key="head-og-description" content={ogDescription} />
       )}
       {ogImage && (
-        <meta property="og:image" content={ogImage} />
+        <meta property="og:image" key="head-og-image" content={ogImage} />
       )}
     </Head>
   );
