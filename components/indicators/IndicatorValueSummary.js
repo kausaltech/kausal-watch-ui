@@ -4,9 +4,9 @@ import styled from 'styled-components';
 import moment from '../../common/moment';
 import { withTranslation } from '../../common/i18n';
 
-const ValueSummary = styled.section`
+const ValueSummary = styled.div`
   margin: 2em 0 0;
-  padding: 1em 0;
+  padding: 1em 0 0;
   border-top: 1px solid #333;
   border-bottom: 1px solid #333;
 `;
@@ -82,7 +82,7 @@ function IndicatorValueSummary({ timeResolution, values, goals, unit, t }) {
     }
     const latestValueDisplay = beautifyValue(latestValue.value);
     valueDisplay = (
-      <div>
+      <div className="mb-4">
         <div><strong>Viimeisin mittaus</strong></div>
         <small>{moment(latestValue.date).format(timeFormat)}</small>
         <h3>
@@ -90,10 +90,10 @@ function IndicatorValueSummary({ timeResolution, values, goals, unit, t }) {
           {' '}
           <small>{shortUnitName}</small>
           {absChange && (
-            <span style={{ color: changeColor, fontSize: '1.2rem' }}>
+            <div style={{ color: changeColor, fontSize: '1.2rem', display: 'inline-block' }}>
               <strong>{changeSymbol}</strong>
               <span>{beautifyValue(absChange)}</span> <small>{diffUnitName}</small>
-            </span>
+            </div>
           )}
         </h3>
       </div>
@@ -107,7 +107,7 @@ function IndicatorValueSummary({ timeResolution, values, goals, unit, t }) {
     const nextGoalDate = moment(nextGoal.date).format(timeFormat);
     const nextGoalValue = beautifyValue(nextGoal.value);
     goalDisplay = (
-      <div>
+      <div className="mb-4">
         <div><strong>Tavoite</strong></div>
         <small>{nextGoalDate}</small>
         <h3>
@@ -125,7 +125,7 @@ function IndicatorValueSummary({ timeResolution, values, goals, unit, t }) {
     const difference = nextGoal.value - values[values.length - 1].value;
     const timeToGoal = moment(nextGoal.date).diff(now, 'years', true).toFixed(0) + " vuotta";
     differenceDisplay = (
-      <div>
+      <div className="mb-4">
         <div><strong>Tavoitteeseen matkaa</strong></div>
         <small>{timeToGoal}</small>
         <h3>

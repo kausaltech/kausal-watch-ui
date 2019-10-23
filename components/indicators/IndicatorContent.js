@@ -86,13 +86,21 @@ const IndicatorHero = styled(BaseJumbotron)`
   a {
     color: inherit;
   }
+  
+  h1 {
+    hyphens: auto;
+
+    @media (max-width: ${(props) => props.theme.breakpointMd}) {
+      font-size: 1.75em;
+    }
+  }
 `;
 
 const IndicatorLevel = styled.h6`
   display: inline-block;
   border-radius: .75em;
   padding: .25em 1em;
-  margin-bottom: 1em;
+  margin-bottom: 1.5rem;
   color: ${(props) => {
     switch (props.level) {
       case 'action':

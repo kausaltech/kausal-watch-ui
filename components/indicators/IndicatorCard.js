@@ -9,6 +9,7 @@ import { IndicatorLink } from '../../common/links';
 
 const CardWrapper = styled.div`
   width: 100%;
+  margin-bottom: 1rem;
 
   a {
     color: inherit;
@@ -23,7 +24,6 @@ const Indicator = styled(Card)`
   text-align: left;
   hyphens: auto;
   line-height: 1;
-  margin-bottom: .5rem;
   border-radius: 6px;
   color: ${(props) => {
     switch (props.level) {
