@@ -96,15 +96,15 @@ const IndicatorLevel = styled.h6`
   color: ${(props) => {
     switch (props.level) {
       case 'action':
-        return '#ffffff';
+        return props.theme.actionColorFg;
       case 'operational':
-        return '#000000';
+        return props.theme.operationalIndicatorColorFg;
       case 'tactical':
-        return '#000000';
+        return props.theme.tacticalIndicatorColorFg;
       case 'strategic':
-        return '#ffffff';
+        return props.theme.strategicIndicatorColorFg;
       default:
-        return '#000000';
+        return props.theme.themeColors.black;
     }
   }};
   background-color: ${(props) => {
@@ -137,10 +137,6 @@ const CausalNavigation = styled.div`
   background-color: ${(props) => props.theme.themeColors.light};
 `;
 
-function getLevelName(level, t) {
-  return t(level);
-}
-
 function IndicatorDetails(props) {
   const { t, indicator, plan } = props;
   const hasImpacts = indicator.relatedCauses.length > 0 || indicator.relatedEffects.length > 0;
@@ -156,7 +152,7 @@ function IndicatorDetails(props) {
           <IndicatorLevel level={indicator.level}>
             <Link href="/indicators">
               <a>
-                { getLevelName(indicator.level, t) }
+                { t(indicator.level) }
               </a>
             </Link>
           </IndicatorLevel>

@@ -4,6 +4,7 @@ import {
   Card, CardImgOverlay, CardBody, CardTitle,
 } from 'reactstrap';
 import styled from 'styled-components';
+import { withTranslation } from '../../common/i18n';
 import { IndicatorLink } from '../../common/links';
 
 const IndicatorType = styled.div`
@@ -11,21 +12,6 @@ const IndicatorType = styled.div`
   text-align: left;
   font-size: 0.8rem;
 `;
-
-function getLevelName(level) {
-  switch (level) {
-    case 'action':
-      return 'Toimenpide';
-    case 'operational':
-      return 'Toiminnallinen mittari';
-    case 'tactical':
-      return 'Taktinen mittari';
-    case 'strategic':
-      return 'Strateginen mittari';
-    default:
-      return '';
-  }
-}
 
 const IndicatorBg = styled.div`
   height: 6rem;
@@ -63,15 +49,15 @@ const IndicatorValue = styled.div`
   color: ${(props) => {
     switch (props.level) {
       case 'action':
-        return '#ffffff';
+        return props.theme.actionColorFg;
       case 'operational':
-        return '#000000';
+        return props.theme.operationalIndicatorColorFg;
       case 'tactical':
-        return '#000000';
+        return props.theme.tacticalIndicatorColorFg;
       case 'strategic':
-        return '#ffffff';
+        return props.theme.strategicIndicatorColorFg;
       default:
-        return '#000000';
+        return props.theme.themeColors.black;
     }
   }};
 `;
@@ -103,6 +89,7 @@ function beautifyValue(x) {
 
 function IndicatorHighlightCard(props) {
   const {
+    t,
     level,
     objectid,
     name,
@@ -127,7 +114,7 @@ function IndicatorHighlightCard(props) {
         </a>
       </IndicatorLink>
       <CardBody>
-        <IndicatorType>{ getLevelName(level) }</IndicatorType>
+        <IndicatorType>{ t(level) }</IndicatorType>
         <IndicatorLink id={objectid}>
           <a href>
             <StyledCardTitle tag="h5">{ name }</StyledCardTitle>
@@ -151,4 +138,4 @@ IndicatorHighlightCard.propTypes = {
   unit: PropTypes.string,
 };
 
-export default IndicatorHighlightCard;
+export default withTranslation('common')(IndicatorHighlightCard);

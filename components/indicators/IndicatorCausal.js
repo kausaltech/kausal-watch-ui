@@ -37,15 +37,15 @@ const Indicator = styled(Card)`
   color: ${(props) => {
     switch (props.level) {
       case 'action':
-        return props.theme.themeColors.white;
+        return props.theme.actionColorFg;
       case 'operational':
-        return props.theme.themeColors.black;
+        return props.theme.operationalIndicatorColorFg;
       case 'tactical':
-        return props.theme.themeColors.black;
+        return props.theme.tacticalIndicatorColorFg;
       case 'strategic':
-        return props.theme.themeColors.white;
+        return props.theme.strategicIndicatorColorFg;
       default:
-        return props.theme.themeColors.dark;
+        return props.theme.themeColors.black;
     }
   }};
   background-color: ${(props) => {

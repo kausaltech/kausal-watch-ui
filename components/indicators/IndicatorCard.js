@@ -4,6 +4,7 @@ import {
   Card, CardBody, CardTitle, Alert,
 } from 'reactstrap';
 import styled from 'styled-components';
+import { withTranslation } from '../../common/i18n';
 import { IndicatorLink } from '../../common/links';
 
 const CardWrapper = styled.div`
@@ -11,7 +12,7 @@ const CardWrapper = styled.div`
 
   a {
     color: inherit;
-    
+
     &:hover {
       text-decoration: none;
     }
@@ -27,15 +28,15 @@ const Indicator = styled(Card)`
   color: ${(props) => {
     switch (props.level) {
       case 'action':
-        return '#ffffff';
+        return props.theme.actionColorFg;
       case 'operational':
-        return '#000000';
+        return props.theme.operationalIndicatorColorFg;
       case 'tactical':
-        return '#000000';
+        return props.theme.tacticalIndicatorColorFg;
       case 'strategic':
-        return '#ffffff';
+        return props.theme.strategicIndicatorColorFg;
       default:
-        return '#000000';
+        return props.theme.themeColors.black;
     }
   }};
   background-color: ${(props) => {
@@ -74,24 +75,9 @@ const IndicatorTitle = styled(CardTitle)`
   font-weight: 600;
 `;
 
-function getLevelName(level) {
-  switch (level) {
-    case 'action':
-      return 'Toimenpide';
-    case 'operational':
-      return 'Toiminnallinen mittari';
-    case 'tactical':
-      return 'Taktinen mittari';
-    case 'strategic':
-      return 'Strateginen mittari';
-    default:
-      return '';
-  }
-}
-
 function IndicatorCard(props) {
   const {
-    level, objectid, name, number,
+    t, level, objectid, name, number,
   } = props;
 
 
@@ -102,7 +88,7 @@ function IndicatorCard(props) {
           <Indicator level={level} key={objectid}>
             <CardBody>
               <div>
-                <IndicatorType>{ getLevelName(level) }</IndicatorType>
+                <IndicatorType>{ t(level) }</IndicatorType>
                 <IndicatorTitle>
                   { number && <IndicatorNumber>{ number }</IndicatorNumber> }
                   { name }
@@ -121,10 +107,11 @@ IndicatorCard.defaultProps = {
 };
 
 IndicatorCard.propTypes = {
+  t: PropTypes.func,
   level: PropTypes.string.isRequired,
   objectid: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   number: PropTypes.number,
 };
 
-export default IndicatorCard;
+export default withTranslation('common')(IndicatorCard);
