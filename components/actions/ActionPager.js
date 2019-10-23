@@ -9,6 +9,7 @@ import { withTranslation } from '../../common/i18n';
 
 const Pager = styled.div`
   display: flex;
+  margin: 2rem 0;
 `;
 
 const Previous = styled.div`
@@ -21,6 +22,8 @@ const Next = styled.div`
 `;
 
 const PageButton = styled(Button)`
+  line-height: 1;
+
   .icon {
     fill: ${props => props.theme.brandDark} !important;
   }

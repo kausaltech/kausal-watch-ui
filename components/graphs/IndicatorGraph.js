@@ -357,13 +357,14 @@ function IndicatorGraph(props) {
     </Card>
   );
 }
+
 IndicatorGraph.propTypes = {
   indicator: PropTypes.shape({
     id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     unit: PropTypes.shape({
-      name: PropTypes.string.isRequired,
-    }).isRequired,
+      name: PropTypes.string,
+    }),
     latestGraph: PropTypes.shape({
       id: PropTypes.string.isRequired,
     }),

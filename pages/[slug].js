@@ -149,7 +149,7 @@ const Content = (props) => {
                           {faq.title}
                         </Accordion.Header>
                         <Accordion.Body>
-                          <div dangerouslySetInnerHTML={{ __html: faq.answer }}/>
+                          <div className="text-content" dangerouslySetInnerHTML={{ __html: faq.answer }}/>
                         </Accordion.Body>
                       </Accordion.Item>
                     ))}

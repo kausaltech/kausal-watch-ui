@@ -104,11 +104,12 @@ function IndicatorCard(props) {
 
 IndicatorCard.defaultProps = {
   number: null,
+  level: null,
 };
 
 IndicatorCard.propTypes = {
   t: PropTypes.func,
-  level: PropTypes.string.isRequired,
+  level: PropTypes.string,
   objectid: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   number: PropTypes.number,

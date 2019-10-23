@@ -158,6 +158,12 @@ const ActionSection = styled.div`
   margin-bottom: 2.5rem;
 `;
 
+const SectionHeader = styled.h2`
+  @media (max-width: ${(props) => props.theme.breakpointMd}) {
+    font-size: 1.75em;
+  }
+`;
+
 const OfficialText = styled.div`
   color: ${(props) => props.theme.brandDark};
   margin-bottom: 3rem;
@@ -220,6 +226,7 @@ function ActionDetails(props) {
 
   const updated = moment(action.updatedAt).format('DD.MM.YYYY');
   const generalContent = plan.generalContent || {};
+  const cleanOfficialText = action.officialName.replace(/(?:\r\n|\r|\n)/g, '<br>');
 
   return (
     <div>
@@ -287,11 +294,11 @@ function ActionDetails(props) {
         <Row>
           <Col md="7" lg="8">
             {action.description
-            && <ActionSection dangerouslySetInnerHTML={{ __html: action.description }} />}
+            && <ActionSection className="text-content" dangerouslySetInnerHTML={{ __html: action.description }} />}
             <OfficialText>
               <h5>{ t('action-description-official') }</h5>
               <strong>{ t('action-as-in-plan') }</strong>
-              <div dangerouslySetInnerHTML={{ __html: action.officialName }} />
+              <div dangerouslySetInnerHTML={{ __html: cleanOfficialText }} />
               {generalContent.officialNameDescription && (
                 <small>{`(${generalContent.officialNameDescription})`}</small>
               )}
@@ -352,7 +359,7 @@ function ActionDetails(props) {
           <Container>
             <Row>
               <Col>
-                <h2 className="mb-5">{ t('action-status-updates') }</h2>
+                <SectionHeader className="mb-5">{ t('action-status-updates') }</SectionHeader>
               </Col>
             </Row>
             <ActionUpdatesList id={action.id} className="mb-5" />
@@ -362,7 +369,7 @@ function ActionDetails(props) {
       <Container>
         <Row>
           <Col>
-            <h2 className="mb-5">{ t('action-tasks') }</h2>
+            <SectionHeader className="mb-5">{ t('action-tasks') }</SectionHeader>
           </Col>
         </Row>
         <Row>
@@ -374,7 +381,7 @@ function ActionDetails(props) {
         </Row>
         <Row>
           <Col>
-            <h2 className="mb-5">{ t('indicators') }</h2>
+            <SectionHeader className="mb-5">{ t('indicators') }</SectionHeader>
           </Col>
         </Row>
         <Row>
@@ -391,7 +398,7 @@ function ActionDetails(props) {
           <Container>
             <Row>
               <Col sm="12">
-                <h2 className="mb-3">{ t('action-what-effect-this-has') }</h2>
+                <SectionHeader className="mb-3">{ t('action-what-effect-this-has') }</SectionHeader>
               </Col>
             </Row>
           </Container>

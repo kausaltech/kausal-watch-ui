@@ -93,7 +93,7 @@ function ActionStatusUpdate(props) {
         </Media>
         <h3>{ title }</h3>
       </ActionUpdateHeader>
-      <div dangerouslySetInnerHTML={{ __html: content }} />
+      <div className="text-content" dangerouslySetInnerHTML={{ __html: content }} />
     </ActionUpdate>
   );
 }
