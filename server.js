@@ -46,12 +46,13 @@ app.prepare().then(() => {
   server.use(nextI18NextMiddleware(nextI18next));
 
   const handle = app.getRequestHandler();
+
   server.get('*', (req, res) => {
     req.currentURL = getCurrentURL(req);
 
     if (ssrCache) {
       if (req.path === '/' || req.path.startsWith('/actions') || req.path.startsWith('/indicators')) {
-        return ssrCache({ req, res, pagePath: req.path });
+        return ssrCache({ req, res, pagePath: req.path, queryParams: req.query });
       }
     }
 
