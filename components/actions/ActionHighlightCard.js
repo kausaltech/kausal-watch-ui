@@ -6,6 +6,7 @@ import {
 } from 'reactstrap';
 import styled from 'styled-components';
 import gql from 'graphql-tag';
+import { Spring } from 'react-spring/renderprops.cjs';
 
 import { ActionLink } from '../../common/links';
 import Icon from '../common/Icon';
@@ -70,36 +71,43 @@ function ActionCard(props) {
   let actionName = action.name;
   if (actionName.length > 120) actionName = `${action.name.substring(0, 120)}…`;
   return (
-    <StyledCard>
-      <ActionLink id={action.identifier}>
-        <a href>
-          <ActionImage action={action} width={520} height={200} />
-          <CardImgOverlay>
-            <ActionNumber className="action-number">{action.identifier}</ActionNumber>
-          </CardImgOverlay>
-        </a>
-      </ActionLink>
-      {action.status && (
-        <ActionStatus
-          name={action.status.name}
-          identifier={action.status.identifier}
-          completion={action.completion}
-        />
-      )}
-      <CardBody>
-        { action.status && action.status.identifier === 'completed'
-          && (
-            <ReadyBadge color="success" pill>
-              <Icon name="check" color="#fff" width="2em" height="2em" />
-            </ReadyBadge>
+    <Spring
+      from={{ opacity: 0 }}
+      to={{ opacity: 1 }}
+    >
+      {(springProps) => (
+        <StyledCard style={springProps}>
+          <ActionLink id={action.identifier}>
+            <a href>
+              <ActionImage action={action} width={520} height={200} />
+              <CardImgOverlay>
+                <ActionNumber className="action-number">{action.identifier}</ActionNumber>
+              </CardImgOverlay>
+            </a>
+          </ActionLink>
+          {action.status && (
+            <ActionStatus
+              name={action.status.name}
+              identifier={action.status.identifier}
+              completion={action.completion}
+            />
           )}
-        <ActionLink id={action.identifier}>
-          <a>
-            <StyledCardTitle tag="h5">{actionName}</StyledCardTitle>
-          </a>
-        </ActionLink>
-      </CardBody>
-    </StyledCard>
+          <CardBody>
+            { action.status && action.status.identifier === 'completed'
+              && (
+                <ReadyBadge color="success" pill>
+                  <Icon name="check" color="#fff" width="2em" height="2em" />
+                </ReadyBadge>
+              )}
+            <ActionLink id={action.identifier}>
+              <a href>
+                <StyledCardTitle tag="h5">{actionName}</StyledCardTitle>
+              </a>
+            </ActionLink>
+          </CardBody>
+        </StyledCard>
+      )}
+    </Spring>
   );
 }
 

@@ -402,7 +402,7 @@ const HnhHero = () => (
     </SiteHero>
     <EmissionScaleBanner className="hero-banner-bottom">
       <Container>
-        <LazyLoad>
+        <LazyLoad height={640}>
           <Spring
             from={{ opacity: 0 }}
             to={{ opacity: 1 }}

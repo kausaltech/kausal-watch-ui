@@ -6,10 +6,10 @@ import { Query } from 'react-apollo';
 import {
   Row, Col, Button,
 } from 'reactstrap';
+import LazyLoad from 'react-lazyload';
 import styled from 'styled-components';
 import { withTranslation } from '../../common/i18n';
 import ContentLoader from '../common/ContentLoader';
-import { Link } from '../../routes';
 import { ActionListLink } from '../../common/links';
 
 import ActionHighlightCard from './ActionHighlightCard';
@@ -66,7 +66,9 @@ function ActionCardList({ t, actions }) {
           className="mb-4 d-flex align-items-stretch"
           style={{ transition: 'all 0.5s ease' }}
         >
-          <ActionHighlightCard action={item} />
+          <LazyLoad height={300}>
+            <ActionHighlightCard action={item} />
+          </LazyLoad>
         </Col>
       ))}
       <Col xs="12" className="mt-5 mb-5">
