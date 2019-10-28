@@ -17,6 +17,8 @@
     "insight-download-png": "Image (png)",
     "insight-filter-label": "Filter by indicator",
     "insight-filter-no-results": "No results",
+    "indicators-as-list": "As a list",
+    "indicators-as-insight": "As insights",
     "goal": "goal",
     "forecast": "forecast",
     "current-trend": "trend",
