@@ -333,7 +333,7 @@ const HnhHero = () => (
                   />
                 </MainIllustration>
                 <SiteTitle style={props}>
-                  <h1>Helsingin Ilmastovahti</h1>
+                  <h1>Helsingin ilmastovahti</h1>
                   <p className="lead">Seuraa Helsingin ilmasto-ohjelman edistymistä.</p>
                 </SiteTitle>
               </Col>
