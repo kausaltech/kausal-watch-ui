@@ -3,6 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
+import { Spring } from 'react-spring/renderprops.cjs';
 import {
   Container, Row, Col,
 } from 'reactstrap';
@@ -171,31 +172,36 @@ class ActionListFiltered extends React.Component {
     return (
       <ActionListSection id="actions">
         <ActionListHeader>
-          <Container>
-            <h1 className="mb-5">{ t('actions') }</h1>
-
-            {leadContent && (
-              <Row>
-                <Col sm="12" md="8" className="mb-5">
-                  <div className="text-content" dangerouslySetInnerHTML={{ __html: leadContent }} />
-                </Col>
-              </Row>
+          <Spring
+            from={{ opacity: 0 }}
+            to={{ opacity: 1 }}
+          >
+            {(props) => (
+              <Container style={props}>
+                <h1 className="mb-5">{ t('actions') }</h1>
+                {leadContent && (
+                  <Row>
+                    <Col sm="12" md="8" className="mb-5">
+                      <div className="text-content" dangerouslySetInnerHTML={{ __html: leadContent }} />
+                    </Col>
+                  </Row>
+                )}
+                <Row>
+                  <Col sm="12" md="10">
+                    <h2 className="mb-4">{ t('browse-actions') }</h2>
+                    <ActionListFilters
+                      cats={this.cats}
+                      orgs={this.orgs}
+                      impacts={impacts}
+                      filters={filters}
+                      onChange={this.handleChange}
+                      actionCount={actions.length}
+                    />
+                  </Col>
+                </Row>
+              </Container>
             )}
-
-            <Row>
-              <Col sm="12" md="10">
-                <h2 className="mb-4">{ t('browse-actions') }</h2>
-                <ActionListFilters
-                  cats={this.cats}
-                  orgs={this.orgs}
-                  impacts={impacts}
-                  filters={filters}
-                  onChange={this.handleChange}
-                  actionCount={actions.length}
-                />
-              </Col>
-            </Row>
-          </Container>
+          </Spring>
         </ActionListHeader>
         <Container>
           <ActionCardList actions={actions} />
