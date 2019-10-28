@@ -1,8 +1,6 @@
 import React from 'react';
-import { Container } from 'reactstrap';
 import { withTranslation } from '../../common/i18n';
 import Layout, { Meta } from '../../components/layout';
-import IndicatorsHero from '../../components/indicators/IndicatorsHero';
 import IndicatorList from '../../components/indicators/IndicatorList';
 
 import PlanContext from '../../context/plan';
@@ -20,11 +18,7 @@ class IndicatorsPage extends React.Component {
     const { t } = this.props;
     return (
       <Layout>
-        <Meta title={t('indicators')} />
-        <IndicatorsHero />
-        <Container>
-          <IndicatorList />
-        </Container>
+        <IndicatorList />
       </Layout>
     );
   }

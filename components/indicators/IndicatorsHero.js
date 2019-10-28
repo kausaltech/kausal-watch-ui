@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   Container, Row, Col, Nav, NavItem,
 } from 'reactstrap';
@@ -34,7 +35,7 @@ const StyledActiveLink = styled(ActiveLink)`
 class IndicatorsHero extends React.Component {
 
   render() {
-    const { t } = this.props;
+    const { t, leadContent } = this.props;
 
     return (
       <div>
@@ -43,16 +44,13 @@ class IndicatorsHero extends React.Component {
             <h1 className="mb-5">
               { t('indicators') }
             </h1>
-            <Row>
-              <Col sm="12" md="8" className="mb-1">
-                <div className="text-content">
-                  <p>Ilmastokriisin pys&auml;ytt&auml;misell&auml; on kiire. Haluamme varmistaa, ett&auml; sovitut 147 toimenpidett&auml; etenev&auml;t aikataulussa ja ett&auml; Helsingin kasvihuonekaasup&auml;&auml;st&ouml;t pienenev&auml;t tarpeeksi nopeasti. Olemme kehitt&auml;neet toimenpiteille mittareita, joita seuraamalla n&auml;emme, mihin suuntaan olemme menossa. Mittareita on kolmenlaisia.</p>
-                  <p>Toiminnalliset mittarit kytkeytyv&auml;t suoraan toimenpiteisiin. Ne kertovat toimenpiteen etenemisest&auml; ja sit&auml;, kuinka paljon kaupungilla ponnistellaan kyseisen toimenpiteen puolesta. Toiminnallinen mittari on esimerkiksi vuodessa rakennetun baanaverkon pituus.</p>
-                  <p>Taktiset mittarit kuvaavat ilmi&ouml;t&auml;, jota kaupunki pyrkii lis&auml;&auml;m&auml;&auml;n tai v&auml;hent&auml;m&auml;&auml;n toimenpiteill&auml;. Esimerkki taktisesta mittarista on py&ouml;r&auml;liikenteen m&auml;&auml;r&auml;.</p>
-                  <p>Strategiset mittarit puolestaan kuvaavat Helsingin kasvihuonekaasup&auml;&auml;st&ouml;j&auml; ja niit&auml; seuraamalla saamme tietoa toimenpiteiden vaikuttavuudesta: teemmeh&auml;n Helsingiss&auml; oikeita asioita, jotta p&auml;&auml;st&ouml;t v&auml;henev&auml;t?</p>
-                </div>
-            </Col>
-          </Row>
+            { leadContent && (
+              <Row>
+                <Col sm="12" md="8" className="mb-1">
+                  <div className="text-content" dangerouslySetInnerHTML={{ __html: leadContent }} />
+                </Col>
+              </Row>
+            )}
           </Container>
         </IndicatorsJumbo>
         <IndicatorsTabs>
@@ -75,5 +73,10 @@ class IndicatorsHero extends React.Component {
     );
   }
 }
+
+IndicatorsHero.propTypes = {
+  t: PropTypes.func.isRequired,
+  leadContent: PropTypes.string,
+};
 
 export default withTranslation('common')(IndicatorsHero);

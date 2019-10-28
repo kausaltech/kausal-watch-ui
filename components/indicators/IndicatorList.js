@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
+import { Container } from 'reactstrap';
 
 import { withTranslation } from '../../common/i18n';
 import ContentLoader from '../common/ContentLoader';
@@ -9,6 +10,7 @@ import PlanContext from '../../context/plan';
 import { Meta } from '../layout';
 import ErrorMessage from '../common/ErrorMessage';
 
+import IndicatorsHero from './IndicatorsHero';
 import IndicatorListFiltered from './IndicatorListFiltered';
 
 
@@ -56,6 +58,7 @@ class IndicatorList extends React.Component {
 
   processDataToProps(data) {
     const { plan } = data;
+    const generalContent = plan.generalContent || {};
     const { indicatorLevels, categoryTypes } = plan;
 
     const indicators = indicatorLevels.map((il) => {
@@ -72,7 +75,7 @@ class IndicatorList extends React.Component {
       });
     });
 
-    return { indicators, categories }
+    return { indicators, categories, leadContent: generalContent.indicatorListLeadContent }
   }
 
   render() {
@@ -85,13 +88,19 @@ class IndicatorList extends React.Component {
           if (loading) return <ContentLoader />;
           if (error) return <ErrorMessage message={error.message} />;
           const props = this.processDataToProps(data);
+          const { leadContent } = props;
+          delete props.leadContent;
+
           return (
             <>
               <Meta
                 title={t('indicators')}
                 description={`Toimenpiteiden edistymistä ja kasvihuonekaasupäästöjen kehitystä seurataan mittareilla`}
-                />
-              <IndicatorListFiltered {...props} />
+              />
+              <IndicatorsHero leadContent={leadContent} />
+              <Container>
+                <IndicatorListFiltered {...props} />
+              </Container>
             </>
           )
         }}
