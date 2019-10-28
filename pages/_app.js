@@ -105,9 +105,10 @@ class AplansApp extends App {
     if (!process.browser || !this.piwik) return;
 
     const parts = url.split('?');
-    const path = parts[0].substring(1);
+    const pathname = parts[0];
+    const path = pathname.substring(1);
 
-    this.piwik.track({ path });
+    this.piwik.track({ path, pathname, search: '' });
   }
 
   componentDidMount() {
