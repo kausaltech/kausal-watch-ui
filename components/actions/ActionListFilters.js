@@ -84,7 +84,6 @@ class ActionListFilters extends React.Component {
     if (filters.category) activeFilters.push({id: 1, reset: this.onCatBtnClick, name: this.getCategoryName(filters.category)});
     if (filters.impact) activeFilters.push({id: 2, reset: this.onImpactBtnClick, name: `${t('impact')}: ${this.getImpactName(filters.impact)}`});
     if (filters.text) activeFilters.push({id: 3, reset: this.onSearchChange, name: filters.text});
-    console.log(activeFilters);
 
     return (
       <div className="filters mb-2 text-left">
