@@ -4,6 +4,7 @@ import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
+import { Spring } from 'react-spring/renderprops.cjs';
 
 import Layout from '../components/layout';
 import { Meta } from '../components/layout';
@@ -117,7 +118,18 @@ const Content = (props) => {
         shareImageUrl={imageUrl}
         description={`${tagline}`}
         />
-      { imageUrl && <HeaderImage image={imageUrl} /> }
+      <HeaderBg>
+        { imageUrl && (
+          <Spring
+            from={{ opacity: 0 }}
+            to={{ opacity: 1 }}
+          >
+            {(props) => (
+              <HeaderImage image={imageUrl} style={props} />
+            )}
+          </Spring>
+        )}
+      </HeaderBg>
       <HeaderBg>
         <Container>
           <Row>

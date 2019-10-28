@@ -49,6 +49,7 @@
     "react-piwik": "^1.6.0",
     "react-plotly.js": "^2.3.0",
     "react-sizeme": "^2.6.8",
+    "react-spring": "^8.0.27",
     "reactstrap": "^8.0.1",
     "sass-extract": "^2.1.0",
     "sass-extract-js": "^0.4.0",

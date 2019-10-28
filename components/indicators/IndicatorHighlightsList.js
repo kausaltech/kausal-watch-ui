@@ -6,6 +6,7 @@ import { Query } from 'react-apollo';
 import {
   Row, Col, Button,
 } from 'reactstrap';
+import LazyLoad from 'react-lazyload';
 import styled from 'styled-components';
 import { withTranslation } from '../../common/i18n';
 import ContentLoader from '../common/ContentLoader';
@@ -63,13 +64,15 @@ function IndicatorCardList(props) {
           className="mb-4 d-flex align-items-stretch"
           style={{ transition: 'all 0.5s ease' }}
         >
-          <IndicatorHighlightCard
-            objectid={item.id}
-            level={item.level}
-            name={item.name}
-            value={item.latestValue.value}
-            unit={item.unit.shortName || item.unit.name}
-          />
+          <LazyLoad height={300}>
+            <IndicatorHighlightCard
+              objectid={item.id}
+              level={item.level}
+              name={item.name}
+              value={item.latestValue.value}
+              unit={item.unit.shortName || item.unit.name}
+            />
+          </LazyLoad>
         </Col>
       ))}
       <Col xs="12" className="mt-5 mb-3">

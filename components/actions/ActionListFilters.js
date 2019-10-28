@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { Spring, Transition } from 'react-spring/renderprops.cjs';
 import {
   CustomInput as BaseCustomInput, Input, FormGroup, Label, Row, Col, Badge, Button
 } from 'reactstrap';
@@ -79,58 +79,90 @@ class ActionListFilters extends React.Component {
     const organization = filters.organization === undefined ? '' : filters.organization;
     const impact = filters.impact === undefined ? '' : filters.impact;
 
+    const activeFilters = [];
+    if (filters.organization) activeFilters.push({id: 0, reset: this.onOrgBtnClick, name: this.getOrganizationName(filters.organization)});
+    if (filters.category) activeFilters.push({id: 1, reset: this.onCatBtnClick, name: this.getCategoryName(filters.category)});
+    if (filters.impact) activeFilters.push({id: 2, reset: this.onImpactBtnClick, name: `${t('impact')}: ${this.getImpactName(filters.impact)}`});
+    if (filters.text) activeFilters.push({id: 3, reset: this.onSearchChange, name: filters.text});
+    console.log(activeFilters);
+
     return (
       <div className="filters mb-2 text-left">
-        <Row>
-          <Col sm="12" md={{ size: 6 }}>
-            <FormGroup>
-              <Label for="catfield">{ t('filter-category') }</Label>
-              <CustomInput type="select" id="catfield" name="category" value={category} onChange={this.onCatBtnClick} className="mb-2">
-                <option value="">{ t('filter-all-categories') }</option>
-                {rootCategories.map(cat => (
-                  <option value={cat.id} key={cat.id}>{ this.getCategoryName(cat.id) }</option>
-                ))}
-              </CustomInput>
-
-            </FormGroup>
-          </Col>
-          <Col sm="12" md={{ size: 6 }}>
-            <FormGroup>
-              <Label for="orgfield">{ t('filter-organization') }</Label>
-              <CustomInput type="select" id="orgfield" name="organization" value={organization} onChange={this.onOrgBtnClick} className="mb-2">
-                <option value="">{ t('filter-all-organizations') }</option>
-                {orgs.map((org) => (
-                  <option value={org.id} key={org.id}>{ this.getOrganizationName(org.id) }</option>
-                ))}
-              </CustomInput>
-            </FormGroup>
-          </Col>
-          <Col sm="12" md={{ size: 6 }}>
-            <FormGroup>
-              <Label for="impactfield">{ t('filter-impact') }</Label>
-              <CustomInput type="select" id="impactfield" name="impact" value={impact} onChange={this.onImpactBtnClick} className="mb-2">
-                <option value="">{ t('filter-all-impacts') }</option>
-                {impacts.map((impact) => (
-                  <option value={impact.id} key={impact.id}>{ impact.name }</option>
-                ))}
-              </CustomInput>
-            </FormGroup>
-          </Col>
-          <Col sm="12" md={{ size: 6 }}>
-            <FormGroup>
-              <Label for="searchfield">{ t('filter-text') }</Label>
-              <Input name="search" id="searchfield" placeholder={t('filter-text-default')} value={filters.text || ''} onChange={this.onSearchChange} />
-            </FormGroup>
-          </Col>
-        </Row>
+        <Spring
+          from={{ opacity: 0 }}
+          to={{ opacity: 1 }}
+        >
+          {(props) => (
+            <Row style={props}>
+              <Col sm="12" md={{ size: 6 }}>
+                <FormGroup>
+                  <Label for="catfield">{ t('filter-category') }</Label>
+                  <CustomInput type="select" id="catfield" name="category" value={category} onChange={this.onCatBtnClick} className="mb-2">
+                    <option value="">{ t('filter-all-categories') }</option>
+                    {rootCategories.map(cat => (
+                      <option value={cat.id} key={cat.id}>{ this.getCategoryName(cat.id) }</option>
+                    ))}
+                  </CustomInput>
+                </FormGroup>
+              </Col>
+              <Col sm="12" md={{ size: 6 }}>
+                <FormGroup>
+                  <Label for="orgfield">{ t('filter-organization') }</Label>
+                  <CustomInput type="select" id="orgfield" name="organization" value={organization} onChange={this.onOrgBtnClick} className="mb-2">
+                    <option value="">{ t('filter-all-organizations') }</option>
+                    {orgs.map((org) => (
+                      <option value={org.id} key={org.id}>{ this.getOrganizationName(org.id) }</option>
+                    ))}
+                  </CustomInput>
+                </FormGroup>
+              </Col>
+              <Col sm="12" md={{ size: 6 }}>
+                <FormGroup>
+                  <Label for="impactfield">{ t('filter-impact') }</Label>
+                  <CustomInput type="select" id="impactfield" name="impact" value={impact} onChange={this.onImpactBtnClick} className="mb-2">
+                    <option value="">{ t('filter-all-impacts') }</option>
+                    {impacts.map((impact) => (
+                      <option value={impact.id} key={impact.id}>{ impact.name }</option>
+                    ))}
+                  </CustomInput>
+                </FormGroup>
+              </Col>
+              <Col sm="12" md={{ size: 6 }}>
+                <FormGroup>
+                  <Label for="searchfield">{ t('filter-text') }</Label>
+                  <Input name="search" id="searchfield" placeholder={t('filter-text-default')} value={filters.text || ''} onChange={this.onSearchChange} />
+                </FormGroup>
+              </Col>
+            </Row>
+          )}
+        </Spring>
         <Row>
           <Col>
             <FiltersList className="mb-4 mt-3">
-              { filters.organization && <div><Badge color="primary" className="mr-3"><Button close size="sm" onClick={this.onOrgBtnClick} />{ this.getOrganizationName(filters.organization) }</Badge></div> }
-              { filters.category && <div><Badge color="primary" className="mr-3"><Button close onClick={this.onCatBtnClick} />{ this.getCategoryName(filters.category) }</Badge></div> }
-              { filters.impact && <div><Badge color="primary" className="mr-3"><Button close onClick={this.onImpactBtnClick} />{ t('impact') }: { this.getImpactName(filters.impact) }</Badge></div> }
-              { filters.text && <div> <Badge color="primary" className="mr-3"><Button close onClick={this.onSearchChange} />"{ filters.text }"</Badge></div> }
-              <div className="count"> { actionCount} {t('filter-result-actions')}</div>
+              <Transition
+                items={activeFilters}
+                keys={(item) => item.id}
+                from={{ opacity: 0 }}
+                to={{ opacity: 1 }}
+                enter={{ opacity: 1 }}
+                leave={{ opacity: 0 }}
+              >
+                {(item) => (props) => (
+                  <Badge
+                    color="primary"
+                    className="mr-3"
+                    style={props}
+                  >
+                    <Button close size="sm" onClick={item.reset} />
+                    { item.name }
+                  </Badge>
+                )}
+              </Transition>
+              <div className="count">
+                { actionCount }
+                { ' ' }
+                { t('filter-result-actions') }
+              </div>
             </FiltersList>
           </Col>
         </Row>

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {
   Card, CardImgOverlay, CardBody, CardTitle,
 } from 'reactstrap';
+import { Spring } from 'react-spring/renderprops.cjs';
 import styled from 'styled-components';
 import { withTranslation } from '../../common/i18n';
 import { IndicatorLink } from '../../common/links';
@@ -98,30 +99,37 @@ function IndicatorHighlightCard(props) {
   } = props;
 
   return (
-    <StyledCard>
-      <IndicatorLink id={objectid}>
-        <a href>
-          <IndicatorBg level={level} />
-          <CardImgOverlay>
-            <IndicatorValue
-              level={level}
-              className="action-number"
-            >
-              { beautifyValue(value) }
-              <IndicatorUnit>{unit}</IndicatorUnit>
-            </IndicatorValue>
-          </CardImgOverlay>
-        </a>
-      </IndicatorLink>
-      <CardBody>
-        <IndicatorType>{ t(level) }</IndicatorType>
-        <IndicatorLink id={objectid}>
-          <a href>
-            <StyledCardTitle tag="h5">{ name }</StyledCardTitle>
-          </a>
-        </IndicatorLink>
-      </CardBody>
-    </StyledCard>
+    <Spring
+      from={{ opacity: 0 }}
+      to={{ opacity: 1 }}
+    >
+      {(springProps) => (
+        <StyledCard style={springProps}>
+          <IndicatorLink id={objectid}>
+            <a href>
+              <IndicatorBg level={level} />
+              <CardImgOverlay>
+                <IndicatorValue
+                  level={level}
+                  className="action-number"
+                >
+                  { beautifyValue(value) }
+                  <IndicatorUnit>{unit}</IndicatorUnit>
+                </IndicatorValue>
+              </CardImgOverlay>
+            </a>
+          </IndicatorLink>
+          <CardBody>
+            <IndicatorType>{ t(level) }</IndicatorType>
+            <IndicatorLink id={objectid}>
+              <a href>
+                <StyledCardTitle tag="h5">{ name }</StyledCardTitle>
+              </a>
+            </IndicatorLink>
+          </CardBody>
+        </StyledCard>
+      )}
+    </Spring>
   );
 }
 

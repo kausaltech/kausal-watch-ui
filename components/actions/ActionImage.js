@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 
 import { CardImg as BaseCardImg } from 'reactstrap';
 import styled from 'styled-components';
-import LazyLoad from 'react-lazyload';
 
 import PlanContext from '../../context/plan';
 
@@ -13,7 +12,7 @@ const CardImg = styled(BaseCardImg)`
 `;
 
 const ImgBg = styled.div`
-  background-color: ${props => props.theme.imageOverlay};
+  background-color: ${(props) => props.theme.imageOverlay};
 `;
 
 
@@ -53,14 +52,11 @@ class ActionImage extends React.Component {
   }
 
   render() {
-    const { height } = this.props;
     return (
       <ImgBg>
         <PlanContext.Consumer>
-          {plan => (
-            <LazyLoad height={height} once offset={100}>
-              <CardImg top width="100%" src={this.getImageURL(plan)} alt="Action Image" />
-            </LazyLoad>
+          {(plan) => (
+            <CardImg top width="100%" src={this.getImageURL(plan)} alt="Action Image" />
           )}
         </PlanContext.Consumer>
       </ImgBg>
@@ -69,7 +65,7 @@ class ActionImage extends React.Component {
 }
 
 ActionImage.propTypes = {
-  action: PropTypes.object.isRequired,
+  action: PropTypes.shape({}).isRequired,
   height: PropTypes.number,
   width: PropTypes.number
 };
