@@ -39,14 +39,14 @@ class BadgeTooltip extends React.Component {
 
   render() {
     const {
-      abbreviation, name, size, id, href,
+      abbreviation, name, size, id, href, ariaLabel,
     } = this.props;
     const { tooltipOpen } = this.state;
     const badgeId = id.replace(/[: ]/g, '_');
 
     return (
       <BadgeWrapper className={size} href={href}>
-        <StyledBadge pill id={badgeId}>{abbreviation || name}</StyledBadge>
+        <StyledBadge pill id={badgeId} aria-label={ariaLabel}>{abbreviation || name}</StyledBadge>
         <Tooltip placement="top" isOpen={tooltipOpen} target={badgeId} toggle={this.toggle}>
           {name}
         </Tooltip>
@@ -63,8 +63,12 @@ BadgeTooltip.propTypes = {
   abbreviation: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   id: PropTypes.string.isRequired,
+  ariaLabel: PropTypes.string,
   size: PropTypes.string,
   href: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+};
+BadgeTooltip.defaultProps = {
+  ariaLabel: null,
 };
 
 export default BadgeTooltip;

@@ -25,18 +25,21 @@ function ResponsibleBadge(props) {
     abbreviation,
   } = props;
   let size = 'md';
-  let fullName = name;
+  let ariaLabel;
 
   if (index === 0) {
     size = 'lg';
-    fullName = `Päävastuutaho: ${name}`;
+    ariaLabel = `Päävastuutaho: ${name}`;
+  } else {
+    ariaLabel = name;
   }
 
   return (
     <ActionListLink query={{ organization: id }}>
       <BadgeTooltip
         id={id}
-        name={fullName}
+        name={name}
+        ariaLabel={ariaLabel}
         abbreviation={abbreviation}
         size={size}
       />
