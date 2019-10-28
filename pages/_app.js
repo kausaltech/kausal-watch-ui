@@ -3,10 +3,11 @@ import App from 'next/app';
 import getConfig from 'next/config';
 import { ApolloProvider, Query } from 'react-apollo';
 import gql from 'graphql-tag';
+import ReactPiwik from 'react-piwik';
 
+import { Router } from '../routes';
 import { captureException } from '../common/sentry';
 import { appWithTranslation } from '../common/i18n';
-
 import PlanContext from '../context/plan';
 import withApollo from '../common/apollo';
 import Error from './_error';
@@ -57,6 +58,18 @@ class AplansApp extends App {
       hasError: false,
       errorEventId: undefined,
     };
+    this.handleRouteChange = this.handleRouteChange.bind(this);
+
+    if (process.browser && publicRuntimeConfig.matomoURL && publicRuntimeConfig.matomoSiteId) {
+      this.piwik = new ReactPiwik({
+        url: publicRuntimeConfig.matomoURL,
+        siteId: publicRuntimeConfig.matomoSiteId,
+        jsFilename: 'matomo.js',
+        phpFilename: 'matomo.php',
+      });
+      // Track the initial page view
+      ReactPiwik.push(['trackPageView']);
+    }
   }
 
   static async getInitialProps(args) {
@@ -86,6 +99,23 @@ class AplansApp extends App {
   componentDidCatch(error, errorInfo) {
     captureException(error, { errorInfo });
     throw error;
+  }
+
+  handleRouteChange(url) {
+    if (!process.browser || !this.piwik) return;
+
+    const parts = url.split('?');
+    const path = parts[0].substring(1);
+
+    this.piwik.track({ path });
+  }
+
+  componentDidMount() {
+    Router.events.on('routeChangeComplete', this.handleRouteChange);
+  }
+
+  componentWillUnmount() {
+    Router.events.off('routeChangeComplete', this.handleRouteChange);
   }
 
   render() {

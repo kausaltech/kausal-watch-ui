@@ -15,6 +15,8 @@ const config = withBundleAnalyzer(withImages(withSass({
     // the default value for PLAN_IDENTIFIER is set below in webpack config
     planIdentifier: process.env.PLAN_IDENTIFIER || 'hnh2035',
     instanceType: process.env.INSTANCE_TYPE || 'development',
+    matomoURL: process.env.MATOMO_URL,
+    matomoSiteId: process.env.MATOMO_SITE_ID,
   },
   /*
   manifest: {
@@ -66,6 +68,8 @@ const config = withBundleAnalyzer(withImages(withSass({
 
     cfg.plugins.push(new webpack.EnvironmentPlugin({
       PLAN_IDENTIFIER: 'hnh2035',
+      MATOMO_URL: '',
+      MATOMO_SITE_ID: '',
     }));
     // cfg.optimization.minimize = false;
 
