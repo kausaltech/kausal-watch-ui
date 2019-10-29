@@ -211,52 +211,43 @@ function IndicatorDetails(props) {
       )}
       { hasImpacts
         && (
-          <>
+          <CausalNavigation>
             <Container>
               <Row>
-                <Col className="mb-4">
-                  <h2>{ t('indicator-direct-impacts') }</h2>
+                <Col sm="6" lg={{ size: 5 }} className="mb-5">
+                  { indicator.relatedCauses.length > 0 && (
+                    <div>
+                      <h3 className="mb-4">{ t('indicator-affected-by') }</h3>
+                      { indicator.relatedCauses.map((cause) => (
+                        <IndicatorCard
+                          objectid={cause.causalIndicator.id}
+                          name={cause.causalIndicator.name}
+                          level={cause.causalIndicator.level}
+                          key={cause.causalIndicator.id}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </Col>
+
+                <Col sm="6" lg={{ size: 5, offset: 2 }} className="mb-5">
+                  { indicator.relatedEffects.length > 0 && (
+                    <div>
+                      <h3 className="mb-4">{ t('indicator-has-effect-on') }</h3>
+                      { indicator.relatedEffects.map((effect) => (
+                        <IndicatorCard
+                          objectid={effect.effectIndicator.id}
+                          name={effect.effectIndicator.name}
+                          level={effect.effectIndicator.level}
+                          key={effect.effectIndicator.id}
+                        />
+                      ))}
+                    </div>
+                  )}
                 </Col>
               </Row>
             </Container>
-            <CausalNavigation>
-              <Container>
-                <Row>
-                  <Col sm="6" lg={{ size: 5 }} className="mb-5">
-                    { indicator.relatedCauses.length > 0 && (
-                      <div>
-                        <h3 className="mb-4">{ t('indicator-affected-by') }</h3>
-                        { indicator.relatedCauses.map((cause) => (
-                          <IndicatorCard
-                            objectid={cause.causalIndicator.id}
-                            name={cause.causalIndicator.name}
-                            level={cause.causalIndicator.level}
-                            key={cause.causalIndicator.id}
-                          />
-                        ))}
-                      </div>
-                    )}
-                  </Col>
-
-                  <Col sm="6" lg={{ size: 5, offset: 2 }} className="mb-5">
-                    { indicator.relatedEffects.length > 0 && (
-                      <div>
-                        <h3 className="mb-4">{ t('indicator-has-effect-on') }</h3>
-                        { indicator.relatedEffects.map((effect) => (
-                          <IndicatorCard
-                            objectid={effect.effectIndicator.id}
-                            name={effect.effectIndicator.name}
-                            level={effect.effectIndicator.level}
-                            key={effect.effectIndicator.id}
-                          />
-                        ))}
-                      </div>
-                    )}
-                  </Col>
-                </Row>
-              </Container>
-            </CausalNavigation>
-          </>
+          </CausalNavigation>
         )}
     </div>
   );
