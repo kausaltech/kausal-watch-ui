@@ -65,7 +65,6 @@
     "error-loading-actions": "Virhe toimenpiteiden latauksessa",
     "error-loading-indicators": "Virhe mittareiden latauksessa",
     "indicator-related-actions": "Mittariin vaikuttavat toimenpiteet",
-    "indicator-direct-impacts": "Suorat vaikutukset",
     "indicator-affected-by": "Tähän mittariin vaikuttaa",
     "indicator-has-effect-on": "Tämä mittari vaikuttaa",
     "indicator-not-found": "Mittaria ei löydy",

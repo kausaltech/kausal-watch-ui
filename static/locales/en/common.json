@@ -65,7 +65,6 @@
     "error-loading-actions": "Error loading the actions list",
     "error-loading-indicators": "Error loading the indicators list",
     "indicator-related-actions": "Actions that impact this indicator",
-    "indicator-direct-impacts": "Direct effects",
     "indicator-affected-by": "This indicator is affected by",
     "indicator-has-effect-on": "This indicator has effect on",
     "indicator-not-found": "Indicator not found",
