@@ -314,6 +314,10 @@ class IndicatorCausal extends React.Component {
     const fromNode = nodes.find(item => edge.from === item.id);
     const toNode = nodes.find(item => edge.to === item.id);
 
+    if (!fromNode || !toNode) {
+      return;
+    }
+
     const edgeLength = toNode.column - fromNode.column;
     const edgeHeight = toNode.row - fromNode.row;
     const averageHeight = 140;
@@ -380,9 +384,11 @@ class IndicatorCausal extends React.Component {
         if (indicator.type !== 'action') indicatorLevel = indicator.indicator_level;
         const connectionsTo = [];
         indicator.to.forEach((edge, index) => {
+          const edgeElement = this.drawEdge(nodes, edge, index);
+          if (!edgeElement) return;
           connectionsTo.push(
             <span key={edge.id}>
-              {this.drawEdge(nodes, edge, index)}
+              {edgeElement}
             </span>,
           );
         });
