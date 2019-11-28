@@ -12,7 +12,7 @@ import PlanContext from '../context/plan';
 import withApollo from '../common/apollo';
 import Error from './_error';
 
-require('../styles/' + process.env.THEME_IDENTIFIER_IDENTIFIER + '/main.scss');
+require('../styles/' + process.env.THEME_IDENTIFIER + '/main.scss');
 
 const { publicRuntimeConfig } = getConfig();
 
