@@ -9,7 +9,7 @@ import SiteFooter from './SiteFooter';
 import PlanContext from '../context/plan';
 
 
-let theme = require('sass-extract-loader?{"plugins": ["sass-extract-js"]}!../styles/' + process.env.PLAN_IDENTIFIER + '/_theme-variables.scss');
+let theme = require('sass-extract-loader?{"plugins": ["sass-extract-js"]}!../styles/' + process.env.THEME_IDENTIFIER + '/_theme-variables.scss');
 
 
 function Layout({ children }) {

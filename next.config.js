@@ -1,8 +1,24 @@
+const fs = require('fs');
+const path = require('path');
 const webpack = require('webpack');
 const withSass = require('@zeit/next-sass');
 const withImages = require('next-images');
 const withBundleAnalyzer = require('@zeit/next-bundle-analyzer');
 const SentryWebpackPlugin = require('@sentry/webpack-plugin');
+
+// Set default plan identifier
+process.env.PLAN_IDENTIFIER = process.env.PLAN_IDENTIFIER || 'hnh2035';
+
+
+function getAllThemes() {
+  const styleDir = path.join(__dirname, 'styles');
+  return fs.readdirSync(styleDir).filter((item) => {
+    if (item === 'app') return false;
+    return fs.lstatSync(path.join(styleDir, item)).isDirectory();
+  });
+}
+
+const themes = getAllThemes();
 
 
 const config = withBundleAnalyzer(withImages(withSass({
@@ -13,7 +29,7 @@ const config = withBundleAnalyzer(withImages(withSass({
     aplansApiBaseURL: process.env.APLANS_API_BASE_URL || 'https://aplans.api.hel.ninja/v1',
     kerrokantasiApiBaseURL: process.env.KERROKANTASI_API_BASE_URL || 'https://api.hel.fi/kerrokantasi-test/v1',
     // the default value for PLAN_IDENTIFIER is set below in webpack config
-    planIdentifier: process.env.PLAN_IDENTIFIER || 'hnh2035',
+    planIdentifier: process.env.PLAN_IDENTIFIER,
     instanceType: process.env.INSTANCE_TYPE || 'development',
     matomoURL: process.env.MATOMO_URL,
     matomoSiteId: process.env.MATOMO_SITE_ID,
@@ -66,11 +82,18 @@ const config = withBundleAnalyzer(withImages(withSass({
     // Ignore all locale files of moment.js
     cfg.plugins.push(new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/));
 
+    // If there is a separate theme for PLAN_IDENTIFIER, use that, otherwise
+    // use the default theme.
+    const defaultThemeIdentifier = themes.indexOf(process.env.PLAN_IDENTIFIER) >= 0
+      ? process.env.PLAN_IDENTIFIER : 'default';
+
     cfg.plugins.push(new webpack.EnvironmentPlugin({
-      PLAN_IDENTIFIER: 'hnh2035',
+      PLAN_IDENTIFIER: '',
+      THEME_IDENTIFIER: defaultThemeIdentifier,
       MATOMO_URL: '',
       MATOMO_SITE_ID: '',
     }));
+
     // cfg.optimization.minimize = false;
 
     // SOURCEMAPS
