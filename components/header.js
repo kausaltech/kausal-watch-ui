@@ -24,10 +24,6 @@ const BotNav = styled(Navbar)`
   color: ${props => props.theme.brandDark};
 `;
 
-const Logo = styled.div`
-  height: 2em;
-`;
-
 
 class Header extends React.Component {
   static contextType = PlanContext;
@@ -60,7 +56,7 @@ class Header extends React.Component {
           <Container>
             <Link href="/">
               <a aria-label={`${siteTitle}, palvelun etusivu`} className="navbar-brand">
-                <Logo aria-hidden="true" className="nav-org-logo" />
+                <div aria-hidden="true" className="nav-org-logo" />
               </a>
             </Link>
           </Container>

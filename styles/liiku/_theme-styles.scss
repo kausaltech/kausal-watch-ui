@@ -2,6 +2,7 @@
 
 .nav-org-logo  {
   @include helsinki-logo($hel-black);
+  height: 2em;
   width: 5em;
 }
 

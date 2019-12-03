@@ -1,49 +1,41 @@
-// Brand colors
 
-$hel-copper:        #00d7a7;
-$hel-bus:           #0000bf;
-$hel-coat:          #0072c6;
-$hel-fog:           #9fc9eb;
-$hel-metro:         #fd4f00;
-$hel-brick:         #bd2719;
-$hel-suomenlinna:   #f5a3c7;
-$hel-engel:         #ffe977;
-$hel-tram:          #009246;
-$hel-summer:        #ffc61e;
-$hel-silver:        #dedfe1;
-$hel-gold:          #c2a251;
-
-// Brand monochromes
-// Not brand loyal $hel-black (#000000) –optimized for digital use.
-$hel-black:         #231f20;
-$hel-dark:          #525a65;
-$hel-gray:          #abb2bd;
-$hel-light:         #ebedf1;
-$hel-white:         #ffffff;
 
 // Helper colors
-$red:     #e05563;
-$yellow:  #eca10c;
-$green:   #3cd55f;
-$cyan:    #52a4ca;
+$red:     #dc3545;
+$yellow:  #ffc107;
+$green:   #28a745;
+$cyan:    #17a2b8;
 
 // Service specific brand color defaults
-$brand-light:  $hel-silver;
-$brand-dark:   $hel-brick;
+// brand-light/brand-dark should have contrast ratio over 4.5
+// brand-light/theme.dark should have contrast ratio over 4.5
+// brand-dark/theme.light should have contrast ratio over 4.5
+$brand-light:  #d8e5e8;
+$brand-dark:   #514CA4;
 
 // Application color mappings:
 $theme-colors: (
-  "primary":    $hel-tram,
-  "secondary":  $hel-summer,
+  "primary":    $brand-dark,
+  "secondary":  $brand-light,
   "success":    $green,
   "info":       $cyan,
   "warning":    $yellow,
   "danger":     $red,
-  "light":      $hel-light,
-  "dark":       $hel-dark
+  "light":      #eeeeee,
+  "dark":       #555555,
+  "black":      #222222,
+  "white":      #ffffff,
 );
 
 $image-overlay: $brand-dark;
+
+// Fonts
+
+$font-family-sans-serif:      'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+//$font-family-serif:           'Inter', Georgia;
+//font-family-headline:        'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; 
+$font-family-monospace:       SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+$font-family-base:            $font-family-sans-serif;
 
 // Links
 //
@@ -69,19 +61,41 @@ $list-group-active-border-color:  $list-group-active-bg;
 
 $brand-nav-background:              $brand-dark;
 
-$navbar-dark-color:                 rgba($hel-white, .5);
-$navbar-dark-hover-color:           rgba($hel-white, .75);
-$navbar-dark-active-color:          $hel-white;
-$navbar-dark-disabled-color:        rgba($hel-white, .25);
+$navbar-dark-color:                 rgba(#222222, .5);
+$navbar-dark-hover-color:           rgba(#222222, .75);
+$navbar-dark-active-color:          #222222;
+$navbar-dark-disabled-color:        rgba(#222222, .25);
 
-$navbar-dark-toggler-icon-bg:       str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='#{$hel-white}' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E"), "#", "%23");
+$navbar-dark-toggler-icon-bg:       str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='#eeeeee' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E"), "#", "%23");
 $navbar-dark-toggler-border-color:  transparent;
 
-$navbar-light-color:                $hel-black;
-$navbar-light-hover-color:          rgba($hel-black, .7);
-$navbar-light-active-color:         rgba($hel-black, .9);
-$navbar-light-disabled-color:       rgba($hel-black, .3);
+$navbar-light-color:                #eeeeee;
+$navbar-light-hover-color:          rgba(#eeeeee, .7);
+$navbar-light-active-color:         rgba(#eeeeee, .9);
+$navbar-light-disabled-color:       rgba(#eeeeee, .3);
 
-$navbar-light-toggler-icon-bg:      str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='#{$hel-black}' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E"), "#", "%23");
+$navbar-light-toggler-icon-bg:      str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='#222222' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E"), "#", "%23");
 
 $navbar-light-toggler-border-color: transparent;
+
+
+// Indicators
+$action-color: #17425a; //modified hel-tram for a11y
+$operational-indicator-color: #9fe6e6; // modified hel-copper for a11y
+$tactical-indicator-color: #9af0a6; // modified hel-fog for a11y
+$strategic-indicator-color: #0e783e; // modified hel-coat for a11y
+
+$action-color-fg: #eeeeee;
+$operational-indicator-color-fg: #222222;
+$tactical-indicator-color-fg: #222222;
+$strategic-indicator-color-fg: #eeeeee;
+
+$causality-increases-color: darken($green, 10%);
+$causality-decreases-color: darken($red, 10%);
+$causality-is-part-of-color: grey;
+
+// Breakpoints
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 992px;
+$breakpoint-xl: 1200px;

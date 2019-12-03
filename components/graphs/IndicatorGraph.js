@@ -281,9 +281,9 @@ function IndicatorGraph(props) {
   const { theme, indicator, plan, i18n } = props;
   const plotColors = [
     theme.themeColors.danger,
-    theme.themeColors.primary,
-    theme.themeColors.warning,
+    theme.brandDark,
     theme.themeColors.success,
+    theme.themeColors.warning,
     theme.themeColors.dark,
     theme.themeColors.info,
   ];
@@ -293,7 +293,7 @@ function IndicatorGraph(props) {
 
     layout.autosize = true;
     layout.colorway = plotColors;
-    layout.font = { family: '"HelsinkiGrotesk", Arial', size: 12 };
+    layout.font = { family: theme.fontFamilySansSerif, size: 12 };
     if (typeof layout.title === 'object' && layout.title !== null) {
       layout.title.text = `<b>${layout.title.text}</b>`;
     } else if (typeof layout.title === 'string') {
@@ -301,12 +301,12 @@ function IndicatorGraph(props) {
     }
     layout.xaxis = layout.xaxis || {};
     layout.xaxis.tickfont = layout.xaxis.tickfont || {};
-    layout.xaxis.tickfont.family = 'HelsinkiGrotesk, Arial';
+    layout.xaxis.tickfont.family = theme.fontFamilySansSerif;
     layout.xaxis.tickfont.size = 14;
 
     layout.yaxis = layout.yaxis || {};
     layout.yaxis.tickfont = layout.yaxis.font || {};
-    layout.yaxis.tickfont.family = 'HelsinkiGrotesk, Arial';
+    layout.yaxis.tickfont.family = theme.fontFamilySansSerif;
     layout.yaxis.tickfont.size = 14;
   }
 

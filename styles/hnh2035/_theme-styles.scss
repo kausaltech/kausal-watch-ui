@@ -2,6 +2,7 @@
 
 .nav-org-logo  {
   @include helsinki-logo($brand-light);
+  height: 2em;
   width: 5em;
 }
 

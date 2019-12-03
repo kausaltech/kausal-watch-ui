@@ -65,7 +65,7 @@ const Timeline = ({ schedules, allSchedules, theme }) => {
       ticks: '',
       showgrid: false,
       tickfont: {
-        family: 'HelsinkiGrotesk',
+        family: theme.fontFamilySansSerif,
         size: 10,
       },
     },
