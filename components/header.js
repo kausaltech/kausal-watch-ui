@@ -83,7 +83,7 @@ class Header extends React.Component {
                   <a className="nav-link">{t('indicators')}</a>
                 </IndicatorListLink>
               </NavItem>
-              { plan.staticPages && plan.staticPages.map((page) => (
+              { plan.staticPages && plan.staticPages.filter((page) => page.topMenu).map((page) => (
                 <NavItem key={page.slug}>
                   <StaticPageLink slug={page.slug}>
                     <a className="nav-link">{page.name}</a>

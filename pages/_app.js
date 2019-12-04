@@ -37,7 +37,9 @@ const GET_PLAN = gql`
       staticPages {
         id,
         name,
-        slug
+        slug,
+        topMenu,
+        footer
       }
       generalContent {
         siteTitle
