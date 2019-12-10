@@ -59,8 +59,8 @@ class HomePage extends React.Component {
 
     let heroComponent = <FrontHero bgImage={plan.imageUrl} heroText={plan.name} />;
 
-    if (plan.identifier === 'hnh2035') heroComponent = <HnhHero />;
-    if (plan.identifier === 'ktstrat') heroComponent = <ThlHero />;
+    if (plan.theme === 'hnh2035') heroComponent = <HnhHero />;
+    if (plan.theme === 'ktstrat') heroComponent = <ThlHero />;
 
     return (
       <Layout>

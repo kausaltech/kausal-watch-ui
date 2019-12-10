@@ -2,3 +2,11 @@
 @import "~bootstrap/scss/_variables";
 
 @import "~open-city-design/src/scss/6aika/variables";
+
+$headings-font-weight:   600;
+
+$navbar-brand-font-size:            $font-size-base;
+// Compute the navbar-brand padding-y so the navbar-brand will have the same height as navbar-text and nav-link
+$nav-link-height:                   $font-size-base * $line-height-base + $nav-link-padding-y * 2 !default;
+$navbar-brand-height:               $navbar-brand-font-size * $line-height-base;
+$navbar-brand-padding-y:            ($nav-link-height - $navbar-brand-height) / 2;
