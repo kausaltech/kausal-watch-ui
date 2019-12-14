@@ -14,20 +14,11 @@ import {
 import IconActions from '../static/images/default/icon-actions.svg';
 import IconIndicators from '../static/images/default/icon-indicators.svg';
 
-const HeroBanner = styled.div`
+const HeroVisual = styled.div`
   position: relative;
   height: 11em;
   width: 11em;
   margin: 0 auto 2em;
-
-  img {
-    display: block;
-    position: relative;
-    z-index: 13;
-    height: 11em;
-    width: 11em;
-    border-radius: 50%;
-  }
 
   &:before {
     content: "";
@@ -36,7 +27,7 @@ const HeroBanner = styled.div`
     width: 11em;
     height: 11em;
     border-radius: 50%;
-    background-color: ${(props) => props.theme.brandDark};;
+    background-color: ${(props) => props.theme.brandDark};
   }
 
   &:after {
@@ -49,6 +40,16 @@ const HeroBanner = styled.div`
     border-radius: 50%;
     background-color: ${(props) => props.theme.brandLight};
   }
+`;
+
+const HeroImage = styled.div`
+  background-image: url(${(props) => props.pic});
+  background-size: cover;
+  position: relative;
+  z-index: 13;
+  height: 11em;
+  width: 11em;
+  border-radius: 50%;
 `;
 
 const BannerContent = styled.div`
@@ -128,9 +129,9 @@ function FrontHero(props) {
             {(sprops) => (
               <Col sm="12" md={{ size: 8, offset: 2 }}>
                 <SiteTitle style={sprops}>
-                  <HeroBanner>
-                    <img src={bgImage} alt="" />
-                  </HeroBanner>
+                  <HeroVisual>
+                    <HeroImage pic={bgImage} />
+                  </HeroVisual>
                   <h1>{ heroText }</h1>
                   <p className="lead">Insert byline here</p>
                 </SiteTitle>
