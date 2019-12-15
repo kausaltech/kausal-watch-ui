@@ -138,11 +138,22 @@ class ActionListFiltered extends React.Component {
     this.handleChange = this.handleChange.bind(this);
 
     // Determine root categories
-    this.actions.forEach((action) => {
-      let category = action.categories[0];
 
-      while (category.parent) category = category.parent;
-      action.rootCategory = category;
+    this.actions.forEach((action) => {
+      if (action.categories[0]) {
+        let category = action.categories[0];
+        while (category.parent) category = category.parent;
+        action.rootCategory = category;
+      }
+      // If action has no category, assign null category
+      // TODO: handle this better
+      else action.rootCategory = {
+        id: '0',
+        identifier: '0',
+        imageUrl: null,
+        name: '',
+        parent: null,
+      };
     });
   }
 
