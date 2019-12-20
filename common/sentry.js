@@ -14,12 +14,8 @@ if (!sentryInitialized) {
 
   // When we're developing locally
   if (process.env.NODE_ENV !== 'production') {
-    /* eslint-disable-next-line global-require */
-    const sentryTestkit = require('sentry-testkit');
-    const { sentryTransport } = sentryTestkit();
-
     // Don't actually send the errors to Sentry
-    sentryOptions.transport = sentryTransport;
+    sentryOptions.beforeSend = () => null;
   }
 
   Sentry.init(sentryOptions);
