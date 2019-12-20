@@ -36,41 +36,45 @@ const PageButton = styled(Button)`
 `;
 
 const ActionPager = (props) => {
-  const { t, nextId, previousId } = props;
+  const { t, nextAction, previousAction } = props;
 
   return (
     <Pager>
       <Previous>
-        { previousId
+        { previousAction
           && (
-            <ActionLink id={previousId}>
-              <PageButton color="primary" outline><Icon name="arrowLeft" />{ t('action-previous') }</PageButton>
+            <ActionLink action={previousAction}>
+              <PageButton color="primary" outline>
+                <Icon name="arrowLeft" />
+                { t('action-previous') }
+              </PageButton>
             </ActionLink>
-          )
-        }
+          )}
       </Previous>
       <Next>
-        { nextId
+        { nextAction
           && (
-            <ActionLink id={nextId}>
-              <PageButton color="primary" outline>{ t('action-next') } <Icon name="arrowRight" /></PageButton>
+            <ActionLink action={nextAction}>
+              <PageButton color="primary" outline>
+                { t('action-next') }
+                <Icon name="arrowRight" />
+              </PageButton>
             </ActionLink>
-          )
-        }
+          )}
       </Next>
     </Pager>
   );
 };
 
 ActionPager.propTypes = {
-  previousId: PropTypes.string,
-  nextId: PropTypes.string,
+  previousAction: ActionLink.propTypes.action,
+  nextAction: ActionLink.propTypes.action,
   t: PropTypes.func.isRequired,
 };
 
 ActionPager.defaultProps = {
-  previousId: '',
-  nextId: '',
+  previousAction: null,
+  nextAction: null,
 };
 
 export default withTranslation('common')(ActionPager);

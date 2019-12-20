@@ -140,8 +140,9 @@ function ActionCard(props) {
   let actionName = action.name;
   if (actionName.length > 120) actionName = `${action.name.substring(0, 120)}…`;
 
+  // FIXME: Show merged status in card style somehow
   return (
-    <ActionLink id={action.identifier}>
+    <ActionLink action={action}>
       <StretchLink>
         <ActionCardElement>
           <ActionStatusArea className={`bg-${action.status.identifier}`}>

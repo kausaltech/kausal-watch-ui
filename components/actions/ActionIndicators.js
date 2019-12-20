@@ -34,7 +34,7 @@ function ActionIndicator(props) {
             Liittyy myös toimenpiteisiin:
             {' '}
             {actions.map(action => (
-              <ActionLink key={action.identifier} id={action.identifier}>
+              <ActionLink key={action.identifier} action={action}>
                 <a><Badge>{action.identifier}</Badge></a>
               </ActionLink>
             ))}

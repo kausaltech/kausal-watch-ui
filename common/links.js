@@ -40,15 +40,23 @@ IndicatorLink.propTypes = {
 };
 
 export function ActionLink(props) {
-  const { id, ...other } = props;
+  const { action, ...other } = props;
+  console.log(props);
+  // If this action is merged with another, replace all links with
+  // a link to the master action.
+  const targetIdentifier = action.mergedWith ? action.mergedWith.identifier : action.identifier;
 
   return (
-    <Link {...getActionLinkProps(id)} passHref {...other} />
+    <Link {...getActionLinkProps(targetIdentifier)} passHref {...other} />
   );
 }
 ActionLink.propTypes = {
-  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-  ...Link.propTypes,
+  action: PropTypes.shape({
+    identifier: PropTypes.string.isRequired,
+    mergedWith: PropTypes.shape({
+      identifier: PropTypes.string.isRequired,
+    }).isRequired,
+  }).isRequired,
 };
 
 

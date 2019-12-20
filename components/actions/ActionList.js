@@ -59,6 +59,10 @@ export const GET_ACTION_LIST = gql`
           name
         }
       }
+      mergedWith {
+        id
+        identifier
+      }
     }
     planWithContent: plan(id: $plan) {
       id

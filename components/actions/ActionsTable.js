@@ -48,7 +48,7 @@ function ActionsTable(props) {
       </thead>
       <tbody>
         { actions.map((action) => (
-          <ActionLink id={action.identifier} key={action.id}>
+          <ActionLink action={action} key={action.id}>
             <tr>
               <td><strong>{ action.identifier }</strong></td>
               <td><strong>{ action.name }</strong></td>

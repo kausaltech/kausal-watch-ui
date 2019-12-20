@@ -77,7 +77,7 @@ function ActionCard(props) {
     >
       {(springProps) => (
         <StyledCard style={springProps}>
-          <ActionLink id={action.identifier}>
+          <ActionLink action={action}>
             <a href>
               <ActionImage action={action} width={520} height={200} />
               <CardImgOverlay>
@@ -99,7 +99,7 @@ function ActionCard(props) {
                   <Icon name="check" color="#fff" width="2em" height="2em" />
                 </ReadyBadge>
               )}
-            <ActionLink id={action.identifier}>
+            <ActionLink action={action}>
               <a href>
                 <StyledCardTitle tag="h5">{actionName}</StyledCardTitle>
               </a>

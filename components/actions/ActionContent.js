@@ -40,7 +40,11 @@ query ActionDetails($plan: ID!, $id: ID!) {
     completion
     imageUrl
     updatedAt
-
+    mergedActions {
+      id
+      identifier
+      officialName
+    }
     categories {
       id
       name
@@ -226,6 +230,10 @@ function ActionDetails(props) {
   const generalContent = plan.generalContent || {};
   const cleanOfficialText = action.officialName.replace(/(?:\r\n|\r|\n)/g, '<br>');
 
+  // FIXME: Show merged actions somehow
+  // Tähän toimenpiteeseen on yhdistetty nämä toimenpiteet:
+  // Toimenpide 1. <virallinen nimi>
+
   return (
     <div>
       <Meta
@@ -247,7 +255,7 @@ function ActionDetails(props) {
                   <p>
                     { action.previousAction
                       && (
-                        <ActionLink id={action.previousAction.identifier}>
+                        <ActionLink action={action.previousAction}>
                           <a href>
                             <Icon name="arrowLeft" color={theme.brandLight} />
                             {' '}
@@ -266,7 +274,7 @@ function ActionDetails(props) {
                       )}
                     { action.nextAction
                       && (
-                        <ActionLink id={action.nextAction.identifier}>
+                        <ActionLink action={action.nextAction}>
                           <a href>
                             { t('next') }
                             <Icon name="arrowRight" color={theme.brandLight} />
