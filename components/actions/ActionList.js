@@ -70,7 +70,7 @@ export const GET_ACTION_LIST = gql`
         actionListLeadContent
       }
     }
-    planCategories(plan: $plan) {
+    actionCategories: planCategories(plan: $plan, categoryType: "action") {
       id
       identifier
       name
@@ -107,7 +107,7 @@ class ActionListFiltered extends React.Component {
     super(props);
 
     this.actions = props.planActions;
-    this.cats = props.planCategories;
+    this.cats = props.actionCategories;
     this.orgs = props.planOrganizations;
     const filters = { props };
 
@@ -140,7 +140,7 @@ class ActionListFiltered extends React.Component {
     const filters = { ...this.props.filters };
     filters[filterType] = val;
     this.setState({
-      filters
+      filters,
     });
     this.props.onFilterChange(filters);
   }
@@ -224,7 +224,7 @@ ActionListFiltered.propTypes = {
   }).isRequired,
   planActions: PropTypes.arrayOf(PropTypes.object).isRequired,
   planOrganizations: PropTypes.arrayOf(PropTypes.object).isRequired,
-  planCategories: PropTypes.arrayOf(PropTypes.object).isRequired,
+  actionCategories: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 

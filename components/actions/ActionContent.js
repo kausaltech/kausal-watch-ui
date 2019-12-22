@@ -45,7 +45,7 @@ query ActionDetails($plan: ID!, $id: ID!) {
       identifier
       officialName
     }
-    categories {
+    categories(categoryType: "action") {
       id
       name
       imageUrl
