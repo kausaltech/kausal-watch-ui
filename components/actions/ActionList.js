@@ -122,7 +122,9 @@ class ActionListFiltered extends React.Component {
     });
 
     this.actions.forEach((act) => {
-      act.categories = act.categories.map((cat) => catsById[cat.id]);
+      act.categories = act.categories
+        .filter((cat) => cat.id in catsById)
+        .map((cat) => catsById[cat.id]);
     });
 
     this.handleChange = this.handleChange.bind(this);
