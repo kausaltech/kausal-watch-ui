@@ -78,6 +78,10 @@ const ActionStatusArea = styled.div`
     background-color: ${(props) => props.theme.themeColors.light};
   }
 
+  &.bg-merged {
+    background-color: ${(props) => props.theme.themeColors.light};
+  }
+
   &.bg-completed {
     background-color:  ${(props) => darken(0.15, props.theme.themeColors.success)};
     color: ${(props) => props.theme.themeColors.white};
@@ -132,6 +136,7 @@ const StyledCardTitle = styled.div`
   font-size: 1rem;
   line-height: 1.2;
   text-align: left;
+  word-break: break-word;
   hyphens: auto;
 `;
 
@@ -140,18 +145,22 @@ function ActionCard(props) {
   let actionName = action.name;
   if (actionName.length > 120) actionName = `${action.name.substring(0, 120)}…`;
 
-  // FIXME: Show merged status in card style somehow
+  const { mergedWith, status } = action;
+
+  // Use different styling for merged action
+  const bgClass = mergedWith === null ? `bg-${status.identifier}` : 'bg-merged';
+
   return (
     <ActionLink action={action}>
       <StretchLink>
         <ActionCardElement>
-          <ActionStatusArea className={`bg-${action.status.identifier}`}>
+          <ActionStatusArea className={bgClass}>
             <ActionNumber className="action-number">{action.identifier}</ActionNumber>
             <ActionStatus>
               <StatusName>{ action.status.name }</StatusName>
               <StatusProgress
                 value={action.completion}
-                className={`bg-${action.status.identifier}`}
+                className={bgClass}
               />
             </ActionStatus>
           </ActionStatusArea>

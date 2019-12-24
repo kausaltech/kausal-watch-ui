@@ -184,6 +184,15 @@ const SolidSection = styled.div`
   margin-bottom: 3rem;
 `;
 
+const ActionNumberBadge = styled(Badge)`
+  font-size: 1rem;
+  padding: .2rem;
+`;
+
+const MergedActionSection = styled.div`
+  margin-bottom: 1rem;
+`;
+
 function getImageURL(plan, action, width, height) {
   let url;
   if (action.imageUrl) {
@@ -218,6 +227,38 @@ function getImageURL(plan, action, width, height) {
   return url;
 }
 
+function MergedAction(props) {
+  const { action, theme } = props;
+  const { identifier, officialName } = action;
+  return (
+    <MergedActionSection>
+      <ActionNumberBadge key={identifier} className="mr-1">
+        {identifier}
+      </ActionNumberBadge>
+      {officialName}
+    </MergedActionSection>
+  );
+}
+
+function MergedActionList(props) {
+  const { actions, t, theme } = props;
+  if (!actions || !actions.length) {
+    // render nothing
+    return null;
+  }
+
+  const mergedActions = actions.map(act => (
+    <MergedAction action={act} theme={theme} key={act.id} />
+  ));
+
+  return (
+    <ActionSection>
+      <h5>{ t('action-merged') }</h5>
+      {mergedActions}
+    </ActionSection>
+  );
+}
+
 function ActionDetails(props) {
   const {
     t,
@@ -230,9 +271,8 @@ function ActionDetails(props) {
   const generalContent = plan.generalContent || {};
   const cleanOfficialText = action.officialName.replace(/(?:\r\n|\r|\n)/g, '<br>');
 
-  // FIXME: Show merged actions somehow
-  // Tähän toimenpiteeseen on yhdistetty nämä toimenpiteet:
-  // Toimenpide 1. <virallinen nimi>
+  const { mergedActions } = action;
+  const hasMergedActions = mergedActions.length > 0;
 
   return (
     <div>
@@ -311,6 +351,7 @@ function ActionDetails(props) {
             </OfficialText>
           </Col>
           <Col md="5" lg="4">
+            <MergedActionList t={t} theme={theme} actions={mergedActions} />
             { action.impact
               && (
               <ActionSection>
