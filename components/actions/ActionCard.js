@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import gql from 'graphql-tag';
 
 import { ActionLink } from '../../common/links';
+import { withTranslation } from '../../common/i18n';
 
 const ACTION_CARD_FRAGMENT = gql`
   fragment ActionCard on Action {
@@ -141,7 +142,7 @@ const StyledCardTitle = styled.div`
 `;
 
 function ActionCard(props) {
-  const { action } = props;
+  const { action, t } = props;
   let actionName = action.name;
   if (actionName.length > 120) actionName = `${action.name.substring(0, 120)}…`;
 
@@ -149,6 +150,7 @@ function ActionCard(props) {
 
   // Use different styling for merged action
   const bgClass = mergedWith === null ? `bg-${status.identifier}` : 'bg-merged';
+  const statusName = mergedWith === null ? status.name : `${t('action-status-merged')} ${mergedWith.identifier}`;
 
   return (
     <ActionLink action={action}>
@@ -157,7 +159,7 @@ function ActionCard(props) {
           <ActionStatusArea className={bgClass}>
             <ActionNumber className="action-number">{action.identifier}</ActionNumber>
             <ActionStatus>
-              <StatusName>{ action.status.name }</StatusName>
+              <StatusName>{statusName}</StatusName>
               <StatusProgress
                 value={action.completion}
                 className={bgClass}
@@ -181,10 +183,11 @@ ActionCard.propTypes = {
       name: PropTypes.string,
     }),
   }).isRequired,
+  t: PropTypes.func.isRequired,
 };
 
 ActionCard.fragments = {
   action: ACTION_CARD_FRAGMENT,
 };
 
-export default ActionCard;
+export default withTranslation('common')(ActionCard);
