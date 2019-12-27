@@ -47,6 +47,8 @@
     "action-progress": "Progress",
     "action-percent-ready": "ready",
     "action-impact": "Impact",
+    "action-merged": "Merged actions",
+    "action-status-merged": "Merged with action",
     "previous": "Previous",
     "next": "Next",
     "action-previous": "Previous action",

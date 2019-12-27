@@ -47,6 +47,8 @@
     "action-progress": "Eteneminen",
     "action-percent-ready": "valmis",
     "action-impact": "Vaikutus",
+    "action-merged": "Yhdistetyt toimenpiteet",
+    "action-status-merged": "Yhdistetty toimenpiteeseen",
     "previous": "Edellinen",
     "next": "Seuraava",
     "action-previous": "Edellinen toimenpide",
