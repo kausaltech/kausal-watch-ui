@@ -48,15 +48,15 @@ class HomePage extends React.Component {
       <FrontHero
         bgImage={plan.imageUrl}
         title={plan.generalContent.siteTitle}
-        byline={plan.generalContent.siteDescription}
-        actionsByline="Toimenpiteet kasvihuonekaasupäästöjen vähentämiseksi"
-        indicatorsByline="Mittarit toimenpiteiden onnistumisen seurantaan"
+        titleDescription={plan.generalContent.siteDescription}
+        actionsDescription="Toimenpiteet kasvihuonekaasupäästöjen vähentämiseksi"
+        indicatorsDescription="Mittarit toimenpiteiden onnistumisen seurantaan"
       />
     );
 
-    // Override with theme specific hero if applicable
-    if (plan.theme === 'hnh2035') heroComponent = <HnhHero />;
-    if (plan.theme === 'ktstrat') heroComponent = <ThlHero />;
+    // Override with plan specific hero if applicable
+    if (plan.identifier === 'hnh2035') heroComponent = <HnhHero />;
+    if (plan.identifier === 'ktstrat') heroComponent = <ThlHero />;
 
     return (
       <Layout>

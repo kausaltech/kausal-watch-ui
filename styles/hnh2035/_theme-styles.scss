@@ -1,4 +1,12 @@
-@import "~open-city-design/src/scss/helsinki/mixins";
+/**
+ * _theme-styles.scss
+ *
+ * Style overrides for the theme. Often handles sizing and coloring
+ * of brand elements of the UI. Also import theme specific fonts here.
+ *
+ */
+ 
+ @import "~open-city-design/src/scss/helsinki/mixins";
 
 .nav-org-logo  {
   @include helsinki-logo($brand-light);

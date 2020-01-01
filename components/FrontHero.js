@@ -121,7 +121,7 @@ const Highlight = styled.div`
 
 function FrontHero(props) {
   const {
-    t, bgImage, title, byline, actionsByline, indicatorsByline,
+    t, bgImage, title, byline, actionsDescription, indicatorsDescription,
   } = props;
   return (
     <BannerContent>
@@ -164,7 +164,7 @@ function FrontHero(props) {
                       <div>
                         <h3>{ t('actions') }</h3>
                         <p>
-                          { actionsByline }
+                          { actionsDescription }
                         </p>
                       </div>
                     </Highlight>
@@ -192,7 +192,7 @@ function FrontHero(props) {
                       <div>
                         <h3>{ t('indicators') }</h3>
                         <p>
-                          { indicatorsByline }
+                          { indicatorsDescription }
                         </p>
                       </div>
                     </Highlight>
@@ -212,8 +212,8 @@ FrontHero.propTypes = {
   bgImage: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   byline: PropTypes.string.isRequired,
-  actionsByline: PropTypes.string.isRequired,
-  indicatorsByline: PropTypes.string.isRequired,
+  actionsDescription: PropTypes.string.isRequired,
+  indicatorsDescription: PropTypes.string.isRequired,
 };
 
 export default withTranslation('common')(FrontHero);

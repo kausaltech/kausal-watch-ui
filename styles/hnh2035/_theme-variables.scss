@@ -1,4 +1,17 @@
-// Brand colors
+/**
+ * _theme-variables.scss
+ *
+ * These are extended set of Bootstrap style variables. They are used
+ * for building a themed Bootstrap base stylesheet for Reactstrap
+ *
+ * All these variables are also parsed as theme object for Styled
+ * Components and they are referenced in most of the UI components.
+ * This file has to be self-contained and can not refer to variables
+ * from the other theme files.
+ *
+ */
+ 
+ // Brand colors
 
 $hel-copper:        #00d7a7;
 $hel-bus:           #0000bf;
@@ -33,6 +46,8 @@ $cyan:    #52a4ca;
 // brand-dark/theme.light should have contrast ratio over 4.5
 $brand-light:  #ffce43;
 $brand-dark:   #00792D; //modified hel-tram for a11y
+$neutral-light:  #ffce43;
+$neutral-dark:   #00792D; //modified hel-tram for a11y
 
 // Application color mappings:
 $theme-colors: (
