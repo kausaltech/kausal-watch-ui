@@ -5,7 +5,9 @@ import {
 } from 'reactstrap';
 
 import styled, { withTheme } from 'styled-components';
+import { withTranslation } from '../common/i18n';
 import ApplicationStateBanner from './common/ApplicationStateBanner';
+import { StaticPageLink, IndicatorListLink, ActionListLink } from '../common/links';
 import PlanContext from '../context/plan';
 
 const Logo = styled.div`
@@ -17,7 +19,7 @@ const StyledFooter = styled.footer`
   position: relative;
   min-height: 14em;
   clear: both;
-  background-color: ${props => props.theme.neutralDark};
+  background-color: ${(props) => props.theme.neutralDark};
   color: #ffffff;
   padding: 6rem 0;
   
@@ -31,13 +33,14 @@ const StyledFooter = styled.footer`
     }
   
   .footer-column {
+    margin-bottom: 2rem;
     text-align: center;
 
     a.nav-link {
-      color: ${props => props.theme.themeColors.white};
+      color: ${(props) => props.theme.themeColors.white};
 
       &:hover {
-        color: ${props => props.theme.neutralLight};
+        color: ${(props) => props.theme.neutralLight};
       }
     }
   }
@@ -47,7 +50,7 @@ const StyledFooter = styled.footer`
 function SiteFooter(props) {
   const plan = React.useContext(PlanContext);
   const generalContent = plan.generalContent || {};
-  const { siteTitle, instanceType } = props;
+  const { t, siteTitle, instanceType } = props;
 
   return (
     <>
@@ -69,8 +72,25 @@ function SiteFooter(props) {
               <div className="page-footer-block">
                 <Nav vertical>
                   <NavItem>
-                    <NavLink className="nav-link active" href="/">Etusivu</NavLink>
+                    <NavLink className="nav-link active" href="/">{ t('front-page') }</NavLink>
                   </NavItem>
+                  <NavItem key="actions">
+                    <ActionListLink>
+                      <a className="nav-link" href>{t('actions')}</a>
+                    </ActionListLink>
+                  </NavItem>
+                  <NavItem key="indicators">
+                    <IndicatorListLink>
+                      <a className="nav-link" href>{t('indicators')}</a>
+                    </IndicatorListLink>
+                  </NavItem>
+                  { plan.staticPages && plan.staticPages.filter((page) => page.footer).map((page) => (
+                    <NavItem key={page.slug}>
+                      <StaticPageLink slug={page.slug}>
+                        <a className="nav-link" href>{page.name}</a>
+                      </StaticPageLink>
+                    </NavItem>
+                  ))}
                 </Nav>
               </div>
             </Col>
@@ -100,6 +120,7 @@ function SiteFooter(props) {
 SiteFooter.propTypes = {
   siteTitle: PropTypes.string.isRequired,
   instanceType: PropTypes.string.isRequired,
+  t: PropTypes.func.isRequired,
 };
 
-export default withTheme(SiteFooter);
+export default withTranslation('common')(withTheme(SiteFooter));
