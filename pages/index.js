@@ -17,7 +17,7 @@ import PlanContext from '../context/plan';
 
 
 const ActionsSection = styled.div`
-  background-color: ${(props) => props.theme.brandLight};
+  background-color: ${(props) => props.theme.neutralLight};
   position: relative;
   padding: 8rem 0 4rem;
   

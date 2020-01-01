@@ -8,12 +8,12 @@ import styled, { withTheme } from 'styled-components';
 import ActiveLink from '../../common/ActiveLink';
 
 const IndicatorsJumbo = styled.div`
-  background-color: ${props => props.theme.brandLight};
+  background-color: ${props => props.theme.neutralLight};
   padding: 3em 0;
 `;
 
 const IndicatorsTabs = styled.div`
-  background-color: ${props => props.theme.brandLight};
+  background-color: ${props => props.theme.neutralLight};
   margin-bottom: 2rem;
 `;
 

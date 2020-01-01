@@ -21,7 +21,10 @@ const TopNav = styled(Navbar)`
 
 const BotNav = styled(Navbar)`
   background-color: ${props => props.theme.white};
-  color: ${props => props.theme.brandDark};
+
+  a {
+    color: ${props => props.theme.neutralDark};
+  }
 `;
 
 

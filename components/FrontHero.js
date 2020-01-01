@@ -16,16 +16,16 @@ import IconIndicators from '../static/images/default/icon-indicators.svg';
 
 const HeroVisual = styled.div`
   position: relative;
-  height: 11em;
-  width: 11em;
-  margin: 0 auto 2em;
+  height: 11rem;
+  width: 11rem;
+  margin: 0 auto 2rem;
 
   &:before {
     content: "";
     position: absolute;
     z-index: 11;
-    width: 11em;
-    height: 11em;
+    width: 11rem;
+    height: 11rem;
     border-radius: 50%;
     background-color: ${(props) => props.theme.brandDark};
   }
@@ -35,8 +35,8 @@ const HeroVisual = styled.div`
     position: absolute;
     left: -5.5em;
     top: 0;
-    width: 11em;
-    height: 11em;
+    width: 11rem;
+    height: 11rem;
     border-radius: 50%;
     background-color: ${(props) => props.theme.brandLight};
   }
@@ -47,14 +47,14 @@ const HeroImage = styled.div`
   background-size: cover;
   position: relative;
   z-index: 13;
-  height: 11em;
-  width: 11em;
+  height: 11rem;
+  width: 11rem;
   border-radius: 50%;
 `;
 
 const BannerContent = styled.div`
-  padding: 3em 0;
-  max-width: 48em;
+  padding: 2rem 0;
+  max-width: 48rem;
   margin: 0 auto 0;
   background-color: #ffffff;
   
@@ -69,14 +69,13 @@ const BannerContent = styled.div`
 `;
 
 const Illustration = styled.div`
-  margin-bottom: 1em;
 
   svg {
-    max-width: 8em;
+    max-width: 8rem;
     margin: auto;
     display: block;
     .a {
-      fill: ${(props) => props.theme.brandLight};
+      fill: ${(props) => props.theme.themeColors.white};
     }
     .b {
       fill: ${(props) => props.theme.brandDark};
@@ -85,16 +84,16 @@ const Illustration = styled.div`
 `;
 
 const SiteTitle = styled.div`
-  margin-bottom: 3em;
+  margin-bottom: 2rem;
   text-align: center;
-  color: ${(props) => props.theme.brandDark};
+  color: ${(props) => props.theme.neutralDark};
   h1 {
-    font-size: 2.5em;
+    font-size: 2.5rem;
   }
 `;
 
 const Highlight = styled.div`
-  margin-bottom: 3em;
+  margin-bottom: 1rem;
   background: #fff;
 
   &:hover {
@@ -107,12 +106,13 @@ const Highlight = styled.div`
   }
 
   h3 {
-    color: ${(props) => props.theme.brandDark};
+    color: ${(props) => props.theme.neutralDark};
   }
  
   p {
     hyphens: auto;
     margin-bottom: 0;
+    color: ${(props) => props.theme.neutralDark};
   }
 `;
 

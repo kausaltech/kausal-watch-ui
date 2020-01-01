@@ -17,7 +17,7 @@ const StyledFooter = styled.footer`
   position: relative;
   min-height: 14em;
   clear: both;
-  background-color: ${props => props.theme.brandDark};
+  background-color: ${props => props.theme.neutralDark};
   color: #ffffff;
   padding: 6rem 0;
   
@@ -32,10 +32,14 @@ const StyledFooter = styled.footer`
   
   .footer-column {
     text-align: center;
-  }
-  
-  a {
-    color: $white;
+
+    a.nav-link {
+      color: ${props => props.theme.themeColors.white};
+
+      &:hover {
+        color: ${props => props.theme.neutralLight};
+      }
+    }
   }
 `;
 

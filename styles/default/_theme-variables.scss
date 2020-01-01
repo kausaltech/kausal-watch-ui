@@ -1,4 +1,16 @@
-
+/**
+ * _theme-variables.scss
+ *
+ * These are extended set of Bootstrap style variables. They are used
+ * for building a themed Bootstrap base stylesheet for Reactstrap
+ *
+ * All these variables are also parsed as theme object for Styled
+ * Components and they are referenced in most of the UI components.
+ * This file has to be self-contained and can not refer to variables
+ * from the other theme files.
+ *
+ */
+ 
 
 // Helper colors
 $red:     #dc3545;
@@ -6,12 +18,14 @@ $yellow:  #ffc107;
 $green:   #28a745;
 $cyan:    #17a2b8;
 
-// Service specific brand color defaults
+// Theme specific brand colors
 // brand-light/brand-dark should have contrast ratio over 4.5
 // brand-light/theme.dark should have contrast ratio over 4.5
 // brand-dark/theme.light should have contrast ratio over 4.5
-$brand-light:  #d8e5e8;
-$brand-dark:   #514CA4;
+$brand-light:  #b8fc9d;
+$brand-dark:   #00755c;
+$neutral-light: #ebe7df;
+$neutral-dark: #262e25;
 
 // Application color mappings:
 $theme-colors: (
@@ -59,7 +73,7 @@ $list-group-active-border-color:  $list-group-active-bg;
 
 /////// NAV
 
-$brand-nav-background:              $brand-dark;
+$brand-nav-background:              $neutral-dark;
 
 $navbar-dark-color:                 rgba(#222222, .5);
 $navbar-dark-hover-color:           rgba(#222222, .75);
@@ -80,10 +94,10 @@ $navbar-light-toggler-border-color: transparent;
 
 
 // Indicators
-$action-color: #17425a; //modified hel-tram for a11y
-$operational-indicator-color: #9fe6e6; // modified hel-copper for a11y
-$tactical-indicator-color: #9af0a6; // modified hel-fog for a11y
-$strategic-indicator-color: #0e783e; // modified hel-coat for a11y
+$action-color: #17425a;
+$operational-indicator-color: #9fe6e6;
+$tactical-indicator-color: #9af0a6;
+$strategic-indicator-color: #0e783e;
 
 $action-color-fg: #eeeeee;
 $operational-indicator-color-fg: #222222;

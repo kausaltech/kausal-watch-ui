@@ -1,4 +1,12 @@
-// import default variables
+/**
+ * main.scss
+ *
+ * Import the style files for application in correct order so
+ * the app styles are built using the themed overrides.
+ *
+ */
+ 
+ // import default variables
 @import "../app/init";
 // import theme specific variables
 @import "./theme-variables";

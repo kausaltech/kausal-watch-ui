@@ -16,13 +16,13 @@ import ActionCardList from './ActionCardList';
 
 const ActionListSection = styled.div`
   padding-bottom: 4rem;
-  background-color: ${(props) => props.theme.brandLight};
+  background-color: ${(props) => props.theme.neutralLight};
 `;
 
 const ActionListHeader = styled.div`
   padding-top: 3rem;
   margin-bottom: 1rem;
-  background-color: ${(props) => props.theme.brandLight};
+  background-color: ${(props) => props.theme.neutralLight};
 `;
 
 export const GET_ACTION_LIST = gql`

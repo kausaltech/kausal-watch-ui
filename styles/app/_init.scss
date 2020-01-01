@@ -1,4 +1,12 @@
-@import "~bootstrap/scss/functions";
+/**
+ * _init.scss
+ *
+ * Import Bootstrap functions and variables and apply
+ * Open City Design overrides and extensions on them.
+ *
+ */
+ 
+ @import "~bootstrap/scss/functions";
 @import "~bootstrap/scss/_variables";
 
 @import "~open-city-design/src/scss/6aika/variables";
