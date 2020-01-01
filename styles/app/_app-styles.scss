@@ -28,7 +28,7 @@
  //@import "~bootstrap/scss/breadcrumb"; // not used by the app
  @import "~bootstrap/scss/pagination";
  @import "~bootstrap/scss/badge";
- //@import "~bootstrap/scss/jumbotron"; // not used by the app
+ @import "~bootstrap/scss/jumbotron";
  @import "~bootstrap/scss/alert";
  @import "~bootstrap/scss/progress";
  @import "~bootstrap/scss/media";
@@ -48,7 +48,7 @@
 }
 
 h1, h2, h3 , h4, h5 {
-  line-height: 1;
+  line-height: 1.1;
   color: inherit;
 }
 
@@ -180,9 +180,6 @@ label {
 textarea.form-control {
   border-width: 2px;
   padding: 6px 12px;
-  &:focus {
-    //border-color: $theme-highlight-dark;
-  }
 }
 
 // form element focus style

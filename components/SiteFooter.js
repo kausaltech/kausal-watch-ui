@@ -76,18 +76,18 @@ function SiteFooter(props) {
                   </NavItem>
                   <NavItem key="actions">
                     <ActionListLink>
-                      <a className="nav-link" href>{t('actions')}</a>
+                      <a className="nav-link" href="true">{t('actions')}</a>
                     </ActionListLink>
                   </NavItem>
                   <NavItem key="indicators">
                     <IndicatorListLink>
-                      <a className="nav-link" href>{t('indicators')}</a>
+                      <a className="nav-link" href="true">{t('indicators')}</a>
                     </IndicatorListLink>
                   </NavItem>
                   { plan.staticPages && plan.staticPages.filter((page) => page.footer).map((page) => (
                     <NavItem key={page.slug}>
                       <StaticPageLink slug={page.slug}>
-                        <a className="nav-link" href>{page.name}</a>
+                        <a className="nav-link" href="true">{page.name}</a>
                       </StaticPageLink>
                     </NavItem>
                   ))}

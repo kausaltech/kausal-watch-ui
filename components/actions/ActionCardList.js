@@ -23,7 +23,6 @@ function ActionCardList({ actions }) {
 
   actions.forEach((action) => {
     const cat = action.rootCategory;
-    console.log(cat);
     let group;
 
     if (cat.id in groupMap) {

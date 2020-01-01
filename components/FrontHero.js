@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import {
   Row, Col, Container,
@@ -6,6 +7,7 @@ import {
 
 import { Spring } from 'react-spring/renderprops.cjs';
 import styled from 'styled-components';
+import { withTranslation } from '../common/i18n';
 import {
   IndicatorListLink,
   ActionListLink,
@@ -84,10 +86,11 @@ const Illustration = styled.div`
 `;
 
 const SiteTitle = styled.div`
-  margin-bottom: 2rem;
+  margin-bottom: 3rem;
   text-align: center;
   color: ${(props) => props.theme.neutralDark};
   h1 {
+    margin-bottom: 1rem;
     font-size: 2.5rem;
   }
 `;
@@ -117,7 +120,9 @@ const Highlight = styled.div`
 `;
 
 function FrontHero(props) {
-  const { bgImage, heroText } = props;
+  const {
+    t, bgImage, title, byline, actionsByline, indicatorsByline,
+  } = props;
   return (
     <BannerContent>
       <Container>
@@ -132,8 +137,8 @@ function FrontHero(props) {
                   <HeroVisual>
                     <HeroImage pic={bgImage} />
                   </HeroVisual>
-                  <h1>{ heroText }</h1>
-                  <p className="lead">Insert byline here</p>
+                  <h1>{ title }</h1>
+                  <p className="lead">{ byline }</p>
                 </SiteTitle>
               </Col>
             )}
@@ -157,9 +162,9 @@ function FrontHero(props) {
                         <IconActions />
                       </Illustration>
                       <div>
-                        <h3>Actions</h3>
+                        <h3>{ t('actions') }</h3>
                         <p>
-                          Insert actions byline here
+                          { actionsByline }
                         </p>
                       </div>
                     </Highlight>
@@ -185,9 +190,9 @@ function FrontHero(props) {
                         <IconIndicators />
                       </Illustration>
                       <div>
-                        <h3>Indicators</h3>
+                        <h3>{ t('indicators') }</h3>
                         <p>
-                          Insert Indicators byline here
+                          { indicatorsByline }
                         </p>
                       </div>
                     </Highlight>
@@ -202,5 +207,13 @@ function FrontHero(props) {
   );
 }
 
+FrontHero.propTypes = {
+  t: PropTypes.func.isRequired,
+  bgImage: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  byline: PropTypes.string.isRequired,
+  actionsByline: PropTypes.string.isRequired,
+  indicatorsByline: PropTypes.string.isRequired,
+};
 
-export default FrontHero;
+export default withTranslation('common')(FrontHero);
