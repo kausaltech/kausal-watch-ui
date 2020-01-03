@@ -349,9 +349,48 @@ function ActionDetails(props) {
                 <small>{`(${generalContent.officialNameDescription})`}</small>
               )}
             </OfficialText>
-          </Col>
-          <Col md="5" lg="4">
+
             <MergedActionList t={t} theme={theme} actions={mergedActions} />
+
+            { action.statusUpdates.length > 0
+            && (
+            <SolidSection>
+              <Row>
+                <Col>
+                  <SectionHeader className="mb-5">{ t('action-status-updates') }</SectionHeader>
+                </Col>
+              </Row>
+              <ActionUpdatesList id={action.id} className="mb-5" />
+            </SolidSection>
+            )}
+            <Row>
+              <Col>
+                <SectionHeader className="mb-5">{ t('action-tasks') }</SectionHeader>
+              </Col>
+            </Row>
+            <Row>
+              <Col className="mb-5">
+                <ActionSection className="mb-5">
+                  <TaskList tasks={action.tasks} />
+                </ActionSection>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <SectionHeader className="mb-5">{ t('indicators') }</SectionHeader>
+              </Col>
+            </Row>
+            <Row>
+              <Col sm="12" className="mb-5">
+                {action.relatedIndicators && action.relatedIndicators.length > 0
+                  ? <ActionIndicators actionId={action.id} relatedIndicators={action.relatedIndicators} />
+                  : <Alert color="light" className="mb-5"><h6>Ei määriteltyjä mittareita</h6></Alert>
+                  }
+              </Col>
+            </Row>
+          </Col>
+
+          <Col md="5" lg="4">
             { action.impact
               && (
               <ActionSection>
@@ -397,46 +436,6 @@ function ActionDetails(props) {
                 { updated }
               </LastUpdated>
             </ActionSection>
-          </Col>
-        </Row>
-      </Container>
-      { action.statusUpdates.length > 0
-        && (
-        <SolidSection>
-          <Container>
-            <Row>
-              <Col>
-                <SectionHeader className="mb-5">{ t('action-status-updates') }</SectionHeader>
-              </Col>
-            </Row>
-            <ActionUpdatesList id={action.id} className="mb-5" />
-          </Container>
-        </SolidSection>
-        )}
-      <Container>
-        <Row>
-          <Col>
-            <SectionHeader className="mb-5">{ t('action-tasks') }</SectionHeader>
-          </Col>
-        </Row>
-        <Row>
-          <Col className="mb-5">
-            <ActionSection className="mb-5">
-              <TaskList tasks={action.tasks} />
-            </ActionSection>
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <SectionHeader className="mb-5">{ t('indicators') }</SectionHeader>
-          </Col>
-        </Row>
-        <Row>
-          <Col sm="12" className="mb-5">
-            {action.relatedIndicators && action.relatedIndicators.length > 0
-              ? <ActionIndicators actionId={action.id} relatedIndicators={action.relatedIndicators} />
-              : <Alert color="light" className="mb-5"><h6>Ei määriteltyjä mittareita</h6></Alert>
-              }
           </Col>
         </Row>
       </Container>

@@ -115,7 +115,7 @@ class ActionUpdatesList extends React.Component {
           return (
             <Row>
               { action.statusUpdates.map((update) => (
-                <Col sm="12" md={{ size: 10, offset: 0 }} key={update.id}>
+                <Col sm="12" key={update.id}>
                   <ActionStatusUpdate
                     author={update.author}
                     date={update.date}
