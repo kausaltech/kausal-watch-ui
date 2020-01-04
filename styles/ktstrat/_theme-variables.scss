@@ -1,5 +1,18 @@
-@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,700');
+/**
+ * _theme-variables.scss
+ *
+ * These are extended set of Bootstrap style variables. They are used
+ * for building a themed Bootstrap base stylesheet for Reactstrap
+ *
+ * All these variables are also parsed as theme object for Styled
+ * Components and they are referenced in most of the UI components.
+ * This file has to be self-contained and can not refer to variables
+ * from the other theme files.
+ *
+ */
+ 
 
+// Helper colors
 $thl-green: #7bc143;
 $thl-green-darker: #519b2f;
 $thl-light-gray: #f2f2f2;
@@ -33,20 +46,27 @@ $yellow:  #eca10c;
 $green:   #3cd55f;
 $cyan:    #52a4ca;
 
-// Service specific brand color defaults
+// Theme specific brand colors
+// brand-light/brand-dark should have contrast ratio over 4.5
+// brand-light/theme.dark should have contrast ratio over 4.5
+// brand-dark/theme.light should have contrast ratio over 4.5
 $brand-light:  $thl-green;
 $brand-dark:   $thl-green-darker;
+$neutral-light: #e2e1de;
+$neutral-dark: #303130;
 
 // Application color mappings:
 $theme-colors: (
-  "primary":    $thl-black,
-  "secondary":  $brand-dark,
+  "primary":    $brand-dark,
+  "secondary":  $brand-light,
   "success":    $green,
   "info":       $cyan,
   "warning":    $yellow,
   "danger":     $red,
   "light":      $thl-light-gray,
-  "dark":       $thl-gray
+  "dark":       $thl-gray,
+  "black":      #222222,
+  "white":      #ffffff,
 );
 
 $image-overlay: $thl-blue;

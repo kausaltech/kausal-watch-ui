@@ -45,6 +45,10 @@ const StyledCard = styled(Card)`
     transform: translateY(-5px);
     box-shadow: 4px 4px 8px rgba(82,90,101,0.5);
   }
+
+  a {
+    color: ${(props) => props.theme.neutralDark};
+  } 
 `;
 
 const ActionNumber = styled.div`
