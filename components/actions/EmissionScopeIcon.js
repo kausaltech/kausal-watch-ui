@@ -42,7 +42,6 @@ class EmissionScopeIcon extends React.Component {
     }
   }
 
-
   render() {
     const { category, color, size } = this.props;
     const { id, identifier, name, shortDescription } = category;

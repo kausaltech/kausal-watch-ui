@@ -63,6 +63,9 @@ export const GET_ACTION_LIST = gql`
         id
         identifier
       }
+      emissionScopes: categories(categoryType: "emission_scope") {
+        id
+      }
     }
     planWithContent: plan(id: $plan) {
       id
@@ -82,6 +85,11 @@ export const GET_ACTION_LIST = gql`
         id
       }
     }
+    emissionScopes: planCategories(plan: $plan, categoryType: "emission_scope") {
+      id
+      identifier
+      name
+    }
     planOrganizations(plan: $plan) {
       id
       abbreviation
@@ -96,10 +104,10 @@ class ActionListFiltered extends React.Component {
 
   static getFiltersFromQuery(query) {
     const {
-      organization, category, text, impact,
+      organization, category, emissionScope, text, impact,
     } = query;
     return {
-      organization, category, text, impact,
+      organization, category, emissionScope, text, impact,
     };
   }
 
@@ -150,7 +158,7 @@ class ActionListFiltered extends React.Component {
   filterActions() {
     const { filters } = this.props;
     const {
-      category, organization, text, impact,
+      category, organization, text, impact, emissionScope,
     } = filters;
 
     const actions = this.actions.filter((item) => {
@@ -159,6 +167,11 @@ class ActionListFiltered extends React.Component {
         if (!item.responsibleParties.find(rp => rp.organization.id === organization)) return false;
       }
       if (impact && (!item.impact || (item.impact.id !== impact))) return false;
+
+      if (emissionScope) {
+        if (!item.emissionScopes.find(es => es.id === emissionScope)) return false;
+      }
+
       if (text) {
         const searchStr = text.toLowerCase();
         if (item.identifier.toLowerCase().startsWith(searchStr)) return true;
@@ -172,7 +185,7 @@ class ActionListFiltered extends React.Component {
   }
 
   render() {
-    const { t, filters, leadContent } = this.props;
+    const { t, emissionScopes, filters, leadContent } = this.props;
     const actions = this.filterActions();
     const impacts = this.context.actionImpacts;
     return (
@@ -197,6 +210,7 @@ class ActionListFiltered extends React.Component {
                     <h2 className="mb-4">{ t('browse-actions') }</h2>
                     <ActionListFilters
                       cats={this.cats}
+                      emissionScopes={emissionScopes}
                       orgs={this.orgs}
                       impacts={impacts}
                       filters={filters}
