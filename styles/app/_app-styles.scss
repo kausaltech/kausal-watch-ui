@@ -87,17 +87,23 @@ blockquote {
     margin-top: 1.5rem;
     font-size: 1.25rem;
   }
-  
+
   h4 {
     margin-top: 1.25rem;
     font-size: 1.25rem;
-    
+
     &:first-child {
       margin-top: 0;
     }
   }
-  
+
   h5 {
     font-size: 1rem;
   }
+}
+
+/* Larger tooltip for emission scope icon */
+.emission-scope-icon-tooltip {
+  text-align: left;
+  min-width: 20em;
 }
