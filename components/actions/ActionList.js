@@ -104,10 +104,10 @@ class ActionListFiltered extends React.Component {
 
   static getFiltersFromQuery(query) {
     const {
-      organization, category, emissionScope, text, impact,
+      organization, category, scope, text, impact,
     } = query;
     return {
-      organization, category, emissionScope, text, impact,
+      organization, category, scope, text, impact,
     };
   }
 
@@ -158,7 +158,7 @@ class ActionListFiltered extends React.Component {
   filterActions() {
     const { filters } = this.props;
     const {
-      category, organization, text, impact, emissionScope,
+      category, organization, text, impact, scope,
     } = filters;
 
     const actions = this.actions.filter((item) => {
@@ -168,8 +168,8 @@ class ActionListFiltered extends React.Component {
       }
       if (impact && (!item.impact || (item.impact.id !== impact))) return false;
 
-      if (emissionScope) {
-        if (!item.emissionScopes.find(es => es.id === emissionScope)) return false;
+      if (scope) {
+        if (!item.emissionScopes.find(es => es.id === scope)) return false;
       }
 
       if (text) {

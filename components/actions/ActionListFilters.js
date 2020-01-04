@@ -50,7 +50,7 @@ class ActionListFilters extends React.Component {
   }
 
   onEmissionScopeBtnClick(evt) {
-    this.props.onChange('emissionScope', evt.target.value);
+    this.props.onChange('scope', evt.target.value);
   }
 
   onSearchChange(evt) {
@@ -94,14 +94,14 @@ class ActionListFilters extends React.Component {
     const category = filters.category === undefined ? '' : filters.category;
     const organization = filters.organization === undefined ? '' : filters.organization;
     const impact = filters.impact === undefined ? '' : filters.impact;
-    const emissionScope = filters.emissionScope === undefined ? '' : filters.emissionScope;
+    const scope = filters.scope === undefined ? '' : filters.scope;
 
     const activeFilters = [];
     if (filters.organization) activeFilters.push({id: 0, reset: this.onOrgBtnClick, name: this.getOrganizationName(filters.organization)});
     if (filters.category) activeFilters.push({id: 1, reset: this.onCatBtnClick, name: this.getCategoryName(filters.category)});
     if (filters.impact) activeFilters.push({id: 2, reset: this.onImpactBtnClick, name: `${t('impact')}: ${this.getImpactName(filters.impact)}`});
     if (filters.text) activeFilters.push({id: 3, reset: this.onSearchChange, name: filters.text});
-    if (filters.emissionScope) activeFilters.push({id: 4, reset: this.onEmissionScopeBtnClick, name: this.getEmissionScopeName(filters.emissionScope)});
+    if (filters.scope) activeFilters.push({id: 4, reset: this.onEmissionScopeBtnClick, name: this.getEmissionScopeName(filters.scope)});
 
     return (
       <div className="filters mb-2 text-left">
@@ -146,8 +146,8 @@ class ActionListFilters extends React.Component {
               </Col>
               <Col sm="12" md={{ size: 6 }} lg="4">
                 <FormGroup>
-                  <Label for="emissionscopefield">{ t('filter-emission-scope') }</Label>
-                  <CustomInput type="select" id="emissionscopefield" name="emissionscope" value={emissionScope} onChange={this.onEmissionScopeBtnClick} className="mb-2">
+                  <Label for="scopefield">{ t('filter-emission-scope') }</Label>
+                  <CustomInput type="select" id="scopefield" name="emissionscope" value={scope} onChange={this.onEmissionScopeBtnClick} className="mb-2">
                     <option value="">{ t('filter-all-emission-scopes') }</option>
                     {emissionScopes.map((es) => (
                       <option value={es.id} key={es.id}>{ es.name }</option>
