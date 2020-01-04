@@ -20,7 +20,7 @@ function Layout({ children }) {
   return (
     <ThemeProvider theme={theme}>
       <div>
-        <Meta />
+        <Meta /> 
         <Head>
           <meta name="viewport" content="initial-scale=1.0, width=device-width" />
           <meta property="og:type" content="website" />
@@ -28,12 +28,11 @@ function Layout({ children }) {
             <meta property="og:url" content={plan.currentURL.domain + plan.currentURL.path} />
           )}
           <meta property="og:site_name" content={siteTitle} />
-          <link rel="apple-touch-icon" sizes="180x180" href="/static/favicon/apple-touch-icon.png" />
-          <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon/favicon-32x32.png" />
-          <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon/favicon-16x16.png" />
-          <link rel="manifest" href="/static/favicon/site.webmanifest" />
-          <link rel="mask-icon" href="/static/favicon/safari-pinned-tab.svg" color="#000000" />
-          <meta name="msapplication-TileColor" content="#ffc40d" />
+          <link rel="apple-touch-icon" sizes="180x180" href={`/static/images/${process.env.THEME_IDENTIFIER}/favicon/apple-touch-icon.png`} />
+          <link rel="icon" type="image/png" sizes="32x32" href={`/static/images/${process.env.THEME_IDENTIFIER}/favicon/favicon-32x32.png`} />
+          <link rel="icon" type="image/png" sizes="16x16" href={`/static/images/${process.env.THEME_IDENTIFIER}/favicon/favicon-16x16.png`} />
+          <link rel="mask-icon" href={`/static/images/${process.env.THEME_IDENTIFIER}/favicon/safari-pinned-tab.svg`} color={theme.brandDark} />
+          <meta name="msapplication-TileColor" content={theme.brandDark} />
           <meta name="theme-color" content="#ffffff" />
         </Head>
         <Header siteTitle={siteTitle} />
