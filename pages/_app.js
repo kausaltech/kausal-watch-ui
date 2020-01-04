@@ -47,6 +47,10 @@ const GET_PLAN = gql`
         officialNameDescription
         copyrightText
         creativeCommonsLicense
+        ownerUrl
+        ownerName
+        actionShortDescription
+        indicatorShortDescription
       }
     }
   }

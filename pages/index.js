@@ -41,16 +41,15 @@ class HomePage extends React.Component {
 
   render() {
     const plan = this.context;
-
+    const generalContent = plan.generalContent || {};
     // Use default hero component
-    // TODO: Get Bylines from API
     let heroComponent = (
       <FrontHero
         bgImage={plan.imageUrl}
-        title={plan.generalContent.siteTitle}
-        titleDescription={plan.generalContent.siteDescription}
-        actionsDescription="Toimenpiteet kasvihuonekaasupäästöjen vähentämiseksi"
-        indicatorsDescription="Mittarit toimenpiteiden onnistumisen seurantaan"
+        title={generalContent.siteTitle}
+        siteDescription={generalContent.siteDescription}
+        actionsDescription={generalContent.actionShortDescription}
+        indicatorsDescription={generalContent.indicatorShortDescription}
       />
     );
 

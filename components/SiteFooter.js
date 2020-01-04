@@ -23,15 +23,6 @@ const StyledFooter = styled.footer`
   color: #ffffff;
   padding: 6rem 0;
   
-    &::before {
-      content: " ";
-      @include koro("storm", $hel-tram, 600);
-      width: 100%;
-      height: $spacer * 3;
-      position: absolute;
-      top: $spacer * -3;
-    }
-  
   .footer-column {
     margin-bottom: 2rem;
     text-align: center;
@@ -62,8 +53,8 @@ function SiteFooter(props) {
               <h5>{siteTitle}</h5>
             </Col>
             <Col md="4" className="footer-column">
-              <div className="footer-branding footer-branding-helsinki">
-                <a href="http://www.hel.fi">
+              <div className="footer-branding">
+                <a href={generalContent.ownerUrl}>
                   <Logo aria-hidden="true" className="footer-org-logo" />
                 </a>
               </div>

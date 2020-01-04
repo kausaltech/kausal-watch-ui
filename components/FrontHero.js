@@ -121,7 +121,7 @@ const Highlight = styled.div`
 
 function FrontHero(props) {
   const {
-    t, bgImage, title, byline, actionsDescription, indicatorsDescription,
+    t, bgImage, title, siteDescription, actionsDescription, indicatorsDescription,
   } = props;
   return (
     <BannerContent>
@@ -137,8 +137,8 @@ function FrontHero(props) {
                   <HeroVisual>
                     <HeroImage pic={bgImage} />
                   </HeroVisual>
-                  <h1>{ title }</h1>
-                  <p className="lead">{ byline }</p>
+                  <h1>{ title || 'Site Title' }</h1>
+                  <p className="lead">{ siteDescription || 'Site Description' }</p>
                 </SiteTitle>
               </Col>
             )}
@@ -164,7 +164,7 @@ function FrontHero(props) {
                       <div>
                         <h3>{ t('actions') }</h3>
                         <p>
-                          { actionsDescription }
+                          { actionsDescription || 'Action Description' }
                         </p>
                       </div>
                     </Highlight>
@@ -192,7 +192,7 @@ function FrontHero(props) {
                       <div>
                         <h3>{ t('indicators') }</h3>
                         <p>
-                          { indicatorsDescription }
+                          { indicatorsDescription || 'Indicator Description' }
                         </p>
                       </div>
                     </Highlight>
@@ -211,7 +211,7 @@ FrontHero.propTypes = {
   t: PropTypes.func.isRequired,
   bgImage: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
-  byline: PropTypes.string.isRequired,
+  siteDescription: PropTypes.string.isRequired,
   actionsDescription: PropTypes.string.isRequired,
   indicatorsDescription: PropTypes.string.isRequired,
 };
