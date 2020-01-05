@@ -14,7 +14,7 @@ const ACTION_CARD_FRAGMENT = gql`
   fragment ActionCard on Action {
     id
     identifier
-    name
+    name(hyphenated: true)
     status {
       id
       identifier

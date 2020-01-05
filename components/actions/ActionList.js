@@ -30,7 +30,7 @@ export const GET_ACTION_LIST = gql`
     planActions(plan: $plan) {
       id
       identifier
-      name
+      name(hyphenated: true)
       officialName
       completion
       plan {
