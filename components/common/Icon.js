@@ -4,6 +4,7 @@ import helsinkiLogo from 'hel-icons/dist/shapes/helsinki-logo.svg';
 import globe from 'hel-icons/dist/shapes/globe.svg';
 import calendar from 'hel-icons/dist/shapes/calendar.svg';
 import check from 'hel-icons/dist/shapes/check.svg';
+import home from 'hel-icons/dist/shapes/home.svg';
 import pencil from 'hel-icons/dist/shapes/pencil.svg';
 import angleUp from 'hel-icons/dist/shapes/angle-up.svg';
 import angleDown from 'hel-icons/dist/shapes/angle-down.svg';
@@ -26,6 +27,7 @@ const icons = {
   globe,
   calendar,
   check,
+  home,
   pencil,
   angleUp,
   angleDown,

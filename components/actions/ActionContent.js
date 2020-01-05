@@ -24,6 +24,7 @@ import ActionIndicators from './ActionIndicators';
 import ActionBgImage from './ActionBgImage';
 import ActionPager from './ActionPager';
 import ActionUpdatesList from './ActionUpdatesList';
+import EmissionScopeIcon from './EmissionScopeIcon';
 import ContentLoader from '../common/ContentLoader';
 import Icon from '../common/Icon';
 import ErrorMessage from '../common/ErrorMessage';
@@ -54,6 +55,12 @@ query ActionDetails($plan: ID!, $id: ID!) {
         name
         imageUrl
       }
+    }
+    emissionScopes: categories(categoryType: "emission_scope") {
+      id
+      identifier
+      name
+      shortDescription
     }
     contactPersons {
       id
@@ -271,7 +278,7 @@ function ActionDetails(props) {
   const generalContent = plan.generalContent || {};
   const cleanOfficialText = action.officialName.replace(/(?:\r\n|\r|\n)/g, '<br>');
 
-  const { mergedActions } = action;
+  const { categories, emissionScopes, mergedActions } = action;
   const hasMergedActions = mergedActions.length > 0;
 
   return (
@@ -327,7 +334,7 @@ function ActionDetails(props) {
                     <br />
                     {action.name}
                   </ActionHeadline>
-                  {action.categories.map((item) => (
+                  {categories.map((item) => (
                     <CategoryBadge key={item.id} className="mr-3">{item.name}</CategoryBadge>
                   ))}
                 </Col>
@@ -421,6 +428,14 @@ function ActionDetails(props) {
               <ActionSection>
                 <h5>{ t('action-timeline') }</h5>
                 <Timeline schedules={action.schedule} allSchedules={plan.actionSchedules} />
+              </ActionSection>
+            ) : null}
+            { emissionScopes.length ? (
+              <ActionSection>
+                <h5>{ t('emission-scopes') }</h5>
+                {emissionScopes.map((item) => (
+                  <EmissionScopeIcon key={item.id} category={item} color={theme.brandDark} size="2em" />
+                ))}
               </ActionSection>
             ) : null}
             <ActionSection>
