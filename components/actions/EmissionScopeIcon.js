@@ -5,7 +5,8 @@ import { Tooltip } from 'reactstrap';
 import styled from 'styled-components';
 import Icon from '../common/Icon';
 
-const IconContainer = styled.span`
+const IconContainer = styled.div`
+  display: inline-block;
   margin-right: 0.5em;
 `;
 
@@ -51,7 +52,7 @@ class EmissionScopeIcon extends React.Component {
     // Fade effect looks jerky for some reason
     const fade = false;
     return (
-      <IconContainer>
+      <IconContainer style={{ width: size, height: size }}>
         <Icon id={iconId} name={iconName} color={color} width={size} height={size} />
         <Tooltip
           placement="top"
