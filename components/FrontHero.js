@@ -73,14 +73,15 @@ const BannerContent = styled.div`
 const Illustration = styled.div`
 
   svg {
-    max-width: 8rem;
+    width: 6rem;
+    height: 6rem;
     margin: auto;
     display: block;
     .a {
-      fill: ${(props) => props.theme.themeColors.white};
+      fill: ${(props) => props.theme.brandLight};
     }
     .b {
-      fill: ${(props) => props.theme.brandDark};
+      fill: ${(props) => props.theme.neutralDark};
     }
   }
 `;
@@ -145,7 +146,7 @@ function FrontHero(props) {
           </Spring>
         </Row>
         <Row>
-          <Col md="6" lg={{ size: 5, offset: 1 }}>
+          <Col md="6">
             <Spring
               from={{ opacity: 0 }}
               to={{ opacity: 1 }}
@@ -173,7 +174,7 @@ function FrontHero(props) {
               )}
             </Spring>
           </Col>
-          <Col md="6" lg="5">
+          <Col md="6">
             <Spring
               from={{ opacity: 0 }}
               to={{ opacity: 1 }}

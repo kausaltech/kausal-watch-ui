@@ -36,6 +36,10 @@ const StyledCard = styled(Card)`
   width: 100%;
   background-color: ${(props) => props.theme.themeColors.light};
   transition: all 0.5s ease;
+
+  a {
+    color: ${(props) => props.theme.neutralDark};
+  }
   &:hover {
     transform: translateY(-5px);
     box-shadow: 4px 4px 8px rgba(82,90,101,0.5);
