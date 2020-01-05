@@ -89,10 +89,16 @@ const ContactDetails = (props) => {
         if (error) return <span>{error.message}</span>;
         const { person } = data;
 
-        const orgAncestors = person.organization.ancestors
-          .filter((org) => org.classification.name !== 'Valtuusto' && org.classification.name !== 'Hallitus')
-          .map((org) => ({ id: org.id, name: org.name }));
-        orgAncestors.push({ id: person.organization.id, name: person.organization.name });
+        let orgAncestors;
+
+        if (person.organization && person.organization.ancestors) {
+          orgAncestors = person.organization.ancestors
+            .filter((org) => org.classification.name !== 'Valtuusto' && org.classification.name !== 'Hallitus')
+            .map((org) => ({ id: org.id, name: org.name }));
+          orgAncestors.push({ id: person.organization.id, name: person.organization.name });
+        } else {
+          orgAncestors = [];
+        }
 
         return (
           <div className="mt-2">
