@@ -71,7 +71,7 @@ function makeLayout(indicator) {
       type: indicator.timeResolution === 'YEAR' ? 'linear' : 'date',
       fixedrange: true,
       tickformat: indicator.timeResolution === 'YEAR' ? 'd' : '%d.%m.%Y',
-      tickmode: indicator.timeResolution !== 'YEAR' ? 'linear' : null,
+      tickmode: null,
     },
     //showlegend: false,
     separators: ', ',
