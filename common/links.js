@@ -41,7 +41,6 @@ IndicatorLink.propTypes = {
 
 export function ActionLink(props) {
   const { action, ...other } = props;
-  console.log(props);
   // If this action is merged with another, replace all links with
   // a link to the master action.
   const targetIdentifier = action.mergedWith ? action.mergedWith.identifier : action.identifier;
