@@ -63,9 +63,6 @@ export const GET_ACTION_LIST = gql`
         id
         identifier
       }
-      emissionScopes: categories(categoryType: "emission_scope") {
-        id
-      }
     }
     planWithContent: plan(id: $plan) {
       id
@@ -117,7 +114,7 @@ class ActionListFiltered extends React.Component {
     this.actions = props.planActions;
     this.cats = props.actionCategories;
     this.orgs = props.planOrganizations;
-    const filters = { props };
+    const { emissionScopes } = props;
 
     const catsById = {};
     this.cats.forEach((cat) => {
@@ -129,7 +126,14 @@ class ActionListFiltered extends React.Component {
       }
     });
 
+    const scopesById = {};
+    emissionScopes.forEach((cat) => {
+      scopesById[cat.id] = cat;
+    });
     this.actions.forEach((act) => {
+      act.emissionScopes = act.categories
+        .filter((cat) => cat.id in scopesById)
+        .map((cat) => scopesById[cat.id]);
       act.categories = act.categories
         .filter((cat) => cat.id in catsById)
         .map((cat) => catsById[cat.id]);
