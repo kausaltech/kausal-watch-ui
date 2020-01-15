@@ -6,7 +6,11 @@ import {
 import styled, { withTheme } from 'styled-components';
 import { Link } from '../routes';
 import { StaticPageLink } from '../common/links';
-import { IndicatorListLink, ActionListLink } from '../common/links';
+import {
+  DashboardLink,
+  IndicatorListLink,
+  ActionListLink,
+} from '../common/links';
 import { withTranslation } from '../common/i18n';
 import PlanContext from '../context/plan';
 
@@ -72,6 +76,11 @@ class Header extends React.Component {
           <NavbarToggler onClick={this.toggle}><Icon name="bars" color={theme.brandDark}/></NavbarToggler>
           <Collapse isOpen={this.state.isOpen} navbar>
             <Nav navbar>
+              <NavItem key="dasboard">
+                <DashboardLink>
+                  <a className="nav-link">{t('dashboard')}</a>
+                </DashboardLink>
+              </NavItem>
               <NavItem key="actions">
                 <ActionListLink>
                   <a className="nav-link">{t('actions')}</a>

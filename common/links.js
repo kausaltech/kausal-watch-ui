@@ -27,6 +27,15 @@ export function getActionListLinkProps(query) {
   };
 }
 
+export function getDashboardLinkProps(query) {
+  return {
+    href: {
+      pathname: '/dashboard',
+      query,
+    },
+  };
+}
+
 export function IndicatorLink(props) {
   const { id, ...other } = props;
 
@@ -54,7 +63,7 @@ ActionLink.propTypes = {
     identifier: PropTypes.string.isRequired,
     mergedWith: PropTypes.shape({
       identifier: PropTypes.string.isRequired,
-    }).isRequired,
+    }),
   }).isRequired,
 };
 
@@ -87,6 +96,12 @@ IndicatorListLink.propTypes = {
   ...Link.propTypes,
 };
 
+export function DashboardLink(props) {
+  return <Link href="/dashboard" passHref {...props} />;
+}
+DashboardLink.propTypes = {
+  ...Link.propTypes,
+};
 
 export function StaticPageLink(props) {
   const { slug, ...other } = props;

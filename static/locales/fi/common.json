@@ -3,6 +3,7 @@
     "indicators": "Mittarit",
     "actions": "Toimenpiteet",
     "action": "Toimenpide",
+    "dashboard": "Tilannekuva",
     "operational": "Toiminnallinen mittari",
     "tactical": "Taktinen mittari",
     "strategic": "Strateginen mittari",
