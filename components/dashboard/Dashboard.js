@@ -3,7 +3,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
-import { Spring } from 'react-spring/renderprops.cjs';
 import {
   Container, Row, Col, TabContent, TabPane,
 } from 'reactstrap';
@@ -11,8 +10,6 @@ import styled from 'styled-components';
 import { withTranslation } from '../../common/i18n';
 import ContentLoader from '../common/ContentLoader';
 import PlanContext from '../../context/plan';
-import ActionListFilters from '../actions/ActionListFilters';
-import ActionCardList from '../actions/ActionCardList';
 import ImpactGroupActionList from './ImpactGroupActionList';
 
 import Bar from './Bar';
@@ -141,10 +138,21 @@ class DashboardLoaded extends React.Component {
       });
     });
 
+    let content;
+    if (actions.length) {
+      content = (
+        <ImpactGroupActionList t={t} actions={actions} />
+      );
+    } else {
+      content = (
+        <div className="mb-5 pd-5">{t('impact-group-no-actions')}</div>
+      );
+    }
+
     return (
       <TabPane key={segment.id} tabId={segment.id}>
         <h2 className="mb-3">{ title }</h2>
-        {actions.length ? (<ImpactGroupActionList t={t} actions={actions} />) : t('impact-group-no-actions')}
+        {content}
       </TabPane>
     );
   }

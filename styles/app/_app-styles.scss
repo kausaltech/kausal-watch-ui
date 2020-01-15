@@ -312,42 +312,48 @@ input[type="password"] {
 
 // Dashboard Bar Component
 
+/* TODO: we probably should use some theme color? */
+$active-segment: firebrick;
+
 .bar-segment-container {
   height: 4em;
   border: 2px solid lighten($black,20%);
+  background-color: darken($white,15%);
 }
 
 .bar-segment:nth-child(3n + 1) {
-  background-color: #ccc;
+  background-color: darken($white,15%);
 }
 
 .bar-segment:nth-child(3n + 2) {
-  background-color: #ddd;
+  background-color: darken($white,10%);
 }
 
 .bar-segment:nth-child(3n) {
-  background-color: #eee;
+  background-color: darken($white,5%);
 }
 
 .bar-segment {
   font-weight: 700;
   font-size: 1.6em;
   color: lighten($black,20%);
-}
 
-.bar-segment.small {
-  font-weight: 400;
-  font-size: 1em;
-}
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.10);
+  }
 
-.bar-segment.active {
-  /* TODO: which color? */
-  background-color: firebrick;
-  color: white;
+  &.small {
+    font-weight: 400;
+    font-size: 1em;
+  }
+
+  &.active {
+    background-color: $active-segment;
+    color: white;
+  }
 }
 
 .bar-arrow {
-  /* TODO: which color? */
-  background-color: firebrick;
+  background-color: $active-segment;
   border: 2px solid lighten($black,20%);
 }

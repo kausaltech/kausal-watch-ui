@@ -16,12 +16,21 @@ const ActionName = styled.span`
   }
 `;
 
+const StatusBadge = styled(Badge)`
+  color: white;
+  font-size: 1em;
+`;
+
 class ImpactGroupActionList extends React.Component {
   static contextType = PlanContext;
+
+  renderStatus(status) {
+  }
 
   render() {
     const { t, actions } = this.props;
     const impacts = this.context.actionImpacts;
+    console.debug('actions', actions);
 
     return (
       <div className="mb-5 pb-5">
@@ -46,7 +55,9 @@ class ImpactGroupActionList extends React.Component {
                   </ActionName>
                 </td>
                 <td>{impacts.find(imp => imp.id === item.impact.id).name}</td>
-                <td>{item.action.status.name}</td>
+                <td>
+                  <StatusBadge className={`bg-${item.action.status.identifier}`}>{item.action.status.name}</StatusBadge>
+                </td>
               </tr>
             ))}
           </tbody>
