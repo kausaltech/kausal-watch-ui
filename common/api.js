@@ -14,7 +14,7 @@ aplans.get = async function get(path, configIn) {
   if (!url.endsWith('/')) url += '/';
   config.url = url;
 
-  headers.Accept = headers.Accept || 'application/vnd.api+json';
+  headers.Accept = headers.Accept || 'application/json';
   config.headers = headers;
 
   return axios.request(config);

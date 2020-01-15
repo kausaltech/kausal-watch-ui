@@ -10,6 +10,8 @@ import moment from '../../common/moment';
 import PlanContext from '../../context/plan';
 import { aplans, CancelToken } from '../../common/api';
 import ContentLoader from '../common/ContentLoader';
+import { captureException } from '../../common/sentry';
+
 
 const CausalChain = styled.div`
   background-color: ${props => props.theme.themeColors.light};
@@ -281,13 +283,15 @@ class IndicatorCausal extends React.Component {
       },
       cancelToken: this.cancelToken.token,
     }).then((result) => {
+      const { nodes, edges } = result.data;
       this.setState({
         isLoaded: true,
-        nodes: result.data.data.nodes,
-        edges: result.data.data.edges,
+        nodes,
+        edges,
       });
     }).catch((error) => {
       if (this.cancelled) return;
+      captureException(error);
       this.setState({
         isLoaded: true,
         error,
