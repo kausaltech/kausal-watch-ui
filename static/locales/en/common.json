@@ -49,6 +49,8 @@
     "action-timeline": "Timeline",
     "action-progress": "Progress",
     "action-percent-ready": "ready",
+    "action-num": "#",
+    "action-name-title": "Action theme",
     "action-impact": "Impact",
     "action-merged": "Merged actions",
     "action-status-merged": "Merged with action",
@@ -80,5 +82,7 @@
     "themes": "Themes",
     "graph": "Graph",
     "no-graph": "No graph",
-    "loading": "Loading"
+    "loading": "Loading",
+    "impact-group-no-actions": "No defined actions.",
+    "impact-group.others": "Others"
 }

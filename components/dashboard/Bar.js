@@ -5,9 +5,6 @@ import BarSegment from './BarSegment';
 
 const SegmentContainer = styled.div`
   display: flex;
-  height: 4em;
-  background-color: #ccc;
-  border: 2px solid #231f20;
 `;
 
 const ArrowContainer = styled.div`
@@ -19,7 +16,6 @@ const Arrow = styled.div`
   z-index: 1;
   width: 20px;
   height: 20px;
-  border: 2px solid #231f20;
   transform: rotate(45deg);
   margin-left: -10px;
 `;
@@ -39,7 +35,7 @@ class Bar extends React.Component {
     return sum;
   }
 
-  onSelect(segment, key) {
+  onSelect(segment) {
     // fire callback
     if (this.props.onSelect) {
       this.props.onSelect(segment);
@@ -64,20 +60,19 @@ class Bar extends React.Component {
 
     return (
       <div className="mb-4">
-        <SegmentContainer>
-          {segments.map((segment, key) => (
+        <SegmentContainer className="bar-segment-container">
+          {segments.map((segment) => (
             <BarSegment
               key={segment.id}
-              idx={key}
               segment={segment}
               active={segment.id === active}
-              sum={sum}
+              width={segment.value / sum * 100 + 0.001}
               onSelect={this.onSelect}
             />
           ))}
         </SegmentContainer>
         <ArrowContainer>
-          <Arrow style={{ left: `${calcArrowPos()}%`, background: 'firebrick' }} />
+          <Arrow className="bar-arrow" style={{ left: `${calcArrowPos()}%`}} />
         </ArrowContainer>
       </div>
     );

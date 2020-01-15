@@ -28,10 +28,10 @@ class ImpactGroupActionList extends React.Component {
         <Table hover>
           <thead>
             <tr>
-              <th>Nro</th>
-              <th>Toimenpide / Nimi</th>
-              <th>Vaikutus</th>
-              <th>Eteneminen</th>
+              <th>{t('action-num')}</th>
+              <th>{t('action-name-title')}</th>
+              <th>{t('action-impact')}</th>
+              <th>{t('action-progress')}</th>
             </tr>
           </thead>
           <tbody>

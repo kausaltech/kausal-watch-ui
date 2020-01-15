@@ -49,6 +49,8 @@
     "action-timeline": "Aikajänne",
     "action-progress": "Eteneminen",
     "action-percent-ready": "valmis",
+    "action-num": "Nro",
+    "action-name-title": "Toimenpide / Nimi",
     "action-impact": "Vaikutus",
     "action-merged": "Yhdistetyt toimenpiteet",
     "action-status-merged": "Yhdistetty toimenpiteeseen",
@@ -80,5 +82,7 @@
     "themes": "Teemat",
     "graph": "Kuvaaja",
     "no-graph": "Ei kuvaajaa",
-    "loading": "Ladataan"
+    "loading": "Ladataan",
+    "impact-group-no-actions": "Ei määriteltyjä toimenpiteitä.",
+    "impact-group-others": "Muut"
 }

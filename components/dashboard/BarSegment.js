@@ -1,6 +1,9 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled, { withTheme } from 'styled-components';
 import { Tooltip } from 'reactstrap';
+
+const VALUE_SMALL = 3.5;
 
 const Segment = styled.div`
   position: relative;
@@ -8,13 +11,8 @@ const Segment = styled.div`
   justify-content: center;
   align-items: center;
   z-index: 2;
-  font-weight: 700;
-  font-size: 1.6em;
   cursor: pointer;
-
-  &.active {
-    color: white;
-  }
+  overflow: hidden;
 `;
 
 class BarSegment extends React.Component {
@@ -34,36 +32,26 @@ class BarSegment extends React.Component {
   }
 
   render() {
-    const { active, idx, segment, sum, onSelect } = this.props;
+    const { active, segment, width, onSelect } = this.props;
+    const id = `segment-${segment.id}`;
 
-    const getBgColor = (i) => {
-      if (active) {
-        return 'firebrick';
-      }
-      switch (i % 3) {
-        case 0:
-          return '#ccc';
-        case 1:
-          return '#ddd';
-        case 2:
-          return '#eee';
-      }
-      return '#fff';
-    };
-
-    const width = segment.value / sum * 100 + 0.001;
-    const id = `segment-${idx}`;
+    let className = 'bar-segment';
+    if (active) {
+      className += ' active';
+    }
+    if (segment.value < VALUE_SMALL) {
+      className += ' small';
+    }
 
     return (
       <>
         <Segment
           id={id}
-          className={active ? 'active' : ''}
+          className={className}
           style={{
             width: `${width}%`,
-            backgroundColor: getBgColor(idx),
           }}
-          onClick={() => onSelect(segment, idx)}
+          onClick={() => onSelect(segment)}
         >
           {`${Math.round(segment.value)}`}%
         </Segment>
@@ -80,5 +68,11 @@ class BarSegment extends React.Component {
     );
   }
 }
+
+BarSegment.propTypes = {
+  active: PropTypes.object,
+  segment: PropTypes.object.isRequired,
+  onSelect: PropTypes.func.isRequired,
+};
 
 export default withTheme(BarSegment);

@@ -98,11 +98,11 @@ class DashboardLoaded extends React.Component {
   }
 
   makeSegments() {
-    const { impactGroups } = this.props;
+    const { t, impactGroups } = this.props;
     const segments = [];
     const others = {
       id: IMPACT_GROUP_OTHERS_ID,
-      name: 'Muut',
+      name: t('impact-group-others'),
       value: 0,
       groups: [],
     };
@@ -122,13 +122,12 @@ class DashboardLoaded extends React.Component {
     });
     segments.push(others);
 
-    // console.debug('Segments', segments);
-
     return segments;
   }
 
   renderTabPane(segment) {
-    const title = segment.id === IMPACT_GROUP_OTHERS_ID ? 'Muut' : segment.name;
+    const { t } = this.props;
+    const title = segment.name;
 
     // Merge actions from all ImpactGroups
     let actions = [];
@@ -145,7 +144,7 @@ class DashboardLoaded extends React.Component {
     return (
       <TabPane key={segment.id} tabId={segment.id}>
         <h2 className="mb-3">{ title }</h2>
-        {actions.length ? (<ImpactGroupActionList actions={actions} />) : 'Ei määriteltyjä toimenpiteitä.'}
+        {actions.length ? (<ImpactGroupActionList t={t} actions={actions} />) : t('impact-group-no-actions')}
       </TabPane>
     );
   }

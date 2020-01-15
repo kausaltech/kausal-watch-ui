@@ -2,11 +2,11 @@
  * _app-styles.scss
  *
  * After setting up the app and theme variables import Bootstrap
- * components and styles. Then add app specific global styles 
- * and overrides. 
+ * components and styles. Then add app specific global styles
+ * and overrides.
  *
  */
- 
+
  @import "~bootstrap/scss/mixins";
  @import "~bootstrap/scss/root";
  @import "~bootstrap/scss/reboot";
@@ -308,4 +308,46 @@ input[type="password"] {
   &:after {
     border-color: lighten($black,40%);
   }
+}
+
+// Dashboard Bar Component
+
+.bar-segment-container {
+  height: 4em;
+  border: 2px solid lighten($black,20%);
+}
+
+.bar-segment:nth-child(3n + 1) {
+  background-color: #ccc;
+}
+
+.bar-segment:nth-child(3n + 2) {
+  background-color: #ddd;
+}
+
+.bar-segment:nth-child(3n) {
+  background-color: #eee;
+}
+
+.bar-segment {
+  font-weight: 700;
+  font-size: 1.6em;
+  color: lighten($black,20%);
+}
+
+.bar-segment.small {
+  font-weight: 400;
+  font-size: 1em;
+}
+
+.bar-segment.active {
+  /* TODO: which color? */
+  background-color: firebrick;
+  color: white;
+}
+
+.bar-arrow {
+  /* TODO: which color? */
+  background-color: firebrick;
+  border: 2px solid lighten($black,20%);
 }
