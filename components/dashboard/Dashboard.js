@@ -37,6 +37,7 @@ export const GET_IMPACT_GROUP_LIST = gql`
     plan(id: $plan) {
       id
       impactGroups {
+        id
         identifier
         name
         weight
@@ -50,6 +51,7 @@ export const GET_IMPACT_GROUP_LIST = gql`
               id
             }
             status {
+              id
               identifier
               name
             }
