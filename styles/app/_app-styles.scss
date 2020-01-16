@@ -317,8 +317,7 @@ input[type="password"] {
 
 // Dashboard Bar Component
 
-/* TODO: we probably should use some theme color? */
-$active-segment: firebrick;
+$active-segment: #444;
 
 .bar-segment-container {
   height: 4em;
