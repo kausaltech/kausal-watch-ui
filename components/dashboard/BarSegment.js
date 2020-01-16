@@ -39,7 +39,7 @@ class BarSegment extends React.Component {
     const style = {
       width: `${width}%`,
     };
-    console.log(color);
+
     if (active) {
       className += ' active';
       if (color) {

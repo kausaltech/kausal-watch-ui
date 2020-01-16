@@ -10,6 +10,9 @@ import { ActionLink } from '../../common/links';
 import PlanContext from '../../context/plan';
 import { withTranslation } from '../../common/i18n';
 
+import uniqueId from 'lodash/uniqueId';
+import MQPoints from './MQPoints';
+
 const ActionName = styled.span`
   a {
     color: ${(props) => props.theme.themeColors.black};
@@ -24,13 +27,13 @@ const StatusBadge = styled(Badge)`
 class ImpactGroupActionList extends React.Component {
   static contextType = PlanContext;
 
-  renderStatus(status) {
-  }
-
   render() {
-    const { t, actions } = this.props;
+    const {
+      t,
+      actions,
+      monitoringQualityPoints,
+    } = this.props;
     const impacts = this.context.actionImpacts;
-    console.debug('actions', actions);
 
     return (
       <div className="mb-5 pb-5">
@@ -41,6 +44,7 @@ class ImpactGroupActionList extends React.Component {
               <th>{t('action-name-title')}</th>
               <th>{t('action-impact')}</th>
               <th>{t('action-progress')}</th>
+              <th>{t('action-monitoring')}</th>
             </tr>
           </thead>
           <tbody>
@@ -58,6 +62,9 @@ class ImpactGroupActionList extends React.Component {
                 <td>
                   <StatusBadge className={`bg-${item.action.status.identifier}`}>{item.action.status.name}</StatusBadge>
                 </td>
+                <td>
+                  <MQPoints action={item.action} points={monitoringQualityPoints} />
+                </td>
               </tr>
             ))}
           </tbody>
@@ -70,6 +77,7 @@ class ImpactGroupActionList extends React.Component {
 ImpactGroupActionList.propTypes = {
   t: PropTypes.func.isRequired,
   actions: PropTypes.arrayOf(PropTypes.object).isRequired,
+  monitoringQualityPoints: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default withTranslation('common')(ImpactGroupActionList);

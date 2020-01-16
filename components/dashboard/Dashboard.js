@@ -53,6 +53,9 @@ export const GET_IMPACT_GROUP_LIST = gql`
               identifier
               name
             }
+            monitoringQualityPoints {
+              id
+            }
           }
           impact {
             id
@@ -61,6 +64,12 @@ export const GET_IMPACT_GROUP_LIST = gql`
       }
       generalContent {
         dashboardLeadContent
+      }
+      monitoringQualityPoints {
+        id
+        identifier
+        descriptionNo
+        descriptionYes
       }
     }
   }
@@ -125,7 +134,7 @@ class DashboardLoaded extends React.Component {
   }
 
   renderTabPane(segment) {
-    const { t } = this.props;
+    const { t, monitoringQualityPoints } = this.props;
     const title = segment.name;
 
     // Merge actions from all ImpactGroups
@@ -143,7 +152,11 @@ class DashboardLoaded extends React.Component {
     let content;
     if (actions.length) {
       content = (
-        <ImpactGroupActionList t={t} actions={actions} />
+        <ImpactGroupActionList
+          t={t}
+          actions={actions}
+          monitoringQualityPoints={monitoringQualityPoints}
+        />
       );
     } else {
       content = (
@@ -207,6 +220,7 @@ DashboardLoaded.propTypes = {
     group: PropTypes.string,
   }).isRequired,
   impactGroups: PropTypes.arrayOf(PropTypes.object).isRequired,
+  monitoringQualityPoints: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 
