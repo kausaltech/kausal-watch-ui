@@ -45,18 +45,25 @@ class Bar extends React.Component {
   render() {
     const { segments, active } = this.props;
     const sum = this.calcSum();
+    let arrowColor;
 
     const calcArrowPos = () => {
       let val = 0;
       for (let i = 0; i < segments.length; i++) {
         if (segments[i].id === active) {
           val += segments[i].value / 2;
+          arrowColor = segments[i].color;
           break;
         }
         val += segments[i].value;
       }
       return val / sum * 100;
-    }
+    };
+
+    const arrowStyle = {
+      left: `${calcArrowPos()}%`,
+      backgroundColor: arrowColor,
+    };
 
     return (
       <div className="mb-4">
@@ -67,12 +74,13 @@ class Bar extends React.Component {
               segment={segment}
               active={segment.id === active}
               width={segment.value / sum * 100 + 0.001}
+              color={segment.color}
               onSelect={this.onSelect}
             />
           ))}
         </SegmentContainer>
         <ArrowContainer>
-          <Arrow className="bar-arrow" style={{ left: `${calcArrowPos()}%`}} />
+          <Arrow className="bar-arrow" style={arrowStyle} />
         </ArrowContainer>
       </div>
     );

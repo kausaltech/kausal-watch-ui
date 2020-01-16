@@ -32,12 +32,19 @@ class BarSegment extends React.Component {
   }
 
   render() {
-    const { active, segment, width, onSelect } = this.props;
+    const { active, segment, width, color, onSelect } = this.props;
     const id = `segment-${segment.id}`;
 
     let className = 'bar-segment';
+    const style = {
+      width: `${width}%`,
+    };
+    console.log(color);
     if (active) {
       className += ' active';
+      if (color) {
+        style.backgroundColor = color;
+      }
     }
     if (segment.value < VALUE_SMALL) {
       className += ' small';
@@ -48,9 +55,7 @@ class BarSegment extends React.Component {
         <Segment
           id={id}
           className={className}
-          style={{
-            width: `${width}%`,
-          }}
+          style={style}
           onClick={() => onSelect(segment)}
         >
           {`${Math.round(segment.value)}`}%
@@ -70,9 +75,10 @@ class BarSegment extends React.Component {
 }
 
 BarSegment.propTypes = {
-  active: PropTypes.object,
+  active: PropTypes.bool.isRequired,
   segment: PropTypes.object.isRequired,
   onSelect: PropTypes.func.isRequired,
+  color: PropTypes.string,
 };
 
 export default withTheme(BarSegment);

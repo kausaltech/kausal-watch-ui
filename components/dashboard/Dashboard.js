@@ -40,6 +40,7 @@ export const GET_IMPACT_GROUP_LIST = gql`
         identifier
         name
         weight
+        color
         actions {
           action {
             id
@@ -104,13 +105,14 @@ class DashboardLoaded extends React.Component {
       groups: [],
     };
 
-    impactGroups.forEach(grp => {
+    impactGroups.forEach((grp) => {
       if (grp.weight > IMPACT_GROUP_MIN_WEIGHT) {
         segments.push({
           id: grp.identifier,
           name: grp.name,
           value: grp.weight,
-          groups: [ grp ],
+          color: grp.color,
+          groups: [grp],
         });
       } else {
         others.groups.push(grp);
@@ -128,9 +130,9 @@ class DashboardLoaded extends React.Component {
 
     // Merge actions from all ImpactGroups
     let actions = [];
-    const actionExists = (actId) => actions.find(act => act.action.id === actId) !== undefined;
-    segment.groups.forEach(grp => {
-      grp.actions.forEach(item => {
+    const actionExists = (actId) => actions.find((act) => act.action.id === actId) !== undefined;
+    segment.groups.forEach((grp) => {
+      grp.actions.forEach((item) => {
         // do not add merged actions or duplicates
         if (item.action.mergedWith === null && !actionExists(item.action.id)) {
           actions.push(item);
@@ -158,7 +160,9 @@ class DashboardLoaded extends React.Component {
   }
 
   render() {
-    const { t, filters, impactGroups, leadContent } = this.props;
+    const {
+      t, filters, impactGroups, leadContent,
+    } = this.props;
     const impacts = this.context.actionImpacts;
     const segments = this.makeSegments();
 
