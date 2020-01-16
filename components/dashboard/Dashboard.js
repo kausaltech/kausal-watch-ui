@@ -7,6 +7,7 @@ import {
   Container, Row, Col, TabContent, TabPane,
 } from 'reactstrap';
 import styled from 'styled-components';
+import { captureException } from '../../common/sentry';
 import { withTranslation } from '../../common/i18n';
 import ContentLoader from '../common/ContentLoader';
 import PlanContext from '../../context/plan';
@@ -239,7 +240,10 @@ class Dashboard extends React.Component {
       <Query query={GET_IMPACT_GROUP_LIST} variables={{ plan: plan.identifier }}>
         {({ data, loading, error }) => {
           if (loading) return <ContentLoader />;
-          if (error) return <p>{ t('error-loading-actions') }</p>;
+          if (error) {
+            captureException(error);
+            return <p>{ t('error-loading-actions') }</p>;
+          }
 
           const { generalContent, ...otherProps } = data.plan;
           const leadContent = generalContent.dashboardLeadContent;
