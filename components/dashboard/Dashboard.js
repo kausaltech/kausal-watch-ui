@@ -59,7 +59,7 @@ export const GET_IMPACT_GROUP_LIST = gql`
         }
       }
       generalContent {
-        actionListLeadContent
+        dashboardLeadContent
       }
     }
   }
@@ -222,9 +222,7 @@ class Dashboard extends React.Component {
           if (error) return <p>{ t('error-loading-actions') }</p>;
 
           const { generalContent, ...otherProps } = data.plan;
-          // TODO: change leadContent to dashboardLeadContent when it is available!
-          // const leadContent = generalContent.someLeadContent;
-          const leadContent = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
+          const leadContent = generalContent.dashboardLeadContent;
 
           return (
             <DashboardLoaded
