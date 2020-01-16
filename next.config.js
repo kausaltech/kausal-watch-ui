@@ -34,6 +34,9 @@ const config = withBundleAnalyzer(withImages(withSass({
     matomoURL: process.env.MATOMO_URL,
     matomoSiteId: process.env.MATOMO_SITE_ID,
   },
+  experimental: {
+    modern: true,
+  },
   /*
   manifest: {
     // if src value is exist, icon image will be generated from src image, and ovwewritten
