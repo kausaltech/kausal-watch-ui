@@ -13,8 +13,8 @@ import {
   ActionListLink,
 } from '../common/links';
 
-import IconActions from '../static/images/default/icon-actions.svg';
-import IconIndicators from '../static/images/default/icon-indicators.svg';
+import IconActions from '../public/static/images/default/icon-actions.svg';
+import IconIndicators from '../public/static/images/default/icon-indicators.svg';
 
 const HeroVisual = styled.div`
   position: relative;
