@@ -33,7 +33,9 @@ class ImpactGroupActionList extends React.Component {
       actions,
       monitoringQualityPoints,
     } = this.props;
-    const impacts = this.context.actionImpacts;
+    const impacts = Object.fromEntries(this.context.actionImpacts.map((x) => [x.id, x]));
+
+    actions.sort((a, b) => impacts[b.impact.id].order - impacts[a.impact.id].order);
 
     return (
       <div className="mb-5 pb-5">
@@ -58,7 +60,7 @@ class ImpactGroupActionList extends React.Component {
                     </ActionLink>
                   </ActionName>
                 </td>
-                <td>{impacts.find(imp => imp.id === item.impact.id).name}</td>
+                <td>{impacts[item.impact.id].name}</td>
                 <td>
                   <StatusBadge className={`bg-${item.action.status.identifier}`}>{item.action.status.name}</StatusBadge>
                 </td>
