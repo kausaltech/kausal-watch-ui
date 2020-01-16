@@ -363,6 +363,10 @@ $active-segment: firebrick;
   border: 2px solid lighten($black,20%);
 }
 
+.action-mqpoints {
+  cursor: pointer;
+}
+
 .mqpoints-col {
   text-align: center;
 }

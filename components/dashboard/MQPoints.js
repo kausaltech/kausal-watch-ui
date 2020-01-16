@@ -13,14 +13,24 @@ const MQPoints = (props) => {
   const actionHasPoint = (id) => action.monitoringQualityPoints
     && action.monitoringQualityPoints.find(obj => obj.id === id) !== undefined;
 
-  const icons = points.map(mqPoint => {
-    const completed = actionHasPoint(mqPoint.id);
-    const desc = completed ? mqPoint.descriptionYes : mqPoint.descriptionNo;
+  const sortedPoints = points.map((mqPoint) => {
+    const out = { ...mqPoint };
+    out.hasPoint = actionHasPoint(mqPoint.id);
+    return out;
+  });
+  sortedPoints.sort((a, b) => {
+    const hasDiff = b.hasPoint - a.hasPoint;
+    if (hasDiff) return hasDiff;
+    return a.order - b.order;
+  });
+
+  const icons = sortedPoints.map(mqPoint => {
+    const desc = mqPoint.hasPoint ? mqPoint.descriptionYes : mqPoint.descriptionNo;
     return (
       <MQPointIcon
         key={mqPoint.id}
         id={`mqpoint-icon-${uniqueId()}`}
-        completed={completed}
+        completed={mqPoint.hasPoint}
         description={desc}
       />
     );
@@ -39,4 +49,3 @@ MQPoints.propTypes = {
 };
 
 export default MQPoints;
-
