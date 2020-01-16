@@ -140,6 +140,11 @@ blockquote {
   }
 }
 
+/* Fix for flickering tooltip bug */
+.tooltip {
+  pointer-events: none;
+}
+
 /* Larger tooltip for emission scope icon */
 .emission-scope-icon-tooltip {
   text-align: left;
