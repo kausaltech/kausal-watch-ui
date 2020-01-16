@@ -15,7 +15,7 @@ import ImpactGroupActionList from './ImpactGroupActionList';
 
 import Bar from './Bar';
 
-const IMPACT_GROUP_MIN_WEIGHT = 2;
+const IMPACT_GROUP_MIN_WEIGHT = 1;
 const IMPACT_GROUP_OTHERS_ID = '_others';
 
 const DashboardSection = styled.div`

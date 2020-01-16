@@ -4,6 +4,7 @@ import styled, { withTheme } from 'styled-components';
 import { Tooltip } from 'reactstrap';
 
 const VALUE_SMALL = 3.5;
+const VALUE_VERY_SMALL = 2;
 
 const Segment = styled.div`
   position: relative;
@@ -46,7 +47,9 @@ class BarSegment extends React.Component {
         style.backgroundColor = color;
       }
     }
-    if (segment.value < VALUE_SMALL) {
+    if (segment.value <= VALUE_VERY_SMALL) {
+      className += ' very-small';
+    } else if (segment.value <= VALUE_SMALL) {
       className += ' small';
     }
 

@@ -352,6 +352,11 @@ $active-segment: firebrick;
     font-size: 1em;
   }
 
+  &.very-small {
+    font-weight: 400;
+    font-size: 0.8em;
+  }
+
   &.active {
     background-color: $active-segment;
     color: white;
