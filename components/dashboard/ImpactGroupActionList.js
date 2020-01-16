@@ -44,7 +44,7 @@ class ImpactGroupActionList extends React.Component {
               <th>{t('action-name-title')}</th>
               <th>{t('action-impact')}</th>
               <th>{t('action-progress')}</th>
-              <th>{t('action-monitoring')}</th>
+              <th className="mqpoints-col">{t('action-monitoring')}</th>
             </tr>
           </thead>
           <tbody>
@@ -62,7 +62,7 @@ class ImpactGroupActionList extends React.Component {
                 <td>
                   <StatusBadge className={`bg-${item.action.status.identifier}`}>{item.action.status.name}</StatusBadge>
                 </td>
-                <td>
+                <td className="mqpoints-col">
                   <MQPoints action={item.action} points={monitoringQualityPoints} />
                 </td>
               </tr>

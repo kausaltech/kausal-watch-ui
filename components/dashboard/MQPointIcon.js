@@ -6,7 +6,7 @@ import styled from 'styled-components';
 const Icon = styled.span`
   display: inline-block;
   font-family: sans-serif;
-  font-size: 1.8em;
+  font-size: 1.6em;
   line-height: 0.5;
   position: relative;
   top: 0.15em;

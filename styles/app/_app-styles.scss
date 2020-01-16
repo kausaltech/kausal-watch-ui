@@ -363,6 +363,10 @@ $active-segment: firebrick;
   border: 2px solid lighten($black,20%);
 }
 
+.mqpoints-col {
+  text-align: center;
+}
+
 /* Monitoring Quality Point Icon (star symbol) */
 .mqpoint-icon {
   color: rgba(0, 0, 0, 0.5);
