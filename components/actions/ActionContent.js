@@ -276,7 +276,8 @@ function ActionDetails(props) {
 
   const updated = moment(action.updatedAt).format('DD.MM.YYYY');
   const generalContent = plan.generalContent || {};
-  const cleanOfficialText = action.officialName.replace(/(?:\r\n|\r|\n)/g, '<br>');
+  const officialName = action.officialName || '';
+  const cleanOfficialText = officialName.replace(/(?:\r\n|\r|\n)/g, '<br>');
 
   const { categories, emissionScopes, mergedActions } = action;
   const hasMergedActions = mergedActions.length > 0;
@@ -348,14 +349,15 @@ function ActionDetails(props) {
           <Col md="7" lg="8">
             {action.description
             && <ActionSection className="text-content" dangerouslySetInnerHTML={{ __html: action.description }} />}
-            <OfficialText>
+            {cleanOfficialText
+            && <OfficialText>
               <h5>{ t('action-description-official') }</h5>
               <strong>{ t('action-as-in-plan') }</strong>
               <div dangerouslySetInnerHTML={{ __html: cleanOfficialText }} />
               {generalContent.officialNameDescription && (
                 <small>{`(${generalContent.officialNameDescription})`}</small>
               )}
-            </OfficialText>
+            </OfficialText>}
 
             <MergedActionList t={t} theme={theme} actions={mergedActions} />
 

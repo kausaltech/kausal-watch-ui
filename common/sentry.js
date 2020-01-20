@@ -64,7 +64,12 @@ function captureException(err, ctx) {
   return Sentry.captureException(err);
 }
 
+function captureMessage(msg) {
+  return Sentry.captureMessage(msg);
+}
+
 module.exports = {
   Sentry: Sentry,
-  captureException: captureException
+  captureException: captureException,
+  captureMessage: captureMessage,
 };

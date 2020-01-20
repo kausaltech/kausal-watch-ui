@@ -9,6 +9,7 @@ import {
 } from 'reactstrap';
 import styled from 'styled-components';
 import { withTranslation } from '../../common/i18n';
+import { captureMessage } from '../../common/sentry';
 import ContentLoader from '../common/ContentLoader';
 import PlanContext from '../../context/plan';
 import ActionListFilters from './ActionListFilters';
@@ -146,18 +147,28 @@ class ActionListFiltered extends React.Component {
     this.actions.forEach((action) => {
       if (action.categories[0]) {
         let category = action.categories[0];
-        while (category.parent) category = category.parent;
+        let seenCats = {};
+        while (category.parent) {
+          category = category.parent;
+          if (category.id in seenCats) {
+            captureMessage(`Category ${category.id} has invalid parent`);
+            break;
+          } else {
+            seenCats[category.id] = category;
+          }
+        }
         action.rootCategory = category;
+      } else {
+        action.rootCategory = {
+          // If action has no category, assign null category
+          // TODO: handle this better
+          id: '0',
+          identifier: '0',
+          imageUrl: null,
+          name: '',
+          parent: null,
+        };
       }
-      // If action has no category, assign null category
-      // TODO: handle this better
-      else action.rootCategory = {
-        id: '0',
-        identifier: '0',
-        imageUrl: null,
-        name: '',
-        parent: null,
-      };
     });
   }
 
