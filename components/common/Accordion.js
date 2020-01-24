@@ -2,6 +2,7 @@ import React from 'react';
 import { Collapse, Button } from 'reactstrap';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { replaceHashWithoutScrolling } from '../../common/links';
 
 const Header = styled.h3`
   display: flex;
@@ -43,10 +44,30 @@ export default class Accordion extends React.Component {
     open: this.props.open
   };
 
-  toggleSection = index => () => {
+  componentDidMount() {
+    // Read open faq id from location.hash.
+    // Unfortunately this can't be done in server side because
+    // hash is not available there.
+    const getOpenFaqId = () => {
+      const hash = window.location.hash;
+      return hash && hash.length > 2 ? hash.substr(2) : undefined;
+    };
+
+    const open = getOpenFaqId();
+    if (open) {
+      this.setState({
+        open,
+      });
+    }
+  }
+
+  toggleSection = id => () => {
     this.setState(({ open }) => ({
-      open: index === open ? undefined : index
+      open: id == open ? undefined : id,
     }));
+
+    // put opened faq id into URL hash so URL can be shared
+    replaceHashWithoutScrolling(`q${id}`);
   };
 
   render() {
@@ -54,10 +75,11 @@ export default class Accordion extends React.Component {
       <div className="accordion">
         {React.Children.map(this.props.children, (child, index) => {
           if (child.type !== AccordionItem) return null;
+          const id = child.props.id || index;
           return React.cloneElement(child, {
-            isOpen: child.props.open || this.state.open === index,
-            onClick: this.toggleSection(index),
-            identifier: index
+            isOpen: child.props.open || this.state.open === id,
+            onClick: this.toggleSection(id),
+            identifier: id,
           });
         })}
       </div>
@@ -70,7 +92,7 @@ Accordion.defaultProps = {
 };
 
 Accordion.propTypes = {
-  open: PropTypes.number,
+  open: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 
 const AccordionItem = ({
@@ -95,7 +117,7 @@ const AccordionItem = ({
 AccordionItem.propTypes = {
   isOpen: PropTypes.bool,
   onClick: PropTypes.func,
-  identifier: PropTypes.number,
+  identifier: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 
 const AccordionHeader = ({
@@ -118,7 +140,7 @@ AccordionHeader.propTypes = {
   children: PropTypes.oneOfType([PropTypes.element, PropTypes.string]).isRequired,
   isOpen: PropTypes.bool,
   onClick: PropTypes.func,
-  identifier: PropTypes.number,
+  identifier: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 
 const AccordionBody = ({ children, isOpen, identifier }) => (
@@ -135,7 +157,7 @@ const AccordionBody = ({ children, isOpen, identifier }) => (
 
 AccordionBody.propTypes = {
   isOpen: PropTypes.bool,
-  identifier: PropTypes.number,
+  identifier: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 
 Accordion.Item = AccordionItem;

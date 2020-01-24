@@ -70,7 +70,7 @@ query GetStaticPage($plan: ID!, $slug: ID!) {
   }
 }`;
 
-class StaticPage extends React.Component {
+class StaticPage extends React.PureComponent {
   static contextType = PlanContext;
 
   static async getInitialProps({ query }) {
@@ -107,8 +107,7 @@ class StaticPage extends React.Component {
   }
 }
 
-const Content = (props) => {
-  const { page } = props;
+const Content = ({ page }) => {
   const { title, tagline, imageUrl, content, questions } = page;
 
   return (
@@ -159,7 +158,7 @@ const Content = (props) => {
                   <h2>Usein kysytyt kysymykset</h2>
                   <Accordion>
                     { questions.map(faq => (
-                      <Accordion.Item key={faq.id}>
+                      <Accordion.Item key={faq.id} id={faq.id}>
                         <Accordion.Header>
                           {faq.title}
                         </Accordion.Header>
@@ -176,7 +175,7 @@ const Content = (props) => {
           )}
       </div>
     </article>
-  )
+  );
 }
 
 export default StaticPage;

@@ -36,6 +36,9 @@ export function getDashboardLinkProps(query) {
   };
 }
 
+export const replaceHashWithoutScrolling = hash => window
+  .history.replaceState({}, '', `#${hash}`);
+
 export function IndicatorLink(props) {
   const { id, ...other } = props;
 
