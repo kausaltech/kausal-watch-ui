@@ -5,7 +5,7 @@
  * of brand elements of the UI. Also import theme specific fonts here.
  *
  */
- 
+
  @import "~open-city-design/src/scss/helsinki/mixins";
 
 .nav-org-logo  {
@@ -65,4 +65,21 @@
     top: -5px;
     transform: rotate(180deg);
   }
+}
+
+.sponsor-logo-container {
+  width: 100%;
+  height: 100%;
+  padding: 5em 5em 0 5em;
+}
+
+@import 'eit-climate-kic-logo';
+
+.sponsor-logo {
+  background-image: url($sponsor-logo-data);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 100%;
+  height: 100%;
 }

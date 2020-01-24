@@ -22,7 +22,7 @@ const StyledFooter = styled.footer`
   background-color: ${(props) => props.theme.neutralDark};
   color: #ffffff;
   padding: 6rem 0;
-  
+
   .footer-column {
     margin-bottom: 2rem;
     text-align: center;
@@ -51,6 +51,9 @@ function SiteFooter(props) {
           <Row>
             <Col md="4" className="footer-column">
               <h5>{siteTitle}</h5>
+              <div className="sponsor-logo-container">
+                <div className="sponsor-logo" />
+              </div>
             </Col>
             <Col md="4" className="footer-column">
               <div className="footer-branding">
