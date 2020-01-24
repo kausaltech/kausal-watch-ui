@@ -51,8 +51,8 @@ function SiteFooter(props) {
           <Row>
             <Col md="4" className="footer-column">
               <h5>{siteTitle}</h5>
-              <div className="sponsor-logo-container">
-                <div className="sponsor-logo" />
+              <div className="funding-instrument-logo-container">
+                <div className="funding-instrument-logo" />
               </div>
             </Col>
             <Col md="4" className="footer-column">

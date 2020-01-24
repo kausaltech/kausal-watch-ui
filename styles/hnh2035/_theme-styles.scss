@@ -67,7 +67,7 @@
   }
 }
 
-.sponsor-logo-container {
+.funding-instrument-logo-container {
   width: 100%;
   height: 100%;
   padding: 5em 5em 0 5em;
@@ -75,8 +75,8 @@
 
 @import 'eit-climate-kic-logo';
 
-.sponsor-logo {
-  background-image: url($sponsor-logo-data);
+.funding-instrument-logo {
+  background-image: url($funding-instrument-logo-data);
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
