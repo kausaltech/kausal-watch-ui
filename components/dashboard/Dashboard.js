@@ -78,9 +78,31 @@ export const GET_IMPACT_GROUP_LIST = gql`
   }
 `;
 
-class DashboardLoaded extends React.Component {
-  static contextType = PlanContext;
+const DashboardTab = ({ t, monitoringQualityPoints, segment }) => {
+  let content;
+  if (segment.actions.length) {
+    content = (
+      <ImpactGroupActionList
+        t={t}
+        actions={segment.actions}
+        monitoringQualityPoints={monitoringQualityPoints}
+      />
+    );
+  } else {
+    content = (
+      <div className="mb-5 pd-5">{t('impact-group-no-actions')}</div>
+    );
+  }
 
+  return (
+    <TabPane tabId={segment.id}>
+      <h2 className="mb-3">{ segment.title }</h2>
+      {content}
+    </TabPane>
+  );
+};
+
+class DashboardLoaded extends React.PureComponent {
   static getFiltersFromQuery(query) {
     const {
       group,
@@ -103,86 +125,16 @@ class DashboardLoaded extends React.Component {
       activeTabId: segment.id,
     });
 
-    // Update URL in address bar
+    // Update query string of URL
     this.props.onFilterChange({ group: segment.id });
-  }
-
-  makeSegments() {
-    const { t, impactGroups } = this.props;
-    const segments = [];
-    const others = {
-      id: IMPACT_GROUP_OTHERS_ID,
-      name: t('impact-group-others'),
-      value: 0,
-      groups: [],
-    };
-
-    impactGroups.forEach((grp) => {
-      if (grp.weight > IMPACT_GROUP_MIN_WEIGHT) {
-        segments.push({
-          id: grp.identifier,
-          name: grp.name,
-          value: grp.weight,
-          color: grp.color,
-          groups: [grp],
-        });
-      } else {
-        others.groups.push(grp);
-        others.value += grp.weight;
-      }
-    });
-    segments.push(others);
-
-    return segments;
-  }
-
-  renderTabPane(segment) {
-    const { t, monitoringQualityPoints } = this.props;
-    const title = segment.name;
-
-    // Merge actions from all ImpactGroups
-    let actions = [];
-    const actionExists = (actId) => actions.find((act) => act.action.id === actId) !== undefined;
-    segment.groups.forEach((grp) => {
-      grp.actions.forEach((item) => {
-        // do not add merged actions or duplicates
-        if (item.action.mergedWith === null && !actionExists(item.action.id)) {
-          actions.push(item);
-        }
-      });
-    });
-
-    let content;
-    if (actions.length) {
-      content = (
-        <ImpactGroupActionList
-          t={t}
-          actions={actions}
-          monitoringQualityPoints={monitoringQualityPoints}
-        />
-      );
-    } else {
-      content = (
-        <div className="mb-5 pd-5">{t('impact-group-no-actions')}</div>
-      );
-    }
-
-    return (
-      <TabPane key={segment.id} tabId={segment.id}>
-        <h2 className="mb-3">{ title }</h2>
-        {content}
-      </TabPane>
-    );
   }
 
   render() {
     const {
-      t, filters, impactGroups, leadContent,
+      t, filters, leadContent,
+      monitoringQualityPoints,
+      segments,
     } = this.props;
-    const impacts = this.context.actionImpacts;
-    const segments = this.makeSegments();
-
-    const tabPanes = segments.map(segment => this.renderTabPane(segment));
 
     // by default show the first segment
     const activeTabId = this.state.activeTabId || (segments.length ? segments[0].id : undefined);
@@ -209,7 +161,14 @@ class DashboardLoaded extends React.Component {
               onSelect={this.handleSelect}
             />
             <TabContent activeTab={activeTabId}>
-              { tabPanes }
+              {segments.map(segment => (
+                <DashboardTab
+                  key={segment.id}
+                  t={t}
+                  monitoringQualityPoints={monitoringQualityPoints}
+                  segment={segment}
+                />
+              ))}
             </TabContent>
           </Container>
         </ImpactGroupSection>
@@ -222,14 +181,69 @@ DashboardLoaded.propTypes = {
   filters: PropTypes.shape({
     group: PropTypes.string,
   }).isRequired,
-  impactGroups: PropTypes.arrayOf(PropTypes.object).isRequired,
   monitoringQualityPoints: PropTypes.arrayOf(PropTypes.object).isRequired,
+  segments: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 
-class Dashboard extends React.Component {
+class Dashboard extends React.PureComponent {
+  static contextType = PlanContext;
   static getFiltersFromQuery(query) {
     return DashboardLoaded.getFiltersFromQuery(query);
+  }
+
+  constructor(props) {
+    super(props);
+    this.makeSegments = this.makeSegments.bind(this);
+  }
+
+  makeSegments(impactGroups) {
+    const { t } = this.props;
+    const segments = [];
+    const others = {
+      id: IMPACT_GROUP_OTHERS_ID,
+      name: t('impact-group-others'),
+      value: 0,
+      groups: [],
+    };
+
+    impactGroups.forEach((grp) => {
+      if (grp.weight > IMPACT_GROUP_MIN_WEIGHT) {
+        segments.push({
+          id: grp.identifier,
+          name: grp.name,
+          value: grp.weight,
+          color: grp.color,
+          groups: [grp],
+        });
+      } else {
+        others.groups.push(grp);
+        others.value += grp.weight;
+      }
+    });
+    segments.push(others);
+
+    // add actions to each segment
+    const impacts = Object.fromEntries(this.context.actionImpacts.map((x) => [x.id, x]));
+
+    segments.forEach(segment => {
+      // Merge actions from all ImpactGroups
+      let actions = [];
+      const actionExists = (actId) => actions.find((act) => act.action.id === actId) !== undefined;
+      segment.groups.forEach((grp) => {
+        grp.actions.forEach((item) => {
+          // do not add merged actions or duplicates
+          if (item.action.mergedWith === null && !actionExists(item.action.id)) {
+            actions.push(item);
+          }
+        });
+      });
+      actions.sort((a, b) => impacts[b.impact.id].order - impacts[a.impact.id].order);
+
+      segment.actions = actions;
+    });
+
+    return segments;
   }
 
   render() {
@@ -245,17 +259,22 @@ class Dashboard extends React.Component {
             return <p>{ t('error-loading-actions') }</p>;
           }
 
-          const { generalContent, ...otherProps } = data.plan;
+          const {
+            generalContent,
+            monitoringQualityPoints,
+            ...otherProps
+          } = data.plan;
           const leadContent = generalContent.dashboardLeadContent;
+          const segments = this.makeSegments(data.plan.impactGroups);
 
           return (
             <DashboardLoaded
               t={t}
-              plan={plan}
               leadContent={leadContent}
               filters={filters}
               onFilterChange={onFilterChange}
-              {...data.plan}
+              segments={segments}
+              monitoringQualityPoints={monitoringQualityPoints}
             />
           );
         }}

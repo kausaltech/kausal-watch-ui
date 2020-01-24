@@ -125,6 +125,19 @@ class AplansApp extends App {
     Router.events.off('routeChangeComplete', this.handleRouteChange);
   }
 
+  shouldComponentUpdate(nextProps) {
+    // Optimize performance by updating this component only
+    // when props change. State is not used in render() so
+    // no need to check it here.
+    const keys = Object.keys(this.props);
+    for (let i = 0; i < keys.length; i++) {
+      if (this.props[keys[i]] !== nextProps[keys[i]]) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   render() {
     const {
       Component, pageProps, apollo, currentURL,

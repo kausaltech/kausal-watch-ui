@@ -38,7 +38,8 @@ class DashboardPage extends React.Component {
     });
 
     const link = getDashboardLinkProps(query);
-    Router.replace(link.href);
+    // Use shallow routing to avoid page re-rendering
+    Router.replace(link.href, undefined, { shallow: true });
   }
 
   render() {

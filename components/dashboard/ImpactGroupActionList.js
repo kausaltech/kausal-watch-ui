@@ -24,7 +24,7 @@ const StatusBadge = styled(Badge)`
   font-size: 1em;
 `;
 
-class ImpactGroupActionList extends React.Component {
+class ImpactGroupActionList extends React.PureComponent {
   static contextType = PlanContext;
 
   render() {
@@ -34,9 +34,6 @@ class ImpactGroupActionList extends React.Component {
       monitoringQualityPoints,
     } = this.props;
     const impacts = Object.fromEntries(this.context.actionImpacts.map((x) => [x.id, x]));
-
-    actions.sort((a, b) => impacts[b.impact.id].order - impacts[a.impact.id].order);
-
     return (
       <div className="mb-5 pb-5">
         <Table hover>
