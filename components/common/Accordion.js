@@ -50,7 +50,7 @@ export default class Accordion extends React.Component {
     // hash is not available there.
     const getOpenFaqId = () => {
       const hash = window.location.hash;
-      return hash && hash.length > 2 ? hash.substr(2) : undefined;
+      return hash && hash.length > 2 ? parseInt(hash.substr(2)) : undefined;
     };
 
     const open = getOpenFaqId();
@@ -63,7 +63,7 @@ export default class Accordion extends React.Component {
 
   toggleSection = id => () => {
     this.setState(({ open }) => ({
-      open: id == open ? undefined : id,
+      open: id === open ? undefined : id,
     }));
 
     // put opened faq id into URL hash so URL can be shared
@@ -92,7 +92,7 @@ Accordion.defaultProps = {
 };
 
 Accordion.propTypes = {
-  open: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  open: PropTypes.number,
 };
 
 const AccordionItem = ({
@@ -117,7 +117,7 @@ const AccordionItem = ({
 AccordionItem.propTypes = {
   isOpen: PropTypes.bool,
   onClick: PropTypes.func,
-  identifier: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  identifier: PropTypes.number,
 };
 
 const AccordionHeader = ({
@@ -140,7 +140,7 @@ AccordionHeader.propTypes = {
   children: PropTypes.oneOfType([PropTypes.element, PropTypes.string]).isRequired,
   isOpen: PropTypes.bool,
   onClick: PropTypes.func,
-  identifier: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  identifier: PropTypes.number,
 };
 
 const AccordionBody = ({ children, isOpen, identifier }) => (
