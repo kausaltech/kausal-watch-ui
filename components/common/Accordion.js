@@ -157,7 +157,7 @@ const AccordionBody = ({ children, isOpen, identifier }) => (
 
 AccordionBody.propTypes = {
   isOpen: PropTypes.bool,
-  identifier: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  identifier: PropTypes.number,
 };
 
 Accordion.Item = AccordionItem;
