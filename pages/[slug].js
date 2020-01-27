@@ -158,7 +158,7 @@ const Content = ({ page }) => {
                   <h2>Usein kysytyt kysymykset</h2>
                   <Accordion>
                     { questions.map(faq => (
-                      <Accordion.Item key={faq.id} id={parseInt(faq.id)}>
+                      <Accordion.Item key={faq.id} id={faq.id}>
                         <Accordion.Header>
                           {faq.title}
                         </Accordion.Header>

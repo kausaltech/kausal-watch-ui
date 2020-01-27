@@ -45,15 +45,15 @@ export default class Accordion extends React.Component {
   };
 
   componentDidMount() {
-    // Read open faq id from location.hash.
+    // Read open question id from location.hash.
     // Unfortunately this can't be done in server side because
     // hash is not available there.
-    const getOpenFaqId = () => {
+    const getOpenQuestionId = () => {
       const hash = window.location.hash;
-      return hash && hash.length > 2 ? parseInt(hash.substr(2)) : undefined;
+      return hash && hash.length > 2 ? hash.substr(2) : undefined;
     };
 
-    const open = getOpenFaqId();
+    const open = getOpenQuestionId();
     if (open) {
       this.setState({
         open,
@@ -62,12 +62,13 @@ export default class Accordion extends React.Component {
   }
 
   toggleSection = id => () => {
+    const prevOpen = this.state.open;
     this.setState(({ open }) => ({
       open: id === open ? undefined : id,
     }));
 
-    // put opened faq id into URL hash so URL can be shared
-    replaceHashWithoutScrolling(`q${id}`);
+    // put opened question id into URL hash so URL can be shared
+    replaceHashWithoutScrolling(id !== prevOpen ? `q${id}` : undefined);
   };
 
   render() {
@@ -75,7 +76,7 @@ export default class Accordion extends React.Component {
       <div className="accordion">
         {React.Children.map(this.props.children, (child, index) => {
           if (child.type !== AccordionItem) return null;
-          const id = child.props.id || index;
+          const id = child.props.id || `${index}`;
           return React.cloneElement(child, {
             isOpen: child.props.open || this.state.open === id,
             onClick: this.toggleSection(id),
@@ -88,11 +89,11 @@ export default class Accordion extends React.Component {
 }
 
 Accordion.defaultProps = {
-  open: 0,
+  open: undefined,
 };
 
 Accordion.propTypes = {
-  open: PropTypes.number,
+  open: PropTypes.string,
 };
 
 const AccordionItem = ({
@@ -117,7 +118,7 @@ const AccordionItem = ({
 AccordionItem.propTypes = {
   isOpen: PropTypes.bool,
   onClick: PropTypes.func,
-  identifier: PropTypes.number,
+  identifier: PropTypes.string,
 };
 
 const AccordionHeader = ({
@@ -140,7 +141,7 @@ AccordionHeader.propTypes = {
   children: PropTypes.oneOfType([PropTypes.element, PropTypes.string]).isRequired,
   isOpen: PropTypes.bool,
   onClick: PropTypes.func,
-  identifier: PropTypes.number,
+  identifier: PropTypes.string,
 };
 
 const AccordionBody = ({ children, isOpen, identifier }) => (
@@ -157,7 +158,7 @@ const AccordionBody = ({ children, isOpen, identifier }) => (
 
 AccordionBody.propTypes = {
   isOpen: PropTypes.bool,
-  identifier: PropTypes.number,
+  identifier: PropTypes.string,
 };
 
 Accordion.Item = AccordionItem;
