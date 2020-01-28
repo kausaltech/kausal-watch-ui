@@ -366,16 +366,3 @@ $active-segment: #444;
   background-color: $active-segment;
   border: 2px solid lighten($black,20%);
 }
-
-.action-mqpoints {
-  cursor: pointer;
-}
-
-.mqpoints-col {
-  text-align: center;
-}
-
-/* Monitoring Quality Point Icon (star symbol) */
-.mqpoint-icon {
-  color: rgba(0, 0, 0, 0.5);
-}
