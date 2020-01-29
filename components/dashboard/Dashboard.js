@@ -56,9 +56,6 @@ export const GET_IMPACT_GROUP_LIST = gql`
               identifier
               name
             }
-            monitoringQualityPoints {
-              id
-            }
           }
           impact {
             id
@@ -68,24 +65,17 @@ export const GET_IMPACT_GROUP_LIST = gql`
       generalContent {
         dashboardLeadContent
       }
-      monitoringQualityPoints {
-        id
-        identifier
-        descriptionNo
-        descriptionYes
-      }
     }
   }
 `;
 
-const DashboardTab = ({ t, monitoringQualityPoints, segment }) => {
+const DashboardTab = ({ t, segment }) => {
   let content;
   if (segment.actions.length) {
     content = (
       <ImpactGroupActionList
         t={t}
         actions={segment.actions}
-        monitoringQualityPoints={monitoringQualityPoints}
       />
     );
   } else {
@@ -132,7 +122,6 @@ class DashboardLoaded extends React.PureComponent {
   render() {
     const {
       t, filters, leadContent,
-      monitoringQualityPoints,
       segments,
     } = this.props;
 
@@ -165,7 +154,6 @@ class DashboardLoaded extends React.PureComponent {
                 <DashboardTab
                   key={segment.id}
                   t={t}
-                  monitoringQualityPoints={monitoringQualityPoints}
                   segment={segment}
                 />
               ))}
@@ -181,7 +169,6 @@ DashboardLoaded.propTypes = {
   filters: PropTypes.shape({
     group: PropTypes.string,
   }).isRequired,
-  monitoringQualityPoints: PropTypes.arrayOf(PropTypes.object).isRequired,
   segments: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
@@ -261,7 +248,6 @@ class Dashboard extends React.PureComponent {
 
           const {
             generalContent,
-            monitoringQualityPoints,
             ...otherProps
           } = data.plan;
           const leadContent = generalContent.dashboardLeadContent;
@@ -274,7 +260,6 @@ class Dashboard extends React.PureComponent {
               filters={filters}
               onFilterChange={onFilterChange}
               segments={segments}
-              monitoringQualityPoints={monitoringQualityPoints}
             />
           );
         }}

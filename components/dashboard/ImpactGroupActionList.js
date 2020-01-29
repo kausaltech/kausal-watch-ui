@@ -11,7 +11,6 @@ import PlanContext from '../../context/plan';
 import { withTranslation } from '../../common/i18n';
 
 import uniqueId from 'lodash/uniqueId';
-import MQPoints from './MQPoints';
 
 const ActionName = styled.span`
   a {
@@ -31,7 +30,6 @@ class ImpactGroupActionList extends React.PureComponent {
     const {
       t,
       actions,
-      monitoringQualityPoints,
     } = this.props;
     const impacts = Object.fromEntries(this.context.actionImpacts.map((x) => [x.id, x]));
     return (
@@ -43,7 +41,6 @@ class ImpactGroupActionList extends React.PureComponent {
               <th>{t('action-name-title')}</th>
               <th>{t('action-impact')}</th>
               <th>{t('action-progress')}</th>
-              <th className="mqpoints-col">{t('action-monitoring')}</th>
             </tr>
           </thead>
           <tbody>
@@ -61,9 +58,6 @@ class ImpactGroupActionList extends React.PureComponent {
                 <td>
                   <StatusBadge className={`bg-${item.action.status.identifier}`}>{item.action.status.name}</StatusBadge>
                 </td>
-                <td className="mqpoints-col">
-                  <MQPoints action={item.action} points={monitoringQualityPoints} />
-                </td>
               </tr>
             ))}
           </tbody>
@@ -76,7 +70,6 @@ class ImpactGroupActionList extends React.PureComponent {
 ImpactGroupActionList.propTypes = {
   t: PropTypes.func.isRequired,
   actions: PropTypes.arrayOf(PropTypes.object).isRequired,
-  monitoringQualityPoints: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default withTranslation('common')(ImpactGroupActionList);
