@@ -1,8 +1,7 @@
 import React from 'react';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
-import { storiesOf } from "@storybook/react";
-import apolloStorybookDecorator from "apollo-storybook-react";
+import apolloStorybookDecorator from 'apollo-storybook-react';
 import ContactPerson from '../../components/actions/ContactPerson';
 
 const typeDefs = `
@@ -20,31 +19,31 @@ const mocks = {
     return {
       helloWorld: () => {
         return 'Hello from Apollo!!';
-      }
+      },
     };
-  }
+  },
 };
 
 const personProp = {
   id: '12',
   firstName: 'Firstname',
   lastName: 'Lastname',
-  avatarUrl:  'https://thispersondoesnotexist.com/image?1587700464286',
+  avatarUrl: 'https://thispersondoesnotexist.com/image?1587700464286',
   title: 'Occupation',
   organization: { name: 'Organization' },
 };
 
-storiesOf('Contact Person', module)
-  .addDecorator(
+export default {
+  title: 'Contact Person',
+
+  decorators: [
     apolloStorybookDecorator({
       typeDefs,
       mocks,
     }),
-  ).add('Contact Person Test', () => {
-    return (
-      <ContactPerson
-        person={personProp}
-        leader={false}
-      />
-    );
-  });
+  ],
+};
+
+export const ContactPersonTest = () => {
+  return <ContactPerson person={personProp} leader={false} />;
+};

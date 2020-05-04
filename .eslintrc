@@ -9,10 +9,11 @@
     "react"
   ],
   "rules": {
-    "max-len": [1, 120, 2, {ignoreComments: true}],
+    "max-len": [1, 120, 2, {"ignoreComments": true}],
     "curly": ["off"],
     "react/prop-types": [2],
-    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }]
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+    "import/no-extraneous-dependencies": ["error", {"devDependencies": true}],
   },
   "extends": ["eslint:recommended", "plugin:react/recommended", "airbnb"]
 }
