@@ -6,7 +6,6 @@ import { ThemeContext } from 'styled-components';
 const DesignTokens = () =>
 {
   const themeContext = useContext(ThemeContext);
-  // console.log('Current theme: ', themeContext);
   return (
     <div className="container">
       <hr />
@@ -15,22 +14,48 @@ const DesignTokens = () =>
       <Table>
         <thead>
           <tr>
-            <td>Name</td>
-            <td>Value</td>
-            <td>Output</td>
+            <th>Key</th>
+            <th>Value</th>
+            <th>Sample</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>actionColor</td>
-            <td>{ themeContext.actionColor }</td>
-            <td><div style={{ backgroundColor: themeContext.actionColor }}>sample</div></td>
-          </tr>
-          <tr>
-            <td>themeColors.danger</td>
-            <td>{ themeContext.themeColors.danger }</td>
-            <td><div style={{ backgroundColor: themeContext.themeColors.danger }}>sample</div></td>
-          </tr>
+          { themeContext && Object.entries(themeContext).map((element) => (
+            typeof element[1] !== 'object'
+              ? (
+                <tr key={element[0]}>
+                  <td>{typeof element[0] !== 'object' && element[0]}</td>
+                  <td>{element[1]}</td>
+                  <td><div style={{ backgroundColor: element[1] }}>sample</div></td>
+                </tr>
+              )
+              : (
+                <tr key={element[0]}>
+                  <td colSpan="3">
+                    <Table>
+                      <thead>
+                        <tr>
+                          <th>&nbsp;</th>
+                          <th colSpan="3">
+                            {element[0]}
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {Object.entries(element[1]).map((subelement) => (
+                          <tr key={subelement[0]}>
+                            <td>&nbsp;</td>
+                            <td>{subelement[0]}</td>
+                            <td>{subelement[1]}</td>
+                            <td><div style={{ backgroundColor: subelement[1] }}>sample</div></td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </Table>
+                  </td>
+                </tr>
+              )
+          ))}
         </tbody>
       </Table>
     </div>
