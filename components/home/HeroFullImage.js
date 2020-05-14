@@ -16,6 +16,9 @@ import {
 import IconActions from '../../public/static/images/default/icon-actions.svg';
 import IconIndicators from '../../public/static/images/default/icon-indicators.svg';
 
+/*
+######### WORK IN PROGRESS ###########
+*/
 
 const Hero = styled.div`
   width: 100%;
@@ -119,7 +122,7 @@ function HeroFullImage(props) {
             delay={200}
           >
             {(sprops) => (
-              <IndicatorListLink>
+              <ActionListLink>
                 <a href>
                   <Highlight
                     className="d-flex p-3 bd-highlight flex-row justify-content-center justify-content-md-start"
@@ -136,7 +139,7 @@ function HeroFullImage(props) {
                     </div>
                   </Highlight>
                 </a>
-              </IndicatorListLink>
+              </ActionListLink>
             )}
           </Spring> 
           <Spring
