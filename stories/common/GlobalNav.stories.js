@@ -1,5 +1,4 @@
 import React from 'react';
-import { Alert } from 'reactstrap';
 import GlobalNav from '../../components/common/GlobalNav';
 import i18n from '../../.storybook/i18n';
 
@@ -14,6 +13,7 @@ const testPages = [
 ];
 
 const testTree = [
+  { id: '4', name: 'Link 4', slug: 'link4' },
   { id: '1',
     name: 'Link 1',
     slug: 'link1',
@@ -36,17 +36,25 @@ export const GlobalNavBasic = () => {
   );
 };
 
+export const GlobalNavFullWidth = () => {
+  return (
+    <GlobalNav
+      siteTitle="Test Plan"
+      navItems={testPages}
+      active="link2"
+      fullwidth
+    />
+  );
+};
+
 export const GlobalNavWithChildren = () => {
   return (
     <div>
       <GlobalNav
         siteTitle="Test Plan"
         navItems={testTree}
-        active="link3"
+        active="link2"
       />
-      <Alert>
-        We do not have two level navigation yet. Let's work out the branching logic first.
-      </Alert>
     </div>
   );
 };
