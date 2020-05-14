@@ -47,3 +47,7 @@ export default {
 export const ContactPersonTest = () => {
   return <ContactPerson person={personProp} leader={false} />;
 };
+
+export const ContactPersonLeader = () => {
+  return <ContactPerson person={personProp} leader />;
+};
