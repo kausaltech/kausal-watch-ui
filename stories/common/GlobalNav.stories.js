@@ -38,6 +38,20 @@ export const GlobalNavBasic = () => {
   );
 };
 
+export const GlobalNavSticky = () => {
+  return (
+    <div style={{ backgroundColor: '#cccccc', height: '50rem' }}>
+      <GlobalNav
+        siteTitle="Kausal Watch"
+        navItems={testPages}
+        active="link2"
+        sticky
+      />
+      <p style={{ padding: '2rem' }}>(Navbar gets sticky when scrolling up)</p>
+    </div>
+  );
+};
+
 export const GlobalNavFullWidth = () => {
   return (
     <div style={{ backgroundColor: '#cccccc', height: '50rem' }}>
@@ -47,6 +61,7 @@ export const GlobalNavFullWidth = () => {
         active="link2"
         fullwidth
       />
+      <p style={{ padding: '2rem' }}>(Navbar content not aligned with content container)</p>
     </div>
   );
 };

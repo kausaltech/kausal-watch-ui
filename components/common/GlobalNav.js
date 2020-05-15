@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   Collapse, Container, Navbar, Nav, NavItem, NavbarToggler,
   UncontrolledDropdown, DropdownToggle, DropdownItem, DropdownMenu
 } from 'reactstrap';
 import styled, { withTheme } from 'styled-components';
+import { useScrollPosition } from '@n8tb1t/use-scroll-position';
 import { transparentize } from 'polished';
 import { Link } from '../../routes';
 import { StaticPageLink } from '../../common/links';
@@ -161,86 +162,82 @@ DropdownList.propTypes = {
 };
 
 
-class GlobalNav extends React.Component {
-  constructor(props) {
-    super(props);
+function GlobalNav(props) {
+  const [navIsFixed, setnavIsFixed] = useState(false);
+  const [isOpen, toggleOpen] = useState(false);
+  const {
+    theme, siteTitle, navItems, active, fullwidth, sticky
+  } = props;
 
-    this.toggle = this.toggle.bind(this);
-    this.state = {
-      isOpen: false,
-    };
-  }
-
-  toggle() {
-    const { isOpen } = this.state;
-    this.setState({
-      isOpen: !isOpen,
-    });
-  }
-
-  render() {
-    const {
-      theme, siteTitle, navItems, active, fullwidth,
-    } = this.props;
-
-    const { isOpen } = this.state;
-
-    return (
-      <div>
-        <TopNav expand="md">
-          <Container fluid={fullwidth}>
-            <Link href="/">
-              <a
-                href
-                aria-label={`${siteTitle}, palvelun etusivu`}
-                className="navbar-brand"
-              >
-                {/* Organization logo currently rendered by compiled CSS */}
-                <Logo aria-hidden="true" />
-              </a>
-            </Link>
-          </Container>
-        </TopNav>
-        <BotNav expand="md">
-          <Container fluid={fullwidth}>
-            <Link href="/">
-              <HomeLink href="" className="navbar-brand">{siteTitle}</HomeLink>
-            </Link>
-            <NavbarToggler onClick={this.toggle}>
-              <Icon name="bars" color={theme.brandDark} />
-            </NavbarToggler>
-            <Collapse isOpen={isOpen} navbar>
-              <Nav navbar>
-                { navItems && navItems.map((page) => (
-                  page.children
-                    ? (
-                      <DropdownList
-                        parent={page}
-                        items={page.children}
-                        active={page.slug === active}
-                      />
-                    ) : (
-                      <NavItem key={page.slug} active={page.slug === active}>
-                        <StaticPageLink slug={page.slug}>
-                          <NavLink href="">
-                            <span className="nav-highlighter">{page.name}</span>
-                          </NavLink>
-                        </StaticPageLink>
-                      </NavItem>
-                    )
-                ))}
-              </Nav>
-            </Collapse>
-          </Container>
-        </BotNav>
-      </div>
+  if (sticky) {
+    useScrollPosition(
+      ({ prevPos, currPos }) => {
+        const goingUp = currPos.y > prevPos.y && currPos.y < -70;
+        if (goingUp !== navIsFixed) setnavIsFixed(goingUp);
+      },
+      [navIsFixed],
+      null,
+      false,
+      300,
     );
   }
+
+  return (
+    <div>
+      <TopNav expand="md">
+        <Container fluid={fullwidth}>
+          <Link href="/">
+            <a
+              href
+              aria-label={`${siteTitle}, palvelun etusivu`}
+              className="navbar-brand"
+            >
+              {/* Organization logo currently rendered by compiled CSS */}
+              <Logo aria-hidden="true" />
+            </a>
+          </Link>
+        </Container>
+      </TopNav>
+      <BotNav expand="md" fixed={navIsFixed ? 'top' : ''}>
+        <Container fluid={fullwidth}>
+          <Link href="/">
+            <HomeLink href="" className="navbar-brand">{siteTitle}</HomeLink>
+          </Link>
+          <NavbarToggler onClick={()=> toggleOpen(!isOpen)}>
+            <Icon name="bars" color={theme.brandDark} />
+          </NavbarToggler>
+          <Collapse isOpen={isOpen} navbar>
+            <Nav navbar>
+              { navItems && navItems.map((page) => (
+                page.children
+                  ? (
+                    <DropdownList
+                      parent={page}
+                      items={page.children}
+                      active={page.slug === active}
+                    />
+                  ) : (
+                    <NavItem key={page.slug} active={page.slug === active}>
+                      <StaticPageLink slug={page.slug}>
+                        <NavLink href="">
+                          <span className="nav-highlighter">{page.name}</span>
+                        </NavLink>
+                      </StaticPageLink>
+                    </NavItem>
+                  )
+              ))}
+            </Nav>
+          </Collapse>
+        </Container>
+      </BotNav>
+    </div>
+  );
 }
 
 GlobalNav.defaultProps = {
   active: '',
   fullwidth: false,
+  sticky: false,
 };
 
 GlobalNav.propTypes = {
@@ -254,6 +251,7 @@ GlobalNav.propTypes = {
   active: PropTypes.string,
   theme: PropTypes.shape.isRequired,
   fullwidth: PropTypes.bool,
+  sticky: PropTypes.bool,
 };
 
 export default withTheme(GlobalNav);
