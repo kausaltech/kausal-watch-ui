@@ -28,30 +28,34 @@ const testTree = [
 
 export const GlobalNavBasic = () => {
   return (
-    <GlobalNav
-      siteTitle="Test Plan"
-      navItems={testPages}
-      active="link2"
-    />
+    <div style={{ backgroundColor: '#cccccc', height: '50rem' }}>
+      <GlobalNav
+        siteTitle="Kausal Watch"
+        navItems={testPages}
+        active="link2"
+      />
+    </div>
   );
 };
 
 export const GlobalNavFullWidth = () => {
   return (
-    <GlobalNav
-      siteTitle="Test Plan"
-      navItems={testPages}
-      active="link2"
-      fullwidth
-    />
+    <div style={{ backgroundColor: '#cccccc', height: '50rem' }}>
+      <GlobalNav
+        siteTitle="Kausal Watch"
+        navItems={testPages}
+        active="link2"
+        fullwidth
+      />
+    </div>
   );
 };
 
 export const GlobalNavWithChildren = () => {
   return (
-    <div>
+    <div style={{ backgroundColor: '#cccccc', height: '50rem' }}>
       <GlobalNav
-        siteTitle="Test Plan"
+        siteTitle="Kausal Watch"
         navItems={testTree}
         active="link2"
       />

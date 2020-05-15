@@ -11,12 +11,25 @@ import { StaticPageLink } from '../../common/links';
 
 import Icon from './Icon';
 
+const Logo = styled.div`
+  background-image: url("${(props) => props.theme.themeLogo}");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: left center;
+  height: 2.2em;
+  width: 6em;
+`;
+
 const TopNav = styled(Navbar)`
   background-color: ${(props) => props.theme.brandNavBackground};
+
+  .navbar-brand {
+    padding: .25rem;
+  }
 `;
 
 const BotNav = styled(Navbar)`
-  background-color: ${(props) => props.theme.white};
+  background-color: ${(props) => props.theme.themeColors.white};
 
   .nav-item.active a span {
     border-bottom: 2px solid ${(props) => props.theme.brandDark};
@@ -35,7 +48,7 @@ const HomeLink = styled.a`
 
 const NavLink = styled.a`
   display: block;
-  margin: 0 1rem;
+  margin: 0 .75rem;
   color: ${(props) => props.theme.neutralDark};
   
   span {
@@ -59,7 +72,7 @@ const NavLink = styled.a`
 const StyledDropdownToggle = styled(DropdownToggle)`
   display: block;
   padding:0 !important;
-  margin: 0 1rem;
+  margin: 0 .75rem;
   color: ${(props) => props.theme.neutralDark};
 
   .nav-highlighter {
@@ -183,7 +196,7 @@ class GlobalNav extends React.Component {
                 className="navbar-brand"
               >
                 {/* Organization logo currently rendered by compiled CSS */}
-                <div aria-hidden="true" className="nav-org-logo" />
+                <Logo aria-hidden="true" />
               </a>
             </Link>
           </Container>
