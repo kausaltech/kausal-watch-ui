@@ -12,11 +12,10 @@ export const FullImageHero = () => {
   return (
     <HeroFullImage
       bgImage="https://source.unsplash.com/collection/1597991"
-      title="Liikkumisohjelma"
-      siteDescription="Noin 60 toimenpidettä tuovat liikkumisen näkyväksi osaksi kaupunkilaisten arkielämää."
-      actionsDescription="Noin 60 toimenpidettä tuovat liikkumisen näkyväksi osaksi kaupunkilaisten arkielämää."
-      indicatorsDescription="Liikkumisohjelman johto- ja projektiryhmä seuraavat ohjelman osatavoitteiden ja
-      toimenpiteiden toteutumista ohjelmaan kirjattujen mittareiden suunnassa."
+      title="Ilmasto-ohjelma"
+      siteDescription="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+      actionsDescription="Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+      indicatorsDescription="Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
     />
   );
 };
@@ -25,11 +24,10 @@ export const SimpleHero = () => {
   return (
     <FrontHero
       bgImage="https://source.unsplash.com/collection/1597991"
-      title="Liikkumisohjelma"
+      title="Strategiaohjelma"
       siteDescription="Noin 60 toimenpidettä tuovat liikkumisen näkyväksi osaksi kaupunkilaisten arkielämää."
-      actionsDescription="Noin 60 toimenpidettä tuovat liikkumisen näkyväksi osaksi kaupunkilaisten arkielämää."
-      indicatorsDescription="Liikkumisohjelman johto- ja projektiryhmä seuraavat ohjelman osatavoitteiden ja
-      toimenpiteiden toteutumista ohjelmaan kirjattujen mittareiden suunnassa."
+      actionsDescription="Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+      indicatorsDescription="Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
     />
   );
 };

@@ -26,6 +26,7 @@ const testTree = [
   { id: '3', name: 'Link 3', slug: 'link3' },
 ];
 
+
 export const GlobalNavBasic = () => {
   return (
     <div style={{ backgroundColor: '#cccccc', height: '50rem' }}>
@@ -71,6 +72,18 @@ export const GlobalNavWithChildren = () => {
     <div style={{ backgroundColor: '#cccccc', height: '50rem' }}>
       <GlobalNav
         siteTitle="Kausal Watch"
+        navItems={testTree}
+        active="link2"
+      />
+    </div>
+  );
+};
+
+export const GlobalNavStressTest = () => {
+  return (
+    <div style={{ backgroundColor: '#cccccc', height: '50rem' }}>
+      <GlobalNav
+        siteTitle="Äteritsiputeritsipuolilautatsijänkän Ilmastovahti"
         navItems={testTree}
         active="link2"
       />

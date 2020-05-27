@@ -1,20 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import SVG from 'react-inlinesvg';
 
 import {
   Row, Col, Container,
 } from 'reactstrap';
 
-import { Spring } from 'react-spring/renderprops.cjs';
-import styled from 'styled-components';
+import styled, { withTheme } from 'styled-components';
 import { withTranslation } from '../../common/i18n';
 import {
   IndicatorListLink,
   ActionListLink,
 } from '../../common/links';
 
-import IconActions from '../../public/static/images/default/icon-actions.svg';
-import IconIndicators from '../../public/static/images/default/icon-indicators.svg';
 
 /*
 ######### WORK IN PROGRESS ###########
@@ -26,156 +24,122 @@ const Hero = styled.div`
 `;
 
 const HeroMain = styled.div`
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  height: 24rem;
+  min-height: 34rem;
   background-image: url(${(props) => props.image});
   background-size: cover;
   background-position: center;
 `;
 
-const HeroLinks = styled.div`
-  padding: 1rem 0;
-  background-color: ${(props) => props.theme.neutralLight};
-  display: flex;
-  justify-content: center;
-`;
-
 const MainCard = styled.div`
-  background-color: ${(props) => props.theme.imageOverlay};
-  opacity: 0.75;
-  width: 640px;
   padding: 2rem;
-  margin-bottom: 1rem;
-  color: #fff;
-  h1 {
-    opacity: 1;
-  }
-`;
+  margin: 2rem 0;
+  background-color: ${(props) => props.theme.themeColors.white};
+  color: ${(props) => props.theme.brandDark};
 
-const LinkCards = styled.div`
-  display: flex;
-  align-items: stretch;
-  width: 640px;
+  a {
+    color: ${(props) => props.theme.brandDark};
+
+    &:hover {
+      text-decoration: none;
+
+      h5 {
+        text-decoration: underline;
+      }
+
+      svg .a {
+        fill: ${(props) => props.theme.brandlight};
+      }
+    }
+  }
 `;
 
 const Highlight = styled.div`
   height: 100%;
   margin-bottom: 0;
-  background-color: ${(props) => props.theme.brandLight};
 
-  &:hover {
-    box-shadow: 6px 6px 10px ${(props) => props.theme.brandDark};
-    transform: translate(0, -10px);
-    transition: all 0.5s ease;
-    a {
-      text-decoration: none;
-    }
-  }
-
-  h3 {
-    color: ${(props) => props.theme.neutralDark};
+  h5 {
+    color: ${(props) => props.theme.brandDark};
   }
  
   p {
     hyphens: auto;
     margin-bottom: 0;
-    color: ${(props) => props.theme.neutralDark};
+    color: ${(props) => props.theme.brandDark};
   }
 `;
 
 const Illustration = styled.div`
-
   svg {
-    width: 4rem;
-    height: 4rem;
-    margin: auto;
+    width: 2.5rem;
+    height: 2.5rem;
+    margin: 0;
     display: block;
-    .a {
-      fill: ${(props) => props.theme.neutralLight};
-    }
-    .b {
-      fill: ${(props) => props.theme.neutralDark};
-    }
+    fill: ${(props) => props.theme.brandDark};
   }
 `;
 
-
 function HeroFullImage(props) {
   const {
-    t, bgImage, title, siteDescription, actionsDescription, indicatorsDescription,
+    t, theme, bgImage, title, siteDescription, actionsDescription, indicatorsDescription,
   } = props;
+  const ActionsIcon = () => <SVG src={theme.iconActions} />;
+  const IndicatorsIcon = () => <SVG src={theme.iconIndicators} />;
+
   return (
     <Hero>
       <HeroMain image={bgImage}>
-          <MainCard>
-            <h1>{ title || 'Site Title' }</h1>
-            <p className="lead">{ siteDescription || 'Site Description' }</p>
-          </MainCard>
+        <Container>
+          <Row>
+            <Col md={8} lg={6} >
+              <MainCard>
+                <h2>{ title || 'Site Title' }</h2>
+                <p className="lead">{ siteDescription || 'Site Description' }</p>
+                <ActionListLink>
+                  <a href>
+                    <Highlight
+                      className="d-flex py-3 bd-highlight flex-row"
+                    >
+                      <Illustration className="mr-4">
+                        <ActionsIcon />
+                      </Illustration>
+                      <div>
+                        <h5>{ t('actions') }</h5>
+                        <p>
+                          { actionsDescription || 'Actions Description' }
+                        </p>
+                      </div>
+                    </Highlight>
+                  </a>
+                </ActionListLink>
+                <IndicatorListLink>
+                  <a href>
+                    <Highlight
+                      className="d-flex py-3 bd-highlight flex-row"
+                    >
+                      <Illustration className="mr-4">
+                        <IndicatorsIcon />
+                      </Illustration>
+                      <div>
+                        <h5>{ t('indicators') }</h5>
+                        <p>
+                          { indicatorsDescription || 'Indicator Description' }
+                        </p>
+                      </div>
+                    </Highlight>
+                  </a>
+                </IndicatorListLink>
+              </MainCard>
+            </Col>
+          </Row>
+        </Container>
       </HeroMain>
-      <HeroLinks>
-        <LinkCards>
-          <Spring
-            from={{ opacity: 0 }}
-            to={{ opacity: 1 }}
-            delay={200}
-          >
-            {(sprops) => (
-              <ActionListLink>
-                <a href>
-                  <Highlight
-                    className="d-flex p-3 bd-highlight flex-row justify-content-center justify-content-md-start"
-                    style={sprops}
-                  >
-                    <Illustration className="mr-4">
-                      <IconActions />
-                    </Illustration>
-                    <div>
-                      <h3>{ t('actions') }</h3>
-                      <p>
-                        { actionsDescription || 'Actions Description' }
-                      </p>
-                    </div>
-                  </Highlight>
-                </a>
-              </ActionListLink>
-            )}
-          </Spring> 
-          <Spring
-            from={{ opacity: 0 }}
-            to={{ opacity: 1 }}
-            delay={200}
-          >
-            {(sprops) => (
-              <IndicatorListLink>
-                <a href>
-                  <Highlight
-                    className="d-flex p-3 bd-highlight flex-row justify-content-center justify-content-md-start"
-                    style={sprops}
-                  >
-                    <Illustration className="mr-4">
-                      <IconIndicators />
-                    </Illustration>
-                    <div>
-                      <h3>{ t('indicators') }</h3>
-                      <p>
-                        { indicatorsDescription || 'Indicator Description' }
-                      </p>
-                    </div>
-                  </Highlight>
-                </a>
-              </IndicatorListLink>
-            )}
-          </Spring>
-        </LinkCards>
-      </HeroLinks>
     </Hero>
   );
 }
 
 HeroFullImage.propTypes = {
   t: PropTypes.func.isRequired,
+  theme: PropTypes.shape({}).isRequired,
   bgImage: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   siteDescription: PropTypes.string.isRequired,
@@ -183,4 +147,4 @@ HeroFullImage.propTypes = {
   indicatorsDescription: PropTypes.string.isRequired,
 };
 
-export default withTranslation('common')(HeroFullImage);
+export default withTranslation('common')(withTheme(HeroFullImage));
