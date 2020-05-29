@@ -1,3 +1,8 @@
+/*
+######### New version of site footer ###########
+#########  Isolated from API calls   ###########
+*/
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -6,15 +11,8 @@ import {
 
 import SVG from 'react-inlinesvg';
 import styled, { withTheme } from 'styled-components';
-import { withTranslation } from '../common/i18n';
-import ApplicationStateBanner from './common/ApplicationStateBanner';
-import { StaticPageLink, IndicatorListLink, ActionListLink } from '../common/links';
-import PlanContext from '../context/plan';
-
-const Logo = styled.div`
-  height: 4em;
-  margin-bottom: 4rem;
-`;
+import { withTranslation } from '../../common/i18n';
+import { StaticPageLink, IndicatorListLink, ActionListLink } from '../../common/links';
 
 const StyledFooter = styled.footer`
   position: relative;
@@ -38,32 +36,37 @@ const StyledFooter = styled.footer`
   }
 `;
 
+const OrgBrand = styled.div`
+  svg {
+    max-height: 2.5rem;
+    max-width: 100%;
+  }
+`;
 
 function SiteFooter(props) {
-  const plan = React.useContext(PlanContext);
-  const generalContent = plan.generalContent || {};
-  const { t, theme, siteTitle, instanceType } = props;
 
-  const OrgLogo = () => <SVG src={theme.iconIndicators} />;
+  const { t, theme, siteTitle, ownerUrl, staticPages, creativeCommonsLicense, copyrightText } = props;
+
+  const OrgLogo = () => <SVG src={theme.themeLogo} />;
 
   return (
     <>
-      <ApplicationStateBanner instanceType={instanceType} />
       <StyledFooter className="site-footer">
         <Container fluid>
           <Row>
             <Col md="4" className="footer-column">
+              <OrgBrand>
+                <a href={ownerUrl}>
+                  <OrgLogo aria-hidden="true" className="footer-org-logo" />
+                </a>
+              </OrgBrand>
               <h5>{siteTitle}</h5>
               <div className="funding-instrument-logo-container">
                 <div className="funding-instrument-logo" />
               </div>
             </Col>
             <Col md="4" className="footer-column">
-              <div className="footer-branding">
-                <a href={generalContent.ownerUrl}>
-                  <OrgLogo aria-hidden="true" className="footer-org-logo" />
-                </a>
-              </div>
+
             </Col>
             <Col md="4" className="footer-column">
               <div className="page-footer-block">
@@ -81,7 +84,7 @@ function SiteFooter(props) {
                       <a className="nav-link" href="true">{t('indicators')}</a>
                     </IndicatorListLink>
                   </NavItem>
-                  { plan.staticPages && plan.staticPages.filter((page) => page.footer).map((page) => (
+                  { staticPages && staticPages.filter((page) => page.footer).map((page) => (
                     <NavItem key={page.slug}>
                       <StaticPageLink slug={page.slug}>
                         <a className="nav-link" href="true">{page.name}</a>
@@ -95,14 +98,14 @@ function SiteFooter(props) {
           <Row>
             <Col className="footer-column">
               <div className="site-footer-small-print">
-                { generalContent.creativeCommonsLicense && (
+                { creativeCommonsLicense && (
                   <Nav vertical>
-                    <NavItem>{ generalContent.creativeCommonsLicense }</NavItem>
+                    <NavItem>{ creativeCommonsLicense }</NavItem>
                   </Nav>
                 )}
-                { generalContent.copyrightText && (
+                { copyrightText && (
                   <Nav vertical>
-                    <NavItem className="list-inline-item">{ generalContent.copyrightText }</NavItem>
+                    <NavItem className="list-inline-item">{ copyrightText }</NavItem>
                   </Nav>
                 )}
               </div>
@@ -116,8 +119,12 @@ function SiteFooter(props) {
 
 SiteFooter.propTypes = {
   siteTitle: PropTypes.string.isRequired,
-  instanceType: PropTypes.string.isRequired,
+  staticPages: PropTypes.shape({}).isRequired,
   t: PropTypes.func.isRequired,
+  theme: PropTypes.shape({}).isRequired,
+  ownerUrl: PropTypes.string.isRequired,
+  creativeCommonsLicense: PropTypes.string.isRequired,
+  copyrightText: PropTypes.string.isRequired,
 };
 
 export default withTranslation('common')(withTheme(SiteFooter));
