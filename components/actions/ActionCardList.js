@@ -18,19 +18,19 @@ const ActionGroup = styled(Row)`
 
 
 function ActionCardList({ actions }) {
-  const groups = [];
+  let groups = [];
   const groupMap = {};
 
   actions.forEach((action) => {
     const cat = action.rootCategory;
     let group;
-
     if (cat.id in groupMap) {
       group = groupMap[cat.id];
     } else {
       group = {
         id: cat.id,
         name: cat.name,
+        identifier: cat.identifier,
         elements: [],
       };
       groupMap[cat.id] = group;
@@ -38,7 +38,7 @@ function ActionCardList({ actions }) {
     }
     group.elements.push(action);
   });
-
+  groups = groups.sort((g1, g2) => g1.identifier - g2.identifier);
   return (
     <div>
       {groups.map((group) => (
