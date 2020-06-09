@@ -2,15 +2,33 @@ import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import Head from 'next/head';
 
-import { ThemeProvider } from 'styled-components';
+import { createGlobalStyle, ThemeProvider } from 'styled-components';
 
 import Header from './header';
 import SiteFooter from './SiteFooter';
 import PlanContext from '../context/plan';
 
+ let theme = require('sass-extract-loader?{"plugins": ["sass-extract-js"]}!../styles/' + process.env.THEME_IDENTIFIER + '/_theme-variables.scss');
+// let theme = require('../styles/' + process.env.THEME_IDENTIFIER + '/tokens.json');
 
-let theme = require('sass-extract-loader?{"plugins": ["sass-extract-js"]}!../styles/' + process.env.THEME_IDENTIFIER + '/_theme-variables.scss');
+const GlobalStyle = createGlobalStyle`
 
+  @font-face {
+    font-family: 'HelsinkiGrotesk';
+    src: url('https://makasiini.hel.ninja/delivery/HelsinkiGrotesk/565d73a693abe0776c801607ac28f0bf.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    font-family: ${(props) => props.theme.fontFamilySansSerif};
+  }
+
+  a {
+    color: ${(props) => props.theme.brandDark};
+  }
+`;
 
 function Layout({ children }) {
   const plan = useContext(PlanContext);
@@ -20,7 +38,8 @@ function Layout({ children }) {
   return (
     <ThemeProvider theme={theme}>
       <div>
-        <Meta /> 
+        <Meta />
+        <GlobalStyle />
         <Head>
           <meta name="viewport" content="initial-scale=1.0, width=device-width" />
           <meta property="og:type" content="website" />

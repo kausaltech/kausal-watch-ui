@@ -169,10 +169,7 @@ label {
 }
 
 // Boxed input fields into underlined
-.form-control {
-  border-width: 0 0 2px 0;
-  padding: 6px 2px;
-}
+
 
 // Validaded invalid field has color background
 .was-validated .form-control:invalid,
@@ -224,7 +221,7 @@ input[type="password"] {
 // input group when button border is 2px
 
 .input-group .form-control {
-  border-width: 2px;
+  border-width: 1px;
   padding: 0.375rem 0.75rem;
 }
 
@@ -233,11 +230,11 @@ input[type="password"] {
 }
 
 .input-group-prepend {
-  margin-right: -2px;
+  margin-right: -1px;
 }
 
 .input-group-append {
-  margin-left: -2px;
+  margin-left: -1px;
 }
 
 .input-group > .input-group-prepend > .btn,
@@ -247,7 +244,7 @@ input[type="password"] {
 .input-group > .input-group-append:last-child > .btn:not(:last-child):not(.dropdown-toggle),
 .input-group > .input-group-append:last-child > .input-group-text:not(:last-child) {
   border-color: $black;
-  border-width: 2px;
+  border-width: 1px;
   padding: 0 0.75rem;
 }
 
@@ -258,7 +255,7 @@ input[type="password"] {
 .input-group > .input-group-prepend:first-child > .btn:not(:first-child),
 .input-group > .input-group-prepend:first-child > .input-group-text:not(:first-child) {
   border-color: $black;
-  border-width: 2px;
+  border-width: 1px;
   padding: 0 0.75rem;
 }
 
@@ -269,17 +266,17 @@ input[type="password"] {
 // Custom checkboxes and radiobuttons
 
 .custom-control-label::before {
-  border: 2px solid $black;
+  border: 1px solid $black;
 }
 
 .custom-control-input:disabled ~ .custom-control-label::before {
-  border: 2px solid lighten($black,40%);
+  border: 1px solid lighten($black,40%);
 }
 
 // Custom Select
 
 .custom-select {
-  border: 2px solid $black;
+  border: 1px solid $black;
 
   &:disabled {
     border-color: lighten($black,40%);
@@ -292,18 +289,18 @@ input[type="password"] {
 
   option {
     padding: .25rem;
-    margin: 2px;
+    margin: 1px;
   }
 }
 
 // Custom File Browser
 
 .custom-file-label {
-  border: 2px solid $black;
+  border: 1px solid $black;
 
   &:after {
-    border-left: 2px solid $black;
-    border-bottom: 2px solid $black;
+    border-left: 1px solid $black;
+    border-bottom: 1px solid $black;
   }
 }
 
@@ -321,7 +318,7 @@ $active-segment: #444;
 
 .bar-segment-container {
   height: 4em;
-  border: 2px solid lighten($black,20%);
+  border: 1px solid lighten($black,20%);
   background-color: darken($white,15%);
 }
 

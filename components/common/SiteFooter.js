@@ -38,6 +38,7 @@ const StyledFooter = styled.footer`
 
 const OrgBrand = styled.div`
   svg {
+    fill: #fff;
     max-height: 2.5rem;
     max-width: 100%;
   }
@@ -45,7 +46,9 @@ const OrgBrand = styled.div`
 
 function SiteFooter(props) {
 
-  const { t, theme, siteTitle, ownerUrl, staticPages, creativeCommonsLicense, copyrightText } = props;
+  const {
+    t, theme, siteTitle, ownerUrl, staticPages, creativeCommonsLicense, copyrightText,
+  } = props;
 
   const OrgLogo = () => <SVG src={theme.themeLogo} />;
 

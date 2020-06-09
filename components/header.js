@@ -17,7 +17,14 @@ import PlanContext from '../context/plan';
 import Icon from './common/Icon';
 import ApplicationStateBanner from './common/ApplicationStateBanner';
 
-// TODO: get page content from API
+const Logo = styled.div`
+  background-image: url("${(props) => props.theme.themeLogo}");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: left center;
+  height: 2.2em;
+  width: 6em;
+`;
 
 const TopNav = styled(Navbar)`
   background-color: ${props => props.theme.brandNavBackground};
@@ -63,7 +70,7 @@ class Header extends React.Component {
           <Container>
             <Link href="/">
               <a aria-label={`${siteTitle}, palvelun etusivu`} className="navbar-brand">
-                <div aria-hidden="true" className="nav-org-logo" />
+                <Logo aria-hidden="true" />
               </a>
             </Link>
           </Container>

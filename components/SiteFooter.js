@@ -38,13 +38,20 @@ const StyledFooter = styled.footer`
   }
 `;
 
+const OrgBrand = styled.div`
+  svg {
+    fill: #fff;
+    max-height: 2.5rem;
+    max-width: 100%;
+  }
+`;
 
 function SiteFooter(props) {
   const plan = React.useContext(PlanContext);
   const generalContent = plan.generalContent || {};
   const { t, theme, siteTitle, instanceType } = props;
 
-  const OrgLogo = () => <SVG src={theme.iconIndicators} />;
+  const OrgLogo = () => <SVG src={theme.themeLogo} />;
 
   return (
     <>
@@ -59,11 +66,11 @@ function SiteFooter(props) {
               </div>
             </Col>
             <Col md="4" className="footer-column">
-              <div className="footer-branding">
+              <OrgBrand>
                 <a href={generalContent.ownerUrl}>
                   <OrgLogo aria-hidden="true" className="footer-org-logo" />
                 </a>
-              </div>
+              </OrgBrand>
             </Col>
             <Col md="4" className="footer-column">
               <div className="page-footer-block">
