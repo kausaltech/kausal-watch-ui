@@ -60,7 +60,8 @@
     "sass-extract-loader": "^1.1.0",
     "sentry-testkit": "^3.2.1",
     "simple-statistics": "^7.0.7",
-    "styled-components": "^5.0.0"
+    "styled-components": "^5.0.0",
+    "webpack": "^4.43.0"
   },
   "license": "AGPL-3.0-or-later",
   "main": "next.config.js",
