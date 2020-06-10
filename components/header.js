@@ -62,6 +62,7 @@ class Header extends React.Component {
       t, i18n, theme, siteTitle,
     } = this.props;
     const plan = this.context;
+    const hasActionImpacts = plan.actionImpacts.length > 0;
 
     return (
       <div>
@@ -83,11 +84,13 @@ class Header extends React.Component {
           <NavbarToggler onClick={this.toggle}><Icon name="bars" color={theme.brandDark}/></NavbarToggler>
           <Collapse isOpen={this.state.isOpen} navbar>
             <Nav navbar>
-              <NavItem key="dasboard">
-                <DashboardLink>
-                  <a className="nav-link">{t('dashboard')}</a>
-                </DashboardLink>
-              </NavItem>
+              { hasActionImpacts && (
+                <NavItem key="dasboard">
+                  <DashboardLink>
+                    <a className="nav-link">{t('dashboard')}</a>
+                  </DashboardLink>
+                </NavItem>
+              )}
               <NavItem key="actions">
                 <ActionListLink>
                   <a className="nav-link">{t('actions')}</a>
