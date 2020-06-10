@@ -54,7 +54,7 @@ const StyledCard = styled(Card)`
 const ActionNumber = styled.div`
   font-size: 3.5em;
   font-weight: 700;
-  line-height: 1;
+  line-height: 1.5;
   color: rgba(255,255,255,0.8);
 `;
 

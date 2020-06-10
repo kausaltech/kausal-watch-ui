@@ -25,6 +25,7 @@ export const GET_ACTION_LIST = gql`
       officialName
       completion
       updatedAt
+      imageUrl
       plan {
         id
       }
@@ -35,6 +36,7 @@ export const GET_ACTION_LIST = gql`
       }
       categories {
         id
+        imageUrl
       }
     }
   }

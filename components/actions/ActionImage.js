@@ -25,12 +25,13 @@ class ActionImage extends React.Component {
     } else {
       action.categories.forEach((cat) => {
         if (url) return;
-        while (cat) {
-          if (cat.imageUrl) {
-            url = cat.imageUrl;
+        let parent = cat;
+        while (parent) {
+          if (parent.imageUrl) {
+            url = parent.imageUrl;
             return;
           }
-          cat = cat.parent;
+          parent = parent.parent;
         }
       });
     }
@@ -46,7 +47,7 @@ class ActionImage extends React.Component {
       params.push(`width=${width}`);
     }
     if (params.length) {
-      url += `?${params.join('&')}`
+      url += `?${params.join('&')}`;
     }
     return url;
   }
