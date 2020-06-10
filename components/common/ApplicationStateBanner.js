@@ -5,16 +5,16 @@ import { Container } from 'reactstrap';
 
 import { withTranslation } from '../../common/i18n';
 
-
+ 
 const Banner = styled.div`
-  padding: 1.5em 0;
+  padding: .75rem 0;
   font-size: 80%;
-  background-color: ${(props) => props.theme.themeColors.black};
+  background-color: ${(props) => props.theme.themeColors.dark};
   color: ${(props) => props.theme.themeColors.light};
 `;
 
 const Label = styled.strong`
-  color: ${(props) => props.theme.brandLight};
+  color: ${(props) => props.theme.themeColors.warning};
   margin-right: .5em;
 `;
 

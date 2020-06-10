@@ -18,7 +18,7 @@ import Icon from './common/Icon';
 import ApplicationStateBanner from './common/ApplicationStateBanner';
 
 const Logo = styled.div`
-  background-image: url("${(props) => props.theme.themeLogo}");
+  background-image: url("${(props) => props.theme.themeLogoColor}");
   background-size: contain;
   background-repeat: no-repeat;
   background-position: left center;

@@ -41,6 +41,7 @@
  @import "~bootstrap/scss/utilities";
  @import "~bootstrap/scss/print";
 
+
 .icon {
   fill: currentColor;
   vertical-align: -0.1em;
@@ -160,17 +161,6 @@ blockquote {
 
 /* Form styles overrides */
 
-label {
-  font-weight: 500;
-}
-
-.custom-file-label, .custom-control-label {
-  font-weight: 400;
-}
-
-// Boxed input fields into underlined
-
-
 // Validaded invalid field has color background
 .was-validated .form-control:invalid,
 .form-control.is-invalid,
@@ -179,138 +169,6 @@ label {
   background-color: rgba($danger, 0.15);
 }
 
-textarea.form-control {
-  border-width: 2px;
-  padding: 6px 12px;
-}
-
-// form element focus style
-textarea:focus,
-input[type="text"]:focus,
-input[type="password"]:focus,
-input[type="datetime"]:focus,
-input[type="datetime-local"]:focus,
-input[type="date"]:focus,
-input[type="month"]:focus,
-input[type="time"]:focus,
-input[type="week"]:focus,
-input[type="number"]:focus,
-input[type="email"]:focus,
-input[type="url"]:focus,
-input[type="search"]:focus,
-input[type="tel"]:focus,
-input[type="color"]:focus,
-.form-control:focus,
-.uneditable-input:focus {
-  border-color: theme-color("secondary");
-  background: rgba($white, 0.3);
-  box-shadow: none;
-}
-
-// Make password hide characters consistent
-input[type="password"] {
-  font-family: caption;
-  letter-spacing: 3px;
-
-  &::placeholder {
-    font-family: "HelsinkiGrotesk";
-    letter-spacing: normal;
-  }
-}
-
-// input group when button border is 2px
-
-.input-group .form-control {
-  border-width: 1px;
-  padding: 0.375rem 0.75rem;
-}
-
-.input-group-text {
-  color: $black;
-}
-
-.input-group-prepend {
-  margin-right: -1px;
-}
-
-.input-group-append {
-  margin-left: -1px;
-}
-
-.input-group > .input-group-prepend > .btn,
-.input-group > .input-group-prepend > .input-group-text,
-.input-group > .input-group-append:not(:last-child) > .btn,
-.input-group > .input-group-append:not(:last-child) > .input-group-text,
-.input-group > .input-group-append:last-child > .btn:not(:last-child):not(.dropdown-toggle),
-.input-group > .input-group-append:last-child > .input-group-text:not(:last-child) {
-  border-color: $black;
-  border-width: 1px;
-  padding: 0 0.75rem;
-}
-
-.input-group > .input-group-append > .btn,
-.input-group > .input-group-append > .input-group-text,
-.input-group > .input-group-prepend:not(:first-child) > .btn,
-.input-group > .input-group-prepend:not(:first-child) > .input-group-text,
-.input-group > .input-group-prepend:first-child > .btn:not(:first-child),
-.input-group > .input-group-prepend:first-child > .input-group-text:not(:first-child) {
-  border-color: $black;
-  border-width: 1px;
-  padding: 0 0.75rem;
-}
-
-.input-group-prepend .btn + .btn, .input-group-prepend .btn + .input-group-text, .input-group-prepend .input-group-text + .input-group-text, .input-group-prepend .input-group-text + .btn, .input-group-append .btn + .btn, .input-group-append .btn + .input-group-text, .input-group-append .input-group-text + .input-group-text, .input-group-append .input-group-text + .btn {
-  margin-left: -2px;
-}
-
-// Custom checkboxes and radiobuttons
-
-.custom-control-label::before {
-  border: 1px solid $black;
-}
-
-.custom-control-input:disabled ~ .custom-control-label::before {
-  border: 1px solid lighten($black,40%);
-}
-
-// Custom Select
-
-.custom-select {
-  border: 1px solid $black;
-
-  &:disabled {
-    border-color: lighten($black,40%);
-  }
-
-}
-
-.custom-select[multiple] {
-  padding: 0;
-
-  option {
-    padding: .25rem;
-    margin: 1px;
-  }
-}
-
-// Custom File Browser
-
-.custom-file-label {
-  border: 1px solid $black;
-
-  &:after {
-    border-left: 1px solid $black;
-    border-bottom: 1px solid $black;
-  }
-}
-
-.custom-file-input:disabled ~ .custom-file-label {
-  border-color: lighten($black,40%);
-
-  &:after {
-    border-color: lighten($black,40%);
-  }
-}
 
 // Dashboard Bar Component
 
@@ -318,7 +176,7 @@ $active-segment: #444;
 
 .bar-segment-container {
   height: 4em;
-  border: 1px solid lighten($black,20%);
+  border: 2px solid lighten($black,20%);
   background-color: darken($white,15%);
 }
 
@@ -362,4 +220,10 @@ $active-segment: #444;
 .bar-arrow {
   background-color: $active-segment;
   border: 2px solid lighten($black,20%);
+}
+
+.form-control, .custom-select {
+  &:hover {
+    border-color: $black;
+  }
 }

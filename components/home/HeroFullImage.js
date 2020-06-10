@@ -24,20 +24,29 @@ const Hero = styled.div`
 `;
 
 const HeroMain = styled.div`
-  min-height: 34rem;
+  position: relative;
+  min-height: 38rem;
+  //background-color: ${(props) => props.theme.themeColors.black};
   background-image: url(${(props) => props.image});
   background-size: cover;
   background-position: center;
+  background-repeat: no-repeat;
+
+  @media (max-width: ${(props) => props.theme.breakpointMd}) {
+    min-height: 24rem;
+    background-size: contain;
+    background-position: top;
+  }
 `;
 
 const MainCard = styled.div`
   padding: 2rem;
-  margin: 2rem 0;
+  margin: 3rem 0;
   background-color: ${(props) => props.theme.themeColors.white};
-  color: ${(props) => props.theme.brandDark};
+  color: ${(props) => props.theme.neutralDark};
 
   a {
-    color: ${(props) => props.theme.brandDark};
+    color: ${(props) => props.theme.neutralDark};
 
     &:hover {
       text-decoration: none;
@@ -51,6 +60,14 @@ const MainCard = styled.div`
       }
     }
   }
+
+  @media (max-width: ${(props) => props.theme.breakpointMd}) {
+    margin-top: 20rem;
+  }
+
+  @media (max-width: ${(props) => props.theme.breakpointSm}) {
+    margin-top: 14rem;
+  }
 `;
 
 const Highlight = styled.div`
@@ -58,21 +75,21 @@ const Highlight = styled.div`
   margin-bottom: 0;
 
   h5 {
-    color: ${(props) => props.theme.brandDark};
+    color: ${(props) => props.theme.neutralDark};
   }
  
   p {
     hyphens: auto;
     margin-bottom: 0;
-    color: ${(props) => props.theme.brandDark};
+    color: ${(props) => props.theme.neutralDark};
   }
 `;
 
 const Illustration = styled.div`
   svg {
-    width: 2.5rem;
-    height: 2.5rem;
-    margin: 0;
+    width: 3rem;
+    height: 3rem;
+    margin: 0 1rem 0 0;
     display: block;
     fill: ${(props) => props.theme.brandDark};
   }
@@ -82,8 +99,11 @@ function HeroFullImage(props) {
   const {
     t, theme, bgImage, title, siteDescription, actionsDescription, indicatorsDescription,
   } = props;
-  const ActionsIcon = () => <SVG src={theme.iconActions} />;
-  const IndicatorsIcon = () => <SVG src={theme.iconIndicators} />;
+
+  let ActionsIcon = null;
+  if (theme.iconActions) ActionsIcon = () => <SVG src={theme.iconActions} />;
+  let IndicatorsIcon = null;
+  if (theme.iconIndicators) IndicatorsIcon = () => <SVG src={theme.iconIndicators} />;
 
   return (
     <Hero>
@@ -99,9 +119,11 @@ function HeroFullImage(props) {
                     <Highlight
                       className="d-flex py-3 bd-highlight flex-row"
                     >
-                      <Illustration className="mr-4">
-                        <ActionsIcon />
-                      </Illustration>
+                      {ActionsIcon && (
+                        <Illustration>
+                          <ActionsIcon />
+                        </Illustration>
+                      )}
                       <div>
                         <h5>{ t('actions') }</h5>
                         <p>
@@ -116,9 +138,11 @@ function HeroFullImage(props) {
                     <Highlight
                       className="d-flex py-3 bd-highlight flex-row"
                     >
-                      <Illustration className="mr-4">
-                        <IndicatorsIcon />
-                      </Illustration>
+                      {IndicatorsIcon && (
+                        <Illustration>
+                          <IndicatorsIcon />
+                        </Illustration>
+                      )}
                       <div>
                         <h5>{ t('indicators') }</h5>
                         <p>

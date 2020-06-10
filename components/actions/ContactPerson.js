@@ -25,6 +25,10 @@ const Person = styled.div`
 
 const PersonDetails = styled(Media)`
   margin-left: 1em;
+
+  .btn-link, .btn-link:hover {
+    color: ${(props) => props.theme.brandDark};
+  }
 `;
 
 const Name = styled.p`
@@ -56,6 +60,7 @@ const Avatar = styled.img`
 const Address = styled.address`
   margin-top: 1em;
   margin-bottom: 0;
+  font-size: 90%;
 `;
 
 const CollapseButton = styled(Button)`

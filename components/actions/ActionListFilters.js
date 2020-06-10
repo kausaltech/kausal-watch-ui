@@ -27,6 +27,12 @@ const FiltersList = styled.div`
 
 `;
 
+const StyledBadge = styled(Badge)`
+  background-color: ${(props) => props.theme.brandDark};
+  color: ${(props) => props.theme.themeColors.light};
+`;
+
+
 class ActionListFilters extends React.Component {
   constructor(props) {
     super(props);
@@ -176,14 +182,13 @@ class ActionListFilters extends React.Component {
                 leave={{ opacity: 0 }}
               >
                 {(item) => (props) => (
-                  <Badge
-                    color="primary"
+                  <StyledBadge
                     className="mr-3"
                     style={props}
                   >
                     <Button close size="sm" onClick={item.reset} />
                     { item.name }
-                  </Badge>
+                  </StyledBadge>
                 )}
               </Transition>
               <div className="count">

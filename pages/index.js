@@ -12,6 +12,7 @@ import IndicatorHighlightsList from '../components/indicators/IndicatorHighlight
 import HnhHero from '../components/HnhHero';
 import FrontHero from '../components/FrontHero';
 import ThlHero from '../components/ThlHero';
+import HeroFullImage from '../components/home/HeroFullImage';
 import PlanContext from '../context/plan';
 
 
@@ -27,7 +28,7 @@ const ActionsSection = styled.div`
 
 const IndicatorsSection = styled.div`
   background-color: ${(props) => props.theme.themeColors.white};
-  color: ${(props) => props.theme.brandDark};
+  color: ${(props) => props.theme.neutralDark};
   position: relative;
   padding: 7rem 0;
   
@@ -56,6 +57,15 @@ class HomePage extends React.Component {
     // Override with plan specific hero if applicable
     if (plan.identifier === 'hnh2035') heroComponent = <HnhHero />;
     if (plan.identifier === 'ktstrat') heroComponent = <ThlHero />;
+    if (plan.identifier === 'liiku') heroComponent = (
+      <HeroFullImage
+        bgImage={plan.imageUrl}
+        title={generalContent.siteTitle}
+        siteDescription={generalContent.siteDescription}
+        actionsDescription={generalContent.actionShortDescription}
+        indicatorsDescription={generalContent.indicatorShortDescription}
+      />
+    );
 
     return (
       <Layout>

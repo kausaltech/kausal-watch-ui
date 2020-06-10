@@ -8,6 +8,7 @@ import {
 } from 'reactstrap';
 import LazyLoad from 'react-lazyload';
 import styled from 'styled-components';
+import { transparentize } from 'polished';
 import { withTranslation } from '../../common/i18n';
 import ContentLoader from '../common/ContentLoader';
 import { IndicatorListLink } from '../../common/links';
@@ -36,14 +37,25 @@ export const GET_INDICATOR_HIGHLIGHTS = gql`
 `;
 
 const LinkButton = styled(Button)`
+
+  color: ${(props) => props.theme.brandDark} !important;
+  border-color: ${(props) => props.theme.brandDark} !important;
+
   svg {
     fill: ${(props) => props.theme.brandDark} !important;
   }
 
   &:hover {
-    svg {
-      fill: ${(props) => props.theme.themeColors.white} !important;
-    }
+    background-color: ${(props) => transparentize(0.9, props.theme.brandDark)};
+  }
+
+  &:not(:disabled):not(.disabled):active {
+    background-color: ${(props) => transparentize(0.9, props.theme.brandDark)};
+    box-shadow: 0 0 0 0.25rem ${(props) => props.theme.brandDark};
+  }
+
+  &:not(:disabled):not(.disabled):active:focus, &:not(:disabled):not(.disabled):focus, &.focus {
+    box-shadow: 0 0 0 0.25rem ${(props) => props.theme.inputBtnFocusColor};
   }
 `;
 

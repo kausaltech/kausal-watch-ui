@@ -183,6 +183,8 @@ const CategoryBadge = styled(Badge)`
   white-space: normal;
   text-align: left;
   font-size: 1rem;
+  color: ${(props) => props.theme.themeColors.light};
+  background-color: ${(props) => props.theme.brandDark};
 `;
 
 const SolidSection = styled.div`
