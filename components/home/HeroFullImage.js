@@ -8,6 +8,7 @@ import {
 
 import styled, { withTheme } from 'styled-components';
 import { withTranslation } from '../../common/i18n';
+import Icon from '../common/Icon';
 import {
   IndicatorListLink,
   ActionListLink,
@@ -76,6 +77,10 @@ const Highlight = styled.div`
 
   h5 {
     color: ${(props) => props.theme.neutralDark};
+
+    .icon {
+      margin-left: .25rem;
+    }
   }
  
   p {
@@ -125,7 +130,10 @@ function HeroFullImage(props) {
                         </Illustration>
                       )}
                       <div>
-                        <h5>{ t('actions') }</h5>
+                        <h5>
+                          { t('actions') }
+                          <Icon name="arrowRight" color="black" />
+                        </h5>
                         <p>
                           { actionsDescription || 'Actions Description' }
                         </p>
@@ -144,7 +152,10 @@ function HeroFullImage(props) {
                         </Illustration>
                       )}
                       <div>
-                        <h5>{ t('indicators') }</h5>
+                        <h5>
+                          { t('indicators') }
+                          <Icon name="arrowRight" color="black" />
+                        </h5>
                         <p>
                           { indicatorsDescription || 'Indicator Description' }
                         </p>
