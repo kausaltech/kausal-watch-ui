@@ -11,8 +11,8 @@ import { captureException } from './sentry';
 
 const { publicRuntimeConfig } = getConfig();
 
-export default withApollo(({ ctx, headers, initialState }) => (
-  new ApolloClient({
+export default withApollo(({ ctx, headers, initialState }) => {
+  const client = new ApolloClient({
     ssrMode: !process.browser,
     link: ApolloLink.from([
       onError(({ graphQLErrors, networkError }) => {
@@ -35,5 +35,6 @@ export default withApollo(({ ctx, headers, initialState }) => (
       }),
     ]),
     cache: new InMemoryCache().restore(initialState || {}),
-  })
-), { getDataFromTree: 'ssr' });
+  });
+  return client;
+}, {});
