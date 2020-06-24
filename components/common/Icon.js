@@ -21,6 +21,7 @@ import chartPie from './icons/chart-pie.svg';
 import chartLine from './icons/chart-line.svg';
 import circleOutline from './icons/circle-outline.svg';
 import circleFull from './icons/circle-full.svg';
+import infoCircle from './icons/info-circle.svg';
 
 const icons = {
   helsinkiLogo,
@@ -44,6 +45,7 @@ const icons = {
   bars,
   circleOutline,
   circleFull,
+  infoCircle,
 };
 
 class Icon extends React.Component {
