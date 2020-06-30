@@ -12,6 +12,7 @@ import { transparentize } from 'polished';
 import { withTranslation } from '../../common/i18n';
 import ContentLoader from '../common/ContentLoader';
 import { ActionListLink } from '../../common/links';
+import { getActionImageURL } from '../../common/utils';
 
 import ActionHighlightCard from './ActionHighlightCard';
 import Icon from '../common/Icon';
@@ -65,7 +66,7 @@ const LinkButton = styled(Button)`
   }
 `;
 
-function ActionCardList({ t, actions }) {
+function ActionCardList({ t, actions, plan }) {
   return (
     <Row>
       <Col xs="12">
@@ -81,7 +82,7 @@ function ActionCardList({ t, actions }) {
           style={{ transition: 'all 0.5s ease' }}
         >
           <LazyLoad height={300}>
-            <ActionHighlightCard action={item} />
+            <ActionHighlightCard action={item} imageUrl={getActionImageURL(plan, item, 520, 200)} />
           </LazyLoad>
         </Col>
       ))}
@@ -103,6 +104,9 @@ function ActionCardList({ t, actions }) {
 ActionCardList.propTypes = {
   t: PropTypes.func.isRequired,
   actions: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  plan: PropTypes.shape({
+    identifier: PropTypes.string,
+  }).isRequired,
 };
 
 function ActionHighlightsList(props) {
@@ -120,7 +124,7 @@ function ActionHighlightsList(props) {
       {({ data, loading, error }) => {
         if (loading) return <ContentLoader />;
         if (error) return <p>{ t('error-loading-actions') }</p>;
-        return <ActionCardList t={t} actions={data.planActions} />;
+        return <ActionCardList t={t} actions={data.planActions} plan={plan}/>;
       }}
     </Query>
   );

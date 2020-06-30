@@ -3,65 +3,36 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 import PlanContext from '../../context/plan';
-
+import { getActionImageURL } from '../../common/utils';
 
 const ImgBg = styled.div`
-  background-color: ${props => props.bgColor};
-  background-image: url(${props => props.bgImage});
+  background-color: ${(props) => props.bgColor};
+  background-image: url(${(props) => props.bgImage});
   background-position: center;
   background-size: cover;
   background-blend-mode: multiply;
 `;
 
 
-class ActionBgImage extends React.Component {
-  getImageURL(plan) {
-    const { action, height, width } = this.props;
-    let url;
-    if (action.imageUrl) {
-      url = action.imageUrl;
-    } else {
-      action.categories.forEach((cat) => {
-        if (url) return;
-        let parent = cat;
-        while (parent) {
-          if (parent.imageUrl) {
-            url = parent.imageUrl;
-            return;
-          }
-          parent = parent.parent;
-        }
-      });
-    }
-    if (!url) {
-      url = plan.imageUrl;
-    }
+function ActionBgImage(props) {
+  const {
+    children,
+    color,
+    action,
+    width,
+    height,
+  } = props;
 
-    const params = [];
-    if (height) {
-      params.push(`height=${height}`);
-    }
-    if (width) {
-      params.push(`width=${width}`);
-    }
-    if (params.length) {
-      url += `?${params.join('&')}`;
-    }
-    return url;
-  }
+  return (
+    <PlanContext.Consumer>
+      {(plan) => (
+        <ImgBg bgImage={getActionImageURL(plan, action, width, height)} bgColor={color}>
+          {children}
+        </ImgBg>
+      )}
+    </PlanContext.Consumer>
+  );
 
-  render() {
-    const { children, color } = this.props;
-    return (
-      <PlanContext.Consumer>
-        {plan => (
-          <ImgBg bgImage={this.getImageURL(plan)} bgColor={color}>
-            {children}
-          </ImgBg>
-        )}
-      </PlanContext.Consumer>
-    );
-  }
 }
 
 ActionBgImage.propTypes = {

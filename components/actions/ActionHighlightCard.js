@@ -1,67 +1,44 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Card, CardImgOverlay, CardBody,
+  Card, CardBody,
   CardTitle, Badge,
 } from 'reactstrap';
 import styled from 'styled-components';
-import gql from 'graphql-tag';
+import { transparentize } from 'polished';
 import { Spring } from 'react-spring/renderprops.cjs';
 
 import { ActionLink } from '../../common/links';
 import Icon from '../common/Icon';
-import ActionImage from './ActionImage';
 import ActionStatus from './ActionStatus';
-
-const ACTION_CARD_FRAGMENT = gql`
-  fragment ActionCard on Action {
-    id
-    identifier
-    name
-    status {
-      id
-      identifier
-      name
-    }
-    completion
-    categories {
-      id
-      identifier
-      name
-      imageUrl
-    }
-    status {
-      id
-      identifier
-      name
-    }
-  }
-`;
 
 const StyledCard = styled(Card)`
   width: 100%;
   transition: all 0.5s ease;
+  margin-bottom: 1rem;
+  overflow: hidden;
+
   &:hover {
     transform: translateY(-5px);
-    box-shadow: 4px 4px 8px rgba(82,90,101,0.5);
+    box-shadow: 4px 4px 8px ${(props) => transparentize(0.8, props.theme.themeColors.dark)};
   }
-
-  a {
-    color: ${(props) => props.theme.neutralDark};
-  } 
 `;
 
-const ActionNumber = styled.div`
-  font-size: 3.5em;
-  font-weight: 700;
-  line-height: 1.5;
-  color: rgba(255,255,255,0.8);
+const CardLink = styled.a`
+  text-decoration: none;
+  color: ${(props) => props.theme.neutralDark};
+
+  &:hover {
+    text-decoration: none;
+    color: ${(props) => props.theme.neutralDark};
+  }
 `;
 
 const ReadyBadge = styled(Badge)`
   position: absolute;
   top: 1em;
   left: 1em;
+  background-color: ${(props) => props.theme.themeColors.success};
 `;
 
 const StyledCardTitle = styled(CardTitle)`
@@ -70,8 +47,44 @@ const StyledCardTitle = styled(CardTitle)`
   hyphens: auto;
 `;
 
-function ActionCard(props) {
-  const { action } = props;
+const ImgArea = styled.div`
+  position: relative;
+  background-color: ${(props) => props.theme.imageOverlay};
+`;
+
+const ImgBg = styled.div`
+  height: 9rem;
+  background-image: url(${(props) => props.background});
+  background-position: center;
+  background-size: cover;
+  mix-blend-mode: multiply;
+
+  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    height: 8rem;
+  }
+`;
+
+const ImgOverlay = styled.div`
+  position: absolute;
+  width: 100%;
+  top: 0;
+`;
+
+const ActionNumber = styled.div`
+  text-align: center;
+  font-size: 3.5em;
+  font-weight: 700;
+  line-height: 9rem;
+  color: ${(props) => props.theme.themeColors.light};
+
+
+  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    line-height: 8rem;
+  }
+`;
+
+function ActionHighlightCard(props) {
+  const { action, imageUrl } = props;
   let actionName = action.name;
   if (actionName.length > 120) actionName = `${action.name.substring(0, 120)}…`;
   return (
@@ -80,42 +93,40 @@ function ActionCard(props) {
       to={{ opacity: 1 }}
     >
       {(springProps) => (
-        <StyledCard style={springProps}>
-          <ActionLink action={action}>
-            <a href>
-              <ActionImage action={action} width={520} height={200} />
-              <CardImgOverlay>
-                <ActionNumber className="action-number">{action.identifier}</ActionNumber>
-              </CardImgOverlay>
-            </a>
-          </ActionLink>
-          {action.status && (
-            <ActionStatus
-              name={action.status.name}
-              identifier={action.status.identifier}
-              completion={action.completion}
-            />
-          )}
-          <CardBody>
-            { action.status && action.status.identifier === 'completed'
-              && (
-                <ReadyBadge color="success" pill>
-                  <Icon name="check" color="#fff" width="2em" height="2em" />
-                </ReadyBadge>
+        <ActionLink action={action}>
+          <CardLink href>
+            <StyledCard style={springProps}>
+              <ImgArea>
+                <ImgBg background={imageUrl} />
+                <ImgOverlay>
+                  <ActionNumber>{action.identifier}</ActionNumber>
+                </ImgOverlay>
+              </ImgArea>
+              {action.status && (
+                <ActionStatus
+                  name={action.status.name}
+                  identifier={action.status.identifier}
+                  completion={action.completion}
+                />
               )}
-            <ActionLink action={action}>
-              <a href>
-                <StyledCardTitle tag="h5">{actionName}</StyledCardTitle>
-              </a>
-            </ActionLink>
-          </CardBody>
-        </StyledCard>
+              <CardBody>
+                { action.status && action.status.identifier === 'completed'
+                  && (
+                    <ReadyBadge pill>
+                      <Icon name="check" color="#fff" width="2em" height="2em" />
+                    </ReadyBadge>
+                  )}
+                    <StyledCardTitle tag="h5">{actionName}</StyledCardTitle>
+              </CardBody>
+            </StyledCard>
+          </CardLink>
+        </ActionLink>
       )}
     </Spring>
   );
 }
 
-ActionCard.propTypes = {
+ActionHighlightCard.propTypes = {
   action: PropTypes.shape({
     identifier: PropTypes.string,
     name: PropTypes.string,
@@ -125,10 +136,7 @@ ActionCard.propTypes = {
     }),
     completion: PropTypes.number,
   }).isRequired,
+  imageUrl: PropTypes.string,
 };
 
-ActionCard.fragments = {
-  action: ACTION_CARD_FRAGMENT,
-};
-
-export default ActionCard;
+export default ActionHighlightCard;

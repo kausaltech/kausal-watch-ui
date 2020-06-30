@@ -28,7 +28,7 @@ import EmissionScopeIcon from './EmissionScopeIcon';
 import ContentLoader from '../common/ContentLoader';
 import Icon from '../common/Icon';
 import ErrorMessage from '../common/ErrorMessage';
-
+import { getActionImageURL } from '../../common/utils';
 
 const GET_ACTION_DETAILS = gql`
 query ActionDetails($plan: ID!, $id: ID!) {
@@ -202,40 +202,6 @@ const MergedActionSection = styled.div`
   margin-bottom: 1rem;
 `;
 
-function getImageURL(plan, action, width, height) {
-  let url;
-  if (action.imageUrl) {
-    url = action.imageUrl;
-  } else {
-    action.categories.forEach((cat) => {
-      if (url) return;
-      let parent = cat;
-      while (parent) {
-        if (parent.imageUrl) {
-          url = parent.imageUrl;
-          return;
-        }
-        parent = parent.parent;
-      }
-    });
-  }
-  if (!url) {
-    url = plan.imageUrl;
-  }
-
-  const params = [];
-  if (height) {
-    params.push(`height=${height}`);
-  }
-  if (width) {
-    params.push(`width=${width}`);
-  }
-  if (params.length) {
-    url += `?${params.join('&')}`;
-  }
-  return url;
-}
-
 function MergedAction(props) {
   const { action, theme } = props;
   const { identifier, officialName } = action;
@@ -288,7 +254,7 @@ function ActionDetails(props) {
     <div>
       <Meta
         title={`${t('action')} ${action.identifier}`}
-        shareImageUrl={getImageURL(plan, action, 1200, 630)}
+        shareImageUrl={getActionImageURL(plan, action, 1200, 630)}
         description={`${action.name}`}
       />
       <ActionHero>
