@@ -5,7 +5,8 @@ module.exports = {
   addons: [
     '@storybook/addon-actions',
     '@storybook/addon-links',
-    'storybook-addon-styled-component-theme/dist/register'
+    'storybook-addon-styled-component-theme/dist/register',
+    '@storybook/addon-viewport/register',
   ],
   webpackFinal: async (config, { configType }) => {
     config.module.rules.push({
