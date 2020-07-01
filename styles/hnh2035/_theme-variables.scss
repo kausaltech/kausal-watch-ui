@@ -29,12 +29,12 @@ $hel-silver:        #dedfe1;
 $hel-gold:          #c2a251;
 
 // Brand monochromes
-// Not brand loyal $hel-black (#000000) –optimized for digital use.
-$hel-black:         #231f20;
-$hel-dark:          #525a65;
-$hel-gray:          #abb2bd;
-$hel-light:         #ebedf1;
-$hel-white:         #ffffff;
+
+$hel-black:         #000000; //--color-black
+$hel-dark:          #333333; //--color-black-80
+$hel-gray:          #666666; //--color-black-60
+$hel-light:         #e5e5e5; //--color-black-10
+$hel-white:         #ffffff; //--color-white
 
 // Helper colors
 $red:     #e05563;
@@ -92,6 +92,13 @@ $nav-pills-link-active-bg: $brand-dark;
 $list-group-active-bg:  $component-active-bg;
 $list-group-active-border-color:  $list-group-active-bg;
 
+/////// BUTTONS
+
+$input-btn-focus-color:       #0072c6;
+$input-btn-padding-y:           1rem;
+$input-btn-padding-x:           1rem;
+$btn-border-radius:             0;
+$btn-border-width:        2px;
 
 /////// NAV
 

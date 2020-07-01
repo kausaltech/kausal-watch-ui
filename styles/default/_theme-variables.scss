@@ -23,8 +23,8 @@ $cyan:    #17a2b8;
 // brand-light/brand-dark should have contrast ratio over 4.5
 // brand-light/theme.dark should have contrast ratio over 4.5
 // brand-dark/theme.light should have contrast ratio over 4.5
-$brand-light:  #d8f3a7;
-$brand-dark:   #53857c;
+$brand-light:  #A7EBC0;
+$brand-dark:   #0A5E43;
 $neutral-light: #eeebe4;
 $neutral-dark: #292721;
 
@@ -36,10 +36,10 @@ $theme-colors: (
   "info":       $cyan,
   "warning":    $yellow,
   "danger":     $red,
-  "light":      #eeeeee,
-  "dark":       #555555,
-  "black":      #222222,
-  "white":      #ffffff,
+  "light":      #E1DFDA,
+  "dark":       #46423E,
+  "black":      #1A1817,
+  "white":      #F7F6F3,
 );
 
 $image-overlay: $brand-dark;
@@ -71,6 +71,14 @@ $nav-pills-link-active-bg: $brand-dark;
 $list-group-active-bg:  $component-active-bg;
 $list-group-active-border-color:  $list-group-active-bg;
 
+
+/////// BUTTONS
+
+$input-btn-focus-color:       #4E80A6;
+$input-btn-padding-y:           .5rem;
+$input-btn-padding-x:           .75rem;
+$btn-border-radius:             .25rem;
+$btn-border-width:        1px;
 
 /////// NAV
 
