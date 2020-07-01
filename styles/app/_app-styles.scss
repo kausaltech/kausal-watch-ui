@@ -115,6 +115,10 @@ blockquote {
 .text-content {
   a {
     text-decoration: underline;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-all;
+    word-break: break-word;
   }
 
   h3, h4, h5 {
