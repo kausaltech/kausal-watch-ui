@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {
-  Container, Row, Col, Button,
+  Container, Row, Col
 }
   from 'reactstrap';
 import styled from 'styled-components';
@@ -14,6 +14,7 @@ import {
   StaticPageLink,
 } from '../common/links';
 import Icon from './common/Icon';
+import Button from './common/Button';
 
 
 const SiteHero = styled.div`

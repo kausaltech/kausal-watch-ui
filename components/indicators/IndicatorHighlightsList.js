@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
 import {
-  Row, Col, Button,
+  Row, Col,
 } from 'reactstrap';
 import LazyLoad from 'react-lazyload';
 import styled from 'styled-components';
@@ -15,6 +15,7 @@ import { IndicatorListLink } from '../../common/links';
 
 import IndicatorHighlightCard from './IndicatorHighlightCard';
 import Icon from '../common/Icon';
+import Button from '../common/Button';
 
 export const GET_INDICATOR_HIGHLIGHTS = gql`
   query IndicatorHightlightList($plan: ID!, $first: Int!, $orderBy: String!) {
@@ -33,29 +34,6 @@ export const GET_INDICATOR_HIGHLIGHTS = gql`
       updatedAt
       level(plan: $plan)
     }
-  }
-`;
-
-const LinkButton = styled(Button)`
-
-  color: ${(props) => props.theme.brandDark} !important;
-  border-color: ${(props) => props.theme.brandDark} !important;
-
-  svg {
-    fill: ${(props) => props.theme.brandDark} !important;
-  }
-
-  &:hover {
-    background-color: ${(props) => transparentize(0.9, props.theme.brandDark)};
-  }
-
-  &:not(:disabled):not(.disabled):active {
-    background-color: ${(props) => transparentize(0.9, props.theme.brandDark)};
-    box-shadow: 0 0 0 0.25rem ${(props) => props.theme.brandDark};
-  }
-
-  &:not(:disabled):not(.disabled):active:focus, &:not(:disabled):not(.disabled):focus, &.focus {
-    box-shadow: 0 0 0 0.25rem ${(props) => props.theme.inputBtnFocusColor};
   }
 `;
 
@@ -90,11 +68,11 @@ function IndicatorCardList(props) {
       <Col xs="12" className="mt-5 mb-3">
         <IndicatorListLink>
           <a href>
-            <LinkButton outline color="primary">
+            <Button outline color="primary">
               { t('see-all-indicators') }
               {' '}
               <Icon name="arrowRight" />
-            </LinkButton>
+            </Button>
           </a>
         </IndicatorListLink>
       </Col>

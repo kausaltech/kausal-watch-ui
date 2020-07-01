@@ -19,6 +19,12 @@ const Buttons = () => {
         <Button outline color="secondary">Secondary Outline Button</Button>
       </div>
       <div className="py-4">
+        <Button outline color="light">Light Outline Button</Button>
+      </div>
+      <div className="py-4">
+        <Button outline color="dark">Dark Outline Button</Button>
+      </div>
+      <div className="py-4">
         <Button color="link">Link Button</Button>
       </div>
     </div>

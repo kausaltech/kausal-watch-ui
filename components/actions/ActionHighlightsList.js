@@ -4,11 +4,10 @@ import PropTypes from 'prop-types';
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
 import {
-  Row, Col, Button,
+  Row, Col,
 } from 'reactstrap';
 import LazyLoad from 'react-lazyload';
-import styled from 'styled-components';
-import { transparentize } from 'polished';
+import Button from '../common/Button';
 import { withTranslation } from '../../common/i18n';
 import ContentLoader from '../common/ContentLoader';
 import { ActionListLink } from '../../common/links';
@@ -43,29 +42,6 @@ export const GET_ACTION_LIST = gql`
   }
 `;
 
-const LinkButton = styled(Button)`
-
-  color: ${(props) => props.theme.brandDark} !important;
-  border-color: ${(props) => props.theme.brandDark} !important;
-
-  svg {
-    fill: ${(props) => props.theme.brandDark} !important;
-  }
-
-  &:hover {
-    background-color: ${(props) => transparentize(0.9, props.theme.brandDark)};
-  }
-
-  &:not(:disabled):not(.disabled):active {
-    background-color: ${(props) => transparentize(0.9, props.theme.brandDark)};
-    box-shadow: 0 0 0 0.25rem ${(props) => props.theme.brandDark};
-  }
-
-  &:not(:disabled):not(.disabled):active:focus, &:not(:disabled):not(.disabled):focus, &.focus {
-    box-shadow: 0 0 0 0.25rem ${(props) => props.theme.inputBtnFocusColor};
-  }
-`;
-
 function ActionCardList({ t, actions, plan }) {
   return (
     <Row>
@@ -89,11 +65,11 @@ function ActionCardList({ t, actions, plan }) {
       <Col xs="12" className="mt-5 mb-5">
         <ActionListLink>
           <a>
-            <LinkButton outline color="primary">
+            <Button outline color="primary">
               { t('see-all-actions') }
               {' '}
               <Icon name="arrowRight" color="black" />
-            </LinkButton>
+            </Button>
           </a>
         </ActionListLink>
       </Col>

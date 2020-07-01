@@ -80,6 +80,40 @@ const StyledButton = styled(BSButton)`
     }
   }
 
+  &.btn-outline-light {
+    color: ${(props) => props.theme.themeColors.light} !important;
+    border-color: ${(props) => props.theme.themeColors.light} !important;
+
+    svg {
+      fill: ${(props) => props.theme.themeColors.light} !important;
+    }
+
+    &:hover {
+      background-color: ${(props) => transparentize(0.9, props.theme.themeColors.light)};
+    }
+
+    &:not(:disabled):not(.disabled):active {
+      background-color: ${(props) => transparentize(0.8, props.theme.themeColors.light)};
+    }
+  }
+
+  &.btn-outline-dark {
+    color: ${(props) => props.theme.themeColors.dark} !important;
+    border-color: ${(props) => props.theme.themeColors.dark} !important;
+
+    svg {
+      fill: ${(props) => props.theme.themeColors.dark} !important;
+    }
+
+    &:hover {
+      background-color: ${(props) => transparentize(0.9, props.theme.themeColors.dark)};
+    }
+
+    &:not(:disabled):not(.disabled):active {
+      background-color: ${(props) => transparentize(0.8, props.theme.themeColors.dark)};
+    }
+  }
+
   &.btn-link {
     color: ${(props) => props.theme.brandDark};
 
