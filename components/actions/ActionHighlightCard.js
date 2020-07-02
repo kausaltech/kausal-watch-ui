@@ -15,8 +15,9 @@ import ActionStatus from './ActionStatus';
 const StyledCard = styled(Card)`
   width: 100%;
   transition: all 0.5s ease;
-  margin-bottom: 1rem;
   overflow: hidden;
+  border-width: ${(props) => props.theme.cardBorderWidth};
+  border-radius: ${(props) => props.theme.cardBorderRadius};
 
   &:hover {
     transform: translateY(-5px);
@@ -45,6 +46,7 @@ const StyledCardTitle = styled(CardTitle)`
   font-size: 1.2em;
   text-align: left;
   hyphens: auto;
+  margin-bottom: 0;
 `;
 
 const ImgArea = styled.div`
@@ -116,7 +118,7 @@ function ActionHighlightCard(props) {
                       <Icon name="check" color="#fff" width="2em" height="2em" />
                     </ReadyBadge>
                   )}
-                    <StyledCardTitle tag="h5">{actionName}</StyledCardTitle>
+                  <StyledCardTitle tag="h5">{actionName}</StyledCardTitle>
               </CardBody>
             </StyledCard>
           </CardLink>

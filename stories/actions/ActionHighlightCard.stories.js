@@ -1,10 +1,11 @@
+import React, { useContext } from 'react';
+import { ThemeContext } from 'styled-components';
+
 import ActionHighlightCard from '../../components/actions/ActionHighlightCard';
 import ActionStatus from '../../components/actions/ActionStatus';
 
-import React from 'react';
-
 const actionProp = {
-  identifier: 24,
+  identifier: '24',
   name: 'Action title goes here',
   status: {
     name: 'On Time',
@@ -14,7 +15,7 @@ const actionProp = {
 };
 
 const actionPropCompleted = {
-  identifier: 138,
+  identifier: '138',
   name: 'This action is completed. Action title goes here',
   status: {
     name: 'Completed',
@@ -24,7 +25,7 @@ const actionPropCompleted = {
 };
 
 const actionPropLate= {
-  identifier: 7,
+  identifier: '7',
   name: 'This action is Late. Action title goes here',
   status: {
     name: 'Late',
@@ -34,7 +35,7 @@ const actionPropLate= {
 };
 
 const actionPropSeverelyLate= {
-  identifier: 68,
+  identifier: '68',
   name: 'This action is Severely Late. Action title goes here',
   status: {
     name: 'Severely Late',
@@ -47,34 +48,43 @@ export default {
   title: 'Action',
 };
 
-export const ActionCard = () => {
+const ActionCards = () => {
+  const theme = useContext(ThemeContext);
+
   return (
-    <div className="row p-2 pm-5">
-      <div className="col col-sm-8 col-md-6">
-        <ActionHighlightCard
-          action={actionPropCompleted}
-          id="12"
-          imageUrl="https://source.unsplash.com/collection/1597991"
-        />
-        <ActionHighlightCard
-          action={actionProp}
-          id="12"
-          imageUrl="https://source.unsplash.com/collection/1597991"
-        />
-        <ActionHighlightCard
-          action={actionPropLate}
-          id="12"
-          imageUrl="https://source.unsplash.com/collection/1597991"
-        />
-        <ActionHighlightCard
-          action={actionPropSeverelyLate}
-          id="12"
-          imageUrl="https://source.unsplash.com/collection/1597991"
-        />
+    <div className="container" style={{ backgroundColor: theme.neutralLight, color: theme.themeColors.light }}>
+      <div className="row p-2 pm-5">
+        <div className="col col-sm-8 col-md-6">
+          <ActionHighlightCard
+            action={actionPropCompleted}
+            id="12"
+            imageUrl="https://source.unsplash.com/collection/1597991"
+          />
+          <br />
+          <ActionHighlightCard
+            action={actionProp}
+            id="12"
+            imageUrl="https://source.unsplash.com/collection/1597991"
+          />
+          <br />
+          <ActionHighlightCard
+            action={actionPropLate}
+            id="12"
+            imageUrl="https://source.unsplash.com/collection/1597991"
+          />
+          <br />
+          <ActionHighlightCard
+            action={actionPropSeverelyLate}
+            id="12"
+            imageUrl="https://source.unsplash.com/collection/1597991"
+          />
+        </div>
       </div>
     </div>
   );
 };
+
+export const ActionCardStory = (theme) => <ActionCards theme={theme} />;
 
 export const ActionStatusStory = () => {
   return (

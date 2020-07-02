@@ -3,6 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
+import styled from 'styled-components';
 import {
   Row, Col,
 } from 'reactstrap';
@@ -42,6 +43,17 @@ export const GET_ACTION_LIST = gql`
   }
 `;
 
+const CardContainer = styled(Col)`
+  margin-bottom: 1.5rem;
+
+  .lazyload-wrapper {
+    width: 100%;
+  }
+  .card {
+    height: 100%;
+  }
+`;
+
 function ActionCardList({ t, actions, plan }) {
   return (
     <Row>
@@ -49,18 +61,18 @@ function ActionCardList({ t, actions, plan }) {
         <h2 className="mb-5">{ t('recently-updated-actions') }</h2>
       </Col>
       {actions.map((item) => (
-        <Col
+        <CardContainer
           xs="12"
           md="6"
           lg="4"
           key={item.id}
-          className="mb-4 d-flex align-items-stretch"
+          className="d-flex align-items-stretch"
           style={{ transition: 'all 0.5s ease' }}
         >
           <LazyLoad height={300}>
             <ActionHighlightCard action={item} imageUrl={getActionImageURL(plan, item, 520, 200)} />
           </LazyLoad>
-        </Col>
+        </CardContainer>
       ))}
       <Col xs="12" className="mt-5 mb-5">
         <ActionListLink>
