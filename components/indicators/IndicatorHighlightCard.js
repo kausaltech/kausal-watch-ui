@@ -12,6 +12,7 @@ const IndicatorType = styled.div`
   margin-bottom: .5em;
   text-align: left;
   font-size: 0.8rem;
+  color: ${(props) => props.theme.neutralDark};
 `;
 
 const IndicatorBg = styled.div`
@@ -36,7 +37,9 @@ const StyledCard = styled(Card)`
   width: 100%;
   background-color: ${(props) => props.theme.themeColors.light};
   transition: all 0.5s ease;
-
+  border-width: ${(props) => props.theme.cardBorderWidth};
+  border-radius: ${(props) => props.theme.cardBorderRadius};
+  overflow: hidden;
   a {
     color: ${(props) => props.theme.neutralDark};
   }
@@ -73,6 +76,7 @@ const IndicatorUnit = styled.span`
 `;
 
 const StyledCardTitle = styled(CardTitle)`
+  margin-bottom: 0;
   font-size: 1.2em;
   text-align: left;
   hyphens: auto;

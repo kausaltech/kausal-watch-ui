@@ -6,8 +6,8 @@ import { Query } from 'react-apollo';
 import {
   Row, Col,
 } from 'reactstrap';
-import LazyLoad from 'react-lazyload';
 import styled from 'styled-components';
+import LazyLoad from 'react-lazyload';
 import { transparentize } from 'polished';
 import { withTranslation } from '../../common/i18n';
 import ContentLoader from '../common/ContentLoader';
@@ -37,6 +37,17 @@ export const GET_INDICATOR_HIGHLIGHTS = gql`
   }
 `;
 
+const CardContainer = styled(Col)`
+  margin-bottom: 1.5rem;
+
+  .lazyload-wrapper {
+    width: 100%;
+  }
+  .card {
+    height: 100%;
+  }
+`;
+
 function IndicatorCardList(props) {
   const { t, indicators } = props;
 
@@ -46,12 +57,12 @@ function IndicatorCardList(props) {
         <h2 className="mb-5">{ t('recently-updated-indicators') }</h2>
       </Col>
       {indicators.map((item) => (
-        <Col
+        <CardContainer
           xs="12"
           md="6"
           lg="4"
           key={item.id}
-          className="mb-4 d-flex align-items-stretch"
+          className="mb-4 d-flex"
           style={{ transition: 'all 0.5s ease' }}
         >
           <LazyLoad height={300}>
@@ -63,7 +74,7 @@ function IndicatorCardList(props) {
               unit={item.unit.shortName || item.unit.name}
             />
           </LazyLoad>
-        </Col>
+        </CardContainer>
       ))}
       <Col xs="12" className="mt-5 mb-3">
         <IndicatorListLink>
