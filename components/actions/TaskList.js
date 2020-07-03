@@ -1,4 +1,5 @@
 import React from 'react';
+import { PropTypes } from 'prop-types';
 import { ListGroup, ListGroupItem as BaseListGroupItem } from 'reactstrap';
 import styled from 'styled-components';
 import moment from '../../common/moment';
@@ -23,8 +24,8 @@ const TaskMeta = styled.div`
 `;
 
 const TaskContent = styled.div`
-  border-left: 1px solid #333;
-  margin-left: 1rem;
+  border-left: 1px solid ${(props) => props.theme.themeColors.dark};
+  margin-left: .5rem;
   padding-left: 1rem;
 `;
 
@@ -35,80 +36,87 @@ const ListGroupItem = styled(BaseListGroupItem)`
   }
 `;
 
-class TaskList extends React.Component {
-  static parseTimestamp(timestamp) {
-    const timeFormat = 'DD.MM.YYYY';
-    return moment(timestamp).format(timeFormat);
-  }
+function parseTimestamp(timestamp) {
+  const timeFormat = 'DD.MM.YYYY';
+  return moment(timestamp).format(timeFormat);
+}
 
-  render() {
-    const t = this.props.t;
-    const sortedTasks = this.props.tasks.sort((a, b) => {
-      let bdate;
-      let adate;
-
-      a.completedAt ? adate = a.completedAt : adate = a.dueAt;
-      b.completedAt ? bdate = b.completedAt : bdate = b.dueAt;
+function TaskList(props) {
+  const { t, tasks } = props;
+  const sortedTasks = tasks
+    .sort((a, b) => {
+      const adate = a.completedAt ? a.completedAt : a.dueAt;
+      const bdate = b.completedAt ? b.completedAt : b.dueAt;
       return moment(adate).diff(moment(bdate));
     });
 
-    const doneTasks = sortedTasks
-      .filter(item => item.completedAt !== null)
-      .map((item, index) => (
-        <ListGroupItem key={item.id} className={`state--${item.state}`}>
-          <TaskWrapper>
-            <TaskMeta>
-              <Icon name="check" className="text-black-50 mr-2" alt={t('action-task-done')}/>
-              <Date>{TaskList.parseTimestamp(item.completedAt)}</Date>
-            </TaskMeta>
-            <TaskContent>
-              <h6>{item.name}</h6>
-              <div className="text-content"><small><span dangerouslySetInnerHTML={{ __html: item.comment }} /></small></div>
-            </TaskContent>
-          </TaskWrapper>
-        </ListGroupItem>
-      ));
-
-    const undoneTasks = sortedTasks.map((item, index) => (
-      item.completedAt === null
-            && (
-            <ListGroupItem key={item.id} className={`state--${item.state}`}>
-              <TaskWrapper>
-                <TaskMeta>
-                  <Icon name="calendar" className="text-black-50 mr-2" alt={t('action-task-todo')}/>
-                  <Date>{TaskList.parseTimestamp(item.dueAt)}</Date>
-                </TaskMeta>
-                <TaskContent>
-                  <h6>{item.name}</h6>
-                  <div className="text-content"><small><span dangerouslySetInnerHTML={{ __html: item.comment }} /></small></div>
-                </TaskContent>
-              </TaskWrapper>
-            </ListGroupItem>
-            )
+  const doneTasks = sortedTasks
+    .reverse()
+    .filter((item) => item.completedAt !== null)
+    .map((item) => (
+      <ListGroupItem key={item.id} className={`state--${item.state}`}>
+        <TaskWrapper>
+          <TaskMeta>
+            <Icon name="check" className="text-black-50 mr-2" alt={t('action-task-done')} />
+            <Date>{parseTimestamp(item.completedAt)}</Date>
+          </TaskMeta>
+          <TaskContent>
+            <h6>{item.name}</h6>
+            <div className="text-content">
+              <small>
+                <span dangerouslySetInnerHTML={{ __html: item.comment }} />
+              </small>
+            </div>
+          </TaskContent>
+        </TaskWrapper>
+      </ListGroupItem>
     ));
 
-    return (
-      <div>
-        { doneTasks.length > 0 && (
-          <ListGroup className="mb-5">
-            <h5 className="mb-3">{ t('action-tasks-done') }</h5>
-            {doneTasks}
-          </ListGroup>
-        )}
-        { undoneTasks.length > 0
-          ? (
-            <ListGroup className="mb-5">
-              <h5 className="mb-3">{ t('action-tasks-todo') }</h5>
-              {undoneTasks}
-            </ListGroup>
-          )
-          : <h5>{ t('action-tasks-todo-empty') }</h5>
-        }
-      </div>
+  const undoneTasks = sortedTasks
+    .filter((item) => item.completedAt === null)
+    .map((item) => (
+      <ListGroupItem key={item.id} className={`state--${item.state}`}>
+        <TaskWrapper>
+          <TaskMeta>
+            <Icon name="calendar" className="text-black-50 mr-2" alt={t('action-task-todo')} />
+            <Date>{parseTimestamp(item.dueAt)}</Date>
+          </TaskMeta>
+          <TaskContent>
+            <h6>{item.name}</h6>
+            <div className="text-content">
+              <small>
+                <span dangerouslySetInnerHTML={{ __html: item.comment }} />
+              </small>
+            </div>
+          </TaskContent>
+        </TaskWrapper>
+      </ListGroupItem>
+    ));
 
-    );
-  }
+  return (
+    <div>
+      { undoneTasks.length > 0
+        ? (
+          <ListGroup className="mb-5">
+            <h5 className="mb-3">{ t('action-tasks-todo') }</h5>
+            {undoneTasks}
+          </ListGroup>
+        )
+        : <h5 className="text-muted mb-4">{ t('action-tasks-todo-empty') }</h5> }
+      { doneTasks.length > 0 && (
+        <ListGroup className="mb-5">
+          <h5 className="mb-3">{ t('action-tasks-done') }</h5>
+          {doneTasks}
+        </ListGroup>
+      )}
+    </div>
+
+  );
 }
 
+TaskList.propTypes = {
+  t: PropTypes.func.isRequired,
+  tasks: PropTypes.arrayOf(PropTypes.shape).isRequired,
+};
 
 export default withTranslation('common')(TaskList);
