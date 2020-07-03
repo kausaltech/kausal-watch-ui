@@ -463,7 +463,7 @@ $input-padding-x:                         $input-btn-padding-x;
 //$input-font-family:                     $input-btn-font-family !default;
 //$input-font-size:                       $input-btn-font-size !default;
 //$input-font-weight:                     $font-weight-base !default;
-//$input-line-height:                     $input-btn-line-height !default;
+$input-line-height:                     $input-btn-line-height !default;
 
 //$input-padding-y-sm:                    $input-btn-padding-y-sm !default;
 //$input-padding-x-sm:                    $input-btn-padding-x-sm !default;
@@ -475,12 +475,12 @@ $input-padding-x:                         $input-btn-padding-x;
 //$input-font-size-lg:                    $input-btn-font-size-lg !default;
 //$input-line-height-lg:                  $input-btn-line-height-lg !default;
 
-$input-bg:                                transparent;
+$input-bg:                                $white;
 //$input-disabled-bg:                     $gray-200 !default;
 
 //$input-color:                           $gray-700 !default;
 $input-border-color:                      $gray-600;
-$input-border-width:                      $input-btn-border-width;
+$input-border-width:                      1px;
 //$input-box-shadow:                      inset 0 1px 1px rgba($black, .075) !default;
 
 $input-border-radius:                     2px;
@@ -587,7 +587,7 @@ $custom-select-height:                $input-height;
 //$custom-select-disabled-bg:         $gray-200 !default;
 //$custom-select-bg-size:             8px 10px !default; // In pixels because image dimensions
 //$custom-select-indicator-color:     $gray-800 !default;
-//$custom-select-indicator:           url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='4' height='5' viewBox='0 0 4 5'><path fill='#{$custom-select-indicator-color}' d='M2 0L0 2h4zm0 5L0 3h4z'/></svg>") !default;
+$custom-select-indicator:           url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='4' height='5' viewBox='0 0 4 5'><path fill='#{$custom-select-indicator-color}' d='M2 0L0 2h4zm0 5L0 3h4z'/></svg>") !default;
 //$custom-select-background:          escape-svg($custom-select-indicator) no-repeat right $custom-select-padding-x center / $custom-select-bg-size !default; // Used so we can have multiple background elements (e.g., arrow and feedback icon)
 
 //$custom-select-feedback-icon-padding-right: add(1em * .75, (2 * $custom-select-padding-y * .75) + $custom-select-padding-x + $custom-select-indicator-padding) !default;

@@ -100,6 +100,16 @@ $input-btn-padding-x:           1rem;
 $btn-border-radius:             0;
 $btn-border-width:        2px;
 
+/////// FORMS
+
+$input-padding-y:            $input-btn-padding-y;
+$input-padding-x:            $input-btn-padding-x;
+$input-bg:                   #ffffff;
+$input-border-width:         2px;
+$input-line-height:          1.5;
+$input-border-radius:        2px;
+$custom-select-indicator:    url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQiIGhlaWdodD0iMTQiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTExLjg5NiAzTDcgNy44NDIgMi4xMDQgMyAwIDUuMDggNyAxMmw3LTYuOTJMMTEuODk2IDN6IiBmaWxsPSIjMDAwIi8+PC9zdmc+") !default;
+
 /////// NAV
 
 $brand-nav-background:              $brand-dark;

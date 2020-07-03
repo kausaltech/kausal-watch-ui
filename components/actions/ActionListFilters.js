@@ -1,11 +1,13 @@
 import React from 'react';
 import { Spring, Transition } from 'react-spring/renderprops.cjs';
 import {
-  CustomInput as BaseCustomInput, Input, FormGroup, Label, Row, Col, Badge, Button
+  CustomInput as BaseCustomInput, FormGroup, Label, Row, Col, Badge, Button
 } from 'reactstrap';
 
 import styled from 'styled-components';
 import { withTranslation } from '../../common/i18n';
+import TextInput from '../common/TextInput';
+import DropDown from '../common/DropDown';
 
 const CustomInput = styled(BaseCustomInput)`
   background-color: transparent !important;
@@ -117,55 +119,71 @@ class ActionListFilters extends React.Component {
         >
           {(props) => (
             <Row style={props}>
-              <Col sm="12" md={{ size: 6 }} lg="6">
-                <FormGroup>
-                  <Label for="catfield">{ t('filter-category') }</Label>
-                  <CustomInput type="select" id="catfield" name="category" value={category} onChange={this.onCatBtnClick} className="mb-2">
-                    <option value="">{ t('filter-all-categories') }</option>
-                    {rootCategories.map(cat => (
-                      <option value={cat.id} key={cat.id}>{ this.getCategoryName(cat.id) }</option>
-                    ))}
-                  </CustomInput>
-                </FormGroup>
+              <Col sm="12" md={{ size: 6 }} lg="6" className="mb-2 d-flex align-items-end">
+                <DropDown
+                  label={t('filter-category') }
+                  id="catfield"
+                  name="category"
+                  value={category}
+                  onChange={this.onCatBtnClick}
+                >
+                  <option value="">{ t('filter-all-categories') }</option>
+                  {rootCategories.map(cat => (
+                    <option value={cat.id} key={cat.id}>{ this.getCategoryName(cat.id) }</option>
+                  ))}
+                </DropDown>
               </Col>
-              <Col sm="12" md={{ size: 6 }} lg="6">
-                <FormGroup>
-                  <Label for="orgfield">{ t('filter-organization') }</Label>
-                  <CustomInput type="select" id="orgfield" name="organization" value={organization} onChange={this.onOrgBtnClick} className="mb-2">
-                    <option value="">{ t('filter-all-organizations') }</option>
-                    {orgs.map((org) => (
-                      <option value={org.id} key={org.id}>{ this.getOrganizationName(org.id) }</option>
-                    ))}
-                  </CustomInput>
-                </FormGroup>
+              <Col sm="12" md={{ size: 6 }} lg="6" className="mb-2 d-flex align-items-end">
+                <DropDown
+                  label={t('filter-organization')}
+                  id="orgfield"
+                  name="organization"
+                  value={organization}
+                  onChange={this.onOrgBtnClick}
+                >
+                  <option value="">{ t('filter-all-organizations') }</option>
+                  {orgs.map((org) => (
+                    <option value={org.id} key={org.id}>{ this.getOrganizationName(org.id) }</option>
+                  ))}
+                </DropDown>
               </Col>
-              <Col sm="12" md={{ size: 6 }} lg="4">
-                <FormGroup>
-                  <Label for="impactfield">{ t('filter-impact') }</Label>
-                  <CustomInput type="select" id="impactfield" name="impact" value={impact} onChange={this.onImpactBtnClick} className="mb-2">
-                    <option value="">{ t('filter-all-impacts') }</option>
-                    {impacts.map((impact) => (
-                      <option value={impact.id} key={impact.id}>{ impact.name }</option>
-                    ))}
-                  </CustomInput>
-                </FormGroup>
+              <Col sm="12" md={{ size: 6 }} lg="4" className="mb-2 d-flex align-items-end">
+                <DropDown
+                  label={t('filter-impact')}
+                  id="impactfield"
+                  name="impact"
+                  value={impact}
+                  onChange={this.onImpactBtnClick}
+                >
+                  <option value="">{ t('filter-all-impacts') }</option>
+                  {impacts.map((item) => (
+                    <option value={item.id} key={item.id}>{ item.name }</option>
+                  ))}
+                </DropDown>
               </Col>
-              <Col sm="12" md={{ size: 6 }} lg="4">
-                <FormGroup>
-                  <Label for="scopefield">{ t('filter-emission-scope') }</Label>
-                  <CustomInput type="select" id="scopefield" name="emissionscope" value={scope} onChange={this.onEmissionScopeBtnClick} className="mb-2">
-                    <option value="">{ t('filter-all-emission-scopes') }</option>
-                    {emissionScopes.map((es) => (
-                      <option value={es.id} key={es.id}>{ es.name }</option>
-                    ))}
-                  </CustomInput>
-                </FormGroup>
+              <Col sm="12" md={{ size: 6 }} lg="4" className="mb-2 d-flex align-items-end">
+                <DropDown
+                  label={ t('filter-emission-scope') }
+                  id="scopefield"
+                  name="emissionscope"
+                  value={scope}
+                  onChange={this.onEmissionScopeBtnClick}
+                >
+                  <option value="">{ t('filter-all-emission-scopes') }</option>
+                  {emissionScopes.map((es) => (
+                    <option value={es.id} key={es.id}>{ es.name }</option>
+                  ))}
+                </DropDown>
               </Col>
               <Col sm="12" md={{ size: 12 }} lg="4">
-                <FormGroup>
-                  <Label for="searchfield">{ t('filter-text') }</Label>
-                  <Input name="search" id="searchfield" placeholder={t('filter-text-default')} value={filters.text || ''} onChange={this.onSearchChange} />
-                </FormGroup>
+                <TextInput
+                  label={t('filter-text')}
+                  id="searchfield"
+                  name="search"
+                  placeholder={t('filter-text-default')}
+                  value={filters.text || ''}
+                  onChange={this.onSearchChange}
+                />
               </Col>
             </Row>
           )}
