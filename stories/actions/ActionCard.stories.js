@@ -1,8 +1,7 @@
 import React, { useContext } from 'react';
 import { ThemeContext } from 'styled-components';
 
-import ActionHighlightCard from '../../components/actions/ActionHighlightCard';
-import ActionStatus from '../../components/actions/ActionStatus';
+import ActionCard from '../../components/actions/ActionCard';
 
 const actionProp = {
   identifier: '24',
@@ -12,6 +11,7 @@ const actionProp = {
     identifier: 'on_time',
   },
   completion: 50,
+  mergedWith: null,
 };
 
 const actionPropCompleted = {
@@ -22,6 +22,7 @@ const actionPropCompleted = {
     identifier: 'completed',
   },
   completion: 100,
+  mergedWith: null,
 };
 
 const actionPropLate= {
@@ -32,6 +33,7 @@ const actionPropLate= {
     identifier: 'late',
   },
   completion: 15,
+  mergedWith: null,
 };
 
 const actionPropSeverelyLate= {
@@ -42,10 +44,22 @@ const actionPropSeverelyLate= {
     identifier: 'severely_late',
   },
   completion: 5,
+  mergedWith: null,
+};
+
+const actionPropMerged= {
+  identifier: '68',
+  name: 'This action is merged',
+  status: {
+    name: 'Severely Late',
+    identifier: 'severely_late',
+  },
+  completion: 0,
+  mergedWith: { identifier: '222' },
 };
 
 export default {
-  title: 'Action',
+  title: 'Actions',
 };
 
 const ActionCards = () => {
@@ -55,55 +69,35 @@ const ActionCards = () => {
     <div className="container" style={{ backgroundColor: theme.neutralLight, color: theme.themeColors.light }}>
       <div className="row p-2 pm-5">
         <div className="col col-sm-8 col-md-6">
-          <ActionHighlightCard
+          <ActionCard
             action={actionPropCompleted}
             id="12"
-            imageUrl="https://source.unsplash.com/collection/1597991"
           />
           <br />
-          <ActionHighlightCard
+          <ActionCard
             action={actionProp}
             id="12"
-            imageUrl="https://source.unsplash.com/collection/1597991"
           />
           <br />
-          <ActionHighlightCard
+          <ActionCard
             action={actionPropLate}
             id="12"
-            imageUrl="https://source.unsplash.com/collection/1597991"
           />
           <br />
-          <ActionHighlightCard
+          <ActionCard
             action={actionPropSeverelyLate}
             id="12"
-            imageUrl="https://source.unsplash.com/collection/1597991"
           />
+          <br />
+          <ActionCard
+            action={actionPropMerged}
+            id="12"
+          />
+          <br />
         </div>
       </div>
     </div>
   );
 };
 
-export const ActionHighlightCardStory = (theme) => <ActionCards theme={theme} />;
-
-export const ActionStatusStory = () => {
-  return (
-    <div className="row">
-      <div className="col-6 p-5">
-        <ActionStatus identifier="on_time" name="On Time" completion="90" />
-      </div>
-      <div className="col-6 p-5">
-        <ActionStatus identifier="completed" name="Completed" completion="50" />
-      </div>
-      <div className="col-6 p-5">
-        <ActionStatus identifier="late" name="Late" completion="25" />
-      </div>
-      <div className="col-6 p-5">
-        <ActionStatus identifier="severely_late" name="Severely Late" completion="10" />
-      </div>
-      <div className="col-6 p-5">
-        <ActionStatus identifier="not_started" name="Not Started" completion="0" />
-      </div>
-    </div>
-  );
-};
+export const ActionCardStory = (theme) => <ActionCards theme={theme} />;

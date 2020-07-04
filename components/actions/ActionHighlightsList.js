@@ -46,9 +46,6 @@ export const GET_ACTION_LIST = gql`
 const CardContainer = styled(Col)`
   margin-bottom: 1.5rem;
 
-  .lazyload-wrapper {
-    width: 100%;
-  }
   .card {
     height: 100%;
   }

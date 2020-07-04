@@ -14,6 +14,10 @@ const ActionGroupHeader = styled.h2`
 
 const ActionGroup = styled(Row)`
   margin-bottom: 2rem;
+
+  .card {
+    height: 100%;
+  }
 `;
 
 
@@ -47,7 +51,15 @@ function ActionCardList({ actions }) {
             <ActionGroupHeader>{group.name}</ActionGroupHeader>
           </Col>
           {group.elements.map((item) => (
-            <Col xs="6" sm="4" lg="3" xl="2" key={item.id} className="mb-4 d-flex align-items-stretch" style={{'transition': 'all 0.5s ease'}}>
+            <Col
+              xs="6"
+              sm="4"
+              lg="3"
+              xl="2"
+              key={item.id}
+              className="mb-4 d-flex align-items-stretch"
+              style={{ transition: 'all 0.5s ease' }}
+            >
               <ActionCard action={item} />
             </Col>
           ))}

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { lighten, darken } from 'polished';
+import { lighten, darken, transparentize } from 'polished';
 import {
   Progress,
 } from 'reactstrap';
@@ -35,25 +35,26 @@ const ACTION_CARD_FRAGMENT = gql`
   }
 `;
 
+const StyledActionLink = styled.a`
+  text-decoration: none;
+  display: flex;
+
+  &:hover {
+    text-decoration: none;
+  }
+`;
+
 const ActionCardElement = styled.div`
+  width: 100%;
   background: #ffffff;
-  height: 100%;
+  border-width: ${(props) => props.theme.cardBorderWidth};
+  border-radius: ${(props) => props.theme.cardBorderRadius};
+  overflow: hidden;
   box-shadow: 2px 2px 8px rgba(82,90,101,0.1);
   transition: all 0.5s ease;
   &:hover {
     transform: translateY(-5px);
-    box-shadow: 4px 4px 8px rgba(82,90,101,0.5);
-  }
-`;
-
-const StretchLink = styled.a`
-  display: block;
-  width: 100%;
-  height: 100%;
-  text-decoration: none;
-
-  &:hover {
-    text-decoration: none;
+    box-shadow: 4px 4px 8px ${(props) => transparentize(0.8, props.theme.themeColors.dark)};
   }
 `;
 
@@ -76,10 +77,6 @@ const ActionStatusArea = styled.div`
   min-height: 100px;
 
   &.bg-not_started {
-    background-color: ${(props) => props.theme.themeColors.light};
-  }
-
-  &.bg-merged {
     background-color: ${(props) => props.theme.themeColors.light};
   }
 
@@ -111,6 +108,13 @@ const ActionStatusArea = styled.div`
       background-color: ${(props) => darken(0.15, props.theme.themeColors.danger)};
     }
   }
+
+  &.bg-merged {
+    background-color: ${(props) => props.theme.themeColors.light};
+    .progress-bar {
+      background-color: ${(props) => lighten(0.5, props.theme.themeColors.dark)};
+    }
+  }
 `;
 
 const ActionStatus = styled.div`
@@ -119,7 +123,7 @@ const ActionStatus = styled.div`
 const StatusName = styled.div`
   margin-left: .5rem;
   font-size: 1rem;
-  font-weight: 600
+  font-weight: 700
 `;
 
 const StatusProgress = styled(Progress)`
@@ -129,9 +133,9 @@ const StatusProgress = styled(Progress)`
 `;
 
 const StyledCardTitle = styled.div`
-  min-height: 4.8rem;
+  min-height: calc(1.5rem + 1.2em * 3);
   margin-bottom: 0;
-  padding: .5rem;
+  padding: .75rem;
   color: #000000;
   background: #ffffff;
   font-size: 1rem;
@@ -154,7 +158,7 @@ function ActionCard(props) {
 
   return (
     <ActionLink action={action}>
-      <StretchLink>
+      <StyledActionLink>
         <ActionCardElement>
           <ActionStatusArea className={bgClass}>
             <ActionNumber className="action-number">{action.identifier}</ActionNumber>
@@ -168,7 +172,7 @@ function ActionCard(props) {
           </ActionStatusArea>
           <StyledCardTitle>{actionName}</StyledCardTitle>
         </ActionCardElement>
-      </StretchLink>
+      </StyledActionLink>
     </ActionLink>
   );
 }
@@ -182,6 +186,7 @@ ActionCard.propTypes = {
       identifier: PropTypes.string,
       name: PropTypes.string,
     }),
+    mergedWith: PropTypes.object,
   }).isRequired,
   t: PropTypes.func.isRequired,
 };
