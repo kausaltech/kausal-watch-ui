@@ -147,15 +147,6 @@ const OfficialText = styled.div`
   margin-bottom: 3rem;
 `;
 
-const CategoryBadge = styled(Badge)`
-  margin-right: 1em;
-  white-space: normal;
-  text-align: left;
-  font-size: 1rem;
-  color: ${(props) => props.theme.themeColors.light};
-  background-color: ${(props) => props.theme.brandDark};
-`;
-
 const SolidSection = styled.div`
   padding: 2rem 0;
 
@@ -164,7 +155,10 @@ const SolidSection = styled.div`
 
 const ActionNumberBadge = styled(Badge)`
   font-size: 1rem;
-  padding: .2rem;
+  padding: .25rem;
+  border-radius: ${(props) => props.theme.btnBorderRadius};
+  background-color: ${(props) => props.theme.brandDark};
+  color: ${(props) => props.theme.themeColors.white};
 `;
 
 const MergedActionSection = styled.div`

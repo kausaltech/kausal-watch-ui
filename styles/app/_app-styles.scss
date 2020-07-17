@@ -120,6 +120,10 @@ blockquote {
     word-wrap: break-word;
     word-break: break-all;
     word-break: break-word;
+
+    &:hover {
+      text-decoration: none;
+    }
   }
 
   h3, h4, h5 {
