@@ -28,6 +28,7 @@ const StyledCard = styled(Card)`
 const CardLink = styled.a`
   text-decoration: none;
   color: ${(props) => props.theme.neutralDark};
+  width: 100%;
 
   &:hover {
     text-decoration: none;

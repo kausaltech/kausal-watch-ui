@@ -40,7 +40,7 @@ Icon.defaultProps = {
 };
 
 Icon.propTypes = {
-  theme: PropTypes.shape.isRequired,
+  theme: PropTypes.shape({}).isRequired,
   name: PropTypes.string,
   color: PropTypes.string,
   width: PropTypes.string,

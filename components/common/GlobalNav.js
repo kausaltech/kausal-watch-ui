@@ -249,7 +249,7 @@ GlobalNav.propTypes = {
     children: PropTypes.array,
   })).isRequired,
   active: PropTypes.string,
-  theme: PropTypes.shape.isRequired,
+  theme: PropTypes.shape({}).isRequired,
   fullwidth: PropTypes.bool,
   sticky: PropTypes.bool,
 };

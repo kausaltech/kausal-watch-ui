@@ -52,8 +52,10 @@ class EmissionScopeIcon extends React.Component {
     // Fade effect looks jerky for some reason
     const fade = false;
     return (
-      <IconContainer style={{ width: size, height: size }}>
-        <Icon id={iconId} name={iconName} color={color} width={size} height={size} />
+      <>
+        <IconContainer id={iconId} style={{ width: size, height: size }}>
+          <Icon name={iconName} color={color} width={size} height={size} />
+        </IconContainer>
         <Tooltip
           placement="top"
           isOpen={this.state.tooltipOpen}
@@ -62,10 +64,10 @@ class EmissionScopeIcon extends React.Component {
           fade={fade}
           innerClassName="emission-scope-icon-tooltip"
         >
-          <strong>{name}</strong><br />
+          <strong>{name}</strong><br/>
           {shortDescription}
         </Tooltip>
-      </IconContainer>
+      </>
     );
   }
 }

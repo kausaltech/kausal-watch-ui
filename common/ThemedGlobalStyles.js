@@ -35,9 +35,13 @@ function ThemedGlobalStyles(props) {
   );
 }
 
+ThemedGlobalStyles.defaultProps = {
+  children: '',
+};
+
 ThemedGlobalStyles.propTypes = {
-  theme: PropTypes.shape.isRequired,
-  children: PropTypes.node.isRequired,
+  theme: PropTypes.shape({}).isRequired,
+  children: PropTypes.node,
 };
 
 export default withTheme(ThemedGlobalStyles);
