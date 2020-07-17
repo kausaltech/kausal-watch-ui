@@ -1,14 +1,27 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Badge, Alert, Card, CardBody, CardTitle, CardFooter } from 'reactstrap';
-import { Link } from '../../routes';
+import {
+  Badge as BaseBadge,
+  Card as BaseCard,
+  CardBody,
+  CardFooter,
+} from 'reactstrap';
+import styled from 'styled-components';
+
 import { ActionLink, IndicatorLink } from '../../common/links';
-
 import IndicatorGraph from '../graphs/IndicatorGraph';
-
 import Icon from '../common/Icon';
 import PlanContext from '../../context/plan';
 
+const Card = styled(BaseCard)`
+  border-radius: ${(props) => props.theme.cardBorderRadius};
+`;
+
+const Badge = styled(BaseBadge)`
+  border-radius: ${(props) => props.theme.btnBorderRadius};
+  color: ${(props) => props.theme.themeColors.white};
+  background-color: ${(props) => props.theme.brandDark};
+`;
 
 function ActionIndicator(props) {
   const { relatedIndicator, actionId } = props;
@@ -17,17 +30,12 @@ function ActionIndicator(props) {
   const actions = indicator.actions.filter(action => action.id !== actionId);
 
   return (
-    <Card className="mb-3">
-      {(indicator.latestGraph || indicator.latestValue)
-        ? <IndicatorGraph indicator={indicator} plan={plan} />
-        : (
-          <CardBody>
-            <CardTitle>
-              <h5>{indicator.name}</h5>
-            </CardTitle>
-          </CardBody>
-        )
-      }
+    <Card className="mb-4">
+      <CardBody>
+        {(indicator.latestGraph || indicator.latestValue)
+          ? <IndicatorGraph indicator={indicator} plan={plan} />
+          : <h5 className="mb-0">{indicator.name}</h5>}
+      </CardBody>
       <CardFooter>
         {actions.length > 0 && (
           <span>
@@ -57,7 +65,11 @@ function ActionIndicators(props) {
   return (
     <div>
       {relatedIndicators.map(relatedIndicator => (
-        <ActionIndicator key={relatedIndicator.indicator.id} actionId={actionId} relatedIndicator={relatedIndicator} />
+        <ActionIndicator
+          key={relatedIndicator.indicator.id}
+          actionId={actionId}
+          relatedIndicator={relatedIndicator}
+        />
       ))}
     </div>
   );

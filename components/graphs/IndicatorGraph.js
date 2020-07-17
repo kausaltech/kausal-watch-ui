@@ -340,16 +340,11 @@ function IndicatorGraph(props) {
     layout.autosize = true;
     layout.colorway = plotColors;
     layout.font = { family: theme.fontFamilySansSerif, size: 12 };
-    if (typeof layout.title === 'object' && layout.title !== null) {
-      layout.title.text = `<b>${layout.title.text}</b>`;
-    } else if (typeof layout.title === 'string') {
-      layout.title = { text: `<b>${layout.title}</b>` };
-    }
+    layout.title = null;
     layout.xaxis = layout.xaxis || {};
     layout.xaxis.tickfont = layout.xaxis.tickfont || {};
     layout.xaxis.tickfont.family = theme.fontFamilySansSerif;
     layout.xaxis.tickfont.size = 14;
-
     layout.yaxis = layout.yaxis || {};
     layout.yaxis.tickfont = layout.yaxis.font || {};
     layout.yaxis.tickfont.family = theme.fontFamilySansSerif;
@@ -357,7 +352,7 @@ function IndicatorGraph(props) {
   }
 
   return (
-    <Card>
+
       <Query query={GET_INDICATOR_GRAPH_DATA} variables={{ id: indicator.id, plan: plan.identifier }}>
         {({ loading, error, data }) => {
           if (loading) return <ContentLoader />;
@@ -380,10 +375,18 @@ function IndicatorGraph(props) {
           } else {
             plot = generatePlotFromValues(indicator, i18n, plotColors);
           }
-          fixLayout(indicator, plot);
+          let plotTitle = '';
+          if (typeof plot.layout.title === 'object' && plot.layout.title !== null) {
+            plotTitle = plot.layout.title.text;
+          } else if (typeof plot.layout.title === 'string') {
+            plotTitle = plot.layout.title;
+          }
+
+          fixLayout(indicator, plot); // TODO: do not mutate argument
 
           return (
-            <CardBody style={{ height: '400px' }}>
+            <div>
+              <h5 className="mb-0">{plotTitle}</h5>
               <Plot
                 data={plot.data}
                 layout={plot.layout}
@@ -396,11 +399,10 @@ function IndicatorGraph(props) {
                   staticPlot: false,
                 }}
               />
-            </CardBody>
+            </div>
           );
         }}
       </Query>
-    </Card>
   );
 }
 
