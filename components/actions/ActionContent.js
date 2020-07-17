@@ -8,7 +8,6 @@ import styled, { withTheme } from 'styled-components';
 import gql from 'graphql-tag';
 import moment from '../../common/moment';
 
-import { ActionLink, ActionListLink } from '../../common/links';
 import { withTranslation } from '../../common/i18n';
 import PlanContext from '../../context/plan';
 
@@ -21,12 +20,11 @@ import ContactPersons from './ContactPersons';
 import ActionStatus from './ActionStatus';
 import ActionImpact from './ActionImpact';
 import ActionIndicators from './ActionIndicators';
-import ActionBgImage from './ActionBgImage';
+import ActionHero from './ActionHero';
 import ActionPager from './ActionPager';
 import ActionUpdatesList from './ActionUpdatesList';
 import EmissionScopeIcon from './EmissionScopeIcon';
 import ContentLoader from '../common/ContentLoader';
-import Icon from '../common/Icon';
 import ErrorMessage from '../common/ErrorMessage';
 import { getActionImageURL } from '../../common/utils';
 
@@ -129,35 +127,6 @@ query ActionDetails($plan: ID!, $id: ID!) {
   }
 }`;
 
-const ActionHero = styled.div`
-  position: relative;
-  margin-bottom: 3rem;
-  a {
-    color: ${(props) => props.theme.brandLight};
-  }
-`;
-
-const OverlayContainer = styled.div`
-  color: white;
-  padding: 2rem 0;
-`;
-
-const ActionHeadline = styled.h1`
-  hyphens: auto;
-  margin-bottom: 2rem;
-
-  @media (max-width: ${(props) => props.theme.breakpointMd}) {
-    font-size: 1.75em;
-  }
-`;
-
-const ActionNumber = styled.span`
-  font-size: 3.5rem;
-  @media (max-width: ${(props) => props.theme.breakpointMd}) {
-    font-size: 2.5rem;
-  }
-`;
-
 const LastUpdated = styled.div`
   margin-bottom: 1em;
   color: ${(props) => props.theme.themeColors.dark};
@@ -249,69 +218,23 @@ function ActionDetails(props) {
 
   const { categories, emissionScopes, mergedActions } = action;
   const hasMergedActions = mergedActions.length > 0;
+  const imageUrl=getActionImageURL(plan, action, 1200, 630);
 
   return (
     <div>
       <Meta
         title={`${t('action')} ${action.identifier}`}
-        shareImageUrl={getActionImageURL(plan, action, 1200, 630)}
+        shareImageUrl={imageUrl}
         description={`${action.name}`}
       />
-      <ActionHero>
-        <ActionBgImage action={action} width={1200} height={600} color={theme.imageOverlay}>
-          <OverlayContainer>
-            <Container>
-              <Row>
-                <Col md="10">
-                  <ActionListLink>
-                    <a>
-                      <h4>{ t('actions') }</h4>
-                    </a>
-                  </ActionListLink>
-                  <p>
-                    { action.previousAction
-                      && (
-                        <ActionLink action={action.previousAction}>
-                          <a href>
-                            <Icon name="arrowLeft" color={theme.brandLight} />
-                            {' '}
-                            { t('previous') }
-                          </a>
-                        </ActionLink>
-                      )}
-                    { action.nextAction
-                      && action.previousAction
-                      && (
-                        <span>
-                          {' '}
-                          |
-                          {' '}
-                        </span>
-                      )}
-                    { action.nextAction
-                      && (
-                        <ActionLink action={action.nextAction}>
-                          <a href>
-                            { t('next') }
-                            <Icon name="arrowRight" color={theme.brandLight} />
-                          </a>
-                        </ActionLink>
-                      )}
-                  </p>
-                  <ActionHeadline>
-                    <ActionNumber>{action.identifier}</ActionNumber>
-                    <br />
-                    {action.name}
-                  </ActionHeadline>
-                  {categories.map((item) => (
-                    <CategoryBadge key={item.id} className="mr-3">{item.name}</CategoryBadge>
-                  ))}
-                </Col>
-              </Row>
-            </Container>
-          </OverlayContainer>
-        </ActionBgImage>
-      </ActionHero>
+      <ActionHero
+        categories={action.categories}
+        previousAction={action.previousAction}
+        nextAction={action.nextAction}
+        identifier={action.identifier}
+        name={action.name}
+        imageUrl={imageUrl}
+      />
       <Container>
         <Row>
           <Col md="7" lg="8">
