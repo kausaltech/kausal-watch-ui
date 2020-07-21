@@ -69,15 +69,14 @@ function TaskList(props) {
       return moment(adate).diff(moment(bdate));
     });
 
-  const doneTasks = sortedTasks
-    .reverse()
-    .filter((item) => item.completedAt !== null)
+  const undoneTasks = sortedTasks
+    .filter((item) => item.completedAt === null)
     .map((item) => (
       <ListGroupItem key={item.id} className={`state--${item.state}`}>
         <TaskWrapper>
           <TaskMeta>
-            <Icon name="check" className="text-black-50 mr-1" alt={t('action-task-done')} />
-            <Date>{parseTimestamp(item.completedAt)}</Date>
+            <Icon name="calendar" className="text-black-50 mr-2" alt={t('action-task-todo')} />
+            <Date>{parseTimestamp(item.dueAt)}</Date>
           </TaskMeta>
           <TaskContent>
             <h6>{item.name}</h6>
@@ -90,14 +89,15 @@ function TaskList(props) {
       </ListGroupItem>
     ));
 
-  const undoneTasks = sortedTasks
-    .filter((item) => item.completedAt === null)
+  const doneTasks = sortedTasks
+    .reverse()
+    .filter((item) => item.completedAt !== null)
     .map((item) => (
       <ListGroupItem key={item.id} className={`state--${item.state}`}>
         <TaskWrapper>
           <TaskMeta>
-            <Icon name="calendar" className="text-black-50 mr-1" alt={t('action-task-todo')} />
-            <Date>{parseTimestamp(item.dueAt)}</Date>
+            <Icon name="check" className="text-black-50 mr-2" alt={t('action-task-done')} />
+            <Date>{parseTimestamp(item.completedAt)}</Date>
           </TaskMeta>
           <TaskContent>
             <h6>{item.name}</h6>
