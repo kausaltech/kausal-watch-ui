@@ -37,6 +37,8 @@ const StyledFooter = styled.footer`
 `;
 
 const OrgBrand = styled.div`
+  margin-bottom: 2rem;
+
   svg {
     fill: #fff;
     max-height: 2.5rem;
