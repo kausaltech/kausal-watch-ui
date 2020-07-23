@@ -329,7 +329,7 @@ const HnhHero = () => (
               <Col sm="12" md={{ size: 10, offset: 1 }}>
                 <MainIllustration style={props}>
                   <img
-                    src="/static/images/hnh2035/main-illustration.svg"
+                    src="./static/images/hnh2035/main-illustration.svg"
                     alt="Piirroskuvitus Helsinki rantamaisema"
                   />
                 </MainIllustration>
@@ -356,7 +356,7 @@ const HnhHero = () => (
                       style={props}
                     >
                       <Illustration className="mr-4 w-50">
-                        <img src="/static/images/hnh2035/actions-illustration.svg" alt="Piirroskuvitus toimenpiteen valmistelua" />
+                        <img src="./static/images/hnh2035/actions-illustration.svg" alt="Piirroskuvitus toimenpiteen valmistelua" />
                       </Illustration>
                       <div>
                         <h3>Toimenpiteet</h3>
@@ -384,7 +384,7 @@ const HnhHero = () => (
                       style={props}
                     >
                       <Illustration className="mr-4 w-50">
-                        <img src="/static/images/hnh2035/indicators-illustration.svg" alt="Piirroskuvitus toimenpiteen mittaus" />
+                        <img src="./static/images/hnh2035/indicators-illustration.svg" alt="Piirroskuvitus toimenpiteen mittaus" />
                       </Illustration>
                       <div>
                         <h3>Mittarit</h3>

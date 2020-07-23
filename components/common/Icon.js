@@ -17,7 +17,7 @@ function Icon(props) {
   /* Find the correct icon file from static folder for now */
   /* TODO: Get themed icon url from API */
   const iconFileName = name.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2').toLowerCase();
-  const icon = `/static/icons/${theme.name}/${iconFileName}.svg`;
+  const icon = `./static/icons/${theme.name}/${iconFileName}.svg`;
 
   return (
     <SVG
