@@ -63,7 +63,7 @@ const DesignTokens = () =>
 };
 
 export default {
-  title: 'Basics',
+  title: 'Basics/Tokens',
   component: DesignTokens,
 };
 
@@ -74,7 +74,7 @@ TokensStory.story = {
 };
 
 export const TypeStory = () => (
-  <div>
+  <div className="container">
     <h1>Headline 1</h1>
     <h2>Headline 2</h2>
     <h3>Headline 3</h3>

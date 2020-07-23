@@ -63,6 +63,6 @@ InputStory.story = {
 };
 
 export default {
-  title: 'Inputs',
+  title: 'Forms/Inputs',
   component: InputStory,
 };

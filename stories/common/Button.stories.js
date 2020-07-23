@@ -55,6 +55,6 @@ ButtonsStory.story = {
 };
 
 export default {
-  title: 'Buttons',
+  title: 'Forms/Buttons',
   component: ButtonsStory,
 };

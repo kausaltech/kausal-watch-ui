@@ -3,7 +3,7 @@ import SiteFooter from '../../components/common/SiteFooter';
 import i18n from '../../.storybook/i18n';
 
 export default {
-  title: 'Footer',
+  title: 'Global/Footer',
 };
 
 const testPages = [

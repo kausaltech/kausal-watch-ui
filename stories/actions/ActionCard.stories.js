@@ -59,7 +59,7 @@ const actionPropMerged= {
 };
 
 export default {
-  title: 'Actions',
+  title: 'Action/Card',
 };
 
 const ActionCards = () => {

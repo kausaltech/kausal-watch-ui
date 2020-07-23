@@ -3,7 +3,7 @@ import GlobalNav from '../../components/common/GlobalNav';
 import i18n from '../../.storybook/i18n';
 
 export default {
-  title: 'Global Navigation',
+  title: 'Global/Global Navigation',
 };
 
 const testPages = [

@@ -4,7 +4,7 @@ import { ThemeContext } from 'styled-components';
 import TaskList from '../../components/actions/TaskList';
 
 export default {
-  title: 'Task List',
+  title: 'Action/Task List',
 };
 
 const tasksList = [

@@ -45,7 +45,7 @@ const actionPropSeverelyLate= {
 };
 
 export default {
-  title: 'Action',
+  title: 'Action/Highlight',
 };
 
 const ActionCards = () => {
@@ -84,9 +84,9 @@ const ActionCards = () => {
   );
 };
 
-export const ActionHighlightCardStory = (theme) => <ActionCards theme={theme} />;
+export const HighlightCards = (theme) => <ActionCards theme={theme} />;
 
-export const ActionStatusStory = () => {
+export const ActionStatusBars = () => {
   return (
     <div className="row">
       <div className="col-6 p-5">

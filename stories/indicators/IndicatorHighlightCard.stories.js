@@ -5,7 +5,7 @@ import i18n from '../../.storybook/i18n';
 import IndicatorHighlightCard from '../../components/indicators/IndicatorHighlightCard';
 
 export default {
-  title: 'Indicator',
+  title: 'Indicators/Card',
 };
 
 const IndicatorCards = () => {
@@ -53,4 +53,4 @@ const IndicatorCards = () => {
   );
 };
 
-export const IndicatorCardStory = (theme) => <IndicatorCards theme={theme} />;
+export const Cards = (theme) => <IndicatorCards theme={theme} />;

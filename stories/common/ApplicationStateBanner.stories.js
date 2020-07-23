@@ -4,7 +4,7 @@ import ApplicationStateBanner from '../../components/common/ApplicationStateBann
 import i18n from '../../.storybook/i18n';
 
 export default {
-  title: 'Application State',
+  title: 'Global/Application State',
 };
 
 export const ApplicationStateTesting = () => {

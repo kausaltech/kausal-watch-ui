@@ -4,7 +4,7 @@ import { ThemeContext } from 'styled-components';
 import ActionHero from '../../components/actions/ActionHero';
 
 export default {
-  title: 'Action Hero',
+  title: 'Action/Hero',
 };
 
 const categories = [{

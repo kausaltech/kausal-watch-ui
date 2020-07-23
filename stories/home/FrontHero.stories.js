@@ -5,7 +5,7 @@ import HnhHero from '../../components/HnhHero';
 import i18n from '../../.storybook/i18n';
 
 export default {
-  title: 'HomePageHero',
+  title: 'Global/Home Hero',
 };
 
 export const FullImageHero = () => {

@@ -11,7 +11,7 @@ const personProp = {
 };
 
 export default {
-  title: 'Contact Person',
+  title: 'Action/Contact Person',
 
 };
 
