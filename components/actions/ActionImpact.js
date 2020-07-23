@@ -1,10 +1,8 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import styled from 'styled-components'
+import React from 'react';
+import PropTypes from 'prop-types';
+import styled from 'styled-components';
 
-import Icon from '../common/Icon'
-import PlanContext from '../../context/plan'
-import { withTranslation } from '../../common/i18n'
+import Icon from '../common/Icon';
 
 const ImpactIcon = styled(Icon)`
   font-size: 1.5em;
@@ -23,13 +21,12 @@ const ImpactIcon = styled(Icon)`
 `;
 
 function ActionImpact(props) {
-  const plan = React.useContext(PlanContext);
-  const { t, identifier, name } = props;
-  const max = plan.actionImpacts.reduce((planMax, item) => {
-    const val = parseInt(item.identifier, 10);
-    if (!planMax || val > planMax) return val;
-    return planMax;
-  }, null);
+  const {
+    identifier,
+    name,
+    max,
+  } = props;
+
   const bullets = [];
   const num = Number(identifier);
 
@@ -65,10 +62,14 @@ function ActionImpact(props) {
   );
 }
 
+ActionImpact.defaultProps = {
+  max: 4,
+};
+
 ActionImpact.propTypes = {
   identifier: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
-  t: PropTypes.func.isRequired,
+  max: PropTypes.number,
 };
 
-export default withTranslation('common')(ActionImpact);
+export default ActionImpact;

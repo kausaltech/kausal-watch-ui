@@ -50,8 +50,24 @@ export default {
 export const normal = () => {
   return (
     <div className="row">
-      <div className="col-6 p-5">
-        <ActionImpact identifier="on_time" name="On Time" completion="90" />
+      <div className="col-8 p-5">
+        <ActionImpact
+          name="High Impact"
+          identifier="4"
+          max="4"
+        />
+        <br />
+        <ActionImpact
+          name="Very Low Impact"
+          identifier="1"
+          max="6"
+        />
+        <br />
+        <ActionImpact
+          name="Opposite Impact"
+          identifier="-4"
+          max="6"
+        />
       </div>
     </div>
   );

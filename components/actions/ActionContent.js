@@ -197,6 +197,14 @@ function MergedActionList(props) {
   );
 }
 
+function getMaxImpact(plan) {
+  const max = plan.actionImpacts.reduce((planMax, item) => {
+    const val = parseInt(item.identifier, 10);
+    if (!planMax || val > planMax) return val;
+    return planMax;
+  }, null);
+  return max;
+}
 function ActionDetails(props) {
   const {
     t,
@@ -289,7 +297,11 @@ function ActionDetails(props) {
               && (
               <ActionSection>
                 <h5>{ t('action-impact') }</h5>
-                <ActionImpact name={action.impact.name} identifier={action.impact.identifier} />
+                <ActionImpact
+                  name={action.impact.name}
+                  identifier={action.impact.identifier}
+                  max={getMaxImpact(plan)}
+                />
               </ActionSection>
               )}
             <ActionSection>
