@@ -27,6 +27,7 @@ function ResponsibleBadge(props) {
   let size = 'md';
   let ariaLabel;
 
+  // TODO: translate päävastuutaho
   if (index === 0) {
     size = 'lg';
     ariaLabel = `Päävastuutaho: ${name}`;
@@ -37,7 +38,7 @@ function ResponsibleBadge(props) {
   return (
     <ActionListLink query={{ organization: id }}>
       <BadgeTooltip
-        id={id}
+        id={`org-${id}`}
         name={name}
         ariaLabel={ariaLabel}
         abbreviation={abbreviation}
