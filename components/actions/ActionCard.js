@@ -38,6 +38,7 @@ const ACTION_CARD_FRAGMENT = gql`
 const StyledActionLink = styled.a`
   text-decoration: none;
   display: flex;
+  width: 100%;
 
   &:hover {
     text-decoration: none;
