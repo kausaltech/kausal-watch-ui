@@ -103,8 +103,11 @@ $btn-border-width:        2px;
 
 $input-padding-y:            $input-btn-padding-y;
 $input-padding-x:            $input-btn-padding-x;
+$input-bg:                   #ffffff;
+$input-border-width:         2px;
 $input-line-height:          1.5;
 $input-border-radius:        2px;
+$custom-select-indicator:    url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQiIGhlaWdodD0iMTQiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTExLjg5NiAzTDcgNy44NDIgMi4xMDQgMyAwIDUuMDggNyAxMmw3LTYuOTJMMTEuODk2IDN6IiBmaWxsPSIjMDAwIi8+PC9zdmc+") !default;
 
  /////// NAV
 
@@ -132,7 +135,17 @@ $input-border-radius:        2px;
 $card-border-width:                   0;
 $card-border-radius:                  0;
 
- 
+/////// BADGES
+
+$badge-border-radius:             0;
+$badge-padding-y:                 .5em;
+$badge-padding-x:                 .75em;
+$badge-font-weight:               400;
+
+/////// TABLES
+
+$table-head-bg:                   #f1f1f1;
+
  // Indicators
  $action-color: #00792D; //modified hel-tram for a11y
  $operational-indicator-color: #17ebba; // modified hel-copper for a11y

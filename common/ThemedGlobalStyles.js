@@ -15,6 +15,10 @@ const GlobalStyle = createGlobalStyle`
       color: ${(props) => props.theme.brandDark};
     }
   }
+
+  thead {
+    background-color: ${(props) => props.theme.tableHeadBg};
+  }
 `;
 
 function ThemedGlobalStyles(props) {

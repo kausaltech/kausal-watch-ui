@@ -13,8 +13,13 @@ const BadgeWrapper = styled.a`
 const StyledBadge = styled(Badge)`
   background-color: ${(props) => props.theme.brandDark};
   color: #ffffff;
+  border-radius: ${(props) => props.theme.badgeBorderRadius};
+  padding: ${(props) => props.theme.badgePaddingY} ${(props) => props.theme.badgePaddingX};
+  font-weight: ${(props) => props.theme.badgeFontWeight};
+  margin-right: .5rem;
+  margin-bottom: .5rem;
 
-  &.badge-pill.badge-secondary:hover {
+  &.badge-secondary:hover {
     background-color:  ${(props) => lighten(0.05, props.theme.brandDark)};
     color: ${(props) => props.theme.themeColors.white};
   }
@@ -46,7 +51,7 @@ class BadgeTooltip extends React.Component {
 
     return (
       <BadgeWrapper className={size} href={href}>
-        <StyledBadge pill id={badgeId} aria-label={ariaLabel}>{abbreviation || name}</StyledBadge>
+        <StyledBadge id={badgeId} aria-label={ariaLabel}>{abbreviation || name}</StyledBadge>
         <Tooltip placement="top" isOpen={tooltipOpen} target={badgeId} toggle={this.toggle}>
           {name}
         </Tooltip>

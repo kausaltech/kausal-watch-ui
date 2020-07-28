@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import {
   CustomInput as BaseCustomInput, Input, FormGroup, Label, Row, Col,
 } from 'reactstrap';
+import TextInput from '../common/TextInput';
+import DropDown from '../common/DropDown';
 
 import styled from 'styled-components';
 
@@ -55,30 +57,31 @@ class IndicatorListFilters extends React.Component {
       <div className="filters mb-5 mt-5">
         <Row>
           <Col sm="12" md="6">
-            <FormGroup>
-              <Label for="catfield">Rajaa teeman mukaan</Label>
-              <CustomInput
-                type="select"
-                id="catfield"
-                name="category"
-                value={activeCat}
-                onChange={this.onCatBtnClick}
-                className="mb-2"
-              >
-                <option value="">Kaikki teemat</option>
-                {sortedCats.map(cat => (
-                  <option value={cat.id} key={cat.id}>
-                    { `${this.getCategoryIdentifier(cat.id)} ${this.getCategoryName(cat.id)}` }
-                  </option>
-                ))}
-              </CustomInput>
-            </FormGroup>
+            <DropDown
+              label="Rajaa teeman mukaan"
+              type="select"
+              id="catfield"
+              name="category"
+              value={activeCat}
+              onChange={this.onCatBtnClick}
+              className="mb-2"
+            >
+              <option value="">Kaikki teemat</option>
+              {sortedCats.map(cat => (
+                <option value={cat.id} key={cat.id}>
+                  { `${this.getCategoryIdentifier(cat.id)} ${this.getCategoryName(cat.id)}` }
+                </option> 
+              ))}
+            </DropDown>
           </Col>
           <Col sm="12" md="6">
-            <FormGroup>
-              <Label for="searchfield">Etsi tekstistä</Label>
-              <Input name="search" id="searchfield" placeholder="Hae kuvauksista" onChange={this.onSearchChange} />
-            </FormGroup>
+            <TextInput
+              label="Etsi tekstistä"
+              name="search"
+              id="searchfield"
+              placeholder="Hae kuvauksista"
+              onChange={this.onSearchChange}
+            />
           </Col>
         </Row>
       </div>
