@@ -19,7 +19,7 @@ import { Meta } from '../layout';
 
 import IndicatorGraph from '../graphs/IndicatorGraph';
 import IndicatorValueSummary from './IndicatorValueSummary';
-import IndicatorCard from './IndicatorCard';
+import CausalNavigation from './CausalNavigation';
 import ActionsTable from '../actions/ActionsTable';
 
 
@@ -98,9 +98,11 @@ const IndicatorHero = styled(BaseJumbotron)`
 
 const IndicatorLevel = styled.h6`
   display: inline-block;
-  border-radius: .75em;
-  padding: .25em 1em;
+  border-radius: ${(props) => props.theme.badgeBorderRadius};
+  padding: ${(props) => props.theme.badgePaddingY} ${(props) => props.theme.badgePaddingX};
+  font-weight: ${(props) => props.theme.badgeFontWeight};
   margin-bottom: 1.5rem;
+
   color: ${(props) => {
     switch (props.level) {
       case 'action':
@@ -138,11 +140,6 @@ const Section = styled.section`
   h2 {
     margin-bottom: 1em;
   }
-`;
-
-const CausalNavigation = styled.div`
-  padding-top: 2rem;
-  background-color: ${(props) => props.theme.themeColors.light};
 `;
 
 function IndicatorDetails(props) {
@@ -211,43 +208,10 @@ function IndicatorDetails(props) {
       )}
       { hasImpacts
         && (
-          <CausalNavigation>
-            <Container>
-              <Row>
-                <Col sm="6" lg={{ size: 5 }} className="mb-5">
-                  { indicator.relatedCauses.length > 0 && (
-                    <div>
-                      <h3 className="mb-4">{ t('indicator-affected-by') }</h3>
-                      { indicator.relatedCauses.map((cause) => (
-                        <IndicatorCard
-                          objectid={cause.causalIndicator.id}
-                          name={cause.causalIndicator.name}
-                          level={cause.causalIndicator.level}
-                          key={cause.causalIndicator.id}
-                        />
-                      ))}
-                    </div>
-                  )}
-                </Col>
-
-                <Col sm="6" lg={{ size: 5, offset: 2 }} className="mb-5">
-                  { indicator.relatedEffects.length > 0 && (
-                    <div>
-                      <h3 className="mb-4">{ t('indicator-has-effect-on') }</h3>
-                      { indicator.relatedEffects.map((effect) => (
-                        <IndicatorCard
-                          objectid={effect.effectIndicator.id}
-                          name={effect.effectIndicator.name}
-                          level={effect.effectIndicator.level}
-                          key={effect.effectIndicator.id}
-                        />
-                      ))}
-                    </div>
-                  )}
-                </Col>
-              </Row>
-            </Container>
-          </CausalNavigation>
+          <CausalNavigation
+            causes={indicator.relatedCauses}
+            effects={indicator.relatedEffects}
+          />
         )}
     </div>
   );
@@ -294,9 +258,9 @@ IndicatorContent.propTypes = {
 IndicatorDetails.propTypes = {
   plan: PropTypes.shape({}).isRequired,
   indicator: PropTypes.shape({
-    actions: PropTypes.array.isRequired,
-    relatedCauses: PropTypes.array.isRequired,
-    relatedEffects: PropTypes.array.isRequired,
+    actions: PropTypes.arrayOf(PropTypes.shape).isRequired,
+    relatedCauses: PropTypes.arrayOf(PropTypes.shape).isRequired,
+    relatedEffects: PropTypes.arrayOf(PropTypes.shape).isRequired,
     name: PropTypes.string.isRequired,
     level: PropTypes.string.isRequired,
     timeResolution: PropTypes.string.isRequired,

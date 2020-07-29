@@ -54,7 +54,7 @@ function ActionImpact(props) {
 
   return (
     <div>
-      { impactVisual }
+      <div className="d-flex">{ impactVisual }</div>
       <h6>
         {name}
       </h6>

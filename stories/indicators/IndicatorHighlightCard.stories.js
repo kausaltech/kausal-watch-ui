@@ -53,4 +53,4 @@ const IndicatorCards = () => {
   );
 };
 
-export const Cards = (theme) => <IndicatorCards theme={theme} />;
+export const HighlightCard = (theme) => <IndicatorCards theme={theme} />;

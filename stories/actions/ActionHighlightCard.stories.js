@@ -90,19 +90,19 @@ export const ActionStatusBars = () => {
   return (
     <div className="row">
       <div className="col-6 p-5">
-        <ActionStatus identifier="on_time" name="On Time" completion="90" />
+        <ActionStatus identifier="on_time" name="On Time" completion={90} />
       </div>
       <div className="col-6 p-5">
-        <ActionStatus identifier="completed" name="Completed" completion="50" />
+        <ActionStatus identifier="completed" name="Completed" completion={50} />
       </div>
       <div className="col-6 p-5">
-        <ActionStatus identifier="late" name="Late" completion="25" />
+        <ActionStatus identifier="late" name="Late" completion={25} />
       </div>
       <div className="col-6 p-5">
-        <ActionStatus identifier="severely_late" name="Severely Late" completion="10" />
+        <ActionStatus identifier="severely_late" name="Severely Late" completion={10} />
       </div>
       <div className="col-6 p-5">
-        <ActionStatus identifier="not_started" name="Not Started" completion="0" />
+        <ActionStatus identifier="not_started" name="Not Started" completion={0} />
       </div>
     </div>
   );

@@ -1,17 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  Card, CardBody, CardTitle, Alert,
-} from 'reactstrap';
 import styled, { withTheme } from 'styled-components';
-import { IndicatorLink } from '../../common/links';
-import moment from '../../common/moment';
 
 import PlanContext from '../../context/plan';
 import { aplans, CancelToken } from '../../common/api';
 import ContentLoader from '../common/ContentLoader';
 import { captureException } from '../../common/sentry';
 
+import IndicatorCard from './IndicatorCard';
 import Connector from './Connector';
 
 const CausalChain = styled.div`
@@ -29,132 +25,17 @@ const Column = styled.div`
   flex-direction: column;
 `;
 
-const Indicator = styled(Card)`
+const Indicator = styled.div`
   flex: 1 1 0;
+  position: relative;
   width: 240px;
-  hyphens: auto;
-  margin: 10px 20px;
-  line-height: 1;
   min-height: 160px;
-  border: 0;
-  border-radius: ${(props) => props.theme.cardBorderRadius};
+  margin: 10px 20px;
 
-  color: ${(props) => {
-    switch (props.level) {
-      case 'action':
-        return props.theme.actionColorFg;
-      case 'operational':
-        return props.theme.operationalIndicatorColorFg;
-      case 'tactical':
-        return props.theme.tacticalIndicatorColorFg;
-      case 'strategic':
-        return props.theme.strategicIndicatorColorFg;
-      default:
-        return props.theme.themeColors.black;
-    }
-  }};
-  background-color: ${(props) => {
-    switch (props.level) {
-      case 'action':
-        return props.theme.actionColor;
-      case 'operational':
-        return props.theme.operationalIndicatorColor;
-      case 'tactical':
-        return props.theme.tacticalIndicatorColor;
-      case 'strategic':
-        return props.theme.strategicIndicatorColor;
-      default:
-        return '#cccccc';
-    }
-  }};
-  
-  a {
-    color: inherit;
-
-    &:hover {
-      color: inherit;
-      text-decoration: underline;
-    }
+  .card {
+    height: 100%;
   }
 `;
-
-const IndicatorType = styled.div`
-  opacity: .75;
-  font-size: 75%;
-  margin-bottom: .5em;
-`;
-
-const IndicatorTitle = styled(CardTitle)`
-  font-weight: 600;
-`;
-
-const IndicatorValue = styled.div`
-  margin-top: 1em;
-  font-weight: 600;
-  opacity: .75;
-`;
-
-const IndicatorValueUnit = styled.span`
-  font-size: 75%;
-  font-weight: 400;
-`;
-
-const IndicatorValueTime = styled.div`
-  font-size: 75%;
-  font-weight: 400;
-`;
-
-function getIndicatorLevelName(level) {
-  switch (level) {
-    case 'action':
-      return 'Toimenpide';
-    case 'operational':
-      return 'Toiminnallinen mittari';
-    case 'tactical':
-      return 'Taktinen mittari';
-    case 'strategic':
-      return 'Strateginen mittari';
-    default:
-      return '';
-  }
-
-}
-
-function IndicatorLatestValue(props) {
-  const { indicator } = props;
-
-  const latestValue = indicator.latest_value;
-  if (!latestValue) return null;
-
-  const timeResolution = indicator.time_resolution;
-  const time = moment(latestValue.date, 'YYYY-MM-DD');
-  let tagVal;
-  let formattedTime;
-
-  if (timeResolution === 'year') {
-    formattedTime = time.format('YYYY');
-    tagVal = formattedTime;
-  } else if (timeResolution === 'month') {
-    formattedTime = time.format('YYYY-MM');
-    tagVal = 'MMMM YYYY';
-  } else {
-    formattedTime = time.format('DD.MM.YYYY');
-    tagVal = time.format(); // ISO format
-  }
-
-  return (
-    <IndicatorValue>
-      {Number.isInteger(latestValue.value) ? latestValue.value : latestValue.value.toFixed(2).replace('.', ',')}
-      {' '}
-      <IndicatorValueUnit>
-        {latestValue.unit}
-      </IndicatorValueUnit>
-      <IndicatorValueTime>
-        <time dateTime={tagVal}>{formattedTime}</time>
-      </IndicatorValueTime>
-    </IndicatorValue>
-  );
-}
 
 function getGridHeight(nodes) {
   let column = 0;
@@ -254,7 +135,7 @@ function createChain(nodes, theme) {
   while (columnIndicators.length !== 0) {
     const children = [];
 
-    columnIndicators = nodes.filter(item => item.column === column);
+    columnIndicators = nodes.filter((item) => item.column === column);
 
     columnIndicators.forEach((indicator) => {
       let indicatorLevel = 'action';
@@ -271,25 +152,14 @@ function createChain(nodes, theme) {
       });
       children.push(
         <Indicator level={indicatorLevel} key={indicator.id}>
-          <CardBody>
-            { indicatorLevel !== 'action'
-              ? (
-                <div>
-                  <IndicatorType>{ getIndicatorLevelName(indicatorLevel) }</IndicatorType>
-                  <IndicatorLink id={indicator.object_id}>
-                    <a><IndicatorTitle>{ indicator.name }</IndicatorTitle></a>
-                  </IndicatorLink>
-                </div>
-              )
-              : (
-                <div>
-                  <IndicatorType>Toimenpide</IndicatorType>
-                  <IndicatorTitle>{ indicator.name }</IndicatorTitle>
-                </div>
-              )
-            }
-            <IndicatorLatestValue indicator={indicator} />
-          </CardBody>
+          <IndicatorCard
+            objectid={indicator.object_id}
+            name={indicator.name}
+            level={indicatorLevel}
+            key={indicator.id}
+            latestValue={indicator.latest_value}
+            resolution={indicator.time_resolution}
+          />
           {connectionsTo}
         </Indicator>,
       );
@@ -390,11 +260,11 @@ class IndicatorCausal extends React.Component {
     // Combine edges data to indicator nodes
     this.indicators = nodes;
     this.indicators.forEach((item, index) => {
-      this.indicators[index].from = edges.filter(edge => edge.from === item.id);
-      this.indicators[index].to = edges.filter(edge => edge.to === item.id);
+      this.indicators[index].from = edges.filter((edge) => edge.from === item.id);
+      this.indicators[index].to = edges.filter((edge) => edge.to === item.id);
     });
 
-    this.rootIndex = this.indicators.findIndex(item => item.to.length === 0);
+    this.rootIndex = this.indicators.findIndex((item) => item.to.length === 0);
     this.indicators = this.setColumns(this.indicators, this.rootIndex, 0);
     this.indicators = this.setRows(this.indicators);
 
