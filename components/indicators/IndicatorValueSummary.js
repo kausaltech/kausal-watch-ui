@@ -1,14 +1,14 @@
 import React from 'react';
 import { Row, Col } from 'reactstrap';
-import styled from 'styled-components';
+import styled, { withTheme } from 'styled-components';
 import moment from '../../common/moment';
 import { withTranslation } from '../../common/i18n';
 
 const ValueSummary = styled.div`
   margin: 2em 0 0;
   padding: 1em 0 0;
-  border-top: 1px solid #333;
-  border-bottom: 1px solid #333;
+  border-top: 1px solid ${(props) => props.theme.themeColors.dark};
+  border-bottom: 1px solid ${(props) => props.theme.themeColors.dark};
 `;
 
 const ValueLabel = styled.div`
@@ -72,7 +72,8 @@ function determineDesirableDirection(values, goals) {
   return '-';
 }
 
-function IndicatorValueSummary({ timeResolution, values, goals, unit, t }) {
+function IndicatorValueSummary(props) {
+  const { timeResolution, values, goals, unit, t, theme } = props;
   const desirableDirection = determineDesirableDirection(values, goals);
   const pluralUnitName = unit.verboseNamePlural || unit.verboseName || unit.shortName || unit.name;
   const shortUnitName = unit.shortName || unit.name;
@@ -100,13 +101,13 @@ function IndicatorValueSummary({ timeResolution, values, goals, unit, t }) {
         if ((absChange > 0 && desirableDirection === '+') ||
             (absChange < 0 && desirableDirection === '-')) {
           desirableChange = true;
-          changeColor = 'green';
+          changeColor = theme.themeColors.success;
         } else if (absChange === 0) {
           desirableChange = null;
-          changeColor = 'grey';
+          changeColor = theme.themeColors.dark;
         } else {
           desirableChange = false;
-          changeColor = 'red';
+          changeColor = theme.themeColors.danger;
         }
       }
       if (absChange < 0) {
@@ -186,4 +187,4 @@ function IndicatorValueSummary({ timeResolution, values, goals, unit, t }) {
   );
 }
 
-export default withTranslation()(IndicatorValueSummary);
+export default withTranslation()(withTheme(IndicatorValueSummary));
