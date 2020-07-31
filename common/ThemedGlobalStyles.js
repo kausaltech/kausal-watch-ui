@@ -19,6 +19,10 @@ const GlobalStyle = createGlobalStyle`
   thead {
     background-color: ${(props) => props.theme.tableHeadBg};
   }
+
+  .table-hover > tbody > tr:hover {
+    background-color: ${(props) => props.theme.tableHoverBg};
+  }
 `;
 
 function ThemedGlobalStyles(props) {

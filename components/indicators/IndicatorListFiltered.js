@@ -54,6 +54,7 @@ const StyledBadge = styled(Badge)`
   border-radius: ${(props) => props.theme.badgeBorderRadius};
   padding: ${(props) => props.theme.badgePaddingY} ${(props) => props.theme.badgePaddingX};
   font-weight: ${(props) => props.theme.badgeFontWeight};
+  background-color: ${(props) => props.theme.themeColors.light};
 `;
 
 const IndicatorName = styled.span`
@@ -158,7 +159,7 @@ class IndicatorListFiltered extends React.Component {
                 </td>
                 <td>
                   {item.categories.map((cat) => {
-                    if (cat) return <StyledBadge color="light" key={cat.id}>{cat.name}</StyledBadge>;
+                    if (cat) return <StyledBadge key={cat.id}>{cat.name}</StyledBadge>;
                   })}
                 </td>
                 <td>
