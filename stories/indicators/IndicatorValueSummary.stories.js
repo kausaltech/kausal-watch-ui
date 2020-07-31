@@ -17,11 +17,42 @@ const goalsData = [
   },
 ];
 
+const goalsData2 = [
+  {
+    id: '43',
+    date: '2018-12-31',
+    value: 32,
+  },
+  {
+    id: '74',
+    date: '2021-12-31',
+    value: 60,
+  },
+  {
+    id: '13',
+    date: '2022-12-31',
+    value: 105,
+  },
+  {
+    id: '25',
+    date: '2025-12-31',
+    value: 150,
+  }
+];
+
 const unitData = {
   id: '217',
   name: 'MW',
   shortName: null,
   verboseName: 'megawatti',
+  verboseNamePlural: null,
+};
+
+const unitData2 = {
+  id: '68',
+  name: 'km',
+  shortName: null,
+  verboseName: null,
   verboseNamePlural: null,
 };
 
@@ -63,6 +94,30 @@ const valuesData = [
   },
 ];
 
+const valuesData2 = [
+  {
+    id: '704',
+    date: '2015-12-31',
+    value: 8.7,
+  },
+  {
+    id: '829',
+    date: '2016-12-31',
+    value: 30.1,
+  },
+  {
+    id: '830',
+    date: '2017-12-31',
+    value: 34.2,
+  },
+  {
+    id: '1089',
+    date: '2018-12-31',
+    value: 32,
+  }
+];
+
+
 export default {
   title: 'Indicators/ValueSummary',
 };
@@ -78,6 +133,15 @@ const IndicatorValueSummaryStory = () => {
         unit={unitData}
         goals={goalsData}
       />
+      <br/>
+      <br/>
+      <IndicatorValueSummary
+        timeResolution="YEAR"
+        values={valuesData2}
+        unit={unitData2}
+        goals={goalsData2}
+      />
+
     </div>
   );
 };

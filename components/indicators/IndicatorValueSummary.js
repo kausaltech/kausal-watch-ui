@@ -11,6 +11,41 @@ const ValueSummary = styled.div`
   border-bottom: 1px solid #333;
 `;
 
+const ValueLabel = styled.div`
+  margin-bottom: .5rem;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1;
+`;
+
+const ValueDate = styled.div`
+  font-size: 0.8rem;
+  color: ${(props) => props.theme.themeColors.dark};
+`;
+
+const ValueDisplay = styled.div`
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+`;
+
+const ValueUnit = styled.span`
+  margin: 0 .5em 0 .25em;
+  font-size: 1rem;
+  font-weight: 400;
+  color: ${(props) => props.theme.themeColors.dark};
+`;
+
+const ValueChange = styled.div`
+  display: inline-block;
+  font-size: 1rem;
+  color: ${(props) => props.color};
+`;
+
+const ChangeSymbol = styled.span`
+  margin-right: .5em;
+  font-size: .8rem;
+`;
 
 function beautifyValue(x) {
   let out;
@@ -49,7 +84,7 @@ function IndicatorValueSummary({ timeResolution, values, goals, unit, t }) {
     timeFormat = 'YYYY';
   }
 
-  let valueDisplay = <h6>Ei arvoja</h6>;
+  let valueDisplay = <h6>{ t('indicator-no-values') }</h6>;
   if (values.length > 0) {
     const latestValue = values[values.length - 1];
     let absChange;
@@ -83,38 +118,37 @@ function IndicatorValueSummary({ timeResolution, values, goals, unit, t }) {
     const latestValueDisplay = beautifyValue(latestValue.value);
     valueDisplay = (
       <div className="mb-4">
-        <div><strong>Viimeisin mittaus</strong></div>
-        <small>{moment(latestValue.date).format(timeFormat)}</small>
-        <h3>
+        <ValueLabel>{ t('indicator-latest-value') }</ValueLabel>
+        <ValueDate>{moment(latestValue.date).format(timeFormat)}</ValueDate>
+        <ValueDisplay>
           {latestValueDisplay}
-          {' '}
-          <small>{shortUnitName}</small>
+          <ValueUnit>{shortUnitName}</ValueUnit>
           {absChange && (
-            <div style={{ color: changeColor, fontSize: '1.2rem', display: 'inline-block' }}>
-              <strong>{changeSymbol}</strong>
-              <span>{beautifyValue(absChange)}</span> <small>{diffUnitName}</small>
-            </div>
+            <ValueChange color={changeColor}>
+              <ChangeSymbol>{changeSymbol}</ChangeSymbol>
+              <span>{beautifyValue(absChange)}</span>
+              <small>{diffUnitName}</small>
+            </ValueChange>
           )}
-        </h3>
+        </ValueDisplay>
       </div>
     );
   }
 
   const nextGoal = goals.find((goal) => moment(goal.date).isSameOrAfter(now));
-  let goalDisplay = <h6>Ei tavoitearvoja</h6>;
+  let goalDisplay = <h6>{ t('indicator-time-no-goals') }</h6>;
 
   if (nextGoal) {
     const nextGoalDate = moment(nextGoal.date).format(timeFormat);
     const nextGoalValue = beautifyValue(nextGoal.value);
     goalDisplay = (
       <div className="mb-4">
-        <div><strong>Tavoite</strong></div>
-        <small>{nextGoalDate}</small>
-        <h3>
+        <ValueLabel>{ t('indicator-goal') }</ValueLabel>
+        <ValueDate>{nextGoalDate}</ValueDate>
+        <ValueDisplay>
           {nextGoalValue}
-          {' '}
-          <small>{shortUnitName}</small>
-        </h3>
+          <ValueUnit>{shortUnitName}</ValueUnit>
+        </ValueDisplay>
       </div>
     );
   }
@@ -123,16 +157,15 @@ function IndicatorValueSummary({ timeResolution, values, goals, unit, t }) {
   let differenceDisplay = <h6>-</h6>;
   if (values.length > 0 && nextGoal) {
     const difference = nextGoal.value - values[values.length - 1].value;
-    const timeToGoal = moment(nextGoal.date).diff(now, 'years', true).toFixed(0) + " vuotta";
+    const timeToGoal = `${moment(nextGoal.date).diff(now, 'years', true).toFixed(0)} ${' '} ${t('indicator-resolution-years')}`;
     differenceDisplay = (
       <div className="mb-4">
-        <div><strong>Tavoitteeseen matkaa</strong></div>
-        <small>{timeToGoal}</small>
-        <h3>
+        <ValueLabel>{ t('indicator-time-to-goal') }</ValueLabel>
+        <ValueDate>{timeToGoal}</ValueDate>
+        <ValueDisplay>
           {beautifyValue(difference)}
-          {' '}
-          <small>{diffUnitName}</small>
-        </h3>
+          <ValueUnit>{diffUnitName}</ValueUnit>
+        </ValueDisplay>
       </div>
     );
   }
