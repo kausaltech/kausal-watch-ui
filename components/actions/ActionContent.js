@@ -472,8 +472,8 @@ function ActionDetails(props) {
         <Row>
           <Col sm="12" className="mb-5">
             <ActionPager
-              nextId={action.nextAction ? action.nextAction.identifier : undefined}
-              previousId={action.previousAction ? action.previousAction.identifier : undefined}
+              nextAction={action.nextAction}
+              previousAction={action.previousAction}
             />
           </Col>
         </Row>
