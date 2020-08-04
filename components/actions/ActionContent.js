@@ -84,7 +84,7 @@ query ActionDetails($plan: ID!, $id: ID!) {
       }
     }
     tasks {
-      id, name, dueAt, completedAt, comment
+      id, name, dueAt, completedAt, comment, state
     }
     status {
       id, identifier, name

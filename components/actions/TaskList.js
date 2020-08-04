@@ -51,7 +51,7 @@ function TaskList(props) {
     });
 
   const undoneTasks = sortedTasks
-    .filter((item) => item.completedAt === null)
+    .filter((item) => item.completedAt === null && item.state !== 'CANCELLED')
     .map((item) => (
       <ListGroupItem key={item.id} className={`state--${item.state}`}>
         <TaskWrapper>
@@ -73,7 +73,7 @@ function TaskList(props) {
 
   const doneTasks = sortedTasks
     .reverse()
-    .filter((item) => item.completedAt !== null)
+    .filter((item) => item.completedAt !== null && item.state !== 'CANCELLED')
     .map((item) => (
       <ListGroupItem key={item.id} className={`state--${item.state}`}>
         <TaskWrapper>
