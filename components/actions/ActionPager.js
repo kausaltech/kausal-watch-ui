@@ -1,10 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button } from 'reactstrap';
 import styled from 'styled-components';
-import { Link } from '../../routes';
 import { ActionLink } from '../../common/links';
 import Icon from '../common/Icon';
+import Button from '../common/Button';
 import { withTranslation } from '../../common/i18n';
 
 const Pager = styled.div`
@@ -25,13 +24,7 @@ const PageButton = styled(Button)`
   line-height: 1;
 
   .icon {
-    fill: ${props => props.theme.brandDark} !important;
-  }
-  
-  &:hover {
-    .icon {
-      fill: #ffffff !important;
-    }
+    fill: ${(props) => props.theme.brandDark} !important;
   }
 `;
 
