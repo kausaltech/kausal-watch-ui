@@ -1,17 +1,17 @@
 import React from 'react';
 import { useContext } from 'react';
-import { Table } from 'reactstrap';
+import { Container, Table } from 'reactstrap';
 import { ThemeContext } from 'styled-components';
 
 const DesignTokens = () =>
 {
   const themeContext = useContext(ThemeContext);
   return (
-    <div className="container">
+    <Container>
       <hr />
       <h2>Testing Design Token Documentation</h2>
       <p>This can be used as a testground and documentation for theme variables</p>
-      <Table>
+      <Table responsive>
         <thead>
           <tr>
             <th>Key</th>
@@ -58,7 +58,13 @@ const DesignTokens = () =>
           ))}
         </tbody>
       </Table>
-    </div>
+      <h3>
+        Theme JSON:
+        {' '}
+        { themeContext.name }
+      </h3>
+      <div><pre className="pre-scrollable bg-light"><code>{JSON.stringify(themeContext, null, 2) }</code></pre></div>
+    </Container>
   );
 };
 
