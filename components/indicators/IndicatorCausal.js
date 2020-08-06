@@ -179,11 +179,11 @@ function drawEdge(nodes, edge, toIndex, gridHeight, theme) {
   const fromNode = nodes.find((item) => edge.from === item.id);
   const toNode = nodes.find((item) => edge.to === item.id);
 
-  const fromIndex = fromNode.from.findIndex((x) => x.id === edge.id);
-
   if (!fromNode || !toNode) {
     return '';
   }
+
+  const fromIndex = fromNode.from.findIndex((x) => x.id === edge.id);
 
   const nodeHeight = 160;
   const fromNodeHeight = (gridHeight / getColumnHeight(nodes, fromNode.column)) * nodeHeight;
