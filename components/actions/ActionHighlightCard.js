@@ -76,7 +76,7 @@ const ImgOverlay = styled.div`
 const ActionNumber = styled.div`
   text-align: center;
   font-size: ${(props) => props.theme.fontSizeXxl};
-  font-weight: 700;
+  font-weight: ${(props) => props.theme.fontWeightBold};
   line-height: 9rem;
   color: ${(props) => props.theme.themeColors.light};
 

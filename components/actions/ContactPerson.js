@@ -34,14 +34,14 @@ const PersonDetails = styled(Media)`
 const Name = styled.p`
   line-height: ${(props) => props.theme.lineHeightSm};
   margin-bottom: .5em;
-  font-weight: 600;
+  font-weight: ${(props) => props.theme.fontWeightBold};
 `;
 
 const PersonRole = styled.p`
   margin-bottom: .5em;
   color: ${(props) => props.theme.themeColors.dark};
   font-size: ${(props) => props.theme.fontSizeSm};
-  font-weight: 600;
+  font-weight: ${(props) => props.theme.fontWeightBold};
   line-height: ${(props) => props.theme.lineHeightSm};
 `;
 

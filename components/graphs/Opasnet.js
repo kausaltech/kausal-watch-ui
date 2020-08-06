@@ -9,7 +9,7 @@ import ContentLoader from '../common/ContentLoader';
 
 
 const GraphSection = styled.section`
-  margin-bottom: 3rem;
+  margin-bottom: ${(props) => props.theme.spaces.s300}
 `;
 
 class Opasnet extends React.Component {

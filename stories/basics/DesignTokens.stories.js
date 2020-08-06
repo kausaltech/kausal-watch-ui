@@ -1,5 +1,4 @@
-import React from 'react';
-import { useContext } from 'react';
+import React, { useContext } from 'react';
 import { Container, Table } from 'reactstrap';
 import { ThemeContext } from 'styled-components';
 
@@ -77,17 +76,4 @@ export const TokensStory = (theme) => <DesignTokens theme={theme} />;
 
 TokensStory.story = {
   name: 'Design Tokens',
-};
-
-export const TypeStory = () => (
-  <div className="container">
-    <h1>Headline 1</h1>
-    <h2>Headline 2</h2>
-    <h3>Headline 3</h3>
-    <h4>Headline 4</h4>
-  </div>
-);
-
-TypeStory.story = {
-  name: 'Typography',
 };

@@ -8,12 +8,12 @@ import ActionCard from './ActionCard';
 
 const ActionGroupHeader = styled.h2`
   border-bottom: 1px solid;
-  padding-bottom: 1rem;
-  margin-bottom: 2rem;
+  padding-bottom: ${(props) => props.theme.spaces.s100};
+  margin-bottom: ${(props) => props.theme.spaces.s200};
 `;
 
 const ActionGroup = styled(Row)`
-  margin-bottom: 2rem;
+  margin-bottom: ${(props) => props.theme.spaces.s200};
 
   .card {
     height: 100%;

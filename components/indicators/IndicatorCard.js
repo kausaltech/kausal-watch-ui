@@ -11,18 +11,18 @@ import { IndicatorLink } from '../../common/links';
 
 const IndicatorValue = styled.div`
   margin-top: 1em;
-  font-weight: 600;
+  font-weight: ${(props) => props.theme.fontWeightBold};
   opacity: .75;
 `;
 
 const IndicatorValueUnit = styled.span`
   font-size: ${(props) => props.theme.fontSizesm};
-  font-weight: 400;
+  font-weight: ${(props) => props.theme.fontWeightNormal};
 `;
 
 const IndicatorValueTime = styled.div`
   font-size: ${(props) => props.theme.fontSizesm};
-  font-weight: 400;
+  font-weight: ${(props) => props.theme.fontWeightNormal};
 `;
 
 const StyledLink = styled.a`
@@ -87,7 +87,7 @@ const IndicatorNumber = styled.span`
 `;
 
 const IndicatorTitle = styled(CardTitle)`
-  font-weight: 600;
+  font-weight: ${(props) => props.theme.fontWeightBold};
 `;
 
 function IndicatorLatestValue(props) {

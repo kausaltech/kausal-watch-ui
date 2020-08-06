@@ -41,8 +41,8 @@ const HeroMain = styled.div`
 `;
 
 const MainCard = styled.div`
-  padding: 2rem;
-  margin: 3rem 0;
+  padding: ${(props) => props.theme.spaces.s200};
+  margin: ${(props) => props.theme.spaces.s300} 0;
   background-color: ${(props) => props.theme.themeColors.white};
   color: ${(props) => props.theme.neutralDark};
 
@@ -79,7 +79,7 @@ const Highlight = styled.div`
     color: ${(props) => props.theme.neutralDark};
 
     .icon {
-      margin-left: .25rem;
+      margin-left: ${(props) => props.theme.spaces.s025};
     }
   }
  
@@ -92,8 +92,8 @@ const Highlight = styled.div`
 
 const Illustration = styled.div`
   svg {
-    width: 3rem;
-    height: 3rem;
+    width: ${(props) => props.theme.spaces.s300};
+    height: ${(props) => props.theme.spaces.s300};
     margin: 0 1rem 0 0;
     display: block;
     fill: ${(props) => props.theme.brandDark};

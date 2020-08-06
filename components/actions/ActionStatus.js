@@ -8,7 +8,7 @@ const Status = styled.div`
   color: ${(props) => props.theme.themeColors.dark};
   background-color: ${(props) => props.theme.themeColors.dark};
   font-size: ${(props) => props.theme.fontSizeSm};
-  font-weight: 700;
+  font-weight: ${(props) => props.theme.fontWeightBold};
   letter-spacing: 0.03em;
   text-align: left;
   line-height: ${(props) => props.theme.lineHeightBase};

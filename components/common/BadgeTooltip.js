@@ -16,8 +16,8 @@ const StyledBadge = styled(Badge)`
   border-radius: ${(props) => props.theme.badgeBorderRadius};
   padding: ${(props) => props.theme.badgePaddingY} ${(props) => props.theme.badgePaddingX};
   font-weight: ${(props) => props.theme.badgeFontWeight};
-  margin-right: .5rem;
-  margin-bottom: .5rem;
+  margin-right: ${(props) => props.theme.spaces.s050};
+  margin-bottom: ${(props) => props.theme.spaces.s050};
 
   &.badge-secondary:hover {
     background-color:  ${(props) => lighten(0.05, props.theme.brandDark)};

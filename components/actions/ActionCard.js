@@ -61,9 +61,9 @@ const ActionCardElement = styled.div`
 
 const ActionNumber = styled.div`
   align-self: flex-start;
-  padding: .5rem;
+  padding: ${(props) => props.theme.spaces.s050};
   font-size: ${(props) => props.theme.fontSizeBase};
-  font-weight: 700;
+  font-weight: ${(props) => props.theme.fontWeightBold};
   line-height: ${(props) => props.theme.lineHeightSm};
   color: #000000;
   background: #ffffff;
@@ -123,14 +123,14 @@ const ActionStatus = styled.div`
 `;
 
 const StatusName = styled.div`
-  margin: .5rem;
+  margin: ${(props) => props.theme.spaces.s050};
   font-size: ${(props) => props.theme.fontSizeBase};
-  line-height: ${(props) => props.theme.lineHeightSm};;
-  font-weight: 700
+  line-height: ${(props) => props.theme.lineHeightSm};
+  font-weight: ${(props) => props.theme.fontWeightBold};
 `;
 
 const StatusProgress = styled(Progress)`
-  height: .5em;
+  height: ${(props) => props.theme.spaces.s050};
   background-color: transparent;
 
 `;
@@ -138,7 +138,7 @@ const StatusProgress = styled(Progress)`
 const StyledCardTitle = styled.div`
   min-height: calc(1.5rem + 1.2em * 3);
   margin-bottom: 0;
-  padding: .75rem;
+  padding: ${(props) => props.theme.spaces.s100};
   color: #000000;
   background: #ffffff;
   font-size: ${(props) => props.theme.fontSizeBase};

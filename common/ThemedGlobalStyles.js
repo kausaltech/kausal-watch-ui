@@ -24,6 +24,46 @@ const GlobalStyle = createGlobalStyle`
     color: inherit;
   }
 
+  h1 {
+    font-size: ${(props) => props.theme.fontSizeXxl};
+  }
+
+  h2 {
+    font-size: ${(props) => props.theme.fontSizeXl};
+  }
+
+  h3 {
+    font-size: ${(props) => props.theme.fontSizeLg};
+  }
+
+  h4 {
+    font-size: ${(props) => props.theme.fontSizeMd};
+  }
+
+  h5 {
+    font-size: ${(props) => props.theme.fontSizeBase};
+  }
+
+  h6 {
+    font-size: ${(props) => props.theme.fontSizeSm};
+  }
+
+  p {
+    margin-top: 0;
+    margin-bottom: 1rem;
+  }
+
+  hr {
+    margin: ${(props) => props.theme.spaces.s100} 0;
+    color: ${(props) => props.theme.themeColors.dark};
+    background-color: currentColor;
+    border: 0;
+  }
+
+  hr:not([size]) {
+    height: 1px;
+  }
+
   .text-content {
     a {
       text-decoration: underline;
@@ -38,12 +78,12 @@ const GlobalStyle = createGlobalStyle`
     }
 
     h3 {
-      margin-top: 1.5rem;
+      margin-top: ${(props) => props.theme.spaces.s150};
       font-size: ${(props) => props.theme.fontSizeLg};
     }
 
     h4 {
-      margin-top: 1.25rem;
+      margin-top: ${(props) => props.theme.spaces.s150};
       font-size: ${(props) => props.theme.fontSizeMd};
 
       &:first-child {

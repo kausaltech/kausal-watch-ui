@@ -20,7 +20,7 @@ const HeroVisual = styled.div`
   position: relative;
   height: 11rem;
   width: 11rem;
-  margin: 0 auto 2rem;
+  margin: 0 auto ${(props) => props.theme.spaces.s200};
 
   &:before {
     content: "";
@@ -87,17 +87,17 @@ const Illustration = styled.div`
 `;
 
 const SiteTitle = styled.div`
-  margin-bottom: 3rem;
+  margin-bottom: ${(props) => props.theme.spaces.s300};
   text-align: center;
   color: ${(props) => props.theme.neutralDark};
   h1 {
-    margin-bottom: 1rem;
-    font-size: 2.5rem;
+    margin-bottom: ${(props) => props.theme.spaces.s100};
+    font-size: ${(props) => props.theme.fontSizeXl};
   }
 `;
 
 const Highlight = styled.div`
-  margin-bottom: 1rem;
+  margin-bottom: ${(props) => props.theme.spaces.s100};
   background: #fff;
 
   &:hover {

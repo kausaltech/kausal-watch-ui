@@ -12,9 +12,9 @@ const ValueSummary = styled.div`
 `;
 
 const ValueLabel = styled.div`
-  margin-bottom: .5rem;
+  margin-bottom: ${(props) => props.theme.spaces.s050};
   font-size: ${(props) => props.theme.fontSizeBase};
-  font-weight: 700;
+  font-weight: ${(props) => props.theme.fontWeightBold};
   line-height: ${(props) => props.theme.lineHeightSm};
 `;
 
@@ -25,14 +25,14 @@ const ValueDate = styled.div`
 
 const ValueDisplay = styled.div`
   font-size: ${(props) => props.theme.fontSizeLg};
-  font-weight: 700;
+  font-weight: ${(props) => props.theme.fontWeightBold};
   line-height: ${(props) => props.theme.lineHeightSm};
 `;
 
 const ValueUnit = styled.span`
   margin: 0 .5em 0 .25em;
   font-size: ${(props) => props.theme.fontSizeBase};
-  font-weight: 400;
+  font-weight: ${(props) => props.theme.fontWeightNormal};
   color: ${(props) => props.theme.themeColors.dark};
 `;
 

@@ -16,7 +16,7 @@ const IndicatorType = styled.div`
 `;
 
 const IndicatorBg = styled.div`
-  height: 6rem;
+  height: ${(props) => props.theme.spaces.s600};
   background-color: ${(props) => {
     switch (props.level) {
       case 'action':
@@ -50,9 +50,9 @@ const StyledCard = styled(Card)`
 `;
 
 const IndicatorValue = styled.div`
-  margin-top: .75rem;
+  margin-top: ${(props) => props.theme.spaces.s050};
   font-size: ${(props) => props.theme.fontSizeXl};
-  font-weight: 700;
+  font-weight: ${(props) => props.theme.fontWeightBold};
   line-height: ${(props) => props.theme.lineHeightSm};
   color: ${(props) => {
     switch (props.level) {

@@ -10,8 +10,8 @@ import PlanContext from '../../context/plan';
 import { withTranslation } from '../../common/i18n';
 
 const ActionUpdate = styled.article`
-  padding: .75rem;
-  margin: 0 0 1.5rem;
+  padding: ${(props) => props.theme.spaces.s050};
+  margin: 0 0 ${(props) => props.theme.spaces.s150};
   background: ${(props) => props.theme.themeColors.white};
   border: 2px solid  ${(props) => props.theme.themeColors.light};
 `;
@@ -24,18 +24,18 @@ const ActionUpdateHeader = styled.header`
 `;
 
 const AuthorAvatar = styled.img`
-  width: 2.75rem;
-  height: 2.75rem;
-  margin-right: .5rem;
+  width: ${(props) => props.theme.spaces.s300};
+  height: ${(props) => props.theme.spaces.s300};
+  margin-right: ${(props) => props.theme.spaces.s050};
 `;
 
 const AuthorName = styled.div`
-  font-weight: 600;
+  font-weight: ${(props) => props.theme.fontWeightBold};
 `;
 
 const UpdateDate = styled.div`
   font-size: ${(props) => props.theme.fontSizeSm};
-  font-weight: 400;
+  font-weight: ${(props) => props.theme.fontWeightNormal};
   color: ${(props) => props.theme.themeColors.dark};
 `;
 

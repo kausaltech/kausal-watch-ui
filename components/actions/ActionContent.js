@@ -133,7 +133,7 @@ const LastUpdated = styled.div`
 `;
 
 const ActionSection = styled.div`
-  margin-bottom: 2.5rem;
+  margin-bottom: ${(props) => props.theme.spaces.s300};
 `;
 
 const SectionHeader = styled.h2`
@@ -144,25 +144,25 @@ const SectionHeader = styled.h2`
 
 const OfficialText = styled.div`
   color: ${(props) => props.theme.brandDark};
-  margin-bottom: 3rem;
+  margin-bottom: ${(props) => props.theme.spaces.s300};
 `;
 
 const SolidSection = styled.div`
   padding: 2rem 0;
 
-  margin-bottom: 3rem;
+  margin-bottom: ${(props) => props.theme.spaces.s300};
 `;
 
 const ActionNumberBadge = styled(Badge)`
   font-size: ${(props) => props.theme.fontSizeBase};
-  padding: .25rem;
+  padding: ${(props) => props.theme.spaces.s025};
   border-radius: ${(props) => props.theme.btnBorderRadius};
   background-color: ${(props) => props.theme.brandDark};
   color: ${(props) => props.theme.themeColors.white};
 `;
 
 const MergedActionSection = styled.div`
-  margin-bottom: 1rem;
+  margin-bottom: ${(props) => props.theme.spaces.s100};
 `;
 
 function MergedAction(props) {

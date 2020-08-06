@@ -10,7 +10,7 @@ const pulse = keyframes`
 `;
 
 const Loader = styled.div`
-  margin 3rem;
+  margin: ${(props) => props.theme.spaces.s300};
   text-align: center;
 
   div:nth-child(1) {

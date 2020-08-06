@@ -52,17 +52,36 @@ $font-family-sans-serif:      #{$font-family}, -apple-system, BlinkMacSystemFont
 $font-family-monospace:       SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 $font-family-base:            $font-family-sans-serif;
 
-$font-size-sm:	  0.875rem;
+$font-size-sm:	  0.75rem;
 $font-size-base: 	1rem;
-$font-size-md:	  1.125rem;
+$font-size-md:	  1.25rem;
 $font-size-lg:	  1.5rem;
-$font-size-xl:	  2.25rem;
-$font-size-xxl:	  3.25rem;
+$font-size-xl:	  2rem;
+$font-size-xxl:	  3rem;
 
-$line-height-base:            1.5;
+$font-weight-normal:          400;
+$font-weight-bold:            700;
+
+$font-weight-base:            $font-weight-normal !default;
+
+$line-height-base:            1.666;
 $line-height-sm:              1;
 $line-height-md:              1.2;
 $line-height-lg:              1.75;
+
+$space: 0.8rem;
+$spaces: (
+  s000: 0,
+  s025: $space / 4,   //4px
+  s050: $space / 2,   //8px
+  s100: $space,       //16px
+  s150: $space * 1.5, //24px
+  s200: $space * 2,    //32px
+  s300: $space * 3,   //48px
+  s400: $space * 4,   //64px
+  s600: $space * 6,   //96px
+  s800: $space * 8,   //128px
+);
 
 // Links
 //

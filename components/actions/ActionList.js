@@ -16,13 +16,13 @@ import ActionListFilters from './ActionListFilters';
 import ActionCardList from './ActionCardList';
 
 const ActionListSection = styled.div`
-  padding-bottom: 4rem;
+  padding-bottom: ${(props) => props.theme.spaces.s400};
   background-color: ${(props) => props.theme.neutralLight};
 `;
 
 const ActionListHeader = styled.div`
-  padding-top: 3rem;
-  margin-bottom: 1rem;
+  padding-top: ${(props) => props.theme.spaces.s300};
+  margin-bottom: ${(props) => props.theme.spaces.s100};
   background-color: ${(props) => props.theme.neutralLight};
 `;
 

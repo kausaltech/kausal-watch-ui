@@ -18,8 +18,8 @@ const FiltersList = styled.div`
   line-height: ${(props) => props.theme.lineHeightBase};
 
   .count {
-    margin-top: 1rem;
-    font-weight: 600;
+    margin-top: ${(props) => props.theme.spaces.s100};
+    font-weight: ${(props) => props.theme.fontWeightBold};
     font-size: ${(props) => props.theme.fontSizeMd};
   }
 

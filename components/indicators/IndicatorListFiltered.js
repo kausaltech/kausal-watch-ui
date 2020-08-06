@@ -49,8 +49,8 @@ const IndicatorType = styled(Badge)`
 
 const StyledBadge = styled(Badge)`
   white-space: normal;
-  margin-right: .5rem;
-  margin-bottom: .5rem;
+  margin-right: ${(props) => props.theme.spaces.s050};
+  margin-bottom: ${(props) => props.theme.spaces.s050};
   border-radius: ${(props) => props.theme.badgeBorderRadius};
   padding: ${(props) => props.theme.badgePaddingY} ${(props) => props.theme.badgePaddingX};
   font-weight: ${(props) => props.theme.badgeFontWeight};

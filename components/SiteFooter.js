@@ -12,8 +12,8 @@ import { StaticPageLink, IndicatorListLink, ActionListLink } from '../common/lin
 import PlanContext from '../context/plan';
 
 const Logo = styled.div`
-  height: 4em;
-  margin-bottom: 4rem;
+  height: ${(props) => props.theme.spaces.s400};
+  margin-bottom: ${(props) => props.theme.spaces.s400};
 `;
 
 const StyledFooter = styled.footer`
@@ -25,7 +25,7 @@ const StyledFooter = styled.footer`
   padding: 6rem 0;
 
   .footer-column {
-    margin-bottom: 2rem;
+    margin-bottom: ${(props) => props.theme.spaces.s200};
     text-align: center;
 
     a.nav-link {
@@ -41,7 +41,7 @@ const StyledFooter = styled.footer`
 const OrgBrand = styled.div`
   svg {
     fill: #fff;
-    max-height: 2.5rem;
+    max-height: ${(props) => props.theme.spaces.s200};
     max-width: 100%;
   }
 `;

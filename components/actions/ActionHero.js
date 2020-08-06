@@ -11,7 +11,7 @@ import Icon from '../common/Icon';
 
 const Hero = styled.header`
   position: relative;
-  margin-bottom: 3rem;
+  margin-bottom: ${(props) => props.theme.spaces.s300};
   a {
     color: ${(props) => props.theme.brandLight};
 
@@ -44,7 +44,7 @@ const VisuallyHidden = styled.span`
 
 const OverlayContainer = styled.div`
   color: white;
-  padding: 2rem 0;
+  padding: ${(props) => props.theme.spaces.s200} 0;
 `;
 
 const ActionsNav = styled.nav`
@@ -63,7 +63,7 @@ const NavDivider = styled.span`
 
 const IndexLink = styled.span`
   font-size: ${(props) => props.theme.fontSizeLg};
-  font-weight: 700;
+  font-weight: ${(props) => props.theme.fontWeightBold};
 
   @media (max-width: ${(props) => props.theme.breakpointMd}) {
     font-size: ${(props) => props.theme.fontSizeMd};
@@ -72,7 +72,7 @@ const IndexLink = styled.span`
 
 const ActionHeadline = styled.h1`
   hyphens: auto;
-  margin-bottom: 2rem;
+  margin-bottom: ${(props) => props.theme.spaces.s200};
   font-size: ${(props) => props.theme.fontSizeXl};
 
   @media (max-width: ${(props) => props.theme.breakpointMd}) {
@@ -90,13 +90,14 @@ const ActionNumber = styled.span`
 
 const CategoryBadge = styled(Badge)`
   margin-right: 1em;
-  padding: .5rem;
+  padding: ${(props) => props.theme.spaces.s050};
   white-space: normal;
   text-align: left;
   font-size: ${(props) => props.theme.fontSizeBase};
-  line-height: ${(props) => props.theme.lineHeightMd}
+  font-weight: ${(props) => props.theme.badgeFontWeight};
+  line-height: ${(props) => props.theme.lineHeightMd};
   border-radius: ${(props) => props.theme.btnBorderRadius};
-  color: ${(props) => props.theme.themeColors.light};
+  color: ${(props) => props.theme.themeColors.white};
   background-color: ${(props) => props.theme.brandDark};
 `;
 

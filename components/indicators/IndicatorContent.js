@@ -81,7 +81,7 @@ const GET_INDICATOR_DETAILS = gql`
 `;
 
 const IndicatorHero = styled(BaseJumbotron)`
-  margin-bottom: 2rem;
+  margin-bottom: ${(props) => props.theme.spaces.s200};
 
   a {
     color: inherit;
@@ -101,7 +101,7 @@ const IndicatorLevel = styled.h6`
   border-radius: ${(props) => props.theme.badgeBorderRadius};
   padding: ${(props) => props.theme.badgePaddingY} ${(props) => props.theme.badgePaddingX};
   font-weight: ${(props) => props.theme.badgeFontWeight};
-  margin-bottom: 1.5rem;
+  margin-bottom: ${(props) => props.theme.spaces.s150};
 
   color: ${(props) => {
     switch (props.level) {

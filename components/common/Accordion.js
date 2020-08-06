@@ -16,7 +16,7 @@ const Header = styled.h3`
     flex-shrink: 0;
     margin-right: 12px;
     color: ${props => props.theme.themeColors.dark};
-    font-weight: 100;
+    font-weight: ${(props) => props.theme.fontWeightNormal};
   }
 
   .is-open&:before {
@@ -29,7 +29,7 @@ const QuestionTrigger = styled(Button)`
   margin-bottom: 1em;
   text-align: left;
   font-size: inherit;
-  font-weight: 600;
+  font-weight: ${(props) => props.theme.fontWeightBold};
   line-height: ${(props) => props.theme.lineHeightMd};
   hyphens: auto;
 `;

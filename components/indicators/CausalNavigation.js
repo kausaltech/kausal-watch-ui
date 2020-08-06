@@ -9,12 +9,12 @@ import { withTranslation } from '../../common/i18n';
 import IndicatorCard from './IndicatorCard';
 
 const CausalNavigationWrapper = styled.div`
-  padding-top: 2rem;
+  padding-top: ${(props) => props.theme.spaces.s200};
   background-color: ${(props) => props.theme.themeColors.light};
 `;
 
 const CardWrapper = styled.div`
-  margin-bottom: 1rem;
+  margin-bottom: ${(props) => props.theme.spaces.s100};
 `;
 
 function CausalNavigation(props) {

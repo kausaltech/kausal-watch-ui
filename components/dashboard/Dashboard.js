@@ -23,14 +23,14 @@ const DashboardSection = styled.div`
 `;
 
 const DashboardHeader = styled.div`
-  padding-top: 3rem;
-  margin-bottom: 1rem;
+  padding-top: ${(props) => props.theme.spaces.s300};
+  margin-bottom: ${(props) => props.theme.spaces.s100};
   background-color: ${(props) => props.theme.neutralLight};
 `;
 
 const ImpactGroupSection = styled.div`
-  padding-top: 2rem;
-  padding-bottom: 2rem;
+  padding-top: ${(props) => props.theme.spaces.s200};
+  padding-bottom: ${(props) => props.theme.spaces.s200};
 `;
 
 export const GET_IMPACT_GROUP_LIST = gql`

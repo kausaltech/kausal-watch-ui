@@ -14,7 +14,7 @@ const IndicatorsJumbo = styled.div`
 
 const IndicatorsTabs = styled.div`
   background-color: ${props => props.theme.neutralLight};
-  margin-bottom: 2rem;
+  margin-bottom: ${(props) => props.theme.spaces.s200};
 `;
 
 const StyledActiveLink = styled(ActiveLink)`

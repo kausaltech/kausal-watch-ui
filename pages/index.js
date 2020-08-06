@@ -15,11 +15,10 @@ import ThlHero from '../components/ThlHero';
 import HeroFullImage from '../components/home/HeroFullImage';
 import PlanContext from '../context/plan';
 
-
 const ActionsSection = styled.div`
   background-color: ${(props) => props.theme.neutralLight};
   position: relative;
-  padding: 8rem 0 4rem;
+  padding: ${(props) => props.theme.spaces.s800} 0 ${(props) => props.theme.spaces.s400};
   
   .container {
     text-align: center;
@@ -30,7 +29,7 @@ const IndicatorsSection = styled.div`
   background-color: ${(props) => props.theme.themeColors.white};
   color: ${(props) => props.theme.neutralDark};
   position: relative;
-  padding: 7rem 0;
+  padding: ${(props) => props.theme.spaces.s600} 0;
   
   .container {
     text-align: center;

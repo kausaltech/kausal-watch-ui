@@ -44,7 +44,7 @@ export const GET_ACTION_LIST = gql`
 `;
 
 const CardContainer = styled(Col)`
-  margin-bottom: 1.5rem;
+  margin-bottom: ${(props) => props.theme.spaces.s150};
 
   .card {
     height: 100%;

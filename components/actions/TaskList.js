@@ -7,7 +7,6 @@ import Icon from '../common/Icon';
 import { withTranslation } from '../../common/i18n';
 
 const Date = styled.span`
-  font-weight: 700;
   font-size: ${(props) => props.theme.fontSizeSm};
 `;
 
@@ -16,13 +15,13 @@ const TaskWrapper = styled.div`
 `;
 
 const TaskMeta = styled.div`
-  flex: 0 0 6rem;
+  flex: 0 0 ${(props) => props.theme.spaces.s600};
 `;
 
 const TaskContent = styled.div`
   border-left: 1px solid ${(props) => props.theme.themeColors.light};
-  margin-left: .5rem;
-  padding-left: 1rem;
+  margin-left: ${(props) => props.theme.spaces.s050};
+  padding-left: ${(props) => props.theme.spaces.s100};
 
   .text-content {
     font-size: ${(props) => props.theme.fontSizeSm};
@@ -38,7 +37,7 @@ const ListGroup = styled(BaseListGroup)`
 `;
 
 const ListGroupItem = styled(BaseListGroupItem)`
-  padding: .5rem;
+  padding: ${(props) => props.theme.spaces.s050};
 
   &:first-child {
     border-top-left-radius: ${(props) => props.theme.cardBorderRadius};
@@ -75,7 +74,7 @@ function TaskList(props) {
       <ListGroupItem key={item.id} className={`state--${item.state}`}>
         <TaskWrapper>
           <TaskMeta>
-            <Icon name="calendar" className="text-black-50 mr-2" alt={t('action-task-todo')} />
+            <Icon name="calendar" className="text-black-50" alt={t('action-task-todo')} />
             <Date>{parseTimestamp(item.dueAt)}</Date>
           </TaskMeta>
           <TaskContent>
@@ -96,7 +95,7 @@ function TaskList(props) {
       <ListGroupItem key={item.id} className={`state--${item.state}`}>
         <TaskWrapper>
           <TaskMeta>
-            <Icon name="check" className="text-black-50 mr-2" alt={t('action-task-done')} />
+            <Icon name="check" className="text-black-50" alt={t('action-task-done')} />
             <Date>{parseTimestamp(item.completedAt)}</Date>
           </TaskMeta>
           <TaskContent>

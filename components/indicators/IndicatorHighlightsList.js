@@ -38,7 +38,7 @@ export const GET_INDICATOR_HIGHLIGHTS = gql`
 `;
 
 const CardContainer = styled(Col)`
-  margin-bottom: 1.5rem;
+  margin-bottom: ${(props) => props.theme.spaces.s150};
 
   .lazyload-wrapper {
     width: 100%;
