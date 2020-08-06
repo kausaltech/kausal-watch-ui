@@ -14,12 +14,13 @@ const CustomInput = styled(BaseCustomInput)`
 `;
 
 const FiltersList = styled.div`
-  font-size: 2rem;
+  font-size: ${(props) => props.theme.fontSizeLg};
+  line-height: ${(props) => props.theme.lineHeightBase};
 
   .count {
     margin-top: 1rem;
     font-weight: 600;
-    font-size: 1.25rem;
+    font-size: ${(props) => props.theme.fontSizeMd};
   }
 
   .close {

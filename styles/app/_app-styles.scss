@@ -48,11 +48,6 @@
   overflow: hidden;
 }
 
-h1, h2, h3 , h4, h5 {
-  line-height: 1.1;
-  color: inherit;
-}
-
 blockquote {
   margin-left: 2em;
   padding-left: 1em;
@@ -111,42 +106,6 @@ blockquote {
 
 .bg-status {
   background-color: $green;
-}
-
-.text-content {
-  a {
-    text-decoration: underline;
-    overflow-wrap: break-word;
-    word-wrap: break-word;
-    word-break: break-all;
-    word-break: break-word;
-
-    &:hover {
-      text-decoration: none;
-    }
-  }
-
-  h3, h4, h5 {
-    line-height: 1.2;
-  }
-
-  h3 {
-    margin-top: 1.5rem;
-    font-size: 1.25rem;
-  }
-
-  h4 {
-    margin-top: 1.25rem;
-    font-size: 1.25rem;
-
-    &:first-child {
-      margin-top: 0;
-    }
-  }
-
-  h5 {
-    font-size: 1rem;
-  }
 }
 
 /* Fix for flickering tooltip bug */

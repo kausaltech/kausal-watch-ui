@@ -18,8 +18,8 @@ const ActionUpdate = styled.article`
 
 const ActionUpdateHeader = styled.header`
   h3 {
-    font-size: 1.25rem;
-    line-height: 24px;
+    font-size: ${(props) => props.theme.fontSizeLg};
+    line-height: ${(props) => props.theme.lineHeightMd};
   }
 `;
 
@@ -34,7 +34,7 @@ const AuthorName = styled.div`
 `;
 
 const UpdateDate = styled.div`
-  font-size: 0.8em;
+  font-size: ${(props) => props.theme.fontSizeSm};
   font-weight: 400;
   color: ${(props) => props.theme.themeColors.dark};
 `;

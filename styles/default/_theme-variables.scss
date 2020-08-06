@@ -52,6 +52,18 @@ $font-family-sans-serif:      #{$font-family}, -apple-system, BlinkMacSystemFont
 $font-family-monospace:       SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 $font-family-base:            $font-family-sans-serif;
 
+$font-size-sm:	  0.875rem;
+$font-size-base: 	1rem;
+$font-size-md:	  1.125rem;
+$font-size-lg:	  1.5rem;
+$font-size-xl:	  2.25rem;
+$font-size-xxl:	  3.25rem;
+
+$line-height-base:            1.5;
+$line-height-sm:              1;
+$line-height-md:              1.2;
+$line-height-lg:              1.75;
+
 // Links
 //
 // Style anchor elements.

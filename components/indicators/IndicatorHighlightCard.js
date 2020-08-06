@@ -11,7 +11,7 @@ import { IndicatorLink } from '../../common/links';
 const IndicatorType = styled.div`
   margin-bottom: .5em;
   text-align: left;
-  font-size: 0.8rem;
+  font-size: ${(props) => props.theme.fontSizeSm};
   color: ${(props) => props.theme.neutralDark};
 `;
 
@@ -51,9 +51,9 @@ const StyledCard = styled(Card)`
 
 const IndicatorValue = styled.div`
   margin-top: .75rem;
-  font-size: 2rem;
+  font-size: ${(props) => props.theme.fontSizeXl};
   font-weight: 700;
-  line-height: 1;
+  line-height: ${(props) => props.theme.lineHeightSm};
   color: ${(props) => {
     switch (props.level) {
       case 'action':
@@ -72,12 +72,12 @@ const IndicatorValue = styled.div`
 
 const IndicatorUnit = styled.span`
   margin-left: .25em;
-  font-size: 60%;
+  font-size: ${(props) => props.theme.fontSizeSm};
 `;
 
 const StyledCardTitle = styled(CardTitle)`
   margin-bottom: 0;
-  font-size: 1.2em;
+  font-size: ${(props) => props.theme.fontSizeMd};
   text-align: left;
   hyphens: auto;
 `;

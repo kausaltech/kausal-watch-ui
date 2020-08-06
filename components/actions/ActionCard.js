@@ -62,9 +62,9 @@ const ActionCardElement = styled.div`
 const ActionNumber = styled.div`
   align-self: flex-start;
   padding: .5rem;
-  font-size: 1rem;
+  font-size: ${(props) => props.theme.fontSizeBase};
   font-weight: 700;
-  line-height: 1;
+  line-height: ${(props) => props.theme.lineHeightSm};
   color: #000000;
   background: #ffffff;
 `;
@@ -76,6 +76,7 @@ const ActionStatusArea = styled.div`
   color: ${(props) => props.theme.themeColors.black};
   background-color: ${(props) => props.theme.themeColors.success};
   min-height: 100px;
+  line-height: ${(props) => props.theme.lineHeightSm};;
 
   &.bg-not_started {
     background-color: ${(props) => props.theme.themeColors.light};
@@ -122,8 +123,9 @@ const ActionStatus = styled.div`
 `;
 
 const StatusName = styled.div`
-  margin-left: .5rem;
-  font-size: 1rem;
+  margin: .5rem;
+  font-size: ${(props) => props.theme.fontSizeBase};
+  line-height: ${(props) => props.theme.lineHeightSm};;
   font-weight: 700
 `;
 
@@ -139,8 +141,8 @@ const StyledCardTitle = styled.div`
   padding: .75rem;
   color: #000000;
   background: #ffffff;
-  font-size: 1rem;
-  line-height: 1.2;
+  font-size: ${(props) => props.theme.fontSizeBase};
+  line-height: ${(props) => props.theme.lineHeightMd};
   text-align: left;
   word-break: break-word;
   hyphens: auto;

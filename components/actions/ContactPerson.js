@@ -32,7 +32,7 @@ const PersonDetails = styled(Media)`
 `;
 
 const Name = styled.p`
-  line-height: 1;
+  line-height: ${(props) => props.theme.lineHeightSm};
   margin-bottom: .5em;
   font-weight: 600;
 `;
@@ -40,16 +40,16 @@ const Name = styled.p`
 const PersonRole = styled.p`
   margin-bottom: .5em;
   color: ${(props) => props.theme.themeColors.dark};
-  font-size: 90%;
+  font-size: ${(props) => props.theme.fontSizeSm};
   font-weight: 600;
-  line-height: 1;
+  line-height: ${(props) => props.theme.lineHeightSm};
 `;
 
 const PersonOrg = styled.p`
   margin-bottom: 1em;
   color: ${(props) => props.theme.themeColors.dark};
-  font-size: 90%;
-  line-height: 1;
+  font-size: ${(props) => props.theme.fontSizeSm};
+  line-height: ${(props) => props.theme.lineHeightSm};
 `;
 
 const Avatar = styled.img`
@@ -60,7 +60,7 @@ const Avatar = styled.img`
 const Address = styled.address`
   margin-top: 1em;
   margin-bottom: 0;
-  font-size: 90%;
+  font-size: ${(props) => props.theme.fontSizeSm};
 `;
 
 const CollapseButton = styled(Button)`

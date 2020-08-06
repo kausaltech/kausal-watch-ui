@@ -8,7 +8,7 @@ import { withTranslation } from '../../common/i18n';
  
 const Banner = styled.div`
   padding: .75rem 0;
-  font-size: 80%;
+  font-size: ${(props) => props.theme.fontSizeSm};
   background-color: ${(props) => props.theme.themeColors.dark};
   color: ${(props) => props.theme.themeColors.light};
 `;

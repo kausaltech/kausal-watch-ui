@@ -13,38 +13,38 @@ const ValueSummary = styled.div`
 
 const ValueLabel = styled.div`
   margin-bottom: .5rem;
-  font-size: 1rem;
+  font-size: ${(props) => props.theme.fontSizeBase};
   font-weight: 700;
-  line-height: 1;
+  line-height: ${(props) => props.theme.lineHeightSm};
 `;
 
 const ValueDate = styled.div`
-  font-size: 0.8rem;
+  font-size: ${(props) => props.theme.fontSizeSm};
   color: ${(props) => props.theme.themeColors.dark};
 `;
 
 const ValueDisplay = styled.div`
-  font-size: 1.5rem;
+  font-size: ${(props) => props.theme.fontSizeLg};
   font-weight: 700;
-  line-height: 1;
+  line-height: ${(props) => props.theme.lineHeightSm};
 `;
 
 const ValueUnit = styled.span`
   margin: 0 .5em 0 .25em;
-  font-size: 1rem;
+  font-size: ${(props) => props.theme.fontSizeBase};
   font-weight: 400;
   color: ${(props) => props.theme.themeColors.dark};
 `;
 
 const ValueChange = styled.div`
   display: inline-block;
-  font-size: 1rem;
+  font-size: ${(props) => props.theme.fontSizeBase};
   color: ${(props) => props.color};
 `;
 
 const ChangeSymbol = styled.span`
   margin-right: .5em;
-  font-size: .8rem;
+  font-size: ${(props) => props.theme.fontSizeSm};
 `;
 
 function beautifyValue(x) {

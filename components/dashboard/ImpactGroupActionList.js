@@ -20,7 +20,7 @@ const ActionName = styled.span`
 
 const StatusBadge = styled(Badge)`
   color: white;
-  font-size: 1em;
+  font-size: ${(props) => props.theme.fontSizeBase};
 `;
 
 class ImpactGroupActionList extends React.PureComponent {

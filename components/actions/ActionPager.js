@@ -21,7 +21,7 @@ const Next = styled.div`
 `;
 
 const PageButton = styled(Button)`
-  line-height: 1;
+  line-height: ${(props) => props.theme.lineHeightSm};
 
   .icon {
     fill: ${(props) => props.theme.brandDark} !important;

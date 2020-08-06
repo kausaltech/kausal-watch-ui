@@ -11,6 +11,6 @@ let liiku = require('sass-extract-loader?{"plugins": ["sass-extract-js"]}!../sty
 
 let hnh2035 = require('sass-extract-loader?{"plugins": ["sass-extract-js"]}!../styles/hnh2035/_theme-variables.scss');
 
-const themes = [defaultTheme, hnh2035, liiku];
+const themes = [defaultTheme, Object.assign({...defaultTheme}, hnh2035), Object.assign({...defaultTheme},liiku)];
 addDecorator(storyFN => <ThemedGlobalStyles>{storyFN()}</ThemedGlobalStyles>);
 addDecorator(withThemesProvider(themes));

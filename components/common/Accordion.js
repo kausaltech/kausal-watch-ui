@@ -6,7 +6,7 @@ import { replaceHashWithoutScrolling } from '../../common/links';
 
 const Header = styled.h3`
   display: flex;
-  font-size: 1.4em;
+  font-size: ${(props) => props.theme.fontSizeLg};
 
   &:before {
     display: block;
@@ -30,7 +30,7 @@ const QuestionTrigger = styled(Button)`
   text-align: left;
   font-size: inherit;
   font-weight: 600;
-  line-height: 1.2;
+  line-height: ${(props) => props.theme.lineHeightMd};
   hyphens: auto;
 `;
 

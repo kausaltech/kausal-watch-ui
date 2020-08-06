@@ -138,7 +138,7 @@ const ActionSection = styled.div`
 
 const SectionHeader = styled.h2`
   @media (max-width: ${(props) => props.theme.breakpointMd}) {
-    font-size: 1.75em;
+    font-size: ${(props) => props.theme.fontSizeLg};
   }
 `;
 
@@ -154,7 +154,7 @@ const SolidSection = styled.div`
 `;
 
 const ActionNumberBadge = styled(Badge)`
-  font-size: 1rem;
+  font-size: ${(props) => props.theme.fontSizeBase};
   padding: .25rem;
   border-radius: ${(props) => props.theme.btnBorderRadius};
   background-color: ${(props) => props.theme.brandDark};

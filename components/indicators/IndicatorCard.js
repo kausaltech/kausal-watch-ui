@@ -16,12 +16,12 @@ const IndicatorValue = styled.div`
 `;
 
 const IndicatorValueUnit = styled.span`
-  font-size: 75%;
+  font-size: ${(props) => props.theme.fontSizesm};
   font-weight: 400;
 `;
 
 const IndicatorValueTime = styled.div`
-  font-size: 75%;
+  font-size: ${(props) => props.theme.fontSizesm};
   font-weight: 400;
 `;
 
@@ -36,7 +36,7 @@ const StyledLink = styled.a`
 
 const Indicator = styled(Card)`
   hyphens: auto;
-  line-height: 1;
+  line-height: ${(props) => props.theme.lineHeightSm};
   border: 0;
   border-radius: ${(props) => props.theme.cardBorderRadius};
 
@@ -78,7 +78,7 @@ const Indicator = styled(Card)`
 
 const IndicatorType = styled.div`
   opacity: .75;
-  font-size: 75%;
+  font-size: ${(props) => props.theme.fontSizeSm};
   margin-bottom: .5em;
 `;
 

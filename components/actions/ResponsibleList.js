@@ -6,7 +6,7 @@ import { ActionListLink } from '../../common/links';
 import BadgeTooltip from '../common/BadgeTooltip';
 
 const Responsibles = styled.div`
-  font-size: 1.25rem;
+  font-size: ${(props) => props.theme.fontSizeMd};
 
   .badge-pill {
     margin-right: .5em;

@@ -8,7 +8,7 @@ import { withTranslation } from '../../common/i18n';
 
 const Date = styled.span`
   font-weight: 700;
-  font-size: 75%;
+  font-size: ${(props) => props.theme.fontSizeSm};
 `;
 
 const TaskWrapper = styled.div`
@@ -25,7 +25,7 @@ const TaskContent = styled.div`
   padding-left: 1rem;
 
   .text-content {
-    font-size: .9rem;
+    font-size: ${(props) => props.theme.fontSizeSm};
 
     p:last-child {
       margin-bottom: 0;

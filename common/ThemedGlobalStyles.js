@@ -6,6 +6,9 @@ import Fonts from './fonts';
 const GlobalStyle = createGlobalStyle`
   body {
     font-family: ${(props) => props.theme.fontFamilySansSerif};
+    font-size: ${(props) => props.theme.fontSizeBase};
+    line-height: ${(props) => props.theme.lineHeightBase};
+    text-rendering: optimizeLegibility;
   }
 
   a {
@@ -13,6 +16,43 @@ const GlobalStyle = createGlobalStyle`
 
     &:hover {
       color: ${(props) => props.theme.brandDark};
+    }
+  }
+
+  h1, h2, h3 , h4, h5 {
+    line-height: ${(props) => props.theme.lineHeightMd};
+    color: inherit;
+  }
+
+  .text-content {
+    a {
+      text-decoration: underline;
+      overflow-wrap: break-word;
+      word-wrap: break-word;
+      word-break: break-all;
+      word-break: break-word;
+
+      &:hover {
+        text-decoration: none;
+      }
+    }
+
+    h3 {
+      margin-top: 1.5rem;
+      font-size: ${(props) => props.theme.fontSizeLg};
+    }
+
+    h4 {
+      margin-top: 1.25rem;
+      font-size: ${(props) => props.theme.fontSizeMd};
+
+      &:first-child {
+        margin-top: 0;
+      }
+    }
+
+    h5 {
+      font-size: ${(props) => props.theme.fontSizeBase}
     }
   }
 

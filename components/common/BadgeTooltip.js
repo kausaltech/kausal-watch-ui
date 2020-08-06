@@ -6,7 +6,7 @@ import { lighten } from 'polished';
 
 const BadgeWrapper = styled.a`
   &.lg {
-    font-size: 1.75rem;
+    font-size: ${(props) => props.theme.fontSizeXl};
   }
 `;
 

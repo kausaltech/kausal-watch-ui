@@ -44,7 +44,7 @@ const ReadyBadge = styled(Badge)`
 `;
 
 const StyledCardTitle = styled(CardTitle)`
-  font-size: 1.2em;
+  font-size: ${(props) => props.theme.fontSizeMd};
   text-align: left;
   hyphens: auto;
   margin-bottom: 0;
@@ -75,7 +75,7 @@ const ImgOverlay = styled.div`
 
 const ActionNumber = styled.div`
   text-align: center;
-  font-size: 3.5em;
+  font-size: ${(props) => props.theme.fontSizeXxl};
   font-weight: 700;
   line-height: 9rem;
   color: ${(props) => props.theme.themeColors.light};

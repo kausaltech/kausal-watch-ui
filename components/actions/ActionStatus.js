@@ -7,11 +7,11 @@ import { Progress } from 'reactstrap';
 const Status = styled.div`
   color: ${(props) => props.theme.themeColors.dark};
   background-color: ${(props) => props.theme.themeColors.dark};
-  font-size: 0.8em;
+  font-size: ${(props) => props.theme.fontSizeSm};
   font-weight: 700;
   letter-spacing: 0.03em;
   text-align: left;
-  line-height: 2;
+  line-height: ${(props) => props.theme.lineHeightBase};
 `;
 
 const StatusTitle = styled.div`

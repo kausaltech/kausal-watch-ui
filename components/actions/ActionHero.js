@@ -48,10 +48,10 @@ const OverlayContainer = styled.div`
 `;
 
 const ActionsNav = styled.nav`
-  font-size: 1rem;
+  font-size: ${(props) => props.theme.fontSizeBase};
 
   @media (max-width: ${(props) => props.theme.breakpointMd}) {
-    font-size: 0.9rem;
+    font-size: ${(props) => props.theme.fontSizeSm};
   }
 `;
 
@@ -62,27 +62,29 @@ const NavDivider = styled.span`
 `;
 
 const IndexLink = styled.span`
-  font-size: 1.5rem;
+  font-size: ${(props) => props.theme.fontSizeLg};
   font-weight: 700;
 
   @media (max-width: ${(props) => props.theme.breakpointMd}) {
-    font-size: 1.2em;
+    font-size: ${(props) => props.theme.fontSizeMd};
   }
 `;
 
 const ActionHeadline = styled.h1`
   hyphens: auto;
   margin-bottom: 2rem;
+  font-size: ${(props) => props.theme.fontSizeXl};
 
   @media (max-width: ${(props) => props.theme.breakpointMd}) {
-    font-size: 1.75em;
+    font-size: ${(props) => props.theme.fontSizeLg};
   }
 `;
 
 const ActionNumber = styled.span`
-  font-size: 3.5rem;
+  font-size: ${(props) => props.theme.fontSizeXxl};
+
   @media (max-width: ${(props) => props.theme.breakpointMd}) {
-    font-size: 2.5rem;
+    font-size: ${(props) => props.theme.fontSizeLg};
   }
 `;
 
@@ -91,8 +93,8 @@ const CategoryBadge = styled(Badge)`
   padding: .5rem;
   white-space: normal;
   text-align: left;
-  font-size: 1rem;
-  line-height: 1.1;
+  font-size: ${(props) => props.theme.fontSizeBase};
+  line-height: ${(props) => props.theme.lineHeightMd}
   border-radius: ${(props) => props.theme.btnBorderRadius};
   color: ${(props) => props.theme.themeColors.light};
   background-color: ${(props) => props.theme.brandDark};

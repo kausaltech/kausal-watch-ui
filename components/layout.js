@@ -9,7 +9,9 @@ import SiteFooter from './SiteFooter';
 import PlanContext from '../context/plan';
 import ThemedGlobalStyles from '../common/ThemedGlobalStyles';
 
-const theme = require('sass-extract-loader?{"plugins": ["sass-extract-js"]}!../styles/' + process.env.THEME_IDENTIFIER + '/_theme-variables.scss');
+const defaultTheme = require('sass-extract-loader?{"plugins": ["sass-extract-js"]}!../styles/default/_theme-variables.scss');
+const customTheme = require('sass-extract-loader?{"plugins": ["sass-extract-js"]}!../styles/' + process.env.THEME_IDENTIFIER + '/_theme-variables.scss');
+const theme = Object.assign(defaultTheme, customTheme);
 
 function Layout({ children }) {
   const plan = useContext(PlanContext);

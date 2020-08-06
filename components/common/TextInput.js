@@ -9,7 +9,7 @@ import styled from 'styled-components';
 
 const Label = styled(BSLabel)`
   font-weight: 700;
-  line-height: 1;
+  line-height: ${(props) => props.theme.lineHeightSm};
 `;
 
 const Input = styled(BSInput)`
