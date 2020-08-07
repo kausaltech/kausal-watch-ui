@@ -1,13 +1,14 @@
 import React from 'react';
 import { PropTypes } from 'prop-types';
 import { ListGroup as BaseListGroup, ListGroupItem as BaseListGroupItem } from 'reactstrap';
-import styled from 'styled-components';
+import styled, { withTheme } from 'styled-components';
 import moment from '../../common/moment';
 import Icon from '../common/Icon';
 import { withTranslation } from '../../common/i18n';
 
 const Date = styled.span`
   font-size: ${(props) => props.theme.fontSizeSm};
+  margin-left: ${(props) => props.theme.spaces.s025};
 `;
 
 const TaskWrapper = styled.div`
@@ -15,12 +16,12 @@ const TaskWrapper = styled.div`
 `;
 
 const TaskMeta = styled.div`
-  flex: 0 0 ${(props) => props.theme.spaces.s600};
+  flex: 0 0 ${(props) => props.theme.spaces.s800};
 `;
 
 const TaskContent = styled.div`
   border-left: 1px solid ${(props) => props.theme.themeColors.light};
-  margin-left: ${(props) => props.theme.spaces.s050};
+  margin: ${(props) => props.theme.spaces.s050};
   padding-left: ${(props) => props.theme.spaces.s100};
 
   .text-content {
@@ -60,7 +61,7 @@ function parseTimestamp(timestamp) {
 }
 
 function TaskList(props) {
-  const { t, tasks } = props;
+  const { t, theme, tasks } = props;
   const sortedTasks = tasks
     .sort((a, b) => {
       const adate = a.completedAt ? a.completedAt : a.dueAt;
@@ -74,11 +75,11 @@ function TaskList(props) {
       <ListGroupItem key={item.id} className={`state--${item.state}`}>
         <TaskWrapper>
           <TaskMeta>
-            <Icon name="calendar" className="text-black-50" alt={t('action-task-todo')} />
+            <Icon name="calendar" color={theme.themeColors.dark} alt={t('action-task-todo')} />
             <Date>{parseTimestamp(item.dueAt)}</Date>
           </TaskMeta>
           <TaskContent>
-            <h6>{item.name}</h6>
+            <h5>{item.name}</h5>
             <div
               className="text-content"
               dangerouslySetInnerHTML={{ __html: item.comment }}
@@ -95,11 +96,11 @@ function TaskList(props) {
       <ListGroupItem key={item.id} className={`state--${item.state}`}>
         <TaskWrapper>
           <TaskMeta>
-            <Icon name="check" className="text-black-50" alt={t('action-task-done')} />
+            <Icon name="check" color={theme.themeColors.dark} alt={t('action-task-done')} />
             <Date>{parseTimestamp(item.completedAt)}</Date>
           </TaskMeta>
           <TaskContent>
-            <h6>{item.name}</h6>
+            <h5>{item.name}</h5>
             <div
               className="text-content"
               dangerouslySetInnerHTML={{ __html: item.comment }}
@@ -114,16 +115,16 @@ function TaskList(props) {
       { undoneTasks.length > 0
         ? (
           <>
-            <h5 className="mb-3">{ t('action-tasks-todo') }</h5>
+            <h4>{ t('action-tasks-todo') }</h4>
             <ListGroup className="mb-5">
               {undoneTasks}
             </ListGroup>
           </>
         )
-        : <h5 className="text-muted mb-4">{ t('action-tasks-todo-empty') }</h5> }
+        : <h4 className="text-muted mb-4">{ t('action-tasks-todo-empty') }</h4> }
       { doneTasks.length > 0 && (
         <>
-          <h5 className="mb-3">{ t('action-tasks-done') }</h5>
+          <h4>{ t('action-tasks-done') }</h4>
           <ListGroup className="mb-5">
             {doneTasks}
           </ListGroup>
@@ -139,4 +140,4 @@ TaskList.propTypes = {
   tasks: PropTypes.arrayOf(PropTypes.shape).isRequired,
 };
 
-export default withTranslation('common')(TaskList);
+export default withTranslation('common')(withTheme(TaskList));
