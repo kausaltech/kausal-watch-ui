@@ -176,7 +176,7 @@ function IndicatorDetails(props) {
       <Container>
         <Row>
           <Col md="10" className="mb-5">
-            <div className="mt-4" dangerouslySetInnerHTML={{ __html: indicator.description }} />
+            <div className="mt-4 text-content" dangerouslySetInnerHTML={{ __html: indicator.description }} />
           </Col>
         </Row>
         {(indicator.latestGraph || indicator.values.length > 0) &&
