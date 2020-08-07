@@ -10,7 +10,6 @@ const SpacerExample = styled.div`
 
 const Spacings = () => {
   const themeContext = useContext(ThemeContext);
-  console.log(themeContext);
   return (
     <Container className="my-5">
       <h3>Spacing tokens</h3>
