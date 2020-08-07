@@ -43,6 +43,13 @@ export const GET_ACTION_LIST = gql`
   }
 `;
 
+const ListHeader = styled(Col)`
+  h2 {
+    font-size: ${(props) => props.theme.fontSizeXl};
+    margin-bottom: ${(props) => props.theme.spaces.s400};
+  }
+`;
+
 const CardContainer = styled(Col)`
   margin-bottom: ${(props) => props.theme.spaces.s150};
 
@@ -54,9 +61,9 @@ const CardContainer = styled(Col)`
 function ActionCardList({ t, actions, plan }) {
   return (
     <Row>
-      <Col xs="12">
-        <h2 className="mb-5">{ t('recently-updated-actions') }</h2>
-      </Col>
+      <ListHeader xs="12">
+        <h2>{ t('recently-updated-actions') }</h2>
+      </ListHeader>
       {actions.map((item) => (
         <CardContainer
           xs="12"

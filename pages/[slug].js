@@ -17,36 +17,38 @@ const HeaderImage = styled.div`
   background-image: url(${(props) => props.image});
   background-size: cover;
   background-position: center;
-  color: #fff;
-  height: 300px;
+  color: ${(props) => props.theme.themeColors.white};
+  height: calc(4 * ${(props) => props.theme.spaces.s400});
   background-color: ${(props) => props.theme.brandDark};
   background-blend-mode: multiply;
 `;
 
 const HeaderBg = styled.div`
   background-color: ${(props) => props.theme.brandDark};
-  color: #fff;
+  color: ${(props) => props.theme.themeColors.white};
   position: relative;
 `;
 
 const ContentHeader = styled.header`
-  padding: 5em 0 3em;
+  padding: ${(props) => props.theme.spaces.s400} 0 ${(props) => props.theme.spaces.s200};
   h1 {
-    margin-bottom: .5em;
+    font-size: ${(props) => props.theme.fontSizeXxl};
+    margin-bottom: ${(props) => props.theme.spaces.s150};
   }
 `;
 
 const ContentMarkup = styled.div`
-  padding: 3em 0;
+  padding: ${(props) => props.theme.spaces.s300} 0;
 `;
 
 const FaqSection = styled.section`
-  padding: 4em 0;
+  padding: ${(props) => props.theme.spaces.s400} 0;
   background: ${(props) => props.theme.themeColors.light};
 
   h2 {
     text-align: center;
-    margin-bottom: 2em;
+    font-size: ${(props) => props.theme.fontSizeXl};
+    margin-bottom: ${(props) => props.theme.spaces.s300};
   }
 `;
 

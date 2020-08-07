@@ -8,7 +8,6 @@ import {
 } from 'reactstrap';
 import styled from 'styled-components';
 import LazyLoad from 'react-lazyload';
-import { transparentize } from 'polished';
 import { withTranslation } from '../../common/i18n';
 import ContentLoader from '../common/ContentLoader';
 import { IndicatorListLink } from '../../common/links';
@@ -37,6 +36,13 @@ export const GET_INDICATOR_HIGHLIGHTS = gql`
   }
 `;
 
+const ListHeader = styled(Col)`
+  h2 {
+    font-size: ${(props) => props.theme.fontSizeXl};
+    margin-bottom: ${(props) => props.theme.spaces.s400};
+  }
+`;
+
 const CardContainer = styled(Col)`
   margin-bottom: ${(props) => props.theme.spaces.s150};
 
@@ -53,9 +59,9 @@ function IndicatorCardList(props) {
 
   return (
     <Row>
-      <Col xs="12">
-        <h2 className="mb-5">{ t('recently-updated-indicators') }</h2>
-      </Col>
+      <ListHeader xs="12">
+        <h2>{ t('recently-updated-indicators') }</h2>
+      </ListHeader>
       {indicators.map((item) => (
         <CardContainer
           xs="12"

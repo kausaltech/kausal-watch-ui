@@ -133,13 +133,12 @@ const LastUpdated = styled.div`
 `;
 
 const ActionSection = styled.div`
-  margin-bottom: ${(props) => props.theme.spaces.s300};
+  margin-bottom: ${(props) => props.theme.spaces.s200};
 `;
 
 const SectionHeader = styled.h2`
-  @media (max-width: ${(props) => props.theme.breakpointMd}) {
-    font-size: ${(props) => props.theme.fontSizeLg};
-  }
+  font-size: ${(props) => props.theme.fontSizeLg};
+  margin-bottom: ${(props) => props.theme.spaces.s200};
 `;
 
 const OfficialText = styled.div`
@@ -148,8 +147,7 @@ const OfficialText = styled.div`
 `;
 
 const SolidSection = styled.div`
-  padding: 2rem 0;
-
+  padding:  ${(props) => props.theme.spaces.s100} 0;
   margin-bottom: ${(props) => props.theme.spaces.s300};
 `;
 
@@ -259,31 +257,31 @@ function ActionDetails(props) {
             <SolidSection>
               <Row>
                 <Col>
-                  <SectionHeader className="mb-5">{ t('action-status-updates') }</SectionHeader>
+                  <SectionHeader>{ t('action-status-updates') }</SectionHeader>
                 </Col>
               </Row>
-              <ActionUpdatesList id={action.id} className="mb-5" />
+              <ActionUpdatesList id={action.id} />
             </SolidSection>
             )}
             <Row>
               <Col>
-                <SectionHeader className="mb-5">{ t('action-tasks') }</SectionHeader>
+                <SectionHeader>{ t('action-tasks') }</SectionHeader>
               </Col>
             </Row>
             <Row>
-              <Col className="mb-5">
-                <ActionSection className="mb-5">
+              <Col>
+                <ActionSection>
                   <TaskList tasks={action.tasks} />
                 </ActionSection>
               </Col>
             </Row>
             <Row>
               <Col>
-                <SectionHeader className="mb-5">{ t('indicators') }</SectionHeader>
+                <SectionHeader>{ t('indicators') }</SectionHeader>
               </Col>
             </Row>
             <Row>
-              <Col sm="12" className="mb-5">
+              <Col sm="12">
                 {action.relatedIndicators && action.relatedIndicators.length > 0
                   ? <ActionIndicators actionId={action.id} relatedIndicators={action.relatedIndicators} />
                   : <Alert color="light" className="mb-5"><h6>Ei määriteltyjä mittareita</h6></Alert>
@@ -358,7 +356,7 @@ function ActionDetails(props) {
           <Container>
             <Row>
               <Col sm="12">
-                <SectionHeader className="mb-3">{ t('action-what-effect-this-has') }</SectionHeader>
+                <SectionHeader>{ t('action-what-effect-this-has') }</SectionHeader>
               </Col>
             </Row>
           </Container>
@@ -367,7 +365,7 @@ function ActionDetails(props) {
       )}
       <Container>
         <Row>
-          <Col sm="12" className="mb-5">
+          <Col sm="12">
             <ActionPager
               nextAction={action.nextAction}
               previousAction={action.previousAction}

@@ -10,6 +10,15 @@ import ActiveLink from '../../common/ActiveLink';
 const IndicatorsJumbo = styled.div`
   background-color: ${props => props.theme.neutralLight};
   padding: 3em 0;
+
+  h1 {
+    font-size: ${(props) => props.theme.fontSizeXxl};
+    margin-bottom: ${(props) => props.theme.spaces.s150};
+
+    @media (max-width: ${(props) => props.theme.breakpointMd}) {
+      font-size: ${(props) => props.theme.fontSizeXl};
+    }
+  }
 `;
 
 const IndicatorsTabs = styled.div`
@@ -41,7 +50,7 @@ class IndicatorsHero extends React.Component {
       <div>
         <IndicatorsJumbo>
           <Container>
-            <h1 className="mb-5">
+            <h1>
               { t('indicators') }
             </h1>
             { leadContent && (

@@ -27,7 +27,6 @@ const Hero = styled.div`
 const HeroMain = styled.div`
   position: relative;
   min-height: 38rem;
-  //background-color: ${(props) => props.theme.themeColors.black};
   background-image: url(${(props) => props.image});
   background-size: cover;
   background-position: center;
@@ -43,8 +42,14 @@ const HeroMain = styled.div`
 const MainCard = styled.div`
   padding: ${(props) => props.theme.spaces.s200};
   margin: ${(props) => props.theme.spaces.s300} 0;
+  border-radius: ${(props) => props.theme.cardBorderRadius};
   background-color: ${(props) => props.theme.themeColors.white};
   color: ${(props) => props.theme.neutralDark};
+
+  h1 {
+    font-size: ${(props) => props.theme.fontSizeXl};
+    margin-bottom: ${(props) => props.theme.spaces.s100};
+  }
 
   a {
     color: ${(props) => props.theme.neutralDark};
@@ -62,6 +67,11 @@ const MainCard = styled.div`
     }
   }
 
+  p {
+    font-size: ${(props) => props.theme.fontSizeMd};
+    line-height: ${(props) => props.theme.lineHeightMd};
+  }
+
   @media (max-width: ${(props) => props.theme.breakpointMd}) {
     margin-top: 20rem;
   }
@@ -75,9 +85,16 @@ const Highlight = styled.div`
   height: 100%;
   margin-bottom: 0;
 
-  h5 {
-    color: ${(props) => props.theme.neutralDark};
+  &:hover {
+    h2 {
+      text-decoration: underline;
+    }
+  }
 
+  h2 {
+    color: ${(props) => props.theme.neutralDark};
+    font-size: ${(props) => props.theme.fontSizeMd};
+  
     .icon {
       margin-left: ${(props) => props.theme.spaces.s025};
     }
@@ -87,6 +104,7 @@ const Highlight = styled.div`
     hyphens: auto;
     margin-bottom: 0;
     color: ${(props) => props.theme.neutralDark};
+    font-size: ${(props) => props.theme.fontSizeBase};
   }
 `;
 
@@ -117,8 +135,8 @@ function HeroFullImage(props) {
           <Row>
             <Col md={8} lg={6} >
               <MainCard>
-                <h2>{ title || 'Site Title' }</h2>
-                <p className="lead">{ siteDescription || 'Site Description' }</p>
+                <h1>{ title || 'Site Title' }</h1>
+                <p>{ siteDescription || 'Site Description' }</p>
                 <ActionListLink>
                   <a href>
                     <Highlight
@@ -130,10 +148,10 @@ function HeroFullImage(props) {
                         </Illustration>
                       )}
                       <div>
-                        <h5>
+                        <h2>
                           { t('actions') }
-                          <Icon name="arrowRight" color="black" />
-                        </h5>
+                          <Icon name="arrowRight" color={theme.neutralDark} />
+                        </h2>
                         <p>
                           { actionsDescription || 'Actions Description' }
                         </p>
@@ -152,10 +170,10 @@ function HeroFullImage(props) {
                         </Illustration>
                       )}
                       <div>
-                        <h5>
+                        <h2>
                           { t('indicators') }
-                          <Icon name="arrowRight" color="black" />
-                        </h5>
+                          <Icon name="arrowRight" color={theme.neutralDark} />
+                        </h2>
                         <p>
                           { indicatorsDescription || 'Indicator Description' }
                         </p>

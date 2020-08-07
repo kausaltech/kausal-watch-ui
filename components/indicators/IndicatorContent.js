@@ -86,12 +86,13 @@ const IndicatorHero = styled(BaseJumbotron)`
   a {
     color: inherit;
   }
-  
+
   h1 {
+    font-size: ${(props) => props.theme.fontSizeXl};
     hyphens: auto;
 
     @media (max-width: ${(props) => props.theme.breakpointMd}) {
-      font-size: 1.75em;
+      font-size: ${(props) => props.theme.fontSizeLg};
     }
   }
 `;
@@ -134,11 +135,11 @@ const IndicatorLevel = styled.h6`
 `;
 
 const Section = styled.section`
-  padding: 3em 0 6em;
-  margin-bottom: -3em;
+  padding: ${(props) => props.theme.spaces.s300} 0;
 
   h2 {
-    margin-bottom: 1em;
+    font-size: ${(props) => props.theme.fontSizeLg};
+    margin-bottom: ${(props) => props.theme.spaces.s100};
   }
 `;
 
@@ -182,7 +183,6 @@ function IndicatorDetails(props) {
           (
           <Row>
             <Col className="mb-5">
-              <h2 className="mb-4">{ t('graph') }</h2>
               <ErrorBoundary><IndicatorGraph indicator={indicator} plan={plan} /></ErrorBoundary>
             </Col>
           </Row>

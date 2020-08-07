@@ -18,11 +18,12 @@ import Button from './common/Button';
 
 
 const SiteHero = styled.div`
-  margin: 3em 0 2em;
+  margin: ${(props) => props.theme.spaces.s300} 0 ${(props) => props.theme.spaces.s200};
   background-color: ${(props) => props.theme.themeColors.white};
 
   h1 {
     color: ${(props) => props.theme.brandDark};
+    font-size: ${(props) => props.theme.fontSizeXl};
   }
 
   a {
@@ -52,7 +53,7 @@ const Illustration = styled.div`
 `;
 
 const ProgressGraph = styled.div`
-  margin-bottom: 4em;
+  margin-bottom: ${(props) => props.theme.spaces.s400};
 
   img {
     max-width: 600px;
@@ -65,8 +66,8 @@ const SiteTitle = styled.div`
 `;
 
 const Highlight = styled.div`
-  margin-bottom: 3em;
-  background: #fff;
+  margin-bottom: ${(props) => props.theme.spaces.s300};
+  background: ${(props) => props.theme.themeColors.white};
 
   &:hover {
     box-shadow: 6px 6px 10px ${(props) => props.theme.brandDark};
@@ -76,6 +77,7 @@ const Highlight = styled.div`
 
   h3 {
     color: ${(props) => props.theme.brandDark};
+    font-size: ${(props) => props.theme.fontSizeLg};
   }
 
   p {
@@ -86,16 +88,16 @@ const Highlight = styled.div`
 
 const EmissionScaleBanner = styled.div`
   background-color: ${(props) => props.theme.brandDark};
-  color: #fff;
+  color: ${(props) => props.theme.themeColors.white};
   position: relative;
   padding: 9rem 0 6rem;
 
   h2 {
-    margin-bottom: 1em;
+    margin-bottom: ${(props) => props.theme.spaces.s100};
   }
 
   p {
-    margin-bottom: 3em;
+    margin-bottom: ${(props) => props.theme.spaces.s300};
   }
 
   a {
@@ -111,7 +113,8 @@ const EmissionScaleBanner = styled.div`
     content: " ";
     @include koro("storm", $hel-summer, 600);
     width: 100%;
-    height: 3rem;
+    height: ${(props) => props.theme.spaces.s300};
+    margin-bottom: ${(props) => props.theme.spaces.s300};
     position: absolute;
     top: -5px;
     transform: rotate(180deg);

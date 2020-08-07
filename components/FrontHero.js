@@ -14,7 +14,6 @@ import {
   ActionListLink,
 } from '../common/links';
 
-
 const HeroVisual = styled.div`
   position: relative;
   height: 11rem;
@@ -58,11 +57,6 @@ const BannerContent = styled.div`
   max-width: 48rem;
   margin: 0 auto 0;
   background-color: #ffffff;
-  
-  //text-shadow: 3px 3px 8px rgba(0,0,0, 0.3);
-  h1 {
-    font-size: 48px;
-  }
 
   a:hover {
     text-decoration: none;

@@ -10,15 +10,16 @@ import PlanContext from '../../context/plan';
 import { withTranslation } from '../../common/i18n';
 
 const ActionUpdate = styled.article`
-  padding: ${(props) => props.theme.spaces.s050};
+  padding: ${(props) => props.theme.spaces.s100};
   margin: 0 0 ${(props) => props.theme.spaces.s150};
   background: ${(props) => props.theme.themeColors.white};
   border: 2px solid  ${(props) => props.theme.themeColors.light};
+  border-radius: ${(props) => props.theme.cardBorderRadius};
 `;
 
 const ActionUpdateHeader = styled.header`
   h3 {
-    font-size: ${(props) => props.theme.fontSizeLg};
+    font-size: ${(props) => props.theme.fontSizeMd};
     line-height: ${(props) => props.theme.lineHeightMd};
   }
 `;

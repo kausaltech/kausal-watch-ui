@@ -57,7 +57,8 @@ const StyledBadge = styled(Badge)`
   background-color: ${(props) => props.theme.themeColors.light};
 `;
 
-const IndicatorName = styled.span`
+const IndicatorName = styled.div`
+
   a {
     color: ${(props) => props.theme.themeColors.black};
   }

@@ -26,6 +26,15 @@ const DashboardHeader = styled.div`
   padding-top: ${(props) => props.theme.spaces.s300};
   margin-bottom: ${(props) => props.theme.spaces.s100};
   background-color: ${(props) => props.theme.neutralLight};
+
+  h1 {
+    font-size: ${(props) => props.theme.fontSizeXxl};
+    margin-bottom: ${(props) => props.theme.spaces.s150};
+
+    @media (max-width: ${(props) => props.theme.breakpointMd}) {
+      font-size: ${(props) => props.theme.fontSizeXl};
+    }
+  }
 `;
 
 const ImpactGroupSection = styled.div`
@@ -132,7 +141,7 @@ class DashboardLoaded extends React.PureComponent {
       <div id="dashboard">
         <DashboardHeader>
           <Container>
-            <h1 className="mb-3">{ t('dashboard') }</h1>
+            <h1>{ t('dashboard') }</h1>
             {leadContent && (
               <Row>
                 <Col sm="12" md="12" className="mb-5">

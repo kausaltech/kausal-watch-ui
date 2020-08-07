@@ -11,6 +11,11 @@ import IndicatorCard from './IndicatorCard';
 const CausalNavigationWrapper = styled.div`
   padding-top: ${(props) => props.theme.spaces.s200};
   background-color: ${(props) => props.theme.themeColors.light};
+
+  h3 {
+    font-size: ${(props) => props.theme.fontSizeLg};
+    margin-bottom: ${(props) => props.theme.spaces.s200};
+  }
 `;
 
 const CardWrapper = styled.div`
@@ -27,7 +32,7 @@ function CausalNavigation(props) {
           <Col sm="6" lg={{ size: 5 }} className="mb-5">
             { causes.length > 0 && (
               <div>
-                <h3 className="mb-4">{ t('indicator-affected-by') }</h3>
+                <h3>{ t('indicator-affected-by') }</h3>
                 { causes.map((cause) => (
                   <CardWrapper>
                     <IndicatorCard
@@ -45,7 +50,7 @@ function CausalNavigation(props) {
           <Col sm="6" lg={{ size: 5, offset: 2 }} className="mb-5">
             { effects.length > 0 && (
               <div>
-                <h3 className="mb-4">{ t('indicator-has-effect-on') }</h3>
+                <h3>{ t('indicator-has-effect-on') }</h3>
                 { effects.map((effect) => (
                   <CardWrapper>
                     <IndicatorCard

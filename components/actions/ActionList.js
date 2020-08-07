@@ -24,6 +24,20 @@ const ActionListHeader = styled.div`
   padding-top: ${(props) => props.theme.spaces.s300};
   margin-bottom: ${(props) => props.theme.spaces.s100};
   background-color: ${(props) => props.theme.neutralLight};
+
+  h1 {
+    font-size: ${(props) => props.theme.fontSizeXxl};
+    margin-bottom: ${(props) => props.theme.spaces.s150};
+
+    @media (max-width: ${(props) => props.theme.breakpointMd}) {
+      font-size: ${(props) => props.theme.fontSizeXl};
+    }
+  }
+
+  h2 {
+    font-size: ${(props) => props.theme.fontSizeLg};
+    margin-bottom: ${(props) => props.theme.spaces.s200};
+  }
 `;
 
 export const GET_ACTION_LIST = gql`
@@ -223,7 +237,7 @@ class ActionListFiltered extends React.Component {
           >
             {(props) => (
               <Container style={props}>
-                <h1 className="mb-5">{ t('actions') }</h1>
+                <h1>{ t('actions') }</h1>
                 {leadContent && (
                   <Row>
                     <Col sm="12" md="8" className="mb-5">
@@ -233,7 +247,7 @@ class ActionListFiltered extends React.Component {
                 )}
                 <Row>
                   <Col sm="12" md="10">
-                    <h2 className="mb-4">{ t('browse-actions') }</h2>
+                    <h2>{ t('browse-actions') }</h2>
                     <ActionListFilters
                       cats={this.cats}
                       emissionScopes={emissionScopes}

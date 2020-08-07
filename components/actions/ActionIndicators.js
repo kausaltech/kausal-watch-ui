@@ -13,6 +13,10 @@ import IndicatorGraph from '../graphs/IndicatorGraph';
 import Icon from '../common/Icon';
 import PlanContext from '../../context/plan';
 
+const IndicatorsSection = styled.div`
+  margin-bottom: ${(props) => props.theme.spaces.s400};
+`;
+
 const Card = styled(BaseCard)`
   border-radius: ${(props) => props.theme.cardBorderRadius};
 `;
@@ -63,7 +67,7 @@ function ActionIndicator(props) {
 function ActionIndicators(props) {
   const { actionId, relatedIndicators } = props;
   return (
-    <div>
+    <IndicatorsSection>
       {relatedIndicators.map(relatedIndicator => (
         <ActionIndicator
           key={relatedIndicator.indicator.id}
@@ -71,7 +75,7 @@ function ActionIndicators(props) {
           relatedIndicator={relatedIndicator}
         />
       ))}
-    </div>
+    </IndicatorsSection>
   );
 }
 
