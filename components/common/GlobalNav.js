@@ -15,11 +15,11 @@ import Icon from './Icon';
 
 const Logo = styled.div`
   height: 2.2em;
-  width: 6em;
+  max-width: 12em;
 
   svg {
-    max-height: 2.2rem;
-    max-width: 100%;
+    height: 100%;
+    width: auto;
   }
 `;
 
@@ -171,7 +171,7 @@ function GlobalNav(props) {
     theme, siteTitle, navItems, active, fullwidth, sticky
   } = props;
 
-  const OrgLogo = () => <SVG src={theme.themeLogoUrl} />;
+  const OrgLogo = () => <SVG src={theme.themeLogoUrl}  preserveAspectRatio="xMinYMin meet"/>;
 
   if (sticky) {
     useScrollPosition(
@@ -190,17 +190,17 @@ function GlobalNav(props) {
     <div>
       <TopNav expand="md">
         <Container fluid={fullwidth}>
-          <Logo>
-            <Link href="/">
-              <a
-                href
-                aria-label={`${siteTitle}, palvelun etusivu`}
-              >
+          <Link href="/">
+            <a
+              href
+              aria-label={`${siteTitle}, palvelun etusivu`}
+            >
+              <Logo>
                 {/* Organization logo currently rendered by compiled CSS */}
                 <OrgLogo aria-hidden="true" />
-              </a>
-            </Link>
-          </Logo>
+              </Logo>
+            </a>
+          </Link>
         </Container>
       </TopNav>
       <BotNav expand="md" fixed={navIsFixed ? 'top' : ''}>

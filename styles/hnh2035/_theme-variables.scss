@@ -135,6 +135,7 @@ $input-border-width:         2px;
 $input-line-height:          1.5;
 $input-border-radius:        2px;
 $custom-select-indicator:    url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQiIGhlaWdodD0iMTQiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTExLjg5NiAzTDcgNy44NDIgMi4xMDQgMyAwIDUuMDggNyAxMmw3LTYuOTJMMTEuODk2IDN6IiBmaWxsPSIjMDAwIi8+PC9zdmc+") !default;
+$form-label-font-weight:     400;
 
 /////// NAV
 
@@ -195,6 +196,7 @@ $breakpoint-md: 768px;
 $breakpoint-lg: 992px;
 $breakpoint-xl: 1200px;
 
+$icons-url: '/static/icons/hnh2035';
 $theme-logo-url: '/static/images/hnh2035/helsinki-logo-white.svg';
 $icon-indicators-url: '/static/images/default/icon-indicators.svg';
 $icon-actions-url: '/static/images/default/icon-actions.svg';
