@@ -106,9 +106,9 @@ function HeroFullImage(props) {
   } = props;
 
   let ActionsIcon = null;
-  if (theme.iconActions) ActionsIcon = () => <SVG src={theme.iconActions} />;
+  if (theme.iconActionsUrl !== '') ActionsIcon = () => <SVG src={theme.iconActionsUrl} />;
   let IndicatorsIcon = null;
-  if (theme.iconIndicators) IndicatorsIcon = () => <SVG src={theme.iconIndicators} />;
+  if (theme.iconIndicatorsUrl !== '') IndicatorsIcon = () => <SVG src={theme.iconIndicatorsUrl} />;
 
   return (
     <Hero>

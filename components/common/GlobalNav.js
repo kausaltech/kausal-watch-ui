@@ -4,6 +4,7 @@ import {
   Collapse, Container, Navbar, Nav, NavItem, NavbarToggler,
   UncontrolledDropdown, DropdownToggle, DropdownItem, DropdownMenu
 } from 'reactstrap';
+import SVG from 'react-inlinesvg';
 import styled, { withTheme } from 'styled-components';
 import { useScrollPosition } from '@n8tb1t/use-scroll-position';
 import { transparentize } from 'polished';
@@ -13,12 +14,13 @@ import { StaticPageLink } from '../../common/links';
 import Icon from './Icon';
 
 const Logo = styled.div`
-  background-image: url("${(props) => props.theme.themeLogo}");
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: left center;
   height: 2.2em;
   width: 6em;
+
+  svg {
+    max-height: 2.2rem;
+    max-width: 100%;
+  }
 `;
 
 const TopNav = styled(Navbar)`
@@ -169,6 +171,8 @@ function GlobalNav(props) {
     theme, siteTitle, navItems, active, fullwidth, sticky
   } = props;
 
+  const OrgLogo = () => <SVG src={theme.themeLogoUrl} />;
+
   if (sticky) {
     useScrollPosition(
       ({ prevPos, currPos }) => {
@@ -186,16 +190,17 @@ function GlobalNav(props) {
     <div>
       <TopNav expand="md">
         <Container fluid={fullwidth}>
-          <Link href="/">
-            <a
-              href
-              aria-label={`${siteTitle}, palvelun etusivu`}
-              className="navbar-brand"
-            >
-              {/* Organization logo currently rendered by compiled CSS */}
-              <Logo aria-hidden="true" />
-            </a>
-          </Link>
+          <Logo>
+            <Link href="/">
+              <a
+                href
+                aria-label={`${siteTitle}, palvelun etusivu`}
+              >
+                {/* Organization logo currently rendered by compiled CSS */}
+                <OrgLogo aria-hidden="true" />
+              </a>
+            </Link>
+          </Logo>
         </Container>
       </TopNav>
       <BotNav expand="md" fixed={navIsFixed ? 'top' : ''}>

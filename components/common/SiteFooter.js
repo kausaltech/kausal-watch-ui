@@ -52,7 +52,7 @@ function SiteFooter(props) {
     t, theme, siteTitle, ownerUrl, staticPages, creativeCommonsLicense, copyrightText,
   } = props;
 
-  const OrgLogo = () => <SVG src={theme.themeLogo} />;
+  const OrgLogo = () => <SVG src={theme.themeLogoUrl} />; 
 
   return (
     <>

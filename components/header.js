@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {
   Collapse, Container, Navbar, Nav, NavItem, NavbarToggler,
 } from 'reactstrap';
+import SVG from 'react-inlinesvg';
 import styled, { withTheme } from 'styled-components';
 import { Link } from '../routes';
 import { StaticPageLink } from '../common/links';
@@ -18,12 +19,13 @@ import Icon from './common/Icon';
 import ApplicationStateBanner from './common/ApplicationStateBanner';
 
 const Logo = styled.div`
-  background-image: url("${(props) => props.theme.themeLogoColor}");
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: left center;
   height: 2.2em;
   width: 6em;
+
+  svg {
+    max-height: 2.2rem;
+    max-width: 100%;
+  }
 `;
 
 const TopNav = styled(Navbar)`
@@ -63,17 +65,20 @@ class Header extends React.Component {
     } = this.props;
     const plan = this.context;
     const hasActionImpacts = plan.actionImpacts.length > 0;
+    const OrgLogo = () => <SVG src={theme.themeLogoUrl} />;
 
     return (
       <div>
         <ApplicationStateBanner instanceType={plan.instanceType} />
         <TopNav expand="md">
           <Container>
-            <Link href="/">
-              <a aria-label={`${siteTitle}, palvelun etusivu`} className="navbar-brand">
-                <Logo aria-hidden="true" />
-              </a>
-            </Link>
+            <Logo>
+              <Link href="/">
+                <a aria-label={`${siteTitle}, palvelun etusivu`}>
+                <OrgLogo aria-hidden="true" />
+                </a>
+              </Link>
+            </Logo>
           </Container>
         </TopNav>
         <BotNav expand="md">

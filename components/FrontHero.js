@@ -5,16 +5,15 @@ import {
   Row, Col, Container,
 } from 'reactstrap';
 
+import SVG from 'react-inlinesvg';
 import { Spring } from 'react-spring/renderprops.cjs';
-import styled from 'styled-components';
+import styled, { withTheme } from 'styled-components';
 import { withTranslation } from '../common/i18n';
 import {
   IndicatorListLink,
   ActionListLink,
 } from '../common/links';
 
-import IconActions from '../public/static/images/default/icon-actions.svg';
-import IconIndicators from '../public/static/images/default/icon-indicators.svg';
 
 const HeroVisual = styled.div`
   position: relative;
@@ -122,8 +121,12 @@ const Highlight = styled.div`
 
 function FrontHero(props) {
   const {
-    t, bgImage, title, siteDescription, actionsDescription, indicatorsDescription,
+    t, theme, bgImage, title, siteDescription, actionsDescription, indicatorsDescription,
   } = props;
+
+  const IconActions = () => <SVG src={theme.iconActionsUrl} />;
+  const IconIndicators = () => <SVG src={theme.iconIndicatorsUrl} />;
+
   return (
     <BannerContent>
       <Container>
@@ -217,4 +220,4 @@ FrontHero.propTypes = {
   indicatorsDescription: PropTypes.string.isRequired,
 };
 
-export default withTranslation('common')(FrontHero);
+export default withTranslation('common')(withTheme(FrontHero));
