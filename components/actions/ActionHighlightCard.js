@@ -18,6 +18,7 @@ const StyledCard = styled(Card)`
   overflow: hidden;
   border-width: ${(props) => props.theme.cardBorderWidth};
   border-radius: ${(props) => props.theme.cardBorderRadius};
+  background-color: ${(props) => props.theme.themeColors.white};
 
   &:hover {
     transform: translateY(-5px);

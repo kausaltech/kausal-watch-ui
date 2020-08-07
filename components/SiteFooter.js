@@ -21,7 +21,7 @@ const StyledFooter = styled.footer`
   min-height: 14em;
   clear: both;
   background-color: ${(props) => props.theme.neutralDark};
-  color: #ffffff;
+  color: ${(props) => props.theme.themeColors.white};
   padding: 6rem 0;
 
   .footer-column {
@@ -40,7 +40,7 @@ const StyledFooter = styled.footer`
 
 const OrgBrand = styled.div`
   svg {
-    fill: #fff;
+    fill: ${(props) => props.theme.themeColors.white};
     max-height: ${(props) => props.theme.spaces.s200};
     max-width: 100%;
   }

@@ -33,7 +33,7 @@ const TopNav = styled(Navbar)`
 `;
 
 const BotNav = styled(Navbar)`
-  background-color: ${props => props.theme.white};
+  background-color: ${(props) => props.theme.themeColors.white};
 
   a {
     color: ${props => props.theme.neutralDark};

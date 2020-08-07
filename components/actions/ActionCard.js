@@ -47,7 +47,7 @@ const StyledActionLink = styled.a`
 
 const ActionCardElement = styled.div`
   width: 100%;
-  background: #ffffff;
+  background: ${(props) => props.theme.themeColors.white};
   border-width: ${(props) => props.theme.cardBorderWidth};
   border-radius: ${(props) => props.theme.cardBorderRadius};
   overflow: hidden;
@@ -65,8 +65,8 @@ const ActionNumber = styled.div`
   font-size: ${(props) => props.theme.fontSizeBase};
   font-weight: ${(props) => props.theme.fontWeightBold};
   line-height: ${(props) => props.theme.lineHeightSm};
-  color: #000000;
-  background: #ffffff;
+  color: ${(props) => props.theme.themeColors.black};
+  background: ${(props) => props.theme.themeColors.white};
 `;
 
 const ActionStatusArea = styled.div`
@@ -139,8 +139,7 @@ const StyledCardTitle = styled.div`
   min-height: calc(1.5rem + 1.2em * 3);
   margin-bottom: 0;
   padding: ${(props) => props.theme.spaces.s100};
-  color: #000000;
-  background: #ffffff;
+  color: ${(props) => props.theme.themeColors.black};
   font-size: ${(props) => props.theme.fontSizeBase};
   line-height: ${(props) => props.theme.lineHeightMd};
   text-align: left;

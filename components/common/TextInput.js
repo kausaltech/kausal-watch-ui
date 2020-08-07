@@ -8,7 +8,7 @@ import {
 import styled from 'styled-components';
 
 const Label = styled(BSLabel)`
-  font-weight: ${(props) => props.theme.fontWeightBold};
+  font-weight: ${(props) => props.theme.formLabelFontWeight};
   line-height: ${(props) => props.theme.lineHeightSm};
 `;
 

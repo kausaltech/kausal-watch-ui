@@ -56,7 +56,7 @@ const BannerContent = styled.div`
   padding: 2rem 0;
   max-width: 48rem;
   margin: 0 auto 0;
-  background-color: #ffffff;
+  background-color: ${(props) => props.theme.themeColors.white};
 
   a:hover {
     text-decoration: none;
@@ -91,7 +91,7 @@ const SiteTitle = styled.div`
 
 const Highlight = styled.div`
   margin-bottom: ${(props) => props.theme.spaces.s100};
-  background: #fff;
+  background: ${(props) => props.theme.themeColors.white};
 
   &:hover {
     box-shadow: 6px 6px 10px ${(props) => props.theme.brandDark};
