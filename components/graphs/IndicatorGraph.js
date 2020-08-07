@@ -10,6 +10,7 @@ import {
 import { linearRegression } from 'simple-statistics';
 
 import ContentLoader from '../common/ContentLoader';
+import InfoTooltip from '../common/InfoTooltip';
 import { withTranslation } from '../../common/i18n';
 
 
@@ -324,7 +325,15 @@ function IndicatorGraph(props) {
     return null;
   }
 
-  const { theme, indicator, plan, i18n } = props;
+  const {
+    t,
+    theme,
+    indicator,
+    plan,
+    i18n,
+  } = props;
+
+  const graphInfoContent = 'This is test content for graph info tooltip. Can be Long but maybe not too long.';
   const plotColors = [
     theme.themeColors.danger,
     theme.brandDark,
@@ -334,17 +343,13 @@ function IndicatorGraph(props) {
     theme.themeColors.info,
   ];
 
-  function fixLayout(indicator, data) {
-    const layout = data.layout;
+  function fixLayout(data) {
+    const { layout } = data;
 
     layout.autosize = true;
     layout.colorway = plotColors;
     layout.font = { family: theme.fontFamilySansSerif, size: 12 };
-    if (typeof layout.title === 'object' && layout.title !== null) {
-      layout.title.text = `<b>${layout.title.text}</b>`;
-    } else if (typeof layout.title === 'string') {
-      layout.title = { text: `<b>${layout.title}</b>` };
-    }
+    layout.title = '';
     layout.xaxis = layout.xaxis || {};
     layout.xaxis.tickfont = layout.xaxis.tickfont || {};
     layout.xaxis.tickfont.family = theme.fontFamilySansSerif;
@@ -380,10 +385,21 @@ function IndicatorGraph(props) {
           } else {
             plot = generatePlotFromValues(indicator, i18n, plotColors);
           }
-          fixLayout(indicator, plot);
+          let graphTitle;
+          if (typeof plot.layout.title === 'object' && plot.layout.title !== null) {
+            graphTitle = plot.layout.title.text;
+          } else if (typeof plot.layout.title === 'string') {
+            graphTitle = plot.layout.title;
+          }
+          fixLayout(plot);
 
           return (
-            <CardBody style={{ height: '400px' }}>
+            <CardBody>
+              <h5>
+                { graphTitle }
+                {' '}
+                { graphInfoContent && <InfoTooltip content={graphInfoContent} />}
+              </h5>
               <Plot
                 data={plot.data}
                 layout={plot.layout}

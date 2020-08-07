@@ -185,7 +185,6 @@ function IndicatorDetails(props) {
           (
           <Row>
             <Col className="mb-5">
-              <h2 className="mb-4">{ t('graph') }</h2>
               <ErrorBoundary><IndicatorGraph indicator={indicator} plan={plan} /></ErrorBoundary>
             </Col>
           </Row>
