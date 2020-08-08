@@ -4,7 +4,7 @@
 */
 
 import React from 'react';
-import PropTypes, { array } from 'prop-types';
+import PropTypes from 'prop-types';
 import {
   Container, Row, Col,
 } from 'reactstrap';
@@ -33,13 +33,13 @@ const StyledFooter = styled.footer`
 `;
 
 const Logo = styled.div`
-  height: 3em;
-  width: 6em;
+  height: ${(props) => props.theme.spaces.s400};
+  width: calc( 4 * ${(props) => props.theme.spaces.s300});
   margin-bottom: ${(props) => props.theme.spaces.s150};
 
   svg {
     height: 100%;
-    width: auto;
+    width: 100%;
   }
 `;
 
@@ -88,6 +88,34 @@ const Divider = styled.hr`
   border-top: 2px solid ${(props) => props.theme.themeColors.white};
 `;
 
+const SmallPrint = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+const SmallPrintSection = styled.ul`
+  display: flex;
+  list-style: none;
+  padding: 0;
+`;
+
+const SmallPrintItem = styled.li`
+  margin-left: ${(props) => props.theme.spaces.s050};
+  &:before {
+    content: "\\2022";
+    margin-right: ${(props) => props.theme.spaces.s050};
+  }
+
+  &:first-child {
+    margin-left: 0;
+
+    &:before {
+      content: "";
+      margin-right: 0;
+    }
+  }
+`;
+
 function SiteFooter(props) {
   const {
     t,
@@ -100,7 +128,7 @@ function SiteFooter(props) {
     navItems,
   } = props;
 
-  const OrgLogo = () => <SVG src={theme.themeLogoUrl} />; 
+  const OrgLogo = () => <SVG src={theme.themeLogoUrl} preserveAspectRatio="xMinYMin meet" />;
 
   return (
     <>
@@ -154,22 +182,24 @@ function SiteFooter(props) {
           <Row>
             <Col>
               <Divider />
-              <div className="site-footer-small-print">
-                {creativeCommonsLicense}
-                {' '}&#8226;{' '}
-                {copyrightText}
-                {' '}&#8226;{' '}
-                Terms & Conditions
-                {' '}&#8226;{' '}
-                Accessibility
-              </div>
+              <SmallPrint>
+                <SmallPrintSection>
+                  <SmallPrintItem>{creativeCommonsLicense}</SmallPrintItem>
+                  <SmallPrintItem>{copyrightText}</SmallPrintItem>
+                  <SmallPrintItem><a href="#">Terms & Conditions</a></SmallPrintItem>
+                  <SmallPrintItem><a href="#">Accessibility</a></SmallPrintItem>
+                </SmallPrintSection>
+                <SmallPrintSection>
+                  <SmallPrintItem><a href="#">Give Feedback</a></SmallPrintItem>
+                </SmallPrintSection>
+              </SmallPrint>
             </Col>
           </Row>
         </Container>
       </StyledFooter>
     </>
   );
-} 
+}
 
 SiteFooter.propTypes = {
   siteTitle: PropTypes.string.isRequired,
