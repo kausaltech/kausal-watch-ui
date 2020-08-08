@@ -4,15 +4,15 @@
 */
 
 import React from 'react';
-import PropTypes from 'prop-types';
+import PropTypes, { array } from 'prop-types';
 import {
-  Container, Row, Col, Nav, NavItem, NavLink,
+  Container, Row, Col,
 } from 'reactstrap';
 
 import SVG from 'react-inlinesvg';
 import styled, { withTheme } from 'styled-components';
 import { withTranslation } from '../../common/i18n';
-import { StaticPageLink, IndicatorListLink, ActionListLink } from '../../common/links';
+import { StaticPageLink } from '../../common/links';
 
 const StyledFooter = styled.footer`
   position: relative;
@@ -22,34 +22,82 @@ const StyledFooter = styled.footer`
   color: ${(props) => props.theme.themeColors.white};
   padding: 6rem 0;
 
-  .footer-column {
-    margin-bottom: 2rem;
-    text-align: center;
-
-    a.nav-link {
+  a {
       color: ${(props) => props.theme.themeColors.white};
 
       &:hover {
-        color: ${(props) => props.theme.neutralLight};
+        color: ${(props) => props.theme.themeColors.white};
+        text-decoration: underline;
       }
     }
+`;
+
+const Logo = styled.div`
+  height: 3em;
+  width: 6em;
+  margin-bottom: ${(props) => props.theme.spaces.s150};
+
+  svg {
+    height: 100%;
+    width: auto;
   }
 `;
 
-const OrgBrand = styled.div`
-  margin-bottom: 2rem;
+const ServiceTitle = styled.div`
+  margin-bottom: ${(props) => props.theme.spaces.s200};
+  font-size: ${(props) => props.theme.fontSizeMd};
+  font-weight: ${(props) => props.theme.fontWeightBold};
+`;
 
-  svg {
-    fill: ${(props) => props.theme.themeColors.white};
-    max-height: 2.5rem;
-    max-width: 100%;
-  }
+const OrgTitle = styled.div`
+  font-size: ${(props) => props.theme.fontSizeBase};
+  font-weight: ${(props) => props.theme.fontWeightNormal};
+`;
+
+const FooterNav = styled.nav`
+    line-height: ${(props) => props.theme.lineHeightSm};
+`;
+
+const FooterNavItems = styled.ul`
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  padding: 0;
+`;
+
+const FooterNavItem = styled.li`
+  flex: 1 1 25%;
+  padding-right: ${(props) => props.theme.spaces.s150};
+  margin-bottom: ${(props) => props.theme.spaces.s300};
+  font-size: ${(props) => props.theme.fontSizeBase};
+  font-weight: ${(props) => props.theme.fontWeightBold};
+`;
+
+const FooterSubnav = styled.ul`
+  list-style: none;
+  padding: 0;
+`;
+
+const FooterNavSubItem = styled.li`
+  margin-top: ${(props) => props.theme.spaces.s100};
+  font-size: ${(props) => props.theme.fontSizeBase};
+  font-weight: ${(props) => props.theme.fontWeightNormal};
+`;
+
+const Divider = styled.hr`
+  border-top: 2px solid ${(props) => props.theme.themeColors.white};
 `;
 
 function SiteFooter(props) {
-
   const {
-    t, theme, siteTitle, ownerUrl, staticPages, creativeCommonsLicense, copyrightText,
+    t,
+    theme,
+    siteTitle,
+    ownerUrl,
+    ownerName,
+    creativeCommonsLicense,
+    copyrightText,
+    navItems,
   } = props;
 
   const OrgLogo = () => <SVG src={theme.themeLogoUrl} />; 
@@ -57,62 +105,63 @@ function SiteFooter(props) {
   return (
     <>
       <StyledFooter className="site-footer">
-        <Container fluid>
+        <Container>
           <Row>
-            <Col md="4" className="footer-column">
-              <OrgBrand>
+            <Col md="4">
+              <Logo>
                 <a href={ownerUrl}>
                   <OrgLogo aria-hidden="true" className="footer-org-logo" />
                 </a>
-              </OrgBrand>
-              <h5>{siteTitle}</h5>
+              </Logo>
+              <ServiceTitle>
+                {siteTitle}
+              </ServiceTitle>
+              <OrgTitle>
+                <a href={ownerUrl} target="_blank">
+                  {ownerName}
+                </a>
+              </OrgTitle>
               <div className="funding-instrument-logo-container">
                 <div className="funding-instrument-logo" />
               </div>
             </Col>
-            <Col md="4" className="footer-column">
-
-            </Col>
-            <Col md="4" className="footer-column">
-              <div className="page-footer-block">
-                <Nav vertical>
-                  <NavItem>
-                    <NavLink className="nav-link active" href="/">{ t('front-page') }</NavLink>
-                  </NavItem>
-                  <NavItem key="actions">
-                    <ActionListLink>
-                      <a className="nav-link" href="true">{t('actions')}</a>
-                    </ActionListLink>
-                  </NavItem>
-                  <NavItem key="indicators">
-                    <IndicatorListLink>
-                      <a className="nav-link" href="true">{t('indicators')}</a>
-                    </IndicatorListLink>
-                  </NavItem>
-                  { staticPages && staticPages.filter((page) => page.footer).map((page) => (
-                    <NavItem key={page.slug}>
+            <Col md="8">
+              <FooterNav>
+                <FooterNavItems>
+                  { navItems && navItems.map((page) => (
+                    <FooterNavItem key={page.id}>
                       <StaticPageLink slug={page.slug}>
-                        <a className="nav-link" href="true">{page.name}</a>
+                        <strong><a href="true">{page.name}</a></strong>
                       </StaticPageLink>
-                    </NavItem>
+                      { page.children && (
+                        <FooterSubnav>
+                          { page.children.map((childPage) => (
+                            <FooterNavSubItem key={childPage.slug}>
+                              <StaticPageLink slug={childPage.slug}>
+                                <a href="true">{childPage.name}</a>
+                              </StaticPageLink>
+                            </FooterNavSubItem>
+                          ))}
+                        </FooterSubnav>
+                      )}
+                    </FooterNavItem>
                   ))}
-                </Nav>
-              </div>
+                </FooterNavItems>
+              </FooterNav>
             </Col>
+
           </Row>
           <Row>
-            <Col className="footer-column">
+            <Col>
+              <Divider />
               <div className="site-footer-small-print">
-                { creativeCommonsLicense && (
-                  <Nav vertical>
-                    <NavItem>{ creativeCommonsLicense }</NavItem>
-                  </Nav>
-                )}
-                { copyrightText && (
-                  <Nav vertical>
-                    <NavItem className="list-inline-item">{ copyrightText }</NavItem>
-                  </Nav>
-                )}
+                {creativeCommonsLicense}
+                {' '}&#8226;{' '}
+                {copyrightText}
+                {' '}&#8226;{' '}
+                Terms & Conditions
+                {' '}&#8226;{' '}
+                Accessibility
               </div>
             </Col>
           </Row>
@@ -120,7 +169,7 @@ function SiteFooter(props) {
       </StyledFooter>
     </>
   );
-}
+} 
 
 SiteFooter.propTypes = {
   siteTitle: PropTypes.string.isRequired,
@@ -128,8 +177,10 @@ SiteFooter.propTypes = {
   t: PropTypes.func.isRequired,
   theme: PropTypes.shape({}).isRequired,
   ownerUrl: PropTypes.string.isRequired,
+  ownerName: PropTypes.string.isRequired,
   creativeCommonsLicense: PropTypes.string.isRequired,
   copyrightText: PropTypes.string.isRequired,
+  navItems: PropTypes.arrayOf({}).isRequired,
 };
 
 export default withTranslation('common')(withTheme(SiteFooter));
