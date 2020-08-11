@@ -1,0 +1,25 @@
+/* To be moved to backend */
+
+@font-face {
+  font-family: 'HelsinkiGrotesk';
+  src: url('https://makasiini.hel.ninja/delivery/HelsinkiGrotesk/565d73a693abe0776c801607ac28f0bf.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  text-rendering: optimizeLegibility;
+}
+
+@font-face {
+  font-family: 'HelsinkiGrotesk';
+  src: url('https://makasiini.hel.ninja/delivery/HelsinkiGrotesk/5bb29e3b7b1d3ef30121229bbe67c3e1.woff') format('woff');
+  font-weight: 400;
+  font-style: italic;
+  text-rendering: optimizeLegibility;
+}
+
+@font-face {
+  font-family: 'HelsinkiGrotesk';
+  src: url('https://makasiini.hel.ninja/delivery/HelsinkiGrotesk/533af26cf28d7660f24c2884d3c27eac.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  text-rendering: optimizeLegibility;
+}
