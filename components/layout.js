@@ -4,8 +4,9 @@ import Head from 'next/head';
 
 import { ThemeProvider } from 'styled-components';
 
+import { withTranslation } from '../common/i18n';
 import Header from './header';
-import SiteFooter from './SiteFooter';
+import Footer from './Footer';
 import PlanContext from '../context/plan';
 import ThemedGlobalStyles from '../common/ThemedGlobalStyles';
 
@@ -39,7 +40,7 @@ function Layout({ children }) {
         </Head>
         <Header siteTitle={siteTitle} />
         {children}
-        <SiteFooter siteTitle={siteTitle} instanceType={plan.instanceType} />
+        <Footer />
       </div>
     </ThemeProvider>
   );
@@ -48,8 +49,7 @@ Layout.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-export default Layout;
-
+export default withTranslation('common')(Layout);
 
 export function Meta(props) {
   const plan = React.useContext(PlanContext);

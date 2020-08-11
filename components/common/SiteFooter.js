@@ -1,8 +1,3 @@
-/*
-######### New version of site footer ###########
-#########  Isolated from API calls   ###########
-*/
-
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -12,7 +7,7 @@ import {
 import SVG from 'react-inlinesvg';
 import styled, { withTheme } from 'styled-components';
 import { withTranslation } from '../../common/i18n';
-import { StaticPageLink } from '../../common/links';
+import { NavigationLink } from '../../common/links';
 
 const StyledFooter = styled.footer`
   position: relative;
@@ -21,7 +16,7 @@ const StyledFooter = styled.footer`
   background-color: ${(props) => props.theme.neutralDark};
   color: ${(props) => props.theme.themeColors.white};
   padding: 6rem 0;
-
+ 
   a {
       color: ${(props) => props.theme.themeColors.white};
 
@@ -66,11 +61,14 @@ const FooterNavItems = styled.ul`
 `;
 
 const FooterNavItem = styled.li`
-  flex: 1 1 25%;
+  width: 25%;
   padding-right: ${(props) => props.theme.spaces.s150};
   margin-bottom: ${(props) => props.theme.spaces.s300};
   font-size: ${(props) => props.theme.fontSizeBase};
-  font-weight: ${(props) => props.theme.fontWeightBold};
+  
+  .parent-item {
+    font-weight: ${(props) => props.theme.fontWeightBold};
+  }
 `;
 
 const FooterSubnav = styled.ul`
@@ -158,16 +156,16 @@ function SiteFooter(props) {
                 <FooterNavItems>
                   { navItems && navItems.map((page) => (
                     <FooterNavItem key={page.id}>
-                      <StaticPageLink slug={page.slug}>
-                        <strong><a href="true">{page.name}</a></strong>
-                      </StaticPageLink>
+                      <NavigationLink slug={page.slug}>
+                        <a className="parent-item">{page.name}</a>
+                      </NavigationLink>
                       { page.children && (
                         <FooterSubnav>
                           { page.children.map((childPage) => (
                             <FooterNavSubItem key={childPage.slug}>
-                              <StaticPageLink slug={childPage.slug}>
-                                <a href="true">{childPage.name}</a>
-                              </StaticPageLink>
+                              <NavigationLink slug={childPage.slug}>
+                                <a>{childPage.name}</a>
+                              </NavigationLink>
                             </FooterNavSubItem>
                           ))}
                         </FooterSubnav>
@@ -203,14 +201,13 @@ function SiteFooter(props) {
 
 SiteFooter.propTypes = {
   siteTitle: PropTypes.string.isRequired,
-  staticPages: PropTypes.shape({}).isRequired,
   t: PropTypes.func.isRequired,
   theme: PropTypes.shape({}).isRequired,
   ownerUrl: PropTypes.string.isRequired,
   ownerName: PropTypes.string.isRequired,
   creativeCommonsLicense: PropTypes.string.isRequired,
   copyrightText: PropTypes.string.isRequired,
-  navItems: PropTypes.arrayOf({}).isRequired,
+  navItems: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
 };
 
 export default withTranslation('common')(withTheme(SiteFooter));
