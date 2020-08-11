@@ -1,8 +1,38 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import { Link } from '../routes';
 
+// react-i18next does not support dynamic routes yet
+// DynamicLink adds 'as' property to translated link
+// this solution: https://github.com/isaachinman/next-i18next/issues/413#issuecomment-663455809
+
+const pathJoin = (...parts) => parts.join('/').replace(/\/+/g, '/');
+
+export function DynamicLink(props) {
+  const { as, href, ...other } = props;
+  const {
+    i18n: {
+      language,
+      options: { localeSubpaths },
+    },
+  } = useTranslation();
+  const lang = Object.values(localeSubpaths).includes(language) ? language : '';
+  const withAbsolute = href.substr(0, 1) === '/' ? '/' : '';
+
+  return (
+    <Link
+      {...other}
+      href={pathJoin(withAbsolute, lang, href)}
+      as={as}
+      passHref
+    />
+  );
+}
+DynamicLink.propTypes = {
+  ...Link.propTypes,
+};
 
 export function getIndicatorLinkProps(id) {
   return {
@@ -36,7 +66,7 @@ export function getDashboardLinkProps(query) {
   };
 }
 
-export const replaceHashWithoutScrolling = hash => window.history.replaceState(
+export const replaceHashWithoutScrolling = (hash) => window.history.replaceState(
   {}, // state, not used
   '', // title, not used
   hash ? `#${hash}` : `${window.location.pathname}${window.location.search}`,
@@ -46,7 +76,7 @@ export function IndicatorLink(props) {
   const { id, ...other } = props;
 
   return (
-    <Link {...getIndicatorLinkProps(id)} passHref {...other} />
+    <DynamicLink {...getIndicatorLinkProps(id)} passHref {...other} />
   );
 }
 IndicatorLink.propTypes = {
@@ -61,7 +91,7 @@ export function ActionLink(props) {
   const targetIdentifier = action.mergedWith ? action.mergedWith.identifier : action.identifier;
 
   return (
-    <Link {...getActionLinkProps(targetIdentifier)} passHref {...other} />
+    <DynamicLink {...getActionLinkProps(targetIdentifier)} passHref {...other} />
   );
 }
 ActionLink.propTypes = {
@@ -72,7 +102,6 @@ ActionLink.propTypes = {
     }),
   }).isRequired,
 };
-
 
 export function ActionListLink(props) {
   const { query, ...other } = props;
@@ -94,7 +123,6 @@ ActionListLink.defaultProps = {
   query: null,
 };
 
-
 export function IndicatorListLink(props) {
   return <Link href="/indicators" passHref {...props} />;
 }
@@ -114,6 +142,16 @@ export function StaticPageLink(props) {
   return <Link href="/[slug]" as={`/${slug}`} {...other} />;
 }
 StaticPageLink.propTypes = {
+  slug: PropTypes.string.isRequired,
+  ...Link.propTypes,
+};
+
+export function NavigationLink(props) {
+  const { slug, ...other } = props;
+  return <Link href={`/${slug}`} {...other} passHref />;
+}
+
+NavigationLink.propTypes = {
   slug: PropTypes.string.isRequired,
   ...Link.propTypes,
 };

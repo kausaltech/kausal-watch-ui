@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { useRouter } from 'next/router';
 import {
   Collapse, Container, Navbar, Nav, NavItem, NavbarToggler,
-  UncontrolledDropdown, DropdownToggle, DropdownItem, DropdownMenu
+  UncontrolledDropdown, DropdownToggle, DropdownItem, DropdownMenu,
 } from 'reactstrap';
 import SVG from 'react-inlinesvg';
 import styled, { withTheme } from 'styled-components';
 import { useScrollPosition } from '@n8tb1t/use-scroll-position';
 import { transparentize } from 'polished';
 import { Link } from '../../routes';
-import { StaticPageLink } from '../../common/links';
+import { NavigationLink } from '../../common/links';
 
 import Icon from './Icon';
 
@@ -163,15 +164,15 @@ DropdownList.propTypes = {
   active: PropTypes.bool,
 };
 
-
 function GlobalNav(props) {
   const [navIsFixed, setnavIsFixed] = useState(false);
   const [isOpen, toggleOpen] = useState(false);
+  const router = useRouter();
   const {
-    theme, siteTitle, navItems, active, fullwidth, sticky
+    theme, siteTitle, navItems, active, fullwidth, sticky,
   } = props;
 
-  const OrgLogo = () => <SVG src={theme.themeLogoUrl}  preserveAspectRatio="xMinYMin meet"/>;
+  const OrgLogo = () => <SVG src={theme.themeLogoUrl} preserveAspectRatio="xMinYMin meet" />;
 
   if (sticky) {
     useScrollPosition(
@@ -208,7 +209,7 @@ function GlobalNav(props) {
           <Link href="/">
             <HomeLink href="" className="navbar-brand">{siteTitle}</HomeLink>
           </Link>
-          <NavbarToggler onClick={()=> toggleOpen(!isOpen)}>
+          <NavbarToggler onClick={() => toggleOpen(!isOpen)}>
             <Icon name="bars" color={theme.brandDark} />
           </NavbarToggler>
           <Collapse isOpen={isOpen} navbar>
@@ -222,12 +223,12 @@ function GlobalNav(props) {
                       active={page.slug === active}
                     />
                   ) : (
-                    <NavItem key={page.slug} active={page.slug === active}>
-                      <StaticPageLink slug={page.slug}>
-                        <NavLink href="">
+                    <NavItem key={page.slug} active={`/${page.slug}` === router.pathname}>
+                      <NavigationLink slug={page.slug}>
+                        <NavLink>
                           <span className="nav-highlighter">{page.name}</span>
                         </NavLink>
-                      </StaticPageLink>
+                      </NavigationLink>
                     </NavItem>
                   )
               ))}
@@ -251,7 +252,7 @@ GlobalNav.propTypes = {
     id: PropTypes.string,
     name: PropTypes.string,
     slug: PropTypes.string,
-    children: PropTypes.array,
+    children: PropTypes.arrayOf(PropTypes.shape),
   })).isRequired,
   active: PropTypes.string,
   theme: PropTypes.shape({}).isRequired,

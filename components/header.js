@@ -16,6 +16,7 @@ import { withTranslation } from '../common/i18n';
 import PlanContext from '../context/plan';
 
 import Icon from './common/Icon';
+import GlobalNav from './common/GlobalNav';
 import ApplicationStateBanner from './common/ApplicationStateBanner';
 
 const Logo = styled.div`
@@ -67,56 +68,29 @@ class Header extends React.Component {
     const hasActionImpacts = plan.actionImpacts.length > 0;
     const OrgLogo = () => <SVG src={theme.themeLogoUrl} />;
 
+    let navLinks = [];
+    let staticPages = [];
+
+    if (hasActionImpacts) navLinks.push({ id: '1', name: t('dashboard'), slug: 'dashboard' });
+    navLinks.push({ id: '2', name: t('actions'), slug: 'actions' });
+    navLinks.push({ id: '3', name: t('indicators'), slug: 'indicators' });
+
+    if (plan.staticPages) {
+      const topMenuPages = plan.staticPages.filter((page) => page.topMenu);
+      staticPages = topMenuPages.map((page, index) => (
+        { id: `s${index}`, name: page.name, slug: page.slug }
+      ));
+      navLinks = navLinks.concat(staticPages);
+    }
+
     return (
       <div>
         <ApplicationStateBanner instanceType={plan.instanceType} />
-        <TopNav expand="md">
-          <Container>
-            <Logo>
-              <Link href="/">
-                <a aria-label={`${siteTitle}, palvelun etusivu`}>
-                <OrgLogo aria-hidden="true" />
-                </a>
-              </Link>
-            </Logo>
-          </Container>
-        </TopNav>
-        <BotNav expand="md">
-        <Container>
-          <Link href="/">
-            <a className="navbar-brand">{siteTitle}</a>
-          </Link>
-          <NavbarToggler onClick={this.toggle}><Icon name="bars" color={theme.brandDark}/></NavbarToggler>
-          <Collapse isOpen={this.state.isOpen} navbar>
-            <Nav navbar>
-              { hasActionImpacts && (
-                <NavItem key="dasboard">
-                  <DashboardLink>
-                    <a className="nav-link">{t('dashboard')}</a>
-                  </DashboardLink>
-                </NavItem>
-              )}
-              <NavItem key="actions">
-                <ActionListLink>
-                  <a className="nav-link">{t('actions')}</a>
-                </ActionListLink>
-              </NavItem>
-              <NavItem key="indicators">
-                <IndicatorListLink>
-                  <a className="nav-link">{t('indicators')}</a>
-                </IndicatorListLink>
-              </NavItem>
-              { plan.staticPages && plan.staticPages.filter((page) => page.topMenu).map((page) => (
-                <NavItem key={page.slug}>
-                  <StaticPageLink slug={page.slug}>
-                    <a className="nav-link">{page.name}</a>
-                  </StaticPageLink>
-                </NavItem>
-              ))}
-            </Nav>
-          </Collapse>
-          </Container>
-        </BotNav>
+        <GlobalNav
+          siteTitle={siteTitle}
+          navItems={navLinks}
+          sticky
+        />
       </div>
     );
   }
