@@ -57,6 +57,7 @@ function Header(props) {
       <ApplicationStateBanner instanceType={plan.instanceType} />
       <GlobalNav
         siteTitle={siteTitle}
+        ownerName={plan.generalContent.ownerName}
         navItems={navLinks}
       />
     </div>

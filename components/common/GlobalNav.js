@@ -8,6 +8,7 @@ import SVG from 'react-inlinesvg';
 import styled, { withTheme } from 'styled-components';
 import { useScrollPosition } from '@n8tb1t/use-scroll-position';
 import { transparentize } from 'polished';
+import { withTranslation } from '../../common/i18n';
 import { Link } from '../../routes';
 import { NavigationLink } from '../../common/links';
 
@@ -169,10 +170,17 @@ function GlobalNav(props) {
   const [navIsFixed, setnavIsFixed] = useState(false);
   const [isOpen, toggleOpen] = useState(false);
   const {
-    theme, siteTitle, navItems, fullwidth, sticky,
+    t, theme, siteTitle, ownerName, navItems, fullwidth, sticky,
   } = props;
 
-  const OrgLogo = () => <SVG src={theme.themeLogoUrl} preserveAspectRatio="xMinYMin meet" />;
+  const OrgLogo = () => (
+    <SVG
+      src={theme.themeLogoUrl}
+      title={`${ownerName},
+      ${siteTitle} ${t('front-page')}`}
+      preserveAspectRatio="xMinYMin meet"
+    />
+  );
 
   if (sticky) {
     useScrollPosition(
@@ -192,10 +200,10 @@ function GlobalNav(props) {
       <TopNav expand="md">
         <Container fluid={fullwidth}>
           <Link href="/">
-            <a href="#" aria-label={`${siteTitle}`}>
+            <a>
               <Logo>
                 {/* Organization logo currently rendered by compiled CSS */}
-                <OrgLogo aria-hidden="true" />
+                <OrgLogo />
               </Logo>
             </a>
           </Link>
@@ -203,11 +211,11 @@ function GlobalNav(props) {
       </TopNav>
       <BotNav expand="md" fixed={navIsFixed ? 'top' : ''}>
         <Container fluid={fullwidth}>
-          <Link href="/">
-            <HomeLink href="#">{siteTitle}</HomeLink>
+          <Link href="/" passHref>
+            <HomeLink>{siteTitle}</HomeLink>
           </Link>
           <NavbarToggler onClick={() => toggleOpen(!isOpen)}>
-            <Icon name="bars" color={theme.brandDark} />
+            <Icon name="bars" color={theme.neutralDark} />
           </NavbarToggler>
           <Collapse isOpen={isOpen} navbar>
             <Nav navbar>
@@ -240,10 +248,12 @@ function GlobalNav(props) {
 GlobalNav.defaultProps = {
   fullwidth: false,
   sticky: false,
+  ownerName: '',
 };
 
 GlobalNav.propTypes = {
   siteTitle: PropTypes.string.isRequired,
+  ownerName: PropTypes.string,
   navItems: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.string,
     name: PropTypes.string,
@@ -253,6 +263,7 @@ GlobalNav.propTypes = {
   theme: PropTypes.shape({}).isRequired,
   fullwidth: PropTypes.bool,
   sticky: PropTypes.bool,
+  t: PropTypes.func.isRequired,
 };
 
-export default withTheme(GlobalNav);
+export default withTranslation('common')(withTheme(GlobalNav));
