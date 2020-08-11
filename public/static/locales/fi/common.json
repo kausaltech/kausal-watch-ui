@@ -71,6 +71,7 @@
     "filter-impact": "Rajaa vaikuttavuuden mukaan",
     "filter-text": "Tekstihaku",
     "filter-text-default": "Etsi otsikoista",
+    "filter-text-description": "Etsi kuvauksista",
     "filter-result-actions": "toimenpidettä",
     "error-loading-actions": "Virhe toimenpiteiden latauksessa",
     "error-loading-indicators": "Virhe mittareiden latauksessa",

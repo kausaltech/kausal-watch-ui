@@ -1,16 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  CustomInput as BaseCustomInput, Input, FormGroup, Label, Row, Col,
-} from 'reactstrap';
+import { Row, Col } from 'reactstrap';
+import { withTranslation } from '../../common/i18n';
 import TextInput from '../common/TextInput';
 import DropDown from '../common/DropDown';
-
-import styled from 'styled-components';
-
-const CustomInput = styled(BaseCustomInput)`
-  background-color: transparent !important;
-`;
 
 class IndicatorListFilters extends React.Component {
   constructor(props) {
@@ -39,7 +32,7 @@ class IndicatorListFilters extends React.Component {
   getCategoryName(catId) {
     const { cats } = this.props;
     const category = cats.find(cat => cat.id === catId);
-    return category ? category.name : 'Kaikki teemat';
+    return category ? category.name : t('filter-all-categories');
   }
 
   getCategoryIdentifier(catId) {
@@ -49,7 +42,7 @@ class IndicatorListFilters extends React.Component {
   }
 
   render() {
-    const { cats } = this.props;
+    const { t, cats } = this.props;
     const { activeCat } = this.state;
     const sortedCats = cats.sort((a, b) => a.identifier.localeCompare(b.identifier));
 
@@ -58,7 +51,7 @@ class IndicatorListFilters extends React.Component {
         <Row>
           <Col sm="12" md="6">
             <DropDown
-              label="Rajaa teeman mukaan"
+              label={t('filter-category')}
               type="select"
               id="catfield"
               name="category"
@@ -66,7 +59,7 @@ class IndicatorListFilters extends React.Component {
               onChange={this.onCatBtnClick}
               className="mb-2"
             >
-              <option value="">Kaikki teemat</option>
+              <option value="">{t('filter-all-categories')}</option>
               {sortedCats.map(cat => (
                 <option value={cat.id} key={cat.id}>
                   { `${this.getCategoryIdentifier(cat.id)} ${this.getCategoryName(cat.id)}` }
@@ -76,10 +69,10 @@ class IndicatorListFilters extends React.Component {
           </Col>
           <Col sm="12" md="6">
             <TextInput
-              label="Etsi tekstistä"
+              label={t('filter-text')}
               name="search"
               id="searchfield"
-              placeholder="Hae kuvauksista"
+              placeholder={t('filter-text-description')}
               onChange={this.onSearchChange}
             />
           </Col>
@@ -90,7 +83,8 @@ class IndicatorListFilters extends React.Component {
 }
 
 IndicatorListFilters.propTypes = {
+  t: PropTypes.func.isRequired,
   cats: PropTypes.arrayOf(PropTypes.object),
 };
 
-export default IndicatorListFilters;
+export default withTranslation('common')(IndicatorListFilters);
