@@ -1,99 +1,44 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  Collapse, Container, Navbar, Nav, NavItem, NavbarToggler,
-} from 'reactstrap';
-import SVG from 'react-inlinesvg';
-import styled, { withTheme } from 'styled-components';
-import { Link } from '../routes';
-import { StaticPageLink } from '../common/links';
-import {
-  DashboardLink,
-  IndicatorListLink,
-  ActionListLink,
-} from '../common/links';
+
 import { withTranslation } from '../common/i18n';
 import PlanContext from '../context/plan';
 
-import Icon from './common/Icon';
 import GlobalNav from './common/GlobalNav';
 import ApplicationStateBanner from './common/ApplicationStateBanner';
 
-const Logo = styled.div`
-  height: 2.2em;
-  width: 6em;
+function Header(props) {
+  const plan = React.useContext(PlanContext);
+  const {
+    t, siteTitle,
+  } = props;
+  const hasActionImpacts = plan.actionImpacts.length > 0;
 
-  svg {
-    max-height: 2.2rem;
-    max-width: 100%;
-  }
-`;
+  let navLinks = [];
+  let staticPages = [];
 
-const TopNav = styled(Navbar)`
-  background-color: ${props => props.theme.brandNavBackground};
-`;
+  if (hasActionImpacts) navLinks.push({ id: '1', name: t('dashboard'), slug: 'dashboard' });
+  navLinks.push({ id: '2', name: t('actions'), slug: 'actions' });
+  navLinks.push({ id: '3', name: t('indicators'), slug: 'indicators' });
 
-const BotNav = styled(Navbar)`
-  background-color: ${(props) => props.theme.themeColors.white};
-
-  a {
-    color: ${props => props.theme.neutralDark};
-  }
-`;
-
-
-class Header extends React.Component {
-  static contextType = PlanContext;
-
-  constructor(props) {
-    super(props);
-
-    this.toggle = this.toggle.bind(this);
-    this.state = {
-      isOpen: false,
-    };
+  if (plan.staticPages) {
+    const topMenuPages = plan.staticPages.filter((page) => page.topMenu);
+    staticPages = topMenuPages.map((page, index) => (
+      { id: `s${index}`, name: page.name, slug: page.slug }
+    ));
+    navLinks = navLinks.concat(staticPages);
   }
 
-  toggle() {
-    this.setState({
-      isOpen: !this.state.isOpen,
-    });
-  }
-
-  render() {
-    const {
-      t, i18n, theme, siteTitle,
-    } = this.props;
-    const plan = this.context;
-    const hasActionImpacts = plan.actionImpacts.length > 0;
-    const OrgLogo = () => <SVG src={theme.themeLogoUrl} />;
-
-    let navLinks = [];
-    let staticPages = [];
-
-    if (hasActionImpacts) navLinks.push({ id: '1', name: t('dashboard'), slug: 'dashboard' });
-    navLinks.push({ id: '2', name: t('actions'), slug: 'actions' });
-    navLinks.push({ id: '3', name: t('indicators'), slug: 'indicators' });
-
-    if (plan.staticPages) {
-      const topMenuPages = plan.staticPages.filter((page) => page.topMenu);
-      staticPages = topMenuPages.map((page, index) => (
-        { id: `s${index}`, name: page.name, slug: page.slug }
-      ));
-      navLinks = navLinks.concat(staticPages);
-    }
-
-    return (
-      <div>
-        <ApplicationStateBanner instanceType={plan.instanceType} />
-        <GlobalNav
-          siteTitle={siteTitle}
-          navItems={navLinks}
-          sticky
-        />
-      </div>
-    );
-  }
+  return (
+    <div>
+      <ApplicationStateBanner instanceType={plan.instanceType} />
+      <GlobalNav
+        siteTitle={siteTitle}
+        navItems={navLinks}
+        sticky
+      />
+    </div>
+  );
 }
 
 Header.propTypes = {
@@ -101,4 +46,4 @@ Header.propTypes = {
   t: PropTypes.func.isRequired,
 };
 
-export default withTranslation('common')(withTheme(Header));
+export default withTranslation('common')(Header);

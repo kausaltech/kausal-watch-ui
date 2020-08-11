@@ -192,10 +192,7 @@ function GlobalNav(props) {
       <TopNav expand="md">
         <Container fluid={fullwidth}>
           <Link href="/">
-            <a
-              href
-              aria-label={`${siteTitle}, palvelun etusivu`}
-            >
+            <a aria-label={`${siteTitle}, palvelun etusivu`}>
               <Logo>
                 {/* Organization logo currently rendered by compiled CSS */}
                 <OrgLogo aria-hidden="true" />
@@ -207,7 +204,7 @@ function GlobalNav(props) {
       <BotNav expand="md" fixed={navIsFixed ? 'top' : ''}>
         <Container fluid={fullwidth}>
           <Link href="/">
-            <HomeLink href="" className="navbar-brand">{siteTitle}</HomeLink>
+            <HomeLink className="navbar-brand">{siteTitle}</HomeLink>
           </Link>
           <NavbarToggler onClick={() => toggleOpen(!isOpen)}>
             <Icon name="bars" color={theme.brandDark} />
