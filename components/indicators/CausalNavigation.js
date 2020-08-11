@@ -34,12 +34,11 @@ function CausalNavigation(props) {
               <div>
                 <h3>{ t('indicator-affected-by') }</h3>
                 { causes.map((cause) => (
-                  <CardWrapper>
+                  <CardWrapper key={cause.causalIndicator.id}>
                     <IndicatorCard
                       objectid={cause.causalIndicator.id}
                       name={cause.causalIndicator.name}
                       level={cause.causalIndicator.level}
-                      key={cause.causalIndicator.id}
                     />
                   </CardWrapper>
                 ))}
@@ -52,12 +51,11 @@ function CausalNavigation(props) {
               <div>
                 <h3>{ t('indicator-has-effect-on') }</h3>
                 { effects.map((effect) => (
-                  <CardWrapper>
+                  <CardWrapper key={effect.effectIndicator.id}>
                     <IndicatorCard
                       objectid={effect.effectIndicator.id}
                       name={effect.effectIndicator.name}
                       level={effect.effectIndicator.level}
-                      key={effect.effectIndicator.id}
                     />
                   </CardWrapper>
                 ))}
