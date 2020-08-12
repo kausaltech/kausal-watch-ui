@@ -77,7 +77,7 @@ function IndicatorsHero(props) {
               </NavigationLink>
             </NavItem>
             <NavItem>
-              <NavigationLink slug="insight">
+              <NavigationLink slug="insight" passHref>
                 <Tab className={`nav-link ${router.pathname === '/insight' ? 'active' : ''}`}>
                   { t('indicators-as-insight') }
                 </Tab>

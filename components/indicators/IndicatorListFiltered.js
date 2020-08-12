@@ -130,7 +130,6 @@ class IndicatorListFiltered extends React.Component {
   render() {
     const { t, categories, indicators } = this.props;
     const filteredIndicators = this.filterIndicators(indicators);
-    console.log(indicators)
     return (
       <div className="mb-5 pb-5">
         <IndicatorListFilters cats={categories} changeOption={this.handleChange} />
@@ -161,6 +160,7 @@ class IndicatorListFiltered extends React.Component {
                 <td>
                   {item.categories.map((cat) => {
                     if (cat) return <StyledBadge key={cat.id}>{cat.name}</StyledBadge>;
+                    return false;
                   })}
                 </td>
                 <td>

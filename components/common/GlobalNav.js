@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { useRouter } from 'next/router';
 import {
   Collapse, Container, Navbar, Nav, NavItem, NavbarToggler,
   UncontrolledDropdown, DropdownToggle, DropdownItem, DropdownMenu,
@@ -9,14 +8,20 @@ import SVG from 'react-inlinesvg';
 import styled, { withTheme } from 'styled-components';
 import { useScrollPosition } from '@n8tb1t/use-scroll-position';
 import { transparentize } from 'polished';
+import { withTranslation } from '../../common/i18n';
 import { Link } from '../../routes';
 import { NavigationLink } from '../../common/links';
 
 import Icon from './Icon';
 
+const TopNav = styled(Navbar)`
+  background-color: ${(props) => props.theme.brandNavBackground};
+`;
+
 const Logo = styled.div`
   height: 2.2em;
   max-width: 12em;
+  margin: ${(props) => props.theme.spaces.s050} 0;
 
   svg {
     height: 100%;
@@ -24,16 +29,12 @@ const Logo = styled.div`
   }
 `;
 
-const TopNav = styled(Navbar)`
-  background-color: ${(props) => props.theme.brandNavBackground};
-
-  .navbar-brand {
-    padding: .25rem;
-  }
-`;
-
 const BotNav = styled(Navbar)`
   background-color: ${(props) => props.theme.themeColors.white};
+
+  .navbar-nav {
+    padding: ${(props) => props.theme.spaces.s050} 0;
+  }
 
   .nav-item.active a span {
     border-bottom: 2px solid ${(props) => props.theme.brandDark};
@@ -41,8 +42,9 @@ const BotNav = styled(Navbar)`
 `;
 
 const HomeLink = styled.a`
+  margin-right: ${(props) => props.theme.spaces.s150};
   color: ${(props) => props.theme.neutralDark};
-  margin-bottom: 2px;
+  font-weight: ${(props) => props.theme.fontWeightBold};
 
   &:hover {
       text-decoration: none;
@@ -159,7 +161,7 @@ DropdownList.propTypes = {
     id: PropTypes.string,
     name: PropTypes.string,
     slug: PropTypes.string,
-    children: PropTypes.array,
+    children: PropTypes.node,
   })).isRequired,
   active: PropTypes.bool,
 };
@@ -167,12 +169,17 @@ DropdownList.propTypes = {
 function GlobalNav(props) {
   const [navIsFixed, setnavIsFixed] = useState(false);
   const [isOpen, toggleOpen] = useState(false);
-  const router = useRouter();
   const {
-    theme, siteTitle, navItems, active, fullwidth, sticky,
+    t, theme, siteTitle, ownerName, navItems, fullwidth, sticky,
   } = props;
 
-  const OrgLogo = () => <SVG src={theme.themeLogoUrl} preserveAspectRatio="xMinYMin meet" />;
+  const OrgLogo = () => (
+    <SVG
+      src={theme.themeLogoUrl}
+      title={`${ownerName}, ${siteTitle} ${t('front-page')}`}
+      preserveAspectRatio="xMinYMin meet"
+    />
+  );
 
   if (sticky) {
     useScrollPosition(
@@ -192,10 +199,10 @@ function GlobalNav(props) {
       <TopNav expand="md">
         <Container fluid={fullwidth}>
           <Link href="/">
-            <a aria-label={`${siteTitle}, palvelun etusivu`}>
+            <a>
               <Logo>
                 {/* Organization logo currently rendered by compiled CSS */}
-                <OrgLogo aria-hidden="true" />
+                <OrgLogo />
               </Logo>
             </a>
           </Link>
@@ -203,11 +210,11 @@ function GlobalNav(props) {
       </TopNav>
       <BotNav expand="md" fixed={navIsFixed ? 'top' : ''}>
         <Container fluid={fullwidth}>
-          <Link href="/">
-            <HomeLink className="navbar-brand">{siteTitle}</HomeLink>
+          <Link href="/" passHref>
+            <HomeLink>{siteTitle}</HomeLink>
           </Link>
           <NavbarToggler onClick={() => toggleOpen(!isOpen)}>
-            <Icon name="bars" color={theme.brandDark} />
+            <Icon name="bars" color={theme.neutralDark} />
           </NavbarToggler>
           <Collapse isOpen={isOpen} navbar>
             <Nav navbar>
@@ -217,10 +224,10 @@ function GlobalNav(props) {
                     <DropdownList
                       parent={page}
                       items={page.children}
-                      active={page.slug === active}
+                      active={page.active}
                     />
                   ) : (
-                    <NavItem key={page.slug} active={`/${page.slug}` === router.pathname}>
+                    <NavItem key={page.slug} active={page.active}>
                       <NavigationLink slug={page.slug}>
                         <NavLink>
                           <span className="nav-highlighter">{page.name}</span>
@@ -238,23 +245,24 @@ function GlobalNav(props) {
 }
 
 GlobalNav.defaultProps = {
-  active: '',
   fullwidth: false,
   sticky: false,
+  ownerName: '',
 };
 
 GlobalNav.propTypes = {
   siteTitle: PropTypes.string.isRequired,
+  ownerName: PropTypes.string,
   navItems: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.string,
     name: PropTypes.string,
     slug: PropTypes.string,
     children: PropTypes.arrayOf(PropTypes.shape),
   })).isRequired,
-  active: PropTypes.string,
   theme: PropTypes.shape({}).isRequired,
   fullwidth: PropTypes.bool,
   sticky: PropTypes.bool,
+  t: PropTypes.func.isRequired,
 };
 
-export default withTheme(GlobalNav);
+export default withTranslation('common')(withTheme(GlobalNav));

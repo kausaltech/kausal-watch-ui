@@ -6,6 +6,7 @@ import PlanContext from '../context/plan';
 
 import GlobalNav from './common/GlobalNav';
 import ApplicationStateBanner from './common/ApplicationStateBanner';
+import { isBranchActive } from '../common/links';
 
 function Header(props) {
   const plan = React.useContext(PlanContext);
@@ -17,14 +18,36 @@ function Header(props) {
   let navLinks = [];
   let staticPages = [];
 
-  if (hasActionImpacts) navLinks.push({ id: '1', name: t('dashboard'), slug: 'dashboard' });
-  navLinks.push({ id: '2', name: t('actions'), slug: 'actions' });
-  navLinks.push({ id: '3', name: t('indicators'), slug: 'indicators' });
+  if (hasActionImpacts) navLinks.push({
+    id: '1',
+    name: t('dashboard'),
+    slug: 'dashboard',
+    active: isBranchActive('dashboard'),
+  });
+
+  navLinks.push({
+    id: '2',
+    name: t('actions'),
+    slug: 'actions',
+    active: isBranchActive('actions'),
+  });
+
+  navLinks.push({
+    id: '3',
+    name: t('indicators'),
+    slug: 'indicators',
+    active: isBranchActive('indicators'),
+  });
 
   if (plan.staticPages) {
     const topMenuPages = plan.staticPages.filter((page) => page.topMenu);
     staticPages = topMenuPages.map((page, index) => (
-      { id: `s${index}`, name: page.name, slug: page.slug }
+      {
+        id: `s${index}`,
+        name: page.name,
+        slug: page.slug,
+        active: isBranchActive(page.slug),
+      }
     ));
     navLinks = navLinks.concat(staticPages);
   }
@@ -34,8 +57,8 @@ function Header(props) {
       <ApplicationStateBanner instanceType={plan.instanceType} />
       <GlobalNav
         siteTitle={siteTitle}
+        ownerName={plan.generalContent.ownerName}
         navItems={navLinks}
-        sticky
       />
     </div>
   );

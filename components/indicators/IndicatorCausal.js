@@ -153,7 +153,7 @@ function createChain(nodes, theme) {
       children.push(
         <Indicator level={indicatorLevel} key={indicator.id}>
           <IndicatorCard
-            objectid={indicator.object_id}
+            objectid={String(indicator.object_id)}
             name={indicator.name}
             level={indicatorLevel}
             key={indicator.id}

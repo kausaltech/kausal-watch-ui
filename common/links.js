@@ -1,30 +1,33 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import { Link } from '../routes';
 
-// react-i18next does not support dynamic routes yet
-// DynamicLink adds 'as' property to translated link
-// this solution: https://github.com/isaachinman/next-i18next/issues/413#issuecomment-663455809
-
 const pathJoin = (...parts) => parts.join('/').replace(/\/+/g, '/');
 
-export function DynamicLink(props) {
-  const { as, href, ...other } = props;
+function getActiveLanguagePath() {
   const {
     i18n: {
       language,
       options: { localeSubpaths },
     },
   } = useTranslation();
-  const lang = Object.values(localeSubpaths).includes(language) ? language : '';
+  return Object.values(localeSubpaths).includes(language) ? language : '';
+}
+
+// react-i18next does not support dynamic routes yet
+// DynamicLink adds 'as' property to translated link
+// this solution: https://github.com/isaachinman/next-i18next/issues/413#issuecomment-663455809
+export function DynamicLink(props) {
+  const { as, href, ...other } = props;
   const withAbsolute = href.substr(0, 1) === '/' ? '/' : '';
 
   return (
     <Link
       {...other}
-      href={pathJoin(withAbsolute, lang, href)}
+      href={pathJoin(withAbsolute, getActiveLanguagePath(), href)}
       as={as}
       passHref
     />
@@ -33,6 +36,18 @@ export function DynamicLink(props) {
 DynamicLink.propTypes = {
   ...Link.propTypes,
 };
+
+// Return true if top level of the current path matches the passed slug
+export function isBranchActive(slug) {
+  const currentLangPath = getActiveLanguagePath();
+  const parentIndex = currentLangPath === '' ? 1 : 2;
+
+  const router = useRouter();
+  const splitCurrent = router.asPath.split('/');
+  const currentPath = splitCurrent[parentIndex];
+
+  return currentPath === slug;
+}
 
 export function getIndicatorLinkProps(id) {
   return {

@@ -9,7 +9,7 @@ export default {
 const testPages = [
   { id: '1', name: 'Link 1', slug: 'link1' },
   { id: '2', name: 'Link 2', slug: 'link2' },
-  { id: '3', name: 'Link 3', slug: 'link3' },
+  { id: '3', name: 'Link 3', slug: 'link3', active: true },
 ];
 
 const testTree = [
@@ -17,6 +17,7 @@ const testTree = [
   { id: '2',
     name: 'Link 2',
     slug: 'link2',
+    active: true,
     children: [
       { id: '2.1', name: 'Link 2.1', slug: 'link2-1' },
       { id: '2.2', name: 'Link 2.2', slug: 'link2-2' },
@@ -33,7 +34,6 @@ export const GlobalNavBasic = () => {
       <GlobalNav
         siteTitle="Kausal Watch"
         navItems={testPages}
-        active="link2"
       />
     </div>
   );
@@ -45,7 +45,6 @@ export const GlobalNavSticky = () => {
       <GlobalNav
         siteTitle="Kausal Watch"
         navItems={testPages}
-        active="link2"
         sticky
       />
       <p style={{ padding: '2rem' }}>(Navbar gets sticky when scrolling up)</p>
@@ -59,7 +58,6 @@ export const GlobalNavFullWidth = () => {
       <GlobalNav
         siteTitle="Kausal Watch"
         navItems={testPages}
-        active="link2"
         fullwidth
       />
       <p style={{ padding: '2rem' }}>(Navbar content not aligned with content container)</p>
@@ -73,7 +71,6 @@ export const GlobalNavWithChildren = () => {
       <GlobalNav
         siteTitle="Kausal Watch"
         navItems={testTree}
-        active="link2"
       />
     </div>
   );
@@ -85,7 +82,6 @@ export const GlobalNavStressTest = () => {
       <GlobalNav
         siteTitle="Äteritsiputeritsipuolilautatsijänkän Ilmastovahti"
         navItems={testTree}
-        active="link2"
       />
     </div>
   );

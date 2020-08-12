@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import Head from 'next/head';
 
-import { ThemeProvider } from 'styled-components';
+import styled, { ThemeProvider } from 'styled-components';
 
 import { withTranslation } from '../common/i18n';
 import Header from './header';
@@ -13,6 +13,10 @@ import ThemedGlobalStyles from '../common/ThemedGlobalStyles';
 const defaultTheme = require('sass-extract-loader?{"plugins": ["sass-extract-js"]}!../styles/default/_theme-variables.scss');
 const customTheme = require('sass-extract-loader?{"plugins": ["sass-extract-js"]}!../styles/' + process.env.THEME_IDENTIFIER + '/_theme-variables.scss');
 const theme = Object.assign(defaultTheme, customTheme);
+
+const Content = styled.div`
+  min-height: 800px;
+`;
 
 function Layout({ children }) {
   const plan = useContext(PlanContext);
@@ -31,15 +35,19 @@ function Layout({ children }) {
             <meta property="og:url" content={plan.currentURL.domain + plan.currentURL.path} />
           )}
           <meta property="og:site_name" content={siteTitle} />
+          <link rel="shortcut icon" href={`/static/images/${process.env.THEME_IDENTIFIER}/favicon/favicon.ico`} type="image/x-icon" />
           <link rel="apple-touch-icon" sizes="180x180" href={`/static/images/${process.env.THEME_IDENTIFIER}/favicon/apple-touch-icon.png`} />
           <link rel="icon" type="image/png" sizes="32x32" href={`/static/images/${process.env.THEME_IDENTIFIER}/favicon/favicon-32x32.png`} />
           <link rel="icon" type="image/png" sizes="16x16" href={`/static/images/${process.env.THEME_IDENTIFIER}/favicon/favicon-16x16.png`} />
           <link rel="mask-icon" href={`/static/images/${process.env.THEME_IDENTIFIER}/favicon/safari-pinned-tab.svg`} color={theme.brandDark} />
+          { theme.themeCustomStylesUrl && <link rel="stylesheet" type="text/css" href={theme.themeCustomStylesUrl} />}
           <meta name="msapplication-TileColor" content={theme.brandDark} />
           <meta name="theme-color" content="#ffffff" />
         </Head>
         <Header siteTitle={siteTitle} />
-        {children}
+        <Content>
+          {children}
+        </Content>
         <Footer />
       </div>
     </ThemeProvider>
