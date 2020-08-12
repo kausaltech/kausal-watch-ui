@@ -36,6 +36,7 @@ function Layout({ children }) {
           <link rel="icon" type="image/png" sizes="32x32" href={`/static/images/${process.env.THEME_IDENTIFIER}/favicon/favicon-32x32.png`} />
           <link rel="icon" type="image/png" sizes="16x16" href={`/static/images/${process.env.THEME_IDENTIFIER}/favicon/favicon-16x16.png`} />
           <link rel="mask-icon" href={`/static/images/${process.env.THEME_IDENTIFIER}/favicon/safari-pinned-tab.svg`} color={theme.brandDark} />
+          { theme.themeCustomStylesUrl && <link rel="stylesheet" type="text/css" href={theme.themeCustomStylesUrl} />}
           <meta name="msapplication-TileColor" content={theme.brandDark} />
           <meta name="theme-color" content="#ffffff" />
         </Head>

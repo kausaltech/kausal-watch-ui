@@ -29,7 +29,6 @@ function Footer(props) {
 
   return (
     <>
-      <ApplicationStateBanner instanceType={plan.instanceType} />
       <SiteFooter
         siteTitle={generalContent.siteTitle}
         ownerName={generalContent.ownerName}
@@ -38,6 +37,7 @@ function Footer(props) {
         copyrightText={generalContent.copyrightText}
         navItems={navLinks}
       />
+      <ApplicationStateBanner instanceType={plan.instanceType} />
     </>
   );
 }
