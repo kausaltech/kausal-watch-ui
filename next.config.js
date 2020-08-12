@@ -26,7 +26,7 @@ const config = withBundleAnalyzer(withImages(withSass({
     SENTRY_DSN: process.env.SENTRY_DSN,
   },
   publicRuntimeConfig: { // Will be available on both server and client
-    aplansApiBaseURL: process.env.APLANS_API_BASE_URL || 'https://aplans.api.hel.ninja/v1',
+    aplansApiBaseURL: process.env.APLANS_API_BASE_URL || 'https://api.watch.kausal.tech/v1',
     kerrokantasiApiBaseURL: process.env.KERROKANTASI_API_BASE_URL || 'https://api.hel.fi/kerrokantasi-test/v1',
     // the default value for PLAN_IDENTIFIER is set below in webpack config
     planIdentifier: process.env.PLAN_IDENTIFIER,
