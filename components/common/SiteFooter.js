@@ -190,7 +190,7 @@ function SiteFooter(props) {
 
   const OrgLogo = () => (
     <SVG
-      src={theme.themeLogoUrl}
+      src={theme.themeLogoWhiteUrl}
       preserveAspectRatio="xMinYMin meet"
       title={`${ownerName}, ${siteTitle} ${t('front-page')}`}
     />
