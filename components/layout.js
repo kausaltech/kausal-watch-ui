@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import Head from 'next/head';
 
-import { ThemeProvider } from 'styled-components';
+import styled, { ThemeProvider } from 'styled-components';
 
 import { withTranslation } from '../common/i18n';
 import Header from './header';
@@ -13,6 +13,10 @@ import ThemedGlobalStyles from '../common/ThemedGlobalStyles';
 const defaultTheme = require('sass-extract-loader?{"plugins": ["sass-extract-js"]}!../styles/default/_theme-variables.scss');
 const customTheme = require('sass-extract-loader?{"plugins": ["sass-extract-js"]}!../styles/' + process.env.THEME_IDENTIFIER + '/_theme-variables.scss');
 const theme = Object.assign(defaultTheme, customTheme);
+
+const Content = styled.div`
+  min-height: 800px;
+`;
 
 function Layout({ children }) {
   const plan = useContext(PlanContext);
@@ -41,7 +45,9 @@ function Layout({ children }) {
           <meta name="theme-color" content="#ffffff" />
         </Head>
         <Header siteTitle={siteTitle} />
-        {children}
+        <Content>
+          {children}
+        </Content>
         <Footer />
       </div>
     </ThemeProvider>
