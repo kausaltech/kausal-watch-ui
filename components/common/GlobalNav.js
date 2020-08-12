@@ -176,8 +176,7 @@ function GlobalNav(props) {
   const OrgLogo = () => (
     <SVG
       src={theme.themeLogoUrl}
-      title={`${ownerName},
-      ${siteTitle} ${t('front-page')}`}
+      title={`${ownerName}, ${siteTitle} ${t('front-page')}`}
       preserveAspectRatio="xMinYMin meet"
     />
   );

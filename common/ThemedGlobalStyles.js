@@ -19,6 +19,11 @@ const GlobalStyle = createGlobalStyle`
     }
   }
 
+  // To prevent browser tooltip on titled inline svgs
+  svg {
+    pointer-events: none;
+  }
+
   h1, h2, h3 , h4, h5 {
     line-height: ${(props) => props.theme.lineHeightMd};
     color: inherit;

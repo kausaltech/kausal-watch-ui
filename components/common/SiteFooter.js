@@ -7,13 +7,14 @@ import {
 import SVG from 'react-inlinesvg';
 import styled, { withTheme } from 'styled-components';
 import { withTranslation } from '../../common/i18n';
+import { Link } from '../../routes';
 import { NavigationLink } from '../../common/links';
 
 const StyledFooter = styled.footer`
   position: relative;
   min-height: 14em;
   clear: both;
-  background-color: ${(props) => props.theme.neutralDark};
+  background-color: ${(props) => props.theme.themeColors.black};
   color: ${(props) => props.theme.themeColors.white};
   padding: 6rem 0;
  
@@ -25,16 +26,46 @@ const StyledFooter = styled.footer`
         text-decoration: underline;
       }
     }
+
+  .footer-column{
+    @media (max-width: ${(props) => props.theme.breakpointMd}) {
+      margin-bottom: ${(props) => props.theme.spaces.s300};
+      text-align: center;
+    }
+  }
+
+  @media (max-width: ${(props) => props.theme.breakpointMd}) {
+      text-align: center;
+    }
 `;
 
 const Logo = styled.div`
   height: ${(props) => props.theme.spaces.s400};
   width: calc( 4 * ${(props) => props.theme.spaces.s300});
-  margin-bottom: ${(props) => props.theme.spaces.s150};
+  margin: 0 0 ${(props) => props.theme.spaces.s150};
 
   svg {
     height: 100%;
-    width: 100%;
+    max-width: 100%;
+  }
+
+  @media (max-width: ${(props) => props.theme.breakpointMd}) {
+    margin: 0 auto ${(props) => props.theme.spaces.s150};
+  }
+`;
+
+const FundingInstrumentContainer = styled.div`
+  height: ${(props) => props.theme.spaces.s500};
+  width: calc( 3 * ${(props) => props.theme.spaces.s500});
+  text-align: right;
+
+  svg {
+    height: 100%;
+    max-width: 100%;
+  }
+
+  @media (max-width: ${(props) => props.theme.breakpointMd}) {
+    text-align: center;
   }
 `;
 
@@ -58,6 +89,12 @@ const FooterNavItems = styled.ul`
   flex-wrap: wrap;
   list-style: none;
   padding: 0;
+
+  @media (max-width: ${(props) => props.theme.breakpointMd}) {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
 `;
 
 const FooterNavItem = styled.li`
@@ -68,6 +105,11 @@ const FooterNavItem = styled.li`
   
   .parent-item {
     font-weight: ${(props) => props.theme.fontWeightBold};
+  }
+
+  @media (max-width: ${(props) => props.theme.breakpointMd}) {
+    margin-bottom: ${(props) => props.theme.spaces.s100};
+    padding-right: 0;
   }
 `;
 
@@ -82,19 +124,30 @@ const FooterNavSubItem = styled.li`
   font-weight: ${(props) => props.theme.fontWeightNormal};
 `;
 
-const Divider = styled.hr`
-  border-top: 2px solid ${(props) => props.theme.themeColors.white};
-`;
-
 const SmallPrint = styled.div`
   display: flex;
   justify-content: space-between;
+  margin: ${(props) => props.theme.spaces.s100} 0;
+  padding: ${(props) => props.theme.spaces.s100} 0;
+  border-top: 1px solid ${(props) => props.theme.themeColors.light};
+
+  @media (max-width: ${(props) => props.theme.breakpointMd}) {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
 `;
 
 const SmallPrintSection = styled.ul`
   display: flex;
   list-style: none;
   padding: 0;
+
+  @media (max-width: ${(props) => props.theme.breakpointMd}) {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
 `;
 
 const SmallPrintItem = styled.li`
@@ -112,6 +165,13 @@ const SmallPrintItem = styled.li`
       margin-right: 0;
     }
   }
+
+  @media (max-width: ${(props) => props.theme.breakpointMd}) {
+    &:before {
+      content: "";
+      margin-left: 0;
+    }
+  }
 `;
 
 function SiteFooter(props) {
@@ -124,32 +184,51 @@ function SiteFooter(props) {
     creativeCommonsLicense,
     copyrightText,
     navItems,
+    additionalLinks,
+    feedbackLink,
   } = props;
 
-  const OrgLogo = () => <SVG src={theme.themeLogoUrl} preserveAspectRatio="xMinYMin meet" />;
+  const OrgLogo = () => (
+    <SVG
+      src={theme.themeLogoUrl}
+      preserveAspectRatio="xMinYMin meet"
+      title={`${ownerName}, ${siteTitle} ${t('front-page')}`}
+    />
+  );
+
+  const FundingLogo = () => (
+    <SVG
+      src="/static/images/hnh2035/climate-kic-logo-white.svg"
+      preserveAspectRatio="xMinYMin meet"
+      title={t('funding-instrument')}
+    />
+  );
 
   return (
     <>
       <StyledFooter className="site-footer">
         <Container>
           <Row>
-            <Col md="4">
+            <Col md="4" className="footer-column">
               <Logo>
-                <a href={ownerUrl}>
-                  <OrgLogo aria-hidden="true" className="footer-org-logo" />
-                </a>
+                <Link href="/">
+                  <a>
+                    <OrgLogo aria-hidden="true" className="footer-org-logo" />
+                  </a>
+                </Link>
               </Logo>
               <ServiceTitle>
-                {siteTitle}
+                <Link href="/">
+                  <a>
+                    {siteTitle}
+                    </a>
+                </Link>
               </ServiceTitle>
               <OrgTitle>
                 <a href={ownerUrl} target="_blank">
                   {ownerName}
                 </a>
               </OrgTitle>
-              <div className="funding-instrument-logo-container">
-                <div className="funding-instrument-logo" />
-              </div>
             </Col>
             <Col md="8">
               <FooterNav>
@@ -179,20 +258,33 @@ function SiteFooter(props) {
           </Row>
           <Row>
             <Col>
-              <Divider />
               <SmallPrint>
                 <SmallPrintSection>
-                  <SmallPrintItem>{creativeCommonsLicense}</SmallPrintItem>
-                  <SmallPrintItem>{copyrightText}</SmallPrintItem>
-                  <SmallPrintItem><a href="#">Terms & Conditions</a></SmallPrintItem>
-                  <SmallPrintItem><a href="#">Accessibility</a></SmallPrintItem>
+                  { creativeCommonsLicense && <SmallPrintItem>{creativeCommonsLicense}</SmallPrintItem>}
+                  { copyrightText && <SmallPrintItem>{copyrightText}</SmallPrintItem> }
+                  { additionalLinks && additionalLinks.map((page) => (
+                    <SmallPrintItem>
+                      <NavigationLink slug={childPage.slug}>
+                        <a>{page.name}</a>
+                      </NavigationLink>
+                    </SmallPrintItem>
+                  ))}
                 </SmallPrintSection>
                 <SmallPrintSection>
-                  <SmallPrintItem><a href="#">Give Feedback</a></SmallPrintItem>
+                  { feedbackLink && (
+                    <SmallPrintItem>
+                      <NavigationLink slug={feedbackLink.slug}>
+                        <a>{feedbackLink.name}</a>
+                      </NavigationLink>
+                    </SmallPrintItem>
+                  )}
                 </SmallPrintSection>
               </SmallPrint>
             </Col>
           </Row>
+          <FundingInstrumentContainer>
+            <FundingLogo />
+          </FundingInstrumentContainer>
         </Container>
       </StyledFooter>
     </>
@@ -208,6 +300,8 @@ SiteFooter.propTypes = {
   creativeCommonsLicense: PropTypes.string.isRequired,
   copyrightText: PropTypes.string.isRequired,
   navItems: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  additionalLinks: PropTypes.arrayOf(PropTypes.shape({})),
+  feedbackLink: PropTypes.PropTypes.shape({}),
 };
 
 export default withTranslation('common')(withTheme(SiteFooter));
