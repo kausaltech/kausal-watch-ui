@@ -18,7 +18,7 @@ import ActionHighlightCard from './ActionHighlightCard';
 import Icon from '../common/Icon';
 
 export const GET_ACTION_LIST = gql`
-  query ActionHightlightList($plan: ID!, $first: Int!, $orderBy: String!) {
+  query ActionHightlightList($plan: ID!, $first: Int!, $orderBy: String!, $bgImageSize: String = "520x200") {
     planActions(plan: $plan, first: $first, orderBy: $orderBy) {
       id
       identifier
@@ -26,7 +26,7 @@ export const GET_ACTION_LIST = gql`
       officialName
       completion
       updatedAt
-      imageUrl
+      imageUrl(size: $bgImageSize)
       plan {
         id
       }
@@ -37,7 +37,15 @@ export const GET_ACTION_LIST = gql`
       }
       categories {
         id
-        imageUrl
+        imageUrl(size: $bgImageSize)
+        parent {
+          id
+          imageUrl(size: $bgImageSize)
+          parent {
+            id
+            imageUrl(size: $bgImageSize)
+          }
+        }
       }
     }
   }
@@ -74,7 +82,7 @@ function ActionCardList({ t, actions, plan }) {
           style={{ transition: 'all 0.5s ease' }}
         >
           <LazyLoad height={300}>
-            <ActionHighlightCard action={item} imageUrl={getActionImageURL(plan, item, 520, 200)} />
+            <ActionHighlightCard action={item} imageUrl={getActionImageURL(plan, item)} />
           </LazyLoad>
         </CardContainer>
       ))}

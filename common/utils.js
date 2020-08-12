@@ -2,7 +2,7 @@
 
 /* Resolve image url for an action */
 /* If not available fallback on category or plan image */
-export function getActionImageURL(plan, action, width, height) {
+export function getActionImageURL(plan, action) {
   let url;
 
   if (action.imageUrl) {
@@ -22,17 +22,6 @@ export function getActionImageURL(plan, action, width, height) {
   }
   if (!url) {
     url = plan.imageUrl;
-  }
-
-  const params = [];
-  if (height) {
-    params.push(`height=${height}`);
-  }
-  if (width) {
-    params.push(`width=${width}`);
-  }
-  if (params.length) {
-    url += `?${params.join('&')}`;
   }
   return url;
 }

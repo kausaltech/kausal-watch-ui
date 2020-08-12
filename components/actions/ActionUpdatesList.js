@@ -51,7 +51,7 @@ query ActionUpdates($plan: ID!, $id: ID!) {
           id
           firstName
           lastName
-          avatarUrl
+          avatarUrl(size: "150x150")
         }
         content
     }

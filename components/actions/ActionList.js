@@ -89,7 +89,6 @@ export const GET_ACTION_LIST = gql`
       id
       identifier
       name
-      imageUrl
       parent {
         id
       }

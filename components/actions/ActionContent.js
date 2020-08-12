@@ -29,7 +29,7 @@ import ErrorMessage from '../common/ErrorMessage';
 import { getActionImageURL } from '../../common/utils';
 
 const GET_ACTION_DETAILS = gql`
-query ActionDetails($plan: ID!, $id: ID!) {
+query ActionDetails($plan: ID!, $id: ID!, $bgImageSize: String = "1200x630") {
   action(plan: $plan, identifier: $id) {
     id
     identifier
@@ -37,7 +37,7 @@ query ActionDetails($plan: ID!, $id: ID!) {
     officialName
     description
     completion
-    imageUrl
+    imageUrl(size: $bgImageSize)
     updatedAt
     mergedActions {
       id
@@ -47,11 +47,11 @@ query ActionDetails($plan: ID!, $id: ID!) {
     categories(categoryType: "action") {
       id
       name
-      imageUrl
+      imageUrl(size: $bgImageSize)
       parent {
         id
         name
-        imageUrl
+        imageUrl(size: $bgImageSize)
       }
     }
     emissionScopes: categories(categoryType: "emission_scope") {
@@ -66,7 +66,7 @@ query ActionDetails($plan: ID!, $id: ID!) {
         id
         firstName
         lastName
-        avatarUrl
+        avatarUrl(size: "150x150")
         title
         organization {
           name
@@ -218,7 +218,7 @@ function ActionDetails(props) {
 
   const { categories, emissionScopes, mergedActions } = action;
   const hasMergedActions = mergedActions.length > 0;
-  const imageUrl=getActionImageURL(plan, action, 1200, 630);
+  const imageUrl = getActionImageURL(plan, action);
 
   return (
     <div>
