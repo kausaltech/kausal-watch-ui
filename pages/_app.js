@@ -23,6 +23,7 @@ const GET_PLAN = gql`
       identifier
       name
       imageUrl
+      serveFileBaseUrl
       actionSchedules {
         id,
         beginsAt,

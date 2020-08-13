@@ -26,6 +26,7 @@ import ActionUpdatesList from './ActionUpdatesList';
 import EmissionScopeIcon from './EmissionScopeIcon';
 import ContentLoader from '../common/ContentLoader';
 import ErrorMessage from '../common/ErrorMessage';
+import RichText from '../common/RichText';
 import { getActionImageURL } from '../../common/utils';
 
 const GET_ACTION_DETAILS = gql`
@@ -238,17 +239,19 @@ function ActionDetails(props) {
       <Container>
         <Row>
           <Col md="7" lg="8">
-            {action.description
-            && <ActionSection className="text-content" dangerouslySetInnerHTML={{ __html: action.description }} />}
-            {cleanOfficialText
-            && <OfficialText>
-              <h5>{ t('action-description-official') }</h5>
-              <strong>{ t('action-as-in-plan') }</strong>
-              <div dangerouslySetInnerHTML={{ __html: cleanOfficialText }} />
-              {generalContent.officialNameDescription && (
-                <small>{`(${generalContent.officialNameDescription})`}</small>
-              )}
-            </OfficialText>}
+            {action.description && (
+              <ActionSection className="text-content"><RichText html={action.description} /></ActionSection>
+            )}
+            {cleanOfficialText && (
+              <OfficialText>
+                <h5>{ t('action-description-official') }</h5>
+                <strong>{ t('action-as-in-plan') }</strong>
+                <div dangerouslySetInnerHTML={{ __html: cleanOfficialText }} />
+                {generalContent.officialNameDescription && (
+                  <small>{`(${generalContent.officialNameDescription})`}</small>
+                )}
+              </OfficialText>
+            )}
 
             <MergedActionList t={t} theme={theme} actions={mergedActions} />
 
