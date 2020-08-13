@@ -35,7 +35,7 @@
     "hel-icons": "^1.0.0-beta.3",
     "html-react-parser": "^0.13.0",
     "i18next-http-backend": "^1.0.17",
-    "jquery": "1.9.1",
+    "jquery": "3.5.0",
     "lodash": "^4.17.15",
     "lru-cache": "^5.1.1",
     "moment": "^2.26.0",
