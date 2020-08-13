@@ -114,7 +114,7 @@ function IndicatorValueSummary(props) {
         changeSymbol = '▼';
       } else if (absChange > 0) {
         changeSymbol = '▲';
-      }
+      } else changeSymbol = '—';
     }
     const latestValueDisplay = beautifyValue(latestValue.value);
     valueDisplay = (
@@ -124,10 +124,11 @@ function IndicatorValueSummary(props) {
         <ValueDisplay>
           {latestValueDisplay}
           <ValueUnit>{shortUnitName}</ValueUnit>
-          {absChange && (
+          {changeSymbol && (
             <ValueChange color={changeColor}>
               <ChangeSymbol>{changeSymbol}</ChangeSymbol>
               <span>{beautifyValue(absChange)}</span>
+              {' '}
               <small>{diffUnitName}</small>
             </ValueChange>
           )}

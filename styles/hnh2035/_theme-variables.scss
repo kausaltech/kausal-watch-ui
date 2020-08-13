@@ -36,12 +36,6 @@ $hel-gray:          #666666; //--color-black-60
 $hel-light:         #e5e5e5; //--color-black-10
 $hel-white:         #ffffff; //--color-white
 
-// Helper colors
-$red:     #e05563;
-$yellow:  #eca10c;
-$green:   #3cd55f;
-$cyan:    #52a4ca;
-
 // Service specific brand color defaults
 // brand-light/brand-dark should have contrast ratio over 4.5
 // brand-light/theme.dark should have contrast ratio over 4.5
@@ -55,10 +49,10 @@ $neutral-dark:   #00792D; //modified hel-tram for a11y
 $theme-colors: (
   "primary":    $brand-dark,
   "secondary":  $brand-light,
-  "success":    $green,
-  "info":       $cyan,
-  "warning":    $yellow,
-  "danger":     $red,
+  "success":    #007a64,
+  "info":       #007293,
+  "warning":    #ffda07,
+  "danger":     #c4123e,
   "light":      $hel-light,
   "dark":       $hel-dark,
   "black":      $hel-black,
@@ -186,8 +180,8 @@ $operational-indicator-color-fg: $hel-black;
 $tactical-indicator-color-fg: $hel-black;
 $strategic-indicator-color-fg: $hel-white;
 
-$causality-increases-color: darken($green, 10%);
-$causality-decreases-color: darken($red, 10%);
+$causality-increases-color: #006250;
+$causality-decreases-color: #8d0d2d;
 $causality-is-part-of-color: grey;
 
 // Breakpoints
