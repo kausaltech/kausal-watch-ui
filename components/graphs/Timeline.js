@@ -33,6 +33,12 @@ const Timeline = ({ schedules, allSchedules, theme }) => {
 
   const startYear = parseInt(minDate.split('-')[0], 10);
   const endYear = parseInt(maxDate.split('-')[0], 10);
+  const nrYears = endYear - startYear;
+  let dtick;
+
+  if (nrYears > 10) dtick = 'M36';
+  else if (nrYears > 5) dtick = 'M24';
+  else dtick = 'M12';
 
   const Plot = dynamic(import('./Plot'));
   const data = [
@@ -61,7 +67,7 @@ const Timeline = ({ schedules, allSchedules, theme }) => {
       range: [minDate, maxDate],
       autorange: false,
       tickformat: '         %Y', // FUUUUUU
-      dtick: endYear - startYear > 10 ? 'M36' : 'M12',
+      dtick,
       ticks: '',
       showgrid: false,
       tickfont: {
@@ -74,7 +80,7 @@ const Timeline = ({ schedules, allSchedules, theme }) => {
       visible: false,
     },
     plot_bgcolor: '#e9ecef',
-    width: null,  // Is resized automatically by plotly
+    width: null, // Is resized automatically by plotly
     height: 36,
     autosize: true,
   };
