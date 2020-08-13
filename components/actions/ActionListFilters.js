@@ -35,6 +35,19 @@ const StyledBadge = styled(Badge)`
   color: ${(props) => props.theme.themeColors.light};
 `;
 
+function generateSortedOrgTree(orgs, depth) {
+  const sortedOrgs = orgs.sort((a, b) => a.name.localeCompare(b.name));
+  let out = [];
+
+  sortedOrgs.forEach((org) => {
+    org.depth = depth;
+    out.push(org);
+    if (!org.children.length) return;
+    out = out.concat(generateSortedOrgTree(org.children, depth + 1));
+  });
+
+  return out;
+}
 
 class ActionListFilters extends React.Component {
   constructor(props) {
@@ -97,8 +110,8 @@ class ActionListFilters extends React.Component {
     const rootCategories = this.props.cats
       .filter(cat => cat.parent == null)
       .sort((a, b) => a.name.localeCompare(b.name));
-    const orgs = this.props.orgs.slice(0)
-      .sort((a, b) => a.name.localeCompare(b.name));
+
+    const orgs = generateSortedOrgTree(this.props.orgs.filter((org) => !org.parent), 0);
 
     const category = filters.category === undefined ? '' : filters.category;
     const organization = filters.organization === undefined ? '' : filters.organization;
@@ -144,7 +157,7 @@ class ActionListFilters extends React.Component {
                 >
                   <option value="">{ t('filter-all-organizations') }</option>
                   {orgs.map((org) => (
-                    <option value={org.id} key={org.id}>{ this.getOrganizationName(org.id) }</option>
+                    <option value={org.id} key={org.id}>{ ' '.repeat(org.depth * 4) + org.name }</option>
                   ))}
                 </DropDown>
               </Col>

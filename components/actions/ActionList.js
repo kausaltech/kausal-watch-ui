@@ -101,14 +101,54 @@ export const GET_ACTION_LIST = gql`
       identifier
       name
     }
-    planOrganizations(plan: $plan) {
+    planOrganizations(plan: $plan, withAncestors: true) {
       id
       abbreviation
       name
+      classification {
+        name
+      }
+      parent {
+        id
+      }
     }
   }
 `;
 
+function constructOrgHierarchy(orgs, actions) {
+  const orgsById = new Map();
+  const skipOrgs = ['Hallitus', 'Valtuusto', 'Lautakunta', 'Jaosto'];
+
+  function isSkippedOrg(org) {
+    if (!org.classification) return false;
+    return skipOrgs.indexOf(org.classification.name) >= 0;
+  }
+
+  orgs.forEach((org) => {
+    orgsById.set(org.id, org);
+    org.children = [];
+  });
+  orgs.forEach((org) => {
+    if (!org.parent) return;
+    // Check if org or its parents is one of the skipped organization types
+    // and yank them out of the org hierarchy
+    if (isSkippedOrg(org)) return;
+    let parent = orgsById.get(org.parent.id);
+    while (isSkippedOrg(parent)) {
+      parent = orgsById.get(parent.parent.id);
+    }
+    parent.children.push(org);
+    org.parent = parent;
+  });
+
+  actions.forEach((action) => {
+    action.responsibleParties.forEach((rp) => {
+      rp.organization = orgsById.get(rp.organization.id);
+    });
+  });
+
+  return orgs.filter((org) => !isSkippedOrg(org));
+}
 
 class ActionListFiltered extends React.Component {
   static contextType = PlanContext;
@@ -127,7 +167,8 @@ class ActionListFiltered extends React.Component {
 
     this.actions = props.planActions;
     this.cats = props.actionCategories;
-    this.orgs = props.planOrganizations;
+    this.orgs = constructOrgHierarchy(props.planOrganizations, this.actions);
+
     const { emissionScopes } = props;
 
     const catsById = {};
@@ -203,7 +244,19 @@ class ActionListFiltered extends React.Component {
     const actions = this.actions.filter((item) => {
       if (category && item.rootCategory.id !== category) return false;
       if (organization) {
-        if (!item.responsibleParties.find(rp => rp.organization.id === organization)) return false;
+        let found = false;
+        item.responsibleParties.forEach((rp) => {
+          let org = rp.organization;
+
+          while (org) {
+            if (org.id === organization) {
+              found = true;
+              break;
+            }
+            org = org.parent;
+          }
+        });
+        if (!found) return false;
       }
       if (impact && (!item.impact || (item.impact.id !== impact))) return false;
 
