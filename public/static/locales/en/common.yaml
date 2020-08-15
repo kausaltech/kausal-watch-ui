@@ -1,0 +1,98 @@
+front-page: Front Page
+indicators: Indicators
+actions: Actions
+action: Action
+dashboard: Dashboard
+operational: Operational indicator
+tactical: Tactical indicator
+strategic: Strategic indicator
+recently-updated-actions: Recently updated actions
+see-all-actions: See all actions
+recently-updated-indicators: Recently updated indicators
+see-all-indicators: See all indicators
+instance-type-testing-label: Testing
+instance-type-testing-message: This is a test version of the service
+instance-type-development-label: Development
+instance-type-development-message: This is a development version of the service
+insight-download-label: Download
+insight-download-png: Image (png)
+insight-filter-label: Filter by indicator
+insight-filter-no-results: No results
+indicators-as-list: As a list
+indicators-as-insight: As insights
+goal: goal
+forecast: forecast
+current-trend: trend
+percent-point-abbreviation: p.p.
+responsible-parties: Responsible organisations
+responsible-parties-missing: No named responsible organisations
+responsible-party-main: Main responsible
+contact-persons: Contact persons
+contact-persons-missing: No named contact persons
+contact-person-main: Main contact person
+contact-info: Contact information
+email: E-mail
+emission-scopes: Emission scopes
+action-not-found: Action not found
+action-description-official: Official description
+action-as-in-plan: Description from the original plan
+action-what-effect-this-has: How this action contributes to the outcome?
+action-tasks: Tasks
+action-tasks-done: What has been done?
+action-tasks-todo: What's left to do?
+action-task-done: Done
+action-task-todo: Todo
+action-tasks-todo-empty: No to-dos
+action-status-updates: Latest updates
+action-last-updated: Information updated
+action-timeline: Timeline
+action-progress: Progress
+action-percent-ready: ready
+action-num: '#'
+action-name-title: Action theme
+action-impact: Impact
+action-monitoring: Monitoring
+action-merged: Merged actions
+action-status-merged: Merged with action
+previous: Previous
+next: Next
+action-previous: Previous action
+action-next: Next action
+impact: impact
+browse-actions: Browse actions
+filter-category: Filter by theme
+filter-all-categories: All themes
+filter-all-emission-scopes: No emission scope filter
+filter-all-organizations: All organizations
+filter-all-impacts: No impact filter
+filter-organization: Filter by organization
+filter-emission-scope: Filter by emission scope
+filter-impact: Filter by impact
+filter-text: Text search
+filter-text-default: Search from headers
+filter-text-description: Search from descriptions
+filter-result-actions: actions
+funding-instrument: >-
+  Helsinki Climate Watch has received funding from the European Union EIT
+  Climate-KIC programme.
+error-loading-actions: Error loading the actions list
+error-loading-indicators: Error loading the indicators list
+indicator-related-actions: Actions that impact this indicator
+indicator-affected-by: This indicator is affected by
+indicator-has-effect-on: This indicator has effect on
+indicator-not-found: Indicator not found
+indicator-latest-value: Latest value
+indicator-no-values: No values
+indicator-goal: Goal
+indicator-time-to-goal: Time to goal
+indicator-time-no-goals: No goals
+indicator-resolution-years: years
+type: Type
+name: Name
+themes: Themes
+graph: Graph
+no-graph: No graph
+loading: Loading
+impact-group-no-actions: No defined actions.
+impact-group.others: Others
+

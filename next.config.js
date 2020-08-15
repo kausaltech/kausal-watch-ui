@@ -5,10 +5,14 @@ const withSass = require('@zeit/next-sass');
 const withImages = require('next-images');
 const withBundleAnalyzer = require('@zeit/next-bundle-analyzer');
 const SentryWebpackPlugin = require('@sentry/webpack-plugin');
+const { nextI18NextRewrites } = require('next-i18next/rewrites')
 
 // Set default plan identifier
 process.env.PLAN_IDENTIFIER = process.env.PLAN_IDENTIFIER || 'hnh2035';
 
+const localeSubpaths = {
+  en: 'en',
+};
 
 function getAllThemes() {
   const styleDir = path.join(__dirname, 'styles');
@@ -20,11 +24,11 @@ function getAllThemes() {
 
 const themes = getAllThemes();
 
-
 const config = withBundleAnalyzer(withImages(withSass({
   env: {
     SENTRY_DSN: process.env.SENTRY_DSN,
   },
+  rewrites: async () => nextI18NextRewrites(localeSubpaths),
   publicRuntimeConfig: { // Will be available on both server and client
     aplansApiBaseURL: process.env.APLANS_API_BASE_URL || 'https://api.watch.kausal.tech/v1',
     kerrokantasiApiBaseURL: process.env.KERROKANTASI_API_BASE_URL || 'https://api.hel.fi/kerrokantasi-test/v1',
@@ -33,6 +37,7 @@ const config = withBundleAnalyzer(withImages(withSass({
     instanceType: process.env.INSTANCE_TYPE || 'development',
     matomoURL: process.env.MATOMO_URL,
     matomoSiteId: process.env.MATOMO_SITE_ID,
+    localeSubpaths,
   },
   experimental: {
     modern: true,

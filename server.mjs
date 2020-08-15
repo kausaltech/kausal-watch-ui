@@ -1,14 +1,12 @@
 // server.js
-const next = require('next');
-const morgan = require('morgan');
-const express = require('express');
-const nextI18NextMiddleware = require('next-i18next/middleware').default;
-const originalUrl = require('original-url');
-const parseCacheControl = require('parse-cache-control');
-const cacheableResponse = require('cacheable-response');
+import next from 'next';
+import morgan from 'morgan';
+import express from 'express';
+import originalUrl from 'original-url';
+import parseCacheControl from 'parse-cache-control';
+import cacheableResponse from 'cacheable-response';
 
-const sentry = require('./common/sentry');
-const nextI18next = require('./common/i18n');
+import sentry from './common/sentry.js';
 
 
 const serverPort = process.env.PORT || 3000;
@@ -43,7 +41,6 @@ app.prepare().then(() => {
     server.use(Sentry.Handlers.requestHandler());
   }
   server.use(morgan('dev'));
-  server.use(nextI18NextMiddleware(nextI18next));
 
   const handle = app.getRequestHandler();
 
