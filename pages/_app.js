@@ -1,8 +1,8 @@
 import React from 'react';
 import App from 'next/app';
 import getConfig from 'next/config';
-import { ApolloProvider, Query } from 'react-apollo';
-import gql from 'graphql-tag';
+import { Query } from '@apollo/client/react/components';
+import { gql, ApolloProvider } from '@apollo/client';
 import ReactPiwik from 'react-piwik';
 
 import { Router } from '../routes';
@@ -152,8 +152,8 @@ class AplansApp extends App {
             if (error) return <Error message={error} />;
             if (loading) return null;
 
-            const { plan } = data;
-            plan.instanceType = instanceType;
+            let { plan } = data;
+            plan = { ...plan, instanceType };
             if (currentURL) plan.currentURL = currentURL;
             return (
               <PlanContext.Provider value={plan}>

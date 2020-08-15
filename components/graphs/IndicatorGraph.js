@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import dynamic from 'next/dynamic';
-import { Query } from 'react-apollo';
-import gql from 'graphql-tag';
+import { Query } from '@apollo/client/react/components';
+import { gql } from '@apollo/client';
 import { withTheme } from 'styled-components';
 import {
   Card, CardBody, Alert,
@@ -136,7 +136,7 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
     return { date, value };
   }
 
-  const values = indicator.values.sort((a, b) => a.date - b.date).map(processItem);
+  const values = [...indicator.values].sort((a, b) => a.date - b.date).map(processItem);
 
   // Group goals by scenario
   const scenarios = new Map();

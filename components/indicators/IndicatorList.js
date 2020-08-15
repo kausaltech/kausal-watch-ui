@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Query } from 'react-apollo';
-import gql from 'graphql-tag';
+import { Query } from '@apollo/client/react/components';
+import { gql } from '@apollo/client';
 import { Container } from 'reactstrap';
 
 import { withTranslation } from '../../common/i18n';
@@ -65,8 +65,7 @@ class IndicatorList extends React.Component {
     const indicators = indicatorLevels.map((il) => {
       const { indicator, level } = il;
 
-      indicator.level = level.toLowerCase();
-      return indicator;
+      return { ...indicator, level: level.toLowerCase() };
     });
 
     const categories = [];
@@ -78,7 +77,7 @@ class IndicatorList extends React.Component {
       });
     });
 
-    return { indicators, categories, leadContent: generalContent.indicatorListLeadContent }
+    return { indicators, categories, leadContent: generalContent.indicatorListLeadContent };
   }
 
   render() {

@@ -5,7 +5,7 @@ import {
   Progress,
 } from 'reactstrap';
 import styled from 'styled-components';
-import gql from 'graphql-tag';
+import { gql } from '@apollo/client';
 
 import { ActionLink } from '../../common/links';
 import { withTranslation } from '../../common/i18n';

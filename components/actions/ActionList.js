@@ -1,8 +1,8 @@
 /* eslint-disable max-classes-per-file */
 import React from 'react';
 import PropTypes from 'prop-types';
-import gql from 'graphql-tag';
-import { Query } from 'react-apollo';
+import { gql } from '@apollo/client';
+import { Query } from '@apollo/client/react/components';
 import { Spring } from 'react-spring/renderprops.cjs';
 import {
   Container, Row, Col,
@@ -115,7 +115,7 @@ export const GET_ACTION_LIST = gql`
   }
 `;
 
-function constructOrgHierarchy(orgs, actions) {
+function constructOrgHierarchy(orgsIn, actions) {
   const orgsById = new Map();
   const skipOrgs = ['Hallitus', 'Valtuusto', 'Lautakunta', 'Jaosto'];
 
@@ -124,10 +124,12 @@ function constructOrgHierarchy(orgs, actions) {
     return skipOrgs.indexOf(org.classification.name) >= 0;
   }
 
-  orgs.forEach((org) => {
-    orgsById.set(org.id, org);
-    org.children = [];
+  const orgs = orgsIn.map((org) => {
+    const newOrg = { ...org, children: [] };
+    orgsById.set(newOrg.id, newOrg);
+    return newOrg;
   });
+
   orgs.forEach((org) => {
     if (!org.parent) return;
     // Check if org or its parents is one of the skipped organization types
@@ -165,7 +167,10 @@ class ActionListFiltered extends React.Component {
   constructor(props) {
     super(props);
 
-    this.actions = props.planActions;
+    this.actions = props.planActions.map((act) => {
+      const rps = act.responsibleParties.map((rp) => ({ ...rp }));
+      return { ...act, responsibleParties: rps };
+    });
     this.cats = props.actionCategories;
     this.orgs = constructOrgHierarchy(props.planOrganizations, this.actions);
 

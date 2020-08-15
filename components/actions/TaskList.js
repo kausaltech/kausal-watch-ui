@@ -62,7 +62,7 @@ function parseTimestamp(timestamp) {
 
 function TaskList(props) {
   const { t, theme, tasks } = props;
-  const sortedTasks = tasks
+  const sortedTasks = [...tasks]
     .sort((a, b) => {
       const adate = a.completedAt ? a.completedAt : a.dueAt;
       const bdate = b.completedAt ? b.completedAt : b.dueAt;

@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import {
   Container, Row, Col, Badge, Alert,
 } from 'reactstrap';
-import { Query } from 'react-apollo';
+import { Query } from '@apollo/client/react/components';
 import styled, { withTheme } from 'styled-components';
-import gql from 'graphql-tag';
+import { gql } from '@apollo/client';
 import moment from '../../common/moment';
 
 import { withTranslation } from '../../common/i18n';

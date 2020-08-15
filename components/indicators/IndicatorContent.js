@@ -5,8 +5,8 @@ import {
   Jumbotron as BaseJumbotron, Container, Row, Col,
 } from 'reactstrap';
 import styled from 'styled-components';
-import { Query } from 'react-apollo';
-import gql from 'graphql-tag';
+import { Query } from '@apollo/client/react/components';
+import { gql } from '@apollo/client';
 
 import { IndicatorListLink } from '../../common/links';
 import PlanContext from '../../context/plan';
@@ -53,6 +53,7 @@ const GET_INDICATOR_DETAILS = gql`
         value
       }
       actions(plan: $plan) {
+        id
         ...ActionsTable
       }
       relatedCauses {
