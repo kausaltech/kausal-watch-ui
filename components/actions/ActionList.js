@@ -171,7 +171,7 @@ class ActionListFiltered extends React.Component {
       const rps = act.responsibleParties.map((rp) => ({ ...rp }));
       return { ...act, responsibleParties: rps };
     });
-    this.cats = props.actionCategories;
+    this.cats = props.actionCategories.map((cat) => ({ ...cat }));
     this.orgs = constructOrgHierarchy(props.planOrganizations, this.actions);
 
     const { emissionScopes } = props;
