@@ -52,7 +52,6 @@ app.prepare().then(() => {
         return ssrCache({ req, res, pagePath: req.path, queryParams: req.query });
       }
     }
-
     return handle(req, res);
   });
 

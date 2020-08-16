@@ -1,5 +1,6 @@
 import withApollo from 'next-with-apollo';
 import { ApolloClient, HttpLink, ApolloLink, concat } from '@apollo/client';
+import { getDataFromTree } from '@apollo/react-ssr';
 import { InMemoryCache } from '@apollo/client/cache';
 import { onError } from '@apollo/client/link/error';
 import getConfig from 'next/config';
@@ -66,6 +67,13 @@ export default withApollo(({ ctx, headers, initialState }) => {
     ssrMode: !process.browser,
     link: concat(localeMiddleware, sentryHttpLink),
     cache: new InMemoryCache().restore(initialState || {}),
+    defaultOptions: {
+      query: {
+        fetchPolicy: 'cache-and-network',
+      },
+    },
   });
   return client;
-}, {});
+}, {
+  getDataFromTree,
+});
