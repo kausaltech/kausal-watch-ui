@@ -19,9 +19,13 @@ export default function RichText({ html }) {
           // FIXME: Add icon based on attribs['data-file-extension']
           return <a href={`${plan.serveFileBaseUrl}${attribs.href}`}>{domToReact(children, options)}</a>;
         }
+        return <a target='_blank' {...attribs}>{domToReact(children, options)}</a>;
       } else if (name === 'img') {
         if (attribs.src && attribs.src[0] === '/') {
-          return <img {...attribs} width={undefined} height={undefined} src={`${plan.serveFileBaseUrl}${attribs.src}`} />;
+          const { alt, src, rest } = attribs;
+          rest.className = rest.class;
+          delete rest.class;
+          return <img src={`${plan.serveFileBaseUrl}${src}`} alt={alt} {...rest} />;
         }
       }
       return null;
