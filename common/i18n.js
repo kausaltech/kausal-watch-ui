@@ -5,7 +5,7 @@ module.exports = new NextI18Next({
   otherLanguages: ['en'],
   browserLanguageDetection: false,
   serverLanguageDetection: false,
-  localePath: 'public/static/locales',
+  localePath: 'locales',
   localeExtension: 'yaml',
   localeSubpaths: {
     en: 'en',
