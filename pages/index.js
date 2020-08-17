@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {
   Container,
 } from 'reactstrap';
@@ -36,54 +36,50 @@ const IndicatorsSection = styled.div`
   }
 `;
 
-class HomePage extends React.Component {
-  static contextType = PlanContext;
+function HomePage() {
+  const plan = useContext(PlanContext);
+  const generalContent = plan.generalContent || {};
 
-  render() {
-    const plan = this.context;
-    const generalContent = plan.generalContent || {};
-    // Use default hero component
-    let heroComponent = (
-      <FrontHero
-        bgImage={plan.imageUrl}
-        title={generalContent.siteTitle}
-        siteDescription={generalContent.siteDescription}
-        actionsDescription={generalContent.actionShortDescription}
-        indicatorsDescription={generalContent.indicatorShortDescription}
-      />
-    );
+  // Use default hero component
+  let heroComponent = (
+    <FrontHero
+      bgImage={plan.imageUrl}
+      title={generalContent.siteTitle}
+      siteDescription={generalContent.siteDescription}
+      actionsDescription={generalContent.actionShortDescription}
+      indicatorsDescription={generalContent.indicatorShortDescription}
+    />
+  );
 
-    // Override with plan specific hero if applicable
-    if (plan.identifier === 'hnh2035') heroComponent = <HnhHero />;
-    if (plan.identifier === 'ktstrat') heroComponent = <ThlHero />;
-    if (plan.identifier === 'liiku') heroComponent = (
-      <HeroFullImage
-        bgImage={plan.imageUrl}
-        title={generalContent.siteTitle}
-        siteDescription={generalContent.siteDescription}
-        actionsDescription={generalContent.actionShortDescription}
-        indicatorsDescription={generalContent.indicatorShortDescription}
-      />
-    );
+  // Override with plan specific hero if applicable
+  if (plan.identifier === 'hnh2035') heroComponent = <HnhHero />;
+  if (plan.identifier === 'ktstrat') heroComponent = <ThlHero />;
+  if (plan.identifier === 'liiku') heroComponent = (
+    <HeroFullImage
+      bgImage={plan.imageUrl}
+      title={generalContent.siteTitle}
+      siteDescription={generalContent.siteDescription}
+      actionsDescription={generalContent.actionShortDescription}
+      indicatorsDescription={generalContent.indicatorShortDescription}
+    />
+  );
 
-    return (
-      <Layout>
-        { heroComponent }
-        <ActionsSection className="actions-section">
-          <Container>
-            <ActionHighlightsList plan={plan} />
-          </Container>
-        </ActionsSection>
-        <IndicatorsSection className="indicators-section">
-          <Container>
-            <IndicatorHighlightsList plan={plan} />
-          </Container>
-        </IndicatorsSection>
-      </Layout>
-    );
-  }
+  return (
+    <Layout>
+      { heroComponent }
+      <ActionsSection className="actions-section">
+        <Container>
+          <ActionHighlightsList plan={plan} />
+        </Container>
+      </ActionsSection>
+      <IndicatorsSection className="indicators-section">
+        <Container>
+          <IndicatorHighlightsList plan={plan} />
+        </Container>
+      </IndicatorsSection>
+    </Layout>
+  );
 }
-
 
 HomePage.getInitialProps = async () => ({
   namespacesRequired: ['common'],

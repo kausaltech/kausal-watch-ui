@@ -1,13 +1,38 @@
-const NextI18Next = require('next-i18next').default;
+import NextI18Next from 'next-i18next';
+import path from 'path';
 
-module.exports = new NextI18Next({
+const i18nNext = new NextI18Next({
   defaultLanguage: 'fi',
   otherLanguages: ['en'],
   browserLanguageDetection: false,
   serverLanguageDetection: false,
-  localePath: 'locales',
+  localePath: path.resolve('./locales'),
   localeExtension: 'yaml',
   localeSubpaths: {
     en: 'en',
   },
 });
+
+const {
+  appWithTranslation,
+  withTranslation,
+  i18n,
+  Link,
+  Router,
+  Trans,
+  useTranslation,
+  withNamespaces,
+  initPromise,
+} = i18nNext;
+
+export {
+  appWithTranslation,
+  withTranslation,
+  i18n,
+  Link,
+  Router,
+  Trans,
+  useTranslation,
+  withNamespaces,
+  initPromise,
+};

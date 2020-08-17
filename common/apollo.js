@@ -45,8 +45,9 @@ const sentryHttpLink = ApolloLink.from([
   onError(({ graphQLErrors, networkError }) => {
     if (graphQLErrors) {
       graphQLErrors.forEach(({ message, locations, path }) => {
+        const locationsStr = JSON.stringify(locations);
         if (process.env.NODE_ENV !== 'production')
-          console.error(`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`);
+          console.error(`[GraphQL error]: Message: ${message}, Location: ${locationsStr}, Path: ${path}`);
       });
       captureException(graphQLErrors[0]);
     }
@@ -62,8 +63,13 @@ const sentryHttpLink = ApolloLink.from([
   }),
 ]);
 
+let apolloClient;
+
+
 export default withApollo(({ ctx, headers, initialState }) => {
-  const client = new ApolloClient({
+  if (apolloClient) return apolloClient;
+
+  apolloClient = new ApolloClient({
     ssrMode: !process.browser,
     link: concat(localeMiddleware, sentryHttpLink),
     cache: new InMemoryCache().restore(initialState || {}),
@@ -73,7 +79,7 @@ export default withApollo(({ ctx, headers, initialState }) => {
       },
     },
   });
-  return client;
+  return apolloClient;
 }, {
   getDataFromTree,
 });

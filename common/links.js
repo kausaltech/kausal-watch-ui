@@ -38,7 +38,7 @@ DynamicLink.propTypes = {
 };
 
 // Return true if top level of the current path matches the passed slug
-export function isBranchActive(slug) {
+export function getActiveBranch() {
   const currentLangPath = getActiveLanguagePath();
   const parentIndex = currentLangPath === '' ? 1 : 2;
 
@@ -46,7 +46,7 @@ export function isBranchActive(slug) {
   const splitCurrent = router.asPath.split('/');
   const currentPath = splitCurrent[parentIndex];
 
-  return currentPath === slug;
+  return currentPath;
 }
 
 export function getIndicatorLinkProps(id) {

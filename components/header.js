@@ -1,60 +1,63 @@
-import React from 'react';
+import React, { useMemo, useContext } from 'react';
 import PropTypes from 'prop-types';
 
-import { withTranslation } from '../common/i18n';
-import PlanContext from '../context/plan';
+import { withTranslation } from 'common/i18n';
+import PlanContext from 'context/plan';
+import SiteContext from 'context/site';
 
 import GlobalNav from './common/GlobalNav';
 import ApplicationStateBanner from './common/ApplicationStateBanner';
-import { isBranchActive } from '../common/links';
+import { getActiveBranch } from '../common/links';
 
-function Header(props) {
-  const plan = React.useContext(PlanContext);
-  const {
-    t, siteTitle,
-  } = props;
+
+function Header({ t, siteTitle }) {
+  const plan = useContext(PlanContext);
+  const site = useContext(SiteContext);
   const hasActionImpacts = plan.actionImpacts.length > 0;
-
-  let navLinks = [];
+  const activeBranch = getActiveBranch();
   let staticPages = [];
 
-  if (hasActionImpacts) navLinks.push({
-    id: '1',
-    name: t('dashboard'),
-    slug: 'dashboard',
-    active: isBranchActive('dashboard'),
-  });
+  const navLinks = useMemo(() => {
+    let links = [];
+    if (hasActionImpacts) links.push({
+      id: '1',
+      name: t('dashboard'),
+      slug: 'dashboard',
+      active: activeBranch === 'dashboard',
+    });
 
-  navLinks.push({
-    id: '2',
-    name: t('actions'),
-    slug: 'actions',
-    active: isBranchActive('actions'),
-  });
+    links.push({
+      id: '2',
+      name: t('actions'),
+      slug: 'actions',
+      active: activeBranch === 'actions',
+    });
 
-  navLinks.push({
-    id: '3',
-    name: t('indicators'),
-    slug: 'indicators',
-    active: isBranchActive('indicators'),
-  });
+    links.push({
+      id: '3',
+      name: t('indicators'),
+      slug: 'indicators',
+      active: activeBranch === 'indicators',
+    });
 
-  if (plan.staticPages) {
-    const topMenuPages = plan.staticPages.filter((page) => page.topMenu);
-    staticPages = topMenuPages.map((page, index) => (
-      {
-        id: `s${index}`,
-        name: page.name,
-        slug: page.slug,
-        active: isBranchActive(page.slug),
-      }
-    ));
-    navLinks = navLinks.concat(staticPages);
-  }
+    if (plan.staticPages) {
+      const topMenuPages = plan.staticPages.filter((page) => page.topMenu);
+      staticPages = topMenuPages.map((page, index) => (
+        {
+          id: `s${index}`,
+          name: page.name,
+          slug: page.slug,
+          active: activeBranch === page.slug,
+        }
+      ));
+      links = links.concat(staticPages);
+    }
+    return links;
+  }, [hasActionImpacts, activeBranch, JSON.stringify(plan.staticPages)]);
 
   return (
     <div>
-      <ApplicationStateBanner instanceType={plan.instanceType} />
+      <ApplicationStateBanner instanceType={site.instanceType} />
       <GlobalNav
         siteTitle={siteTitle}
         ownerName={plan.generalContent.ownerName}
@@ -69,4 +72,4 @@ Header.propTypes = {
   t: PropTypes.func.isRequired,
 };
 
-export default withTranslation('common')(Header);
+export default withTranslation('common')(React.memo(Header));

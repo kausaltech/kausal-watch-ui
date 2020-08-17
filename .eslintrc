@@ -8,6 +8,14 @@
   "plugins": [
     "react"
   ],
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "paths": ["."],
+        "extensions": [".js", ".jsx"]
+      }
+    }
+  },
   "rules": {
     "max-len": [1, 120, 2, {"ignoreComments": true}],
     "curly": ["off"],

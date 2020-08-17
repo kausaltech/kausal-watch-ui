@@ -4,11 +4,13 @@ import Head from 'next/head';
 
 import styled, { ThemeProvider } from 'styled-components';
 
-import { withTranslation } from '../common/i18n';
+import { withTranslation } from 'common/i18n';
+import PlanContext from 'context/plan';
+import SiteContext from 'context/site';
+import ThemedGlobalStyles from 'common/ThemedGlobalStyles';
+
 import Header from './header';
 import Footer from './Footer';
-import PlanContext from '../context/plan';
-import ThemedGlobalStyles from '../common/ThemedGlobalStyles';
 
 const defaultTheme = require('sass-extract-loader?{"plugins": ["sass-extract-js"]}!../styles/default/_theme-variables.scss');
 const customTheme = require('sass-extract-loader?{"plugins": ["sass-extract-js"]}!../styles/' + process.env.THEME_IDENTIFIER + '/_theme-variables.scss');
@@ -20,6 +22,7 @@ const Content = styled.div`
 
 function Layout({ children }) {
   const plan = useContext(PlanContext);
+  const site = useContext(SiteContext);
   const generalContent = plan.generalContent || {};
   const siteTitle = generalContent.siteTitle || plan.name;
 
@@ -31,8 +34,8 @@ function Layout({ children }) {
         <Head>
           <meta name="viewport" content="initial-scale=1.0, width=device-width" />
           <meta property="og:type" content="website" />
-          {plan.currentURL && (
-            <meta property="og:url" content={plan.currentURL.domain + plan.currentURL.path} />
+          {site.currentURL && (
+            <meta property="og:url" content={site.currentURL.domain + site.currentURL.path} />
           )}
           <meta property="og:site_name" content={siteTitle} />
           <link rel="shortcut icon" href={`/static/images/${process.env.THEME_IDENTIFIER}/favicon/favicon.ico`} type="image/x-icon" />

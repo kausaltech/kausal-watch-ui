@@ -20,14 +20,19 @@ const ActionGroup = styled(Row)`
   }
 `;
 
-
 function ActionCardList({ actions }) {
   let groups = [];
   const groupMap = {};
+  const noGroupItems = [];
 
   actions.forEach((action) => {
     const cat = action.rootCategory;
     let group;
+
+    if (!cat) {
+      noGroupItems.push(action);
+      return;
+    }
     if (cat.id in groupMap) {
       group = groupMap[cat.id];
     } else {
@@ -43,6 +48,7 @@ function ActionCardList({ actions }) {
     group.elements.push(action);
   });
   groups = groups.sort((g1, g2) => g1.identifier - g2.identifier);
+
   return (
     <div>
       {groups.map((group) => (
@@ -65,6 +71,23 @@ function ActionCardList({ actions }) {
           ))}
         </ActionGroup>
       ))}
+      {noGroupItems && (
+        <ActionGroup key="default">
+          {noGroupItems.map((item) => (
+            <Col
+              xs="6"
+              sm="4"
+              lg="3"
+              xl="2"
+              key={item.id}
+              className="mb-4 d-flex align-items-stretch"
+              style={{ transition: 'all 0.5s ease' }}
+            >
+              <ActionCard action={item} />
+            </Col>
+          ))}
+        </ActionGroup>
+      )}
     </div>
   );
 }

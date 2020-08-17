@@ -33,7 +33,6 @@ if (('ENABLE_CACHE' in process.env)
   });
 }
 
-
 app.prepare().then(() => {
   const server = express();
 

@@ -7,8 +7,9 @@ import ReactPiwik from 'react-piwik';
 
 import { Router } from '../routes';
 import { captureException } from '../common/sentry';
-import { appWithTranslation } from '../common/i18n';
+import { appWithTranslation, initPromise as i18nInitPromise, i18n } from '../common/i18n';
 import PlanContext from '../context/plan';
+import SiteContext from '../context/site';
 import withApollo from '../common/apollo';
 import Error from './_error';
 
@@ -43,6 +44,7 @@ const GET_PLAN = gql`
         footer
       }
       generalContent {
+        id
         siteTitle
         siteDescription
         officialNameDescription
@@ -53,18 +55,26 @@ const GET_PLAN = gql`
         actionShortDescription
         indicatorShortDescription
       }
+      mainMenu {
+        items(withDescendants: true) {
+          id
+          linkText
+          page {
+            urlPath
+            slug
+          }
+          parent {
+            id
+          }
+        }
+      }
     }
   }
 `;
 
-
 class AplansApp extends App {
   constructor(props) {
     super(props);
-    this.state = {
-      hasError: false,
-      errorEventId: undefined,
-    };
     this.handleRouteChange = this.handleRouteChange.bind(this);
 
     if (process.browser && publicRuntimeConfig.matomoURL && publicRuntimeConfig.matomoSiteId) {
@@ -88,6 +98,8 @@ class AplansApp extends App {
       // The current, full URL is used in SSR to render the opengraph tags.
       currentURL = ctx.req.currentURL;
     }
+
+    await i18nInitPromise;
 
     try {
       if (Component.getInitialProps) {
@@ -130,13 +142,15 @@ class AplansApp extends App {
     // Optimize performance by updating this component only
     // when props change. State is not used in render() so
     // no need to check it here.
-    const keys = Object.keys(this.props);
-    for (let i = 0; i < keys.length; i++) {
-      if (this.props[keys[i]] !== nextProps[keys[i]]) {
+    return Object.entries(this.props).some(([key, val]) => {
+      if (key === 'pageProps') {
+        return JSON.stringify(val) === JSON.stringify(nextProps[key]);
+      }
+      if (nextProps[key] !== val) {
         return true;
       }
-    }
-    return false;
+      return false;
+    });
   }
 
   render() {
@@ -144,28 +158,32 @@ class AplansApp extends App {
       Component, pageProps, apollo, currentURL,
     } = this.props;
     const { planIdentifier, instanceType } = publicRuntimeConfig;
+    const siteContext = {
+      instanceType,
+      currentURL,
+    };
 
     return (
-      <ApolloProvider client={apollo}>
-        <Query query={GET_PLAN} variables={{ plan: planIdentifier }}>
-          {({ data, loading, error }) => {
-            if (error) return <Error message={error} />;
-            if (loading) return null;
+      <SiteContext.Provider value={siteContext}>
+        <ApolloProvider client={apollo}>
+          <Query query={GET_PLAN} variables={{ plan: planIdentifier }}>
+            {({ data, loading, error }) => {
+              if (error) return <Error message={error} />;
+              if (loading) return null;
 
-            let { plan } = data;
-            plan = { ...plan, instanceType };
-            if (currentURL) plan.currentURL = currentURL;
-            return (
-              <PlanContext.Provider value={plan}>
-                <Component {...pageProps} />
-              </PlanContext.Provider>
-            );
-          }}
-        </Query>
-      </ApolloProvider>
+              const { plan } = data;
+
+              return (
+                <PlanContext.Provider value={plan}>
+                  <Component {...pageProps} />
+                </PlanContext.Provider>
+              );
+            }}
+          </Query>
+        </ApolloProvider>
+      </SiteContext.Provider>
     );
   }
 }
-
 
 export default appWithTranslation(withApollo(AplansApp));

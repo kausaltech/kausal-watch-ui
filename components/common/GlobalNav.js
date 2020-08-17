@@ -265,4 +265,4 @@ GlobalNav.propTypes = {
   t: PropTypes.func.isRequired,
 };
 
-export default withTranslation('common')(withTheme(GlobalNav));
+export default withTranslation('common')(withTheme(React.memo(GlobalNav)));

@@ -137,4 +137,4 @@ ThemedGlobalStyles.propTypes = {
   children: PropTypes.node,
 };
 
-export default withTheme(ThemedGlobalStyles);
+export default withTheme(React.memo(ThemedGlobalStyles));
