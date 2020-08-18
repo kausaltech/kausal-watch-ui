@@ -10,40 +10,17 @@
  * from the other theme files.
  *
  */
- 
- // Brand colors
 
 $name: 'hnh2035';
-
-$hel-copper:        #00d7a7;
-$hel-bus:           #0000bf;
-$hel-coat:          #0072c6;
-$hel-fog:           #9fc9eb;
-$hel-metro:         #fd4f00;
-$hel-brick:         #bd2719;
-$hel-suomenlinna:   #f5a3c7;
-$hel-engel:         #ffe977;
-$hel-tram:          #009246;
-$hel-summer:        #ffc61e;
-$hel-silver:        #dedfe1;
-$hel-gold:          #c2a251;
-
-// Brand monochromes
-
-$hel-black:         #000000; //--color-black
-$hel-dark:          #333333; //--color-black-80
-$hel-gray:          #666666; //--color-black-60
-$hel-light:         #e5e5e5; //--color-black-10
-$hel-white:         #ffffff; //--color-white
 
 // Service specific brand color defaults
 // brand-light/brand-dark should have contrast ratio over 4.5
 // brand-light/theme.dark should have contrast ratio over 4.5
 // brand-dark/theme.light should have contrast ratio over 4.5
-$brand-light:  #ffce43;
-$brand-dark:   #00792D; //modified hel-tram for a11y
-$neutral-light:  #ffce43;
-$neutral-dark:   #00792D; //modified hel-tram for a11y
+$brand-light:  #ffc61e;
+$brand-dark:   #007438; //modified hel-tram for a11y
+$neutral-light:  #ffe28e;
+$neutral-dark:   #007438; //modified hel-tram for a11y
 
 // Application color mappings:
 $theme-colors: (
@@ -53,9 +30,9 @@ $theme-colors: (
   "info":       #007293,
   "warning":    #ffda07,
   "danger":     #c4123e,
-  "light":      $hel-light,
-  "dark":       $hel-dark,
-  "black":      $hel-black,
+  "light":      #f1f1f1,
+  "dark":       #4c4c4c,
+  "black":      #1a1a1a,
   "white":      #ffffff,
 );
 
@@ -135,23 +112,6 @@ $form-label-font-weight:     400;
 
 $brand-nav-background:              $brand-dark;
 
-$navbar-dark-color:                 rgba($hel-white, .5);
-$navbar-dark-hover-color:           rgba($hel-white, .75);
-$navbar-dark-active-color:          $hel-white;
-$navbar-dark-disabled-color:        rgba($hel-white, .25);
-
-$navbar-dark-toggler-icon-bg:       str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='#{$hel-white}' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E"), "#", "%23");
-$navbar-dark-toggler-border-color:  transparent;
-
-$navbar-light-color:                $hel-black;
-$navbar-light-hover-color:          rgba($hel-black, .7);
-$navbar-light-active-color:         rgba($hel-black, .9);
-$navbar-light-disabled-color:       rgba($hel-black, .3);
-
-$navbar-light-toggler-icon-bg:      str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='#{$hel-black}' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E"), "#", "%23");
-
-$navbar-light-toggler-border-color: transparent;
-
 /////// CARDS
 
 $card-border-width:                   0;
@@ -175,10 +135,10 @@ $operational-indicator-color: #17ebba; // modified hel-copper for a11y
 $tactical-indicator-color: #b7dbf7; // modified hel-fog for a11y
 $strategic-indicator-color: #006EB2; // modified hel-coat for a11y
 
-$action-color-fg: $hel-white;
-$operational-indicator-color-fg: $hel-black;
-$tactical-indicator-color-fg: $hel-black;
-$strategic-indicator-color-fg: $hel-white;
+$action-color-fg: theme-color("black");
+$operational-indicator-color-fg: theme-color("black");
+$tactical-indicator-color-fg: theme-color("black");
+$strategic-indicator-color-fg: theme-color("white");
 
 $causality-increases-color: #006250;
 $causality-decreases-color: #8d0d2d;
