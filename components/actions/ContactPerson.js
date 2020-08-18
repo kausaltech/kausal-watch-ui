@@ -18,7 +18,7 @@ const Person = styled.div`
 
   &.leader {
     img {
-      border: 2px solid ${(props) => props.theme.brandDark};
+      border: 4px solid ${(props) => props.theme.brandDark};
     }
   }
 `;
