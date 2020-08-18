@@ -3,11 +3,13 @@ import PropTypes from 'prop-types';
 
 import { withTranslation } from '../common/i18n';
 import ApplicationStateBanner from './common/ApplicationStateBanner';
-import PlanContext from '../context/plan';
+import PlanContext from 'context/plan';
+import SiteContext from 'context/site';
 import SiteFooter from './common/SiteFooter';
 
 function Footer(props) {
   const plan = React.useContext(PlanContext);
+  const site = React.useContext(SiteContext);
   const generalContent = plan.generalContent || {};
   const { t } = props;
 
@@ -37,7 +39,7 @@ function Footer(props) {
         copyrightText={generalContent.copyrightText}
         navItems={navLinks}
       />
-      <ApplicationStateBanner instanceType={plan.instanceType} />
+      <ApplicationStateBanner instanceType={site.instanceType} />
     </>
   );
 }
