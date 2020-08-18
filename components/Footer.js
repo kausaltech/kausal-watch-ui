@@ -27,6 +27,15 @@ function Footer(props) {
     navLinks = navLinks.concat(staticPages);
   }
 
+  const fundingInstruments = [
+    {
+      id: '1',
+      name: 'Climate KIC',
+      link: '',
+      logo: '/static/images/hnh2035/climate-kic-logo-white.svg',
+    },
+  ];
+
   return (
     <>
       <SiteFooter
@@ -36,6 +45,7 @@ function Footer(props) {
         creativeCommonsLicense={generalContent.creativeCommonsLicense}
         copyrightText={generalContent.copyrightText}
         navItems={navLinks}
+        fundingInstruments={fundingInstruments}
       />
       <ApplicationStateBanner instanceType={plan.instanceType} />
     </>

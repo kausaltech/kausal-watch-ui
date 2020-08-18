@@ -70,7 +70,7 @@
     "dev": "node server.mjs",
     "build": "next build",
     "start": "NODE_ENV=production node server.mjs",
-    "storybook": "start-storybook -p 6006 -s ./public",
+    "storybook": "start-storybook -p 6006 -s ./public,./locales",
     "build-storybook": "build-storybook -s ./public",
     "deploy-storybook": "storybook-to-ghpages"
   },

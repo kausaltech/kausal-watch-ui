@@ -15,7 +15,7 @@ i18n
       escapeValue: false, // not needed for react as it escapes by default
     },
     backend: {
-        loadPath: './static/locales/{{lng}}/{{ns}}.json' // xhr load path for my own fallback
+        loadPath: './static/locales/{{lng}}/{{ns}}.yaml' // xhr load path for my own fallback
     }
   });
 
