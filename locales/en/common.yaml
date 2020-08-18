@@ -82,6 +82,7 @@ indicator-affected-by: This indicator is affected by
 indicator-has-effect-on: This indicator has effect on
 indicator-not-found: Indicator not found
 indicator-latest-value: Latest value
+indicator-more-information: More information
 indicator-no-values: No values
 indicator-goal: Goal
 indicator-time-to-goal: Time to goal

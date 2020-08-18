@@ -8,6 +8,7 @@ import {
 } from 'reactstrap';
 import styled from 'styled-components';
 
+import { withTranslation } from '../../common/i18n';
 import { ActionLink, IndicatorLink } from '../../common/links';
 import IndicatorGraph from '../graphs/IndicatorGraph';
 import Icon from '../common/Icon';
@@ -28,7 +29,7 @@ const Badge = styled(BaseBadge)`
 `;
 
 function ActionIndicator(props) {
-  const { relatedIndicator, actionId } = props;
+  const { t, relatedIndicator, actionId } = props;
   const { indicator } = relatedIndicator;
   const plan = useContext(PlanContext);
   const actions = indicator.actions.filter(action => action.id !== actionId);
@@ -55,7 +56,7 @@ function ActionIndicator(props) {
         )}
         <IndicatorLink id={indicator.id}>
           <a>
-            Mittarin tarkemmat tiedot
+            {t('indicator-more-information')}
             <Icon name="arrowRight" color="" />
           </a>
         </IndicatorLink>
@@ -65,11 +66,12 @@ function ActionIndicator(props) {
 }
 
 function ActionIndicators(props) {
-  const { actionId, relatedIndicators } = props;
+  const { t, actionId, relatedIndicators } = props;
   return (
     <IndicatorsSection>
       {relatedIndicators.map(relatedIndicator => (
         <ActionIndicator
+          t={t}
           key={relatedIndicator.indicator.id}
           actionId={actionId}
           relatedIndicator={relatedIndicator}
@@ -84,4 +86,4 @@ ActionIndicators.propTypes = {
   relatedIndicators: PropTypes.array.isRequired,
 };
 
-export default ActionIndicators;
+export default withTranslation('common')(ActionIndicators);
