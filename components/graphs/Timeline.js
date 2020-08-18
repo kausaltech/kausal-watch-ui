@@ -37,7 +37,6 @@ const Timeline = ({ schedules, allSchedules, theme }) => {
   let dtick;
 
   if (nrYears > 10) dtick = 'M36';
-  else if (nrYears > 5) dtick = 'M24';
   else dtick = 'M12';
 
   const Plot = dynamic(import('./Plot'));
@@ -69,6 +68,7 @@ const Timeline = ({ schedules, allSchedules, theme }) => {
       tickformat: '         %Y', // FUUUUUU
       dtick,
       ticks: '',
+      tickangle: 0,
       showgrid: false,
       tickfont: {
         family: theme.fontFamilySansSerif,
