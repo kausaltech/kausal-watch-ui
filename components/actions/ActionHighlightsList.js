@@ -64,6 +64,10 @@ const CardContainer = styled(Col)`
   .card {
     height: 100%;
   }
+
+  .lazyload-wrapper {
+    width: 100%;
+  }
 `;
 
 function ActionCardList({ t, actions, plan }) {
