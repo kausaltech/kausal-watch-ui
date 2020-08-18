@@ -5,7 +5,6 @@ import { Container } from 'reactstrap';
 
 import { withTranslation } from '../../common/i18n';
 
- 
 const Banner = styled.div`
   padding: .75rem 0;
   font-size: ${(props) => props.theme.fontSizeSm};
@@ -16,6 +15,20 @@ const Banner = styled.div`
 const Label = styled.strong`
   color: ${(props) => props.theme.themeColors.warning};
   margin-right: .5em;
+
+  &:before {
+    margin-right: 1em;
+    content: ${(props) => {
+    switch (props.type) {
+      case 'production':
+        return '';
+      case 'testing':
+        return '"\\1F50D"'; /* magnifying emoji for test */
+      default:
+        return '"\\1F6A7"'; /* construction emoji for dev */
+    }
+  }}
+  }
 `;
 
 function ApplicationStateBanner(props) {
@@ -36,15 +49,19 @@ function ApplicationStateBanner(props) {
   return (
     <Banner>
       <Container>
-        <Label>{typeLabel.toUpperCase()}</Label>
+        <Label type={instanceType}>{typeLabel.toUpperCase()}</Label>
         {` ${typeMessage}`}
       </Container>
     </Banner>
   );
 }
 
+ApplicationStateBanner.defaultProps = {
+  instanceType: 'development',
+};
+
 ApplicationStateBanner.propTypes = {
-  instanceType: PropTypes.oneOf(['production', 'testing', 'development']).isRequired,
+  instanceType: PropTypes.oneOf(['production', 'testing', 'development']),
   t: PropTypes.func.isRequired,
 };
 
