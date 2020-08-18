@@ -2,9 +2,10 @@ import React from 'react';
 import { PropTypes } from 'prop-types';
 import { ListGroup as BaseListGroup, ListGroupItem as BaseListGroupItem } from 'reactstrap';
 import styled, { withTheme } from 'styled-components';
-import moment from '../../common/moment';
-import Icon from '../common/Icon';
-import { withTranslation } from '../../common/i18n';
+import moment from 'common/moment';
+import Icon from 'components/common/Icon';
+import RichText from 'components/common/RichText';
+import { withTranslation } from 'common/i18n';
 
 const Date = styled.span`
   font-size: ${(props) => props.theme.fontSizeSm};
@@ -80,10 +81,7 @@ function TaskList(props) {
           </TaskMeta>
           <TaskContent>
             <h5>{item.name}</h5>
-            <div
-              className="text-content"
-              dangerouslySetInnerHTML={{ __html: item.comment }}
-            />
+            {item.comment && (<div className="text-content"><RichText html={item.comment} /></div>)}
           </TaskContent>
         </TaskWrapper>
       </ListGroupItem>

@@ -22,7 +22,7 @@ export default function RichText({ html }) {
         return <a target='_blank' {...attribs}>{domToReact(children, options)}</a>;
       } else if (name === 'img') {
         if (attribs.src && attribs.src[0] === '/') {
-          const { alt, src, rest } = attribs;
+          const { alt, src, ...rest } = attribs;
           rest.className = rest.class;
           delete rest.class;
           return <img src={`${plan.serveFileBaseUrl}${src}`} alt={alt} {...rest} />;
@@ -34,3 +34,6 @@ export default function RichText({ html }) {
 
   return <div>{parse(html, options)}</div>;
 }
+RichText.propTypes = {
+  html: PropTypes.string.isRequired,
+};
