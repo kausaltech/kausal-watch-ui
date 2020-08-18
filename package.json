@@ -100,6 +100,9 @@
     "type": "git",
     "url": ""
   },
+  "engines": {
+    "node": "14.x"
+  },
   "browsers": [
     "> 1%",
     "last 4 versions"
