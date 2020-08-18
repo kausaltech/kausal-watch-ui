@@ -16,7 +16,7 @@ const defaultTheme = require('sass-extract-loader?{"plugins": ["sass-extract-js"
 const customTheme = require('sass-extract-loader?{"plugins": ["sass-extract-js"]}!../styles/' + process.env.THEME_IDENTIFIER + '/_theme-variables.scss');
 const theme = Object.assign(defaultTheme, customTheme);
 
-const Content = styled.div`
+const Content = styled.main`
   min-height: 800px;
 `;
 
