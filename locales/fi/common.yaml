@@ -61,7 +61,7 @@ action-next: Seuraava toimenpide
 impact: vaikutus
 browse-actions: Selaa toimenpiteitä
 filter-category: Rajaa teeman mukaan
-filter-all-categories: Kaikki teemat
+filter-all-categories: Ei rajausta
 filter-all-emission-scopes: Ei päästöluokkarajausta
 filter-all-organizations: Kaikki organisaatiot
 filter-all-impacts: Ei vaikutusrajausta
