@@ -23,7 +23,7 @@ const GET_PLAN = gql`
       id
       identifier
       name
-      imageUrl
+      imageUrl(size: "1800x600")
       serveFileBaseUrl
       actionSchedules {
         id,
