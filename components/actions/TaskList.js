@@ -99,10 +99,7 @@ function TaskList(props) {
           </TaskMeta>
           <TaskContent>
             <h5>{item.name}</h5>
-            <div
-              className="text-content"
-              dangerouslySetInnerHTML={{ __html: item.comment }}
-            />
+            {item.comment && (<div className="text-content"><RichText html={item.comment} /></div>)}
           </TaskContent>
         </TaskWrapper>
       </ListGroupItem>
