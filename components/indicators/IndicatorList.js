@@ -39,11 +39,13 @@ const GET_INDICATOR_LIST = gql`
       generalContent {
         indicatorListLeadContent
       }
-      categoryTypes {
+      categoryTypes(usableForIndicators: true) {
+        id
         identifier
         categories {
           id
           identifier
+          order
           name
           parent {
             id
@@ -70,8 +72,6 @@ class IndicatorList extends React.Component {
 
     const categories = [];
     categoryTypes.forEach((ct) => {
-      if (ct.identifier !== 'action') return;
-
       ct.categories.forEach((cat) => {
         categories.push(cat);
       });

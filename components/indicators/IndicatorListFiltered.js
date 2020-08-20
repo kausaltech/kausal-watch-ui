@@ -130,9 +130,11 @@ class IndicatorListFiltered extends React.Component {
   render() {
     const { t, categories, indicators } = this.props;
     const filteredIndicators = this.filterIndicators(indicators);
+    const sortedCategories = [...categories].sort((a, b) => b.order - a.order);
+
     return (
       <div className="mb-5 pb-5">
-        <IndicatorListFilters cats={categories} changeOption={this.handleChange} />
+        <IndicatorListFilters cats={sortedCategories} changeOption={this.handleChange} />
         <Table hover>
           <thead>
             <tr>
