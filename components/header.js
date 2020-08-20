@@ -60,7 +60,7 @@ function Header({ t, siteTitle }) {
       <ApplicationStateBanner instanceType={site.instanceType} />
       <GlobalNav
         siteTitle={siteTitle}
-        ownerName={plan.generalContent.ownerName}
+        ownerName={plan.generalContent ? plan.generalContent.ownerName : plan.name}
         navItems={navLinks}
       />
     </div>
