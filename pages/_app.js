@@ -142,15 +142,16 @@ class AplansApp extends App {
     // Optimize performance by updating this component only
     // when props change. State is not used in render() so
     // no need to check it here.
-    return Object.entries(this.props).some(([key, val]) => {
+    const out = Object.entries(this.props).some(([key, val]) => {
       if (key === 'pageProps') {
-        return JSON.stringify(val) === JSON.stringify(nextProps[key]);
+        return JSON.stringify(val) !== JSON.stringify(nextProps[key]);
       }
       if (nextProps[key] !== val) {
         return true;
       }
       return false;
     });
+    return out;
   }
 
   render() {
