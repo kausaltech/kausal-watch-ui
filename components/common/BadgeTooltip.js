@@ -65,7 +65,7 @@ BadgeTooltip.defaultProps = {
 };
 
 BadgeTooltip.propTypes = {
-  abbreviation: PropTypes.string.isRequired,
+  abbreviation: PropTypes.string,
   name: PropTypes.string.isRequired,
   id: PropTypes.string.isRequired,
   ariaLabel: PropTypes.string,
@@ -74,6 +74,8 @@ BadgeTooltip.propTypes = {
 };
 BadgeTooltip.defaultProps = {
   ariaLabel: null,
+  abbreviation: null,
+  href: null,
 };
 
 export default BadgeTooltip;
