@@ -1,30 +1,50 @@
-import React from 'react';
-import { Collapse, Button } from 'reactstrap';
+import React, { useState, useEffect } from 'react';
+import { Collapse, Button, Tooltip } from 'reactstrap';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import {CopyToClipboard} from 'react-copy-to-clipboard';
+import SiteContext from 'context/site';
+
+import Icon from './icon';
 import { replaceHashWithoutScrolling } from '../../common/links';
 
 const Header = styled.h3`
   display: flex;
   font-size: ${(props) => props.theme.fontSizeLg};
 
-  &:before {
-    display: block;
-    content: '+';
-    flex-basis: 20px;
-    flex-grow: 0;
-    flex-shrink: 0;
-    margin-right: 12px;
-    color: ${props => props.theme.themeColors.dark};
-    font-weight: ${(props) => props.theme.fontWeightNormal};
-  }
-
-  .is-open&:before {
-    content: '-';
+  &:hover {
+    .copy-link {
+      visibility: visible;
+    }
   }
 `;
 
+const CopyLink = styled.button`
+  display: block;
+  visibility: hidden;
+  flex-basis: 20px;
+  flex-grow: 0;
+  flex-shrink: 0;
+  align-self: flex-start;
+  margin-left: 12px;
+  color: ${props => props.theme.themeColors.dark};
+  font-weight: ${(props) => props.theme.fontWeightNormal};
+`;
+
+const TriggerIcon = styled.span`
+  display: inline-block;
+  content: '+';
+  flex-basis: 20px;
+  flex-grow: 0;
+  flex-shrink: 0;
+  margin-right: 12px;
+  color: ${props => props.theme.themeColors.dark};
+  font-weight: ${(props) => props.theme.fontWeightNormal};
+`;
+
 const QuestionTrigger = styled(Button)`
+  display: flex;
+  flex-grow: 1;
   padding: 0;
   margin-bottom: 1em;
   text-align: left;
@@ -32,6 +52,10 @@ const QuestionTrigger = styled(Button)`
   font-weight: ${(props) => props.theme.fontWeightBold};
   line-height: ${(props) => props.theme.lineHeightMd};
   hyphens: auto;
+
+  span {
+    text-decoration: none !important;
+  }
 `;
 
 const AccordionContent = styled(Collapse)`
@@ -39,53 +63,45 @@ const AccordionContent = styled(Collapse)`
   margin-left: 32px;
 `;
 
-export default class Accordion extends React.Component {
-  state = {
-    open: this.props.open
+function Accordion(props) {
+  const [open, setOpen] = useState(props.open);
+
+  // const site = useContext(SiteContext);
+
+  const getOpenQuestionId = () => {
+    const hash = window.location.hash;
+    return hash && hash.length > 2 ? hash.substr(2) : undefined;
   };
 
-  componentDidMount() {
+  useEffect(() => {
     // Read open question id from location.hash.
     // Unfortunately this can't be done in server side because
     // hash is not available there.
-    const getOpenQuestionId = () => {
-      const hash = window.location.hash;
-      return hash && hash.length > 2 ? hash.substr(2) : undefined;
-    };
+    const openNow = getOpenQuestionId();
+    if (openNow) setOpen(openNow);
+  }, [open])
 
-    const open = getOpenQuestionId();
-    if (open) {
-      this.setState({
-        open,
-      });
-    }
-  }
-
-  toggleSection = id => () => {
-    const prevOpen = this.state.open;
-    this.setState(({ open }) => ({
-      open: id === open ? undefined : id,
-    }));
+  const toggleSection = id => () => {
+    const prevOpen = open;
+    setOpen(id === open ? undefined : id);
 
     // put opened question id into URL hash so URL can be shared
     replaceHashWithoutScrolling(id !== prevOpen ? `q${id}` : undefined);
   };
 
-  render() {
-    return (
-      <div className="accordion">
-        {React.Children.map(this.props.children, (child, index) => {
-          if (child.type !== AccordionItem) return null;
-          const id = child.props.id || `${index}`;
-          return React.cloneElement(child, {
-            isOpen: child.props.open || this.state.open === id,
-            onClick: this.toggleSection(id),
-            identifier: id,
-          });
-        })}
-      </div>
-    );
-  }
+  return (
+    <div className="accordion">
+      {React.Children.map(props.children, (child, index) => {
+        if (child.type !== AccordionItem) return null;
+        const id = child.props.id || `${index}`;
+        return React.cloneElement(child, {
+          isOpen: child.props.open || open === id,
+          onClick: toggleSection(id),
+          identifier: id,
+        });
+      })}
+    </div>
+  );
 }
 
 Accordion.defaultProps = {
@@ -114,28 +130,55 @@ const AccordionItem = ({
   </div>
 );
 
-
 AccordionItem.propTypes = {
   isOpen: PropTypes.bool,
   onClick: PropTypes.func,
   identifier: PropTypes.string,
 };
 
+const copyToClipboard = (what) => {
+  console.log(what);
+};
+
 const AccordionHeader = ({
   children, onClick, isOpen, identifier,
-}) => (
-  <Header className={isOpen && 'is-open'}>
-    <QuestionTrigger
-      color="link"
-      onClick={onClick}
-      aria-expanded={isOpen}
-      aria-controls={`#collapse-${identifier}`}
-      id={`heading-${identifier}`}
-    >
-      {children}
-    </QuestionTrigger>
-  </Header>
-);
+}) => {
+  const [tooltipOpen, setTooltipOpen] = useState(false);
+  const toggle = () => setTooltipOpen(!tooltipOpen);
+  return (
+    <Header className={isOpen && 'is-open'}>
+      <QuestionTrigger
+        className="question-trigger"
+        onClick={onClick}
+        aria-expanded={isOpen}
+        aria-controls={`#collapse-${identifier}`}
+        id={`heading-${identifier}`}
+      >
+        <TriggerIcon>+</TriggerIcon>
+        {children}
+      </QuestionTrigger>
+      <Tooltip
+        placement="top"
+        isOpen={tooltipOpen}
+        target={`tooltip-${identifier}`}
+        toggle={toggle}
+      >
+        Copy Link to Clipboard
+      </Tooltip>
+      <CopyToClipboard
+        text={`#q${identifier}`}
+        id={`tooltip-${identifier}`}
+      >
+        <CopyLink
+          className="copy-link"
+          color="link"
+        >
+          <Icon name="commenting" />
+        </CopyLink>
+      </CopyToClipboard>
+    </Header>
+  );
+};
 
 AccordionHeader.propTypes = {
   children: PropTypes.oneOfType([PropTypes.element, PropTypes.string]).isRequired,
@@ -164,3 +207,5 @@ AccordionBody.propTypes = {
 Accordion.Item = AccordionItem;
 Accordion.Header = AccordionHeader;
 Accordion.Body = AccordionBody;
+
+export default Accordion;
