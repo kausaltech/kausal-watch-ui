@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Collapse, Container, Navbar, Nav, NavItem, NavbarToggler,
+  Collapse, Container, Navbar, Nav, NavItem,
   UncontrolledDropdown, DropdownToggle, DropdownItem, DropdownMenu,
 } from 'reactstrap';
 import SVG from 'react-inlinesvg';
@@ -18,31 +18,23 @@ const TopNav = styled(Navbar)`
   background-color: ${(props) => props.theme.brandNavBackground};
 `;
 
-const Logo = styled.div`
-  height: ${(props) => props.theme.spaces.s300};
-  max-width: 12em;
-  margin: ${(props) => props.theme.spaces.s050}
-          ${(props) => props.theme.spaces.s200}
-          ${(props) => props.theme.spaces.s050}
-          0;
-
-  svg {
-    height: 100%;
-    width: auto;
-  }
-`;
-
 const BotNav = styled(Navbar)`
   background-color: ${(props) => props.theme.themeColors.white};
   padding: 0;
   box-shadow: 0 1px 0 ${(props) => props.theme.themeColors.light};
 
+  .container {
+    flex-wrap: nowrap;
+  }
+
   .navbar-nav {
     padding: 0;
   }
 
-  .nav-item.active a .nav-highlighter {
-    border-bottom: 2px solid ${(props) => props.theme.brandDark};
+  @media (max-width: ${(props) => props.theme.breakpointMd}) {
+    .navbar-nav {
+      padding: ${(props) => props.theme.spaces.s150} 0;
+    }
   }
 `;
 
@@ -51,21 +43,41 @@ const HomeLink = styled.a`
   align-items: center;
   color: ${(props) => props.theme.themeColors.white};
   font-weight: ${(props) => props.theme.fontWeightBold};
+  line-height: ${(props) => props.theme.lineHeightSm};
+  hyphens: auto;
+  word-break: break-word;
 
   &:hover {
     text-decoration: none;
     color: ${(props) => props.theme.themeColors.light};
   }
+
+  svg {
+    display: block;
+    max-width: 10em;
+    height: calc(${(props) => props.theme.spaces.s200} + ${(props) => props.theme.spaces.s050});
+    margin: ${(props) => props.theme.spaces.s050}
+          ${(props) => props.theme.spaces.s200}
+          ${(props) => props.theme.spaces.s050}
+          0;
+  }
+
+  @media (max-width: ${(props) => props.theme.breakpointMd}) {
+    svg {
+      max-width: 6em;
+      height: ${(props) => props.theme.spaces.s200};
+      margin: ${(props) => props.theme.spaces.s050}
+              ${(props) => props.theme.spaces.s150}
+              ${(props) => props.theme.spaces.s050}
+              0;
+    }
+  }
 `;
 
 const NavLink = styled.a`
   display: block;
-  margin: 0 ${(props) => props.theme.spaces.s150};
+  margin-right: ${(props) => props.theme.spaces.s200};
   color: ${(props) => props.theme.neutralDark};
-
-  &:first-child {
-    margin-left: 0;
-  }
 
   &:hover {
       text-decoration: none;
@@ -77,7 +89,7 @@ const NavLink = styled.a`
     }
 
   @media (max-width: ${(props) => props.theme.breakpointMd}) {
-    margin: 0 0 .5rem;
+    margin: 0 0 ${(props) => props.theme.spaces.s050} ${(props) => props.theme.spaces.s100};
   }
 `;
 
@@ -90,6 +102,11 @@ const NavHighlighter = styled.span`
   &.active {
     border-bottom: 5px solid ${(props) => props.theme.brandDark};
   }
+
+  @media (max-width: ${(props) => props.theme.breakpointMd}) {
+    display: inline-block;
+    padding: ${(props) => props.theme.spaces.s050} 0 calc(${(props) => props.theme.spaces.s050} - 5px);
+  }
 `;
 
 const DropDownHighlighter = styled.span`
@@ -101,12 +118,17 @@ const DropDownHighlighter = styled.span`
   &.active {
     border-bottom: 5px solid ${(props) => props.theme.brandDark};
   }
+
+  @media (max-width: ${(props) => props.theme.breakpointMd}) {
+    display: inline-block;
+    padding: ${(props) => props.theme.spaces.s050} 0 calc(${(props) => props.theme.spaces.s050} - 5px);
+  }
 `;
 
 const StyledDropdownToggle = styled(DropdownToggle)`
   display: block;
-  margin: 0 ${(props) => props.theme.spaces.s150};
   padding: 0;
+  margin-right: ${(props) => props.theme.spaces.s150};
   color: ${(props) => props.theme.neutralDark};
 
   &:hover {
@@ -115,7 +137,7 @@ const StyledDropdownToggle = styled(DropdownToggle)`
   }
 
   @media (max-width: ${(props) => props.theme.breakpointMd}) {
-    margin: 0 0 .5rem;
+    margin: 0 0 ${(props) => props.theme.spaces.s050} ${(props) => props.theme.spaces.s100};
   }
 `;
 
@@ -123,18 +145,23 @@ const StyledDropdown = styled(UncontrolledDropdown)`
 
   .dropdown-menu {
     border: 0px;
+    background-color: ${(props) => props.theme.themeColors.white};
     box-shadow: 3px 3px 6px 2px ${(props) => transparentize(0.85, props.theme.themeColors.dark)}};
   }
   .dropdown-item {
     margin: 0;
     color: ${(props) => props.theme.neutralDark};
 
+    span {
+      display: inline-block;
+      padding: ${(props) => props.theme.spaces.s050} 0 calc(${(props) => props.theme.spaces.s050} - 5px);
+    }
+
     &:hover {
     background-color: transparent;
 
-      .nav-highlighter {
-        padding-bottom: 2px;
-        border-bottom: 2px solid ${(props) => props.theme.brandDark};
+      span {
+        border-bottom: 5px solid ${(props) => props.theme.brandDark};
       }
     }
   }
@@ -146,8 +173,30 @@ const StyledDropdown = styled(UncontrolledDropdown)`
     }
 
     .dropdown-item {
-      margin: 0;
+      margin: 0 0 0 ${(props) => props.theme.spaces.s150};
     }
+  }
+`;
+
+const NavbarToggler = styled.button`
+  display: none;
+  padding: 0;
+  margin: 0;
+  text-align: right;
+  font-size: 1.5rem;
+  width: ${(props) => props.theme.spaces.s300};
+  color: ${(props) => props.theme.brandDark};
+  font-weight: ${(props) => props.theme.fontWeightBold};
+  line-height: ${(props) => props.theme.lineHeightMd};
+  hyphens: auto;
+  border: none;
+  overflow: visible;
+  background: transparent;
+  border-radius: 0;
+  -webkit-appearance: none;
+
+  @media (max-width: ${(props) => props.theme.breakpointMd}) {
+    display: inline-block 
   }
 `;
 
@@ -161,9 +210,9 @@ function DropdownList(props) {
       <DropdownMenu left>
         { items && items.map((child) => (
           <DropdownItem>
-            <span className="nav-highlighter">
+            <NavHighlighter>
               {child.name}
-            </span>
+            </NavHighlighter>
           </DropdownItem>
         ))}
       </DropdownMenu>
@@ -197,7 +246,7 @@ function GlobalNav(props) {
     <SVG
       src={theme.themeLogoUrl}
       title={`${ownerName}, ${siteTitle} ${t('front-page')}`}
-      preserveAspectRatio="xMinYMin meet"
+      preserveAspectRatio="xMinYMid meet"
     />
   );
 
@@ -213,26 +262,29 @@ function GlobalNav(props) {
       300,
     );
   }
-
   return (
     <div>
       <TopNav expand="md">
         <Container fluid={fullwidth}>
           <Link href="/" passHref>
             <HomeLink>
-              <Logo>
-                <OrgLogo />
-              </Logo>
-              {siteTitle}
+              <OrgLogo className="org-logo" />
+              <span>{siteTitle}</span>
             </HomeLink>
           </Link>
+          <NavbarToggler
+            onClick={() => toggleOpen(!isOpen)}
+            aria-label="Toggle navigation"
+            type="button"
+          >
+            { isOpen
+              ? <Icon name="times" color={theme.themeColors.white} />
+              : <Icon name="bars" color={theme.themeColors.white} /> }
+          </NavbarToggler>
         </Container>
       </TopNav>
       <BotNav expand="md" fixed={navIsFixed ? 'top' : ''}>
         <Container fluid={fullwidth}>
-          <NavbarToggler onClick={() => toggleOpen(!isOpen)}>
-            <Icon name="bars" color={theme.neutralDark} />
-          </NavbarToggler>
           <Collapse isOpen={isOpen} navbar>
             <Nav navbar>
               { navItems && navItems.map((page) => (
