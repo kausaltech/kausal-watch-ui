@@ -19,9 +19,12 @@ const TopNav = styled(Navbar)`
 `;
 
 const Logo = styled.div`
-  height: 2.2em;
+  height: ${(props) => props.theme.spaces.s300};
   max-width: 12em;
-  margin: ${(props) => props.theme.spaces.s050} 0;
+  margin: ${(props) => props.theme.spaces.s050}
+          ${(props) => props.theme.spaces.s200}
+          ${(props) => props.theme.spaces.s050}
+          0;
 
   svg {
     height: 100%;
@@ -31,34 +34,37 @@ const Logo = styled.div`
 
 const BotNav = styled(Navbar)`
   background-color: ${(props) => props.theme.themeColors.white};
+  padding: 0;
+  box-shadow: 0 1px 0 ${(props) => props.theme.themeColors.light};
 
   .navbar-nav {
-    padding: ${(props) => props.theme.spaces.s050} 0;
+    padding: 0;
   }
 
-  .nav-item.active a span {
+  .nav-item.active a .nav-highlighter {
     border-bottom: 2px solid ${(props) => props.theme.brandDark};
   }
 `;
 
 const HomeLink = styled.a`
-  margin-right: ${(props) => props.theme.spaces.s150};
-  color: ${(props) => props.theme.neutralDark};
+  display: flex;
+  align-items: center;
+  color: ${(props) => props.theme.themeColors.white};
   font-weight: ${(props) => props.theme.fontWeightBold};
 
   &:hover {
-      text-decoration: none;
-      color: ${(props) => props.theme.brandDark};
-    }
+    text-decoration: none;
+    color: ${(props) => props.theme.themeColors.light};
+  }
 `;
 
 const NavLink = styled.a`
   display: block;
-  margin: 0 .75rem;
+  margin: 0 ${(props) => props.theme.spaces.s150};
   color: ${(props) => props.theme.neutralDark};
-  
-  span {
-    border-bottom: 2px solid transparent;
+
+  &:first-child {
+    margin-left: 0;
   }
 
   &:hover {
@@ -66,7 +72,7 @@ const NavLink = styled.a`
       color: ${(props) => props.theme.neutralDark};
 
       span {
-        border-bottom: 2px solid ${(props) => props.theme.brandDark};
+        border-bottom: 5px solid ${(props) => props.theme.brandDark};
       }
     }
 
@@ -75,23 +81,37 @@ const NavLink = styled.a`
   }
 `;
 
+const NavHighlighter = styled.span`
+  display: block;
+  padding: ${(props) => props.theme.spaces.s150} 0 calc(${(props) => props.theme.spaces.s150} - 5px);
+  border-bottom: 5px solid transparent;
+  transition: border 200ms;
+
+  &.active {
+    border-bottom: 5px solid ${(props) => props.theme.brandDark};
+  }
+`;
+
+const DropDownHighlighter = styled.span`
+  display: inline-block;
+  padding: ${(props) => props.theme.spaces.s150} 0 calc(${(props) => props.theme.spaces.s150} - 5px);
+  border-bottom: 5px solid transparent;
+  transition: border 200ms;
+
+  &.active {
+    border-bottom: 5px solid ${(props) => props.theme.brandDark};
+  }
+`;
+
 const StyledDropdownToggle = styled(DropdownToggle)`
   display: block;
-  padding:0 !important;
-  margin: 0 .75rem;
+  margin: 0 ${(props) => props.theme.spaces.s150};
+  padding: 0;
   color: ${(props) => props.theme.neutralDark};
-
-  .nav-highlighter {
-    border-bottom: 2px solid transparent;
-  }
 
   &:hover {
     text-decoration: none;
     color: ${(props) => props.theme.neutralDark};
-
-    .nav-highlighter {
-      border-bottom: 2px solid ${(props) => props.theme.brandDark};
-    }
   }
 
   @media (max-width: ${(props) => props.theme.breakpointMd}) {
@@ -136,7 +156,7 @@ function DropdownList(props) {
   return (
     <StyledDropdown nav inNavbar className={active && 'active'}>
       <StyledDropdownToggle nav caret>
-        <span className="nav-highlighter">{ parent.name }</span>
+        <DropDownHighlighter>{ parent.name }</DropDownHighlighter>
       </StyledDropdownToggle>
       <DropdownMenu left>
         { items && items.map((child) => (
@@ -198,21 +218,18 @@ function GlobalNav(props) {
     <div>
       <TopNav expand="md">
         <Container fluid={fullwidth}>
-          <Link href="/">
-            <a>
+          <Link href="/" passHref>
+            <HomeLink>
               <Logo>
-                {/* Organization logo currently rendered by compiled CSS */}
                 <OrgLogo />
               </Logo>
-            </a>
+              {siteTitle}
+            </HomeLink>
           </Link>
         </Container>
       </TopNav>
       <BotNav expand="md" fixed={navIsFixed ? 'top' : ''}>
         <Container fluid={fullwidth}>
-          <Link href="/" passHref>
-            <HomeLink>{siteTitle}</HomeLink>
-          </Link>
           <NavbarToggler onClick={() => toggleOpen(!isOpen)}>
             <Icon name="bars" color={theme.neutralDark} />
           </NavbarToggler>
@@ -230,7 +247,9 @@ function GlobalNav(props) {
                     <NavItem key={page.slug} active={page.active}>
                       <NavigationLink slug={page.slug}>
                         <NavLink>
-                          <span className="nav-highlighter">{page.name}</span>
+                          <NavHighlighter className={page.active && 'active'}>
+                            {page.name}
+                          </NavHighlighter>
                         </NavLink>
                       </NavigationLink>
                     </NavItem>
