@@ -65,20 +65,20 @@ const sentryHttpLink = ApolloLink.from([
 
 let apolloClient;
 
+export function clearCache() {
+  if (!apolloClient) return;
+  apolloClient.resetStore();
+}
 
-export default withApollo(({ ctx, headers, initialState }) => {
+export default withApollo(({ initialState }) => {
   if (apolloClient) return apolloClient;
 
-  apolloClient = new ApolloClient({
+  const clientOpts = {
     ssrMode: !process.browser,
     link: concat(localeMiddleware, sentryHttpLink),
     cache: new InMemoryCache().restore(initialState || {}),
-    defaultOptions: {
-      query: {
-        fetchPolicy: 'cache-and-network',
-      },
-    },
-  });
+  };
+  apolloClient = new ApolloClient(clientOpts);
   return apolloClient;
 }, {
   getDataFromTree,

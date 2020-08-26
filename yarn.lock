@@ -2507,6 +2507,11 @@
   dependencies:
     "@turf/helpers" "6.x"
 
+"@tusbar/cache-control@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@tusbar/cache-control/-/cache-control-0.4.0.tgz#2b7cc0088482956c078edefbe1133b8496d23086"
+  integrity sha512-55J2ojuKrznii04dnFNaJSo2994LRwWo/yMXhd+SN+YzmnVXbdImr3GEzho452JC9Xo+wN9f44oCptmse/HQKQ==
+
 "@types/anymatch@*":
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/@types/anymatch/-/anymatch-1.3.1.tgz#336badc1beecb9dacc38bea2cf32adf627a8421a"
@@ -4487,10 +4492,10 @@ cache-base@^1.0.1:
     union-value "^1.0.0"
     unset-value "^1.0.0"
 
-cacheable-response@^2.0.9:
-  version "2.1.3"
-  resolved "https://registry.yarnpkg.com/cacheable-response/-/cacheable-response-2.1.3.tgz#439f7e979c699a2e6d6d1820501c062f3da3526b"
-  integrity sha512-fdNa3ZOfvmYjqfsceiyU1XwI26AqjvV9mT3/4bJwzdy2HOzQMRppWKv814O9Xo+iRQHsFjYE5McgwgamgoVz7w==
+cacheable-response@^2.1.4:
+  version "2.1.4"
+  resolved "https://registry.yarnpkg.com/cacheable-response/-/cacheable-response-2.1.4.tgz#84ef7be7b439693491ee2f67e1a44aa3d2af8e86"
+  integrity sha512-2NHhzv7wNcHAT0/sFGIxrvRXnDwAcYtqr2G3b+hade8Dd94uc7ppricZ2dg4p3IQU5nbZSoWpVf+V4eGbr/ifg==
   dependencies:
     compress-brotli "~1.2.2"
     debug-logfmt "~1.0.4"
@@ -11296,11 +11301,6 @@ parse-asn1@^5.0.0, parse-asn1@^5.1.5:
     evp_bytestokey "^1.0.0"
     pbkdf2 "^3.0.3"
     safe-buffer "^5.1.1"
-
-parse-cache-control@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/parse-cache-control/-/parse-cache-control-1.0.1.tgz#8eeab3e54fa56920fe16ba38f77fa21aacc2d74e"
-  integrity sha1-juqz5U+laSD+Fro493+iGqzC104=
 
 parse-color@^1.0.0:
   version "1.0.0"
