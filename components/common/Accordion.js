@@ -1,123 +1,145 @@
-import React from 'react';
-import { Collapse, Button } from 'reactstrap';
+import React, { useContext, useState, useEffect } from 'react';
+import { Collapse, Tooltip } from 'reactstrap';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import SiteContext from 'context/site';
+
+import { useTranslation } from 'common/i18n';
+// import { withTranslation } from 'common/i18n';
+import Icon from 'components/common/Icon';
 import { replaceHashWithoutScrolling } from '../../common/links';
 
 const Header = styled.h3`
-  display: flex;
+  position: relative;
   font-size: ${(props) => props.theme.fontSizeLg};
 
-  &:before {
-    display: block;
-    content: '+';
-    flex-basis: 20px;
-    flex-grow: 0;
-    flex-shrink: 0;
-    margin-right: 12px;
-    color: ${props => props.theme.themeColors.dark};
-    font-weight: ${(props) => props.theme.fontWeightNormal};
-  }
+  &:hover {
+    .copy-link {
+      visibility: visible;
+    }
 
-  .is-open&:before {
-    content: '-';
+    .question-title {
+      text-decoration: underline;
+    }
   }
 `;
 
-const QuestionTrigger = styled(Button)`
+const CopyLink = styled.button`
+  display: block;
+  position: absolute;
+  visibility: hidden;
+  width: 2rem;
+  right: -1rem;
+  top: -.5rem;
+  border: none;
+  border-radius: 0;
+  margin: 0;
   padding: 0;
-  margin-bottom: 1em;
+  overflow: visible;
+  background: transparent;
+  line-height: normal;
+  -webkit-appearance: none;
+
+  &::-moz-focus-inner {
+    border: 0;
+    padding: 0;
+  }
+
+  svg {
+    fill: ${(props) => props.theme.themeColors.dark} !important;
+  }
+`;
+
+const TriggerIcon = styled.span`
+  display: inline-block;
+  flex-basis: ${(props) => props.theme.spaces.s150};
+  flex-grow: 0;
+  flex-shrink: 0;
+  margin-right: ${(props) => props.theme.spaces.s050};
+  color: ${(props) => props.theme.themeColors.dark};
+  font-weight: ${(props) => props.theme.fontWeightNormal};
+  text-align: center;
+`;
+
+const QuestionTrigger = styled.button`
+  display: flex;
+  flex-grow: 1;
+  padding: 0;
+  margin: 0 0 1em;
   text-align: left;
   font-size: inherit;
+  color: ${(props) => props.theme.brandDark};
   font-weight: ${(props) => props.theme.fontWeightBold};
   line-height: ${(props) => props.theme.lineHeightMd};
   hyphens: auto;
+  border: none;
+  overflow: visible;
+  background: transparent;
+  line-height: normal;
+  border-radius: 0;
+  -webkit-appearance: none;
 `;
 
 const AccordionContent = styled(Collapse)`
-  margin-bottom: 3em;
-  margin-left: 32px;
+  margin-bottom: ${(props) => props.theme.spaces.s300};
+  margin-left: ${(props) => props.theme.spaces.s200};
 `;
 
-export default class Accordion extends React.Component {
-  state = {
-    open: this.props.open
-  };
-
-  componentDidMount() {
-    // Read open question id from location.hash.
-    // Unfortunately this can't be done in server side because
-    // hash is not available there.
-    const getOpenQuestionId = () => {
-      const hash = window.location.hash;
-      return hash && hash.length > 2 ? hash.substr(2) : undefined;
-    };
-
-    const open = getOpenQuestionId();
-    if (open) {
-      this.setState({
-        open,
-      });
-    }
-  }
-
-  toggleSection = id => () => {
-    const prevOpen = this.state.open;
-    this.setState(({ open }) => ({
-      open: id === open ? undefined : id,
-    }));
-
-    // put opened question id into URL hash so URL can be shared
-    replaceHashWithoutScrolling(id !== prevOpen ? `q${id}` : undefined);
-  };
-
-  render() {
-    return (
-      <div className="accordion">
-        {React.Children.map(this.props.children, (child, index) => {
-          if (child.type !== AccordionItem) return null;
-          const id = child.props.id || `${index}`;
-          return React.cloneElement(child, {
-            isOpen: child.props.open || this.state.open === id,
-            onClick: this.toggleSection(id),
-            identifier: id,
-          });
-        })}
-      </div>
-    );
-  }
-}
-
-Accordion.defaultProps = {
-  open: undefined,
+const ToolTipContent = (props) => {
+  const { scheduleUpdate, children } = props;
+  scheduleUpdate();
+  return (
+    <>{ children }</>
+  );
 };
 
-Accordion.propTypes = {
-  open: PropTypes.string,
+ToolTipContent.propTypes = {
+  scheduleUpdate: PropTypes.func.isRequired,
+  children: PropTypes.node.isRequired,
 };
 
-const AccordionItem = ({
-  children, isOpen, onClick, identifier,
-}) => (
-  <div id={`q${identifier}`}>
-    {React.Children.map(children, child => {
-      if (child.type === AccordionHeader) {
-        return React.cloneElement(child, { onClick, isOpen, identifier });
-      }
+const LinkCopyButton = (props) => {
+  const { identifier } = props;
+  const site = useContext(SiteContext);
+  const { t } = useTranslation();
+  const [tooltipOpen, setTooltipOpen] = useState(false);
+  const [copyText, setCopyText] = useState(t('copy-to-clipboard'));
+  const toggle = () => {
+    setTooltipOpen(!tooltipOpen);
+    if (!tooltipOpen) setCopyText(t('copy-to-clipboard'));
+  };
 
-      if (child.type === AccordionBody) {
-        return React.cloneElement(child, { isOpen, identifier });
-      }
+  return (
+    <>
+      <Tooltip
+        placement="top"
+        isOpen={tooltipOpen}
+        target={`tooltip-${identifier}`}
+        toggle={toggle}
+      >
+        {({ scheduleUpdate }) => (
+          <ToolTipContent scheduleUpdate={scheduleUpdate}>
+            { copyText }
+          </ToolTipContent>
+        )}
+      </Tooltip>
+      <CopyToClipboard
+        text={`${site.currentURL.domain}${site.currentURL.path}#q${identifier}`}
+        id={`tooltip-${identifier}`}
+        onCopy={() => setCopyText(t('copied-to-clipboard'))}
+      >
+        <CopyLink
+          className="copy-link"
+        >
+          <Icon name="link" />
+        </CopyLink>
+      </CopyToClipboard>
+    </>
+  );
+};
 
-      return null;
-    })}
-  </div>
-);
-
-
-AccordionItem.propTypes = {
-  isOpen: PropTypes.bool,
-  onClick: PropTypes.func,
+LinkCopyButton.propTypes = {
   identifier: PropTypes.string,
 };
 
@@ -126,14 +148,20 @@ const AccordionHeader = ({
 }) => (
   <Header className={isOpen && 'is-open'}>
     <QuestionTrigger
-      color="link"
+      className="question-trigger"
       onClick={onClick}
       aria-expanded={isOpen}
       aria-controls={`#collapse-${identifier}`}
       id={`heading-${identifier}`}
     >
-      {children}
+      <TriggerIcon>
+        {isOpen ? '-' : '+'}
+      </TriggerIcon>
+      <span className="question-title">
+        {children}
+      </span>
     </QuestionTrigger>
+    <LinkCopyButton identifier={identifier} />
   </Header>
 );
 
@@ -159,8 +187,87 @@ const AccordionBody = ({ children, isOpen, identifier }) => (
 AccordionBody.propTypes = {
   isOpen: PropTypes.bool,
   identifier: PropTypes.string,
+  children: PropTypes.node.isRequired,
+};
+
+const AccordionItem = ({
+  children, isOpen, onClick, identifier,
+}) => (
+  <div id={`q${identifier}`}>
+    {React.Children.map(children, (child) => {
+      if (child.type === AccordionHeader) {
+        return React.cloneElement(child, { onClick, isOpen, identifier });
+      }
+
+      if (child.type === AccordionBody) {
+        return React.cloneElement(child, { isOpen, identifier });
+      }
+
+      return null;
+    })}
+  </div>
+);
+
+AccordionItem.propTypes = {
+  isOpen: PropTypes.bool,
+  onClick: PropTypes.func,
+  identifier: PropTypes.string,
+  children: PropTypes.node,
+};
+
+function Accordion(props) {
+  const { open, children } = props;
+  const [openItem, setOpenItem] = useState(open);
+
+  // const site = useContext(SiteContext);
+
+  const getOpenQuestionId = () => {
+    const { hash } = window.location;
+    return hash && hash.length > 2 ? hash.substr(2) : undefined;
+  };
+
+  useEffect(() => {
+    // Read open question id from location.hash.
+    // Unfortunately this can't be done in server side because
+    // hash is not available there.
+    const openNow = getOpenQuestionId();
+    if (openNow) setOpenItem(openNow);
+  }, [openItem]);
+
+  const toggleSection = (id) => () => {
+    const prevOpen = openItem;
+    setOpenItem(id === openItem ? undefined : id);
+
+    // put opened question id into URL hash so URL can be shared
+    replaceHashWithoutScrolling(id !== prevOpen ? `q${id}` : undefined);
+  };
+
+  return (
+    <div className="accordion">
+      {React.Children.map(children, (child, index) => {
+        if (child.type !== AccordionItem) return null;
+        const id = child.props.id || `${index}`;
+        return React.cloneElement(child, {
+          isOpen: child.props.open || openItem === id,
+          onClick: toggleSection(id),
+          identifier: id,
+        });
+      })}
+    </div>
+  );
+}
+
+Accordion.defaultProps = {
+  open: undefined,
+};
+
+Accordion.propTypes = {
+  open: PropTypes.string,
+  children: PropTypes.node.isRequired,
 };
 
 Accordion.Item = AccordionItem;
 Accordion.Header = AccordionHeader;
 Accordion.Body = AccordionBody;
+
+export default Accordion;
