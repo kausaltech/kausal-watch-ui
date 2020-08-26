@@ -42,26 +42,6 @@ const config = withBundleAnalyzer(withImages(withSass({
   experimental: {
     modern: true,
   },
-  /*
-  manifest: {
-    // if src value is exist, icon image will be generated from src image, and ovwewritten
-    // icons value exist in the properties. if you want to keep your own icons path? do not pass
-    // src path to this plugin
-    name: 'Hiilineutraali Helsinki 2035',
-    short_name: 'CNH',
-    start_url: '/',
-    background_color: '#009246',
-    theme_color: '#009246',
-    display: 'minimal-ui',
-    icons: {
-      // source image path, to generate applications icons in 192x192, 512x512 sizes for manifest.
-      src: resolve(process.cwd(), './images/hel-icon.png'),
-      // default is true, cache images until the hash value of source image has changed
-      // if false, generating new icon images while every build time.
-      cache: true,
-    },
-  },
-  */
   analyzeServer: ['server', 'both'].includes(process.env.BUNDLE_ANALYZE),
   analyzeBrowser: ['browser', 'both'].includes(process.env.BUNDLE_ANALYZE),
   bundleAnalyzerConfig: {
