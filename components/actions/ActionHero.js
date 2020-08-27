@@ -74,6 +74,7 @@ const ActionHeadline = styled.h1`
   hyphens: auto;
   margin-bottom: ${(props) => props.theme.spaces.s200};
   font-size: ${(props) => props.theme.fontSizeXl};
+  color: ${(props) => props.theme.themeColors.white} !important;
 
   @media (max-width: ${(props) => props.theme.breakpointMd}) {
     font-size: ${(props) => props.theme.fontSizeLg};
@@ -82,6 +83,7 @@ const ActionHeadline = styled.h1`
 
 const ActionNumber = styled.span`
   font-size: ${(props) => props.theme.fontSizeXxl};
+  color: ${(props) => props.theme.themeColors.white} !important;
 
   @media (max-width: ${(props) => props.theme.breakpointMd}) {
     font-size: ${(props) => props.theme.fontSizeLg};

@@ -3,7 +3,7 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Libre+Franklin:ital,wght@0,400;0,700;1,400&display=swap');
 
-/*
+
 @font-face {
     font-family: 'LahtiSans';
     src: url('https://api.watch.kausal.tech/media/themes/lahti/LahtiSans/LahtiSans-Regular.eot');
@@ -11,10 +11,10 @@
          url('https://api.watch.kausal.tech/media/themes/lahti/LahtiSans/LahtiSans-Regular.woff2') format('woff2'),
          url('https://api.watch.kausal.tech/media/themes/lahti/LahtiSans/LahtiSans-Regular.woff') format('woff'),
          url('https://api.watch.kausal.tech/media/themes/lahti/LahtiSans/LahtiSans-Regular.ttf')  format('truetype');
-    font-weight: 400;
+    font-weight: 700;
   }
-*/
 
+/*
 @font-face {
     font-family: 'LahtiSans';
     src: url('https://api.watch.kausal.tech/media/themes/lahti/LahtiSans/LahtiSans-Bold.eot');
@@ -24,3 +24,4 @@
          url('https://api.watch.kausal.tech/media/themes/lahti/LahtiSans/LahtiSans-Bold.ttf')  format('truetype');
     font-weight: 700;
   }
+*/

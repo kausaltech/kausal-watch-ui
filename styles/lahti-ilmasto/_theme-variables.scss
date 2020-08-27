@@ -14,38 +14,32 @@ $name: 'lahti-ilmasto';
  *
  */
  
- $name: 'default';
-
- // Helper colors
- $red:     #dc3545;
- $yellow:  #ffc107;
- $green:   #28a745;
- $cyan:    #17a2b8;
+ $name: 'lahti-ilmasto';
  
  // Theme specific brand colors
  // brand-light/brand-dark should have contrast ratio over 4.5
  // brand-light/theme.dark should have contrast ratio over 4.5
  // brand-dark/theme.light should have contrast ratio over 4.5
- $brand-light:  #01e376;
- $brand-dark:   #0050b0;
+ $brand-light:  #01E376;
+ $brand-dark:   #0050B0;
  $neutral-light: #F2F6FB;
- $neutral-dark: #0050b0; 
+ $neutral-dark: #00387A; 
  
  // Application color mappings:
  $theme-colors: (
    "primary":    $brand-dark,
    "secondary":  $brand-light,
-   "success":    $green,
-   "info":       $cyan,
-   "warning":    $yellow,
-   "danger":     $red,
-   "light":      #F2F6FB,
-   "dark":       #46423E,
-   "black":      #444444,
+   "success":    #107251,
+   "info":       #336D94,
+   "warning":    #F4CE73,
+   "danger":     #A73939,
+   "light":      #F8F8F8,
+   "dark":       #444444,
+   "black":      #000000,
    "white":      #FFFFFF,
  );
  
- $image-overlay: $brand-dark;
+ $image-overlay: $neutral-dark;
  
  // Fonts
  $font-url: '/static/fonts/lahti-ilmasto/fonts.css';
@@ -145,22 +139,30 @@ $name: 'lahti-ilmasto';
  /////// TABLES
  
  $table-head-bg:                   transparent;
- $table-hover-bg:                  #F7F6F3;
+ $table-hover-bg:                  #F2F6FB;
  
+ // Actions
+$actionNotStarted-color:    #F3F3F5;
+$actionCompleted-color:     #C0F3F1;
+$actionOnTime-color:        #C0F3F1;
+$actionLate-color:          #FFF4B8;
+$actionSeverelyLate-color:  #FFC2CA;
+$actionMerged-color:        #F3F3F5;
+
  // Indicators
- $action-color: $brand-dark;
- $operational-indicator-color: #6D97B8;
- $tactical-indicator-color: #AAC5DB;
- $strategic-indicator-color: #CBE2F6;
+ $action-color: #00387A;
+ $operational-indicator-color: #0050B0;
+ $tactical-indicator-color: #64A8FA;
+ $strategic-indicator-color: #BCDAFF;
  
- $action-color-fg: #eeeeee;
- $operational-indicator-color-fg: #eeeeee;
- $tactical-indicator-color-fg: #222222;
- $strategic-indicator-color-fg: #222222;
+ $action-color-fg: #ffffff;
+ $operational-indicator-color-fg: #ffffff;
+ $tactical-indicator-color-fg: #000000;
+ $strategic-indicator-color-fg: #000000;
  
- $causality-increases-color: darken($green, 10%);
- $causality-decreases-color: darken($red, 10%);
- $causality-is-part-of-color: grey;
+ $causality-increases-color: #279A6D;
+ $causality-decreases-color: #D46262;
+ $causality-is-part-of-color: #88847C;
  
  // Breakpoints
  $breakpoint-sm: 576px;
