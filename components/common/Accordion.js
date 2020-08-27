@@ -65,6 +65,7 @@ const TriggerIcon = styled.span`
 const QuestionTrigger = styled.button`
   display: flex;
   flex-grow: 1;
+  width: 100%;
   padding: 0;
   margin: 0 0 1em;
   text-align: left;
