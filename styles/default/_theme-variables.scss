@@ -13,30 +13,24 @@
  
 $name: 'default';
 
-// Helper colors
-$red:     #dc3545;
-$yellow:  #ffc107;
-$green:   #28a745;
-$cyan:    #17a2b8;
-
 // Theme specific brand colors
 // brand-light/brand-dark should have contrast ratio over 4.5
 // brand-light/theme.dark should have contrast ratio over 4.5
 // brand-dark/theme.light should have contrast ratio over 4.5
-$brand-light:  #A7EBC0;
-$brand-dark:   #0A5E43;
-$neutral-light: #eeebe4;
-$neutral-dark: #292721;
+$brand-light:  #D4EBFF;
+$brand-dark:   #107251;
+$neutral-light: #E1DFDA;
+$neutral-dark: #5C5853;
 
 // Application color mappings:
 $theme-colors: (
   "primary":    $brand-dark,
   "secondary":  $brand-light,
-  "success":    $green,
-  "info":       $cyan,
-  "warning":    $yellow,
-  "danger":     $red,
-  "light":      #E1DFDA,
+  "success":    #107251,
+  "info":       #336D94,
+  "warning":    #F4CE73,
+  "danger":     #A73939,
+  "light":      #ECEAE6,
   "dark":       #46423E,
   "black":      #1A1817,
   "white":      #F7F6F3,
@@ -143,20 +137,28 @@ $badge-font-weight:               700;
 $table-head-bg:                   transparent;
 $table-hover-bg:                  #F7F6F3;
 
+// Actions
+$actionNotStarted-color:    #ECEAE6;
+$actionCompleted-color:     #A7EBC0;
+$actionOnTime-color:        #A7EBC0;
+$actionLate-color:          #FBE6AE;
+$actionSeverelyLate-color:  #FCD8D8;
+$actionMerged-color:        #ECEAE6;
+
 // Indicators
-$action-color: $brand-dark;
-$operational-indicator-color: #6D97B8;
+$action-color: #145070;
+$operational-indicator-color: #4E80A6;
 $tactical-indicator-color: #AAC5DB;
 $strategic-indicator-color: #CBE2F6;
 
-$action-color-fg: #eeeeee;
-$operational-indicator-color-fg: #eeeeee;
-$tactical-indicator-color-fg: #222222;
-$strategic-indicator-color-fg: #222222;
+$action-color-fg: #F7F6F3;
+$operational-indicator-color-fg: #F7F6F3;
+$tactical-indicator-color-fg: #1A1817;
+$strategic-indicator-color-fg: #1A1817;
 
-$causality-increases-color: darken($green, 10%);
-$causality-decreases-color: darken($red, 10%);
-$causality-is-part-of-color: grey;
+$causality-increases-color: #279A6D;
+$causality-decreases-color: #D46262;
+$causality-is-part-of-color: #88847C;
 
 // Breakpoints
 $breakpoint-sm: 576px;
