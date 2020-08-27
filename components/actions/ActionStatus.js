@@ -14,12 +14,12 @@ const StatusTitle = styled.div`
   left: ${(props) => props.theme.spaces.s050};
   color: ${(props) => props.theme.themeColors.black};
   font-size: ${(props) => props.theme.fontSizeSm};
-  line-height: ${(props) => props.theme.spaces.s150};
+  line-height: ${(props) => props.theme.spaces.s200};
 `;
 
 const ActionProgress = styled(Progress)`
   position: relative;
-  height: ${(props) => props.theme.spaces.s150};
+  height: ${(props) => props.theme.spaces.s200};
   background-color: ${(props) => props.theme.themeColors.light};
 
   &.bg-not_started {

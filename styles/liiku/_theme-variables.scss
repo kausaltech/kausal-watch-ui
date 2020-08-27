@@ -10,68 +10,66 @@
  * from the other theme files.
  *
  */
- 
- // Brand colors
 
  $name: 'liiku';
 
- $hel-copper:        #00d7a7;
- $hel-bus:           #0000bf;
- $hel-coat:          #0072c6;
- $hel-fog:           #9fc9eb;
- $hel-metro:         #fd4f00;
- $hel-brick:         #bd2719;
- $hel-suomenlinna:   #f5a3c7;
- $hel-engel:         #ffe977;
- $hel-tram:          #009246;
- $hel-summer:        #ffc61e;
- $hel-silver:        #dedfe1;
- $hel-gold:          #c2a251;
- 
- // Brand monochromes
- $hel-black:         #000000; //--color-black
- $hel-dark:          #333333; //--color-black-80
- $hel-gray:          #666666; //--color-black-60
- $hel-light:         #e5e5e5; //--color-black-10
- $hel-white:         #ffffff; //--color-white
- 
- // Helper colors
- $red:     #e05563;
- $yellow:  #eca10c;
- $green:   #3cd55f;
- $cyan:    #52a4ca;
- 
  // Service specific brand color defaults
  // brand-light/brand-dark should have contrast ratio over 4.5
  // brand-light/theme.dark should have contrast ratio over 4.5
  // brand-dark/theme.light should have contrast ratio over 4.5
- $brand-light:  $hel-silver;
- $brand-dark:   $hel-brick; //modified hel-tram for a11y
- $neutral-light:  $hel-silver;
- $neutral-dark:   $hel-black; //modified hel-tram for a11y
+ $brand-light:  #DEDFE1;
+ $brand-dark:   #BD2719; //modified hel-tram for a11y
+ $neutral-light:  #DEDFE1;
+ $neutral-dark:   #1A1A1A; //modified hel-tram for a11y
  
  // Application color mappings:
  $theme-colors: (
    "primary":    $brand-dark,
    "secondary":  $brand-light,
-   "success":    $green,
-   "info":       $cyan,
-   "warning":    $yellow,
-   "danger":     $red,
-   "light":      $hel-light,
-   "dark":       $hel-dark,
-   "black":      $hel-black,
+   "success":    #007a64,
+   "info":       #007293,
+   "warning":    #ffda07,
+   "danger":     #c4123e,
+   "light":      #f1f1f1,
+   "dark":       #4c4c4c,
+   "black":      #1a1a1a,
    "white":      #ffffff,
  );
  
- $image-overlay: #696969;
+ $image-overlay: #4c4c4c;
  
  $font-url: '/static/fonts/hnh2035/fonts.css';
  $font-family: 'HelsinkiGrotesk';
  $font-family-sans-serif:      #{$font-family}, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
  $font-family-monospace:       SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
  $font-family-base:            $font-family-sans-serif;
-
+ 
+ $font-size-sm:	  0.875rem;
+ $font-size-base: 	1rem;
+ $font-size-md:	  1.125rem;
+ $font-size-lg:	  1.5rem;
+ $font-size-xl:	  2.25rem;
+ $font-size-xxl:	  3.25rem;
+ 
+ $line-height-base:            1.5;
+ $line-height-sm:              1;
+ $line-height-md:              1.2;
+ $line-height-lg:              1.75;
+ 
+ $space: 1rem;
+ $spaces: (
+   s000: 0,
+   s025: $space / 4,   //4px
+   s050: $space / 2,   //8px
+   s100: $space,       //16px
+   s150: $space * 1.5, //24px
+   s200: $space * 2,    //32px
+   s300: $space * 3,   //48px
+   s400: $space * 4,   //64px
+   s600: $space * 6,   //96px
+   s800: $space * 8,   //128px
+ );
+ 
  // Links
  //
  // Style anchor elements.
@@ -91,85 +89,80 @@
  $list-group-active-bg:  $component-active-bg;
  $list-group-active-border-color:  $list-group-active-bg;
  
-/////// BUTTONS
-
-$input-btn-focus-color:       #0072c6;
-$input-btn-padding-y:           1rem;
-$input-btn-padding-x:           1rem;
-$btn-border-radius:             0;
-$btn-border-width:        2px;
-
-/////// FORMS
-
-$input-padding-y:            $input-btn-padding-y;
-$input-padding-x:            $input-btn-padding-x;
-$input-bg:                   #ffffff;
-$input-border-width:         2px;
-$input-line-height:          1.5;
-$input-border-radius:        2px;
-$custom-select-indicator:    url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQiIGhlaWdodD0iMTQiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTExLjg5NiAzTDcgNy44NDIgMi4xMDQgMyAwIDUuMDggNyAxMmw3LTYuOTJMMTEuODk2IDN6IiBmaWxsPSIjMDAwIi8+PC9zdmc+") !default;
-
+ /////// BUTTONS
+ 
+ $input-btn-focus-color:       #0072c6;
+ $input-btn-padding-y:           1rem;
+ $input-btn-padding-x:           1rem;
+ $btn-border-radius:             0;
+ $btn-border-width:        2px;
+ 
+ /////// FORMS
+ 
+ $input-padding-y:            $input-btn-padding-y;
+ $input-padding-x:            $input-btn-padding-x;
+ $input-bg:                   #ffffff;
+ $input-border-width:         2px;
+ $input-line-height:          1.5;
+ $input-border-radius:        2px;
+ $custom-select-indicator:    url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQiIGhlaWdodD0iMTQiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTExLjg5NiAzTDcgNy44NDIgMi4xMDQgMyAwIDUuMDggNyAxMmw3LTYuOTJMMTEuODk2IDN6IiBmaWxsPSIjMDAwIi8+PC9zdmc+") !default;
+ $form-label-font-weight:     400;
+ 
  /////// NAV
-
- $brand-nav-background:              $neutral-dark;
  
- $navbar-dark-color:                 rgba($hel-white, .5);
- $navbar-dark-hover-color:           rgba($hel-white, .75);
- $navbar-dark-active-color:          $hel-white;
- $navbar-dark-disabled-color:        rgba($hel-white, .25);
+ $brand-nav-background:              $brand-dark;
  
- $navbar-dark-toggler-icon-bg:       str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='#{$hel-white}' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E"), "#", "%23");
- $navbar-dark-toggler-border-color:  transparent;
+ /////// CARDS
  
- $navbar-light-color:                $hel-black;
- $navbar-light-hover-color:          rgba($hel-black, .7);
- $navbar-light-active-color:         rgba($hel-black, .9);
- $navbar-light-disabled-color:       rgba($hel-black, .3);
+ $card-border-width:                   0;
+ $card-border-radius:                  0;
  
- $navbar-light-toggler-icon-bg:      str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='#{$hel-black}' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E"), "#", "%23");
+ /////// BADGES
  
- $navbar-light-toggler-border-color: transparent;
+ $badge-border-radius:             0;
+ $badge-padding-y:                 .5em;
+ $badge-padding-x:                 .75em;
+ $badge-font-weight:               400;
  
-/////// CARDS
-
-$card-border-width:                   0;
-$card-border-radius:                  0;
-
-/////// BADGES
-
-$badge-border-radius:             0;
-$badge-padding-y:                 .5em;
-$badge-padding-x:                 .75em;
-$badge-font-weight:               400;
-
-/////// TABLES
-
-$table-head-bg:                   #f1f1f1;
-$table-hover-bg:                  #f1f1f1;
-
+ /////// TABLES
+ 
+ $table-head-bg:                   #f1f1f1;
+ $table-hover-bg:                  #f1f1f1;
+ 
+ // Actions
+ $actionNotStarted-color:    #DEDFE1;
+ $actionCompleted-color:     #CCE9DA;
+ $actionOnTime-color:        #CCE9DA;
+ $actionLate-color:          #FFF4BB;
+ $actionSeverelyLate-color:  #F1D3D1;
+ $actionMerged-color:        #DEDFE1;
+ 
  // Indicators
- $action-color: #00792D; //modified hel-tram for a11y
- $operational-indicator-color: #17ebba; // modified hel-copper for a11y
+ $action-color: #007438; //modified hel-tram for a11y
+ $operational-indicator-color: #80EBD3; // modified hel-copper for a11y
  $tactical-indicator-color: #b7dbf7; // modified hel-fog for a11y
  $strategic-indicator-color: #006EB2; // modified hel-coat for a11y
  
- $action-color-fg: $hel-white;
- $operational-indicator-color-fg: $hel-black;
- $tactical-indicator-color-fg: $hel-black;
- $strategic-indicator-color-fg: $hel-white;
+ $action-color-fg: #ffffff;
+ $operational-indicator-color-fg: #1a1a1a;
+ $tactical-indicator-color-fg: #1a1a1a;
+ $strategic-indicator-color-fg: #ffffff;
  
- $causality-increases-color: darken($green, 10%);
- $causality-decreases-color: darken($red, 10%);
- $causality-is-part-of-color: grey;
+ $causality-increases-color: #006250;
+ $causality-decreases-color: #8d0d2d;
+ $causality-is-part-of-color: #808080;
  
  // Breakpoints
  $breakpoint-sm: 576px;
  $breakpoint-md: 768px;
  $breakpoint-lg: 992px;
  $breakpoint-xl: 1200px;
-
+ 
  $icons-url: '/static/icons/hnh2035';
  $theme-logo-url: '/static/images/liiku/helsinki-logo-white.svg';
- $theme-logo-white-url: $theme-logo-url;
+ $theme-logo-white-url: '/static/images/liiku/helsinki-logo-white.svg';
  $icon-indicators-url: '';
  $icon-actions-url: '';
+ 
+ $theme-custom-styles-url: '/static/styles/liiku/custom.css';
+ 
