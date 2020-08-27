@@ -14,6 +14,10 @@ import { NavigationLink } from '../../common/links';
 
 import Icon from './Icon';
 
+// TODO: Skip to main content -link
+// TODO: Active states for links and buttons
+// TODO: Restyle dropdown elements
+
 const TopNav = styled(Navbar)`
   background-color: ${(props) => props.theme.brandNavBackground};
 `;
@@ -274,7 +278,7 @@ function GlobalNav(props) {
           </Link>
           <NavbarToggler
             onClick={() => toggleOpen(!isOpen)}
-            aria-label="Toggle navigation"
+            aria-label={t('toggle-navigation')}
             type="button"
           >
             { isOpen
