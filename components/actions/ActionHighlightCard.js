@@ -26,6 +26,10 @@ const StyledCard = styled(Card)`
   }
 `;
 
+const StyledActionStatus = styled(ActionStatus)`
+  border-bottom: 1px solid ${(props) => props.theme.themeColors.light};
+`;
+
 const CardLink = styled.a`
   text-decoration: none;
   color: ${(props) => props.theme.neutralDark};
@@ -81,7 +85,6 @@ const ActionNumber = styled.div`
   line-height: 9rem;
   color: ${(props) => props.theme.themeColors.light};
 
-
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     line-height: 8rem;
   }
@@ -107,7 +110,7 @@ function ActionHighlightCard(props) {
                 </ImgOverlay>
               </ImgArea>
               {action.status && (
-                <ActionStatus
+                <StyledActionStatus
                   name={action.status.name}
                   identifier={action.status.identifier}
                   completion={action.completion}
@@ -120,7 +123,7 @@ function ActionHighlightCard(props) {
                       <Icon name="check" color="#fff" width="2em" height="2em" />
                     </ReadyBadge>
                   )}
-                  <StyledCardTitle tag="h5">{actionName}</StyledCardTitle>
+                <StyledCardTitle tag="h5">{actionName}</StyledCardTitle>
               </CardBody>
             </StyledCard>
           </CardLink>

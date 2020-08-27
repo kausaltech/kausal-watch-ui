@@ -19,7 +19,7 @@ $name: 'hnh2035';
 // brand-dark/theme.light should have contrast ratio over 4.5
 $brand-light:  #ffc61e;
 $brand-dark:   #007438; //modified hel-tram for a11y
-$neutral-light:  #ffe28e;
+$neutral-light:  #ffc61e;
 $neutral-dark:   #007438; //modified hel-tram for a11y
 
 // Application color mappings:
@@ -129,20 +129,28 @@ $badge-font-weight:               400;
 $table-head-bg:                   #f1f1f1;
 $table-hover-bg:                  #f1f1f1;
 
+// Actions
+$actionNotStarted-color:    #DEDFE1;
+$actionCompleted-color:     #CCE9DA;
+$actionOnTime-color:        #CCE9DA;
+$actionLate-color:          #FFF4BB;
+$actionSeverelyLate-color:  #F1D3D1;
+$actionMerged-color:        #DEDFE1;
+
 // Indicators
-$action-color: #00792D; //modified hel-tram for a11y
-$operational-indicator-color: #17ebba; // modified hel-copper for a11y
+$action-color: #007438; //modified hel-tram for a11y
+$operational-indicator-color: #80EBD3; // modified hel-copper for a11y
 $tactical-indicator-color: #b7dbf7; // modified hel-fog for a11y
 $strategic-indicator-color: #006EB2; // modified hel-coat for a11y
 
-$action-color-fg: theme-color("black");
-$operational-indicator-color-fg: theme-color("black");
-$tactical-indicator-color-fg: theme-color("black");
-$strategic-indicator-color-fg: theme-color("white");
+$action-color-fg: #ffffff;
+$operational-indicator-color-fg: #1a1a1a;
+$tactical-indicator-color-fg: #1a1a1a;
+$strategic-indicator-color-fg: #ffffff;
 
 $causality-increases-color: #006250;
 $causality-decreases-color: #8d0d2d;
-$causality-is-part-of-color: grey;
+$causality-is-part-of-color: #808080;
 
 // Breakpoints
 $breakpoint-sm: 576px;
@@ -151,7 +159,7 @@ $breakpoint-lg: 992px;
 $breakpoint-xl: 1200px;
 
 $icons-url: '/static/icons/hnh2035';
-$theme-logo-url: '/static/images/hnh2035/helsinki-logo.svg';
+$theme-logo-url: '/static/images/hnh2035/helsinki-logo-white.svg';
 $theme-logo-white-url: '/static/images/hnh2035/helsinki-logo-white.svg';
 $icon-indicators-url: '/static/images/default/icon-indicators.svg';
 $icon-actions-url: '/static/images/default/icon-actions.svg';

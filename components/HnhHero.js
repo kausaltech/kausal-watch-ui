@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {
-  Container, Row, Col
+  Container, Row, Col,
 }
   from 'reactstrap';
 import styled from 'styled-components';
@@ -16,9 +16,8 @@ import {
 import Icon from './common/Icon';
 import Button from './common/Button';
 
-
 const SiteHero = styled.div`
-  margin: ${(props) => props.theme.spaces.s300} 0 ${(props) => props.theme.spaces.s200};
+  padding: ${(props) => props.theme.spaces.s400} 0 ${(props) => props.theme.spaces.s300};
   background-color: ${(props) => props.theme.themeColors.white};
 
   h1 {
@@ -66,7 +65,8 @@ const SiteTitle = styled.div`
 `;
 
 const Highlight = styled.div`
-  margin-bottom: ${(props) => props.theme.spaces.s300};
+  height: 100%;
+  
   background: ${(props) => props.theme.themeColors.white};
 
   &:hover {
@@ -151,7 +151,7 @@ const GraphAnimation = Keyframes.Spring({
       },
       delay: 2000,
       config: { tension: 20, friction: 15 },
-    })
+    });
     await next({
       from: {
         emissionsNow: 0,
@@ -159,165 +159,163 @@ const GraphAnimation = Keyframes.Spring({
       to: {
         emissionsNow: 1,
       },
-    })
-  }
-})
+    });
+  },
+});
 
-const SvgComponent = (props) => {
-  return (
-    <GraphAnimation
-      state="play"
-      emissionsStart={3514}
-      emissionsNow={2559}
-    >
-      {(animatedProps) => (
-        <svg viewBox="0 0 516 135">
-          <defs>
-            <style>
-              {
-                '.prefix__d{fill:none;stroke:#fff;stroke-width:2px;stroke-linecap:square}'
-                + '.prefix__ai,.prefix__e,.prefix__k{isolation:isolate}'
-                + '.prefix__e{font-size:21px;fill:#fff;font-family:HelsinkiGrotesk;font-weight:700}'
-                + '.prefix__k{font-size:10px;fill:#ebedf1;font-family:HelsinkiGrotesk;font-weight:500}'
-                + '.prefix__ab,.prefix__v,.prefix__w{letter-spacing:-.01em}'
-              }
-            </style>
-          </defs>
-          <title>Helsingin päästötilanne</title>
-          <path fill="none" stroke="#fff" strokeWidth={2} d="M2 92.47h512v41H2z" />
+const HelsinkiEmissionsViz = () => (
+  <GraphAnimation
+    state="play"
+    emissionsStart={3514}
+    emissionsNow={2559}
+  >
+    {(animatedProps) => (
+      <svg viewBox="0 0 516 135">
+        <defs>
+          <style>
+            {
+              '.prefix__d{fill:none;stroke:#fff;stroke-width:2px;stroke-linecap:square}'
+              + '.prefix__ai,.prefix__e,.prefix__k{isolation:isolate}'
+              + '.prefix__e{font-size:21px;fill:#fff;font-family:HelsinkiGrotesk;font-weight:700}'
+              + '.prefix__k{font-size:10px;fill:#ebedf1;font-family:HelsinkiGrotesk;font-weight:500}'
+              + '.prefix__ab,.prefix__v,.prefix__w{letter-spacing:-.01em}'
+            }
+          </style>
+        </defs>
+        <title>Helsingin päästötilanne</title>
+        <path fill="none" stroke="#fff" strokeWidth={2} d="M2 92.47h512v41H2z" />
+        <g>
+          <text
+            transform="translate(8.2 117.51)"
+            fill="#dedfe1"
+            fontSize={12}
+            fontFamily="HelsinkiGrotesk"
+            fontWeight={500}
+          >
+            Vähennetty
+          </text>
+          <text
+            transform="translate(72.91 118.51)"
+            style={{
+              isolation: 'isolate',
+            }}
+            letterSpacing="-.01em"
+            fontSize={16}
+            fontFamily="HelsinkiGrotesk"
+            fontWeight={700}
+            fill="#fff"
+          >
+            { beautifyValue(3514 - animatedProps.emissions) }
+          </text>
+        </g>
+        <g transform={animatedProps.trans}>
+          <rect fill="#ffce43" x="0" y="0" width={288 + animatedProps.barWidth} height="30" />
           <g>
             <text
-              transform="translate(8.2 117.51)"
-              fill="#dedfe1"
+              transform="translate(8 20)"
               fontSize={12}
               fontFamily="HelsinkiGrotesk"
               fontWeight={500}
             >
-              Vähennetty
-            </text>
-            <text
-              transform="translate(72.91 118.51)"
-              style={{
-                isolation: 'isolate',
-              }}
-              letterSpacing="-.01em"
-              fontSize={16}
-              fontFamily="HelsinkiGrotesk"
-              fontWeight={700}
-              fill="#fff"
-            >
-              { beautifyValue(3514 - animatedProps.emissions) }
-            </text>
-          </g>
-          <g transform={animatedProps.trans}>
-            <rect fill="#ffce43" x="0" y="0" width={288 + animatedProps.barWidth} height="30" />
-            <g>
-              <text
-                transform="translate(8 20)"
+              { 'Vähennettävää ' }
+              <tspan
+                style={{
+                  isolation: 'isolate',
+                }}
+                fontSize={16}
+                fontFamily="HelsinkiGrotesk"
+                fontWeight={700}
+              >
+                { beautifyValue(animatedProps.emissions - 702) }
+              </tspan>
+              <tspan
+                style={{
+                  isolation: 'isolate',
+                }}
                 fontSize={12}
                 fontFamily="HelsinkiGrotesk"
                 fontWeight={500}
               >
-                { 'Vähennettävää ' }
-                <tspan
-                  style={{
-                    isolation: 'isolate',
-                  }}
-                  fontSize={16}
-                  fontFamily="HelsinkiGrotesk"
-                  fontWeight={700}
-                >
-                  { beautifyValue(animatedProps.emissions - 702) }
-                </tspan>
-                <tspan
-                  style={{
-                    isolation: 'isolate',
-                  }}
-                  fontSize={12}
-                  fontFamily="HelsinkiGrotesk"
-                  fontWeight={500}
-                >
-                  { ' kt CO\u2082e' }
-                </tspan>
-              </text>
-            </g>
-          </g>
-          <path fill="#29b770" d="M429.5 97.97h79.75v30H429.5z" />
-          Tavoite
-          <path
-            className="prefix__d"
-            d="M430 82 v -13"
-          />
-          <g>
-            <text className="prefix__k" transform="translate(2 11.54)">
-              1990
-            </text>
-            <text className="prefix__e" transform="translate(.2 34.86)">
-              3 514
-              <tspan className="prefix__k">
-                {' kt CO\u2082e'}
+                { ' kt CO\u2082e' }
               </tspan>
             </text>
-            <path className="prefix__d" d="M2 82 v -40" />
           </g>
-          <g opacity={animatedProps.emissionsNow}>
-            <text className="prefix__k" transform="translate(137 11.54)">
-              2018
-            </text>
-            <text
-              transform="translate(137 44.86)"
-              fontSize={36}
-              fontFamily="HelsinkiGrotesk"
-              fontWeight={700}
-              fill="#ffce43"
-            >
-              {beautifyValue(animatedProps.emissions)}
-              <tspan className="prefix__k">
-                {' kt CO\u2082e'}
-              </tspan>
-            </text>
-            <path className="prefix__d" d="M142 82 v -25" />
-          </g>
-          <g>
-            <text
-              transform="translate(436 117.51)"
-              fontSize={12}
-              fontFamily="HelsinkiGrotesk"
-              fontWeight={500}
-            >
-              Tavoite
-            </text>
-            <text
-              transform="translate(424.75 11.54)"
-              style={{
-                isolation: 'isolate',
-              }}
-              letterSpacing="-.01em"
-              fontFamily="HelsinkiGrotesk"
-              fontWeight={500}
-              fontSize={10}
-              fill="#ebedf1"
-            >
-              2035
-            </text>
-            <text className="prefix__k" transform="translate(425.62 26.97)">
-              Enintään
-            </text>
-            <text className="prefix__e" transform="translate(425.61 47.86)">
-              702
-              <tspan className="prefix__k">
-                {' kt CO\u2082e'}
-              </tspan>
-            </text>
-            <text className="prefix__k" transform="translate(425 61.03)">
-              joka kompensoidaan
-            </text>
-          </g>
-        </svg>
-      )}
-    </GraphAnimation>
-  );
-};
+        </g>
+        <path fill="#29b770" d="M429.5 97.97h79.75v30H429.5z" />
+        Tavoite
+        <path
+          className="prefix__d"
+          d="M430 82 v -13"
+        />
+        <g>
+          <text className="prefix__k" transform="translate(2 11.54)">
+            1990
+          </text>
+          <text className="prefix__e" transform="translate(.2 34.86)">
+            3 514
+            <tspan className="prefix__k">
+              {' kt CO\u2082e'}
+            </tspan>
+          </text>
+          <path className="prefix__d" d="M2 82 v -40" />
+        </g>
+        <g opacity={animatedProps.emissionsNow}>
+          <text className="prefix__k" transform="translate(137 11.54)">
+            2018
+          </text>
+          <text
+            transform="translate(137 44.86)"
+            fontSize={36}
+            fontFamily="HelsinkiGrotesk"
+            fontWeight={700}
+            fill="#ffce43"
+          >
+            {beautifyValue(animatedProps.emissions)}
+            <tspan className="prefix__k">
+              {' kt CO\u2082e'}
+            </tspan>
+          </text>
+          <path className="prefix__d" d="M142 82 v -25" />
+        </g>
+        <g>
+          <text
+            transform="translate(436 117.51)"
+            fontSize={12}
+            fontFamily="HelsinkiGrotesk"
+            fontWeight={500}
+          >
+            Tavoite
+          </text>
+          <text
+            transform="translate(424.75 11.54)"
+            style={{
+              isolation: 'isolate',
+            }}
+            letterSpacing="-.01em"
+            fontFamily="HelsinkiGrotesk"
+            fontWeight={500}
+            fontSize={10}
+            fill="#ebedf1"
+          >
+            2035
+          </text>
+          <text className="prefix__k" transform="translate(425.62 26.97)">
+            Enintään
+          </text>
+          <text className="prefix__e" transform="translate(425.61 47.86)">
+            702
+            <tspan className="prefix__k">
+              {' kt CO\u2082e'}
+            </tspan>
+          </text>
+          <text className="prefix__k" transform="translate(425 61.03)">
+            joka kompensoidaan
+          </text>
+        </g>
+      </svg>
+    )}
+  </GraphAnimation>
+);
 
 const HnhHero = () => (
   <div>
@@ -359,7 +357,10 @@ const HnhHero = () => (
                       style={props}
                     >
                       <Illustration className="mr-4 w-50">
-                        <img src="./static/images/hnh2035/actions-illustration.svg" alt="Piirroskuvitus toimenpiteen valmistelua" />
+                        <img
+                          src="./static/images/hnh2035/actions-illustration.svg"
+                          alt="Piirroskuvitus toimenpiteen valmistelua"
+                        />
                       </Illustration>
                       <div>
                         <h3>Toimenpiteet</h3>
@@ -387,7 +388,10 @@ const HnhHero = () => (
                       style={props}
                     >
                       <Illustration className="mr-4 w-50">
-                        <img src="./static/images/hnh2035/indicators-illustration.svg" alt="Piirroskuvitus toimenpiteen mittaus" />
+                        <img
+                          src="./static/images/hnh2035/indicators-illustration.svg"
+                          alt="Piirroskuvitus toimenpiteen mittaus"
+                        />
                       </Illustration>
                       <div>
                         <h3>Mittarit</h3>
@@ -439,7 +443,7 @@ const HnhHero = () => (
                   </p>
                   <h3 className="mb-4">Helsingin päästötilanne</h3>
                   <ProgressGraph>
-                    <SvgComponent />
+                    <HelsinkiEmissionsViz />
                   </ProgressGraph>
                   <StaticPageLink slug="tietoa">
                     <Button outline color="light">

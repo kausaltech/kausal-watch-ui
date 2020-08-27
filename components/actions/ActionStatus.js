@@ -6,60 +6,59 @@ import { Progress } from 'reactstrap';
 
 const Status = styled.div`
   color: ${(props) => props.theme.themeColors.dark};
-  background-color: ${(props) => props.theme.themeColors.dark};
-  font-size: ${(props) => props.theme.fontSizeSm};
-  font-weight: ${(props) => props.theme.fontWeightBold};
-  letter-spacing: 0.03em;
-  text-align: left;
-  line-height: ${(props) => props.theme.lineHeightBase};
 `;
 
 const StatusTitle = styled.div`
   position: absolute;
-  left: 1em;
+  top: 0;
+  left: ${(props) => props.theme.spaces.s050};
+  color: ${(props) => props.theme.themeColors.black};
+  font-size: ${(props) => props.theme.fontSizeSm};
+  line-height: ${(props) => props.theme.spaces.s200};
 `;
 
 const ActionProgress = styled(Progress)`
   position: relative;
-  height: 2em;
+  height: ${(props) => props.theme.spaces.s200};
   background-color: ${(props) => props.theme.themeColors.light};
 
   &.bg-not_started {
-    background-color: ${(props) => props.theme.themeColors.light};
+    background-color: ${(props) => props.theme.actionNotStartedColor};
+  }
 
+  &.bg-on_time {
+    background-color: ${(props) => props.theme.actionOnTimeColor};
     .progress-bar {
-      color: ${(props) => props.theme.themeColors.dark};
+      background-color: ${(props) => darken(0.15, props.theme.actionOnTimeColor)};
     }
   }
 
-  &.bg-on_time, &.bg-completed {
-    background-color:  ${(props) => darken(0.20, props.theme.themeColors.success)};
+  &.bg-completed {
+    background-color: ${(props) => props.theme.actionCompletedColor};
     .progress-bar {
-      background-color: ${(props) => props.theme.themeColors.success};
+      background-color: ${(props) => darken(0.15, props.theme.actionCompletedColor)};
     }
   }
 
   &.bg-late {
-    background-color:  ${(props) => darken(0.15, props.theme.themeColors.warning)};
+    background-color: ${(props) => props.theme.actionLateColor};
     .progress-bar {
-      background-color: ${(props) => props.theme.themeColors.warning};
+      background-color: ${(props) => darken(0.15, props.theme.actionLateColor)};
     }
   }
 
   &.bg-severely_late {
-    background-color:  ${(props) => darken(0.20, props.theme.themeColors.danger)};
+    background-color: ${(props) => props.theme.actionSeverelyLateColor};
     .progress-bar {
-      background-color: ${(props) => props.theme.themeColors.danger};
+      background-color: ${(props) => darken(0.15, props.theme.actionSeverelyLateColor)};
     }
-}
+  }
 `;
-
-
 function ActionStatus(props) {
-  const { identifier, name, completion } = props;
+  const { identifier, name, completion, ...rest } = props;
 
   return (
-    <Status>
+    <Status {...rest}>
       <ActionProgress
         value={completion}
         className={`bg-${identifier}`}

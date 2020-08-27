@@ -156,6 +156,7 @@ function ActionListResults({
   t, planActions, planOrganizations, categoryTypes, leadContent, filters, onFilterChange
 }) {
   const plan = useContext(PlanContext);
+  const catById = {};
   const catTypes = categoryTypes.map((ct) => {
     const categoriesById = {};
     const categories = ct.categories.map((cat) => {
@@ -166,11 +167,13 @@ function ActionListResults({
     let rootCategories = [];
 
     categories.forEach((cat) => {
+      cat.type = ct;
       if (cat.parent) {
         cat.parent = categoriesById[cat.parent.id];
       } else {
         rootCategories.push(cat);
       }
+      catById[cat.id] = cat;
     });
     rootCategories = rootCategories.sort((a, b) => a.name.localeCompare(b.name));
 
@@ -185,6 +188,17 @@ function ActionListResults({
   const actions = planActions.map((action) => {
     const act = { ...action };
     const rps = act.responsibleParties.map((rp) => ({ ...rp }));
+
+    act.categories = act.categories.map((cat) => {
+      const out = catById[cat.id];
+      act.rootCategory = null;
+      if (out.type.identifier === 'action') {
+        let root = out;
+        while (root.parent != null) root = root.parent;
+        act.rootCategory = root;
+      }
+      return out;
+    });
 
     return { ...act, responsibleParties: rps };
   });

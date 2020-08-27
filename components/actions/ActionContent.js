@@ -368,7 +368,7 @@ function ActionDetails(props) {
       )}
       <Container>
         <Row>
-          <Col sm="12">
+          <Col sm="12" className="mb-5">
             <ActionPager
               nextAction={action.nextAction}
               previousAction={action.previousAction}

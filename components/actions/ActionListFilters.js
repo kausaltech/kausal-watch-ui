@@ -201,6 +201,7 @@ function ActionListFilters({
                 md={{ size: filter.md }}
                 lg={{ size: filter.lg }}
                 className={`mb-2 d-flex${filter.isLast ? ' align-items-end' : ''}`}
+                key={filter.identifier}
               >
                 <ActionListFilterInput filter={filter} currentValue={filters[filter.identifier]} onChange={onChange} />
               </Col>

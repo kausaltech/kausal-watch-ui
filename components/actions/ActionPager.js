@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { ActionLink } from '../../common/links';
+import { ActionLink, actionPropType } from '../../common/links';
 import Icon from '../common/Icon';
 import Button from '../common/Button';
 import { withTranslation } from '../../common/i18n';
@@ -64,8 +64,8 @@ const ActionPager = (props) => {
 };
 
 ActionPager.propTypes = {
-  previousAction: ActionLink.propTypes.action,
-  nextAction: ActionLink.propTypes.action,
+  previousAction: actionPropType,
+  nextAction: actionPropType,
   t: PropTypes.func.isRequired,
 };
 

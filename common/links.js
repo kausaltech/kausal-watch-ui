@@ -99,6 +99,13 @@ IndicatorLink.propTypes = {
   ...Link.propTypes,
 };
 
+export const actionPropType = PropTypes.shape({
+  identifier: PropTypes.string.isRequired,
+  mergedWith: PropTypes.shape({
+    identifier: PropTypes.string.isRequired,
+  }),
+});
+
 export function ActionLink(props) {
   const { action, ...other } = props;
   // If this action is merged with another, replace all links with
@@ -110,12 +117,7 @@ export function ActionLink(props) {
   );
 }
 ActionLink.propTypes = {
-  action: PropTypes.shape({
-    identifier: PropTypes.string.isRequired,
-    mergedWith: PropTypes.shape({
-      identifier: PropTypes.string.isRequired,
-    }),
-  }).isRequired,
+  action: actionPropType.isRequired,
 };
 
 export function ActionListLink(props) {

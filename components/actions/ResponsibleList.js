@@ -73,14 +73,14 @@ ResponsibleBadge.propTypes = {
   id: PropTypes.string.isRequired,
   index: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
-  abbreviation: PropTypes.string.isRequired,
+  abbreviation: PropTypes.string,
 };
 
 ResponsibleList.propTypes = {
   data: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
-    abbreviation: PropTypes.string.isRequired,
+    abbreviation: PropTypes.string,
   })).isRequired,
   t: PropTypes.func.isRequired,
 };

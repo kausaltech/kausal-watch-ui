@@ -10,7 +10,7 @@ import { captureException } from '../common/sentry';
 import { appWithTranslation, initPromise as i18nInitPromise, i18n } from '../common/i18n';
 import PlanContext from '../context/plan';
 import SiteContext from '../context/site';
-import withApollo from '../common/apollo';
+import withApollo, { clearCache as clearApolloCache } from '../common/apollo';
 import Error from './_error';
 
 require('../styles/default/main.scss');
@@ -97,6 +97,7 @@ class AplansApp extends App {
     if (ctx.req) {
       // The current, full URL is used in SSR to render the opengraph tags.
       currentURL = ctx.req.currentURL;
+      clearApolloCache();
     }
 
     await i18nInitPromise;
@@ -142,15 +143,16 @@ class AplansApp extends App {
     // Optimize performance by updating this component only
     // when props change. State is not used in render() so
     // no need to check it here.
-    return Object.entries(this.props).some(([key, val]) => {
+    const out = Object.entries(this.props).some(([key, val]) => {
       if (key === 'pageProps') {
-        return JSON.stringify(val) === JSON.stringify(nextProps[key]);
+        return JSON.stringify(val) !== JSON.stringify(nextProps[key]);
       }
       if (nextProps[key] !== val) {
         return true;
       }
       return false;
     });
+    return out;
   }
 
   render() {

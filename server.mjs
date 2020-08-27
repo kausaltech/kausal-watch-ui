@@ -3,11 +3,10 @@ import next from 'next';
 import morgan from 'morgan';
 import express from 'express';
 import originalUrl from 'original-url';
-import parseCacheControl from 'parse-cache-control';
 import cacheableResponse from 'cacheable-response';
+import parseCacheControl from '@tusbar/cache-control';
 
 import sentry from './common/sentry.js';
-
 
 const serverPort = process.env.PORT || 3000;
 
@@ -26,9 +25,11 @@ if (('ENABLE_CACHE' in process.env)
   console.log('SSR cache initialized');
   ssrCache = cacheableResponse({
     ttl: 1000 * 60, // 1 min
-    get: async ({ req, res, pagePath, queryParams }) => ({
-      data: await app.renderToHTML(req, res, pagePath, queryParams),
-    }),
+    get: async ({ req, res, pagePath, queryParams }) => {
+      if ('force' in req.query) delete req.query.force;
+      const data = await app.renderToHTML(req, res, pagePath, queryParams);
+      return { data };
+    },
     send: ({ data, res }) => res.send(data),
   });
 }
@@ -48,7 +49,14 @@ app.prepare().then(() => {
 
     if (ssrCache) {
       if (req.path === '/' || req.path.startsWith('/actions') || req.path.startsWith('/indicators')) {
-        return ssrCache({ req, res, pagePath: req.path, queryParams: req.query });
+        const queryParams = { ...req.query };
+        const cacheControl = req.get('Cache-Control');
+        const parsed = parseCacheControl.parse(cacheControl);
+
+        if (parsed.noCache || parsed.maxAge === 0) {
+          req.query.force = true;
+        }
+        return ssrCache({ req, res, pagePath: req.path, queryParams });
       }
     }
     return handle(req, res);

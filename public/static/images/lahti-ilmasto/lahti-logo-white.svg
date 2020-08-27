@@ -1,14 +1,10 @@
-<svg width="425" height="125" viewBox="0 0 425 125" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g clip-path="url(#clip0)">
-<path d="M0 110.216H87.8413V104.902H16.1585V15H0V110.216Z" fill="white"/>
-<path d="M145.426 21.9405L172.971 74.2115H117.881L145.426 21.9405ZM90.9862 110.216H99.0112L115.17 79.5254H175.791L191.949 110.216H199.974L149.439 15H141.414L90.9862 110.216Z" fill="white"/>
-<path d="M203.228 110.216H210.277V62.7162H293.997V110.216H301.046V15H293.997V57.4024H210.277V15H203.228V110.216Z" fill="white"/>
-<path d="M306.577 20.3139H350.714V110.216H357.655V20.3139H401.793V15H306.577V20.3139Z" fill="white"/>
-<path d="M425 15H407.866V110.216H425V15Z" fill="white"/>
-</g>
-<defs>
-<clipPath id="clip0">
-<rect width="425" height="95.2156" fill="white" transform="translate(0 15)"/>
-</clipPath>
-</defs>
+<svg viewBox="0 0 425 125" xmlns="http://www.w3.org/2000/svg">
+  <g clip-path="url(#lahti-logo-white__clip0)" fill="#fff">
+    <path d="M0 110.216h87.841v-5.314H16.16V15H0v95.216zM145.426 21.94l27.545 52.272h-55.09l27.545-52.272zm-54.44 88.276h8.025l16.159-30.69h60.621l16.158 30.69h8.025L149.439 15h-8.025l-50.428 95.216zm112.242 0h7.049v-47.5h83.72v47.5h7.049V15h-7.049v42.402h-83.72V15h-7.049v95.216zm103.349-89.902h44.137v89.902h6.941V20.314h44.138V15h-95.216v5.314zM425 15h-17.134v95.216H425V15z"/>
+  </g>
+  <defs>
+    <clipPath id="lahti-logo-white__clip0">
+      <path fill="#fff" transform="translate(0 15)" d="M0 0h425v95.216H0z"/>
+    </clipPath>
+  </defs>
 </svg>

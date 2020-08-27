@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { lighten, darken, transparentize } from 'polished';
+import { darken, transparentize } from 'polished';
 import {
   Progress,
 } from 'reactstrap';
@@ -76,45 +76,50 @@ const ActionStatusArea = styled.div`
   color: ${(props) => props.theme.themeColors.black};
   background-color: ${(props) => props.theme.themeColors.success};
   min-height: 100px;
-  line-height: ${(props) => props.theme.lineHeightSm};;
+  line-height: ${(props) => props.theme.lineHeightSm};
+
+  .progress-bar {
+      background-color: ${(props) => transparentize(0.5, props.theme.themeColors.dark)};
+    }
 
   &.bg-not_started {
-    background-color: ${(props) => props.theme.themeColors.light};
-  }
-
-  &.bg-completed {
-    background-color:  ${(props) => darken(0.15, props.theme.themeColors.success)};
-    color: ${(props) => props.theme.themeColors.white};
-    .progress-bar {
-      background-color: ${(props) => darken(0.15, props.theme.themeColors.success)};
-    }
+    background-color: ${(props) => props.theme.actionNotStartedColor};
   }
 
   &.bg-on_time {
-    background-color:  ${(props) => lighten(0.10, props.theme.themeColors.success)};
+    background-color: ${(props) => props.theme.actionOnTimeColor};
     .progress-bar {
-      background-color: ${(props) => darken(0.15, props.theme.themeColors.success)};
+      background-color: ${(props) => darken(0.25, props.theme.actionOnTimeColor)};
+    }
+  }
+
+  &.bg-completed {
+    background-color: ${(props) => props.theme.actionCompletedColor};
+    .progress-bar {
+      background-color: ${(props) => darken(0.25, props.theme.actionCompletedColor)};
     }
   }
 
   &.bg-late {
-    background-color:  ${(props) => lighten(0.10, props.theme.themeColors.warning)};
+    background-color: ${(props) => props.theme.actionLateColor};
     .progress-bar {
-      background-color: ${(props) => darken(0.15, props.theme.themeColors.warning)};
+      background-color: ${(props) => darken(0.25, props.theme.actionLateColor)};
     }
   }
 
   &.bg-severely_late {
-    background-color:  ${(props) => lighten(0.15, props.theme.themeColors.danger)};
+    background-color: ${(props) => props.theme.actionSeverelyLateColor};
     .progress-bar {
-      background-color: ${(props) => darken(0.15, props.theme.themeColors.danger)};
+      background-color: ${(props) => darken(0.25, props.theme.actionSeverelyLateColor)};
     }
   }
 
   &.bg-merged {
-    background-color: ${(props) => props.theme.themeColors.light};
-    .progress-bar {
-      background-color: ${(props) => lighten(0.5, props.theme.themeColors.dark)};
+    color: ${(props) => props.theme.themeColors.dark};
+    background-color: ${(props) => props.theme.actionMergedColor};
+
+    .action-number {
+      background-color: ${(props) => props.theme.actionMergedColor};
     }
   }
 `;
