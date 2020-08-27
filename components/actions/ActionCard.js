@@ -86,6 +86,13 @@ const ActionStatusArea = styled.div`
     background-color: ${(props) => props.theme.actionNotStartedColor};
   }
 
+  &.bg-in_progress {
+    background-color: ${(props) => props.theme.actionOnTimeColor};
+    .progress-bar {
+      background-color: ${(props) => darken(0.25, props.theme.actionOnTimeColor)};
+    }
+  }
+
   &.bg-on_time {
     background-color: ${(props) => props.theme.actionOnTimeColor};
     .progress-bar {
@@ -114,7 +121,7 @@ const ActionStatusArea = styled.div`
     }
   }
 
-  &.bg-merged {
+  &.bg-merged, &.bg-postponed {
     color: ${(props) => props.theme.themeColors.dark};
     background-color: ${(props) => props.theme.actionMergedColor};
 
