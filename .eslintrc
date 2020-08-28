@@ -12,13 +12,15 @@
     "import/resolver": {
       "node": {
         "paths": ["."],
-        "extensions": [".js", ".jsx"]
+        "extensions": [".js", ".jsx", ".jsm"]
       }
     }
   },
+  "ignorePatterns": ["node_modules/**"],
   "rules": {
     "max-len": [1, 120, 2, {"ignoreComments": true}],
     "curly": ["off"],
+    "object-curly-newline": ["off"],
     "react/prop-types": [2],
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
     "import/no-extraneous-dependencies": ["error", {"devDependencies": true}],
