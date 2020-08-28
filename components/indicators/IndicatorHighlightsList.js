@@ -1,8 +1,7 @@
 /* eslint-disable max-classes-per-file */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { gql } from '@apollo/client';
-import { Query } from '@apollo/client/react/components';
+import { gql, useQuery } from '@apollo/client';
 import {
   Row, Col,
 } from 'reactstrap';
@@ -112,15 +111,13 @@ function IndicatorHighlightsList(props) {
     orderBy: '-updatedAt',
   };
 
-  return (
-    <Query query={GET_INDICATOR_HIGHLIGHTS} variables={queryParams}>
-      {({ data, loading, error }) => {
-        if (loading) return <ContentLoader />;
-        if (error) return <p>{ t('error-loading-indicators') }</p>;
-        return <IndicatorCardList t={t} indicators={data.planIndicators} />;
-      }}
-    </Query>
-  );
+  const { loading, error, data } = useQuery(GET_INDICATOR_HIGHLIGHTS, {
+    variables: queryParams,
+  });
+
+  if (loading) return <ContentLoader />;
+  if (error) return <p>{ t('error-loading-indicators') }</p>;
+  return <IndicatorCardList t={t} indicators={data.planIndicators} />;
 }
 
 IndicatorHighlightsList.propTypes = {
