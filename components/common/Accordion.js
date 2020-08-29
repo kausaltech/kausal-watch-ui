@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect, useCallback } from 'react';
 import { Collapse, Tooltip } from 'reactstrap';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
@@ -100,16 +100,25 @@ ToolTipContent.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-const LinkCopyButton = (props) => {
+const LinkCopyButton = React.memo((props) => {
   const { identifier } = props;
   const site = useContext(SiteContext);
   const { t } = useTranslation();
   const [tooltipOpen, setTooltipOpen] = useState(false);
   const [copyText, setCopyText] = useState(t('copy-to-clipboard'));
-  const toggle = () => {
-    setTooltipOpen(!tooltipOpen);
-    if (!tooltipOpen) setCopyText(t('copy-to-clipboard'));
-  };
+  const toggle = useCallback(
+    () => {
+      setTooltipOpen(!tooltipOpen);
+      if (!tooltipOpen) setCopyText(t('copy-to-clipboard'));
+    },
+    [tooltipOpen, setCopyText],
+  );
+  const onCopy = useCallback(
+    () => {
+      setCopyText(t('copied-to-clipboard'));
+    },
+    [setCopyText],
+  );
 
   return (
     <>
@@ -126,9 +135,9 @@ const LinkCopyButton = (props) => {
         )}
       </Tooltip>
       <CopyToClipboard
-        text={`${site.currentURL.domain}${site.currentURL.path}#q${identifier}`}
+        text={`${site.domain}${site.path}#q${identifier}`}
         id={`tooltip-${identifier}`}
-        onCopy={() => setCopyText(t('copied-to-clipboard'))}
+        onCopy={onCopy}
       >
         <CopyLink
           className="copy-link"
@@ -138,7 +147,7 @@ const LinkCopyButton = (props) => {
       </CopyToClipboard>
     </>
   );
-};
+});
 
 LinkCopyButton.propTypes = {
   identifier: PropTypes.string,

@@ -1,15 +1,25 @@
 // NOTE: This require will be replaced with `@sentry/browser` when
 // process.browser === true thanks to the webpack config in next.config.js
 const Sentry = require('@sentry/node');
+const sentryIntegrations = require('@sentry/integrations');
 
 let sentryInitialized = false;
 
 if (!sentryInitialized) {
+  const distDir = `${process.env.SENTRY_ROOTDIR}/.next`;
   const sentryOptions = {
     dsn: process.env.SENTRY_DSN,
     release: process.env.SENTRY_RELEASE,
     maxBreadcrumbs: 50,
     attachStacktrace: true,
+    integrations: [
+      new sentryIntegrations.RewriteFrames({
+        iteratee: (frame) => {
+          frame.filename = frame.filename.replace(distDir, 'app:///_next');
+          return frame;
+        },
+      }),
+    ],
   };
 
   // When we're developing locally
@@ -34,11 +44,11 @@ function captureException(err, ctx) {
     }
 
     if (err.statusCode) {
-      scope.setExtra('statusCode', err.statusCode);
+      scope.setExtra('http_status', err.statusCode);
     }
 
     if (res && res.statusCode) {
-      scope.setExtra('statusCode', res.statusCode);
+      scope.setExtra('http_status', res.statusCode);
     }
 
     if (process.browser) {
@@ -69,7 +79,7 @@ function captureMessage(msg) {
 }
 
 module.exports = {
-  Sentry: Sentry,
-  captureException: captureException,
-  captureMessage: captureMessage,
+  Sentry,
+  captureException,
+  captureMessage,
 };

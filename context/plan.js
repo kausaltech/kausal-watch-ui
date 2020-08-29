@@ -1,8 +1,5 @@
 import React from 'react';
 
-const PlanContext = React.createContext({
-  plan: {},
-  instanceType: null,
-});
+const PlanContext = React.createContext({});
 
 export default PlanContext;

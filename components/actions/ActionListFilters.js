@@ -218,4 +218,4 @@ function ActionListFilters({
   );
 }
 
-export default withTranslation('common')(ActionListFilters);
+export default withTranslation(['common', 'actions'])(ActionListFilters);

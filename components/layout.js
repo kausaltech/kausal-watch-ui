@@ -34,8 +34,8 @@ function Layout({ children }) {
         <Head>
           <meta name="viewport" content="initial-scale=1.0, width=device-width" />
           <meta property="og:type" content="website" />
-          {site.currentURL && (
-            <meta property="og:url" content={site.currentURL.domain + site.currentURL.path} />
+          {site.domain && (
+            <meta property="og:url" content={site.domain + site.path} />
           )}
           <meta property="og:site_name" content={siteTitle} />
           <link rel="shortcut icon" href={`/static/images/${process.env.THEME_IDENTIFIER}/favicon/favicon.ico`} type="image/x-icon" />

@@ -421,7 +421,7 @@ const HnhHero = () => (
                 <Col sm="12" md={{ size: 8, offset: 2 }} style={props}>
                   <h2>Hiilineutraaliksi 2035 mennessä</h2>
                   <p>
-                    Hiiineutraalissa Helsingissä kasvihuonekaasupäästöt saavat olla
+                    Hiilineutraalissa Helsingissä kasvihuonekaasupäästöt saavat olla
                     {' '}
                     enintään 702 kt CO
                     <sub>2</sub>
@@ -446,11 +446,13 @@ const HnhHero = () => (
                     <HelsinkiEmissionsViz />
                   </ProgressGraph>
                   <StaticPageLink slug="tietoa">
-                    <Button outline color="light">
-                      Lue lisää tavoitteesta ja tästä palvelusta
-                      {' '}
-                      <Icon name="arrowRight" color="white" />
-                    </Button>
+                    <a>
+                      <Button outline color="light">
+                        Lue lisää tavoitteesta ja tästä palvelusta
+                        {' '}
+                        <Icon name="arrowRight" color="white" />
+                      </Button>
+                    </a>
                   </StaticPageLink>
                 </Col>
               </Row>

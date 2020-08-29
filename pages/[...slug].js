@@ -1,17 +1,16 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
 import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
-import { Query } from '@apollo/client/react/components';
-import { gql } from '@apollo/client';
+import { gql, useQuery } from '@apollo/client';
 import { Spring } from 'react-spring/renderprops.cjs';
 
-import Layout from '../components/layout';
-import { Meta } from '../components/layout';
-import PlanContext from '../context/plan';
-import ErrorMessage from '../components/common/ErrorMessage';
-import Accordion from '../components/common/Accordion';
-import ContentLoader from '../components/common/ContentLoader';
+import { useTranslation } from 'common/i18n';
+import Layout, { Meta } from 'components/layout';
+import PlanContext from 'context/plan';
+import ErrorMessage from 'components/common/ErrorMessage';
+import Accordion from 'components/common/Accordion';
+import ContentLoader from 'components/common/ContentLoader';
 
 const HeaderImage = styled.div`
   background-image: url(${(props) => props.image});
@@ -72,42 +71,41 @@ query GetStaticPage($plan: ID!, $slug: ID!) {
   }
 }`;
 
-class StaticPage extends React.PureComponent {
-  static contextType = PlanContext;
+function StaticPage({ slug }) {
+  const { t } = useTranslation();
 
-  static async getInitialProps({ query }) {
-    return {
-      slug: query.slug,
-      namespacesRequired: ['common'],
-    };
+  // We don't support nested static pages yet
+  if (slug.length > 1) {
+    return <ErrorMessage statusCode={404} message={t('page-not-found')} />;
+  }
+  slug = slug[0];
+
+  const plan = useContext(PlanContext);
+  const { loading, error, data } = useQuery(GET_CONTENT, {
+    variables: {
+      plan: plan.identifier,
+      slug,
+    },
+  });
+
+  if (loading) return <ContentLoader />;
+  if (error) return <ErrorMessage message={error.message} />;
+
+  const { staticPage } = data;
+  if (!staticPage) {
+    return <ErrorMessage statusCode={404} message={t('page-not-found')} />;
   }
 
-  render() {
-    const plan = this.context;
-    const { slug } = this.props;
-
-    return (
-      <Query query={GET_CONTENT} variables={{ plan: plan.identifier, slug: slug }}>
-        {({ loading, error, data }) => {
-          if (loading) return <ContentLoader />;
-          if (error) return <ErrorMessage message={error.message} />;
-
-          const { staticPage } = data;
-          if (!staticPage) {
-            return <ErrorMessage statusCode={404} message="Sivua ei löydy" />
-          }
-
-          return (
-            <Layout>
-              <Content page={data.staticPage} />
-            </Layout>
-          );
-          /* ActionContent action={data.action} theme={ theme } /> */
-        }}
-      </Query>
-    );
-  }
+  return (
+    <Layout>
+      <Content page={data.staticPage} />
+    </Layout>
+  );
 }
+StaticPage.getInitialProps = async ({ query }) => ({
+  slug: query.slug,
+  namespacesRequired: ['common'],
+});
 
 const Content = ({ page }) => {
   const { title, tagline, imageUrl, content, questions } = page;

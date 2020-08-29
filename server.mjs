@@ -1,17 +1,25 @@
-// server.js
+/* eslint-disable no-console */
+
+import fs from 'fs';
 import next from 'next';
 import morgan from 'morgan';
 import express from 'express';
 import originalUrl from 'original-url';
 import cacheableResponse from 'cacheable-response';
 import parseCacheControl from '@tusbar/cache-control';
+import YAML from 'yaml'
 
-import sentry from './common/sentry.js';
+console.log('Starting');
 
 const serverPort = process.env.PORT || 3000;
 
 const app = next({ dev: process.env.NODE_ENV !== 'production' });
+
+console.log('Next initialized');
+
 let Sentry;
+
+const sentry = await import('./common/sentry.js');
 
 if (process.env.SENTRY_DSN) {
   // { release: app.buildId }
@@ -34,44 +42,6 @@ if (('ENABLE_CACHE' in process.env)
   });
 }
 
-app.prepare().then(() => {
-  const server = express();
-
-  if (Sentry) {
-    server.use(Sentry.Handlers.requestHandler());
-  }
-  server.use(morgan('dev'));
-
-  const handle = app.getRequestHandler();
-
-  server.get('*', (req, res) => {
-    req.currentURL = getCurrentURL(req);
-
-    if (ssrCache) {
-      if (req.path === '/' || req.path.startsWith('/actions') || req.path.startsWith('/indicators')) {
-        const queryParams = { ...req.query };
-        const cacheControl = req.get('Cache-Control');
-        const parsed = parseCacheControl.parse(cacheControl);
-
-        if (parsed.noCache || parsed.maxAge === 0) {
-          req.query.force = true;
-        }
-        return ssrCache({ req, res, pagePath: req.path, queryParams });
-      }
-    }
-    return handle(req, res);
-  });
-
-  if (Sentry) {
-    server.use(Sentry.Handlers.errorHandler());
-  }
-
-  server.listen(serverPort, (err) => {
-    if (err) throw err;
-    console.log(`Ready on http://localhost:${serverPort}`);
-  });
-});
-
 function getCurrentURL(req) {
   const obj = originalUrl(req);
   let port;
@@ -87,3 +57,62 @@ function getCurrentURL(req) {
   const domain = `${obj.protocol}//${obj.hostname}${port}`;
   return { domain, path };
 }
+
+Error.stackTraceLimit = 30;
+
+await app.prepare();
+
+const server = express();
+
+if (Sentry) {
+  server.use(Sentry.Handlers.requestHandler());
+}
+server.use(morgan('dev'));
+
+const handle = app.getRequestHandler();
+
+// Serve locales as JSON
+server.get('/locales/:lang([a-z]{2})/:ns([a-z_-]+).json', function (req, res) {
+  const { lang, ns } = req.params;
+  let contents;
+
+  try {
+    contents = fs.readFileSync(`./locales/${lang}/${ns}.yaml`, 'utf8');
+  } catch (err) {
+    if (err.code === 'ENOENT') {
+      res.sendStatus(404)
+      return;
+    }
+  }
+  const data = YAML.parse(contents);
+  res.json(data);
+});
+
+server.get('*', (req, res) => {
+  const { path } = req;
+  req.currentURL = getCurrentURL(req);
+
+  if (ssrCache) {
+    if (!path.startsWith('/static') && !path.startsWith('/_next')) {
+      const queryParams = { ...req.query };
+      const cacheControl = req.get('Cache-Control');
+      const parsed = parseCacheControl.parse(cacheControl);
+
+      // If browser requests a fresh version, we force a cache miss.
+      if (parsed.noCache || parsed.maxAge === 0) {
+        req.query.force = true;
+      }
+      return ssrCache({ req, res, pagePath: req.path, queryParams });
+    }
+  }
+  return handle(req, res);
+});
+
+if (Sentry) {
+  server.use(Sentry.Handlers.errorHandler());
+}
+
+server.listen(serverPort, (err) => {
+  if (err) throw err;
+  console.log(`Ready on http://localhost:${serverPort}`);
+});

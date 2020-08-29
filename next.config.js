@@ -1,18 +1,19 @@
+/* eslint-disable no-restricted-syntax */
 const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
 const withSass = require('@zeit/next-sass');
 const withImages = require('next-images');
 const withBundleAnalyzer = require('@zeit/next-bundle-analyzer');
+const withSourceMaps = require('@zeit/next-source-maps');
 const SentryWebpackPlugin = require('@sentry/webpack-plugin');
-const { nextI18NextRewrites } = require('next-i18next/rewrites')
+const { nextI18NextRewrites } = require('next-i18next/rewrites');
+
+const basePath = '';
 
 // Set default plan identifier
 process.env.PLAN_IDENTIFIER = process.env.PLAN_IDENTIFIER || 'hnh2035';
-
-const localeSubpaths = {
-  en: 'en',
-};
+process.env.SENTRY_ROOTDIR = __dirname;
 
 function getAllThemes() {
   const styleDir = path.join(__dirname, 'styles');
@@ -22,22 +23,51 @@ function getAllThemes() {
   });
 }
 
+const SUPPORTED_LANGUAGES = ['fi', 'en', 'sv'];
+const DEFAULT_LANGUAGES = ['fi', 'en'];
+
+function generateLocaleConfig() {
+  let languages = (process.env.UI_LANGUAGES || '').split(',').filter((item) => item);
+
+  languages.forEach((lang) => {
+    if (SUPPORTED_LANGUAGES.indexOf(lang) < 0) {
+      throw new Error(`Invalid UI_LANGUAGES setting: language ${lang} not supported`);
+    }
+  });
+  if (languages.length < 1) {
+    languages = DEFAULT_LANGUAGES;
+  }
+  return {
+    defaultLanguage: languages[0],
+    otherLanguages: languages.slice(1),
+  };
+}
+
 const themes = getAllThemes();
 
-const config = withBundleAnalyzer(withImages(withSass({
+const config = withSourceMaps(withBundleAnalyzer(withImages(withSass({
   env: {
     SENTRY_DSN: process.env.SENTRY_DSN,
   },
-  rewrites: async () => nextI18NextRewrites(localeSubpaths),
+  async rewrites() {
+    const localeSubpaths = Object.fromEntries(
+      generateLocaleConfig().otherLanguages.map((lang) => [lang, lang]),
+    );
+    const i18nRewrites = await nextI18NextRewrites(localeSubpaths);
+    const rewrites = [
+      { source: '/favicon.ico', destination: '/public/static/favicon.ico' },
+      ...i18nRewrites,
+    ];
+    return rewrites;
+  },
   publicRuntimeConfig: { // Will be available on both server and client
     aplansApiBaseURL: process.env.APLANS_API_BASE_URL || 'https://api.watch.kausal.tech/v1',
-    kerrokantasiApiBaseURL: process.env.KERROKANTASI_API_BASE_URL || 'https://api.hel.fi/kerrokantasi-test/v1',
     // the default value for PLAN_IDENTIFIER is set below in webpack config
     planIdentifier: process.env.PLAN_IDENTIFIER,
     instanceType: process.env.INSTANCE_TYPE || 'development',
     matomoURL: process.env.MATOMO_URL,
     matomoSiteId: process.env.MATOMO_SITE_ID,
-    localeSubpaths,
+    localeConfig: generateLocaleConfig(),
   },
   experimental: {
     modern: true,
@@ -61,6 +91,7 @@ const config = withBundleAnalyzer(withImages(withSass({
     cfg.plugins.push(
       new webpack.DefinePlugin({
         'process.env.SENTRY_RELEASE': JSON.stringify(buildId),
+        'process.env.SENTRY_ROOTDIR': isServer ? JSON.stringify(__dirname) : '""',
       }),
     );
     if (!isServer) {
@@ -107,16 +138,15 @@ const config = withBundleAnalyzer(withImages(withSass({
         cfg.plugins.push(new SentryWebpackPlugin({
           include: '.next',
           ignore: ['node_modules'],
+          stripPrefix: ['webpack://_N_E/'],
+          urlPrefix: `~${basePath}/_next`,
           release: buildId,
-          rewrite: true,
-          stripCommonPrefix: true,
-          urlPrefix: '_next',
         }));
       }
     }
-
     return cfg;
   },
-})));
+  basePath,
+}))));
 
 module.exports = config;

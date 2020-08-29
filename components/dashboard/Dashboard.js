@@ -72,6 +72,7 @@ export const GET_IMPACT_GROUP_LIST = gql`
         }
       }
       generalContent {
+        id
         dashboardLeadContent
       }
     }

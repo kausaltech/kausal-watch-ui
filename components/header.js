@@ -13,7 +13,7 @@ import { getActiveBranch } from '../common/links';
 function Header({ t, siteTitle }) {
   const plan = useContext(PlanContext);
   const site = useContext(SiteContext);
-  const hasActionImpacts = plan.actionImpacts.length > 0;
+  const hasActionImpacts = plan.actionImpacts?.length > 0;
   const activeBranch = getActiveBranch();
   let staticPages = [];
 
@@ -53,7 +53,7 @@ function Header({ t, siteTitle }) {
       links = links.concat(staticPages);
     }
     return links;
-  }, [hasActionImpacts, activeBranch, JSON.stringify(plan.staticPages)]);
+  }, [hasActionImpacts, activeBranch, plan.staticPages]);
 
   return (
     <div>

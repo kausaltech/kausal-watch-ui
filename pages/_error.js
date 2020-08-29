@@ -1,32 +1,14 @@
-import * as Sentry from '@sentry/browser';
-import getConfig from 'next/config';
 import React from 'react';
+import * as Sentry from '@sentry/browser';
+import NextErrorComponent from 'next/error';
+import getConfig from 'next/config';
 
 import Layout from '../components/layout';
 
-export default class Error extends React.Component {
-  static getInitialProps(context) {
-    let statusCode;
-    const { req, res, err } = context;
+function Error({ statusCode, hasGetInitialPropsRun, err, errorMessage }) {
+  console.log('render error');
 
-    if (res) {
-      ({ statusCode } = res);
-    } else if (err) {
-      ({ statusCode } = err);
-    } else {
-      statusCode = null;
-    }
-
-    return {
-      statusCode,
-      namespacesRequired: ['common'],
-    };
-  }
-
-  render() {
-    let errorMessage = '';
-    const statusCode = this.props.statusCode;
-
+  if (!errorMessage) {
     if (statusCode) {
       errorMessage = `Virhe ${statusCode}`;
       if (statusCode === 404) {
@@ -35,16 +17,52 @@ export default class Error extends React.Component {
     } else {
       errorMessage = 'Tapahtui virhe';
     }
-    return (
-      <Layout>
-        <div className="mb-5">
-          <div className="jumbotron" style={{ marginBottom: '6rem' }}>
-            <div className="container">
-              <h1>{errorMessage}</h1>
-            </div>
+  }
+  return (
+    <Layout>
+      <div className="mb-5">
+        <div className="jumbotron" style={{ marginBottom: '6rem' }}>
+          <div className="container">
+            <h1>{errorMessage}</h1>
           </div>
         </div>
-      </Layout>
-    );
-  }
+      </div>
+    </Layout>
+  );
 }
+
+Error.getInitialProps = async ({ req, res, err }) => {
+  const props = await NextErrorComponent.getInitialProps({
+    res,
+    err,
+  });
+
+  // Workaround for https://github.com/vercel/next.js/issues/8592, mark when
+  // getInitialProps has run
+  props.hasGetInitialPropsRun = true;
+  props.namespacesRequired = ['common'];
+
+  if (err?.statusCode && res) res.statusCode = err.statusCode;
+
+  if (res?.statusCode === 404) {
+    // do not record an exception in Sentry for 404
+    return { statusCode: 404, namespacesRequired: ['common'] };
+  }
+
+  if (res && !res.statusCode) res.statusCode = 500;
+
+  if (err) {
+    Sentry.captureException(err);
+    await Sentry.flush(2000);
+    return props;
+  }
+
+  Sentry.captureException(
+    new Error(`_error.js getInitialProps missing data at path: ${asPath}`),
+  );
+  await Sentry.flush(2000);
+
+  return props;
+};
+
+export default Error;

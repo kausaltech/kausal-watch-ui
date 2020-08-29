@@ -37,6 +37,7 @@ const GET_INDICATOR_LIST = gql`
         }
       }
       generalContent {
+        id
         indicatorListLeadContent
       }
       categoryTypes(usableForIndicators: true) {

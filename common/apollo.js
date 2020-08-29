@@ -65,11 +65,6 @@ const sentryHttpLink = ApolloLink.from([
 
 let apolloClient;
 
-export function clearCache() {
-  if (!apolloClient) return;
-  apolloClient.resetStore();
-}
-
 export default withApollo(({ initialState }) => {
   if (apolloClient) return apolloClient;
 

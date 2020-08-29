@@ -25,7 +25,7 @@ function ActionListPage({ t }) {
       });
 
       const link = getActionListLinkProps(query);
-      Router.replace(link.href);
+      router.replace(link.href, undefined, { shallow: true });
     },
     [],
   );
@@ -43,8 +43,8 @@ ActionListPage.propTypes = {
   t: PropTypes.func.isRequired,
 };
 const initialProps = {
-  namespacesRequired: ['common'],
+  namespacesRequired: ['common', 'actions'],
 };
 ActionListPage.getInitialProps = async () => (initialProps);
 
-export default withTranslation('common')(ActionListPage);
+export default withTranslation('common', 'actions')(ActionListPage);

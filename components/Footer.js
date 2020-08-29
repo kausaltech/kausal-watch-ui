@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { withTranslation } from '../common/i18n';
-import ApplicationStateBanner from './common/ApplicationStateBanner';
+import { withTranslation } from 'common/i18n';
 import PlanContext from 'context/plan';
 import SiteContext from 'context/site';
+import ApplicationStateBanner from './common/ApplicationStateBanner';
 import SiteFooter from './common/SiteFooter';
 
 function Footer(props) {
@@ -15,7 +15,7 @@ function Footer(props) {
 
   let navLinks = [];
   let staticPages = [];
-  const hasActionImpacts = plan.actionImpacts.length > 0;
+  const hasActionImpacts = plan.actionImpacts?.length > 0;
 
   if (hasActionImpacts) navLinks.push({ id: '1', name: t('dashboard'), slug: 'dashboard' });
   navLinks.push({ id: '2', name: t('actions'), slug: 'actions' });

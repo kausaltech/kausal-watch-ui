@@ -2,23 +2,16 @@ import React from 'react';
 import ActionContent from '../../components/actions/ActionContent';
 import Layout from '../../components/layout';
 
-
-class ActionPage extends React.Component {
-  static async getInitialProps({ query }) {
-    return {
-      id: query.id,
-      namespacesRequired: ['common'], // for translations
-    };
-  }
-
-  render() {
-    const { id } = this.props;
-    return (
-      <Layout>
-        <ActionContent id={id} />
-      </Layout>
-    );
-  }
+function ActionPage({ id }) {
+  return (
+    <Layout>
+      <ActionContent id={id} />
+    </Layout>
+  );
 }
+ActionPage.getInitialProps = async ({ query }) => ({
+  namespacesRequired: ['common'],
+  id: query.id,
+});
 
 export default ActionPage;

@@ -190,7 +190,7 @@ function MergedActionList(props) {
 
   return (
     <ActionSection>
-      <h5>{ t('action-merged') }</h5>
+      <h5>{ t('actions:action-merged') }</h5>
       {mergedActions}
     </ActionSection>
   );
@@ -244,8 +244,8 @@ function ActionDetails(props) {
             )}
             {cleanOfficialText && (
               <OfficialText>
-                <h5>{ t('action-description-official') }</h5>
-                <strong>{ t('action-as-in-plan') }</strong>
+                <h5>{ t('actions:action-description-official') }</h5>
+                <strong>{ t('actions:action-as-in-plan') }</strong>
                 <div dangerouslySetInnerHTML={{ __html: cleanOfficialText }} />
                 {generalContent.officialNameDescription && (
                   <small>{`(${generalContent.officialNameDescription})`}</small>
@@ -260,7 +260,7 @@ function ActionDetails(props) {
             <SolidSection>
               <Row>
                 <Col>
-                  <SectionHeader>{ t('action-status-updates') }</SectionHeader>
+                  <SectionHeader>{ t('actions:action-status-updates') }</SectionHeader>
                 </Col>
               </Row>
               <ActionUpdatesList id={action.id} />
@@ -268,7 +268,7 @@ function ActionDetails(props) {
             )}
             <Row>
               <Col>
-                <SectionHeader>{ t('action-tasks') }</SectionHeader>
+                <SectionHeader>{ t('actions:action-tasks') }</SectionHeader>
               </Col>
             </Row>
             <Row>
@@ -287,7 +287,7 @@ function ActionDetails(props) {
               <Col sm="12">
                 {action.relatedIndicators && action.relatedIndicators.length > 0
                   ? <ActionIndicators actionId={action.id} relatedIndicators={action.relatedIndicators} />
-                  : <Alert color="light" className="mb-5"><h6>Ei määriteltyjä mittareita</h6></Alert>
+                  : <Alert color="light" className="mb-5"><h6>{ t('actions:no-defined-indicators') }</h6></Alert>
                   }
               </Col>
             </Row>
@@ -297,7 +297,7 @@ function ActionDetails(props) {
             { action.impact
               && (
               <ActionSection>
-                <h5>{ t('action-impact') }</h5>
+                <h5>{ t('actions:action-impact') }</h5>
                 <ActionImpact
                   name={action.impact.name}
                   identifier={action.impact.identifier}
@@ -306,14 +306,14 @@ function ActionDetails(props) {
               </ActionSection>
               )}
             <ActionSection>
-              <h5>{ t('action-progress') }</h5>
+              <h5>{ t('actions:action-progress') }</h5>
               { action.completion > 0
               && (
               <strong>
                 {action.completion}
                 %
                 {' '}
-                { t('action-percent-ready') }
+                { t('actions:action-percent-ready') }
               </strong>
               ) }
               {action.status && (
@@ -326,13 +326,13 @@ function ActionDetails(props) {
             </ActionSection>
             { action.schedule.length ? (
               <ActionSection>
-                <h5>{ t('action-timeline') }</h5>
+                <h5>{ t('actions:action-timeline') }</h5>
                 <Timeline schedules={action.schedule} allSchedules={plan.actionSchedules} />
               </ActionSection>
             ) : null}
             { emissionScopes.length ? (
               <ActionSection>
-                <h5>{ t('emission-scopes') }</h5>
+                <h5>{ t('actions:emission-scopes') }</h5>
                 {emissionScopes.map((item) => (
                   <EmissionScopeIcon key={item.id} category={item} color={theme.brandDark} size="2em" />
                 ))}
@@ -346,7 +346,7 @@ function ActionDetails(props) {
             </ActionSection>
             <ActionSection>
               <LastUpdated>
-                { t('action-last-updated') }
+                { t('actions:action-last-updated') }
                 {' '}
                 { updated }
               </LastUpdated>
@@ -359,7 +359,7 @@ function ActionDetails(props) {
           <Container>
             <Row>
               <Col sm="12">
-                <SectionHeader>{ t('action-what-effect-this-has') }</SectionHeader>
+                <SectionHeader>{ t('actions:action-what-effect-this-has') }</SectionHeader>
               </Col>
             </Row>
           </Container>
@@ -420,4 +420,4 @@ ActionContent.propTypes = {
   theme: PropTypes.shape({}).isRequired,
 };
 
-export default withTranslation('common')(withTheme(ActionContent));
+export default withTranslation(['common', 'actions'])(withTheme(ActionContent));

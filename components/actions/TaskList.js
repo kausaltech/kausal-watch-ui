@@ -76,7 +76,7 @@ function TaskList(props) {
       <ListGroupItem key={item.id} className={`state--${item.state}`}>
         <TaskWrapper>
           <TaskMeta>
-            <Icon name="calendar" color={theme.themeColors.dark} alt={t('action-task-todo')} />
+            <Icon name="calendar" color={theme.themeColors.dark} alt={t('actions:action-task-todo')} />
             <Date>{parseTimestamp(item.dueAt)}</Date>
           </TaskMeta>
           <TaskContent>
@@ -94,7 +94,7 @@ function TaskList(props) {
       <ListGroupItem key={item.id} className={`state--${item.state}`}>
         <TaskWrapper>
           <TaskMeta>
-            <Icon name="check" color={theme.themeColors.dark} alt={t('action-task-done')} />
+            <Icon name="check" color={theme.themeColors.dark} alt={t('actions:action-task-done')} />
             <Date>{parseTimestamp(item.completedAt)}</Date>
           </TaskMeta>
           <TaskContent>
@@ -110,16 +110,16 @@ function TaskList(props) {
       { undoneTasks.length > 0
         ? (
           <>
-            <h4>{ t('action-tasks-todo') }</h4>
+            <h4>{ t('actions:action-tasks-todo') }</h4>
             <ListGroup className="mb-5">
               {undoneTasks}
             </ListGroup>
           </>
         )
-        : <h4 className="text-muted mb-4">{ t('action-tasks-todo-empty') }</h4> }
+        : <h4 className="text-muted mb-4">{ t('actions:action-tasks-todo-empty') }</h4> }
       { doneTasks.length > 0 && (
         <>
-          <h4>{ t('action-tasks-done') }</h4>
+          <h4>{ t('actions:action-tasks-done') }</h4>
           <ListGroup className="mb-5">
             {doneTasks}
           </ListGroup>
@@ -135,4 +135,4 @@ TaskList.propTypes = {
   tasks: PropTypes.arrayOf(PropTypes.shape).isRequired,
 };
 
-export default withTranslation('common')(withTheme(TaskList));
+export default withTranslation(['common', 'actions'])(withTheme(TaskList));

@@ -32,34 +32,9 @@ contact-persons-missing: Ei merkittyjä yhteyshenkilöitä
 contact-person-main: Pääyhteyshenkilö
 contact-info: Yhteystiedot
 email: Sähköposti
-emission-scopes: Päästöluokat
-action-not-found: Toimenpidettä ei löydy
-action-description-official: Virallinen kuvaus
-action-as-in-plan: Toimenpideohjelman mukaan
-action-what-effect-this-has: Miten tämä toimenpide vaikuttaa tavoitteeseen?
-action-tasks: Tehtävät
-action-tasks-done: Mitä on tehty?
-action-tasks-todo: Mitä on tehtävä?
-action-task-done: Tehty
-action-task-todo: Tehtävä
-action-tasks-todo-empty: Ei tekemättömiä tehtäviä
-action-status-updates: Viimeisimmät päivitykset
-action-last-updated: Tietoja päivitetty
-action-timeline: Aikajänne
-action-progress: Eteneminen
-action-percent-ready: valmis
-action-num: Nro
-action-name-title: Toimenpide / Nimi
-action-impact: Vaikutus
-action-monitoring: Seuranta
-action-merged: Yhdistetyt toimenpiteet
-action-status-merged: Yhdistetty toimenpiteeseen
 previous: Edellinen
 next: Seuraava
-action-previous: Edellinen toimenpide
-action-next: Seuraava toimenpide
 impact: vaikutus
-browse-actions: Selaa toimenpiteitä
 filter-category: Rajaa teeman mukaan
 filter-all-categories: Ei rajausta
 filter-all-emission-scopes: Ei päästöluokkarajausta
@@ -72,6 +47,7 @@ filter-text: Tekstihaku
 filter-text-default: Etsi otsikoista
 filter-text-description: Etsi kuvauksista
 filter-result-actions: toimenpidettä
+browse-actions: Selaa toimenpiteitä
 funding-instrument: 'Helsingin ilmastovahti on saanut tukea EU:n Climate-KIC-ohjelmasta.'
 error-loading-actions: Virhe toimenpiteiden latauksessa
 error-loading-indicators: Virhe mittareiden latauksessa

@@ -30,13 +30,21 @@ export default class WatchDocument extends Document {
 
   render() {
     const nextDataProps = this.props.__NEXT_DATA__.props;
+    let serverError;
+
+    if (!nextDataProps) {
+      serverError = (
+        <h1>Internal Server Error</h1>
+      );
+    }
 
     return (
-      <Html lang={nextDataProps}>
+      <Html lang={nextDataProps?.initialLanguage}>
         <Head />
         <body>
           <Main />
           <NextScript />
+          {serverError}
         </body>
       </Html>
     );

@@ -48,4 +48,4 @@ Icon.propTypes = {
   className: PropTypes.string,
 };
 
-export default withTheme(Icon);
+export default withTheme(React.memo(Icon));

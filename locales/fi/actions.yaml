@@ -1,0 +1,24 @@
+emission-scopes: Päästöluokat
+action-not-found: Toimenpidettä ei löydy
+action-description-official: Virallinen kuvaus
+action-as-in-plan: Toimenpideohjelman mukaan
+action-what-effect-this-has: Miten tämä toimenpide vaikuttaa tavoitteeseen?
+action-tasks: Tehtävät
+action-tasks-done: Mitä on tehty?
+action-tasks-todo: Mitä on tehtävä?
+action-task-done: Tehty
+action-task-todo: Tehtävä
+action-tasks-todo-empty: Ei tekemättömiä tehtäviä
+action-status-updates: Viimeisimmät päivitykset
+action-last-updated: Tietoja päivitetty
+action-timeline: Aikajänne
+action-progress: Eteneminen
+action-percent-ready: valmis
+action-num: Nro
+action-name-title: Toimenpide / Nimi
+action-impact: Vaikutus
+action-monitoring: Seuranta
+action-merged: Yhdistetyt toimenpiteet
+action-status-merged: Yhdistetty toimenpiteeseen
+action-previous: Edellinen toimenpide
+action-next: Seuraava toimenpide
