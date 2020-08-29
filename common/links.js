@@ -45,8 +45,7 @@ export function getActiveBranch() {
   const router = useRouter();
   const splitCurrent = router.asPath.split('/');
   const currentPath = splitCurrent[parentIndex];
-
-  return currentPath;
+  return currentPath.split('#')[0];
 }
 
 export function getIndicatorLinkProps(id) {
