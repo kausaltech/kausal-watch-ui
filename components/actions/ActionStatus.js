@@ -82,6 +82,7 @@ ActionStatus.propTypes = {
   identifier: PropTypes.oneOf([
     'not_started',
     'on_time',
+    'in_progress',
     'completed',
     'late',
     'severely_late',
