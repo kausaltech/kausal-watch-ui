@@ -22,3 +22,4 @@ action-merged: Yhdistetyt toimenpiteet
 action-status-merged: Yhdistetty toimenpiteeseen
 action-previous: Edellinen toimenpide
 action-next: Seuraava toimenpide
+no-defined-indicators: Ei määriteltyjä mittareita

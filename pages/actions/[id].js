@@ -10,7 +10,7 @@ function ActionPage({ id }) {
   );
 }
 ActionPage.getInitialProps = async ({ query }) => ({
-  namespacesRequired: ['common'],
+  namespacesRequired: ['common', 'actions'],
   id: query.id,
 });
 
