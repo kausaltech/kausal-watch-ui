@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { createGlobalStyle, withTheme } from 'styled-components';
+import { themeProp } from 'common/theme';
 import Fonts from './fonts';
 
 const GlobalStyle = createGlobalStyle`
@@ -110,11 +111,7 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-function ThemedGlobalStyles(props) {
-  const {
-    theme, children,
-  } = props;
-
+function ThemedGlobalStyles({ theme, children }) {
   if (typeof window !== 'undefined') {
     const { fontUrl, fontFamily } = theme;
     Fonts(fontFamily, fontUrl);
@@ -133,7 +130,7 @@ ThemedGlobalStyles.defaultProps = {
 };
 
 ThemedGlobalStyles.propTypes = {
-  theme: PropTypes.shape({}).isRequired,
+  theme: themeProp.isRequired,
   children: PropTypes.node,
 };
 

@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import SVG from 'react-inlinesvg';
-import { withTheme } from 'styled-components';
+import { useTheme } from 'common/theme';
 
 function Icon(props) {
+  const theme = useTheme();
   const {
-    theme,
     name,
     color,
     width,
@@ -40,7 +40,6 @@ Icon.defaultProps = {
 };
 
 Icon.propTypes = {
-  theme: PropTypes.shape({}).isRequired,
   name: PropTypes.string,
   color: PropTypes.string,
   width: PropTypes.string,
@@ -48,4 +47,4 @@ Icon.propTypes = {
   className: PropTypes.string,
 };
 
-export default withTheme(React.memo(Icon));
+export default React.memo(Icon);

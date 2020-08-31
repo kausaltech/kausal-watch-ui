@@ -1,7 +1,7 @@
 import React, { useMemo, useContext } from 'react';
 import PropTypes from 'prop-types';
 
-import { withTranslation } from 'common/i18n';
+import { useTranslation } from 'common/i18n';
 import PlanContext from 'context/plan';
 import SiteContext from 'context/site';
 
@@ -9,11 +9,11 @@ import GlobalNav from './common/GlobalNav';
 import ApplicationStateBanner from './common/ApplicationStateBanner';
 import { getActiveBranch } from '../common/links';
 
-
-function Header({ t, siteTitle }) {
+function Header({ siteTitle }) {
   const plan = useContext(PlanContext);
   const site = useContext(SiteContext);
-  const hasActionImpacts = plan.actionImpacts?.length > 0;
+  const { t } = useTranslation(['common']);
+  const hasActionImpacts = plan.impactGroups?.length > 0;
   const activeBranch = getActiveBranch();
   let staticPages = [];
 
@@ -69,7 +69,6 @@ function Header({ t, siteTitle }) {
 
 Header.propTypes = {
   siteTitle: PropTypes.string.isRequired,
-  t: PropTypes.func.isRequired,
 };
 
-export default withTranslation('common')(React.memo(Header));
+export default React.memo(Header);

@@ -8,13 +8,10 @@ import { withTranslation } from 'common/i18n';
 import PlanContext from 'context/plan';
 import SiteContext from 'context/site';
 import ThemedGlobalStyles from 'common/ThemedGlobalStyles';
+import theme from 'common/theme';
 
 import Header from './header';
 import Footer from './Footer';
-
-const defaultTheme = require('sass-extract-loader?{"plugins": ["sass-extract-js"]}!../styles/default/_theme-variables.scss');
-const customTheme = require('sass-extract-loader?{"plugins": ["sass-extract-js"]}!../styles/' + process.env.THEME_IDENTIFIER + '/_theme-variables.scss');
-const theme = Object.assign(defaultTheme, customTheme);
 
 const Content = styled.main`
   min-height: 800px;

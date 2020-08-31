@@ -1,7 +1,7 @@
 import React, { useContext, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
-import { withTranslation } from '../../common/i18n';
+import { useTranslation } from '../../common/i18n';
 import { Router } from '../../routes';
 import { getActionListLinkProps } from '../../common/links';
 import PlanContext from '../../context/plan';
@@ -10,9 +10,10 @@ import ContentLoader from '../../components/common/ContentLoader';
 import Layout, { Meta } from '../../components/layout';
 import ActionList from '../../components/actions/ActionList';
 
-function ActionListPage({ t }) {
+function ActionListPage() {
   const router = useRouter();
   const filters = ActionList.getFiltersFromQuery(router.query);
+  const { t } = useTranslation('common');
 
   const handleFilterChange = useCallback(
     (newFilters) => {
@@ -39,12 +40,9 @@ function ActionListPage({ t }) {
     </Layout>
   );
 }
-ActionListPage.propTypes = {
-  t: PropTypes.func.isRequired,
-};
 const initialProps = {
   namespacesRequired: ['common', 'actions'],
 };
 ActionListPage.getInitialProps = async () => (initialProps);
 
-export default withTranslation('common', 'actions')(ActionListPage);
+export default ActionListPage;

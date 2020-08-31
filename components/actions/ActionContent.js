@@ -1,15 +1,13 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import {
   Container, Row, Col, Badge, Alert,
 } from 'reactstrap';
-import { Query } from '@apollo/client/react/components';
-import styled, { withTheme } from 'styled-components';
-import { gql } from '@apollo/client';
-import moment from '../../common/moment';
-
-import { withTranslation } from '../../common/i18n';
-import PlanContext from '../../context/plan';
+import styled, { ThemeContext } from 'styled-components';
+import { gql, useQuery } from '@apollo/client';
+import moment from 'common/moment';
+import { useTranslation } from 'common/i18n';
+import PlanContext from 'context/plan';
 
 import { Meta } from '../layout';
 import IndicatorCausal from '../indicators/IndicatorCausal';
@@ -164,8 +162,7 @@ const MergedActionSection = styled.div`
   margin-bottom: ${(props) => props.theme.spaces.s100};
 `;
 
-function MergedAction(props) {
-  const { action, theme } = props;
+function MergedAction({ action, theme }) {
   const { identifier, officialName } = action;
   return (
     <MergedActionSection>
@@ -177,8 +174,7 @@ function MergedAction(props) {
   );
 }
 
-function MergedActionList(props) {
-  const { actions, t, theme } = props;
+function MergedActionList({ actions, t, theme }) {
   if (!actions || !actions.length) {
     // render nothing
     return null;
@@ -204,13 +200,24 @@ function getMaxImpact(plan) {
   }, null);
   return max;
 }
-function ActionDetails(props) {
-  const {
-    t,
-    action,
-    plan,
-    theme,
-  } = props;
+
+function ActionContent({ id }) {
+  const plan = useContext(PlanContext);
+  const theme = useContext(ThemeContext);
+  const { t } = useTranslation(['common', 'actions']);
+  const { loading, error, data } = useQuery(GET_ACTION_DETAILS, {
+    variables: {
+      id,
+      plan: plan.identifier,
+    },
+  });
+
+  if (loading) return <ContentLoader />;
+  if (error) return <ErrorMessage message={error.message} />;
+  const { action } = data;
+  if (!action) {
+    return <ErrorMessage statusCode={404} message={t('action-not-found')} />;
+  }
 
   const updated = moment(action.updatedAt).format('DD.MM.YYYY');
   const generalContent = plan.generalContent || {};
@@ -379,45 +386,8 @@ function ActionDetails(props) {
     </div>
   );
 }
-
-class ActionContent extends React.Component {
-  static contextType = PlanContext;
-
-  render() {
-    const { t, theme, id } = this.props;
-    const plan = this.context;
-
-    return (
-      <Query query={GET_ACTION_DETAILS} variables={{ id, plan: plan.identifier }}>
-        {({ loading, error, data }) => {
-          if (loading) return <ContentLoader />;
-          if (error) return <ErrorMessage message={error.message} />;
-          const { action } = data;
-          if (!action) {
-            return <ErrorMessage statusCode={404} message={t('action-not-found')} />;
-          }
-          return <ActionDetails action={action} theme={theme} plan={plan} t={t} />;
-          /* ActionContent action={data.action} theme={ theme } /> */
-        }}
-      </Query>
-    );
-  }
-}
-
-ActionDetails.propTypes = {
-  action: PropTypes.shape({}).isRequired,
-  plan: PropTypes.shape({}).isRequired,
-  t: PropTypes.func.isRequired,
-  theme: PropTypes.shape({
-    brandLight: PropTypes.string.isRequired,
-    imageOverlay: PropTypes.string.isRequired,
-  }).isRequired,
-};
-
 ActionContent.propTypes = {
   id: PropTypes.string.isRequired,
-  t: PropTypes.func.isRequired,
-  theme: PropTypes.shape({}).isRequired,
 };
 
-export default withTranslation(['common', 'actions'])(withTheme(ActionContent));
+export default ActionContent;

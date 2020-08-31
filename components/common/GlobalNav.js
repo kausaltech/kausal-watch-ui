@@ -6,9 +6,10 @@ import {
 } from 'reactstrap';
 import SVG from 'react-inlinesvg';
 import styled, { withTheme } from 'styled-components';
+import { themeProp } from 'common/theme';
 import { useScrollPosition } from '@n8tb1t/use-scroll-position';
 import { transparentize } from 'polished';
-import { withTranslation } from '../../common/i18n';
+import { useTranslation } from 'common/i18n';
 import { Link } from '../../routes';
 import { NavigationLink } from '../../common/links';
 
@@ -240,10 +241,11 @@ DropdownList.propTypes = {
 };
 
 function GlobalNav(props) {
+  const { t } = useTranslation();
   const [navIsFixed, setnavIsFixed] = useState(false);
   const [isOpen, toggleOpen] = useState(false);
   const {
-    t, theme, siteTitle, ownerName, navItems, fullwidth, sticky,
+    theme, siteTitle, ownerName, navItems, fullwidth, sticky,
   } = props;
 
   const OrgLogo = () => (
@@ -334,10 +336,9 @@ GlobalNav.propTypes = {
     slug: PropTypes.string,
     children: PropTypes.arrayOf(PropTypes.shape),
   })).isRequired,
-  theme: PropTypes.shape({}).isRequired,
+  theme: themeProp.isRequired,
   fullwidth: PropTypes.bool,
   sticky: PropTypes.bool,
-  t: PropTypes.func.isRequired,
 };
 
-export default withTranslation('common')(withTheme(React.memo(GlobalNav)));
+export default withTheme(React.memo(GlobalNav));

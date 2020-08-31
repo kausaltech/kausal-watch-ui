@@ -7,8 +7,9 @@ import {
 
 import SVG from 'react-inlinesvg';
 import { Spring } from 'react-spring/renderprops.cjs';
-import styled, { withTheme } from 'styled-components';
-import { withTranslation } from '../common/i18n';
+import styled from 'styled-components';
+import { useTheme } from 'common/theme';
+import { useTranslation } from 'common/i18n';
 import {
   IndicatorListLink,
   ActionListLink,
@@ -105,7 +106,7 @@ const Highlight = styled.div`
   h3 {
     color: ${(props) => props.theme.neutralDark};
   }
- 
+
   p {
     hyphens: auto;
     margin-bottom: 0;
@@ -114,8 +115,10 @@ const Highlight = styled.div`
 `;
 
 function FrontHero(props) {
+  const { t } = useTranslation();
+  const theme = useTheme();
   const {
-    t, theme, bgImage, title, siteDescription, actionsDescription, indicatorsDescription,
+    bgImage, title, siteDescription, actionsDescription, indicatorsDescription,
   } = props;
 
   const IconActions = () => <SVG src={theme.iconActionsUrl} />;
@@ -133,7 +136,7 @@ function FrontHero(props) {
               <Col sm="12" md={{ size: 8, offset: 2 }}>
                 <SiteTitle style={sprops}>
                   <HeroVisual>
-                    <HeroImage pic={bgImage} />
+                    {bgImage && (<HeroImage pic={bgImage} />)}
                   </HeroVisual>
                   <h1>{ title || 'Site Title' }</h1>
                   <p className="lead">{ siteDescription || 'Site Description' }</p>
@@ -206,12 +209,14 @@ function FrontHero(props) {
 }
 
 FrontHero.propTypes = {
-  t: PropTypes.func.isRequired,
-  bgImage: PropTypes.string.isRequired,
+  bgImage: PropTypes.string,
   title: PropTypes.string.isRequired,
   siteDescription: PropTypes.string.isRequired,
   actionsDescription: PropTypes.string.isRequired,
   indicatorsDescription: PropTypes.string.isRequired,
 };
+FrontHero.defaultProps = {
+  bgImage: null,
+};
 
-export default withTranslation('common')(withTheme(FrontHero));
+export default FrontHero;

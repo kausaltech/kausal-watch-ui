@@ -44,6 +44,9 @@ const GET_PLAN = gql`
         name,
         order
       }
+      impactGroups(first: 1) {
+        id
+      }
       staticPages {
         id,
         name,
