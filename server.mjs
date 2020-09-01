@@ -9,18 +9,14 @@ import cacheableResponse from 'cacheable-response';
 import parseCacheControl from '@tusbar/cache-control';
 import YAML from 'yaml'
 
-console.log('Starting');
 
+console.log('Starting server');
 const serverPort = process.env.PORT || 3000;
-
 const app = next({ dev: process.env.NODE_ENV !== 'production' });
-
 console.log('Next initialized');
 
 let Sentry;
-
 const sentry = await import('./common/sentry.js');
-
 if (process.env.SENTRY_DSN) {
   // { release: app.buildId }
   Sentry = sentry.Sentry;
@@ -60,7 +56,9 @@ function getCurrentURL(req) {
 
 Error.stackTraceLimit = 30;
 
+console.log('Preparing server');
 await app.prepare();
+console.log('Server prepared');
 
 const server = express();
 

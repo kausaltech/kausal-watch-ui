@@ -2,7 +2,6 @@
 // process.browser === true thanks to the webpack config in next.config.js
 const Sentry = require('@sentry/node');
 const sentryIntegrations = require('@sentry/integrations');
-
 let sentryInitialized = false;
 
 if (!sentryInitialized) {

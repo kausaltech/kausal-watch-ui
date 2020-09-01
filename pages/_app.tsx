@@ -1,7 +1,7 @@
 import React from 'react';
-import App from 'next/app';
+import App, { AppProps } from 'next/app';
 import getConfig from 'next/config';
-import { gql, ApolloProvider } from '@apollo/client';
+import { gql, ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
 import ReactPiwik from 'react-piwik';
 import { I18nextProvider, withSSR } from 'react-i18next';
 
@@ -44,7 +44,7 @@ const GET_PLAN = gql`
         name,
         order
       }
-      impactGroups(first: 1) {
+      impactGroups {
         id
       }
       staticPages {
@@ -93,9 +93,23 @@ function onRouteChange(url) {
   piwik.track({ path, pathname, search: '' });
 }
 
+
+interface SiteContext {
+  instanceType: string;
+  domain: string;
+  path: string;
+}
+
+
+interface WatchAppProps extends AppProps {
+  apollo: ApolloClient<InMemoryCache>,
+  siteContext: SiteContext,
+  plan: any;
+}
+
 function WatchApp({
   Component, pageProps, apollo, plan, siteContext,
-}) {
+}: WatchAppProps) {
   if (!piwik && process.browser && publicRuntimeConfig.matomoURL && publicRuntimeConfig.matomoSiteId) {
     piwik = new ReactPiwik({
       url: publicRuntimeConfig.matomoURL,
@@ -210,7 +224,7 @@ function I18nApp(props) {
     </I18nextProvider>
   );
 }
-const MemoApp = React.memo(I18nApp);
+const MemoApp = React.memo(I18nApp) as any;
 
 MemoApp.getInitialProps = async (appContext) => {
   const appProps = await TransApp.getInitialProps(appContext);

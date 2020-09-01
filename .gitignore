@@ -5,6 +5,7 @@ yarn-error.log
 
 # Build directory
 /.next
+/next-env.d.ts
 
 .DS_Store
 *~

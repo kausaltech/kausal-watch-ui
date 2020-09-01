@@ -66,7 +66,7 @@ const SiteTitle = styled.div`
 
 const Highlight = styled.div`
   height: 100%;
-  
+
   background: ${(props) => props.theme.themeColors.white};
 
   &:hover {
