@@ -30,7 +30,7 @@ const IndicatorsSection = styled.div`
   color: ${(props) => props.theme.neutralDark};
   position: relative;
   padding: ${(props) => props.theme.spaces.s600} 0;
-  
+
   .container {
     text-align: center;
   }
@@ -43,7 +43,7 @@ function HomePage() {
   // Use default hero component
   let heroComponent = (
     <FrontHero
-      bgImage={plan.imageUrl}
+      bgImage={plan.mainImage?.smallRendition?.src || plan.imageUrl}
       title={generalContent.siteTitle}
       siteDescription={generalContent.siteDescription}
       actionsDescription={generalContent.actionShortDescription}
