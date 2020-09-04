@@ -1,17 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import dynamic from 'next/dynamic';
-import { Query } from '@apollo/client/react/components';
-import { gql } from '@apollo/client';
-import { withTheme } from 'styled-components';
-import {
-  Card, CardBody, Alert,
-} from 'reactstrap';
+import { isEqual } from 'lodash';
+import { gql, useQuery } from '@apollo/client';
+import { Alert } from 'reactstrap';
 import { linearRegression } from 'simple-statistics';
+import { useTranslation } from 'common/i18n';
+import { useTheme } from 'common/theme';
 
 import ContentLoader from '../common/ContentLoader';
-import { withTranslation } from '../../common/i18n';
-
 
 const GET_INDICATOR_GRAPH_DATA = gql`
   query IndicatorGraphData($id: ID, $plan: ID) {
@@ -27,10 +24,23 @@ const GET_INDICATOR_GRAPH_DATA = gql`
         id
         name
       }
-      values {
+      values(includeDimensions: true) {
         id
         date
         value
+        categories {
+          id
+        }
+      }
+      dimensions {
+        dimension {
+          id
+          name
+          categories {
+            id
+            name
+          }
+        }
       }
       goals(plan: $plan) {
         id
@@ -93,7 +103,6 @@ function makeLayout(indicator) {
   return out;
 }
 
-
 const log10 = Math.log(10);
 
 function capitalizeFirstLetter(s) {
@@ -101,26 +110,90 @@ function capitalizeFirstLetter(s) {
 }
 
 function getSignificantDigitCount(n) {
-  n = Math.abs(String(n).replace('.', '')); // remove decimal and make positive
-  if (n == 0) return 0;
-  while (n != 0 && n % 10 == 0) n /= 10; // kill the 0s at the end of n
+  let val = Math.abs(String(n).replace('.', '')); // remove decimal and make positive
+  if (val === 0) return 0;
+  while (val !== 0 && val % 10 === 0) val /= 10; // kill the 0s at the end of n
 
-  return Math.floor(Math.log(n) / log10) + 1; // get number of digits
+  return Math.floor(Math.log(val) / log10) + 1; // get number of digits
 }
 
 function shouldDrawLine(trace) {
-  if (trace.x.length > 2) return true;
+  if (trace.x.length > 1) return true;
   return false;
+}
+
+function generateCube(dimensions, values, path) {
+  const dim = dimensions[0];
+  const rest = dimensions.slice(1);
+
+  const array = dim.categories.map((cat) => {
+    const catPath = path ? [...path, cat.id] : [cat.id];
+    catPath.sort();
+
+    if (rest.length) return generateCube(rest, values, catPath);
+
+    const found = values.filter((val) => {
+      const ids = val.categories.map((valCat) => valCat.id).sort();
+      return isEqual(ids, catPath);
+    });
+    if (found.length !== 1) {
+      return null;
+    }
+    return found[0].value;
+  });
+  return array;
+}
+
+function getTraces(dimensions, cube, names)
+{
+  const dim = dimensions[0];
+
+  if (dimensions.length == 1) {
+    return [{
+      name: names.join(', '),
+      type: 'bar',
+      x: dim.categories.map((cat) => cat.name),
+      y: cube,
+    }];
+  }
+  let traces = [];
+  const rest = dimensions.splice(1);
+
+  dim.categories.forEach((cat, idx) => {
+    const out = getTraces(rest, cube[idx], (names || []).concat([cat.name]));
+    traces = traces.concat(out);
+  });
+  return traces;
+}
+
+function generateSingleYearPlot(indicator, values, i18n, plotColors) {
+  // Choose the dimension with the most categories as the X axis
+  const dimensions = indicator.dimensions.map((indicatorDim) => indicatorDim.dimension)
+    .sort((a, b) => (a.categories.length - b.categories.length));
+  const cube = generateCube(dimensions, values);
+  const allTraces = [];
+  const dim = dimensions;
+  let path;
+
+  const traces = getTraces(dimensions, cube).map((trace, idx) => ({marker: {color: plotColors[idx + 1]}, ...trace}));
+
+  return {
+    data: traces,
+    layout: {
+      barmode: 'group',
+      title: `${indicator.name} (${values[0].date})`,
+    },
+  };
 }
 
 function generatePlotFromValues(indicator, i18n, plotColors) {
   let onlyIntegers = true;
   let maxDigits = 0;
   const { unit } = indicator;
-  const unitLabel = unit.name === 'no unit' ? '' : (unit.shortName || unit.name)
+  const unitLabel = unit.name === 'no unit' ? '' : (unit.shortName || unit.name);
 
   function processItem(item) {
-    let { date, value } = item;
+    let { date, value, categories } = item;
 
     if (indicator.timeResolution === 'YEAR') {
       // Strip the month-day part
@@ -133,10 +206,16 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
     // to be able to set suitable number formating.
     const digitCount = getSignificantDigitCount(value);
     if (digitCount > maxDigits) maxDigits = digitCount;
-    return { date, value };
+    return { date, value, categories };
   }
 
-  const values = [...indicator.values].sort((a, b) => a.date - b.date).map(processItem);
+  let values = [...indicator.values].sort((a, b) => a.date - b.date).map(processItem);
+  const dates = Array.from(new Set(values.map((item) => item.date)));
+  if (dates.length == 1) {
+    return generateSingleYearPlot(indicator, values, i18n, plotColors);
+  }
+  // Choose only the main (non-dimensional) values for now
+  values = values.filter((item) => !item.categories.length);
 
   // Group goals by scenario
   const scenarios = new Map();
@@ -319,12 +398,13 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
   return plot;
 }
 
-function IndicatorGraph(props) {
+function IndicatorGraph({ indicatorId, plan }) {
   if (!process.browser) {
     return null;
   }
 
-  const { theme, indicator, plan, i18n } = props;
+  const theme = useTheme();
+  const { t, i18n } = useTranslation();
   const plotColors = [
     theme.themeColors.danger,
     theme.brandDark,
@@ -334,8 +414,8 @@ function IndicatorGraph(props) {
     theme.themeColors.info,
   ];
 
-  function fixLayout(indicator, data) {
-    const layout = data.layout;
+  function fixLayout(data) {
+    const { layout } = data;
 
     layout.autosize = true;
     layout.colorway = plotColors;
@@ -351,80 +431,64 @@ function IndicatorGraph(props) {
     layout.yaxis.tickfont.size = 14;
   }
 
+  const { loading, error, data } = useQuery(GET_INDICATOR_GRAPH_DATA, {
+    variables: {
+      id: indicatorId,
+      plan: plan.identifier,
+    },
+  });
+
+  if (loading) return <ContentLoader />;
+  if (error) return (
+    <Alert color="danger">
+      {`${t('error')}: ${error.message}`}
+    </Alert>
+  );
+
+  const { indicator } = data;
+  if (!indicator) return (
+    <Alert color="danger">
+      {t('indicator-not-found')}
+    </Alert>
+  );
+
+  const Plot = dynamic(import('./Plot'));
+
+  const plot = generatePlotFromValues(indicator, i18n, plotColors);
+
+  let plotTitle = '';
+  if (typeof plot.layout.title === 'object' && plot.layout.title !== null) {
+    plotTitle = plot.layout.title.text;
+  } else if (typeof plot.layout.title === 'string') {
+    plotTitle = plot.layout.title;
+  }
+
+  fixLayout(plot); // TODO: do not mutate argument
+
   return (
-
-      <Query query={GET_INDICATOR_GRAPH_DATA} variables={{ id: indicator.id, plan: plan.identifier }}>
-        {({ loading, error, data }) => {
-          if (loading) return <ContentLoader />;
-          if (error) return (
-            <Alert color="danger">
-              Error:
-              {error.message}
-            </Alert>
-          );
-          const Plot = dynamic(import('./Plot'));
-          const { indicator } = data;
-          if (!indicator) return (
-            <Alert color="danger">
-              Mittaria ei löydy
-            </Alert>
-          );
-          let plot;
-          if (indicator.latestGraph) {
-            plot = JSON.parse(indicator.latestGraph.data);
-          } else {
-            plot = generatePlotFromValues(indicator, i18n, plotColors);
-          }
-          let plotTitle = '';
-          if (typeof plot.layout.title === 'object' && plot.layout.title !== null) {
-            plotTitle = plot.layout.title.text;
-          } else if (typeof plot.layout.title === 'string') {
-            plotTitle = plot.layout.title;
-          }
-
-          fixLayout(indicator, plot); // TODO: do not mutate argument
-
-          return (
-            <div>
-              <h5 className="mb-0">{plotTitle}</h5>
-              <Plot
-                data={plot.data}
-                layout={plot.layout}
-                style={{ width: '100%', height: '100%' }}
-                useResizeHandler
-                config={{
-                  locale: 'fi',
-                  displayModeBar: false,
-                  showSendToCloud: true,
-                  staticPlot: false,
-                }}
-              />
-            </div>
-          );
+    <div>
+      <h5 className="mb-0">{plotTitle}</h5>
+      <Plot
+        data={plot.data}
+        layout={plot.layout}
+        style={{ width: '100%', height: '100%' }}
+        useResizeHandler
+        config={{
+          locale: i18n.language,
+          displayModeBar: false,
+          showSendToCloud: true,
+          staticPlot: false,
         }}
-      </Query>
+      />
+    </div>
   );
 }
 
 IndicatorGraph.propTypes = {
-  indicator: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    unit: PropTypes.shape({
-      name: PropTypes.string,
-    }),
-    latestGraph: PropTypes.shape({
-      id: PropTypes.string.isRequired,
-    }),
-    latestValue: PropTypes.shape({
-      value: PropTypes.number.isRequired,
-      date: PropTypes.string.isRequired,
-    }),
-  }).isRequired,
+  indicatorId: PropTypes.string.isRequired,
   plan: PropTypes.shape({
     identifier: PropTypes.string.isRequired,
   }).isRequired,
 };
 
-
-export default withTranslation()(withTheme(IndicatorGraph));
+export default IndicatorGraph;

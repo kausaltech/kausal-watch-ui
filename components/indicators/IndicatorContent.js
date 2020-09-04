@@ -1,17 +1,16 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 
 import {
   Jumbotron as BaseJumbotron, Container, Row, Col,
 } from 'reactstrap';
 import styled from 'styled-components';
-import { Query } from '@apollo/client/react/components';
-import { gql } from '@apollo/client';
+import { gql, useQuery } from '@apollo/client';
 
-import { IndicatorListLink } from '../../common/links';
-import PlanContext from '../../context/plan';
+import { IndicatorListLink } from 'common/links';
+import PlanContext from 'context/plan';
+import { useTranslation } from 'common/i18n';
 
-import { withTranslation } from '../../common/i18n';
 import ContentLoader from '../common/ContentLoader';
 import ErrorMessage from '../common/ErrorMessage';
 import ErrorBoundary from '../common/ErrorBoundary';
@@ -21,7 +20,6 @@ import IndicatorGraph from '../graphs/IndicatorGraph';
 import IndicatorValueSummary from './IndicatorValueSummary';
 import CausalNavigation from './CausalNavigation';
 import ActionsTable from '../actions/ActionsTable';
-
 
 const GET_INDICATOR_DETAILS = gql`
   query IndicatorDetails($id: ID, $plan: ID, $identifier: ID) {
@@ -144,8 +142,24 @@ const Section = styled.section`
   }
 `;
 
-function IndicatorDetails(props) {
-  const { t, indicator, plan } = props;
+function IndicatorDetails({ id }) {
+  const plan = useContext(PlanContext);
+  const { t } = useTranslation();
+  const { data, loading, error } = useQuery(GET_INDICATOR_DETAILS, {
+    variables: {
+      id,
+      plan: plan.identifier,
+    },
+  });
+
+  if (loading) return <ContentLoader />;
+  if (error) return <ErrorMessage message={error.message} />;
+
+  const { indicator } = data;
+  if (!indicator) {
+    return <ErrorMessage statusCode={404} message={ t('indicator-not-found') } />;
+  }
+
   const hasImpacts = indicator.relatedCauses.length > 0 || indicator.relatedEffects.length > 0;
 
   return (
@@ -163,8 +177,8 @@ function IndicatorDetails(props) {
             </IndicatorListLink>
           </IndicatorLevel>
           <h1>{indicator.name}</h1>
-          { (indicator.goals.length > 0  || indicator.goals.length > 0) &&
-          (
+          { (indicator.goals.length > 0 || indicator.goals.length > 0)
+          && (
             <IndicatorValueSummary
               timeResolution={indicator.timeResolution}
               values={indicator.values}
@@ -180,14 +194,14 @@ function IndicatorDetails(props) {
             <div className="mt-4 text-content" dangerouslySetInnerHTML={{ __html: indicator.description }} />
           </Col>
         </Row>
-        {(indicator.latestGraph || indicator.values.length > 0) &&
-          (
+        {(indicator.latestGraph || indicator.values.length > 0)
+        && (
           <Row>
             <Col className="mb-5">
-              <ErrorBoundary><IndicatorGraph indicator={indicator} plan={plan} /></ErrorBoundary>
+              <ErrorBoundary><IndicatorGraph indicatorId={indicator.id} plan={plan} /></ErrorBoundary>
             </Col>
           </Row>
-          )}
+        )}
       </Container>
       { indicator.actions.length > 0 && (
         <Section>
@@ -218,55 +232,9 @@ function IndicatorDetails(props) {
   );
 }
 
+
 IndicatorDetails.propTypes = {
-  indicator: PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    goals: PropTypes.arrayOf(PropTypes.shape({
-      value: PropTypes.number.isRequired,
-    })),
-  }).isRequired,
-};
-
-
-class IndicatorContent extends React.Component {
-  static contextType = PlanContext;
-
-  render() {
-    const { t, id } = this.props;
-    const plan = this.context;
-
-    return (
-      <Query query={GET_INDICATOR_DETAILS} variables={{ id, plan: plan.identifier }}>
-        {({ loading, error, data }) => {
-          if (loading) return <ContentLoader />;
-          if (error) return <ErrorMessage message={error.message} />;
-          const { indicator } = data;
-          if (!indicator) {
-            return <ErrorMessage statusCode={404} message={ t('indicator-not-found') } />
-          }
-          return <IndicatorDetails indicator={indicator} plan={plan} t={t}/>;
-        }}
-      </Query>
-    );
-  }
-}
-
-IndicatorContent.propTypes = {
   id: PropTypes.string.isRequired,
-  t: PropTypes.func.isRequired,
 };
 
-IndicatorDetails.propTypes = {
-  plan: PropTypes.shape({}).isRequired,
-  indicator: PropTypes.shape({
-    actions: PropTypes.arrayOf(PropTypes.shape).isRequired,
-    relatedCauses: PropTypes.arrayOf(PropTypes.shape).isRequired,
-    relatedEffects: PropTypes.arrayOf(PropTypes.shape).isRequired,
-    name: PropTypes.string.isRequired,
-    level: PropTypes.string.isRequired,
-    timeResolution: PropTypes.string.isRequired,
-  }).isRequired,
-  t: PropTypes.func.isRequired,
-}
-
-export default withTranslation('common')(IndicatorContent);
+export default IndicatorDetails;
