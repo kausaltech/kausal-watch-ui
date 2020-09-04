@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import PropTypes, { number, exact, string } from 'prop-types';
+import PropTypes, { number, exact, string, oneOfType } from 'prop-types';
 import { ThemeContext } from 'styled-components';
 
 // FIXME
@@ -22,7 +22,7 @@ export const themeProp = exact({
   actionNotStartedColor: string.isRequired,
   actionOnTimeColor: string.isRequired,
   actionSeverelyLateColor: string.isRequired,
-  badgeBorderRadius: string.isRequired,
+  badgeBorderRadius: oneOfType([string, number]).isRequired,
   badgeFontWeight: number.isRequired,
   badgePaddingX: string.isRequired,
   badgePaddingY: string.isRequired,
@@ -33,10 +33,10 @@ export const themeProp = exact({
   breakpointMd: string.isRequired,
   breakpointSm: string.isRequired,
   breakpointXl: string.isRequired,
-  btnBorderRadius: string.isRequired,
+  btnBorderRadius: oneOfType([string, number]).isRequired,
   btnBorderWidth: string.isRequired,
   cardBorderRadius: number.isRequired,
-  cardBorderWidth: string.isRequired,
+  cardBorderWidth: oneOfType([string, number]).isRequired,
   causalityDecreasesColor: string.isRequired,
   causalityIncreasesColor: string.isRequired,
   causalityIsPartOfColor: string.isRequired,
