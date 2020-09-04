@@ -4,8 +4,6 @@
   "version": "1.0.0",
   "author": "Tero Tikkanen <tero.tikkanen@kausal.tech>",
   "dependencies": {
-    "3": "^2.1.0",
-    "-": "^0.0.1",
     "@apollo/client": "^3.1.3",
     "@apollo/react-ssr": "^4.0.0",
     "@n8tb1t/use-scroll-position": "^1.0.43",
@@ -110,7 +108,7 @@
   "engines": {
     "node": "14.x"
   },
-  "browsers": [
+  "browserslist": [
     "> 1%",
     "last 4 versions"
   ]
