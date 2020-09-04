@@ -167,8 +167,10 @@ function ActionCard(props) {
   const { mergedWith, status } = action;
 
   // Use different styling for merged action
-  const bgClass = mergedWith === null ? `bg-${status.identifier}` : 'bg-merged';
-  const statusName = mergedWith === null ? status.name : `${t('action-status-merged')} ${mergedWith.identifier}`;
+  let bgClass = status ? `bg-${status.identifier}` : null;
+  if (mergedWith) bgClass = 'bg-merged';
+  let statusName = status?.name;
+  if (mergedWith) statusName = `${t('action-status-merged')} ${mergedWith.identifier}`;
 
   return (
     <ActionLink action={action}>
