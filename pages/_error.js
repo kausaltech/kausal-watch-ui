@@ -3,12 +3,12 @@ import * as Sentry from '@sentry/browser';
 import NextErrorComponent from 'next/error';
 import getConfig from 'next/config';
 
-import { i18n } from 'common/i18n';
+import { useTranslation } from 'common/i18n';
 import Layout from '../components/layout';
 
 function Error({ statusCode, hasGetInitialPropsRun, err, errorMessage }) {
   let msg = errorMessage;
-  const { t } = i18n;
+  const { t } = useTranslation();
 
   if (!msg) {
     if (statusCode) {
