@@ -144,8 +144,6 @@ function WatchApp(props: WatchAppProps) {
     Router.events.on('routeChangeComplete', onRouteChange);
   }
 
-  console.log(props.theme);
-
   setTheme(props.theme);
 
   return (
