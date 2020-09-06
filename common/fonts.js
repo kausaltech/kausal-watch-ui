@@ -1,11 +1,24 @@
 import FontFaceObserver from 'fontfaceobserver';
 
 const Fonts = (family, styleUrl) => {
-  const link = document.createElement('link');
-  link.href = styleUrl;
-  link.rel = 'stylesheet';
+  if (!document.getElementById('global-font-styles')) {
+    const link = document.createElement('link');
+    link.href = styleUrl;
+    link.rel = 'stylesheet';
+    link.setAttribute('id', 'global-font-styles');
 
-  document.head.appendChild(link);
+    // Stylesheets should go before the scripts so that rendering is not blocked.
+    const stylesheets = document.head.querySelectorAll('[rel="stylesheet"]');
+    if (stylesheets.length) {
+      stylesheets[stylesheets.length - 1].after(link);
+    } else {
+      document.head.appendChild(link);
+    }
+  }
+
+  const doc = document.documentElement;
+
+  if (doc.classList.contains('has-theme-fonts')) return;
 
   const ThemeFontFamily400 = new FontFaceObserver(family, {
     weight: 400,
