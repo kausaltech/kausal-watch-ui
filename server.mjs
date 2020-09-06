@@ -8,6 +8,7 @@ import originalUrl from 'original-url';
 import cacheableResponse from 'cacheable-response';
 import parseCacheControl from '@tusbar/cache-control';
 import YAML from 'yaml'
+import normalizeUrl from 'normalize-url';
 
 
 console.log('Starting server');
@@ -32,9 +33,19 @@ if (('ENABLE_CACHE' in process.env)
     get: async ({ req, res, pagePath, queryParams }) => {
       if ('force' in req.query) delete req.query.force;
       const data = await app.renderToHTML(req, res, pagePath, queryParams);
-      return { data };
+      return { data, statusCode: res.statusCode };
     },
-    send: ({ data, res }) => res.send(data),
+    send: ({ statusCode, data, res }) => {
+      res.statusCode = statusCode;
+      res.send(data);
+    },
+    getKey: ({ req }) => {
+      const url = originalUrl(req);
+      const baseKey = normalizeUrl(url.full, {
+        removeQueryParameters: ['force', /^utm_\w+/i]
+      });
+      return baseKey;
+    }
   });
 }
 
