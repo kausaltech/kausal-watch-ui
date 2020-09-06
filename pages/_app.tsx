@@ -10,11 +10,9 @@ import { Router } from 'routes';
 import { captureException } from 'common/sentry';
 import { appWithTranslation, i18n } from 'common/i18n';
 import withApollo from 'common/apollo';
-import theme, { setTheme } from 'common/theme';
+import theme, { setTheme, applyTheme } from 'common/theme';
 import PlanContext from 'context/plan';
 import SiteContext from 'context/site';
-
-require('../styles/default/main.scss');
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -121,16 +119,19 @@ interface SiteContext {
   path: string;
 }
 
-
-interface WatchAppProps extends AppProps {
-  apollo: ApolloClient<InMemoryCache>,
+interface GlobalProps {
   siteContext: SiteContext,
+  themeProps: any,
   plan: any,
-  theme: any,
+}
+
+
+interface WatchAppProps extends AppProps, GlobalProps {
+  apollo: ApolloClient<InMemoryCache>,
 }
 
 function WatchApp(props: WatchAppProps) {
-  const { Component, pageProps, apollo, plan, siteContext } = props;
+  const { Component, pageProps, apollo, plan, siteContext, themeProps } = props;
 
   if (!piwik && process.browser && publicRuntimeConfig.matomoURL && publicRuntimeConfig.matomoSiteId) {
     piwik = new ReactPiwik({
@@ -144,7 +145,7 @@ function WatchApp(props: WatchAppProps) {
     Router.events.on('routeChangeComplete', onRouteChange);
   }
 
-  setTheme(props.theme);
+  if (process.browser) setTheme(themeProps);
 
   return (
     <SiteContext.Provider value={siteContext}>
@@ -164,7 +165,7 @@ let cachedPlan;
 const cachedPlansForHostnames = {};
 const cachedThemesForHostnames = {};
 
-async function getPlanAndTheme(ctx) {
+async function getPlan(ctx) {
   const { apolloClient, req } = ctx;
   const { defaultPlanIdentifier } = publicRuntimeConfig;
   let plan;
@@ -212,31 +213,7 @@ async function getPlanAndTheme(ctx) {
   if (queryVariables.domain) cachedPlansForHostnames[queryVariables.domain] = plan;
   if (req) req.requestPlan = plan;
 
-  let themeVars = {};
-  // Initialize theme variables
-  if (!process.browser && queryVariables.domain) {
-    // FIXME: Get this from GraphQL
-    themeVars = cachedThemesForHostnames[queryVariables.domain];
-    if (!themeVars || process.env.DISABLE_THEME_CACHE) {
-      const fs = require('fs');
-      try {
-        const data = fs.readFileSync(`./styles/${plan.identifier}.json`, {encoding: 'utf8'});
-        themeVars = JSON.parse(data);
-      } catch (error) {
-        if (process.env.NODE_ENV !== 'production') {
-          console.error(error);
-        } else {
-          captureException(error, ctx);
-        }
-        themeVars = {};
-      }
-      if (!process.env.DISABLE_THEME_CACHE) {
-        cachedThemesForHostnames[queryVariables.domain] = themeVars;
-      }
-    }
-  }
-
-  return {plan, theme: themeVars};
+  return plan;
 }
 
 let siteContext;
@@ -251,7 +228,10 @@ WatchApp.getInitialProps = async (appContext) => {
   if (siteContext.instanceType !== instanceType) {
     siteContext.instanceType = instanceType;
   }
-  if (ctx.req) {
+
+  let globalProps: GlobalProps;
+
+  if (!process.browser) {
     const { currentURL } = ctx.req;
 
     // The current, full URL is used in SSR to render the opengraph tags.
@@ -260,17 +240,39 @@ WatchApp.getInitialProps = async (appContext) => {
 
     // For SSR, the Apollo cache should be cleared on every request to
     // avoid stale data.
-    apolloClient.resetStore();
+    await apolloClient.resetStore();
+    let plan;
+    try {
+      plan = await getPlan(ctx);
+    } catch (error) {
+      captureException(error, ctx);
+      if (ctx.res) {
+        ctx.res.statusCode = 500;
+      }
+      throw error;
+    }
+
+    applyTheme(plan.identifier);
+
+    globalProps = {
+      plan,
+      themeProps: theme,
+      siteContext
+    }
+  } else {
+    // @ts-ignore
+    const { siteContext, plan, themeProps } = window.__NEXT_DATA__.props;
+    globalProps = {
+      plan,
+      themeProps: theme,
+      siteContext
+    }
   }
 
   let appProps;
-  let plan, themeVars;
 
   try {
     appProps = await App.getInitialProps(appContext);
-    const data = await getPlanAndTheme(ctx);
-    plan = data.plan;
-    themeVars = data.theme;
   } catch (error) {
     // Capture errors that happen during a page's getInitialProps.
     // This will work on both client and server sides.
@@ -281,11 +283,7 @@ WatchApp.getInitialProps = async (appContext) => {
     throw error;
   }
 
-  appProps.plan = plan;
-  appProps.theme = themeVars;
-  appProps.siteContext = siteContext;
-
-  return { ...appProps };
+  return { ...appProps, ...globalProps };
 };
 
 function I18nApp(props) {

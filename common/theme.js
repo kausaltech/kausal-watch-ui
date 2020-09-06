@@ -4,18 +4,20 @@ import { ThemeContext } from 'styled-components';
 
 /* eslint-disable */
 const defaultTheme = require('sass-extract-loader?{"plugins": ["sass-extract-js"]}!../styles/default/_theme-variables.scss');
+require('../styles/default/main.scss');
 
-if (process.env.THEME_IDENTIFIER) {
-  /* eslint-disable */
-  const customTheme = require('sass-extract-loader?{"plugins": ["sass-extract-js"]}!../styles/' + process.env.THEME_IDENTIFIER + '/_theme-variables.scss');
-  if (!process.browser && process.env.SYNC_THEME) {
-    const fs = require('fs');
-    const YAML = require('yaml');
+const themeCache = {};
 
-    fs.writeFileSync(`styles/${process.env.THEME_IDENTIFIER}.yaml`, YAML.stringify(customTheme));
-    fs.writeFileSync(`styles/${process.env.THEME_IDENTIFIER}.json`, JSON.stringify(customTheme, null, 4));
+if (!process.browser) {
+  // Import the _theme-variables.scss files from all the themes and store them
+  // in an in-memory cache on the server side.
+  function importAllThemes(r) {
+    r.keys().forEach((key) => {
+      const themeIdentifier = key.split('/')[1];
+      themeCache[themeIdentifier] = r(key);
+    });
   }
-  Object.assign(defaultTheme, customTheme);
+  importAllThemes(require.context('sass-extract-loader?{"plugins": ["sass-extract-js"]}!../styles', true, /_theme-variables\.scss$/));
 }
 /* eslint-enable */
 
@@ -161,6 +163,16 @@ export function setTheme(newTheme) {
 
   Object.getOwnPropertyNames(theme).forEach((prop) => delete theme[prop]);
   Object.assign(theme, out);
+}
+
+export function applyTheme(themeIdentifier) {
+  let themeProps = themeCache[themeIdentifier];
+
+  if (!themeProps) {
+    console.error(`Theme with identifier ${themeIdentifier} not found`);
+    themeProps = {};
+  }
+  setTheme(themeProps);
 }
 
 export default theme;
