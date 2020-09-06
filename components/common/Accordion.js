@@ -135,7 +135,7 @@ const LinkCopyButton = React.memo((props) => {
         )}
       </Tooltip>
       <CopyToClipboard
-        text={`${site.domain}${site.path}#q${identifier}`}
+        text={`${site.baseURL}${site.path}#q${identifier}`}
         id={`tooltip-${identifier}`}
         onCopy={onCopy}
       >

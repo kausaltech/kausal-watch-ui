@@ -4,13 +4,15 @@ import getConfig from 'next/config';
 import { gql, ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
 import ReactPiwik from 'react-piwik';
 import { I18nextProvider, withSSR } from 'react-i18next';
+import { ThemeProvider } from 'styled-components';
 
 import { Router } from 'routes';
 import { captureException } from 'common/sentry';
 import { appWithTranslation, i18n } from 'common/i18n';
+import withApollo from 'common/apollo';
+import theme, { setTheme } from 'common/theme';
 import PlanContext from 'context/plan';
 import SiteContext from 'context/site';
-import withApollo from '../common/apollo';
 
 require('../styles/default/main.scss');
 
@@ -25,9 +27,14 @@ if (process.browser && process.env.NODE_ENV !== 'production') {
   });
 }
 
+interface GetPlanParams {
+  identifier?: string;
+  domain?: string;
+}
+
 const GET_PLAN = gql`
-  query Plan($plan: ID!) {
-    plan(id: $plan) {
+  query Plan($identifier: ID, $domain: String) {
+    plan(id: $identifier, domain: $domain) {
       id
       identifier
       name
@@ -118,12 +125,13 @@ interface SiteContext {
 interface WatchAppProps extends AppProps {
   apollo: ApolloClient<InMemoryCache>,
   siteContext: SiteContext,
-  plan: any;
+  plan: any,
+  theme: any,
 }
 
-function WatchApp({
-  Component, pageProps, apollo, plan, siteContext,
-}: WatchAppProps) {
+function WatchApp(props: WatchAppProps) {
+  const { Component, pageProps, apollo, plan, siteContext } = props;
+
   if (!piwik && process.browser && publicRuntimeConfig.matomoURL && publicRuntimeConfig.matomoSiteId) {
     piwik = new ReactPiwik({
       url: publicRuntimeConfig.matomoURL,
@@ -136,50 +144,101 @@ function WatchApp({
     Router.events.on('routeChangeComplete', onRouteChange);
   }
 
+  console.log(props.theme);
+
+  setTheme(props.theme);
+
   return (
     <SiteContext.Provider value={siteContext}>
-      <ApolloProvider client={apollo}>
-        <PlanContext.Provider value={plan}>
-          <Component {...pageProps} />
-        </PlanContext.Provider>
-      </ApolloProvider>
+      <ThemeProvider theme={theme}>
+        <ApolloProvider client={apollo}>
+          <PlanContext.Provider value={plan}>
+            <Component {...pageProps} />
+          </PlanContext.Provider>
+        </ApolloProvider>
+      </ThemeProvider>
     </SiteContext.Provider>
   );
 }
 WatchApp.whyDidYouRender = true;
 
 let cachedPlan;
+const cachedPlansForHostnames = {};
+const cachedThemesForHostnames = {};
 
-async function getPlan(ctx) {
+async function getPlanAndTheme(ctx) {
   const { apolloClient, req } = ctx;
-  // FIXME: Determine identifier based on hostname
-  const { planIdentifier } = publicRuntimeConfig;
+  const { defaultPlanIdentifier } = publicRuntimeConfig;
   let plan;
 
   if (process.browser && cachedPlan) return cachedPlan;
   if (req?.requestPlan) return req.requestPlan;
 
+  const queryVariables: GetPlanParams = {
+    identifier: '',
+    domain: '',
+  }
+
+  if (defaultPlanIdentifier) {
+    queryVariables.identifier = defaultPlanIdentifier;
+  } else {
+    queryVariables.domain = req?.currentURL?.hostname;
+  }
+
   try {
     const { data, error } = await apolloClient.query({
       query: GET_PLAN,
-      variables: {
-        plan: planIdentifier,
-      },
+      variables: queryVariables,
     });
     if (error) throw error;
     plan = data.plan;
+    if (!plan) {
+      throw new Error(`No plan found for identifier '${queryVariables.identifier}' and hostname '${queryVariables.domain}'`)
+    }
   } catch (error) {
     // We got an error from the API, but if we have a cached version of the plan, use that.
+    if (queryVariables.domain) {
+      plan = cachedPlansForHostnames[queryVariables.domain];
+    } else {
+      plan = cachedPlan;
+    }
     if (cachedPlan) {
       captureException(error, ctx);
-      return cachedPlan;
+      plan = cachedPlan;
+    } else {
+      // No? Nothing we can do...
+      throw error;
     }
-    // No? Nothing we can do...
-    throw error;
   }
   cachedPlan = plan;
+  if (queryVariables.domain) cachedPlansForHostnames[queryVariables.domain] = plan;
   if (req) req.requestPlan = plan;
-  return plan;
+
+  let themeVars = {};
+  // Initialize theme variables
+  if (!process.browser && queryVariables.domain) {
+    // FIXME: Get this from GraphQL
+    themeVars = cachedThemesForHostnames[queryVariables.domain];
+    if (!themeVars || process.env.DISABLE_THEME_CACHE) {
+      const fs = require('fs');
+      try {
+        const data = fs.readFileSync(`./styles/${plan.identifier}.json`, {encoding: 'utf8'});
+        themeVars = JSON.parse(data);
+      } catch (error) {
+        if (process.env.NODE_ENV !== 'production') {
+          console.error(error);
+        } else {
+          captureException(error, ctx);
+        }
+        themeVars = {};
+      }
+      if (!process.env.DISABLE_THEME_CACHE) {
+        cachedThemesForHostnames[queryVariables.domain] = themeVars;
+      }
+    }
+  }
+
+  return {plan, theme: themeVars};
 }
 
 let siteContext;
@@ -207,11 +266,13 @@ WatchApp.getInitialProps = async (appContext) => {
   }
 
   let appProps;
-  let plan;
+  let plan, themeVars;
 
   try {
     appProps = await App.getInitialProps(appContext);
-    plan = await getPlan(ctx);
+    const data = await getPlanAndTheme(ctx);
+    plan = data.plan;
+    themeVars = data.theme;
   } catch (error) {
     // Capture errors that happen during a page's getInitialProps.
     // This will work on both client and server sides.
@@ -223,6 +284,7 @@ WatchApp.getInitialProps = async (appContext) => {
   }
 
   appProps.plan = plan;
+  appProps.theme = themeVars;
   appProps.siteContext = siteContext;
 
   return { ...appProps };

@@ -3,19 +3,21 @@ import * as Sentry from '@sentry/browser';
 import NextErrorComponent from 'next/error';
 import getConfig from 'next/config';
 
+import { i18n } from 'common/i18n';
 import Layout from '../components/layout';
 
 function Error({ statusCode, hasGetInitialPropsRun, err, errorMessage }) {
-  console.log('render error');
+  let msg = errorMessage;
+  const { t } = i18n;
 
-  if (!errorMessage) {
+  if (!msg) {
     if (statusCode) {
-      errorMessage = `Virhe ${statusCode}`;
+      msg = t('error-with-code', { code: statusCode });
       if (statusCode === 404) {
-        errorMessage = 'Sivua ei löydy';
+        msg = t('page-not-found');
       }
     } else {
-      errorMessage = 'Tapahtui virhe';
+      msg = t('error-occurred');
     }
   }
   return (
@@ -23,7 +25,7 @@ function Error({ statusCode, hasGetInitialPropsRun, err, errorMessage }) {
       <div className="mb-5">
         <div className="jumbotron" style={{ marginBottom: '6rem' }}>
           <div className="container">
-            <h1>{errorMessage}</h1>
+            <h1>{msg}</h1>
           </div>
         </div>
       </div>

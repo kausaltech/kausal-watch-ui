@@ -2,8 +2,10 @@ import React from 'react';
 
 type SiteContextProps = {
   instanceType: string,
-  domain: string,
-  theme: string,
+  themeIdentifier: string,
+  hostname: string,
+  baseURL: string,
+  path: string,
 };
 
 const SiteContext = React.createContext<Partial<SiteContextProps>>({

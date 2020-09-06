@@ -6,7 +6,7 @@ import {
 } from 'reactstrap';
 import SVG from 'react-inlinesvg';
 import styled, { withTheme } from 'styled-components';
-import { themeProp } from 'common/theme';
+import { themeProp } from 'common/theme';
 import { useScrollPosition } from '@n8tb1t/use-scroll-position';
 import { transparentize } from 'polished';
 import { useTranslation } from 'common/i18n';

@@ -4,7 +4,9 @@ const path = require('path');
 const webpack = require('webpack');
 const withSass = require('@zeit/next-sass');
 const withImages = require('next-images');
-const withBundleAnalyzer = require('@zeit/next-bundle-analyzer');
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: !!process.env.ANALYZE_BUNDLE,
+});
 const withSourceMaps = require('@zeit/next-source-maps');
 const SentryWebpackPlugin = require('@sentry/webpack-plugin');
 const { nextI18NextRewrites } = require('next-i18next/rewrites');
@@ -12,16 +14,7 @@ const { nextI18NextRewrites } = require('next-i18next/rewrites');
 const basePath = '';
 
 // Set default plan identifier
-process.env.PLAN_IDENTIFIER = process.env.PLAN_IDENTIFIER || 'hnh2035';
 process.env.SENTRY_ROOTDIR = __dirname;
-
-function getAllThemes() {
-  const styleDir = path.join(__dirname, 'styles');
-  return fs.readdirSync(styleDir).filter((item) => {
-    if (item === 'app') return false;
-    return fs.lstatSync(path.join(styleDir, item)).isDirectory();
-  });
-}
 
 const SUPPORTED_LANGUAGES = ['fi', 'en', 'sv'];
 const DEFAULT_LANGUAGES = ['fi', 'en'];
@@ -43,8 +36,6 @@ function generateLocaleConfig() {
   };
 }
 
-const themes = getAllThemes();
-
 const config = withSourceMaps(withBundleAnalyzer(withImages(withSass({
   env: {
     SENTRY_DSN: process.env.SENTRY_DSN,
@@ -63,7 +54,8 @@ const config = withSourceMaps(withBundleAnalyzer(withImages(withSass({
   publicRuntimeConfig: { // Will be available on both server and client
     aplansApiBaseURL: process.env.APLANS_API_BASE_URL || 'https://api.watch.kausal.tech/v1',
     // the default value for PLAN_IDENTIFIER is set below in webpack config
-    planIdentifier: process.env.PLAN_IDENTIFIER,
+    defaultPlanIdentifier: process.env.PLAN_IDENTIFIER,
+    defaultThemeIdentifier: process.env.THEME_IDENTIFIER,
     instanceType: process.env.INSTANCE_TYPE || 'development',
     matomoURL: process.env.MATOMO_URL,
     matomoSiteId: process.env.MATOMO_SITE_ID,
@@ -71,18 +63,6 @@ const config = withSourceMaps(withBundleAnalyzer(withImages(withSass({
   },
   experimental: {
     modern: true,
-  },
-  analyzeServer: ['server', 'both'].includes(process.env.BUNDLE_ANALYZE),
-  analyzeBrowser: ['browser', 'both'].includes(process.env.BUNDLE_ANALYZE),
-  bundleAnalyzerConfig: {
-    server: {
-      analyzerMode: 'static',
-      reportFilename: '../bundles/server.html',
-    },
-    browser: {
-      analyzerMode: 'static',
-      reportFilename: '../bundles/client.html',
-    },
   },
   /* eslint no-param-reassign: ["error", { "props": true, "ignorePropertyModificationsFor": ["cfg"] }] */
   webpack(cfg, options) {
@@ -101,16 +81,13 @@ const config = withSourceMaps(withBundleAnalyzer(withImages(withSass({
     // Ignore all locale files of moment.js
     cfg.plugins.push(new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/));
 
-    // If there is a separate theme for PLAN_IDENTIFIER, use that, otherwise
-    // use the default theme.
-    const defaultThemeIdentifier = themes.indexOf(process.env.PLAN_IDENTIFIER) >= 0
-      ? process.env.PLAN_IDENTIFIER : 'default';
-
     cfg.plugins.push(new webpack.EnvironmentPlugin({
       PLAN_IDENTIFIER: '',
-      THEME_IDENTIFIER: defaultThemeIdentifier,
+      THEME_IDENTIFIER: '',
+      DISABLE_THEME_CACHE: '',
       MATOMO_URL: '',
       MATOMO_SITE_ID: '',
+      SYNC_THEME: '',
     }));
 
     // cfg.optimization.minimize = false;

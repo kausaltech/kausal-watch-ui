@@ -50,8 +50,9 @@ function getCurrentURL(req) {
     port = `:${obj.port}`;
   }
   const path = obj.pathname.replace(/\/$/, ''); // strip trailing slash
-  const domain = `${obj.protocol}//${obj.hostname}${port}`;
-  return { domain, path };
+  const baseURL = `${obj.protocol}//${obj.hostname}${port}`;
+  const hostname = obj.hostname;
+  return { baseURL, path, hostname };
 }
 
 Error.stackTraceLimit = 30;

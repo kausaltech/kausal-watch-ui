@@ -2,17 +2,52 @@ import { useContext } from 'react';
 import PropTypes, { number, exact, string, oneOfType } from 'prop-types';
 import { ThemeContext } from 'styled-components';
 
-// FIXME
-const defaultTheme =require('sass-extract-loader?{"plugins": ["sass-extract-js"]}!../styles/default/_theme-variables.scss');
-const customTheme = require('sass-extract-loader?{"plugins": ["sass-extract-js"]}!../styles/' + process.env.THEME_IDENTIFIER + '/_theme-variables.scss');
+/* eslint-disable */
+const defaultTheme = require('sass-extract-loader?{"plugins": ["sass-extract-js"]}!../styles/default/_theme-variables.scss');
 
-const theme = Object.assign(defaultTheme, customTheme);
+if (process.env.THEME_IDENTIFIER) {
+  /* eslint-disable */
+  const customTheme = require('sass-extract-loader?{"plugins": ["sass-extract-js"]}!../styles/' + process.env.THEME_IDENTIFIER + '/_theme-variables.scss');
+  if (!process.browser && process.env.SYNC_THEME) {
+    const fs = require('fs');
+    const YAML = require('yaml');
 
-export function useTheme()
-{
+    fs.writeFileSync(`styles/${process.env.THEME_IDENTIFIER}.yaml`, YAML.stringify(customTheme));
+    fs.writeFileSync(`styles/${process.env.THEME_IDENTIFIER}.json`, JSON.stringify(customTheme, null, 4));
+  }
+  Object.assign(defaultTheme, customTheme);
+}
+/* eslint-enable */
+
+const theme = {};
+
+export function useTheme() {
   return useContext(ThemeContext);
 }
 
+let css;
+
+if (process.env.NODE_ENV === 'development') {
+  const csstree = require('css-tree');
+
+  css = (cssPropName) => (props, propName) => {
+    let val = props[propName];
+    if (val === null || val === undefined) {
+      val = '';
+    } else if (!isNaN(val)) {
+      val = val.toString();
+    }
+    const ast = csstree.parse(val, { context: 'value' });
+    const ret = csstree.lexer.matchProperty(cssPropName, ast);
+    if (ret.error) {
+      throw new Error(`${propName} validation failed: ${ret.error.message}`);
+    }
+  };
+} else {
+  css = () => () => {
+    throw new Error('css validation attempted in production');
+  };
+}
 export const themeProp = exact({
   actionColor: string.isRequired,
   actionColorFg: string.isRequired,
@@ -33,13 +68,13 @@ export const themeProp = exact({
   breakpointMd: string.isRequired,
   breakpointSm: string.isRequired,
   breakpointXl: string.isRequired,
-  btnBorderRadius: oneOfType([string, number]).isRequired,
-  btnBorderWidth: string.isRequired,
-  cardBorderRadius: number.isRequired,
-  cardBorderWidth: oneOfType([string, number]).isRequired,
-  causalityDecreasesColor: string.isRequired,
-  causalityIncreasesColor: string.isRequired,
-  causalityIsPartOfColor: string.isRequired,
+  btnBorderRadius: css('border-radius'),
+  btnBorderWidth: css('border-width'),
+  cardBorderRadius: css('border-radius'),
+  cardBorderWidth: css('border-width'),
+  causalityDecreasesColor: css('color'),
+  causalityIncreasesColor: css('color'),
+  causalityIsPartOfColor: css('color'),
   componentActiveBg: string.isRequired,
   customSelectIndicator: string.isRequired,
   fontFamily: string.isRequired,
@@ -120,6 +155,12 @@ export const themeProp = exact({
   themeLogoWhiteUrl: string.isRequired,
 });
 
-PropTypes.checkPropTypes({ theme: themeProp.isRequired }, { theme }, 'prop', 'GlobalTheme');
+export function setTheme(newTheme) {
+  const out = { ...defaultTheme, ...newTheme };
+  PropTypes.checkPropTypes({ theme: themeProp.isRequired }, { theme: out }, 'prop', 'GlobalTheme');
+
+  Object.getOwnPropertyNames(theme).forEach((prop) => delete theme[prop]);
+  Object.assign(theme, out);
+}
 
 export default theme;

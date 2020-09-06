@@ -4,7 +4,7 @@ import Head from 'next/head';
 
 import styled, { ThemeProvider } from 'styled-components';
 
-import { withTranslation } from 'common/i18n';
+import { useTranslation } from 'common/i18n';
 import PlanContext from 'context/plan';
 import SiteContext from 'context/site';
 import ThemedGlobalStyles from 'common/ThemedGlobalStyles';
@@ -20,44 +20,48 @@ const Content = styled.main`
 function Layout({ children }) {
   const plan = useContext(PlanContext);
   const site = useContext(SiteContext);
+  const { t } = useTranslation('common');
   const generalContent = plan.generalContent || {};
   const siteTitle = generalContent.siteTitle || plan.name;
+  const iconBase = site.theme ? `/static/images/${site.theme}/favicon` : null;
 
   return (
-    <ThemeProvider theme={theme}>
-      <div>
-        <Meta />
-        <ThemedGlobalStyles />
-        <Head>
-          <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-          <meta property="og:type" content="website" />
-          {site.domain && (
-            <meta property="og:url" content={site.domain + site.path} />
-          )}
-          <meta property="og:site_name" content={siteTitle} />
-          <link rel="shortcut icon" href={`/static/images/${process.env.THEME_IDENTIFIER}/favicon/favicon.ico`} type="image/x-icon" />
-          <link rel="apple-touch-icon" sizes="180x180" href={`/static/images/${process.env.THEME_IDENTIFIER}/favicon/apple-touch-icon.png`} />
-          <link rel="icon" type="image/png" sizes="32x32" href={`/static/images/${process.env.THEME_IDENTIFIER}/favicon/favicon-32x32.png`} />
-          <link rel="icon" type="image/png" sizes="16x16" href={`/static/images/${process.env.THEME_IDENTIFIER}/favicon/favicon-16x16.png`} />
-          <link rel="mask-icon" href={`/static/images/${process.env.THEME_IDENTIFIER}/favicon/safari-pinned-tab.svg`} color={theme.brandDark} />
-          { theme.themeCustomStylesUrl && <link rel="stylesheet" type="text/css" href={theme.themeCustomStylesUrl} />}
-          <meta name="msapplication-TileColor" content={theme.brandDark} />
-          <meta name="theme-color" content="#ffffff" />
-        </Head>
-        <Header siteTitle={siteTitle} />
-        <Content>
-          {children}
-        </Content>
-        <Footer />
-      </div>
-    </ThemeProvider>
+    <>
+      <Meta />
+      <ThemedGlobalStyles />
+      <Head>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <meta property="og:type" content="website" />
+        {site.baseURL && (
+          <meta property="og:url" content={site.baseURL + site.path} />
+        )}
+        <meta property="og:site_name" content={siteTitle} />
+        {iconBase && (
+          <>
+            <link rel="shortcut icon" href={`${iconBase}/favicon.ico`} type="image/x-icon" />
+            <link rel="apple-touch-icon" sizes="180x180" href={`${iconBase}/apple-touch-icon.png`} />
+            <link rel="icon" type="image/png" sizes="32x32" href={`${iconBase}/favicon-32x32.png`} />
+            <link rel="icon" type="image/png" sizes="16x16" href={`${iconBase}/favicon-16x16.png`} />
+            <link rel="mask-icon" href={`${iconBase}/safari-pinned-tab.svg`} color={theme.brandDark} />
+          </>
+        )}
+        { theme.themeCustomStylesUrl && <link rel="stylesheet" type="text/css" href={theme.themeCustomStylesUrl} />}
+        <meta name="msapplication-TileColor" content={theme.brandDark} />
+        <meta name="theme-color" content="#ffffff" />
+      </Head>
+      <Header siteTitle={siteTitle} />
+      <Content>
+        {children}
+      </Content>
+      <Footer />
+    </>
   );
 }
 Layout.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-export default withTranslation('common')(Layout);
+export default Layout;
 
 export function Meta(props) {
   const plan = React.useContext(PlanContext);
