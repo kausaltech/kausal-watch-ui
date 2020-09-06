@@ -198,7 +198,7 @@ function IndicatorDetails({ id }) {
         && (
           <Row>
             <Col className="mb-5">
-              <ErrorBoundary><IndicatorGraph indicatorId={indicator.id} plan={plan} /></ErrorBoundary>
+              <ErrorBoundary><IndicatorGraph indicatorId={indicator.id} /></ErrorBoundary>
             </Col>
           </Row>
         )}
@@ -231,7 +231,6 @@ function IndicatorDetails({ id }) {
     </div>
   );
 }
-
 
 IndicatorDetails.propTypes = {
   id: PropTypes.string.isRequired,

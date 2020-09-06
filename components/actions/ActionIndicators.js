@@ -38,7 +38,7 @@ function ActionIndicator(props) {
     <Card className="mb-4">
       <CardBody>
         {(indicator.latestGraph || indicator.latestValue)
-          ? <IndicatorGraph indicator={indicator} plan={plan} />
+          ? <IndicatorGraph indicatorId={indicator.id} />
           : <h5 className="mb-0">{indicator.name}</h5>}
       </CardBody>
       <CardFooter>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import dynamic from 'next/dynamic';
 import { isEqual } from 'lodash';
@@ -7,6 +7,7 @@ import { Alert } from 'reactstrap';
 import { linearRegression } from 'simple-statistics';
 import { useTranslation } from 'common/i18n';
 import { useTheme } from 'common/theme';
+import PlanContext from 'context/plan';
 
 import ContentLoader from '../common/ContentLoader';
 
@@ -211,7 +212,7 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
 
   let values = [...indicator.values].sort((a, b) => a.date - b.date).map(processItem);
   const dates = Array.from(new Set(values.map((item) => item.date)));
-  if (dates.length == 1) {
+  if (dates.length == 1 && indicator.dimensions.length) {
     return generateSingleYearPlot(indicator, values, i18n, plotColors);
   }
   // Choose only the main (non-dimensional) values for now
@@ -398,11 +399,12 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
   return plot;
 }
 
-function IndicatorGraph({ indicatorId, plan }) {
+function IndicatorGraph({ indicatorId }) {
   if (!process.browser) {
     return null;
   }
 
+  const plan = useContext(PlanContext);
   const theme = useTheme();
   const { t, i18n } = useTranslation();
   const plotColors = [
@@ -486,9 +488,6 @@ function IndicatorGraph({ indicatorId, plan }) {
 
 IndicatorGraph.propTypes = {
   indicatorId: PropTypes.string.isRequired,
-  plan: PropTypes.shape({
-    identifier: PropTypes.string.isRequired,
-  }).isRequired,
 };
 
 export default IndicatorGraph;
