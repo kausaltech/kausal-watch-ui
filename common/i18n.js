@@ -2,23 +2,18 @@ import NextI18Next from 'next-i18next';
 import getConfig from 'next/config';
 import path from 'path';
 
-
-const { localeConfig } = getConfig().publicRuntimeConfig;
+const { supportedLanguages } = getConfig().publicRuntimeConfig;
 
 const i18nNext = new NextI18Next({
-  defaultLanguage: localeConfig.defaultLanguage,
-  otherLanguages: localeConfig.otherLanguages,
   browserLanguageDetection: false,
   serverLanguageDetection: false,
   localePath: path.resolve('./locales'),
   localeExtension: process.browser ? 'json' : 'yaml',
-  localeSubpaths: Object.fromEntries(
-    localeConfig.otherLanguages.map((lang) => [lang, lang]),
-  ),
+  otherLanguages: supportedLanguages,
   saveMissing: process.env.NODE_ENV !== 'production',
   defaultNS: 'common',
   fallbackNS: ['actions'],
-  missingKeyHandler: (ng, ns, key, fallbackValue) => {
+  missingKeyHandler: (ng, ns, key) => {
     console.warn(`Missing i18n key '${key}' in namespace '${ns}'`);
   },
 });
@@ -35,6 +30,21 @@ const {
   initPromise,
 } = i18nNext;
 
+function configureFromPlan(plan) {
+  const { config } = i18nNext;
+  const { primaryLanguage = 'fi', otherLanguages } = plan;
+
+  const newConfig = {
+    defaultLanguage: primaryLanguage,
+    otherLanguages,
+    localeSubpaths: Object.fromEntries(
+      otherLanguages.map((lang) => [lang, lang]),
+    ),
+  };
+  Object.assign(config, newConfig);
+  Object.assign(i18n.options, newConfig);
+}
+
 export {
   appWithTranslation,
   withTranslation,
@@ -45,4 +55,5 @@ export {
   useTranslation,
   withNamespaces,
   initPromise,
+  configureFromPlan,
 };

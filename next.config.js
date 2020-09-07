@@ -16,8 +16,7 @@ const basePath = '';
 // Set default plan identifier
 process.env.SENTRY_ROOTDIR = __dirname;
 
-const SUPPORTED_LANGUAGES = ['fi', 'en', 'sv'];
-const DEFAULT_LANGUAGES = ['fi', 'en'];
+const SUPPORTED_LANGUAGES = ['en', 'fi', 'sv'];
 
 function generateLocaleConfig() {
   let languages = (process.env.UI_LANGUAGES || '').split(',').filter((item) => item);
@@ -28,12 +27,9 @@ function generateLocaleConfig() {
     }
   });
   if (languages.length < 1) {
-    languages = DEFAULT_LANGUAGES;
+    languages = SUPPORTED_LANGUAGES;
   }
-  return {
-    defaultLanguage: languages[0],
-    otherLanguages: languages.slice(1),
-  };
+  return languages;
 }
 
 const config = withSourceMaps(withBundleAnalyzer(withImages(withSass({
@@ -42,7 +38,7 @@ const config = withSourceMaps(withBundleAnalyzer(withImages(withSass({
   },
   async rewrites() {
     const localeSubpaths = Object.fromEntries(
-      generateLocaleConfig().otherLanguages.map((lang) => [lang, lang]),
+      generateLocaleConfig().map((lang) => [lang, lang]),
     );
     const i18nRewrites = await nextI18NextRewrites(localeSubpaths);
     const rewrites = [
@@ -59,7 +55,7 @@ const config = withSourceMaps(withBundleAnalyzer(withImages(withSass({
     instanceType: process.env.INSTANCE_TYPE || 'development',
     matomoURL: process.env.MATOMO_URL,
     matomoSiteId: process.env.MATOMO_SITE_ID,
-    localeConfig: generateLocaleConfig(),
+    supportedLanguages: generateLocaleConfig(),
   },
   experimental: {
     modern: true,

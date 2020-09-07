@@ -8,7 +8,7 @@ import { ThemeProvider } from 'styled-components';
 
 import { Router } from 'routes';
 import { captureException } from 'common/sentry';
-import { appWithTranslation, i18n } from 'common/i18n';
+import { appWithTranslation, i18n, configureFromPlan } from 'common/i18n';
 import withApollo from 'common/apollo';
 import theme, { setTheme, applyTheme } from 'common/theme';
 import PlanContext from 'context/plan';
@@ -37,6 +37,8 @@ const GET_PLAN = gql`
       identifier
       name
       imageUrl(size: "1500x500")
+      primaryLanguage
+      otherLanguages
       mainImage {
         largeRendition: rendition(size: "1500x500") {
           src
@@ -161,6 +163,38 @@ function WatchApp(props: WatchAppProps) {
 }
 WatchApp.whyDidYouRender = true;
 
+WatchApp.getInitialProps = async (appContext) => {
+  const { ctx } = appContext;
+  let appProps;
+
+  try {
+    appProps = await App.getInitialProps(appContext);
+  } catch (error) {
+    // Capture errors that happen during a page's getInitialProps.
+    // This will work on both client and server sides.
+    captureException(error, ctx);
+    if (ctx.res) {
+      ctx.res.statusCode = 500;
+    }
+    throw error;
+  }
+
+  return { ...appProps };
+};
+
+function I18nApp(props) {
+  const { initialLanguage, initialI18nStore, i18nServerInstance } = props;
+  const SSRWrappedApp = withSSR()(WatchApp);
+
+  return (
+    <I18nextProvider i18n={i18nServerInstance || i18n}>
+      <SSRWrappedApp initialLanguage={initialLanguage} initialI18nStore={initialI18nStore} {...props} />
+    </I18nextProvider>
+  );
+}
+const TopLevelApp = React.memo(I18nApp) as any;
+
+
 let cachedPlan;
 const cachedPlansForHostnames = {};
 const cachedThemesForHostnames = {};
@@ -218,7 +252,8 @@ async function getPlan(ctx) {
 
 let siteContext;
 
-WatchApp.getInitialProps = async (appContext) => {
+
+TopLevelApp.getInitialProps = async (appContext) => {
   const { ctx } = appContext;
   const { instanceType } = publicRuntimeConfig;
   const { apolloClient } = ctx;
@@ -269,42 +304,15 @@ WatchApp.getInitialProps = async (appContext) => {
     }
   }
 
-  let appProps;
+  configureFromPlan(globalProps.plan);
 
-  try {
-    appProps = await App.getInitialProps(appContext);
-  } catch (error) {
-    // Capture errors that happen during a page's getInitialProps.
-    // This will work on both client and server sides.
-    captureException(error, ctx);
-    if (ctx.res) {
-      ctx.res.statusCode = 500;
-    }
-    throw error;
-  }
-
-  return { ...appProps, ...globalProps };
-};
-
-function I18nApp(props) {
-  const { initialLanguage, initialI18nStore, i18nServerInstance } = props;
-  const SSRWrappedApp = withSSR()(WatchApp);
-
-  return (
-    <I18nextProvider i18n={i18nServerInstance || i18n}>
-      <SSRWrappedApp initialLanguage={initialLanguage} initialI18nStore={initialI18nStore} {...props} />
-    </I18nextProvider>
-  );
-}
-const MemoApp = React.memo(I18nApp) as any;
-
-MemoApp.getInitialProps = async (appContext) => {
   const appProps = await TransApp.getInitialProps(appContext);
-  return appProps;
+
+  return {...appProps, ...globalProps};
 };
 
 // appWithTranslation is not a pure component, so it re-renders much too often.
 // We only use its getInitialProps() but do not render it.
 const TransApp = appWithTranslation(WatchApp);
 
-export default withApollo(MemoApp);
+export default withApollo(TopLevelApp);
