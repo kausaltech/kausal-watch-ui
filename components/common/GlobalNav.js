@@ -62,7 +62,7 @@ const HomeLink = styled.a`
     max-width: 10em;
     height: calc(${(props) => props.theme.spaces.s200} + ${(props) => props.theme.spaces.s050});
     margin: ${(props) => props.theme.spaces.s050}
-          ${(props) => props.theme.spaces.s200}
+          ${(props) => props.theme.spaces.s150}
           ${(props) => props.theme.spaces.s050}
           0;
   }
