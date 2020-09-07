@@ -5,8 +5,12 @@ import {
 } from 'reactstrap';
 import styled, { ThemeContext } from 'styled-components';
 import { gql, useQuery } from '@apollo/client';
+import { useHotkeys } from 'react-hotkeys-hook';
+import { useRouter } from 'next/router';
+
+import { getActionLinkProps } from 'common/links';
 import moment from 'common/moment';
-import { useTranslation } from 'common/i18n';
+import { useTranslation, use } from 'common/i18n';
 import PlanContext from 'context/plan';
 
 import { Meta } from '../layout';
@@ -204,6 +208,8 @@ function getMaxImpact(plan) {
 function ActionContent({ id }) {
   const plan = useContext(PlanContext);
   const theme = useContext(ThemeContext);
+  const router = useRouter();
+
   const { t } = useTranslation(['common', 'actions']);
   const { loading, error, data } = useQuery(GET_ACTION_DETAILS, {
     variables: {
@@ -211,10 +217,19 @@ function ActionContent({ id }) {
       plan: plan.identifier,
     },
   });
+  const { action } = data || {};
+
+  useHotkeys('ctrl+left, ctrl+right', (ev) => {
+    const next = (ev.code == 'ArrowLeft' ? action.previousAction : action.nextAction);
+    if (!next) {
+      return;
+    }
+    const { href, as } = getActionLinkProps(next.identifier);
+    router.push(href, as);
+  }, {}, [action, router]);
 
   if (loading) return <ContentLoader />;
   if (error) return <ErrorMessage message={error.message} />;
-  const { action } = data;
   if (!action) {
     return <ErrorMessage statusCode={404} message={t('action-not-found')} />;
   }
