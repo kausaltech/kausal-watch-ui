@@ -1,0 +1,80 @@
+front-page: Framsida
+indicators: Indikatorer
+actions: Åtgärder
+action: Åtgärd
+dashboard: instrumentbräda
+operational: Driftsindikator
+tactical: Taktisk indikator
+strategic: Strategisk indikator
+recently-updated-actions: Nyligen uppdaterade handlingar
+see-all-actions: Se alla handlingar
+recently-updated-indicators: Nyligen uppdaterade indikatorer
+see-all-indicators: Se alla indikatorer
+instance-type-testing-label: Testning
+instance-type-testing-message: Detta är en testversion av tjänsten
+instance-type-development-label: Utveckling
+instance-type-development-message: Detta är en utvecklingsversion av tjänsten
+insight-download-label: Ladda ner
+insight-download-png: Bild (png)
+insight-filter-label: Filtrera efter indikator
+insight-filter-no-results: Inga resultat
+indicators-as-list: Som en lista
+indicators-as-insight: Som insikter
+goal: mål
+forecast: prognos
+current-trend: trend
+percent-point-abbreviation: p.p.
+responsible-parties: Ansvariga organisationer
+responsible-parties-missing: Inga namngivna ansvariga organisationer
+responsible-party-main: Huvudansvarig
+contact-persons: Kontaktpersoner
+contact-persons-missing: Inga namngivna kontaktpersoner
+contact-person-main: Huvudkontaktperson
+contact-info: Kontaktinformation
+email: E-post
+previous: Tidigare
+next: Nästa
+impact: påverkan
+filter-category: Filtrera efter tema
+filter-all-categories: Alla kategorier
+filter-all-emission-scopes: Inget utsläppsfilter
+filter-all-organizations: Alla organisationer
+filter-all-impacts: Inget slagfilter
+filter-organization: Filtrera efter organisation
+filter-emission-scope: Filtrera efter utsläpp
+filter-impact: Filtrera efter påverkan
+filter-text: Textsökning
+filter-text-default: Sök från rubriker
+filter-text-description: Sök från beskrivningar
+filter-result-actions: åtgärder
+browse-actions: Bläddra bland åtgärder
+funding-instrument: >-
+  Helsinki Climate Watch har fått finansiering från Europeiska unionens EIT Climate-KIC-program.
+error-loading-actions: Fel vid inläsning av åtgärdslistan
+error-loading-indicators: Fel vid inläsning av indikatorlistan
+indicator-related-actions: Åtgärderna som påverkar denna indikator
+indicator-affected-by: Denna indikator påverkas av
+indicator-has-effect-on: Denna indikator har effekt på
+indicator-not-found: Indikator hittades inte
+indicator-latest-value: Senaste värdet
+indicator-more-information: Mer information
+indicator-no-values: Inga värden
+indicator-goal: Mål
+indicator-time-to-goal: Dags till mål
+indicator-time-no-goals: Inga mål
+indicator-resolution-years: år
+type: Typ
+name: Namn
+themes: Teman
+graph: Graf
+no-graph: Inget diagram
+loading: Läser in
+impact-group-no-actions: Inga definierade handlingar.
+impact-group.others: Andra
+published-on: Publicerad på
+supported-by: Stöds av
+back-to-top: Tillbaka till toppen
+copy-to-clipboard: Kopiera länk till urklipp
+copied-to-clipboard: Kopierad!
+toggle-navigation: Växla navigering
+page-not-found: Sidan hittas inte

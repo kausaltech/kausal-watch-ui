@@ -1,0 +1,24 @@
+emission-scopes: Utsläppsomfattningar
+action-not-found: Åtgärd hittades inte
+action-description-official: Officiell beskrivning
+action-as-in-plan: Beskrivning från originalplanen
+action-what-effect-this-has: "Hur denna åtgärd bidrar till resultatet?"
+action-tasks: Uppgifter
+action-tasks-done: "Vad har gjorts?"
+action-tasks-todo: "Vad återstår att göra?"
+action-task-done: Gjort
+action-task-todo: Att göra
+action-tasks-todo-empty: Inga uppgifter
+action-status-updates: Senaste uppdateringarna
+action-last-updated: Information uppdaterad
+action-timeline: Tidslinje
+action-progress: Framsteg
+action-percent-ready: redo
+action-num: '#'
+action-name-title: Åtgärds tema
+action-impact: Påverkan
+action-monitoring: Övervakning
+action-merged: Sammanlagda åtgärderna
+action-status-merged: Sammanfogad med åtgärden
+action-previous: Tidigare åtgärd
+action-next: Nästa åtgärd
