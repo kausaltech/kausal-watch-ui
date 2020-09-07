@@ -261,10 +261,16 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
   };
   let attrs;
   const lineGraph = shouldDrawLine(dataTrace);
+  let lineMode;
+  if (values.length > 30) {
+    lineMode = 'lines';
+  } else {
+    lineMode = 'lines+markers';
+  }
   if (lineGraph) {
     attrs = {
       type: 'scatter',
-      mode: 'lines+markers',
+      mode: lineMode,
       line: {
         width: 3,
         shape: 'spline',
