@@ -5,7 +5,8 @@ import { InMemoryCache } from '@apollo/client/cache';
 import { onError } from '@apollo/client/link/error';
 import getConfig from 'next/config';
 
-import { captureException } from './sentry';
+import { captureException } from 'common/sentry';
+import { i18n } from 'common/i18n';
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -13,6 +14,8 @@ const localeMiddleware = new ApolloLink((operation, forward) => {
   // Inject @locale directive into the query root object
   const { query } = operation;
   const { definitions } = query;
+
+  if (!i18n.language) return forward(operation);
 
   const localeDirective = {
     kind: 'Directive',
@@ -23,7 +26,7 @@ const localeMiddleware = new ApolloLink((operation, forward) => {
     arguments: [{
       kind: 'Argument',
       name: { kind: 'Name', value: 'lang' },
-      value: { kind: 'StringValue', value: 'fi', block: false },
+      value: { kind: 'StringValue', value: i18n.language, block: false },
     }],
   };
 
