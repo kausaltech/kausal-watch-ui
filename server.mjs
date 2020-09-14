@@ -81,6 +81,10 @@ server.use(morgan('dev'));
 
 const handle = app.getRequestHandler();
 
+server.get('/favicon.ico', function (req, res) {
+  res.status(404).send('Not found');
+});
+
 // Serve locales as JSON
 server.get('/locales/:lang([a-z]{2})/:ns([a-z_-]+).json', function (req, res) {
   const { lang, ns } = req.params;
