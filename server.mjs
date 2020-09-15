@@ -7,6 +7,7 @@ import express from 'express';
 import originalUrl from 'original-url';
 import cacheableResponse from 'cacheable-response';
 import parseCacheControl from '@tusbar/cache-control';
+import robots from 'express-robots-txt';
 import YAML from 'yaml'
 import normalizeUrl from 'normalize-url';
 
@@ -84,6 +85,10 @@ const handle = app.getRequestHandler();
 server.get('/favicon.ico', function (req, res) {
   res.status(404).send('Not found');
 });
+
+const isProduction = process.env.INSTANCE_TYPE === 'production';
+
+server.use(robots(isProduction ? {UserAgent: '*', Allow: '/'} : {UserAgent: '*', Disallow: '/'}));
 
 // Serve locales as JSON
 server.get('/locales/:lang([a-z]{2})/:ns([a-z_-]+).json', function (req, res) {
