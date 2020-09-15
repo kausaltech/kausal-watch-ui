@@ -100,7 +100,7 @@ function ActionHighlightCard(props) {
       to={{ opacity: 1 }}
     >
       {(springProps) => (
-        <ActionLink action={action}>
+        <ActionLink action={action} prefetch={false}>
           <CardLink href>
             <StyledCard style={springProps}>
               <ImgArea>
