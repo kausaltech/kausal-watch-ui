@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { withTranslation } from '../../common/i18n';
-import { ActionListLink } from '../../common/links';
+import { withTranslation } from 'common/i18n';
+import { ActionListLink } from 'common/links';
+import { slugify } from 'common/utils';
 import BadgeTooltip from '../common/BadgeTooltip';
 
 const Responsibles = styled.div`
@@ -38,7 +39,7 @@ function ResponsibleBadge(props) {
   return (
     <ActionListLink query={{ organization: id }}>
       <BadgeTooltip
-        id={`org-${id}`}
+        id={`org-${slugify(id)}`}
         name={name}
         ariaLabel={ariaLabel}
         abbreviation={abbreviation}
