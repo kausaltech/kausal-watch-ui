@@ -145,6 +145,12 @@ const Section = styled.section`
 function IndicatorDetails({ id }) {
   const plan = useContext(PlanContext);
   const { t } = useTranslation();
+
+  // Ensure id is a number
+  if (isNaN(parseInt(id, 10))) {
+    return <ErrorMessage statusCode={404} message={ t('indicator-not-found') } />;
+  }
+
   const { data, loading, error } = useQuery(GET_INDICATOR_DETAILS, {
     variables: {
       id,
