@@ -49,13 +49,16 @@ let requestContext;
 const refererLink = new ApolloLink((operation, forward) => {
   if (requestContext) {
     operation.setContext((ctx) => {
+      const req = requestContext;
       const { headers } = ctx;
-      const { currentURL } = requestContext;
+      const { currentURL } = req;
       const { baseURL, path } = currentURL;
+      const remoteAddress = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 
       return {
         headers: {
           referer: baseURL + path,
+          'x-forwarded-for': remoteAddress,
           ...headers,
         },
       };
