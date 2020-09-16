@@ -44,6 +44,30 @@ const localeMiddleware = new ApolloLink((operation, forward) => {
   return forward(operation);
 });
 
+let requestContext;
+
+const refererLink = new ApolloLink((operation, forward) => {
+  if (requestContext) {
+    operation.setContext((ctx) => {
+      const { headers } = ctx;
+      const { currentURL } = requestContext;
+      const { baseURL, path } = currentURL;
+
+      return {
+        headers: {
+          referer: baseURL + path,
+          ...headers,
+        },
+      };
+    });
+  }
+  return forward(operation);
+});
+
+export function setRequestContext(req) {
+  requestContext = req;
+}
+
 const sentryHttpLink = ApolloLink.from([
   onError(({ graphQLErrors, networkError }) => {
     if (graphQLErrors) {
@@ -73,7 +97,7 @@ export default withApollo(({ initialState }) => {
 
   const clientOpts = {
     ssrMode: !process.browser,
-    link: concat(localeMiddleware, sentryHttpLink),
+    link: ApolloLink.from([refererLink, localeMiddleware, sentryHttpLink]),
     cache: new InMemoryCache().restore(initialState || {}),
   };
   apolloClient = new ApolloClient(clientOpts);

@@ -9,7 +9,7 @@ import { ThemeProvider } from 'styled-components';
 import { Router } from 'routes';
 import { captureException } from 'common/sentry';
 import { appWithTranslation, i18n, configureFromPlan } from 'common/i18n';
-import withApollo from 'common/apollo';
+import withApollo, { setRequestContext } from 'common/apollo';
 import theme, { setTheme, applyTheme } from 'common/theme';
 import PlanContext from 'context/plan';
 import SiteContext from 'context/site';
@@ -273,9 +273,13 @@ TopLevelApp.getInitialProps = async (appContext) => {
     if (siteContext.domain !== currentURL.domain) siteContext.domain = currentURL.domain;
     if (siteContext.path !== currentURL.path) siteContext.path = currentURL.path;
 
+    // We pass the request to Apollo so that we can inform the backend about
+    // the refering URL
+    setRequestContext(ctx.req);
     // For SSR, the Apollo cache should be cleared on every request to
     // avoid stale data.
     await apolloClient.resetStore();
+
     let plan;
     try {
       plan = await getPlan(ctx);
