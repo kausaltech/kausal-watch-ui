@@ -5,7 +5,7 @@ import {
 } from 'reactstrap';
 
 import styled from 'styled-components';
-import { withTranslation } from '../../common/i18n';
+import { useTranslation } from 'common/i18n';
 import TextInput from '../common/TextInput';
 import DropDown from '../common/DropDown';
 
@@ -88,8 +88,9 @@ function ActionListFilterInput({
 }
 
 function ActionListFilterBadges({
-  t, filters, activeFilters, actionCount, onReset
+  filters, activeFilters, actionCount, onReset
 }) {
+  const { t } = useTranslation();
   const badges = filters.filter((item) => activeFilters[item.identifier]).map((item, index) => {
     let name;
     if (item.type !== 'text') {
@@ -124,7 +125,7 @@ function ActionListFilterBadges({
             className="mr-3"
             style={props}
           >
-            <Button close size="sm" onClick={makeCallback(item.identifier)} />
+            <Button close size="sm" onClick={makeCallback(item.identifier)} aria-label={t('remove-selection')} />
             { item.name }
           </StyledBadge>
         )}
@@ -140,8 +141,9 @@ function ActionListFilterBadges({
 
 
 function ActionListFilters({
-  t, filters, orgs, categoryTypes, impacts, actionCount, onChange,
+  filters, orgs, categoryTypes, impacts, actionCount, onChange,
 }) {
+  const { t } = useTranslation();
   const sortedOrgs = generateSortedOrgTree(orgs.filter((org) => !org.parent), 0);
   const allFilters = [];
 
@@ -218,4 +220,4 @@ function ActionListFilters({
   );
 }
 
-export default withTranslation(['common', 'actions'])(ActionListFilters);
+export default ActionListFilters;
