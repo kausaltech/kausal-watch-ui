@@ -7,6 +7,7 @@ import SiteContext from 'context/site';
 
 import GlobalNav from './common/GlobalNav';
 import ApplicationStateBanner from './common/ApplicationStateBanner';
+import SkipToContent from './common/SkipToContent';
 import { getActiveBranch } from '../common/links';
 
 function Header({ siteTitle }) {
@@ -56,14 +57,15 @@ function Header({ siteTitle }) {
   }, [hasActionImpacts, activeBranch, plan.staticPages]);
 
   return (
-    <div>
+    <header style={{ position: 'relative' }}>
+      <SkipToContent />
       <ApplicationStateBanner instanceType={site.instanceType} />
       <GlobalNav
         siteTitle={siteTitle}
         ownerName={plan.generalContent ? plan.generalContent.ownerName : plan.name}
         navItems={navLinks}
       />
-    </div>
+    </header>
   );
 }
 
