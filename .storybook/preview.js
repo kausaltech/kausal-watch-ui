@@ -11,13 +11,13 @@ let liiku = require('sass-extract-loader?{"plugins": ["sass-extract-js"]}!../sty
 
 let hnh2035 = require('sass-extract-loader?{"plugins": ["sass-extract-js"]}!../styles/hnh2035/_theme-variables.scss');
 
-let greenreality = require('sass-extract-loader?{"plugins": ["sass-extract-js"]}!../styles/greenreality/_theme-variables.scss');
+let lprilmasto = require('sass-extract-loader?{"plugins": ["sass-extract-js"]}!../styles/lpr-ilmasto/_theme-variables.scss');
 
 const themes = [
     defaultTheme,
     Object.assign({...defaultTheme}, hnh2035),
-    Object.assign({...defaultTheme},liiku),
-    Object.assign({...defaultTheme},greenreality),
+    Object.assign({...defaultTheme}, liiku),
+    Object.assign({...defaultTheme}, lprilmasto),
 ];
 addDecorator(storyFN => <ThemedGlobalStyles>{storyFN()}</ThemedGlobalStyles>);
 addDecorator(withThemesProvider(themes));
