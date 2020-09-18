@@ -446,13 +446,11 @@ const HnhHero = () => (
                     <HelsinkiEmissionsViz />
                   </ProgressGraph>
                   <StaticPageLink slug="tietoa">
-                    <a>
-                      <Button outline color="light">
-                        Lue lisää tavoitteesta ja tästä palvelusta
-                        {' '}
-                        <Icon name="arrowRight" color="white" />
-                      </Button>
-                    </a>
+                    <Button outline color="light" tag="a" href="">
+                      Lue lisää tavoitteesta ja tästä palvelusta
+                      {' '}
+                      <Icon name="arrowRight" color="white" />
+                    </Button>
                   </StaticPageLink>
                 </Col>
               </Row>
