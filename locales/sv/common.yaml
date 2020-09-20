@@ -77,7 +77,8 @@ supported-by: Stöds av
 back-to-top: Tillbaka till toppen
 copy-to-clipboard: Kopiera länk till urklipp
 copied-to-clipboard: Kopierad!
-toggle-navigation: Växla navigering
+nav-menu-close: Stäng meny
+nav-menu-open: Meny
 page-not-found: Sidan hittas inte
 skip-to-content: Hoppa till huvudinnehåll
 remove-selection: --Remove selection

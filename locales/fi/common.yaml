@@ -77,7 +77,8 @@ supported-by: Kehitystä tukenut
 back-to-top: Sivun alkuun
 copy-to-clipboard: Kopioi linkki leikepöydälle
 copied-to-clipboard: Kopioitu!
-toggle-navigation: Avaa/sulje navigaatio
+nav-menu-close: Sulje navigaatio
+nav-menu-open: Navigaatio
 page-not-found: Sivua ei löydy
 skip-to-content: Hyppää sisältöön
 remove-selection: Poista valinta

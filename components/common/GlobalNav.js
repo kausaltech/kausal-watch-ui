@@ -208,8 +208,15 @@ const NavbarToggler = styled.button`
 function DropdownList(props) {
   const { parent, items, active } = props;
   return (
-    <StyledDropdown nav inNavbar className={active && 'active'}>
-      <StyledDropdownToggle nav caret>
+    <StyledDropdown
+      nav
+      inNavbar
+      className={active && 'active'}
+    >
+      <StyledDropdownToggle
+        nav
+        caret
+      >
         <DropDownHighlighter>{ parent.name }</DropDownHighlighter>
       </StyledDropdownToggle>
       <DropdownMenu left>
@@ -280,7 +287,9 @@ function GlobalNav(props) {
           </Link>
           <NavbarToggler
             onClick={() => toggleOpen(!isOpen)}
-            aria-label={t('toggle-navigation')}
+            aria-label={isOpen ? t('nav-menu-close') : t('nav-menu-open')}
+            aria-controls="navbarSupportedContent"
+            aria-expanded={isOpen}
             type="button"
           >
             { isOpen
@@ -289,7 +298,11 @@ function GlobalNav(props) {
           </NavbarToggler>
         </Container>
       </TopNav>
-      <BotNav expand="md" fixed={navIsFixed ? 'top' : ''}>
+      <BotNav
+        expand="md"
+        fixed={navIsFixed ? 'top' : ''}
+        id="navbarSupportedContent"
+      >
         <Container fluid={fullwidth}>
           <Collapse isOpen={isOpen} navbar>
             <Nav navbar>
