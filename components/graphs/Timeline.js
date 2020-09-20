@@ -1,10 +1,10 @@
 import React from 'react';
 import dynamic from 'next/dynamic';
-import { Progress } from 'reactstrap';
-import styled, { withTheme } from 'styled-components';
-
+import { useTranslation } from 'common/i18n';
+import { withTheme } from 'styled-components';
 
 const Timeline = ({ schedules, allSchedules, theme }) => {
+  const { t } = useTranslation('common');
   if (!process.browser) {
     return null;
   }
@@ -30,6 +30,9 @@ const Timeline = ({ schedules, allSchedules, theme }) => {
       actEndDate = sch.endsAt;
     }
   });
+
+  const yearrange = `${parseInt(actStartDate.split('-')[0], 10)} - ${parseInt(actEndDate.split('-')[0], 10)}`;
+  const description = `${t('timeline-between')} ${yearrange}`;
 
   const startYear = parseInt(minDate.split('-')[0], 10);
   const endYear = parseInt(maxDate.split('-')[0], 10);
@@ -79,14 +82,26 @@ const Timeline = ({ schedules, allSchedules, theme }) => {
       ticks: '',
       visible: false,
     },
-    plot_bgcolor: '#e9ecef',
+    plot_bgcolor: theme.themeColors.light,
     width: null, // Is resized automatically by plotly
     height: 36,
     autosize: true,
   };
 
   return (
-    <Plot data={data} layout={layout} config={{ staticPlot: true }} style={{ width: '100%' }} useResizeHandler />
+    <figure
+      role="presentation"
+      title={description}
+      aria-label={description}
+    >
+      <Plot
+        data={data}
+        layout={layout}
+        config={{ staticPlot: true }}
+        style={{ width: '100%' }}
+        useResizeHandler
+      />
+    </figure>
   );
 };
 

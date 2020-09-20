@@ -12,6 +12,7 @@ action-tasks-todo-empty: No to-dos
 action-status-updates: Latest updates
 action-last-updated: Information updated
 action-timeline: Timeline
+action-timeline-between: Takes place between
 action-progress: Progress
 action-percent-ready: ready
 action-num: '#'

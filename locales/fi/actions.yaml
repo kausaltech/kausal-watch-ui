@@ -12,6 +12,7 @@ action-tasks-todo-empty: Ei tekemättömiä tehtäviä
 action-status-updates: Viimeisimmät päivitykset
 action-last-updated: Tietoja päivitetty
 action-timeline: Aikajänne
+action-timeline-between: Toteutetaan aikavälillä
 action-progress: Eteneminen
 action-percent-ready: valmis
 action-num: Nro

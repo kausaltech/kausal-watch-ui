@@ -12,6 +12,7 @@ action-tasks-todo-empty: Inga uppgifter
 action-status-updates: Senaste uppdateringarna
 action-last-updated: Information uppdaterad
 action-timeline: Tidslinje
+action-timeline-between: --Takes place between
 action-progress: Framsteg
 action-percent-ready: redo
 action-num: '#'
