@@ -1,10 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled, { withTheme } from 'styled-components';
+import { withTranslation } from '../../common/i18n';
 import BarSegment from './BarSegment';
 
 const SegmentContainer = styled.div`
   display: flex;
+  height: 4em;
+  border: 2px solid ${(props) => props.theme.themeColors.dark};
+  background-color: ${(props) => props.theme.themeColors.light};
 `;
 
 const ArrowContainer = styled.div`
@@ -18,12 +22,21 @@ const Arrow = styled.div`
   height: 20px;
   transform: rotate(45deg);
   margin-left: -10px;
+  background-color: ${(props) => props.theme.themeColors.dark};
+  border: 2px solid ${(props) => props.theme.themeColors.dark};
 `;
 
 class Bar extends React.Component {
   constructor(props) {
     super(props);
     this.onSelect = this.onSelect.bind(this);
+  }
+
+  onSelect(segment) {
+    // fire callback
+    if (this.props.onSelect) {
+      this.props.onSelect(segment);
+    }
   }
 
   calcSum() {
@@ -35,15 +48,8 @@ class Bar extends React.Component {
     return sum;
   }
 
-  onSelect(segment) {
-    // fire callback
-    if (this.props.onSelect) {
-      this.props.onSelect(segment);
-    }
-  }
-
   render() {
-    const { segments, active } = this.props;
+    const { t, segments, active } = this.props;
     const sum = this.calcSum();
     let arrowColor;
 
@@ -67,7 +73,10 @@ class Bar extends React.Component {
 
     return (
       <div className="mb-4">
-        <SegmentContainer className="bar-segment-container">
+        <SegmentContainer
+          role="tablist"
+          aria-label={t('dashboard-tabs')}
+        >
           {segments.map((segment) => (
             <BarSegment
               key={segment.id}
@@ -93,4 +102,4 @@ Bar.propTypes = {
   onSelect: PropTypes.func,
 };
 
-export default withTheme(Bar);
+export default withTranslation('common')(withTheme(Bar));

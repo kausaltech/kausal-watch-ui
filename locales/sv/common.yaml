@@ -3,7 +3,8 @@ indicators: Indikatorer
 actions: Åtgärder
 action: Åtgärd
 dashboard: instrumentbräda
-operational: Driftsindikator
+dashboard-tabs: --Emission reduction potential divided by category
+dashboard-segment-description: --Actions share of reduction potentialoperational: Driftsindikator
 tactical: Taktisk indikator
 strategic: Strategisk indikator
 recently-updated-actions: Nyligen uppdaterade handlingar

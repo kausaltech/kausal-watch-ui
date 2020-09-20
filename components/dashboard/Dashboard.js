@@ -95,7 +95,12 @@ const DashboardTab = ({ t, segment }) => {
   }
 
   return (
-    <TabPane tabId={segment.id}>
+    <TabPane
+      tabId={segment.id}
+      role="tabpanel"
+      id={`tab-${segment.id}`}
+      aria-labelledby={`segment-${segment.id}`}
+    >
       <h2 className="mb-3">{ segment.title }</h2>
       {content}
     </TabPane>
@@ -287,4 +292,4 @@ Dashboard.propTypes = {
   onFilterChange: PropTypes.func.isRequired,
 };
 
-export default withTranslation('common')(Dashboard);
+export default withTranslation(['common', 'actions'])(Dashboard);

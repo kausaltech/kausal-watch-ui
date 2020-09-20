@@ -3,6 +3,8 @@ indicators: Mittarit
 actions: Toimenpiteet
 action: Toimenpide
 dashboard: Tilannekuva
+dashboard-tabs: Päästövähennyspotentiaali jaettuna aihealueisiin
+dashboard-segment-description: Kategorian toimenpiteiden osuus päästövähennyspotentiaalista
 operational: Toiminnallinen mittari
 tactical: Taktinen mittari
 strategic: Strateginen mittari
