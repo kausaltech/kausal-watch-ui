@@ -70,6 +70,18 @@ const GlobalStyle = createGlobalStyle`
     height: 1px;
   }
 
+  .icon {
+    fill: currentColor;
+    vertical-align: -0.1em;
+    overflow: hidden;
+  }
+
+  blockquote {
+    margin-left: 2em;
+    padding-left: 1em;
+    border-left: #cccccc 3px solid;
+  }
+
   .text-content {
     a {
       text-decoration: underline;
@@ -108,6 +120,34 @@ const GlobalStyle = createGlobalStyle`
 
   .table-hover > tbody > tr:hover {
     background-color: ${(props) => props.theme.tableHoverBg};
+  }
+
+  /* Fix for flickering tooltip bug */
+  .tooltip {
+    pointer-events: none;
+  }
+
+  /* Larger tooltip for emission scope icon */
+  .emission-scope-icon-tooltip {
+    text-align: left;
+    min-width: 20em;
+  }
+
+  /* Form styles overrides */
+
+  /* Validaded invalid field has color background */
+  .was-validated .form-control:invalid,
+  .form-control.is-invalid,
+  .was-validated .custom-select:invalid,
+  .custom-select.is-invalid {
+    background-color: rgba(${(props) => props.theme.themeColors.danger}, 0.15);
+  }
+
+
+  .form-control, .custom-select {
+    &:hover {
+      border-color: ${(props) => props.theme.themeColors.black};
+    }
   }
 `;
 
