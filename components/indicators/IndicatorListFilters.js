@@ -4,6 +4,7 @@ import { Row, Col } from 'reactstrap';
 import { withTranslation } from '../../common/i18n';
 import TextInput from '../common/TextInput';
 import DropDown from '../common/DropDown';
+import Button from '../common/Button';
 
 class IndicatorListFilters extends React.Component {
   constructor(props) {
@@ -47,9 +48,9 @@ class IndicatorListFilters extends React.Component {
     const sortedCats = cats.sort((a, b) => a.identifier.localeCompare(b.identifier));
 
     return (
-      <div className="filters mb-5 mt-5">
+      <form className="filters mb-5 mt-5">
         <Row>
-          <Col sm="12" md="6">
+          <Col sm="9" md="4" lg="5">
             <DropDown
               label={t('filter-category')}
               type="select"
@@ -63,11 +64,11 @@ class IndicatorListFilters extends React.Component {
               {sortedCats.map(cat => (
                 <option value={cat.id} key={cat.id}>
                   { `${this.getCategoryIdentifier(cat.id)} ${this.getCategoryName(cat.id)}` }
-                </option> 
+                </option>
               ))}
             </DropDown>
           </Col>
-          <Col sm="12" md="6">
+          <Col sm="9" md="5" lg="5">
             <TextInput
               label={t('filter-text')}
               name="search"
@@ -76,8 +77,13 @@ class IndicatorListFilters extends React.Component {
               onChange={this.onSearchChange}
             />
           </Col>
+          <Col xs={6} sm={3} md={3} lg={2} xl={2} className="d-flex flex-column justify-content-end">
+            <Button type="submit" color="primary" className="mb-3" block>
+              { t('search') }
+            </Button>
+          </Col>
         </Row>
-      </div>
+      </form>
     );
   }
 }

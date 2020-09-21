@@ -98,7 +98,6 @@ class IndicatorList extends React.Component {
             <>
               <Meta
                 title={t('indicators')}
-                description={`Toimenpiteiden edistymistä ja kasvihuonekaasupäästöjen kehitystä seurataan mittareilla`}
               />
               <IndicatorsHero leadContent={leadContent} />
               <Container>
