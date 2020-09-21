@@ -81,4 +81,6 @@ nav-menu-close: Stäng meny
 nav-menu-open: Meny
 page-not-found: Sidan hittas inte
 skip-to-content: Hoppa till huvudinnehåll
-remove-selection: --Remove selection
+search: --Search
+active-filters: --Active filters
+remove-filter: --Remove filter

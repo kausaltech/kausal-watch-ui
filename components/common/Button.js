@@ -136,8 +136,12 @@ function Button(props) {
   );
 }
 
+Button.defaultProps = {
+  children: null,
+};
+
 Button.propTypes = {
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node,
 };
 
 export default Button;

@@ -1,24 +1,25 @@
 import React, { useCallback } from 'react';
 import { Spring, Transition } from 'react-spring/renderprops.cjs';
 import {
-  CustomInput as BaseCustomInput, FormGroup, Label, Row, Col, Badge, Button,
+  Row, Col, Badge,
 } from 'reactstrap';
 
 import styled from 'styled-components';
 import { useTranslation } from 'common/i18n';
 import TextInput from '../common/TextInput';
+import Button from '../common/Button';
 import DropDown from '../common/DropDown';
 
-const CustomInput = styled(BaseCustomInput)`
-  background-color: transparent !important;
-`;
-
 const FiltersList = styled.div`
+  margin: ${(props) => props.theme.spaces.s150} 0;
   font-size: ${(props) => props.theme.fontSizeLg};
   line-height: ${(props) => props.theme.lineHeightBase};
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
 
   .count {
     margin-top: ${(props) => props.theme.spaces.s100};
+    padding-bottom: ${(props) => props.theme.spaces.s100};
     font-weight: ${(props) => props.theme.fontWeightBold};
     font-size: ${(props) => props.theme.fontSizeMd};
   }
@@ -31,8 +32,10 @@ const FiltersList = styled.div`
 `;
 
 const StyledBadge = styled(Badge)`
+  margin-bottom: ${(props) => props.theme.spaces.s100};
   background-color: ${(props) => props.theme.brandDark};
   color: ${(props) => props.theme.themeColors.light};
+  line-height: 1.25;
 `;
 
 function generateSortedOrgTree(orgs, depth) {
@@ -111,7 +114,11 @@ function ActionListFilterBadges({
   }
 
   return (
-    <FiltersList className="mb-4 mt-3">
+    <FiltersList aria-live="assertive">
+      <div className="count">
+        { `${actionCount} ${t('filter-result-actions')}` }
+      </div>
+      { badges.length > 0 && <span className="sr-only">{t('active-filters')}</span>}
       <Transition
         items={badges}
         keys={(item) => item.id}
@@ -125,18 +132,13 @@ function ActionListFilterBadges({
             className="mr-3"
             style={props}
           >
-            <Button close size="sm" onClick={makeCallback(item.identifier)} aria-label={t('remove-selection')} />
-            { item.name }
+            <Button close size="sm" onClick={makeCallback(item.identifier)} aria-label={t('remove-filter')} />
+            { item.name.trim() }
           </StyledBadge>
         )}
       </Transition>
-      <div className="count">
-        { actionCount }
-        { ' ' }
-        { t('filter-result-actions') }
-      </div>
     </FiltersList>
-  )
+  );
 }
 
 
@@ -151,7 +153,7 @@ function ActionListFilters({
     label: t('filter-organization'),
     showAllLabel: t('filter-all-organizations'),
     md: 6,
-    lg: 6,
+    lg: 4,
     identifier: 'organization',
     options: sortedOrgs.map((org) => ({
       id: org.id,
@@ -172,7 +174,7 @@ function ActionListFilters({
       label: ct.name,
       showAllLabel: t('filter-all-categories'),
       md: 6,
-      lg: 6,
+      lg: 4,
       identifier: `category_${ct.identifier}`,
       options: ct.categories.filter((cat) => !cat.parent),
     });
@@ -183,37 +185,52 @@ function ActionListFilters({
   allFilters.push({
     label: t('filter-text'),
     placeholder: t('filter-text-default'),
-    md: 12,
-    lg: 12,
+    sm: 9,
+    md: 9,
+    lg: 6,
     identifier: 'text',
     type: 'text',
   });
 
   return (
     <div className="filters mb-2 text-left">
-      <Spring
-        from={{ opacity: 0 }}
-        to={{ opacity: 1 }}
-      >
-        {(props) => (
-          <Row style={props}>
-            {allFilters.map((filter) => (
-              <Col
-                sm="12"
-                md={{ size: filter.md }}
-                lg={{ size: filter.lg }}
-                className={`mb-2 d-flex${filter.isLast ? ' align-items-end' : ''}`}
-                key={filter.identifier}
-              >
-                <ActionListFilterInput filter={filter} currentValue={filters[filter.identifier]} onChange={onChange} />
+      <form onSubmit={(event) => { event.preventDefault(); }} role="search" aria-label="Toimenpiteet">
+        <Spring
+          from={{ opacity: 0 }}
+          to={{ opacity: 1 }}
+        >
+          {(props) => (
+            <Row style={props}>
+              {allFilters.map((filter) => (
+                <Col
+                  sm={filter.sm}
+                  md={filter.md}
+                  lg={filter.lg}
+                  key={filter.identifier}
+                >
+                  <ActionListFilterInput
+                    filter={filter}
+                    currentValue={filters[filter.identifier]}
+                    onChange={onChange}
+                  />
+                </Col>
+              ))}
+              <Col xs={6} sm={3} md={3} lg={2} xl={2} className="d-flex flex-column justify-content-end">
+                <Button type="submit" color="primary" className="mb-3" block>{ t('search') }</Button>
               </Col>
-            ))}
-          </Row>
-        )}
-      </Spring>
+            </Row>
+          )}
+        </Spring>
+      </form>
       <Row>
         <Col>
-          <ActionListFilterBadges t={t} filters={allFilters} activeFilters={filters} onReset={onChange} actionCount={actionCount} />
+          <ActionListFilterBadges
+            t={t}
+            filters={allFilters}
+            activeFilters={filters}
+            onReset={onChange}
+            actionCount={actionCount}
+          />
         </Col>
       </Row>
     </div>

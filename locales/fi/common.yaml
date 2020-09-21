@@ -81,4 +81,6 @@ nav-menu-close: Sulje navigaatio
 nav-menu-open: Navigaatio
 page-not-found: Sivua ei löydy
 skip-to-content: Hyppää sisältöön
-remove-selection: Poista valinta
+search: Hae
+active-filters: Aktiiviset rajaukset
+remove-filter: Poista rajaus

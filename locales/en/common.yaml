@@ -83,4 +83,6 @@ nav-menu-close: Close menu
 nav-menu-open: Navigation menu
 page-not-found: Page not found
 skip-to-content: Skip to main content
-remove-selection: Remove selection
+search: Search
+active-filters: Active filters
+remove-filter: Remove filter
