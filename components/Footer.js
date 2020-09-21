@@ -32,7 +32,7 @@ function Footer(props) {
   const fundingInstruments = [
     {
       id: '1',
-      name: 'Climate KIC',
+      name: 'Climate-KIC (Climate-KIC is supported by the EIT, a body of the European Union)',
       link: '',
       logo: '/static/images/hnh2035/climate-kic-logo-white.svg',
     },
