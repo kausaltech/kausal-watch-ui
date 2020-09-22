@@ -23,12 +23,15 @@ const ActionProgress = styled(Progress)`
 
   &.bg-not_started {
     background-color: ${(props) => props.theme.actionNotStartedColor};
+    .progress-bar {
+      color: ${(props) => props.theme.themeColors.black};
+    }
   }
 
   &.bg-in_progress {
     background-color: ${(props) => props.theme.actionOnTimeColor};
     .progress-bar {
-      background-color: ${(props) => lighten(0.1, props.theme.actionOnTimeColor)};
+      background-color: ${(props) => darken(0.15, props.theme.actionOnTimeColor)};
     }
   }
 
