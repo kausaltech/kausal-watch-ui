@@ -1,8 +1,10 @@
 emission-scopes: Emission scopes
 action-not-found: Action not found
 action-description-official: Official description
+action-description: Description
 action-as-in-plan: Description from the original plan
 action-what-effect-this-has: How this action contributes to the outcome?
+action-meta-header: Summary and contacts
 action-tasks: Tasks
 action-tasks-done: What has been done?
 action-tasks-todo: What's left to do?

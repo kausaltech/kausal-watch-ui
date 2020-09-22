@@ -139,6 +139,10 @@ const ActionSection = styled.div`
   margin-bottom: ${(props) => props.theme.spaces.s200};
 `;
 
+const SideHeader = styled.h3`
+  font-size: ${(props) => props.theme.fontSizeBase};
+`;
+
 const SectionHeader = styled.h2`
   font-size: ${(props) => props.theme.fontSizeLg};
   margin-bottom: ${(props) => props.theme.spaces.s200};
@@ -147,6 +151,10 @@ const SectionHeader = styled.h2`
 const OfficialText = styled.div`
   color: ${(props) => props.theme.brandDark};
   margin-bottom: ${(props) => props.theme.spaces.s300};
+
+  h2 {
+    font-size: ${(props) => props.theme.fontSizeMd};
+  }
 `;
 
 const SolidSection = styled.div`
@@ -190,7 +198,7 @@ function MergedActionList({ actions, t, theme }) {
 
   return (
     <ActionSection>
-      <h5>{ t('actions:action-merged') }</h5>
+      <h2>{ t('actions:action-merged') }</h2>
       {mergedActions}
     </ActionSection>
   );
@@ -262,11 +270,14 @@ function ActionContent({ id }) {
         <Row>
           <Col md="7" lg="8">
             {action.description && (
-              <ActionSection className="text-content"><RichText html={action.description} /></ActionSection>
+              <ActionSection className="text-content">
+                <h2 className="sr-only">{ t('actions:action-description') }</h2>
+                <RichText html={action.description} />
+              </ActionSection>
             )}
             {cleanOfficialText && (
               <OfficialText>
-                <h5>{ t('actions:action-description-official') }</h5>
+                <h2>{ t('actions:action-description-official') }</h2>
                 <strong>{ t('actions:action-as-in-plan') }</strong>
                 <div dangerouslySetInnerHTML={{ __html: cleanOfficialText }} />
                 {generalContent.officialNameDescription && (
@@ -316,10 +327,11 @@ function ActionContent({ id }) {
           </Col>
 
           <Col md="5" lg="4">
+            <h2 className="sr-only">{ t('actions:action-meta-header') }</h2>
             { action.impact
               && (
               <ActionSection>
-                <h5>{ t('actions:action-impact') }</h5>
+                <SideHeader>{ t('actions:action-impact') }</SideHeader>
                 <ActionImpact
                   name={action.impact.name}
                   identifier={action.impact.identifier}
@@ -328,7 +340,7 @@ function ActionContent({ id }) {
               </ActionSection>
               )}
             <ActionSection>
-              <h5>{ t('actions:action-progress') }</h5>
+              <SideHeader>{ t('actions:action-progress') }</SideHeader>
               { action.completion > 0
               && (
               <strong>
@@ -348,13 +360,13 @@ function ActionContent({ id }) {
             </ActionSection>
             { action.schedule.length ? (
               <ActionSection>
-                <h5>{ t('actions:action-timeline') }</h5>
+                <SideHeader>{ t('actions:action-timeline') }</SideHeader>
                 <Timeline schedules={action.schedule} allSchedules={plan.actionSchedules} />
               </ActionSection>
             ) : null}
             { emissionScopes.length ? (
               <ActionSection>
-                <h5>{ t('actions:emission-scopes') }</h5>
+                <SideHeader>{ t('actions:emission-scopes') }</SideHeader>
                 {emissionScopes.map((item) => (
                   <EmissionScopeIcon key={item.id} category={item} color={theme.brandDark} size="2em" />
                 ))}

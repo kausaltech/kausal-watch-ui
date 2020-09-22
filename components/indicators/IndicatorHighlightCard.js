@@ -131,7 +131,7 @@ function IndicatorHighlightCard(props) {
             <IndicatorType>{ t(level) }</IndicatorType>
             <IndicatorLink id={objectid}>
               <a href>
-                <StyledCardTitle tag="h5">{ name }</StyledCardTitle>
+                <StyledCardTitle tag="h3">{ name }</StyledCardTitle>
               </a>
             </IndicatorLink>
           </CardBody>

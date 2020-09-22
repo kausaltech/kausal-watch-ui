@@ -475,7 +475,7 @@ function IndicatorGraph({ indicatorId }) {
 
   return (
     <div>
-      <h5 className="mb-0">{plotTitle}</h5>
+      <h3 className="mb-0">{plotTitle}</h3>
       <span className="sr-only">{ t('indicator-graph-not-accessible') }</span>
       <div aria-hidden="true">
         <Plot

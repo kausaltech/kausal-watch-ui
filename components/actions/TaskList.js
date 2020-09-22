@@ -35,7 +35,13 @@ const TaskContent = styled.div`
 `;
 
 const ListGroup = styled(BaseListGroup)`
+  h4 {
+    font-size: ${(props) => props.theme.fontSizeBase};
+  }
+`;
 
+const ListGroupTitle = styled.h3`
+  font-size: ${(props) => props.theme.fontSizeMd};
 `;
 
 const ListGroupItem = styled(BaseListGroupItem)`
@@ -80,7 +86,7 @@ function TaskList(props) {
             <Date>{parseTimestamp(item.dueAt)}</Date>
           </TaskMeta>
           <TaskContent>
-            <h5>{item.name}</h5>
+            <h4>{item.name}</h4>
             {item.comment && (<div className="text-content"><RichText html={item.comment} /></div>)}
           </TaskContent>
         </TaskWrapper>
@@ -98,7 +104,7 @@ function TaskList(props) {
             <Date>{parseTimestamp(item.completedAt)}</Date>
           </TaskMeta>
           <TaskContent>
-            <h5>{item.name}</h5>
+            <h4>{item.name}</h4>
             {item.comment && (<div className="text-content"><RichText html={item.comment} /></div>)}
           </TaskContent>
         </TaskWrapper>
@@ -110,7 +116,7 @@ function TaskList(props) {
       { undoneTasks.length > 0
         ? (
           <>
-            <h4>{ t('actions:action-tasks-todo') }</h4>
+            <ListGroupTitle>{ t('actions:action-tasks-todo') }</ListGroupTitle>
             <ListGroup className="mb-5">
               {undoneTasks}
             </ListGroup>
@@ -119,7 +125,7 @@ function TaskList(props) {
         : <h4 className="text-muted mb-4">{ t('actions:action-tasks-todo-empty') }</h4> }
       { doneTasks.length > 0 && (
         <>
-          <h4>{ t('actions:action-tasks-done') }</h4>
+          <ListGroupTitle>{ t('actions:action-tasks-done') }</ListGroupTitle>
           <ListGroup className="mb-5">
             {doneTasks}
           </ListGroup>

@@ -123,7 +123,7 @@ function ActionHighlightCard(props) {
                       <Icon name="check" color="#fff" width="2em" height="2em" />
                     </ReadyBadge>
                   )}
-                <StyledCardTitle tag="h5">{actionName}</StyledCardTitle>
+                <StyledCardTitle tag="h3">{actionName}</StyledCardTitle>
               </CardBody>
             </StyledCard>
           </CardLink>

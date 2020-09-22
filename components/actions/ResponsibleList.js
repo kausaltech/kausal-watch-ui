@@ -12,6 +12,10 @@ const Responsibles = styled.div`
     margin-right: ${(props) => props.theme.spaces.s050};
   }
 
+  h3 {
+    font-size: ${(props) => props.theme.fontSizeBase};
+  }
+
   .lg {
     margin-right: 100%;
   }
@@ -53,7 +57,7 @@ function ResponsibleList(props) {
 
   return (
     <Responsibles>
-      <h5>{t('responsible-parties')}</h5>
+      <h3>{t('responsible-parties')}</h3>
       { data
         ? data.map((item, index) => (
           <ResponsibleBadge
