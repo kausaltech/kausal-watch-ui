@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { darken, transparentize } from 'polished';
+import { darken, lighten, transparentize } from 'polished';
 import {
   Progress,
 } from 'reactstrap';
@@ -73,7 +73,7 @@ const ActionStatusArea = styled.div`
   display: flex;
   justify-content: space-between;
   flex-direction: column;
-  color: ${(props) => props.theme.themeColors.black};
+  color: ${(props) => props.theme.themeColors.white};
   background-color: ${(props) => props.theme.themeColors.success};
   min-height: 100px;
   line-height: ${(props) => props.theme.lineHeightSm};
@@ -85,30 +85,31 @@ const ActionStatusArea = styled.div`
   &.bg-not_started {
     background-color: ${(props) => props.theme.actionNotStartedColor};
   }
-
+ 
   &.bg-in_progress {
     background-color: ${(props) => props.theme.actionOnTimeColor};
     .progress-bar {
-      background-color: ${(props) => darken(0.25, props.theme.actionOnTimeColor)};
+      background-color: ${(props) => darken(0.1, props.theme.actionOnTimeColor)};
     }
   }
 
   &.bg-on_time {
     background-color: ${(props) => props.theme.actionOnTimeColor};
     .progress-bar {
-      background-color: ${(props) => darken(0.25, props.theme.actionOnTimeColor)};
+      background-color: ${(props) => darken(0.1, props.theme.actionOnTimeColor)};
     }
   }
 
   &.bg-completed {
     background-color: ${(props) => props.theme.actionCompletedColor};
     .progress-bar {
-      background-color: ${(props) => darken(0.25, props.theme.actionCompletedColor)};
+      background-color: ${(props) => props.theme.actionCompletedColor};
     }
   }
 
   &.bg-late {
     background-color: ${(props) => props.theme.actionLateColor};
+    color: ${(props) => props.theme.themeColors.black};
     .progress-bar {
       background-color: ${(props) => darken(0.25, props.theme.actionLateColor)};
     }
@@ -117,7 +118,7 @@ const ActionStatusArea = styled.div`
   &.bg-severely_late {
     background-color: ${(props) => props.theme.actionSeverelyLateColor};
     .progress-bar {
-      background-color: ${(props) => darken(0.25, props.theme.actionSeverelyLateColor)};
+      background-color: ${(props) => darken(0.15, props.theme.actionSeverelyLateColor)};
     }
   }
 
