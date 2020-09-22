@@ -75,7 +75,7 @@ const Highlight = styled.div`
     transition: all 0.5s ease;
   }
 
-  h3 {
+  h2 {
     color: ${(props) => props.theme.brandDark};
     font-size: ${(props) => props.theme.fontSizeLg};
   }
@@ -359,11 +359,11 @@ const HnhHero = () => (
                       <Illustration className="mr-4 w-50">
                         <img
                           src="./static/images/hnh2035/actions-illustration.svg"
-                          alt="Piirroskuvitus toimenpiteen valmistelua"
+                          alt=""
                         />
                       </Illustration>
                       <div>
-                        <h3>Toimenpiteet</h3>
+                        <h2>Toimenpiteet</h2>
                         <p>
                           Helsingin kaupunki vähentää kasvihuonekaasupäästöjä 147 toimenpiteen avulla.
                         </p>
@@ -390,11 +390,11 @@ const HnhHero = () => (
                       <Illustration className="mr-4 w-50">
                         <img
                           src="./static/images/hnh2035/indicators-illustration.svg"
-                          alt="Piirroskuvitus toimenpiteen mittaus"
+                          alt=""
                         />
                       </Illustration>
                       <div>
-                        <h3>Mittarit</h3>
+                        <h2>Mittarit</h2>
                         <p>
                           Seuraamme toimenpiteiden edistymistä ja kasvihuonekaasupäästöjen kehitystä mittareilla.
                         </p>
@@ -441,8 +441,8 @@ const HnhHero = () => (
                     {' '}
                     auttavat meitä pääsemään oikeaan suuntaan kohti hiilineutraaliutta.
                   </p>
-                  <h3 className="mb-4">Helsingin päästötilanne</h3>
-                  <ProgressGraph>
+                  <ProgressGraph aria-hidden="true">
+                    <h3 className="mb-4">Helsingin päästötilanne</h3>
                     <HelsinkiEmissionsViz />
                   </ProgressGraph>
                   <StaticPageLink slug="tietoa">
