@@ -24,7 +24,10 @@ function ContactPersons(props) {
         { persons.length !== 0
           ? persons.map((person, index) => (
             <li key={person.id}>
-              <ContactPerson person={person} leader={index===0}/>
+              <ContactPerson
+                person={person}
+                leader={index === 0}
+              />
             </li>
           ))
           : <Note>{ t('contact-persons-missing') }</Note>}

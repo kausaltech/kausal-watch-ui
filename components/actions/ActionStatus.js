@@ -66,9 +66,13 @@ function ActionStatus(props) {
 
   return (
     <Status {...rest}>
+      <span className="sr-only">
+        {name}
+      </span>
       <ActionProgress
         value={completion}
         className={`bg-${identifier}`}
+        aria-hidden
       >
         <StatusTitle>
           {name}

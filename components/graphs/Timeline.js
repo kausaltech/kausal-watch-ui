@@ -1,10 +1,12 @@
 import React from 'react';
 import dynamic from 'next/dynamic';
 import { useTranslation } from 'common/i18n';
-import { withTheme } from 'styled-components';
+import { useTheme } from 'common/theme';
 
-const Timeline = ({ schedules, allSchedules, theme }) => {
+const Timeline = ({ schedules, allSchedules }) => {
   const { t } = useTranslation('common');
+  const theme = useTheme();
+
   if (!process.browser) {
     return null;
   }
@@ -32,7 +34,7 @@ const Timeline = ({ schedules, allSchedules, theme }) => {
   });
 
   const yearrange = `${parseInt(actStartDate.split('-')[0], 10)} - ${parseInt(actEndDate.split('-')[0], 10)}`;
-  const description = `${t('timeline-between')} ${yearrange}`;
+  const description = `${t('action-timeline-between')} ${yearrange}`;
 
   const startYear = parseInt(minDate.split('-')[0], 10);
   const endYear = parseInt(maxDate.split('-')[0], 10);
@@ -89,20 +91,21 @@ const Timeline = ({ schedules, allSchedules, theme }) => {
   };
 
   return (
-    <figure
-      role="presentation"
-      title={description}
-      aria-label={description}
-    >
-      <Plot
-        data={data}
-        layout={layout}
-        config={{ staticPlot: true }}
-        style={{ width: '100%' }}
-        useResizeHandler
-      />
-    </figure>
+    <div role="presentation">
+      <span className="sr-only">
+        {description}
+      </span>
+      <div aria-hidden>
+        <Plot
+          data={data}
+          layout={layout}
+          config={{ staticPlot: true }}
+          style={{ width: '100%' }}
+          useResizeHandler
+        />
+      </div>
+    </div>
   );
 };
 
-export default withTheme(Timeline);
+export default Timeline;

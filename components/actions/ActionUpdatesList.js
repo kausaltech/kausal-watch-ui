@@ -80,7 +80,7 @@ function ActionStatusUpdate(props) {
             <AuthorAvatar
               src={avatarUrl}
               className="rounded-circle"
-              alt="name"
+              alt={name}
             />
           </Media>
           <Media body>
