@@ -44,11 +44,14 @@ function ActionIndicator(props) {
       <CardFooter>
         {actions.length > 0 && (
           <span>
-            Liittyy myös toimenpiteisiin:
+            {t('indicator-also-for-actions')}
+            :
             {' '}
             {actions.map(action => (
               <ActionLink key={action.identifier} action={action}>
-                <a><Badge>{action.identifier}</Badge></a>
+                <a className="mr-2" href>
+                  <Badge>{action.identifier}</Badge>
+                </a>
               </ActionLink>
             ))}
             {' | '}

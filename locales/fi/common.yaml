@@ -64,6 +64,8 @@ indicator-goal: Tavoite
 indicator-time-to-goal: Tavoitteeseen matkaa
 indicator-time-no-goals: Ei tavoitearvoja
 indicator-resolution-years: vuotta
+indicator-also-for-actions: Liittyy myös toimenpiteisiin
+indicator-graph-not-accessible: Indikaattorin data-graafin tekstiversio ei ole vielä saatavilla
 type: Tyyppi
 name: Nimi
 themes: Teemat

@@ -64,6 +64,8 @@ indicator-goal: Mål
 indicator-time-to-goal: Dags till mål
 indicator-time-no-goals: Inga mål
 indicator-resolution-years: år
+indicator-also-for-actions: --Also impacted by
+indicator-graph-not-accessible: --Data graph accessible version is not yet available
 type: Typ
 name: Namn
 themes: Teman

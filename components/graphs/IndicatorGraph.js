@@ -476,18 +476,21 @@ function IndicatorGraph({ indicatorId }) {
   return (
     <div>
       <h5 className="mb-0">{plotTitle}</h5>
-      <Plot
-        data={plot.data}
-        layout={plot.layout}
-        style={{ width: '100%', height: '100%' }}
-        useResizeHandler
-        config={{
-          locale: i18n.language,
-          displayModeBar: false,
-          showSendToCloud: true,
-          staticPlot: false,
-        }}
-      />
+      <span className="sr-only">{ t('indicator-graph-not-accessible') }</span>
+      <div aria-hidden="true">
+        <Plot
+          data={plot.data}
+          layout={plot.layout}
+          style={{ width: '100%', height: '100%' }}
+          useResizeHandler
+          config={{
+            locale: i18n.language,
+            displayModeBar: false,
+            showSendToCloud: true,
+            staticPlot: false,
+          }}
+        />
+      </div>
     </div>
   );
 }

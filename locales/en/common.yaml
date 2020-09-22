@@ -66,6 +66,8 @@ indicator-goal: Goal
 indicator-time-to-goal: Time to goal
 indicator-time-no-goals: No goals
 indicator-resolution-years: years
+indicator-also-for-actions: Also impacted by
+indicator-graph-not-accessible: Data graph accessible version is not yet available
 type: Type
 name: Name
 themes: Themes
