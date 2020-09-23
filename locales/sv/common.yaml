@@ -4,7 +4,8 @@ actions: Åtgärder
 action: Åtgärd
 dashboard: instrumentbräda
 dashboard-tabs: --Emission reduction potential divided by category
-dashboard-segment-description: --Actions share of reduction potentialoperational: Driftsindikator
+dashboard-segment-description: --Actions share of reduction potential
+operational: Driftsindikator
 tactical: Taktisk indikator
 strategic: Strategisk indikator
 recently-updated-actions: Nyligen uppdaterade handlingar
