@@ -85,6 +85,14 @@ function SiteFooter(props) {
                       </StaticPageLink>
                     </NavItem>
                   ))}
+                  { plan.accessibilityStatementUrl
+                    && (
+                    <NavItem key="accessibility">
+                      <a className="nav-link" href={plan.accessibilityStatementUrl}>
+                        {t('accessibility')}
+                      </a>
+                    </NavItem>
+                    )}
                 </Nav>
               </div>
             </Col>

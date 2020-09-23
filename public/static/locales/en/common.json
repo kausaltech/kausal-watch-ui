@@ -85,5 +85,6 @@
     "no-graph": "No graph",
     "loading": "Loading",
     "impact-group-no-actions": "No defined actions.",
-    "impact-group.others": "Others"
+    "impact-group.others": "Others",
+    "accessibility": "Accessibility"
 }

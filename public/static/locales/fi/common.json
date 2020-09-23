@@ -85,5 +85,6 @@
     "no-graph": "Ei kuvaajaa",
     "loading": "Ladataan",
     "impact-group-no-actions": "Ei määriteltyjä toimenpiteitä.",
-    "impact-group-others": "Muut"
+    "impact-group-others": "Muut",
+    "accessibility": "Saavutettavuus"
 }
