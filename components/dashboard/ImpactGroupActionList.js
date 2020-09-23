@@ -10,8 +10,6 @@ import { ActionLink } from '../../common/links';
 import PlanContext from '../../context/plan';
 import { withTranslation } from '../../common/i18n';
 
-import uniqueId from 'lodash/uniqueId';
-
 const ActionName = styled.span`
   a {
     color: ${(props) => props.theme.themeColors.black};
@@ -19,8 +17,34 @@ const ActionName = styled.span`
 `;
 
 const StatusBadge = styled(Badge)`
-  color: white;
   font-size: ${(props) => props.theme.fontSizeBase};
+  color: ${(props) => props.theme.themeColors.white};
+
+  &.bg-not_started {
+    background-color: ${(props) => props.theme.actionNotStartedColor};
+    color: ${(props) => props.theme.themeColors.black};
+  }
+
+  &.bg-in_progress {
+    background-color: ${(props) => props.theme.actionOnTimeColor};
+  }
+
+  &.bg-on_time {
+    background-color: ${(props) => props.theme.actionOnTimeColor};
+  }
+
+  &.bg-completed {
+    background-color: ${(props) => props.theme.actionCompletedColor};
+  }
+
+  &.bg-late {
+    background-color: ${(props) => props.theme.actionLateColor};
+    color: ${(props) => props.theme.themeColors.black};
+  }
+
+  &.bg-severely_late {
+    background-color: ${(props) => props.theme.actionSeverelyLateColor};
+  }
 `;
 
 class ImpactGroupActionList extends React.PureComponent {
@@ -56,7 +80,9 @@ class ImpactGroupActionList extends React.PureComponent {
                 </td>
                 <td>{impacts[item.impact.id].name}</td>
                 <td>
-                  <StatusBadge className={`bg-${item.action.status.identifier}`}>{item.action.status.name}</StatusBadge>
+                  <StatusBadge
+                    className={`bg-${item.action.status.identifier}`}>{item.action.status.name}
+                  </StatusBadge>
                 </td>
               </tr>
             ))}
