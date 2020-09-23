@@ -29,6 +29,12 @@ function Footer(props) {
     navLinks = navLinks.concat(staticPages);
   }
 
+  let additionalLinks = [];
+
+  if (plan.accessibilityStatementUrl) {
+    additionalLinks.push({ id: '1', name: t('accessibility'), slug: plan.accessibilityStatementUrl });
+  }
+
   const fundingInstruments = [
     {
       id: '1',
@@ -46,6 +52,7 @@ function Footer(props) {
         ownerUrl={generalContent.ownerUrl}
         creativeCommonsLicense={generalContent.creativeCommonsLicense}
         copyrightText={generalContent.copyrightText}
+        additionalLinks={additionalLinks}
         navItems={navLinks}
         fundingInstruments={fundingInstruments}
       />

@@ -162,7 +162,9 @@ StaticPageLink.propTypes = {
 
 export function NavigationLink(props) {
   const { slug, ...other } = props;
-  return <Link href={`/${slug}`} {...other} passHref />;
+  return slug.startsWith('http')
+    ? <a href={slug} {...other} />
+    : <Link href={`/${slug}`} {...other} passHref />;
 }
 
 NavigationLink.propTypes = {

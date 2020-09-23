@@ -100,6 +100,7 @@ const GET_PLAN = gql`
           }
         }
       }
+      accessibilityStatementUrl
     }
   }
 `;
