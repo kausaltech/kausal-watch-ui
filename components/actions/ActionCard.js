@@ -84,6 +84,7 @@ const ActionStatusArea = styled.div`
 
   &.bg-not_started {
     background-color: ${(props) => props.theme.actionNotStartedColor};
+    color: ${(props) => props.theme.themeColors.dark};
   }
  
   &.bg-in_progress {
