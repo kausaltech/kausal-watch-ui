@@ -4,7 +4,7 @@ action-description: Beskrivning
 action-description-official: Officiell beskrivning
 action-as-in-plan: Beskrivning från originalplanen
 action-what-effect-this-has: "Hur denna åtgärd bidrar till resultatet?"
-action-meta-header: --Summary and contacts
+action-meta-header: Sammanfattning och kontakter
 action-tasks: Uppgifter
 action-tasks-done: "Vad har gjorts?"
 action-tasks-todo: "Vad återstår att göra?"
@@ -14,7 +14,7 @@ action-tasks-todo-empty: Inga uppgifter
 action-status-updates: Senaste uppdateringarna
 action-last-updated: Information uppdaterad
 action-timeline: Tidslinje
-action-timeline-between: --Takes place between
+action-timeline-between: Tidsram mellan
 action-progress: Framsteg
 action-percent-ready: redo
 action-num: '#'

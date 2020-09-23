@@ -3,8 +3,8 @@ indicators: Indikatorer
 actions: Åtgärder
 action: Åtgärd
 dashboard: instrumentbräda
-dashboard-tabs: --Emission reduction potential divided by category
-dashboard-segment-description: --Actions share of reduction potential
+dashboard-tabs: Utsläppsminskningspotential dividerat efter kategori
+dashboard-segment-description: Åtgärder andel av minskningspotential
 operational: Driftsindikator
 tactical: Taktisk indikator
 strategic: Strategisk indikator
@@ -65,8 +65,8 @@ indicator-goal: Mål
 indicator-time-to-goal: Dags till mål
 indicator-time-no-goals: Inga mål
 indicator-resolution-years: år
-indicator-also-for-actions: --Also impacted by
-indicator-graph-not-accessible: --Data graph accessible version is not yet available
+indicator-also-for-actions: Påverkas också av
+indicator-graph-not-accessible: Data diagram tillgänglig version är ännu inte tillgänglig
 type: Typ
 name: Namn
 themes: Teman
@@ -84,6 +84,6 @@ nav-menu-close: Stäng meny
 nav-menu-open: Meny
 page-not-found: Sidan hittas inte
 skip-to-content: Hoppa till huvudinnehåll
-search: --Search
-active-filters: --Active filters
-remove-filter: --Remove filter
+search: Sök
+active-filters: Aktiva filter
+remove-filter: Ta bort filtret
