@@ -9,6 +9,10 @@ const ContactList = styled.ul`
   margin-top: 2em;
   list-style: none;
   padding: 0;
+
+  h3 {
+    font-size: ${(props) => props.theme.fontSizeBase};
+  }
 `;
 
 const Note = styled.div`
@@ -18,18 +22,19 @@ const Note = styled.div`
 function ContactPersons(props) {
   const { t, persons } = props;
   return (
-    <>
-      <h5>{ t('contact-persons') }</h5>
-      <ContactList>
-        { persons.length !== 0
-          ? persons.map((person, index) => (
-            <li key={person.id}>
-              <ContactPerson person={person} leader={index===0}/>
-            </li>
-          ))
-          : <Note>{ t('contact-persons-missing') }</Note>}
-      </ContactList>
-    </>
+    <ContactList>
+      <h3>{ t('contact-persons') }</h3>
+      { persons.length !== 0
+        ? persons.map((person, index) => (
+          <li key={person.id}>
+            <ContactPerson
+              person={person}
+              leader={index === 0}
+            />
+          </li>
+        ))
+        : <Note>{ t('contact-persons-missing') }</Note>}
+    </ContactList>
   );
 }
 ContactPersons.propTypes = {

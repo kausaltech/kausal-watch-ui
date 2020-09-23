@@ -92,13 +92,11 @@ function ActionCardList({ t, actions, plan }) {
       ))}
       <Col xs="12" className="mt-5 mb-5">
         <ActionListLink>
-          <a>
-            <Button outline color="primary">
-              { t('see-all-actions') }
-              {' '}
-              <Icon name="arrowRight" color="black" />
-            </Button>
-          </a>
+          <Button outline color="primary" tag="a">
+            { t('see-all-actions') }
+            {' '}
+            <Icon name="arrowRight" color="black" />
+          </Button>
         </ActionListLink>
       </Col>
     </Row>

@@ -148,6 +148,9 @@ class ContactPerson extends React.Component {
     const { collapse } = this.state;
     let isLeader = '';
     isLeader = leader ? 'leader' : '';
+    const fullName = `${person.firstName} ${person.lastName}`;
+    const role = isLeader ? t('contact-person-main') : '';
+
     return (
       <Person className={isLeader}>
         <Media key={person.id}>
@@ -155,12 +158,12 @@ class ContactPerson extends React.Component {
             <Avatar
               src={person.avatarUrl || '/static/images/default-avatar.png'}
               className={`rounded-circle ${isLeader}`}
-              alt={`${person.firstName} ${person.lastName}`}
+              alt={`${role} ${fullName}`}
             />
           </Media>
           <PersonDetails body>
             <Name>
-              {`${person.firstName} ${person.lastName}`}
+              {fullName}
             </Name>
             <PersonRole>{person.title}</PersonRole>
             {person.organization && (

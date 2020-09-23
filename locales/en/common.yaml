@@ -3,6 +3,8 @@ indicators: Indicators
 actions: Actions
 action: Action
 dashboard: Dashboard
+dashboard-tabs: Emission reduction potential divided by category
+dashboard-segment-description: Actions share of reduction potential
 operational: Operational indicator
 tactical: Tactical indicator
 strategic: Strategic indicator
@@ -64,6 +66,8 @@ indicator-goal: Goal
 indicator-time-to-goal: Time to goal
 indicator-time-no-goals: No goals
 indicator-resolution-years: years
+indicator-also-for-actions: Also impacted by
+indicator-graph-not-accessible: Data graph accessible version is not yet available
 type: Type
 name: Name
 themes: Themes
@@ -77,5 +81,10 @@ supported-by: Supported by
 back-to-top: Back to top
 copy-to-clipboard: Copy link to clipboard
 copied-to-clipboard: Copied!
-toggle-navigation: Toggle navigation
+nav-menu-close: Close menu
+nav-menu-open: Navigation menu
 page-not-found: Page not found
+skip-to-content: Skip to main content
+search: Search
+active-filters: Active filters
+remove-filter: Remove filter

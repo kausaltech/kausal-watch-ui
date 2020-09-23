@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Badge, Tooltip } from 'reactstrap';
 import styled from 'styled-components';
@@ -16,7 +16,6 @@ const StyledBadge = styled(Badge)`
   border-radius: ${(props) => props.theme.badgeBorderRadius};
   padding: ${(props) => props.theme.badgePaddingY} ${(props) => props.theme.badgePaddingX};
   font-weight: ${(props) => props.theme.badgeFontWeight};
-  margin-right: ${(props) => props.theme.spaces.s050};
   margin-bottom: ${(props) => props.theme.spaces.s050};
 
   &.badge-secondary:hover {
@@ -25,40 +24,41 @@ const StyledBadge = styled(Badge)`
   }
 `;
 
-class BadgeTooltip extends React.Component {
-  constructor(props) {
-    super(props);
+const BadgeTooltip = (props) => {
+  const {
+    abbreviation,
+    name,
+    size,
+    id,
+    href,
+    ariaLabel,
+  } = props;
 
-    this.toggle = this.toggle.bind(this);
-    this.state = {
-      tooltipOpen: false,
-    };
-  }
+  const badgeId = id.replace(/[: ]/g, '_');
+  const [tooltipOpen, setTooltipOpen] = useState(false);
+  const toggle = () => setTooltipOpen(!tooltipOpen);
 
-  toggle() {
-    const { tooltipOpen } = this.state;
-    this.setState({
-      tooltipOpen: !tooltipOpen,
-    });
-  }
-
-  render() {
-    const {
-      abbreviation, name, size, id, href, ariaLabel,
-    } = this.props;
-    const { tooltipOpen } = this.state;
-    const badgeId = id.replace(/[: ]/g, '_');
-
-    return (
-      <BadgeWrapper className={size} href={href}>
-        <StyledBadge id={badgeId} aria-label={ariaLabel}>{abbreviation || name}</StyledBadge>
-        <Tooltip placement="top" isOpen={tooltipOpen} target={badgeId} toggle={this.toggle}>
-          {name}
-        </Tooltip>
-      </BadgeWrapper>
-    );
-  }
-}
+  return (
+    <BadgeWrapper
+      className={size}
+      href={href}
+      id={badgeId}
+      aria-label={ariaLabel}
+    >
+      <StyledBadge>
+        {abbreviation || name}
+      </StyledBadge>
+      <Tooltip
+        placement="top"
+        isOpen={tooltipOpen}
+        target={badgeId}
+        toggle={toggle}
+      >
+        {name}
+      </Tooltip>
+    </BadgeWrapper>
+  );
+};
 
 BadgeTooltip.defaultProps = {
   size: 'md',

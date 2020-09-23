@@ -3,6 +3,8 @@ indicators: Mittarit
 actions: Toimenpiteet
 action: Toimenpide
 dashboard: Tilannekuva
+dashboard-tabs: Päästövähennyspotentiaali jaettuna aihealueisiin
+dashboard-segment-description: Kategorian toimenpiteiden osuus päästövähennyspotentiaalista
 operational: Toiminnallinen mittari
 tactical: Taktinen mittari
 strategic: Strateginen mittari
@@ -62,6 +64,8 @@ indicator-goal: Tavoite
 indicator-time-to-goal: Tavoitteeseen matkaa
 indicator-time-no-goals: Ei tavoitearvoja
 indicator-resolution-years: vuotta
+indicator-also-for-actions: Liittyy myös toimenpiteisiin
+indicator-graph-not-accessible: Indikaattorin data-graafin tekstiversio ei ole vielä saatavilla
 type: Tyyppi
 name: Nimi
 themes: Teemat
@@ -75,5 +79,10 @@ supported-by: Kehitystä tukenut
 back-to-top: Sivun alkuun
 copy-to-clipboard: Kopioi linkki leikepöydälle
 copied-to-clipboard: Kopioitu!
-toggle-navigation: Avaa/sulje navigaatio
+nav-menu-close: Sulje navigaatio
+nav-menu-open: Navigaatio
 page-not-found: Sivua ei löydy
+skip-to-content: Hyppää sisältöön
+search: Hae
+active-filters: Aktiiviset rajaukset
+remove-filter: Poista rajaus

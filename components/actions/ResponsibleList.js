@@ -8,18 +8,22 @@ import BadgeTooltip from '../common/BadgeTooltip';
 
 const Responsibles = styled.div`
   font-size: ${(props) => props.theme.fontSizeMd};
+  a {
+    margin-right: ${(props) => props.theme.spaces.s050};
+  }
 
-  .badge-pill {
-    margin-right: .5em;
+  h3 {
+    font-size: ${(props) => props.theme.fontSizeBase};
   }
 
   .lg {
-    display: block;
+    margin-right: 100%;
   }
 `;
 
 function ResponsibleBadge(props) {
   const {
+    t,
     index,
     id,
     name,
@@ -28,12 +32,11 @@ function ResponsibleBadge(props) {
   let size = 'md';
   let ariaLabel;
 
-  // TODO: translate päävastuutaho
   if (index === 0) {
     size = 'lg';
-    ariaLabel = `Päävastuutaho: ${name}`;
+    ariaLabel = `${t('responsible-party-main')}: ${abbreviation} ${name}`;
   } else {
-    ariaLabel = name;
+    ariaLabel = `${abbreviation} ${name}`;
   }
 
   return (
@@ -54,10 +57,11 @@ function ResponsibleList(props) {
 
   return (
     <Responsibles>
-      <h5>{t('responsible-parties')}</h5>
+      <h3>{t('responsible-parties')}</h3>
       { data
         ? data.map((item, index) => (
           <ResponsibleBadge
+            t={t}
             key={item.id}
             index={index}
             id={item.id}

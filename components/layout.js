@@ -50,7 +50,7 @@ function Layout({ children }) {
         <meta name="theme-color" content="#ffffff" />
       </Head>
       <Header siteTitle={siteTitle} />
-      <Content>
+      <Content id="main">
         {children}
       </Content>
       <Footer />

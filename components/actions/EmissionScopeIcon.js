@@ -1,75 +1,62 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import { Tooltip } from 'reactstrap';
 import styled from 'styled-components';
 import Icon from '../common/Icon';
 
-const IconContainer = styled.div`
+const IconContainer = styled.a`
   display: inline-block;
   margin-right: 0.5em;
 `;
 
-class EmissionScopeIcon extends React.Component {
+const EmissionScopeIcon = (props) => {
+  const { category, color, size } = props;
+  const { id, identifier, name, shortDescription } = category;
+  const iconId = `em-sc-${id}`;
+  const fade = false;
 
-  constructor(props) {
-    super(props);
+  const [tooltipOpen, setTooltipOpen] = useState(false);
+  const toggle = () => setTooltipOpen(!tooltipOpen);
 
-    this.toggle = this.toggle.bind(this);
-    this.state = {
-      tooltipOpen: false,
-    };
-  }
-
-  toggle() {
-    const { tooltipOpen } = this.state;
-    this.setState({
-      tooltipOpen: !tooltipOpen,
-    });
-  }
-
-  mapIcon(scope) {
+  function mapIcon(scope) {
     // TODO: move scope -> icon mapping somewhere else
     // TODO: use (create) more fitting icons
     switch (scope) {
       case 'scope1_2':
         return 'home';
-
       case 'scope3':
         return 'globe';
-
       default:
         return 'circleOutline';
     }
-  }
+  };
 
-  render() {
-    const { category, color, size } = this.props;
-    const { id, identifier, name, shortDescription } = category;
-    const iconId = `em-sc-${id}`;
-    const iconName = this.mapIcon(identifier);
-
-    // Fade effect looks jerky for some reason
-    const fade = false;
-    return (
-      <>
-        <IconContainer id={iconId} style={{ width: size, height: size }}>
-          <Icon name={iconName} color={color} width={size} height={size} />
-        </IconContainer>
-        <Tooltip
-          placement="top"
-          isOpen={this.state.tooltipOpen}
-          target={iconId}
-          toggle={this.toggle}
-          fade={fade}
-          innerClassName="emission-scope-icon-tooltip"
-        >
-          <strong>{name}</strong><br/>
-          {shortDescription}
-        </Tooltip>
-      </>
-    );
-  }
+  return (
+    <IconContainer
+      id={iconId}
+      style={{ width: size, height: size }}
+      href="#"
+    >
+      <span className="sr-only">
+        {name}
+        {shortDescription}
+      </span>
+      <Icon name={mapIcon(identifier)} color={color} width={size} height={size} />
+      <Tooltip
+        placement="top"
+        isOpen={tooltipOpen}
+        target={iconId}
+        toggle={toggle}
+        fade={fade}
+        innerClassName="emission-scope-icon-tooltip"
+        trigger="focus hover click"
+      >
+        <strong>{name}</strong><br/>
+        {shortDescription}
+      </Tooltip>
+    </IconContainer>
+  );
 }
 
 EmissionScopeIcon.propTypes = {

@@ -50,14 +50,15 @@ function ActionCardList({ actions }) {
   groups = groups.sort((g1, g2) => g1.identifier - g2.identifier);
 
   return (
-    <div>
+    <div role="list">
       {groups.map((group) => (
-        <ActionGroup key={group.id}>
+        <ActionGroup key={group.id} role="group">
           <Col xs="12">
             <ActionGroupHeader>{group.name}</ActionGroupHeader>
           </Col>
           {group.elements.map((item) => (
             <Col
+              tag="li"
               xs="6"
               sm="4"
               lg="3"
@@ -65,6 +66,7 @@ function ActionCardList({ actions }) {
               key={item.id}
               className="mb-4 d-flex align-items-stretch"
               style={{ transition: 'all 0.5s ease' }}
+              role="listitem"
             >
               <ActionCard action={item} />
             </Col>
@@ -72,7 +74,7 @@ function ActionCardList({ actions }) {
         </ActionGroup>
       ))}
       {noGroupItems && (
-        <ActionGroup key="default">
+        <ActionGroup key="default" role="group">
           {noGroupItems.map((item) => (
             <Col
               xs="6"
@@ -82,6 +84,7 @@ function ActionCardList({ actions }) {
               key={item.id}
               className="mb-4 d-flex align-items-stretch"
               style={{ transition: 'all 0.5s ease' }}
+              role="listitem"
             >
               <ActionCard action={item} />
             </Col>

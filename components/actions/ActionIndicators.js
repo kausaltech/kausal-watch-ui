@@ -39,16 +39,19 @@ function ActionIndicator(props) {
       <CardBody>
         {(indicator.latestGraph || indicator.latestValue)
           ? <IndicatorGraph indicatorId={indicator.id} />
-          : <h5 className="mb-0">{indicator.name}</h5>}
+          : <h3 className="mb-0">{indicator.name}</h3>}
       </CardBody>
       <CardFooter>
         {actions.length > 0 && (
           <span>
-            Liittyy myös toimenpiteisiin:
+            {t('indicator-also-for-actions')}
+            :
             {' '}
             {actions.map(action => (
               <ActionLink key={action.identifier} action={action}>
-                <a><Badge>{action.identifier}</Badge></a>
+                <a className="mr-2" href>
+                  <Badge>{action.identifier}</Badge>
+                </a>
               </ActionLink>
             ))}
             {' | '}

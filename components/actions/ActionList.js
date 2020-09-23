@@ -289,7 +289,7 @@ function ActionListResults({
             </Row>
           )}
           <Row>
-            <Col sm="12" md="10">
+            <Col sm="12">
               <h2>{ t('browse-actions') }</h2>
               <ActionListFilters
                 categoryTypes={catTypes}
