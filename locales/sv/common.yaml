@@ -13,7 +13,7 @@ see-all-actions: Se alla handlingar
 recently-updated-indicators: Nyligen uppdaterade indikatorer
 see-all-indicators: Se alla indikatorer
 instance-type-testing-label: Testning
-instance-type-testing-message: Detta är en testversion av tjänsten
+instance-type-testing-message: Detta är en testversion av tjänsten (under uppbyggnad)
 instance-type-development-label: Utveckling
 instance-type-development-message: Detta är en utvecklingsversion av tjänsten
 insight-download-label: Ladda ner
