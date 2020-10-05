@@ -37,11 +37,15 @@ DynamicLink.propTypes = {
   ...Link.propTypes,
 };
 
-// Return true if top level of the current path matches the passed slug
+// Return root slug of the current path
 export function getActiveBranch() {
   const router = useRouter();
   const splitCurrent = router.pathname.split('/');
-  const currentPath = splitCurrent[0];
+  const currentPath = splitCurrent[1]; // [0] is ''
+  // Resolve slug for a dynamic content page
+  if (currentPath === '[...slug]') {
+    return router.query.slug[0];
+  }
   // Ignore the hashtag if present
   return currentPath.split('#')[0];
 }
@@ -116,7 +120,7 @@ export function ActionLink(props) {
 ActionLink.propTypes = {
   action: actionPropType.isRequired,
 };
-
+ 
 export function ActionListLink(props) {
   const { query, ...other } = props;
   const pathname = '/actions';
