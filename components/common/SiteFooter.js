@@ -446,7 +446,7 @@ function SiteFooter(props) {
             </BaseColumn>
           </BaseSection>
 
-          {fundingInstruments && (
+          {fundingInstruments.length > 0 && (
             <FundingInstruments>
               <FundingHeader>{t('supported-by')}</FundingHeader>
               { fundingInstruments.map((funder) => (

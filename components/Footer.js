@@ -35,7 +35,8 @@ function Footer(props) {
     additionalLinks.push({ id: '1', name: t('accessibility'), slug: plan.accessibilityStatementUrl });
   }
 
-  const fundingInstruments = [
+  let fundingInstruments = [];
+  if (plan.identifier === 'hnh2035') fundingInstruments = [
     {
       id: '1',
       name: 'Climate-KIC (Climate-KIC is supported by the EIT, a body of the European Union)',
