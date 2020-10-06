@@ -26,7 +26,8 @@ const FiltersList = styled.div`
 
   .close {
     color: white;
-    margin-left: .5em;
+    margin-left: .75em;
+    font-size: ${(props) => props.theme.fontSizeMd};
   }
 
 `;
@@ -132,7 +133,9 @@ function ActionListFilterBadges({
             className="mr-3"
             style={props}
           >
-            <Button close size="sm" onClick={makeCallback(item.identifier)} aria-label={t('remove-filter')} />
+            <Button close size="sm" onClick={makeCallback(item.identifier)} aria-label={t('remove-filter')}>
+              <span aria-hidden="true">x</span>
+            </Button>
             { item.name.trim() }
           </StyledBadge>
         )}
