@@ -10,6 +10,7 @@ const GlobalStyle = createGlobalStyle`
     font-size: ${(props) => props.theme.fontSizeBase};
     line-height: ${(props) => props.theme.lineHeightBase};
     text-rendering: optimizeLegibility;
+    background: ${(props) => props.theme.themeColors.white};
   }
 
   a {

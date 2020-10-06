@@ -43,7 +43,7 @@ const VisuallyHidden = styled.span`
 `;
 
 const OverlayContainer = styled.div`
-  color: white;
+  color: ${(props) => props.theme.themeColors.white};
   padding: ${(props) => props.theme.spaces.s200} 0;
 `;
 

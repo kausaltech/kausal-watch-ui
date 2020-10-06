@@ -30,15 +30,15 @@ const IndicatorsTabs = styled.div`
 
 const Tab = styled.a`
   background: ${(props) => props.theme.brandDark};
-  color: white;
+  color: ${(props) => props.theme.themeColors.white};
   &:hover {
     color: ${(props) => props.theme.brandLight};
   }
   &.active {
     color: ${(props) => props.theme.brandDark};
-    background: white;
+    background: ${(props) => props.theme.themeColors.white};
     &:hover {
-      color: black;
+      color: ${(props) => props.theme.themeColors.black};
     }
   }
 `;
