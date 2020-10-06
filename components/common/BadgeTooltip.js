@@ -17,7 +17,12 @@ const StyledBadge = styled(Badge)`
   padding: ${(props) => props.theme.badgePaddingY} ${(props) => props.theme.badgePaddingX};
   font-weight: ${(props) => props.theme.badgeFontWeight};
   margin-bottom: ${(props) => props.theme.spaces.s050};
-
+  max-width: 100%;
+  word-break: break-all;
+  word-break: break-word;
+  hyphens: auto;
+  white-space: normal;
+  text-align: left;
   &.badge-secondary:hover {
     background-color:  ${(props) => lighten(0.05, props.theme.brandDark)};
     color: ${(props) => props.theme.themeColors.white};
