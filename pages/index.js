@@ -56,7 +56,7 @@ function HomePage() {
   if (plan.identifier === 'ktstrat') heroComponent = <ThlHero />;
   if (plan.identifier === 'liiku' || plan.identifier === 'lahti-ilmasto') heroComponent = (
     <HeroFullImage
-      bgImage={plan.imageUrl}
+      bgImage={plan.mainImage?.largeRendition?.src || plan.imageUrl}
       title={generalContent.siteTitle}
       siteDescription={generalContent.siteDescription}
       actionsDescription={generalContent.actionShortDescription}
