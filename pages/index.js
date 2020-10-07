@@ -54,9 +54,9 @@ function HomePage() {
   // Override with plan specific hero if applicable
   if (plan.identifier === 'hnh2035') heroComponent = <HnhHero />;
   if (plan.identifier === 'ktstrat') heroComponent = <ThlHero />;
-  if (plan.identifier === 'liiku') heroComponent = (
+  if (plan.identifier === 'liiku' || plan.identifier === 'lahti-ilmasto') heroComponent = (
     <HeroFullImage
-      bgImage={plan.imageUrl}
+      bgImage={plan.mainImage?.largeRendition?.src || plan.imageUrl}
       title={generalContent.siteTitle}
       siteDescription={generalContent.siteDescription}
       actionsDescription={generalContent.actionShortDescription}

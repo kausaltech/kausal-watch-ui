@@ -25,7 +25,7 @@ const FiltersList = styled.div`
   }
 
   .close {
-    color: white;
+    color: ${(props) => props.theme.themeColors.white};
     margin-left: .75em;
     font-size: ${(props) => props.theme.fontSizeMd};
   }

@@ -15,10 +15,6 @@ const Responsibles = styled.div`
   h3 {
     font-size: ${(props) => props.theme.fontSizeBase};
   }
-
-  .lg {
-    margin-right: 100%;
-  }
 `;
 
 function ResponsibleBadge(props) {

@@ -21,7 +21,7 @@ export function getActionImageURL(plan, action) {
     });
   }
   if (!url) {
-    url = plan.imageUrl;
+    url = plan.mainImage?.smallRendition?.src || plan.imageUrl;
   }
   return url;
 }

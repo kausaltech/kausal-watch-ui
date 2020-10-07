@@ -60,7 +60,7 @@ const Segment = styled.button`
 
   &.active {
     background-color: ${(props) => props.theme.themeColors.dark};
-    color: white;
+    color: ${(props) => props.theme.themeColors.white};
   }
 `;
 

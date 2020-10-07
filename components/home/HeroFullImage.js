@@ -73,15 +73,16 @@ const MainCard = styled.div`
   }
 
   @media (max-width: ${(props) => props.theme.breakpointMd}) {
-    margin-top: 20rem;
+    margin-top: 10rem;
+    margin-bottom: 0;
   }
 
   @media (max-width: ${(props) => props.theme.breakpointSm}) {
-    margin-top: 14rem;
+    margin-top: 8rem;
   }
 `;
 
-const Highlight = styled.div`
+const Highlight = styled.div` 
   height: 100%;
   margin-bottom: 0;
 
@@ -110,8 +111,8 @@ const Highlight = styled.div`
 
 const Illustration = styled.div`
   svg {
-    width: ${(props) => props.theme.spaces.s300};
-    height: ${(props) => props.theme.spaces.s300};
+    width: ${(props) => props.theme.spaces.s600};
+    height: ${(props) => props.theme.spaces.s600};
     margin: 0 1rem 0 0;
     display: block;
     fill: ${(props) => props.theme.brandDark};
