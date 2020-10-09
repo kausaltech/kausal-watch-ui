@@ -82,6 +82,15 @@ export function getDashboardLinkProps(query) {
   };
 }
 
+export function getStatusboardLinkProps(query) {
+  return {
+    href: {
+      pathname: '/dashboard/status',
+      query,
+    },
+  };
+}
+
 export const replaceHashWithoutScrolling = (hash) => window.history.replaceState(
   {}, // state, not used
   '', // title, not used
