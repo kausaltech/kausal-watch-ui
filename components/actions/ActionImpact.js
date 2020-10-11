@@ -5,7 +5,13 @@ import styled from 'styled-components';
 import Icon from '../common/Icon';
 
 const ImpactIcon = styled(Icon)`
-  font-size: 1.5em;
+  font-size: ${(props) => {
+    switch (props.size) {
+      case 'sm': return '1em';
+      case 'md': return '1.5em';
+      default: return '1.5em';
+    }
+  }};
 
   &.icon-on {
     fill: ${(props) => props.theme.brandDark} !important;
@@ -25,6 +31,7 @@ function ActionImpact(props) {
     identifier,
     name,
     max,
+    size,
   } = props;
 
   const bullets = [];
@@ -42,11 +49,11 @@ function ActionImpact(props) {
   const impactVisual = bullets.map((item) => {
     switch (item.type) {
       case 'bad':
-        return <ImpactIcon key={item.key} name="exclamationCircle" className="icon-bad" />
+        return <ImpactIcon key={item.key} name="exclamationCircle" className="icon-bad" size={size} />;
       case 'off':
-        return <ImpactIcon key={item.key} name="circleOutline" className="icon-off" />
+        return <ImpactIcon key={item.key} name="circleOutline" className="icon-off" size={size} />;
       case 'on':
-        return <ImpactIcon key={item.key} name="circleFull" className="icon-on" />
+        return <ImpactIcon key={item.key} name="circleFull" className="icon-on" size={size} />;
       default:
         return null;
     }
@@ -67,12 +74,14 @@ function ActionImpact(props) {
 
 ActionImpact.defaultProps = {
   max: 4,
+  size: 'md',
 };
 
 ActionImpact.propTypes = {
   identifier: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   max: PropTypes.number,
+  size: PropTypes.string,
 };
 
 export default ActionImpact;

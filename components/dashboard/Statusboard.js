@@ -8,8 +8,6 @@ import {
 } from 'reactstrap';
 import styled from 'styled-components';
 import { withTranslation } from 'common/i18n';
-import { captureMessage } from 'common/sentry';
-import RichText from 'components/common/RichText';
 import ContentLoader from 'components/common/ContentLoader';
 import ErrorMessage from 'components/common/ErrorMessage';
 import PlanContext from 'context/plan';
@@ -97,6 +95,14 @@ export const GET_ACTION_LIST = gql`
           name
         }
       }
+      contactPersons {
+        id
+        person {
+          organization {
+            id
+          }
+        }
+      }
       tasks {
         id
         state
@@ -110,6 +116,16 @@ export const GET_ACTION_LIST = gql`
         id
         goals {
           id
+        }
+      }
+      relatedIndicators {
+        id
+        indicatesActionProgress
+        indicator {
+          id
+          goals {
+            id
+          }
         }
       }
     }
@@ -165,7 +181,7 @@ function constructOrgHierarchy(orgsIn, actions) {
 }
 
 function ActionListResults({
-  t, planActions, planOrganizations, categoryTypes, leadContent, filters, onFilterChange
+  t, planActions, planOrganizations, categoryTypes, filters, onFilterChange
 }) {
   const plan = useContext(PlanContext);
   const catById = {};
@@ -335,7 +351,6 @@ ActionListResults.propTypes = {
   planActions: PropTypes.arrayOf(PropTypes.object).isRequired,
   planOrganizations: PropTypes.arrayOf(PropTypes.object).isRequired,
   categoryTypes: PropTypes.arrayOf(PropTypes.object).isRequired,
-  leadContent: PropTypes.string.isRequired,
 };
 
 function Statusboard({
