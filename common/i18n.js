@@ -12,7 +12,7 @@ const i18nNext = new NextI18Next({
   otherLanguages: supportedLanguages,
   saveMissing: process.env.NODE_ENV !== 'production',
   defaultNS: 'common',
-  fallbackNS: ['actions'],
+  fallbackNS: ['actions', 'a11y'],
   missingKeyHandler: (ng, ns, key) => {
     console.warn(`Missing i18n key '${key}' in namespace '${ns}'`);
   },
