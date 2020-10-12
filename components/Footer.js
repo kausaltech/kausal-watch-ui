@@ -29,10 +29,13 @@ function Footer(props) {
     navLinks = navLinks.concat(staticPages);
   }
 
-  let additionalLinks = [];
+  const additionalLinks = [];
 
   if (plan.accessibilityStatementUrl) {
     additionalLinks.push({ id: '1', name: t('accessibility'), slug: plan.accessibilityStatementUrl });
+  }
+  else {
+    additionalLinks.push({ id: '1', name: t('accessibility'), slug: 'accessibility' });
   }
 
   let fundingInstruments = [];
