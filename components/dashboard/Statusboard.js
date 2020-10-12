@@ -12,6 +12,7 @@ import ContentLoader from 'components/common/ContentLoader';
 import ErrorMessage from 'components/common/ErrorMessage';
 import PlanContext from 'context/plan';
 import StatusboardFilters from './StatusboardFilters';
+import ActionStatusGraphs from './ActionStatusGraphs';
 import ActionStatusTable from './ActionStatusTable';
 
 const ActionListSection = styled.div`
@@ -326,6 +327,7 @@ function ActionListResults({
         </ActionListHeader>
       </ActionListSection>
       <Container>
+        <ActionStatusGraphs actions={filteredActions} />
         <ActionStatusTable actions={filteredActions} />
       </Container>
     </>

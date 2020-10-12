@@ -65,6 +65,12 @@ const GET_PLAN = gql`
         name,
         order
       }
+      actionStatuses {
+        id
+        identifier
+        name
+        isCompleted
+      }
       impactGroups {
         id
       }

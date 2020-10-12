@@ -160,7 +160,6 @@ const ResponsiblesViz = (props) => {
   const theme = useTheme();
   const contactList = [];
   const noContactList = [];
-  console.log(parties, persons);
   parties.forEach((party) => {
     let hasContact = false;
     persons.forEach((person) => {
