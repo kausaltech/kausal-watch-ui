@@ -4,7 +4,12 @@ import { useTheme } from 'common/theme';
 import { lighten } from 'polished';
 
 const StatusDonut = (props) => {
-  const { data, currentValue } = props;
+  const {
+    data,
+    currentValue,
+    colors,
+    header
+  } = props;
   const theme = useTheme();
   const Plot = dynamic(import('./Plot'));
 
@@ -17,17 +22,18 @@ const StatusDonut = (props) => {
   pieData.hoverinfo = 'label+value+percent';
   pieData.hole = 0.5;
   pieData.type = 'pie';
+  pieData.sort = false;
+  pieData.direction = 'clockwise';
   pieData.textinfo = 'none';
-  const plotColors = [
+  const plotColors = colors || [
     theme.actionOnTimeColor,
     lighten(0.15, theme.actionOnTimeColor),
     lighten(0.25, theme.actionOnTimeColor),
     theme.actionLateColor,
   ];
 
-  //  ${(props) => lighten(0.15, props.theme.actionSeverelyLateColor)};
   const pieLayout = {
-    title: 'Progress',
+    title: header,
     annotations: [
       {
         font: {
