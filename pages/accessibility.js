@@ -176,13 +176,10 @@ const AccessibilityPage = () => {
   );
 };
 
-<<<<<<< HEAD
-=======
 const initialProps = {
   namespacesRequired: ['common', 'a11y'],
 };
 
 AccessibilityPage.getInitialProps = async () => (initialProps);
 
->>>>>>> origin/master
 export default AccessibilityPage;
