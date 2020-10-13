@@ -23,7 +23,7 @@ const ContentHeader = styled.header`
 `;
 
 const AccessibilityPage = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(['a11y']);
   const plan = useContext(PlanContext);
   const accessibilityProblems = accessibilityStatementData.fi.nonAccessibleContent.nonCompliant;
 
@@ -89,6 +89,7 @@ const AccessibilityPage = () => {
                   <h3>{t('a11y:non-compliance-aa')}</h3>
                   <p>
                     {t('a11y:non-compliance-below')}
+                    :
                   </p>
                   <ul>
                     { accessibilityProblems.map((problem) => (
@@ -118,6 +119,7 @@ const AccessibilityPage = () => {
                 {t('a11y:prepared-on')}
                 {' '}
                 {accessibilityStatementData.en.preparedOn}
+                .
               </p>
               <p>
                 {t('a11y:prepared-how')}
@@ -126,6 +128,7 @@ const AccessibilityPage = () => {
                 {t('a11y:reviewed-on')}
                 {' '}
                 {accessibilityStatementData.en.reviewedOn}
+                .
               </p>
               <h2>{t('a11y:feedback-contact')}</h2>
               <p>
@@ -173,8 +176,10 @@ const AccessibilityPage = () => {
   );
 };
 
-AccessibilityPage.getInitialProps = async () => ({
-  namespacesRequired: ['a11y'],
-});
+const initialProps = {
+  namespacesRequired: ['common', 'a11y'],
+};
+
+AccessibilityPage.getInitialProps = async () => (initialProps);
 
 export default AccessibilityPage;
