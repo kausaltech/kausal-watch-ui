@@ -96,14 +96,19 @@ const GlobalStyle = createGlobalStyle`
       }
     }
 
-    h3 {
+    h2 {
       margin-top: ${(props) => props.theme.spaces.s150};
       font-size: ${(props) => props.theme.fontSizeLg};
     }
 
-    h4 {
+    h3 {
       margin-top: ${(props) => props.theme.spaces.s150};
       font-size: ${(props) => props.theme.fontSizeMd};
+    }
+
+    h4 {
+      margin-top: ${(props) => props.theme.spaces.s150};
+      font-size: ${(props) => props.theme.fontSizeBase};
 
       &:first-child {
         margin-top: 0;

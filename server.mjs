@@ -91,7 +91,7 @@ const isProduction = process.env.INSTANCE_TYPE === 'production';
 server.use(robots(isProduction ? {UserAgent: '*', Allow: '/'} : {UserAgent: '*', Disallow: '/'}));
 
 // Serve locales as JSON
-server.get('/locales/:lang([a-z]{2})/:ns([a-z_-]+).json', function (req, res) {
+server.get('/locales/:lang([a-z]{2})/:ns([0-9a-z_-]+).json', function (req, res) {
   const { lang, ns } = req.params;
   let contents;
 
