@@ -23,7 +23,7 @@ const ContentHeader = styled.header`
 `;
 
 const AccessibilityPage = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(['a11y']);
   const plan = useContext(PlanContext);
   const accessibilityProblems = accessibilityStatementData.fi.nonAccessibleContent.nonCompliant;
 
@@ -172,9 +172,5 @@ const AccessibilityPage = () => {
     </Layout>
   );
 };
-
-AccessibilityPage.getInitialProps = async () => ({
-  namespacesRequired: ['a11y'],
-});
 
 export default AccessibilityPage;

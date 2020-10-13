@@ -412,7 +412,7 @@ function SiteFooter(props) {
               { feedbackLink && (
                 <UtilityItem>
                   <NavigationLink slug={feedbackLink.slug}>
-                    <a>{feedbackLink.name}</a>
+                    {feedbackLink.name}
                   </NavigationLink>
                 </UtilityItem>
               )}
@@ -434,7 +434,7 @@ function SiteFooter(props) {
               { additionalLinks && additionalLinks.map((page) => (
                 <BaseLink key={page.slug}>
                   <NavigationLink slug={page.slug}>
-                    <a>{page.name}</a>
+                    {page.name}
                   </NavigationLink>
                 </BaseLink>
               ))}
