@@ -89,6 +89,7 @@ const AccessibilityPage = () => {
                   <h3>{t('a11y:non-compliance-aa')}</h3>
                   <p>
                     {t('a11y:non-compliance-below')}
+                    :
                   </p>
                   <ul>
                     { accessibilityProblems.map((problem) => (
@@ -118,6 +119,7 @@ const AccessibilityPage = () => {
                 {t('a11y:prepared-on')}
                 {' '}
                 {accessibilityStatementData.en.preparedOn}
+                .
               </p>
               <p>
                 {t('a11y:prepared-how')}
@@ -126,6 +128,7 @@ const AccessibilityPage = () => {
                 {t('a11y:reviewed-on')}
                 {' '}
                 {accessibilityStatementData.en.reviewedOn}
+                .
               </p>
               <h2>{t('a11y:feedback-contact')}</h2>
               <p>
@@ -173,4 +176,13 @@ const AccessibilityPage = () => {
   );
 };
 
+<<<<<<< HEAD
+=======
+const initialProps = {
+  namespacesRequired: ['common', 'a11y'],
+};
+
+AccessibilityPage.getInitialProps = async () => (initialProps);
+
+>>>>>>> origin/master
 export default AccessibilityPage;
