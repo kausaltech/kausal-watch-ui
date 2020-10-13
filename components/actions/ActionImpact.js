@@ -51,7 +51,7 @@ function ActionImpact(props) {
       case 'bad':
         return <ImpactIcon key={item.key} name="exclamationCircle" className="icon-bad" size={size} />;
       case 'off':
-        return <ImpactIcon key={item.key} name="circleOutline" className="icon-off" size={size} />;
+        return <ImpactIcon key={item.key} name="circleFull" className="icon-off" size={size} />;
       case 'on':
         return <ImpactIcon key={item.key} name="circleFull" className="icon-on" size={size} />;
       default:

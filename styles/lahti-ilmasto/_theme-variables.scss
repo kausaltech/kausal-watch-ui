@@ -23,7 +23,7 @@ $name: 'lahti-ilmasto';
  $brand-light:  #01E376;
  $brand-dark:   #0050B0;
  $neutral-light: #F2F6FB;
- $neutral-dark: #00387A; 
+ $neutral-dark: #0050B0; 
  
  // Application color mappings:
  $theme-colors: (
@@ -33,8 +33,8 @@ $name: 'lahti-ilmasto';
    "info":       #336D94,
    "warning":    #F4CE73,
    "danger":     #A73939,
-   "light":      #F8F8F8,
-   "dark":       #444444,
+   "light":      #edf2f8,
+   "dark":       #454545,
    "black":      #000000,
    "white":      #FFFFFF,
  );
@@ -43,10 +43,9 @@ $name: 'lahti-ilmasto';
  
  // Fonts
  $font-url: '/static/fonts/lahti-ilmasto/fonts.css';
- //$font-family: 'franklin-gothic-urw';
  $font-family: 'Libre Franklin';
  
- $font-family-sans-serif:      "Franklin Gothic", "ITC Franklin Gothic", #{$font-family}, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+ $font-family-sans-serif:      #{$font-family}, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
  $font-family-monospace:       SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
  $font-family-base:            $font-family-sans-serif;
  
@@ -62,7 +61,7 @@ $name: 'lahti-ilmasto';
  
  $font-weight-base:            $font-weight-normal !default;
  
- $line-height-base:            1.666;
+ $line-height-base:            1.6;
  $line-height-sm:              1;
  $line-height-md:              1.2;
  $line-height-lg:              1.75;
