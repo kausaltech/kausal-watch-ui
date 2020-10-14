@@ -136,36 +136,33 @@ const TasksStatusBar = (props) => {
   );
 };
 
-const IndicatorsViz = (props) => {
-  const {relatedIndicators, indicators} = props;
+const IndicatorsViz = ({ relatedIndicators }) => {
   const theme = useTheme();
   let hasProgress = false;
-  let hasGoal = false;
-  relatedIndicators.forEach((indicator) => {
-    if (indicator.indicatesActionProgress) {
-      hasProgress = indicator.id;
-      if (indicator.indicator.goals.length > 0) hasGoal = true;
-    };
+  let hasGoals = false;
+  const hasIndicators = relatedIndicators.length > 0;
+
+  relatedIndicators.forEach((ri) => {
+    const { indicator, indicatesActionProgress } = ri;
+    if (indicatesActionProgress) hasProgress = true;
+    if (indicator.goals.length > 0) hasGoals = true;
   });
+
   return (
     <div>
-      <Icon name="tachometer" color={hasProgress ? theme.actionOnTimeColor : theme.actionNotStartedColor} />
-      <Icon name="bullseye" color={hasGoal ? theme.actionOnTimeColor : theme.actionNotStartedColor} />
+      <Icon name="tachometer" color={hasIndicators ? theme.actionOnTimeColor : theme.actionNotStartedColor} />
+      <Icon name="bullseye" color={hasGoals ? theme.actionOnTimeColor : theme.actionNotStartedColor} />
     </div>
   );
 };
 
-const ResponsiblesViz = (props) => {
-  const { parties, persons } = props;
+const ResponsiblesViz = ({ parties, persons }) => {
   const theme = useTheme();
   const contactList = [];
   const noContactList = [];
+
   parties.forEach((party) => {
-    let hasContact = false;
-    persons.forEach((person) => {
-      if (person.person.organization && person.person.organization.id === party.organization.id) hasContact = true;
-    });
-    if (hasContact) contactList.push(party.organization.id);
+    if (party.hasContactPerson) contactList.push(party.organization.id);
     else noContactList.push(party.organization.id);
   });
 
@@ -177,10 +174,42 @@ const ResponsiblesViz = (props) => {
   );
 };
 
+function isChildOrg(childOrg, parentOrg) {
+  function makeTree(org) {
+    let ids = [];
+    while (org) {
+      ids.push(org.id);
+      org = org.parent;
+    };
+    return ids;
+  }
+  const childTree = makeTree(childOrg);
+  const parentTree = makeTree(parentOrg);
+  return childTree.some((id) => parentTree.indexOf(id) >= 0);
+}
+
+function processAction(actionIn, orgMap) {
+  const action = { ...actionIn };
+
+  action.responsibleParties = actionIn.responsibleParties.map((rp) => {
+    const org = orgMap.get(rp.organization.id);
+    const found = action.contactPersons.some(({ person }) => {
+      const personOrg = orgMap.get(person.organization.id);
+      return isChildOrg(personOrg, org);
+    });
+    return {
+      ...rp,
+      hasContactPerson: found,
+    };
+  });
+  return action;
+}
+
 const ActionsStatusTable = (props) => {
-  const { actions } = props;
+  const { actions, orgs } = props;
+  const orgMap = new Map(orgs.map((org) => [org.id, org]));
   const plan = useContext(PlanContext);
-  const sortedActions = actions.sort((g1, g2) => g1.identifier - g2.identifier);
+  const sortedActions = actions.sort((g1, g2) => g1.identifier - g2.identifier).map((action) => processAction(action, orgMap));
   const hasImpacts = plan.actionImpacts.length > 0;
 
   return (
@@ -234,10 +263,10 @@ const ActionsStatusTable = (props) => {
               </td>
               <td>
                 { item.relatedIndicators && !item.mergedWith &&
-                  <IndicatorsViz indicators={item.indicators} relatedIndicators={item.relatedIndicators} />}
+                  <IndicatorsViz relatedIndicators={item.relatedIndicators} />}
               </td>
               <td>
-                <UpdatedAgo>{ moment(item.updatedAt).fromNow(true) }</UpdatedAgo>
+                <UpdatedAgo>{ `${moment(item.updatedAt).fromNow(true)} ago` }</UpdatedAgo>
               </td>
             </ActionRow>
           ) : (
@@ -258,6 +287,7 @@ const ActionsStatusTable = (props) => {
 
 ActionsStatusTable.propTypes = {
   actions: PropTypes.arrayOf(PropTypes.object).isRequired,
+  orgs: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default ActionsStatusTable;

@@ -328,7 +328,7 @@ function ActionListResults({
       </ActionListSection>
       <Container>
         <ActionStatusGraphs actions={filteredActions} />
-        <ActionStatusTable actions={filteredActions} />
+        <ActionStatusTable actions={filteredActions} orgs={orgs} />
       </Container>
     </>
   );
