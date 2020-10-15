@@ -194,6 +194,7 @@ function processAction(actionIn, orgMap) {
   action.responsibleParties = actionIn.responsibleParties.map((rp) => {
     const org = orgMap.get(rp.organization.id);
     const found = action.contactPersons.some(({ person }) => {
+      if (!person.organization) return false;
       const personOrg = orgMap.get(person.organization.id);
       return isChildOrg(personOrg, org);
     });
