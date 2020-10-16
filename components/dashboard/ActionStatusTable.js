@@ -176,15 +176,15 @@ const ResponsiblesViz = ({ parties, persons }) => {
 
 function isChildOrg(childOrg, parentOrg) {
   function makeTree(org) {
-    let ids = [];
+    const ids = [];
     while (org) {
       ids.push(org.id);
       org = org.parent;
-    };
+    }
     return ids;
   }
   const childTree = makeTree(childOrg);
-  const parentTree = makeTree(parentOrg);
+  const parentTree = [parentOrg.id];
   return childTree.some((id) => parentTree.indexOf(id) >= 0);
 }
 
