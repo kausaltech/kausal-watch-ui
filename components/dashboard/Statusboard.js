@@ -8,6 +8,7 @@ import {
 } from 'reactstrap';
 import styled from 'styled-components';
 import { withTranslation } from 'common/i18n';
+import { constructOrgHierarchy, orgHasActions } from 'common/organizations';
 import ContentLoader from 'components/common/ContentLoader';
 import ErrorMessage from 'components/common/ErrorMessage';
 import PlanContext from 'context/plan';
@@ -130,10 +131,12 @@ export const GET_ACTION_LIST = gql`
         }
       }
     }
-    planOrganizations(plan: $plan, withAncestors: true) {
+    planOrganizations(plan: $plan, withAncestors: true, forContactPersons: true, forResponsibleParties: true) {
       id
       abbreviation
       name
+      contactPersonCount
+      actionCount
       classification {
         name
       }
@@ -143,43 +146,6 @@ export const GET_ACTION_LIST = gql`
     }
   }
 `;
-
-function constructOrgHierarchy(orgsIn, actions) {
-  const orgsById = new Map();
-  const skipOrgs = ['Hallitus', 'Valtuusto', 'Lautakunta', 'Jaosto'];
-
-  function isSkippedOrg(org) {
-    if (!org.classification) return false;
-    return skipOrgs.indexOf(org.classification.name) >= 0;
-  }
-
-  const orgs = orgsIn.map((org) => {
-    const newOrg = { ...org, children: [] };
-    orgsById.set(newOrg.id, newOrg);
-    return newOrg;
-  });
-
-  orgs.forEach((org) => {
-    if (!org.parent) return;
-    // Check if org or its parents is one of the skipped organization types
-    // and yank them out of the org hierarchy
-    if (isSkippedOrg(org)) return;
-    let parent = orgsById.get(org.parent.id);
-    while (isSkippedOrg(parent)) {
-      parent = orgsById.get(parent.parent.id);
-    }
-    parent.children.push(org);
-    org.parent = parent;
-  });
-
-  actions.forEach((action) => {
-    action.responsibleParties.forEach((rp) => {
-      rp.organization = orgsById.get(rp.organization.id);
-    });
-  });
-
-  return orgs.filter((org) => !isSkippedOrg(org));
-}
 
 function ActionListResults({
   t, planActions, planOrganizations, categoryTypes, filters, onFilterChange
@@ -315,7 +281,7 @@ function ActionListResults({
               <Col sm="12">
                 <StatusboardFilters
                   categoryTypes={catTypes}
-                  orgs={orgs}
+                  orgs={orgs.filter(orgHasActions)}
                   impacts={impacts}
                   filters={filters}
                   onChange={handleChange}
