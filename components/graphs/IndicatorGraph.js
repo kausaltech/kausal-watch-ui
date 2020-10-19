@@ -17,10 +17,8 @@ const GET_INDICATOR_GRAPH_DATA = gql`
       id
       name
       timeResolution
-      latestGraph {
-        id
-        data
-      }
+      minValue
+      maxValue
       quantity {
         id
         name
@@ -137,10 +135,9 @@ function generateCube(dimensions, values, path) {
       const ids = val.categories.map((valCat) => valCat.id).sort();
       return isEqual(ids, catPath);
     });
-    if (found.length !== 1) {
-      return null;
-    }
-    return found[0].value;
+    if (!found.length) return null;
+    if (found.length === 1) return found[0].value;
+    return found.map(({ date, value }) => ({ date, value }));
   });
   return array;
 }
@@ -149,7 +146,24 @@ function getTraces(dimensions, cube, names)
 {
   const dim = dimensions[0];
 
-  if (dimensions.length == 1) {
+  if (dimensions.length === 1) {
+    // If the cube has a time dimension, the values will be objects (and not straight numbers)
+    if (typeof cube[0] === 'object') {
+      return dim.categories.map((cat, idx) => {
+        const traceName = [
+          ...(names || []),
+          cat.name,
+        ].join(', ');
+        return {
+          name: traceName,
+          type: 'lines+markers',
+          x: cube[idx].map((val) => val.date),
+          y: cube[idx].map((val) => val.value),
+        };
+      });
+    }
+
+    // No time dimension, 'x' axis will be categories
     return [{
       name: (names || [dim.name]).join(', '),
       type: 'bar',
@@ -187,11 +201,53 @@ function generateSingleYearPlot(indicator, values, i18n, plotColors) {
   };
 }
 
+function generateDataTraces(indicator, values, i18n, plotColors, unitLabel) {
+  const dimensions = indicator.dimensions.map((indicatorDim) => indicatorDim.dimension)
+    .sort((a, b) => (a.categories.length - b.categories.length));
+  const symbols = [
+    'square', 'diamond', 'pentagon', 'hexagram', 'star-diamond', 'hash', 'y-down',
+  ];
+  const cube = generateCube(dimensions, values);
+  const dataTraces = getTraces(dimensions, cube).map((trace, idx) => {
+    const color = plotColors[(idx + 1) % plotColors.length];
+
+    return {
+      ...trace,
+      marker: {
+        size: 8,
+        line: {
+          width: 2,
+          color,
+        },
+        symbol: symbols[idx % symbols.length],
+        gradient: {
+          type: 'none',
+        },
+        color: '#ffffff',
+      },
+      line: {
+        width: 2,
+        shape: 'spline',
+        color,
+      },
+      hovertemplate: `%{x} ${trace.name}: %{y} ${unitLabel}`,
+      hoverinfo: 'x+y',
+      hoverlabel: {
+        namelength: 0,
+        bgcolor: color,
+      },
+    };
+  });
+
+  return dataTraces;
+}
+
 function generatePlotFromValues(indicator, i18n, plotColors) {
   let onlyIntegers = true;
   let maxDigits = 0;
   const { unit } = indicator;
   const unitLabel = unit.name === 'no unit' ? '' : (unit.shortName || unit.name);
+  const traces = [];
 
   function processItem(item) {
     let { date, value, categories } = item;
@@ -210,13 +266,79 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
     return { date, value, categories };
   }
 
-  let values = [...indicator.values].sort((a, b) => a.date - b.date).map(processItem);
-  const dates = Array.from(new Set(values.map((item) => item.date)));
+  const values = [...indicator.values].sort((a, b) => a.date - b.date).map(processItem);
+  const dates = Array.from(new Set(values.map((item) => item.date))).sort();
+
+  // Render in a different way for datasets with only one time point
   if (dates.length == 1 && indicator.dimensions.length) {
     return generateSingleYearPlot(indicator, values, i18n, plotColors);
   }
-  // Choose only the main (non-dimensional) values for now
-  values = values.filter((item) => !item.categories.length);
+
+  // Draw the main historical series (non-dimensioned)
+  const mainValues = values.filter((item) => !item.categories.length);
+  const dataTrace = {
+    y: mainValues.map((item) => item.value),
+    x: mainValues.map((item) => item.date),
+    name: indicator.quantity ? capitalizeFirstLetter(indicator.quantity.name) : null,
+    color: plotColors[0],
+    hovertemplate: `%{x}: %{y} ${unitLabel}`,
+    hoverinfo: 'x+y',
+    hoverlabel: {
+      namelength: 0,
+      bgcolor: '#fff',
+    },
+    showlegend: indicator.quantity != null,
+  };
+
+  let attrs;
+  const lineGraph = shouldDrawLine(dataTrace);
+  let lineMode;
+  if (values.length > 30) {
+    lineMode = 'lines';
+  } else {
+    lineMode = 'lines+markers';
+  }
+  if (lineGraph) {
+    attrs = {
+      type: 'scatter',
+      mode: lineMode,
+      line: {
+        width: 4,
+        shape: 'spline',
+        color: plotColors[0],
+      },
+      marker: {
+        size: 6,
+        line: {
+          width: 3,
+          color: plotColors[0],
+        },
+        symbol: 'circle',
+        gradient: {
+          type: 'none',
+        },
+        color: '#ffffff',
+      },
+    };
+  } else {
+    attrs = {
+      type: 'scatter',
+      mode: 'markers',
+      marker: {
+        size: 12,
+        line: {
+          width: 3,
+          color: plotColors[0],
+        },
+        symbol: 'circle',
+        gradient: {
+          type: 'none',
+        },
+        color: '#ffffff',
+      }
+    };
+  }
+  traces.push({ ...dataTrace, ...attrs });
 
   // Group goals by scenario
   const scenarios = new Map();
@@ -246,55 +368,6 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
     scenario.goals = goals.sort((a, b) => a.date - b.date).map(processItem);
   });
 
-  const dataTrace = {
-    y: values.map((item) => item.value),
-    x: values.map((item) => item.date),
-    name: indicator.quantity ? capitalizeFirstLetter(indicator.quantity.name) : null,
-    color: plotColors[0],
-    hovertemplate: `%{x}: %{y} ${unitLabel}`,
-    hoverinfo: 'x+y',
-    hoverlabel: {
-      namelength: 0,
-      bgcolor: '#fff',
-    },
-    showlegend: indicator.quantity != null,
-  };
-  let attrs;
-  const lineGraph = shouldDrawLine(dataTrace);
-  let lineMode;
-  if (values.length > 30) {
-    lineMode = 'lines';
-  } else {
-    lineMode = 'lines+markers';
-  }
-  if (lineGraph) {
-    attrs = {
-      type: 'scatter',
-      mode: lineMode,
-      line: {
-        width: 3,
-        shape: 'spline',
-        color: plotColors[0],
-      },
-      marker: {
-        size: 6,
-        line: {
-          width: 3,
-          color: plotColors[0],
-        },
-        symbol: 'circle',
-        gradient: {
-          type: 'none',
-        },
-        color: '#ffffff',
-      },
-    };
-  } else {
-    attrs = {
-      type: 'bar',
-    };
-  }
-  const traces = [{ ...dataTrace, ...attrs }];
   scenarios.forEach((scenario, scenarioId) => {
     const { goals } = scenario;
 
@@ -326,9 +399,9 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
   });
 
   // Draw current trend line
-  if (indicator.timeResolution === 'YEAR' && indicator.values.length >= 5) {
-    const numberOfYears = Math.min(values.length, 10);
-    const regData = values.slice(values.length - numberOfYears, values.length)
+  if (indicator.timeResolution === 'YEAR' && mainValues.length >= 5) {
+    const numberOfYears = Math.min(mainValues.length, 10);
+    const regData = mainValues.slice(mainValues.length - numberOfYears, mainValues.length)
       .map((item) => [parseInt(item.date, 10), item.value]);
     const model = linearRegression(regData);
     const predictedTrace = {
@@ -346,7 +419,7 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
     };
 
     let highestGoalYear = null;
-    const highestDataYear = values[values.length - 1];
+    const highestDataYear = mainValues[mainValues.length - 1];
 
     // Draw from last historical value to first scenario goal
     scenarios.forEach((scenario, scenarioId) => {
@@ -389,11 +462,16 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
     traces.push(predictedTrace);
   }
 
+  if (indicator.dimensions.length) {
+    const dimensionTraces = generateDataTraces(indicator, values, i18n, plotColors, unitLabel);
+    dimensionTraces.forEach((trace) => traces.push(trace));
+  }
+
   const layout = makeLayout(indicator);
   layout.title = indicator.name;
   layout.yaxis.title = unitLabel;
 
-  if (scenarios.size < 2) {
+  if (scenarios.size < 2 && !indicator.dimensions.length) {
     layout.showlegend = false;
   }
 
@@ -401,6 +479,15 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
   if (onlyIntegers) {
     layout.yaxis.hoverformat = `${onlyIntegers ? '' : '.'}${maxDigits}r`;
   }
+
+  // If min and max values are set, do not use autorange
+  if (indicator.minValue != null || indicator.maxValue != null) {
+    layout.yaxis.range = [indicator.minValue, indicator.maxValue];
+    if (indicator.minValue != null && indicator.maxValue != null) {
+      layout.yaxis.autorange = false;
+    }
+  }
+
   const plot = { data: traces, layout };
   return plot;
 }
