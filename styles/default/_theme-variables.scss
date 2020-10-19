@@ -10,7 +10,7 @@
  * from the other theme files.
  *
  */
- 
+
 $name: 'default';
 
 // Theme specific brand colors
@@ -173,3 +173,26 @@ $icon-indicators-url: '/static/images/default/icon-indicators.svg';
 $icon-actions-url: '/static/images/default/icon-actions.svg';
 
 $theme-custom-styles-url: '';
+
+$graph-colors: (
+  green010: #A7EBC0,
+  green030: #56C38E,
+  green050: #279A6D,
+  green070: #107251,
+  green090: #074A35,
+  red010: #FCD8D8,
+  red030: #EF9A9A,
+  red050: #D46262,
+  red070: #A73939,
+  red090: #661D1D,
+  blue010: #C2D9ED,
+  blue030: #6D97B8,
+  blue050: #4E80A6,
+  blue070: #205D82,
+  blue090: #0D445E,
+  yellow010: #FBE6AE,
+  yellow030: #DC9D2A,
+  yellow050: #C88217,
+  yellow070: #8F4604,
+  yellow090: #3C1300,
+);
