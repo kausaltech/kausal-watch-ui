@@ -203,6 +203,12 @@ class IndicatorCausal extends React.Component {
   setColumns(nodes, index, column) {
     // Assign indicators with columns
     const columned = nodes;
+
+    // Sanity check: Bail out if we have already processed this.
+    // FIXME: Otherwise setColumns() can sometimes loop forever
+    if ('column' in columned[index]) {
+      return columned;
+    }
     columned[index].column = column;
     if (columned[index].indicator_level !== 'strategic') {
       columned[index].from.forEach((edge) => {
