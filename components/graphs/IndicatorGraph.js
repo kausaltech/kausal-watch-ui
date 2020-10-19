@@ -429,9 +429,9 @@ function IndicatorGraph({ indicatorId }) {
     ],
     mainScale: [
       theme.graphColors.red070,
-      theme.graphColors.blue070,
+      theme.graphColors.blue050,
       theme.graphColors.yellow030,
-      theme.graphColors.red070,
+      theme.graphColors.green030,
       theme.graphColors.blue030,
       theme.graphColors.yellow070,
       theme.graphColors.green070,
