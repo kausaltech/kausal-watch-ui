@@ -151,7 +151,7 @@ function getTraces(dimensions, cube, names)
 
   if (dimensions.length == 1) {
     return [{
-      name: names.join(', '),
+      name: (names || [dim.name]).join(', '),
       type: 'bar',
       x: dim.categories.map((cat) => cat.name),
       y: cube,
