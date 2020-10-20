@@ -176,7 +176,8 @@ function generateSingleYearPlot(indicator, values, i18n, plotColors) {
   const dim = dimensions;
   let path;
 
-  const traces = getTraces(dimensions, cube).map((trace, idx) => ({marker: {color: plotColors[idx + 1]}, ...trace}));
+  const traces = getTraces(dimensions, cube).map((trace, idx) => (
+    { marker: { color: plotColors.mainScale[idx + 1] }, ...trace }));
 
   return {
     data: traces,
@@ -227,9 +228,9 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
 
     if (!scenarios.has(scenarioId)) {
       // Default scenario (organization goal) is plotted with color #1
-      const color = scenarioId ? plotColors[colorIdx++] : plotColors[1];
-      const scenario = { goals: [], color };
+      const color = scenarioId ? plotColors.goalScale[colorIdx++] : plotColors.goalScale[1];
 
+      const scenario = { goals: [], color };
       if (scenarioId) {
         scenario.name = goal.scenario.name;
       } else {
@@ -250,7 +251,9 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
     y: values.map((item) => item.value),
     x: values.map((item) => item.date),
     name: indicator.quantity ? capitalizeFirstLetter(indicator.quantity.name) : null,
-    color: plotColors[0],
+    line: {
+      color: plotColors.trace,
+    },
     hovertemplate: `%{x}: %{y} ${unitLabel}`,
     hoverinfo: 'x+y',
     hoverlabel: {
@@ -274,13 +277,13 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
       line: {
         width: 3,
         shape: 'spline',
-        color: plotColors[0],
+        color: plotColors.trace,
       },
       marker: {
         size: 6,
         line: {
           width: 3,
-          color: plotColors[0],
+          color: plotColors.trace,
         },
         symbol: 'circle',
         gradient: {
@@ -297,7 +300,6 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
   const traces = [{ ...dataTrace, ...attrs }];
   scenarios.forEach((scenario, scenarioId) => {
     const { goals } = scenario;
-
     const trace = {
       y: goals.map((item) => item.value),
       x: goals.map((item) => item.date),
@@ -307,13 +309,14 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
       line: {
         width: 3,
         dash: 'dash',
+        color: scenario.color,
       },
       marker: {
         size: 12,
         symbol: 'x',
+        color: scenario.color,
       },
       opacity: 0.7,
-      color: scenario.color,
       hoverinfo: 'x+y',
       hovertemplate: `%{x}: %{y} ${unitLabel} (${scenario.name})`,
       hoverlabel: {
@@ -338,7 +341,7 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
       opacity: 0.7,
       line: {
         width: 3,
-        color: plotColors[0],
+        color: plotColors.trend,
         dash: 'dash',
       },
       name: dataTrace.name ? `${dataTrace.name} (${i18n.t('current-trend')})` : i18n.t('current-trend'),
@@ -413,20 +416,36 @@ function IndicatorGraph({ indicatorId }) {
   const plan = useContext(PlanContext);
   const theme = useTheme();
   const { t, i18n } = useTranslation();
-  const plotColors = [
-    theme.themeColors.danger,
-    theme.brandDark,
-    theme.themeColors.success,
-    theme.themeColors.warning,
-    theme.themeColors.dark,
-    theme.themeColors.info,
-  ];
+
+  const plotColors = {
+    trace: theme.graphColors.red070,
+    trend: theme.graphColors.red030,
+    goalScale: [
+      theme.graphColors.green070,
+      theme.graphColors.green050,
+      theme.graphColors.green030,
+      theme.graphColors.green090,
+      theme.graphColors.green010,
+    ],
+    mainScale: [
+      theme.graphColors.red070,
+      theme.graphColors.blue050,
+      theme.graphColors.yellow030,
+      theme.graphColors.green030,
+      theme.graphColors.blue030,
+      theme.graphColors.yellow070,
+      theme.graphColors.green070,
+      theme.graphColors.red030,
+      theme.graphColors.green090,
+      theme.graphColors.yellow010,
+    ],
+  };
 
   function fixLayout(data) {
     const { layout } = data;
 
     layout.autosize = true;
-    layout.colorway = plotColors;
+    layout.colorway = plotColors.mainScale;
     layout.font = { family: theme.fontFamilySansSerif, size: 12 };
     layout.title = null;
     layout.xaxis = layout.xaxis || {};
