@@ -30,9 +30,11 @@ const HeaderBg = styled.div`
 
 const ContentHeader = styled.header`
   padding: ${(props) => props.theme.spaces.s400} 0 ${(props) => props.theme.spaces.s200};
+
   h1 {
-    font-size: ${(props) => props.theme.fontSizeXxl};
     margin-bottom: ${(props) => props.theme.spaces.s150};
+    font-size: ${(props) => props.theme.fontSizeXxl};
+    color: ${(props) => props.theme.themeColors.white} !important;
   }
 `;
 
