@@ -190,8 +190,7 @@ function generateSingleYearPlot(indicator, values, i18n, plotColors) {
   const dim = dimensions;
   let path;
 
-  const traces = getTraces(dimensions, cube).map((trace, idx) => (
-    { marker: { color: plotColors.mainScale[idx + 1] }, ...trace }));
+  const traces = getTraces(dimensions, cube).map((trace, idx) => ({marker: {color: plotColors.mainScale[idx + 1]}, ...trace}));
 
   return {
     data: traces,
@@ -210,7 +209,7 @@ function generateDataTraces(indicator, values, i18n, plotColors, unitLabel) {
   ];
   const cube = generateCube(dimensions, values);
   const dataTraces = getTraces(dimensions, cube).map((trace, idx) => {
-    const color = plotColors.mainScale[(idx + 1) % plotColors.length];
+    const color = plotColors.mainScale[(idx + 1) % plotColors.mainScale.length];
 
     return {
       ...trace,
@@ -281,9 +280,7 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
     y: mainValues.map((item) => item.value),
     x: mainValues.map((item) => item.date),
     name: indicator.quantity ? capitalizeFirstLetter(indicator.quantity.name) : null,
-    line: {
-      color: plotColors.trace,
-    },
+    color: plotColors.trace,
     hovertemplate: `%{x}: %{y} ${unitLabel}`,
     hoverinfo: 'x+y',
     hoverlabel: {
@@ -373,6 +370,7 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
 
   scenarios.forEach((scenario, scenarioId) => {
     const { goals } = scenario;
+
     const trace = {
       y: goals.map((item) => item.value),
       x: goals.map((item) => item.date),
@@ -382,14 +380,13 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
       line: {
         width: 3,
         dash: 'dash',
-        color: scenario.color,
       },
       marker: {
         size: 12,
         symbol: 'x',
-        color: scenario.color,
       },
       opacity: 0.7,
+      color: scenario.color,
       hoverinfo: 'x+y',
       hovertemplate: `%{x}: %{y} ${unitLabel} (${scenario.name})`,
       hoverlabel: {
@@ -411,7 +408,6 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
       x: regData.map((item) => item[0]),
       type: 'scatter',
       mode: 'lines',
-      opacity: 0.7,
       line: {
         width: 3,
         color: plotColors.trend,
