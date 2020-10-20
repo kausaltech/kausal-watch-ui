@@ -380,13 +380,14 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
       line: {
         width: 3,
         dash: 'dash',
+        color: scenario.color,
       },
       marker: {
         size: 12,
         symbol: 'x',
+        color: scenario.color,
       },
       opacity: 0.7,
-      color: scenario.color,
       hoverinfo: 'x+y',
       hovertemplate: `%{x}: %{y} ${unitLabel} (${scenario.name})`,
       hoverlabel: {
