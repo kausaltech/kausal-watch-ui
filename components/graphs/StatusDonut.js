@@ -26,9 +26,9 @@ const StatusDonut = (props) => {
   pieData.direction = 'clockwise';
   pieData.textinfo = 'none';
   const plotColors = colors || [
-    theme.actionOnTimeColor,
-    lighten(0.15, theme.actionOnTimeColor),
-    lighten(0.25, theme.actionOnTimeColor),
+    theme.graphColors.green090,
+    theme.graphColors.green070,
+    theme.graphColors.green050,
     theme.actionLateColor,
   ];
 

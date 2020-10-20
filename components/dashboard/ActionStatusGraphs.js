@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
-import { lighten } from 'polished';
 import moment from 'common/moment';
 import { useTheme } from 'common/theme';
 import { useTranslation } from 'common/i18n';
@@ -155,20 +154,20 @@ const ActionsStatusGraphs = (props) => {
   const theme = useTheme();
   const pieColors = {};
   pieColors.GOOD_COLORS = [
-    theme.actionOnTimeColor,
-    lighten(0.1, theme.actionOnTimeColor),
-    lighten(0.2, theme.actionOnTimeColor),
-    lighten(0.3, theme.actionOnTimeColor),
+    theme.graphColors.green070,
+    theme.graphColors.green050,
+    theme.graphColors.green030,
+    theme.graphColors.green010,
   ];
 
   pieColors.NEUTRAL_COLORS = [
     '#ffffff',
-    theme.actionNotStartedColor,
+    theme.themeColors.light,
   ];
 
   pieColors.BAD_COLORS = [
-    lighten(0.15, theme.actionLateColor),
-    theme.actionLateColor,
+    theme.graphColors.yellow030,
+    theme.graphColors.yellow070,
   ];
 
   const progressData = getProgressData(actions, pieColors);
