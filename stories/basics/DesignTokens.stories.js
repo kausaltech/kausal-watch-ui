@@ -68,7 +68,7 @@ const DesignTokens = () =>
 };
 
 export default {
-  title: 'Basics/Tokens',
+  title: 'Tokens/All',
   component: DesignTokens,
 };
 

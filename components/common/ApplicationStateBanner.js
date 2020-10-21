@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Container } from 'reactstrap';
 
-import { withTranslation } from '../../common/i18n';
+import { useTranslation } from 'common/i18n';
 
 const Banner = styled.div`
   padding: .75rem 0;
@@ -32,7 +32,8 @@ const Label = styled.strong`
 `;
 
 function ApplicationStateBanner(props) {
-  const { instanceType, t } = props;
+  const { instanceType } = props;
+  const { t } = useTranslation();
   let typeLabel;
   let typeMessage;
 
@@ -62,7 +63,6 @@ ApplicationStateBanner.defaultProps = {
 
 ApplicationStateBanner.propTypes = {
   instanceType: PropTypes.oneOf(['production', 'testing', 'development']),
-  t: PropTypes.func.isRequired,
 };
 
-export default withTranslation('common')(ApplicationStateBanner);
+export default ApplicationStateBanner;

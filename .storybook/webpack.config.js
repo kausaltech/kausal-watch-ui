@@ -1,13 +1,10 @@
 const path = require('path');
 
-module.exports = ({ config }) => {
-    config.plugins = config.plugins.filter(
-        p => String(p.resourceRegExp) !== '/core-js/'
-      );
-    config.resolve.modules = [
-      ...(config.resolve.modules || []),
-      path.resolve('./'),
-    ];
-    return config;
-  };
-  
+module.exports = {
+  webpackFinal: async (baseConfig) => {
+    const nextConfig = require('../next.config.js');
+
+    // merge whatever from nextConfig into the webpack config storybook will use
+    return { ...baseConfig };
+  },
+};

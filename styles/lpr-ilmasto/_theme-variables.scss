@@ -10,14 +10,8 @@
  * from the other theme files.
  *
  */
- 
-$name: 'greenreality';
 
-// Helper colors
-$red:     #dc3545;
-$yellow:  #ffc107;
-$green:   #28a745;
-$cyan:    #17a2b8;
+$name: 'greenreality';
 
 // Theme specific brand colors
 // brand-light/brand-dark should have contrast ratio over 4.5
@@ -32,10 +26,10 @@ $neutral-dark: $brand-dark;
 $theme-colors: (
   "primary":    $brand-dark,
   "secondary":  $brand-light,
-  "success":    $green,
-  "info":       $cyan,
-  "warning":    $yellow,
-  "danger":     $red,
+  "success":    #28a745,
+  "info":       #17a2b8,
+  "warning":    #ffc107,
+  "danger":     #dc3545,
   "light":      #eeeeee,
   "dark":       rgb(65,65,65),
   "black":      rgb(51,51,51),
@@ -126,7 +120,6 @@ $form-label-font-weight:     400;
 
 $brand-nav-background:              $neutral-dark;
 
-$navbar-dark-color:                 rgba(#222222, .5);
 $navbar-dark-hover-color:           rgba(#222222, .75);
 $navbar-dark-active-color:          #222222;
 $navbar-dark-disabled-color:        rgba(#222222, .25);
@@ -171,8 +164,8 @@ $operational-indicator-color-fg: #222222;
 $tactical-indicator-color-fg: #222222;
 $strategic-indicator-color-fg: #eeeeee;
 
-$causality-increases-color: darken($green, 10%);
-$causality-decreases-color: darken($red, 10%);
+$causality-increases-color: darken(#28a745, 10%);
+$causality-decreases-color: darken(#dc3545, 10%);
 $causality-is-part-of-color: grey;
 
 // Breakpoints

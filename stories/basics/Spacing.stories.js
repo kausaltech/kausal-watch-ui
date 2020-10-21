@@ -72,7 +72,7 @@ const Spacings = () => {
 };
 
 export default {
-  title: 'Basics/Tokens',
+  title: 'Tokens/Spaces',
   component: Spacings,
 };
 
