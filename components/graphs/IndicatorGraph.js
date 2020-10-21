@@ -527,18 +527,19 @@ function IndicatorGraph({ indicatorId }) {
 
   function fixLayout(data) {
     const { layout } = data;
+    const fontFamily = `${theme.fontFamily}, ${theme.fontFamilyFallback}`;
 
     layout.autosize = true;
     layout.colorway = plotColors.mainScale;
-    layout.font = { family: theme.fontFamilySansSerif, size: 12 };
+    layout.font = { family: fontFamily, size: 12 };
     layout.title = null;
     layout.xaxis = layout.xaxis || {};
     layout.xaxis.tickfont = layout.xaxis.tickfont || {};
-    layout.xaxis.tickfont.family = theme.fontFamilySansSerif;
+    layout.xaxis.tickfont.family = fontFamily;
     layout.xaxis.tickfont.size = 14;
     layout.yaxis = layout.yaxis || {};
     layout.yaxis.tickfont = layout.yaxis.font || {};
-    layout.yaxis.tickfont.family = theme.fontFamilySansSerif;
+    layout.yaxis.tickfont.family = fontFamily;
     layout.yaxis.tickfont.size = 14;
   }
 

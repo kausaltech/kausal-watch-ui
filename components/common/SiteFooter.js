@@ -18,7 +18,7 @@ const StyledFooter = styled.footer`
   background-color: ${(props) => props.theme.themeColors.black};
   color: ${(props) => props.theme.themeColors.white};
   padding: ${(props) => props.theme.spaces.s400} 0;
- 
+
   a {
       color: ${(props) => props.theme.themeColors.white};
 
@@ -101,7 +101,7 @@ const FooterNavItem = styled.li`
   padding-right: ${(props) => props.theme.spaces.s300};
   margin-bottom: ${(props) => props.theme.spaces.s300};
   font-size: ${(props) => props.theme.fontSizeBase};
-  
+
   .parent-item {
     font-weight: ${(props) => props.theme.fontWeightBold};
   }
@@ -184,7 +184,7 @@ const UtilityItem = styled.li`
 
   @media (max-width: ${(props) => props.theme.breakpointMd}) {
     margin-left: 0;
-  
+
     &:before {
       content: "";
       margin-left: 0;
@@ -196,7 +196,7 @@ const TopButton = styled.button`
   background: none;
   border: none;
   padding: 0;
-  font-family: ${(props) => props.theme.fontFamilySansSerif};
+  font-family: ${(props) => props.theme.fontFamily}, ${(props) => props.theme.fontFamilyFallback};
   cursor: pointer;
   color: ${(props) => props.theme.themeColors.white};
 
@@ -257,7 +257,7 @@ const BaseItem = styled.li`
 const BaseLink = styled.li`
 
   margin-left: ${(props) => props.theme.spaces.s200};
-  
+
   a {
   text-decoration: underline;
 

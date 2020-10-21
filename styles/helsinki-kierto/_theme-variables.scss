@@ -33,16 +33,15 @@ $theme-colors: (
   "light":      #f1f1f1,
   "dark":       #4c4c4c,
   "black":      #1a1a1a,
-  "white":      #ffffff,
+  "white":      #020202,
 );
 
 $image-overlay: $brand-dark;
 
 $font-url: '/static/fonts/hnh2035/fonts.css';
 $font-family: 'HelsinkiGrotesk';
-$font-family-sans-serif:      #{$font-family}, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-$font-family-monospace:       SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-$font-family-base:            $font-family-sans-serif;
+$headings-font-family: $font-family;
+$headings-color: #1a1a1a;
 
 $font-size-sm:	  0.875rem;
 $font-size-base: 	1rem;

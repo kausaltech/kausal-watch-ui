@@ -251,7 +251,7 @@ class CytoGraph extends React.Component {
         {
           selector: '*',
           style: {
-            'font-family': theme.fontFamilySansSerif,
+            'font-family': `${theme.fontFamily}, sans-serif`,
           },
         },
         {
