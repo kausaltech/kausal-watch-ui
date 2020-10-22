@@ -1,6 +1,7 @@
 import React from 'react';
 import App, { AppProps } from 'next/app';
 import getConfig from 'next/config';
+import Head from 'next/head'
 import { gql, ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
 import ReactPiwik from 'react-piwik';
 import { I18nextProvider, withSSR } from 'react-i18next';
@@ -131,6 +132,7 @@ interface SiteContext {
 
 interface GlobalProps {
   siteContext: SiteContext,
+  traceTransactionId: string,
   themeProps: any,
   plan: any,
 }
@@ -141,7 +143,7 @@ interface WatchAppProps extends AppProps, GlobalProps {
 }
 
 function WatchApp(props: WatchAppProps) {
-  const { Component, pageProps, apollo, plan, siteContext, themeProps } = props;
+  const { Component, pageProps, apollo, plan, siteContext, themeProps, traceTransactionId } = props;
 
   if (!piwik && process.browser && publicRuntimeConfig.matomoURL && publicRuntimeConfig.matomoSiteId) {
     piwik = new ReactPiwik({
@@ -157,11 +159,16 @@ function WatchApp(props: WatchAppProps) {
 
   if (process.browser) setTheme(themeProps);
 
+  const transaction = Sentry.getCurrentHub().getScope().getTransaction();
+
   return (
     <SiteContext.Provider value={siteContext}>
       <ThemeProvider theme={theme}>
         <ApolloProvider client={apollo}>
           <PlanContext.Provider value={plan}>
+            {transaction && (
+              <meta name="sentry-trace" content={ traceTransactionId } />
+            )}
             <Component {...pageProps} />
           </PlanContext.Provider>
         </ApolloProvider>
@@ -314,7 +321,8 @@ MemoizedApp.getInitialProps = async (appContext) => {
     globalProps = {
       plan,
       themeProps: theme,
-      siteContext
+      siteContext,
+      traceTransactionId: transaction?.toTraceparent(),
     }
   } else {
     // @ts-ignore
@@ -322,7 +330,8 @@ MemoizedApp.getInitialProps = async (appContext) => {
     globalProps = {
       plan,
       themeProps: theme,
-      siteContext
+      siteContext,
+      traceTransactionId: transaction?.toTraceparent(),
     }
   }
 

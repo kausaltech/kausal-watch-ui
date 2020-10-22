@@ -21,7 +21,20 @@ function initSentry(app) {
     integrations.push(new Sentry.Integrations.Http({ tracing: true }));
     integrations.push(new SentryTracing.Integrations.Express({ app }));
   } else {
-    integrations.push(new SentryTracing.Integrations.BrowserTracing());
+    let lastPath;
+
+    integrations.push(new SentryTracing.Integrations.BrowserTracing({
+      beforeNavigate: (context) => {
+        const { pathname } = window.location;
+        if (context.op == 'navigation') {
+          // Do not send tracing events that only change the query string
+          // (such as the action list page).
+          if (lastPath === pathname) return undefined;
+          lastPath = pathname;
+        }
+        return context;
+      },
+    }));
   }
 
   let sampleRate = parseFloat(process.env.SENTRY_TRACE_SAMPLE_RATE);
