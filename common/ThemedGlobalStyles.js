@@ -6,11 +6,12 @@ import Fonts from './fonts';
 
 const GlobalStyle = createGlobalStyle`
   body {
-    font-family: ${(props) => props.theme.fontFamilySansSerif};
+    font-family: ${(props) => props.theme.fontFamily}, ${(props) => props.theme.fontFamilyFallback};
     font-size: ${(props) => props.theme.fontSizeBase};
     line-height: ${(props) => props.theme.lineHeightBase};
     text-rendering: optimizeLegibility;
     background: ${(props) => props.theme.themeColors.white};
+    color: ${(props) => props.theme.themeColors.black};
   }
 
   a {
@@ -27,8 +28,10 @@ const GlobalStyle = createGlobalStyle`
   }
 
   h1, h2, h3 , h4, h5 {
+    font-family: ${(props) => props.theme.headingsFontFamily}, ${(props) => props.theme.headingsFontFamilyFallback};
+    font-weight: ${(props) => props.theme.headingsFontWeight};
     line-height: ${(props) => props.theme.lineHeightMd};
-    color: inherit;
+    color: ${(props) => props.theme.headingsColor};
   }
 
   h1 {
@@ -159,8 +162,8 @@ const GlobalStyle = createGlobalStyle`
 
 function ThemedGlobalStyles({ theme, children }) {
   if (typeof window !== 'undefined') {
-    const { fontUrl, fontFamily } = theme;
-    Fonts(fontFamily, fontUrl);
+    const { fontUrl, fontFamily, headingsFontFamily } = theme;
+    Fonts(fontFamily, headingsFontFamily, fontUrl);
   }
 
   return (
