@@ -48,6 +48,7 @@ function initSentry(app) {
   const sentryOptions = {
     dsn: process.env.SENTRY_DSN,
     release: process.env.SENTRY_RELEASE,
+    environment: process.env.NODE_ENV,
     maxBreadcrumbs: 50,
     attachStacktrace: true,
     integrations,
