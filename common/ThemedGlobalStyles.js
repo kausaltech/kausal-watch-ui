@@ -29,8 +29,9 @@ const GlobalStyle = createGlobalStyle`
 
   h1, h2, h3 , h4, h5 {
     font-family: ${(props) => props.theme.headingsFontFamily}, ${(props) => props.theme.headingsFontFamilyFallback};
-    color: ${(props) => props.theme.headingsColor};
+    font-weight: ${(props) => props.theme.headingsFontWeight};
     line-height: ${(props) => props.theme.lineHeightMd};
+    color: ${(props) => props.theme.headingsColor};
   }
 
   h1 {
