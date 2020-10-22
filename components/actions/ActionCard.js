@@ -1,14 +1,17 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
-import { darken, lighten, transparentize } from 'polished';
+import { darken, transparentize } from 'polished';
 import {
   Progress,
 } from 'reactstrap';
+import SVG from 'react-inlinesvg';
 import styled from 'styled-components';
 import { gql } from '@apollo/client';
 
-import { ActionLink } from '../../common/links';
-import { withTranslation } from '../../common/i18n';
+import { ActionLink } from 'common/links';
+import { withTranslation } from 'common/i18n';
+
+import PlanContext from 'context/plan';
 
 const ACTION_CARD_FRAGMENT = gql`
   fragment ActionCard on Action {
@@ -45,13 +48,23 @@ const StyledActionLink = styled.a`
   }
 `;
 
+const CategoryIcon = styled(SVG)`
+  position: absolute;
+  right: ${(props) => props.theme.spaces.s050};
+  top: ${(props) => props.theme.spaces.s050};
+  width: ${(props) => props.theme.spaces.s300};
+  opacity: .75;
+  fill: white;
+`;
+
 const ActionCardElement = styled.div`
+  position: relative;
   width: 100%;
   background: ${(props) => props.theme.themeColors.white};
   border-width: ${(props) => props.theme.cardBorderWidth};
   border-radius: ${(props) => props.theme.cardBorderRadius};
   overflow: hidden;
-  box-shadow: 2px 2px 8px rgba(82,90,101,0.1);
+  box-shadow: 2px 2px 8px ${(props) => transparentize(0.9, props.theme.themeColors.dark)};
   transition: all 0.5s ease;
   &:hover {
     transform: translateY(-5px);
@@ -86,7 +99,7 @@ const ActionStatusArea = styled.div`
     background-color: ${(props) => props.theme.actionNotStartedColor};
     color: ${(props) => props.theme.themeColors.dark};
   }
- 
+
   &.bg-in_progress {
     background-color: ${(props) => props.theme.actionOnTimeColor};
     .progress-bar {
@@ -161,9 +174,19 @@ const StyledCardTitle = styled.div`
   hyphens: auto;
 `;
 
+function getMockIconUrl(category) {
+  const plan = useContext(PlanContext);
+  let iconUrl = null;
+  if (plan.identifier === 'liiku') iconUrl = `/static/images/liiku/category-${category}.svg`;
+  return iconUrl;
+}
+
 function ActionCard(props) {
   const { action, t } = props;
   let actionName = action.name;
+  // mock category icon Url
+  const iconUrl = getMockIconUrl(action.categories[0].identifier);
+
   if (actionName.length > 120) actionName = `${action.name.substring(0, 120)}…`;
 
   const { mergedWith, status } = action;
@@ -179,6 +202,12 @@ function ActionCard(props) {
       <StyledActionLink>
         <ActionCardElement>
           <ActionStatusArea className={bgClass}>
+            { iconUrl && (
+              <CategoryIcon
+                src={iconUrl}
+                preserveAspectRatio="xMinYMid meet"
+              />
+            )}
             <ActionNumber className="action-number">{action.identifier}</ActionNumber>
             <ActionStatus>
               <StatusName>{statusName}</StatusName>
