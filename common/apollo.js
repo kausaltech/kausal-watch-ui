@@ -5,7 +5,7 @@ import { InMemoryCache } from '@apollo/client/cache';
 import { onError } from '@apollo/client/link/error';
 import getConfig from 'next/config';
 
-import { captureException } from 'common/sentry';
+import { captureException, Sentry } from 'common/sentry';
 import { i18n } from 'common/i18n';
 
 const { publicRuntimeConfig } = getConfig();
@@ -47,6 +47,24 @@ const localeMiddleware = new ApolloLink((operation, forward) => {
 let requestContext;
 
 const refererLink = new ApolloLink((operation, forward) => {
+  const sentryHub = Sentry.getCurrentHub();
+  const sentryScope = sentryHub.pushScope();
+  const transaction = sentryScope.getTransaction();
+  let tracingSpan;
+
+  if (transaction) {
+    tracingSpan = transaction.startChild({
+      op: 'GraphQL query',
+      description: operation.operationName,
+      data: {
+        graphql_variables: operation.variables,
+      },
+    });
+  }
+
+  sentryScope.setContext('graphql_variables', operation.variables);
+  sentryScope.setTag('graphql_operation', operation.operationName);
+
   if (requestContext) {
     operation.setContext((ctx) => {
       const req = requestContext;
@@ -64,7 +82,11 @@ const refererLink = new ApolloLink((operation, forward) => {
       };
     });
   }
-  return forward(operation);
+  return forward(operation).map((result) => {
+    if (tracingSpan) tracingSpan.finish();
+    sentryHub.popScope();
+    return result;
+  });
 });
 
 export function setRequestContext(req) {

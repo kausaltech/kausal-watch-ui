@@ -2,33 +2,61 @@
 // process.browser === true thanks to the webpack config in next.config.js
 const Sentry = require('@sentry/node');
 const sentryIntegrations = require('@sentry/integrations');
+const SentryTracing = require('@sentry/tracing');
+
 let sentryInitialized = false;
 
-if (!sentryInitialized) {
+function initSentry(app) {
   const distDir = `${process.env.SENTRY_ROOTDIR}/.next`;
+  const integrations = [
+    new sentryIntegrations.RewriteFrames({
+      iteratee: (frame) => {
+        frame.filename = frame.filename.replace(distDir, 'app:///_next');
+        return frame;
+      },
+    }),
+  ];
+
+  if (!process.browser) {
+    integrations.push(new Sentry.Integrations.Http({ tracing: true }));
+    integrations.push(new SentryTracing.Integrations.Express({ app }));
+  } else {
+    integrations.push(new SentryTracing.Integrations.BrowserTracing());
+  }
+
+  let sampleRate = parseFloat(process.env.SENTRY_TRACE_SAMPLE_RATE);
+  if (Number.isNaN(sampleRate)) {
+    sampleRate = 1.0;
+  } else if (sampleRate < 0) {
+    sampleRate = 0;
+  } else if (sampleRate > 1.0) {
+    sampleRate = 1.0;
+  }
   const sentryOptions = {
     dsn: process.env.SENTRY_DSN,
     release: process.env.SENTRY_RELEASE,
     maxBreadcrumbs: 50,
     attachStacktrace: true,
-    integrations: [
-      new sentryIntegrations.RewriteFrames({
-        iteratee: (frame) => {
-          frame.filename = frame.filename.replace(distDir, 'app:///_next');
-          return frame;
-        },
-      }),
-    ],
+    integrations,
+    tracesSampler: (samplingContext) => {
+      /* FIXME */
+      return sampleRate;
+    },
   };
 
   // When we're developing locally
-  if (process.env.NODE_ENV !== 'production') {
+  if (process.env.NODE_ENV !== 'production' && !process.env.FORCE_SENTRY_SEND) {
     // Don't actually send the errors to Sentry
-    sentryOptions.beforeSend = () => null;
+    sentryOptions.beforeSend = (event) => null;
   }
 
   Sentry.init(sentryOptions);
   sentryInitialized = true;
+}
+
+// On the browser side we initialize Sentry automatically
+if (!sentryInitialized && process.browser) {
+  initSentry(null);
 }
 
 function captureException(err, ctx) {
@@ -81,4 +109,5 @@ module.exports = {
   Sentry,
   captureException,
   captureMessage,
+  initSentry,
 };

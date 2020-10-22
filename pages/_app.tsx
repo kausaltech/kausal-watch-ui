@@ -5,6 +5,7 @@ import { gql, ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client
 import ReactPiwik from 'react-piwik';
 import { I18nextProvider, withSSR } from 'react-i18next';
 import { ThemeProvider } from 'styled-components';
+import * as Sentry from "@sentry/react";
 
 import { Router } from 'routes';
 import { captureException } from 'common/sentry';
@@ -173,7 +174,6 @@ WatchApp.whyDidYouRender = true;
 WatchApp.getInitialProps = async (appContext) => {
   const { ctx } = appContext;
   let appProps;
-
   try {
     appProps = await App.getInitialProps(appContext);
   } catch (error) {
@@ -199,7 +199,7 @@ function I18nApp(props) {
     </I18nextProvider>
   );
 }
-const TopLevelApp = React.memo(I18nApp) as any;
+const MemoizedApp = React.memo(I18nApp) as any;
 
 
 let cachedPlan;
@@ -260,10 +260,13 @@ async function getPlan(ctx) {
 let siteContext;
 
 
-TopLevelApp.getInitialProps = async (appContext) => {
+MemoizedApp.getInitialProps = async (appContext) => {
   const { ctx } = appContext;
   const { instanceType } = publicRuntimeConfig;
   const { apolloClient } = ctx;
+
+  const transaction = Sentry.getCurrentHub().getScope().getTransaction();
+  let tracingSpan;
 
   if (!siteContext) siteContext = {};
 
@@ -287,6 +290,12 @@ TopLevelApp.getInitialProps = async (appContext) => {
     // avoid stale data.
     await apolloClient.resetStore();
 
+    if (transaction) {
+      tracingSpan = transaction.startChild({
+        op: 'getPlan',
+      })
+    }
+
     let plan;
     try {
       plan = await getPlan(ctx);
@@ -297,6 +306,8 @@ TopLevelApp.getInitialProps = async (appContext) => {
       }
       throw error;
     }
+
+    if (tracingSpan) tracingSpan.finish();
 
     applyTheme(plan.identifier);
 
@@ -316,8 +327,10 @@ TopLevelApp.getInitialProps = async (appContext) => {
   }
 
   configureFromPlan(globalProps.plan);
+  Sentry.setTag("plan", globalProps.plan.identifier);
 
   const appProps = await TransApp.getInitialProps(appContext);
+  if (tracingSpan) tracingSpan.finish();
 
   return {...appProps, ...globalProps};
 };
@@ -325,5 +338,23 @@ TopLevelApp.getInitialProps = async (appContext) => {
 // appWithTranslation is not a pure component, so it re-renders much too often.
 // We only use its getInitialProps() but do not render it.
 const TransApp = appWithTranslation(WatchApp);
+const ApolloApp = withApollo(MemoizedApp);
+const getInitialPropsApollo = ApolloApp.getInitialProps
 
-export default withApollo(TopLevelApp);
+ApolloApp.getInitialProps = async (appContext) => {
+  const transaction = Sentry.getCurrentHub().getScope().getTransaction();
+  let tracingSpan;
+
+  if (transaction) {
+    tracingSpan = transaction.startChild({
+      op: 'getInitialProps',
+    })
+  }
+  const appProps = await getInitialPropsApollo(appContext);
+  if (tracingSpan) tracingSpan.finish();
+  return appProps;
+};
+
+const ProfiledApp = Sentry.withProfiler(ApolloApp);
+
+export default ProfiledApp;

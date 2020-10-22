@@ -19,11 +19,6 @@ console.log('Next initialized');
 
 let Sentry;
 const sentry = await import('./common/sentry.js');
-if (process.env.SENTRY_DSN) {
-  // { release: app.buildId }
-  Sentry = sentry.Sentry;
-  console.log('Sentry initialized');
-}
 
 let ssrCache;
 if (('ENABLE_CACHE' in process.env)
@@ -69,24 +64,30 @@ function getCurrentURL(req) {
 
 Error.stackTraceLimit = 30;
 
+const server = express();
+
+if (process.env.SENTRY_DSN) {
+  sentry.initSentry(server);
+  Sentry = sentry.Sentry;
+  server.use(Sentry.Handlers.requestHandler());
+  server.use(Sentry.Handlers.tracingHandler());
+  console.log('Sentry initialized');
+}
+
 console.log('Preparing server');
 await app.prepare();
 console.log('Server prepared');
 
-const server = express();
+const isProduction = process.env.INSTANCE_TYPE === 'production';
 
-if (Sentry) {
-  server.use(Sentry.Handlers.requestHandler());
-}
-server.use(morgan('dev'));
+// Request logging
+server.use(morgan(isProduction ? 'combined' : 'dev'));
 
 const handle = app.getRequestHandler();
 
 server.get('/favicon.ico', function (req, res) {
   res.status(404).send('Not found');
 });
-
-const isProduction = process.env.INSTANCE_TYPE === 'production';
 
 server.use(robots(isProduction ? {UserAgent: '*', Allow: '/'} : {UserAgent: '*', Disallow: '/'}));
 
