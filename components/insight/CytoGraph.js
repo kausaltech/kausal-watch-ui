@@ -329,6 +329,7 @@ class CytoGraph extends React.Component {
           style: {
             shape: 'rectangle',
             'background-color': theme.strategicIndicatorColor,
+            color: theme.strategicIndicatorColorFg,
             width: 'label',
             height: 'label',
             'text-valign': 'center',
