@@ -1,5 +1,7 @@
 # Kausal Watch Action Plan Monitoring UI
 
+[![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)](https://opensource.org/licenses/)
+
 React UI for browsing and visualizing action plans. Built using [Next.js](https://nextjs.org).
 
 * Displays data from [Kausal Watch API](https://github.com/kausaltech/kausal-watch)
