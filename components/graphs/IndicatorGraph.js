@@ -267,10 +267,11 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
   }
 
   const values = [...indicator.values].sort((a, b) => a.date - b.date).map(processItem);
+  const dimensionedValues = values.filter((val) => val.categories.length > 0);
   const dates = Array.from(new Set(values.map((item) => item.date))).sort();
 
   // Render in a different way for datasets with only one time point
-  if (dates.length == 1 && indicator.dimensions.length) {
+  if (dates.length == 1 && indicator.dimensions.length && dimensionedValues.length) {
     return generateSingleYearPlot(indicator, values, i18n, plotColors);
   }
 
@@ -462,7 +463,7 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
     traces.push(predictedTrace);
   }
 
-  if (indicator.dimensions.length) {
+  if (indicator.dimensions.length && dimensionedValues.length) {
     const dimensionTraces = generateDataTraces(indicator, values, i18n, plotColors, unitLabel);
     dimensionTraces.forEach((trace) => traces.push(trace));
   }
