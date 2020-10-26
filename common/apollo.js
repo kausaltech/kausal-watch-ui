@@ -115,17 +115,18 @@ const sentryHttpLink = ApolloLink.from([
   }),
 ]);
 
-let apolloClient;
+let cachedApolloClient;
 
 export default withApollo(({ initialState }) => {
-  if (apolloClient && process.browser) return apolloClient;
+  if (cachedApolloClient && process.browser) return cachedApolloClient;
 
   const clientOpts = {
     ssrMode: !process.browser,
     link: ApolloLink.from([refererLink, localeMiddleware, sentryHttpLink]),
     cache: new InMemoryCache().restore(initialState || {}),
   };
-  apolloClient = new ApolloClient(clientOpts);
+  const apolloClient = new ApolloClient(clientOpts);
+  if (process.browser) cachedApolloClient = apolloClient;
   return apolloClient;
 }, {
   getDataFromTree,
