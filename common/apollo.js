@@ -118,7 +118,7 @@ const sentryHttpLink = ApolloLink.from([
 let apolloClient;
 
 export default withApollo(({ initialState }) => {
-  if (apolloClient && !process.browser) return apolloClient;
+  if (apolloClient && process.browser) return apolloClient;
 
   const clientOpts = {
     ssrMode: !process.browser,
