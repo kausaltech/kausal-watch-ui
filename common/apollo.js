@@ -45,6 +45,7 @@ const localeMiddleware = new ApolloLink((operation, forward) => {
 });
 
 let requestContext;
+let planIdentifier;
 
 const refererLink = new ApolloLink((operation, forward) => {
   const sentryHub = Sentry.getCurrentHub();
@@ -65,23 +66,33 @@ const refererLink = new ApolloLink((operation, forward) => {
   sentryScope.setContext('graphql_variables', operation.variables);
   sentryScope.setTag('graphql_operation', operation.operationName);
 
-  if (requestContext) {
-    operation.setContext((ctx) => {
+  operation.setContext((ctx) => {
+    const { headers } = ctx;
+    const newHeaders = {};
+
+    if (requestContext) {
       const req = requestContext;
-      const { headers } = ctx;
       const { currentURL } = req;
       const { baseURL, path } = currentURL;
       const remoteAddress = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 
-      return {
-        headers: {
-          referer: baseURL + path,
-          'x-forwarded-for': remoteAddress,
-          ...headers,
-        },
-      };
-    });
-  }
+      newHeaders.referer = baseURL + path;
+      newHeaders['x-forwarded-for'] = remoteAddress;
+    }
+    if (ctx.planDomain) {
+      newHeaders['x-cache-plan-domain'] = ctx.planDomain;
+    }
+    if (ctx.planIdentifier || planIdentifier) {
+      newHeaders['x-cache-plan-identifier'] = ctx.planIdentifier || planIdentifier;
+    }
+    return {
+      headers: {
+        ...headers,
+        ...newHeaders,
+      },
+    };
+  });
+
   return forward(operation).map((result) => {
     if (tracingSpan) tracingSpan.finish();
     sentryHub.popScope();
@@ -91,6 +102,10 @@ const refererLink = new ApolloLink((operation, forward) => {
 
 export function setRequestContext(req) {
   requestContext = req;
+}
+
+export function setPlanIdentifier(identifier) {
+  planIdentifier = identifier;
 }
 
 const sentryHttpLink = ApolloLink.from([

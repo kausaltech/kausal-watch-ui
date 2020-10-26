@@ -9,8 +9,11 @@ import * as Sentry from "@sentry/react";
 
 import { Router } from 'routes';
 import { captureException } from 'common/sentry';
-import { appWithTranslation, i18n, configureFromPlan } from 'common/i18n';
-import withApollo, { setRequestContext } from 'common/apollo';
+import { appWithTranslation, i18n, configureFromPlan as configureI18nFromPlan } from 'common/i18n';
+import withApollo, {
+  setRequestContext as setApolloRequestContext,
+  setPlanIdentifier as setApolloPlanIdentifier
+} from 'common/apollo';
 import theme, { setTheme, applyTheme } from 'common/theme';
 import PlanContext from 'context/plan';
 import SiteContext from 'context/site';
@@ -155,7 +158,10 @@ function WatchApp(props: WatchAppProps) {
     Router.events.on('routeChangeComplete', onRouteChange);
   }
 
-  if (process.browser) setTheme(themeProps);
+  if (process.browser) {
+    setTheme(themeProps);
+    setApolloPlanIdentifier(plan.identifier);
+  }
 
   return (
     <SiteContext.Provider value={siteContext}>
@@ -215,8 +221,8 @@ async function getPlan(ctx) {
   if (req?.requestPlan) return req.requestPlan;
 
   const queryVariables: GetPlanParams = {
-    identifier: '',
-    domain: '',
+    identifier: null,
+    domain: null,
   }
 
   if (defaultPlanIdentifier) {
@@ -229,6 +235,10 @@ async function getPlan(ctx) {
     const { data, error } = await apolloClient.query({
       query: GET_PLAN,
       variables: queryVariables,
+      context: {
+        planIdentifier: queryVariables.identifier,
+        planDomain: queryVariables.domain,
+      }
     });
     if (error) throw error;
     plan = data.plan;
@@ -285,10 +295,7 @@ MemoizedApp.getInitialProps = async (appContext) => {
 
     // We pass the request to Apollo so that we can inform the backend about
     // the refering URL
-    setRequestContext(ctx.req);
-    // For SSR, the Apollo cache should be cleared on every request to
-    // avoid stale data.
-    await apolloClient.resetStore();
+    setApolloRequestContext(ctx.req);
 
     if (transaction) {
       tracingSpan = transaction.startChild({
@@ -326,7 +333,8 @@ MemoizedApp.getInitialProps = async (appContext) => {
     }
   }
 
-  configureFromPlan(globalProps.plan);
+  configureI18nFromPlan(globalProps.plan);
+  setApolloPlanIdentifier(globalProps.plan.identifier);
   Sentry.setTag("plan", globalProps.plan.identifier);
 
   const appProps = await TransApp.getInitialProps(appContext);
