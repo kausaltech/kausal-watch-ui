@@ -77,7 +77,7 @@ const ServiceTitle = styled.div`
 
 const OrgTitle = styled.div`
   font-size: ${(props) => props.theme.fontSizeBase};
-  font-weight: ${(props) => props.theme.fontWeightNormal};
+  font-weight: ${(props) => props.theme.fontWeightBold};
 `;
 
 const FooterNav = styled.nav`
@@ -165,21 +165,12 @@ const UtilityColumn = styled.ul`
 `;
 
 const UtilityItem = styled.li`
-  margin-left: ${(props) => props.theme.spaces.s050};
+  margin-left: ${(props) => props.theme.spaces.s150};
   margin-bottom: ${(props) => props.theme.spaces.s200};
-
-  &:before {
-    content: "\\2022";
-    margin-right: ${(props) => props.theme.spaces.s050};
-  }
+  font-weight: ${(props) => props.theme.fontWeightBold};
 
   &:first-child {
     margin-left: 0;
-
-    &:before {
-      content: "";
-      margin-right: 0;
-    }
   }
 
   @media (max-width: ${(props) => props.theme.breakpointMd}) {
@@ -197,8 +188,13 @@ const TopButton = styled.button`
   border: none;
   padding: 0;
   font-family: ${(props) => props.theme.fontFamily}, ${(props) => props.theme.fontFamilyFallback};
+  font-weight: ${(props) => props.theme.fontWeightBold};
   cursor: pointer;
   color: ${(props) => props.theme.themeColors.white};
+
+  .icon {
+    margin-top: -.25em;
+  }
 
   &:hover {
     color: ${(props) => props.theme.themeColors.white};
@@ -331,8 +327,7 @@ function SiteFooter(props) {
     copyrightText,
     navItems,
     additionalLinks,
-    contactLink,
-    feedbackLink,
+    utilityLinks,
     fundingInstruments,
   } = props;
 
@@ -402,33 +397,37 @@ function SiteFooter(props) {
               </UtilityItem>
             </UtilityColumn>
             <UtilityColumn>
-              { contactLink && (
-                <UtilityItem>
-                  <NavigationLink slug={contactLink.slug}>
-                    <a>{contactLink.name}</a>
+              { utilityLinks && utilityLinks.map((page) => (
+                <UtilityItem key={page.id}>
+                  <NavigationLink slug={page.slug}>
+                    <a>{page.name}</a>
                   </NavigationLink>
                 </UtilityItem>
-              )}
-              { feedbackLink && (
-                <UtilityItem>
-                  <NavigationLink slug={feedbackLink.slug}>
-                    {feedbackLink.name}
-                  </NavigationLink>
-                </UtilityItem>
-              )}
+              ))}
               <UtilityItem>
                 <TopButton type="button" onClick={scrollToTop}>
                   {t('back-to-top')}
                   {' '}
-                  <Icon name="arrowUp" color={theme.themeColors.white} aria-hidden="true" />
+                  <Icon
+                    name="arrowUp"
+                    color={theme.themeColors.white}
+                    aria-hidden="true"
+                    width="1.25em"
+                    height="1.25em"
+                  />
                 </TopButton>
               </UtilityItem>
             </UtilityColumn>
           </UtilitySection>
           <BaseSection>
             <BaseColumn>
+              { copyrightText && (
+                <BaseItem>
+                  &copy;
+                  {copyrightText}
+                </BaseItem>
+              )}
               { creativeCommonsLicense && <BaseItem>{creativeCommonsLicense}</BaseItem> }
-              { copyrightText && <BaseItem>{copyrightText}</BaseItem> }
             </BaseColumn>
             <BaseColumn>
               { additionalLinks && additionalLinks.map((page) => (
@@ -477,8 +476,7 @@ SiteFooter.propTypes = {
   creativeCommonsLicense: PropTypes.string.isRequired,
   copyrightText: PropTypes.string.isRequired,
   navItems: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  contactLink: PropTypes.shape({}),
-  feedbackLink: PropTypes.shape({}),
+  utilityLinks: PropTypes.arrayOf(PropTypes.shape({})),
   additionalLinks: PropTypes.arrayOf(PropTypes.shape({})),
   fundingInstruments: PropTypes.arrayOf(PropTypes.shape({})),
 };
