@@ -15,7 +15,7 @@ const localeMiddleware = new ApolloLink((operation, forward) => {
   const { query } = operation;
   const { definitions } = query;
 
-  if (!i18n.language) return forward(operation);
+  if (!i18n.language || definitions[0].operation === 'mutation') return forward(operation);
 
   const localeDirective = {
     kind: 'Directive',

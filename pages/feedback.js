@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import PropTypes from 'prop-types';
 import { gql, useMutation } from '@apollo/client';
 import { useForm, Controller } from 'react-hook-form';
 import { Container, Row, Col } from 'reactstrap';
@@ -25,75 +26,87 @@ const ContentHeader = styled.header`
   }
 `;
 
-const ADD_FEEDBACK = gql`
-  mutation AddFeedback($type: String!) {
-    addFeedback(type: $type) {
-      id
-      name
-      email
-      feedback
+const CREATE_USER_FEEDBACK = gql`
+  mutation CreateUserFeedback($input: UserFeedbackMutationInput!) {
+    createUserFeedback(input: $input) {
+      feedback {
+        createdAt
+      }
+      errors {
+        field
+        messages
+      }
     }
   }
 `;
 
-const FeedbackForm = ({plan}) => {
+const FeedbackForm = ({ planIdentifier }) => {
   const { control, handleSubmit, errors } = useForm();
   const { t } = useTranslation();
   const [
-    addFeedback,
-    { loading: mutationLoading, error: mutationError },
-  ] = useMutation(ADD_FEEDBACK);
+    createUserFeedback,
+    { loading: mutationLoading, error: mutationError, data: mutationData },
+  ] = useMutation(CREATE_USER_FEEDBACK);
 
-  const onSubmit = (data) => {
-    const feedbackData = data;
-    feedbackData.plan = plan;
-    console.log("SENDING FEEDBACK...");
-    console.log(feedbackData);
-    addFeedback({ variables: feedbackData });
+  const onSubmit = (formData) => {
+    const data = {
+      ...formData,
+      plan: planIdentifier,
+      url: window.location.href,
+    };
+    createUserFeedback({ variables: { input: data } });
   };
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <Controller
-        as={TextInput}
-        label={t('name')}
-        name="name"
-        id="name-field"
-        control={control}
-        defaultValue=""
-      />
-      <Controller
-        as={TextInput}
-        label={t('email')}
-        name="email"
-        id="email-field"
-        control={control}
-        defaultValue=""
-        rules={{
-          required: true,
-          pattern: {
-            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-          },
-        }}
-        invalid={'email' in errors}
-        formFeedback={errors.email && t('error-email-format')}
-      />
-      <Controller
-        as={TextInput}
-        label={`${t('feedback')} (${t('required')})`}
-        name="feedback"
-        id="feedback-field"
-        control={control}
-        type="textarea"
-        rules={{ required: true }}
-        invalid={'feedback' in errors}
-        defaultValue=""
-        formFeedback={errors.feedback && t('error-feedback-required')}
-      />
-      <Button type="submit" color="primary">{t('send')}</Button>
-      {mutationLoading && <p>Sending feedback...</p>}
-      {mutationError && <p>Something went wrong. Your feedback is not sent. Try again.</p>}
-    </form>
+    <div>
+      {(mutationData && !mutationLoading && !mutationError) && (
+        <p>Feedback received. Thanks!</p>
+      )}
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Controller
+          as={TextInput}
+          label={t('name')}
+          name="name"
+          id="name-field"
+          control={control}
+          defaultValue=""
+        />
+        <Controller
+          as={TextInput}
+          label={t('email')}
+          name="email"
+          id="email-field"
+          control={control}
+          defaultValue=""
+          rules={{
+            required: true,
+            pattern: {
+              value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+            },
+          }}
+          invalid={'email' in errors}
+          formFeedback={errors.email && t('error-email-format')}
+        />
+        <Controller
+          as={TextInput}
+          label={`${t('feedback')} (${t('required')})`}
+          name="comment"
+          id="comment-field"
+          control={control}
+          type="textarea"
+          rules={{ required: true }}
+          invalid={'comment' in errors}
+          defaultValue=""
+          formFeedback={errors.feedback && t('error-feedback-required')}
+        />
+        <Button type="submit" color="primary">{t('send')}</Button>
+        {mutationLoading && <p>Sending feedback...</p>}
+        {mutationError && <p>Something went wrong. Your feedback is not sent. Try again.</p>}
+      </form>
+    </div>
   );
+};
+FeedbackForm.propTypes = {
+  planIdentifier: PropTypes.string.isRequired,
 };
 
 const FeedbackPage = () => {
@@ -102,9 +115,7 @@ const FeedbackPage = () => {
 
   return (
     <Layout>
-      <Meta
-        title={t('give-feedback')}
-      />
+      <Meta title={t('give-feedback')} />
       <HeaderBg>
         <Container>
           <Row>
@@ -128,7 +139,7 @@ const FeedbackPage = () => {
               <p>
                 Please let us know here.
               </p>
-              <FeedbackForm plan={plan.name} />
+              <FeedbackForm planIdentifier={plan.identifier} />
             </Col>
           </Row>
         </Container>
