@@ -78,6 +78,7 @@ const IndicatorUnit = styled.span`
 const StyledCardTitle = styled(CardTitle)`
   margin-bottom: 0;
   font-size: ${(props) => props.theme.fontSizeMd};
+  color: ${(props) => props.theme.neutralDark};
   text-align: left;
   hyphens: auto;
 `;

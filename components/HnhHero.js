@@ -94,6 +94,11 @@ const EmissionScaleBanner = styled.div`
 
   h2 {
     margin-bottom: ${(props) => props.theme.spaces.s100};
+    color: ${(props) => props.theme.themeColors.white};
+  }
+
+  h3 {
+    color: ${(props) => props.theme.themeColors.white};
   }
 
   p {

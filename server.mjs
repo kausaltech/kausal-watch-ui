@@ -78,7 +78,7 @@ console.log('Preparing server');
 await app.prepare();
 console.log('Server prepared');
 
-const isProduction = process.env.INSTANCE_TYPE === 'production';
+const isProduction = process.env.NODE_ENV === 'production';
 
 // Request logging
 server.use(morgan(isProduction ? 'combined' : 'dev'));

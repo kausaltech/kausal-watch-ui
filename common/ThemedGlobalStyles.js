@@ -131,6 +131,16 @@ const GlobalStyle = createGlobalStyle`
     background-color: ${(props) => props.theme.tableHoverBg};
   }
 
+  /* Alert headers follow alert text color */
+  .alert {
+    h1, h2, h3, h4, h5, h6 {
+      color: inherit;
+    }
+
+    p:last-child {
+      margin-bottom: 0;
+    }
+  }
   /* Fix for flickering tooltip bug */
   .tooltip {
     pointer-events: none;

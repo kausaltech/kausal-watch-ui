@@ -3,10 +3,12 @@
 const Sentry = require('@sentry/node');
 const sentryIntegrations = require('@sentry/integrations');
 const SentryTracing = require('@sentry/tracing');
+const getConfig = require('next/config').default;
 
 let sentryInitialized = false;
 
 function initSentry(app) {
+  let environment;
   const distDir = `${process.env.SENTRY_ROOTDIR}/.next`;
   const integrations = [
     new sentryIntegrations.RewriteFrames({
@@ -20,6 +22,7 @@ function initSentry(app) {
   if (!process.browser) {
     integrations.push(new Sentry.Integrations.Http({ tracing: true }));
     integrations.push(new SentryTracing.Integrations.Express({ app }));
+    environment = process.env.INSTANCE_TYPE || 'development';
   } else {
     let lastPath;
 
@@ -35,6 +38,8 @@ function initSentry(app) {
         return context;
       },
     }));
+    const { publicRuntimeConfig } = getConfig();
+    environment = publicRuntimeConfig.instanceType;
   }
 
   let sampleRate = parseFloat(process.env.SENTRY_TRACE_SAMPLE_RATE);
@@ -48,6 +53,7 @@ function initSentry(app) {
   const sentryOptions = {
     dsn: process.env.SENTRY_DSN,
     release: process.env.SENTRY_RELEASE,
+    environment,
     maxBreadcrumbs: 50,
     attachStacktrace: true,
     integrations,
