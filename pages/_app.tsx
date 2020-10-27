@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import App, { AppProps } from 'next/app';
 import getConfig from 'next/config';
 import { gql, ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
@@ -31,18 +31,23 @@ if (process.browser && process.env.NODE_ENV !== 'production') {
 
 interface GetPlanParams {
   identifier?: string;
-  domain?: string;
+  hostname?: string;
 }
 
 const GET_PLAN = gql`
-  query Plan($identifier: ID, $domain: String) {
-    plan(id: $identifier, domain: $domain) {
+  query Plan($identifier: ID, $hostname: String) {
+    plan(id: $identifier, domain: $hostname) {
       id
       identifier
       name
       imageUrl(size: "1500x500")
       primaryLanguage
       otherLanguages
+      domain(hostname: $hostname) {
+        id
+        googleSiteVerificationTag
+        matomoAnalyticsUrl
+      }
       mainImage {
         largeRendition: rendition(size: "1500x500") {
           src
@@ -145,18 +150,28 @@ interface WatchAppProps extends AppProps, GlobalProps {
 
 function WatchApp(props: WatchAppProps) {
   const { Component, pageProps, apollo, plan, siteContext, themeProps } = props;
+  const matomoAnalyticsUrl = plan.domain?.matomoAnalyticsUrl;
+  let matomoURL, matomoSiteId;
 
-  if (!piwik && process.browser && publicRuntimeConfig.matomoURL && publicRuntimeConfig.matomoSiteId) {
+  if (matomoAnalyticsUrl) {
+    [matomoURL, matomoSiteId] = matomoAnalyticsUrl.split('?');
+  } else {
+    ({ matomoURL, matomoSiteId } = publicRuntimeConfig);
+  }
+
+  useEffect(() => {
+    // Launch Piwik after rendering the app
+    if (piwik || !process.browser || !matomoURL || !matomoSiteId) return;
     piwik = new ReactPiwik({
-      url: publicRuntimeConfig.matomoURL,
-      siteId: publicRuntimeConfig.matomoSiteId,
-      jsFilename: 'matomo.js',
-      phpFilename: 'matomo.php',
+      url: matomoURL,
+      siteId: matomoSiteId,
+      jsFilename: 'js/',
+      phpFilename: 'js/',
     });
     // Track the initial page view
-    piwik.push(['trackPageView']);
+    ReactPiwik.push(['trackPageView']);
     Router.events.on('routeChangeComplete', onRouteChange);
-  }
+  });
 
   if (process.browser) {
     setTheme(themeProps);
@@ -222,13 +237,13 @@ async function getPlan(ctx) {
 
   const queryVariables: GetPlanParams = {
     identifier: null,
-    domain: null,
+    hostname: null,
   }
 
   if (defaultPlanIdentifier) {
     queryVariables.identifier = defaultPlanIdentifier;
   } else {
-    queryVariables.domain = req?.currentURL?.hostname;
+    queryVariables.hostname = req?.currentURL?.hostname;
   }
 
   try {
@@ -237,18 +252,18 @@ async function getPlan(ctx) {
       variables: queryVariables,
       context: {
         planIdentifier: queryVariables.identifier,
-        planDomain: queryVariables.domain,
+        planDomain: queryVariables.hostname,
       }
     });
     if (error) throw error;
     plan = data.plan;
     if (!plan) {
-      throw new Error(`No plan found for identifier '${queryVariables.identifier}' and hostname '${queryVariables.domain}'`)
+      throw new Error(`No plan found for identifier '${queryVariables.identifier}' and hostname '${queryVariables.hostname}'`)
     }
   } catch (error) {
     // We got an error from the API, but if we have a cached version of the plan, use that.
-    if (queryVariables.domain) {
-      plan = cachedPlansForHostnames[queryVariables.domain];
+    if (queryVariables.hostname) {
+      plan = cachedPlansForHostnames[queryVariables.hostname];
     } else {
       plan = cachedPlan;
     }
@@ -261,7 +276,7 @@ async function getPlan(ctx) {
     }
   }
   cachedPlan = plan;
-  if (queryVariables.domain) cachedPlansForHostnames[queryVariables.domain] = plan;
+  if (queryVariables.hostname) cachedPlansForHostnames[queryVariables.hostname] = plan;
   if (req) req.requestPlan = plan;
 
   return plan;

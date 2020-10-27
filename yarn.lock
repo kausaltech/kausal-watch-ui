@@ -13427,10 +13427,10 @@ react-overlays@^2.0.0:
     uncontrollable "^7.0.0"
     warning "^4.0.3"
 
-react-piwik@^1.8.0:
-  version "1.8.0"
-  resolved "https://registry.yarnpkg.com/react-piwik/-/react-piwik-1.8.0.tgz#f0ff0d54c4923c80c9497b728a1863c4d2609cfc"
-  integrity sha512-ZpT7oPcdSIXt1yZvRWU/qq/EX7rXZELkwEJq2cDDejFlVYq7NKXtiMpuAvkO6QNeFwOmkO/820MHgmJ+fDug/Q==
+react-piwik@^1.10.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/react-piwik/-/react-piwik-1.10.0.tgz#55213dee70e3a665db978b4697814a50051bf0ab"
+  integrity sha512-FEPUdnLQfBPeLfoWXBXjev+EHyRPxXSLQhcF1DcGNYlV+2QWYXQozf9aCQu6D0qx2fUf6PkF2yPpVPuArKg55g==
 
 react-plotly.js@^2.4.0:
   version "2.4.0"
