@@ -81,6 +81,12 @@ back-to-top: Tillbaka till toppen
 contact: Kontakta oss
 feedback: Respons
 give-feedback: Ge respons
+feedback-description: Upptäckte du något som inte fungerar? Eller har du idéer om något vi kan förbättra?
+feedback-prompt: Meddela oss genom att fylla i och skicka det här formuläret.
+feedback-thankyou-header: Respons mottagen
+feedback-thankyou-content: Tack för att du tog dig tid att ge oss feedback. Det är verkligen bra.
+feedback-error-header: Fel när meddelandet skickades
+feedback-error-content: Något gick fel och din feedback mottogs inte. Försök igen om ett ögonblick.
 error-feedback-required: Feedback krävs
 error-email-format: Ange en giltig e-postadress
 accessibility: Tillganglighetsredogorelse
@@ -93,5 +99,6 @@ skip-to-content: Hoppa till huvudinnehåll
 search: Sök
 active-filters: Aktiva filter
 remove-filter: Ta bort filtret
-required: Obligatoriskt
+required-field: Obligatorisk
 send: Skicka
+close: Stäng
