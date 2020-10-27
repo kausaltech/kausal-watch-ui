@@ -81,6 +81,9 @@ supported-by: Supported by
 back-to-top: Back to top
 contact: Contact
 feedback: Feedback
+give-feedback: Give feedback
+error-feedback-required: Feedback is required
+error-email-format: Please provide a valid email address
 accessibility: Accessibility
 copy-to-clipboard: Copy link to clipboard
 copied-to-clipboard: Copied!
@@ -91,3 +94,5 @@ skip-to-content: Skip to main content
 search: Search
 active-filters: Active filters
 remove-filter: Remove filter
+required: required
+send: Send
