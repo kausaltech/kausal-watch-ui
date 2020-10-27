@@ -26,10 +26,12 @@ const ContentHeader = styled.header`
 `;
 
 const ADD_FEEDBACK = gql`
-  mutation AddTodo($type: String!) {
+  mutation AddFeedback($type: String!) {
     addFeedback(type: $type) {
       id
-      type
+      name
+      email
+      feedback
     }
   }
 `;
@@ -37,11 +39,17 @@ const ADD_FEEDBACK = gql`
 const FeedbackForm = ({plan}) => {
   const { control, handleSubmit, errors } = useForm();
   const { t } = useTranslation();
+  const [
+    addFeedback,
+    { loading: mutationLoading, error: mutationError },
+  ] = useMutation(ADD_FEEDBACK);
+
   const onSubmit = (data) => {
     const feedbackData = data;
     feedbackData.plan = plan;
     console.log("SENDING FEEDBACK...");
     console.log(feedbackData);
+    addFeedback({ variables: feedbackData });
   };
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -82,6 +90,8 @@ const FeedbackForm = ({plan}) => {
         formFeedback={errors.feedback && t('error-feedback-required')}
       />
       <Button type="submit" color="primary">{t('send')}</Button>
+      {mutationLoading && <p>Sending feedback...</p>}
+      {mutationError && <p>Something went wrong. Your feedback is not sent. Try again.</p>}
     </form>
   );
 };
@@ -89,8 +99,6 @@ const FeedbackForm = ({plan}) => {
 const FeedbackPage = () => {
   const { t } = useTranslation();
   const plan = useContext(PlanContext);
-  let input;
-  const [addFeedback, { data }] = useMutation(ADD_FEEDBACK);
 
   return (
     <Layout>
@@ -120,11 +128,10 @@ const FeedbackPage = () => {
               <p>
                 Please let us know here.
               </p>
-              <FeedbackForm plan={plan.name}/>
+              <FeedbackForm plan={plan.name} />
             </Col>
           </Row>
         </Container>
-
       </div>
     </Layout>
   );
@@ -137,14 +144,3 @@ const initialProps = {
 FeedbackPage.getInitialProps = async () => (initialProps);
 
 export default FeedbackPage;
-
-/*
-      <TextInput
-        label={filter.label}
-        id={filter.identifier + '-field'}
-        name={filter.identifier}
-        placeholder={filter.placeholder}
-        value={currentValue || ''}
-        onChange={callback}
-      />
-      */
