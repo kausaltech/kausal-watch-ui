@@ -79,6 +79,9 @@ supported-by: Kehitystä tukenut
 back-to-top: Sivun alkuun
 contact: Yhteystiedot
 feedback: Palaute
+give-feedback: Anna palautetta
+error-feedback-required: Palaute on pakollinen kenttä
+error-email-format: Syötä oikea sähköpostiosoite
 accessibility: Saavutettavuus
 copy-to-clipboard: Kopioi linkki leikepöydälle
 copied-to-clipboard: Kopioitu!
@@ -89,3 +92,5 @@ skip-to-content: Hyppää sisältöön
 search: Hae
 active-filters: Aktiiviset rajaukset
 remove-filter: Poista rajaus
+required: Pakollinen
+send: Lähetä

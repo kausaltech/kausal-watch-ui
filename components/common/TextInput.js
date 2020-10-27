@@ -3,6 +3,7 @@ import {
   Input as BSInput,
   FormGroup,
   Label as BSLabel,
+  FormFeedback,
 } from 'reactstrap';
 
 import styled from 'styled-components';
@@ -20,11 +21,12 @@ const Input = styled(BSInput)`
   border-width: ${(props) => props.theme.inputBorderWidth};
 `;
 
-function TextInput(props) {
+const TextInput = (props) => {
   const {
     label,
     id,
     placeholder,
+    formFeedback,
     ...rest
   } = props;
   return (
@@ -35,13 +37,13 @@ function TextInput(props) {
         </Label>
       )}
       <Input
-        name="search"
         id={id}
         placeholder={placeholder}
         {...rest}
       />
+      <FormFeedback role="alert">{formFeedback}</FormFeedback>
     </FormGroup>
   );
-}
+};
 
 export default TextInput;
