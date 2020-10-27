@@ -1,8 +1,8 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 import { gql, useMutation } from '@apollo/client';
 import { useForm, Controller } from 'react-hook-form';
-import { Container, Row, Col } from 'reactstrap';
+import { Container, Row, Col, Alert, Spinner } from 'reactstrap';
 import styled from 'styled-components';
 
 import { useTranslation } from 'common/i18n';
@@ -43,6 +43,9 @@ const CREATE_USER_FEEDBACK = gql`
 const FeedbackForm = ({ planIdentifier }) => {
   const { control, handleSubmit, errors } = useForm();
   const { t } = useTranslation();
+  const [sent, setSent] = useState(false);
+  const onDismiss = () => setSent(false);
+
   const [
     createUserFeedback,
     { loading: mutationLoading, error: mutationError, data: mutationData },
@@ -54,54 +57,90 @@ const FeedbackForm = ({ planIdentifier }) => {
       plan: planIdentifier,
       url: window.location.href,
     };
+    setSent(true);
     createUserFeedback({ variables: { input: data } });
   };
+
   return (
-    <div>
+    <div className="mb-5">
+      <h2 className="mb-4">{t('give-feedback')}</h2>
+      <p>{t('feedback-description')}</p>
+      <p>{t('feedback-prompt')}</p>
       {(mutationData && !mutationLoading && !mutationError) && (
-        <p>Feedback received. Thanks!</p>
+        <Alert
+          color="primary"
+          isOpen={sent}
+          toggle={onDismiss}
+          closeAriaLabel={t('close')}
+        >
+          <h3>{t('feedback-thankyou-header')}</h3>
+          <p>{t('feedback-thankyou-content')}</p>
+        </Alert>
       )}
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Controller
-          as={TextInput}
-          label={t('name')}
-          name="name"
-          id="name-field"
-          control={control}
-          defaultValue=""
-        />
-        <Controller
-          as={TextInput}
-          label={t('email')}
-          name="email"
-          id="email-field"
-          control={control}
-          defaultValue=""
-          rules={{
-            required: true,
-            pattern: {
-              value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-            },
-          }}
-          invalid={'email' in errors}
-          formFeedback={errors.email && t('error-email-format')}
-        />
-        <Controller
-          as={TextInput}
-          label={`${t('feedback')} (${t('required')})`}
-          name="comment"
-          id="comment-field"
-          control={control}
-          type="textarea"
-          rules={{ required: true }}
-          invalid={'comment' in errors}
-          defaultValue=""
-          formFeedback={errors.feedback && t('error-feedback-required')}
-        />
-        <Button type="submit" color="primary">{t('send')}</Button>
-        {mutationLoading && <p>Sending feedback...</p>}
-        {mutationError && <p>Something went wrong. Your feedback is not sent. Try again.</p>}
-      </form>
+      { (!sent || mutationError) && (
+        <div className="mt-4">
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <Controller
+              as={TextInput}
+              label={t('name')}
+              name="name"
+              id="name-field"
+              control={control}
+              defaultValue=""
+            />
+            <Controller
+              as={TextInput}
+              label={t('email')}
+              name="email"
+              id="email-field"
+              control={control}
+              defaultValue=""
+              rules={{
+                required: true,
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                },
+              }}
+              invalid={'email' in errors}
+              formFeedback={errors.email && t('error-email-format')}
+            />
+            <Controller
+              as={TextInput}
+              label={`${t('feedback')} (${t('required-field')})`}
+              name="comment"
+              id="comment-field"
+              control={control}
+              type="textarea"
+              rules={{ required: true }}
+              invalid={'comment' in errors}
+              defaultValue=""
+              formFeedback={errors.feedback && t('error-feedback-required')}
+            />
+            {mutationError && (
+              <Alert
+                color="danger"
+                className="mt-4"
+                isOpen={sent}
+                toggle={onDismiss}
+                closeAriaLabel={t('close')}
+              >
+                <h3>{t('feedback-error-header')}</h3>
+                <p>{t('feedback-error-content')}</p>
+              </Alert>
+            )}
+            <Button type="submit" color="primary">
+              {!mutationLoading && t('send')}
+              {mutationLoading && (
+                <span>
+                  <Spinner size="sm" color="light" className="mr-3" />
+                  {t('loading')}
+                  ...
+                </span>
+              )}
+            </Button>
+          </form>
+        </div>
+      )}
     </div>
   );
 };
@@ -127,18 +166,10 @@ const FeedbackPage = () => {
           </Row>
         </Container>
       </HeaderBg>
-      <div className="content-area text-content my-5">
+      <div className="content-area my-5">
         <Container className="pb-4">
           <Row>
             <Col lg={{ size: 8, offset: 2 }} md={{ size: 10, offset: 1 }}>
-              <h2>{t('give-feedback')}</h2>
-              <p>
-                Did you discover something that does not work?
-                Or do you have ideas on something we can improve?
-              </p>
-              <p>
-                Please let us know here.
-              </p>
               <FeedbackForm planIdentifier={plan.identifier} />
             </Col>
           </Row>
