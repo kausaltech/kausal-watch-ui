@@ -27,7 +27,7 @@ const GlobalStyle = createGlobalStyle`
     pointer-events: none;
   }
 
-  h1, h2, h3 , h4, h5 {
+  h1, h2, h3 , h4, h5, h6 {
     font-family: ${(props) => props.theme.headingsFontFamily}, ${(props) => props.theme.headingsFontFamilyFallback};
     font-weight: ${(props) => props.theme.headingsFontWeight};
     line-height: ${(props) => props.theme.lineHeightMd};
