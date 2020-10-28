@@ -23,6 +23,7 @@ insight-filter-no-results: Ei tuloksia
 indicators-as-list: Listana
 indicators-as-insight: Näkemysverkossa
 goal: tavoite
+total: yhteensä
 forecast: ennuste
 current-trend: nykytrendi
 percent-point-abbreviation: '%-yks.'

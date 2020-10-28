@@ -23,6 +23,7 @@ insight-filter-no-results: No results
 indicators-as-list: As a list
 indicators-as-insight: As insights
 goal: goal
+total: total
 forecast: forecast
 current-trend: trend
 percent-point-abbreviation: p.p.

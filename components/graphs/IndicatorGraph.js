@@ -277,16 +277,23 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
 
   // Draw the main historical series (non-dimensioned)
   const mainValues = values.filter((item) => !item.categories.length);
+  let traceName = indicator.quantity ? capitalizeFirstLetter(indicator.quantity.name) : null;
+  if (dimensionedValues.length) {
+    traceName = capitalizeFirstLetter(i18n.t('total'));
+  }
   const dataTrace = {
     y: mainValues.map((item) => item.value),
     x: mainValues.map((item) => item.date),
-    name: indicator.quantity ? capitalizeFirstLetter(indicator.quantity.name) : null,
+    name: traceName,
     color: plotColors.trace,
-    hovertemplate: `%{x}: %{y} ${unitLabel}`,
+    hovertemplate: dimensionedValues.length ? `%{x} ${traceName}: %{y} ${unitLabel}` : `%{x}: %{y} ${unitLabel}`,
     hoverinfo: 'x+y',
     hoverlabel: {
       namelength: 0,
       bgcolor: '#fff',
+      font: {
+        color: dimensionedValues.length ? plotColors.trace : undefined,
+      },
     },
     showlegend: indicator.quantity != null,
   };
@@ -336,7 +343,7 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
           type: 'none',
         },
         color: '#ffffff',
-      }
+      },
     };
   }
   traces.push({ ...dataTrace, ...attrs });
@@ -371,6 +378,10 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
 
   scenarios.forEach((scenario, scenarioId) => {
     const { goals } = scenario;
+
+    goals.forEach((item) => {
+      if (dates.indexOf(item.date) < 0) dates.push(item.date);
+    });
 
     const trace = {
       y: goals.map((item) => item.value),
@@ -470,12 +481,15 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
 
   const layout = makeLayout(indicator);
   layout.title = indicator.name;
-  layout.yaxis.title = unitLabel;
+  layout.yaxis.title = unitLabel || indicator.quantity?.name;
 
   if (scenarios.size < 2 && !indicator.dimensions.length) {
     layout.showlegend = false;
   }
 
+  if (dates.length < 4) {
+    layout.xaxis.tickvals = dates.sort();
+  }
   if (maxDigits > 3) maxDigits = 3;
   if (onlyIntegers) {
     layout.yaxis.hoverformat = `${onlyIntegers ? '' : '.'}${maxDigits}r`;
