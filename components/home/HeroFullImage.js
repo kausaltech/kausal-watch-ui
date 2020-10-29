@@ -82,7 +82,7 @@ const MainCard = styled.div`
   }
 `;
 
-const Highlight = styled.div` 
+const Highlight = styled.div`
   height: 100%;
   margin-bottom: 0;
 
@@ -95,12 +95,12 @@ const Highlight = styled.div`
   h2 {
     color: ${(props) => props.theme.neutralDark};
     font-size: ${(props) => props.theme.fontSizeMd};
-  
+
     .icon {
       margin-left: ${(props) => props.theme.spaces.s025};
     }
   }
- 
+
   p {
     hyphens: auto;
     margin-bottom: 0;
@@ -111,8 +111,8 @@ const Highlight = styled.div`
 
 const Illustration = styled.div`
   svg {
-    width: ${(props) => props.theme.spaces.s600};
-    height: ${(props) => props.theme.spaces.s600};
+    width: ${(props) => props.theme.spaces.s400};
+    height: ${(props) => props.theme.spaces.s400};
     margin: 0 1rem 0 0;
     display: block;
     fill: ${(props) => props.theme.brandDark};

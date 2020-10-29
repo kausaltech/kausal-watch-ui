@@ -123,6 +123,15 @@ const GlobalStyle = createGlobalStyle`
     }
   }
 
+  .richtext-image {
+    margin: ${(props) => props.theme.spaces.s150} 0;
+
+    &.full-width {
+      max-width: 100%;
+      height: auto;
+    }
+  }
+
   thead {
     background-color: ${(props) => props.theme.tableHeadBg};
   }
