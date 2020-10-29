@@ -53,7 +53,6 @@ const FaqSection = styled.section`
   }
 `;
 
-
 const GET_CONTENT = gql`
 query GetStaticPage($plan: ID!, $slug: ID!) {
   staticPage(plan: $plan, slug: $slug) {
@@ -64,7 +63,7 @@ query GetStaticPage($plan: ID!, $slug: ID!) {
     tagline
     content
     modifiedAt
-    imageUrl
+    imageUrl(size: "1800x1200")
     questions {
       id
       title
