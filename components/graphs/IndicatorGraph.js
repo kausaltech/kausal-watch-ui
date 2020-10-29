@@ -228,6 +228,7 @@ function generateDataTraces(indicator, values, i18n, plotColors, unitLabel) {
       line: {
         width: 2,
         shape: 'spline',
+        smoothing: 0.7,
         color,
       },
       hovertemplate: `%{x} ${trace.name}: %{y} ${unitLabel}`,
@@ -313,6 +314,7 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
       line: {
         width: 4,
         shape: 'spline',
+        smoothing: 0.7,
         color: plotColors.trace,
       },
       marker: {
