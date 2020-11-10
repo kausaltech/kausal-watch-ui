@@ -124,9 +124,15 @@ function captureMessage(msg) {
   return Sentry.captureMessage(msg);
 }
 
+function setRelease(release) {
+  const client = Sentry.getCurrentHub().getClient();
+  client._options.release = release;
+}
+
 module.exports = {
   Sentry,
   captureException,
   captureMessage,
   initSentry,
+  setRelease,
 };

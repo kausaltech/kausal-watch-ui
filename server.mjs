@@ -78,6 +78,10 @@ console.log('Preparing server');
 await app.prepare();
 console.log('Server prepared');
 
+if (process.env.SENTRY_DSN) {
+  sentry.setRelease(app.buildId);
+}
+
 const isProduction = process.env.NODE_ENV === 'production';
 
 // Request logging
