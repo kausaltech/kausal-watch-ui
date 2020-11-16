@@ -29,7 +29,7 @@ const StyledBadge = styled(Badge)`
   }
 `;
 
-const BadgeTooltip = (props) => {
+const BadgeTooltip = React.forwardRef((props, ref) => {
   const {
     abbreviation,
     name,
@@ -49,6 +49,7 @@ const BadgeTooltip = (props) => {
       href={href}
       id={badgeId}
       aria-label={ariaLabel}
+      ref={ref}
     >
       <StyledBadge>
         {abbreviation || name}
@@ -63,7 +64,7 @@ const BadgeTooltip = (props) => {
       </Tooltip>
     </BadgeWrapper>
   );
-};
+});
 
 BadgeTooltip.defaultProps = {
   size: 'md',
