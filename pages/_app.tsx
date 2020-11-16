@@ -49,7 +49,7 @@ const GET_PLAN = gql`
         matomoAnalyticsUrl
       }
       mainImage {
-        largeRendition: rendition(size: "1500x500") {
+        largeRendition: rendition(size: "1600x900") {
           src
           width
           height
