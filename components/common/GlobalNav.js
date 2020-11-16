@@ -201,7 +201,7 @@ const NavbarToggler = styled.button`
   -webkit-appearance: none;
 
   @media (max-width: ${(props) => props.theme.breakpointMd}) {
-    display: inline-block 
+    display: inline-block
   }
 `;
 
@@ -278,7 +278,7 @@ function GlobalNav(props) {
   return (
     <div>
       <TopNav expand="md">
-        <Container fluid={fullwidth}>
+        <Container fluid={fullwidth} className="flex-nowrap">
           <Link href="/" passHref>
             <HomeLink>
               <OrgLogo className="org-logo" />
