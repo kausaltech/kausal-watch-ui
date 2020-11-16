@@ -144,7 +144,6 @@ function ActionListFilterBadges({
   );
 }
 
-
 function ActionListFilters({
   filters, orgs, categoryTypes, impacts, actionCount, onChange,
 }) {
@@ -163,14 +162,17 @@ function ActionListFilters({
       label: ' '.repeat(org.depth * 4) + org.name,
     })),
   });
-  allFilters.push({
-    label: t('filter-impact'),
-    showAllLabel: t('filter-all-impacts'),
-    md: 6,
-    lg: 4,
-    identifier: 'impact',
-    options: impacts,
-  });
+
+  if (impacts.length > 0) {
+    allFilters.push({
+      label: t('filter-impact'),
+      showAllLabel: t('filter-all-impacts'),
+      md: 6,
+      lg: 4,
+      identifier: 'impact',
+      options: impacts,
+    });
+  }
 
   categoryTypes.forEach((ct) => {
     allFilters.push({
