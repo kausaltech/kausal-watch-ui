@@ -18,9 +18,9 @@
  // brand-light/theme.dark should have contrast ratio over 4.5
  // brand-dark/theme.light should have contrast ratio over 4.5
  $brand-light:  #DEDFE1;
- $brand-dark:   #BD2719; //modified hel-tram for a11y
+ $brand-dark:   #BD2719;
  $neutral-light:  #DEDFE1;
- $neutral-dark:   #1A1A1A; //modified hel-tram for a11y
+ $neutral-dark:   #1A1A1A;
 
  // Application color mappings:
  $theme-colors: (
@@ -109,7 +109,8 @@
 
  /////// NAV
 
- $brand-nav-background:              $brand-dark;
+ $brand-nav-color:              #ffffff;
+ $brand-nav-background:         $brand-dark;
 
  /////// CARDS
 
@@ -118,6 +119,8 @@
 
  /////// BADGES
 
+ $badge-background:                $brand-dark;
+ $badge-color:                     #ffffff;
  $badge-border-radius:             0;
  $badge-padding-y:                 .5em;
  $badge-padding-x:                 .75em;

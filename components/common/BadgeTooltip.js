@@ -11,8 +11,8 @@ const BadgeWrapper = styled.a`
 `;
 
 const StyledBadge = styled(Badge)`
-  background-color: ${(props) => props.theme.brandDark};
-  color: ${(props) => props.theme.themeColors.white};
+  background-color: ${(props) => props.theme.badgeBackground};
+  color: ${(props) => props.theme.badgeColor};
   border-radius: ${(props) => props.theme.badgeBorderRadius};
   padding: ${(props) => props.theme.badgePaddingY} ${(props) => props.theme.badgePaddingX};
   font-weight: ${(props) => props.theme.badgeFontWeight};
@@ -24,8 +24,8 @@ const StyledBadge = styled(Badge)`
   white-space: normal;
   text-align: left;
   &.badge-secondary:hover {
-    background-color:  ${(props) => lighten(0.05, props.theme.brandDark)};
-    color: ${(props) => props.theme.themeColors.white};
+    background-color:  ${(props) => lighten(0.05, props.theme.badgeBackground)};
+    color: ${(props) => props.theme.badgeColor};
   }
 `;
 

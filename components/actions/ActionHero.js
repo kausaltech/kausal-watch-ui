@@ -99,8 +99,8 @@ const CategoryBadge = styled(Badge)`
   font-weight: ${(props) => props.theme.badgeFontWeight};
   line-height: ${(props) => props.theme.lineHeightMd};
   border-radius: ${(props) => props.theme.btnBorderRadius};
-  color: ${(props) => props.theme.themeColors.white};
-  background-color: ${(props) => props.theme.brandDark};
+  color: ${(props) => props.theme.badgeColor};
+  background-color: ${(props) => props.theme.badgeBackground};
 `;
 
 function ActionHero(props) {
