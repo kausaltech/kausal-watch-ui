@@ -149,8 +149,13 @@ const SectionHeader = styled.h2`
 `;
 
 const OfficialText = styled.div`
-  color: ${(props) => props.theme.brandDark};
   margin-bottom: ${(props) => props.theme.spaces.s300};
+
+  .official-text-content {
+    color: ${(props) => props.theme.neutralDark};
+    padding-left: ${(props) => props.theme.spaces.s100};
+    border-left: 4px solid ${(props) => props.theme.neutralLight};
+  }
 
   h2 {
     font-size: ${(props) => props.theme.fontSizeMd};
@@ -278,11 +283,13 @@ function ActionContent({ id }) {
             {cleanOfficialText && (
               <OfficialText>
                 <h2>{ t('actions:action-description-official') }</h2>
-                <strong>{ t('actions:action-as-in-plan') }</strong>
-                <div dangerouslySetInnerHTML={{ __html: cleanOfficialText }} />
-                {generalContent.officialNameDescription && (
-                  <small>{`(${generalContent.officialNameDescription})`}</small>
-                )}
+                <div className="official-text-content">
+                  <strong>{ t('actions:action-as-in-plan') }</strong>
+                  <div dangerouslySetInnerHTML={{ __html: cleanOfficialText }} />
+                  {generalContent.officialNameDescription && (
+                    <small>{`(${generalContent.officialNameDescription})`}</small>
+                  )}
+                </div>
               </OfficialText>
             )}
 

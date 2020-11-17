@@ -46,7 +46,7 @@ const BotNav = styled(Navbar)`
 const HomeLink = styled.a`
   display: flex;
   align-items: center;
-  color: ${(props) => props.theme.themeColors.white};
+  color: ${(props) => props.theme.brandNavColor};
   font-weight: ${(props) => props.theme.fontWeightBold};
   line-height: ${(props) => props.theme.lineHeightSm};
   hyphens: auto;
@@ -54,7 +54,7 @@ const HomeLink = styled.a`
 
   &:hover {
     text-decoration: none;
-    color: ${(props) => props.theme.themeColors.light};
+    color: ${(props) => props.theme.brandNavColor};
   }
 
   svg {
@@ -89,7 +89,7 @@ const NavLink = styled.a`
       color: ${(props) => props.theme.neutralDark};
 
       span {
-        border-bottom: 5px solid ${(props) => props.theme.brandDark};
+        border-bottom: 5px solid ${(props) => props.theme.brandNavBackground};
       }
     }
 
@@ -105,7 +105,7 @@ const NavHighlighter = styled.span`
   transition: border 200ms;
 
   &.active {
-    border-bottom: 5px solid ${(props) => props.theme.brandDark};
+    border-bottom: 5px solid ${(props) => props.theme.brandNavBackground};
   }
 
   @media (max-width: ${(props) => props.theme.breakpointMd}) {
@@ -121,7 +121,7 @@ const DropDownHighlighter = styled.span`
   transition: border 200ms;
 
   &.active {
-    border-bottom: 5px solid ${(props) => props.theme.brandDark};
+    border-bottom: 5px solid ${(props) => props.theme.brandNavBackground};
   }
 
   @media (max-width: ${(props) => props.theme.breakpointMd}) {
@@ -166,7 +166,7 @@ const StyledDropdown = styled(UncontrolledDropdown)`
     background-color: transparent;
 
       span {
-        border-bottom: 5px solid ${(props) => props.theme.brandDark};
+        border-bottom: 5px solid ${(props) => props.theme.brandNavBackground};
       }
     }
   }
@@ -190,7 +190,6 @@ const NavbarToggler = styled.button`
   text-align: right;
   font-size: 1.5rem;
   width: ${(props) => props.theme.spaces.s300};
-  color: ${(props) => props.theme.brandDark};
   font-weight: ${(props) => props.theme.fontWeightBold};
   line-height: ${(props) => props.theme.lineHeightMd};
   hyphens: auto;
@@ -293,8 +292,8 @@ function GlobalNav(props) {
             type="button"
           >
             { isOpen
-              ? <Icon name="times" color={theme.themeColors.white} />
-              : <Icon name="bars" color={theme.themeColors.white} /> }
+              ? <Icon name="times" color={theme.brandNavColor} />
+              : <Icon name="bars" color={theme.brandNavColor} /> }
           </NavbarToggler>
         </Container>
       </TopNav>

@@ -17,10 +17,10 @@
  // brand-light/brand-dark should have contrast ratio over 4.5
  // brand-light/theme.dark should have contrast ratio over 4.5
  // brand-dark/theme.light should have contrast ratio over 4.5
- $brand-light:  #d0e6f7;
- $brand-dark:   #9e823c; //modified hel-tram for a11y
+ $brand-light:  #c2a251;
+ $brand-dark:   #1a1a1a;
  $neutral-light:  #d0e6f7;
- $neutral-dark:   #1a1a1a; //modified hel-tram for a11y
+ $neutral-dark:   #1a1a1a;
 
  // Application color mappings:
  $theme-colors: (
@@ -109,7 +109,8 @@
 
  /////// NAV
 
- $brand-nav-background:              $brand-dark;
+ $brand-nav-color:              $brand-dark;
+ $brand-nav-background:         $brand-light;
 
  /////// CARDS
 
@@ -118,6 +119,8 @@
 
  /////// BADGES
 
+ $badge-background:                $neutral-light;
+ $badge-color:                     #1a1a1a;
  $badge-border-radius:             0;
  $badge-padding-y:                 .5em;
  $badge-padding-x:                 .75em;
@@ -158,7 +161,7 @@
  $breakpoint-xl: 1200px;
 
  $icons-url: '/static/icons/hnh2035';
- $theme-logo-url: '/static/images/hnh2035/helsinki-logo-white.svg';
+ $theme-logo-url: '/static/images/helsinki-kierto/helsinki-logo.svg';
  $theme-logo-white-url: '/static/images/hnh2035/helsinki-logo-white.svg';
  $icon-indicators-url: '';
  $icon-actions-url: '';

@@ -121,7 +121,8 @@ $name: 'lahti-ilmasto';
 
  /////// NAV
 
- $brand-nav-background:              $neutral-dark;
+ $brand-nav-color:              #ffffff;
+ $brand-nav-background:         $brand-dark;
 
  /////// CARDS
 
@@ -130,6 +131,8 @@ $name: 'lahti-ilmasto';
 
  /////// BADGES
 
+ $badge-background:                $brand-dark;
+ $badge-color:                     #ffffff;
  $badge-border-radius:             3px;
  $badge-padding-y:                 .5em;
  $badge-padding-x:                 .75em;

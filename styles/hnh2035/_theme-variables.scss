@@ -109,7 +109,8 @@ $form-label-font-weight:     400;
 
 /////// NAV
 
-$brand-nav-background:              $brand-dark;
+$brand-nav-color:              #ffffff;
+$brand-nav-background:         $brand-dark;
 
 /////// CARDS
 
@@ -118,6 +119,8 @@ $card-border-radius:                  0;
 
 /////// BADGES
 
+$badge-background:                $brand-dark;
+$badge-color:                     #ffffff;
 $badge-border-radius:             0;
 $badge-padding-y:                 .5em;
 $badge-padding-x:                 .75em;
