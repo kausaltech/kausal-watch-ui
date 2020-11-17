@@ -128,13 +128,15 @@ const StyledButton = styled(BSButton)`
   }
 `;
 
-function Button(props) {
+const Button = React.forwardRef((props, ref) => {
   const { children } = props;
 
   return (
-    <StyledButton {...props}>{ children }</StyledButton>
+    <StyledButton ref={ref} {...props}>
+      { children }
+    </StyledButton>
   );
-}
+});
 
 Button.defaultProps = {
   children: null,

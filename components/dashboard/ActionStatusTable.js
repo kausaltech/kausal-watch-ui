@@ -16,6 +16,7 @@ const ActionRow = styled.tr`
 
   td {
     vertical-align: middle;
+    line-height: ${(props) => props.theme.lineHeightSm};
   }
 
   a {
@@ -30,7 +31,7 @@ const ActionRow = styled.tr`
 
 const ResponsibleList = styled.div`
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
 `;
 
 const UpdatedAgo = styled.div`
