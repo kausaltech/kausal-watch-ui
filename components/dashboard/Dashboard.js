@@ -1,8 +1,8 @@
 /* eslint-disable max-classes-per-file */
 import React from 'react';
 import PropTypes from 'prop-types';
-import gql from 'graphql-tag';
-import { Query } from 'react-apollo';
+import { gql } from '@apollo/client';
+import { Query } from '@apollo/client/react/components';
 import {
   Container, Row, Col, TabContent, TabPane,
 } from 'reactstrap';
@@ -23,14 +23,23 @@ const DashboardSection = styled.div`
 `;
 
 const DashboardHeader = styled.div`
-  padding-top: 3rem;
-  margin-bottom: 1rem;
+  padding-top: ${(props) => props.theme.spaces.s300};
+  margin-bottom: ${(props) => props.theme.spaces.s100};
   background-color: ${(props) => props.theme.neutralLight};
+
+  h1 {
+    font-size: ${(props) => props.theme.fontSizeXxl};
+    margin-bottom: ${(props) => props.theme.spaces.s150};
+
+    @media (max-width: ${(props) => props.theme.breakpointMd}) {
+      font-size: ${(props) => props.theme.fontSizeXl};
+    }
+  }
 `;
 
 const ImpactGroupSection = styled.div`
-  padding-top: 2rem;
-  padding-bottom: 2rem;
+  padding-top: ${(props) => props.theme.spaces.s200};
+  padding-bottom: ${(props) => props.theme.spaces.s200};
 `;
 
 export const GET_IMPACT_GROUP_LIST = gql`
@@ -63,6 +72,7 @@ export const GET_IMPACT_GROUP_LIST = gql`
         }
       }
       generalContent {
+        id
         dashboardLeadContent
       }
     }
@@ -85,8 +95,13 @@ const DashboardTab = ({ t, segment }) => {
   }
 
   return (
-    <TabPane tabId={segment.id}>
-      <h2 className="mb-3">{ segment.title }</h2>
+    <TabPane
+      tabId={segment.id}
+      role="tabpanel"
+      id={`tab-${segment.id}`}
+      aria-labelledby={`segment-${segment.id}`}
+    >
+      <h2 className="mb-3">{ segment.name }</h2>
       {content}
     </TabPane>
   );
@@ -132,7 +147,7 @@ class DashboardLoaded extends React.PureComponent {
       <div id="dashboard">
         <DashboardHeader>
           <Container>
-            <h1 className="mb-3">{ t('dashboard') }</h1>
+            <h1>{ t('dashboard') }</h1>
             {leadContent && (
               <Row>
                 <Col sm="12" md="12" className="mb-5">
@@ -277,4 +292,4 @@ Dashboard.propTypes = {
   onFilterChange: PropTypes.func.isRequired,
 };
 
-export default withTranslation('common')(Dashboard);
+export default withTranslation(['common', 'actions'])(Dashboard);

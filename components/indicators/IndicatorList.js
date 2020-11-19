@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Query } from 'react-apollo';
-import gql from 'graphql-tag';
+import { Query } from '@apollo/client/react/components';
+import { gql } from '@apollo/client';
 import { Container } from 'reactstrap';
 
 import { withTranslation } from '../../common/i18n';
@@ -37,13 +37,16 @@ const GET_INDICATOR_LIST = gql`
         }
       }
       generalContent {
+        id
         indicatorListLeadContent
       }
-      categoryTypes {
+      categoryTypes(usableForIndicators: true) {
+        id
         identifier
         categories {
           id
           identifier
+          order
           name
           parent {
             id
@@ -65,20 +68,17 @@ class IndicatorList extends React.Component {
     const indicators = indicatorLevels.map((il) => {
       const { indicator, level } = il;
 
-      indicator.level = level.toLowerCase();
-      return indicator;
+      return { ...indicator, level: level.toLowerCase() };
     });
 
     const categories = [];
     categoryTypes.forEach((ct) => {
-      if (ct.identifier !== 'action') return;
-
       ct.categories.forEach((cat) => {
         categories.push(cat);
       });
     });
 
-    return { indicators, categories, leadContent: generalContent.indicatorListLeadContent }
+    return { indicators, categories, leadContent: generalContent.indicatorListLeadContent };
   }
 
   render() {
@@ -98,7 +98,6 @@ class IndicatorList extends React.Component {
             <>
               <Meta
                 title={t('indicators')}
-                description={`Toimenpiteiden edistymistä ja kasvihuonekaasupäästöjen kehitystä seurataan mittareilla`}
               />
               <IndicatorsHero leadContent={leadContent} />
               <Container>

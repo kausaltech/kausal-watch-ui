@@ -4,8 +4,8 @@
 yarn-error.log
 
 # Build directory
-/public
 /.next
+/next-env.d.ts
 
 .DS_Store
 *~

@@ -1,13 +1,17 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import styled from 'styled-components'
+import React from 'react';
+import PropTypes from 'prop-types';
+import styled from 'styled-components';
 
-import Icon from '../common/Icon'
-import PlanContext from '../../context/plan'
-import { withTranslation } from '../../common/i18n'
+import Icon from '../common/Icon';
 
 const ImpactIcon = styled(Icon)`
-  font-size: 1.5em;
+  font-size: ${(props) => {
+    switch (props.size) {
+      case 'sm': return '1em';
+      case 'md': return '1.5em';
+      default: return '1.5em';
+    }
+  }};
 
   &.icon-on {
     fill: ${(props) => props.theme.brandDark} !important;
@@ -23,13 +27,13 @@ const ImpactIcon = styled(Icon)`
 `;
 
 function ActionImpact(props) {
-  const plan = React.useContext(PlanContext);
-  const { t, identifier, name } = props;
-  const max = plan.actionImpacts.reduce((planMax, item) => {
-    const val = parseInt(item.identifier, 10);
-    if (!planMax || val > planMax) return val;
-    return planMax;
-  }, null);
+  const {
+    identifier,
+    name,
+    max,
+    size,
+  } = props;
+
   const bullets = [];
   const num = Number(identifier);
 
@@ -45,11 +49,11 @@ function ActionImpact(props) {
   const impactVisual = bullets.map((item) => {
     switch (item.type) {
       case 'bad':
-        return <ImpactIcon key={item.key} name="exclamationCircle" className="icon-bad" />
+        return <ImpactIcon key={item.key} name="exclamationCircle" className="icon-bad" size={size} />;
       case 'off':
-        return <ImpactIcon key={item.key} name="circleOutline" className="icon-off" />
+        return <ImpactIcon key={item.key} name="circleFull" className="icon-off" size={size} />;
       case 'on':
-        return <ImpactIcon key={item.key} name="circleFull" className="icon-on" />
+        return <ImpactIcon key={item.key} name="circleFull" className="icon-on" size={size} />;
       default:
         return null;
     }
@@ -57,18 +61,27 @@ function ActionImpact(props) {
 
   return (
     <div>
-      { impactVisual }
-      <h6>
-        {name}
-      </h6>
+      <div className="d-flex">
+        { impactVisual }
+        <strong className="ml-2">
+          {name}
+        </strong>
+      </div>
+
     </div>
   );
 }
 
+ActionImpact.defaultProps = {
+  max: 4,
+  size: 'md',
+};
+
 ActionImpact.propTypes = {
   identifier: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
-  t: PropTypes.func.isRequired,
+  max: PropTypes.number,
+  size: PropTypes.string,
 };
 
-export default withTranslation('common')(ActionImpact);
+export default ActionImpact;

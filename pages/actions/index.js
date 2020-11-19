@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useContext, useCallback } from 'react';
+import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
-import { withTranslation } from '../../common/i18n';
+import { useTranslation } from '../../common/i18n';
 import { Router } from '../../routes';
 import { getActionListLinkProps } from '../../common/links';
 import PlanContext from '../../context/plan';
@@ -9,57 +10,39 @@ import ContentLoader from '../../components/common/ContentLoader';
 import Layout, { Meta } from '../../components/layout';
 import ActionList from '../../components/actions/ActionList';
 
+function ActionListPage() {
+  const router = useRouter();
+  const filters = ActionList.getFiltersFromQuery(router.query);
+  const { t } = useTranslation('common');
 
-class ActionListPage extends React.Component {
-  static async getInitialProps({ query }) {
-    const filters = ActionList.getFiltersFromQuery(query);
+  const handleFilterChange = useCallback(
+    (newFilters) => {
+      // navigate to new page
+      const query = {};
 
-    const ret = {
-      filters,
-      namespacesRequired: ['common'],
-    };
-    return ret;
-  }
+      Object.entries(newFilters).forEach(([key, val]) => {
+        if (!val) return;
+        query[key] = val;
+      });
 
-  constructor(props) {
-    super(props);
-    this.handleFilterChange = this.handleFilterChange.bind(this);
-  }
-
-  /* eslint-disable class-methods-use-this */
-  handleFilterChange(filters) {
-    // navigate to new page
-    const query = {};
-
-    Object.entries(filters).forEach((item) => {
-      const [key, val] = item;
-      if (!val) return;
-      query[key] = val;
-    });
-
-    const link = getActionListLinkProps(query);
-    Router.replace(link.href);
-  }
-
-  render() {
-    const plan = this.context;
-    const { filters, t } = this.props;
-
-    return (
-      <Layout>
-        <Meta title={t('actions')} />
-        {!process.browser ? <ContentLoader /> : (
-          <ActionList plan={plan} filters={filters} onFilterChange={this.handleFilterChange} />
-        )}
-      </Layout>
-    );
-  }
+      const link = getActionListLinkProps(query);
+      router.replace(link.href, undefined, { shallow: true });
+    },
+    [],
+  );
+  const plan = useContext(PlanContext);
+  return (
+    <Layout>
+      <Meta title={t('actions')} />
+      {!process.browser ? <ContentLoader /> : (
+        <ActionList plan={plan} filters={filters} onFilterChange={handleFilterChange} />
+      )}
+    </Layout>
+  );
 }
-
-ActionListPage.contextType = PlanContext;
-
-ActionListPage.propTypes = {
-  t: PropTypes.func.isRequired,
+const initialProps = {
+  namespacesRequired: ['common', 'actions'],
 };
+ActionListPage.getInitialProps = async () => (initialProps);
 
-export default withTranslation('common')(ActionListPage);
+export default ActionListPage;

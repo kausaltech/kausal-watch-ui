@@ -1,22 +1,24 @@
 /* eslint-disable max-classes-per-file */
 import React from 'react';
 import PropTypes from 'prop-types';
-import gql from 'graphql-tag';
-import { Query } from 'react-apollo';
+import { gql } from '@apollo/client';
+import { Query } from '@apollo/client/react/components';
+import styled from 'styled-components';
 import {
-  Row, Col, Button,
+  Row, Col,
 } from 'reactstrap';
 import LazyLoad from 'react-lazyload';
-import styled from 'styled-components';
+import Button from '../common/Button';
 import { withTranslation } from '../../common/i18n';
 import ContentLoader from '../common/ContentLoader';
 import { ActionListLink } from '../../common/links';
+import { getActionImageURL } from '../../common/utils';
 
 import ActionHighlightCard from './ActionHighlightCard';
 import Icon from '../common/Icon';
 
 export const GET_ACTION_LIST = gql`
-  query ActionHightlightList($plan: ID!, $first: Int!, $orderBy: String!) {
+  query ActionHightlightList($plan: ID!, $first: Int!, $orderBy: String!, $bgImageSize: String = "520x200") {
     planActions(plan: $plan, first: $first, orderBy: $orderBy) {
       id
       identifier
@@ -24,6 +26,7 @@ export const GET_ACTION_LIST = gql`
       officialName
       completion
       updatedAt
+      imageUrl(size: $bgImageSize)
       plan {
         id
       }
@@ -34,52 +37,66 @@ export const GET_ACTION_LIST = gql`
       }
       categories {
         id
+        imageUrl(size: $bgImageSize)
+        parent {
+          id
+          imageUrl(size: $bgImageSize)
+          parent {
+            id
+            imageUrl(size: $bgImageSize)
+          }
+        }
       }
     }
   }
 `;
 
-const LinkButton = styled(Button)`
-  svg {
-    fill: ${(props) => props.theme.brandDark} !important;
-  }
-
-  &:hover {
-    svg {
-      fill: ${(props) => props.theme.themeColors.white} !important;
-    }
+const ListHeader = styled(Col)`
+  h2 {
+    font-size: ${(props) => props.theme.fontSizeXl};
+    margin-bottom: ${(props) => props.theme.spaces.s400};
   }
 `;
 
-function ActionCardList({ t, actions }) {
+const CardContainer = styled(Col)`
+  margin-bottom: ${(props) => props.theme.spaces.s150};
+
+  .card {
+    height: 100%;
+  }
+
+  .lazyload-wrapper {
+    width: 100%;
+  }
+`;
+
+function ActionCardList({ t, actions, plan }) {
   return (
     <Row>
-      <Col xs="12">
-        <h2 className="mb-5">{ t('recently-updated-actions') }</h2>
-      </Col>
+      <ListHeader xs="12">
+        <h2>{ t('recently-updated-actions') }</h2>
+      </ListHeader>
       {actions.map((item) => (
-        <Col
+        <CardContainer
           xs="12"
           md="6"
           lg="4"
           key={item.id}
-          className="mb-4 d-flex align-items-stretch"
+          className="d-flex align-items-stretch"
           style={{ transition: 'all 0.5s ease' }}
         >
           <LazyLoad height={300}>
-            <ActionHighlightCard action={item} />
+            <ActionHighlightCard action={item} imageUrl={getActionImageURL(plan, item)} />
           </LazyLoad>
-        </Col>
+        </CardContainer>
       ))}
       <Col xs="12" className="mt-5 mb-5">
         <ActionListLink>
-          <a>
-            <LinkButton outline color="primary">
-              { t('see-all-actions') }
-              {' '}
-              <Icon name="arrowRight" color="black" />
-            </LinkButton>
-          </a>
+          <Button outline color="primary" tag="a">
+            { t('see-all-actions') }
+            {' '}
+            <Icon name="arrowRight" color="black" />
+          </Button>
         </ActionListLink>
       </Col>
     </Row>
@@ -89,6 +106,9 @@ function ActionCardList({ t, actions }) {
 ActionCardList.propTypes = {
   t: PropTypes.func.isRequired,
   actions: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  plan: PropTypes.shape({
+    identifier: PropTypes.string,
+  }).isRequired,
 };
 
 function ActionHighlightsList(props) {
@@ -106,7 +126,7 @@ function ActionHighlightsList(props) {
       {({ data, loading, error }) => {
         if (loading) return <ContentLoader />;
         if (error) return <p>{ t('error-loading-actions') }</p>;
-        return <ActionCardList t={t} actions={data.planActions} />;
+        return <ActionCardList t={t} actions={data.planActions} plan={plan}/>;
       }}
     </Query>
   );

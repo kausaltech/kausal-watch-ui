@@ -5,22 +5,21 @@ import {
   Row, Col, Container,
 } from 'reactstrap';
 
+import SVG from 'react-inlinesvg';
 import { Spring } from 'react-spring/renderprops.cjs';
 import styled from 'styled-components';
-import { withTranslation } from '../common/i18n';
+import { useTheme } from 'common/theme';
+import { useTranslation } from 'common/i18n';
 import {
   IndicatorListLink,
   ActionListLink,
 } from '../common/links';
 
-import IconActions from '../public/static/images/default/icon-actions.svg';
-import IconIndicators from '../public/static/images/default/icon-indicators.svg';
-
 const HeroVisual = styled.div`
   position: relative;
   height: 11rem;
   width: 11rem;
-  margin: 0 auto 2rem;
+  margin: 0 auto ${(props) => props.theme.spaces.s200};
 
   &:before {
     content: "";
@@ -58,12 +57,7 @@ const BannerContent = styled.div`
   padding: 2rem 0;
   max-width: 48rem;
   margin: 0 auto 0;
-  background-color: #ffffff;
-  
-  //text-shadow: 3px 3px 8px rgba(0,0,0, 0.3);
-  h1 {
-    font-size: 48px;
-  }
+  background-color: ${(props) => props.theme.themeColors.white};
 
   a:hover {
     text-decoration: none;
@@ -87,18 +81,18 @@ const Illustration = styled.div`
 `;
 
 const SiteTitle = styled.div`
-  margin-bottom: 3rem;
+  margin-bottom: ${(props) => props.theme.spaces.s300};
   text-align: center;
   color: ${(props) => props.theme.neutralDark};
   h1 {
-    margin-bottom: 1rem;
-    font-size: 2.5rem;
+    margin-bottom: ${(props) => props.theme.spaces.s100};
+    font-size: ${(props) => props.theme.fontSizeXl};
   }
 `;
 
 const Highlight = styled.div`
-  margin-bottom: 1rem;
-  background: #fff;
+  margin-bottom: ${(props) => props.theme.spaces.s100};
+  background: ${(props) => props.theme.themeColors.white};
 
   &:hover {
     box-shadow: 6px 6px 10px ${(props) => props.theme.brandDark};
@@ -112,7 +106,7 @@ const Highlight = styled.div`
   h3 {
     color: ${(props) => props.theme.neutralDark};
   }
- 
+
   p {
     hyphens: auto;
     margin-bottom: 0;
@@ -121,9 +115,15 @@ const Highlight = styled.div`
 `;
 
 function FrontHero(props) {
+  const { t } = useTranslation();
+  const theme = useTheme();
   const {
-    t, bgImage, title, siteDescription, actionsDescription, indicatorsDescription,
+    bgImage, title, siteDescription, actionsDescription, indicatorsDescription,
   } = props;
+
+  const IconActions = () => <SVG src={theme.iconActionsUrl} />;
+  const IconIndicators = () => <SVG src={theme.iconIndicatorsUrl} />;
+
   return (
     <BannerContent>
       <Container>
@@ -136,7 +136,7 @@ function FrontHero(props) {
               <Col sm="12" md={{ size: 8, offset: 2 }}>
                 <SiteTitle style={sprops}>
                   <HeroVisual>
-                    <HeroImage pic={bgImage} />
+                    {bgImage && (<HeroImage pic={bgImage} />)}
                   </HeroVisual>
                   <h1>{ title || 'Site Title' }</h1>
                   <p className="lead">{ siteDescription || 'Site Description' }</p>
@@ -209,12 +209,14 @@ function FrontHero(props) {
 }
 
 FrontHero.propTypes = {
-  t: PropTypes.func.isRequired,
-  bgImage: PropTypes.string.isRequired,
+  bgImage: PropTypes.string,
   title: PropTypes.string.isRequired,
   siteDescription: PropTypes.string.isRequired,
   actionsDescription: PropTypes.string.isRequired,
   indicatorsDescription: PropTypes.string.isRequired,
 };
+FrontHero.defaultProps = {
+  bgImage: null,
+};
 
-export default withTranslation('common')(FrontHero);
+export default FrontHero;

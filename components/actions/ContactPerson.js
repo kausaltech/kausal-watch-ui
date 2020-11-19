@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Query } from 'react-apollo';
-import gql from 'graphql-tag';
+import { Query } from '@apollo/client/react/components';
+import { gql } from '@apollo/client';
 
 import { Media, Button, Collapse } from 'reactstrap';
 import { withTranslation } from '../../common/i18n';
@@ -18,34 +18,38 @@ const Person = styled.div`
 
   &.leader {
     img {
-      border: 2px solid ${(props) => props.theme.brandDark};
+      border: 4px solid ${(props) => props.theme.brandDark};
     }
   }
 `;
 
 const PersonDetails = styled(Media)`
   margin-left: 1em;
+
+  .btn-link, .btn-link:hover {
+    color: ${(props) => props.theme.brandDark};
+  }
 `;
 
 const Name = styled.p`
-  line-height: 1;
+  line-height: ${(props) => props.theme.lineHeightSm};
   margin-bottom: .5em;
-  font-weight: 600;
+  font-weight: ${(props) => props.theme.fontWeightBold};
 `;
 
 const PersonRole = styled.p`
   margin-bottom: .5em;
   color: ${(props) => props.theme.themeColors.dark};
-  font-size: 90%;
-  font-weight: 600;
-  line-height: 1;
+  font-size: ${(props) => props.theme.fontSizeSm};
+  font-weight: ${(props) => props.theme.fontWeightBold};
+  line-height: ${(props) => props.theme.lineHeightSm};
 `;
 
 const PersonOrg = styled.p`
   margin-bottom: 1em;
   color: ${(props) => props.theme.themeColors.dark};
-  font-size: 90%;
-  line-height: 1;
+  font-size: ${(props) => props.theme.fontSizeSm};
+  line-height: ${(props) => props.theme.lineHeightSm};
 `;
 
 const Avatar = styled.img`
@@ -56,6 +60,7 @@ const Avatar = styled.img`
 const Address = styled.address`
   margin-top: 1em;
   margin-bottom: 0;
+  font-size: ${(props) => props.theme.fontSizeSm};
 `;
 
 const CollapseButton = styled(Button)`
@@ -104,12 +109,10 @@ const ContactDetails = (props) => {
           <div className="mt-2">
             {orgAncestors.length > 1 && (
               <PersonOrg>
-                {orgAncestors.map((item) => (
+                {orgAncestors.map((item, idx) => (
                   <span key={item.key}>
                     {item.name}
-                    {' '}
-                    /
-                    {' '}
+                    {idx < orgAncestors.length - 1 ? ' / ' : ''}
                   </span>
                 ))}
               </PersonOrg>
@@ -141,22 +144,24 @@ class ContactPerson extends React.Component {
   render() {
     const { t, person, leader } = this.props;
     const { collapse } = this.state;
-    const avatarUrl = person.avatarUrl ? `${person.avatarUrl}?height=150&width=150` : null;
     let isLeader = '';
     isLeader = leader ? 'leader' : '';
+    const fullName = `${person.firstName} ${person.lastName}`;
+    const role = isLeader ? t('contact-person-main') : '';
+
     return (
       <Person className={isLeader}>
         <Media key={person.id}>
           <Media left>
             <Avatar
-              src={avatarUrl || '/static/images/default-avatar.png'}
+              src={person.avatarUrl || '/static/images/default-avatar.png'}
               className={`rounded-circle ${isLeader}`}
-              alt={`${person.firstName} ${person.lastName}`}
+              alt={`${role} ${fullName}`}
             />
           </Media>
           <PersonDetails body>
             <Name>
-              {`${person.firstName} ${person.lastName}`}
+              {fullName}
             </Name>
             <PersonRole>{person.title}</PersonRole>
             {person.organization && (

@@ -1,33 +1,69 @@
 /* eslint-disable max-classes-per-file */
-import React from 'react';
+import React, { useContext, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import gql from 'graphql-tag';
-import { Query } from 'react-apollo';
-import { Spring } from 'react-spring/renderprops.cjs';
+import { gql, useQuery } from '@apollo/client';
+import { useSpring, animated } from 'react-spring';
 import {
   Container, Row, Col,
 } from 'reactstrap';
 import styled from 'styled-components';
-import { withTranslation } from '../../common/i18n';
-import { captureMessage } from '../../common/sentry';
-import ContentLoader from '../common/ContentLoader';
-import PlanContext from '../../context/plan';
+import { withTranslation } from 'common/i18n';
+import { captureMessage } from 'common/sentry';
+import RichText from 'components/common/RichText';
+import ContentLoader from 'components/common/ContentLoader';
+import ErrorMessage from 'components/common/ErrorMessage';
+import PlanContext from 'context/plan';
 import ActionListFilters from './ActionListFilters';
 import ActionCardList from './ActionCardList';
 
 const ActionListSection = styled.div`
-  padding-bottom: 4rem;
+  padding-bottom: ${(props) => props.theme.spaces.s400};
   background-color: ${(props) => props.theme.neutralLight};
 `;
 
 const ActionListHeader = styled.div`
-  padding-top: 3rem;
-  margin-bottom: 1rem;
+  padding-top: ${(props) => props.theme.spaces.s300};
+  margin-bottom: ${(props) => props.theme.spaces.s100};
   background-color: ${(props) => props.theme.neutralLight};
+
+  h1 {
+    font-size: ${(props) => props.theme.fontSizeXxl};
+    margin-bottom: ${(props) => props.theme.spaces.s150};
+
+    @media (max-width: ${(props) => props.theme.breakpointMd}) {
+      font-size: ${(props) => props.theme.fontSizeXl};
+    }
+  }
+
+  h2 {
+    font-size: ${(props) => props.theme.fontSizeLg};
+    margin-bottom: ${(props) => props.theme.spaces.s200};
+  }
 `;
 
 export const GET_ACTION_LIST = gql`
   query ActionList($plan: ID!) {
+    plan(id: $plan) {
+      id
+      categoryTypes {
+        id
+        identifier
+        name
+        usableForActions
+        categories {
+          id
+          identifier
+          name
+          parent {
+            id
+          }
+        }
+      }
+      generalContent {
+        id
+        actionListLeadContent
+      }
+    }
     planActions(plan: $plan) {
       id
       identifier
@@ -65,243 +101,261 @@ export const GET_ACTION_LIST = gql`
         identifier
       }
     }
-    planWithContent: plan(id: $plan) {
-      id
-      generalContent {
-        actionListLeadContent
-      }
-    }
-    actionCategories: planCategories(plan: $plan, categoryType: "action") {
-      id
-      identifier
-      name
-      imageUrl
-      parent {
-        id
-      }
-      type {
-        id
-      }
-    }
-    emissionScopes: planCategories(plan: $plan, categoryType: "emission_scope") {
-      id
-      identifier
-      name
-    }
-    planOrganizations(plan: $plan) {
+    planOrganizations(plan: $plan, withAncestors: true) {
       id
       abbreviation
       name
+      classification {
+        name
+      }
+      parent {
+        id
+      }
     }
   }
 `;
 
+function constructOrgHierarchy(orgsIn, actions) {
+  const orgsById = new Map();
+  const skipOrgs = ['Hallitus', 'Valtuusto', 'Lautakunta', 'Jaosto'];
 
-class ActionListFiltered extends React.Component {
-  static contextType = PlanContext;
-
-  static getFiltersFromQuery(query) {
-    const {
-      organization, category, scope, text, impact,
-    } = query;
-    return {
-      organization, category, scope, text, impact,
-    };
+  function isSkippedOrg(org) {
+    if (!org.classification) return false;
+    return skipOrgs.indexOf(org.classification.name) >= 0;
   }
 
-  constructor(props) {
-    super(props);
+  const orgs = orgsIn.map((org) => {
+    const newOrg = { ...org, children: [] };
+    orgsById.set(newOrg.id, newOrg);
+    return newOrg;
+  });
 
-    this.actions = props.planActions;
-    this.cats = props.actionCategories;
-    this.orgs = props.planOrganizations;
-    const { emissionScopes } = props;
+  orgs.forEach((org) => {
+    if (!org.parent) return;
+    // Check if org or its parents is one of the skipped organization types
+    // and yank them out of the org hierarchy
+    if (isSkippedOrg(org)) return;
+    let parent = orgsById.get(org.parent.id);
+    while (isSkippedOrg(parent)) {
+      parent = orgsById.get(parent.parent.id);
+    }
+    parent.children.push(org);
+    org.parent = parent;
+  });
 
-    const catsById = {};
-    this.cats.forEach((cat) => {
-      catsById[cat.id] = cat;
+  actions.forEach((action) => {
+    action.responsibleParties.forEach((rp) => {
+      rp.organization = orgsById.get(rp.organization.id);
     });
-    this.cats.forEach((cat) => {
+  });
+
+  return orgs.filter((org) => !isSkippedOrg(org));
+}
+
+function ActionListResults({
+  t, planActions, planOrganizations, categoryTypes, leadContent, filters, onFilterChange
+}) {
+  const plan = useContext(PlanContext);
+  const catById = {};
+  const catTypes = categoryTypes.map((ct) => {
+    const categoriesById = {};
+    const categories = ct.categories.map((cat) => {
+      const out = { ...cat };
+      categoriesById[out.id] = out;
+      return out;
+    });
+    let rootCategories = [];
+
+    categories.forEach((cat) => {
+      cat.type = ct;
       if (cat.parent) {
-        cat.parent = catsById[cat.parent.id];
+        cat.parent = categoriesById[cat.parent.id];
+      } else {
+        rootCategories.push(cat);
       }
+      catById[cat.id] = cat;
+    });
+    rootCategories = rootCategories.sort((a, b) => a.name.localeCompare(b.name));
+
+    return {
+      categories,
+      categoriesById,
+      rootCategories,
+      ...ct,
+    };
+  });
+
+  const actions = planActions.map((action) => {
+    const act = { ...action };
+    const rps = act.responsibleParties.map((rp) => ({ ...rp }));
+
+    act.categories = act.categories.map((cat) => {
+      const out = catById[cat.id];
+      act.rootCategory = null;
+      if (out.type.identifier === 'action') {
+        let root = out;
+        while (root.parent != null) root = root.parent;
+        act.rootCategory = root;
+      }
+      return out;
     });
 
-    const scopesById = {};
-    emissionScopes.forEach((cat) => {
-      scopesById[cat.id] = cat;
-    });
+    return { ...act, responsibleParties: rps };
+  });
+  const orgs = constructOrgHierarchy(planOrganizations, actions);
+
+  /*
     this.actions.forEach((act) => {
-      act.emissionScopes = act.categories
-        .filter((cat) => cat.id in scopesById)
-        .map((cat) => scopesById[cat.id]);
       act.categories = act.categories
         .filter((cat) => cat.id in catsById)
         .map((cat) => catsById[cat.id]);
     });
+  */
+  const handleChange = useCallback(
+    (filterType, val) => {
+      const newFilters = { ...filters };
+      newFilters[filterType] = val;
+      onFilterChange(newFilters);
+    },
+    [onFilterChange, filters],
+  );
 
-    this.handleChange = this.handleChange.bind(this);
-
+  /*
     // Determine root categories
-
     this.actions.forEach((action) => {
-      if (action.categories[0]) {
-        let category = action.categories[0];
-        let seenCats = {};
-        while (category.parent) {
-          category = category.parent;
-          if (category.id in seenCats) {
-            captureMessage(`Category ${category.id} has invalid parent`);
+    });
+  }
+  */
+
+  function filterAction(item) {
+    if (filters.organization) {
+      let found = false;
+      item.responsibleParties.forEach((rp) => {
+        let org = rp.organization;
+        while (org) {
+          if (org.id === filters.organization) {
+            found = true;
             break;
-          } else {
-            seenCats[category.id] = category;
           }
+          org = org.parent;
         }
-        action.rootCategory = category;
-      } else {
-        action.rootCategory = {
-          // If action has no category, assign null category
-          // TODO: handle this better
-          id: '0',
-          identifier: '0',
-          imageUrl: null,
-          name: '',
-          parent: null,
-        };
-      }
-    });
-  }
+      });
+      if (!found) return false;
+    }
+    if (filters.impact && (!item.impact || (item.impact.id !== filters.impact))) return false;
+    if (filters.text) {
+      const searchStr = filters.text.toLowerCase();
+      if (item.identifier.toLowerCase().startsWith(searchStr)) return true;
+      if (item.name.toLowerCase().search(searchStr) !== -1) return true;
+      return false;
+    }
+    const allCatsFound = catTypes.every((ct) => {
+      const key = `category_${ct.identifier}`;
+      const val = filters[key];
 
-  handleChange(filterType, val) {
-    const filters = { ...this.props.filters };
-    filters[filterType] = val;
-    this.setState({
-      filters,
-    });
-    this.props.onFilterChange(filters);
-  }
+      if (!val) return true;
+      if (!item.categories) return false;
 
-  filterActions() {
-    const { filters } = this.props;
-    const {
-      category, organization, text, impact, scope,
-    } = filters;
-
-    const actions = this.actions.filter((item) => {
-      if (category && item.rootCategory.id !== category) return false;
-      if (organization) {
-        if (!item.responsibleParties.find(rp => rp.organization.id === organization)) return false;
-      }
-      if (impact && (!item.impact || (item.impact.id !== impact))) return false;
-
-      if (scope) {
-        if (!item.emissionScopes.find(es => es.id === scope)) return false;
-      }
-
-      if (text) {
-        const searchStr = text.toLowerCase();
-        if (item.identifier.toLowerCase().startsWith(searchStr)) return true;
-        if (item.name.toLowerCase().search(searchStr) !== -1) return true;
+      const catTypeFound = item.categories.some((cat) => {
+        if (cat.id === val) return true;
+        while (cat.parent) {
+          cat = cat.parent;
+          if (cat.id === val) return true;
+        }
         return false;
-      }
-      return true;
+      });
+      return catTypeFound;
     });
-
-    return actions;
+    if (!allCatsFound) return false;
+    return true;
   }
 
-  render() {
-    const { t, emissionScopes, filters, leadContent } = this.props;
-    const actions = this.filterActions();
-    const impacts = this.context.actionImpacts;
-    return (
-      <ActionListSection id="actions">
-        <ActionListHeader>
-          <Spring
-            from={{ opacity: 0 }}
-            to={{ opacity: 1 }}
-          >
-            {(props) => (
-              <Container style={props}>
-                <h1 className="mb-5">{ t('actions') }</h1>
-                {leadContent && (
-                  <Row>
-                    <Col sm="12" md="8" className="mb-5">
-                      <div className="text-content" dangerouslySetInnerHTML={{ __html: leadContent }} />
-                    </Col>
-                  </Row>
-                )}
-                <Row>
-                  <Col sm="12" md="10">
-                    <h2 className="mb-4">{ t('browse-actions') }</h2>
-                    <ActionListFilters
-                      cats={this.cats}
-                      emissionScopes={emissionScopes}
-                      orgs={this.orgs}
-                      impacts={impacts}
-                      filters={filters}
-                      onChange={this.handleChange}
-                      actionCount={actions.length}
-                    />
-                  </Col>
-                </Row>
-              </Container>
-            )}
-          </Spring>
-        </ActionListHeader>
-        <Container>
-          <ActionCardList actions={actions} />
-        </Container>
-      </ActionListSection>
-    );
-  }
+  const filteredActions = actions.filter(filterAction);
+  const impacts = plan.actionImpacts;
+  const springProps = useSpring({ opacity: 1, from: { opacity: 0 } });
+
+  const AnimatedContainer = Container;
+
+  return (
+    <ActionListSection id="actions">
+      <ActionListHeader>
+        <AnimatedContainer style={springProps}>
+          <h1>{ t('actions') }</h1>
+          {leadContent && (
+            <Row>
+              <Col sm="12" md="8" className="mb-5">
+                <div className="text-content"><RichText html={leadContent} /></div>
+              </Col>
+            </Row>
+          )}
+          <Row>
+            <Col sm="12">
+              <h2>{ t('browse-actions') }</h2>
+              <ActionListFilters
+                categoryTypes={catTypes}
+                orgs={orgs}
+                impacts={impacts}
+                filters={filters}
+                onChange={handleChange}
+                actionCount={filteredActions.length}
+              />
+            </Col>
+          </Row>
+        </AnimatedContainer>
+      </ActionListHeader>
+      <Container>
+        <ActionCardList actions={filteredActions} />
+      </Container>
+    </ActionListSection>
+  );
 }
+ActionListResults = withTranslation('common')(ActionListResults);
 
-ActionListFiltered.propTypes = {
+ActionListResults.getFiltersFromQuery = (query) => {
+  const {
+    organization, text, impact, ...rest
+  } = query;
+  return {
+    organization, text, impact, ...rest,
+  };
+};
+
+ActionListResults.propTypes = {
   filters: PropTypes.shape({
     organization: PropTypes.string,
-    category: PropTypes.string,
     text: PropTypes.string,
     impact: PropTypes.string,
   }).isRequired,
   planActions: PropTypes.arrayOf(PropTypes.object).isRequired,
   planOrganizations: PropTypes.arrayOf(PropTypes.object).isRequired,
-  actionCategories: PropTypes.arrayOf(PropTypes.object).isRequired,
+  categoryTypes: PropTypes.arrayOf(PropTypes.object).isRequired,
+  leadContent: PropTypes.string.isRequired,
 };
 
+function ActionList({
+  t, plan, filters, onFilterChange,
+}) {
+  const { loading, error, data } = useQuery(GET_ACTION_LIST, {
+    variables: { plan: plan.identifier },
+  });
 
-class ActionList extends React.Component {
-  static getFiltersFromQuery(query) {
-    return ActionListFiltered.getFiltersFromQuery(query);
-  }
+  if (loading) return <ContentLoader />;
+  if (error) return <ErrorMessage message={t('error-loading-actions')} />;
 
-  render() {
-    const {
-      t, plan, filters, onFilterChange,
-    } = this.props;
-    return (
-      <Query query={GET_ACTION_LIST} variables={{ plan: plan.identifier }}>
-        {({ data, loading, error }) => {
-          if (loading) return <ContentLoader />;
-          if (error) return <p>{ t('error-loading-actions') }</p>;
+  const { plan: loadedPlan, ...otherProps } = data;
+  const { categoryTypes } = loadedPlan;
+  const generalContent = loadedPlan.generalContent || {};
 
-          const { planWithContent, ...otherProps } = data;
-          const generalContent = planWithContent.generalContent || {};
-
-          return (
-            <ActionListFiltered
-              t={t}
-              plan={plan}
-              leadContent={generalContent.actionListLeadContent}
-              filters={filters}
-              onFilterChange={onFilterChange}
-              {...otherProps}
-            />
-          );
-        }}
-      </Query>
-    );
-  }
+  return (
+    <ActionListResults
+      plan={plan}
+      leadContent={generalContent.actionListLeadContent}
+      filters={filters}
+      onFilterChange={onFilterChange}
+      categoryTypes={categoryTypes}
+      {...otherProps}
+    />
+  );
 }
 
 ActionList.propTypes = {
@@ -312,5 +366,6 @@ ActionList.propTypes = {
   filters: PropTypes.shape({}).isRequired,
   onFilterChange: PropTypes.func.isRequired,
 };
+ActionList.getFiltersFromQuery = (query) => ActionListResults.getFiltersFromQuery(query);
 
 export default withTranslation('common')(ActionList);

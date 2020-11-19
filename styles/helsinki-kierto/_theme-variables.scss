@@ -1,0 +1,15 @@
+/**
+ * _theme-variables.scss
+ *
+ * These are extended set of Bootstrap style variables. They are used
+ * for building a themed Bootstrap base stylesheet for Reactstrap
+ *
+ * All these variables are also parsed as theme object for Styled
+ * Components and they are referenced in most of the UI components.
+ * This file has to be self-contained and can not refer to variables
+ * from the other theme files.
+ *
+ */
+
+@import '../hnh2035/_theme-variables.scss';
+$name: 'helsinki-kierto';

@@ -1,14 +1,15 @@
 import React from 'react';
 import { PropTypes } from 'prop-types';
-import { ListGroup, ListGroupItem as BaseListGroupItem } from 'reactstrap';
-import styled from 'styled-components';
-import moment from '../../common/moment';
-import Icon from '../common/Icon';
-import { withTranslation } from '../../common/i18n';
+import { ListGroup as BaseListGroup, ListGroupItem as BaseListGroupItem } from 'reactstrap';
+import styled, { withTheme } from 'styled-components';
+import moment from 'common/moment';
+import Icon from 'components/common/Icon';
+import RichText from 'components/common/RichText';
+import { withTranslation } from 'common/i18n';
 
 const Date = styled.span`
-  font-weight: 700;
-  font-size: 75%;
+  font-size: ${(props) => props.theme.fontSizeSm};
+  margin-left: ${(props) => props.theme.spaces.s025};
 `;
 
 const TaskWrapper = styled.div`
@@ -16,20 +17,45 @@ const TaskWrapper = styled.div`
 `;
 
 const TaskMeta = styled.div`
-  flex: 0 0 6rem;
-
-  @media (max-width: ${(props) => props.theme.breakpointMd}) {
-    flex: 0 0 3rem;
-  }
+  flex: 0 0 ${(props) => props.theme.spaces.s800};
 `;
 
 const TaskContent = styled.div`
-  border-left: 1px solid ${(props) => props.theme.themeColors.dark};
-  margin-left: .5rem;
-  padding-left: 1rem;
+  border-left: 1px solid ${(props) => props.theme.themeColors.light};
+  margin: ${(props) => props.theme.spaces.s050};
+  padding-left: ${(props) => props.theme.spaces.s100};
+
+  .text-content {
+    font-size: ${(props) => props.theme.fontSizeSm};
+
+    p:last-child {
+      margin-bottom: 0;
+    }
+  }
+`;
+
+const ListGroup = styled(BaseListGroup)`
+  h4 {
+    font-size: ${(props) => props.theme.fontSizeBase};
+  }
+`;
+
+const ListGroupTitle = styled.h3`
+  font-size: ${(props) => props.theme.fontSizeMd};
 `;
 
 const ListGroupItem = styled(BaseListGroupItem)`
+  padding: ${(props) => props.theme.spaces.s050};
+
+  &:first-child {
+    border-top-left-radius: ${(props) => props.theme.cardBorderRadius};
+    border-top-right-radius: ${(props) => props.theme.cardBorderRadius};
+  }
+
+  &:last-child {
+    border-bottom-left-radius: ${(props) => props.theme.cardBorderRadius};
+    border-bottom-right-radius: ${(props) => props.theme.cardBorderRadius};
+  }
 
   &.state--cancelled .task-header {
     text-decoration: line-through;
@@ -42,8 +68,8 @@ function parseTimestamp(timestamp) {
 }
 
 function TaskList(props) {
-  const { t, tasks } = props;
-  const sortedTasks = tasks
+  const { t, theme, tasks } = props;
+  const sortedTasks = [...tasks]
     .sort((a, b) => {
       const adate = a.completedAt ? a.completedAt : a.dueAt;
       const bdate = b.completedAt ? b.completedAt : b.dueAt;
@@ -56,16 +82,12 @@ function TaskList(props) {
       <ListGroupItem key={item.id} className={`state--${item.state}`}>
         <TaskWrapper>
           <TaskMeta>
-            <Icon name="calendar" className="text-black-50 mr-2" alt={t('action-task-todo')} />
+            <Icon name="calendar" color={theme.themeColors.dark} alt={t('actions:action-task-todo')} />
             <Date>{parseTimestamp(item.dueAt)}</Date>
           </TaskMeta>
           <TaskContent>
-            <h6>{item.name}</h6>
-            <div className="text-content">
-              <small>
-                <span dangerouslySetInnerHTML={{ __html: item.comment }} />
-              </small>
-            </div>
+            <h4>{item.name}</h4>
+            {item.comment && (<div className="text-content"><RichText html={item.comment} /></div>)}
           </TaskContent>
         </TaskWrapper>
       </ListGroupItem>
@@ -78,16 +100,12 @@ function TaskList(props) {
       <ListGroupItem key={item.id} className={`state--${item.state}`}>
         <TaskWrapper>
           <TaskMeta>
-            <Icon name="check" className="text-black-50 mr-2" alt={t('action-task-done')} />
+            <Icon name="check" color={theme.themeColors.dark} alt={t('actions:action-task-done')} />
             <Date>{parseTimestamp(item.completedAt)}</Date>
           </TaskMeta>
           <TaskContent>
-            <h6>{item.name}</h6>
-            <div className="text-content">
-              <small>
-                <span dangerouslySetInnerHTML={{ __html: item.comment }} />
-              </small>
-            </div>
+            <h4>{item.name}</h4>
+            {item.comment && (<div className="text-content"><RichText html={item.comment} /></div>)}
           </TaskContent>
         </TaskWrapper>
       </ListGroupItem>
@@ -97,17 +115,21 @@ function TaskList(props) {
     <div>
       { undoneTasks.length > 0
         ? (
-          <ListGroup className="mb-5">
-            <h5 className="mb-3">{ t('action-tasks-todo') }</h5>
-            {undoneTasks}
-          </ListGroup>
+          <>
+            <ListGroupTitle>{ t('actions:action-tasks-todo') }</ListGroupTitle>
+            <ListGroup className="mb-5">
+              {undoneTasks}
+            </ListGroup>
+          </>
         )
-        : <h5 className="text-muted mb-4">{ t('action-tasks-todo-empty') }</h5> }
+        : <h4 className="text-muted mb-4">{ t('actions:action-tasks-todo-empty') }</h4> }
       { doneTasks.length > 0 && (
-        <ListGroup className="mb-5">
-          <h5 className="mb-3">{ t('action-tasks-done') }</h5>
-          {doneTasks}
-        </ListGroup>
+        <>
+          <ListGroupTitle>{ t('actions:action-tasks-done') }</ListGroupTitle>
+          <ListGroup className="mb-5">
+            {doneTasks}
+          </ListGroup>
+        </>
       )}
     </div>
 
@@ -119,4 +141,4 @@ TaskList.propTypes = {
   tasks: PropTypes.arrayOf(PropTypes.shape).isRequired,
 };
 
-export default withTranslation('common')(TaskList);
+export default withTranslation(['common', 'actions'])(withTheme(TaskList));

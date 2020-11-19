@@ -1,10 +1,12 @@
 import React from 'react';
 import dynamic from 'next/dynamic';
-import { Progress } from 'reactstrap';
-import styled, { withTheme } from 'styled-components';
+import { useTranslation } from 'common/i18n';
+import { useTheme } from 'common/theme';
 
+const Timeline = ({ schedules, allSchedules }) => {
+  const { t } = useTranslation('common');
+  const theme = useTheme();
 
-const Timeline = ({ schedules, allSchedules, theme }) => {
   if (!process.browser) {
     return null;
   }
@@ -31,8 +33,16 @@ const Timeline = ({ schedules, allSchedules, theme }) => {
     }
   });
 
+  const yearrange = `${parseInt(actStartDate.split('-')[0], 10)} - ${parseInt(actEndDate.split('-')[0], 10)}`;
+  const description = `${t('action-timeline-between')} ${yearrange}`;
+
   const startYear = parseInt(minDate.split('-')[0], 10);
   const endYear = parseInt(maxDate.split('-')[0], 10);
+  const nrYears = endYear - startYear;
+  let dtick;
+
+  if (nrYears > 10) dtick = 'M36';
+  else dtick = 'M12';
 
   const Plot = dynamic(import('./Plot'));
   const data = [
@@ -61,11 +71,12 @@ const Timeline = ({ schedules, allSchedules, theme }) => {
       range: [minDate, maxDate],
       autorange: false,
       tickformat: '         %Y', // FUUUUUU
-      dtick: endYear - startYear > 10 ? 'M36' : 'M12',
+      dtick,
       ticks: '',
+      tickangle: 0,
       showgrid: false,
       tickfont: {
-        family: theme.fontFamilySansSerif,
+        family: `${theme.fontFamily}, ${theme.fontFamilyFallback}`,
         size: 10,
       },
     },
@@ -73,15 +84,28 @@ const Timeline = ({ schedules, allSchedules, theme }) => {
       ticks: '',
       visible: false,
     },
-    plot_bgcolor: '#e9ecef',
-    width: null,  // Is resized automatically by plotly
+    plot_bgcolor: theme.themeColors.light,
+    width: null, // Is resized automatically by plotly
     height: 36,
     autosize: true,
   };
 
   return (
-    <Plot data={data} layout={layout} config={{ staticPlot: true }} style={{ width: '100%' }} useResizeHandler />
+    <div role="presentation">
+      <span className="sr-only">
+        {description}
+      </span>
+      <div aria-hidden>
+        <Plot
+          data={data}
+          layout={layout}
+          config={{ staticPlot: true }}
+          style={{ width: '100%' }}
+          useResizeHandler
+        />
+      </div>
+    </div>
   );
 };
 
-export default withTheme(Timeline);
+export default Timeline;

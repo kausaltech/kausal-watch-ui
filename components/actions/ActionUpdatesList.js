@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Query } from 'react-apollo';
-import gql from 'graphql-tag';
+import { Query } from '@apollo/client/react/components';
+import { gql } from '@apollo/client';
 import { Row, Col, Media } from 'reactstrap';
 
 import moment from '../../common/moment';
@@ -10,32 +10,33 @@ import PlanContext from '../../context/plan';
 import { withTranslation } from '../../common/i18n';
 
 const ActionUpdate = styled.article`
-  padding: .75rem;
-  margin: 0 0 1.5rem;
+  padding: ${(props) => props.theme.spaces.s100};
+  margin: 0 0 ${(props) => props.theme.spaces.s150};
   background: ${(props) => props.theme.themeColors.white};
   border: 2px solid  ${(props) => props.theme.themeColors.light};
+  border-radius: ${(props) => props.theme.cardBorderRadius};
 `;
 
 const ActionUpdateHeader = styled.header`
   h3 {
-    font-size: 1.25rem;
-    line-height: 24px;
+    font-size: ${(props) => props.theme.fontSizeMd};
+    line-height: ${(props) => props.theme.lineHeightMd};
   }
 `;
 
 const AuthorAvatar = styled.img`
-  width: 2.75rem;
-  height: 2.75rem;
-  margin-right: .5rem;
+  width: ${(props) => props.theme.spaces.s300};
+  height: ${(props) => props.theme.spaces.s300};
+  margin-right: ${(props) => props.theme.spaces.s050};
 `;
 
 const AuthorName = styled.div`
-  font-weight: 600;
+  font-weight: ${(props) => props.theme.fontWeightBold};
 `;
 
 const UpdateDate = styled.div`
-  font-size: 0.8em;
-  font-weight: 400;
+  font-size: ${(props) => props.theme.fontSizeSm};
+  font-weight: ${(props) => props.theme.fontWeightNormal};
   color: ${(props) => props.theme.themeColors.dark};
 `;
 
@@ -50,7 +51,7 @@ query ActionUpdates($plan: ID!, $id: ID!) {
           id
           firstName
           lastName
-          avatarUrl
+          avatarUrl(size: "150x150")
         }
         content
     }
@@ -79,7 +80,7 @@ function ActionStatusUpdate(props) {
             <AuthorAvatar
               src={avatarUrl}
               className="rounded-circle"
-              alt="name"
+              alt={name}
             />
           </Media>
           <Media body>

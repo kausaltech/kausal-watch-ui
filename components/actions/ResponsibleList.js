@@ -1,24 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { withTranslation } from '../../common/i18n';
-import { ActionListLink } from '../../common/links';
+import { withTranslation } from 'common/i18n';
+import { ActionListLink } from 'common/links';
+import { slugify } from 'common/utils';
 import BadgeTooltip from '../common/BadgeTooltip';
 
 const Responsibles = styled.div`
-  font-size: 1.25rem;
-
-  .badge-pill {
-    margin-right: .5em;
+  font-size: ${(props) => props.theme.fontSizeMd};
+  a {
+    margin-right: ${(props) => props.theme.spaces.s050};
   }
 
-  .lg {
-    display: block;
+  h3 {
+    font-size: ${(props) => props.theme.fontSizeBase};
   }
 `;
 
 function ResponsibleBadge(props) {
   const {
+    t,
     index,
     id,
     name,
@@ -29,15 +30,15 @@ function ResponsibleBadge(props) {
 
   if (index === 0) {
     size = 'lg';
-    ariaLabel = `Päävastuutaho: ${name}`;
+    ariaLabel = `${t('responsible-party-main')}: ${abbreviation} ${name}`;
   } else {
-    ariaLabel = name;
+    ariaLabel = `${abbreviation} ${name}`;
   }
 
   return (
     <ActionListLink query={{ organization: id }}>
       <BadgeTooltip
-        id={id}
+        id={`org-${slugify(id)}`}
         name={name}
         ariaLabel={ariaLabel}
         abbreviation={abbreviation}
@@ -52,10 +53,11 @@ function ResponsibleList(props) {
 
   return (
     <Responsibles>
-      <h5>{t('responsible-parties')}</h5>
+      <h3>{t('responsible-parties')}</h3>
       { data
         ? data.map((item, index) => (
           <ResponsibleBadge
+            t={t}
             key={item.id}
             index={index}
             id={item.id}
@@ -72,14 +74,14 @@ ResponsibleBadge.propTypes = {
   id: PropTypes.string.isRequired,
   index: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
-  abbreviation: PropTypes.string.isRequired,
+  abbreviation: PropTypes.string,
 };
 
 ResponsibleList.propTypes = {
   data: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
-    abbreviation: PropTypes.string.isRequired,
+    abbreviation: PropTypes.string,
   })).isRequired,
   t: PropTypes.func.isRequired,
 };

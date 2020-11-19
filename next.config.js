@@ -1,73 +1,65 @@
+/* eslint-disable no-restricted-syntax */
 const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
 const withSass = require('@zeit/next-sass');
 const withImages = require('next-images');
-const withBundleAnalyzer = require('@zeit/next-bundle-analyzer');
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: !!process.env.ANALYZE_BUNDLE,
+});
+const withSourceMaps = require('@zeit/next-source-maps');
 const SentryWebpackPlugin = require('@sentry/webpack-plugin');
+const { nextI18NextRewrites } = require('next-i18next/rewrites');
+
+const basePath = '';
 
 // Set default plan identifier
-process.env.PLAN_IDENTIFIER = process.env.PLAN_IDENTIFIER || 'hnh2035';
+process.env.SENTRY_ROOTDIR = __dirname;
 
+const SUPPORTED_LANGUAGES = ['en', 'fi', 'sv'];
 
-function getAllThemes() {
-  const styleDir = path.join(__dirname, 'styles');
-  return fs.readdirSync(styleDir).filter((item) => {
-    if (item === 'app') return false;
-    return fs.lstatSync(path.join(styleDir, item)).isDirectory();
+function generateLocaleConfig() {
+  let languages = (process.env.UI_LANGUAGES || '').split(',').filter((item) => item);
+
+  languages.forEach((lang) => {
+    if (SUPPORTED_LANGUAGES.indexOf(lang) < 0) {
+      throw new Error(`Invalid UI_LANGUAGES setting: language ${lang} not supported`);
+    }
   });
+  if (languages.length < 1) {
+    languages = SUPPORTED_LANGUAGES;
+  }
+  return languages;
 }
 
-const themes = getAllThemes();
-
-
-const config = withBundleAnalyzer(withImages(withSass({
+const config = withSourceMaps(withBundleAnalyzer(withImages(withSass({
   env: {
     SENTRY_DSN: process.env.SENTRY_DSN,
+    SENTRY_TRACE_SAMPLE_RATE: process.env.SENTRY_TRACE_SAMPLE_RATE || '1.0',
+  },
+  async rewrites() {
+    const localeSubpaths = Object.fromEntries(
+      generateLocaleConfig().map((lang) => [lang, lang]),
+    );
+    const i18nRewrites = await nextI18NextRewrites(localeSubpaths);
+    const rewrites = [
+      { source: '/favicon.ico', destination: '/public/static/favicon.ico' },
+      ...i18nRewrites,
+    ];
+    return rewrites;
   },
   publicRuntimeConfig: { // Will be available on both server and client
-    aplansApiBaseURL: process.env.APLANS_API_BASE_URL || 'https://aplans.api.hel.ninja/v1',
-    kerrokantasiApiBaseURL: process.env.KERROKANTASI_API_BASE_URL || 'https://api.hel.fi/kerrokantasi-test/v1',
+    aplansApiBaseURL: process.env.APLANS_API_BASE_URL || 'https://api.watch.kausal.tech/v1',
     // the default value for PLAN_IDENTIFIER is set below in webpack config
-    planIdentifier: process.env.PLAN_IDENTIFIER,
+    defaultPlanIdentifier: process.env.PLAN_IDENTIFIER,
+    defaultThemeIdentifier: process.env.THEME_IDENTIFIER,
     instanceType: process.env.INSTANCE_TYPE || 'development',
     matomoURL: process.env.MATOMO_URL,
     matomoSiteId: process.env.MATOMO_SITE_ID,
+    supportedLanguages: generateLocaleConfig(),
   },
   experimental: {
     modern: true,
-  },
-  /*
-  manifest: {
-    // if src value is exist, icon image will be generated from src image, and ovwewritten
-    // icons value exist in the properties. if you want to keep your own icons path? do not pass
-    // src path to this plugin
-    name: 'Hiilineutraali Helsinki 2035',
-    short_name: 'CNH',
-    start_url: '/',
-    background_color: '#009246',
-    theme_color: '#009246',
-    display: 'minimal-ui',
-    icons: {
-      // source image path, to generate applications icons in 192x192, 512x512 sizes for manifest.
-      src: resolve(process.cwd(), './images/hel-icon.png'),
-      // default is true, cache images until the hash value of source image has changed
-      // if false, generating new icon images while every build time.
-      cache: true,
-    },
-  },
-  */
-  analyzeServer: ['server', 'both'].includes(process.env.BUNDLE_ANALYZE),
-  analyzeBrowser: ['browser', 'both'].includes(process.env.BUNDLE_ANALYZE),
-  bundleAnalyzerConfig: {
-    server: {
-      analyzerMode: 'static',
-      reportFilename: '../bundles/server.html',
-    },
-    browser: {
-      analyzerMode: 'static',
-      reportFilename: '../bundles/client.html',
-    },
   },
   /* eslint no-param-reassign: ["error", { "props": true, "ignorePropertyModificationsFor": ["cfg"] }] */
   webpack(cfg, options) {
@@ -76,6 +68,7 @@ const config = withBundleAnalyzer(withImages(withSass({
     cfg.plugins.push(
       new webpack.DefinePlugin({
         'process.env.SENTRY_RELEASE': JSON.stringify(buildId),
+        'process.env.SENTRY_ROOTDIR': isServer ? JSON.stringify(__dirname) : '""',
       }),
     );
     if (!isServer) {
@@ -85,16 +78,14 @@ const config = withBundleAnalyzer(withImages(withSass({
     // Ignore all locale files of moment.js
     cfg.plugins.push(new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/));
 
-    // If there is a separate theme for PLAN_IDENTIFIER, use that, otherwise
-    // use the default theme.
-    const defaultThemeIdentifier = themes.indexOf(process.env.PLAN_IDENTIFIER) >= 0
-      ? process.env.PLAN_IDENTIFIER : 'default';
-
     cfg.plugins.push(new webpack.EnvironmentPlugin({
       PLAN_IDENTIFIER: '',
-      THEME_IDENTIFIER: defaultThemeIdentifier,
+      THEME_IDENTIFIER: '',
+      DISABLE_THEME_CACHE: '',
       MATOMO_URL: '',
       MATOMO_SITE_ID: '',
+      SYNC_THEME: '',
+      FORCE_SENTRY_SEND: '',
     }));
 
     // cfg.optimization.minimize = false;
@@ -122,16 +113,15 @@ const config = withBundleAnalyzer(withImages(withSass({
         cfg.plugins.push(new SentryWebpackPlugin({
           include: '.next',
           ignore: ['node_modules'],
+          stripPrefix: ['webpack://_N_E/'],
+          urlPrefix: `~${basePath}/_next`,
           release: buildId,
-          rewrite: true,
-          stripCommonPrefix: true,
-          urlPrefix: '_next',
         }));
       }
     }
-
     return cfg;
   },
-})));
+  basePath,
+}))));
 
 module.exports = config;

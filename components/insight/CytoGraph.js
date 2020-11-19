@@ -251,7 +251,7 @@ class CytoGraph extends React.Component {
         {
           selector: '*',
           style: {
-            'font-family': theme.fontFamilySansSerif,
+            'font-family': `${theme.fontFamily}, sans-serif`,
           },
         },
         {
@@ -261,7 +261,7 @@ class CytoGraph extends React.Component {
             'text-wrap': 'wrap',
             'text-outline-width': 0,
             'color': '#ffffff',
-            'font-weight': '500',
+            'font-weight': theme.fontWeightNormal,
           },
         },
         {
@@ -278,7 +278,7 @@ class CytoGraph extends React.Component {
             'color': '#ffffff',
             'curve-style': 'bezier',
             'font-size': '18px',
-            'font-weight': '600',
+            'font-weight': theme.fontWeightBold,
             width: 2,
           },
         },
@@ -329,6 +329,7 @@ class CytoGraph extends React.Component {
           style: {
             shape: 'rectangle',
             'background-color': theme.strategicIndicatorColor,
+            color: theme.strategicIndicatorColorFg,
             width: 'label',
             height: 'label',
             'text-valign': 'center',

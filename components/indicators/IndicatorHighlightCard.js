@@ -11,11 +11,12 @@ import { IndicatorLink } from '../../common/links';
 const IndicatorType = styled.div`
   margin-bottom: .5em;
   text-align: left;
-  font-size: 0.8rem;
+  font-size: ${(props) => props.theme.fontSizeSm};
+  color: ${(props) => props.theme.neutralDark};
 `;
 
 const IndicatorBg = styled.div`
-  height: 6rem;
+  height: ${(props) => props.theme.spaces.s600};
   background-color: ${(props) => {
     switch (props.level) {
       case 'action':
@@ -36,7 +37,9 @@ const StyledCard = styled(Card)`
   width: 100%;
   background-color: ${(props) => props.theme.themeColors.light};
   transition: all 0.5s ease;
-
+  border-width: ${(props) => props.theme.cardBorderWidth};
+  border-radius: ${(props) => props.theme.cardBorderRadius};
+  overflow: hidden;
   a {
     color: ${(props) => props.theme.neutralDark};
   }
@@ -47,10 +50,10 @@ const StyledCard = styled(Card)`
 `;
 
 const IndicatorValue = styled.div`
-  margin-top: .75rem;
-  font-size: 2rem;
-  font-weight: 700;
-  line-height: 1;
+  margin-top: ${(props) => props.theme.spaces.s050};
+  font-size: ${(props) => props.theme.fontSizeXl};
+  font-weight: ${(props) => props.theme.fontWeightBold};
+  line-height: ${(props) => props.theme.lineHeightSm};
   color: ${(props) => {
     switch (props.level) {
       case 'action':
@@ -69,11 +72,13 @@ const IndicatorValue = styled.div`
 
 const IndicatorUnit = styled.span`
   margin-left: .25em;
-  font-size: 60%;
+  font-size: ${(props) => props.theme.fontSizeSm};
 `;
 
 const StyledCardTitle = styled(CardTitle)`
-  font-size: 1.2em;
+  margin-bottom: 0;
+  font-size: ${(props) => props.theme.fontSizeMd};
+  color: ${(props) => props.theme.neutralDark};
   text-align: left;
   hyphens: auto;
 `;
@@ -109,7 +114,7 @@ function IndicatorHighlightCard(props) {
     >
       {(springProps) => (
         <StyledCard style={springProps}>
-          <IndicatorLink id={objectid}>
+          <IndicatorLink id={objectid} prefetch={false}>
             <a href>
               <IndicatorBg level={level} />
               <CardImgOverlay>
@@ -127,7 +132,7 @@ function IndicatorHighlightCard(props) {
             <IndicatorType>{ t(level) }</IndicatorType>
             <IndicatorLink id={objectid}>
               <a href>
-                <StyledCardTitle tag="h5">{ name }</StyledCardTitle>
+                <StyledCardTitle tag="h3">{ name }</StyledCardTitle>
               </a>
             </IndicatorLink>
           </CardBody>

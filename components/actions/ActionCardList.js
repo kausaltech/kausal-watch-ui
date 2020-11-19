@@ -8,22 +8,31 @@ import ActionCard from './ActionCard';
 
 const ActionGroupHeader = styled.h2`
   border-bottom: 1px solid;
-  padding-bottom: 1rem;
-  margin-bottom: 2rem;
+  padding-bottom: ${(props) => props.theme.spaces.s100};
+  margin-bottom: ${(props) => props.theme.spaces.s200};
 `;
 
 const ActionGroup = styled(Row)`
-  margin-bottom: 2rem;
-`;
+  margin-bottom: ${(props) => props.theme.spaces.s200};
 
+  .card {
+    height: 100%;
+  }
+`;
 
 function ActionCardList({ actions }) {
   let groups = [];
   const groupMap = {};
+  const noGroupItems = [];
 
   actions.forEach((action) => {
     const cat = action.rootCategory;
     let group;
+
+    if (!cat) {
+      noGroupItems.push(action);
+      return;
+    }
     if (cat.id in groupMap) {
       group = groupMap[cat.id];
     } else {
@@ -39,20 +48,49 @@ function ActionCardList({ actions }) {
     group.elements.push(action);
   });
   groups = groups.sort((g1, g2) => g1.identifier - g2.identifier);
+
   return (
-    <div>
+    <div role="list">
       {groups.map((group) => (
-        <ActionGroup key={group.id}>
+        <ActionGroup key={group.id} role="group">
           <Col xs="12">
             <ActionGroupHeader>{group.name}</ActionGroupHeader>
           </Col>
           {group.elements.map((item) => (
-            <Col xs="6" sm="4" lg="3" xl="2" key={item.id} className="mb-4 d-flex align-items-stretch" style={{'transition': 'all 0.5s ease'}}>
+            <Col
+              tag="li"
+              xs="6"
+              sm="4"
+              lg="3"
+              xl="2"
+              key={item.id}
+              className="mb-4 d-flex align-items-stretch"
+              style={{ transition: 'all 0.5s ease' }}
+              role="listitem"
+            >
               <ActionCard action={item} />
             </Col>
           ))}
         </ActionGroup>
       ))}
+      {noGroupItems && (
+        <ActionGroup key="default" role="group">
+          {noGroupItems.map((item) => (
+            <Col
+              xs="6"
+              sm="4"
+              lg="3"
+              xl="2"
+              key={item.id}
+              className="mb-4 d-flex align-items-stretch"
+              style={{ transition: 'all 0.5s ease' }}
+              role="listitem"
+            >
+              <ActionCard action={item} />
+            </Col>
+          ))}
+        </ActionGroup>
+      )}
     </div>
   );
 }

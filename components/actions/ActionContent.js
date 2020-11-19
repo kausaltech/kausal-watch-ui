@@ -1,16 +1,17 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import {
   Container, Row, Col, Badge, Alert,
 } from 'reactstrap';
-import { Query } from 'react-apollo';
-import styled, { withTheme } from 'styled-components';
-import gql from 'graphql-tag';
-import moment from '../../common/moment';
+import styled, { ThemeContext } from 'styled-components';
+import { gql, useQuery } from '@apollo/client';
+import { useHotkeys } from 'react-hotkeys-hook';
+import { useRouter } from 'next/router';
 
-import { ActionLink, ActionListLink } from '../../common/links';
-import { withTranslation } from '../../common/i18n';
-import PlanContext from '../../context/plan';
+import { getActionLinkProps } from 'common/links';
+import moment from 'common/moment';
+import { useTranslation, use } from 'common/i18n';
+import PlanContext from 'context/plan';
 
 import { Meta } from '../layout';
 import IndicatorCausal from '../indicators/IndicatorCausal';
@@ -21,17 +22,17 @@ import ContactPersons from './ContactPersons';
 import ActionStatus from './ActionStatus';
 import ActionImpact from './ActionImpact';
 import ActionIndicators from './ActionIndicators';
-import ActionBgImage from './ActionBgImage';
+import ActionHero from './ActionHero';
 import ActionPager from './ActionPager';
 import ActionUpdatesList from './ActionUpdatesList';
 import EmissionScopeIcon from './EmissionScopeIcon';
 import ContentLoader from '../common/ContentLoader';
-import Icon from '../common/Icon';
 import ErrorMessage from '../common/ErrorMessage';
-
+import RichText from '../common/RichText';
+import { getActionImageURL } from '../../common/utils';
 
 const GET_ACTION_DETAILS = gql`
-query ActionDetails($plan: ID!, $id: ID!) {
+query ActionDetails($plan: ID!, $id: ID!, $bgImageSize: String = "1200x630") {
   action(plan: $plan, identifier: $id) {
     id
     identifier
@@ -39,7 +40,7 @@ query ActionDetails($plan: ID!, $id: ID!) {
     officialName
     description
     completion
-    imageUrl
+    imageUrl(size: $bgImageSize)
     updatedAt
     mergedActions {
       id
@@ -49,11 +50,11 @@ query ActionDetails($plan: ID!, $id: ID!) {
     categories(categoryType: "action") {
       id
       name
-      imageUrl
+      imageUrl(size: $bgImageSize)
       parent {
         id
         name
-        imageUrl
+        imageUrl(size: $bgImageSize)
       }
     }
     emissionScopes: categories(categoryType: "emission_scope") {
@@ -68,7 +69,7 @@ query ActionDetails($plan: ID!, $id: ID!) {
         id
         firstName
         lastName
-        avatarUrl
+        avatarUrl(size: "150x150")
         title
         organization {
           name
@@ -129,113 +130,51 @@ query ActionDetails($plan: ID!, $id: ID!) {
   }
 }`;
 
-const ActionHero = styled.div`
-  position: relative;
-  margin-bottom: 3rem;
-  a {
-    color: ${(props) => props.theme.brandLight};
-  }
-`;
-
-const OverlayContainer = styled.div`
-  color: white;
-  padding: 2rem 0;
-`;
-
-const ActionHeadline = styled.h1`
-  hyphens: auto;
-  margin-bottom: 2rem;
-
-  @media (max-width: ${(props) => props.theme.breakpointMd}) {
-    font-size: 1.75em;
-  }
-`;
-
-const ActionNumber = styled.span`
-  font-size: 3.5rem;
-  @media (max-width: ${(props) => props.theme.breakpointMd}) {
-    font-size: 2.5rem;
-  }
-`;
-
 const LastUpdated = styled.div`
   margin-bottom: 1em;
   color: ${(props) => props.theme.themeColors.dark};
 `;
 
 const ActionSection = styled.div`
-  margin-bottom: 2.5rem;
+  margin-bottom: ${(props) => props.theme.spaces.s200};
+`;
+
+const SideHeader = styled.h3`
+  font-size: ${(props) => props.theme.fontSizeBase};
 `;
 
 const SectionHeader = styled.h2`
-  @media (max-width: ${(props) => props.theme.breakpointMd}) {
-    font-size: 1.75em;
-  }
+  font-size: ${(props) => props.theme.fontSizeLg};
+  margin-bottom: ${(props) => props.theme.spaces.s200};
 `;
 
 const OfficialText = styled.div`
   color: ${(props) => props.theme.brandDark};
-  margin-bottom: 3rem;
-`;
+  margin-bottom: ${(props) => props.theme.spaces.s300};
 
-const CategoryBadge = styled(Badge)`
-  margin-right: 1em;
-  white-space: normal;
-  text-align: left;
-  font-size: 1rem;
+  h2 {
+    font-size: ${(props) => props.theme.fontSizeMd};
+  }
 `;
 
 const SolidSection = styled.div`
-  padding: 2rem 0;
-
-  margin-bottom: 3rem;
+  padding:  ${(props) => props.theme.spaces.s100} 0;
+  margin-bottom: ${(props) => props.theme.spaces.s300};
 `;
 
 const ActionNumberBadge = styled(Badge)`
-  font-size: 1rem;
-  padding: .2rem;
+  font-size: ${(props) => props.theme.fontSizeBase};
+  padding: ${(props) => props.theme.spaces.s025};
+  border-radius: ${(props) => props.theme.btnBorderRadius};
+  background-color: ${(props) => props.theme.brandDark};
+  color: ${(props) => props.theme.themeColors.white};
 `;
 
 const MergedActionSection = styled.div`
-  margin-bottom: 1rem;
+  margin-bottom: ${(props) => props.theme.spaces.s100};
 `;
 
-function getImageURL(plan, action, width, height) {
-  let url;
-  if (action.imageUrl) {
-    url = action.imageUrl;
-  } else {
-    action.categories.forEach((cat) => {
-      if (url) return;
-      let parent = cat;
-      while (parent) {
-        if (parent.imageUrl) {
-          url = parent.imageUrl;
-          return;
-        }
-        parent = parent.parent;
-      }
-    });
-  }
-  if (!url) {
-    url = plan.imageUrl;
-  }
-
-  const params = [];
-  if (height) {
-    params.push(`height=${height}`);
-  }
-  if (width) {
-    params.push(`width=${width}`);
-  }
-  if (params.length) {
-    url += `?${params.join('&')}`;
-  }
-  return url;
-}
-
-function MergedAction(props) {
-  const { action, theme } = props;
+function MergedAction({ action, theme }) {
   const { identifier, officialName } = action;
   return (
     <MergedActionSection>
@@ -247,8 +186,7 @@ function MergedAction(props) {
   );
 }
 
-function MergedActionList(props) {
-  const { actions, t, theme } = props;
+function MergedActionList({ actions, t, theme }) {
   if (!actions || !actions.length) {
     // render nothing
     return null;
@@ -260,19 +198,49 @@ function MergedActionList(props) {
 
   return (
     <ActionSection>
-      <h5>{ t('action-merged') }</h5>
+      <h2>{ t('actions:action-merged') }</h2>
       {mergedActions}
     </ActionSection>
   );
 }
 
-function ActionDetails(props) {
-  const {
-    t,
-    action,
-    plan,
-    theme,
-  } = props;
+function getMaxImpact(plan) {
+  const max = plan.actionImpacts.reduce((planMax, item) => {
+    const val = parseInt(item.identifier, 10);
+    if (!planMax || val > planMax) return val;
+    return planMax;
+  }, null);
+  return max;
+}
+
+function ActionContent({ id }) {
+  const plan = useContext(PlanContext);
+  const theme = useContext(ThemeContext);
+  const router = useRouter();
+
+  const { t } = useTranslation(['common', 'actions']);
+  const { loading, error, data } = useQuery(GET_ACTION_DETAILS, {
+    variables: {
+      id,
+      plan: plan.identifier,
+    },
+  });
+  const { action } = data || {};
+
+  useHotkeys('ctrl+left, ctrl+right', (ev) => {
+    const next = (ev.code == 'ArrowLeft' ? action.previousAction : action.nextAction);
+    if (!next) {
+      return;
+    }
+    const { href, as } = getActionLinkProps(next.identifier);
+    router.push(href, as);
+  }, {}, [action, router]);
+
+  if (loading) return <ContentLoader />;
+  if (error) return <ErrorMessage message={error.message} />;
+  if (!action) {
+    return <ErrorMessage statusCode={404} message={t('action-not-found')} />;
+  }
 
   const updated = moment(action.updatedAt).format('DD.MM.YYYY');
   const generalContent = plan.generalContent || {};
@@ -281,83 +249,42 @@ function ActionDetails(props) {
 
   const { categories, emissionScopes, mergedActions } = action;
   const hasMergedActions = mergedActions.length > 0;
+  const imageUrl = getActionImageURL(plan, action);
 
   return (
     <div>
       <Meta
         title={`${t('action')} ${action.identifier}`}
-        shareImageUrl={getImageURL(plan, action, 1200, 630)}
+        shareImageUrl={imageUrl}
         description={`${action.name}`}
       />
-      <ActionHero>
-        <ActionBgImage action={action} width={1200} height={600} color={theme.imageOverlay}>
-          <OverlayContainer>
-            <Container>
-              <Row>
-                <Col md="10">
-                  <ActionListLink>
-                    <a>
-                      <h4>{ t('actions') }</h4>
-                    </a>
-                  </ActionListLink>
-                  <p>
-                    { action.previousAction
-                      && (
-                        <ActionLink action={action.previousAction}>
-                          <a href>
-                            <Icon name="arrowLeft" color={theme.brandLight} />
-                            {' '}
-                            { t('previous') }
-                          </a>
-                        </ActionLink>
-                      )}
-                    { action.nextAction
-                      && action.previousAction
-                      && (
-                        <span>
-                          {' '}
-                          |
-                          {' '}
-                        </span>
-                      )}
-                    { action.nextAction
-                      && (
-                        <ActionLink action={action.nextAction}>
-                          <a href>
-                            { t('next') }
-                            <Icon name="arrowRight" color={theme.brandLight} />
-                          </a>
-                        </ActionLink>
-                      )}
-                  </p>
-                  <ActionHeadline>
-                    <ActionNumber>{action.identifier}</ActionNumber>
-                    <br />
-                    {action.name}
-                  </ActionHeadline>
-                  {categories.map((item) => (
-                    <CategoryBadge key={item.id} className="mr-3">{item.name}</CategoryBadge>
-                  ))}
-                </Col>
-              </Row>
-            </Container>
-          </OverlayContainer>
-        </ActionBgImage>
-      </ActionHero>
+      <ActionHero
+        categories={action.categories}
+        previousAction={action.previousAction}
+        nextAction={action.nextAction}
+        identifier={action.identifier}
+        name={action.name}
+        imageUrl={imageUrl}
+      />
       <Container>
         <Row>
           <Col md="7" lg="8">
-            {action.description
-            && <ActionSection className="text-content" dangerouslySetInnerHTML={{ __html: action.description }} />}
-            {cleanOfficialText
-            && <OfficialText>
-              <h5>{ t('action-description-official') }</h5>
-              <strong>{ t('action-as-in-plan') }</strong>
-              <div dangerouslySetInnerHTML={{ __html: cleanOfficialText }} />
-              {generalContent.officialNameDescription && (
-                <small>{`(${generalContent.officialNameDescription})`}</small>
-              )}
-            </OfficialText>}
+            {action.description && (
+              <ActionSection className="text-content">
+                <h2 className="sr-only">{ t('actions:action-description') }</h2>
+                <RichText html={action.description} />
+              </ActionSection>
+            )}
+            {cleanOfficialText && (
+              <OfficialText>
+                <h2>{ t('actions:action-description-official') }</h2>
+                <strong>{ t('actions:action-as-in-plan') }</strong>
+                <div dangerouslySetInnerHTML={{ __html: cleanOfficialText }} />
+                {generalContent.officialNameDescription && (
+                  <small>{`(${generalContent.officialNameDescription})`}</small>
+                )}
+              </OfficialText>
+            )}
 
             <MergedActionList t={t} theme={theme} actions={mergedActions} />
 
@@ -366,56 +293,61 @@ function ActionDetails(props) {
             <SolidSection>
               <Row>
                 <Col>
-                  <SectionHeader className="mb-5">{ t('action-status-updates') }</SectionHeader>
+                  <SectionHeader>{ t('actions:action-status-updates') }</SectionHeader>
                 </Col>
               </Row>
-              <ActionUpdatesList id={action.id} className="mb-5" />
+              <ActionUpdatesList id={action.id} />
             </SolidSection>
             )}
             <Row>
               <Col>
-                <SectionHeader className="mb-5">{ t('action-tasks') }</SectionHeader>
+                <SectionHeader>{ t('actions:action-tasks') }</SectionHeader>
               </Col>
             </Row>
             <Row>
-              <Col className="mb-5">
-                <ActionSection className="mb-5">
+              <Col>
+                <ActionSection>
                   <TaskList tasks={action.tasks} />
                 </ActionSection>
               </Col>
             </Row>
             <Row>
               <Col>
-                <SectionHeader className="mb-5">{ t('indicators') }</SectionHeader>
+                <SectionHeader>{ t('indicators') }</SectionHeader>
               </Col>
             </Row>
             <Row>
-              <Col sm="12" className="mb-5">
+              <Col sm="12">
                 {action.relatedIndicators && action.relatedIndicators.length > 0
                   ? <ActionIndicators actionId={action.id} relatedIndicators={action.relatedIndicators} />
-                  : <Alert color="light" className="mb-5"><h6>Ei määriteltyjä mittareita</h6></Alert>
+                  : <Alert color="light" className="mb-5"><h6>{ t('actions:no-defined-indicators') }</h6></Alert>
                   }
               </Col>
             </Row>
           </Col>
 
           <Col md="5" lg="4">
+            <h2 className="sr-only">{ t('actions:action-meta-header') }</h2>
             { action.impact
               && (
               <ActionSection>
-                <h5>{ t('action-impact') }</h5>
-                <ActionImpact name={action.impact.name} identifier={action.impact.identifier} />
+                <SideHeader>{ t('actions:action-impact') }</SideHeader>
+                <ActionImpact
+                  name={action.impact.name}
+                  identifier={action.impact.identifier}
+                  max={getMaxImpact(plan)}
+                />
               </ActionSection>
               )}
             <ActionSection>
-              <h5>{ t('action-progress') }</h5>
+              <SideHeader>{ t('actions:action-progress') }</SideHeader>
               { action.completion > 0
               && (
               <strong>
                 {action.completion}
                 %
                 {' '}
-                { t('action-percent-ready') }
+                { t('actions:action-percent-ready') }
               </strong>
               ) }
               {action.status && (
@@ -428,13 +360,13 @@ function ActionDetails(props) {
             </ActionSection>
             { action.schedule.length ? (
               <ActionSection>
-                <h5>{ t('action-timeline') }</h5>
+                <SideHeader>{ t('actions:action-timeline') }</SideHeader>
                 <Timeline schedules={action.schedule} allSchedules={plan.actionSchedules} />
               </ActionSection>
             ) : null}
             { emissionScopes.length ? (
               <ActionSection>
-                <h5>{ t('emission-scopes') }</h5>
+                <SideHeader>{ t('actions:emission-scopes') }</SideHeader>
                 {emissionScopes.map((item) => (
                   <EmissionScopeIcon key={item.id} category={item} color={theme.brandDark} size="2em" />
                 ))}
@@ -448,7 +380,7 @@ function ActionDetails(props) {
             </ActionSection>
             <ActionSection>
               <LastUpdated>
-                { t('action-last-updated') }
+                { t('actions:action-last-updated') }
                 {' '}
                 { updated }
               </LastUpdated>
@@ -461,7 +393,7 @@ function ActionDetails(props) {
           <Container>
             <Row>
               <Col sm="12">
-                <SectionHeader className="mb-3">{ t('action-what-effect-this-has') }</SectionHeader>
+                <SectionHeader>{ t('actions:action-what-effect-this-has') }</SectionHeader>
               </Col>
             </Row>
           </Container>
@@ -481,45 +413,8 @@ function ActionDetails(props) {
     </div>
   );
 }
-
-class ActionContent extends React.Component {
-  static contextType = PlanContext;
-
-  render() {
-    const { t, theme, id } = this.props;
-    const plan = this.context;
-
-    return (
-      <Query query={GET_ACTION_DETAILS} variables={{ id, plan: plan.identifier }}>
-        {({ loading, error, data }) => {
-          if (loading) return <ContentLoader />;
-          if (error) return <ErrorMessage message={error.message} />;
-          const { action } = data;
-          if (!action) {
-            return <ErrorMessage statusCode={404} message={t('action-not-found')} />;
-          }
-          return <ActionDetails action={action} theme={theme} plan={plan} t={t} />;
-          /* ActionContent action={data.action} theme={ theme } /> */
-        }}
-      </Query>
-    );
-  }
-}
-
-ActionDetails.propTypes = {
-  action: PropTypes.shape({}).isRequired,
-  plan: PropTypes.shape({}).isRequired,
-  t: PropTypes.func.isRequired,
-  theme: PropTypes.shape({
-    brandLight: PropTypes.string.isRequired,
-    imageOverlay: PropTypes.string.isRequired,
-  }).isRequired,
-};
-
 ActionContent.propTypes = {
   id: PropTypes.string.isRequired,
-  t: PropTypes.func.isRequired,
-  theme: PropTypes.shape({}).isRequired,
 };
 
-export default withTranslation('common')(withTheme(ActionContent));
+export default ActionContent;

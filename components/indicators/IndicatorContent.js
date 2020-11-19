@@ -1,17 +1,16 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 
 import {
   Jumbotron as BaseJumbotron, Container, Row, Col,
 } from 'reactstrap';
 import styled from 'styled-components';
-import { Query } from 'react-apollo';
-import gql from 'graphql-tag';
+import { gql, useQuery } from '@apollo/client';
 
-import { IndicatorListLink } from '../../common/links';
-import PlanContext from '../../context/plan';
+import { IndicatorListLink } from 'common/links';
+import PlanContext from 'context/plan';
+import { useTranslation } from 'common/i18n';
 
-import { withTranslation } from '../../common/i18n';
 import ContentLoader from '../common/ContentLoader';
 import ErrorMessage from '../common/ErrorMessage';
 import ErrorBoundary from '../common/ErrorBoundary';
@@ -19,9 +18,8 @@ import { Meta } from '../layout';
 
 import IndicatorGraph from '../graphs/IndicatorGraph';
 import IndicatorValueSummary from './IndicatorValueSummary';
-import IndicatorCard from './IndicatorCard';
+import CausalNavigation from './CausalNavigation';
 import ActionsTable from '../actions/ActionsTable';
-
 
 const GET_INDICATOR_DETAILS = gql`
   query IndicatorDetails($id: ID, $plan: ID, $identifier: ID) {
@@ -53,6 +51,7 @@ const GET_INDICATOR_DETAILS = gql`
         value
       }
       actions(plan: $plan) {
+        id
         ...ActionsTable
       }
       relatedCauses {
@@ -81,26 +80,30 @@ const GET_INDICATOR_DETAILS = gql`
 `;
 
 const IndicatorHero = styled(BaseJumbotron)`
-  margin-bottom: 2rem;
+  margin-bottom: ${(props) => props.theme.spaces.s200};
 
   a {
     color: inherit;
   }
-  
+
   h1 {
+    font-size: ${(props) => props.theme.fontSizeXl};
     hyphens: auto;
 
     @media (max-width: ${(props) => props.theme.breakpointMd}) {
-      font-size: 1.75em;
+      font-size: ${(props) => props.theme.fontSizeLg};
     }
   }
 `;
 
-const IndicatorLevel = styled.h6`
+const IndicatorLevel = styled.span`
+a {
   display: inline-block;
-  border-radius: .75em;
-  padding: .25em 1em;
-  margin-bottom: 1.5rem;
+  border-radius: ${(props) => props.theme.badgeBorderRadius};
+  padding: ${(props) => props.theme.badgePaddingY} ${(props) => props.theme.badgePaddingX};
+  font-weight: ${(props) => props.theme.badgeFontWeight};
+  margin-bottom: ${(props) => props.theme.spaces.s150};
+
   color: ${(props) => {
     switch (props.level) {
       case 'action':
@@ -115,6 +118,7 @@ const IndicatorLevel = styled.h6`
         return props.theme.themeColors.black;
     }
   }};
+
   background-color: ${(props) => {
     switch (props.level) {
       case 'action':
@@ -129,24 +133,47 @@ const IndicatorLevel = styled.h6`
         return '#cccccc';
     }
   }};
+
+  &:hover {
+    color: inherit;
+    text-decoration: underline;
+  }
+}
 `;
 
 const Section = styled.section`
-  padding: 3em 0 6em;
-  margin-bottom: -3em;
+  padding: ${(props) => props.theme.spaces.s300} 0;
 
   h2 {
-    margin-bottom: 1em;
+    font-size: ${(props) => props.theme.fontSizeLg};
+    margin-bottom: ${(props) => props.theme.spaces.s100};
   }
 `;
 
-const CausalNavigation = styled.div`
-  padding-top: 2rem;
-  background-color: ${(props) => props.theme.themeColors.light};
-`;
+function IndicatorDetails({ id }) {
+  const plan = useContext(PlanContext);
+  const { t } = useTranslation();
 
-function IndicatorDetails(props) {
-  const { t, indicator, plan } = props;
+  // Ensure id is a number
+  if (isNaN(parseInt(id, 10))) {
+    return <ErrorMessage statusCode={404} message={ t('indicator-not-found') } />;
+  }
+
+  const { data, loading, error } = useQuery(GET_INDICATOR_DETAILS, {
+    variables: {
+      id,
+      plan: plan.identifier,
+    },
+  });
+
+  if (loading) return <ContentLoader />;
+  if (error) return <ErrorMessage message={error.message} />;
+
+  const { indicator } = data;
+  if (!indicator) {
+    return <ErrorMessage statusCode={404} message={ t('indicator-not-found') } />;
+  }
+
   const hasImpacts = indicator.relatedCauses.length > 0 || indicator.relatedEffects.length > 0;
 
   return (
@@ -164,8 +191,8 @@ function IndicatorDetails(props) {
             </IndicatorListLink>
           </IndicatorLevel>
           <h1>{indicator.name}</h1>
-          { (indicator.goals.length > 0  || indicator.goals.length > 0) &&
-          (
+          { (indicator.goals.length > 0 || indicator.goals.length > 0)
+          && (
             <IndicatorValueSummary
               timeResolution={indicator.timeResolution}
               values={indicator.values}
@@ -178,18 +205,17 @@ function IndicatorDetails(props) {
       <Container>
         <Row>
           <Col md="10" className="mb-5">
-            <div className="mt-4" dangerouslySetInnerHTML={{ __html: indicator.description }} />
+            <div className="mt-4 text-content" dangerouslySetInnerHTML={{ __html: indicator.description }} />
           </Col>
         </Row>
-        {(indicator.latestGraph || indicator.values.length > 0) &&
-          (
+        {(indicator.latestGraph || indicator.values.length > 0)
+        && (
           <Row>
             <Col className="mb-5">
-              <h2 className="mb-4">{ t('graph') }</h2>
-              <ErrorBoundary><IndicatorGraph indicator={indicator} plan={plan} /></ErrorBoundary>
+              <ErrorBoundary><IndicatorGraph indicatorId={indicator.id} /></ErrorBoundary>
             </Col>
           </Row>
-          )}
+        )}
       </Container>
       { indicator.actions.length > 0 && (
         <Section>
@@ -211,97 +237,17 @@ function IndicatorDetails(props) {
       )}
       { hasImpacts
         && (
-          <CausalNavigation>
-            <Container>
-              <Row>
-                <Col sm="6" lg={{ size: 5 }} className="mb-5">
-                  { indicator.relatedCauses.length > 0 && (
-                    <div>
-                      <h3 className="mb-4">{ t('indicator-affected-by') }</h3>
-                      { indicator.relatedCauses.map((cause) => (
-                        <IndicatorCard
-                          objectid={cause.causalIndicator.id}
-                          name={cause.causalIndicator.name}
-                          level={cause.causalIndicator.level}
-                          key={cause.causalIndicator.id}
-                        />
-                      ))}
-                    </div>
-                  )}
-                </Col>
-
-                <Col sm="6" lg={{ size: 5, offset: 2 }} className="mb-5">
-                  { indicator.relatedEffects.length > 0 && (
-                    <div>
-                      <h3 className="mb-4">{ t('indicator-has-effect-on') }</h3>
-                      { indicator.relatedEffects.map((effect) => (
-                        <IndicatorCard
-                          objectid={effect.effectIndicator.id}
-                          name={effect.effectIndicator.name}
-                          level={effect.effectIndicator.level}
-                          key={effect.effectIndicator.id}
-                        />
-                      ))}
-                    </div>
-                  )}
-                </Col>
-              </Row>
-            </Container>
-          </CausalNavigation>
+          <CausalNavigation
+            causes={indicator.relatedCauses}
+            effects={indicator.relatedEffects}
+          />
         )}
     </div>
   );
 }
 
 IndicatorDetails.propTypes = {
-  indicator: PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    goals: PropTypes.arrayOf(PropTypes.shape({
-      value: PropTypes.number.isRequired,
-    })),
-  }).isRequired,
-};
-
-
-class IndicatorContent extends React.Component {
-  static contextType = PlanContext;
-
-  render() {
-    const { t, id } = this.props;
-    const plan = this.context;
-
-    return (
-      <Query query={GET_INDICATOR_DETAILS} variables={{ id, plan: plan.identifier }}>
-        {({ loading, error, data }) => {
-          if (loading) return <ContentLoader />;
-          if (error) return <ErrorMessage message={error.message} />;
-          const { indicator } = data;
-          if (!indicator) {
-            return <ErrorMessage statusCode={404} message={ t('indicator-not-found') } />
-          }
-          return <IndicatorDetails indicator={indicator} plan={plan} t={t}/>;
-        }}
-      </Query>
-    );
-  }
-}
-
-IndicatorContent.propTypes = {
   id: PropTypes.string.isRequired,
-  t: PropTypes.func.isRequired,
 };
 
-IndicatorDetails.propTypes = {
-  plan: PropTypes.shape({}).isRequired,
-  indicator: PropTypes.shape({
-    actions: PropTypes.array.isRequired,
-    relatedCauses: PropTypes.array.isRequired,
-    relatedEffects: PropTypes.array.isRequired,
-    name: PropTypes.string.isRequired,
-    level: PropTypes.string.isRequired,
-    timeResolution: PropTypes.string.isRequired,
-  }).isRequired,
-  t: PropTypes.func.isRequired,
-}
-
-export default withTranslation('common')(IndicatorContent);
+export default IndicatorDetails;

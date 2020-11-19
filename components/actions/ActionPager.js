@@ -1,10 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button } from 'reactstrap';
 import styled from 'styled-components';
-import { Link } from '../../routes';
-import { ActionLink } from '../../common/links';
+import { ActionLink, actionPropType } from '../../common/links';
 import Icon from '../common/Icon';
+import Button from '../common/Button';
 import { withTranslation } from '../../common/i18n';
 
 const Pager = styled.div`
@@ -22,19 +21,13 @@ const Next = styled.div`
 `;
 
 const PageButton = styled(Button)`
-  line-height: 1;
+  line-height: ${(props) => props.theme.lineHeightSm};
 
   .icon {
-    fill: ${props => props.theme.brandDark} !important;
-  }
-  
-  &:hover {
-    .icon {
-      fill: #ffffff !important;
-    }
+    fill: ${(props) => props.theme.brandDark} !important;
   }
 `;
-
+ 
 const ActionPager = (props) => {
   const { t, nextAction, previousAction } = props;
 
@@ -44,10 +37,12 @@ const ActionPager = (props) => {
         { previousAction
           && (
             <ActionLink action={previousAction}>
-              <PageButton color="primary" outline>
-                <Icon name="arrowLeft" />
-                { t('action-previous') }
-              </PageButton>
+              <a>
+                <PageButton color="primary" outline>
+                  <Icon name="arrowLeft" />
+                  { t('action-previous') }
+                </PageButton>
+              </a>
             </ActionLink>
           )}
       </Previous>
@@ -55,10 +50,12 @@ const ActionPager = (props) => {
         { nextAction
           && (
             <ActionLink action={nextAction}>
-              <PageButton color="primary" outline>
-                { t('action-next') }
-                <Icon name="arrowRight" />
-              </PageButton>
+              <a>
+                <PageButton color="primary" outline>
+                  { t('action-next') }
+                  <Icon name="arrowRight" />
+                </PageButton>
+              </a>
             </ActionLink>
           )}
       </Next>
@@ -67,8 +64,8 @@ const ActionPager = (props) => {
 };
 
 ActionPager.propTypes = {
-  previousAction: ActionLink.propTypes.action,
-  nextAction: ActionLink.propTypes.action,
+  previousAction: actionPropType,
+  nextAction: actionPropType,
   t: PropTypes.func.isRequired,
 };
 

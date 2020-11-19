@@ -4,27 +4,42 @@ import {
   Card, CardBody, CardTitle, Alert,
 } from 'reactstrap';
 import styled from 'styled-components';
+import moment from '../../common/moment';
 import { withTranslation } from '../../common/i18n';
 import { IndicatorLink } from '../../common/links';
 
-const CardWrapper = styled.div`
-  width: 100%;
-  margin-bottom: 1rem;
 
-  a {
+const IndicatorValue = styled.div`
+  margin-top: 1em;
+  font-weight: ${(props) => props.theme.fontWeightBold};
+  opacity: .75;
+`;
+
+const IndicatorValueUnit = styled.span`
+  font-size: ${(props) => props.theme.fontSizeSm};
+  font-weight: ${(props) => props.theme.fontWeightNormal};
+`;
+
+const IndicatorValueTime = styled.div`
+  font-size: ${(props) => props.theme.fontSizeSm};
+  font-weight: ${(props) => props.theme.fontWeightNormal};
+`;
+
+const StyledLink = styled.a`
+  color: inherit;
+
+  &:hover {
     color: inherit;
-
-    &:hover {
-      text-decoration: none;
-    }
+    text-decoration: none;
   }
 `;
 
 const Indicator = styled(Card)`
-  text-align: left;
   hyphens: auto;
-  line-height: 1;
-  border-radius: 6px;
+  line-height: ${(props) => props.theme.lineHeightSm};
+  border: 0;
+  border-radius: ${(props) => props.theme.cardBorderRadius};
+
   color: ${(props) => {
     switch (props.level) {
       case 'action':
@@ -63,7 +78,7 @@ const Indicator = styled(Card)`
 
 const IndicatorType = styled.div`
   opacity: .75;
-  font-size: 75%;
+  font-size: ${(props) => props.theme.fontSizeSm};
   margin-bottom: .5em;
 `;
 
@@ -72,39 +87,84 @@ const IndicatorNumber = styled.span`
 `;
 
 const IndicatorTitle = styled(CardTitle)`
-  font-weight: 600;
+  font-weight: ${(props) => props.theme.fontWeightBold};
 `;
+
+function IndicatorLatestValue(props) {
+  const { latestValue, date, unit, resolution } = props;
+
+  if (!latestValue) return null;
+
+  const time = moment(date, 'YYYY-MM-DD');
+  let tagVal;
+  let formattedTime;
+
+  if (resolution === 'year') {
+    formattedTime = time.format('YYYY');
+    tagVal = formattedTime;
+  } else if (resolution === 'month') {
+    formattedTime = time.format('YYYY-MM');
+    tagVal = 'MMMM YYYY';
+  } else {
+    formattedTime = time.format('DD.MM.YYYY');
+    tagVal = time.format(); // ISO format
+  }
+
+  return (
+    <IndicatorValue>
+      {Number.isInteger(latestValue) ? latestValue : latestValue.toFixed(2).replace('.', ',')}
+      {' '}
+      <IndicatorValueUnit>
+        {unit}
+      </IndicatorValueUnit>
+      <IndicatorValueTime>
+        <time dateTime={tagVal}>{formattedTime}</time>
+      </IndicatorValueTime>
+    </IndicatorValue>
+  );
+}
+
+function CardLink(props) {
+  const { level, indicatorId, children } = props;
+
+  if (level !== 'action') return <IndicatorLink id={indicatorId}><StyledLink href>{ children }</StyledLink></IndicatorLink>;
+  return <>{children}</>;
+}
 
 function IndicatorCard(props) {
   const {
-    t, level, objectid, name, number,
+    t,
+    level,
+    objectid,
+    name,
+    number,
+    latestValue,
+    resolution,
   } = props;
 
-
   return (
-    <CardWrapper>
-      <IndicatorLink id={objectid}>
-        <a href>
-          <Indicator level={level} key={objectid}>
-            <CardBody>
-              <div>
-                <IndicatorType>{ t(level) }</IndicatorType>
-                <IndicatorTitle>
-                  { number && <IndicatorNumber>{ number }</IndicatorNumber> }
-                  { name }
-                </IndicatorTitle>
-              </div>
-            </CardBody>
-          </Indicator>
-        </a>
-      </IndicatorLink>
-    </CardWrapper>
+    <CardLink level={level} indicatorId={objectid}>
+      <Indicator level={level}>
+        <CardBody>
+          <div>
+            <IndicatorType>{ t(level) }</IndicatorType>
+            <IndicatorTitle>
+              { number && <IndicatorNumber>{ number }</IndicatorNumber> }
+              { name }
+            </IndicatorTitle>
+          </div>
+          { latestValue && <IndicatorLatestValue latestValue={latestValue.value} date={latestValue.date} unit={latestValue.unit} resolution={resolution} />}
+        </CardBody>
+      </Indicator>
+    </CardLink>
   );
 }
 
 IndicatorCard.defaultProps = {
   number: null,
   level: null,
+  latestValue: null,
+  resolution: 'day',
 };
 
 IndicatorCard.propTypes = {
@@ -113,6 +173,8 @@ IndicatorCard.propTypes = {
   objectid: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   number: PropTypes.number,
+  latestValue: PropTypes.shape({ value: PropTypes.number, date: PropTypes.string, unit: PropTypes.string }),
+  resolution: PropTypes.string,
 };
 
 export default withTranslation('common')(IndicatorCard);

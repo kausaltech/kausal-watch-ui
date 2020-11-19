@@ -1,0 +1,50 @@
+.site-footer::before,
+.indicators-section::before,
+.actions-section::before,
+.hero-banner-bottom::before {
+  content: " ";
+  position: absolute;
+  width: 100%;
+  background-size: 120px 4800px;
+  background-position: top;
+  background-repeat: repeat-x;
+  left: 0;
+}
+
+.hero-banner-bottom::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' x='0px' y='0px' viewBox='0 0 20 800' style='enable-background:new 0 0 20 800;' xml:space='preserve'%3E %3Cstyle type='text/css'%3E .kf%7Bfill:%23ffffff;%7D %3C/style%3E %3Ctitle%3Ekoro-storm-fog-0%3C/title%3E %3Cpath class='kf' d='M20,800V0c-2.3,5.5-8.7,8.1-14.3,5.7C3.1,4.7,1.2,2.6,0,0v800H20z'/%3E %3C/svg%3E");
+  height: 3rem;
+  top: -5px;
+  transform: rotate(180deg);
+}
+
+.actions-section::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' x='0px' y='0px' viewBox='0 0 20 800' style='enable-background:new 0 0 20 800;' xml:space='preserve'%3E %3Cstyle type='text/css'%3E .kf%7Bfill:%23007438;%7D %3C/style%3E %3Ctitle%3Ekoro-storm-fog-0%3C/title%3E %3Cpath class='kf' d='M20,800V0c-2.3,5.5-8.7,8.1-14.3,5.7C3.1,4.7,1.2,2.6,0,0v800H20z'/%3E %3C/svg%3E");
+  height: 3rem;
+  top: -5px;
+  transform: rotate(180deg);
+}
+
+.indicators-section::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' x='0px' y='0px' viewBox='0 0 20 800' style='enable-background:new 0 0 20 800;' xml:space='preserve'%3E %3Cstyle type='text/css'%3E .kf%7Bfill:%23ffc61e;%7D %3C/style%3E %3Ctitle%3Ekoro-storm-fog-0%3C/title%3E %3Cpath class='kf' d='M20,800V0c-2.3,5.5-8.7,8.1-14.3,5.7C3.1,4.7,1.2,2.6,0,0v800H20z'/%3E %3C/svg%3E");
+  height: 3rem;
+  top: -5px;
+  transform: rotate(180deg);
+}
+
+.site-footer::before {
+  background-size: 90px 3600px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' x='0px' y='0px' viewBox='0 0 20 800' style='enable-background:new 0 0 20 800;' xml:space='preserve'%3E %3Cstyle type='text/css'%3E .kf%7Bfill:%231a1a1a;%7D %3C/style%3E %3Ctitle%3Ekoro-storm-fog-0%3C/title%3E %3Cpath class='kf' d='M20,800V0c-2.3,5.5-8.7,8.1-14.3,5.7C3.1,4.7,1.2,2.6,0,0v800H20z'/%3E %3C/svg%3E");
+  height: 2rem;
+  top: -2rem;
+}
+
+@media (max-width: 768px) {
+
+  .site-footer::before,
+  .indicators-section::before,
+  .actions-section::before,
+  .hero-banner-bottom::before {
+    background-size: 60px 2400px;
+  }
+}

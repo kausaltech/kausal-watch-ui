@@ -1,19 +1,19 @@
 /* eslint-disable max-classes-per-file */
 import React from 'react';
 import PropTypes from 'prop-types';
-import gql from 'graphql-tag';
-import { Query } from 'react-apollo';
+import { gql, useQuery } from '@apollo/client';
 import {
-  Row, Col, Button,
+  Row, Col,
 } from 'reactstrap';
-import LazyLoad from 'react-lazyload';
 import styled from 'styled-components';
+import LazyLoad from 'react-lazyload';
 import { withTranslation } from '../../common/i18n';
 import ContentLoader from '../common/ContentLoader';
 import { IndicatorListLink } from '../../common/links';
 
 import IndicatorHighlightCard from './IndicatorHighlightCard';
 import Icon from '../common/Icon';
+import Button from '../common/Button';
 
 export const GET_INDICATOR_HIGHLIGHTS = gql`
   query IndicatorHightlightList($plan: ID!, $first: Int!, $orderBy: String!) {
@@ -35,15 +35,21 @@ export const GET_INDICATOR_HIGHLIGHTS = gql`
   }
 `;
 
-const LinkButton = styled(Button)`
-  svg {
-    fill: ${(props) => props.theme.brandDark} !important;
+const ListHeader = styled(Col)`
+  h2 {
+    font-size: ${(props) => props.theme.fontSizeXl};
+    margin-bottom: ${(props) => props.theme.spaces.s400};
   }
+`;
 
-  &:hover {
-    svg {
-      fill: ${(props) => props.theme.themeColors.white} !important;
-    }
+const CardContainer = styled(Col)`
+  margin-bottom: ${(props) => props.theme.spaces.s150};
+
+  .lazyload-wrapper {
+    width: 100%;
+  }
+  .card {
+    height: 100%;
   }
 `;
 
@@ -52,16 +58,16 @@ function IndicatorCardList(props) {
 
   return (
     <Row>
-      <Col xs="12">
-        <h2 className="mb-5">{ t('recently-updated-indicators') }</h2>
-      </Col>
+      <ListHeader xs="12">
+        <h2>{ t('recently-updated-indicators') }</h2>
+      </ListHeader>
       {indicators.map((item) => (
-        <Col
+        <CardContainer
           xs="12"
           md="6"
           lg="4"
           key={item.id}
-          className="mb-4 d-flex align-items-stretch"
+          className="mb-4 d-flex"
           style={{ transition: 'all 0.5s ease' }}
         >
           <LazyLoad height={300}>
@@ -73,17 +79,15 @@ function IndicatorCardList(props) {
               unit={item.unit.shortName || item.unit.name}
             />
           </LazyLoad>
-        </Col>
+        </CardContainer>
       ))}
       <Col xs="12" className="mt-5 mb-3">
         <IndicatorListLink>
-          <a href>
-            <LinkButton outline color="primary">
-              { t('see-all-indicators') }
-              {' '}
-              <Icon name="arrowRight" />
-            </LinkButton>
-          </a>
+          <Button outline color="primary" tag="a">
+            { t('see-all-indicators') }
+            {' '}
+            <Icon name="arrowRight" />
+          </Button>
         </IndicatorListLink>
       </Col>
     </Row>
@@ -105,15 +109,13 @@ function IndicatorHighlightsList(props) {
     orderBy: '-updatedAt',
   };
 
-  return (
-    <Query query={GET_INDICATOR_HIGHLIGHTS} variables={queryParams}>
-      {({ data, loading, error }) => {
-        if (loading) return <ContentLoader />;
-        if (error) return <p>{ t('error-loading-indicators') }</p>;
-        return <IndicatorCardList t={t} indicators={data.planIndicators} />;
-      }}
-    </Query>
-  );
+  const { loading, error, data } = useQuery(GET_INDICATOR_HIGHLIGHTS, {
+    variables: queryParams,
+  });
+
+  if (loading) return <ContentLoader />;
+  if (error) return <p>{ t('error-loading-indicators') }</p>;
+  return <IndicatorCardList t={t} indicators={data.planIndicators} />;
 }
 
 IndicatorHighlightsList.propTypes = {

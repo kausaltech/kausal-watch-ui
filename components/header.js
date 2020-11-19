@@ -1,115 +1,76 @@
-import React from 'react';
+import React, { useMemo, useContext } from 'react';
 import PropTypes from 'prop-types';
-import {
-  Collapse, Container, Navbar, Nav, NavItem, NavbarToggler,
-} from 'reactstrap';
-import styled, { withTheme } from 'styled-components';
-import { Link } from '../routes';
-import { StaticPageLink } from '../common/links';
-import {
-  DashboardLink,
-  IndicatorListLink,
-  ActionListLink,
-} from '../common/links';
-import { withTranslation } from '../common/i18n';
-import PlanContext from '../context/plan';
 
-import Icon from './common/Icon';
+import { useTranslation } from 'common/i18n';
+import PlanContext from 'context/plan';
+import SiteContext from 'context/site';
+
+import GlobalNav from './common/GlobalNav';
 import ApplicationStateBanner from './common/ApplicationStateBanner';
+import SkipToContent from './common/SkipToContent';
+import { getActiveBranch } from '../common/links';
 
-// TODO: get page content from API
+function Header({ siteTitle }) {
+  const plan = useContext(PlanContext);
+  const site = useContext(SiteContext);
+  const { t } = useTranslation(['common']);
+  const hasActionImpacts = plan.impactGroups?.length > 0;
+  const activeBranch = getActiveBranch();
+  let staticPages = [];
 
-const TopNav = styled(Navbar)`
-  background-color: ${props => props.theme.brandNavBackground};
-`;
-
-const BotNav = styled(Navbar)`
-  background-color: ${props => props.theme.white};
-
-  a {
-    color: ${props => props.theme.neutralDark};
-  }
-`;
-
-
-class Header extends React.Component {
-  static contextType = PlanContext;
-
-  constructor(props) {
-    super(props);
-
-    this.toggle = this.toggle.bind(this);
-    this.state = {
-      isOpen: false,
-    };
-  }
-
-  toggle() {
-    this.setState({
-      isOpen: !this.state.isOpen,
+  const navLinks = useMemo(() => {
+    let links = [];
+    if (hasActionImpacts) links.push({
+      id: '1',
+      name: t('dashboard'),
+      slug: 'dashboard',
+      active: activeBranch === 'dashboard',
     });
-  }
 
-  render() {
-    const {
-      t, i18n, theme, siteTitle,
-    } = this.props;
-    const plan = this.context;
+    links.push({
+      id: '2',
+      name: t('actions'),
+      slug: 'actions',
+      active: activeBranch === 'actions',
+    });
 
-    return (
-      <div>
-        <ApplicationStateBanner instanceType={plan.instanceType} />
-        <TopNav expand="md">
-          <Container>
-            <Link href="/">
-              <a aria-label={`${siteTitle}, palvelun etusivu`} className="navbar-brand">
-                <div aria-hidden="true" className="nav-org-logo" />
-              </a>
-            </Link>
-          </Container>
-        </TopNav>
-        <BotNav expand="md">
-        <Container>
-          <Link href="/">
-            <a className="navbar-brand">{siteTitle}</a>
-          </Link>
-          <NavbarToggler onClick={this.toggle}><Icon name="bars" color={theme.brandDark}/></NavbarToggler>
-          <Collapse isOpen={this.state.isOpen} navbar>
-            <Nav navbar>
-              <NavItem key="dasboard">
-                <DashboardLink>
-                  <a className="nav-link">{t('dashboard')}</a>
-                </DashboardLink>
-              </NavItem>
-              <NavItem key="actions">
-                <ActionListLink>
-                  <a className="nav-link">{t('actions')}</a>
-                </ActionListLink>
-              </NavItem>
-              <NavItem key="indicators">
-                <IndicatorListLink>
-                  <a className="nav-link">{t('indicators')}</a>
-                </IndicatorListLink>
-              </NavItem>
-              { plan.staticPages && plan.staticPages.filter((page) => page.topMenu).map((page) => (
-                <NavItem key={page.slug}>
-                  <StaticPageLink slug={page.slug}>
-                    <a className="nav-link">{page.name}</a>
-                  </StaticPageLink>
-                </NavItem>
-              ))}
-            </Nav>
-          </Collapse>
-          </Container>
-        </BotNav>
-      </div>
-    );
-  }
+    links.push({
+      id: '3',
+      name: t('indicators'),
+      slug: 'indicators',
+      active: activeBranch === 'indicators',
+    });
+
+    if (plan.staticPages) {
+      const topMenuPages = plan.staticPages.filter((page) => page.topMenu);
+      staticPages = topMenuPages.map((page, index) => (
+        {
+          id: `s${index}`,
+          name: page.name,
+          slug: page.slug,
+          active: activeBranch === page.slug,
+        }
+      ));
+      links = links.concat(staticPages);
+    }
+    return links;
+  }, [hasActionImpacts, activeBranch, plan.staticPages]);
+
+  return (
+    <header style={{ position: 'relative' }}>
+      <SkipToContent />
+      <ApplicationStateBanner instanceType={site.instanceType} />
+      <GlobalNav
+        siteTitle={siteTitle}
+        ownerName={plan.generalContent ? plan.generalContent.ownerName : plan.name}
+        navItems={navLinks}
+      />
+    </header>
+  );
 }
 
 Header.propTypes = {
   siteTitle: PropTypes.string.isRequired,
-  t: PropTypes.func.isRequired,
 };
 
-export default withTranslation('common')(withTheme(Header));
+export default React.memo(Header);
