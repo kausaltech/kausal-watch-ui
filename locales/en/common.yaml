@@ -23,6 +23,7 @@ insight-filter-no-results: No results
 indicators-as-list: As a list
 indicators-as-insight: As insights
 goal: goal
+total: total
 forecast: forecast
 current-trend: trend
 percent-point-abbreviation: p.p.
@@ -81,6 +82,15 @@ supported-by: Supported by
 back-to-top: Back to top
 contact: Contact
 feedback: Feedback
+give-feedback: Give feedback
+feedback-description: Did you discover something that does not work? Or do you have ideas on something we can improve?
+feedback-prompt: Please let us know by filling and sending this form.
+feedback-thankyou-header: Feedback received
+feedback-thankyou-content: Thank you for taking the time to provide us feedback. It's truly helpful.
+feedback-error-header: Error sending the message
+feedback-error-content: Something went wrong and your feedback was not received. Please try again in a moment.
+error-feedback-required: Feedback is required
+error-email-format: Please provide a valid email address
 accessibility: Accessibility
 copy-to-clipboard: Copy link to clipboard
 copied-to-clipboard: Copied!
@@ -91,3 +101,6 @@ skip-to-content: Skip to main content
 search: Search
 active-filters: Active filters
 remove-filter: Remove filter
+required-field: Required field
+send: Send
+close: Close

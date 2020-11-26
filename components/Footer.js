@@ -38,6 +38,19 @@ function Footer(props) {
     additionalLinks.push({ id: '1', name: t('accessibility'), slug: 'accessibility' });
   }
 
+  const utilityLinks = [];
+
+  if (plan.contactLink) {
+    utilityLinks.push({ id: '1', name: t('contact'), slug: plan.contactLink });
+  }
+
+  if (plan.feedbackLink) {
+    utilityLinks.push({ id: '2', name: t('give-feedback'), slug: plan.feedbackLink });
+  }
+  else {
+    utilityLinks.push({ id: '2', name: t('give-feedback'), slug: 'feedback' });
+  }
+
   let fundingInstruments = [];
   if (plan.identifier === 'hnh2035') fundingInstruments = [
     {
@@ -56,6 +69,7 @@ function Footer(props) {
         ownerUrl={generalContent.ownerUrl}
         creativeCommonsLicense={generalContent.creativeCommonsLicense}
         copyrightText={generalContent.copyrightText}
+        utilityLinks={utilityLinks}
         additionalLinks={additionalLinks}
         navItems={navLinks}
         fundingInstruments={fundingInstruments}

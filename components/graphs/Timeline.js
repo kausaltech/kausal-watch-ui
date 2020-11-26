@@ -76,7 +76,7 @@ const Timeline = ({ schedules, allSchedules }) => {
       tickangle: 0,
       showgrid: false,
       tickfont: {
-        family: theme.fontFamilySansSerif,
+        family: `${theme.fontFamily}, ${theme.fontFamilyFallback}`,
         size: 10,
       },
     },

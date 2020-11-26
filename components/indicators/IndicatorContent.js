@@ -96,7 +96,8 @@ const IndicatorHero = styled(BaseJumbotron)`
   }
 `;
 
-const IndicatorLevel = styled.h6`
+const IndicatorLevel = styled.span`
+a {
   display: inline-block;
   border-radius: ${(props) => props.theme.badgeBorderRadius};
   padding: ${(props) => props.theme.badgePaddingY} ${(props) => props.theme.badgePaddingX};
@@ -117,6 +118,7 @@ const IndicatorLevel = styled.h6`
         return props.theme.themeColors.black;
     }
   }};
+
   background-color: ${(props) => {
     switch (props.level) {
       case 'action':
@@ -131,6 +133,12 @@ const IndicatorLevel = styled.h6`
         return '#cccccc';
     }
   }};
+
+  &:hover {
+    color: inherit;
+    text-decoration: underline;
+  }
+}
 `;
 
 const Section = styled.section`

@@ -20,10 +20,10 @@ const Content = styled.main`
 function Layout({ children }) {
   const plan = useContext(PlanContext);
   const site = useContext(SiteContext);
-  const { t } = useTranslation('common');
   const generalContent = plan.generalContent || {};
   const siteTitle = generalContent.siteTitle || plan.name;
   const iconBase = site.theme ? `/static/images/${site.theme}/favicon` : null;
+  const googleSiteVerificationTag = plan.domain?.googleSiteVerificationTag;
 
   return (
     <>
@@ -48,6 +48,7 @@ function Layout({ children }) {
         { theme.themeCustomStylesUrl && <link rel="stylesheet" type="text/css" href={theme.themeCustomStylesUrl} />}
         <meta name="msapplication-TileColor" content={theme.brandDark} />
         <meta name="theme-color" content="#ffffff" />
+        { googleSiteVerificationTag && <meta name="google-site-verification" content={googleSiteVerificationTag} />}
       </Head>
       <Header siteTitle={siteTitle} />
       <Content id="main">

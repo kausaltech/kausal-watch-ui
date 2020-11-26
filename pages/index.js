@@ -19,7 +19,7 @@ const ActionsSection = styled.div`
   background-color: ${(props) => props.theme.neutralLight};
   position: relative;
   padding: ${(props) => props.theme.spaces.s800} 0 ${(props) => props.theme.spaces.s400};
-  
+
   .container {
     text-align: center;
   }
@@ -54,14 +54,17 @@ function HomePage() {
   // Override with plan specific hero if applicable
   if (plan.identifier === 'hnh2035') heroComponent = <HnhHero />;
   if (plan.identifier === 'ktstrat') heroComponent = <ThlHero />;
-  if (plan.identifier === 'liiku' || plan.identifier === 'lahti-ilmasto') heroComponent = (
-    <HeroFullImage
-      bgImage={plan.mainImage?.largeRendition?.src || plan.imageUrl}
-      title={generalContent.siteTitle}
-      siteDescription={generalContent.siteDescription}
-      actionsDescription={generalContent.actionShortDescription}
-      indicatorsDescription={generalContent.indicatorShortDescription}
-    />
+  if (
+    plan.identifier === 'liiku'
+    || plan.identifier === 'lahti-ilmasto'
+    || plan.identifier === 'helsinki-kierto') heroComponent = (
+      <HeroFullImage
+        bgImage={plan.mainImage?.largeRendition?.src || plan.imageUrl}
+        title={generalContent.siteTitle}
+        siteDescription={generalContent.siteDescription}
+        actionsDescription={generalContent.actionShortDescription}
+        indicatorsDescription={generalContent.indicatorShortDescription}
+      />
   );
 
   return (

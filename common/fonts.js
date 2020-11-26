@@ -1,6 +1,6 @@
 import FontFaceObserver from 'fontfaceobserver';
 
-const Fonts = (family, styleUrl) => {
+const Fonts = (family, headingsFamily, styleUrl) => {
   if (!document.getElementById('global-font-styles')) {
     const link = document.createElement('link');
     link.href = styleUrl;
@@ -20,6 +20,9 @@ const Fonts = (family, styleUrl) => {
 
   if (doc.classList.contains('has-theme-fonts')) return;
 
+  // Assume theme main font family has two weights and header font one
+  // In most cases headingsFamily === family
+
   const ThemeFontFamily400 = new FontFaceObserver(family, {
     weight: 400,
   });
@@ -28,9 +31,12 @@ const Fonts = (family, styleUrl) => {
     weight: 700,
   });
 
+  const HeadingsFontFamily = new FontFaceObserver(headingsFamily);
+
   Promise.all([
     ThemeFontFamily400.load(),
     ThemeFontFamily700.load(),
+    HeadingsFontFamily.load(),
   ]).then(() => {
     document.documentElement.classList.add('has-theme-fonts');
   });

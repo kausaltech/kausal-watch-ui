@@ -5,7 +5,7 @@ import { InMemoryCache } from '@apollo/client/cache';
 import { onError } from '@apollo/client/link/error';
 import getConfig from 'next/config';
 
-import { captureException } from 'common/sentry';
+import { captureException, Sentry } from 'common/sentry';
 import { i18n } from 'common/i18n';
 
 const { publicRuntimeConfig } = getConfig();
@@ -15,7 +15,7 @@ const localeMiddleware = new ApolloLink((operation, forward) => {
   const { query } = operation;
   const { definitions } = query;
 
-  if (!i18n.language) return forward(operation);
+  if (!i18n.language || definitions[0].operation === 'mutation') return forward(operation);
 
   const localeDirective = {
     kind: 'Directive',
@@ -45,30 +45,67 @@ const localeMiddleware = new ApolloLink((operation, forward) => {
 });
 
 let requestContext;
+let planIdentifier;
 
 const refererLink = new ApolloLink((operation, forward) => {
-  if (requestContext) {
-    operation.setContext((ctx) => {
+  const sentryHub = Sentry.getCurrentHub();
+  const sentryScope = sentryHub.pushScope();
+  const transaction = sentryScope.getTransaction();
+  let tracingSpan;
+
+  if (transaction) {
+    tracingSpan = transaction.startChild({
+      op: 'GraphQL query',
+      description: operation.operationName,
+      data: {
+        graphql_variables: operation.variables,
+      },
+    });
+  }
+
+  sentryScope.setContext('graphql_variables', operation.variables);
+  sentryScope.setTag('graphql_operation', operation.operationName);
+
+  operation.setContext((ctx) => {
+    const { headers } = ctx;
+    const newHeaders = {};
+
+    if (requestContext) {
       const req = requestContext;
-      const { headers } = ctx;
       const { currentURL } = req;
       const { baseURL, path } = currentURL;
       const remoteAddress = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 
-      return {
-        headers: {
-          referer: baseURL + path,
-          'x-forwarded-for': remoteAddress,
-          ...headers,
-        },
-      };
-    });
-  }
-  return forward(operation);
+      newHeaders.referer = baseURL + path;
+      newHeaders['x-forwarded-for'] = remoteAddress;
+    }
+    if (ctx.planDomain) {
+      newHeaders['x-cache-plan-domain'] = ctx.planDomain;
+    }
+    if (ctx.planIdentifier || planIdentifier) {
+      newHeaders['x-cache-plan-identifier'] = ctx.planIdentifier || planIdentifier;
+    }
+    return {
+      headers: {
+        ...headers,
+        ...newHeaders,
+      },
+    };
+  });
+
+  return forward(operation).map((result) => {
+    if (tracingSpan) tracingSpan.finish();
+    sentryHub.popScope();
+    return result;
+  });
 });
 
 export function setRequestContext(req) {
   requestContext = req;
+}
+
+export function setPlanIdentifier(identifier) {
+  planIdentifier = identifier;
 }
 
 const sentryHttpLink = ApolloLink.from([
@@ -93,17 +130,18 @@ const sentryHttpLink = ApolloLink.from([
   }),
 ]);
 
-let apolloClient;
+let cachedApolloClient;
 
 export default withApollo(({ initialState }) => {
-  if (apolloClient) return apolloClient;
+  if (cachedApolloClient && process.browser) return cachedApolloClient;
 
   const clientOpts = {
     ssrMode: !process.browser,
     link: ApolloLink.from([refererLink, localeMiddleware, sentryHttpLink]),
     cache: new InMemoryCache().restore(initialState || {}),
   };
-  apolloClient = new ApolloClient(clientOpts);
+  const apolloClient = new ApolloClient(clientOpts);
+  if (process.browser) cachedApolloClient = apolloClient;
   return apolloClient;
 }, {
   getDataFromTree,

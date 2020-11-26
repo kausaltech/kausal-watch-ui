@@ -109,12 +109,10 @@ const ContactDetails = (props) => {
           <div className="mt-2">
             {orgAncestors.length > 1 && (
               <PersonOrg>
-                {orgAncestors.map((item) => (
+                {orgAncestors.map((item, idx) => (
                   <span key={item.key}>
                     {item.name}
-                    {' '}
-                    /
-                    {' '}
+                    {idx < orgAncestors.length - 1 ? ' / ' : ''}
                   </span>
                 ))}
               </PersonOrg>

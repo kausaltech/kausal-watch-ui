@@ -1,50 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled, { keyframes } from 'styled-components';
-import { withTranslation } from '../../common/i18n';
+import styled from 'styled-components';
+import { Spinner } from 'reactstrap';
 
-const pulse = keyframes`
-  33% { transform: translateY(10px); }
-  66% { transform: translateY(-10px); }
-  100% { transform: translateY(0); }
-`;
+import { withTranslation } from '../../common/i18n';
 
 const Loader = styled.div`
   padding: ${(props) => props.theme.spaces.s800} ${(props) => props.theme.spaces.s300};
   text-align: center;
-
-  div:nth-child(1) {
-    animation: ${pulse} .8s -0.20s infinite ease-in-out;
-  }
-  div:nth-child(2) {
-    animation: ${pulse} .8s -0.10s infinite ease-in-out;
-  }
-  div:nth-child(3) {
-    animation: ${pulse} .8s 0s infinite ease-in-out;
-  }
 `;
 
-const LoaderSpinner = styled.div`
+const StyledSpinner = styled(Spinner)`
+  width: ${(props) => props.theme.spaces.s100};
+  height: ${(props) => props.theme.spaces.s100};
   background-color: ${(props) => props.theme.brandDark};
-  width: 10px;
-  height: 10px;
-  border-radius: 100%;
-  margin: 3px;
-  animation-fill-mode: both;
-  display: inline-block;
-`;
-
-const ScreenReaders = styled.div`
-  border: 0;
-  clip: rect(0 0 0 0);
-  clip-path: polygon(0px 0px, 0px 0px, 0px 0px);
-  height: 1px;
-  margin: -1px;
-  overflow: hidden;
-  padding: 0;
-  position: absolute;
-  width: 1px;
-  white-space: nowrap;
 `;
 
 class ContentLoader extends React.Component {
@@ -80,10 +49,10 @@ class ContentLoader extends React.Component {
 
     return (
       <Loader>
-        <LoaderSpinner />
-        <LoaderSpinner />
-        <LoaderSpinner />
-        <ScreenReaders>{ t('loading') }</ScreenReaders>
+        <StyledSpinner type="grow" className="mx-1" />
+        <StyledSpinner type="grow" className="mx-1" />
+        <StyledSpinner type="grow" className="mx-1" />
+        <div className="sr-only">{ t('loading') }</div>
       </Loader>
     );
   }

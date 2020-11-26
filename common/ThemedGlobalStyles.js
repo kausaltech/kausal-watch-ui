@@ -6,11 +6,12 @@ import Fonts from './fonts';
 
 const GlobalStyle = createGlobalStyle`
   body {
-    font-family: ${(props) => props.theme.fontFamilySansSerif};
+    font-family: ${(props) => props.theme.fontFamily}, ${(props) => props.theme.fontFamilyFallback};
     font-size: ${(props) => props.theme.fontSizeBase};
     line-height: ${(props) => props.theme.lineHeightBase};
     text-rendering: optimizeLegibility;
     background: ${(props) => props.theme.themeColors.white};
+    color: ${(props) => props.theme.themeColors.black};
   }
 
   a {
@@ -26,9 +27,11 @@ const GlobalStyle = createGlobalStyle`
     pointer-events: none;
   }
 
-  h1, h2, h3 , h4, h5 {
+  h1, h2, h3 , h4, h5, h6 {
+    font-family: ${(props) => props.theme.headingsFontFamily}, ${(props) => props.theme.headingsFontFamilyFallback};
+    font-weight: ${(props) => props.theme.headingsFontWeight};
     line-height: ${(props) => props.theme.lineHeightMd};
-    color: inherit;
+    color: ${(props) => props.theme.headingsColor};
   }
 
   h1 {
@@ -120,6 +123,15 @@ const GlobalStyle = createGlobalStyle`
     }
   }
 
+  .richtext-image {
+    margin: ${(props) => props.theme.spaces.s150} 0;
+
+    &.full-width {
+      max-width: 100%;
+      height: auto;
+    }
+  }
+
   thead {
     background-color: ${(props) => props.theme.tableHeadBg};
   }
@@ -128,6 +140,16 @@ const GlobalStyle = createGlobalStyle`
     background-color: ${(props) => props.theme.tableHoverBg};
   }
 
+  /* Alert headers follow alert text color */
+  .alert {
+    h1, h2, h3, h4, h5, h6 {
+      color: inherit;
+    }
+
+    p:last-child {
+      margin-bottom: 0;
+    }
+  }
   /* Fix for flickering tooltip bug */
   .tooltip {
     pointer-events: none;
@@ -159,8 +181,8 @@ const GlobalStyle = createGlobalStyle`
 
 function ThemedGlobalStyles({ theme, children }) {
   if (typeof window !== 'undefined') {
-    const { fontUrl, fontFamily } = theme;
-    Fonts(fontFamily, fontUrl);
+    const { fontUrl, fontFamily, headingsFontFamily } = theme;
+    Fonts(fontFamily, headingsFontFamily, fontUrl);
   }
 
   return (

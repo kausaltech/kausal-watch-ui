@@ -23,6 +23,7 @@ insight-filter-no-results: Ei tuloksia
 indicators-as-list: Listana
 indicators-as-insight: Näkemysverkossa
 goal: tavoite
+total: yhteensä
 forecast: ennuste
 current-trend: nykytrendi
 percent-point-abbreviation: '%-yks.'
@@ -79,6 +80,15 @@ supported-by: Kehitystä tukenut
 back-to-top: Sivun alkuun
 contact: Yhteystiedot
 feedback: Palaute
+give-feedback: Anna palautetta
+feedback-description: Löysitkö palvelusta jotain joka ei toimi? Tai onko sinulla ideoita palvelun parantamiseksi?
+feedback-prompt: Lähetä meille palautetta palvelusta tällä lomakkeella.
+feedback-thankyou-header: Palaute otettu vastaan
+feedback-thankyou-content: Kiitos kun lähetit palautetta. Kaikki palaute on meille arvokasta kun kehitämme palvelua.
+feedback-error-header: Virhe lähetyksessä
+feedback-error-content: Jotain meni pieleen palautteen lähettämisessä. Ole hyvä ja yritä hetken kuluttua uudelleen.
+error-feedback-required: Palaute on pakollinen kenttä
+error-email-format: Syötä oikea sähköpostiosoite
 accessibility: Saavutettavuus
 copy-to-clipboard: Kopioi linkki leikepöydälle
 copied-to-clipboard: Kopioitu!
@@ -89,3 +99,6 @@ skip-to-content: Hyppää sisältöön
 search: Hae
 active-filters: Aktiiviset rajaukset
 remove-filter: Poista rajaus
+required-field: Pakollinen tieto
+send: Lähetä
+close: Sulje

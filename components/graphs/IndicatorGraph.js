@@ -228,6 +228,7 @@ function generateDataTraces(indicator, values, i18n, plotColors, unitLabel) {
       line: {
         width: 2,
         shape: 'spline',
+        smoothing: 0.7,
         color,
       },
       hovertemplate: `%{x} ${trace.name}: %{y} ${unitLabel}`,
@@ -267,25 +268,33 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
   }
 
   const values = [...indicator.values].sort((a, b) => a.date - b.date).map(processItem);
+  const dimensionedValues = values.filter((val) => val.categories.length > 0);
   const dates = Array.from(new Set(values.map((item) => item.date))).sort();
 
   // Render in a different way for datasets with only one time point
-  if (dates.length == 1 && indicator.dimensions.length) {
+  if (dates.length == 1 && indicator.dimensions.length && dimensionedValues.length) {
     return generateSingleYearPlot(indicator, values, i18n, plotColors);
   }
 
   // Draw the main historical series (non-dimensioned)
   const mainValues = values.filter((item) => !item.categories.length);
+  let traceName = indicator.quantity ? capitalizeFirstLetter(indicator.quantity.name) : null;
+  if (dimensionedValues.length) {
+    traceName = capitalizeFirstLetter(i18n.t('total'));
+  }
   const dataTrace = {
     y: mainValues.map((item) => item.value),
     x: mainValues.map((item) => item.date),
-    name: indicator.quantity ? capitalizeFirstLetter(indicator.quantity.name) : null,
+    name: traceName,
     color: plotColors.trace,
-    hovertemplate: `%{x}: %{y} ${unitLabel}`,
+    hovertemplate: dimensionedValues.length ? `%{x} ${traceName}: %{y} ${unitLabel}` : `%{x}: %{y} ${unitLabel}`,
     hoverinfo: 'x+y',
     hoverlabel: {
       namelength: 0,
       bgcolor: '#fff',
+      font: {
+        color: dimensionedValues.length ? plotColors.trace : undefined,
+      },
     },
     showlegend: indicator.quantity != null,
   };
@@ -305,6 +314,7 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
       line: {
         width: 4,
         shape: 'spline',
+        smoothing: 0.7,
         color: plotColors.trace,
       },
       marker: {
@@ -335,7 +345,7 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
           type: 'none',
         },
         color: '#ffffff',
-      }
+      },
     };
   }
   traces.push({ ...dataTrace, ...attrs });
@@ -370,6 +380,10 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
 
   scenarios.forEach((scenario, scenarioId) => {
     const { goals } = scenario;
+
+    goals.forEach((item) => {
+      if (dates.indexOf(item.date) < 0) dates.push(item.date);
+    });
 
     const trace = {
       y: goals.map((item) => item.value),
@@ -462,19 +476,22 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
     traces.push(predictedTrace);
   }
 
-  if (indicator.dimensions.length) {
+  if (indicator.dimensions.length && dimensionedValues.length) {
     const dimensionTraces = generateDataTraces(indicator, values, i18n, plotColors, unitLabel);
     dimensionTraces.forEach((trace) => traces.push(trace));
   }
 
   const layout = makeLayout(indicator);
   layout.title = indicator.name;
-  layout.yaxis.title = unitLabel;
+  layout.yaxis.title = unitLabel || indicator.quantity?.name;
 
   if (scenarios.size < 2 && !indicator.dimensions.length) {
     layout.showlegend = false;
   }
 
+  if (dates.length < 4) {
+    layout.xaxis.tickvals = dates.sort();
+  }
   if (maxDigits > 3) maxDigits = 3;
   if (onlyIntegers) {
     layout.yaxis.hoverformat = `${onlyIntegers ? '' : '.'}${maxDigits}r`;
@@ -527,18 +544,19 @@ function IndicatorGraph({ indicatorId }) {
 
   function fixLayout(data) {
     const { layout } = data;
+    const fontFamily = `${theme.fontFamily}, ${theme.fontFamilyFallback}`;
 
     layout.autosize = true;
     layout.colorway = plotColors.mainScale;
-    layout.font = { family: theme.fontFamilySansSerif, size: 12 };
+    layout.font = { family: fontFamily, size: 12 };
     layout.title = null;
     layout.xaxis = layout.xaxis || {};
     layout.xaxis.tickfont = layout.xaxis.tickfont || {};
-    layout.xaxis.tickfont.family = theme.fontFamilySansSerif;
+    layout.xaxis.tickfont.family = fontFamily;
     layout.xaxis.tickfont.size = 14;
     layout.yaxis = layout.yaxis || {};
     layout.yaxis.tickfont = layout.yaxis.font || {};
-    layout.yaxis.tickfont.family = theme.fontFamilySansSerif;
+    layout.yaxis.tickfont.family = fontFamily;
     layout.yaxis.tickfont.size = 14;
   }
 

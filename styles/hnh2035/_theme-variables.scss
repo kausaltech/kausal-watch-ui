@@ -40,9 +40,8 @@ $image-overlay: $brand-dark;
 
 $font-url: '/static/fonts/hnh2035/fonts.css';
 $font-family: 'HelsinkiGrotesk';
-$font-family-sans-serif:      #{$font-family}, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-$font-family-monospace:       SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-$font-family-base:            $font-family-sans-serif;
+$headings-font-family: $font-family;
+$headings-color: #1a1a1a;
 
 $font-size-sm:	  0.875rem;
 $font-size-base: 	1rem;
@@ -110,7 +109,8 @@ $form-label-font-weight:     400;
 
 /////// NAV
 
-$brand-nav-background:              $brand-dark;
+$brand-nav-color:              #ffffff;
+$brand-nav-background:         $brand-dark;
 
 /////// CARDS
 
@@ -119,6 +119,8 @@ $card-border-radius:                  0;
 
 /////// BADGES
 
+$badge-background:                $brand-dark;
+$badge-color:                     #ffffff;
 $badge-border-radius:             0;
 $badge-padding-y:                 .5em;
 $badge-padding-x:                 .75em;

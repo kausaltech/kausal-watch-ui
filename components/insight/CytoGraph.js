@@ -251,7 +251,7 @@ class CytoGraph extends React.Component {
         {
           selector: '*',
           style: {
-            'font-family': theme.fontFamilySansSerif,
+            'font-family': `${theme.fontFamily}, sans-serif`,
           },
         },
         {
@@ -329,6 +329,7 @@ class CytoGraph extends React.Component {
           style: {
             shape: 'rectangle',
             'background-color': theme.strategicIndicatorColor,
+            color: theme.strategicIndicatorColorFg,
             width: 'label',
             height: 'label',
             'text-valign': 'center',

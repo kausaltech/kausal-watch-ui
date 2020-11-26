@@ -50,6 +50,7 @@ const ReadyBadge = styled(Badge)`
 
 const StyledCardTitle = styled(CardTitle)`
   font-size: ${(props) => props.theme.fontSizeMd};
+  color: ${(props) => props.theme.neutralDark};
   text-align: left;
   hyphens: auto;
   margin-bottom: 0;

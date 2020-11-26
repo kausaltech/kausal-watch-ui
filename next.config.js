@@ -35,6 +35,7 @@ function generateLocaleConfig() {
 const config = withSourceMaps(withBundleAnalyzer(withImages(withSass({
   env: {
     SENTRY_DSN: process.env.SENTRY_DSN,
+    SENTRY_TRACE_SAMPLE_RATE: process.env.SENTRY_TRACE_SAMPLE_RATE || '1.0',
   },
   async rewrites() {
     const localeSubpaths = Object.fromEntries(
@@ -84,6 +85,7 @@ const config = withSourceMaps(withBundleAnalyzer(withImages(withSass({
       MATOMO_URL: '',
       MATOMO_SITE_ID: '',
       SYNC_THEME: '',
+      FORCE_SENTRY_SEND: '',
     }));
 
     // cfg.optimization.minimize = false;
