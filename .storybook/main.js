@@ -8,14 +8,5 @@ module.exports = {
     'storybook-addon-styled-component-theme/dist/register',
     '@storybook/addon-viewport/register',
   ],
-  webpackFinal: async (config, { configType }) => {
-    config.module.rules.push({
-      test: /\.scss$/,
-      use: ['style-loader', 'css-loader',  'postcss-loader', 'sass-loader'],
-      include: path.resolve(__dirname, '../'),
-    });
-
-    // Return the altered config
-    return config;
-  },
+  presets: [path.resolve(__dirname, "./next-preset.js")],
 };
