@@ -16,6 +16,7 @@ Does not adhere to version numbering.
 - Fix forwardRef dev warnings on Button and Popover components.
 - Hide impact filter on ActionList view if plan has no impact categories.
 - Improve status dashboard wrapping and spacing.
+- Storybook runs again
 
 ## [unversioned] - 2020-10-29
 ### Added
