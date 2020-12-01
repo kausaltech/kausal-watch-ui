@@ -468,6 +468,12 @@ function SiteFooter(props) {
   );
 }
 
+SiteFooter.defaultProps = {
+  utilityLinks: [],
+  additionalLinks: [],
+  fundingInstruments: [],
+};
+
 SiteFooter.propTypes = {
   siteTitle: PropTypes.string.isRequired,
   t: PropTypes.func.isRequired,
