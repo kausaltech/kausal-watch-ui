@@ -114,7 +114,7 @@ const TypeList = () => {
 };
 
 export default {
-  title: 'Tokens/Type',
+  title: 'Design System/Type',
   component: TypeList,
 };
 

@@ -130,7 +130,7 @@ const Colors = () => {
 };
 
 export default {
-  title: 'Tokens/Colors',
+  title: 'Design System/Colors',
   component: Colors,
 };
 

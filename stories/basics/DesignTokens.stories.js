@@ -68,12 +68,8 @@ const DesignTokens = () =>
 };
 
 export default {
-  title: 'Tokens/All',
+  title: 'Design System',
   component: DesignTokens,
 };
 
 export const TokensStory = (theme) => <DesignTokens theme={theme} />;
-
-TokensStory.story = {
-  name: 'Design Tokens',
-};

@@ -66,6 +66,6 @@ IconsStory.story = {
 };
 
 export default {
-  title: 'Basics/Icons',
-  component: IconsStory,
+  title: 'Design System/Icons',
+  component: IconsLayout,
 };

@@ -3,7 +3,7 @@ import SiteFooter from '../../components/common/SiteFooter';
 
 export default {
   component: SiteFooter,
-  title: 'Site Footer',
+  title: 'Global/Site Footer',
 };
 
 const testPages = [
