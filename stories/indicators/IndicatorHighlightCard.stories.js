@@ -5,7 +5,7 @@ import i18n from '../../.storybook/i18n';
 import IndicatorHighlightCard from '../../components/indicators/IndicatorHighlightCard';
 
 export default {
-  title: 'Indicators/Card',
+  title: 'Indicators/HighlightCard',
 };
 
 const IndicatorCards = () => {

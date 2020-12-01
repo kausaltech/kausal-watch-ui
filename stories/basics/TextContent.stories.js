@@ -4,15 +4,15 @@ import { Container } from 'reactstrap';
 import { ThemeContext } from 'styled-components';
 
 export default {
-  title: 'Basics/Content',
-  component: TypeStory,
+  title: 'Design System/Text',
+  component: TextContent,
 };
 
-export const TypeStory = () => (
+export const TextContent = () => (
     <Container>
       <div className="text-content">
         <hr />
-  
+
         <h1>A Heading h1</h1>
         <p>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
@@ -62,32 +62,28 @@ export const TypeStory = () => (
         <hr />
 
         <h3>Unordered List</h3>
-  
+
         <ul><li>Item 1</li><li>Item 2<ul><li>Item 2a</li><li>Item 2b</li></ul></li></ul>
-  
+
         <h3>Ordered List</h3>
-  
+
         <ol><li>Item 1</li><li>Item 2</li><li>Item 3<ol><li>Item 3a</li><li>Item 3b</li></ol></li></ol>
-  
+
         <h3>Image</h3>
-  
+
         <p><img alt="This is a alt text." title="This is a sample image." src="/image/sample.png" /></p>
-  
+
         <h2>Links</h2>
-  
+
         <p>You may be using <a href="https://markdownlivepreview.com/">Markdown Live Preview</a>.</p>
-  
+
         <h2>Blockquotes</h2>
-  
+
         <blockquote><p>Markdown is a lightweight markup language with plain-text-formatting syntax, created in 2004 by John Gruber with Aaron Swartz.</p><blockquote><p>Markdown is often used to format readme files, for writing messages in online discussion forums, and to create rich text using a plain text editor.</p></blockquote></blockquote>
-  
+
         <h2>Inline code</h2>
-  
+
         <p>May the <code>Force</code> be with you</p>
       </div>
     </Container>
   );
-  
-  TypeStory.story = {
-    name: 'Text content',
-  };

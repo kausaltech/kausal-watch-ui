@@ -10,7 +10,7 @@ import { themeProp } from 'common/theme';
 import { useScrollPosition } from '@n8tb1t/use-scroll-position';
 import { transparentize } from 'polished';
 import { useTranslation } from 'common/i18n';
-import { Link } from '../../routes';
+import { Link } from 'routes';
 import { NavigationLink } from '../../common/links';
 
 import Icon from './Icon';

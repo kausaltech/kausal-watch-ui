@@ -2,7 +2,8 @@ import React from 'react';
 import SiteFooter from '../../components/common/SiteFooter';
 
 export default {
-  title: 'Global/Footer',
+  component: SiteFooter,
+  title: 'Global/Site Footer',
 };
 
 const testPages = [

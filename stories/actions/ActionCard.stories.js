@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { ThemeContext } from 'styled-components';
 
-import ActionCard from '../../components/actions/ActionCard';
+import ActionCard from 'components/actions/ActionCard';
 
 const actionProp = {
   identifier: '24',
@@ -25,7 +25,7 @@ const actionPropCompleted = {
   mergedWith: null,
 };
 
-const actionPropLate= {
+const actionPropLate = {
   identifier: '7',
   name: 'This action is Late. Action title goes here',
   status: {
@@ -36,7 +36,7 @@ const actionPropLate= {
   mergedWith: null,
 };
 
-const actionPropSeverelyLate= {
+const actionPropSeverelyLate = {
   identifier: '68',
   name: 'This action is Severely Late. Action title goes here',
   status: {
@@ -47,7 +47,7 @@ const actionPropSeverelyLate= {
   mergedWith: null,
 };
 
-const actionPropMerged= {
+const actionPropMerged = {
   identifier: '68',
   name: 'This action is merged',
   status: {
@@ -60,7 +60,25 @@ const actionPropMerged= {
 
 export default {
   title: 'Action/Card',
+  component: ActionCard,
 };
+
+const ActionCardTemplate = (args) => <ActionCard {...args} />;
+
+export const Completed = ActionCardTemplate.bind({});
+Completed.args = { action: actionPropCompleted, id: '12' };
+
+export const OnTime = ActionCardTemplate.bind({});
+OnTime.args = { action: actionProp, id: '12' };
+
+export const Late = ActionCardTemplate.bind({});
+Late.args = { action: actionPropLate, id: '12' };
+
+export const SeverelyLate = ActionCardTemplate.bind({});
+SeverelyLate.args = { action: actionPropSeverelyLate, id: '12' };
+
+export const Merged = ActionCardTemplate.bind({});
+Merged.args = { action: actionPropMerged, id: '12' };
 
 const ActionCards = () => {
   const theme = useContext(ThemeContext);

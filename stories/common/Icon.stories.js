@@ -61,11 +61,7 @@ const IconsLayout = () => {
 
 export const IconsStory = (theme) => <IconsLayout theme={theme} />;
 
-IconsStory.story = {
-  name: 'Basic Icons',
-};
-
 export default {
-  title: 'Basics/Icons',
-  component: IconsStory,
+  title: 'Design System/Icons',
+  component: IconsLayout,
 };

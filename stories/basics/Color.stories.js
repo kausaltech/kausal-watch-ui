@@ -113,17 +113,25 @@ const Colors = () => {
           />
         </tbody>
       </Table>
+      <h3>Graph colors</h3>
+      <Table responsive>
+        <tbody>
+          {Object.keys(themeContext.graphColors).map((key) => (
+            <ColorRow
+              colorName={key}
+              colorValue={themeContext.graphColors[key]}
+              key={key}
+            />
+          ))}
+        </tbody>
+      </Table>
     </Container>
   );
 };
 
 export default {
-  title: 'Basics/Tokens',
+  title: 'Design System/Colors',
   component: Colors,
 };
 
 export const ColorsStory = (theme) => <Colors theme={theme} />;
-
-ColorsStory.story = {
-  name: 'Colors',
-};

@@ -3,7 +3,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
-import { Link } from '../routes';
+import { Link } from 'routes';
 
 const pathJoin = (...parts) => parts.join('/').replace(/\/+/g, '/');
 
@@ -129,7 +129,7 @@ export function ActionLink(props) {
 ActionLink.propTypes = {
   action: actionPropType.isRequired,
 };
- 
+
 export function ActionListLink(props) {
   const { query, ...other } = props;
   const pathname = '/actions';

@@ -2,7 +2,6 @@ import React from 'react';
 
 import { Container } from 'reactstrap';
 import styled from 'styled-components';
-import { Link } from '../routes';
 
 const HeroBanner = styled.div`
   background-image: url('https://source.unsplash.com/5zp0jym2w9M');

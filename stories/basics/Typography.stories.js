@@ -114,12 +114,8 @@ const TypeList = () => {
 };
 
 export default {
-  title: 'Basics/Tokens',
+  title: 'Design System/Type',
   component: TypeList,
 };
 
 export const TypesStory = (theme) => <TypeList theme={theme} />;
-
-TypesStory.story = {
-  name: 'Typography',
-};

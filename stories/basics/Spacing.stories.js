@@ -72,12 +72,8 @@ const Spacings = () => {
 };
 
 export default {
-  title: 'Basics/Tokens',
+  title: 'Design System/Spaces',
   component: Spacings,
 };
 
 export const SpacingStory = (theme) => <Spacings theme={theme} />;
-
-SpacingStory.story = {
-  name: 'Spaces',
-};
