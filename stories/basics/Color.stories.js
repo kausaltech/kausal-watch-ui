@@ -135,7 +135,3 @@ export default {
 };
 
 export const ColorsStory = (theme) => <Colors theme={theme} />;
-
-ColorsStory.story = {
-  name: 'Colors',
-};

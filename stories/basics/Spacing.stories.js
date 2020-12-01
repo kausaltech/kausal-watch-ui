@@ -77,7 +77,3 @@ export default {
 };
 
 export const SpacingStory = (theme) => <Spacings theme={theme} />;
-
-SpacingStory.story = {
-  name: 'Spaces',
-};

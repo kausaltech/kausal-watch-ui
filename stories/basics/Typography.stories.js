@@ -119,7 +119,3 @@ export default {
 };
 
 export const TypesStory = (theme) => <TypeList theme={theme} />;
-
-TypesStory.story = {
-  name: 'Typography',
-};

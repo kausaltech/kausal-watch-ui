@@ -58,10 +58,6 @@ const InputsLayout = () => {
 
 export const InputStory = (theme) => <InputsLayout theme={theme} />;
 
-InputStory.story = {
-  name: 'Text Input',
-};
-
 export default {
   title: 'Global/Form',
   component: InputStory,

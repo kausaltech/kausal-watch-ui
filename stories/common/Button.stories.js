@@ -50,10 +50,6 @@ const ButtonsLayout = () => {
 
 export const ButtonsStory = (theme) => <ButtonsLayout theme={theme} />;
 
-ButtonsStory.story = {
-  name: 'Basic Buttons',
-};
-
 export default {
   title: 'Global/Buttons',
   component: ButtonsStory,
