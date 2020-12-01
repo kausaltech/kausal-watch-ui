@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Router } from 'routes';
 import { withTranslation } from '../../common/i18n';
-import { Router } from '../../routes';
 import { getDashboardLinkProps } from '../../common/links';
 import PlanContext from '../../context/plan';
 

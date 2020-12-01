@@ -6,9 +6,10 @@ import {
 
 import SVG from 'react-inlinesvg';
 import styled, { withTheme } from 'styled-components';
+import { Link } from 'routes';
+
 import Icon from './Icon';
 import { withTranslation } from '../../common/i18n';
-import { Link } from '../../routes';
 import { NavigationLink } from '../../common/links';
 
 const StyledFooter = styled.footer`

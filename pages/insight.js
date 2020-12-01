@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import dynamic from 'next/dynamic';
 
+import { Router } from 'routes';
 import Layout from '../components/layout';
-import { Router } from '../routes';
 import { aplans } from '../common/api';
 import IndicatorsHero from '../components/indicators/IndicatorsHero';
 import PlanContext from '../context/plan';

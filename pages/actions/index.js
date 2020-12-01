@@ -2,7 +2,6 @@ import React, { useContext, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import { useTranslation } from '../../common/i18n';
-import { Router } from '../../routes';
 import { getActionListLinkProps } from '../../common/links';
 import PlanContext from '../../context/plan';
 
