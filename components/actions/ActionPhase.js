@@ -4,13 +4,55 @@ import styled from 'styled-components';
 
 const Status = styled.div`
   color: ${(props) => props.theme.themeColors.black};
+
+  ul {
+    display: flex;
+    margin-top: ${(props) => props.theme.spaces.s100};
+    padding: 0;
+    list-style-type: none;
+  }
+
+  li {
+    flex: 1;
+    margin-right: ${(props) => props.theme.spaces.s050};
+  }
+
+  .label {
+    font-size: ${(props) => props.theme.fontSizeSm};
+    line-height: ${(props) => props.theme.lineHeightMd};
+    hyphens: auto;
+  }
+`;
+
+const PhaseDescription = styled.p`
+  margin-bottom: ${(props) => props.theme.spaces.s050};
+  font-size: ${(props) => props.theme.fontSizeSm};
+  line-height: ${(props) => props.theme.lineHeightMd};
+`;
+
+const PhaseReason = styled.p`
+  margin-bottom: ${(props) => props.theme.spaces.s050};
+  font-size: ${(props) => props.theme.fontSizeSm};
+  line-height: ${(props) => props.theme.lineHeightMd};
+`;
+
+const PhaseLabel = styled.div`
+  margin-top: ${(props) => props.theme.spaces.s050};
+  font-size: ${(props) => props.theme.fontSizeSm};
+  line-height: ${(props) => props.theme.lineHeightMd};
+  hyphens: auto;
+
+  &.active {
+    font-weight: ${(props) => props.theme.fontWeightBold};
+  }
 `;
 
 const PhaseBlock = styled.div`
   position: relative;
-  height: ${(props) => props.theme.spaces.s200};
-  width: ${(props) => props.theme.spaces.s200};
+  height: ${(props) => props.theme.spaces.s100};
+  width: auto;
   background-color: ${(props) => props.theme.themeColors.light};
+  border-radius: ${(props) => props.theme.badgeBorderRadius};
 
   &.bg-active {
     background-color: ${(props) => props.theme.graphColors.blue070};
@@ -42,7 +84,7 @@ const PhaseBlock = styled.div`
 `;
 
 function PhaseIndicator(props) {
-  const { completed, active } = props.phase;
+  const { completed, active, name } = props.phase;
   const { status } = props;
 
   let phaseClass = 'bg-inactive';
@@ -50,7 +92,10 @@ function PhaseIndicator(props) {
   if (active) phaseClass = `bg-${status}`;
 
   return (
-    <PhaseBlock className={phaseClass} />
+    <li>
+      <PhaseBlock className={phaseClass} />
+      <PhaseLabel className={active && 'active'}>{name}</PhaseLabel>
+    </li>
   );
 }
 
@@ -59,12 +104,16 @@ function ActionPhase(props) {
 
   return (
     <Status {...rest}>
+      <PhaseDescription>{ message }</PhaseDescription>
+      { reason && (
+        <PhaseReason>
+          <strong>Reason: </strong>
+          { reason }
+        </PhaseReason>
+      )}
       <ul>
         { phases.map((phase) => (
-          <li key={phase.id}>
-            <PhaseIndicator phase={phase} status={status} />
-            { phase.name }
-          </li>
+          <PhaseIndicator phase={phase} status={status} key={phase.id} />
         ))}
       </ul>
     </Status>
@@ -73,9 +122,8 @@ function ActionPhase(props) {
 
 ActionPhase.propTypes = {
   status: PropTypes.oneOf([
-    'not_started',
+    'neutral',
     'on_time',
-    'in_progress',
     'completed',
     'late',
     'severely_late',
@@ -86,7 +134,7 @@ ActionPhase.propTypes = {
 };
 
 ActionPhase.defaultProps = {
-  status: 'not_started',
+  status: 'neutral',
   message: '',
   reason: '',
   phases: [],

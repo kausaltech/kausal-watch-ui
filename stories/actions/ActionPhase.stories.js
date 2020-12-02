@@ -2,38 +2,76 @@ import React from 'react';
 
 import ActionPhase from 'components/actions/ActionPhase';
 
-const actionProp = {
+const actionInProgress = {
   status: 'on_time',
-  message: 'Toimenpidettä ei ole aloitettu ja aloittaminen on myöhässä.',
-  reason: 'Toimenpiteelle varattu budjetti on käytetty toisaalla.',
+  message: 'Action is in progress and on time',
+  reason: '',
   phases: [
     {
       id: 1,
-      name: 'Ei aloitettu',
+      name: 'Not started',
       completed: true,
       active: false,
     },
     {
       id: 2,
-      name: 'Käynnistysvaihe',
+      name: 'Initiation',
       completed: true,
       active: false,
     },
     {
       id: 3,
-      name: 'Toteutus',
+      name: 'Progress',
       completed: false,
       active: true,
     },
     {
       id: 4,
-      name: 'Päätöksenteko',
+      name: 'Decision',
       completed: false,
       active: false,
     },
     {
       id: 5,
-      name: 'Valmis',
+      name: 'Completed',
+      completed: false,
+      active: false,
+    },
+  ],
+};
+
+const actionLate = {
+  status: 'late',
+  message: 'Action has not been started and it is late',
+  reason: 'Budget has not been approved',
+  phases: [
+    {
+      id: 1,
+      name: 'Not started',
+      completed: false,
+      active: true,
+    },
+    {
+      id: 2,
+      name: 'Initiation',
+      completed: false,
+      active: false,
+    },
+    {
+      id: 3,
+      name: 'Progress',
+      completed: false,
+      active: false,
+    },
+    {
+      id: 4,
+      name: 'Decision',
+      completed: false,
+      active: false,
+    },
+    {
+      id: 5,
+      name: 'Completed',
       completed: false,
       active: false,
     },
@@ -47,5 +85,8 @@ export default {
 
 const ActionCardTemplate = (args) => <ActionPhase {...args} />;
 
-export const Completed = ActionCardTemplate.bind({});
-Completed.args = actionProp;
+export const InProgress = ActionCardTemplate.bind({});
+InProgress.args = actionInProgress;
+
+export const Late = ActionCardTemplate.bind({});
+Late.args = actionLate;
