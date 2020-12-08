@@ -2,80 +2,75 @@ import React from 'react';
 
 import ActionPhase from 'components/actions/ActionPhase';
 
+const mockPhases = [
+  {
+    id: 1,
+    identifier: 'not_started',
+    name: 'Not started',
+    description: 'Action has not been started',
+  },
+  {
+    id: 2,
+    identifier: 'initiation',
+    name: 'Initiation',
+    description: 'Action is being initiated',
+  },
+  {
+    id: 3,
+    identifier: 'in_progress',
+    name: 'In progress',
+    description: 'Action is in progress',
+  },
+  {
+    id: 4,
+    identifier: 'decision_making',
+    name: 'Decision making',
+    description: 'Action is in decision making',
+  },
+  {
+    id: 5,
+    identifier: 'completed',
+    name: 'Completed',
+    description: 'Action is completed',
+  },
+];
+
 const actionInProgress = {
-  status: 'on_time',
-  message: 'Action is in progress and on time',
+  statusIdentifier: 'on_time',
+  statusName: 'On Time',
+  activePhase: 'in_progress',
   reason: '',
-  phases: [
-    {
-      id: 1,
-      name: 'Not started',
-      completed: true,
-      active: false,
-    },
-    {
-      id: 2,
-      name: 'Initiation',
-      completed: true,
-      active: false,
-    },
-    {
-      id: 3,
-      name: 'Progress',
-      completed: false,
-      active: true,
-    },
-    {
-      id: 4,
-      name: 'Decision',
-      completed: false,
-      active: false,
-    },
-    {
-      id: 5,
-      name: 'Completed',
-      completed: false,
-      active: false,
-    },
-  ],
+  phases: mockPhases,
 };
 
 const actionLate = {
-  status: 'late',
-  message: 'Action has not been started and it is late',
+  statusIdentifier: 'late',
+  statusName: 'Late',
+  activePhase: 'not_started',
   reason: 'Budget has not been approved',
-  phases: [
-    {
-      id: 1,
-      name: 'Not started',
-      completed: false,
-      active: true,
-    },
-    {
-      id: 2,
-      name: 'Initiation',
-      completed: false,
-      active: false,
-    },
-    {
-      id: 3,
-      name: 'Progress',
-      completed: false,
-      active: false,
-    },
-    {
-      id: 4,
-      name: 'Decision',
-      completed: false,
-      active: false,
-    },
-    {
-      id: 5,
-      name: 'Completed',
-      completed: false,
-      active: false,
-    },
-  ],
+  phases: mockPhases,
+};
+
+const actionMerged = {
+  statusIdentifier: 'merged',
+  statusName: 'Merged',
+  reason: '',
+  phases: mockPhases,
+};
+
+const actionPostponed = {
+  statusIdentifier: 'postponed',
+  statusName: 'Postponed for now',
+  reason: 'Feasibility will be reassessed in 2025',
+  phases: mockPhases,
+};
+
+const actionCancelled = {
+  statusIdentifier: 'cancelled',
+  statusName: 'Cancelled',
+  activePhase: '',
+  reason: 'Is not feasible in this point',
+  phases: mockPhases,
 };
 
 export default {
@@ -90,3 +85,12 @@ InProgress.args = actionInProgress;
 
 export const Late = ActionCardTemplate.bind({});
 Late.args = actionLate;
+
+export const Postponed = ActionCardTemplate.bind({});
+Postponed.args = actionPostponed;
+
+export const Merged = ActionCardTemplate.bind({});
+Merged.args = actionMerged;
+
+export const Cancelled = ActionCardTemplate.bind({});
+Cancelled.args = actionCancelled;

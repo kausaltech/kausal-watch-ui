@@ -45,6 +45,10 @@ const PhaseLabel = styled.div`
   &.active {
     font-weight: ${(props) => props.theme.fontWeightBold};
   }
+
+  &.disabled {
+    color: ${(props) => props.theme.themeColors.dark};
+  }
 `;
 
 const PhaseBlock = styled.div`
@@ -83,24 +87,45 @@ const PhaseBlock = styled.div`
   }
 `;
 
-function PhaseIndicator(props) {
-  const { completed, active, name } = props.phase;
-  const { status } = props;
+function Phase(props) {
+  const { name } = props.phase;
+  const { status, active, passed, disabled } = props;
 
   let phaseClass = 'bg-inactive';
-  if (completed) phaseClass = 'bg-active';
+  if (passed) phaseClass = 'bg-active';
   if (active) phaseClass = `bg-${status}`;
 
   return (
     <li>
       <PhaseBlock className={phaseClass} />
-      <PhaseLabel className={active && 'active'}>{name}</PhaseLabel>
+      <PhaseLabel className={(active && 'active') || (disabled && 'disabled')}>
+        {name}
+      </PhaseLabel>
     </li>
   );
 }
 
 function ActionPhase(props) {
-  const { status, message, reason, phases, ...rest } = props;
+  const {
+    statusIdentifier,
+    statusName,
+    activePhase,
+    reason,
+    mergedWith,
+    phases,
+    ...rest } = props;
+
+  let message = '';
+  let phaseIndex = -1;
+  // if Action is set in one of the phases, find its index and create message accordingly
+  if (activePhase !== '') {
+    phaseIndex = phases.findIndex((phase) => phase.identifier === activePhase);
+    message = phases[phaseIndex].description;
+    if (statusName) message = `${message} (${statusName})`;
+  }
+  // if Action is in one of the inactive statuses set phase viz to disabled
+  const inactive = ['cancelled', 'merged', 'postponed'].includes(statusIdentifier);
+  if (inactive) message = statusName;
 
   return (
     <Status {...rest}>
@@ -112,8 +137,15 @@ function ActionPhase(props) {
         </PhaseReason>
       )}
       <ul>
-        { phases.map((phase) => (
-          <PhaseIndicator phase={phase} status={status} key={phase.id} />
+        { phases.map((phase, indx) => (
+          <Phase
+            phase={phase}
+            passed={indx < phaseIndex}
+            active={indx === phaseIndex}
+            status={statusIdentifier}
+            disabled={inactive}
+            key={phase.id}
+          />
         ))}
       </ul>
     </Status>
@@ -121,32 +153,35 @@ function ActionPhase(props) {
 }
 
 ActionPhase.propTypes = {
-  status: PropTypes.oneOf([
-    'neutral',
+  statusIdentifier: PropTypes.oneOf([
+    '',
     'on_time',
     'completed',
     'late',
     'severely_late',
+    'cancelled',
+    'merged',
+    'postponed',
   ]),
-  message: PropTypes.string,
+  statusName: PropTypes.string,
+  activePhase: PropTypes.string,
   reason: PropTypes.string,
-  phases: PropTypes.arrayOf(PropTypes.shape),
+  phases: PropTypes.arrayOf(PropTypes.shape(
+    {
+      id: PropTypes.string,
+      identifier: PropTypes.string,
+      name: PropTypes.string,
+      description: PropTypes.string,
+    },
+  )),
 };
 
 ActionPhase.defaultProps = {
-  status: 'neutral',
-  message: '',
+  statusIdentifier: '',
+  statusName: '',
+  activePhase: '',
   reason: '',
   phases: [],
 };
 
 export default ActionPhase;
-
-/*
-    PropTypes.shapeOf({
-      id: PropTypes.number,
-      name: PropTypes.string,
-      completed: PropTypes.bool,
-      active: PropTypes.bool,
-    }),
-    */
