@@ -4,31 +4,31 @@ import ActionPhase from 'components/actions/ActionPhase';
 
 const mockPhases = [
   {
-    id: 1,
+    id: '1',
     identifier: 'not_started',
     name: 'Not started',
     description: 'Action has not been started',
   },
   {
-    id: 2,
+    id: '2',
     identifier: 'initiation',
     name: 'Initiation',
     description: 'Action is being initiated',
   },
   {
-    id: 3,
+    id: '3',
     identifier: 'in_progress',
     name: 'In progress',
     description: 'Action is in progress',
   },
   {
-    id: 4,
+    id: '4',
     identifier: 'decision_making',
     name: 'Decision making',
     description: 'Action is in decision making',
   },
   {
-    id: 5,
+    id: '5',
     identifier: 'completed',
     name: 'Completed',
     description: 'Action is completed',

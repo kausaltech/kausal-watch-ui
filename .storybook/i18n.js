@@ -10,6 +10,8 @@ i18n
     defaultLanguage: 'en',
     otherLanguages: [],
     localeSubpaths: [{'en':'en'}],
+    defaultNS: 'common',
+    fallbackNS: ['actions', 'a11y'],
   });
 
 export { i18n };

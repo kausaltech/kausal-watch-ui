@@ -1,9 +1,6 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { darken, transparentize } from 'polished';
-import {
-  Progress,
-} from 'reactstrap';
 import SVG from 'react-inlinesvg';
 import styled from 'styled-components';
 import { gql } from '@apollo/client';
@@ -35,6 +32,7 @@ const ACTION_CARD_FRAGMENT = gql`
       identifier
       name
     }
+    activePhase
   }
 `;
 
@@ -147,19 +145,13 @@ const ActionStatusArea = styled.div`
 `;
 
 const ActionStatus = styled.div`
+  background-color: ${(props) => props.theme.themeColors.light};
+  color: ${(props) => props.theme.themeColors.dark};
 `;
 
 const StatusName = styled.div`
   margin: ${(props) => props.theme.spaces.s050};
-  font-size: ${(props) => props.theme.fontSizeBase};
-  line-height: ${(props) => props.theme.lineHeightSm};
-  font-weight: ${(props) => props.theme.fontWeightBold};
-`;
-
-const StatusProgress = styled(Progress)`
-  height: ${(props) => props.theme.spaces.s050};
-  background-color: transparent;
-
+  font-size: ${(props) => props.theme.fontSizeSm};
 `;
 
 const StyledCardTitle = styled.div`
@@ -189,13 +181,21 @@ function ActionCard(props) {
 
   if (actionName.length > 120) actionName = `${action.name.substring(0, 120)}…`;
 
-  const { mergedWith, status } = action;
+  const { mergedWith, status, activePhase } = action;
+  const { phases } = props;
+
+  let statusText = status?.name;
+
+  // if Action is set in one of the phases, create message accordingly
+  if (activePhase) {
+    statusText = phases.find((phase) => phase.identifier === activePhase).description;
+    if (status?.name) statusText = `${statusText} (${status.name})`;
+  }
 
   // Use different styling for merged action
   let bgClass = status ? `bg-${status.identifier}` : null;
   if (mergedWith) bgClass = 'bg-merged';
-  let statusName = status?.name;
-  if (mergedWith) statusName = `${t('action-status-merged')} ${mergedWith.identifier}`;
+  if (mergedWith) statusText = `${t('action-status-merged')} ${mergedWith.identifier}`;
 
   return (
     <ActionLink action={action}>
@@ -210,11 +210,7 @@ function ActionCard(props) {
             )}
             <ActionNumber className="action-number">{action.identifier}</ActionNumber>
             <ActionStatus>
-              <StatusName>{statusName}</StatusName>
-              <StatusProgress
-                value={action.completion}
-                className={bgClass}
-              />
+              <StatusName>{statusText}</StatusName>
             </ActionStatus>
           </ActionStatusArea>
           <StyledCardTitle>{actionName}</StyledCardTitle>
@@ -223,6 +219,10 @@ function ActionCard(props) {
     </ActionLink>
   );
 }
+
+ActionCard.defaultProps = {
+  phases: [],
+};
 
 ActionCard.propTypes = {
   action: PropTypes.shape({
@@ -233,13 +233,22 @@ ActionCard.propTypes = {
       identifier: PropTypes.string,
       name: PropTypes.string,
     }),
-    mergedWith: PropTypes.object,
+    mergedWith: PropTypes.shape(),
+    activePhase: PropTypes.string,
   }).isRequired,
   t: PropTypes.func.isRequired,
+  phases: PropTypes.arrayOf(PropTypes.shape(
+    {
+      id: PropTypes.string,
+      identifier: PropTypes.string,
+      name: PropTypes.string,
+      description: PropTypes.string,
+    },
+  )),
 };
 
 ActionCard.fragments = {
   action: ACTION_CARD_FRAGMENT,
 };
 
-export default withTranslation('common')(ActionCard);
+export default withTranslation(['actions', 'common'])(ActionCard);
