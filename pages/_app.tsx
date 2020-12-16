@@ -64,14 +64,20 @@ const GET_PLAN = gql`
       }
       serveFileBaseUrl
       actionSchedules {
-        id,
-        beginsAt,
+        id
+        beginsAt
         endsAt
       }
+      actionImplementationPhases {
+        id
+        identifier
+        name
+        order
+      }
       actionImpacts {
-        id,
-        identifier,
-        name,
+        id
+        identifier
+        name
         order
       }
       actionStatuses {
