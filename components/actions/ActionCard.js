@@ -177,7 +177,7 @@ function ActionCard(props) {
   const { action, t } = props;
   let actionName = action.name;
   // mock category icon Url
-  const iconUrl = action.categories ? getMockIconUrl(action.categories[0].identifier) : '';
+  const iconUrl = action.categories.length ? getMockIconUrl(action.categories[0].identifier) : '';
 
   if (actionName.length > 120) actionName = `${action.name.substring(0, 120)}…`;
 

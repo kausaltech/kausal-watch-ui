@@ -90,6 +90,9 @@ query ActionDetails($plan: ID!, $id: ID!, $bgImageSize: String = "1200x630") {
     status {
       id, identifier, name
     }
+    implementationPhase {
+      id
+    }
     schedule {
       id, name, beginsAt, endsAt
     }
