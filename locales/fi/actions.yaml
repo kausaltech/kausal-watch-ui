@@ -22,7 +22,7 @@ action-name-title: Toimenpide / Nimi
 action-impact: Vaikutus
 action-monitoring: Seuranta
 action-merged: Yhdistetyt toimenpiteet
-action-status-merged: Yhdistetty toimenpiteeseen
+action-status-merged: Yhdistetty
 action-previous: Edellinen toimenpide
 action-next: Seuraava toimenpide
 no-defined-indicators: Ei määriteltyjä mittareita

@@ -84,6 +84,8 @@ export const GET_ACTION_LIST = gql`
       manualStatusReason
       implementationPhase {
         id
+        identifier
+        name
       }
       impact {
         id
