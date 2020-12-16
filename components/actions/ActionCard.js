@@ -109,7 +109,7 @@ const ActionStatusArea = styled.div`
     background-color: ${(props) => props.theme.actionSeverelyLateColor};
   }
 
-  &.bg-merged, &.bg-postponed {
+  &.bg-merged, &.bg-postponed, &.bg-cancelled {
     background-color: ${(props) => props.theme.actionMergedColor};
   }
 `;

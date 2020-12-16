@@ -1,20 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { useTranslation } from 'common/i18n';
 
 const Status = styled.div`
   color: ${(props) => props.theme.themeColors.black};
 
   ul {
     display: flex;
-    margin-top: ${(props) => props.theme.spaces.s100};
+    align-items: flex-end;
+    margin-bottom: ${(props) => props.theme.spaces.s050};;
     padding: 0;
     list-style-type: none;
   }
 
   li {
     flex: 1;
-    margin-right: ${(props) => props.theme.spaces.s050};
+    margin-right: 4px;
   }
 
   .label {
@@ -24,12 +26,6 @@ const Status = styled.div`
   }
 `;
 
-const PhaseDescription = styled.p`
-  margin-bottom: ${(props) => props.theme.spaces.s050};
-  font-size: ${(props) => props.theme.fontSizeSm};
-  line-height: ${(props) => props.theme.lineHeightMd};
-`;
-
 const PhaseReason = styled.p`
   margin-bottom: ${(props) => props.theme.spaces.s050};
   font-size: ${(props) => props.theme.fontSizeSm};
@@ -37,7 +33,7 @@ const PhaseReason = styled.p`
 `;
 
 const PhaseLabel = styled.div`
-  margin-top: ${(props) => props.theme.spaces.s050};
+  margin-bottom: ${(props) => props.theme.spaces.s050};
   font-size: ${(props) => props.theme.fontSizeSm};
   line-height: ${(props) => props.theme.lineHeightMd};
   hyphens: auto;
@@ -53,7 +49,7 @@ const PhaseLabel = styled.div`
 
 const PhaseBlock = styled.div`
   position: relative;
-  height: ${(props) => props.theme.spaces.s100};
+  height: ${(props) => props.theme.spaces.s050};
   width: auto;
   background-color: ${(props) => props.theme.themeColors.light};
   border-radius: ${(props) => props.theme.badgeBorderRadius};
@@ -89,18 +85,33 @@ const PhaseBlock = styled.div`
 
 function Phase(props) {
   const { name } = props.phase;
-  const { status, active, passed, disabled } = props;
+  const { statusName, status, active, passed, disabled } = props;
 
   let phaseClass = 'bg-inactive';
-  if (passed) phaseClass = 'bg-active';
-  if (active) phaseClass = `bg-${status}`;
+  let labelClass = 'disabled';
+
+  // Passed phase gets active status color
+  if (passed) {
+    // phaseClass = 'bg-active';
+    phaseClass = `bg-${status}`;
+    labelClass = '';
+  }
+  if (active) {
+    phaseClass = `bg-${status}`;
+    labelClass = 'active';
+  }
+  // Let status completed override the phase
+  if (status === 'completed') {
+    phaseClass = 'bg-completed';
+    labelClass = 'disabled';
+  }
 
   return (
     <li>
-      <PhaseBlock className={phaseClass} />
-      <PhaseLabel className={(active && 'active') || (disabled && 'disabled')}>
+      <PhaseLabel className={labelClass}>
         {name}
       </PhaseLabel>
+      <PhaseBlock className={phaseClass} />
     </li>
   );
 }
@@ -115,6 +126,7 @@ function ActionPhase(props) {
     phases,
     ...rest } = props;
 
+  const { t } = useTranslation(['common', 'actions']);
   let message = '';
   let phaseIndex = -1;
   // if Action is set in one of the phases, find its index and create message accordingly
@@ -129,13 +141,6 @@ function ActionPhase(props) {
 
   return (
     <Status {...rest}>
-      <PhaseDescription>{ message }</PhaseDescription>
-      { reason && (
-        <PhaseReason>
-          <strong>Reason: </strong>
-          { reason }
-        </PhaseReason>
-      )}
       <ul>
         { phases.map((phase, indx) => (
           <Phase
@@ -143,11 +148,23 @@ function ActionPhase(props) {
             passed={indx < phaseIndex}
             active={indx === phaseIndex}
             status={statusIdentifier}
+            statusName={statusName}
             disabled={inactive}
             key={phase.id}
           />
         ))}
       </ul>
+      <strong>{ statusName }</strong>
+      { reason && (
+        <PhaseReason>
+          <strong>
+            { t('action-status-reason') }
+            :
+            {' '}
+          </strong>
+          { reason }
+        </PhaseReason>
+      )}
     </Status>
   );
 }

@@ -23,6 +23,7 @@ action-impact: Vaikutus
 action-monitoring: Seuranta
 action-merged: Yhdistetyt toimenpiteet
 action-status-merged: Yhdistetty
+action-status-reason: Tarkennus
 action-previous: Edellinen toimenpide
 action-next: Seuraava toimenpide
 no-defined-indicators: Ei määriteltyjä mittareita

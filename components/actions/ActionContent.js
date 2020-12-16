@@ -10,7 +10,7 @@ import { useRouter } from 'next/router';
 
 import { getActionLinkProps } from 'common/links';
 import moment from 'common/moment';
-import { useTranslation, use } from 'common/i18n';
+import { useTranslation } from 'common/i18n';
 import PlanContext from 'context/plan';
 
 import { Meta } from '../layout';
@@ -261,6 +261,8 @@ function ActionContent({ id }) {
   const hasMergedActions = mergedActions.length > 0;
   const imageUrl = getActionImageURL(plan, action);
 
+  const hasPhases = plan.actionImplementationPhases.length > 0;
+
   return (
     <div>
       <Meta
@@ -277,20 +279,25 @@ function ActionContent({ id }) {
         imageUrl={imageUrl}
       />
       <Container>
-        <Row>
-          <Col md="7" lg="8">
-            {plan.actionImplementationPhases.length > 0 && (
-              <ActionSection className="text-content">
+        {hasPhases && (
+          <Row>
+            <Col md="7" lg="8" className="mb-3">
+              <ActionSection>
+                <SideHeader>{ t('actions:action-progress') }</SideHeader>
                 <ActionPhase
                   statusIdentifier={action.status.identifier}
                   statusName={action.status.name}
-                  activePhase={action.implementationPhase.id}
+                  activePhase={action.implementationPhase?.id}
                   reason={action.manualStatusReason}
                   mergedWith={action.mergedWith}
                   phases={plan.actionImplementationPhases}
                 />
               </ActionSection>
-            )}
+            </Col>
+          </Row>
+        )}
+        <Row>
+          <Col md="7" lg="8">
             {action.description && (
               <ActionSection className="text-content">
                 <h2 className="sr-only">{ t('actions:action-description') }</h2>
@@ -363,7 +370,7 @@ function ActionContent({ id }) {
                 />
               </ActionSection>
               )}
-            { !action.implementationPhase && (
+            { !hasPhases && (
               <ActionSection>
                 <SideHeader>{ t('actions:action-progress') }</SideHeader>
                 { action.completion > 0

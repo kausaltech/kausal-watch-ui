@@ -23,5 +23,6 @@ action-impact: Impact
 action-monitoring: Monitoring
 action-merged: Merged actions
 action-status-merged: Merged with action
+action-status-reason: Reason
 action-previous: Previous action
 action-next: Next action
