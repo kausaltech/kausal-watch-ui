@@ -119,8 +119,8 @@ function ActionPhase(props) {
   let phaseIndex = -1;
   // if Action is set in one of the phases, find its index and create message accordingly
   if (activePhase !== '') {
-    phaseIndex = phases.findIndex((phase) => phase.identifier === activePhase);
-    message = phases[phaseIndex].description;
+    phaseIndex = phases.findIndex((phase) => phase.id === activePhase);
+    message = phases[phaseIndex].name;
     if (statusName) message = `${message} (${statusName})`;
   }
   // if Action is in one of the inactive statuses set phase viz to disabled
@@ -174,6 +174,7 @@ ActionPhase.propTypes = {
       description: PropTypes.string,
     },
   )),
+  mergedWith: PropTypes.string,
 };
 
 ActionPhase.defaultProps = {
@@ -182,6 +183,7 @@ ActionPhase.defaultProps = {
   activePhase: '',
   reason: '',
   phases: [],
+  mergedWith: '',
 };
 
 export default ActionPhase;

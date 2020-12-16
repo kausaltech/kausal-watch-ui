@@ -19,6 +19,7 @@ import Timeline from '../graphs/Timeline';
 import TaskList from './TaskList';
 import ResponsibleList from './ResponsibleList';
 import ContactPersons from './ContactPersons';
+import ActionPhase from './ActionPhase';
 import ActionStatus from './ActionStatus';
 import ActionImpact from './ActionImpact';
 import ActionIndicators from './ActionIndicators';
@@ -90,6 +91,7 @@ query ActionDetails($plan: ID!, $id: ID!, $bgImageSize: String = "1200x630") {
     status {
       id, identifier, name
     }
+    manualStatusReason
     implementationPhase {
       id
     }
@@ -277,6 +279,18 @@ function ActionContent({ id }) {
       <Container>
         <Row>
           <Col md="7" lg="8">
+            {plan.actionImplementationPhases.length > 0 && (
+              <ActionSection className="text-content">
+                <ActionPhase
+                  statusIdentifier={action.status.identifier}
+                  statusName={action.status.name}
+                  activePhase={action.implementationPhase.id}
+                  reason={action.manualStatusReason}
+                  mergedWith={action.mergedWith}
+                  phases={plan.actionImplementationPhases}
+                />
+              </ActionSection>
+            )}
             {action.description && (
               <ActionSection className="text-content">
                 <h2 className="sr-only">{ t('actions:action-description') }</h2>
@@ -349,25 +363,27 @@ function ActionContent({ id }) {
                 />
               </ActionSection>
               )}
-            <ActionSection>
-              <SideHeader>{ t('actions:action-progress') }</SideHeader>
-              { action.completion > 0
-              && (
-              <strong>
-                {action.completion}
-                %
-                {' '}
-                { t('actions:action-percent-ready') }
-              </strong>
-              ) }
-              {action.status && (
-                <ActionStatus
-                  name={action.status.name}
-                  identifier={action.status.identifier}
-                  completion={action.completion}
-                />
-              )}
-            </ActionSection>
+            { !action.implementationPhase && (
+              <ActionSection>
+                <SideHeader>{ t('actions:action-progress') }</SideHeader>
+                { action.completion > 0
+                && (
+                <strong>
+                  {action.completion}
+                  %
+                  {' '}
+                  { t('actions:action-percent-ready') }
+                </strong>
+                ) }
+                {action.status && (
+                  <ActionStatus
+                    name={action.status.name}
+                    identifier={action.status.identifier}
+                    completion={action.completion}
+                  />
+                )}
+              </ActionSection>
+            )}
             { action.schedule.length ? (
               <ActionSection>
                 <SideHeader>{ t('actions:action-timeline') }</SideHeader>
