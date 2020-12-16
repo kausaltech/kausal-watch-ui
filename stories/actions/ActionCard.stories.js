@@ -45,6 +45,7 @@ const actionProp = {
   },
   completion: 50,
   mergedWith: null,
+  categories: [],
 };
 
 const actionPhaseOnTime = {
@@ -57,6 +58,7 @@ const actionPhaseOnTime = {
   completion: 50,
   mergedWith: null,
   activePhase: 'in_progress',
+  categories: [],
 };
 
 const actionPropCompleted = {
@@ -68,6 +70,7 @@ const actionPropCompleted = {
   },
   completion: 100,
   mergedWith: null,
+  categories: [],
 };
 
 const actionPropLate = {
@@ -79,6 +82,7 @@ const actionPropLate = {
   },
   completion: 15,
   mergedWith: null,
+  categories: [],
 };
 
 const actionPropSeverelyLate = {
@@ -90,6 +94,7 @@ const actionPropSeverelyLate = {
   },
   completion: 5,
   mergedWith: null,
+  categories: [],
 };
 
 const actionPropMerged = {
@@ -101,6 +106,7 @@ const actionPropMerged = {
   },
   completion: 0,
   mergedWith: { identifier: '222' },
+  categories: [],
 };
 
 export default {
@@ -167,3 +173,31 @@ const ActionCards = () => {
 };
 
 export const ActionCardStory = (theme) => <ActionCards theme={theme} />;
+
+/*
+const ACTION_CARD_FRAGMENT = gql`
+  fragment ActionCard on Action {
+    id
+    identifier
+    name(hyphenated: true)
+    status {
+      id
+      identifier
+      name
+    }
+    completion
+    categories {
+      id
+      identifier
+      name
+      imageUrl
+    }
+    status {
+      id
+      identifier
+      name
+    }
+    activePhase
+  }
+`;
+*/

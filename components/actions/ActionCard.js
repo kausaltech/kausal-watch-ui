@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
-import { darken, transparentize } from 'polished';
+import { transparentize } from 'polished';
 import SVG from 'react-inlinesvg';
 import styled from 'styled-components';
 import { gql } from '@apollo/client';
@@ -27,7 +27,7 @@ const ACTION_CARD_FRAGMENT = gql`
       name
       imageUrl
     }
-    status {
+    implementationPhase {
       id
       identifier
       name
@@ -89,58 +89,28 @@ const ActionStatusArea = styled.div`
   min-height: 100px;
   line-height: ${(props) => props.theme.lineHeightSm};
 
-  .progress-bar {
-      background-color: ${(props) => transparentize(0.5, props.theme.themeColors.dark)};
-    }
-
   &.bg-not_started {
-    background-color: ${(props) => props.theme.actionNotStartedColor};
-    color: ${(props) => props.theme.themeColors.dark};
+    background-color: ${(props) => props.theme.graphColors.blue030};
   }
 
-  &.bg-in_progress {
-    background-color: ${(props) => props.theme.actionOnTimeColor};
-    .progress-bar {
-      background-color: ${(props) => darken(0.1, props.theme.actionOnTimeColor)};
-    }
-  }
-
-  &.bg-on_time {
-    background-color: ${(props) => props.theme.actionOnTimeColor};
-    .progress-bar {
-      background-color: ${(props) => darken(0.1, props.theme.actionOnTimeColor)};
-    }
+  &.bg-in_progress, &.bg-on_time {
+    background-color: ${(props) => props.theme.graphColors.green050};}
   }
 
   &.bg-completed {
-    background-color: ${(props) => props.theme.actionCompletedColor};
-    .progress-bar {
-      background-color: ${(props) => props.theme.actionCompletedColor};
-    }
+    background-color: ${(props) => props.theme.graphColors.green090};
   }
 
   &.bg-late {
-    background-color: ${(props) => props.theme.actionLateColor};
-    color: ${(props) => props.theme.themeColors.black};
-    .progress-bar {
-      background-color: ${(props) => darken(0.25, props.theme.actionLateColor)};
-    }
+    background-color: ${(props) => props.theme.graphColors.yellow050};
   }
 
   &.bg-severely_late {
     background-color: ${(props) => props.theme.actionSeverelyLateColor};
-    .progress-bar {
-      background-color: ${(props) => darken(0.15, props.theme.actionSeverelyLateColor)};
-    }
   }
 
   &.bg-merged, &.bg-postponed {
-    color: ${(props) => props.theme.themeColors.dark};
     background-color: ${(props) => props.theme.actionMergedColor};
-
-    .action-number {
-      background-color: ${(props) => props.theme.actionMergedColor};
-    }
   }
 `;
 
@@ -181,21 +151,21 @@ function ActionCard(props) {
 
   if (actionName.length > 120) actionName = `${action.name.substring(0, 120)}…`;
 
-  const { mergedWith, status, activePhase } = action;
-  const { phases } = props;
+  const { mergedWith, status, implementationPhase } = action;
 
   let statusText = status?.name;
 
   // if Action is set in one of the phases, create message accordingly
-  if (activePhase) {
-    statusText = phases.find((phase) => phase.identifier === activePhase).description;
+  if (implementationPhase) {
+    statusText = implementationPhase.name;
     if (status?.name) statusText = `${statusText} (${status.name})`;
+    // Let's assume if status is completed the phase is irrelevant
+    if (status?.identifier === 'completed') statusText = status.name;
   }
 
   // Use different styling for merged action
   let bgClass = status ? `bg-${status.identifier}` : null;
   if (mergedWith) bgClass = 'bg-merged';
-  if (mergedWith) statusText = `${t('action-status-merged')} ${mergedWith.identifier}`;
 
   return (
     <ActionLink action={action}>
@@ -210,7 +180,15 @@ function ActionCard(props) {
             )}
             <ActionNumber className="action-number">{action.identifier}</ActionNumber>
             <ActionStatus>
-              <StatusName>{statusText}</StatusName>
+              { mergedWith ? (
+                <StatusName>
+                  { t('action-status-merged') } &rarr; { mergedWith.identifier }
+                </StatusName>
+              ) : (
+                <StatusName>
+                  { statusText }
+                </StatusName>
+              )}
             </ActionStatus>
           </ActionStatusArea>
           <StyledCardTitle>{actionName}</StyledCardTitle>
@@ -221,7 +199,6 @@ function ActionCard(props) {
 }
 
 ActionCard.defaultProps = {
-  phases: [],
 };
 
 ActionCard.propTypes = {
@@ -235,16 +212,13 @@ ActionCard.propTypes = {
     }),
     mergedWith: PropTypes.shape(),
     activePhase: PropTypes.string,
-  }).isRequired,
-  t: PropTypes.func.isRequired,
-  phases: PropTypes.arrayOf(PropTypes.shape(
-    {
+    implementationPhase: PropTypes.shape({
       id: PropTypes.string,
       identifier: PropTypes.string,
       name: PropTypes.string,
-      description: PropTypes.string,
-    },
-  )),
+    }),
+  }).isRequired,
+  t: PropTypes.func.isRequired,
 };
 
 ActionCard.fragments = {
