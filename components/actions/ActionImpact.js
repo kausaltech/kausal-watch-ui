@@ -7,7 +7,7 @@ import Icon from '../common/Icon';
 const ImpactIcon = styled(Icon)`
   font-size: ${(props) => {
     switch (props.size) {
-      case 'sm': return '1em';
+      case 'sm': return '.8em';
       case 'md': return '1.5em';
       default: return '1.5em';
     }

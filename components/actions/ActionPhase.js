@@ -6,10 +6,14 @@ import { useTranslation } from 'common/i18n';
 const Status = styled.div`
   color: ${(props) => props.theme.themeColors.black};
 
+  &.compact {
+    font-size: ${(props) => props.theme.fontSizeSm};
+  }
+
   ul {
     display: flex;
     align-items: flex-end;
-    margin-bottom: ${(props) => props.theme.spaces.s050};;
+    margin-bottom: ${(props) => props.theme.spaces.s050};
     padding: 0;
     list-style-type: none;
   }
@@ -85,7 +89,7 @@ const PhaseBlock = styled.div`
 
 function Phase(props) {
   const { name } = props.phase;
-  const { statusName, status, active, passed, disabled } = props;
+  const { statusName, status, active, passed, disabled, compact } = props;
 
   let phaseClass = 'bg-inactive';
   let labelClass = 'disabled';
@@ -108,9 +112,11 @@ function Phase(props) {
 
   return (
     <li>
-      <PhaseLabel className={labelClass}>
-        {name}
-      </PhaseLabel>
+      { !compact && (
+        <PhaseLabel className={labelClass}>
+          {name}
+        </PhaseLabel>
+      )}
       <PhaseBlock className={phaseClass} />
     </li>
   );
@@ -124,23 +130,23 @@ function ActionPhase(props) {
     reason,
     mergedWith,
     phases,
+    compact,
     ...rest } = props;
 
   const { t } = useTranslation(['common', 'actions']);
-  let message = '';
+  let activePhaseName = '';
   let phaseIndex = -1;
-  // if Action is set in one of the phases, find its index and create message accordingly
+  // Find name of the active phase
   if (activePhase !== '') {
     phaseIndex = phases.findIndex((phase) => phase.id === activePhase);
-    message = phases[phaseIndex].name;
-    if (statusName) message = `${message} (${statusName})`;
+    activePhaseName = phases[phaseIndex].name;
   }
-  // if Action is in one of the inactive statuses set phase viz to disabled
-  const inactive = ['cancelled', 'merged', 'postponed'].includes(statusIdentifier);
-  if (inactive) message = statusName;
+  // Override phase name in special case statuses
+  const inactive = ['cancelled', 'merged', 'postponed', 'completed'].includes(statusIdentifier);
+  if (inactive) activePhaseName = statusName;
 
   return (
-    <Status {...rest}>
+    <Status {...rest} className={compact && 'compact'}>
       <ul>
         { phases.map((phase, indx) => (
           <Phase
@@ -151,19 +157,27 @@ function ActionPhase(props) {
             statusName={statusName}
             disabled={inactive}
             key={phase.id}
+            compact={compact}
           />
         ))}
       </ul>
-      <strong>{ statusName }</strong>
-      { reason && (
-        <PhaseReason>
-          <strong>
-            { t('action-status-reason') }
-            :
-            {' '}
-          </strong>
-          { reason }
-        </PhaseReason>
+      { !compact && (
+        <>
+          <strong>{ statusName }</strong>
+          { reason && (
+            <PhaseReason>
+              <strong>
+                { t('action-status-reason') }
+                :
+                {' '}
+              </strong>
+              { reason }
+            </PhaseReason>
+          )}
+        </>
+      )}
+      { compact && (
+        <span>{ activePhaseName }</span>
       )}
     </Status>
   );
@@ -192,6 +206,7 @@ ActionPhase.propTypes = {
     },
   )),
   mergedWith: PropTypes.string,
+  compact: PropTypes.bool,
 };
 
 ActionPhase.defaultProps = {
@@ -201,6 +216,7 @@ ActionPhase.defaultProps = {
   reason: '',
   phases: [],
   mergedWith: '',
+  compact: false,
 };
 
 export default ActionPhase;

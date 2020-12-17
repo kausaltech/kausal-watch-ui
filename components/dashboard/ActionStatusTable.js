@@ -6,6 +6,7 @@ import { useTheme } from 'common/theme';
 import PlanContext from 'context/plan';
 import moment from 'common/moment';
 import ActionImpact from 'components/actions/ActionImpact';
+import ActionPhase from 'components/actions/ActionPhase';
 import { ActionLink } from 'common/links';
 import Icon from 'components/common/Icon';
 
@@ -15,7 +16,7 @@ const ActionRow = styled.tr`
   }
 
   td {
-    vertical-align: middle;
+    vertical-align: top;
     line-height: ${(props) => props.theme.lineHeightSm};
   }
 
@@ -35,63 +36,69 @@ const ResponsibleList = styled.div`
 `;
 
 const UpdatedAgo = styled.div`
+  font-size: ${(props) => props.theme.fontSizeSm};
   white-space: nowrap;
 `;
 
-const TaskStatusBar = styled.div`
-  display: flex;
-  min-width: ${(props) => props.theme.spaces.s600};
-  height: 16px;
-  background-color: ${(props) => props.theme.themeColors.light};
-
-  .on-time {
-    display: inline-block;
-    height: 16px;
-    background-color: ${(props) => props.theme.actionOnTimeColor};
-  }
-  .late {
-    display: inline-block;
-    height: 16px;
-    background-color: ${(props) => props.theme.actionLateColor};
-  }
-  .completed {
-    display: inline-block;
-    height: 16px;
-    background-color: ${(props) => props.theme.actionNotStartedColor};
-  }
-`;
-
-const StatusBadge = styled(Badge)`
-  font-size: .6rem;
-  padding: 6px;
-  color: ${(props) => props.theme.themeColors.white};
+const StatusBar = styled.div`
+  height: 8px;
+  background-color: #333;
 
   &.bg-not_started {
-    background-color: ${(props) => props.theme.actionNotStartedColor};
-    color: ${(props) => props.theme.themeColors.black};
+    background-color: ${(props) => props.theme.graphColors.blue030};
   }
 
-  &.bg-in_progress {
-    background-color: ${(props) => props.theme.actionOnTimeColor};
-  }
-
-  &.bg-on_time {
-    background-color: ${(props) => props.theme.actionOnTimeColor};
+  &.bg-in_progress, &.bg-on_time {
+    background-color: ${(props) => props.theme.graphColors.green050};}
   }
 
   &.bg-completed {
-    background-color: ${(props) => props.theme.actionCompletedColor};
+    background-color: ${(props) => props.theme.graphColors.green090};
   }
 
   &.bg-late {
-    background-color: ${(props) => props.theme.actionLateColor};
-    color: ${(props) => props.theme.themeColors.black};
+    background-color: ${(props) => props.theme.graphColors.yellow050};
   }
 
   &.bg-severely_late {
     background-color: ${(props) => props.theme.actionSeverelyLateColor};
   }
+
+  &.bg-merged, &.bg-postponed, &.bg-cancelled {
+    background-color: ${(props) => props.theme.actionMergedColor};
+  }
 `;
+
+const TaskStatusBar = styled.div`
+  display: flex;
+  min-width: ${(props) => props.theme.spaces.s600};
+  height: 8px;
+  background-color: ${(props) => props.theme.themeColors.light};
+
+  .on-time {
+    display: inline-block;
+    background-color: ${(props) => props.theme.graphColors.green010};
+  }
+  .late {
+    display: inline-block;
+    background-color: ${(props) => props.theme.graphColors.yellow050};
+  }
+  .completed {
+    display: inline-block;
+    background-color: ${(props) => props.theme.graphColors.green070};
+  }
+`;
+
+const StatusDisplay = (props) => {
+  const {statusIdentifier, statusName} = props;
+
+  return (
+    <>
+      <StatusBar className={`bg-${statusIdentifier}`} />
+      <small>{ statusName }</small>
+    </>
+  );
+};
 
 const TasksStatusBar = (props) => {
   const { tasks } = props;
@@ -122,16 +129,16 @@ const TasksStatusBar = (props) => {
   return (
     <TaskStatusBar>
       <div
-        className="on-time"
-        style={{ width: `${(ontimeTasks / tasksCount) * 100}%` }}
+        className="completed"
+        style={{ width: `${(completedTasks / tasksCount) * 100}%` }}
       />
       <div
         className="late"
         style={{ width: `${(lateTasks / tasksCount) * 100}%` }}
       />
       <div
-        className="completed"
-        style={{ width: `${(completedTasks / tasksCount) * 100}%` }}
+        className="on-time"
+        style={{ width: `${(ontimeTasks / tasksCount) * 100}%` }}
       />
     </TaskStatusBar>
   );
@@ -151,13 +158,13 @@ const IndicatorsViz = ({ relatedIndicators }) => {
 
   return (
     <div>
-      <Icon name="tachometer" color={hasIndicators ? theme.actionOnTimeColor : theme.actionNotStartedColor} />
-      <Icon name="bullseye" color={hasGoals ? theme.actionOnTimeColor : theme.actionNotStartedColor} />
+      <Icon name="tachometer" color={hasIndicators ? theme.actionOnTimeColor : theme.actionNotStartedColor} height="1.2em" width="1.2em" />
+      <Icon name="bullseye" color={hasGoals ? theme.actionOnTimeColor : theme.actionNotStartedColor} height="1.2em" width="1.2em" />
     </div>
   );
 };
 
-const ResponsiblesViz = ({ parties, persons }) => {
+const ResponsiblesViz = ({ parties }) => {
   const theme = useTheme();
   const contactList = [];
   const noContactList = [];
@@ -169,8 +176,8 @@ const ResponsiblesViz = ({ parties, persons }) => {
 
   return (
     <ResponsibleList>
-      { contactList.map((contact) => <Icon name="dot-circle" color={theme.actionOnTimeColor} key={contact} />)}
-      { noContactList.map((contact) => <Icon name="circle-outline" color={theme.actionOnTimeColor} key={contact} />)}
+      { contactList.map((contact) => <Icon name="dot-circle" color={theme.actionOnTimeColor} key={contact} width=".8em" height=".8em" />)}
+      { noContactList.map((contact) => <Icon name="circle-outline" color={theme.actionOnTimeColor} key={contact} width=".8em" height=".8em"  />)}
     </ResponsibleList>
   );
 };
@@ -211,8 +218,10 @@ const ActionsStatusTable = (props) => {
   const { actions, orgs } = props;
   const orgMap = new Map(orgs.map((org) => [org.id, org]));
   const plan = useContext(PlanContext);
-  const sortedActions = actions.sort((g1, g2) => g1.identifier - g2.identifier).map((action) => processAction(action, orgMap));
+  const sortedActions = actions.sort((g1, g2) => g1.identifier - g2.identifier)
+    .map((action) => processAction(action, orgMap));
   const hasImpacts = plan.actionImpacts.length > 0;
+  const hasPhases = plan.actionImplementationPhases.length > 0;
 
   return (
     <Table role="list" className="my-5">
@@ -241,11 +250,23 @@ const ActionsStatusTable = (props) => {
                 </ActionLink>
               </td>
               <td>
-                <StatusBadge
-                  className={`bg-${item.status.identifier}`}
-                >
-                  {item.status.name}
-                </StatusBadge>
+                { hasPhases && (
+                  <ActionPhase
+                    statusIdentifier={item.status.identifier}
+                    statusName={item.status.name}
+                    activePhase={item.implementationPhase?.id}
+                    reason={item.manualStatusReason}
+                    mergedWith={item.mergedWith}
+                    phases={plan.actionImplementationPhases}
+                    compact
+                  />
+                )}
+                { !hasPhases && (
+                  <StatusDisplay
+                    statusIdentifier={item.status.identifier}
+                    statusName={item.status.name}
+                  />
+                )}
               </td>
               <td>
                 <TasksStatusBar tasks={item.tasks} />

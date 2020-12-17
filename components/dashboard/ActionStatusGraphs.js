@@ -82,7 +82,7 @@ const getProgressData = (actions, colors) => {
     let statusCount = 0;
     let statusName = '';
     actions.forEach((action) => {
-      if (action.status.identifier === status) {
+      if (action.status?.identifier === status) {
         if (action.mergedWith) mergedCount += 1;
         else {
           statusCount += 1;
@@ -103,7 +103,7 @@ const getProgressData = (actions, colors) => {
     let statusCount = 0;
     let statusName = '';
     actions.forEach((action) => {
-      if (action.status.identifier === status) {
+      if (action.status?.identifier === status) {
         if (action.mergedWith) mergedCount += 1;
         else {
           statusCount += 1;
@@ -123,7 +123,7 @@ const getProgressData = (actions, colors) => {
     let statusCount = 0;
     let statusName = '';
     actions.forEach((action) => {
-      if (action.status.identifier === status) {
+      if (action.status?.identifier === status) {
         if (action.mergedWith) mergedCount += 1;
         else {
           statusCount += 1;

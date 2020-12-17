@@ -2,7 +2,7 @@
 import React, { useContext, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { gql, useQuery } from '@apollo/client';
-import { useSpring, animated } from 'react-spring';
+import { useSpring } from 'react-spring';
 import {
   Container, Row, Col,
 } from 'reactstrap';
@@ -81,6 +81,9 @@ export const GET_ACTION_LIST = gql`
         id
         identifier
         name
+      }
+      implementationPhase {
+        id
       }
       impact {
         id
