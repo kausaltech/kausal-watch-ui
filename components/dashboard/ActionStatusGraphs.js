@@ -18,6 +18,7 @@ const getTimelinessData = (actions, colors) => {
   let under30 = 0;
   let under60 = 0;
   let over60 = 0;
+  let merged = 0;
   let total = 0;
   let good = 0;
 
@@ -25,12 +26,15 @@ const getTimelinessData = (actions, colors) => {
     const actionUpdated = moment(action.updatedAt);
     const age = moment.duration(now.diff(actionUpdated));
     total += 1;
-    if (age.as('hours') >= 24 * 60) over60 += 1;
+
+    if (action.mergedWith) {
+      merged += 1;
+      total -= 1;
+    } else if (age.as('hours') >= 24 * 60) over60 += 1;
     else if (age.as('hours') >= 24 * 30) {
       under60 += 1;
       good += 1;
-    }
-    else if (age.as('hours') < 24 * 30) {
+    } else if (age.as('hours') < 24 * 30) {
       under30 += 1;
       good += 1;
     }
@@ -45,6 +49,9 @@ const getTimelinessData = (actions, colors) => {
   timeliness.values.push(over60);
   timeliness.labels.push('Over 60 days');
   timeliness.colors.push(colors.BAD_COLORS[0]);
+  timeliness.values.push(merged);
+  timeliness.labels.push('Merged');
+  timeliness.colors.push(colors.NEUTRAL_COLORS[0]);
 
   timeliness.total = `${Math.round((good / total) * 100)}%`;
 
@@ -69,6 +76,8 @@ const getProgressData = (actions, colors) => {
   const ORDER_NEUTRAL = [
     'merged',
     'postponed',
+    'cancelled',
+    undefined,
   ];
   const ORDER_BAD = [
     'late',
@@ -161,8 +170,9 @@ const ActionsStatusGraphs = (props) => {
   ];
 
   pieColors.NEUTRAL_COLORS = [
-    '#ffffff',
-    theme.themeColors.light,
+    theme.graphColors.grey010,
+    theme.graphColors.grey030,
+    theme.graphColors.grey050,
   ];
 
   pieColors.BAD_COLORS = [
@@ -179,13 +189,13 @@ const ActionsStatusGraphs = (props) => {
         data={{ values: progressData.values, labels: progressData.labels }}
         currentValue={progressData.total}
         colors={progressData.colors.length > 0 && progressData.colors}
-        header="Toimenpiteiden eteneminen"
+        header="Toimenpiteiden tila"
       />
       <StatusDonut
         data={{ values: timelinessData.values, labels: timelinessData.labels }}
         currentValue={timelinessData.total}
         colors={timelinessData.colors.length > 0 && timelinessData.colors}
-        header="Toimenpiteiden ajantasaisuus"
+        header="Toimenpiteiden päivitys"
       />
     </div>
   );

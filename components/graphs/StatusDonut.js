@@ -1,7 +1,6 @@
 import React from 'react';
 import dynamic from 'next/dynamic';
 import { useTheme } from 'common/theme';
-import { lighten } from 'polished';
 
 const StatusDonut = (props) => {
   const {
@@ -29,11 +28,14 @@ const StatusDonut = (props) => {
     theme.graphColors.green090,
     theme.graphColors.green070,
     theme.graphColors.green050,
-    theme.actionLateColor,
+    theme.graphColors.yellow050,
   ];
 
   const pieLayout = {
     title: header,
+    font: {
+      family: theme.fontFamily,
+    },
     annotations: [
       {
         font: {
