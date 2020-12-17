@@ -1,4 +1,5 @@
 emission-scopes: Päästöluokat
+action-identifier: Tunniste
 action-not-found: Toimenpidettä ei löydy
 action-description: Kuvaus
 action-description-official: Virallinen kuvaus
@@ -16,6 +17,8 @@ action-last-updated: Tietoja päivitetty
 action-timeline: Aikajänne
 action-timeline-between: Toteutetaan aikavälillä
 action-progress: Eteneminen
+action-responsibles-short: Vastuut
+action-implementation-phase: Toteutusvaihe
 action-percent-ready: valmis
 action-num: Nro
 action-name-title: Toimenpide / Nimi

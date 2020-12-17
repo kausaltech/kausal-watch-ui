@@ -159,8 +159,7 @@ const getProgressData = (actions, colors) => {
   return progress;
 };
 
-const getPhaseData = (actions, phases, colors) => {
-  const theme = useTheme();
+const getPhaseData = (actions, phases, theme, t) => {
   const phaseData = {
     labels: [],
     values: [],
@@ -186,7 +185,7 @@ const getPhaseData = (actions, phases, colors) => {
     phaseData.total += actionCountOnPhase.length;
   });
 
-  phaseData.labels.push('No Phase');
+  phaseData.labels.push(t('unknown'));
   phaseData.values.push(actions.length - phaseData.total);
   phaseData.colors.push('#ffffff');
 
@@ -197,6 +196,7 @@ const ActionsStatusGraphs = (props) => {
   const { actions } = props;
   const theme = useTheme();
   const plan = useContext(PlanContext);
+  const { t } = useTranslation(['common']);
 
   const pieColors = {};
   pieColors.GOOD_COLORS = [
@@ -225,7 +225,7 @@ const ActionsStatusGraphs = (props) => {
   const timelinessData = (getTimelinessData(actions, pieColors));
   let phaseData;
   if (plan.actionImplementationPhases.length > 0) {
-    phaseData = getPhaseData(actions, plan.actionImplementationPhases, pieColors);
+    phaseData = getPhaseData(actions, plan.actionImplementationPhases, theme, t);
   }
 
   return (

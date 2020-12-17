@@ -1,4 +1,5 @@
 emission-scopes: Emission scopes
+action-identifier: Identifier
 action-not-found: Action not found
 action-description-official: Official description
 action-description: Description
@@ -16,6 +17,8 @@ action-last-updated: Information updated
 action-timeline: Timeline
 action-timeline-between: Timeframe between
 action-progress: Progress
+action-responsibles-short: Responsibles
+action-implementation-phase: Implementation phase
 action-percent-ready: ready
 action-num: '#'
 action-name-title: Action theme

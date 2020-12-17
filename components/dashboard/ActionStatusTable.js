@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { useTheme } from 'common/theme';
 import PlanContext from 'context/plan';
 import moment from 'common/moment';
+import { useTranslation } from 'common/i18n';
 import ActionImpact from 'components/actions/ActionImpact';
 import ActionPhase from 'components/actions/ActionPhase';
 import { ActionLink } from 'common/links';
@@ -226,19 +227,22 @@ const ActionsStatusTable = (props) => {
     .map((action) => processAction(action, orgMap));
   const hasImpacts = plan.actionImpacts.length > 0;
   const hasPhases = plan.actionImplementationPhases.length > 0;
+  const { t, i18n } = useTranslation(['common', 'actions']);
+
+  moment.locale(i18n.language);
 
   return (
     <DashTable role="list">
       <thead>
         <tr>
-          <th>ID</th>
-          <th>Action</th>
-          <th>Progress</th>
-          <th>Tasks</th>
-          <th>Responsible</th>
-          <th>{ hasImpacts && 'Impact' }</th>
-          <th>Indicator</th>
-          <th>Last update</th>
+          <th>{ t('action-identifier') }</th>
+          <th>{ t('action-name-title') }</th>
+          <th>{ t('action-implementation-phase') }</th>
+          <th>{ t('action-tasks') }</th>
+          <th>{ t('action-responsibles-short') }</th>
+          <th>{ hasImpacts && t('action-impact') }</th>
+          <th>{ t('indicators') }</th>
+          <th>{ t('action-last-updated') }</th>
         </tr>
       </thead>
       <tbody>
@@ -293,7 +297,7 @@ const ActionsStatusTable = (props) => {
                   <IndicatorsViz relatedIndicators={item.relatedIndicators} />}
               </td>
               <td>
-                <UpdatedAgo>{ `${moment(item.updatedAt).fromNow(true)} ago` }</UpdatedAgo>
+                <UpdatedAgo>{ `${moment(item.updatedAt).fromNow(false)}` }</UpdatedAgo>
               </td>
             </ActionRow>
           ) : (
