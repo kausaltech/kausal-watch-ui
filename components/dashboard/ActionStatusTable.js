@@ -263,8 +263,8 @@ const ActionsStatusTable = (props) => {
                 )}
                 { !hasPhases && (
                   <StatusDisplay
-                    statusIdentifier={item.status.identifier}
-                    statusName={item.status.name}
+                    statusIdentifier={item.status?.identifier}
+                    statusName={item.status?.name}
                   />
                 )}
               </td>
