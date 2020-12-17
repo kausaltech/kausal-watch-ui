@@ -1,12 +1,13 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'common/moment';
+import { getStatusColor, cleanActionStatus } from 'common/preprocess';
 import { useTheme } from 'common/theme';
 import PlanContext from 'context/plan';
 import { useTranslation } from 'common/i18n';
 import StatusDonut from 'components/graphs/StatusDonut';
 
-const getTimelinessData = (actions, colors) => {
+const getTimelinessData = (actions, actionStatuses, theme) => {
   const timeliness = {
     values: [],
     labels: [],
@@ -20,16 +21,22 @@ const getTimelinessData = (actions, colors) => {
   let under60 = 0;
   let over60 = 0;
   let merged = 0;
+  let notActive = 0;
   let total = 0;
   let good = 0;
 
   actions.forEach((action) => {
     const actionUpdated = moment(action.updatedAt);
     const age = moment.duration(now.diff(actionUpdated));
+    const actionStatus = cleanActionStatus(action, actionStatuses);
     total += 1;
 
-    if (action.mergedWith) {
+    // Filter out merged, inactive and completed actions from timeliness calculation
+    if (actionStatus.identifier === 'merged') {
       merged += 1;
+      total -= 1;
+    } else if (['postponed', 'cancelled', 'completed'].includes(actionStatus.identifier)) {
+      notActive += 1;
       total -= 1;
     } else if (age.as('hours') >= 24 * 60) over60 += 1;
     else if (age.as('hours') >= 24 * 30) {
@@ -43,24 +50,26 @@ const getTimelinessData = (actions, colors) => {
 
   timeliness.values.push(under30);
   timeliness.labels.push('Under 30 days');
-  timeliness.colors.push(colors.GOOD_COLORS[0]);
+  timeliness.colors.push(theme.graphColors.green070);
   timeliness.values.push(under60);
   timeliness.labels.push('Under 60 days');
-  timeliness.colors.push(colors.GOOD_COLORS[1]);
+  timeliness.colors.push(theme.graphColors.green030);
   timeliness.values.push(over60);
   timeliness.labels.push('Over 60 days');
-  timeliness.colors.push(colors.BAD_COLORS[0]);
+  timeliness.colors.push(theme.graphColors.yellow050);
+  timeliness.values.push(notActive);
+  timeliness.labels.push('Not Active');
+  timeliness.colors.push(theme.graphColors.grey030);
   timeliness.values.push(merged);
   timeliness.labels.push('Merged');
-  timeliness.colors.push(colors.NEUTRAL_COLORS[0]);
+  timeliness.colors.push(theme.graphColors.grey010);
 
   timeliness.total = `${Math.round((good / total) * 100)}%`;
 
   return timeliness;
 };
 
-const getProgressData = (actions, colors) => {
-  const { t } = useTranslation();
+const getStatusData = (actions, actionStatuses, theme) => {
   const progress = {
     values: [],
     labels: [],
@@ -68,98 +77,46 @@ const getProgressData = (actions, colors) => {
     total: 0,
     colors: [],
   };
-  const ORDER_GOOD = [
+  const ORDER_STATUSES = [
     'completed',
     'on_time',
     'in_progress',
     'not_started',
-  ];
-  const ORDER_NEUTRAL = [
-    'merged',
-    'postponed',
-    'cancelled',
-    undefined,
-  ];
-  const ORDER_BAD = [
     'late',
     'severely_late',
+    'cancelled',
+    'merged',
+    'postponed',
+    'severely_late',
+    'undefined',
   ];
 
-  let mergedCount = 0;
   let totalCount = 0;
 
-  ORDER_GOOD.forEach((status, index) => {
+  ORDER_STATUSES.forEach((statusIdentifier) => {
     let statusCount = 0;
     let statusName = '';
     actions.forEach((action) => {
-      if (action.status?.identifier === status) {
-        if (action.mergedWith) mergedCount += 1;
-        else {
-          statusCount += 1;
-          totalCount += 1;
-          statusName = action.status.name;
-        }
+      const actionStatus = cleanActionStatus(action, actionStatuses);
+      if (actionStatus.identifier === statusIdentifier) {
+        statusCount += 1;
+        totalCount += 1;
+        statusName = actionStatus.name;
       }
     });
     if (statusCount > 0) {
       progress.values.push(statusCount);
       progress.labels.push(statusName);
-      progress.colors.push(colors.GOOD_COLORS[index]);
-    }
-    progress.good += statusCount;
-  });
-
-  ORDER_BAD.forEach((status, index) => {
-    let statusCount = 0;
-    let statusName = '';
-    actions.forEach((action) => {
-      if (action.status?.identifier === status) {
-        if (action.mergedWith) mergedCount += 1;
-        else {
-          statusCount += 1;
-          totalCount += 1;
-          statusName = action.status.name;
-        }
-      }
-    });
-    if (statusCount > 0) {
-      progress.values.push(statusCount);
-      progress.labels.push(statusName);
-      progress.colors.push(colors.BAD_COLORS[index]);
+      progress.colors.push(getStatusColor(statusIdentifier, theme));
+      if (['completed', 'on_time', 'in_progress'].includes(statusIdentifier)) progress.good += statusCount;
     }
   });
-
-  ORDER_NEUTRAL.forEach((status, index) => {
-    let statusCount = 0;
-    let statusName = '';
-    actions.forEach((action) => {
-      if (action.status?.identifier === status) {
-        if (action.mergedWith) mergedCount += 1;
-        else {
-          statusCount += 1;
-          totalCount += 1;
-          statusName = action.status.name;
-        }
-      }
-    });
-    if (statusCount > 0) {
-      progress.values.push(statusCount);
-      progress.labels.push(statusName);
-      progress.colors.push(colors.NEUTRAL_COLORS[index]);
-    }
-  });
-
-  if (mergedCount > 0) {
-    progress.values.push(mergedCount);
-    progress.labels.push(t('merged'));
-    progress.colors.push(colors.NEUTRAL_COLORS[0]);
-  }
 
   progress.total = `${Math.round((progress.good / totalCount) * 100)}%`;
   return progress;
 };
 
-const getPhaseData = (actions, phases, theme, t) => {
+const getPhaseData = (actions, phases, actionStatuses, theme, t) => {
   const phaseData = {
     labels: [],
     values: [],
@@ -168,16 +125,38 @@ const getPhaseData = (actions, phases, theme, t) => {
   };
 
   const phaseColors = [
-    theme.graphColors.grey050,
     theme.graphColors.green010,
+    theme.graphColors.green030,
     theme.graphColors.green050,
     theme.graphColors.green070,
     theme.graphColors.green090,
     theme.graphColors.grey010,
   ];
 
+  // Process actions and ignore set phase if action's status trumps it
+  const phasedActions = actions.map((action) => {
+    const actionStatus = cleanActionStatus(action, actionStatuses);
+    const realphase = {
+      id: action.implementationPhase?.id,
+      identifier: action.implementationPhase?.identifier,
+      name: action.implementationPhase?.name,
+    };
+
+    if (['cancelled', 'merged', 'postponed', 'completed'].includes(actionStatus.identifier)) {
+      realphase.id = actionStatus.id;
+      realphase.identifier = actionStatus.identifier;
+      realphase.name = `No phase (${actionStatus.name})`;
+    }
+
+    if (actionStatus.identifier === 'completed') {
+      realphase.name = actionStatus.name;
+    }
+
+    return { phase: realphase };
+  });
+
   phases.forEach((phase, index) => {
-    const actionCountOnPhase = actions.filter((action) => action.implementationPhase?.id === phase.id);
+    const actionCountOnPhase = phasedActions.filter((action) => action.phase.identifier === phase.identifier);
 
     phaseData.labels.push(phase.name);
     phaseData.values.push(actionCountOnPhase.length);
@@ -187,7 +166,7 @@ const getPhaseData = (actions, phases, theme, t) => {
 
   phaseData.labels.push(t('unknown'));
   phaseData.values.push(actions.length - phaseData.total);
-  phaseData.colors.push('#ffffff');
+  phaseData.colors.push(theme.graphColors.grey010);
 
   return phaseData;
 };
@@ -198,34 +177,11 @@ const ActionsStatusGraphs = (props) => {
   const plan = useContext(PlanContext);
   const { t } = useTranslation(['common']);
 
-  const pieColors = {};
-  pieColors.GOOD_COLORS = [
-    theme.graphColors.green070,
-    theme.graphColors.green050,
-    theme.graphColors.green030,
-    theme.graphColors.green010,
-    theme.graphColors.blue070,
-    theme.graphColors.blue050,
-    theme.graphColors.blue030,
-    theme.graphColors.blue010,
-  ];
-
-  pieColors.NEUTRAL_COLORS = [
-    theme.themeColors.white,
-    theme.graphColors.grey030,
-    theme.graphColors.grey050,
-  ];
-
-  pieColors.BAD_COLORS = [
-    theme.graphColors.yellow030,
-    theme.graphColors.yellow070,
-  ];
-
-  const progressData = getProgressData(actions, pieColors);
-  const timelinessData = (getTimelinessData(actions, pieColors));
+  const progressData = getStatusData(actions, plan.actionStatuses, theme);
+  const timelinessData = (getTimelinessData(actions, plan.actionStatuses, theme));
   let phaseData;
   if (plan.actionImplementationPhases.length > 0) {
-    phaseData = getPhaseData(actions, plan.actionImplementationPhases, theme, t);
+    phaseData = getPhaseData(actions, plan.actionImplementationPhases, plan.actionStatuses, theme, t);
   }
 
   return (
@@ -248,7 +204,7 @@ const ActionsStatusGraphs = (props) => {
         data={{ values: timelinessData.values, labels: timelinessData.labels }}
         currentValue={timelinessData.total}
         colors={timelinessData.colors.length > 0 && timelinessData.colors}
-        header="Toimenpiteiden päivitys"
+        header="Aktiivisten toimenpiteiden päivitys"
       />
     </div>
   );

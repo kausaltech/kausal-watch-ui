@@ -5,9 +5,10 @@ import SVG from 'react-inlinesvg';
 import styled from 'styled-components';
 import { gql } from '@apollo/client';
 
+import { cleanActionStatus, getStatusColor } from 'common/preprocess';
 import { ActionLink } from 'common/links';
-import { withTranslation } from 'common/i18n';
-
+import { useTheme } from 'common/theme';
+import { useTranslation } from 'common/i18n';
 import PlanContext from 'context/plan';
 
 const ACTION_CARD_FRAGMENT = gql`
@@ -85,33 +86,9 @@ const ActionStatusArea = styled.div`
   justify-content: space-between;
   flex-direction: column;
   color: ${(props) => props.theme.themeColors.white};
-  background-color: ${(props) => props.theme.themeColors.success};
+  background-color: ${(props) => props.statusColor};
   min-height: 100px;
   line-height: ${(props) => props.theme.lineHeightSm};
-
-  &.bg-not_started {
-    background-color: ${(props) => props.theme.graphColors.blue030};
-  }
-
-  &.bg-in_progress, &.bg-on_time {
-    background-color: ${(props) => props.theme.graphColors.green050};}
-  }
-
-  &.bg-completed {
-    background-color: ${(props) => props.theme.graphColors.green090};
-  }
-
-  &.bg-late {
-    background-color: ${(props) => props.theme.graphColors.yellow050};
-  }
-
-  &.bg-severely_late {
-    background-color: ${(props) => props.theme.actionSeverelyLateColor};
-  }
-
-  &.bg-merged, &.bg-postponed, &.bg-cancelled {
-    background-color: ${(props) => props.theme.actionMergedColor};
-  }
 `;
 
 const ActionStatus = styled.div`
@@ -144,34 +121,34 @@ function getMockIconUrl(category) {
 }
 
 function ActionCard(props) {
-  const { action, t } = props;
+  const { action } = props;
+  const plan = useContext(PlanContext);
+  const t = useTranslation(['actions', 'common']);
+  const theme = useTheme();
+
   let actionName = action.name;
   // mock category icon Url
   const iconUrl = action.categories.length ? getMockIconUrl(action.categories[0].identifier) : '';
 
   if (actionName.length > 120) actionName = `${action.name.substring(0, 120)}…`;
 
-  const { mergedWith, status, implementationPhase } = action;
-
-  let statusText = status?.name;
+  const { mergedWith, implementationPhase } = action;
+  const status = cleanActionStatus(action, plan.actionStatuses);
+  let statusText = status.name;
 
   // if Action is set in one of the phases, create message accordingly
   if (implementationPhase) {
     statusText = implementationPhase.name;
-    if (status?.name) statusText = `${statusText} (${status.name})`;
+    if (status.name) statusText = `${statusText} (${status.name})`;
     // Let's assume if status is completed the phase is irrelevant
-    if (status?.identifier === 'completed') statusText = status.name;
+    if (status.identifier === 'completed') statusText = status.name;
   }
-
-  // Use different styling for merged action
-  let bgClass = status ? `bg-${status.identifier}` : null;
-  if (mergedWith) bgClass = 'bg-merged';
 
   return (
     <ActionLink action={action}>
       <StyledActionLink>
         <ActionCardElement>
-          <ActionStatusArea className={bgClass}>
+          <ActionStatusArea statusColor={getStatusColor(status.identifier, theme)}>
             { iconUrl && (
               <CategoryIcon
                 src={iconUrl}
@@ -182,7 +159,9 @@ function ActionCard(props) {
             <ActionStatus>
               { mergedWith ? (
                 <StatusName>
-                  { t('action-status-merged') } &rarr; { mergedWith.identifier }
+                  { t('action-status-merged') }
+                  <span> &rarr; </span>
+                  { mergedWith.identifier }
                 </StatusName>
               ) : (
                 <StatusName>
@@ -225,4 +204,4 @@ ActionCard.fragments = {
   action: ACTION_CARD_FRAGMENT,
 };
 
-export default withTranslation(['actions', 'common'])(ActionCard);
+export default ActionCard;

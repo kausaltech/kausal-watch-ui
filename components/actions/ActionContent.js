@@ -12,6 +12,7 @@ import { getActionLinkProps } from 'common/links';
 import moment from 'common/moment';
 import { useTranslation } from 'common/i18n';
 import PlanContext from 'context/plan';
+import { cleanActionStatus } from 'common/preprocess';
 
 import { Meta } from '../layout';
 import IndicatorCausal from '../indicators/IndicatorCausal';
@@ -94,6 +95,7 @@ query ActionDetails($plan: ID!, $id: ID!, $bgImageSize: String = "1200x630") {
     manualStatusReason
     implementationPhase {
       id
+      identifier
     }
     schedule {
       id, name, beginsAt, endsAt
@@ -256,6 +258,7 @@ function ActionContent({ id }) {
   const generalContent = plan.generalContent || {};
   const officialName = action.officialName || '';
   const cleanOfficialText = officialName.replace(/(?:\r\n|\r|\n)/g, '<br>');
+  const actionStatus = cleanActionStatus(action, plan.actionStatuses);
 
   const { categories, emissionScopes, mergedActions } = action;
   const hasMergedActions = mergedActions.length > 0;
@@ -285,9 +288,8 @@ function ActionContent({ id }) {
               <ActionSection>
                 <SideHeader>{ t('actions:action-progress') }</SideHeader>
                 <ActionPhase
-                  statusIdentifier={action.status.identifier}
-                  statusName={action.status.name}
-                  activePhase={action.implementationPhase?.id}
+                  status={actionStatus}
+                  activePhase={action.implementationPhase?.identifier}
                   reason={action.manualStatusReason}
                   mergedWith={action.mergedWith}
                   phases={plan.actionImplementationPhases}
@@ -382,13 +384,11 @@ function ActionContent({ id }) {
                   { t('actions:action-percent-ready') }
                 </strong>
                 ) }
-                {action.status && (
-                  <ActionStatus
-                    name={action.status.name}
-                    identifier={action.status.identifier}
-                    completion={action.completion}
-                  />
-                )}
+                <ActionStatus
+                  name={actionStatus.name}
+                  identifier={actionStatus.identifier}
+                  completion={action.completion}
+                />
               </ActionSection>
             )}
             { action.schedule.length ? (

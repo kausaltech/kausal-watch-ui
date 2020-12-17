@@ -10,19 +10,20 @@ import ActionImpact from 'components/actions/ActionImpact';
 import ActionPhase from 'components/actions/ActionPhase';
 import { ActionLink } from 'common/links';
 import Icon from 'components/common/Icon';
+import { getStatusColor, cleanActionStatus } from 'common/preprocess';
 
 const DashTable = styled(Table)`
   margin-bottom: ${(props) => props.theme.spaces.s600};
+  line-height: ${(props) => props.theme.lineHeightMd};
 `;
 
-const ActionRow = styled.tr`
+const StyledRow = styled.tr`
   &.merged {
     opacity: .25;
   }
 
   td {
     vertical-align: top;
-    line-height: ${(props) => props.theme.lineHeightSm};
   }
 
   a {
@@ -46,31 +47,13 @@ const UpdatedAgo = styled.div`
 `;
 
 const StatusBar = styled.div`
-  height: 8px;
-  background-color: #333;
-
-  &.bg-not_started {
-    background-color: ${(props) => props.theme.graphColors.blue030};
+  .color-bar {
+    height: 8px;
+    background-color: ${(props) => props.statusColor};
   }
 
-  &.bg-in_progress, &.bg-on_time {
-    background-color: ${(props) => props.theme.graphColors.green050};}
-  }
-
-  &.bg-completed {
-    background-color: ${(props) => props.theme.graphColors.green090};
-  }
-
-  &.bg-late {
-    background-color: ${(props) => props.theme.graphColors.yellow050};
-  }
-
-  &.bg-severely_late {
-    background-color: ${(props) => props.theme.actionSeverelyLateColor};
-  }
-
-  &.bg-merged, &.bg-postponed, &.bg-cancelled {
-    background-color: ${(props) => props.theme.actionMergedColor};
+  span {
+    font-size: ${(props) => props.theme.fontSizeSm};
   }
 `;
 
@@ -96,12 +79,13 @@ const TaskStatusBar = styled.div`
 
 const StatusDisplay = (props) => {
   const {statusIdentifier, statusName} = props;
+  const theme = useTheme();
 
   return (
-    <>
-      <StatusBar className={`bg-${statusIdentifier}`} />
-      <small>{ statusName }</small>
-    </>
+    <StatusBar statusColor={getStatusColor(statusIdentifier, theme)}>
+      <div className="color-bar" />
+      <span>{ statusName }</span>
+    </StatusBar>
   );
 };
 
@@ -219,6 +203,63 @@ function processAction(actionIn, orgMap) {
   return action;
 }
 
+const ActionRow = ({item, plan}) => {
+  const actionStatus = cleanActionStatus(item, plan.actionStatuses);
+
+  return (
+    <StyledRow>
+      <td>
+        { item.identifier }
+      </td>
+      <td>
+        <ActionLink action={item}>
+          { item.name }
+        </ActionLink>
+      </td>
+      <td>
+        { plan.actionImplementationPhases?.length > 0 ? (
+          <ActionPhase
+            status={actionStatus}
+            activePhase={item.implementationPhase?.identifier}
+            reason={item.manualStatusReason}
+            mergedWith={item.mergedWith?.id}
+            phases={plan.actionImplementationPhases}
+            compact
+          />
+        ) : (
+          <StatusDisplay
+            statusIdentifier={actionStatus.identifier}
+            statusName={actionStatus.name}
+          />
+        )}
+      </td>
+      <td>
+        <TasksStatusBar tasks={item.tasks} />
+      </td>
+      <td>
+        <ResponsiblesViz parties={item.responsibleParties} persons={item.contactPersons} />
+      </td>
+      <td>
+        { plan.actionImpacts?.length > 0 && item.impact
+            && (
+            <ActionImpact
+              identifier={item.impact.identifier}
+              name=""
+              size="sm"
+            />
+            )}
+      </td>
+      <td>
+        { item.relatedIndicators && !item.mergedWith &&
+          <IndicatorsViz relatedIndicators={item.relatedIndicators} />}
+      </td>
+      <td>
+        <UpdatedAgo>{ `${moment(item.updatedAt).fromNow(false)}` }</UpdatedAgo>
+      </td>
+    </StyledRow>
+  );
+};
+
 const ActionsStatusTable = (props) => {
   const { actions, orgs } = props;
   const orgMap = new Map(orgs.map((org) => [org.id, org]));
@@ -226,7 +267,6 @@ const ActionsStatusTable = (props) => {
   const sortedActions = actions.sort((g1, g2) => g1.identifier - g2.identifier)
     .map((action) => processAction(action, orgMap));
   const hasImpacts = plan.actionImpacts.length > 0;
-  const hasPhases = plan.actionImplementationPhases.length > 0;
   const { t, i18n } = useTranslation(['common', 'actions']);
 
   moment.locale(i18n.language);
@@ -246,71 +286,7 @@ const ActionsStatusTable = (props) => {
         </tr>
       </thead>
       <tbody>
-        {sortedActions.map((item) => (
-          !item.mergedWith ? (
-            <ActionRow key={item.id}>
-              <td>
-                { item.identifier }
-              </td>
-              <td>
-                <ActionLink action={item}>
-                  { item.name }
-                </ActionLink>
-              </td>
-              <td>
-                { hasPhases && (
-                  <ActionPhase
-                    statusIdentifier={item.status.identifier}
-                    statusName={item.status.name}
-                    activePhase={item.implementationPhase?.id}
-                    reason={item.manualStatusReason}
-                    mergedWith={item.mergedWith}
-                    phases={plan.actionImplementationPhases}
-                    compact
-                  />
-                )}
-                { !hasPhases && (
-                  <StatusDisplay
-                    statusIdentifier={item.status?.identifier}
-                    statusName={item.status?.name}
-                  />
-                )}
-              </td>
-              <td>
-                <TasksStatusBar tasks={item.tasks} />
-              </td>
-              <td>
-                <ResponsiblesViz parties={item.responsibleParties} persons={item.contactPersons} />
-              </td>
-              <td>
-                { hasImpacts && item.impact
-                    && (
-                    <ActionImpact
-                      identifier={item.impact.identifier}
-                      name=""
-                      size="sm"
-                    />
-                    )}
-              </td>
-              <td>
-                { item.relatedIndicators && !item.mergedWith &&
-                  <IndicatorsViz relatedIndicators={item.relatedIndicators} />}
-              </td>
-              <td>
-                <UpdatedAgo>{ `${moment(item.updatedAt).fromNow(false)}` }</UpdatedAgo>
-              </td>
-            </ActionRow>
-          ) : (
-            <ActionRow className="merged" key={item.id}>
-              <td>
-                { item.identifier }
-              </td>
-              <td colSpan="7">
-                { item.name }
-              </td>
-            </ActionRow>
-          )
-        ))}
+        {sortedActions.map((item) => <ActionRow item={item} key={item.id} plan={plan} />)}
       </tbody>
     </DashTable>
   );

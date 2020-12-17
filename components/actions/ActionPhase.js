@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { useTheme } from 'common/theme';
 import { useTranslation } from 'common/i18n';
+import { getStatusColor } from 'common/preprocess';
 
 const Status = styled.div`
   color: ${(props) => props.theme.themeColors.black};
@@ -57,56 +59,28 @@ const PhaseBlock = styled.div`
   width: auto;
   background-color: ${(props) => props.theme.themeColors.light};
   border-radius: ${(props) => props.theme.badgeBorderRadius};
-
-  &.bg-active {
-    background-color: ${(props) => props.theme.graphColors.blue070};
-  }
-
-  &.bg-not_started {
-    background-color: ${(props) => props.theme.graphColors.blue070};
-  }
-
-  &.bg-in_progress {
-    background-color: ${(props) => props.theme.graphColors.blue070};
-  }
-
-  &.bg-on_time {
-    background-color: ${(props) => props.theme.graphColors.green050};
-  }
-
-  &.bg-completed {
-    background-color: ${(props) => props.theme.graphColors.green090};
-  }
-
-  &.bg-late {
-    background-color: ${(props) => props.theme.graphColors.yellow050};
-  }
-
-  &.bg-severely_late {
-    background-color: ${(props) => props.theme.graphColors.red050};
-  }
+  background-color: ${(props) => props.blockColor};
 `;
 
 function Phase(props) {
   const { name } = props.phase;
-  const { statusName, status, active, passed, disabled, compact } = props;
+  const { statusIdentifier, active, passed, disabled, compact } = props;
+  const theme = useTheme();
 
-  let phaseClass = 'bg-inactive';
+  let blockColor = theme.themeColors.light;
+
   let labelClass = 'disabled';
 
   // Passed phase gets active status color
   if (passed) {
     // phaseClass = 'bg-active';
-    phaseClass = `bg-${status}`;
+    blockColor = getStatusColor(statusIdentifier, theme);
     labelClass = '';
-  }
-  if (active) {
-    phaseClass = `bg-${status}`;
+  } else if (active) {
+    blockColor = getStatusColor(statusIdentifier, theme);
     labelClass = 'active';
-  }
-  // Let status completed override the phase
-  if (status === 'completed') {
-    phaseClass = 'bg-completed';
+  } else if (statusIdentifier === 'completed') {
+    blockColor = getStatusColor(statusIdentifier, theme);
     labelClass = 'disabled';
   }
 
@@ -117,15 +91,14 @@ function Phase(props) {
           {name}
         </PhaseLabel>
       )}
-      <PhaseBlock className={phaseClass} />
+      <PhaseBlock blockColor={blockColor} />
     </li>
   );
 }
 
 function ActionPhase(props) {
   const {
-    statusIdentifier,
-    statusName,
+    status,
     activePhase,
     reason,
     mergedWith,
@@ -134,16 +107,16 @@ function ActionPhase(props) {
     ...rest } = props;
 
   const { t } = useTranslation(['common', 'actions']);
-  let activePhaseName = '';
+  let activePhaseName = activePhase?.name;
   let phaseIndex = -1;
-  // Find name of the active phase
+
+  // Find position of the active phase
   if (activePhase !== '') {
-    phaseIndex = phases.findIndex((phase) => phase.id === activePhase);
-    activePhaseName = phases[phaseIndex].name;
+    phaseIndex = phases.findIndex((phase) => phase.identifier === activePhase);
   }
   // Override phase name in special case statuses
-  const inactive = ['cancelled', 'merged', 'postponed', 'completed'].includes(statusIdentifier);
-  if (inactive) activePhaseName = statusName;
+  const inactive = ['cancelled', 'merged', 'postponed', 'completed'].includes(status.identifier);
+  if (inactive) activePhaseName = status.name;
 
   return (
     <Status {...rest} className={compact && 'compact'}>
@@ -153,8 +126,8 @@ function ActionPhase(props) {
             phase={phase}
             passed={indx < phaseIndex}
             active={indx === phaseIndex}
-            status={statusIdentifier}
-            statusName={statusName}
+            statusIdentifier={status.identifier}
+            statusName={status.name}
             disabled={inactive}
             key={phase.id}
             compact={compact}
@@ -163,7 +136,7 @@ function ActionPhase(props) {
       </ul>
       { !compact && (
         <>
-          <strong>{ statusName }</strong>
+          <strong>{ status.name }</strong>
           { reason && (
             <PhaseReason>
               <strong>
@@ -184,17 +157,7 @@ function ActionPhase(props) {
 }
 
 ActionPhase.propTypes = {
-  statusIdentifier: PropTypes.oneOf([
-    '',
-    'on_time',
-    'completed',
-    'late',
-    'severely_late',
-    'cancelled',
-    'merged',
-    'postponed',
-  ]),
-  statusName: PropTypes.string,
+  status: PropTypes.shape.isRequired,
   activePhase: PropTypes.string,
   reason: PropTypes.string,
   phases: PropTypes.arrayOf(PropTypes.shape(
@@ -210,8 +173,6 @@ ActionPhase.propTypes = {
 };
 
 ActionPhase.defaultProps = {
-  statusIdentifier: '',
-  statusName: '',
   activePhase: '',
   reason: '',
   phases: [],
