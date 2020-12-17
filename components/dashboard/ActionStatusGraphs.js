@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'common/moment';
 import { useTheme } from 'common/theme';
+import PlanContext from 'context/plan';
 import { useTranslation } from 'common/i18n';
 import StatusDonut from 'components/graphs/StatusDonut';
 
@@ -158,19 +159,59 @@ const getProgressData = (actions, colors) => {
   return progress;
 };
 
+const getPhaseData = (actions, phases, colors) => {
+  const theme = useTheme();
+  const phaseData = {
+    labels: [],
+    values: [],
+    colors: [],
+    total: 0,
+  };
+
+  const phaseColors = [
+    theme.graphColors.grey050,
+    theme.graphColors.green010,
+    theme.graphColors.green050,
+    theme.graphColors.green070,
+    theme.graphColors.green090,
+    theme.graphColors.grey010,
+  ];
+
+  phases.forEach((phase, index) => {
+    const actionCountOnPhase = actions.filter((action) => action.implementationPhase?.id === phase.id);
+
+    phaseData.labels.push(phase.name);
+    phaseData.values.push(actionCountOnPhase.length);
+    phaseData.colors.push(phaseColors[index]);
+    phaseData.total += actionCountOnPhase.length;
+  });
+
+  phaseData.labels.push('No Phase');
+  phaseData.values.push(actions.length - phaseData.total);
+  phaseData.colors.push('#ffffff');
+
+  return phaseData;
+};
+
 const ActionsStatusGraphs = (props) => {
   const { actions } = props;
   const theme = useTheme();
+  const plan = useContext(PlanContext);
+
   const pieColors = {};
   pieColors.GOOD_COLORS = [
     theme.graphColors.green070,
     theme.graphColors.green050,
     theme.graphColors.green030,
     theme.graphColors.green010,
+    theme.graphColors.blue070,
+    theme.graphColors.blue050,
+    theme.graphColors.blue030,
+    theme.graphColors.blue010,
   ];
 
   pieColors.NEUTRAL_COLORS = [
-    theme.graphColors.grey010,
+    theme.themeColors.white,
     theme.graphColors.grey030,
     theme.graphColors.grey050,
   ];
@@ -182,9 +223,21 @@ const ActionsStatusGraphs = (props) => {
 
   const progressData = getProgressData(actions, pieColors);
   const timelinessData = (getTimelinessData(actions, pieColors));
+  let phaseData;
+  if (plan.actionImplementationPhases.length > 0) {
+    phaseData = getPhaseData(actions, plan.actionImplementationPhases, pieColors);
+  }
 
   return (
     <div>
+      { phaseData && (
+        <StatusDonut
+          data={{ values: phaseData.values, labels: phaseData.labels }}
+          currentValue={phaseData.total}
+          colors={phaseData.colors.length > 0 && phaseData.colors}
+          header="Toimenpiteiden vaiheet"
+        />
+      )}
       <StatusDonut
         data={{ values: progressData.values, labels: progressData.labels }}
         currentValue={progressData.total}
