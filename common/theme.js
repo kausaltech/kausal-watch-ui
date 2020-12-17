@@ -96,6 +96,11 @@ export const themeProp = exact({
   fontWeightNormal: number.isRequired,
   formLabelFontWeight: number.isRequired,
   graphColors: exact({
+    grey010: css('color'),
+    grey030: css('color'),
+    grey050: css('color'),
+    grey070: css('color'),
+    grey090: css('color'),
     green010: css('color'),
     green030: css('color'),
     green050: css('color'),
