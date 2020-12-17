@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Badge } from 'reactstrap';
+import { Table } from 'reactstrap';
 import styled from 'styled-components';
 import { useTheme } from 'common/theme';
 import PlanContext from 'context/plan';
@@ -9,6 +9,10 @@ import ActionImpact from 'components/actions/ActionImpact';
 import ActionPhase from 'components/actions/ActionPhase';
 import { ActionLink } from 'common/links';
 import Icon from 'components/common/Icon';
+
+const DashTable = styled(Table)`
+  margin-bottom: ${(props) => props.theme.spaces.s600};
+`;
 
 const ActionRow = styled.tr`
   &.merged {
@@ -224,7 +228,7 @@ const ActionsStatusTable = (props) => {
   const hasPhases = plan.actionImplementationPhases.length > 0;
 
   return (
-    <Table role="list" className="my-5">
+    <DashTable role="list">
       <thead>
         <tr>
           <th>ID</th>
@@ -279,7 +283,7 @@ const ActionsStatusTable = (props) => {
                     && (
                     <ActionImpact
                       identifier={item.impact.identifier}
-                      name={item.impact.name}
+                      name=""
                       size="sm"
                     />
                     )}
@@ -293,7 +297,7 @@ const ActionsStatusTable = (props) => {
               </td>
             </ActionRow>
           ) : (
-            <ActionRow className="merged">
+            <ActionRow className="merged" key={item.id}>
               <td>
                 { item.identifier }
               </td>
@@ -304,7 +308,7 @@ const ActionsStatusTable = (props) => {
           )
         ))}
       </tbody>
-    </Table>
+    </DashTable>
   );
 };
 
