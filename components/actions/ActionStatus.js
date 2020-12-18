@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled, { useTheme } from 'styled-components';
-import { darken } from 'polished';
 import { Progress } from 'reactstrap';
 import { getStatusColor } from 'common/preprocess';
 
@@ -9,27 +8,20 @@ const Status = styled.div`
   color: ${(props) => props.theme.themeColors.black};
 `;
 
-const ActionStatusBar = styled.div`
-  height: ${(props) => props.theme.spaces.s050};
-  background-color: ${(props) => props.color};
-`;
-
 const StatusTitle = styled.div`
-  position: absolute;
-  top: 0;
-  left: ${(props) => props.theme.spaces.s050};
+  padding: 3px 6px;
+  background-color: ${(props) => props.theme.themeColors.light};
   font-size: ${(props) => props.theme.fontSizeSm};
-  line-height: ${(props) => props.theme.spaces.s200};
+  line-height: ${(props) => props.theme.spaces.s150};
 `;
 
 const ActionProgress = styled(Progress)`
   position: relative;
-  height: ${(props) => props.theme.spaces.s200};
-  background-color: ${(props) => props.theme.themeColors.light};
+  height: ${(props) => props.theme.spaces.s050};
+  background-color: ${(props) => props.color};
 
   .progress-bar {
-    //background-color: ${(props) => darken(0.10, props.theme.graphColors.light)};
-    background-color: ${(props) => props.theme.graphColors.green010};
+    background-color: ${(props) => props.theme.graphColors.green090};
     color: ${(props) => props.theme.themeColors.black};
   }
 `;
@@ -40,18 +32,14 @@ function ActionStatus(props) {
 
   return (
     <Status {...rest}>
-      <span className="sr-only">
-        { statusName }
-      </span>
-      <ActionStatusBar color={statusColor} />
       <ActionProgress
         value={completion}
+        color={statusColor}
         aria-hidden
-      >
-        <StatusTitle>
-          { statusName }
-        </StatusTitle>
-      </ActionProgress>
+      />
+      <StatusTitle>
+        { statusName }
+      </StatusTitle>
     </Status>
   );
 }
