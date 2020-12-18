@@ -157,7 +157,7 @@ function ActionPhase(props) {
 }
 
 ActionPhase.propTypes = {
-  status: PropTypes.shape.isRequired,
+  status: PropTypes.shape().isRequired,
   activePhase: PropTypes.string,
   reason: PropTypes.string,
   phases: PropTypes.arrayOf(PropTypes.shape(

@@ -6,11 +6,12 @@ import { useTheme } from 'common/theme';
 import PlanContext from 'context/plan';
 import moment from 'common/moment';
 import { useTranslation } from 'common/i18n';
+import StatusBadge from 'components/common/StatusBadge';
 import ActionImpact from 'components/actions/ActionImpact';
 import ActionPhase from 'components/actions/ActionPhase';
 import { ActionLink } from 'common/links';
 import Icon from 'components/common/Icon';
-import { getStatusColor, cleanActionStatus } from 'common/preprocess';
+import { cleanActionStatus } from 'common/preprocess';
 
 const DashTable = styled(Table)`
   margin-bottom: ${(props) => props.theme.spaces.s600};
@@ -46,17 +47,6 @@ const UpdatedAgo = styled.div`
   white-space: nowrap;
 `;
 
-const StatusBar = styled.div`
-  .color-bar {
-    height: 8px;
-    background-color: ${(props) => props.statusColor};
-  }
-
-  span {
-    font-size: ${(props) => props.theme.fontSizeSm};
-  }
-`;
-
 const TaskStatusBar = styled.div`
   display: flex;
   min-width: ${(props) => props.theme.spaces.s600};
@@ -76,18 +66,6 @@ const TaskStatusBar = styled.div`
     background-color: ${(props) => props.theme.graphColors.green070};
   }
 `;
-
-const StatusDisplay = (props) => {
-  const {statusIdentifier, statusName} = props;
-  const theme = useTheme();
-
-  return (
-    <StatusBar statusColor={getStatusColor(statusIdentifier, theme)}>
-      <div className="color-bar" />
-      <span>{ statusName }</span>
-    </StatusBar>
-  );
-};
 
 const TasksStatusBar = (props) => {
   const { tasks } = props;
@@ -227,7 +205,7 @@ const ActionRow = ({item, plan}) => {
             compact
           />
         ) : (
-          <StatusDisplay
+          <StatusBadge
             statusIdentifier={actionStatus.identifier}
             statusName={actionStatus.name}
           />

@@ -65,6 +65,11 @@ export const GET_IMPACT_GROUP_LIST = gql`
               identifier
               name
             }
+            implementationPhase {
+              id
+              identifier
+              name
+            }
           }
           impact {
             id

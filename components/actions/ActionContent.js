@@ -259,9 +259,7 @@ function ActionContent({ id }) {
   const officialName = action.officialName || '';
   const cleanOfficialText = officialName.replace(/(?:\r\n|\r|\n)/g, '<br>');
   const actionStatus = cleanActionStatus(action, plan.actionStatuses);
-
-  const { categories, emissionScopes, mergedActions } = action;
-  const hasMergedActions = mergedActions.length > 0;
+  const { emissionScopes, mergedActions } = action;
   const imageUrl = getActionImageURL(plan, action);
 
   const hasPhases = plan.actionImplementationPhases.length > 0;
