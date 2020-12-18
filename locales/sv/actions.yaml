@@ -22,6 +22,7 @@ action-name-title: Åtgärds tema
 action-impact: Påverkan
 action-monitoring: Övervakning
 action-merged: Sammanlagda åtgärderna
+action-status-undefined: Status saknas
 action-status-merged: Sammanfogad med åtgärden
 action-status-reason: Anledning
 action-previous: Tidigare åtgärd

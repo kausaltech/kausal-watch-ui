@@ -25,6 +25,7 @@ action-name-title: Action theme
 action-impact: Impact
 action-monitoring: Monitoring
 action-merged: Merged actions
+action-status-undefined: No status
 action-status-merged: Merged with action
 action-status-reason: Reason
 action-previous: Previous action

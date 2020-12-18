@@ -25,6 +25,7 @@ action-name-title: Toimenpide / Nimi
 action-impact: Vaikutus
 action-monitoring: Seuranta
 action-merged: Yhdistetyt toimenpiteet
+action-status-undefined: Ei statusta
 action-status-merged: Yhdistetty
 action-status-reason: Tarkennus
 action-previous: Edellinen toimenpide
