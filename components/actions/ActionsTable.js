@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Table } from 'reactstrap';
 import { gql } from '@apollo/client';
 
-import { withTranslation } from '../../common/i18n';
-import { ActionLink } from '../../common/links';
-import ActionStatus from './ActionStatus';
-import ActionImpact from './ActionImpact';
+import { withTranslation } from 'common/i18n';
+import { ActionLink } from 'common/links';
+import PlanContext from 'context/plan';
+import { cleanActionStatus } from 'common/preprocess';
+import StatusBadge from 'components/common/StatusBadge';
+import ActionImpact from 'components/actions/ActionImpact';
 
 const ACTION_ROW_FRAGMENT = gql`
   fragment ActionsTable on Action {
@@ -17,6 +19,10 @@ const ACTION_ROW_FRAGMENT = gql`
       id
       identifier
       name
+    }
+    implementationPhase {
+      id
+      identifier
     }
     completion
     categories {
@@ -33,9 +39,20 @@ const ACTION_ROW_FRAGMENT = gql`
   }
 `;
 
+const Status = (props) => {
+  const { action, plan } = props;
+  const checkedStatus = cleanActionStatus(action, plan.actionStatuses);
 
+  return (
+    <StatusBadge
+      statusIdentifier={checkedStatus.identifier}
+      statusName={checkedStatus.name}
+    />
+  );
+};
 function ActionsTable(props) {
   const { t, actions } = props;
+  const plan = useContext(PlanContext);
 
   return (
     <Table hover responsive>
@@ -55,11 +72,7 @@ function ActionsTable(props) {
               <td width="200">
                 { action.status
                   && (
-                  <ActionStatus
-                    identifier={action.status.identifier}
-                    name={action.status.name}
-                    completion={action.status.completion}
-                  />
+                    <Status action={action} plan={plan} />
                   )}
               </td>
               <td>
