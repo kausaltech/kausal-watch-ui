@@ -372,7 +372,7 @@ function ActionContent({ id }) {
                 />
               </ActionSection>
               )}
-            { !hasPhases && (
+            { (!hasPhases || action.completion) && (
               <ActionSection>
                 <SideHeader>{ t('actions:action-progress') }</SideHeader>
                 { action.completion > 0
