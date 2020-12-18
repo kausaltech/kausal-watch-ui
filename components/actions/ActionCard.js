@@ -123,7 +123,7 @@ function getMockIconUrl(category) {
 function ActionCard(props) {
   const { action } = props;
   const plan = useContext(PlanContext);
-  const t = useTranslation(['actions', 'common']);
+  const { t } = useTranslation(['common', 'actions']);
   const theme = useTheme();
 
   let actionName = action.name;
@@ -197,7 +197,6 @@ ActionCard.propTypes = {
       name: PropTypes.string,
     }),
   }).isRequired,
-  t: PropTypes.func.isRequired,
 };
 
 ActionCard.fragments = {
