@@ -198,9 +198,9 @@ const ActionRow = ({item, plan}) => {
         { plan.actionImplementationPhases?.length > 0 ? (
           <ActionPhase
             status={actionStatus}
-            activePhase={item.implementationPhase?.identifier}
+            activePhase={item.implementationPhase}
             reason={item.manualStatusReason}
-            mergedWith={item.mergedWith?.id}
+            mergedWith={item.mergedWith}
             phases={plan.actionImplementationPhases}
             compact
           />

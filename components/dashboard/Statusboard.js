@@ -85,6 +85,7 @@ export const GET_ACTION_LIST = gql`
       implementationPhase {
         id
         identifier
+        name
       }
       impact {
         id

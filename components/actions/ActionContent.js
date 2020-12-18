@@ -96,6 +96,7 @@ query ActionDetails($plan: ID!, $id: ID!, $bgImageSize: String = "1200x630") {
     implementationPhase {
       id
       identifier
+      name
     }
     schedule {
       id, name, beginsAt, endsAt
@@ -287,7 +288,7 @@ function ActionContent({ id }) {
                 <SideHeader>{ t('actions:action-progress') }</SideHeader>
                 <ActionPhase
                   status={actionStatus}
-                  activePhase={action.implementationPhase?.identifier}
+                  activePhase={action.implementationPhase}
                   reason={action.manualStatusReason}
                   mergedWith={action.mergedWith}
                   phases={plan.actionImplementationPhases}

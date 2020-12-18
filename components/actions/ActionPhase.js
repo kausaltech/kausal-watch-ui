@@ -111,8 +111,8 @@ function ActionPhase(props) {
   let phaseIndex = -1;
 
   // Find position of the active phase
-  if (activePhase !== '') {
-    phaseIndex = phases.findIndex((phase) => phase.identifier === activePhase);
+  if (activePhase?.identifier) {
+    phaseIndex = phases.findIndex((phase) => phase.identifier === activePhase.identifier);
   }
   // Override phase name in special case statuses
   const inactive = ['cancelled', 'merged', 'postponed', 'completed'].includes(status.identifier);
@@ -158,7 +158,7 @@ function ActionPhase(props) {
 
 ActionPhase.propTypes = {
   status: PropTypes.shape().isRequired,
-  activePhase: PropTypes.string,
+  activePhase: PropTypes.shape(),
   reason: PropTypes.string,
   phases: PropTypes.arrayOf(PropTypes.shape(
     {
@@ -173,7 +173,7 @@ ActionPhase.propTypes = {
 };
 
 ActionPhase.defaultProps = {
-  activePhase: '',
+  activePhase: {},
   reason: '',
   phases: [],
   mergedWith: '',

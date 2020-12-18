@@ -23,6 +23,7 @@ const ACTION_ROW_FRAGMENT = gql`
     implementationPhase {
       id
       identifier
+      name
     }
     completion
     categories {
