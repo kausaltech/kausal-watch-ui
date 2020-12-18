@@ -1,24 +1,28 @@
 import React from 'react';
 import dynamic from 'next/dynamic';
 import { useTheme } from 'common/theme';
+import { useTranslation } from 'common/i18n';
 
 const StatusDonut = (props) => {
   const {
     data,
     currentValue,
     colors,
-    header
+    header,
   } = props;
   const theme = useTheme();
-  const Plot = dynamic(import('./Plot'));
+  const { i18n } = useTranslation();
 
   if (!process.browser) {
     return null;
   }
 
+  const Plot = dynamic(import('./Plot'));
+
   const pieData = data;
   pieData.domain = { column: 0 };
   pieData.hoverinfo = 'label+value+percent';
+  pieData.hovertemplate = '%{label}<br>%{value}<br>%{percent:.0%}<extra></extra>';
   pieData.hole = 0.5;
   pieData.type = 'pie';
   pieData.sort = false;
@@ -52,8 +56,19 @@ const StatusDonut = (props) => {
     showlegend: false,
     colorway: plotColors,
   };
-
-  return <Plot data={[pieData]} layout={pieLayout} />;
+  const config = {
+    locale: i18n.language,
+    locales: {
+      fi: {
+        format: {
+          decimal: ',',
+          thousands: ' ',
+          grouping: [3],
+        },
+      },
+    },
+  };
+  return <Plot data={[pieData]} layout={pieLayout} config={config} />;
 };
 
 export default StatusDonut;

@@ -103,3 +103,5 @@ required-field: Pakollinen tieto
 send: Lähetä
 close: Sulje
 unknown: Tuntematon
+under-x-days: Alle {{days}} päivää
+over-x-days: Yli {{days}} päivää

@@ -7,7 +7,7 @@ import PlanContext from 'context/plan';
 import { useTranslation } from 'common/i18n';
 import StatusDonut from 'components/graphs/StatusDonut';
 
-const getTimelinessData = (actions, actionStatuses, theme) => {
+const getTimelinessData = (actions, actionStatuses, theme, t) => {
   const timeliness = {
     values: [],
     labels: [],
@@ -20,7 +20,6 @@ const getTimelinessData = (actions, actionStatuses, theme) => {
   let under30 = 0;
   let under60 = 0;
   let over60 = 0;
-  let merged = 0;
   let notActive = 0;
   let total = 0;
   let good = 0;
@@ -32,10 +31,7 @@ const getTimelinessData = (actions, actionStatuses, theme) => {
     total += 1;
 
     // Filter out merged, inactive and completed actions from timeliness calculation
-    if (actionStatus.identifier === 'merged') {
-      merged += 1;
-      total -= 1;
-    } else if (['postponed', 'cancelled', 'completed'].includes(actionStatus.identifier)) {
+    if (['postponed', 'cancelled', 'completed', 'merged'].includes(actionStatus.identifier)) {
       notActive += 1;
       total -= 1;
     } else if (age.as('hours') >= 24 * 60) over60 += 1;
@@ -49,20 +45,26 @@ const getTimelinessData = (actions, actionStatuses, theme) => {
   });
 
   timeliness.values.push(under30);
-  timeliness.labels.push('Under 30 days');
+  timeliness.labels.push(t('under-x-days', { days: 30 }));
   timeliness.colors.push(theme.graphColors.green070);
+
   timeliness.values.push(under60);
-  timeliness.labels.push('Under 60 days');
+  timeliness.labels.push(t('under-x-days', { days: 60 }));
   timeliness.colors.push(theme.graphColors.green030);
+
   timeliness.values.push(over60);
-  timeliness.labels.push('Over 60 days');
+  timeliness.labels.push(t('over-x-days', { days: 60 }));
   timeliness.colors.push(theme.graphColors.yellow050);
+
+  /*
+   * Do not report on the timeliness of actions that are not
+   * being monitored anymore.
+   */
+  /*
   timeliness.values.push(notActive);
-  timeliness.labels.push('Not Active');
+  timeliness.labels.push(t('not-being-monitored'));
   timeliness.colors.push(theme.graphColors.grey030);
-  timeliness.values.push(merged);
-  timeliness.labels.push('Merged');
-  timeliness.colors.push(theme.graphColors.grey010);
+  */
 
   timeliness.total = `${Math.round((good / total) * 100)}%`;
 
@@ -83,11 +85,9 @@ const getStatusData = (actions, actionStatuses, theme) => {
     'in_progress',
     'not_started',
     'late',
-    'severely_late',
     'cancelled',
     'merged',
     'postponed',
-    'severely_late',
     'undefined',
   ];
 
@@ -164,7 +164,7 @@ const getPhaseData = (actions, phases, actionStatuses, theme, t) => {
     phaseData.total += actionCountOnPhase.length;
   });
 
-  phaseData.labels.push(t('unknown'));
+  phaseData.labels.push(t('not-being-implemented'));
   phaseData.values.push(actions.length - phaseData.total);
   phaseData.colors.push(theme.graphColors.grey010);
 
@@ -178,7 +178,7 @@ const ActionsStatusGraphs = (props) => {
   const { t } = useTranslation(['common']);
 
   const progressData = getStatusData(actions, plan.actionStatuses, theme);
-  const timelinessData = (getTimelinessData(actions, plan.actionStatuses, theme));
+  const timelinessData = getTimelinessData(actions, plan.actionStatuses, theme, t);
   let phaseData;
   if (plan.actionImplementationPhases.length > 0) {
     phaseData = getPhaseData(actions, plan.actionImplementationPhases, plan.actionStatuses, theme, t);

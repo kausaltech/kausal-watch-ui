@@ -30,3 +30,5 @@ action-status-merged: Merged with action
 action-status-reason: Reason
 action-previous: Previous action
 action-next: Next action
+not-being-monitored: Not monitored
+not-being-implemented: Not being implemented

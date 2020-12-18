@@ -31,3 +31,5 @@ action-status-reason: Tarkennus
 action-previous: Edellinen toimenpide
 action-next: Seuraava toimenpide
 no-defined-indicators: Ei määriteltyjä mittareita
+not-being-monitored: Ei seurannassa
+not-being-implemented: Ei toteuteta

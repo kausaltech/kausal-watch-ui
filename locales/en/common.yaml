@@ -105,3 +105,5 @@ required-field: Required field
 send: Send
 close: Close
 unknown: Unknown
+under-x-days: Under {{days}} days
+over-x-days: Over {{days}} days
