@@ -10,6 +10,7 @@ const Status = styled.div`
 
 const StatusTitle = styled.div`
   padding: 3px 6px;
+  text-align: left;
   background-color: ${(props) => props.theme.themeColors.light};
   font-size: ${(props) => props.theme.fontSizeSm};
   line-height: ${(props) => props.theme.spaces.s150};
