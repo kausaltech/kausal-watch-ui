@@ -1,11 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { lighten, darken } from 'polished';
+import styled, { useTheme } from 'styled-components';
+import { darken } from 'polished';
 import { Progress } from 'reactstrap';
+import { getStatusColor } from 'common/preprocess';
 
 const Status = styled.div`
-  color: ${(props) => props.theme.themeColors.white};
+  color: ${(props) => props.theme.themeColors.black};
+`;
+
+const ActionStatusBar = styled.div`
+  height: ${(props) => props.theme.spaces.s050};
+  background-color: ${(props) => props.color};
 `;
 
 const StatusTitle = styled.div`
@@ -21,64 +27,29 @@ const ActionProgress = styled(Progress)`
   height: ${(props) => props.theme.spaces.s200};
   background-color: ${(props) => props.theme.themeColors.light};
 
-  &.bg-not_started {
-    background-color: ${(props) => props.theme.actionNotStartedColor};
-    .progress-bar {
-      color: ${(props) => props.theme.themeColors.black};
-    }
-  }
-
-  &.bg-in_progress {
-    background-color: ${(props) => props.theme.actionOnTimeColor};
-    .progress-bar {
-      background-color: ${(props) => darken(0.15, props.theme.actionOnTimeColor)};
-    }
-  }
-
-  &.bg-on_time {
-    background-color: ${(props) => props.theme.actionOnTimeColor};
-    .progress-bar {
-      background-color: ${(props) => darken(0.1, props.theme.actionOnTimeColor)};
-    }
-  }
-
-  &.bg-completed {
-    background-color: ${(props) => props.theme.actionCompletedColor};
-    .progress-bar {
-      background-color: ${(props) => props.theme.actionCompletedColor};
-    }
-  }
-
-  &.bg-late {
-    background-color: ${(props) => props.theme.actionLateColor};
-    .progress-bar {
-      color: ${(props) => props.theme.themeColors.black};
-      background-color: ${(props) => darken(0.25, props.theme.actionLateColor)};
-    }
-  }
-
-  &.bg-severely_late {
-    background-color: ${(props) => props.theme.actionSeverelyLateColor};
-    .progress-bar {
-      background-color: ${(props) => lighten(0.15, props.theme.actionSeverelyLateColor)};
-    }
+  .progress-bar {
+    //background-color: ${(props) => darken(0.10, props.theme.graphColors.light)};
+    background-color: ${(props) => props.theme.graphColors.green010};
+    color: ${(props) => props.theme.themeColors.black};
   }
 `;
 function ActionStatus(props) {
-  const { identifier, name, completion, ...rest } = props;
+  const { identifier: statusIdentifier, name: statusName, completion, ...rest } = props;
+  const theme = useTheme();
+  const statusColor = getStatusColor(statusIdentifier, theme);
 
   return (
     <Status {...rest}>
       <span className="sr-only">
-        {name}
+        { statusName }
       </span>
+      <ActionStatusBar color={statusColor} />
       <ActionProgress
         value={completion}
-        className={`bg-${identifier}`}
         aria-hidden
       >
         <StatusTitle>
-          {name}
+          { statusName }
         </StatusTitle>
       </ActionProgress>
     </Status>

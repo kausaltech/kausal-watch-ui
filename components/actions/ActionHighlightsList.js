@@ -35,6 +35,10 @@ export const GET_ACTION_LIST = gql`
         identifier
         name
       }
+      implementationPhase {
+        id
+        identifier
+      }
       categories {
         id
         imageUrl(size: $bgImageSize)

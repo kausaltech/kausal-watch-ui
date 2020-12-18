@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import {
   Card, CardBody,
@@ -7,10 +7,11 @@ import {
 import styled from 'styled-components';
 import { transparentize } from 'polished';
 import { Spring } from 'react-spring/renderprops.cjs';
-
-import { ActionLink } from '../../common/links';
-import Icon from '../common/Icon';
-import ActionStatus from './ActionStatus';
+import PlanContext from 'context/plan';
+import { cleanActionStatus } from 'common/preprocess';
+import { ActionLink } from 'common/links';
+import Icon from 'components/common/Icon';
+import ActionStatus from 'components/actions/ActionStatus';
 
 const StyledCard = styled(Card)`
   width: 100%;
@@ -93,6 +94,8 @@ const ActionNumber = styled.div`
 
 function ActionHighlightCard(props) {
   const { action, imageUrl } = props;
+  const plan = useContext(PlanContext);
+  const actionStatus = cleanActionStatus(action, plan.actionStatuses);
   let actionName = action.name;
   if (actionName.length > 120) actionName = `${action.name.substring(0, 120)}…`;
   return (
@@ -110,18 +113,18 @@ function ActionHighlightCard(props) {
                   <ActionNumber>{action.identifier}</ActionNumber>
                 </ImgOverlay>
               </ImgArea>
-              {action.status && (
+              {actionStatus && (
                 <StyledActionStatus
-                  name={action.status.name}
-                  identifier={action.status.identifier}
+                  name={actionStatus.name}
+                  identifier={actionStatus.identifier}
                   completion={action.completion}
                 />
               )}
               <CardBody>
-                { action.status && action.status.identifier === 'completed'
+                { actionStatus && actionStatus.identifier === 'completed'
                   && (
                     <ReadyBadge pill>
-                      <Icon name="check" color="#fff" width="2em" height="2em" />
+                      <Icon name="check" color="#ffffff" width="2em" height="2em" />
                     </ReadyBadge>
                   )}
                 <StyledCardTitle tag="h3">{actionName}</StyledCardTitle>
@@ -144,7 +147,7 @@ ActionHighlightCard.propTypes = {
     }),
     completion: PropTypes.number,
   }).isRequired,
-  imageUrl: PropTypes.string,
+  imageUrl: PropTypes.string.isRequired,
 };
 
 export default ActionHighlightCard;
