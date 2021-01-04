@@ -57,7 +57,8 @@ function HomePage() {
   if (
     plan.identifier === 'liiku'
     || plan.identifier === 'lahti-ilmasto'
-    || plan.identifier === 'helsinki-kierto') heroComponent = (
+    || plan.identifier === 'helsinki-kierto'
+    || plan.identifier === 'tampere-ilmasto') heroComponent = (
       <HeroFullImage
         bgImage={plan.mainImage?.largeRendition?.src || plan.imageUrl}
         title={generalContent.siteTitle}

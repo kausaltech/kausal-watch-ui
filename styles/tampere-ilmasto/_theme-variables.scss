@@ -1,0 +1,208 @@
+/**
+ * _theme-variables.scss
+ *
+ * These are extended set of Bootstrap style variables. They are used
+ * for building a themed Bootstrap base stylesheet for Reactstrap
+ *
+ * All these variables are also parsed as theme object for Styled
+ * Components and they are referenced in most of the UI components.
+ * This file has to be self-contained and can not refer to variables
+ * from the other theme files.
+ *
+ */
+
+$name: 'tampere-ilmasto';
+
+// Theme specific brand colors
+// brand-light/brand-dark should have contrast ratio over 4.5
+// brand-light/theme.dark should have contrast ratio over 4.5
+// brand-dark/theme.light should have contrast ratio over 4.5
+$brand-light:  #8CC1B3;
+$brand-dark:   #397368;
+$neutral-light: #8CC1B3;
+$neutral-dark: #585857;
+
+// Application color mappings:
+$theme-colors: (
+  "primary":    $brand-dark,
+  "secondary":  $brand-light,
+  "success":    #107251,
+  "info":       #336D94,
+  "warning":    #F4CE73,
+  "danger":     #A73939,
+  "light":      #ECEAE6,
+  "dark":       #585857,
+  "black":      #4e4e4e,
+  "white":      #ffffff,
+);
+
+$image-overlay: #ffffff;
+
+// Fonts
+$font-url: '/static/fonts/tampere-ilmasto/fonts.css';
+$font-family: 'Open Sans';
+$headings-font-family: 'Montserrat';
+$headings-font-weight: 700;
+$headings-color: #4e4e4e;
+
+$font-family-fallback:  -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
+$headings-font-family-fallback:  $font-family-fallback;
+
+$font-size-sm:	  0.75rem;
+$font-size-base: 	1rem;
+$font-size-md:	  1.333rem;
+$font-size-lg:	  1.666rem;
+$font-size-xl:	  2rem;
+$font-size-xxl:	  3rem;
+
+$font-weight-normal:          400;
+$font-weight-bold:            700;
+
+$font-weight-base:            $font-weight-normal !default;
+
+$line-height-base:            1.5;
+$line-height-sm:              1;
+$line-height-md:              1.2;
+$line-height-lg:              1.75;
+
+$space: 1rem;
+$spaces: (
+  s000: 0,
+  s025: $space / 4,   //4px
+  s050: $space / 2,   //8px
+  s100: $space,       //16px
+  s150: $space * 1.5, //24px
+  s200: $space * 2,    //32px
+  s300: $space * 3,   //48px
+  s400: $space * 4,   //64px
+  s600: $space * 6,   //96px
+  s800: $space * 8,   //128px
+);
+
+// Links
+//
+// Style anchor elements.
+
+$link-color: $brand-dark;
+$link-hover-color: darken($brand-dark, 7%);
+
+// Components
+//
+// Define common padding and border radius sizes and more.
+
+//$component-active-color:      #ffffff !default;
+$component-active-bg:         $brand-dark;
+
+$nav-pills-link-active-bg: $brand-dark;
+
+$list-group-active-bg:  $component-active-bg;
+$list-group-active-border-color:  $list-group-active-bg;
+
+
+/////// BUTTONS
+
+$input-btn-focus-color:       #4E80A6;
+$input-btn-padding-y:           .5rem;
+$input-btn-padding-x:           .75rem;
+$btn-border-radius:             .25rem;
+$btn-border-width:        1px;
+
+/////// FORMS
+
+$input-padding-y:            $input-btn-padding-y;
+$input-padding-x:            $input-btn-padding-x;
+$input-bg:                   #ffffff;
+$input-border-width:         1px;
+$input-line-height:          1.5;
+$input-border-radius:        4px;
+$custom-select-indicator:    url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQiIGhlaWdodD0iMTQiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTExLjg5NiAzTDcgNy44NDIgMi4xMDQgMyAwIDUuMDggNyAxMmw3LTYuOTJMMTEuODk2IDN6IiBmaWxsPSIjMDAwIi8+PC9zdmc+") !default;
+$form-label-font-weight:     400;
+
+/////// NAV
+
+$brand-nav-color:                   #ffffff;
+$brand-nav-background:              #4e4e4e;
+
+/////// CARDS
+
+$card-border-width:                   0;
+$card-border-radius:                  .25rem;
+
+/////// BADGES
+
+$badge-background:                #91C9EA;
+$badge-color:                     #4e4e4e;
+$badge-border-radius:             3px;
+$badge-padding-y:                 .5em;
+$badge-padding-x:                 .75em;
+$badge-font-weight:               700;
+
+/////// TABLES
+
+$table-head-bg:                   transparent;
+$table-hover-bg:                  #F7F6F3;
+
+// Actions
+$actionNotStarted-color:    #ECEAE6;
+$actionCompleted-color:     #0C4B2B;
+$actionOnTime-color:        #0C4B2B;
+$actionLate-color:          #E2AB0A;
+$actionSeverelyLate-color:  #812A03;
+$actionMerged-color:        #88847C;
+
+// Indicators
+$action-color: #216988;
+$operational-indicator-color: #2186B1;
+$tactical-indicator-color: #62C9F6;
+$strategic-indicator-color: #A6E4FF;
+
+$action-color-fg: #F7F6F3;
+$operational-indicator-color-fg: #F7F6F3;
+$tactical-indicator-color-fg: #1A1817;
+$strategic-indicator-color-fg: #1A1817;
+
+$causality-increases-color: #279A6D;
+$causality-decreases-color: #D46262;
+$causality-is-part-of-color: #88847C;
+
+// Breakpoints
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 992px;
+$breakpoint-xl: 1200px;
+
+$icons-url: '/static/icons/default';
+$theme-logo-url: '/static/images/tampere-ilmasto/tampere-logo.svg';
+$theme-logo-white-url: '/static/images/tampere-ilmasto/tampere-logo.svg';
+$icon-indicators-url: '';
+$icon-actions-url: '';
+
+$theme-custom-styles-url: '';
+
+$graph-colors: (
+  grey010: #eeeeee,
+  grey030: #c7c7c7,
+  grey050: #a0a0a0,
+  grey070: #636363,
+  grey090: #3f3f3f,
+  green010: #EAFACB,
+  green030: #D8EDAE,
+  green050: #ABC872,
+  green070: #7A9644,
+  green090: #587325,
+  red010: #FEDEDC,
+  red030: #E87E78,
+  red050: #C83E36,
+  red070: #95120A,
+  red090: #6F130D,
+  blue010: #A6E4FF,
+  blue030: #62C9F6,
+  blue050: #39A7D7,
+  blue070: #2186B1,
+  blue090: #216988,
+  yellow010: #FFF1B9,
+  yellow030: #FFE992,
+  yellow050: #F4D240,
+  yellow070: #D6BC4D,
+  yellow090: #B69E3A,
+);
