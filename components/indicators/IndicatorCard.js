@@ -12,7 +12,6 @@ import { IndicatorLink } from '../../common/links';
 const IndicatorValue = styled.div`
   margin-top: 1em;
   font-weight: ${(props) => props.theme.fontWeightBold};
-  opacity: .75;
 `;
 
 const IndicatorValueUnit = styled.span`
@@ -77,7 +76,6 @@ const Indicator = styled(Card)`
 `;
 
 const IndicatorType = styled.div`
-  opacity: .75;
   font-size: ${(props) => props.theme.fontSizeSm};
   margin-bottom: .5em;
 `;
