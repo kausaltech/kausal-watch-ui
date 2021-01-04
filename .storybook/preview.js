@@ -25,6 +25,7 @@ const additionalThemes = [
   'hnh2035',
   'liiku',
   'lahti-ilmasto',
+  'tampere-ilmasto',
 ];
 
 additionalThemes.forEach((value) => {
