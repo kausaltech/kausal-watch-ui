@@ -22,6 +22,7 @@ let defaultTheme = require('sass-extract-loader?{"plugins": ["sass-extract-js"]}
 let themes = [defaultTheme];
 
 const additionalThemes = [
+  'lpr-ilmasto',
   'hnh2035',
   'liiku',
   'lahti-ilmasto',

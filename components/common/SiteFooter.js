@@ -301,7 +301,7 @@ const FundingHeader = styled.div`
 `;
 
 const FundingInstrumentContainer = styled.div`
-  height: ${(props) => props.theme.spaces.s500};
+  height: calc( 2 * ${(props) => props.theme.spaces.s600});
   width: calc( 2 * ${(props) => props.theme.spaces.s800});
   margin-left: ${(props) => props.theme.spaces.s300};
   text-align: right;

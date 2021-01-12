@@ -276,7 +276,11 @@ function GlobalNav(props) {
   }
   return (
     <div>
-      <TopNav expand="md">
+      <TopNav
+        expand="md"
+        id="branding-navigation-bar"
+        aria-label={siteTitle}
+      >
         <Container fluid={fullwidth} className="flex-nowrap">
           <Link href="/" passHref>
             <HomeLink>
@@ -287,7 +291,7 @@ function GlobalNav(props) {
           <NavbarToggler
             onClick={() => toggleOpen(!isOpen)}
             aria-label={isOpen ? t('nav-menu-close') : t('nav-menu-open')}
-            aria-controls="navbarSupportedContent"
+            aria-controls="global-navigation-bar"
             aria-expanded={isOpen}
             type="button"
           >
@@ -300,7 +304,7 @@ function GlobalNav(props) {
       <BotNav
         expand="md"
         fixed={navIsFixed ? 'top' : ''}
-        id="navbarSupportedContent"
+        id="global-navigation-bar"
       >
         <Container fluid={fullwidth}>
           <Collapse isOpen={isOpen} navbar>

@@ -11,14 +11,14 @@
  *
  */
 
-$name: 'greenreality';
+$name: 'lpr-ilmasto';
 
 // Theme specific brand colors
 // brand-light/brand-dark should have contrast ratio over 4.5
 // brand-light/theme.dark should have contrast ratio over 4.5
 // brand-dark/theme.light should have contrast ratio over 4.5
 $brand-light:  rgb(159, 231, 152);
-$brand-dark:   rgb(39, 93, 56);
+$brand-dark:   #3a8433;
 $neutral-light: #eeeeee;
 $neutral-dark: $brand-dark;
 
@@ -33,7 +33,7 @@ $theme-colors: (
   "light":      #eeeeee,
   "dark":       rgb(65,65,65),
   "black":      rgb(51,51,51),
-  "white":      #f9f9f9,
+  "white":      #ffffff,
 );
 
 $image-overlay: $brand-dark;
@@ -116,24 +116,8 @@ $form-label-font-weight:     400;
 
 /////// NAV
 
-$brand-nav-color:              #f9f9f9;
+$brand-nav-color:              #ffffff;
 $brand-nav-background:         $neutral-dark;
-
-$navbar-dark-hover-color:           rgba(#222222, .75);
-$navbar-dark-active-color:          #222222;
-$navbar-dark-disabled-color:        rgba(#222222, .25);
-
-$navbar-dark-toggler-icon-bg:       str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='#eeeeee' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E"), "#", "%23");
-$navbar-dark-toggler-border-color:  transparent;
-
-$navbar-light-color:                #eeeeee;
-$navbar-light-hover-color:          rgba(#eeeeee, .7);
-$navbar-light-active-color:         rgba(#eeeeee, .9);
-$navbar-light-disabled-color:       rgba(#eeeeee, .3);
-
-$navbar-light-toggler-icon-bg:      str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='#222222' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E"), "#", "%23");
-
-$navbar-light-toggler-border-color: transparent;
 
 /////// CARDS
 
@@ -176,7 +160,7 @@ $breakpoint-lg: 992px;
 $breakpoint-xl: 1200px;
 
 $icons-url: '/static/icons/default';
-$theme-logo-url: '/static/images/greenreality/greenreality-white.svg';
+$theme-logo-url: '/static/images/lpr-ilmasto/greenreality-white.svg';
 $theme-logo-white-url: $theme-logo-url;
 $icon-indicators-url: '';
 $icon-actions-url: '';

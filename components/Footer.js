@@ -60,6 +60,22 @@ function Footer(props) {
       logo: '/static/images/hnh2035/climate-kic-logo-white.svg',
     },
   ];
+  if (plan.identifier === 'lpr-ilmasto') fundingInstruments = [
+    {
+      id: '1',
+      name: 'European Green Leaf winner 2021 (An initiative of European Comission)',
+      link: '',
+      logo: '/static/images/lpr-ilmasto/european-green-leaf.svg',
+    },
+  ];
+  if (plan.identifier === 'lahti-ilmasto') fundingInstruments = [
+    {
+      id: '1',
+      name: 'Lahti, European Green Capital winner 2021 (An initiative of European Comission)',
+      link: '',
+      logo: '/static/images/lahti-ilmasto/lahti-green-capital-2021.svg',
+    },
+  ];
 
   return (
     <>
