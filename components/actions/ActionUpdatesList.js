@@ -5,7 +5,7 @@ import { Query } from '@apollo/client/react/components';
 import { gql } from '@apollo/client';
 import { Row, Col, Media } from 'reactstrap';
 
-import moment from '../../common/moment';
+import dayjs from '../../common/dayjs';
 import PlanContext from '../../context/plan';
 import { withTranslation } from '../../common/i18n';
 
@@ -88,7 +88,7 @@ function ActionStatusUpdate(props) {
               {name}
             </AuthorName>
             <UpdateDate>
-              <time dateTime={date}>{ moment(date).format('DD.MM.YYYY') }</time>
+              <time dateTime={date}>{ dayjs(date).format('DD.MM.YYYY') }</time>
             </UpdateDate>
           </Media>
         </Media>

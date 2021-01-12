@@ -1,7 +1,7 @@
 import React from 'react';
 import { Row, Col } from 'reactstrap';
 import styled, { withTheme } from 'styled-components';
-import moment from '../../common/moment';
+import dayjs from '../../common/dayjs';
 import { withTranslation } from '../../common/i18n';
 
 const ValueSummary = styled.div`
@@ -78,7 +78,7 @@ function IndicatorValueSummary(props) {
   const pluralUnitName = unit.verboseNamePlural || unit.verboseName || unit.shortName || unit.name;
   const shortUnitName = unit.shortName || unit.name;
   const diffUnitName = unit.name === '%' ? t('percent-point-abbreviation') : shortUnitName;
-  const now = moment();
+  const now = dayjs();
   let timeFormat = 'D.M.YYYY';
 
   if (timeResolution === 'YEAR') {
@@ -120,7 +120,7 @@ function IndicatorValueSummary(props) {
     valueDisplay = (
       <div className="mb-4">
         <ValueLabel>{ t('indicator-latest-value') }</ValueLabel>
-        <ValueDate>{moment(latestValue.date).format(timeFormat)}</ValueDate>
+        <ValueDate>{dayjs(latestValue.date).format(timeFormat)}</ValueDate>
         <ValueDisplay>
           {latestValueDisplay}
           <ValueUnit>{shortUnitName}</ValueUnit>
@@ -137,11 +137,11 @@ function IndicatorValueSummary(props) {
     );
   }
 
-  const nextGoal = goals.find((goal) => moment(goal.date).isSameOrAfter(now));
+  const nextGoal = goals.find((goal) => dayjs(goal.date).isSameOrAfter(now));
   let goalDisplay = <h6>{ t('indicator-time-no-goals') }</h6>;
 
   if (nextGoal) {
-    const nextGoalDate = moment(nextGoal.date).format(timeFormat);
+    const nextGoalDate = dayjs(nextGoal.date).format(timeFormat);
     const nextGoalValue = beautifyValue(nextGoal.value);
     goalDisplay = (
       <div className="mb-4">
@@ -159,7 +159,7 @@ function IndicatorValueSummary(props) {
   let differenceDisplay = <h6>-</h6>;
   if (values.length > 0 && nextGoal) {
     const difference = nextGoal.value - values[values.length - 1].value;
-    const timeToGoal = `${moment(nextGoal.date).diff(now, 'years', true).toFixed(0)} ${' '} ${t('indicator-resolution-years')}`;
+    const timeToGoal = `${dayjs(nextGoal.date).diff(now, 'years', true).toFixed(0)} ${' '} ${t('indicator-resolution-years')}`;
     differenceDisplay = (
       <div className="mb-4">
         <ValueLabel>{ t('indicator-time-to-goal') }</ValueLabel>

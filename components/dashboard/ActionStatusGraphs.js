@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
-import moment from 'common/moment';
+import dayjs from 'common/dayjs';
 import { getStatusColor, cleanActionStatus } from 'common/preprocess';
 import { useTheme } from 'common/theme';
 import PlanContext from 'context/plan';
@@ -16,7 +16,7 @@ const getTimelinessData = (actions, actionStatuses, theme, t) => {
     colors: [],
   };
 
-  const now = moment();
+  const now = dayjs();
   let under30 = 0;
   let under60 = 0;
   let over60 = 0;
@@ -25,8 +25,8 @@ const getTimelinessData = (actions, actionStatuses, theme, t) => {
   let good = 0;
 
   actions.forEach((action) => {
-    const actionUpdated = moment(action.updatedAt);
-    const age = moment.duration(now.diff(actionUpdated));
+    const actionUpdated = dayjs(action.updatedAt);
+    const age = now.diff(actionUpdated, 'day');
     const actionStatus = cleanActionStatus(action, actionStatuses);
     total += 1;
 
@@ -34,11 +34,11 @@ const getTimelinessData = (actions, actionStatuses, theme, t) => {
     if (['postponed', 'cancelled', 'completed', 'merged'].includes(actionStatus.identifier)) {
       notActive += 1;
       total -= 1;
-    } else if (age.as('hours') >= 24 * 60) over60 += 1;
-    else if (age.as('hours') >= 24 * 30) {
+    } else if (age >= 60) over60 += 1;
+    else if (age >= 30) {
       under60 += 1;
       good += 1;
-    } else if (age.as('hours') < 24 * 30) {
+    } else if (age < 30) {
       under30 += 1;
       good += 1;
     }

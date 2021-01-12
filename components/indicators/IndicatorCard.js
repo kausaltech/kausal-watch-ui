@@ -4,7 +4,7 @@ import {
   Card, CardBody, CardTitle, Alert,
 } from 'reactstrap';
 import styled from 'styled-components';
-import moment from '../../common/moment';
+import dayjs from '../../common/dayjs';
 import { withTranslation } from '../../common/i18n';
 import { IndicatorLink } from '../../common/links';
 
@@ -93,7 +93,7 @@ function IndicatorLatestValue(props) {
 
   if (!latestValue) return null;
 
-  const time = moment(date, 'YYYY-MM-DD');
+  const time = dayjs(date, 'YYYY-MM-DD');
   let tagVal;
   let formattedTime;
 

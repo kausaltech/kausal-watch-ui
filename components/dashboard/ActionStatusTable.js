@@ -4,7 +4,7 @@ import { Table } from 'reactstrap';
 import styled from 'styled-components';
 import { useTheme } from 'common/theme';
 import PlanContext from 'context/plan';
-import moment from 'common/moment';
+import dayjs from 'common/dayjs';
 import { useTranslation } from 'common/i18n';
 import StatusBadge from 'components/common/StatusBadge';
 import ActionImpact from 'components/actions/ActionImpact';
@@ -232,7 +232,7 @@ const ActionRow = ({item, plan}) => {
           <IndicatorsViz relatedIndicators={item.relatedIndicators} />}
       </td>
       <td>
-        <UpdatedAgo>{ `${moment(item.updatedAt).fromNow(false)}` }</UpdatedAgo>
+        <UpdatedAgo>{ `${dayjs(item.updatedAt).fromNow(false)}` }</UpdatedAgo>
       </td>
     </StyledRow>
   );
@@ -247,7 +247,7 @@ const ActionsStatusTable = (props) => {
   const hasImpacts = plan.actionImpacts.length > 0;
   const { t, i18n } = useTranslation(['common', 'actions']);
 
-  moment.locale(i18n.language);
+  dayjs.locale(i18n.language);
 
   return (
     <DashTable role="list">

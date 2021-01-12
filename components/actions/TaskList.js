@@ -2,7 +2,7 @@ import React from 'react';
 import { PropTypes } from 'prop-types';
 import { ListGroup as BaseListGroup, ListGroupItem as BaseListGroupItem } from 'reactstrap';
 import styled, { withTheme } from 'styled-components';
-import moment from 'common/moment';
+import dayjs from 'common/dayjs';
 import Icon from 'components/common/Icon';
 import RichText from 'components/common/RichText';
 import { withTranslation } from 'common/i18n';
@@ -64,7 +64,7 @@ const ListGroupItem = styled(BaseListGroupItem)`
 
 function parseTimestamp(timestamp) {
   const timeFormat = 'DD.MM.YYYY';
-  return moment(timestamp).format(timeFormat);
+  return dayjs(timestamp).format(timeFormat);
 }
 
 function TaskList(props) {
@@ -73,7 +73,7 @@ function TaskList(props) {
     .sort((a, b) => {
       const adate = a.completedAt ? a.completedAt : a.dueAt;
       const bdate = b.completedAt ? b.completedAt : b.dueAt;
-      return moment(adate).diff(moment(bdate));
+      return dayjs(adate).diff(dayjs(bdate));
     });
 
   const undoneTasks = sortedTasks
