@@ -22,7 +22,7 @@ function Layout({ children }) {
   const site = useContext(SiteContext);
   const generalContent = plan.generalContent || {};
   const siteTitle = generalContent.siteTitle || plan.name;
-  const iconBase = site.theme ? `/static/images/${site.theme}/favicon` : null;
+  const iconBase = theme.name ? `/static/images/${theme.name}/favicon` : null;
   const googleSiteVerificationTag = plan.domain?.googleSiteVerificationTag;
 
   return (
@@ -38,16 +38,12 @@ function Layout({ children }) {
         <meta property="og:site_name" content={siteTitle} />
         {iconBase && (
           <>
-            <link rel="shortcut icon" href={`${iconBase}/favicon.ico`} type="image/x-icon" />
-            <link rel="apple-touch-icon" sizes="180x180" href={`${iconBase}/apple-touch-icon.png`} />
-            <link rel="icon" type="image/png" sizes="32x32" href={`${iconBase}/favicon-32x32.png`} />
-            <link rel="icon" type="image/png" sizes="16x16" href={`${iconBase}/favicon-16x16.png`} />
-            <link rel="mask-icon" href={`${iconBase}/safari-pinned-tab.svg`} color={theme.brandDark} />
+            <link rel="icon" href={`${iconBase}/icon.svg`} type="image/svg+xml" />
+            <link rel="icon" href={`${iconBase}/favicon.ico`} />
+            <link rel="apple-touch-icon" href={`${iconBase}/apple.png`} />
           </>
         )}
         { theme.themeCustomStylesUrl && <link rel="stylesheet" type="text/css" href={theme.themeCustomStylesUrl} />}
-        <meta name="msapplication-TileColor" content={theme.brandDark} />
-        <meta name="theme-color" content="#ffffff" />
         { googleSiteVerificationTag && <meta name="google-site-verification" content={googleSiteVerificationTag} />}
       </Head>
       <Header siteTitle={siteTitle} />
