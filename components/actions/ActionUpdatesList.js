@@ -88,7 +88,7 @@ function ActionStatusUpdate(props) {
               {name}
             </AuthorName>
             <UpdateDate>
-              <time dateTime={date}>{ dayjs(date).format('DD.MM.YYYY') }</time>
+              <time dateTime={date}>{ dayjs(date).format('L') }</time>
             </UpdateDate>
           </Media>
         </Media>

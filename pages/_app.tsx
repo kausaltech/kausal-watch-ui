@@ -15,6 +15,7 @@ import withApollo, {
   setPlanIdentifier as setApolloPlanIdentifier
 } from 'common/apollo';
 import theme, { setTheme, applyTheme } from 'common/theme';
+import dayjs from 'common/dayjs';
 import PlanContext from 'context/plan';
 import SiteContext from 'context/site';
 
@@ -219,6 +220,8 @@ WatchApp.getInitialProps = async (appContext) => {
 function I18nApp(props) {
   const { initialLanguage, initialI18nStore, i18nServerInstance } = props;
   const SSRWrappedApp = withSSR()(WatchApp);
+
+  dayjs.locale(initialLanguage)
 
   return (
     <I18nextProvider i18n={i18nServerInstance || i18n}>

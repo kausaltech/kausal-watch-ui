@@ -247,8 +247,6 @@ const ActionsStatusTable = (props) => {
   const hasImpacts = plan.actionImpacts.length > 0;
   const { t, i18n } = useTranslation(['common', 'actions']);
 
-  dayjs.locale(i18n.language);
-
   return (
     <DashTable role="list">
       <thead>

@@ -63,7 +63,7 @@ const ListGroupItem = styled(BaseListGroupItem)`
 `;
 
 function parseTimestamp(timestamp) {
-  const timeFormat = 'DD.MM.YYYY';
+  const timeFormat = 'L';
   return dayjs(timestamp).format(timeFormat);
 }
 

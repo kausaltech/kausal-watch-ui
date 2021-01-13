@@ -79,7 +79,7 @@ function IndicatorValueSummary(props) {
   const shortUnitName = unit.shortName || unit.name;
   const diffUnitName = unit.name === '%' ? t('percent-point-abbreviation') : shortUnitName;
   const now = dayjs();
-  let timeFormat = 'D.M.YYYY';
+  let timeFormat = 'l';
 
   if (timeResolution === 'YEAR') {
     timeFormat = 'YYYY';

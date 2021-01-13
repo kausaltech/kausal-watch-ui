@@ -102,9 +102,9 @@ function IndicatorLatestValue(props) {
     tagVal = formattedTime;
   } else if (resolution === 'month') {
     formattedTime = time.format('YYYY-MM');
-    tagVal = 'MMMM YYYY';
+    tagVal = formattedTime;
   } else {
-    formattedTime = time.format('DD.MM.YYYY');
+    formattedTime = time.format('L');
     tagVal = time.format(); // ISO format
   }
 
