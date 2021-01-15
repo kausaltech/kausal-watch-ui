@@ -12,7 +12,7 @@ import { constructOrgHierarchy, orgHasActions } from 'common/organizations';
 import ContentLoader from 'components/common/ContentLoader';
 import ErrorMessage from 'components/common/ErrorMessage';
 import PlanContext from 'context/plan';
-import StatusboardFilters from './StatusboardFilters';
+import ActionListFilters from 'components/common/ActionListFilters';
 import ActionStatusGraphs from './ActionStatusGraphs';
 import ActionStatusTable from './ActionStatusTable';
 
@@ -284,7 +284,7 @@ function ActionListResults({
             <h1>{ t('dashboard') }</h1>
             <Row>
               <Col sm="12">
-                <StatusboardFilters
+                <ActionListFilters
                   categoryTypes={catTypes}
                   orgs={orgs.filter(orgHasActions)}
                   impacts={impacts}
