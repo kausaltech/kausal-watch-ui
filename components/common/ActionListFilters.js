@@ -6,9 +6,9 @@ import {
 
 import styled from 'styled-components';
 import { useTranslation } from 'common/i18n';
-import TextInput from '../common/TextInput';
-import Button from '../common/Button';
-import DropDown from '../common/DropDown';
+import TextInput from './TextInput';
+import Button from './Button';
+import DropDown from './DropDown';
 
 const FiltersList = styled.div`
   margin: ${(props) => props.theme.spaces.s150} 0;
@@ -29,7 +29,6 @@ const FiltersList = styled.div`
     margin-left: .75em;
     font-size: ${(props) => props.theme.fontSizeMd};
   }
-
 `;
 
 const StyledBadge = styled(Badge)`
@@ -67,7 +66,7 @@ function ActionListFilterInput({
     return (
       <TextInput
         label={filter.label}
-        id={filter.identifier + '-field'}
+        id={`${filter.identifier}-field`}
         name={filter.identifier}
         placeholder={filter.placeholder}
         value={currentValue || ''}
@@ -78,7 +77,7 @@ function ActionListFilterInput({
   return (
     <DropDown
       label={filter.label}
-      id={filter.identifier + '-field'}
+      id={`${filter.identifier}-field`}
       name={filter.identifier}
       value={currentValue || ''}
       onChange={callback}

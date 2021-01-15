@@ -13,7 +13,7 @@ import RichText from 'components/common/RichText';
 import ContentLoader from 'components/common/ContentLoader';
 import ErrorMessage from 'components/common/ErrorMessage';
 import PlanContext from 'context/plan';
-import ActionListFilters from './ActionListFilters';
+import ActionListFilters from 'components/common/ActionListFilters';
 import ActionCardList from './ActionCardList';
 
 const ActionListSection = styled.div`
