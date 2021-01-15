@@ -33,7 +33,6 @@ const ACTION_CARD_FRAGMENT = gql`
       identifier
       name
     }
-    activePhase
   }
 `;
 
@@ -190,7 +189,6 @@ ActionCard.propTypes = {
       name: PropTypes.string,
     }),
     mergedWith: PropTypes.shape(),
-    activePhase: PropTypes.string,
     implementationPhase: PropTypes.shape({
       id: PropTypes.string,
       identifier: PropTypes.string,

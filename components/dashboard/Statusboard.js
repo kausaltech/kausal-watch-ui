@@ -42,7 +42,7 @@ const ActionListHeader = styled.div`
 `;
 
 export const GET_ACTION_LIST = gql`
-  query ActionList($plan: ID!) {
+  query DashboardActionList($plan: ID!) {
     plan(id: $plan) {
       id
       categoryTypes {
