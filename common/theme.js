@@ -3,13 +3,14 @@ import PropTypes, { number, exact, string, oneOfType } from 'prop-types';
 import { ThemeContext } from 'styled-components';
 
 /* eslint-disable */
-const defaultTheme = require('sass-extract-loader?{"plugins": ["sass-extract-js"]}!../styles/default/_theme-variables.scss');
+const defaultTheme = require('styles/default/theme.json');
+
 require('../styles/default/main.scss');
 
 const themeCache = {};
 
 if (!process.browser) {
-  // Import the _theme-variables.scss files from all the themes and store them
+  // Import the theme.json files from all the themes and store them
   // in an in-memory cache on the server side.
   function importAllThemes(r) {
     r.keys().forEach((key) => {
@@ -17,7 +18,7 @@ if (!process.browser) {
       themeCache[themeIdentifier] = r(key);
     });
   }
-  importAllThemes(require.context('sass-extract-loader?{"plugins": ["sass-extract-js"]}!../styles', true, /_theme-variables\.scss$/));
+  importAllThemes(require.context('../styles', true, /theme\.json$/));
 }
 /* eslint-enable */
 

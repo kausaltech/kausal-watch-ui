@@ -5,6 +5,7 @@ import { setConfig } from 'next/config';
 import { i18n } from './i18n';
 
 import ThemedGlobalStyles from '../common/ThemedGlobalStyles';
+import defaultTheme from 'styles/default/theme.json';
 
 const publicRuntimeConfig= {
   aplansApiBaseURL: 'https://api.watch.kausal.tech/v1',
@@ -18,7 +19,6 @@ setConfig({ publicRuntimeConfig });
 
 require('../styles/default/main.scss');
 
-let defaultTheme = require('sass-extract-loader?{"plugins": ["sass-extract-js"]}!../styles/default/_theme-variables.scss');
 let themes = [defaultTheme];
 
 const additionalThemes = [
@@ -27,10 +27,12 @@ const additionalThemes = [
   'liiku',
   'lahti-ilmasto',
   'tampere-ilmasto',
+  'helsinki-kierto',
+  'ktstrat',
 ];
 
 additionalThemes.forEach((value) => {
-  const additionalTheme = require('sass-extract-loader?{"plugins": ["sass-extract-js"]}!../styles/' + value + '/_theme-variables.scss');
+  const additionalTheme = require('styles/' + value + '/theme.json');
   themes.push(Object.assign({...defaultTheme}, additionalTheme),);
 });
 

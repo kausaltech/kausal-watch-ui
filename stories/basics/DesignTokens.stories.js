@@ -8,7 +8,6 @@ import defaultTheme from 'styles/default/theme.json';
 
 const ColorPicker = (props) => {
   const { color, handleChange, isDefault } = props;
-  const [currentColor, setColor] = useState(color);
   const [displayColorPicker, setDisplayColorPicker] = useState(false);
 
   const handlePickerClick = () => {
@@ -20,8 +19,7 @@ const ColorPicker = (props) => {
   };
 
   const handlePickerChange = (newColor, evt) => {
-    //setColor(newColor.hex);
-    handleChange(newColor.hex);
+    handleChange(`rgb(${newColor.rgb.r}, ${newColor.rgb.g}, ${newColor.rgb.b})`);
   };
 
   return (
@@ -29,7 +27,6 @@ const ColorPicker = (props) => {
       <input
         type="text"
         defaultValue={color}
-        size="12"
         style={{ color: isDefault && '#999999' }}
       />
       <button
@@ -71,7 +68,7 @@ const ColorPicker = (props) => {
               }}
               onClick={handlePickerClose}
             />
-            <SketchPicker color={currentColor} onChangeComplete={handlePickerChange} />
+            <SketchPicker color={color} onChangeComplete={handlePickerChange} />
           </div>
         ) : null }
     </div>
@@ -204,8 +201,8 @@ const DesignTokens = () => {
         {' '}
         { editedTheme.name }
       </h3>
-      <div><pre className="pre-scrollable bg-light"><code>{JSON.stringify(editedTheme, null, 2) }</code></pre></div>
-      <button type="button">SAVE</button>
+      <div contentEditable="true"><pre className="pre-scrollable bg-light"><code>{JSON.stringify(editedTheme, null, 2) }</code></pre></div>
+      <button type="button" disabled>SAVE</button>
     </Container>
   );
 };
