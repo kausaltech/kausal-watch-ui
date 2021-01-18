@@ -1,0 +1,11 @@
+name: CI
+on: push
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build Docker container
+        run: docker build -t kausal-watch-ui .
+      - name: Run unit tests
+        run: docker run kausal-watch-ui --entrypoint '' yarn test
