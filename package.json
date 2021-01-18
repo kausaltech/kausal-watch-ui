@@ -41,7 +41,7 @@
     "next-i18next": "^6.0.2",
     "next-images": "^1.4.1",
     "next-with-apollo": "^5.1.0",
-    "node-sass": "^4.14.1",
+    "node-sass": "^5.0.0",
     "original-url": "^1.2.3",
     "plotly.js": "^1.54.7",
     "polished": "^3.6.5",
@@ -114,9 +114,12 @@
     "typewiz-webpack": "^1.2.4",
     "yaml-loader": "^0.6.0"
   },
+  "installConfig": {
+    "pnp": false
+  },
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/kausaltech/kausal-watch-ui"
   },
   "engines": {
     "node": "14.x || 15.x"

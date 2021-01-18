@@ -1,14 +1,20 @@
-FROM node:current-alpine as base
+#syntax=docker/dockerfile:1.2
+
+FROM node:15.5.1-buster as base
 
 WORKDIR /app
-RUN apk --no-cache add --virtual native-deps \
-    g++ gcc libgcc libstdc++ linux-headers make python2
-COPY package*.json ./
-RUN yarn install
+
+# Install dependencies first
+ENV YARN_CACHE_FOLDER /yarn-cache
+RUN yarn set version berry
+COPY .yarnrc.yml yarn.lock package*.json ./
+RUN --mount=type=cache,target=/yarn-cache yarn install
+
 COPY . .
 
 FROM base as bundle
 RUN yarn build
 
+COPY ./docker/entrypoint.sh /entrypoint.sh
 EXPOSE 3000
-ENTRYPOINT ["/app/docker/entrypoint.sh"]
+ENTRYPOINT ["/entrypoint.sh"]
