@@ -1,11 +1,24 @@
 name: CI
 on: push
 jobs:
-  build_and_test:
+  build_docker:
+    name: Build Docker container
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Build Docker container
-        run: docker build -t kausal-watch-ui .
-      - name: Run unit tests
-        run: docker run kausal-watch-ui --entrypoint '' yarn test
+      - name: Building Docker base container
+        run: docker build --target base -t kausal-watch-ui/base .
+  run_unit_tests:
+    name: Run unit tests
+    runs-on: ubuntu-latest
+    needs: build_docker
+    steps:
+      - name: Running Jest tests
+        run: docker run kausal-watch-ui/base --entrypoint '' yarn test
+  build_nextjs_bundle:
+    name: Build NextJS bundles
+    runs-on: ubuntu-latest
+    needs: build_docker
+    steps:
+      - name: Finishing Docker build
+        run: docker build .

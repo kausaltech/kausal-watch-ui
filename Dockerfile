@@ -1,4 +1,4 @@
-FROM node:current-alpine
+FROM node:current-alpine as base
 
 WORKDIR /app
 RUN apk --no-cache add --virtual native-deps \
@@ -7,6 +7,7 @@ COPY package*.json ./
 RUN yarn install
 COPY . .
 
+FROM base as bundle
 RUN yarn build
 
 EXPOSE 3000
