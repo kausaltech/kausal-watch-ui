@@ -58,9 +58,6 @@ const config = withSourceMaps(withBundleAnalyzer(withImages(withSass({
     matomoSiteId: process.env.MATOMO_SITE_ID,
     supportedLanguages: generateLocaleConfig(),
   },
-  experimental: {
-    modern: true,
-  },
   /* eslint no-param-reassign: ["error", { "props": true, "ignorePropertyModificationsFor": ["cfg"] }] */
   webpack(cfg, options) {
     const { isServer, buildId, dev } = options;
