@@ -9,7 +9,7 @@ import { useHotkeys } from 'react-hotkeys-hook';
 import { useRouter } from 'next/router';
 
 import { getActionLinkProps } from 'common/links';
-import moment from 'common/moment';
+import dayjs from 'common/dayjs';
 import { useTranslation } from 'common/i18n';
 import PlanContext from 'context/plan';
 import { cleanActionStatus } from 'common/preprocess';
@@ -255,7 +255,7 @@ function ActionContent({ id }) {
     return <ErrorMessage statusCode={404} message={t('action-not-found')} />;
   }
 
-  const updated = moment(action.updatedAt).format('DD.MM.YYYY');
+  const updated = dayjs(action.updatedAt).format('L');
   const generalContent = plan.generalContent || {};
   const officialName = action.officialName || '';
   const cleanOfficialText = officialName.replace(/(?:\r\n|\r|\n)/g, '<br>');
