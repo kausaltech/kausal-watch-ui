@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {
   Col, Container, Row, UncontrolledButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem,
 } from 'reactstrap';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import styled, { withTheme } from 'styled-components';
 import cytoscape from 'cytoscape';
 import dagre from 'cytoscape-dagre';
@@ -130,7 +130,7 @@ class CytoGraph extends React.Component {
     const url = window.URL.createObjectURL(blob);
     target.href = url;
     target.target = '_blank';
-    target.download = `nakemysverkko-${moment().format('YYYY-MM-DD-HH-mm-ss')}.png`;
+    target.download = `nakemysverkko-${dayjs().format('YYYY-MM-DD-HH-mm-ss')}.png`;
   }
 
   renderNetwork() {
