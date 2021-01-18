@@ -4,14 +4,37 @@ jobs:
   build_and_test:
     name: Build Docker container and run tests
     runs-on: ubuntu-latest
+    env:
+      BUILDKIT_PROGRESS: plain
     steps:
       - uses: actions/checkout@v2
+      - uses: satackey/action-docker-layer-caching@v0.0.11
+        continue-on-error: true
       - name: Set up Docker Buildx
-        id: buildx
         uses: docker/setup-buildx-action@v1
+        id: buildx
+        with:
+          install: true
+      - name: Cache Docker layers
+        uses: actions/cache@v2
+        id: cache
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
       - name: Building Docker base container
-        run: docker buildx build --target base -t kausal-watch-ui/base .
+        run: |
+          docker build \
+            --cache-from "type=local,src=/tmp/.buildx-cache" \
+            --cache-to "type=local,dest=/tmp/.buildx-cache" \
+            --output "type=image,push=false" \
+            --tag kausal-watch-ui/base \
+            --target base .
+      - name: List docker images
+        run: docker images
       - name: Running Jest unit tests
-        run: docker run kausal-watch-ui/base --entrypoint '' yarn test
+        run: docker run --entrypoint '' kausal-watch-ui-base yarn test
+        continue-on-error: true
       - name: Building NextJS bundles
-        run: docker buildx build .
+        run: docker build .
