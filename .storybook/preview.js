@@ -5,7 +5,7 @@ import { setConfig } from 'next/config';
 import { i18n } from './i18n';
 
 import ThemedGlobalStyles from '../common/ThemedGlobalStyles';
-import defaultTheme from 'styles/default/theme.json';
+import defaultTheme from 'public/static/themes/default/theme.json';
 
 const publicRuntimeConfig= {
   aplansApiBaseURL: 'https://api.watch.kausal.tech/v1',
@@ -32,7 +32,7 @@ const additionalThemes = [
 ];
 
 additionalThemes.forEach((value) => {
-  const additionalTheme = require('styles/' + value + '/theme.json');
+  const additionalTheme = require('public/static/themes/' + value + '/theme.json');
   themes.push(Object.assign({...defaultTheme}, additionalTheme),);
 });
 
