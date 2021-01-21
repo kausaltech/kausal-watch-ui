@@ -105,8 +105,8 @@
   "iconsUrl": "/static/icons/default",
   "themeLogoUrl": "/static/images/default/default-logo-white.svg",
   "themeLogoWhiteUrl": "/static/images/default/default-logo-white.svg",
-  "iconIndicatorsUrl": "/static/images/default/icon-indicators.svg",
-  "iconActionsUrl": "/static/images/default/icon-actions.svg",
+  "iconIndicatorsUrl": "",
+  "iconActionsUrl": "",
   "themeCustomStylesUrl": "",
   "graphColors": {
     "grey010": "rgb(238, 238, 238)",
