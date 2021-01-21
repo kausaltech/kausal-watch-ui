@@ -5,9 +5,9 @@ import {
 } from 'reactstrap';
 import styled, { withTheme } from 'styled-components';
 
-import { ActionLink, ActionListLink } from '../../common/links';
-import { withTranslation } from '../../common/i18n';
-import Icon from '../common/Icon';
+import { ActionLink, ActionListLink } from 'common/links';
+import { withTranslation } from 'common/i18n';
+import Icon from 'components/common/Icon';
 
 const Hero = styled.header`
   position: relative;
@@ -48,10 +48,10 @@ const OverlayContainer = styled.div`
 `;
 
 const ActionsNav = styled.nav`
-  font-size: ${(props) => props.theme.fontSizeBase};
+  font-size: ${(props) => props.theme.fontSizeSm};
 
-  @media (max-width: ${(props) => props.theme.breakpointMd}) {
-    font-size: ${(props) => props.theme.fontSizeSm};
+  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    font-size: ${(props) => props.theme.fontSizeBase};
   }
 `;
 
@@ -62,31 +62,31 @@ const NavDivider = styled.span`
 `;
 
 const IndexLink = styled.span`
-  font-size: ${(props) => props.theme.fontSizeLg};
+  font-size: ${(props) => props.theme.fontSizeMd};
   font-weight: ${(props) => props.theme.fontWeightBold};
 
-  @media (max-width: ${(props) => props.theme.breakpointMd}) {
-    font-size: ${(props) => props.theme.fontSizeMd};
+  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    font-size: ${(props) => props.theme.fontSizeLg};
   }
 `;
 
 const ActionHeadline = styled.h1`
   hyphens: auto;
   margin-bottom: ${(props) => props.theme.spaces.s200};
-  font-size: ${(props) => props.theme.fontSizeXl};
+  font-size: ${(props) => props.theme.fontSizeLg};
   color: ${(props) => props.theme.themeColors.white} !important;
 
-  @media (max-width: ${(props) => props.theme.breakpointMd}) {
-    font-size: ${(props) => props.theme.fontSizeLg};
+  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    font-size: ${(props) => props.theme.fontSizeXl};
   }
 `;
 
 const ActionNumber = styled.span`
-  font-size: ${(props) => props.theme.fontSizeXxl};
+  font-size: ${(props) => props.theme.fontSizeLg};
   color: ${(props) => props.theme.themeColors.white} !important;
 
-  @media (max-width: ${(props) => props.theme.breakpointMd}) {
-    font-size: ${(props) => props.theme.fontSizeLg};
+  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    font-size: ${(props) => props.theme.fontSizeXxl};
   }
 `;
 

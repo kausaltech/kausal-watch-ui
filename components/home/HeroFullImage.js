@@ -26,28 +26,28 @@ const Hero = styled.div`
 
 const HeroMain = styled.div`
   position: relative;
-  min-height: 38rem;
+  min-height: 24rem;
+  background-size: contain;
+  background-position: top;
   background-image: url(${(props) => props.image});
-  background-size: cover;
-  background-position: center;
   background-repeat: no-repeat;
 
-  @media (max-width: ${(props) => props.theme.breakpointMd}) {
-    min-height: 24rem;
-    background-size: contain;
-    background-position: top;
+  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    min-height: 38rem;
+    background-size: cover;
+    background-position: center;
   }
 `;
 
 const MainCard = styled.div`
   padding: ${(props) => props.theme.spaces.s200};
-  margin: ${(props) => props.theme.spaces.s300} 0;
+  margin-top: 8rem;
   border-radius: ${(props) => props.theme.cardBorderRadius};
   background-color: ${(props) => props.theme.themeColors.white};
   color: ${(props) => props.theme.neutralDark};
 
   h1 {
-    font-size: ${(props) => props.theme.fontSizeXl};
+    font-size: ${(props) => props.theme.fontSizeLg};
     margin-bottom: ${(props) => props.theme.spaces.s100};
   }
 
@@ -68,17 +68,24 @@ const MainCard = styled.div`
   }
 
   p {
-    font-size: ${(props) => props.theme.fontSizeMd};
+    font-size: ${(props) => props.theme.fontSizeBase};
     line-height: ${(props) => props.theme.lineHeightMd};
   }
 
-  @media (max-width: ${(props) => props.theme.breakpointMd}) {
+  @media (min-width: ${(props) => props.theme.breakpointMd}) {
     margin-top: 10rem;
-    margin-bottom: 0;
   }
 
-  @media (max-width: ${(props) => props.theme.breakpointSm}) {
-    margin-top: 8rem;
+  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    margin: ${(props) => props.theme.spaces.s300} 0;
+
+    h1 {
+      font-size: ${(props) => props.theme.fontSizeXl};
+    }
+
+    p {
+      font-size: ${(props) => props.theme.fontSizeMd};
+    }
   }
 `;
 
