@@ -51,7 +51,8 @@ filter-text-description: Sök från beskrivningar
 filter-result-actions: åtgärder
 browse-actions: Bläddra bland åtgärder
 funding-instrument: >-
-  Helsinki Climate Watch har fått finansiering från Europeiska unionens EIT Climate-KIC-program.
+  Helsinki Climate Watch har fått finansiering från Europeiska unionens EIT
+  Climate-KIC-program.
 error-loading-actions: Fel vid inläsning av åtgärdslistan
 error-loading-indicators: Fel vid inläsning av indikatorlistan
 indicator-related-actions: Åtgärderna som påverkar denna indikator
@@ -81,7 +82,9 @@ back-to-top: Tillbaka till toppen
 contact: Kontakta oss
 feedback: Respons
 give-feedback: Ge respons
-feedback-description: Upptäckte du något som inte fungerar? Eller har du idéer om något vi kan förbättra?
+feedback-description: >-
+  Upptäckte du något som inte fungerar? Eller har du idéer om något vi kan
+  förbättra?
 feedback-prompt: Meddela oss genom att fylla i och skicka det här formuläret.
 feedback-thankyou-header: Respons mottagen
 feedback-thankyou-content: Tack för att du tog dig tid att ge oss feedback. Det är verkligen bra.
@@ -102,3 +105,4 @@ remove-filter: Ta bort filtret
 required-field: Obligatorisk
 send: Skicka
 close: Stäng
+frequently-asked-questions: Vanliga frågor

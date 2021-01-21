@@ -83,12 +83,16 @@ back-to-top: Back to top
 contact: Contact
 feedback: Feedback
 give-feedback: Give feedback
-feedback-description: Did you discover something that does not work? Or do you have ideas on something we can improve?
+feedback-description: >-
+  Did you discover something that does not work? Or do you have ideas on
+  something we can improve?
 feedback-prompt: Please let us know by filling and sending this form.
 feedback-thankyou-header: Feedback received
 feedback-thankyou-content: Thank you for taking the time to provide us feedback. It's truly helpful.
 feedback-error-header: Error sending the message
-feedback-error-content: Something went wrong and your feedback was not received. Please try again in a moment.
+feedback-error-content: >-
+  Something went wrong and your feedback was not received. Please try again in a
+  moment.
 error-feedback-required: Feedback is required
 error-email-format: Please provide a valid email address
 accessibility: Accessibility
@@ -105,5 +109,6 @@ required-field: Required field
 send: Send
 close: Close
 unknown: Unknown
-under-x-days: Under {{days}} days
-over-x-days: Over {{days}} days
+under-x-days: 'Under {{days}} days'
+over-x-days: 'Over {{days}} days'
+frequently-asked-questions: Frequently asked questions

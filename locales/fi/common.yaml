@@ -81,12 +81,18 @@ back-to-top: Sivun alkuun
 contact: Yhteystiedot
 feedback: Palaute
 give-feedback: Anna palautetta
-feedback-description: Löysitkö palvelusta jotain joka ei toimi? Tai onko sinulla ideoita palvelun parantamiseksi?
+feedback-description: >-
+  Löysitkö palvelusta jotain joka ei toimi? Tai onko sinulla ideoita palvelun
+  parantamiseksi?
 feedback-prompt: Lähetä meille palautetta palvelusta tällä lomakkeella.
 feedback-thankyou-header: Palaute otettu vastaan
-feedback-thankyou-content: Kiitos kun lähetit palautetta. Kaikki palaute on meille arvokasta kun kehitämme palvelua.
+feedback-thankyou-content: >-
+  Kiitos kun lähetit palautetta. Kaikki palaute on meille arvokasta kun
+  kehitämme palvelua.
 feedback-error-header: Virhe lähetyksessä
-feedback-error-content: Jotain meni pieleen palautteen lähettämisessä. Ole hyvä ja yritä hetken kuluttua uudelleen.
+feedback-error-content: >-
+  Jotain meni pieleen palautteen lähettämisessä. Ole hyvä ja yritä hetken
+  kuluttua uudelleen.
 error-feedback-required: Palaute on pakollinen kenttä
 error-email-format: Syötä oikea sähköpostiosoite
 accessibility: Saavutettavuus
@@ -103,5 +109,6 @@ required-field: Pakollinen tieto
 send: Lähetä
 close: Sulje
 unknown: Tuntematon
-under-x-days: Alle {{days}} päivää
-over-x-days: Yli {{days}} päivää
+under-x-days: 'Alle {{days}} päivää'
+over-x-days: 'Yli {{days}} päivää'
+frequently-asked-questions: Usein Kysytyt Kysymykset

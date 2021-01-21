@@ -110,6 +110,7 @@ StaticPage.getInitialProps = async ({ query }) => ({
 
 const Content = ({ page }) => {
   const { title, tagline, imageUrl, content, questions } = page;
+  const { t } = useTranslation(['common']);
 
   return (
     <article>
@@ -156,7 +157,7 @@ const Content = ({ page }) => {
             <Container>
               <Row>
                 <Col lg={{ size: 8, offset: 2 }} md={{ size: 10, offset: 1 }}>
-                  <h2>Usein kysytyt kysymykset</h2>
+                  <h2>{ t('frequently-asked-questions') }</h2>
                   <Accordion>
                     { questions.map(faq => (
                       <Accordion.Item key={faq.id} id={faq.id}>

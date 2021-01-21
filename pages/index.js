@@ -42,8 +42,8 @@ function HomePage() {
 
   // Use default hero component
   let heroComponent = (
-    <FrontHero
-      bgImage={plan.mainImage?.smallRendition?.src || plan.imageUrl}
+    <HeroFullImage
+      bgImage={plan.mainImage?.largeRendition?.src || plan.imageUrl}
       title={generalContent.siteTitle}
       siteDescription={generalContent.siteDescription}
       actionsDescription={generalContent.actionShortDescription}
@@ -54,20 +54,6 @@ function HomePage() {
   // Override with plan specific hero if applicable
   if (plan.identifier === 'hnh2035') heroComponent = <HnhHero />;
   if (plan.identifier === 'ktstrat') heroComponent = <ThlHero />;
-  if (
-    plan.identifier === 'liiku'
-    || plan.identifier === 'lahti-ilmasto'
-    || plan.identifier === 'helsinki-kierto'
-    || plan.identifier === 'lpr-ilmasto'
-    || plan.identifier === 'tampere-ilmasto') heroComponent = (
-      <HeroFullImage
-        bgImage={plan.mainImage?.largeRendition?.src || plan.imageUrl}
-        title={generalContent.siteTitle}
-        siteDescription={generalContent.siteDescription}
-        actionsDescription={generalContent.actionShortDescription}
-        indicatorsDescription={generalContent.indicatorShortDescription}
-      />
-  );
 
   return (
     <Layout>
