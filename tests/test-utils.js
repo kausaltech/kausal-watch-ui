@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import { ThemeProvider } from 'styled-components';
-import theme from '../styles/default/theme.json';
+import theme from '../public/static/themes/default/theme.json';
 
 const AllTheProviders = ({ children }) => (
   <ThemeProvider theme={theme}>
