@@ -3,7 +3,7 @@ import PropTypes, { number, exact, string, oneOfType } from 'prop-types';
 import { ThemeContext } from 'styled-components';
 
 /* eslint-disable */
-const defaultTheme = require('styles/default/theme.json');
+const defaultTheme = require('public/static/themes/default/theme.json');
 
 require('../styles/default/main.scss');
 
@@ -18,7 +18,7 @@ if (!process.browser) {
       themeCache[themeIdentifier] = r(key);
     });
   }
-  importAllThemes(require.context('../styles', true, /theme\.json$/));
+  importAllThemes(require.context('public/static/themes', true, /theme\.json$/));
 }
 /* eslint-enable */
 

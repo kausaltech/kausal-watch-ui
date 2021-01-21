@@ -335,7 +335,7 @@ const HnhHero = () => (
               <Col sm="12" md={{ size: 10, offset: 1 }}>
                 <MainIllustration style={props}>
                   <img
-                    src="./static/images/hnh2035/main-illustration.svg"
+                    src="./static/themes/hnh2035/images/main-illustration.svg"
                     alt="Piirroskuvitus Helsinki rantamaisema"
                   />
                 </MainIllustration>
@@ -363,7 +363,7 @@ const HnhHero = () => (
                     >
                       <Illustration className="mr-4 w-50">
                         <img
-                          src="./static/images/hnh2035/actions-illustration.svg"
+                          src="./static/themes/hnh2035/images/actions-illustration.svg"
                           alt=""
                         />
                       </Illustration>
@@ -394,7 +394,7 @@ const HnhHero = () => (
                     >
                       <Illustration className="mr-4 w-50">
                         <img
-                          src="./static/images/hnh2035/indicators-illustration.svg"
+                          src="./static/themes/hnh2035/images/indicators-illustration.svg"
                           alt=""
                         />
                       </Illustration>

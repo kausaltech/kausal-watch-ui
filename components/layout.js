@@ -22,7 +22,7 @@ function Layout({ children }) {
   const site = useContext(SiteContext);
   const generalContent = plan.generalContent || {};
   const siteTitle = generalContent.siteTitle || plan.name;
-  const iconBase = theme.name ? `/static/images/${theme.name}/favicon` : null;
+  const iconBase = theme.name ? `/static/themes/${theme.name}/images/favicon` : null;
   const googleSiteVerificationTag = plan.domain?.googleSiteVerificationTag;
 
   return (
