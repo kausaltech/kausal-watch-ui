@@ -4,7 +4,7 @@ import _ from 'lodash';
 import { ThemeContext } from 'styled-components';
 import { SketchPicker } from 'react-color';
 import { themeProp } from 'common/theme';
-import defaultTheme from 'styles/default/theme.json';
+import defaultTheme from 'public/static/themes/default/theme.json';
 
 const ColorPicker = (props) => {
   const { color, handleChange, isDefault } = props;
