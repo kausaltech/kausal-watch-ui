@@ -24,6 +24,16 @@ const IndicatorProgresses = () => {
             goalValue="500"
             unit="CO2"
           />
+          <br />
+          <IndicatorProgressBar
+            startDate="1990"
+            startValue="30000"
+            latestDate="2019"
+            latestValue="9000"
+            goalDate="2030"
+            goalValue="100"
+            unit="CO2"
+          />
         </div>
       </div>
     </div>

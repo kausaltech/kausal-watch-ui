@@ -52,6 +52,11 @@ const IndicatorProgressBar = (props) => {
           <ValueText x="0" dy="18">{startValue}</ValueText>
           <UnitText>{unit}</UnitText>
         </text>
+        <text transform={`translate(${latestBar.x+latestBar.w/2} 110)`} textAnchor="middle">
+          <DateText>Accomplished</DateText>
+          <ValueText x="0" dy="18">{startValue-latestValue}</ValueText>
+          <UnitText>{unit}</UnitText>
+        </text>
 
         <BarBase
           x={distanceBar.x} y="64"
@@ -61,6 +66,11 @@ const IndicatorProgressBar = (props) => {
           <ValueText x="0" dy="18">{latestValue}</ValueText>
           <UnitText>{unit}</UnitText>
         </text>
+        <text transform={`translate(${distanceBar.x+distanceBar.w/2} 110)`} textAnchor="middle">
+          <DateText>To reduce</DateText>
+          <ValueText x="0" dy="18">{latestValue-goalValue}</ValueText>
+          <UnitText>{unit}</UnitText>
+        </text>
         <BarBase
           x={goalBar.x} y="64"
           width={goalBar.w} height={bar.h-8} fill="green"/>
@@ -68,6 +78,9 @@ const IndicatorProgressBar = (props) => {
           <DateText>{goalDate}</DateText>
           <ValueText x="0" dy="18">{goalValue}</ValueText>
           <UnitText>{unit}</UnitText>
+        </text>
+        <text transform={`translate(${goalBar.x+goalBar.w/2} 110)`} textAnchor="middle">
+          <DateText>Goal</DateText>
         </text>
       </svg>
       {goalValue}
