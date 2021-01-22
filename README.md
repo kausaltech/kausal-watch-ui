@@ -11,7 +11,7 @@ React UI for browsing and visualizing action plans. Built using [Next.js](https:
 #### Prerequisites
 
 * [Node.js](https://nodejs.org/) 14.x
-* [Yarn](https://yarnpkg.com/)
+* [Yarn](https://yarnpkg.com/) 2
   
 #### Getting Started
 

@@ -87,11 +87,11 @@ const IndicatorHero = styled(BaseJumbotron)`
   }
 
   h1 {
-    font-size: ${(props) => props.theme.fontSizeXl};
+    font-size: ${(props) => props.theme.fontSizeLg};
     hyphens: auto;
 
-    @media (max-width: ${(props) => props.theme.breakpointMd}) {
-      font-size: ${(props) => props.theme.fontSizeLg};
+    @media (min-width: ${(props) => props.theme.breakpointMd}) {
+      font-size: ${(props) => props.theme.fontSizeXl};
     }
   }
 `;

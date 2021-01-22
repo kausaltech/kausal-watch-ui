@@ -11,13 +11,10 @@ import { useScrollPosition } from '@n8tb1t/use-scroll-position';
 import { transparentize } from 'polished';
 import { useTranslation } from 'common/i18n';
 import { Link } from 'routes';
-import { NavigationLink } from '../../common/links';
+import { NavigationLink } from 'common/links';
 
 import Icon from './Icon';
 
-// TODO: Skip to main content -link
-// TODO: Active states for links and buttons
-// TODO: Restyle dropdown elements
 
 const TopNav = styled(Navbar)`
   background-color: ${(props) => props.theme.brandNavBackground};
@@ -33,12 +30,12 @@ const BotNav = styled(Navbar)`
   }
 
   .navbar-nav {
-    padding: 0;
+    padding: ${(props) => props.theme.spaces.s150} 0;
   }
 
-  @media (max-width: ${(props) => props.theme.breakpointMd}) {
+  @media (min-width: ${(props) => props.theme.breakpointMd}) {
     .navbar-nav {
-      padding: ${(props) => props.theme.spaces.s150} 0;
+      padding: 0;
     }
   }
 `;
@@ -58,30 +55,30 @@ const HomeLink = styled.a`
   }
 
   svg {
-    display: block;
-    max-width: 10em;
-    height: calc(${(props) => props.theme.spaces.s200} + ${(props) => props.theme.spaces.s050});
-    margin: ${(props) => props.theme.spaces.s050}
-          ${(props) => props.theme.spaces.s150}
-          ${(props) => props.theme.spaces.s050}
-          0;
-  }
-
-  @media (max-width: ${(props) => props.theme.breakpointMd}) {
-    svg {
+      display: block;
       max-width: 6em;
       height: ${(props) => props.theme.spaces.s200};
       margin: ${(props) => props.theme.spaces.s050}
               ${(props) => props.theme.spaces.s150}
               ${(props) => props.theme.spaces.s050}
               0;
+  }
+
+  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    svg {
+    max-width: 10em;
+    height: calc(${(props) => props.theme.spaces.s200} + ${(props) => props.theme.spaces.s050});
+    margin: ${(props) => props.theme.spaces.s050}
+          ${(props) => props.theme.spaces.s150}
+          ${(props) => props.theme.spaces.s050}
+          0;
     }
   }
 `;
 
 const NavLink = styled.a`
   display: block;
-  margin-right: ${(props) => props.theme.spaces.s200};
+  margin: 0 0 ${(props) => props.theme.spaces.s050} ${(props) => props.theme.spaces.s100};
   color: ${(props) => props.theme.neutralDark};
 
   &:hover {
@@ -93,14 +90,14 @@ const NavLink = styled.a`
       }
     }
 
-  @media (max-width: ${(props) => props.theme.breakpointMd}) {
-    margin: 0 0 ${(props) => props.theme.spaces.s050} ${(props) => props.theme.spaces.s100};
+  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    margin: 0 ${(props) => props.theme.spaces.s200} 0 0;
   }
 `;
 
 const NavHighlighter = styled.span`
-  display: block;
-  padding: ${(props) => props.theme.spaces.s150} 0 calc(${(props) => props.theme.spaces.s150} - 5px);
+  display: inline-block;
+  padding: ${(props) => props.theme.spaces.s050} 0 calc(${(props) => props.theme.spaces.s050} - 5px);
   border-bottom: 5px solid transparent;
   transition: border 200ms;
 
@@ -108,15 +105,15 @@ const NavHighlighter = styled.span`
     border-bottom: 5px solid ${(props) => props.theme.brandNavBackground};
   }
 
-  @media (max-width: ${(props) => props.theme.breakpointMd}) {
-    display: inline-block;
-    padding: ${(props) => props.theme.spaces.s050} 0 calc(${(props) => props.theme.spaces.s050} - 5px);
+  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    display: block;
+    padding: ${(props) => props.theme.spaces.s150} 0 calc(${(props) => props.theme.spaces.s150} - 5px);
   }
 `;
 
 const DropDownHighlighter = styled.span`
   display: inline-block;
-  padding: ${(props) => props.theme.spaces.s150} 0 calc(${(props) => props.theme.spaces.s150} - 5px);
+  padding: ${(props) => props.theme.spaces.s050} 0 calc(${(props) => props.theme.spaces.s050} - 5px);
   border-bottom: 5px solid transparent;
   transition: border 200ms;
 
@@ -124,16 +121,15 @@ const DropDownHighlighter = styled.span`
     border-bottom: 5px solid ${(props) => props.theme.brandNavBackground};
   }
 
-  @media (max-width: ${(props) => props.theme.breakpointMd}) {
-    display: inline-block;
-    padding: ${(props) => props.theme.spaces.s050} 0 calc(${(props) => props.theme.spaces.s050} - 5px);
+  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    padding: ${(props) => props.theme.spaces.s150} 0 calc(${(props) => props.theme.spaces.s150} - 5px);
   }
 `;
 
 const StyledDropdownToggle = styled(DropdownToggle)`
   display: block;
   padding: 0;
-  margin-right: ${(props) => props.theme.spaces.s150};
+  margin: 0 0 ${(props) => props.theme.spaces.s050} ${(props) => props.theme.spaces.s100};
   color: ${(props) => props.theme.neutralDark};
 
   &:hover {
@@ -141,20 +137,19 @@ const StyledDropdownToggle = styled(DropdownToggle)`
     color: ${(props) => props.theme.neutralDark};
   }
 
-  @media (max-width: ${(props) => props.theme.breakpointMd}) {
-    margin: 0 0 ${(props) => props.theme.spaces.s050} ${(props) => props.theme.spaces.s100};
+  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    margin-right: ${(props) => props.theme.spaces.s150};
   }
 `;
 
 const StyledDropdown = styled(UncontrolledDropdown)`
 
   .dropdown-menu {
-    border: 0px;
-    background-color: ${(props) => props.theme.themeColors.white};
-    box-shadow: 3px 3px 6px 2px ${(props) => transparentize(0.85, props.theme.themeColors.dark)}};
+    padding-top: 0;
+    box-shadow: none;
   }
   .dropdown-item {
-    margin: 0;
+    margin: 0 0 0 ${(props) => props.theme.spaces.s150};
     color: ${(props) => props.theme.neutralDark};
 
     span {
@@ -171,20 +166,21 @@ const StyledDropdown = styled(UncontrolledDropdown)`
     }
   }
 
-  @media (max-width: ${(props) => props.theme.breakpointMd}) {
+  @media (min-width: ${(props) => props.theme.breakpointMd}) {
     .dropdown-menu {
-      padding-top: 0;
-      box-shadow: none;
+      border: 0px;
+      background-color: ${(props) => props.theme.themeColors.white};
+      box-shadow: 3px 3px 6px 2px ${(props) => transparentize(0.85, props.theme.themeColors.dark)}};
     }
 
     .dropdown-item {
-      margin: 0 0 0 ${(props) => props.theme.spaces.s150};
+      margin: 0;
     }
   }
 `;
 
 const NavbarToggler = styled.button`
-  display: none;
+  display: inline-block;
   padding: 0;
   margin: 0;
   text-align: right;
@@ -199,8 +195,8 @@ const NavbarToggler = styled.button`
   border-radius: 0;
   -webkit-appearance: none;
 
-  @media (max-width: ${(props) => props.theme.breakpointMd}) {
-    display: inline-block
+  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    display: none;
   }
 `;
 

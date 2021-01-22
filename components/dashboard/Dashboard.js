@@ -7,10 +7,10 @@ import {
   Container, Row, Col, TabContent, TabPane,
 } from 'reactstrap';
 import styled from 'styled-components';
-import { captureException } from '../../common/sentry';
-import { withTranslation } from '../../common/i18n';
-import ContentLoader from '../common/ContentLoader';
-import PlanContext from '../../context/plan';
+import { captureException } from 'common/sentry';
+import { withTranslation } from 'common/i18n';
+import ContentLoader from 'components/common/ContentLoader';
+import PlanContext from 'context/plan';
 import ImpactGroupActionList from './ImpactGroupActionList';
 
 import Bar from './Bar';
@@ -28,11 +28,11 @@ const DashboardHeader = styled.div`
   background-color: ${(props) => props.theme.neutralLight};
 
   h1 {
-    font-size: ${(props) => props.theme.fontSizeXxl};
+    font-size: ${(props) => props.theme.fontSizeXl};
     margin-bottom: ${(props) => props.theme.spaces.s150};
 
-    @media (max-width: ${(props) => props.theme.breakpointMd}) {
-      font-size: ${(props) => props.theme.fontSizeXl};
+    @media (min-width: ${(props) => props.theme.breakpointMd}) {
+      font-size: ${(props) => props.theme.fontSizeXxl};
     }
   }
 `;

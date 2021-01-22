@@ -14,11 +14,11 @@ const IndicatorsJumbo = styled.div`
   padding: 3em 0;
 
   h1 {
-    font-size: ${(props) => props.theme.fontSizeXxl};
+    font-size: ${(props) => props.theme.fontSizeXl};
     margin-bottom: ${(props) => props.theme.spaces.s150};
 
-    @media (max-width: ${(props) => props.theme.breakpointMd}) {
-      font-size: ${(props) => props.theme.fontSizeXl};
+    @media (min-width: ${(props) => props.theme.breakpointMd}) {
+      font-size: ${(props) => props.theme.fontSizeXxl};
     }
   }
 `;
