@@ -12,9 +12,7 @@ const IndicatorProgresses = () => {
   const theme = useContext(ThemeContext);
 
   return (
-    <div className="container" style={{ backgroundColor: theme.neutralLight, color: theme.themeColors.light }}>
-      <div className="row p-2 pm-5">
-        <div className="col col-sm-8 col-md-10">
+    <div className="container">
           <IndicatorProgressBar
             startDate="1990"
             startValue="2000"
@@ -22,7 +20,8 @@ const IndicatorProgresses = () => {
             latestValue="1500"
             goalDate="2030"
             goalValue="500"
-            unit="CO2"
+            unit="kt CO₂e"
+            note="Target maximum emissions 500 kt CO₂em, the rest will be compensated"
           />
           <br />
           <IndicatorProgressBar
@@ -32,10 +31,19 @@ const IndicatorProgresses = () => {
             latestValue="9000"
             goalDate="2030"
             goalValue="100"
-            unit="CO2"
+            unit="kt CO₂e"
+            note="Target maximum emissions 500 kt CO₂em, the rest will be compensated"
           />
-        </div>
-      </div>
+          <IndicatorProgressBar
+            startDate="4/2020"
+            startValue="123456"
+            latestDate="1/2021"
+            latestValue="120000"
+            goalDate="12/2020"
+            goalValue="100000"
+            unit="kt CO₂e"
+            note="Target maximum emissions 500 kt CO₂em, the rest will be compensated"
+          />
     </div>
   );
 };
