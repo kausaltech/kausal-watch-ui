@@ -1,6 +1,6 @@
 #syntax=docker/dockerfile:1.2
 
-FROM node:15.5.1-buster as base
+FROM node:15.5.1-alpine3.11 as base
 
 WORKDIR /app
 
