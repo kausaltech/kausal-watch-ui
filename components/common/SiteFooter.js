@@ -330,6 +330,7 @@ function SiteFooter(props) {
     additionalLinks,
     utilityLinks,
     fundingInstruments,
+    otherLogos,
   } = props;
 
   const OrgLogo = () => (
@@ -462,6 +463,21 @@ function SiteFooter(props) {
               ))}
             </FundingInstruments>
           )}
+          {otherLogos.length > 0 && (
+            <FundingInstruments>
+              { otherLogos.map((logo) => (
+                <FundingInstrumentContainer key={logo.id}>
+                  <a href={logo.link} target="_blank" rel="noreferrer">
+                    <SVG
+                      src={logo.logo}
+                      preserveAspectRatio="xMidYMid meet"
+                      title={logo.name}
+                    />
+                  </a>
+                </FundingInstrumentContainer>
+              ))}
+            </FundingInstruments>
+          )}
         </Container>
       </StyledFooter>
     </>
@@ -486,6 +502,7 @@ SiteFooter.propTypes = {
   utilityLinks: PropTypes.arrayOf(PropTypes.shape({})),
   additionalLinks: PropTypes.arrayOf(PropTypes.shape({})),
   fundingInstruments: PropTypes.arrayOf(PropTypes.shape({})),
+  otherLogos: PropTypes.arrayOf(PropTypes.shape({})),
 };
 
 export default withTranslation('common')(withTheme(SiteFooter));
