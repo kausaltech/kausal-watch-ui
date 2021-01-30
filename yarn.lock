@@ -10107,6 +10107,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"cross-fetch@npm:^3.0.6":
+  version: 3.0.6
+  resolution: "cross-fetch@npm:3.0.6"
+  dependencies:
+    node-fetch: 2.6.1
+  checksum: a491ad1b89988a351f8b8b252b68a5e653636d911042648c43a806cf7575ff043379a80d6269102ca60ec633af0b49ca4c83536007793bb0e65e491769f70d9d
+  languageName: node
+  linkType: hard
+
 "cross-spawn@npm:7.0.1":
   version: 7.0.1
   resolution: "cross-spawn@npm:7.0.1"
@@ -10913,6 +10922,13 @@ __metadata:
   version: 2.0.0
   resolution: "depd@npm:2.0.0"
   checksum: 20726d843f5ab5e933211fcb5a440a1a3986ef9d6f85d38cf1eae815ea3cc12fa4436bd35a38e21bdb391a021b57f2d97b9f856873852506acac1b07ac913ba4
+  languageName: node
+  linkType: hard
+
+"dequal@npm:2.0.2":
+  version: 2.0.2
+  resolution: "dequal@npm:2.0.2"
+  checksum: 3b5b019a873da282a25512c632c077e5e8e2a019e71c5b6968836443b861e44176ee3934facfecdc14994d553c1ff4a6c7232278d6aef87baf65e2413d41760c
   languageName: node
   linkType: hard
 
@@ -14192,6 +14208,19 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
+"graphql-request@npm:^3.4.0":
+  version: 3.4.0
+  resolution: "graphql-request@npm:3.4.0"
+  dependencies:
+    cross-fetch: ^3.0.6
+    extract-files: ^9.0.0
+    form-data: ^3.0.0
+  peerDependencies:
+    graphql: 14.x || 15.x
+  checksum: d564874ff42ad63f1555ec18f582bfef5a0ca36160cfc4bf20e22211eca6cf5beabb65961ef734817db441508eee81a9332d4d88fe19c335e39342e20f9f303a
+  languageName: node
+  linkType: hard
+
 "graphql-tag@npm:2.11.0, graphql-tag@npm:^2.10.1, graphql-tag@npm:^2.11.0":
   version: 2.11.0
   resolution: "graphql-tag@npm:2.11.0"
@@ -16867,6 +16896,7 @@ fsevents@~2.1.2:
     express-robots-txt: ^0.5.0
     fontfaceobserver: ^2.1.0
     graphql: ^15.3.0
+    graphql-request: ^3.4.0
     graphql-tools: ^6.0.18
     html-react-parser: ^0.13.0
     i18next-http-backend: ^1.0.18
@@ -16906,6 +16936,7 @@ fsevents@~2.1.2:
     simple-statistics: ^7.1.0
     storybook-addon-styled-component-theme: ^1.3.0
     styled-components: ^5.1.1
+    swr: ^0.4.1
     typescript: ^4.0.2
     typewiz-webpack: ^1.2.4
     webpack: ^4.44.1
@@ -18610,6 +18641,13 @@ fsevents@~2.1.2:
   version: 2.6.0
   resolution: "node-fetch@npm:2.6.0"
   checksum: dd9f586a9f7ddb7dd94d2aba9cb693d32f5001e9850098512fbc8a4cbdd56838afa08ed0a6725b9fce9b01ec12b713e622cbfc16d92762d8b937b238330a632a
+  languageName: node
+  linkType: hard
+
+"node-fetch@npm:2.6.1":
+  version: 2.6.1
+  resolution: "node-fetch@npm:2.6.1"
+  checksum: cbb171635e538162b977eac5dfe7a1e07a9a02e991924377a6435502291e2f823d306b95aabc455caebf4a118ccf836868462bc70ccc3095af02bb9da61fda37
   languageName: node
   linkType: hard
 
@@ -23807,6 +23845,17 @@ resolve@^1.18.1:
   bin:
     svgo: ./bin/svgo
   checksum: 1d8593e672994aaef4d96ee20f45355dc21bff3ab3550f7a5e68a1c6bae470b132b161935b018063030430818355d1ede6b8b53331b2cd6d32949e83717671fa
+  languageName: node
+  linkType: hard
+
+"swr@npm:^0.4.1":
+  version: 0.4.1
+  resolution: "swr@npm:0.4.1"
+  dependencies:
+    dequal: 2.0.2
+  peerDependencies:
+    react: ^16.11.0 || ^17.0.0
+  checksum: 947310e3bf8cf3cdbe25aaef344a3e178b131301c9d8ca576541cfa13d6a3541452dc2dc9b7c16097d7da8426a593d3cbb3c3cf596d38dd6e5c98e11c9309ee9
   languageName: node
   linkType: hard
 

@@ -31,6 +31,7 @@
     "express-robots-txt": "^0.5.0",
     "fontfaceobserver": "^2.1.0",
     "graphql": "^15.3.0",
+    "graphql-request": "^3.4.0",
     "graphql-tools": "^6.0.18",
     "html-react-parser": "^0.13.0",
     "i18next-http-backend": "^1.0.18",
@@ -63,6 +64,7 @@
     "sentry-testkit": "^3.2.1",
     "simple-statistics": "^7.1.0",
     "styled-components": "^5.1.1",
+    "swr": "^0.4.1",
     "webpack": "^4.44.1",
     "yaml": "^1.10.0"
   },
