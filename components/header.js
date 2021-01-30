@@ -5,10 +5,26 @@ import { useTranslation } from 'common/i18n';
 import PlanContext from 'context/plan';
 import SiteContext from 'context/site';
 
-import GlobalNav from './common/GlobalNav';
-import ApplicationStateBanner from './common/ApplicationStateBanner';
-import SkipToContent from './common/SkipToContent';
-import { getActiveBranch } from '../common/links';
+import GlobalNav from 'components/common/GlobalNav';
+import ApplicationStateBanner from 'components/common/ApplicationStateBanner';
+import SkipToContent from 'components/common/SkipToContent';
+import { getActiveBranch } from 'common/links';
+
+const getChildren = ((pages, id, activeBranch) => {
+  const children = [];
+  pages.forEach((page) => {
+    if (page.parent.id === id) {
+      children.push({
+        id: `${page.id}`,
+        name: page.linkText,
+        slug: page.page.slug,
+        active: activeBranch === page.page.slug,
+        children: getChildren(pages, page.id),
+      });
+    }
+  });
+  return children;
+});
 
 function Header({ siteTitle }) {
   const plan = useContext(PlanContext);
@@ -52,6 +68,14 @@ function Header({ siteTitle }) {
         }
       ));
       links = links.concat(staticPages);
+    }
+
+    if (plan.mainMenu.items.length > 0) {
+      // console.log(plan.mainMenu);
+      const rootItemIndex = plan.mainMenu.items.findIndex((page) => page.parent.page.__typename === 'PlanRootPage');
+      // console.log(rootId);
+      const wagtailPages = getChildren(plan.mainMenu.items, plan.mainMenu.items[rootItemIndex].parent.id, activeBranch);
+      links = links.concat(wagtailPages);
     }
     return links;
   }, [hasActionImpacts, activeBranch, plan.staticPages]);

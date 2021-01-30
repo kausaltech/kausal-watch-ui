@@ -214,9 +214,9 @@ function DropdownList(props) {
       >
         <DropDownHighlighter>{ parent.name }</DropDownHighlighter>
       </StyledDropdownToggle>
-      <DropdownMenu left>
+      <DropdownMenu direction="left">
         { items && items.map((child) => (
-          <DropdownItem>
+          <DropdownItem key={child.id}>
             <NavHighlighter>
               {child.name}
             </NavHighlighter>
@@ -232,7 +232,7 @@ DropdownList.defaultProps = {
 };
 
 DropdownList.propTypes = {
-  parent: PropTypes.string.isRequired,
+  parent: PropTypes.shape().isRequired,
   items: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.string,
     name: PropTypes.string,
@@ -312,6 +312,7 @@ function GlobalNav(props) {
                       parent={page}
                       items={page.children}
                       active={page.active}
+                      key={page.slug}
                     />
                   ) : (
                     <NavItem key={page.slug} active={page.active}>
