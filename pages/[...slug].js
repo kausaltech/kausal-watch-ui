@@ -80,7 +80,6 @@ function StaticPage({ slug }) {
   if (!planPage) {
     return <ErrorMessage statusCode={404} message={t('page-not-found')} />;
   }
-  console.log(planPage);
   return (
     <Layout>
       <Content page={planPage} />
@@ -94,7 +93,7 @@ StaticPage.getInitialProps = async ({ query }) => ({
 
 const Content = ({ page }) => {
   const { title, headerImage } = page;
-  const imageUrl = headerImage?.rendition.url;
+  const imageUrl = headerImage?.rendition.src;
   const { t } = useTranslation(['common']);
 
   return (
