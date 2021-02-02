@@ -5,10 +5,27 @@ import { useTranslation } from 'common/i18n';
 import PlanContext from 'context/plan';
 import SiteContext from 'context/site';
 
-import GlobalNav from './common/GlobalNav';
-import ApplicationStateBanner from './common/ApplicationStateBanner';
-import SkipToContent from './common/SkipToContent';
-import { getActiveBranch } from '../common/links';
+import GlobalNav from 'components/common/GlobalNav';
+import SkipToContent from 'components/common/SkipToContent';
+import ApplicationStateBanner from 'components/common/ApplicationStateBanner';
+import { getActiveBranch } from 'common/links';
+
+const getMenuStructure = ((pages, rootId, activeBranch) => {
+  const menuLevelItems = [];
+  pages.forEach((page) => {
+    if (page.parent.id === rootId) {
+      menuLevelItems.push({
+        id: `${page.id}`,
+        name: page.linkText,
+        slug: page.page.slug,
+        urlPath: page.page.urlPath,
+        active: activeBranch === page.page.slug,
+        children: getMenuStructure(pages, page.id),
+      });
+    }
+  });
+  return menuLevelItems.length > 0 ? menuLevelItems : null;
+});
 
 function Header({ siteTitle }) {
   const plan = useContext(PlanContext);
@@ -16,7 +33,6 @@ function Header({ siteTitle }) {
   const { t } = useTranslation(['common']);
   const hasActionImpacts = plan.impactGroups?.length > 0;
   const activeBranch = getActiveBranch();
-  let staticPages = [];
 
   const navLinks = useMemo(() => {
     let links = [];
@@ -24,6 +40,7 @@ function Header({ siteTitle }) {
       id: '1',
       name: t('dashboard'),
       slug: 'dashboard',
+      urlPath: '/dashboard',
       active: activeBranch === 'dashboard',
     });
 
@@ -31,6 +48,7 @@ function Header({ siteTitle }) {
       id: '2',
       name: t('actions'),
       slug: 'actions',
+      urlPath: '/actions',
       active: activeBranch === 'actions',
     });
 
@@ -38,23 +56,22 @@ function Header({ siteTitle }) {
       id: '3',
       name: t('indicators'),
       slug: 'indicators',
+      urlPath: '/indicators',
       active: activeBranch === 'indicators',
     });
 
-    if (plan.staticPages) {
-      const topMenuPages = plan.staticPages.filter((page) => page.topMenu);
-      staticPages = topMenuPages.map((page, index) => (
-        {
-          id: `s${index}`,
-          name: page.name,
-          slug: page.slug,
-          active: activeBranch === page.slug,
-        }
-      ));
+    if (plan.mainMenu.items.length > 0) {
+      // find one menu item with root as parent to access the id of the rootPage
+      const rootItemIndex = plan.mainMenu.items.findIndex((page) => page.parent.page.__typename === 'PlanRootPage');
+      const staticPages = getMenuStructure(
+        plan.mainMenu.items,
+        plan.mainMenu.items[rootItemIndex].parent.id,
+        activeBranch,
+      );
       links = links.concat(staticPages);
     }
     return links;
-  }, [hasActionImpacts, activeBranch, plan.staticPages]);
+  }, [hasActionImpacts, activeBranch, plan.mainMenu]);
 
   return (
     <header style={{ position: 'relative' }}>
