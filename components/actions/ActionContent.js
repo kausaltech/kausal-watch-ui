@@ -373,7 +373,7 @@ function ActionContent({ id }) {
               )}
             { (!hasPhases || action.completion) && (
               <ActionSection>
-                <SideHeader>{ t('actions:action-progress') }</SideHeader>
+                <SideHeader>{ t('actions:action-completion-percentage') }</SideHeader>
                 { action.completion > 0
                 && (
                 <strong>

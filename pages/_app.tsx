@@ -119,6 +119,9 @@ const GET_PLAN = gql`
           }
           parent {
             id
+            page {
+              __typename
+            }
           }
         }
       }

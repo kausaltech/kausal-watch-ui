@@ -60,7 +60,9 @@ function Footer(props) {
       logo: '/static/themes/hnh2035/images/climate-kic-logo-white.svg',
     },
   ];
-  if (plan.identifier === 'lpr-ilmasto') fundingInstruments = [
+
+  let otherLogos = [];
+  if (plan.identifier === 'lpr-ilmasto') otherLogos = [
     {
       id: '1',
       name: 'European Green Leaf winner 2021 (An initiative of European Comission)',
@@ -68,7 +70,7 @@ function Footer(props) {
       logo: '/static/themes/lpr-ilmasto/images/european-green-leaf.svg',
     },
   ];
-  if (plan.identifier === 'lahti-ilmasto') fundingInstruments = [
+  if (plan.identifier === 'lahti-ilmasto') otherLogos = [
     {
       id: '1',
       name: 'Lahti, European Green Capital winner 2021 (An initiative of European Comission)',
@@ -89,6 +91,7 @@ function Footer(props) {
         additionalLinks={additionalLinks}
         navItems={navLinks}
         fundingInstruments={fundingInstruments}
+        otherLogos={otherLogos}
       />
       <ApplicationStateBanner instanceType={site.instanceType} />
     </>

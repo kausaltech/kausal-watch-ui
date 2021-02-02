@@ -177,7 +177,7 @@ export function NavigationLink(props) {
   const { slug, ...other } = props;
   return slug.startsWith('http')
     ? <a href={slug} {...other} />
-    : <Link href={`/${slug}`} {...other} passHref />;
+    : <Link href={`${slug}`} {...other} passHref />;
 }
 
 NavigationLink.propTypes = {

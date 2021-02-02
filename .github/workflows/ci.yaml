@@ -29,10 +29,11 @@ jobs:
             --load \
             --tag kausal-watch-ui/base \
             --target base .
-      - name: List docker images
-        run: docker images
       - name: Running Jest unit tests
-        run: docker run --entrypoint '' kausal-watch-ui/base yarn test
-        continue-on-error: true
+        run: docker run --rm --entrypoint '' kausal-watch-ui/base yarn test
       - name: Building NextJS bundles
-        run: docker build .
+        run: |
+          docker build \
+            --cache-from "type=local,src=/tmp/.buildx-cache" \
+            --cache-to "type=local,dest=/tmp/.not-cached" \
+            .

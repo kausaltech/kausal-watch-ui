@@ -201,7 +201,7 @@ const NavbarToggler = styled.button`
 `;
 
 function DropdownList(props) {
-  const { parent, items, active } = props;
+  const { parentName, items, active } = props;
   return (
     <StyledDropdown
       nav
@@ -212,14 +212,20 @@ function DropdownList(props) {
         nav
         caret
       >
-        <DropDownHighlighter>{ parent.name }</DropDownHighlighter>
+        <DropDownHighlighter className={active && 'active'}>
+          { parentName }
+        </DropDownHighlighter>
       </StyledDropdownToggle>
-      <DropdownMenu left>
+      <DropdownMenu direction="left">
         { items && items.map((child) => (
-          <DropdownItem>
-            <NavHighlighter>
-              {child.name}
-            </NavHighlighter>
+          <DropdownItem key={child.id}>
+            <NavigationLink slug={child.urlPath}>
+              <NavLink>
+                <NavHighlighter>
+                  {child.name}
+                </NavHighlighter>
+              </NavLink>
+            </NavigationLink>
           </DropdownItem>
         ))}
       </DropdownMenu>
@@ -232,7 +238,7 @@ DropdownList.defaultProps = {
 };
 
 DropdownList.propTypes = {
-  parent: PropTypes.string.isRequired,
+  parentName: PropTypes.string.isRequired,
   items: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.string,
     name: PropTypes.string,
@@ -309,13 +315,14 @@ function GlobalNav(props) {
                 page.children
                   ? (
                     <DropdownList
-                      parent={page}
+                      parentName={page.name}
                       items={page.children}
                       active={page.active}
+                      key={page.slug}
                     />
                   ) : (
                     <NavItem key={page.slug} active={page.active}>
-                      <NavigationLink slug={page.slug}>
+                      <NavigationLink slug={page.urlPath}>
                         <NavLink>
                           <NavHighlighter className={page.active && 'active'}>
                             {page.name}

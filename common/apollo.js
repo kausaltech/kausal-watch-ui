@@ -7,6 +7,7 @@ import getConfig from 'next/config';
 
 import { captureException, Sentry } from 'common/sentry';
 import { i18n } from 'common/i18n';
+import { possibleTypes } from 'components/common/StreamField';
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -138,7 +139,10 @@ export default withApollo(({ initialState }) => {
   const clientOpts = {
     ssrMode: !process.browser,
     link: ApolloLink.from([refererLink, localeMiddleware, sentryHttpLink]),
-    cache: new InMemoryCache().restore(initialState || {}),
+    cache: new InMemoryCache({
+      // https://www.apollographql.com/docs/react/data/fragments/#defining-possibletypes-manually
+      possibleTypes: possibleTypes,
+    }).restore(initialState || {}),
   };
   const apolloClient = new ApolloClient(clientOpts);
   if (process.browser) cachedApolloClient = apolloClient;
