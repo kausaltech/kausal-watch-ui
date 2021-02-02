@@ -13,7 +13,7 @@ const StyledCard = styled(BSCard)`
   overflow: hidden;
   border-width: ${(props) => props.theme.cardBorderWidth};
   border-radius: ${(props) => props.theme.cardBorderRadius};
-  background-color: ${(props) => (props.customColor ? props.customColor : props.theme.themeColors.white)};
+  background-color: ${(props) => (props.customcolor ? props.customcolor : props.theme.themeColors.white)};
 
   &:hover {
     transform: translateY(-5px);
@@ -22,7 +22,7 @@ const StyledCard = styled(BSCard)`
 
   &.negative {
     color: ${(props) => props.theme.themeColors.white};
-    background-color: ${(props) => (props.customColor ? props.customColor : props.theme.themeColors.black)};
+    background-color: ${(props) => (props.customcolor ? props.customcolor : props.theme.themeColors.black)};
 
     h1, h2, h3, h4, h5, h6 {
       color: ${(props) => props.theme.themeColors.white};
@@ -64,7 +64,7 @@ const Card = (props) => {
         <StyledCard
           style={springProps}
           className={negative && 'negative'}
-          customColor={customColor}
+          customcolor={customColor}
         >
           {imageUrl && (
             <ImgArea imageTone={imageTone}>

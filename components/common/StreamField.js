@@ -3,6 +3,7 @@ import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
 import { gql } from '@apollo/client';
 import QuestionAnswerBlock from 'components/contentblocks/QuestionAnswerBlock';
+import CategoryListBlock from 'components/contentblocks/CategoryListBlock';
 
 const STREAM_FIELD_FRAGMENT = gql`
   fragment StreamFieldFragment on StreamFieldInterface {
@@ -80,7 +81,7 @@ function StreamFieldBlock(props) {
     case 'IndicatorBlock':
       return <div>INDICATOR BLOCK</div>;
     case 'CategoryListBlock':
-      return <div>LIST OF CATEGORIES BLOCK</div>;
+      return <CategoryListBlock {...props} />;
     default:
       return <div />;
   }
