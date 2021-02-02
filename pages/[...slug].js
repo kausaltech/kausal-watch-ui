@@ -1,43 +1,14 @@
 import React, { useContext } from 'react';
 
-import { Container, Row, Col } from 'reactstrap';
-import styled from 'styled-components';
 import { gql, useQuery } from '@apollo/client';
-import { Spring } from 'react-spring/renderprops.cjs';
 
-import { useTranslation } from 'common/i18n';
 import Layout, { Meta } from 'components/layout';
 import PlanContext from 'context/plan';
 import ErrorMessage from 'components/common/ErrorMessage';
 import ContentLoader from 'components/common/ContentLoader';
 import StreamField from 'components/common/StreamField';
-
-
-const HeaderImage = styled.div`
-  background-image: url(${(props) => props.image});
-  background-size: cover;
-  background-position: center;
-  color: ${(props) => props.theme.themeColors.white};
-  height: calc(4 * ${(props) => props.theme.spaces.s400});
-  background-color: ${(props) => props.theme.brandDark};
-  background-blend-mode: multiply;
-`;
-
-const HeaderBg = styled.div`
-  background-color: ${(props) => props.theme.brandDark};
-  color: ${(props) => props.theme.themeColors.white};
-  position: relative;
-`;
-
-const ContentHeader = styled.header`
-  padding: ${(props) => props.theme.spaces.s400} 0 ${(props) => props.theme.spaces.s200};
-
-  h1 {
-    margin-bottom: ${(props) => props.theme.spaces.s150};
-    font-size: ${(props) => props.theme.fontSizeXxl};
-    color: ${(props) => props.theme.themeColors.white} !important;
-  }
-`;
+import CategoryPageHeaderBlock from 'components/contentblocks/CategoryPageHeaderBlock';
+import ContentPageHeaderBlock from 'components/contentblocks/ContentPageHeaderBlock';
 
 const GET_PLAN_PAGE = gql`
 query GetPlanPage($plan: ID!, $path: String!) {
@@ -69,7 +40,6 @@ ${StreamField.fragments.streamField}
 `;
 
 function StaticPage({ slug }) {
-  const { t } = useTranslation();
   const path = '/' + slug.join('/');
   const plan = useContext(PlanContext);
   const { loading, error, data } = useQuery(GET_PLAN_PAGE, {
@@ -96,10 +66,33 @@ StaticPage.getInitialProps = async ({ query }) => ({
   namespacesRequired: ['common'],
 });
 
+const PageHeaderBlock = (page) => {
+  const { title, headerImage } = page;
+  const imageUrl = headerImage?.rendition.src;
+
+  switch (page.__typename) {
+    case 'CategoryPage':
+      return (
+        <CategoryPageHeaderBlock
+          title={title}
+          lead={page.leadParagraph}
+          headerImage={imageUrl}
+        />
+      );
+    default:
+      return (
+        <ContentPageHeaderBlock
+          title={title}
+          lead={page.leadParagraph}
+          headerImage={imageUrl}
+        />
+      );
+  }
+};
+
 const Content = ({ page }) => {
   const { title, headerImage } = page;
   const imageUrl = headerImage?.rendition.src;
-  const { t } = useTranslation(['common']);
 
   return (
     <article>
@@ -107,36 +100,13 @@ const Content = ({ page }) => {
         title={`${title}`}
         shareImageUrl={imageUrl}
         description={`${page.searchDescription || title}`}
-        />
-      <HeaderBg>
-        { imageUrl && (
-          <Spring
-            from={{ opacity: 0 }}
-            to={{ opacity: 1 }}
-          >
-            {(props) => (
-              <HeaderImage image={imageUrl} style={props} />
-            )}
-          </Spring>
-        )}
-      </HeaderBg>
-      <HeaderBg>
-        <Container>
-          <Row>
-            <Col>
-              <ContentHeader>
-                <h1>{title}</h1>
-                {page.leadParagraph && <p className="lead">{page.leadParagraph}</p>}
-              </ContentHeader>
-            </Col>
-          </Row>
-        </Container>
-      </HeaderBg>
+      />
+      <PageHeaderBlock {...page} />
       <div className="content-area">
         {page.body && <StreamField blocks={page.body} />}
       </div>
     </article>
   );
-}
+};
 
 export default StaticPage;
