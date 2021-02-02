@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
 import Card from 'components/common/Card';
@@ -21,36 +20,37 @@ const CardHeader = styled.h3`
 `;
 
 const CategoryListBlock = (props) => {
+  const placemarkerImageUrl = "https://kausal.watch.kausal.tech/media/images/Visit_Tampere_Foggy_sunset_Panorama_from_Nasinn.original.jpg";
   const fakeprops = {
     heading: 'Toimenpidekokonaisuudet',
     categories: [
       {
         id: '1',
-        imageUrl: 'https://source.unsplash.com/random',
+        imageUrl: placemarkerImageUrl,
         title: 'Toimenpidekokonaisuus 1',
         progress: '60',
       },
       {
         id: '2',
-        imageUrl: 'https://source.unsplash.com/random',
+        imageUrl: placemarkerImageUrl,
         title: 'Toimenpidekokonaisuus 2',
         progress: '60',
       },
       {
         id: '3',
-        imageUrl: 'https://source.unsplash.com/random',
+        imageUrl: placemarkerImageUrl,
         title: 'Toimenpidekokonaisuus 3',
         progress: '60',
       },
       {
         id: '4',
-        imageUrl: 'https://source.unsplash.com/random',
+        imageUrl: placemarkerImageUrl,
         title: 'Toimenpidekokonaisuus 4',
         progress: '60',
       },
       {
         id: '5',
-        imageUrl: 'https://source.unsplash.com/random',
+        imageUrl: placemarkerImageUrl,
         title: 'Toimenpidekokonaisuus 5',
         progress: '60',
       },
@@ -76,16 +76,5 @@ const CategoryListBlock = (props) => {
     </CategoryListSection>
   );
 };
-
-/*
-CategoryListBlock.defaultProps = {
-  heading: null,
-};
-
-CategoryListBlock.propTypes = {
-  heading: PropTypes.string,
-  categories: PropTypes.arrayOf(PropTypes.object).isRequired,
-};
-*/
 
 export default CategoryListBlock;

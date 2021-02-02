@@ -22,7 +22,7 @@ const CategoryPageHeaderBlock = (props) => {
     themeColor: '#29549A',
   };
 
-  const { categories, themeColor } = fakeprops;
+  const { themeColor } = fakeprops;
   return (
     <CategoryPageHeader bg={themeColor}>
       <Container>
@@ -39,15 +39,15 @@ const CategoryPageHeaderBlock = (props) => {
   );
 };
 
-/*
-CategoryListBlock.defaultProps = {
-  heading: null,
+CategoryPageHeaderBlock.defaultProps = {
+  lead: null,
+  headerImage: null,
 };
 
-CategoryListBlock.propTypes = {
-  heading: PropTypes.string,
-  categories: PropTypes.arrayOf(PropTypes.object).isRequired,
+CategoryPageHeaderBlock.propTypes = {
+  title: PropTypes.string.isRequired,
+  lead: PropTypes.string,
+  headerImage: PropTypes.string,
 };
-*/
 
 export default CategoryPageHeaderBlock;

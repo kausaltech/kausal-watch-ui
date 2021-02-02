@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 
 import { gql, useQuery } from '@apollo/client';
-
+import { useTranslation } from 'common/i18n';
 import Layout, { Meta } from 'components/layout';
 import PlanContext from 'context/plan';
 import ErrorMessage from 'components/common/ErrorMessage';
@@ -40,6 +40,7 @@ ${StreamField.fragments.streamField}
 `;
 
 function StaticPage({ slug }) {
+  const { t } = useTranslation();
   const path = '/' + slug.join('/');
   const plan = useContext(PlanContext);
   const { loading, error, data } = useQuery(GET_PLAN_PAGE, {

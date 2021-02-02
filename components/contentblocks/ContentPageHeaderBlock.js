@@ -62,15 +62,15 @@ const ContentPageHeaderBlock = (props) => {
   );
 };
 
-/*
-CategoryListBlock.defaultProps = {
-  heading: null,
+ContentPageHeaderBlock.defaultProps = {
+  lead: null,
+  headerImage: null,
 };
 
-CategoryListBlock.propTypes = {
-  heading: PropTypes.string,
-  categories: PropTypes.arrayOf(PropTypes.object).isRequired,
+ContentPageHeaderBlock.propTypes = {
+  title: PropTypes.string.isRequired,
+  lead: PropTypes.string,
+  headerImage: PropTypes.string,
 };
-*/
 
 export default ContentPageHeaderBlock;
