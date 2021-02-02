@@ -57,6 +57,11 @@ query GetPlanPage($plan: ID!, $path: String!) {
         ...StreamFieldFragment
       }
     }
+    ... on CategoryPage {
+      body {
+        ...StreamFieldFragment
+      }
+    }
     lastPublishedAt
   }
 }

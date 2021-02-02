@@ -1,8 +1,8 @@
+import React from 'react';
 import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
 import { gql } from '@apollo/client';
-
-import Accordion from 'components/common/Accordion';
+import QuestionAnswerBlock from 'components/contentblocks/QuestionAnswerBlock';
 
 const STREAM_FIELD_FRAGMENT = gql`
   fragment StreamFieldFragment on StreamFieldInterface {
@@ -34,82 +34,63 @@ const STREAM_FIELD_FRAGMENT = gql`
         }
       }
     }
+    ... on IndicatorBlock {
+      style
+    }
+    ... on CategoryListBlock {
+      style
+    }
   }
 `;
 
 export const possibleTypes = {
   StreamFieldInterface: [
-    'CharBlock', 'TextBlock', 'RichTextBlock', 'ChoiceBlock', 'QuestionAnswerBlock',
-  ]
+    'CharBlock',
+    'TextBlock',
+    'RichTextBlock',
+    'ChoiceBlock',
+    'QuestionAnswerBlock',
+    'IndicatorBlock',
+    'CategoryListBlock',
+  ],
 };
-
 
 const ContentMarkup = styled.div`
   padding: ${(props) => props.theme.spaces.s300} 0;
 `;
 
-const FaqSection = styled.section`
-  padding: ${(props) => props.theme.spaces.s400} 0;
-  background: ${(props) => props.theme.themeColors.light};
-
-  h2 {
-    text-align: center;
-    font-size: ${(props) => props.theme.fontSizeXl};
-    margin-bottom: ${(props) => props.theme.spaces.s300};
-  }
-`;
-
-
-function QuestionAnswerBlock({heading, questions}) {
-  return (
-    <FaqSection>
-      <Container>
-        <Row>
-          <Col lg={{ size: 8, offset: 2 }} md={{ size: 10, offset: 1 }}>
-            { heading && (<h2>{ heading }</h2>)}
-            <Accordion>
-              { questions.map(q => (
-                <Accordion.Item key={q.id} id={q.id}>
-                  <Accordion.Header>
-                    {q.question}
-                  </Accordion.Header>
-                  <Accordion.Body>
-                    <div className="text-content" dangerouslySetInnerHTML={{ __html: q.answer }}/>
-                  </Accordion.Body>
-                </Accordion.Item>
-              ))}
-            </Accordion>
-          </Col>
-        </Row>
-      </Container>
-    </FaqSection>
-  );
-}
-
 function StreamFieldBlock(props) {
   const { field, blockType } = props;
+  console.log(props);
   switch (blockType) {
     case 'RichTextBlock':
       return (
         <Container>
           <Row>
-            <Col lg={{ size:8, offset: 2 }} md={{ size: 10, offset: 1 }}>
+            <Col lg={{ size: 8, offset: 2 }} md={{ size: 10, offset: 1 }}>
               <ContentMarkup dangerouslySetInnerHTML={{ __html: props.value }} />
             </Col>
           </Row>
         </Container>
       );
     case 'QuestionAnswerBlock':
-      return <QuestionAnswerBlock {...props} />
+      return <QuestionAnswerBlock {...props} />;
     case 'CharBlock':
-      return <Container><Row><Col><div>{props.value}</div></Col></Row></Container>
+      return <Container><Row><Col><div>{props.value}</div></Col></Row></Container>;
+    case 'IndicatorBlock':
+      return <div>INDICATOR BLOCK</div>;
+    case 'CategoryListBlock':
+      return <div>LIST OF CATEGORIES BLOCK</div>;
+    default:
+      return <div />;
   }
 }
 
 function StreamField({ blocks }) {
+  console.log(blocks);
   return (
     <>
-      { blocks.map((block) => <StreamFieldBlock {...block} />) }
+      { blocks.map((block) => <StreamFieldBlock {...block} key={block.id} />) }
     </>
   );
 }
