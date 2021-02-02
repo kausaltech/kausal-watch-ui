@@ -21,10 +21,10 @@ function Footer(props) {
   navLinks.push({ id: '2', name: t('actions'), slug: 'actions' });
   navLinks.push({ id: '3', name: t('indicators'), slug: 'indicators' });
 
-  if (plan.staticPages) {
-    const topMenuPages = plan.staticPages.filter((page) => page.footer);
-    staticPages = topMenuPages.map((page, index) => (
-      { id: `s${index}`, name: page.name, slug: page.slug }
+  if (plan.pages) {
+    const footerPages = plan.pages.filter((page) => page.showInFooter);
+    staticPages = footerPages.map((page, index) => (
+      { id: `s${index}`, name: page.seoTitle, slug: page.slug }
     ));
     navLinks = navLinks.concat(staticPages);
   }
