@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { gql } from '@apollo/client';
 import QuestionAnswerBlock from 'components/contentblocks/QuestionAnswerBlock';
 import CategoryListBlock from 'components/contentblocks/CategoryListBlock';
+import IndicatorBlock from 'components/contentblocks/IndicatorBlock';
 
 const STREAM_FIELD_FRAGMENT = gql`
   fragment StreamFieldFragment on StreamFieldInterface {
@@ -37,6 +38,9 @@ const STREAM_FIELD_FRAGMENT = gql`
     }
     ... on IndicatorBlock {
       style
+      indicator {
+        id
+      }
     }
     ... on CategoryListBlock {
       style
@@ -62,7 +66,6 @@ const ContentMarkup = styled.div`
 
 function StreamFieldBlock(props) {
   const { field, blockType } = props;
-  console.log(props);
   switch (blockType) {
     case 'RichTextBlock':
       return (
@@ -79,7 +82,7 @@ function StreamFieldBlock(props) {
     case 'CharBlock':
       return <Container><Row><Col><div>{props.value}</div></Col></Row></Container>;
     case 'IndicatorBlock':
-      return <div>INDICATOR BLOCK</div>;
+      return <IndicatorBlock {...props} />;
     case 'CategoryListBlock':
       return <CategoryListBlock {...props} />;
     default:
@@ -88,7 +91,6 @@ function StreamFieldBlock(props) {
 }
 
 function StreamField({ blocks }) {
-  console.log(blocks);
   return (
     <>
       { blocks.map((block) => <StreamFieldBlock {...block} key={block.id} />) }
