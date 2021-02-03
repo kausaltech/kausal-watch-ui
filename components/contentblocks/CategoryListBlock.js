@@ -1,6 +1,7 @@
 import React from 'react';
 import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
+import {DynamicLink} from 'common/links';
 import Card from 'components/common/Card';
 
 const CategoryListSection = styled.div`
@@ -30,7 +31,9 @@ const CategoryListBlock = ({ categories }) => {
           { categories.map((cat) => (
             <Col lg="3" md="4" sm="6" key={cat.id} className="mb-4">
               <Card imageUrl={cat.imageUrl}>
-                <CardHeader>{ cat.name }</CardHeader>
+                <DynamicLink href={cat.categoryPage.urlPath}>
+                  <CardHeader>{ cat.name }</CardHeader>
+                </DynamicLink>
               </Card>
             </Col>
           ))}
