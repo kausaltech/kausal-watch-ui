@@ -90,10 +90,10 @@ function StreamFieldBlock(props) {
   }
 }
 
-function StreamField({ blocks }) {
+function StreamField({ page, blocks }) {
   return (
     <>
-      { blocks.map((block) => <StreamFieldBlock {...block} key={block.id} />) }
+      { blocks.map((block) => <StreamFieldBlock {...block} categories={page.category.children} key={block.id} />) }
     </>
   );
 }

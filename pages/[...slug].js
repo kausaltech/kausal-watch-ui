@@ -35,6 +35,7 @@ query GetPlanPage($plan: ID!, $path: String!) {
           id
           identifier
           name
+          imageUrl
           categoryPage {
             title
             urlPath
