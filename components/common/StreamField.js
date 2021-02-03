@@ -72,30 +72,39 @@ const ContentMarkup = styled.div`
 `;
 
 function StreamFieldBlock(props) {
-  const { field, blockType, page } = props;
+  const { blockType } = props;
+
   switch (blockType) {
-    case 'RichTextBlock':
+    case 'RichTextBlock': {
+      const { value } = props;
       return (
         <Container>
           <Row>
             <Col lg={{ size: 8, offset: 2 }} md={{ size: 10, offset: 1 }}>
-              <ContentMarkup dangerouslySetInnerHTML={{ __html: props.value }} />
+              <ContentMarkup dangerouslySetInnerHTML={{ __html: value }} />
             </Col>
           </Row>
         </Container>
       );
-    case 'QuestionAnswerBlock':
-      return <QuestionAnswerBlock {...props} />;
-    case 'CharBlock':
-      return <Container><Row><Col><div>{props.value}</div></Col></Row></Container>;
-    case 'IndicatorBlock':
-      return <IndicatorBlock {...props} />;
+    }
+    case 'QuestionAnswerBlock': {
+      const { heading, questions } = props;
+      return <QuestionAnswerBlock heading={heading} questions={questions} />;
+    }
+    case 'CharBlock': {
+      const { value } = props;
+      return <Container><Row><Col><div>{value}</div></Col></Row></Container>;
+    }
+    case 'IndicatorBlock': {
+      const { indicator } = props;
+      return <IndicatorBlock indicator={indicator} />;
+    }
     case 'ActionListBlock': {
       const { categoryFilter } = props;
       return <ActionListBlock categoryId={categoryFilter?.id || page.category.id} />;
     }
     case 'CategoryListBlock':
-      return <CategoryListBlock {...props} categories={page.category.children} />;
+      return <CategoryListBlock categories={page.category.children} />;
     default:
       return <div />;
   }
