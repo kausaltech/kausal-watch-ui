@@ -29,6 +29,18 @@ query GetPlanPage($plan: ID!, $path: String!) {
       }
     }
     ... on CategoryPage {
+      category {
+        id
+        children {
+          id
+          identifier
+          name
+          categoryPage {
+            title
+            urlPath
+          }
+        }
+      }
       body {
         ...StreamFieldFragment
       }
@@ -104,7 +116,7 @@ const Content = ({ page }) => {
       />
       <PageHeaderBlock {...page} />
       <div className="content-area">
-        {page.body && <StreamField blocks={page.body} />}
+        {page.body && <StreamField page={page} blocks={page.body} />}
       </div>
     </article>
   );
