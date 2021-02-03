@@ -20,7 +20,6 @@ const CardHeader = styled.h3`
 `;
 
 const CategoryListBlock = (props) => {
-  const placemarkerImageUrl = "https://kausal.watch.kausal.tech/media/images/Visit_Tampere_Foggy_sunset_Panorama_from_Nasinn.original.jpg";
   const fakeprops = {
     heading: 'Toimenpidekokonaisuudet',
     categories: props.categories.map(({ id, name, imageUrl }) => ({

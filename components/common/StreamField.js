@@ -3,6 +3,7 @@ import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
 import { gql } from '@apollo/client';
 import QuestionAnswerBlock from 'components/contentblocks/QuestionAnswerBlock';
+import ActionListBlock from 'components/contentblocks/ActionListBlock';
 import CategoryListBlock from 'components/contentblocks/CategoryListBlock';
 import IndicatorBlock from 'components/contentblocks/IndicatorBlock';
 
@@ -42,6 +43,11 @@ const STREAM_FIELD_FRAGMENT = gql`
         id
       }
     }
+    ... on ActionListBlock {
+      categoryFilter {
+        id
+      }
+    }
     ... on CategoryListBlock {
       style
     }
@@ -56,6 +62,7 @@ export const possibleTypes = {
     'ChoiceBlock',
     'QuestionAnswerBlock',
     'IndicatorBlock',
+    'ActionListBlock',
     'CategoryListBlock',
   ],
 };
@@ -83,6 +90,8 @@ function StreamFieldBlock(props) {
       return <Container><Row><Col><div>{props.value}</div></Col></Row></Container>;
     case 'IndicatorBlock':
       return <IndicatorBlock {...props} />;
+    case 'ActionListBlock':
+      return <ActionListBlock {...props} />;
     case 'CategoryListBlock':
       return <CategoryListBlock {...props} />;
     default:
