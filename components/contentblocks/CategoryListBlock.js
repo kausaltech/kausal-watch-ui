@@ -1,12 +1,17 @@
 import React from 'react';
 import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
-import {DynamicLink} from 'common/links';
+import { DynamicLink } from 'common/links';
 import Card from 'components/common/Card';
 
 const CategoryListSection = styled.div`
   background-color: ${(props) => props.bg};
   padding: ${(props) => props.theme.spaces.s300};
+
+  a.card-wrapper {
+    display: flex;
+    width: 100%;
+  }
 `;
 
 const SectionHeader = styled.h2`
@@ -20,21 +25,30 @@ const CardHeader = styled.h3`
   line-height: ${(props) => props.theme.lineHeightSm};
 `;
 
-const CategoryListBlock = ({ categories }) => {
+const CategoryListBlock = ({ categories, color, fallbackImageUrl }) => {
   const heading = 'Toimenpidekokonaisuudet';
-  const themeColor = '#29549A';
+  const themeColor = color;
   return (
     <CategoryListSection bg={themeColor}>
       <Container>
         { heading && (<SectionHeader>{ heading }</SectionHeader>)}
         <Row>
           { categories.map((cat) => (
-            <Col lg="3" md="4" sm="6" key={cat.id} className="mb-4">
-              <Card imageUrl={cat.imageUrl}>
-                <DynamicLink href={cat.categoryPage.urlPath}>
-                  <CardHeader>{ cat.name }</CardHeader>
-                </DynamicLink>
-              </Card>
+            <Col
+              tag="li"
+              xs="6"
+              lg="4"
+              key={cat.id}
+              className="mb-4 d-flex align-items-stretch"
+              style={{ transition: 'all 0.5s ease' }}
+              role="listitem">
+              <DynamicLink href={cat.categoryPage.urlPath}>
+                <a className="card-wrapper">
+                  <Card imageUrl={cat.imageUrl || fallbackImageUrl}>
+                    <CardHeader>{ cat.name }</CardHeader>
+                  </Card>
+                </a>
+              </DynamicLink>
             </Col>
           ))}
         </Row>

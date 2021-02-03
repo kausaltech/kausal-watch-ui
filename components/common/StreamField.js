@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
 import { gql } from '@apollo/client';
+import PlanContext from 'context/plan';
 import QuestionAnswerBlock from 'components/contentblocks/QuestionAnswerBlock';
 import ActionListBlock from 'components/contentblocks/ActionListBlock';
 import CategoryListBlock from 'components/contentblocks/CategoryListBlock';
@@ -72,7 +73,8 @@ const ContentMarkup = styled.div`
 `;
 
 function StreamFieldBlock(props) {
-  const { blockType } = props;
+  const { blockType, page } = props;
+  const plan = useContext(PlanContext);
 
   switch (blockType) {
     case 'RichTextBlock': {
@@ -103,17 +105,21 @@ function StreamFieldBlock(props) {
       const { categoryFilter } = props;
       return <ActionListBlock categoryId={categoryFilter?.id || page.category.id} />;
     }
-    case 'CategoryListBlock':
-      return <CategoryListBlock categories={page.category.children} />;
+    case 'CategoryListBlock': {
+      const { color } = props;
+      const { category } = page;
+      const fallbackImage = category?.imageUrl || plan.mainImage?.smallRendition?.src || plan.imageUrl;
+      return <CategoryListBlock categories={category.children} color={color} fallbackImageUrl={fallbackImage} />;
+    }
     default:
       return <div />;
   }
 }
 
-function StreamField({ page, blocks }) {
+function StreamField({ page, blocks, color }) {
   return (
     <>
-      { blocks.map((block) => <StreamFieldBlock {...block} page={page} key={block.id} />) }
+      { blocks.map((block) => <StreamFieldBlock {...block} page={page} key={block.id} color={color} />) }
     </>
   );
 }

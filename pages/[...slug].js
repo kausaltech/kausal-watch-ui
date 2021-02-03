@@ -4,6 +4,7 @@ import { gql, useQuery } from '@apollo/client';
 import { useTranslation } from 'common/i18n';
 import Layout, { Meta } from 'components/layout';
 import PlanContext from 'context/plan';
+import { ThemeContext } from 'styled-components';
 import ErrorMessage from 'components/common/ErrorMessage';
 import ContentLoader from 'components/common/ContentLoader';
 import StreamField from 'components/common/StreamField';
@@ -31,11 +32,26 @@ query GetPlanPage($plan: ID!, $path: String!) {
     ... on CategoryPage {
       category {
         id
+        imageUrl
+        color
+        type {
+          name
+        }
         children {
           id
           identifier
           name
           imageUrl
+          color
+          categoryPage {
+            title
+            urlPath
+          }
+        }
+        parent {
+          id
+          imageUrl
+          color
           categoryPage {
             title
             urlPath
@@ -80,33 +96,44 @@ StaticPage.getInitialProps = async ({ query }) => ({
   namespacesRequired: ['common'],
 });
 
-const PageHeaderBlock = (page) => {
-  const { title, headerImage } = page;
-  const imageUrl = headerImage?.rendition.src;
+const PageHeaderBlock = (props) => {
+  const { color, page } = props;
 
   switch (page.__typename) {
-    case 'CategoryPage':
+    case 'CategoryPage': {
+      const parentTitle = page.category.parent?.categoryPage.title || page.category.type.name;
+      const parentUrl = page.category.parent?.categoryPage.urlPath || '/';
       return (
         <CategoryPageHeaderBlock
-          title={title}
+          title={page.title}
           lead={page.leadParagraph}
-          headerImage={imageUrl}
+          headerImage={page.category.imageUrl || page.category?.parent.imageUrl }
+          parentTitle={parentTitle}
+          parentUrl={parentUrl}
+          color={color}
         />
       );
-    default:
+    }
+    default: {
+      const { headerImage } = page;
       return (
         <ContentPageHeaderBlock
-          title={title}
+          title={page.title}
           lead={page.leadParagraph}
-          headerImage={imageUrl}
+          headerImage={headerImage?.rendition.src}
         />
       );
+    }
   }
 };
 
 const Content = ({ page }) => {
+  // TODO: Resolve shareImageUrl by pagetype
   const { title, headerImage } = page;
   const imageUrl = headerImage?.rendition.src;
+
+  const theme = useContext(ThemeContext);
+  const pageSectionColor = page?.category.color || page?.category.parent?.color || theme.brandDark;
 
   return (
     <article>
@@ -115,9 +142,9 @@ const Content = ({ page }) => {
         shareImageUrl={imageUrl}
         description={`${page.searchDescription || title}`}
       />
-      <PageHeaderBlock {...page} />
+      <PageHeaderBlock page={page} color={pageSectionColor} />
       <div className="content-area">
-        {page.body && <StreamField page={page} blocks={page.body} />}
+        {page.body && <StreamField page={page} blocks={page.body} color={pageSectionColor} />}
       </div>
     </article>
   );

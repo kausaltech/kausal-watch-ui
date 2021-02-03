@@ -55,7 +55,15 @@ const ActionListBlock = (props) => {
         { heading && (<SectionHeader>{ heading }</SectionHeader>)}
         <Row>
           { planActions.map((action) => (
-            <Col lg="3" md="4" sm="6" key={action.id} className="mb-4">
+            <Col
+              tag="li"
+              xs="6"
+              sm="4"
+              lg="3"
+              key={action.id}
+              className="mb-4 d-flex align-items-stretch"
+              style={{ transition: 'all 0.5s ease' }}
+              role="listitem">
               <ActionCard action={action} />
             </Col>
           ))}
