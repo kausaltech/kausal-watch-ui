@@ -1,10 +1,11 @@
 import React, { useContext } from 'react';
+import PropTypes from 'prop-types';
 import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
 import { gql, useQuery } from '@apollo/client';
 
 import { useTranslation } from 'common/i18n';
-import Card from 'components/common/Card';
+import ActionCard from 'components/actions/ActionCard';
 import ContentLoader from 'components/common/ContentLoader';
 import ErrorMessage from 'components/common/ErrorMessage';
 import PlanContext from 'context/plan';
@@ -12,11 +13,10 @@ import PlanContext from 'context/plan';
 const GET_ACTION_LIST = gql`
 query GetActionList($plan: ID!, $category: ID) {
   planActions(plan: $plan, category: $category) {
-    id
-    name
-    imageUrl
+    ...ActionCard
   }
 }
+${ActionCard.fragments.action}
 `;
 
 const ActionListSection = styled.div`
@@ -30,18 +30,14 @@ const SectionHeader = styled.h2`
   margin-bottom: ${(props) => props.theme.spaces.s300};
 `;
 
-const CardHeader = styled.h3`
-  color: ${(props) => props.theme.themeColors.black};
-  line-height: ${(props) => props.theme.lineHeightSm};
-`;
-
-const ActionListBlock = ({ categoryFilter }) => {
+const ActionListBlock = (props) => {
+  const { categoryId } = props;
   const { t } = useTranslation();
   const plan = useContext(PlanContext);
   const { loading, error, data } = useQuery(GET_ACTION_LIST, {
     variables: {
       plan: plan.identifier,
-      category: categoryFilter && categoryFilter.id,
+      category: categoryId,
     },
   });
   if (loading) return <ContentLoader />;
@@ -60,15 +56,17 @@ const ActionListBlock = ({ categoryFilter }) => {
         <Row>
           { planActions.map((action) => (
             <Col lg="3" md="4" sm="6" key={action.id} className="mb-4">
-              <Card imageUrl={action.imageUrl}>
-                <CardHeader>{ action.name }</CardHeader>
-              </Card>
+              <ActionCard action={action} />
             </Col>
           ))}
         </Row>
       </Container>
     </ActionListSection>
   );
+};
+
+ActionListBlock.propTypes = {
+  categoryId: PropTypes.string.isRequired,
 };
 
 export default ActionListBlock;

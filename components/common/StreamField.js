@@ -72,7 +72,7 @@ const ContentMarkup = styled.div`
 `;
 
 function StreamFieldBlock(props) {
-  const { field, blockType } = props;
+  const { field, blockType, page } = props;
   switch (blockType) {
     case 'RichTextBlock':
       return (
@@ -90,10 +90,12 @@ function StreamFieldBlock(props) {
       return <Container><Row><Col><div>{props.value}</div></Col></Row></Container>;
     case 'IndicatorBlock':
       return <IndicatorBlock {...props} />;
-    case 'ActionListBlock':
-      return <ActionListBlock {...props} />;
+    case 'ActionListBlock': {
+      const { categoryFilter } = props;
+      return <ActionListBlock categoryId={categoryFilter?.id || page.category.id} />;
+    }
     case 'CategoryListBlock':
-      return <CategoryListBlock {...props} />;
+      return <CategoryListBlock {...props} categories={page.category.children} />;
     default:
       return <div />;
   }
@@ -102,7 +104,7 @@ function StreamFieldBlock(props) {
 function StreamField({ page, blocks }) {
   return (
     <>
-      { blocks.map((block) => <StreamFieldBlock {...block} categories={page.category.children} key={block.id} />) }
+      { blocks.map((block) => <StreamFieldBlock {...block} page={page} key={block.id} />) }
     </>
   );
 }
