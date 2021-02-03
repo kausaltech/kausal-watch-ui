@@ -19,19 +19,9 @@ const CardHeader = styled.h3`
   line-height: ${(props) => props.theme.lineHeightSm};
 `;
 
-const CategoryListBlock = (props) => {
-  const fakeprops = {
-    heading: 'Toimenpidekokonaisuudet',
-    categories: props.categories.map(({ id, name, imageUrl }) => ({
-      id,
-      imageUrl,
-      title: name,
-      progress: '60',
-    })),
-    themeColor: '#29549A',
-  };
-
-  const { heading, categories, themeColor } = fakeprops;
+const CategoryListBlock = ({ categories }) => {
+  const heading = 'Toimenpidekokonaisuudet';
+  const themeColor = '#29549A';
   return (
     <CategoryListSection bg={themeColor}>
       <Container>
@@ -40,7 +30,7 @@ const CategoryListBlock = (props) => {
           { categories.map((cat) => (
             <Col lg="3" md="4" sm="6" key={cat.id} className="mb-4">
               <Card imageUrl={cat.imageUrl}>
-                <CardHeader>{ cat.title }</CardHeader>
+                <CardHeader>{ cat.name }</CardHeader>
               </Card>
             </Col>
           ))}

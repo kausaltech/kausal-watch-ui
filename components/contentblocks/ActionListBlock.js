@@ -51,26 +51,17 @@ const ActionListBlock = ({ categoryFilter }) => {
   if (!planActions) {
     return <ErrorMessage statusCode={404} message={t('page-not-found')} />;
   }
-  const fakeprops = {
-    heading: 'TODO',
-    actions: planActions.map(({ id, name, imageUrl }) => ({
-      id,
-      imageUrl,
-      title: name,
-    })),
-    themeColor: '#29549A',
-  };
-
-  const { heading, actions, themeColor } = fakeprops;
+  const heading = 'TODO';
+  const themeColor = '#29549A';
   return (
     <ActionListSection bg={themeColor}>
       <Container>
         { heading && (<SectionHeader>{ heading }</SectionHeader>)}
         <Row>
-          { actions.map((action) => (
+          { planActions.map((action) => (
             <Col lg="3" md="4" sm="6" key={action.id} className="mb-4">
               <Card imageUrl={action.imageUrl}>
-                <CardHeader>{ action.title }</CardHeader>
+                <CardHeader>{ action.name }</CardHeader>
               </Card>
             </Col>
           ))}
