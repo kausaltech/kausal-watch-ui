@@ -21,10 +21,9 @@ function Footer(props) {
   navLinks.push({ id: '2', name: t('actions'), slug: 'actions' });
   navLinks.push({ id: '3', name: t('indicators'), slug: 'indicators' });
 
-  if (plan.pages) {
-    const footerPages = plan.pages.filter((page) => page.showInFooter);
-    staticPages = footerPages.map((page, index) => (
-      { id: `s${index}`, name: page.seoTitle, slug: page.slug }
+  if (plan.footer.items.length > 0) {
+    staticPages = plan.footer.items.map(({ linkText, page }, index) => (
+      { id: `s${index}`, name: linkText, slug: page.slug }
     ));
     navLinks = navLinks.concat(staticPages);
   }
