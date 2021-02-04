@@ -1,0 +1,79 @@
+import React, { useContext } from 'react';
+import PropTypes from 'prop-types';
+import { Container, Row, Col } from 'reactstrap';
+import styled from 'styled-components';
+import { gql, useQuery } from '@apollo/client';
+
+import { useTranslation } from 'common/i18n';
+import ActionCard from 'components/actions/ActionCard';
+import ContentLoader from 'components/common/ContentLoader';
+import ErrorMessage from 'components/common/ErrorMessage';
+import PlanContext from 'context/plan';
+
+const GET_ACTION_LIST = gql`
+query GetActionList($plan: ID!, $category: ID) {
+  planActions(plan: $plan, category: $category) {
+    ...ActionCard
+  }
+}
+${ActionCard.fragments.action}
+`;
+
+const ActionListSection = styled.div`
+  background-color: ${(props) => props.theme.neutralLight};
+  padding: ${(props) => props.theme.spaces.s300};
+`;
+
+const SectionHeader = styled.h2`
+  text-align: center;
+  color: ${(props) => props.theme.themeColors.black};
+  margin-bottom: ${(props) => props.theme.spaces.s300};
+`;
+
+const ActionListBlock = (props) => {
+  const { categoryId } = props;
+  const { t } = useTranslation();
+  const plan = useContext(PlanContext);
+  const { loading, error, data } = useQuery(GET_ACTION_LIST, {
+    variables: {
+      plan: plan.identifier,
+      category: categoryId,
+    },
+  });
+  if (loading) return <ContentLoader />;
+  if (error) return <ErrorMessage message={error.message} />;
+
+  const { planActions } = data;
+  if (!planActions) {
+    return <ErrorMessage statusCode={404} message={t('page-not-found')} />;
+  }
+  const heading = t('actions');
+  return (
+    <ActionListSection>
+      <Container>
+        { heading && (<SectionHeader>{ heading }</SectionHeader>)}
+        <Row>
+          { planActions.map((action) => (
+            <Col
+              tag="li"
+              xs="6"
+              sm="4"
+              lg="3"
+              key={action.id}
+              className="mb-4 d-flex align-items-stretch"
+              style={{ transition: 'all 0.5s ease' }}
+              role="listitem">
+              <ActionCard action={action} />
+            </Col>
+          ))}
+        </Row>
+      </Container>
+    </ActionListSection>
+  );
+};
+
+ActionListBlock.propTypes = {
+  categoryId: PropTypes.string.isRequired,
+};
+
+export default ActionListBlock;

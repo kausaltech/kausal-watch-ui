@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
 import { gql } from '@apollo/client';
+import PlanContext from 'context/plan';
 import QuestionAnswerBlock from 'components/contentblocks/QuestionAnswerBlock';
+import ActionListBlock from 'components/contentblocks/ActionListBlock';
 import CategoryListBlock from 'components/contentblocks/CategoryListBlock';
 import IndicatorBlock from 'components/contentblocks/IndicatorBlock';
 
@@ -42,6 +44,11 @@ const STREAM_FIELD_FRAGMENT = gql`
         id
       }
     }
+    ... on ActionListBlock {
+      categoryFilter {
+        id
+      }
+    }
     ... on CategoryListBlock {
       style
     }
@@ -56,6 +63,7 @@ export const possibleTypes = {
     'ChoiceBlock',
     'QuestionAnswerBlock',
     'IndicatorBlock',
+    'ActionListBlock',
     'CategoryListBlock',
   ],
 };
@@ -65,35 +73,53 @@ const ContentMarkup = styled.div`
 `;
 
 function StreamFieldBlock(props) {
-  const { field, blockType } = props;
+  const { blockType, page } = props;
+  const plan = useContext(PlanContext);
+
   switch (blockType) {
-    case 'RichTextBlock':
+    case 'RichTextBlock': {
+      const { value } = props;
       return (
         <Container>
           <Row>
             <Col lg={{ size: 8, offset: 2 }} md={{ size: 10, offset: 1 }}>
-              <ContentMarkup dangerouslySetInnerHTML={{ __html: props.value }} />
+              <ContentMarkup dangerouslySetInnerHTML={{ __html: value }} />
             </Col>
           </Row>
         </Container>
       );
-    case 'QuestionAnswerBlock':
-      return <QuestionAnswerBlock {...props} />;
-    case 'CharBlock':
-      return <Container><Row><Col><div>{props.value}</div></Col></Row></Container>;
-    case 'IndicatorBlock':
-      return <IndicatorBlock {...props} />;
-    case 'CategoryListBlock':
-      return <CategoryListBlock {...props} />;
+    }
+    case 'QuestionAnswerBlock': {
+      const { heading, questions } = props;
+      return <QuestionAnswerBlock heading={heading} questions={questions} />;
+    }
+    case 'CharBlock': {
+      const { value } = props;
+      return <Container><Row><Col><div>{value}</div></Col></Row></Container>;
+    }
+    case 'IndicatorBlock': {
+      const { indicator } = props;
+      return <IndicatorBlock indicator={indicator} />;
+    }
+    case 'ActionListBlock': {
+      const { categoryFilter } = props;
+      return <ActionListBlock categoryId={categoryFilter?.id || page.category.id} />;
+    }
+    case 'CategoryListBlock': {
+      const { color } = props;
+      const { category } = page;
+      const fallbackImage = category?.imageUrl || plan.mainImage?.smallRendition?.src || plan.imageUrl;
+      return <CategoryListBlock categories={category.children} color={color} fallbackImageUrl={fallbackImage} />;
+    }
     default:
       return <div />;
   }
 }
 
-function StreamField({ blocks }) {
+function StreamField({ page, blocks, color }) {
   return (
     <>
-      { blocks.map((block) => <StreamFieldBlock {...block} key={block.id} />) }
+      { blocks.map((block) => <StreamFieldBlock {...block} page={page} key={block.id} color={color} />) }
     </>
   );
 }

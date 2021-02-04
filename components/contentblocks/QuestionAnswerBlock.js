@@ -16,7 +16,7 @@ const FaqSection = styled.section`
 `;
 
 const QuestionAnswerBlock = (props) => {
-  const { heading, questions} = props;
+  const { heading, questions } = props;
   const questionList = [];
   // create ids
   questions.forEach((question, index) => questionList.push({
