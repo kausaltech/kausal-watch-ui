@@ -1,11 +1,17 @@
 import React from 'react';
 import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
+import { DynamicLink } from 'common/links';
 import Card from 'components/common/Card';
 
 const CategoryListSection = styled.div`
   background-color: ${(props) => props.bg};
   padding: ${(props) => props.theme.spaces.s300};
+
+  a.card-wrapper {
+    display: flex;
+    width: 100%;
+  }
 `;
 
 const SectionHeader = styled.h2`
@@ -16,59 +22,37 @@ const SectionHeader = styled.h2`
 
 const CardHeader = styled.h3`
   color: ${(props) => props.theme.themeColors.black};
+  font-size: ${(props) => props.theme.fontSizeMd};
   line-height: ${(props) => props.theme.lineHeightSm};
 `;
 
-const CategoryListBlock = (props) => {
-  const placemarkerImageUrl = "https://kausal.watch.kausal.tech/media/images/Visit_Tampere_Foggy_sunset_Panorama_from_Nasinn.original.jpg";
-  const fakeprops = {
-    heading: 'Toimenpidekokonaisuudet',
-    categories: [
-      {
-        id: '1',
-        imageUrl: placemarkerImageUrl,
-        title: 'Toimenpidekokonaisuus 1',
-        progress: '60',
-      },
-      {
-        id: '2',
-        imageUrl: placemarkerImageUrl,
-        title: 'Toimenpidekokonaisuus 2',
-        progress: '60',
-      },
-      {
-        id: '3',
-        imageUrl: placemarkerImageUrl,
-        title: 'Toimenpidekokonaisuus 3',
-        progress: '60',
-      },
-      {
-        id: '4',
-        imageUrl: placemarkerImageUrl,
-        title: 'Toimenpidekokonaisuus 4',
-        progress: '60',
-      },
-      {
-        id: '5',
-        imageUrl: placemarkerImageUrl,
-        title: 'Toimenpidekokonaisuus 5',
-        progress: '60',
-      },
-    ],
-    themeColor: '#29549A',
-  };
-
-  const { heading, categories, themeColor } = fakeprops;
+const CategoryListBlock = ({ categories, color, fallbackImageUrl }) => {
+  const heading = 'Toimenpidekokonaisuudet';
+  const themeColor = color;
   return (
     <CategoryListSection bg={themeColor}>
       <Container>
         { heading && (<SectionHeader>{ heading }</SectionHeader>)}
         <Row>
           { categories.map((cat) => (
-            <Col lg="3" md="4" sm="6" key={cat.id} className="mb-4">
-              <Card imageUrl={cat.imageUrl}>
-                <CardHeader>{ cat.title }</CardHeader>
-              </Card>
+            <Col
+              tag="li"
+              xs="6"
+              lg="4"
+              key={cat.id}
+              className="mb-5 d-flex align-items-stretch"
+              style={{ transition: 'all 0.5s ease' }}
+              role="listitem">
+              <DynamicLink href={cat.categoryPage.urlPath}>
+                <a className="card-wrapper">
+                  <Card
+                   imageUrl={cat.imageUrl || fallbackImageUrl}
+                   imageTone={false}
+                  >
+                    <CardHeader>{ cat.name }</CardHeader>
+                  </Card>
+                </a>
+              </DynamicLink>
             </Col>
           ))}
         </Row>
