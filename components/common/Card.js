@@ -14,6 +14,7 @@ const StyledCard = styled(BSCard)`
   border-width: ${(props) => props.theme.cardBorderWidth};
   border-radius: ${(props) => props.theme.cardBorderRadius};
   background-color: ${(props) => (props.customcolor ? props.customcolor : props.theme.themeColors.white)};
+  box-shadow: 2px 2px 8px ${(props) => transparentize(0.9, props.theme.themeColors.dark)};
 
   &:hover {
     transform: translateY(-5px);
