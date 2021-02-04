@@ -90,13 +90,6 @@ const GET_PLAN = gql`
       impactGroups {
         id
       }
-      staticPages {
-        id,
-        name,
-        slug,
-        topMenu,
-        footer
-      }
       generalContent {
         id
         siteTitle
