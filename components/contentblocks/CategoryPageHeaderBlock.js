@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { DynamicLink } from 'common/links';
 
 const CategoryPageHeader = styled.div`
+  min-height: 32rem;
   background-color: ${(props) => props.bg};
   padding: ${(props) => props.theme.spaces.s300};
   background-image: url(${(props) => props.image});
@@ -17,11 +18,20 @@ const HeaderContent = styled.div`
   overflow: hidden;
   border-width: ${(props) => props.theme.cardBorderWidth};
   border-radius: ${(props) => props.theme.cardBorderRadius};
-  background-color: ${(props) => props.theme.themeColors.white };
+  background-color: ${(props) => props.theme.themeColors.white};
+  text-align: center;
 `;
 
 const CategoryPageHeaderBlock = (props) => {
-  const { title, lead, headerImage, parentTitle, parentUrl, color } = props;
+  const {
+    title,
+    identifier,
+    lead,
+    headerImage,
+    parentTitle,
+    parentUrl,
+    color } = props;
+
   const fakeprops = {
     themeColor: color,
   };
@@ -34,6 +44,7 @@ const CategoryPageHeaderBlock = (props) => {
           <Col lg={{ size: 10, offset: 1 }}>
             <HeaderContent>
               <p><DynamicLink href={parentUrl}><a>{parentTitle}</a></DynamicLink></p>
+              {identifier}
               <h1>{ title }</h1>
               <p className="lead">{ lead }</p>
             </HeaderContent>

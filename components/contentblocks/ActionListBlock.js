@@ -20,13 +20,13 @@ ${ActionCard.fragments.action}
 `;
 
 const ActionListSection = styled.div`
-  background-color: ${(props) => props.bg};
+  background-color: ${(props) => props.theme.neutralLight};
   padding: ${(props) => props.theme.spaces.s300};
 `;
 
 const SectionHeader = styled.h2`
   text-align: center;
-  color: ${(props) => props.theme.themeColors.white};
+  color: ${(props) => props.theme.themeColors.black};
   margin-bottom: ${(props) => props.theme.spaces.s300};
 `;
 
@@ -47,10 +47,9 @@ const ActionListBlock = (props) => {
   if (!planActions) {
     return <ErrorMessage statusCode={404} message={t('page-not-found')} />;
   }
-  const heading = 'TODO';
-  const themeColor = '#29549A';
+  const heading = t('actions');
   return (
-    <ActionListSection bg={themeColor}>
+    <ActionListSection>
       <Container>
         { heading && (<SectionHeader>{ heading }</SectionHeader>)}
         <Row>

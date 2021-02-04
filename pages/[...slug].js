@@ -32,7 +32,9 @@ query GetPlanPage($plan: ID!, $path: String!) {
     ... on CategoryPage {
       category {
         id
+        identifier
         imageUrl
+        shortDescription
         color
         type {
           name
@@ -50,6 +52,7 @@ query GetPlanPage($plan: ID!, $path: String!) {
         }
         parent {
           id
+          identifier
           imageUrl
           color
           categoryPage {
@@ -106,7 +109,8 @@ const PageHeaderBlock = (props) => {
       return (
         <CategoryPageHeaderBlock
           title={page.title}
-          lead={page.leadParagraph}
+          identifier={page.category.identifier}
+          lead={page.category.shortDescription}
           headerImage={page.category.imageUrl || page.category?.parent.imageUrl }
           parentTitle={parentTitle}
           parentUrl={parentUrl}
@@ -133,7 +137,7 @@ const Content = ({ page }) => {
   const imageUrl = headerImage?.rendition.src;
 
   const theme = useContext(ThemeContext);
-  const pageSectionColor = page?.category.color || page?.category.parent?.color || theme.brandDark;
+  const pageSectionColor = page.category?.color || page.category?.parent?.color || theme.neutralDark;
 
   return (
     <article>

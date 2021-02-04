@@ -22,6 +22,7 @@ const SectionHeader = styled.h2`
 
 const CardHeader = styled.h3`
   color: ${(props) => props.theme.themeColors.black};
+  font-size: ${(props) => props.theme.fontSizeMd};
   line-height: ${(props) => props.theme.lineHeightSm};
 `;
 
@@ -39,12 +40,15 @@ const CategoryListBlock = ({ categories, color, fallbackImageUrl }) => {
               xs="6"
               lg="4"
               key={cat.id}
-              className="mb-4 d-flex align-items-stretch"
+              className="mb-5 d-flex align-items-stretch"
               style={{ transition: 'all 0.5s ease' }}
               role="listitem">
               <DynamicLink href={cat.categoryPage.urlPath}>
                 <a className="card-wrapper">
-                  <Card imageUrl={cat.imageUrl || fallbackImageUrl}>
+                  <Card
+                   imageUrl={cat.imageUrl || fallbackImageUrl}
+                   imageTone={false}
+                  >
                     <CardHeader>{ cat.name }</CardHeader>
                   </Card>
                 </a>
