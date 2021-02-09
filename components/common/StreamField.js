@@ -108,7 +108,9 @@ function StreamFieldBlock(props) {
     case 'CategoryListBlock': {
       const { color } = props;
       const { category } = page;
-      const fallbackImage = category?.imageUrl || plan.mainImage?.smallRendition?.src || plan.imageUrl;
+      const fallbackImage = (category?.image?.rendition.src
+                             || plan.image?.smallRendition?.src
+                             || plan.image?.rendition.src);
       return <CategoryListBlock categories={category.children} color={color} fallbackImageUrl={fallbackImage} />;
     }
     default:

@@ -69,7 +69,7 @@ export function Meta(props) {
   // In ogTitle we don't want to repeat the site name.
   const ogTitle = title || siteTitle;
   const ogDescription = description || generalContent.siteDescription;
-  const ogImage = shareImageUrl || plan.mainImage?.smallRendition?.src || plan.imageUrl;
+  const ogImage = shareImageUrl || plan.image?.smallRendition?.src || plan.image?.rendition.src;
 
   return (
     <Head>

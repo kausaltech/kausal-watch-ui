@@ -41,7 +41,11 @@ const GET_PLAN = gql`
       id
       identifier
       name
-      imageUrl(size: "1500x500")
+      image {
+        rendition(size: "1500x500") {
+          src
+        }
+      }
       primaryLanguage
       otherLanguages
       domain(hostname: $hostname) {
@@ -49,7 +53,7 @@ const GET_PLAN = gql`
         googleSiteVerificationTag
         matomoAnalyticsUrl
       }
-      mainImage {
+      image {
         largeRendition: rendition(size: "1600x900") {
           src
           width

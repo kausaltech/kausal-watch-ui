@@ -5,15 +5,15 @@
 export function getActionImageURL(plan, action) {
   let url;
 
-  if (action.imageUrl) {
-    url = action.imageUrl;
+  if (action.image?.rendition.src) {
+    url = action.image.rendition.src;
   } else {
     action.categories.forEach((cat) => {
       if (url) return;
       let parent = cat;
       while (parent) {
-        if (parent.imageUrl) {
-          url = parent.imageUrl;
+        if (parent.image?.rendition.src) {
+          url = parent.image.rendition.src;
           return;
         }
         parent = parent.parent;
@@ -21,7 +21,7 @@ export function getActionImageURL(plan, action) {
     });
   }
   if (!url) {
-    url = plan.mainImage?.smallRendition?.src || plan.imageUrl;
+    url = plan.image?.smallRendition?.src || plan.image?.rendition.src;
   }
   return url;
 }
