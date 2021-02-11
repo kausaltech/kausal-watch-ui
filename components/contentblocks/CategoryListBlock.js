@@ -5,7 +5,7 @@ import { DynamicLink } from 'common/links';
 import Card from 'components/common/Card';
 
 const CategoryListSection = styled.div`
-  background-color: ${(props) => props.bg};
+  background-color: ${(props) => props.theme.themeColors.black};
   padding: ${(props) => props.theme.spaces.s300};
 
   a.card-wrapper {
@@ -47,7 +47,7 @@ const CategoryListBlock = ({ categories, color, fallbackImageUrl }) => {
                 <a className="card-wrapper">
                   <Card
                    imageUrl={cat.imageUrl || fallbackImageUrl}
-                   imageTone={false}
+                   imageTone={themeColor}
                   >
                     <CardHeader>{ cat.name }</CardHeader>
                   </Card>

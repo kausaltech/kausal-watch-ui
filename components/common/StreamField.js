@@ -119,7 +119,14 @@ function StreamFieldBlock(props) {
 function StreamField({ page, blocks, color }) {
   return (
     <>
-      { blocks.map((block) => <StreamFieldBlock {...block} page={page} key={block.id} color={color} />) }
+      { blocks.map((block) => (
+        <StreamFieldBlock
+          {...block}
+          page={page}
+          key={block.id}
+          color={color}
+        />
+      ))}
     </>
   );
 }

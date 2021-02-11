@@ -148,7 +148,13 @@ const Content = ({ page }) => {
       />
       <PageHeaderBlock page={page} color={pageSectionColor} />
       <div className="content-area">
-        {page.body && <StreamField page={page} blocks={page.body} color={pageSectionColor} />}
+        {page.body && (
+          <StreamField
+            page={page}
+            blocks={page.body}
+            color={pageSectionColor}
+          />
+        )}
       </div>
     </article>
   );
