@@ -29,12 +29,13 @@ const CardHeader = styled.h3`
 const CategoryListBlock = ({ categories, color, fallbackImageUrl }) => {
   const heading = 'Toimenpidekokonaisuudet';
   const themeColor = color;
+
   return (
     <CategoryListSection bg={themeColor}>
       <Container>
         { heading && (<SectionHeader>{ heading }</SectionHeader>)}
         <Row>
-          { categories.map((cat) => (
+          { categories?.map((cat) => (
             <Col
               tag="li"
               xs="6"
@@ -42,7 +43,8 @@ const CategoryListBlock = ({ categories, color, fallbackImageUrl }) => {
               key={cat.id}
               className="mb-5 d-flex align-items-stretch"
               style={{ transition: 'all 0.5s ease' }}
-              role="listitem">
+              role="listitem"
+            >
               <DynamicLink href={cat.categoryPage.urlPath}>
                 <a className="card-wrapper">
                   <Card
