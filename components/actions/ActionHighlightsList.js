@@ -26,7 +26,11 @@ export const GET_ACTION_LIST = gql`
       officialName
       completion
       updatedAt
-      imageUrl(size: $bgImageSize)
+      image {
+        rendition(size: $bgImageSize) {
+          src
+        }
+      }
       plan {
         id
       }
@@ -41,13 +45,25 @@ export const GET_ACTION_LIST = gql`
       }
       categories {
         id
-        imageUrl(size: $bgImageSize)
+        image {
+          rendition(size: $bgImageSize) {
+            src
+          }
+        }
         parent {
           id
-          imageUrl(size: $bgImageSize)
+          image {
+            rendition(size: $bgImageSize) {
+              src
+            }
+          }
           parent {
             id
-            imageUrl(size: $bgImageSize)
+            image {
+              rendition(size: $bgImageSize) {
+                src
+              }
+            }
           }
         }
       }

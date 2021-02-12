@@ -42,7 +42,11 @@ query ActionDetails($plan: ID!, $id: ID!, $bgImageSize: String = "1200x630") {
     officialName
     description
     completion
-    imageUrl(size: $bgImageSize)
+    image {
+      rendition(size: $bgImageSize) {
+        src
+      }
+    }
     updatedAt
     mergedActions {
       id
@@ -52,11 +56,19 @@ query ActionDetails($plan: ID!, $id: ID!, $bgImageSize: String = "1200x630") {
     categories(categoryType: "action") {
       id
       name
-      imageUrl(size: $bgImageSize)
+      image {
+        rendition(size: $bgImageSize) {
+          src
+        }
+      }
       parent {
         id
         name
-        imageUrl(size: $bgImageSize)
+        image {
+          rendition(size: $bgImageSize) {
+            src
+          }
+        }
       }
     }
     emissionScopes: categories(categoryType: "emission_scope") {
