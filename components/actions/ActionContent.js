@@ -61,6 +61,11 @@ query ActionDetails($plan: ID!, $id: ID!, $bgImageSize: String = "1200x630") {
           src
         }
       }
+      color
+      categoryPage {
+            title
+            urlPath
+          }
       parent {
         id
         name
@@ -69,7 +74,12 @@ query ActionDetails($plan: ID!, $id: ID!, $bgImageSize: String = "1200x630") {
             src
           }
         }
-      }
+        color
+        categoryPage {
+            title
+            urlPath
+          }
+       }
     }
     emissionScopes: categories(categoryType: "emission_scope") {
       id
@@ -293,9 +303,10 @@ function ActionContent({ id }) {
         imageUrl={imageUrl}
       />
       <Container>
-        {hasPhases && (
-          <Row>
-            <Col md="7" lg="8" className="mb-3">
+
+        <Row>
+          <Col md="7" lg="8">
+            {hasPhases && (
               <ActionSection>
                 <SideHeader>{ t('actions:action-progress') }</SideHeader>
                 <ActionPhase
@@ -306,11 +317,7 @@ function ActionContent({ id }) {
                   phases={plan.actionImplementationPhases}
                 />
               </ActionSection>
-            </Col>
-          </Row>
-        )}
-        <Row>
-          <Col md="7" lg="8">
+            )}
             {action.description && (
               <ActionSection className="text-content">
                 <h2 className="sr-only">{ t('actions:action-description') }</h2>

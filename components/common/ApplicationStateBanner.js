@@ -6,14 +6,18 @@ import { Container } from 'reactstrap';
 import { useTranslation } from 'common/i18n';
 
 const Banner = styled.div`
-  padding: .75rem 0;
-  font-size: ${(props) => props.theme.fontSizeSm};
-  background-color: ${(props) => props.theme.themeColors.dark};
-  color: ${(props) => props.theme.themeColors.light};
+  padding: 8px 16px;
+  text-align: right;
+  font-family: -apple-system, -apple-system, BlinkMacSystemFont,
+  'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif,
+  helvetica neue, helvetica, Ubuntu, roboto, noto, segoe ui, arial, sans-serif;
+  font-size: 12px;
+  background-color: black;
+  color: silver;
 `;
 
 const Label = styled.strong`
-  color: ${(props) => props.theme.themeColors.warning};
+  color: goldenrod;
   margin-right: .5em;
 
   &:before {
@@ -49,10 +53,8 @@ function ApplicationStateBanner(props) {
 
   return (
     <Banner>
-      <Container>
-        <Label type={instanceType}>{typeLabel.toUpperCase()}</Label>
-        {` ${typeMessage}`}
-      </Container>
+      <Label type={instanceType}>{typeLabel.toUpperCase()}</Label>
+      {` ${typeMessage}`}
     </Banner>
   );
 }

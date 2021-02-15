@@ -7,6 +7,8 @@ import QuestionAnswerBlock from 'components/contentblocks/QuestionAnswerBlock';
 import ActionListBlock from 'components/contentblocks/ActionListBlock';
 import CategoryListBlock from 'components/contentblocks/CategoryListBlock';
 import IndicatorBlock from 'components/contentblocks/IndicatorBlock';
+import FrontPageHeroBlock from 'components/contentblocks/FrontPageHeroBlock';
+import IndicatorShowcaseBlock from 'components/contentblocks/IndicatorShowcaseBlock';
 
 const STREAM_FIELD_FRAGMENT = gql`
   fragment StreamFieldFragment on StreamFieldInterface {
@@ -52,6 +54,57 @@ const STREAM_FIELD_FRAGMENT = gql`
     ... on CategoryListBlock {
       style
     }
+    ... on FrontPageHeroBlock {
+      blocks {
+        id
+      }
+    }
+    ... on IndicatorShowcaseBlock {
+      id
+      blockType
+      field
+      rawValue
+      blocks {
+        __typename
+      }
+      title
+      body
+      indicator {
+        id
+        identifier
+        name
+        unit {
+          id
+          shortName
+        }
+        minValue
+        maxValue
+        latestValue {
+          date
+          value
+        }
+        values {
+          date
+          value
+        }
+        goals {
+          date
+          value
+        }
+      }
+      linkButton {
+        blockType
+        ... on PageLinkBlock {
+          text
+          page {
+            url
+            urlPath
+            slug
+          }
+        }
+
+      }
+    }
   }
 `;
 
@@ -65,6 +118,8 @@ export const possibleTypes = {
     'IndicatorBlock',
     'ActionListBlock',
     'CategoryListBlock',
+    'IndicatorShowcaseBlock',
+    'FrontPageHeroBlock',
   ],
 };
 
@@ -102,26 +157,61 @@ function StreamFieldBlock(props) {
       return <IndicatorBlock indicator={indicator} />;
     }
     case 'ActionListBlock': {
-      const { categoryFilter } = props;
-      return <ActionListBlock categoryId={categoryFilter?.id || page.category.id} />;
+      const { categoryFilter, color } = props;
+      return <ActionListBlock categoryId={categoryFilter?.id || page.category.id} color={color} />;
     }
     case 'CategoryListBlock': {
       const { color } = props;
       const { category } = page;
       const fallbackImage = (category?.image?.rendition.src
-                             || plan.image?.smallRendition?.src
-                             || plan.image?.rendition.src);
+        || plan.image?.smallRendition?.src
+        || plan.image?.rendition.src);
       return <CategoryListBlock categories={category.children} color={color} fallbackImageUrl={fallbackImage} />;
     }
+    case 'FrontPageHeroBlock': {
+      const mockData = {
+        layout: '',
+        image: {
+          id: '12',
+          title: 'Bridge',
+          rendition: {
+            width: '1920',
+            height: '1024',
+            src: 'https://source.unsplash.com/1920x1024/?nature,water',
+          },
+        },
+        heading: 'Tampereen hiilivahti',
+        lead: 'Tämä on Tampereen vahti',
+      };
+      return (
+        <FrontPageHeroBlock
+          layout={mockData.layout}
+          imageSrc={mockData.image.rendition.src}
+          heading={mockData.heading}
+          lead={mockData.lead}
+        />
+      );
+    }
+    case 'IndicatorShowcaseBlock': {
+      const { indicator, title, body } = props;
+      return <IndicatorShowcaseBlock indicator={indicator} title={title} body={body} />;
+    }
     default:
-      return <div />;
+      return <div>Component for { blockType } does not exist</div>;
   }
 }
 
 function StreamField({ page, blocks, color }) {
   return (
     <>
-      { blocks.map((block) => <StreamFieldBlock {...block} page={page} key={block.id} color={color} />) }
+      { blocks.map((block) => (
+        <StreamFieldBlock
+          {...block}
+          page={page}
+          key={block.id}
+          color={color}
+        />
+      ))}
     </>
   );
 }

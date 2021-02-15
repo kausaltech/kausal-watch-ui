@@ -20,7 +20,7 @@ ${ActionCard.fragments.action}
 `;
 
 const ActionListSection = styled.div`
-  background-color: ${(props) => props.theme.neutralLight};
+  background-color: ${(props) => props.color};
   padding: ${(props) => props.theme.spaces.s300};
 `;
 
@@ -31,7 +31,7 @@ const SectionHeader = styled.h2`
 `;
 
 const ActionListBlock = (props) => {
-  const { categoryId } = props;
+  const { categoryId, color } = props;
   const { t } = useTranslation();
   const plan = useContext(PlanContext);
   const { loading, error, data } = useQuery(GET_ACTION_LIST, {
@@ -49,7 +49,7 @@ const ActionListBlock = (props) => {
   }
   const heading = t('actions');
   return (
-    <ActionListSection>
+    <ActionListSection color={color}>
       <Container>
         { heading && (<SectionHeader>{ heading }</SectionHeader>)}
         <Row>

@@ -5,8 +5,8 @@ import { DynamicLink } from 'common/links';
 import Card from 'components/common/Card';
 
 const CategoryListSection = styled.div`
-  background-color: ${(props) => props.bg};
-  padding: ${(props) => props.theme.spaces.s300};
+  background-color: ${(props) => props.theme.neutralLight};
+  padding: ${(props) => props.theme.spaces.s300} 0;
 
   a.card-wrapper {
     display: flex;
@@ -16,7 +16,7 @@ const CategoryListSection = styled.div`
 
 const SectionHeader = styled.h2`
   text-align: center;
-  color: ${(props) => props.theme.themeColors.white};
+  color: ${(props) => props.theme.themeColors.black};
   margin-bottom: ${(props) => props.theme.spaces.s300};
 `;
 
@@ -29,12 +29,13 @@ const CardHeader = styled.h3`
 const CategoryListBlock = ({ categories, color, fallbackImageUrl }) => {
   const heading = 'Toimenpidekokonaisuudet';
   const themeColor = color;
+
   return (
     <CategoryListSection bg={themeColor}>
       <Container>
         { heading && (<SectionHeader>{ heading }</SectionHeader>)}
         <Row>
-          { categories.map((cat) => (
+          { categories?.map((cat) => (
             <Col
               tag="li"
               xs="6"
@@ -42,12 +43,13 @@ const CategoryListBlock = ({ categories, color, fallbackImageUrl }) => {
               key={cat.id}
               className="mb-5 d-flex align-items-stretch"
               style={{ transition: 'all 0.5s ease' }}
-              role="listitem">
+              role="listitem"
+            >
               <DynamicLink href={cat.categoryPage.urlPath}>
                 <a className="card-wrapper">
                   <Card
                    imageUrl={cat.imageUrl || fallbackImageUrl}
-                   imageTone={false}
+                   imageTone={themeColor}
                   >
                     <CardHeader>{ cat.name }</CardHeader>
                   </Card>

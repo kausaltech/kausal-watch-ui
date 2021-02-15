@@ -1,4 +1,6 @@
 import React from 'react';
+import { useTranslation } from 'common/i18n';
+import { useTheme } from 'common/theme';
 import PropTypes from 'prop-types';
 import SVG from 'react-inlinesvg';
 
@@ -128,9 +130,10 @@ const Illustration = styled.div`
 
 function HeroFullImage(props) {
   const {
-    t, theme, bgImage, title, siteDescription, actionsDescription, indicatorsDescription,
+    bgImage, title, siteDescription, actionsDescription, indicatorsDescription,
   } = props;
-
+  const { t } = useTranslation(['common']);
+  const theme = useTheme();
   let ActionsIcon = null;
   if (theme.iconActionsUrl !== '') ActionsIcon = () => <SVG src={theme.iconActionsUrl} />;
   let IndicatorsIcon = null;
@@ -143,8 +146,8 @@ function HeroFullImage(props) {
           <Row>
             <Col md={8} lg={6} >
               <MainCard>
-                <h1>{ title || 'Site Title' }</h1>
-                <p>{ siteDescription || 'Site Description' }</p>
+                <h1>{ title }</h1>
+                <p>{ siteDescription }</p>
                 <ActionListLink>
                   <a href>
                     <Highlight
@@ -161,7 +164,7 @@ function HeroFullImage(props) {
                           <Icon name="arrowRight" color={theme.neutralDark} />
                         </h2>
                         <p>
-                          { actionsDescription || 'Actions Description' }
+                          { actionsDescription }
                         </p>
                       </div>
                     </Highlight>
@@ -183,7 +186,7 @@ function HeroFullImage(props) {
                           <Icon name="arrowRight" color={theme.neutralDark} />
                         </h2>
                         <p>
-                          { indicatorsDescription || 'Indicator Description' }
+                          { indicatorsDescription }
                         </p>
                       </div>
                     </Highlight>
@@ -199,8 +202,6 @@ function HeroFullImage(props) {
 }
 
 HeroFullImage.propTypes = {
-  t: PropTypes.func.isRequired,
-  theme: PropTypes.shape({}).isRequired,
   bgImage: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   siteDescription: PropTypes.string.isRequired,

@@ -33,6 +33,9 @@ query GetPlanPage($plan: ID!, $path: String!) {
       category {
         id
         identifier
+        type {
+          name
+        }
         image {
           rendition {
             src
@@ -85,7 +88,7 @@ ${StreamField.fragments.streamField}
 
 function StaticPage({ slug }) {
   const { t } = useTranslation();
-  const path = '/' + slug.join('/');
+  const path = `/${slug.join('/')}`;
   const plan = useContext(PlanContext);
   const { loading, error, data } = useQuery(GET_PLAN_PAGE, {
     variables: {
@@ -124,6 +127,7 @@ const PageHeaderBlock = (props) => {
           identifier={page.category.identifier}
           lead={page.category.shortDescription}
           headerImage={page.category.image?.rendition.src || page.category.parent?.image?.rendition.src}
+          imageAlign="bottom center"
           parentTitle={parentTitle}
           parentUrl={parentUrl}
           color={color}
@@ -160,7 +164,13 @@ const Content = ({ page }) => {
       />
       <PageHeaderBlock page={page} color={pageSectionColor} />
       <div className="content-area">
-        {page.body && <StreamField page={page} blocks={page.body} color={pageSectionColor} />}
+        {page.body && (
+          <StreamField
+            page={page}
+            blocks={page.body}
+            color={pageSectionColor}
+          />
+        )}
       </div>
     </article>
   );

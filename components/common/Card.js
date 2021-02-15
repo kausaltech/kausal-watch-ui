@@ -33,7 +33,7 @@ const StyledCard = styled(BSCard)`
 
 const ImgArea = styled.div`
   position: relative;
-  background-color: ${(props) => (props.imageTone ? props.theme.imageOverlay : props.theme.themeColors.white)};
+  background-color: ${(props) => props.imageTone};
 `;
 
 const ImgBg = styled.div`

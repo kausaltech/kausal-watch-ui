@@ -1,22 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Container, Row, Col, Badge,
+  Container, Row, Col,
 } from 'reactstrap';
-import styled, { withTheme } from 'styled-components';
-
+import styled from 'styled-components';
+import { Link } from 'routes';
+import { useTheme } from 'common/theme';
+import { useTranslation } from 'common/i18n';
 import { ActionLink, ActionListLink } from 'common/links';
-import { withTranslation } from 'common/i18n';
+
 import Icon from 'components/common/Icon';
 
 const Hero = styled.header`
   position: relative;
-  margin-bottom: ${(props) => props.theme.spaces.s300};
+  background-color: ${(props) => props.bgColor};
+  margin-bottom: ${(props) => props.theme.spaces.s400};
   a {
-    color: ${(props) => props.theme.brandLight};
+    color: ${(props) => props.theme.brandDark};
 
     &:hover {
-      color: ${(props) => props.theme.brandLight};
+      color: ${(props) => props.theme.brandDark};
     }
   }
 `;
@@ -24,30 +27,35 @@ const Hero = styled.header`
 const ActionBgImage = styled.div`
   background-color: ${(props) => props.bgColor};
   background-image: url(${(props) => props.bgImage});
-  background-position: center;
+  background-position: bottom;
   background-size: cover;
   background-blend-mode: multiply;
 `;
 
-const VisuallyHidden = styled.span`
-  position: absolute !important;
-  width: 1px !important;
-  height: 1px !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  overflow: hidden !important;
-  clip: rect(0 0 0 0) !important;
-  clip-path: inset(50%) !important;
-  border: 0 !important;
-  white-space: nowrap !important;
+const HeroCardBg = styled.div`
+  overflow: hidden;
+  margin-bottom: -${(props) => props.theme.spaces.s400};
+  background-color: white;
+  border-radius: ${(props) => props.theme.cardBorderRadius};
+  box-shadow: 4px 4px 8px rgba(0,0,0,0.1);
+`;
+
+const CardContent = styled.div`
+  padding: ${(props) => props.theme.spaces.s150};
+
+  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    padding: ${(props) => props.theme.spaces.s200};
+  }
 `;
 
 const OverlayContainer = styled.div`
-  color: ${(props) => props.theme.themeColors.white};
-  padding: ${(props) => props.theme.spaces.s200} 0;
+  padding: ${(props) => props.theme.spaces.s300} 0 ${(props) => props.theme.spaces.s300};
 `;
 
 const ActionsNav = styled.nav`
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: ${(props) => props.theme.spaces.s100};
   font-size: ${(props) => props.theme.fontSizeSm};
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
@@ -55,58 +63,88 @@ const ActionsNav = styled.nav`
   }
 `;
 
+const CategoriesBreadcrumb = styled.div`
+  margin-bottom: ${(props) => props.theme.spaces.s100};
+`;
+
 const NavDivider = styled.span`
+  color: ${(props) => props.theme.brandDark};
   &::after {
     content: ' | ';
   }
 `;
 
 const IndexLink = styled.span`
-  font-size: ${(props) => props.theme.fontSizeMd};
   font-weight: ${(props) => props.theme.fontWeightBold};
-
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
-    font-size: ${(props) => props.theme.fontSizeLg};
-  }
 `;
 
 const ActionHeadline = styled.h1`
   hyphens: auto;
-  margin-bottom: ${(props) => props.theme.spaces.s200};
-  font-size: ${(props) => props.theme.fontSizeLg};
-  color: ${(props) => props.theme.themeColors.white} !important;
+  margin: ${(props) => props.theme.spaces.s100} 0;
+  font-size: ${(props) => props.theme.fontSizeXl};
+  color: ${(props) => props.theme.themeColors.black} !important;
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    display: flex;
     font-size: ${(props) => props.theme.fontSizeXl};
   }
 `;
 
 const ActionNumber = styled.span`
-  font-size: ${(props) => props.theme.fontSizeLg};
-  color: ${(props) => props.theme.themeColors.white} !important;
+  margin-right: ${(props) => props.theme.spaces.s100};
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
-    font-size: ${(props) => props.theme.fontSizeXxl};
+  &:after {
+    content: ".";
   }
 `;
 
-const CategoryBadge = styled(Badge)`
-  margin-right: 1em;
-  padding: ${(props) => props.theme.spaces.s050};
-  white-space: normal;
-  text-align: left;
-  font-size: ${(props) => props.theme.fontSizeBase};
-  font-weight: ${(props) => props.theme.badgeFontWeight};
-  line-height: ${(props) => props.theme.lineHeightMd};
-  border-radius: ${(props) => props.theme.btnBorderRadius};
-  color: ${(props) => props.theme.badgeColor};
-  background-color: ${(props) => props.theme.badgeBackground};
-`;
+const ActionCategories = (categories) => {
+  const displayCategories = [];
+  categories.categories.forEach((cat, indx) => {
+    displayCategories[indx] = {};
+    displayCategories[indx].name = cat.name;
+    displayCategories[indx].id = cat.id;
+    if (cat.categoryPage) {
+      displayCategories[indx].url = cat.categoryPage.urlPath;
+    } else {
+      displayCategories[indx].url = `/actions?category_action=${cat.id}`;
+    }
+    if (cat.parent) {
+      displayCategories[indx].parent = {};
+      displayCategories[indx].parent.name = cat.parent.name;
+      displayCategories[indx].parent.id = cat.parent.id;
+      if (cat.parent.categoryPage) {
+        displayCategories[indx].parent.url = cat.parent.categoryPage.urlPath;
+      } else {
+        displayCategories[indx].parent.url = `/actions?category_action=${cat.parent.id}`;
+      }
+    }
+  });
+  return (
+    <CategoriesBreadcrumb>
+      {displayCategories.map((item) => (
+        <div key={item.id} className="mr-3">
+          {item.parent && (
+            <span>
+              <Link href={item.parent.url} passHref>
+                {item.parent.name}
+              </Link>
+              {' '}
+              /
+              {' '}
+            </span>
+          )}
+          <Link href={item.url} passHref>
+            {item.name}
+          </Link>
+        </div>
+      ))}
+    </CategoriesBreadcrumb>
+  );
+};
 
 function ActionHero(props) {
   const {
-    t,
-    theme,
     categories,
     previousAction,
     nextAction,
@@ -114,59 +152,72 @@ function ActionHero(props) {
     name,
     imageUrl,
   } = props;
+  const theme = useTheme();
+  const { t } = useTranslation();
+
+  // Theme overlay color as fallback
+  let categoryColor = theme.imageOverlay;
+  // If category or its parent has color defined
+  const categoryWithColor = categories.find((cat) => (
+    cat.color !== null || (cat.parent !== null && cat.parent.color !== null)
+  ));
+  // Override overlay color with that
+  if (categoryWithColor) {
+    categoryColor = categoryWithColor.color ? categoryWithColor.color : categoryWithColor?.parent.color;
+  }
 
   return (
-    <Hero>
+    <Hero bgColor={theme.brandDark}>
       <ActionBgImage
         bgImage={imageUrl}
-        bgColor={theme.imageOverlay}
+        bgColor={categoryColor}
       >
         <OverlayContainer>
           <Container>
             <Row>
-              <Col md="10">
-                <ActionsNav aria-label="Actions Pager">
-                  <ActionListLink>
-                    <a href>
-                      <IndexLink>{ t('actions') }</IndexLink>
-                    </a>
-                  </ActionListLink>
-                  <p>
-                    { previousAction
-                      && (
-                        <ActionLink action={previousAction}>
-                          <a href>
-                            <Icon name="arrowLeft" color={theme.brandLight} aria-hidden="true" />
-                            {' '}
-                            { t('previous') }
-                          </a>
-                        </ActionLink>
-                      )}
-                    { nextAction
-                      && previousAction
-                      && (
-                        <NavDivider />
-                      )}
-                    { nextAction
-                      && (
-                        <ActionLink action={nextAction}>
-                          <a href>
-                            { t('next') }
-                            <Icon name="arrowRight" color={theme.brandLight} aria-hidden="true" />
-                          </a>
-                        </ActionLink>
-                      )}
-                  </p>
-                </ActionsNav>
-                <ActionHeadline>
-                  <ActionNumber>{identifier}</ActionNumber>
-                  <br />
-                  {name}
-                </ActionHeadline>
-                <VisuallyHidden>Categories:</VisuallyHidden>
-                {categories.map((item) => (
-                  <CategoryBadge key={item.id} className="mr-3">{item.name}</CategoryBadge>
-                ))}
+              <Col lg={8}>
+                <HeroCardBg>
+                  <CardContent>
+                    <ActionsNav aria-label="Actions Pager">
+                      <ActionListLink>
+                        <a href>
+                          <IndexLink>{ t('actions') }</IndexLink>
+                        </a>
+                      </ActionListLink>
+                      <div>
+                        { previousAction
+                              && (
+                                <ActionLink action={previousAction}>
+                                  <a href>
+                                    <Icon name="arrowLeft" color={theme.brandDark} aria-hidden="true" />
+                                    {' '}
+                                    { t('previous') }
+                                  </a>
+                                </ActionLink>
+                              )}
+                        { nextAction
+                              && previousAction
+                              && (
+                                <NavDivider />
+                              )}
+                        { nextAction
+                              && (
+                                <ActionLink action={nextAction}>
+                                  <a href>
+                                    { t('next') }
+                                    <Icon name="arrowRight" color={theme.brandDark} aria-hidden="true" />
+                                  </a>
+                                </ActionLink>
+                              )}
+                      </div>
+                    </ActionsNav>
+                    <ActionCategories categories={categories} />
+                    <ActionHeadline>
+                      <ActionNumber>{identifier}</ActionNumber>
+                      <span>{name}</span>
+                    </ActionHeadline>
+                  </CardContent>
+                </HeroCardBg>
               </Col>
             </Row>
           </Container>
@@ -176,4 +227,4 @@ function ActionHero(props) {
   );
 }
 
-export default withTranslation('common')(withTheme(ActionHero));
+export default ActionHero;
