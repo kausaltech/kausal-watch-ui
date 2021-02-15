@@ -12,7 +12,7 @@ import { constructOrgHierarchy, orgHasActions } from 'common/organizations';
 import ContentLoader from 'components/common/ContentLoader';
 import ErrorMessage from 'components/common/ErrorMessage';
 import PlanContext from 'context/plan';
-import ActionListFilters from 'components/common/ActionListFilters';
+import ActionListFilters from 'components/actions/ActionListFilters';
 import ActionStatusGraphs from './ActionStatusGraphs';
 import ActionStatusTable from './ActionStatusTable';
 

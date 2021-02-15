@@ -6,9 +6,9 @@ import {
 
 import styled from 'styled-components';
 import { useTranslation } from 'common/i18n';
-import TextInput from './TextInput';
-import Button from './Button';
-import DropDown from './DropDown';
+import TextInput from 'components/common/TextInput';
+import Button from 'components/common/Button';
+import DropDown from 'components/common/DropDown';
 
 const FiltersList = styled.div`
   margin: ${(props) => props.theme.spaces.s150} 0;
@@ -98,7 +98,7 @@ function ActionListFilterBadges({
     let name;
     if (item.type !== 'text') {
       const activeOption = item.options.find((opt) => opt.id === activeFilters[item.identifier]);
-      name = activeOption.label || activeOption.name;
+      name = activeOption?.label || activeOption?.name;
     } else {
       name = activeFilters[item.identifier];
     }
@@ -135,7 +135,7 @@ function ActionListFilterBadges({
             <Button close size="sm" onClick={makeCallback(item.identifier)} aria-label={t('remove-filter')}>
               <span aria-hidden="true">x</span>
             </Button>
-            { item.name.trim() }
+            { item.name?.trim() }
           </StyledBadge>
         )}
       </Transition>
