@@ -9,26 +9,31 @@ import { DynamicLink, ActionListLink } from 'common/links';
 const CategoryPageHeader = styled.div`
   min-height: 24rem;
   background-color: ${(props) => props.bg};
-  padding: ${(props) => props.theme.spaces.s300};
+  padding: ${(props) => props.theme.spaces.s200} ${(props) => props.theme.spaces.s050};
   background-color: ${(props) => props.bg};
   background-image: url(${(props) => props.image});
   background-position: bottom;
   background-size: cover;
   background-blend-mode: multiply;
+
+  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    padding: ${(props) => props.theme.spaces.s400} ${(props) => props.theme.spaces.s050};
+  }
 `;
 
 const HeaderContent = styled.div`
-  padding: ${(props) => props.theme.spaces.s300};
+  padding: ${(props) => props.theme.spaces.s150};
   overflow: hidden;
   border-width: ${(props) => props.theme.cardBorderWidth};
   border-radius: ${(props) => props.theme.cardBorderRadius};
   background-color: ${(props) => props.theme.themeColors.white};
 
   h1 {
-    font-size: ${(props) => props.theme.fontSizeXl};
+    font-size: ${(props) => props.theme.fontSizeLg};
   }
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    padding: ${(props) => props.theme.spaces.s300};
     h1 {
       font-size: ${(props) => props.theme.fontSizeXxl};
     }
@@ -52,11 +57,7 @@ const CategoryPageHeaderBlock = (props) => {
     color } = props;
 
   const { t } = useTranslation();
-  const fakeprops = {
-    themeColor: color,
-  };
-
-  const { themeColor } = fakeprops;
+  console.log(parentTitle);
   return (
     <CategoryPageHeader
       bg={color}
@@ -66,17 +67,13 @@ const CategoryPageHeaderBlock = (props) => {
           <Row>
             <Col lg={{ size: 10, offset: 1 }}>
               <HeaderContent>
-                <Breadcrumb>
-                  <ActionListLink>
-                    <a href>
-                      { t('actions') }
-                    </a>
-                  </ActionListLink>
-                  {' '}
-                  /
-                  {' '}
-                  <DynamicLink href={parentUrl}><a>{parentTitle}</a></DynamicLink>
-                </Breadcrumb>
+                { parentTitle && (
+                  <Breadcrumb>
+                    <DynamicLink href={parentUrl}><a>{parentTitle}</a></DynamicLink>
+                    {' '}
+                    /
+                  </Breadcrumb>
+                )}
                 <h1>{ title }</h1>
                 <p className="lead">{ lead }</p>
               </HeaderContent>

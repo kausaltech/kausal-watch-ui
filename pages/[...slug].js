@@ -33,6 +33,9 @@ query GetPlanPage($plan: ID!, $path: String!) {
       category {
         id
         identifier
+        type {
+          name
+        }
         image {
           rendition {
             src
@@ -116,7 +119,7 @@ const PageHeaderBlock = (props) => {
 
   switch (page.__typename) {
     case 'CategoryPage': {
-      const parentTitle = page.category.parent?.categoryPage.title;
+      const parentTitle = page.category.parent?.categoryPage.title || page.category.type.name;
       const parentUrl = page.category.parent?.categoryPage.urlPath || '/';
       return (
         <CategoryPageHeaderBlock
