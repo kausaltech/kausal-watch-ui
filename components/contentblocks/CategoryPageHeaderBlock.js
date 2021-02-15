@@ -9,7 +9,7 @@ const CategoryPageHeader = styled.div`
   background-color: ${(props) => props.bg};
   padding: ${(props) => props.theme.spaces.s300};
   background-image: url(${(props) => props.image});
-  background-position: center;
+  background-position: ${(props) => props.align};
   background-size: cover;
 `;
 
@@ -28,6 +28,7 @@ const CategoryPageHeaderBlock = (props) => {
     identifier,
     lead,
     headerImage,
+    imageAlign,
     parentTitle,
     parentUrl,
     color } = props;
@@ -38,7 +39,11 @@ const CategoryPageHeaderBlock = (props) => {
 
   const { themeColor } = fakeprops;
   return (
-    <CategoryPageHeader bg={themeColor} image={headerImage}>
+    <CategoryPageHeader
+      bg={themeColor}
+      image={headerImage}
+      align={imageAlign}
+    >
       <Container>
         <Row>
           <Col lg={{ size: 10, offset: 1 }}>
@@ -58,12 +63,14 @@ const CategoryPageHeaderBlock = (props) => {
 CategoryPageHeaderBlock.defaultProps = {
   lead: null,
   headerImage: null,
+  imageAlign: 'center',
 };
 
 CategoryPageHeaderBlock.propTypes = {
   title: PropTypes.string.isRequired,
   lead: PropTypes.string,
   headerImage: PropTypes.string,
+  imageAlign: PropTypes.string,
 };
 
 export default CategoryPageHeaderBlock;

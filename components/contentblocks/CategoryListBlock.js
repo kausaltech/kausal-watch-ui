@@ -6,7 +6,7 @@ import Card from 'components/common/Card';
 
 const CategoryListSection = styled.div`
   background-color: ${(props) => props.theme.themeColors.black};
-  padding: ${(props) => props.theme.spaces.s300};
+  padding: ${(props) => props.theme.spaces.s300} 0;
 
   a.card-wrapper {
     display: flex;
