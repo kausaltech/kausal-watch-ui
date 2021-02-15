@@ -26,7 +26,7 @@
   "headingsFontFamilyFallback": "'-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Oxygen-Sans', 'Ubuntu', 'Cantarell', 'Helvetica Neue', sans-serif",
   "fontSizeSm": "0.75rem",
   "fontSizeBase": "1rem",
-  "fontSizeMd": "",
+  "fontSizeMd": "1.25rem",
   "fontSizeLg": "1.666rem",
   "fontSizeXl": "2rem",
   "fontSizeXxl": "3rem",

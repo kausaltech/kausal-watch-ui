@@ -5,7 +5,7 @@ import { DynamicLink } from 'common/links';
 import Card from 'components/common/Card';
 
 const CategoryListSection = styled.div`
-  background-color: ${(props) => props.theme.themeColors.black};
+  background-color: ${(props) => props.theme.neutralLight};
   padding: ${(props) => props.theme.spaces.s300} 0;
 
   a.card-wrapper {
@@ -16,7 +16,7 @@ const CategoryListSection = styled.div`
 
 const SectionHeader = styled.h2`
   text-align: center;
-  color: ${(props) => props.theme.themeColors.white};
+  color: ${(props) => props.theme.themeColors.black};
   margin-bottom: ${(props) => props.theme.spaces.s300};
 `;
 

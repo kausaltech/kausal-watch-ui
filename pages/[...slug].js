@@ -104,7 +104,7 @@ const PageHeaderBlock = (props) => {
 
   switch (page.__typename) {
     case 'CategoryPage': {
-      const parentTitle = page.category.parent?.categoryPage.title || page.category.type.name;
+      const parentTitle = page.category.parent?.categoryPage.title;
       const parentUrl = page.category.parent?.categoryPage.urlPath || '/';
       return (
         <CategoryPageHeaderBlock

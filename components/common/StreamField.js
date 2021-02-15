@@ -157,8 +157,8 @@ function StreamFieldBlock(props) {
       return <IndicatorBlock indicator={indicator} />;
     }
     case 'ActionListBlock': {
-      const { categoryFilter } = props;
-      return <ActionListBlock categoryId={categoryFilter?.id || page.category.id} />;
+      const { categoryFilter, color } = props;
+      return <ActionListBlock categoryId={categoryFilter?.id || page.category.id} color={color} />;
     }
     case 'CategoryListBlock': {
       const { color } = props;

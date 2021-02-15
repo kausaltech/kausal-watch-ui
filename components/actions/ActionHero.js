@@ -14,7 +14,7 @@ import Icon from 'components/common/Icon';
 const Hero = styled.header`
   position: relative;
   background-color: ${(props) => props.bgColor};
-  margin-bottom: ${(props) => props.theme.spaces.s600};
+  margin-bottom: ${(props) => props.theme.spaces.s400};
   a {
     color: ${(props) => props.theme.brandDark};
 
@@ -34,7 +34,7 @@ const ActionBgImage = styled.div`
 
 const HeroCardBg = styled.div`
   overflow: hidden;
-  margin-bottom: -${(props) => props.theme.spaces.s600};
+  margin-bottom: -${(props) => props.theme.spaces.s400};
   background-color: white;
   border-radius: ${(props) => props.theme.cardBorderRadius};
   box-shadow: 4px 4px 8px rgba(0,0,0,0.1);
