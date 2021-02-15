@@ -2,9 +2,8 @@ import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import Head from 'next/head';
 
-import styled, { ThemeProvider } from 'styled-components';
+import styled from 'styled-components';
 
-import { useTranslation } from 'common/i18n';
 import PlanContext from 'context/plan';
 import SiteContext from 'context/site';
 import ThemedGlobalStyles from 'common/ThemedGlobalStyles';
@@ -69,7 +68,7 @@ export function Meta(props) {
   // In ogTitle we don't want to repeat the site name.
   const ogTitle = title || siteTitle;
   const ogDescription = description || generalContent.siteDescription;
-  const ogImage = shareImageUrl || plan.image?.smallRendition?.src || plan.image?.rendition.src;
+  const ogImage = shareImageUrl || plan.image?.social?.src || plan.image?.rendition.src;
 
   return (
     <Head>

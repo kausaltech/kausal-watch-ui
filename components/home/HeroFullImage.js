@@ -25,14 +25,13 @@ const HeroMain = styled.div`
   position: relative;
   min-height: 24rem;
   background-size: cover;
-  background-position: top;
+  background-position: ${(props) => props.imageAlign};
   background-image: url(${(props) => props.image});
   background-repeat: no-repeat;
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     min-height: 38rem;
     background-size: cover;
-    background-position: center;
   }
 `;
 
@@ -125,7 +124,7 @@ const Illustration = styled.div`
 
 function HeroFullImage(props) {
   const {
-    bgImage, title, siteDescription, actionsDescription, indicatorsDescription,
+    bgImage, imageAlign, title, siteDescription, actionsDescription, indicatorsDescription,
   } = props;
   const { t } = useTranslation(['common']);
   const theme = useTheme();
@@ -136,7 +135,7 @@ function HeroFullImage(props) {
 
   return (
     <Hero>
-      <HeroMain image={bgImage}>
+      <HeroMain image={bgImage} imageAlign={imageAlign}>
         <Container>
           <Row>
             <Col md={8} lg={6} >
@@ -198,6 +197,7 @@ function HeroFullImage(props) {
 
 HeroFullImage.propTypes = {
   bgImage: PropTypes.string.isRequired,
+  imageAlign: PropTypes.string,
   title: PropTypes.string.isRequired,
   siteDescription: PropTypes.string.isRequired,
   actionsDescription: PropTypes.string.isRequired,

@@ -5,6 +5,7 @@ import _ from 'lodash';
 import { useTranslation } from 'common/i18n';
 import Layout from 'components/layout';
 import PlanContext from 'context/plan';
+import images from 'common/images';
 import ErrorMessage from 'components/common/ErrorMessage';
 import ContentLoader from 'components/common/ContentLoader';
 import StreamField from 'components/common/StreamField';
@@ -29,9 +30,7 @@ query GetPlanPage($plan: ID!, $path: String!) {
     identifier
     name
     image {
-      rendition {
-        src
-      }
+      ...MultiUseImageFragment
     }
     color
     categoryPage {
@@ -48,12 +47,11 @@ query GetPlanPage($plan: ID!, $path: String!) {
   }
 }
 ${StreamField.fragments.streamField}
+${images.fragments.multiUseImage}
 `;
 
 const getRootCategories = (allCategories) => {
-  console.log(allCategories);
   const mainCategories = allCategories.filter((cat) => cat.parent === null);
-  console.log(mainCategories);
   return mainCategories;
 };
 

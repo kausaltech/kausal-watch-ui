@@ -1,6 +1,7 @@
 import React from 'react';
 import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
+import { getBgImageAlignment } from 'common/images';
 import { DynamicLink } from 'common/links';
 import Card from 'components/common/Card';
 
@@ -26,10 +27,9 @@ const CardHeader = styled.h3`
   line-height: ${(props) => props.theme.lineHeightSm};
 `;
 
-const CategoryListBlock = ({ categories, color, fallbackImageUrl }) => {
+const CategoryListBlock = ({ categories, color, fallbackImage }) => {
   const heading = 'Toimenpidekokonaisuudet';
   const themeColor = color;
-
   return (
     <CategoryListSection bg={themeColor}>
       <Container>
@@ -48,8 +48,9 @@ const CategoryListBlock = ({ categories, color, fallbackImageUrl }) => {
               <DynamicLink href={cat.categoryPage.urlPath}>
                 <a className="card-wrapper">
                   <Card
-                   imageUrl={cat.imageUrl || fallbackImageUrl}
-                   imageTone={themeColor}
+                    imageUrl={cat.image?.small.src || fallbackImage.small.src}
+                    imageAlign={getBgImageAlignment(cat.image || fallbackImage)}
+                    imageTone={themeColor}
                   >
                     <CardHeader>{ cat.name }</CardHeader>
                   </Card>

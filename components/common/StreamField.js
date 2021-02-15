@@ -3,6 +3,7 @@ import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
 import { gql } from '@apollo/client';
 import PlanContext from 'context/plan';
+import images, { getBgImageAlignment } from 'common/images';
 import QuestionAnswerBlock from 'components/contentblocks/QuestionAnswerBlock';
 import ActionListBlock from 'components/contentblocks/ActionListBlock';
 import CategoryListBlock from 'components/contentblocks/CategoryListBlock';
@@ -58,10 +59,7 @@ const STREAM_FIELD_FRAGMENT = gql`
       id
       layout
       image {
-        title
-        rendition {
-          src
-        }
+        ...MultiUseImageFragment
       }
       heading
       lead
@@ -113,6 +111,7 @@ const STREAM_FIELD_FRAGMENT = gql`
       }
     }
   }
+${images.fragments.multiUseImage}
 `;
 
 export const possibleTypes = {
@@ -170,10 +169,8 @@ function StreamFieldBlock(props) {
     case 'CategoryListBlock': {
       const { color } = props;
       const { category } = page;
-      const fallbackImage = (category?.image?.rendition.src
-        || plan.image?.smallRendition?.src
-        || plan.image?.rendition.src);
-      return <CategoryListBlock categories={category.children} color={color} fallbackImageUrl={fallbackImage} />;
+      const fallbackImage = (category?.image || plan.image);
+      return <CategoryListBlock categories={category.children} color={color} fallbackImage={fallbackImage} />;
     }
     case 'FrontPageHeroBlock': {
       const {
@@ -182,7 +179,8 @@ function StreamFieldBlock(props) {
       return (
         <FrontPageHeroBlock
           layout={layout}
-          imageSrc={image.rendition.src}
+          imageSrc={image.large.src}
+          imageAlign={getBgImageAlignment(image)}
           heading={heading}
           lead={lead}
         />

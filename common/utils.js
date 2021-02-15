@@ -1,35 +1,5 @@
 /* Common utility functions */
 
-/* Resolve image url for an action */
-/* If not available fallback on category or plan image */
-export function getActionImageURL(plan, action) {
-  let url;
-
-  if (action.image?.rendition.src) {
-    url = action.image.rendition.src;
-  } else {
-    action.categories.forEach((cat) => {
-      if (url) return;
-      let parent = cat;
-      while (parent) {
-        if (parent.image?.rendition.src) {
-          url = parent.image.rendition.src;
-          return;
-        }
-        parent = parent.parent;
-      }
-    });
-  }
-  if (!url) {
-    url = plan.image?.smallRendition?.src || plan.image?.rendition.src;
-  }
-  return url;
-}
-
-export function resizeImageUrl(plan) {
-  return plan;
-}
-
 export function slugify(text) {
   return text.toString().toLowerCase()
     .replace(/\s+/g, '-')           // Replace spaces with -

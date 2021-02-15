@@ -14,9 +14,13 @@ import { useTranslation } from 'common/i18n';
 import PlanContext from 'context/plan';
 import { cleanActionStatus } from 'common/preprocess';
 
-import { Meta } from '../layout';
-import IndicatorCausal from '../indicators/IndicatorCausal';
-import Timeline from '../graphs/Timeline';
+import { Meta } from 'components/layout';
+import images, { getBgImageAlignment, getActionImage } from 'common/images';
+import IndicatorCausal from 'components/indicators/IndicatorCausal';
+import Timeline from 'components/graphs/Timeline';
+import ContentLoader from 'components/common/ContentLoader';
+import ErrorMessage from 'components/common/ErrorMessage';
+import RichText from 'components/common/RichText';
 import TaskList from './TaskList';
 import ResponsibleList from './ResponsibleList';
 import ContactPersons from './ContactPersons';
@@ -28,13 +32,9 @@ import ActionHero from './ActionHero';
 import ActionPager from './ActionPager';
 import ActionUpdatesList from './ActionUpdatesList';
 import EmissionScopeIcon from './EmissionScopeIcon';
-import ContentLoader from '../common/ContentLoader';
-import ErrorMessage from '../common/ErrorMessage';
-import RichText from '../common/RichText';
-import { getActionImageURL } from '../../common/utils';
 
 const GET_ACTION_DETAILS = gql`
-query ActionDetails($plan: ID!, $id: ID!, $bgImageSize: String = "1200x630") {
+query ActionDetails($plan: ID!, $id: ID!) {
   action(plan: $plan, identifier: $id) {
     id
     identifier
@@ -43,9 +43,7 @@ query ActionDetails($plan: ID!, $id: ID!, $bgImageSize: String = "1200x630") {
     description
     completion
     image {
-      rendition(size: $bgImageSize) {
-        src
-      }
+      ...MultiUseImageFragment
     }
     updatedAt
     mergedActions {
@@ -57,9 +55,7 @@ query ActionDetails($plan: ID!, $id: ID!, $bgImageSize: String = "1200x630") {
       id
       name
       image {
-        rendition(size: $bgImageSize) {
-          src
-        }
+        ...MultiUseImageFragment
       }
       color
       categoryPage {
@@ -70,9 +66,7 @@ query ActionDetails($plan: ID!, $id: ID!, $bgImageSize: String = "1200x630") {
         id
         name
         image {
-          rendition(size: $bgImageSize) {
-            src
-          }
+          ...MultiUseImageFragment
         }
         color
         categoryPage {
@@ -158,7 +152,9 @@ query ActionDetails($plan: ID!, $id: ID!, $bgImageSize: String = "1200x630") {
       identifier
     }
   }
-}`;
+}
+${images.fragments.multiUseImage}
+`;
 
 const LastUpdated = styled.div`
   margin-bottom: 1em;
@@ -283,7 +279,7 @@ function ActionContent({ id }) {
   const cleanOfficialText = officialName.replace(/(?:\r\n|\r|\n)/g, '<br>');
   const actionStatus = cleanActionStatus(action, plan.actionStatuses);
   const { emissionScopes, mergedActions } = action;
-  const imageUrl = getActionImageURL(plan, action);
+  const actionImage = getActionImage(plan, action);
 
   const hasPhases = plan.actionImplementationPhases.length > 0;
 
@@ -291,7 +287,7 @@ function ActionContent({ id }) {
     <div>
       <Meta
         title={`${t('action')} ${action.identifier}`}
-        shareImageUrl={imageUrl}
+        shareImageUrl={actionImage.social.src}
         description={`${action.name}`}
       />
       <ActionHero
@@ -300,7 +296,8 @@ function ActionContent({ id }) {
         nextAction={action.nextAction}
         identifier={action.identifier}
         name={action.name}
-        imageUrl={imageUrl}
+        imageUrl={actionImage.large.src}
+        imageAlign={getBgImageAlignment(actionImage)}
       />
       <Container>
 

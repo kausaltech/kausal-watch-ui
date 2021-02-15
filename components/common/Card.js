@@ -39,7 +39,7 @@ const ImgArea = styled.div`
 const ImgBg = styled.div`
   height: 9rem;
   background-image: url(${(props) => props.background});
-  background-position: center;
+  background-position: ${(props) => props.imageAlign};
   background-size: cover;
   mix-blend-mode: multiply;
 
@@ -52,6 +52,7 @@ const Card = (props) => {
   const {
     imageUrl,
     imageTone,
+    imageAlign,
     negative,
     customColor,
     children } = props;
@@ -69,7 +70,7 @@ const Card = (props) => {
         >
           {imageUrl && (
             <ImgArea imageTone={imageTone}>
-              <ImgBg background={imageUrl} />
+              <ImgBg background={imageUrl} imageAlign={imageAlign} />
             </ImgArea>
           )}
           <CardBody>
@@ -83,6 +84,7 @@ const Card = (props) => {
 
 Card.defaultProps = {
   imageUrl: '',
+  imageAlign: 'center',
   imageTone: true,
   negative: false,
   customColor: '',
@@ -90,6 +92,7 @@ Card.defaultProps = {
 
 Card.propTypes = {
   imageUrl: PropTypes.string,
+  imageAlign: PropTypes.string,
   imageTone: PropTypes.bool,
   negative: PropTypes.bool,
   customColor: PropTypes.string,
