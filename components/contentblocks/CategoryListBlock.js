@@ -12,6 +12,12 @@ const CategoryListSection = styled.div`
   a.card-wrapper {
     display: flex;
     width: 100%;
+    color: ${(props) => props.theme.themeColors.black};
+
+    &:hover {
+      text-decoration: none;
+      color: ${(props) => props.theme.themeColors.black};
+    }
   }
 `;
 
@@ -52,7 +58,10 @@ const CategoryListBlock = ({ categories, color, fallbackImage }) => {
                     imageAlign={getBgImageAlignment(cat.image || fallbackImage)}
                     imageTone={themeColor}
                   >
-                    <CardHeader>{ cat.name }</CardHeader>
+                    <div>
+                      <CardHeader>{ cat.name }</CardHeader>
+                      <p>{cat.shortDescription}</p>
+                    </div>
                   </Card>
                 </a>
               </DynamicLink>

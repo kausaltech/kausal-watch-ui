@@ -85,7 +85,7 @@ const Card = (props) => {
 Card.defaultProps = {
   imageUrl: '',
   imageAlign: 'center',
-  imageTone: true,
+  imageTone: '#ffffff',
   negative: false,
   customColor: '',
 };
@@ -93,7 +93,7 @@ Card.defaultProps = {
 Card.propTypes = {
   imageUrl: PropTypes.string,
   imageAlign: PropTypes.string,
-  imageTone: PropTypes.bool,
+  imageTone: PropTypes.string,
   negative: PropTypes.bool,
   customColor: PropTypes.string,
   children: PropTypes.element.isRequired,

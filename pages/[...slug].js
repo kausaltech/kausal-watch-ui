@@ -47,6 +47,7 @@ query GetPlanPage($plan: ID!, $path: String!) {
           id
           identifier
           name
+          shortDescription
           image {
             ...MultiUseImageFragment
           }
@@ -135,7 +136,7 @@ const PageHeaderBlock = (props) => {
         <ContentPageHeaderBlock
           title={page.title}
           lead={page.leadParagraph}
-          headerImage={headerImage.large.src}
+          headerImage={headerImage && headerImage.large.src}
           imageAlign={getBgImageAlignment(headerImage)}
         />
       );

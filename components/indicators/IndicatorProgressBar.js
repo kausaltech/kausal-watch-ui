@@ -100,7 +100,7 @@ const IndicatorProgressBar = (props) => {
         <ValueGroup
           transform={`translate(${accomplishedBar.x + 4} 30)`}
           date={startDate}
-          value={startValue}
+          value={startValue.toString()}
           unit={unit}
         />
         <text transform={`translate(${accomplishedBar.x + accomplishedBar.w / 2} 110)`} textAnchor="middle">
@@ -129,7 +129,7 @@ const IndicatorProgressBar = (props) => {
         <ValueGroup
           transform={`translate(${missingBar.x + 4} 30)`}
           date={latestDate}
-          value={latestValue}
+          value={latestValue.toString()}
           unit={unit}
         />
         <text transform={`translate(${missingBar.x + missingBar.w / 2} 110)`} textAnchor="middle">
@@ -157,7 +157,7 @@ const IndicatorProgressBar = (props) => {
         <ValueGroup
           transform={`translate(${goalBar.x + 4} 30)`}
           date={goalDate}
-          value={goalValue}
+          value={goalValue.toString()}
           unit={unit}
         />
         <text transform={`translate(${goalBar.x + goalBar.w / 2} 110)`} textAnchor="middle">
@@ -178,11 +178,11 @@ IndicatorProgressBar.defaultProps = {
 
 IndicatorProgressBar.propTypes = {
   startDate: PropTypes.string,
-  startValue: PropTypes.string.isRequired,
+  startValue: PropTypes.number.isRequired,
   latestDate: PropTypes.string,
-  latestValue: PropTypes.string.isRequired,
+  latestValue: PropTypes.number.isRequired,
   goalDate: PropTypes.string,
-  goalValue: PropTypes.string.isRequired,
+  goalValue: PropTypes.number.isRequired,
   unit: PropTypes.string.isRequired,
   note: PropTypes.string,
 };

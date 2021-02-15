@@ -23,7 +23,7 @@ const TopNav = styled(Navbar)`
 const BotNav = styled(Navbar)`
   background-color: ${(props) => props.theme.themeColors.white};
   padding: 0;
-  box-shadow: 0 1px 0 ${(props) => props.theme.themeColors.light};
+  box-shadow: 0 2px 4px rgba(0,0,0,0.07);
 
   .container {
     flex-wrap: nowrap;
@@ -138,7 +138,7 @@ const StyledDropdownToggle = styled(DropdownToggle)`
   }
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
-    margin-right: ${(props) => props.theme.spaces.s150};
+    margin: 0 ${(props) => props.theme.spaces.s200} 0 0;
   }
 `;
 
@@ -170,7 +170,7 @@ const StyledDropdown = styled(UncontrolledDropdown)`
     .dropdown-menu {
       border: 0px;
       background-color: ${(props) => props.theme.themeColors.white};
-      box-shadow: 3px 3px 6px 2px ${(props) => transparentize(0.85, props.theme.themeColors.dark)}};
+      box-shadow: 3px 3px 6px 2px ${(props) => transparentize(0.85, props.theme.themeColors.black)}};
     }
 
     .dropdown-item {

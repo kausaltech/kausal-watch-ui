@@ -29,6 +29,7 @@ query GetPlanPage($plan: ID!, $path: String!) {
     id
     identifier
     name
+    shortDescription
     image {
       ...MultiUseImageFragment
     }

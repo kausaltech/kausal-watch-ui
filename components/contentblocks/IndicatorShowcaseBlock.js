@@ -5,8 +5,12 @@ import styled from 'styled-components';
 import IndicatorProgressBar from 'components/indicators/IndicatorProgressBar';
 
 const IndicatorShowcase = styled.div`
-  background-color: ${(props) => props.theme.themeColors.light};
   padding: ${(props) => props.theme.spaces.s300} 0;
+  background-color: ${(props) => props.theme.neutralDark};
+  color: ${(props) => props.theme.themeColors.white};
+  h2 {
+    color: ${(props) => props.theme.themeColors.white};
+  }
 `;
 
 const IndicatorShowcaseBlock = (props) => {
