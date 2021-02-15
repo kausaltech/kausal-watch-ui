@@ -1,79 +1,94 @@
 import React, { useContext } from 'react';
-import {
-  Container,
-} from 'reactstrap';
 
-import styled from 'styled-components';
-import { withTranslation } from '../common/i18n';
+import { gql, useQuery } from '@apollo/client';
+import _ from 'lodash';
+import { useTranslation } from 'common/i18n';
+import Layout from 'components/layout';
+import PlanContext from 'context/plan';
+import ErrorMessage from 'components/common/ErrorMessage';
+import ContentLoader from 'components/common/ContentLoader';
+import StreamField from 'components/common/StreamField';
+import LegacyHomePage from 'components/home/LegacyHomePage';
 
-import Layout from '../components/layout';
-import ActionHighlightsList from '../components/actions/ActionHighlightsList';
-import IndicatorHighlightsList from '../components/indicators/IndicatorHighlightsList';
-import HnhHero from '../components/HnhHero';
-import FrontHero from '../components/FrontHero';
-import ThlHero from '../components/ThlHero';
-import HeroFullImage from '../components/home/HeroFullImage';
-import PlanContext from '../context/plan';
-
-const ActionsSection = styled.div`
-  background-color: ${(props) => props.theme.neutralLight};
-  position: relative;
-  padding: ${(props) => props.theme.spaces.s800} 0 ${(props) => props.theme.spaces.s400};
-
-  .container {
-    text-align: center;
+const GET_PLAN_PAGE = gql`
+query GetPlanPage($plan: ID!, $path: String!) {
+  planPage(plan: $plan, path: $path) {
+    __typename
+    id
+    slug
+    title
+    ... on PlanRootPage {
+      body {
+        ...StreamFieldFragment
+      }
+    }
+    lastPublishedAt
   }
+  planCategories(plan: $plan) {
+    id
+    identifier
+    name
+    imageUrl
+    color
+    categoryPage {
+      title
+      urlPath
+    }
+    type {
+      id
+      name
+    }
+    parent {
+      id
+    }
+  }
+}
+${StreamField.fragments.streamField}
 `;
 
-const IndicatorsSection = styled.div`
-  background-color: ${(props) => props.theme.themeColors.white};
-  color: ${(props) => props.theme.neutralDark};
-  position: relative;
-  padding: ${(props) => props.theme.spaces.s600} 0;
+const getRootCategories = (allCategories) => {
+  console.log(allCategories);
+  const mainCategories = allCategories.filter((cat) => cat.parent === null);
+  console.log(mainCategories);
+  return mainCategories;
+};
 
-  .container {
-    text-align: center;
-  }
-`;
-
-function HomePage() {
+function RootPage() {
+  const { t } = useTranslation();
   const plan = useContext(PlanContext);
-  const generalContent = plan.generalContent || {};
+  const { loading, error, data } = useQuery(GET_PLAN_PAGE, {
+    variables: {
+      plan: plan.identifier,
+      path: '/',
+    },
+  });
 
-  // Use default hero component
-  let heroComponent = (
-    <HeroFullImage
-      bgImage={plan.mainImage?.largeRendition?.src || plan.imageUrl}
-      title={generalContent.siteTitle}
-      siteDescription={generalContent.siteDescription}
-      actionsDescription={generalContent.actionShortDescription}
-      indicatorsDescription={generalContent.indicatorShortDescription}
-    />
-  );
+  if (loading) return <ContentLoader />;
+  if (error) return <ErrorMessage message={error.message} />;
 
-  // Override with plan specific hero if applicable
-  if (plan.identifier === 'hnh2035') heroComponent = <HnhHero />;
-  if (plan.identifier === 'ktstrat') heroComponent = <ThlHero />;
+  const { planPage } = data;
+  if (!planPage) {
+    return <ErrorMessage statusCode={404} message={t('page-not-found')} />;
+  }
+  const page = _.clone(planPage);
+  page.category = {};
+  page.category.children = getRootCategories(data.planCategories);
+
+  if (page.body.length < 1) return <LegacyHomePage />;
 
   return (
     <Layout>
-      { heroComponent }
-      <ActionsSection className="actions-section">
-        <Container>
-          <ActionHighlightsList plan={plan} />
-        </Container>
-      </ActionsSection>
-      <IndicatorsSection className="indicators-section">
-        <Container>
-          <IndicatorHighlightsList plan={plan} />
-        </Container>
-      </IndicatorsSection>
+      <div className="content-area">
+        {page.body && (
+          <StreamField
+            page={page}
+            blocks={page.body}
+            color="#ffffff"
+          />
+        )}
+      </div>
     </Layout>
   );
 }
 
-HomePage.getInitialProps = async () => ({
-  namespacesRequired: ['common'],
-});
-
-export default withTranslation('common')(HomePage);
+export default RootPage;

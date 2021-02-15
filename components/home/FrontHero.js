@@ -13,7 +13,7 @@ import { useTranslation } from 'common/i18n';
 import {
   IndicatorListLink,
   ActionListLink,
-} from '../common/links';
+} from 'common/links';
 
 const HeroVisual = styled.div`
   position: relative;

@@ -73,7 +73,7 @@ ${StreamField.fragments.streamField}
 
 function StaticPage({ slug }) {
   const { t } = useTranslation();
-  const path = '/' + slug.join('/');
+  const path = `/${slug.join('/')}`;
   const plan = useContext(PlanContext);
   const { loading, error, data } = useQuery(GET_PLAN_PAGE, {
     variables: {
@@ -112,6 +112,7 @@ const PageHeaderBlock = (props) => {
           identifier={page.category.identifier}
           lead={page.category.shortDescription}
           headerImage={page.category.imageUrl || page.category?.parent.imageUrl }
+          imageAlign="bottom center"
           parentTitle={parentTitle}
           parentUrl={parentUrl}
           color={color}

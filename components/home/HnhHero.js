@@ -12,9 +12,9 @@ import {
   IndicatorListLink,
   ActionListLink,
   StaticPageLink,
-} from '../common/links';
-import Icon from './common/Icon';
-import Button from './common/Button';
+} from 'common/links';
+import Icon from 'components/common/Icon';
+import Button from 'components/common/Button';
 
 const SiteHero = styled.div`
   padding: ${(props) => props.theme.spaces.s400} 0 ${(props) => props.theme.spaces.s300};
