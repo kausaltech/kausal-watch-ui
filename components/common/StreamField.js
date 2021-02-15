@@ -55,9 +55,16 @@ const STREAM_FIELD_FRAGMENT = gql`
       style
     }
     ... on FrontPageHeroBlock {
-      blocks {
-        id
+      id
+      layout
+      image {
+        title
+        rendition {
+          src
+        }
       }
+      heading
+      lead
     }
     ... on IndicatorShowcaseBlock {
       id
@@ -169,26 +176,15 @@ function StreamFieldBlock(props) {
       return <CategoryListBlock categories={category.children} color={color} fallbackImageUrl={fallbackImage} />;
     }
     case 'FrontPageHeroBlock': {
-      const mockData = {
-        layout: '',
-        image: {
-          id: '12',
-          title: 'Bridge',
-          rendition: {
-            width: '1920',
-            height: '1024',
-            src: 'https://source.unsplash.com/1920x1024/?nature,water',
-          },
-        },
-        heading: 'Tampereen hiilivahti',
-        lead: 'Tämä on Tampereen vahti',
-      };
+      const {
+        layout, image, heading, lead
+      } = props;
       return (
         <FrontPageHeroBlock
-          layout={mockData.layout}
-          imageSrc={mockData.image.rendition.src}
-          heading={mockData.heading}
-          lead={mockData.lead}
+          layout={layout}
+          imageSrc={image.rendition.src}
+          heading={heading}
+          lead={lead}
         />
       );
     }

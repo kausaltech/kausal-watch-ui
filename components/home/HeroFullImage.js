@@ -16,11 +16,6 @@ import {
   ActionListLink,
 } from '../../common/links';
 
-
-/*
-######### WORK IN PROGRESS ###########
-*/
-
 const Hero = styled.div`
   width: 100%;
   background-color: ${(props) => props.theme.neutralLight};
@@ -29,7 +24,7 @@ const Hero = styled.div`
 const HeroMain = styled.div`
   position: relative;
   min-height: 24rem;
-  background-size: contain;
+  background-size: cover;
   background-position: top;
   background-image: url(${(props) => props.image});
   background-repeat: no-repeat;
@@ -147,7 +142,7 @@ function HeroFullImage(props) {
             <Col md={8} lg={6} >
               <MainCard>
                 <h1>{ title }</h1>
-                <p>{ siteDescription }</p>
+                <div dangerouslySetInnerHTML={{ __html: siteDescription }} />
                 <ActionListLink>
                   <a href>
                     <Highlight
