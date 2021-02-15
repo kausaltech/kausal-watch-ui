@@ -33,7 +33,11 @@ query GetPlanPage($plan: ID!, $path: String!) {
       category {
         id
         identifier
-        imageUrl
+        image {
+          rendition {
+            src
+          }
+        }
         shortDescription
         color
         type {
@@ -43,7 +47,11 @@ query GetPlanPage($plan: ID!, $path: String!) {
           id
           identifier
           name
-          imageUrl
+          image {
+            rendition {
+              src
+            }
+          }
           color
           categoryPage {
             title
@@ -53,7 +61,11 @@ query GetPlanPage($plan: ID!, $path: String!) {
         parent {
           id
           identifier
-          imageUrl
+          image {
+            rendition {
+              src
+            }
+          }
           color
           categoryPage {
             title
@@ -111,7 +123,7 @@ const PageHeaderBlock = (props) => {
           title={page.title}
           identifier={page.category.identifier}
           lead={page.category.shortDescription}
-          headerImage={page.category.imageUrl || page.category?.parent.imageUrl }
+          headerImage={page.category.image?.rendition.src || page.category.parent?.image?.rendition.src}
           imageAlign="bottom center"
           parentTitle={parentTitle}
           parentUrl={parentUrl}

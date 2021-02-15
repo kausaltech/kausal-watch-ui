@@ -42,7 +42,11 @@ query ActionDetails($plan: ID!, $id: ID!, $bgImageSize: String = "1200x630") {
     officialName
     description
     completion
-    imageUrl(size: $bgImageSize)
+    image {
+      rendition(size: $bgImageSize) {
+        src
+      }
+    }
     updatedAt
     mergedActions {
       id
@@ -52,7 +56,11 @@ query ActionDetails($plan: ID!, $id: ID!, $bgImageSize: String = "1200x630") {
     categories(categoryType: "action") {
       id
       name
-      imageUrl(size: $bgImageSize)
+      image {
+        rendition(size: $bgImageSize) {
+          src
+        }
+      }
       color
       categoryPage {
             title
@@ -61,13 +69,17 @@ query ActionDetails($plan: ID!, $id: ID!, $bgImageSize: String = "1200x630") {
       parent {
         id
         name
-        imageUrl(size: $bgImageSize)
+        image {
+          rendition(size: $bgImageSize) {
+            src
+          }
+        }
         color
         categoryPage {
             title
             urlPath
           }
-      }
+       }
     }
     emissionScopes: categories(categoryType: "emission_scope") {
       id

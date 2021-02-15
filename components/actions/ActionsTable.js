@@ -30,7 +30,11 @@ const ACTION_ROW_FRAGMENT = gql`
       id
       identifier
       name
-      imageUrl
+      image {
+        rendition {
+          src
+        }
+      }
     }
     impact {
       id

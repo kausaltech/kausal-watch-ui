@@ -41,7 +41,7 @@ function LegacyHomePage() {
   // Use default hero component
   let heroComponent = (
     <HeroFullImage
-      bgImage={plan.mainImage?.largeRendition?.src || plan.imageUrl}
+      bgImage={plan.image?.largeRendition?.src}
       title={generalContent.siteTitle}
       siteDescription={generalContent.siteDescription}
       actionsDescription={generalContent.actionShortDescription}

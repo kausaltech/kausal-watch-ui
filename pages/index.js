@@ -28,7 +28,11 @@ query GetPlanPage($plan: ID!, $path: String!) {
     id
     identifier
     name
-    imageUrl
+    image {
+      rendition {
+        src
+      }
+    }
     color
     categoryPage {
       title
@@ -65,7 +69,6 @@ function RootPage() {
 
   if (loading) return <ContentLoader />;
   if (error) return <ErrorMessage message={error.message} />;
-
   const { planPage } = data;
   if (!planPage) {
     return <ErrorMessage statusCode={404} message={t('page-not-found')} />;

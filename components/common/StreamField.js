@@ -163,8 +163,10 @@ function StreamFieldBlock(props) {
     case 'CategoryListBlock': {
       const { color } = props;
       const { category } = page;
-      const fallbackImage = category?.imageUrl || plan.mainImage?.smallRendition?.src || plan.imageUrl;
-      return <CategoryListBlock categories={category?.children} color={color} fallbackImageUrl={fallbackImage} />;
+      const fallbackImage = (category?.image?.rendition.src
+        || plan.image?.smallRendition?.src
+        || plan.image?.rendition.src);
+      return <CategoryListBlock categories={category.children} color={color} fallbackImageUrl={fallbackImage} />;
     }
     case 'FrontPageHeroBlock': {
       const mockData = {
