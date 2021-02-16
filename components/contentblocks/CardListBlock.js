@@ -6,7 +6,7 @@ import { DynamicLink } from 'common/links';
 import Card from 'components/common/Card';
 
 const CategoryListSection = styled.div`
-  background-color: ${(props) => props.theme.neutralLight};
+  background-color: ${(props) => props.theme.themeColors.white};
   padding: ${(props) => props.theme.spaces.s400} 0;
 
   a.card-wrapper {
@@ -24,6 +24,12 @@ const CategoryListSection = styled.div`
 const SectionHeader = styled.h2`
   text-align: center;
   color: ${(props) => props.theme.themeColors.black};
+  margin-bottom: ${(props) => props.theme.spaces.s100};
+`;
+
+const Content = styled.p`
+  text-align: center;
+  font-size: ${(props) => props.theme.fontSizeMd};
   margin-bottom: ${(props) => props.theme.spaces.s300};
 `;
 
@@ -33,38 +39,37 @@ const CardHeader = styled.h3`
   line-height: ${(props) => props.theme.lineHeightSm};
 `;
 
-const CategoryListBlock = ({ categories, color, fallbackImage }) => {
-  const heading = 'Teemat';
-  const themeColor = color;
+const CardListBlock = (props) => {
+  const { heading, content, cards } = props;
+
   return (
-    <CategoryListSection bg={themeColor}>
+    <CategoryListSection>
       <Container>
         { heading && (<SectionHeader>{ heading }</SectionHeader>)}
+        <Content>{ content }</Content>
         <Row>
-          { categories?.map((cat) => (
+          { cards?.map((card) => (
             <Col
               tag="li"
               xs="6"
               lg="4"
-              key={cat.id}
+              key={card.id}
               className="mb-5 d-flex align-items-stretch"
               style={{ transition: 'all 0.5s ease' }}
               role="listitem"
             >
-              <DynamicLink href={cat.categoryPage.urlPath}>
-                <a className="card-wrapper">
-                  <Card
-                    imageUrl={cat.image?.small.src || fallbackImage.small.src}
-                    imageAlign={getBgImageAlignment(cat.image || fallbackImage)}
-                    imageTone={themeColor}
-                  >
-                    <div>
-                      <CardHeader>{ cat.name }</CardHeader>
-                      <p>{cat.shortDescription}</p>
-                    </div>
-                  </Card>
-                </a>
-              </DynamicLink>
+              <a href={card.link} className="card-wrapper">
+                <Card
+                  imageUrl={card.imageUrl}
+                  imageAlign="center"
+                  negative
+                >
+                  <div>
+                    <CardHeader>{ card.header }</CardHeader>
+                    <p>{card.content}</p>
+                  </div>
+                </Card>
+              </a>
             </Col>
           ))}
         </Row>
@@ -73,4 +78,4 @@ const CategoryListBlock = ({ categories, color, fallbackImage }) => {
   );
 };
 
-export default CategoryListBlock;
+export default CardListBlock;

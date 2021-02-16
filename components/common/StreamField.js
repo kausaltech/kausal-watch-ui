@@ -10,6 +10,7 @@ import CategoryListBlock from 'components/contentblocks/CategoryListBlock';
 import IndicatorBlock from 'components/contentblocks/IndicatorBlock';
 import FrontPageHeroBlock from 'components/contentblocks/FrontPageHeroBlock';
 import IndicatorShowcaseBlock from 'components/contentblocks/IndicatorShowcaseBlock';
+import CardListBlock from 'components/contentblocks/CardListBlock';
 
 const STREAM_FIELD_FRAGMENT = gql`
   fragment StreamFieldFragment on StreamFieldInterface {
@@ -191,6 +192,11 @@ function StreamFieldBlock(props) {
     case 'IndicatorShowcaseBlock': {
       const { indicator, title, body } = props;
       return <IndicatorShowcaseBlock indicator={indicator} title={title} body={body} />;
+    }
+    case 'CardListBlock': {
+      const { cardsData, content, heading } = props;
+      console.log(cardsData);
+      return <CardListBlock cards={cardsData} content={content} heading={heading} />;
     }
     default:
       return <div>Component for { blockType } does not exist</div>;

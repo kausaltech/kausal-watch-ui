@@ -62,7 +62,7 @@ images.fragments = {
       height
       src
     }
-    small: rendition(size:"600x200") {
+    small: rendition(size:"600x300") {
       width
       height
       src
