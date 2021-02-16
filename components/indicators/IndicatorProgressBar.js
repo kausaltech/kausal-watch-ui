@@ -100,7 +100,7 @@ const IndicatorProgressBar = (props) => {
         />
         <ValueGroup
           transform={`translate(${accomplishedBar.x + 4} 20)`}
-          date={dayjs(startDate).format('L')}
+          date={dayjs(startDate).format('YYYY')}
           value={startValue.toString()}
           unit={unit}
         />
@@ -129,7 +129,7 @@ const IndicatorProgressBar = (props) => {
         />
         <ValueGroup
           transform={`translate(${missingBar.x + 4} 20)`}
-          date={dayjs(latestDate).format('L')}
+          date={dayjs(latestDate).format('YYYY')}
           value={latestValue.toString()}
           unit={unit}
         />
@@ -157,7 +157,7 @@ const IndicatorProgressBar = (props) => {
         />
         <ValueGroup
           transform={`translate(${goalBar.x + 4} 20)`}
-          date={dayjs(goalDate).format('L')}
+          date={dayjs(goalDate).format('YYYY')}
           value={goalValue.toString()}
           unit={unit}
         />
