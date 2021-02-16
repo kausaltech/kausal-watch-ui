@@ -3,15 +3,17 @@ import PropTypes from 'prop-types';
 import HeroFullImage from 'components/home/HeroFullImage';
 
 const FrontPageHeroBlock = (props) => {
-  const { layout, imageSrc, imageAlign, heading, lead } = props;
+  const {
+    layout, imageSrc, imageAlign, heading, lead, actionsDescription, indicatorsDescription,
+  } = props;
   return (
     <HeroFullImage
       bgImage={imageSrc}
       imageAlign={imageAlign}
       title={heading}
       siteDescription={lead}
-      actionsDescription=""
-      indicatorsDescription=""
+      actionsDescription={actionsDescription}
+      indicatorsDescription={indicatorsDescription}
     />
   );
 };
