@@ -8,6 +8,7 @@ import QuestionAnswerBlock from 'components/contentblocks/QuestionAnswerBlock';
 import ActionListBlock from 'components/contentblocks/ActionListBlock';
 import CategoryListBlock from 'components/contentblocks/CategoryListBlock';
 import IndicatorBlock from 'components/contentblocks/IndicatorBlock';
+import IndicatorGroupBlock from 'components/contentblocks/IndicatorGroupBlock';
 import FrontPageHeroBlock from 'components/contentblocks/FrontPageHeroBlock';
 import IndicatorShowcaseBlock from 'components/contentblocks/IndicatorShowcaseBlock';
 import CardListBlock from 'components/contentblocks/CardListBlock';
@@ -46,6 +47,20 @@ const STREAM_FIELD_FRAGMENT = gql`
       style
       indicator {
         id
+      }
+    }
+    ... on IndicatorGroupBlock {
+      id
+      blockType
+      rawValue
+      items {
+        ... on IndicatorBlock {
+          id
+          style
+          indicator {
+            id
+          }
+        }
       }
     }
     ... on ActionListBlock {
@@ -127,6 +142,7 @@ export const possibleTypes = {
     'CategoryListBlock',
     'IndicatorShowcaseBlock',
     'FrontPageHeroBlock',
+    'IndicatorGroupBlock',
   ],
 };
 
@@ -159,9 +175,9 @@ function StreamFieldBlock(props) {
       const { value } = props;
       return <Container><Row><Col><div>{value}</div></Col></Row></Container>;
     }
-    case 'IndicatorBlock': {
-      const { indicator } = props;
-      return <IndicatorBlock indicator={indicator} />;
+    case 'IndicatorGroupBlock': {
+      const { items } = props;
+      return <IndicatorGroupBlock indicators={items} />;
     }
     case 'ActionListBlock': {
       const { categoryFilter, color } = props;
@@ -203,7 +219,9 @@ function StreamFieldBlock(props) {
   }
 }
 
-function StreamField({ page, blocks, color }) {
+function StreamField(props) {
+  const { page, blocks, color } = props;
+  console.log(blocks);
   return (
     <>
       { blocks.map((block) => (
