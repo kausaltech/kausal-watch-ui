@@ -8,6 +8,7 @@ import { ThemeContext } from 'styled-components';
 import ErrorMessage from 'components/common/ErrorMessage';
 import ContentLoader from 'components/common/ContentLoader';
 import StreamField from 'components/common/StreamField';
+import images, { getBgImageAlignment } from 'common/images';
 import CategoryPageHeaderBlock from 'components/contentblocks/CategoryPageHeaderBlock';
 import ContentPageHeaderBlock from 'components/contentblocks/ContentPageHeaderBlock';
 
@@ -20,9 +21,7 @@ query GetPlanPage($plan: ID!, $path: String!) {
     title
     ... on StaticPage {
       headerImage {
-        rendition(size: "1200x800") {
-          src
-        }
+        ...MultiUseImageFragment
       }
       leadParagraph
       body {
@@ -37,9 +36,7 @@ query GetPlanPage($plan: ID!, $path: String!) {
           name
         }
         image {
-          rendition {
-            src
-          }
+          ...MultiUseImageFragment
         }
         shortDescription
         color
@@ -50,10 +47,9 @@ query GetPlanPage($plan: ID!, $path: String!) {
           id
           identifier
           name
+          shortDescription
           image {
-            rendition {
-              src
-            }
+            ...MultiUseImageFragment
           }
           color
           categoryPage {
@@ -65,9 +61,7 @@ query GetPlanPage($plan: ID!, $path: String!) {
           id
           identifier
           image {
-            rendition {
-              src
-            }
+            ...MultiUseImageFragment
           }
           color
           categoryPage {
@@ -84,6 +78,7 @@ query GetPlanPage($plan: ID!, $path: String!) {
   }
 }
 ${StreamField.fragments.streamField}
+${images.fragments.multiUseImage}
 `;
 
 function StaticPage({ slug }) {
@@ -121,13 +116,14 @@ const PageHeaderBlock = (props) => {
     case 'CategoryPage': {
       const parentTitle = page.category.parent?.categoryPage.title || page.category.type.name;
       const parentUrl = page.category.parent?.categoryPage.urlPath || '/';
+      const headerImage = page.category.image || page.category.parent?.image;
       return (
         <CategoryPageHeaderBlock
           title={page.title}
           identifier={page.category.identifier}
           lead={page.category.shortDescription}
-          headerImage={page.category.image?.rendition.src || page.category.parent?.image?.rendition.src}
-          imageAlign="bottom center"
+          headerImage={headerImage.large.src}
+          imageAlign={getBgImageAlignment(headerImage)}
           parentTitle={parentTitle}
           parentUrl={parentUrl}
           color={color}
@@ -140,7 +136,8 @@ const PageHeaderBlock = (props) => {
         <ContentPageHeaderBlock
           title={page.title}
           lead={page.leadParagraph}
-          headerImage={headerImage?.rendition.src}
+          headerImage={headerImage && headerImage.large.src}
+          imageAlign={getBgImageAlignment(headerImage)}
         />
       );
     }
@@ -150,7 +147,7 @@ const PageHeaderBlock = (props) => {
 const Content = ({ page }) => {
   // TODO: Resolve shareImageUrl by pagetype
   const { title, headerImage } = page;
-  const imageUrl = headerImage?.rendition.src;
+  const imageUrl = headerImage?.large.src;
 
   const theme = useContext(ThemeContext);
   const pageSectionColor = page.category?.color || page.category?.parent?.color || theme.neutralDark;

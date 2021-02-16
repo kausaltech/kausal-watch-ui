@@ -1,23 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Container, Row, Col } from 'reactstrap';
-import styled from 'styled-components';
 import HeroFullImage from 'components/home/HeroFullImage';
 
-const IndicatorGraphSection = styled.div`
-  background-color: ${(props) => props.theme.themeColors.light};
-  padding: ${(props) => props.theme.spaces.s300};
-`;
-
 const FrontPageHeroBlock = (props) => {
-  const { layout, imageSrc, heading, lead } = props;
+  const {
+    layout, imageSrc, imageAlign, heading, lead, actionsDescription, indicatorsDescription,
+  } = props;
   return (
     <HeroFullImage
       bgImage={imageSrc}
+      imageAlign={imageAlign}
       title={heading}
       siteDescription={lead}
-      actionsDescription=""
-      indicatorsDescription=""
+      actionsDescription={actionsDescription}
+      indicatorsDescription={indicatorsDescription}
     />
   );
 };
@@ -25,12 +21,14 @@ const FrontPageHeroBlock = (props) => {
 FrontPageHeroBlock.defaultProps = {
   layout: 'big-image',
   imageSrc: '',
+  imageAlign: 'left',
   lead: '',
 };
 
 FrontPageHeroBlock.propTypes = {
   layout: PropTypes.string,
   imageSrc: PropTypes.string,
+  imageAlign: PropTypes.string,
   heading: PropTypes.string.isRequired,
   lead: PropTypes.string,
 };

@@ -3,12 +3,15 @@ import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
 import { gql } from '@apollo/client';
 import PlanContext from 'context/plan';
+import images, { getBgImageAlignment } from 'common/images';
 import QuestionAnswerBlock from 'components/contentblocks/QuestionAnswerBlock';
 import ActionListBlock from 'components/contentblocks/ActionListBlock';
 import CategoryListBlock from 'components/contentblocks/CategoryListBlock';
 import IndicatorBlock from 'components/contentblocks/IndicatorBlock';
+import IndicatorGroupBlock from 'components/contentblocks/IndicatorGroupBlock';
 import FrontPageHeroBlock from 'components/contentblocks/FrontPageHeroBlock';
 import IndicatorShowcaseBlock from 'components/contentblocks/IndicatorShowcaseBlock';
+import CardListBlock from 'components/contentblocks/CardListBlock';
 
 const STREAM_FIELD_FRAGMENT = gql`
   fragment StreamFieldFragment on StreamFieldInterface {
@@ -46,6 +49,20 @@ const STREAM_FIELD_FRAGMENT = gql`
         id
       }
     }
+    ... on IndicatorGroupBlock {
+      id
+      blockType
+      rawValue
+      items {
+        ... on IndicatorBlock {
+          id
+          style
+          indicator {
+            id
+          }
+        }
+      }
+    }
     ... on ActionListBlock {
       categoryFilter {
         id
@@ -55,9 +72,13 @@ const STREAM_FIELD_FRAGMENT = gql`
       style
     }
     ... on FrontPageHeroBlock {
-      blocks {
-        id
+      id
+      layout
+      image {
+        ...MultiUseImageFragment
       }
+      heading
+      lead
     }
     ... on IndicatorShowcaseBlock {
       id
@@ -106,6 +127,7 @@ const STREAM_FIELD_FRAGMENT = gql`
       }
     }
   }
+${images.fragments.multiUseImage}
 `;
 
 export const possibleTypes = {
@@ -120,6 +142,7 @@ export const possibleTypes = {
     'CategoryListBlock',
     'IndicatorShowcaseBlock',
     'FrontPageHeroBlock',
+    'IndicatorGroupBlock',
   ],
 };
 
@@ -152,9 +175,9 @@ function StreamFieldBlock(props) {
       const { value } = props;
       return <Container><Row><Col><div>{value}</div></Col></Row></Container>;
     }
-    case 'IndicatorBlock': {
-      const { indicator } = props;
-      return <IndicatorBlock indicator={indicator} />;
+    case 'IndicatorGroupBlock': {
+      const { items } = props;
+      return <IndicatorGroupBlock indicators={items} />;
     }
     case 'ActionListBlock': {
       const { categoryFilter, color } = props;
@@ -163,32 +186,22 @@ function StreamFieldBlock(props) {
     case 'CategoryListBlock': {
       const { color } = props;
       const { category } = page;
-      const fallbackImage = (category?.image?.rendition.src
-        || plan.image?.smallRendition?.src
-        || plan.image?.rendition.src);
-      return <CategoryListBlock categories={category.children} color={color} fallbackImageUrl={fallbackImage} />;
+      const fallbackImage = (category?.image || plan.image);
+      return <CategoryListBlock categories={category.children} color={color} fallbackImage={fallbackImage} />;
     }
     case 'FrontPageHeroBlock': {
-      const mockData = {
-        layout: '',
-        image: {
-          id: '12',
-          title: 'Bridge',
-          rendition: {
-            width: '1920',
-            height: '1024',
-            src: 'https://source.unsplash.com/1920x1024/?nature,water',
-          },
-        },
-        heading: 'Tampereen hiilivahti',
-        lead: 'Tämä on Tampereen vahti',
-      };
+      const {
+        layout, image, heading, lead
+      } = props;
       return (
         <FrontPageHeroBlock
-          layout={mockData.layout}
-          imageSrc={mockData.image.rendition.src}
-          heading={mockData.heading}
-          lead={mockData.lead}
+          layout={layout}
+          imageSrc={image.large.src}
+          imageAlign={getBgImageAlignment(image)}
+          heading={heading}
+          lead={lead}
+          actionsDescription={plan.generalContent.actionShortDescription}
+          indicatorsDescription={plan.generalContent.indicatorShortDescription}
         />
       );
     }
@@ -196,12 +209,19 @@ function StreamFieldBlock(props) {
       const { indicator, title, body } = props;
       return <IndicatorShowcaseBlock indicator={indicator} title={title} body={body} />;
     }
+    case 'CardListBlock': {
+      const { cardsData, content, heading } = props;
+      console.log(cardsData);
+      return <CardListBlock cards={cardsData} content={content} heading={heading} />;
+    }
     default:
       return <div>Component for { blockType } does not exist</div>;
   }
 }
 
-function StreamField({ page, blocks, color }) {
+function StreamField(props) {
+  const { page, blocks, color } = props;
+  console.log(blocks);
   return (
     <>
       { blocks.map((block) => (

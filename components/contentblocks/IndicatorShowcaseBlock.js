@@ -5,8 +5,17 @@ import styled from 'styled-components';
 import IndicatorProgressBar from 'components/indicators/IndicatorProgressBar';
 
 const IndicatorShowcase = styled.div`
-  background-color: ${(props) => props.theme.themeColors.light};
-  padding: ${(props) => props.theme.spaces.s300} 0;
+  padding: ${(props) => props.theme.spaces.s400} 0;
+  background-color: ${(props) => props.theme.brandDark};
+  color: ${(props) => props.theme.themeColors.white};
+  text-align: center;
+  h2 {
+    color: ${(props) => props.theme.themeColors.white};
+  }
+`;
+
+const Content = styled.div`
+  margin-bottom: ${(props) => props.theme.spaces.s200};
 `;
 
 const IndicatorShowcaseBlock = (props) => {
@@ -27,7 +36,7 @@ const IndicatorShowcaseBlock = (props) => {
             lg={{ size: 10, offset: 1 }}
           >
             <h2>{title}</h2>
-            <div dangerouslySetInnerHTML={{ __html: body }} />
+            <Content dangerouslySetInnerHTML={{ __html: body }} />
             <IndicatorProgressBar
               startDate={indicator.values[0].date}
               startValue={(goalValue < startValue) ? startValue : goalValue}

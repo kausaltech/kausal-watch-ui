@@ -10,6 +10,7 @@ import * as Sentry from "@sentry/react";
 import { Router } from 'routes';
 import { captureException } from 'common/sentry';
 import { appWithTranslation, i18n, configureFromPlan as configureI18nFromPlan } from 'common/i18n';
+import images from 'common/images';
 import withApollo, {
   setRequestContext as setApolloRequestContext,
   setPlanIdentifier as setApolloPlanIdentifier
@@ -41,11 +42,6 @@ const GET_PLAN = gql`
       id
       identifier
       name
-      image {
-        rendition(size: "1500x500") {
-          src
-        }
-      }
       primaryLanguage
       otherLanguages
       domain(hostname: $hostname) {
@@ -53,19 +49,8 @@ const GET_PLAN = gql`
         googleSiteVerificationTag
         matomoAnalyticsUrl
       }
-      image {
-        largeRendition: rendition(size: "1600x900") {
-          src
-          width
-          height
-          alt
-        }
-        smallRendition: rendition(size: "600x600") {
-          src
-          width
-          height
-          alt
-        }
+      image { 
+        ...MultiUseImageFragment
       }
       serveFileBaseUrl
       actionSchedules {
@@ -125,6 +110,7 @@ const GET_PLAN = gql`
       accessibilityStatementUrl
     }
   }
+  ${images.fragments.multiUseImage}
 `;
 
 let piwik;

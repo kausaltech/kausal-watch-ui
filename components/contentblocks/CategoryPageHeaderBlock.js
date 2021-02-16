@@ -2,9 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
-import { Link } from 'routes';
-import { useTranslation } from 'common/i18n';
-import { DynamicLink, ActionListLink } from 'common/links';
+import { DynamicLink } from 'common/links';
 
 const CategoryPageHeader = styled.div`
   min-height: 24rem;
@@ -12,7 +10,7 @@ const CategoryPageHeader = styled.div`
   padding: ${(props) => props.theme.spaces.s200} ${(props) => props.theme.spaces.s050};
   background-color: ${(props) => props.bg};
   background-image: url(${(props) => props.image});
-  background-position: bottom;
+  background-position: ${(props) => props.imageAlign};
   background-size: cover;
   background-blend-mode: multiply;
 
@@ -56,30 +54,30 @@ const CategoryPageHeaderBlock = (props) => {
     parentUrl,
     color } = props;
 
-  const { t } = useTranslation();
-  console.log(parentTitle);
+
   return (
     <CategoryPageHeader
       bg={color}
-      align={imageAlign}
-      image={headerImage}>
-        <Container>
-          <Row>
-            <Col lg={{ size: 10, offset: 1 }}>
-              <HeaderContent>
-                { parentTitle && (
-                  <Breadcrumb>
-                    <DynamicLink href={parentUrl}><a>{parentTitle}</a></DynamicLink>
-                    {' '}
-                    /
-                  </Breadcrumb>
-                )}
-                <h1>{ title }</h1>
-                <p className="lead">{ lead }</p>
-              </HeaderContent>
-            </Col>
-          </Row>
-        </Container>
+      imageAlign={imageAlign}
+      image={headerImage}
+    >
+      <Container>
+        <Row>
+          <Col lg={{ size: 10, offset: 1 }}>
+            <HeaderContent>
+              { parentTitle && (
+                <Breadcrumb>
+                  <DynamicLink href={parentUrl}><a>{parentTitle}</a></DynamicLink>
+                  {' '}
+                  /
+                </Breadcrumb>
+              )}
+              <h1>{ title }</h1>
+              <p className="lead">{ lead }</p>
+            </HeaderContent>
+          </Col>
+        </Row>
+      </Container>
     </CategoryPageHeader>
   );
 };

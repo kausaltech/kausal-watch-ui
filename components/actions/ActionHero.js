@@ -27,7 +27,7 @@ const Hero = styled.header`
 const ActionBgImage = styled.div`
   background-color: ${(props) => props.bgColor};
   background-image: url(${(props) => props.bgImage});
-  background-position: bottom;
+  background-position: ${(props) => props.imageAlign};
   background-size: cover;
   background-blend-mode: multiply;
 `;
@@ -151,6 +151,7 @@ function ActionHero(props) {
     identifier,
     name,
     imageUrl,
+    imageAlign,
   } = props;
   const theme = useTheme();
   const { t } = useTranslation();
@@ -170,6 +171,7 @@ function ActionHero(props) {
     <Hero bgColor={theme.brandDark}>
       <ActionBgImage
         bgImage={imageUrl}
+        imageAlign={imageAlign}
         bgColor={categoryColor}
       >
         <OverlayContainer>

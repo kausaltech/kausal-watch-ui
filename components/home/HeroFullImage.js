@@ -16,11 +16,6 @@ import {
   ActionListLink,
 } from '../../common/links';
 
-
-/*
-######### WORK IN PROGRESS ###########
-*/
-
 const Hero = styled.div`
   width: 100%;
   background-color: ${(props) => props.theme.neutralLight};
@@ -29,15 +24,14 @@ const Hero = styled.div`
 const HeroMain = styled.div`
   position: relative;
   min-height: 24rem;
-  background-size: contain;
-  background-position: top;
+  background-size: cover;
+  background-position: ${(props) => props.imageAlign};
   background-image: url(${(props) => props.image});
   background-repeat: no-repeat;
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     min-height: 38rem;
     background-size: cover;
-    background-position: center;
   }
 `;
 
@@ -130,7 +124,7 @@ const Illustration = styled.div`
 
 function HeroFullImage(props) {
   const {
-    bgImage, title, siteDescription, actionsDescription, indicatorsDescription,
+    bgImage, imageAlign, title, siteDescription, actionsDescription, indicatorsDescription,
   } = props;
   const { t } = useTranslation(['common']);
   const theme = useTheme();
@@ -141,13 +135,13 @@ function HeroFullImage(props) {
 
   return (
     <Hero>
-      <HeroMain image={bgImage}>
+      <HeroMain image={bgImage} imageAlign={imageAlign}>
         <Container>
           <Row>
             <Col md={8} lg={6} >
               <MainCard>
                 <h1>{ title }</h1>
-                <p>{ siteDescription }</p>
+                <div dangerouslySetInnerHTML={{ __html: siteDescription }} />
                 <ActionListLink>
                   <a href>
                     <Highlight
@@ -203,6 +197,7 @@ function HeroFullImage(props) {
 
 HeroFullImage.propTypes = {
   bgImage: PropTypes.string.isRequired,
+  imageAlign: PropTypes.string,
   title: PropTypes.string.isRequired,
   siteDescription: PropTypes.string.isRequired,
   actionsDescription: PropTypes.string.isRequired,

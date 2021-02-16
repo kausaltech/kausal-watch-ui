@@ -8,17 +8,17 @@ import {
   Row, Col,
 } from 'reactstrap';
 import LazyLoad from 'react-lazyload';
-import Button from '../common/Button';
-import { withTranslation } from '../../common/i18n';
-import ContentLoader from '../common/ContentLoader';
-import { ActionListLink } from '../../common/links';
-import { getActionImageURL } from '../../common/utils';
+import Button from 'components/common/Button';
+import { withTranslation } from 'common/i18n';
+import ContentLoader from 'components/common/ContentLoader';
+import { ActionListLink } from 'common/links';
+import images, { getActionImage } from 'common/images';
 
 import ActionHighlightCard from './ActionHighlightCard';
 import Icon from '../common/Icon';
 
 export const GET_ACTION_LIST = gql`
-  query ActionHightlightList($plan: ID!, $first: Int!, $orderBy: String!, $bgImageSize: String = "520x200") {
+  query ActionHightlightList($plan: ID!, $first: Int!, $orderBy: String!) {
     planActions(plan: $plan, first: $first, orderBy: $orderBy) {
       id
       identifier
@@ -27,9 +27,7 @@ export const GET_ACTION_LIST = gql`
       completion
       updatedAt
       image {
-        rendition(size: $bgImageSize) {
-          src
-        }
+        ...MultiUseImageFragment
       }
       plan {
         id
@@ -46,29 +44,24 @@ export const GET_ACTION_LIST = gql`
       categories {
         id
         image {
-          rendition(size: $bgImageSize) {
-            src
-          }
+          ...MultiUseImageFragment
         }
         parent {
           id
           image {
-            rendition(size: $bgImageSize) {
-              src
-            }
+            ...MultiUseImageFragment
           }
           parent {
             id
             image {
-              rendition(size: $bgImageSize) {
-                src
-              }
+              ...MultiUseImageFragment
             }
           }
         }
       }
     }
   }
+  ${images.fragments.multiUseImage}
 `;
 
 const ListHeader = styled(Col)`
@@ -106,7 +99,7 @@ function ActionCardList({ t, actions, plan }) {
           style={{ transition: 'all 0.5s ease' }}
         >
           <LazyLoad height={300}>
-            <ActionHighlightCard action={item} imageUrl={getActionImageURL(plan, item)} />
+            <ActionHighlightCard action={item} imageUrl={getActionImage(plan, item).small.src} />
           </LazyLoad>
         </CardContainer>
       ))}

@@ -2,26 +2,27 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import styled, { ThemeContext } from 'styled-components';
+import dayjs from 'common/dayjs';
 
 const BarBase = styled.rect`
 
 `;
 
 const DateText = styled.tspan`
-  fill: ${(props) => props.theme.themeColors.black};
+  fill: ${(props) => props.theme.themeColors.white};
   font-family: '${(props) => props.theme.fontFamily}';
   font-size: 14px;
 `;
 
 const ValueText = styled.tspan`
-  fill: ${(props) => props.theme.themeColors.black};
+  fill: ${(props) => props.theme.themeColors.white};
   font-family: '${(props) => props.theme.fontFamily}';
   font-size: 20px;
   font-weight: 700;
 `;
 
 const UnitText = styled.tspan`
-  fill: ${(props) => props.theme.themeColors.black};
+  fill: ${(props) => props.theme.themeColors.white};
   font-family: '${(props) => props.theme.fontFamily}';
   font-size: 14px;
 `;
@@ -32,7 +33,7 @@ const ValueGroup = (props) => {
   return (
     <text {...rest}>
       <DateText>{date}</DateText>
-      <ValueText x="0" dy="20">{value}</ValueText>
+      <ValueText x="0" dy="22">{value}</ValueText>
       <UnitText>
         {' '}
         {unit}
@@ -75,7 +76,7 @@ const IndicatorProgressBar = (props) => {
   return (
     <div>
       <svg viewBox={`0 0 ${canvas.w} ${canvas.h}`}>
-        <title>Helsingin päästötilanne</title>
+        <title>a11y title here</title>
         <BarBase
           x="40"
           y="60"
@@ -93,18 +94,18 @@ const IndicatorProgressBar = (props) => {
         <line
           x1={accomplishedBar.x}
           x2={accomplishedBar.x}
-          y1={16}
+          y1={10}
           y2={64 + bar.h - 8}
-          stroke={theme.themeColors.dark}
+          stroke={theme.themeColors.light}
         />
         <ValueGroup
-          transform={`translate(${accomplishedBar.x + 4} 30)`}
-          date={startDate}
-          value={startValue}
+          transform={`translate(${accomplishedBar.x + 4} 20)`}
+          date={dayjs(startDate).format('L')}
+          value={startValue.toString()}
           unit={unit}
         />
         <text transform={`translate(${accomplishedBar.x + accomplishedBar.w / 2} 110)`} textAnchor="middle">
-          <DateText>Accomplished</DateText>
+          <DateText>Vähennetty</DateText>
           <UnitText x="0" dy="20">
             {startValue - latestValue}
             {' '}
@@ -117,23 +118,23 @@ const IndicatorProgressBar = (props) => {
           y="64"
           width={missingBar.w}
           height={bar.h - 8}
-          fill={theme.graphColors.red070}
+          fill={theme.graphColors.red030}
         />
         <line
           x1={missingBar.x}
           x2={missingBar.x}
-          y1={16}
+          y1={10}
           y2={64 + bar.h - 8}
-          stroke="#333"
+          stroke={theme.themeColors.light}
         />
         <ValueGroup
-          transform={`translate(${missingBar.x + 4} 30)`}
-          date={latestDate}
-          value={latestValue}
+          transform={`translate(${missingBar.x + 4} 20)`}
+          date={dayjs(latestDate).format('L')}
+          value={latestValue.toString()}
           unit={unit}
         />
         <text transform={`translate(${missingBar.x + missingBar.w / 2} 110)`} textAnchor="middle">
-          <DateText>To reduce</DateText>
+          <DateText>Vähennettävää</DateText>
           <UnitText x="0" dy="20">
             {latestValue - goalValue}
             {' '}
@@ -145,23 +146,23 @@ const IndicatorProgressBar = (props) => {
           y="64"
           width={goalBar.w}
           height={bar.h - 8}
-          fill={theme.graphColors.green030}
+          fill={theme.graphColors.green070}
         />
         <line
           x1={goalBar.x}
           x2={goalBar.x}
-          y1={16}
+          y1={10}
           y2={64 + bar.h - 8}
-          stroke="#333"
+          stroke={theme.themeColors.light}
         />
         <ValueGroup
-          transform={`translate(${goalBar.x + 4} 30)`}
-          date={goalDate}
-          value={goalValue}
+          transform={`translate(${goalBar.x + 4} 20)`}
+          date={dayjs(goalDate).format('L')}
+          value={goalValue.toString()}
           unit={unit}
         />
         <text transform={`translate(${goalBar.x + goalBar.w / 2} 110)`} textAnchor="middle">
-          <DateText>Target</DateText>
+          <DateText>Tavoite</DateText>
         </text>
       </svg>
       <div className="text-center"><small>{ note }</small></div>
@@ -178,11 +179,11 @@ IndicatorProgressBar.defaultProps = {
 
 IndicatorProgressBar.propTypes = {
   startDate: PropTypes.string,
-  startValue: PropTypes.string.isRequired,
+  startValue: PropTypes.number.isRequired,
   latestDate: PropTypes.string,
-  latestValue: PropTypes.string.isRequired,
+  latestValue: PropTypes.number.isRequired,
   goalDate: PropTypes.string,
-  goalValue: PropTypes.string.isRequired,
+  goalValue: PropTypes.number.isRequired,
   unit: PropTypes.string.isRequired,
   note: PropTypes.string,
 };

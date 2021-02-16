@@ -26,11 +26,6 @@ const ACTION_CARD_FRAGMENT = gql`
       id
       identifier
       name
-      image {
-        rendition {
-          src
-        }
-      }
     }
     implementationPhase {
       id

@@ -21,12 +21,15 @@ ${ActionCard.fragments.action}
 
 const ActionListSection = styled.div`
   background-color: ${(props) => props.color};
-  padding: ${(props) => props.theme.spaces.s300};
+  padding: ${(props) => props.theme.spaces.s400};
 `;
 
 const SectionHeader = styled.h2`
   text-align: center;
-  color: ${(props) => props.theme.themeColors.black};
+  padding: ${(props) => props.theme.spaces.s050};
+  border-radius: ${(props) => props.theme.cardBorderRadius};
+  background-color: ${(props) => props.theme.brandDark};
+  color: ${(props) => props.theme.themeColors.white};
   margin-bottom: ${(props) => props.theme.spaces.s300};
 `;
 

@@ -8,7 +8,7 @@ import { Spring } from 'react-spring/renderprops.cjs';
 const HeaderImage = styled.div`
   background-image: url(${(props) => props.image});
   background-size: cover;
-  background-position: center;
+  background-position: ${(props) => props.theme.imageAlign};
   color: ${(props) => props.theme.themeColors.white};
   height: calc(4 * ${(props) => props.theme.spaces.s400});
   background-color: ${(props) => props.theme.brandDark};
@@ -31,7 +31,13 @@ const ContentHeader = styled.header`
 `;
 
 const ContentPageHeaderBlock = (props) => {
-  const { title, lead, headerImage } = props;
+  const {
+    title,
+    lead,
+    headerImage,
+    imageAlign
+  } = props;
+
   return (
     <>
       <HeaderBg>
@@ -41,7 +47,7 @@ const ContentPageHeaderBlock = (props) => {
             to={{ opacity: 1 }}
           >
             {(props) => (
-              <HeaderImage image={headerImage} style={props} />
+              <HeaderImage image={headerImage} style={props} imageAlign={imageAlign} />
             )}
           </Spring>
         )}
@@ -65,12 +71,14 @@ const ContentPageHeaderBlock = (props) => {
 ContentPageHeaderBlock.defaultProps = {
   lead: null,
   headerImage: null,
+  imageAlign: 'center',
 };
 
 ContentPageHeaderBlock.propTypes = {
   title: PropTypes.string.isRequired,
   lead: PropTypes.string,
   headerImage: PropTypes.string,
+  imageAlign: PropTypes.string,
 };
 
 export default ContentPageHeaderBlock;
