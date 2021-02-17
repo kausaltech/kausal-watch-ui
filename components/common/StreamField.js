@@ -126,6 +126,21 @@ const STREAM_FIELD_FRAGMENT = gql`
 
       }
     }
+    ... on CardListBlock {
+      id
+      heading
+      lead
+      cards {
+        ... on CardBlock {
+          image {
+            ...MultiUseImageFragment
+          }
+          heading
+          content
+          link
+        }
+      }
+    }
   }
 ${images.fragments.multiUseImage}
 `;
@@ -143,6 +158,7 @@ export const possibleTypes = {
     'IndicatorShowcaseBlock',
     'FrontPageHeroBlock',
     'IndicatorGroupBlock',
+    'CardListBlock',
   ],
 };
 
@@ -210,9 +226,8 @@ function StreamFieldBlock(props) {
       return <IndicatorShowcaseBlock indicator={indicator} title={title} body={body} />;
     }
     case 'CardListBlock': {
-      const { cardsData, content, heading } = props;
-      console.log(cardsData);
-      return <CardListBlock cards={cardsData} content={content} heading={heading} />;
+      const { cards, lead, heading } = props;
+      return <CardListBlock cards={cards} lead={lead} heading={heading} />;
     }
     default:
       return <div>Component for { blockType } does not exist</div>;

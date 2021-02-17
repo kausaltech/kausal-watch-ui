@@ -40,13 +40,13 @@ const CardHeader = styled.h3`
 `;
 
 const CardListBlock = (props) => {
-  const { heading, content, cards } = props;
+  const { heading, lead, cards } = props;
 
   return (
     <CategoryListSection>
       <Container>
         { heading && (<SectionHeader>{ heading }</SectionHeader>)}
-        <Content>{ content }</Content>
+        <Content>{ lead }</Content>
         <Row>
           { cards?.map((card) => (
             <Col
@@ -60,12 +60,12 @@ const CardListBlock = (props) => {
             >
               <a href={card.link} className="card-wrapper">
                 <Card
-                  imageUrl={card.imageUrl}
+                  imageUrl={card.image && card.image.rendition.src}
                   imageAlign="center"
                   negative
                 >
                   <div>
-                    <CardHeader>{ card.header }</CardHeader>
+                    <CardHeader>{ card.heading }</CardHeader>
                     <p>{card.content}</p>
                   </div>
                 </Card>
