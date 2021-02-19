@@ -19,6 +19,10 @@ const CategoryPageHeader = styled.div`
   }
 `;
 
+const Identifier = styled.span`
+  color: ${(props) => props.theme.graphColors.grey050};
+`;
+
 const HeaderContent = styled.div`
   padding: ${(props) => props.theme.spaces.s150};
   overflow: hidden;
@@ -72,7 +76,7 @@ const CategoryPageHeaderBlock = (props) => {
                   /
                 </Breadcrumb>
               )}
-              <h1>{ title }</h1>
+              <h1><Identifier>{identifier}.</Identifier> { title }</h1>
               <p className="lead">{ lead }</p>
             </HeaderContent>
           </Col>

@@ -60,6 +60,7 @@ query GetPlanPage($plan: ID!, $path: String!) {
         parent {
           id
           identifier
+          name
           image {
             ...MultiUseImageFragment
           }
@@ -114,7 +115,9 @@ const PageHeaderBlock = (props) => {
 
   switch (page.__typename) {
     case 'CategoryPage': {
-      const parentTitle = page.category.parent?.categoryPage.title || page.category.type.name;
+      const parentTitle = page.category.parent?.categoryPage
+        ? `${page.category.parent?.identifier}. ${page.category.parent?.categoryPage.title}`
+        : page.category.type.name;
       const parentUrl = page.category.parent?.categoryPage.urlPath || '/';
       const headerImage = page.category.image || page.category.parent?.image;
       return (

@@ -53,6 +53,7 @@ query ActionDetails($plan: ID!, $id: ID!) {
     }
     categories(categoryType: "action") {
       id
+      identifier
       name
       image {
         ...MultiUseImageFragment
@@ -64,6 +65,7 @@ query ActionDetails($plan: ID!, $id: ID!) {
           }
       parent {
         id
+        identifier
         name
         image {
           ...MultiUseImageFragment
@@ -223,7 +225,7 @@ function MergedActionList({ actions, t, theme }) {
     return null;
   }
 
-  const mergedActions = actions.map(act => (
+  const mergedActions = actions.map((act) => (
     <MergedAction action={act} theme={theme} key={act.id} />
   ));
 
@@ -347,31 +349,36 @@ function ActionContent({ id }) {
               <ActionUpdatesList id={action.id} />
             </SolidSection>
             )}
-            <Row>
-              <Col>
-                <SectionHeader>{ t('actions:action-tasks') }</SectionHeader>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <ActionSection>
-                  <TaskList tasks={action.tasks} />
-                </ActionSection>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <SectionHeader>{ t('indicators') }</SectionHeader>
-              </Col>
-            </Row>
-            <Row>
-              <Col sm="12">
-                {action.relatedIndicators && action.relatedIndicators.length > 0
-                  ? <ActionIndicators actionId={action.id} relatedIndicators={action.relatedIndicators} />
-                  : <Alert color="light" className="mb-5"><h6>{ t('actions:no-defined-indicators') }</h6></Alert>
-                  }
-              </Col>
-            </Row>
+            { action.tasks.length > 0 && (
+            <div>
+              <Row>
+                <Col>
+                  <SectionHeader>{ t('actions:action-tasks') }</SectionHeader>
+                </Col>
+              </Row>
+              <Row>
+                <Col>
+                  <ActionSection>
+                    <TaskList tasks={action.tasks} />
+                  </ActionSection>
+                </Col>
+              </Row>
+            </div>
+            )}
+            {action?.relatedIndicators.length > 0 && (
+            <div>
+              <Row>
+                <Col>
+                  <SectionHeader>{ t('indicators') }</SectionHeader>
+                </Col>
+              </Row>
+              <Row>
+                <Col sm="12">
+                  <ActionIndicators actionId={action.id} relatedIndicators={action.relatedIndicators} />
+                </Col>
+              </Row>
+            </div>
+            )}
           </Col>
 
           <Col md="5" lg="4">
@@ -423,9 +430,11 @@ function ActionContent({ id }) {
             <ActionSection>
               <ResponsibleList data={action.responsibleParties.map((item) => item.organization)} />
             </ActionSection>
-            <ActionSection>
-              <ContactPersons persons={action.contactPersons.map((item) => item.person)} />
-            </ActionSection>
+            { action?.contactPersons.length > 0 && (
+              <ActionSection>
+                <ContactPersons persons={action.contactPersons.map((item) => item.person)} />
+              </ActionSection>
+            )}
             <ActionSection>
               <LastUpdated>
                 { t('actions:action-last-updated') }
@@ -436,7 +445,7 @@ function ActionContent({ id }) {
           </Col>
         </Row>
       </Container>
-      {action.relatedIndicators && action.relatedIndicators.length > 0 && (
+      {action?.relatedIndicators.length > 0 && (
         <div>
           <Container>
             <Row>

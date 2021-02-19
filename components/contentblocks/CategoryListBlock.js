@@ -33,6 +33,10 @@ const CardHeader = styled.h3`
   line-height: ${(props) => props.theme.lineHeightSm};
 `;
 
+const Identifier = styled.span`
+  color: ${(props) => props.theme.graphColors.grey050};
+`;
+
 const CategoryListBlock = ({ categories, color, fallbackImage }) => {
   const heading = 'Teemat';
   const themeColor = color;
@@ -59,7 +63,7 @@ const CategoryListBlock = ({ categories, color, fallbackImage }) => {
                     imageTone={themeColor}
                   >
                     <div>
-                      <CardHeader>{ cat.name }</CardHeader>
+                      <CardHeader><Identifier>{cat.identifier}.</Identifier> { cat.name }</CardHeader>
                       <p>{cat.shortDescription}</p>
                     </div>
                   </Card>
