@@ -211,7 +211,6 @@ function StreamFieldBlock(props) {
     }
     case 'CardListBlock': {
       const { cardsData, content, heading } = props;
-      console.log(cardsData);
       return <CardListBlock cards={cardsData} content={content} heading={heading} />;
     }
     default:
@@ -221,7 +220,6 @@ function StreamFieldBlock(props) {
 
 function StreamField(props) {
   const { page, blocks, color } = props;
-  console.log(blocks);
   return (
     <>
       { blocks.map((block) => (

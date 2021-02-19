@@ -86,18 +86,21 @@ function RootPage() {
       heading: 'Yhteinen tavoite',
       cardsData: [
         {
+          id: '1',
           imageUrl: 'https://source.unsplash.com/collection/8586906/600x300',
           header: 'Ilmastosankari',
           content: 'Tamperelaisten oma ilmasto-opas',
           link: 'https://example.com',
         },
         {
+          id: '2',
           imageUrl: 'https://source.unsplash.com/collection/8586906/600x300',
           header: 'Ilmastokumppani',
           content: 'Yritysten ja yhteisöjen ilmastokumppanuus',
           link: 'https://example.com',
         },
         {
+          id: '3',
           imageUrl: 'https://source.unsplash.com/collection/8586906/600x300',
           header: 'Korkeakouluyhteistyö',
           content: 'Kestävä kehitys korkeakouluyhteistyössä',
