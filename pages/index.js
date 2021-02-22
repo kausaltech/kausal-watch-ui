@@ -40,6 +40,7 @@ query GetPlanPage($plan: ID!, $path: String!) {
     }
     type {
       id
+      identifier
       name
     }
     parent {
@@ -74,7 +75,8 @@ function RootPage() {
   }
   const page = _.clone(planPage);
   page.category = {};
-  page.category.children = getRootCategories(data.planCategories);
+  const cats = data.planCategories.filter(cat => cat.type.identifier === 'action');
+  page.category.children = getRootCategories(cats);
 
   if (page.body.length < 1) return <LegacyHomePage />;
 
