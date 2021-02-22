@@ -80,38 +80,6 @@ function RootPage() {
 
   if (page.body.length < 1) return <LegacyHomePage />;
 
-  const mockData = [
-    {
-      id: 'mock',
-      blockType: 'CardListBlock',
-      content: 'Tarvitsemme mukaan kaikki Tampereen asukkaat, yritykset ja yhteisöt.',
-      heading: 'Yhteinen tavoite',
-      cardsData: [
-        {
-          id: '1',
-          imageUrl: 'https://source.unsplash.com/collection/8586906/600x300',
-          header: 'Ilmastosankari',
-          content: 'Tamperelaisten oma ilmasto-opas',
-          link: 'https://example.com',
-        },
-        {
-          id: '2',
-          imageUrl: 'https://source.unsplash.com/collection/8586906/600x300',
-          header: 'Ilmastokumppani',
-          content: 'Yritysten ja yhteisöjen ilmastokumppanuus',
-          link: 'https://example.com',
-        },
-        {
-          id: '3',
-          imageUrl: 'https://source.unsplash.com/collection/8586906/600x300',
-          header: 'Korkeakouluyhteistyö',
-          content: 'Kestävä kehitys korkeakouluyhteistyössä',
-          link: 'https://example.com',
-        },
-      ],
-    },
-  ];
-
   return (
     <Layout>
       <div className="content-area">
@@ -119,13 +87,6 @@ function RootPage() {
           <StreamField
             page={page}
             blocks={page.body}
-            color="#ffffff"
-          />
-        )}
-        {plan.identifier === 'tampere-ilmasto' && (
-          <StreamField
-            page={page}
-            blocks={mockData}
             color="#ffffff"
           />
         )}
