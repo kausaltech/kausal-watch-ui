@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { DynamicLink } from 'common/links';
 
 const CategoryPageHeader = styled.div`
-  min-height: 24rem;
+  height: 24rem;
   background-color: ${(props) => props.bg};
   padding: ${(props) => props.theme.spaces.s200} ${(props) => props.theme.spaces.s050};
   background-color: ${(props) => props.bg};
@@ -47,6 +47,54 @@ const Breadcrumb = styled.div`
   margin-bottom: ${(props) => props.theme.spaces.s100};
 `;
 
+const MetaDataList = styled.dl`
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 600px;
+  margin: 3rem auto;
+  border-top: 1px solid black;
+  dt {
+    width: 30%;
+    padding-right: 2rem;
+    text-align: right;
+  }
+
+  dd {
+    width: 70%;
+    margin-left: auto;
+  }
+`;
+
+const MetaContent = (props) => {
+  const { contentData } = props;
+
+  switch (contentData.__typename) {
+    case 'CategoryMetadataChoice': {
+      return <div>{contentData.value}</div>;
+    }
+    case 'CategoryMetadataRichText': {
+      const rtContent = contentData.value;
+      return (<div className="text-content" dangerouslySetInnerHTML={{ __html: rtContent }} />);
+    }
+    default: return <div />;
+  }
+};
+
+const CategoryMeta = (props) => {
+  const { metadata } = props;
+
+  return (
+    <MetaDataList>
+      {metadata.map((item) => (
+        <React.Fragment key={item.id}>
+          <dt>{item.key}</dt>
+          <dd><MetaContent contentData={item} /></dd>
+        </React.Fragment>
+      ))}
+    </MetaDataList>
+  );
+};
+
 const CategoryPageHeaderBlock = (props) => {
   const {
     title,
@@ -56,9 +104,11 @@ const CategoryPageHeaderBlock = (props) => {
     imageAlign,
     parentTitle,
     parentUrl,
-    color } = props;
+    color,
+    metadata,
+  } = props;
 
-
+  console.log(metadata);
   return (
     <CategoryPageHeader
       bg={color}
@@ -76,8 +126,16 @@ const CategoryPageHeaderBlock = (props) => {
                   /
                 </Breadcrumb>
               )}
-              <h1><Identifier>{identifier}.</Identifier> { title }</h1>
+              <h1>
+                <Identifier>
+                  {identifier}
+                  .
+                </Identifier>
+                {' '}
+                { title }
+              </h1>
               <p className="lead">{ lead }</p>
+              {metadata?.length > 0 && <CategoryMeta metadata={metadata} />}
             </HeaderContent>
           </Col>
         </Row>

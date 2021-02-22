@@ -120,6 +120,34 @@ const PageHeaderBlock = (props) => {
         : page.category.type.name;
       const parentUrl = page.category.parent?.categoryPage.urlPath || '/';
       const headerImage = page.category.image || page.category.parent?.image;
+
+      // Mock category metadata to Tampere second level categories
+      const metadata = page.category.parent ? [
+        {
+          __typename: 'CategoryMetadataChoice',
+          id: '2',
+          key: 'Päästövähennys',
+          keyIdentifier: 'emission_reduction',
+          value: 'Small',
+          valueIdentifier: 's',
+        },
+        {
+          __typename: 'CategoryMetadataChoice',
+          id: '2',
+          key: 'Kustannusarvio',
+          keyIdentifier: 'cost_estimate',
+          value: 'Small',
+          valueIdentifier: 's',
+        },
+        {
+          __typename: 'CategoryMetadataRichText',
+          key: 'Other benefits',
+          keyIdentifier: 'other_benefits',
+          value: '<ul><li>Monimuotoisen kaupunkiympäristön edistäminen</li><li>Täydennysrakentamisen mahdollistaminen</li><li>Palvelujen ja joukkoliikenteen kannattavuuden vahvistaminen</li></ul>',
+          id: '1',
+          text: 'foo',
+        },
+      ] : undefined;
       return (
         <CategoryPageHeaderBlock
           title={page.title}
@@ -130,6 +158,7 @@ const PageHeaderBlock = (props) => {
           parentTitle={parentTitle}
           parentUrl={parentUrl}
           color={color}
+          metadata={metadata}
         />
       );
     }
