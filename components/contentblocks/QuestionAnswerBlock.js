@@ -19,7 +19,7 @@ const QuestionAnswerBlock = (props) => {
   const { heading, questions } = props;
   const questionList = [];
   // create ids
-  questions.forEach((question, index) => questionList.push({
+  questions?.forEach((question, index) => questionList.push({
     id: index.toString(),
     ...question,
   }));

@@ -164,7 +164,7 @@ const getPhaseData = (actions, phases, actionStatuses, theme, t) => {
     phaseData.total += actionCountOnPhase.length;
   });
 
-  phaseData.labels.push(t('not-being-implemented'));
+  phaseData.labels.push(t('unknown'));
   phaseData.values.push(actions.length - phaseData.total);
   phaseData.colors.push(theme.graphColors.grey010);
 
