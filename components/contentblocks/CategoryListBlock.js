@@ -41,7 +41,7 @@ const CategoryListBlock = ({ categories, color, fallbackImage }) => {
       <Container>
         { heading && (<SectionHeader>{ heading }</SectionHeader>)}
         <Row>
-          { categories?.map((cat) => (
+          { categories?.filter(cat => cat.categoryPath).map((cat) => (
             <Col
               tag="li"
               xs="6"
