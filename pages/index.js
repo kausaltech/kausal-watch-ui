@@ -25,7 +25,7 @@ query GetPlanPage($plan: ID!, $path: String!) {
     }
     lastPublishedAt
   }
-  planCategories(plan: $plan) {
+  planCategories(plan: $plan, categoryType: "action") {
     id
     identifier
     name
@@ -42,6 +42,10 @@ query GetPlanPage($plan: ID!, $path: String!) {
       id
       identifier
       name
+    }
+    level {
+      name
+      namePlural
     }
     parent {
       id

@@ -5,7 +5,7 @@ import { getBgImageAlignment } from 'common/images';
 import { DynamicLink } from 'common/links';
 import Card from 'components/common/Card';
 
-const CategoryListSection = styled.div`
+const CardListSection = styled.div`
   background-color: ${(props) => props.theme.themeColors.white};
   padding: ${(props) => props.theme.spaces.s400} 0;
 
@@ -42,8 +42,9 @@ const CardHeader = styled.h3`
 const CardListBlock = (props) => {
   const { heading, lead, cards } = props;
 
+  // TODO : Summon a key value for cards
   return (
-    <CategoryListSection>
+    <CardListSection>
       <Container>
         { heading && (<SectionHeader>{ heading }</SectionHeader>)}
         <Content>{ lead }</Content>
@@ -53,7 +54,6 @@ const CardListBlock = (props) => {
               tag="li"
               xs="6"
               lg="4"
-              key={card.id}
               className="mb-5 d-flex align-items-stretch"
               style={{ transition: 'all 0.5s ease' }}
               role="listitem"
@@ -74,7 +74,7 @@ const CardListBlock = (props) => {
           ))}
         </Row>
       </Container>
-    </CategoryListSection>
+    </CardListSection>
   );
 };
 

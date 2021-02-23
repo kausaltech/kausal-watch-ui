@@ -38,7 +38,7 @@ const Identifier = styled.span`
 `;
 
 const CategoryListBlock = ({ categories, color, fallbackImage }) => {
-  const heading = 'Teemat';
+  const heading = categories[0]?.level?.namePlural;
   const themeColor = color;
   return (
     <CategoryListSection bg={themeColor}>
