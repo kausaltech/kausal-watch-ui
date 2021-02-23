@@ -33,6 +33,10 @@ const BotNav = styled(Navbar)`
     padding: ${(props) => props.theme.spaces.s150} 0;
   }
 
+  .nav-item {
+    display: flex;
+  }
+
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     .navbar-nav {
       padding: 0;
@@ -78,6 +82,7 @@ const HomeLink = styled.a`
 
 const NavLink = styled.a`
   display: block;
+  align-self: flex-end;
   margin: 0 0 ${(props) => props.theme.spaces.s050} ${(props) => props.theme.spaces.s100};
   color: ${(props) => props.theme.neutralDark};
 
@@ -85,7 +90,7 @@ const NavLink = styled.a`
       text-decoration: none;
       color: ${(props) => props.theme.neutralDark};
 
-      span {
+      .highlighter {
         border-bottom: 5px solid ${(props) => props.theme.brandNavBackground};
       }
     }
@@ -106,28 +111,13 @@ const NavHighlighter = styled.span`
   }
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
-    display: block;
-    padding: ${(props) => props.theme.spaces.s150} 0 calc(${(props) => props.theme.spaces.s150} - 5px);
-  }
-`;
-
-const DropDownHighlighter = styled.span`
-  display: inline-block;
-  padding: ${(props) => props.theme.spaces.s050} 0 calc(${(props) => props.theme.spaces.s050} - 5px);
-  border-bottom: 5px solid transparent;
-  transition: border 200ms;
-
-  &.active {
-    border-bottom: 5px solid ${(props) => props.theme.brandNavBackground};
-  }
-
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
     padding: ${(props) => props.theme.spaces.s150} 0 calc(${(props) => props.theme.spaces.s150} - 5px);
   }
 `;
 
 const StyledDropdownToggle = styled(DropdownToggle)`
   display: block;
+  align-self: flex-end;
   padding: 0;
   margin: 0 0 0 ${(props) => props.theme.spaces.s100};
   color: ${(props) => props.theme.neutralDark};
@@ -135,6 +125,10 @@ const StyledDropdownToggle = styled(DropdownToggle)`
   &:hover {
     text-decoration: none;
     color: ${(props) => props.theme.neutralDark};
+
+    .highlighter {
+      border-bottom: 5px solid ${(props) => props.theme.brandNavBackground};
+    }
   }
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
@@ -152,7 +146,7 @@ const StyledDropdown = styled(UncontrolledDropdown)`
     margin: 0 0 0 ${(props) => props.theme.spaces.s150};
     color: ${(props) => props.theme.neutralDark};
 
-    span {
+    .highlighter {
       display: inline-block;
       padding: ${(props) => props.theme.spaces.s050} 0 calc(${(props) => props.theme.spaces.s050} - 5px);
     }
@@ -160,7 +154,7 @@ const StyledDropdown = styled(UncontrolledDropdown)`
     &:hover {
     background-color: transparent;
 
-      span {
+      .highlighter {
         border-bottom: 5px solid ${(props) => props.theme.brandNavBackground};
       }
     }
@@ -212,16 +206,16 @@ function DropdownList(props) {
         nav
         caret
       >
-        <DropDownHighlighter className={active && 'active'}>
+        <NavHighlighter className={`highlighter ${active && 'active'}`}>
           { parentName }
-        </DropDownHighlighter>
+        </NavHighlighter>
       </StyledDropdownToggle>
       <DropdownMenu direction="left">
         { items && items.map((child) => (
           <DropdownItem key={child.id}>
             <NavigationLink slug={child.urlPath}>
               <NavLink>
-                <NavHighlighter>
+                <NavHighlighter className="highlighter">
                   {child.name}
                 </NavHighlighter>
               </NavLink>
@@ -324,7 +318,7 @@ function GlobalNav(props) {
                     <NavItem key={page.slug} active={page.active}>
                       <NavigationLink slug={page.urlPath}>
                         <NavLink>
-                          <NavHighlighter className={page.active && 'active'}>
+                          <NavHighlighter className={`highlighter ${page.active && 'active'}`}>
                             {page.name}
                           </NavHighlighter>
                         </NavLink>
