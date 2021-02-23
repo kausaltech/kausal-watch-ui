@@ -59,6 +59,25 @@ const STREAM_FIELD_FRAGMENT = gql`
           style
           indicator {
             id
+            identifier
+            name
+            unit {
+              id
+              name
+            }
+            description
+            timeResolution
+            latestValue {
+              id
+              date
+              value
+            }
+            goals {
+              id
+              date
+              value
+            }
+            level(plan: $plan)
           }
         }
       }
