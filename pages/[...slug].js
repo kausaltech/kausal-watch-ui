@@ -32,22 +32,24 @@ query GetPlanPage($plan: ID!, $path: String!) {
       category {
         id
         identifier
-        type {
+        level {
           name
+          namePlural
         }
         image {
           ...MultiUseImageFragment
         }
         shortDescription
         color
-        type {
-          name
-        }
         children {
           id
           identifier
           name
           shortDescription
+          level {
+            name
+            namePlural
+          }
           image {
             ...MultiUseImageFragment
           }
@@ -61,6 +63,10 @@ query GetPlanPage($plan: ID!, $path: String!) {
           id
           identifier
           name
+          level {
+            name
+            namePlural
+          }
           image {
             ...MultiUseImageFragment
           }
@@ -68,6 +74,21 @@ query GetPlanPage($plan: ID!, $path: String!) {
           categoryPage {
             title
             urlPath
+          }
+        }
+        metadata {
+          __typename
+          id
+          ...on CategoryMetadataChoice {
+            key
+            keyIdentifier
+            value
+            valueIdentifier
+          }
+          ...on CategoryMetadataRichText {
+            key
+            keyIdentifier
+            value
           }
         }
       }
@@ -117,7 +138,7 @@ const PageHeaderBlock = (props) => {
     case 'CategoryPage': {
       const parentTitle = page.category.parent?.categoryPage
         ? `${page.category.parent?.identifier}. ${page.category.parent?.categoryPage.title}`
-        : page.category.type.name;
+        : page.category.level.namePlural;
       const parentUrl = page.category.parent?.categoryPage.urlPath || '/';
       const headerImage = page.category.image || page.category.parent?.image;
 
@@ -125,7 +146,7 @@ const PageHeaderBlock = (props) => {
       const metadata = page.category.parent ? [
         {
           __typename: 'CategoryMetadataChoice',
-          id: '2',
+          id: '3',
           key: 'Päästövähennys',
           keyIdentifier: 'emission_reduction',
           value: 'Small',
@@ -141,7 +162,7 @@ const PageHeaderBlock = (props) => {
         },
         {
           __typename: 'CategoryMetadataRichText',
-          key: 'Other benefits',
+          key: 'Muut hyödyt',
           keyIdentifier: 'other_benefits',
           value: '<ul><li>Monimuotoisen kaupunkiympäristön edistäminen</li><li>Täydennysrakentamisen mahdollistaminen</li><li>Palvelujen ja joukkoliikenteen kannattavuuden vahvistaminen</li></ul>',
           id: '1',
@@ -183,7 +204,6 @@ const Content = ({ page }) => {
 
   const theme = useContext(ThemeContext);
   const pageSectionColor = page.category?.color || page.category?.parent?.color || theme.neutralDark;
-
   return (
     <article>
       <Meta
