@@ -236,7 +236,6 @@ function StreamFieldBlock(props) {
 
 function StreamField(props) {
   const { page, blocks, color } = props;
-  console.log(blocks);
   return (
     <>
       { blocks.map((block) => (

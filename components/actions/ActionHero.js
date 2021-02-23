@@ -102,22 +102,26 @@ const ActionCategories = (categories) => {
   const displayCategories = [];
   categories.categories.forEach((cat, indx) => {
     displayCategories[indx] = {};
-    displayCategories[indx].name = cat.name;
-    displayCategories[indx].id = cat.id;
+    let categoryTitle = cat.name;
     if (cat.categoryPage) {
       displayCategories[indx].url = cat.categoryPage.urlPath;
+      if (cat.identifier) categoryTitle = `${cat.identifier}. ${cat.name}`;
     } else {
       displayCategories[indx].url = `/actions?category_action=${cat.id}`;
     }
+    displayCategories[indx].name = categoryTitle;
+    displayCategories[indx].id = cat.id;
     if (cat.parent) {
       displayCategories[indx].parent = {};
-      displayCategories[indx].parent.name = cat.parent.name;
-      displayCategories[indx].parent.id = cat.parent.id;
+      let categoryParentTitle = cat.parent.name;
       if (cat.parent.categoryPage) {
         displayCategories[indx].parent.url = cat.parent.categoryPage.urlPath;
+        if (cat.parent.identifier) categoryParentTitle = `${cat.parent.identifier}. ${cat.parent.name}`;
       } else {
         displayCategories[indx].parent.url = `/actions?category_action=${cat.parent.id}`;
       }
+      displayCategories[indx].parent.name = categoryParentTitle;
+      displayCategories[indx].parent.id = cat.parent.id;
     }
   });
   return (
@@ -137,6 +141,9 @@ const ActionCategories = (categories) => {
           <Link href={item.url} passHref>
             {item.name}
           </Link>
+          {' '}
+          /
+          {' '}
         </div>
       ))}
     </CategoriesBreadcrumb>

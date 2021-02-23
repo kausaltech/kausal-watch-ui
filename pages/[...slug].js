@@ -32,22 +32,24 @@ query GetPlanPage($plan: ID!, $path: String!) {
       category {
         id
         identifier
-        type {
+        level {
           name
+          namePlural
         }
         image {
           ...MultiUseImageFragment
         }
         shortDescription
         color
-        type {
-          name
-        }
         children {
           id
           identifier
           name
           shortDescription
+          level {
+            name
+            namePlural
+          }
           image {
             ...MultiUseImageFragment
           }
@@ -60,6 +62,11 @@ query GetPlanPage($plan: ID!, $path: String!) {
         parent {
           id
           identifier
+          name
+          level {
+            name
+            namePlural
+          }
           image {
             ...MultiUseImageFragment
           }
@@ -67,6 +74,21 @@ query GetPlanPage($plan: ID!, $path: String!) {
           categoryPage {
             title
             urlPath
+          }
+        }
+        metadata {
+          __typename
+          id
+          ...on CategoryMetadataChoice {
+            key
+            keyIdentifier
+            value
+            valueIdentifier
+          }
+          ...on CategoryMetadataRichText {
+            key
+            keyIdentifier
+            value
           }
         }
       }
@@ -114,9 +136,39 @@ const PageHeaderBlock = (props) => {
 
   switch (page.__typename) {
     case 'CategoryPage': {
-      const parentTitle = page.category.parent?.categoryPage.title || page.category.type.name;
+      const parentTitle = page.category.parent?.categoryPage
+        ? `${page.category.parent?.identifier}. ${page.category.parent?.categoryPage.title}`
+        : page.category.level.namePlural;
       const parentUrl = page.category.parent?.categoryPage.urlPath || '/';
       const headerImage = page.category.image || page.category.parent?.image;
+
+      // Mock category metadata to Tampere second level categories
+      const metadata = page.category.parent ? [
+        {
+          __typename: 'CategoryMetadataChoice',
+          id: '3',
+          key: 'Päästövähennys',
+          keyIdentifier: 'emission_reduction',
+          value: 'Small',
+          valueIdentifier: 's',
+        },
+        {
+          __typename: 'CategoryMetadataChoice',
+          id: '2',
+          key: 'Kustannusarvio',
+          keyIdentifier: 'cost_estimate',
+          value: 'Small',
+          valueIdentifier: 's',
+        },
+        {
+          __typename: 'CategoryMetadataRichText',
+          key: 'Muut hyödyt',
+          keyIdentifier: 'other_benefits',
+          value: '<ul><li>Monimuotoisen kaupunkiympäristön edistäminen</li><li>Täydennysrakentamisen mahdollistaminen</li><li>Palvelujen ja joukkoliikenteen kannattavuuden vahvistaminen</li></ul>',
+          id: '1',
+          text: 'foo',
+        },
+      ] : undefined;
       return (
         <CategoryPageHeaderBlock
           title={page.title}
@@ -127,6 +179,7 @@ const PageHeaderBlock = (props) => {
           parentTitle={parentTitle}
           parentUrl={parentUrl}
           color={color}
+          metadata={metadata}
         />
       );
     }
@@ -151,7 +204,6 @@ const Content = ({ page }) => {
 
   const theme = useContext(ThemeContext);
   const pageSectionColor = page.category?.color || page.category?.parent?.color || theme.neutralDark;
-
   return (
     <article>
       <Meta
