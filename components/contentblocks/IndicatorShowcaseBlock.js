@@ -38,6 +38,7 @@ const IndicatorShowcaseBlock = (props) => {
             <h2>{title}</h2>
             <Content dangerouslySetInnerHTML={{ __html: body }} />
             <IndicatorProgressBar
+              indicatorId={indicator.id}
               startDate={indicator.values[0].date}
               startValue={(goalValue < startValue) ? startValue : goalValue}
               latestDate={indicator.latestValue.date}

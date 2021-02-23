@@ -3,6 +3,7 @@ import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import styled, { ThemeContext } from 'styled-components';
 import dayjs from 'common/dayjs';
+import { IndicatorLink } from 'common/links';
 
 const BarBase = styled.rect`
 
@@ -25,6 +26,10 @@ const UnitText = styled.tspan`
   fill: ${(props) => props.theme.themeColors.white};
   font-family: '${(props) => props.theme.fontFamily}';
   font-size: 14px;
+`;
+
+const LinkedIndicator = styled.div`
+  cursor: pointer;
 `;
 
 const ValueGroup = (props) => {
@@ -57,7 +62,7 @@ const IndicatorProgressBar = (props) => {
     startDate, startValue,
     latestDate, latestValue,
     goalDate, goalValue,
-    unit, note } = props;
+    unit, note, indicatorId } = props;
 
   const theme = useContext(ThemeContext);
 
@@ -74,7 +79,7 @@ const IndicatorProgressBar = (props) => {
   const goalBar = { x: 44 + accomplishedBar.w + missingBar.w, w: (goalValue) * scale };
 
   return (
-    <div>
+    <IndicatorLink id={indicatorId}><LinkedIndicator>
       <svg viewBox={`0 0 ${canvas.w} ${canvas.h}`}>
         <title>a11y title here</title>
         <BarBase
@@ -166,7 +171,7 @@ const IndicatorProgressBar = (props) => {
         </text>
       </svg>
       <div className="text-center"><small>{ note }</small></div>
-    </div>
+    </LinkedIndicator></IndicatorLink>
   );
 };
 
