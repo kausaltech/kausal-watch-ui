@@ -1,8 +1,8 @@
 import React from 'react';
-import HeroFullImage from '../../components/home/HeroFullImage';
-import FrontHero from '../../components/FrontHero';
-import HnhHero from '../../components/HnhHero';
-import i18n from '../../.storybook/i18n';
+import HeroFullImage from 'components/home/HeroFullImage';
+import FrontHero from 'components/home/FrontHero';
+import HnhHero from 'components/home/HnhHero';
+import i18n from '.storybook/i18n';
 
 export default {
   title: 'Global/Home Hero',
