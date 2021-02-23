@@ -15,7 +15,6 @@ import { NavigationLink } from 'common/links';
 
 import Icon from './Icon';
 
-
 const TopNav = styled(Navbar)`
   background-color: ${(props) => props.theme.brandNavBackground};
 `;
@@ -35,11 +34,16 @@ const BotNav = styled(Navbar)`
 
   .nav-item {
     display: flex;
+    flex-direction: column;
   }
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     .navbar-nav {
       padding: 0;
+    }
+
+    .nav-item {
+      flex-direction: row;
     }
   }
 `;
@@ -82,7 +86,6 @@ const HomeLink = styled.a`
 
 const NavLink = styled.a`
   display: block;
-  align-self: flex-end;
   margin: 0 0 ${(props) => props.theme.spaces.s050} ${(props) => props.theme.spaces.s100};
   color: ${(props) => props.theme.neutralDark};
 
@@ -96,6 +99,7 @@ const NavLink = styled.a`
     }
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    align-self: flex-end;
     margin: 0 ${(props) => props.theme.spaces.s200} 0 0;
   }
 `;
@@ -117,9 +121,8 @@ const NavHighlighter = styled.span`
 
 const StyledDropdownToggle = styled(DropdownToggle)`
   display: block;
-  align-self: flex-end;
   padding: 0;
-  margin: 0 0 0 ${(props) => props.theme.spaces.s100};
+  margin: 0 0 ${(props) => props.theme.spaces.s100} ${(props) => props.theme.spaces.s100};
   color: ${(props) => props.theme.neutralDark};
 
   &:hover {
@@ -132,6 +135,7 @@ const StyledDropdownToggle = styled(DropdownToggle)`
   }
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    align-self: flex-end;
     margin: 0 ${(props) => props.theme.spaces.s200} 0 0;
   }
 `;
@@ -139,6 +143,7 @@ const StyledDropdownToggle = styled(DropdownToggle)`
 const StyledDropdown = styled(UncontrolledDropdown)`
 
   .dropdown-menu {
+    border: 0px;
     padding-top: 0;
     box-shadow: none;
   }
@@ -162,7 +167,6 @@ const StyledDropdown = styled(UncontrolledDropdown)`
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     .dropdown-menu {
-      border: 0px;
       background-color: ${(props) => props.theme.themeColors.white};
       box-shadow: 3px 3px 6px 2px ${(props) => transparentize(0.85, props.theme.themeColors.black)}};
     }
