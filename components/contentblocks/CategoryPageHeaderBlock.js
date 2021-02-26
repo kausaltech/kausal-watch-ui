@@ -69,6 +69,7 @@ const Breadcrumb = styled.div`
 const CategoryPageHeaderBlock = (props) => {
   const {
     title,
+    id,
     identifier,
     lead,
     headerImage,
@@ -106,7 +107,7 @@ const CategoryPageHeaderBlock = (props) => {
                   { title }
                 </h1>
                 <p>{ lead }</p>
-                { metadata?.length > 0 && <CategoryMetaDataBlock metadata={metadata} color={color} /> }
+                { metadata?.length > 0 && <CategoryMetaDataBlock metadata={metadata} color={color} id={id} /> }
               </HeaderContent>
             </Col>
           </Row>

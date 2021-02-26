@@ -149,7 +149,7 @@ const PageHeaderBlock = (props) => {
           id: '3',
           key: 'Päästövähennys',
           keyIdentifier: 'emission_reduction',
-          value: 'Small',
+          value: '1 000 – 10 000 t CO2e/v',
           valueIdentifier: 's',
         },
         {
@@ -157,7 +157,7 @@ const PageHeaderBlock = (props) => {
           id: '2',
           key: 'Kustannusarvio',
           keyIdentifier: 'cost_estimate',
-          value: 'Small',
+          value: '1 – 10 milj. €',
           valueIdentifier: 's',
         },
         {
@@ -172,6 +172,7 @@ const PageHeaderBlock = (props) => {
       return (
         <CategoryPageHeaderBlock
           title={page.title}
+          id={page.category.id}
           identifier={page.category.identifier}
           lead={page.category.shortDescription}
           headerImage={headerImage.large.src}

@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import ActionGroupStatus from 'components/actions/ActionGroupStatus';
 
 import Icon from 'components/common/Icon';
 
@@ -56,7 +57,6 @@ const MetaDataList = styled.dl`
 
     dt {
       flex: 0 0 30%;
-      text-align: left;
       text-align: right;
     }
 
@@ -66,6 +66,11 @@ const MetaDataList = styled.dl`
       padding-left: ${(props) => props.theme.spaces.s150};
     }
   }
+`;
+
+const MetaChoiceLabel = styled.span`
+  margin-left: ${(props) => props.theme.spaces.s050};
+  font-size: ${(props) => props.theme.fontSizeSm};
 `;
 
 const MetaContent = (props) => {
@@ -80,6 +85,7 @@ const MetaContent = (props) => {
           <ScaleIcon name="circleFull" className="icon-on" size="md" />
           <ScaleIcon name="circleFull" className="icon-off" size="md" />
           <ScaleIcon name="circleFull" className="icon-off" size="md" />
+          <MetaChoiceLabel>{ contentData.value }</MetaChoiceLabel>
         </div>
       );
     }
@@ -91,25 +97,11 @@ const MetaContent = (props) => {
   }
 };
 
-const CategoryMeta = (props) => {
-  const { metadata } = props;
-
-  return (
-    <MetaDataList>
-      {metadata.map((item) => (
-        <React.Fragment key={item.id}>
-          <dt>{item.key}</dt>
-          <dd><MetaContent contentData={item} /></dd>
-        </React.Fragment>
-      ))}
-    </MetaDataList>
-  );
-};
-
 const CategoryMetaDataBlock = (props) => {
   const {
     color,
     metadata,
+    id,
   } = props;
 
   return (
@@ -120,10 +112,15 @@ const CategoryMetaDataBlock = (props) => {
           <dd><MetaContent contentData={item} /></dd>
         </React.Fragment>
       ))}
+      <dt>Eteneminen</dt>
+      <dd>
+        <ActionGroupStatus category={id} />
+      </dd>
     </MetaDataList>
   );
 };
 
+// TODO: prop types and defaults
 CategoryMetaDataBlock.defaultProps = {
 
 };
