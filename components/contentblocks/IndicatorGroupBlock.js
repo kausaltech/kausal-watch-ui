@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
-import IndicatorGraphSmall from 'components/graphs/IndicatorGraphSmall';
+import IndicatorHighlightCard from 'components/indicators/IndicatorHighlightCard';
 
 const IndicatorGraphSection = styled.div`
-  background-color: ${(props) => props.theme.themeColors.light};
+  background-color: ${(props) => props.theme.neutralLight};
   padding: ${(props) => props.theme.spaces.s300};
 `;
 
@@ -15,9 +15,15 @@ const IndicatorGroupBlock = (props) => {
     <IndicatorGraphSection>
       <Container>
         <Row>
-          { indicators.map((indicator) => (
-            <Col md={6} xl={4} className="mb-5" key={indicator.id}>
-              <IndicatorGraphSmall indicatorId={indicator.indicator.id} />
+          { indicators.map((item) => (
+            <Col md={6} xl={4} className="mb-5" key={item.indicator.id}>
+              <IndicatorHighlightCard
+                level={item.indicator.level}
+                objectid={item.indicator.id}
+                name={item.indicator.name}
+                value={item.indicator.latestValue.value}
+                unit={item.indicator.unit.name}
+              />
             </Col>
           ))}
         </Row>
@@ -27,9 +33,9 @@ const IndicatorGroupBlock = (props) => {
 };
 
 IndicatorGroupBlock.propTypes = {
-  indicator: PropTypes.shape({
-    id: PropTypes.string,
-  }).isRequired,
+  indicators: PropTypes.arrayOf(
+    PropTypes.shape(),
+  ).isRequired,
 };
 
 export default IndicatorGroupBlock;
