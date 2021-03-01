@@ -200,7 +200,7 @@ const ActionRow = ({item, plan}) => {
             status={actionStatus}
             activePhase={item.implementationPhase}
             reason={item.manualStatusReason}
-            mergedWith={item.mergedWith}
+            mergedWith={item.mergedWith?.identifier}
             phases={plan.actionImplementationPhases}
             compact
           />

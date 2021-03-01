@@ -1,6 +1,7 @@
-import React, { useContext, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { gql, useQuery } from '@apollo/client';
+import { useRouter } from 'next/router';
 import {
   Container, Row, Col, Nav, NavItem,
 } from 'reactstrap';
@@ -9,14 +10,15 @@ import { useTranslation } from 'common/i18n';
 import { constructOrgHierarchy, orgHasActions } from 'common/organizations';
 import ContentLoader from 'components/common/ContentLoader';
 import ErrorMessage from 'components/common/ErrorMessage';
-import PlanContext from 'context/plan';
+import RichText from 'components/common/RichText';
+import { NavigationLink } from 'common/links';
 import ActionListFilters from 'components/actions/ActionListFilters';
 import ActionCardList from 'components/actions/ActionCardList';
 import ActionStatusGraphs from './ActionStatusGraphs';
 import ActionStatusTable from './ActionStatusTable';
 
 const ActionListSection = styled.div`
-  padding-bottom: ${(props) => props.theme.spaces.s050};
+  padding-bottom: ${(props) => props.theme.spaces.s400};
   background-color: ${(props) => props.theme.neutralLight};
 `;
 
@@ -45,17 +47,10 @@ const IndicatorsTabs = styled.div`
   margin-bottom: ${(props) => props.theme.spaces.s200};
 `;
 
-const Tab = styled.button`
+const Tab = styled.a`
   background: ${(props) => props.theme.brandDark};
   color: ${(props) => props.theme.themeColors.white};
-  display: inline-block;
-  border: none;
-  margin: 0;
-  text-decoration: none;
-  cursor: pointer;
-  text-align: center;
-
-  &:hover, &:focus {
+  &:hover {
     color: ${(props) => props.theme.brandLight};
   }
   &.active {
@@ -178,16 +173,65 @@ export const GET_ACTION_LIST = gql`
   }
 `;
 
-const ActionListResults = (props) => {
-  const {
-    planActions,
-    planOrganizations,
-    categoryTypes,
-    filters,
-    onFilterChange } = props;
+function filterAction(item, filters, catTypes) {
+  if (filters.organization) {
+    let found = false;
+    item.responsibleParties.forEach((rp) => {
+      let org = rp.organization;
+      while (org) {
+        if (org.id === filters.organization) {
+          found = true;
+          break;
+        }
+        org = org.parent;
+      }
+    });
+    if (!found) return false;
+  }
+  if (filters.impact && (!item.impact || (item.impact.id !== filters.impact))) return false;
+  if (filters.text) {
+    const searchStr = filters.text.toLowerCase();
+    if (item.identifier.toLowerCase().startsWith(searchStr)) return true;
+    if (item.name.toLowerCase().search(searchStr) !== -1) return true;
+    return false;
+  }
+  const allCatsFound = catTypes.every((ct) => {
+    const key = `category_${ct.identifier}`;
+    const val = filters[key];
+
+    if (!val) return true;
+    if (!item.categories) return false;
+
+    const catTypeFound = item.categories.some((cat) => {
+      if (cat.id === val) return true;
+      while (cat.parent) {
+        cat = cat.parent;
+        if (cat.id === val) return true;
+      }
+      return false;
+    });
+    return catTypeFound;
+  });
+  if (!allCatsFound) return false;
+  return true;
+}
+
+function ActionListResults({
+  plan, filters, onFilterChange,
+}) {
   const { t } = useTranslation('common');
-  const plan = useContext(PlanContext);
-  const displayDashboard = filters.view === 'dashboard';
+  const { loading, error, data } = useQuery(GET_ACTION_LIST, {
+    variables: { plan: plan.identifier },
+  });
+
+  if (loading) return <ContentLoader />;
+  if (error) return <ErrorMessage message={t('error-loading-actions')} />;
+
+  const { plan: loadedPlan, planActions, planOrganizations } = data;
+  const { categoryTypes } = loadedPlan;
+  const generalContent = loadedPlan.generalContent || {};
+  console.log(data);
+
   const catById = {};
   const catTypes = categoryTypes.map((ct) => {
     const categoriesById = {};
@@ -234,7 +278,7 @@ const ActionListResults = (props) => {
 
     return { ...act, responsibleParties: rps };
   });
-  const orgs = constructOrgHierarchy(planOrganizations, actions);
+  const orgs = constructOrgHierarchy(planOrganizations, actions, catTypes);
 
   const handleChange = useCallback(
     (filterType, val) => {
@@ -245,125 +289,63 @@ const ActionListResults = (props) => {
     [onFilterChange, filters],
   );
 
-  function filterAction(item) {
-    if (filters.organization) {
-      let found = false;
-      item.responsibleParties.forEach((rp) => {
-        let org = rp.organization;
-        while (org) {
-          if (org.id === filters.organization) {
-            found = true;
-            break;
-          }
-          org = org.parent;
-        }
-      });
-      if (!found) return false;
-    }
-    if (filters.impact && (!item.impact || (item.impact.id !== filters.impact))) return false;
-    if (filters.text) {
-      const searchStr = filters.text.toLowerCase();
-      if (item.identifier.toLowerCase().startsWith(searchStr)) return true;
-      if (item.name.toLowerCase().search(searchStr) !== -1) return true;
-      return false;
-    }
-    const allCatsFound = catTypes.every((ct) => {
-      const key = `category_${ct.identifier}`;
-      const val = filters[key];
-
-      if (!val) return true;
-      if (!item.categories) return false;
-
-      const catTypeFound = item.categories.some((cat) => {
-        if (cat.id === val) return true;
-        while (cat.parent) {
-          cat = cat.parent;
-          if (cat.id === val) return true;
-        }
-        return false;
-      });
-      return catTypeFound;
-    });
-    if (!allCatsFound) return false;
-    return true;
-  }
-
-  const filteredActions = actions.filter(filterAction);
+  const filteredActions = actions.filter(filterAction, filters);
   const impacts = plan.actionImpacts;
 
   return (
     <>
       <ActionListSection id="actions">
         <ActionListHeader>
-          <Container>
-            <h1>{ t('actions') }</h1>
+          <h1>{ t('actions') }</h1>
+          { generalContent.actionListLeadContent && (
             <Row>
-              <Col sm="12">
-                <ActionListFilters
-                  categoryTypes={catTypes}
-                  orgs={orgs.filter(orgHasActions)}
-                  impacts={impacts}
-                  filters={filters}
-                  onChange={handleChange}
-                  actionCount={filteredActions.length}
-                />
+              <Col sm="12" md="8" className="mb-5">
+                <div className="text-content"><RichText html={generalContent.actionListLeadContent} /></div>
               </Col>
             </Row>
-          </Container>
+          )}
+          <Row>
+            <Col sm="12">
+              <ActionListFilters
+                categoryTypes={catTypes}
+                orgs={orgs.filter(orgHasActions)}
+                impacts={impacts}
+                filters={filters}
+                actionCount={filteredActions.length}
+                handleChange={handleChange}
+              />
+            </Col>
+          </Row>
+          <IndicatorsTabs>
+            <Container>
+              <Nav>
+                <NavItem>
+                  <NavigationLink slug="indicators">
+                    <Tab>
+                      { t('indicators-as-list') }
+                    </Tab>
+                  </NavigationLink>
+                </NavItem>
+                <NavItem>
+                  <NavigationLink slug="insight" passHref>
+                    <Tab>
+                      { t('indicators-as-insight') }
+                    </Tab>
+                  </NavigationLink>
+                </NavItem>
+              </Nav>
+            </Container>
+          </IndicatorsTabs>
         </ActionListHeader>
       </ActionListSection>
-      <IndicatorsTabs>
-        <Container>
-          <Nav role="tablist">
-            <NavItem>
-              <Tab
-                className={`nav-link ${!displayDashboard ? 'active' : ''}`}
-                onClick={() => handleChange('view', 'list')}
-                passHref
-                role="tab"
-                tabIndex="0"
-                aria-selected={!displayDashboard}
-                aria-controls="list-view"
-                id="list-tab"
-              >
-                { t('actions-as-list') }
-              </Tab>
-            </NavItem>
-            <NavItem>
-              <Tab
-                className={`nav-link ${displayDashboard ? 'active' : ''}`}
-                onClick={() => handleChange('view', 'dashboard')}
-                passHref
-                role="tab"
-                tabIndex="0"
-                aria-selected={displayDashboard}
-                aria-controls="dashboard-view"
-                id="dashboard-tab"
-              >
-                { t('dashboard') }
-              </Tab>
-            </NavItem>
-          </Nav>
-        </Container>
-      </IndicatorsTabs>
       <Container>
-        <div id="list-view" role="tabpanel" tabIndex="0" aria-labelledby="list-tab" hidden={!displayDashboard}>
-          { displayDashboard && (
-            <>
-              <ActionStatusGraphs actions={filteredActions} />
-              <ActionStatusTable actions={filteredActions} orgs={orgs} />
-            </>
-          )}
-        </div>
-        <div id="dashboard-view" role="tabpanel" tabIndex="0" aria-labelledby="dashboard-tab" hidden={displayDashboard}>
-          { !displayDashboard && (
-            <ActionCardList actions={filteredActions} />
-          )}
-        </div>
+        <ActionStatusGraphs actions={filteredActions} />
+        <ActionStatusTable actions={filteredActions} orgs={orgs} />
+        <ActionCardList actions={filteredActions} />
       </Container>
     </>
   );
-};
+}
 
 ActionListResults.getFiltersFromQuery = (query) => {
   const {
@@ -379,49 +361,8 @@ ActionListResults.propTypes = {
     organization: PropTypes.string,
     text: PropTypes.string,
     impact: PropTypes.string,
+    view: PropTypes.string,
   }).isRequired,
-  planActions: PropTypes.arrayOf(PropTypes.object).isRequired,
-  planOrganizations: PropTypes.arrayOf(PropTypes.object).isRequired,
-  categoryTypes: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
-function Statusboard(props) {
-  const {
-    plan,
-    filters,
-    onFilterChange,
-  } = props;
-  const { t } = useTranslation('common');
-  const { loading, error, data } = useQuery(GET_ACTION_LIST, {
-    variables: { plan: plan.identifier },
-  });
-
-  if (loading) return <ContentLoader />;
-  if (error) return <ErrorMessage message={t('error-loading-actions')} />;
-
-  const { plan: loadedPlan, ...otherProps } = data;
-  const { categoryTypes } = loadedPlan;
-  const generalContent = loadedPlan.generalContent || {};
-
-  return (
-    <ActionListResults
-      plan={plan}
-      leadContent={generalContent.actionListLeadContent}
-      filters={filters}
-      onFilterChange={onFilterChange}
-      categoryTypes={categoryTypes}
-      {...otherProps}
-    />
-  );
-}
-
-Statusboard.propTypes = {
-  plan: PropTypes.shape({
-    identifier: PropTypes.string,
-  }).isRequired,
-  filters: PropTypes.shape({}).isRequired,
-  onFilterChange: PropTypes.func.isRequired,
-};
-Statusboard.getFiltersFromQuery = (query) => ActionListResults.getFiltersFromQuery(query);
-
-export default Statusboard;
+export default ActionListResults;

@@ -1,22 +1,20 @@
 import React, { useContext, useCallback } from 'react';
 import { useRouter } from 'next/router';
-import PropTypes from 'prop-types';
-import { useTranslation } from '../../common/i18n';
-import { getActionListLinkProps } from '../../common/links';
-import PlanContext from '../../context/plan';
+import { useTranslation } from 'common/i18n';
+import { getActionListLinkProps } from 'common/links';
+import PlanContext from 'context/plan';
 
-import ContentLoader from '../../components/common/ContentLoader';
-import Layout, { Meta } from '../../components/layout';
-import ActionList from '../../components/actions/ActionList';
+import ContentLoader from 'components/common/ContentLoader';
+import Layout, { Meta } from 'components/layout';
+import StatusBoard from 'components/dashboard/Statusboard';
 
-function ActionListPage() {
+function ActionsListPage() {
   const router = useRouter();
-  const filters = ActionList.getFiltersFromQuery(router.query);
+  const filters = StatusBoard.getFiltersFromQuery(router.query);
   const { t } = useTranslation('common');
 
   const handleFilterChange = useCallback(
     (newFilters) => {
-      // navigate to new page
       const query = {};
 
       Object.entries(newFilters).forEach(([key, val]) => {
@@ -34,7 +32,11 @@ function ActionListPage() {
     <Layout>
       <Meta title={t('actions')} />
       {!process.browser ? <ContentLoader /> : (
-        <ActionList plan={plan} filters={filters} onFilterChange={handleFilterChange} />
+        <StatusBoard
+          plan={plan}
+          filters={filters}
+          onFilterChange={handleFilterChange}
+        />
       )}
     </Layout>
   );
@@ -42,6 +44,6 @@ function ActionListPage() {
 const initialProps = {
   namespacesRequired: ['common', 'actions'],
 };
-ActionListPage.getInitialProps = async () => (initialProps);
+ActionsListPage.getInitialProps = async () => (initialProps);
 
-export default ActionListPage;
+export default ActionsListPage;
