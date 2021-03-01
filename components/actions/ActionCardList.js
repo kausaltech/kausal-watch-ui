@@ -5,6 +5,9 @@ import styled from 'styled-components';
 
 import ActionCard from './ActionCard';
 
+const ActionsList = styled.div`
+  margin-top: ${(props) => props.theme.spaces.s400};
+`;
 
 const ActionGroupHeader = styled.h2`
   border-bottom: 1px solid;
@@ -50,7 +53,7 @@ function ActionCardList({ actions }) {
   groups = groups.sort((g1, g2) => g1.identifier - g2.identifier);
 
   return (
-    <div role="list">
+    <ActionsList role="list">
       {groups.map((group) => (
         <ActionGroup key={group.id} role="group">
           <Col xs="12">
@@ -91,7 +94,7 @@ function ActionCardList({ actions }) {
           ))}
         </ActionGroup>
       )}
-    </div>
+    </ActionsList>
   );
 }
 
