@@ -1,29 +1,52 @@
-import React from 'react';
-import { withTranslation } from '../../common/i18n';
-import Layout, { Meta } from '../../components/layout';
-import IndicatorList from '../../components/indicators/IndicatorList';
+import React, { useContext } from 'react';
+import { gql, useQuery } from '@apollo/client';
+import Layout, { Meta } from 'components/layout';
+import PlanContext from 'context/plan';
+import ErrorMessage from 'components/common/ErrorMessage';
+import ContentLoader from 'components/common/ContentLoader';
+import IndicatorList from 'components/indicators/IndicatorList';
 
-import PlanContext from '../../context/plan';
-
-
-class IndicatorsPage extends React.Component {
-  static async getInitialProps() {
-    const ret = {
-      namespacesRequired: ['common'],
-    };
-    return ret;
-  }
-
-  render() {
-    const { t } = this.props;
-    return (
-      <Layout>
-        <IndicatorList />
-      </Layout>
-    );
+const GET_PLAN_PAGE = gql`
+query GetPlanPage($plan: ID!, $path: String!) {
+  planPage(plan: $plan, path: $path) {
+    __typename
+    id
+    slug
+    title
+    ... on IndicatorListPage {
+      leadContent
+    }
+    lastPublishedAt
   }
 }
+`;
 
-IndicatorsPage.contextType = PlanContext;
+function IndicatorsPage() {
+  const path = '/indicators';
+  const plan = useContext(PlanContext);
+  const { loading, error, data } = useQuery(GET_PLAN_PAGE, {
+    variables: {
+      plan: plan.identifier,
+      path,
+    },
+  });
+  if (loading) return <ContentLoader />;
+  if (error) return <ErrorMessage message={error.message} />;
 
-export default withTranslation('common')(IndicatorsPage);
+  return (
+    <Layout>
+      <Meta title={data.planPage.title} />
+      <IndicatorList
+        title={data.planPage.title}
+        leadContent={data.planPage.leadContent}
+      />
+    </Layout>
+  );
+}
+
+const initialProps = {
+  namespacesRequired: ['common', 'actions'],
+};
+IndicatorList.getInitialProps = async () => (initialProps);
+
+export default IndicatorsPage;

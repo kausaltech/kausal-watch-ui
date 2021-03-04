@@ -83,7 +83,7 @@ class IndicatorList extends React.Component {
 
   render() {
     const plan = this.context;
-    const { t } = this.props;
+    const { t, title, leadContent } = this.props;
 
     return (
       <Query query={GET_INDICATOR_LIST} variables={{ plan: plan.identifier }}>
@@ -91,13 +91,11 @@ class IndicatorList extends React.Component {
           if (loading) return <ContentLoader />;
           if (error) return <ErrorMessage message={error.message} />;
           const props = this.processDataToProps(data);
-          const { leadContent } = props;
-          delete props.leadContent;
 
           return (
             <>
               <Meta
-                title={t('indicators')}
+                title={title}
               />
               <IndicatorsHero leadContent={leadContent} />
               <Container>
