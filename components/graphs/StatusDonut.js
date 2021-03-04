@@ -55,6 +55,7 @@ const StatusDonut = (props) => {
     width: 350,
     showlegend: false,
     colorway: plotColors,
+    paper_bgcolor: 'rgba(0,0,0,0)',
   };
   const config = {
     locale: i18n.language,

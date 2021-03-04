@@ -1,22 +1,45 @@
 import React, { useContext, useCallback } from 'react';
 import { useRouter } from 'next/router';
-import PropTypes from 'prop-types';
-import { useTranslation } from '../../common/i18n';
-import { getActionListLinkProps } from '../../common/links';
-import PlanContext from '../../context/plan';
+import { gql, useQuery } from '@apollo/client';
+import { getActionListLinkProps } from 'common/links';
+import PlanContext from 'context/plan';
+import ErrorMessage from 'components/common/ErrorMessage';
+import ContentLoader from 'components/common/ContentLoader';
+import Layout, { Meta } from 'components/layout';
+import StatusBoard from 'components/dashboard/Statusboard';
 
-import ContentLoader from '../../components/common/ContentLoader';
-import Layout, { Meta } from '../../components/layout';
-import ActionList from '../../components/actions/ActionList';
+const GET_PLAN_PAGE = gql`
+query GetPlanPage($plan: ID!, $path: String!) {
+  planPage(plan: $plan, path: $path) {
+    __typename
+    id
+    slug
+    title
+    ... on ActionListPage {
+      leadContent
+    }
+    lastPublishedAt
+  }
+}
+`;
 
-function ActionListPage() {
+function ActionsListPage() {
   const router = useRouter();
-  const filters = ActionList.getFiltersFromQuery(router.query);
-  const { t } = useTranslation('common');
+  const filters = StatusBoard.getFiltersFromQuery(router.query);
+
+  const path = '/actions';
+  const plan = useContext(PlanContext);
+  const { loading, error, data } = useQuery(GET_PLAN_PAGE, {
+    variables: {
+      plan: plan.identifier,
+      path,
+    },
+  });
+  if (loading) return <ContentLoader />;
+  if (error) return <ErrorMessage message={error.message} />;
 
   const handleFilterChange = useCallback(
     (newFilters) => {
-      // navigate to new page
       const query = {};
 
       Object.entries(newFilters).forEach(([key, val]) => {
@@ -29,12 +52,18 @@ function ActionListPage() {
     },
     [],
   );
-  const plan = useContext(PlanContext);
+
   return (
     <Layout>
-      <Meta title={t('actions')} />
+      <Meta title={data.planPage.title} />
       {!process.browser ? <ContentLoader /> : (
-        <ActionList plan={plan} filters={filters} onFilterChange={handleFilterChange} />
+        <StatusBoard
+          plan={plan}
+          title={data.planPage.title}
+          leadContent={data.planPage.leadContent}
+          filters={filters}
+          onFilterChange={handleFilterChange}
+        />
       )}
     </Layout>
   );
@@ -42,6 +71,6 @@ function ActionListPage() {
 const initialProps = {
   namespacesRequired: ['common', 'actions'],
 };
-ActionListPage.getInitialProps = async () => (initialProps);
+ActionsListPage.getInitialProps = async () => (initialProps);
 
-export default ActionListPage;
+export default ActionsListPage;

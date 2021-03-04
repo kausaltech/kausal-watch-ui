@@ -12,13 +12,18 @@ import DropDown from 'components/common/DropDown';
 
 const FiltersList = styled.div`
   margin: ${(props) => props.theme.spaces.s150} 0;
+  padding: ${(props) => props.theme.spaces.s100} 0;
   font-size: ${(props) => props.theme.fontSizeLg};
   line-height: ${(props) => props.theme.lineHeightBase};
-  border-top: 1px solid black;
-  border-bottom: 1px solid black;
+  border-color: ${(props) => props.theme.themeColors.dark};
+  border-top: 1px solid;
+  border-bottom: 1px solid;
 
   .count {
-    margin-top: ${(props) => props.theme.spaces.s100};
+    margin: ${(props) => props.theme.spaces.s100}
+      ${(props) => props.theme.spaces.s100}
+      ${(props) => props.theme.spaces.s100}
+      0;
     padding-bottom: ${(props) => props.theme.spaces.s100};
     font-weight: ${(props) => props.theme.fontWeightBold};
     font-size: ${(props) => props.theme.fontSizeMd};
@@ -32,7 +37,7 @@ const FiltersList = styled.div`
 `;
 
 const StyledBadge = styled(Badge)`
-  margin-bottom: ${(props) => props.theme.spaces.s100};
+  margin-bottom: ${(props) => props.theme.spaces.s050};
   background-color: ${(props) => props.theme.brandDark};
   color: ${(props) => props.theme.themeColors.light};
   line-height: 1.25;
@@ -115,9 +120,9 @@ function ActionListFilterBadges({
 
   return (
     <FiltersList aria-live="assertive">
-      <div className="count">
+      <span className="count">
         { `${actionCount} ${t('filter-result-actions')}` }
-      </div>
+      </span>
       { badges.length > 0 && <span className="sr-only">{t('active-filters')}</span>}
       <Transition
         items={badges}
