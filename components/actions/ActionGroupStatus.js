@@ -91,12 +91,16 @@ function ActionGroupStatus(props) {
     <Status>
       <BarGraph>
         {statusData?.labels.map((segment, indx) => (
-          <Segment color={statusData.colors[indx]} portion={(statusData.values[indx] / actionCount) * 100} />
+          <Segment
+            key={segment}
+            color={statusData.colors[indx]}
+            portion={(statusData.values[indx] / actionCount) * 100}
+          />
         ))}
       </BarGraph>
       <Labels>
         {statusData?.labels.map((segment, indx) => (
-          <SegmentLabel portion={(statusData.values[indx] / actionCount) * 100}>
+          <SegmentLabel key={segment} portion={(statusData.values[indx] / actionCount) * 100}>
             <span className="value">
               { Math.round((statusData.values[indx] / actionCount) * 100) }
               %

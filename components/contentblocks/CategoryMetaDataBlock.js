@@ -74,20 +74,26 @@ const MetaChoiceLabel = styled.span`
 `;
 
 const MetaContent = (props) => {
-  const { contentData } = props;
+  const { contentData, contentType } = props;
 
   switch (contentData.__typename) {
     case 'CategoryMetadataChoice': {
-      return (
-        <div>
-          <ScaleIcon name="circleFull" className="icon-on" size="md" />
-          <ScaleIcon name="circleFull" className="icon-on" size="md" />
-          <ScaleIcon name="circleFull" className="icon-on" size="md" />
-          <ScaleIcon name="circleFull" className="icon-off" size="md" />
-          <ScaleIcon name="circleFull" className="icon-off" size="md" />
-          <MetaChoiceLabel>{ contentData.value }</MetaChoiceLabel>
-        </div>
-      );
+      if (contentType) {
+        const choiceCount = contentType.choices.length;
+        return (
+          <div>
+            { contentType.choices.map((choice) => (
+              <ScaleIcon
+                name="circleFull"
+                className={choice.identifier <= contentData.valueIdentifier ? 'icon-on' : 'icon-off'}
+                size="md"
+                key={choice.identifier}
+              />
+            ))}
+            <MetaChoiceLabel>{ contentData.value }</MetaChoiceLabel>
+          </div>
+        );
+      }
     }
     case 'CategoryMetadataRichText': {
       const rtContent = contentData.value;
@@ -102,6 +108,7 @@ const CategoryMetaDataBlock = (props) => {
     color,
     metadata,
     id,
+    types,
   } = props;
 
   return (
@@ -109,7 +116,12 @@ const CategoryMetaDataBlock = (props) => {
       {metadata.map((item) => (
         <React.Fragment key={item.id}>
           <dt>{item.key}</dt>
-          <dd><MetaContent contentData={item} /></dd>
+          <dd>
+            <MetaContent
+              contentData={item}
+              contentType={types?.find((type) => type.identifier === item.keyIdentifier)}
+            />
+          </dd>
         </React.Fragment>
       ))}
       <dt>Eteneminen</dt>
