@@ -10,6 +10,7 @@ import { constructOrgHierarchy, orgHasActions } from 'common/organizations';
 import ContentLoader from 'components/common/ContentLoader';
 import ErrorMessage from 'components/common/ErrorMessage';
 import PlanContext from 'context/plan';
+import RichText from 'components/common/RichText';
 import ActionListFilters from 'components/actions/ActionListFilters';
 import ActionCardList from 'components/actions/ActionCardList';
 import ActionStatusGraphs from './ActionStatusGraphs';
@@ -184,7 +185,9 @@ const ActionListResults = (props) => {
     planOrganizations,
     categoryTypes,
     filters,
-    onFilterChange } = props;
+    onFilterChange,
+    title,
+    leadContent } = props;
   const { t } = useTranslation('common');
   const plan = useContext(PlanContext);
   const displayDashboard = filters.view === 'dashboard';
@@ -296,7 +299,14 @@ const ActionListResults = (props) => {
       <ActionListSection id="actions">
         <ActionListHeader>
           <Container>
-            <h1>{ t('actions') }</h1>
+            <h1>{ title }</h1>
+            {leadContent && (
+              <Row>
+                <Col sm="12" md="8" className="mb-5">
+                  <div className="text-content"><RichText html={leadContent} /></div>
+                </Col>
+              </Row>
+            )}
             <Row>
               <Col sm="12">
                 <ActionListFilters
@@ -388,6 +398,8 @@ ActionListResults.propTypes = {
 function Statusboard(props) {
   const {
     plan,
+    title,
+    leadContent,
     filters,
     onFilterChange,
   } = props;
@@ -401,12 +413,12 @@ function Statusboard(props) {
 
   const { plan: loadedPlan, ...otherProps } = data;
   const { categoryTypes } = loadedPlan;
-  const generalContent = loadedPlan.generalContent || {};
 
   return (
     <ActionListResults
       plan={plan}
-      leadContent={generalContent.actionListLeadContent}
+      title={title}
+      leadContent={leadContent}
       filters={filters}
       onFilterChange={onFilterChange}
       categoryTypes={categoryTypes}
