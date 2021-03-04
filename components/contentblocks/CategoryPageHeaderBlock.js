@@ -1,9 +1,31 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
+import { gql, useQuery } from '@apollo/client';
 import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
+import PlanContext from 'context/plan';
 import { DynamicLink } from 'common/links';
 import CategoryMetaDataBlock from './CategoryMetaDataBlock';
+
+export const GET_CATEGORY_METADATA_TYPES = gql`
+  query GetMetadataTypes($plan: ID!) {
+    plan(id: $plan) {
+      id
+      categoryTypes {
+        id
+        name
+        metadata {
+          __typename
+          format
+          identifier
+          choices {
+            identifier
+          }
+        }
+      }
+    }
+  }
+`;
 
 const HeaderBackground = styled.div`
   position: relative;
@@ -69,7 +91,7 @@ const Breadcrumb = styled.div`
 const CategoryPageHeaderBlock = (props) => {
   const {
     title,
-    id,
+    categoryId,
     identifier,
     lead,
     headerImage,
@@ -78,7 +100,23 @@ const CategoryPageHeaderBlock = (props) => {
     parentUrl,
     color,
     metadata,
+    typeId,
   } = props;
+
+  let metadataTypes = [];
+
+  if (metadata?.length) {
+    const plan = useContext(PlanContext);
+    const { loading, error, data } = useQuery(GET_CATEGORY_METADATA_TYPES, {
+      variables: {
+        plan: plan.identifier,
+      },
+    });
+    if (data) {
+      const thisType = data.plan.categoryTypes.find((type) => type.id === typeId);
+      metadataTypes = thisType.metadata;
+    }
+  }
 
   return (
     <HeaderBackground bg={color}>
@@ -107,7 +145,8 @@ const CategoryPageHeaderBlock = (props) => {
                   { title }
                 </h1>
                 <p>{ lead }</p>
-                { metadata?.length > 0 && <CategoryMetaDataBlock metadata={metadata} color={color} id={id} /> }
+                { metadata?.length > 0
+                  && <CategoryMetaDataBlock metadata={metadata} color={color} id={categoryId} types={metadataTypes} /> }
               </HeaderContent>
             </Col>
           </Row>

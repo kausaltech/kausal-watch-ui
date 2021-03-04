@@ -36,6 +36,9 @@ query GetPlanPage($plan: ID!, $path: String!) {
           name
           namePlural
         }
+        type {
+          id
+        }
         image {
           ...MultiUseImageFragment
         }
@@ -141,38 +144,10 @@ const PageHeaderBlock = (props) => {
         : page.category.level.namePlural;
       const parentUrl = page.category.parent?.categoryPage.urlPath || '/';
       const headerImage = page.category.image || page.category.parent?.image;
-
-      // Mock category metadata to Tampere second level categories
-      const metadata = page.category.parent ? [
-        {
-          __typename: 'CategoryMetadataChoice',
-          id: '3',
-          key: 'Päästövähennys',
-          keyIdentifier: 'emission_reduction',
-          value: '1 000 – 10 000 t CO2e/v',
-          valueIdentifier: 's',
-        },
-        {
-          __typename: 'CategoryMetadataChoice',
-          id: '2',
-          key: 'Kustannusarvio',
-          keyIdentifier: 'cost_estimate',
-          value: '1 – 10 milj. €',
-          valueIdentifier: 's',
-        },
-        {
-          __typename: 'CategoryMetadataRichText',
-          key: 'Muut hyödyt',
-          keyIdentifier: 'other_benefits',
-          value: '<ul><li>Monimuotoisen kaupunkiympäristön edistäminen</li><li>Täydennysrakentamisen mahdollistaminen</li><li>Palvelujen ja joukkoliikenteen kannattavuuden vahvistaminen</li></ul>',
-          id: '1',
-          text: 'foo',
-        },
-      ] : undefined;
       return (
         <CategoryPageHeaderBlock
           title={page.title}
-          id={page.category.id}
+          categoryId={page.category.id}
           identifier={page.category.identifier}
           lead={page.category.shortDescription}
           headerImage={headerImage.large.src}
@@ -180,7 +155,8 @@ const PageHeaderBlock = (props) => {
           parentTitle={parentTitle}
           parentUrl={parentUrl}
           color={color}
-          metadata={metadata}
+          metadata={page.category.metadata}
+          typeId={page.category.type.id}
         />
       );
     }
