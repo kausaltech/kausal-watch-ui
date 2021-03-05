@@ -4,10 +4,10 @@ import styled from 'styled-components';
 import { gql } from '@apollo/client';
 import PlanContext from 'context/plan';
 import images, { getBgImageAlignment } from 'common/images';
+import RichText from 'components/common/RichText';
 import QuestionAnswerBlock from 'components/contentblocks/QuestionAnswerBlock';
 import ActionListBlock from 'components/contentblocks/ActionListBlock';
 import CategoryListBlock from 'components/contentblocks/CategoryListBlock';
-import IndicatorBlock from 'components/contentblocks/IndicatorBlock';
 import IndicatorGroupBlock from 'components/contentblocks/IndicatorGroupBlock';
 import FrontPageHeroBlock from 'components/contentblocks/FrontPageHeroBlock';
 import IndicatorShowcaseBlock from 'components/contentblocks/IndicatorShowcaseBlock';
@@ -195,8 +195,8 @@ function StreamFieldBlock(props) {
       return (
         <Container>
           <Row>
-            <Col lg={{ size: 8, offset: 2 }} md={{ size: 10, offset: 1 }}>
-              <ContentMarkup dangerouslySetInnerHTML={{ __html: value }} />
+            <Col lg={{ size: 8, offset: 2 }} md={{ size: 10, offset: 1 }} className="py-5">
+              <RichText html={value} />
             </Col>
           </Row>
         </Container>

@@ -303,7 +303,7 @@ const ActionListResults = (props) => {
             {leadContent && (
               <Row>
                 <Col sm="12" md="8" className="mb-5">
-                  <div className="text-content"><RichText html={leadContent} /></div>
+                  <RichText html={leadContent} />
                 </Col>
               </Row>
             )}

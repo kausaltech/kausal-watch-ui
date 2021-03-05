@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import RichText from 'components/common/RichText';
 import ActionGroupStatus from 'components/actions/ActionGroupStatus';
 
 import Icon from 'components/common/Icon';
@@ -97,7 +98,7 @@ const MetaContent = (props) => {
     }
     case 'CategoryMetadataRichText': {
       const rtContent = contentData.value;
-      return (<div className="text-content" dangerouslySetInnerHTML={{ __html: rtContent }} />);
+      return (<RichText html={rtContent} />);
     }
     default: return <div />;
   }
