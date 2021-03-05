@@ -48,7 +48,8 @@ const CategoryListBlock = ({ categories, color, fallbackImage }) => {
           { categories?.map((cat) => (
             <Col
               tag="li"
-              xs="6"
+              xs="12"
+              sm="6"
               lg="4"
               key={cat.id}
               className="mb-5 d-flex align-items-stretch"
