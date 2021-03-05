@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
@@ -20,12 +20,16 @@ const Content = styled.div`
 
 const IndicatorShowcaseBlock = (props) => {
   const { indicator, title, body } = props;
-
+  const [animate, setAnimate] = useState('off');
   // The bar is built for showing reduction goals
   // we swap the goal and start values if the goal is to increase
   // TODO: enable the viz to handle goals to increase
   const goalValue = indicator.goals[indicator.goals.length-1].value;
   const startValue = indicator.values[0].value;
+
+  const triggerAnimation = (e) => {
+    setAnimate(animate === 'on' ? 'off' : 'on');
+  };
 
   return (
     <IndicatorShowcase>
@@ -35,8 +39,8 @@ const IndicatorShowcaseBlock = (props) => {
             xl={{ size: 8, offset: 2 }}
             lg={{ size: 10, offset: 1 }}
           >
-            <h2>{title}</h2>
-            <Content dangerouslySetInnerHTML={{ __html: body }} />
+            <h2 onClick={triggerAnimation}>{title}</h2>
+            <RichText html={body} />
             <IndicatorProgressBar
               indicatorId={indicator.id}
               startDate={indicator.values[0].date}
@@ -47,6 +51,7 @@ const IndicatorShowcaseBlock = (props) => {
               goalValue={(goalValue < startValue) ? goalValue : startValue}
               unit={indicator.unit.shortName}
               note={indicator.name}
+              animate={animate}
             />
           </Col>
         </Row>
