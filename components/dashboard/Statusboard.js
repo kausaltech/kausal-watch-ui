@@ -1,5 +1,6 @@
 import React, { useContext, useCallback } from 'react';
 import PropTypes from 'prop-types';
+import dynamic from 'next/dynamic';
 import { gql, useQuery } from '@apollo/client';
 import {
   Container, Row, Col, Nav, NavItem,
@@ -14,7 +15,8 @@ import RichText from 'components/common/RichText';
 import ActionListFilters from 'components/actions/ActionListFilters';
 import ActionCardList from 'components/actions/ActionCardList';
 import ActionStatusGraphs from './ActionStatusGraphs';
-import ActionStatusTable from './ActionStatusTable';
+
+const DynamicActionStatusTable = dynamic(() => import('./ActionStatusTable'));
 
 const ActionListSection = styled.div`
   padding-bottom: ${(props) => props.theme.spaces.s050};
@@ -361,7 +363,7 @@ const ActionListResults = (props) => {
           { displayDashboard && (
             <>
               <ActionStatusGraphs actions={filteredActions} />
-              <ActionStatusTable actions={filteredActions} orgs={orgs} />
+              <DynamicActionStatusTable actions={filteredActions} orgs={orgs} />
             </>
           )}
         </div>
