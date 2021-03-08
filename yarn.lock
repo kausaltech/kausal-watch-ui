@@ -16930,6 +16930,7 @@ fsevents@~2.1.2:
     react-hook-form: ^6.9.6
     react-hotkeys-hook: ^2.3.1
     react-inlinesvg: ^2.0.1
+    react-intersection-observer: ^8.31.0
     react-lazyload: ^3.0.0
     react-piwik: ^1.10.0
     react-plotly.js: ^2.4.0
@@ -21065,6 +21066,15 @@ fsevents@~2.1.2:
   peerDependencies:
     react: ^16.8.4
   checksum: f1df0bbe41e37ed5ebaca9bc3e229afb7e365ac3f2c9c7dbb49b6e6301aadce38c9c1865c903915a1b48d0236124b7cace9061d8aa6a4fa8f0b443214096c1e5
+  languageName: node
+  linkType: hard
+
+"react-intersection-observer@npm:^8.31.0":
+  version: 8.31.0
+  resolution: "react-intersection-observer@npm:8.31.0"
+  peerDependencies:
+    react: ^15.0.0 || ^16.0.0 || ^17.0.0|| ^18.0.0
+  checksum: cf71521d312afea0510d8044bbda372b91a86f3d4aab8c086f9cf8d88fc97228e218a89523de0b2f71d16e4f034b1b9b12d7aa8a1ebb2c81995de2ed5a9ae86c
   languageName: node
   linkType: hard
 

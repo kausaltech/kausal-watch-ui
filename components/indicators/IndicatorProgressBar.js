@@ -47,11 +47,10 @@ function beautifyValue(x) {
   return displayNumber.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 }
 
-const ValueGroup = React.forwardRef((props, ref) => {
+const ValueGroup = (props) => {
   const { date, value, unit, ...rest } = props;
-
   return (
-    <text {...rest} ref={ref}>
+    <text {...rest}>
       <DateText>{date}</DateText>
       <ValueText x="0" dy="22">{beautifyValue(value)}</ValueText>
       <UnitText>
@@ -60,9 +59,7 @@ const ValueGroup = React.forwardRef((props, ref) => {
       </UnitText>
     </text>
   );
-});
-
-const AnimatedValueGroup = motion(ValueGroup, { forwardMotionProps: true });
+};
 
 ValueGroup.defaultProps = {
   date: '',
@@ -99,17 +96,15 @@ const IndicatorProgressBar = (props) => {
     animate } = props;
 
   const theme = useContext(ThemeContext);
-  // const [animation, setAnimation] = useState(animate);
   const pendingBarControls = useAnimation();
   const completedBarControls = useAnimation();
-  const completedValueControls = useAnimation();
   const latestValueControls = useAnimation();
 
   const canvas = { w: 800, h: 150 };
   const bar = { w: 720, h: 32 };
   const scale = (bar.w - 8) / startValue;
 
-  //const animatedLatestValue = useSpring({ latest: latestValue, from: { latest: startValue } });
+  // const animatedLatestValue = useSpring({ latest: latestValue, from: { latest: startValue } });
   // For simplicity, currently only supports indicators
   // where the goal is towards reduction of a value
   // TODO: catch possible edge cases
@@ -119,8 +114,21 @@ const IndicatorProgressBar = (props) => {
   const goalBar = { x: 44 + completedBar.w + pendingBar.w, w: (goalValue) * scale };
 
   let reductionCounterFrom = startValue - latestValue;
-  let reductionCounterTo = startValue - latestValue;
-  let reductionCounterDuration = 3;
+  const reductionCounterTo = startValue - latestValue;
+  const reductionCounterDuration = 3;
+
+  useEffect(() => {
+    pendingBarControls.set({
+      x: 44,
+      width: completedBar.w + pendingBar.w,
+    });
+    latestValueControls.set({
+      opacity: 0,
+    });
+    completedBarControls.set({
+      opacity: 0,
+    });
+  }, []);
 
   const sequenceOn = async () => {
     await pendingBarControls.start({
@@ -138,35 +146,10 @@ const IndicatorProgressBar = (props) => {
     });
   };
 
-  const sequenceOff = async () => {
-    await latestValueControls.start({
-      opacity: 0,
-      transition: { duration: 1 },
-    });
-    await completedBarControls.start({
-      opacity: 0,
-      transition: { duration: 1 },
-    });
-    await pendingBarControls.start({
-      x: 44,
-      width: (startValue) * scale,
-      transition: { duration: 1 },
-    });
-    completedValueControls.start({
-    });
-  };
-
-  if (animate === 'off') {
-    reductionCounterFrom = startValue - latestValue;
-    reductionCounterTo = 0;
-    sequenceOff();
-  }
-  if (animate === 'on') {
+  if (animate) {
     sequenceOn();
     reductionCounterFrom = 0;
   }
-
-  //console.log(pendingBar.w);
 
   return (
     <IndicatorLink id={indicatorId}>
@@ -196,7 +179,7 @@ const IndicatorProgressBar = (props) => {
             y2={64 + bar.h - 8}
             stroke={theme.themeColors.light}
           />
-          <AnimatedValueGroup
+          <ValueGroup
             transform={`translate(${completedBar.x + 4} 20)`}
             date={dayjs(startDate).format('YYYY')}
             value={startValue.toString()}
@@ -231,7 +214,7 @@ const IndicatorProgressBar = (props) => {
             <ValueGroup
               transform={`translate(${pendingBar.x + 4} 20)`}
               date={dayjs(latestDate).format('YYYY')}
-              value={latestValue}
+              value={latestValue.toString()}
               unit={unit}
             />
           </motion.g>
