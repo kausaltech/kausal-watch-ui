@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
+import RichText from 'components/common/RichText';
 import Accordion from 'components/common/Accordion';
 
 const FaqSection = styled.section`
@@ -36,7 +37,7 @@ const QuestionAnswerBlock = (props) => {
                     {q.question}
                   </Accordion.Header>
                   <Accordion.Body>
-                    <div className="text-content" dangerouslySetInnerHTML={{ __html: q.answer }} />
+                    <RichText html={q.answer} />
                   </Accordion.Body>
                 </Accordion.Item>
               ))}

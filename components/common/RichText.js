@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import parse, { domToReact } from 'html-react-parser';
 
-import PlanContext from '../../context/plan';
+import PlanContext from 'context/plan';
 
 export default function RichText({ html }) {
   const plan = useContext(PlanContext);
@@ -32,7 +32,7 @@ export default function RichText({ html }) {
     },
   };
 
-  return <div>{parse(html, options)}</div>;
+  return <div className="text-content">{parse(html, options)}</div>;
 }
 RichText.propTypes = {
   html: PropTypes.string.isRequired,

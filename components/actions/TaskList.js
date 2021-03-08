@@ -87,7 +87,7 @@ function TaskList(props) {
           </TaskMeta>
           <TaskContent>
             <h4>{item.name}</h4>
-            {item.comment && (<div className="text-content"><RichText html={item.comment} /></div>)}
+            {item.comment && (<RichText html={item.comment} />)}
           </TaskContent>
         </TaskWrapper>
       </ListGroupItem>
@@ -105,7 +105,7 @@ function TaskList(props) {
           </TaskMeta>
           <TaskContent>
             <h4>{item.name}</h4>
-            {item.comment && (<div className="text-content"><RichText html={item.comment} /></div>)}
+            {item.comment && (<RichText html={item.comment} />)}
           </TaskContent>
         </TaskWrapper>
       </ListGroupItem>

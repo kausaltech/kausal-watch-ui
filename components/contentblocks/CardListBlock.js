@@ -52,7 +52,8 @@ const CardListBlock = (props) => {
           { cards?.map((card) => (
             <Col
               tag="li"
-              xs="6"
+              xs="12"
+              sm="6"
               lg="4"
               className="mb-5 d-flex align-items-stretch"
               style={{ transition: 'all 0.5s ease' }}
