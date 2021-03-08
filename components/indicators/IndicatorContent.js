@@ -11,6 +11,7 @@ import { IndicatorListLink } from 'common/links';
 import PlanContext from 'context/plan';
 import { useTranslation } from 'common/i18n';
 
+import RichText from 'components/common/RichText';
 import ContentLoader from '../common/ContentLoader';
 import ErrorMessage from '../common/ErrorMessage';
 import ErrorBoundary from '../common/ErrorBoundary';
@@ -204,8 +205,8 @@ function IndicatorDetails({ id }) {
       </IndicatorHero>
       <Container>
         <Row>
-          <Col md="10" className="mb-5">
-            <div className="mt-4 text-content" dangerouslySetInnerHTML={{ __html: indicator.description }} />
+          <Col md="10" className="mb-5 pt-4">
+            <RichText html={indicator.description} />
           </Col>
         </Row>
         {(indicator.latestGraph || indicator.values.length > 0)

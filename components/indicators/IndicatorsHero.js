@@ -5,7 +5,7 @@ import {
   Container, Row, Col, Nav, NavItem,
 } from 'reactstrap';
 import styled from 'styled-components';
-
+import RichText from 'components/common/RichText';
 import { withTranslation } from '../../common/i18n';
 import { NavigationLink } from '../../common/links';
 
@@ -57,10 +57,7 @@ function IndicatorsHero(props) {
           { leadContent && (
             <Row>
               <Col sm="12" md="8" className="mb-1">
-                <div
-                  className="text-content"
-                  dangerouslySetInnerHTML={{ __html: leadContent }}
-                />
+              <RichText html={leadContent} />
               </Col>
             </Row>
           )}

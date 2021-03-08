@@ -17,9 +17,9 @@ function Footer(props) {
   let staticPages = [];
   const hasActionImpacts = plan.impactGroups?.length > 0;
 
-  if (hasActionImpacts) navLinks.push({ id: '1', name: t('dashboard'), slug: 'dashboard' }); //
-  navLinks.push({ id: '2', name: t('actions'), slug: 'actions' });
-  navLinks.push({ id: '3', name: t('indicators'), slug: 'indicators' });
+  if (hasActionImpacts) navLinks.push({ id: '1', name: t('dashboard'), slug: '/dashboard' }); //
+  navLinks.push({ id: '2', name: t('actions'), slug: '/actions' });
+  navLinks.push({ id: '3', name: t('indicators'), slug: '/indicators' });
 
   if (plan.staticPages) {
     const topMenuPages = plan.staticPages.filter((page) => page.footer);

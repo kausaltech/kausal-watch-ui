@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import parse, { domToReact } from 'html-react-parser';
 
-import PlanContext from '../../context/plan';
+import PlanContext from 'context/plan';
 
 export default function RichText({ html, ...rest }) {
   const plan = useContext(PlanContext);

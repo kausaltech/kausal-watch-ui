@@ -1,14 +1,12 @@
-import React, { useContext, useCallback } from 'react';
+import React from 'react';
 import { Container } from 'reactstrap';
 import { useTranslation } from 'common/i18n';
-import PlanContext from 'context/plan';
 import { Link } from 'routes';
 
 import Layout, { Meta } from 'components/layout';
 
 function StatusPage() {
   const { t } = useTranslation('common');
-  const plan = useContext(PlanContext);
 
   return (
     <Layout>

@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { Query } from '@apollo/client/react/components';
 import { gql } from '@apollo/client';
 import { Row, Col, Media } from 'reactstrap';
-
+import RichText from 'components/common/RichText';
 import dayjs from '../../common/dayjs';
 import PlanContext from '../../context/plan';
 import { withTranslation } from '../../common/i18n';
@@ -94,7 +94,7 @@ function ActionStatusUpdate(props) {
         </Media>
         <h3>{ title }</h3>
       </ActionUpdateHeader>
-      <div className="text-content" dangerouslySetInnerHTML={{ __html: content }} />
+      <RichText html={content} />
     </ActionUpdate>
   );
 }

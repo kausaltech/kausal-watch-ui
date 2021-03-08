@@ -7,6 +7,7 @@ import { Container } from 'reactstrap';
 
 import styled from 'styled-components';
 import Icon from 'components/common/Icon';
+import RichText from 'components/common/RichText';
 import {
   IndicatorListLink,
   ActionListLink,
@@ -143,7 +144,7 @@ function HeroFullImage(props) {
         <Container>
               <MainCard>
                 <h1>{ title }</h1>
-                <div dangerouslySetInnerHTML={{ __html: siteDescription }} />
+                <RichText html={siteDescription} />
                 { actionsDescription && (
                   <ActionListLink>
                     <a href>

@@ -300,7 +300,7 @@ function ActionListResults({
           { generalContent.actionListLeadContent && (
             <Row>
               <Col sm="12" md="8" className="mb-5">
-                <div className="text-content"><RichText html={generalContent.actionListLeadContent} /></div>
+                <RichText html={generalContent.actionListLeadContent} />
               </Col>
             </Row>
           )}
