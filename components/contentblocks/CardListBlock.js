@@ -49,7 +49,7 @@ const CardListBlock = (props) => {
         { heading && (<SectionHeader>{ heading }</SectionHeader>)}
         <Content>{ lead }</Content>
         <Row>
-          { cards?.map((card) => (
+          { cards?.map((card,inx) => (
             <Col
               tag="li"
               xs="12"
@@ -58,6 +58,7 @@ const CardListBlock = (props) => {
               className="mb-5 d-flex align-items-stretch"
               style={{ transition: 'all 0.5s ease' }}
               role="listitem"
+              key={inx}
             >
               <a href={card.link} className="card-wrapper">
                 <Card

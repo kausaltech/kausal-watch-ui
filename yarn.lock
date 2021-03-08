@@ -2977,7 +2977,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emotion/is-prop-valid@npm:0.8.8, @emotion/is-prop-valid@npm:^0.8.6, @emotion/is-prop-valid@npm:^0.8.8":
+"@emotion/is-prop-valid@npm:0.8.8, @emotion/is-prop-valid@npm:^0.8.2, @emotion/is-prop-valid@npm:^0.8.6, @emotion/is-prop-valid@npm:^0.8.8":
   version: 0.8.8
   resolution: "@emotion/is-prop-valid@npm:0.8.8"
   dependencies:
@@ -12977,6 +12977,33 @@ __metadata:
   languageName: node
   linkType: hard
 
+"framer-motion@npm:^3.10.0":
+  version: 3.10.0
+  resolution: "framer-motion@npm:3.10.0"
+  dependencies:
+    "@emotion/is-prop-valid": ^0.8.2
+    framesync: 5.2.0
+    hey-listen: ^1.0.8
+    popmotion: 9.3.1
+    style-value-types: 4.1.1
+    tslib: ^1.10.0
+  peerDependencies:
+    react: ">=16.8 || ^17.0.0"
+    react-dom: ">=16.8 || ^17.0.0"
+  dependenciesMeta:
+    "@emotion/is-prop-valid":
+      optional: true
+  checksum: 5ca92acbd23c5c36b50cd31746d6a37efd2b34d4c019844911013e9d758eec80799d777f81a35861a145345aedf80f71f9038b484772433892a359a846e3e9f4
+  languageName: node
+  linkType: hard
+
+"framesync@npm:5.2.0":
+  version: 5.2.0
+  resolution: "framesync@npm:5.2.0"
+  checksum: ef7c4d349bdcdd2c487ceb9e45570dfb49972a2a9660cebc372b4a129186b408502946e8953d73a4b951174a54425d22f6c7be0e8a9a7f051ba7be07e9188c8f
+  languageName: node
+  linkType: hard
+
 "fresh@npm:0.5.2":
   version: 0.5.2
   resolution: "fresh@npm:0.5.2"
@@ -14547,6 +14574,13 @@ fsevents@~2.1.2:
   version: 0.2.6
   resolution: "heap@npm:0.2.6"
   checksum: 7bb8c80753b64cfbb4685bd0aa4ba52101d63c4a90d450b151931e23d0e30552a60be5db4dd109d1a18e73d1af27ceca9884b1cc451a1b7757f3dd89bcdc21a4
+  languageName: node
+  linkType: hard
+
+"hey-listen@npm:^1.0.8":
+  version: 1.0.8
+  resolution: "hey-listen@npm:1.0.8"
+  checksum: b9a3ed8d4851735d221a8c2ecf06fba598b0240d18e7ad46780e00af1d62471a40c65d5c6ec48b004fc86d96056cf7e3599d3ef8ee77a31df3cb9f4ce69721ce
   languageName: node
   linkType: hard
 
@@ -16866,6 +16900,7 @@ fsevents@~2.1.2:
     express: ^4.17.1
     express-robots-txt: ^0.5.0
     fontfaceobserver: ^2.1.0
+    framer-motion: ^3.10.0
     graphql: ^15.3.0
     graphql-tools: ^6.0.18
     html-react-parser: ^0.13.0
@@ -16895,6 +16930,7 @@ fsevents@~2.1.2:
     react-hook-form: ^6.9.6
     react-hotkeys-hook: ^2.3.1
     react-inlinesvg: ^2.0.1
+    react-intersection-observer: ^8.31.0
     react-lazyload: ^3.0.0
     react-piwik: ^1.10.0
     react-plotly.js: ^2.4.0
@@ -20069,6 +20105,18 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
+"popmotion@npm:9.3.1":
+  version: 9.3.1
+  resolution: "popmotion@npm:9.3.1"
+  dependencies:
+    framesync: 5.2.0
+    hey-listen: ^1.0.8
+    style-value-types: 4.1.1
+    tslib: ^1.10.0
+  checksum: 2b9c9d15de01124ada68ecb630fcacd94e4f78c29cae2b721c5518144eac1fc6cf68515f4df7babdee580819cfdfa5430e6ee9866cf6a74aaf18014088de593d
+  languageName: node
+  linkType: hard
+
 "popper.js@npm:^1.14.4, popper.js@npm:^1.15.0, popper.js@npm:^1.16.0":
   version: 1.16.1
   resolution: "popper.js@npm:1.16.1"
@@ -21018,6 +21066,15 @@ fsevents@~2.1.2:
   peerDependencies:
     react: ^16.8.4
   checksum: f1df0bbe41e37ed5ebaca9bc3e229afb7e365ac3f2c9c7dbb49b6e6301aadce38c9c1865c903915a1b48d0236124b7cace9061d8aa6a4fa8f0b443214096c1e5
+  languageName: node
+  linkType: hard
+
+"react-intersection-observer@npm:^8.31.0":
+  version: 8.31.0
+  resolution: "react-intersection-observer@npm:8.31.0"
+  peerDependencies:
+    react: ^15.0.0 || ^16.0.0 || ^17.0.0|| ^18.0.0
+  checksum: cf71521d312afea0510d8044bbda372b91a86f3d4aab8c086f9cf8d88fc97228e218a89523de0b2f71d16e4f034b1b9b12d7aa8a1ebb2c81995de2ed5a9ae86c
   languageName: node
   linkType: hard
 
@@ -23606,6 +23663,16 @@ resolve@^1.18.1:
   dependencies:
     inline-style-parser: 0.1.1
   checksum: 869b30171c2c0d1ed1928e86c3644d691d96277e484fdafaa99df3ad3b1e11e0fcfc2ac2def4e3dd068df49995de585918dbda2ff833b5691bc8206d1cda37ad
+  languageName: node
+  linkType: hard
+
+"style-value-types@npm:4.1.1":
+  version: 4.1.1
+  resolution: "style-value-types@npm:4.1.1"
+  dependencies:
+    hey-listen: ^1.0.8
+    tslib: ^1.10.0
+  checksum: 3fcabc3cc9f7763b7937a97e3015c3cfa2b5bb1e209cd1197492026f8f5ec8b8bf395a666a9e14d858b1225a4c6b55ebbdac303849c7730ca20f457f2a71f073
   languageName: node
   linkType: hard
 
