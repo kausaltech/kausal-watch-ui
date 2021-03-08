@@ -82,10 +82,11 @@ if (process.env.SENTRY_DSN) {
   sentry.setRelease(app.buildId);
 }
 
-const isProduction = process.env.NODE_ENV === 'production';
+const isDevelopment = process.env.NODE_ENV !== 'production';
+const isProduction = process.env.INSTANCE_TYPE === 'production';
 
 // Request logging
-server.use(morgan(isProduction ? 'combined' : 'dev'));
+server.use(morgan(!isDevelopment ? 'combined' : 'dev'));
 
 const handle = app.getRequestHandler();
 
