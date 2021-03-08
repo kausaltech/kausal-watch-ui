@@ -44,22 +44,6 @@ function Header({ siteTitle }) {
       active: activeBranch === 'dashboard',
     });
 
-    links.push({
-      id: '2',
-      name: t('actions'),
-      slug: 'actions',
-      urlPath: '/actions',
-      active: activeBranch === 'actions',
-    });
-
-    links.push({
-      id: '3',
-      name: t('indicators'),
-      slug: 'indicators',
-      urlPath: '/indicators',
-      active: activeBranch === 'indicators',
-    });
-
     if (plan.mainMenu.items.length > 0) {
       // find one menu item with root as parent to access the id of the rootPage
       const rootItemIndex = plan.mainMenu.items.findIndex((page) => page.parent.page.__typename === 'PlanRootPage');
