@@ -7,6 +7,8 @@ import PlanContext from 'context/plan';
 export default function RichText({ html, ...rest }) {
   const plan = useContext(PlanContext);
 
+  if (typeof html !== 'string') return <div />;
+
   const options = {
     replace: (domNode) => {
       const {
@@ -34,6 +36,11 @@ export default function RichText({ html, ...rest }) {
 
   return <div {...rest}>{parse(html, options)}</div>;
 }
+
+RichText.defaultProps = {
+  html: '',
+};
+
 RichText.propTypes = {
-  html: PropTypes.string.isRequired,
+  html: PropTypes.string,
 };
