@@ -107,6 +107,25 @@ const GET_PLAN = gql`
           }
         }
       }
+      footer {
+        items {
+          id
+          linkText
+          page {
+            urlPath
+            slug
+          }
+          parent {
+            id
+            page {
+              __typename
+            }
+          }
+          children {
+            __typename
+          }
+        }
+      }
       accessibilityStatementUrl
     }
   }

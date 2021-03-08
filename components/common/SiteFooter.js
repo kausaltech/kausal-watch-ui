@@ -8,9 +8,9 @@ import SVG from 'react-inlinesvg';
 import styled, { withTheme } from 'styled-components';
 import { Link } from 'routes';
 
+import { withTranslation } from 'common/i18n';
+import { NavigationLink } from 'common/links';
 import Icon from './Icon';
-import { withTranslation } from '../../common/i18n';
-import { NavigationLink } from '../../common/links';
 
 const StyledFooter = styled.footer`
   position: relative;
@@ -370,19 +370,24 @@ function SiteFooter(props) {
             <FooterNavItems>
               { navItems && navItems.map((page) => (
                 <FooterNavItem key={page.id}>
-                  <NavigationLink slug={page.slug}>
-                    <a className="parent-item">{page.name}</a>
-                  </NavigationLink>
+                  { !page.children && page.slug && (
+                    <NavigationLink slug={page.slug}>
+                      <a className="parent-item">{page.name}</a>
+                    </NavigationLink>
+                  )}
                   { page.children && (
-                    <FooterSubnav>
-                      { page.children.map((childPage) => (
-                        <FooterNavSubItem key={childPage.slug}>
-                          <NavigationLink slug={childPage.slug}>
-                            <a>{childPage.name}</a>
-                          </NavigationLink>
-                        </FooterNavSubItem>
-                      ))}
-                    </FooterSubnav>
+                    <>
+                      <span className="parent-item">{page.name}</span>
+                      <FooterSubnav>
+                        { page.children.map((childPage) => (
+                          <FooterNavSubItem key={childPage.slug}>
+                            <NavigationLink slug={childPage.slug}>
+                              <a>{childPage.name}</a>
+                            </NavigationLink>
+                          </FooterNavSubItem>
+                        ))}
+                      </FooterSubnav>
+                    </>
                   )}
                 </FooterNavItem>
               ))}

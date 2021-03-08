@@ -12,14 +12,21 @@ function Footer(props) {
   const site = React.useContext(SiteContext);
   const generalContent = plan.generalContent || {};
   const { t } = props;
-
   let navLinks = [];
   let staticPages = [];
   const hasActionImpacts = plan.impactGroups?.length > 0;
 
   if (hasActionImpacts) navLinks.push({ id: '1', name: t('dashboard'), slug: '/dashboard' }); //
-  navLinks.push({ id: '2', name: t('actions'), slug: '/actions' });
-  navLinks.push({ id: '3', name: t('indicators'), slug: '/indicators' });
+
+  // TODO: populate nav item children when available in graphql
+  plan.footer.items?.forEach((navItem) => {
+    navLinks.push({
+      id: navItem.id,
+      name: navItem.linkText,
+      slug: navItem.children.length > 0 ? undefined : navItem.page.urlPath,
+      children: navItem.children.length > 0 ? [] : null,
+    });
+  });
 
   if (plan.staticPages) {
     const topMenuPages = plan.staticPages.filter((page) => page.footer);
