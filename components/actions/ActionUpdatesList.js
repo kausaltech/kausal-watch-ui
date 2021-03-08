@@ -65,7 +65,7 @@ function ActionStatusUpdate(props) {
     title,
     content,
   } = props;
-  let avatarUrl = '/static/images/default-avatar.png';
+  let avatarUrl = '/static/themes/default/images/default-avatar.png';
   let name = 'Ylläpitäjä';
   if (author) {
     avatarUrl = author.avatarUrl;
