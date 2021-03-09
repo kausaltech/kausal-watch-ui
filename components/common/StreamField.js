@@ -12,6 +12,8 @@ import IndicatorGroupBlock from 'components/contentblocks/IndicatorGroupBlock';
 import FrontPageHeroBlock from 'components/contentblocks/FrontPageHeroBlock';
 import IndicatorShowcaseBlock from 'components/contentblocks/IndicatorShowcaseBlock';
 import CardListBlock from 'components/contentblocks/CardListBlock';
+import ActionHighlightsBlock from 'components/contentblocks/ActionHighlightsBlock';
+import IndicatorHighlightsBlock from 'components/contentblocks/IndicatorHighlightsBlock';
 
 const STREAM_FIELD_FRAGMENT = gql`
   fragment StreamFieldFragment on StreamFieldInterface {
@@ -160,6 +162,12 @@ const STREAM_FIELD_FRAGMENT = gql`
         }
       }
     }
+    ... on ActionHighlightsBlock {
+      field
+    }
+    ... on IndicatorHighlightsBlock {
+      field
+    }
   }
 ${images.fragments.multiUseImage}
 `;
@@ -186,10 +194,10 @@ const ContentMarkup = styled.div`
 `;
 
 function StreamFieldBlock(props) {
-  const { blockType, page } = props;
+  const { __typename, page } = props;
   const plan = useContext(PlanContext);
 
-  switch (blockType) {
+  switch (__typename) {
     case 'RichTextBlock': {
       const { value } = props;
       return (
@@ -248,13 +256,26 @@ function StreamFieldBlock(props) {
       const { cards, lead, heading } = props;
       return <CardListBlock cards={cards} lead={lead} heading={heading} />;
     }
+    case 'ActionHighlightsBlock': {
+      return <ActionHighlightsBlock />;
+    }
+    case 'IndicatorHighlightsBlock': {
+      return <IndicatorHighlightsBlock />;
+    }
     default:
-      return <div>Component for { blockType } does not exist</div>;
+      return (
+        <div>
+          Component for
+          { __typename }
+          does not exist
+        </div>
+      );
   }
 }
 
 function StreamField(props) {
   const { page, blocks, color } = props;
+
   return (
     <>
       { blocks.map((block) => (
