@@ -33,3 +33,6 @@ action-next: Next action
 not-being-monitored: Not monitored
 not-being-implemented: Not being implemented
 action-completion-percentage: Completion
+actions-phases: Actions in phases
+actions-status: Actions in status
+actions-updated: Active actions last updated

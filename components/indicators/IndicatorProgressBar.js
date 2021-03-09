@@ -1,9 +1,9 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useContext, useEffect, useState, useRef } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import styled, { ThemeContext } from 'styled-components';
 import { motion, useAnimation, animate } from 'framer-motion';
-import {useSpring, animated} from 'react-spring';
+import { useTranslation } from 'common/i18n';
 import dayjs from 'common/dayjs';
 import { IndicatorLink } from 'common/links';
 
@@ -96,6 +96,7 @@ const IndicatorProgressBar = (props) => {
     animate } = props;
 
   const theme = useContext(ThemeContext);
+  const { t } = useTranslation(['common', 'actions']);
   const pendingBarControls = useAnimation();
   const completedBarControls = useAnimation();
   const latestValueControls = useAnimation();
@@ -186,7 +187,7 @@ const IndicatorProgressBar = (props) => {
             unit={unit}
           />
           <text transform={`translate(${completedBar.x + completedBar.w / 2} 110)`} textAnchor="middle">
-            <DateText>Vähennetty</DateText>
+            <DateText>{t('reduced')}</DateText>
             <UnitText x="0" dy="20">
               <Counter
                 from={reductionCounterFrom}
@@ -223,7 +224,7 @@ const IndicatorProgressBar = (props) => {
             transform={`translate(${pendingBar.x + pendingBar.w / 2} 110)`}
             textAnchor="middle"
           >
-            <DateText>Vähennettävää</DateText>
+            <DateText>{t('to-reduce')}</DateText>
             <UnitText x="0" dy="20">
               {latestValue - goalValue}
               {' '}
@@ -251,7 +252,7 @@ const IndicatorProgressBar = (props) => {
             unit={unit}
           />
           <text transform={`translate(${goalBar.x + goalBar.w / 2} 110)`} textAnchor="middle">
-            <DateText>Tavoite</DateText>
+            <DateText>{t('bar-goal')}</DateText>
           </text>
         </svg>
         <div className="text-center"><small>{ note }</small></div>

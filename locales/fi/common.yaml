@@ -51,7 +51,7 @@ filter-text-default: Etsi otsikoista
 filter-text-description: Etsi kuvauksista
 filter-result-actions: toimenpidettä
 browse-actions: Selaa toimenpiteitä
-funding-instrument: 'Helsingin ilmastovahti on saanut tukea EU:n Climate-KIC-ohjelmasta.'
+funding-instrument: Helsingin ilmastovahti on saanut tukea EU:n Climate-KIC-ohjelmasta.
 error-loading-actions: Virhe toimenpiteiden latauksessa
 error-loading-indicators: Virhe mittareiden latauksessa
 indicator-related-actions: Mittariin vaikuttavat toimenpiteet
@@ -109,7 +109,10 @@ required-field: Pakollinen tieto
 send: Lähetä
 close: Sulje
 unknown: Tuntematon
-under-x-days: 'Alle {{days}} päivää'
-over-x-days: 'Yli {{days}} päivää'
+under-x-days: Alle {{days}} päivää
+over-x-days: Yli {{days}} päivää
 frequently-asked-questions: Usein Kysytyt Kysymykset
 actions-as-list: Listana
+reduced: Vähennetty
+to-reduce: Vähennettävää
+bar-goal: Tavoite

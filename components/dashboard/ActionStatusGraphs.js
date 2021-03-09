@@ -91,20 +91,20 @@ const ActionsStatusGraphs = (props) => {
           data={{ values: phaseData.values, labels: phaseData.labels }}
           currentValue={phaseData.total}
           colors={phaseData.colors.length > 0 && phaseData.colors}
-          header="Toimenpiteiden vaiheet"
+          header={t('actions-phases')}
         />
       )}
       <StatusDonut
         data={{ values: progressData.values, labels: progressData.labels }}
         currentValue={progressData.total}
         colors={progressData.colors.length > 0 && progressData.colors}
-        header="Toimenpiteiden tila"
+        header={t('actions-status')}
       />
       <StatusDonut
         data={{ values: timelinessData.values, labels: timelinessData.labels }}
         currentValue={timelinessData.total}
         colors={timelinessData.colors.length > 0 && timelinessData.colors}
-        header="Aktiivisten toimenpiteiden päivitys"
+        header={t('actions-updated')}
       />
     </div>
   );

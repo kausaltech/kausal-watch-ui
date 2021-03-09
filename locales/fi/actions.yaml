@@ -34,3 +34,6 @@ no-defined-indicators: Ei määriteltyjä mittareita
 not-being-monitored: Ei seurannassa
 not-being-implemented: Ei toteuteta
 action-completion-percentage: Valmistumisaste
+actions-phases: Toimenpiteiden vaiheet
+actions-status: Toimenpiteiden tila
+actions-updated: Aktiivisten toimenpiteiden päivitys
