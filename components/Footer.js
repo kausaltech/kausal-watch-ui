@@ -18,13 +18,22 @@ function Footer(props) {
 
   if (hasActionImpacts) navLinks.push({ id: '1', name: t('dashboard'), slug: '/dashboard' }); //
 
-  // TODO: populate nav item children when available in graphql
   plan.footer.items?.forEach((navItem) => {
+    const children = navItem.children.length > 0 ? [] : null;
+    if (children) {
+      navItem.children.forEach((child) => {
+        children.push({
+          id: child.id,
+          name: child.linkText,
+          slug: child.page.urlPath,
+        });
+      });
+    }
     navLinks.push({
       id: navItem.id,
       name: navItem.linkText,
       slug: navItem.children.length > 0 ? undefined : navItem.page.urlPath,
-      children: navItem.children.length > 0 ? [] : null,
+      children,
     });
   });
 

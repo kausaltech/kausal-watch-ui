@@ -98,7 +98,7 @@ const FooterNavItems = styled.ul`
 `;
 
 const FooterNavItem = styled.li`
-  max-width: 150px;
+  max-width: 300px;
   padding-right: ${(props) => props.theme.spaces.s300};
   margin-bottom: ${(props) => props.theme.spaces.s300};
   font-size: ${(props) => props.theme.fontSizeBase};
@@ -129,7 +129,7 @@ const FooterSubnav = styled.ul`
 
 const FooterNavSubItem = styled.li`
   margin-top: ${(props) => props.theme.spaces.s100};
-  font-size: ${(props) => props.theme.fontSizeBase};
+  font-size: 90%;
   font-weight: ${(props) => props.theme.fontWeightNormal};
 `;
 

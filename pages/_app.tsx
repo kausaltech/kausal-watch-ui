@@ -123,6 +123,12 @@ const GET_PLAN = gql`
           }
           children {
             __typename
+            id
+            linkText
+            page {
+              urlPath
+              slug
+            }
           }
         }
       }
