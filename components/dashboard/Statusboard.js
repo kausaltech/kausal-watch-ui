@@ -86,6 +86,10 @@ export const GET_ACTION_LIST = gql`
           parent {
             id
           }
+          categoryPage {
+            id
+            live
+          }
         }
       }
       generalContent {

@@ -41,7 +41,7 @@ function ActionCardList({ actions }) {
     } else {
       group = {
         id: cat.id,
-        name: cat.name,
+        name: `${cat.categoryPage ? cat.identifier : ''} ${cat.name}`,
         identifier: cat.identifier,
         elements: [],
       };
