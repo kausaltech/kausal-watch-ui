@@ -48,7 +48,7 @@ class IndicatorListFilters extends React.Component {
     const sortedCats = cats.sort((a, b) => a.identifier.localeCompare(b.identifier));
 
     return (
-      <form className="filters mb-5 mt-5">
+      <form className="filters mb-5 mt-5" onSubmit={(event) => { event.preventDefault(); }}>
         <Row>
           <Col sm="9" md="4" lg="5">
             <DropDown
