@@ -13,6 +13,10 @@ const ActionGroupHeader = styled.h2`
   border-bottom: 1px solid;
   padding-bottom: ${(props) => props.theme.spaces.s100};
   margin-bottom: ${(props) => props.theme.spaces.s200};
+
+  .category-identifier {
+    color: ${(props) => props.theme.graphColors.grey050};
+  }
 `;
 
 const ActionGroup = styled(Row)`
@@ -41,7 +45,8 @@ function ActionCardList({ actions }) {
     } else {
       group = {
         id: cat.id,
-        name: `${cat.categoryPage ? cat.identifier : ''} ${cat.name}`,
+        displayIdentifier: `${cat.categoryPage ? cat.identifier : ''}`,
+        name: cat.name,
         identifier: cat.identifier,
         elements: [],
       };
@@ -57,7 +62,14 @@ function ActionCardList({ actions }) {
       {groups.map((group) => (
         <ActionGroup key={group.id} role="group">
           <Col xs="12">
-            <ActionGroupHeader>{group.name}</ActionGroupHeader>
+            <ActionGroupHeader>
+              {group.displayIdentifier && (
+                <span className="category-identifier">
+                  {`${group.displayIdentifier}. `}
+                </span>
+              )}
+              {group.name}
+            </ActionGroupHeader>
           </Col>
           {group.elements.map((item) => (
             <Col
