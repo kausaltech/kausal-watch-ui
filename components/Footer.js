@@ -51,7 +51,7 @@ function Footer(props) {
     additionalLinks.push({ id: '1', name: t('accessibility'), slug: plan.accessibilityStatementUrl });
   }
   else {
-    additionalLinks.push({ id: '1', name: t('accessibility'), slug: 'accessibility' });
+    additionalLinks.push({ id: '1', name: t('accessibility'), slug: '/accessibility' });
   }
 
   const utilityLinks = [];
@@ -64,7 +64,14 @@ function Footer(props) {
     utilityLinks.push({ id: '2', name: t('give-feedback'), slug: plan.feedbackLink });
   }
   else {
-    utilityLinks.push({ id: '2', name: t('give-feedback'), slug: 'feedback' });
+    utilityLinks.push({ id: '2', name: t('give-feedback'), slug: '/feedback' });
+  }
+
+  if (plan.adminLink) {
+    utilityLinks.push({ id: '3', name: t('admin-login'), slug: plan.feedbackLink, icon: 'lock' });
+  }
+  else {
+    utilityLinks.push({ id: '3', name: t('admin-login'), slug: '/login', icon: 'lock' });
   }
 
   let fundingInstruments = [];

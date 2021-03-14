@@ -407,7 +407,17 @@ function SiteFooter(props) {
               { utilityLinks && utilityLinks.map((page) => (
                 <UtilityItem key={page.id}>
                   <NavigationLink slug={page.slug}>
-                    <a>{page.name}</a>
+                    <a>
+                      { page.icon && (
+                        <Icon
+                          name={page.icon}
+                          color={theme.themeColors.white}
+                          aria-hidden="true"
+                          className="mr-1"
+                        />
+                      )}
+                      {page.name}
+                    </a>
                   </NavigationLink>
                 </UtilityItem>
               ))}
