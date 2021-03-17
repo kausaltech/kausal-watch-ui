@@ -229,7 +229,6 @@ function StreamFieldBlock(props) {
       return <ActionListBlock categoryId={categoryFilter?.id || page.category.id} color={color} />;
     }
     case 'CategoryListBlock': {
-      console.log(props);
       const { color, heading, lead } = props;
       const { category } = page;
       const fallbackImage = (category?.image || plan.image);
