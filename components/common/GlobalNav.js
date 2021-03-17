@@ -84,23 +84,25 @@ const HomeLink = styled.a`
   }
 `;
 
-const NavLink = styled.a`
-  display: block;
-  margin: 0 0 ${(props) => props.theme.spaces.s050} ${(props) => props.theme.spaces.s100};
-  color: ${(props) => props.theme.neutralDark};
+const NavLink = styled.div`
+  a {
+    display: block;
+    margin: 0 0 ${(props) => props.theme.spaces.s050} ${(props) => props.theme.spaces.s100};
+    color: ${(props) => props.theme.neutralDark};
 
-  &:hover {
-      text-decoration: none;
-      color: ${(props) => props.theme.neutralDark};
+    &:hover {
+        text-decoration: none;
+        color: ${(props) => props.theme.neutralDark};
 
-      .highlighter {
-        border-bottom: 5px solid ${(props) => props.theme.brandNavBackground};
+        .highlighter {
+          border-bottom: 5px solid ${(props) => props.theme.brandNavBackground};
+        }
       }
-    }
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
-    align-self: flex-end;
-    margin: 0 ${(props) => props.theme.spaces.s200} 0 0;
+    @media (min-width: ${(props) => props.theme.breakpointMd}) {
+      align-self: flex-end;
+      margin: 0 ${(props) => props.theme.spaces.s200} 0 0;
+    }
   }
 `;
 
@@ -217,13 +219,13 @@ function DropdownList(props) {
       <DropdownMenu direction="left">
         { items && items.map((child) => (
           <DropdownItem key={child.id}>
-            <NavigationLink slug={child.urlPath}>
-              <NavLink>
+            <NavLink>
+              <NavigationLink slug={child.urlPath}>
                 <NavHighlighter className="highlighter">
                   {child.name}
                 </NavHighlighter>
-              </NavLink>
-            </NavigationLink>
+              </NavigationLink>
+            </NavLink>
           </DropdownItem>
         ))}
       </DropdownMenu>
@@ -320,13 +322,13 @@ function GlobalNav(props) {
                     />
                   ) : (
                     <NavItem key={page.slug} active={page.active}>
-                      <NavigationLink slug={page.urlPath}>
-                        <NavLink>
+                      <NavLink>
+                        <NavigationLink slug={page.urlPath}>
                           <NavHighlighter className={`highlighter ${page.active && 'active'}`}>
                             {page.name}
                           </NavHighlighter>
-                        </NavLink>
-                      </NavigationLink>
+                        </NavigationLink>
+                      </NavLink>
                     </NavItem>
                   )
               ))}

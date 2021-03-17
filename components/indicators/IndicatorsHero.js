@@ -28,7 +28,7 @@ const IndicatorsTabs = styled.div`
   margin-bottom: ${(props) => props.theme.spaces.s200};
 `;
 
-const Tab = styled.a`
+const Tab = styled.div`
   background: ${(props) => props.theme.brandDark};
   color: ${(props) => props.theme.themeColors.white};
   &:hover {
@@ -75,7 +75,7 @@ function IndicatorsHero(props) {
                 </NavigationLink>
               </NavItem>
               <NavItem>
-                <NavigationLink slug="insight" passHref>
+                <NavigationLink slug="insight">
                   <Tab className={`nav-link ${router.pathname === '/insight' ? 'active' : ''}`}>
                     { t('indicators-as-insight') }
                   </Tab>
