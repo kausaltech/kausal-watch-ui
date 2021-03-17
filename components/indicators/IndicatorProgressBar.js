@@ -226,7 +226,7 @@ const IndicatorProgressBar = (props) => {
           >
             <DateText>{t('to-reduce')}</DateText>
             <UnitText x="0" dy="20">
-              {latestValue - goalValue}
+              {beautifyValue(latestValue - goalValue)}
               {' '}
               {unit}
             </UnitText>

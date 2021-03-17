@@ -54,11 +54,32 @@ const GET_INDICATOR_LIST = gql`
         }
       }
     }
+    planIndicators(plan: $plan) {
+      id
+      relatedCauses {
+        id
+        causalIndicator {
+          id
+        }
+        effectIndicator {
+          id
+        }
+        effectType
+      }
+    }
   }
 `;
 
 class IndicatorList extends React.Component {
   static contextType = PlanContext;
+
+  hasInsights(data) {
+    const { planIndicators } = data;
+    // Check if any of the indicators has causality link
+    return planIndicators.find((indicator) => {
+      return indicator.relatedCauses?.find((effect) => effect.effectType !== 'PART_OF') !== undefined;
+    }) !== undefined;
+  };
 
   processDataToProps(data) {
     const { plan } = data;
@@ -91,13 +112,17 @@ class IndicatorList extends React.Component {
           if (loading) return <ContentLoader />;
           if (error) return <ErrorMessage message={error.message} />;
           const props = this.processDataToProps(data);
+          const showInsights = this.hasInsights(data);
 
           return (
             <>
               <Meta
                 title={title}
               />
-              <IndicatorsHero leadContent={leadContent} />
+              <IndicatorsHero
+                leadContent={leadContent}
+                showInsights={showInsights}
+              />
               <Container>
                 <IndicatorListFiltered {...props} />
               </Container>

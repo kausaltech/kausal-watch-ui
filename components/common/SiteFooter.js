@@ -371,8 +371,8 @@ function SiteFooter(props) {
               { navItems && navItems.map((page) => (
                 <FooterNavItem key={page.id}>
                   { !page.children && page.slug && (
-                    <NavigationLink slug={page.slug}>
-                      <a className="parent-item">{page.name}</a>
+                    <NavigationLink slug={page.slug} className="parent-item">
+                      {page.name}
                     </NavigationLink>
                   )}
                   { page.children && (
@@ -382,7 +382,7 @@ function SiteFooter(props) {
                         { page.children.map((childPage) => (
                           <FooterNavSubItem key={childPage.slug}>
                             <NavigationLink slug={childPage.slug}>
-                              <a>{childPage.name}</a>
+                              {childPage.name}
                             </NavigationLink>
                           </FooterNavSubItem>
                         ))}
@@ -407,7 +407,15 @@ function SiteFooter(props) {
               { utilityLinks && utilityLinks.map((page) => (
                 <UtilityItem key={page.id}>
                   <NavigationLink slug={page.slug}>
-                    <a>{page.name}</a>
+                    { page.icon && (
+                      <Icon
+                        name={page.icon}
+                        color={theme.themeColors.white}
+                        aria-hidden="true"
+                        className="mr-1"
+                      />
+                    )}
+                    {page.name}
                   </NavigationLink>
                 </UtilityItem>
               ))}

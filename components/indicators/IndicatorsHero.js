@@ -28,7 +28,7 @@ const IndicatorsTabs = styled.div`
   margin-bottom: ${(props) => props.theme.spaces.s200};
 `;
 
-const Tab = styled.a`
+const Tab = styled.div`
   background: ${(props) => props.theme.brandDark};
   color: ${(props) => props.theme.themeColors.white};
   &:hover {
@@ -44,7 +44,7 @@ const Tab = styled.a`
 `;
 
 function IndicatorsHero(props) {
-  const { t, leadContent } = props;
+  const { t, leadContent, showInsights } = props;
   const router = useRouter();
 
   return (
@@ -63,33 +63,41 @@ function IndicatorsHero(props) {
           )}
         </Container>
       </IndicatorsJumbo>
-      <IndicatorsTabs>
-        <Container>
-          <Nav>
-            <NavItem>
-              <NavigationLink slug="indicators">
-                <Tab className={`nav-link ${router.pathname === '/indicators' ? 'active' : ''}`}>
-                  { t('indicators-as-list') }
-                </Tab>
-              </NavigationLink>
-            </NavItem>
-            <NavItem>
-              <NavigationLink slug="insight" passHref>
-                <Tab className={`nav-link ${router.pathname === '/insight' ? 'active' : ''}`}>
-                  { t('indicators-as-insight') }
-                </Tab>
-              </NavigationLink>
-            </NavItem>
-          </Nav>
-        </Container>
-      </IndicatorsTabs>
+      { showInsights && (
+        <IndicatorsTabs>
+          <Container>
+            <Nav>
+              <NavItem>
+                <NavigationLink slug="indicators">
+                  <Tab className={`nav-link ${router.pathname === '/indicators' ? 'active' : ''}`}>
+                    { t('indicators-as-list') }
+                  </Tab>
+                </NavigationLink>
+              </NavItem>
+              <NavItem>
+                <NavigationLink slug="insight">
+                  <Tab className={`nav-link ${router.pathname === '/insight' ? 'active' : ''}`}>
+                    { t('indicators-as-insight') }
+                  </Tab>
+                </NavigationLink>
+              </NavItem>
+            </Nav>
+          </Container>
+        </IndicatorsTabs>
+      )}
     </div>
   );
 }
 
+IndicatorsHero.defaultProps = {
+  leadContent: '',
+  showInsights: true,
+};
+
 IndicatorsHero.propTypes = {
   t: PropTypes.func.isRequired,
   leadContent: PropTypes.string,
+  showInsights: PropTypes.bool,
 };
 
 export default withTranslation('common')(IndicatorsHero);

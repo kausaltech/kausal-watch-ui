@@ -1,9 +1,9 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Spring, Transition } from 'react-spring/renderprops.cjs';
 import {
   Row, Col, Badge,
 } from 'reactstrap';
-
+import _ from 'lodash';
 import styled from 'styled-components';
 import { useTranslation } from 'common/i18n';
 import TextInput from 'components/common/TextInput';
@@ -60,12 +60,15 @@ function generateSortedOrgTree(orgs, depth) {
 function ActionListFilterInput({
   filter, currentValue, onChange
 }) {
-  const callback = useCallback(
-    (event) => {
-      onChange(filter.identifier, event.target.value);
-    },
-    [filter.identifier, onChange],
-  );
+  const [filterValue, setValue] = useState(currentValue);
+  const delayedQuery = useCallback(_.debounce(
+    (value) => onChange(filter.identifier, value), 500,
+  ), [filter.identifier, onChange]);
+
+  const callback = (event) => {
+    setValue(event.target.value);
+    delayedQuery(event.target.value);
+  };
 
   if (filter.type === 'text') {
     return (
@@ -74,7 +77,7 @@ function ActionListFilterInput({
         id={`${filter.identifier}-field`}
         name={filter.identifier}
         placeholder={filter.placeholder}
-        value={currentValue || ''}
+        value={filterValue || ''}
         onChange={callback}
       />
     );
