@@ -67,11 +67,8 @@ function Footer(props) {
     utilityLinks.push({ id: '2', name: t('give-feedback'), slug: '/feedback' });
   }
 
-  if (plan.adminLink) {
-    utilityLinks.push({ id: '3', name: t('admin-login'), slug: plan.feedbackLink, icon: 'lock' });
-  }
-  else {
-    utilityLinks.push({ id: '3', name: t('admin-login'), slug: '/login', icon: 'lock' });
+  if (plan.adminUrl) {
+    utilityLinks.push({ id: '3', name: t('admin-login'), slug: plan.adminUrl, icon: 'lock' });
   }
 
   let fundingInstruments = [];

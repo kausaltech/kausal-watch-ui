@@ -132,6 +132,7 @@ const GET_PLAN = gql`
           }
         }
       }
+      adminUrl
       accessibilityStatementUrl
     }
   }
