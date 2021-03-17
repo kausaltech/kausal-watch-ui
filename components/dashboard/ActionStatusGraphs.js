@@ -1,11 +1,18 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 import dayjs from 'common/dayjs';
 import { cleanActionStatus, getPhaseData, getStatusData } from 'common/preprocess';
 import { useTheme } from 'common/theme';
 import PlanContext from 'context/plan';
 import { useTranslation } from 'common/i18n';
 import StatusDonut from 'components/graphs/StatusDonut';
+
+const StatusGraphs = styled.div`
+  width: auto;
+  display: flex;
+  overflow-x: scroll;
+`;
 
 const getTimelinessData = (actions, actionStatuses, theme, t) => {
   const timeliness = {
@@ -85,7 +92,7 @@ const ActionsStatusGraphs = (props) => {
   }
 
   return (
-    <div>
+    <StatusGraphs>
       { phaseData && (
         <StatusDonut
           data={{ values: phaseData.values, labels: phaseData.labels }}
@@ -106,7 +113,7 @@ const ActionsStatusGraphs = (props) => {
         colors={timelinessData.colors.length > 0 && timelinessData.colors}
         header={t('actions-updated')}
       />
-    </div>
+    </StatusGraphs>
   );
 };
 

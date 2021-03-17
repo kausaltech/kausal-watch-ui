@@ -1,7 +1,19 @@
 import React from 'react';
 import dynamic from 'next/dynamic';
+import styled from 'styled-components';
 import { useTheme } from 'common/theme';
 import { useTranslation } from 'common/i18n';
+import Card from 'components/common/Card';
+
+const GraphCard = styled.div`
+  padding: 1rem;
+  margin: 1rem;
+  max-width: 260px;
+`;
+
+const GraphHeader = styled.h2`
+  font-size: 20px;
+`;
 
 const StatusDonut = (props) => {
   const {
@@ -34,9 +46,9 @@ const StatusDonut = (props) => {
     theme.graphColors.green050,
     theme.graphColors.yellow050,
   ];
+  pieData.autoMargin = true;
 
   const pieLayout = {
-    title: header,
     font: {
       family: theme.fontFamily,
     },
@@ -51,11 +63,12 @@ const StatusDonut = (props) => {
         y: 0.5,
       },
     ],
-    height: 350,
-    width: 350,
+    height: 175,
+    width: 175,
     showlegend: false,
     colorway: plotColors,
     paper_bgcolor: 'rgba(0,0,0,0)',
+    margin: {"t": 0, "b": 0, "l": 0, "r": 0},
   };
   const config = {
     locale: i18n.language,
@@ -69,7 +82,12 @@ const StatusDonut = (props) => {
       },
     },
   };
-  return <Plot data={[pieData]} layout={pieLayout} config={config} />;
+  return (
+    <GraphCard>
+      <GraphHeader>{header}</GraphHeader>
+      <Plot data={[pieData]} layout={pieLayout} config={config} />
+    </GraphCard>
+  );
 };
 
 export default StatusDonut;

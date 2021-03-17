@@ -70,6 +70,12 @@ const Tab = styled.button`
   }
 `;
 
+const TableWrapper = styled.div`
+  width: auto;
+  display: flex;
+  overflow-x: scroll;
+`;
+
 export const GET_ACTION_LIST = gql`
   query DashboardActionList($plan: ID!) {
     plan(id: $plan) {
@@ -363,7 +369,9 @@ const ActionListResults = (props) => {
           { displayDashboard && (
             <>
               <ActionStatusGraphs actions={filteredActions} />
-              <DynamicActionStatusTable actions={filteredActions} orgs={orgs} />
+              <TableWrapper>
+                <DynamicActionStatusTable actions={filteredActions} orgs={orgs} />
+              </TableWrapper>
             </>
           )}
         </div>
