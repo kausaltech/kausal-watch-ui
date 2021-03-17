@@ -91,6 +91,8 @@ const STREAM_FIELD_FRAGMENT = gql`
     }
     ... on CategoryListBlock {
       style
+      heading
+      lead
     }
     ... on FrontPageHeroBlock {
       id
@@ -227,10 +229,19 @@ function StreamFieldBlock(props) {
       return <ActionListBlock categoryId={categoryFilter?.id || page.category.id} color={color} />;
     }
     case 'CategoryListBlock': {
-      const { color } = props;
+      console.log(props);
+      const { color, heading, lead } = props;
       const { category } = page;
       const fallbackImage = (category?.image || plan.image);
-      return <CategoryListBlock categories={category.children} color={color} fallbackImage={fallbackImage} />;
+      return (
+        <CategoryListBlock
+          categories={category.children}
+          color={color}
+          fallbackImage={fallbackImage}
+          heading={heading}
+          lead={lead}
+        />
+      );
     }
     case 'FrontPageHeroBlock': {
       const {

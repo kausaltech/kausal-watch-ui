@@ -1,6 +1,7 @@
 import React from 'react';
 import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
+import RichText from 'components/common/RichText';
 import { getBgImageAlignment } from 'common/images';
 import { DynamicLink } from 'common/links';
 import Card from 'components/common/Card';
@@ -37,13 +38,15 @@ const Identifier = styled.span`
   color: ${(props) => props.theme.graphColors.grey050};
 `;
 
-const CategoryListBlock = ({ categories, color, fallbackImage }) => {
-  const heading = categories[0]?.level?.namePlural;
+const CategoryListBlock = (props) => {
+  const { categories, color, fallbackImage, heading, lead } = props;
+  console.log(props);
   const themeColor = color;
   return (
     <CategoryListSection bg={themeColor}>
       <Container>
         { heading && (<SectionHeader>{ heading }</SectionHeader>)}
+        <RichText>{ lead }</RichText>
         <Row>
           { categories?.map((cat) => (
             <Col
