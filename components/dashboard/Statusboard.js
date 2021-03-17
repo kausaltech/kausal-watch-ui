@@ -92,6 +92,10 @@ export const GET_ACTION_LIST = gql`
           parent {
             id
           }
+          categoryPage {
+            id
+            live
+          }
         }
       }
       generalContent {
@@ -275,7 +279,7 @@ const ActionListResults = (props) => {
     if (filters.text) {
       const searchStr = filters.text.toLowerCase();
       if (item.identifier.toLowerCase().startsWith(searchStr)) return true;
-      if (item.name.toLowerCase().search(searchStr) !== -1) return true;
+      if (item.name.replace(/\u00AD/g, '').toLowerCase().search(searchStr) !== -1) return true;
       return false;
     }
     const allCatsFound = catTypes.every((ct) => {

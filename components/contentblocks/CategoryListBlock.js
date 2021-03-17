@@ -1,6 +1,7 @@
 import React from 'react';
 import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
+import RichText from 'components/common/RichText';
 import { getBgImageAlignment } from 'common/images';
 import { DynamicLink } from 'common/links';
 import Card from 'components/common/Card';
@@ -19,12 +20,18 @@ const CategoryListSection = styled.div`
       color: ${(props) => props.theme.themeColors.black};
     }
   }
+
+  .lead-text {
+    text-align: center;
+    font-size: ${(props) => props.theme.fontSizeMd};
+    margin-bottom: ${(props) => props.theme.spaces.s300};
+  }
 `;
 
 const SectionHeader = styled.h2`
   text-align: center;
   color: ${(props) => props.theme.themeColors.black};
-  margin-bottom: ${(props) => props.theme.spaces.s300};
+  margin-bottom: ${(props) => props.theme.spaces.s100};
 `;
 
 const CardHeader = styled.h3`
@@ -37,13 +44,14 @@ const Identifier = styled.span`
   color: ${(props) => props.theme.graphColors.grey050};
 `;
 
-const CategoryListBlock = ({ categories, color, fallbackImage }) => {
-  const heading = categories[0]?.level?.namePlural;
+const CategoryListBlock = (props) => {
+  const { categories, color, fallbackImage, heading, lead } = props;
   const themeColor = color;
   return (
     <CategoryListSection bg={themeColor}>
       <Container>
         { heading && (<SectionHeader>{ heading }</SectionHeader>)}
+        <RichText html={lead} className="lead-text" />
         <Row>
           { categories?.map((cat) => (
             <Col

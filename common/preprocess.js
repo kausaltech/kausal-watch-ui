@@ -3,11 +3,12 @@ import { i18n } from 'common/i18n';
 
 // Clean up actionStatus so UI can handle edge cases
 const cleanActionStatus = (action, actionStatuses) => {
-  const { status } = action;
+  const { status, implementationPhase } = action;
   // precaution not to mutate original object
   const newStatus = status ? _.cloneDeep(status) : {};
 
-  // if status is undefined, mark it as a status
+  // if status is missing, mark it as undefined
+  // if implementationPhase is completed, make status undefined
   if (!status) {
     newStatus.id = '404'; // not nice to invent ids, but we don't use ids as differentiator in the UI
     newStatus.name = i18n.t('action-status-undefined');
@@ -15,14 +16,22 @@ const cleanActionStatus = (action, actionStatuses) => {
     newStatus.isCompleted = false;
   }
 
-  // if implementationPhase is completed, make sure status is also completed
-  if (action.implementationPhase?.identifier === 'completed' && status.identifier !== 'completed') {
-    newStatus.id = '13'; // this is the current completed id in api
+  // if implementationPhase is completed, make new status of completed
+  if (implementationPhase?.identifier === 'completed') {
+    newStatus.id = '13'; // this is the old completed id in api
     newStatus.name = actionStatuses.find(
       (statusType) => statusType.identifier === 'completed',
-    ).name || action.implementationPhase.name;
+    ).name || implementationPhase.name;
     newStatus.identifier = 'completed';
     newStatus.isCompleted = true;
+  }
+
+  // if implementationPhase is not_started, and implementationPhase on_time create new status of not_started
+  if (implementationPhase?.identifier === 'not_started' && status.identifier === 'on_time') {
+    newStatus.id = '70'; // this is the old not_started id in api
+    newStatus.name = status.name;
+    newStatus.identifier = 'not_started';
+    newStatus.isCompleted = false;
   }
 
   // if action is merged, mark it as a status
@@ -44,7 +53,6 @@ const getStatusColor = (statusIdentifier, theme) => {
     in_progress: theme.graphColors.green050,
     completed: theme.graphColors.green090,
     late: theme.graphColors.yellow050,
-    severely_late: theme.graphColors.red030,
     cancelled: theme.graphColors.grey030,
     merged: theme.graphColors.grey010,
     postponed: theme.graphColors.blue030,
