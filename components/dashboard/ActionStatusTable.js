@@ -125,10 +125,30 @@ const IndicatorsViz = ({ relatedIndicators }) => {
 
   return (
     <div>
-      <Icon name="tachometer" color={hasIndicators ? theme.actionOnTimeColor : theme.actionNotStartedColor} height="1.2em" width="1.2em" />
-      <Icon name="bullseye" color={hasGoals ? theme.actionOnTimeColor : theme.actionNotStartedColor} height="1.2em" width="1.2em" />
+      <Icon
+        name="tachometer"
+        color={hasIndicators ? theme.actionOnTimeColor : theme.actionNotStartedColor}
+        height="1.2em"
+        width="1.2em"
+      />
+      <Icon
+        name="bullseye"
+        color={hasGoals ? theme.actionOnTimeColor : theme.actionNotStartedColor}
+        height="1.2em"
+        width="1.2em"
+      />
     </div>
   );
+};
+
+const hasResponsiblePersons = (actions) => {
+  let hasResponsibles = false;
+  actions.forEach((action) => {
+    action.responsibleParties.forEach((party) => {
+      if (party.hasContactPerson) hasResponsibles = true;
+    });
+  });
+  return hasResponsibles;
 };
 
 const ResponsiblesViz = ({ parties }) => {
@@ -181,7 +201,7 @@ function processAction(actionIn, orgMap) {
   return action;
 }
 
-const ActionRow = ({item, plan}) => {
+const ActionRow = ({item, plan, hasResponsibles, hasImpacts}) => {
   const actionStatus = cleanActionStatus(item, plan.actionStatuses);
 
   return (
@@ -214,19 +234,22 @@ const ActionRow = ({item, plan}) => {
       <td>
         <TasksStatusBar tasks={item.tasks} />
       </td>
-      <td>
-        <ResponsiblesViz parties={item.responsibleParties} persons={item.contactPersons} />
-      </td>
-      <td>
-        { plan.actionImpacts?.length > 0 && item.impact
-            && (
+      { hasResponsibles && (
+        <td>
+          <ResponsiblesViz parties={item.responsibleParties} persons={item.contactPersons} />
+        </td>
+      )}
+      { hasImpacts && (
+        <td>
+          { item.impact && (
             <ActionImpact
               identifier={item.impact.identifier}
               name=""
               size="sm"
             />
-            )}
-      </td>
+          )}
+        </td>
+      )}
       <td>
         { item.relatedIndicators && !item.mergedWith &&
           <IndicatorsViz relatedIndicators={item.relatedIndicators} />}
@@ -245,6 +268,7 @@ const ActionsStatusTable = (props) => {
   const sortedActions = actions.sort((g1, g2) => g1.identifier - g2.identifier)
     .map((action) => processAction(action, orgMap));
   const hasImpacts = plan.actionImpacts.length > 0;
+  const hasResponsibles = hasResponsiblePersons(sortedActions);
   const { t, i18n } = useTranslation(['common', 'actions']);
 
   return (
@@ -255,14 +279,14 @@ const ActionsStatusTable = (props) => {
           <th>{ t('action-name-title') }</th>
           <th>{ t('action-implementation-phase') }</th>
           <th>{ t('action-tasks') }</th>
-          <th>{ t('action-responsibles-short') }</th>
-          <th>{ hasImpacts && t('action-impact') }</th>
+          { hasResponsibles && <th>{t('action-responsibles-short')}</th> }
+          { hasImpacts && <th>{t('action-impact')}</th> }
           <th>{ t('indicators') }</th>
           <th>{ t('action-last-updated') }</th>
         </tr>
       </thead>
       <tbody>
-        {sortedActions.map((item) => <ActionRow item={item} key={item.id} plan={plan} />)}
+        {sortedActions.map((item) => <ActionRow item={item} key={item.id} plan={plan} hasResponsibles={hasResponsibles} hasImpacts={hasImpacts}/>)}
       </tbody>
     </DashTable>
   );
