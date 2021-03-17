@@ -116,9 +116,6 @@
     "typewiz-webpack": "^1.2.4",
     "yaml-loader": "^0.6.0"
   },
-  "installConfig": {
-    "pnp": false
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/kausaltech/kausal-watch-ui"
