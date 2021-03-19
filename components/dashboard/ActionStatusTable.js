@@ -115,21 +115,21 @@ const TasksStatusBar = (props) => {
 
   return (
     <div>
-    <TaskStatusBar>
-      <div
-        className="completed"
-        style={{ width: `${(completedTasks / tasksCount) * 100}%` }}
-      />
-      <div
-        className="late"
-        style={{ width: `${(lateTasks / tasksCount) * 100}%` }}
-      />
-      <div
-        className="on-time"
-        style={{ width: `${(ontimeTasks / tasksCount) * 100}%` }}
-      />
-    </TaskStatusBar>
-    <VizLabel>{displayTasksCount}</VizLabel>
+      <TaskStatusBar>
+        <div
+          className="completed"
+          style={{ width: `${(completedTasks / tasksCount) * 100}%` }}
+        />
+        <div
+          className="late"
+          style={{ width: `${(lateTasks / tasksCount) * 100}%` }}
+        />
+        <div
+          className="on-time"
+          style={{ width: `${(ontimeTasks / tasksCount) * 100}%` }}
+        />
+      </TaskStatusBar>
+      <VizLabel className={tasksCount === 0 && 'disabled'}>{displayTasksCount}</VizLabel>
     </div>
   );
 };
@@ -172,6 +172,14 @@ const hasResponsiblePersons = (actions) => {
     });
   });
   return hasResponsibles;
+};
+
+const hasIndicators = (actions) => {
+  let hasRelevantIndicators = false;
+  actions.forEach((action) => {
+    if (action.relatedIndicators.length > 0) hasRelevantIndicators = true;
+  });
+  return hasRelevantIndicators;
 };
 
 const ResponsiblesViz = ({ parties }) => {
@@ -224,7 +232,7 @@ function processAction(actionIn, orgMap) {
   return action;
 }
 
-const ActionRow = ({item, plan, hasResponsibles, hasImpacts}) => {
+const ActionRow = ({item, plan, hasResponsibles, hasImpacts, hasIndicators}) => {
   const actionStatus = cleanActionStatus(item, plan.actionStatuses);
 
   return (
@@ -273,10 +281,12 @@ const ActionRow = ({item, plan, hasResponsibles, hasImpacts}) => {
           )}
         </td>
       )}
-      <td>
-        { item.relatedIndicators && !item.mergedWith &&
-          <IndicatorsViz relatedIndicators={item.relatedIndicators} />}
-      </td>
+      { hasIndicators && (
+        <td>
+          { item.relatedIndicators && !item.mergedWith &&
+            <IndicatorsViz relatedIndicators={item.relatedIndicators} />}
+        </td>
+      )}
       <td>
         <UpdatedAgo>{ `${dayjs(item.updatedAt).fromNow(false)}` }</UpdatedAgo>
       </td>
@@ -290,8 +300,9 @@ const ActionsStatusTable = (props) => {
   const plan = useContext(PlanContext);
   const sortedActions = actions.sort((g1, g2) => g1.identifier - g2.identifier)
     .map((action) => processAction(action, orgMap));
-  const hasImpacts = plan.actionImpacts.length > 0;
-  const hasResponsibles = hasResponsiblePersons(sortedActions);
+  const showImpacts = plan.actionImpacts.length > 0;
+  const showResponsibles = hasResponsiblePersons(sortedActions);
+  const showIndicators = hasIndicators(sortedActions);
   const { t } = useTranslation(['common', 'actions']);
 
   return (
@@ -302,14 +313,23 @@ const ActionsStatusTable = (props) => {
           <th>{ t('action-name-title') }</th>
           <th>{ t('action-implementation-phase') }</th>
           <th>{ t('action-tasks') }</th>
-          { hasResponsibles && <th>{t('action-responsibles-short')}</th> }
-          { hasImpacts && <th>{t('action-impact')}</th> }
-          <th>{ t('indicators') }</th>
+          { showResponsibles && <th>{t('action-responsibles-short')}</th> }
+          { showImpacts && <th>{t('action-impact')}</th> }
+          { showIndicators && <th>{ t('indicators') }</th> }
           <th>{ t('action-last-updated') }</th>
         </tr>
       </thead>
       <tbody>
-        {sortedActions.map((item) => <ActionRow item={item} key={item.id} plan={plan} hasResponsibles={hasResponsibles} hasImpacts={hasImpacts}/>)}
+        {sortedActions.map((item) => (
+          <ActionRow
+            item={item}
+            key={item.id}
+            plan={plan}
+            hasResponsibles={showResponsibles}
+            hasImpacts={showImpacts}
+            hasIndicators={showIndicators}
+          />
+        ))}
       </tbody>
     </DashTable>
   );
