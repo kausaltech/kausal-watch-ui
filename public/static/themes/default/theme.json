@@ -140,7 +140,8 @@
       "showResponsibles": true
     },
     "categories": {
-      "showIdentifiers": false
+      "showIdentifiers": false,
+      "filterIndicatorsByAllLevels": true
     },
     "fundingInstruments":[],
     "otherLogos": []

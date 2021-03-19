@@ -140,7 +140,8 @@
       "showResponsibles": true
     },
     "categories": {
-      "showIdentifiers": true
+      "showIdentifiers": true,
+      "filterIndicatorsByAllLevels": false
     }
   }
 }
