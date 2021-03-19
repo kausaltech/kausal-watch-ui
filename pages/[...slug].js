@@ -4,7 +4,7 @@ import { gql, useQuery } from '@apollo/client';
 import { useTranslation } from 'common/i18n';
 import Layout, { Meta } from 'components/layout';
 import PlanContext from 'context/plan';
-import { ThemeContext } from 'styled-components';
+import { useTheme } from 'common/theme';
 import ErrorMessage from 'components/common/ErrorMessage';
 import ContentLoader from 'components/common/ContentLoader';
 import StreamField from 'components/common/StreamField';
@@ -182,7 +182,7 @@ const Content = ({ page }) => {
   const { title, headerImage } = page;
   const imageUrl = headerImage?.large.src;
 
-  const theme = useContext(ThemeContext);
+  const theme = useTheme();
   const pageSectionColor = page.category?.color || page.category?.parent?.color || theme.neutralDark;
   return (
     <article>
