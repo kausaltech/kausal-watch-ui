@@ -7,6 +7,8 @@ action-as-in-plan: Beskrivning från originalplanen
 action-what-effect-this-has: Hur denna åtgärd bidrar till resultatet?
 action-meta-header: Sammanfattning och kontakter
 action-tasks: Uppgifter
+action-tasks-count: uppgifter
+action-no-tasks: Inga uppgifter
 action-tasks-done: Vad har gjorts?
 action-tasks-todo: Vad återstår att göra?
 action-task-done: Gjort

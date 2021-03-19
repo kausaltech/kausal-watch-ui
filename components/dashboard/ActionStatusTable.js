@@ -51,6 +51,7 @@ const TaskStatusBar = styled.div`
   display: flex;
   min-width: ${(props) => props.theme.spaces.s600};
   height: 8px;
+  margin-bottom: ${(props) => props.theme.spaces.s050};
   background-color: ${(props) => props.theme.themeColors.light};
 
   .on-time {
@@ -67,8 +68,23 @@ const TaskStatusBar = styled.div`
   }
 `;
 
+const VizLabel = styled.div`
+  font-size: ${(props) => props.theme.fontSizeSm};
+  line-height: ${(props) => props.theme.lineHeightMd};
+  hyphens: auto;
+
+  &.active {
+    font-weight: ${(props) => props.theme.fontWeightBold};
+  }
+
+  &.disabled {
+    color: ${(props) => props.theme.themeColors.dark};
+  }
+`;
+
 const TasksStatusBar = (props) => {
   const { tasks } = props;
+  const { t } = useTranslation(['common', 'actions']);
   let tasksCount = tasks.length;
   let ontimeTasks = 0;
   let lateTasks = 0;
@@ -93,7 +109,12 @@ const TasksStatusBar = (props) => {
     }
   });
 
+  const displayTasksCount = tasksCount === 0
+    ? t('action-no-tasks')
+    : `${tasksCount} ${t('action-tasks-count')}`;
+
   return (
+    <div>
     <TaskStatusBar>
       <div
         className="completed"
@@ -108,6 +129,8 @@ const TasksStatusBar = (props) => {
         style={{ width: `${(ontimeTasks / tasksCount) * 100}%` }}
       />
     </TaskStatusBar>
+    <VizLabel>{displayTasksCount}</VizLabel>
+    </div>
   );
 };
 
@@ -269,7 +292,7 @@ const ActionsStatusTable = (props) => {
     .map((action) => processAction(action, orgMap));
   const hasImpacts = plan.actionImpacts.length > 0;
   const hasResponsibles = hasResponsiblePersons(sortedActions);
-  const { t, i18n } = useTranslation(['common', 'actions']);
+  const { t } = useTranslation(['common', 'actions']);
 
   return (
     <DashTable role="list">

@@ -7,6 +7,8 @@ action-as-in-plan: Toimenpideohjelman mukaan
 action-what-effect-this-has: Miten tämä toimenpide vaikuttaa tavoitteeseen?
 action-meta-header: Yhteenveto ja yhteystiedot
 action-tasks: Tehtävät
+action-tasks-count: tehtävää
+action-no-tasks: Ei tehtäviä
 action-tasks-done: Mitä on tehty?
 action-tasks-todo: Mitä on tehtävä?
 action-task-done: Tehty
