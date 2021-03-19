@@ -1,4 +1,5 @@
 emission-scopes: Päästöluokat
+action-id: Id
 action-identifier: Tunniste
 action-not-found: Toimenpidettä ei löydy
 action-description: Kuvaus
@@ -7,6 +8,8 @@ action-as-in-plan: Toimenpideohjelman mukaan
 action-what-effect-this-has: Miten tämä toimenpide vaikuttaa tavoitteeseen?
 action-meta-header: Yhteenveto ja yhteystiedot
 action-tasks: Tehtävät
+action-tasks-count: tehtävää
+action-no-tasks: Ei tehtäviä
 action-tasks-done: Mitä on tehty?
 action-tasks-todo: Mitä on tehtävä?
 action-task-done: Tehty
@@ -35,5 +38,8 @@ not-being-monitored: Ei seurannassa
 not-being-implemented: Ei toteuteta
 action-completion-percentage: Valmistumisaste
 actions-phases: Toimenpiteiden vaiheet
+actions-phases-help: Käynnistettyjen ja valmiiden toimenpiteiden määrä
 actions-status: Toimenpiteiden tila
+actions-status-help: Aikataulussa olevien toimenpiteiden osuus
 actions-updated: Aktiivisten toimenpiteiden päivitys
+actions-updated-help: Alle kaksi kuukautta sitten päivitettyjen toimenpiteiden osuus

@@ -51,6 +51,7 @@ const TaskStatusBar = styled.div`
   display: flex;
   min-width: ${(props) => props.theme.spaces.s600};
   height: 8px;
+  margin-bottom: ${(props) => props.theme.spaces.s050};
   background-color: ${(props) => props.theme.themeColors.light};
 
   .on-time {
@@ -67,8 +68,23 @@ const TaskStatusBar = styled.div`
   }
 `;
 
+const VizLabel = styled.div`
+  font-size: ${(props) => props.theme.fontSizeSm};
+  line-height: ${(props) => props.theme.lineHeightMd};
+  hyphens: auto;
+
+  &.active {
+    font-weight: ${(props) => props.theme.fontWeightBold};
+  }
+
+  &.disabled {
+    color: ${(props) => props.theme.themeColors.dark};
+  }
+`;
+
 const TasksStatusBar = (props) => {
   const { tasks } = props;
+  const { t } = useTranslation(['common', 'actions']);
   let tasksCount = tasks.length;
   let ontimeTasks = 0;
   let lateTasks = 0;
@@ -93,21 +109,28 @@ const TasksStatusBar = (props) => {
     }
   });
 
+  const displayTasksCount = tasksCount === 0
+    ? t('action-no-tasks')
+    : `${tasksCount} ${t('action-tasks-count')}`;
+
   return (
-    <TaskStatusBar>
-      <div
-        className="completed"
-        style={{ width: `${(completedTasks / tasksCount) * 100}%` }}
-      />
-      <div
-        className="late"
-        style={{ width: `${(lateTasks / tasksCount) * 100}%` }}
-      />
-      <div
-        className="on-time"
-        style={{ width: `${(ontimeTasks / tasksCount) * 100}%` }}
-      />
-    </TaskStatusBar>
+    <div>
+      <TaskStatusBar>
+        <div
+          className="completed"
+          style={{ width: `${(completedTasks / tasksCount) * 100}%` }}
+        />
+        <div
+          className="late"
+          style={{ width: `${(lateTasks / tasksCount) * 100}%` }}
+        />
+        <div
+          className="on-time"
+          style={{ width: `${(ontimeTasks / tasksCount) * 100}%` }}
+        />
+      </TaskStatusBar>
+      <VizLabel className={tasksCount === 0 && 'disabled'}>{displayTasksCount}</VizLabel>
+    </div>
   );
 };
 
@@ -125,10 +148,38 @@ const IndicatorsViz = ({ relatedIndicators }) => {
 
   return (
     <div>
-      <Icon name="tachometer" color={hasIndicators ? theme.actionOnTimeColor : theme.actionNotStartedColor} height="1.2em" width="1.2em" />
-      <Icon name="bullseye" color={hasGoals ? theme.actionOnTimeColor : theme.actionNotStartedColor} height="1.2em" width="1.2em" />
+      <Icon
+        name="tachometer"
+        color={hasIndicators ? theme.actionOnTimeColor : theme.actionNotStartedColor}
+        height="1.2em"
+        width="1.2em"
+      />
+      <Icon
+        name="bullseye"
+        color={hasGoals ? theme.actionOnTimeColor : theme.actionNotStartedColor}
+        height="1.2em"
+        width="1.2em"
+      />
     </div>
   );
+};
+
+const hasResponsiblePersons = (actions) => {
+  let hasResponsibles = false;
+  actions.forEach((action) => {
+    action.responsibleParties.forEach((party) => {
+      if (party.hasContactPerson) hasResponsibles = true;
+    });
+  });
+  return hasResponsibles;
+};
+
+const hasIndicators = (actions) => {
+  let hasRelevantIndicators = false;
+  actions.forEach((action) => {
+    if (action.relatedIndicators.length > 0) hasRelevantIndicators = true;
+  });
+  return hasRelevantIndicators;
 };
 
 const ResponsiblesViz = ({ parties }) => {
@@ -181,7 +232,7 @@ function processAction(actionIn, orgMap) {
   return action;
 }
 
-const ActionRow = ({item, plan}) => {
+const ActionRow = ({item, plan, hasResponsibles, hasImpacts, hasIndicators}) => {
   const actionStatus = cleanActionStatus(item, plan.actionStatuses);
 
   return (
@@ -214,23 +265,28 @@ const ActionRow = ({item, plan}) => {
       <td>
         <TasksStatusBar tasks={item.tasks} />
       </td>
-      <td>
-        <ResponsiblesViz parties={item.responsibleParties} persons={item.contactPersons} />
-      </td>
-      <td>
-        { plan.actionImpacts?.length > 0 && item.impact
-            && (
+      { hasResponsibles && (
+        <td>
+          <ResponsiblesViz parties={item.responsibleParties} persons={item.contactPersons} />
+        </td>
+      )}
+      { hasImpacts && (
+        <td>
+          { item.impact && (
             <ActionImpact
               identifier={item.impact.identifier}
               name=""
               size="sm"
             />
-            )}
-      </td>
-      <td>
-        { item.relatedIndicators && !item.mergedWith &&
-          <IndicatorsViz relatedIndicators={item.relatedIndicators} />}
-      </td>
+          )}
+        </td>
+      )}
+      { hasIndicators && (
+        <td>
+          { item.relatedIndicators && !item.mergedWith &&
+            <IndicatorsViz relatedIndicators={item.relatedIndicators} />}
+        </td>
+      )}
       <td>
         <UpdatedAgo>{ `${dayjs(item.updatedAt).fromNow(false)}` }</UpdatedAgo>
       </td>
@@ -244,25 +300,36 @@ const ActionsStatusTable = (props) => {
   const plan = useContext(PlanContext);
   const sortedActions = actions.sort((g1, g2) => g1.identifier - g2.identifier)
     .map((action) => processAction(action, orgMap));
-  const hasImpacts = plan.actionImpacts.length > 0;
-  const { t, i18n } = useTranslation(['common', 'actions']);
+  const showImpacts = plan.actionImpacts.length > 0;
+  const showResponsibles = hasResponsiblePersons(sortedActions);
+  const showIndicators = hasIndicators(sortedActions);
+  const { t } = useTranslation(['common', 'actions']);
 
   return (
     <DashTable role="list">
       <thead>
         <tr>
-          <th>{ t('action-identifier') }</th>
+          <th><abbr>{ t('action-id') }</abbr></th>
           <th>{ t('action-name-title') }</th>
           <th>{ t('action-implementation-phase') }</th>
           <th>{ t('action-tasks') }</th>
-          <th>{ t('action-responsibles-short') }</th>
-          <th>{ hasImpacts && t('action-impact') }</th>
-          <th>{ t('indicators') }</th>
+          { showResponsibles && <th>{t('action-responsibles-short')}</th> }
+          { showImpacts && <th>{t('action-impact')}</th> }
+          { showIndicators && <th>{ t('indicators') }</th> }
           <th>{ t('action-last-updated') }</th>
         </tr>
       </thead>
       <tbody>
-        {sortedActions.map((item) => <ActionRow item={item} key={item.id} plan={plan} />)}
+        {sortedActions.map((item) => (
+          <ActionRow
+            item={item}
+            key={item.id}
+            plan={plan}
+            hasResponsibles={showResponsibles}
+            hasImpacts={showImpacts}
+            hasIndicators={showIndicators}
+          />
+        ))}
       </tbody>
     </DashTable>
   );
