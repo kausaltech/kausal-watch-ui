@@ -6,6 +6,7 @@ import {
   Container, Row, Col, Nav, NavItem,
 } from 'reactstrap';
 import styled from 'styled-components';
+import { transparentize } from 'polished';
 import { useTranslation } from 'common/i18n';
 import { constructOrgHierarchy, orgHasActions } from 'common/organizations';
 import ContentLoader from 'components/common/ContentLoader';
@@ -74,6 +75,20 @@ const TableWrapper = styled.div`
   width: auto;
   display: flex;
   overflow-x: scroll;
+
+  background-image: ${(props) => `linear-gradient(to right, ${props.theme.themeColors.white}, ${props.theme.themeColors.white}),
+    linear-gradient(to right, ${props.theme.themeColors.white}, ${props.theme.themeColors.white}),
+    linear-gradient(to right, rgba(0, 0, 0, 0.25), ${transparentize(0, props.theme.themeColors.white)}),
+    linear-gradient(to left, rgba(0, 0, 0, 0.25), ${transparentize(0, props.theme.themeColors.white)})`};
+  background-position: left center, right center, left center, right center;
+  background-repeat: no-repeat;
+  background-color: ${(props) => props.theme.themeColors.white};
+  background-size: 20px 100%, 20px 100%, 10px 100%, 10px 100%;
+  background-attachment: local, local, scroll, scroll;
+
+  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    background-image: none;
+  }
 `;
 
 export const GET_ACTION_LIST = gql`

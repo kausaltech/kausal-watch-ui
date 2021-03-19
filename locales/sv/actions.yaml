@@ -1,4 +1,5 @@
 emission-scopes: Utsläppsomfattningar
+action-id: Id
 action-identifier: Märka
 action-not-found: Åtgärd hittades inte
 action-description: Beskrivning
@@ -36,5 +37,9 @@ not-being-monitored: ;Not monitored;
 not-being-implemented: ;Not being implemented;
 action-completion-percentage: Komplettering
 actions-phases: Åtgärds fas
+actions-phases-help: Antal pågående och slutförda åtgärder
 actions-status: Åtgärds komplettering
+actions-status-help: Andelen åtgärder som är enligt schemat
 actions-updated: Åtgärds uppdaterad
+actions-updated-help: Andelen åtgärder som har uppdaterats inom två månader
+

@@ -6,13 +6,26 @@ import { useTranslation } from 'common/i18n';
 import Card from 'components/common/Card';
 
 const GraphCard = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
   padding: 1rem;
   margin: 1rem;
   max-width: 260px;
 `;
 
 const GraphHeader = styled.h2`
-  font-size: 20px;
+  text-align: center;
+  font-size: ${(props) => props.theme.fontSizeBase};
+  line-height: ${(props) => props.theme.lineHeightMd};
+`;
+
+const HelpText = styled.p`
+  margin-bottom: ${(props) => props.theme.spaces.s200};
+  text-align: center;
+  font-size: ${(props) => props.theme.fontSizeSm};
+  line-height: ${(props) => props.theme.lineHeightMd};
 `;
 
 const StatusDonut = (props) => {
@@ -21,6 +34,7 @@ const StatusDonut = (props) => {
     currentValue,
     colors,
     header,
+    helpText,
   } = props;
   const theme = useTheme();
   const { i18n } = useTranslation();
@@ -85,6 +99,7 @@ const StatusDonut = (props) => {
   return (
     <GraphCard>
       <GraphHeader>{header}</GraphHeader>
+      <HelpText>{ helpText }</HelpText>
       <Plot data={[pieData]} layout={pieLayout} config={config} />
     </GraphCard>
   );

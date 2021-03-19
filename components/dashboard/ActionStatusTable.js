@@ -309,7 +309,7 @@ const ActionsStatusTable = (props) => {
     <DashTable role="list">
       <thead>
         <tr>
-          <th>{ t('action-identifier') }</th>
+          <th><abbr>{ t('action-id') }</abbr></th>
           <th>{ t('action-name-title') }</th>
           <th>{ t('action-implementation-phase') }</th>
           <th>{ t('action-tasks') }</th>

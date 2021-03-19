@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { transparentize } from 'polished';
 import dayjs from 'common/dayjs';
 import { cleanActionStatus, getPhaseData, getStatusData } from 'common/preprocess';
 import { useTheme } from 'common/theme';
@@ -12,6 +13,20 @@ const StatusGraphs = styled.div`
   width: auto;
   display: flex;
   overflow-x: scroll;
+  margin-bottom: ${(props) => props.theme.spaces.s300};
+  background-image: ${(props) => `linear-gradient(to right, ${props.theme.themeColors.white}, ${props.theme.themeColors.white}),
+    linear-gradient(to right, ${props.theme.themeColors.white}, ${props.theme.themeColors.white}),
+    linear-gradient(to right, rgba(0, 0, 0, 0.25), ${transparentize(0, props.theme.themeColors.white)}),
+    linear-gradient(to left, rgba(0, 0, 0, 0.25), ${transparentize(0, props.theme.themeColors.white)})`};
+  background-position: left center, right center, left center, right center;
+  background-repeat: no-repeat;
+  background-color: ${(props) => props.theme.themeColors.white};
+  background-size: 20px 100%, 20px 100%, 10px 100%, 10px 100%;
+  background-attachment: local, local, scroll, scroll;
+
+  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    background-image: none;
+  }
 `;
 
 const getTimelinessData = (actions, actionStatuses, theme, t) => {
@@ -99,6 +114,7 @@ const ActionsStatusGraphs = (props) => {
           currentValue={phaseData.total}
           colors={phaseData.colors.length > 0 && phaseData.colors}
           header={t('actions-phases')}
+          helpText={t('actions-phases-help')}
         />
       )}
       <StatusDonut
@@ -106,12 +122,14 @@ const ActionsStatusGraphs = (props) => {
         currentValue={progressData.total}
         colors={progressData.colors.length > 0 && progressData.colors}
         header={t('actions-status')}
+        helpText={t('actions-status-help')}
       />
       <StatusDonut
         data={{ values: timelinessData.values, labels: timelinessData.labels }}
         currentValue={timelinessData.total}
         colors={timelinessData.colors.length > 0 && timelinessData.colors}
         header={t('actions-updated')}
+        helpText={t('actions-updated-help')}
       />
     </StatusGraphs>
   );
