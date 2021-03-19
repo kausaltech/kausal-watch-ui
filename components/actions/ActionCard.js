@@ -114,7 +114,7 @@ const StyledCardTitle = styled.div`
 function getMockIconUrl(category) {
   const plan = useContext(PlanContext);
   let iconUrl = null;
-  if (plan.identifier === 'liiku') iconUrl = `/static/images/liiku/category-${category}.svg`;
+  if (plan.identifier === 'liiku') iconUrl = `/static/themes/liiku/images/category-${category}.svg`;
   return iconUrl;
 }
 
