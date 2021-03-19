@@ -136,11 +136,14 @@ StaticPage.getInitialProps = async ({ query }) => ({
 
 const PageHeaderBlock = (props) => {
   const { color, page } = props;
+  const theme = useTheme();
 
   switch (page.__typename) {
     case 'CategoryPage': {
       const parentTitle = page.category.parent?.categoryPage
-        ? `${page.category.parent?.identifier}. ${page.category.parent?.categoryPage.title}`
+        ? `${theme.settings.categories.showIdentifiers
+          && `${page.category.parent?.identifier}. `}
+          ${page.category.parent?.categoryPage.title}`
         : page.category.level.namePlural;
       const parentUrl = page.category.parent?.categoryPage.urlPath || '/';
       const headerImage = page.category.image || page.category.parent?.image;
@@ -148,7 +151,7 @@ const PageHeaderBlock = (props) => {
         <CategoryPageHeaderBlock
           title={page.title}
           categoryId={page.category.id}
-          identifier={page.category.identifier}
+          identifier={theme.settings.categories.showIdentifiers ? page.category.identifier : undefined}
           lead={page.category.shortDescription}
           headerImage={headerImage.large.src}
           imageAlign={getBgImageAlignment(headerImage)}

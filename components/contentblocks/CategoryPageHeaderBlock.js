@@ -137,10 +137,12 @@ const CategoryPageHeaderBlock = (props) => {
                   </Breadcrumb>
                 )}
                 <h1>
-                  <Identifier>
-                    {identifier}
-                    .
-                  </Identifier>
+                  { identifier && (
+                    <Identifier>
+                      {identifier}
+                      .
+                    </Identifier>
+                  )}
                   {' '}
                   { title }
                 </h1>

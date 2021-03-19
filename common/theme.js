@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import PropTypes, { number, exact, string, oneOfType } from 'prop-types';
+import PropTypes, { number, exact, string, oneOfType, bool, array } from 'prop-types';
 import { ThemeContext } from 'styled-components';
 
 /* eslint-disable */
@@ -188,6 +188,16 @@ export const themeProp = exact({
   themeCustomStylesUrl: string.isRequired,
   themeLogoUrl: string.isRequired,
   themeLogoWhiteUrl: string.isRequired,
+  settings: exact({
+    dashboard: exact({
+      showResponsibles: bool.isRequired,
+    }),
+    categories: exact({
+      showIdentifiers: bool.isRequired,
+    }),
+    fundingInstruments: array.isRequired,
+    otherLogos: array.isRequired
+  }),
 });
 
 export function setTheme(newTheme) {

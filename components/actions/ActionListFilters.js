@@ -5,6 +5,7 @@ import {
 } from 'reactstrap';
 import _ from 'lodash';
 import styled from 'styled-components';
+import { useTheme } from 'common/theme';
 import { useTranslation } from 'common/i18n';
 import TextInput from 'components/common/TextInput';
 import Button from 'components/common/Button';
@@ -155,6 +156,7 @@ function ActionListFilters({
   filters, orgs, categoryTypes, impacts, actionCount, onChange,
 }) {
   const { t } = useTranslation();
+  const theme = useTheme();
   const sortedOrgs = generateSortedOrgTree(orgs.filter((org) => !org.parent), 0);
   const allFilters = [];
 
@@ -188,7 +190,10 @@ function ActionListFilters({
       md: 6,
       lg: 4,
       identifier: `category_${ct.identifier}`,
-      options: ct.categories.filter((cat) => !cat.parent),
+      options: ct.categories.filter((cat) => !cat.parent).map((topCat) => ({
+        id: topCat.id,
+        label: `${theme.settings.categories.showIdentifiers ? `${topCat.identifier}. ` : ''}${topCat.name}`,
+      })),
     });
   });
 

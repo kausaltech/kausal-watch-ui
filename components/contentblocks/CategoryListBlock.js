@@ -2,6 +2,7 @@ import React from 'react';
 import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
 import RichText from 'components/common/RichText';
+import { useTheme } from 'common/theme';
 import { getBgImageAlignment } from 'common/images';
 import { DynamicLink } from 'common/links';
 import Card from 'components/common/Card';
@@ -47,6 +48,8 @@ const Identifier = styled.span`
 const CategoryListBlock = (props) => {
   const { categories, color, fallbackImage, heading, lead } = props;
   const themeColor = color;
+  const theme = useTheme();
+
   return (
     <CategoryListSection bg={themeColor}>
       <Container>
@@ -72,7 +75,16 @@ const CategoryListBlock = (props) => {
                     imageTone={themeColor}
                   >
                     <div>
-                      <CardHeader><Identifier>{cat.identifier}.</Identifier> { cat.name }</CardHeader>
+                      <CardHeader>
+                        { theme.settings.categories.showIdentifiers && (
+                          <Identifier>
+                            {cat.identifier}
+                            .
+                            {' '}
+                          </Identifier>
+                        )}
+                        { cat.name }
+                      </CardHeader>
                       <p>{cat.shortDescription}</p>
                     </div>
                   </Card>
