@@ -191,6 +191,7 @@ export const themeProp = exact({
   settings: exact({
     dashboard: exact({
       showResponsibles: bool.isRequired,
+      showIndicators: bool.isRequired,
     }),
     categories: exact({
       showIdentifiers: bool.isRequired,

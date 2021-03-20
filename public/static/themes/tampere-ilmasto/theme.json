@@ -137,7 +137,8 @@
   },
   "settings": {
     "dashboard": {
-      "showResponsibles": true
+      "showResponsibles": false,
+      "showIndicators": false
     },
     "categories": {
       "showIdentifiers": true,
