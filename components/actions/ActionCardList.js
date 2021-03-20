@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Row, Col } from 'reactstrap';
 import styled from 'styled-components';
-
+import { useTheme } from 'common/theme';
 import ActionCard from './ActionCard';
 
 const ActionsList = styled.div`
@@ -28,6 +28,7 @@ const ActionGroup = styled(Row)`
 `;
 
 function ActionCardList({ actions }) {
+  const theme = useTheme();
   let groups = [];
   const groupMap = {};
   const noGroupItems = [];
@@ -45,7 +46,7 @@ function ActionCardList({ actions }) {
     } else {
       group = {
         id: cat.id,
-        displayIdentifier: `${cat.categoryPage ? cat.identifier : ''}`,
+        displayIdentifier: `${theme.settings.categories.showIdentifiers ? cat.identifier : ''}`,
         name: cat.name,
         identifier: cat.identifier,
         elements: [],

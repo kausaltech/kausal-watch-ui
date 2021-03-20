@@ -4,7 +4,7 @@ import { gql, useQuery } from '@apollo/client';
 import { useTranslation } from 'common/i18n';
 import Layout, { Meta } from 'components/layout';
 import PlanContext from 'context/plan';
-import { ThemeContext } from 'styled-components';
+import { useTheme } from 'common/theme';
 import ErrorMessage from 'components/common/ErrorMessage';
 import ContentLoader from 'components/common/ContentLoader';
 import StreamField from 'components/common/StreamField';
@@ -136,11 +136,14 @@ StaticPage.getInitialProps = async ({ query }) => ({
 
 const PageHeaderBlock = (props) => {
   const { color, page } = props;
+  const theme = useTheme();
 
   switch (page.__typename) {
     case 'CategoryPage': {
       const parentTitle = page.category.parent?.categoryPage
-        ? `${page.category.parent?.identifier}. ${page.category.parent?.categoryPage.title}`
+        ? `${theme.settings.categories.showIdentifiers
+          && `${page.category.parent?.identifier}. `}
+          ${page.category.parent?.categoryPage.title}`
         : page.category.level.namePlural;
       const parentUrl = page.category.parent?.categoryPage.urlPath || '/';
       const headerImage = page.category.image || page.category.parent?.image;
@@ -148,7 +151,7 @@ const PageHeaderBlock = (props) => {
         <CategoryPageHeaderBlock
           title={page.title}
           categoryId={page.category.id}
-          identifier={page.category.identifier}
+          identifier={theme.settings.categories.showIdentifiers ? page.category.identifier : undefined}
           lead={page.category.shortDescription}
           headerImage={headerImage.large.src}
           imageAlign={getBgImageAlignment(headerImage)}
@@ -179,7 +182,7 @@ const Content = ({ page }) => {
   const { title, headerImage } = page;
   const imageUrl = headerImage?.large.src;
 
-  const theme = useContext(ThemeContext);
+  const theme = useTheme();
   const pageSectionColor = page.category?.color || page.category?.parent?.color || theme.neutralDark;
   return (
     <article>

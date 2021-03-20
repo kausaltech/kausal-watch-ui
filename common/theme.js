@@ -1,7 +1,7 @@
 import { useContext } from 'react';
-import PropTypes, { number, exact, string, oneOfType } from 'prop-types';
+import PropTypes, { number, exact, string, oneOfType, bool, array } from 'prop-types';
 import { ThemeContext } from 'styled-components';
-
+import _ from 'lodash';
 /* eslint-disable */
 const defaultTheme = require('public/static/themes/default/theme.json');
 
@@ -188,10 +188,24 @@ export const themeProp = exact({
   themeCustomStylesUrl: string.isRequired,
   themeLogoUrl: string.isRequired,
   themeLogoWhiteUrl: string.isRequired,
+  settings: exact({
+    dashboard: exact({
+      showResponsibles: bool.isRequired,
+      showIndicators: bool.isRequired,
+    }),
+    categories: exact({
+      showIdentifiers: bool.isRequired,
+      filterIndicatorsByAllLevels: bool.isRequired,
+    }),
+    fundingInstruments: array.isRequired,
+    otherLogos: array.isRequired,
+  }),
 });
 
 export function setTheme(newTheme) {
-  const out = { ...defaultTheme, ...newTheme };
+  // Merge with default theme recursively
+  const out = _.cloneDeep(defaultTheme);
+  _.merge(out, newTheme);
   PropTypes.checkPropTypes({ theme: themeProp.isRequired }, { theme: out }, 'prop', 'GlobalTheme');
 
   Object.getOwnPropertyNames(theme).forEach((prop) => delete theme[prop]);

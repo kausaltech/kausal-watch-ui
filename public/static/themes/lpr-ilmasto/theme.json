@@ -134,5 +134,15 @@
     "yellow050": "rgb(200, 130, 23)",
     "yellow070": "rgb(143, 70, 4)",
     "yellow090": "rgb(60, 19, 0)"
+  },
+  "settings": {
+    "otherLogos": [
+      {
+        "id": "1",
+        "name": "European Green Leaf winner 2021 (An initiative of European Comission)",
+        "link": "",
+        "logo": "/static/themes/lpr-ilmasto/images/european-green-leaf.svg"
+      }
+    ]
   }
 }

@@ -99,13 +99,17 @@ const ActionNumber = styled.span`
 `;
 
 const ActionCategories = (categories) => {
+  const theme = useTheme();
+  const { showIdentifiers } = theme.settings.categories;
+
   const displayCategories = [];
+
   categories.categories.forEach((cat, indx) => {
     displayCategories[indx] = {};
     let categoryTitle = cat.name;
     if (cat.categoryPage) {
       displayCategories[indx].url = cat.categoryPage.urlPath;
-      if (cat.identifier) categoryTitle = `${cat.identifier}. ${cat.name}`;
+      if (cat.identifier && showIdentifiers) categoryTitle = `${cat.identifier}. ${cat.name}`;
     } else {
       displayCategories[indx].url = `/actions?category_action=${cat.id}`;
     }
@@ -116,7 +120,7 @@ const ActionCategories = (categories) => {
       let categoryParentTitle = cat.parent.name;
       if (cat.parent.categoryPage) {
         displayCategories[indx].parent.url = cat.parent.categoryPage.urlPath;
-        if (cat.parent.identifier) categoryParentTitle = `${cat.parent.identifier}. ${cat.parent.name}`;
+        if (cat.parent.identifier && showIdentifiers) categoryParentTitle = `${cat.parent.identifier}. ${cat.parent.name}`;
       } else {
         displayCategories[indx].parent.url = `/actions?category_action=${cat.parent.id}`;
       }

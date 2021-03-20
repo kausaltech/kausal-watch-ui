@@ -134,5 +134,15 @@
     "yellow050": "rgb(232, 202, 36)",
     "yellow070": "rgb(199, 170, 6)",
     "yellow090": "rgb(160, 136, 0)"
+  },
+  "settings": {
+    "otherLogos": [
+      {
+        "id": "1",
+        "name": "Lahti, European Green Capital winner 2021 (An initiative of European Comission)",
+        "link": "",
+        "logo": "/static/themes/lahti-ilmasto/images/lahti-green-capital-2021.svg"
+      }
+    ]
   }
 }

@@ -164,24 +164,6 @@ const IndicatorsViz = ({ relatedIndicators }) => {
   );
 };
 
-const hasResponsiblePersons = (actions) => {
-  let hasResponsibles = false;
-  actions.forEach((action) => {
-    action.responsibleParties.forEach((party) => {
-      if (party.hasContactPerson) hasResponsibles = true;
-    });
-  });
-  return hasResponsibles;
-};
-
-const hasIndicators = (actions) => {
-  let hasRelevantIndicators = false;
-  actions.forEach((action) => {
-    if (action.relatedIndicators.length > 0) hasRelevantIndicators = true;
-  });
-  return hasRelevantIndicators;
-};
-
 const ResponsiblesViz = ({ parties }) => {
   const theme = useTheme();
   const contactList = [];
@@ -194,8 +176,12 @@ const ResponsiblesViz = ({ parties }) => {
 
   return (
     <ResponsibleList>
-      { contactList.map((contact) => <Icon name="dot-circle" color={theme.actionOnTimeColor} key={contact} width=".8em" height=".8em" />)}
-      { noContactList.map((contact) => <Icon name="circle-outline" color={theme.actionOnTimeColor} key={contact} width=".8em" height=".8em"  />)}
+      { contactList.map((contact) => (
+        <Icon name="dot-circle" color={theme.actionOnTimeColor} key={contact} width=".8em" height=".8em" />
+      ))}
+      { noContactList.map((contact) => (
+        <Icon name="circle-outline" color={theme.actionOnTimeColor} key={contact} width=".8em" height=".8em" />
+      ))}
     </ResponsibleList>
   );
 };
@@ -298,11 +284,11 @@ const ActionsStatusTable = (props) => {
   const { actions, orgs } = props;
   const orgMap = new Map(orgs.map((org) => [org.id, org]));
   const plan = useContext(PlanContext);
+  const theme = useTheme();
   const sortedActions = actions.sort((g1, g2) => g1.identifier - g2.identifier)
     .map((action) => processAction(action, orgMap));
   const showImpacts = plan.actionImpacts.length > 0;
-  const showResponsibles = hasResponsiblePersons(sortedActions);
-  const showIndicators = hasIndicators(sortedActions);
+  const { showResponsibles, showIndicators } = theme.settings.dashboard;
   const { t } = useTranslation(['common', 'actions']);
 
   return (

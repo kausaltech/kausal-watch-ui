@@ -134,5 +134,17 @@
     "yellow050": "rgb(200, 130, 23)",
     "yellow070": "rgb(143, 70, 4)",
     "yellow090": "rgb(60, 19, 0)"
+  },
+  "settings": {
+    "dashboard": {
+      "showResponsibles": true,
+      "showIndicators": true
+    },
+    "categories": {
+      "showIdentifiers": false,
+      "filterIndicatorsByAllLevels": true
+    },
+    "fundingInstruments":[],
+    "otherLogos": []
   }
 }

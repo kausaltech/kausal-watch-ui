@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
 import { Row, Col } from 'reactstrap';
+import { withTheme } from 'styled-components';
 import { withTranslation } from '../../common/i18n';
 import TextInput from '../common/TextInput';
 import DropDown from '../common/DropDown';
@@ -42,10 +44,26 @@ class IndicatorListFilters extends React.Component {
     return category ? category.identifier : '';
   }
 
+  getDepth(cats, catId, depth) {
+    let currentDepth = depth;
+    const currentCat = cats.find((cat) => cat.id === catId);
+    if (currentCat.parent) currentDepth = this.getDepth(cats, currentCat.parent.id, depth + 1);
+    return currentDepth;
+  };
+
   render() {
-    const { t, cats } = this.props;
+    const { t, theme, cats } = this.props;
     const { activeCat } = this.state;
-    const sortedCats = cats.sort((a, b) => a.identifier.localeCompare(b.identifier));
+    const { showIdentifiers, filterIndicatorsByAllLevels } = theme.settings.categories;
+
+    let sortedCats = _.cloneDeep(cats.sort((a, b) => a.identifier.localeCompare(b.identifier)));
+    if (!filterIndicatorsByAllLevels) sortedCats = sortedCats.filter((cat) => !cat.parent);
+
+    sortedCats.forEach((cat) => {
+      cat.label = `${' '.repeat(this.getDepth(cats, cat.id, 0) * 4)}
+      ${showIdentifiers ? `${this.getCategoryIdentifier(cat.id)}. ` : ''}
+      ${this.getCategoryName(cat.id)}`;
+    });
 
     return (
       <form className="filters mb-5 mt-5" onSubmit={(event) => { event.preventDefault(); }}>
@@ -63,7 +81,7 @@ class IndicatorListFilters extends React.Component {
               <option value="">{t('filter-all-categories')}</option>
               {sortedCats.map(cat => (
                 <option value={cat.id} key={cat.id}>
-                  { `${this.getCategoryIdentifier(cat.id)} ${this.getCategoryName(cat.id)}` }
+                  { cat.label }
                 </option>
               ))}
             </DropDown>
@@ -93,4 +111,4 @@ IndicatorListFilters.propTypes = {
   cats: PropTypes.arrayOf(PropTypes.object),
 };
 
-export default withTranslation('common')(IndicatorListFilters);
+export default withTranslation('common')(withTheme(IndicatorListFilters));

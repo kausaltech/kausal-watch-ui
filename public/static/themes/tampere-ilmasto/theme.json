@@ -134,5 +134,15 @@
     "yellow050": "rgb(244, 210, 64)",
     "yellow070": "rgb(214, 188, 77)",
     "yellow090": "rgb(182, 158, 58)"
+  },
+  "settings": {
+    "dashboard": {
+      "showResponsibles": false,
+      "showIndicators": false
+    },
+    "categories": {
+      "showIdentifiers": true,
+      "filterIndicatorsByAllLevels": false
+    }
   }
 }
