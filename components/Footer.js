@@ -1,7 +1,6 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-
-import { withTranslation } from 'common/i18n';
+import { useTheme } from 'common/theme';
+import { useTranslation } from 'common/i18n';
 import PlanContext from 'context/plan';
 import SiteContext from 'context/site';
 import ApplicationStateBanner from './common/ApplicationStateBanner';
@@ -11,7 +10,10 @@ function Footer(props) {
   const plan = React.useContext(PlanContext);
   const site = React.useContext(SiteContext);
   const generalContent = plan.generalContent || {};
-  const { t } = props;
+  const theme = useTheme();
+
+  const { fundingInstruments, otherLogos } = theme.settings;
+  const { t } = useTranslation();
   let navLinks = [];
   let staticPages = [];
   const hasActionImpacts = plan.impactGroups?.length > 0;
@@ -71,34 +73,6 @@ function Footer(props) {
     utilityLinks.push({ id: '3', name: t('admin-login'), slug: plan.adminUrl, icon: 'lock' });
   }
 
-  let fundingInstruments = [];
-  if (plan.identifier === 'hnh2035') fundingInstruments = [
-    {
-      id: '1',
-      name: 'Climate-KIC (Climate-KIC is supported by the EIT, a body of the European Union)',
-      link: '',
-      logo: '/static/themes/hnh2035/images/climate-kic-logo-white.svg',
-    },
-  ];
-
-  let otherLogos = [];
-  if (plan.identifier === 'lpr-ilmasto') otherLogos = [
-    {
-      id: '1',
-      name: 'European Green Leaf winner 2021 (An initiative of European Comission)',
-      link: '',
-      logo: '/static/themes/lpr-ilmasto/images/european-green-leaf.svg',
-    },
-  ];
-  if (plan.identifier === 'lahti-ilmasto') otherLogos = [
-    {
-      id: '1',
-      name: 'Lahti, European Green Capital winner 2021 (An initiative of European Comission)',
-      link: '',
-      logo: '/static/themes/lahti-ilmasto/images/lahti-green-capital-2021.svg',
-    },
-  ];
-
   return (
     <>
       <SiteFooter
@@ -118,8 +92,4 @@ function Footer(props) {
   );
 }
 
-Footer.propTypes = {
-  t: PropTypes.func.isRequired,
-};
-
-export default withTranslation('common')(Footer);
+export default Footer;
