@@ -16,15 +16,15 @@ action-task-done: Done
 action-task-todo: Todo
 action-tasks-todo-empty: No to-dos
 action-status-updates: Latest updates
-action-last-updated: Information updated
+action-last-updated: Updated
 action-timeline: Timeline
 action-timeline-between: Timeframe between
 action-progress: Progress
 action-responsibles-short: Responsibles
-action-implementation-phase: Implementation phase
+action-implementation-phase: Phase
 action-percent-ready: ready
 action-num: '#'
-action-name-title: Action theme
+action-name-title: Action name
 action-impact: Impact
 action-monitoring: Monitoring
 action-merged: Merged actions
