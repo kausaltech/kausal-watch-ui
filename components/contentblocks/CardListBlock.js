@@ -48,7 +48,7 @@ const CardListBlock = (props) => {
       <Container>
         { heading && (<SectionHeader>{ heading }</SectionHeader>)}
         <Content>{ lead }</Content>
-        <Row>
+        <Row role="list">
           { cards?.map((card,inx) => (
             <Col
               tag="li"

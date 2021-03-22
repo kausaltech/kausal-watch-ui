@@ -53,7 +53,7 @@ const CategoryPageHeader = styled.div`
 `;
 
 const Identifier = styled.span`
-  color: ${(props) => props.theme.graphColors.grey050};
+  color: ${(props) => props.theme.themeColors.dark};
 `;
 
 const HeaderContent = styled.div`

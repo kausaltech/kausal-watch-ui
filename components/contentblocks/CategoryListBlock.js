@@ -42,7 +42,7 @@ const CardHeader = styled.h3`
 `;
 
 const Identifier = styled.span`
-  color: ${(props) => props.theme.graphColors.grey050};
+  color: ${(props) => props.theme.themeColors.dark};
 `;
 
 const CategoryListBlock = (props) => {
@@ -55,7 +55,7 @@ const CategoryListBlock = (props) => {
       <Container>
         { heading && (<SectionHeader>{ heading }</SectionHeader>)}
         <RichText html={lead} className="lead-text" />
-        <Row>
+        <Row role="list">
           { categories?.map((cat) => (
             <Col
               tag="li"
