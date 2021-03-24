@@ -17,6 +17,7 @@ const TaskWrapper = styled.div`
 `;
 
 const TaskMeta = styled.div`
+  margin-top: ${(props) => props.theme.spaces.s050};
   flex: 0 0 ${(props) => props.theme.spaces.s800};
 `;
 
