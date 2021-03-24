@@ -32,6 +32,9 @@ const TaskContent = styled.div`
       margin-bottom: 0;
     }
   }
+  .task-comment h4 {
+    margin-top: 1rem;
+  }
 `;
 
 const ListGroup = styled(BaseListGroup)`
@@ -86,8 +89,10 @@ function TaskList(props) {
             <Date>{parseTimestamp(item.dueAt)}</Date>
           </TaskMeta>
           <TaskContent>
-            <h4>{item.name}</h4>
-            {item.comment && (<RichText html={item.comment} />)}
+            <h4 className='task-title'>{item.name}</h4>
+            <div className='task-comment'>
+              {item.comment && (<RichText html={item.comment} />)}
+            </div>
           </TaskContent>
         </TaskWrapper>
       </ListGroupItem>
@@ -104,8 +109,10 @@ function TaskList(props) {
             <Date>{parseTimestamp(item.completedAt)}</Date>
           </TaskMeta>
           <TaskContent>
-            <h4>{item.name}</h4>
-            {item.comment && (<RichText html={item.comment} />)}
+            <h4 className='task-title'>{item.name}</h4>
+            <div className='task-comment'>
+              {item.comment && (<RichText html={item.comment} />)}
+            </div>
           </TaskContent>
         </TaskWrapper>
       </ListGroupItem>
