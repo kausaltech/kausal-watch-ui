@@ -113,7 +113,9 @@ under-x-days: 'Under {{days}} days'
 over-x-days: 'Over {{days}} days'
 frequently-asked-questions: Frequently asked questions
 actions-as-list: As a list
+initial-value: Initial value
 reduced: Reduced
 to-reduce: Left to reduce
 bar-goal: Goal
+indicator-source: Source
 admin-login: Admin login

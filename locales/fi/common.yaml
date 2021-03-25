@@ -113,7 +113,9 @@ under-x-days: Alle {{days}} päivää
 over-x-days: Yli {{days}} päivää
 frequently-asked-questions: Usein Kysytyt Kysymykset
 actions-as-list: Listana
+initial-value: Lähtöarvo
 reduced: Vähennetty
 to-reduce: Vähennettävää
 bar-goal: Tavoite
+indicator-source: Lähde
 admin-login: Ylläpito

@@ -120,6 +120,7 @@ const STREAM_FIELD_FRAGMENT = gql`
         unit {
           id
           shortName
+          verboseNamePlural
         }
         minValue
         maxValue
@@ -146,7 +147,6 @@ const STREAM_FIELD_FRAGMENT = gql`
             slug
           }
         }
-
       }
     }
     ... on CardListBlock {
@@ -259,8 +259,16 @@ function StreamFieldBlock(props) {
       );
     }
     case 'IndicatorShowcaseBlock': {
-      const { indicator, title, body } = props;
-      return <IndicatorShowcaseBlock indicator={indicator} title={title} body={body} />;
+      const { indicator, title, body, linkButton } = props;
+      return (
+        <IndicatorShowcaseBlock
+          indicator={indicator}
+          title={title}
+          body={body}
+          linkPath={linkButton.page.urlPath}
+          linkText={linkButton.text}
+        />
+      );
     }
     case 'CardListBlock': {
       const { cards, lead, heading } = props;

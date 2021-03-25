@@ -3,6 +3,9 @@ import PropTypes from 'prop-types';
 import { useInView } from 'react-intersection-observer';
 import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
+import { Link } from 'routes';
+import Icon from 'components/common/Icon';
+import Button from 'components/common/Button';
 import RichText from 'components/common/RichText';
 import IndicatorProgressBar from 'components/indicators/IndicatorProgressBar';
 
@@ -21,7 +24,7 @@ const Content = styled.div`
 `;
 
 const IndicatorShowcaseBlock = (props) => {
-  const { indicator, title, body } = props;
+  const { indicator, title, body, linkPath, linkText } = props;
   // Animation hook:  trigger when visible on screen
   const { ref, inView, entry } = useInView({
     triggerOnce: true,
@@ -51,10 +54,24 @@ const IndicatorShowcaseBlock = (props) => {
               goalDate={indicator.goals[indicator.goals.length-1].date}
               goalValue={(goalValue < startValue) ? goalValue : startValue}
               unit={indicator.unit.shortName}
+              verboseUnit={
+                indicator.unit?.verboseNamePlural ? indicator.unit.verboseNamePlural : indicator.unit.shortName
+              }
               note={indicator.name}
               animate={inView}
             />
+
+            { /* Animation trigger element */}
             <span ref={ref} />
+            { linkText && (
+              <Link href={linkPath}>
+                <Button outline color="light" tag="a" href="" className="mt-4">
+                  {linkText}
+                  {' '}
+                  <Icon name="arrowRight" color="white" />
+                </Button>
+              </Link>
+            )}
           </Col>
         </Row>
       </Container>
