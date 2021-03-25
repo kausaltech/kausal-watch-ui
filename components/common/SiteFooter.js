@@ -351,22 +351,18 @@ function SiteFooter(props) {
       <StyledFooter className="site-footer">
         <Container>
           <FooterNav>
-            <Branding>
-              <Logo>
-                <Link href="/">
-                  <a>
+            <Link href="/">
+              <a href>
+                <Branding>
+                  <Logo>
                     <OrgLogo aria-hidden="true" className="footer-org-logo" />
-                  </a>
-                </Link>
-              </Logo>
-              <ServiceTitle>
-                <Link href="/">
-                  <a>
-                    {siteTitle}
-                    </a>
-                </Link>
-              </ServiceTitle>
-            </Branding>
+                  </Logo>
+                  <ServiceTitle>
+                        {siteTitle}
+                  </ServiceTitle>
+                </Branding>
+                </a>
+                    </Link>
             <FooterNavItems>
               { navItems && navItems.map((page) => (
                 <FooterNavItem key={page.id}>
