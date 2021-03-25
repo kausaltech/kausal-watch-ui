@@ -79,7 +79,7 @@
   "badgePaddingY": "0.5em",
   "badgePaddingX": "0.75em",
   "badgeFontWeight": 700,
-  "tableHeadBg": "rgb(46, 46, 45)",
+  "tableHeadBg": "rgb(247, 246, 243)",
   "tableHoverBg": "rgb(247, 246, 243)",
   "actionNotStartedColor": "rgb(236, 234, 230)",
   "actionCompletedColor": "rgb(12, 75, 43)",

@@ -60,6 +60,12 @@ const StatusDonut = (props) => {
     theme.graphColors.green050,
     theme.graphColors.yellow050,
   ];
+  pieData.marker = {
+    line: {
+      color: '#fff',
+      width: 1,
+    },
+  };
   pieData.autoMargin = true;
 
   const pieLayout = {
