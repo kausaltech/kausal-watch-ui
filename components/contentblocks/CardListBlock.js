@@ -8,17 +8,6 @@ import Card from 'components/common/Card';
 const CardListSection = styled.div`
   background-color: ${(props) => props.theme.themeColors.white};
   padding: ${(props) => props.theme.spaces.s400} 0;
-
-  a.card-wrapper {
-    display: flex;
-    width: 100%;
-    color: ${(props) => props.theme.themeColors.black};
-
-    &:hover {
-      text-decoration: none;
-      color: ${(props) => props.theme.themeColors.black};
-    }
-  }
 `;
 
 const SectionHeader = styled.h2`
@@ -60,18 +49,18 @@ const CardListBlock = (props) => {
               role="listitem"
               key={inx}
             >
-              <a href={card.link} className="card-wrapper">
-                <Card
-                  imageUrl={card.image && card.image.rendition.src}
-                  imageAlign="center"
-                  negative
-                >
-                  <div>
+              <Card
+                imageUrl={card.image && card.image.rendition.src}
+                imageAlign="center"
+                negative
+              >
+                <div>
+                  <a href={card.link} className="card-wrapper">
                     <CardHeader>{ card.heading }</CardHeader>
-                    <p>{card.content}</p>
-                  </div>
-                </Card>
-              </a>
+                  </a>
+                  <p>{card.content}</p>
+                </div>
+              </Card>
             </Col>
           ))}
         </Row>

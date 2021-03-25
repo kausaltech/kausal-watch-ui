@@ -29,6 +29,15 @@ const StyledCard = styled(BSCard)`
       color: ${(props) => props.theme.themeColors.white};
     }
   }
+
+  a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+  }
 `;
 
 const ImgArea = styled.div`

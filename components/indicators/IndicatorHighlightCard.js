@@ -17,6 +17,7 @@ const IndicatorType = styled.div`
 
 const IndicatorBg = styled.div`
   height: ${(props) => props.theme.spaces.s600};
+  text-align: center;
   background-color: ${(props) => {
     switch (props.level) {
       case 'action':
@@ -40,17 +41,25 @@ const StyledCard = styled(Card)`
   border-width: ${(props) => props.theme.cardBorderWidth};
   border-radius: ${(props) => props.theme.cardBorderRadius};
   overflow: hidden;
-  a {
-    color: ${(props) => props.theme.neutralDark};
-  }
   &:hover {
     transform: translateY(-5px);
     box-shadow: 4px 4px 8px rgba(82,90,101,0.5);
   }
+  a {
+    color: ${(props) => props.theme.neutralDark};
+  }
+  a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+  }
 `;
 
 const IndicatorValue = styled.div`
-  margin-top: ${(props) => props.theme.spaces.s050};
+  margin-top: ${(props) => props.theme.spaces.s150};
   font-size: ${(props) => props.theme.fontSizeXl};
   font-weight: ${(props) => props.theme.fontWeightBold};
   line-height: ${(props) => props.theme.lineHeightSm};
@@ -114,23 +123,18 @@ function IndicatorHighlightCard(props) {
     >
       {(springProps) => (
         <StyledCard style={springProps}>
-          <IndicatorLink id={objectid} prefetch={false}>
-            <a href>
-              <IndicatorBg level={level} />
-              <CardImgOverlay>
-                <IndicatorValue
-                  level={level}
-                  className="action-number"
-                >
-                  { beautifyValue(value) }
-                  <IndicatorUnit>{unit}</IndicatorUnit>
-                </IndicatorValue>
-              </CardImgOverlay>
-            </a>
-          </IndicatorLink>
+          <IndicatorBg level={level}>
+            <IndicatorValue
+              level={level}
+              className="action-number"
+            >
+              { beautifyValue(value) }
+              <IndicatorUnit>{unit}</IndicatorUnit>
+            </IndicatorValue>
+          </IndicatorBg>
           <CardBody>
             <IndicatorType>{ t(level) }</IndicatorType>
-            <IndicatorLink id={objectid}>
+            <IndicatorLink id={objectid} prefetch={false}>
               <a href>
                 <StyledCardTitle tag="h3">{ name }</StyledCardTitle>
               </a>
