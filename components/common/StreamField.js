@@ -265,7 +265,7 @@ function StreamFieldBlock(props) {
           indicator={indicator}
           title={title}
           body={body}
-          linkPath={linkButton.page.urlPath}
+          linkPath={linkButton.page?.urlPath}
           linkText={linkButton.text}
         />
       );
