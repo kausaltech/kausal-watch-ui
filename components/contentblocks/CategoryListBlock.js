@@ -10,6 +10,16 @@ import Card from 'components/common/Card';
 const CategoryListSection = styled.div`
   background-color: ${(props) => props.theme.neutralLight};
   padding: ${(props) => props.theme.spaces.s400} 0;
+
+  .lead-text {
+    text-align: center;
+    font-size: 1.25rem;
+    margin-bottom: 3rem;
+  }
+
+  a:hover {
+    text-decoration: none;
+  }
 `;
 
 const SectionHeader = styled.h2`
@@ -50,16 +60,14 @@ const CategoryListBlock = (props) => {
               style={{ transition: 'all 0.5s ease' }}
               role="listitem"
             >
-
-
-                  <Card
-                    imageUrl={cat.image?.small.src || fallbackImage.small.src}
-                    imageAlign={getBgImageAlignment(cat.image || fallbackImage)}
-                    imageTone={themeColor}
-                  >
-                    <div>
-                    <DynamicLink href={cat.categoryPage.urlPath}>
-                      <a>
+              <Card
+                imageUrl={cat.image?.small.src || fallbackImage.small.src}
+                imageAlign={getBgImageAlignment(cat.image || fallbackImage)}
+                imageTone={themeColor}
+              >
+                <div>
+                  <DynamicLink href={cat.categoryPage.urlPath}>
+                    <a href>
                       <CardHeader>
                         { theme.settings.categories.showIdentifiers && (
                           <Identifier>
@@ -70,12 +78,11 @@ const CategoryListBlock = (props) => {
                         )}
                         { cat.name }
                       </CardHeader>
-                      </a>
-                      </DynamicLink>
-                      <p>{cat.shortDescription}</p>
-                    </div>
-                  </Card>
-
+                    </a>
+                  </DynamicLink>
+                  <p>{cat.shortDescription}</p>
+                </div>
+              </Card>
             </Col>
           ))}
         </Row>

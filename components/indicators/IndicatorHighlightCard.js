@@ -48,6 +48,10 @@ const StyledCard = styled(Card)`
   a {
     color: ${(props) => props.theme.neutralDark};
   }
+  a:hover {
+    color: inherit;
+    text-decoration: none;
+  }
   a::after {
     content: '';
     position: absolute;

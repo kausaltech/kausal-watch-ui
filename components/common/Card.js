@@ -13,6 +13,7 @@ const StyledCard = styled(BSCard)`
   overflow: hidden;
   border-width: ${(props) => props.theme.cardBorderWidth};
   border-radius: ${(props) => props.theme.cardBorderRadius};
+  border-color: ${(props) => props.theme.themeColors.light};
   background-color: ${(props) => (props.customcolor ? props.customcolor : props.theme.themeColors.white)};
   box-shadow: 2px 2px 8px ${(props) => transparentize(0.9, props.theme.themeColors.dark)};
 

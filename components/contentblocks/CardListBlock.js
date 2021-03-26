@@ -1,8 +1,7 @@
 import React from 'react';
 import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
-import { getBgImageAlignment } from 'common/images';
-import { DynamicLink } from 'common/links';
+import { useTheme } from 'common/theme';
 import Card from 'components/common/Card';
 
 const CardListSection = styled.div`
@@ -28,8 +27,18 @@ const CardHeader = styled.h3`
   line-height: ${(props) => props.theme.lineHeightSm};
 `;
 
+const StyledLink = styled.a`
+  color: inherit;
+
+  &:hover {
+    color: inherit;
+    text-decoration: none;
+  }
+`;
+
 const CardListBlock = (props) => {
   const { heading, lead, cards } = props;
+  const theme = useTheme();
 
   // TODO : Summon a key value for cards
   return (
@@ -52,12 +61,13 @@ const CardListBlock = (props) => {
               <Card
                 imageUrl={card.image && card.image.rendition.src}
                 imageAlign="center"
+                customColor={theme.themeColors.neutralDark}
                 negative
               >
                 <div>
-                  <a href={card.link} className="card-wrapper">
+                  <StyledLink href={card.link}>
                     <CardHeader>{ card.heading }</CardHeader>
-                  </a>
+                  </StyledLink>
                   <p>{card.content}</p>
                 </div>
               </Card>

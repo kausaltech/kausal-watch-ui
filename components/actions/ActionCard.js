@@ -37,11 +37,18 @@ const ACTION_CARD_FRAGMENT = gql`
 
 const StyledActionLink = styled.a`
   text-decoration: none;
-  display: flex;
-  width: 100%;
 
   &:hover {
     text-decoration: none;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
   }
 `;
 
@@ -58,6 +65,8 @@ const ActionCardElement = styled.div`
   position: relative;
   width: 100%;
   background: ${(props) => props.theme.themeColors.white};
+  border-color: ${(props) => props.theme.themeColors.light};
+  border-style: solid;
   border-width: ${(props) => props.theme.cardBorderWidth};
   border-radius: ${(props) => props.theme.cardBorderRadius};
   overflow: hidden;
@@ -143,8 +152,7 @@ function ActionCard(props) {
   }
 
   return (
-    <ActionLink action={action}>
-      <StyledActionLink>
+
         <ActionCardElement>
           <ActionStatusArea statusColor={getStatusColor(status.identifier, theme)}>
             { iconUrl && (
@@ -168,10 +176,12 @@ function ActionCard(props) {
               )}
             </ActionStatus>
           </ActionStatusArea>
-          <StyledCardTitle>{actionName}</StyledCardTitle>
+          <ActionLink action={action}>
+            <StyledActionLink>
+              <StyledCardTitle>{actionName}</StyledCardTitle>
+            </StyledActionLink>
+          </ActionLink>
         </ActionCardElement>
-      </StyledActionLink>
-    </ActionLink>
   );
 }
 

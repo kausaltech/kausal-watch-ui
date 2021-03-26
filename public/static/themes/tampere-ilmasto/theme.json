@@ -71,7 +71,7 @@
   "formLabelFontWeight": 400,
   "brandNavColor": "rgb(255, 255, 255)",
   "brandNavBackground": "rgb(46, 46, 45)",
-  "cardBorderWidth": 0,
+  "cardBorderWidth": "1px",
   "cardBorderRadius": "0.25rem",
   "badgeBackground": "rgb(145, 201, 234)",
   "badgeColor": "rgb(70, 70, 82)",
