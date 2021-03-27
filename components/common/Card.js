@@ -13,6 +13,7 @@ const StyledCard = styled(BSCard)`
   overflow: hidden;
   border-width: ${(props) => props.theme.cardBorderWidth};
   border-radius: ${(props) => props.theme.cardBorderRadius};
+  border-color: ${(props) => props.theme.themeColors.light};
   background-color: ${(props) => (props.customcolor ? props.customcolor : props.theme.themeColors.white)};
   box-shadow: 2px 2px 8px ${(props) => transparentize(0.9, props.theme.themeColors.dark)};
 
@@ -28,6 +29,15 @@ const StyledCard = styled(BSCard)`
     h1, h2, h3, h4, h5, h6 {
       color: ${(props) => props.theme.themeColors.white};
     }
+  }
+
+  a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
   }
 `;
 

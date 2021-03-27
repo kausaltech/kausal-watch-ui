@@ -30,8 +30,12 @@ const UnitText = styled.tspan`
   font-size: 14px;
 `;
 
-const LinkedIndicator = styled.div`
-  cursor: pointer;
+const NegativeA = styled.a`
+  color: ${(props) => props.theme.themeColors.white};
+
+  &:hover, &:active {
+    color: ${(props) => props.theme.themeColors.white};
+  }
 `;
 
 // Use Finnish style numeric display formatting
@@ -92,7 +96,7 @@ const IndicatorProgressBar = (props) => {
     startDate, startValue,
     latestDate, latestValue,
     goalDate, goalValue,
-    unit, note, indicatorId,
+    unit, verboseUnit, note, indicatorId,
     animate } = props;
 
   const theme = useContext(ThemeContext);
@@ -153,111 +157,125 @@ const IndicatorProgressBar = (props) => {
   }
 
   return (
-    <IndicatorLink id={indicatorId}>
-      <LinkedIndicator>
-        <span>{ animate }</span>
-        <svg viewBox={`0 0 ${canvas.w} ${canvas.h}`}>
-          <title>a11y title here</title>
-          <BarBase
-            x="40"
-            y="60"
-            width={bar.w}
-            height={bar.h}
-            fill={theme.themeColors.light}
-          />
-          <motion.rect
-            initial={{ width: 0 }}
-            animate={{ width: completedBar.w }}
-            x={completedBar.x}
-            y="64"
-            height={bar.h - 8}
-            fill={theme.themeColors.light}
-          />
+    <>
+      <svg viewBox={`0 0 ${canvas.w} ${canvas.h}`} role="img" aria-labelledby="showcaseA11YTitle">
+        <title id="showcaseA11YTitle">
+          {`${t('initial-value')}: ${dayjs(startDate).format('YYYY')} `}
+          {`: ${beautifyValue(startValue)} ${verboseUnit}. `}
+
+          {`${t('reduced')}: ${beautifyValue(reductionCounterTo)} ${verboseUnit}. `}
+
+          {`${t('indicator-latest-value')}: ${dayjs(latestDate).format('YYYY')}: `}
+          {`${beautifyValue(latestValue)} ${verboseUnit}. `}
+
+          {`${t('to-reduce')}: ${beautifyValue(latestValue - goalValue)} ${verboseUnit} `}
+
+          {`${t('bar-goal')}: ${dayjs(goalDate).format('YYYY')}`}
+          {`${beautifyValue(goalValue)} ${verboseUnit}.`}
+        </title>
+        <BarBase
+          x="40"
+          y="60"
+          width={bar.w}
+          height={bar.h}
+          fill={theme.themeColors.light}
+        />
+        <motion.rect
+          initial={{ width: 0 }}
+          animate={{ width: completedBar.w }}
+          x={completedBar.x}
+          y="64"
+          height={bar.h - 8}
+          fill={theme.themeColors.light}
+        />
+        <line
+          x1={completedBar.x}
+          x2={completedBar.x}
+          y1={10}
+          y2={64 + bar.h - 8}
+          stroke={theme.themeColors.light}
+        />
+        <ValueGroup
+          transform={`translate(${completedBar.x + 4} 20)`}
+          date={dayjs(startDate).format('YYYY')}
+          value={startValue.toString()}
+          unit={unit}
+        />
+        <text transform={`translate(${completedBar.x + completedBar.w / 2} 110)`} textAnchor="middle">
+          <DateText>{t('reduced')}</DateText>
+          <UnitText x="0" dy="20">
+            <Counter
+              from={reductionCounterFrom}
+              to={reductionCounterTo}
+              duration={reductionCounterDuration}
+            />
+            {' '}
+            {unit}
+          </UnitText>
+        </text>
+        <motion.rect
+          animate={pendingBarControls}
+          y="64"
+          height={bar.h - 8}
+          fill={theme.graphColors.red030}
+        />
+        <motion.g animate={latestValueControls}>
           <line
-            x1={completedBar.x}
-            x2={completedBar.x}
+            x1={pendingBar.x}
+            x2={pendingBar.x}
             y1={10}
             y2={64 + bar.h - 8}
             stroke={theme.themeColors.light}
           />
           <ValueGroup
-            transform={`translate(${completedBar.x + 4} 20)`}
-            date={dayjs(startDate).format('YYYY')}
-            value={startValue.toString()}
+            transform={`translate(${pendingBar.x + 4} 20)`}
+            date={dayjs(latestDate).format('YYYY')}
+            value={latestValue.toString()}
             unit={unit}
           />
-          <text transform={`translate(${completedBar.x + completedBar.w / 2} 110)`} textAnchor="middle">
-            <DateText>{t('reduced')}</DateText>
-            <UnitText x="0" dy="20">
-              <Counter
-                from={reductionCounterFrom}
-                to={reductionCounterTo}
-                duration={reductionCounterDuration}
-              />
-              {' '}
-              {unit}
-            </UnitText>
-          </text>
-          <motion.rect
-            animate={pendingBarControls}
-            y="64"
-            height={bar.h - 8}
-            fill={theme.graphColors.red030}
-          />
-          <motion.g animate={latestValueControls}>
-            <line
-              x1={pendingBar.x}
-              x2={pendingBar.x}
-              y1={10}
-              y2={64 + bar.h - 8}
-              stroke={theme.themeColors.light}
-            />
-            <ValueGroup
-              transform={`translate(${pendingBar.x + 4} 20)`}
-              date={dayjs(latestDate).format('YYYY')}
-              value={latestValue.toString()}
-              unit={unit}
-            />
-          </motion.g>
-          <motion.text
-            animate={completedBarControls}
-            transform={`translate(${pendingBar.x + pendingBar.w / 2} 110)`}
-            textAnchor="middle"
-          >
-            <DateText>{t('to-reduce')}</DateText>
-            <UnitText x="0" dy="20">
-              {beautifyValue(latestValue - goalValue)}
-              {' '}
-              {unit}
-            </UnitText>
-          </motion.text>
-          <BarBase
-            x={goalBar.x}
-            y="64"
-            width={goalBar.w}
-            height={bar.h - 8}
-            fill={theme.graphColors.green070}
-          />
-          <line
-            x1={goalBar.x}
-            x2={goalBar.x}
-            y1={10}
-            y2={64 + bar.h - 8}
-            stroke={theme.themeColors.light}
-          />
-          <ValueGroup
-            transform={`translate(${goalBar.x + 4} 20)`}
-            date={dayjs(goalDate).format('YYYY')}
-            value={goalValue.toString()}
-            unit={unit}
-          />
-          <text transform={`translate(${goalBar.x + goalBar.w / 2} 110)`} textAnchor="middle">
-            <DateText>{t('bar-goal')}</DateText>
-          </text>
-        </svg>
-        <div className="text-center"><small>{ note }</small></div>
-      </LinkedIndicator>
-    </IndicatorLink>
+        </motion.g>
+        <motion.text
+          animate={completedBarControls}
+          transform={`translate(${pendingBar.x + pendingBar.w / 2} 110)`}
+          textAnchor="middle"
+        >
+          <DateText>{t('to-reduce')}</DateText>
+          <UnitText x="0" dy="20">
+            {beautifyValue(latestValue - goalValue)}
+            {' '}
+            {unit}
+          </UnitText>
+        </motion.text>
+        <BarBase
+          x={goalBar.x}
+          y="64"
+          width={goalBar.w}
+          height={bar.h - 8}
+          fill={theme.graphColors.green070}
+        />
+        <line
+          x1={goalBar.x}
+          x2={goalBar.x}
+          y1={10}
+          y2={64 + bar.h - 8}
+          stroke={theme.themeColors.light}
+        />
+        <ValueGroup
+          transform={`translate(${goalBar.x + 4} 20)`}
+          date={dayjs(goalDate).format('YYYY')}
+          value={goalValue.toString()}
+          unit={unit}
+        />
+        <text transform={`translate(${goalBar.x + goalBar.w / 2} 110)`} textAnchor="middle">
+          <DateText>{t('bar-goal')}</DateText>
+        </text>
+      </svg>
+      <div className="text-center">
+        <IndicatorLink id={indicatorId}>
+          <NegativeA><small>{ `${t('indicator-source')}: ${note}` }</small></NegativeA>
+        </IndicatorLink>
+      </div>
+    </>
   );
 };
 
@@ -266,6 +284,7 @@ IndicatorProgressBar.defaultProps = {
   latestDate: '',
   goalDate: '',
   note: '',
+  animate: true,
 };
 
 IndicatorProgressBar.propTypes = {
@@ -276,6 +295,9 @@ IndicatorProgressBar.propTypes = {
   goalDate: PropTypes.string,
   goalValue: PropTypes.number.isRequired,
   unit: PropTypes.string.isRequired,
+  verboseUnit: PropTypes.string.isRequired,
+  indicatorId: PropTypes.string.isRequired,
+  animate: PropTypes.bool,
   note: PropTypes.string,
 };
 

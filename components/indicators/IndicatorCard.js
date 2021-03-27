@@ -1,13 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Card, CardBody, CardTitle, Alert,
+  Card, CardBody, CardTitle,
 } from 'reactstrap';
 import styled from 'styled-components';
-import dayjs from '../../common/dayjs';
-import { withTranslation } from '../../common/i18n';
-import { IndicatorLink } from '../../common/links';
-
+import dayjs from 'common/dayjs';
+import { withTranslation } from 'common/i18n';
+import { IndicatorLink } from 'common/links';
 
 const IndicatorValue = styled.div`
   margin-top: 1em;
@@ -30,6 +29,15 @@ const StyledLink = styled.a`
   &:hover {
     color: inherit;
     text-decoration: none;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
   }
 `;
 
@@ -124,8 +132,13 @@ function IndicatorLatestValue(props) {
 
 function CardLink(props) {
   const { level, indicatorId, children } = props;
-
-  if (level !== 'action') return <IndicatorLink id={indicatorId}><StyledLink href>{ children }</StyledLink></IndicatorLink>;
+  if (level !== 'action') return (
+    <IndicatorLink id={indicatorId}>
+      <StyledLink href>
+        { children }
+      </StyledLink>
+    </IndicatorLink>
+  );
   return <>{children}</>;
 }
 
@@ -141,20 +154,27 @@ function IndicatorCard(props) {
   } = props;
 
   return (
-    <CardLink level={level} indicatorId={objectid}>
-      <Indicator level={level}>
-        <CardBody>
-          <div>
-            <IndicatorType>{ t(level) }</IndicatorType>
+    <Indicator level={level}>
+      <CardBody>
+        <div>
+          <IndicatorType>{ t(level) }</IndicatorType>
+          <CardLink level={level} indicatorId={objectid}>
             <IndicatorTitle>
               { number && <IndicatorNumber>{ number }</IndicatorNumber> }
               { name }
             </IndicatorTitle>
-          </div>
-          { latestValue && <IndicatorLatestValue latestValue={latestValue.value} date={latestValue.date} unit={latestValue.unit} resolution={resolution} />}
-        </CardBody>
-      </Indicator>
-    </CardLink>
+          </CardLink>
+        </div>
+        { latestValue && (
+          <IndicatorLatestValue
+            latestValue={latestValue.value}
+            date={latestValue.date}
+            unit={latestValue.unit}
+            resolution={resolution}
+          />
+        )}
+      </CardBody>
+    </Indicator>
   );
 }
 

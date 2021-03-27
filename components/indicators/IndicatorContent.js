@@ -98,7 +98,7 @@ const IndicatorHero = styled(BaseJumbotron)`
 `;
 
 const IndicatorLevel = styled.span`
-a {
+a, a:hover {
   display: inline-block;
   border-radius: ${(props) => props.theme.badgeBorderRadius};
   padding: ${(props) => props.theme.badgePaddingY} ${(props) => props.theme.badgePaddingX};
@@ -136,7 +136,6 @@ a {
   }};
 
   &:hover {
-    color: inherit;
     text-decoration: underline;
   }
 }
@@ -186,7 +185,7 @@ function IndicatorDetails({ id }) {
         <Container>
           <IndicatorLevel level={indicator.level}>
             <IndicatorListLink>
-              <a>
+              <a href>
                 { t(indicator.level) }
               </a>
             </IndicatorListLink>

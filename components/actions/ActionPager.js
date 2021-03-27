@@ -6,7 +6,7 @@ import Icon from '../common/Icon';
 import Button from '../common/Button';
 import { withTranslation } from '../../common/i18n';
 
-const Pager = styled.div`
+const Pager = styled.nav`
   display: flex;
   margin: 2rem 0;
 `;
@@ -27,12 +27,12 @@ const PageButton = styled(Button)`
     fill: ${(props) => props.theme.brandDark} !important;
   }
 `;
- 
+
 const ActionPager = (props) => {
   const { t, nextAction, previousAction } = props;
 
   return (
-    <Pager>
+    <Pager aria-label={t('actions-pagination')}>
       <Previous>
         { previousAction
           && (

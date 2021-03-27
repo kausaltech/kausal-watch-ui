@@ -33,10 +33,12 @@ action-status-merged: Yhdistetty
 action-status-reason: Tarkennus
 action-previous: Edellinen toimenpide
 action-next: Seuraava toimenpide
+actions-pagination: Toimenpiteet sivutus
 no-defined-indicators: Ei määriteltyjä mittareita
 not-being-monitored: Ei seurannassa
 not-being-implemented: Ei toteuteta
 action-completion-percentage: Valmistumisaste
+actions-count: toimenpidettä
 actions-phases: Toimenpiteiden vaiheet
 actions-phases-help: Käynnistettyjen ja valmiiden toimenpiteiden määrä
 actions-status: Toimenpiteiden tila

@@ -191,7 +191,7 @@ function ActionHero(props) {
               <Col lg={8}>
                 <HeroCardBg>
                   <CardContent>
-                    <ActionsNav aria-label="Actions Pager">
+                    <ActionsNav aria-label={t('actions-pagination')}>
                       <ActionListLink>
                         <a href>
                           <IndexLink>{ t('actions') }</IndexLink>

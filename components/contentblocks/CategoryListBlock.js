@@ -11,21 +11,14 @@ const CategoryListSection = styled.div`
   background-color: ${(props) => props.theme.neutralLight};
   padding: ${(props) => props.theme.spaces.s400} 0;
 
-  a.card-wrapper {
-    display: flex;
-    width: 100%;
-    color: ${(props) => props.theme.themeColors.black};
-
-    &:hover {
-      text-decoration: none;
-      color: ${(props) => props.theme.themeColors.black};
-    }
-  }
-
   .lead-text {
     text-align: center;
-    font-size: ${(props) => props.theme.fontSizeMd};
-    margin-bottom: ${(props) => props.theme.spaces.s300};
+    font-size: 1.25rem;
+    margin-bottom: 3rem;
+  }
+
+  a:hover {
+    text-decoration: none;
   }
 `;
 
@@ -42,7 +35,7 @@ const CardHeader = styled.h3`
 `;
 
 const Identifier = styled.span`
-  color: ${(props) => props.theme.graphColors.grey050};
+  color: ${(props) => props.theme.themeColors.dark};
 `;
 
 const CategoryListBlock = (props) => {
@@ -55,7 +48,7 @@ const CategoryListBlock = (props) => {
       <Container>
         { heading && (<SectionHeader>{ heading }</SectionHeader>)}
         <RichText html={lead} className="lead-text" />
-        <Row>
+        <Row role="list">
           { categories?.map((cat) => (
             <Col
               tag="li"
@@ -67,14 +60,14 @@ const CategoryListBlock = (props) => {
               style={{ transition: 'all 0.5s ease' }}
               role="listitem"
             >
-              <DynamicLink href={cat.categoryPage.urlPath}>
-                <a className="card-wrapper">
-                  <Card
-                    imageUrl={cat.image?.small.src || fallbackImage.small.src}
-                    imageAlign={getBgImageAlignment(cat.image || fallbackImage)}
-                    imageTone={themeColor}
-                  >
-                    <div>
+              <Card
+                imageUrl={cat.image?.small.src || fallbackImage.small.src}
+                imageAlign={getBgImageAlignment(cat.image || fallbackImage)}
+                imageTone={themeColor}
+              >
+                <div>
+                  <DynamicLink href={cat.categoryPage.urlPath}>
+                    <a href>
                       <CardHeader>
                         { theme.settings.categories.showIdentifiers && (
                           <Identifier>
@@ -85,11 +78,11 @@ const CategoryListBlock = (props) => {
                         )}
                         { cat.name }
                       </CardHeader>
-                      <p>{cat.shortDescription}</p>
-                    </div>
-                  </Card>
-                </a>
-              </DynamicLink>
+                    </a>
+                  </DynamicLink>
+                  <p>{cat.shortDescription}</p>
+                </div>
+              </Card>
             </Col>
           ))}
         </Row>

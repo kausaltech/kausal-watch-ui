@@ -1,24 +1,12 @@
 import React from 'react';
 import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
-import { getBgImageAlignment } from 'common/images';
-import { DynamicLink } from 'common/links';
+import { useTheme } from 'common/theme';
 import Card from 'components/common/Card';
 
 const CardListSection = styled.div`
   background-color: ${(props) => props.theme.themeColors.white};
   padding: ${(props) => props.theme.spaces.s400} 0;
-
-  a.card-wrapper {
-    display: flex;
-    width: 100%;
-    color: ${(props) => props.theme.themeColors.black};
-
-    &:hover {
-      text-decoration: none;
-      color: ${(props) => props.theme.themeColors.black};
-    }
-  }
 `;
 
 const SectionHeader = styled.h2`
@@ -39,8 +27,18 @@ const CardHeader = styled.h3`
   line-height: ${(props) => props.theme.lineHeightSm};
 `;
 
+const StyledLink = styled.a`
+  color: inherit;
+
+  &:hover {
+    color: inherit;
+    text-decoration: none;
+  }
+`;
+
 const CardListBlock = (props) => {
   const { heading, lead, cards } = props;
+  const theme = useTheme();
 
   // TODO : Summon a key value for cards
   return (
@@ -48,7 +46,7 @@ const CardListBlock = (props) => {
       <Container>
         { heading && (<SectionHeader>{ heading }</SectionHeader>)}
         <Content>{ lead }</Content>
-        <Row>
+        <Row role="list">
           { cards?.map((card,inx) => (
             <Col
               tag="li"
@@ -60,18 +58,19 @@ const CardListBlock = (props) => {
               role="listitem"
               key={inx}
             >
-              <a href={card.link} className="card-wrapper">
-                <Card
-                  imageUrl={card.image && card.image.rendition.src}
-                  imageAlign="center"
-                  negative
-                >
-                  <div>
+              <Card
+                imageUrl={card.image && card.image.rendition.src}
+                imageAlign="center"
+                customColor={theme.themeColors.neutralDark}
+                negative
+              >
+                <div>
+                  <StyledLink href={card.link}>
                     <CardHeader>{ card.heading }</CardHeader>
-                    <p>{card.content}</p>
-                  </div>
-                </Card>
-              </a>
+                  </StyledLink>
+                  <p>{card.content}</p>
+                </div>
+              </Card>
             </Col>
           ))}
         </Row>
