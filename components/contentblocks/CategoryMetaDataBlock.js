@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import RichText from 'components/common/RichText';
 import ActionGroupStatus from 'components/actions/ActionGroupStatus';
-
+import { useTranslation } from 'common/i18n';
 import Icon from 'components/common/Icon';
 
 const ScaleIcon = styled(Icon)`
@@ -76,6 +76,7 @@ const MetaChoiceLabel = styled.span`
 
 const MetaContent = (props) => {
   const { contentData, contentType } = props;
+  const { t } = useTranslation();
 
   switch (contentData.__typename) {
     case 'CategoryMetadataChoice': {
@@ -83,15 +84,22 @@ const MetaContent = (props) => {
         const choiceCount = contentType.choices.length;
         return (
           <div>
-            { contentType.choices.map((choice) => (
-              <ScaleIcon
-                name="circleFull"
-                className={choice.identifier <= contentData.valueIdentifier ? 'icon-on' : 'icon-off'}
-                size="md"
-                key={choice.identifier}
-              />
-            ))}
-            <MetaChoiceLabel>{ contentData.value }</MetaChoiceLabel>
+            <span aria-hidden="true">
+              { contentType.choices.map((choice) => (
+                <ScaleIcon
+                  name="circleFull"
+                  className={choice.identifier <= contentData.valueIdentifier ? 'icon-on' : 'icon-off'}
+                  size="md"
+                  key={choice.identifier}
+                />
+              ))}
+            </span>
+            <span class="sr-only">
+              { `${t('meta-level')} ${contentData.valueIdentifier}/${choiceCount}: ` }
+            </span>
+            <MetaChoiceLabel>
+              { contentData.value }
+            </MetaChoiceLabel>
           </div>
         );
       }
