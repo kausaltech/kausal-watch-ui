@@ -31,11 +31,13 @@ action-merged: Merged actions
 action-status-undefined: No status
 action-status-merged: Merged with action
 action-status-reason: Reason
+actions-pagination: Actions pagination
 action-previous: Previous action
 action-next: Next action
 not-being-monitored: Not monitored
 not-being-implemented: Not being implemented
 action-completion-percentage: Completion
+actions-count: Actions
 actions-phases: Actions in phases
 actions-phases-help: Amount of ongoing and completed actions
 actions-status: Actions in status

@@ -33,8 +33,10 @@ action-status-merged: Sammanfogad med åtgärden
 action-status-reason: Anledning
 action-previous: Tidigare åtgärd
 action-next: Nästa åtgärd
+actions-pagination: Åtgärder paginering
 not-being-monitored: ;Not monitored;
 not-being-implemented: ;Not being implemented;
+actions-count: Åtgärder
 action-completion-percentage: Komplettering
 actions-phases: Åtgärds fas
 actions-phases-help: Antal pågående och slutförda åtgärder

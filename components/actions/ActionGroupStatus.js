@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { gql, useQuery } from '@apollo/client';
 import styled, { useTheme } from 'styled-components';
 import PlanContext from 'context/plan';
+import { useTranslation } from 'common/i18n';
 import { getStatusData } from 'common/preprocess';
 
 export const GET_ACTION_STATUSES = gql`
@@ -74,6 +75,7 @@ function ActionGroupStatus(props) {
   const { category } = props;
   const plan = useContext(PlanContext);
   const theme = useTheme();
+  const { t } = useTranslation();
   let statusData = {};
   let actionCount = 0;
   const { loading, error, data } = useQuery(GET_ACTION_STATUSES, {
@@ -99,6 +101,9 @@ function ActionGroupStatus(props) {
         ))}
       </BarGraph>
       <Labels>
+        <span className="sr-only">
+          {`${actionCount} ${t('actions-count')}: `}
+        </span>
         {statusData?.labels.map((segment, indx) => (
           <SegmentLabel key={segment} portion={(statusData.values[indx] / actionCount) * 100}>
             <span className="value">

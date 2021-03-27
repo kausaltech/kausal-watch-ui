@@ -76,7 +76,7 @@ const MetaChoiceLabel = styled.span`
 
 const MetaContent = (props) => {
   const { contentData, contentType } = props;
-  const { t } = useTranslation();
+  const { t } = useTranslation(['actions']);
 
   switch (contentData.__typename) {
     case 'CategoryMetadataChoice': {
