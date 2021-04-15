@@ -187,6 +187,8 @@ function WatchApp(props: WatchAppProps) {
       jsFilename: 'js/',
       phpFilename: 'js/',
     });
+    // Disable cookies
+    ReactPiwik.push(['disableCookies']);
     // Track the initial page view
     ReactPiwik.push(['trackPageView']);
     Router.events.on('routeChangeComplete', onRouteChange);
