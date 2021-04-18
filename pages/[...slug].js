@@ -183,7 +183,7 @@ const Content = ({ page }) => {
   const imageUrl = headerImage?.large.src;
 
   const theme = useTheme();
-  const pageSectionColor = page.category?.color || page.category?.parent?.color || theme.neutralDark;
+  const pageSectionColor = page.category?.color || page.category?.parent?.color || theme.brandLight;
   return (
     <article>
       <Meta
