@@ -153,7 +153,7 @@ const PageHeaderBlock = (props) => {
           categoryId={page.category.id}
           identifier={theme.settings.categories.showIdentifiers ? page.category.identifier : undefined}
           lead={page.category.shortDescription}
-          headerImage={headerImage.large.src}
+          headerImage={headerImage?.large.src}
           imageAlign={getBgImageAlignment(headerImage)}
           parentTitle={parentTitle}
           parentUrl={parentUrl}
@@ -169,7 +169,7 @@ const PageHeaderBlock = (props) => {
         <ContentPageHeaderBlock
           title={page.title}
           lead={page.leadParagraph}
-          headerImage={headerImage && headerImage.large.src}
+          headerImage={headerImage?.large.src}
           imageAlign={getBgImageAlignment(headerImage)}
         />
       );
