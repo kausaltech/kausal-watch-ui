@@ -21,13 +21,13 @@ const cleanActionStatus = (action, actionStatuses) => {
     newStatus.id = '13'; // this is the old completed id in api
     newStatus.name = actionStatuses.find(
       (statusType) => statusType.identifier === 'completed',
-    ).name || implementationPhase.name;
+    )?.name || implementationPhase.name;
     newStatus.identifier = 'completed';
     newStatus.isCompleted = true;
   }
 
   // if implementationPhase is not_started, and implementationPhase on_time create new status of not_started
-  if (implementationPhase?.identifier === 'not_started' && status.identifier === 'on_time') {
+  if (implementationPhase?.identifier === 'not_started' && status?.identifier === 'on_time') {
     newStatus.id = '70'; // this is the old not_started id in api
     newStatus.name = status.name;
     newStatus.identifier = 'not_started';
