@@ -34,9 +34,9 @@ const Fonts = (family, headingsFamily, styleUrl) => {
   const HeadingsFontFamily = new FontFaceObserver(headingsFamily);
 
   Promise.all([
-    ThemeFontFamily400.load(),
-    ThemeFontFamily700.load(),
-    HeadingsFontFamily.load(),
+    ThemeFontFamily400.load(null, 5000),
+    ThemeFontFamily700.load(null, 5000),
+    HeadingsFontFamily.load(null, 5000),
   ]).then(() => {
     document.documentElement.classList.add('has-theme-fonts');
   });

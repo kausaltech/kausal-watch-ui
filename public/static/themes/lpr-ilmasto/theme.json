@@ -17,9 +17,9 @@
     "white": "rgb(255, 255, 255)"
   },
   "imageOverlay": "rgb(58, 132, 51)",
-  "fontUrl": "https://use.typekit.net/qtu1bnh.css",
-  "fontFamily": "effra",
-  "headingsFontFamily": "effra",
+  "fontUrl": "https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,400;0,700;1,400&display=swap",
+  "fontFamily": "Raleway",
+  "headingsFontFamily": "Raleway",
   "headingsFontWeight": 700,
   "headingsColor": "rgb(39, 93, 56)",
   "fontFamilyFallback": "'-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Oxygen-Sans', 'Ubuntu', 'Cantarell', 'Helvetica Neue', sans-serif",
@@ -73,8 +73,8 @@
   "brandNavBackground": "rgb(39, 93, 56)",
   "cardBorderWidth": 0,
   "cardBorderRadius": "0.25rem",
-  "badgeBackground": "rgb(58, 132, 51)",
-  "badgeColor": "rgb(255, 255, 255)",
+  "badgeBackground": "rgb(72, 162, 63)",
+  "badgeColor": "rgb(0, 0, 0)",
   "badgeBorderRadius": "3px",
   "badgePaddingY": "0.5em",
   "badgePaddingX": "0.75em",
@@ -139,9 +139,9 @@
     "otherLogos": [
       {
         "id": "1",
-        "name": "European Green Leaf winner 2021 (An initiative of European Comission)",
+        "name": "Voittaja 2021 - Lappeenranta. European Green Leaf (An initiative of the European Comission)",
         "link": "",
-        "logo": "/static/themes/lpr-ilmasto/images/european-green-leaf.svg"
+        "logo": "/static/themes/lpr-ilmasto/images/green-leaf-winner-white.svg"
       }
     ]
   }
