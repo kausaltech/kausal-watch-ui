@@ -143,6 +143,22 @@
         "link": "",
         "logo": "/static/themes/hnh2035/images/climate-kic-logo-white.svg"
       }
-    ]
+    ],
+    "attentionBannerContent": {
+      "header": "Ilmastovahdin käyttäjäkysely",
+      "content": "Osallistu Helsingin ilmastovahdin kehittämiseen vastaamalla käyttäjäkyselyymme.<br/>Mielipiteesi on meille tärkeä!",
+      "buttons": [
+        {
+          "id": "1",
+          "label": "Vastaa Ilmastovahti-kyselyyn suomeksi",
+          "url": ""
+        },
+        {
+          "id": "2",
+          "label": "Svara på Klimat vakt-förfrågning på svenska",
+          "url": ""
+        }
+      ]
+    }
   }
 }

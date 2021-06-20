@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import { useTheme } from 'common/theme';
 import {
   Container,
 } from 'reactstrap';
@@ -12,6 +13,7 @@ import IndicatorHighlightsList from 'components/indicators/IndicatorHighlightsLi
 import HnhHero from 'components/home/HnhHero';
 import HeroFullImage from 'components/home/HeroFullImage';
 import PlanContext from 'context/plan';
+import AttentionBannerBlock from '../contentblocks/AttentionBannerBlock';
 
 const ActionsSection = styled.div`
   background-color: ${(props) => props.theme.neutralLight};
@@ -36,6 +38,7 @@ const IndicatorsSection = styled.div`
 
 function LegacyHomePage() {
   const plan = useContext(PlanContext);
+  const theme = useTheme();
   const generalContent = plan.generalContent || {};
 
   // Use default hero component
@@ -55,6 +58,11 @@ function LegacyHomePage() {
 
   return (
     <Layout>
+      { theme.settings.attentionBannerContent && (
+        <AttentionBannerBlock
+          {...theme.settings.attentionBannerContent}
+        />
+      )}
       { heroComponent }
       <ActionsSection className="actions-section">
         <Container>
