@@ -253,7 +253,8 @@ function GlobalNav(props) {
   const [navIsFixed, setnavIsFixed] = useState(false);
   const [isOpen, toggleOpen] = useState(false);
   const {
-    theme, siteTitle, ownerName, navItems, fullwidth, sticky,
+    theme, siteTitle, ownerName, navItems, externalItems,
+    fullwidth, sticky,
   } = props;
 
   const OrgLogo = () => (
@@ -310,7 +311,7 @@ function GlobalNav(props) {
       >
         <Container fluid={fullwidth}>
           <Collapse isOpen={isOpen} navbar>
-            <Nav navbar>
+            <Nav navbar className="mr-auto">
               { navItems && navItems.map((page) => (
                 page.children
                   ? (
@@ -333,6 +334,19 @@ function GlobalNav(props) {
                   )
               ))}
             </Nav>
+            <Nav navbar>
+              { externalItems.length > 0 && externalItems.map((page) => (
+                <NavItem key={page.slug}>
+                  <NavLink>
+                    <NavigationLink slug={page.urlPath}>
+                      <NavHighlighter className="highlighter">
+                        {page.name}
+                      </NavHighlighter>
+                    </NavigationLink>
+                  </NavLink>
+                </NavItem>
+              ))}
+            </Nav>
           </Collapse>
         </Container>
       </BotNav>
@@ -344,6 +358,7 @@ GlobalNav.defaultProps = {
   fullwidth: false,
   sticky: false,
   ownerName: '',
+  externalItems: [],
 };
 
 GlobalNav.propTypes = {
@@ -358,6 +373,11 @@ GlobalNav.propTypes = {
   theme: themeProp.isRequired,
   fullwidth: PropTypes.bool,
   sticky: PropTypes.bool,
+  externalItems: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.string,
+    name: PropTypes.string,
+    slug: PropTypes.string,
+  })),
 };
 
 export default withTheme(React.memo(GlobalNav));

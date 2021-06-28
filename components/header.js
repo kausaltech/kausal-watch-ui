@@ -2,6 +2,7 @@ import React, { useMemo, useContext } from 'react';
 import PropTypes from 'prop-types';
 
 import { useTranslation } from 'common/i18n';
+import { useTheme } from 'common/theme';
 import PlanContext from 'context/plan';
 import SiteContext from 'context/site';
 
@@ -31,6 +32,7 @@ function Header({ siteTitle }) {
   const plan = useContext(PlanContext);
   const site = useContext(SiteContext);
   const { t } = useTranslation(['common']);
+  const theme = useTheme();
   const hasActionImpacts = plan.impactGroups?.length > 0;
   const activeBranch = getActiveBranch();
 
@@ -65,6 +67,7 @@ function Header({ siteTitle }) {
         siteTitle={siteTitle}
         ownerName={plan.generalContent ? plan.generalContent.ownerName : plan.name}
         navItems={navLinks}
+        externalItems={theme.settings?.externalLinks}
       />
     </header>
   );

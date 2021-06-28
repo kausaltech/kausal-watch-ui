@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import PropTypes, { number, exact, string, oneOfType, bool, array } from 'prop-types';
+import PropTypes, { number, exact, string, oneOfType, bool, array, object } from 'prop-types';
 import { ThemeContext } from 'styled-components';
 import _ from 'lodash';
 /* eslint-disable */
@@ -199,6 +199,8 @@ export const themeProp = exact({
     }),
     fundingInstruments: array.isRequired,
     otherLogos: array.isRequired,
+    attentionBannerContent: object,
+    externalLinks: array,
   }),
 });
 

@@ -143,6 +143,13 @@
     "categories": {
       "showIdentifiers": true,
       "filterIndicatorsByAllLevels": false
-    }
+    },
+    "externalLinks": [
+      {
+        "slug": "skenaariot",
+        "urlPath": "https://tampere.paths.kausal.tech/",
+        "name": "Skenaariot"
+      }
+    ]
   }
 }
