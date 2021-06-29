@@ -146,9 +146,9 @@
     },
     "externalLinks": [
       {
-        "slug": "skenaariot",
-        "urlPath": "https://ilmastovahti.tampere.fi/scenarios/",
-        "name": "Skenaariot"
+        "slug": "scenarios",
+        "urlPath": "https://ilmastovahti.tampere.fi/paastoskenaariot",
+        "name": "Päästöskenaariot"
       }
     ]
   }
