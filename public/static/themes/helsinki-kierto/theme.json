@@ -134,23 +134,5 @@
     "yellow050": "rgb(226, 171, 10)",
     "yellow070": "rgb(185, 138, 0)",
     "yellow090": "rgb(140, 105, 0)"
-  },
-  "settings": {
-    "attentionBannerContent": {
-      "header": "Kiertotalousvahdin käyttäjäkysely",
-      "content": "Osallistu Helsingin Kiertotalousvahdin kehittämiseen vastaamalla käyttäjäkyselyymme.<br/>Mielipiteesi on meille tärkeä! Kysely on avoinna 15.8 saakka.",
-      "buttons": [
-        {
-          "id": "1",
-          "label": "Vastaa Kiertotalousvahti-kyselyyn suomeksi",
-          "url": "https://docs.google.com/forms/d/e/1FAIpQLSd_qta95i6H_MMuXnN5PMly8n_vy3GUwN03__aPI2a_PFxQNw/viewform?vc=0&c=0&w=1&flr=0"
-        },
-        {
-          "id": "2",
-          "label": "Svara på Klimat vakt-förfrågning på svenska",
-          "url": "https://docs.google.com/forms/d/e/1FAIpQLSdL3RRUVuTc85idV_jYmX1J3KXaBCVuoYQQxq2WMjmcRvqc1w/viewform?vc=0&c=0&w=1&flr=0"
-        }
-      ]
-    }
   }
 }
