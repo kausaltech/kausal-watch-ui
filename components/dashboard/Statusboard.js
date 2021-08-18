@@ -113,10 +113,6 @@ export const GET_ACTION_LIST = gql`
           }
         }
       }
-      generalContent {
-        id
-        actionListLeadContent
-      }
     }
     planActions(plan: $plan) {
       id
