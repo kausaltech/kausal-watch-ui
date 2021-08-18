@@ -36,7 +36,8 @@ const IndicatorsSection = styled.div`
   }
 `;
 
-function LegacyHomePage() {
+function LegacyHomePage(props) {
+  const { actionShortDescription, indicatorShortDescription } = props;
   const plan = useContext(PlanContext);
   const theme = useTheme();
   const generalContent = plan.generalContent || {};
@@ -48,8 +49,8 @@ function LegacyHomePage() {
       imageAlign="center"
       title={generalContent.siteTitle}
       siteDescription={generalContent.siteDescription}
-      actionsDescription={generalContent.actionShortDescription}
-      indicatorsDescription={generalContent.indicatorShortDescription}
+      actionsDescription={actionShortDescription}
+      indicatorsDescription={indicatorShortDescription}
     />
   );
 

@@ -19,6 +19,9 @@ query GetPlanPage($plan: ID!, $path: String!) {
     slug
     title
     ... on PlanRootPage {
+      heroContent
+      actionShortDescription
+      indicatorShortDescription
       body {
         ...StreamFieldFragment
       }
@@ -79,10 +82,16 @@ function RootPage() {
   }
   const page = _.clone(planPage);
   page.category = {};
-  const cats = data.planCategories.filter(cat => cat.type.identifier === 'action');
+  const cats = data.planCategories.filter((cat) => cat.type.identifier === 'action');
   page.category.children = getRootCategories(cats);
 
-  if (page.body.length < 1) return <LegacyHomePage />;
+  if (page.body.length < 1) return (
+    <LegacyHomePage
+      heroContent={page.heroContent}
+      actionShortDescription={page.actionShortDescription}
+      indicatorShortDescription={page.indicatorShortDescription}
+    />
+  );
 
   return (
     <Layout>

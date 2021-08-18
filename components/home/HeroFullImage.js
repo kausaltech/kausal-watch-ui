@@ -72,7 +72,7 @@ const MainCard = styled.div`
     }
   }
 
-  p {
+  .lead-content {
     font-size: ${(props) => props.theme.fontSizeBase};
     line-height: ${(props) => props.theme.lineHeightMd};
   }
@@ -84,7 +84,7 @@ const MainCard = styled.div`
       font-size: ${(props) => props.theme.fontSizeXl};
     }
 
-    p {
+    .lead-content {
       font-size: ${(props) => props.theme.fontSizeMd};
     }
   }
@@ -142,58 +142,58 @@ function HeroFullImage(props) {
     <Hero>
       <HeroMain image={bgImage} imageAlign={imageAlign}>
         <Container>
-              <MainCard>
-                <h1>{ title }</h1>
-                <RichText html={siteDescription} />
-                { actionsDescription && (
-                  <ActionListLink>
-                    <a href>
-                      <Highlight
-                        className="d-flex py-3 bd-highlight flex-row"
-                      >
-                        {ActionsIcon && (
-                          <Illustration>
-                            <ActionsIcon />
-                          </Illustration>
-                        )}
-                        <div>
-                          <h2>
-                            { t('actions') }
-                            <Icon name="arrowRight" color={theme.neutralDark} />
-                          </h2>
-                          <p>
-                            { actionsDescription }
-                          </p>
-                        </div>
-                      </Highlight>
-                    </a>
-                  </ActionListLink>
-                )}
-                { indicatorsDescription && (
-                  <IndicatorListLink>
-                    <a href>
-                      <Highlight
-                        className="d-flex py-3 bd-highlight flex-row"
-                      >
-                        {IndicatorsIcon && (
-                          <Illustration>
-                            <IndicatorsIcon />
-                          </Illustration>
-                        )}
-                        <div>
-                          <h2>
-                            { t('indicators') }
-                            <Icon name="arrowRight" color={theme.neutralDark} />
-                          </h2>
-                          <p>
-                            { indicatorsDescription }
-                          </p>
-                        </div>
-                      </Highlight>
-                    </a>
-                  </IndicatorListLink>
-                )}
-              </MainCard>
+          <MainCard>
+            <h1>{ title }</h1>
+            <RichText html={siteDescription} className="lead-content" />
+            { actionsDescription && (
+            <ActionListLink>
+              <a href>
+                <Highlight
+                  className="d-flex py-3 bd-highlight flex-row"
+                >
+                  {ActionsIcon && (
+                  <Illustration>
+                    <ActionsIcon />
+                  </Illustration>
+                  )}
+                  <div>
+                    <h2>
+                      { t('actions') }
+                      <Icon name="arrowRight" color={theme.neutralDark} />
+                    </h2>
+                    <p>
+                      { actionsDescription }
+                    </p>
+                  </div>
+                </Highlight>
+              </a>
+            </ActionListLink>
+            )}
+            { indicatorsDescription && (
+            <IndicatorListLink>
+              <a href>
+                <Highlight
+                  className="d-flex py-3 bd-highlight flex-row"
+                >
+                  {IndicatorsIcon && (
+                  <Illustration>
+                    <IndicatorsIcon />
+                  </Illustration>
+                  )}
+                  <div>
+                    <h2>
+                      { t('indicators') }
+                      <Icon name="arrowRight" color={theme.neutralDark} />
+                    </h2>
+                    <p>
+                      { indicatorsDescription }
+                    </p>
+                  </div>
+                </Highlight>
+              </a>
+            </IndicatorListLink>
+            )}
+          </MainCard>
         </Container>
       </HeroMain>
     </Hero>
