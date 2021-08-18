@@ -1,4 +1,10 @@
 /* eslint-disable max-classes-per-file */
+/*
+*
+* Legacy page for City of Helsinki, not used in Kausal Watch platform
+*
+*
+*/
 import React from 'react';
 import PropTypes from 'prop-types';
 import { gql } from '@apollo/client';
@@ -79,7 +85,6 @@ export const GET_IMPACT_GROUP_LIST = gql`
       }
       generalContent {
         id
-        dashboardLeadContent
       }
     }
   }
@@ -171,7 +176,7 @@ class DashboardLoaded extends React.PureComponent {
               onSelect={this.handleSelect}
             />
             <TabContent activeTab={activeTabId}>
-              {segments.map(segment => (
+              {segments.map((segment) => (
                 <DashboardTab
                   key={segment.id}
                   t={t}
@@ -193,9 +198,9 @@ DashboardLoaded.propTypes = {
   segments: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
-
 class Dashboard extends React.PureComponent {
   static contextType = PlanContext;
+
   static getFiltersFromQuery(query) {
     return DashboardLoaded.getFiltersFromQuery(query);
   }
@@ -234,9 +239,9 @@ class Dashboard extends React.PureComponent {
     // add actions to each segment
     const impacts = Object.fromEntries(this.context.actionImpacts.map((x) => [x.id, x]));
 
-    segments.forEach(segment => {
+    segments.forEach((segment) => {
       // Merge actions from all ImpactGroups
-      let actions = [];
+      const actions = [];
       const actionExists = (actId) => actions.find((act) => act.action.id === actId) !== undefined;
       segment.groups.forEach((grp) => {
         grp.actions.forEach((item) => {
@@ -271,7 +276,10 @@ class Dashboard extends React.PureComponent {
             generalContent,
             ...otherProps
           } = data.plan;
-          const leadContent = generalContent.dashboardLeadContent;
+          // page lead content removed from API. Lead content currently not available.
+          // const leadContent = generalContent.dashboardLeadContent;
+
+          const leadContent = '<p>Olemme selvitt&auml;neet, kuinka paljon&nbsp;eri toimenpiteill&auml; olisi mahdollista saada&nbsp;p&auml;&auml;st&ouml;v&auml;hennyksi&auml; vuoteen 2035 menness&auml;. Toimenpiteet on useimmiten niputettu yhteen, koska yksitt&auml;isen toimenpiteen p&auml;&auml;st&ouml;v&auml;hennysvaikutusta on vaikea arvioida tarkasti ja monet toimenpiteist&auml; tukevat toisiaan. Suurimmat p&auml;&auml;st&ouml;v&auml;hennykset voidaan saada kaukol&auml;mm&ouml;ntuotannon puhdistumisesta (Helenin toimet), v&auml;hent&auml;m&auml;ll&auml; rakennusten l&auml;mm&ouml;nkulutusta, lis&auml;&auml;m&auml;ll&auml; maal&auml;mm&ouml;n tuotantoa&nbsp;ja tuottamalla enemm&auml;n s&auml;hk&ouml;&auml; aurinkopaneeleilla. P&auml;&auml;st&ouml;tavoitteen saavuttamisessa&nbsp;my&ouml;s s&auml;hk&ouml;autojen osuuden kasvattamisella on huomattava merkitys. On t&auml;rke&auml;&auml;, ett&auml; kaikki toimenpiteet toteutetaan,&nbsp;jotta tavoitteeseen p&auml;&auml;st&auml;&auml;n. P&auml;&auml;st&ouml;v&auml;hennysarvioon olemme laskeneet mukaan vain ne toimet, jotka v&auml;hent&auml;v&auml;t Helsingin v&auml;litt&ouml;mi&auml; p&auml;&auml;st&ouml;j&auml;&nbsp;ja jotka lasketaan 80 prosentin p&auml;&auml;st&ouml;v&auml;hennystavoitteeseen mukaan. Siin&auml; ei siis ole mukana toimenpiteit&auml;, jotka v&auml;hent&auml;v&auml;t v&auml;lillisi&auml; p&auml;&auml;st&ouml;j&auml;.&nbsp;</p>\r\n\r\n<p><em>T&auml;ll&auml; sivulla esitetty arvio&nbsp;p&auml;&auml;st&ouml;v&auml;hennyksist&auml; perustuu vuoden 2015 l&auml;ht&ouml;tietoihin. Arviota ei ole viel&auml; p&auml;ivitetty vastaamaan uusimpia saatavilla olevia tietoja. Tieto toimenpiteiden etenemisest&auml; puolestaan perustuu toimenpiteiden yhteyshenkil&ouml;iden tekem&auml;&auml;n seurantaan (katso p&auml;ivitysajankohta&nbsp;kunkin toimenpiteen omalta sivulta).</em></p>';
           const segments = this.makeSegments(data.plan.impactGroups);
 
           return (
