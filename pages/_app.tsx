@@ -88,8 +88,6 @@ const GET_PLAN = gql`
         creativeCommonsLicense
         ownerUrl
         ownerName
-        actionShortDescription
-        indicatorShortDescription
       }
       mainMenu {
         items(withDescendants: true) {
