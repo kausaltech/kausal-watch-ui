@@ -29,6 +29,7 @@ const additionalThemes = [
   'tampere-ilmasto',
   'helsinki-kierto',
   'ktstrat',
+  'hsy-kestava',
 ];
 
 additionalThemes.forEach((value) => {
