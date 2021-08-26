@@ -95,6 +95,11 @@ export const themeProp = exact({
   fontWeightBase: number.isRequired,
   fontWeightBold: number.isRequired,
   fontWeightNormal: number.isRequired,
+  navLogoVisible: true,
+  footerLogoPlacement: string.isRequired,
+  footerLogoSize: number,
+  footerBackgroundColor: css('color'),
+  footerColor: css('color'),
   formLabelFontWeight: number.isRequired,
   graphColors: exact({
     grey010: css('color'),

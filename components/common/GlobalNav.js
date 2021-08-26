@@ -16,7 +16,9 @@ import { NavigationLink } from 'common/links';
 import Icon from './Icon';
 
 const TopNav = styled(Navbar)`
+  padding: 0 ${(props) => props.theme.spaces.s100};
   background-color: ${(props) => props.theme.brandNavBackground};
+  border-bottom: 1px solid ${(props) => props.theme.themeColors.light};
 `;
 
 const BotNav = styled(Navbar)`
@@ -46,6 +48,12 @@ const BotNav = styled(Navbar)`
       flex-direction: row;
     }
   }
+`;
+
+const SiteTitle = styled.div`
+  font-size: 1.25rem;
+  line-height: 1.666rem;
+  padding: ${(props) => props.theme.spaces.s150} 0 ${(props) => props.theme.spaces.s150};
 `;
 
 const HomeLink = styled.a`
@@ -84,6 +92,24 @@ const HomeLink = styled.a`
   }
 `;
 
+const EmptyLogo = styled.div`
+      width: 0;
+      height: ${(props) => props.theme.spaces.s200};
+      margin: ${(props) => props.theme.spaces.s050}
+              0
+              ${(props) => props.theme.spaces.s050}
+              0;
+
+  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    width: 0;
+    height: calc(${(props) => props.theme.spaces.s200} + ${(props) => props.theme.spaces.s050});
+    margin: ${(props) => props.theme.spaces.s050}
+          0
+          ${(props) => props.theme.spaces.s050}
+          0;
+  }
+`;
+
 const NavLink = styled.div`
   a {
     display: block;
@@ -95,7 +121,7 @@ const NavLink = styled.div`
         color: ${(props) => props.theme.neutralDark};
 
         .highlighter {
-          border-bottom: 5px solid ${(props) => props.theme.brandNavBackground};
+          border-bottom: 5px solid ${(props) => props.theme.brandDark};
         }
       }
 
@@ -113,7 +139,7 @@ const NavHighlighter = styled.span`
   transition: border 200ms;
 
   &.active {
-    border-bottom: 5px solid ${(props) => props.theme.brandNavBackground};
+    border-bottom: 5px solid ${(props) => props.theme.brandDark};
   }
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
@@ -257,13 +283,17 @@ function GlobalNav(props) {
     fullwidth, sticky,
   } = props;
 
-  const OrgLogo = () => (
-    <SVG
-      src={theme.themeLogoUrl}
-      title={`${ownerName}, ${siteTitle} ${t('front-page')}`}
-      preserveAspectRatio="xMinYMid meet"
-    />
-  );
+  const OrgLogo = () => {
+    const logoElement = theme.navLogoVisible
+      ? (
+        <SVG
+          src={theme.themeLogoUrl}
+          title={`${ownerName}, ${siteTitle} ${t('front-page')}`}
+          preserveAspectRatio="xMinYMid meet"
+        />
+      ) : <EmptyLogo />;
+    return logoElement;
+  };
 
   if (sticky) {
     useScrollPosition(
@@ -288,7 +318,7 @@ function GlobalNav(props) {
           <Link href="/" passHref>
             <HomeLink>
               <OrgLogo className="org-logo" />
-              <span>{siteTitle}</span>
+              <SiteTitle>{siteTitle}</SiteTitle>
             </HomeLink>
           </Link>
           <NavbarToggler
