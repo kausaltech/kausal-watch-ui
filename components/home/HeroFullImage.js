@@ -200,13 +200,20 @@ function HeroFullImage(props) {
   );
 }
 
+HeroFullImage.defaultProps = {
+  imageAlign: 'center',
+  siteDescription: '',
+  actionsDescription: '',
+  indicatorsDescription: '',
+};
+
 HeroFullImage.propTypes = {
   bgImage: PropTypes.string.isRequired,
   imageAlign: PropTypes.string,
   title: PropTypes.string.isRequired,
-  siteDescription: PropTypes.string.isRequired,
-  actionsDescription: PropTypes.string.isRequired,
-  indicatorsDescription: PropTypes.string.isRequired,
+  siteDescription: PropTypes.string,
+  actionsDescription: PropTypes.string,
+  indicatorsDescription: PropTypes.string,
 };
 
 export default HeroFullImage;

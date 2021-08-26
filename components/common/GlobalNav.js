@@ -158,7 +158,7 @@ const StyledDropdownToggle = styled(DropdownToggle)`
     color: ${(props) => props.theme.neutralDark};
 
     .highlighter {
-      border-bottom: 5px solid ${(props) => props.theme.brandNavBackground};
+      border-bottom: 5px solid ${(props) => props.theme.brandDark};
     }
   }
 
@@ -169,6 +169,11 @@ const StyledDropdownToggle = styled(DropdownToggle)`
 `;
 
 const StyledDropdown = styled(UncontrolledDropdown)`
+
+  .dropdown-toggle.nav-link {
+    padding-left: 0;
+    padding-right: 0;
+  }
 
   .dropdown-menu {
     border: 0px;

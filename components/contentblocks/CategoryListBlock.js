@@ -36,7 +36,7 @@ const SectionHeader = styled.h2`
 `;
 
 const CardHeader = styled.h3`
-  color: ${(props) => props.theme.themeColors.black};
+  color: ${(props) => props.theme.themeColors.neutralDark};
   font-size: ${(props) => props.theme.fontSizeMd};
   line-height: ${(props) => props.theme.lineHeightSm};
 `;

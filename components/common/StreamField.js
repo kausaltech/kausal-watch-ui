@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
 import { Container, Row, Col } from 'reactstrap';
-import styled from 'styled-components';
 import { gql } from '@apollo/client';
 import PlanContext from 'context/plan';
 import images, { getBgImageAlignment } from 'common/images';
@@ -165,9 +164,11 @@ const STREAM_FIELD_FRAGMENT = gql`
       }
     }
     ... on ActionHighlightsBlock {
+      id
       field
     }
     ... on IndicatorHighlightsBlock {
+      id
       field
     }
   }
@@ -190,10 +191,6 @@ export const possibleTypes = {
     'CardListBlock',
   ],
 };
-
-const ContentMarkup = styled.div`
-  padding: ${(props) => props.theme.spaces.s300} 0;
-`;
 
 function StreamFieldBlock(props) {
   const { __typename, page } = props;
@@ -244,7 +241,7 @@ function StreamFieldBlock(props) {
     }
     case 'FrontPageHeroBlock': {
       const {
-        layout, image, heading, lead
+        layout, image, heading, lead,
       } = props;
       return (
         <FrontPageHeroBlock
@@ -285,7 +282,6 @@ function StreamFieldBlock(props) {
 
 function StreamField(props) {
   const { page, blocks, color } = props;
-
   return (
     <>
       { blocks.map((block) => (
