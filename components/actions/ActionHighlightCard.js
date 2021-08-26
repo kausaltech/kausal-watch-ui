@@ -76,20 +76,23 @@ const ImgBg = styled.div`
 
 const ImgOverlay = styled.div`
   position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100%;
+  height: 9rem;
   top: 0;
 `;
 
 const ActionNumber = styled.div`
   text-align: center;
-  font-size: ${(props) => props.theme.fontSizeXxl};
+  font-size: ${(props) => props.theme.fontSizeXl};
   font-weight: ${(props) => props.theme.fontWeightBold};
-  line-height: 9rem;
   color: ${(props) => props.theme.themeColors.light};
-
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
-    line-height: 8rem;
-  }
+  background: ${(props) => transparentize(0.1, props.theme.brandDark)};
+  line-height: 1;
+  padding: .5rem 1rem;
+  border-radius: 1.75rem;
 `;
 
 function ActionHighlightCard(props) {
@@ -110,7 +113,11 @@ function ActionHighlightCard(props) {
               <ImgArea>
                 <ImgBg background={imageUrl} />
                 <ImgOverlay>
-                  <ActionNumber>{action.identifier}</ActionNumber>
+                  <ActionNumber>
+                    <span>
+                      {action.identifier}
+                    </span>
+                  </ActionNumber>
                 </ImgOverlay>
               </ImgArea>
               {actionStatus && (

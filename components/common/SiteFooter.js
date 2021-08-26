@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {
   Container,
 } from 'reactstrap';
-
+import { transparentize } from 'polished';
 import SVG from 'react-inlinesvg';
 import styled, { withTheme } from 'styled-components';
 import { Link } from 'routes';
@@ -16,15 +16,15 @@ const StyledFooter = styled.footer`
   position: relative;
   min-height: 14em;
   clear: both;
-  background-color: ${(props) => props.theme.themeColors.black};
-  color: ${(props) => props.theme.themeColors.white};
+  background-color: ${(props) => props.theme.footerBackgroundColor};
+  color: ${(props) => props.theme.footerColor};
   padding: ${(props) => props.theme.spaces.s400} 0;
 
   a {
-      color: ${(props) => props.theme.themeColors.white};
+      color: ${(props) => props.theme.footerColor};
 
       &:hover {
-        color: ${(props) => props.theme.themeColors.white};
+        color: ${(props) => props.theme.footerColor};
         text-decoration: underline;
       }
     }
@@ -43,19 +43,32 @@ const StyledFooter = styled.footer`
 
 const Branding = styled.div`
   display: flex;
-  margin-bottom: ${(props) => props.theme.spaces.s300};
+  flex-direction: ${(props) => {
+    let direction;
+    switch (props.theme.footerLogoPlacement) {
+      case 'left':
+        direction = 'row';
+        break;
+      case 'top':
+        direction = 'column';
+        break;
+      default:
+        direction = 'row';
+    }
+    return direction;
+  }};
 
   @media (max-width: ${(props) => props.theme.breakpointMd}) {
     flex-direction: column;
     width: 100%;
-    margin-bottom: ${(props) => props.theme.spaces.s400};
   }
 `;
 
 const Logo = styled.div`
-  height: ${(props) => props.theme.spaces.s400};
-  max-width: calc( 4 * ${(props) => props.theme.spaces.s300});
+  height: calc(${(props) => props.theme.footerLogoSize} * ${(props) => props.theme.spaces.s400});
+  max-width: calc(${(props) => props.theme.footerLogoSize} * 4 * ${(props) => props.theme.spaces.s300});
   margin-right: ${(props) => props.theme.spaces.s200};
+  margin-bottom: ${(props) => props.theme.spaces.s300};
 
   svg {
     height: 100%;
@@ -72,6 +85,7 @@ const ServiceTitle = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  margin-bottom: ${(props) => props.theme.spaces.s300};
   font-size: ${(props) => props.theme.fontSizeMd};
   font-weight: ${(props) => props.theme.fontWeightBold};
 `;
@@ -138,7 +152,7 @@ const UtilitySection = styled.div`
   justify-content: space-between;
   margin: 0;
   padding: ${(props) => props.theme.spaces.s200} 0 0;
-  border-top: 1px solid ${(props) => props.theme.themeColors.light};
+  border-top: 1px solid  ${(props) => transparentize(0.8, props.theme.footerColor)};
   line-height: ${(props) => props.theme.lineHeightSm};
 
   @media (max-width: ${(props) => props.theme.breakpointMd}) {
@@ -191,14 +205,14 @@ const TopButton = styled.button`
   font-family: ${(props) => props.theme.fontFamily}, ${(props) => props.theme.fontFamilyFallback};
   font-weight: ${(props) => props.theme.fontWeightBold};
   cursor: pointer;
-  color: ${(props) => props.theme.themeColors.white};
+  color: ${(props) => props.theme.footerColor};
 
   .icon {
     margin-top: -.25em;
   }
 
   &:hover {
-    color: ${(props) => props.theme.themeColors.white};
+    color: ${(props) => props.theme.footerColor};
     text-decoration: underline;
   }
 `;
@@ -208,7 +222,7 @@ const BaseSection = styled.div`
   justify-content: space-between;
   padding: ${(props) => props.theme.spaces.s200} 0;
   margin-bottom: ${(props) => props.theme.spaces.s200};
-  border-top: 1px solid ${(props) => props.theme.themeColors.light};
+  border-top: 1px solid  ${(props) => transparentize(0.8, props.theme.footerColor)};
   line-height: ${(props) => props.theme.lineHeightSm};
 
   @media (max-width: ${(props) => props.theme.breakpointLg}) {
@@ -363,7 +377,7 @@ function SiteFooter(props) {
                 <Link href="/">
                   <a>
                     {siteTitle}
-                    </a>
+                  </a>
                 </Link>
               </ServiceTitle>
             </Branding>
@@ -410,7 +424,7 @@ function SiteFooter(props) {
                     { page.icon && (
                       <Icon
                         name={page.icon}
-                        color={theme.themeColors.white}
+                        color={theme.footerColor}
                         aria-hidden="true"
                         className="mr-1"
                       />
@@ -425,7 +439,7 @@ function SiteFooter(props) {
                   {' '}
                   <Icon
                     name="arrowUp"
-                    color={theme.themeColors.white}
+                    color={theme.footerColor}
                     aria-hidden="true"
                     width="1.25em"
                     height="1.25em"

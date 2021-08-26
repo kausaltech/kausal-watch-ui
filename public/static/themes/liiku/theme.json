@@ -71,6 +71,11 @@
   "formLabelFontWeight": 400,
   "brandNavColor": "rgb(255, 255, 255)",
   "brandNavBackground": "rgb(189, 39, 25)",
+  "navLogoVisible": true,
+  "footerLogoPlacement": "left",
+  "footerLogoSize": "1",
+  "footerBackgroundColor": "rgb(26, 26, 26)",
+  "footerColor": "rgb(255, 255, 255)",
   "cardBorderWidth": 0,
   "cardBorderRadius": 0,
   "badgeBackground": "rgb(189, 39, 25)",
@@ -134,5 +139,17 @@
     "yellow050": "rgb(226, 171, 10)",
     "yellow070": "rgb(185, 138, 0)",
     "yellow090": "rgb(140, 105, 0)"
+  },
+  "settings": {
+    "dashboard": {
+      "showResponsibles": true,
+      "showIndicators": true
+    },
+    "categories": {
+      "showIdentifiers": false,
+      "filterIndicatorsByAllLevels": true
+    },
+    "fundingInstruments": [],
+    "otherLogos": []
   }
 }
