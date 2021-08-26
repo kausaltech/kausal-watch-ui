@@ -29,7 +29,7 @@ const SectionHeader = styled.h2`
   padding: ${(props) => props.theme.spaces.s100};
   border-radius: ${(props) => props.theme.cardBorderRadius};
   background-color: ${(props) => props.theme.themeColors.white};
-  color: ${(props) => props.theme.themeColors.black};
+  color: ${(props) => props.theme.headingsColor};
   margin-bottom: ${(props) => props.theme.spaces.s300};
 `;
 
@@ -65,7 +65,8 @@ const ActionListBlock = (props) => {
               key={action.id}
               className="mb-4 d-flex align-items-stretch"
               style={{ transition: 'all 0.5s ease' }}
-              role="listitem">
+              role="listitem"
+            >
               <ActionCard action={action} />
             </Col>
           ))}

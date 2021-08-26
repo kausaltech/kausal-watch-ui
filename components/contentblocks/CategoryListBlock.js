@@ -31,7 +31,7 @@ const CategoryListSection = styled.div`
 
 const SectionHeader = styled.h2`
   text-align: center;
-  color: ${(props) => props.theme.themeColors.black};
+  color: ${(props) => props.theme.headingsColor};
   margin-bottom: ${(props) => props.theme.spaces.s100};
 `;
 

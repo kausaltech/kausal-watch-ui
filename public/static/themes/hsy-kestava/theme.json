@@ -24,11 +24,11 @@
   "headingsColor": "rgb(0, 117, 113)",
   "fontFamilyFallback": "'-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Oxygen-Sans', 'Ubuntu', 'Cantarell', 'Helvetica Neue', sans-serif",
   "headingsFontFamilyFallback": "'-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Oxygen-Sans', 'Ubuntu', 'Cantarell', 'Helvetica Neue', sans-serif",
-  "fontSizeSm": "0.75rem",
-  "fontSizeBase": "1rem",
-  "fontSizeMd": "1.25rem",
-  "fontSizeLg": "1.5rem",
-  "fontSizeXl": "2rem",
+  "fontSizeSm": "0.8rem",
+  "fontSizeBase": "1.125rem",
+  "fontSizeMd": "1.3rem",
+  "fontSizeLg": "1.75rem",
+  "fontSizeXl": "2.25rem",
   "fontSizeXxl": "3rem",
   "fontWeightNormal": 400,
   "fontWeightBold": 700,
@@ -146,7 +146,7 @@
       "showIndicators": true
     },
     "categories": {
-      "showIdentifiers": false,
+      "showIdentifiers": true,
       "filterIndicatorsByAllLevels": true
     },
     "fundingInstruments": [],
