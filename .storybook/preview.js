@@ -30,6 +30,7 @@ const additionalThemes = [
   'helsinki-kierto',
   'ktstrat',
   'hsy-kestava',
+  'kpr',
 ];
 
 additionalThemes.forEach((value) => {
