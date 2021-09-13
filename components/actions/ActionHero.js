@@ -49,6 +49,9 @@ const CardContent = styled.div`
 `;
 
 const OverlayContainer = styled.div`
+  display: flex;
+  align-items: flex-end;
+  min-height: 24rem;
   padding: ${(props) => props.theme.spaces.s300} 0 ${(props) => props.theme.spaces.s300};
 `;
 
