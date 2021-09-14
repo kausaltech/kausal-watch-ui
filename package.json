@@ -44,7 +44,7 @@
     "next-with-apollo": "^5.1.0",
     "node-sass": "^5.0.0",
     "original-url": "^1.2.3",
-    "plotly.js": "^1.54.7",
+    "plotly.js": "^2.5.0",
     "polished": "^3.6.5",
     "popper.js": "^1.16.0",
     "prop-types": "^15.7.2",
