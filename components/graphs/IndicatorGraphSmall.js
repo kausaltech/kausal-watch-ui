@@ -12,7 +12,7 @@ import PlanContext from 'context/plan';
 import ContentLoader from '../common/ContentLoader';
 
 const GET_INDICATOR_GRAPH_DATA = gql`
-  query IndicatorGraphData($id: ID, $plan: ID) {
+  query IndicatorGraphDataSmall($id: ID, $plan: ID) {
     indicator(plan: $plan, id: $id) {
       id
       name
