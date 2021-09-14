@@ -5,6 +5,7 @@ import RichText from 'components/common/RichText';
 import { useTheme } from 'common/theme';
 import { getBgImageAlignment } from 'common/images';
 import { DynamicLink } from 'common/links';
+import CategoryTreeMap from 'components/graphs/CategoryTreeMap';
 import Card from 'components/common/Card';
 
 const CategoryListSection = styled.div`
@@ -46,9 +47,13 @@ const Identifier = styled.span`
 `;
 
 const CategoryListBlock = (props) => {
-  const { categories, color, fallbackImage, heading, lead } = props;
+  const { categories, color, fallbackImage, heading, lead, style } = props;
   const themeColor = color;
   const theme = useTheme();
+
+  if (style === 'treemap') {
+    return <CategoryTreeMap />
+  }
 
   return (
     <CategoryListSection bg={themeColor}>
