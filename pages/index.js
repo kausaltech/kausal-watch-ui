@@ -12,7 +12,7 @@ import StreamField from 'components/common/StreamField';
 import LegacyHomePage from 'components/home/LegacyHomePage';
 
 const GET_PLAN_PAGE = gql`
-query GetPlanPage($plan: ID!, $path: String!) {
+query GetPlanPageHomePage($plan: ID!, $path: String!) {
   planPage(plan: $plan, path: $path) {
     __typename
     id

@@ -6,7 +6,7 @@ import PlanContext from 'context/plan';
 import { getStatusData } from 'common/preprocess';
 
 export const GET_ACTION_STATUSES = gql`
-  query DashboardActionList($plan: ID!, $actionCategory: ID) {
+  query GetActionStatuses($plan: ID!, $actionCategory: ID) {
     planActions(plan: $plan, category: $actionCategory) {
       id
       identifier

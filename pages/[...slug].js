@@ -13,7 +13,7 @@ import CategoryPageHeaderBlock from 'components/contentblocks/CategoryPageHeader
 import ContentPageHeaderBlock from 'components/contentblocks/ContentPageHeaderBlock';
 
 const GET_PLAN_PAGE = gql`
-query GetPlanPage($plan: ID!, $path: String!) {
+query GetPlanPageGeneral($plan: ID!, $path: String!) {
   planPage(plan: $plan, path: $path) {
     __typename
     id
