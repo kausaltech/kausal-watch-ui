@@ -9,7 +9,7 @@ import Layout, { Meta } from 'components/layout';
 import StatusBoard from 'components/dashboard/Statusboard';
 
 const GET_PLAN_PAGE = gql`
-query GetPlanPage($plan: ID!, $path: String!) {
+query GetPlanPageActionList($plan: ID!, $path: String!) {
   planPage(plan: $plan, path: $path) {
     __typename
     id

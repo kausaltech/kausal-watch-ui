@@ -7,7 +7,7 @@ import ContentLoader from 'components/common/ContentLoader';
 import IndicatorList from 'components/indicators/IndicatorList';
 
 const GET_PLAN_PAGE = gql`
-query GetPlanPage($plan: ID!, $path: String!) {
+query GetPlanPageIndicatorList($plan: ID!, $path: String!) {
   planPage(plan: $plan, path: $path) {
     __typename
     id
