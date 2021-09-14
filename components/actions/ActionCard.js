@@ -115,6 +115,7 @@ function getMockIconUrl(category) {
   const plan = useContext(PlanContext);
   let iconUrl = null;
   if (plan.identifier === 'liiku') iconUrl = `/static/themes/liiku/images/category-${category}.svg`;
+  if (plan.identifier === 'hsy-kestava') iconUrl = `/static/themes/hsy-kestava/images/category-${category}.svg`;
   return iconUrl;
 }
 
@@ -126,7 +127,7 @@ function ActionCard(props) {
 
   let actionName = action.name;
   // mock category icon Url
-  const iconUrl = action.categories.length ? getMockIconUrl(action.categories[0].identifier) : '';
+  const iconUrl = action.rootCategory ? getMockIconUrl(action.rootCategory.identifier) : '';
 
   if (actionName.length > 120) actionName = `${action.name.substring(0, 120)}…`;
 
@@ -183,6 +184,7 @@ ActionCard.propTypes = {
     identifier: PropTypes.string,
     name: PropTypes.string,
     completion: PropTypes.number,
+    rootCategory: PropTypes.shape(),
     status: PropTypes.shape({
       identifier: PropTypes.string,
       name: PropTypes.string,

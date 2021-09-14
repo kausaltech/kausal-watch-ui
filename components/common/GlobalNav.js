@@ -323,7 +323,7 @@ function GlobalNav(props) {
           <Link href="/" passHref>
             <HomeLink>
               <OrgLogo className="org-logo" />
-              <SiteTitle>{siteTitle}</SiteTitle>
+              <SiteTitle>{ theme.navTitleVisible ? siteTitle : '\u00A0' }</SiteTitle>
             </HomeLink>
           </Link>
           <NavbarToggler
