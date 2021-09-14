@@ -106,11 +106,13 @@ required-field: Obligatorisk
 send: Skicka
 close: Stäng
 unknown: Tuntematon
-under-x-days: Lägre som {{days}} dagar
-over-x-days: Över {{days}} dagar
+under-x-days: 'Lägre som {{days}} dagar'
+over-x-days: 'Över {{days}} dagar'
 frequently-asked-questions: Vanliga frågor
 actions-as-list: Som en lista
 reduced: Minskad
 to-reduce: Kvar för att minska
 bar-goal: Mål
 admin-login: Administratör
+error-with-code: Felkod
+error-occurred: Fel inträffade

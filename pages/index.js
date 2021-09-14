@@ -65,7 +65,7 @@ const getRootCategories = (allCategories) => {
 };
 
 function RootPage() {
-  const { t } = useTranslation();
+  const { t } = useTranslation(['common']);
   const plan = useContext(PlanContext);
   const { loading, error, data } = useQuery(GET_PLAN_PAGE, {
     variables: {
@@ -107,5 +107,9 @@ function RootPage() {
     </Layout>
   );
 }
+
+RootPage.getInitialProps = async ({ query }) => ({
+  namespacesRequired: ['common'],
+});
 
 export default RootPage;

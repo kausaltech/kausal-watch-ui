@@ -117,3 +117,5 @@ reduced: Reduced
 to-reduce: Left to reduce
 bar-goal: Goal
 admin-login: Admin login
+error-with-code: Error with code
+error-occurred: Error occurred

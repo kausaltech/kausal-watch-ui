@@ -109,11 +109,13 @@ required-field: Pakollinen tieto
 send: Lähetä
 close: Sulje
 unknown: Tuntematon
-under-x-days: Alle {{days}} päivää
-over-x-days: Yli {{days}} päivää
+under-x-days: 'Alle {{days}} päivää'
+over-x-days: 'Yli {{days}} päivää'
 frequently-asked-questions: Usein Kysytyt Kysymykset
 actions-as-list: Listana
 reduced: Vähennetty
 to-reduce: Vähennettävää
 bar-goal: Tavoite
 admin-login: Ylläpito
+error-with-code: Virhekoodi
+error-occurred: Virhe tapahtui
