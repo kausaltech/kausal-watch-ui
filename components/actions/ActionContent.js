@@ -427,9 +427,11 @@ function ActionContent({ id }) {
                 ))}
               </ActionSection>
             ) : null}
-            <ActionSection>
-              <ResponsibleList data={action.responsibleParties.map((item) => item.organization)} />
-            </ActionSection>
+            { action.responsibleParties.length ? (
+              <ActionSection>
+                <ResponsibleList data={action.responsibleParties.map((item) => item.organization)} />
+              </ActionSection>
+            ) : null}
             { action?.contactPersons.length > 0 && (
               <ActionSection>
                 <ContactPersons persons={action.contactPersons.map((item) => item.person)} />
