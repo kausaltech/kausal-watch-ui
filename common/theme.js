@@ -98,7 +98,7 @@ export const themeProp = exact({
   navLogoVisible: bool.isRequired,
   navTitleVisible: bool.isRequired,
   footerLogoPlacement: string.isRequired,
-  footerLogoSize: number,
+  footerLogoSize: string,
   footerBackgroundColor: css('color'),
   footerColor: css('color'),
   formLabelFontWeight: number.isRequired,

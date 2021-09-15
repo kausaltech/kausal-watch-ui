@@ -131,7 +131,7 @@ function StaticPage({ slug }) {
 }
 StaticPage.getInitialProps = async ({ query }) => ({
   slug: query.slug,
-  namespacesRequired: ['common'],
+  namespacesRequired: ['common', 'action'],
 });
 
 const PageHeaderBlock = (props) => {

@@ -80,7 +80,7 @@ function LegacyHomePage(props) {
 }
 
 LegacyHomePage.getInitialProps = async () => ({
-  namespacesRequired: ['common'],
+  namespacesRequired: ['common', 'actions'],
 });
 
 export default withTranslation('common')(LegacyHomePage);
