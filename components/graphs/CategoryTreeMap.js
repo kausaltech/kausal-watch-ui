@@ -1,8 +1,10 @@
-import React, { useContext, useState, useCallback } from 'react';
+import React, { useContext, useState, useCallback, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import styled from 'styled-components';
 import _ from 'lodash';
-import { Container, Spinner } from 'reactstrap';
+import { Container, Row, Col } from 'reactstrap';
+import ContentLoader from 'components/common/ContentLoader';
+import Card from 'components/common/Card';
 import { gql, useQuery } from '@apollo/client';
 
 import PlanContext from 'context/plan';
@@ -16,6 +18,10 @@ const CategoryListSection = styled.div`
 
 const TreemapContent = styled.div`
   text-align: center;
+`;
+
+const SectorContent = styled.div`
+  margin-top: ${(props) => props.theme.spaces.s200};
 `;
 
 const GET_CATEGORIES_FOR_TREEMAP = gql`
@@ -111,17 +117,46 @@ const CategoryTreePlot = React.memo(({ data, onChangeSection }) => {
   );
 });
 
-const CategoryTreeMap = React.memo(() => {
+const CategoryTreeSection = (props) => {
+  const { sections } = props;
   const [activeCategory, setCategory] = useState(undefined);
 
   const onChangeSection = useCallback(
     (cat) => {
-      console.log('onAnimatingFrame', cat);
-      setCategory(cat);
+      const newCat = sections.planCategories.find((sect) => sect.id === cat);
+      setCategory(newCat);
       return false;
     }, [],
   );
 
+  return (
+    <CategoryListSection>
+      <Container fluid>
+        <Row>
+          <Col md={8}>
+            <TreemapContent>
+              <CategoryTreePlot
+                data={sections}
+                onChangeSection={onChangeSection}
+              />
+            </TreemapContent>
+          </Col>
+          <Col md={4}>
+            <SectorContent>
+              <Card>
+                <h4>{activeCategory?.name}</h4>
+                <h5>{activeCategory?.metadata[0]?.value}</h5>
+              </Card>
+            </SectorContent>
+          </Col>
+        </Row>
+
+      </Container>
+    </CategoryListSection>
+  );
+};
+
+const CategoryTreeMap = () => {
   if (!process.browser) {
     return null;
   }
@@ -133,20 +168,11 @@ const CategoryTreeMap = React.memo(() => {
     },
   });
 
-  if (!data) return <Spinner size="sm" color="dark" className="mr-3" />;
+  if (!data) return <ContentLoader />;
 
   return (
-    <CategoryListSection>
-      <Container>
-        <TreemapContent>
-          <CategoryTreePlot
-            data={data}
-            onChangeSection={onChangeSection}
-          />
-          <button onClick={() => { setCategory(2); }}>{activeCategory}</button>
-        </TreemapContent>
-      </Container>
-    </CategoryListSection>
+    <CategoryTreeSection sections={data} />
   );
-});
+};
+
 export default CategoryTreeMap;
