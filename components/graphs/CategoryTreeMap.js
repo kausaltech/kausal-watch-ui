@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useCallback } from 'react';
 import dynamic from 'next/dynamic';
 import styled from 'styled-components';
 import _ from 'lodash';
@@ -6,6 +6,8 @@ import { Container, Spinner } from 'reactstrap';
 import { gql, useQuery } from '@apollo/client';
 
 import PlanContext from 'context/plan';
+
+const Plot = dynamic(import('./Plot'));
 
 const CategoryListSection = styled.div`
   background-color: ${(props) => props.theme.neutralLight};
@@ -69,11 +71,60 @@ function makeTrace(cats) {
   return trace;
 }
 
-const CategoryTreePlot = () => {
+const CategoryTreePlot = React.memo(({ data, onChangeSection }) => {
+  const { planCategories } = data;
+
+  // console.log(planCategories);
+  const trace = makeTrace(planCategories);
+  // console.log(trace);
+  const layout = {
+    showlegend: false,
+    paper_bgcolor: 'rgba(0,0,0,0)',
+    margin: { t: 50, b: 20, l: 20, r: 20 },
+    font: {
+      family: "-apple-system, -apple-system, BlinkMacSystemFont, 'Segoe UI', "
+      + "Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', "
+      + 'sans-serif, helvetica neue, helvetica, Ubuntu, roboto, noto, segoe ui, arial, sans-serif',
+    },
+    hovermode: false,
+  };
+
+  const config = {
+    displayModeBar: false,
+    responsive: true,
+  };
+
+  const handleSectionChange = (evt) => {
+    const newCat = evt.frame.data[0].level;
+    onChangeSection(newCat);
+  };
+
+  return (
+    <Plot
+      data={[trace]}
+      layout={layout}
+      config={config}
+      useResizeHandler
+      onAnimatingFrame={handleSectionChange}
+      style={{ width: '100%', height: '100%' }}
+    />
+  );
+});
+
+const CategoryTreeMap = React.memo(() => {
+  const [activeCategory, setCategory] = useState(undefined);
+
+  const onChangeSection = useCallback(
+    (cat) => {
+      console.log('onAnimatingFrame', cat);
+      setCategory(cat);
+      return false;
+    }, [],
+  );
+
   if (!process.browser) {
     return null;
   }
-  const Plot = dynamic(import('./Plot'));
   const plan = useContext(PlanContext);
   const { data, loading, error } = useQuery(GET_CATEGORIES_FOR_TREEMAP, {
     variables: {
@@ -84,37 +135,18 @@ const CategoryTreePlot = () => {
 
   if (!data) return <Spinner size="sm" color="dark" className="mr-3" />;
 
-  const { planCategories } = data;
-  console.log(planCategories);
-  const trace = makeTrace(planCategories);
-  console.log(trace);
-  const layout = {
-    showlegend: false,
-    paper_bgcolor: 'rgba(0,0,0,0)',
-    margin: { t: 50, b: 20, l: 20, r: 20 },
-    height: 600,
-    autosize: true,
-    font: {
-      family: "-apple-system, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif, helvetica neue, helvetica, Ubuntu, roboto, noto, segoe ui, arial, sans-serif",
-    },
-    hovermode: false,
-  };
-
-  const config = {
-    displayModeBar: false,
-  };
-
-  const out = <Plot data={[trace]} layout={layout} config={config} />;
-  return out;
-};
-
-const CategoryTreeMap = () => (
-  <CategoryListSection>
-    <Container>
-      <TreemapContent>
-        <CategoryTreePlot />
-      </TreemapContent>
-    </Container>
-  </CategoryListSection>
-);
+  return (
+    <CategoryListSection>
+      <Container>
+        <TreemapContent>
+          <CategoryTreePlot
+            data={data}
+            onChangeSection={onChangeSection}
+          />
+          <button onClick={() => { setCategory(2); }}>{activeCategory}</button>
+        </TreemapContent>
+      </Container>
+    </CategoryListSection>
+  );
+});
 export default CategoryTreeMap;
