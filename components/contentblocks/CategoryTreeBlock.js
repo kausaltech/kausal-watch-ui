@@ -166,7 +166,7 @@ const CategoryTreeSection = (props) => {
     }, [],
   );
 
-  // console.log(sections);
+  console.log(sections);
 
   return (
     <CategoryListSection>
@@ -174,7 +174,11 @@ const CategoryTreeSection = (props) => {
         <CategoryTreeLayout>
           <CategoryCardColumn>
             <CategoryCard color={activeCategory.color}>
-              <CategoryCardContent category={activeCategory} totalEmissions={rootSection.metadata[0].value} />
+              <CategoryCardContent
+                category={activeCategory}
+                totalEmissions={rootSection.metadata[0].value}
+                key={activeCategory.id}
+              />
             </CategoryCard>
           </CategoryCardColumn>
           <CategoryVizColumn>

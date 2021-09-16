@@ -30,7 +30,7 @@
     "express": "^4.17.1",
     "express-robots-txt": "^0.5.0",
     "fontfaceobserver": "^2.1.0",
-    "framer-motion": "^3.10.0",
+    "framer-motion": "^4.1.17",
     "graphql": "^15.3.0",
     "graphql-tools": "^6.0.18",
     "html-react-parser": "^0.13.0",

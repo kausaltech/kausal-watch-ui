@@ -1,10 +1,9 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import styled from 'styled-components';
 import { Link } from 'routes';
 
-const CardContent = styled.div`
-  max-height: 100%;
-  overflow: scroll;
+const CardContent = styled(motion.div)`
 `;
 
 const CategoryImage = styled.img`
@@ -19,14 +18,17 @@ const CategoryText = styled.div`
 
 const CatecoryCardContent = (props) => {
   const { category, totalEmissions } = props;
-  console.log(category);
+  // console.log(category);
 
   const textcontent = category?.categoryPage?.body.find((block) => block.__typename === 'RichTextBlock');
   const catImageSrc = category?.image?.rendition.src;
   const emissionPortion = category?.metadata[0]?.value;
 
   return (
-    <CardContent>
+    <CardContent
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+    >
       <h4>{category?.name}</h4>
       <h5>
         {emissionPortion ? `${Math.round((emissionPortion / totalEmissions) * 10000) / 100} %` : null}
