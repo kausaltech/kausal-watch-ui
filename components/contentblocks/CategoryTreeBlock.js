@@ -86,14 +86,50 @@ const CategoryVizColumn = styled.div`
     flex: 0 0 66%;
   }
 `;
+
+// TODO: clean out unecessary fields. Fetching a lot for now
+
 const GET_CATEGORIES_FOR_TREEMAP = gql`
 query GetCategoriesForTreeMap($plan: ID!, $categoryType: ID!) {
   planCategories(plan: $plan, categoryType: $categoryType) {
     id
     name
+    shortDescription
+    image {
+      id
+      title
+      imageCredit
+      altText
+      rendition(size:"600x300") {
+        width
+        height
+        src
+        alt
+      }
+    }
+    categoryPage {
+      id
+      title
+      path
+      slug
+      url
+      urlPath
+      depth
+      contentType
+      body {
+        ... on RichTextBlock {
+          value
+        }
+      }
+    }
     color
     parent {
       id
+    }
+    level {
+      id
+      name
+      namePlural
     }
     metadata(id: "impact") {
       ...on CategoryMetadataNumericValue {
@@ -138,7 +174,7 @@ const CategoryTreeSection = (props) => {
         <CategoryTreeLayout>
           <CategoryCardColumn>
             <CategoryCard color={activeCategory.color}>
-              <CategoryCardContent category={activeCategory} />
+              <CategoryCardContent category={activeCategory} totalEmissions={rootSection.metadata[0].value} />
             </CategoryCard>
           </CategoryCardColumn>
           <CategoryVizColumn>
