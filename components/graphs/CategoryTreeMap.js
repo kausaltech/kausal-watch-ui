@@ -63,6 +63,13 @@ function makeTrace(catsIn, i18n) {
       thickness: 24,
       side: 'top',
     },
+    textfont: {
+      family: "-apple-system, -apple-system, BlinkMacSystemFont, 'Segoe UI', "
+      + "Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', "
+      + 'sans-serif, helvetica neue, helvetica, Ubuntu, roboto, noto, segoe ui, arial, sans-serif',
+      color: '#000000',
+      size: 13,
+    },
     tiling: {
       pad: 2,
     },
@@ -86,11 +93,6 @@ const CategoryTreeMap = React.memo((props) => {
     showlegend: false,
     paper_bgcolor: 'rgba(0,0,0,0)',
     margin: { t: 30, b: 0, l: 0, r: 0 },
-    font: {
-      family: "-apple-system, -apple-system, BlinkMacSystemFont, 'Segoe UI', "
-      + "Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', "
-      + 'sans-serif, helvetica neue, helvetica, Ubuntu, roboto, noto, segoe ui, arial, sans-serif',
-    },
     hovermode: false,
   };
 

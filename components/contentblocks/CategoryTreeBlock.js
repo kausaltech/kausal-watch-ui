@@ -8,18 +8,22 @@ import CategoryTreeMap from 'components/graphs/CategoryTreeMap';
 import CategoryCardContent from 'components/common/CategoryCardContent';
 
 import PlanContext from 'context/plan';
+import CategoryActionList from 'components/actions/CategoryActionList';
 
 const CategoryListSection = styled.div`
   background-color: ${(props) => props.theme.neutralLight};
   padding: ${(props) => props.theme.spaces.s400} 0 ${(props) => props.theme.spaces.s100};
 
+  h2 {
+    text-align: center;
+  }
+
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
-    padding: ${(props) => props.theme.spaces.s100} 0;
+    padding: ${(props) => props.theme.spaces.s400} 0;
   }
 `;
 
 const TreemapContent = styled.div`
-  background-color: ${(props) => props.theme.neutralLight};
   text-align: center;
 `;
 
@@ -171,6 +175,7 @@ const CategoryTreeSection = (props) => {
   return (
     <CategoryListSection>
       <Container fluid>
+        <h2>Utsläpp</h2>
         <CategoryTreeLayout>
           <CategoryCardColumn>
             <CategoryCard color={activeCategory.color}>
@@ -190,7 +195,7 @@ const CategoryTreeSection = (props) => {
             </TreemapContent>
           </CategoryVizColumn>
         </CategoryTreeLayout>
-
+        <CategoryActionList categoryId={activeCategory.id === 'root' ? 0 : activeCategory.id} color="#333333" />
       </Container>
     </CategoryListSection>
   );
