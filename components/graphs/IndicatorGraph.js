@@ -13,6 +13,13 @@ import ContentLoader from '../common/ContentLoader';
 
 const GET_INDICATOR_GRAPH_DATA = gql`
   query IndicatorGraphData($id: ID, $plan: ID) {
+    plan(id: $plan) {
+      scenarios {
+        id
+        identifier
+        name
+      }
+    }
     indicator(plan: $plan, id: $id) {
       id
       name
@@ -47,7 +54,6 @@ const GET_INDICATOR_GRAPH_DATA = gql`
         value
         scenario {
           id
-          name
         }
       }
       unit {
@@ -243,7 +249,7 @@ function generateDataTraces(indicator, values, i18n, plotColors, unitLabel) {
   return dataTraces;
 }
 
-function generatePlotFromValues(indicator, i18n, plotColors) {
+function generatePlotFromValues(indicator, i18n, plotColors, planScenarios) {
   let onlyIntegers = true;
   let maxDigits = 0;
   const { unit } = indicator;
@@ -351,34 +357,34 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
   traces.push({ ...dataTrace, ...attrs });
 
   // Group goals by scenario
-  const scenarios = new Map();
+  const traceScenarios = new Map();
   let colorIdx = 2;
 
   (indicator.goals || []).forEach((goal) => {
     const scenarioId = goal.scenario ? goal.scenario.id : null;
 
-    if (!scenarios.has(scenarioId)) {
+    if (!traceScenarios.has(scenarioId)) {
       // Default scenario (organization goal) is plotted with color #1
       const color = scenarioId ? plotColors.goalScale[colorIdx++] : plotColors.goalScale[1];
-      const scenario = { goals: [], color };
+      const scenario = { goals: [], color, config: planScenarios.find((sc) => sc.id == scenarioId) };
 
       if (scenarioId) {
-        scenario.name = goal.scenario.name;
+        scenario.name = scenario.config.name;
       } else {
         scenario.name = i18n.t('goal');
       }
-      scenarios.set(scenarioId, scenario);
+      traceScenarios.set(scenarioId, scenario);
     }
-    scenarios.get(scenarioId).goals.push(goal);
+    traceScenarios.get(scenarioId).goals.push(goal);
   });
 
   // Sort
-  scenarios.forEach((scenario, scenarioId) => {
+  traceScenarios.forEach((scenario) => {
     const { goals } = scenario;
     scenario.goals = goals.sort((a, b) => a.date - b.date).map(processItem);
   });
 
-  scenarios.forEach((scenario, scenarioId) => {
+  traceScenarios.forEach((scenario, scenarioId) => {
     const { goals } = scenario;
 
     goals.forEach((item) => {
@@ -409,7 +415,15 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
         bgcolor: '#fff',
       },
     };
-    if (scenarioId != null) trace.mode = 'markers';
+    if (scenarioId != null) {
+      if (scenario.config?.identifier === 'potential') {
+        trace.mode = 'lines';
+        traces[0].showlegend = true;
+        traces[0].name = i18n.t('indicator-legend-result');
+      } else { 
+        trace.mode = 'markers';
+      }
+    }
     traces.push(trace);
   });
 
@@ -436,7 +450,7 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
     const highestDataYear = mainValues[mainValues.length - 1];
 
     // Draw from last historical value to first scenario goal
-    scenarios.forEach((scenario, scenarioId) => {
+    traceScenarios.forEach((scenario, scenarioId) => {
       const { goals, color } = scenario;
       const highestScenarioGoalYear = goals[goals.length - 1];
       const lowestGoalYear = goals[0];
@@ -485,7 +499,9 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
   layout.title = indicator.name;
   layout.yaxis.title = unitLabel || indicator.quantity?.name;
 
-  if (scenarios.size < 2 && !indicator.dimensions.length) {
+  if (traceScenarios.size > 1 || indicator.dimensions.length || traceScenarios.values().next().value?.config) {
+    layout.showlegend = true;
+  } else {
     layout.showlegend = false;
   }
 
@@ -574,7 +590,7 @@ function IndicatorGraph({ indicatorId }) {
     </Alert>
   );
 
-  const { indicator } = data;
+  const { indicator, plan: { scenarios }} = data;
   if (!indicator) return (
     <Alert color="danger">
       {t('indicator-not-found')}
@@ -583,7 +599,7 @@ function IndicatorGraph({ indicatorId }) {
 
   const Plot = dynamic(import('./Plot'));
 
-  const plot = generatePlotFromValues(indicator, i18n, plotColors);
+  const plot = generatePlotFromValues(indicator, i18n, plotColors, scenarios);
 
   let plotTitle = '';
   if (typeof plot.layout.title === 'object' && plot.layout.title !== null) {

@@ -50,6 +50,9 @@ const GET_INDICATOR_DETAILS = gql`
         id
         date
         value
+        scenario {
+          id
+        }
       }
       actions(plan: $plan) {
         id
@@ -176,6 +179,7 @@ function IndicatorDetails({ id }) {
   }
 
   const hasImpacts = indicator.relatedCauses.length > 0 || indicator.relatedEffects.length > 0;
+  const mainGoals = indicator.goals.filter((goal) => !goal.scenario);
 
   return (
     <div className="mb-5">
@@ -192,13 +196,12 @@ function IndicatorDetails({ id }) {
             </IndicatorListLink>
           </IndicatorLevel>
           <h1>{indicator.name}</h1>
-          { (indicator.goals.length > 0 || indicator.goals.length > 0)
-          && (
+          { (mainGoals.length > 0) && (
             <IndicatorValueSummary
               timeResolution={indicator.timeResolution}
               values={indicator.values}
               unit={indicator.unit}
-              goals={indicator.goals}
+              goals={mainGoals}
             />
           )}
         </Container>
