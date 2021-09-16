@@ -1,46 +1,8 @@
-import React, { useContext, useState, useCallback, useEffect } from 'react';
+import React from 'react';
 import dynamic from 'next/dynamic';
-import styled from 'styled-components';
 import _ from 'lodash';
-import { Container, Row, Col } from 'reactstrap';
-import ContentLoader from 'components/common/ContentLoader';
-import Card from 'components/common/Card';
-import { gql, useQuery } from '@apollo/client';
-
-import PlanContext from 'context/plan';
 
 const Plot = dynamic(import('./Plot'));
-
-const CategoryListSection = styled.div`
-  background-color: ${(props) => props.theme.neutralLight};
-  padding: ${(props) => props.theme.spaces.s100} 0;
-`;
-
-const TreemapContent = styled.div`
-  text-align: center;
-`;
-
-const SectorContent = styled.div`
-  margin-top: ${(props) => props.theme.spaces.s200};
-`;
-
-const GET_CATEGORIES_FOR_TREEMAP = gql`
-query GetCategoriesForTreeMap($plan: ID!, $categoryType: ID!) {
-  planCategories(plan: $plan, categoryType: $categoryType) {
-    id
-    name
-    color
-    parent {
-      id
-    }
-    metadata(id: "impact") {
-      ...on CategoryMetadataNumericValue {
-        value
-      }
-    }
-  }
-}
-`;
 
 function makeTrace(cats) {
   const hasChildren = new Map();
@@ -48,14 +10,26 @@ function makeTrace(cats) {
     if (cat.parent) hasChildren.set(cat.parent.id, true);
   });
 
+  const rootSection = {
+    id: 'root',
+    name: 'Total utsläpp',
+    color: '#999999',
+    parent: null,
+    metadata: [
+      {
+        value: 50.921,
+      },
+    ],
+  };
+
   const trace = {
     type: 'icicle',
     name: 'Utsläpp',
-    labels: _.concat('<b>Total utsläpp</b>', cats.map((cat) => `<b>${cat.name}</b>`)),
-    text: _.concat('50.921 Mt CO<sub>2</sub>e', cats.map((cat) => (cat.metadata[0]?.value ? `${cat.metadata[0]?.value} Mt` : '-'))),
+    labels: _.concat(`<b>${rootSection.name}</b>`, cats.map((cat) => `<b>${cat.name}</b>`)),
+    text: _.concat(`${rootSection.metadata[0]?.value} CO<sub>2</sub>e`, cats.map((cat) => (cat.metadata[0]?.value ? `${cat.metadata[0]?.value} Mt` : '-'))),
     ids: _.concat('root', cats.map((cat) => cat.id)),
     parents: _.concat(null, cats.map((cat) => cat.parent?.id || 'root')),
-    values: _.concat(10, cats.map((cat) => {
+    values: _.concat(0, cats.map((cat) => {
       if (hasChildren.get(cat.id)) return 0;
       return cat.metadata[0]?.value || 0;
     })),
@@ -66,7 +40,7 @@ function makeTrace(cats) {
     maxdepth: 2,
     textinfo: 'label+text',
     pathbar: {
-      edgeshape: '/',
+      edgeshape: '>',
       thickness: 24,
       side: 'top',
     },
@@ -77,16 +51,17 @@ function makeTrace(cats) {
   return trace;
 }
 
-const CategoryTreePlot = React.memo(({ data, onChangeSection }) => {
-  const { planCategories } = data;
+const CategoryTreeMap = React.memo((props) => {
+  const { data, onChangeSection } = props;
 
-  // console.log(planCategories);
-  const trace = makeTrace(planCategories);
+  console.log('data for viz', data);
+  const trace = makeTrace(data);
+
   // console.log(trace);
   const layout = {
     showlegend: false,
     paper_bgcolor: 'rgba(0,0,0,0)',
-    margin: { t: 50, b: 20, l: 20, r: 20 },
+    margin: { t: 30, b: 0, l: 0, r: 0 },
     font: {
       family: "-apple-system, -apple-system, BlinkMacSystemFont, 'Segoe UI', "
       + "Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', "
@@ -116,63 +91,5 @@ const CategoryTreePlot = React.memo(({ data, onChangeSection }) => {
     />
   );
 });
-
-const CategoryTreeSection = (props) => {
-  const { sections } = props;
-  const [activeCategory, setCategory] = useState(undefined);
-
-  const onChangeSection = useCallback(
-    (cat) => {
-      const newCat = sections.planCategories.find((sect) => sect.id === cat);
-      setCategory(newCat);
-      return false;
-    }, [],
-  );
-
-  return (
-    <CategoryListSection>
-      <Container fluid>
-        <Row>
-          <Col md={8}>
-            <TreemapContent>
-              <CategoryTreePlot
-                data={sections}
-                onChangeSection={onChangeSection}
-              />
-            </TreemapContent>
-          </Col>
-          <Col md={4}>
-            <SectorContent>
-              <Card>
-                <h4>{activeCategory?.name}</h4>
-                <h5>{activeCategory?.metadata[0]?.value}</h5>
-              </Card>
-            </SectorContent>
-          </Col>
-        </Row>
-
-      </Container>
-    </CategoryListSection>
-  );
-};
-
-const CategoryTreeMap = () => {
-  if (!process.browser) {
-    return null;
-  }
-  const plan = useContext(PlanContext);
-  const { data, loading, error } = useQuery(GET_CATEGORIES_FOR_TREEMAP, {
-    variables: {
-      plan: plan.identifier,
-      categoryType: 'transition', // FIXME
-    },
-  });
-
-  if (!data) return <ContentLoader />;
-
-  return (
-    <CategoryTreeSection sections={data} />
-  );
-};
 
 export default CategoryTreeMap;
