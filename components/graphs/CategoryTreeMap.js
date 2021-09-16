@@ -2,8 +2,6 @@ import React from 'react';
 import dynamic from 'next/dynamic';
 import _ from 'lodash';
 
-const Plot = dynamic(import('./Plot'));
-
 function makeTrace(cats) {
   const hasChildren = new Map();
   cats.forEach((cat) => {
@@ -54,7 +52,11 @@ function makeTrace(cats) {
 const CategoryTreeMap = React.memo((props) => {
   const { data, onChangeSection } = props;
 
-  console.log('data for viz', data);
+  if (!process.browser) {
+    return null;
+  }
+
+  const Plot = dynamic(import('./Plot'));
   const trace = makeTrace(data);
 
   // console.log(trace);

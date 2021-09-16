@@ -1,17 +1,17 @@
 import React, { useContext, useState, useCallback } from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
-import { Container, Row, Col } from 'reactstrap';
+import { Container } from 'reactstrap';
 import ContentLoader from 'components/common/ContentLoader';
-import Card from 'components/common/Card';
 import { gql, useQuery } from '@apollo/client';
 import CategoryTreeMap from 'components/graphs/CategoryTreeMap';
+import CategoryCardContent from 'components/common/CategoryCardContent';
 
 import PlanContext from 'context/plan';
 
 const CategoryListSection = styled.div`
   background-color: ${(props) => props.theme.neutralLight};
-  padding: ${(props) => props.theme.spaces.s300} 0 ${(props) => props.theme.spaces.s100};
+  padding: ${(props) => props.theme.spaces.s400} 0 ${(props) => props.theme.spaces.s100};
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     padding: ${(props) => props.theme.spaces.s100} 0;
@@ -27,10 +27,11 @@ const CategoryCard = styled.div`
   position: relative;
   z-index: 199;
   background-color: white;
-  height: calc(100% - 6px);
   padding: 1rem;
   margin: 1rem 3px 3px 3px;
   filter: drop-shadow(0 1px 2px rgba(0,0,0,.5));
+  border-left: .5rem solid ${(props) => props.color};
+  border-radius: .5rem;
 
   &::after {
     content: '';
@@ -47,7 +48,8 @@ const CategoryCard = styled.div`
   }
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
-    margin: 3px 1rem 3px 0;
+    margin: 2rem 1rem 3px 0;
+    height: calc(100% - 2rem);
 
     &::after {
     right: -1.5rem;
@@ -70,11 +72,19 @@ const CategoryTreeLayout = styled.div`
 `;
 
 const CategoryCardColumn = styled.div`
-  flex: 0 0 25%;
+  flex: 0 0 50%;
+
+  @media (min-width: ${(props) => props.theme.breakpointLg}) {
+    flex: 0 0 33%;
+  }
 `;
 
 const CategoryVizColumn = styled.div`
-  flex: 0 0 75%;
+  flex: 0 0 50%;
+
+  @media (min-width: ${(props) => props.theme.breakpointLg}) {
+    flex: 0 0 66%;
+  }
 `;
 const GET_CATEGORIES_FOR_TREEMAP = gql`
 query GetCategoriesForTreeMap($plan: ID!, $categoryType: ID!) {
@@ -96,11 +106,6 @@ query GetCategoriesForTreeMap($plan: ID!, $categoryType: ID!) {
 
 const CategoryTreeSection = (props) => {
   const { sections } = props;
-  const [activeCategory, setCategory] = useState({
-    name: 'Total',
-    metadata: [{ value: '50.921' }],
-  });
-
   const rootSection = {
     id: 'root',
     name: 'Total utsläpp',
@@ -113,6 +118,8 @@ const CategoryTreeSection = (props) => {
     ],
   };
 
+  const [activeCategory, setCategory] = useState(rootSection);
+
   // useCallback, so function prop does not cause graph re-rendering
   const onChangeSection = useCallback(
     (cat) => {
@@ -123,26 +130,17 @@ const CategoryTreeSection = (props) => {
     }, [],
   );
 
-  console.log(sections);
+  // console.log(sections);
 
   return (
     <CategoryListSection>
       <Container fluid>
         <CategoryTreeLayout>
-
           <CategoryCardColumn>
-            <CategoryCard>
-              <h4>{activeCategory?.name}</h4>
-              <h5>
-                {activeCategory?.metadata[0]?.value}
-                {' '}
-                Mt CO
-                <sub>2</sub>
-                e
-              </h5>
+            <CategoryCard color={activeCategory.color}>
+              <CategoryCardContent category={activeCategory} />
             </CategoryCard>
           </CategoryCardColumn>
-
           <CategoryVizColumn>
             <TreemapContent>
               <CategoryTreeMap
@@ -159,9 +157,6 @@ const CategoryTreeSection = (props) => {
 };
 
 const CategoryTreeBlock = () => {
-  if (!process.browser) {
-    return null;
-  }
   const plan = useContext(PlanContext);
   const { data, loading, error } = useQuery(GET_CATEGORIES_FOR_TREEMAP, {
     variables: {
