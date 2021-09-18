@@ -166,6 +166,7 @@ function ActionHero(props) {
     name,
     imageUrl,
     imageAlign,
+    hideActionIdentifiers,
   } = props;
   const theme = useTheme();
   const { t } = useTranslation();
@@ -229,7 +230,7 @@ function ActionHero(props) {
                     </ActionsNav>
                     <ActionCategories categories={categories} />
                     <ActionHeadline>
-                      <ActionNumber>{identifier}</ActionNumber>
+                      { !hideActionIdentifiers && <ActionNumber>{identifier}</ActionNumber> }
                       <span>{name}</span>
                     </ActionHeadline>
                   </CardContent>

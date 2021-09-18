@@ -154,7 +154,9 @@ function ActionCard(props) {
                 preserveAspectRatio="xMinYMid meet"
               />
             )}
-            <ActionNumber className="action-number">{action.identifier}</ActionNumber>
+            { plan.hideActionIdentifiers
+              ? <div />
+              : <ActionNumber className="action-number">{ action.identifier }</ActionNumber>}
             <ActionStatus>
               { mergedWith ? (
                 <StatusName>

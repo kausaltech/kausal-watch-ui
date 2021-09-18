@@ -44,6 +44,7 @@ const GET_PLAN = gql`
       name
       primaryLanguage
       otherLanguages
+      hideActionIdentifiers
       domain(hostname: $hostname) {
         id
         googleSiteVerificationTag

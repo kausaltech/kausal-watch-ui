@@ -218,14 +218,16 @@ function processAction(actionIn, orgMap) {
   return action;
 }
 
-const ActionRow = ({item, plan, hasResponsibles, hasImpacts, hasIndicators}) => {
+const ActionRow = ({ item, plan, hasResponsibles, hasImpacts, hasIndicators }) => {
   const actionStatus = cleanActionStatus(item, plan.actionStatuses);
 
   return (
     <StyledRow>
+      { !plan.hideActionIdentifiers && (
       <td>
         { item.identifier }
       </td>
+      )}
       <td>
         <ActionLink action={item}>
           { item.name }
@@ -269,8 +271,8 @@ const ActionRow = ({item, plan, hasResponsibles, hasImpacts, hasIndicators}) => 
       )}
       { hasIndicators && (
         <td>
-          { item.relatedIndicators && !item.mergedWith &&
-            <IndicatorsViz relatedIndicators={item.relatedIndicators} />}
+          { item.relatedIndicators && !item.mergedWith
+            && <IndicatorsViz relatedIndicators={item.relatedIndicators} />}
         </td>
       )}
       <td>
@@ -295,7 +297,7 @@ const ActionsStatusTable = (props) => {
     <DashTable role="list">
       <thead>
         <tr>
-          <th><abbr>{ t('action-id') }</abbr></th>
+          { !plan.hideActionIdentifiers && <th><abbr>{ t('action-id') }</abbr></th>}
           <th>{ t('action-name-title') }</th>
           <th>{ t('action-implementation-phase') }</th>
           <th>{ t('action-tasks') }</th>

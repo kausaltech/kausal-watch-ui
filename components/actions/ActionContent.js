@@ -300,6 +300,7 @@ function ActionContent({ id }) {
         name={action.name}
         imageUrl={actionImage?.large.src}
         imageAlign={getBgImageAlignment(actionImage)}
+        hideActionIdentifiers={plan.hideActionIdentifiers}
       />
       <Container>
 

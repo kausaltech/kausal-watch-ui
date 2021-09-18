@@ -6,7 +6,6 @@ import {
 } from 'reactstrap';
 import styled from 'styled-components';
 import { transparentize } from 'polished';
-import { Spring } from 'react-spring/renderprops.cjs';
 import PlanContext from 'context/plan';
 import { cleanActionStatus } from 'common/preprocess';
 import { ActionLink } from 'common/links';
@@ -96,53 +95,52 @@ const ActionNumber = styled.div`
 `;
 
 function ActionHighlightCard(props) {
-  const { action, imageUrl } = props;
+  const { action, imageUrl, hideIdentifier } = props;
   const plan = useContext(PlanContext);
   const actionStatus = cleanActionStatus(action, plan.actionStatuses);
   let actionName = action.name;
   if (actionName.length > 120) actionName = `${action.name.substring(0, 120)}…`;
   return (
-    <Spring
-      from={{ opacity: 0 }}
-      to={{ opacity: 1 }}
-    >
-      {(springProps) => (
-        <ActionLink action={action} prefetch={false}>
-          <CardLink href>
-            <StyledCard style={springProps}>
-              <ImgArea>
-                <ImgBg background={imageUrl} />
-                <ImgOverlay>
-                  <ActionNumber>
-                    <span>
-                      {action.identifier}
-                    </span>
-                  </ActionNumber>
-                </ImgOverlay>
-              </ImgArea>
-              {actionStatus && (
-                <StyledActionStatus
-                  name={actionStatus.name}
-                  identifier={actionStatus.identifier}
-                  completion={action.completion}
-                />
+    <ActionLink action={action} prefetch={false}>
+      <CardLink href>
+        <StyledCard>
+          <ImgArea>
+            <ImgBg background={imageUrl} />
+            <ImgOverlay>
+              { !hideIdentifier && (
+                <ActionNumber>
+                  <span>
+                    {action.identifier}
+                  </span>
+                </ActionNumber>
               )}
-              <CardBody>
-                { actionStatus && actionStatus.identifier === 'completed'
+            </ImgOverlay>
+          </ImgArea>
+          {actionStatus && (
+          <StyledActionStatus
+            name={actionStatus.name}
+            identifier={actionStatus.identifier}
+            completion={action.completion}
+          />
+          )}
+          <CardBody>
+            { actionStatus && actionStatus.identifier === 'completed'
                   && (
                     <ReadyBadge pill>
                       <Icon name="check" color="#ffffff" width="2em" height="2em" />
                     </ReadyBadge>
                   )}
-                <StyledCardTitle tag="h3">{actionName}</StyledCardTitle>
-              </CardBody>
-            </StyledCard>
-          </CardLink>
-        </ActionLink>
-      )}
-    </Spring>
+            <StyledCardTitle tag="h3">{actionName}</StyledCardTitle>
+          </CardBody>
+        </StyledCard>
+      </CardLink>
+    </ActionLink>
   );
 }
+
+ActionHighlightCard.defaultProps = {
+  hideIdentifier: false,
+};
 
 ActionHighlightCard.propTypes = {
   action: PropTypes.shape({
@@ -155,6 +153,7 @@ ActionHighlightCard.propTypes = {
     completion: PropTypes.number,
   }).isRequired,
   imageUrl: PropTypes.string.isRequired,
+  hideIdentifier: PropTypes.bool,
 };
 
 export default ActionHighlightCard;
