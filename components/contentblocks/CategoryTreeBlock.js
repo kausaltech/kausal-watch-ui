@@ -174,7 +174,7 @@ const CategoryTreeSection = (props) => {
 
   return (
     <CategoryListSection>
-      <Container fluid>
+      <Container>
         <h2>Utsläpp</h2>
         <CategoryTreeLayout>
           <CategoryCardColumn>
@@ -195,7 +195,10 @@ const CategoryTreeSection = (props) => {
             </TreemapContent>
           </CategoryVizColumn>
         </CategoryTreeLayout>
-        <CategoryActionList categoryId={activeCategory.id === 'root' ? 0 : activeCategory.id} color="#333333" />
+        <CategoryActionList
+          categoryId={activeCategory.id === 'root' ? 0 : activeCategory.id}
+          categories={sections}
+        />
       </Container>
     </CategoryListSection>
   );
@@ -203,6 +206,10 @@ const CategoryTreeSection = (props) => {
 
 const CategoryTreeBlock = () => {
   const plan = useContext(PlanContext);
+  if (!process.browser) {
+    return null;
+  }
+
   const { data, loading, error } = useQuery(GET_CATEGORIES_FOR_TREEMAP, {
     variables: {
       plan: plan.identifier,
