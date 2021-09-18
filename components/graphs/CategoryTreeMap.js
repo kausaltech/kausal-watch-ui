@@ -10,24 +10,8 @@ function makeTrace(catsIn, i18n) {
   });
   const cats = catsIn.map((cat) => ({ ...cat, value: 0, children: [] }));
 
-  // Include the top-level sector
-  cats.push({
-    id: 'root',
-    name: 'Total utsläpp',
-    color: '#999999',
-    parent: null,
-    value: 0,
-    children: [],
-  });
-
   const catMap = new Map(cats.map((cat) => [cat.id, cat]));
   cats.forEach((cat) => {
-    if (!cat.parent) {
-      if (cat.id !== 'root') {
-        // Bind the previous top-level sectors to root
-        cat.parent = { id: 'root' };
-      }
-    }
     if (cat.parent) {
       const parent = catMap.get(cat.parent.id);
       parent.children.push(cat);
