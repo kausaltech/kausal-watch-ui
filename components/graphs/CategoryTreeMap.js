@@ -72,7 +72,6 @@ const CategoryTreeMap = React.memo((props) => {
   const Plot = dynamic(import('./Plot'));
   const trace = makeTrace(data, i18n);
 
-  // console.log(trace);
   const layout = {
     showlegend: false,
     paper_bgcolor: 'rgba(0,0,0,0)',

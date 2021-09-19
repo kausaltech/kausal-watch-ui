@@ -146,18 +146,9 @@ query GetCategoriesForTreeMap($plan: ID!, $categoryType: ID!) {
 
 const CategoryTreeSection = (props) => {
   const { sections } = props;
-  const rootSection = {
-    id: 'root',
-    name: 'Total utsläpp',
-    color: '#999999',
-    parent: null,
-    metadata: [
-      {
-        value: 50.921,
-      },
-    ],
-  };
-
+  // console.log(sections);
+  const rootSection = sections.find((sect) => sect.parent === null);
+  // console.log(rootSection);
   const [activeCategory, setCategory] = useState(rootSection);
 
   // useCallback, so function prop does not cause graph re-rendering
@@ -170,8 +161,6 @@ const CategoryTreeSection = (props) => {
     }, [],
   );
 
-  console.log(sections);
-
   return (
     <CategoryListSection>
       <Container>
@@ -181,7 +170,7 @@ const CategoryTreeSection = (props) => {
             <CategoryCard color={activeCategory.color}>
               <CategoryCardContent
                 category={activeCategory}
-                totalEmissions={rootSection.metadata[0].value}
+                totalEmissions="50.921"
                 key={activeCategory.id}
               />
             </CategoryCard>

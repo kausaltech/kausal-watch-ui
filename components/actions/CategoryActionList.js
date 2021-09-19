@@ -90,8 +90,6 @@ const filterByCategory = (actions, catId, categories) => {
   if (catId === 0) return actions;
   const recursiveCategories = findAllChildren(catId, categories);
   recursiveCategories.push(catId);
-  console.log('active:', catId, 'filter:', recursiveCategories);
-  // console.log('allchildren', findAllChildren(catId, categories));
   return actions.filter((action) => action.categories.find((cat) => recursiveCategories.indexOf(cat.id) > -1));
 };
 

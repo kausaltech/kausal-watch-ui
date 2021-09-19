@@ -2,6 +2,8 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import styled from 'styled-components';
 import { Link } from 'routes';
+import { useTranslation } from 'common/i18n';
+import Icon from 'components/common/Icon';
 
 const CardContent = styled(motion.div)`
 `;
@@ -16,40 +18,46 @@ const CategoryText = styled.div`
   font-size: 0.75rem;
 `;
 
+const formatEmissionSharePercent = (share, total) => {
+  const label = 'av totala utsläppen';
+  if (!share) return null;
+  const percent = share / total * 100;
+  if (percent < 1) return `< 1 % ${label}`;
+  return `${Math.round(percent)} % ${label}`;
+};
+
 const CatecoryCardContent = (props) => {
   const { category, totalEmissions } = props;
-  // console.log(category);
+  const { i18n, t } = useTranslation();
+  const { language } = i18n;
+  const numberFormat = new Intl.NumberFormat(language, {
+    maximumSignificantDigits: 3,
+  });
 
   const textcontent = category?.categoryPage?.body.find((block) => block.__typename === 'RichTextBlock');
   const catImageSrc = category?.image?.rendition.src;
-  const emissionPortion = category?.metadata[0]?.value;
+  const categoryEmissions = category?.metadata[0]?.value;
+  const emissionShare = formatEmissionSharePercent(categoryEmissions, totalEmissions);
 
   return (
     <CardContent
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
     >
-      <h4>{category?.name}</h4>
-      <h5>
-        {emissionPortion ? `${Math.round((emissionPortion / totalEmissions) * 10000) / 100} %` : null}
-        { category?.metadata[0]?.value ? (
-          <>
-            {' '}
-            (
-            {category?.metadata[0]?.value}
-            {' '}
-            Mt CO
-            <sub>2</sub>
-            e
-            )
-          </>
-        ) : <>-</>}
-        {' '}
-      </h5>
-
       { catImageSrc && <CategoryImage src={catImageSrc} /> }
+      <h3>{category?.name}</h3>
+      <h5>
+        {emissionShare}
+      </h5>
       <CategoryText className="text-content" dangerouslySetInnerHTML={{ __html: textcontent?.value }} />
-      { category?.categoryPage?.urlPath ? <Link href={category?.categoryPage?.urlPath}>read more</Link> : null }
+      { category?.categoryPage?.urlPath ? (
+        <Link href={category?.categoryPage?.urlPath}>
+          <span>
+            {t('read-more')}
+            <Icon name="arrowRight" />
+          </span>
+        </Link>
+      ) : null }
     </CardContent>
   );
 };
