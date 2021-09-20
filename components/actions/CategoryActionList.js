@@ -11,15 +11,6 @@ import ActionHighlightCard from 'components/actions/ActionHighlightCard';
 import ContentLoader from 'components/common/ContentLoader';
 import ErrorMessage from 'components/common/ErrorMessage';
 import PlanContext from 'context/plan';
-// import images, { getActionImage } from 'common/images';
-
-// TODO: Fetch image rendition, currently this does not work
-// rendition(size:"600x300") {
-//  width
-//  height
-//  src
-//  alt
-// }
 
 const GET_ACTION_LIST = gql`
 query GetActionList($plan: ID!) {
@@ -27,6 +18,12 @@ query GetActionList($plan: ID!) {
     ...ActionCard
     image {
       id
+      rendition(size:"600x300") {
+        width
+        height
+        src
+        alt
+      }
     }
   }
 }
@@ -139,7 +136,7 @@ const CategoryActionList = (props) => {
                 <LazyLoad height={300}>
                   <ActionHighlightCard
                     action={action}
-                    imageUrl="#"
+                    imageUrl={action?.image?.rendition?.src || undefined}
                     hideIdentifier={plan.hideActionIdentifiers}
                   />
                 </LazyLoad>
