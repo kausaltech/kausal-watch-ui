@@ -1,6 +1,6 @@
 import React from 'react';
 import dynamic from 'next/dynamic';
-import _ from 'lodash';
+import { readableColor } from 'polished';
 import { useTranslation } from 'common/i18n';
 
 function makeTrace(catsIn, i18n) {
@@ -28,6 +28,17 @@ function makeTrace(catsIn, i18n) {
     }
   });
 
+  // return category color, if category has no color set, recursively find first ancestor color
+  const findFirstAncestorColor = (id, color = null) => {
+    const currentCat = cats.find((cat) => cat.id === id);
+    if (currentCat.color === null) return findFirstAncestorColor(currentCat.parent?.id, color);
+    return currentCat.color;
+  };
+
+  const segmentBgColors = cats.map((cat) => (findFirstAncestorColor(cat.id)));
+  const segmentTextColors = segmentBgColors.map((segment) => (
+    segment ? readableColor(segment, '#000000', '#ffffff') : null));
+
   const trace = {
     type: 'icicle',
     name: 'Utsläpp',
@@ -37,7 +48,7 @@ function makeTrace(catsIn, i18n) {
     parents: cats.map((cat) => cat.parent?.id),
     values: cats.map((cat) => cat.value),
     marker: {
-      colors: cats.map((cat) => cat.color),
+      colors: segmentBgColors,
     },
     branchvalues: 'total',
     maxdepth: 2,
@@ -51,7 +62,7 @@ function makeTrace(catsIn, i18n) {
       family: "-apple-system, -apple-system, BlinkMacSystemFont, 'Segoe UI', "
       + "Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', "
       + 'sans-serif, helvetica neue, helvetica, Ubuntu, roboto, noto, segoe ui, arial, sans-serif',
-      color: '#000000',
+      color: segmentTextColors,
       size: 13,
     },
     tiling: {
