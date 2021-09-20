@@ -23,6 +23,7 @@ import ErrorMessage from 'components/common/ErrorMessage';
 import RichText from 'components/common/RichText';
 import TaskList from './TaskList';
 import ResponsibleList from './ResponsibleList';
+import CategoryTags from './CategoryTags';
 import ContactPersons from './ContactPersons';
 import ActionPhase from './ActionPhase';
 import ActionStatus from './ActionStatus';
@@ -40,10 +41,19 @@ query ActionDetails($plan: ID!, $id: ID!) {
     identifier
     name
     officialName
+    leadParagraph
     description
     completion
+    startDate
+    endDate
     image {
       ...MultiUseImageFragment
+    }
+    links {
+      id
+      order
+      url
+      title
     }
     updatedAt
     mergedActions {
@@ -51,10 +61,13 @@ query ActionDetails($plan: ID!, $id: ID!) {
       identifier
       officialName
     }
-    categories(categoryType: "action") {
+    categories {
       id
       identifier
       name
+      type {
+        identifier
+      }
       image {
         ...MultiUseImageFragment
       }
@@ -299,6 +312,9 @@ function ActionContent({ id }) {
         identifier={action.identifier}
         name={action.name}
         imageUrl={actionImage?.large.src}
+        imageCredit={action?.image?.imageCredit}
+        imageTitle={action?.image?.title}
+        altText={action?.image?.altText}
         imageAlign={getBgImageAlignment(actionImage)}
         hideActionIdentifiers={plan.hideActionIdentifiers}
       />
@@ -316,6 +332,18 @@ function ActionContent({ id }) {
                   mergedWith={action.mergedWith}
                   phases={plan.actionImplementationPhases}
                 />
+                { action.startDate && (
+                  <small>
+                    {t('action-start-date')}
+                    {' '}
+                    {dayjs(action.startDate).format('L')}
+                  </small>
+                )}
+              </ActionSection>
+            )}
+            {action.leadParagraph && (
+              <ActionSection className="text-content">
+                <strong><RichText html={action.leadParagraph} /></strong>
               </ActionSection>
             )}
             {action.description && (
@@ -337,6 +365,21 @@ function ActionContent({ id }) {
               </OfficialText>
             )}
 
+            { action.links.length && (
+              <>
+                <h4>Links</h4>
+                <ul>
+                  {action.links.map((actionLink) => (
+                    <li key={actionLink.id}>
+                      <a href={actionLink.url}>
+                        {actionLink.title}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+
+              </>
+            )}
             <MergedActionList t={t} theme={theme} actions={mergedActions} />
 
             { action.statusUpdates.length > 0
@@ -426,6 +469,11 @@ function ActionContent({ id }) {
                 {emissionScopes.map((item) => (
                   <EmissionScopeIcon key={item.id} category={item} color={theme.brandDark} size="2em" />
                 ))}
+              </ActionSection>
+            ) : null}
+            { action.categories.length ? (
+              <ActionSection>
+                <CategoryTags data={action.categories} />
               </ActionSection>
             ) : null}
             { action.responsibleParties.length ? (

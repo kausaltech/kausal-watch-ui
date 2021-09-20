@@ -208,8 +208,20 @@ const CategoryTreeBlock = () => {
 
   if (!data) return <ContentLoader />;
 
+  const findFirstAncestorColor = (id) => {
+    const currentCat = data?.planCategories.find((cat) => cat.id === id);
+    if (currentCat.color === null) return findFirstAncestorColor(currentCat.parent?.id);
+    return currentCat.color;
+  };
+
+  const augmentedCategories = data?.planCategories.map((cat) => ({
+    ...cat,
+    color: findFirstAncestorColor(cat.id),
+  }));
+
+  console.log('con color', augmentedCategories);
   return (
-    <CategoryTreeSection sections={data?.planCategories} />
+    <CategoryTreeSection sections={augmentedCategories} />
   );
 };
 

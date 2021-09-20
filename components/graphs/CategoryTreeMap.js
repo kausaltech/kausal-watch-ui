@@ -28,14 +28,7 @@ function makeTrace(catsIn, i18n) {
     }
   });
 
-  // return category color, if category has no color set, recursively find first ancestor color
-  const findFirstAncestorColor = (id, color = null) => {
-    const currentCat = cats.find((cat) => cat.id === id);
-    if (currentCat.color === null) return findFirstAncestorColor(currentCat.parent?.id, color);
-    return currentCat.color;
-  };
-
-  const segmentBgColors = cats.map((cat) => (findFirstAncestorColor(cat.id)));
+  const segmentBgColors = cats.map((cat) => cat.color);
   const segmentTextColors = segmentBgColors.map((segment) => (
     segment ? readableColor(segment, '#000000', '#ffffff') : null));
 

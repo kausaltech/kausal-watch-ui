@@ -11,7 +11,7 @@ const cleanActionStatus = (action, actionStatuses) => {
   // if implementationPhase is completed, make status undefined
   if (!status) {
     newStatus.id = '404'; // not nice to invent ids, but we don't use ids as differentiator in the UI
-    newStatus.name = i18n.t('action-status-undefined');
+    newStatus.name = '';
     newStatus.identifier = 'undefined';
     newStatus.isCompleted = false;
   }
@@ -57,7 +57,7 @@ const getStatusColor = (statusIdentifier, theme) => {
     merged: theme.graphColors.grey010,
     postponed: theme.graphColors.blue030,
     not_started: theme.graphColors.green010,
-    undefined: theme.graphColors.grey050,
+    undefined: theme.brandDark,
   };
 
   statusColor = statusColors[statusIdentifier];

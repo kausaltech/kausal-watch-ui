@@ -53,6 +53,8 @@ images.fragments = {
   multiUseImage: gql`
   fragment MultiUseImageFragment on Image {
     title
+    altText
+    imageCredit
     width
     height
     focalPointX

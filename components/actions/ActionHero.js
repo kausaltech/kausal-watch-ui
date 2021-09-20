@@ -81,6 +81,20 @@ const IndexLink = styled.span`
   font-weight: ${(props) => props.theme.fontWeightBold};
 `;
 
+const ImageCredit = styled.span`
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0.25rem 0.5rem;
+  background-color: rgba(255,255,255,0.66);
+  font-size: ${(props) => props.theme.fontSizeSm};
+
+  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    top: inherit;
+    bottom: 0;
+  }
+`;
+
 const ActionHeadline = styled.h1`
   hyphens: auto;
   margin: ${(props) => props.theme.spaces.s100} 0;
@@ -106,8 +120,8 @@ const ActionCategories = (categories) => {
   const { showIdentifiers } = theme.settings.categories;
 
   const displayCategories = [];
-
-  categories.categories.forEach((cat, indx) => {
+  categories.categories.every((cat, indx) => {
+    if (cat.type.identifier !== 'action') return false;
     displayCategories[indx] = {};
     let categoryTitle = cat.name;
     if (cat.categoryPage) {
@@ -123,13 +137,16 @@ const ActionCategories = (categories) => {
       let categoryParentTitle = cat.parent.name;
       if (cat.parent.categoryPage) {
         displayCategories[indx].parent.url = cat.parent.categoryPage.urlPath;
-        if (cat.parent.identifier && showIdentifiers) categoryParentTitle = `${cat.parent.identifier}. ${cat.parent.name}`;
+        if (cat.parent.identifier && showIdentifiers) {
+          categoryParentTitle = `${cat.parent.identifier}. ${cat.parent.name}`;
+        }
       } else {
         displayCategories[indx].parent.url = `/actions?category_action=${cat.parent.id}`;
       }
       displayCategories[indx].parent.name = categoryParentTitle;
       displayCategories[indx].parent.id = cat.parent.id;
     }
+    return true;
   });
   return (
     <CategoriesBreadcrumb>
@@ -166,6 +183,9 @@ function ActionHero(props) {
     name,
     imageUrl,
     imageAlign,
+    altText,
+    imageCredit,
+    imageTitle,
     hideActionIdentifiers,
   } = props;
   const theme = useTheme();
@@ -182,6 +202,7 @@ function ActionHero(props) {
     categoryColor = categoryWithColor.color ? categoryWithColor.color : categoryWithColor?.parent.color;
   }
 
+  console.log('heroprops', props);
   return (
     <Hero bgColor={theme.brandDark}>
       <ActionBgImage
@@ -238,6 +259,12 @@ function ActionHero(props) {
               </Col>
             </Row>
           </Container>
+          { imageCredit
+            && (
+            <ImageCredit>
+              {`${t('image-credit')}: ${imageCredit}`}
+            </ImageCredit>
+            )}
         </OverlayContainer>
       </ActionBgImage>
     </Hero>

@@ -31,6 +31,7 @@ action-merged: Sammanlagda åtgärderna
 action-status-undefined: Status saknas
 action-status-merged: Sammanfogad med åtgärden
 action-status-reason: Anledning
+action-start-date: Start datum
 action-previous: Tidigare åtgärd
 action-next: Nästa åtgärd
 not-being-monitored: ;Not monitored;
