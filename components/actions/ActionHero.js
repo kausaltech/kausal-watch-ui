@@ -202,7 +202,6 @@ function ActionHero(props) {
     categoryColor = categoryWithColor.color ? categoryWithColor.color : categoryWithColor?.parent.color;
   }
 
-  console.log('heroprops', props);
   return (
     <Hero bgColor={theme.brandDark}>
       <ActionBgImage

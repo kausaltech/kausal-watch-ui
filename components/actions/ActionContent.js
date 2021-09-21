@@ -367,7 +367,7 @@ function ActionContent({ id }) {
 
             { action.links.length && (
               <>
-                <h4>Links</h4>
+                <h4>{t('read-more')}</h4>
                 <ul>
                   {action.links.map((actionLink) => (
                     <li key={actionLink.id}>
