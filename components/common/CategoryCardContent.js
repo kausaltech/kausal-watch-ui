@@ -6,6 +6,9 @@ import { useTranslation } from 'common/i18n';
 import Icon from 'components/common/Icon';
 
 const CardContent = styled(motion.div)`
+  a {
+    cursor: pointer;
+  }
 `;
 
 const CategoryImage = styled.img`
@@ -53,10 +56,10 @@ const CatecoryCardContent = (props) => {
       <CategoryText className="text-content" dangerouslySetInnerHTML={{ __html: textcontent?.value }} />
       { category?.categoryPage?.urlPath ? (
         <Link href={category?.categoryPage?.urlPath}>
-          <span>
+          <a href>
             {t('read-more')}
             <Icon name="arrowRight" />
-          </span>
+          </a>
         </Link>
       ) : null }
     </CardContent>

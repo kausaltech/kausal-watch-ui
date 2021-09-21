@@ -219,7 +219,6 @@ const CategoryTreeBlock = () => {
     color: findFirstAncestorColor(cat.id),
   }));
 
-  console.log('con color', augmentedCategories);
   return (
     <CategoryTreeSection sections={augmentedCategories} />
   );
