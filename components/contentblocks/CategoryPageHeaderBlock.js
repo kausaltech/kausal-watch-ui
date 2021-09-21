@@ -101,6 +101,7 @@ const CategoryPageHeaderBlock = (props) => {
     color,
     metadata,
     typeId,
+    level,
   } = props;
 
   let metadataTypes = [];
@@ -125,34 +126,35 @@ const CategoryPageHeaderBlock = (props) => {
         imageAlign={imageAlign}
         image={headerImage}
       />
-        <Container>
-          <Row>
-            <Col lg={{ size: 10, offset: 1 }}>
-              <HeaderContent>
-                { parentTitle && (
-                  <Breadcrumb>
-                    <DynamicLink href={parentUrl}><a>{parentTitle}</a></DynamicLink>
-                    {' '}
-                    /
-                  </Breadcrumb>
-                )}
-                <h1>
-                  { identifier && (
-                    <Identifier>
-                      {identifier}
-                      .
-                    </Identifier>
-                  )}
+      <Container>
+        <Row>
+          <Col lg={{ size: 10, offset: 1 }}>
+            <HeaderContent>
+              { parentTitle && (
+                <Breadcrumb>
+                  <DynamicLink href={parentUrl}><a>{parentTitle}</a></DynamicLink>
                   {' '}
-                  { title }
-                </h1>
-                <p>{ lead }</p>
-                { metadata?.length > 0
+                  /
+                </Breadcrumb>
+              )}
+              {level}
+              <h1>
+                { identifier && (
+                <Identifier>
+                  {identifier}
+                  .
+                </Identifier>
+                )}
+                {' '}
+                { title }
+              </h1>
+              <p>{ lead }</p>
+              { metadata?.length > 0
                   && <CategoryMetaDataBlock metadata={metadata} color={color} id={categoryId} types={metadataTypes} /> }
-              </HeaderContent>
-            </Col>
-          </Row>
-        </Container>
+            </HeaderContent>
+          </Col>
+        </Row>
+      </Container>
     </HeaderBackground>
   );
 };

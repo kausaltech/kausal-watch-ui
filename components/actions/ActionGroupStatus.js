@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'common/i18n';
 import { gql, useQuery } from '@apollo/client';
 import styled, { useTheme } from 'styled-components';
 import PlanContext from 'context/plan';
@@ -73,6 +74,7 @@ const SegmentLabel = styled.span`
 function ActionGroupStatus(props) {
   const { category } = props;
   const plan = useContext(PlanContext);
+  const { t } = useTranslation(['actions']);
   const theme = useTheme();
   let statusData = {};
   let actionCount = 0;
@@ -87,32 +89,39 @@ function ActionGroupStatus(props) {
   statusData = getStatusData(planActions, plan.actionStatuses, theme);
   actionCount = statusData.values.reduce((total, num) => total + num, 0);
 
+  if (statusData.values.length < 1) return null;
+
   return (
-    <Status>
-      <BarGraph>
-        {statusData?.labels.map((segment, indx) => (
-          <Segment
-            key={segment}
-            color={statusData.colors[indx]}
-            portion={(statusData.values[indx] / actionCount) * 100}
-          />
-        ))}
-      </BarGraph>
-      <Labels>
-        {statusData?.labels.map((segment, indx) => (
-          <SegmentLabel key={segment} portion={(statusData.values[indx] / actionCount) * 100}>
-            <span className="value">
-              { Math.round((statusData.values[indx] / actionCount) * 100) }
-              %
-            </span>
-            <span>
-              {' '}
-              { statusData.labels[indx] }
-            </span>
-          </SegmentLabel>
-        ))}
-      </Labels>
-    </Status>
+    <>
+      <dt>{t('action-progress')}</dt>
+      <dd>
+        <Status>
+          <BarGraph>
+            {statusData?.labels.map((segment, indx) => (
+              <Segment
+                key={segment}
+                color={statusData.colors[indx]}
+                portion={(statusData.values[indx] / actionCount) * 100}
+              />
+            ))}
+          </BarGraph>
+          <Labels>
+            {statusData?.labels.map((segment, indx) => (
+              <SegmentLabel key={segment} portion={(statusData.values[indx] / actionCount) * 100}>
+                <span className="value">
+                  { Math.round((statusData.values[indx] / actionCount) * 100) }
+                  %
+                </span>
+                <span>
+                  {' '}
+                  { statusData.labels[indx] }
+                </span>
+              </SegmentLabel>
+            ))}
+          </Labels>
+        </Status>
+      </dd>
+    </>
   );
 }
 

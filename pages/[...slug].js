@@ -140,12 +140,12 @@ const PageHeaderBlock = (props) => {
 
   switch (page.__typename) {
     case 'CategoryPage': {
+      const parentIdentifier = theme.settings.categories.showIdentifiers
+        ? `${page.category.parent?.identifier}.` : '';
       const parentTitle = page.category.parent?.categoryPage
-        ? `${theme.settings.categories.showIdentifiers
-          && `${page.category.parent?.identifier}. `}
-          ${page.category.parent?.categoryPage.title}`
+        ? `${parentIdentifier} ${page.category.parent?.categoryPage.title}`
         : page.category.level.namePlural;
-      const parentUrl = page.category.parent?.categoryPage.urlPath || '/';
+      const parentUrl = page.category.parent?.categoryPage?.urlPath || '/';
       const headerImage = page.category.image || page.category.parent?.image;
       return (
         <CategoryPageHeaderBlock
@@ -160,6 +160,7 @@ const PageHeaderBlock = (props) => {
           color={color}
           metadata={page.category.metadata}
           typeId={page.category.type.id}
+          level={page.category.level.name}
         />
       );
     }

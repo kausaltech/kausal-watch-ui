@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import RichText from 'components/common/RichText';
 import ActionGroupStatus from 'components/actions/ActionGroupStatus';
@@ -125,10 +124,7 @@ const CategoryMetaDataBlock = (props) => {
           </dd>
         </React.Fragment>
       ))}
-      <dt>Eteneminen</dt>
-      <dd>
-        <ActionGroupStatus category={id} />
-      </dd>
+      <ActionGroupStatus category={id} />
     </MetaDataList>
   );
 };
