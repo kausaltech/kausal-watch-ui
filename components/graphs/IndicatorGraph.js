@@ -86,13 +86,13 @@ function makeLayout(indicator) {
       showgrid: false,
       showline: false,
       anchor: 'free',
-      //domain: [0.01, 1],
+      // domain: [0.01, 1],
       type: indicator.timeResolution === 'YEAR' ? 'linear' : 'date',
       fixedrange: true,
       tickformat: indicator.timeResolution === 'YEAR' ? 'd' : '%d.%m.%Y',
       tickmode: null,
     },
-    //showlegend: false,
+    // showlegend: false,
     separators: ', ',
     hoverlabel: {
       namelength: 0,
@@ -148,8 +148,7 @@ function generateCube(dimensions, values, path) {
   return array;
 }
 
-function getTraces(dimensions, cube, names)
-{
+function getTraces(dimensions, cube, names) {
   const dim = dimensions[0];
 
   if (dimensions.length === 1) {
@@ -196,7 +195,7 @@ function generateSingleYearPlot(indicator, values, i18n, plotColors) {
   const dim = dimensions;
   let path;
 
-  const traces = getTraces(dimensions, cube).map((trace, idx) => ({marker: {color: plotColors.mainScale[idx + 1]}, ...trace}));
+  const traces = getTraces(dimensions, cube).map((trace, idx) => ({ marker: { color: plotColors.mainScale[idx + 1] }, ...trace }));
 
   return {
     data: traces,
@@ -420,7 +419,7 @@ function generatePlotFromValues(indicator, i18n, plotColors, planScenarios) {
         trace.mode = 'lines';
         traces[0].showlegend = true;
         traces[0].name = i18n.t('indicator-legend-result');
-      } else { 
+      } else {
         trace.mode = 'markers';
       }
     }
@@ -590,7 +589,7 @@ function IndicatorGraph({ indicatorId }) {
     </Alert>
   );
 
-  const { indicator, plan: { scenarios }} = data;
+  const { indicator, plan: { scenarios } } = data;
   if (!indicator) return (
     <Alert color="danger">
       {t('indicator-not-found')}
@@ -612,7 +611,7 @@ function IndicatorGraph({ indicatorId }) {
 
   return (
     <div>
-      <h3 className="mb-0">{plotTitle}</h3>
+      <h3 className="mb-2">{plotTitle}</h3>
       <span className="sr-only">{ t('indicator-graph-not-accessible') }</span>
       <div aria-hidden="true">
         <Plot
