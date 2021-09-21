@@ -5,6 +5,7 @@ import { gql, useQuery } from '@apollo/client';
 import styled, { useTheme } from 'styled-components';
 import PlanContext from 'context/plan';
 import { getStatusData } from 'common/preprocess';
+import CategoryMetaBar from './CategoryMetaBar';
 
 export const GET_ACTION_STATUSES = gql`
   query GetActionStatuses($plan: ID!, $actionCategory: ID) {
@@ -91,36 +92,20 @@ function ActionGroupStatus(props) {
 
   if (statusData.values.length < 1) return null;
 
+  const segments = statusData?.labels.map((segment, indx) => ({
+    id: segment,
+    label: statusData.labels[indx],
+    value: `${Math.round((statusData.values[indx] / actionCount) * 100)} %`,
+    portion: statusData.values[indx] / actionCount,
+    color: statusData.colors[indx]
+  }));
+
   return (
     <>
-      <dt>{t('action-progress')}</dt>
-      <dd>
-        <Status>
-          <BarGraph>
-            {statusData?.labels.map((segment, indx) => (
-              <Segment
-                key={segment}
-                color={statusData.colors[indx]}
-                portion={(statusData.values[indx] / actionCount) * 100}
-              />
-            ))}
-          </BarGraph>
-          <Labels>
-            {statusData?.labels.map((segment, indx) => (
-              <SegmentLabel key={segment} portion={(statusData.values[indx] / actionCount) * 100}>
-                <span className="value">
-                  { Math.round((statusData.values[indx] / actionCount) * 100) }
-                  %
-                </span>
-                <span>
-                  {' '}
-                  { statusData.labels[indx] }
-                </span>
-              </SegmentLabel>
-            ))}
-          </Labels>
-        </Status>
-      </dd>
+      <CategoryMetaBar
+        title={t('action-progress')}
+        segments={segments}
+      />
     </>
   );
 }

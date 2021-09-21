@@ -193,7 +193,7 @@ const StyledDropdown = styled(UncontrolledDropdown)`
     background-color: transparent;
 
       .highlighter {
-        border-bottom: 5px solid ${(props) => props.theme.brandNavBackground};
+        border-bottom: 5px solid ${(props) => props.theme.brandDark};
       }
     }
   }

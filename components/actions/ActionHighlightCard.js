@@ -105,7 +105,7 @@ function ActionHighlightCard(props) {
       <CardLink href>
         <StyledCard>
           <ImgArea>
-            <ImgBg background={imageUrl} />
+            { imageUrl && <ImgBg background={imageUrl} /> }
             <ImgOverlay>
               { !hideIdentifier && (
                 <ActionNumber>
@@ -140,6 +140,7 @@ function ActionHighlightCard(props) {
 
 ActionHighlightCard.defaultProps = {
   hideIdentifier: false,
+  imageUrl: undefined,
 };
 
 ActionHighlightCard.propTypes = {
@@ -152,7 +153,7 @@ ActionHighlightCard.propTypes = {
     }),
     completion: PropTypes.number,
   }).isRequired,
-  imageUrl: PropTypes.string.isRequired,
+  imageUrl: PropTypes.string,
   hideIdentifier: PropTypes.bool,
 };
 

@@ -21,6 +21,7 @@ query GetPlanPageGeneral($plan: ID!, $path: String!) {
     title
     ... on StaticPage {
       headerImage {
+        id
         ...MultiUseImageFragment
       }
       leadParagraph
@@ -40,6 +41,7 @@ query GetPlanPageGeneral($plan: ID!, $path: String!) {
           id
         }
         image {
+          id
           ...MultiUseImageFragment
         }
         shortDescription
@@ -54,6 +56,7 @@ query GetPlanPageGeneral($plan: ID!, $path: String!) {
             namePlural
           }
           image {
+            id
             ...MultiUseImageFragment
           }
           color
@@ -71,6 +74,7 @@ query GetPlanPageGeneral($plan: ID!, $path: String!) {
             namePlural
           }
           image {
+            id
             ...MultiUseImageFragment
           }
           color
@@ -82,16 +86,29 @@ query GetPlanPageGeneral($plan: ID!, $path: String!) {
         metadata {
           __typename
           id
+          key
+          keyIdentifier
           ...on CategoryMetadataChoice {
-            key
-            keyIdentifier
             value
             valueIdentifier
+            metadata {
+              identifier
+              name
+            }
           }
           ...on CategoryMetadataRichText {
-            key
-            keyIdentifier
             value
+            metadata {
+              identifier
+              name
+            }
+          }
+          ...on CategoryMetadataNumericValue {
+            numericValue: value
+            metadata {
+              identifier
+              name
+            }
           }
         }
       }
@@ -160,7 +177,7 @@ const PageHeaderBlock = (props) => {
           color={color}
           metadata={page.category.metadata}
           typeId={page.category.type.id}
-          level={page.category.level.name}
+          level={page.category.parent?.categoryPage ? page.category?.level?.name : null}
         />
       );
     }

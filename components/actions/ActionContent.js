@@ -365,7 +365,7 @@ function ActionContent({ id }) {
               </OfficialText>
             )}
 
-            { action.links.length && (
+            { action.links.length ? (
               <>
                 <h4>{t('read-more')}</h4>
                 <ul>
@@ -379,7 +379,7 @@ function ActionContent({ id }) {
                 </ul>
 
               </>
-            )}
+            ) : ''}
             <MergedActionList t={t} theme={theme} actions={mergedActions} />
 
             { action.statusUpdates.length > 0

@@ -137,7 +137,6 @@ const CategoryPageHeaderBlock = (props) => {
                   /
                 </Breadcrumb>
               )}
-              {level}
               <h1>
                 { identifier && (
                 <Identifier>
@@ -148,6 +147,7 @@ const CategoryPageHeaderBlock = (props) => {
                 {' '}
                 { title }
               </h1>
+              {level}
               <p>{ lead }</p>
               { metadata?.length > 0
                   && <CategoryMetaDataBlock metadata={metadata} color={color} id={categoryId} types={metadataTypes} /> }

@@ -53,6 +53,7 @@ ActionStatus.propTypes = {
     'completed',
     'late',
     'severely_late',
+    undefined,
   ]),
   name: PropTypes.string,
   completion: PropTypes.number,
