@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
+
 import RichText from 'components/common/RichText';
 import ActionGroupStatus from 'components/actions/ActionGroupStatus';
-
 import Icon from 'components/common/Icon';
+import PlanContext from 'context/plan';
 import CategoryMetaBar from '../actions/CategoryMetaBar';
 
 const ScaleIcon = styled(Icon)`
@@ -137,6 +138,7 @@ const MetaContent = (props) => {
 };
 
 const CategoryMetaDataBlock = (props) => {
+  const plan = useContext(PlanContext);
   const {
     color,
     metadata,
@@ -156,7 +158,7 @@ const CategoryMetaDataBlock = (props) => {
           />
         </React.Fragment>
       ))}
-      <ActionGroupStatus category={id} />
+      {plan.actionStatuses.length ? <ActionGroupStatus category={id} /> : null}
     </MetaDataList>
   );
 };
