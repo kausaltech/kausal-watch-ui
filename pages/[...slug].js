@@ -161,7 +161,7 @@ const PageHeaderBlock = (props) => {
         ? `${page.category.parent?.identifier}.` : '';
       const parentTitle = page.category.parent?.categoryPage
         ? `${parentIdentifier} ${page.category.parent?.categoryPage.title}`
-        : page.category.level.namePlural;
+        : page.category.level?.namePlural;
       const parentUrl = page.category.parent?.categoryPage?.urlPath || '/';
       const headerImage = page.category.image || page.category.parent?.image;
       return (
