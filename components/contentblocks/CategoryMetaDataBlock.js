@@ -108,7 +108,7 @@ const MetaContent = (props) => {
           </>
         );
       }
-      break;
+      return null;
     case 'CategoryMetadataRichText':
       return (
         <>
@@ -131,7 +131,7 @@ const MetaContent = (props) => {
         }];
         return <CategoryMetaBar segments={segments} title={contentData.key} />;
       }
-      break;
+      return null;
     default: return <div />;
   }
 };

@@ -25,6 +25,16 @@ const CategoryListSection = styled.div`
 
 const TreemapContent = styled.div`
   text-align: center;
+
+  .pathbar .slicetext {
+    text-decoration: underline;
+  }
+
+  .pathbar.cursor-pointer .surface {
+    stroke: ${(props) => props.theme.neutralLight} !important;
+    stroke-opacity: 1 !important;
+    stroke-width: 2px !important;
+  }
 `;
 
 const CategoryCard = styled.div`
