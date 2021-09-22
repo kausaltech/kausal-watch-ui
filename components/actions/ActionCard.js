@@ -26,6 +26,7 @@ const ACTION_CARD_FRAGMENT = gql`
       id
       identifier
       name
+      iconUrl
     }
     implementationPhase {
       id
@@ -111,12 +112,13 @@ const StyledCardTitle = styled.div`
   hyphens: auto;
 `;
 
-function getMockIconUrl(category) {
+function getIconUrl(category) {
   const plan = useContext(PlanContext);
-  let iconUrl = null;
-  if (plan.identifier === 'liiku') iconUrl = `/static/themes/liiku/images/category-${category}.svg`;
-  if (plan.identifier === 'hsy-kestava') iconUrl = `/static/themes/hsy-kestava/images/category-${category}.svg`;
-  return iconUrl;
+  const { identifier, iconUrl } = category;
+  if (iconUrl) return iconUrl;
+  if (plan.identifier === 'liiku') return `/static/themes/liiku/images/category-${identifier}.svg`;
+  if (plan.identifier === 'hsy-kestava') return `/static/themes/hsy-kestava/images/category-${identifier}.svg`;
+  return null;
 }
 
 function ActionCard(props) {
@@ -127,7 +129,7 @@ function ActionCard(props) {
 
   let actionName = action.name;
   // mock category icon Url
-  const iconUrl = action.rootCategory ? getMockIconUrl(action.rootCategory.identifier) : '';
+  const iconUrl = action.rootCategory ? getIconUrl(action.rootCategory) : '';
 
   if (actionName.length > 120) actionName = `${action.name.substring(0, 120)}…`;
 
