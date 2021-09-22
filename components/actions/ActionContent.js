@@ -66,7 +66,14 @@ query ActionDetails($plan: ID!, $id: ID!) {
       identifier
       name
       type {
+        id
         identifier
+        name
+      }
+      level {
+        id
+        name
+        namePlural
       }
       image {
         ...MultiUseImageFragment
@@ -471,14 +478,14 @@ function ActionContent({ id }) {
                 ))}
               </ActionSection>
             ) : null}
-            { action.categories.length ? (
-              <ActionSection>
-                <CategoryTags data={action.categories} />
-              </ActionSection>
-            ) : null}
             { action.responsibleParties.length ? (
               <ActionSection>
                 <ResponsibleList data={action.responsibleParties.map((item) => item.organization)} />
+              </ActionSection>
+            ) : null}
+            { action.categories.length ? (
+              <ActionSection>
+                <CategoryTags data={action.categories} />
               </ActionSection>
             ) : null}
             { action?.contactPersons.length > 0 && (

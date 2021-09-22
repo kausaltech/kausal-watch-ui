@@ -143,8 +143,8 @@
   },
   "settings": {
     "dashboard": {
-      "showResponsibles": true,
-      "showIndicators": true
+      "showResponsibles": false,
+      "showIndicators": false
     },
     "categories": {
       "showIdentifiers": false,

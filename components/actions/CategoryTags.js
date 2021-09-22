@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Badge } from 'reactstrap';
 import styled from 'styled-components';
 import { useTranslation } from 'common/i18n';
 import { Link } from 'routes';
 import { slugify } from 'common/utils';
-import { Badge } from 'reactstrap';
 
 const Categories = styled.div`
   font-size: ${(props) => props.theme.fontSizeMd};
@@ -38,25 +38,30 @@ function Categorybadge(props) {
     </Link>
   );
 }
-
 function CategoryTags(props) {
   const { data } = props;
   const { t } = useTranslation();
 
+  const categoryTypes = [...new Set(data.map((cat) => cat.type?.id))];
+  // const categoryLevels = [...new Set(data.map((cat) => cat.level?.id))];
+  const categoryGroups = categoryTypes.map((catType) => data.filter((cat) => cat.type.id === catType));
+
   return (
     <Categories>
-      { data
-        && data.map((item) => (
-          item.type.identifier !== 'action'
-          && (
-          <Categorybadge
-            t={t}
-            key={item.id}
-            id={item.id}
-            name={item.name}
-            url={item.categoryPage ? item.categoryPage.urlPath : `/actions?category_${item.type.identifier}=${item.id}`}
-          />
-          )
+      { categoryGroups
+        && categoryGroups.map((catGroup, index) => (
+          <div key={catGroup[0].id} className="mb-4">
+            <h3>{catGroup[0].type.name}</h3>
+            { catGroup.map((item) => (
+              <Categorybadge
+                t={t}
+                key={item.id}
+                id={item.id}
+                name={item.name}
+                url={item.categoryPage ? item.categoryPage.urlPath : `/actions?category_${item.type.identifier}=${item.id}`}
+              />
+            ))}
+          </div>
         ))}
     </Categories>
   );
