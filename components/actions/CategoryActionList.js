@@ -19,6 +19,7 @@ query GetActionList($plan: ID!) {
     image {
       id
       rendition(size:"600x300") {
+        id
         width
         height
         src

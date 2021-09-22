@@ -115,6 +115,7 @@ query GetCategoriesForTreeMap($plan: ID!, $categoryType: ID!) {
       imageCredit
       altText
       rendition(size:"600x300") {
+        id
         width
         height
         src

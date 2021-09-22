@@ -60,21 +60,25 @@ images.fragments = {
     focalPointX
     focalPointY
     large: rendition(size:"1600x600") {
+      id
       width
       height
       src
     }
     small: rendition(size:"600x300") {
+      id
       width
       height
       src
     }
     social: rendition(size:"1200x627") {
+      id
       width
       height
       src
     }
     rendition(size:"300x200") {
+      id
       width
       height
       src

@@ -32,6 +32,7 @@ const ACTION_ROW_FRAGMENT = gql`
       name
       image {
         rendition {
+          id
           src
         }
       }
