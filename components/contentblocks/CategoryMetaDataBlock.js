@@ -146,8 +146,6 @@ const CategoryMetaDataBlock = (props) => {
     types,
   } = props;
 
-  const plan = useContext(PlanContext);
-
   return (
     <MetaDataList>
       {metadata.map((item) => (
