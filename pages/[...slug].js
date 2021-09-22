@@ -44,6 +44,9 @@ query GetPlanPageGeneral($plan: ID!, $path: String!) {
           id
           ...MultiUseImageFragment
         }
+        indicators {
+          id
+        }
         shortDescription
         color
         children {

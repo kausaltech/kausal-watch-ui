@@ -13,6 +13,7 @@ import IndicatorShowcaseBlock from 'components/contentblocks/IndicatorShowcaseBl
 import CardListBlock from 'components/contentblocks/CardListBlock';
 import ActionHighlightsBlock from 'components/contentblocks/ActionHighlightsBlock';
 import IndicatorHighlightsBlock from 'components/contentblocks/IndicatorHighlightsBlock';
+import RelatedIndicatorsBlock from 'components/contentblocks/RelatedIndicatorsBlock';
 
 const STREAM_FIELD_FRAGMENT = gql`
   fragment StreamFieldFragment on StreamFieldInterface {
@@ -171,6 +172,9 @@ const STREAM_FIELD_FRAGMENT = gql`
       id
       field
     }
+    ... on RelatedIndicatorsBlock {
+      id
+    }
   }
 ${images.fragments.multiUseImage}
 `;
@@ -189,6 +193,7 @@ export const possibleTypes = {
     'FrontPageHeroBlock',
     'IndicatorGroupBlock',
     'CardListBlock',
+    'RelatedIndicatorsBlock',
   ],
 };
 
@@ -270,12 +275,13 @@ function StreamFieldBlock(props) {
     case 'IndicatorHighlightsBlock': {
       return <IndicatorHighlightsBlock />;
     }
+    case 'RelatedIndicatorsBlock': {
+      return <RelatedIndicatorsBlock indicators={page?.category?.indicators} />;
+    }
     default:
       return (
         <div>
-          Component for
-          { __typename }
-          does not exist
+          { `Component for ${__typename} does not exist` }
         </div>
       );
   }
