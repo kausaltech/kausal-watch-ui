@@ -2,9 +2,9 @@ import React, { useContext } from 'react';
 import styled from 'styled-components';
 
 import RichText from 'components/common/RichText';
+import PlanContext from 'context/plan';
 import ActionGroupStatus from 'components/actions/ActionGroupStatus';
 import Icon from 'components/common/Icon';
-import PlanContext from 'context/plan';
 import CategoryMetaBar from '../actions/CategoryMetaBar';
 
 const ScaleIcon = styled(Icon)`
@@ -145,6 +145,8 @@ const CategoryMetaDataBlock = (props) => {
     id,
     types,
   } = props;
+
+  const plan = useContext(PlanContext);
 
   return (
     <MetaDataList>
