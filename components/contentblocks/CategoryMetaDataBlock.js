@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
 import RichText from 'components/common/RichText';
+import PlanContext from 'context/plan';
 import ActionGroupStatus from 'components/actions/ActionGroupStatus';
 
 import Icon from 'components/common/Icon';
@@ -144,6 +145,8 @@ const CategoryMetaDataBlock = (props) => {
     types,
   } = props;
 
+  const plan = useContext(PlanContext);
+
   return (
     <MetaDataList>
       {metadata.map((item) => (
@@ -156,7 +159,7 @@ const CategoryMetaDataBlock = (props) => {
           />
         </React.Fragment>
       ))}
-      <ActionGroupStatus category={id} />
+      { plan.actionImplementationPhases.lenght && <ActionGroupStatus category={id} /> }
     </MetaDataList>
   );
 };
