@@ -251,6 +251,7 @@ function generateDataTraces(indicator, values, i18n, plotColors, unitLabel) {
 function generatePlotFromValues(indicator, i18n, plotColors, planScenarios) {
   let onlyIntegers = true;
   let maxDigits = 0;
+  let hasPotentialScenario = false;
   const { unit } = indicator;
   const unitLabel = unit.name === 'no unit' ? '' : (unit.shortName || unit.name);
   const traces = [];
@@ -417,8 +418,10 @@ function generatePlotFromValues(indicator, i18n, plotColors, planScenarios) {
     if (scenarioId != null) {
       if (scenario.config?.identifier === 'potential') {
         trace.mode = 'lines';
+        trace.name = scenario.name;
         traces[0].showlegend = true;
         traces[0].name = i18n.t('indicator-legend-result');
+        hasPotentialScenario = true;
       } else {
         trace.mode = 'markers';
       }
@@ -427,7 +430,7 @@ function generatePlotFromValues(indicator, i18n, plotColors, planScenarios) {
   });
 
   // Draw current trend line
-  if (indicator.timeResolution === 'YEAR' && mainValues.length >= 5) {
+  if (indicator.timeResolution === 'YEAR' && mainValues.length >= 5 && !hasPotentialScenario) {
     const numberOfYears = Math.min(mainValues.length, 10);
     const regData = mainValues.slice(mainValues.length - numberOfYears, mainValues.length)
       .map((item) => [parseInt(item.date, 10), item.value]);
