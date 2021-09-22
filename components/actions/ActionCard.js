@@ -112,9 +112,14 @@ const StyledCardTitle = styled.div`
   hyphens: auto;
 `;
 
-function getIconUrl(category) {
+function getIconUrl(action) {
+  if (action.iconUrl) return action.iconUrl;
+
+  const { rootCategory } = action;
+  if (!rootCategory) return null;
+
   const plan = useContext(PlanContext);
-  const { identifier, iconUrl } = category;
+  const { identifier, iconUrl } = rootCategory;
   if (iconUrl) return iconUrl;
   if (plan.identifier === 'liiku') return `/static/themes/liiku/images/category-${identifier}.svg`;
   if (plan.identifier === 'hsy-kestava') return `/static/themes/hsy-kestava/images/category-${identifier}.svg`;
@@ -128,8 +133,7 @@ function ActionCard(props) {
   const theme = useTheme();
 
   let actionName = action.name;
-  // mock category icon Url
-  const iconUrl = action.rootCategory ? getIconUrl(action.rootCategory) : '';
+  const iconUrl = getIconUrl(action) || '';
 
   if (actionName.length > 120) actionName = `${action.name.substring(0, 120)}…`;
 
@@ -188,6 +192,7 @@ ActionCard.propTypes = {
     identifier: PropTypes.string,
     name: PropTypes.string,
     completion: PropTypes.number,
+    iconUrl: PropTypes.string,
     rootCategory: PropTypes.shape(),
     status: PropTypes.shape({
       identifier: PropTypes.string,

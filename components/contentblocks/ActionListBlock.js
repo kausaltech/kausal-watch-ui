@@ -10,8 +10,8 @@ import ContentLoader from 'components/common/ContentLoader';
 import ErrorMessage from 'components/common/ErrorMessage';
 import PlanContext from 'context/plan';
 
-const GET_ACTION_LIST = gql`
-query GetActionList($plan: ID!, $category: ID) {
+const GET_ACTION_LIST_FOR_BLOCK = gql`
+query GetActionListForBlock($plan: ID!, $category: ID) {
   planActions(plan: $plan, category: $category) {
     ...ActionCard
   }
@@ -37,7 +37,7 @@ const ActionListBlock = (props) => {
   const { categoryId, color } = props;
   const { t } = useTranslation();
   const plan = useContext(PlanContext);
-  const { loading, error, data } = useQuery(GET_ACTION_LIST, {
+  const { loading, error, data } = useQuery(GET_ACTION_LIST_FOR_BLOCK, {
     variables: {
       plan: plan.identifier,
       category: categoryId,
@@ -50,13 +50,14 @@ const ActionListBlock = (props) => {
   if (!planActions) {
     return <ErrorMessage statusCode={404} message={t('page-not-found')} />;
   }
+  const actions = planActions.map((act) => ({...act, iconUrl: act.categories.find((cat) => cat.iconUrl)?.iconUrl}));
   const heading = t('actions');
   return (
     <ActionListSection color={color}>
       <Container>
         { heading && (<SectionHeader>{ heading }</SectionHeader>)}
         <Row>
-          { planActions.map((action) => (
+          { actions.map((action) => (
             <Col
               tag="li"
               xs="6"
