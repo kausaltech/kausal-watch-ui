@@ -59,7 +59,7 @@ function generateSortedOrgTree(orgs, depth) {
 }
 
 function ActionListFilterInput({
-  filter, currentValue, onChange
+  filter, currentValue, onChange,
 }) {
   const [filterValue, setValue] = useState(currentValue);
   const delayedQuery = useCallback(_.debounce(
@@ -100,7 +100,7 @@ function ActionListFilterInput({
 }
 
 function ActionListFilterBadges({
-  filters, activeFilters, actionCount, onReset
+  filters, activeFilters, actionCount, onReset,
 }) {
   const { t } = useTranslation();
   const badges = filters.filter((item) => activeFilters[item.identifier]).map((item, index) => {
@@ -183,6 +183,13 @@ function ActionListFilters({
     });
   }
 
+  // Find categories with no parents, if there is only one root category return the next level
+  const getRootCategories = (allCategories) => {
+    const mainCategories = allCategories.filter((cat) => cat.parent === null);
+    if (mainCategories.length === 1) return allCategories.filter((cat) => cat.parent?.id === mainCategories[0].id);
+    return mainCategories;
+  };
+
   categoryTypes.forEach((ct) => {
     allFilters.push({
       label: ct.name,
@@ -190,7 +197,7 @@ function ActionListFilters({
       md: 6,
       lg: 4,
       identifier: `category_${ct.identifier}`,
-      options: ct.categories.filter((cat) => !cat.parent).map((topCat) => ({
+      options: getRootCategories(ct.categories).map((topCat) => ({
         id: topCat.id,
         label: `${theme.settings.categories.showIdentifiers ? `${topCat.identifier}. ` : ''}${topCat.name}`,
       })),

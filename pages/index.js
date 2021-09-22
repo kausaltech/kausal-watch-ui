@@ -61,6 +61,7 @@ ${images.fragments.multiUseImage}
 
 const getRootCategories = (allCategories) => {
   const mainCategories = allCategories.filter((cat) => cat.parent === null);
+  if (mainCategories.length === 1) return allCategories.filter((cat) => cat.parent?.id === mainCategories[0].id);
   return mainCategories;
 };
 
