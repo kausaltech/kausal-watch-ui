@@ -152,9 +152,10 @@ function ActionListFilterBadges({
   );
 }
 
-function ActionListFilters({
-  filters, orgs, categoryTypes, impacts, actionCount, onChange,
-}) {
+function ActionListFilters(props) {
+  const {
+    filters, orgs, categoryTypes, impacts, actionCount, onChange, phases,
+  } = props;
   const { t } = useTranslation();
   const theme = useTheme();
   const sortedOrgs = generateSortedOrgTree(orgs.filter((org) => !org.parent), 0);
@@ -180,6 +181,17 @@ function ActionListFilters({
       lg: 4,
       identifier: 'impact',
       options: impacts,
+    });
+  }
+
+  if (phases.length > 0) {
+    allFilters.push({
+      label: t('filter-phase'),
+      showAllLabel: t('filter-all-phases'),
+      md: 6,
+      lg: 4,
+      identifier: 'implementationPhase',
+      options: phases,
     });
   }
 

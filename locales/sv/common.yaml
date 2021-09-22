@@ -42,9 +42,11 @@ filter-all-categories: Alla kategorier
 filter-all-emission-scopes: Inget utsläppsfilter
 filter-all-organizations: Alla organisationer
 filter-all-impacts: Inget slagfilter
+filter-all-phases: Inget fasfilter
 filter-organization: Filtrera efter organisation
 filter-emission-scope: Filtrera efter utsläpp
 filter-impact: Filtrera efter påverkan
+filter-phase: Filtrera efter fas
 filter-text: Textsökning
 filter-text-default: Sök från rubriker
 filter-text-description: Sök från beskrivningar

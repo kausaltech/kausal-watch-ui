@@ -43,9 +43,11 @@ filter-all-categories: All categories
 filter-all-emission-scopes: No emission scope filter
 filter-all-organizations: All organizations
 filter-all-impacts: No impact filter
+filter-all-phases: No phase filter
 filter-organization: Filter by organization
 filter-emission-scope: Filter by emission scope
 filter-impact: Filter by impact
+filter-phase: Filter by phase
 filter-text: Text search
 filter-text-default: Search from headers
 filter-text-description: Search from descriptions
