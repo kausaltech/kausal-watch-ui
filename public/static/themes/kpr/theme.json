@@ -16,7 +16,7 @@
     "black": "rgb(30, 30, 30)",
     "white": "rgb(247, 246, 243)"
   },
-  "imageOverlay": "",
+  "imageOverlay": "rgb(255, 255, 255)",
   "fontUrl": "/static/themes/kpr/fonts/fonts.css",
   "fontFamily": "Poppins",
   "headingsFontFamily": "Poppins",

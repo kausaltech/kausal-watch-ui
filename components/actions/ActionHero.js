@@ -198,7 +198,7 @@ function ActionHero(props) {
     cat.color !== null || (cat.parent !== null && cat.parent.color !== null)
   ));
   // Override overlay color with that
-  if (categoryWithColor) {
+  if (categoryWithColor && theme.imageOverlay !== 'rgb(255, 255, 255)') {
     categoryColor = categoryWithColor.color ? categoryWithColor.color : categoryWithColor?.parent.color;
   }
 
