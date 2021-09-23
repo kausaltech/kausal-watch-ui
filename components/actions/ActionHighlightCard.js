@@ -58,7 +58,7 @@ const StyledCardTitle = styled(CardTitle)`
 
 const ImgArea = styled.div`
   position: relative;
-  background-color: ${(props) => props.theme.imageOverlay};
+  background-color: ${(props) => (props.theme.brandDark)};
 `;
 
 const ImgBg = styled.div`
@@ -66,7 +66,6 @@ const ImgBg = styled.div`
   background-image: url(${(props) => props.background});
   background-position: center;
   background-size: cover;
-  mix-blend-mode: multiply;
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     height: 8rem;
@@ -157,4 +156,4 @@ ActionHighlightCard.propTypes = {
   hideIdentifier: PropTypes.bool,
 };
 
-export default ActionHighlightCard;
+export default React.memo(ActionHighlightCard);

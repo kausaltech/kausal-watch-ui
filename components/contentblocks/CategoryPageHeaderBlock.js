@@ -29,8 +29,9 @@ export const GET_CATEGORY_METADATA_TYPES = gql`
 
 const HeaderBackground = styled.div`
   position: relative;
+  margin-bottom: ${(props) => props.theme.spaces.s400};
   min-height: 24rem;
-  background-color: ${(props) => props.bg};
+  background-color: ${(props) => props.theme.themeColors.white};
 `;
 
 const CategoryPageHeader = styled.div`
@@ -39,9 +40,8 @@ const CategoryPageHeader = styled.div`
   width: 100%;
   top: 0;
   left: 0;
-  background-color: ${(props) => props.bg};
+  background-color: ${(props) => props.theme.themeColors.white};
   padding: ${(props) => props.theme.spaces.s200} ${(props) => props.theme.spaces.s050};
-  background-color: ${(props) => props.bg};
   background-image: url(${(props) => props.image});
   background-position: ${(props) => props.imageAlign};
   background-size: cover;
@@ -58,11 +58,12 @@ const Identifier = styled.span`
 
 const HeaderContent = styled.div`
   padding: ${(props) => props.theme.spaces.s150};
-  margin: ${(props) => props.theme.spaces.s400} 0 ${(props) => props.theme.spaces.s400};
+  margin: ${(props) => props.theme.spaces.s800} 0 -${(props) => props.theme.spaces.s400};
   overflow: hidden;
   border-width: ${(props) => props.theme.cardBorderWidth};
   border-radius: ${(props) => props.theme.cardBorderRadius};
   background-color: ${(props) => props.theme.themeColors.white};
+  box-shadow: 4px 4px 8px rgba(0,0,0,0.1);
   text-align: center;
 
   h1 {

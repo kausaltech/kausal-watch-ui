@@ -62,8 +62,16 @@ const ListRow = styled.ul`
 `;
 
 const ListColumn = styled(motion.li)`
-  flex: 0 0 25%;
+  flex: 0 0 50%;
   padding: .5rem;
+
+  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    flex: 0 0 33%;
+  }
+
+  @media (min-width: ${(props) => props.theme.breakpointLg}) {
+    flex: 0 0 25%;
+  }
 `;
 
 const childIds = (categoryID, cats) => {
@@ -112,7 +120,6 @@ const CategoryActionList = (props) => {
   const heading = 'Styrmedel och åtaganden';
 
   // const MotionCard = motion(ActionCard);
-
   return (
     <ActionListSection>
       <Container>
@@ -134,13 +141,11 @@ const CategoryActionList = (props) => {
                 exit={{ opacity: 0 }}
                 layout
               >
-                <LazyLoad height={300}>
-                  <ActionHighlightCard
-                    action={action}
-                    imageUrl={action?.image?.rendition?.src || undefined}
-                    hideIdentifier={plan.hideActionIdentifiers}
-                  />
-                </LazyLoad>
+                <ActionHighlightCard
+                  action={action}
+                  imageUrl={action?.image?.rendition?.src || undefined}
+                  hideIdentifier={plan.hideActionIdentifiers}
+                />
               </ListColumn>
             ))}
           </AnimateSharedLayout>
