@@ -11,7 +11,7 @@ const cleanActionStatus = (action, actionStatuses) => {
   // if implementationPhase is completed, make status undefined
   if (!status) {
     newStatus.id = '404'; // not nice to invent ids, but we don't use ids as differentiator in the UI
-    newStatus.name = i18n.t('action-status-undefined');
+    newStatus.name = i18n.t('actions:action-status-undefined');
     newStatus.identifier = 'undefined';
     newStatus.isCompleted = false;
   }
