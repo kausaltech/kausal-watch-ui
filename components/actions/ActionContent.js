@@ -289,7 +289,7 @@ function ActionContent({ id }) {
     <div>
       <Meta
         title={`${t('action')} ${action.identifier}`}
-        shareImageUrl={actionImage.social.src}
+        shareImageUrl={actionImage?.social?.src}
         description={`${action.name}`}
       />
       <ActionHero
@@ -298,7 +298,7 @@ function ActionContent({ id }) {
         nextAction={action.nextAction}
         identifier={action.identifier}
         name={action.name}
-        imageUrl={actionImage.large.src}
+        imageUrl={actionImage?.large.src}
         imageAlign={getBgImageAlignment(actionImage)}
       />
       <Container>
