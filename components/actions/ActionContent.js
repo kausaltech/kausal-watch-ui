@@ -309,7 +309,7 @@ function ActionContent({ id }) {
     <div>
       <Meta
         title={`${t('action')} ${action.identifier}`}
-        shareImageUrl={actionImage?.social.src}
+        shareImageUrl={actionImage?.social?.src}
         description={`${action.name}`}
       />
       <ActionHero

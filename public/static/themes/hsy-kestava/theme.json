@@ -71,7 +71,7 @@
   "formLabelFontWeight": 400,
   "brandNavColor": "rgb(0, 117, 113)",
   "brandNavBackground": "rgb(255, 255, 255)",
-  "navLogoVisible": false,
+  "navLogoVisible": true,
   "footerLogoPlacement": "top",
   "footerLogoSize": "1.75",
   "footerBackgroundColor": "rgba(100,195,205,0.08)",
@@ -108,7 +108,7 @@
   "breakpointLg": "992px",
   "breakpointXl": "1200px",
   "iconsUrl": "/static/themes/default/icons",
-  "themeLogoUrl": "/static/themes/hsy-kestava/images/hsy-color.svg",
+  "themeLogoUrl": "/static/themes/hsy-kestava/images/hsy-kestava-mark-color.svg",
   "themeLogoWhiteUrl": "/static/themes/hsy-kestava/images/hsy-color.svg",
   "iconIndicatorsUrl": "",
   "iconActionsUrl": "",
@@ -150,6 +150,13 @@
       "filterIndicatorsByAllLevels": true
     },
     "fundingInstruments": [],
-    "otherLogos": []
+    "otherLogos": [
+      {
+        "id": "1",
+        "name": "Kestävän kaupunkielämän ohjelma",
+        "link": "",
+        "logo": "/static/themes/hsy-kestava/images/hsy-kestava-color.svg"
+      }
+    ]
   }
 }

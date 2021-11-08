@@ -1,7 +1,7 @@
 {
   "name": "kausal-watch-ui",
   "description": "Kausal Watch UI",
-  "version": "1.0.0",
+  "version": "2.4.2",
   "author": "Tero Tikkanen <tero.tikkanen@kausal.tech>",
   "dependencies": {
     "@apollo/client": "^3.1.3",
