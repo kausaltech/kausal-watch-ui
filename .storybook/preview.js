@@ -31,6 +31,7 @@ const additionalThemes = [
   'ktstrat',
   'hsy-kestava',
   'kpr',
+  'viitasaari-ilmasto',
 ];
 
 additionalThemes.forEach((value) => {
