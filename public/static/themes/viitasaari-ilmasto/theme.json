@@ -110,7 +110,7 @@
   "breakpointXl": "1200px",
   "iconsUrl": "/static/themes/viitasaari-ilmasto/icons",
   "themeLogoUrl": "/static/themes/viitasaari-ilmasto/images/viitasaari-color.svg",
-  "themeLogoWhiteUrl": "/static/themes/viitasaari-ilmasto/images/viitasaari-white.svg",
+  "themeLogoWhiteUrl": "/static/themes/viitasaari-ilmasto/images/viitasaari-logo-slogan.svg",
   "iconIndicatorsUrl": "",
   "iconActionsUrl": "",
   "themeCustomStylesUrl": "",
@@ -151,6 +151,13 @@
       "filterIndicatorsByAllLevels": true
     },
     "fundingInstruments": [],
-    "otherLogos": []
+    "otherLogos": [
+      {
+        "id": "1",
+        "name": "Pikkasen parempi periferia",
+        "link": "",
+        "logo": "/static/themes/viitasaari-ilmasto/images/viitasaari-slogan.svg"
+      }
+    ]
   }
 }
