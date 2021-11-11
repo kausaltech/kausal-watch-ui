@@ -289,6 +289,7 @@ const ActionListResults = (props) => {
     }
     if (filters.impact && (!item.impact || (item.impact.id !== filters.impact))) return false;
     if (filters.implementationPhase && (!item.implementationPhase || (item.implementationPhase.id !== filters.implementationPhase))) return false;
+    if (filters.schedule && (!item.schedule || !(item.schedule.find((sched) => sched.id === filters.schedule)))) return false;
     if (filters.text) {
       const searchStr = filters.text.toLowerCase();
       if (item.identifier.toLowerCase().startsWith(searchStr)) return true;
@@ -319,6 +320,7 @@ const ActionListResults = (props) => {
   const filteredActions = actions.filter(filterAction);
   const impacts = plan.actionImpacts;
   const phases = plan.actionImplementationPhases;
+  const schedules = plan.actionSchedules;
 
   return (
     <>
@@ -340,6 +342,7 @@ const ActionListResults = (props) => {
                   orgs={orgs.filter(orgHasActions)}
                   impacts={impacts}
                   phases={phases}
+                  schedules={schedules}
                   filters={filters}
                   onChange={handleChange}
                   actionCount={filteredActions.length}

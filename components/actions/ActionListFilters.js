@@ -154,7 +154,7 @@ function ActionListFilterBadges({
 
 function ActionListFilters(props) {
   const {
-    filters, orgs, categoryTypes, impacts, actionCount, onChange, phases,
+    filters, orgs, categoryTypes, impacts, actionCount, onChange, phases, schedules,
   } = props;
   const { t } = useTranslation();
   const theme = useTheme();
@@ -192,6 +192,17 @@ function ActionListFilters(props) {
       lg: 4,
       identifier: 'implementationPhase',
       options: phases,
+    });
+  }
+
+  if (schedules.length > 0) {
+    allFilters.push({
+      label: t('filter-schedule'),
+      showAllLabel: t('filter-all-schedules'),
+      md: 6,
+      lg: 4,
+      identifier: 'schedule',
+      options: schedules,
     });
   }
 

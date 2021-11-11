@@ -56,6 +56,7 @@ const GET_PLAN = gql`
       serveFileBaseUrl
       actionSchedules {
         id
+        name
         beginsAt
         endsAt
       }

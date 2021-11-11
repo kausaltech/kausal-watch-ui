@@ -52,6 +52,8 @@ filter-text: Text search
 filter-text-default: Search from headers
 filter-text-description: Search from descriptions
 filter-result-actions: actions
+filter-schedule: Schedule
+filter-all-schedules: All schedules
 browse-actions: Browse actions
 funding-instrument: >-
   Helsinki Climate Watch has received funding from the European Union EIT
