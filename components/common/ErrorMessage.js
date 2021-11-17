@@ -13,7 +13,7 @@ export default function ErrorMessage(props) {
 
   return (
     <div className="mb-5">
-      <div className="jumbotron" style={{ marginBottom: '6rem' }}>
+      <div className="rounded px-3 px-sm-4 py-3 py-sm-5 mb-5">
         <div className="container">
           <h1>{message}</h1>
         </div>

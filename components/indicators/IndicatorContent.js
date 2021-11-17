@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 
 import {
-  Jumbotron as BaseJumbotron, Container, Row, Col,
+  Container, Row, Col,
 } from 'reactstrap';
 import styled from 'styled-components';
 import { gql, useQuery } from '@apollo/client';
@@ -83,7 +83,7 @@ const GET_INDICATOR_DETAILS = gql`
   ${ActionsTable.fragments.action}
 `;
 
-const IndicatorHero = styled(BaseJumbotron)`
+const IndicatorHero = styled.div`
   margin-bottom: ${(props) => props.theme.spaces.s200};
 
   a {
@@ -160,7 +160,7 @@ function IndicatorDetails({ id }) {
 
   // Ensure id is a number
   if (isNaN(parseInt(id, 10))) {
-    return <ErrorMessage statusCode={404} message={ t('indicator-not-found') } />;
+    return <ErrorMessage statusCode={404} message={t('indicator-not-found')} />;
   }
 
   const { data, loading, error } = useQuery(GET_INDICATOR_DETAILS, {
@@ -175,7 +175,7 @@ function IndicatorDetails({ id }) {
 
   const { indicator } = data;
   if (!indicator) {
-    return <ErrorMessage statusCode={404} message={ t('indicator-not-found') } />;
+    return <ErrorMessage statusCode={404} message={t('indicator-not-found')} />;
   }
 
   const hasImpacts = indicator.relatedCauses.length > 0 || indicator.relatedEffects.length > 0;

@@ -2,14 +2,14 @@ import React from 'react';
 import {
   FormGroup,
   Label as BSLabel,
-  CustomInput as BSCustomInput,
+  Input as BSCustomInput,
 } from 'reactstrap';
 
 import styled from 'styled-components';
 
 const Label = styled(BSLabel)`
   font-weight: ${(props) => props.theme.formLabelFontWeight};
-  line-height: ${(props) => props.theme.lineHeightSm}; 
+  line-height: ${(props) => props.theme.lineHeightSm};
 `;
 
 const CustomInput = styled(BSCustomInput)`
@@ -29,7 +29,7 @@ function DropDown(props) {
     name,
     value,
     onChange,
-    children
+    children,
   } = props;
 
   return (
