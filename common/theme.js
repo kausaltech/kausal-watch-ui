@@ -5,8 +5,6 @@ import _ from 'lodash';
 /* eslint-disable */
 const defaultTheme = require('public/static/themes/default/theme.json');
 
-require('../styles/default/main.scss');
-
 const themeCache = {};
 
 if (!process.browser) {
