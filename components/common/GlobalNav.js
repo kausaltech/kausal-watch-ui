@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Collapse, Container, Navbar, Nav, NavItem,
+  Collapse, Navbar, Nav, NavItem,
   UncontrolledDropdown, DropdownToggle, DropdownItem, DropdownMenu,
 } from 'reactstrap';
 import SVG from 'react-inlinesvg';
@@ -56,7 +56,7 @@ const SiteTitle = styled.div`
   padding: ${(props) => props.theme.spaces.s150} 0 ${(props) => props.theme.spaces.s150};
 `;
 
-const HomeLink = styled.a`
+const HomeLink = styled.div`
   display: flex;
   align-items: center;
   color: ${(props) => props.theme.brandNavColor};
@@ -247,7 +247,7 @@ function DropdownList(props) {
           { parentName }
         </NavHighlighter>
       </StyledDropdownToggle>
-      <DropdownMenu direction="left">
+      <DropdownMenu right>
         { items && items.map((child) => (
           <DropdownItem key={child.id}>
             <NavLink>
@@ -318,72 +318,72 @@ function GlobalNav(props) {
         expand="md"
         id="branding-navigation-bar"
         aria-label={siteTitle}
+        container={fullwidth ? 'fluid' : true}
       >
-        <Container fluid={fullwidth} className="flex-nowrap">
-          <Link href="/" passHref>
-            <HomeLink>
-              <OrgLogo className="org-logo" />
-              <SiteTitle>{ theme.navTitleVisible ? siteTitle : '\u00A0' }</SiteTitle>
-            </HomeLink>
-          </Link>
-          <NavbarToggler
-            onClick={() => toggleOpen(!isOpen)}
-            aria-label={isOpen ? t('nav-menu-close') : t('nav-menu-open')}
-            aria-controls="global-navigation-bar"
-            aria-expanded={isOpen}
-            type="button"
-          >
-            { isOpen
-              ? <Icon name="times" color={theme.brandNavColor} />
-              : <Icon name="bars" color={theme.brandNavColor} /> }
-          </NavbarToggler>
-        </Container>
+
+        <Link href="/" passHref>
+          <HomeLink>
+            <OrgLogo className="org-logo" />
+            <SiteTitle>{ theme.navTitleVisible ? siteTitle : '\u00A0' }</SiteTitle>
+          </HomeLink>
+        </Link>
+        <NavbarToggler
+          onClick={() => toggleOpen(!isOpen)}
+          aria-label={isOpen ? t('nav-menu-close') : t('nav-menu-open')}
+          aria-controls="global-navigation-bar"
+          aria-expanded={isOpen}
+          type="button"
+        >
+          { isOpen
+            ? <Icon name="times" color={theme.brandNavColor} />
+            : <Icon name="bars" color={theme.brandNavColor} /> }
+        </NavbarToggler>
+
       </TopNav>
       <BotNav
         expand="md"
         fixed={navIsFixed ? 'top' : ''}
         id="global-navigation-bar"
+        container={fullwidth ? 'fluid' : true}
       >
-        <Container fluid={fullwidth}>
-          <Collapse isOpen={isOpen} navbar>
-            <Nav navbar className="mr-auto">
-              { navItems && navItems.map((page) => (
-                page.children
-                  ? (
-                    <DropdownList
-                      parentName={page.name}
-                      items={page.children}
-                      active={page.active}
-                      key={page.slug}
-                    />
-                  ) : (
-                    <NavItem key={page.slug} active={page.active}>
-                      <NavLink>
-                        <NavigationLink slug={page.urlPath}>
-                          <NavHighlighter className={`highlighter ${page.active && 'active'}`}>
-                            {page.name}
-                          </NavHighlighter>
-                        </NavigationLink>
-                      </NavLink>
-                    </NavItem>
-                  )
-              ))}
-            </Nav>
-            <Nav navbar>
-              { externalItems.length > 0 && externalItems.map((page) => (
-                <NavItem key={page.slug}>
-                  <NavLink>
-                    <NavigationLink slug={page.urlPath}>
-                      <NavHighlighter className="highlighter">
-                        {page.name}
-                      </NavHighlighter>
-                    </NavigationLink>
-                  </NavLink>
-                </NavItem>
-              ))}
-            </Nav>
-          </Collapse>
-        </Container>
+        <Collapse isOpen={isOpen} navbar>
+          <Nav navbar className="mr-auto">
+            { navItems && navItems.map((page) => (
+              page.children
+                ? (
+                  <DropdownList
+                    parentName={page.name}
+                    items={page.children}
+                    active={page.active}
+                    key={page.slug}
+                  />
+                ) : (
+                  <NavItem key={page.slug} active={page.active}>
+                    <NavLink>
+                      <NavigationLink slug={page.urlPath}>
+                        <NavHighlighter className={`highlighter ${page.active && 'active'}`}>
+                          {page.name}
+                        </NavHighlighter>
+                      </NavigationLink>
+                    </NavLink>
+                  </NavItem>
+                )
+            ))}
+          </Nav>
+          <Nav navbar>
+            { externalItems.length > 0 && externalItems.map((page) => (
+              <NavItem key={page.slug}>
+                <NavLink>
+                  <NavigationLink slug={page.urlPath}>
+                    <NavHighlighter className="highlighter">
+                      {page.name}
+                    </NavHighlighter>
+                  </NavigationLink>
+                </NavLink>
+              </NavItem>
+            ))}
+          </Nav>
+        </Collapse>
       </BotNav>
     </div>
   );
