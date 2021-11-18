@@ -126,5 +126,6 @@
   "browserslist": [
     "> 1%",
     "last 4 versions"
-  ]
+  ],
+  "packageManager": "yarn@2.4.3"
 }
