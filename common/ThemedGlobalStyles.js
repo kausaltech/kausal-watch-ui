@@ -16,6 +16,8 @@ const GlobalStyle = createGlobalStyle`
 
   a {
     color: ${(props) => props.theme.brandDark};
+    text-decoration: none;
+    background-color: transparent;
 
     &:hover {
       color: ${(props) => props.theme.brandDark};
