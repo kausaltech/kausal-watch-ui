@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Container, Row, Col, Badge, Alert,
+  Container, Row, Col, Badge,
 } from 'reactstrap';
 import styled, { ThemeContext } from 'styled-components';
 import { gql, useQuery } from '@apollo/client';
@@ -18,6 +18,7 @@ import { Meta } from 'components/layout';
 import images, { getBgImageAlignment, getActionImage } from 'common/images';
 import IndicatorCausal from 'components/indicators/IndicatorCausal';
 import Timeline from 'components/graphs/Timeline';
+import ScheduleTimeline from 'components/graphs/ScheduleTimeline';
 import ContentLoader from 'components/common/ContentLoader';
 import ErrorMessage from 'components/common/ErrorMessage';
 import RichText from 'components/common/RichText';
@@ -44,8 +45,6 @@ query ActionDetails($plan: ID!, $id: ID!) {
     leadParagraph
     description
     completion
-    startDate
-    endDate
     image {
       ...MultiUseImageFragment
     }
@@ -139,6 +138,9 @@ query ActionDetails($plan: ID!, $id: ID!) {
     schedule {
       id, name, beginsAt, endsAt
     }
+    scheduleContinuous
+    startDate
+    endDate
     impact {
       id, identifier, name
     }
@@ -339,13 +341,6 @@ function ActionContent({ id }) {
                   mergedWith={action.mergedWith}
                   phases={plan.actionImplementationPhases}
                 />
-                { action.startDate && (
-                  <small>
-                    {t('action-start-date')}
-                    {' '}
-                    {dayjs(action.startDate).format('L')}
-                  </small>
-                )}
               </ActionSection>
             )}
             {action.leadParagraph && (
@@ -467,7 +462,17 @@ function ActionContent({ id }) {
             { action.schedule.length ? (
               <ActionSection>
                 <SideHeader>{ t('actions:action-timeline') }</SideHeader>
-                <Timeline schedules={action.schedule} allSchedules={plan.actionSchedules} />
+                <ScheduleTimeline schedules={action.schedule} allSchedules={plan.actionSchedules} />
+              </ActionSection>
+            ) : null}
+            { action.startDate || action.endDate || action.scheduleContinuous ? (
+              <ActionSection>
+                <SideHeader>{ t('actions:action-timeline') }</SideHeader>
+                <Timeline
+                  startDate={action.startDate}
+                  endDate={action.endDate}
+                  continuous={action.scheduleContinuous}
+                />
               </ActionSection>
             ) : null}
             { emissionScopes.length ? (
