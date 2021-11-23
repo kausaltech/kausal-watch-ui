@@ -2,6 +2,7 @@ emission-scopes: Päästöluokat
 action-id: Id
 action-identifier: Tunniste
 action-not-found: Toimenpidettä ei löydy
+action-continuous: Jatkuva
 action-description: Kuvaus
 action-description-official: Virallinen kuvaus
 action-as-in-plan: Toimenpideohjelman mukaan

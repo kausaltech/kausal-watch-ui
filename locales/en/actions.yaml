@@ -2,6 +2,7 @@ emission-scopes: Emission scopes
 action-id: Id
 action-identifier: Identifier
 action-not-found: Action not found
+action-continuous: Continous
 action-description-official: Official description
 action-description: Description
 action-as-in-plan: Description from the original plan

@@ -122,6 +122,9 @@ export const GET_ACTION_LIST = gql`
       officialName
       completion
       updatedAt
+      scheduleContinuous
+      startDate
+      endDate
       plan {
         id
       }
