@@ -15,6 +15,11 @@ const Categories = styled.div`
   h3 {
     font-size: ${(props) => props.theme.fontSizeBase};
   }
+
+  .badge {
+    background-color: ${(props) => props.theme.neutralLight};
+    color: ${(props) => props.theme.themeColors.black};
+  }
 `;
 
 function Categorybadge(props) {
