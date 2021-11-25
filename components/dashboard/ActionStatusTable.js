@@ -226,6 +226,7 @@ const ActionRow = ({ item, plan, hasResponsibles, hasImpacts, hasIndicators }) =
       { !plan.hideActionIdentifiers && (
       <td>
         { item.identifier }
+        .
       </td>
       )}
       <td>

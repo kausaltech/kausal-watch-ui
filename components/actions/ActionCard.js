@@ -78,6 +78,10 @@ const ActionNumber = styled.div`
   line-height: ${(props) => props.theme.lineHeightSm};
   color: ${(props) => props.theme.themeColors.black};
   background: ${(props) => props.theme.themeColors.white};
+
+  &:after {
+    content: ".";
+  }
 `;
 
 const ActionStatusArea = styled.div`

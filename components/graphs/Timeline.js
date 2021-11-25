@@ -8,11 +8,15 @@ import { useTranslation } from 'common/i18n';
 import { useTheme } from 'common/theme';
 
 const StatusTitle = styled.div`
-  padding: 3px 6px;
   text-align: left;
-  background-color: ${(props) => props.theme.themeColors.light};
-  font-size: ${(props) => props.theme.fontSizeSm};
   line-height: ${(props) => props.theme.spaces.s150};
+
+  .badge {
+    /* Awkwardly match category badges size */
+    font-size: calc(1.25rem * 0.75);
+    background-color: ${(props) => props.theme.brandDark};
+    color: ${(props) => props.theme.themeColors.white};
+  }
 `;
 
 const Timeline = (props) => {
@@ -97,7 +101,7 @@ const Timeline = (props) => {
       </div>
       <StatusTitle>
         { startDate && `${startDate.format('L')} \u2192 ` }
-        { continuous && <Badge color="primary">{`${t('action-continuous')}`}</Badge>}
+        { continuous && <Badge>{`${t('action-continuous')}`}</Badge>}
         { ((!startDate && endDate) || (continuous && endDate)) && ' \u2192 '}
         { endDate && `${endDate.format('L')}` }
       </StatusTitle>
