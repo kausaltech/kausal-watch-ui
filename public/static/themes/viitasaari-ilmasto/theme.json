@@ -2,7 +2,7 @@
   "name": "viitasaari-ilmasto",
   "brandLight": "rgb(236, 194, 0)",
   "brandDark": "rgb(66, 119, 48)",
-  "neutralLight": "rgb(200, 220, 235)",
+  "neutralLight": "rgb(255, 255, 255)",
   "neutralDark": "rgb(0, 60, 105)",
   "themeColors": {
     "primary": "rgb(66, 119, 48)",
@@ -70,7 +70,7 @@
   "customSelectIndicator": "url(\"data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQiIGhlaWdodD0iMTQiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTExLjg5NiAzTDcgNy44NDIgMi4xMDQgMyAwIDUuMDggNyAxMmw3LTYuOTJMMTEuODk2IDN6IiBmaWxsPSIjMDAwIi8+PC9zdmc+\")",
   "formLabelFontWeight": 400,
   "brandNavColor": "rgb(66, 119, 48)",
-  "brandNavBackground": "rgb(200, 220, 235)",
+  "brandNavBackground": "rgb(255, 255, 255)",
   "navLogoVisible": true,
   "navTitleVisible": true,
   "footerLogoPlacement": "top",

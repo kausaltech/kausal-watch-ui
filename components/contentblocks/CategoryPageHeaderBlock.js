@@ -29,18 +29,17 @@ export const GET_CATEGORY_METADATA_TYPES = gql`
 
 const HeaderBackground = styled.div`
   position: relative;
-  margin-bottom: ${(props) => props.theme.spaces.s400};
-  min-height: 24rem;
-  background-color: ${(props) => props.theme.themeColors.white};
+  min-height: 26rem;
+  background-color: ${(props) => props.bg};
 `;
 
 const CategoryPageHeader = styled.div`
   position: absolute;
-  height: 24rem;
+  height: 26rem;
   width: 100%;
   top: 0;
   left: 0;
-  background-color: ${(props) => props.theme.themeColors.white};
+  background-color: ${(props) => props.bg};
   padding: ${(props) => props.theme.spaces.s200} ${(props) => props.theme.spaces.s050};
   background-image: url(${(props) => props.image});
   background-position: ${(props) => props.imageAlign};
@@ -58,7 +57,7 @@ const Identifier = styled.span`
 
 const HeaderContent = styled.div`
   padding: ${(props) => props.theme.spaces.s150};
-  margin: ${(props) => props.theme.spaces.s800} 0 -${(props) => props.theme.spaces.s400};
+  margin: ${(props) => props.theme.spaces.s800} 0 ${(props) => props.theme.spaces.s400};
   overflow: hidden;
   border-width: ${(props) => props.theme.cardBorderWidth};
   border-radius: ${(props) => props.theme.cardBorderRadius};
@@ -127,7 +126,7 @@ const CategoryPageHeaderBlock = (props) => {
         imageAlign={imageAlign}
         image={headerImage}
       />
-      <Container>
+      <Container className="header-container">
         <Row>
           <Col lg={{ size: 10, offset: 1 }}>
             <HeaderContent>

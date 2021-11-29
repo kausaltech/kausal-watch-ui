@@ -205,9 +205,9 @@ function StreamFieldBlock(props) {
     case 'RichTextBlock': {
       const { value } = props;
       return (
-        <Container>
+        <Container className="my-5">
           <Row>
-            <Col lg={{ size: 8, offset: 2 }} md={{ size: 10, offset: 1 }} className="py-5">
+            <Col lg={{ size: 8, offset: 2 }} md={{ size: 10, offset: 1 }}>
               <RichText html={value} />
             </Col>
           </Row>
