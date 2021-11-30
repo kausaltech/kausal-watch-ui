@@ -307,10 +307,14 @@ function ActionContent({ id }) {
 
   const hasPhases = plan.actionImplementationPhases.length > 0;
 
+  const metaTitle = plan.hideActionIdentifiers
+    ? `${t('action')}: ${action.name}`
+    : `${t('action')} ${action.identifier}`;
+
   return (
     <div>
       <Meta
-        title={`${t('action')} ${action.identifier}`}
+        title={metaTitle}
         shareImageUrl={actionImage?.social?.src}
         description={`${action.name}`}
       />
