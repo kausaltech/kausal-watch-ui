@@ -91,6 +91,10 @@ const ActionNumber = styled.div`
   line-height: 1;
   padding: .5rem 1rem;
   border-radius: 1.75rem;
+
+  &:after {
+    content: ".";
+  }
 `;
 
 function ActionHighlightCard(props) {

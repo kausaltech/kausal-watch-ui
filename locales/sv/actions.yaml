@@ -2,6 +2,7 @@ emission-scopes: Utsläppsomfattningar
 action-id: Id
 action-identifier: Märka
 action-not-found: Åtgärd hittades inte
+action-continuous: Ständig
 action-description: Beskrivning
 action-description-official: Officiell beskrivning
 action-as-in-plan: Beskrivning från originalplanen

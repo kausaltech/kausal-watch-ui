@@ -1,9 +1,26 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import dynamic from 'next/dynamic';
+import dayjs from 'common/dayjs';
+import styled from 'styled-components';
+import { Badge } from 'reactstrap';
 import { useTranslation } from 'common/i18n';
 import { useTheme } from 'common/theme';
 
-const Timeline = ({ schedules, allSchedules }) => {
+const StatusTitle = styled.div`
+  text-align: left;
+  line-height: ${(props) => props.theme.spaces.s150};
+
+  .badge {
+    /* Awkwardly match category badges size */
+    font-size: calc(1.25rem * 0.75);
+    background-color: ${(props) => props.theme.brandDark};
+    color: ${(props) => props.theme.themeColors.white};
+  }
+`;
+
+const Timeline = (props) => {
+  const { startDate: startDateRaw, endDate: endDateRaw, continuous } = props;
   const { t } = useTranslation('common');
   const theme = useTheme();
 
@@ -11,43 +28,24 @@ const Timeline = ({ schedules, allSchedules }) => {
     return null;
   }
 
-  let minDate;
-  let maxDate;
-  allSchedules.forEach((sch) => {
-    if (!minDate || sch.beginsAt < minDate) {
-      minDate = sch.beginsAt;
-    }
-    if (!maxDate || sch.endsAt > maxDate) {
-      maxDate = sch.endsAt;
-    }
-  });
+  const startDate = startDateRaw ? dayjs(startDateRaw) : undefined; // .format('L');
+  const endDate = endDateRaw ? dayjs(endDateRaw) : undefined; // .format('L');
 
-  let actStartDate;
-  let actEndDate;
-  schedules.forEach((sch) => {
-    if (!actStartDate || sch.beginsAt < actStartDate) {
-      actStartDate = sch.beginsAt;
-    }
-    if (!actEndDate || sch.endsAt > actEndDate) {
-      actEndDate = sch.endsAt;
-    }
-  });
+  const plotStartDate = dayjs().isAfter(startDate || dayjs()) ? startDate : dayjs();
 
-  const yearrange = `${parseInt(actStartDate.split('-')[0], 10)} - ${parseInt(actEndDate.split('-')[0], 10)}`;
-  const description = `${t('action-timeline-between')} ${yearrange}`;
+  const maxEndDate = dayjs('2050-01-01');
+  const plotEndDate = maxEndDate.isBefore(endDate || maxEndDate) ? endDate : maxEndDate;
 
-  const startYear = parseInt(minDate.split('-')[0], 10);
-  const endYear = parseInt(maxDate.split('-')[0], 10);
-  const nrYears = endYear - startYear;
-  let dtick;
-
-  if (nrYears > 10) dtick = 'M36';
-  else dtick = 'M12';
+  const displayRange = [startDate, endDate];
+  if (!startDate && endDate) displayRange[0] = endDate.subtract(2, 'month');
+  if (startDate && !endDate) displayRange[1] = startDate.add(2, 'month');
+  if (startDate && continuous) displayRange[1] = maxEndDate;
+  if (!startDate && !endDate) { displayRange[1] = maxEndDate; displayRange[0] = dayjs(); }
 
   const Plot = dynamic(import('./Plot'));
   const data = [
     {
-      x: [actStartDate, actEndDate],
+      x: [displayRange[0].format(), displayRange[1].format()],
       y: [1, 1],
       type: 'scatter',
       mode: 'lines',
@@ -68,15 +66,14 @@ const Timeline = ({ schedules, allSchedules }) => {
       b: 12,
     },
     xaxis: {
-      range: [minDate, maxDate],
+      range: [plotStartDate.format(), plotEndDate.format()],
       autorange: false,
       tickformat: '         %Y', // FUUUUUU
-      dtick,
       ticks: '',
       tickangle: 0,
       showgrid: false,
       tickfont: {
-        family: `${theme.fontFamily}, ${theme.fontFamilyFallback}`,
+        family: `${theme.fontFamilyFallback}`,
         size: 10,
       },
     },
@@ -91,11 +88,9 @@ const Timeline = ({ schedules, allSchedules }) => {
   };
 
   return (
-    <div role="presentation">
-      <span className="sr-only">
-        {description}
-      </span>
-      <div aria-hidden>
+    <div>
+      {/* Hide plot for now, the visualisation logic pending */}
+      <div aria-hidden role="presentation" style={{ display: 'none ' }}>
         <Plot
           data={data}
           layout={layout}
@@ -104,8 +99,26 @@ const Timeline = ({ schedules, allSchedules }) => {
           useResizeHandler
         />
       </div>
+      <StatusTitle>
+        { startDate && `${startDate.format('L')} \u2192 ` }
+        { continuous && <Badge>{`${t('action-continuous')}`}</Badge>}
+        { ((!startDate && endDate) || (continuous && endDate)) && ' \u2192 '}
+        { endDate && `${endDate.format('L')}` }
+      </StatusTitle>
     </div>
   );
+};
+
+Timeline.defaultProps = {
+  continuous: false,
+  endDate: undefined,
+  startDate: undefined,
+};
+
+Timeline.propTypes = {
+  continuous: PropTypes.bool,
+  endDate: PropTypes.string,
+  startDate: PropTypes.string,
 };
 
 export default Timeline;

@@ -94,7 +94,18 @@ server.get('/favicon.ico', function (req, res) {
   res.status(404).send('Not found');
 });
 
-server.use(robots(isProduction ? {UserAgent: '*', Allow: '/'} : {UserAgent: '*', Disallow: '/'}));
+const testRobotsTxt = {
+  UserAgent: '*',
+  Disallow: '/',
+};
+// Quickfix to stop apparent indexing of /actions/[id]
+const prodRobotsTxt = {
+  UserAgent: '*',
+  Allow: '/',
+  Disallow: '/actions/[id]',
+};
+
+server.use(robots(isProduction ? prodRobotsTxt : testRobotsTxt));
 
 // Serve locales as JSON
 server.get('/locales/:lang([a-z]{2})/:ns([0-9a-z_-]+).json', function (req, res) {

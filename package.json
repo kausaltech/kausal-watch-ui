@@ -42,7 +42,7 @@
     "next-i18next": "^6.0.2",
     "next-images": "^1.4.1",
     "next-with-apollo": "^5.1.0",
-    "node-sass": "4.14.1",
+    "node-sass": "^6.0.1",
     "original-url": "^1.2.3",
     "plotly.js": "^2.5.0",
     "polished": "^3.6.5",

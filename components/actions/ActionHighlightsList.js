@@ -99,7 +99,11 @@ function ActionCardList({ t, actions, plan }) {
           style={{ transition: 'all 0.5s ease' }}
         >
           <LazyLoad height={300}>
-            <ActionHighlightCard action={item} imageUrl={getActionImage(plan, item)?.small.src} />
+            <ActionHighlightCard
+              action={item}
+              imageUrl={getActionImage(plan, item)?.small.src}
+              hideIdentifier={plan.hideActionIdentifiers}
+            />
           </LazyLoad>
         </CardContainer>
       ))}

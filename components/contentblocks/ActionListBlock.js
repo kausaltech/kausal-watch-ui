@@ -21,7 +21,7 @@ ${ActionCard.fragments.action}
 
 const ActionListSection = styled.div`
   background-color: ${(props) => props.color};
-  padding: ${(props) => props.theme.spaces.s200} 0 ${(props) => props.theme.spaces.s400};
+  padding: ${(props) => props.theme.spaces.s600} 0 ${(props) => props.theme.spaces.s600};
 `;
 
 const SectionHeader = styled.h2`
@@ -50,7 +50,7 @@ const ActionListBlock = (props) => {
   if (!planActions) {
     return <ErrorMessage statusCode={404} message={t('page-not-found')} />;
   }
-  const actions = planActions.map((act) => ({...act, iconUrl: act.categories.find((cat) => cat.iconUrl)?.iconUrl}));
+  const actions = planActions.map((act) => ({ ...act, iconUrl: act.categories.find((cat) => cat.iconUrl)?.iconUrl }));
   const heading = t('actions');
   return (
     <ActionListSection color={color}>
