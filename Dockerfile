@@ -9,7 +9,7 @@ RUN apk --no-cache add g++ make python3
 
 # Install dependencies first
 ENV YARN_CACHE_FOLDER /yarn-cache
-RUN yarn set version 3.1.1
+RUN yarn set version berry
 COPY .yarnrc.yml yarn.lock package*.json ./
 RUN --mount=type=cache,target=/yarn-cache yarn install
 
