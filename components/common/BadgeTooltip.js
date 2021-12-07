@@ -11,7 +11,7 @@ const BadgeWrapper = styled.a`
 `;
 
 const StyledBadge = styled(Badge)`
-  background-color: ${(props) => props.theme.badgeBackground};
+  background-color: ${(props) => props.theme.badgeBackground} !important;
   color: ${(props) => props.theme.badgeColor};
   border-radius: ${(props) => props.theme.badgeBorderRadius};
   padding: ${(props) => props.theme.badgePaddingY} ${(props) => props.theme.badgePaddingX};

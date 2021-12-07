@@ -57,7 +57,7 @@ function IndicatorsHero(props) {
           { leadContent && (
             <Row>
               <Col sm="12" md="8" className="mb-1">
-              <RichText html={leadContent} />
+                <RichText html={leadContent} />
               </Col>
             </Row>
           )}

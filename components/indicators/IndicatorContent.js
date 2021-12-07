@@ -85,6 +85,8 @@ const GET_INDICATOR_DETAILS = gql`
 
 const IndicatorHero = styled.div`
   margin-bottom: ${(props) => props.theme.spaces.s200};
+  padding: ${(props) => props.theme.spaces.s600} 0;
+  background-color: ${(props) => props.theme.themeColors.light};
 
   a {
     color: inherit;

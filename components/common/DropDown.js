@@ -17,6 +17,7 @@ const CustomInput = styled(BSCustomInput)`
   height: calc(${(props) => props.theme.inputLineHeight}em + ${(props) => props.theme.inputPaddingY} + ${(props) => props.theme.inputPaddingY});
   border-radius: ${(props) => props.theme.inputBorderRadius};
   border-width: ${(props) => props.theme.inputBorderWidth};
+  border-color: ${(props) => props.theme.themeColors.dark};
   background: no-repeat right 0.75rem center/10px 10px;
   background-color: ${(props) => props.theme.inputBg};
   background-image: ${(props) => props.theme.customSelectIndicator};

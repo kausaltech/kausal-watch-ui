@@ -45,7 +45,7 @@ const ReadyBadge = styled(Badge)`
   position: absolute;
   top: 1em;
   left: 1em;
-  background-color: ${(props) => props.theme.themeColors.success};
+  background-color: ${(props) => props.theme.graphColors.green070} !important;
 `;
 
 const StyledCardTitle = styled(CardTitle)`

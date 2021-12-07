@@ -14,7 +14,7 @@ const StatusTitle = styled.div`
   .badge {
     /* Awkwardly match category badges size */
     font-size: calc(1.25rem * 0.75);
-    background-color: ${(props) => props.theme.brandDark};
+    background-color: ${(props) => props.theme.brandDark} !important;
     color: ${(props) => props.theme.themeColors.white};
   }
 `;
