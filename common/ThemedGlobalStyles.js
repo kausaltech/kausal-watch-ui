@@ -183,8 +183,8 @@ const GlobalStyle = createGlobalStyle`
 
 function ThemedGlobalStyles({ theme, children }) {
   if (typeof window !== 'undefined') {
-    const { fontUrl, fontFamily, headingsFontFamily } = theme;
-    Fonts(fontFamily, headingsFontFamily, fontUrl);
+    const { fontFamily, headingsFontFamily } = theme;
+    Fonts(fontFamily, headingsFontFamily);
   }
 
   return (
