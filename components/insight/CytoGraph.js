@@ -23,7 +23,6 @@ const VisContainer = styled.div`
   margin: 2em 0;
 `;
 
-
 function wordWrap(inputStr, maxWidth) {
   const newLineStr = '\n';
   let done = false;
@@ -110,7 +109,7 @@ class CytoGraph extends React.Component {
       return;
     }
     const { nodes } = this.props;
-    const node = nodes.filter(obj => obj.id === nodeId);
+    const node = nodes.filter((obj) => obj.id === nodeId);
     if (node.length !== 1) {
       throw new Error(`Node with id ${nodeId} not found`);
     }
@@ -261,7 +260,7 @@ class CytoGraph extends React.Component {
             label: 'data(label)',
             'text-wrap': 'wrap',
             'text-outline-width': 0,
-            'color': '#ffffff',
+            color: '#ffffff',
             'font-weight': theme.fontWeightNormal,
           },
         },
@@ -276,7 +275,7 @@ class CytoGraph extends React.Component {
             'line-color': 'data(color)',
             'text-outline-width': 3,
             'text-outline-color': 'data(color)',
-            'color': '#ffffff',
+            color: '#ffffff',
             'curve-style': 'bezier',
             'font-size': '18px',
             'font-weight': theme.fontWeightBold,
@@ -347,7 +346,7 @@ class CytoGraph extends React.Component {
 
       if (rootNode) {
         const selectedNodes = rootNode.predecessors();
-        const removeNodes = cy.nodes().difference(selectedNodes).filter(node => node.id() != rootNode.id());
+        const removeNodes = cy.nodes().difference(selectedNodes).filter((node) => node.id() != rootNode.id());
         removeNodes.remove();
         cy.layout(cyLayoutOptions).run();
         cy.center(rootNode);
@@ -380,8 +379,8 @@ class CytoGraph extends React.Component {
       <div>
         <Meta
           title={`${t('indicators')}`}
-          description={`Toimenpiteiden edistymistä ja kasvihuonekaasupäästöjen kehitystä seurataan mittareilla`}
-          />
+          description="Toimenpiteiden edistymistä ja kasvihuonekaasupäästöjen kehitystä seurataan mittareilla"
+        />
         <Container>
           <Row>
             <Col sm="8" lg="6">
@@ -392,7 +391,7 @@ class CytoGraph extends React.Component {
               />
             </Col>
             <Col sm="4" lg="6">
-              <UncontrolledButtonDropdown className="float-right">
+              <UncontrolledButtonDropdown className="float-end">
                 <DropdownToggle caret color="secondary">
                   {t('insight-download-label')}
                 </DropdownToggle>

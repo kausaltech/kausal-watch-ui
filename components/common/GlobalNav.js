@@ -247,7 +247,7 @@ function DropdownList(props) {
           { parentName }
         </NavHighlighter>
       </StyledDropdownToggle>
-      <DropdownMenu right>
+      <DropdownMenu>
         { items && items.map((child) => (
           <DropdownItem key={child.id}>
             <NavLink>
