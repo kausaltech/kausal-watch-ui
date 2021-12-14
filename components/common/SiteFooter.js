@@ -352,6 +352,7 @@ function SiteFooter(props) {
       src={theme.themeLogoWhiteUrl}
       preserveAspectRatio="xMinYMid meet"
       title={`${ownerName}, ${siteTitle} ${t('front-page')}`}
+      style={{ display: 'block' }}
     />
   );
 
@@ -367,11 +368,19 @@ function SiteFooter(props) {
           <FooterNav>
             <Branding>
               <Logo>
-                <Link href="/">
-                  <a>
-                    <OrgLogo aria-hidden="true" className="footer-org-logo" />
-                  </a>
-                </Link>
+                { theme?.footerLogoLink
+                  ? (
+                    <a href={theme.footerLogoLink} target="_blank" rel="noreferrer">
+                      <OrgLogo aria-hidden="true" className="footer-org-logo" />
+                    </a>
+                  )
+                  : (
+                    <Link href="/">
+                      <a>
+                        <OrgLogo aria-hidden="true" className="footer-org-logo" />
+                      </a>
+                    </Link>
+                  )}
               </Logo>
               <ServiceTitle>
                 <Link href="/">
@@ -499,6 +508,7 @@ function SiteFooter(props) {
                       src={logo.logo}
                       preserveAspectRatio="xMidYMid meet"
                       title={logo.name}
+                      style={{ display: 'block' }}
                     />
                   </a>
                 </FundingInstrumentContainer>

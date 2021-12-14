@@ -109,7 +109,8 @@
   "breakpointXl": "1200px",
   "iconsUrl": "/static/themes/default/icons",
   "themeLogoUrl": "/static/themes/hsy-kestava/images/hsy-kestava-mark-color.svg",
-  "themeLogoWhiteUrl": "/static/themes/hsy-kestava/images/hsy-color.svg",
+  "themeLogoWhiteUrl": "/static/themes/hsy-kestava/images/hsy-kestava-color.svg",
+  "footerLogoLink": "https://www.hsy.fi/ilmanlaatu-ja-ilmasto/kestavan-kaupunkielaman-ohjelma/",
   "iconIndicatorsUrl": "",
   "iconActionsUrl": "",
   "themeCustomStylesUrl": "",
@@ -153,9 +154,9 @@
     "otherLogos": [
       {
         "id": "1",
-        "name": "Kestävän kaupunkielämän ohjelma",
-        "link": "",
-        "logo": "/static/themes/hsy-kestava/images/hsy-kestava-color.svg"
+        "name": "Helsingin seudun ympäristöpalvelut HSY",
+        "link": "https://www.hsy.fi",
+        "logo": "/static/themes/hsy-kestava/images/hsy-color.svg"
       }
     ]
   }
