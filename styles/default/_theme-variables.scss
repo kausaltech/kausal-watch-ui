@@ -65,20 +65,6 @@ $line-height-sm:              1;
 $line-height-md:              1.2;
 $line-height-lg:              1.75;
 
-$space: 0.8rem;
-$spaces: (
-  s000: 0,
-  s025: $space / 4,   //4px
-  s050: $space / 2,   //8px
-  s100: $space,       //16px
-  s150: $space * 1.5, //24px
-  s200: $space * 2,    //32px
-  s300: $space * 3,   //48px
-  s400: $space * 4,   //64px
-  s600: $space * 6,   //96px
-  s800: $space * 8,   //128px
-);
-
 // Links
 //
 // Style anchor elements.
@@ -142,6 +128,11 @@ $badge-font-weight:               700;
 $table-head-bg:                   transparent;
 $table-hover-bg:                  #F7F6F3;
 
+
+/////// PROGRESS BAR
+
+$progress-border-radius:     0;
+
 // Actions
 $actionNotStarted-color:    #ECEAE6;
 $actionCompleted-color:     #0C4B2B;
@@ -170,39 +161,3 @@ $breakpoint-sm: 576px;
 $breakpoint-md: 768px;
 $breakpoint-lg: 992px;
 $breakpoint-xl: 1200px;
-
-$icons-url: '/static/icons/default';
-$theme-logo-url: '/static/images/default/default-logo-white.svg';
-$theme-logo-white-url: $theme-logo-url;
-$icon-indicators-url: '/static/images/default/icon-indicators.svg';
-$icon-actions-url: '/static/images/default/icon-actions.svg';
-
-$theme-custom-styles-url: '';
-
-$graph-colors: (
-  grey010: #eeeeee,
-  grey030: #c7c7c7,
-  grey050: #a0a0a0,
-  grey070: #636363,
-  grey090: #3f3f3f,
-  green010: #A7EBC0,
-  green030: #56C38E,
-  green050: #279A6D,
-  green070: #107251,
-  green090: #074A35,
-  red010: #FCD8D8,
-  red030: #EF9A9A,
-  red050: #D46262,
-  red070: #A73939,
-  red090: #661D1D,
-  blue010: #C2D9ED,
-  blue030: #6D97B8,
-  blue050: #4E80A6,
-  blue070: #205D82,
-  blue090: #0D445E,
-  yellow010: #FBE6AE,
-  yellow030: #DC9D2A,
-  yellow050: #C88217,
-  yellow070: #8F4604,
-  yellow090: #3C1300,
-);

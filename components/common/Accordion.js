@@ -1,5 +1,6 @@
 import React, { useContext, useState, useEffect, useCallback } from 'react';
-import { Collapse, Tooltip } from 'reactstrap';
+import { useRouter } from 'next/router';
+import { Collapse, UncontrolledTooltip } from 'reactstrap';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
@@ -87,7 +88,7 @@ const AccordionContent = styled(Collapse)`
   margin-left: ${(props) => props.theme.spaces.s200};
 `;
 
-const ToolTipContent = (props) => {
+const TooltipContent = (props) => {
   const { scheduleUpdate, children } = props;
   scheduleUpdate();
   return (
@@ -95,14 +96,21 @@ const ToolTipContent = (props) => {
   );
 };
 
-ToolTipContent.propTypes = {
-  scheduleUpdate: PropTypes.func.isRequired,
+TooltipContent.defaultProps = {
+  scheduleUpdate: () => null,
+};
+
+TooltipContent.propTypes = {
+  scheduleUpdate: PropTypes.func,
   children: PropTypes.node.isRequired,
 };
 
 const LinkCopyButton = React.memo((props) => {
   const { identifier } = props;
   const site = useContext(SiteContext);
+  const router = useRouter();
+  // console.log(site);
+  // console.log('router', router);
   const { t } = useTranslation();
   const [tooltipOpen, setTooltipOpen] = useState(false);
   const [copyText, setCopyText] = useState(t('copy-to-clipboard'));
@@ -122,18 +130,18 @@ const LinkCopyButton = React.memo((props) => {
 
   return (
     <>
-      <Tooltip
+      <UncontrolledTooltip
         placement="top"
         isOpen={tooltipOpen}
         target={`tooltip-${identifier}`}
         toggle={toggle}
       >
         {({ scheduleUpdate }) => (
-          <ToolTipContent scheduleUpdate={scheduleUpdate}>
+          <TooltipContent scheduleUpdate={scheduleUpdate}>
             { copyText }
-          </ToolTipContent>
+          </TooltipContent>
         )}
-      </Tooltip>
+      </UncontrolledTooltip>
       <CopyToClipboard
         text={`${site.baseURL}${site.path}#q${identifier}`}
         id={`tooltip-${identifier}`}

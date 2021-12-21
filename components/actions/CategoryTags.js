@@ -17,7 +17,7 @@ const Categories = styled.div`
   }
 
   .badge {
-    background-color: ${(props) => props.theme.neutralLight};
+    background-color: ${(props) => props.theme.neutralLight} !important;
     color: ${(props) => props.theme.themeColors.black};
   }
 `;

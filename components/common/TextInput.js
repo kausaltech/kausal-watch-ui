@@ -19,6 +19,7 @@ const Input = styled(BSInput)`
   background-color: ${(props) => props.theme.inputBg};
   border-radius: ${(props) => props.theme.inputBorderRadius};
   border-width: ${(props) => props.theme.inputBorderWidth};
+  border-color: ${(props) => props.theme.themeColors.dark};
 `;
 
 const TextInput = (props) => {

@@ -22,6 +22,8 @@ import SiteContext from 'context/site';
 
 const { publicRuntimeConfig } = getConfig();
 
+require('../styles/default/main.scss');
+
 if (process.browser && process.env.NODE_ENV !== 'production') {
   const whyDidYouRender = require('@welldone-software/why-did-you-render');
 

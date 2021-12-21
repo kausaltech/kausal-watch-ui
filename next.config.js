@@ -2,7 +2,6 @@
 const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
-const withSass = require('@zeit/next-sass');
 const withImages = require('next-images');
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: !!process.env.ANALYZE_BUNDLE,
@@ -32,7 +31,7 @@ function generateLocaleConfig() {
   return languages;
 }
 
-const config = withSourceMaps(withBundleAnalyzer(withImages(withSass({
+const config = withSourceMaps(withBundleAnalyzer(withImages({
   env: {
     SENTRY_DSN: process.env.SENTRY_DSN,
     SENTRY_TRACE_SAMPLE_RATE: process.env.SENTRY_TRACE_SAMPLE_RATE || '1.0',
@@ -119,6 +118,6 @@ const config = withSourceMaps(withBundleAnalyzer(withImages(withSass({
     return cfg;
   },
   basePath,
-}))));
+})));
 
 module.exports = config;

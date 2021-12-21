@@ -9,7 +9,7 @@ const StyledButton = styled(BSButton)`
   padding: ${(props) => props.theme.inputBtnPaddingY} ${(props) => props.theme.inputBtnPaddingX};
   border-radius: ${(props) => props.theme.btnBorderRadius};
   border-width: ${(props) => props.theme.btnBorderWidth};
-
+  font-weight: ${(props) => props.theme.fontWeightBold};
   &.btn {
     &:not(:disabled):not(.disabled):active:focus, &:not(:disabled):not(.disabled):focus, &.focus {
       box-shadow: 0 0 0 0.25rem ${(props) => props.theme.inputBtnFocusColor};

@@ -80,13 +80,13 @@ function makeLayout(indicator) {
       showgrid: false,
       showline: false,
       anchor: 'free',
-      //domain: [0.01, 1],
+      // domain: [0.01, 1],
       type: indicator.timeResolution === 'YEAR' ? 'linear' : 'date',
       fixedrange: true,
       tickformat: indicator.timeResolution === 'YEAR' ? 'd' : '%d.%m.%Y',
       tickmode: null,
     },
-    //showlegend: false,
+    // showlegend: false,
     separators: ', ',
     hoverlabel: {
       namelength: 0,
@@ -142,8 +142,7 @@ function generateCube(dimensions, values, path) {
   return array;
 }
 
-function getTraces(dimensions, cube, names)
-{
+function getTraces(dimensions, cube, names) {
   const dim = dimensions[0];
 
   if (dimensions.length === 1) {
@@ -190,7 +189,7 @@ function generateSingleYearPlot(indicator, values, i18n, plotColors) {
   const dim = dimensions;
   let path;
 
-  const traces = getTraces(dimensions, cube).map((trace, idx) => ({marker: {color: plotColors.mainScale[idx + 1]}, ...trace}));
+  const traces = getTraces(dimensions, cube).map((trace, idx) => ({ marker: { color: plotColors.mainScale[idx + 1] }, ...trace }));
 
   return {
     data: traces,
@@ -597,7 +596,7 @@ function IndicatorGraphSmall({ indicatorId }) {
   return (
     <div>
       <h5 className="mb-3">{plotTitle}</h5>
-      <span className="sr-only">{ t('indicator-graph-not-accessible') }</span>
+      <span className="visually-hidden">{ t('indicator-graph-not-accessible') }</span>
       <div aria-hidden="true">
         <Plot
           data={plot.data}

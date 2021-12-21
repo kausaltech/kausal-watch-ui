@@ -16,6 +16,8 @@ const GlobalStyle = createGlobalStyle`
 
   a {
     color: ${(props) => props.theme.brandDark};
+    text-decoration: none;
+    background-color: transparent;
 
     &:hover {
       color: ${(props) => props.theme.brandDark};
@@ -170,19 +172,12 @@ const GlobalStyle = createGlobalStyle`
   .custom-select.is-invalid {
     background-color: rgba(${(props) => props.theme.themeColors.danger}, 0.15);
   }
-
-
-  .form-control, .custom-select {
-    &:hover {
-      border-color: ${(props) => props.theme.themeColors.black};
-    }
-  }
 `;
 
 function ThemedGlobalStyles({ theme, children }) {
   if (typeof window !== 'undefined') {
-    const { fontUrl, fontFamily, headingsFontFamily } = theme;
-    Fonts(fontFamily, headingsFontFamily, fontUrl);
+    const { fontFamily, headingsFontFamily } = theme;
+    Fonts(fontFamily, headingsFontFamily);
   }
 
   return (

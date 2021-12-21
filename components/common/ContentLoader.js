@@ -52,7 +52,7 @@ class ContentLoader extends React.Component {
         <StyledSpinner type="grow" className="mx-1" />
         <StyledSpinner type="grow" className="mx-1" />
         <StyledSpinner type="grow" className="mx-1" />
-        <div className="sr-only">{ t('loading') }</div>
+        <div className="visually-hidden">{ t('loading') }</div>
       </Loader>
     );
   }

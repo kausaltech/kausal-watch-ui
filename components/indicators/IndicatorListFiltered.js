@@ -44,7 +44,7 @@ const IndicatorType = styled(Badge)`
       default:
         return '#cccccc';
     }
-  }};
+  }} !important;
 `;
 
 const StyledBadge = styled(Badge)`
@@ -54,7 +54,8 @@ const StyledBadge = styled(Badge)`
   border-radius: ${(props) => props.theme.badgeBorderRadius};
   padding: ${(props) => props.theme.badgePaddingY} ${(props) => props.theme.badgePaddingX};
   font-weight: ${(props) => props.theme.badgeFontWeight};
-  background-color: ${(props) => props.theme.themeColors.light};
+  background-color: ${(props) => props.theme.themeColors.light} !important;
+  color: ${(props) => props.theme.themeColors.black};
 `;
 
 const IndicatorName = styled.div`

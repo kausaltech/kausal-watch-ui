@@ -4,10 +4,11 @@ import styled from 'styled-components';
 import { Query } from '@apollo/client/react/components';
 import { gql } from '@apollo/client';
 
-import { Media, Button, Collapse } from 'reactstrap';
+import { Button, Collapse } from 'reactstrap';
 import { withTranslation } from '../../common/i18n';
 
 const Person = styled.div`
+  display: flex;
   margin-top: 1em;
   padding-bottom: 1em;
   border-bottom: 2px solid ${(props) => props.theme.themeColors.light};
@@ -23,7 +24,7 @@ const Person = styled.div`
   }
 `;
 
-const PersonDetails = styled(Media)`
+const PersonDetails = styled.div`
   margin-left: 1em;
 
   .btn-link, .btn-link:hover {
@@ -151,36 +152,34 @@ class ContactPerson extends React.Component {
 
     return (
       <Person className={isLeader}>
-        <Media key={person.id}>
-          <Media left>
-            <Avatar
-              src={person.avatarUrl || '/static/themes/default/images/default-avatar.png'}
-              className={`rounded-circle ${isLeader}`}
-              alt={`${role} ${fullName}`}
-            />
-          </Media>
-          <PersonDetails body>
-            <Name>
-              {fullName}
-            </Name>
-            <PersonRole>{person.title}</PersonRole>
-            {person.organization && (
-              <PersonOrg>{person.organization.name}</PersonOrg>
-            )}
-            <CollapseButton
-              onClick={this.toggle}
-              color="link"
-              size="sm"
-              aria-expanded={collapse}
-              aria-controls={`contact-${person.id}`}
-            >
-              { t('contact-info') }
-            </CollapseButton>
-            <Collapse isOpen={collapse} id={`contact-${person.id}`}>
-              {collapse && <ContactDetails id={person.id} t={t} />}
-            </Collapse>
-          </PersonDetails>
-        </Media>
+        <div left>
+          <Avatar
+            src={person.avatarUrl || '/static/themes/default/images/default-avatar.png'}
+            className={`rounded-circle ${isLeader}`}
+            alt={`${role} ${fullName}`}
+          />
+        </div>
+        <PersonDetails body>
+          <Name>
+            {fullName}
+          </Name>
+          <PersonRole>{person.title}</PersonRole>
+          {person.organization && (
+          <PersonOrg>{person.organization.name}</PersonOrg>
+          )}
+          <CollapseButton
+            onClick={this.toggle}
+            color="link"
+            size="sm"
+            aria-expanded={collapse}
+            aria-controls={`contact-${person.id}`}
+          >
+            { t('contact-info') }
+          </CollapseButton>
+          <Collapse isOpen={collapse} id={`contact-${person.id}`}>
+            {collapse && <ContactDetails id={person.id} t={t} />}
+          </Collapse>
+        </PersonDetails>
       </Person>
     );
   }

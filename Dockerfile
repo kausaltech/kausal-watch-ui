@@ -1,6 +1,6 @@
 #syntax=docker/dockerfile:1.2
 
-FROM node:17.1.0-alpine3.14 as base
+FROM node:17.2.0-alpine3.14 as base
 
 WORKDIR /app
 
@@ -10,6 +10,7 @@ RUN apk --no-cache add g++ make python3
 # Install dependencies first
 ENV YARN_CACHE_FOLDER /yarn-cache
 RUN yarn set version 3.1.1
+RUN yarn plugin import interactive-tools
 COPY .yarnrc.yml yarn.lock package*.json ./
 RUN --mount=type=cache,target=/yarn-cache yarn install
 
