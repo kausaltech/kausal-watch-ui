@@ -127,7 +127,7 @@ function ActionListFilterBadges({
       <span className="count">
         { `${actionCount} ${t('filter-result-actions')}` }
       </span>
-      { badges.length > 0 && <span className="sr-only">{t('active-filters')}</span>}
+      { badges.length > 0 && <span className="visually-hidden">{t('active-filters')}</span>}
       <Transition
         items={badges}
         keys={(item) => item.id}

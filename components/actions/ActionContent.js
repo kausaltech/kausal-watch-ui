@@ -354,7 +354,7 @@ function ActionContent({ id }) {
             )}
             {action.description && (
               <ActionSection className="text-content">
-                <h2 className="sr-only">{ t('actions:action-description') }</h2>
+                <h2 className="visually-hidden">{ t('actions:action-description') }</h2>
                 <RichText html={action.description} />
               </ActionSection>
             )}
@@ -432,7 +432,7 @@ function ActionContent({ id }) {
           </Col>
 
           <Col md="5" lg="4">
-            <h2 className="sr-only">{ t('actions:action-meta-header') }</h2>
+            <h2 className="visually-hidden">{ t('actions:action-meta-header') }</h2>
             { action.impact
               && (
               <ActionSection>

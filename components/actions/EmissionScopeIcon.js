@@ -30,7 +30,7 @@ const EmissionScopeIcon = (props) => {
       default:
         return 'circleOutline';
     }
-  };
+  }
 
   return (
     <IconContainer
@@ -38,7 +38,7 @@ const EmissionScopeIcon = (props) => {
       style={{ width: size, height: size }}
       href="#"
     >
-      <span className="sr-only">
+      <span className="visually-hidden">
         {name}
         {shortDescription}
       </span>
@@ -52,12 +52,13 @@ const EmissionScopeIcon = (props) => {
         innerClassName="emission-scope-icon-tooltip"
         trigger="focus hover click"
       >
-        <strong>{name}</strong><br/>
+        <strong>{name}</strong>
+        <br />
         {shortDescription}
       </Tooltip>
     </IconContainer>
   );
-}
+};
 
 EmissionScopeIcon.propTypes = {
   category: PropTypes.shape({}).isRequired,

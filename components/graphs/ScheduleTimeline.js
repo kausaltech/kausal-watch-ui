@@ -92,7 +92,7 @@ const ScheduleTimeline = ({ schedules, allSchedules }) => {
 
   return (
     <div role="presentation">
-      <span className="sr-only">
+      <span className="visually-hidden">
         {description}
       </span>
       <div aria-hidden>
