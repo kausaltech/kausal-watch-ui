@@ -12,15 +12,15 @@ import PlanContext from 'context/plan';
 import { useTranslation } from 'common/i18n';
 
 import RichText from 'components/common/RichText';
-import ContentLoader from '../common/ContentLoader';
-import ErrorMessage from '../common/ErrorMessage';
-import ErrorBoundary from '../common/ErrorBoundary';
-import { Meta } from '../layout';
+import ContentLoader from 'components/common/ContentLoader';
+import ErrorMessage from 'components/common/ErrorMessage';
+import ErrorBoundary from 'components/common/ErrorBoundary';
+import { Meta } from 'components/layout';
 
-import IndicatorGraph from '../graphs/IndicatorGraph';
-import IndicatorValueSummary from './IndicatorValueSummary';
-import CausalNavigation from './CausalNavigation';
-import ActionsTable from '../actions/ActionsTable';
+import IndicatorVisualisation from 'components/indicators/IndicatorVisualisation';
+import ActionsTable from 'components/actions/ActionsTable';
+import IndicatorValueSummary from 'components/indicators//IndicatorValueSummary';
+import CausalNavigation from 'components/indicators//CausalNavigation';
 
 const GET_INDICATOR_DETAILS = gql`
   query IndicatorDetails($id: ID, $plan: ID, $identifier: ID) {
@@ -218,7 +218,9 @@ function IndicatorDetails({ id }) {
         && (
           <Row>
             <Col className="mb-5">
-              <ErrorBoundary><IndicatorGraph indicatorId={indicator.id} /></ErrorBoundary>
+              <ErrorBoundary>
+                <IndicatorVisualisation indicatorId={indicator.id} />
+              </ErrorBoundary>
             </Col>
           </Row>
         )}
