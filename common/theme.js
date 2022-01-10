@@ -12,7 +12,8 @@ if (!process.browser) {
   // in an in-memory cache on the server side.
   function importAllThemes(r) {
     r.keys().forEach((key) => {
-      const themeIdentifier = key.split('/')[1];
+      const parts = key.split('/');
+      const themeIdentifier = parts[parts.length - 2];
       themeCache[themeIdentifier] = r(key);
     });
   }
