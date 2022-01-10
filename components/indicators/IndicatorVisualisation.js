@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { isEqual, capitalize } from 'lodash';
 import { gql, useQuery } from '@apollo/client';
@@ -24,6 +24,11 @@ const GET_INDICATOR_GRAPH_DATA = gql`
       timeResolution
       minValue
       maxValue
+      organization {
+        id
+        name
+        abbreviation
+      }
       quantity {
         id
         name
@@ -60,6 +65,58 @@ const GET_INDICATOR_GRAPH_DATA = gql`
         shortName
         verboseName
         verboseNamePlural
+      }
+      common {
+        id
+        name
+        indicators {
+          id
+          organization {
+            id
+            name
+            abbreviation
+          }
+          timeResolution
+          minValue
+          maxValue
+          quantity {
+            id
+            name
+          }
+          values(includeDimensions: true) {
+            id
+            date
+            value
+            categories {
+              id
+            }
+          }
+          dimensions {
+            dimension {
+              id
+              name
+              categories {
+                id
+                name
+              }
+            }
+          }
+          goals(plan: $plan) {
+            id
+            date
+            value
+            scenario {
+              id
+            }
+          }
+          unit {
+            id
+            name
+            shortName
+            verboseName
+            verboseNamePlural
+          }
+        }
       }
     }
   }
@@ -126,6 +183,7 @@ function getTraces(dimensions, cube, names) {
 }
 
 function generateTracesFromValues(indicator, i18n) {
+  console.log(indicator);
   const traces = [];
   const values = [...indicator.values].sort((a, b) => a.date - b.date).map((item) => {
     const { date, value, categories } = item;
@@ -146,6 +204,7 @@ function generateTracesFromValues(indicator, i18n) {
     y: mainValues.map((item) => item.value),
     x: mainValues.map((item) => item.date),
     name: traceName,
+    organization: indicator.organization,
   };
 
   traces.push({ ...dataTrace });
@@ -156,7 +215,7 @@ function generateTracesFromValues(indicator, i18n) {
       .sort((a, b) => (a.categories.length - b.categories.length));
     const cube = generateCube(dimensions, values);
     const dataTraces = getTraces(dimensions, cube);
-    dataTraces.forEach((trace) => traces.push(trace));
+    dataTraces.forEach((trace) => traces.push({ ...trace, organization: indicator.organization }));
   }
 
   return traces;
@@ -245,6 +304,8 @@ function IndicatorVisualisation({ indicatorId }) {
 
   const plan = useContext(PlanContext);
   const { t, i18n } = useTranslation();
+  const [compareTo, setCompareTo] = useState('460');
+  // const [comparisonTraces, setComparisonTraces] = useState(undefined);
 
   const { loading, error, data } = useQuery(GET_INDICATOR_GRAPH_DATA, {
     variables: {
@@ -267,6 +328,8 @@ function IndicatorVisualisation({ indicatorId }) {
       {t('indicator-not-found')}
     </Alert>
   );
+
+  console.log(data);
 
   /// Determine Indicator unit label and y-axis range
   const { unit } = indicator;
@@ -303,6 +366,15 @@ function IndicatorVisualisation({ indicatorId }) {
   const goalTraces = generateGoalTraces(indicator, scenarios, i18n);
   const trendTrace = generateTrendTrace(indicator, traces, goalTraces, i18n);
 
+  const comparison = {};
+  if (indicator.common && compareTo) {
+    const comparisonIndicator = indicator.common.indicators.find((ind) => ind.organization.id === compareTo);
+    const comparisonTraces = generateTracesFromValues(comparisonIndicator, i18n);
+    comparison.organization = comparisonIndicator.organization;
+    comparison.traces = comparisonTraces;
+  } else comparison.organization = undefined;
+
+  console.log(comparison);
   return (
     <div>
       <h3 className="mb-2">{plotTitle}</h3>
@@ -314,6 +386,7 @@ function IndicatorVisualisation({ indicatorId }) {
           traces={traces}
           goalTraces={goalTraces}
           trendTrace={trendTrace}
+          comparison={comparison.organization && comparison}
         />
       </div>
     </div>
