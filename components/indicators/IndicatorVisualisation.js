@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 import { isEqual, capitalize } from 'lodash';
 import { gql, useQuery } from '@apollo/client';
@@ -7,7 +7,8 @@ import { linearRegression } from 'simple-statistics';
 import { useTranslation } from 'common/i18n';
 import PlanContext from 'context/plan';
 import ContentLoader from 'components/common/ContentLoader';
-import IndicatorGraph from '../graphs/IndicatorGraph';
+import IndicatorComparisonSelect from 'components/indicators/IndicatorComparisonSelect';
+import IndicatorGraph from 'components/graphs/IndicatorGraph';
 
 const GET_INDICATOR_GRAPH_DATA = gql`
   query IndicatorGraphData($id: ID, $plan: ID) {
@@ -183,7 +184,6 @@ function getTraces(dimensions, cube, names) {
 }
 
 function generateTracesFromValues(indicator, i18n) {
-  console.log(indicator);
   const traces = [];
   const values = [...indicator.values].sort((a, b) => a.date - b.date).map((item) => {
     const { date, value, categories } = item;
@@ -296,7 +296,6 @@ const generateGoalTraces = (indicator, planScenarios, i18n) => {
 
   return goalTraces;
 };
-
 function IndicatorVisualisation({ indicatorId }) {
   if (!process.browser) {
     return null;
@@ -304,7 +303,7 @@ function IndicatorVisualisation({ indicatorId }) {
 
   const plan = useContext(PlanContext);
   const { t, i18n } = useTranslation();
-  const [compareTo, setCompareTo] = useState('460');
+  const [compareTo, setCompareTo] = useState(undefined);
   // const [comparisonTraces, setComparisonTraces] = useState(undefined);
 
   const { loading, error, data } = useQuery(GET_INDICATOR_GRAPH_DATA, {
@@ -328,8 +327,6 @@ function IndicatorVisualisation({ indicatorId }) {
       {t('indicator-not-found')}
     </Alert>
   );
-
-  console.log(data);
 
   /// Determine Indicator unit label and y-axis range
   const { unit } = indicator;
@@ -366,6 +363,10 @@ function IndicatorVisualisation({ indicatorId }) {
   const goalTraces = generateGoalTraces(indicator, scenarios, i18n);
   const trendTrace = generateTrendTrace(indicator, traces, goalTraces, i18n);
 
+  const comparisonOrgs = indicator.common?.indicators
+    .map((common) => common.organization)
+    .filter((org) => org.id !== indicator.organization.id);
+
   const comparison = {};
   if (indicator.common && compareTo) {
     const comparisonIndicator = indicator.common.indicators.find((ind) => ind.organization.id === compareTo);
@@ -374,11 +375,18 @@ function IndicatorVisualisation({ indicatorId }) {
     comparison.traces = comparisonTraces;
   } else comparison.organization = undefined;
 
-  console.log(comparison);
   return (
     <div>
       <h3 className="mb-2">{plotTitle}</h3>
       <span className="visually-hidden">{ t('indicator-graph-not-accessible') }</span>
+      { comparisonOrgs && (
+        <IndicatorComparisonSelect
+          handleChange={setCompareTo}
+          currentValue={compareTo}
+          options={comparisonOrgs}
+          defaultOrg={indicator.organization}
+        />
+      )}
       <div aria-hidden="true">
         <IndicatorGraph
           yRange={yRange}
