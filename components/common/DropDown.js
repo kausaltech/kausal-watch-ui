@@ -31,6 +31,7 @@ function DropDown(props) {
     value,
     onChange,
     children,
+    disabled,
   } = props;
 
   return (
@@ -46,6 +47,7 @@ function DropDown(props) {
         name={name}
         value={value}
         onChange={onChange}
+        disabled={disabled}
       >
         { children }
       </CustomInput>

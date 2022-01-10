@@ -75,7 +75,7 @@ const createLayout = (
   const newLayout = {
     title: null,
     margin: {
-      t: 100,
+      t: 50,
       r: 50,
       b: 50,
       l: 50,
