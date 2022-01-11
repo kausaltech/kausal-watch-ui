@@ -195,16 +195,18 @@ function generateTracesFromValues(indicator, i18n) {
 
   // Draw the main historical series (non-dimensioned)
   const mainValues = values.filter((item) => !item.categories.length);
-  let traceName = indicator.quantity ? capitalize(indicator.quantity.name) : null;
-  if (dimensionedValues.length) {
-    traceName = capitalize(i18n.t('total'));
-  }
+
+  // If we have dimensions, call main historical series 'Total'
+  const traceName = (indicator.quantity && !dimensionedValues.length)
+    ? capitalize(indicator.quantity.name) : capitalize(i18n.t('total'));
+
   const dataTrace = {
     xType: 'time',
     y: mainValues.map((item) => item.value),
     x: mainValues.map((item) => item.date),
     name: traceName,
     organization: indicator.organization,
+    dataType: 'total',
   };
 
   traces.push({ ...dataTrace });
@@ -215,7 +217,11 @@ function generateTracesFromValues(indicator, i18n) {
       .sort((a, b) => (a.categories.length - b.categories.length));
     const cube = generateCube(dimensions, values);
     const dataTraces = getTraces(dimensions, cube);
-    dataTraces.forEach((trace) => traces.push({ ...trace, organization: indicator.organization }));
+    dataTraces.forEach((trace) => traces.push({
+      ...trace,
+      organization: indicator.organization,
+      dataType: 'dimension',
+    }));
   }
 
   return traces;
@@ -333,13 +339,13 @@ function IndicatorVisualisation({ indicatorId }) {
   const unitLabel = unit.name === 'no unit' ? '' : (unit.shortName || unit.name);
 
   const yRange = {
-    title: unitLabel,
+    unit: unitLabel,
     minDigits: 0,
     maxDigits: 0,
     includeZero: false,
     range: [],
   };
-  if (indicator?.quantity.name === 'päästöt') {
+  if (indicator?.quantity?.name === 'päästöt') {
     yRange.includeZero = true;
   }
   // If min and max values are set, do not use autorange
