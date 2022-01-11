@@ -143,7 +143,7 @@ function ActionCard(props) {
 
   const { mergedWith, implementationPhase } = action;
   const status = cleanActionStatus(action, plan.actionStatuses);
-  let statusText = status.name;
+  let statusText = status.name || '-';
 
   // if Action is set in one of the phases, create message accordingly
   if (implementationPhase) {
@@ -153,6 +153,8 @@ function ActionCard(props) {
     if (status.identifier === 'completed') statusText = status.name;
   }
 
+  const { primaryOrg } = action;
+
   return (
     <ActionLink action={action}>
       <StyledActionLink>
@@ -161,6 +163,12 @@ function ActionCard(props) {
             { iconUrl && (
               <CategoryIcon
                 src={iconUrl}
+                preserveAspectRatio="xMinYMid meet"
+              />
+            )}
+            { primaryOrg && (
+              <CategoryIcon
+                src="static/themes/default/icons/bullseye.svg"
                 preserveAspectRatio="xMinYMid meet"
               />
             )}

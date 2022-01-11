@@ -114,6 +114,10 @@ export const GET_ACTION_LIST = gql`
           }
         }
       }
+      primaryOrgs {
+        id
+        name
+      }
     }
     planActions(plan: $plan) {
       id
@@ -155,6 +159,11 @@ export const GET_ACTION_LIST = gql`
           abbreviation
           name
         }
+      }
+      primaryOrg {
+        id
+        abbreviation
+        name
       }
       contactPersons {
         id
@@ -214,7 +223,8 @@ const ActionListResults = (props) => {
     filters,
     onFilterChange,
     title,
-    leadContent } = props;
+    leadContent,
+    primaryOrgs } = props;
   const { t } = useTranslation('common');
   const plan = useContext(PlanContext);
   const displayDashboard = filters.view === 'dashboard';
@@ -276,6 +286,7 @@ const ActionListResults = (props) => {
   );
 
   function filterAction(item) {
+    if (filters.primaryOrganization && item.primaryOrg.id !== filters.primaryOrganization) return false;
     if (filters.organization) {
       let found = false;
       item.responsibleParties.forEach((rp) => {
@@ -343,6 +354,7 @@ const ActionListResults = (props) => {
                 <ActionListFilters
                   categoryTypes={catTypes}
                   orgs={orgs.filter(orgHasActions)}
+                  primaryOrgs={primaryOrgs}
                   impacts={impacts}
                   phases={phases}
                   schedules={schedules}
@@ -421,6 +433,7 @@ ActionListResults.getFiltersFromQuery = (query) => {
 
 ActionListResults.propTypes = {
   filters: PropTypes.shape({
+    primaryOrganization: PropTypes.string,
     organization: PropTypes.string,
     text: PropTypes.string,
     impact: PropTypes.string,
@@ -447,7 +460,7 @@ function Statusboard(props) {
   if (error) return <ErrorMessage message={t('error-loading-actions')} />;
 
   const { plan: loadedPlan, ...otherProps } = data;
-  const { categoryTypes } = loadedPlan;
+  const { categoryTypes, primaryOrgs } = loadedPlan;
 
   return (
     <ActionListResults
@@ -457,6 +470,7 @@ function Statusboard(props) {
       filters={filters}
       onFilterChange={onFilterChange}
       categoryTypes={categoryTypes}
+      primaryOrgs={primaryOrgs}
       {...otherProps}
     />
   );

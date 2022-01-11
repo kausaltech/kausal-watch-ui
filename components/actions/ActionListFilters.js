@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { Spring, Transition } from 'react-spring/renderprops.cjs';
 import {
-  Row, Col, Badge,
+  Row, Col, Badge, CloseButton,
 } from 'reactstrap';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -39,6 +39,8 @@ const FiltersList = styled.div`
 
 const StyledBadge = styled(Badge)`
   margin-bottom: ${(props) => props.theme.spaces.s050};
+  margin-right: ${(props) => props.theme.spaces.s050};
+  padding-left: 0;
   background-color: ${(props) => props.theme.brandDark};
   color: ${(props) => props.theme.themeColors.light};
   line-height: 1.25;
@@ -140,10 +142,9 @@ function ActionListFilterBadges({
           <StyledBadge
             className="mr-3"
             style={props}
+            color="primary"
           >
-            <Button close size="sm" onClick={makeCallback(item.identifier)} aria-label={t('remove-filter')}>
-              <span aria-hidden="true">x</span>
-            </Button>
+            <Button close size="sm" className="btn-close-white" onClick={makeCallback(item.identifier)} aria-label={t('remove-filter')} />
             { item.name?.trim() }
           </StyledBadge>
         )}
@@ -154,12 +155,26 @@ function ActionListFilterBadges({
 
 function ActionListFilters(props) {
   const {
-    filters, orgs, categoryTypes, impacts, actionCount, onChange, phases, schedules,
+    filters, orgs, primaryOrgs, categoryTypes, impacts, actionCount, onChange, phases, schedules,
   } = props;
   const { t } = useTranslation();
   const theme = useTheme();
   const sortedOrgs = generateSortedOrgTree(orgs.filter((org) => !org.parent), 0);
   const allFilters = [];
+
+  if (primaryOrgs.length) allFilters.push(
+    {
+      label: t('filter-primary-organization'),
+      showAllLabel: t('filter-all-organizations'),
+      md: 6,
+      lg: 4,
+      identifier: 'primaryOrganization',
+      options: primaryOrgs.map((org) => ({
+        id: org.id,
+        label: org.name,
+      })),
+    },
+  );
 
   allFilters.push({
     label: t('filter-organization'),
