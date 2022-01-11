@@ -121,6 +121,9 @@ const createTraces = (traces, unit, plotColors) => {
   const layoutConfig = {
     xaxis: {},
   };
+
+  const allXValues = [];
+
   const newTraces = traces.map((trace, idx) => {
     const modTrace = trace;
 
@@ -130,6 +133,8 @@ const createTraces = (traces, unit, plotColors) => {
       const digitCount = getSignificantDigitCount(value);
       if (digitCount > maxDigits) maxDigits = digitCount;
     });
+
+    allXValues.push(...trace.x);
 
     modTrace.line = {
       width: trace.dataType === 'total' ? 3 : 2,
@@ -158,9 +163,6 @@ const createTraces = (traces, unit, plotColors) => {
           color: plotColors.mainScale[idx % plotColors.mainScale.length],
         },
       };
-      if (trace.x.length < 4) {
-        layoutConfig.xaxis.tickvals = trace.x.sort();
-      }
     }
     modTrace.mode = (trace.x.length > 30) ? 'lines' : 'lines+markers';
     modTrace.line.color = plotColors.mainScale[idx % plotColors.mainScale.length];
@@ -173,6 +175,13 @@ const createTraces = (traces, unit, plotColors) => {
 
     return modTrace;
   });
+
+  if (layoutConfig.xaxis?.type !== 'category') {
+    const uniqueXValues = _.uniq(allXValues.sort(), true);
+    if (uniqueXValues.length < 4) {
+      layoutConfig.xaxis.tickvals = uniqueXValues;
+    }
+  }
 
   if (newTraces[newTraces.length - 1].xType === 'category') newTraces.shift();
   layoutConfig.maxDigits = maxDigits > 3 ? 3 : maxDigits;
@@ -226,9 +235,11 @@ const compare = (org1, org2, unit, plotColors) => {
     traces.push(cat.traces[1]);
   });
 
+  const hasSubplots = categoryTraces.length > 1;
+
   const subPlotRowCount = Math.ceil(categoryTraces.length / 2);
 
-  const subplotHeaders = org2.map((plot, idx) => {
+  const subplotHeaders = hasSubplots && org2.map((plot, idx) => {
     // Let us try to position annotations as headers for each of the subplots
     const column = (idx / 2) % 1;
     const row = Math.floor(idx / 2) / subPlotRowCount;
@@ -247,12 +258,14 @@ const compare = (org1, org2, unit, plotColors) => {
     };
   });
 
+  const grid = hasSubplots && { rows: subPlotRowCount, columns: 2, pattern: 'independent' };
+
   // const compareTo = createTraces(org2, plotColors);
   // const { traces: comparisonTraces } = compareTo;
   return {
     layoutConfig: {
       ...categoryTraces[0].layoutConfig,
-      grid: { rows: subPlotRowCount, columns: 2, pattern: 'independent' },
+      grid,
       subplotCount: categoryTraces.length,
       annotations: subplotHeaders,
       yRange,
@@ -261,6 +274,7 @@ const compare = (org1, org2, unit, plotColors) => {
   };
 };
 function IndicatorGraph(props) {
+  console.log(props);
   if (!process.browser) {
     return null;
   }
