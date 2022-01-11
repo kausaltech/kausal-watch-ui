@@ -205,6 +205,7 @@ function generateTracesFromValues(indicator, i18n) {
     x: mainValues.map((item) => item.date),
     name: traceName,
     organization: indicator.organization,
+    dataType: 'total',
   };
 
   traces.push({ ...dataTrace });
@@ -215,7 +216,11 @@ function generateTracesFromValues(indicator, i18n) {
       .sort((a, b) => (a.categories.length - b.categories.length));
     const cube = generateCube(dimensions, values);
     const dataTraces = getTraces(dimensions, cube);
-    dataTraces.forEach((trace) => traces.push({ ...trace, organization: indicator.organization }));
+    dataTraces.forEach((trace) => traces.push({
+      ...trace,
+      organization: indicator.organization,
+      dataType: 'dimension',
+    }));
   }
 
   return traces;
@@ -358,6 +363,7 @@ function IndicatorVisualisation({ indicatorId }) {
     plotTitle = indicator.name;
   }
 
+  console.log(data);
   /// Process data for data traces
   const traces = generateTracesFromValues(indicator, i18n);
   const goalTraces = generateGoalTraces(indicator, scenarios, i18n);

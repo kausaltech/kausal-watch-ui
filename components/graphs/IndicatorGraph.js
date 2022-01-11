@@ -107,14 +107,13 @@ const createTraces = (traces, plotColors) => {
 
   if (!traces.length) return [];
 
-  // we have dimensions so hide the main (total) trace
   const layoutConfig = {
     xaxis: {},
   };
   const newTraces = traces.map((trace, idx) => {
     const modTrace = trace;
     modTrace.line = {
-      width: 2,
+      width: trace.dataType === 'total' ? 3 : 2,
       shape: 'spline',
       smoothing: 0.7,
     };
@@ -285,6 +284,7 @@ function IndicatorGraph(props) {
     ],
   };
 
+  console.log('traces', traces);
   let mainTraces = [];
   const isComparison = comparison && comparison.traces.length > 0;
 
