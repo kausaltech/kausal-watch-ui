@@ -19,6 +19,7 @@ const createLayout = (
   config,
 ) => {
   const fontFamily = '-apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Ubuntu, roboto, noto, arial, sans-serif';
+  const hasCategories = config.xType === 'category';
 
   const yaxes = {
     yaxis: {
@@ -54,21 +55,30 @@ const createLayout = (
     yaxes[`yaxis${y}`] = yaxes.yaxis;
   }
 
-  const xaxes = {
-    xaxis: {
-      showgrid: false,
-      showline: false,
-      // domain: [0.01, 1],
-      type: timeResolution === 'YEAR' ? 'linear' : 'date',
-      fixedrange: false,
-      tickformat: timeResolution === 'YEAR' ? 'd' : '%d.%m.%Y',
-      tickmode: null,
-      tickfont: {
-        family: fontFamily,
-        size: 14,
+  const xaxes = hasCategories
+    ? {
+      xaxis: {
+        type: 'category',
+        tickfont: {
+          family: fontFamily,
+          size: 14,
+        },
       },
-    },
-  };
+    }
+    : {
+      xaxis: {
+        showgrid: false,
+        showline: false,
+        type: timeResolution === 'YEAR' ? 'linear' : 'date',
+        fixedrange: false,
+        tickformat: timeResolution === 'YEAR' ? 'd' : '%d.%m.%Y',
+        tickmode: null,
+        tickfont: {
+          family: fontFamily,
+          size: 14,
+        },
+      },
+    };
 
   // copy x-axis settings to all subplots
   for (let x = 2; x <= config.subplotCount; x += 1) {
@@ -85,7 +95,7 @@ const createLayout = (
     },
     ...yaxes,
     ...xaxes,
-    barmode: 'group',
+    barmode: hasCategories && 'group',
     autosize: true,
     colorway: plotColors.mainScale,
     font: { family: fontFamily, size: 12 },
@@ -116,6 +126,7 @@ const createTraces = (traces, unit, plotColors) => {
   // and define trace and layout setup accordingly
   // First trace is always main/total
 
+  // console.log(traces);
   if (!traces.length) return [];
   let maxDigits = 0;
   const layoutConfig = {
@@ -126,7 +137,6 @@ const createTraces = (traces, unit, plotColors) => {
 
   const newTraces = traces.map((trace, idx) => {
     const modTrace = trace;
-
     trace.y.forEach((value) => {
       // Determine the highest number of significant digits in the dataset
       // to be able to set suitable number formating.
@@ -136,11 +146,6 @@ const createTraces = (traces, unit, plotColors) => {
 
     allXValues.push(...trace.x);
 
-    modTrace.line = {
-      width: trace.dataType === 'total' ? 3 : 2,
-      shape: 'spline',
-      smoothing: 0.7,
-    };
     // we have multiple categories in one time point - draw bar groups
     if (trace.xType === 'category') {
       modTrace.type = 'bar';
@@ -154,6 +159,12 @@ const createTraces = (traces, unit, plotColors) => {
     // we have multiple categories as time series - draw lines and markers
     if (trace.xType === 'time') {
       modTrace.type = 'scatter';
+      modTrace.line = {
+        width: trace.dataType === 'total' ? 3 : 2,
+        shape: 'spline',
+        smoothing: 0.7,
+        color: plotColors.mainScale[idx % plotColors.mainScale.length],
+      };
       modTrace.marker = {
         size: 6,
         symbol: plotColors.symbols[idx % plotColors.symbols.length],
@@ -164,15 +175,13 @@ const createTraces = (traces, unit, plotColors) => {
         },
       };
     }
-    modTrace.mode = (trace.x.length > 30) ? 'lines' : 'lines+markers';
-    modTrace.line.color = plotColors.mainScale[idx % plotColors.mainScale.length];
+    if (modTrace.type === 'scatter') modTrace.mode = (trace.x.length > 30) ? 'lines' : 'lines+markers';
     modTrace.hovertemplate = `(%{x}) ${trace.name}: %{y} ${unit}`;
     modTrace.hoverinfo = 'none';
     modTrace.hoverlabel = {
       bgcolor: plotColors.mainScale[idx % plotColors.mainScale.length],
       namelength: 0,
     };
-
     return modTrace;
   });
 
@@ -181,9 +190,11 @@ const createTraces = (traces, unit, plotColors) => {
     if (uniqueXValues.length < 4) {
       layoutConfig.xaxis.tickvals = uniqueXValues;
     }
+  } else {
+    // remove total trace if we have a category axis
+    newTraces.shift();
   }
 
-  if (newTraces[newTraces.length - 1].xType === 'category') newTraces.shift();
   layoutConfig.maxDigits = maxDigits > 3 ? 3 : maxDigits;
 
   return {
@@ -215,6 +226,7 @@ const compare = (org1, org2, unit, plotColors) => {
       },
     ];
   });
+
   // TODO: Hack for demo - we are dealing with percentages so figure out a nice percentage range
   if (yRange[0] > 45) {
     yRange[0] = 45;
@@ -231,8 +243,7 @@ const compare = (org1, org2, unit, plotColors) => {
   const categoryTraces = categoryPlots.map((plot) => createTraces(plot, unit, plotColors));
 
   categoryTraces.forEach((cat) => {
-    traces.push(cat.traces[0]);
-    traces.push(cat.traces[1]);
+    traces.push(...cat.traces);
   });
 
   const hasSubplots = categoryTraces.length > 1;
@@ -269,12 +280,12 @@ const compare = (org1, org2, unit, plotColors) => {
       subplotCount: categoryTraces.length,
       annotations: subplotHeaders,
       yRange,
+      xType: traces[traces.length - 1].xType,
     },
     traces,
   };
 };
 function IndicatorGraph(props) {
-  console.log(props);
   if (!process.browser) {
     return null;
   }

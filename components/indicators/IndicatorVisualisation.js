@@ -200,16 +200,14 @@ function generateTracesFromValues(indicator, i18n) {
   const traceName = (indicator.quantity && !dimensionedValues.length)
     ? capitalize(indicator.quantity.name) : capitalize(i18n.t('total'));
 
-  const dataTrace = {
+  traces.push({
     xType: 'time',
     y: mainValues.map((item) => item.value),
     x: mainValues.map((item) => item.date),
     name: traceName,
     organization: indicator.organization,
     dataType: 'total',
-  };
-
-  traces.push({ ...dataTrace });
+  });
 
   // Add trace data for dimensions
   if (indicator.dimensions.length && dimensionedValues.length) {
