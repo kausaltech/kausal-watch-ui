@@ -154,7 +154,7 @@ const createTraces = (traces, unit, plotColors) => {
         symbol: plotColors.symbols[idx % plotColors.symbols.length],
         color: '#ffffff',
         line: {
-          width: 3,
+          width: 2,
           color: plotColors.mainScale[idx % plotColors.mainScale.length],
         },
       };
@@ -165,6 +165,12 @@ const createTraces = (traces, unit, plotColors) => {
     modTrace.mode = (trace.x.length > 30) ? 'lines' : 'lines+markers';
     modTrace.line.color = plotColors.mainScale[idx % plotColors.mainScale.length];
     modTrace.hovertemplate = `(%{x}) ${trace.name}: %{y} ${unit}`;
+    modTrace.hoverinfo = 'none';
+    modTrace.hoverlabel = {
+      bgcolor: plotColors.mainScale[idx % plotColors.mainScale.length],
+      namelength: 0,
+    };
+
     return modTrace;
   });
 
@@ -345,7 +351,7 @@ function IndicatorGraph(props) {
           color: plotColors.goalScale[idx % plotColors.goalScale.length],
         },
         opacity: 0.7,
-        hoverinfo: 'x+y',
+        hoverinfo: 'none',
         hovertemplate: `(%{x}) ${goalTrace.name}: %{y} ${yRange.unit}`,
         hoverlabel: {
           namelength: 0,

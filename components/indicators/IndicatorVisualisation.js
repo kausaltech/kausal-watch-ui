@@ -197,10 +197,9 @@ function generateTracesFromValues(indicator, i18n) {
   const mainValues = values.filter((item) => !item.categories.length);
 
   // If we have dimensions, call main historical series 'Total'
-  let traceName = indicator.quantity ? capitalize(indicator.quantity.name) : null;
-  if (dimensionedValues.length) {
-    traceName = capitalize(i18n.t('total'));
-  }
+  const traceName = (indicator.quantity && !dimensionedValues.length)
+    ? capitalize(indicator.quantity.name) : capitalize(i18n.t('total'));
+
   const dataTrace = {
     xType: 'time',
     y: mainValues.map((item) => item.value),
@@ -346,7 +345,7 @@ function IndicatorVisualisation({ indicatorId }) {
     includeZero: false,
     range: [],
   };
-  if (indicator?.quantity.name === 'päästöt') {
+  if (indicator?.quantity?.name === 'päästöt') {
     yRange.includeZero = true;
   }
   // If min and max values are set, do not use autorange
