@@ -195,6 +195,8 @@ function generateTracesFromValues(indicator, i18n) {
 
   // Draw the main historical series (non-dimensioned)
   const mainValues = values.filter((item) => !item.categories.length);
+
+  // If we have dimensions, call main historical series 'Total'
   let traceName = indicator.quantity ? capitalize(indicator.quantity.name) : null;
   if (dimensionedValues.length) {
     traceName = capitalize(i18n.t('total'));
@@ -338,7 +340,7 @@ function IndicatorVisualisation({ indicatorId }) {
   const unitLabel = unit.name === 'no unit' ? '' : (unit.shortName || unit.name);
 
   const yRange = {
-    title: unitLabel,
+    unit: unitLabel,
     minDigits: 0,
     maxDigits: 0,
     includeZero: false,
@@ -363,7 +365,6 @@ function IndicatorVisualisation({ indicatorId }) {
     plotTitle = indicator.name;
   }
 
-  console.log(data);
   /// Process data for data traces
   const traces = generateTracesFromValues(indicator, i18n);
   const goalTraces = generateGoalTraces(indicator, scenarios, i18n);

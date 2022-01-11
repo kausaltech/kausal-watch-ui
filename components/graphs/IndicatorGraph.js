@@ -6,6 +6,8 @@ import styled from 'styled-components';
 import { useTranslation } from 'common/i18n';
 import { useTheme } from 'common/theme';
 
+const log10 = Math.log(10);
+
 const PlotContainer = styled.div`
   height: ${(props) => props.vizHeight}px;
 `;
@@ -17,9 +19,10 @@ const createLayout = (
   config,
 ) => {
   const fontFamily = '-apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Ubuntu, roboto, noto, arial, sans-serif';
+
   const yaxes = {
     yaxis: {
-      hoverformat: `${yRange.maxDigits === 0 ? '' : '.'}${yRange.maxDigits}r`,
+      hoverformat: `${config.maxDigits === 0 ? '' : '.'}${config.maxDigits}r`,
       separatethousands: true,
       fixedrange: true,
       tickfont: {
@@ -30,7 +33,7 @@ const createLayout = (
   };
 
   // Define y-axis range
-  yaxes.yaxis.title = yRange.title;
+  yaxes.yaxis.title = yRange.unit;
   if (yRange.includeZero) {
     yaxes.yaxis.rangemode = 'tozero';
   }
@@ -100,18 +103,34 @@ const createLayout = (
   return newLayout;
 };
 
-const createTraces = (traces, plotColors) => {
+function getSignificantDigitCount(n) {
+  let val = Math.abs(String(n).replace('.', '')); // remove decimal and make positive
+  if (val === 0) return 0;
+  while (val !== 0 && val % 10 === 0) val /= 10; // kill the 0s at the end of n
+
+  return Math.floor(Math.log(val) / log10) + 1; // get number of digits
+}
+
+const createTraces = (traces, unit, plotColors) => {
   // Figure out what we need to draw depending on dataset
   // and define trace and layout setup accordingly
   // First trace is always main/total
 
   if (!traces.length) return [];
-
+  let maxDigits = 0;
   const layoutConfig = {
     xaxis: {},
   };
   const newTraces = traces.map((trace, idx) => {
     const modTrace = trace;
+
+    trace.y.forEach((value) => {
+      // Determine the highest number of significant digits in the dataset
+      // to be able to set suitable number formating.
+      const digitCount = getSignificantDigitCount(value);
+      if (digitCount > maxDigits) maxDigits = digitCount;
+    });
+
     modTrace.line = {
       width: trace.dataType === 'total' ? 3 : 2,
       shape: 'spline',
@@ -145,10 +164,12 @@ const createTraces = (traces, plotColors) => {
     }
     modTrace.mode = (trace.x.length > 30) ? 'lines' : 'lines+markers';
     modTrace.line.color = plotColors.mainScale[idx % plotColors.mainScale.length];
+    modTrace.hovertemplate = `(%{x}) ${trace.name}: %{y} ${unit}`;
     return modTrace;
   });
 
   if (newTraces[newTraces.length - 1].xType === 'category') newTraces.shift();
+  layoutConfig.maxDigits = maxDigits > 3 ? 3 : maxDigits;
 
   return {
     layoutConfig,
@@ -156,7 +177,7 @@ const createTraces = (traces, plotColors) => {
   };
 };
 
-const compare = (org1, org2, plotColors) => {
+const compare = (org1, org2, unit, plotColors) => {
   const yRange = [];
   const categoryPlots = org2.map((toCat, idx) => {
     const fromCat = org1.find((cat) => cat.name === toCat.name);
@@ -192,7 +213,7 @@ const compare = (org1, org2, plotColors) => {
   }
 
   const traces = [];
-  const categoryTraces = categoryPlots.map((plot) => createTraces(plot, plotColors));
+  const categoryTraces = categoryPlots.map((plot) => createTraces(plot, unit, plotColors));
 
   categoryTraces.forEach((cat) => {
     traces.push(cat.traces[0]);
@@ -284,13 +305,12 @@ function IndicatorGraph(props) {
     ],
   };
 
-  console.log('traces', traces);
   let mainTraces = [];
   const isComparison = comparison && comparison.traces.length > 0;
 
   if (isComparison) {
-    mainTraces = compare(traces, comparison.traces, plotColors);
-  } else mainTraces = createTraces(traces, plotColors);
+    mainTraces = compare(traces, comparison.traces, yRange.unit, plotColors);
+  } else mainTraces = createTraces(traces, yRange.unit, plotColors);
 
   const { layoutConfig, traces: plotlyData } = mainTraces;
 
@@ -326,7 +346,7 @@ function IndicatorGraph(props) {
         },
         opacity: 0.7,
         hoverinfo: 'x+y',
-        hovertemplate: `%{x}: %{y} ${yRange.title} ${goalTrace.name}`,
+        hovertemplate: `(%{x}) ${goalTrace.name}: %{y} ${yRange.unit}`,
         hoverlabel: {
           namelength: 0,
           bgcolor: '#fff',
