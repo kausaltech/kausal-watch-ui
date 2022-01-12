@@ -114,6 +114,11 @@ export const GET_ACTION_LIST = gql`
           }
         }
       }
+      primaryOrgs {
+        id
+        abbreviation
+        name
+      }
     }
     planActions(plan: $plan) {
       id
@@ -154,6 +159,16 @@ export const GET_ACTION_LIST = gql`
           id
           abbreviation
           name
+        }
+      }
+      primaryOrg {
+        id
+        abbreviation
+        name
+        logo {
+          rendition(size: "128x128", crop: false) {
+            src
+          }
         }
       }
       contactPersons {
@@ -214,7 +229,8 @@ const ActionListResults = (props) => {
     filters,
     onFilterChange,
     title,
-    leadContent } = props;
+    leadContent,
+    primaryOrgs } = props;
   const { t } = useTranslation('common');
   const plan = useContext(PlanContext);
   const displayDashboard = filters.view === 'dashboard';
@@ -276,6 +292,7 @@ const ActionListResults = (props) => {
   );
 
   function filterAction(item) {
+    if (filters.primaryOrg && item.primaryOrg.id !== filters.primaryOrg) return false;
     if (filters.organization) {
       let found = false;
       item.responsibleParties.forEach((rp) => {
@@ -325,6 +342,8 @@ const ActionListResults = (props) => {
   const phases = plan.actionImplementationPhases;
   const schedules = plan.actionSchedules;
 
+  const groupBy = (primaryOrgs.length && filters.category_action) ? 'primaryOrg' : 'category';
+
   return (
     <>
       <ActionListSection id="actions">
@@ -343,6 +362,7 @@ const ActionListResults = (props) => {
                 <ActionListFilters
                   categoryTypes={catTypes}
                   orgs={orgs.filter(orgHasActions)}
+                  primaryOrgs={primaryOrgs}
                   impacts={impacts}
                   phases={phases}
                   schedules={schedules}
@@ -402,7 +422,10 @@ const ActionListResults = (props) => {
         </div>
         <div id="dashboard-view" role="tabpanel" tabIndex="0" aria-labelledby="dashboard-tab" hidden={displayDashboard}>
           { !displayDashboard && (
-            <ActionCardList actions={filteredActions} />
+            <ActionCardList
+              actions={filteredActions}
+              groupBy={groupBy}
+            />
           )}
         </div>
       </Container>
@@ -421,6 +444,7 @@ ActionListResults.getFiltersFromQuery = (query) => {
 
 ActionListResults.propTypes = {
   filters: PropTypes.shape({
+    primaryOrg: PropTypes.string,
     organization: PropTypes.string,
     text: PropTypes.string,
     impact: PropTypes.string,
@@ -447,7 +471,7 @@ function Statusboard(props) {
   if (error) return <ErrorMessage message={t('error-loading-actions')} />;
 
   const { plan: loadedPlan, ...otherProps } = data;
-  const { categoryTypes } = loadedPlan;
+  const { categoryTypes, primaryOrgs } = loadedPlan;
 
   return (
     <ActionListResults
@@ -457,6 +481,7 @@ function Statusboard(props) {
       filters={filters}
       onFilterChange={onFilterChange}
       categoryTypes={categoryTypes}
+      primaryOrgs={primaryOrgs}
       {...otherProps}
     />
   );

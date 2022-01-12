@@ -1,125 +1,128 @@
-front-page: Framsida
-indicators: Indikatorer
-actions: Åtgärder
+accessibility: Tillganglighetsredogorelse
 action: Åtgärd
+actions: Åtgärder
+actions-as-list: Som en lista
+active-filters: Aktiva filter
+admin-login: Administratör
+back-to-top: Tillbaka till toppen
+bar-goal: Mål
+browse-actions: Bläddra bland åtgärder
+close: Stäng
+contact: Kontakta oss
+contact-info: Kontaktinformation
+contact-person-main: Huvudkontaktperson
+contact-persons: Kontaktpersoner
+contact-persons-missing: Inga namngivna kontaktpersoner
+copied-to-clipboard: Kopierad!
+copy-to-clipboard: Kopiera länk till urklipp
+current-trend: trend
 dashboard: Instrumentbräda
-dashboard-tabs: Utsläppsminskningspotential dividerat efter kategori
 dashboard-segment-description: Åtgärder andel av minskningspotential
-operational: Driftsindikator
-tactical: Taktisk indikator
-strategic: Strategisk indikator
-recently-updated-actions: Nyligen uppdaterade handlingar
-see-all-actions: Se alla handlingar
-recently-updated-indicators: Nyligen uppdaterade indikatorer
-see-all-indicators: Se alla indikatorer
-instance-type-testing-label: Testning
-instance-type-testing-message: Detta är en testversion av tjänsten (under uppbyggnad)
-instance-type-development-label: Utveckling
-instance-type-development-message: Detta är en utvecklingsversion av tjänsten
+dashboard-tabs: Utsläppsminskningspotential dividerat efter kategori
+email: E-post
+error-email-format: Ange en giltig e-postadress
+error-feedback-required: Feedback krävs
+error-loading-actions: Fel vid inläsning av åtgärdslistan
+error-loading-indicators: Fel vid inläsning av indikatorlistan
+error-occurred: Fel inträffade
+error-with-code: Felkod
+feedback: Respons
+feedback-description: >-
+  Upptäckte du något som inte fungerar? Eller har du idéer om något vi kan
+  förbättra?
+feedback-error-content: Något gick fel och din feedback mottogs inte. Försök igen om ett ögonblick.
+feedback-error-header: Fel när meddelandet skickades
+feedback-prompt: Meddela oss genom att fylla i och skicka det här formuläret.
+feedback-thankyou-content: Tack för att du tog dig tid att ge oss feedback. Det är verkligen bra.
+feedback-thankyou-header: Respons mottagen
+filter-all-categories: Alla kategorier
+filter-all-emission-scopes: Inget utsläppsfilter
+filter-all-impacts: Inget slagfilter
+filter-all-organizations: Alla organisationer
+filter-all-phases: Inget fasfilter
+filter-all-schedules: All tidsramar
+filter-category: Filtrera efter tema
+filter-emission-scope: Filtrera efter utsläpp
+filter-impact: Filtrera efter påverkan
+filter-organization: Filtrera efter organisation
+filter-phase: Filtrera efter fas
+filter-primary-organization: Filtera efter primär organisation
+filter-result-actions: åtgärder
+filter-schedule: Tidsram
+filter-text: Textsökning
+filter-text-default: Sök från rubriker
+filter-text-description: Sök från beskrivningar
+forecast: prognos
+frequently-asked-questions: Vanliga frågor
+front-page: Framsida
+funding-instrument: >-
+  Helsinki Climate Watch har fått finansiering från Europeiska unionens EIT
+  Climate-KIC-program.
+give-feedback: Ge respons
+goal: mål
+graph: Graf
+image-credit: Bild
+impact: påverkan
+impact-group-no-actions: Inga definierade handlingar.
+impact-group-others: ''
+impact-group.others: Andra
+indicator-affected-by: Denna indikator påverkas av
+indicator-also-for-actions: Påverkas också av
+indicator-goal: Mål
+indicator-graph-not-accessible: Data diagram tillgänglig version är ännu inte tillgänglig
+indicator-has-effect-on: Denna indikator har effekt på
+indicator-latest-value: Senaste värdet
+indicator-legend-result: Utfall
+indicator-more-information: Mer information
+indicator-no-values: Inga värden
+indicator-not-found: Indikator hittades inte
+indicator-related-actions: Åtgärderna som påverkar denna indikator
+indicator-resolution-years: år
+indicator-time-no-goals: Inga mål
+indicator-time-to-goal: Dags till mål
+indicators: Indikatorer
+indicators-as-insight: Som insikter
+indicators-as-list: Som en lista
 insight-download-label: Ladda ner
 insight-download-png: Bild (png)
 insight-filter-label: Filtrera efter indikator
 insight-filter-no-results: Inga resultat
-indicators-as-list: Som en lista
-indicators-as-insight: Som insikter
-goal: mål
-forecast: prognos
-current-trend: trend
+instance-type-development-label: Utveckling
+instance-type-development-message: Detta är en utvecklingsversion av tjänsten
+instance-type-testing-label: Testning
+instance-type-testing-message: Detta är en testversion av tjänsten (under uppbyggnad)
+loading: Läser in
+name: Namn
+nav-menu-close: Stäng meny
+nav-menu-open: Meny
+next: Nästa
+no-graph: Inget diagram
+operational: Driftsindikator
+over-x-days: Över {{days}} dagar
+page-not-found: Sidan hittas inte
 percent-point-abbreviation: p.p.
+previous: Tidigare
+published-on: Publicerad på
+read-more: Läs mer
+recently-updated-actions: Nyligen uppdaterade handlingar
+recently-updated-indicators: Nyligen uppdaterade indikatorer
+reduced: Minskad
+remove-filter: Ta bort filtret
+required-field: Obligatorisk
 responsible-parties: Ansvariga organisationer
 responsible-parties-missing: Inga namngivna ansvariga organisationer
 responsible-party-main: Huvudansvarig
-contact-persons: Kontaktpersoner
-contact-persons-missing: Inga namngivna kontaktpersoner
-contact-person-main: Huvudkontaktperson
-contact-info: Kontaktinformation
-email: E-post
-previous: Tidigare
-next: Nästa
-impact: påverkan
-filter-category: Filtrera efter tema
-filter-all-categories: Alla kategorier
-filter-all-emission-scopes: Inget utsläppsfilter
-filter-all-organizations: Alla organisationer
-filter-all-impacts: Inget slagfilter
-filter-all-phases: Inget fasfilter
-filter-organization: Filtrera efter organisation
-filter-emission-scope: Filtrera efter utsläpp
-filter-impact: Filtrera efter påverkan
-filter-phase: Filtrera efter fas
-filter-text: Textsökning
-filter-text-default: Sök från rubriker
-filter-text-description: Sök från beskrivningar
-filter-result-actions: åtgärder
-filter-schedule: Tidsram
-filter-all-schedules: All tidsramar
-browse-actions: Bläddra bland åtgärder
-funding-instrument: >-
-  Helsinki Climate Watch har fått finansiering från Europeiska unionens EIT
-  Climate-KIC-program.
-error-loading-actions: Fel vid inläsning av åtgärdslistan
-error-loading-indicators: Fel vid inläsning av indikatorlistan
-indicator-related-actions: Åtgärderna som påverkar denna indikator
-indicator-affected-by: Denna indikator påverkas av
-indicator-has-effect-on: Denna indikator har effekt på
-indicator-not-found: Indikator hittades inte
-indicator-latest-value: Senaste värdet
-indicator-more-information: Mer information
-indicator-no-values: Inga värden
-indicator-goal: Mål
-indicator-time-to-goal: Dags till mål
-indicator-time-no-goals: Inga mål
-indicator-resolution-years: år
-indicator-also-for-actions: Påverkas också av
-indicator-graph-not-accessible: Data diagram tillgänglig version är ännu inte tillgänglig
-type: Typ
-name: Namn
-themes: Teman
-graph: Graf
-no-graph: Inget diagram
-loading: Läser in
-impact-group-no-actions: Inga definierade handlingar.
-impact-group.others: Andra
-published-on: Publicerad på
-supported-by: Stöds av
-back-to-top: Tillbaka till toppen
-contact: Kontakta oss
-feedback: Respons
-give-feedback: Ge respons
-feedback-description: >-
-  Upptäckte du något som inte fungerar? Eller har du idéer om något vi kan
-  förbättra?
-feedback-prompt: Meddela oss genom att fylla i och skicka det här formuläret.
-feedback-thankyou-header: Respons mottagen
-feedback-thankyou-content: Tack för att du tog dig tid att ge oss feedback. Det är verkligen bra.
-feedback-error-header: Fel när meddelandet skickades
-feedback-error-content: Något gick fel och din feedback mottogs inte. Försök igen om ett ögonblick.
-error-feedback-required: Feedback krävs
-error-email-format: Ange en giltig e-postadress
-accessibility: Tillganglighetsredogorelse
-copy-to-clipboard: Kopiera länk till urklipp
-copied-to-clipboard: Kopierad!
-nav-menu-close: Stäng meny
-nav-menu-open: Meny
-page-not-found: Sidan hittas inte
-skip-to-content: Hoppa till huvudinnehåll
 search: Sök
-active-filters: Aktiva filter
-remove-filter: Ta bort filtret
-required-field: Obligatorisk
+see-all-actions: Se alla handlingar
+see-all-indicators: Se alla indikatorer
 send: Skicka
-close: Stäng
-unknown: Tuntematon
-under-x-days: 'Lägre som {{days}} dagar'
-over-x-days: 'Över {{days}} dagar'
-frequently-asked-questions: Vanliga frågor
-actions-as-list: Som en lista
-reduced: Minskad
+skip-to-content: Hoppa till huvudinnehåll
+strategic: Strategisk indikator
+supported-by: Stöds av
+tactical: Taktisk indikator
+themes: Teman
 to-reduce: Kvar för att minska
-bar-goal: Mål
-admin-login: Administratör
-error-with-code: Felkod
-error-occurred: Fel inträffade
-indicator-legend-result: Utfall
-read-more: Läs mer
-image-credit: Bild
+total: ''
+type: Typ
+under-x-days: Lägre som {{days}} dagar
+unknown: Tuntematon
