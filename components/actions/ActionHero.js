@@ -32,6 +32,17 @@ const ActionBgImage = styled.div`
   background-blend-mode: multiply;
 `;
 
+const PrimaryOrg = styled.div`
+  margin-bottom: ${(props) => props.theme.spaces.s100};
+  padding-bottom: ${(props) => props.theme.spaces.s100};
+  border-bottom: 1px solid #eeeeee;
+`;
+
+const OrgLogo = styled.img`
+  height: ${(props) => props.theme.spaces.s300};
+  margin-right: ${(props) => props.theme.spaces.s100};
+`;
+
 const HeroCardBg = styled.div`
   overflow: hidden;
   margin-bottom: -${(props) => props.theme.spaces.s400};
@@ -187,6 +198,7 @@ function ActionHero(props) {
     imageCredit,
     imageTitle,
     hideActionIdentifiers,
+    primaryOrg,
   } = props;
   const theme = useTheme();
   const { t } = useTranslation();
@@ -215,6 +227,16 @@ function ActionHero(props) {
               <Col lg={8}>
                 <HeroCardBg>
                   <CardContent>
+                    { primaryOrg && (
+                      <PrimaryOrg>
+                        { primaryOrg.logo && (
+                        <OrgLogo
+                          src={primaryOrg.logo.rendition.src}
+                        />
+                        )}
+                        <strong><ActionListLink query={{ primaryOrg: primaryOrg.id }}>{ primaryOrg.abbreviation || primaryOrg.name }</ActionListLink></strong>
+                      </PrimaryOrg>
+                    ) }
                     <ActionsNav aria-label="Actions Pager">
                       <ActionListLink>
                         <a href>

@@ -1,46 +1,47 @@
-emission-scopes: Emission scopes
+action-as-in-plan: Description from the original plan
+action-completion-percentage: Completion
+action-continuous: Continous
+action-description: Description
+action-description-official: Official description
 action-id: Id
 action-identifier: Identifier
-action-not-found: Action not found
-action-continuous: Continous
-action-description-official: Official description
-action-description: Description
-action-as-in-plan: Description from the original plan
-action-what-effect-this-has: How this action contributes to the outcome?
-action-meta-header: Summary and contacts
-action-tasks: Tasks
-action-tasks-count: tasks
-action-no-tasks: No tasks
-action-tasks-done: What has been done?
-action-tasks-todo: What's left to do?
-action-task-done: Done
-action-task-todo: Todo
-action-tasks-todo-empty: No to-dos
-action-status-updates: Latest updates
+action-impact: Impact
+action-implementation-phase: Implementation phase
 action-last-updated: Information updated
-action-timeline: Timeline
-action-timeline-between: Timeframe between
+action-merged: Merged actions
+action-meta-header: Summary and contacts
+action-monitoring: Monitoring
+action-name-title: Action theme
+action-next: Next action
+action-no-tasks: No tasks
+action-not-found: Action not found
+action-num: '#'
+action-percent-ready: ready
+action-previous: Previous action
 action-progress: Progress
 action-responsibles-short: Responsibles
-action-implementation-phase: Implementation phase
-action-percent-ready: ready
-action-num: '#'
-action-name-title: Action theme
-action-impact: Impact
-action-monitoring: Monitoring
-action-merged: Merged actions
-action-status-undefined: No status
+action-start-date: Start date
 action-status-merged: Merged with action
 action-status-reason: Reason
-action-start-date: Start date
-action-previous: Previous action
-action-next: Next action
-not-being-monitored: Not monitored
-not-being-implemented: Not being implemented
-action-completion-percentage: Completion
+action-status-undefined: No status
+action-status-updates: Latest updates
+action-task-done: Done
+action-task-todo: Todo
+action-tasks: Tasks
+action-tasks-count: tasks
+action-tasks-done: What has been done?
+action-tasks-todo: What's left to do?
+action-tasks-todo-empty: No to-dos
+action-timeline: Timeline
+action-timeline-between: Timeframe between
+action-what-effect-this-has: How this action contributes to the outcome?
 actions-phases: Actions in phases
 actions-phases-help: Amount of ongoing and completed actions
 actions-status: Actions in status
 actions-status-help: Proportion of actions that are on schedule
 actions-updated: Active actions last updated
 actions-updated-help: Proportion of actions that have been updated within two months
+emission-scopes: Emission scopes
+no-defined-indicators: ''
+not-being-implemented: Not being implemented
+not-being-monitored: Not monitored

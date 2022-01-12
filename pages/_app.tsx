@@ -83,6 +83,9 @@ const GET_PLAN = gql`
       impactGroups {
         id
       }
+      primaryOrgs {
+        id
+      }
       generalContent {
         id
         siteTitle

@@ -27,14 +27,15 @@ const ActionGroup = styled(Row)`
   }
 `;
 
-function ActionCardList({ actions }) {
-  const theme = useTheme();
-  let groups = [];
+const groupActions = (groupBy, actions, theme) => {
   const groupMap = {};
+  const groups = [];
   const noGroupItems = [];
 
   actions.forEach((action) => {
-    const cat = action.rootCategory;
+    let cat;
+    if (groupBy === 'primaryOrg') cat = action.primaryOrg;
+    else cat = action.rootCategory;
     let group;
 
     if (!cat) {
@@ -46,9 +47,9 @@ function ActionCardList({ actions }) {
     } else {
       group = {
         id: cat.id,
-        displayIdentifier: `${theme.settings.categories.showIdentifiers ? cat.identifier : ''}`,
+        displayIdentifier: `${(cat.identifier && theme.settings.categories.showIdentifiers) ? cat.identifier : ''}`,
         name: cat.name,
-        identifier: cat.identifier,
+        identifier: cat.identifier || cat.name,
         elements: [],
       };
       groupMap[cat.id] = group;
@@ -56,7 +57,22 @@ function ActionCardList({ actions }) {
     }
     group.elements.push(action);
   });
-  groups = groups.sort((g1, g2) => g1.identifier - g2.identifier);
+
+  if (noGroupItems.length) groups.push({
+    id: 'zzzz',
+    displayIdentifier: '',
+    name: '',
+    identifier: 'zzzz',
+    elements: noGroupItems,
+  });
+
+  return groups.sort((g1, g2) => (`${g1.identifier}`).localeCompare(g2.identifier));
+};
+function ActionCardList(props) {
+  const { actions, groupBy } = props;
+  const theme = useTheme();
+
+  const groups = groupActions(groupBy, actions, theme);
 
   return (
     <ActionsList role="list">
@@ -89,30 +105,17 @@ function ActionCardList({ actions }) {
           ))}
         </ActionGroup>
       ))}
-      {noGroupItems && (
-        <ActionGroup key="default" role="group">
-          {noGroupItems.map((item) => (
-            <Col
-              xs="6"
-              sm="4"
-              lg="3"
-              xl="2"
-              key={item.id}
-              className="mb-4 d-flex align-items-stretch"
-              style={{ transition: 'all 0.5s ease' }}
-              role="listitem"
-            >
-              <ActionCard action={item} />
-            </Col>
-          ))}
-        </ActionGroup>
-      )}
     </ActionsList>
   );
 }
 
+ActionCardList.defaultProps = {
+  groupBy: 'category',
+};
+
 ActionCardList.propTypes = {
   actions: PropTypes.arrayOf(PropTypes.object).isRequired,
+  groupBy: PropTypes.string,
 };
 
 export default ActionCardList;

@@ -1,127 +1,130 @@
-front-page: Front Page
-indicators: Indicators
-actions: Actions
+accessibility: Accessibility
 action: Action
+actions: Actions
+actions-as-list: As a list
+active-filters: Active filters
+admin-login: Admin login
+back-to-top: Back to top
+bar-goal: Goal
+browse-actions: Browse actions
+close: Close
+contact: Contact
+contact-info: Contact information
+contact-person-main: Main contact person
+contact-persons: Contact persons
+contact-persons-missing: No named contact persons
+copied-to-clipboard: Copied!
+copy-to-clipboard: Copy link to clipboard
+current-trend: trend
 dashboard: Dashboard
-dashboard-tabs: Emission reduction potential divided by category
 dashboard-segment-description: Actions share of reduction potential
-operational: Operational indicator
-tactical: Tactical indicator
-strategic: Strategic indicator
-recently-updated-actions: Recently updated actions
-see-all-actions: See all actions
-recently-updated-indicators: Recently updated indicators
-see-all-indicators: See all indicators
-instance-type-testing-label: Testing
-instance-type-testing-message: This is a test version of the service
-instance-type-development-label: Development
-instance-type-development-message: This is a development version of the service
+dashboard-tabs: Emission reduction potential divided by category
+email: E-mail
+error-email-format: Please provide a valid email address
+error-feedback-required: Feedback is required
+error-loading-actions: Error loading the actions list
+error-loading-indicators: Error loading the indicators list
+error-occurred: Error occurred
+error-with-code: Error with code
+feedback: Feedback
+feedback-description: >-
+  Did you discover something that does not work? Or do you have ideas on
+  something we can improve?
+feedback-error-content: >-
+  Something went wrong and your feedback was not received. Please try again in a
+  moment.
+feedback-error-header: Error sending the message
+feedback-prompt: Please let us know by filling and sending this form.
+feedback-thankyou-content: Thank you for taking the time to provide us feedback. It's truly helpful.
+feedback-thankyou-header: Feedback received
+filter-all-categories: All categories
+filter-all-emission-scopes: No emission scope filter
+filter-all-impacts: No impact filter
+filter-all-organizations: All organizations
+filter-all-phases: No phase filter
+filter-all-schedules: All schedules
+filter-category: Filter by theme
+filter-emission-scope: Filter by emission scope
+filter-impact: Filter by impact
+filter-organization: Filter by organization
+filter-phase: Filter by phase
+filter-primary-organization: Filter by primary organisation
+filter-result-actions: actions
+filter-schedule: Schedule
+filter-text: Text search
+filter-text-default: Search from headers
+filter-text-description: Search from descriptions
+forecast: forecast
+frequently-asked-questions: Frequently asked questions
+front-page: Front Page
+funding-instrument: >-
+  Helsinki Climate Watch has received funding from the European Union EIT
+  Climate-KIC programme.
+give-feedback: Give feedback
+goal: goal
+graph: Graph
+image-credit: Image
+impact: impact
+impact-group-no-actions: No defined actions.
+impact-group-others: ''
+impact-group.others: Others
+indicator-affected-by: This indicator is affected by
+indicator-also-for-actions: Also impacted by
+indicator-goal: Goal
+indicator-graph-not-accessible: Data graph accessible version is not yet available
+indicator-has-effect-on: This indicator has effect on
+indicator-latest-value: Latest value
+indicator-legend-result: ''
+indicator-more-information: More information
+indicator-no-values: No values
+indicator-not-found: Indicator not found
+indicator-related-actions: Actions that impact this indicator
+indicator-resolution-years: years
+indicator-time-no-goals: No goals
+indicator-time-to-goal: Time to goal
+indicators: Indicators
+indicators-as-insight: As insights
+indicators-as-list: As a list
 insight-download-label: Download
 insight-download-png: Image (png)
 insight-filter-label: Filter by indicator
 insight-filter-no-results: No results
-indicators-as-list: As a list
-indicators-as-insight: As insights
-goal: goal
-total: total
-forecast: forecast
-current-trend: trend
+instance-type-development-label: Development
+instance-type-development-message: This is a development version of the service
+instance-type-testing-label: Testing
+instance-type-testing-message: This is a test version of the service
+loading: Loading
+name: Name
+nav-menu-close: Close menu
+nav-menu-open: Navigation menu
+next: Next
+no-graph: No graph
+operational: Operational indicator
+over-x-days: Over {{days}} days
+page-not-found: Page not found
 percent-point-abbreviation: p.p.
+previous: Previous
+published-on: Published on
+read-more: Read more
+recently-updated-actions: Recently updated actions
+recently-updated-indicators: Recently updated indicators
+reduced: Reduced
+remove-filter: Remove filter
+required-field: Required field
 responsible-parties: Responsible organisations
 responsible-parties-missing: No named responsible organisations
 responsible-party-main: Main responsible
-contact-persons: Contact persons
-contact-persons-missing: No named contact persons
-contact-person-main: Main contact person
-contact-info: Contact information
-email: E-mail
-previous: Previous
-next: Next
-impact: impact
-filter-category: Filter by theme
-filter-all-categories: All categories
-filter-all-emission-scopes: No emission scope filter
-filter-all-organizations: All organizations
-filter-all-impacts: No impact filter
-filter-all-phases: No phase filter
-filter-organization: Filter by organization
-filter-emission-scope: Filter by emission scope
-filter-impact: Filter by impact
-filter-phase: Filter by phase
-filter-text: Text search
-filter-text-default: Search from headers
-filter-text-description: Search from descriptions
-filter-result-actions: actions
-filter-schedule: Schedule
-filter-all-schedules: All schedules
-browse-actions: Browse actions
-funding-instrument: >-
-  Helsinki Climate Watch has received funding from the European Union EIT
-  Climate-KIC programme.
-error-loading-actions: Error loading the actions list
-error-loading-indicators: Error loading the indicators list
-indicator-related-actions: Actions that impact this indicator
-indicator-affected-by: This indicator is affected by
-indicator-has-effect-on: This indicator has effect on
-indicator-not-found: Indicator not found
-indicator-latest-value: Latest value
-indicator-more-information: More information
-indicator-no-values: No values
-indicator-goal: Goal
-indicator-time-to-goal: Time to goal
-indicator-time-no-goals: No goals
-indicator-resolution-years: years
-indicator-also-for-actions: Also impacted by
-indicator-graph-not-accessible: Data graph accessible version is not yet available
-type: Type
-name: Name
-themes: Themes
-graph: Graph
-no-graph: No graph
-loading: Loading
-impact-group-no-actions: No defined actions.
-impact-group.others: Others
-published-on: Published on
-supported-by: Supported by
-back-to-top: Back to top
-contact: Contact
-feedback: Feedback
-give-feedback: Give feedback
-feedback-description: >-
-  Did you discover something that does not work? Or do you have ideas on
-  something we can improve?
-feedback-prompt: Please let us know by filling and sending this form.
-feedback-thankyou-header: Feedback received
-feedback-thankyou-content: Thank you for taking the time to provide us feedback. It's truly helpful.
-feedback-error-header: Error sending the message
-feedback-error-content: >-
-  Something went wrong and your feedback was not received. Please try again in a
-  moment.
-error-feedback-required: Feedback is required
-error-email-format: Please provide a valid email address
-accessibility: Accessibility
-copy-to-clipboard: Copy link to clipboard
-copied-to-clipboard: Copied!
-nav-menu-close: Close menu
-nav-menu-open: Navigation menu
-page-not-found: Page not found
-skip-to-content: Skip to main content
 search: Search
-active-filters: Active filters
-remove-filter: Remove filter
-required-field: Required field
+see-all-actions: See all actions
+see-all-indicators: See all indicators
 send: Send
-close: Close
-unknown: Unknown
-under-x-days: 'Under {{days}} days'
-over-x-days: 'Over {{days}} days'
-frequently-asked-questions: Frequently asked questions
-actions-as-list: As a list
-reduced: Reduced
+skip-to-content: Skip to main content
+strategic: Strategic indicator
+supported-by: Supported by
+tactical: Tactical indicator
+themes: Themes
 to-reduce: Left to reduce
-bar-goal: Goal
-admin-login: Admin login
-error-with-code: Error with code
-error-occurred: Error occurred
-read-more: Read more
-image-credit: Image
+total: total
+type: Type
+under-x-days: Under {{days}} days
+unknown: Unknown

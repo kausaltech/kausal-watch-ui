@@ -116,6 +116,7 @@ export const GET_ACTION_LIST = gql`
       }
       primaryOrgs {
         id
+        abbreviation
         name
       }
     }
@@ -164,6 +165,11 @@ export const GET_ACTION_LIST = gql`
         id
         abbreviation
         name
+        logo {
+          rendition(size: "128x128", crop: false) {
+            src
+          }
+        }
       }
       contactPersons {
         id
@@ -286,7 +292,7 @@ const ActionListResults = (props) => {
   );
 
   function filterAction(item) {
-    if (filters.primaryOrganization && item.primaryOrg.id !== filters.primaryOrganization) return false;
+    if (filters.primaryOrg && item.primaryOrg.id !== filters.primaryOrg) return false;
     if (filters.organization) {
       let found = false;
       item.responsibleParties.forEach((rp) => {
@@ -335,6 +341,8 @@ const ActionListResults = (props) => {
   const impacts = plan.actionImpacts;
   const phases = plan.actionImplementationPhases;
   const schedules = plan.actionSchedules;
+
+  const groupBy = (primaryOrgs.length && filters.category_action) ? 'primaryOrg' : 'category';
 
   return (
     <>
@@ -414,7 +422,10 @@ const ActionListResults = (props) => {
         </div>
         <div id="dashboard-view" role="tabpanel" tabIndex="0" aria-labelledby="dashboard-tab" hidden={displayDashboard}>
           { !displayDashboard && (
-            <ActionCardList actions={filteredActions} />
+            <ActionCardList
+              actions={filteredActions}
+              groupBy={groupBy}
+            />
           )}
         </div>
       </Container>
@@ -433,7 +444,7 @@ ActionListResults.getFiltersFromQuery = (query) => {
 
 ActionListResults.propTypes = {
   filters: PropTypes.shape({
-    primaryOrganization: PropTypes.string,
+    primaryOrg: PropTypes.string,
     organization: PropTypes.string,
     text: PropTypes.string,
     impact: PropTypes.string,

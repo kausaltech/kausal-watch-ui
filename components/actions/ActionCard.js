@@ -55,6 +55,14 @@ const CategoryIcon = styled(SVG)`
   fill: white;
 `;
 
+const OrgLogo = styled.img`
+  position: absolute;
+  display: block;
+  right: ${(props) => props.theme.spaces.s050};
+  top: ${(props) => props.theme.spaces.s050};
+  width: ${(props) => props.theme.spaces.s300};
+`;
+
 const ActionCardElement = styled.div`
   position: relative;
   width: 100%;
@@ -166,10 +174,9 @@ function ActionCard(props) {
                 preserveAspectRatio="xMinYMid meet"
               />
             )}
-            { primaryOrg && (
-              <CategoryIcon
-                src="static/themes/default/icons/bullseye.svg"
-                preserveAspectRatio="xMinYMid meet"
+            { primaryOrg?.logo && (
+              <OrgLogo
+                src={primaryOrg.logo.rendition.src}
               />
             )}
             { plan.hideActionIdentifiers

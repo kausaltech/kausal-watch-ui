@@ -168,10 +168,10 @@ function ActionListFilters(props) {
       showAllLabel: t('filter-all-organizations'),
       md: 6,
       lg: 4,
-      identifier: 'primaryOrganization',
+      identifier: 'primaryOrg',
       options: primaryOrgs.map((org) => ({
         id: org.id,
-        label: org.name,
+        label: org.abbreviation || org.name,
       })),
     },
   );
