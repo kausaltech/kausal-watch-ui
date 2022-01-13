@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
-import IndicatorGraph from 'components/graphs/IndicatorGraph';
+import IndicatorVisualisation from 'components/indicators/IndicatorVisualisation';
 
 const IndicatorGraphSection = styled.div`
   background-color: ${(props) => props.theme.themeColors.light};
@@ -16,7 +16,7 @@ const IndicatorBlock = (props) => {
       <Container>
         <Row>
           <Col>
-            <IndicatorGraph indicatorId={indicator.id} />
+            <IndicatorVisualisation indicatorId={indicator.id} />
           </Col>
         </Row>
       </Container>

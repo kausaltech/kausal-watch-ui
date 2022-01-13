@@ -8,9 +8,9 @@ import {
 } from 'reactstrap';
 import styled from 'styled-components';
 
+import IndicatorVisualisation from 'components/indicators/IndicatorVisualisation';
 import { withTranslation } from '../../common/i18n';
 import { ActionLink, IndicatorLink } from '../../common/links';
-import IndicatorGraph from '../graphs/IndicatorGraph';
 import Icon from '../common/Icon';
 import PlanContext from '../../context/plan';
 
@@ -32,13 +32,13 @@ function ActionIndicator(props) {
   const { t, relatedIndicator, actionId } = props;
   const { indicator } = relatedIndicator;
   const plan = useContext(PlanContext);
-  const actions = indicator.actions.filter(action => action.id !== actionId);
+  const actions = indicator.actions.filter((action) => action.id !== actionId);
 
   return (
     <Card className="mb-4">
       <CardBody>
         {(indicator.latestGraph || indicator.latestValue)
-          ? <IndicatorGraph indicatorId={indicator.id} />
+          ? <IndicatorVisualisation indicatorId={indicator.id} />
           : <h3 className="mb-0">{indicator.name}</h3>}
       </CardBody>
       <CardFooter>
@@ -47,7 +47,7 @@ function ActionIndicator(props) {
             {t('indicator-also-for-actions')}
             :
             {' '}
-            {actions.map(action => (
+            {actions.map((action) => (
               <ActionLink key={action.identifier} action={action}>
                 <a className="mr-2" href>
                   <Badge>{action.identifier}</Badge>
@@ -72,7 +72,7 @@ function ActionIndicators(props) {
   const { t, actionId, relatedIndicators } = props;
   return (
     <IndicatorsSection>
-      {relatedIndicators.map(relatedIndicator => (
+      {relatedIndicators.map((relatedIndicator) => (
         <ActionIndicator
           t={t}
           key={relatedIndicator.indicator.id}
