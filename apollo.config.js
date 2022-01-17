@@ -3,6 +3,8 @@ module.exports = {
     includes: [
       'pages/**/*.{js,tsx}',
       'components/**/*.{js,tsx}',
+      'common/**/*.{js,tsx}',
+      'context/**/*.{js,tsx}',
     ],
     service: {
       name: 'kausal-watch-backend',

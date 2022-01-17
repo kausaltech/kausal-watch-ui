@@ -3,26 +3,31 @@
 import fs from 'fs';
 import next from 'next';
 import morgan from 'morgan';
-import express from 'express';
+import Koa from 'koa';
+import Router from '@koa/router';
+import logger from "koa-logger";
 import originalUrl from 'original-url';
 import cacheableResponse from 'cacheable-response';
 import parseCacheControl from '@tusbar/cache-control';
 import robots from 'express-robots-txt';
-import YAML from 'yaml'
+import YAML from 'yaml';
 import normalizeUrl from 'normalize-url';
+import apollo from '@apollo/client';
+
+const { ApolloClient, HttpLink, InMemoryCache, gql } = apollo;
 
 
 console.log('Starting server');
 const serverPort = process.env.PORT || 3000;
-const app = next({ dev: process.env.NODE_ENV !== 'production' });
-console.log('Next initialized');
+const isDevMode = process.env.NODE_ENV !== 'production';
 
 let Sentry;
 const sentry = await import('./common/sentry.js');
 
+/*
 let ssrCache;
-if (('ENABLE_CACHE' in process.env)
-  ? (process.env.ENABLE_CACHE === '1') : process.env.NODE_ENV === 'production') {
+if (false && (('ENABLE_CACHE' in process.env)
+  ? (process.env.ENABLE_CACHE === '1') : process.env.NODE_ENV === 'production')) {
   console.log('SSR cache initialized');
   ssrCache = cacheableResponse({
     ttl: 1000 * 60, // 1 min
@@ -41,9 +46,10 @@ if (('ENABLE_CACHE' in process.env)
         removeQueryParameters: ['force', /^utm_\w+/i]
       });
       return baseKey;
-    }
+    },
   });
 }
+*/
 
 function getCurrentURL(req) {
   const obj = originalUrl(req);
@@ -64,16 +70,145 @@ function getCurrentURL(req) {
 
 Error.stackTraceLimit = 30;
 
-const server = express();
+const GET_PLANS_BY_HOSTNAME = gql`
+query GetPlansByHostname($hostname: String) {
+  plansForHostname(hostname: $hostname) {
+    id
+    identifier
+    domains {
+      hostname
+      basePath
+    }
+    primaryLanguage
+    otherLanguages
+  }
+}
+`;
 
-if (process.env.SENTRY_DSN) {
-  sentry.initSentry(server);
-  Sentry = sentry.Sentry;
-  server.use(Sentry.Handlers.requestHandler());
-  server.use(Sentry.Handlers.tracingHandler());
-  console.log('Sentry initialized');
+class WatchServer {
+  constructor() {
+    this.nextConfig = null;
+    this.app = next({ dev: isDevMode });
+    this.nextHandleRequest = this.app.getRequestHandler();
+    this.plansByHostname = new Map();
+  }
+
+  initApollo() {
+    const uri = this.nextConfig.publicRuntimeConfig.aplansApiBaseURL + '/graphql/';
+    const httpLink = new HttpLink({
+      uri,
+    });
+    console.log(`> 🚀 GraphQL API at ${uri}`);
+    return new ApolloClient({
+      ssrMode: true,
+      link: httpLink,
+      cache: new InMemoryCache(),
+    });
+  }
+
+  async getPlan(ctx) {
+    const { hostname, path } = ctx;
+    const obj = this.plansByHostname.get(hostname);
+    if (obj) return obj;
+
+    try {
+      const { data } = await this.apolloClient.query({
+        query: GET_PLANS_BY_HOSTNAME,
+        variables: {
+          hostname: ctx.hostname,
+        },
+        fetchPolicy: 'no-cache',
+      });
+      const { plansForHostname } = data;
+      if (!plansForHostname.length) {
+        const msg = `Unknown hostname: ${ctx.hostname}`;
+        console.error();
+        ctx.throw(404, msg);
+      }
+      // FIXME: Revisit with multi-plan support
+      const plan = plansForHostname[0];
+      return plan;
+    } catch (error) {
+      console.error(error);
+      ctx.throw(404, 'unknown hostname');
+      return null;
+    }
+  }
+
+  setBasePath(basePath) {
+    const srv = this.nextServer;
+    srv.nextConfig.basePath = basePath;
+    srv.nextConfig.assetPrefix = basePath;
+    srv.nextConfig.images.path = basePath + '/_next/image';
+    srv.nextConfig.publicRuntimeConfig.basePath = basePath;
+    srv.renderOpts.basePath = basePath;
+    srv.renderOpts.canonicalBase = basePath;
+    srv.renderOpts.runtimeConfig.basePath = basePath;
+    srv.renderOpts.assetPrefix = basePath;
+    srv.router.basePath = basePath;
+  }
+
+  setLocale(defaultLocale, locales) {
+    const srv = this.nextServer;
+    // Insert defaultLocale as the first element in locale list
+    const loc = locales.filter((lang) => lang !== defaultLocale);
+    loc.splice(0, 0, defaultLocale);
+    srv.nextConfig.i18n.defaultLocale = defaultLocale;
+    srv.nextConfig.i18n.locales = loc;
+    srv.router.locales = loc;
+    srv.incrementalCache.locales = loc;
+  }
+
+  async handleRequest(ctx) {
+    const plan = await this.getPlan(ctx);
+    if (!plan) return;
+    /*
+    const basePath = instance.hostname?.basePath || '';
+    this.setBasePath(basePath);
+    */
+    this.setLocale(plan.primaryLanguage, plan.otherLanguages);
+    ctx.req.planIdentifier = plan.identifier;
+    ctx.req.currentURL = getCurrentURL(ctx.req);
+    await this.nextHandleRequest(ctx.req, ctx.res);
+    ctx.respond = false;
+  }
+
+  async init() {
+    await this.app.prepare();
+    this.nextConfig = (await import("next/config.js")).default.default();
+    const router = new Router();
+    const server = new Koa();
+
+    if (process.env.SENTRY_DSN) {
+      sentry.initSentry(server);
+      Sentry = sentry.Sentry;
+      server.use(Sentry.Handlers.requestHandler());
+      server.use(Sentry.Handlers.tracingHandler());
+      console.log(`> Sentry initialized at ${process.env.SENTRY_DSN}`);
+    }
+
+    this.apolloClient = this.initApollo();
+    this.nextServer = await this.app.getServer();
+
+    router.all("(.*)", this.handleRequest.bind(this));
+    server.use(logger());
+    server.use(async (ctx, next) => {
+      ctx.res.statusCode = 200;
+      await next();
+    });
+    server.use(router.routes());
+    server.listen(serverPort, () => {
+      console.log(`> ✅ Ready on http://localhost:${serverPort}`);
+    });
+  }
 }
 
+const pathsServer = new WatchServer();
+pathsServer.init().then(() => {
+  console.log('> Init done');
+});
+
+/*
 console.log('Preparing server');
 await app.prepare();
 console.log('Server prepared');
@@ -152,3 +287,4 @@ server.listen(serverPort, (err) => {
   if (err) throw err;
   console.log(`Ready on http://localhost:${serverPort}`);
 });
+*/

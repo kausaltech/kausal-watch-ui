@@ -1,5 +1,5 @@
 import withApollo from 'next-with-apollo';
-import { ApolloClient, HttpLink, ApolloLink, concat } from '@apollo/client';
+import { ApolloClient, HttpLink, ApolloLink, ApolloProvider, concat } from '@apollo/client';
 import { getDataFromTree } from '@apollo/react-ssr';
 import { InMemoryCache } from '@apollo/client/cache';
 import { onError } from '@apollo/client/link/error';
@@ -7,7 +7,7 @@ import getConfig from 'next/config';
 
 import { captureException, Sentry } from 'common/sentry';
 import { i18n } from 'common/i18n';
-import { possibleTypes } from 'components/common/StreamField';
+import { possibleTypes } from 'components/common/StreamField';
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -16,7 +16,7 @@ const localeMiddleware = new ApolloLink((operation, forward) => {
   const { query } = operation;
   const { definitions } = query;
 
-  if (!i18n.language || definitions[0].operation === 'mutation') return forward(operation);
+  if (!i18n || !i18n.language || definitions[0].operation === 'mutation') return forward(operation);
 
   const localeDirective = {
     kind: 'Directive',
@@ -45,8 +45,12 @@ const localeMiddleware = new ApolloLink((operation, forward) => {
   return forward(operation);
 });
 
-let requestContext;
-let planIdentifier;
+let globalRequestContext;
+let globalPlanIdentifier;
+
+export function setApolloPlanIdentifier(identifier) {
+  globalPlanIdentifier = identifier;
+}
 
 const refererLink = new ApolloLink((operation, forward) => {
   const sentryHub = Sentry.getCurrentHub();
@@ -71,8 +75,8 @@ const refererLink = new ApolloLink((operation, forward) => {
     const { headers } = ctx;
     const newHeaders = {};
 
-    if (requestContext) {
-      const req = requestContext;
+    if (globalRequestContext) {
+      const { req } = globalRequestContext;
       const { currentURL } = req;
       const { baseURL, path } = currentURL;
       const remoteAddress = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
@@ -83,8 +87,8 @@ const refererLink = new ApolloLink((operation, forward) => {
     if (ctx.planDomain) {
       newHeaders['x-cache-plan-domain'] = ctx.planDomain;
     }
-    if (ctx.planIdentifier || planIdentifier) {
-      newHeaders['x-cache-plan-identifier'] = ctx.planIdentifier || planIdentifier;
+    if (ctx.planIdentifier || globalPlanIdentifier) {
+      newHeaders['x-cache-plan-identifier'] = ctx.planIdentifier || globalPlanIdentifier;
     }
     return {
       headers: {
@@ -101,13 +105,6 @@ const refererLink = new ApolloLink((operation, forward) => {
   });
 });
 
-export function setRequestContext(req) {
-  requestContext = req;
-}
-
-export function setPlanIdentifier(identifier) {
-  planIdentifier = identifier;
-}
 
 const sentryHttpLink = ApolloLink.from([
   onError(({ graphQLErrors, networkError }) => {
@@ -131,22 +128,40 @@ const sentryHttpLink = ApolloLink.from([
   }),
 ]);
 
-let cachedApolloClient;
+let globalApolloClient;
 
-export default withApollo(({ initialState }) => {
-  if (cachedApolloClient && process.browser) return cachedApolloClient;
+export function initializeApolloClient(opts) {
+  const { ctx, initialState, planIdentifier } = opts;
+
+  if (planIdentifier) {
+    globalPlanIdentifier = planIdentifier;
+  } else if (ctx?.req?.planIdentifier) {
+    globalPlanIdentifier = ctx.req.planIdentifier;
+  }
+  if (ctx) globalRequestContext = ctx;
+
+  if (globalApolloClient && process.browser) return globalApolloClient;
 
   const clientOpts = {
     ssrMode: !process.browser,
     link: ApolloLink.from([refererLink, localeMiddleware, sentryHttpLink]),
     cache: new InMemoryCache({
       // https://www.apollographql.com/docs/react/data/fragments/#defining-possibletypes-manually
-      possibleTypes: possibleTypes,
+      possibleTypes,
     }).restore(initialState || {}),
   };
   const apolloClient = new ApolloClient(clientOpts);
-  if (process.browser) cachedApolloClient = apolloClient;
+  if (process.browser) globalApolloClient = apolloClient;
   return apolloClient;
-}, {
-  getDataFromTree,
-});
+}
+
+export default withApollo(
+  (opts) => initializeApolloClient(opts),
+  {
+    render: ({ Page, props }) => (
+      <ApolloProvider client={props.apollo}>
+        <Page {...props} />
+      </ApolloProvider>
+    ),
+  },
+);

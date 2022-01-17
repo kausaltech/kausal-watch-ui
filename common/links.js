@@ -8,13 +8,8 @@ import { Link } from 'routes';
 const pathJoin = (...parts) => parts.join('/').replace(/\/+/g, '/');
 
 function getActiveLanguagePath() {
-  const {
-    i18n: {
-      language,
-      options: { localeSubpaths },
-    },
-  } = useTranslation();
-  return Object.values(localeSubpaths).includes(language) ? language : '';
+  // FIXME
+  return '';
 }
 
 // react-i18next does not support dynamic routes yet

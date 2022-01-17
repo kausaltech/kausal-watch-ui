@@ -3,143 +3,25 @@ import App, { AppProps } from 'next/app';
 import getConfig from 'next/config';
 import { gql, ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
 import ReactPiwik from 'react-piwik';
-import { I18nextProvider, withSSR } from 'react-i18next';
 import { ThemeProvider } from 'styled-components';
 import * as Sentry from "@sentry/react";
 
 import { Router } from 'routes';
 import { captureException } from 'common/sentry';
 import { appWithTranslation, i18n, configureFromPlan as configureI18nFromPlan } from 'common/i18n';
-import images from 'common/images';
 import withApollo, {
-  setRequestContext as setApolloRequestContext,
-  setPlanIdentifier as setApolloPlanIdentifier
+  initializeApolloClient, setApolloPlanIdentifier
 } from 'common/apollo';
 import theme, { setTheme, applyTheme } from 'common/theme';
 import dayjs from 'common/dayjs';
-import PlanContext from 'context/plan';
+import PlanContext, { GET_PLAN_CONTEXT } from 'context/plan';
 import SiteContext from 'context/site';
+import { getI18n } from 'react-i18next';
 
 const { publicRuntimeConfig } = getConfig();
 
 require('../styles/default/main.scss');
 
-if (process.browser && process.env.NODE_ENV !== 'production') {
-  const whyDidYouRender = require('@welldone-software/why-did-you-render');
-
-  whyDidYouRender(React, {
-    trackAllPureComponents: true,
-    exclude: [/KeyframesImpl/],
-  });
-}
-
-interface GetPlanParams {
-  identifier?: string;
-  hostname?: string;
-}
-
-const GET_PLAN = gql`
-  query Plan($identifier: ID, $hostname: String) {
-    plan(id: $identifier, domain: $hostname) {
-      id
-      identifier
-      name
-      primaryLanguage
-      otherLanguages
-      hideActionIdentifiers
-      domain(hostname: $hostname) {
-        id
-        googleSiteVerificationTag
-        matomoAnalyticsUrl
-      }
-      image { 
-        ...MultiUseImageFragment
-      }
-      serveFileBaseUrl
-      actionSchedules {
-        id
-        name
-        beginsAt
-        endsAt
-      }
-      actionImplementationPhases {
-        id
-        identifier
-        name
-        order
-      }
-      actionImpacts {
-        id
-        identifier
-        name
-        order
-      }
-      actionStatuses {
-        id
-        identifier
-        name
-        isCompleted
-      }
-      impactGroups {
-        id
-      }
-      generalContent {
-        id
-        siteTitle
-        siteDescription
-        officialNameDescription
-        copyrightText
-        creativeCommonsLicense
-        ownerUrl
-        ownerName
-      }
-      mainMenu {
-        items(withDescendants: true) {
-          id
-          linkText
-          page {
-            urlPath
-            slug
-          }
-          parent {
-            id
-            page {
-              __typename
-            }
-          }
-        }
-      }
-      footer {
-        items {
-          id
-          linkText
-          page {
-            urlPath
-            slug
-          }
-          parent {
-            id
-            page {
-              __typename
-            }
-          }
-          children {
-            __typename
-            id
-            linkText
-            page {
-              urlPath
-              slug
-            }
-          }
-        }
-      }
-      adminUrl
-      accessibilityStatementUrl
-    }
-  }
-  ${images.fragments.multiUseImage}
-`;
 
 let piwik;
 
@@ -170,7 +52,7 @@ interface WatchAppProps extends AppProps, GlobalProps {
 }
 
 function WatchApp(props: WatchAppProps) {
-  const { Component, pageProps, apollo, plan, siteContext, themeProps } = props;
+  const { Component, pageProps, apollo, siteProps, themeProps, plan, router } = props;
   const matomoAnalyticsUrl = plan.domain?.matomoAnalyticsUrl;
   let matomoURL, matomoSiteId;
 
@@ -194,7 +76,9 @@ function WatchApp(props: WatchAppProps) {
     // Track the initial page view
     ReactPiwik.push(['trackPageView']);
     Router.events.on('routeChangeComplete', onRouteChange);
-  });
+  }, []);
+
+  dayjs.locale(router.locale)
 
   if (process.browser) {
     setTheme(themeProps);
@@ -202,7 +86,7 @@ function WatchApp(props: WatchAppProps) {
   }
 
   return (
-    <SiteContext.Provider value={siteContext}>
+    <SiteContext.Provider value={siteProps}>
       <ThemeProvider theme={theme}>
         <ApolloProvider client={apollo}>
           <PlanContext.Provider value={plan}>
@@ -213,125 +97,97 @@ function WatchApp(props: WatchAppProps) {
     </SiteContext.Provider>
   );
 }
-WatchApp.whyDidYouRender = true;
 
-WatchApp.getInitialProps = async (appContext) => {
-  const { ctx } = appContext;
-  let appProps;
-  try {
-    appProps = await App.getInitialProps(appContext);
-  } catch (error) {
-    // Capture errors that happen during a page's getInitialProps.
-    // This will work on both client and server sides.
-    captureException(error, ctx);
-    if (ctx.res) {
-      ctx.res.statusCode = 500;
+async function getI18nProps(ctx) {
+  const { serverSideTranslations } = require('next-i18next/serverSideTranslations');
+  const nextI18nConfig = require('../next-i18next.config');
+
+  const conf = {
+    ...nextI18nConfig,
+    i18n: {
+      ...nextI18nConfig.i18n,
+      defaultLocale: ctx.defaultLocale,
+      locales: ctx.locales,
     }
-    throw error;
-  }
-
-  return { ...appProps };
-};
-
-function I18nApp(props) {
-  const { initialLanguage, initialI18nStore, i18nServerInstance } = props;
-  const SSRWrappedApp = withSSR()(WatchApp);
-
-  dayjs.locale(initialLanguage)
-
-  return (
-    <I18nextProvider i18n={i18nServerInstance || i18n}>
-      <SSRWrappedApp initialLanguage={initialLanguage} initialI18nStore={initialI18nStore} {...props} />
-    </I18nextProvider>
+  };
+  const i18nConfig = await serverSideTranslations(
+    ctx.locale, ['common', 'actions', 'a11y'], conf
   );
+  return i18nConfig;
 }
-const MemoizedApp = React.memo(I18nApp) as any;
-
-
-let cachedPlan;
-const cachedPlansForHostnames = {};
-const cachedThemesForHostnames = {};
 
 async function getPlan(ctx) {
-  const { apolloClient, req } = ctx;
-  const { defaultPlanIdentifier } = publicRuntimeConfig;
+  const apollo = initializeApolloClient({ ctx });
+  const planIdentifier = ctx.req.planIdentifier;
   let plan;
 
-  if (process.browser && cachedPlan) return cachedPlan;
-  if (req?.requestPlan) return req.requestPlan;
-
-  const queryVariables: GetPlanParams = {
-    identifier: null,
-    hostname: null,
+  const { data, error } = await apollo.query({
+    query: GET_PLAN_CONTEXT,
+    variables: {
+      identifier: ctx.req.planIdentifier,
+      hostname: ctx.req.currentURL.hostname,
+    },
+  });
+  if (error) throw error;
+  plan = data.plan;
+  if (!plan) {
+    throw new Error(`No plan found for identifier '${planIdentifier}'`)
   }
-
-  if (defaultPlanIdentifier) {
-    queryVariables.identifier = defaultPlanIdentifier;
-  } else {
-    queryVariables.hostname = req?.currentURL?.hostname;
-  }
-
-  try {
-    const { data, error } = await apolloClient.query({
-      query: GET_PLAN,
-      variables: queryVariables,
-      context: {
-        planIdentifier: queryVariables.identifier,
-        planDomain: queryVariables.hostname,
-      }
-    });
-    if (error) throw error;
-    plan = data.plan;
-    if (!plan) {
-      throw new Error(`No plan found for identifier '${queryVariables.identifier}' and hostname '${queryVariables.hostname}'`)
-    }
-  } catch (error) {
-    // We got an error from the API, but if we have a cached version of the plan, use that.
-    if (queryVariables.hostname) {
-      plan = cachedPlansForHostnames[queryVariables.hostname];
-    } else {
-      plan = cachedPlan;
-    }
-    if (cachedPlan) {
-      captureException(error, ctx);
-      plan = cachedPlan;
-    } else {
-      // No? Nothing we can do...
-      throw error;
-    }
-  }
-  cachedPlan = plan;
-  if (queryVariables.hostname) cachedPlansForHostnames[queryVariables.hostname] = plan;
-  if (req) req.requestPlan = plan;
-
   return plan;
 }
 
+function getSiteContext(ctx) {
+  const { currentURL } = ctx.req;
+  const { instanceType } = publicRuntimeConfig;
+
+  return {
+    instanceType,
+    domain: currentURL.domain,
+    path: currentURL.path,
+  }
+}
+
+WatchApp.getInitialProps = async (appContext) => {
+  const { ctx } = appContext;
+  const { req, err } = ctx;
+  const appProps = await App.getInitialProps(appContext);
+
+  if (process.browser) {
+    throw new Error('App.getInitialProps called from browser??')
+  }
+  if (err) {
+    return {...appProps}
+  }
+  const i18nProps = await getI18nProps(ctx);
+  const plan = await getPlan(ctx);
+  const pageProps = {
+    ...appProps.pageProps,
+    ...i18nProps,
+  }
+  applyTheme(plan.identifier);
+  return {
+    ...appProps,
+    plan,
+    themeProps: theme,
+    pageProps: pageProps,
+    siteProps: getSiteContext(ctx),
+  };
+};
+
 let siteContext;
 
+/*
 
 MemoizedApp.getInitialProps = async (appContext) => {
   const { ctx } = appContext;
-  const { instanceType } = publicRuntimeConfig;
   const { apolloClient } = ctx;
 
   const transaction = Sentry.getCurrentHub().getScope().getTransaction();
   let tracingSpan;
 
-  if (!siteContext) siteContext = {};
-
-  if (siteContext.instanceType !== instanceType) {
-    siteContext.instanceType = instanceType;
-  }
-
   let globalProps: GlobalProps;
 
   if (!process.browser) {
-    const { currentURL } = ctx.req;
-
-    // The current, full URL is used in SSR to render the opengraph tags.
-    if (siteContext.domain !== currentURL.domain) siteContext.domain = currentURL.domain;
-    if (siteContext.path !== currentURL.path) siteContext.path = currentURL.path;
 
     // We pass the request to Apollo so that we can inform the backend about
     // the refering URL
@@ -356,11 +212,8 @@ MemoizedApp.getInitialProps = async (appContext) => {
 
     if (tracingSpan) tracingSpan.finish();
 
-    applyTheme(plan.identifier);
-
     globalProps = {
       plan,
-      themeProps: theme,
       siteContext,
     }
   } else {
@@ -385,8 +238,7 @@ MemoizedApp.getInitialProps = async (appContext) => {
 
 // appWithTranslation is not a pure component, so it re-renders much too often.
 // We only use its getInitialProps() but do not render it.
-const TransApp = appWithTranslation(WatchApp);
-const ApolloApp = withApollo(MemoizedApp);
+const ApolloApp = withApollo(appWithTranslation(WatchApp));
 const getInitialPropsApollo = ApolloApp.getInitialProps
 
 ApolloApp.getInitialProps = async (appContext) => {
@@ -404,5 +256,6 @@ ApolloApp.getInitialProps = async (appContext) => {
 };
 
 const ProfiledApp = Sentry.withProfiler(ApolloApp);
+*/
 
-export default ProfiledApp;
+export default withApollo(appWithTranslation(WatchApp));
