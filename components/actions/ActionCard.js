@@ -55,6 +55,14 @@ const CategoryIcon = styled(SVG)`
   fill: white;
 `;
 
+const OrgLogo = styled.img`
+  position: absolute;
+  display: block;
+  right: ${(props) => props.theme.spaces.s050};
+  top: ${(props) => props.theme.spaces.s050};
+  width: ${(props) => props.theme.spaces.s300};
+`;
+
 const ActionCardElement = styled.div`
   position: relative;
   width: 100%;
@@ -143,7 +151,7 @@ function ActionCard(props) {
 
   const { mergedWith, implementationPhase } = action;
   const status = cleanActionStatus(action, plan.actionStatuses);
-  let statusText = status.name;
+  let statusText = status.name || '-';
 
   // if Action is set in one of the phases, create message accordingly
   if (implementationPhase) {
@@ -152,6 +160,8 @@ function ActionCard(props) {
     // Let's assume if status is completed the phase is irrelevant
     if (status.identifier === 'completed') statusText = status.name;
   }
+
+  const { primaryOrg } = action;
 
   return (
     <ActionLink action={action}>
@@ -162,6 +172,11 @@ function ActionCard(props) {
               <CategoryIcon
                 src={iconUrl}
                 preserveAspectRatio="xMinYMid meet"
+              />
+            )}
+            { primaryOrg?.logo && (
+              <OrgLogo
+                src={primaryOrg.logo.rendition.src}
               />
             )}
             { plan.hideActionIdentifiers

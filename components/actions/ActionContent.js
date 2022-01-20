@@ -115,6 +115,16 @@ query ActionDetails($plan: ID!, $id: ID!) {
         }
       }
     }
+    primaryOrg {
+      id
+      abbreviation
+      name
+      logo {
+        rendition(size: "128x128", crop: false) {
+          src
+        }
+      }
+    }
     responsibleParties {
       id
       organization {
@@ -330,6 +340,7 @@ function ActionContent({ id }) {
         altText={action?.image?.altText}
         imageAlign={getBgImageAlignment(actionImage)}
         hideActionIdentifiers={plan.hideActionIdentifiers}
+        primaryOrg={action.primaryOrg}
       />
       <Container>
 

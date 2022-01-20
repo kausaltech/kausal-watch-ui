@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
 import { Link } from 'routes';
-import IndicatorGraph from 'components/graphs/IndicatorGraph';
 import { useTranslation } from 'common/i18n';
 import Icon from 'components/common/Icon';
+import IndicatorVisualisation from 'components/indicators/IndicatorVisualisation';
 
 const IndicatorGraphSection = styled.div`
   background-color: ${(props) => props.theme.neutralLight};
@@ -23,7 +23,7 @@ const IndicatorItem = (props) => {
       className="mb-5"
       lg={{ size: singleIndicator ? 8 : 6, offset: singleIndicator ? 2 : 0 }}
     >
-      <IndicatorGraph indicatorId={indicator} />
+      <IndicatorVisualisation indicatorId={indicator} />
       { showLink && (
       <div className="mt-2 text-right">
         <Link href={`/indicators/${indicator}`}>

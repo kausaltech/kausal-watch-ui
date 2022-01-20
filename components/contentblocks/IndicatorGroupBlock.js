@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
 import IndicatorHighlightCard from 'components/indicators/IndicatorHighlightCard';
-import IndicatorGraph from 'components/graphs/IndicatorGraph';
+import IndicatorVisualisation from 'components/indicators/IndicatorVisualisation';
 
 const IndicatorGraphSection = styled.div`
   background-color: ${(props) => props.theme.neutralLight};
@@ -17,7 +17,7 @@ const IndicatorItem = (props) => {
       className="mb-5"
       lg={{ size: 8, offset: 2 }}
     >
-      <IndicatorGraph indicatorId={indicator.id} />
+      <IndicatorVisualisation indicatorId={indicator.id} />
     </Col>
   );
   return (

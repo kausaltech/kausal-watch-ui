@@ -16,6 +16,10 @@ import { cleanActionStatus } from 'common/preprocess';
 const DashTable = styled(Table)`
   margin-bottom: ${(props) => props.theme.spaces.s600};
   line-height: ${(props) => props.theme.lineHeightMd};
+
+  .logo-column {
+    width: 2rem;
+  }
 `;
 
 const StyledRow = styled.tr`
@@ -35,6 +39,12 @@ const StyledRow = styled.tr`
       text-decoration: underline;
     }
   }
+`;
+
+const OrgLogo = styled.img`
+  display: block;
+  width: 2rem;
+  height: 2rem;
 `;
 
 const ResponsibleList = styled.div`
@@ -223,6 +233,13 @@ const ActionRow = ({ item, plan, hasResponsibles, hasImpacts, hasIndicators }) =
 
   return (
     <StyledRow>
+      { plan.primaryOrgs.length > 0 && (
+        <td className="logo-column">
+          { item.primaryOrg.logo && (
+          <OrgLogo src={item.primaryOrg.logo.rendition.src} alt={item.primaryOrg.name} />
+          )}
+        </td>
+      )}
       { !plan.hideActionIdentifiers && (
       <td>
         { item.identifier }
@@ -298,6 +315,7 @@ const ActionsStatusTable = (props) => {
     <DashTable role="list">
       <thead>
         <tr>
+          { plan.primaryOrgs.length > 0 && <th className="logo-column" />}
           { !plan.hideActionIdentifiers && <th><abbr>{ t('action-id') }</abbr></th>}
           <th>{ t('action-name-title') }</th>
           <th>{ t('action-implementation-phase') }</th>

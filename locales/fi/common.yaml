@@ -1,128 +1,131 @@
-front-page: Etusivu
-indicators: Mittarit
-actions: Toimenpiteet
+accessibility: Saavutettavuus
 action: Toimenpide
+actions: Toimenpiteet
+actions-as-list: Listana
+active-filters: Aktiiviset rajaukset
+admin-login: Ylläpito
+back-to-top: Sivun alkuun
+bar-goal: Tavoite
+browse-actions: Selaa toimenpiteitä
+close: Sulje
+contact: Yhteystiedot
+contact-info: Yhteystiedot
+contact-person-main: Pääyhteyshenkilö
+contact-persons: Yhteyshenkilöt
+contact-persons-missing: Ei merkittyjä yhteyshenkilöitä
+copied-to-clipboard: Kopioitu!
+copy-to-clipboard: Kopioi linkki leikepöydälle
+current-trend: nykytrendi
 dashboard: Tilannekuva
-dashboard-tabs: Päästövähennyspotentiaali jaettuna aihealueisiin
 dashboard-segment-description: Kategorian toimenpiteiden osuus päästövähennyspotentiaalista
-operational: Toiminnallinen mittari
-tactical: Taktinen mittari
-strategic: Strateginen mittari
-recently-updated-actions: Viimeksi muokatut toimenpiteet
-see-all-actions: Katso kaikki toimenpiteet
-recently-updated-indicators: Viimeksi muokatut mittarit
-see-all-indicators: Katso kaikki mittarit
-instance-type-testing-label: Testi
-instance-type-testing-message: Tämä on palvelun testiversio
-instance-type-development-label: Kehitys
-instance-type-development-message: Tämä on palvelun kehitysversio
+dashboard-tabs: Päästövähennyspotentiaali jaettuna aihealueisiin
+email: Sähköposti
+error-email-format: Syötä oikea sähköpostiosoite
+error-feedback-required: Palaute on pakollinen kenttä
+error-loading-actions: Virhe toimenpiteiden latauksessa
+error-loading-indicators: Virhe mittareiden latauksessa
+error-occurred: Virhe tapahtui
+error-with-code: Virhekoodi
+feedback: Palaute
+feedback-description: >-
+  Löysitkö palvelusta jotain joka ei toimi? Tai onko sinulla ideoita palvelun
+  parantamiseksi?
+feedback-error-content: >-
+  Jotain meni pieleen palautteen lähettämisessä. Ole hyvä ja yritä hetken
+  kuluttua uudelleen.
+feedback-error-header: Virhe lähetyksessä
+feedback-prompt: Lähetä meille palautetta palvelusta tällä lomakkeella.
+feedback-thankyou-content: >-
+  Kiitos kun lähetit palautetta. Kaikki palaute on meille arvokasta kun
+  kehitämme palvelua.
+feedback-thankyou-header: Palaute otettu vastaan
+filter-all-categories: Ei rajausta
+filter-all-emission-scopes: Ei päästöluokkarajausta
+filter-all-impacts: Ei vaikutusrajausta
+filter-all-organizations: Kaikki organisaatiot
+filter-all-phases: Ei vaiherajausta
+filter-all-schedules: Kaikki kaudet
+filter-category: Rajaa teeman mukaan
+filter-emission-scope: Rajaa päästöluokkien mukaan
+filter-impact: Rajaa vaikuttavuuden mukaan
+filter-organization: Rajaa vastuuorganisaation mukaan
+filter-phase: Rajaa toteutusvaiheen mukaan
+filter-primary-organization: Rajaa pääorganisaation mukaan
+filter-result-actions: toimenpidettä
+filter-schedule: Aikataulu
+filter-text: Tekstihaku
+filter-text-default: Etsi otsikoista
+filter-text-description: Etsi kuvauksista
+forecast: ennuste
+frequently-asked-questions: Usein Kysytyt Kysymykset
+front-page: Etusivu
+funding-instrument: Helsingin ilmastovahti on saanut tukea EU:n Climate-KIC-ohjelmasta.
+give-feedback: Anna palautetta
+goal: tavoite
+graph: Kuvaaja
+image-credit: Kuva
+impact: vaikutus
+impact-group:
+  others: ''
+impact-group-no-actions: Ei määriteltyjä toimenpiteitä.
+impact-group-others: Muut
+indicator-affected-by: Tähän mittariin vaikuttaa
+indicator-also-for-actions: Liittyy myös toimenpiteisiin
+indicator-goal: Tavoite
+indicator-graph-not-accessible: Indikaattorin data-graafin tekstiversio ei ole vielä saatavilla
+indicator-has-effect-on: Tämä mittari vaikuttaa
+indicator-latest-value: Viimeisin mittaus
+indicator-legend-result: Toteuma
+indicator-more-information: Mittarin tarkemmat tiedot
+indicator-no-values: Ei arvoja
+indicator-not-found: Mittaria ei löydy
+indicator-related-actions: Mittariin vaikuttavat toimenpiteet
+indicator-resolution-years: vuotta
+indicator-time-no-goals: Ei tavoitearvoja
+indicator-time-to-goal: Tavoitteeseen matkaa
+indicators: Mittarit
+indicators-as-insight: Näkemysverkossa
+indicators-as-list: Listana
 insight-download-label: Lataa
 insight-download-png: Kuva (png)
 insight-filter-label: Suodata mittarin perusteella
 insight-filter-no-results: Ei tuloksia
-indicators-as-list: Listana
-indicators-as-insight: Näkemysverkossa
-goal: tavoite
-total: yhteensä
-forecast: ennuste
-current-trend: nykytrendi
+instance-type-development-label: Kehitys
+instance-type-development-message: Tämä on palvelun kehitysversio
+instance-type-testing-label: Testi
+instance-type-testing-message: Tämä on palvelun testiversio
+loading: Ladataan
+name: Nimi
+nav-menu-close: Sulje navigaatio
+nav-menu-open: Navigaatio
+next: Seuraava
+no-graph: Ei kuvaajaa
+operational: Toiminnallinen mittari
+over-x-days: Yli {{days}} päivää
+page-not-found: Sivua ei löydy
 percent-point-abbreviation: '%-yks.'
+previous: Edellinen
+published-on: Julkaisualusta
+read-more: Lue lisää
+recently-updated-actions: Viimeksi muokatut toimenpiteet
+recently-updated-indicators: Viimeksi muokatut mittarit
+reduced: Vähennetty
+remove-filter: Poista rajaus
+required-field: Pakollinen tieto
 responsible-parties: Vastuuorganisaatiot
 responsible-parties-missing: Ei merkittyjä vastuuorganisaatioita
 responsible-party-main: Päävastuuorganisaatio
-contact-persons: Yhteyshenkilöt
-contact-persons-missing: Ei merkittyjä yhteyshenkilöitä
-contact-person-main: Pääyhteyshenkilö
-contact-info: Yhteystiedot
-email: Sähköposti
-previous: Edellinen
-next: Seuraava
-impact: vaikutus
-filter-category: Rajaa teeman mukaan
-filter-all-categories: Ei rajausta
-filter-all-emission-scopes: Ei päästöluokkarajausta
-filter-all-organizations: Kaikki organisaatiot
-filter-all-impacts: Ei vaikutusrajausta
-filter-all-phases: Ei vaiherajausta
-filter-organization: Rajaa vastuuorganisaation mukaan
-filter-emission-scope: Rajaa päästöluokkien mukaan
-filter-impact: Rajaa vaikuttavuuden mukaan
-filter-phase: Rajaa toteutusvaiheen mukaan
-filter-text: Tekstihaku
-filter-text-default: Etsi otsikoista
-filter-text-description: Etsi kuvauksista
-filter-result-actions: toimenpidettä
-filter-schedule: Aikataulu
-filter-all-schedules: Kaikki kaudet
-browse-actions: Selaa toimenpiteitä
-funding-instrument: Helsingin ilmastovahti on saanut tukea EU:n Climate-KIC-ohjelmasta.
-error-loading-actions: Virhe toimenpiteiden latauksessa
-error-loading-indicators: Virhe mittareiden latauksessa
-indicator-related-actions: Mittariin vaikuttavat toimenpiteet
-indicator-affected-by: Tähän mittariin vaikuttaa
-indicator-has-effect-on: Tämä mittari vaikuttaa
-indicator-not-found: Mittaria ei löydy
-indicator-latest-value: Viimeisin mittaus
-indicator-more-information: Mittarin tarkemmat tiedot
-indicator-no-values: Ei arvoja
-indicator-goal: Tavoite
-indicator-time-to-goal: Tavoitteeseen matkaa
-indicator-time-no-goals: Ei tavoitearvoja
-indicator-resolution-years: vuotta
-indicator-also-for-actions: Liittyy myös toimenpiteisiin
-indicator-graph-not-accessible: Indikaattorin data-graafin tekstiversio ei ole vielä saatavilla
-type: Tyyppi
-name: Nimi
-themes: Teemat
-graph: Kuvaaja
-no-graph: Ei kuvaajaa
-loading: Ladataan
-impact-group-no-actions: Ei määriteltyjä toimenpiteitä.
-impact-group-others: Muut
-published-on: Julkaisualusta
-supported-by: Kehitystä tukenut
-back-to-top: Sivun alkuun
-contact: Yhteystiedot
-feedback: Palaute
-give-feedback: Anna palautetta
-feedback-description: >-
-  Löysitkö palvelusta jotain joka ei toimi? Tai onko sinulla ideoita palvelun
-  parantamiseksi?
-feedback-prompt: Lähetä meille palautetta palvelusta tällä lomakkeella.
-feedback-thankyou-header: Palaute otettu vastaan
-feedback-thankyou-content: >-
-  Kiitos kun lähetit palautetta. Kaikki palaute on meille arvokasta kun
-  kehitämme palvelua.
-feedback-error-header: Virhe lähetyksessä
-feedback-error-content: >-
-  Jotain meni pieleen palautteen lähettämisessä. Ole hyvä ja yritä hetken
-  kuluttua uudelleen.
-error-feedback-required: Palaute on pakollinen kenttä
-error-email-format: Syötä oikea sähköpostiosoite
-accessibility: Saavutettavuus
-copy-to-clipboard: Kopioi linkki leikepöydälle
-copied-to-clipboard: Kopioitu!
-nav-menu-close: Sulje navigaatio
-nav-menu-open: Navigaatio
-page-not-found: Sivua ei löydy
-skip-to-content: Hyppää sisältöön
 search: Hae
-active-filters: Aktiiviset rajaukset
-remove-filter: Poista rajaus
-required-field: Pakollinen tieto
+see-all-actions: Katso kaikki toimenpiteet
+see-all-indicators: Katso kaikki mittarit
 send: Lähetä
-close: Sulje
-unknown: Tuntematon
-under-x-days: 'Alle {{days}} päivää'
-over-x-days: 'Yli {{days}} päivää'
-frequently-asked-questions: Usein Kysytyt Kysymykset
-actions-as-list: Listana
-reduced: Vähennetty
+skip-to-content: Hyppää sisältöön
+strategic: Strateginen mittari
+supported-by: Kehitystä tukenut
+tactical: Taktinen mittari
+themes: Teemat
 to-reduce: Vähennettävää
-bar-goal: Tavoite
-admin-login: Ylläpito
-error-with-code: Virhekoodi
-error-occurred: Virhe tapahtui
-indicator-legend-result: Toteuma
-read-more: Lue lisää
-image-credit: Kuva
+total: yhteensä
+type: Tyyppi
+under-x-days: Alle {{days}} päivää
+unknown: Tuntematon
