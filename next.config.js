@@ -9,6 +9,11 @@ const config = {
     SENTRY_DSN: process.env.SENTRY_DSN,
     SENTRY_TRACE_SAMPLE_RATE: process.env.SENTRY_TRACE_SAMPLE_RATE || '1.0',
   },
+  eslint: {
+    // Warning: This allows production builds to successfully complete even if
+    // your project has ESLint errors.
+    ignoreDuringBuilds: true,
+  },
   productionBrowserSourceMaps: true,
   async rewrites() {
     const rewrites = [

@@ -6,21 +6,23 @@
 *
 */
 import React from 'react';
-import PropTypes from 'prop-types';
-import { gql } from '@apollo/client';
+import PropTypes from "prop-types";
+import { gql, useQuery } from '@apollo/client';
 import { Query } from '@apollo/client/react/components';
 import {
   Container, Row, Col, TabContent, TabPane,
 } from 'reactstrap';
 import styled from 'styled-components';
 import { captureException } from 'common/sentry';
-import { withTranslation } from 'common/i18n';
+import { useTranslation, withTranslation } from 'common/i18n';
 import RichText from 'components/common/RichText';
 import ContentLoader from 'components/common/ContentLoader';
-import PlanContext from 'context/plan';
+import { usePlan } from 'context/plan';
 import ImpactGroupActionList from './ImpactGroupActionList';
 
 import Bar from './Bar';
+import { useRouter } from 'next/router';
+import { TFunction } from 'next-i18next';
 
 const IMPACT_GROUP_MIN_WEIGHT = 1;
 const IMPACT_GROUP_OTHERS_ID = '_others';
@@ -83,9 +85,6 @@ export const GET_IMPACT_GROUP_LIST = gql`
           }
         }
       }
-      generalContent {
-        id
-      }
     }
   }
 `;
@@ -118,7 +117,17 @@ const DashboardTab = ({ t, segment }) => {
   );
 };
 
-class DashboardLoaded extends React.PureComponent {
+type DashboardLoadedProps = {
+  t: TFunction,
+  leadContent: string,
+  filters: {
+    group: string,
+  },
+  segments: any[],
+  onFilterChange: Function,
+};
+
+class DashboardLoaded extends React.PureComponent<DashboardLoadedProps> {
   static getFiltersFromQuery(query) {
     const {
       group,
@@ -141,17 +150,14 @@ class DashboardLoaded extends React.PureComponent {
       activeTabId: segment.id,
     });
 
-    // Update query string of URL
+    // @ts-ignore Update query string of URL
     this.props.onFilterChange({ group: segment.id });
   }
 
   render() {
-    const {
-      t, filters, leadContent,
-      segments,
-    } = this.props;
-
-    // by default show the first segment
+    // @ts-ignore
+    const { t, filters, leadContent, segments } = this.props;
+    // @ts-ignore by default show the first segment
     const activeTabId = this.state.activeTabId || (segments.length ? segments[0].id : undefined);
 
     return (
@@ -191,31 +197,18 @@ class DashboardLoaded extends React.PureComponent {
   }
 }
 
-DashboardLoaded.propTypes = {
-  filters: PropTypes.shape({
-    group: PropTypes.string,
-  }).isRequired,
-  segments: PropTypes.arrayOf(PropTypes.object).isRequired,
-};
+export default function Dashboard(props) {
+  const { onFilterChange } = props;
+  const plan = usePlan();
+  const { query } = useRouter();
+  const { t } = useTranslation(['actions', 'common']);
+  const filters = DashboardLoaded.getFiltersFromQuery(query)
 
-class Dashboard extends React.PureComponent {
-  static contextType = PlanContext;
-
-  static getFiltersFromQuery(query) {
-    return DashboardLoaded.getFiltersFromQuery(query);
-  }
-
-  constructor(props) {
-    super(props);
-    this.makeSegments = this.makeSegments.bind(this);
-  }
-
-  makeSegments(impactGroups) {
-    const { t } = this.props;
+  const makeSegments = (impactGroups) => {
     const segments = [];
     const others = {
       id: IMPACT_GROUP_OTHERS_ID,
-      name: t('impact-group-others'),
+      name: t('common:impact-group-others'),
       value: 0,
       groups: [],
     };
@@ -237,7 +230,7 @@ class Dashboard extends React.PureComponent {
     segments.push(others);
 
     // add actions to each segment
-    const impacts = Object.fromEntries(this.context.actionImpacts.map((x) => [x.id, x]));
+    const impacts = Object.fromEntries(plan.actionImpacts.map((x) => [x.id, x]));
 
     segments.forEach((segment) => {
       // Merge actions from all ImpactGroups
@@ -258,52 +251,28 @@ class Dashboard extends React.PureComponent {
 
     return segments;
   }
-
-  render() {
-    const {
-      t, plan, filters, onFilterChange,
-    } = this.props;
-    return (
-      <Query query={GET_IMPACT_GROUP_LIST} variables={{ plan: plan.identifier }}>
-        {({ data, loading, error }) => {
-          if (loading) return <ContentLoader />;
-          if (error) {
-            captureException(error);
-            return <p>{ t('error-loading-actions') }</p>;
-          }
-
-          const {
-            generalContent,
-            ...otherProps
-          } = data.plan;
-          // page lead content removed from API. Lead content currently not available.
-          // const leadContent = generalContent.dashboardLeadContent;
-
-          const leadContent = '<p>Olemme selvitt&auml;neet, kuinka paljon&nbsp;eri toimenpiteill&auml; olisi mahdollista saada&nbsp;p&auml;&auml;st&ouml;v&auml;hennyksi&auml; vuoteen 2035 menness&auml;. Toimenpiteet on useimmiten niputettu yhteen, koska yksitt&auml;isen toimenpiteen p&auml;&auml;st&ouml;v&auml;hennysvaikutusta on vaikea arvioida tarkasti ja monet toimenpiteist&auml; tukevat toisiaan. Suurimmat p&auml;&auml;st&ouml;v&auml;hennykset voidaan saada kaukol&auml;mm&ouml;ntuotannon puhdistumisesta (Helenin toimet), v&auml;hent&auml;m&auml;ll&auml; rakennusten l&auml;mm&ouml;nkulutusta, lis&auml;&auml;m&auml;ll&auml; maal&auml;mm&ouml;n tuotantoa&nbsp;ja tuottamalla enemm&auml;n s&auml;hk&ouml;&auml; aurinkopaneeleilla. P&auml;&auml;st&ouml;tavoitteen saavuttamisessa&nbsp;my&ouml;s s&auml;hk&ouml;autojen osuuden kasvattamisella on huomattava merkitys. On t&auml;rke&auml;&auml;, ett&auml; kaikki toimenpiteet toteutetaan,&nbsp;jotta tavoitteeseen p&auml;&auml;st&auml;&auml;n. P&auml;&auml;st&ouml;v&auml;hennysarvioon olemme laskeneet mukaan vain ne toimet, jotka v&auml;hent&auml;v&auml;t Helsingin v&auml;litt&ouml;mi&auml; p&auml;&auml;st&ouml;j&auml;&nbsp;ja jotka lasketaan 80 prosentin p&auml;&auml;st&ouml;v&auml;hennystavoitteeseen mukaan. Siin&auml; ei siis ole mukana toimenpiteit&auml;, jotka v&auml;hent&auml;v&auml;t v&auml;lillisi&auml; p&auml;&auml;st&ouml;j&auml;.&nbsp;</p>\r\n\r\n<p><em>T&auml;ll&auml; sivulla esitetty arvio&nbsp;p&auml;&auml;st&ouml;v&auml;hennyksist&auml; perustuu vuoden 2015 l&auml;ht&ouml;tietoihin. Arviota ei ole viel&auml; p&auml;ivitetty vastaamaan uusimpia saatavilla olevia tietoja. Tieto toimenpiteiden etenemisest&auml; puolestaan perustuu toimenpiteiden yhteyshenkil&ouml;iden tekem&auml;&auml;n seurantaan (katso p&auml;ivitysajankohta&nbsp;kunkin toimenpiteen omalta sivulta).</em></p>';
-          const segments = this.makeSegments(data.plan.impactGroups);
-
-          return (
-            <DashboardLoaded
-              t={t}
-              leadContent={leadContent}
-              filters={filters}
-              onFilterChange={onFilterChange}
-              segments={segments}
-            />
-          );
-        }}
-      </Query>
-    );
+  const { data, loading, error } = useQuery(GET_IMPACT_GROUP_LIST, {
+    variables: { plan: plan.identifier },
+  })
+  if (loading) return <ContentLoader />;
+  if (error) {
+    captureException(error);
+    return <p>{ t('error-loading-actions') }</p>;
   }
-}
 
+  const leadContent = '<p>Olemme selvitt&auml;neet, kuinka paljon&nbsp;eri toimenpiteill&auml; olisi mahdollista saada&nbsp;p&auml;&auml;st&ouml;v&auml;hennyksi&auml; vuoteen 2035 menness&auml;. Toimenpiteet on useimmiten niputettu yhteen, koska yksitt&auml;isen toimenpiteen p&auml;&auml;st&ouml;v&auml;hennysvaikutusta on vaikea arvioida tarkasti ja monet toimenpiteist&auml; tukevat toisiaan. Suurimmat p&auml;&auml;st&ouml;v&auml;hennykset voidaan saada kaukol&auml;mm&ouml;ntuotannon puhdistumisesta (Helenin toimet), v&auml;hent&auml;m&auml;ll&auml; rakennusten l&auml;mm&ouml;nkulutusta, lis&auml;&auml;m&auml;ll&auml; maal&auml;mm&ouml;n tuotantoa&nbsp;ja tuottamalla enemm&auml;n s&auml;hk&ouml;&auml; aurinkopaneeleilla. P&auml;&auml;st&ouml;tavoitteen saavuttamisessa&nbsp;my&ouml;s s&auml;hk&ouml;autojen osuuden kasvattamisella on huomattava merkitys. On t&auml;rke&auml;&auml;, ett&auml; kaikki toimenpiteet toteutetaan,&nbsp;jotta tavoitteeseen p&auml;&auml;st&auml;&auml;n. P&auml;&auml;st&ouml;v&auml;hennysarvioon olemme laskeneet mukaan vain ne toimet, jotka v&auml;hent&auml;v&auml;t Helsingin v&auml;litt&ouml;mi&auml; p&auml;&auml;st&ouml;j&auml;&nbsp;ja jotka lasketaan 80 prosentin p&auml;&auml;st&ouml;v&auml;hennystavoitteeseen mukaan. Siin&auml; ei siis ole mukana toimenpiteit&auml;, jotka v&auml;hent&auml;v&auml;t v&auml;lillisi&auml; p&auml;&auml;st&ouml;j&auml;.&nbsp;</p>\r\n\r\n<p><em>T&auml;ll&auml; sivulla esitetty arvio&nbsp;p&auml;&auml;st&ouml;v&auml;hennyksist&auml; perustuu vuoden 2015 l&auml;ht&ouml;tietoihin. Arviota ei ole viel&auml; p&auml;ivitetty vastaamaan uusimpia saatavilla olevia tietoja. Tieto toimenpiteiden etenemisest&auml; puolestaan perustuu toimenpiteiden yhteyshenkil&ouml;iden tekem&auml;&auml;n seurantaan (katso p&auml;ivitysajankohta&nbsp;kunkin toimenpiteen omalta sivulta).</em></p>';
+  const segments = makeSegments(data.plan.impactGroups);
+
+  return (
+    <DashboardLoaded
+      t={t}
+      leadContent={leadContent}
+      filters={filters}
+      onFilterChange={onFilterChange}
+      segments={segments}
+    />
+  );
+}
 Dashboard.propTypes = {
-  t: PropTypes.func.isRequired,
-  plan: PropTypes.shape({
-    identifier: PropTypes.string,
-  }).isRequired,
-  filters: PropTypes.shape({}).isRequired,
   onFilterChange: PropTypes.func.isRequired,
 };
-
-export default withTranslation(['common', 'actions'])(Dashboard);

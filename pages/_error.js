@@ -6,7 +6,7 @@ import getConfig from 'next/config';
 import { useTranslation } from 'common/i18n';
 import Layout from '../components/layout';
 
-function Error({ statusCode, hasGetInitialPropsRun, err, errorMessage }) {
+function Error({ errorMessage, statusCode }) {
   let msg = errorMessage;
   const { t } = useTranslation();
 
@@ -42,13 +42,12 @@ Error.getInitialProps = async ({ req, res, err }) => {
   // Workaround for https://github.com/vercel/next.js/issues/8592, mark when
   // getInitialProps has run
   props.hasGetInitialPropsRun = true;
-  props.namespacesRequired = ['common'];
 
   if (err?.statusCode && res) res.statusCode = err.statusCode;
 
   if (res?.statusCode === 404) {
     // do not record an exception in Sentry for 404
-    return { statusCode: 404, namespacesRequired: ['common'] };
+    return { statusCode: 404 };
   }
 
   if (res && !res.statusCode) res.statusCode = 500;

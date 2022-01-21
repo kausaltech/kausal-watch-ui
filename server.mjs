@@ -20,6 +20,8 @@ const { ApolloClient, HttpLink, InMemoryCache, gql } = apollo;
 console.log('Starting server');
 const serverPort = process.env.PORT || 3000;
 const isDevMode = process.env.NODE_ENV !== 'production';
+const isProductionInstance = process.env.INSTANCE_TYPE === 'production';
+
 
 let Sentry;
 const sentry = await import('./common/sentry.js');
@@ -190,12 +192,23 @@ class WatchServer {
     this.apolloClient = this.initApollo();
     this.nextServer = await this.app.getServer();
 
-    router.all("(.*)", this.handleRequest.bind(this));
-    server.use(logger());
-    server.use(async (ctx, next) => {
-      ctx.res.statusCode = 200;
-      await next();
+    router.get('/favicon.ico', async function (ctx) {
+      ctx.throw(404, 'File not found');
     });
+    router.get('/robots.txt', async function (ctx) {
+      let ret = 'User-agent: *\nDisallow:';
+      if (isProductionInstance) {
+        ret += '\n';
+      } else {
+        ret += ' /\n';
+      }
+      ctx.body = ret;
+      ctx.status = 200;
+    });
+
+    router.all("(.*)", this.handleRequest.bind(this));
+
+    server.use(logger());
     server.use(router.routes());
     server.listen(serverPort, () => {
       console.log(`> ✅ Ready on http://localhost:${serverPort}`);
@@ -218,16 +231,12 @@ if (process.env.SENTRY_DSN) {
 }
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
-const isProduction = process.env.INSTANCE_TYPE === 'production';
 
 // Request logging
 server.use(morgan(!isDevelopment ? 'combined' : 'dev'));
 
 const handle = app.getRequestHandler();
 
-server.get('/favicon.ico', function (req, res) {
-  res.status(404).send('Not found');
-});
 
 const testRobotsTxt = {
   UserAgent: '*',

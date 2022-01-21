@@ -69,9 +69,4 @@ function ActionsListPage() {
     </Layout>
   );
 }
-const initialProps = {
-  namespacesRequired: ['common', 'actions'],
-};
-ActionsListPage.getInitialProps = async () => (initialProps);
-
 export default ActionsListPage;

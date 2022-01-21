@@ -41,7 +41,7 @@ const StyledBadge = styled(Badge)`
   margin-bottom: ${(props) => props.theme.spaces.s050};
   margin-right: ${(props) => props.theme.spaces.s050};
   padding-left: 0;
-  background-color: ${(props) => props.theme.brandDark};
+  background-color: ${(props) => props.theme.brandDark} !important;
   color: ${(props) => props.theme.themeColors.light};
   line-height: 1.25;
 `;

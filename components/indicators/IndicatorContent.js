@@ -8,7 +8,7 @@ import styled from 'styled-components';
 import { gql, useQuery } from '@apollo/client';
 
 import { IndicatorListLink } from 'common/links';
-import PlanContext from 'context/plan';
+import { usePlan } from 'context/plan';
 import { useTranslation } from 'common/i18n';
 
 import RichText from 'components/common/RichText';
@@ -21,6 +21,7 @@ import IndicatorVisualisation from 'components/indicators/IndicatorVisualisation
 import ActionsTable from 'components/actions/ActionsTable';
 import IndicatorValueSummary from 'components/indicators//IndicatorValueSummary';
 import CausalNavigation from 'components/indicators//CausalNavigation';
+
 
 const GET_INDICATOR_DETAILS = gql`
   query IndicatorDetails($id: ID, $plan: ID, $identifier: ID) {
@@ -157,7 +158,7 @@ const Section = styled.section`
 `;
 
 function IndicatorDetails({ id }) {
-  const plan = useContext(PlanContext);
+  const plan = usePlan();
   const { t } = useTranslation();
 
   // Ensure id is a number

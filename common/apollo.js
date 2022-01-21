@@ -6,7 +6,7 @@ import { onError } from '@apollo/client/link/error';
 import getConfig from 'next/config';
 
 import { captureException, Sentry } from 'common/sentry';
-import { i18n } from 'common/i18n';
+import { getI18n } from 'common/i18n';
 import { possibleTypes } from 'components/common/StreamField';
 
 const { publicRuntimeConfig } = getConfig();
@@ -15,6 +15,7 @@ const localeMiddleware = new ApolloLink((operation, forward) => {
   // Inject @locale directive into the query root object
   const { query } = operation;
   const { definitions } = query;
+  const i18n = getI18n();
 
   if (!i18n || !i18n.language || definitions[0].operation === 'mutation') return forward(operation);
 
@@ -163,5 +164,6 @@ export default withApollo(
         <Page {...props} />
       </ApolloProvider>
     ),
+    getDataFromTree,
   },
 );

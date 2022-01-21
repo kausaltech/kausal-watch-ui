@@ -1,8 +1,9 @@
 import _ from 'lodash';
-import { i18n } from 'common/i18n';
+import { getI18n } from 'common/i18n';
 
 // Clean up actionStatus so UI can handle edge cases
 const cleanActionStatus = (action, actionStatuses) => {
+  const i18n = getI18n();
   const { status, implementationPhase } = action;
   // precaution not to mutate original object
   const newStatus = status ? _.cloneDeep(status) : {};

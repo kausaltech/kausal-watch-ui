@@ -179,10 +179,4 @@ const FeedbackPage = () => {
   );
 };
 
-const initialProps = {
-  namespacesRequired: ['common', 'a11y'],
-};
-
-FeedbackPage.getInitialProps = async () => (initialProps);
-
 export default FeedbackPage;

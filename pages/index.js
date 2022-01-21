@@ -109,8 +109,4 @@ function RootPage() {
   );
 }
 
-RootPage.getInitialProps = async ({ query }) => ({
-  namespacesRequired: ['common', 'actions'],
-});
-
 export default RootPage;

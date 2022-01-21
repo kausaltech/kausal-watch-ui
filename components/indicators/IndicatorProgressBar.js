@@ -78,6 +78,8 @@ function Counter({ from, to, duration}) {
     const controls = animate(from, to, {
       duration: duration,
       onUpdate(value) {
+        // ref.current is null when navigating away from the page
+        if (!ref.current) return;
         ref.current.textContent = beautifyValue(value.toFixed());
       },
     });
@@ -87,7 +89,7 @@ function Counter({ from, to, duration}) {
   return <tspan ref={ref} />;
 }
 
-const IndicatorProgressBar = (props) => {
+function IndicatorProgressBar(props) {
   const {
     startDate, startValue,
     latestDate, latestValue,

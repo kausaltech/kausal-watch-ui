@@ -9,6 +9,7 @@ import PlanContext from 'context/plan';
 import { cleanActionStatus } from 'common/preprocess';
 import StatusBadge from 'components/common/StatusBadge';
 import ActionImpact from 'components/actions/ActionImpact';
+import { useTranslation } from 'next-i18next';
 
 const ACTION_ROW_FRAGMENT = gql`
   fragment ActionsTable on Action {
@@ -57,7 +58,8 @@ const Status = (props) => {
   );
 };
 function ActionsTable(props) {
-  const { t, actions } = props;
+  const { t } = useTranslation();
+  const { actions } = props;
   const plan = useContext(PlanContext);
 
   return (
@@ -107,4 +109,4 @@ ActionsTable.fragments = {
   action: ACTION_ROW_FRAGMENT,
 };
 
-export default withTranslation('common')(ActionsTable);
+export default ActionsTable;

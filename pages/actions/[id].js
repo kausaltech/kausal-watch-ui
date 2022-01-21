@@ -1,17 +1,16 @@
 import React from 'react';
+import { useRouter } from 'next/router'
 import ActionContent from '../../components/actions/ActionContent';
 import Layout from '../../components/layout';
 
-function ActionPage({ id }) {
+function ActionPage() {
+  const router = useRouter();
+  const { id } = router.query;
   return (
     <Layout>
       <ActionContent id={id} />
     </Layout>
   );
 }
-ActionPage.getInitialProps = async ({ query }) => ({
-  namespacesRequired: ['common', 'actions'],
-  id: query.id,
-});
 
 export default ActionPage;

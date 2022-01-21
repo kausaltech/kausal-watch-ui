@@ -4,10 +4,12 @@ import { useTranslation } from 'react-i18next';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import { Link } from 'routes';
+import { getI18n } from 'common/i18n';
 
 const pathJoin = (...parts) => parts.join('/').replace(/\/+/g, '/');
 
 function getActiveLanguagePath() {
+  const i18n = getI18n();
   // FIXME
   return '';
 }

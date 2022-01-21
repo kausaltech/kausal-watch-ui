@@ -12,7 +12,7 @@
     "import/resolver": {
       "node": {
         "paths": ["."],
-        "extensions": [".js", ".jsx", ".jsm", ".mjs"]
+        "extensions": [".js", ".jsx", ".jsm", ".mjs", ".tsx", ".ts"]
       }
     }
   },
@@ -24,6 +24,7 @@
     "react/prop-types": [2],
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
     "import/no-extraneous-dependencies": ["error", {"devDependencies": true}],
+    "import/extensions": [".js", ".mjs", ".jsx", ".ts", ".tsx"],
   },
   "extends": [
     "eslint:recommended", "plugin:react/recommended", "plugin:react/jsx-runtime", "airbnb"

@@ -8,7 +8,7 @@ import * as Sentry from "@sentry/react";
 
 import { Router } from 'routes';
 import { captureException } from 'common/sentry';
-import { appWithTranslation, i18n, configureFromPlan as configureI18nFromPlan } from 'common/i18n';
+import { appWithTranslation } from 'common/i18n';
 import withApollo, {
   initializeApolloClient, setApolloPlanIdentifier
 } from 'common/apollo';
@@ -16,7 +16,6 @@ import theme, { setTheme, applyTheme } from 'common/theme';
 import dayjs from 'common/dayjs';
 import PlanContext, { GET_PLAN_CONTEXT } from 'context/plan';
 import SiteContext from 'context/site';
-import { getI18n } from 'react-i18next';
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -41,7 +40,7 @@ interface SiteContext {
 }
 
 interface GlobalProps {
-  siteContext: SiteContext,
+  siteProps: SiteContext,
   themeProps: any,
   plan: any,
 }
@@ -53,7 +52,7 @@ interface WatchAppProps extends AppProps, GlobalProps {
 
 function WatchApp(props: WatchAppProps) {
   const { Component, pageProps, apollo, siteProps, themeProps, plan, router } = props;
-  const matomoAnalyticsUrl = plan.domain?.matomoAnalyticsUrl;
+  const matomoAnalyticsUrl = plan?.domain?.matomoAnalyticsUrl;
   let matomoURL, matomoSiteId;
 
   if (matomoAnalyticsUrl) {
@@ -84,7 +83,6 @@ function WatchApp(props: WatchAppProps) {
     setTheme(themeProps);
     setApolloPlanIdentifier(plan.identifier);
   }
-
   return (
     <SiteContext.Provider value={siteProps}>
       <ThemeProvider theme={theme}>
@@ -142,7 +140,7 @@ function getSiteContext(ctx) {
 
   return {
     instanceType,
-    domain: currentURL.domain,
+    hostname: currentURL.hostname,
     path: currentURL.path,
   }
 }
@@ -153,11 +151,26 @@ WatchApp.getInitialProps = async (appContext) => {
   const appProps = await App.getInitialProps(appContext);
 
   if (process.browser) {
-    throw new Error('App.getInitialProps called from browser??')
+    const nextData = window.__NEXT_DATA__;
+    const { _nextI18Next } = nextData.props.pageProps;
+    const { plan, themeProps, siteProps } = nextData.props;
+    const ret = {
+      ...appProps,
+      plan,
+      siteProps,
+      themeProps,
+      pageProps: {
+        ...appProps.pageProps,
+        _nextI18Next,
+      },
+    };
+    return ret;
   }
+  /*
   if (err) {
     return {...appProps}
   }
+  */
   const i18nProps = await getI18nProps(ctx);
   const plan = await getPlan(ctx);
   const pageProps = {

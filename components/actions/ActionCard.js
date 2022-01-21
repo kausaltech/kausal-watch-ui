@@ -185,7 +185,7 @@ function ActionCard(props) {
             <ActionStatus>
               { mergedWith ? (
                 <StatusName>
-                  { t('action-status-merged') }
+                  { t('actions:action-status-merged') }
                   <span> &rarr; </span>
                   { mergedWith.identifier }
                 </StatusName>

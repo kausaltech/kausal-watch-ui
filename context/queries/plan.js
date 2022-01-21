@@ -46,6 +46,9 @@ query PlanContext($identifier: ID, $hostname: String) {
     impactGroups {
       id
     }
+    primaryOrgs {
+      id
+    }
     generalContent {
       id
       siteTitle
