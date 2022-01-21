@@ -56,6 +56,7 @@ const Identifier = styled.span`
 `;
 
 const HeaderContent = styled.div`
+  position: relative;
   padding: ${(props) => props.theme.spaces.s150};
   margin: ${(props) => props.theme.spaces.s800} 0 ${(props) => props.theme.spaces.s400};
   overflow: hidden;
