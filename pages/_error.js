@@ -1,12 +1,20 @@
 import React from 'react';
-import * as Sentry from '@sentry/browser';
+import * as Sentry from '@sentry/nextjs';
 import NextErrorComponent from 'next/error';
 import getConfig from 'next/config';
 
 import { useTranslation } from 'common/i18n';
 import Layout from '../components/layout';
 
-function Error({ errorMessage, statusCode }) {
+function Error({ errorMessage, err, hasGetInitialPropsRun, statusCode }) {
+  if (!hasGetInitialPropsRun && err) {
+    // getInitialProps is not called in case of
+    // https://github.com/vercel/next.js/issues/8592. As a workaround, we pass
+    // err via _app.js so it can be captured
+    Sentry.captureException(err);
+    // Flushing is not required in this case as it only happens on the client
+  }
+
   let msg = errorMessage;
   const { t } = useTranslation();
 
@@ -51,13 +59,15 @@ Error.getInitialProps = async ({ req, res, err }) => {
   }
 
   if (res && !res.statusCode) res.statusCode = 500;
-
   if (err) {
     Sentry.captureException(err);
+
+    // Flushing before returning is necessary if deploying to Vercel, see
+    // https://vercel.com/docs/platform/limits#streaming-responses
     await Sentry.flush(2000);
+
     return props;
   }
-
   Sentry.captureException(
     new Error(`_error.js getInitialProps missing data at path: ${asPath}`),
   );

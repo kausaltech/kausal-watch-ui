@@ -24,7 +24,15 @@
     "react/prop-types": [2],
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
     "import/no-extraneous-dependencies": ["error", {"devDependencies": true}],
-    "import/extensions": [".js", ".mjs", ".jsx", ".ts", ".tsx"],
+    "import/extensions": [
+      "warn", {
+        ".js": "never",
+        ".mjs": "never",
+        ".jsx": "never",
+        ".ts": "never",
+        ".tsx": "never",
+      }
+    ],
   },
   "extends": [
     "eslint:recommended", "plugin:react/recommended", "plugin:react/jsx-runtime", "airbnb"

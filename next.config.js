@@ -1,9 +1,13 @@
 /* eslint-disable no-restricted-syntax */
 const webpack = require('webpack');
+const { withSentryConfig } = require("@sentry/nextjs");
 const { i18n, SUPPORTED_LANGUAGES } = require('./next-i18next.config');
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+})
 
 
-const config = {
+let config = {
   i18n,
   env: {
     SENTRY_DSN: process.env.SENTRY_DSN,
@@ -61,5 +65,8 @@ const config = {
     return cfg;
   },
 };
+
+config = withBundleAnalyzer(config);
+config = process.env.SENTRY_DSN ? withSentryConfig(config) : config;
 
 module.exports = config;

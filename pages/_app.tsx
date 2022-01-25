@@ -99,6 +99,12 @@ function WatchApp(props: WatchAppProps) {
 async function getI18nProps(ctx) {
   const { serverSideTranslations } = require('next-i18next/serverSideTranslations');
   const nextI18nConfig = require('../next-i18next.config');
+  let locale = ctx.locale;
+
+  if (!locale) {
+    console.warn('No locale set in context, falling back to locale list');
+    locale = ctx.locales[0];
+  }
 
   const conf = {
     ...nextI18nConfig,
@@ -109,7 +115,7 @@ async function getI18nProps(ctx) {
     }
   };
   const i18nConfig = await serverSideTranslations(
-    ctx.locale, ['common', 'actions', 'a11y'], conf
+    locale, ['common', 'actions', 'a11y'], conf
   );
   return i18nConfig;
 }

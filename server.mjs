@@ -9,22 +9,23 @@ import logger from "koa-logger";
 import originalUrl from 'original-url';
 import cacheableResponse from 'cacheable-response';
 import parseCacheControl from '@tusbar/cache-control';
-import robots from 'express-robots-txt';
-import YAML from 'yaml';
 import normalizeUrl from 'normalize-url';
 import apollo from '@apollo/client';
+import 'dotenv/config'
+
+console.log('> 💡 Starting server');
 
 const { ApolloClient, HttpLink, InMemoryCache, gql } = apollo;
 
+import * as Sentry from '@sentry/nextjs';
+import './sentry.server.config.js';
 
-console.log('Starting server');
+if (process.env.SENTRY_DSN) {
+  console.log(`> ⚙️ Sentry initialized at ${process.env.SENTRY_DSN}`);
+}
 const serverPort = process.env.PORT || 3000;
 const isDevMode = process.env.NODE_ENV !== 'production';
 const isProductionInstance = process.env.INSTANCE_TYPE === 'production';
-
-
-let Sentry;
-const sentry = await import('./common/sentry.js');
 
 /*
 let ssrCache;
@@ -124,15 +125,28 @@ class WatchServer {
       const { plansForHostname } = data;
       if (!plansForHostname.length) {
         const msg = `Unknown hostname: ${ctx.hostname}`;
-        console.error();
+        console.error(msg);
         ctx.throw(404, msg);
       }
       // FIXME: Revisit with multi-plan support
       const plan = plansForHostname[0];
       return plan;
     } catch (error) {
-      console.error(error);
-      ctx.throw(404, 'unknown hostname');
+      console.error(`Unable to get plan for hostname: ${ctx.hostname}`)
+      if (error.networkError) {
+        if (!error.networkError.result) {
+          console.error(error.networkError);
+        } else {
+          console.log(error.networkError.result?.errors);
+        }
+      } else {
+        console.error(error);
+      }
+      Sentry.withScope((scope) => {
+        scope.setTag('hostname', ctx.hostname);
+        Sentry.captureException(error);
+      });
+      ctx.throw(500, 'Internal server error – unable to get plan data');
       return null;
     }
   }
@@ -181,14 +195,6 @@ class WatchServer {
     const router = new Router();
     const server = new Koa();
 
-    if (process.env.SENTRY_DSN) {
-      sentry.initSentry(server);
-      Sentry = sentry.Sentry;
-      server.use(Sentry.Handlers.requestHandler());
-      server.use(Sentry.Handlers.tracingHandler());
-      console.log(`> Sentry initialized at ${process.env.SENTRY_DSN}`);
-    }
-
     this.apolloClient = this.initApollo();
     this.nextServer = await this.app.getServer();
 
@@ -210,6 +216,15 @@ class WatchServer {
 
     server.use(logger());
     server.use(router.routes());
+    server.on('error', (err, ctx) => {
+      Sentry.withScope((scope) => {
+        scope.addEventProcessor((event) => {
+          return Sentry.Handlers.parseRequest(event, ctx.request);
+        });
+        Sentry.captureException(err);
+      });
+      console.log(err);
+    });
     server.listen(serverPort, () => {
       console.log(`> ✅ Ready on http://localhost:${serverPort}`);
     });

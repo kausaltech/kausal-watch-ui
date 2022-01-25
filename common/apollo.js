@@ -11,6 +11,8 @@ import { possibleTypes } from 'components/common/StreamField';
 
 const { publicRuntimeConfig } = getConfig();
 
+const GRAPHQL_ENDPOINT_URI = `${publicRuntimeConfig.aplansApiBaseURL}/graphql/`;
+
 const localeMiddleware = new ApolloLink((operation, forward) => {
   // Inject @locale directive into the query root object
   const { query } = operation;
@@ -54,24 +56,6 @@ export function setApolloPlanIdentifier(identifier) {
 }
 
 const refererLink = new ApolloLink((operation, forward) => {
-  const sentryHub = Sentry.getCurrentHub();
-  const sentryScope = sentryHub.pushScope();
-  const transaction = sentryScope.getTransaction();
-  let tracingSpan;
-
-  if (transaction) {
-    tracingSpan = transaction.startChild({
-      op: 'GraphQL query',
-      description: operation.operationName,
-      data: {
-        graphql_variables: operation.variables,
-      },
-    });
-  }
-
-  sentryScope.setContext('graphql_variables', operation.variables);
-  sentryScope.setTag('graphql_operation', operation.operationName);
-
   operation.setContext((ctx) => {
     const { headers } = ctx;
     const newHeaders = {};
@@ -98,6 +82,27 @@ const refererLink = new ApolloLink((operation, forward) => {
       },
     };
   });
+  return forward(operation);
+});
+
+const sentryTracingLink = new ApolloLink((operation, forward) => {
+  const sentryHub = Sentry.getCurrentHub();
+  const sentryScope = sentryHub.pushScope();
+  const transaction = sentryScope.getTransaction();
+  let tracingSpan;
+
+  if (transaction) {
+    tracingSpan = transaction.startChild({
+      op: 'GraphQL query',
+      description: operation.operationName,
+      data: {
+        graphql_variables: operation.variables,
+      },
+    });
+  }
+
+  sentryScope.setContext('graphql_variables', operation.variables);
+  sentryScope.setTag('graphql_operation', operation.operationName);
 
   return forward(operation).map((result) => {
     if (tracingSpan) tracingSpan.finish();
@@ -106,28 +111,26 @@ const refererLink = new ApolloLink((operation, forward) => {
   });
 });
 
-
-const sentryHttpLink = ApolloLink.from([
-  onError(({ graphQLErrors, networkError }) => {
-    if (graphQLErrors) {
-      graphQLErrors.forEach(({ message, locations, path }) => {
-        const locationsStr = JSON.stringify(locations);
-        if (process.env.NODE_ENV !== 'production')
-          console.error(`[GraphQL error]: Message: ${message}, Location: ${locationsStr}, Path: ${path}`);
-      });
-      captureException(graphQLErrors[0]);
-    }
-    if (networkError) {
+const sentryErrorLink = onError(({ graphQLErrors, networkError }) => {
+  if (graphQLErrors) {
+    graphQLErrors.forEach(({ message, locations, path }) => {
+      const locationsStr = JSON.stringify(locations);
       if (process.env.NODE_ENV !== 'production')
-        console.error(`[Network error]: ${networkError}`);
-      captureException(networkError);
-    }
-  }),
-  new HttpLink({
-    uri: `${publicRuntimeConfig.aplansApiBaseURL}/graphql/`,
-    credentials: 'same-origin',
-  }),
-]);
+        console.error(`[GraphQL error]: Message: ${message}, Location: ${locationsStr}, Path: ${path}`);
+    });
+    captureException(graphQLErrors[0]);
+  }
+  if (networkError) {
+    if (process.env.NODE_ENV !== 'production')
+      console.error(`[Network error]: ${networkError}`);
+    captureException(networkError);
+  }
+});
+
+const httpLink = new HttpLink({
+  uri: GRAPHQL_ENDPOINT_URI,
+  credentials: 'same-origin',
+});
 
 let globalApolloClient;
 
@@ -142,10 +145,9 @@ export function initializeApolloClient(opts) {
   if (ctx) globalRequestContext = ctx;
 
   if (globalApolloClient && process.browser) return globalApolloClient;
-
   const clientOpts = {
     ssrMode: !process.browser,
-    link: ApolloLink.from([refererLink, localeMiddleware, sentryHttpLink]),
+    link: ApolloLink.from([refererLink, localeMiddleware, refererLink, sentryTracingLink, sentryErrorLink, httpLink]),
     cache: new InMemoryCache({
       // https://www.apollographql.com/docs/react/data/fragments/#defining-possibletypes-manually
       possibleTypes,
