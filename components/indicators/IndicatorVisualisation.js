@@ -138,7 +138,9 @@ function generateCube(dimensions, values, path) {
       return isEqual(ids, catPath);
     });
     if (!found.length) return null;
-    if (found.length === 1) return found[0].value;
+    // Single date so only return value
+    // TODO: this determines display as bar, needs to take comparison cases into account
+    // if (found.length === 1) return found[0].value;
     return found.map(({ date, value }) => ({ date, value }));
   });
   return array;
@@ -191,10 +193,9 @@ function generateTracesFromValues(indicator, i18n) {
     return { date: newDate, value, categories };
   });
 
-  const dimensionedValues = values.filter((val) => val.categories.length > 0);
-
-  // Draw the main historical series (non-dimensioned)
+  // Separate the main historical series (non-dimensioned) from the dimensioned values
   const mainValues = values.filter((item) => !item.categories.length);
+  const dimensionedValues = values.filter((val) => val.categories.length > 0);
 
   // If we have dimensions, call main historical series 'Total'
   const traceName = (indicator.quantity && !dimensionedValues.length)
@@ -212,7 +213,8 @@ function generateTracesFromValues(indicator, i18n) {
   // Add trace data for dimensions
   if (indicator.dimensions.length && dimensionedValues.length) {
     const dimensions = indicator.dimensions.map((indicatorDim) => indicatorDim.dimension)
-      .sort((a, b) => (a.categories.length - b.categories.length));
+      .sort((a, b) => (a.categories.length - b.categories.length || a.id - b.id));
+
     const cube = generateCube(dimensions, values);
     const dataTraces = getTraces(dimensions, cube);
     dataTraces.forEach((trace) => traces.push({
