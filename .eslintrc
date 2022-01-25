@@ -22,6 +22,7 @@
     "curly": ["off"],
     "object-curly-newline": ["off"],
     "react/prop-types": [2],
+    "react/jsx-props-no-spreading": ["off"],
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
     "import/no-extraneous-dependencies": ["error", {"devDependencies": true}],
     "import/extensions": [
@@ -35,6 +36,6 @@
     ],
   },
   "extends": [
-    "eslint:recommended", "plugin:react/recommended", "plugin:react/jsx-runtime", "airbnb"
+    "eslint:recommended", "plugin:react/recommended", "airbnb", "plugin:react/jsx-runtime"
   ]
 }

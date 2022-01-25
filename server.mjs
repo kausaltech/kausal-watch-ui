@@ -198,10 +198,10 @@ class WatchServer {
     this.apolloClient = this.initApollo();
     this.nextServer = await this.app.getServer();
 
-    router.get('/favicon.ico', async function (ctx) {
+    router.get('/favicon.ico', async (ctx) => {
       ctx.throw(404, 'File not found');
     });
-    router.get('/robots.txt', async function (ctx) {
+    router.get('/robots.txt', async (ctx) => {
       let ret = 'User-agent: *\nDisallow:';
       if (isProductionInstance) {
         ret += '\n';
@@ -212,18 +212,17 @@ class WatchServer {
       ctx.status = 200;
     });
 
-    router.all("(.*)", this.handleRequest.bind(this));
+    router.all('(.*)', this.handleRequest.bind(this));
 
     server.use(logger());
     server.use(router.routes());
     server.on('error', (err, ctx) => {
+      // Do not report HTTP 404s to Sentry
+      if (err.statusCode && err.statusCode === 404) return;
       Sentry.withScope((scope) => {
-        scope.addEventProcessor((event) => {
-          return Sentry.Handlers.parseRequest(event, ctx.request);
-        });
+        scope.addEventProcessor((event) => Sentry.Handlers.parseRequest(event, ctx.request));
         Sentry.captureException(err);
       });
-      console.log(err);
     });
     server.listen(serverPort, () => {
       console.log(`> ✅ Ready on http://localhost:${serverPort}`);
@@ -237,35 +236,6 @@ pathsServer.init().then(() => {
 });
 
 /*
-console.log('Preparing server');
-await app.prepare();
-console.log('Server prepared');
-
-if (process.env.SENTRY_DSN) {
-  sentry.setRelease(app.buildId);
-}
-
-const isDevelopment = process.env.NODE_ENV !== 'production';
-
-// Request logging
-server.use(morgan(!isDevelopment ? 'combined' : 'dev'));
-
-const handle = app.getRequestHandler();
-
-
-const testRobotsTxt = {
-  UserAgent: '*',
-  Disallow: '/',
-};
-// Quickfix to stop apparent indexing of /actions/[id]
-const prodRobotsTxt = {
-  UserAgent: '*',
-  Allow: '/',
-  Disallow: '/actions/[id]',
-};
-
-server.use(robots(isProduction ? prodRobotsTxt : testRobotsTxt));
-
 // Serve locales as JSON
 server.get('/locales/:lang([a-z]{2})/:ns([0-9a-z_-]+).json', function (req, res) {
   const { lang, ns } = req.params;
@@ -301,14 +271,5 @@ server.get('*', (req, res) => {
     }
   }
   return handle(req, res);
-});
-
-if (Sentry) {
-  server.use(Sentry.Handlers.errorHandler());
-}
-
-server.listen(serverPort, (err) => {
-  if (err) throw err;
-  console.log(`Ready on http://localhost:${serverPort}`);
 });
 */

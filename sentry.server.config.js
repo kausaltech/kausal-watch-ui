@@ -8,8 +8,13 @@ Sentry.init({
   maxBreadcrumbs: 50,
   environment: process.env.INSTANCE_TYPE || 'development',
   debug: (process.env.NODE_ENV !== 'production') && SENTRY_DSN,
-  beforeSend: (event) => {
-    //if (process.env.SENTRY_DSN) console.error(event);
+  beforeSend: (event, hint) => {
+    const error = hint.originalException;
+    if (error && error.statusCode && error.statusCode === 404) {
+      // eslint-disable-next-line no-console
+      console.warn('Ignoring page-not-found error on the server');
+      return null;
+    }
     return event;
   },
 });

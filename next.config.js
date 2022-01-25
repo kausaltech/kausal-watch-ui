@@ -1,17 +1,21 @@
 /* eslint-disable no-restricted-syntax */
 const webpack = require('webpack');
-const { withSentryConfig } = require("@sentry/nextjs");
+const { withSentryConfig } = require('@sentry/nextjs');
 const { i18n, SUPPORTED_LANGUAGES } = require('./next-i18next.config');
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
-})
-
+});
 
 let config = {
   i18n,
   env: {
     SENTRY_DSN: process.env.SENTRY_DSN,
     SENTRY_TRACE_SAMPLE_RATE: process.env.SENTRY_TRACE_SAMPLE_RATE || '1.0',
+  },
+  sentry: {
+    // If SENTRY_AUTH_TOKEN is not set, disable uploading source maps to Sentry
+    disableServerWebpackPlugin: !process.env.SENTRY_AUTH_TOKEN,
+    disableClientWebpackPlugin: !process.env.SENTRY_AUTH_TOKEN,
   },
   eslint: {
     // Warning: This allows production builds to successfully complete even if

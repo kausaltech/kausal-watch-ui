@@ -1,5 +1,5 @@
 import withApollo from 'next-with-apollo';
-import { ApolloClient, HttpLink, ApolloLink, ApolloProvider, concat } from '@apollo/client';
+import { ApolloClient, HttpLink, ApolloLink, ApolloProvider } from '@apollo/client';
 import { getDataFromTree } from '@apollo/react-ssr';
 import { InMemoryCache } from '@apollo/client/cache';
 import { onError } from '@apollo/client/link/error';
