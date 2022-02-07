@@ -3,7 +3,7 @@ import { withThemesProvider } from "storybook-addon-styled-component-theme";
 import { I18nextProvider } from 'react-i18next';
 import { setConfig } from 'next/config';
 import { i18n } from './i18n';
-
+import '../styles/default/main.scss';
 import ThemedGlobalStyles from '../common/ThemedGlobalStyles';
 import defaultTheme from 'public/static/themes/default/theme.json';
 
@@ -16,8 +16,6 @@ const publicRuntimeConfig= {
 };
 
 setConfig({ publicRuntimeConfig });
-
-require('../styles/default/main.scss');
 
 let themes = [defaultTheme];
 
