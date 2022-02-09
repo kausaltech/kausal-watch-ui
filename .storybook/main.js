@@ -5,7 +5,7 @@ module.exports = {
     '../stories/**/*.stories.mdx',
     '../stories/**/*.stories.@(js|jsx|ts|tsx)'
   ],
-  addons: ['@storybook/addon-links', '@storybook/addon-essentials', 'storybook-addon-next', 'storybook-addon-styled-component-theme/dist/register', '@storybook/addon-a11y'],
+  addons: ['@storybook/addon-links', '@storybook/addon-essentials', 'storybook-addon-next', '@storybook/addon-a11y', 'storybook-addon-styled-component-theme/dist/preset',],
   framework: '@storybook/react',
   core: {
     builder: "webpack5"
@@ -15,6 +15,10 @@ module.exports = {
       ...config.resolve.fallback,
       fs: false, // <------
       path: false // <-----
+    };
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      'next-i18next': 'react-i18next'
     };
     return config;
   },

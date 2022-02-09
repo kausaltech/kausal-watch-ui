@@ -347,14 +347,16 @@ function SiteFooter(props) {
     otherLogos,
   } = props;
 
-  const OrgLogo = () => (
-    <SVG
-      src={theme.themeLogoWhiteUrl}
-      preserveAspectRatio="xMinYMid meet"
-      title={`${ownerName}, ${siteTitle} ${t('front-page')}`}
-      style={{ display: 'block' }}
-    />
-  );
+  function OrgLogo() {
+    return (
+      <SVG
+        src={theme.themeLogoWhiteUrl}
+        preserveAspectRatio="xMinYMid meet"
+        title={`${ownerName}, ${siteTitle} ${t('front-page')}`}
+        style={{ display: 'block' }}
+      />
+    );
+  }
 
   function scrollToTop(e) {
     e.preventDefault();
@@ -362,162 +364,160 @@ function SiteFooter(props) {
   }
 
   return (
-    <>
-      <StyledFooter className="site-footer">
-        <Container>
-          <FooterNav>
-            <Branding>
-              <Logo>
-                { theme?.footerLogoLink
-                  ? (
-                    <a href={theme.footerLogoLink} target="_blank" rel="noreferrer">
+    <StyledFooter className="site-footer">
+      <Container>
+        <FooterNav>
+          <Branding>
+            <Logo>
+              { theme?.footerLogoLink
+                ? (
+                  <a href={theme.footerLogoLink} target="_blank" rel="noreferrer">
+                    <OrgLogo aria-hidden="true" className="footer-org-logo" />
+                  </a>
+                )
+                : (
+                  <Link href="/">
+                    <a>
                       <OrgLogo aria-hidden="true" className="footer-org-logo" />
                     </a>
-                  )
-                  : (
-                    <Link href="/">
-                      <a>
-                        <OrgLogo aria-hidden="true" className="footer-org-logo" />
-                      </a>
-                    </Link>
-                  )}
-              </Logo>
-              <ServiceTitle>
-                <Link href="/">
-                  <a>
-                    {siteTitle}
-                  </a>
-                </Link>
-              </ServiceTitle>
-            </Branding>
-            <FooterNavItems>
-              { navItems && navItems.map((page) => (
-                <FooterNavItem key={page.id}>
-                  { !page.children && page.slug && (
-                    <NavigationLink slug={page.slug} className="parent-item">
-                      {page.name}
-                    </NavigationLink>
-                  )}
-                  { page.children && (
-                    <>
-                      <span className="parent-item">{page.name}</span>
-                      <FooterSubnav>
-                        { page.children.map((childPage) => (
-                          <FooterNavSubItem key={childPage.slug}>
+                  </Link>
+                )}
+            </Logo>
+            <ServiceTitle>
+              <Link href="/">
+                <a>
+                  {siteTitle}
+                </a>
+              </Link>
+            </ServiceTitle>
+          </Branding>
+          <FooterNavItems>
+            { navItems && navItems.map((page) => (
+              <FooterNavItem key={page.id}>
+                { !page.children && page.slug && (
+                <NavigationLink slug={page.slug} className="parent-item">
+                  {page.name}
+                </NavigationLink>
+                )}
+                { page.children && (
+                <>
+                  <span className="parent-item">{page.name}</span>
+                  <FooterSubnav>
+                    { page.children.map((childPage) => (
+                      <FooterNavSubItem key={childPage.slug}>
                             <NavigationLink slug={childPage.slug}>
                               {childPage.name}
                             </NavigationLink>
                           </FooterNavSubItem>
-                        ))}
-                      </FooterSubnav>
-                    </>
-                  )}
-                </FooterNavItem>
-              ))}
-            </FooterNavItems>
-          </FooterNav>
-          <UtilitySection>
-            <UtilityColumn>
-              <UtilityItem>
-                <OrgTitle>
-                  <a href={ownerUrl} target="_blank" rel="noreferrer">
-                    {ownerName}
-                  </a>
-                </OrgTitle>
-              </UtilityItem>
-            </UtilityColumn>
-            <UtilityColumn>
-              { utilityLinks && utilityLinks.map((page) => (
-                <UtilityItem key={page.id}>
-                  <NavigationLink slug={page.slug}>
-                    { page.icon && (
-                      <Icon
-                        name={page.icon}
-                        color={theme.footerColor}
-                        aria-hidden="true"
-                        className="mr-1"
-                      />
-                    )}
-                    {page.name}
-                  </NavigationLink>
-                </UtilityItem>
-              ))}
-              <UtilityItem>
-                <TopButton type="button" onClick={scrollToTop}>
-                  {t('back-to-top')}
-                  {' '}
+                    ))}
+                  </FooterSubnav>
+                </>
+                )}
+              </FooterNavItem>
+            ))}
+          </FooterNavItems>
+        </FooterNav>
+        <UtilitySection>
+          <UtilityColumn>
+            <UtilityItem>
+              <OrgTitle>
+                <a href={ownerUrl} target="_blank" rel="noreferrer">
+                  {ownerName}
+                </a>
+              </OrgTitle>
+            </UtilityItem>
+          </UtilityColumn>
+          <UtilityColumn>
+            { utilityLinks && utilityLinks.map((page) => (
+              <UtilityItem key={page.id}>
+                <NavigationLink slug={page.slug}>
+                  { page.icon && (
                   <Icon
-                    name="arrowUp"
+                    name={page.icon}
                     color={theme.footerColor}
                     aria-hidden="true"
-                    width="1.25em"
-                    height="1.25em"
+                    className="mr-1"
                   />
-                </TopButton>
+                  )}
+                  {page.name}
+                </NavigationLink>
               </UtilityItem>
-            </UtilityColumn>
-          </UtilitySection>
-          <BaseSection>
-            <BaseColumn>
-              { copyrightText && (
-                <BaseItem>
-                  &copy;
-                  {copyrightText}
-                </BaseItem>
-              )}
-              { creativeCommonsLicense && <BaseItem>{creativeCommonsLicense}</BaseItem> }
-            </BaseColumn>
-            <BaseColumn>
-              { additionalLinks && additionalLinks.map((page) => (
-                <BaseLink key={page.slug}>
-                  <NavigationLink slug={page.slug}>
-                    {page.name}
-                  </NavigationLink>
-                </BaseLink>
-              ))}
-              <BaseLink>
-                {t('published-on')}
+            ))}
+            <UtilityItem>
+              <TopButton type="button" onClick={scrollToTop}>
+                {t('back-to-top')}
                 {' '}
-                <a href="https://kausal.tech" target="_blank" rel="noreferrer">Kausal Watch</a>
+                <Icon
+                  name="arrowUp"
+                  color={theme.footerColor}
+                  aria-hidden="true"
+                  width="1.25em"
+                  height="1.25em"
+                />
+              </TopButton>
+            </UtilityItem>
+          </UtilityColumn>
+        </UtilitySection>
+        <BaseSection>
+          <BaseColumn>
+            { copyrightText && (
+            <BaseItem>
+              &copy;
+              {copyrightText}
+            </BaseItem>
+            )}
+            { creativeCommonsLicense && <BaseItem>{creativeCommonsLicense}</BaseItem> }
+          </BaseColumn>
+          <BaseColumn>
+            { additionalLinks && additionalLinks.map((page) => (
+              <BaseLink key={page.slug}>
+                <NavigationLink slug={page.slug}>
+                  {page.name}
+                </NavigationLink>
               </BaseLink>
-            </BaseColumn>
-          </BaseSection>
+            ))}
+            <BaseLink>
+              {t('published-on')}
+              {' '}
+              <a href="https://kausal.tech" target="_blank" rel="noreferrer">Kausal Watch</a>
+            </BaseLink>
+          </BaseColumn>
+        </BaseSection>
 
-          {fundingInstruments.length > 0 && (
-            <FundingInstruments>
-              <FundingHeader>{t('supported-by')}</FundingHeader>
-              { fundingInstruments.map((funder) => (
-                <FundingInstrumentContainer key={funder.id}>
-                  <a href={funder.link} target="_blank" rel="noreferrer">
-                    <SVG
-                      src={funder.logo}
-                      preserveAspectRatio="xMidYMid meet"
-                      title={funder.name}
-                    />
-                  </a>
-                </FundingInstrumentContainer>
-              ))}
-            </FundingInstruments>
-          )}
-          {otherLogos.length > 0 && (
-            <FundingInstruments>
-              { otherLogos.map((logo) => (
-                <FundingInstrumentContainer key={logo.id}>
-                  <a href={logo.link} target="_blank" rel="noreferrer">
-                    <SVG
-                      src={logo.logo}
-                      preserveAspectRatio="xMidYMid meet"
-                      title={logo.name}
-                      style={{ display: 'block' }}
-                    />
-                  </a>
-                </FundingInstrumentContainer>
-              ))}
-            </FundingInstruments>
-          )}
-        </Container>
-      </StyledFooter>
-    </>
+        {fundingInstruments?.length > 0 && (
+        <FundingInstruments>
+          <FundingHeader>{t('supported-by')}</FundingHeader>
+          { fundingInstruments.map((funder) => (
+            <FundingInstrumentContainer key={funder.id}>
+              <a href={funder.link} target="_blank" rel="noreferrer">
+                <SVG
+                  src={funder.logo}
+                  preserveAspectRatio="xMidYMid meet"
+                  title={funder.name}
+                />
+              </a>
+            </FundingInstrumentContainer>
+          ))}
+        </FundingInstruments>
+        )}
+        {otherLogos?.length > 0 && (
+        <FundingInstruments>
+          { otherLogos.map((logo) => (
+            <FundingInstrumentContainer key={logo.id}>
+              <a href={logo.link} target="_blank" rel="noreferrer">
+                <SVG
+                  src={logo.logo}
+                  preserveAspectRatio="xMidYMid meet"
+                  title={logo.name}
+                  style={{ display: 'block' }}
+                />
+              </a>
+            </FundingInstrumentContainer>
+          ))}
+        </FundingInstruments>
+        )}
+      </Container>
+    </StyledFooter>
   );
 }
 

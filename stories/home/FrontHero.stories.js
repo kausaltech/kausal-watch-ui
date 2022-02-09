@@ -2,13 +2,12 @@ import React from 'react';
 import HeroFullImage from 'components/home/HeroFullImage';
 import FrontHero from 'components/home/FrontHero';
 import HnhHero from 'components/home/HnhHero';
-import i18n from '.storybook/i18n';
 
 export default {
   title: 'Global/Home Hero',
 };
 
-export const FullImageHero = () => {
+export function FullImageHero() {
   return (
     <HeroFullImage
       bgImage="https://source.unsplash.com/collection/1597991"
@@ -18,9 +17,9 @@ export const FullImageHero = () => {
       indicatorsDescription="Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
     />
   );
-};
+}
 
-export const SimpleHero = () => {
+export function SimpleHero() {
   return (
     <FrontHero
       bgImage="https://source.unsplash.com/collection/1597991"
@@ -30,9 +29,9 @@ export const SimpleHero = () => {
       indicatorsDescription="Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
     />
   );
-};
+}
 
-export const HelsinkiHero = () => {
+export function HelsinkiHero() {
   return (
     <HnhHero
       bgImage="https://source.unsplash.com/collection/1597991"
@@ -43,4 +42,4 @@ export const HelsinkiHero = () => {
       toimenpiteiden toteutumista ohjelmaan kirjattujen mittareiden suunnassa."
     />
   );
-};
+}

@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
 import { ThemeContext } from 'styled-components';
-import i18n from '../../.storybook/i18n';
 
 import IndicatorListFiltered from '../../components/indicators/IndicatorListFiltered';
 
@@ -124,7 +123,7 @@ export default {
   title: 'Indicators/List',
 };
 
-const IndicatorListStory = () => {
+function IndicatorListStory() {
   const theme = useContext(ThemeContext);
 
   return (
@@ -135,6 +134,8 @@ const IndicatorListStory = () => {
       />
     </div>
   );
-};
+}
 
-export const List = (theme) => <IndicatorListStory theme={theme} />;
+export function List(theme) {
+  return <IndicatorListStory theme={theme} />;
+}

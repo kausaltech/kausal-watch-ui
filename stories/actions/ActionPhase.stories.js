@@ -36,38 +36,48 @@ const mockPhases = [
 ];
 
 const actionInProgress = {
-  statusIdentifier: 'on_time',
-  statusName: 'On Time',
+  status: {
+    name: 'On Time',
+    identifier: 'on_time',
+  },
   activePhase: 'in_progress',
   reason: '',
   phases: mockPhases,
 };
 
 const actionLate = {
-  statusIdentifier: 'late',
-  statusName: 'Late',
+  status: {
+    identifier: 'late',
+    name: 'Late',
+  },
   activePhase: 'not_started',
   reason: 'Budget has not been approved',
   phases: mockPhases,
 };
 
 const actionMerged = {
-  statusIdentifier: 'merged',
-  statusName: 'Merged',
+  status: {
+    identifier: 'merged',
+    name: 'Merged',
+  },
   reason: '',
   phases: mockPhases,
 };
 
 const actionPostponed = {
-  statusIdentifier: 'postponed',
-  statusName: 'Postponed for now',
+  status: {
+    identifier: 'postponed',
+    name: 'Postponed for now',
+  },
   reason: 'Feasibility will be reassessed in 2025',
   phases: mockPhases,
 };
 
 const actionCancelled = {
-  statusIdentifier: 'cancelled',
-  statusName: 'Cancelled',
+  status: {
+    identifier: 'cancelled',
+    name: 'Cancelled',
+  },
   activePhase: '',
   reason: 'Is not feasible in this point',
   phases: mockPhases,
@@ -78,19 +88,21 @@ export default {
   component: ActionPhase,
 };
 
-const ActionCardTemplate = (args) => <ActionPhase {...args} />;
+function ActionPhaseTemplate(args) {
+  return <ActionPhase {...args} />;
+}
 
-export const InProgress = ActionCardTemplate.bind({});
+export const InProgress = ActionPhaseTemplate.bind({});
 InProgress.args = actionInProgress;
 
-export const Late = ActionCardTemplate.bind({});
+export const Late = ActionPhaseTemplate.bind({});
 Late.args = actionLate;
 
-export const Postponed = ActionCardTemplate.bind({});
+export const Postponed = ActionPhaseTemplate.bind({});
 Postponed.args = actionPostponed;
 
-export const Merged = ActionCardTemplate.bind({});
+export const Merged = ActionPhaseTemplate.bind({});
 Merged.args = actionMerged;
 
-export const Cancelled = ActionCardTemplate.bind({});
+export const Cancelled = ActionPhaseTemplate.bind({});
 Cancelled.args = actionCancelled;

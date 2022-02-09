@@ -126,7 +126,7 @@ const ActionNumber = styled.span`
   }
 `;
 
-const ActionCategories = (categories) => {
+function ActionCategories(categories) {
   const theme = useTheme();
   const { showIdentifiers } = theme.settings.categories;
 
@@ -183,7 +183,7 @@ const ActionCategories = (categories) => {
       ))}
     </CategoriesBreadcrumb>
   );
-};
+}
 
 function ActionHero(props) {
   const {

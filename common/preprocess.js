@@ -1,9 +1,7 @@
 import _ from 'lodash';
-import { getI18n } from 'common/i18n';
 
 // Clean up actionStatus so UI can handle edge cases
 const cleanActionStatus = (action, actionStatuses) => {
-  const i18n = getI18n();
   const { status, implementationPhase } = action;
   // precaution not to mutate original object
   const newStatus = status ? _.cloneDeep(status) : {};
@@ -38,7 +36,7 @@ const cleanActionStatus = (action, actionStatuses) => {
   // if action is merged, mark it as a status
   if (action.mergedWith) {
     newStatus.id = '707'; // not nice to invent ids, but we don't use ids as differentiator in the UI
-    newStatus.name = i18n.t('action-status-merged');
+    newStatus.name = 'merged'; // TODO get translation here somehow, Storybook fails i18n.t
     newStatus.identifier = 'merged';
     newStatus.isCompleted = true;
   }

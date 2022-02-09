@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
 import { ThemeContext } from 'styled-components';
-import i18n from '../../.storybook/i18n';
 
 import IndicatorCard from '../../components/indicators/IndicatorCard';
 
@@ -8,7 +7,7 @@ export default {
   title: 'Indicators/Card',
 };
 
-const IndicatorCards = () => {
+function IndicatorCards() {
   const theme = useContext(ThemeContext);
 
   return (
@@ -77,6 +76,8 @@ const IndicatorCards = () => {
       </div>
     </div>
   );
-};
+}
 
-export const Card = (theme) => <IndicatorCards theme={theme} />;
+export function Card(theme) {
+  return <IndicatorCards theme={theme} />;
+}

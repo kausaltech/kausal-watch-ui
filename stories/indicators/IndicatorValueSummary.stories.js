@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
 import { ThemeContext } from 'styled-components';
-import i18n from '../../.storybook/i18n';
 
 import IndicatorValueSummary from '../../components/indicators/IndicatorValueSummary';
 
@@ -37,7 +36,7 @@ const goalsData2 = [
     id: '25',
     date: '2025-12-31',
     value: 150,
-  }
+  },
 ];
 
 const unitData = {
@@ -114,15 +113,14 @@ const valuesData2 = [
     id: '1089',
     date: '2018-12-31',
     value: 32,
-  }
+  },
 ];
-
 
 export default {
   title: 'Indicators/ValueSummary',
 };
 
-const IndicatorValueSummaryStory = () => {
+function IndicatorValueSummaryStory() {
   const theme = useContext(ThemeContext);
 
   return (
@@ -133,8 +131,8 @@ const IndicatorValueSummaryStory = () => {
         unit={unitData}
         goals={goalsData}
       />
-      <br/>
-      <br/>
+      <br />
+      <br />
       <IndicatorValueSummary
         timeResolution="YEAR"
         values={valuesData2}
@@ -144,6 +142,8 @@ const IndicatorValueSummaryStory = () => {
 
     </div>
   );
-};
+}
 
-export const Summary = (theme) => <IndicatorValueSummaryStory theme={theme} />;
+export function Summary(theme) {
+  return <IndicatorValueSummaryStory theme={theme} />;
+}

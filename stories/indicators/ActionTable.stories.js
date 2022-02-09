@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
 import { ThemeContext } from 'styled-components';
-import i18n from '../../.storybook/i18n';
 
 import ActionsTable from '../../components/actions/ActionsTable';
 
@@ -38,7 +37,7 @@ export default {
   title: 'Indicators/RelatedActions',
 };
 
-const ActionTableStory = () => {
+function ActionTableStory() {
   const theme = useContext(ThemeContext);
 
   return (
@@ -48,6 +47,8 @@ const ActionTableStory = () => {
       />
     </div>
   );
-};
+}
 
-export const Table = (theme) => <ActionTableStory theme={theme} />;
+export function Table(theme) {
+  return <ActionTableStory theme={theme} />;
+}

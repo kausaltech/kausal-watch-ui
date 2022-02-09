@@ -114,7 +114,9 @@ export default {
   component: ActionCard,
 };
 
-const ActionCardTemplate = (args) => <ActionCard {...args} />;
+function ActionCardTemplate(args) {
+  return <ActionCard {...args} />;
+}
 
 export const Completed = ActionCardTemplate.bind({});
 Completed.args = { action: actionPropCompleted, id: '12' };
@@ -134,7 +136,7 @@ Merged.args = { action: actionPropMerged, id: '12' };
 export const PhaseOnTime = ActionCardTemplate.bind({});
 PhaseOnTime.args = { action: actionPhaseOnTime, id: '12', phases: mockPhases };
 
-const ActionCards = () => {
+function ActionCards() {
   const theme = useContext(ThemeContext);
 
   return (
@@ -170,9 +172,11 @@ const ActionCards = () => {
       </div>
     </div>
   );
-};
+}
 
-export const ActionCardStory = (theme) => <ActionCards theme={theme} />;
+export function ActionCardStory(theme) {
+  return <ActionCards theme={theme} />;
+}
 
 /*
 const ACTION_CARD_FRAGMENT = gql`

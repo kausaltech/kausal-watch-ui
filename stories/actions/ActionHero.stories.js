@@ -9,27 +9,43 @@ export default {
 
 const categories = [{
   id: '103',
+  identifier: '3',
   name: 'Action Category 1 With a very Long Title',
   imageUrl: null,
+  type: {
+    identifier: 'action',
+  },
   parent: {
     id: '102',
+    identifier: '2',
     name: 'Parent Category',
     imageUrl: '',
+    type: {
+      identifier: 'action',
+    },
   },
 },
 {
   id: '104',
+  identifier: '4',
   name: 'Category 2',
   imageUrl: null,
+  type: {
+    identifier: 'action',
+  },
   parent: {
     id: '102',
+    identifier: '2',
     name: 'Parent Category 2',
     imageUrl: '',
+    type: {
+      identifier: 'action',
+    },
   },
 },
 ];
 
-const ActionHeros = () => {
+function ActionHeros() {
   const theme = useContext(ThemeContext);
 
   return (
@@ -42,6 +58,8 @@ const ActionHeros = () => {
       imageUrl="https://source.unsplash.com/collection/1597991"
     />
   );
-};
+}
 
-export const ActionHeroStory = (theme) => <ActionHeros theme={theme} />;
+export function ActionHeroStory(theme) {
+  return <ActionHeros theme={theme} />;
+}
