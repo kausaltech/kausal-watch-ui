@@ -32,7 +32,7 @@ const additionalThemes = [
   'lpr-ilmasto',
   'hnh2035',
   'liiku',
-  'lahti-ilmasto',
+  'hame-ilmasto',
   'tampere-ilmasto',
   'helsinki-kierto',
   'ktstrat',

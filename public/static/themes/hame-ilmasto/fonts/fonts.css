@@ -1,0 +1,17 @@
+@import url("https://use.typekit.net/jyn7hwg.css");
+
+@font-face {
+  font-family: 'Butler';
+  src: url('https://api.watch.kausal.tech/media/themes/hame-ilmasto/Butler_Webfont/Butler-Bold.woff2') format('woff2'),
+      url('https://api.watch.kausal.tech/media/themes/hame-ilmasto/Butler_Webfont/Butler-Bold.woff') format('woff');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Butler';
+  src: url('https://api.watch.kausal.tech/media/themes/hame-ilmasto/Butler_Webfont/Butler.woff2') format('woff2'),
+      url('https://api.watch.kausal.tech/media/themes/hame-ilmasto/Butler_Webfont/Butler.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
