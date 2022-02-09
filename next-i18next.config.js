@@ -7,7 +7,7 @@ module.exports = {
     localeDetection: false,
   },
   localePath: './locales',
-  localeExtension: 'yaml',
+  localeExtension: 'json',
   saveMissing: process.env.NODE_ENV !== 'production',
   ns: ['common', 'actions', 'a11y'],
   defaultNS: 'common',

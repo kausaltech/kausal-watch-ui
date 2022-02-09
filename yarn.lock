@@ -15015,8 +15015,6 @@ __metadata:
     typescript: ^4.5.5
     typewiz-webpack: ^1.2.4
     webpack: ^5.68.0
-    yaml: ^1.10.2
-    yaml-loader: ^0.6.0
     yarn-upgrade-all: ^0.6.1
   languageName: unknown
   linkType: soft
@@ -23278,17 +23276,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"yaml-loader@npm:^0.6.0":
-  version: 0.6.0
-  resolution: "yaml-loader@npm:0.6.0"
-  dependencies:
-    loader-utils: ^1.4.0
-    yaml: ^1.8.3
-  checksum: de6f070aafaf10ee65aac721fbbacadfec0468801e07457ed81bb725e6336e2bd6c1402fa233a16d6ad72e4373680147b3e37d569d9a1e98d3fcd3a2cd64de8e
-  languageName: node
-  linkType: hard
-
-"yaml@npm:^1.10.0, yaml@npm:^1.10.2, yaml@npm:^1.7.2, yaml@npm:^1.8.3":
+"yaml@npm:^1.10.0, yaml@npm:^1.7.2":
   version: 1.10.2
   resolution: "yaml@npm:1.10.2"
   checksum: ce4ada136e8a78a0b08dc10b4b900936912d15de59905b2bf415b4d33c63df1d555d23acb2a41b23cf9fb5da41c256441afca3d6509de7247daa062fd2c5ea5f
