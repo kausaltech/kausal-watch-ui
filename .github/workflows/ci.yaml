@@ -38,6 +38,7 @@ jobs:
             --cache-from "type=local,src=/tmp/.buildx-cache" \
             --cache-to "type=local,dest=/tmp/.not-cached" \
             --tag ${{ env.DOCKER_IMAGE }} \
+            --load \
             .
       - name: Log into Docker registry
         if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/stage'
