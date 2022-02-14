@@ -25,7 +25,7 @@ const ScaleIcon = styled(Icon)`
   }
 
   &.icon-bad {
-    fill: ${(props) => props.theme.themeColors.danger} !important;
+    fill: ${(props) => props.theme.graphColors.red070} !important;
   }
 `;
 
@@ -83,7 +83,7 @@ const formatEmissionSharePercent = (share, total) => {
   return `${Math.round(percent)} % ${label}`;
 };
 
-const MetaContent = (props) => {
+function MetaContent(props) {
   const { contentData, contentType, title, color } = props;
 
   switch (contentData.__typename) {
@@ -135,9 +135,9 @@ const MetaContent = (props) => {
       return null;
     default: return <div />;
   }
-};
+}
 
-const CategoryMetaDataBlock = (props) => {
+function CategoryMetaDataBlock(props) {
   const plan = useContext(PlanContext);
   const {
     color,
@@ -161,7 +161,7 @@ const CategoryMetaDataBlock = (props) => {
       {plan.actionStatuses.length ? <ActionGroupStatus category={id} /> : null}
     </MetaDataList>
   );
-};
+}
 
 // TODO: prop types and defaults
 CategoryMetaDataBlock.defaultProps = {

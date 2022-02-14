@@ -26,17 +26,15 @@ function Categorybadge(props) {
   const {
     id,
     name,
-    abbreviation,
     url,
   } = props;
   const size = 'md';
-  const { t } = useTranslation();
-
   return (
-    <Link href={url} passHref>
+    <Link href={url}>
       <Badge
         id={`org-${slugify(id)}`}
         size={size}
+        href
       >
         {name}
       </Badge>
@@ -74,9 +72,8 @@ function CategoryTags(props) {
 
 Categorybadge.propTypes = {
   id: PropTypes.string.isRequired,
-  index: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
-  abbreviation: PropTypes.string,
+  url: PropTypes.string,
 };
 
 CategoryTags.propTypes = {

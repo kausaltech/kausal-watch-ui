@@ -181,14 +181,8 @@ export const themeProp = exact({
   tacticalIndicatorColorFg: string.isRequired,
   themeColors: exact({
     black: string.isRequired,
-    danger: string.isRequired,
     dark: string.isRequired,
-    info: string.isRequired,
     light: string.isRequired,
-    primary: string.isRequired,
-    secondary: string.isRequired,
-    success: string.isRequired,
-    warning: string.isRequired,
     white: string.isRequired,
   }).isRequired,
   themeCustomStylesUrl: string.isRequired,
@@ -207,6 +201,8 @@ export const themeProp = exact({
     otherLogos: array.isRequired,
     attentionBannerContent: object,
     externalLinks: array,
+    footerLogoOnly: bool,
+    navigationLogoOnly: bool,
   }),
 });
 

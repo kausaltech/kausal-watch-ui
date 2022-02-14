@@ -11,7 +11,7 @@ const ColorExample = styled.div`
 `;
 
 function ColorRow(props) {
-  const {colorName, colorValue} = props;
+  const { colorName, colorValue } = props;
   return (
     <tr>
       <td>{colorName}</td>
@@ -21,7 +21,7 @@ function ColorRow(props) {
     </tr>
   );
 }
-const Colors = () => {
+function Colors() {
   const themeContext = useContext(ThemeContext);
   return (
     <Container className="my-5">
@@ -60,25 +60,6 @@ const Colors = () => {
           <ColorRow
             colorName="themeColors.white"
             colorValue={themeContext.themeColors.white}
-          />
-          <tr>
-            <th colSpan={3}>Functional UI Colors</th>
-          </tr>
-          <ColorRow
-            colorName="themeColors.success"
-            colorValue={themeContext.themeColors.success}
-          />
-          <ColorRow
-            colorName="themeColors.info"
-            colorValue={themeContext.themeColors.info}
-          />
-          <ColorRow
-            colorName="themeColors.warning"
-            colorValue={themeContext.themeColors.warning}
-          />
-          <ColorRow
-            colorName="themeColors.danger"
-            colorValue={themeContext.themeColors.danger}
           />
           <tr>
             <th colSpan={3}>Semantic Colors</th>
@@ -127,11 +108,13 @@ const Colors = () => {
       </Table>
     </Container>
   );
-};
+}
 
 export default {
   title: 'Design System/Colors',
   component: Colors,
 };
 
-export const ColorsStory = (theme) => <Colors theme={theme} />;
+export function ColorsStory(theme) {
+  return <Colors theme={theme} />;
+}

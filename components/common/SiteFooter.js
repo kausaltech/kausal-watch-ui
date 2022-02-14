@@ -383,6 +383,8 @@ function SiteFooter(props) {
                   </Link>
                 )}
             </Logo>
+            { !theme.settings.footerLogoOnly
+            && (
             <ServiceTitle>
               <Link href="/">
                 <a>
@@ -390,6 +392,7 @@ function SiteFooter(props) {
                 </a>
               </Link>
             </ServiceTitle>
+            )}
           </Branding>
           <FooterNavItems>
             { navItems && navItems.map((page) => (
@@ -405,10 +408,10 @@ function SiteFooter(props) {
                   <FooterSubnav>
                     { page.children.map((childPage) => (
                       <FooterNavSubItem key={childPage.slug}>
-                            <NavigationLink slug={childPage.slug}>
-                              {childPage.name}
-                            </NavigationLink>
-                          </FooterNavSubItem>
+                        <NavigationLink slug={childPage.slug}>
+                          {childPage.name}
+                        </NavigationLink>
+                      </FooterNavSubItem>
                     ))}
                   </FooterSubnav>
                 </>
