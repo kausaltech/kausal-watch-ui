@@ -98,16 +98,16 @@ function IndicatorValueSummary(props) {
       absChange = latestValue.value - values[values.length - 2].value;
       relChange = latestValue.value ? absChange / latestValue.value : 0;
       if (desirableDirection) {
-        if ((absChange > 0 && desirableDirection === '+') ||
-            (absChange < 0 && desirableDirection === '-')) {
+        if ((absChange > 0 && desirableDirection === '+')
+            || (absChange < 0 && desirableDirection === '-')) {
           desirableChange = true;
-          changeColor = theme.themeColors.success;
+          changeColor = theme.graphColors.green070;
         } else if (absChange === 0) {
           desirableChange = null;
           changeColor = theme.themeColors.dark;
         } else {
           desirableChange = false;
-          changeColor = theme.themeColors.danger;
+          changeColor = props.theme.graphColors.red070;
         }
       }
       if (absChange < 0) {

@@ -44,7 +44,7 @@ const CategoryPageHeader = styled.div`
   background-image: url(${(props) => props.image});
   background-position: ${(props) => props.imageAlign};
   background-size: cover;
-  background-blend-mode: multiply;
+
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     padding: ${(props) => props.theme.spaces.s400} ${(props) => props.theme.spaces.s050};
@@ -89,7 +89,7 @@ const Breadcrumb = styled.div`
   margin-bottom: ${(props) => props.theme.spaces.s100};
 `;
 
-const CategoryPageHeaderBlock = (props) => {
+function CategoryPageHeaderBlock(props) {
   const {
     title,
     categoryId,
@@ -158,7 +158,7 @@ const CategoryPageHeaderBlock = (props) => {
       </Container>
     </HeaderBackground>
   );
-};
+}
 
 CategoryPageHeaderBlock.defaultProps = {
   lead: null,

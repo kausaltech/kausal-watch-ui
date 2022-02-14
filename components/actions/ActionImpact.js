@@ -22,7 +22,7 @@ const ImpactIcon = styled(Icon)`
   }
 
   &.icon-bad {
-    fill: ${(props) => props.theme.themeColors.danger} !important;
+    fill: ${(props) => props.theme.graphColors.red070} !important;
   }
 `;
 

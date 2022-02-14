@@ -5,12 +5,6 @@
   "neutralLight": "rgb(240, 240, 240)",
   "neutralDark": "rgb(30, 30, 30)",
   "themeColors": {
-    "primary": "rgb(0, 79, 116)",
-    "secondary": "rgb(192, 224, 183)",
-    "success": "rgb(0, 79, 116)",
-    "info": "rgb(51, 109, 148)",
-    "warning": "rgb(244, 206, 115)",
-    "danger": "rgb(167, 57, 57)",
     "light": "rgb(236, 234, 230)",
     "dark": "rgb(75, 75, 75)",
     "black": "rgb(30, 30, 30)",

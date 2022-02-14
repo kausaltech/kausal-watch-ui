@@ -170,7 +170,7 @@ const GlobalStyle = createGlobalStyle`
   .form-control.is-invalid,
   .was-validated .custom-select:invalid,
   .custom-select.is-invalid {
-    background-color: rgba(${(props) => props.theme.themeColors.danger}, 0.15);
+    background-color: rgba(${(props) => props.theme.graphColors.red070}, 0.15);
   }
 `;
 
