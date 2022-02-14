@@ -86,7 +86,7 @@ query ContactDetails($id: ID!) {
   }
 }`;
 
-const ContactDetails = (props) => {
+function ContactDetails(props) {
   const { t, id } = props;
   return (
     <Query query={GET_CONTACT_DETAILS} variables={{ id }}>
@@ -129,7 +129,7 @@ const ContactDetails = (props) => {
       }}
     </Query>
   );
-};
+}
 
 class ContactPerson extends React.Component {
   constructor(props) {
@@ -152,7 +152,7 @@ class ContactPerson extends React.Component {
 
     return (
       <Person className={isLeader}>
-        <div left>
+        <div>
           <Avatar
             src={person.avatarUrl || '/static/themes/default/images/default-avatar.png'}
             className={`rounded-circle ${isLeader}`}

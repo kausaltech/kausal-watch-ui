@@ -51,7 +51,7 @@ const SiteTitle = styled.div`
   padding: ${(props) => props.theme.spaces.s150} 0 ${(props) => props.theme.spaces.s150};
 `;
 
-const HomeLink = styled.div`
+const HomeLink = styled.a`
   display: flex;
   align-items: center;
   color: ${(props) => props.theme.brandNavColor};
