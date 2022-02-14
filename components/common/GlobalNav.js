@@ -34,11 +34,6 @@ const BotNav = styled(Navbar)`
     padding: ${(props) => props.theme.spaces.s150} 0;
   }
 
-  .nav-item {
-    display: flex;
-    flex-direction: column;
-  }
-
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     .navbar-nav {
       padding: 0;
@@ -247,7 +242,7 @@ function DropdownList(props) {
           { parentName }
         </NavHighlighter>
       </StyledDropdownToggle>
-      <DropdownMenu>
+      <DropdownMenu end>
         { items && items.map((child) => (
           <DropdownItem key={child.id}>
             <NavLink>

@@ -201,6 +201,8 @@ export const themeProp = exact({
     otherLogos: array.isRequired,
     attentionBannerContent: object,
     externalLinks: array,
+    footerLogoOnly: bool,
+    navigationLogoOnly: bool,
   }),
 });
 
