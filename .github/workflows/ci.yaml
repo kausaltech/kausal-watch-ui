@@ -41,7 +41,7 @@ jobs:
             --load \
             .
       - name: Log into Docker registry
-        if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/stage'
+        if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/deployment/staging'
         uses: docker/login-action@v1
         with:
           registry: docker.kausal.tech
@@ -52,8 +52,8 @@ jobs:
         if: github.ref == 'refs/heads/master'
         run: |
           docker push ${{ env.DOCKER_IMAGE }}:latest
-      - name: Add stage tag and push to registry
-        if: github.ref == 'refs/heads/stage'
+      - name: Add staging tag and push to registry
+        if: github.ref == 'refs/heads/deployment/staging'
         run: |
-          docker tag ${{ env.DOCKER_IMAGE }} ${{ env.DOCKER_IMAGE }}:stage-${{ github.run_number }}
-          docker push ${{ env.DOCKER_IMAGE }}:stage-${{ github.run_number }}
+          docker tag ${{ env.DOCKER_IMAGE }} ${{ env.DOCKER_IMAGE }}:staging-${{ github.run_number }}
+          docker push ${{ env.DOCKER_IMAGE }}:staging-${{ github.run_number }}
