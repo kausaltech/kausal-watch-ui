@@ -70,6 +70,15 @@ export function getActionListLinkProps(query) {
   };
 }
 
+export function getSearchResultsLinkProps(query) {
+  return {
+    href: {
+      pathname: '/search',
+      query,
+    },
+  };
+}
+
 export function getDashboardLinkProps(query) {
   return {
     href: {
