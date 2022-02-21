@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useQuery, gql } from '@apollo/client';
 import styled from 'styled-components';
 import {
-  Container, Row, Col, Input, Label, FormGroup
+  Container, Row, Col, Input, Label, FormGroup,
 } from 'reactstrap';
 import { Link } from 'routes';
 import { useTranslation } from 'common/i18n';
@@ -134,11 +134,13 @@ function SearchResultItem({ hit }) {
   }
   return (
     <StyledSearchResultItem>
-      {(plan.identifier !== hit.plan.identifier) && (<PlanTag
+      {(plan.identifier !== hit.plan.identifier) && (
+      <PlanTag
         planImage={hit.plan.image.rendition.src}
         planShortName={hit.plan.shortName || hit.plan.name}
         organization={hit.plan.organization.name}
-      />)}
+      />
+      )}
       {hitTypeName && (<div>{hitTypeName}</div>)}
       {primaryOrg && (<div>{primaryOrg.name}</div>)}
       <Link href={hit.url} passHref>
@@ -148,7 +150,7 @@ function SearchResultItem({ hit }) {
       </Link>
       <ResultExcerpt dangerouslySetInnerHTML={{ __html: hit.highlight }} />
     </StyledSearchResultItem>
-  )
+  );
 }
 
 const searchProps = PropTypes.shape({
@@ -178,7 +180,7 @@ function SearchResults({ search }) {
     <Row>
       <Col sm="12" md={{ offset: 3, size: 6 }}>
         <ResultsHeader>
-          {t('number-of-search-results', { count: hits.length }) + ' '}
+          {`${t('number-of-search-results', { count: hits.length })} `}
           &apos;
           {search.q}
           &apos;
@@ -240,9 +242,9 @@ function SearchView(props) {
                     value={userSearch.q}
                     onChange={handleValueChange}
                   />
-                  <FormGroup>
+                  <FormGroup switch>
                     <Input
-                      type="checkbox"
+                      type="switch"
                       id="other-plans-only"
                       name="onlyOtherPlans"
                       checked={userSearch.onlyOtherPlans}
