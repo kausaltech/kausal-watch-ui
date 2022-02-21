@@ -14,6 +14,7 @@ import { Link } from 'routes';
 import { NavigationLink } from 'common/links';
 
 import Icon from './Icon';
+import NavbarSearch from './NavbarSearch';
 
 const TopNav = styled(Navbar)`
   padding: 0 ${(props) => props.theme.spaces.s100};
@@ -322,6 +323,9 @@ function GlobalNav(props) {
             <SiteTitle>{ theme.navTitleVisible ? siteTitle : '\u00A0' }</SiteTitle>
           </HomeLink>
         </Link>
+        <Nav navbar className="ml-auto d-none d-md-block">
+          <NavbarSearch />
+        </Nav>
         <NavbarToggler
           onClick={() => toggleOpen(!isOpen)}
           aria-label={isOpen ? t('nav-menu-close') : t('nav-menu-open')}
