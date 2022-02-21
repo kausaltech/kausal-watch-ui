@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Table } from 'reactstrap';
+import { Table, Button } from 'reactstrap';
 import styled from 'styled-components';
 import { useTheme } from 'common/theme';
 import PlanContext from 'context/plan';
@@ -308,11 +308,10 @@ const SortableTableHeader = ({children, headerKey, sort, onClick}) => {
   let directionArrow = '';
   if (selected) {
     directionArrow = (sort.direction ?? 1) === 1 ? '▴' : '▾';
-    style.textDecoration = 'underline';
   }
   return (
     <th style={style} onClick={onClick}>
-      { children }
+      <span style={(selected ? {textDecoration: 'underline'} : {})}>{ children }</span>
       &nbsp;
       { directionArrow }
     </th>
@@ -321,8 +320,6 @@ const SortableTableHeader = ({children, headerKey, sort, onClick}) => {
 
 const preprocessForSorting = (key, values) => {
   switch (key) {
-  case 'identifier':
-    return values.map((s) => Number.parseInt(s));
   case 'updatedAt':
     const [x, y] = values;
     return [y, x];
@@ -335,23 +332,30 @@ const ActionsStatusTable = (props) => {
   const orgMap = new Map(orgs.map((org) => [org.id, org]));
   const plan = useContext(PlanContext);
   const theme = useTheme();
-  const [ sort, setSort ] = useState({key: 'name', direction: 1});
+  const [ sort, setSort ] = useState({key: 'order', direction: 1});
   const { key, direction } = sort;
 
   const comparator = (g1, g2) =>  {
     let [v1, v2] = preprocessForSorting(key, [g1[key], g2[key]]);
     const val = (
       v1 == v2 ? 0
-        : (v1 == null || (v2 > v1)) ? -1
-        : 1
+        : (v1 == null || (v2 > v1)) ? -1 : 1
     );
     return (direction === 1 ? val : -val);
   };
   const sortedActions = actions.sort(comparator)
     .map((action) => processAction(action, orgMap));
-  const showImpacts = plan.actionImpacts.length > 0;
+
   const { showResponsibles, showIndicators } = theme.settings.dashboard;
-  const { t } = useTranslation(['common', 'actions']);
+  const showColumn = {};
+  showColumn.logos = plan.primaryOrgs.length > 0;
+  showColumn.actionIdentifiers = !plan.hideActionIdentifiers;
+  showColumn.impacts = plan.actionImpacts.length > 0;
+  showColumn.responsibles = showResponsibles;
+  showColumn.indicators = showIndicators;
+
+  let columnCount = 4;
+  columnCount += Object.keys(showColumn).filter(x => x).length;
 
   const clickHandler = (key) => () => {
     let direction = 1
@@ -361,25 +365,42 @@ const ActionsStatusTable = (props) => {
     setSort({key, direction});
   }
 
+  const { t } = useTranslation(['common', 'actions']);
+  const directionLabel = direction === 1 ? t('ascending') : t('descending');
+  const columnLabel = {
+    identifier: t('action-id'),
+    name: t('action-name-title'),
+    updatedAt: t('action-last-updated')
+  };
+  const sortingStatusText = t(
+    'sorting-in-direction-x-by-column-y',
+    {direction: directionLabel, column: columnLabel[sort.key]}
+  );
+
   return (
     <DashTable role="list">
       <thead>
+        { sort.key !== 'order' &&
+          <tr style={{ backgroundColor: 'white', fontWeight: 'normal', textAlign: 'left' }}>
+            <th style={{ fontWeight: 'normal' }} colSpan={columnCount}>
+              {sortingStatusText} &nbsp;
+              <Button outline size="sm" color="primary" onClick={clickHandler('order')}>{t('default-sorting')}</Button>
+            </th>
+          </tr>
+        }
         <tr>
-          { plan.primaryOrgs.length > 0 && <th className="logo-column" />}
-          { !plan.hideActionIdentifiers &&
-            <SortableTableHeader sort={sort} headerKey="identifier" onClick={clickHandler('identifier')}>
-              <abbr>{ t('action-id') }</abbr>
-            </SortableTableHeader>}
+          { showColumn.logos && <th className="logo-column" />}
+          { showColumn.actionIdentifiers && <th><abbr>{ columnLabel.identifier }</abbr></th> }
           <SortableTableHeader sort={sort} headerKey="name" onClick={clickHandler('name')}>
-            { t('action-name-title') }
+            { columnLabel.name }
           </SortableTableHeader>
           <th>{ t('action-implementation-phase') }</th>
           <th>{ t('action-tasks') }</th>
-          { showResponsibles && <th>{t('action-responsibles-short')}</th> }
-          { showImpacts && <th>{t('action-impact')}</th> }
-          { showIndicators && <th>{ t('indicators') }</th> }
+          { showColumn.responsibles && <th>{t('action-responsibles-short')}</th> }
+          { showColumn.impacts && <th>{t('action-impact')}</th> }
+          { showColumn.indicators && <th>{ t('indicators') }</th> }
           <SortableTableHeader sort={sort} headerKey="updatedAt" onClick={clickHandler('updatedAt')}>
-          { t('action-last-updated') }
+          { columnLabel.updatedAt }
           </SortableTableHeader>
         </tr>
       </thead>
@@ -390,8 +411,8 @@ const ActionsStatusTable = (props) => {
             key={item.id}
             plan={plan}
             hasResponsibles={showResponsibles}
-            hasImpacts={showImpacts}
-            hasIndicators={showIndicators}
+            hasImpacts={showColumn.impacts}
+            hasIndicators={showColumn.indicators}
           />
         ))}
       </tbody>
