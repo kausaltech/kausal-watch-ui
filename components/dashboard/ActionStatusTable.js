@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Table } from 'reactstrap';
 import styled from 'styled-components';
@@ -305,7 +305,17 @@ const ActionsStatusTable = (props) => {
   const orgMap = new Map(orgs.map((org) => [org.id, org]));
   const plan = useContext(PlanContext);
   const theme = useTheme();
-  const sortedActions = actions.sort((g1, g2) => g1.identifier - g2.identifier)
+  const [ sort, setSort ] = useState({key: 'name', direction: 'asc'});
+
+  const comparator = (g1, g2) =>  {
+    const { key, direction } = sort;
+    const val = (
+      g1[key] == g2[key] ? 0 :
+      (g1[key] == null || (g2[key] > g1[key])) ? -1 : 1
+    );
+    return (direction === 'asc' ? val : -val);
+  };
+  const sortedActions = actions.sort(comparator)
     .map((action) => processAction(action, orgMap));
   const showImpacts = plan.actionImpacts.length > 0;
   const { showResponsibles, showIndicators } = theme.settings.dashboard;
