@@ -1,14 +1,52 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { useQuery, gql } from '@apollo/client';
 import styled from 'styled-components';
-import { useTranslation } from 'common/i18n';
 import {
   Container, Row, Col,
 } from 'reactstrap';
 import { Link } from 'routes';
+import { useTranslation } from 'common/i18n';
 import TextInput from 'components/common/TextInput';
 import Button from 'components/common/Button';
 import PlanTag from 'components/plans/PlanTag';
+import { usePlan } from 'context/plan';
+import ContentLoader from './ContentLoader';
+
+const SEARCH_QUERY = gql`
+query SearchQuery($plan: ID!, $query: String!) {
+  search(plan: $plan, query: $query, includeRelatedPlans: true) {
+    hits {
+      title
+      url
+      plan {
+        identifier
+        image {
+          rendition(size: "128x128") {
+            src
+          }
+        }
+        name
+        shortName
+        organization {
+          name
+        }
+      }
+      object {
+        ... on Action {
+          identifier
+        }
+        ... on Indicator {
+          id
+        }
+      }
+      page {
+        title
+      }
+    }
+  }
+}
+`;
 
 const SearchSection = styled.div`
   padding-bottom: ${(props) => props.theme.spaces.s050};
@@ -62,14 +100,61 @@ const SearchResultItem = styled.li`
 const ResultExcerpt = styled.div`
 
 `;
-function SearchResults(props) {
+
+function SearchResults({ search }) {
+  const plan = usePlan();
+  const { error, loading, data } = useQuery(SEARCH_QUERY, {
+    variables: {
+      plan: plan.identifier,
+      query: search.q,
+    },
+  });
+  if (error) {
+    return <div>{error}</div>;
+  }
+  if (loading) {
+    return <ContentLoader />;
+  }
+  const { hits } = data.search;
+  return (
+    <Row>
+      <Col sm="12" md={{ offset: 3, size: 6 }}>
+        <ResultsHeader>
+          {hits.length}
+          {' '}
+          results for &apos;
+          { search.q }
+          &apos;
+        </ResultsHeader>
+        <SearchResultList>
+          { hits.map((hit) => (
+            <SearchResultItem key={hit.url}>
+              <PlanTag
+                planImage={hit.plan.image.rendition.src}
+                planShortName={hit.plan.shortName || hit.plan.name}
+                organization={hit.plan.organization.name}
+              />
+              <Link href={hit.url} passHref>
+                <a href>
+                  <h5>{hit.title}</h5>
+                </a>
+              </Link>
+              <ResultExcerpt dangerouslySetInnerHTML={{ __html: hit.highlight }} />
+            </SearchResultItem>
+          ))}
+        </SearchResultList>
+      </Col>
+    </Row>
+  );
+}
+
+function SearchView(props) {
   const {
-    results,
     search,
     onSearchChange,
   } = props;
-  const { t } = useTranslation('common');
   const [userSearch, setUserSearch] = useState(search);
+  const { t } = useTranslation('common');
 
   const handleValueChange = (event) => {
     const { target } = event;
@@ -85,7 +170,7 @@ function SearchResults(props) {
     onSearchChange(userSearch);
   };
 
-  const searchActive = typeof search.q !== 'undefined';
+  const query = search.q;
 
   return (
     <>
@@ -119,46 +204,16 @@ function SearchResults(props) {
         </SearchHeader>
       </SearchSection>
       <Container>
-        { searchActive ? (
-          <Row>
-            <Col sm="12" md={{ offset: 3, size: 6 }}>
-              <ResultsHeader>
-                {results.length}
-                {' '}
-                results for &apos;
-                { search.q }
-                &apos;
-              </ResultsHeader>
-              <SearchResultList>
-                { results.map((result) => (
-                  <SearchResultItem key={result.id}>
-                    <PlanTag
-                      planImage={result.plan.planImage}
-                      planShortName={result.plan.planShortName}
-                      organization={result.organization.organizationShortName}
-                    />
-                    <Link href="sdfsdfsdsd" passHref>
-                      <a href>
-                        <h5>{result.title}</h5>
-                      </a>
-                    </Link>
-                    <ResultExcerpt dangerouslySetInnerHTML={{ __html: result.excerpt }} />
-                  </SearchResultItem>
-                ))}
-              </SearchResultList>
-            </Col>
-          </Row>
+        { query ? (
+          <SearchResults search={search} />
         ) : (
-          <h2>
-            -
-          </h2>
+          <div>No query</div>
         )}
       </Container>
     </>
   );
 }
-
-SearchResults.getSearchFromQuery = (query) => {
+SearchView.getSearchFromQuery = (query) => {
   const {
     q, ...rest
   } = query;
@@ -167,92 +222,11 @@ SearchResults.getSearchFromQuery = (query) => {
   };
 };
 
-SearchResults.propTypes = {
+SearchView.propTypes = {
   search: PropTypes.shape({
     q: PropTypes.string,
   }).isRequired,
-  results: PropTypes.arrayOf(PropTypes.object).isRequired,
   onSearchChange: PropTypes.func.isRequired,
 };
-
-function SearchView(props) {
-  const {
-    search,
-    onSearchChange,
-  } = props;
-
-  const searchQuery = search.q;
-
-  /* Handle loading and populating search results here */
-  /* Dummy results */
-
-  const results = searchQuery ? [
-    {
-      id: '0',
-      pageType: 'action',
-      plan: {
-        planImage: 'https://via.placeholder.com/150x150/FF0000',
-        planShortName: 'Ilmasto',
-        planLongName: 'Hiilineutraali Tampere 2035',
-        planUrl: '',
-      },
-      organization: {
-        organizationImage: '',
-        organizationShortName: 'Tampere',
-      },
-      title: 'Action title',
-      excerpt: `Maybe this is HTML so <strong>${searchQuery}</strong> are highlighted?`,
-      resultUrl: '',
-    },
-    {
-      id: '1',
-      pageType: 'action',
-      plan: {
-        planImage: 'https://via.placeholder.com/150x150/FF0000',
-        planShortName: 'Ilmasto',
-        planLongName: 'Hiilineutraali Tampere 2035',
-        planUrl: '',
-      },
-      organization: {
-        organizationImage: '',
-        organizationShortName: 'Tampere',
-      },
-      title: 'Action title 2',
-      excerpt: `Maybe this is HTML so <strong>${searchQuery}</strong> are highlighted?`,
-      resultUrl: '',
-    },
-    {
-      id: '2',
-      pageType: 'action',
-      plan: {
-        planImage: 'https://via.placeholder.com/150x150/0000FF',
-        planShortName: 'LUMO-ohjelma',
-        planLongName: 'Tampereen luonnon monimuotoisuusohjelma',
-        planUrl: '',
-      },
-      organization: {
-        organizationImage: '',
-        organizationShortName: 'Tampere',
-      },
-      title: 'Action title 3',
-      excerpt: `Maybe this is HTML so <strong>${searchQuery}</strong> are highlighted?`,
-      resultUrl: '',
-    },
-  ] : undefined;
-
-  return (
-    <SearchResults
-      search={search}
-      onSearchChange={onSearchChange}
-      results={results}
-    />
-  );
-}
-
-SearchView.propTypes = {
-  search: PropTypes.shape({}).isRequired,
-  onSearchChange: PropTypes.func.isRequired,
-};
-SearchView.getSearchFromQuery = (query) => SearchResults.getSearchFromQuery(query);
 
 export default SearchView;
