@@ -305,15 +305,21 @@ const ActionsStatusTable = (props) => {
   const orgMap = new Map(orgs.map((org) => [org.id, org]));
   const plan = useContext(PlanContext);
   const theme = useTheme();
-  const [ sort, setSort ] = useState({key: 'name', direction: 'asc'});
+  const [ sort, setSort ] = useState({key: 'name', direction: 1});
 
   const comparator = (g1, g2) =>  {
     const { key, direction } = sort;
+    let [v1, v2] = [g1[key], g2[key]];
+    if (key === 'identifier') {
+      v1 = Number.parseInt(v1);
+      v2 = Number.parseInt(v2);
+    }
     const val = (
-      g1[key] == g2[key] ? 0 :
-      (g1[key] == null || (g2[key] > g1[key])) ? -1 : 1
+      v1 == v2 ? 0
+        : (v1 == null || (v2 > v1)) ? -1
+        : 1
     );
-    return (direction === 'asc' ? val : -val);
+    return (direction === 1 ? val : -val);
   };
   const sortedActions = actions.sort(comparator)
     .map((action) => processAction(action, orgMap));
@@ -321,19 +327,28 @@ const ActionsStatusTable = (props) => {
   const { showResponsibles, showIndicators } = theme.settings.dashboard;
   const { t } = useTranslation(['common', 'actions']);
 
+  const clickHandler = (key) => () => {
+    let direction = 1
+    if (key === sort.key) {
+      direction -= sort.direction;
+    }
+    setSort({key, direction});
+  }
+
   return (
     <DashTable role="list">
       <thead>
         <tr>
           { plan.primaryOrgs.length > 0 && <th className="logo-column" />}
-          { !plan.hideActionIdentifiers && <th><abbr>{ t('action-id') }</abbr></th>}
-          <th>{ t('action-name-title') }</th>
+          { !plan.hideActionIdentifiers &&
+            <th onClick={clickHandler('identifier')}><abbr>{ t('action-id') }</abbr></th>}
+          <th onClick={clickHandler('name')}>{ t('action-name-title') }</th>
           <th>{ t('action-implementation-phase') }</th>
           <th>{ t('action-tasks') }</th>
           { showResponsibles && <th>{t('action-responsibles-short')}</th> }
           { showImpacts && <th>{t('action-impact')}</th> }
           { showIndicators && <th>{ t('indicators') }</th> }
-          <th>{ t('action-last-updated') }</th>
+          <th onClick={clickHandler('updatedAt')}>{ t('action-last-updated') }</th>
         </tr>
       </thead>
       <tbody>
