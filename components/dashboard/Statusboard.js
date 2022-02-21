@@ -131,6 +131,7 @@ export const GET_ACTION_LIST = gql`
       scheduleContinuous
       startDate
       endDate
+      order
       plan {
         id
       }
