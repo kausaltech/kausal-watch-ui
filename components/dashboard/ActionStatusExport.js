@@ -1,7 +1,7 @@
 import { useTranslation } from 'common/i18n';
 import { cleanActionStatus } from 'common/preprocess';
 
-async function exportActions(t, actions, actionStatuses) {
+async function exportActions(t, actions, actionStatuses, fileFormat = 'excel') {
   const Excel = (await import('exceljs')).default;
   const fileSaver = (await import('file-saver')).default;
   const workbook = new Excel.Workbook();
@@ -78,12 +78,27 @@ async function exportActions(t, actions, actionStatuses) {
     ]);
   });
 
-  const xls64 = await workbook.xlsx.writeBuffer({ base64: true });
   const today = new Date().toISOString().split('T')[0];
-  fileSaver.saveAs(
-    new Blob([xls64], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }),
-    `${t('actions')}-${today}.xlsx`,
-  );
+  switch(fileFormat) {
+    case 'excel':
+      const xls64 = await workbook.xlsx.writeBuffer({ base64: true });
+      fileSaver.saveAs(
+        new Blob([xls64], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }),
+        `${t('actions')}-${today}.xlsx`,
+      );
+      break;
+
+    case 'csv':
+      const csv64 = await workbook.csv.writeBuffer({ base64: true });
+      fileSaver.saveAs(
+        new Blob([csv64], { type: 'text/csv' }),
+        `${t('actions')}-${today}.csv`,
+      );
+      break;
+
+    default:
+      throw new Error("Unknown file format");
+  }
 }
 
 export default function ActionStatusExport({ actions, actionStatuses }) {
