@@ -26,12 +26,10 @@ function ActionsListPage() {
 
   return (
     <Layout>
-      {!process.browser ? <ContentLoader /> : (
-        <SearchView
-          search={search}
-          onSearchChange={handleSearchChange}
-        />
-      )}
+      <SearchView
+        search={search}
+        onSearchChange={handleSearchChange}
+      />
     </Layout>
   );
 }

@@ -33,6 +33,7 @@ query SearchQuery($plan: ID!, $query: String!) {
         }
       }
       object {
+        __typename
         ... on Action {
           identifier
         }
@@ -42,6 +43,13 @@ query SearchQuery($plan: ID!, $query: String!) {
       }
       page {
         title
+        ... on CategoryPage {
+          category {
+            level {
+              name
+            }
+          }
+        }
       }
     }
   }
@@ -83,7 +91,7 @@ const SearchResultList = styled.ul`
   padding: 0;
 `;
 
-const SearchResultItem = styled.li`
+const StyledSearchResultItem = styled.li`
   margin: 0 0 ${(props) => props.theme.spaces.s200} 0;
   padding: ${(props) => props.theme.spaces.s100};
   border: 1px solid ${(props) => props.theme.themeColors.light};
@@ -101,8 +109,46 @@ const ResultExcerpt = styled.div`
 
 `;
 
+function SearchResultItem({ hit }) {
+  const { t } = useTranslation();
+  const plan = usePlan();
+  const { object, page }  = hit;
+  let hitTypeName;
+
+  if (object) {
+    const typename = object.__typename;
+    if (typename == 'Action') {
+      hitTypeName = t('action');
+    } else if (typename == 'Indicator') {
+      hitTypeName = t('indicator');
+    }
+  } else if (page) {
+    if (page.category) {
+      hitTypeName = page.category.level?.name;
+    }
+    if (!hitTypeName) hitTypeName = t('page');
+  }
+  return (
+    <StyledSearchResultItem>
+      {(plan.identifier !== hit.plan.identifier) && (<PlanTag
+        planImage={hit.plan.image.rendition.src}
+        planShortName={hit.plan.shortName || hit.plan.name}
+        organization={hit.plan.organization.name}
+      />)}
+      {hitTypeName ?? <div>{hitTypeName}</div>}
+      <Link href={hit.url} passHref>
+        <a href>
+          <h5>{hit.title}</h5>
+        </a>
+      </Link>
+      <ResultExcerpt dangerouslySetInnerHTML={{ __html: hit.highlight }} />
+    </StyledSearchResultItem>
+  )
+}
+
 function SearchResults({ search }) {
   const plan = usePlan();
+  const { t } = useTranslation('common');
   const { error, loading, data } = useQuery(SEARCH_QUERY, {
     variables: {
       plan: plan.identifier,
@@ -116,31 +162,19 @@ function SearchResults({ search }) {
     return <ContentLoader />;
   }
   const { hits } = data.search;
+
   return (
     <Row>
       <Col sm="12" md={{ offset: 3, size: 6 }}>
         <ResultsHeader>
-          {hits.length}
-          {' '}
-          results for &apos;
-          { search.q }
+          {t('number-of-search-results', { count: hits.length }) + ' '}
+          &apos;
+          {search.q}
           &apos;
         </ResultsHeader>
         <SearchResultList>
           { hits.map((hit) => (
-            <SearchResultItem key={hit.url}>
-              <PlanTag
-                planImage={hit.plan.image.rendition.src}
-                planShortName={hit.plan.shortName || hit.plan.name}
-                organization={hit.plan.organization.name}
-              />
-              <Link href={hit.url} passHref>
-                <a href>
-                  <h5>{hit.title}</h5>
-                </a>
-              </Link>
-              <ResultExcerpt dangerouslySetInnerHTML={{ __html: hit.highlight }} />
-            </SearchResultItem>
+            <SearchResultItem key={hit.url} hit={hit} />
           ))}
         </SearchResultList>
       </Col>
@@ -186,6 +220,7 @@ function SearchView(props) {
                     id="q"
                     name="q"
                     placeholder="Type search here"
+                    value={query}
                     onChange={handleValueChange}
                   />
                   <Button
