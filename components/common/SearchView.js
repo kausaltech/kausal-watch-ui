@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useQuery, gql } from '@apollo/client';
 import styled from 'styled-components';
 import {
-  Container, Row, Col,
+  Container, Row, Col, Input, Label, FormGroup
 } from 'reactstrap';
 import { Link } from 'routes';
 import { useTranslation } from 'common/i18n';
@@ -14,8 +14,8 @@ import { usePlan } from 'context/plan';
 import ContentLoader from './ContentLoader';
 
 const SEARCH_QUERY = gql`
-query SearchQuery($plan: ID!, $query: String!) {
-  search(plan: $plan, query: $query, includeRelatedPlans: true) {
+query SearchQuery($plan: ID!, $query: String!, $onlyOtherPlans: Boolean) {
+  search(plan: $plan, query: $query, includeRelatedPlans: true, onlyOtherPlans: $onlyOtherPlans) {
     hits {
       title
       url
@@ -36,6 +36,9 @@ query SearchQuery($plan: ID!, $query: String!) {
         __typename
         ... on Action {
           identifier
+          primaryOrg {
+            name
+          }
         }
         ... on Indicator {
           id
@@ -112,14 +115,15 @@ const ResultExcerpt = styled.div`
 function SearchResultItem({ hit }) {
   const { t } = useTranslation();
   const plan = usePlan();
-  const { object, page }  = hit;
+  const { object, page } = hit;
+  const primaryOrg = object?.primaryOrg;
   let hitTypeName;
 
   if (object) {
     const typename = object.__typename;
-    if (typename == 'Action') {
+    if (typename === 'Action') {
       hitTypeName = t('action');
-    } else if (typename == 'Indicator') {
+    } else if (typename === 'Indicator') {
       hitTypeName = t('indicator');
     }
   } else if (page) {
@@ -135,7 +139,8 @@ function SearchResultItem({ hit }) {
         planShortName={hit.plan.shortName || hit.plan.name}
         organization={hit.plan.organization.name}
       />)}
-      {hitTypeName ?? <div>{hitTypeName}</div>}
+      {hitTypeName && (<div>{hitTypeName}</div>)}
+      {primaryOrg && (<div>{primaryOrg.name}</div>)}
       <Link href={hit.url} passHref>
         <a href>
           <h5>{hit.title}</h5>
@@ -146,17 +151,23 @@ function SearchResultItem({ hit }) {
   )
 }
 
+const searchProps = PropTypes.shape({
+  q: PropTypes.string,
+  onlyOtherPlans: PropTypes.bool,
+});
+
 function SearchResults({ search }) {
   const plan = usePlan();
-  const { t } = useTranslation('common');
+  const { t } = useTranslation('common');
   const { error, loading, data } = useQuery(SEARCH_QUERY, {
     variables: {
       plan: plan.identifier,
       query: search.q,
+      onlyOtherPlans: search.onlyOtherPlans,
     },
   });
   if (error) {
-    return <div>{error}</div>;
+    return <div>{error.toString()}</div>;
   }
   if (loading) {
     return <ContentLoader />;
@@ -181,6 +192,9 @@ function SearchResults({ search }) {
     </Row>
   );
 }
+SearchResults.propTypes = {
+  search: searchProps.isRequired,
+};
 
 function SearchView(props) {
   const {
@@ -192,19 +206,22 @@ function SearchView(props) {
 
   const handleValueChange = (event) => {
     const { target } = event;
-    const { value } = target;
     const { name } = target;
+    let value;
+    if (target.type === 'checkbox') {
+      value = target.checked;
+    } else {
+      value = target.value;
+    }
     setUserSearch({
+      ...userSearch,
       [name]: value,
     });
   };
-
   const handleSubmit = (event) => {
     event.preventDefault();
     onSearchChange(userSearch);
   };
-
-  const query = search.q;
 
   return (
     <>
@@ -220,9 +237,19 @@ function SearchView(props) {
                     id="q"
                     name="q"
                     placeholder="Type search here"
-                    value={query}
+                    value={userSearch.q}
                     onChange={handleValueChange}
                   />
+                  <FormGroup>
+                    <Input
+                      type="checkbox"
+                      id="other-plans-only"
+                      name="onlyOtherPlans"
+                      checked={userSearch.onlyOtherPlans}
+                      onChange={handleValueChange}
+                    />
+                    <Label for="other-plans-only">Other plans only</Label>
+                  </FormGroup>
                   <Button
                     type="submit"
                     color="primary"
@@ -239,7 +266,7 @@ function SearchView(props) {
         </SearchHeader>
       </SearchSection>
       <Container>
-        { query ? (
+        { search.q ? (
           <SearchResults search={search} />
         ) : (
           <div>No query</div>
@@ -250,17 +277,17 @@ function SearchView(props) {
 }
 SearchView.getSearchFromQuery = (query) => {
   const {
-    q, ...rest
+    q, onlyOtherPlans, ...rest
   } = query;
   return {
-    q, ...rest,
+    q,
+    onlyOtherPlans: onlyOtherPlans === 'true',
+    ...rest,
   };
 };
 
 SearchView.propTypes = {
-  search: PropTypes.shape({
-    q: PropTypes.string,
-  }).isRequired,
+  search: searchProps.isRequired,
   onSearchChange: PropTypes.func.isRequired,
 };
 
