@@ -415,7 +415,7 @@ const ActionListResults = (props) => {
           { displayDashboard && (
             <>
               <ActionStatusGraphs actions={filteredActions} />
-              <ActionStatusExport actions={filteredActions} />
+              <ActionStatusExport actions={filteredActions} actionStatuses={plan.actionStatuses} />
               <TableWrapper>
                 <DynamicActionStatusTable actions={filteredActions} orgs={orgs} />
               </TableWrapper>
