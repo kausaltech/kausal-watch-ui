@@ -300,20 +300,46 @@ const ActionRow = ({ item, plan, hasResponsibles, hasImpacts, hasIndicators }) =
   );
 };
 
+const SortableTableHeader = ({children, headerKey, sort, onClick}) => {
+  const selected = (sort.key == headerKey);
+  const style = {
+    cursor: 'pointer'
+  };
+  let directionArrow = '';
+  if (selected) {
+    directionArrow = (sort.direction ?? 1) === 1 ? '▴' : '▾';
+    style.textDecoration = 'underline';
+  }
+  return (
+    <th style={style} onClick={onClick}>
+      { children }
+      &nbsp;
+      { directionArrow }
+    </th>
+  );
+}
+
+const preprocessForSorting = (key, values) => {
+  switch (key) {
+  case 'identifier':
+    return values.map((s) => Number.parseInt(s));
+  case 'updatedAt':
+    const [x, y] = values;
+    return [y, x];
+  }
+  return values;
+}
+
 const ActionsStatusTable = (props) => {
   const { actions, orgs } = props;
   const orgMap = new Map(orgs.map((org) => [org.id, org]));
   const plan = useContext(PlanContext);
   const theme = useTheme();
   const [ sort, setSort ] = useState({key: 'name', direction: 1});
+  const { key, direction } = sort;
 
   const comparator = (g1, g2) =>  {
-    const { key, direction } = sort;
-    let [v1, v2] = [g1[key], g2[key]];
-    if (key === 'identifier') {
-      v1 = Number.parseInt(v1);
-      v2 = Number.parseInt(v2);
-    }
+    let [v1, v2] = preprocessForSorting(key, [g1[key], g2[key]]);
     const val = (
       v1 == v2 ? 0
         : (v1 == null || (v2 > v1)) ? -1
@@ -341,14 +367,20 @@ const ActionsStatusTable = (props) => {
         <tr>
           { plan.primaryOrgs.length > 0 && <th className="logo-column" />}
           { !plan.hideActionIdentifiers &&
-            <th onClick={clickHandler('identifier')}><abbr>{ t('action-id') }</abbr></th>}
-          <th onClick={clickHandler('name')}>{ t('action-name-title') }</th>
+            <SortableTableHeader sort={sort} headerKey="identifier" onClick={clickHandler('identifier')}>
+              <abbr>{ t('action-id') }</abbr>
+            </SortableTableHeader>}
+          <SortableTableHeader sort={sort} headerKey="name" onClick={clickHandler('name')}>
+            { t('action-name-title') }
+          </SortableTableHeader>
           <th>{ t('action-implementation-phase') }</th>
           <th>{ t('action-tasks') }</th>
           { showResponsibles && <th>{t('action-responsibles-short')}</th> }
           { showImpacts && <th>{t('action-impact')}</th> }
           { showIndicators && <th>{ t('indicators') }</th> }
-          <th onClick={clickHandler('updatedAt')}>{ t('action-last-updated') }</th>
+          <SortableTableHeader sort={sort} headerKey="updatedAt" onClick={clickHandler('updatedAt')}>
+          { t('action-last-updated') }
+          </SortableTableHeader>
         </tr>
       </thead>
       <tbody>
