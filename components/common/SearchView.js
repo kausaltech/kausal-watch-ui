@@ -88,6 +88,16 @@ const ResultsHeader = styled.div`
   margin: ${(props) => props.theme.spaces.s300} 0 ${(props) => props.theme.spaces.s300} 0;
 `;
 
+const HitType = styled.div`
+  margin-bottom: ${(props) => props.theme.spaces.s050};
+  font-size: ${(props) => props.theme.fontSizeSm};
+`;
+
+const HitPrimaryOrg = styled.div`
+  margin-bottom: ${(props) => props.theme.spaces.s050};
+  color: ${(props) => props.theme.graphColors.grey050};
+`;
+
 const SearchResultList = styled.ul`
   list-style: none;
   margin: 0 0 ${(props) => props.theme.spaces.s600} 0;
@@ -95,15 +105,16 @@ const SearchResultList = styled.ul`
 `;
 
 const StyledSearchResultItem = styled.li`
-  margin: 0 0 ${(props) => props.theme.spaces.s200} 0;
-  padding: ${(props) => props.theme.spaces.s100};
-  border: 1px solid ${(props) => props.theme.themeColors.light};
+  margin: 0 0 ${(props) => props.theme.spaces.s150} 0;
+  padding: ${(props) => props.theme.spaces.s050} 0;
+  border-top: 1px solid ${(props) => props.theme.themeColors.light};
 
-  h5 {
-    margin-top: ${(props) => props.theme.spaces.s100};
+  h3 {
+    margin: 0;
+    font-size: ${(props) => props.theme.fontSizeBase};
   }
 
-  a {
+  a:hover {
     text-decoration: underline;
   }
 `;
@@ -141,14 +152,14 @@ function SearchResultItem({ hit }) {
         organization={hit.plan.organization.name}
       />
       )}
-      {hitTypeName && (<div>{hitTypeName}</div>)}
-      {primaryOrg && (<div>{primaryOrg.name}</div>)}
+      {hitTypeName && (<HitType>{hitTypeName}</HitType>)}
       <Link href={hit.url} passHref>
         <a href>
-          <h5>{hit.title}</h5>
+          <h3>{hit.title}</h3>
         </a>
       </Link>
       <ResultExcerpt dangerouslySetInnerHTML={{ __html: hit.highlight }} />
+      {primaryOrg && (<HitPrimaryOrg>{primaryOrg.name}</HitPrimaryOrg>)}
     </StyledSearchResultItem>
   );
 }
@@ -232,13 +243,13 @@ function SearchView(props) {
           <Container>
             <Row>
               <Col sm="12" md={{ offset: 3, size: 6 }}>
-                <h1>Search</h1>
+                <h1>{t('search')}</h1>
                 <form>
                   <TextInput
-                    label="Search text"
+                    type="search"
                     id="q"
                     name="q"
-                    placeholder="Type search here"
+                    placeholder={t('search-from-plans')}
                     value={userSearch.q}
                     onChange={handleValueChange}
                   />
@@ -250,7 +261,7 @@ function SearchView(props) {
                       checked={userSearch.onlyOtherPlans}
                       onChange={handleValueChange}
                     />
-                    <Label for="other-plans-only">Other plans only</Label>
+                    <Label for="other-plans-only">{t('other-plans-only')}</Label>
                   </FormGroup>
                   <Button
                     type="submit"

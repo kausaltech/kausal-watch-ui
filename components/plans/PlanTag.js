@@ -4,9 +4,8 @@ import styled from 'styled-components';
 
 const Tag = styled.div`
   display: flex;
-  padding: ${(props) => props.theme.spaces.s050};
-  max-width: 200px;
-  border: 1px solid ${(props) => props.theme.themeColors.light};
+  max-width: 600px;
+  margin-bottom: ${(props) => props.theme.spaces.s100};
   border-radius: 4px;
 `;
 
