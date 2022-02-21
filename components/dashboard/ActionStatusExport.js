@@ -1,5 +1,6 @@
 import { useTranslation } from 'common/i18n';
 import { cleanActionStatus } from 'common/preprocess';
+import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
 async function exportActions(t, actions, actionStatuses, fileFormat = 'excel') {
   const Excel = (await import('exceljs')).default;
@@ -103,9 +104,18 @@ async function exportActions(t, actions, actionStatuses, fileFormat = 'excel') {
 
 export default function ActionStatusExport({ actions, actionStatuses }) {
   const { t } = useTranslation(['common', 'actions']);
-  const handleExport = async () => {
-    await exportActions(t, actions, actionStatuses);
+  const handleExport = async (format) => {
+    await exportActions(t, actions, actionStatuses, format);
   };
-
-  return <button onClick={handleExport}>Export</button>;
+  return (
+    <UncontrolledDropdown>
+      <DropdownToggle caret>
+        { t('export') }
+      </DropdownToggle>
+      <DropdownMenu>
+        <DropdownItem onClick={() => handleExport('excel')}>Excel</DropdownItem>
+        <DropdownItem onClick={() => handleExport('csv')}>CSV</DropdownItem>
+      </DropdownMenu>
+   </UncontrolledDropdown>
+  );
 }
