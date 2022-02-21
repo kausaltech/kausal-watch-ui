@@ -318,13 +318,17 @@ const SortableTableHeader = ({children, headerKey, sort, onClick}) => {
   );
 }
 
-const preprocessForSorting = (key, values) => {
+const preprocessForSorting = (key, items) => {
+  const values = items.map(item => item[key]);
   switch (key) {
   case 'updatedAt':
     const [x, y] = values;
     return [y, x];
+  case 'implementationPhase':
+    return items.map(item => item[key]?.order);
+  default:
+    return values;
   }
-  return values;
 }
 
 const ActionsStatusTable = (props) => {
@@ -336,7 +340,7 @@ const ActionsStatusTable = (props) => {
   const { key, direction } = sort;
 
   const comparator = (g1, g2) =>  {
-    let [v1, v2] = preprocessForSorting(key, [g1[key], g2[key]]);
+    let [v1, v2] = preprocessForSorting(key, [g1, g2]);
     const val = (
       v1 == v2 ? 0
         : (v1 == null || (v2 > v1)) ? -1 : 1
@@ -370,7 +374,9 @@ const ActionsStatusTable = (props) => {
   const columnLabel = {
     identifier: t('action-id'),
     name: t('action-name-title'),
-    updatedAt: t('action-last-updated')
+    updatedAt: t('action-last-updated'),
+    implementationPhase: t('action-implementation-phase')
+
   };
   const sortingStatusText = t(
     'sorting-in-direction-x-by-column-y',
@@ -394,7 +400,10 @@ const ActionsStatusTable = (props) => {
           <SortableTableHeader sort={sort} headerKey="name" onClick={clickHandler('name')}>
             { columnLabel.name }
           </SortableTableHeader>
-          <th>{ t('action-implementation-phase') }</th>
+          <SortableTableHeader sort={sort} headerKey="implementationPhase"
+                               onClick={clickHandler('implementationPhase')}>
+            { columnLabel.implementationPhase }
+          </SortableTableHeader>
           <th>{ t('action-tasks') }</th>
           { showColumn.responsibles && <th>{t('action-responsibles-short')}</th> }
           { showColumn.impacts && <th>{t('action-impact')}</th> }

@@ -147,6 +147,7 @@ export const GET_ACTION_LIST = gql`
         id
         identifier
         name
+        order
       }
       impact {
         id
