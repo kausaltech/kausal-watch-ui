@@ -1,32 +1,32 @@
 import { useTranslation } from 'common/i18n';
 import { cleanActionStatus } from 'common/preprocess';
+import { usePlan } from 'context/plan';
 import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
 async function exportActions(t, actions, actionStatuses, fileFormat = 'excel') {
   const Excel = (await import('exceljs')).default;
   const fileSaver = (await import('file-saver')).default;
   const workbook = new Excel.Workbook();
-  const worksheet = workbook.addWorksheet(t('actions'))
+  const worksheet = workbook.addWorksheet(t('actions'));
   worksheet.columns = [
     { header: t('actions:action-identifier'), key: 'id', width: 10 },
     { header: t('actions:action-name-title'), key: 'name', width: 50 },
     // TODO: i18n
-    { header: 'Status', key: 'status', width: 20 },
+    { header: t('actions:status'), key: 'status', width: 20 },
     { header: t('actions:action-implementation-phase'), key: 'implementationPhase', width: 20 },
     { header: t('actions:action-last-updated'), key: 'lastUpdated', width: 15 },
     // TODO: i18n
-    { header: 'On-time tasks', key: 'ontimeTasks', width: 10 },
+    { header: t('actions:tasks-on-time'), key: 'ontimeTasks', width: 10 },
     // TODO: i18n
-    { header: 'Late tasks', key: 'lateTasks', width: 10 },
+    { header: t('actions:tasks-late'), key: 'lateTasks', width: 10 },
     // TODO: i18n
-    { header: 'Completed tasks', key: 'completedTasks', width: 10 },
+    { header: t('actions:tasks-completed'), key: 'completedTasks', width: 10 },
     { header: t('actions:action-tasks'), key: 'tasks', width: 10 },
     // TODO: i18n
-    { header: 'Main responsible organization', key: 'mainResponsibleOrg', width: 20 },
+    { header: t('actions:responsible-organization-main'), key: 'mainResponsibleOrg', width: 20 },
     // TODO: i18n
-    { header: 'Other responsible organizations', key: 'otherResponsibleOrgs', width: 20 },
+    { header: t('actions:responsible-organization-other'), key: 'otherResponsibleOrgs', width: 20 },
   ];
-  console.log(actions);
   actions.forEach((act) => {
     const status = cleanActionStatus(act, actionStatuses);
     let activePhaseName = act.implementationPhase?.name;
@@ -102,15 +102,17 @@ async function exportActions(t, actions, actionStatuses, fileFormat = 'excel') {
   }
 }
 
-export default function ActionStatusExport({ actions, actionStatuses }) {
+export default function ActionStatusExport({ actions }) {
   const { t } = useTranslation(['common', 'actions']);
+  const plan = usePlan();
+  const { actionStatuses } = plan;
   const handleExport = async (format) => {
     await exportActions(t, actions, actionStatuses, format);
   };
   return (
     <UncontrolledDropdown>
       <DropdownToggle caret>
-        { t('export') }
+        { t('common:export') }
       </DropdownToggle>
       <DropdownMenu>
         <DropdownItem onClick={() => handleExport('excel')}>Excel</DropdownItem>
