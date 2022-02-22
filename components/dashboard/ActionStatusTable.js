@@ -361,9 +361,6 @@ const ActionsStatusTable = (props) => {
   showColumn.responsibles = showResponsibles;
   showColumn.indicators = showIndicators;
 
-  let columnCount = 4;
-  columnCount += Object.keys(showColumn).filter(x => x).length;
-
   const clickHandler = (key) => () => {
     let direction = 1
     if (key === sort.key) {
@@ -387,22 +384,21 @@ const ActionsStatusTable = (props) => {
   );
 
   return (
+    <>
+      <div style={{flexGrow: 4}}>
+        { sort.key !== 'order' && <>
+          <small>{sortingStatusText} &nbsp;</small>
+          <Button outline size="sm" color="primary" onClick={clickHandler('order')}>
+            {t('default-sorting')}
+          </Button>
+        </>
+        }
+      </div>
+    <div>
+      <ActionStatusExport actions={actions} actionStatuses={props.plan.actionStatuses} />
+    </div>
     <DashTable role="list">
       <thead>
-        <tr style={{ backgroundColor: 'white', fontWeight: 'normal', textAlign: 'left' }}>
-          <th style={{ fontWeight: 'normal' }} colSpan={columnCount - 1}>
-          { sort.key !== 'order' && <>
-            <small>{sortingStatusText} &nbsp;</small>
-            <Button outline size="sm" color="primary" onClick={clickHandler('order')}>
-              {t('default-sorting')}
-            </Button>
-          </>
-          }
-          </th>
-          <th>
-            <ActionStatusExport actions={actions} actionStatuses={props.plan.actionStatuses} />
-          </th>
-        </tr>
         <tr>
           { showColumn.logos && <th className="logo-column" />}
           { showColumn.actionIdentifiers && <th><abbr>{ columnLabel.identifier }</abbr></th> }
@@ -435,7 +431,7 @@ const ActionsStatusTable = (props) => {
         ))}
       </tbody>
     </DashTable>
-  );
+  </>);
 };
 
 ActionsStatusTable.propTypes = {

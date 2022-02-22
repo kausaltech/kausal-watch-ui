@@ -74,6 +74,7 @@ const Tab = styled.button`
 const TableWrapper = styled.div`
   width: auto;
   display: flex;
+  flex-flow: wrap;
   overflow-x: scroll;
 
   background-image: ${(props) => `linear-gradient(to right, ${props.theme.themeColors.white}, ${props.theme.themeColors.white}),
