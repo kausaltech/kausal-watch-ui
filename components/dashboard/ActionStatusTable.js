@@ -307,13 +307,11 @@ const SortableTableHeader = ({children, headerKey, sort, onClick}) => {
   const style = {
     cursor: 'pointer'
   };
-  let directionArrow = '';
+  let iconName = 'arrowUpDown';
   if (selected) {
-    directionArrow = (sort.direction ?? 1) === 1 ? '▴' : '▾';
+    iconName = (sort.direction ?? 1) === 1 ? 'arrowDown' : 'arrowUp';
   }
-  else {
-    directionArrow = '⇕';
-  }
+  const directionArrow = <Icon style={{opacity: (selected ? 1 : 0.5), width: "0.8em", height:"0.8em"}} name={iconName} />;
   return (
     <th style={style} onClick={onClick}>
       <span style={(selected ? {textDecoration: 'underline'} : {})}>{ children }</span>
