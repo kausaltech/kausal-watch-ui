@@ -39,6 +39,11 @@ query SearchQuery($plan: ID!, $query: String!, $onlyOtherPlans: Boolean) {
           identifier
           primaryOrg {
             name
+            logo {
+              rendition(size: "128x128") {
+                src
+              }
+            }
           }
         }
         ... on Indicator {
@@ -92,11 +97,14 @@ const ResultsHeader = styled.div`
 const HitType = styled.div`
   margin-bottom: ${(props) => props.theme.spaces.s050};
   font-size: ${(props) => props.theme.fontSizeSm};
+  text-transform: uppercase;
+  letter-spacing: 0.25px;
 `;
 
-const HitPrimaryOrg = styled.div`
+const SearchResultMeta = styled.div`
+  display: flex;
+  justify-content: space-between;
   margin-bottom: ${(props) => props.theme.spaces.s050};
-  color: ${(props) => props.theme.graphColors.grey050};
 `;
 
 const SearchResultList = styled.ul`
@@ -106,13 +114,14 @@ const SearchResultList = styled.ul`
 `;
 
 const StyledSearchResultItem = styled.li`
-  margin: 0 0 ${(props) => props.theme.spaces.s150} 0;
-  padding: ${(props) => props.theme.spaces.s050} 0;
-  border-top: 1px solid ${(props) => props.theme.themeColors.light};
+  margin: 0 0 ${(props) => props.theme.spaces.s150};
+  padding: ${(props) => props.theme.spaces.s050} 0 ${(props) => props.theme.spaces.s150} 0;
+  border-top: 1px solid ${(props) => props.theme.themeColors.dark};
 
   h3 {
-    margin: 0;
+    margin: 0 0 ${(props) => props.theme.spaces.s050};
     font-size: ${(props) => props.theme.fontSizeBase};
+    font-family: ${(props) => props.theme.fontFamily};
   }
 
   a:hover {
@@ -121,7 +130,12 @@ const StyledSearchResultItem = styled.li`
 `;
 
 const ResultExcerpt = styled.div`
+  font-size: ${(props) => props.theme.fontSizeSm};
 
+  em {
+    font-style: normal;
+    font-weight: ${(props) => props.theme.fontWeightBold};
+  }
 `;
 
 function SearchResultItem({ hit }) {
@@ -145,23 +159,29 @@ function SearchResultItem({ hit }) {
     if (!hitTypeName) hitTypeName = t('page');
   }
   const showPlanTag = true;
+  const hitImage = primaryOrg?.logo.rendition.src
+    || hit.plan.image?.rendition.src
+    || 'https://via.placeholder.com/64/AAAAAA/EEEEEE';
+  const hitOrganization = primaryOrg?.name || hit.plan.organization.name;
+
   return (
     <StyledSearchResultItem>
-      {showPlanTag && (
-      <PlanTag
-        planImage={hit.plan.image?.rendition?.src}
-        planShortName={hit.plan.shortName || hit.plan.name}
-        organization={hit.plan.organization.name}
-      />
-      )}
-      {hitTypeName && (<HitType>{hitTypeName}</HitType>)}
+      <SearchResultMeta>
+        {showPlanTag && (
+        <PlanTag
+          planImage={hitImage}
+          planShortName={hit.plan.shortName || hit.plan.name}
+          organization={hitOrganization}
+        />
+        )}
+        {hitTypeName && (<HitType>{hitTypeName}</HitType>)}
+      </SearchResultMeta>
       <Link href={hit.url} passHref>
         <a href>
           <h3>{hit.title}</h3>
         </a>
       </Link>
       <ResultExcerpt dangerouslySetInnerHTML={{ __html: hit.highlight }} />
-      {primaryOrg && (<HitPrimaryOrg>{primaryOrg.name}</HitPrimaryOrg>)}
     </StyledSearchResultItem>
   );
 }
