@@ -309,6 +309,9 @@ const SortableTableHeader = ({children, headerKey, sort, onClick}) => {
   if (selected) {
     directionArrow = (sort.direction ?? 1) === 1 ? '▴' : '▾';
   }
+  else {
+    directionArrow = '⇕';
+  }
   return (
     <th style={style} onClick={onClick}>
       <span style={(selected ? {textDecoration: 'underline'} : {})}>{ children }</span>
