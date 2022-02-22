@@ -13,6 +13,8 @@ import { ActionLink } from 'common/links';
 import Icon from 'components/common/Icon';
 import { cleanActionStatus } from 'common/preprocess';
 
+import ActionStatusExport from './ActionStatusExport';
+
 const DashTable = styled(Table)`
   margin-bottom: ${(props) => props.theme.spaces.s600};
   line-height: ${(props) => props.theme.lineHeightMd};
@@ -389,14 +391,20 @@ const ActionsStatusTable = (props) => {
   return (
     <DashTable role="list">
       <thead>
-        { sort.key !== 'order' &&
-          <tr style={{ backgroundColor: 'white', fontWeight: 'normal', textAlign: 'left' }}>
-            <th style={{ fontWeight: 'normal' }} colSpan={columnCount}>
-              {sortingStatusText} &nbsp;
-              <Button outline size="sm" color="primary" onClick={clickHandler('order')}>{t('default-sorting')}</Button>
-            </th>
-          </tr>
-        }
+        <tr style={{ backgroundColor: 'white', fontWeight: 'normal', textAlign: 'left' }}>
+          <th style={{ fontWeight: 'normal' }} colSpan={columnCount - 1}>
+          { sort.key !== 'order' && <>
+            <small>{sortingStatusText} &nbsp;</small>
+            <Button outline size="sm" color="primary" onClick={clickHandler('order')}>
+              {t('default-sorting')}
+            </Button>
+          </>
+          }
+          </th>
+          <th>
+            <ActionStatusExport actions={actions} actionStatuses={props.plan.actionStatuses} />
+          </th>
+        </tr>
         <tr>
           { showColumn.logos && <th className="logo-column" />}
           { showColumn.actionIdentifiers && <th><abbr>{ columnLabel.identifier }</abbr></th> }

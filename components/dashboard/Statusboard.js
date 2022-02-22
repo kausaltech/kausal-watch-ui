@@ -16,7 +16,6 @@ import RichText from 'components/common/RichText';
 import ActionListFilters from 'components/actions/ActionListFilters';
 import ActionCardList from 'components/actions/ActionCardList';
 import ActionStatusGraphs from './ActionStatusGraphs';
-import ActionStatusExport from './ActionStatusExport';
 
 const DynamicActionStatusTable = dynamic(() => import('./ActionStatusTable'));
 
@@ -417,9 +416,8 @@ const ActionListResults = (props) => {
           { displayDashboard && (
             <>
               <ActionStatusGraphs actions={filteredActions} />
-              <ActionStatusExport actions={filteredActions} actionStatuses={plan.actionStatuses} />
               <TableWrapper>
-                <DynamicActionStatusTable actions={filteredActions} orgs={orgs} />
+                <DynamicActionStatusTable actions={filteredActions} orgs={orgs} plan={plan} />
               </TableWrapper>
             </>
           )}
