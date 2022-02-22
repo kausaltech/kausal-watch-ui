@@ -19,6 +19,7 @@ query SearchQuery($plan: ID!, $query: String!, $onlyOtherPlans: Boolean) {
     hits {
       title
       url
+      highlight
       plan {
         identifier
         image {
@@ -143,11 +144,12 @@ function SearchResultItem({ hit }) {
     }
     if (!hitTypeName) hitTypeName = t('page');
   }
+  const showPlanTag = true;
   return (
     <StyledSearchResultItem>
-      {(plan.identifier !== hit.plan.identifier) && (
+      {showPlanTag && (
       <PlanTag
-        planImage={hit.plan.image.rendition.src}
+        planImage={hit.plan.image?.rendition?.src}
         planShortName={hit.plan.shortName || hit.plan.name}
         organization={hit.plan.organization.name}
       />
