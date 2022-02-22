@@ -45,5 +45,11 @@
   "actions-status": "Toimenpiteiden tila",
   "actions-status-help": "Aikataulussa olevien toimenpiteiden osuus",
   "actions-updated": "Aktiivisten toimenpiteiden päivitys",
-  "actions-updated-help": "Alle kaksi kuukautta sitten päivitettyjen toimenpiteiden osuus"
+  "actions-updated-help": "Alle kaksi kuukautta sitten päivitettyjen toimenpiteiden osuus",
+  "status": "Tila",
+  "tasks-completed": "Valmistuneet tehtävät",
+  "responsible-organization-main": "Päävastuutaho",
+  "responsible-organization-other": "Muut vastuutahot",
+  "tasks-late": "Myöhästyneet tehtävät",
+  "tasks-on-time": "Ajoissa olevat tehtävät"
 }

@@ -45,5 +45,11 @@
   "emission-scopes": "Emission scopes",
   "no-defined-indicators": "",
   "not-being-implemented": "Not being implemented",
-  "not-being-monitored": "Not monitored"
+  "not-being-monitored": "Not monitored",
+  "status": "Status",
+  "tasks-late": "Late tasks",
+  "tasks-on-time": "On-time tasks",
+  "tasks-completed": "Completed tasks",
+  "responsible-organization-main": "Main responsible",
+  "responsible-organization-other": "Other responsibles"
 }
