@@ -159,7 +159,7 @@ function SearchResultItem({ hit }) {
     if (!hitTypeName) hitTypeName = t('page');
   }
   const showPlanTag = true;
-  const hitImage = primaryOrg?.logo.rendition.src
+  const hitImage = primaryOrg?.logo?.rendition.src
     || hit.plan.image?.rendition.src
     || 'https://via.placeholder.com/64/AAAAAA/EEEEEE';
   const hitOrganization = primaryOrg?.name || hit.plan.organization.name;
