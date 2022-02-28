@@ -40,8 +40,8 @@ const CREATE_USER_FEEDBACK = gql`
   }
 `;
 
-const FeedbackForm = ({ planIdentifier }) => {
-  const { control, handleSubmit, errors } = useForm();
+function FeedbackForm({ planIdentifier }) {
+  const { control, formState: { errors }, handleSubmit } = useForm();
   const { t } = useTranslation();
   const [sent, setSent] = useState(false);
   const onDismiss = () => setSent(false);
@@ -81,16 +81,26 @@ const FeedbackForm = ({ planIdentifier }) => {
         <div className="mt-4">
           <form onSubmit={handleSubmit(onSubmit)}>
             <Controller
-              as={TextInput}
-              label={t('name')}
+              render={({ field }) => (
+                <TextInput
+                  label={t('name')}
+                  {...field}
+                />
+              )}
               name="name"
               id="name-field"
               control={control}
               defaultValue=""
             />
             <Controller
-              as={TextInput}
-              label={t('email')}
+              render={({ field }) => (
+                <TextInput
+                  {...field}
+                  label={t('email')}
+                  invalid={errors.email?.type === 'required'}
+                  formFeedback={errors.email && t('error-email-format')}
+                />
+              )}
               name="email"
               id="email-field"
               control={control}
@@ -101,20 +111,22 @@ const FeedbackForm = ({ planIdentifier }) => {
                   value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                 },
               }}
-              invalid={'email' in errors}
-              formFeedback={errors.email && t('error-email-format')}
             />
             <Controller
-              as={TextInput}
-              label={`${t('feedback')} (${t('required-field')})`}
+              render={({ field }) => (
+                <TextInput
+                  {...field}
+                  label={`${t('feedback')} (${t('required-field')})`}
+                  invalid={errors.comment?.type === 'required'}
+                  type="textarea"
+                  formFeedback={errors.comment && t('error-feedback-required')}
+                />
+              )}
               name="comment"
               id="comment-field"
               control={control}
-              type="textarea"
               rules={{ required: true }}
-              invalid={'comment' in errors}
               defaultValue=""
-              formFeedback={errors.feedback && t('error-feedback-required')}
             />
             {mutationError && (
               <Alert
@@ -143,12 +155,12 @@ const FeedbackForm = ({ planIdentifier }) => {
       )}
     </div>
   );
-};
+}
 FeedbackForm.propTypes = {
   planIdentifier: PropTypes.string.isRequired,
 };
 
-const FeedbackPage = () => {
+function FeedbackPage() {
   const { t } = useTranslation();
   const plan = useContext(PlanContext);
 
@@ -177,6 +189,6 @@ const FeedbackPage = () => {
       </div>
     </Layout>
   );
-};
+}
 
 export default FeedbackPage;

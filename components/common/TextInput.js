@@ -22,7 +22,7 @@ const Input = styled(BSInput)`
   border-color: ${(props) => props.theme.themeColors.dark};
 `;
 
-const TextInput = (props) => {
+const TextInput = React.forwardRef((props, ref) => {
   const {
     label,
     id,
@@ -41,10 +41,11 @@ const TextInput = (props) => {
         id={id}
         placeholder={placeholder}
         {...rest}
+        ref={ref}
       />
       <FormFeedback role="alert">{formFeedback}</FormFeedback>
     </FormGroup>
   );
-};
+});
 
 export default TextInput;
