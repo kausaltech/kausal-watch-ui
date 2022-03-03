@@ -25,12 +25,12 @@ function getStaticPages () {
 
 function getDynamicPages (data) {
   const impactGroups = data.plan.impactGroups.map(g => g.identifier).concat(['_others']);
-  return [].concat(
+  return [
     data.plan.pages.map(p => p.urlPath),
     data.plan.actions.map(p => `actions/${p.identifier}`),
     data.planIndicators.map(i => `indicators/${i.id}`),
     impactGroups.map(g => `dashboard?group=${g}`),
-  )
+  ];
 }
 
 function urlTag(absoluteURL, priority) {
@@ -38,7 +38,7 @@ function urlTag(absoluteURL, priority) {
     <url>
       <loc>${absoluteURL}</loc>
       <changefreq>monthly</changefreq>
-      <priority>${priority}</priority>
+      <priority>${priority.toFixed(2)}</priority>
     </url>
   `;
 }
@@ -81,17 +81,32 @@ export const getServerSideProps = async ({ req, res }) => {
   const { planIdentifier, currentURL: { baseURL } } = req;
 
   const data = await getSiteData(planIdentifier, req);
-  const dynamicPages = getDynamicPages(data, baseURL);
-  const staticPages = getStaticPages();
+  const pageGroups = getDynamicPages(data, baseURL);
+  const staticPages = getStaticPages().filter((p) => {
+    for (let g of pageGroups) {
+      if (g.includes(p)) {
+        return false;
+      }
+    }
+    return true;
+  });
 
-  const staticString = staticPages.map(url => urlElement(baseURL, url, 0.5)).join(' ');
-  const dynamicString = dynamicPages.map(url => urlElement(baseURL, url, 0.5)).join(' ');
+  pageGroups.push(staticPages);
+  const priorityStep = 1 / pageGroups.length;
+  let urls = []
+  let priority = 1;
+  for (let group of pageGroups) {
+    for (let url of group) {
+      urls.push(urlElement(baseURL, url, priority));
+    }
+    priority = priority - priorityStep;
+  }
+
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
     <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd"
          xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-      ${staticString}
-      ${dynamicString}
+      ${urls.join(' ')}
     </urlset>
   `;
 
