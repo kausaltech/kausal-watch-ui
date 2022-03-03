@@ -10,6 +10,7 @@ const EXCLUDE_FROM_SITEMAP = [
   "_app.tsx",
   "_document.js",
   "_error.js",
+  "index.js",
   "[...slug].js",
   "sitemap.xml.js",
 ];
@@ -19,17 +20,16 @@ function getStaticPages () {
     .readdirSync('pages')
     .filter((staticPage) => {
       return !EXCLUDE_FROM_SITEMAP.includes(staticPage);
-    });
+    }).map(p => `/${p}`);
 }
 
 function getDynamicPages (data) {
-  const impactGroups = data.plan.impactGroups.map(g => g.identifier);
+  const impactGroups = data.plan.impactGroups.map(g => g.identifier).concat(['_others']);
   return [].concat(
-    data.plan.pages.map(p => p.url),
-    data.plan.actions.map(p => `actions/${p.id}`),
+    data.plan.pages.map(p => p.urlPath),
+    data.plan.actions.map(p => `actions/${p.identifier}`),
     data.planIndicators.map(i => `indicators/${i.id}`),
     impactGroups.map(g => `dashboard?group=${g}`),
-    ['dashboard?group=_others'],
   )
 }
 
@@ -44,8 +44,8 @@ function urlTag(absoluteURL, priority) {
 }
 
 function urlElement(baseURL, url, priority) {
-  const path = url.replace(/\.js$/, '');
-  return urlTag(`${baseURL}/${path}`, priority);
+  const u = new URL(url.replace(/\.js$/, ''), baseURL);
+  return urlTag(u, priority);
 }
 
 async function getSiteData(planIdentifier) {
@@ -55,8 +55,8 @@ async function getSiteData(planIdentifier) {
   const QUERY = gql`
     query PlanSite($identifier: ID!) {
       plan(id: $identifier) {
-        pages { url },
-        actions { id },
+        pages { urlPath },
+        actions { identifier },
         impactGroups { identifier }
       }
       planIndicators(plan: $identifier) { id }
@@ -79,9 +79,11 @@ async function getSiteData(planIdentifier) {
 
 export const getServerSideProps = async ({ req, res }) => {
   const { planIdentifier, currentURL: { baseURL } } = req;
-  const staticPages = getStaticPages();
+
   const data = await getSiteData(planIdentifier, req);
   const dynamicPages = getDynamicPages(data, baseURL);
+  const staticPages = getStaticPages();
+
   const staticString = staticPages.map(url => urlElement(baseURL, url, 0.5)).join(' ');
   const dynamicString = dynamicPages.map(url => urlElement(baseURL, url, 0.5)).join(' ');
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
