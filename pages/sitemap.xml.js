@@ -29,8 +29,10 @@ function getStaticPages () {
 }
 
 function getDynamicPages (data) {
+  const contentPages = data.plan.pages.map(p => p.urlPath).filter(u => !EXCLUDE_FROM_SITEMAP.includes(u));
+  contentPages.push('actions?view=dashboard');
   const result = [
-    data.plan.pages.map(p => p.urlPath).filter(u => !EXCLUDE_FROM_SITEMAP.includes(u)),
+    contentPages,
     data.plan.actions.map(p => `actions/${p.identifier}`),
     data.planIndicators.map(i => `indicators/${i.id}`),
   ];
