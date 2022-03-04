@@ -39,6 +39,10 @@ const StyledFooter = styled.footer`
   @media (max-width: ${(props) => props.theme.breakpointMd}) {
       text-align: center;
     }
+
+  @media print {
+    display: none;
+  }
 `;
 
 const Branding = styled.div`
