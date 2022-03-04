@@ -14,6 +14,12 @@ const FaqSection = styled.section`
     font-size: ${(props) => props.theme.fontSizeXl};
     margin-bottom: ${(props) => props.theme.spaces.s300};
   }
+
+  @media print {
+    .accordion .collapse {
+      display: block;
+    }
+  }
 `;
 
 const QuestionAnswerBlock = (props) => {
