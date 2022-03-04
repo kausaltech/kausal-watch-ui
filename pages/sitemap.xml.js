@@ -5,7 +5,7 @@ import { gql } from '@apollo/client';
 
 const Sitemap  = () => null;
 
-const EXCLUDE_FROM_SITEMAP = [
+const EXCLUDE_FROM_STATIC_SITEMAP = [
   "_app.js",
   "_app.tsx",
   "_document.js",
@@ -13,24 +13,32 @@ const EXCLUDE_FROM_SITEMAP = [
   "index.js",
   "[...slug].js",
   "sitemap.xml.js",
+  "dashboard",
+];
+
+const EXCLUDE_FROM_SITEMAP = [
+  'impact-groups'
 ];
 
 function getStaticPages () {
   return fs
     .readdirSync('pages')
     .filter((staticPage) => {
-      return !EXCLUDE_FROM_SITEMAP.includes(staticPage);
+      return !EXCLUDE_FROM_STATIC_SITEMAP.includes(staticPage);
     }).map(p => `/${p}`);
 }
 
 function getDynamicPages (data) {
-  const impactGroups = data.plan.impactGroups.map(g => g.identifier).concat(['_others']);
-  return [
-    data.plan.pages.map(p => p.urlPath),
+  const result = [
+    data.plan.pages.map(p => p.urlPath).filter(u => !EXCLUDE_FROM_SITEMAP.includes(u)),
     data.plan.actions.map(p => `actions/${p.identifier}`),
     data.planIndicators.map(i => `indicators/${i.id}`),
-    impactGroups.map(g => `dashboard?group=${g}`),
   ];
+  const impactGroups = data.plan.impactGroups.map(g => g.identifier);
+  if (impactGroups.length > 0) {
+    result.push(impactGroups.concat(['_others']).map(g => `dashboard?group=${g}`));
+  }
+  return result;
 }
 
 function urlTag(absoluteURL, priority) {
