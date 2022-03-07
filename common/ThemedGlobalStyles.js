@@ -172,6 +172,12 @@ const GlobalStyle = createGlobalStyle`
   .custom-select.is-invalid {
     background-color: rgba(${(props) => props.theme.graphColors.red070}, 0.15);
   }
+
+  @media print {
+    p, .card, h1, h2, h3, h4, h5, h6, .btn, .js-plotly-plot, .plot-container, .plotly {
+      break-inside: avoid-page;
+    }
+  }
 `;
 
 function ThemedGlobalStyles({ theme, children }) {
