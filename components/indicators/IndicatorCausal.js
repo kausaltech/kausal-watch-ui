@@ -300,7 +300,7 @@ class IndicatorCausal extends React.Component {
     }
     const combinedData = this.combineData(nodes, edges);
     return (
-      <CausalChain>
+      <CausalChain className="causal-chain-visualisation">
         { createChain(combinedData, theme) }
       </CausalChain>
     );

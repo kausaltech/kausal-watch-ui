@@ -174,7 +174,13 @@ const GlobalStyle = createGlobalStyle`
   }
 
   @media print {
-    p, .card, h1, h2, h3, h4, h5, h6, .btn, .js-plotly-plot, .plot-container, .plotly {
+    p,
+    h1, h2, h3, h4, h5, h6,
+    .card,
+    .btn,
+    .js-plotly-plot, .plot-container, .plotly,
+    .causal-chain-visualisation
+    {
       break-inside: avoid-page;
     }
   }
