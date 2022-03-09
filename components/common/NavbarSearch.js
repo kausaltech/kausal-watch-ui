@@ -41,7 +41,7 @@ function ResultItem({ hit }) {
         <div>{ hit.plan.shortName || hit.plan.name }</div>
         <div>{ hit.title }</div>
         {hit.highlight && (
-          <div dangerouslySetInnerHTML={hit.highlight} />
+          <div dangerouslySetInnerHTML={{__html: hit.highlight}} />
         )}
       </a>
     </li>
