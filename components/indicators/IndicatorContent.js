@@ -238,6 +238,7 @@ function IndicatorDetails({ id }) {
               <Col>
                 <ActionsTable
                   actions={indicator.actions}
+                  t={t}
                 />
               </Col>
             </Row>
