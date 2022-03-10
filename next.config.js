@@ -23,6 +23,10 @@ let config = {
     ignoreDuringBuilds: true,
   },
   productionBrowserSourceMaps: true,
+  compiler: {
+    // Enables the styled-components SWC transform
+    styledComponents: true
+  },
   async rewrites() {
     const rewrites = [
       { source: '/favicon.ico', destination: '/public/static/favicon.ico' },
