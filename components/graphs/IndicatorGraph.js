@@ -12,6 +12,52 @@ const PlotContainer = styled.div`
   height: ${(props) => props.vizHeight}px;
 `;
 
+function getTraces(dimensions, cube, names, hasTimeDimension) {
+  if (dimensions.length === 0) {
+    return [{
+      xType: cube.length === 1 ? 'category' : 'time',
+      name: 'TODO',
+      x: cube.map(val => val.date),
+      y: cube.map(val => val.value)
+    }];
+  }
+  const [firstDimension, ...rest] = dimensions;
+  if (dimensions.length === 1) {
+    if (hasTimeDimension) {
+      return firstDimension.categories.map((cat, idx) => {
+        const traceName = [
+          ...(names || []),
+          cat.name,
+        ].join(', ');
+        let x, y, xType, _cube = cube[idx];
+        xType = 'time';
+        x = _cube.map(val => val.date);
+        y = _cube.map(val => val.value);
+        return {
+          xType: 'time',
+          name: traceName,
+          x, y
+        };
+      });
+    }
+
+    // No time dimension, 'x' axis will be categories
+    return [{
+      xType: 'category',
+      name: (names || [firstDimension.name]).join(', '),
+      x: firstDimension.categories.map((cat) => cat.name),
+      y: cube.map(c => c[0].value),
+    }];
+  }
+  let traces = [];
+
+  firstDimension.categories.forEach((cat, idx) => {
+    const out = getTraces(rest, cube[idx], (names || []).concat([cat.name]), hasTimeDimension);
+    traces = traces.concat(out);
+  });
+  return traces;
+}
+
 const createLayout = (
   timeResolution,
   yRange,
@@ -121,17 +167,22 @@ function getSignificantDigitCount(n) {
   return Math.floor(Math.log(val) / log10) + 1; // get number of digits
 }
 
-const createTraces = (traces, unit, plotColors) => {
+const createTraces = (traces, unit, plotColors, styleCount, categoryCount) => {
   // Figure out what we need to draw depending on dataset
   // and define trace and layout setup accordingly
   // First trace is always main/total
 
-  // console.log(traces);
   if (!traces.length) return [];
   let maxDigits = 0;
   const layoutConfig = {
     xaxis: {},
   };
+
+  let numColors = plotColors.mainScale.length;
+  let numSymbols = plotColors.symbols.length;
+  if (styleCount != null && styleCount > 0 && styleCount < numColors && styleCount < numSymbols) {
+    numSymbols = numColors = styleCount;
+  }
 
   const allXValues = [];
 
@@ -150,7 +201,9 @@ const createTraces = (traces, unit, plotColors) => {
     if (trace.xType === 'category') {
       modTrace.type = 'bar';
       modTrace.marker = {
-        color: plotColors.mainScale[idx % plotColors.mainScale.length],
+        color: (categoryCount < 2 ?
+                trace.y.map((y, i) => plotColors.mainScale[i % numColors]) :
+                plotColors.mainScale[idx % numColors]),
       };
       layoutConfig.barmode = 'group';
       layoutConfig.xaxis.type = 'category';
@@ -160,18 +213,18 @@ const createTraces = (traces, unit, plotColors) => {
     if (trace.xType === 'time') {
       modTrace.type = 'scatter';
       modTrace.line = {
-        width: trace.dataType === 'total' ? 3 : 2,
+        width: trace.dataType === 'total' ? 3 : 2, // TODO extension trace total vs dimension
         shape: 'spline',
         smoothing: 0.7,
-        color: plotColors.mainScale[idx % plotColors.mainScale.length],
+        color: plotColors.mainScale[idx % numColors],
       };
       modTrace.marker = {
         size: 6,
-        symbol: plotColors.symbols[idx % plotColors.symbols.length],
+        symbol: plotColors.symbols[idx % numSymbols],
         color: '#ffffff',
         line: {
           width: 2,
-          color: plotColors.mainScale[idx % plotColors.mainScale.length],
+          color: plotColors.mainScale[idx % numColors],
         },
       };
     }
@@ -179,21 +232,21 @@ const createTraces = (traces, unit, plotColors) => {
     modTrace.hovertemplate = `(%{x}) ${trace.name}: %{y} ${unit}`;
     modTrace.hoverinfo = 'none';
     modTrace.hoverlabel = {
-      bgcolor: plotColors.mainScale[idx % plotColors.mainScale.length],
+      bgcolor: plotColors.mainScale[idx % numColors],
       namelength: 0,
     };
     return modTrace;
   });
-
   if (layoutConfig.xaxis?.type !== 'category') {
     const uniqueXValues = _.uniq(allXValues.sort(), true);
     if (uniqueXValues.length < 4) {
       layoutConfig.xaxis.tickvals = uniqueXValues;
     }
-  } else {
-    // remove total trace if we have a category axis
-    newTraces.shift();
   }
+ // else {
+ //    // remove total trace if we have a category axis
+ //    newTraces.shift();
+ //  }
 
   layoutConfig.maxDigits = maxDigits > 3 ? 3 : maxDigits;
 
@@ -290,12 +343,12 @@ function IndicatorGraph(props) {
     return null;
   }
   const {
-    traces,
     yRange,
     timeResolution,
     goalTraces,
     trendTrace,
     comparison,
+    specification
   } = props;
 
   const Plot = dynamic(import('./Plot'));
@@ -337,12 +390,42 @@ function IndicatorGraph(props) {
   };
 
   let mainTraces = [];
-  const isComparison = comparison && comparison.traces.length > 0;
+  const isComparison = false;
+  const subplotsNeeded = specification.axes.filter(a => ['comparison', 'categories'].includes(a[0])).length > 1;
+  const comparisonAxis = specification.axes.filter(a => a[0] === 'comparison');
+  const hasTimeDimension = specification.axes.filter(a => a[0] === 'time').length > 0;
+  const categoryCount = specification.axes.length > 0 ? specification.axes[0][1] : 0;
+  let styleCount = null;
+  if (comparisonAxis.length > 0) {
+    styleCount = comparisonAxis[0][1] + 1;
+  }
+  else if (!hasTimeDimension && !subplotsNeeded && categoryCount > 1) {
+    styleCount = specification.dimensions[0].categories.length;
+  }
+  const _traces = getTraces(specification.dimensions, specification.cube, null, hasTimeDimension);
+  mainTraces = createTraces(_traces, yRange.unit, plotColors, styleCount, categoryCount);
 
-  if (isComparison) {
-    mainTraces = compare(traces, comparison.traces, yRange.unit, plotColors);
-  } else mainTraces = createTraces(traces, yRange.unit, plotColors);
-
+  if (subplotsNeeded) {
+    const categoryDimensions = specification.dimensions.slice(0, categoryCount);
+    const organizationDimension = specification.dimensions.at(categoryCount);
+    const combinationCount = categoryDimensions.reduce(((p, c) => (p * c.categories.length)), 1)
+    mainTraces.layoutConfig.grid = { rows: Math.ceil(combinationCount/2), columns: 2, pattern: 'independent' };
+    mainTraces.layoutConfig.yRange = [0, 100];
+    mainTraces.traces.forEach((t, idx) => {
+      const axisIndex = hasTimeDimension ? Math.floor(idx / 2) + 1: idx + 1;
+      if (!hasTimeDimension || idx > 1) {
+        t.showlegend = false;
+      }
+      else {
+        t.legendGroup = t.name = organizationDimension.categories[idx % 2].name;
+      }
+      if (axisIndex > 1) {
+        for (let c of ['x', 'y']) {
+          t[`${c}axis`] = `${c}${axisIndex}`;
+        }
+      }
+    });
+  }
   const { layoutConfig, traces: plotlyData } = mainTraces;
 
   // add trend if defined
@@ -359,32 +442,32 @@ function IndicatorGraph(props) {
   });
 
   // add goals if defined
-  if (!isComparison && goalTraces.length) {
-    goalTraces.forEach((goalTrace, idx) => {
-      plotlyData.push({
-        ...goalTrace,
-        type: 'scatter',
-        mode: goalTrace.scenario ? 'markers' : 'lines+markers',
-        line: {
-          width: 3,
-          dash: 'dash',
-          color: plotColors.goalScale[idx % plotColors.goalScale.length],
-        },
-        marker: {
-          size: 12,
-          symbol: 'x',
-          color: plotColors.goalScale[idx % plotColors.goalScale.length],
-        },
-        opacity: 0.7,
-        hoverinfo: 'none',
-        hovertemplate: `(%{x}) ${goalTrace.name}: %{y} ${yRange.unit}`,
-        hoverlabel: {
-          namelength: 0,
-          bgcolor: '#fff',
-        },
-      });
-    });
-  }
+  // if (!isComparison && goalTraces.length) {
+  //   goalTraces.forEach((goalTrace, idx) => {
+  //     plotlyData.push({
+  //       ...goalTrace,
+  //       type: 'scatter',
+  //       mode: goalTrace.scenario ? 'markers' : 'lines+markers',
+  //       line: {
+  //         width: 3,
+  //         dash: 'dash',
+  //         color: plotColors.goalScale[idx % plotColors.goalScale.length],
+  //       },
+  //       marker: {
+  //         size: 12,
+  //         symbol: 'x',
+  //         color: plotColors.goalScale[idx % plotColors.goalScale.length],
+  //       },
+  //       opacity: 0.7,
+  //       hoverinfo: 'none',
+  //       hovertemplate: `(%{x}) ${goalTrace.name}: %{y} ${yRange.unit}`,
+  //       hoverlabel: {
+  //         namelength: 0,
+  //         bgcolor: '#fff',
+  //       },
+  //     });
+  //   });
+  // }
 
   const layout = createLayout(
     timeResolution,
@@ -392,7 +475,6 @@ function IndicatorGraph(props) {
     plotColors,
     layoutConfig,
   );
-
   return (
     <PlotContainer vizHeight={layoutConfig?.grid?.rows ? layoutConfig.grid.rows * 300 : 450}>
       <Plot
@@ -418,7 +500,6 @@ IndicatorGraph.defaultProps = {
 };
 
 IndicatorGraph.propTypes = {
-  traces: PropTypes.arrayOf(PropTypes.shape).isRequired,
   yRange: PropTypes.shape().isRequired,
   timeResolution: PropTypes.string.isRequired,
   goalTraces: PropTypes.arrayOf(PropTypes.shape),

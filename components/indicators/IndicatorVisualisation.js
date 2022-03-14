@@ -146,86 +146,78 @@ function generateCube(dimensions, values, path) {
   return array;
 }
 
-function getTraces(dimensions, cube, names) {
-  const dim = dimensions[0];
-  const dataMode = '';
 
-  if (dimensions.length === 1) {
-    // If the cube has a time dimension, the values will be objects (and not straight numbers)
-    if (typeof cube[0] === 'object') {
-      return dim.categories.map((cat, idx) => {
-        const traceName = [
-          ...(names || []),
-          cat.name,
-        ].join(', ');
-        return {
-          xType: 'time',
-          name: traceName,
-          x: cube[idx].map((val) => val.date),
-          y: cube[idx].map((val) => val.value),
-        };
-      });
-    }
 
-    // No time dimension, 'x' axis will be categories
-    return [{
-      xType: 'category',
-      name: (names || [dim.name]).join(', '),
-      x: dim.categories.map((cat) => cat.name),
-      y: cube,
-    }];
-  }
-  let traces = [];
-  const rest = dimensions.splice(1);
-
-  dim.categories.forEach((cat, idx) => {
-    const out = getTraces(rest, cube[idx], (names || []).concat([cat.name]));
-    traces = traces.concat(out);
-  });
-  return traces;
-}
-
-function generateTracesFromValues(indicator, i18n) {
+function generateCubeFromValues(indicator, indicatorGraphSpecification, combinedValues, i18n) {
   const traces = [];
-  const values = [...indicator.values].sort((a, b) => a.date - b.date).map((item) => {
+  const values = [...combinedValues].sort((a, b) => a.date - b.date).map((item) => {
     const { date, value, categories } = item;
     const newDate = indicator.timeResolution === 'YEAR' ? date.split('-')[0] : date;
     return { date: newDate, value, categories };
   });
 
   // Separate the main historical series (non-dimensioned) from the dimensioned values
-  const mainValues = values.filter((item) => !item.categories.length);
+  // TODO mainValues with new multi dimensional org
+  // const mainValues = values.filter((item) => !item.categories.length);
   const dimensionedValues = values.filter((val) => val.categories.length > 0);
 
-  // If we have dimensions, call main historical series 'Total'
-  const traceName = (indicator.quantity && !dimensionedValues.length)
-    ? capitalize(indicator.quantity.name) : capitalize(i18n.t('total'));
+  // // If we have dimensions, call main historical series 'Total'
+  // const traceName = (indicator.quantity && !dimensionedValues.length)
+  //   ? capitalize(indicator.quantity.name) : capitalize(i18n.t('total'));
 
-  traces.push({
-    xType: 'time',
-    y: mainValues.map((item) => item.value),
-    x: mainValues.map((item) => item.date),
-    name: traceName,
-    organization: indicator.organization,
-    dataType: 'total',
-  });
+  // traces.push({
+  //   xType: 'time',
+  //   y: mainValues.map((item) => item.value),
+  //   x: mainValues.map((item) => item.date),
+  //   name: traceName,
+  //   organization: indicator.organization,
+  //   dataType: 'total',
+  // });
 
   // Add trace data for dimensions
-  if (indicator.dimensions.length && dimensionedValues.length) {
-    const dimensions = indicator.dimensions.map((indicatorDim) => indicatorDim.dimension)
-      .sort((a, b) => (a.categories.length - b.categories.length || a.id - b.id));
+  if (indicatorGraphSpecification.dimensions.length && dimensionedValues.length) {
+    const dimensions = indicatorGraphSpecification.dimensions.map((indicatorDim) => indicatorDim.dimension)
+          .sort((a, b) => {
+            if (a.sort === 'last') {
+              return 1;
+            }
+            else if (b.sort === 'last') {
+              return -1;
+            }
+            return (a.categories.length - b.categories.length || a.id - b.id)
+          });
+    indicatorGraphSpecification.dimensions = dimensions;
+    return generateCube(dimensions, values);
+  //   let dataTraceGroups;
+  //   //
+  //   //  [{ path: , traces : [] }]
+  //   //
+  //   if (indicatorGraphSpecification.axes.length > 2) {
+  //     dataTraceGroups = cube.map(c => getTraces(dimensions.slice(0, -1), c));
+  //   }
+  //   else {
+  //      dataTraceGroups = [getTraces(dimensions, cube)];
+  //   }
 
-    const cube = generateCube(dimensions, values);
-    const dataTraces = getTraces(dimensions, cube);
-    dataTraces.forEach((trace) => traces.push({
-      ...trace,
-      organization: indicator.organization,
-      dataType: 'dimension',
-    }));
+  //   dataTraceGroups.forEach((group) => {
+  //     traces.push(
+  //       group.map(trace => (
+  //         {
+  //           ...trace,
+  //           //organization: indicator.organization, // TODO: maybe not used anywhere?
+  //           dataType: 'dimension',
+  //         }
+  //       )
+  //     )
+  //   );
+  //   });
   }
-
-  return traces;
+  else {
+    return values;
+  }
+  return cube;
 }
+
 
 const generateTrendTrace = (indicator, traces, goals, i18n) => {
   const hasPotentialScenario = traces.find((goal) => goal.scenario?.identifier === 'potential');
@@ -302,6 +294,58 @@ const generateGoalTraces = (indicator, planScenarios, i18n) => {
 
   return goalTraces;
 };
+
+function getIndicatorGraphSpecification(indicator, compareOrganization) {
+  const specification = {}
+  const indicators = [indicator];
+  const dimensions = JSON.parse(JSON.stringify(indicator.dimensions));
+  if (compareOrganization) {
+    const compareIndicator = indicator.common.indicators.find(
+      x => x.organization.id === compareOrganization
+    );
+    indicators.push(compareIndicator);
+    const comparisonDimension = { dimension: { sort: 'last'} };
+    comparisonDimension.dimension.categories = indicators.map(i => (
+      {id: `org:${i.organization.id}`, name: i.organization.name}
+    ));
+    dimensions.push(comparisonDimension);
+  }
+  const times = new Set(indicators.map(i => i.values.map(x => x.date)).flat());
+  const hasTime = times.size > 1;
+  const axes = [];
+  if (indicator.dimensions.length > 0) {
+    axes.push(['categories', indicator.dimensions.length]);
+  }
+  if (compareOrganization != null) {
+    axes.push(['comparison', 1]);
+  }
+  if (hasTime) {
+    axes.push(['time', 1]);
+  };
+
+  specification.axes = axes;
+  specification.dimensions = dimensions;
+  return specification;
+}
+
+function addOrganizationCategory(value, orgId) {
+  const newCategories = [...(value.categories)]//
+  newCategories.push({id: `org:${orgId}`});
+  return Object.assign({}, value, {categories: newCategories});
+}
+
+function combineValues(indicator, compareTo, indicatorGraphSpecification) {
+  if (compareTo == null) {
+    return indicator.values;
+  }
+  const comparisonIndicator = indicator.common.indicators.find((ind) => ind.organization.id === compareTo);
+  return [
+    ...(indicator.values.map(v => addOrganizationCategory(v, indicator.organization.id))),
+    ...(comparisonIndicator.values.map(v => addOrganizationCategory(v, compareTo)))
+  ];
+
+}
+
 function IndicatorVisualisation({ indicatorId }) {
   if (!process.browser) {
     return null;
@@ -327,6 +371,8 @@ function IndicatorVisualisation({ indicatorId }) {
   );
 
   const { indicator, plan: { scenarios } } = data;
+  const indicatorGraphSpecification = getIndicatorGraphSpecification(indicator, compareTo);
+  debug({indicatorGraphSpecification});
 
   if (!indicator) return (
     <Alert color="danger">
@@ -364,22 +410,24 @@ function IndicatorVisualisation({ indicatorId }) {
     plotTitle = indicator.name;
   }
 
+  const combinedValues = combineValues(indicator, compareTo, indicatorGraphSpecification);
   /// Process data for data traces
-  const traces = generateTracesFromValues(indicator, i18n);
-  const goalTraces = generateGoalTraces(indicator, scenarios, i18n);
-  const trendTrace = generateTrendTrace(indicator, traces, goalTraces, i18n);
+  const cube = generateCubeFromValues(indicator, indicatorGraphSpecification, combinedValues, i18n);
+  indicatorGraphSpecification.cube = cube;
+  const goalTraces = null; //generateGoalTraces(indicator, scenarios, i18n);
+  const trendTrace = null; //generateTrendTrace(indicator, traces, goalTraces, i18n);
 
   const comparisonOrgs = indicator.common?.indicators
     .map((common) => common.organization)
     .filter((org) => org.id !== indicator.organization.id);
 
-  const comparison = {};
-  if (indicator.common && compareTo) {
-    const comparisonIndicator = indicator.common.indicators.find((ind) => ind.organization.id === compareTo);
-    const comparisonTraces = generateTracesFromValues(comparisonIndicator, i18n);
-    comparison.organization = comparisonIndicator.organization;
-    comparison.traces = comparisonTraces;
-  } else comparison.organization = undefined;
+  const comparison = {organization: null};
+  // if (indicator.common && compareTo) {
+  //   const comparisonIndicator = indicator.common.indicators.find((ind) => ind.organization.id === compareTo);
+  //   const comparisonTraces = generateTracesFromValues(comparisonIndicator, i18n);
+  //   comparison.organization = comparisonIndicator.organization;
+  //   comparison.traces = comparisonTraces;
+  // } else comparison.organization = undefined;
 
   return (
     <div>
@@ -395,12 +443,13 @@ function IndicatorVisualisation({ indicatorId }) {
       )}
       <div aria-hidden="true">
         <IndicatorGraph
+          specification={indicatorGraphSpecification}
           yRange={yRange}
           timeResolution={indicator.timeResolution}
-          traces={traces}
+          traces={null}
           goalTraces={goalTraces}
           trendTrace={trendTrace}
-          comparison={comparison.organization && comparison}
+          comparison={null}
         />
       </div>
     </div>

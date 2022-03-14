@@ -24,7 +24,8 @@ const IndicatorComparisonSelect = (props) => {
   const { handleChange, currentValue, options, defaultOrg } = props;
 
   const callback = (evt) => {
-    handleChange(evt.target.value);
+    const value = evt.target.value;
+    handleChange(value === '' ? null : value);
   };
 
   return (
