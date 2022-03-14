@@ -68,14 +68,14 @@ function IndicatorsHero(props) {
           <Container>
             <Nav>
               <NavItem>
-                <NavigationLink slug="indicators">
+                <NavigationLink slug="/indicators">
                   <Tab className={`nav-link ${router.pathname === '/indicators' ? 'active' : ''}`}>
                     { t('indicators-as-list') }
                   </Tab>
                 </NavigationLink>
               </NavItem>
               <NavItem>
-                <NavigationLink slug="insight">
+                <NavigationLink slug="/insight">
                   <Tab className={`nav-link ${router.pathname === '/insight' ? 'active' : ''}`}>
                     { t('indicators-as-insight') }
                   </Tab>

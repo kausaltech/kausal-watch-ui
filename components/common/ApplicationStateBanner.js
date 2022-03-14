@@ -14,6 +14,9 @@ const Banner = styled.div`
   font-size: 12px;
   background-color: black;
   color: silver;
+  @media print {
+    display: none;
+  }
 `;
 
 const Label = styled.strong`
