@@ -13,6 +13,9 @@ const { publicRuntimeConfig } = getConfig();
 
 const GRAPHQL_ENDPOINT_URI = `${publicRuntimeConfig.aplansApiBaseURL}/graphql/`;
 
+let globalRequestContext;
+let globalPlanIdentifier;
+
 const localeMiddleware = new ApolloLink((operation, forward) => {
   // Inject @locale directive into the query root object
   const { query } = operation;
@@ -31,6 +34,10 @@ const localeMiddleware = new ApolloLink((operation, forward) => {
       kind: 'Argument',
       name: { kind: 'Name', value: 'lang' },
       value: { kind: 'StringValue', value: i18n.language, block: false },
+    }, {
+      kind: 'Argument',
+      name: { kind: 'Name', value: 'plan' },
+      value: { kind: 'StringValue', value: globalPlanIdentifier, block: false },
     }],
   };
 
@@ -47,9 +54,6 @@ const localeMiddleware = new ApolloLink((operation, forward) => {
 
   return forward(operation);
 });
-
-let globalRequestContext;
-let globalPlanIdentifier;
 
 export function setApolloPlanIdentifier(identifier) {
   globalPlanIdentifier = identifier;
