@@ -16,7 +16,7 @@ function getTraces(dimensions, cube, names, hasTimeDimension) {
   if (dimensions.length === 0) {
     return [{
       xType: cube.length === 1 ? 'category' : 'time',
-      name: 'TODO',
+      name: '',
       x: cube.map(val => val.date),
       y: cube.map(val => val.value)
     }];
