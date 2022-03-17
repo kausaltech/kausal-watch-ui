@@ -393,20 +393,12 @@ function IndicatorVisualisation({ indicatorId }) {
   /// Process data for data traces
   const cube = generateCubeFromValues(indicator, indicatorGraphSpecification, combinedValues, i18n);
   indicatorGraphSpecification.cube = cube;
-  const goalTraces = null; //generateGoalTraces(indicator, scenarios, i18n);
-  const trendTrace = generateTrendTrace(indicator, traces, goalTraces, i18n);
+  const goalTraces = generateGoalTraces(indicator, scenarios, i18n);
+  const trendTrace = null; //generateTrendTrace(indicator, traces, goalTraces, i18n);
 
   const comparisonOrgs = indicator.common?.indicators
     .map((common) => common.organization)
     .filter((org) => org.id !== indicator.organization.id);
-
-  const comparison = {organization: null};
-  // if (indicator.common && compareTo) {
-  //   const comparisonIndicator = indicator.common.indicators.find((ind) => ind.organization.id === compareTo);
-  //   const comparisonTraces = generateTracesFromValues(comparisonIndicator, i18n);
-  //   comparison.organization = comparisonIndicator.organization;
-  //   comparison.traces = comparisonTraces;
-  // } else comparison.organization = undefined;
 
   return (
     <div>
@@ -428,7 +420,6 @@ function IndicatorVisualisation({ indicatorId }) {
           traces={null}
           goalTraces={goalTraces}
           trendTrace={trendTrace}
-          comparison={null}
         />
       </div>
     </div>

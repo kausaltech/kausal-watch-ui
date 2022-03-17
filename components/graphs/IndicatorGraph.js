@@ -301,7 +301,6 @@ function IndicatorGraph(props) {
     timeResolution,
     goalTraces,
     trendTrace,
-    comparison,
     specification
   } = props;
 
@@ -344,7 +343,7 @@ function IndicatorGraph(props) {
   };
 
   let mainTraces = [];
-  const isComparison = false;
+  let isComparison = false;
   const subplotsNeeded = specification.axes.filter(a => ['comparison', 'categories'].includes(a[0])).length > 1;
   const comparisonAxis = specification.axes.filter(a => a[0] === 'comparison');
   const hasTimeDimension = specification.axes.filter(a => a[0] === 'time').length > 0;
@@ -352,6 +351,7 @@ function IndicatorGraph(props) {
   let styleCount = null;
   if (comparisonAxis.length > 0) {
     styleCount = comparisonAxis[0][1] + 1;
+    isComparison = true;
   }
   else if (!hasTimeDimension && !subplotsNeeded && categoryCount > 1) {
     styleCount = specification.dimensions[0].categories.length;
@@ -364,10 +364,10 @@ function IndicatorGraph(props) {
     const organizationDimension = specification.dimensions.at(categoryCount);
     const combinationCount = categoryDimensions.reduce(((p, c) => (p * c.categories.length)), 1)
     const subplotRowCount = Math.ceil(combinationCount/2);
+    const subplotHeaderTitles = mainTraces.traces.filter((_,i) => ((i % categoryCount) == 0)).map(t => t._parentName);
     mainTraces.layoutConfig.grid = { rows: subplotRowCount, columns: 2, pattern: 'independent' };
     mainTraces.layoutConfig.yRange = [0, 100];
     mainTraces.layoutConfig.subplotCount = combinationCount;
-    const subplotHeaderTitles = mainTraces.traces.filter((_,i) => ((i % categoryCount) == 0)).map(t => t._parentName);
     mainTraces.layoutConfig.annotations = getSubplotHeaders(subplotRowCount, subplotHeaderTitles);
     mainTraces.traces.forEach((t, idx) => {
       const axisIndex = hasTimeDimension ? Math.floor(idx / 2) + 1: idx + 1;
@@ -400,32 +400,32 @@ function IndicatorGraph(props) {
   });
 
   // add goals if defined
-  // if (!isComparison && goalTraces.length) {
-  //   goalTraces.forEach((goalTrace, idx) => {
-  //     plotlyData.push({
-  //       ...goalTrace,
-  //       type: 'scatter',
-  //       mode: goalTrace.scenario ? 'markers' : 'lines+markers',
-  //       line: {
-  //         width: 3,
-  //         dash: 'dash',
-  //         color: plotColors.goalScale[idx % plotColors.goalScale.length],
-  //       },
-  //       marker: {
-  //         size: 12,
-  //         symbol: 'x',
-  //         color: plotColors.goalScale[idx % plotColors.goalScale.length],
-  //       },
-  //       opacity: 0.7,
-  //       hoverinfo: 'none',
-  //       hovertemplate: `(%{x}) ${goalTrace.name}: %{y} ${yRange.unit}`,
-  //       hoverlabel: {
-  //         namelength: 0,
-  //         bgcolor: '#fff',
-  //       },
-  //     });
-  //   });
-  // }
+  if (!isComparison && goalTraces.length) {
+    goalTraces.forEach((goalTrace, idx) => {
+      plotlyData.push({
+        ...goalTrace,
+        type: 'scatter',
+        mode: goalTrace.scenario ? 'markers' : 'lines+markers',
+        line: {
+          width: 3,
+          dash: 'dash',
+          color: plotColors.goalScale[idx % plotColors.goalScale.length],
+        },
+        marker: {
+          size: 12,
+          symbol: 'x',
+          color: plotColors.goalScale[idx % plotColors.goalScale.length],
+        },
+        opacity: 0.7,
+        hoverinfo: 'none',
+        hovertemplate: `(%{x}) ${goalTrace.name}: %{y} ${yRange.unit}`,
+        hoverlabel: {
+          namelength: 0,
+          bgcolor: '#fff',
+        },
+      });
+    });
+  }
 
   const layout = createLayout(
     timeResolution,
@@ -454,7 +454,6 @@ function IndicatorGraph(props) {
 IndicatorGraph.defaultProps = {
   goalTraces: [],
   trendTrace: {},
-  comparison: undefined,
 };
 
 IndicatorGraph.propTypes = {
@@ -462,7 +461,6 @@ IndicatorGraph.propTypes = {
   timeResolution: PropTypes.string.isRequired,
   goalTraces: PropTypes.arrayOf(PropTypes.shape),
   trendTrace: PropTypes.shape(),
-  comparison: PropTypes.shape(),
 };
 
 export default IndicatorGraph;
