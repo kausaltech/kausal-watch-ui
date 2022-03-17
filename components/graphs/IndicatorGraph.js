@@ -57,7 +57,9 @@ function getTraces(dimensions, cube, names, hasTimeDimension) {
     const out = getTraces(rest, cube[idx], (names || []).concat([cat.name]), hasTimeDimension);
     traces = traces.concat(out);
   });
-  return traces;
+  // Filter out empty traces resulting from
+  // unavailable (total, category) combinations
+  return traces.filter(t => (t.x.length > 0));
 }
 
 const createLayout = (

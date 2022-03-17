@@ -138,10 +138,6 @@ function generateCube(dimensions, values, path) {
       const ids = val.categories.map((valCat) => valCat.id).sort();
       return isEqual(ids, catPath);
     });
-    if (!found.length) return null;
-    // Single date so only return value
-    // TODO: this determines display as bar, needs to take comparison cases into account
-    // if (found.length === 1) return found[0].value;
     return found.map(({ date, value }) => ({ date, value }));
   });
   return array;
@@ -274,10 +270,19 @@ const generateGoalTraces = (indicator, planScenarios, i18n) => {
   return goalTraces;
 };
 
-function getIndicatorGraphSpecification(indicator, compareOrganization) {
+function getIndicatorGraphSpecification(indicator, compareOrganization, t) {
   const specification = {}
   const indicators = [indicator];
   const dimensions = JSON.parse(JSON.stringify(indicator.dimensions));
+
+  dimensions.forEach(d => {
+    const { categories, id: dimId } = d.dimension;
+    categories.unshift({
+      id: `total`,
+      name: t('total')
+    });
+  });
+
   if (compareOrganization) {
     const compareIndicator = indicator.common.indicators.find(
       x => x.organization.id === compareOrganization
@@ -313,14 +318,30 @@ function addOrganizationCategory(value, orgId) {
   return Object.assign({}, value, {categories: newCategories});
 }
 
+function _addTotal(v, categoryCount) {
+  if (v.categories.length === 0) {
+    const newCategories = new Array(categoryCount).fill({id: 'total'});
+    return Object.assign({}, v, {
+      categories: [...v.categories, ...newCategories] });
+  }
+  return v;
+}
+
 function combineValues(indicator, compareTo, indicatorGraphSpecification) {
+  const categoryCount = indicatorGraphSpecification.axes[0][1];
+  const indicatorValues = indicator.values
+    .map(v => _addTotal(v, categoryCount))
+    .filter(v => v.categories.length === categoryCount);
   if (compareTo == null) {
-    return indicator.values;
+    return indicatorValues;
   }
   const comparisonIndicator = indicator.common.indicators.find((ind) => ind.organization.id === compareTo);
+  const comparisonIndicatorValues = comparisonIndicator.values
+    .map(v => _addTotal(v, categoryCount))
+    .filter(v => v.categories.length === categoryCount);
   return [
-    ...(indicator.values.map(v => addOrganizationCategory(v, indicator.organization.id))),
-    ...(comparisonIndicator.values.map(v => addOrganizationCategory(v, compareTo)))
+    ...(indicatorValues.map(v => addOrganizationCategory(v, indicator.organization.id))),
+    ...(comparisonIndicatorValues.map(v => addOrganizationCategory(v, compareTo)))
   ];
 
 }
@@ -333,7 +354,6 @@ function IndicatorVisualisation({ indicatorId }) {
   const plan = useContext(PlanContext);
   const { t, i18n } = useTranslation();
   const [compareTo, setCompareTo] = useState(undefined);
-  // const [comparisonTraces, setComparisonTraces] = useState(undefined);
 
   const { loading, error, data } = useQuery(GET_INDICATOR_GRAPH_DATA, {
     variables: {
@@ -350,7 +370,7 @@ function IndicatorVisualisation({ indicatorId }) {
   );
 
   const { indicator, plan: { scenarios } } = data;
-  const indicatorGraphSpecification = getIndicatorGraphSpecification(indicator, compareTo);
+  const indicatorGraphSpecification = getIndicatorGraphSpecification(indicator, compareTo, t);
   debug({indicatorGraphSpecification});
 
   if (!indicator) return (
