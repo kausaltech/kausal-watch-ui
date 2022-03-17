@@ -5,6 +5,7 @@ import { gql, useQuery } from '@apollo/client';
 import { Alert } from 'reactstrap';
 import { linearRegression } from 'simple-statistics';
 import { useTranslation } from 'common/i18n';
+import { captureMessage } from 'common/sentry';
 import PlanContext from 'context/plan';
 import ContentLoader from 'components/common/ContentLoader';
 import IndicatorComparisonSelect from 'components/indicators/IndicatorComparisonSelect';
@@ -175,47 +176,25 @@ function generateCubeFromValues(indicator, indicatorGraphSpecification, combined
   // });
 
   // Add trace data for dimensions
+  const dimensions = indicatorGraphSpecification.dimensions.map((indicatorDim) => indicatorDim.dimension)
+    .sort((a, b) => {
+      if (a.sort === 'last') {
+        return 1;
+      }
+      else if (b.sort === 'last') {
+        return -1;
+      }
+      return (a.categories.length - b.categories.length || a.id - b.id)
+    });
+  indicatorGraphSpecification.dimensions = dimensions;
+  if (dimensionedValues.length === 0 && indicatorGraphSpecification.dimensions.length !== 0) {
+    captureMessage(`Data consistency error: indicator ${indicator.id} has dimensions, but the data does not`);
+    indicatorGraphSpecification.dimensions = [];
+  }
   if (indicatorGraphSpecification.dimensions.length && dimensionedValues.length) {
-    const dimensions = indicatorGraphSpecification.dimensions.map((indicatorDim) => indicatorDim.dimension)
-          .sort((a, b) => {
-            if (a.sort === 'last') {
-              return 1;
-            }
-            else if (b.sort === 'last') {
-              return -1;
-            }
-            return (a.categories.length - b.categories.length || a.id - b.id)
-          });
-    indicatorGraphSpecification.dimensions = dimensions;
     return generateCube(dimensions, values);
-  //   let dataTraceGroups;
-  //   //
-  //   //  [{ path: , traces : [] }]
-  //   //
-  //   if (indicatorGraphSpecification.axes.length > 2) {
-  //     dataTraceGroups = cube.map(c => getTraces(dimensions.slice(0, -1), c));
-  //   }
-  //   else {
-  //      dataTraceGroups = [getTraces(dimensions, cube)];
-  //   }
-
-  //   dataTraceGroups.forEach((group) => {
-  //     traces.push(
-  //       group.map(trace => (
-  //         {
-  //           ...trace,
-  //           //organization: indicator.organization, // TODO: maybe not used anywhere?
-  //           dataType: 'dimension',
-  //         }
-  //       )
-  //     )
-  //   );
-  //   });
   }
-  else {
-    return values;
-  }
-  return cube;
+  return values;
 }
 
 
