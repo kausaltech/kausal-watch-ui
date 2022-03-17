@@ -7,7 +7,6 @@ import { SearchProvider, WithSearch, SearchBox, Results } from '@elastic/react-s
 
 import { useTheme } from 'common/theme';
 import WatchSearchAPIConnector from 'common/search';
-import Button from './Button';
 import Icon from './Icon';
 import PlanTag from 'components/plans/PlanTag';
 import { usePlan } from 'context/plan';
@@ -15,19 +14,28 @@ import { useApolloClient } from '@apollo/client';
 import { useTranslation } from 'common/i18n';
 
 const TextInput = styled.input`
+  display: ${(props) => (props.isOpen === 'true' ? 'block' : 'hidden')};
   width: ${(props) => (props.isOpen === 'true' ? 'auto' : '0')};
   height: calc(${(props) => props.theme.inputLineHeight}em + ${(props) => props.theme.inputPaddingY} + ${(props) => props.theme.inputPaddingY});
   padding: ${(props) => (props.isOpen === 'true' ? `${props.theme.inputPaddingY} ${props.theme.inputPaddingY}` : '0')};
-  color: ${(props) => props.theme.brandNavColor};
-  background-color: ${(props) => props.theme.brandNavBackground};
+  color: ${(props) => props.theme.themeColors.black};
+  background-color: ${(props) => props.theme.themeColors.white};
   border-radius: ${(props) => props.theme.inputBorderRadius};
-  border-width:${(props) => (props.isOpen === 'true' ? props.theme.inputBorderWidth : '0')};
-  border-color: ${(props) => props.theme.themeColors.dark};
-  transition: all 0.4s ease-in-out;
-  &:focus {
-    padding: ${(props) => props.theme.inputPaddingY} ${(props) => props.theme.inputPaddingX};
-    border-width: ${(props) => props.theme.inputBorderWidth};
+  border: 0;
+
+  &:focus, &:focus-visible {
+    outline: 3px solid ${(props) => props.theme.inputBtnFocusColor};
   }
+`;
+
+const SearchButton = styled.button`
+  height: calc(${(props) => props.theme.inputLineHeight}em + ${(props) => props.theme.inputPaddingY} + ${(props) => props.theme.inputPaddingY});
+  padding: 8px ${(props) => props.theme.inputBtnPaddingX};
+  background-color: ${(props) => props.isActive === 'true' ? props.theme.themeColors.black : props.theme.brandNavBackground};
+  border: 0;
+  border-radius: ${(props) => props.theme.btnBorderRadius};
+  border-width: ${(props) => props.theme.btnBorderWidth};
+  font-weight: ${(props) => props.theme.fontWeightBold};
 `;
 
 const ResultsBox = styled.div`
@@ -235,16 +243,18 @@ function NavbarSearch(props) {
                     ref={searchInput}
                     isOpen={searchOpen.toString()}
                   />
-                  <Button
-                    color={!searchOpen ? 'link' : 'primary'}
+                  <SearchButton
+                    isActive={searchOpen.toString()}
                     type="submit"
                     onClick={handleSubmit}
                   >
                     <Icon
                       name="search"
-                      color={theme.themeColors.white}
+                      color={theme.brandNavColor}
+                      width="1.25rem"
+                      height="1.25rem"
                     />
-                  </Button>
+                  </SearchButton>
                 </InputGroup>
               </form>
               </SearchControls>
