@@ -394,7 +394,7 @@ function IndicatorVisualisation({ indicatorId }) {
   const cube = generateCubeFromValues(indicator, indicatorGraphSpecification, combinedValues, i18n);
   indicatorGraphSpecification.cube = cube;
   const goalTraces = null; //generateGoalTraces(indicator, scenarios, i18n);
-  const trendTrace = null; //generateTrendTrace(indicator, traces, goalTraces, i18n);
+  const trendTrace = generateTrendTrace(indicator, traces, goalTraces, i18n);
 
   const comparisonOrgs = indicator.common?.indicators
     .map((common) => common.organization)

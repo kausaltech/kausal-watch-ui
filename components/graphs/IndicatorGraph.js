@@ -36,6 +36,7 @@ function getTraces(dimensions, cube, names, hasTimeDimension) {
         return {
           xType: 'time',
           name: traceName,
+          _parentName: names?.join(', '),
           x, y
         };
       });
@@ -45,6 +46,7 @@ function getTraces(dimensions, cube, names, hasTimeDimension) {
     return [{
       xType: 'category',
       name: (names || [firstDimension.name]).join(', '),
+      _parentName: names?.join(', '),
       x: firstDimension.categories.map((cat) => cat.name),
       y: cube.map(c => c[0].value),
     }];
@@ -256,64 +258,17 @@ const createTraces = (traces, unit, plotColors, styleCount, categoryCount) => {
   };
 };
 
-const compare = (org1, org2, unit, plotColors) => {
-  const yRange = [];
-  const categoryPlots = org2.map((toCat, idx) => {
-    const fromCat = org1.find((cat) => cat.name === toCat.name);
-    yRange[0] = _.min(_.concat(fromCat.y, toCat.y, yRange[0]));
-    yRange[1] = _.max(_.concat(fromCat.y, toCat.y, yRange[1]));
-    return [
-      {
-        ...fromCat,
-        name: fromCat.organization.abbreviation,
-        xaxis: `x${idx + 1}`,
-        yaxis: `y${idx + 1}`,
-        showlegend: idx === 0,
-      },
-      {
-        ...toCat,
-        name: toCat.organization.abbreviation,
-        xaxis: `x${idx + 1}`,
-        yaxis: `y${idx + 1}`,
-        showlegend: idx === 0,
-      },
-    ];
-  });
-
-  // TODO: Hack for demo - we are dealing with percentages so figure out a nice percentage range
-  if (yRange[0] > 45) {
-    yRange[0] = 45;
-    yRange[1] = 105;
-  } else if (yRange[1] < 50) {
-    yRange[0] = 0;
-    yRange[1] = 50;
-  } else {
-    yRange[0] = 0;
-    yRange[1] = 105;
-  }
-
-  const traces = [];
-  const categoryTraces = categoryPlots.map((plot) => createTraces(plot, unit, plotColors));
-
-  categoryTraces.forEach((cat) => {
-    traces.push(...cat.traces);
-  });
-
-  const hasSubplots = categoryTraces.length > 1;
-
-  const subPlotRowCount = Math.ceil(categoryTraces.length / 2);
-
-  const subplotHeaders = hasSubplots && org2.map((plot, idx) => {
-    // Let us try to position annotations as headers for each of the subplots
+function getSubplotHeaders(subPlotRowCount, names) {
+  return names.map((name, idx) => {
     const column = (idx / 2) % 1;
     const row = Math.floor(idx / 2) / subPlotRowCount;
     return {
-      text: `<b>${plot.name}</b>`,
+      text: `<b>${name}</b>`,
       font: {
         size: 16,
       },
       showarrow: false,
-      x: column + column * 0.1,
+      x: column + column * 0.1 + 0.02,
       y: 1 - row - (row * 0.3 * (1 / subPlotRowCount)), // wild improvisation
       xref: 'paper',
       xanchor: 'left',
@@ -321,23 +276,22 @@ const compare = (org1, org2, unit, plotColors) => {
       yanchor: 'bottom',
     };
   });
+}
 
-  const grid = hasSubplots && { rows: subPlotRowCount, columns: 2, pattern: 'independent' };
+// TODO: incorporate these range heuristics somewhere
+// TODO: Hack for demo - we are dealing with percentages so figure out a nice percentage range
+// if (yRange[0] > 45) {
+//   yRange[0] = 45;
+//   yRange[1] = 105;
+// } else if (yRange[1] < 50) {
+//   yRange[0] = 0;
+//   yRange[1] = 50;
+// } else {
+//   yRange[0] = 0;
+//   yRange[1] = 105;
+// }
 
-  // const compareTo = createTraces(org2, plotColors);
-  // const { traces: comparisonTraces } = compareTo;
-  return {
-    layoutConfig: {
-      ...categoryTraces[0].layoutConfig,
-      grid,
-      subplotCount: categoryTraces.length,
-      annotations: subplotHeaders,
-      yRange,
-      xType: traces[traces.length - 1].xType,
-    },
-    traces,
-  };
-};
+
 function IndicatorGraph(props) {
   if (!process.browser) {
     return null;
@@ -409,8 +363,12 @@ function IndicatorGraph(props) {
     const categoryDimensions = specification.dimensions.slice(0, categoryCount);
     const organizationDimension = specification.dimensions.at(categoryCount);
     const combinationCount = categoryDimensions.reduce(((p, c) => (p * c.categories.length)), 1)
-    mainTraces.layoutConfig.grid = { rows: Math.ceil(combinationCount/2), columns: 2, pattern: 'independent' };
+    const subplotRowCount = Math.ceil(combinationCount/2);
+    mainTraces.layoutConfig.grid = { rows: subplotRowCount, columns: 2, pattern: 'independent' };
     mainTraces.layoutConfig.yRange = [0, 100];
+    mainTraces.layoutConfig.subplotCount = combinationCount;
+    const subplotHeaderTitles = mainTraces.traces.filter((_,i) => ((i % categoryCount) == 0)).map(t => t._parentName);
+    mainTraces.layoutConfig.annotations = getSubplotHeaders(subplotRowCount, subplotHeaderTitles);
     mainTraces.traces.forEach((t, idx) => {
       const axisIndex = hasTimeDimension ? Math.floor(idx / 2) + 1: idx + 1;
       if (!hasTimeDimension || idx > 1) {
