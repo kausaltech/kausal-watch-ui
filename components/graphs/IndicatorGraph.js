@@ -25,10 +25,9 @@ function getTraces(dimensions, cube, names, hasTimeDimension) {
   if (dimensions.length === 1) {
     if (hasTimeDimension) {
       return firstDimension.categories.map((cat, idx) => {
-        const traceName = [
-          ...(names || []),
-          cat.name,
-        ].join(', ');
+        const traceName = Array.from(
+          (new Set(names ?? undefined)).add(cat.name)
+        ).join(', ');
         let x, y, xType, _cube = cube[idx];
         xType = 'time';
         x = _cube.map(val => val.date);
@@ -36,7 +35,7 @@ function getTraces(dimensions, cube, names, hasTimeDimension) {
         return {
           xType: 'time',
           name: traceName,
-          _parentName: names?.join(', '),
+          _parentName: names ? Array.from(names).join(', ') : null,
           x, y
         };
       });
@@ -54,7 +53,7 @@ function getTraces(dimensions, cube, names, hasTimeDimension) {
   let traces = [];
 
   firstDimension.categories.forEach((cat, idx) => {
-    const out = getTraces(rest, cube[idx], (names || []).concat([cat.name]), hasTimeDimension);
+    const out = getTraces(rest, cube[idx], (new Set(names ?? undefined)).add(cat.name), hasTimeDimension);
     traces = traces.concat(out);
   });
   // Filter out empty traces resulting from
