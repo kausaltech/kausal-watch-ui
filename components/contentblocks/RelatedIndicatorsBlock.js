@@ -27,7 +27,7 @@ const IndicatorItem = (props) => {
       { showLink && (
       <div className="mt-2 text-right">
         <Link href={`/indicators/${indicator}`}>
-          <a href>
+          <a>
             {t('read-more')}
             <Icon name="arrowRight" />
           </a>

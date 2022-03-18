@@ -56,7 +56,7 @@ const CatecoryCardContent = (props) => {
       <CategoryText className="text-content" dangerouslySetInnerHTML={{ __html: textcontent?.value }} />
       { category?.categoryPage?.urlPath ? (
         <Link href={category?.categoryPage?.urlPath}>
-          <a href>
+          <a>
             {t('read-more')}
             <Icon name="arrowRight" />
           </a>

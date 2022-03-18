@@ -21,7 +21,7 @@ export default function RichText({ html, ...rest }) {
           // FIXME: Add icon based on attribs['data-file-extension']
           return <a href={`${plan.serveFileBaseUrl}${attribs.href}`}>{domToReact(children, options)}</a>;
         }
-        return <a target='_blank' href={attribs.href}>{domToReact(children, options)}</a>;
+        return <a target='_blank' href={attribs.href} rel="noreferrer">{domToReact(children, options)}</a>;
       } else if (name === 'img') {
         if (attribs.src && attribs.src[0] === '/') {
           const { alt, src, height, width, ...rest } = attribs;

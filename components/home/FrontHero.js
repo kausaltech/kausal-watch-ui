@@ -154,7 +154,7 @@ function FrontHero(props) {
             >
               {(sprops) => (
                 <ActionListLink>
-                  <a href>
+                  <a>
                     <Highlight
                       className="d-flex p-3 bd-highlight flex-row justify-content-center justify-content-md-start"
                       style={sprops}
@@ -182,7 +182,7 @@ function FrontHero(props) {
             >
               {(sprops) => (
                 <IndicatorListLink>
-                  <a href>
+                  <a>
                     <Highlight
                       className="d-flex p-3 bd-highlight flex-row justify-content-center justify-content-md-start"
                       style={sprops}

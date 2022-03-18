@@ -177,7 +177,7 @@ function SearchResultItem({ hit }) {
         {hitTypeName && (<HitType>{hitTypeName}</HitType>)}
       </SearchResultMeta>
       <Link href={hit.url} passHref>
-        <a href>
+        <a>
           <h3>{hit.title}</h3>
         </a>
       </Link>

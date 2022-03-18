@@ -356,7 +356,7 @@ const HnhHero = () => (
             >
               {props => (
                 <ActionListLink>
-                  <a href>
+                  <a>
                     <Highlight
                       className="d-flex p-3 bd-highlight flex-row justify-content-center justify-content-md-start"
                       style={props}
@@ -387,7 +387,7 @@ const HnhHero = () => (
             >
               {(props) => (
                 <IndicatorListLink>
-                  <a href>
+                  <a>
                     <Highlight
                       className="d-flex p-3 bd-highlight flex-row justify-content-center justify-content-md-start"
                       style={props}
