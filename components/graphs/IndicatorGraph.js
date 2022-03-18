@@ -12,55 +12,6 @@ const PlotContainer = styled.div`
   height: ${(props) => props.vizHeight}px;
 `;
 
-function getTraces(dimensions, cube, names, hasTimeDimension) {
-  if (dimensions.length === 0) {
-    return [{
-      xType: cube.length === 1 ? 'category' : 'time',
-      name: '',
-      x: cube.map(val => val.date),
-      y: cube.map(val => val.value)
-    }];
-  }
-  const [firstDimension, ...rest] = dimensions;
-  if (dimensions.length === 1) {
-    if (hasTimeDimension) {
-      return firstDimension.categories.map((cat, idx) => {
-        const traceName = Array.from(
-          (new Set(names ?? undefined)).add(cat.name)
-        ).join(', ');
-        let x, y, xType, _cube = cube[idx];
-        xType = 'time';
-        x = _cube.map(val => val.date);
-        y = _cube.map(val => val.value);
-        return {
-          xType: 'time',
-          name: traceName,
-          _parentName: names ? Array.from(names).join(', ') : null,
-          x, y
-        };
-      });
-    }
-
-    // No time dimension, 'x' axis will be categories
-    return [{
-      xType: 'category',
-      name: Array.from(new Set(names ?? [firstDimension.name])).join(', '),
-      _parentName:  names ? Array.from(names).join(', ') : null,
-      x: firstDimension.categories.map((cat) => cat.name),
-      y: cube.map(c => c[0]?.value),
-    }];
-  }
-  let traces = [];
-
-  firstDimension.categories.forEach((cat, idx) => {
-    const out = getTraces(rest, cube[idx], (new Set(names ?? undefined)).add(cat.name), hasTimeDimension);
-    traces = traces.concat(out);
-  });
-  // Filter out empty traces resulting from
-  // unavailable (total, category) combinations
-  return traces.filter(t => (t.x.length > 0));
-}
-
 const createLayout = (
   timeResolution,
   yRange,
@@ -300,6 +251,7 @@ function IndicatorGraph(props) {
   const {
     yRange,
     timeResolution,
+    traces,
     goalTraces,
     trendTrace,
     specification
@@ -357,8 +309,7 @@ function IndicatorGraph(props) {
   else if (!hasTimeDimension && !subplotsNeeded && categoryCount > 1) {
     styleCount = specification.dimensions[0].categories.length;
   }
-  const _traces = getTraces(specification.dimensions, specification.cube, null, hasTimeDimension);
-  mainTraces = createTraces(_traces, yRange.unit, plotColors, styleCount, categoryCount);
+  mainTraces = createTraces(traces, yRange.unit, plotColors, styleCount, categoryCount);
 
   if (subplotsNeeded) {
     const categoryDimensions = specification.dimensions.slice(0, categoryCount);

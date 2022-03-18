@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { isEqual, capitalize } from 'lodash';
 import { gql, useQuery } from '@apollo/client';
 import { Alert } from 'reactstrap';
+import dayjs from 'common/dayjs';
 import { linearRegression } from 'simple-statistics';
 import { useTranslation } from 'common/i18n';
 import { captureMessage } from 'common/sentry';
@@ -169,6 +170,57 @@ function generateCubeFromValues(indicator, indicatorGraphSpecification, combined
   return generateCube(indicatorGraphSpecification.dimensions, values);
 }
 
+function getTraces(dimensions, cube, names, hasTimeDimension) {
+  if (dimensions.length === 0) {
+    return [{
+      xType: cube.length === 1 ? 'category' : 'time',
+      name: '',
+      x: cube.map(val => {
+        const d = dayjs(val.date)
+        return cube.length < 2 ? d.year() : val.date;
+      }),
+      y: cube.map(val => val.value)
+    }];
+  }
+  const [firstDimension, ...rest] = dimensions;
+  if (dimensions.length === 1) {
+    if (hasTimeDimension) {
+      return firstDimension.categories.map((cat, idx) => {
+        const traceName = Array.from(
+          (new Set(names ?? undefined)).add(cat.name)
+        ).join(', ');
+        let x, y, xType, _cube = cube[idx];
+        xType = 'time';
+        x = _cube.map(val => val.date);
+        y = _cube.map(val => val.value);
+        return {
+          xType: 'time',
+          name: traceName,
+          _parentName: names ? Array.from(names).join(', ') : null,
+          x, y
+        };
+      });
+    }
+
+    // No time dimension, 'x' axis will be categories
+    return [{
+      xType: 'category',
+      name: Array.from(new Set(names ?? [firstDimension.name])).join(', '),
+      _parentName:  names ? Array.from(names).join(', ') : null,
+      x: firstDimension.categories.map((cat) => cat.name),
+      y: cube.map(c => c[0]?.value),
+    }];
+  }
+  let traces = [];
+
+  firstDimension.categories.forEach((cat, idx) => {
+    const out = getTraces(rest, cube[idx], (new Set(names ?? undefined)).add(cat.name), hasTimeDimension);
+    traces = traces.concat(out);
+  });
+  // Filter out empty traces resulting from
+  // unavailable (total, category) combinations
+  return traces.filter(t => (t.x.length > 0));
+}
 
 const generateTrendTrace = (indicator, traces, goals, i18n) => {
   const hasPotentialScenario = traces.find((goal) => goal.scenario?.identifier === 'potential');
@@ -398,8 +450,11 @@ function IndicatorVisualisation({ indicatorId }) {
   /// Process data for data traces
   const cube = generateCubeFromValues(indicator, indicatorGraphSpecification, combinedValues, i18n);
   indicatorGraphSpecification.cube = cube;
+  const hasTimeDimension = indicatorGraphSpecification.axes.filter(a => a[0] === 'time').length > 0;
+  const traces = getTraces(
+    indicatorGraphSpecification.dimensions, cube, null, hasTimeDimension);
   const goalTraces = generateGoalTraces(indicator, scenarios, i18n);
-  const trendTrace = null; //generateTrendTrace(indicator, traces, goalTraces, i18n);
+  const trendTrace = hasTimeDimension ? generateTrendTrace(indicator, traces, goalTraces, i18n) : null;
 
   const comparisonOrgs = indicator.common?.indicators
     .map((common) => common.organization)
@@ -422,7 +477,7 @@ function IndicatorVisualisation({ indicatorId }) {
           specification={indicatorGraphSpecification}
           yRange={yRange}
           timeResolution={indicator.timeResolution}
-          traces={null}
+          traces={traces}
           goalTraces={goalTraces}
           trendTrace={trendTrace}
         />
