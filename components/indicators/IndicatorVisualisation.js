@@ -152,45 +152,21 @@ function generateCubeFromValues(indicator, indicatorGraphSpecification, combined
     const newDate = indicator.timeResolution === 'YEAR' ? date.split('-')[0] : date;
     return { date: newDate, value, categories };
   });
-
-  // Separate the main historical series (non-dimensioned) from the dimensioned values
-  // TODO mainValues with new multi dimensional org
-  // const mainValues = values.filter((item) => !item.categories.length);
-  const dimensionedValues = values.filter((val) => val.categories.length > 0);
-
-  // // If we have dimensions, call main historical series 'Total'
-  // const traceName = (indicator.quantity && !dimensionedValues.length)
-  //   ? capitalize(indicator.quantity.name) : capitalize(i18n.t('total'));
-
-  // traces.push({
-  //   xType: 'time',
-  //   y: mainValues.map((item) => item.value),
-  //   x: mainValues.map((item) => item.date),
-  //   name: traceName,
-  //   organization: indicator.organization,
-  //   dataType: 'total',
-  // });
-
-  // Add trace data for dimensions
-  const dimensions = indicatorGraphSpecification.dimensions.map((indicatorDim) => indicatorDim.dimension)
-    .sort((a, b) => {
-      if (a.sort === 'last') {
-        return 1;
-      }
-      else if (b.sort === 'last') {
-        return -1;
-      }
-      return (a.categories.length - b.categories.length || a.id - b.id)
-    });
-  indicatorGraphSpecification.dimensions = dimensions;
-  if (dimensionedValues.length === 0 && indicatorGraphSpecification.dimensions.length !== 0) {
-    captureMessage(`Data consistency error: indicator ${indicator.id} has dimensions, but the data does not`);
-    indicatorGraphSpecification.dimensions = [];
+  if (indicatorGraphSpecification.dimensions.length === 0) {
+    return values;
   }
-  if (indicatorGraphSpecification.dimensions.length && dimensionedValues.length) {
-    return generateCube(dimensions, values);
-  }
-  return values;
+  indicatorGraphSpecification.dimensions =  indicatorGraphSpecification.dimensions.map(
+    d => d.dimension
+  ).sort((a, b) => {
+    if (a.sort === 'last') {
+      return 1;
+    }
+    else if (b.sort === 'last') {
+      return -1;
+    }
+    return (a.categories.length - b.categories.length || a.id - b.id)
+  });
+  return generateCube(indicatorGraphSpecification.dimensions, values);
 }
 
 
@@ -273,7 +249,13 @@ const generateGoalTraces = (indicator, planScenarios, i18n) => {
 function getIndicatorGraphSpecification(indicator, compareOrganization, t) {
   const specification = {}
   const indicators = [indicator];
-  const dimensions = JSON.parse(JSON.stringify(indicator.dimensions));
+  let dimensions = JSON.parse(JSON.stringify(indicator.dimensions));
+
+  const dimensionedValues = indicator.values.filter((val) => val.categories.length > 0);
+  if (dimensionedValues.length === 0 && dimensions.length !== 0) {
+    captureMessage(`Data consistency error: indicator ${indicator.id} has dimensions, but the data does not`);
+    dimensions = [];
+  }
 
   dimensions.forEach(d => {
     const { categories, id: dimId } = d.dimension;
@@ -328,7 +310,11 @@ function _addTotal(v, categoryCount) {
 }
 
 function combineValues(indicator, compareTo, indicatorGraphSpecification) {
-  const categoryCount = indicatorGraphSpecification.axes[0][1];
+  let categoryCount = 0;
+  const categoryAxis = indicatorGraphSpecification.axes.filter(a => a[0] === 'categories');
+  if (categoryAxis.length > 0) {
+    categoryCount = categoryAxis[0][1];
+  }
   const indicatorValues = indicator.values
     .map(v => _addTotal(v, categoryCount))
     .filter(v => v.categories.length === categoryCount);
@@ -371,7 +357,6 @@ function IndicatorVisualisation({ indicatorId }) {
 
   const { indicator, plan: { scenarios } } = data;
   const indicatorGraphSpecification = getIndicatorGraphSpecification(indicator, compareTo, t);
-  debug({indicatorGraphSpecification});
 
   if (!indicator) return (
     <Alert color="danger">

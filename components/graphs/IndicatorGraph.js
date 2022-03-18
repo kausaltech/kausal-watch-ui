@@ -44,10 +44,10 @@ function getTraces(dimensions, cube, names, hasTimeDimension) {
     // No time dimension, 'x' axis will be categories
     return [{
       xType: 'category',
-      name: (names || [firstDimension.name]).join(', '),
-      _parentName: names?.join(', '),
+      name: Array.from(new Set(names ?? [firstDimension.name])).join(', '),
+      _parentName:  names ? Array.from(names).join(', ') : null,
       x: firstDimension.categories.map((cat) => cat.name),
-      y: cube.map(c => c[0].value),
+      y: cube.map(c => c[0]?.value),
     }];
   }
   let traces = [];
@@ -365,7 +365,10 @@ function IndicatorGraph(props) {
     const organizationDimension = specification.dimensions.at(categoryCount);
     const combinationCount = categoryDimensions.reduce(((p, c) => (p * c.categories.length)), 1)
     const subplotRowCount = Math.ceil(combinationCount/2);
-    const subplotHeaderTitles = mainTraces.traces.filter((_,i) => ((i % categoryCount) == 0)).map(t => t._parentName);
+    const COMPARISON_COUNT = 2;
+    const subplotHeaderTitles = mainTraces.traces.filter((_,i) => (
+      (i % COMPARISON_COUNT) == 0)
+    ).map(t => t._parentName);
     mainTraces.layoutConfig.grid = { rows: subplotRowCount, columns: 2, pattern: 'independent' };
     mainTraces.layoutConfig.yRange = [0, 100];
     mainTraces.layoutConfig.subplotCount = combinationCount;
