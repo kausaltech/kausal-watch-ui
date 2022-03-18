@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container } from 'reactstrap';
 import { useTranslation } from 'common/i18n';
-import { Link } from 'routes';
+import { Link } from 'common/links';
 
 import Layout, { Meta } from 'components/layout';
 

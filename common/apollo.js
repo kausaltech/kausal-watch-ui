@@ -20,9 +20,14 @@ const localeMiddleware = new ApolloLink((operation, forward) => {
   // Inject @locale directive into the query root object
   const { query } = operation;
   const { definitions } = query;
+  const operationName = definitions?.[0].name.value;
   const i18n = getI18n();
+  const locale = i18n ? i18n.language : publicRuntimeConfig.locale;
 
-  if (!i18n || !i18n.language || definitions[0].operation === 'mutation') return forward(operation);
+  if (!locale || definitions[0].operation === 'mutation') {
+    console.log(`no language for query: ${operationName}`);
+    return forward(operation);
+  }
 
   const localeDirective = {
     kind: 'Directive',
@@ -33,11 +38,7 @@ const localeMiddleware = new ApolloLink((operation, forward) => {
     arguments: [{
       kind: 'Argument',
       name: { kind: 'Name', value: 'lang' },
-      value: { kind: 'StringValue', value: i18n.language, block: false },
-    }, {
-      kind: 'Argument',
-      name: { kind: 'Name', value: 'plan' },
-      value: { kind: 'StringValue', value: globalPlanIdentifier, block: false },
+      value: { kind: 'StringValue', value: locale, block: false },
     }],
   };
 

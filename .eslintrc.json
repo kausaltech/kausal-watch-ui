@@ -1,22 +1,5 @@
 {
-  "parser": "@babel/eslint-parser",
-  "env": {
-      "browser": true,
-      "node": true,
-      "es6": true,
-  },
-  "plugins": [
-    "react"
-  ],
-  "settings": {
-    "import/resolver": {
-      "node": {
-        "paths": ["."],
-        "extensions": [".js", ".jsx", ".jsm", ".mjs", ".tsx", ".ts"]
-      }
-    }
-  },
-  "ignorePatterns": ["node_modules/**"],
+  "extends": ["next/core-web-vitals"],
   "rules": {
     "max-len": [1, 120, 2, {"ignoreComments": true}],
     "curly": ["off"],
@@ -31,11 +14,8 @@
         ".mjs": "never",
         ".jsx": "never",
         ".ts": "never",
-        ".tsx": "never",
+        ".tsx": "never"
       }
-    ],
-  },
-  "extends": [
-    "eslint:recommended", "plugin:react/recommended", "airbnb", "plugin:react/jsx-runtime"
-  ]
+    ]
+  }
 }

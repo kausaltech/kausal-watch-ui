@@ -1,15 +1,14 @@
 /* eslint-disable no-console */
 
-import fs from 'fs';
 import next from 'next';
-import morgan from 'morgan';
 import Koa from 'koa';
 import Router from '@koa/router';
-import logger from "koa-logger";
+import logger from 'koa-logger';
 import originalUrl from 'original-url';
 import cacheableResponse from 'cacheable-response';
 import parseCacheControl from '@tusbar/cache-control';
 import normalizeUrl from 'normalize-url';
+import LRU from 'lru-cache';
 import apollo from '@apollo/client';
 import 'dotenv/config'
 
@@ -93,7 +92,10 @@ class WatchServer {
     this.nextConfig = null;
     this.app = next({ dev: isDevMode });
     this.nextHandleRequest = this.app.getRequestHandler();
-    this.plansByHostname = new Map();
+    this.hostnameCache = new LRU({
+      max: 500,
+      ttl: 1 * 60 * 1000,
+    });
   }
 
   initApollo() {
@@ -109,10 +111,54 @@ class WatchServer {
     });
   }
 
-  async getPlan(ctx) {
+  parseRequestPath(ctx, plans) {
+    const { path } = ctx;
+    let matchedPlan = null, basePath = null;
+    let parts = path.split('/').splice(1);
+
+    for (const plan of plans) {
+      let prefix;
+      if (!plan.domains.length) {
+        prefix = '';
+      } else {
+        const domain = plan.domains[0];
+        prefix = (domain.basePath || '/').split('/').splice(1)[0];
+      }
+      if (!prefix) {
+        // Root plan
+        matchedPlan = plan;
+        basePath = '';
+        continue
+      }
+      if (prefix === parts[0]) {
+        matchedPlan = plan;
+        parts = parts.splice(1);
+        basePath = `/${prefix}`;
+        break;
+      }
+    }
+    if (!matchedPlan) {
+      throw new Error(`Did not find a matching plan for path ${path}`);
+    }
+    let locale = matchedPlan.primaryLanguage;
+    if (parts.length) {
+      // Check if we have a locale prefix
+      for (const lang of matchedPlan.otherLanguages) {
+        if (parts[0] === lang) {
+          locale = lang;
+          break;
+        }
+      }
+    }
+    return { plan: matchedPlan, locale, basePath};
+  }
+
+  async getAvailablePlans(ctx) {
     const { hostname, path } = ctx;
-    const obj = this.plansByHostname.get(hostname);
-    if (obj) return obj;
+    let plansForHostname;
+    const obj = this.hostnameCache.get(hostname);
+
+    if (obj) return JSON.parse(obj);
 
     try {
       const { data } = await this.apolloClient.query({
@@ -122,15 +168,7 @@ class WatchServer {
         },
         fetchPolicy: 'no-cache',
       });
-      const { plansForHostname } = data;
-      if (!plansForHostname.length) {
-        const msg = `Unknown hostname: ${ctx.hostname}`;
-        console.error(msg);
-        ctx.throw(404, msg);
-      }
-      // FIXME: Revisit with multi-plan support
-      const plan = plansForHostname[0];
-      return plan;
+      plansForHostname = data.plansForHostname;
     } catch (error) {
       console.error(`Unable to get plan for hostname: ${ctx.hostname}`)
       if (error.networkError) {
@@ -146,9 +184,16 @@ class WatchServer {
         scope.setTag('hostname', ctx.hostname);
         Sentry.captureException(error);
       });
-      ctx.throw(500, 'Internal server error – unable to get plan data');
+      ctx.throw(500, 'Internal server error (unable to get plan data)');
       return null;
     }
+    if (!plansForHostname.length) {
+      const msg = `Unknown hostname: ${ctx.hostname}`;
+      console.error(msg);
+      ctx.throw(404, msg);
+    }
+    this.hostnameCache.set(hostname, JSON.stringify(plansForHostname));
+    return plansForHostname;
   }
 
   setBasePath(basePath) {
@@ -164,25 +209,24 @@ class WatchServer {
     srv.router.basePath = basePath;
   }
 
-  setLocale(defaultLocale, locales) {
+  setLocale(locale, defaultLocale, locales) {
     const srv = this.nextServer;
     // Insert defaultLocale as the first element in locale list
     const loc = locales.filter((lang) => lang !== defaultLocale);
     loc.splice(0, 0, defaultLocale);
     srv.nextConfig.i18n.defaultLocale = defaultLocale;
     srv.nextConfig.i18n.locales = loc;
+    srv.nextConfig.publicRuntimeConfig.locale = locale;
     srv.router.locales = loc;
     srv.incrementalCache.locales = loc;
   }
 
   async handleRequest(ctx) {
-    const plan = await this.getPlan(ctx);
-    if (!plan) return;
-    /*
-    const basePath = instance.hostname?.basePath || '';
+    const plans = await this.getAvailablePlans(ctx);
+    if (!plans) return;
+    const { plan, locale, basePath } = this.parseRequestPath(ctx, plans);
     this.setBasePath(basePath);
-    */
-    this.setLocale(plan.primaryLanguage, plan.otherLanguages);
+    this.setLocale(locale, plan.primaryLanguage, plan.otherLanguages);
     ctx.req.planIdentifier = plan.identifier;
     ctx.req.currentURL = getCurrentURL(ctx.req);
     await this.nextHandleRequest(ctx.req, ctx.res);
@@ -223,6 +267,7 @@ class WatchServer {
         scope.addEventProcessor((event) => Sentry.Handlers.parseRequest(event, ctx.request));
         Sentry.captureException(err);
       });
+      console.error(err);
     });
     server.listen(serverPort, () => {
       console.log(`> ✅ Ready on http://localhost:${serverPort}`);

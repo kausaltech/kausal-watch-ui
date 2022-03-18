@@ -2,7 +2,6 @@ import React from 'react';
 import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
 import { getBgImageAlignment } from 'common/images';
-import { DynamicLink } from 'common/links';
 import Card from 'components/common/Card';
 
 const CardListSection = styled.div`

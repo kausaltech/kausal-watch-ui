@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
-import { Link } from 'routes';
+import { Link } from 'common/links';
 import { useTranslation } from 'common/i18n';
 import Icon from 'components/common/Icon';
 import IndicatorVisualisation from 'components/indicators/IndicatorVisualisation';

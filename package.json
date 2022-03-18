@@ -40,9 +40,11 @@
     "next-images": "^1.8.4",
     "next-with-apollo": "^5.2.1",
     "original-url": "^1.2.3",
+    "patch-package": "^6.4.7",
     "plotly.js": "^2.9.0",
     "polished": "^4.1.4",
     "popper.js": "^1.16.1",
+    "postinstall-postinstall": "^2.1.0",
     "prop-types": "^15.8.1",
     "react": "^17.0.2",
     "react-bootstrap-typeahead": "^6.0.0-alpha.9",
@@ -70,9 +72,11 @@
     "dev": "node server.mjs",
     "build": "next build",
     "start": "NODE_ENV=production node server.mjs",
+    "postinstall": "patch-package",
     "storybook": "start-storybook -p 6006 -s ./public",
     "build-storybook": "build-storybook -s ./public",
     "deploy-storybook": "storybook-to-ghpages",
+    "lint": "next lint",
     "test": "jest"
   },
   "devDependencies": {
@@ -99,6 +103,7 @@
     "css-tree": "^2.0.4",
     "eslint": "^8.9.0",
     "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-next": "12.1.0",
     "eslint-loader": "^4.0.2",
     "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-jsx-a11y": "^6.5.1",
@@ -120,7 +125,7 @@
     "url": "https://github.com/kausaltech/kausal-watch-ui"
   },
   "engines": {
-    "node": "14.x || 15.x"
+    "node": "14.x || 15.x || 16.x || 17.x"
   },
   "browserslist": [
     "> 1%",

@@ -4,7 +4,7 @@ import { gql, useQuery } from '@apollo/client';
 import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
 import PlanContext from 'context/plan';
-import { DynamicLink } from 'common/links';
+import { Link } from 'common/links';
 import CategoryMetaDataBlock from './CategoryMetaDataBlock';
 
 export const GET_CATEGORY_METADATA_TYPES = gql`
@@ -133,7 +133,7 @@ function CategoryPageHeaderBlock(props) {
             <HeaderContent>
               { parentTitle && (
                 <Breadcrumb>
-                  <DynamicLink href={parentUrl}><a>{parentTitle}</a></DynamicLink>
+                  <Link href={parentUrl}><a>{parentTitle}</a></Link>
                   {' '}
                   /
                 </Breadcrumb>

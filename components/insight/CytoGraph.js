@@ -7,8 +7,8 @@ import dayjs from 'dayjs';
 import styled, { withTheme } from 'styled-components';
 import cytoscape from 'cytoscape';
 import dagre from 'cytoscape-dagre';
+import { Router } from 'next/router';
 
-import { Router } from 'routes';
 import { withTranslation } from '../../common/i18n';
 import { getIndicatorLinkProps, getActionLinkProps } from '../../common/links';
 import { Meta } from '../layout';

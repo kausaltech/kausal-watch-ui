@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import {
   Container, Row, Col, Input, Label, FormGroup,
 } from 'reactstrap';
-import { Link } from 'routes';
+import { Link } from 'common/links';
 import { useTranslation } from 'common/i18n';
 import TextInput from 'components/common/TextInput';
 import Button from 'components/common/Button';

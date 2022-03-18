@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import styled from 'styled-components';
-import { Link } from 'routes';
+import { Link } from 'common/links';
 import { useTranslation } from 'common/i18n';
 import Icon from 'components/common/Icon';
 

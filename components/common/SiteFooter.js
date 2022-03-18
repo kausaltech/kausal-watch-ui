@@ -6,10 +6,9 @@ import {
 import { transparentize } from 'polished';
 import SVG from 'react-inlinesvg';
 import styled, { withTheme } from 'styled-components';
-import { Link } from 'routes';
 
 import { withTranslation } from 'common/i18n';
-import { NavigationLink } from 'common/links';
+import { NavigationLink, Link } from 'common/links';
 import Icon from './Icon';
 
 const StyledFooter = styled.footer`
