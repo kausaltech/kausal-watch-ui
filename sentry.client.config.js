@@ -7,5 +7,5 @@ Sentry.init({
   tracesSampleRate: 1.0,
   maxBreadcrumbs: 50,
   environment: process.env.INSTANCE_TYPE || 'development',
-  debug: (process.env.NODE_ENV !== 'production') && SENTRY_DSN,
+  // debug: (process.env.NODE_ENV !== 'production') && SENTRY_DSN,
 });
