@@ -7,6 +7,7 @@
     "@apollo/client": "^3.5.9",
     "@apollo/react-ssr": "^4.0.0",
     "@babel/eslint-parser": "^7.17.0",
+    "@elastic/react-search-ui": "^1.9.0",
     "@koa/router": "^10.1.1",
     "@n8tb1t/use-scroll-position": "^2.0.3",
     "@next/bundle-analyzer": "^12.1.0",
