@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import dynamic from 'next/dynamic';
 import _ from 'lodash';
+import dayjs from 'common/dayjs';
 import styled from 'styled-components';
 import { useTranslation } from 'common/i18n';
 import { useTheme } from 'common/theme';
@@ -11,6 +12,89 @@ const log10 = Math.log(10);
 const PlotContainer = styled.div`
   height: ${(props) => props.vizHeight}px;
 `;
+
+function getTraces(dimensions, cube, names, hasTimeDimension) {
+  if (dimensions.length === 0) {
+    return [{
+      xType: cube.length === 1 ? 'category' : 'time',
+      name: '',
+      x: cube.map(val => {
+        const d = dayjs(val.date)
+        return cube.length < 2 ? d.year() : val.date;
+      }),
+      y: cube.map(val => val.value)
+    }];
+  }
+  const [firstDimension, ...rest] = dimensions;
+  if (dimensions.length === 1) {
+    if (hasTimeDimension) {
+      return firstDimension.categories.map((cat, idx) => {
+        const traceName = Array.from(
+          (new Set(names ?? undefined)).add(cat.name)
+        ).join(', ');
+        let x, y, xType, _cube = cube[idx];
+        xType = 'time';
+        x = _cube.map(val => val.date);
+        y = _cube.map(val => val.value);
+        return {
+          xType: 'time',
+          name: traceName,
+          _parentName: names ? Array.from(names).join(', ') : null,
+          x, y
+        };
+      });
+    }
+
+    // No time dimension, 'x' axis will be categories
+    return [{
+      xType: 'category',
+      name: Array.from(new Set(names ?? [firstDimension.name])).join(', '),
+      _parentName:  names ? Array.from(names).join(', ') : null,
+      x: firstDimension.categories.map((cat) => cat.name),
+      y: cube.map(c => c[0]?.value),
+    }];
+  }
+  let traces = [];
+
+  firstDimension.categories.forEach((cat, idx) => {
+    const out = getTraces(rest, cube[idx], (new Set(names ?? undefined)).add(cat.name), hasTimeDimension);
+    traces = traces.concat(out);
+  });
+  // Filter out empty traces resulting from
+  // unavailable (total, category) combinations
+  return traces.filter(t => (t.x.length > 0));
+}
+
+const generateTrendTrace = (indicator, traces, goals, i18n) => {
+  const hasPotentialScenario = traces.find((goal) => goal.scenario?.identifier === 'potential');
+  if (indicator.timeResolution === 'YEAR' && traces[0].y.length >= 5 && !hasPotentialScenario) {
+    const values = [...indicator.values].sort((a, b) => a.date - b.date).map((item) => {
+      const { date, value, categories } = item;
+      const newDate = indicator.timeResolution === 'YEAR' ? date.split('-')[0] : date;
+      return { date: newDate, value, categories };
+    });
+    const mainValues = values.filter((item) => !item.categories.length);
+    const numberOfYears = Math.min(mainValues.length, 10);
+    const regData = mainValues.slice(mainValues.length - numberOfYears, mainValues.length)
+      .map((item) => [parseInt(item.date, 10), item.value]);
+    const model = linearRegression(regData);
+    const predictedTrace = {
+      x: regData.map((item) => item[0]),
+      name: i18n.t('current-trend'),
+    };
+
+    const highestDataYear = traces[0].y[traces[0].y.length - 1];
+    const highestGoalYear = Math.max(...goals.map((goal) => goal.x[goal.x.length - 1]));
+    if (highestGoalYear && highestGoalYear > highestDataYear) {
+      predictedTrace.x.push(highestGoalYear);
+    }
+
+    predictedTrace.y = predictedTrace.x.map((year) => model.m * year + model.b);
+    return predictedTrace;
+  }
+  return undefined;
+};
+
 
 const createLayout = (
   timeResolution,
