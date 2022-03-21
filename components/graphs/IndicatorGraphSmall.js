@@ -7,6 +7,7 @@ import { Alert } from 'reactstrap';
 import { linearRegression } from 'simple-statistics';
 import { useTranslation } from 'common/i18n';
 import { useTheme } from 'common/theme';
+import { capitalizeFirstLetter } from 'common/utils';
 import PlanContext from 'context/plan';
 
 import ContentLoader from '../common/ContentLoader';
@@ -103,10 +104,6 @@ function makeLayout(indicator) {
 }
 
 const log10 = Math.log(10);
-
-function capitalizeFirstLetter(s) {
-  return s.charAt(0).toUpperCase() + s.slice(1);
-}
 
 function getSignificantDigitCount(n) {
   let val = Math.abs(String(n).replace('.', '')); // remove decimal and make positive

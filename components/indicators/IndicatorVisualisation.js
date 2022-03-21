@@ -7,6 +7,7 @@ import dayjs from 'common/dayjs';
 import { linearRegression } from 'simple-statistics';
 import { useTranslation } from 'common/i18n';
 import { captureMessage } from 'common/sentry';
+import { capitalizeFirstLetter } from 'common/utils';
 import PlanContext from 'context/plan';
 import ContentLoader from 'components/common/ContentLoader';
 import IndicatorComparisonSelect from 'components/indicators/IndicatorComparisonSelect';
@@ -313,7 +314,7 @@ function getIndicatorGraphSpecification(indicator, compareOrganization, t) {
     const { categories, id: dimId } = d.dimension;
     categories.unshift({
       id: `total`,
-      name: t('total')
+      name: capitalizeFirstLetter(t('total'))
     });
   });
 
