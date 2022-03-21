@@ -197,11 +197,6 @@ const createTraces = (traces, unit, plotColors, styleCount, categoryCount) => {
       layoutConfig.xaxis.tickvals = uniqueXValues;
     }
   }
- // else {
- //    // remove total trace if we have a category axis
- //    newTraces.shift();
- //  }
-
   layoutConfig.maxDigits = maxDigits > 3 ? 3 : maxDigits;
 
   return {
