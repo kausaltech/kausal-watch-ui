@@ -311,9 +311,9 @@ function IndicatorGraph(props) {
     const organizationDimension = specification.dimensions.at(categoryCount);
     const combinationCount = categoryDimensions.reduce(((p, c) => (p * c.categories.length)), 1)
     const subplotRowCount = Math.ceil(combinationCount/2);
-    const COMPARISON_COUNT = 2;
+    const comparisonCount = hasTimeDimension ? 2 : 1;
     const subplotHeaderTitles = mainTraces.traces.filter((_,i) => (
-      (i % COMPARISON_COUNT) == 0)
+      (i % comparisonCount) == 0)
     ).map(t => t._parentName);
     mainTraces.layoutConfig.grid = { rows: subplotRowCount, columns: 2, pattern: 'independent' };
     mainTraces.layoutConfig.yRange = [0, 100];
