@@ -310,27 +310,38 @@ function getIndicatorGraphSpecification(indicator, compareOrganization, t) {
     dimensions = [];
   }
 
-  dimensions.forEach(d => {
-    const { categories, id: dimId } = d.dimension;
-    categories.unshift({
-      id: `total`,
-      name: capitalizeFirstLetter(t('total'))
-    });
-  });
-
   if (compareOrganization) {
     const compareIndicator = indicator.common.indicators.find(
       x => x.organization.id === compareOrganization
     );
     indicators.push(compareIndicator);
-    const comparisonDimension = { dimension: { sort: 'last'} };
+    const comparisonDimension = { dimension: { sort: 'last', type: 'organization'} };
     comparisonDimension.dimension.categories = indicators.map(i => (
-      {id: `org:${i.organization.id}`, name: i.organization.name}
+      {
+        id: `org:${i.organization.id}`,
+        name: i.organization.name,
+        type: 'organization'
+      }
     ));
     dimensions.push(comparisonDimension);
   }
   const times = new Set(indicators.map(i => i.values.map(x => x.date)).flat());
   const hasTime = times.size > 1;
+
+  if (hasTime) {
+    dimensions.forEach(d => {
+      const { categories, id: dimId, type } = d.dimension;
+      if (type === 'organization') {
+        return;
+      }
+      categories.unshift({
+        id: `total`,
+        type: 'aggregate',
+        name: capitalizeFirstLetter(t('total'))
+      });
+    });
+  }
+
   const axes = [];
   if (indicator.dimensions.length > 0) {
     axes.push(['categories', indicator.dimensions.length]);
@@ -340,7 +351,7 @@ function getIndicatorGraphSpecification(indicator, compareOrganization, t) {
   }
   if (hasTime) {
     axes.push(['time', 1]);
-  };
+  }
 
   specification.axes = axes;
   specification.dimensions = dimensions;
