@@ -249,9 +249,9 @@ const generateTrendTrace = (indicator, traces, goals, i18n) => {
     }
 
     predictedTrace.y = predictedTrace.x.map((year) => model.m * year + model.b);
-    return predictedTrace;
+    return [predictedTrace, calculateBounds(predictedTrace.y)];
   }
-  return undefined;
+  return [undefined, undefined];
 };
 
 const generateGoalTraces = (indicator, planScenarios, i18n) => {
@@ -297,8 +297,19 @@ const generateGoalTraces = (indicator, planScenarios, i18n) => {
     goalTraces.push(trace);
   });
 
-  return goalTraces;
+  const bounds = calculateBounds(goalTraces.map(t => t.y).flat());
+  return [goalTraces, bounds];
 };
+
+function calculateBounds(values) {
+  if (values.length === 0) {
+    return null;
+  }
+  return {
+    min: Math.min(...values),
+    max: Math.max(...values)
+  }
+}
 
 function getIndicatorGraphSpecification(indicator, compareOrganization, t) {
   const specification = {}
@@ -326,6 +337,10 @@ function getIndicatorGraphSpecification(indicator, compareOrganization, t) {
     ));
     dimensions.push(comparisonDimension);
   }
+
+  const allValues = indicators.map(i => i.values.map(x => x.value)).flat();
+  specification.bounds = calculateBounds(allValues);
+
   const times = new Set(indicators.map(i => i.values.map(x => x.date)).flat());
   const hasTime = times.size > 1;
 
@@ -433,23 +448,6 @@ function IndicatorVisualisation({ indicatorId }) {
   const { unit } = indicator;
   const unitLabel = unit.name === 'no unit' ? '' : (unit.shortName || unit.name);
 
-  const yRange = {
-    unit: unitLabel,
-    minDigits: 0,
-    maxDigits: 0,
-    includeZero: false,
-    range: [],
-  };
-  if (indicator?.quantity?.name === 'päästöt') {
-    yRange.includeZero = true;
-  }
-  // If min and max values are set, do not use autorange
-  if (indicator.minValue != null || indicator.maxValue != null) {
-    yRange.range = [indicator.minValue, indicator.maxValue];
-    if (indicator.minValue != null && indicator.maxValue != null) {
-      yRange.autorange = false;
-    }
-  }
 
   /// Handle object type indicator name (?)
   let plotTitle = '';
@@ -465,9 +463,45 @@ function IndicatorVisualisation({ indicatorId }) {
   indicatorGraphSpecification.cube = cube;
   const hasTimeDimension = indicatorGraphSpecification.axes.filter(a => a[0] === 'time').length > 0;
   const traces = getTraces(
-    indicatorGraphSpecification.dimensions, cube, null, hasTimeDimension);
-  const goalTraces = generateGoalTraces(indicator, scenarios, i18n);
-  const trendTrace = hasTimeDimension ? generateTrendTrace(indicator, traces, goalTraces, i18n) : null;
+    indicatorGraphSpecification.dimensions, cube, null, hasTimeDimension, i18n);
+  const [goalTraces, goalBounds] = generateGoalTraces(indicator, scenarios, i18n);
+  const [trendTrace, trendBounds] = hasTimeDimension ?
+        generateTrendTrace(indicator, traces, goalTraces, i18n) : [null, null];
+
+  let bounds = indicatorGraphSpecification.bounds;
+  for (const addBounds of [goalBounds, trendBounds]) {
+    if (addBounds) {
+      bounds = calculateBounds([
+        ...Object.values(bounds),
+        ...(Object.values(addBounds).filter(b => b != null && !isNaN(b)))]);
+    }
+  }
+  const delta = bounds.max - bounds.min;
+  bounds.max = bounds.max + delta*0.1;
+  bounds.min = bounds.min - delta*0.1;
+  indicatorGraphSpecification.bounds = bounds;
+
+  const yRange = {
+    unit: unitLabel,
+    minDigits: 0,
+    maxDigits: 0,
+    includeZero: false,
+    range: [],
+  };
+  if (indicator?.quantity?.name === 'päästöt') {
+    yRange.includeZero = true;
+  }
+  let minValue, maxValue;
+  minValue = indicator.minValue ?? indicatorGraphSpecification.bounds.min;
+  maxValue = indicator.maxValue ?? indicatorGraphSpecification.bounds.max;
+
+  // If min and max values are set, do not use autorange
+  if (minValue != null || maxValue != null) {
+    yRange.range = [minValue, maxValue];
+    if (minValue != null && maxValue != null) {
+      yRange.autorange = false;
+    }
+  }
 
   const comparisonOrgs = indicator.common?.indicators
     .map((common) => common.organization)
