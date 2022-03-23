@@ -468,12 +468,17 @@ function IndicatorGraph(props) {
     layoutConfig,
   );
   return (
-    <PlotContainer vizHeight={layoutConfig?.grid?.rows ? layoutConfig.grid.rows * 300 : 450}>
+    <PlotContainer data-element="indicator-graph-plot-container"
+                   vizHeight={layoutConfig?.grid?.rows ? layoutConfig.grid.rows * 300 : 450}>
       <Plot
         data={plotlyData}
         layout={layout}
         style={{ width: '100%', height: '100%' }}
         useResizeHandler
+        onAfterPlot={() => {
+          const event = new Event('indicator_graph_ready');
+          document.dispatchEvent(event);
+        }}
         config={{
           locale: i18n.language,
           displayModeBar: false,
