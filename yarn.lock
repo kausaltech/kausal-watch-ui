@@ -3045,10 +3045,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@popperjs/core@npm:^2.10.2, @popperjs/core@npm:^2.5.4, @popperjs/core@npm:^2.6.0, @popperjs/core@npm:^2.8.6":
+"@popperjs/core@npm:^2.10.2":
+  version: 2.11.2
+  resolution: "@popperjs/core@npm:2.11.2"
+  checksum: 5695bf020eda54636e16a62dc9b5fdd92beaf7b2d19f62fcef049d57c5cff92773562d80cbf760b217c3ec928da310eb24994ab6a00fd39dffa0af9b5dfc01a6
+  languageName: node
+  linkType: hard
+
+"@popperjs/core@npm:^2.11.4":
   version: 2.11.4
   resolution: "@popperjs/core@npm:2.11.4"
   checksum: 36168d274aa164368a50aef2e7b2f858e1b9145d9250af9dc1315ff719d874a367177760f8285efb75c8cf48267194a50e7dc9cdb41bf0b1958c38805c13564c
+  languageName: node
+  linkType: hard
+
+"@popperjs/core@npm:^2.5.4, @popperjs/core@npm:^2.6.0, @popperjs/core@npm:^2.8.6":
+  version: 2.11.0
+  resolution: "@popperjs/core@npm:2.11.0"
+  checksum: 84d6f197d3ddfd8a5b05c7276c3692d8404c96128a946ab0a800b25567d8fc231928319c1f97a67e0817e76ce2a1b735589ef0f38f8e8835692408660a2395a1
   languageName: node
   linkType: hard
 
@@ -14979,6 +14993,7 @@ __metadata:
     "@n8tb1t/use-scroll-position": ^2.0.3
     "@next/bundle-analyzer": ^12.1.0
     "@next/eslint-plugin-next": ^12.1.0
+    "@popperjs/core": ^2.11.4
     "@sentry/nextjs": ^6.17.9
     "@storybook/addon-a11y": ^6.4.19
     "@storybook/addon-essentials": ^6.4.19
@@ -15056,6 +15071,7 @@ __metadata:
     react-lazyload: ^3.2.0
     react-piwik: ^1.12.0
     react-plotly.js: ^2.5.1
+    react-popper: ^2.2.5
     react-sizeme: ^3.0.2
     react-spring: ^8.0.27
     reactstrap: ^9.0.1

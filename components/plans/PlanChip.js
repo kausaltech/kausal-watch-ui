@@ -11,8 +11,8 @@ const Tag = styled.div`
 
 const PlanAvatar = styled.img`
   display: block;
-  width: ${(props) => props.theme.spaces.s200};
-  height: ${(props) => props.theme.spaces.s200};
+  width: ${(props) => props.theme.spaces[props.size]};
+  height: ${(props) => props.theme.spaces[props.size]};
   border-radius: 50%;
 `;
 
@@ -23,25 +23,30 @@ const PlanName = styled.div`
 
 const PlanTitle = styled.div`
   font-size: ${(props) => props.theme.fontSizeSm};
-  font-weight: ${(props) => props.theme.fontWeightBold};
+  font-weight: ${(props) => props.theme[props.weight]};
 `;
 
 const PlanOrg = styled.div`
   font-size: ${(props) => props.theme.fontSizeSm};
 `;
 
-const PlanTag = React.forwardRef((props, ref) => {
+const PlanChip = React.forwardRef((props, ref) => {
   const {
     planImage,
     planShortName,
     organization,
     size } = props;
 
+    const IMAGE_SIZES = {
+      'sm': 's100',
+      'md': 's200',
+    }
+
   return (
     <Tag ref={ref} {...props}>
-      <PlanAvatar src={planImage} size={size} />
+      <PlanAvatar src={planImage} size={IMAGE_SIZES[size]} />
       <PlanName>
-        <PlanTitle>
+        <PlanTitle weight={size==='sm' ? 'fontWeightNormal' : 'fontWeightBold'}>
           {planShortName}
         </PlanTitle>
         <PlanOrg>
@@ -52,11 +57,11 @@ const PlanTag = React.forwardRef((props, ref) => {
   );
 });
 
-PlanTag.defaultProps = {
-  size: 'sm',
+PlanChip.defaultProps = {
+  size: 'md',
 };
 
-PlanTag.propTypes = {
+PlanChip.propTypes = {
   planImage: PropTypes.string,
   planShortName: PropTypes.string,
   planLongName: PropTypes.string,
@@ -64,4 +69,4 @@ PlanTag.propTypes = {
   size: PropTypes.string,
 };
 
-export default PlanTag;
+export default PlanChip;
