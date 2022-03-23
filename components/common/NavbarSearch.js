@@ -76,6 +76,10 @@ function NavbarSearch(props) {
     }
   };
 
+  if (!plan.features.enableSearch) {
+    return null;
+  }
+
   const connector = new WatchSearchAPIConnector({ plan, apolloClient });
   return (
     <SearchProvider config={{ apiConnector: connector }} >

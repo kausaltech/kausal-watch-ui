@@ -193,6 +193,34 @@ export interface PlanContext_plan_footer {
   items: (PlanContext_plan_footer_items | null)[];
 }
 
+export interface PlanContext_plan_features {
+  __typename: "PlanFeatures";
+  /**
+   * Enable site-wide search functionality
+   */
+  enableSearch: boolean | null;
+  /**
+   * Set if the plan uses meaningful action identifiers
+   */
+  hasActionIdentifiers: boolean;
+  /**
+   * Set if the plan uses the official name field
+   */
+  hasActionOfficialName: boolean;
+  /**
+   * Set if the plan uses the lead paragraph field
+   */
+  hasActionLeadParagraph: boolean;
+  /**
+   * Set if actions have a clear primary organisation (such as multi-city plans)
+   */
+  hasActionPrimaryOrgs: boolean;
+  /**
+   * Set if the contact persons should be visible in the public UI
+   */
+  publicContactPersons: boolean;
+}
+
 export interface PlanContext_plan {
   __typename: "Plan";
   id: string;
@@ -200,10 +228,7 @@ export interface PlanContext_plan {
   name: string;
   primaryLanguage: string;
   otherLanguages: string[] | null;
-  /**
-   * Set if the plan doesn't have meaningful action identifiers
-   */
-  hideActionIdentifiers: boolean;
+  hideActionIdentifiers: boolean | null;
   domain: PlanContext_plan_domain | null;
   image: PlanContext_plan_image | null;
   serveFileBaseUrl: string;
@@ -211,13 +236,14 @@ export interface PlanContext_plan {
   actionImplementationPhases: PlanContext_plan_actionImplementationPhases[];
   actionImpacts: PlanContext_plan_actionImpacts[];
   actionStatuses: PlanContext_plan_actionStatuses[];
-  impactGroups: (PlanContext_plan_impactGroups | null)[] | null;
+  impactGroups: (PlanContext_plan_impactGroups | null)[];
   primaryOrgs: (PlanContext_plan_primaryOrgs | null)[];
   generalContent: PlanContext_plan_generalContent | null;
   mainMenu: PlanContext_plan_mainMenu | null;
   footer: PlanContext_plan_footer | null;
   adminUrl: string | null;
   accessibilityStatementUrl: string | null;
+  features: PlanContext_plan_features;
 }
 
 export interface PlanContext {
