@@ -171,11 +171,12 @@ function generateCubeFromValues(indicator, indicatorGraphSpecification, combined
   return generateCube(indicatorGraphSpecification.dimensions, values);
 }
 
-function getTraces(dimensions, cube, names, hasTimeDimension) {
+function getTraces(dimensions, cube, names, hasTimeDimension, i18n) {
   if (dimensions.length === 0) {
     return [{
       xType: cube.length === 1 ? 'category' : 'time',
-      name: '',
+      name: i18n.t('total'),
+      dataType: 'total',
       x: cube.map(val => {
         const d = dayjs(val.date)
         return cube.length < 2 ? d.year() : val.date;
@@ -191,11 +192,11 @@ function getTraces(dimensions, cube, names, hasTimeDimension) {
           (new Set(names ?? undefined)).add(cat.name)
         ).join(', ');
         let x, y, xType, _cube = cube[idx];
-        xType = 'time';
         x = _cube.map(val => val.date);
         y = _cube.map(val => val.value);
         return {
           xType: 'time',
+          dataType: cat.id === 'total' ? 'total' : null,
           name: traceName,
           _parentName: names ? Array.from(names).join(', ') : null,
           x, y
@@ -215,7 +216,7 @@ function getTraces(dimensions, cube, names, hasTimeDimension) {
   let traces = [];
 
   firstDimension.categories.forEach((cat, idx) => {
-    const out = getTraces(rest, cube[idx], (new Set(names ?? undefined)).add(cat.name), hasTimeDimension);
+    const out = getTraces(rest, cube[idx], (new Set(names ?? undefined)).add(cat.name), hasTimeDimension, i18n);
     traces = traces.concat(out);
   });
   // Filter out empty traces resulting from

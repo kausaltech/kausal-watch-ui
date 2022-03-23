@@ -205,7 +205,7 @@ function getSignificantDigitCount(n) {
   return Math.floor(Math.log(val) / log10) + 1; // get number of digits
 }
 
-const createTraces = (traces, unit, plotColors, styleCount, categoryCount) => {
+const createTraces = (traces, unit, plotColors, styleCount, categoryCount, hasTimeDimension) => {
   // Figure out what we need to draw depending on dataset
   // and define trace and layout setup accordingly
   // First trace is always main/total
@@ -236,7 +236,7 @@ const createTraces = (traces, unit, plotColors, styleCount, categoryCount) => {
     allXValues.push(...trace.x);
 
     // we have multiple categories in one time point - draw bar groups
-    if (trace.xType === 'category') {
+    if (!hasTimeDimension) {
       modTrace.type = 'bar';
       modTrace.marker = {
         color: (categoryCount < 2 ?
@@ -248,7 +248,7 @@ const createTraces = (traces, unit, plotColors, styleCount, categoryCount) => {
       layoutConfig.xaxis.tickvals = null;
     }
     // we have multiple categories as time series - draw lines and markers
-    if (trace.xType === 'time') {
+    if (hasTimeDimension) {
       modTrace.type = 'scatter';
       modTrace.line = {
         width: trace.dataType === 'total' ? 3 : 2, // TODO extension trace total vs dimension
@@ -398,7 +398,7 @@ function IndicatorGraph(props) {
     // Shift to blue.
     plotColors.mainScale.shift();
   }
-  mainTraces = createTraces(traces, yRange.unit, plotColors, styleCount, categoryCount);
+  mainTraces = createTraces(traces, yRange.unit, plotColors, styleCount, categoryCount, hasTimeDimension);
 
   if (subplotsNeeded) {
     const categoryDimensions = specification.dimensions.slice(0, categoryCount);
