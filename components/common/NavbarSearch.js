@@ -4,7 +4,7 @@ import { InputGroup, Popover, PopoverBody } from 'reactstrap';
 import { usePopper } from 'react-popper';
 import styled from 'styled-components';
 import { SearchProvider, WithSearch, SearchBox, Results } from '@elastic/react-search-ui';
-import { Link } from 'routes';
+import { Link } from 'common/links';
 import { useTheme } from 'common/theme';
 import WatchSearchAPIConnector from 'common/search';
 import Icon from 'components/common/Icon';
@@ -52,11 +52,22 @@ const ResultsBox = styled.div`
 const ResultsHeader = styled.div`
   padding-bottom: ${(props) => props.theme.spaces.s025};
   color: ${(props) => props.theme.graphColors.grey070};
+  font-size: ${(props) => props.theme.fontSizeBase};
+`;
+
+const ResultCount = styled.div`
+    font-size: ${(props) => props.theme.fontSizeSm};
 `;
 
 const ResultsFooter = styled.div`
   padding-top: ${(props) => props.theme.spaces.s025};
-  border-top: 1px solid #ccc;
+  border-top: 1px solid ${(props) => props.theme.graphColors.grey030};
+  text-align: right;
+  font-weight: ${(props) => props.theme.fontWeightBold};
+
+  .icon {
+    fill: ${(props) => props.theme.brandDark} !important;
+  }
 `;
 
 const HitList = styled.ul`
@@ -66,20 +77,49 @@ const HitList = styled.ul`
 `;
 
 const HitItem = styled.li`
-  border-top: 1px solid #ccc ;
-  padding: ${(props) => props.theme.spaces.s050} 0;
+  border-top: 1px solid ${(props) => props.theme.graphColors.grey030};
+  padding: ${(props) => props.theme.spaces.s050};
+  margin: 0 -${(props) => props.theme.spaces.s050};
+
+  &:hover {
+    background: ${(props) => props.theme.graphColors.grey010};
+
+    h6 {
+      text-decoration: underline;
+    }
+  }
 
   h6 {
-    margin: ${(props) => props.theme.spaces.s100} 0;
+    margin: ${(props) => props.theme.spaces.s050} 0;
+    font-size: ${(props) => props.theme.fontSizeBase};
+    font-weight: ${(props) => props.theme.fontWeightNormal};
   }
 
   a {
     color: ${(props) => props.theme.themeColors.black};
   }
+
+  em {
+    font-style: normal;
+    font-weight: ${(props) => props.theme.fontWeightBold};
+  }
+`;
+
+const HitType = styled.div`
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.25px;
+`;
+
+const HitHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
 `;
 
 const HitHighlight = styled.div`
-  font-size: ${(props) => props.theme.fontSizeSm} 0 0;
+  margin: 0 0 ${(props) => props.theme.spaces.s050} 0;
+  color: ${(props) => props.theme.graphColors.grey050};
+  font-size: ${(props) => props.theme.fontSizeSm};
   line-height: 1;
 `;
 
@@ -117,17 +157,40 @@ const Arrow = styled.div`
   }
 `;
 
-function ResultItem({ hit }) {
+function ResultItem(props) {
+  const { t } = useTranslation();
+  const { hit } = props;
   const itemImage = hit.plan.image?.rendition?.src;
   // FIXME: Group by hit.object.__typename?
+
+  const typeName = (hit) => {
+    const { object, page } = hit;
+    if (object) {
+      const typename = object.__typename;
+      if (typename === 'Action') {
+        return t('action');
+      } else if (typename === 'Indicator') {
+        return t('indicator');
+      }
+    } else if (page) {
+      if (page.category) {
+        return page.category.level?.name;
+      }
+      return t('page');
+    }
+  }
+
   return (
     <HitItem key={hit.id}>
-        <PlanChip
-          planImage={itemImage}
-          planShortName={hit.plan.shortName || hit.plan.name}
-          size="sm"
-        />
-        <a href={hit.url}>
+      <a href={hit.url}>
+        <HitHeader>
+          <PlanChip
+            planImage={itemImage}
+            planShortName={hit.plan.shortName || hit.plan.name}
+            size="sm"
+          />
+          <HitType>{typeName(hit)}</HitType>
+        </HitHeader>
         <h6>{ hit.title }</h6>
         {hit.highlight && (
           <HitHighlight dangerouslySetInnerHTML={{__html: hit.highlight}} />
@@ -139,6 +202,7 @@ function ResultItem({ hit }) {
 
 const ResultList = (props) => {
   const { results, searchTerm } = props;
+  const { t } = useTranslation();
   //const plan = usePlan();
   const RESULTS_LIMIT = 4;
   const counts = [
@@ -155,11 +219,17 @@ const ResultList = (props) => {
       count: results.filter((result) => result.object?.__typename === 'Indicator').length,
     }
   ];
-  // FIXME: Add 'Search for {searchTerm}' result
+
   // FIXME: can we limit the number of results earlier?
+  // We could show { counts.map((count) => count.count > 0 ? `${count.name}: ${count.count} ` : '' ) }
   return (
         <>
-          <ResultsHeader>Searching for '{searchTerm}'</ResultsHeader>
+          <ResultsHeader>
+            {t('searching-for', {term: searchTerm})}
+            <ResultCount>
+              { results.length > 0 ? '' : t('search-no-results')}
+            </ResultCount>
+          </ResultsHeader>
           <HitList>
             {results.slice(0,RESULTS_LIMIT).map(r => (
               <ResultItem hit={r} />
@@ -169,14 +239,12 @@ const ResultList = (props) => {
             { results.length > 0 ?
             <Link href={`/search?q=${searchTerm}`}>
               <a>
-                See full results (
-                { counts.map((count) => count.count > 0 ? `${count.name}: ${count.count} ` : ' ' )}
-                )
+                { t('see-all-results', {count: results.length})}
                 <Icon name="arrow-right" />
               </a>
             </Link>
             :
-            <Link href={`/search`}><a>Advanced search <Icon name="arrow-right" /></a></Link>}
+            <Link href={`/search`}><a>{t('search-advanced')} <Icon name="arrow-right" /></a></Link>}
           </ResultsFooter>
         </>
   );
