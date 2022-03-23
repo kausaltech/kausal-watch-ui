@@ -7,10 +7,14 @@ export default class WatchDocument extends Document {
   static async getInitialProps(ctx) {
     const sheet = new ServerStyleSheet();
     const originalRenderPage = ctx.renderPage;
+    let themeProps;
 
     try {
       ctx.renderPage = () => originalRenderPage({
-        enhanceApp: (App) => (props) => sheet.collectStyles(<App {...props} />),
+        enhanceApp: (App) => (props) => {
+          themeProps = props.themeProps;
+          return sheet.collectStyles(<App {...props} />);
+        },
       });
 
       const initialProps = await Document.getInitialProps(ctx);
@@ -20,6 +24,12 @@ export default class WatchDocument extends Document {
           <>
             {initialProps.styles}
             {sheet.getStyleElement()}
+            {themeProps?.themeCustomStylesUrl && (
+              <link rel="stylesheet" type="text/css" href={themeProps.themeCustomStylesUrl} />
+            )}
+            {themeProps?.fontUrl && (
+              <link rel="stylesheet" type="text/css" href={themeProps.fontUrl} />
+            )}
           </>
         ),
       };
