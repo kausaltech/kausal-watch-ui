@@ -4,15 +4,16 @@ import getConfig from 'next/config';
 import { gql, ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
 import ReactPiwik from 'react-piwik';
 import { ThemeProvider } from 'styled-components';
-import * as Sentry from "@sentry/react";
+import { Router, useRouter } from 'next/router';
 
-import { Router } from 'routes';
 import { captureException } from 'common/sentry';
 import { appWithTranslation } from 'common/i18n';
 import withApollo, {
   initializeApolloClient, setApolloPlanIdentifier
 } from 'common/apollo';
+import { setBasePath } from 'common/links';
 import theme, { setTheme, applyTheme } from 'common/theme';
+import { getI18n } from 'common/i18n';
 import dayjs from 'common/dayjs';
 import PlanContext, { GET_PLAN_CONTEXT } from 'context/plan';
 import SiteContext from 'context/site';
@@ -21,6 +22,9 @@ const { publicRuntimeConfig } = getConfig();
 
 require('../styles/default/main.scss');
 
+if (process.browser) {
+  setBasePath();
+}
 
 let piwik;
 
@@ -51,7 +55,8 @@ interface WatchAppProps extends AppProps, GlobalProps {
 }
 
 function WatchApp(props: WatchAppProps) {
-  const { Component, pageProps, apollo, siteProps, themeProps, plan, router } = props;
+  const { Component, pageProps, apollo, siteProps, themeProps, plan } = props;
+  const router = useRouter();
   const matomoAnalyticsUrl = plan?.domain?.matomoAnalyticsUrl;
   let matomoURL, matomoSiteId;
 
@@ -99,13 +104,16 @@ function WatchApp(props: WatchAppProps) {
 async function getI18nProps(ctx) {
   const { serverSideTranslations } = require('next-i18next/serverSideTranslations');
   const nextI18nConfig = require('../next-i18next.config');
-  let locale = ctx.locale;
+  const { publicRuntimeConfig } = getConfig();
+  let locale = ctx.locale || publicRuntimeConfig.locale;
+  const i18n = getI18n();
 
   if (!locale) {
-    console.warn('No locale set in context, falling back to locale list');
-    locale = ctx.locales[0];
+    throw new Error("Locale not set");
   }
-
+  if (i18n) {
+    await i18n.changeLanguage(locale);
+  }
   const conf = {
     ...nextI18nConfig,
     i18n: {
@@ -154,6 +162,7 @@ function getSiteContext(ctx) {
 WatchApp.getInitialProps = async (appContext) => {
   const { ctx } = appContext;
   const { req, err } = ctx;
+  setBasePath();
   const appProps = await App.getInitialProps(appContext);
 
   if (process.browser) {

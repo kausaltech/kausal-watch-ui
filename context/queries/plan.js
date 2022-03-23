@@ -102,6 +102,14 @@ query PlanContext($identifier: ID, $hostname: String) {
     }
     adminUrl
     accessibilityStatementUrl
+    features {
+      enableSearch
+      hasActionIdentifiers
+      hasActionOfficialName
+      hasActionLeadParagraph
+      hasActionPrimaryOrgs
+      publicContactPersons
+    }
   }
 }
 ${images.fragments.multiUseImage}

@@ -42,8 +42,6 @@ function Layout({ children }) {
             <link rel="apple-touch-icon" href={`${iconBase}/apple.png`} />
           </>
         )}
-        { (typeof window !== 'undefined') && theme.fontUrl && <link rel="stylesheet" type="text/css" href={theme.fontUrl} />}
-        { theme.themeCustomStylesUrl && <link rel="stylesheet" type="text/css" href={theme.themeCustomStylesUrl} />}
         { googleSiteVerificationTag && <meta name="google-site-verification" content={googleSiteVerificationTag} />}
       </Head>
       <Header siteTitle={siteTitle} />

@@ -4,10 +4,9 @@ import {
   Container, Row, Col,
 } from 'reactstrap';
 import styled from 'styled-components';
-import { Link } from 'routes';
 import { useTheme } from 'common/theme';
 import { useTranslation } from 'common/i18n';
-import { ActionLink, ActionListLink } from 'common/links';
+import { ActionLink, ActionListLink, Link } from 'common/links';
 
 import Icon from 'components/common/Icon';
 
@@ -239,7 +238,7 @@ function ActionHero(props) {
                     ) }
                     <ActionsNav aria-label="Actions Pager">
                       <ActionListLink>
-                        <a href>
+                        <a>
                           <IndexLink>{ t('actions') }</IndexLink>
                         </a>
                       </ActionListLink>
@@ -247,7 +246,7 @@ function ActionHero(props) {
                         { previousAction
                               && (
                                 <ActionLink action={previousAction}>
-                                  <a href>
+                                  <a>
                                     <Icon name="arrowLeft" color={theme.brandDark} aria-hidden="true" />
                                     {' '}
                                     { t('previous') }
@@ -262,7 +261,7 @@ function ActionHero(props) {
                         { nextAction
                               && (
                                 <ActionLink action={nextAction}>
-                                  <a href>
+                                  <a>
                                     { t('next') }
                                     <Icon name="arrowRight" color={theme.brandDark} aria-hidden="true" />
                                   </a>

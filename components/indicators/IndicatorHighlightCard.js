@@ -115,7 +115,7 @@ function IndicatorHighlightCard(props) {
       {(springProps) => (
         <StyledCard style={springProps}>
           <IndicatorLink id={objectid} prefetch={false}>
-            <a href>
+            <a>
               <IndicatorBg level={level} />
               <CardImgOverlay>
                 <IndicatorValue
@@ -131,7 +131,7 @@ function IndicatorHighlightCard(props) {
           <CardBody>
             <IndicatorType>{ t(level) }</IndicatorType>
             <IndicatorLink id={objectid}>
-              <a href>
+              <a>
                 <StyledCardTitle tag="h3">{ name }</StyledCardTitle>
               </a>
             </IndicatorLink>

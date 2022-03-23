@@ -12,6 +12,7 @@ ENV YARN_CACHE_FOLDER /yarn-cache
 RUN yarn set version 3.1.1
 RUN yarn plugin import interactive-tools
 COPY .yarnrc.yml yarn.lock package*.json ./
+COPY patches ./patches/
 RUN --mount=type=cache,target=/yarn-cache yarn install
 
 COPY . .

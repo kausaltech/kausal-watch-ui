@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import RichText from 'components/common/RichText';
 import { useTheme } from 'common/theme';
 import { getBgImageAlignment } from 'common/images';
-import { DynamicLink } from 'common/links';
+import { Link } from 'common/links';
 import CategoryTreeBlock from 'components/contentblocks/CategoryTreeBlock';
 import Card from 'components/common/Card';
 
@@ -72,7 +72,7 @@ const CategoryListBlock = (props) => {
               style={{ transition: 'all 0.5s ease' }}
               role="listitem"
             >
-              <DynamicLink href={cat.categoryPage.urlPath}>
+              <Link href={cat.categoryPage.urlPath}>
                 <a className="card-wrapper">
                   <Card
                     imageUrl={cat.image?.small.src || fallbackImage.small.src}
@@ -94,7 +94,7 @@ const CategoryListBlock = (props) => {
                     </div>
                   </Card>
                 </a>
-              </DynamicLink>
+              </Link>
             </Col>
           ))}
         </Row>

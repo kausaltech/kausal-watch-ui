@@ -49,7 +49,7 @@ function ActionIndicator(props) {
             {' '}
             {actions.map((action) => (
               <ActionLink key={action.identifier} action={action}>
-                <a className="mr-2" href>
+                <a className="mr-2">
                   <Badge>{action.identifier}</Badge>
                 </a>
               </ActionLink>

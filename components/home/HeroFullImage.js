@@ -147,7 +147,7 @@ function HeroFullImage(props) {
             <RichText html={siteDescription} className="lead-content" />
             { actionsDescription && (
             <ActionListLink>
-              <a href>
+              <a>
                 <Highlight
                   className="d-flex py-3 bd-highlight flex-row"
                 >
@@ -171,7 +171,7 @@ function HeroFullImage(props) {
             )}
             { indicatorsDescription && (
             <IndicatorListLink>
-              <a href>
+              <a>
                 <Highlight
                   className="d-flex py-3 bd-highlight flex-row"
                 >

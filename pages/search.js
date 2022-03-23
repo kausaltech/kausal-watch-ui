@@ -2,11 +2,15 @@ import { useCallback } from 'react';
 import { useRouter } from 'next/router';
 import { getSearchResultsLinkProps } from 'common/links';
 import Layout from 'components/layout';
-import ContentLoader from 'components/common/ContentLoader';
+import ErrorMessage from 'components/common/ErrorMessage';
 import SearchView from 'components/common/SearchView';
+import { usePlan } from 'context/plan';
+import { useTranslation } from 'common/i18n';
 
-function ActionsListPage() {
+function SearchPage() {
+  const plan = usePlan();
   const router = useRouter();
+  const { t } = useTranslation();
   const search = SearchView.getSearchFromQuery(router.query);
 
   const handleSearchChange = useCallback(
@@ -24,6 +28,10 @@ function ActionsListPage() {
     [search],
   );
 
+  if (!plan.features.enableSearch) {
+    return <ErrorMessage statusCode={404} message={t('page-not-found')} />;
+  }
+
   return (
     <Layout>
       <SearchView
@@ -33,4 +41,4 @@ function ActionsListPage() {
     </Layout>
   );
 }
-export default ActionsListPage;
+export default SearchPage;

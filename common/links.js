@@ -1,38 +1,15 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
-import { useTranslation } from 'react-i18next';
+import { setBasePath as setNextRouterBasePath } from 'next/dist/shared/lib/router/router';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 import PropTypes from 'prop-types';
-import { Link } from 'routes';
-import { getI18n } from 'common/i18n';
+import getConfig from 'next/config';
 
-const pathJoin = (...parts) => parts.join('/').replace(/\/+/g, '/');
-
-function getActiveLanguagePath() {
-  const i18n = getI18n();
-  // FIXME
-  return '';
+export function setBasePath() {
+  const { publicRuntimeConfig } = getConfig();
+  setNextRouterBasePath(publicRuntimeConfig.basePath);
 }
-
-// react-i18next does not support dynamic routes yet
-// DynamicLink adds 'as' property to translated link
-// this solution: https://github.com/isaachinman/next-i18next/issues/413#issuecomment-663455809
-export function DynamicLink(props) {
-  const { as, href, ...other } = props;
-  const withAbsolute = href.substr(0, 1) === '/' ? '/' : '';
-
-  return (
-    <Link
-      {...other}
-      href={pathJoin(withAbsolute, getActiveLanguagePath(), href)}
-      as={as}
-      passHref
-    />
-  );
-}
-DynamicLink.propTypes = {
-  ...Link.propTypes,
-};
 
 // Return root slug of the current path
 export function getActiveBranch() {
@@ -49,15 +26,13 @@ export function getActiveBranch() {
 
 export function getIndicatorLinkProps(id) {
   return {
-    href: '/indicators/[id]',
-    as: `/indicators/${id}`,
+    href: `/indicators/${id}`,
   };
 }
 
 export function getActionLinkProps(id) {
   return {
-    href: '/actions/[id]',
-    as: `/actions/${id}`,
+    href: `/actions/${id}`,
   };
 }
 
@@ -107,7 +82,7 @@ export function IndicatorLink(props) {
   const { id, ...other } = props;
 
   return (
-    <DynamicLink {...getIndicatorLinkProps(id)} passHref {...other} />
+    <Link {...getIndicatorLinkProps(id)} passHref {...other} />
   );
 }
 IndicatorLink.propTypes = {
@@ -129,7 +104,7 @@ export function ActionLink(props) {
   const targetIdentifier = action.mergedWith ? action.mergedWith.identifier : action.identifier;
 
   return (
-    <DynamicLink {...getActionLinkProps(targetIdentifier)} passHref {...other} />
+    <Link {...getActionLinkProps(targetIdentifier)} passHref {...other} />
   );
 }
 ActionLink.propTypes = {
@@ -172,7 +147,7 @@ DashboardLink.propTypes = {
 
 export function StaticPageLink(props) {
   const { slug, ...other } = props;
-  return <Link href="/[slug]" as={`/${slug}`} {...other} />;
+  return <Link href={`/${slug}`} {...other} />;
 }
 StaticPageLink.propTypes = {
   slug: PropTypes.string.isRequired,
@@ -183,10 +158,12 @@ export function NavigationLink(props) {
   const { slug, children, ...other } = props;
   return slug?.startsWith('http')
     ? <a href={slug} {...other}>{children}</a>
-    : <Link href={`${slug}`} {...other} passHref><a>{children}</a></Link>;
+    : <Link href={`${slug}`} {...other}><a>{children}</a></Link>;
 }
 
 NavigationLink.propTypes = {
   slug: PropTypes.string.isRequired,
   ...Link.propTypes,
 };
+
+export { Link };

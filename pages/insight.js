@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import dynamic from 'next/dynamic';
 
-import { Router } from 'routes';
+import { Router } from 'next/router';
 import Layout from '../components/layout';
 import { aplans } from '../common/api';
 import IndicatorsHero from '../components/indicators/IndicatorsHero';

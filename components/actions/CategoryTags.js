@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Badge } from 'reactstrap';
 import styled from 'styled-components';
 import { useTranslation } from 'common/i18n';
-import { Link } from 'routes';
+import { Link } from 'common/links';
 import { slugify } from 'common/utils';
 
 const Categories = styled.div`
