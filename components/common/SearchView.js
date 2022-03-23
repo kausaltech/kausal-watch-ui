@@ -9,7 +9,7 @@ import { Link } from 'routes';
 import { useTranslation } from 'common/i18n';
 import TextInput from 'components/common/TextInput';
 import Button from 'components/common/Button';
-import PlanTag from 'components/plans/PlanTag';
+import PlanChip from 'components/plans/PlanChip';
 import { usePlan } from 'context/plan';
 import ContentLoader from './ContentLoader';
 
@@ -158,7 +158,7 @@ function SearchResultItem({ hit }) {
     }
     if (!hitTypeName) hitTypeName = t('page');
   }
-  const showPlanTag = true;
+  const showPlanChip = true;
   const hitImage = primaryOrg?.logo?.rendition.src
     || hit.plan.image?.rendition.src
     || 'https://via.placeholder.com/64/AAAAAA/EEEEEE';
@@ -167,11 +167,12 @@ function SearchResultItem({ hit }) {
   return (
     <StyledSearchResultItem>
       <SearchResultMeta>
-        {showPlanTag && (
-        <PlanTag
+        {showPlanChip && (
+        <PlanChip
           planImage={hitImage}
           planShortName={hit.plan.shortName || hit.plan.name}
           organization={hitOrganization}
+          size="md"
         />
         )}
         {hitTypeName && (<HitType>{hitTypeName}</HitType>)}
@@ -236,8 +237,12 @@ function SearchView(props) {
     search,
     onSearchChange,
   } = props;
-  const [userSearch, setUserSearch] = useState(search);
+  const [userSearch, setUserSearch] = useState(null);
   const { t } = useTranslation('common');
+
+  useEffect(() => {
+    setUserSearch(search);
+  }, [search]);
 
   const handleValueChange = (event) => {
     const { target } = event;
@@ -272,7 +277,7 @@ function SearchView(props) {
                     id="q"
                     name="q"
                     placeholder={t('search-from-plans')}
-                    value={userSearch.q}
+                    value={userSearch?.q}
                     onChange={handleValueChange}
                   />
                   <FormGroup switch>
@@ -280,7 +285,7 @@ function SearchView(props) {
                       type="switch"
                       id="other-plans-only"
                       name="onlyOtherPlans"
-                      checked={userSearch.onlyOtherPlans}
+                      checked={userSearch?.onlyOtherPlans}
                       onChange={handleValueChange}
                     />
                     <Label for="other-plans-only">{t('other-plans-only')}</Label>

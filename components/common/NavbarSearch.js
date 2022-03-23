@@ -4,11 +4,11 @@ import { InputGroup, Popover, PopoverBody } from 'reactstrap';
 import { usePopper } from 'react-popper';
 import styled from 'styled-components';
 import { SearchProvider, WithSearch, SearchBox, Results } from '@elastic/react-search-ui';
-
+import { Link } from 'routes';
 import { useTheme } from 'common/theme';
 import WatchSearchAPIConnector from 'common/search';
-import Icon from './Icon';
-import PlanTag from 'components/plans/PlanTag';
+import Icon from 'components/common/Icon';
+import PlanChip from 'components/plans/PlanChip';
 import { usePlan } from 'context/plan';
 import { useApolloClient } from '@apollo/client';
 import { useTranslation } from 'common/i18n';
@@ -49,12 +49,38 @@ const ResultsBox = styled.div`
   box-shadow: 2px 2px 8px 1px rgba(0, 0, 0, .5);
 `;
 
+const ResultsHeader = styled.div`
+  padding-bottom: ${(props) => props.theme.spaces.s025};
+  color: ${(props) => props.theme.graphColors.grey070};
+`;
+
+const ResultsFooter = styled.div`
+  padding-top: ${(props) => props.theme.spaces.s025};
+  border-top: 1px solid #ccc;
+`;
+
 const HitList = styled.ul`
   list-style: none;
+  padding: 0;
+  margin: 0;
 `;
 
 const HitItem = styled.li`
+  border-top: 1px solid #ccc ;
+  padding: ${(props) => props.theme.spaces.s050} 0;
 
+  h6 {
+    margin: ${(props) => props.theme.spaces.s100} 0;
+  }
+
+  a {
+    color: ${(props) => props.theme.themeColors.black};
+  }
+`;
+
+const HitHighlight = styled.div`
+  font-size: ${(props) => props.theme.fontSizeSm} 0 0;
+  line-height: 1;
 `;
 
 const SearchControls = styled.div`
@@ -96,14 +122,15 @@ function ResultItem({ hit }) {
   // FIXME: Group by hit.object.__typename?
   return (
     <HitItem key={hit.id}>
-      <a href={hit.url}>
-        <PlanTag
+        <PlanChip
           planImage={itemImage}
           planShortName={hit.plan.shortName || hit.plan.name}
+          size="sm"
         />
-        <div>{ hit.title }</div>
+        <a href={hit.url}>
+        <h6>{ hit.title }</h6>
         {hit.highlight && (
-          <div dangerouslySetInnerHTML={{__html: hit.highlight}} />
+          <HitHighlight dangerouslySetInnerHTML={{__html: hit.highlight}} />
         )}
       </a>
     </HitItem>
@@ -132,14 +159,25 @@ const ResultList = (props) => {
   // FIXME: can we limit the number of results earlier?
   return (
         <>
-          <span>Searching for '{searchTerm}'</span>
-          { counts.map((count) => <span>{count.name}: {count.count} </span>)}
+          <ResultsHeader>Searching for '{searchTerm}'</ResultsHeader>
           <HitList>
             {results.slice(0,RESULTS_LIMIT).map(r => (
               <ResultItem hit={r} />
             ))}
           </HitList>
-          <div>Total {results.length} results</div>
+          <ResultsFooter>
+            { results.length > 0 ?
+            <Link href={`/search?q=${searchTerm}`}>
+              <a>
+                See full results (
+                { counts.map((count) => count.count > 0 ? `${count.name}: ${count.count} ` : ' ' )}
+                )
+                <Icon name="arrow-right" />
+              </a>
+            </Link>
+            :
+            <Link href={`/search`}><a>Advanced search <Icon name="arrow-right" /></a></Link>}
+          </ResultsFooter>
         </>
   );
 }
@@ -164,14 +202,15 @@ function NavbarSearch(props) {
       },
     }} >
       <WithSearch
-        mapContextToProps={({ searchTerm, setSearchTerm, results }) => ({
+        mapContextToProps={({ isLoading, searchTerm, setSearchTerm, results }) => ({
+          isLoading,
           searchTerm,
           setSearchTerm,
           results
         })}
       >
         {(context) => {
-          const { searchTerm, setSearchTerm, results } = context;
+          const { isLoading, searchTerm, setSearchTerm, results } = context;
           const [referenceElement, setReferenceElement] = useState(null);
           const [popperElement, setPopperElement] = useState(null);
           const [arrowElement, setArrowElement] = useState(null);
@@ -259,6 +298,7 @@ function NavbarSearch(props) {
               </form>
               </SearchControls>
               {/* TODO: is there a way to control results visibility better? */}
+              {/* TODO: display loading state but currently isLoading does not update itself */}
               { searchTerm.length > 1 && searchOpen &&
                 <ResultsBox ref={setPopperElement} style={styles.popper} {...attributes.popper}>
                   <Arrow ref={setArrowElement} style={styles.arrow} />
