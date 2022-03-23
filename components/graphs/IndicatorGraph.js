@@ -385,8 +385,18 @@ function IndicatorGraph(props) {
     styleCount = comparisonAxis[0][1] + 1;
     isComparison = true;
   }
-  else if (!hasTimeDimension && !subplotsNeeded && categoryCount > 1) {
-    styleCount = specification.dimensions[0].categories.length;
+  else if (!hasTimeDimension && !subplotsNeeded) {
+    if (categoryCount > 1) {
+      styleCount = specification.dimensions[0].categories.length;
+    }
+    else {
+      styleCount = 1;
+    }
+  }
+  if (!hasTimeDimension) {
+    // For bar graphs, the red color looks too heavy.
+    // Shift to blue.
+    plotColors.mainScale.shift();
   }
   mainTraces = createTraces(traces, yRange.unit, plotColors, styleCount, categoryCount);
 
