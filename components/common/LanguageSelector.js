@@ -54,6 +54,7 @@ const StyledDropdownMenu = styled(DropdownMenu)`
 const languageNames = {
   fi: 'Suomi',
   en: 'English',
+  de: 'Deutsch',
 };
 
 const LanguageSelector = (props) => {
