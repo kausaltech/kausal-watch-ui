@@ -61,7 +61,7 @@ const LanguageSelector = (props) => {
   const { mobile } = props;
 
   const { locales } = router
-  //if (locales?.length < 2) return (null);
+  if (locales?.length < 2) return (null);
   const handleLocaleChange = (ev) => {
     ev.preventDefault();
     window.location.href = ev.target.href;
