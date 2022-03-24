@@ -1,6 +1,5 @@
 /* eslint-disable no-console */
 
-import next from 'next';
 import Koa from 'koa';
 import Router from '@koa/router';
 import logger from 'koa-logger';
@@ -11,6 +10,7 @@ import normalizeUrl from 'normalize-url';
 import LRU from 'lru-cache';
 import apollo from '@apollo/client';
 import 'dotenv/config'
+import next from 'next';
 
 console.log('> 💡 Starting server');
 

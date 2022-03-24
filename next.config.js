@@ -43,6 +43,7 @@ let config = {
     matomoURL: process.env.MATOMO_URL,
     matomoSiteId: process.env.MATOMO_SITE_ID,
     supportedLanguages: SUPPORTED_LANGUAGES,
+    forceFeatures: process.env.FORCE_FEATURES?.split(','),
   },
   /* eslint no-param-reassign: ["error", { "props": true, "ignorePropertyModificationsFor": ["cfg"] }] */
   webpack(cfg, options) {
