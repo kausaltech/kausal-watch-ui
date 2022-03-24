@@ -15,7 +15,7 @@ import { setBasePath } from 'common/links';
 import theme, { setTheme, applyTheme } from 'common/theme';
 import { getI18n } from 'common/i18n';
 import dayjs from 'common/dayjs';
-import PlanContext, { GET_PLAN_CONTEXT } from 'context/plan';
+import PlanContext, { GET_PLAN_CONTEXT, customizePlan } from 'context/plan';
 import SiteContext from 'context/site';
 
 const { publicRuntimeConfig } = getConfig();
@@ -80,7 +80,7 @@ function WatchApp(props: WatchAppProps) {
     // Track the initial page view
     ReactPiwik.push(['trackPageView']);
     Router.events.on('routeChangeComplete', onRouteChange);
-  }, []);
+  }, [matomoURL, matomoSiteId]);
 
   dayjs.locale(router.locale)
 
@@ -142,10 +142,11 @@ async function getPlan(ctx) {
   });
   if (error) throw error;
   plan = data.plan;
+
   if (!plan) {
     throw new Error(`No plan found for identifier '${planIdentifier}'`)
   }
-  return plan;
+  return customizePlan(plan);
 }
 
 function getSiteContext(ctx) {

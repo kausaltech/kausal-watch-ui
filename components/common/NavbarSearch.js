@@ -257,6 +257,10 @@ function NavbarSearch(props) {
   const apolloClient = useApolloClient();
   const router = useRouter();
 
+  if (!plan.features.enableSearch) {
+    return null;
+  }
+
   const connector = new WatchSearchAPIConnector({ plan, apolloClient });
   return (
     <SearchProvider config={{
