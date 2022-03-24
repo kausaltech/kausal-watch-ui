@@ -13,6 +13,7 @@ import { useTranslation } from 'common/i18n';
 import { NavigationLink, Link } from 'common/links';
 
 import Icon from './Icon';
+import LanguageSelector from './LanguageSelector';
 import NavbarSearch from './NavbarSearch';
 
 const TopNav = styled(Navbar)`
@@ -322,8 +323,9 @@ function GlobalNav(props) {
             <SiteTitle>{ theme.navTitleVisible ? siteTitle : '\u00A0' }</SiteTitle>
           </HomeLink>
         </Link>
-        <Nav navbar className="ml-auto d-none d-md-block">
+        <Nav navbar className="ml-auto d-none d-md-flex">
           <NavbarSearch />
+          <LanguageSelector mobile={false} />
         </Nav>
         <NavbarToggler
           onClick={() => toggleOpen(!isOpen)}
@@ -367,6 +369,17 @@ function GlobalNav(props) {
                   </NavItem>
                 )
             ))}
+            <NavItem className="d-md-none">
+              <NavLink>
+                <NavigationLink slug="/search">
+                  <NavHighlighter>
+                    <Icon name="search" className="me-2" />
+                    {t('search')}
+                  </NavHighlighter>
+                </NavigationLink>
+              </NavLink>
+            </NavItem>
+            <LanguageSelector mobile="true"/>
           </Nav>
           <Nav navbar>
             { externalItems.length > 0 && externalItems.map((page) => (

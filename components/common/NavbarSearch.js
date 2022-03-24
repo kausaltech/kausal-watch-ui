@@ -29,13 +29,18 @@ const TextInput = styled.input`
 `;
 
 const SearchButton = styled.button`
+  display: flex;
+  align-items: center;
   height: calc(${(props) => props.theme.inputLineHeight}em + ${(props) => props.theme.inputPaddingY} + ${(props) => props.theme.inputPaddingY});
-  padding: 8px ${(props) => props.theme.inputBtnPaddingX};
+  padding: 0 .5rem;
   background-color: ${(props) => props.isActive === 'true' ? props.theme.themeColors.black : props.theme.brandNavBackground};
   border: 0;
   border-radius: ${(props) => props.theme.btnBorderRadius};
   border-width: ${(props) => props.theme.btnBorderWidth};
-  font-weight: ${(props) => props.theme.fontWeightBold};
+
+  .icon {
+    fill: ${(props) => props.isActive === 'true' ? props.theme.themeColors.white : props.theme.brandNavColor} !important;
+  }
 `;
 
 const ResultsBox = styled.div`
@@ -124,14 +129,8 @@ const HitHighlight = styled.div`
 `;
 
 const SearchControls = styled.div`
-
-.sui-search-box__text-input {
-
-}
-
-.sui-search-box__submit {
-  display: none;
-}
+  display: flex;
+  align-items: center;
 `;
 
 
@@ -328,7 +327,7 @@ function NavbarSearch(props) {
             } else closeSearch();
           };
           return (
-            <div ref={searchElement}>
+            <li ref={searchElement} className="nav-item">
               <SearchControls ref={setReferenceElement}>
               <form role="combobox" autoComplete="off" aria-expanded="false" aria-haspopup="listbox" aria-labelledby="downshift-5-label">
                 <InputGroup>
@@ -357,7 +356,6 @@ function NavbarSearch(props) {
                   >
                     <Icon
                       name="search"
-                      color={theme.brandNavColor}
                       width="1.25rem"
                       height="1.25rem"
                     />
@@ -374,7 +372,7 @@ function NavbarSearch(props) {
                 </ResultsBox>
               }
 
-            </div>
+            </li>
           )
         }}
       </WithSearch>
