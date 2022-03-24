@@ -402,7 +402,7 @@ function IndicatorGraph(props) {
 
   if (subplotsNeeded) {
     const categoryDimensions = specification.dimensions.slice(0, categoryCount);
-    const organizationDimension = specification.dimensions.at(categoryCount);
+    const organizationDimension = specification.dimensions[categoryCount];
     const combinationCount = categoryDimensions.reduce(((p, c) => (p * c.categories.length)), 1)
     const subplotRowCount = Math.ceil(combinationCount/2);
     const comparisonCount = hasTimeDimension ? 2 : 1;
