@@ -77,7 +77,6 @@ let config = {
   },
 };
 
-config = withBundleAnalyzer(config);
-config = process.env.SENTRY_DSN ? withSentryConfig(config) : config;
+config = withSentryConfig(withBundleAnalyzer(config));
 
 module.exports = config;
