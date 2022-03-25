@@ -42,6 +42,7 @@ let config = {
     instanceType: process.env.INSTANCE_TYPE || 'development',
     matomoURL: process.env.MATOMO_URL,
     matomoSiteId: process.env.MATOMO_SITE_ID,
+    sentryDsn: process.env.SENTRY_DSN,
     supportedLanguages: SUPPORTED_LANGUAGES,
     forceFeatures: process.env.FORCE_FEATURES?.split(','),
   },
