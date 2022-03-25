@@ -309,20 +309,6 @@ function getSubplotHeaders(subPlotRowCount, names) {
   });
 }
 
-// TODO: incorporate these range heuristics somewhere
-// TODO: Hack for demo - we are dealing with percentages so figure out a nice percentage range
-// if (yRange[0] > 45) {
-//   yRange[0] = 45;
-//   yRange[1] = 105;
-// } else if (yRange[1] < 50) {
-//   yRange[0] = 0;
-//   yRange[1] = 50;
-// } else {
-//   yRange[0] = 0;
-//   yRange[1] = 105;
-// }
-
-
 function IndicatorGraph(props) {
   if (!process.browser) {
     return null;
