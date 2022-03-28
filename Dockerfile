@@ -26,7 +26,7 @@ ARG SENTRY_URL
 ARG SENTRY_ORG
 
 RUN yarn build
-RUN if [ ! -z "$SENTRY_ORG" -a -d ".git" ] ; then node_modules/.bin/sentry-cli releases set-commits $(cat .next/BUILD_ID) ; fi
+RUN if [ ! -z "$SENTRY_ORG" -a -d ".git" ] ; then node_modules/.bin/sentry-cli releases set-commits --ignore-missing $(cat .next/BUILD_ID) ; fi
 
 COPY ./docker/entrypoint.sh /entrypoint.sh
 EXPOSE 3000
