@@ -55,14 +55,6 @@ const CategoryIcon = styled(SVG)`
   fill: white;
 `;
 
-const OrgLogo = styled.img`
-  position: absolute;
-  display: block;
-  right: ${(props) => props.theme.spaces.s050};
-  top: ${(props) => props.theme.spaces.s050};
-  width: ${(props) => props.theme.spaces.s300};
-`;
-
 const ActionCardElement = styled.div`
   position: relative;
   width: 100%;
@@ -98,7 +90,7 @@ const ActionStatusArea = styled.div`
   flex-direction: column;
   color: ${(props) => props.theme.themeColors.white};
   background-color: ${(props) => props.statusColor};
-  min-height: 100px;
+  min-height: ${(props) => props.theme.spaces.s400};
   line-height: ${(props) => props.theme.lineHeightSm};
 `;
 
@@ -108,20 +100,42 @@ const ActionStatus = styled.div`
 `;
 
 const StatusName = styled.div`
-  margin: ${(props) => props.theme.spaces.s050};
+  padding: ${(props) => props.theme.spaces.s050};
   font-size: ${(props) => props.theme.fontSizeSm};
 `;
 
 const StyledCardTitle = styled.div`
   min-height: calc(1.5rem + 1.2em * 3);
   margin-bottom: 0;
-  padding: ${(props) => props.theme.spaces.s100};
+  padding: ${(props) => props.theme.spaces.s050};
   color: ${(props) => props.theme.themeColors.black};
   font-size: ${(props) => props.theme.fontSizeBase};
   line-height: ${(props) => props.theme.lineHeightMd};
   text-align: left;
   word-break: break-word;
   hyphens: auto;
+`;
+
+const ActionOrg = styled.div`
+  display: flex;
+  align-items: center;
+  background-color: ${(props) => props.theme.themeColors.white};
+  border-bottom: 1px solid ${(props) => props.theme.themeColors.light};
+`;
+
+const ActionOrgAvatar = styled.div`
+  margin: ${(props) => props.theme.spaces.s050}
+`;
+
+const ActionOrgName = styled.div`
+  font-size: ${(props) => props.theme.fontSizeSm};
+  color: ${(props) => props.theme.themeColors.dark};
+`;
+
+const OrgLogo = styled.img`
+  display: block;
+  width: ${(props) => props.theme.spaces.s150};
+  height: ${(props) => props.theme.spaces.s150};
 `;
 
 function getIconUrl(action) {
@@ -174,28 +188,33 @@ function ActionCard(props) {
                 preserveAspectRatio="xMinYMid meet"
               />
             )}
-            { primaryOrg?.logo && (
-              <OrgLogo
-                src={primaryOrg.logo.rendition.src}
-              />
-            )}
             { plan.hideActionIdentifiers
               ? <div />
               : <ActionNumber className="action-number">{ action.identifier }</ActionNumber>}
-            <ActionStatus>
-              { mergedWith ? (
-                <StatusName>
-                  { t('actions:action-status-merged') }
-                  <span> &rarr; </span>
-                  { mergedWith.identifier }
-                </StatusName>
-              ) : (
-                <StatusName>
-                  { statusText }
-                </StatusName>
-              )}
-            </ActionStatus>
           </ActionStatusArea>
+          <ActionStatus>
+            { mergedWith ? (
+              <StatusName>
+                { t('actions:action-status-merged') }
+                <span> &rarr; </span>
+                { mergedWith.identifier }
+              </StatusName>
+            ) : (
+              <StatusName>
+                { statusText }
+              </StatusName>
+            )}
+          </ActionStatus>
+          { primaryOrg && (
+              <ActionOrg>
+                <ActionOrgAvatar>
+                  <OrgLogo
+                    src={primaryOrg?.logo?.rendition?.src || '/static/themes/default/images/default-avatar-org.png'}
+                  />
+                </ActionOrgAvatar>
+                <ActionOrgName>{primaryOrg.abbreviation || primaryOrg.name}</ActionOrgName>
+              </ActionOrg>
+            )}
           <StyledCardTitle>{actionName}</StyledCardTitle>
         </ActionCardElement>
       </StyledActionLink>

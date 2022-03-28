@@ -154,7 +154,7 @@ class ContactPerson extends React.Component {
       <Person className={isLeader}>
         <div>
           <Avatar
-            src={person.avatarUrl || '/static/themes/default/images/default-avatar.png'}
+            src={person.avatarUrl || '/static/themes/default/images/default-avatar-user.png'}
             className={`rounded-circle ${isLeader}`}
             alt={`${role} ${fullName}`}
           />

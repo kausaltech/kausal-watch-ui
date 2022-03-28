@@ -14,7 +14,7 @@ query GetAutocompleteResults($plan: ID!, $term: String!) {
       plan {
         identifier
         image {
-          rendition(size: "128x128") {
+          rendition(size: "128x128", crop: true) {
             src
           }
         }

@@ -228,11 +228,9 @@ function ActionHero(props) {
                   <CardContent>
                     { primaryOrg && (
                       <PrimaryOrg>
-                        { primaryOrg.logo && (
                         <OrgLogo
-                          src={primaryOrg.logo.rendition.src}
+                          src={primaryOrg.logo?.rendition?.src || '/static/themes/default/images/default-avatar-org.png'}
                         />
-                        )}
                         <strong><ActionListLink query={{ primaryOrg: primaryOrg.id }}>{ primaryOrg.abbreviation || primaryOrg.name }</ActionListLink></strong>
                       </PrimaryOrg>
                     ) }

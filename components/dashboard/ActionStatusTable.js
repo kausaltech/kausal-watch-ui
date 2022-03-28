@@ -45,8 +45,8 @@ const StyledRow = styled.tr`
 
 const OrgLogo = styled.img`
   display: block;
-  width: 2rem;
-  height: 2rem;
+  width: ${(props) => props.theme.spaces.s150};
+  height: ${(props) => props.theme.spaces.s150};
 `;
 
 const ResponsibleList = styled.div`
@@ -237,8 +237,12 @@ const ActionRow = ({ item, plan, hasResponsibles, hasImpacts, hasIndicators }) =
     <StyledRow>
       { plan.primaryOrgs.length > 0 && (
         <td className="logo-column">
-          { item.primaryOrg.logo && (
-          <OrgLogo src={item.primaryOrg.logo.rendition.src} alt={item.primaryOrg.name} />
+          { item.primaryOrg && (
+            <OrgLogo
+              src={item.primaryOrg?.logo?.rendition?.src || '/static/themes/default/images/default-avatar-org.png'}
+              alt={item.primaryOrg.name}
+              id={`L${item.primaryOrg.id}`}
+            />
           )}
         </td>
       )}

@@ -169,7 +169,7 @@ export const GET_ACTION_LIST = gql`
         abbreviation
         name
         logo {
-          rendition(size: "128x128", crop: false) {
+          rendition(size: "128x128", crop: true) {
             src
           }
         }

@@ -23,7 +23,7 @@ query SearchQuery($plan: ID!, $query: String!, $onlyOtherPlans: Boolean) {
       plan {
         identifier
         image {
-          rendition(size: "128x128") {
+          rendition(size: "128x128", crop: true) {
             src
           }
         }
@@ -40,7 +40,7 @@ query SearchQuery($plan: ID!, $query: String!, $onlyOtherPlans: Boolean) {
           primaryOrg {
             name
             logo {
-              rendition(size: "128x128") {
+              rendition(size: "128x128", crop: true) {
                 src
               }
             }
