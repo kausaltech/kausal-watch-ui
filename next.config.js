@@ -27,6 +27,7 @@ let config = {
     // Enables the styled-components SWC transform
     styledComponents: true
   },
+  swcMinify: true,
   async rewrites() {
     const rewrites = [
       { source: '/favicon.ico', destination: '/public/static/favicon.ico' },
