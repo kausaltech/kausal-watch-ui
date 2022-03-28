@@ -6,12 +6,15 @@ import dayjs from 'common/dayjs';
 import styled from 'styled-components';
 import { useTranslation } from 'common/i18n';
 import { useTheme } from 'common/theme';
+import { splitLines } from 'common/utils';
 
 const log10 = Math.log(10);
 
 const PlotContainer = styled.div`
   height: ${(props) => props.vizHeight}px;
 `;
+
+const CATEGORY_XAXIS_LABEL_EXTRA_MARGIN = 200;
 
 function getTraces(dimensions, cube, names, hasTimeDimension) {
   if (dimensions.length === 0) {
@@ -101,9 +104,11 @@ const createLayout = (
   yRange,
   plotColors,
   config,
+  hasTimeDimension,
+  subplotsNeeded
 ) => {
   const fontFamily = '-apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Ubuntu, roboto, noto, arial, sans-serif';
-  const hasCategories = config.xType === 'category';
+  const hasCategories = !hasTimeDimension;
 
   const yaxes = {
     yaxis: {
@@ -143,6 +148,7 @@ const createLayout = (
     ? {
       xaxis: {
         type: 'category',
+        tickangle: subplotsNeeded ? 'auto' : 90,
         tickfont: {
           family: fontFamily,
           size: 14,
@@ -174,8 +180,9 @@ const createLayout = (
     margin: {
       t: 50,
       r: 50,
-      b: 50,
+      b: 50 + hasCategories ? CATEGORY_XAXIS_LABEL_EXTRA_MARGIN : 0,
       l: 50,
+      pad: 5
     },
     ...yaxes,
     ...xaxes,
@@ -237,6 +244,7 @@ const createTraces = (traces, unit, plotColors, styleCount, categoryCount, hasTi
 
     // we have multiple categories in one time point - draw bar groups
     if (!hasTimeDimension) {
+      modTrace.x = modTrace.x.map(name => splitLines(name));
       modTrace.type = 'bar';
       modTrace.marker = {
         color: (categoryCount < 2 ?
@@ -267,7 +275,7 @@ const createTraces = (traces, unit, plotColors, styleCount, categoryCount, hasTi
       };
     }
     if (modTrace.type === 'scatter') modTrace.mode = (trace.x.length > 30) ? 'lines' : 'lines+markers';
-    modTrace.hovertemplate = `(%{x}) ${trace.name}: %{y} ${unit}`;
+    modTrace.hovertemplate = `(%{x})<br> ${trace.name}: %{y} ${unit}`;
     modTrace.hoverinfo = 'none';
     modTrace.hoverlabel = {
       bgcolor: plotColors.mainScale[idx % numColors],
@@ -294,7 +302,7 @@ function getSubplotHeaders(subPlotRowCount, names) {
     const column = (idx / 2) % 1;
     const row = Math.floor(idx / 2) / subPlotRowCount;
     return {
-      text: `<b>${name}</b>`,
+      text: `<b>${splitLines(name)}</b>`,
       font: {
         size: 16,
       },
@@ -308,20 +316,6 @@ function getSubplotHeaders(subPlotRowCount, names) {
     };
   });
 }
-
-// TODO: incorporate these range heuristics somewhere
-// TODO: Hack for demo - we are dealing with percentages so figure out a nice percentage range
-// if (yRange[0] > 45) {
-//   yRange[0] = 45;
-//   yRange[1] = 105;
-// } else if (yRange[1] < 50) {
-//   yRange[0] = 0;
-//   yRange[1] = 50;
-// } else {
-//   yRange[0] = 0;
-//   yRange[1] = 105;
-// }
-
 
 function IndicatorGraph(props) {
   if (!process.browser) {
@@ -476,10 +470,15 @@ function IndicatorGraph(props) {
     yRange,
     plotColors,
     layoutConfig,
+    hasTimeDimension,
+    subplotsNeeded
   );
+  const height = layoutConfig?.grid?.rows ?
+        layoutConfig.grid.rows * 300 :
+        450 + (!hasTimeDimension ? CATEGORY_XAXIS_LABEL_EXTRA_MARGIN : 0)
   return (
     <PlotContainer data-element="indicator-graph-plot-container"
-                   vizHeight={layoutConfig?.grid?.rows ? layoutConfig.grid.rows * 300 : 450}>
+                   vizHeight={height}>
       <Plot
         data={plotlyData}
         layout={layout}

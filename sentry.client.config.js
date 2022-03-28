@@ -6,11 +6,14 @@ const { publicRuntimeConfig } = getConfig();
 const SENTRY_DSN = (
   publicRuntimeConfig?.sentryDsn || process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN
 );
+const INSTANCE_TYPE = (
+  publicRuntimeConfig?.instanceType || process.env.INSTANCE_TYPE || 'development'
+);
 
 Sentry.init({
   dsn: SENTRY_DSN,
   tracesSampleRate: 1.0,
   maxBreadcrumbs: 50,
-  environment: process.env.INSTANCE_TYPE || 'development',
+  environment: INSTANCE_TYPE,
   // debug: (process.env.NODE_ENV !== 'production') && SENTRY_DSN,
 });
