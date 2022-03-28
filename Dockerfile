@@ -20,6 +20,13 @@ COPY . .
 FROM base as bundle
 # https://stackoverflow.com/questions/69692842/error-message-error0308010cdigital-envelope-routinesunsupported
 ENV NODE_OPTIONS=--openssl-legacy-provider
+
+# For Sentry source map upload
+ARG SENTRY_PROJECT
+ARG SENTRY_AUTH_TOKEN
+ARG SENTRY_URL
+ARG SENTRY_ORG
+
 RUN yarn build
 
 COPY ./docker/entrypoint.sh /entrypoint.sh
