@@ -27,7 +27,6 @@ let config = {
     // Enables the styled-components SWC transform
     styledComponents: true
   },
-  swcMinify: true,
   async rewrites() {
     const rewrites = [
       { source: '/favicon.ico', destination: '/public/static/favicon.ico' },
@@ -50,11 +49,6 @@ let config = {
   webpack(cfg, options) {
     const { isServer, buildId, dev } = options;
 
-    cfg.plugins.push(
-      new webpack.DefinePlugin({
-        'process.env.SENTRY_RELEASE': JSON.stringify(buildId),
-      }),
-    );
     if (!isServer) {
       cfg.resolve.alias['@sentry/node'] = '@sentry/browser';
       cfg.resolve.alias['next-i18next/serverSideTranslations'] = false;
@@ -70,8 +64,6 @@ let config = {
       SYNC_THEME: '',
       FORCE_SENTRY_SEND: '',
     }));
-
-    // cfg.optimization.minimize = false;
 
     return cfg;
   },
