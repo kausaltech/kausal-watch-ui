@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 BUILD_ID_FILE=".next/BUILD_ID"
 
