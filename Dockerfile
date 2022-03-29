@@ -21,12 +21,17 @@ FROM base as bundle
 
 # For Sentry source map upload
 ARG SENTRY_PROJECT
-ARG SENTRY_AUTH_TOKEN
 ARG SENTRY_URL
 ARG SENTRY_ORG
+ARG SENTRY_AUTH_TOKEN
+ARG GIT_REPO
+ARG GIT_REV
 
-RUN yarn build
-RUN docker/sentry-set-release-commits.sh
+RUN --mount=type=secret,id=SENTRY_AUTH_TOKEN \
+    yarn build
+
+RUN --mount=type=secret,id=SENTRY_AUTH_TOKEN \
+    docker/sentry-set-release-commits.sh
 
 COPY ./docker/entrypoint.sh /entrypoint.sh
 EXPOSE 3000
