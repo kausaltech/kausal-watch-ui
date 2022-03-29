@@ -338,7 +338,7 @@ const preprocessForSorting = (key, items) => {
   }
 }
 
-const ActionsStatusTable = (props) => {
+const ActionStatusTable = (props) => {
   const { actions, orgs, plan } = props;
   const orgMap = new Map(orgs.map((org) => [org.id, org]));
   const theme = useTheme();
@@ -437,7 +437,7 @@ const ActionsStatusTable = (props) => {
   </>);
 };
 
-ActionsStatusTable.propTypes = {
+ActionStatusTable.propTypes = {
   actions: PropTypes.arrayOf(PropTypes.object).isRequired,
   orgs: PropTypes.arrayOf(PropTypes.object).isRequired,
   plan: PropTypes.shape({
@@ -445,4 +445,4 @@ ActionsStatusTable.propTypes = {
   }).isRequired,
 };
 
-export default ActionsStatusTable;
+export default ActionStatusTable;
