@@ -381,16 +381,10 @@ const ActionStatusTable = (props) => {
     implementationPhase: t('action-implementation-phase')
 
   };
-  const sortingStatusText = t(
-    'sorting-in-direction-x-by-column-y',
-    {direction: directionLabel, column: columnLabel[sort.key]}
-  );
-
   return (
     <>
       <div style={{flexGrow: 4}}>
         { sort.key !== 'order' && <>
-          <small>{sortingStatusText} &nbsp;</small>
           <Button outline size="sm" color="primary" onClick={clickHandler('order')}>
             {t('default-sorting')}
           </Button>
