@@ -15,6 +15,7 @@ i18n.use(initReactI18next)
             escapeValue: false,
         },
         defaultNS: 'common',
+        fallbackNS: ['common', 'actions', 'a11y'],
         ns,
         supportedLngs,
     });
