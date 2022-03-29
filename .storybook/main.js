@@ -26,6 +26,9 @@ module.exports = {
       ...config.resolve.alias,
       'next-i18next': 'react-i18next'
     };
+    if (configType === 'DEVELOPMENT') {
+      config.devtool = 'eval-source-map';
+    }
     return config;
   },
 };
