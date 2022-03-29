@@ -339,9 +339,8 @@ const preprocessForSorting = (key, items) => {
 }
 
 const ActionsStatusTable = (props) => {
-  const { actions, orgs } = props;
+  const { actions, orgs, plan } = props;
   const orgMap = new Map(orgs.map((org) => [org.id, org]));
-  const plan = useContext(PlanContext);
   const theme = useTheme();
   const [ sort, setSort ] = useState({key: 'order', direction: 1});
   const { key, direction } = sort;
@@ -399,7 +398,7 @@ const ActionsStatusTable = (props) => {
         }
       </div>
     <div>
-      <ActionStatusExport actions={actions} actionStatuses={props.plan.actionStatuses} />
+      <ActionStatusExport actions={actions} actionStatuses={plan.actionStatuses} />
     </div>
     <DashTable role="list">
       <thead>
@@ -441,6 +440,9 @@ const ActionsStatusTable = (props) => {
 ActionsStatusTable.propTypes = {
   actions: PropTypes.arrayOf(PropTypes.object).isRequired,
   orgs: PropTypes.arrayOf(PropTypes.object).isRequired,
+  plan: PropTypes.shape({
+    identifier: PropTypes.string,
+  }).isRequired,
 };
 
 export default ActionsStatusTable;
