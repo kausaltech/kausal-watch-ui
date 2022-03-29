@@ -11,8 +11,9 @@ if [ ! -z "$SENTRY_ORG" -a ! -z "$SENTRY_AUTH_TOKEN" ] ; then
     if [ ! -z "$GIT_REV" -a ! -z "$GIT_REPO" ] ; then
         echo Setting commit from $GIT_REPO: $GIT_REV
         ARGS="-c ${GIT_REPO}@${GIT_REV}"
-    else
-        ARGS=""
+    elif [ ! -z "$GIT_REPO" ] ; then
+        echo Setting commit from .git for $GIT_REPO
+        ARGS="-c ${GIT_REPO}#."
     fi
     if [ -e "${BUILD_ID_FILE}" ] ; then
         node_modules/.bin/sentry-cli releases set-commits \
