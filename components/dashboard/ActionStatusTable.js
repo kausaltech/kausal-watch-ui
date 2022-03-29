@@ -20,7 +20,6 @@ const TableWrapper = styled.div`
   width: auto;
   display: flex;
   flex-flow: wrap;
-  overflow-x: scroll;
 
   background-image: ${(props) => `linear-gradient(to right, ${props.theme.themeColors.white}, ${props.theme.themeColors.white}),
     linear-gradient(to right, ${props.theme.themeColors.white}, ${props.theme.themeColors.white}),
@@ -39,6 +38,7 @@ const TableWrapper = styled.div`
 
 const DashTable = styled(Table)`
   margin-bottom: ${(props) => props.theme.spaces.s600};
+  margin-top: ${(props) => props.theme.spaces.s100};
   line-height: ${(props) => props.theme.lineHeightMd};
 
   .logo-column {
@@ -405,7 +405,7 @@ const ActionStatusTable = (props) => {
   };
   return (
     <TableWrapper>
-      <div style={{flexGrow: 4}}>
+      <div style={{flexGrow: 4, alignSelf: 'end' }}>
         { sort.key !== 'order' && <>
           <Button outline size="sm" color="primary" onClick={clickHandler('order')}>
             {t('default-sorting')}
