@@ -13,6 +13,7 @@ import { useTranslation } from 'common/i18n';
 import { NavigationLink, Link } from 'common/links';
 
 import Icon from './Icon';
+import PlanSelector from 'components/plans/PlanSelector';
 import LanguageSelector from './LanguageSelector';
 import NavbarSearch from './NavbarSearch';
 
@@ -21,6 +22,12 @@ const TopNav = styled(Navbar)`
   background-color: ${(props) => props.theme.brandNavBackground};
   border-bottom: 1px solid ${(props) => props.theme.themeColors.light};
 `;
+
+const TopNavItems = styled(Navbar)`
+  display: flex;
+  justify-content: flex-start;
+`;
+
 
 const BotNav = styled(Navbar)`
   background-color: ${(props) => props.theme.themeColors.white};
@@ -323,10 +330,16 @@ function GlobalNav(props) {
             <SiteTitle>{ theme.navTitleVisible ? siteTitle : '\u00A0' }</SiteTitle>
           </HomeLink>
         </Link>
-        <Nav navbar className="ml-auto d-none d-md-flex">
-          <NavbarSearch />
-          <LanguageSelector mobile={false} />
-        </Nav>
+        <TopNavItems>
+          <Nav navbar className="mr-auto">
+            <PlanSelector />
+          </Nav>
+
+          <Nav navbar className="ml-auto d-none d-md-flex">
+            <NavbarSearch />
+            <LanguageSelector mobile={false} />
+          </Nav>
+        </TopNavItems>
         <NavbarToggler
           onClick={() => toggleOpen(!isOpen)}
           aria-label={isOpen ? t('nav-menu-close') : t('nav-menu-open')}
