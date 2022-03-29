@@ -10,7 +10,7 @@ jobs:
       BUILDKIT_PROGRESS: plain
     steps:
       - name: Check out code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Building Docker base container
         run: |
           docker build \
@@ -18,11 +18,20 @@ jobs:
             --target base .
       - name: Running Jest unit tests
         run: docker run --rm --entrypoint '' kausal-watch-ui/base yarn test
+
       - name: Building NextJS bundles
         run: |
           docker build \
             --tag ${{ env.DOCKER_IMAGE }} \
             .
+        env:
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+          SENTRY_URL: ${{ secrets.SENTRY_URL }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          GIT_REV: ${{ github.sha }}
+          GIT_REPO: ${{ github.repository }}
+
       - name: Log into Docker registry
         if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/deployment/staging'
         uses: docker/login-action@v1
