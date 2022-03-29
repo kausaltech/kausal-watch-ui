@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Table, Button } from 'reactstrap';
 import styled from 'styled-components';
+import { transparentize } from 'polished';
 import { useTheme } from 'common/theme';
 import PlanContext from 'context/plan';
 import dayjs from 'common/dayjs';
@@ -14,6 +15,27 @@ import Icon from 'components/common/Icon';
 import { cleanActionStatus } from 'common/preprocess';
 
 import ActionStatusExport from './ActionStatusExport';
+
+const TableWrapper = styled.div`
+  width: auto;
+  display: flex;
+  flex-flow: wrap;
+  overflow-x: scroll;
+
+  background-image: ${(props) => `linear-gradient(to right, ${props.theme.themeColors.white}, ${props.theme.themeColors.white}),
+    linear-gradient(to right, ${props.theme.themeColors.white}, ${props.theme.themeColors.white}),
+    linear-gradient(to right, rgba(0, 0, 0, 0.25), ${transparentize(0, props.theme.themeColors.white)}),
+    linear-gradient(to left, rgba(0, 0, 0, 0.25), ${transparentize(0, props.theme.themeColors.white)})`};
+  background-position: left center, right center, left center, right center;
+  background-repeat: no-repeat;
+  background-color: ${(props) => props.theme.themeColors.white};
+  background-size: 20px 100%, 20px 100%, 10px 100%, 10px 100%;
+  background-attachment: local, local, scroll, scroll;
+
+  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    background-image: none;
+  }
+`;
 
 const DashTable = styled(Table)`
   margin-bottom: ${(props) => props.theme.spaces.s600};
@@ -382,7 +404,7 @@ const ActionStatusTable = (props) => {
 
   };
   return (
-    <>
+    <TableWrapper>
       <div style={{flexGrow: 4}}>
         { sort.key !== 'order' && <>
           <Button outline size="sm" color="primary" onClick={clickHandler('order')}>
@@ -428,7 +450,7 @@ const ActionStatusTable = (props) => {
         ))}
       </tbody>
     </DashTable>
-  </>);
+  </TableWrapper>);
 };
 
 ActionStatusTable.propTypes = {
