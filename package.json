@@ -24,6 +24,7 @@
     "cytoscape": "^3.21.0",
     "cytoscape-dagre": "^2.4.0",
     "dayjs": "^1.11.0",
+    "docker-secret": "^1.2.4",
     "dotenv": "^14.3.2",
     "exceljs": "^4.3.0",
     "express-robots-txt": "^1.0.0",

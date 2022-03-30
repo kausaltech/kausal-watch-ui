@@ -1,10 +1,13 @@
 /* eslint-disable no-restricted-syntax */
 const webpack = require('webpack');
+const { secrets } = require('docker-secret');
 const { withSentryConfig } = require('@sentry/nextjs');
 const { i18n, SUPPORTED_LANGUAGES } = require('./next-i18next.config');
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 });
+
+const sentryAuthToken = secrets.SENTRY_AUTH_TOKEN || process.env.SENTRY_AUTH_TOKEN;
 
 let config = {
   i18n,
@@ -14,8 +17,8 @@ let config = {
   },
   sentry: {
     // If SENTRY_AUTH_TOKEN is not set, disable uploading source maps to Sentry
-    disableServerWebpackPlugin: !process.env.SENTRY_AUTH_TOKEN,
-    disableClientWebpackPlugin: !process.env.SENTRY_AUTH_TOKEN,
+    disableServerWebpackPlugin: !sentryAuthToken,
+    disableClientWebpackPlugin: !sentryAuthToken,
   },
   eslint: {
     // Warning: This allows production builds to successfully complete even if
@@ -70,6 +73,10 @@ let config = {
   },
 };
 
-config = withSentryConfig(withBundleAnalyzer(config));
+const sentryWebpackOpts = {
+  authToken: sentryAuthToken,
+};
+
+config = withSentryConfig(withBundleAnalyzer(config), sentryWebpackOpts);
 
 module.exports = config;

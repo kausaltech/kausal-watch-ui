@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Table, Button } from 'reactstrap';
 import styled from 'styled-components';
+import { transparentize } from 'polished';
 import { useTheme } from 'common/theme';
 import PlanContext from 'context/plan';
 import dayjs from 'common/dayjs';
@@ -15,8 +16,29 @@ import { cleanActionStatus } from 'common/preprocess';
 
 import ActionStatusExport from './ActionStatusExport';
 
+const TableWrapper = styled.div`
+  width: auto;
+  display: flex;
+  flex-flow: wrap;
+
+  background-image: ${(props) => `linear-gradient(to right, ${props.theme.themeColors.white}, ${props.theme.themeColors.white}),
+    linear-gradient(to right, ${props.theme.themeColors.white}, ${props.theme.themeColors.white}),
+    linear-gradient(to right, rgba(0, 0, 0, 0.25), ${transparentize(0, props.theme.themeColors.white)}),
+    linear-gradient(to left, rgba(0, 0, 0, 0.25), ${transparentize(0, props.theme.themeColors.white)})`};
+  background-position: left center, right center, left center, right center;
+  background-repeat: no-repeat;
+  background-color: ${(props) => props.theme.themeColors.white};
+  background-size: 20px 100%, 20px 100%, 10px 100%, 10px 100%;
+  background-attachment: local, local, scroll, scroll;
+
+  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    background-image: none;
+  }
+`;
+
 const DashTable = styled(Table)`
   margin-bottom: ${(props) => props.theme.spaces.s600};
+  margin-top: ${(props) => props.theme.spaces.s100};
   line-height: ${(props) => props.theme.lineHeightMd};
 
   .logo-column {
@@ -42,6 +64,26 @@ const StyledRow = styled.tr`
     }
   }
 `;
+
+const StyledTableHeader = styled.th`
+  cursor: pointer;
+  paddingRight: 15;
+`;
+
+const HeaderContentWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  text-decoration: ${(props) => props.selected ? 'underline' : null};
+  align-items: flex-end;
+`;
+
+const TableSortingIcon = styled(Icon)`
+  width: 0.8em;
+  height: 0.8em;
+  opacity: ${(props) => (props.selected ? 1 : 0.4)};
+`;
+
 
 const OrgLogo = styled.img`
   display: block;
@@ -308,20 +350,18 @@ const ActionRow = ({ item, plan, hasResponsibles, hasImpacts, hasIndicators }) =
 
 const SortableTableHeader = ({children, headerKey, sort, onClick}) => {
   const selected = (sort.key == headerKey);
-  const style = {
-    cursor: 'pointer'
-  };
-  let iconName = 'arrowUpDown';
-  if (selected) {
-    iconName = (sort.direction ?? 1) === 1 ? 'arrowDown' : 'arrowUp';
-  }
-  const directionArrow = <Icon style={{opacity: (selected ? 1 : 0.5), width: "0.8em", height:"0.8em"}} name={iconName} />;
+  const iconName = selected ?
+    (sort.direction ?? 1) === 1 ? 'arrowDown' : 'arrowUp' :
+    'arrowUpDown'
   return (
-    <th style={style} onClick={onClick}>
-      <span style={(selected ? {textDecoration: 'underline'} : {})}>{ children }</span>
-      &nbsp;
-      { directionArrow }
-    </th>
+    <StyledTableHeader onClick={onClick}>
+      <HeaderContentWrapper selected={selected}>
+        <div>
+          { children }
+        </div>
+        <TableSortingIcon name={iconName} selected={selected} />
+      </HeaderContentWrapper>
+    </StyledTableHeader>
   );
 }
 
@@ -338,10 +378,9 @@ const preprocessForSorting = (key, items) => {
   }
 }
 
-const ActionsStatusTable = (props) => {
-  const { actions, orgs } = props;
+const ActionStatusTable = (props) => {
+  const { actions, orgs, plan } = props;
   const orgMap = new Map(orgs.map((org) => [org.id, org]));
-  const plan = useContext(PlanContext);
   const theme = useTheme();
   const [ sort, setSort ] = useState({key: 'order', direction: 1});
   const { key, direction } = sort;
@@ -382,16 +421,10 @@ const ActionsStatusTable = (props) => {
     implementationPhase: t('action-implementation-phase')
 
   };
-  const sortingStatusText = t(
-    'sorting-in-direction-x-by-column-y',
-    {direction: directionLabel, column: columnLabel[sort.key]}
-  );
-
   return (
-    <>
-      <div style={{flexGrow: 4}}>
+    <TableWrapper>
+      <div style={{flexGrow: 4, alignSelf: 'end' }}>
         { sort.key !== 'order' && <>
-          <small>{sortingStatusText} &nbsp;</small>
           <Button outline size="sm" color="primary" onClick={clickHandler('order')}>
             {t('default-sorting')}
           </Button>
@@ -399,7 +432,7 @@ const ActionsStatusTable = (props) => {
         }
       </div>
     <div>
-      <ActionStatusExport actions={actions} actionStatuses={props.plan.actionStatuses} />
+      <ActionStatusExport actions={actions} actionStatuses={plan.actionStatuses} />
     </div>
     <DashTable role="list">
       <thead>
@@ -435,12 +468,15 @@ const ActionsStatusTable = (props) => {
         ))}
       </tbody>
     </DashTable>
-  </>);
+  </TableWrapper>);
 };
 
-ActionsStatusTable.propTypes = {
+ActionStatusTable.propTypes = {
   actions: PropTypes.arrayOf(PropTypes.object).isRequired,
   orgs: PropTypes.arrayOf(PropTypes.object).isRequired,
+  plan: PropTypes.shape({
+    identifier: PropTypes.string,
+  }).isRequired,
 };
 
-export default ActionsStatusTable;
+export default ActionStatusTable;

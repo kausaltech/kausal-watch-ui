@@ -9818,6 +9818,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"docker-secret@npm:^1.2.4":
+  version: 1.2.4
+  resolution: "docker-secret@npm:1.2.4"
+  checksum: bb99387c9a734a0754686d56e5e2367bb17b469193056f19fec72c9776c0e8b0a9169addb4307353861de6297cbf5e579d2b68f6dacb42e970c1fc59baa770e7
+  languageName: node
+  linkType: hard
+
 "doctrine@npm:^2.1.0":
   version: 2.1.0
   resolution: "doctrine@npm:2.1.0"
@@ -15073,6 +15080,7 @@ __metadata:
     cytoscape: ^3.21.0
     cytoscape-dagre: ^2.4.0
     dayjs: ^1.11.0
+    docker-secret: ^1.2.4
     dotenv: ^14.3.2
     eslint: ^8.11.0
     eslint-config-airbnb: ^19.0.4
