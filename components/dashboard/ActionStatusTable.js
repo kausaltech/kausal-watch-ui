@@ -65,6 +65,26 @@ const StyledRow = styled.tr`
   }
 `;
 
+const StyledTableHeader = styled.th`
+  cursor: pointer;
+  paddingRight: 15;
+`;
+
+const HeaderContentWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  text-decoration: ${(props) => props.selected ? 'underline' : null};
+  align-items: flex-end;
+`;
+
+const TableSortingIcon = styled(Icon)`
+  width: 0.8em;
+  height: 0.8em;
+  opacity: ${(props) => (props.selected ? 1 : 0.4)};
+`;
+
+
 const OrgLogo = styled.img`
   display: block;
   width: ${(props) => props.theme.spaces.s150};
@@ -330,20 +350,18 @@ const ActionRow = ({ item, plan, hasResponsibles, hasImpacts, hasIndicators }) =
 
 const SortableTableHeader = ({children, headerKey, sort, onClick}) => {
   const selected = (sort.key == headerKey);
-  const style = {
-    cursor: 'pointer'
-  };
-  let iconName = 'arrowUpDown';
-  if (selected) {
-    iconName = (sort.direction ?? 1) === 1 ? 'arrowDown' : 'arrowUp';
-  }
-  const directionArrow = <Icon style={{opacity: (selected ? 1 : 0.5), width: "0.8em", height:"0.8em"}} name={iconName} />;
+  const iconName = selected ?
+    (sort.direction ?? 1) === 1 ? 'arrowDown' : 'arrowUp' :
+    'arrowUpDown'
   return (
-    <th style={style} onClick={onClick}>
-      <span style={(selected ? {textDecoration: 'underline'} : {})}>{ children }</span>
-      &nbsp;
-      { directionArrow }
-    </th>
+    <StyledTableHeader onClick={onClick}>
+      <HeaderContentWrapper selected={selected}>
+        <div>
+          { children }
+        </div>
+        <TableSortingIcon name={iconName} selected={selected} />
+      </HeaderContentWrapper>
+    </StyledTableHeader>
   );
 }
 
