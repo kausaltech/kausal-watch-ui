@@ -38,7 +38,7 @@ function onRouteChange(url) {
 
 
 interface SiteContext {
-  instanceType: string;
+  deploymentType: string;
   domain: string;
   path: string;
 }
@@ -151,10 +151,10 @@ async function getPlan(ctx) {
 
 function getSiteContext(ctx) {
   const { currentURL } = ctx.req;
-  const { instanceType } = publicRuntimeConfig;
+  const { deploymentType } = publicRuntimeConfig;
 
   return {
-    instanceType,
+    deploymentType,
     hostname: currentURL.hostname,
     path: currentURL.path,
   }

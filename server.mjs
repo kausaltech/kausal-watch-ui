@@ -24,7 +24,7 @@ if (process.env.SENTRY_DSN) {
 }
 const serverPort = process.env.PORT || 3000;
 const isDevMode = process.env.NODE_ENV !== 'production';
-const isProductionInstance = process.env.INSTANCE_TYPE === 'production';
+const isProductionInstance = process.env.DEPLOYMENT_TYPE === 'production';
 
 /*
 let ssrCache;

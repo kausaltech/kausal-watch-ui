@@ -42,7 +42,7 @@ let config = {
     // the default value for PLAN_IDENTIFIER is set below in webpack config
     defaultPlanIdentifier: process.env.PLAN_IDENTIFIER,
     defaultThemeIdentifier: process.env.THEME_IDENTIFIER,
-    instanceType: process.env.INSTANCE_TYPE || 'development',
+    deploymentType: process.env.DEPLOYMENT_TYPE || 'development',
     matomoURL: process.env.MATOMO_URL,
     matomoSiteId: process.env.MATOMO_SITE_ID,
     sentryDsn: process.env.SENTRY_DSN,

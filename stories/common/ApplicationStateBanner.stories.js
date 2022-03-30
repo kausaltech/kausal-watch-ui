@@ -7,12 +7,12 @@ export default {
 
 export const ApplicationStateTesting = () => (
   <ApplicationStateBanner
-    instanceType="testing"
+    deploymentType="testing"
   />
 );
 
 export const ApplicationStateDevelopment = () => (
   <ApplicationStateBanner
-    instanceType="development"
+    deploymentType="development"
   />
 );

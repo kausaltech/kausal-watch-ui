@@ -87,7 +87,7 @@ function Footer(props) {
         fundingInstruments={fundingInstruments}
         otherLogos={otherLogos}
       />
-      <ApplicationStateBanner instanceType={site.instanceType} />
+      <ApplicationStateBanner deploymentType={site.deploymentType} />
     </>
   );
 }

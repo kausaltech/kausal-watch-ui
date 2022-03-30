@@ -62,7 +62,7 @@ function Header({ siteTitle }) {
   return (
     <header style={{ position: 'relative' }}>
       <SkipToContent />
-      <ApplicationStateBanner instanceType={site.instanceType} />
+      <ApplicationStateBanner deploymentType={site.deploymentType} />
       <GlobalNav
         siteTitle={siteTitle}
         ownerName={plan.generalContent ? plan.generalContent.ownerName : plan.name}

@@ -39,14 +39,14 @@ const Label = styled.strong`
 `;
 
 function ApplicationStateBanner(props) {
-  const { instanceType } = props;
+  const { deploymentType } = props;
   const { t } = useTranslation();
   let typeLabel;
   let typeMessage;
 
-  if (instanceType === 'production') return null;
+  if (deploymentType === 'production') return null;
 
-  if (instanceType === 'testing') {
+  if (deploymentType === 'testing') {
     typeLabel = t('instance-type-testing-label');
     typeMessage = t('instance-type-testing-message');
   } else {
@@ -56,18 +56,18 @@ function ApplicationStateBanner(props) {
 
   return (
     <Banner>
-      <Label type={instanceType}>{typeLabel.toUpperCase()}</Label>
+      <Label type={deploymentType}>{typeLabel.toUpperCase()}</Label>
       {` ${typeMessage}`}
     </Banner>
   );
 }
 
 ApplicationStateBanner.defaultProps = {
-  instanceType: 'development',
+  deploymentType: 'development',
 };
 
 ApplicationStateBanner.propTypes = {
-  instanceType: PropTypes.oneOf(['production', 'testing', 'development']),
+  deploymentType: PropTypes.oneOf(['production', 'testing', 'development']),
 };
 
 export default ApplicationStateBanner;
