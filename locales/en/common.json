@@ -91,6 +91,8 @@
   "insight-filter-no-results": "No results",
   "instance-type-development-label": "Development",
   "instance-type-development-message": "This is a development version of the service",
+  "instance-type-staging-label": "Staging",
+  "instance-type-staging-message": "This is a staging version of the service",
   "instance-type-testing-label": "Testing",
   "instance-type-testing-message": "This is a test version of the service",
   "loading": "Loading",

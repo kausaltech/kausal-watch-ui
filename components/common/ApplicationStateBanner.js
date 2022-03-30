@@ -44,14 +44,20 @@ function ApplicationStateBanner(props) {
   let typeLabel;
   let typeMessage;
 
-  if (deploymentType === 'production') return null;
-
-  if (deploymentType === 'testing') {
-    typeLabel = t('instance-type-testing-label');
-    typeMessage = t('instance-type-testing-message');
-  } else {
-    typeLabel = t('instance-type-development-label');
-    typeMessage = t('instance-type-development-message');
+  switch (deploymentType) {
+    case 'production':
+      return null;
+    case 'testing':
+      typeLabel = t('instance-type-testing-label');
+      typeMessage = t('instance-type-testing-message');
+      break;
+    case 'staging':
+      typeLabel = t('instance-type-staging-label');
+      typeMessage = t('instance-type-staging-message');
+      break;
+    default:
+      typeLabel = t('instance-type-development-label');
+      typeMessage = t('instance-type-development-message');
   }
 
   return (
@@ -67,7 +73,7 @@ ApplicationStateBanner.defaultProps = {
 };
 
 ApplicationStateBanner.propTypes = {
-  deploymentType: PropTypes.oneOf(['production', 'testing', 'development']),
+  deploymentType: PropTypes.oneOf(['production', 'testing', 'staging', 'development']),
 };
 
 export default ApplicationStateBanner;

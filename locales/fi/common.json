@@ -93,6 +93,8 @@
   "insight-filter-no-results": "Ei tuloksia",
   "instance-type-development-label": "Kehitys",
   "instance-type-development-message": "Tämä on palvelun kehitysversio",
+  "instance-type-staging-label": "Staging",
+  "instance-type-staging-message": "Tämä on palvelun staging-versio",
   "instance-type-testing-label": "Testi",
   "instance-type-testing-message": "Tämä on palvelun testiversio",
   "loading": "Ladataan",
