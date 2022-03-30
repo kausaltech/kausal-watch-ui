@@ -16,6 +16,7 @@ import Icon from './Icon';
 import PlanSelector from 'components/plans/PlanSelector';
 import LanguageSelector from './LanguageSelector';
 import NavbarSearch from './NavbarSearch';
+import Plan from 'context/queries/plan';
 
 const TopNav = styled(Navbar)`
   padding: 0 ${(props) => props.theme.spaces.s100};
@@ -26,6 +27,7 @@ const TopNav = styled(Navbar)`
 const TopNavItems = styled(Navbar)`
   display: flex;
   justify-content: flex-start;
+
 `;
 
 
@@ -54,9 +56,18 @@ const BotNav = styled(Navbar)`
 `;
 
 const SiteTitle = styled.div`
-  font-size: 1.25rem;
+  font-size: 1rem;
   line-height: 1.666rem;
   padding: ${(props) => props.theme.spaces.s150} 0 ${(props) => props.theme.spaces.s150};
+
+  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    font-size: 1.25rem;
+  }
+`;
+
+const Site = styled.div`
+  display: flex;
+  align-items: center;
 `;
 
 const HomeLink = styled.a`
@@ -74,17 +85,18 @@ const HomeLink = styled.a`
   }
 
   svg {
-      display: block;
+      display: ${(props) => props.hideLogoOnMobile === 'true' ? 'none' : 'block'};
       max-width: 6em;
       height: ${(props) => props.theme.spaces.s200};
       margin: ${(props) => props.theme.spaces.s050}
-              ${(props) => props.theme.spaces.s150}
+              ${(props) => props.theme.spaces.s100}
               ${(props) => props.theme.spaces.s050}
               0;
   }
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     svg {
+    display: block;
     max-width: 10em;
     height: calc(${(props) => props.theme.spaces.s200} + ${(props) => props.theme.spaces.s050});
     margin: ${(props) => props.theme.spaces.s050}
@@ -315,6 +327,44 @@ function GlobalNav(props) {
       300,
     );
   }
+
+  const mockPlans = [
+    {
+      identifier: 'kierto',
+      image: 'https://picsum.photos/200',
+      name: 'Kiertotalousohjelma',
+      shortName: 'Kiertotalous',
+      organization: {
+        abbreviation: 'Sunnydale',
+      },
+      active: false,
+      planUrl: 'http://helsinki-kierto.localhost:3000/',
+    },
+    {
+      identifier: 'lumo',
+      image: 'https://picsum.photos/200',
+      name:  'Luonnon monimuotoisuus',
+      shortName: 'LUMO',
+      organization: {
+        abbreviation: 'Sunnydale',
+      },
+      active: false,
+      planUrl: 'http://hsy-kestava.localhost:3000/',
+    },
+    {
+      identifier: 'ilmasto',
+      image: 'https://picsum.photos/200',
+      name: 'Sunnydale ilmasto-ohjelma',
+      shortName: 'Ilmasto',
+      organization: {
+        abbreviation: 'Sunnydale',
+      },
+      active: true,
+      planUrl: 'http://sunnydale.localhost:3000/',
+    },
+  ];
+  const hideLogoOnMobile = theme.navTitleVisible && mockPlans;
+
   return (
     <div>
       <TopNav
@@ -323,23 +373,23 @@ function GlobalNav(props) {
         aria-label={siteTitle}
         container={fullwidth ? 'fluid' : true}
       >
+        <Site>
+          <Link href="/" passHref>
+            <HomeLink hideLogoOnMobile={hideLogoOnMobile.toString()}>
+              <OrgLogo className="org-logo" />
+              <SiteTitle>
+                { theme.navTitleVisible ? siteTitle : '\u00A0' }
+              </SiteTitle>
+            </HomeLink>
+          </Link>
+          { mockPlans && <PlanSelector plans={mockPlans} /> }
+        </Site>
 
-        <Link href="/" passHref>
-          <HomeLink>
-            <OrgLogo className="org-logo" />
-            <SiteTitle>{ theme.navTitleVisible ? siteTitle : '\u00A0' }</SiteTitle>
-          </HomeLink>
-        </Link>
-        <TopNavItems>
-          <Nav navbar className="mr-auto">
-            <PlanSelector />
-          </Nav>
 
           <Nav navbar className="ml-auto d-none d-md-flex">
             <NavbarSearch />
             <LanguageSelector mobile={false} />
           </Nav>
-        </TopNavItems>
         <NavbarToggler
           onClick={() => toggleOpen(!isOpen)}
           aria-label={isOpen ? t('nav-menu-close') : t('nav-menu-open')}

@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 const Tag = styled.div`
   display: flex;
+  align-items: center;
   max-width: 600px;
   margin-bottom: ${(props) => props.theme.spaces.s025};
   border-radius: 4px;
