@@ -81,7 +81,7 @@ const HeaderContentWrapper = styled.div`
 const TableSortingIcon = styled(Icon)`
   width: 0.8em;
   height: 0.8em;
-  opacity: ${(props) => (props.selected ? 1 : 0.4)};
+  opacity: ${(props) => (props.selected ? 1 : 0.3)};
 `;
 
 
@@ -351,8 +351,8 @@ const ActionRow = ({ item, plan, hasResponsibles, hasImpacts, hasIndicators }) =
 const SortableTableHeader = ({children, headerKey, sort, onClick}) => {
   const selected = (sort.key == headerKey);
   const iconName = selected ?
-    (sort.direction ?? 1) === 1 ? 'arrowDown' : 'arrowUp' :
-    'arrowUpDown'
+    (sort.direction ?? 1) === 1 ? 'sortDown' : 'sortUp' :
+    'sort'
   return (
     <StyledTableHeader onClick={onClick}>
       <HeaderContentWrapper selected={selected}>
