@@ -180,7 +180,7 @@ const createLayout = (
     margin: {
       t: 50,
       r: 50,
-      b: 50 + hasCategories ? CATEGORY_XAXIS_LABEL_EXTRA_MARGIN : 0,
+      b: 50 + (hasCategories ? CATEGORY_XAXIS_LABEL_EXTRA_MARGIN : 0),
       l: 50,
       pad: 5
     },
