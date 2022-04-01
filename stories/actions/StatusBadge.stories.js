@@ -3,7 +3,8 @@ import { ThemeContext } from 'styled-components';
 import StatusBadge from 'components/common/StatusBadge';
 
 export default {
-  title: 'Action/StatusBadge'
+  title: 'Action/ActionStatusTable/StatusBadge',
+  includeStories: /^[A-Z]/
 };
 
 const Template = args => (
@@ -72,19 +73,23 @@ NotInKnownStatuses.args = {
   statusName: 'This status is not part of the a priori list of known statuses'
 }
 
+export const components = [
+  NotStarted,
+  InProgress,
+  OnTime,
+  Completed,
+  Late,
+  Cancelled,
+  Merged,
+  Postponed,
+  Undefined,
+  NotInKnownStatuses
+]
+
 export const AllStatuses = () => {
   const theme = useContext(ThemeContext);
-  const components = [
-    NotStarted,
-    InProgress,
-    OnTime,
-    Completed,
-    Late,
-    Cancelled,
-    Merged,
-    Postponed,
-    Undefined,
-    NotInKnownStatuses
-  ].map((c, idx) => <Template {...Object.assign({}, c.args, {key: `status-${idx}`})} />);
-  return <div>{ components }</div>;
+  const children = components.map((c, idx) => (
+    <Template {...Object.assign({}, c.args, {key: `status-${idx}`})} />
+  ));
+  return <div>{ children }</div>;
 }
