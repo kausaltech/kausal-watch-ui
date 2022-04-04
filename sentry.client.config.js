@@ -9,11 +9,17 @@ const SENTRY_DSN = (
 const DEPLOYMENT_TYPE = (
   publicRuntimeConfig?.deploymentType || process.env.DEPLOYMENT_TYPE || 'development'
 );
+const API_DOMAIN = new URL(publicRuntimeConfig.aplansApiBaseURL).hostname;
 
 Sentry.init({
   dsn: SENTRY_DSN,
   tracesSampleRate: 1.0,
   maxBreadcrumbs: 50,
   environment: DEPLOYMENT_TYPE,
+  integrations: [
+    new Sentry.BrowserTracing({
+      tracingOrigins: [API_DOMAIN],
+    }),
+  ],
   // debug: (process.env.NODE_ENV !== 'production') && SENTRY_DSN,
 });
