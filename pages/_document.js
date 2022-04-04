@@ -1,5 +1,7 @@
 import React from 'react';
 import Document, { Html, Head, Main, NextScript } from 'next/document';
+import * as Sentry from "@sentry/nextjs";
+
 // Import styled components ServerStyleSheet
 import { ServerStyleSheet } from 'styled-components';
 
@@ -8,6 +10,8 @@ export default class WatchDocument extends Document {
     const sheet = new ServerStyleSheet();
     const originalRenderPage = ctx.renderPage;
     let themeProps;
+
+    const sentryTraceId = Sentry.getCurrentHub()?.getScope()?.getTransaction()?.toTraceparent();
 
     try {
       ctx.renderPage = () => originalRenderPage({
@@ -29,6 +33,9 @@ export default class WatchDocument extends Document {
             )}
             {themeProps?.fontUrl && (
               <link rel="stylesheet" type="text/css" href={themeProps.fontUrl} />
+            )}
+            {false && sentryTraceId && (
+              <meta name="sentry-trace" content={sentryTraceId} />
             )}
           </>
         ),
