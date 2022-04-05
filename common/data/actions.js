@@ -11,7 +11,7 @@ export const ORDERED_ACTION_STATUSES = [
 ];
 
 export function actionStatusOrder(status) {
-  const index = ORDERED_ACTION_STATUSES.indexOf(status.identifier);
+  const index = ORDERED_ACTION_STATUSES.indexOf(status?.identifier);
   if (index === -1) {
     return Number.MAX_SAFE_INTEGER;
   }
