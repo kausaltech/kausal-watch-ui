@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import { ORDERED_ACTION_STATUSES } from './data/actions';
 
 // Clean up actionStatus so UI can handle edge cases
 const cleanActionStatus = (action, actionStatuses) => {
@@ -75,21 +76,9 @@ const getStatusData = (actions, actionStatuses, theme) => {
     total: 0,
     colors: [],
   };
-  const ORDER_STATUSES = [
-    'completed',
-    'on_time',
-    'in_progress',
-    'not_started',
-    'late',
-    'cancelled',
-    'merged',
-    'postponed',
-    'undefined',
-  ];
-
   let totalCount = 0;
 
-  ORDER_STATUSES.forEach((statusIdentifier) => {
+  ORDERED_ACTION_STATUSES.forEach((statusIdentifier) => {
     let statusCount = 0;
     let statusName = '';
     actions.forEach((action) => {
