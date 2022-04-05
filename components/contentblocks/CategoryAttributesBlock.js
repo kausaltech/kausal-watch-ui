@@ -29,7 +29,7 @@ const ScaleIcon = styled(Icon)`
   }
 `;
 
-const MetaDataList = styled.dl`
+const AttributesList = styled.dl`
   display: flex;
   flex-flow: row wrap;
   max-width: 720px;
@@ -70,7 +70,7 @@ const MetaDataList = styled.dl`
   }
 `;
 
-const MetaChoiceLabel = styled.span`
+const AttributeChoiceLabel = styled.span`
   margin-left: ${(props) => props.theme.spaces.s050};
   font-size: ${(props) => props.theme.fontSizeSm};
 `;
@@ -83,19 +83,19 @@ const formatEmissionSharePercent = (share, total) => {
   return `${Math.round(percent)} % ${label}`;
 };
 
-function MetaContent(props) {
+function AttributeContent(props) {
   const { contentData, contentType, title, color } = props;
 
   switch (contentData.__typename) {
-    case 'CategoryMetadataChoice':
+    case 'CategoryAttributeChoice':
       if (contentType) {
-        // const choiceCount = contentType.choices.length;
+        // const choiceCount = contentType.choiceOptions.length;
         return (
           <>
             <dt>{title}</dt>
             <dd>
               <div>
-                { contentType.choices.map((choice) => (
+                { contentType.choiceOptions.map((choice) => (
                   <ScaleIcon
                     name="circleFull"
                     className={choice.identifier <= contentData.valueIdentifier ? 'icon-on' : 'icon-off'}
@@ -103,14 +103,14 @@ function MetaContent(props) {
                     key={choice.identifier}
                   />
                 ))}
-                <MetaChoiceLabel>{ contentData.value }</MetaChoiceLabel>
+                <AttributeChoiceLabel>{ contentData.value }</AttributeChoiceLabel>
               </div>
             </dd>
           </>
         );
       }
       return null;
-    case 'CategoryMetadataRichText':
+    case 'CategoryAttributeRichText':
       return (
         <>
           <dt>{title}</dt>
@@ -119,7 +119,7 @@ function MetaContent(props) {
           </dd>
         </>
       );
-    case 'CategoryMetadataNumericValue':
+    case 'CategoryAttributeNumericValue':
       // KPR specific hack
       if (contentData.keyIdentifier === 'impact') {
         const totalEmissions = 50.921;
@@ -137,20 +137,20 @@ function MetaContent(props) {
   }
 }
 
-function CategoryMetaDataBlock(props) {
+function CategoryAttributesBlock(props) {
   const plan = useContext(PlanContext);
   const {
     color,
-    metadata,
+    attributes,
     id,
     types,
   } = props;
 
   return (
-    <MetaDataList>
-      {metadata.map((item) => (
+    <AttributesList>
+      {attributes.map((item) => (
         <React.Fragment key={item.id}>
-          <MetaContent
+          <AttributeContent
             title={item.key}
             contentData={item}
             contentType={types?.find((type) => type.identifier === item.keyIdentifier)}
@@ -159,17 +159,17 @@ function CategoryMetaDataBlock(props) {
         </React.Fragment>
       ))}
       {plan.actionStatuses.length ? <ActionGroupStatus category={id} /> : null}
-    </MetaDataList>
+    </AttributesList>
   );
 }
 
 // TODO: prop types and defaults
-CategoryMetaDataBlock.defaultProps = {
+CategoryAttributesBlock.defaultProps = {
 
 };
 
-CategoryMetaDataBlock.propTypes = {
+CategoryAttributesBlock.propTypes = {
 
 };
 
-export default CategoryMetaDataBlock;
+export default CategoryAttributesBlock;

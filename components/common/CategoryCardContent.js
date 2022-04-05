@@ -39,7 +39,7 @@ const CatecoryCardContent = (props) => {
 
   const textcontent = category?.categoryPage?.body.find((block) => block.__typename === 'RichTextBlock');
   const catImageSrc = category?.image?.rendition.src;
-  const categoryEmissions = category?.metadata[0]?.value;
+  const categoryEmissions = category?.attributes[0]?.value;
   const emissionShare = formatEmissionSharePercent(categoryEmissions, totalEmissions);
 
   return (

@@ -146,8 +146,8 @@ query GetCategoriesForTreeMap($plan: ID!, $categoryType: ID!) {
       name
       namePlural
     }
-    metadata(id: "impact") {
-      ...on CategoryMetadataNumericValue {
+    attributes(id: "impact") {
+      ...on CategoryAttributeNumericValue {
         value
       }
     }

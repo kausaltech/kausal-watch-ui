@@ -5,20 +5,20 @@ import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
 import PlanContext from 'context/plan';
 import { Link } from 'common/links';
-import CategoryMetaDataBlock from './CategoryMetaDataBlock';
+import CategoryAttributesBlock from './CategoryAttributesBlock';
 
-export const GET_CATEGORY_METADATA_TYPES = gql`
-  query GetMetadataTypes($plan: ID!) {
+export const GET_CATEGORY_ATTRIBUTE_TYPES = gql`
+  query GetAttributeTypes($plan: ID!) {
     plan(id: $plan) {
       id
       categoryTypes {
         id
         name
-        metadata {
+        attributeTypes {
           __typename
           format
           identifier
-          choices {
+          choiceOptions {
             identifier
           }
         }
@@ -100,23 +100,23 @@ function CategoryPageHeaderBlock(props) {
     parentTitle,
     parentUrl,
     color,
-    metadata,
+    attributes,
     typeId,
     level,
   } = props;
 
-  let metadataTypes = [];
+  let attributeTypes = [];
 
-  if (metadata?.length) {
+  if (attributes?.length) {
     const plan = useContext(PlanContext);
-    const { loading, error, data } = useQuery(GET_CATEGORY_METADATA_TYPES, {
+    const { loading, error, data } = useQuery(GET_CATEGORY_ATTRIBUTE_TYPES, {
       variables: {
         plan: plan.identifier,
       },
     });
     if (data) {
       const thisType = data.plan.categoryTypes.find((type) => type.id === typeId);
-      metadataTypes = thisType.metadata;
+      attributeTypes = thisType.attributeTypes;
     }
   }
 
@@ -150,8 +150,8 @@ function CategoryPageHeaderBlock(props) {
               </h1>
               {level}
               <p>{ lead }</p>
-              { metadata?.length > 0
-                  && <CategoryMetaDataBlock metadata={metadata} color={color} id={categoryId} types={metadataTypes} /> }
+              { attributes?.length > 0
+                  && <CategoryAttributesBlock attributes={attributes} color={color} id={categoryId} types={attributeTypes} /> }
             </HeaderContent>
           </Col>
         </Row>

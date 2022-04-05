@@ -20,7 +20,7 @@ function makeTrace(catsIn, i18n) {
   // Aggregate the treemap values starting from the leaves
   cats.filter((cat) => cat.children.length === 0).forEach((cat) => {
     let { parent } = cat;
-    cat.value = cat.metadata[0].value;
+    cat.value = cat.attributes[0].value;
     while (parent) {
       const p = catMap.get(parent.id);
       p.value += cat.value;
