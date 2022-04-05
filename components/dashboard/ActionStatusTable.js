@@ -12,6 +12,7 @@ import ActionImpact from 'components/actions/ActionImpact';
 import ActionPhase from 'components/actions/ActionPhase';
 import { ActionLink } from 'common/links';
 import Icon from 'components/common/Icon';
+import { actionStatusOrder } from 'common/data/actions';
 import { cleanActionStatus } from 'common/preprocess';
 
 import ActionStatusExport from './ActionStatusExport';
@@ -272,7 +273,7 @@ function processAction(actionIn, orgMap) {
   return action;
 }
 
-const ActionRow = ({ item, plan, hasResponsibles, hasImpacts, hasIndicators }) => {
+const ActionRow = ({ item, plan, hasResponsibles, hasImpacts, hasIndicators, hasImplementationPhases }) => {
   const actionStatus = cleanActionStatus(item, plan.actionStatuses);
 
   return (
@@ -300,7 +301,7 @@ const ActionRow = ({ item, plan, hasResponsibles, hasImpacts, hasIndicators }) =
         </ActionLink>
       </td>
       <td>
-        { plan.actionImplementationPhases?.length > 0 ? (
+        { hasImplementationPhases ? (
           <ActionPhase
             status={actionStatus}
             activePhase={item.implementationPhase}
@@ -365,14 +366,16 @@ const SortableTableHeader = ({children, headerKey, sort, onClick}) => {
   );
 }
 
-const preprocessForSorting = (key, items) => {
+const preprocessForSorting = (key, items, hasImplementationPhases) => {
   const values = items.map(item => item[key]);
   switch (key) {
   case 'updatedAt':
     const [x, y] = values;
     return [y, x];
   case 'implementationPhase':
-    return items.map(item => item[key]?.order);
+    return hasImplementationPhases ?
+      items.map(item => item[key]?.order) :
+      items.map(item => actionStatusOrder(item.status));
   default:
     return values;
   }
@@ -385,8 +388,10 @@ const ActionStatusTable = (props) => {
   const [ sort, setSort ] = useState({key: 'order', direction: 1});
   const { key, direction } = sort;
 
+  const hasImplementationPhases = plan.actionImplementationPhases?.length > 0;
+
   const comparator = (g1, g2) =>  {
-    let [v1, v2] = preprocessForSorting(key, [g1, g2]);
+    let [v1, v2] = preprocessForSorting(key, [g1, g2], hasImplementationPhases);
     const val = (
       v1 == v2 ? 0
         : (v1 == null || (v2 > v1)) ? -1 : 1
@@ -464,6 +469,7 @@ const ActionStatusTable = (props) => {
             hasResponsibles={showResponsibles}
             hasImpacts={showColumn.impacts}
             hasIndicators={showColumn.indicators}
+            hasImplementationPhases={hasImplementationPhases}
           />
         ))}
       </tbody>
