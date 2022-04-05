@@ -23,7 +23,7 @@ const makeAction = (
 
 const NOW = Date.now()
 
-const makeStatus = (props) => ({
+const makeStatus = (props) => (props == null ? null : {
   identifier: props.statusIdentifier,
   name: props.statusName
 });

@@ -73,6 +73,9 @@ NotInKnownStatuses.args = {
   statusName: 'This status is not part of the a priori list of known statuses'
 }
 
+const NullStatus = Template.bind({});
+NullStatus.args = null;
+
 export const components = [
   NotStarted,
   InProgress,
@@ -83,7 +86,8 @@ export const components = [
   Merged,
   Postponed,
   Undefined,
-  NotInKnownStatuses
+  NotInKnownStatuses,
+  NullStatus
 ]
 
 export const AllStatuses = () => {
