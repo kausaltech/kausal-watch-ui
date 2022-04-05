@@ -12,6 +12,7 @@ const makeAction = (
   }
 ) => ({
   id: sequence,
+  order: sequence,
   identifier: `${namespace}-${sequence}`,
   name: `${groupName}${sequence}`,
   status,
