@@ -226,6 +226,7 @@ export interface PlanContext_plan {
   id: string;
   identifier: string;
   name: string;
+  themeIdentifier: string | null;
   primaryLanguage: string;
   otherLanguages: string[] | null;
   hideActionIdentifiers: boolean | null;
