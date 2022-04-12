@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Table, Button } from 'reactstrap';
 import styled from 'styled-components';
 import { transparentize } from 'polished';
+import { usePopper } from 'react-popper';
 import { useTheme } from 'common/theme';
 import PlanContext from 'context/plan';
 import dayjs from 'common/dayjs';
@@ -88,18 +89,40 @@ const TableSortingIcon = styled(Icon)`
 
 const OrgLogo = styled.img`
   display: block;
-  width: ${(props) => props.theme.spaces.s150};
-  height: ${(props) => props.theme.spaces.s150};
+  width: ${(props) => props.theme.spaces.s200};
+  height: ${(props) => props.theme.spaces.s200};
+
+  &:hover {
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+  }
+`;
+
+const StatusDisplay = styled.div`
+  &:hover {
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+  }
 `;
 
 const ResponsibleList = styled.div`
   display: flex;
   flex-wrap: wrap;
+  padding: ${(props) => props.theme.spaces.s050};
+
+  &:hover {
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+  }
 `;
 
 const UpdatedAgo = styled.div`
+  display: inline-block;
   font-size: ${(props) => props.theme.fontSizeSm};
   white-space: nowrap;
+  cursor: default;
+  padding: ${(props) => props.theme.spaces.s050};
+
+  &:hover {
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+  }
 `;
 
 const TaskStatusBar = styled.div`
@@ -135,6 +158,59 @@ const VizLabel = styled.div`
   &.disabled {
     color: ${(props) => props.theme.themeColors.dark};
   }
+`;
+
+const Tooltip = styled.div`
+  background: ${(props) => props.theme.themeColors.white};
+  color: ${(props) => props.theme.themeColors.black};
+  font-weight: bold;
+  padding: ${(props) => props.theme.spaces.s050} ${(props) => props.theme.spaces.s100};
+  font-size: 13px;
+  border-radius: 4px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+
+  &[data-popper-placement^='top'] > div {
+    bottom: -4px;
+  }
+
+  &[data-popper-placement^='bottom'] > div {
+    top: -4px;
+  }
+
+  &[data-popper-placement^='left'] > div {
+    right: -4px;
+  }
+
+  &[data-popper-placement^='right'] > div {
+    left: -4px;
+  }
+`;
+
+const Arrow = styled.div`
+  visibility: hidden;
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: inherit;
+
+  &:before {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: inherit;
+    visibility: visible;
+    content: '';
+    transform: rotate(45deg);
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+  }
+`;
+
+const IndicatorsDisplay = styled.div`
+  display: inline-block;
+  padding: ${(props) => props.theme.spaces.s050};
+
+  &:hover {
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
 `;
 
 const TasksStatusBar = (props) => {
@@ -189,7 +265,8 @@ const TasksStatusBar = (props) => {
   );
 };
 
-const IndicatorsViz = ({ relatedIndicators }) => {
+const IndicatorsViz = (props) => {
+  const { relatedIndicators, onTooltip } = props;
   const theme = useTheme();
   let hasProgress = false;
   let hasGoals = false;
@@ -201,8 +278,15 @@ const IndicatorsViz = ({ relatedIndicators }) => {
     if (indicator.goals.length > 0) hasGoals = true;
   });
 
-  return (
+  const tooltipContent = (
     <div>
+      Indicators: {relatedIndicators.length}<br />
+      Goals: ?
+    </div>
+  );
+
+  return (
+    <IndicatorsDisplay onMouseOver={(e)=> onTooltip(e, tooltipContent)}>
       <Icon
         name="tachometer"
         color={hasIndicators ? theme.actionOnTimeColor : theme.actionNotStartedColor}
@@ -215,7 +299,7 @@ const IndicatorsViz = ({ relatedIndicators }) => {
         height="1.2em"
         width="1.2em"
       />
-    </div>
+    </IndicatorsDisplay>
   );
 };
 
@@ -273,13 +357,20 @@ function processAction(actionIn, orgMap) {
   return action;
 }
 
-const ActionRow = ({ item, plan, hasResponsibles, hasImpacts, hasIndicators, hasImplementationPhases }) => {
+const ActionRow = (props) => {
+  const { item, plan, hasResponsibles, hasImpacts, hasIndicators, hasImplementationPhases, popperRef } = props;
   const actionStatus = cleanActionStatus(item, plan.actionStatuses);
+
+  const popUp = (evt, name) => {
+    console.log("EVENT", evt);
+    console.log("name", name);
+    popperRef(evt.target, name);
+  };
 
   return (
     <StyledRow>
       { plan.primaryOrgs.length > 0 && (
-        <td className="logo-column">
+        <td className="logo-column" onMouseOver={(e)=> popUp(e, item.primaryOrg.name)}>
           { item.primaryOrg && (
             <OrgLogo
               src={item.primaryOrg?.logo?.rendition?.src || '/static/themes/default/images/default-avatar-org.png'}
@@ -301,21 +392,23 @@ const ActionRow = ({ item, plan, hasResponsibles, hasImpacts, hasIndicators, has
         </ActionLink>
       </td>
       <td>
-        { hasImplementationPhases ? (
-          <ActionPhase
-            status={actionStatus}
-            activePhase={item.implementationPhase}
-            reason={item.manualStatusReason}
-            mergedWith={item.mergedWith?.identifier}
-            phases={plan.actionImplementationPhases}
-            compact
-          />
-        ) : (
-          <StatusBadge
-            statusIdentifier={actionStatus.identifier}
-            statusName={actionStatus.name}
-          />
-        )}
+        <StatusDisplay>
+          { hasImplementationPhases ? (
+            <ActionPhase
+              status={actionStatus}
+              activePhase={item.implementationPhase}
+              reason={item.manualStatusReason}
+              mergedWith={item.mergedWith?.identifier}
+              phases={plan.actionImplementationPhases}
+              compact
+            />
+          ) : (
+            <StatusBadge
+              statusIdentifier={actionStatus.identifier}
+              statusName={actionStatus.name}
+            />
+          )}
+        </StatusDisplay>
       </td>
       <td>
         <TasksStatusBar tasks={item.tasks} />
@@ -339,11 +432,11 @@ const ActionRow = ({ item, plan, hasResponsibles, hasImpacts, hasIndicators, has
       { hasIndicators && (
         <td>
           { item.relatedIndicators && !item.mergedWith
-            && <IndicatorsViz relatedIndicators={item.relatedIndicators} />}
+            && <IndicatorsViz relatedIndicators={item.relatedIndicators} onTooltip={popUp}/>}
         </td>
       )}
       <td>
-        <UpdatedAgo>{ `${dayjs(item.updatedAt).fromNow(false)}` }</UpdatedAgo>
+        <UpdatedAgo onMouseOver={(e)=> popUp(e, dayjs(item.updatedAt).format('L'))}>{ `${dayjs(item.updatedAt).fromNow(false)}` }</UpdatedAgo>
       </td>
     </StyledRow>
   );
@@ -387,8 +480,19 @@ const ActionStatusTable = (props) => {
   const theme = useTheme();
   const [ sort, setSort ] = useState({key: 'order', direction: 1});
   const { key, direction } = sort;
-
+  const [referenceElement, setReferenceElement] = useState(null);
+  const [popperElement, setPopperElement] = useState(null);
+  const [arrowElement, setArrowElement] = useState(null);
+  const [popperContent, setPopperContent] = useState("null");
+  const { styles, attributes } = usePopper(referenceElement, popperElement, {
+    placement: 'top',
+    modifiers: [
+      { name: 'arrow', options: { element: arrowElement } },
+      { name: 'offset', options: { offset: [0, 12] } },
+    ],
+  });
   const hasImplementationPhases = plan.actionImplementationPhases?.length > 0;
+
 
   const comparator = (g1, g2) =>  {
     let [v1, v2] = preprocessForSorting(key, [g1, g2], hasImplementationPhases);
@@ -426,6 +530,12 @@ const ActionStatusTable = (props) => {
     implementationPhase: t('action-implementation-phase')
 
   };
+
+  const onPop = (target, content) => {
+    setPopperContent(content);
+    setReferenceElement(target);
+  };
+
   return (
     <TableWrapper>
       <div style={{flexGrow: 4, alignSelf: 'end' }}>
@@ -470,10 +580,15 @@ const ActionStatusTable = (props) => {
             hasImpacts={showColumn.impacts}
             hasIndicators={showColumn.indicators}
             hasImplementationPhases={hasImplementationPhases}
+            popperRef={onPop}
           />
         ))}
       </tbody>
     </DashTable>
+    <Tooltip ref={setPopperElement} style={styles.popper} {...attributes.popper}>
+      {popperContent}
+
+    </Tooltip>
   </TableWrapper>);
 };
 
