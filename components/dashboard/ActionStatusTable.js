@@ -55,6 +55,10 @@ const StyledRow = styled.tr`
 
   td {
     vertical-align: top;
+
+    &.has-tooltip:hover {
+      box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    }
   }
 
   a {
@@ -91,26 +95,17 @@ const OrgLogo = styled.img`
   display: block;
   width: ${(props) => props.theme.spaces.s200};
   height: ${(props) => props.theme.spaces.s200};
-
-  &:hover {
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
-  }
 `;
 
 const StatusDisplay = styled.div`
-  &:hover {
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
-  }
+  padding: ${(props) => props.theme.spaces.s050};
+  height: 100%;
 `;
 
 const ResponsibleList = styled.div`
   display: flex;
   flex-wrap: wrap;
   padding: ${(props) => props.theme.spaces.s050};
-
-  &:hover {
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
-  }
 `;
 
 const ResponsibleTooltipList = styled.ul`
@@ -129,10 +124,6 @@ const UpdatedAgo = styled.div`
   white-space: nowrap;
   cursor: default;
   padding: ${(props) => props.theme.spaces.s050};
-
-  &:hover {
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
-  }
 `;
 
 const TaskStatusViz = styled.div`
@@ -156,13 +147,6 @@ const TaskStatusViz = styled.div`
   }
 `;
 
-const TaskCell = styled.div`
-
-  &:hover {
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
-  }
-`;
-
 const VizLabel = styled.div`
   font-size: ${(props) => props.theme.fontSizeSm};
   line-height: ${(props) => props.theme.lineHeightMd};
@@ -183,7 +167,7 @@ const Tooltip = styled.div`
   padding: ${(props) => props.theme.spaces.s050} ${(props) => props.theme.spaces.s100};
   font-size: ${(props) => props.theme.fontSizeSm};
   border-radius: 4px;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 
   &[data-popper-placement^='top'] > div {
     bottom: -4px;
@@ -224,13 +208,10 @@ const Arrow = styled.div`
 const IndicatorsDisplay = styled.div`
   display: inline-block;
   padding: ${(props) => props.theme.spaces.s050};
-
-  &:hover {
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
 `;
 
 const TasksStatusBar = (props) => {
-  const { tasks, onTooltip } = props;
+  const { tasks } = props;
   const { t } = useTranslation(['common', 'actions']);
   let tasksCount = tasks.length;
   let ontimeTasks = 0;
@@ -260,14 +241,8 @@ const TasksStatusBar = (props) => {
     ? t('action-no-tasks')
     : `${tasksCount} ${t('action-tasks-count')}`;
 
-  const tooltipContent = (
-    <div>
-      Tasks: { tasks.length }
-    </div>
-  );
-
   return (
-    <TaskCell onMouseOver={(e)=> onTooltip(e, tooltipContent)}>
+    <>
       <TaskStatusViz>
         <div
           className="completed"
@@ -283,12 +258,12 @@ const TasksStatusBar = (props) => {
         />
       </TaskStatusViz>
       <VizLabel className={tasksCount === 0 && 'disabled'}>{displayTasksCount}</VizLabel>
-    </TaskCell>
+      </>
   );
 };
 
 const IndicatorsViz = (props) => {
-  const { relatedIndicators, onTooltip } = props;
+  const { relatedIndicators } = props;
   const theme = useTheme();
   let hasProgress = false;
   let hasGoals = false;
@@ -300,15 +275,8 @@ const IndicatorsViz = (props) => {
     if (indicator.goals.length > 0) hasGoals = true;
   });
 
-  const tooltipContent = (
-    <div>
-      Indicators: {relatedIndicators.length}<br />
-      Goals: ?
-    </div>
-  );
-
   return (
-    <IndicatorsDisplay onMouseOver={(e)=> onTooltip(e, tooltipContent)}>
+    <IndicatorsDisplay>
       <Icon
         name="tachometer"
         color={hasIndicators ? theme.actionOnTimeColor : theme.actionNotStartedColor}
@@ -326,7 +294,7 @@ const IndicatorsViz = (props) => {
 };
 
 const ResponsiblesViz = (props) => {
-  const { parties, onTooltip } = props;
+  const { parties } = props;
   const theme = useTheme();
   const contactList = [];
   const noContactList = [];
@@ -336,28 +304,8 @@ const ResponsiblesViz = (props) => {
     else noContactList.push(party.organization.id);
   });
 
-  const tooltipContent = (
-    <div>
-      <h5>{parties.length} responsible organizations</h5>
-      {parties.length - noContactList.length} with a named contact)
-      <ResponsibleTooltipList>
-        {parties.map((party) => (
-          <ResponsibleTooltipListItem hasContact={party.hasContactPerson.toString()} key={party.id}>
-            <Icon
-              name={party.hasContactPerson ? 'dot-circle' : 'circle-outline'}
-              color={theme.actionOnTimeColor}
-              width="1em"
-              height="1em"
-            />
-            {' '}
-            {party.organization.abbreviation || party.organization.name }
-          </ResponsibleTooltipListItem>
-        ))}
-      </ResponsibleTooltipList>
-    </div>
-  )
   return (
-    <ResponsibleList onMouseOver={(e)=> onTooltip(e, tooltipContent)}>
+    <ResponsibleList>
       { contactList.map((contact) => (
         <Icon name="dot-circle" color={theme.actionOnTimeColor} key={contact} width=".8em" height=".8em" />
       ))}
@@ -402,18 +350,62 @@ function processAction(actionIn, orgMap) {
 
 const ActionRow = (props) => {
   const { item, plan, hasResponsibles, hasImpacts, hasIndicators, hasImplementationPhases, popperRef } = props;
+  const theme = useTheme();
   const actionStatus = cleanActionStatus(item, plan.actionStatuses);
 
   const popUp = (evt, name) => {
-    popperRef(evt.target, name);
+    popperRef(evt.currentTarget, name);
   };
+
+  const tasksTooltipContent = (tasks) => (
+    <div>
+      Tasks: { tasks.length }
+    </div>
+  );
+
+  const phasesTooltipContent = () => { hasImplementationPhases ?
+    (
+      <ul>
+      {plan.actionImplementationPhases.map((phase) => (
+        <li>{phase.name}</li>
+      ))}
+      </ul>
+    ) : null
+  };
+
+  const responsiblesTooltipContent = (parties) => (
+    <div>
+      <h5>{parties.length} responsible organizations</h5>
+      <ResponsibleTooltipList>
+        {parties.map((party) => (
+          <ResponsibleTooltipListItem hasContact={party.hasContactPerson.toString()} key={party.id}>
+            <Icon
+              name={party.hasContactPerson ? 'dot-circle' : 'circle-outline'}
+              color={theme.actionOnTimeColor}
+              width="1em"
+              height="1em"
+            />
+            {' '}
+            {party.organization.abbreviation || party.organization.name }
+          </ResponsibleTooltipListItem>
+        ))}
+      </ResponsibleTooltipList>
+    </div>
+  );
+
+  const indicatorsTooltipContent = (relatedIndicators) => (
+    <div>
+      Indicators: {relatedIndicators.length}<br />
+      Goals: ?
+    </div>
+  );
 
   return (
     <StyledRow>
       { plan.primaryOrgs.length > 0 && (
         <td
-          className="logo-column"
-          onMouseOver={(e)=> popUp(e, item.primaryOrg.name)}
+          className="logo-column has-tooltip"
+          onMouseEnter={(e)=> popUp(e, item.primaryOrg.name)}
         >
           { item.primaryOrg && (
             <OrgLogo
@@ -435,7 +427,7 @@ const ActionRow = (props) => {
           { item.name }
         </ActionLink>
       </td>
-      <td>
+      <td className="has-tooltip" onMouseEnter={(e)=> popUp(e, phasesTooltipContent())}>
         <StatusDisplay>
           { hasImplementationPhases ? (
             <ActionPhase
@@ -444,7 +436,6 @@ const ActionRow = (props) => {
               reason={item.manualStatusReason}
               mergedWith={item.mergedWith?.identifier}
               phases={plan.actionImplementationPhases}
-              onMouseOver={(e)=> popUp(e, item.implementationPhase.name)}
               compact
             />
           ) : (
@@ -455,23 +446,21 @@ const ActionRow = (props) => {
           )}
         </StatusDisplay>
       </td>
-      <td>
+      <td className="has-tooltip" onMouseEnter={(e)=> popUp(e, tasksTooltipContent(item.tasks))}>
         <TasksStatusBar
           tasks={item.tasks}
-          onTooltip={popUp}
         />
       </td>
       { hasResponsibles && (
-        <td>
+        <td className="has-tooltip" onMouseEnter={(e)=> popUp(e, responsiblesTooltipContent(item.responsibleParties))}>
           <ResponsiblesViz
             parties={item.responsibleParties}
             persons={item.contactPersons}
-            onTooltip={popUp}
           />
         </td>
       )}
       { hasImpacts && (
-        <td>
+        <td className="has-tooltip" onMouseEnter={(e)=> popUp(e, 'Impact')}>
           { item.impact && (
             <ActionImpact
               identifier={item.impact.identifier}
@@ -482,13 +471,13 @@ const ActionRow = (props) => {
         </td>
       )}
       { hasIndicators && (
-        <td>
+        <td className="has-tooltip" onMouseEnter={(e) => popUp(e, indicatorsTooltipContent(item.relatedIndicators))}>
           { item.relatedIndicators && !item.mergedWith
-            && <IndicatorsViz relatedIndicators={item.relatedIndicators} onTooltip={popUp}/>}
+            && <IndicatorsViz relatedIndicators={item.relatedIndicators}/>}
         </td>
       )}
-      <td>
-        <UpdatedAgo onMouseOver={(e)=> popUp(e, dayjs(item.updatedAt).format('L'))}>
+      <td className="has-tooltip" onMouseEnter={(e)=> popUp(e, dayjs(item.updatedAt).format('L'))}>
+        <UpdatedAgo>
           { `${dayjs(item.updatedAt).fromNow(false)}` }
         </UpdatedAgo>
       </td>
