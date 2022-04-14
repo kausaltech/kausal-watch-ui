@@ -7,6 +7,7 @@ query PlanContext($identifier: ID, $hostname: String) {
     id
     identifier
     name
+    themeIdentifier
     primaryLanguage
     otherLanguages
     hideActionIdentifiers

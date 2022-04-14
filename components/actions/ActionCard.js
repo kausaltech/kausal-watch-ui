@@ -33,6 +33,16 @@ const ACTION_CARD_FRAGMENT = gql`
       identifier
       name
     }
+    primaryOrg {
+      id
+      abbreviation
+      name
+      logo {
+        rendition(size: "128x128", crop: true) {
+          src
+        }
+      }
+    }
   }
 `;
 
@@ -130,6 +140,7 @@ const ActionOrgAvatar = styled.div`
 const ActionOrgName = styled.div`
   font-size: ${(props) => props.theme.fontSizeSm};
   color: ${(props) => props.theme.themeColors.dark};
+  line-height: 1;
 `;
 
 const OrgLogo = styled.img`

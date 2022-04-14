@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import dynamic from 'next/dynamic';
 
-import { Router } from 'next/router';
+import { withRouter } from 'next/router';
 import Layout from '../components/layout';
 import { aplans } from '../common/api';
 import IndicatorsHero from '../components/indicators/IndicatorsHero';
@@ -56,12 +56,13 @@ class VisPage extends React.Component {
 
   handleFilterChange(filters) {
     const { indicator } = filters;
+    const { router } = this.props;
 
     let queryParams = '';
     if (indicator) {
       queryParams = `?indicator=${indicator}`;
     }
-    Router.replace('/insight' + queryParams, '/insight' + queryParams);
+    router.replace('/insight' + queryParams);
   }
 
   render() {
@@ -96,4 +97,4 @@ class VisPage extends React.Component {
   }
 }
 
-export default VisPage;
+export default withRouter(VisPage);

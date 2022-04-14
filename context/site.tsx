@@ -1,7 +1,7 @@
 import React from 'react';
 
 type SiteContextProps = {
-  instanceType: string,
+  deploymentType: string,
   themeIdentifier: string,
   hostname: string,
   baseURL: string,
@@ -9,7 +9,7 @@ type SiteContextProps = {
 };
 
 const SiteContext = React.createContext<Partial<SiteContextProps>>({
-  instanceType: 'development',
+  deploymentType: 'development',
 });
 
 export default SiteContext;

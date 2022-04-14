@@ -6,6 +6,7 @@ import { gql, useQuery } from '@apollo/client';
 
 import { useTranslation } from 'common/i18n';
 import ActionCard from 'components/actions/ActionCard';
+import ActionCardList from 'components/actions/ActionCardList';
 import ContentLoader from 'components/common/ContentLoader';
 import ErrorMessage from 'components/common/ErrorMessage';
 import PlanContext from 'context/plan';
@@ -51,26 +52,18 @@ const ActionListBlock = (props) => {
     return <ErrorMessage statusCode={404} message={t('page-not-found')} />;
   }
   const actions = planActions.map((act) => ({ ...act, iconUrl: act.categories.find((cat) => cat.iconUrl)?.iconUrl }));
+  const groupBy = plan.primaryOrgs.length > 0 ? 'primaryOrg' : 'none';
+
   const heading = t('actions');
   return (
     <ActionListSection color={color}>
       <Container>
         { heading && (<SectionHeader>{ heading }</SectionHeader>)}
         <Row>
-          { actions.map((action) => (
-            <Col
-              tag="li"
-              xs="6"
-              sm="4"
-              lg="3"
-              key={action.id}
-              className="mb-4 d-flex align-items-stretch"
-              style={{ transition: 'all 0.5s ease' }}
-              role="listitem"
-            >
-              <ActionCard action={action} />
-            </Col>
-          ))}
+          <ActionCardList
+            actions={actions}
+            groupBy={groupBy}
+          />
         </Row>
       </Container>
     </ActionListSection>

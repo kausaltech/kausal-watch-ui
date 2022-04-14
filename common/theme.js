@@ -206,10 +206,13 @@ export const themeProp = exact({
   }),
 });
 
-export function setTheme(newTheme) {
+export function mergeWithDefaultTheme(newTheme) {
   // Merge with default theme recursively
-  const out = _.cloneDeep(defaultTheme);
-  _.merge(out, newTheme);
+  return _.merge(_.cloneDeep(defaultTheme), newTheme);
+}
+
+export function setTheme(newTheme) {
+  const out = mergeWithDefaultTheme(newTheme);
   PropTypes.checkPropTypes({ theme: themeProp.isRequired }, { theme: out }, 'prop', 'GlobalTheme');
 
   Object.getOwnPropertyNames(theme).forEach((prop) => delete theme[prop]);

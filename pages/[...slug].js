@@ -86,29 +86,29 @@ query GetPlanPageGeneral($plan: ID!, $path: String!) {
             urlPath
           }
         }
-        metadata {
+        attributes {
           __typename
           id
           key
           keyIdentifier
-          ...on CategoryMetadataChoice {
+          ...on CategoryAttributeChoice {
             value
             valueIdentifier
-            metadata {
+            type {
               identifier
               name
             }
           }
-          ...on CategoryMetadataRichText {
+          ...on CategoryAttributeRichText {
             value
-            metadata {
+            type {
               identifier
               name
             }
           }
-          ...on CategoryMetadataNumericValue {
+          ...on CategoryAttributeNumericValue {
             numericValue: value
-            metadata {
+            type {
               identifier
               name
             }
@@ -178,7 +178,7 @@ const PageHeaderBlock = (props) => {
           parentTitle={parentTitle}
           parentUrl={parentUrl}
           color={color}
-          metadata={page.category.metadata}
+          attributes={page.category.attributes}
           typeId={page.category.type.id}
           level={page.category.parent?.categoryPage ? page.category?.level?.name : null}
         />

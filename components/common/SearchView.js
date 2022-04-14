@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useQuery, gql } from '@apollo/client';
 import styled from 'styled-components';
 import {
-  Container, Row, Col, Input, Label, FormGroup,
+  Container, Row, Col, Input, Label, FormGroup, Alert
 } from 'reactstrap';
 import { Link } from 'common/links';
 import { useTranslation } from 'common/i18n';
@@ -309,7 +309,11 @@ function SearchView(props) {
         { search.q ? (
           <SearchResults search={search} />
         ) : (
-          <div>No query</div>
+          <Col sm="12" md={{ offset: 3, size: 6 }} className="mt-5">
+            <Alert color="primary">
+              {t('search-no-results')}
+            </Alert>
+          </Col>
         )}
       </Container>
     </>

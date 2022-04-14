@@ -7,7 +7,7 @@ import dayjs from 'dayjs';
 import styled, { withTheme } from 'styled-components';
 import cytoscape from 'cytoscape';
 import dagre from 'cytoscape-dagre';
-import { Router } from 'next/router';
+import { withRouter } from 'next/router';
 
 import { withTranslation } from '../../common/i18n';
 import { getIndicatorLinkProps, getActionLinkProps } from '../../common/links';
@@ -134,7 +134,7 @@ class CytoGraph extends React.Component {
 
   renderNetwork() {
     const visNode = this.visRef.current;
-    const { nodes, edges, theme } = this.props;
+    const { nodes, edges, theme, router } = this.props;
     const elements = [];
     const nodeMap = {};
 
@@ -356,11 +356,11 @@ class CytoGraph extends React.Component {
       if (this.data('type') === 'action') {
         const id = this.data('identifier');
         const link = getActionLinkProps(id);
-        Router.push(link.href, link.as);
+        router.push(link.href);
       } else {
         const id = this.data('id').substr(1);
         const link = getIndicatorLinkProps(id);
-        Router.push(link.href, link.as);
+        router.push(link.href);
       }
     }
     cy.on('tap', 'node', nodeTapHandler);
@@ -410,4 +410,4 @@ class CytoGraph extends React.Component {
   }
 }
 
-export default withTranslation('common')(withTheme(CytoGraph));
+export default withRouter(withTranslation('common')(withTheme(CytoGraph)));

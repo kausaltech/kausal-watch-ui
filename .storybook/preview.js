@@ -7,6 +7,7 @@ import { useGlobals } from '@storybook/client-api';
 import {i18n} from './i18next.js';
 import '../styles/default/main.scss';
 import ThemedGlobalStyles from '../common/ThemedGlobalStyles';
+import { mergeWithDefaultTheme } from '../common/theme';
 import defaultTheme from 'public/static/themes/default/theme.json';
 
 export const parameters = {
@@ -55,7 +56,7 @@ const additionalThemes = [
 
 additionalThemes.forEach((value) => {
   const additionalTheme = require('public/static/themes/' + value + '/theme.json');
-  themes.push(Object.assign({...defaultTheme}, additionalTheme),);
+  themes.push(mergeWithDefaultTheme(additionalTheme));
 });
 
 export const decorators = [

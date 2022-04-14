@@ -1,19 +1,14 @@
 import ActionStatusTable from 'components/dashboard/ActionStatusTable';
+import { actions, plan } from './fixtures/actions';
 
 export default {
   title: 'Action/ActionStatusTable'
 };
 
-const plan = {
-  primaryOrgs: [],
-  actionImpacts: [],
-  actionStatuses: []
-};
-
 export const AllCombinations = () => (
     <ActionStatusTable
       plan={plan}
-      actions={[]}
+      actions={actions}
       orgs={[]}
     />
-)
+);

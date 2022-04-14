@@ -34,8 +34,10 @@ const groupActions = (groupBy, actions, theme) => {
 
   actions.forEach((action) => {
     let cat;
+    cat = action.rootCategory;
     if (groupBy === 'primaryOrg') cat = action.primaryOrg;
-    else cat = action.rootCategory;
+    if (groupBy === 'none') cat = false;
+
     let group;
 
     if (!cat) {
@@ -78,7 +80,7 @@ function ActionCardList(props) {
     <ActionsList role="list">
       {groups.map((group) => (
         <ActionGroup key={group.id} role="group">
-          <Col xs="12">
+          {groups.length > 1 && <Col xs="12">
             <ActionGroupHeader>
               {group.displayIdentifier && (
                 <span className="category-identifier">
@@ -87,7 +89,7 @@ function ActionCardList(props) {
               )}
               {group.name}
             </ActionGroupHeader>
-          </Col>
+          </Col>}
           {group.elements.map((item) => (
             <Col
               tag="li"

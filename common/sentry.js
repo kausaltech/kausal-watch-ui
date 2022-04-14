@@ -19,7 +19,7 @@ function initSentry(app) {
       },
     }));
     const { publicRuntimeConfig } = getConfig();
-    environment = publicRuntimeConfig.instanceType;
+    environment = publicRuntimeConfig.deploymentType;
 }
 */
 
