@@ -57,7 +57,7 @@ const StyledRow = styled.tr`
     vertical-align: top;
 
     &.has-tooltip:hover {
-      box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+      box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
     }
   }
 
@@ -167,7 +167,7 @@ const Tooltip = styled.div`
   padding: ${(props) => props.theme.spaces.s050} ${(props) => props.theme.spaces.s100};
   font-size: ${(props) => props.theme.fontSizeSm};
   border-radius: 4px;
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
 
   &[data-popper-placement^='top'] > div {
     bottom: -4px;
