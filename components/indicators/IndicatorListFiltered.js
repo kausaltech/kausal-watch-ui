@@ -132,6 +132,9 @@ class IndicatorListFiltered extends React.Component {
     const { t, categories, indicators } = this.props;
     const filteredIndicators = this.filterIndicators(indicators);
     const sortedCategories = [...categories].sort((a, b) => b.order - a.order);
+    const allIndicatorsHaveGraphs = filteredIndicators.filter(item => (
+      !item.latestGraph && !item.latestValue
+    )).length === 0;
 
     return (
       <div className="mb-5 pb-5">
@@ -142,7 +145,7 @@ class IndicatorListFiltered extends React.Component {
               <th>{ t('type') }</th>
               <th>{ t('name') }</th>
               <th>{ t('themes') }</th>
-              <th>{ t('graph') }</th>
+              { !allIndicatorsHaveGraphs && <th>{ t('graph') }</th> }
             </tr>
           </thead>
           <tbody>
@@ -166,13 +169,14 @@ class IndicatorListFiltered extends React.Component {
                     return false;
                   })}
                 </td>
-                <td>
+                { !allIndicatorsHaveGraphs && <td>
                   {(item.latestGraph || item.latestValue) && (
                     <span>
                       <Icon name="chartLine" />
                     </span>
                   )}
                 </td>
+                }
               </tr>
             ))}
           </tbody>

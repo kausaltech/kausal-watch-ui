@@ -57,6 +57,7 @@ const indicatorsData = [
     latestGraph: null,
     latestValue: {
       id: '610',
+      value: 234.5,
       date: '2018-12-31',
     },
     level: 'tactical',
@@ -73,6 +74,7 @@ const indicatorsData = [
     latestGraph: null,
     latestValue: {
       id: '630',
+      value: 235.6,
       date: '2018-12-31',
     },
     level: 'operational',
@@ -88,6 +90,7 @@ const indicatorsData = [
     ],
     latestGraph: null,
     latestValue: {
+      value: 235.6,
       id: '658',
       date: '2018-12-31',
     },
@@ -101,6 +104,7 @@ const indicatorsData = [
     ],
     latestGraph: null,
     latestValue: {
+      value: 235.6,
       id: '668',
       date: '2018-12-31',
     },
@@ -120,10 +124,7 @@ const indicatorsData = [
       },
     ],
     latestGraph: null,
-    latestValue: {
-      id: '527',
-      date: '2017-12-31',
-    },
+    latestValue: null,
     level: 'tactical',
   },
 ];
