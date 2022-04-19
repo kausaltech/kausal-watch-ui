@@ -61,6 +61,9 @@ const indicatorsData = [
       date: '2018-12-31',
     },
     level: 'tactical',
+    unit: {
+      'shortName': 'kt/a'
+    }
   },
   {
     id: '2',
@@ -74,10 +77,13 @@ const indicatorsData = [
     latestGraph: null,
     latestValue: {
       id: '630',
-      value: 235.6,
+      value: 235.666,
       date: '2018-12-31',
     },
     level: 'operational',
+    unit: {
+      'shortName': 'kt/a'
+    }
   },
   {
     id: '111',
@@ -90,11 +96,14 @@ const indicatorsData = [
     ],
     latestGraph: null,
     latestValue: {
-      value: 235.6,
+      value: 12235.666,
       id: '658',
       date: '2018-12-31',
     },
     level: 'strategic',
+    unit: {
+      'shortName': 'kt/a'
+    }
   },
   {
     id: '165',
@@ -104,11 +113,14 @@ const indicatorsData = [
     ],
     latestGraph: null,
     latestValue: {
-      value: 235.6,
+      value: 235.666,
       id: '668',
       date: '2018-12-31',
     },
     level: 'strategic',
+    unit: {
+      'shortName': 'kt/a'
+    }
   },
   {
     id: '4',
@@ -126,6 +138,9 @@ const indicatorsData = [
     latestGraph: null,
     latestValue: null,
     level: 'tactical',
+    unit: {
+      'shortName': 'kt/a'
+    }
   },
 ];
 

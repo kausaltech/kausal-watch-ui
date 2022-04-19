@@ -140,5 +140,6 @@
   "total": "yhteensä",
   "type": "Tyyppi",
   "under-x-days": "Alle {{days}} päivää",
-  "unknown": "Tuntematon"
+  "unknown": "Tuntematon",
+  "updated": "Päivitetty"
 }

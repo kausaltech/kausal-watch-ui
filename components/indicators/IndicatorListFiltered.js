@@ -9,6 +9,7 @@ import styled from 'styled-components';
 import { IndicatorLink } from '../../common/links';
 import Icon from '../common/Icon';
 import { withTranslation } from '../../common/i18n';
+import { beautifyValue } from '../../common/data/format';
 
 import IndicatorListFilters from './IndicatorListFilters';
 
@@ -129,7 +130,7 @@ class IndicatorListFiltered extends React.Component {
   }
 
   render() {
-    const { t, categories, indicators } = this.props;
+    const { t, categories, indicators, i18n } = this.props;
     const filteredIndicators = this.filterIndicators(indicators);
     const sortedCategories = [...categories].sort((a, b) => b.order - a.order);
     const allIndicatorsHaveGraphs = filteredIndicators.filter(item => (
@@ -145,6 +146,8 @@ class IndicatorListFiltered extends React.Component {
               <th>{ t('type') }</th>
               <th>{ t('name') }</th>
               <th>{ t('themes') }</th>
+              <th>{ t('updated') }</th>
+              <th>{ t('indicator-latest-value') }</th>
               { !allIndicatorsHaveGraphs && <th>{ t('graph') }</th> }
             </tr>
           </thead>
@@ -168,6 +171,16 @@ class IndicatorListFiltered extends React.Component {
                     if (cat) return <StyledBadge key={cat.id}>{cat.name}</StyledBadge>;
                     return false;
                   })}
+                </td>
+                <td>
+                  {item.latestValue && (
+                    item.latestValue.date
+                  )}
+                </td>
+                <td>
+                  {item.latestValue && (
+                    `${beautifyValue(item.latestValue.value, i18n.language)} ${item.unit?.shortName}`
+                  )}
                 </td>
                 { !allIndicatorsHaveGraphs && <td>
                   {(item.latestGraph || item.latestValue) && (

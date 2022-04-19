@@ -126,5 +126,6 @@
   "total": "",
   "type": "Typ",
   "under-x-days": "Lägre som {{days}} dagar",
-  "unknown": "Tuntematon"
+  "unknown": "Tuntematon",
+  "updated": "Uppdaterad"
 }

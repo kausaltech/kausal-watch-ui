@@ -134,5 +134,6 @@
   "total": "gesamt",
   "type": "Typ",
   "under-x-days": "Weniger als {{days}} Tage",
-  "unknown": "Unbekannt"
+  "unknown": "Unbekannt",
+  "updated": "Aktualisiert"
 }

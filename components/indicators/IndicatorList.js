@@ -33,6 +33,10 @@ const GET_INDICATOR_LIST = gql`
           latestValue {
             id
             date
+            value
+          }
+          unit {
+            shortName
           }
         }
       }
