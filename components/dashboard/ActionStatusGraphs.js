@@ -56,13 +56,16 @@ const getTimelinessData = (actions, actionStatuses, theme, t) => {
     if (['postponed', 'cancelled', 'completed', 'merged'].includes(actionStatus.identifier)) {
       notActive += 1;
       total -= 1;
-    } else if (age >= 60) over60 += 1;
-    else if (age >= 30) {
-      under60 += 1;
-      good += 1;
-    } else if (age < 30) {
-      under30 += 1;
-      good += 1;
+    } else {
+      if (age >= 60) {
+        over60 += 1;
+      } else if (age >= 30) {
+        under60 += 1;
+        good += 1;
+      } else {
+        under30 += 1;
+        good += 1;
+      }
     }
   });
 
@@ -100,6 +103,7 @@ const ActionsStatusGraphs = (props) => {
   const { t } = useTranslation(['common']);
 
   const progressData = getStatusData(actions, plan.actionStatuses, theme);
+  progressData.labels = progressData.labels.map((label) => label || t('unknown'));
   const timelinessData = getTimelinessData(actions, plan.actionStatuses, theme, t);
   let phaseData;
   if (plan.actionImplementationPhases.length > 0) {
