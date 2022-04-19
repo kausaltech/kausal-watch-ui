@@ -15,23 +15,32 @@ const categoriesData = [
     identifier: '1.1.1',
     name: 'Sub Category 2',
     parent: {
-      id: '116',
+      id: '1',
     },
   },
   {
     id: '3',
     identifier: '1.1.2',
     name: 'Sub Category 3',
+    parent: {
+      id: '1',
+    }
   },
   {
     id: '4',
     identifier: '1.1.3',
     name: 'Sub Category 4',
+    parent: {
+      id: '1'
+    }
   },
   {
     id: '5',
     identifier: '1.1.4',
     name: 'Sub Category 5',
+    parent: {
+      id: '1'
+    }
   },
 ];
 
