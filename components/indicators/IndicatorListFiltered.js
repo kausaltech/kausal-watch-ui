@@ -8,6 +8,7 @@ import styled from 'styled-components';
 
 import { IndicatorLink } from '../../common/links';
 import Icon from '../common/Icon';
+import dayjs from '../../common/dayjs';
 import { withTranslation } from '../../common/i18n';
 import { beautifyValue } from '../../common/data/format';
 
@@ -152,46 +153,52 @@ class IndicatorListFiltered extends React.Component {
             </tr>
           </thead>
           <tbody>
-            {filteredIndicators.map((item) => (
-              <tr key={item.id}>
-                <td>
-                  <IndicatorType level={item.level}>
-                    { t(item.level) || <span>-</span> }
-                  </IndicatorType>
-                </td>
-                <td>
-                  <IndicatorName>
-                    <IndicatorLink id={item.id}>
-                      <a>{item.name}</a>
-                    </IndicatorLink>
-                  </IndicatorName>
-                </td>
-                <td>
-                  {item.categories.map((cat) => {
-                    if (cat) return <StyledBadge key={cat.id}>{cat.name}</StyledBadge>;
-                    return false;
-                  })}
-                </td>
-                <td>
-                  {item.latestValue && (
-                    item.latestValue.date
-                  )}
-                </td>
-                <td>
-                  {item.latestValue && (
-                    `${beautifyValue(item.latestValue.value, i18n.language)} ${item.unit?.shortName}`
-                  )}
-                </td>
-                { !allIndicatorsHaveGraphs && <td>
-                  {(item.latestGraph || item.latestValue) && (
-                    <span>
-                      <Icon name="chartLine" />
-                    </span>
-                  )}
-                </td>
-                }
-              </tr>
-            ))}
+            {filteredIndicators.map((item) => {
+              let timeFormat = 'l';
+              if (item.timeResolution === 'YEAR') {
+                timeFormat = 'YYYY';
+              }
+              return (
+                <tr key={item.id}>
+                  <td>
+                    <IndicatorType level={item.level}>
+                      { t(item.level) || <span>-</span> }
+                    </IndicatorType>
+                  </td>
+                  <td>
+                    <IndicatorName>
+                      <IndicatorLink id={item.id}>
+                        <a>{item.name}</a>
+                      </IndicatorLink>
+                    </IndicatorName>
+                  </td>
+                  <td>
+                    {item.categories.map((cat) => {
+                      if (cat) return <StyledBadge key={cat.id}>{cat.name}</StyledBadge>;
+                      return false;
+                    })}
+                  </td>
+                  <td>
+                    {item.latestValue && (
+                      dayjs(item.latestValue.date).format(timeFormat)
+                    )}
+                  </td>
+                  <td>
+                    {item.latestValue && (
+                      `${beautifyValue(item.latestValue.value, i18n.language)} ${item.unit?.shortName ?? ''}`
+                    )}
+                  </td>
+                  { !allIndicatorsHaveGraphs && <td>
+                    {(item.latestGraph || item.latestValue) && (
+                      <span>
+                        <Icon name="chartLine" />
+                      </span>
+                    )}
+                  </td>
+                  }
+                </tr>
+              );
+            })}
           </tbody>
         </Table>
       </div>

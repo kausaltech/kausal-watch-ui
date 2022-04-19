@@ -23,6 +23,7 @@ const GET_INDICATOR_LIST = gql`
         indicator {
           id
           name
+          timeResolution
           categories {
             id
             name
