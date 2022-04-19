@@ -18,12 +18,23 @@ const GET_INDICATOR_LIST = gql`
   query IndicatorList($plan: ID!) {
     plan(id: $plan) {
       id
+      features {
+        hasActionPrimaryOrgs
+      }
       indicatorLevels {
         level,
         indicator {
           id
           name
           timeResolution
+          organization {
+            id
+            name
+          }
+          common {
+            id
+            name
+          }
           categories {
             id
             name
@@ -84,6 +95,7 @@ class IndicatorList extends React.Component {
 
   processDataToProps(data) {
     const { plan } = data;
+    const displayMunicipality = plan.features.hasActionPrimaryOrgs === true;
     const generalContent = plan.generalContent || {};
     const { indicatorLevels, categoryTypes } = plan;
 
@@ -100,7 +112,7 @@ class IndicatorList extends React.Component {
       });
     });
 
-    return { indicators, categories, leadContent: generalContent.indicatorListLeadContent };
+    return { indicators, categories, leadContent: generalContent.indicatorListLeadContent, displayMunicipality };
   }
 
   render() {
