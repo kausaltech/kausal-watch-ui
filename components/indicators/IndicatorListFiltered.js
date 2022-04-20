@@ -216,7 +216,13 @@ class IndicatorListFiltered extends React.Component {
                   <td>
                     { indicatorName(item) }
                   </td>
-                  { displayMunicipality && <td> {item.organization.name} </td> }
+                  { displayMunicipality &&
+                    <td>
+                      <IndicatorLink id={item.id}>
+                        <a>{item.organization.name}</a>
+                      </IndicatorLink>
+                    </td>
+                  }
                   { someIndicatorsHaveCategories &&
                     <td>
                       {item.categories.map((cat) => {
@@ -232,7 +238,9 @@ class IndicatorListFiltered extends React.Component {
                   </td>
                   <td>
                     {item.latestValue && (
-                      `${beautifyValue(item.latestValue.value, i18n.language)} ${item.unit?.shortName ?? ''}`
+                      <IndicatorLink id={item.id}>
+                        <a>{`${beautifyValue(item.latestValue.value, i18n.language)} ${item.unit?.shortName ?? ''}`}</a>
+                      </IndicatorLink>
                     )}
                   </td>
                   { !allIndicatorsHaveGraphs && <td>
