@@ -346,6 +346,7 @@ const ActionListResults = (props) => {
                   primaryOrgs={primaryOrgs}
                   impacts={impacts}
                   phases={phases}
+                  hasActionPrimaryOrgs={plan.features.hasActionPrimaryOrgs}
                   schedules={schedules}
                   filters={filters}
                   onChange={handleChange}
