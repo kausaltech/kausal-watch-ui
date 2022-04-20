@@ -141,5 +141,10 @@
   "type": "Type",
   "under-x-days": "Under {{days}} days",
   "unknown": "Unknown",
-  "updated": "Updated"
+  "updated": "Updated",
+  "primary-organization": "Organization",
+  "with-contact-persons": "Have contact person",
+  "without-contact-person": "No contact person",
+  "has-goals": "Has goals",
+  "latest-update": "Latest update"
 }
