@@ -263,8 +263,8 @@ const getTaskCounts = (tasks, t) => {
   });
 
   const displayTasksCount = tasksCount === 0
-    ? t('action-no-tasks')
-    : `${tasksCount} ${t('action-tasks-count')}`;
+    ? t('actions:action-no-tasks')
+    : `${tasksCount} ${t('actions:action-tasks-count')}`;
 
   return {
     total: tasksCount,
@@ -399,32 +399,27 @@ const ActionRow = (props) => {
 
   const primaryOrgTooltipContent = (primaryOrg) => (
     <div>
-      <h5>{ t('primary-organisation') }</h5>
+      <h5>{ t('common:primary-organization') }</h5>
       { primaryOrg}
     </div>
   );
 
   const tasksTooltipContent = (tasks) => {
     const taskCounts = getTaskCounts(tasks, t);
-    if (taskCounts.total < 1) return <div><h5>{ t('action-no-tasks') }</h5></div>
+    if (taskCounts.total < 1) return <div><h5>{ t('actions:action-no-tasks') }</h5></div>
     return (
     <TaskTooltip>
+      <h5>{ t('actions:action-tasks') } </h5>
       <table>
-        <thead>
-        <tr>
-          <th>{ t('tasks') } </th>
-          <th>{ taskCounts.total }</th>
-        </tr>
-        </thead>
         <tbody>
        { taskCounts.completed > 0 && (
          <tr>
-          <td>{t('completed')}</td>
+          <td>{t('actions:tasks-completed')}</td>
           <td>{taskCounts.completed}</td>
         </tr>
         ) }
-       { taskCounts.late > 0 && <tr><td>{ t('late') }</td> <td>{ taskCounts.late }</td></tr> }
-       { taskCounts.onTime > 0 && <tr><td>{ t('on-time') }</td> <td>{ taskCounts.onTime }</td></tr> }
+       { taskCounts.late > 0 && <tr><td>{ t('actions:tasks-late') }</td> <td>{ taskCounts.late }</td></tr> }
+       { taskCounts.onTime > 0 && <tr><td>{ t('actions:tasks-on-time') }</td> <td>{ taskCounts.onTime }</td></tr> }
        </tbody>
       </table>
     </TaskTooltip>
@@ -433,12 +428,12 @@ const ActionRow = (props) => {
   const phasesTooltipContent = (status, activePhase, merged) => {
     if (merged) return (
       <div>
-        <h5>{ ` ${t('merged-with')} ${merged?.identifier} ` }</h5>
+        <h5>{ ` ${t('actions:action-status-merged')} ${merged?.identifier} ` }</h5>
       </div>
     )
     if (!activePhase) return (
       <div>
-        {!status?.name && <h5>{ t('action-phase-unknown') }</h5>}
+        {!status?.name && <h5>{ t('actions:action-implementation-phase-unknown')}</h5>}
         {status?.name}
       </div>
     )
@@ -450,7 +445,7 @@ const ActionRow = (props) => {
     return hasImplementationPhases ?
     (
       <div>
-        <h5>{ t('action-phase') }</h5>
+        <h5>{ t('actions:action-implementation-phase') }</h5>
         <PhasesTooltipList>
         {plan.actionImplementationPhases.map((phase) => (
           <PhasesTooltipListItem key={phase.id} active={(activePhase?.id === phase.id).toString()}>
@@ -471,13 +466,13 @@ const ActionRow = (props) => {
   const responsiblesTooltipContent = (parties) => {
     if (parties.length < 1) return (
       <div>
-        <h5>{ t('non-named-responsibles') }</h5>
+        <h5>{ t('common:responsible-parties') }</h5>
       </div>
     )
     return (
     <div>
-      <h5>{parties.length} responsible organizations</h5>
-      { parties.find((party) => party.hasContactPerson) && <strong>{ t('with-contact-person') }:</strong>}
+      <h5>{ t('common:responsible-parties') }</h5>
+      { parties.find((party) => party.hasContactPerson) && <strong>{ t('common:with-contact-persons') }:</strong>}
       <ResponsibleTooltipList>
         {parties.map((party) => (
           party.hasContactPerson ? (
@@ -494,7 +489,7 @@ const ActionRow = (props) => {
           ) : null
         ))}
       </ResponsibleTooltipList>
-      { parties.find((party) => !party.hasContactPerson) && <strong>{ t('without-contact-person') }:</strong>}
+      { parties.find((party) => !party.hasContactPerson) && <strong>{ t('common:without-contact-person') }:</strong>}
       <ResponsibleTooltipList>
         { parties.map((party) => (
           !party.hasContactPerson ? (
@@ -519,28 +514,28 @@ const ActionRow = (props) => {
   const hasGoals = relatedIndicators.find((ri) => ri.indicator.goals.length > 0);
   return (
     <div>
-      <h5>{ t('indicators') }</h5>
+      <h5>{ t('common:indicators') }</h5>
       <Icon
         name="tachometer"
         color={hasIndicators ? theme.graphColors.green070 : theme.graphColors.grey030}
         height="1.2em"
         width="1.2em"
       />
-      {hasIndicators ? ` ${t('indicators')}: ${relatedIndicators.length}` : ` ${t('action-has-no-indicators')}`}<br />
+      {hasIndicators ? ` ${t('common:indicators')}: ${relatedIndicators.length}` : ` ${t('actions:no-defined-indicators')}`}<br />
       <Icon
         name="bullseye"
         color={hasGoals ? theme.graphColors.green070 : theme.graphColors.grey030}
         height="1.2em"
         width="1.2em"
       />
-      { hasGoals ? ` ${t('action-has-goals')}` : ` ${t('action-has-no-goals')}` }
+      { hasGoals ? ` ${t('common:has-goals')}` : ` ${t('common:indicator-time-no-goals')}` }
       {}
     </div>
   )};
 
   const lastUpdatedTooltipContent = (updateDate) => (
     <div>
-      <h5>{ t('latest-update') }</h5>
+      <h5>{ t('common:latest-update') }</h5>
       {dayjs(updateDate).format('L')}
     </div>
   );
@@ -550,7 +545,7 @@ const ActionRow = (props) => {
     const activeImpact = impacts.find((item) => item.id === impact.id);
     return (
     <div>
-      <h5>{ t('impact') }</h5>
+      <h5>{ t('common:impact') }</h5>
       {activeImpact.identifier !== '0' && <div>{activeImpact.identifier}/{impacts.length - 1}</div>}
       {activeImpact.name}
     </div>
@@ -722,12 +717,12 @@ const ActionStatusTable = (props) => {
   }
 
   const { t } = useTranslation(['common', 'actions']);
-  const directionLabel = direction === 1 ? t('ascending') : t('descending');
+  const directionLabel = direction === 1 ? t('common:ascending') : t('common:descending');
   const columnLabel = {
-    identifier: t('action-id'),
-    name: t('action-name-title'),
-    updatedAt: t('action-last-updated'),
-    implementationPhase: t('action-implementation-phase')
+    identifier: t('actions:action-id'),
+    name: t('actions:action-name-title'),
+    updatedAt: t('actions:action-last-updated'),
+    implementationPhase: t('actions:action-implementation-phase')
 
   };
 
@@ -741,7 +736,7 @@ const ActionStatusTable = (props) => {
       <div style={{flexGrow: 4, alignSelf: 'end' }}>
         { sort.key !== 'order' && <>
           <Button outline size="sm" color="primary" onClick={clickHandler('order')}>
-            {t('default-sorting')}
+            {t('common:default-sorting')}
           </Button>
         </>
         }
@@ -761,10 +756,10 @@ const ActionStatusTable = (props) => {
                                onClick={clickHandler('implementationPhase')}>
             { columnLabel.implementationPhase }
           </SortableTableHeader>
-          <th>{ t('action-tasks') }</th>
-          { showColumn.responsibles && <th>{t('action-responsibles-short')}</th> }
-          { showColumn.impacts && <th>{t('action-impact')}</th> }
-          { showColumn.indicators && <th>{ t('indicators') }</th> }
+          <th>{ t('actions:action-tasks') }</th>
+          { showColumn.responsibles && <th>{t('actions:action-responsibles-short')}</th> }
+          { showColumn.impacts && <th>{t('actions:action-impact')}</th> }
+          { showColumn.indicators && <th>{ t('common:indicators') }</th> }
           <SortableTableHeader sort={sort} headerKey="updatedAt" onClick={clickHandler('updatedAt')}>
           { columnLabel.updatedAt }
           </SortableTableHeader>

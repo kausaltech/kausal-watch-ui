@@ -43,7 +43,7 @@
   "actions-updated": "Active actions last updated",
   "actions-updated-help": "Proportion of actions that have been updated within two months",
   "emission-scopes": "Emission scopes",
-  "no-defined-indicators": "",
+  "no-defined-indicators": "No indicators defined",
   "not-being-implemented": "Not being implemented",
   "not-being-monitored": "Not monitored",
   "status": "Status",
@@ -51,5 +51,6 @@
   "tasks-on-time": "On-time tasks",
   "tasks-completed": "Completed tasks",
   "responsible-organization-main": "Main responsible",
-  "responsible-organization-other": "Other responsibles"
+  "responsible-organization-other": "Other responsibles",
+  "action-implementation-phase-unknown": "No implementation phase"
 }

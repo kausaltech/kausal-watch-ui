@@ -143,5 +143,10 @@
   "type": "Tyyppi",
   "under-x-days": "Alle {{days}} päivää",
   "unknown": "Tuntematon",
-  "updated": "Päivitetty"
+  "updated": "Päivitetty",
+  "primary-organization": "Organisaatio",
+  "with-contact-persons": "On yhteyshenkilö",
+  "without-contact-person": "Ei yhteyshenkilöä",
+  "has-goals": "On tavoitearvoja",
+  "latest-update": "Viimeisin päivitys"
 }
