@@ -151,9 +151,13 @@ class IndicatorListFiltered extends React.Component {
     const { t, categories, indicators, i18n, displayMunicipality, hierarchy } = this.props;
     const filteredIndicators = this.filterIndicators(hierarchy, indicators, displayMunicipality);
     const sortedCategories = [...categories].sort((a, b) => b.order - a.order);
+
     const allIndicatorsHaveGraphs = filteredIndicators.filter(item => (
       !item.latestGraph && !item.latestValue
     )).length === 0;
+    const someIndicatorsHaveCategories = filteredIndicators.reduce(
+      ((cumul, cur) => Math.max(cumul, cur.categories.length)), 0) > 0;
+    const allIndicatorsHaveSameLevel = new Set(filteredIndicators.map(i => i.level)).size === 1;
 
     const indicatorElement = (item, itemName, indentLevel) => (
       <IndicatorName indentLevel={indentLevel} >
@@ -185,10 +189,10 @@ class IndicatorListFiltered extends React.Component {
         <Table hover>
           <thead>
             <tr>
-              <th>{ t('type') }</th>
+              { !allIndicatorsHaveSameLevel && <th>{ t('type') }</th> }
               <th>{ t('name') }</th>
-              { displayMunicipality && <th>{ t('municipality') }</th>}
-              <th>{ t('themes') }</th>
+              { displayMunicipality && <th>{ t('municipality') }</th> }
+              { someIndicatorsHaveCategories && <th>{ t('themes') }</th> }
               <th>{ t('updated') }</th>
               <th>{ t('indicator-latest-value') }</th>
               { !allIndicatorsHaveGraphs && <th>{ t('graph') }</th> }
@@ -202,21 +206,25 @@ class IndicatorListFiltered extends React.Component {
               }
               return (
                 <tr key={item.id}>
-                  <td>
-                    <IndicatorType level={item.level}>
-                      { t(item.level) || <span>-</span> }
-                    </IndicatorType>
-                  </td>
+                  { !allIndicatorsHaveSameLevel &&
+                    <td>
+                      <IndicatorType level={item.level}>
+                        { t(item.level) || <span>-</span> }
+                      </IndicatorType>
+                    </td>
+                  }
                   <td>
                     { indicatorName(item) }
                   </td>
                   { displayMunicipality && <td> {item.organization.name} </td> }
-                  <td>
-                    {item.categories.map((cat) => {
-                      if (cat) return <StyledBadge key={cat.id}>{cat.name}</StyledBadge>;
-                      return false;
-                    })}
-                  </td>
+                  { someIndicatorsHaveCategories &&
+                    <td>
+                      {item.categories.map((cat) => {
+                        if (cat) return <StyledBadge key={cat.id}>{cat.name}</StyledBadge>;
+                        return false;
+                      })}
+                    </td>
+                  }
                   <td>
                     {item.latestValue && (
                       dayjs(item.latestValue.date).format(timeFormat)
