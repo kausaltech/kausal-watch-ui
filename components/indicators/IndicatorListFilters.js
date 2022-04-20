@@ -68,6 +68,7 @@ class IndicatorListFilters extends React.Component {
     return (
       <form className="filters mb-5 mt-5" onSubmit={(event) => { event.preventDefault(); }}>
         <Row>
+        { sortedCats.length > 1 && (
           <Col sm="9" md="4" lg="5">
             <DropDown
               label={t('filter-category')}
@@ -86,6 +87,7 @@ class IndicatorListFilters extends React.Component {
               ))}
             </DropDown>
           </Col>
+          )}
           <Col sm="9" md="5" lg="5">
             <TextInput
               label={t('filter-text')}
