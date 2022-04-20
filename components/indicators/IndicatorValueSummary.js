@@ -3,6 +3,7 @@ import { Row, Col } from 'reactstrap';
 import styled, { withTheme } from 'styled-components';
 import dayjs from '../../common/dayjs';
 import { withTranslation } from '../../common/i18n';
+import { beautifyValue } from '../../common/data/format';
 
 const ValueSummary = styled.div`
   margin: 2em 0 0;
@@ -47,19 +48,6 @@ const ChangeSymbol = styled.span`
   font-size: ${(props) => props.theme.fontSizeSm};
 `;
 
-function beautifyValue(x) {
-  let out;
-
-  if (!Number.isInteger(x)) {
-    out = x.toFixed(2);
-  } else {
-    out = x;
-  }
-  const s = out.toString();
-  const displayNumber = s.replace('.', ',');
-  return displayNumber.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-}
-
 function determineDesirableDirection(values, goals) {
   if (!values.length || !goals.length) return null;
 
@@ -73,7 +61,7 @@ function determineDesirableDirection(values, goals) {
 }
 
 function IndicatorValueSummary(props) {
-  const { timeResolution, values, goals, unit, t, theme } = props;
+  const { timeResolution, values, goals, unit, t, theme, i18n } = props;
   const desirableDirection = determineDesirableDirection(values, goals);
   const pluralUnitName = unit.verboseNamePlural || unit.verboseName || unit.shortName || unit.name;
   const shortUnitName = unit.shortName || unit.name;
@@ -116,7 +104,7 @@ function IndicatorValueSummary(props) {
         changeSymbol = '▲';
       } else changeSymbol = '—';
     }
-    const latestValueDisplay = beautifyValue(latestValue.value);
+    const latestValueDisplay = beautifyValue(latestValue.value, i18n.language);
     valueDisplay = (
       <div className="mb-4">
         <ValueLabel>{ t('indicator-latest-value') }</ValueLabel>
@@ -127,7 +115,7 @@ function IndicatorValueSummary(props) {
           {changeSymbol && (
             <ValueChange color={changeColor}>
               <ChangeSymbol>{changeSymbol}</ChangeSymbol>
-              <span>{beautifyValue(absChange)}</span>
+              <span>{beautifyValue(absChange, i18n.language)}</span>
               {' '}
               <small>{diffUnitName}</small>
             </ValueChange>
@@ -142,7 +130,7 @@ function IndicatorValueSummary(props) {
 
   if (nextGoal) {
     const nextGoalDate = dayjs(nextGoal.date).format(timeFormat);
-    const nextGoalValue = beautifyValue(nextGoal.value);
+    const nextGoalValue = beautifyValue(nextGoal.value, i18n.language);
     goalDisplay = (
       <div className="mb-4">
         <ValueLabel>{ t('indicator-goal') }</ValueLabel>
@@ -165,7 +153,7 @@ function IndicatorValueSummary(props) {
         <ValueLabel>{ t('indicator-time-to-goal') }</ValueLabel>
         <ValueDate>{timeToGoal}</ValueDate>
         <ValueDisplay>
-          {beautifyValue(difference)}
+          {beautifyValue(difference, i18n.language)}
           <ValueUnit>{diffUnitName}</ValueUnit>
         </ValueDisplay>
       </div>

@@ -8,7 +8,9 @@ import styled from 'styled-components';
 
 import { IndicatorLink } from '../../common/links';
 import Icon from '../common/Icon';
+import dayjs from '../../common/dayjs';
 import { withTranslation } from '../../common/i18n';
+import { beautifyValue } from '../../common/data/format';
 
 import IndicatorListFilters from './IndicatorListFilters';
 
@@ -47,6 +49,10 @@ const IndicatorType = styled(Badge)`
   }} !important;
 `;
 
+const IndicatorDate = styled.span`
+  color: ${(props) => props.theme.graphColors.grey050}
+`
+
 const StyledBadge = styled(Badge)`
   white-space: normal;
   margin-right: ${(props) => props.theme.spaces.s050};
@@ -63,6 +69,7 @@ const IndicatorName = styled.div`
   a {
     color: ${(props) => props.theme.themeColors.black};
   }
+  padding-left: ${(props) => props.indentLevel * 20}px;
 `;
 
 const levels = {
@@ -71,9 +78,8 @@ const levels = {
   strategic: { fi: 'strateginen', index: 3 },
 };
 
-function sortIndicators(indicators) {
+function sortIndicators(hierarchy, indicators, displayMunicipality) {
   let sorted = indicators;
-
   sorted = indicators.sort((a, b) => a.name.localeCompare(b.name));
   sorted = indicators.sort((a, b) => {
     if (levels[a.level].index < levels[b.level].index) {
@@ -83,6 +89,23 @@ function sortIndicators(indicators) {
       return 1;
     }
     return 0;
+  });
+  if (displayMunicipality) {
+    sorted = indicators.sort((a, b) => a.organization.name.localeCompare(b.organization.name));
+  }
+  if (hierarchy == null || Object.keys(hierarchy).length === 0) {
+    return sorted;
+  }
+  sorted = indicators.sort((a, b) => {
+    if (a.common == null || b.common == null) {
+      return 0;
+    }
+    const [pathA, pathB] = [hierarchy[a.common.id].path, hierarchy[b.common.id].path];
+    for (let i = 0; i < pathA.length && i < pathB.length; i++) {
+      if (pathA[i] === pathB[i]) continue;
+      return pathA[i] - pathB[i];
+    }
+    return pathA.length - pathB.length;
   });
   return sorted;
 }
@@ -104,7 +127,7 @@ class IndicatorListFiltered extends React.Component {
     });
   }
 
-  filterIndicators(indicators) {
+  filterIndicators(hierarchy, indicators, displayMunicipality) {
     let i;
     const filtered = indicators.filter((item) => {
       const { activeCategory } = this.state;
@@ -125,56 +148,118 @@ class IndicatorListFiltered extends React.Component {
       return true;
     });
 
-    return sortIndicators(filtered);
+    return sortIndicators(hierarchy, filtered, displayMunicipality);
   }
 
   render() {
-    const { t, categories, indicators } = this.props;
-    const filteredIndicators = this.filterIndicators(indicators);
+    const { t, categories, indicators, i18n, displayMunicipality, hierarchy } = this.props;
+    const filteredIndicators = this.filterIndicators(hierarchy, indicators, displayMunicipality);
     const sortedCategories = [...categories].sort((a, b) => b.order - a.order);
 
+    const allIndicatorsHaveGraphs = filteredIndicators.filter(item => (
+      !item.latestGraph && !item.latestValue
+    )).length === 0;
+    const someIndicatorsHaveCategories = filteredIndicators.reduce(
+      ((cumul, cur) => Math.max(cumul, cur.categories.length)), 0) > 0;
+    const allIndicatorsHaveSameLevel = new Set(filteredIndicators.map(i => i.level)).size === 1;
+
+    const indicatorElement = (item, itemName, indentLevel) => (
+      <IndicatorName indentLevel={indentLevel} >
+        <IndicatorLink id={item.id}>
+          <a>{itemName}</a>
+        </IndicatorLink>
+      </IndicatorName>
+    );
+    const seen = new Set();
+    const indicatorName = (item) => {
+      let result = item.name;
+      if (item.common == null || hierarchy === null || Object.keys(hierarchy).length === 0) {
+        result = item.name;
+        return indicatorElement(item, result, 0);
+      }
+      if (seen.has(item.common.id)) {
+        result = null;
+      }
+      seen.add(item.common.id);
+      if (result == null) {
+        return result;
+      }
+      const level = (hierarchy[item.common.id]?.path?.length ?? 1) - 1;
+      return indicatorElement(item, result, level);
+    };
     return (
       <div className="mb-5 pb-5">
         <IndicatorListFilters cats={sortedCategories} changeOption={this.handleChange} />
         <Table hover>
           <thead>
             <tr>
-              <th>{ t('type') }</th>
+              { !allIndicatorsHaveSameLevel && <th>{ t('type') }</th> }
               <th>{ t('name') }</th>
-              <th>{ t('themes') }</th>
-              <th>{ t('graph') }</th>
+              { displayMunicipality && <th>{ t('municipality') }</th> }
+              { someIndicatorsHaveCategories && <th>{ t('themes') }</th> }
+              <th>{ t('updated') }</th>
+              <th>{ t('indicator-value') }</th>
+              { !allIndicatorsHaveGraphs && <th>{ t('graph') }</th> }
             </tr>
           </thead>
           <tbody>
-            {filteredIndicators.map((item) => (
-              <tr key={item.id}>
-                <td>
-                  <IndicatorType level={item.level}>
-                    { t(item.level) || <span>-</span> }
-                  </IndicatorType>
-                </td>
-                <td>
-                  <IndicatorName>
-                    <IndicatorLink id={item.id}>
-                      <a>{item.name}</a>
-                    </IndicatorLink>
-                  </IndicatorName>
-                </td>
-                <td>
-                  {item.categories.map((cat) => {
-                    if (cat) return <StyledBadge key={cat.id}>{cat.name}</StyledBadge>;
-                    return false;
-                  })}
-                </td>
-                <td>
-                  {(item.latestGraph || item.latestValue) && (
-                    <span>
-                      <Icon name="chartLine" />
-                    </span>
-                  )}
-                </td>
-              </tr>
-            ))}
+            {filteredIndicators.map((item) => {
+              let timeFormat = 'l';
+              if (item.timeResolution === 'YEAR') {
+                timeFormat = 'YYYY';
+              }
+              return (
+                <tr key={item.id}>
+                  { !allIndicatorsHaveSameLevel &&
+                    <td>
+                      <IndicatorType level={item.level}>
+                        { t(item.level) || <span>-</span> }
+                      </IndicatorType>
+                    </td>
+                  }
+                  <td>
+                    { indicatorName(item) }
+                  </td>
+                  { displayMunicipality &&
+                    <td>
+                      <IndicatorLink id={item.id}>
+                        <a>{item.organization.name}</a>
+                      </IndicatorLink>
+                    </td>
+                  }
+                  { someIndicatorsHaveCategories &&
+                    <td>
+                      {item.categories.map((cat) => {
+                        if (cat) return <StyledBadge key={cat.id}>{cat.name}</StyledBadge>;
+                        return false;
+                      })}
+                    </td>
+                  }
+                  <td>
+                    {item.latestValue && (
+                      <IndicatorDate>
+                        { dayjs(item.latestValue.date).format(timeFormat) }
+                      </IndicatorDate>
+                    )}
+                  </td>
+                  <td>
+                    {item.latestValue && (
+                      <IndicatorLink id={item.id}>
+                        <a>{`${beautifyValue(item.latestValue.value, i18n.language)} ${item.unit?.shortName ?? ''}`}</a>
+                      </IndicatorLink>
+                    )}
+                  </td>
+                  { !allIndicatorsHaveGraphs && <td>
+                    {(item.latestGraph || item.latestValue) && (
+                      <span>
+                        <Icon name="chartLine" />
+                      </span>
+                    )}
+                  </td>
+                  }
+                </tr>
+              );
+            })}
           </tbody>
         </Table>
       </div>

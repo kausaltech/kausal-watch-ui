@@ -81,6 +81,7 @@
   "indicator-resolution-years": "Jahre",
   "indicator-time-no-goals": "Keine Ziele",
   "indicator-time-to-goal": "Zeit zum Ziel",
+  "indicator": "Wert",
   "indicator": "Indikator",
   "indicators": "Indikatoren",
   "indicators-as-insight": "Im Überblick",
@@ -96,6 +97,7 @@
   "instance-type-testing-label": "Test",
   "instance-type-testing-message": "Dies ist eine Testversion des Dienstes",
   "loading": "Wird geladen",
+  "municipality": "Gemeinde",
   "name": "Name",
   "nav-menu-close": "Menü schließen",
   "nav-menu-open": "Navigationsmenü",
@@ -134,5 +136,6 @@
   "total": "gesamt",
   "type": "Typ",
   "under-x-days": "Weniger als {{days}} Tage",
-  "unknown": "Unbekannt"
+  "unknown": "Unbekannt",
+  "updated": "Aktualisiert"
 }
