@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { useTheme } from 'common/theme';
 import { useTranslation } from 'common/i18n';
 import Card from 'components/common/Card';
+import ContentLoader from 'components/common/ContentLoader';
 
 const GraphCard = styled.div`
   display: flex;
@@ -28,6 +29,14 @@ const HelpText = styled.p`
   line-height: ${(props) => props.theme.lineHeightMd};
 `;
 
+const Plot = dynamic(
+  () => import('./Plot'),
+  {
+    loading: () => <ContentLoader />,
+    ssr: false,
+  }
+);
+
 const StatusDonut = (props) => {
   const {
     data,
@@ -43,16 +52,9 @@ const StatusDonut = (props) => {
     return null;
   }
 
-  const Plot = dynamic(import('./Plot'));
-  const defaultColors = [
-    theme.graphColors.green090,
-    theme.graphColors.green070,
-    theme.graphColors.green050,
-    theme.graphColors.yellow050,
-  ];
   const pieData = {
-    values: data.values,
-    labels: data.labels,
+    values: [...data.values],
+    labels: [...data.labels],
     domain: { column: 0 },
     hoverinfo: 'label+value+percent',
     hovertemplate: '%{label}<br>%{value}<br>%{percent:.0%}<extra></extra>',
@@ -62,11 +64,10 @@ const StatusDonut = (props) => {
     direction: 'clockwise',
     textinfo: 'none',
     marker: {
-      colors: colors || defaultColors,
+      colors: [...colors],
     },
     autoMargin: true,
   };
-
   const pieLayout = {
     font: {
       family: theme.fontFamily,
