@@ -194,7 +194,7 @@ class IndicatorListFiltered extends React.Component {
               { displayMunicipality && <th>{ t('municipality') }</th> }
               { someIndicatorsHaveCategories && <th>{ t('themes') }</th> }
               <th>{ t('updated') }</th>
-              <th>{ t('indicator-latest-value') }</th>
+              <th>{ t('indicator-value') }</th>
               { !allIndicatorsHaveGraphs && <th>{ t('graph') }</th> }
             </tr>
           </thead>
