@@ -87,7 +87,7 @@ function AttributeContent(props) {
   const { contentData, contentType, title, color } = props;
 
   switch (contentData.__typename) {
-    case 'AttributeChoice':
+    case 'CategoryAttributeChoice':
       if (contentType) {
         // const choiceCount = contentType.choiceOptions.length;
         return (
@@ -110,7 +110,7 @@ function AttributeContent(props) {
         );
       }
       return null;
-    case 'AttributeRichText':
+    case 'CategoryAttributeRichText':
       return (
         <>
           <dt>{title}</dt>
@@ -119,7 +119,7 @@ function AttributeContent(props) {
           </dd>
         </>
       );
-    case 'AttributeNumericValue':
+    case 'CategoryAttributeNumericValue':
       // KPR specific hack
       if (contentData.keyIdentifier === 'impact') {
         const totalEmissions = 50.921;

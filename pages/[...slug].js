@@ -91,7 +91,7 @@ query GetPlanPageGeneral($plan: ID!, $path: String!) {
           id
           key
           keyIdentifier
-          ...on AttributeChoice {
+          ...on CategoryAttributeChoice {
             value
             valueIdentifier
             type {
@@ -99,14 +99,14 @@ query GetPlanPageGeneral($plan: ID!, $path: String!) {
               name
             }
           }
-          ...on AttributeRichText {
+          ...on CategoryAttributeRichText {
             value
             type {
               identifier
               name
             }
           }
-          ...on AttributeNumericValue {
+          ...on CategoryAttributeNumericValue {
             numericValue: value
             type {
               identifier
