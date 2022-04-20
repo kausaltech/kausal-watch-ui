@@ -393,7 +393,6 @@ const ActionRow = (props) => {
   const { t } = useTranslation(['common', 'actions']);
   const actionStatus = cleanActionStatus(item, plan.actionStatuses);
 
-  //console.log("plan", plan);
   const popUp = (evt, content) => {
     content && popperRef(evt.currentTarget, content);
   };
@@ -432,7 +431,6 @@ const ActionRow = (props) => {
   )};
 
   const phasesTooltipContent = (status, activePhase, merged) => {
-    console.log(status, activePhase, merged);
     if (merged) return (
       <div>
         <h5>{ ` ${t('merged-with')} ${merged?.identifier} ` }</h5>
@@ -471,7 +469,6 @@ const ActionRow = (props) => {
   };
 
   const responsiblesTooltipContent = (parties) => {
-    console.log(parties);
     if (parties.length < 1) return (
       <div>
         <h5>{ t('non-named-responsibles') }</h5>
@@ -518,7 +515,6 @@ const ActionRow = (props) => {
   )};
 
   const indicatorsTooltipContent = (relatedIndicators) => {
-  console.log("related", relatedIndicators);
   const hasIndicators = relatedIndicators.length > 0;
   const hasGoals = relatedIndicators.find((ri) => ri.indicator.goals.length > 0);
   return (
