@@ -228,7 +228,6 @@ const Arrow = styled.div`
     visibility: visible;
     content: '';
     transform: rotate(45deg);
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
   }
 `;
 
@@ -387,14 +386,18 @@ function processAction(actionIn, orgMap) {
   return action;
 }
 
-const ActionRow = (props) => {
+const ActionRow = React.memo(function ActionRow(props) {
   const { item, plan, hasResponsibles, hasImpacts, hasIndicators, hasImplementationPhases, popperRef } = props;
   const theme = useTheme();
   const { t } = useTranslation(['common', 'actions']);
   const actionStatus = cleanActionStatus(item, plan.actionStatuses);
 
-  const popUp = (evt, content) => {
+  const showTooltip = (evt, content) => {
     content && popperRef(evt.currentTarget, content);
+  };
+
+  const hideTooltip = (evt) => {
+    popperRef(null, null);
   };
 
   const primaryOrgTooltipContent = (primaryOrg) => (
@@ -412,14 +415,14 @@ const ActionRow = (props) => {
       <h5>{ t('actions:action-tasks') } </h5>
       <table>
         <tbody>
-       { taskCounts.completed > 0 && (
-         <tr>
-          <td>{t('actions:tasks-completed')}</td>
-          <td>{taskCounts.completed}</td>
-        </tr>
-        ) }
-       { taskCounts.late > 0 && <tr><td>{ t('actions:tasks-late') }</td> <td>{ taskCounts.late }</td></tr> }
-       { taskCounts.onTime > 0 && <tr><td>{ t('actions:tasks-on-time') }</td> <td>{ taskCounts.onTime }</td></tr> }
+          { taskCounts.completed > 0 && (
+            <tr>
+              <td>{t('actions:tasks-completed')}</td>
+              <td>{taskCounts.completed}</td>
+            </tr>
+          ) }
+       { taskCounts.late > 0 && <tr><td>{ t('actions:tasks-late') }</td><td>{ taskCounts.late }</td></tr> }
+       { taskCounts.onTime > 0 && <tr><td>{ t('actions:tasks-on-time') }</td><td>{ taskCounts.onTime }</td></tr> }
        </tbody>
       </table>
     </TaskTooltip>
@@ -556,7 +559,8 @@ const ActionRow = (props) => {
       { plan.primaryOrgs.length > 0 && (
         <td
           className="logo-column has-tooltip"
-          onMouseEnter={(e)=> popUp(e, primaryOrgTooltipContent(item.primaryOrg.name))}
+          onMouseEnter={(e)=> showTooltip(e, primaryOrgTooltipContent(item.primaryOrg.name))}
+          onMouseLeave={(e)=> hideTooltip(e)}
         >
           { item.primaryOrg && (
             <OrgLogo
@@ -578,7 +582,11 @@ const ActionRow = (props) => {
           { item.name }
         </ActionLink>
       </td>
-      <td className="has-tooltip" onMouseEnter={(e)=> popUp(e, phasesTooltipContent(actionStatus, item.implementationPhase, item.mergedWith))}>
+      <td
+        className="has-tooltip"
+        onMouseEnter={(e)=> showTooltip(e, phasesTooltipContent(actionStatus, item.implementationPhase, item.mergedWith))}
+        onMouseLeave={(e)=> hideTooltip(e)}
+      >
         <StatusDisplay>
           { hasImplementationPhases ? (
             <ActionPhase
@@ -597,13 +605,21 @@ const ActionRow = (props) => {
           )}
         </StatusDisplay>
       </td>
-      <td className="has-tooltip" onMouseEnter={(e)=> popUp(e, tasksTooltipContent(item.tasks))}>
+      <td
+        className="has-tooltip"
+        onMouseEnter={(e)=> showTooltip(e, tasksTooltipContent(item.tasks))}
+        onMouseLeave={(e)=> hideTooltip(e)}
+      >
         <TasksStatusBar
           tasks={item.tasks}
         />
       </td>
       { hasResponsibles && (
-        <td className="has-tooltip" onMouseEnter={(e)=> popUp(e, responsiblesTooltipContent(item.responsibleParties))}>
+        <td
+          className="has-tooltip"
+          onMouseEnter={(e)=> showTooltip(e, responsiblesTooltipContent(item.responsibleParties))}
+          onMouseLeave={(e)=> hideTooltip(e)}
+        >
           <ResponsiblesViz
             parties={item.responsibleParties}
             persons={item.contactPersons}
@@ -611,7 +627,11 @@ const ActionRow = (props) => {
         </td>
       )}
       { hasImpacts && (
-        <td className="has-tooltip" onMouseEnter={(e)=> popUp(e, impactTooltipContent(item.impact, plan.actionImpacts))}>
+        <td
+          className="has-tooltip"
+          onMouseEnter={(e)=> showTooltip(e, impactTooltipContent(item.impact, plan.actionImpacts))}
+          onMouseLeave={(e)=> hideTooltip(e)}
+        >
           { item.impact && (
             <ActionImpact
               identifier={item.impact.identifier}
@@ -623,19 +643,27 @@ const ActionRow = (props) => {
         </td>
       )}
       { hasIndicators && (
-        <td className="has-tooltip" onMouseEnter={(e) => popUp(e, indicatorsTooltipContent(item.relatedIndicators))}>
+        <td
+          className="has-tooltip"
+          onMouseEnter={(e) => showTooltip(e, indicatorsTooltipContent(item.relatedIndicators))}
+          onMouseLeave={(e)=> hideTooltip(e)}
+        >
           { item.relatedIndicators && !item.mergedWith
             && <IndicatorsViz relatedIndicators={item.relatedIndicators}/>}
         </td>
       )}
-      <td className="has-tooltip" onMouseEnter={(e)=> popUp(e, lastUpdatedTooltipContent(item.updatedAt))}>
+      <td
+        className="has-tooltip"
+        onMouseEnter={(e)=> showTooltip(e, lastUpdatedTooltipContent(item.updatedAt))}
+        onMouseLeave={(e)=> hideTooltip(e)}
+      >
         <UpdatedAgo>
           { `${dayjs(item.updatedAt).fromNow(false)}` }
         </UpdatedAgo>
       </td>
     </StyledRow>
   );
-};
+});
 
 const SortableTableHeader = ({children, headerKey, sort, onClick}) => {
   const selected = (sort.key == headerKey);
@@ -675,6 +703,7 @@ const ActionStatusTable = (props) => {
   const theme = useTheme();
   const [ sort, setSort ] = useState({key: 'order', direction: 1});
   const { key, direction } = sort;
+  const [showTooltip, setShowTooltip] = useState(false);
   const [referenceElement, setReferenceElement] = useState(null);
   const [popperElement, setPopperElement] = useState(null);
   const [arrowElement, setArrowElement] = useState(null);
@@ -726,9 +755,13 @@ const ActionStatusTable = (props) => {
 
   };
 
-  const onPop = (target, content) => {
-    setPopperContent(content);
-    setReferenceElement(target);
+  const handleTooltip = (target, content) => {
+    if (!target) setShowTooltip(false)
+    else {
+      setPopperContent(content);
+      setReferenceElement(target);
+      setShowTooltip(true);
+    }
   };
 
   return (
@@ -775,15 +808,17 @@ const ActionStatusTable = (props) => {
             hasImpacts={showColumn.impacts}
             hasIndicators={showColumn.indicators}
             hasImplementationPhases={hasImplementationPhases}
-            popperRef={onPop}
+            popperRef={handleTooltip}
           />
         ))}
       </tbody>
     </DashTable>
-    <Tooltip ref={setPopperElement} style={styles.popper} {...attributes.popper}>
-      {popperContent}
-
-    </Tooltip>
+    { showTooltip && (
+      <Tooltip ref={setPopperElement} style={styles.popper} {...attributes.popper}>
+        {popperContent}
+        <Arrow ref={setArrowElement} style={styles.arrow} />
+      </Tooltip>
+    )}
   </TableWrapper>);
 };
 
