@@ -49,6 +49,10 @@ const IndicatorType = styled(Badge)`
   }} !important;
 `;
 
+const IndicatorDate = styled.span`
+  color: ${(props) => props.theme.graphColors.grey050}
+`
+
 const StyledBadge = styled(Badge)`
   white-space: normal;
   margin-right: ${(props) => props.theme.spaces.s050};
@@ -233,7 +237,9 @@ class IndicatorListFiltered extends React.Component {
                   }
                   <td>
                     {item.latestValue && (
-                      dayjs(item.latestValue.date).format(timeFormat)
+                      <IndicatorDate>
+                        { dayjs(item.latestValue.date).format(timeFormat) }
+                      </IndicatorDate>
                     )}
                   </td>
                   <td>
