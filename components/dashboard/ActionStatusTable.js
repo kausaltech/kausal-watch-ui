@@ -55,6 +55,13 @@ const StyledRow = styled.tr`
 
   td {
     vertical-align: top;
+    min-height: 1px;
+
+    &.has-tooltip > a {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
 
     &.has-tooltip:hover {
       box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
@@ -115,7 +122,16 @@ const ResponsibleTooltipList = styled.ul`
 `;
 
 const ResponsibleTooltipListItem = styled.li`
-  color: ${(props) => props.hasContact ? '#333' : '#900'}
+`;
+
+const PhasesTooltipList = styled.ul`
+  margin: 0;
+  padding: 0;
+  list-style: none;
+`;
+
+const PhasesTooltipListItem = styled.li`
+  color: ${(props) => props.active === 'true' ? '#333' : '#ccc'}
 `;
 
 const UpdatedAgo = styled.div`
@@ -145,6 +161,10 @@ const TaskStatusViz = styled.div`
     display: inline-block;
     background-color: ${(props) => props.theme.graphColors.green070};
   }
+`;
+
+const TaskTooltip = styled.div`
+
 `;
 
 const VizLabel = styled.div`
@@ -184,6 +204,13 @@ const Tooltip = styled.div`
   &[data-popper-placement^='right'] > div {
     left: -4px;
   }
+
+  h5 {
+    font-family: ${(props) => props.theme.fontFamily}, ${(props) => props.theme.fontFamilyFallback};
+    font-weight: ${(props) => props.theme.fontWeightBold};
+    font-size: ${(props) => props.theme.fontSizeSm};
+    color: ${(props) => props.theme.themeColors.black};
+  }
 `;
 
 const Arrow = styled.div`
@@ -210,9 +237,7 @@ const IndicatorsDisplay = styled.div`
   padding: ${(props) => props.theme.spaces.s050};
 `;
 
-const TasksStatusBar = (props) => {
-  const { tasks } = props;
-  const { t } = useTranslation(['common', 'actions']);
+const getTaskCounts = (tasks, t) => {
   let tasksCount = tasks.length;
   let ontimeTasks = 0;
   let lateTasks = 0;
@@ -241,23 +266,37 @@ const TasksStatusBar = (props) => {
     ? t('action-no-tasks')
     : `${tasksCount} ${t('action-tasks-count')}`;
 
+  return {
+    total: tasksCount,
+    displayTotal: displayTasksCount,
+    onTime: ontimeTasks,
+    late: lateTasks,
+    completed: completedTasks,
+  }
+};
+
+const TasksStatusBar = (props) => {
+  const { t } = useTranslation(['common', 'actions']);
+  const { tasks } = props;
+  const taskCounts = getTaskCounts(tasks, t);
+
   return (
     <>
       <TaskStatusViz>
         <div
           className="completed"
-          style={{ width: `${(completedTasks / tasksCount) * 100}%` }}
+          style={{ width: `${(taskCounts.completed / taskCounts.total) * 100}%` }}
         />
         <div
           className="late"
-          style={{ width: `${(lateTasks / tasksCount) * 100}%` }}
+          style={{ width: `${(taskCounts.late / taskCounts.total) * 100}%` }}
         />
         <div
           className="on-time"
-          style={{ width: `${(ontimeTasks / tasksCount) * 100}%` }}
+          style={{ width: `${(taskCounts.onTime / taskCounts.total) * 100}%` }}
         />
       </TaskStatusViz>
-      <VizLabel className={tasksCount === 0 && 'disabled'}>{displayTasksCount}</VizLabel>
+      <VizLabel className={taskCounts.total === 0 && 'disabled'}>{taskCounts.displayTotal}</VizLabel>
       </>
   );
 };
@@ -279,13 +318,13 @@ const IndicatorsViz = (props) => {
     <IndicatorsDisplay>
       <Icon
         name="tachometer"
-        color={hasIndicators ? theme.actionOnTimeColor : theme.actionNotStartedColor}
+        color={hasIndicators ? theme.graphColors.green070 : theme.graphColors.grey030}
         height="1.2em"
         width="1.2em"
       />
       <Icon
         name="bullseye"
-        color={hasGoals ? theme.actionOnTimeColor : theme.actionNotStartedColor}
+        color={hasGoals ? theme.graphColors.green070 : theme.graphColors.grey030}
         height="1.2em"
         width="1.2em"
       />
@@ -351,61 +390,182 @@ function processAction(actionIn, orgMap) {
 const ActionRow = (props) => {
   const { item, plan, hasResponsibles, hasImpacts, hasIndicators, hasImplementationPhases, popperRef } = props;
   const theme = useTheme();
+  const { t } = useTranslation(['common', 'actions']);
   const actionStatus = cleanActionStatus(item, plan.actionStatuses);
 
-  const popUp = (evt, name) => {
-    popperRef(evt.currentTarget, name);
+  //console.log("plan", plan);
+  const popUp = (evt, content) => {
+    content && popperRef(evt.currentTarget, content);
   };
 
-  const tasksTooltipContent = (tasks) => (
+  const primaryOrgTooltipContent = (primaryOrg) => (
     <div>
-      Tasks: { tasks.length }
+      <h5>{ t('primary-organisation') }</h5>
+      { primaryOrg}
     </div>
   );
 
-  const phasesTooltipContent = () => { hasImplementationPhases ?
+  const tasksTooltipContent = (tasks) => {
+    const taskCounts = getTaskCounts(tasks, t);
+    if (taskCounts.total < 1) return <div><h5>{ t('action-no-tasks') }</h5></div>
+    return (
+    <TaskTooltip>
+      <table>
+        <thead>
+        <tr>
+          <th>{ t('tasks') } </th>
+          <th>{ taskCounts.total }</th>
+        </tr>
+        </thead>
+        <tbody>
+       { taskCounts.completed > 0 && (
+         <tr>
+          <td>{t('completed')}</td>
+          <td>{taskCounts.completed}</td>
+        </tr>
+        ) }
+       { taskCounts.late > 0 && <tr><td>{ t('late') }</td> <td>{ taskCounts.late }</td></tr> }
+       { taskCounts.onTime > 0 && <tr><td>{ t('on-time') }</td> <td>{ taskCounts.onTime }</td></tr> }
+       </tbody>
+      </table>
+    </TaskTooltip>
+  )};
+
+  const phasesTooltipContent = (status, activePhase, merged) => {
+    console.log(status, activePhase, merged);
+    if (merged) return (
+      <div>
+        <h5>{ ` ${t('merged-with')} ${merged?.identifier} ` }</h5>
+      </div>
+    )
+    if (!activePhase) return (
+      <div>
+        {!status?.name && <h5>{ t('action-phase-unknown') }</h5>}
+        {status?.name}
+      </div>
+    )
+    if (status?.identifier === 'cancelled') return (
+      <div>
+        <h5>{ status.name }</h5>
+      </div>
+    )
+    return hasImplementationPhases ?
     (
-      <ul>
-      {plan.actionImplementationPhases.map((phase) => (
-        <li>{phase.name}</li>
-      ))}
-      </ul>
-    ) : null
+      <div>
+        <h5>{ t('action-phase') }</h5>
+        <PhasesTooltipList>
+        {plan.actionImplementationPhases.map((phase) => (
+          <PhasesTooltipListItem key={phase.id} active={(activePhase?.id === phase.id).toString()}>
+            {phase.name}
+            {activePhase?.id === phase.id && status.name && !status.isCompleted ? ` (${status.name})` : ''}
+          </PhasesTooltipListItem>
+        ))}
+        </PhasesTooltipList>
+      </div>
+    ) : (
+      <div>
+        <h5>Status</h5>
+        {status.name}
+      </div>
+    )
   };
 
-  const responsiblesTooltipContent = (parties) => (
+  const responsiblesTooltipContent = (parties) => {
+    console.log(parties);
+    if (parties.length < 1) return (
+      <div>
+        <h5>{ t('non-named-responsibles') }</h5>
+      </div>
+    )
+    return (
     <div>
       <h5>{parties.length} responsible organizations</h5>
+      { parties.find((party) => party.hasContactPerson) && <strong>{ t('with-contact-person') }:</strong>}
       <ResponsibleTooltipList>
         {parties.map((party) => (
-          <ResponsibleTooltipListItem hasContact={party.hasContactPerson.toString()} key={party.id}>
-            <Icon
-              name={party.hasContactPerson ? 'dot-circle' : 'circle-outline'}
-              color={theme.actionOnTimeColor}
-              width="1em"
-              height="1em"
-            />
-            {' '}
-            {party.organization.abbreviation || party.organization.name }
-          </ResponsibleTooltipListItem>
+          party.hasContactPerson ? (
+            <ResponsibleTooltipListItem key={party.id}>
+              <Icon
+                name={party.hasContactPerson ? 'dot-circle' : 'circle-outline'}
+                color={theme.actionOnTimeColor}
+                width="1em"
+                height="1em"
+              />
+              {' '}
+              {party.organization.abbreviation || party.organization.name }
+            </ResponsibleTooltipListItem>
+          ) : null
+        ))}
+      </ResponsibleTooltipList>
+      { parties.find((party) => !party.hasContactPerson) && <strong>{ t('without-contact-person') }:</strong>}
+      <ResponsibleTooltipList>
+        { parties.map((party) => (
+          !party.hasContactPerson ? (
+            <ResponsibleTooltipListItem key={party.id}>
+              <Icon
+                name={party.hasContactPerson ? 'dot-circle' : 'circle-outline'}
+                color={theme.actionOnTimeColor}
+                width="1em"
+                height="1em"
+              />
+              {' '}
+              {party.organization.abbreviation || party.organization.name }
+            </ResponsibleTooltipListItem>
+          ) : null
         ))}
       </ResponsibleTooltipList>
     </div>
-  );
+  )};
 
-  const indicatorsTooltipContent = (relatedIndicators) => (
+  const indicatorsTooltipContent = (relatedIndicators) => {
+  console.log("related", relatedIndicators);
+  const hasIndicators = relatedIndicators.length > 0;
+  const hasGoals = relatedIndicators.find((ri) => ri.indicator.goals.length > 0);
+  return (
     <div>
-      Indicators: {relatedIndicators.length}<br />
-      Goals: ?
+      <h5>{ t('indicators') }</h5>
+      <Icon
+        name="tachometer"
+        color={hasIndicators ? theme.graphColors.green070 : theme.graphColors.grey030}
+        height="1.2em"
+        width="1.2em"
+      />
+      {hasIndicators ? ` ${t('indicators')}: ${relatedIndicators.length}` : ` ${t('action-has-no-indicators')}`}<br />
+      <Icon
+        name="bullseye"
+        color={hasGoals ? theme.graphColors.green070 : theme.graphColors.grey030}
+        height="1.2em"
+        width="1.2em"
+      />
+      { hasGoals ? ` ${t('action-has-goals')}` : ` ${t('action-has-no-goals')}` }
+      {}
+    </div>
+  )};
+
+  const lastUpdatedTooltipContent = (updateDate) => (
+    <div>
+      <h5>{ t('latest-update') }</h5>
+      {dayjs(updateDate).format('L')}
     </div>
   );
+
+  const impactTooltipContent = (impact, impacts) => {
+    if (!impact) return null;
+    const activeImpact = impacts.find((item) => item.id === impact.id);
+    return (
+    <div>
+      <h5>{ t('impact') }</h5>
+      {activeImpact.identifier !== '0' && <div>{activeImpact.identifier}/{impacts.length - 1}</div>}
+      {activeImpact.name}
+    </div>
+  )};
 
   return (
     <StyledRow>
       { plan.primaryOrgs.length > 0 && (
         <td
           className="logo-column has-tooltip"
-          onMouseEnter={(e)=> popUp(e, item.primaryOrg.name)}
+          onMouseEnter={(e)=> popUp(e, primaryOrgTooltipContent(item.primaryOrg.name))}
         >
           { item.primaryOrg && (
             <OrgLogo
@@ -422,12 +582,12 @@ const ActionRow = (props) => {
         .
       </td>
       )}
-      <td>
+      <td className="has-tooltip">
         <ActionLink action={item}>
           { item.name }
         </ActionLink>
       </td>
-      <td className="has-tooltip" onMouseEnter={(e)=> popUp(e, phasesTooltipContent())}>
+      <td className="has-tooltip" onMouseEnter={(e)=> popUp(e, phasesTooltipContent(actionStatus, item.implementationPhase, item.mergedWith))}>
         <StatusDisplay>
           { hasImplementationPhases ? (
             <ActionPhase
@@ -460,11 +620,12 @@ const ActionRow = (props) => {
         </td>
       )}
       { hasImpacts && (
-        <td className="has-tooltip" onMouseEnter={(e)=> popUp(e, 'Impact')}>
+        <td className="has-tooltip" onMouseEnter={(e)=> popUp(e, impactTooltipContent(item.impact, plan.actionImpacts))}>
           { item.impact && (
             <ActionImpact
               identifier={item.impact.identifier}
               name=""
+              max={plan.actionImpacts.length - 1}
               size="sm"
             />
           )}
@@ -476,7 +637,7 @@ const ActionRow = (props) => {
             && <IndicatorsViz relatedIndicators={item.relatedIndicators}/>}
         </td>
       )}
-      <td className="has-tooltip" onMouseEnter={(e)=> popUp(e, dayjs(item.updatedAt).format('L'))}>
+      <td className="has-tooltip" onMouseEnter={(e)=> popUp(e, lastUpdatedTooltipContent(item.updatedAt))}>
         <UpdatedAgo>
           { `${dayjs(item.updatedAt).fromNow(false)}` }
         </UpdatedAgo>
