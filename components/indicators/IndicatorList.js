@@ -78,6 +78,29 @@ const GET_INDICATOR_LIST = gql`
         }
         effectType
       }
+      common {
+        id
+        name
+        indicators {
+          id
+          organization { name }
+        }
+        relatedCauses {
+          effectType
+          causalIndicator {
+            id
+            name
+          }
+        }
+        relatedEffects {
+          id
+          effectType
+          effectIndicator {
+            id
+            name
+          }
+        }
+      }
     }
   }
 `;
@@ -92,6 +115,36 @@ class IndicatorList extends React.Component {
       return indicator.relatedCauses?.find((effect) => effect.effectType !== 'PART_OF') !== undefined;
     }) !== undefined;
   };
+
+  processCommonIndicatorHierarchy(planIndicators) {
+    const makeLinks = (commonIndicator) => ({
+      id: commonIndicator.id,
+      isRoot: commonIndicator.relatedEffects.filter(e => e.effectType === 'PART_OF').length === 0,
+      children: commonIndicator.relatedCauses
+        .filter(e => e.effectType === 'PART_OF')
+        .map(e => e.causalIndicator.id)
+    });
+    const uniqueCommonIndicators = {};
+    planIndicators.forEach(i => {
+      if (i.common != null && !(i.common.id in uniqueCommonIndicators)) {
+        uniqueCommonIndicators[i.common.id] = i.common;
+      }
+    });
+    const processed = Object.fromEntries(
+      Object.values(uniqueCommonIndicators)
+        .map(i => ([i.id, makeLinks(i)]))
+    );
+    const expandPaths = (processed, indicators, path) => {
+      indicators.forEach(i => {
+        processed[i.id].path = [...path, i.id];
+        expandPaths(processed, i.children.map(c => processed[c]), [...path, i.id])
+      });
+      return processed;
+    }
+
+    const rootIndicators = Object.values(processed).filter(i => i.isRoot);
+    return expandPaths(processed, rootIndicators, []);
+  }
 
   processDataToProps(data) {
     const { plan } = data;
@@ -125,6 +178,7 @@ class IndicatorList extends React.Component {
           if (loading) return <ContentLoader />;
           if (error) return <ErrorMessage message={error.message} />;
           const props = this.processDataToProps(data);
+          props.hierarchy = this.processCommonIndicatorHierarchy(data.planIndicators);
           const showInsights = this.hasInsights(data);
 
           return (
