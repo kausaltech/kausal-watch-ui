@@ -156,9 +156,6 @@ class IndicatorListFiltered extends React.Component {
     const filteredIndicators = this.filterIndicators(hierarchy, indicators, displayMunicipality);
     const sortedCategories = [...categories].sort((a, b) => b.order - a.order);
 
-    const allIndicatorsHaveGraphs = filteredIndicators.filter(item => (
-      !item.latestGraph && !item.latestValue
-    )).length === 0;
     const someIndicatorsHaveCategories = filteredIndicators.reduce(
       ((cumul, cur) => Math.max(cumul, cur.categories.length)), 0) > 0;
     const allIndicatorsHaveSameLevel = new Set(filteredIndicators.map(i => i.level)).size === 1;
@@ -199,7 +196,6 @@ class IndicatorListFiltered extends React.Component {
               { someIndicatorsHaveCategories && <th>{ t('themes') }</th> }
               <th>{ t('updated') }</th>
               <th>{ t('indicator-value') }</th>
-              { !allIndicatorsHaveGraphs && <th>{ t('graph') }</th> }
             </tr>
           </thead>
           <tbody>
@@ -249,14 +245,6 @@ class IndicatorListFiltered extends React.Component {
                       </IndicatorLink>
                     )}
                   </td>
-                  { !allIndicatorsHaveGraphs && <td>
-                    {(item.latestGraph || item.latestValue) && (
-                      <span>
-                        <Icon name="chartLine" />
-                      </span>
-                    )}
-                  </td>
-                  }
                 </tr>
               );
             })}
