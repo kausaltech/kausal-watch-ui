@@ -6,6 +6,7 @@ import {
 
 import styled from 'styled-components';
 
+import { useTheme } from 'common/theme';
 import { IndicatorLink } from '../../common/links';
 import Icon from '../common/Icon';
 import dayjs from '../../common/dayjs';
@@ -65,12 +66,52 @@ const StyledBadge = styled(Badge)`
 `;
 
 const IndicatorName = styled.div`
-
   a {
     color: ${(props) => props.theme.themeColors.black};
   }
-  padding-left: ${(props) => props.indentLevel * 20}px;
 `;
+
+const IndentableTable = styled(Table)`
+  > :not(caption) > * > * {
+    padding: 0;
+    background-color: transparent;
+  }
+
+  > :not(:first-child) {
+    border-top: 3px solid ${props => props.theme.themeColors.white};
+}
+`;
+
+const IndentableCellContentWrapper = styled.div`
+  padding: ${(props) => (props.sectionHeader === true ? "0.5rem" : "0.15rem 0.5rem")};
+  font-weight: ${(props) => (props.sectionHeader === true ? "bold" : "normal")};
+  border-left: ${(props) => 30 * props.indent}px solid ${(props) => props.theme.themeColors.light};
+  background-color: ${(props) => (props.sectionHeader === true ? props.theme.themeColors.light : 'inherit')};
+`;
+
+const IndentableTableCell = (props) => (
+  <td>
+    <IndentableCellContentWrapper indent={props.indent}>
+      { props.children }
+    </IndentableCellContentWrapper>
+  </td>
+);
+
+const DarkenedTableHeader = styled.th`
+  background-color: red;
+`;
+
+const IndentableTableHeader = (props) => {
+  const theme = useTheme();
+  return (
+    <th onClick={props.onClick} colSpan={props.colSpan}>
+      <IndentableCellContentWrapper indent={props.indent} sectionHeader={props.sectionHeader}>
+        { props.children }
+      </IndentableCellContentWrapper>
+    </th>
+  );
+};
+
 
 const levels = {
   operational: { fi: 'toiminnallinen', index: 1 },
@@ -121,9 +162,20 @@ class IndicatorListFiltered extends React.Component {
     super(props);
     this.state = {
       activeCategory: '',
-      activeSearch: '',
+      Activesearch: '',
+      hiddenGroups: {}
     };
     this.handleChange = this.handleChange.bind(this);
+    this.toggleHidden = this.toggleHidden.bind(this);
+  }
+
+  toggleHidden(idx) {
+    this.setState(state => {
+      let newVal = !(state.hiddenGroups[idx] === true);
+      console.log(idx);
+      const newHiddenGroups = Object.assign(state.hiddenGroups, {[idx]: newVal});
+      return Object.assign({}, state, {hiddenGroups: newHiddenGroups});
+    })
   }
 
   handleChange(filterType, val) {
@@ -183,7 +235,10 @@ class IndicatorListFiltered extends React.Component {
         return indicatorElement(item, result, 0);
       }
 
-      result = hierarchy[item.common.id]?.pathNames ?? '--not-found--';
+      const pathNames = hierarchy[item.common.id]?.pathNames;
+      if (pathNames != null && pathNames.length > 0) {
+        result = pathNames[pathNames.length -1] ?? '--not-found--';
+      }
       if (seen.has(item.common.id)) {
         result = null;
       }
@@ -194,75 +249,76 @@ class IndicatorListFiltered extends React.Component {
       const level = (hierarchy[item.common.id]?.path?.length ?? 1) - 1;
       return indicatorElement(item, result, level);
     };
+    const indentationLevel = (item) => (
+      (hierarchy[item.common.id]?.path?.length ?? 1) - 1
+    );
     return (
       <div className="mb-5 pb-5">
         <IndicatorListFilters cats={sortedCategories} changeOption={this.handleChange} />
-        <Table hover>
+        <IndentableTable hover>
           <thead>
-            <tr>
-              { !allIndicatorsHaveSameLevel && <th>{ t('type') }</th> }
-              <th>{ t('name') }</th>
-              { displayMunicipality && <th>{ t('municipality') }</th> }
-              { someIndicatorsHaveCategories && <th>{ t('themes') }</th> }
-              <th>{ t('updated') }</th>
-              <th>{ t('indicator-value') }</th>
-            </tr>
           </thead>
-          {filteredIndicators.map(group => (
+          {filteredIndicators.map((group, idx) => (
             <tbody>
-              <tr><th colSpan="1">{indicatorName(group[0])}</th></tr>
+              <tr>
+                <IndentableTableHeader sectionHeader={true} onClick={event =>this.toggleHidden(idx)} colSpan="3" indent={indentationLevel(group[0])}>{indicatorName(group[0])}</IndentableTableHeader>
+              </tr>
+              <tr style={{display: (this.state.hiddenGroups[idx] === false ? "none": "table-row")}}>
+                { !allIndicatorsHaveSameLevel && <IndentableTableHeader>{ t('type') }</IndentableTableHeader> }
+                { displayMunicipality && <IndentableTableHeader indent={indentationLevel(group[0])}>{ t('municipality') }</IndentableTableHeader> }
+                { someIndicatorsHaveCategories && <IndentableTableHeader>{ t('themes') }</IndentableTableHeader> }
+                <IndentableTableHeader>{ t('updated') }</IndentableTableHeader>
+                <IndentableTableHeader>{ t('indicator-value') }</IndentableTableHeader>
+              </tr>
               {group.map((item) => {
                 let timeFormat = 'l';
                 if (item.timeResolution === 'YEAR') {
                   timeFormat = 'YYYY';
                 }
-                return (
-                  <tr key={item.id}>
+                return (<>
+                          <tr style={{display: (this.state.hiddenGroups[idx] === false ? "none": "table-row")}} key={item.id}>
                     { !allIndicatorsHaveSameLevel &&
-                      <td>
+                      <IndentableTableCell>
                         <IndicatorType level={item.level}>
                           { t(item.level) || <span>-</span> }
                         </IndicatorType>
-                      </td>
+                      </IndentableTableCell>
                     }
-                    <td>
-                      { indicatorName(item) }
-                    </td>
                     { displayMunicipality &&
-                      <td>
+                      <IndentableTableCell indent={indentationLevel(item)}>
                         <IndicatorLink id={item.id}>
                           <a>{item.organization.name}</a>
                         </IndicatorLink>
-                      </td>
+                      </IndentableTableCell>
                     }
                     { someIndicatorsHaveCategories &&
-                      <td>
+                      <IndentableTableCell>
                         {item.categories.map((cat) => {
                           if (cat) return <StyledBadge key={cat.id}>{cat.name}</StyledBadge>;
                           return false;
                         })}
-                      </td>
+                      </IndentableTableCell>
                     }
-                    <td>
+                    <IndentableTableCell>
                       {item.latestValue && (
                         <IndicatorDate>
                           { dayjs(item.latestValue.date).format(timeFormat) }
                         </IndicatorDate>
                       )}
-                    </td>
-                    <td>
+                    </IndentableTableCell>
+                    <IndentableTableCell>
                       {item.latestValue && (
                         <IndicatorLink id={item.id}>
                           <a>{`${beautifyValue(item.latestValue.value, i18n.language)} ${item.unit?.shortName ?? ''}`}</a>
                         </IndicatorLink>
                       )}
-                    </td>
+                    </IndentableTableCell>
                   </tr>
-                );
+                </>);
               })}
             </tbody>
           ))}
-        </Table>
+        </IndentableTable>
       </div>
     );
   }
