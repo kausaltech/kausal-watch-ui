@@ -136,8 +136,10 @@ class IndicatorList extends React.Component {
     );
     const expandPaths = (processed, indicators, path) => {
       indicators.forEach(i => {
-        processed[i.id].path = [...path, i.id];
-        expandPaths(processed, i.children.map(c => processed[c]), [...path, i.id])
+        const newPath = [...path, i.id]
+        processed[i.id].path = newPath;
+        processed[i.id].pathNames = newPath.map(p => uniqueCommonIndicators[p].name);
+        expandPaths(processed, i.children.map(c => processed[c]), newPath)
       });
       return processed;
     }

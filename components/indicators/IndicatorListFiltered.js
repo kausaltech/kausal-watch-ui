@@ -94,7 +94,7 @@ function sortIndicators(hierarchy, indicators, displayMunicipality) {
     sorted = indicators.sort((a, b) => a.organization.name.localeCompare(b.organization.name));
   }
   if (hierarchy == null || Object.keys(hierarchy).length === 0) {
-    return sorted;
+    return [sorted];
   }
   sorted = indicators.sort((a, b) => {
     if (a.common == null || b.common == null) {
@@ -107,7 +107,13 @@ function sortIndicators(hierarchy, indicators, displayMunicipality) {
     }
     return pathA.length - pathB.length;
   });
-  return sorted;
+  const grouped = new Map();
+  sorted.forEach(indicator => {
+    const commonId = indicator.common.id;
+    const group = grouped.get(commonId) ?? [];
+    grouped.set(commonId, [...group, indicator]);
+  });
+  return [...grouped.values()];
 }
 
 class IndicatorListFiltered extends React.Component {
@@ -156,9 +162,10 @@ class IndicatorListFiltered extends React.Component {
     const filteredIndicators = this.filterIndicators(hierarchy, indicators, displayMunicipality);
     const sortedCategories = [...categories].sort((a, b) => b.order - a.order);
 
-    const someIndicatorsHaveCategories = filteredIndicators.reduce(
+    console.log(filteredIndicators);
+    const someIndicatorsHaveCategories = filteredIndicators.flat().reduce(
       ((cumul, cur) => Math.max(cumul, cur.categories.length)), 0) > 0;
-    const allIndicatorsHaveSameLevel = new Set(filteredIndicators.map(i => i.level)).size === 1;
+    const allIndicatorsHaveSameLevel = new Set(filteredIndicators.flat().map(i => i.level)).size === 1;
 
     const indicatorElement = (item, itemName, indentLevel) => (
       <IndicatorName indentLevel={indentLevel} >
@@ -168,12 +175,15 @@ class IndicatorListFiltered extends React.Component {
       </IndicatorName>
     );
     const seen = new Set();
+    console.log(hierarchy);
     const indicatorName = (item) => {
-      let result = item.name;
+      let result = null;
       if (item.common == null || hierarchy === null || Object.keys(hierarchy).length === 0) {
         result = item.name;
         return indicatorElement(item, result, 0);
       }
+
+      result = hierarchy[item.common.id]?.pathNames ?? '--not-found--';
       if (seen.has(item.common.id)) {
         result = null;
       }
@@ -198,57 +208,60 @@ class IndicatorListFiltered extends React.Component {
               <th>{ t('indicator-value') }</th>
             </tr>
           </thead>
-          <tbody>
-            {filteredIndicators.map((item) => {
-              let timeFormat = 'l';
-              if (item.timeResolution === 'YEAR') {
-                timeFormat = 'YYYY';
-              }
-              return (
-                <tr key={item.id}>
-                  { !allIndicatorsHaveSameLevel &&
+          {filteredIndicators.map(group => (
+            <tbody>
+              <tr><th colSpan="1">{indicatorName(group[0])}</th></tr>
+              {group.map((item) => {
+                let timeFormat = 'l';
+                if (item.timeResolution === 'YEAR') {
+                  timeFormat = 'YYYY';
+                }
+                return (
+                  <tr key={item.id}>
+                    { !allIndicatorsHaveSameLevel &&
+                      <td>
+                        <IndicatorType level={item.level}>
+                          { t(item.level) || <span>-</span> }
+                        </IndicatorType>
+                      </td>
+                    }
                     <td>
-                      <IndicatorType level={item.level}>
-                        { t(item.level) || <span>-</span> }
-                      </IndicatorType>
+                      { indicatorName(item) }
                     </td>
-                  }
-                  <td>
-                    { indicatorName(item) }
-                  </td>
-                  { displayMunicipality &&
+                    { displayMunicipality &&
+                      <td>
+                        <IndicatorLink id={item.id}>
+                          <a>{item.organization.name}</a>
+                        </IndicatorLink>
+                      </td>
+                    }
+                    { someIndicatorsHaveCategories &&
+                      <td>
+                        {item.categories.map((cat) => {
+                          if (cat) return <StyledBadge key={cat.id}>{cat.name}</StyledBadge>;
+                          return false;
+                        })}
+                      </td>
+                    }
                     <td>
-                      <IndicatorLink id={item.id}>
-                        <a>{item.organization.name}</a>
-                      </IndicatorLink>
+                      {item.latestValue && (
+                        <IndicatorDate>
+                          { dayjs(item.latestValue.date).format(timeFormat) }
+                        </IndicatorDate>
+                      )}
                     </td>
-                  }
-                  { someIndicatorsHaveCategories &&
                     <td>
-                      {item.categories.map((cat) => {
-                        if (cat) return <StyledBadge key={cat.id}>{cat.name}</StyledBadge>;
-                        return false;
-                      })}
+                      {item.latestValue && (
+                        <IndicatorLink id={item.id}>
+                          <a>{`${beautifyValue(item.latestValue.value, i18n.language)} ${item.unit?.shortName ?? ''}`}</a>
+                        </IndicatorLink>
+                      )}
                     </td>
-                  }
-                  <td>
-                    {item.latestValue && (
-                      <IndicatorDate>
-                        { dayjs(item.latestValue.date).format(timeFormat) }
-                      </IndicatorDate>
-                    )}
-                  </td>
-                  <td>
-                    {item.latestValue && (
-                      <IndicatorLink id={item.id}>
-                        <a>{`${beautifyValue(item.latestValue.value, i18n.language)} ${item.unit?.shortName ?? ''}`}</a>
-                      </IndicatorLink>
-                    )}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
+                  </tr>
+                );
+              })}
+            </tbody>
+          ))}
         </Table>
       </div>
     );
