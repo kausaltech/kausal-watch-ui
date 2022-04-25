@@ -138,6 +138,7 @@ async function getPlan(ctx) {
     variables: {
       identifier: ctx.req.planIdentifier,
       hostname: ctx.req.currentURL.hostname,
+      clientUrl: ctx.req.currentURL.baseURL,
     },
   });
   if (error) throw error;

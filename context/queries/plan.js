@@ -2,7 +2,7 @@ import { gql } from '@apollo/client';
 import images from 'common/images';
 
 export default gql`
-query PlanContext($identifier: ID, $hostname: String) {
+query PlanContext($identifier: ID, $hostname: String, $clientUrl: String) {
   plan(id: $identifier) {
     id
     identifier
@@ -125,7 +125,7 @@ query PlanContext($identifier: ID, $hostname: String) {
       organization {
         name
       }
-      viewUrl
+      viewUrl(clientUrl: $clientUrl)
     }
   }
 }
