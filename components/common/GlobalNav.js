@@ -329,23 +329,26 @@ function GlobalNav(props) {
     );
   }
 
-  const hasPlanSiblings = plan.relatedPlans?.length > 0;
+  const hasPlanSiblings = plan.relatedPlans?.length > 0 || plan.children?.length > 0;
   const hideLogoOnMobile = theme.navTitleVisible && hasPlanSiblings;
+
+  const displayTitle = plan.parent ? plan.parent.name : siteTitle;
+  const rootLink = plan.parent ? plan.parent.viewUrl : '/';
 
   return (
     <div>
       <TopNav
         expand="md"
         id="branding-navigation-bar"
-        aria-label={siteTitle}
+        aria-label={displayTitle}
         container={fullwidth ? 'fluid' : true}
       >
         <Site>
-          <Link href="/" passHref>
+          <Link href={rootLink} passHref>
             <HomeLink hideLogoOnMobile={hideLogoOnMobile.toString()}>
               <OrgLogo className="org-logo" />
               <SiteTitle>
-                { theme.navTitleVisible ? siteTitle : '\u00A0' }
+                { theme.navTitleVisible ? displayTitle : '\u00A0' }
               </SiteTitle>
             </HomeLink>
           </Link>

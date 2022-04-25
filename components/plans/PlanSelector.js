@@ -76,7 +76,7 @@ const StyledDropdownToggle = styled(DropdownToggle)`
 
 const PlanSelector = (props) => {
   const plan = useContext(PlanContext);
-  if (!plan.relatedPlans) return null;
+  if (!plan.relatedPlans || !plan.children) return null;
   return (
 
     <PlanSelect>
@@ -87,7 +87,7 @@ const PlanSelector = (props) => {
           tag="button"
         >
 
-            <PlanAvatar src={plan.image.small.src} />
+            <PlanAvatar src={plan.image?.small.src} />
             <PlanTitle>
               {plan.shortName}
             </PlanTitle>
@@ -95,6 +95,16 @@ const PlanSelector = (props) => {
         </StyledDropdownToggle>
         <DropdownMenu>
           { plan.relatedPlans.map((relPlan) => (
+            <PlanDropdownItem href={relPlan.viewUrl} key={relPlan.identifier}>
+              <PlanChip
+                planImage={relPlan.image?.rendition.src}
+                planShortName={relPlan.shortName}
+                organization={relPlan.name}
+                size="md"
+              />
+            </PlanDropdownItem>
+          ))}
+          { plan.children.map((relPlan) => (
             <PlanDropdownItem href={relPlan.viewUrl} key={relPlan.identifier}>
               <PlanChip
                 planImage={relPlan.image?.rendition.src}

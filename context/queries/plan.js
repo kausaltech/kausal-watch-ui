@@ -127,6 +127,36 @@ query PlanContext($identifier: ID, $hostname: String, $clientUrl: String) {
       }
       viewUrl(clientUrl: $clientUrl)
     }
+    children {
+      id
+      identifier
+      name
+      shortName
+      image {
+          rendition(size: "128x128", crop: true) {
+            src
+          }
+        }
+      organization {
+        name
+      }
+      viewUrl(clientUrl: $clientUrl)
+    }
+    parent {
+      id
+      identifier
+      name
+      shortName
+      image {
+          rendition(size: "128x128", crop: true) {
+            src
+          }
+        }
+      organization {
+        name
+      }
+      viewUrl(clientUrl: $clientUrl)
+    }
   }
 }
 ${images.fragments.multiUseImage}
