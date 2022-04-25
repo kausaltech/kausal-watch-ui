@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import {
   Collapse, Navbar, Nav, NavItem,
@@ -16,7 +16,7 @@ import Icon from './Icon';
 import PlanSelector from 'components/plans/PlanSelector';
 import LanguageSelector from './LanguageSelector';
 import NavbarSearch from './NavbarSearch';
-import Plan from 'context/queries/plan';
+import PlanContext from 'context/plan';
 
 const TopNav = styled(Navbar)`
   padding: 0 ${(props) => props.theme.spaces.s100};
@@ -296,6 +296,7 @@ DropdownList.propTypes = {
 
 function GlobalNav(props) {
   const { t } = useTranslation();
+  const plan = useContext(PlanContext);
   const [navIsFixed, setnavIsFixed] = useState(false);
   const [isOpen, toggleOpen] = useState(false);
   const {
@@ -328,42 +329,8 @@ function GlobalNav(props) {
     );
   }
 
-  const mockPlans = [
-    {
-      identifier: 'kierto',
-      image: 'https://picsum.photos/200',
-      name: 'Kiertotalousohjelma',
-      shortName: 'Kiertotalous',
-      organization: {
-        abbreviation: 'Sunnydale',
-      },
-      active: false,
-      planUrl: 'http://helsinki-kierto.localhost:3000/',
-    },
-    {
-      identifier: 'lumo',
-      image: 'https://picsum.photos/200',
-      name:  'Luonnon monimuotoisuus',
-      shortName: 'LUMO',
-      organization: {
-        abbreviation: 'Sunnydale',
-      },
-      active: false,
-      planUrl: 'http://hsy-kestava.localhost:3000/',
-    },
-    {
-      identifier: 'ilmasto',
-      image: 'https://picsum.photos/200',
-      name: 'Sunnydale ilmasto-ohjelma',
-      shortName: 'Ilmasto',
-      organization: {
-        abbreviation: 'Sunnydale',
-      },
-      active: true,
-      planUrl: 'http://sunnydale.localhost:3000/',
-    },
-  ];
-  const hideLogoOnMobile = theme.navTitleVisible && mockPlans;
+  const hasPlanSiblings = plan.relatedPlans?.length > 0;
+  const hideLogoOnMobile = theme.navTitleVisible && hasPlanSiblings;
 
   return (
     <div>
@@ -382,7 +349,7 @@ function GlobalNav(props) {
               </SiteTitle>
             </HomeLink>
           </Link>
-          { mockPlans && <PlanSelector plans={mockPlans} /> }
+          { hasPlanSiblings && <PlanSelector /> }
         </Site>
 
 

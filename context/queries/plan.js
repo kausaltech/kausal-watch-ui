@@ -7,6 +7,7 @@ query PlanContext($identifier: ID, $hostname: String) {
     id
     identifier
     name
+    shortName
     themeIdentifier
     primaryLanguage
     otherLanguages
@@ -16,7 +17,7 @@ query PlanContext($identifier: ID, $hostname: String) {
       googleSiteVerificationTag
       matomoAnalyticsUrl
     }
-    image { 
+    image {
       ...MultiUseImageFragment
     }
     serveFileBaseUrl
@@ -110,6 +111,21 @@ query PlanContext($identifier: ID, $hostname: String) {
       hasActionLeadParagraph
       hasActionPrimaryOrgs
       publicContactPersons
+    }
+    relatedPlans {
+      id
+      identifier
+      name
+      shortName
+      image {
+          rendition(size: "128x128", crop: true) {
+            src
+          }
+        }
+      organization {
+        name
+      }
+      viewUrl
     }
   }
 }

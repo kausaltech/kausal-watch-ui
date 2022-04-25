@@ -28,7 +28,7 @@ const PlanTitle = styled.div`
 `;
 
 const PlanOrg = styled.div`
-  font-size: ${(props) => props.theme.fontSizeSm};
+  font-size: 80%;
 `;
 
 const PlanChip = React.forwardRef((props, ref) => {
@@ -57,6 +57,8 @@ const PlanChip = React.forwardRef((props, ref) => {
     </Tag>
   );
 });
+
+PlanChip.displayName = "PlanChip";
 
 PlanChip.defaultProps = {
   size: 'md',

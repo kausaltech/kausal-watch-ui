@@ -1,6 +1,9 @@
+import { useContext } from 'react';
 import styled from 'styled-components';
 import { darken, transparentize } from 'polished';
 import { UncontrolledDropdown, DropdownToggle, DropdownMenu } from 'reactstrap';
+import PlanContext from 'context/plan';
+import Icon from 'components/common/Icon';
 import PlanChip from './PlanChip';
 
 const PlanSelect = styled.div`
@@ -45,7 +48,7 @@ const PlanDropdownItem = styled.a`
 const StyledDropdownToggle = styled(DropdownToggle)`
   display: flex;
   align-items: center;
-  padding: .25rem .75rem .25rem .25rem;
+  padding: .25rem;
   background: none;
   line-height: 1.5rem;
   border: 1px solid ${(props)=> transparentize(0.75, props.theme.brandNavColor)};
@@ -60,13 +63,20 @@ const StyledDropdownToggle = styled(DropdownToggle)`
     background: ${(props) => props.theme.themeColors.white};
     border-color: ${(props) => props.theme.themeColors.dark};
     color: ${(props) => props.theme.themeColors.dark};
+
+    svg {
+      fill: ${(props) => props.theme.themeColors.dark} !important;
+    }
+  }
+
+  svg {
+    fill: ${(props)=> props.theme.brandNavColor} !important;
   }
 `;
 
 const PlanSelector = (props) => {
-  const { plans } = props;
-  const activePlan = plans.find((plan) => plan.active === true);
-
+  const plan = useContext(PlanContext);
+  if (!plan.relatedPlans) return null;
   return (
 
     <PlanSelect>
@@ -77,19 +87,19 @@ const PlanSelector = (props) => {
           tag="button"
         >
 
-            <PlanAvatar src={activePlan.image} />
+            <PlanAvatar src={plan.image.small.src} />
             <PlanTitle>
-              {activePlan.shortName}
+              {plan.shortName}
             </PlanTitle>
-
+            <Icon name="angle-down" />
         </StyledDropdownToggle>
         <DropdownMenu>
-          { plans.map((plan) => (
-            <PlanDropdownItem href={plan.planUrl} key={plan.identifier}>
+          { plan.relatedPlans.map((relPlan) => (
+            <PlanDropdownItem href={relPlan.viewUrl} key={relPlan.identifier}>
               <PlanChip
-                planImage={plan.image}
-                planShortName={plan.shortName}
-                organization={plan.name}
+                planImage={relPlan.image?.rendition.src}
+                planShortName={relPlan.shortName}
+                organization={relPlan.name}
                 size="md"
               />
             </PlanDropdownItem>
