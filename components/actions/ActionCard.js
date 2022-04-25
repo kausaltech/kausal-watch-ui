@@ -10,6 +10,7 @@ import { ActionLink } from 'common/links';
 import { useTheme } from 'common/theme';
 import { useTranslation } from 'common/i18n';
 import PlanContext from 'context/plan';
+import PlanChip from 'components/plans/PlanChip';
 
 const ACTION_CARD_FRAGMENT = gql`
   fragment ActionCard on Action {
@@ -38,6 +39,15 @@ const ACTION_CARD_FRAGMENT = gql`
       abbreviation
       name
       logo {
+        rendition(size: "128x128", crop: true) {
+          src
+        }
+      }
+    }
+    plan {
+      id
+      shortName
+      image {
         rendition(size: "128x128", crop: true) {
           src
         }
@@ -164,7 +174,7 @@ function getIconUrl(action) {
 }
 
 function ActionCard(props) {
-  const { action } = props;
+  const { action, showPlan } = props;
   const plan = useContext(PlanContext);
   const { t } = useTranslation(['common', 'actions']);
   const theme = useTheme();
@@ -201,7 +211,12 @@ function ActionCard(props) {
             )}
             { plan.hideActionIdentifiers
               ? <div />
-              : <ActionNumber className="action-number">{ action.identifier }</ActionNumber>}
+              : (
+                <ActionNumber className="action-number">
+                  { action.identifier }
+                </ActionNumber>
+              )
+            }
           </ActionStatusArea>
           <ActionStatus>
             { mergedWith ? (
@@ -226,7 +241,16 @@ function ActionCard(props) {
                 <ActionOrgName>{primaryOrg.abbreviation || primaryOrg.name}</ActionOrgName>
               </ActionOrg>
             )}
-          <StyledCardTitle>{actionName}</StyledCardTitle>
+          <StyledCardTitle>
+          { showPlan && (
+                    <PlanChip
+                      planImage={action.plan.image.rendition.src}
+                      planShortName={action.plan.shortName || action.plan.name}
+                      size="sm"
+                    />
+                  )}
+                  {actionName}
+          </StyledCardTitle>
         </ActionCardElement>
       </StyledActionLink>
     </ActionLink>
@@ -234,9 +258,11 @@ function ActionCard(props) {
 }
 
 ActionCard.defaultProps = {
+  showPlan: false,
 };
 
 ActionCard.propTypes = {
+  showPlan: PropTypes.bool,
   action: PropTypes.shape({
     identifier: PropTypes.string,
     name: PropTypes.string,

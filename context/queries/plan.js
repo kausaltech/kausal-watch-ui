@@ -2,11 +2,12 @@ import { gql } from '@apollo/client';
 import images from 'common/images';
 
 export default gql`
-query PlanContext($identifier: ID, $hostname: String) {
+query PlanContext($identifier: ID, $hostname: String, $clientUrl: String) {
   plan(id: $identifier) {
     id
     identifier
     name
+    shortName
     themeIdentifier
     primaryLanguage
     otherLanguages
@@ -16,7 +17,7 @@ query PlanContext($identifier: ID, $hostname: String) {
       googleSiteVerificationTag
       matomoAnalyticsUrl
     }
-    image { 
+    image {
       ...MultiUseImageFragment
     }
     serveFileBaseUrl
@@ -110,6 +111,51 @@ query PlanContext($identifier: ID, $hostname: String) {
       hasActionLeadParagraph
       hasActionPrimaryOrgs
       publicContactPersons
+    }
+    relatedPlans {
+      id
+      identifier
+      name
+      shortName
+      image {
+          rendition(size: "128x128", crop: true) {
+            src
+          }
+        }
+      organization {
+        name
+      }
+      viewUrl(clientUrl: $clientUrl)
+    }
+    children {
+      id
+      identifier
+      name
+      shortName
+      image {
+          rendition(size: "128x128", crop: true) {
+            src
+          }
+        }
+      organization {
+        name
+      }
+      viewUrl(clientUrl: $clientUrl)
+    }
+    parent {
+      id
+      identifier
+      name
+      shortName
+      image {
+          rendition(size: "128x128", crop: true) {
+            src
+          }
+        }
+      organization {
+        name
+      }
+      viewUrl(clientUrl: $clientUrl)
     }
   }
 }

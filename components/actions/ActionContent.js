@@ -32,6 +32,7 @@ import ActionImpact from './ActionImpact';
 import ActionIndicators from './ActionIndicators';
 import ActionHero from './ActionHero';
 import ActionPager from './ActionPager';
+import ActionCard from './ActionCard';
 import ActionUpdatesList from './ActionUpdatesList';
 import EmissionScopeIcon from './EmissionScopeIcon';
 
@@ -177,6 +178,12 @@ query ActionDetails($plan: ID!, $id: ID!) {
         }
       }
     }
+    relatedActions {
+      id
+      relatedAction {
+        ...ActionCard
+      }
+    }
     nextAction {
       id
       identifier
@@ -188,6 +195,7 @@ query ActionDetails($plan: ID!, $id: ID!) {
   }
 }
 ${images.fragments.multiUseImage}
+${ActionCard.fragments.action}
 `;
 
 const LastUpdated = styled.div`
@@ -523,6 +531,36 @@ function ActionContent({ id }) {
           </Col>
         </Row>
       </Container>
+      {action?.relatedActions.length > 0 && (
+        <div>
+          <Container>
+            <Row>
+              <Col sm="12">
+                <SectionHeader>{ t('actions:related-actions') }</SectionHeader>
+              </Col>
+            </Row>
+            <Row>
+              {action.relatedActions.map((relAction) => (
+                <Col
+                  tag="li"
+                  xs="12"
+                  sm="6"
+                  lg="4"
+                  className="mb-5 d-flex align-items-stretch"
+                  style={{ transition: 'all 0.5s ease' }}
+                  role="listitem"
+                  key={relAction.relatedAction.id}
+                >
+                  <ActionCard
+                    action={relAction.relatedAction}
+                    showPlan={true}
+                  />
+                </Col>
+              ))}
+            </Row>
+          </Container>
+        </div>
+      )}
       {action?.relatedIndicators.length > 0 && (
         <div>
           <Container>

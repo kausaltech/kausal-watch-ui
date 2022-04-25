@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import {
   Collapse, Navbar, Nav, NavItem,
@@ -13,14 +13,23 @@ import { useTranslation } from 'common/i18n';
 import { NavigationLink, Link } from 'common/links';
 
 import Icon from './Icon';
+import PlanSelector from 'components/plans/PlanSelector';
 import LanguageSelector from './LanguageSelector';
 import NavbarSearch from './NavbarSearch';
+import PlanContext from 'context/plan';
 
 const TopNav = styled(Navbar)`
   padding: 0 ${(props) => props.theme.spaces.s100};
   background-color: ${(props) => props.theme.brandNavBackground};
   border-bottom: 1px solid ${(props) => props.theme.themeColors.light};
 `;
+
+const TopNavItems = styled(Navbar)`
+  display: flex;
+  justify-content: flex-start;
+
+`;
+
 
 const BotNav = styled(Navbar)`
   background-color: ${(props) => props.theme.themeColors.white};
@@ -47,9 +56,18 @@ const BotNav = styled(Navbar)`
 `;
 
 const SiteTitle = styled.div`
-  font-size: 1.25rem;
+  font-size: 1rem;
   line-height: 1.666rem;
   padding: ${(props) => props.theme.spaces.s150} 0 ${(props) => props.theme.spaces.s150};
+
+  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    font-size: 1.25rem;
+  }
+`;
+
+const Site = styled.div`
+  display: flex;
+  align-items: center;
 `;
 
 const HomeLink = styled.a`
@@ -67,17 +85,18 @@ const HomeLink = styled.a`
   }
 
   svg {
-      display: block;
+      display: ${(props) => props.hideLogoOnMobile === 'true' ? 'none' : 'block'};
       max-width: 6em;
       height: ${(props) => props.theme.spaces.s200};
       margin: ${(props) => props.theme.spaces.s050}
-              ${(props) => props.theme.spaces.s150}
+              ${(props) => props.theme.spaces.s100}
               ${(props) => props.theme.spaces.s050}
               0;
   }
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     svg {
+    display: block;
     max-width: 10em;
     height: calc(${(props) => props.theme.spaces.s200} + ${(props) => props.theme.spaces.s050});
     margin: ${(props) => props.theme.spaces.s050}
@@ -277,6 +296,7 @@ DropdownList.propTypes = {
 
 function GlobalNav(props) {
   const { t } = useTranslation();
+  const plan = useContext(PlanContext);
   const [navIsFixed, setnavIsFixed] = useState(false);
   const [isOpen, toggleOpen] = useState(false);
   const {
@@ -308,25 +328,38 @@ function GlobalNav(props) {
       300,
     );
   }
+
+  const hasPlanSiblings = plan.relatedPlans?.length > 0 || plan.children?.length > 0;
+  const hideLogoOnMobile = theme.navTitleVisible && hasPlanSiblings;
+
+  const displayTitle = plan.parent ? plan.parent.name : siteTitle;
+  const rootLink = plan.parent ? plan.parent.viewUrl : '/';
+
   return (
     <div>
       <TopNav
         expand="md"
         id="branding-navigation-bar"
-        aria-label={siteTitle}
+        aria-label={displayTitle}
         container={fullwidth ? 'fluid' : true}
       >
+        <Site>
+          <Link href={rootLink} passHref>
+            <HomeLink hideLogoOnMobile={hideLogoOnMobile.toString()}>
+              <OrgLogo className="org-logo" />
+              <SiteTitle>
+                { theme.navTitleVisible ? displayTitle : '\u00A0' }
+              </SiteTitle>
+            </HomeLink>
+          </Link>
+          { hasPlanSiblings && <PlanSelector /> }
+        </Site>
 
-        <Link href="/" passHref>
-          <HomeLink>
-            <OrgLogo className="org-logo" />
-            <SiteTitle>{ theme.navTitleVisible ? siteTitle : '\u00A0' }</SiteTitle>
-          </HomeLink>
-        </Link>
-        <Nav navbar className="ml-auto d-none d-md-flex">
-          <NavbarSearch />
-          <LanguageSelector mobile={false} />
-        </Nav>
+
+          <Nav navbar className="ml-auto d-none d-md-flex">
+            <NavbarSearch />
+            <LanguageSelector mobile={false} />
+          </Nav>
         <NavbarToggler
           onClick={() => toggleOpen(!isOpen)}
           aria-label={isOpen ? t('nav-menu-close') : t('nav-menu-open')}

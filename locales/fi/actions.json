@@ -52,5 +52,6 @@
   "responsible-organization-other": "Muut vastuutahot",
   "tasks-late": "Myöhästyneet tehtävät",
   "tasks-on-time": "Ajoissa olevat tehtävät",
-  "action-implementation-phase-unknown": "Ei toteutusvaihetta"
+  "action-implementation-phase-unknown": "Ei toteutusvaihetta",
+  "related-actions": "Liittyvät toimenpiteet"
 }

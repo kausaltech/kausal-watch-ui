@@ -52,5 +52,6 @@
   "tasks-completed": "Completed tasks",
   "responsible-organization-main": "Main responsible",
   "responsible-organization-other": "Other responsibles",
-  "action-implementation-phase-unknown": "No implementation phase"
+  "action-implementation-phase-unknown": "No implementation phase",
+  "related-actions": "Related actions"
 }
