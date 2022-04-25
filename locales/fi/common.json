@@ -83,6 +83,7 @@
   "indicator-resolution-years": "vuotta",
   "indicator-time-no-goals": "Ei tavoitearvoja",
   "indicator-time-to-goal": "Tavoitteeseen matkaa",
+  "indicator-value": "Havainto",
   "indicator": "Mittari",
   "indicators": "Mittarit",
   "indicators-as-insight": "Näkemysverkossa",
@@ -98,6 +99,7 @@
   "instance-type-testing-label": "Testi",
   "instance-type-testing-message": "Tämä on palvelun testiversio",
   "loading": "Ladataan",
+  "municipality": "Kunta",
   "name": "Nimi",
   "nav-menu-close": "Sulje navigaatio",
   "nav-menu-open": "Navigaatio",
@@ -140,5 +142,11 @@
   "total": "yhteensä",
   "type": "Tyyppi",
   "under-x-days": "Alle {{days}} päivää",
-  "unknown": "Tuntematon"
+  "unknown": "Tuntematon",
+  "updated": "Päivitetty",
+  "primary-organization": "Organisaatio",
+  "with-contact-persons": "On yhteyshenkilö",
+  "without-contact-person": "Ei yhteyshenkilöä",
+  "has-goals": "On tavoitearvoja",
+  "latest-update": "Viimeisin päivitys"
 }

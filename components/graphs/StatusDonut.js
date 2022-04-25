@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { useTheme } from 'common/theme';
 import { useTranslation } from 'common/i18n';
 import Card from 'components/common/Card';
+import ContentLoader from 'components/common/ContentLoader';
 
 const GraphCard = styled.div`
   display: flex;
@@ -28,6 +29,14 @@ const HelpText = styled.p`
   line-height: ${(props) => props.theme.lineHeightMd};
 `;
 
+const Plot = dynamic(
+  () => import('./Plot'),
+  {
+    loading: () => <ContentLoader />,
+    ssr: false,
+  }
+);
+
 const StatusDonut = (props) => {
   const {
     data,
@@ -43,25 +52,22 @@ const StatusDonut = (props) => {
     return null;
   }
 
-  const Plot = dynamic(import('./Plot'));
-
-  const pieData = data;
-  pieData.domain = { column: 0 };
-  pieData.hoverinfo = 'label+value+percent';
-  pieData.hovertemplate = '%{label}<br>%{value}<br>%{percent:.0%}<extra></extra>';
-  pieData.hole = 0.5;
-  pieData.type = 'pie';
-  pieData.sort = false;
-  pieData.direction = 'clockwise';
-  pieData.textinfo = 'none';
-  const plotColors = colors || [
-    theme.graphColors.green090,
-    theme.graphColors.green070,
-    theme.graphColors.green050,
-    theme.graphColors.yellow050,
-  ];
-  pieData.autoMargin = true;
-
+  const pieData = {
+    values: [...data.values],
+    labels: [...data.labels],
+    domain: { column: 0 },
+    hoverinfo: 'label+value+percent',
+    hovertemplate: '%{label}<br>%{value}<br>%{percent:.0%}<extra></extra>',
+    hole: 0.5,
+    type: 'pie',
+    sort: false,
+    direction: 'clockwise',
+    textinfo: 'none',
+    marker: {
+      colors: [...colors],
+    },
+    autoMargin: true,
+  };
   const pieLayout = {
     font: {
       family: theme.fontFamily,
@@ -80,7 +86,6 @@ const StatusDonut = (props) => {
     height: 175,
     width: 175,
     showlegend: false,
-    colorway: plotColors,
     paper_bgcolor: 'rgba(0,0,0,0)',
     margin: {"t": 0, "b": 0, "l": 0, "r": 0},
   };

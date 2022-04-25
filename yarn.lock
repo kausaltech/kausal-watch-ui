@@ -4801,6 +4801,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/d3@npm:^3":
+  version: 3.5.47
+  resolution: "@types/d3@npm:3.5.47"
+  checksum: f49657cb30705125de0de0617194f78ca5c05c1e1900485f2ea4c438d5b7744ff7d53b31e814caf986b994d21997edcda9fd845df115193fca2667bd096d0fdf
+  languageName: node
+  linkType: hard
+
 "@types/eslint-scope@npm:^3.7.3":
   version: 3.7.3
   resolution: "@types/eslint-scope@npm:3.7.3"
@@ -5025,6 +5032,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/plotly.js@npm:*, @types/plotly.js@npm:^1.54.20":
+  version: 1.54.20
+  resolution: "@types/plotly.js@npm:1.54.20"
+  dependencies:
+    "@types/d3": ^3
+  checksum: 34dddd780616a16055cb3c338de6c5baf7b2274d044c008a3d3e0e2d946e7883287ab4bd0ff1467433c7845854978327ddf083c01b211f7e7c269c9a86464a92
+  languageName: node
+  linkType: hard
+
 "@types/prettier@npm:^2.1.5":
   version: 2.4.4
   resolution: "@types/prettier@npm:2.4.4"
@@ -5059,6 +5075,16 @@ __metadata:
   dependencies:
     "@types/react": "*"
   checksum: b54cd0ef573236b3d87fe7493e6d1c36d8b4ca37a3b46364272a5c91ac178e3296b68ea1aeb299ce68f12ad663c5720ee890d0539b14881c6754bdcbdb0befa0
+  languageName: node
+  linkType: hard
+
+"@types/react-plotly.js@npm:^2.5.0":
+  version: 2.5.0
+  resolution: "@types/react-plotly.js@npm:2.5.0"
+  dependencies:
+    "@types/plotly.js": "*"
+    "@types/react": "*"
+  checksum: 4ade2f77740467eadc6e916e0f030eef3bf03b23940d6b17524193a73383a5316dc001081c01c7261d6dd6d3cc1e2b520313170a8537b5f8d4c7812f524f2de9
   languageName: node
   linkType: hard
 
@@ -15064,7 +15090,9 @@ __metadata:
     "@testing-library/react": ^12.1.4
     "@tusbar/cache-control": ^0.6.1
     "@types/node": ^17.0.23
+    "@types/plotly.js": ^1.54.20
     "@types/react": ^17.0.42
+    "@types/react-plotly.js": ^2.5.0
     apollo: ^2.33.9
     autoprefixer: ^10.4.4
     axios: ^0.25.0

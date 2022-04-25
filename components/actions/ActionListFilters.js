@@ -156,6 +156,7 @@ function ActionListFilterBadges({
 function ActionListFilters(props) {
   const {
     filters, orgs, primaryOrgs, categoryTypes, impacts, actionCount, onChange, phases, schedules,
+    hasActionPrimaryOrgs
   } = props;
   const { t } = useTranslation();
   const theme = useTheme();
@@ -176,17 +177,19 @@ function ActionListFilters(props) {
     },
   );
 
-  allFilters.push({
-    label: t('filter-organization'),
-    showAllLabel: t('filter-all-organizations'),
-    md: 6,
-    lg: 4,
-    identifier: 'organization',
-    options: sortedOrgs.map((org) => ({
-      id: org.id,
-      label: ' '.repeat(org.depth * 4) + org.name,
-    })),
-  });
+  if (!hasActionPrimaryOrgs) {
+    allFilters.push({
+      label: t('filter-organization'),
+      showAllLabel: t('filter-all-organizations'),
+      md: 6,
+      lg: 4,
+      identifier: 'organization',
+      options: sortedOrgs.map((org) => ({
+        id: org.id,
+        label: ' '.repeat(org.depth * 4) + org.name,
+      })),
+    });
+  }
 
   if (impacts.length > 0) {
     allFilters.push({

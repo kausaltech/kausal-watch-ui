@@ -15,23 +15,32 @@ const categoriesData = [
     identifier: '1.1.1',
     name: 'Sub Category 2',
     parent: {
-      id: '116',
+      id: '1',
     },
   },
   {
     id: '3',
     identifier: '1.1.2',
     name: 'Sub Category 3',
+    parent: {
+      id: '1',
+    }
   },
   {
     id: '4',
     identifier: '1.1.3',
     name: 'Sub Category 4',
+    parent: {
+      id: '1'
+    }
   },
   {
     id: '5',
     identifier: '1.1.4',
     name: 'Sub Category 5',
+    parent: {
+      id: '1'
+    }
   },
 ];
 
@@ -48,9 +57,13 @@ const indicatorsData = [
     latestGraph: null,
     latestValue: {
       id: '610',
+      value: 234.5,
       date: '2018-12-31',
     },
     level: 'tactical',
+    unit: {
+      'shortName': 'kt/a'
+    }
   },
   {
     id: '2',
@@ -64,9 +77,13 @@ const indicatorsData = [
     latestGraph: null,
     latestValue: {
       id: '630',
+      value: 235.666,
       date: '2018-12-31',
     },
     level: 'operational',
+    unit: {
+      'shortName': 'kt/a'
+    }
   },
   {
     id: '111',
@@ -79,10 +96,14 @@ const indicatorsData = [
     ],
     latestGraph: null,
     latestValue: {
+      value: 12235.666,
       id: '658',
       date: '2018-12-31',
     },
     level: 'strategic',
+    unit: {
+      'shortName': 'kt/a'
+    }
   },
   {
     id: '165',
@@ -92,10 +113,14 @@ const indicatorsData = [
     ],
     latestGraph: null,
     latestValue: {
+      value: 235.666,
       id: '668',
       date: '2018-12-31',
     },
     level: 'strategic',
+    unit: {
+      'shortName': 'kt/a'
+    }
   },
   {
     id: '4',
@@ -111,11 +136,11 @@ const indicatorsData = [
       },
     ],
     latestGraph: null,
-    latestValue: {
-      id: '527',
-      date: '2017-12-31',
-    },
+    latestValue: null,
     level: 'tactical',
+    unit: {
+      'shortName': 'kt/a'
+    }
   },
 ];
 

@@ -19,8 +19,9 @@ import { Meta } from 'components/layout';
 
 import IndicatorVisualisation from 'components/indicators/IndicatorVisualisation';
 import ActionsTable from 'components/actions/ActionsTable';
-import IndicatorValueSummary from 'components/indicators//IndicatorValueSummary';
-import CausalNavigation from 'components/indicators//CausalNavigation';
+
+import CausalNavigation from 'components/indicators/CausalNavigation';
+import IndicatorHero from './IndicatorHero';
 
 
 const GET_INDICATOR_DETAILS = gql`
@@ -32,6 +33,43 @@ const GET_INDICATOR_DETAILS = gql`
       level(plan: $plan)
       description
       timeResolution
+      organization {
+        id
+        classification {
+          id
+          name
+        }
+        name
+        abbreviation
+        logo {
+          id
+          rendition(size: "128x128", crop: true) {
+            src
+          }
+        }
+      }
+      common {
+        id
+        indicators {
+          id
+          identifier
+          organization {
+            id
+            classification {
+              id
+              name
+            }
+            name
+            abbreviation
+            logo {
+              id
+              rendition(size: "128x128", crop: true) {
+                src
+              }
+            }
+          }
+        }
+      }
       unit {
         id
         name
@@ -84,70 +122,6 @@ const GET_INDICATOR_DETAILS = gql`
   ${ActionsTable.fragments.action}
 `;
 
-const IndicatorHero = styled.div`
-  margin-bottom: ${(props) => props.theme.spaces.s200};
-  padding: ${(props) => props.theme.spaces.s600} 0;
-  background-color: ${(props) => props.theme.themeColors.light};
-
-  a {
-    color: inherit;
-  }
-
-  h1 {
-    font-size: ${(props) => props.theme.fontSizeLg};
-    hyphens: auto;
-
-    @media (min-width: ${(props) => props.theme.breakpointMd}) {
-      font-size: ${(props) => props.theme.fontSizeXl};
-    }
-  }
-`;
-
-const IndicatorLevel = styled.span`
-a {
-  display: inline-block;
-  border-radius: ${(props) => props.theme.badgeBorderRadius};
-  padding: ${(props) => props.theme.badgePaddingY} ${(props) => props.theme.badgePaddingX};
-  font-weight: ${(props) => props.theme.badgeFontWeight};
-  margin-bottom: ${(props) => props.theme.spaces.s150};
-
-  color: ${(props) => {
-    switch (props.level) {
-      case 'action':
-        return props.theme.actionColorFg;
-      case 'operational':
-        return props.theme.operationalIndicatorColorFg;
-      case 'tactical':
-        return props.theme.tacticalIndicatorColorFg;
-      case 'strategic':
-        return props.theme.strategicIndicatorColorFg;
-      default:
-        return props.theme.themeColors.black;
-    }
-  }};
-
-  background-color: ${(props) => {
-    switch (props.level) {
-      case 'action':
-        return props.theme.actionColor;
-      case 'operational':
-        return props.theme.operationalIndicatorColor;
-      case 'tactical':
-        return props.theme.tacticalIndicatorColor;
-      case 'strategic':
-        return props.theme.strategicIndicatorColor;
-      default:
-        return '#cccccc';
-    }
-  }};
-
-  &:hover {
-    color: inherit;
-    text-decoration: underline;
-  }
-}
-`;
-
 const Section = styled.section`
   padding: ${(props) => props.theme.spaces.s300} 0;
 
@@ -184,31 +158,28 @@ function IndicatorDetails({ id }) {
   const hasImpacts = indicator.relatedCauses.length > 0 || indicator.relatedEffects.length > 0;
   const mainGoals = indicator.goals.filter((goal) => !goal.scenario);
 
+  const allOrgs = indicator.common?.indicators.map((common) => {
+    return {
+      id: common.id,
+      identifier: common.identifier,
+      image: common.organization.logo?.rendition.src,
+      name: common.organization.name,
+      shortName: common.organization.abbreviation,
+      active: common.organization.id === indicator.organization.id,
+      orgUrl: `/indicators/${common.id}`,
+    };
+  });
+
   return (
     <div className="mb-5">
       <Meta
         title={indicator.name}
       />
-      <IndicatorHero level={indicator.level}>
-        <Container>
-          <IndicatorLevel level={indicator.level}>
-            <IndicatorListLink>
-              <a>
-                { t(indicator.level) }
-              </a>
-            </IndicatorListLink>
-          </IndicatorLevel>
-          <h1>{indicator.name}</h1>
-          { (mainGoals.length > 0) && (
-            <IndicatorValueSummary
-              timeResolution={indicator.timeResolution}
-              values={indicator.values}
-              unit={indicator.unit}
-              goals={mainGoals}
-            />
-          )}
-        </Container>
-      </IndicatorHero>
+      <IndicatorHero
+        indicator={indicator}
+        orgs={plan.features.hasActionPrimaryOrgs ? allOrgs : null}
+        goals={mainGoals}
+      />
       <Container>
         <Row>
           <Col md="10" className="mb-5 pt-4">

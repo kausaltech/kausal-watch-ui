@@ -444,6 +444,10 @@ function IndicatorVisualisation({ indicatorId }) {
     </Alert>
   );
 
+  if (indicator.values.length === 0) {
+    return null;
+  }
+
   /// Determine Indicator unit label and y-axis range
   const { unit } = indicator;
   const unitLabel = unit.name === 'no unit' ? '' : (unit.shortName || unit.name);

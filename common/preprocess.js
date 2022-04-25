@@ -54,10 +54,10 @@ const getStatusColor = (statusIdentifier, theme) => {
     completed: theme.graphColors.green090,
     late: theme.graphColors.yellow050,
     cancelled: theme.graphColors.grey030,
-    merged: theme.graphColors.grey010,
+    merged: theme.graphColors.grey030,
     postponed: theme.graphColors.blue030,
     not_started: theme.graphColors.green010,
-    undefined: theme.graphColors.grey090,
+    undefined: theme.graphColors.grey010,
   };
 
   statusColor = statusColors[statusIdentifier];
