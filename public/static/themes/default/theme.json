@@ -145,6 +145,9 @@
       "filterIndicatorsByAllLevels": true
     },
     "fundingInstruments":[],
-    "otherLogos": []
+    "otherLogos": [],
+    "a11y": {
+      "feedbackEmail": "accessibility@kausal.tech"
+    }
   }
 }

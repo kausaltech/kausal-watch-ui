@@ -142,6 +142,10 @@
         "link": "",
         "logo": "/static/themes/lpr-ilmasto/images/green-leaf-winner-white.svg"
       }
-    ]
+    ],
+    "a11y": {
+      "responsibleBody": "Lappeenrannan kaupunki, ympäristötoimi",
+      "feedbackEmail": "saavutettavuus@lappeenranta.fi"
+    }
   }
 }

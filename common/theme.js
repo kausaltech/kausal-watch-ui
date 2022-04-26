@@ -203,6 +203,10 @@ export const themeProp = exact({
     externalLinks: array,
     footerLogoOnly: bool,
     navigationLogoOnly: bool,
+    a11y: exact({
+      responsibleBody: string,
+      feedbackEmail: string
+    })
   }),
 });
 
