@@ -6,7 +6,6 @@ const Tag = styled.div`
   display: flex;
   align-items: center;
   max-width: 600px;
-  margin-bottom: ${(props) => props.theme.spaces.s025};
   border-radius: 4px;
 `;
 
@@ -18,7 +17,7 @@ const PlanAvatar = styled.img`
 `;
 
 const PlanName = styled.div`
-  margin-left: ${(props) => props.theme.spaces.s050};
+  margin-left: ${(props) => props.theme.spaces.s025};
   line-height: 1.2;
 `;
 

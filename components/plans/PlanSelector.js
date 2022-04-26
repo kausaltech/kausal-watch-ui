@@ -14,7 +14,7 @@ const PlanSelect = styled.div`
 const PlanDivider = styled.div`
   &:before {
     content: '/';
-    margin: 0 .5rem;
+    margin: 0 .25rem 0 .5rem;
     color: ${(props)=> props.theme.brandNavColor};
   }
 `;
@@ -24,6 +24,7 @@ const PlanAvatar = styled.img`
   width: 1.5rem;
   height: 1.5rem;
   border-radius: 50%;
+  border: 1px solid ${(props)=> transparentize(0.8, props.theme.brandNavColor)};
 `;
 
 const PlanTitle = styled.div`
@@ -37,7 +38,7 @@ const PlanDropdownItem = styled.a`
   padding: .25rem .75rem .25rem .25rem;
   margin: .5rem;
   border: 1px solid ${(props)=> props.theme.themeColors.light};
-  border-radius: 1.75rem;
+  border-radius: 1rem;
 
   &:hover {
     background: ${(props)=> props.theme.themeColors.light};
@@ -51,7 +52,7 @@ const StyledDropdownToggle = styled(DropdownToggle)`
   padding: .25rem;
   background: none;
   line-height: 1.5rem;
-  border: 1px solid ${(props)=> transparentize(0.75, props.theme.brandNavColor)};
+  border: 1px solid transparent;
   border-radius: 1.75rem;
   font-size: 1rem;
   color: ${(props)=> props.theme.brandNavColor};
@@ -86,7 +87,6 @@ const PlanSelector = (props) => {
           data-toggle="dropdown"
           tag="button"
         >
-
             <PlanAvatar src={plan.image?.small.src} />
             <PlanTitle>
               {plan.shortName}

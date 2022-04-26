@@ -90,14 +90,20 @@ const ActionCardElement = styled.div`
   }
 `;
 
-const ActionNumber = styled.div`
+const ActionId = styled.div`
   align-self: flex-start;
+  display: flex;
+  align-items: center;
   padding: ${(props) => props.theme.spaces.s050};
   font-size: ${(props) => props.theme.fontSizeBase};
   font-weight: ${(props) => props.theme.fontWeightBold};
   line-height: ${(props) => props.theme.lineHeightSm};
   color: ${(props) => props.theme.themeColors.black};
   background: ${(props) => props.theme.themeColors.white};
+`;
+
+const ActionNumber = styled.div`
+  margin-left: ${(props) => props.theme.spaces.s050};
 
   &:after {
     content: ".";
@@ -114,14 +120,18 @@ const ActionStatusArea = styled.div`
   line-height: ${(props) => props.theme.lineHeightSm};
 `;
 
-const ActionStatus = styled.div`
-  background-color: ${(props) => props.theme.themeColors.light};
+const ActionPhase = styled.div`
+  background-color: ${(props) => props.hasStatus === 'true' ? props.theme.themeColors.light : props.statusColor};
   color: ${(props) => props.theme.themeColors.dark};
 `;
 
 const StatusName = styled.div`
   padding: ${(props) => props.theme.spaces.s050};
   font-size: ${(props) => props.theme.fontSizeSm};
+
+  &:after {
+    content: "\\00a0";
+  }
 `;
 
 const StyledCardTitle = styled.div`
@@ -173,6 +183,29 @@ function getIconUrl(action) {
   return null;
 }
 
+const ActionIdentifier = (props) => {
+  const {showId, identifier, plan} = props;
+  if (!showId && !plan) return <div/>
+
+  return (
+    <ActionId>
+    { plan && (
+      <PlanChip
+        planImage={plan.image.rendition.src}
+        planShortName={plan.shortName || plan.name}
+        size="sm"
+      />
+    )}
+    { showId && <ActionNumber>{ identifier }</ActionNumber> }
+    </ActionId>
+  )
+};
+
+ActionIdentifier.propTypes = {
+  showId: PropTypes.bool,
+  identifier: PropTypes.string,
+  plan: PropTypes.shape({}),
+};
 function ActionCard(props) {
   const { action, showPlan } = props;
   const plan = useContext(PlanContext);
@@ -186,7 +219,7 @@ function ActionCard(props) {
 
   const { mergedWith, implementationPhase } = action;
   const status = cleanActionStatus(action, plan.actionStatuses);
-  let statusText = status.name || '-';
+  let statusText = status.name || null;
 
   // if Action is set in one of the phases, create message accordingly
   if (implementationPhase) {
@@ -202,23 +235,25 @@ function ActionCard(props) {
     <ActionLink action={action}>
       <StyledActionLink>
         <ActionCardElement>
-          <ActionStatusArea statusColor={getStatusColor(status.identifier, theme)}>
+          <ActionStatusArea
+            statusColor={getStatusColor(status.identifier, theme)}
+          >
             { iconUrl && (
               <CategoryIcon
                 src={iconUrl}
                 preserveAspectRatio="xMinYMid meet"
               />
             )}
-            { plan.hideActionIdentifiers
-              ? <div />
-              : (
-                <ActionNumber className="action-number">
-                  { action.identifier }
-                </ActionNumber>
-              )
-            }
+            <ActionIdentifier
+              showId={!plan.hideActionIdentifiers}
+              identifier={action.identifier}
+              plan={showPlan ? action.plan : null}
+            />
           </ActionStatusArea>
-          <ActionStatus>
+          <ActionPhase
+            statusColor={getStatusColor(status.identifier, theme)}
+            hasStatus={(mergedWith !== null || statusText !== null).toString()}
+          >
             { mergedWith ? (
               <StatusName>
                 { t('actions:action-status-merged') }
@@ -230,7 +265,7 @@ function ActionCard(props) {
                 { statusText }
               </StatusName>
             )}
-          </ActionStatus>
+          </ActionPhase>
           { primaryOrg && (
               <ActionOrg>
                 <ActionOrgAvatar>
@@ -242,14 +277,7 @@ function ActionCard(props) {
               </ActionOrg>
             )}
           <StyledCardTitle>
-          { showPlan && (
-                    <PlanChip
-                      planImage={action.plan.image.rendition.src}
-                      planShortName={action.plan.shortName || action.plan.name}
-                      size="sm"
-                    />
-                  )}
-                  {actionName}
+            {actionName}
           </StyledCardTitle>
         </ActionCardElement>
       </StyledActionLink>
