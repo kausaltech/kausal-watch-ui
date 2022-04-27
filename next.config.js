@@ -3,6 +3,7 @@ const webpack = require('webpack');
 const { secrets } = require('docker-secret');
 const { withSentryConfig } = require('@sentry/nextjs');
 const { i18n, SUPPORTED_LANGUAGES } = require('./next-i18next.config');
+const path = require('path');
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 });
@@ -57,6 +58,7 @@ let config = {
       cfg.resolve.alias['@sentry/node'] = '@sentry/browser';
       cfg.resolve.alias['next-i18next/serverSideTranslations'] = false;
       cfg.resolve.alias['./next-i18next.config'] = false;
+      cfg.resolve.symlinks = true;
     }
 
     cfg.plugins.push(new webpack.EnvironmentPlugin({
@@ -68,6 +70,16 @@ let config = {
       SYNC_THEME: '',
       FORCE_SENTRY_SEND: '',
     }));
+    if (isServer) {
+      const destPath = path.join(__dirname, 'public', 'static', 'themes');
+      const { SymlinkThemesPlugin: SymlinkPublicThemesPlugin } = require('@kausal/themes');
+      cfg.plugins.push(new SymlinkPublicThemesPlugin(destPath));
+      try {
+        const { SymlinkThemesPlugin: SymlinkPrivateThemesPlugin } = require('@kausal/themes-private');
+        cfg.plugins.push(new SymlinkPrivateThemesPlugin(destPath));
+      } catch (error) {
+      }
+    }
 
     return cfg;
   },

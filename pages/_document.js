@@ -1,15 +1,17 @@
 import React from 'react';
 import Document, { Html, Head, Main, NextScript } from 'next/document';
 import * as Sentry from "@sentry/nextjs";
-
 // Import styled components ServerStyleSheet
 import { ServerStyleSheet } from 'styled-components';
+
+import { getThemeCSS } from 'common/theme';
 
 export default class WatchDocument extends Document {
   static async getInitialProps(ctx) {
     const sheet = new ServerStyleSheet();
     const originalRenderPage = ctx.renderPage;
     let themeProps;
+    let basePath;
 
     const sentryTraceId = Sentry.getCurrentHub()?.getScope()?.getTransaction()?.toTraceparent();
 
@@ -17,10 +19,10 @@ export default class WatchDocument extends Document {
       ctx.renderPage = () => originalRenderPage({
         enhanceApp: (App) => (props) => {
           themeProps = props.themeProps;
+          basePath = props.router.basePath;
           return sheet.collectStyles(<App {...props} />);
         },
       });
-
       const initialProps = await Document.getInitialProps(ctx);
       return {
         ...initialProps,
@@ -28,11 +30,8 @@ export default class WatchDocument extends Document {
           <>
             {initialProps.styles}
             {sheet.getStyleElement()}
-            {themeProps?.themeCustomStylesUrl && (
-              <link rel="stylesheet" type="text/css" href={themeProps.themeCustomStylesUrl} />
-            )}
-            {themeProps?.fontUrl && (
-              <link rel="stylesheet" type="text/css" href={themeProps.fontUrl} />
+            {themeProps && (
+              <link rel="stylesheet" type="text/css" href={getThemeCSS(themeProps.name)} />
             )}
             {false && sentryTraceId && (
               <meta name="sentry-trace" content={sentryTraceId} />

@@ -194,7 +194,7 @@ WatchApp.getInitialProps = async (appContext) => {
     ...appProps.pageProps,
     ...i18nProps,
   }
-  applyTheme(plan.themeIdentifier || plan.identifier);
+  await applyTheme(plan.themeIdentifier || plan.identifier);
   return {
     ...appProps,
     plan,

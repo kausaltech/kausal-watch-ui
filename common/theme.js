@@ -7,20 +7,6 @@ const defaultTheme = require('public/static/themes/default/theme.json');
 
 const themeCache = {};
 
-if (!process.browser) {
-  // Import the theme.json files from all the themes and store them
-  // in an in-memory cache on the server side.
-  function importAllThemes(r) {
-    r.keys().forEach((key) => {
-      const parts = key.split('/');
-      const themeIdentifier = parts[parts.length - 2];
-      themeCache[themeIdentifier] = r(key);
-    });
-  }
-  importAllThemes(require.context('public/static/themes', true, /theme\.json$/));
-}
-/* eslint-enable */
-
 const theme = {};
 
 export function useTheme() {
@@ -223,14 +209,23 @@ export function setTheme(newTheme) {
   Object.assign(theme, out);
 }
 
-export function applyTheme(themeIdentifier) {
-  let themeProps = themeCache[themeIdentifier];
-
-  if (!themeProps) {
+export async function applyTheme(themeIdentifier) {
+  let themeProps;
+  try {
+    const theme = await import(`public/static/themes/${themeIdentifier}/theme.json`);
+    themeProps = theme.default;
+  } catch (error) {
     console.error(`Theme with identifier ${themeIdentifier} not found`);
+    console.error(error);
+  }
+  if (!themeProps) {
     themeProps = {};
   }
   setTheme(themeProps);
+}
+
+export function getThemeCSS(themeIdentifier) {
+  return `/static/themes/${themeIdentifier}/main.css`;
 }
 
 export default theme;

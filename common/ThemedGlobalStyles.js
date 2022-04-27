@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { createGlobalStyle, withTheme } from 'styled-components';
 import { themeProp } from 'common/theme';
-import Fonts from './fonts';
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -187,11 +186,6 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 function ThemedGlobalStyles({ theme, children }) {
-  if (typeof window !== 'undefined') {
-    const { fontFamily, headingsFontFamily } = theme;
-    Fonts(fontFamily, headingsFontFamily);
-  }
-
   return (
     <>
       <GlobalStyle />
