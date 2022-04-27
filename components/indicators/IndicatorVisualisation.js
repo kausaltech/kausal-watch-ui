@@ -436,7 +436,6 @@ function IndicatorVisualisation({ indicatorId }) {
   );
 
   const { indicator, plan: { scenarios } } = data;
-  const indicatorGraphSpecification = getIndicatorGraphSpecification(indicator, compareTo, t);
 
   if (!indicator) return (
     <Alert color="danger">
@@ -447,6 +446,7 @@ function IndicatorVisualisation({ indicatorId }) {
   if (indicator.values.length === 0) {
     return null;
   }
+  const indicatorGraphSpecification = getIndicatorGraphSpecification(indicator, compareTo, t);
 
   /// Determine Indicator unit label and y-axis range
   const { unit } = indicator;
