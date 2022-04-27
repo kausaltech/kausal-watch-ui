@@ -162,8 +162,10 @@ class IndicatorListFiltered extends React.Component {
     super(props);
     this.state = {
       activeCategory: '',
-      Activesearch: '',
-      hiddenGroups: {}
+      activeSearch: '',
+      visibleGroups: {
+        0: true
+      }
     };
     this.handleChange = this.handleChange.bind(this);
     this.toggleHidden = this.toggleHidden.bind(this);
@@ -171,10 +173,10 @@ class IndicatorListFiltered extends React.Component {
 
   toggleHidden(idx) {
     this.setState(state => {
-      let newVal = !(state.hiddenGroups[idx] === true);
-      console.log(idx);
-      const newHiddenGroups = Object.assign(state.hiddenGroups, {[idx]: newVal});
-      return Object.assign({}, state, {hiddenGroups: newHiddenGroups});
+      const oldVal = state.visibleGroups[idx];
+      let newVal = (oldVal === false || oldVal == null);
+      const newVisibleGroups = Object.assign(state.visibleGroups, {[idx]: newVal});
+      return Object.assign({}, state, {visibleGroups: newVisibleGroups});
     })
   }
 
@@ -263,7 +265,7 @@ class IndicatorListFiltered extends React.Component {
               <tr>
                 <IndentableTableHeader sectionHeader={true} onClick={event =>this.toggleHidden(idx)} colSpan="3" indent={indentationLevel(group[0])}>{indicatorName(group[0])}</IndentableTableHeader>
               </tr>
-              <tr style={{display: (this.state.hiddenGroups[idx] === false ? "none": "table-row")}}>
+              <tr style={{display: (this.state.visibleGroups[idx] === true ? "table-row": "none")}}>
                 { !allIndicatorsHaveSameLevel && <IndentableTableHeader>{ t('type') }</IndentableTableHeader> }
                 { displayMunicipality && <IndentableTableHeader indent={indentationLevel(group[0])}>{ t('municipality') }</IndentableTableHeader> }
                 { someIndicatorsHaveCategories && <IndentableTableHeader>{ t('themes') }</IndentableTableHeader> }
@@ -276,7 +278,7 @@ class IndicatorListFiltered extends React.Component {
                   timeFormat = 'YYYY';
                 }
                 return (<>
-                          <tr style={{display: (this.state.hiddenGroups[idx] === false ? "none": "table-row")}} key={item.id}>
+                          <tr style={{display: (this.state.visibleGroups[idx] === true ? "table-row": "none")}} key={item.id}>
                     { !allIndicatorsHaveSameLevel &&
                       <IndentableTableCell>
                         <IndicatorType level={item.level}>
