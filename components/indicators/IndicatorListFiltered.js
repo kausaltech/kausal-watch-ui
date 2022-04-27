@@ -221,8 +221,9 @@ class IndicatorListFiltered extends React.Component {
       ((cumul, cur) => Math.max(cumul, cur.categories.length)), 0) > 0;
     const allIndicatorsHaveSameLevel = new Set(filteredIndicators.flat().map(i => i.level)).size === 1;
 
-    const indicatorElement = (item, itemName, indentLevel) => (
+    const indicatorElement = (item, itemName, indentLevel, idx) => (
       <IndicatorName indentLevel={indentLevel} >
+        <Icon name={ this.state.visibleGroups[idx] === true ? 'angleDown' : 'angleRight'} />
         <IndicatorLink id={item.id}>
           <a>{itemName}</a>
         </IndicatorLink>
@@ -230,11 +231,11 @@ class IndicatorListFiltered extends React.Component {
     );
     const seen = new Set();
     console.log(hierarchy);
-    const indicatorName = (item) => {
+    const indicatorName = (item, idx) => {
       let result = null;
       if (item.common == null || hierarchy === null || Object.keys(hierarchy).length === 0) {
         result = item.name;
-        return indicatorElement(item, result, 0);
+        return indicatorElement(item, result, 0, idx);
       }
 
       const pathNames = hierarchy[item.common.id]?.pathNames;
@@ -249,7 +250,7 @@ class IndicatorListFiltered extends React.Component {
         return result;
       }
       const level = (hierarchy[item.common.id]?.path?.length ?? 1) - 1;
-      return indicatorElement(item, result, level);
+      return indicatorElement(item, result, level, idx);
     };
     const indentationLevel = (item) => (
       (hierarchy[item.common.id]?.path?.length ?? 1) - 1
@@ -263,7 +264,9 @@ class IndicatorListFiltered extends React.Component {
           {filteredIndicators.map((group, idx) => (
             <tbody>
               <tr>
-                <IndentableTableHeader sectionHeader={true} onClick={event =>this.toggleHidden(idx)} colSpan="3" indent={indentationLevel(group[0])}>{indicatorName(group[0])}</IndentableTableHeader>
+                <IndentableTableHeader sectionHeader={true} onClick={event => this.toggleHidden(idx)} colSpan="3" indent={indentationLevel(group[0])}>
+                  {indicatorName(group[0], idx)}
+                </IndentableTableHeader>
               </tr>
               <tr style={{display: (this.state.visibleGroups[idx] === true ? "table-row": "none")}}>
                 { !allIndicatorsHaveSameLevel && <IndentableTableHeader>{ t('type') }</IndentableTableHeader> }
