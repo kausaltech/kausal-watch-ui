@@ -14,6 +14,7 @@ import CardListBlock from 'components/contentblocks/CardListBlock';
 import ActionHighlightsBlock from 'components/contentblocks/ActionHighlightsBlock';
 import IndicatorHighlightsBlock from 'components/contentblocks/IndicatorHighlightsBlock';
 import RelatedIndicatorsBlock from 'components/contentblocks/RelatedIndicatorsBlock';
+import RelatedPlanListBlock from 'components/contentblocks/RelatedPlanListBlock';
 
 const STREAM_FIELD_FRAGMENT = gql`
   fragment StreamFieldFragment on StreamFieldInterface {
@@ -277,6 +278,9 @@ function StreamFieldBlock(props) {
     }
     case 'RelatedIndicatorsBlock': {
       return <RelatedIndicatorsBlock indicators={page?.category?.indicators} />;
+    }
+    case 'RelatedPlanListBlock': {
+      return <RelatedPlanListBlock />;
     }
     default:
       return (
