@@ -219,6 +219,10 @@ export interface PlanContext_plan_features {
    * Set if the contact persons should be visible in the public UI
    */
   publicContactPersons: boolean;
+  /**
+   * Set if we want admin link shown in site footer
+   */
+  showAdminLink: boolean;
 }
 
 export interface PlanContext_plan {
