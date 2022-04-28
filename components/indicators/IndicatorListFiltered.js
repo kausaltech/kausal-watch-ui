@@ -142,7 +142,7 @@ class IndicatorListFiltered extends React.Component {
       }
 
       if (activeSearch) {
-        if (item.name.toLowerCase().search(activeSearch.toLowerCase()) !== -1) return true;
+        if (item.name.toLowerCase().indexOf(activeSearch.toLowerCase()) !== -1) return true;
         return false;
       }
       return true;
