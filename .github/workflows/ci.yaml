@@ -41,6 +41,8 @@ jobs:
             --build-arg SENTRY_PROJECT=${{ secrets.SENTRY_PROJECT }} \
             --build-arg GIT_REV=${{ github.sha }} \
             --build-arg GIT_REPO=${{ github.repository }} \
+            --build-arg YARN_NPM_REGISTRY_SERVER=${{ secrets.NPM_REGISTRY_SERVER }} \
+            --build-arg YARN_NPM_AUTH_IDENT=${{ secrets.NPM_AUTH_IDENT }} \
             --build-arg SENTRY_AUTH_TOKEN=$SENTRY_AUTH_TOKEN \
             --tag ${{ env.DOCKER_IMAGE }} \
             .
