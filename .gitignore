@@ -3,6 +3,7 @@
 /node_modules/
 yarn-error.log
 /.yarn/
+/.yarnrc.yml
 .pnp.*
 
 # Build directory
