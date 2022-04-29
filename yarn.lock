@@ -2371,10 +2371,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@kausal/themes@npm:^0.1.0":
-  version: 0.1.0
-  resolution: "@kausal/themes@npm:0.1.0"
-  checksum: ab92b38fa4f7e00faf54b7e1b3856d5a1ac5b08d0ef1ecfeca39930f181339b1e03f0987a30bc65c9a03a315f2a1c9ad1d806512ddef78a58b999c3b67062deb
+"@kausal/themes-private@npm:^0.1.1":
+  version: 0.1.1
+  resolution: "@kausal/themes-private@npm:0.1.1"
+  checksum: 6808eba5b0e639edbdf12568442ba7e862a9af5610368f40dda9918d50480f64eddb573dd43b32e011a50e0a5f73d9f822e12c6cfdb2075667527c43a2932861
+  languageName: node
+  linkType: hard
+
+"@kausal/themes@npm:^0.1.1":
+  version: 0.1.1
+  resolution: "@kausal/themes@npm:0.1.1"
+  checksum: ee9863aa6ac8699c2885eb072c84da076fb8e50c5348206c5e952956b707e7d25bb31afca4e597146f8cb07074d167ab4670dc48ccdc270996b4bb084cf12df8
   languageName: node
   linkType: hard
 
@@ -15078,7 +15085,8 @@ __metadata:
     "@babel/eslint-parser": ^7.17.0
     "@babel/plugin-proposal-decorators": ^7.17.8
     "@elastic/react-search-ui": ^1.10.0
-    "@kausal/themes": ^0.1.0
+    "@kausal/themes": ^0.1.1
+    "@kausal/themes-private": ^0.1.1
     "@koa/router": ^10.1.1
     "@n8tb1t/use-scroll-position": ^2.0.3
     "@next/bundle-analyzer": ^12.1.0
@@ -15179,6 +15187,9 @@ __metadata:
     typewiz-webpack: ^1.2.4
     webpack: ^5.70.0
     yarn-upgrade-all: ^0.6.1
+  dependenciesMeta:
+    "@kausal/themes-private":
+      optional: true
   languageName: unknown
   linkType: soft
 

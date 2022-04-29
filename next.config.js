@@ -77,17 +77,15 @@ let config = {
       SYNC_THEME: '',
       FORCE_SENTRY_SEND: '',
     }));
-    if (isServer) {
-      const destPath = path.join(__dirname, 'public', 'static', 'themes');
-      const { SymlinkThemesPlugin: SymlinkPublicThemesPlugin } = require('@kausal/themes');
-      cfg.plugins.push(new SymlinkPublicThemesPlugin(destPath));
-      try {
-        const { SymlinkThemesPlugin: SymlinkPrivateThemesPlugin } = require('@kausal/themes-private');
-        cfg.plugins.push(new SymlinkPrivateThemesPlugin(destPath));
-      } catch (error) {
-      }
-    }
 
+    const destPath = path.join(__dirname, 'public', 'static', 'themes');
+    const { SymlinkThemesPlugin: SymlinkPublicThemesPlugin } = require('@kausal/themes');
+    cfg.plugins.push(new SymlinkPublicThemesPlugin(destPath));
+    try {
+      const { SymlinkThemesPlugin: SymlinkPrivateThemesPlugin } = require('@kausal/themes-private');
+      cfg.plugins.push(new SymlinkPrivateThemesPlugin(destPath));
+    } catch (error) {
+    }
     return cfg;
   },
 };

@@ -8,7 +8,7 @@
     "@apollo/react-ssr": "^4.0.0",
     "@babel/eslint-parser": "^7.17.0",
     "@elastic/react-search-ui": "^1.10.0",
-    "@kausal/themes": "^0.1.0",
+    "@kausal/themes": "^0.1.1",
     "@koa/router": "^10.1.1",
     "@n8tb1t/use-scroll-position": "^2.0.3",
     "@next/bundle-analyzer": "^12.1.0",
@@ -70,6 +70,9 @@
     "simple-statistics": "^7.7.5",
     "styled-components": "^5.3.3",
     "webpack": "^5.70.0"
+  },
+  "optionalDependencies": {
+    "@kausal/themes-private": "^0.1.1"
   },
   "license": "AGPL-3.0-or-later",
   "main": "next.config.js",
