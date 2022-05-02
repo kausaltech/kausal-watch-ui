@@ -266,21 +266,37 @@ class IndicatorListFiltered extends React.Component {
             const expanded = (this.state.visibleGroups[idx] === true);
             const expandKey = `common-indicator-section-${idx}`;
             const headers = [];
-            if (!allIndicatorsHaveSameLevel) headers.push(<IndentableTableHeader>{ t('type') }</IndentableTableHeader>);
-            if (displayMunicipality) headers.push(<IndentableTableHeader indent={indentationLevel(group[0])}>{ t('municipality') }</IndentableTableHeader>);
-            if (someIndicatorsHaveCategories) headers.push(<IndentableTableHeader>{ t('themes') }</IndentableTableHeader>);
-            headers.push(<IndentableTableHeader>{ t('updated') }</IndentableTableHeader>);
-            headers.push(<IndentableTableHeader>{ t('indicator-value') }</IndentableTableHeader>);
+            if (!allIndicatorsHaveSameLevel) {
+              headers.push(
+                <IndentableTableHeader key="hr-type">{ t('type') }</IndentableTableHeader>
+              );
+            }
+            if (displayMunicipality) {
+              headers.push(
+                <IndentableTableHeader key="hr-municipality" indent={indentationLevel(group[0])}>
+                  { t('municipality') }
+                </IndentableTableHeader>
+              );
+            }
+            if (someIndicatorsHaveCategories) {
+              headers.push(
+                <IndentableTableHeader key="hr-themes">
+                  { t('themes') }
+                </IndentableTableHeader>
+              );
+            }
+            headers.push(<IndentableTableHeader key="hr-updated">{ t('updated') }</IndentableTableHeader>);
+            headers.push(<IndentableTableHeader key="hr-value">{ t('indicator-value') }</IndentableTableHeader>);
 
-            return (<>
-            <tbody>
+            return (<React.Fragment key={`indicator-group-${idx}`}>
+            <tbody key="body-1">
               <tr>
                 <IndentableTableHeader sectionHeader={true} onClick={event => this.toggleHidden(idx)} colSpan={headers.length} indent={indentationLevel(group[0])}>
                   {indicatorName(group[0], expanded, expandKey)}
                 </IndentableTableHeader>
               </tr>
             </tbody>
-            <tbody id={expandKey} aria-hidden={!expanded} style={{display: (expanded ? "table-row-group": "none")}}>
+            <tbody key="body-2" id={expandKey} aria-hidden={!expanded} style={{display: (expanded ? "table-row-group": "none")}}>
               <tr>
                 { headers }
               </tr>
@@ -289,7 +305,7 @@ class IndicatorListFiltered extends React.Component {
                 if (item.timeResolution === 'YEAR') {
                   timeFormat = 'YYYY';
                 }
-                return (<>
+                return (
                   <tr key={item.id}>
                     { !allIndicatorsHaveSameLevel &&
                       <IndentableTableCell>
@@ -328,9 +344,9 @@ class IndicatorListFiltered extends React.Component {
                       )}
                     </IndentableTableCell>
                   </tr>
-                </>);
+                );
               })}
-            </tbody></>);
+            </tbody></React.Fragment>);
           })}
         </IndentableTable>
       </div>
