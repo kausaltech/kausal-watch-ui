@@ -18,6 +18,7 @@ ENV YARN_CACHE_FOLDER /yarn-cache
 RUN yarn set version berry
 COPY yarn.lock package*.json ./
 COPY patches ./patches/
+RUN yarn config set nodeLinker 'node-modules'
 RUN --mount=type=cache,target=/yarn-cache yarn install
 
 COPY . .
