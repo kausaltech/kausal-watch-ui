@@ -79,12 +79,13 @@ let config = {
     }));
 
     const destPath = path.join(__dirname, 'public', 'static', 'themes');
-    const { SymlinkThemesPlugin: SymlinkPublicThemesPlugin } = require('@kausal/themes');
-    cfg.plugins.push(new SymlinkPublicThemesPlugin(destPath));
+    const { generateThemeSymlinks: generateThemeSymlinksPublic } = require('@kausal/themes');
+    generateThemeSymlinksPublic(destPath, { verbose: true });
     try {
-      const { SymlinkThemesPlugin: SymlinkPrivateThemesPlugin } = require('@kausal/themes-private');
-      cfg.plugins.push(new SymlinkPrivateThemesPlugin(destPath));
+      const { generateThemeSymlinks: generateThemeSymlinksPrivate } = require('@kausal/themes-private');
+      generateThemeSymlinksPrivate(destPath, { verbose: true });
     } catch (error) {
+      console.error(error);
     }
     return cfg;
   },
