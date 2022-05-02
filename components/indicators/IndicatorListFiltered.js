@@ -65,6 +65,11 @@ const StyledBadge = styled(Badge)`
   color: ${(props) => props.theme.themeColors.black};
 `;
 
+const SectionButton = styled.button`
+  border: none;
+  background: none;
+`;
+
 const IndicatorName = styled.div`
   a {
     color: ${(props) => props.theme.themeColors.black};
@@ -216,26 +221,24 @@ class IndicatorListFiltered extends React.Component {
     const filteredIndicators = this.filterIndicators(hierarchy, indicators, displayMunicipality);
     const sortedCategories = [...categories].sort((a, b) => b.order - a.order);
 
-    console.log(filteredIndicators);
     const someIndicatorsHaveCategories = filteredIndicators.flat().reduce(
       ((cumul, cur) => Math.max(cumul, cur.categories.length)), 0) > 0;
     const allIndicatorsHaveSameLevel = new Set(filteredIndicators.flat().map(i => i.level)).size === 1;
 
-    const indicatorElement = (item, itemName, indentLevel, idx) => (
+    const indicatorElement = (item, itemName, indentLevel, expanded, expandKey) => (
       <IndicatorName indentLevel={indentLevel} >
-        <Icon name={ this.state.visibleGroups[idx] === true ? 'angleDown' : 'angleRight'} />
-        <IndicatorLink id={item.id}>
-          <a>{itemName}</a>
-        </IndicatorLink>
+        <SectionButton aria-controls={expandKey} aria-expanded={expanded}>
+          <Icon name={expanded ? 'angleDown' : 'angleRight'} />
+          {itemName}
+        </SectionButton>
       </IndicatorName>
     );
     const seen = new Set();
-    console.log(hierarchy);
-    const indicatorName = (item, idx) => {
+    const indicatorName = (item, expanded, expandKey) => {
       let result = null;
       if (item.common == null || hierarchy === null || Object.keys(hierarchy).length === 0) {
         result = item.name;
-        return indicatorElement(item, result, 0, idx);
+        return indicatorElement(item, result, 0, expanded, expandKey);
       }
 
       const pathNames = hierarchy[item.common.id]?.pathNames;
@@ -250,7 +253,7 @@ class IndicatorListFiltered extends React.Component {
         return result;
       }
       const level = (hierarchy[item.common.id]?.path?.length ?? 1) - 1;
-      return indicatorElement(item, result, level, idx);
+      return indicatorElement(item, result, level, expanded, expandKey);
     };
     const indentationLevel = (item) => (
       (hierarchy[item.common.id]?.path?.length ?? 1) - 1
@@ -259,21 +262,27 @@ class IndicatorListFiltered extends React.Component {
       <div className="mb-5 pb-5">
         <IndicatorListFilters cats={sortedCategories} changeOption={this.handleChange} />
         <IndentableTable hover>
-          <thead>
-          </thead>
-          {filteredIndicators.map((group, idx) => (
+          {filteredIndicators.map((group, idx) => {
+            const expanded = (this.state.visibleGroups[idx] === true);
+            const expandKey = `common-indicator-section-${idx}`;
+            const headers = [];
+            if (!allIndicatorsHaveSameLevel) headers.push(<IndentableTableHeader>{ t('type') }</IndentableTableHeader>);
+            if (displayMunicipality) headers.push(<IndentableTableHeader indent={indentationLevel(group[0])}>{ t('municipality') }</IndentableTableHeader>);
+            if (someIndicatorsHaveCategories) headers.push(<IndentableTableHeader>{ t('themes') }</IndentableTableHeader>);
+            headers.push(<IndentableTableHeader>{ t('updated') }</IndentableTableHeader>);
+            headers.push(<IndentableTableHeader>{ t('indicator-value') }</IndentableTableHeader>);
+
+            return (<>
             <tbody>
               <tr>
-                <IndentableTableHeader sectionHeader={true} onClick={event => this.toggleHidden(idx)} colSpan="3" indent={indentationLevel(group[0])}>
-                  {indicatorName(group[0], idx)}
+                <IndentableTableHeader sectionHeader={true} onClick={event => this.toggleHidden(idx)} colSpan={headers.length} indent={indentationLevel(group[0])}>
+                  {indicatorName(group[0], expanded, expandKey)}
                 </IndentableTableHeader>
               </tr>
-              <tr style={{display: (this.state.visibleGroups[idx] === true ? "table-row": "none")}}>
-                { !allIndicatorsHaveSameLevel && <IndentableTableHeader>{ t('type') }</IndentableTableHeader> }
-                { displayMunicipality && <IndentableTableHeader indent={indentationLevel(group[0])}>{ t('municipality') }</IndentableTableHeader> }
-                { someIndicatorsHaveCategories && <IndentableTableHeader>{ t('themes') }</IndentableTableHeader> }
-                <IndentableTableHeader>{ t('updated') }</IndentableTableHeader>
-                <IndentableTableHeader>{ t('indicator-value') }</IndentableTableHeader>
+            </tbody>
+            <tbody id={expandKey} aria-hidden={!expanded} style={{display: (expanded ? "table-row-group": "none")}}>
+              <tr>
+                { headers }
               </tr>
               {group.map((item) => {
                 let timeFormat = 'l';
@@ -281,7 +290,7 @@ class IndicatorListFiltered extends React.Component {
                   timeFormat = 'YYYY';
                 }
                 return (<>
-                          <tr style={{display: (this.state.visibleGroups[idx] === true ? "table-row": "none")}} key={item.id}>
+                  <tr key={item.id}>
                     { !allIndicatorsHaveSameLevel &&
                       <IndentableTableCell>
                         <IndicatorType level={item.level}>
@@ -321,8 +330,8 @@ class IndicatorListFiltered extends React.Component {
                   </tr>
                 </>);
               })}
-            </tbody>
-          ))}
+            </tbody></>);
+          })}
         </IndentableTable>
       </div>
     );
