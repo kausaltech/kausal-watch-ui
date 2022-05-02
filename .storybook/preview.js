@@ -41,18 +41,13 @@ setConfig({ publicRuntimeConfig });
 
 let themes = [defaultTheme];
 
-const additionalThemes = [
-  'lpr-ilmasto',
-  'hnh2035',
-  'liiku',
-  'hame-ilmasto',
-  'tampere-ilmasto',
-  'helsinki-kierto',
-  'ktstrat',
-  'hsy-kestava',
-  'kpr',
-  'viitasaari-ilmasto',
-];
+
+let additionalThemes = [];
+try {
+  additionalThemes = require('@kausal/themes-private/themes.json');
+} catch (error) {
+  console.error(error);
+}
 
 additionalThemes.forEach((value) => {
   const additionalTheme = require('public/static/themes/' + value + '/theme.json');
