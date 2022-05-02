@@ -10,6 +10,21 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 
 const sentryAuthToken = secrets.SENTRY_AUTH_TOKEN || process.env.SENTRY_AUTH_TOKEN;
 
+
+function initializeThemes() {
+  const destPath = path.join(__dirname, 'public', 'static', 'themes');
+  const { generateThemeSymlinks: generateThemeSymlinksPublic } = require('@kausal/themes');
+  generateThemeSymlinksPublic(destPath, { verbose: true });
+  try {
+    const { generateThemeSymlinks: generateThemeSymlinksPrivate } = require('@kausal/themes-private');
+    generateThemeSymlinksPrivate(destPath, { verbose: true });
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+initializeThemes();
+
 let config = {
   i18n,
   env: {
@@ -78,15 +93,6 @@ let config = {
       FORCE_SENTRY_SEND: '',
     }));
 
-    const destPath = path.join(__dirname, 'public', 'static', 'themes');
-    const { generateThemeSymlinks: generateThemeSymlinksPublic } = require('@kausal/themes');
-    generateThemeSymlinksPublic(destPath, { verbose: true });
-    try {
-      const { generateThemeSymlinks: generateThemeSymlinksPrivate } = require('@kausal/themes-private');
-      generateThemeSymlinksPrivate(destPath, { verbose: true });
-    } catch (error) {
-      console.error(error);
-    }
     return cfg;
   },
 };
