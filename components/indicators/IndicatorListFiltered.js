@@ -68,6 +68,7 @@ const StyledBadge = styled(Badge)`
 const SectionButton = styled.button`
   border: none;
   background: none;
+  padding-left: 0;
 `;
 
 const IndicatorName = styled.div`
@@ -217,7 +218,7 @@ class IndicatorListFiltered extends React.Component {
   }
 
   render() {
-    const { t, categories, indicators, i18n, displayMunicipality, hierarchy } = this.props;
+    const { t, categories, indicators, i18n, displayMunicipality, hierarchy, displayNormalizedValues } = this.props;
     const filteredIndicators = this.filterIndicators(hierarchy, indicators, displayMunicipality);
     const sortedCategories = [...categories].sort((a, b) => b.order - a.order);
 
@@ -287,6 +288,9 @@ class IndicatorListFiltered extends React.Component {
             }
             headers.push(<IndentableTableHeader key="hr-updated">{ t('updated') }</IndentableTableHeader>);
             headers.push(<IndentableTableHeader key="hr-value">{ t('indicator-value') }</IndentableTableHeader>);
+            if (displayNormalizedValues) {
+              headers.push(<IndentableTableHeader key="hr-normalized-value">{ t('indicator-population-normalized-value') }</IndentableTableHeader>);
+            }
 
             return (<React.Fragment key={`indicator-group-${idx}`}>
             <tbody key="body-1">
@@ -301,6 +305,21 @@ class IndicatorListFiltered extends React.Component {
                 { headers }
               </tr>
               {group.map((item) => {
+                let [normalizedValue, normalizedUnit] = [null, null];
+                // We currently support only one normalizer, the population indicator
+                const normalizations = item.common?.normalizations;
+                if (displayNormalizedValues && normalizations != null && normalizations.length > 0) {
+                  const populationNormalization = normalizations.find(n => n.normalizer.identifier === 'population');
+                  if (populationNormalization != null) {
+                    const normalizedValueObject = item.latestValue.normalizedValues.find(
+                      v => v.normalizerId === populationNormalization.normalizer.id
+                    );
+                    if (normalizedValueObject != null) {
+                      normalizedValue = normalizedValueObject.value;
+                      normalizedUnit = populationNormalization.unit.shortName;
+                    }
+                  }
+                }
                 let timeFormat = 'l';
                 if (item.timeResolution === 'YEAR') {
                   timeFormat = 'YYYY';
@@ -343,6 +362,11 @@ class IndicatorListFiltered extends React.Component {
                         </IndicatorLink>
                       )}
                     </IndentableTableCell>
+                    { (displayNormalizedValues) &&
+                      <IndentableTableCell>
+                        {`${beautifyValue(normalizedValue, i18n.language)} ${normalizedUnit ?? ''}`}
+                      </IndentableTableCell>
+                    }
                   </tr>
                 );
               })}

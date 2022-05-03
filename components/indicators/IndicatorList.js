@@ -34,6 +34,16 @@ const GET_INDICATOR_LIST = gql`
           common {
             id
             name
+            normalizations {
+              unit {
+                shortName
+              }
+              normalizer {
+                name
+                id
+                identifier
+              }
+            }
           }
           categories {
             id
@@ -46,7 +56,11 @@ const GET_INDICATOR_LIST = gql`
             id
             date
             value
-          }
+            normalizedValues {
+              normalizerId
+              value
+            }
+         }
           unit {
             shortName
           }
@@ -151,6 +165,9 @@ class IndicatorList extends React.Component {
   processDataToProps(data) {
     const { plan } = data;
     const displayMunicipality = plan.features.hasActionPrimaryOrgs === true;
+    const displayNormalizedValues = undefined !== plan.indicatorLevels.find(
+      l => l.indicator.common.normalizations.length > 0
+    );
     const generalContent = plan.generalContent || {};
     const { indicatorLevels, categoryTypes } = plan;
 
@@ -167,7 +184,13 @@ class IndicatorList extends React.Component {
       });
     });
 
-    return { indicators, categories, leadContent: generalContent.indicatorListLeadContent, displayMunicipality };
+    return {
+      indicators,
+      categories,
+      leadContent: generalContent.indicatorListLeadContent,
+      displayMunicipality,
+      displayNormalizedValues
+    };
   }
 
   render() {
