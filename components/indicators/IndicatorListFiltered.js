@@ -69,6 +69,7 @@ const SectionButton = styled.button`
   border: none;
   background: none;
   padding-left: 0;
+  font-weight: ${(props) => props.theme.fontWeightBold};
 `;
 
 const IndicatorName = styled.div`
@@ -89,19 +90,37 @@ const IndentableTable = styled(Table)`
 `;
 
 const IndentableCellContentWrapper = styled.div`
-  padding: ${(props) => (props.sectionHeader === true ? "0.5rem" : "0.15rem 0.5rem")};
-  font-weight: ${(props) => (props.sectionHeader === true ? "bold" : "normal")};
-  border-left: ${(props) => 30 * props.indent}px solid ${(props) => props.theme.themeColors.light};
+  padding: ${(props) => (
+    props.sectionHeader === true
+    ? `.5rem`
+    : `0.15rem 0.5rem .15rem ${+props.firstCol + .5}rem`
+  )};
+  text-align: ${(props) => props.numeric === true ? 'right' : 'left'};
+  font-weight: ${(props) => (props.sectionHeader === true ? props.theme.fontWeightBold : props.theme.fontWeightNormal)};
+  border-left: ${(props) => 24 * props.indent}px solid ${(props) => props.theme.themeColors.light};
   background-color: ${(props) => (props.sectionHeader === true ? props.theme.themeColors.light : 'inherit')};
 `;
 
 const IndentableTableCell = (props) => (
   <td>
-    <IndentableCellContentWrapper indent={props.indent}>
+    <IndentableCellContentWrapper
+      indent={props.indent}
+      numeric={props.numeric}
+      firstCol={props.firstCol}
+    >
       { props.children }
     </IndentableCellContentWrapper>
   </td>
 );
+
+const Value = styled.span`
+
+`;
+
+const Unit = styled.span`
+  margin-left: .5rem;
+  font-size: 80%;
+`;
 
 const DarkenedTableHeader = styled.th`
   background-color: red;
@@ -111,7 +130,12 @@ const IndentableTableHeader = (props) => {
   const theme = useTheme();
   return (
     <th onClick={props.onClick} colSpan={props.colSpan}>
-      <IndentableCellContentWrapper indent={props.indent} sectionHeader={props.sectionHeader}>
+      <IndentableCellContentWrapper
+        indent={props.indent}
+        sectionHeader={props.sectionHeader}
+        numeric={props.numeric}
+        firstCol={props.firstCol}
+      >
         { props.children }
       </IndentableCellContentWrapper>
     </th>
@@ -274,7 +298,11 @@ class IndicatorListFiltered extends React.Component {
             }
             if (displayMunicipality) {
               headers.push(
-                <IndentableTableHeader key="hr-municipality" indent={indentationLevel(group[0])}>
+                <IndentableTableHeader
+                  key="hr-municipality"
+                  indent={indentationLevel(group[0])}
+                  firstCol
+                >
                   { t('municipality') }
                 </IndentableTableHeader>
               );
@@ -287,15 +315,20 @@ class IndicatorListFiltered extends React.Component {
               );
             }
             headers.push(<IndentableTableHeader key="hr-updated">{ t('updated') }</IndentableTableHeader>);
-            headers.push(<IndentableTableHeader key="hr-value">{ t('indicator-value') }</IndentableTableHeader>);
+            headers.push(<IndentableTableHeader key="hr-value" numeric>{ t('indicator-value') }</IndentableTableHeader>);
             if (displayNormalizedValues) {
-              headers.push(<IndentableTableHeader key="hr-normalized-value">{ t('indicator-population-normalized-value') }</IndentableTableHeader>);
+              headers.push(<IndentableTableHeader key="hr-normalized-value" numeric>{ t('indicator-population-normalized-value') }</IndentableTableHeader>);
             }
 
             return (<React.Fragment key={`indicator-group-${idx}`}>
             <tbody key="body-1">
               <tr>
-                <IndentableTableHeader sectionHeader={true} onClick={event => this.toggleHidden(idx)} colSpan={headers.length} indent={indentationLevel(group[0])}>
+                <IndentableTableHeader
+                  sectionHeader={true}
+                  onClick={event => this.toggleHidden(idx)}
+                  colSpan={headers.length}
+                  indent={indentationLevel(group[0])}
+                >
                   {indicatorName(group[0], expanded, expandKey)}
                 </IndentableTableHeader>
               </tr>
@@ -334,7 +367,7 @@ class IndicatorListFiltered extends React.Component {
                       </IndentableTableCell>
                     }
                     { displayMunicipality &&
-                      <IndentableTableCell indent={indentationLevel(item)}>
+                      <IndentableTableCell indent={indentationLevel(item)} firstCol>
                         <IndicatorLink id={item.id}>
                           <a>{item.organization.name}</a>
                         </IndicatorLink>
@@ -355,16 +388,20 @@ class IndicatorListFiltered extends React.Component {
                         </IndicatorDate>
                       )}
                     </IndentableTableCell>
-                    <IndentableTableCell>
+                    <IndentableTableCell numeric>
                       {item.latestValue && (
                         <IndicatorLink id={item.id}>
-                          <a>{`${beautifyValue(item.latestValue.value, i18n.language)} ${item.unit?.shortName ?? ''}`}</a>
+                          <a>
+                            <Value>{beautifyValue(item.latestValue.value, i18n.language)}</Value>
+                            <Unit>{item.unit?.shortName ?? ''}</Unit>
+                          </a>
                         </IndicatorLink>
                       )}
                     </IndentableTableCell>
                     { (displayNormalizedValues) &&
-                      <IndentableTableCell>
-                        {`${beautifyValue(normalizedValue, i18n.language)} ${normalizedUnit ?? ''}`}
+                      <IndentableTableCell numeric>
+                        <Value>{beautifyValue(normalizedValue, i18n.language)}</Value>
+                        <Unit>{normalizedUnit ?? ''}</Unit>
                       </IndentableTableCell>
                     }
                   </tr>
