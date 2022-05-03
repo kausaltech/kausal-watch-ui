@@ -49,7 +49,7 @@ class VisPage extends React.Component {
       },
     });
 
-    const { edges, nodes } = resp.data;
+    const { edges, nodes } = resp;
 
     this.setState({ edges, nodes, loading: false });
   }

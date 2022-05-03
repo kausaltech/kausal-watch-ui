@@ -1,40 +1,21 @@
-import axios from 'axios';
 import getConfig from 'next/config';
 
-export const { CancelToken } = axios;
 const { publicRuntimeConfig } = getConfig();
 
-export const aplans = {};
+export const aplans = {
+  get: async (path, { params }) => {
+    let url = `${publicRuntimeConfig.aplansApiBaseURL}/${path}`;
 
-aplans.get = async function get(path, configIn) {
-  let url = `${publicRuntimeConfig.aplansApiBaseURL}/${path}`;
-  const config = { ...configIn, method: 'get' };
-  const headers = { ...config.headers };
-
-  if (!url.endsWith('/')) url += '/';
-  config.url = url;
-
-  headers.Accept = headers.Accept || 'application/json';
-  config.headers = headers;
-
-  return axios.request(config);
-};
-
-
-class KerrokantasiAPI {
-  get(path, configIn) {
-    let apiUrl = `${publicRuntimeConfig.kerrokantasiApiBaseURL}/${path}`;
-
-    if (!apiUrl.endsWith('/')) apiUrl += '/';
-
-    return axios.get(apiUrl, configIn);
-  }
+    if (!url.endsWith('/')) url += '/';
+    if (params) {
+      const queryParams = new URLSearchParams(params);
+      url += '?' + queryParams.toString();
+    }
+    const headers = {
+      Accept: 'application/json',
+    };
+    const resp = await fetch(url, { headers });
+    const data = resp.json();
+    return data;
+  },
 }
-
-export const kerrokantasi = new KerrokantasiAPI();
-
-export default {
-  aplans,
-  kerrokantasi,
-  CancelToken,
-};

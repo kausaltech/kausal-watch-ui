@@ -4,9 +4,9 @@ import Koa from 'koa';
 import Router from '@koa/router';
 import logger from 'koa-logger';
 import originalUrl from 'original-url';
-import cacheableResponse from 'cacheable-response';
-import parseCacheControl from '@tusbar/cache-control';
-import normalizeUrl from 'normalize-url';
+//import cacheableResponse from 'cacheable-response';
+//import parseCacheControl from '@tusbar/cache-control';
+//import normalizeUrl from 'normalize-url';
 import LRU from 'lru-cache';
 import apollo from '@apollo/client';
 import 'dotenv/config'

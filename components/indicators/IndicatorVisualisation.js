@@ -4,7 +4,7 @@ import { isEqual, capitalize } from 'lodash';
 import { gql, useQuery } from '@apollo/client';
 import { Alert } from 'reactstrap';
 import dayjs from 'common/dayjs';
-import { linearRegression } from 'simple-statistics';
+import { linearRegression } from 'common/math';
 import { useTranslation } from 'common/i18n';
 import { captureMessage } from 'common/sentry';
 import { capitalizeFirstLetter } from 'common/utils';

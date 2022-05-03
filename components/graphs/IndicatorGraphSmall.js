@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic';
 import { isEqual } from 'lodash';
 import { gql, useQuery } from '@apollo/client';
 import { Alert } from 'reactstrap';
-import { linearRegression } from 'simple-statistics';
+import { linearRegression } from 'common/math';
 import { useTranslation } from 'common/i18n';
 import { useTheme } from 'common/theme';
 import { capitalizeFirstLetter } from 'common/utils';

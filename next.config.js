@@ -54,6 +54,13 @@ let config = {
     styledComponents: true
   },
   swcMinify: true,
+  experimental: {
+    modularizeImports: {
+      lodash: {
+        transform: 'lodash/{{member}}',
+      },
+    },
+  },
   async rewrites() {
     const rewrites = [
       { source: '/favicon.ico', destination: '/public/static/favicon.ico' },
@@ -82,7 +89,6 @@ let config = {
       cfg.resolve.alias['./next-i18next.config'] = false;
       cfg.resolve.symlinks = true;
     }
-
     cfg.plugins.push(new webpack.EnvironmentPlugin({
       PLAN_IDENTIFIER: '',
       THEME_IDENTIFIER: '',

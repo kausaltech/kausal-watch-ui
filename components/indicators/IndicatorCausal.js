@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled, { withTheme } from 'styled-components';
+import { Alert } from 'reactstrap';
 
-import PlanContext from '../../context/plan';
-import { aplans, CancelToken } from '../../common/api';
-import ContentLoader from '../common/ContentLoader';
-import { captureException } from '../../common/sentry';
+import PlanContext from 'context/plan';
+import { aplans } from 'common/api';
+import ContentLoader from 'components/common/ContentLoader';
+import { captureException } from 'common/sentry';
 
 import IndicatorCard from './IndicatorCard';
 import Connector from './Connector';
@@ -173,7 +174,6 @@ function createChain(nodes, theme) {
 class IndicatorCausal extends React.Component {
   constructor(props) {
     super(props);
-    this.cancelToken = CancelToken.source();
     this.state = {
       isLoaded: false,
       error: null,
@@ -193,11 +193,6 @@ class IndicatorCausal extends React.Component {
     if (prevProps.actionId !== actionId) {
       this.fetchData();
     }
-  }
-
-  componentWillUnmount() {
-    this.cancelToken.cancel();
-    this.cancelled = true;
   }
 
   setColumns(nodes, index, column) {
@@ -244,16 +239,14 @@ class IndicatorCausal extends React.Component {
       params: {
         plan: plan.identifier, action: actionId,
       },
-      cancelToken: this.cancelToken.token,
     }).then((result) => {
-      const { nodes, edges } = result.data;
+      const { nodes, edges } = result;
       this.setState({
         isLoaded: true,
         nodes,
         edges,
       });
     }).catch((error) => {
-      if (this.cancelled) return;
       captureException(error);
       this.setState({
         isLoaded: true,

@@ -1,6 +1,6 @@
 import withApollo from 'next-with-apollo';
 import { ApolloClient, HttpLink, ApolloLink, ApolloProvider } from '@apollo/client';
-import { getDataFromTree } from '@apollo/react-ssr';
+import { getDataFromTree } from "@apollo/client/react/ssr";
 import { InMemoryCache } from '@apollo/client/cache';
 import { onError } from '@apollo/client/link/error';
 import getConfig from 'next/config';
@@ -166,11 +166,13 @@ export function initializeApolloClient(opts) {
 export default withApollo(
   (opts) => initializeApolloClient(opts),
   {
-    render: ({ Page, props }) => (
-      <ApolloProvider client={props.apollo}>
-        <Page {...props} />
-      </ApolloProvider>
-    ),
+    render: ({ Page, props }) => {
+      return (
+        <ApolloProvider client={props.apollo}>
+          <Page {...props} />
+        </ApolloProvider>
+      );
+    },
     getDataFromTree,
   },
 );
