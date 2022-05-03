@@ -3,7 +3,7 @@ import { Spring, Transition } from 'react-spring/renderprops.cjs';
 import {
   Row, Col, Badge, CloseButton,
 } from 'reactstrap';
-import _ from 'lodash';
+import { debounce } from 'lodash';
 import styled from 'styled-components';
 import { useTheme } from 'common/theme';
 import { useTranslation } from 'common/i18n';
@@ -64,7 +64,7 @@ function ActionListFilterInput({
   filter, currentValue, onChange,
 }) {
   const [filterValue, setValue] = useState(currentValue);
-  const delayedQuery = useCallback(_.debounce(
+  const delayedQuery = useCallback(debounce(
     (value) => onChange(filter.identifier, value), 500,
   ), [filter.identifier, onChange]);
 

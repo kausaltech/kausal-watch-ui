@@ -1,11 +1,11 @@
-import _ from 'lodash';
+import { cloneDeep } from 'lodash';
 import { ORDERED_ACTION_STATUSES } from './data/actions';
 
 // Clean up actionStatus so UI can handle edge cases
 const cleanActionStatus = (action, actionStatuses) => {
   const { status, implementationPhase } = action;
   // precaution not to mutate original object
-  const newStatus = status ? _.cloneDeep(status) : {};
+  const newStatus = status ? cloneDeep(status) : {};
 
   // if status is missing, mark it as undefined
   // if implementationPhase is completed, make status undefined

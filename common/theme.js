@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import PropTypes, { number, exact, string, oneOfType, bool, array, object } from 'prop-types';
 import { ThemeContext } from 'styled-components';
-import _ from 'lodash';
+import { cloneDeep, merge } from 'lodash';
 /* eslint-disable */
 const defaultTheme = require('public/static/themes/default/theme.json');
 
@@ -198,7 +198,7 @@ export const themeProp = exact({
 
 export function mergeWithDefaultTheme(newTheme) {
   // Merge with default theme recursively
-  return _.merge(_.cloneDeep(defaultTheme), newTheme);
+  return merge(cloneDeep(defaultTheme), newTheme);
 }
 
 export function setTheme(newTheme) {

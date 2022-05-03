@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import dynamic from 'next/dynamic';
-import _ from 'lodash';
+import { merge, uniq } from 'lodash';
 import dayjs from 'common/dayjs';
 import styled from 'styled-components';
 import { useTranslation } from 'common/i18n';
@@ -199,7 +199,7 @@ const createLayout = (
     annotations: config?.annotations,
   };
 
-  _.merge(newLayout, config);
+  merge(newLayout, config);
 
   return newLayout;
 };
@@ -284,7 +284,7 @@ const createTraces = (traces, unit, plotColors, styleCount, categoryCount, hasTi
     return modTrace;
   });
   if (layoutConfig.xaxis?.type !== 'category') {
-    const uniqueXValues = _.uniq(allXValues.sort(), true);
+    const uniqueXValues = uniq(allXValues.sort(), true);
     if (uniqueXValues.length < 4) {
       layoutConfig.xaxis.tickvals = uniqueXValues;
     }

@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 
 import { gql, useQuery } from '@apollo/client';
-import _ from 'lodash';
+import { clone } from 'lodash';
 import { useTranslation } from 'common/i18n';
 import Layout from 'components/layout';
 import PlanContext from 'context/plan';
@@ -81,7 +81,7 @@ function RootPage() {
   if (!planPage) {
     return <ErrorMessage statusCode={404} message={t('page-not-found')} />;
   }
-  const page = _.clone(planPage);
+  const page = clone(planPage);
   page.category = {};
   const cats = data.planCategories.filter((cat) => cat.type.identifier === 'action');
   page.category.children = getRootCategories(cats);

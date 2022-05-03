@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
+import { cloneDeep } from 'lodash';
 import { Row, Col } from 'reactstrap';
 import { withTheme } from 'styled-components';
 import { withTranslation } from '../../common/i18n';
@@ -56,7 +56,7 @@ class IndicatorListFilters extends React.Component {
     const { activeCat } = this.state;
     const { showIdentifiers, filterIndicatorsByAllLevels } = theme.settings.categories;
 
-    let sortedCats = _.cloneDeep(cats.sort((a, b) => a.identifier.localeCompare(b.identifier)));
+    let sortedCats = cloneDeep(cats.sort((a, b) => a.identifier.localeCompare(b.identifier)));
     if (!filterIndicatorsByAllLevels) sortedCats = sortedCats.filter((cat) => !cat.parent);
 
     sortedCats.forEach((cat) => {

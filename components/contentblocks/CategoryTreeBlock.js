@@ -1,5 +1,5 @@
 import React, { useContext, useState, useCallback } from 'react';
-import _ from 'lodash';
+import { concat } from 'lodash';
 import styled from 'styled-components';
 import { Container } from 'reactstrap';
 import ContentLoader from 'components/common/ContentLoader';
@@ -165,7 +165,7 @@ const CategoryTreeSection = (props) => {
   // useCallback, so function prop does not cause graph re-rendering
   const onChangeSection = useCallback(
     (cat) => {
-      const allSections = _.concat(rootSection, sections);
+      const allSections = concat(rootSection, sections);
       const newCat = allSections.find((sect) => sect.id === cat);
       setCategory(newCat);
       return false;
