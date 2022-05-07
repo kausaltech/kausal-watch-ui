@@ -94,6 +94,17 @@ const PlanSelector = (props) => {
             <Icon name="angle-down" />
         </StyledDropdownToggle>
         <DropdownMenu>
+          { !plan.children?.length > 0 && (
+            <PlanDropdownItem>
+              <PlanChip
+                planImage={plan.image?.rendition.src}
+                planShortName={plan.shortName}
+                organization={plan.name}
+                size="md"
+              />
+            </PlanDropdownItem>
+            )
+          }
           { plan.relatedPlans.map((relPlan) => (
             <PlanDropdownItem href={relPlan.viewUrl} key={relPlan.identifier}>
               <PlanChip

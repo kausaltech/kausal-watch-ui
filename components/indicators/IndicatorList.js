@@ -34,6 +34,16 @@ const GET_INDICATOR_LIST = gql`
           common {
             id
             name
+            normalizations {
+              unit {
+                shortName
+              }
+              normalizer {
+                name
+                id
+                identifier
+              }
+            }
           }
           categories {
             id
@@ -46,7 +56,11 @@ const GET_INDICATOR_LIST = gql`
             id
             date
             value
-          }
+            normalizedValues {
+              normalizerId
+              value
+            }
+         }
           unit {
             shortName
           }
@@ -136,8 +150,10 @@ class IndicatorList extends React.Component {
     );
     const expandPaths = (processed, indicators, path) => {
       indicators.forEach(i => {
-        processed[i.id].path = [...path, i.id];
-        expandPaths(processed, i.children.map(c => processed[c]), [...path, i.id])
+        const newPath = [...path, i.id]
+        processed[i.id].path = newPath;
+        processed[i.id].pathNames = newPath.map(p => uniqueCommonIndicators[p].name);
+        expandPaths(processed, i.children.map(c => processed[c]), newPath)
       });
       return processed;
     }
@@ -149,6 +165,9 @@ class IndicatorList extends React.Component {
   processDataToProps(data) {
     const { plan } = data;
     const displayMunicipality = plan.features.hasActionPrimaryOrgs === true;
+    const displayNormalizedValues = undefined !== plan.indicatorLevels.find(
+      l => l.indicator.common.normalizations.length > 0
+    );
     const generalContent = plan.generalContent || {};
     const { indicatorLevels, categoryTypes } = plan;
 
@@ -165,7 +184,13 @@ class IndicatorList extends React.Component {
       });
     });
 
-    return { indicators, categories, leadContent: generalContent.indicatorListLeadContent, displayMunicipality };
+    return {
+      indicators,
+      categories,
+      leadContent: generalContent.indicatorListLeadContent,
+      displayMunicipality,
+      displayNormalizedValues
+    };
   }
 
   render() {

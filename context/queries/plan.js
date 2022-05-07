@@ -111,6 +111,7 @@ query PlanContext($identifier: ID, $hostname: String, $clientUrl: String) {
       hasActionLeadParagraph
       hasActionPrimaryOrgs
       publicContactPersons
+      showAdminLink
     }
     relatedPlans {
       id
