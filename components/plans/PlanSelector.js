@@ -95,10 +95,10 @@ const PlanSelector = (props) => {
         </StyledDropdownToggle>
         <DropdownMenu>
           { !plan.children?.length > 0 && (
-            <PlanDropdownItem>
+            <PlanDropdownItem href={plan.viewUrl}>
               <PlanChip
                 planImage={plan.image?.rendition.src}
-                planShortName={plan.shortName}
+                planShortName="{plan.shortName}"
                 organization={plan.name}
                 size="md"
               />
