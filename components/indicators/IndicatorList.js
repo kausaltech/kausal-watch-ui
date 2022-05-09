@@ -166,7 +166,7 @@ class IndicatorList extends React.Component {
     const { plan } = data;
     const displayMunicipality = plan.features.hasActionPrimaryOrgs === true;
     const displayNormalizedValues = undefined !== plan.indicatorLevels.find(
-      l => l.indicator.common.normalizations.length > 0
+      l => (l.indicator?.common != null && l.indicator.common.normalizations.length > 0)
     );
     const generalContent = plan.generalContent || {};
     const { indicatorLevels, categoryTypes } = plan;

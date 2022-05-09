@@ -180,7 +180,7 @@ function sortIndicators(hierarchy, indicators, displayMunicipality) {
   });
   const grouped = new Map();
   sorted.forEach(indicator => {
-    const commonId = indicator.common.id;
+    const commonId = indicator.common?.id;
     const group = grouped.get(commonId) ?? [];
     grouped.set(commonId, [...group, indicator]);
   });
@@ -281,8 +281,9 @@ class IndicatorListFiltered extends React.Component {
       return indicatorElement(item, result, level, expanded, expandKey);
     };
     const indentationLevel = (item) => (
-      (hierarchy[item.common.id]?.path?.length ?? 1) - 1
+      item.common == null ? 1 : (hierarchy[item.common.id]?.path?.length ?? 1) - 1
     );
+    const hierarchyEnabled = Object.keys(hierarchy).length > 1;
     return (
       <div className="mb-5 pb-5">
         <IndicatorListFilters cats={sortedCategories} changeOption={this.handleChange} />
@@ -291,6 +292,11 @@ class IndicatorListFiltered extends React.Component {
             const expanded = (this.state.visibleGroups[idx] === true);
             const expandKey = `common-indicator-section-${idx}`;
             const headers = [];
+            if (!hierarchyEnabled) {
+              headers.push(
+                <IndentableTableHeader key="hr-name">{ t('name') }</IndentableTableHeader>
+              );
+            }
             if (!allIndicatorsHaveSameLevel) {
               headers.push(
                 <IndentableTableHeader key="hr-type">{ t('type') }</IndentableTableHeader>
@@ -321,6 +327,7 @@ class IndicatorListFiltered extends React.Component {
             }
 
             return (<React.Fragment key={`indicator-group-${idx}`}>
+            { hierarchyEnabled &&
             <tbody key="body-1">
               <tr>
                 <IndentableTableHeader
@@ -333,6 +340,7 @@ class IndicatorListFiltered extends React.Component {
                 </IndentableTableHeader>
               </tr>
             </tbody>
+            }
             <tbody key="body-2" id={expandKey} aria-hidden={!expanded} style={{display: (expanded ? "table-row-group": "none")}}>
               <tr>
                 { headers }
@@ -359,6 +367,13 @@ class IndicatorListFiltered extends React.Component {
                 }
                 return (
                   <tr key={item.id}>
+                    { !hierarchyEnabled &&
+                      <IndentableTableCell indent={0} >
+                        <IndicatorLink id={item.id}>
+                          { item.name }
+                        </IndicatorLink>
+                      </IndentableTableCell>
+                    }
                     { !allIndicatorsHaveSameLevel &&
                       <IndentableTableCell>
                         <IndicatorType level={item.level}>
