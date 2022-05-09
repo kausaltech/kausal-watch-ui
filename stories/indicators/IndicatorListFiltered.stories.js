@@ -2,165 +2,34 @@ import React, { useContext } from 'react';
 import { ThemeContext } from 'styled-components';
 
 import IndicatorListFiltered from '../../components/indicators/IndicatorListFiltered';
-
-const categoriesData = [
-  {
-    id: '1',
-    identifier: '1.1',
-    name: 'Category 1',
-    parent: null,
-  },
-  {
-    id: '2',
-    identifier: '1.1.1',
-    name: 'Sub Category 2',
-    parent: {
-      id: '1',
-    },
-  },
-  {
-    id: '3',
-    identifier: '1.1.2',
-    name: 'Sub Category 3',
-    parent: {
-      id: '1',
-    }
-  },
-  {
-    id: '4',
-    identifier: '1.1.3',
-    name: 'Sub Category 4',
-    parent: {
-      id: '1'
-    }
-  },
-  {
-    id: '5',
-    identifier: '1.1.4',
-    name: 'Sub Category 5',
-    parent: {
-      id: '1'
-    }
-  },
-];
-
-const indicatorsData = [
-  {
-    id: '21',
-    name: 'Tactical Indicator',
-    categories: [
-      {
-        id: '4',
-        name: 'Sub Category 1',
-      },
-    ],
-    latestGraph: null,
-    latestValue: {
-      id: '610',
-      value: 234.5,
-      date: '2018-12-31',
-    },
-    level: 'tactical',
-    unit: {
-      'shortName': 'kt/a'
-    }
-  },
-  {
-    id: '2',
-    name: 'Operational Indicator with a longer title that probably wraps',
-    categories: [
-      {
-        id: '3',
-        name: 'Cat',
-      },
-    ],
-    latestGraph: null,
-    latestValue: {
-      id: '630',
-      value: 235.666,
-      date: '2018-12-31',
-    },
-    level: 'operational',
-    unit: {
-      'shortName': 'kt/a'
-    }
-  },
-  {
-    id: '111',
-    name: 'Some Strategic Indicator',
-    categories: [
-      {
-        id: '4',
-        name: 'This is a category',
-      },
-    ],
-    latestGraph: null,
-    latestValue: {
-      value: 12235.666,
-      id: '658',
-      date: '2018-12-31',
-    },
-    level: 'strategic',
-    unit: {
-      'shortName': 'kt/a'
-    }
-  },
-  {
-    id: '165',
-    name: 'Another one with longer title',
-    categories: [
-      null,
-    ],
-    latestGraph: null,
-    latestValue: {
-      value: 235.666,
-      id: '668',
-      date: '2018-12-31',
-    },
-    level: 'strategic',
-    unit: {
-      'shortName': 'kt/a'
-    }
-  },
-  {
-    id: '4',
-    name: 'Tactical indicator with a title that ',
-    categories: [
-      {
-        id: '5',
-        name: 'Another Category',
-      },
-      {
-        id: '1',
-        name: 'Category with also long title',
-      },
-    ],
-    latestGraph: null,
-    latestValue: null,
-    level: 'tactical',
-    unit: {
-      'shortName': 'kt/a'
-    }
-  },
-];
+import {
+  categoriesData,
+  nonHierarchicalIndicatorsData,
+  hierarchy,
+  hierarchicalIndicatorsData
+} from './indicators.fixtures';
 
 export default {
   title: 'Indicators/List',
 };
 
-function IndicatorListStory() {
-  const theme = useContext(ThemeContext);
-
-  return (
-    <div className="p-5">
-      <IndicatorListFiltered
-        indicators={indicatorsData}
-        categories={categoriesData}
-      />
-    </div>
-  );
+const Template = args => {
+  console.log(args);
+  return <div className="p-5">
+    <IndicatorListFiltered {...args} />
+  </div>
 }
 
-export function List(theme) {
-  return <IndicatorListStory theme={theme} />;
+export const SimpleList = Template.bind({});
+SimpleList.args = {
+  indicators: nonHierarchicalIndicatorsData,
+  categories: categoriesData
+}
+
+export const HierarchicalList = Template.bind({});
+HierarchicalList.args = {
+  indicators: hierarchicalIndicatorsData,
+  categories: categoriesData,
+  displayMunicipality: true,
+  hierarchy
 }
