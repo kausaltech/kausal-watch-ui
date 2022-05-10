@@ -301,7 +301,7 @@ function GlobalNav(props) {
   const [isOpen, toggleOpen] = useState(false);
   const {
     theme, siteTitle, ownerName, navItems, externalItems,
-    fullwidth, sticky,
+    fullwidth, sticky, hasPlanSiblings,
   } = props;
 
   const OrgLogo = () => {
@@ -329,7 +329,6 @@ function GlobalNav(props) {
     );
   }
 
-  const hasPlanSiblings = plan.relatedPlans?.length > 0 || plan.children?.length > 0;
   const hideLogoOnMobile = theme.navTitleVisible && hasPlanSiblings;
 
   const displayTitle = plan.parent ? plan.parent.name  : siteTitle;

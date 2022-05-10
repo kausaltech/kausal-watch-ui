@@ -10,6 +10,7 @@ import styled, { withTheme } from 'styled-components';
 import { withTranslation } from 'common/i18n';
 import { NavigationLink, Link } from 'common/links';
 import Icon from './Icon';
+import PlanSelector from 'components/plans/PlanSelector';
 
 const StyledFooter = styled.footer`
   position: relative;
@@ -60,6 +61,7 @@ const Branding = styled.div`
     }
     return direction;
   }};
+  margin-bottom: ${(props) => props.theme.spaces.s300};
 
   @media (max-width: ${(props) => props.theme.breakpointMd}) {
     flex-direction: column;
@@ -71,7 +73,10 @@ const Logo = styled.div`
   height: calc(${(props) => props.theme.footerLogoSize} * ${(props) => props.theme.spaces.s400});
   max-width: calc(${(props) => props.theme.footerLogoSize} * 4 * ${(props) => props.theme.spaces.s300});
   margin-right: ${(props) => props.theme.spaces.s200};
-  margin-bottom: ${(props) => props.theme.spaces.s300};
+  margin: ${(props) => props.theme.spaces.s150}
+    ${(props) => props.theme.spaces.s200}
+    ${(props) => props.theme.spaces.s150}
+    0;
 
   svg {
     height: 100%;
@@ -86,11 +91,15 @@ const Logo = styled.div`
 
 const ServiceTitle = styled.div`
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  margin-bottom: ${(props) => props.theme.spaces.s300};
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
   font-size: ${(props) => props.theme.fontSizeMd};
   font-weight: ${(props) => props.theme.fontWeightBold};
+
+  @media (max-width: ${(props) => props.theme.breakpointMd}) {
+    flex-direction: column;
+  }
 `;
 
 const OrgTitle = styled.div`
@@ -348,6 +357,7 @@ function SiteFooter(props) {
     utilityLinks,
     fundingInstruments,
     otherLogos,
+    hasPlanSiblings,
   } = props;
 
   function OrgLogo() {
@@ -394,6 +404,7 @@ function SiteFooter(props) {
                   {siteTitle}
                 </a>
               </Link>
+              { hasPlanSiblings && <PlanSelector /> }
             </ServiceTitle>
             )}
           </Branding>

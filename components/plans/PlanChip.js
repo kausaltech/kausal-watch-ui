@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 const Tag = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   max-width: 600px;
   border-radius: 4px;
 `;
@@ -13,12 +13,12 @@ const PlanAvatar = styled.img`
   display: block;
   width: ${(props) => props.theme.spaces[props.size]};
   height: ${(props) => props.theme.spaces[props.size]};
+  margin-right: ${(props) => props.size === 's300' ? props.theme.spaces.s050 : props.theme.spaces.s050};
   border-radius: 50%;
 `;
 
 const PlanName = styled.div`
   color: ${(props) => props.negative ? props.theme.themeColors.light : props.theme.themeColors.dark};
-  margin-left: ${(props) => props.theme.spaces.s025};
   line-height: 1.2;
 `;
 
@@ -29,6 +29,7 @@ const PlanTitle = styled.div`
 
 const PlanOrg = styled.div`
   font-size: 80%;
+  font-weight: ${(props) => props.theme.fontWeightNormal};
 `;
 
 const PlanChip = React.forwardRef((props, ref) => {

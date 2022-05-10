@@ -59,11 +59,17 @@ function Layout({ children }) {
         )}
         { googleSiteVerificationTag && <meta name="google-site-verification" content={googleSiteVerificationTag} />}
       </Head>
-      <Header siteTitle={displaySite.navigationTitle} />
+      <Header
+        siteTitle={displaySite.navigationTitle}
+        hasPlanSiblings={hasPlanSiblings}
+      />
       <Content id="main">
         {children}
       </Content>
-      <Footer />
+      <Footer
+        siteTitle={displaySite.navigationTitle}
+        hasPlanSiblings={hasPlanSiblings}
+      />
     </>
   );
 }

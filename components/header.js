@@ -28,7 +28,7 @@ const getMenuStructure = ((pages, rootId, activeBranch) => {
   return menuLevelItems.length > 0 ? menuLevelItems : null;
 });
 
-function Header({ siteTitle }) {
+function Header({ siteTitle, hasPlanSiblings }) {
   const plan = useContext(PlanContext);
   const site = useContext(SiteContext);
   const { t } = useTranslation(['common']);
@@ -68,6 +68,7 @@ function Header({ siteTitle }) {
         ownerName={plan.generalContent ? plan.generalContent.ownerName : plan.name}
         navItems={navLinks}
         externalItems={theme.settings?.externalLinks}
+        hasPlanSiblings={hasPlanSiblings}
       />
     </header>
   );
