@@ -30,7 +30,10 @@ export function getIndicatorLinkProps(id) {
   };
 }
 
-export function getActionLinkProps(id) {
+export function getActionLinkProps(id, planUrl) {
+  if (planUrl) return {
+    href: `${planUrl}/actions/${id}`
+  }
   return {
     href: `/actions/${id}`,
   };
@@ -98,17 +101,23 @@ export const actionPropType = PropTypes.shape({
 });
 
 export function ActionLink(props) {
-  const { action, ...other } = props;
+  const { action, planUrl, ...other } = props;
   // If this action is merged with another, replace all links with
   // a link to the master action.
   const targetIdentifier = action.mergedWith ? action.mergedWith.identifier : action.identifier;
 
   return (
-    <Link {...getActionLinkProps(targetIdentifier)} passHref {...other} />
+    <Link {...getActionLinkProps(targetIdentifier, planUrl)} passHref {...other} />
   );
 }
+
+ActionLink.defaultProps = {
+  planUrl: undefined,
+};
+
 ActionLink.propTypes = {
   action: actionPropType.isRequired,
+  planUrl: PropTypes.string,
 };
 
 export function ActionListLink(props) {

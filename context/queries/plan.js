@@ -148,6 +148,10 @@ query PlanContext($identifier: ID, $hostname: String, $clientUrl: String) {
       identifier
       name
       shortName
+      generalContent {
+        id
+        siteTitle
+      }
       image {
           rendition(size: "128x128", crop: true) {
             src

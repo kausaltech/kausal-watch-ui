@@ -168,6 +168,11 @@ export const GET_ACTION_LIST = gql`
       mergedWith {
         id
         identifier
+        plan {
+          id
+          shortName
+          viewUrl
+        }
       }
       indicators {
         id

@@ -36,13 +36,15 @@ const PlanTitle = styled.div`
 const PlanDropdownItem = styled.a`
   display: block;
   padding: .25rem .75rem .25rem .25rem;
-  margin: .5rem;
+  margin: 0 .5rem .5rem;
   border: 1px solid ${(props)=> props.theme.themeColors.light};
-  border-radius: 1rem;
+  border-radius: .5rem;
+  text-decoration: none !important;
 
   &:hover {
     background: ${(props)=> props.theme.themeColors.light};
     border-color: ${(props)=> props.theme.themeColors.light};
+    text-decoration: none;
   }
 `;
 
@@ -77,6 +79,7 @@ const StyledDropdownToggle = styled(DropdownToggle)`
 
 const PlanSelector = (props) => {
   const plan = useContext(PlanContext);
+  console.log("plan", plan);
   if (!plan.relatedPlans || !plan.children) return null;
   return (
 
@@ -95,7 +98,7 @@ const PlanSelector = (props) => {
         </StyledDropdownToggle>
         <DropdownMenu>
           { !plan.children?.length > 0 && (
-            <PlanDropdownItem>
+            <PlanDropdownItem href="/">
               <PlanChip
                 planImage={plan.image?.rendition.src}
                 planShortName={plan.shortName}

@@ -116,7 +116,7 @@ function ActionPhase(props) {
   }
   // Override phase name in special case statuses
   const inactive = ['cancelled', 'merged', 'postponed', 'completed'].includes(status.identifier);
-  if (inactive) activePhaseName = status.name;
+  if (inactive) activePhaseName = status.identifier === 'merged' ? `${t('actions:action-status-merged')}` : status.name;
 
   return (
     <Status {...rest} className={compact && 'compact'}>

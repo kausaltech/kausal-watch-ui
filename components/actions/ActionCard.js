@@ -44,9 +44,19 @@ const ACTION_CARD_FRAGMENT = gql`
         }
       }
     }
+    mergedWith {
+        id
+        identifier
+        plan {
+          id
+          shortName
+          viewUrl
+        }
+      }
     plan {
       id
       shortName
+      viewUrl
       image {
         rendition(size: "128x128", crop: true) {
           src
@@ -217,7 +227,7 @@ function ActionCard(props) {
 
   if (actionName.length > 120) actionName = `${action.name.substring(0, 120)}…`;
 
-  const { mergedWith, implementationPhase } = action;
+  const { mergedWith, implementationPhase, primaryOrg } = action;
   const status = cleanActionStatus(action, plan.actionStatuses);
   let statusText = status.name || null;
 
@@ -229,10 +239,22 @@ function ActionCard(props) {
     if (status.identifier === 'completed') statusText = status.name;
   }
 
-  const { primaryOrg } = action;
+  const getPlanUrl = (mergedWith, actionPlan, planId) => {
+    if (mergedWith && (mergedWith?.plan.id !== planId)) return mergedWith.plan.viewUrl;
+    if (actionPlan.id !== planId) return actionPlan.viewUrl;
+    return undefined;
+  };
+
+  const getMergedName = (mergedWith, planId) => {
+    if (mergedWith.plan.id !== planId) return `${mergedWith.plan.shortName} ${mergedWith.identifier}`;
+    else return mergedWith.identifier;
+  };
 
   return (
-    <ActionLink action={action}>
+    <ActionLink
+      action={action}
+      planUrl={getPlanUrl(mergedWith, action.plan, plan.id)}
+    >
       <StyledActionLink>
         <ActionCardElement>
           <ActionStatusArea
@@ -258,7 +280,7 @@ function ActionCard(props) {
               <StatusName>
                 { t('actions:action-status-merged') }
                 <span> &rarr; </span>
-                { mergedWith.identifier }
+                { getMergedName(mergedWith, plan.id) }
               </StatusName>
             ) : (
               <StatusName>
