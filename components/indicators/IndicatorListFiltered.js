@@ -93,7 +93,7 @@ const IndentableCellContentWrapper = styled.div`
   padding: ${(props) => (
     props.sectionHeader === true
     ? `.5rem`
-    : `0.15rem 0.5rem .15rem ${+props.firstCol + .5}rem`
+    : `0.15rem 0.5rem .15rem ${+(props.firstCol ?? 0) + .5}rem`
   )};
   text-align: ${(props) => props.numeric === true ? 'right' : 'left'};
   font-weight: ${(props) => (props.sectionHeader === true ? props.theme.fontWeightBold : props.theme.fontWeightNormal)};
