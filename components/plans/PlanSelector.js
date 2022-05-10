@@ -98,7 +98,7 @@ const PlanSelector = (props) => {
             <PlanDropdownItem href={plan.viewUrl}>
               <PlanChip
                 planImage={plan.image?.rendition.src}
-                planShortName="{plan.shortName}"
+                planShortName={plan.shortName}
                 organization={plan.name}
                 size="md"
               />

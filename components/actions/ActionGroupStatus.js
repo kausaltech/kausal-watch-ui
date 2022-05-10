@@ -28,6 +28,11 @@ export const GET_ACTION_STATUSES = gql`
       mergedWith {
         id
         identifier
+        plan {
+          id
+          shortName
+          viewUrl
+        }
       }
     }
   }
