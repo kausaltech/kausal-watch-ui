@@ -428,10 +428,16 @@ const ActionRow = React.memo(function ActionRow(props) {
     </TaskTooltip>
   )};
 
-  const phasesTooltipContent = (status, activePhase, merged) => {
+  const phasesTooltipContent = (status, activePhase, merged, planId) => {
+
+    const getMergedName = (mergedWith, planId) => {
+      if (mergedWith.plan.id !== planId) return `${mergedWith.plan.shortName} ${mergedWith.identifier}`;
+      else return mergedWith.identifier;
+    };
+
     if (merged) return (
       <div>
-        <h5>{ ` ${t('actions:action-status-merged')} ${merged?.identifier} ` }</h5>
+        <h5>{ ` ${t('actions:action-status-merged')}: ${getMergedName(merged, planId)}.` }</h5>
       </div>
     )
     if (!activePhase) return (
@@ -554,6 +560,12 @@ const ActionRow = React.memo(function ActionRow(props) {
     </div>
   )};
 
+  const getPlanUrl = (mergedWith, actionPlan, planId) => {
+    if (mergedWith && (mergedWith?.plan.id !== planId)) return mergedWith.plan.viewUrl;
+    if (actionPlan.id !== planId) return actionPlan.viewUrl;
+    return undefined;
+  };
+
   return (
     <StyledRow>
       { plan.primaryOrgs.length > 0 && (
@@ -578,13 +590,16 @@ const ActionRow = React.memo(function ActionRow(props) {
       </td>
       )}
       <td className="has-tooltip">
-        <ActionLink action={item}>
+        <ActionLink
+          action={item}
+          planUrl={getPlanUrl(item.mergedWith, item.plan, plan.id)}
+        >
           { item.name }
         </ActionLink>
       </td>
       <td
         className="has-tooltip"
-        onMouseEnter={(e)=> showTooltip(e, phasesTooltipContent(actionStatus, item.implementationPhase, item.mergedWith))}
+        onMouseEnter={(e)=> showTooltip(e, phasesTooltipContent(actionStatus, item.implementationPhase, item.mergedWith, plan))}
         onMouseLeave={(e)=> hideTooltip(e)}
       >
         <StatusDisplay>
@@ -600,7 +615,7 @@ const ActionRow = React.memo(function ActionRow(props) {
           ) : (
             <StatusBadge
               statusIdentifier={actionStatus.identifier}
-              statusName={actionStatus.name}
+              statusName={item.mergedWith? 'coucou' : actionStatus.name}
             />
           )}
         </StatusDisplay>

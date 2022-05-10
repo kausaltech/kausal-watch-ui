@@ -44,6 +44,15 @@ const ACTION_CARD_FRAGMENT = gql`
         }
       }
     }
+    mergedWith {
+        id
+        identifier
+        plan {
+          id
+          shortName
+          viewUrl
+        }
+      }
     plan {
       id
       shortName
@@ -212,8 +221,6 @@ function ActionCard(props) {
   const plan = useContext(PlanContext);
   const { t } = useTranslation(['common', 'actions']);
   const theme = useTheme();
-
-  console.log(action);
 
   let actionName = action.name;
   const iconUrl = getIconUrl(action) || '';
