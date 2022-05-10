@@ -179,10 +179,7 @@ query ActionDetails($plan: ID!, $id: ID!) {
       }
     }
     relatedActions {
-      id
-      relatedAction {
-        ...ActionCard
-      }
+      ...ActionCard
     }
     nextAction {
       id
@@ -549,10 +546,10 @@ function ActionContent({ id }) {
                   className="mb-5 d-flex align-items-stretch"
                   style={{ transition: 'all 0.5s ease' }}
                   role="listitem"
-                  key={relAction.relatedAction.id}
+                  key={relAction.id}
                 >
                   <ActionCard
-                    action={relAction.relatedAction}
+                    action={relAction}
                     showPlan={true}
                   />
                 </Col>
