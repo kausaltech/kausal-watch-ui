@@ -11,12 +11,14 @@ React UI for browsing and visualizing action plans. Built using [Next.js](https:
 #### Prerequisites
 
 * [Node.js](https://nodejs.org/) 14.x
-* [Yarn](https://yarnpkg.com/) 2
+* [Yarn](https://yarnpkg.com/) berry
   
 #### Getting Started
 
 Clone the repository, install dependencies and run the development server locally:
 
+    yarn set version berry
+    yarn config set nodeLinker 'node-modules'
     yarn install
     yarn dev
 
