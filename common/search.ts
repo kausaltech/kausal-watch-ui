@@ -5,7 +5,7 @@ import { title } from 'process';
 
 const GET_AUTOCOMPLETE_RESULTS = gql`
 query GetAutocompleteResults($plan: ID!, $term: String!) {
-  search(plan: $plan, autocomplete: $term) {
+  search(plan: $plan, autocomplete: $term, includeRelatedPlans: true) {
     hits {
       id
       title
