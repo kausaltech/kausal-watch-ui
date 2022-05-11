@@ -34,7 +34,6 @@ function Categorybadge(props) {
       <Badge
         id={`org-${slugify(id)}`}
         size={size}
-        href
       >
         {name}
       </Badge>

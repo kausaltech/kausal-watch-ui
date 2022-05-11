@@ -3,13 +3,15 @@ import dynamic from 'next/dynamic';
 import { useTranslation } from 'common/i18n';
 import { useTheme } from 'common/theme';
 
+
+const Plot = dynamic(
+  () => import('./Plot'),
+  { ssr: false }
+);
+
 const ScheduleTimeline = ({ schedules, allSchedules }) => {
   const { t } = useTranslation('common');
   const theme = useTheme();
-
-  if (!process.browser) {
-    return null;
-  }
 
   let minDate;
   let maxDate;
@@ -44,7 +46,6 @@ const ScheduleTimeline = ({ schedules, allSchedules }) => {
   if (nrYears > 10) dtick = 'M36';
   else dtick = 'M12';
 
-  const Plot = dynamic(import('./Plot'));
   const data = [
     {
       x: [actStartDate, actEndDate],

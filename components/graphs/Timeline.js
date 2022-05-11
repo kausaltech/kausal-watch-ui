@@ -19,14 +19,16 @@ const StatusTitle = styled.div`
   }
 `;
 
+const Plot = dynamic(
+  () => import('./Plot'),
+  { ssr: false }
+)
+
+
 const Timeline = (props) => {
   const { startDate: startDateRaw, endDate: endDateRaw, continuous } = props;
   const { t } = useTranslation('common');
   const theme = useTheme();
-
-  if (!process.browser) {
-    return null;
-  }
 
   const startDate = startDateRaw ? dayjs(startDateRaw) : undefined; // .format('L');
   const endDate = endDateRaw ? dayjs(endDateRaw) : undefined; // .format('L');
@@ -41,8 +43,6 @@ const Timeline = (props) => {
   if (startDate && !endDate) displayRange[1] = startDate.add(2, 'month');
   if (startDate && continuous) displayRange[1] = maxEndDate;
   if (!startDate && !endDate) { displayRange[1] = maxEndDate; displayRange[0] = dayjs(); }
-
-  const Plot = dynamic(import('./Plot'));
   const data = [
     {
       x: [displayRange[0].format(), displayRange[1].format()],
