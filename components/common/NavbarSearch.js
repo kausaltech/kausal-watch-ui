@@ -265,7 +265,7 @@ function NavbarSearch(props) {
   return (
     <SearchProvider config={{
       apiConnector: connector,
-      debug: true,
+      debug: false,
       hasA11yNotifications: true,
       a11yNotificationMessages: {
         searchResults: ({ start, end, totalResults, searchTerm }) =>

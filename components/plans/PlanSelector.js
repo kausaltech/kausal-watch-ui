@@ -79,7 +79,6 @@ const StyledDropdownToggle = styled(DropdownToggle)`
 
 const PlanSelector = (props) => {
   const plan = useContext(PlanContext);
-  console.log("plan", plan);
   if (!plan.relatedPlans || !plan.children) return null;
   return (
 
