@@ -113,7 +113,7 @@ query PlanContext($identifier: ID, $hostname: String, $clientUrl: String) {
       publicContactPersons
       showAdminLink
     }
-    relatedPlans {
+    allRelatedPlans {
       id
       identifier
       name

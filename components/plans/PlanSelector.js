@@ -1,8 +1,7 @@
-import { useContext } from 'react';
 import styled from 'styled-components';
-import { darken, transparentize } from 'polished';
+import { transparentize } from 'polished';
 import { UncontrolledDropdown, DropdownToggle, DropdownMenu } from 'reactstrap';
-import PlanContext from 'context/plan';
+import { usePlan } from 'context/plan';
 import Icon from 'components/common/Icon';
 import PlanChip from './PlanChip';
 
@@ -78,10 +77,13 @@ const StyledDropdownToggle = styled(DropdownToggle)`
 `;
 
 const PlanSelector = (props) => {
-  const plan = useContext(PlanContext);
-  if (!plan.relatedPlans || !plan.children) return null;
-  return (
+  const plan = usePlan();
 
+  const { allRelatedPlans } = plan;
+  if (!allRelatedPlans.length) return null;
+
+  const otherPlans = plan.allRelatedPlans.filter((pl) => pl.id !== plan.parent?.id && pl.id != plan.id);
+  return (
     <PlanSelect>
       <PlanDivider />
       <UncontrolledDropdown>
@@ -91,38 +93,17 @@ const PlanSelector = (props) => {
         >
             <PlanAvatar src={plan.image?.small.src} />
             <PlanTitle>
-              {plan.shortName}
+              {plan.shortName || plan.name}
             </PlanTitle>
             <Icon name="angle-down" />
         </StyledDropdownToggle>
         <DropdownMenu>
-          { !plan.children?.length > 0 && (
-            <PlanDropdownItem href="/">
+          { otherPlans.map((pl) => (
+            <PlanDropdownItem href={pl.viewUrl} key={pl.identifier}>
               <PlanChip
-                planImage={plan.image?.rendition.src}
-                planShortName={plan.shortName}
-                organization={plan.name}
-                size="md"
-              />
-            </PlanDropdownItem>
-            )
-          }
-          { plan.relatedPlans.map((relPlan) => (
-            <PlanDropdownItem href={relPlan.viewUrl} key={relPlan.identifier}>
-              <PlanChip
-                planImage={relPlan.image?.rendition.src}
-                planShortName={relPlan.shortName}
-                organization={relPlan.name}
-                size="md"
-              />
-            </PlanDropdownItem>
-          ))}
-          { plan.children.map((relPlan) => (
-            <PlanDropdownItem href={relPlan.viewUrl} key={relPlan.identifier}>
-              <PlanChip
-                planImage={relPlan.image?.rendition.src}
-                planShortName={relPlan.shortName}
-                organization={relPlan.name}
+                planImage={pl.image?.rendition.src}
+                planShortName={pl.shortName}
+                organization={pl.name}
                 size="md"
               />
             </PlanDropdownItem>

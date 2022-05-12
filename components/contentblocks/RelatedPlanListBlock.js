@@ -1,13 +1,10 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { Container, Row, Col } from 'reactstrap';
+import { Container } from 'reactstrap';
 import styled from 'styled-components';
-import PlanContext from 'context/plan';
+import { usePlan } from 'context/plan';
 import PlanChip from 'components/plans/PlanChip';
-import { Link } from 'common/links';
 import { useTranslation } from 'common/i18n';
-import Icon from 'components/common/Icon';
-import IndicatorVisualisation from 'components/indicators/IndicatorVisualisation';
 
 const PlanListSection = styled.div`
   background-color: ${(props) => props.theme.themeColors.dark};
@@ -37,9 +34,9 @@ const PlanList = styled.div`
 `;
 
 const RelatedPlanListBlock = (props) => {
-  const plan = useContext(PlanContext);
+  const plan = usePlan();
   const { t } = useTranslation(['common']);
-  if (!plan.relatedPlans || !plan.children) return null;
+  if (!plan.allRelatedPlans) return null;
 
   return (
     <PlanListSection>
@@ -50,7 +47,7 @@ const RelatedPlanListBlock = (props) => {
         </a>
       </h2>
         <PlanList>
-          { plan.relatedPlans?.length > 0 && (
+          { plan.allRelatedPlans.length > 0 && (
             <a
               href={plan.viewUrl}
               key={plan.identifier}
@@ -64,29 +61,15 @@ const RelatedPlanListBlock = (props) => {
               />
             </a>
           )}
-          { plan.relatedPlans.map((relPlan) => (
+          { plan.allRelatedPlans.map((pl) => (
             <a
-              href={relPlan.viewUrl}
-              key={relPlan.identifier}
+              href={pl.viewUrl}
+              key={pl.identifier}
             >
               <PlanChip
-                planImage={relPlan.image?.rendition.src}
-                planShortName={relPlan.shortName}
-                organization={relPlan.name}
-                size="lg"
-                negative={true}
-              />
-            </a>
-          ))}
-          { plan.children.map((relPlan) => (
-            <a
-              href={relPlan.viewUrl}
-              key={relPlan.identifier}
-            >
-              <PlanChip
-                planImage={relPlan.image?.rendition.src}
-                planShortName={relPlan.shortName}
-                organization={relPlan.name}
+                planImage={pl.image?.rendition.src}
+                planShortName={pl.shortName}
+                organization={pl.name}
                 size="lg"
                 negative={true}
               />

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   Collapse, Navbar, Nav, NavItem,
@@ -16,7 +16,7 @@ import Icon from './Icon';
 import PlanSelector from 'components/plans/PlanSelector';
 import LanguageSelector from './LanguageSelector';
 import NavbarSearch from './NavbarSearch';
-import PlanContext from 'context/plan';
+import { usePlan } from 'context/plan';
 
 const TopNav = styled(Navbar)`
   padding: 0 ${(props) => props.theme.spaces.s100};
@@ -296,12 +296,12 @@ DropdownList.propTypes = {
 
 function GlobalNav(props) {
   const { t } = useTranslation();
-  const plan = useContext(PlanContext);
+  const plan = usePlan();
   const [navIsFixed, setnavIsFixed] = useState(false);
   const [isOpen, toggleOpen] = useState(false);
   const {
     theme, siteTitle, ownerName, navItems, externalItems,
-    fullwidth, sticky, hasPlanSiblings,
+    fullwidth, sticky,
   } = props;
 
   const OrgLogo = () => {
@@ -329,7 +329,8 @@ function GlobalNav(props) {
     );
   }
 
-  const hideLogoOnMobile = theme.navTitleVisible && hasPlanSiblings;
+  const siblings = plan.allRelatedPlans.filter((pl) => pl.id !== plan.parent?.id);
+  const hideLogoOnMobile = theme.navTitleVisible && siblings.length;
 
   const displayTitle = plan.parent ? plan.parent.name  : siteTitle;
   const rootLink = plan.parent ? plan.parent.viewUrl : '/';
@@ -351,7 +352,7 @@ function GlobalNav(props) {
               </SiteTitle>
             </HomeLink>
           </Link>
-          { hasPlanSiblings && <PlanSelector /> }
+          <PlanSelector />
         </Site>
 
 

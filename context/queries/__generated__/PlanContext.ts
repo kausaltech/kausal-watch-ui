@@ -220,9 +220,103 @@ export interface PlanContext_plan_features {
    */
   publicContactPersons: boolean;
   /**
-   * Set if we want admin link shown in site footer
+   * Should the public website contain a link to the admin login?
    */
   showAdminLink: boolean;
+}
+
+export interface PlanContext_plan_allRelatedPlans_image_rendition {
+  __typename: "ImageRendition";
+  src: string;
+}
+
+export interface PlanContext_plan_allRelatedPlans_image {
+  __typename: "Image";
+  rendition: PlanContext_plan_allRelatedPlans_image_rendition | null;
+}
+
+export interface PlanContext_plan_allRelatedPlans_organization {
+  __typename: "Organization";
+  /**
+   * A primary name, e.g. a legally recognized name
+   */
+  name: string;
+}
+
+export interface PlanContext_plan_allRelatedPlans {
+  __typename: "Plan";
+  id: string;
+  identifier: string;
+  name: string;
+  shortName: string | null;
+  image: PlanContext_plan_allRelatedPlans_image | null;
+  organization: PlanContext_plan_allRelatedPlans_organization;
+  viewUrl: string | null;
+}
+
+export interface PlanContext_plan_children_image_rendition {
+  __typename: "ImageRendition";
+  src: string;
+}
+
+export interface PlanContext_plan_children_image {
+  __typename: "Image";
+  rendition: PlanContext_plan_children_image_rendition | null;
+}
+
+export interface PlanContext_plan_children_organization {
+  __typename: "Organization";
+  /**
+   * A primary name, e.g. a legally recognized name
+   */
+  name: string;
+}
+
+export interface PlanContext_plan_children {
+  __typename: "Plan";
+  id: string;
+  identifier: string;
+  name: string;
+  shortName: string | null;
+  image: PlanContext_plan_children_image | null;
+  organization: PlanContext_plan_children_organization;
+  viewUrl: string | null;
+}
+
+export interface PlanContext_plan_parent_generalContent {
+  __typename: "SiteGeneralContent";
+  id: string;
+  siteTitle: string;
+}
+
+export interface PlanContext_plan_parent_image_rendition {
+  __typename: "ImageRendition";
+  src: string;
+}
+
+export interface PlanContext_plan_parent_image {
+  __typename: "Image";
+  rendition: PlanContext_plan_parent_image_rendition | null;
+}
+
+export interface PlanContext_plan_parent_organization {
+  __typename: "Organization";
+  /**
+   * A primary name, e.g. a legally recognized name
+   */
+  name: string;
+}
+
+export interface PlanContext_plan_parent {
+  __typename: "Plan";
+  id: string;
+  identifier: string;
+  name: string;
+  shortName: string | null;
+  generalContent: PlanContext_plan_parent_generalContent | null;
+  image: PlanContext_plan_parent_image | null;
+  organization: PlanContext_plan_parent_organization;
+  viewUrl: string | null;
 }
 
 export interface PlanContext_plan {
@@ -230,6 +324,7 @@ export interface PlanContext_plan {
   id: string;
   identifier: string;
   name: string;
+  shortName: string | null;
   themeIdentifier: string | null;
   primaryLanguage: string;
   otherLanguages: string[] | null;
@@ -249,6 +344,9 @@ export interface PlanContext_plan {
   adminUrl: string | null;
   accessibilityStatementUrl: string | null;
   features: PlanContext_plan_features;
+  allRelatedPlans: (PlanContext_plan_allRelatedPlans | null)[];
+  children: PlanContext_plan_children[];
+  parent: PlanContext_plan_parent | null;
 }
 
 export interface PlanContext {
@@ -258,4 +356,5 @@ export interface PlanContext {
 export interface PlanContextVariables {
   identifier?: string | null;
   hostname?: string | null;
+  clientUrl?: string | null;
 }

@@ -34,7 +34,6 @@ function Layout({ children }) {
     displaySite.navigationTitle = plan.parent.generalContent.siteTitle || plan.parent.name;
   };
 
-  const hasPlanSiblings = plan.relatedPlans?.length > 0 || plan.children?.length > 0;
   //const hideLogoOnMobile = theme.navTitleVisible && hasPlanSiblings;
   //const displayTitle = plan.parent ? plan.parent.name  : siteTitle;
   //const rootLink = plan.parent ? plan.parent.viewUrl : '/';
@@ -61,14 +60,12 @@ function Layout({ children }) {
       </Head>
       <Header
         siteTitle={displaySite.navigationTitle}
-        hasPlanSiblings={hasPlanSiblings}
       />
       <Content id="main">
         {children}
       </Content>
       <Footer
         siteTitle={displaySite.navigationTitle}
-        hasPlanSiblings={hasPlanSiblings}
       />
     </>
   );
