@@ -37,6 +37,8 @@ const RelatedPlanListBlock = (props) => {
   const plan = usePlan();
   const { t } = useTranslation(['common']);
   if (!plan.allRelatedPlans) return null;
+  const siblingsOrChildren = plan.allRelatedPlans.filter((pl) => pl.id != plan.parent?.id)
+  const isParentPlan = plan.children.length > 0;
 
   return (
     <PlanListSection>
@@ -47,7 +49,7 @@ const RelatedPlanListBlock = (props) => {
         </a>
       </h2>
         <PlanList>
-          { plan.allRelatedPlans.length > 0 && (
+          { !isParentPlan && (
             <a
               href={plan.viewUrl}
               key={plan.identifier}
@@ -61,7 +63,7 @@ const RelatedPlanListBlock = (props) => {
               />
             </a>
           )}
-          { plan.allRelatedPlans.map((pl) => (
+          { siblingsOrChildren.map((pl) => (
             <a
               href={pl.viewUrl}
               key={pl.identifier}
