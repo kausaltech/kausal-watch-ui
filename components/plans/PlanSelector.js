@@ -82,7 +82,13 @@ const PlanSelector = (props) => {
   const { allRelatedPlans } = plan;
   if (!allRelatedPlans.length) return null;
 
-  const otherPlans = plan.allRelatedPlans.filter((pl) => pl.id !== plan.parent?.id && pl.id != plan.id);
+  const selectablePlans = plan.allRelatedPlans.filter((pl) => pl.id !== plan.parent?.id);
+  if (!plan.children.length) {
+    selectablePlans.unshift({
+      ...plan,
+      viewUrl: '/',
+    });
+  }
   return (
     <PlanSelect>
       <PlanDivider />
@@ -98,7 +104,7 @@ const PlanSelector = (props) => {
             <Icon name="angle-down" />
         </StyledDropdownToggle>
         <DropdownMenu>
-          { otherPlans.map((pl) => (
+          { selectablePlans.map((pl) => (
             <PlanDropdownItem href={pl.viewUrl} key={pl.identifier}>
               <PlanChip
                 planImage={pl.image?.rendition.src}
