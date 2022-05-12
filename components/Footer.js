@@ -11,7 +11,7 @@ function Footer(props) {
   const site = React.useContext(SiteContext);
   const generalContent = plan.generalContent || {};
   const theme = useTheme();
-  const { siteTitle, hasPlanSiblings } = props;
+  const { siteTitle } = props;
 
   const { fundingInstruments, otherLogos } = theme.settings;
   const { t } = useTranslation();
@@ -87,7 +87,6 @@ function Footer(props) {
         navItems={navLinks}
         fundingInstruments={fundingInstruments}
         otherLogos={otherLogos}
-        hasPlanSiblings={hasPlanSiblings}
       />
       <ApplicationStateBanner deploymentType={site.deploymentType} />
     </>

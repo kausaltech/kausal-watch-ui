@@ -11,6 +11,7 @@ import { withTranslation } from 'common/i18n';
 import { NavigationLink, Link } from 'common/links';
 import Icon from './Icon';
 import PlanSelector from 'components/plans/PlanSelector';
+import { usePlan } from 'context/plan';
 
 const StyledFooter = styled.footer`
   position: relative;
@@ -357,7 +358,6 @@ function SiteFooter(props) {
     utilityLinks,
     fundingInstruments,
     otherLogos,
-    hasPlanSiblings,
   } = props;
 
   function OrgLogo() {
@@ -404,7 +404,7 @@ function SiteFooter(props) {
                   {siteTitle}
                 </a>
               </Link>
-              { hasPlanSiblings && <PlanSelector /> }
+              <PlanSelector />
             </ServiceTitle>
             )}
           </Branding>
