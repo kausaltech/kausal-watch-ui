@@ -133,12 +133,12 @@ const AccessibilityPage = () => {
                 .
               </p>
               <h2>{t('a11y:feedback-contact')}</h2>
-              <p>{t('responsible-for-maintenance')} <strong>{theme.settings.a11y.responsibleBody || plan.generalContent.ownerName}</strong></p>
+              <p>{t('responsible-for-maintenance')} <strong>{theme.settings.a11y?.responsibleBody || plan.generalContent.ownerName}</strong></p>
               <p>
                 {t('a11y:feedback-text')}
                 {' '}
-                <a href={`mailto:${theme.settings.a11y.feedbackEmail}`}>
-                  {theme.settings.a11y.feedbackEmail}
+                <a href={`mailto:${theme.settings.a11y?.feedbackEmail || 'accessibility@kausal.tech'}`}>
+                  {theme.settings.a11y?.feedbackEmail || 'accessibility@kausal.tech'}
                 </a>
                 {' '}
                 {t('a11y:response-time')}
