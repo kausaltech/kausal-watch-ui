@@ -116,7 +116,7 @@ const ActionsStatusGraphs = (props) => {
         <StatusDonut
           data={{ values: phaseData.values, labels: phaseData.labels }}
           currentValue={phaseData.total}
-          colors={phaseData.colors.length > 0 && phaseData.colors}
+          colors={phaseData.colors.length > 0 ? phaseData.colors : []}
           header={t('actions-phases')}
           helpText={t('actions-phases-help')}
         />
@@ -124,14 +124,14 @@ const ActionsStatusGraphs = (props) => {
       <StatusDonut
         data={{ values: progressData.values, labels: progressData.labels }}
         currentValue={progressData.total}
-        colors={progressData.colors.length > 0 && progressData.colors}
+        colors={progressData.colors.length > 0 ? progressData.colors : []}
         header={t('actions-status')}
         helpText={t('actions-status-help')}
       />
       <StatusDonut
         data={{ values: timelinessData.values, labels: timelinessData.labels }}
         currentValue={timelinessData.total}
-        colors={timelinessData.colors.length > 0 && timelinessData.colors}
+        colors={timelinessData.colors.length > 0 ? timelinessData.colors : []}
         header={t('actions-updated')}
         helpText={t('actions-updated-help')}
       />
