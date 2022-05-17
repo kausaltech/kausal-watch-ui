@@ -60,6 +60,8 @@ query PlanContext($identifier: ID, $hostname: String, $clientUrl: String) {
       creativeCommonsLicense
       ownerUrl
       ownerName
+      accessibilityResponsibleBody
+      accessibilityContactEmail
     }
     mainMenu {
       items(withDescendants: true) {

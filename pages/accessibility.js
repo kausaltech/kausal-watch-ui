@@ -28,6 +28,7 @@ const AccessibilityPage = () => {
   const theme = useTheme();
   const plan = useContext(PlanContext);
   const accessibilityProblems = accessibilityStatementData.fi.nonAccessibleContent.nonCompliant;
+  const accessibilityContactEmail = plan.generalContent.accessibilityContactEmail || 'accessibility@kausal.tech';
 
   return (
     <Layout>
@@ -133,12 +134,12 @@ const AccessibilityPage = () => {
                 .
               </p>
               <h2>{t('a11y:feedback-contact')}</h2>
-              <p>{t('responsible-for-maintenance')} <strong>{theme.settings.a11y?.responsibleBody || plan.generalContent.ownerName}</strong></p>
+              <p>{t('responsible-for-maintenance')} <strong>{plan.generalContent.accessibilityResponsibleBody || plan.generalContent.ownerName}</strong></p>
               <p>
                 {t('a11y:feedback-text')}
                 {' '}
-                <a href={`mailto:${theme.settings.a11y?.feedbackEmail || 'accessibility@kausal.tech'}`}>
-                  {theme.settings.a11y?.feedbackEmail || 'accessibility@kausal.tech'}
+                <a href={`mailto:${accessibilityContactEmail}`}>
+                  {accessibilityContactEmail}
                 </a>
                 {' '}
                 {t('a11y:response-time')}
