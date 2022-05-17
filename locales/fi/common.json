@@ -132,7 +132,7 @@
   "see-all-results": "Näytä kaikki tulokset ({{count}})",
   "searching-for": "Haetaan: \"{{term}}\"",
   "search-advanced": "Lisää hakuvaihtoehtoja",
-  "search-no-results": "Haulla ei löytynyt tuloksia",
+  "search-no-results": "Haulla ei löytynyt tuloksia. Yritä muokata hakuehtoja.",
   "send": "Lähetä",
   "skip-to-content": "Hyppää sisältöön",
   "strategic": "Strateginen mittari",

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import dynamic from 'next/dynamic';
 import { gql, useQuery } from '@apollo/client';
 import {
-  Container, Row, Col, Nav, NavItem,
+  Container, Row, Col, Nav, NavItem, Alert
 } from 'reactstrap';
 import styled from 'styled-components';
 import { useTranslation } from 'common/i18n';
@@ -397,22 +397,30 @@ const ActionListResults = (props) => {
         </Container>
       </IndicatorsTabs>
       <Container>
-        <div id="list-view" role="tabpanel" tabIndex="0" aria-labelledby="list-tab" hidden={!displayDashboard}>
-          { displayDashboard && (
-            <>
-              <ActionStatusGraphs actions={filteredActions} />
-              <DynamicActionStatusTable actions={filteredActions} orgs={orgs} plan={plan} />
-            </>
-          )}
-        </div>
-        <div id="dashboard-view" role="tabpanel" tabIndex="0" aria-labelledby="dashboard-tab" hidden={displayDashboard}>
-          { !displayDashboard && (
-            <ActionCardList
-              actions={filteredActions}
-              groupBy={groupBy}
-            />
-          )}
-        </div>
+          <div id="list-view" role="tabpanel" tabIndex="0" aria-labelledby="list-tab" hidden={!displayDashboard}>
+            { displayDashboard && filteredActions.length > 0 ? (
+              <>
+                <ActionStatusGraphs actions={filteredActions} />
+                <DynamicActionStatusTable actions={filteredActions} orgs={orgs} plan={plan} />
+              </>
+            ) : (
+              <Alert color="primary">
+                {t('search-no-results')}
+              </Alert>
+            )}
+          </div>
+          <div id="dashboard-view" role="tabpanel" tabIndex="0" aria-labelledby="dashboard-tab" hidden={displayDashboard}>
+            { !displayDashboard && filteredActions.length > 0 ? (
+              <ActionCardList
+                actions={filteredActions}
+                groupBy={groupBy}
+              />
+            ) : (
+              <Alert color="primary">
+                {t('search-no-results')}
+              </Alert>
+            )}
+          </div>
       </Container>
     </>
   );

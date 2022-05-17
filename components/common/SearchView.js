@@ -203,16 +203,23 @@ function SearchResults({ search }) {
     },
   });
   if (error) {
-    return <div>{error.toString()}</div>;
+    return (
+      <ResultsHeader>
+        <Alert color="warning">
+          <h2>{t('error-with-code')}</h2>
+          {error.toString()}
+        </Alert>
+      </ResultsHeader>
+    );
   }
   if (loading) {
-    return <ContentLoader />;
+    return <ResultsHeader><ContentLoader /></ResultsHeader>;
   }
   const { hits } = data.search;
 
   return (
     <Row>
-      <Col sm="12" md={{ offset: 3, size: 6 }}>
+      <Col sm="12" md={{ offset: 2, size: 8 }}>
         <ResultsHeader>
           {`${t('number-of-search-results', { count: hits.length })} `}
           &apos;
@@ -263,6 +270,7 @@ function SearchView(props) {
     onSearchChange(userSearch);
   };
 
+  console.log(search);
   return (
     <>
       <SearchSection id="search-results">
@@ -309,7 +317,7 @@ function SearchView(props) {
         { search.q ? (
           <SearchResults search={search} />
         ) : (
-          <Col sm="12" md={{ offset: 3, size: 6 }} className="mt-5">
+          <Col sm="12" md={{ offset: 2, size: 8 }} className="mt-5">
             <Alert color="primary">
               {t('search-no-results')}
             </Alert>

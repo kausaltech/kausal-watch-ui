@@ -81,8 +81,7 @@
   "indicator-related-actions": "Maßnahmen, die sich auf diesen Indikator auswirken",
   "indicator-resolution-years": "Jahre",
   "indicator-time-no-goals": "Keine Ziele",
-  "indicator-time-to-goal": "Zeit zum Ziel",
-  "indicator": "Wert",
+  "indicator-value": "Wert",
   "indicator": "Indikator",
   "indicators": "Indikatoren",
   "indicators-as-insight": "Im Überblick",
@@ -138,5 +137,6 @@
   "type": "Typ",
   "under-x-days": "Weniger als {{days}} Tage",
   "unknown": "Unbekannt",
-  "updated": "Aktualisiert"
+  "updated": "Aktualisiert",
+  "search-no-results": "Keine Ergebnisse für diese Suche. Versuchen Sie, die Suchbegriffe zu ändern."
 }
