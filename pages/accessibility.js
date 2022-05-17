@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import { Trans } from 'react-i18next';
 
 import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
@@ -24,11 +25,18 @@ const ContentHeader = styled.header`
 `;
 
 const AccessibilityPage = () => {
-  const { t } = useTranslation(['a11y']);
+  const { t, i18n } = useTranslation(['a11y']);
+
   const theme = useTheme();
   const plan = useContext(PlanContext);
-  const accessibilityProblems = accessibilityStatementData.fi.nonAccessibleContent.nonCompliant;
+
+  let locale = i18n.language;
+  if (!(locale in accessibilityStatementData)) {
+    locale = 'en';
+  }
+  const accessibilityProblems = accessibilityStatementData[locale].nonAccessibleContent.nonCompliant;
   const accessibilityContactEmail = plan.generalContent.accessibilityContactEmail || 'accessibility@kausal.tech';
+  const responsibleBody =  plan.generalContent.accessibilityResponsibleBody || plan.generalContent.ownerName;
 
   return (
     <Layout>
@@ -134,7 +142,12 @@ const AccessibilityPage = () => {
                 .
               </p>
               <h2>{t('a11y:feedback-contact')}</h2>
-              <p>{t('responsible-for-maintenance')} <strong>{plan.generalContent.accessibilityResponsibleBody || plan.generalContent.ownerName}</strong></p>
+              <p>
+                <Trans i18nKey="responsible-for-maintenance">
+                  This page is published by
+                  <strong>{{responsibleBody}}</strong>
+                </Trans>
+              </p>
               <p>
                 {t('a11y:feedback-text')}
                 {' '}
