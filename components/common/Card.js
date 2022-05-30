@@ -16,6 +16,10 @@ const StyledCard = styled(BSCard)`
   background-color: ${(props) => (props.customcolor ? props.customcolor : props.theme.themeColors.white)};
   box-shadow: 2px 2px 8px ${(props) => transparentize(0.9, props.theme.themeColors.dark)};
 
+  .card-body {
+    line-height: ${(props) => props.theme.lineHeightMd};
+  }
+
   &:hover {
     transform: translateY(-5px);
     box-shadow: 4px 4px 8px ${(props) => transparentize(0.8, props.theme.themeColors.dark)};
