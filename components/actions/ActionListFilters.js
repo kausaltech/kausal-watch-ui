@@ -140,7 +140,7 @@ function ActionListFilterBadges({
       >
         {(item) => (props) => (
           <StyledBadge
-            className="mr-3"
+            className="me-3"
             style={props}
             color="primary"
           >

@@ -453,7 +453,7 @@ function SiteFooter(props) {
                     name={page.icon}
                     color={theme.footerColor}
                     aria-hidden="true"
-                    className="mr-1"
+                    className="me-1"
                   />
                   )}
                   {page.name}

@@ -361,7 +361,7 @@ const HnhHero = () => (
                       className="d-flex p-3 bd-highlight flex-row justify-content-center justify-content-md-start"
                       style={props}
                     >
-                      <Illustration className="mr-4 w-50">
+                      <Illustration className="me-4 w-50">
                         <img
                           src="./static/themes/hnh2035/images/actions-illustration.svg"
                           alt=""
@@ -392,7 +392,7 @@ const HnhHero = () => (
                       className="d-flex p-3 bd-highlight flex-row justify-content-center justify-content-md-start"
                       style={props}
                     >
-                      <Illustration className="mr-4 w-50">
+                      <Illustration className="me-4 w-50">
                         <img
                           src="./static/themes/hnh2035/images/indicators-illustration.svg"
                           alt=""

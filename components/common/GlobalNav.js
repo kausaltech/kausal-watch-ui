@@ -380,7 +380,7 @@ function GlobalNav(props) {
         container={fullwidth ? 'fluid' : true}
       >
         <Collapse isOpen={isOpen} navbar>
-          <Nav navbar className="mr-auto">
+          <Nav navbar className="me-auto">
             { navItems && navItems.map((page) => (
               page.children
                 ? (

@@ -144,7 +144,7 @@ function FeedbackForm({ planIdentifier }) {
               {!mutationLoading && t('send')}
               {mutationLoading && (
                 <span>
-                  <Spinner size="sm" color="light" className="mr-3" />
+                  <Spinner size="sm" color="light" className="me-3" />
                   {t('loading')}
                   ...
                 </span>

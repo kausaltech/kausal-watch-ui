@@ -161,7 +161,7 @@ function ActionCategories(categories) {
   return (
     <CategoriesBreadcrumb>
       {displayCategories.map((item) => (
-        <div key={item.id} className="mr-3">
+        <div key={item.id} className="me-3">
           {item.parent && (
             <span>
               <Link href={item.parent.url} passHref>

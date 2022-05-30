@@ -248,7 +248,7 @@ function MergedAction({ action, theme }) {
   const { identifier, officialName } = action;
   return (
     <MergedActionSection>
-      <ActionNumberBadge key={identifier} className="mr-1">
+      <ActionNumberBadge key={identifier} className="me-1">
         {identifier}
       </ActionNumberBadge>
       {officialName}

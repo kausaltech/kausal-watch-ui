@@ -159,7 +159,7 @@ function FrontHero(props) {
                       className="d-flex p-3 bd-highlight flex-row justify-content-center justify-content-md-start"
                       style={sprops}
                     >
-                      <Illustration className="mr-4">
+                      <Illustration className="me-4">
                         <IconActions />
                       </Illustration>
                       <div>
@@ -187,7 +187,7 @@ function FrontHero(props) {
                       className="d-flex p-3 bd-highlight flex-row justify-content-center justify-content-md-start"
                       style={sprops}
                     >
-                      <Illustration className="mr-4">
+                      <Illustration className="me-4">
                         <IconIndicators />
                       </Illustration>
                       <div>
