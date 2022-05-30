@@ -24,7 +24,7 @@ function Layout({ children }) {
 
   const displaySite = {
     generalContent: plan.generalContent || {},
-    title: plan.name,
+    title: plan.generalContent.siteTitle || plan.name,
     navigationTitle: plan.generalContent.siteTitle || plan.name,
   };
 
