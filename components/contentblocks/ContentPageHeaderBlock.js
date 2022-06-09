@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 
 import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
-import { Spring } from 'react-spring/renderprops.cjs';
 
 const HeaderImage = styled.div`
   background-image: url(${(props) => props.image});
@@ -40,16 +39,10 @@ const ContentPageHeaderBlock = (props) => {
 
   return (
     <>
+      {/* TODO: animate image entry? */}
       <HeaderBg>
         { headerImage && (
-          <Spring
-            from={{ opacity: 0 }}
-            to={{ opacity: 1 }}
-          >
-            {(props) => (
-              <HeaderImage image={headerImage} style={props} imageAlign={imageAlign} />
-            )}
-          </Spring>
+          <HeaderImage image={headerImage} imageAlign={imageAlign} />
         )}
       </HeaderBg>
       <HeaderBg>

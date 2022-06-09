@@ -59,7 +59,6 @@
     "react-plotly.js": "^2.5.1",
     "react-popper": "^2.3.0",
     "react-sizeme": "^3.0.2",
-    "react-spring": "^8",
     "reactstrap": "^9.0.2",
     "sass": "^1.51.0",
     "sentry-testkit": "^3.3.7",

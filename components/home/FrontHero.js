@@ -6,7 +6,6 @@ import {
 } from 'reactstrap';
 
 import SVG from 'react-inlinesvg';
-import { Spring } from 'react-spring/renderprops.cjs';
 import styled from 'styled-components';
 import { useTheme } from 'common/theme';
 import { useTranslation } from 'common/i18n';
@@ -128,79 +127,56 @@ function FrontHero(props) {
     <BannerContent>
       <Container>
         <Row>
-          <Spring
-            from={{ opacity: 0 }}
-            to={{ opacity: 1 }}
-          >
-            {(sprops) => (
-              <Col sm="12" md={{ size: 8, offset: 2 }}>
-                <SiteTitle style={sprops}>
-                  <HeroVisual>
-                    {bgImage && (<HeroImage pic={bgImage} />)}
-                  </HeroVisual>
-                  <h1>{ title || 'Site Title' }</h1>
-                  <p className="lead">{ siteDescription || 'Site Description' }</p>
-                </SiteTitle>
-              </Col>
-            )}
-          </Spring>
+          <Col sm="12" md={{ size: 8, offset: 2 }}>
+            <SiteTitle style={sprops}>
+              <HeroVisual>
+                {bgImage && (<HeroImage pic={bgImage} />)}
+              </HeroVisual>
+              <h1>{ title || 'Site Title' }</h1>
+              <p className="lead">{ siteDescription || 'Site Description' }</p>
+            </SiteTitle>
+          </Col>
         </Row>
         <Row>
           <Col md="6">
-            <Spring
-              from={{ opacity: 0 }}
-              to={{ opacity: 1 }}
-              delay={250}
-            >
-              {(sprops) => (
-                <ActionListLink>
-                  <a>
-                    <Highlight
-                      className="d-flex p-3 bd-highlight flex-row justify-content-center justify-content-md-start"
-                      style={sprops}
-                    >
-                      <Illustration className="me-4">
-                        <IconActions />
-                      </Illustration>
-                      <div>
-                        <h3>{ t('actions') }</h3>
-                        <p>
-                          { actionsDescription || 'Action Description' }
-                        </p>
-                      </div>
-                    </Highlight>
-                  </a>
-                </ActionListLink>
-              )}
-            </Spring>
+            <ActionListLink>
+              <a>
+                <Highlight
+                  className="d-flex p-3 bd-highlight flex-row justify-content-center justify-content-md-start"
+                  style={sprops}
+                >
+                  <Illustration className="me-4">
+                    <IconActions />
+                  </Illustration>
+                  <div>
+                    <h3>{ t('actions') }</h3>
+                    <p>
+                      { actionsDescription || 'Action Description' }
+                    </p>
+                  </div>
+                </Highlight>
+              </a>
+            </ActionListLink>
           </Col>
           <Col md="6">
-            <Spring
-              from={{ opacity: 0 }}
-              to={{ opacity: 1 }}
-              delay={200}
-            >
-              {(sprops) => (
-                <IndicatorListLink>
-                  <a>
-                    <Highlight
-                      className="d-flex p-3 bd-highlight flex-row justify-content-center justify-content-md-start"
-                      style={sprops}
-                    >
-                      <Illustration className="me-4">
-                        <IconIndicators />
-                      </Illustration>
-                      <div>
-                        <h3>{ t('indicators') }</h3>
-                        <p>
-                          { indicatorsDescription || 'Indicator Description' }
-                        </p>
-                      </div>
-                    </Highlight>
-                  </a>
-                </IndicatorListLink>
-              )}
-            </Spring>
+            <IndicatorListLink>
+              <a>
+                <Highlight
+                  className="d-flex p-3 bd-highlight flex-row justify-content-center justify-content-md-start"
+                  style={sprops}
+                >
+                  <Illustration className="me-4">
+                    <IconIndicators />
+                  </Illustration>
+                  <div>
+                    <h3>{ t('indicators') }</h3>
+                    <p>
+                      { indicatorsDescription || 'Indicator Description' }
+                    </p>
+                  </div>
+                </Highlight>
+              </a>
+            </IndicatorListLink>
           </Col>
         </Row>
       </Container>

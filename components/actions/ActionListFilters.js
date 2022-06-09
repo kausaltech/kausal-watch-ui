@@ -1,5 +1,4 @@
 import React, { useCallback, useState } from 'react';
-import { Spring, Transition } from 'react-spring/renderprops.cjs';
 import {
   Row, Col, Badge, CloseButton,
 } from 'reactstrap';
@@ -130,25 +129,21 @@ function ActionListFilterBadges({
         { `${actionCount} ${t('filter-result-actions')}` }
       </span>
       { badges.length > 0 && <span className="visually-hidden">{t('active-filters')}</span>}
-      <Transition
-        items={badges}
-        keys={(item) => item.id}
-        from={{ opacity: 0 }}
-        to={{ opacity: 1 }}
-        enter={{ opacity: 1 }}
-        leave={{ opacity: 0 }}
-      >
-        {(item) => (props) => (
+      {/* TODO: animate transition */}
+        {(item) => (
           <StyledBadge
             className="me-3"
-            style={props}
             color="primary"
           >
-            <Button close size="sm" className="btn-close-white" onClick={makeCallback(item.identifier)} aria-label={t('remove-filter')} />
+            <Button
+              close size="sm"
+              className="btn-close-white"
+              onClick={makeCallback(item.identifier)}
+              aria-label={t('remove-filter')}
+            />
             { item.name?.trim() }
           </StyledBadge>
         )}
-      </Transition>
     </FiltersList>
   );
 }
@@ -260,32 +255,26 @@ function ActionListFilters(props) {
   return (
     <div className="filters mb-2 text-left">
       <form onSubmit={(event) => { event.preventDefault(); }} role="search" aria-label="Toimenpiteet">
-        <Spring
-          from={{ opacity: 0 }}
-          to={{ opacity: 1 }}
-        >
-          {(props) => (
-            <Row style={props}>
-              {allFilters.map((filter) => (
-                <Col
-                  sm={filter.sm}
-                  md={filter.md}
-                  lg={filter.lg}
-                  key={filter.identifier}
-                >
-                  <ActionListFilterInput
-                    filter={filter}
-                    currentValue={filters[filter.identifier]}
-                    onChange={onChange}
-                  />
-                </Col>
-              ))}
-              <Col xs={6} sm={3} md={3} lg={2} xl={2} className="d-flex flex-column justify-content-end">
-                <Button type="submit" color="primary" className="mb-3" block>{ t('search') }</Button>
+        {/* TODO: Animate UI changes */}
+          <Row>
+            {allFilters.map((filter) => (
+              <Col
+                sm={filter.sm}
+                md={filter.md}
+                lg={filter.lg}
+                key={filter.identifier}
+              >
+                <ActionListFilterInput
+                  filter={filter}
+                  currentValue={filters[filter.identifier]}
+                  onChange={onChange}
+                />
               </Col>
-            </Row>
-          )}
-        </Spring>
+            ))}
+            <Col xs={6} sm={3} md={3} lg={2} xl={2} className="d-flex flex-column justify-content-end">
+              <Button type="submit" color="primary" className="mb-3" block>{ t('search') }</Button>
+            </Col>
+          </Row>
       </form>
       <Row>
         <Col>

@@ -2458,10 +2458,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@kausal/themes-private@npm:^0.1.11":
-  version: 0.1.11
-  resolution: "@kausal/themes-private@npm:0.1.11"
-  checksum: 606d332967172c668a5887f8c320bf41911847fecfdbb842e5ecb64025054494a5f2f297f16c19072987e46f8b8287ebffd6fdccae27648ab346b87b34ac4350
+"@kausal/themes-private@npm:^0.1.12":
+  version: 0.1.13
+  resolution: "@kausal/themes-private@npm:0.1.13"
+  checksum: d6fd58c53c60817c7e7f95b73b52374983ad77b1130df1957f1d12e35c44b82efdffd961d6a1f05f5fce6b28f9e9cb9d9f5b6e961b4b3d4bd8ba46c6a0a0ce01
   languageName: node
   linkType: hard
 
@@ -15103,7 +15103,7 @@ __metadata:
     "@babel/plugin-proposal-decorators": ^7.17.9
     "@elastic/react-search-ui": ^1.11.2
     "@kausal/themes": ^0.1.2
-    "@kausal/themes-private": ^0.1.11
+    "@kausal/themes-private": ^0.1.12
     "@koa/router": ^10.1.1
     "@n8tb1t/use-scroll-position": ^2.0.3
     "@next/bundle-analyzer": ^12.1.6
@@ -15189,7 +15189,6 @@ __metadata:
     react-plotly.js: ^2.5.1
     react-popper: ^2.3.0
     react-sizeme: ^3.0.2
-    react-spring: ^8
     reactstrap: ^9.0.2
     regenerator-runtime: ^0.13.9
     sass: ^1.51.0
@@ -19210,19 +19209,6 @@ __metadata:
     shallowequal: ^1.1.0
     throttle-debounce: ^3.0.1
   checksum: 97cb852c24bbd50acb310da89df564e0d069415f6635676dae3d3bdc583ece88090c0f2ee88a6b0dc36d2793af4a11e83bf6bbb41b86225dd0cf338e8f7e8552
-  languageName: node
-  linkType: hard
-
-"react-spring@npm:^8":
-  version: 8.0.27
-  resolution: "react-spring@npm:8.0.27"
-  dependencies:
-    "@babel/runtime": ^7.3.1
-    prop-types: ^15.5.8
-  peerDependencies:
-    react: ">= 16.8.0"
-    react-dom: ">= 16.8.0"
-  checksum: 4f306e30c3a425fd2b11c265ca0a7c261de0f63c0250fa6fa19eddd58c50fc9eaa463927571ee1dec39659a1bf619aaacf3352602b7724695da240ec0bc106cf
   languageName: node
   linkType: hard
 

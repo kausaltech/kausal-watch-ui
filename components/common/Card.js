@@ -5,7 +5,6 @@ import {
 } from 'reactstrap';
 import styled from 'styled-components';
 import { transparentize } from 'polished';
-import { Spring } from 'react-spring/renderprops.cjs';
 
 const StyledCard = styled(BSCard)`
   width: 100%;
@@ -62,27 +61,20 @@ const Card = (props) => {
     children } = props;
 
   return (
-    <Spring
-      from={{ opacity: 0 }}
-      to={{ opacity: 1 }}
+    <StyledCard
+      className={negative && 'negative'}
+      customcolor={customColor}
     >
-      {(springProps) => (
-        <StyledCard
-          style={springProps}
-          className={negative && 'negative'}
-          customcolor={customColor}
-        >
-          {imageUrl && (
-            <ImgArea imageTone={imageTone}>
-              <ImgBg background={imageUrl} imageAlign={imageAlign} />
-            </ImgArea>
-          )}
-          <CardBody>
-            { children }
-          </CardBody>
-        </StyledCard>
+      {/* TODO: maybe animate transition */}
+      {imageUrl && (
+        <ImgArea imageTone={imageTone}>
+          <ImgBg background={imageUrl} imageAlign={imageAlign} />
+        </ImgArea>
       )}
-    </Spring>
+      <CardBody>
+        { children }
+      </CardBody>
+    </StyledCard>
   );
 };
 
