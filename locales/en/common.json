@@ -147,5 +147,7 @@
   "with-contact-persons": "Have contact person",
   "without-contact-person": "No contact person",
   "has-goals": "Has goals",
-  "latest-update": "Latest update"
+  "latest-update": "Latest update",
+  "return-to-front": "Return to front page",
+  "admin-login-not-defined": "Admin login page has not been defined"
 }

@@ -130,5 +130,7 @@
   "type": "Typ",
   "under-x-days": "Lägre som {{days}} dagar",
   "unknown": "Tuntematon",
-  "updated": "Uppdaterad"
+  "updated": "Uppdaterad",
+  "return-to-front": "Tillbaka till förstasidan",
+  "admin-login-not-defined": " Admininloggningssida är inte definierad"
 }

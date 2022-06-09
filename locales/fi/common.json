@@ -149,5 +149,7 @@
   "with-contact-persons": "On yhteyshenkilö",
   "without-contact-person": "Ei yhteyshenkilöä",
   "has-goals": "On tavoitearvoja",
-  "latest-update": "Viimeisin päivitys"
+  "latest-update": "Viimeisin päivitys",
+  "return-to-front": "Palaa etusivulle",
+  "admin-login-not-defined": "Ylläpidon osoitetta ei ole määritelty"
 }

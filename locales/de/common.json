@@ -138,5 +138,7 @@
   "under-x-days": "Weniger als {{days}} Tage",
   "unknown": "Unbekannt",
   "updated": "Aktualisiert",
-  "search-no-results": "Keine Ergebnisse für diese Suche. Versuchen Sie, die Suchbegriffe zu ändern."
+  "search-no-results": "Keine Ergebnisse für diese Suche. Versuchen Sie, die Suchbegriffe zu ändern.",
+  "admin-login-not-defined": "Die Admin-Anmeldeseite ist nicht definiert",
+  "return-to-front": "Zurück zur Titelseite"
 }
