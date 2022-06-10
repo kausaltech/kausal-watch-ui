@@ -34,25 +34,12 @@ const LinkedIndicator = styled.div`
   cursor: pointer;
 `;
 
-// Use Finnish style numeric display formatting
-function beautifyValue(x) {
-  let out;
-  if (!Number.isInteger(x)) {
-    out = Math.round(x);
-  } else {
-    out = x;
-  }
-  const s = out.toString();
-  const displayNumber = s.replace('.', ',');
-  return displayNumber.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-}
-
 const ValueGroup = (props) => {
-  const { date, value, unit, ...rest } = props;
+  const { date, value, unit, locale, ...rest } = props;
   return (
     <text {...rest}>
       <DateText>{date}</DateText>
-      <ValueText x="0" dy="22">{beautifyValue(value)}</ValueText>
+      <ValueText x="0" dy="22">{value.toLocaleString(locale)}</ValueText>
       <UnitText>
         {' '}
         {unit}
@@ -71,7 +58,7 @@ ValueGroup.propTypes = {
   unit: PropTypes.string.isRequired,
 };
 
-function Counter({ from, to, duration}) {
+function Counter({ from, to, duration, locale}) {
   const ref = useRef();
 
   useEffect(() => {
@@ -80,7 +67,7 @@ function Counter({ from, to, duration}) {
       onUpdate(value) {
         // ref.current is null when navigating away from the page
         if (!ref.current) return;
-        ref.current.textContent = beautifyValue(value.toFixed());
+        ref.current.textContent = Math.round(value).toLocaleString(locale);
       },
     });
     return () => controls.stop();
@@ -98,7 +85,7 @@ function IndicatorProgressBar(props) {
     animate } = props;
 
   const theme = useContext(ThemeContext);
-  const { t } = useTranslation(['common', 'actions']);
+  const { t, i18n } = useTranslation(['common', 'actions']);
   const pendingBarControls = useAnimation();
   const completedBarControls = useAnimation();
   const latestValueControls = useAnimation();
@@ -185,8 +172,9 @@ function IndicatorProgressBar(props) {
           <ValueGroup
             transform={`translate(${completedBar.x + 4} 20)`}
             date={dayjs(startDate).format('YYYY')}
-            value={startValue.toString()}
+            value={startValue.toLocaleString(i18n.language)}
             unit={unit}
+            locale={i18n.language}
           />
           <text transform={`translate(${completedBar.x + completedBar.w / 2} 110)`} textAnchor="middle">
             <DateText>{t('reduced')}</DateText>
@@ -195,6 +183,7 @@ function IndicatorProgressBar(props) {
                 from={reductionCounterFrom}
                 to={reductionCounterTo}
                 duration={reductionCounterDuration}
+                locale={i18n.language}
               />
               {' '}
               {unit}
@@ -217,7 +206,7 @@ function IndicatorProgressBar(props) {
             <ValueGroup
               transform={`translate(${pendingBar.x + 4} 20)`}
               date={dayjs(latestDate).format('YYYY')}
-              value={latestValue.toString()}
+              value={latestValue.toLocaleString(i18n.language)}
               unit={unit}
             />
           </motion.g>
@@ -228,7 +217,7 @@ function IndicatorProgressBar(props) {
           >
             <DateText>{t('to-reduce')}</DateText>
             <UnitText x="0" dy="20">
-              {beautifyValue(latestValue - goalValue)}
+              {(latestValue - goalValue).toLocaleString(i18n.language)}
               {' '}
               {unit}
             </UnitText>
@@ -250,7 +239,7 @@ function IndicatorProgressBar(props) {
           <ValueGroup
             transform={`translate(${goalBar.x + 4} 20)`}
             date={dayjs(goalDate).format('YYYY')}
-            value={goalValue.toString()}
+            value={goalValue.toLocaleString(i18n.language)}
             unit={unit}
           />
           <text transform={`translate(${goalBar.x + goalBar.w / 2} 110)`} textAnchor="middle">
