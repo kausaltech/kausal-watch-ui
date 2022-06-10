@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
 import { gql, useQuery } from '@apollo/client';
-import { motion, AnimateSharedLayout } from 'framer-motion';
-import LazyLoad from 'react-lazyload';
+
 import { useTranslation } from 'common/i18n';
 import ActionCard from 'components/actions/ActionCard';
 import ActionHighlightCard from 'components/actions/ActionHighlightCard';
@@ -61,7 +60,7 @@ const ListRow = styled.ul`
   }
 `;
 
-const ListColumn = styled(motion.li)`
+const ListColumn = styled.li`
   flex: 0 0 50%;
   padding: .5rem;
 
@@ -130,25 +129,24 @@ const CategoryActionList = (props) => {
           { heading }
         </SectionHeader>
         )}
+        {/* TODO: animate transition with Framer */}
         <ListRow>
-          <AnimateSharedLayout>
-            { filteredActions.map((action) => (
-              <ListColumn
-                key={action.id}
-                className="mb-4 d-flex align-items-stretch"
-                role="listitem"
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                layout
-              >
-                <ActionHighlightCard
-                  action={action}
-                  imageUrl={action?.image?.rendition?.src || undefined}
-                  hideIdentifier={plan.hideActionIdentifiers}
-                />
-              </ListColumn>
-            ))}
-          </AnimateSharedLayout>
+          { filteredActions.map((action) => (
+            <ListColumn
+              key={action.id}
+              className="mb-4 d-flex align-items-stretch"
+              role="listitem"
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              layout
+            >
+              <ActionHighlightCard
+                action={action}
+                imageUrl={action?.image?.rendition?.src || undefined}
+                hideIdentifier={plan.hideActionIdentifiers}
+              />
+            </ListColumn>
+          ))}
         </ListRow>
       </Container>
     </ActionListSection>
