@@ -151,5 +151,6 @@
   "has-goals": "On tavoitearvoja",
   "latest-update": "Viimeisin päivitys",
   "return-to-front": "Palaa etusivulle",
-  "admin-login-not-defined": "Ylläpidon osoitetta ei ole määritelty"
+  "admin-login-not-defined": "Ylläpidon osoitetta ei ole määritelty",
+  "organizations": "Organisaatiot"
 }

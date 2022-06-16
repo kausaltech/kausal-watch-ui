@@ -132,5 +132,6 @@
   "unknown": "Tuntematon",
   "updated": "Uppdaterad",
   "return-to-front": "Tillbaka till förstasidan",
-  "admin-login-not-defined": " Admininloggningssida är inte definierad"
+  "admin-login-not-defined": " Admininloggningssida är inte definierad",
+  "organizations": "Organisationer"
 }
