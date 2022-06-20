@@ -133,8 +133,18 @@ const GET_ORG_DETAILS = gql`
            id
            identifier
            name
+           updatedAt
            tasks {
              id
+           }
+           tasks {
+             id
+             state
+             dueAt
+           }
+           status {
+             identifier
+             name
            }
            plan {
              id
