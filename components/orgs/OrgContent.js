@@ -1,6 +1,8 @@
 import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 
+import ActionStatusTable from 'components/dashboard/ActionStatusTable';
+
 import styled from 'styled-components';
 import { gql, useQuery } from '@apollo/client';
 import {
@@ -113,6 +115,13 @@ const GET_ORG_DETAILS = gql`
       }
       plansWithActionResponsibilities {
         name
+        primaryOrgs {
+          id
+          name
+        }
+        actionImpacts {
+          id
+        }
         image {
           rendition(size: "128x128", crop: true) {
             id
@@ -124,6 +133,22 @@ const GET_ORG_DETAILS = gql`
            id
            identifier
            name
+           tasks {
+             id
+           }
+           plan {
+             id
+             viewUrl
+           }
+           responsibleParties {
+             id
+             organization {
+               id
+               abbreviation
+               name
+             }
+           }
+
         }
       }
       actionCount
@@ -231,9 +256,12 @@ function OrgContent(props) {
         </IndicatorsTabs>
       </OrgHeader>
       <Container>
-        <ul style={{paddingTop: 50}}>
-          { plans[selectedPlanIndex].actions.map((a) => (<li><ActionLink action={a}>{a.name}</ActionLink></li>)) }
-        </ul>
+        <ActionStatusTable
+          enableExport={false}
+          plan={plans[selectedPlanIndex]}
+          actions={[...plans[selectedPlanIndex].actions]}
+          orgs={[]}
+        />
       </Container>
     </div>
   );

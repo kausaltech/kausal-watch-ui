@@ -401,7 +401,7 @@ const ActionListResults = (props) => {
             { displayDashboard && filteredActions.length > 0 ? (
               <>
                 <ActionStatusGraphs actions={filteredActions} />
-                <DynamicActionStatusTable actions={filteredActions} orgs={orgs} plan={plan} />
+                <DynamicActionStatusTable actions={filteredActions} orgs={orgs} plan={plan} enableExport={true} />
               </>
             ) : (
               <Alert color="primary">
