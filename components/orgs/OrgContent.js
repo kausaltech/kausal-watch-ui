@@ -89,7 +89,7 @@ const GET_ORG_DETAILS = gql`
       logo(parentFallback: true) {
         id
         altText
-        rendition(size: "128x128", crop: true) {
+        rendition(size: "128x128", crop: false) {
           id
           src
           alt
