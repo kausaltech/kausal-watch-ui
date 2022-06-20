@@ -1,22 +1,53 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 
-import {
-  Container, Row, Col,
-} from 'reactstrap';
 import styled from 'styled-components';
 import { gql, useQuery } from '@apollo/client';
+import {
+  Container, Row, Col, TabContent, TabPane, Nav, NavItem
+} from 'reactstrap';
+
+const Tab = styled.button`
+  background: ${(props) => props.theme.brandDark};
+  color: ${(props) => props.theme.themeColors.white};
+  padding: ${(props) => props.theme.spaces.s100};
+  border-radius: 0.5em 0.5em 0 0;
+  display: inline-block;
+  border: none;
+  margin: 0;
+  text-decoration: none;
+  cursor: pointer;
+  text-align: center;
+
+  &:hover, &:focus {
+    color: ${(props) => props.theme.brandLight};
+  }
+  &.active {
+    color: ${(props) => props.theme.brandDark};
+    background: ${(props) => props.theme.themeColors.white};
+    &:hover {
+      color: ${(props) => props.theme.themeColors.black};
+    }
+  }
+`;
+
 
 import { usePlan } from 'context/plan';
 import { useTranslation } from 'common/i18n';
-import { Link } from 'common/links';
+import { Link, ActionLink } from 'common/links';
 import ContentLoader from 'components/common/ContentLoader';
 import ErrorMessage from 'components/common/ErrorMessage';
 import { Meta } from 'components/layout';
 import theme from 'common/theme';
 
+const IndicatorsTabs = styled.div`
+  background-color: ${(props) => props.theme.brandDark};
+  margin-bottom: 0;
+`;
+
+
 const OrgHeader = styled.div`
-  padding: ${(props) => props.theme.spaces.s300} 0;
+  padding: ${(props) => props.theme.spaces.s300} 0 0 0;
   background-color: ${(props) => props.theme.brandDark};
   color: ${(props) => props.theme.themeColors.white };
 
@@ -80,6 +111,21 @@ const GET_ORG_DETAILS = gql`
       ancestors {
         id
       }
+      plansWithActionResponsibilities {
+        name
+        image {
+          rendition(size: "128x128", crop: true) {
+            id
+            src
+            alt
+          }
+        }
+        actions(responsibleOrganization: $id) {
+           id
+           identifier
+           name
+        }
+      }
       actionCount
       contactPersonCount
       parent {
@@ -103,6 +149,7 @@ function OrgContent(props) {
   const { id } = props;
   const plan = usePlan();
   const { t } = useTranslation();
+  const [ selectedPlanIndex, setSelectedPlan ] = useState(0);
 
   const { data, loading, error } = useQuery(GET_ORG_DETAILS, {
     variables: {
@@ -117,6 +164,8 @@ function OrgContent(props) {
   if (!org) {
     return <ErrorMessage statusCode={404} message={t('indicator-not-found')} />;
   }
+
+  const plans = data?.organization?.plansWithActionResponsibilities;
 
   return (
     <div className="mb-5">
@@ -158,7 +207,34 @@ function OrgContent(props) {
             </Col>
           </Row>
         </Container>
+        <IndicatorsTabs>
+          <Container>
+            <Nav role="tablist">
+              { plans.map((p, i) => (
+                <NavItem>
+                  <Tab
+                    className={i === selectedPlanIndex ? "active" : ""}
+                    aria-selected={i === selectedPlanIndex}
+                    passHref
+                    role="tab"
+                    tabIndex="0"
+                    aria-controls="list-view"
+                    id="list-tab"
+                    onClick={() => setSelectedPlan(i)}
+                  >
+                    { p.name }
+                  </Tab>
+                </NavItem>
+              ))}
+            </Nav>
+          </Container>
+        </IndicatorsTabs>
       </OrgHeader>
+      <Container>
+        <ul style={{paddingTop: 50}}>
+          { plans[selectedPlanIndex].actions.map((a) => (<li><ActionLink action={a}>{a.name}</ActionLink></li>)) }
+        </ul>
+      </Container>
     </div>
   );
 }
