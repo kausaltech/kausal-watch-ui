@@ -2458,10 +2458,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@kausal/themes-private@npm:^0.1.12":
-  version: 0.1.13
-  resolution: "@kausal/themes-private@npm:0.1.13"
-  checksum: d6fd58c53c60817c7e7f95b73b52374983ad77b1130df1957f1d12e35c44b82efdffd961d6a1f05f5fce6b28f9e9cb9d9f5b6e961b4b3d4bd8ba46c6a0a0ce01
+"@kausal/themes-private@npm:^0.1.13":
+  version: 0.1.14
+  resolution: "@kausal/themes-private@npm:0.1.14"
+  checksum: a6543ee00f20e76104de43b4a556b8a4475771787b59e6532ca9e21d7ce7545333e176a2c75591231300bec0efab7223276fa9f54e5c9928a2f80f935f2320a0
   languageName: node
   linkType: hard
 
@@ -15103,7 +15103,7 @@ __metadata:
     "@babel/plugin-proposal-decorators": ^7.17.9
     "@elastic/react-search-ui": ^1.11.2
     "@kausal/themes": ^0.1.2
-    "@kausal/themes-private": ^0.1.12
+    "@kausal/themes-private": ^0.1.13
     "@koa/router": ^10.1.1
     "@n8tb1t/use-scroll-position": ^2.0.3
     "@next/bundle-analyzer": ^12.1.6
@@ -22291,7 +22291,7 @@ __metadata:
 
 "typescript@patch:typescript@>=2.4.2 <4.0.0#~builtin<compat/typescript>":
   version: 3.9.10
-  resolution: "typescript@patch:typescript@npm%3A3.9.10#~builtin<compat/typescript>::version=3.9.10&hash=bda367"
+  resolution: "typescript@patch:typescript@npm%3A3.9.10#~builtin<compat/typescript>::version=3.9.10&hash=7ad353"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
@@ -22301,7 +22301,7 @@ __metadata:
 
 "typescript@patch:typescript@^4.6.4#~builtin<compat/typescript>":
   version: 4.6.4
-  resolution: "typescript@patch:typescript@npm%3A4.6.4#~builtin<compat/typescript>::version=4.6.4&hash=bda367"
+  resolution: "typescript@patch:typescript@npm%3A4.6.4#~builtin<compat/typescript>::version=4.6.4&hash=7ad353"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver

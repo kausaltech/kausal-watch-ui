@@ -27,14 +27,14 @@ function Footer(props) {
       navItem.children.forEach((child) => {
         children.push({
           id: child.id,
-          name: child.linkText,
+          name: child.page.title,
           slug: child.page.urlPath,
         });
       });
     }
     navLinks.push({
       id: navItem.id,
-      name: navItem.linkText,
+      name: navItem.page.title,
       slug: navItem.children.length > 0 ? undefined : navItem.page.urlPath,
       children,
     });
