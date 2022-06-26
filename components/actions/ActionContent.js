@@ -19,6 +19,7 @@ import images, { getBgImageAlignment, getActionImage } from 'common/images';
 import IndicatorCausal from 'components/indicators/IndicatorCausal';
 import Timeline from 'components/graphs/Timeline';
 import ScheduleTimeline from 'components/graphs/ScheduleTimeline';
+import AttributesBlock from 'components/common/AttributesBlock';
 import ContentLoader from 'components/common/ContentLoader';
 import ErrorMessage from 'components/common/ErrorMessage';
 import RichText from 'components/common/RichText';
@@ -189,6 +190,44 @@ query ActionDetails($plan: ID!, $id: ID!) {
       id
       identifier
     }
+    attributes {
+      __typename
+      id
+      key
+      keyIdentifier
+      ...on AttributeChoice {
+        value
+        valueIdentifier
+        type {
+          identifier
+          name
+        }
+      }
+      ...on AttributeRichText {
+        value
+        type {
+          identifier
+          name
+        }
+      }
+      ...on AttributeNumericValue {
+        numericValue: value
+        type {
+          identifier
+          name
+        }
+      }
+    }
+  }
+  plan(id: $plan) {
+    actionAttributeTypes {
+      __typename
+      format
+      identifier
+      choiceOptions {
+        identifier
+      }
+    }
   }
 }
 ${images.fragments.multiUseImage}
@@ -296,6 +335,7 @@ function ActionContent({ id }) {
     },
   });
   const { action } = data || {};
+  const attributeTypes = data?.plan.actionAttributeTypes;
 
   useHotkeys('ctrl+left, ctrl+right', (ev) => {
     const next = (ev.code == 'ArrowLeft' ? action.previousAction : action.nextAction);
@@ -513,6 +553,11 @@ function ActionContent({ id }) {
                 <CategoryTags data={action.categories} />
               </ActionSection>
             ) : null}
+            { action.attributes.length > 0 && (
+              <ActionSection>
+                <AttributesBlock attributes={action.attributes} types={attributeTypes} />
+              </ActionSection>
+            )}
             { action?.contactPersons.length > 0 && (
               <ActionSection>
                 <ContactPersons persons={action.contactPersons.map((item) => item.person)} />
