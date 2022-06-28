@@ -93,13 +93,16 @@ function AttributeContent(props) {
   switch (contentData.__typename) {
     case 'AttributeChoice':
       if (contentType) {
+        const valueIndex = contentType.choiceOptions.findIndex(
+          (choiceType) => choiceType.identifier === contentData.valueIdentifier
+        );
         // const choiceCount = contentType.choiceOptions.length;
         dataElement = (
           <div>
-            { contentType.choiceOptions.map((choice) => (
+            { contentType.choiceOptions.map((choice, idx) => (
               <ScaleIcon
                 name="circleFull"
-                className={choice.identifier <= contentData.valueIdentifier ? 'icon-on' : 'icon-off'}
+                className={idx <= valueIndex ? 'icon-on' : 'icon-off'}
                 size="md"
                 key={choice.identifier}
               />
