@@ -5,10 +5,11 @@ import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
 import PlanContext from 'context/plan';
 import { Link } from 'common/links';
-import CategoryAttributesBlock from './CategoryAttributesBlock';
+import ActionGroupStatus from 'components/actions/ActionGroupStatus';
+import AttributesBlock from 'components/common/AttributesBlock';
 
 export const GET_CATEGORY_ATTRIBUTE_TYPES = gql`
-  query GetAttributeTypes($plan: ID!) {
+  query GetCategoryAttributeTypes($plan: ID!) {
     plan(id: $plan) {
       id
       categoryTypes {
@@ -104,11 +105,10 @@ function CategoryPageHeaderBlock(props) {
     typeId,
     level,
   } = props;
+  const plan = useContext(PlanContext);
 
   let attributeTypes = [];
-
   if (attributes?.length) {
-    const plan = useContext(PlanContext);
     const { loading, error, data } = useQuery(GET_CATEGORY_ATTRIBUTE_TYPES, {
       variables: {
         plan: plan.identifier,
@@ -150,8 +150,11 @@ function CategoryPageHeaderBlock(props) {
               </h1>
               {level}
               <p>{ lead }</p>
-              { attributes?.length > 0
-                  && <CategoryAttributesBlock attributes={attributes} color={color} id={categoryId} types={attributeTypes} /> }
+              { attributes?.length > 0 && (
+                <AttributesBlock attributes={attributes} color={color} id={categoryId} types={attributeTypes} vertical>
+                  {plan.actionStatuses.length ? <ActionGroupStatus category={categoryId} /> : null}
+                </AttributesBlock>
+              )}
             </HeaderContent>
           </Col>
         </Row>

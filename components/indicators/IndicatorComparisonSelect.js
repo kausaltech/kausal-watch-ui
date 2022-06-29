@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import DropDown from 'components/common/DropDown';
+import { useTranslation } from 'common/i18n';
 
 const CompareChooser = styled.div`
   display: flex;
@@ -22,6 +23,7 @@ const CompareTo = styled.div`
 
 const IndicatorComparisonSelect = (props) => {
   const { handleChange, currentValue, options, defaultOrg } = props;
+  const { t } = useTranslation();
 
   const callback = (evt) => {
     const value = evt.target.value;
@@ -32,7 +34,7 @@ const IndicatorComparisonSelect = (props) => {
     <CompareChooser>
       <CompareFrom>
         <DropDown
-          label="Näytetään"
+          label={t('indicator-compare-source')}
           id="compare-from"
           name="compare-from"
           disabled
@@ -42,7 +44,7 @@ const IndicatorComparisonSelect = (props) => {
       </CompareFrom>
       <CompareTo>
         <DropDown
-          label="Vertaa"
+          label={t('indicator-compare-to')}
           id="compare-select"
           name="compare-select"
           value={currentValue || ''}

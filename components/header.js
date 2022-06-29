@@ -17,7 +17,7 @@ const getMenuStructure = ((pages, rootId, activeBranch) => {
     if (page.parent.id === rootId) {
       menuLevelItems.push({
         id: `${page.id}`,
-        name: page.linkText,
+        name: page.page.title,
         slug: page.page.slug,
         urlPath: page.page.urlPath,
         active: activeBranch === page.page.slug,
@@ -46,18 +46,26 @@ function Header({ siteTitle }) {
       active: activeBranch === 'dashboard',
     });
 
-    if (plan.mainMenu.items.length > 0) {
+    const pageMenuItems = plan.mainMenu.items.filter(item => item.__typename == 'PageMenuItem');
+    if (pageMenuItems.length > 0) {
       // find one menu item with root as parent to access the id of the rootPage
-      const rootItemIndex = plan.mainMenu.items.findIndex((page) => page.parent.page.__typename === 'PlanRootPage');
+      const rootItemIndex = pageMenuItems.findIndex((page) => page.parent.page.__typename === 'PlanRootPage');
       const staticPages = getMenuStructure(
-        plan.mainMenu.items,
-        plan.mainMenu.items[rootItemIndex].parent.id,
+        pageMenuItems,
+        pageMenuItems[rootItemIndex].parent.id,
         activeBranch,
       );
       links = links.concat(staticPages);
     }
     return links;
   }, [hasActionImpacts, activeBranch, plan.mainMenu]);
+
+  const externalLinks = useMemo(() => {
+    return plan.mainMenu.items.filter(item => item.__typename == 'ExternalLinkMenuItem').map(item => ({
+      name: item.linkText,
+      url: item.url,
+    }));
+  }, [plan.mainMenu]);
 
   return (
     <header style={{ position: 'relative' }}>
@@ -67,7 +75,7 @@ function Header({ siteTitle }) {
         siteTitle={siteTitle}
         ownerName={plan.generalContent ? plan.generalContent.ownerName : plan.name}
         navItems={navLinks}
-        externalItems={theme.settings?.externalLinks}
+        externalItems={externalLinks}
       />
     </header>
   );

@@ -152,5 +152,7 @@
   "latest-update": "Viimeisin päivitys",
   "return-to-front": "Palaa etusivulle",
   "admin-login-not-defined": "Ylläpidon osoitetta ei ole määritelty",
-  "organizations": "Organisaatiot"
+  "organizations": "Organisaatiot",
+  "indicator-compare-source": "Näytetään",
+  "indicator-compare-to": "Vertaa"
 }

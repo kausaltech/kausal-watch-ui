@@ -415,12 +415,12 @@ function GlobalNav(props) {
             <LanguageSelector mobile="true"/>
           </Nav>
           <Nav navbar>
-            { externalItems.length > 0 && externalItems.map((page) => (
-              <NavItem key={page.slug}>
+            { externalItems.length > 0 && externalItems.map((item, index) => (
+              <NavItem key={`external${index}`}>
                 <NavLink>
-                  <NavigationLink slug={page.urlPath}>
+                  <NavigationLink slug={item.url}>
                     <NavHighlighter className="highlighter">
-                      {page.name}
+                      {item.name}
                     </NavHighlighter>
                   </NavigationLink>
                 </NavLink>
@@ -447,15 +447,16 @@ GlobalNav.propTypes = {
     id: PropTypes.string,
     name: PropTypes.string,
     slug: PropTypes.string,
+    urlPath: PropTypes.string,
+    active: PropTypes.bool,
     children: PropTypes.arrayOf(PropTypes.shape),
   })).isRequired,
   theme: themeProp.isRequired,
   fullwidth: PropTypes.bool,
   sticky: PropTypes.bool,
   externalItems: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.string,
     name: PropTypes.string,
-    slug: PropTypes.string,
+    url: PropTypes.string,
   })),
 };
 

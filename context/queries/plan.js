@@ -65,41 +65,50 @@ query PlanContext($identifier: ID, $hostname: String, $clientUrl: String) {
     }
     mainMenu {
       items(withDescendants: true) {
-        id
-        linkText
-        page {
-          urlPath
-          slug
-        }
-        parent {
+        __typename
+        ... on PageMenuItem {
           id
           page {
-            __typename
+            title
+            urlPath
+            slug
           }
+          parent {
+            id
+            page {
+              __typename
+            }
+          }
+        }
+        ... on ExternalLinkMenuItem {
+          linkText
+          url
         }
       }
     }
     footer {
       items {
-        id
-        linkText
-        page {
-          urlPath
-          slug
-        }
-        parent {
+        ... on PageMenuItem {
           id
           page {
-            __typename
-          }
-        }
-        children {
-          __typename
-          id
-          linkText
-          page {
+            title
             urlPath
             slug
+          }
+          parent {
+            id
+            page {
+              __typename
+            }
+          }
+          children {
+            __typename
+            id
+            page {
+              title
+              urlPath
+              slug
+            }
           }
         }
       }

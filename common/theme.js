@@ -193,7 +193,6 @@ export const themeProp = exact({
     fundingInstruments: array.isRequired,
     otherLogos: array.isRequired,
     attentionBannerContent: object,
-    externalLinks: array,
     footerLogoOnly: bool,
     navigationLogoOnly: bool,
     a11y: exact({

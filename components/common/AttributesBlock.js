@@ -1,9 +1,8 @@
 import React, { useContext } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 import RichText from 'components/common/RichText';
 import PlanContext from 'context/plan';
-import ActionGroupStatus from 'components/actions/ActionGroupStatus';
 import Icon from 'components/common/Icon';
 import CategoryMetaBar from '../actions/CategoryMetaBar';
 
@@ -30,21 +29,25 @@ const ScaleIcon = styled(Icon)`
 `;
 
 const AttributesList = styled.dl`
-  display: flex;
-  flex-flow: row wrap;
+  ${props => props.vertical && css`
+    display: flex;
+    flex-flow: row wrap;
+  `}
   max-width: 720px;
   margin: ${(props) => props.theme.spaces.s200} auto 0;
 
+  h3 {
+    font-size: ${(props) => props.theme.fontSizeBase};
+  }
+
   dt {
     flex: 0 0 100%;
-    text-align: center;
     margin-bottom: .5rem;
   }
 
   dd {
     flex: 0 1 100%;
     margin-bottom: 1rem;
-    text-align: center;
 
     .text-content {
       text-align: left;
@@ -84,92 +87,98 @@ const formatEmissionSharePercent = (share, total) => {
 };
 
 function AttributeContent(props) {
-  const { contentData, contentType, title, color } = props;
+  const { contentData, contentType, title, vertical } = props;
 
+  let dataElement;
   switch (contentData.__typename) {
     case 'AttributeChoice':
       if (contentType) {
+        const valueIndex = contentType.choiceOptions.findIndex(
+          (choiceType) => choiceType.identifier === contentData.valueIdentifier
+        );
         // const choiceCount = contentType.choiceOptions.length;
-        return (
-          <>
-            <dt>{title}</dt>
-            <dd>
-              <div>
-                { contentType.choiceOptions.map((choice) => (
-                  <ScaleIcon
-                    name="circleFull"
-                    className={choice.identifier <= contentData.valueIdentifier ? 'icon-on' : 'icon-off'}
-                    size="md"
-                    key={choice.identifier}
-                  />
-                ))}
-                <AttributeChoiceLabel>{ contentData.value }</AttributeChoiceLabel>
-              </div>
-            </dd>
-          </>
+        dataElement = (
+          <div>
+            { contentType.choiceOptions.map((choice, idx) => (
+              <ScaleIcon
+                name="circleFull"
+                className={idx <= valueIndex ? 'icon-on' : 'icon-off'}
+                size="md"
+                key={choice.identifier}
+              />
+            ))}
+            <AttributeChoiceLabel>{ contentData.value }</AttributeChoiceLabel>
+          </div>
         );
       }
+      break;
+    case 'AttributeChoiceAndText':
+      // TODO
       return null;
     case 'AttributeRichText':
-      return (
-        <>
-          <dt>{title}</dt>
-          <dd>
-            <RichText html={contentData.value} />
-          </dd>
-        </>
+      dataElement = (
+        <RichText html={contentData.value} />
       );
+      break;
     case 'AttributeNumericValue':
-      // KPR specific hack
-      if (contentData.keyIdentifier === 'impact') {
-        const totalEmissions = 50.921;
-        const segments = [{
-          id: 'emissions',
-          label: '',
-          value: formatEmissionSharePercent(contentData.numericValue, totalEmissions),
-          portion: contentData.numericValue / totalEmissions,
-          color,
-        }];
-        return <CategoryMetaBar segments={segments} title={contentData.key} />;
-      }
-      return null;
+      dataElement = (
+        <span>
+          {contentData.numericValue}
+        </span>
+      );
+      break;
     default: return <div />;
   }
+  if (vertical) {
+    return (
+      <>
+        <dt>{title}</dt>
+        <dd>{dataElement}</dd>
+      </>
+    );
+  }
+  // Render horizontal layout
+  return (
+    <div className="mb-4">
+      <h3>{title}</h3>
+      {dataElement}
+    </div>
+  );
 }
 
-function CategoryAttributesBlock(props) {
+function AttributesBlock(props) {
   const plan = useContext(PlanContext);
   const {
-    color,
     attributes,
-    id,
+    children,  // extra children that can be passed by nesting in the JSX tag
     types,
+    vertical,
   } = props;
 
   return (
-    <AttributesList>
+    <AttributesList vertical={vertical}>
       {attributes.map((item) => (
         <React.Fragment key={item.id}>
           <AttributeContent
             title={item.key}
             contentData={item}
             contentType={types?.find((type) => type.identifier === item.keyIdentifier)}
-            color={color}
+            vertical={vertical}
           />
         </React.Fragment>
       ))}
-      {plan.actionStatuses.length ? <ActionGroupStatus category={id} /> : null}
+      {children}
     </AttributesList>
   );
 }
 
 // TODO: prop types and defaults
-CategoryAttributesBlock.defaultProps = {
+AttributesBlock.defaultProps = {
 
 };
 
-CategoryAttributesBlock.propTypes = {
+AttributesBlock.propTypes = {
 
 };
 
-export default CategoryAttributesBlock;
+export default AttributesBlock;

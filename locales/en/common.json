@@ -150,5 +150,7 @@
   "latest-update": "Latest update",
   "return-to-front": "Return to front page",
   "admin-login-not-defined": "Admin login page has not been defined",
-  "organizations": "Organizations"
+  "organizations": "Organizations",
+  "indicator-compare-source": "Showing",
+  "indicator-compare-to": "Compare to"
 }
