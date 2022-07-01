@@ -80,7 +80,6 @@ PlanChip.defaultProps = {
 PlanChip.propTypes = {
   planImage: PropTypes.string,
   planShortName: PropTypes.string,
-  planLongName: PropTypes.string,
   organization: PropTypes.string,
   size: PropTypes.string,
   negative: PropTypes.bool,
