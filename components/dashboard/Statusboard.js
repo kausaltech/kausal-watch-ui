@@ -86,7 +86,7 @@ export const GET_ACTION_LIST = gql`
           parent {
             id
           }
-          iconUrl
+          iconSvgUrl
           categoryPage {
             id
             live

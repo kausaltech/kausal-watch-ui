@@ -27,7 +27,7 @@ const ACTION_CARD_FRAGMENT = gql`
       id
       identifier
       name
-      iconUrl
+      iconSvgUrl
     }
     implementationPhase {
       id
@@ -181,14 +181,14 @@ const OrgLogo = styled.img`
 `;
 
 function getIconUrl(action) {
-  if (action.iconUrl) return action.iconUrl;
+  if (action.iconSvgUrl) return action.iconSvgUrl;
 
   const { rootCategory } = action;
   if (!rootCategory) return null;
 
   const plan = useContext(PlanContext);
-  const { identifier, iconUrl } = rootCategory;
-  if (iconUrl) return iconUrl;
+  const { identifier, iconSvgUrl } = rootCategory;
+  if (iconSvgUrl) return iconSvgUrl;
   if (plan.identifier === 'liiku') return `/static/themes/liiku/images/category-${identifier}.svg`;
   if (plan.identifier === 'hsy-kestava') return `/static/themes/hsy-kestava/images/category-${identifier}.svg`;
   return null;
@@ -318,7 +318,7 @@ ActionCard.propTypes = {
     identifier: PropTypes.string,
     name: PropTypes.string,
     completion: PropTypes.number,
-    iconUrl: PropTypes.string,
+    iconSvgUrl: PropTypes.string,
     rootCategory: PropTypes.shape(),
     status: PropTypes.shape({
       identifier: PropTypes.string,

@@ -51,7 +51,7 @@ const ActionListBlock = (props) => {
   if (!planActions) {
     return <ErrorMessage statusCode={404} message={t('page-not-found')} />;
   }
-  const actions = planActions.map((act) => ({ ...act, iconUrl: act.categories.find((cat) => cat.iconUrl)?.iconUrl }));
+  const actions = planActions.map((act) => ({ ...act, iconSvgUrl: act.categories.find((cat) => cat.iconSvgUrl)?.iconSvgUrl }));
   const groupBy = plan.primaryOrgs.length > 0 ? 'primaryOrg' : 'none';
 
   const heading = t('actions');
