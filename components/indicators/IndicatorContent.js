@@ -158,8 +158,11 @@ function IndicatorDetails({ id }) {
   const hasImpacts = indicator.relatedCauses.length > 0 || indicator.relatedEffects.length > 0;
   const mainGoals = indicator.goals.filter((goal) => !goal.scenario);
 
-  const allOrgs = indicator.common?.indicators.map((common) => {
-    return {
+  const allOrgs = [];
+  indicator.common?.indicators.forEach((common) => {
+    /* Make sure organization is included in this plan */
+    const orgInThisPlan = plan.primaryOrgs.find((org) => org.id === common.organization.id);
+    if (orgInThisPlan) allOrgs.push({
       id: common.id,
       identifier: common.identifier,
       image: common.organization.logo?.rendition.src,
@@ -167,7 +170,7 @@ function IndicatorDetails({ id }) {
       shortName: common.organization.abbreviation,
       active: common.organization.id === indicator.organization.id,
       orgUrl: `/indicators/${common.id}`,
-    };
+    });
   });
 
   return (
