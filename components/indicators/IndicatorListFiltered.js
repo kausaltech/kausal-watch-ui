@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   Badge, Table,
@@ -93,10 +93,11 @@ const IndentableCellContentWrapper = styled.div`
   padding: ${(props) => (
     props.sectionHeader === true
     ? `.5rem`
-    : `0.15rem 0.5rem .15rem ${+(props.firstCol ?? 0) + .5}rem`
+    : `0.5rem 0.5rem .5rem ${+(props.firstCol ?? 0) + .5}rem`
   )};
   text-align: ${(props) => props.numeric === true ? 'right' : 'left'};
   font-weight: ${(props) => (props.sectionHeader === true ? props.theme.fontWeightBold : props.theme.fontWeightNormal)};
+  line-height: ${(props) => props.theme.lineHeightMd};
   border-left: ${(props) => 24 * props.indent}px solid ${(props) => props.theme.themeColors.light};
   background-color: ${(props) => (props.sectionHeader === true ? props.theme.themeColors.light : 'inherit')};
 `;
@@ -127,16 +128,17 @@ const DarkenedTableHeader = styled.th`
 `;
 
 const IndentableTableHeader = (props) => {
-  const theme = useTheme();
+  // const theme = useTheme();
+  const { onClick, colSpan, indent, sectionHeader, numeric, firstCol, children } = props;
   return (
-    <th onClick={props.onClick} colSpan={props.colSpan}>
+    <th onClick={onClick} colSpan={colSpan}>
       <IndentableCellContentWrapper
-        indent={props.indent}
-        sectionHeader={props.sectionHeader}
-        numeric={props.numeric}
-        firstCol={props.firstCol}
+        indent={indent}
+        sectionHeader={sectionHeader}
+        numeric={numeric}
+        firstCol={firstCol}
       >
-        { props.children }
+        { children }
       </IndentableCellContentWrapper>
     </th>
   );
@@ -187,41 +189,36 @@ function sortIndicators(hierarchy, indicators, displayMunicipality) {
   return [...grouped.values()];
 }
 
-class IndicatorListFiltered extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      activeCategory: '',
-      activeSearch: '',
-      visibleGroups: {
-        0: true
-      }
-    };
-    this.handleChange = this.handleChange.bind(this);
-    this.toggleHidden = this.toggleHidden.bind(this);
+const IndicatorListFiltered = (props) => {
+  const { t, categories, indicators, i18n, displayMunicipality, hierarchy, displayNormalizedValues } = props;
+
+  const [activeCategory, setActiveCategory] = useState('');
+  const [activeSearch, setActiveSearch] = useState('');
+  const [visibleGroups, setVisibleGroups] = useState({ 0: true });
+
+  const toggleHidden = (idx) => {
+    const newGroups = {};
+    newGroups[idx] = idx in visibleGroups ? visibleGroups[idx] === false :  true;
+
+    setVisibleGroups(visibleGroups => ({
+      ...visibleGroups,
+      ...newGroups,
+    }));
+    return null;
   }
 
-  toggleHidden(idx) {
-    this.setState(state => {
-      const oldVal = state.visibleGroups[idx];
-      let newVal = (oldVal === false || oldVal == null);
-      const newVisibleGroups = Object.assign(state.visibleGroups, {[idx]: newVal});
-      return Object.assign({}, state, {visibleGroups: newVisibleGroups});
-    })
+  const handleChange = (filterType, val) => {
+    if(filterType === 'Search') {
+      setActiveSearch(val);
+    }
+    if(filterType === 'Category') {
+      setActiveCategory(val);
+    }
   }
 
-  handleChange(filterType, val) {
-    const change = `active${filterType}`;
-    this.setState({
-      [change]: val,
-    });
-  }
-
-  filterIndicators(hierarchy, indicators, displayMunicipality) {
+  const filterIndicators = (hierarchy, indicators, displayMunicipality) => {
     let i;
     const filtered = indicators.filter((item) => {
-      const { activeCategory } = this.state;
-      const { activeSearch } = this.state;
 
       if (activeCategory) {
         let catMatch = false;
@@ -241,9 +238,7 @@ class IndicatorListFiltered extends React.Component {
     return sortIndicators(hierarchy, filtered, displayMunicipality);
   }
 
-  render() {
-    const { t, categories, indicators, i18n, displayMunicipality, hierarchy, displayNormalizedValues } = this.props;
-    const filteredIndicators = this.filterIndicators(hierarchy, indicators, displayMunicipality);
+    const filteredIndicators = filterIndicators(hierarchy, indicators, displayMunicipality);
     const sortedCategories = [...categories].sort((a, b) => b.order - a.order);
 
     const someIndicatorsHaveCategories = filteredIndicators.flat().reduce(
@@ -259,6 +254,7 @@ class IndicatorListFiltered extends React.Component {
       </IndicatorName>
     );
     const seen = new Set();
+
     const indicatorName = (item, expanded, expandKey) => {
       let result = null;
       if (item.common == null || hierarchy === null || Object.keys(hierarchy).length === 0) {
@@ -283,13 +279,26 @@ class IndicatorListFiltered extends React.Component {
     const indentationLevel = (item) => (
       item.common == null ? 1 : (hierarchy[item.common.id]?.path?.length ?? 1) - 1
     );
-    const hierarchyEnabled = Object.keys(hierarchy).length > 1;
+
+    // TODO: This is a quickfix to hide hierarchy from non-multiplans. This logic should be
+    const hierarchyEnabled = Object.keys(hierarchy).length > 1 && displayMunicipality;
+
+    // TODO: if we have a mix of hierarchical and non hierarchical indicators in non-multicity instance
+    // we have to awkwardly flatten the list
+    if (Object.keys(hierarchy).length > 1 && !displayMunicipality) {
+      const flatFilteredIndicators = [filteredIndicators[0]];
+      filteredIndicators.map((category, indx) => {
+        if(indx > 0) flatFilteredIndicators[0].push(...category);
+      });
+      filterIndicators[0] = [...flatFilteredIndicators];
+    }
+
     return (
       <div className="mb-5 pb-5">
-        <IndicatorListFilters cats={sortedCategories} changeOption={this.handleChange} />
+        <IndicatorListFilters cats={sortedCategories} changeOption={handleChange} />
         <IndentableTable hover>
           {filteredIndicators.map((group, idx) => {
-            const expanded = (this.state.visibleGroups[idx] === true);
+            const expanded = visibleGroups[idx] === true;
             const expandKey = `common-indicator-section-${idx}`;
             const headers = [];
             if (!hierarchyEnabled) {
@@ -328,18 +337,18 @@ class IndicatorListFiltered extends React.Component {
 
             return (<React.Fragment key={`indicator-group-${idx}`}>
             { hierarchyEnabled &&
-            <tbody key="body-1">
-              <tr>
-                <IndentableTableHeader
-                  sectionHeader={true}
-                  onClick={event => this.toggleHidden(idx)}
-                  colSpan={headers.length}
-                  indent={indentationLevel(group[0])}
-                >
-                  {indicatorName(group[0], expanded, expandKey)}
-                </IndentableTableHeader>
-              </tr>
-            </tbody>
+              <tbody key="body-1">
+                <tr>
+                  <IndentableTableHeader
+                    sectionHeader={true}
+                    onClick={event => toggleHidden(idx)}
+                    colSpan={headers.length}
+                    indent={indentationLevel(group[0])}
+                  >
+                    {indicatorName(group[0], expanded, expandKey)}
+                  </IndentableTableHeader>
+                </tr>
+              </tbody>
             }
             <tbody key="body-2" id={expandKey} aria-hidden={!expanded} style={{display: (expanded ? "table-row-group": "none")}}>
               <tr>
@@ -427,7 +436,6 @@ class IndicatorListFiltered extends React.Component {
         </IndentableTable>
       </div>
     );
-  }
 }
 
 IndicatorListFiltered.propTypes = {
