@@ -171,6 +171,7 @@ const ActionOrgAvatar = styled.div`
 
 const ActionOrgName = styled.div`
   font-size: ${(props) => props.theme.fontSizeSm};
+  font-family: ${(props) => props.theme.fontFamilyTiny};
   color: ${(props) => props.theme.themeColors.dark};
   line-height: 1;
 `;
