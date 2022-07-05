@@ -34,7 +34,7 @@ export default function RichText({ html, ...rest }) {
     },
   };
 
-  return <div {...rest}>{parse(html, options)}</div>;
+  return <div {...rest} className="text-content">{parse(html, options)}</div>;
 }
 
 RichText.defaultProps = {

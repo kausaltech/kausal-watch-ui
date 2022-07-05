@@ -75,6 +75,7 @@ const MainCard = styled.div`
   .lead-content {
     font-size: ${(props) => props.theme.fontSizeBase};
     line-height: ${(props) => props.theme.lineHeightMd};
+    font-family: ${(props) => props.theme.fontFamilyContent};
   }
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {

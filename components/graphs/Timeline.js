@@ -73,7 +73,7 @@ const Timeline = (props) => {
       tickangle: 0,
       showgrid: false,
       tickfont: {
-        family: `${theme.fontFamilyFallback}`,
+        family: '`${theme.fontFamilyTiny}`',
         size: 10,
       },
     },

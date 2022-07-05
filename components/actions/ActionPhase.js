@@ -10,6 +10,7 @@ const Status = styled.div`
 
   &.compact {
     font-size: ${(props) => props.theme.fontSizeSm};
+    font-family: ${(props) => props.theme.fontFamilyTiny};
   }
 
   ul {
@@ -27,6 +28,7 @@ const Status = styled.div`
 
   .label {
     font-size: ${(props) => props.theme.fontSizeSm};
+    font-family: ${(props) => props.theme.fontFamilyTiny};
     line-height: ${(props) => props.theme.lineHeightMd};
     hyphens: auto;
   }
@@ -35,12 +37,14 @@ const Status = styled.div`
 const PhaseReason = styled.p`
   margin-bottom: ${(props) => props.theme.spaces.s050};
   font-size: ${(props) => props.theme.fontSizeSm};
+  font-family: ${(props) => props.theme.fontFamilyTiny};
   line-height: ${(props) => props.theme.lineHeightMd};
 `;
 
 const PhaseLabel = styled.div`
   margin-bottom: ${(props) => props.theme.spaces.s050};
   font-size: ${(props) => props.theme.fontSizeSm};
+  font-family: ${(props) => props.theme.fontFamilyTiny};
   line-height: ${(props) => props.theme.lineHeightMd};
   hyphens: auto;
 

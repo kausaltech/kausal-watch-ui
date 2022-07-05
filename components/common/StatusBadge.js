@@ -16,6 +16,7 @@ background-color: ${(props) => props.theme.themeColors.light};
 .label {
   padding: 3px 6px;
   font-size: ${(props) => props.theme.fontSizeSm};
+  font-family: ${(props) => props.theme.fontFamilyTiny};
 }
 `;
 

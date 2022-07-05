@@ -97,6 +97,7 @@ const ResultsHeader = styled.div`
 const HitType = styled.div`
   margin-bottom: ${(props) => props.theme.spaces.s050};
   font-size: ${(props) => props.theme.fontSizeSm};
+  font-family: ${(props) => props.theme.fontFamilyTiny};
   text-transform: uppercase;
   letter-spacing: 0.25px;
 `;
@@ -131,6 +132,7 @@ const StyledSearchResultItem = styled.li`
 
 const ResultExcerpt = styled.div`
   font-size: ${(props) => props.theme.fontSizeSm};
+  font-family: ${(props) => props.theme.fontFamilyTiny};
 
   em {
     font-style: normal;

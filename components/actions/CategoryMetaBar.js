@@ -34,6 +34,7 @@ const SegmentLabel = styled.span`
   text-align: left;
   margin: ${(props) => props.theme.spaces.s050} ${(props) => props.theme.spaces.s050} 0 0;
   font-size: ${(props) => props.theme.fontSizeSm};
+  font-family: ${(props) => props.theme.fontFamilyTiny};
   line-height: ${(props) => props.theme.lineHeightMd};
 
   span {

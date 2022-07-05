@@ -49,6 +49,8 @@ const DashTable = styled(Table)`
 `;
 
 const StyledRow = styled.tr`
+  font-family: ${(props) => props.theme.fontFamilyContent};
+
   &.merged {
     opacity: .25;
   }
@@ -137,6 +139,7 @@ const PhasesTooltipListItem = styled.li`
 const UpdatedAgo = styled.div`
   display: inline-block;
   font-size: ${(props) => props.theme.fontSizeSm};
+  font-family: ${(props) => props.theme.fontFamilyTiny};
   white-space: nowrap;
   cursor: default;
   padding: ${(props) => props.theme.spaces.s050};
@@ -169,6 +172,7 @@ const TaskTooltip = styled.div`
 
 const VizLabel = styled.div`
   font-size: ${(props) => props.theme.fontSizeSm};
+  font-family: ${(props) => props.theme.fontFamilyTiny};
   line-height: ${(props) => props.theme.lineHeightMd};
   hyphens: auto;
 
@@ -186,6 +190,7 @@ const Tooltip = styled.div`
   color: ${(props) => props.theme.themeColors.black};
   padding: ${(props) => props.theme.spaces.s050} ${(props) => props.theme.spaces.s100};
   font-size: ${(props) => props.theme.fontSizeSm};
+  font-family: ${(props) => props.theme.fontFamilyTiny};
   border-radius: 4px;
   box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
 
@@ -206,9 +211,9 @@ const Tooltip = styled.div`
   }
 
   h5 {
-    font-family: ${(props) => props.theme.fontFamily}, ${(props) => props.theme.fontFamilyFallback};
     font-weight: ${(props) => props.theme.fontWeightBold};
     font-size: ${(props) => props.theme.fontSizeSm};
+    font-family: ${(props) => props.theme.fontFamilyTiny};
     color: ${(props) => props.theme.themeColors.black};
   }
 `;
