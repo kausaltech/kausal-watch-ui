@@ -237,6 +237,7 @@ ${ActionCard.fragments.action}
 const LastUpdated = styled.div`
   margin-bottom: 1em;
   color: ${(props) => props.theme.themeColors.dark};
+  font-family: ${(props) => props.theme.fontFamilyContent};
 `;
 
 const ActionSection = styled.div`

@@ -26,6 +26,7 @@ const HelpText = styled.p`
   margin-bottom: ${(props) => props.theme.spaces.s200};
   text-align: center;
   font-size: ${(props) => props.theme.fontSizeSm};
+  font-family: ${(props) => props.theme.fontFamilyTiny};
   line-height: ${(props) => props.theme.lineHeightMd};
 `;
 
@@ -70,7 +71,7 @@ const StatusDonut = (props) => {
   };
   const pieLayout = {
     font: {
-      family: theme.fontFamily,
+      family: theme.fontFamilyTiny,
     },
     annotations: [
       {

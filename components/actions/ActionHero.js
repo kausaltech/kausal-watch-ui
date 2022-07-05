@@ -70,9 +70,11 @@ const ActionsNav = styled.nav`
   justify-content: space-between;
   margin-bottom: ${(props) => props.theme.spaces.s100};
   font-size: ${(props) => props.theme.fontSizeSm};
+  font-family: ${(props) => props.theme.fontFamilyTiny};
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     font-size: ${(props) => props.theme.fontSizeBase};
+    font-family: ${(props) => props.theme.fontFamily};
   }
 `;
 
@@ -98,6 +100,7 @@ const ImageCredit = styled.span`
   padding: 0.25rem 0.5rem;
   background-color: rgba(255,255,255,0.66);
   font-size: ${(props) => props.theme.fontSizeSm};
+  font-family: ${(props) => props.theme.fontFamilyTiny};
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     top: inherit;

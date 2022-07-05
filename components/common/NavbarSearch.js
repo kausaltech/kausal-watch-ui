@@ -62,6 +62,7 @@ const ResultsHeader = styled.div`
 
 const ResultCount = styled.div`
     font-size: ${(props) => props.theme.fontSizeSm};
+    font-family: ${(props) => props.theme.fontFamilyTiny};
 `;
 
 const ResultsFooter = styled.div`
@@ -125,6 +126,7 @@ const HitHighlight = styled.div`
   margin: 0 0 ${(props) => props.theme.spaces.s050} 0;
   color: ${(props) => props.theme.graphColors.grey050};
   font-size: ${(props) => props.theme.fontSizeSm};
+  font-family: ${(props) => props.theme.fontFamilyTiny};
   line-height: 1;
 `;
 

@@ -11,6 +11,7 @@ const IndicatorType = styled.div`
   margin-bottom: .5em;
   text-align: left;
   font-size: ${(props) => props.theme.fontSizeSm};
+  font-family: ${(props) => props.theme.fontFamilyTiny};
   color: ${(props) => props.theme.neutralDark};
 `;
 

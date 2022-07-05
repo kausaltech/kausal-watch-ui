@@ -138,6 +138,7 @@ const ActionPhase = styled.div`
 const StatusName = styled.div`
   padding: ${(props) => props.theme.spaces.s050};
   font-size: ${(props) => props.theme.fontSizeSm};
+  font-family: ${(props) => props.theme.fontFamilyTiny};
   line-height: 1;
 
   &:after {

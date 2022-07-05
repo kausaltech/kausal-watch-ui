@@ -16,11 +16,13 @@ const IndicatorValue = styled.div`
 
 const IndicatorValueUnit = styled.span`
   font-size: ${(props) => props.theme.fontSizeSm};
+  font-family: ${(props) => props.theme.fontFamilyTiny};
   font-weight: ${(props) => props.theme.fontWeightNormal};
 `;
 
 const IndicatorValueTime = styled.div`
   font-size: ${(props) => props.theme.fontSizeSm};
+  font-family: ${(props) => props.theme.fontFamilyTiny};
   font-weight: ${(props) => props.theme.fontWeightNormal};
 `;
 
@@ -77,6 +79,7 @@ const Indicator = styled(Card)`
 
 const IndicatorType = styled.div`
   font-size: ${(props) => props.theme.fontSizeSm};
+  font-family: ${(props) => props.theme.fontFamilyTiny};
   margin-bottom: .5em;
 `;
 

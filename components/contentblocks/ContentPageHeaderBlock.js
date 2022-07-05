@@ -21,6 +21,7 @@ const HeaderBg = styled.div`
 
 const ContentHeader = styled.header`
   padding: ${(props) => props.theme.spaces.s400} 0 ${(props) => props.theme.spaces.s200};
+  font-family: ${(props) => props.theme.fontFamilyContent};
 
   h1 {
     margin-bottom: ${(props) => props.theme.spaces.s150};

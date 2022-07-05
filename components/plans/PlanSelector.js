@@ -29,6 +29,7 @@ const PlanAvatar = styled.img`
 const PlanTitle = styled.div`
   margin-left: .5rem;
   font-size: ${(props) => props.theme.fontSizeSm};
+  font-family: ${(props) => props.theme.fontFamilyTiny};
   font-weight: ${(props) => props.theme[props.weight]};
 `;
 
