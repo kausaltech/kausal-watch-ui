@@ -255,6 +255,7 @@ const SectionHeader = styled.h2`
 
 const OfficialText = styled.div`
   margin-bottom: ${(props) => props.theme.spaces.s300};
+  font-family: ${(props) => props.theme.fontFamilyContent};
 
   .official-text-content {
     color: ${(props) => props.theme.neutralDark};
