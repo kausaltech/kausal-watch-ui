@@ -124,7 +124,7 @@ function AttributeContent(props) {
     case 'AttributeNumericValue':
       dataElement = (
         <span>
-          {contentData.numericValue}
+          {contentData.numericValue} {contentData.type.unit?.name}
         </span>
       );
       break;

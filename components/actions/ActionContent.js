@@ -215,6 +215,9 @@ query ActionDetails($plan: ID!, $id: ID!) {
         type {
           identifier
           name
+          unit {
+            name
+          }
         }
       }
     }
