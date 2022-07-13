@@ -19,9 +19,14 @@ import NavbarSearch from './NavbarSearch';
 import { usePlan } from 'context/plan';
 
 const TopNav = styled(Navbar)`
-  padding: 0 ${(props) => props.theme.spaces.s100};
+  padding: 0;
   background-color: ${(props) => props.theme.brandNavBackground};
   border-bottom: 1px solid ${(props) => props.theme.themeColors.light};
+  flex-wrap: nowrap;
+
+  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    padding: 0 ${(props) => props.theme.spaces.s100};
+  }
 `;
 
 const TopNavItems = styled(Navbar)`
@@ -57,7 +62,7 @@ const BotNav = styled(Navbar)`
 
 const SiteTitle = styled.div`
   font-size: 1rem;
-  line-height: 1.666rem;
+  line-height: 1;
   padding: ${(props) => props.theme.spaces.s150} 0 ${(props) => props.theme.spaces.s150};
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
