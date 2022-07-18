@@ -122,6 +122,7 @@ const ActionHeadline = styled.h1`
 
 const ActionNumber = styled.span`
   margin-right: ${(props) => props.theme.spaces.s100};
+  white-space: nowrap;
 
   &:after {
     content: ".";
@@ -133,7 +134,7 @@ function ActionCategories(categories) {
   const { showIdentifiers } = theme.settings.categories;
 
   const displayCategories = [];
-  categories.categories.every((cat, indx) => {
+  categories.categories.forEach((cat, indx) => {
     if (cat.type.identifier !== 'action') return false;
     displayCategories[indx] = {};
     let categoryTitle = cat.name;
@@ -233,6 +234,7 @@ function ActionHero(props) {
                       <PrimaryOrg>
                         <OrgLogo
                           src={primaryOrg.logo?.rendition?.src || '/static/themes/default/images/default-avatar-org.png'}
+                          alt=""
                         />
                         <strong><ActionListLink query={{ primaryOrg: primaryOrg.id }}>{ primaryOrg.abbreviation || primaryOrg.name }</ActionListLink></strong>
                       </PrimaryOrg>

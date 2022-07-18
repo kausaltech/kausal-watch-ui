@@ -4,7 +4,9 @@ import parse, { domToReact } from 'html-react-parser';
 
 import PlanContext from 'context/plan';
 
-export default function RichText({ html, ...rest }) {
+export default function RichText(props) {
+  console.log(props);
+  const { html, className, ...rest } = props;
   const plan = useContext(PlanContext);
 
   if (typeof html !== 'string') return <div />;
@@ -34,7 +36,7 @@ export default function RichText({ html, ...rest }) {
     },
   };
 
-  return <div {...rest} className="text-content">{parse(html, options)}</div>;
+  return <div {...rest} className={`text-content ${className}`}>{parse(html, options)}</div>;
 }
 
 RichText.defaultProps = {
