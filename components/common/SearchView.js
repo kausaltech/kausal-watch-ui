@@ -184,7 +184,10 @@ function SearchResultItem({ hit }) {
           <h3>{hit.title}</h3>
         </a>
       </Link>
-      <ResultExcerpt dangerouslySetInnerHTML={{ __html: hit.highlight }} />
+      <ResultExcerpt
+        dangerouslySetInnerHTML={{ __html: hit.highlight }}
+      />
+      {/* TODO: Add ellipsis or indication for truncated text */}
     </StyledSearchResultItem>
   );
 }

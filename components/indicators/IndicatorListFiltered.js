@@ -51,7 +51,7 @@ const IndicatorType = styled(Badge)`
 `;
 
 const IndicatorDate = styled.span`
-  color: ${(props) => props.theme.graphColors.grey050}
+  color: ${(props) => props.theme.graphColors.grey060}
 `
 
 const StyledBadge = styled(Badge)`

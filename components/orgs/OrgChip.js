@@ -38,7 +38,7 @@ const OrgChip = React.forwardRef((props, ref) => {
 
   return (
     <Tag ref={ref} {...props}>
-      <OrgAvatar src={image} size={IMAGE_SIZES[size]} />
+      <OrgAvatar src={image} size={IMAGE_SIZES[size]} alt=""/>
       <OrgName>
         <OrgTitle weight={size==='sm' ? 'fontWeightNormal' : 'fontWeightBold'}>
           {name}

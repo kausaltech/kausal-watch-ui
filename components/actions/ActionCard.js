@@ -296,6 +296,7 @@ function ActionCard(props) {
                 <ActionOrgAvatar>
                   <OrgLogo
                     src={primaryOrg?.logo?.rendition?.src || '/static/themes/default/images/default-avatar-org.png'}
+                    alt=""
                   />
                 </ActionOrgAvatar>
                 <ActionOrgName>{primaryOrg.abbreviation || primaryOrg.name}</ActionOrgName>

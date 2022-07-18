@@ -73,7 +73,7 @@ const OrgSelector = (props) => {
           tag="button"
         >
 
-            <OrgAvatar src={activeOrg.image} />
+            <OrgAvatar src={activeOrg.image} alt=""/>
             <OrgTitle>
               {activeOrg.shortName}
             </OrgTitle>

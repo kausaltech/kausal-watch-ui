@@ -56,7 +56,7 @@ const PlanChip = React.forwardRef((props, ref) => {
 
   return (
     <Tag ref={ref} {...props}>
-      <PlanAvatar src={planImage} size={IMAGE_SIZES[size]} />
+      <PlanAvatar src={planImage} size={IMAGE_SIZES[size]} alt=""/>
       <PlanName negative={negative}>
         <PlanTitle
           weight={size==='sm' ? 'fontWeightNormal' : 'fontWeightBold'}
