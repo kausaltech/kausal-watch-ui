@@ -130,8 +130,9 @@ function ActionListFilterBadges({
       </span>
       { badges.length > 0 && <span className="visually-hidden">{t('active-filters')}</span>}
       {/* TODO: animate transition */}
-        {(item) => (
+        {badges.map((item) => (
           <StyledBadge
+            key={item.id}
             className="me-3"
             color="primary"
           >
@@ -143,7 +144,7 @@ function ActionListFilterBadges({
             />
             { item.name?.trim() }
           </StyledBadge>
-        )}
+        ))}
     </FiltersList>
   );
 }
