@@ -85,7 +85,7 @@ function IndicatorProgressBar(props) {
     animate } = props;
 
   const theme = useContext(ThemeContext);
-  const { t, i18n } = useTranslation(['common', 'actions']);
+  const { t, i18n } = useTranslation();
   const pendingBarControls = useAnimation();
   const completedBarControls = useAnimation();
   const latestValueControls = useAnimation();
@@ -141,12 +141,31 @@ function IndicatorProgressBar(props) {
     reductionCounterFrom = 0;
   }
 
+  const graphValues = {
+    name: note,
+    startYear: dayjs(startDate).format('YYYY'),
+    latestYear: dayjs(startDate).format('YYYY'),
+    goalYear: dayjs(startDate).format('YYYY'),
+    startValue: `${startValue} ${unit}`,
+    latestValue: `${latestValue} ${unit}`,
+    goalValue: `${goalValue} ${unit}`,
+    reduced: `${reductionCounterTo.toFixed(1)} ${unit}`,
+    toBeReduced: `${latestValue - goalValue} ${unit}`,
+  };
+ /*
+    On the year {{startYear}} {{name}} was {{startValue}}.
+    Latest observed value in {{latestYear}} was {{latestValue}}.
+    The goal for the year {{goalYear}} is {{goalValue}}.
+    Since {{startYear}} reduction is {{reduced}}.
+    {{toBeReduced}} still needs to be reduced before the year {{goalYear}}.;
+  */
+
   return (
     <IndicatorLink id={indicatorId}>
       <LinkedIndicator>
         <span>{ animate }</span>
         <svg viewBox={`0 0 ${canvas.w} ${canvas.h}`}>
-          <title>a11y title here</title>
+          <title>{t('indicator-progress-bar', graphValues)}</title>
           <BarBase
             x="40"
             y="60"
@@ -171,7 +190,7 @@ function IndicatorProgressBar(props) {
           />
           <ValueGroup
             transform={`translate(${completedBar.x + 4} 20)`}
-            date={dayjs(startDate).format('YYYY')}
+            date={graphValues.startYear}
             value={startValue.toLocaleString(i18n.language)}
             unit={unit}
             locale={i18n.language}
@@ -205,7 +224,7 @@ function IndicatorProgressBar(props) {
             />
             <ValueGroup
               transform={`translate(${pendingBar.x + 4} 20)`}
-              date={dayjs(latestDate).format('YYYY')}
+              date={graphValues.latestYear}
               value={latestValue.toLocaleString(i18n.language)}
               unit={unit}
             />
@@ -238,7 +257,7 @@ function IndicatorProgressBar(props) {
           />
           <ValueGroup
             transform={`translate(${goalBar.x + 4} 20)`}
-            date={dayjs(goalDate).format('YYYY')}
+            date={graphValues.goalYear}
             value={goalValue.toLocaleString(i18n.language)}
             unit={unit}
           />
