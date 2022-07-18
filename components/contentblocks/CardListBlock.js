@@ -54,7 +54,7 @@ const CardListBlock = (props) => {
               xs="12"
               sm="6"
               lg="4"
-              className="mb-5 d-flex align-items-stretch"
+              className="mb-5 d-flex align-items-stretch mx-auto"
               style={{ transition: 'all 0.5s ease' }}
               role="listitem"
               key={inx}

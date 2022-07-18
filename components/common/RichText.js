@@ -5,7 +5,6 @@ import parse, { domToReact } from 'html-react-parser';
 import PlanContext from 'context/plan';
 
 export default function RichText(props) {
-  console.log(props);
   const { html, className, ...rest } = props;
   const plan = useContext(PlanContext);
 

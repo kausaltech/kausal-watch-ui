@@ -61,12 +61,12 @@ const BotNav = styled(Navbar)`
 `;
 
 const SiteTitle = styled.div`
-  font-size: 1rem;
+  font-size: ${(props) => props.theme.fontSizeBase};
   line-height: 1;
   padding: ${(props) => props.theme.spaces.s150} 0 ${(props) => props.theme.spaces.s150};
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
-    font-size: 1.25rem;
+    font-size: ${(props) => props.theme.fontSizeMd};
   }
 `;
 
