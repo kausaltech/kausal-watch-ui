@@ -32,6 +32,11 @@ const UnitText = styled.tspan`
 
 const LinkedIndicator = styled.div`
   cursor: pointer;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
 `;
 
 const ValueGroup = (props) => {

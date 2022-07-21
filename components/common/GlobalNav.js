@@ -29,13 +29,6 @@ const TopNav = styled(Navbar)`
   }
 `;
 
-const TopNavItems = styled(Navbar)`
-  display: flex;
-  justify-content: flex-start;
-
-`;
-
-
 const BotNav = styled(Navbar)`
   background-color: ${(props) => props.theme.themeColors.white};
   padding: 0;
@@ -197,7 +190,7 @@ const StyledDropdown = styled(UncontrolledDropdown)`
 
   .dropdown-menu {
     border: 0px;
-    padding-top: 0;
+    padding-top: ${(props) => props.theme.spaces.s150};
     box-shadow: none;
   }
   .dropdown-item {
@@ -206,7 +199,7 @@ const StyledDropdown = styled(UncontrolledDropdown)`
 
     .highlighter {
       display: inline-block;
-      padding: ${(props) => props.theme.spaces.s050} 0 calc(${(props) => props.theme.spaces.s050} - 5px);
+      padding: 0 0 calc(${(props) => props.theme.spaces.s050} - 5px);
     }
 
     &:hover {

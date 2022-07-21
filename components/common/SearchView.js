@@ -105,7 +105,7 @@ const HitType = styled.div`
 const SearchResultMeta = styled.div`
   display: flex;
   justify-content: space-between;
-  margin-bottom: ${(props) => props.theme.spaces.s050};
+  margin-bottom: ${(props) => props.theme.spaces.s150};
 `;
 
 const SearchResultList = styled.ul`
@@ -115,18 +115,25 @@ const SearchResultList = styled.ul`
 `;
 
 const StyledSearchResultItem = styled.li`
-  margin: 0 0 ${(props) => props.theme.spaces.s150};
-  padding: ${(props) => props.theme.spaces.s050} 0 ${(props) => props.theme.spaces.s150} 0;
+  margin: 0;
+  padding: ${(props) => props.theme.spaces.s100} 0 ${(props) => props.theme.spaces.s150} 0;
   border-top: 1px solid ${(props) => props.theme.themeColors.dark};
 
   h3 {
     margin: 0 0 ${(props) => props.theme.spaces.s050};
     font-size: ${(props) => props.theme.fontSizeBase};
     font-family: ${(props) => props.theme.fontFamily};
+    text-decoration: underline;
+
+    &:hover {
+      color: ${(props) => props.theme.linkHoverColor};
+      text-decoration: none !important;
+    }
   }
 
   a:hover {
-    text-decoration: underline;
+    color: inherit !important;
+    text-decoration: none !important;
   }
 `;
 

@@ -12,7 +12,7 @@ const PlanListSection = styled.div`
   overflow: auto;
 
   h2, h2 a {
-    margin-bottom: ${(props) => props.theme.spaces.s050};
+    margin-bottom: ${(props) => props.theme.spaces.s100};
     font-size: ${(props) => props.theme.fontSizeMd};
     color: ${(props) => props.theme.themeColors.white};
   }
@@ -29,6 +29,7 @@ const PlanList = styled.div`
 
     &:hover {
       background-color: ${(props) => props.theme.graphColors.grey070};
+      text-decoration: none;
     }
   }
 `;

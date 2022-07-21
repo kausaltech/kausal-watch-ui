@@ -69,6 +69,10 @@ const Address = styled.address`
 
 const CollapseButton = styled(Button)`
   padding: 0;
+
+  &:hover {
+    text-decoration: none;
+  }
 `;
 
 const GET_CONTACT_DETAILS = gql`

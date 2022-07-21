@@ -20,6 +20,7 @@ const GlobalStyle = createGlobalStyle`
 
     &:hover {
       color: ${(props) => props.theme.brandDark};
+      text-decoration: underline;
     }
   }
 

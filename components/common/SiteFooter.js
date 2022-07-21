@@ -125,14 +125,11 @@ const FooterNavItems = styled.ul`
 `;
 
 const FooterNavItem = styled.li`
-  max-width: 300px;
+  max-width: 240px;
   padding-right: ${(props) => props.theme.spaces.s300};
   margin-bottom: ${(props) => props.theme.spaces.s300};
   font-size: ${(props) => props.theme.fontSizeBase};
-
-  .parent-item {
-    font-weight: ${(props) => props.theme.fontWeightBold};
-  }
+ font-weight: ${(props) => props.theme.fontWeightBold};
 
   @media (max-width: ${(props) => props.theme.breakpointLg}) {
     width: 25%;
@@ -156,7 +153,7 @@ const FooterSubnav = styled.ul`
 
 const FooterNavSubItem = styled.li`
   margin-top: ${(props) => props.theme.spaces.s100};
-  font-size: 90%;
+  font-size: ${(props) => props.theme.fontSizeSm};
   font-weight: ${(props) => props.theme.fontWeightNormal};
 `;
 

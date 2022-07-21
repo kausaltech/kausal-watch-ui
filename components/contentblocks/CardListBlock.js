@@ -16,6 +16,10 @@ const CardListSection = styled.div`
     &:hover {
       text-decoration: none;
       color: ${(props) => props.theme.themeColors.black};
+
+      .card-title {
+        text-decoration: underline;
+      }
     }
   }
 `;
@@ -66,7 +70,7 @@ const CardListBlock = (props) => {
                   negative
                 >
                   <div>
-                    <CardHeader>{ card.heading }</CardHeader>
+                    <CardHeader className="card-title">{ card.heading }</CardHeader>
                     <p>{card.content}</p>
                   </div>
                 </Card>

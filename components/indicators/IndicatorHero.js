@@ -98,7 +98,20 @@ a {
   }};
 
   &:hover {
-    color: inherit;
+    color: ${(props) => {
+      switch (props.level) {
+        case 'action':
+          return props.theme.actionColorFg;
+        case 'operational':
+          return props.theme.operationalIndicatorColorFg;
+        case 'tactical':
+          return props.theme.tacticalIndicatorColorFg;
+        case 'strategic':
+          return props.theme.strategicIndicatorColorFg;
+        default:
+          return props.theme.themeColors.black;
+      }
+    }};
     text-decoration: underline;
   }
 }

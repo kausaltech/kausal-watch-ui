@@ -73,7 +73,12 @@ const StyledActionLink = styled.a`
 
   &:hover {
     text-decoration: none;
+
+    .card-title {
+      text-decoration: underline;
+    }
   }
+
 `;
 
 const CategoryIcon = styled(SVG)`
@@ -302,7 +307,7 @@ function ActionCard(props) {
                 <ActionOrgName>{primaryOrg.abbreviation || primaryOrg.name}</ActionOrgName>
               </ActionOrg>
             )}
-          <StyledCardTitle>
+          <StyledCardTitle className="card-title">
             {actionName}
           </StyledCardTitle>
         </ActionCardElement>

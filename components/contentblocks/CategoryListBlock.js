@@ -18,8 +18,12 @@ const CategoryListSection = styled.div`
     color: ${(props) => props.theme.themeColors.black};
 
     &:hover {
-      text-decoration: none;
       color: ${(props) => props.theme.themeColors.black};
+      text-decoration: none;
+
+      .card-title {
+        text-decoration: underline;
+      }
     }
   }
 
@@ -80,7 +84,7 @@ const CategoryListBlock = (props) => {
                     imageTone={cat.color}
                   >
                     <div>
-                      <CardHeader>
+                      <CardHeader className="card-title">
                         { theme.settings.categories.showIdentifiers && (
                           <Identifier>
                             {cat.identifier}

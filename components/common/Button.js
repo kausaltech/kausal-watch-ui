@@ -10,6 +10,12 @@ const StyledButton = styled(BSButton)`
   border-radius: ${(props) => props.theme.btnBorderRadius};
   border-width: ${(props) => props.theme.btnBorderWidth};
   font-weight: ${(props) => props.theme.fontWeightBold};
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: none;
+  }
+
   &.btn {
     &:not(:disabled):not(.disabled):active:focus, &:not(:disabled):not(.disabled):focus, &.focus {
       box-shadow: 0 0 0 0.25rem ${(props) => props.theme.inputBtnFocusColor};
@@ -116,6 +122,7 @@ const StyledButton = styled(BSButton)`
 
   &.btn-link {
     color: ${(props) => props.theme.brandDark};
+    text-decoration: underline;
 
     &:hover {
       text-decoration: none;
@@ -128,7 +135,7 @@ const StyledButton = styled(BSButton)`
   }
 `;
 
-const Button = React.forwardRef((props, ref) => {
+const Button = React.forwardRef(function Button(props, ref) {
   const { children } = props;
 
   return (

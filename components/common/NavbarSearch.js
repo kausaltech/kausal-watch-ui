@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { InputGroup, Popover, PopoverBody } from 'reactstrap';
 import { usePopper } from 'react-popper';
 import styled from 'styled-components';
+import { transparentize } from 'polished';
 import { SearchProvider, WithSearch, SearchBox, Results } from '@elastic/react-search-ui';
 import { Link } from 'common/links';
 import { useTheme } from 'common/theme';
@@ -38,6 +39,9 @@ const SearchButton = styled.button`
   border-radius: ${(props) => props.theme.btnBorderRadius};
   border-width: ${(props) => props.theme.btnBorderWidth};
 
+  &:hover {
+    background-color: ${(props) => transparentize(0.4, props.theme.themeColors.black)};
+  }
   .icon {
     fill: ${(props) => props.isActive === 'true' ? props.theme.themeColors.white : props.theme.brandNavColor} !important;
   }
@@ -87,14 +91,6 @@ const HitItem = styled.li`
   padding: ${(props) => props.theme.spaces.s050};
   margin: 0 -${(props) => props.theme.spaces.s050};
 
-  &:hover {
-    background: ${(props) => props.theme.graphColors.grey010};
-
-    h6 {
-      text-decoration: underline;
-    }
-  }
-
   h6 {
     margin: ${(props) => props.theme.spaces.s050} 0;
     font-size: ${(props) => props.theme.fontSizeBase};
@@ -103,6 +99,15 @@ const HitItem = styled.li`
 
   a {
     color: ${(props) => props.theme.themeColors.black};
+
+    &:hover {
+      background: ${(props) => props.theme.graphColors.grey010};
+      text-decoration: none;
+
+      h6 {
+        text-decoration: underline;
+      }
+    }
   }
 
   em {
