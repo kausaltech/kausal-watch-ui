@@ -199,7 +199,10 @@ function ResultItem(props) {
         </HitHeader>
         <h6>{ hit.title }</h6>
         {hit.highlight && (
-          <HitHighlight dangerouslySetInnerHTML={{__html: hit.highlight}} />
+          <HitHighlight>
+            <span dangerouslySetInnerHTML={{__html: hit.highlight}} />
+            ...
+          </HitHighlight>
         )}
       </a>
     </HitItem>
@@ -364,11 +367,14 @@ function NavbarSearch(props) {
                     isActive={searchOpen.toString()}
                     type="submit"
                     onClick={handleSubmit}
+                    aria-label={t('search')}
                   >
                     <Icon
                       name="search"
                       width="1.25rem"
                       height="1.25rem"
+                      aria-hidden="true"
+                      focusable="false"
                     />
                   </SearchButton>
                 </InputGroup>

@@ -267,7 +267,7 @@ const OfficialText = styled.div`
   }
 
   h2 {
-    font-size: ${(props) => props.theme.fontSizeMd};
+    font-size: ${(props) => props.theme.fontSizeBase};
   }
 `;
 
@@ -423,7 +423,6 @@ function ActionContent({ id }) {
               <OfficialText>
                 <h2>{ t('actions:action-description-official') }</h2>
                 <div className="official-text-content">
-                  <strong>{ t('actions:action-as-in-plan') }</strong>
                   <div dangerouslySetInnerHTML={{ __html: cleanOfficialText }} />
                   {generalContent.officialNameDescription && (
                     <small>{`(${generalContent.officialNameDescription})`}</small>

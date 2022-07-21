@@ -191,9 +191,9 @@ function SearchResultItem({ hit }) {
           <h3>{hit.title}</h3>
         </a>
       </Link>
-      <ResultExcerpt
-        dangerouslySetInnerHTML={{ __html: hit.highlight }}
-      />
+      <ResultExcerpt>
+        <span dangerouslySetInnerHTML={{ __html: hit.highlight }} />...
+      </ResultExcerpt>
       {/* TODO: Add ellipsis or indication for truncated text */}
     </StyledSearchResultItem>
   );
@@ -232,7 +232,7 @@ function SearchResults({ search }) {
   return (
     <Row>
       <Col sm="12" md={{ offset: 2, size: 8 }}>
-        <ResultsHeader>
+        <ResultsHeader role="alert">
           {`${t('number-of-search-results', { count: hits.length })} `}
           &apos;
           {search.q}
