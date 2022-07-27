@@ -12,6 +12,7 @@ import {
   IndicatorListLink,
   ActionListLink,
 } from 'common/links';
+import { usePlan } from 'context/plan';
 
 const Hero = styled.div`
   width: 100%;
@@ -134,6 +135,7 @@ function HeroFullImage(props) {
   } = props;
   const { t } = useTranslation(['common']);
   const theme = useTheme();
+  const plan = usePlan();
   let ActionsIcon = null;
   if (theme.iconActionsUrl !== '') ActionsIcon = () => <SVG src={theme.iconActionsUrl} />;
   let IndicatorsIcon = null;
@@ -159,7 +161,7 @@ function HeroFullImage(props) {
                   )}
                   <div>
                     <h2>
-                      { t('actions') }
+                      { t('actions', { context: plan.generalContent.actionTerm }) }
                       <Icon name="arrowRight" color={theme.neutralDark} />
                     </h2>
                     <p>

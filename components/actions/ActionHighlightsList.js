@@ -87,7 +87,7 @@ function ActionCardList({ t, actions, plan }) {
   return (
     <Row>
       <ListHeader xs="12">
-        <h2>{ t('recently-updated-actions') }</h2>
+        <h2>{ t('recently-updated-actions', {context: plan.generalContent.actionTerm}) }</h2>
       </ListHeader>
       {actions.map((item) => (
         <CardContainer
@@ -110,7 +110,7 @@ function ActionCardList({ t, actions, plan }) {
       <Col xs="12" className="mt-5 mb-5">
         <ActionListLink>
           <Button outline color="primary" tag="a">
-            { t('see-all-actions') }
+            { t('see-all-actions', { context: plan.generalContent.actionTerm }) }
             {' '}
             <Icon name="arrowRight" color="black" />
           </Button>
@@ -142,7 +142,7 @@ function ActionHighlightsList(props) {
     <Query query={GET_ACTION_LIST} variables={queryParams}>
       {({ data, loading, error }) => {
         if (loading) return <ContentLoader />;
-        if (error) return <p>{ t('error-loading-actions') }</p>;
+        if (error) return <p>{ t('error-loading-actions', { context: plan.generalContent.actionTerm }) }</p>;
         return <ActionCardList t={t} actions={data.planActions} plan={plan}/>;
       }}
     </Query>

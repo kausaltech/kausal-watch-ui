@@ -13,6 +13,7 @@ import {
   IndicatorListLink,
   ActionListLink,
 } from 'common/links';
+import { usePlan } from 'context/plan';
 
 const HeroVisual = styled.div`
   position: relative;
@@ -116,6 +117,7 @@ const Highlight = styled.div`
 function FrontHero(props) {
   const { t } = useTranslation();
   const theme = useTheme();
+  const plan = usePlan();
   const {
     bgImage, title, siteDescription, actionsDescription, indicatorsDescription,
   } = props;
@@ -149,7 +151,7 @@ function FrontHero(props) {
                     <IconActions />
                   </Illustration>
                   <div>
-                    <h3>{ t('actions') }</h3>
+                    <h3>{ t('actions', { context: plan.generalContent.actionTerm }) }</h3>
                     <p>
                       { actionsDescription || 'Action Description' }
                     </p>

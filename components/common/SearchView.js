@@ -157,7 +157,7 @@ function SearchResultItem({ hit }) {
   if (object) {
     const typename = object.__typename;
     if (typename === 'Action') {
-      hitTypeName = t('action');
+      hitTypeName = t('action', { context: plan.generalContent.actionTerm });
     } else if (typename === 'Indicator') {
       hitTypeName = t('indicator');
     }

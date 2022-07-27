@@ -9,6 +9,7 @@ import { useTranslation } from 'common/i18n';
 import { IndicatorLink, IndicatorListLink, Link } from 'common/links';
 import OrgSelector from 'components/orgs/OrgSelector';
 import IndicatorValueSummary from 'components/indicators//IndicatorValueSummary';
+import { usePlan } from 'context/plan';
 
 const Hero = styled.header`
   position: relative;
@@ -141,6 +142,10 @@ function IndicatorHero(props) {
   } = props;
   const theme = useTheme();
   const { t } = useTranslation();
+  const plan = usePlan();
+
+  // FIXME: It sucks that we only use the context for the translation key 'action'
+  const indicatorType = indicator.level === 'action' ? t('action', { context: plan.generalContent.actionTerm }) : t(indicator.level);
 
   return (
     <Hero bgColor={theme.brandDark}>
@@ -178,7 +183,7 @@ function IndicatorHero(props) {
                     <IndicatorLevel level={indicator.level}>
                       <IndicatorListLink>
                         <a>
-                          { t(indicator.level) }
+                          { indicatorType }
                         </a>
                       </IndicatorListLink>
                     </IndicatorLevel>

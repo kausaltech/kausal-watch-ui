@@ -2,15 +2,17 @@ import React from 'react';
 import { Container } from 'reactstrap';
 import { useTranslation } from 'common/i18n';
 import { Link } from 'common/links';
+import { usePlan } from 'context/plan';
 
 import Layout, { Meta } from 'components/layout';
 
 function StatusPage() {
   const { t } = useTranslation('common');
+  const plan = usePlan();
 
   return (
     <Layout>
-      <Meta title={t('actions')} />
+      <Meta title={t('actions', { context: plan.generalContent.actionTerm })} />
       <Container>
         <div>
           <hr />

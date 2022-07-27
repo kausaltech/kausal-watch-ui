@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { useTheme } from 'common/theme';
 import { useTranslation } from 'common/i18n';
 import { getStatusColor } from 'common/preprocess';
+import { usePlan } from 'context/plan';
 
 const Status = styled.div`
   color: ${(props) => props.theme.themeColors.black};
@@ -111,6 +112,7 @@ function ActionPhase(props) {
     ...rest } = props;
 
   const { t } = useTranslation(['common', 'actions']);
+  const plan = usePlan();
   let activePhaseName = activePhase?.name;
   let phaseIndex = -1;
 
@@ -120,7 +122,7 @@ function ActionPhase(props) {
   }
   // Override phase name in special case statuses
   const inactive = ['cancelled', 'merged', 'postponed', 'completed'].includes(status.identifier);
-  if (inactive) activePhaseName = status.identifier === 'merged' ? `${t('actions:action-status-merged')}` : status.name;
+  if (inactive) activePhaseName = status.identifier === 'merged' ? `${t('actions:action-status-merged', { context: plan.generalContent.actionTerm })}` : status.name;
 
   return (
     <Status {...rest} className={compact && 'compact'}>

@@ -41,7 +41,7 @@ const ImpactGroupActionList = (props) => {
         <thead>
           <tr>
             <th>{t('action-num')}</th>
-            <th>{t('action-name-title')}</th>
+            <th>{t('action-name-title', { context: plan.generalContent.actionTerm })}</th>
             <th>{t('action-impact')}</th>
             <th>{t('action-progress')}</th>
           </tr>

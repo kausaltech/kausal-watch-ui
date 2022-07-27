@@ -54,7 +54,7 @@ const ActionListBlock = (props) => {
   const actions = planActions.map((act) => ({ ...act, iconSvgUrl: act.categories.find((cat) => cat.iconSvgUrl)?.iconSvgUrl }));
   const groupBy = plan.primaryOrgs.length > 0 ? 'primaryOrg' : 'none';
 
-  const heading = t('actions');
+  const heading = t('actions', { context: plan.generalContent.actionTerm });
   return (
     <ActionListSection color={color}>
       <Container>

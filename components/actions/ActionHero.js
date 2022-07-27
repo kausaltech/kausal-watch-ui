@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import { useTheme } from 'common/theme';
 import { useTranslation } from 'common/i18n';
 import { ActionLink, ActionListLink, Link } from 'common/links';
+import { usePlan } from 'context/plan';
 
 import Icon from 'components/common/Icon';
 
@@ -205,6 +206,7 @@ function ActionHero(props) {
   } = props;
   const theme = useTheme();
   const { t } = useTranslation();
+  const plan = usePlan();
 
   // Theme overlay color as fallback
   let categoryColor = theme.imageOverlay;
@@ -242,7 +244,7 @@ function ActionHero(props) {
                     <ActionsNav aria-label="Actions Pager">
                       <ActionListLink>
                         <a>
-                          <IndexLink>{ t('actions') }</IndexLink>
+                          <IndexLink>{ t('actions', { context: plan.generalContent.actionTerm }) }</IndexLink>
                         </a>
                       </ActionListLink>
                       <div>

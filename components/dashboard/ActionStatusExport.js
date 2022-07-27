@@ -3,14 +3,14 @@ import { cleanActionStatus } from 'common/preprocess';
 import { usePlan } from 'context/plan';
 import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
-async function exportActions(t, actions, actionStatuses, fileFormat = 'excel') {
+async function exportActions(t, actions, actionStatuses, plan, fileFormat = 'excel') {
   const Excel = (await import('exceljs')).default;
   const fileSaver = (await import('file-saver')).default;
   const workbook = new Excel.Workbook();
-  const worksheet = workbook.addWorksheet(t('actions'));
+  const worksheet = workbook.addWorksheet(t('actions', { context: plan.generalContent.actionTerm }));
   worksheet.columns = [
     { header: t('actions:action-identifier'), key: 'id', width: 10 },
-    { header: t('actions:action-name-title'), key: 'name', width: 50 },
+    { header: t('actions:action-name-title', { context: plan.generalContent.actionTerm }), key: 'name', width: 50 },
     // TODO: i18n
     { header: t('actions:status'), key: 'status', width: 20 },
     { header: t('actions:action-implementation-phase'), key: 'implementationPhase', width: 20 },
@@ -85,7 +85,7 @@ async function exportActions(t, actions, actionStatuses, fileFormat = 'excel') {
       const xls64 = await workbook.xlsx.writeBuffer({ base64: true });
       fileSaver.saveAs(
         new Blob([xls64], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }),
-        `${t('actions')}-${today}.xlsx`,
+        `${t('actions', { context: plan.generalContent.actionTerm })}-${today}.xlsx`,
       );
       break;
 
@@ -93,7 +93,7 @@ async function exportActions(t, actions, actionStatuses, fileFormat = 'excel') {
       const csv64 = await workbook.csv.writeBuffer({ base64: true });
       fileSaver.saveAs(
         new Blob([csv64], { type: 'text/csv' }),
-        `${t('actions')}-${today}.csv`,
+        `${t('actions', { context: plan.generalContent.actionTerm })}-${today}.csv`,
       );
       break;
 
@@ -107,7 +107,7 @@ export default function ActionStatusExport({ actions }) {
   const plan = usePlan();
   const { actionStatuses } = plan;
   const handleExport = async (format) => {
-    await exportActions(t, actions, actionStatuses, format);
+    await exportActions(t, actions, actionStatuses, plan, format);
   };
   return (
     <UncontrolledDropdown>

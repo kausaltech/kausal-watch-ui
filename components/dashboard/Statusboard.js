@@ -461,7 +461,7 @@ function Statusboard(props) {
   });
 
   if (loading) return <ContentLoader />;
-  if (error) return <ErrorMessage message={t('error-loading-actions')} />;
+  if (error) return <ErrorMessage message={t('error-loading-actions', { context: plan.generalContent.actionTerm })} />;
 
   const { plan: loadedPlan, ...otherProps } = data;
   const { categoryTypes, primaryOrgs } = loadedPlan;

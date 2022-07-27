@@ -9,6 +9,7 @@ import { useTranslation } from 'common/i18n';
 import TextInput from 'components/common/TextInput';
 import Button from 'components/common/Button';
 import DropDown from 'components/common/DropDown';
+import { usePlan } from 'context/plan';
 
 const FiltersList = styled.div`
   margin: ${(props) => props.theme.spaces.s150} 0;
@@ -104,6 +105,7 @@ function ActionListFilterBadges({
   filters, activeFilters, actionCount, onReset,
 }) {
   const { t } = useTranslation();
+  const plan = usePlan();
   const badges = filters.filter((item) => activeFilters[item.identifier]).map((item, index) => {
     let name;
     if (item.type !== 'text') {
@@ -126,7 +128,7 @@ function ActionListFilterBadges({
   return (
     <FiltersList aria-live="assertive">
       <span className="count">
-        { `${actionCount} ${t('filter-result-actions')}` }
+        { `${actionCount} ${t('filter-result-actions', { context: plan.generalContent.actionTerm })}` /* FIXME: Translation should take number into account */}
       </span>
       { badges.length > 0 && <span className="visually-hidden">{t('active-filters')}</span>}
       {/* TODO: animate transition */}

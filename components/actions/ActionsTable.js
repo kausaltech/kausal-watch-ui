@@ -66,7 +66,7 @@ function ActionsTable(props) {
     <Table hover responsive>
       <thead>
         <tr>
-          <th colSpan="2" scope="col">{ t('action') }</th>
+          <th colSpan="2" scope="col">{ t('action', { context: plan.generalContent.actionTerm }) }</th>
           <th scope="col">{ t('action-progress') }</th>
           <th scope="col">{ t('action-impact') }</th>
         </tr>

@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import dayjs from '../../common/dayjs';
 import { withTranslation } from '../../common/i18n';
 import { IndicatorLink } from '../../common/links';
+import { usePlan } from 'context/plan';
 
 
 const IndicatorValue = styled.div`
@@ -142,13 +143,17 @@ function IndicatorCard(props) {
     latestValue,
     resolution,
   } = props;
+  const plan = usePlan();
+
+  // FIXME: It sucks that we only use the context for the translation key 'action'
+  const indicatorType = level === 'action' ? t('action', { context: plan.generalContent.actionTerm }) : t(level);
 
   return (
     <CardLink level={level} indicatorId={objectid}>
       <Indicator level={level}>
         <CardBody>
           <div>
-            <IndicatorType>{ t(level) }</IndicatorType>
+            <IndicatorType>{ indicatorType }</IndicatorType>
             <IndicatorTitle>
               { number && <IndicatorNumber>{ number }</IndicatorNumber> }
               { name }

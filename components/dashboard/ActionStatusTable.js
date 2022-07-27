@@ -442,7 +442,7 @@ const ActionRow = React.memo(function ActionRow(props) {
 
     if (merged) return (
       <div>
-        <h5>{ ` ${t('actions:action-status-merged')}: ${getMergedName(merged, planId)}.` }</h5>
+        <h5>{ ` ${t('actions:action-status-merged', { context: plan.generalContent.actionTerm })}: ${getMergedName(merged, planId)}.` }</h5>
       </div>
     )
     if (!activePhase) return (
@@ -769,7 +769,7 @@ const ActionStatusTable = (props) => {
   const directionLabel = direction === 1 ? t('common:ascending') : t('common:descending');
   const columnLabel = {
     identifier: t('actions:action-id'),
-    name: t('actions:action-name-title'),
+    name: t('actions:action-name-title', { context: plan.generalContent.actionTerm }),
     updatedAt: t('actions:action-last-updated'),
     implementationPhase: t('actions:action-implementation-phase')
 

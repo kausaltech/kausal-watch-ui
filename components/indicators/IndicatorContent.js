@@ -205,7 +205,7 @@ function IndicatorDetails({ id }) {
           <Container>
             <Row>
               <Col className="mb-4">
-                <h2>{t('indicator-related-actions')}</h2>
+                <h2>{t('indicator-related-actions', { context: plan.generalContent.actionTerm })}</h2>
               </Col>
             </Row>
             <Row>

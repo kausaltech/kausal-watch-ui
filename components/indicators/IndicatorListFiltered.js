@@ -12,6 +12,7 @@ import Icon from '../common/Icon';
 import dayjs from '../../common/dayjs';
 import { withTranslation } from '../../common/i18n';
 import { beautifyValue } from '../../common/data/format';
+import { usePlan } from 'context/plan';
 
 import IndicatorListFilters from './IndicatorListFilters';
 
@@ -195,6 +196,7 @@ const IndicatorListFiltered = (props) => {
   const [activeCategory, setActiveCategory] = useState('');
   const [activeSearch, setActiveSearch] = useState('');
   const [visibleGroups, setVisibleGroups] = useState({ 0: true });
+  const plan = usePlan();
 
   const toggleHidden = (idx) => {
     const newGroups = {};
@@ -355,6 +357,8 @@ const IndicatorListFiltered = (props) => {
                 { headers }
               </tr>
               {group.map((item) => {
+                // FIXME: It sucks that we only use the context for the translation key 'action'
+                const indicatorType = item.level === 'action' ? t('action', { context: plan.generalContent.actionTerm }) : t(item.level);
                 let [normalizedValue, normalizedUnit] = [null, null];
                 // We currently support only one normalizer, the population indicator
                 const normalizations = item.common?.normalizations;
@@ -386,7 +390,7 @@ const IndicatorListFiltered = (props) => {
                     { !allIndicatorsHaveSameLevel &&
                       <IndentableTableCell>
                         <IndicatorType level={item.level}>
-                          { t(item.level) || <span>-</span> }
+                          { indicatorType || <span>-</span> }
                         </IndicatorType>
                       </IndentableTableCell>
                     }

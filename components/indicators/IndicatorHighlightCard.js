@@ -6,6 +6,7 @@ import {
 import styled from 'styled-components';
 import { withTranslation } from '../../common/i18n';
 import { IndicatorLink } from '../../common/links';
+import { usePlan } from 'context/plan';
 
 const IndicatorType = styled.div`
   margin-bottom: .5em;
@@ -106,6 +107,10 @@ function IndicatorHighlightCard(props) {
     value,
     unit,
   } = props;
+  const plan = usePlan();
+
+  // FIXME: It sucks that we only use the context for the translation key 'action'
+  const indicatorType = level === 'action' ? t('action', { context: plan.generalContent.actionTerm }) : t(level);
 
   return (
     <StyledCard>
@@ -125,7 +130,7 @@ function IndicatorHighlightCard(props) {
         </a>
       </IndicatorLink>
       <CardBody>
-        <IndicatorType>{ t(level) }</IndicatorType>
+        <IndicatorType>{ indicatorType }</IndicatorType>
         <IndicatorLink id={objectid}>
           <a>
             <StyledCardTitle tag="h3">{ name }</StyledCardTitle>

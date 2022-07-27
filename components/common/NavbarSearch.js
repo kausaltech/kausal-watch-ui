@@ -165,6 +165,7 @@ const Arrow = styled.div`
 
 function ResultItem(props) {
   const { t } = useTranslation();
+  const plan = usePlan();
   const { hit } = props;
   const itemImage = hit.plan.image?.rendition?.src;
   // FIXME: Group by hit.object.__typename?
@@ -174,7 +175,7 @@ function ResultItem(props) {
     if (object) {
       const typename = object.__typename;
       if (typename === 'Action') {
-        return t('action');
+        return t('action', { context: plan.generalContent.actionTerm });
       } else if (typename === 'Indicator') {
         return t('indicator');
       }

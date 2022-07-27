@@ -300,7 +300,7 @@ function MergedAction({ action, theme }) {
   );
 }
 
-function MergedActionList({ actions, t, theme }) {
+function MergedActionList({ actions, t, theme, plan }) {
   if (!actions || !actions.length) {
     // render nothing
     return null;
@@ -312,7 +312,7 @@ function MergedActionList({ actions, t, theme }) {
 
   return (
     <ActionSection>
-      <h2>{ t('actions:action-merged') }</h2>
+      <h2>{ t('actions:action-merged', { context: plan.generalContent.actionTerm }) }</h2>
       {mergedActions}
     </ActionSection>
   );
@@ -354,7 +354,7 @@ function ActionContent({ id }) {
   if (loading) return <ContentLoader />;
   if (error) return <ErrorMessage message={error.message} />;
   if (!action) {
-    return <ErrorMessage statusCode={404} message={t('action-not-found')} />;
+    return <ErrorMessage statusCode={404} message={t('action-not-found', { context: plan.generalContent.actionTerm })} />;
   }
 
   const updated = dayjs(action.updatedAt).format('L');
@@ -368,8 +368,8 @@ function ActionContent({ id }) {
   const hasPhases = plan.actionImplementationPhases.length > 0;
 
   const metaTitle = plan.hideActionIdentifiers
-    ? `${t('action')}: ${action.name}`
-    : `${t('action')} ${action.identifier}`;
+    ? `${t('action', { context: plan.generalContent.actionTerm })}: ${action.name}`
+    : `${t('action', { context: plan.generalContent.actionTerm })} ${action.identifier}`;
 
   return (
     <div>
@@ -446,7 +446,7 @@ function ActionContent({ id }) {
 
               </>
             ) : ''}
-            <MergedActionList t={t} theme={theme} actions={mergedActions} />
+            <MergedActionList t={t} theme={theme} actions={mergedActions} plan={plan} />
 
             { action.statusUpdates.length > 0
             && (
@@ -612,7 +612,7 @@ function ActionContent({ id }) {
           <Container>
             <Row>
               <Col sm="12">
-                <SectionHeader>{ t('actions:action-what-effect-this-has') }</SectionHeader>
+                <SectionHeader>{ t('actions:action-what-effect-this-has', { context: plan.generalContent.actionTerm }) }</SectionHeader>
               </Col>
             </Row>
           </Container>
