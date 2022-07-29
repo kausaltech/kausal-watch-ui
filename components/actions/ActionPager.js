@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { ActionLink, actionPropType } from '../../common/links';
 import Icon from '../common/Icon';
 import Button from '../common/Button';
-import { withTranslation } from '../../common/i18n';
+import { getActionTermContext, withTranslation } from '../../common/i18n';
 import { usePlan } from 'context/plan';
 
 const Pager = styled.div`
@@ -42,7 +42,7 @@ const ActionPager = (props) => {
               <a>
                 <PageButton color="primary" outline>
                   <Icon name="arrowLeft" />
-                  { t('action-previous', { context: plan.generalContent.actionTerm }) }
+                  { t('action-previous', getActionTermContext(plan)) }
                 </PageButton>
               </a>
             </ActionLink>
@@ -54,7 +54,7 @@ const ActionPager = (props) => {
             <ActionLink action={nextAction}>
               <a>
                 <PageButton color="primary" outline>
-                  { t('action-next', { context: plan.generalContent.actionTerm }) }
+                  { t('action-next', getActionTermContext(plan)) }
                   <Icon name="arrowRight" />
                 </PageButton>
               </a>

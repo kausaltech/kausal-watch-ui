@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { useTheme } from 'common/theme';
-import { useTranslation } from 'common/i18n';
+import { getActionTermContext, useTranslation } from 'common/i18n';
 import { getStatusColor } from 'common/preprocess';
 import { usePlan } from 'context/plan';
 
@@ -122,7 +122,7 @@ function ActionPhase(props) {
   }
   // Override phase name in special case statuses
   const inactive = ['cancelled', 'merged', 'postponed', 'completed'].includes(status.identifier);
-  if (inactive) activePhaseName = status.identifier === 'merged' ? `${t('actions:action-status-merged', { context: plan.generalContent.actionTerm })}` : status.name;
+  if (inactive) activePhaseName = status.identifier === 'merged' ? `${t('actions:action-status-merged', getActionTermContext(plan))}` : status.name;
 
   return (
     <Status {...rest} className={compact && 'compact'}>

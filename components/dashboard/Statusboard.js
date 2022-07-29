@@ -6,7 +6,7 @@ import {
   Container, Row, Col, Nav, NavItem, Alert
 } from 'reactstrap';
 import styled from 'styled-components';
-import { useTranslation } from 'common/i18n';
+import { getActionTermContext, useTranslation } from 'common/i18n';
 import { constructOrgHierarchy, orgHasActions } from 'common/organizations';
 import ContentLoader from 'components/common/ContentLoader';
 import ErrorMessage from 'components/common/ErrorMessage';
@@ -461,7 +461,7 @@ function Statusboard(props) {
   });
 
   if (loading) return <ContentLoader />;
-  if (error) return <ErrorMessage message={t('error-loading-actions', { context: plan.generalContent.actionTerm })} />;
+  if (error) return <ErrorMessage message={t('error-loading-actions', getActionTermContext(plan))} />;
 
   const { plan: loadedPlan, ...otherProps } = data;
   const { categoryTypes, primaryOrgs } = loadedPlan;

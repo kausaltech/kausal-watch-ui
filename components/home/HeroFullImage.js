@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTranslation } from 'common/i18n';
+import { getActionTermContext, useTranslation } from 'common/i18n';
 import { useTheme } from 'common/theme';
 import PropTypes from 'prop-types';
 import SVG from 'react-inlinesvg';
@@ -161,7 +161,7 @@ function HeroFullImage(props) {
                   )}
                   <div>
                     <h2>
-                      { t('actions', { context: plan.generalContent.actionTerm }) }
+                      { t('actions', getActionTermContext(plan)) }
                       <Icon name="arrowRight" color={theme.neutralDark} />
                     </h2>
                     <p>

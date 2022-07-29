@@ -8,7 +8,7 @@ import { gql } from '@apollo/client';
 import { cleanActionStatus, getStatusColor } from 'common/preprocess';
 import { ActionLink } from 'common/links';
 import { useTheme } from 'common/theme';
-import { useTranslation } from 'common/i18n';
+import { getActionTermContext, useTranslation } from 'common/i18n';
 import PlanContext from 'context/plan';
 import PlanChip from 'components/plans/PlanChip';
 
@@ -286,7 +286,7 @@ function ActionCard(props) {
           >
             { mergedWith ? (
               <StatusName>
-                { t('actions:action-status-merged', { context: plan.generalContent.actionTerm }) }
+                { t('actions:action-status-merged', getActionTermContext(plan)) }
                 <span> &rarr; </span>
                 { getMergedName(mergedWith, plan.id) }
               </StatusName>

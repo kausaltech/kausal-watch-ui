@@ -10,7 +10,7 @@ import { useRouter } from 'next/router';
 
 import { getActionLinkProps } from 'common/links';
 import dayjs from 'common/dayjs';
-import { useTranslation } from 'common/i18n';
+import { getActionTermContext, useTranslation } from 'common/i18n';
 import PlanContext from 'context/plan';
 import { cleanActionStatus } from 'common/preprocess';
 
@@ -312,7 +312,7 @@ function MergedActionList({ actions, t, theme, plan }) {
 
   return (
     <ActionSection>
-      <h2>{ t('actions:action-merged', { context: plan.generalContent.actionTerm }) }</h2>
+      <h2>{ t('actions:action-merged', getActionTermContext(plan)) }</h2>
       {mergedActions}
     </ActionSection>
   );
@@ -354,7 +354,7 @@ function ActionContent({ id }) {
   if (loading) return <ContentLoader />;
   if (error) return <ErrorMessage message={error.message} />;
   if (!action) {
-    return <ErrorMessage statusCode={404} message={t('action-not-found', { context: plan.generalContent.actionTerm })} />;
+    return <ErrorMessage statusCode={404} message={t('action-not-found', getActionTermContext(plan))} />;
   }
 
   const updated = dayjs(action.updatedAt).format('L');
@@ -368,8 +368,8 @@ function ActionContent({ id }) {
   const hasPhases = plan.actionImplementationPhases.length > 0;
 
   const metaTitle = plan.hideActionIdentifiers
-    ? `${t('action', { context: plan.generalContent.actionTerm })}: ${action.name}`
-    : `${t('action', { context: plan.generalContent.actionTerm })} ${action.identifier}`;
+    ? `${t('action', getActionTermContext(plan))}: ${action.name}`
+    : `${t('action', getActionTermContext(plan))} ${action.identifier}`;
 
   return (
     <div>
@@ -612,7 +612,7 @@ function ActionContent({ id }) {
           <Container>
             <Row>
               <Col sm="12">
-                <SectionHeader>{ t('actions:action-what-effect-this-has', { context: plan.generalContent.actionTerm }) }</SectionHeader>
+                <SectionHeader>{ t('actions:action-what-effect-this-has', getActionTermContext(plan)) }</SectionHeader>
               </Col>
             </Row>
           </Container>

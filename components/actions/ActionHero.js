@@ -5,7 +5,7 @@ import {
 } from 'reactstrap';
 import styled from 'styled-components';
 import { useTheme } from 'common/theme';
-import { useTranslation } from 'common/i18n';
+import { getActionTermContext, useTranslation } from 'common/i18n';
 import { ActionLink, ActionListLink, Link } from 'common/links';
 import { usePlan } from 'context/plan';
 
@@ -244,7 +244,7 @@ function ActionHero(props) {
                     <ActionsNav aria-label="Actions Pager">
                       <ActionListLink>
                         <a>
-                          <IndexLink>{ t('actions', { context: plan.generalContent.actionTerm }) }</IndexLink>
+                          <IndexLink>{ t('actions', getActionTermContext(plan)) }</IndexLink>
                         </a>
                       </ActionListLink>
                       <div>

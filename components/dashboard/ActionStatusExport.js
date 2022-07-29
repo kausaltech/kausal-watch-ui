@@ -1,4 +1,4 @@
-import { useTranslation } from 'common/i18n';
+import { getActionTermContext, useTranslation } from 'common/i18n';
 import { cleanActionStatus } from 'common/preprocess';
 import { usePlan } from 'context/plan';
 import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
@@ -7,10 +7,10 @@ async function exportActions(t, actions, actionStatuses, plan, fileFormat = 'exc
   const Excel = (await import('exceljs')).default;
   const fileSaver = (await import('file-saver')).default;
   const workbook = new Excel.Workbook();
-  const worksheet = workbook.addWorksheet(t('actions', { context: plan.generalContent.actionTerm }));
+  const worksheet = workbook.addWorksheet(t('actions', getActionTermContext(plan)));
   worksheet.columns = [
     { header: t('actions:action-identifier'), key: 'id', width: 10 },
-    { header: t('actions:action-name-title', { context: plan.generalContent.actionTerm }), key: 'name', width: 50 },
+    { header: t('actions:action-name-title', getActionTermContext(plan)), key: 'name', width: 50 },
     // TODO: i18n
     { header: t('actions:status'), key: 'status', width: 20 },
     { header: t('actions:action-implementation-phase'), key: 'implementationPhase', width: 20 },
@@ -85,7 +85,7 @@ async function exportActions(t, actions, actionStatuses, plan, fileFormat = 'exc
       const xls64 = await workbook.xlsx.writeBuffer({ base64: true });
       fileSaver.saveAs(
         new Blob([xls64], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }),
-        `${t('actions', { context: plan.generalContent.actionTerm })}-${today}.xlsx`,
+        `${t('actions', getActionTermContext(plan))}-${today}.xlsx`,
       );
       break;
 
@@ -93,7 +93,7 @@ async function exportActions(t, actions, actionStatuses, plan, fileFormat = 'exc
       const csv64 = await workbook.csv.writeBuffer({ base64: true });
       fileSaver.saveAs(
         new Blob([csv64], { type: 'text/csv' }),
-        `${t('actions', { context: plan.generalContent.actionTerm })}-${today}.csv`,
+        `${t('actions', getActionTermContext(plan))}-${today}.csv`,
       );
       break;
 

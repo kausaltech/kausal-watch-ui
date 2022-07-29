@@ -5,7 +5,7 @@ import {
 import { debounce } from 'lodash';
 import styled from 'styled-components';
 import { useTheme } from 'common/theme';
-import { useTranslation } from 'common/i18n';
+import { getActionTermContext, useTranslation } from 'common/i18n';
 import TextInput from 'components/common/TextInput';
 import Button from 'components/common/Button';
 import DropDown from 'components/common/DropDown';
@@ -128,7 +128,7 @@ function ActionListFilterBadges({
   return (
     <FiltersList aria-live="assertive">
       <span className="count">
-        { `${actionCount} ${t('filter-result-actions', { context: plan.generalContent.actionTerm })}` /* FIXME: Translation should take number into account */}
+        { `${actionCount} ${t('filter-result-actions', getActionTermContext(plan))}` /* FIXME: Translation should take number into account */}
       </span>
       { badges.length > 0 && <span className="visually-hidden">{t('active-filters')}</span>}
       {/* TODO: animate transition */}

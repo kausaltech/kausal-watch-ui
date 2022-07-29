@@ -10,7 +10,7 @@ import { useTheme } from 'common/theme';
 import { IndicatorLink } from '../../common/links';
 import Icon from '../common/Icon';
 import dayjs from '../../common/dayjs';
-import { withTranslation } from '../../common/i18n';
+import { getActionTermContext, withTranslation } from '../../common/i18n';
 import { beautifyValue } from '../../common/data/format';
 import { usePlan } from 'context/plan';
 
@@ -358,7 +358,7 @@ const IndicatorListFiltered = (props) => {
               </tr>
               {group.map((item) => {
                 // FIXME: It sucks that we only use the context for the translation key 'action'
-                const indicatorType = item.level === 'action' ? t('action', { context: plan.generalContent.actionTerm }) : t(item.level);
+                const indicatorType = item.level === 'action' ? t('action', getActionTermContext(plan)) : t(item.level);
                 let [normalizedValue, normalizedUnit] = [null, null];
                 // We currently support only one normalizer, the population indicator
                 const normalizations = item.common?.normalizations;

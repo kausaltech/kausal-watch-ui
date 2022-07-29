@@ -12,7 +12,7 @@ import Icon from 'components/common/Icon';
 import PlanChip from 'components/plans/PlanChip';
 import { usePlan } from 'context/plan';
 import { useApolloClient } from '@apollo/client';
-import { useTranslation } from 'common/i18n';
+import { getActionTermContext, useTranslation } from 'common/i18n';
 
 const TextInput = styled.input`
   display: ${(props) => (props.isOpen === 'true' ? 'block' : 'hidden')};
@@ -175,7 +175,7 @@ function ResultItem(props) {
     if (object) {
       const typename = object.__typename;
       if (typename === 'Action') {
-        return t('action', { context: plan.generalContent.actionTerm });
+        return t('action', getActionTermContext(plan));
       } else if (typename === 'Indicator') {
         return t('indicator');
       }

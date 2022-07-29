@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container } from 'reactstrap';
-import { useTranslation } from 'common/i18n';
+import { getActionTermContext, useTranslation } from 'common/i18n';
 import { Link } from 'common/links';
 import { usePlan } from 'context/plan';
 
@@ -12,7 +12,7 @@ function StatusPage() {
 
   return (
     <Layout>
-      <Meta title={t('actions', { context: plan.generalContent.actionTerm })} />
+      <Meta title={t('actions', getActionTermContext(plan))} />
       <Container>
         <div>
           <hr />

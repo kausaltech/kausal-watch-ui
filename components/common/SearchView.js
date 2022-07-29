@@ -6,7 +6,7 @@ import {
   Container, Row, Col, Input, Label, FormGroup, Alert
 } from 'reactstrap';
 import { Link } from 'common/links';
-import { useTranslation } from 'common/i18n';
+import { getActionTermContext, useTranslation } from 'common/i18n';
 import TextInput from 'components/common/TextInput';
 import Button from 'components/common/Button';
 import PlanChip from 'components/plans/PlanChip';
@@ -157,7 +157,7 @@ function SearchResultItem({ hit }) {
   if (object) {
     const typename = object.__typename;
     if (typename === 'Action') {
-      hitTypeName = t('action', { context: plan.generalContent.actionTerm });
+      hitTypeName = t('action', getActionTermContext(plan));
     } else if (typename === 'Indicator') {
       hitTypeName = t('indicator');
     }

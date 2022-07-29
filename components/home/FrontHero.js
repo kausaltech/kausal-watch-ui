@@ -8,7 +8,7 @@ import {
 import SVG from 'react-inlinesvg';
 import styled from 'styled-components';
 import { useTheme } from 'common/theme';
-import { useTranslation } from 'common/i18n';
+import { getActionTermContext, useTranslation } from 'common/i18n';
 import {
   IndicatorListLink,
   ActionListLink,
@@ -151,7 +151,7 @@ function FrontHero(props) {
                     <IconActions />
                   </Illustration>
                   <div>
-                    <h3>{ t('actions', { context: plan.generalContent.actionTerm }) }</h3>
+                    <h3>{ t('actions', getActionTermContext(plan)) }</h3>
                     <p>
                       { actionsDescription || 'Action Description' }
                     </p>

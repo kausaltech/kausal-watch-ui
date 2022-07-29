@@ -9,7 +9,7 @@ import { gql, useQuery } from '@apollo/client';
 
 import { IndicatorListLink } from 'common/links';
 import { usePlan } from 'context/plan';
-import { useTranslation } from 'common/i18n';
+import { getActionTermContext, useTranslation } from 'common/i18n';
 
 import RichText from 'components/common/RichText';
 import ContentLoader from 'components/common/ContentLoader';
@@ -205,7 +205,7 @@ function IndicatorDetails({ id }) {
           <Container>
             <Row>
               <Col className="mb-4">
-                <h2>{t('indicator-related-actions', { context: plan.generalContent.actionTerm })}</h2>
+                <h2>{t('indicator-related-actions', getActionTermContext(plan))}</h2>
               </Col>
             </Row>
             <Row>

@@ -145,7 +145,7 @@ function IndicatorHero(props) {
   const plan = usePlan();
 
   // FIXME: It sucks that we only use the context for the translation key 'action'
-  const indicatorType = indicator.level === 'action' ? t('action', { context: plan.generalContent.actionTerm }) : t(indicator.level);
+  const indicatorType = indicator.level === 'action' ? t('action', getActionTermContext(plan)) : t(indicator.level);
 
   return (
     <Hero bgColor={theme.brandDark}>

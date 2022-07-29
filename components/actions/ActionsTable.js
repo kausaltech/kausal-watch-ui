@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Table } from 'reactstrap';
 import { gql } from '@apollo/client';
 
-import { withTranslation } from 'common/i18n';
+import { getActionTermContext, withTranslation } from 'common/i18n';
 import { ActionLink } from 'common/links';
 import PlanContext from 'context/plan';
 import { cleanActionStatus } from 'common/preprocess';
@@ -66,7 +66,7 @@ function ActionsTable(props) {
     <Table hover responsive>
       <thead>
         <tr>
-          <th colSpan="2" scope="col">{ t('action', { context: plan.generalContent.actionTerm }) }</th>
+          <th colSpan="2" scope="col">{ t('action', getActionTermContext(plan)) }</th>
           <th scope="col">{ t('action-progress') }</th>
           <th scope="col">{ t('action-impact') }</th>
         </tr>
