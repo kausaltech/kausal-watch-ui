@@ -66,6 +66,7 @@ export const themeProp = exact({
   causalityDecreasesColor: css('color'),
   causalityIncreasesColor: css('color'),
   causalityIsPartOfColor: css('color'),
+  combinedIconsFilename: string.isRequired,
   componentActiveBg: string.isRequired,
   customSelectIndicator: string.isRequired,
   fontFamily: string.isRequired,

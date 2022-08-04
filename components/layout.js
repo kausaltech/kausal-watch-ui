@@ -8,6 +8,7 @@ import PlanContext from 'context/plan';
 import SiteContext from 'context/site';
 import ThemedGlobalStyles from 'common/ThemedGlobalStyles';
 import theme from 'common/theme';
+import { CombinedIconSymbols } from 'components/common/Icon';
 
 import Header from './header';
 import Footer from './Footer';
@@ -62,6 +63,7 @@ function Layout({ children }) {
         siteTitle={displaySite.navigationTitle}
       />
       <Content id="main">
+        <CombinedIconSymbols />
         {children}
       </Content>
       <Footer
