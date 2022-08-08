@@ -39,7 +39,6 @@ const StyledCard = styled(Card)`
 const AdminPage = () => {
   const plan = useContext(PlanContext);
 
-  console.log("PLAN", plan);
   const { t } = useTranslation();
   if (typeof window !== "undefined" && plan.adminUrl) window.location.replace(plan.adminUrl);
 

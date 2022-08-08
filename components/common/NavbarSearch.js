@@ -341,10 +341,14 @@ function NavbarSearch(props) {
               closeSearch();
             } else closeSearch();
           };
+
           return (
             <li ref={searchElement} className="nav-item">
               <SearchControls ref={setReferenceElement}>
-              <form role="combobox" autoComplete="off" aria-expanded="false" aria-haspopup="listbox" aria-labelledby="downshift-5-label">
+              <form
+                autoComplete="off"
+                aria-label={t('search')}
+              >
                 <InputGroup>
                   <TextInput
                     type="search"
@@ -352,15 +356,18 @@ function NavbarSearch(props) {
                     name="q"
                     autocomplete="off"
                     aria-autocomplete="list"
-                    aria-labelledby="downshift-5-label"
                     placeholder={t('search')}
                     aria-label={t('search')}
+                    role="combobox"
+                    aria-expanded={searchTerm.length > 1}
+                    aria-haspopup="listbox"
                     value={searchTerm}
                     onChange={e => setSearchTerm(e.target.value, {
                       autocompleteResults: true,
                       autocompleteMinimumCharacters: 2,
                       debounce: 200,
                     })}
+                    onFocus={e => setSearchOpen(true)}
                     ref={searchInput}
                     isOpen={searchOpen.toString()}
                   />
@@ -384,7 +391,11 @@ function NavbarSearch(props) {
               {/* TODO: is there a way to control results visibility better? */}
               {/* TODO: display loading state but currently isLoading does not update itself */}
               { searchTerm.length > 1 && searchOpen &&
-                <ResultsBox ref={setPopperElement} style={styles.popper} {...attributes.popper}>
+                <ResultsBox
+                  ref={setPopperElement}
+                  style={styles.popper}
+                  {...attributes.popper}
+                >
                   <Arrow ref={setArrowElement} style={styles.arrow} />
                   <ResultList results={results} searchTerm={searchTerm} anchor={referenceElement}/>
                 </ResultsBox>

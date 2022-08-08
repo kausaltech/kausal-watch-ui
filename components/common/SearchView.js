@@ -282,7 +282,6 @@ function SearchView(props) {
     onSearchChange(userSearch);
   };
 
-  console.log(search);
   return (
     <>
       <SearchSection id="search-results">

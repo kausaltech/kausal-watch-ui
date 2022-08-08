@@ -51,7 +51,7 @@ const CardListBlock = (props) => {
       <Container>
         { heading && (<SectionHeader>{ heading }</SectionHeader>)}
         <Content>{ lead }</Content>
-        <Row>
+        <Row tag="ul">
           { cards?.map((card,inx) => (
             <Col
               tag="li"
@@ -60,7 +60,6 @@ const CardListBlock = (props) => {
               lg="4"
               className="mb-5 d-flex align-items-stretch mx-auto"
               style={{ transition: 'all 0.5s ease' }}
-              role="listitem"
               key={inx}
             >
               <a href={card.link} className="card-wrapper">

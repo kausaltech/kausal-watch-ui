@@ -585,7 +585,7 @@ function ActionContent({ id }) {
                 <SectionHeader>{ t('actions:related-actions') }</SectionHeader>
               </Col>
             </Row>
-            <Row>
+            <Row tag="ul">
               {action.relatedActions.map((relAction) => (
                 <Col
                   tag="li"
@@ -594,7 +594,6 @@ function ActionContent({ id }) {
                   lg="4"
                   className="mb-5 d-flex align-items-stretch"
                   style={{ transition: 'all 0.5s ease' }}
-                  role="listitem"
                   key={relAction.id}
                 >
                   <ActionCard

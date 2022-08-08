@@ -364,36 +364,32 @@ const ActionListResults = (props) => {
       </ActionListSection>
       <IndicatorsTabs>
         <Container>
-          <Nav role="tablist">
-            <NavItem>
-              <Tab
-                className={`nav-link ${!displayDashboard ? 'active' : ''}`}
-                onClick={() => handleChange('view', 'list')}
-                passHref
-                role="tab"
-                tabIndex="0"
-                aria-selected={!displayDashboard}
-                aria-controls="list-view"
-                id="list-tab"
-              >
-                { t('actions-as-list') }
-              </Tab>
-            </NavItem>
-            <NavItem>
-              <Tab
-                className={`nav-link ${displayDashboard ? 'active' : ''}`}
-                onClick={() => handleChange('view', 'dashboard')}
-                passHref
-                role="tab"
-                tabIndex="0"
-                aria-selected={displayDashboard}
-                aria-controls="dashboard-view"
-                id="dashboard-tab"
-              >
-                { t('dashboard') }
-              </Tab>
-            </NavItem>
-          </Nav>
+          <div role="tablist">
+            <Tab
+              className={`nav-link ${!displayDashboard ? 'active' : ''}`}
+              onClick={() => handleChange('view', 'list')}
+              passHref
+              role="tab"
+              tabIndex="0"
+              aria-selected={!displayDashboard}
+              aria-controls="list-view"
+              id="list-tab"
+            >
+              { t('actions-as-list') }
+            </Tab>
+            <Tab
+              className={`nav-link ${displayDashboard ? 'active' : ''}`}
+              onClick={() => handleChange('view', 'dashboard')}
+              passHref
+              role="tab"
+              tabIndex="0"
+              aria-selected={displayDashboard}
+              aria-controls="dashboard-view"
+              id="dashboard-tab"
+            >
+              { t('dashboard') }
+            </Tab>
+          </div>
         </Container>
       </IndicatorsTabs>
       <Container>

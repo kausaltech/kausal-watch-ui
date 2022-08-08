@@ -64,7 +64,7 @@ const CategoryListBlock = (props) => {
       <Container>
         { heading && (<SectionHeader>{ heading }</SectionHeader>)}
         <RichText html={lead} className="lead-text" />
-        <Row>
+        <Row tag="ul">
           { categories?.map((cat) => cat.categoryPage && (
             <Col
               tag="li"
@@ -74,7 +74,6 @@ const CategoryListBlock = (props) => {
               key={cat.id}
               className="mb-5 d-flex align-items-stretch"
               style={{ transition: 'all 0.5s ease' }}
-              role="listitem"
             >
               <Link href={cat.categoryPage.urlPath}>
                 <a className="card-wrapper">
