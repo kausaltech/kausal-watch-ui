@@ -247,6 +247,10 @@ const ActionSection = styled.div`
   margin-bottom: ${(props) => props.theme.spaces.s200};
 `;
 
+const PrimaryHeader = styled.h2`
+  font-size: ${(props) => props.theme.fontSizeBase};
+`;
+
 const SideHeader = styled.h3`
   font-size: ${(props) => props.theme.fontSizeBase};
 `;
@@ -398,7 +402,7 @@ function ActionContent({ id }) {
           <Col md="7" lg="8">
             {hasPhases && (
               <ActionSection>
-                <SideHeader>{ t('actions:action-progress') }</SideHeader>
+                <PrimaryHeader>{ t('actions:action-progress') }</PrimaryHeader>
                 <ActionPhase
                   status={actionStatus}
                   activePhase={action.implementationPhase}

@@ -90,8 +90,9 @@ const SearchHeader = styled.div`
   }
 `;
 
-const ResultsHeader = styled.div`
+const ResultsHeader = styled.h2`
   margin: ${(props) => props.theme.spaces.s300} 0 ${(props) => props.theme.spaces.s300} 0;
+  font-size: ${(props) => props.theme.fontSizeBase};
 `;
 
 const HitType = styled.div`
@@ -232,12 +233,14 @@ function SearchResults({ search }) {
   return (
     <Row>
       <Col sm="12" md={{ offset: 2, size: 8 }}>
-        <ResultsHeader role="alert">
-          {`${t('number-of-search-results', { count: hits.length })} `}
-          &apos;
-          {search.q}
-          &apos;
-        </ResultsHeader>
+        <div role="alert">
+          <ResultsHeader>
+            {`${t('number-of-search-results', { count: hits.length })} `}
+            &apos;
+            {search.q}
+            &apos;
+          </ResultsHeader>
+        </div>
         <SearchResultList>
           { hits.map((hit) => (
             <SearchResultItem key={hit.url} hit={hit} />
@@ -298,6 +301,7 @@ function SearchView(props) {
                     placeholder={t('search-from-plans')}
                     value={userSearch?.q}
                     onChange={handleValueChange}
+                    aria-label={t('search')}
                   />
                   <FormGroup switch>
                     <Input
@@ -330,7 +334,7 @@ function SearchView(props) {
         ) : (
           <Col sm="12" md={{ offset: 2, size: 8 }} className="mt-5">
             <Alert color="primary">
-              {t('search-no-results')}
+              <ResultsHeader>{t('search-no-results')}</ResultsHeader>
             </Alert>
           </Col>
         )}
