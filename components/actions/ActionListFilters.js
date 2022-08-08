@@ -257,7 +257,11 @@ function ActionListFilters(props) {
 
   return (
     <div className="filters mb-2 text-left">
-      <form onSubmit={(event) => { event.preventDefault(); }} role="search" aria-label="Toimenpiteet">
+      <form
+        onSubmit={(event) => { event.preventDefault(); }}
+        role="search"
+        aria-label={t('form-action-filters')}
+      >
         {/* TODO: Animate UI changes */}
           <Row>
             {allFilters.map((filter) => (

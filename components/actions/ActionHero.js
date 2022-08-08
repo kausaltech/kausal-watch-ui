@@ -241,7 +241,7 @@ function ActionHero(props) {
                         <strong><ActionListLink query={{ primaryOrg: primaryOrg.id }}>{ primaryOrg.abbreviation || primaryOrg.name }</ActionListLink></strong>
                       </PrimaryOrg>
                     ) }
-                    <ActionsNav aria-label="Actions Pager">
+                    <ActionsNav aria-label={t('nav-actions-pager')}>
                       <ActionListLink>
                         <a>
                           <IndexLink>{ t('actions', getActionTermContext(plan)) }</IndexLink>

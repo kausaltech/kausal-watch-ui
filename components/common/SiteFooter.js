@@ -376,7 +376,7 @@ function SiteFooter(props) {
   return (
     <StyledFooter className="site-footer">
       <Container>
-        <FooterNav>
+        <FooterNav aria-label={t('nav-footer')}>
           <Branding>
             <Logo>
               { theme?.footerLogoLink

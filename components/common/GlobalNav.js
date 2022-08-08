@@ -338,7 +338,7 @@ function GlobalNav(props) {
       <TopNav
         expand="md"
         id="branding-navigation-bar"
-        aria-label={siteTitle}
+        aria-label={t('nav-tools')}
         container={fullwidth ? 'fluid' : true}
       >
         <Site>
@@ -376,6 +376,7 @@ function GlobalNav(props) {
         fixed={navIsFixed ? 'top' : ''}
         id="global-navigation-bar"
         container={fullwidth ? 'fluid' : true}
+        aria-label={t('nav-primary')}
       >
         <Collapse isOpen={isOpen} navbar>
           <Nav navbar className="me-auto">
