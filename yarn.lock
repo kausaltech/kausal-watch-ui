@@ -2458,17 +2458,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@kausal/themes-private@npm:^0.2.5":
-  version: 0.2.5
-  resolution: "@kausal/themes-private@npm:0.2.5"
-  checksum: 61d0c8f6495d1ae228071364b317505a1c0ad07d6a5adaf1060334cd5d5bbb4db048bf8322f279800e041b0c96aa89019cb370aea2527e9b7b4a6cf83d194950
+"@kausal/themes-private@npm:^0.2.6":
+  version: 0.2.6
+  resolution: "@kausal/themes-private@npm:0.2.6"
+  checksum: c6ae6ce8f05f53b892dd86e40b1df9d69c59690e3953f8ead3ba8049f29dc265a687aad2558734fb658d67d368eadbf50a83786370bc60697848d72f98d2b455
   languageName: node
   linkType: hard
 
-"@kausal/themes@npm:^0.3.2":
-  version: 0.3.2
-  resolution: "@kausal/themes@npm:0.3.2"
-  checksum: 1b195e85b58096bd09e120fa1846ffe6532b4e85106c141b5df1389ce31ed49e4f27e074fce64346b7dcec28a8784809ecf134ec94fbe9c685b0445ada29f7e9
+"@kausal/themes@npm:^0.4.0":
+  version: 0.4.0
+  resolution: "@kausal/themes@npm:0.4.0"
+  checksum: d2e2e73ad0b7b701060677e18ea6906ffecbd083342cf671d6aa040262fcad91051195de6e06012309eb47184381160647c32e1a4cdea5613e63c0cfa5331043
   languageName: node
   linkType: hard
 
@@ -15102,8 +15102,8 @@ __metadata:
     "@babel/eslint-parser": ^7.17.0
     "@babel/plugin-proposal-decorators": ^7.17.9
     "@elastic/react-search-ui": ^1.11.2
-    "@kausal/themes": ^0.3.2
-    "@kausal/themes-private": ^0.2.5
+    "@kausal/themes": ^0.4.0
+    "@kausal/themes-private": ^0.2.6
     "@koa/router": ^10.1.1
     "@n8tb1t/use-scroll-position": ^2.0.3
     "@next/bundle-analyzer": ^12.1.6
@@ -22291,7 +22291,7 @@ __metadata:
 
 "typescript@patch:typescript@>=2.4.2 <4.0.0#~builtin<compat/typescript>":
   version: 3.9.10
-  resolution: "typescript@patch:typescript@npm%3A3.9.10#~builtin<compat/typescript>::version=3.9.10&hash=bda367"
+  resolution: "typescript@patch:typescript@npm%3A3.9.10#~builtin<compat/typescript>::version=3.9.10&hash=7ad353"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
@@ -22301,7 +22301,7 @@ __metadata:
 
 "typescript@patch:typescript@^4.6.4#~builtin<compat/typescript>":
   version: 4.6.4
-  resolution: "typescript@patch:typescript@npm%3A4.6.4#~builtin<compat/typescript>::version=4.6.4&hash=bda367"
+  resolution: "typescript@patch:typescript@npm%3A4.6.4#~builtin<compat/typescript>::version=4.6.4&hash=7ad353"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
