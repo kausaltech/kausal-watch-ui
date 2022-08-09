@@ -15,6 +15,7 @@ import ActionHighlightsBlock from 'components/contentblocks/ActionHighlightsBloc
 import IndicatorHighlightsBlock from 'components/contentblocks/IndicatorHighlightsBlock';
 import RelatedIndicatorsBlock from 'components/contentblocks/RelatedIndicatorsBlock';
 import RelatedPlanListBlock from 'components/contentblocks/RelatedPlanListBlock';
+import ActionCategoryFilterCardsBlock from 'components/contentblocks/ActionCategoryFilterCardsBlock';
 
 const STREAM_FIELD_FRAGMENT = gql`
   fragment StreamFieldFragment on StreamFieldInterface {
@@ -165,6 +166,20 @@ const STREAM_FIELD_FRAGMENT = gql`
         }
       }
     }
+    ... on ActionCategoryFilterCardsBlock {
+      cards {
+        ... on ActionCategoryFilterCardBlock {
+          heading
+          lead
+          category {
+            id
+            type {
+              identifier
+            }
+          }
+        }
+      }
+    }
     ... on ActionHighlightsBlock {
       id
       field
@@ -195,6 +210,7 @@ export const possibleTypes = {
     'IndicatorGroupBlock',
     'CardListBlock',
     'RelatedIndicatorsBlock',
+    'ActionCategoryFilterCardsBlock'
   ],
 };
 
@@ -281,6 +297,10 @@ function StreamFieldBlock(props) {
     }
     case 'RelatedPlanListBlock': {
       return <RelatedPlanListBlock />;
+    }
+    case 'ActionCategoryFilterCardsBlock': {
+      const { cards } = props;
+      return <ActionCategoryFilterCardsBlock cards={cards} />;
     }
     default:
       return (
