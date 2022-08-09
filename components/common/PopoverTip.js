@@ -12,6 +12,9 @@ const InfoButton = styled(Button)`
   }
 `;
 
+/* TODO: make this accessible */
+/* TODO: Use icon from theme */
+
 const PopoverTip = (props) => {
   const { content } = props;
   return (

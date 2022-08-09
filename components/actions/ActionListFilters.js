@@ -115,7 +115,7 @@ function ActionListFilterInput({
   );
 }
 
-function ActionListFilterRadio({
+function ActionListMainFilter({
   filter, currentValue, onChange,
 }) {
   const [filterValue, setValue] = useState(currentValue);
@@ -297,6 +297,7 @@ function ActionListFilters(props) {
     return mainCategories;
   };
 
+  /* TODO: identify the main category in generic way */
   categoryTypes.forEach((ct) => {
     allFilters.push({
       main: ct?.common?.identifier === 'au_target_audience',
@@ -338,7 +339,7 @@ function ActionListFilters(props) {
                 sm={12}
                 key={filter.identifier}
               >
-                <ActionListFilterRadio
+                <ActionListMainFilter
                   filter={filter}
                   currentValue={filters[filter.identifier]}
                   onChange={onChange}
