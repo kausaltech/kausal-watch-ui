@@ -74,7 +74,7 @@ const HomeLink = styled.a`
   color: ${(props) => props.theme.brandNavColor};
   font-weight: ${(props) => props.theme.fontWeightBold};
   line-height: ${(props) => props.theme.lineHeightSm};
-  hyphens: auto;
+  hyphens: manual;
   word-break: break-word;
 
   &:hover {
@@ -232,7 +232,7 @@ const NavbarToggler = styled.button`
   width: ${(props) => props.theme.spaces.s300};
   font-weight: ${(props) => props.theme.fontWeightBold};
   line-height: ${(props) => props.theme.lineHeightMd};
-  hyphens: auto;
+  hyphens: manual;
   border: none;
   overflow: visible;
   background: transparent;

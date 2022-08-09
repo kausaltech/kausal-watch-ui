@@ -44,7 +44,7 @@ const TaskContent = styled.div`
     word-wrap: break-word;
     word-break: break-all;
     word-break: break-word;
-    hyphens: auto;
+    hyphens: manual;
   }
 `;
 

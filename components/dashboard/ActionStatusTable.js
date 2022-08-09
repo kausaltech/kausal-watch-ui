@@ -174,7 +174,7 @@ const VizLabel = styled.div`
   font-size: ${(props) => props.theme.fontSizeSm};
   font-family: ${(props) => props.theme.fontFamilyTiny};
   line-height: ${(props) => props.theme.lineHeightMd};
-  hyphens: auto;
+  hyphens: manual;
 
   &.active {
     font-weight: ${(props) => props.theme.fontWeightBold};

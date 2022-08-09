@@ -4,6 +4,7 @@ import { isEqual, capitalize } from 'lodash';
 import { gql, useQuery } from '@apollo/client';
 import { Alert } from 'reactstrap';
 import dayjs from 'common/dayjs';
+import styled from 'styled-components';
 import { linearRegression } from 'common/math';
 import { useTranslation } from 'common/i18n';
 import { captureMessage } from 'common/sentry';
@@ -124,6 +125,10 @@ const GET_INDICATOR_GRAPH_DATA = gql`
       }
     }
   }
+`;
+
+const IndicatorVizHeader = styled.h2`
+  font-size: ${(props) => props.theme.fontSizeMd};
 `;
 
 function generateCube(dimensions, values, path) {
@@ -513,7 +518,7 @@ function IndicatorVisualisation({ indicatorId }) {
 
   return (
     <div>
-      <h3 className="mb-2">{plotTitle}</h3>
+      <IndicatorVizHeader className="mb-2">{plotTitle}</IndicatorVizHeader>
       <span className="visually-hidden">{ t('indicator-graph-not-accessible') }</span>
       { comparisonOrgs && (
         <IndicatorComparisonSelect

@@ -108,7 +108,7 @@ const Highlight = styled.div`
   }
 
   p {
-    hyphens: auto;
+    hyphens: manual;
     margin-bottom: 0;
     color: ${(props) => props.theme.neutralDark};
   }

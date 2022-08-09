@@ -81,7 +81,7 @@ const StyledCardTitle = styled(CardTitle)`
   font-size: ${(props) => props.theme.fontSizeMd};
   color: ${(props) => props.theme.neutralDark};
   text-align: left;
-  hyphens: auto;
+  hyphens: manual;
 `;
 
 

@@ -110,7 +110,7 @@ const ImageCredit = styled.span`
 `;
 
 const ActionHeadline = styled.h1`
-  hyphens: auto;
+  hyphens: manual;
   margin: ${(props) => props.theme.spaces.s100} 0;
   font-size: ${(props) => props.theme.fontSizeXl};
   color: ${(props) => props.theme.themeColors.black} !important;

@@ -20,7 +20,7 @@ const StyledBadge = styled(Badge)`
   max-width: 100%;
   word-break: break-all;
   word-break: break-word;
-  hyphens: auto;
+  hyphens: manual;
   white-space: normal;
   text-align: left;
 

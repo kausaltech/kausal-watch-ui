@@ -37,7 +37,7 @@ const StyledLink = styled.a`
 `;
 
 const Indicator = styled(Card)`
-  hyphens: auto;
+  hyphens: manual;
   line-height: ${(props) => props.theme.lineHeightSm};
   border: 0;
   border-radius: ${(props) => props.theme.cardBorderRadius};

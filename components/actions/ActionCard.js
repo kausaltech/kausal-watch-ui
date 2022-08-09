@@ -160,7 +160,7 @@ const StyledCardTitle = styled.div`
   line-height: ${(props) => props.theme.lineHeightMd};
   text-align: left;
   word-break: break-word;
-  hyphens: auto;
+  hyphens: manual;
 `;
 
 const ActionOrg = styled.div`
