@@ -1,28 +1,47 @@
 import React from 'react';
-import { Button, UncontrolledPopover, PopoverHeader, PopoverBody } from 'bootstrap';
+import styled from 'styled-components';
+import { Button, UncontrolledPopover, PopoverHeader, PopoverBody } from 'reactstrap';
+
+const InfoButton = styled(Button)`
+  padding: 0;
+  margin: 0 .25rem;
+  line-height: .5rem;
+
+  svg {
+    fill: ${(props) => props.theme.graphColors.grey090};
+  }
+`;
 
 const PopoverTip = (props) => {
-  const { header, content } = props;
+  const { content } = props;
   return (
-    <div>
-      <Button
+    <>
+      <InfoButton
         id="UncontrolledPopover"
-        type="button"
+        color="link"
       >
-        Launch Popover
-      </Button>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          fill="currentColor"
+          className="bi bi-info-circle-fill"
+          viewBox="0 0 16 16"
+        >
+          <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+        </svg>
+      </InfoButton>
       <UncontrolledPopover
-        placement="bottom"
         target="UncontrolledPopover"
+        placement="top"
+        trigger="click"
+        flip
       >
-        <PopoverHeader>
-          { header }
-        </PopoverHeader>
         <PopoverBody>
           { content }
         </PopoverBody>
       </UncontrolledPopover>
-    </div>
+    </>
   );
 };
 

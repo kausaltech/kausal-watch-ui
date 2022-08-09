@@ -79,6 +79,10 @@ export const GET_ACTION_LIST = gql`
         identifier
         name
         usableForActions
+        common {
+          identifier
+          name
+        }
         categories {
           id
           identifier
