@@ -6,7 +6,7 @@ import {
   Container, Row, Col, Nav, NavItem, Alert
 } from 'reactstrap';
 import styled from 'styled-components';
-import { useTranslation } from 'common/i18n';
+import { getActionTermContext, useTranslation } from 'common/i18n';
 import { constructOrgHierarchy, orgHasActions } from 'common/organizations';
 import ContentLoader from 'components/common/ContentLoader';
 import ErrorMessage from 'components/common/ErrorMessage';
@@ -79,6 +79,10 @@ export const GET_ACTION_LIST = gql`
         identifier
         name
         usableForActions
+        common {
+          identifier
+          name
+        }
         categories {
           id
           identifier
@@ -86,7 +90,7 @@ export const GET_ACTION_LIST = gql`
           parent {
             id
           }
-          iconUrl
+          iconSvgUrl
           categoryPage {
             id
             live
@@ -364,36 +368,32 @@ const ActionListResults = (props) => {
       </ActionListSection>
       <IndicatorsTabs>
         <Container>
-          <Nav role="tablist">
-            <NavItem>
-              <Tab
-                className={`nav-link ${!displayDashboard ? 'active' : ''}`}
-                onClick={() => handleChange('view', 'list')}
-                passHref
-                role="tab"
-                tabIndex="0"
-                aria-selected={!displayDashboard}
-                aria-controls="list-view"
-                id="list-tab"
-              >
-                { t('actions-as-list') }
-              </Tab>
-            </NavItem>
-            <NavItem>
-              <Tab
-                className={`nav-link ${displayDashboard ? 'active' : ''}`}
-                onClick={() => handleChange('view', 'dashboard')}
-                passHref
-                role="tab"
-                tabIndex="0"
-                aria-selected={displayDashboard}
-                aria-controls="dashboard-view"
-                id="dashboard-tab"
-              >
-                { t('dashboard') }
-              </Tab>
-            </NavItem>
-          </Nav>
+          <div role="tablist">
+            <Tab
+              className={`nav-link ${!displayDashboard ? 'active' : ''}`}
+              onClick={() => handleChange('view', 'list')}
+              passHref
+              role="tab"
+              tabIndex="0"
+              aria-selected={!displayDashboard}
+              aria-controls="list-view"
+              id="list-tab"
+            >
+              { t('actions-as-list') }
+            </Tab>
+            <Tab
+              className={`nav-link ${displayDashboard ? 'active' : ''}`}
+              onClick={() => handleChange('view', 'dashboard')}
+              passHref
+              role="tab"
+              tabIndex="0"
+              aria-selected={displayDashboard}
+              aria-controls="dashboard-view"
+              id="dashboard-tab"
+            >
+              { t('dashboard') }
+            </Tab>
+          </div>
         </Container>
       </IndicatorsTabs>
       <Container>
@@ -461,7 +461,7 @@ function Statusboard(props) {
   });
 
   if (loading) return <ContentLoader />;
-  if (error) return <ErrorMessage message={t('error-loading-actions')} />;
+  if (error) return <ErrorMessage message={t('error-loading-actions', getActionTermContext(plan))} />;
 
   const { plan: loadedPlan, ...otherProps } = data;
   const { categoryTypes, primaryOrgs } = loadedPlan;

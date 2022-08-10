@@ -28,8 +28,10 @@ const PlanTitle = styled.div`
 `;
 
 const PlanOrg = styled.div`
-  font-size: 80%;
+  font-size: 75%;
   font-weight: ${(props) => props.theme.fontWeightNormal};
+  font-family: ${(props) => props.theme.fontFamilyTiny};
+  color: ${(props) => props.negative ? props.theme.graphColors.grey090 : props.theme.graphColors.grey060};
 `;
 
 const PlanChip = React.forwardRef((props, ref) => {
@@ -54,7 +56,7 @@ const PlanChip = React.forwardRef((props, ref) => {
 
   return (
     <Tag ref={ref} {...props}>
-      <PlanAvatar src={planImage} size={IMAGE_SIZES[size]} />
+      <PlanAvatar src={planImage} size={IMAGE_SIZES[size]} alt=""/>
       <PlanName negative={negative}>
         <PlanTitle
           weight={size==='sm' ? 'fontWeightNormal' : 'fontWeightBold'}

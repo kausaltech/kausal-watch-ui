@@ -2,14 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { useTheme } from 'common/theme';
-import { useTranslation } from 'common/i18n';
+import { getActionTermContext, useTranslation } from 'common/i18n';
 import { getStatusColor } from 'common/preprocess';
+import { usePlan } from 'context/plan';
 
 const Status = styled.div`
   color: ${(props) => props.theme.themeColors.black};
 
   &.compact {
     font-size: ${(props) => props.theme.fontSizeSm};
+    font-family: ${(props) => props.theme.fontFamilyTiny};
   }
 
   ul {
@@ -27,22 +29,25 @@ const Status = styled.div`
 
   .label {
     font-size: ${(props) => props.theme.fontSizeSm};
+    font-family: ${(props) => props.theme.fontFamilyTiny};
     line-height: ${(props) => props.theme.lineHeightMd};
-    hyphens: auto;
+    hyphens: manual;
   }
 `;
 
 const PhaseReason = styled.p`
   margin-bottom: ${(props) => props.theme.spaces.s050};
   font-size: ${(props) => props.theme.fontSizeSm};
+  font-family: ${(props) => props.theme.fontFamilyTiny};
   line-height: ${(props) => props.theme.lineHeightMd};
 `;
 
 const PhaseLabel = styled.div`
   margin-bottom: ${(props) => props.theme.spaces.s050};
   font-size: ${(props) => props.theme.fontSizeSm};
+  font-family: ${(props) => props.theme.fontFamilyTiny};
   line-height: ${(props) => props.theme.lineHeightMd};
-  hyphens: auto;
+  hyphens: manual;
 
   &.active {
     font-weight: ${(props) => props.theme.fontWeightBold};
@@ -107,6 +112,7 @@ function ActionPhase(props) {
     ...rest } = props;
 
   const { t } = useTranslation(['common', 'actions']);
+  const plan = usePlan();
   let activePhaseName = activePhase?.name;
   let phaseIndex = -1;
 
@@ -116,7 +122,7 @@ function ActionPhase(props) {
   }
   // Override phase name in special case statuses
   const inactive = ['cancelled', 'merged', 'postponed', 'completed'].includes(status.identifier);
-  if (inactive) activePhaseName = status.identifier === 'merged' ? `${t('actions:action-status-merged')}` : status.name;
+  if (inactive) activePhaseName = status.identifier === 'merged' ? `${t('actions:action-status-merged', getActionTermContext(plan))}` : status.name;
 
   return (
     <Status {...rest} className={compact && 'compact'}>

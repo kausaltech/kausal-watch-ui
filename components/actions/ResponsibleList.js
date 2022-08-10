@@ -51,6 +51,8 @@ function ResponsibleBadge(props) {
 function ResponsibleList(props) {
   const { t, data } = props;
 
+    /* TODO: a11y - this should probably be a list markup */
+
   return (
     <Responsibles>
       <h3>{t('responsible-parties')}</h3>

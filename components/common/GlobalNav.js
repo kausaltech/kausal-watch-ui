@@ -19,17 +19,15 @@ import NavbarSearch from './NavbarSearch';
 import { usePlan } from 'context/plan';
 
 const TopNav = styled(Navbar)`
-  padding: 0 ${(props) => props.theme.spaces.s100};
+  padding: 0;
   background-color: ${(props) => props.theme.brandNavBackground};
   border-bottom: 1px solid ${(props) => props.theme.themeColors.light};
+  flex-wrap: nowrap;
+
+  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    padding: 0 ${(props) => props.theme.spaces.s100};
+  }
 `;
-
-const TopNavItems = styled(Navbar)`
-  display: flex;
-  justify-content: flex-start;
-
-`;
-
 
 const BotNav = styled(Navbar)`
   background-color: ${(props) => props.theme.themeColors.white};
@@ -56,12 +54,12 @@ const BotNav = styled(Navbar)`
 `;
 
 const SiteTitle = styled.div`
-  font-size: 1rem;
-  line-height: 1.666rem;
+  font-size: ${(props) => props.theme.fontSizeBase};
+  line-height: 1;
   padding: ${(props) => props.theme.spaces.s150} 0 ${(props) => props.theme.spaces.s150};
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
-    font-size: 1.25rem;
+    font-size: ${(props) => props.theme.fontSizeMd};
   }
 `;
 
@@ -76,7 +74,7 @@ const HomeLink = styled.a`
   color: ${(props) => props.theme.brandNavColor};
   font-weight: ${(props) => props.theme.fontWeightBold};
   line-height: ${(props) => props.theme.lineHeightSm};
-  hyphens: auto;
+  hyphens: manual;
   word-break: break-word;
 
   &:hover {
@@ -192,7 +190,7 @@ const StyledDropdown = styled(UncontrolledDropdown)`
 
   .dropdown-menu {
     border: 0px;
-    padding-top: 0;
+    padding-top: ${(props) => props.theme.spaces.s150};
     box-shadow: none;
   }
   .dropdown-item {
@@ -201,7 +199,7 @@ const StyledDropdown = styled(UncontrolledDropdown)`
 
     .highlighter {
       display: inline-block;
-      padding: ${(props) => props.theme.spaces.s050} 0 calc(${(props) => props.theme.spaces.s050} - 5px);
+      padding: 0 0 calc(${(props) => props.theme.spaces.s050} - 5px);
     }
 
     &:hover {
@@ -234,7 +232,7 @@ const NavbarToggler = styled.button`
   width: ${(props) => props.theme.spaces.s300};
   font-weight: ${(props) => props.theme.fontWeightBold};
   line-height: ${(props) => props.theme.lineHeightMd};
-  hyphens: auto;
+  hyphens: manual;
   border: none;
   overflow: visible;
   background: transparent;
@@ -340,7 +338,7 @@ function GlobalNav(props) {
       <TopNav
         expand="md"
         id="branding-navigation-bar"
-        aria-label={siteTitle}
+        aria-label={t('nav-tools')}
         container={fullwidth ? 'fluid' : true}
       >
         <Site>
@@ -378,6 +376,7 @@ function GlobalNav(props) {
         fixed={navIsFixed ? 'top' : ''}
         id="global-navigation-bar"
         container={fullwidth ? 'fluid' : true}
+        aria-label={t('nav-primary')}
       >
         <Collapse isOpen={isOpen} navbar>
           <Nav navbar className="me-auto">

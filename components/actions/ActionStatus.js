@@ -13,6 +13,7 @@ const StatusTitle = styled.div`
   text-align: left;
   background-color: ${(props) => props.theme.themeColors.light};
   font-size: ${(props) => props.theme.fontSizeSm};
+  font-family: ${(props) => props.theme.fontFamilyTiny};
   line-height: ${(props) => props.theme.spaces.s150};
 `;
 

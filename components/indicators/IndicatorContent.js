@@ -9,7 +9,7 @@ import { gql, useQuery } from '@apollo/client';
 
 import { IndicatorListLink } from 'common/links';
 import { usePlan } from 'context/plan';
-import { useTranslation } from 'common/i18n';
+import { getActionTermContext, useTranslation } from 'common/i18n';
 
 import RichText from 'components/common/RichText';
 import ContentLoader from 'components/common/ContentLoader';
@@ -158,8 +158,11 @@ function IndicatorDetails({ id }) {
   const hasImpacts = indicator.relatedCauses.length > 0 || indicator.relatedEffects.length > 0;
   const mainGoals = indicator.goals.filter((goal) => !goal.scenario);
 
-  const allOrgs = indicator.common?.indicators.map((common) => {
-    return {
+  const allOrgs = [];
+  indicator.common?.indicators.forEach((common) => {
+    /* Make sure organization is included in this plan */
+    const orgInThisPlan = plan.primaryOrgs.find((org) => org.id === common.organization.id);
+    if (orgInThisPlan) allOrgs.push({
       id: common.id,
       identifier: common.identifier,
       image: common.organization.logo?.rendition.src,
@@ -167,7 +170,7 @@ function IndicatorDetails({ id }) {
       shortName: common.organization.abbreviation,
       active: common.organization.id === indicator.organization.id,
       orgUrl: `/indicators/${common.id}`,
-    };
+    });
   });
 
   return (
@@ -202,7 +205,7 @@ function IndicatorDetails({ id }) {
           <Container>
             <Row>
               <Col className="mb-4">
-                <h2>{t('indicator-related-actions')}</h2>
+                <h2>{t('indicator-related-actions', getActionTermContext(plan))}</h2>
               </Col>
             </Row>
             <Row>

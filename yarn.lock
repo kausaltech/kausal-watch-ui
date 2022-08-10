@@ -2458,17 +2458,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@kausal/themes-private@npm:^0.1.15":
-  version: 0.1.15
-  resolution: "@kausal/themes-private@npm:0.1.15"
-  checksum: 0396f68fa6f49bbf0a754ade734a2d3eda83b47f1b5f7366317ca1d226ccea09001ab9eb20ac634cf9618dab51b602be57e8f89e4f6cef33d8be95942cf993a5
+"@kausal/themes-private@npm:^0.2.7":
+  version: 0.2.7
+  resolution: "@kausal/themes-private@npm:0.2.7"
+  checksum: 22b0147eaa41f7e7f5fe77f036f3d5558edd6abeed8bf9d80f247e88a65d920a1410cea92cf72510a7565c4c397322b6005668575b24861bfe3c492f494ddfbd
   languageName: node
   linkType: hard
 
-"@kausal/themes@npm:^0.1.2":
-  version: 0.1.2
-  resolution: "@kausal/themes@npm:0.1.2"
-  checksum: c82bd9eb48468832ea5b5e9a8ab5fb7cea1e806d102fead6d6ec20d5fc4d51a73dac145374799605ebc516ec62cfa2b508f0c893d946b2f911f55c7926f6395d
+"@kausal/themes@npm:^0.4.0":
+  version: 0.4.0
+  resolution: "@kausal/themes@npm:0.4.0"
+  checksum: d2e2e73ad0b7b701060677e18ea6906ffecbd083342cf671d6aa040262fcad91051195de6e06012309eb47184381160647c32e1a4cdea5613e63c0cfa5331043
   languageName: node
   linkType: hard
 
@@ -15102,8 +15102,8 @@ __metadata:
     "@babel/eslint-parser": ^7.17.0
     "@babel/plugin-proposal-decorators": ^7.17.9
     "@elastic/react-search-ui": ^1.11.2
-    "@kausal/themes": ^0.1.2
-    "@kausal/themes-private": ^0.1.15
+    "@kausal/themes": ^0.4.0
+    "@kausal/themes-private": ^0.2.7
     "@koa/router": ^10.1.1
     "@n8tb1t/use-scroll-position": ^2.0.3
     "@next/bundle-analyzer": ^12.1.6

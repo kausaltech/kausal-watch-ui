@@ -20,16 +20,17 @@ const StyledBadge = styled(Badge)`
   max-width: 100%;
   word-break: break-all;
   word-break: break-word;
-  hyphens: auto;
+  hyphens: manual;
   white-space: normal;
   text-align: left;
-  &.badge-secondary:hover {
-    background-color:  ${(props) => lighten(0.05, props.theme.badgeBackground)};
+
+  &.bg-secondary:hover {
+    background-color:  ${(props) => lighten(0.05, props.theme.badgeBackground)} !important;
     color: ${(props) => props.theme.badgeColor};
   }
 `;
 
-const BadgeTooltip = React.forwardRef((props, ref) => {
+const BadgeTooltip = React.forwardRef(function BadgeTooltip(props, ref) {
   const {
     abbreviation,
     name,

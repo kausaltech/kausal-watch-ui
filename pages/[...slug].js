@@ -111,6 +111,9 @@ query GetPlanPageGeneral($plan: ID!, $path: String!) {
             type {
               identifier
               name
+              unit {
+                name
+              }
             }
           }
         }

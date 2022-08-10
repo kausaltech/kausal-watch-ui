@@ -76,6 +76,7 @@ const AttributesList = styled.dl`
 const AttributeChoiceLabel = styled.span`
   margin-left: ${(props) => props.theme.spaces.s050};
   font-size: ${(props) => props.theme.fontSizeSm};
+  font-family: ${(props) => props.theme.fontFamilyTiny};
 `;
 
 const formatEmissionSharePercent = (share, total) => {
@@ -123,7 +124,7 @@ function AttributeContent(props) {
     case 'AttributeNumericValue':
       dataElement = (
         <span>
-          {contentData.numericValue}
+          {contentData.numericValue} {contentData.type.unit?.name}
         </span>
       );
       break;

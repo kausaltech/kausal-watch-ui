@@ -8,7 +8,7 @@ import { gql } from '@apollo/client';
 import { cleanActionStatus, getStatusColor } from 'common/preprocess';
 import { ActionLink } from 'common/links';
 import { useTheme } from 'common/theme';
-import { useTranslation } from 'common/i18n';
+import { getActionTermContext, useTranslation } from 'common/i18n';
 import PlanContext from 'context/plan';
 import PlanChip from 'components/plans/PlanChip';
 
@@ -27,7 +27,7 @@ const ACTION_CARD_FRAGMENT = gql`
       id
       identifier
       name
-      iconUrl
+      iconSvgUrl
     }
     implementationPhase {
       id
@@ -73,7 +73,12 @@ const StyledActionLink = styled.a`
 
   &:hover {
     text-decoration: none;
+
+    .card-title {
+      text-decoration: underline;
+    }
   }
+
 `;
 
 const CategoryIcon = styled(SVG)`
@@ -138,6 +143,7 @@ const ActionPhase = styled.div`
 const StatusName = styled.div`
   padding: ${(props) => props.theme.spaces.s050};
   font-size: ${(props) => props.theme.fontSizeSm};
+  font-family: ${(props) => props.theme.fontFamilyTiny};
   line-height: 1;
 
   &:after {
@@ -154,7 +160,7 @@ const StyledCardTitle = styled.div`
   line-height: ${(props) => props.theme.lineHeightMd};
   text-align: left;
   word-break: break-word;
-  hyphens: auto;
+  hyphens: manual;
 `;
 
 const ActionOrg = styled.div`
@@ -170,6 +176,7 @@ const ActionOrgAvatar = styled.div`
 
 const ActionOrgName = styled.div`
   font-size: ${(props) => props.theme.fontSizeSm};
+  font-family: ${(props) => props.theme.fontFamilyTiny};
   color: ${(props) => props.theme.themeColors.dark};
   line-height: 1;
 `;
@@ -181,14 +188,14 @@ const OrgLogo = styled.img`
 `;
 
 function getIconUrl(action) {
-  if (action.iconUrl) return action.iconUrl;
+  if (action.iconSvgUrl) return action.iconSvgUrl;
 
   const { rootCategory } = action;
   if (!rootCategory) return null;
 
   const plan = useContext(PlanContext);
-  const { identifier, iconUrl } = rootCategory;
-  if (iconUrl) return iconUrl;
+  const { identifier, iconSvgUrl } = rootCategory;
+  if (iconSvgUrl) return iconSvgUrl;
   if (plan.identifier === 'liiku') return `/static/themes/liiku/images/category-${identifier}.svg`;
   if (plan.identifier === 'hsy-kestava') return `/static/themes/hsy-kestava/images/category-${identifier}.svg`;
   return null;
@@ -279,7 +286,7 @@ function ActionCard(props) {
           >
             { mergedWith ? (
               <StatusName>
-                { t('actions:action-status-merged') }
+                { t('actions:action-status-merged', getActionTermContext(plan)) }
                 <span> &rarr; </span>
                 { getMergedName(mergedWith, plan.id) }
               </StatusName>
@@ -294,12 +301,13 @@ function ActionCard(props) {
                 <ActionOrgAvatar>
                   <OrgLogo
                     src={primaryOrg?.logo?.rendition?.src || '/static/themes/default/images/default-avatar-org.png'}
+                    alt=""
                   />
                 </ActionOrgAvatar>
                 <ActionOrgName>{primaryOrg.abbreviation || primaryOrg.name}</ActionOrgName>
               </ActionOrg>
             )}
-          <StyledCardTitle>
+          <StyledCardTitle className="card-title">
             {actionName}
           </StyledCardTitle>
         </ActionCardElement>
@@ -318,7 +326,7 @@ ActionCard.propTypes = {
     identifier: PropTypes.string,
     name: PropTypes.string,
     completion: PropTypes.number,
-    iconUrl: PropTypes.string,
+    iconSvgUrl: PropTypes.string,
     rootCategory: PropTypes.shape(),
     status: PropTypes.shape({
       identifier: PropTypes.string,

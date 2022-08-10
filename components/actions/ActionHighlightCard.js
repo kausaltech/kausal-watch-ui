@@ -38,6 +38,10 @@ const CardLink = styled.a`
   &:hover {
     text-decoration: none;
     color: ${(props) => props.theme.neutralDark};
+
+    .card-title {
+      text-decoration: underline;
+    }
   }
 `;
 
@@ -52,7 +56,7 @@ const StyledCardTitle = styled(CardTitle)`
   font-size: ${(props) => props.theme.fontSizeMd};
   color: ${(props) => props.theme.neutralDark};
   text-align: left;
-  hyphens: auto;
+  hyphens: manual;
   margin-bottom: 0;
 `;
 
@@ -133,7 +137,7 @@ function ActionHighlightCard(props) {
                       <Icon name="check" color="#ffffff" width="2em" height="2em" />
                     </ReadyBadge>
                   )}
-            <StyledCardTitle tag="h3">{actionName}</StyledCardTitle>
+            <StyledCardTitle tag="h3" className="card-title">{actionName}</StyledCardTitle>
           </CardBody>
         </StyledCard>
       </CardLink>

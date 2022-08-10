@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { InputGroup, Popover, PopoverBody } from 'reactstrap';
 import { usePopper } from 'react-popper';
 import styled from 'styled-components';
+import { transparentize } from 'polished';
 import { SearchProvider, WithSearch, SearchBox, Results } from '@elastic/react-search-ui';
 import { Link } from 'common/links';
 import { useTheme } from 'common/theme';
@@ -11,7 +12,7 @@ import Icon from 'components/common/Icon';
 import PlanChip from 'components/plans/PlanChip';
 import { usePlan } from 'context/plan';
 import { useApolloClient } from '@apollo/client';
-import { useTranslation } from 'common/i18n';
+import { getActionTermContext, useTranslation } from 'common/i18n';
 
 const TextInput = styled.input`
   display: ${(props) => (props.isOpen === 'true' ? 'block' : 'hidden')};
@@ -38,6 +39,9 @@ const SearchButton = styled.button`
   border-radius: ${(props) => props.theme.btnBorderRadius};
   border-width: ${(props) => props.theme.btnBorderWidth};
 
+  &:hover {
+    background-color: ${(props) => transparentize(0.4, props.theme.themeColors.black)};
+  }
   .icon {
     fill: ${(props) => props.isActive === 'true' ? props.theme.themeColors.white : props.theme.brandNavColor} !important;
   }
@@ -62,6 +66,7 @@ const ResultsHeader = styled.div`
 
 const ResultCount = styled.div`
     font-size: ${(props) => props.theme.fontSizeSm};
+    font-family: ${(props) => props.theme.fontFamilyTiny};
 `;
 
 const ResultsFooter = styled.div`
@@ -86,14 +91,6 @@ const HitItem = styled.li`
   padding: ${(props) => props.theme.spaces.s050};
   margin: 0 -${(props) => props.theme.spaces.s050};
 
-  &:hover {
-    background: ${(props) => props.theme.graphColors.grey010};
-
-    h6 {
-      text-decoration: underline;
-    }
-  }
-
   h6 {
     margin: ${(props) => props.theme.spaces.s050} 0;
     font-size: ${(props) => props.theme.fontSizeBase};
@@ -102,6 +99,15 @@ const HitItem = styled.li`
 
   a {
     color: ${(props) => props.theme.themeColors.black};
+
+    &:hover {
+      background: ${(props) => props.theme.graphColors.grey010};
+      text-decoration: none;
+
+      h6 {
+        text-decoration: underline;
+      }
+    }
   }
 
   em {
@@ -125,6 +131,7 @@ const HitHighlight = styled.div`
   margin: 0 0 ${(props) => props.theme.spaces.s050} 0;
   color: ${(props) => props.theme.graphColors.grey050};
   font-size: ${(props) => props.theme.fontSizeSm};
+  font-family: ${(props) => props.theme.fontFamilyTiny};
   line-height: 1;
 `;
 
@@ -158,6 +165,7 @@ const Arrow = styled.div`
 
 function ResultItem(props) {
   const { t } = useTranslation();
+  const plan = usePlan();
   const { hit } = props;
   const itemImage = hit.plan.image?.rendition?.src;
   // FIXME: Group by hit.object.__typename?
@@ -167,7 +175,7 @@ function ResultItem(props) {
     if (object) {
       const typename = object.__typename;
       if (typename === 'Action') {
-        return t('action');
+        return t('action', getActionTermContext(plan));
       } else if (typename === 'Indicator') {
         return t('indicator');
       }
@@ -192,7 +200,10 @@ function ResultItem(props) {
         </HitHeader>
         <h6>{ hit.title }</h6>
         {hit.highlight && (
-          <HitHighlight dangerouslySetInnerHTML={{__html: hit.highlight}} />
+          <HitHighlight>
+            <span dangerouslySetInnerHTML={{__html: hit.highlight}} />
+            ...
+          </HitHighlight>
         )}
       </a>
     </HitItem>
@@ -330,10 +341,14 @@ function NavbarSearch(props) {
               closeSearch();
             } else closeSearch();
           };
+
           return (
             <li ref={searchElement} className="nav-item">
               <SearchControls ref={setReferenceElement}>
-              <form role="combobox" autoComplete="off" aria-expanded="false" aria-haspopup="listbox" aria-labelledby="downshift-5-label">
+              <form
+                autoComplete="off"
+                aria-label={t('search')}
+              >
                 <InputGroup>
                   <TextInput
                     type="search"
@@ -341,15 +356,18 @@ function NavbarSearch(props) {
                     name="q"
                     autocomplete="off"
                     aria-autocomplete="list"
-                    aria-labelledby="downshift-5-label"
                     placeholder={t('search')}
                     aria-label={t('search')}
+                    role="combobox"
+                    aria-expanded={searchTerm.length > 1}
+                    aria-haspopup="listbox"
                     value={searchTerm}
                     onChange={e => setSearchTerm(e.target.value, {
                       autocompleteResults: true,
                       autocompleteMinimumCharacters: 2,
                       debounce: 200,
                     })}
+                    onFocus={e => setSearchOpen(true)}
                     ref={searchInput}
                     isOpen={searchOpen.toString()}
                   />
@@ -357,11 +375,14 @@ function NavbarSearch(props) {
                     isActive={searchOpen.toString()}
                     type="submit"
                     onClick={handleSubmit}
+                    aria-label={t('search')}
                   >
                     <Icon
                       name="search"
                       width="1.25rem"
                       height="1.25rem"
+                      aria-hidden="true"
+                      focusable="false"
                     />
                   </SearchButton>
                 </InputGroup>
@@ -370,7 +391,11 @@ function NavbarSearch(props) {
               {/* TODO: is there a way to control results visibility better? */}
               {/* TODO: display loading state but currently isLoading does not update itself */}
               { searchTerm.length > 1 && searchOpen &&
-                <ResultsBox ref={setPopperElement} style={styles.popper} {...attributes.popper}>
+                <ResultsBox
+                  ref={setPopperElement}
+                  style={styles.popper}
+                  {...attributes.popper}
+                >
                   <Arrow ref={setArrowElement} style={styles.arrow} />
                   <ResultList results={results} searchTerm={searchTerm} anchor={referenceElement}/>
                 </ResultsBox>

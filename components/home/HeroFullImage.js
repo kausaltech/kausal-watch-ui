@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTranslation } from 'common/i18n';
+import { getActionTermContext, useTranslation } from 'common/i18n';
 import { useTheme } from 'common/theme';
 import PropTypes from 'prop-types';
 import SVG from 'react-inlinesvg';
@@ -12,6 +12,7 @@ import {
   IndicatorListLink,
   ActionListLink,
 } from 'common/links';
+import { usePlan } from 'context/plan';
 
 const Hero = styled.div`
   width: 100%;
@@ -75,6 +76,7 @@ const MainCard = styled.div`
   .lead-content {
     font-size: ${(props) => props.theme.fontSizeBase};
     line-height: ${(props) => props.theme.lineHeightMd};
+    font-family: ${(props) => props.theme.fontFamilyContent};
   }
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
@@ -110,7 +112,7 @@ const Highlight = styled.div`
   }
 
   p {
-    hyphens: auto;
+    hyphens: manual;
     margin-bottom: 0;
     color: ${(props) => props.theme.neutralDark};
     font-size: ${(props) => props.theme.fontSizeBase};
@@ -133,6 +135,7 @@ function HeroFullImage(props) {
   } = props;
   const { t } = useTranslation(['common']);
   const theme = useTheme();
+  const plan = usePlan();
   let ActionsIcon = null;
   if (theme.iconActionsUrl !== '') ActionsIcon = () => <SVG src={theme.iconActionsUrl} />;
   let IndicatorsIcon = null;
@@ -158,7 +161,7 @@ function HeroFullImage(props) {
                   )}
                   <div>
                     <h2>
-                      { t('actions') }
+                      { t('actions', getActionTermContext(plan)) }
                       <Icon name="arrowRight" color={theme.neutralDark} />
                     </h2>
                     <p>

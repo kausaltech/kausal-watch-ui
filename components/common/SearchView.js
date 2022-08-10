@@ -6,7 +6,7 @@ import {
   Container, Row, Col, Input, Label, FormGroup, Alert
 } from 'reactstrap';
 import { Link } from 'common/links';
-import { useTranslation } from 'common/i18n';
+import { getActionTermContext, useTranslation } from 'common/i18n';
 import TextInput from 'components/common/TextInput';
 import Button from 'components/common/Button';
 import PlanChip from 'components/plans/PlanChip';
@@ -90,13 +90,15 @@ const SearchHeader = styled.div`
   }
 `;
 
-const ResultsHeader = styled.div`
+const ResultsHeader = styled.h2`
   margin: ${(props) => props.theme.spaces.s300} 0 ${(props) => props.theme.spaces.s300} 0;
+  font-size: ${(props) => props.theme.fontSizeBase};
 `;
 
 const HitType = styled.div`
   margin-bottom: ${(props) => props.theme.spaces.s050};
   font-size: ${(props) => props.theme.fontSizeSm};
+  font-family: ${(props) => props.theme.fontFamilyTiny};
   text-transform: uppercase;
   letter-spacing: 0.25px;
 `;
@@ -104,7 +106,7 @@ const HitType = styled.div`
 const SearchResultMeta = styled.div`
   display: flex;
   justify-content: space-between;
-  margin-bottom: ${(props) => props.theme.spaces.s050};
+  margin-bottom: ${(props) => props.theme.spaces.s150};
 `;
 
 const SearchResultList = styled.ul`
@@ -114,23 +116,31 @@ const SearchResultList = styled.ul`
 `;
 
 const StyledSearchResultItem = styled.li`
-  margin: 0 0 ${(props) => props.theme.spaces.s150};
-  padding: ${(props) => props.theme.spaces.s050} 0 ${(props) => props.theme.spaces.s150} 0;
+  margin: 0;
+  padding: ${(props) => props.theme.spaces.s100} 0 ${(props) => props.theme.spaces.s150} 0;
   border-top: 1px solid ${(props) => props.theme.themeColors.dark};
 
   h3 {
     margin: 0 0 ${(props) => props.theme.spaces.s050};
     font-size: ${(props) => props.theme.fontSizeBase};
     font-family: ${(props) => props.theme.fontFamily};
+    text-decoration: underline;
+
+    &:hover {
+      color: ${(props) => props.theme.linkHoverColor};
+      text-decoration: none !important;
+    }
   }
 
   a:hover {
-    text-decoration: underline;
+    color: inherit !important;
+    text-decoration: none !important;
   }
 `;
 
 const ResultExcerpt = styled.div`
   font-size: ${(props) => props.theme.fontSizeSm};
+  font-family: ${(props) => props.theme.fontFamilyTiny};
 
   em {
     font-style: normal;
@@ -148,7 +158,7 @@ function SearchResultItem({ hit }) {
   if (object) {
     const typename = object.__typename;
     if (typename === 'Action') {
-      hitTypeName = t('action');
+      hitTypeName = t('action', getActionTermContext(plan));
     } else if (typename === 'Indicator') {
       hitTypeName = t('indicator');
     }
@@ -182,7 +192,10 @@ function SearchResultItem({ hit }) {
           <h3>{hit.title}</h3>
         </a>
       </Link>
-      <ResultExcerpt dangerouslySetInnerHTML={{ __html: hit.highlight }} />
+      <ResultExcerpt>
+        <span dangerouslySetInnerHTML={{ __html: hit.highlight }} />...
+      </ResultExcerpt>
+      {/* TODO: Add ellipsis or indication for truncated text */}
     </StyledSearchResultItem>
   );
 }
@@ -220,12 +233,14 @@ function SearchResults({ search }) {
   return (
     <Row>
       <Col sm="12" md={{ offset: 2, size: 8 }}>
-        <ResultsHeader>
-          {`${t('number-of-search-results', { count: hits.length })} `}
-          &apos;
-          {search.q}
-          &apos;
-        </ResultsHeader>
+        <div role="alert">
+          <ResultsHeader>
+            {`${t('number-of-search-results', { count: hits.length })} `}
+            &apos;
+            {search.q}
+            &apos;
+          </ResultsHeader>
+        </div>
         <SearchResultList>
           { hits.map((hit) => (
             <SearchResultItem key={hit.url} hit={hit} />
@@ -270,7 +285,6 @@ function SearchView(props) {
     onSearchChange(userSearch);
   };
 
-  console.log(search);
   return (
     <>
       <SearchSection id="search-results">
@@ -287,6 +301,7 @@ function SearchView(props) {
                     placeholder={t('search-from-plans')}
                     value={userSearch?.q}
                     onChange={handleValueChange}
+                    aria-label={t('search')}
                   />
                   <FormGroup switch>
                     <Input
@@ -319,7 +334,7 @@ function SearchView(props) {
         ) : (
           <Col sm="12" md={{ offset: 2, size: 8 }} className="mt-5">
             <Alert color="primary">
-              {t('search-no-results')}
+              <ResultsHeader>{t('search-no-results')}</ResultsHeader>
             </Alert>
           </Col>
         )}

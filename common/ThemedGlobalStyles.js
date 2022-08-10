@@ -20,6 +20,7 @@ const GlobalStyle = createGlobalStyle`
 
     &:hover {
       color: ${(props) => props.theme.brandDark};
+      text-decoration: underline;
     }
   }
 
@@ -29,7 +30,7 @@ const GlobalStyle = createGlobalStyle`
   }
 
   h1, h2, h3 , h4, h5, h6 {
-    font-family: ${(props) => props.theme.headingsFontFamily}, ${(props) => props.theme.headingsFontFamilyFallback};
+    font-family: ${(props) => props.theme.fontFamilyHeadings}, ${(props) => props.theme.fontFamilyFallbackHeadings};
     font-weight: ${(props) => props.theme.headingsFontWeight};
     line-height: ${(props) => props.theme.lineHeightMd};
     color: ${(props) => props.theme.headingsColor};
@@ -88,6 +89,8 @@ const GlobalStyle = createGlobalStyle`
   }
 
   .text-content {
+    font-family: ${(props) => props.theme.fontFamilyContent};
+
     a {
       text-decoration: underline;
       overflow-wrap: break-word;

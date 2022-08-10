@@ -6,7 +6,7 @@ import { transparentize } from 'polished';
 import { usePopper } from 'react-popper';
 import { useTheme } from 'common/theme';
 import dayjs from 'common/dayjs';
-import { useTranslation } from 'common/i18n';
+import { getActionTermContext, useTranslation } from 'common/i18n';
 import StatusBadge from 'components/common/StatusBadge';
 import ActionImpact from 'components/actions/ActionImpact';
 import ActionPhase from 'components/actions/ActionPhase';
@@ -48,6 +48,8 @@ const DashTable = styled(Table)`
 `;
 
 const StyledRow = styled.tr`
+  font-family: ${(props) => props.theme.fontFamilyContent};
+
   &.merged {
     opacity: .25;
   }
@@ -136,6 +138,7 @@ const PhasesTooltipListItem = styled.li`
 const UpdatedAgo = styled.div`
   display: inline-block;
   font-size: ${(props) => props.theme.fontSizeSm};
+  font-family: ${(props) => props.theme.fontFamilyTiny};
   white-space: nowrap;
   cursor: default;
   padding: ${(props) => props.theme.spaces.s050};
@@ -168,8 +171,9 @@ const TaskTooltip = styled.div`
 
 const VizLabel = styled.div`
   font-size: ${(props) => props.theme.fontSizeSm};
+  font-family: ${(props) => props.theme.fontFamilyTiny};
   line-height: ${(props) => props.theme.lineHeightMd};
-  hyphens: auto;
+  hyphens: manual;
 
   &.active {
     font-weight: ${(props) => props.theme.fontWeightBold};
@@ -185,6 +189,7 @@ const Tooltip = styled.div`
   color: ${(props) => props.theme.themeColors.black};
   padding: ${(props) => props.theme.spaces.s050} ${(props) => props.theme.spaces.s100};
   font-size: ${(props) => props.theme.fontSizeSm};
+  font-family: ${(props) => props.theme.fontFamilyTiny};
   border-radius: 4px;
   box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
 
@@ -205,9 +210,9 @@ const Tooltip = styled.div`
   }
 
   h5 {
-    font-family: ${(props) => props.theme.fontFamily}, ${(props) => props.theme.fontFamilyFallback};
     font-weight: ${(props) => props.theme.fontWeightBold};
     font-size: ${(props) => props.theme.fontSizeSm};
+    font-family: ${(props) => props.theme.fontFamilyTiny};
     color: ${(props) => props.theme.themeColors.black};
   }
 `;
@@ -436,7 +441,7 @@ const ActionRow = React.memo(function ActionRow(props) {
 
     if (merged) return (
       <div>
-        <h5>{ ` ${t('actions:action-status-merged')}: ${getMergedName(merged, planId)}.` }</h5>
+        <h5>{ ` ${t('actions:action-status-merged', getActionTermContext(plan))}: ${getMergedName(merged, planId)}.` }</h5>
       </div>
     )
     if (!activePhase) return (
@@ -763,7 +768,7 @@ const ActionStatusTable = (props) => {
   const directionLabel = direction === 1 ? t('common:ascending') : t('common:descending');
   const columnLabel = {
     identifier: t('actions:action-id'),
-    name: t('actions:action-name-title'),
+    name: t('actions:action-name-title', getActionTermContext(plan)),
     updatedAt: t('actions:action-last-updated'),
     implementationPhase: t('actions:action-implementation-phase')
 

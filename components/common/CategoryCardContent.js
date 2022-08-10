@@ -47,7 +47,7 @@ const CatecoryCardContent = (props) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
     >
-      { catImageSrc && <CategoryImage src={catImageSrc} /> }
+      { catImageSrc && <CategoryImage src={catImageSrc} alt=""/> }
       <p>{category?.level?.name}</p>
       <h3>{category?.name}</h3>
       <h5>

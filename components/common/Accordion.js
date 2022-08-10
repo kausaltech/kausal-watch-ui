@@ -74,7 +74,7 @@ const QuestionTrigger = styled.button`
   color: ${(props) => props.theme.brandDark};
   font-weight: ${(props) => props.theme.fontWeightBold};
   line-height: ${(props) => props.theme.lineHeightMd};
-  hyphens: auto;
+  hyphens: manual;
   border: none;
   overflow: visible;
   background: transparent;

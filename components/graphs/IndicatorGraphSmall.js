@@ -540,7 +540,7 @@ function IndicatorGraphSmall({ indicatorId }) {
 
   function fixLayout(data) {
     const { layout } = data;
-    const fontFamily = `${theme.fontFamily}, ${theme.fontFamilyFallback}`;
+    const fontFamily = `${theme.fontFamilyTiny}`;
 
     layout.autosize = true;
     layout.colorway = plotColors.mainScale;

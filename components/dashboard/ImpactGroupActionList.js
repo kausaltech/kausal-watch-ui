@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import { cleanActionStatus } from 'common/preprocess';
 import { ActionLink } from 'common/links';
 import PlanContext from 'context/plan';
-import { withTranslation } from 'common/i18n';
+import { getActionTermContext, withTranslation } from 'common/i18n';
 
 import StatusBadge from 'components/common/StatusBadge';
 
@@ -41,7 +41,7 @@ const ImpactGroupActionList = (props) => {
         <thead>
           <tr>
             <th>{t('action-num')}</th>
-            <th>{t('action-name-title')}</th>
+            <th>{t('action-name-title', getActionTermContext(plan))}</th>
             <th>{t('action-impact')}</th>
             <th>{t('action-progress')}</th>
           </tr>

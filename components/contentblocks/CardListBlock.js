@@ -16,6 +16,10 @@ const CardListSection = styled.div`
     &:hover {
       text-decoration: none;
       color: ${(props) => props.theme.themeColors.black};
+
+      .card-title {
+        text-decoration: underline;
+      }
     }
   }
 `;
@@ -47,16 +51,15 @@ const CardListBlock = (props) => {
       <Container>
         { heading && (<SectionHeader>{ heading }</SectionHeader>)}
         <Content>{ lead }</Content>
-        <Row>
+        <Row tag="ul">
           { cards?.map((card,inx) => (
             <Col
               tag="li"
               xs="12"
               sm="6"
               lg="4"
-              className="mb-5 d-flex align-items-stretch"
+              className="mb-5 d-flex align-items-stretch mx-auto"
               style={{ transition: 'all 0.5s ease' }}
-              role="listitem"
               key={inx}
             >
               <a href={card.link} className="card-wrapper">
@@ -66,7 +69,7 @@ const CardListBlock = (props) => {
                   negative
                 >
                   <div>
-                    <CardHeader>{ card.heading }</CardHeader>
+                    <CardHeader className="card-title">{ card.heading }</CardHeader>
                     <p>{card.content}</p>
                   </div>
                 </Card>

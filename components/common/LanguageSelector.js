@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Link } from 'common/links';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
+import { transparentize } from 'polished';
 import {
   UncontrolledDropdown,
   DropdownToggle,
@@ -11,6 +12,28 @@ import {
 import Icon from './Icon';
 
 const Selector = styled(UncontrolledDropdown)`
+
+  margin-left: ${(props) => props.theme.spaces.s025};
+  border-radius: ${(props) => props.theme.btnBorderRadius};
+
+  &:hover span {
+    text-decoration: underline;
+  }
+
+  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    &:hover {
+      background-color: ${(props) => transparentize(0.4, props.theme.themeColors.black)};
+
+      svg.icon {
+      fill: ${(props) => props.mobile === 'true' ? props.theme.themeColors.dark : props.theme.brandNavColor} !important;
+      }
+
+      span {
+        text-decoration: none;
+      }
+    }
+  }
+
   a {
     height: 100%;
     display: flex;
@@ -19,13 +42,9 @@ const Selector = styled(UncontrolledDropdown)`
     color: ${(props) => props.theme.neutralDark};
 
     &:hover {
-        text-decoration: none;
-        color: ${(props) => props.theme.neutralDark};
-
-        .highlighter {
-          border-bottom: 5px solid ${(props) => props.theme.brandDark};
-        }
-      }
+      color: ${(props) => props.theme.neutralDark};
+      text-decoration: none;
+    }
 
     @media (min-width: ${(props) => props.theme.breakpointMd}) {
       align-self: center;

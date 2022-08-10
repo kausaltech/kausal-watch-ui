@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Badge } from 'reactstrap';
 import styled from 'styled-components';
+import { lighten } from 'polished';
 import { useTranslation } from 'common/i18n';
 import { Link } from 'common/links';
 import { slugify } from 'common/utils';
@@ -19,6 +20,10 @@ const Categories = styled.div`
   .badge {
     background-color: ${(props) => props.theme.neutralLight} !important;
     color: ${(props) => props.theme.themeColors.black};
+
+    &:hover {
+      background-color: ${(props) => lighten(0.05, props.theme.neutralLight)} !important;
+    }
   }
 `;
 
@@ -31,12 +36,14 @@ function Categorybadge(props) {
   const size = 'md';
   return (
     <Link href={url}>
-      <Badge
-        id={`org-${slugify(id)}`}
-        size={size}
-      >
-        {name}
-      </Badge>
+      <a>
+        <Badge
+          id={`org-${slugify(id)}`}
+          size={size}
+        >
+          {name}
+        </Badge>
+      </a>
     </Link>
   );
 }
@@ -48,6 +55,7 @@ function CategoryTags(props) {
   // const categoryLevels = [...new Set(data.map((cat) => cat.level?.id))];
   const categoryGroups = categoryTypes.map((catType) => data.filter((cat) => cat.type.id === catType));
 
+  /* TODO: a11y - this should probably be a list markup */
   return (
     <Categories>
       { categoryGroups

@@ -21,6 +21,7 @@ const OrgName = styled.div`
 
 const OrgTitle = styled.div`
   font-size: ${(props) => props.theme.fontSizeSm};
+  font-family: ${(props) => props.theme.fontFamilyTiny};
   font-weight: ${(props) => props.theme[props.weight]};
 `;
 
@@ -37,7 +38,7 @@ const OrgChip = React.forwardRef((props, ref) => {
 
   return (
     <Tag ref={ref} {...props}>
-      <OrgAvatar src={image} size={IMAGE_SIZES[size]} />
+      <OrgAvatar src={image} size={IMAGE_SIZES[size]} alt=""/>
       <OrgName>
         <OrgTitle weight={size==='sm' ? 'fontWeightNormal' : 'fontWeightBold'}>
           {name}

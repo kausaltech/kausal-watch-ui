@@ -10,7 +10,7 @@ import { useRouter } from 'next/router';
 
 import { getActionLinkProps } from 'common/links';
 import dayjs from 'common/dayjs';
-import { useTranslation } from 'common/i18n';
+import { getActionTermContext, useTranslation } from 'common/i18n';
 import PlanContext from 'context/plan';
 import { cleanActionStatus } from 'common/preprocess';
 
@@ -215,6 +215,9 @@ query ActionDetails($plan: ID!, $id: ID!) {
         type {
           identifier
           name
+          unit {
+            name
+          }
         }
       }
     }
@@ -237,10 +240,15 @@ ${ActionCard.fragments.action}
 const LastUpdated = styled.div`
   margin-bottom: 1em;
   color: ${(props) => props.theme.themeColors.dark};
+  font-family: ${(props) => props.theme.fontFamilyContent};
 `;
 
 const ActionSection = styled.div`
   margin-bottom: ${(props) => props.theme.spaces.s200};
+`;
+
+const PrimaryHeader = styled.h2`
+  font-size: ${(props) => props.theme.fontSizeBase};
 `;
 
 const SideHeader = styled.h3`
@@ -254,6 +262,7 @@ const SectionHeader = styled.h2`
 
 const OfficialText = styled.div`
   margin-bottom: ${(props) => props.theme.spaces.s300};
+  font-family: ${(props) => props.theme.fontFamilyContent};
 
   .official-text-content {
     color: ${(props) => props.theme.neutralDark};
@@ -262,7 +271,7 @@ const OfficialText = styled.div`
   }
 
   h2 {
-    font-size: ${(props) => props.theme.fontSizeMd};
+    font-size: ${(props) => props.theme.fontSizeBase};
   }
 `;
 
@@ -295,7 +304,7 @@ function MergedAction({ action, theme }) {
   );
 }
 
-function MergedActionList({ actions, t, theme }) {
+function MergedActionList({ actions, t, theme, plan }) {
   if (!actions || !actions.length) {
     // render nothing
     return null;
@@ -307,7 +316,7 @@ function MergedActionList({ actions, t, theme }) {
 
   return (
     <ActionSection>
-      <h2>{ t('actions:action-merged') }</h2>
+      <h2>{ t('actions:action-merged', getActionTermContext(plan)) }</h2>
       {mergedActions}
     </ActionSection>
   );
@@ -349,7 +358,7 @@ function ActionContent({ id }) {
   if (loading) return <ContentLoader />;
   if (error) return <ErrorMessage message={error.message} />;
   if (!action) {
-    return <ErrorMessage statusCode={404} message={t('action-not-found')} />;
+    return <ErrorMessage statusCode={404} message={t('action-not-found', getActionTermContext(plan))} />;
   }
 
   const updated = dayjs(action.updatedAt).format('L');
@@ -363,8 +372,8 @@ function ActionContent({ id }) {
   const hasPhases = plan.actionImplementationPhases.length > 0;
 
   const metaTitle = plan.hideActionIdentifiers
-    ? `${t('action')}: ${action.name}`
-    : `${t('action')} ${action.identifier}`;
+    ? `${t('action', getActionTermContext(plan))}: ${action.name}`
+    : `${t('action', getActionTermContext(plan))} ${action.identifier}`;
 
   return (
     <div>
@@ -393,7 +402,7 @@ function ActionContent({ id }) {
           <Col md="7" lg="8">
             {hasPhases && (
               <ActionSection>
-                <SideHeader>{ t('actions:action-progress') }</SideHeader>
+                <PrimaryHeader>{ t('actions:action-progress') }</PrimaryHeader>
                 <ActionPhase
                   status={actionStatus}
                   activePhase={action.implementationPhase}
@@ -418,7 +427,6 @@ function ActionContent({ id }) {
               <OfficialText>
                 <h2>{ t('actions:action-description-official') }</h2>
                 <div className="official-text-content">
-                  <strong>{ t('actions:action-as-in-plan') }</strong>
                   <div dangerouslySetInnerHTML={{ __html: cleanOfficialText }} />
                   {generalContent.officialNameDescription && (
                     <small>{`(${generalContent.officialNameDescription})`}</small>
@@ -442,7 +450,7 @@ function ActionContent({ id }) {
 
               </>
             ) : ''}
-            <MergedActionList t={t} theme={theme} actions={mergedActions} />
+            <MergedActionList t={t} theme={theme} actions={mergedActions} plan={plan} />
 
             { action.statusUpdates.length > 0
             && (
@@ -581,7 +589,7 @@ function ActionContent({ id }) {
                 <SectionHeader>{ t('actions:related-actions') }</SectionHeader>
               </Col>
             </Row>
-            <Row>
+            <Row tag="ul">
               {action.relatedActions.map((relAction) => (
                 <Col
                   tag="li"
@@ -590,7 +598,6 @@ function ActionContent({ id }) {
                   lg="4"
                   className="mb-5 d-flex align-items-stretch"
                   style={{ transition: 'all 0.5s ease' }}
-                  role="listitem"
                   key={relAction.id}
                 >
                   <ActionCard
@@ -608,7 +615,7 @@ function ActionContent({ id }) {
           <Container>
             <Row>
               <Col sm="12">
-                <SectionHeader>{ t('actions:action-what-effect-this-has') }</SectionHeader>
+                <SectionHeader>{ t('actions:action-what-effect-this-has', getActionTermContext(plan)) }</SectionHeader>
               </Col>
             </Row>
           </Container>

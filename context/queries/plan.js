@@ -62,6 +62,7 @@ query PlanContext($identifier: ID, $hostname: String, $clientUrl: String) {
       ownerName
       accessibilityResponsibleBody
       accessibilityContactEmail
+      actionTerm
     }
     mainMenu {
       items(withDescendants: true) {

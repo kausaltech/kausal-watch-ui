@@ -9,6 +9,7 @@ import { useTranslation } from 'common/i18n';
 import { IndicatorLink, IndicatorListLink, Link } from 'common/links';
 import OrgSelector from 'components/orgs/OrgSelector';
 import IndicatorValueSummary from 'components/indicators//IndicatorValueSummary';
+import { usePlan } from 'context/plan';
 
 const Hero = styled.header`
   position: relative;
@@ -98,7 +99,20 @@ a {
   }};
 
   &:hover {
-    color: inherit;
+    color: ${(props) => {
+      switch (props.level) {
+        case 'action':
+          return props.theme.actionColorFg;
+        case 'operational':
+          return props.theme.operationalIndicatorColorFg;
+        case 'tactical':
+          return props.theme.tacticalIndicatorColorFg;
+        case 'strategic':
+          return props.theme.strategicIndicatorColorFg;
+        default:
+          return props.theme.themeColors.black;
+      }
+    }};
     text-decoration: underline;
   }
 }
@@ -109,7 +123,7 @@ const IndexLink = styled.span`
 `;
 
 const IndicatorHeadline = styled.h1`
-  hyphens: auto;
+  hyphens: manual;
   margin: ${(props) => props.theme.spaces.s100} 0;
   font-size: ${(props) => props.theme.fontSizeXl};
   color: ${(props) => props.theme.themeColors.black} !important;
@@ -128,6 +142,10 @@ function IndicatorHero(props) {
   } = props;
   const theme = useTheme();
   const { t } = useTranslation();
+  const plan = usePlan();
+
+  // FIXME: It sucks that we only use the context for the translation key 'action'
+  const indicatorType = indicator.level === 'action' ? t('action', getActionTermContext(plan)) : t(indicator.level);
 
   return (
     <Hero bgColor={theme.brandDark}>
@@ -165,7 +183,7 @@ function IndicatorHero(props) {
                     <IndicatorLevel level={indicator.level}>
                       <IndicatorListLink>
                         <a>
-                          { t(indicator.level) }
+                          { indicatorType }
                         </a>
                       </IndicatorListLink>
                     </IndicatorLevel>

@@ -5,10 +5,13 @@ import {
 import { debounce } from 'lodash';
 import styled from 'styled-components';
 import { useTheme } from 'common/theme';
-import { useTranslation } from 'common/i18n';
+import { getActionTermContext, useTranslation } from 'common/i18n';
+import {ButtonGroup, Button as RButton} from 'reactstrap';
 import TextInput from 'components/common/TextInput';
 import Button from 'components/common/Button';
 import DropDown from 'components/common/DropDown';
+import { usePlan } from 'context/plan';
+import PopoverTip from 'components/common/PopoverTip';
 
 const FiltersList = styled.div`
   margin: ${(props) => props.theme.spaces.s150} 0;
@@ -43,6 +46,18 @@ const StyledBadge = styled(Badge)`
   background-color: ${(props) => props.theme.brandDark} !important;
   color: ${(props) => props.theme.themeColors.light};
   line-height: 1.25;
+`;
+
+const MainCategoryLabel = styled.p`
+  font-weight: 400;
+  line-height: 1;
+  margin-bottom: ${(props) => props.theme.spaces.s100};
+`;
+
+const MainCategory = styled.div`
+  padding: 0 0 ${(props) => props.theme.spaces.s200} 0;
+  margin: 0 0 ${(props) => props.theme.spaces.s200} 0;
+  border-bottom: 1px solid black;
 `;
 
 function generateSortedOrgTree(orgs, depth) {
@@ -100,10 +115,65 @@ function ActionListFilterInput({
   );
 }
 
+function ActionListMainFilter({
+  filter, currentValue, onChange,
+}) {
+  const [filterValue, setValue] = useState(currentValue);
+  const delayedQuery = useCallback(debounce(
+    (value) => onChange(filter.identifier, value), 500,
+  ), [filter.identifier, onChange]);
+
+  const callback = (newValue) => {
+    setValue(newValue);
+    delayedQuery(newValue);
+  };
+
+  return (
+    <MainCategory>
+    <MainCategoryLabel id={`label-${filter.identifier}`}>
+      {filter.label}
+      <PopoverTip
+        header="Main Category"
+        content="Show actions that are relevant for council or community"
+      />
+    </MainCategoryLabel>
+    <ButtonGroup
+      role="radiogroup"
+      aria-labelledby={`label-${filter.identifier}`}
+    >
+      <RButton
+        color="black"
+        outline
+        onClick={() => callback("")}
+        active={currentValue === undefined}
+        aria-checked={currentValue === undefined}
+        role="radio"
+      >
+        All actions
+      </RButton>
+      {filter.options.map((opt) => (
+      <RButton
+        color="black"
+        outline
+        onClick={() => callback(opt.id)}
+        active={currentValue === opt.id}
+        aria-checked={currentValue === opt.id}
+        key={opt.id}
+        role="radio"
+      >
+        { opt.label || opt.name }
+      </RButton>
+      ))}
+    </ButtonGroup>
+    </MainCategory>
+  );
+}
+
 function ActionListFilterBadges({
   filters, activeFilters, actionCount, onReset,
 }) {
   const { t } = useTranslation();
+  const plan = usePlan();
   const badges = filters.filter((item) => activeFilters[item.identifier]).map((item, index) => {
     let name;
     if (item.type !== 'text') {
@@ -126,12 +196,13 @@ function ActionListFilterBadges({
   return (
     <FiltersList aria-live="assertive">
       <span className="count">
-        { `${actionCount} ${t('filter-result-actions')}` }
+        { `${actionCount} ${t('filter-result-actions', getActionTermContext(plan))}` /* FIXME: Translation should take number into account */}
       </span>
       { badges.length > 0 && <span className="visually-hidden">{t('active-filters')}</span>}
       {/* TODO: animate transition */}
-        {(item) => (
+        {badges.map((item) => (
           <StyledBadge
+            key={item.id}
             className="me-3"
             color="primary"
           >
@@ -143,7 +214,7 @@ function ActionListFilterBadges({
             />
             { item.name?.trim() }
           </StyledBadge>
-        )}
+        ))}
     </FiltersList>
   );
 }
@@ -226,8 +297,10 @@ function ActionListFilters(props) {
     return mainCategories;
   };
 
+  /* TODO: identify the main category in generic way */
   categoryTypes.forEach((ct) => {
     allFilters.push({
+      main: ct?.common?.identifier === 'au_target_audience',
       label: ct.name,
       showAllLabel: t('filter-all-categories'),
       md: 6,
@@ -254,11 +327,29 @@ function ActionListFilters(props) {
 
   return (
     <div className="filters mb-2 text-left">
-      <form onSubmit={(event) => { event.preventDefault(); }} role="search" aria-label="Toimenpiteet">
+      <form
+        onSubmit={(event) => { event.preventDefault(); }}
+        role="search"
+        aria-label={t('form-action-filters')}
+      >
         {/* TODO: Animate UI changes */}
           <Row>
             {allFilters.map((filter) => (
-              <Col
+              filter.main && <Col
+                sm={12}
+                key={filter.identifier}
+              >
+                <ActionListMainFilter
+                  filter={filter}
+                  currentValue={filters[filter.identifier]}
+                  onChange={onChange}
+                />
+              </Col>
+            ))}
+          </Row>
+          <Row>
+            {allFilters.map((filter) => (
+              !filter.main && <Col
                 sm={filter.sm}
                 md={filter.md}
                 lg={filter.lg}

@@ -80,7 +80,7 @@ const Highlight = styled.div`
   }
 
   p {
-    hyphens: auto;
+    hyphens: manual;
     margin-bottom: 0;
   }
 `;

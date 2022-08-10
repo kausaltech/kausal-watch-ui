@@ -4,13 +4,15 @@ import {
   Card, CardImgOverlay, CardBody, CardTitle,
 } from 'reactstrap';
 import styled from 'styled-components';
-import { withTranslation } from '../../common/i18n';
+import { getActionTermContext, withTranslation } from '../../common/i18n';
 import { IndicatorLink } from '../../common/links';
+import { usePlan } from 'context/plan';
 
 const IndicatorType = styled.div`
   margin-bottom: .5em;
   text-align: left;
   font-size: ${(props) => props.theme.fontSizeSm};
+  font-family: ${(props) => props.theme.fontFamilyTiny};
   color: ${(props) => props.theme.neutralDark};
 `;
 
@@ -79,7 +81,7 @@ const StyledCardTitle = styled(CardTitle)`
   font-size: ${(props) => props.theme.fontSizeMd};
   color: ${(props) => props.theme.neutralDark};
   text-align: left;
-  hyphens: auto;
+  hyphens: manual;
 `;
 
 
@@ -105,6 +107,10 @@ function IndicatorHighlightCard(props) {
     value,
     unit,
   } = props;
+  const plan = usePlan();
+
+  // FIXME: It sucks that we only use the context for the translation key 'action'
+  const indicatorType = level === 'action' ? t('action', getActionTermContext(plan)) : t(level);
 
   return (
     <StyledCard>
@@ -124,7 +130,7 @@ function IndicatorHighlightCard(props) {
         </a>
       </IndicatorLink>
       <CardBody>
-        <IndicatorType>{ t(level) }</IndicatorType>
+        <IndicatorType>{ indicatorType }</IndicatorType>
         <IndicatorLink id={objectid}>
           <a>
             <StyledCardTitle tag="h3">{ name }</StyledCardTitle>

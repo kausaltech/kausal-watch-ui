@@ -21,6 +21,7 @@ const OrgAvatar = styled.img`
 const OrgTitle = styled.div`
   margin: 0 .5rem 0 1rem;
   font-size: ${(props) => props.theme.fontSizeSm};
+  font-family: ${(props) => props.theme.fontFamilyTiny};
   font-weight: ${(props) => props.theme[props.weight]};
 `;
 
@@ -72,7 +73,7 @@ const OrgSelector = (props) => {
           tag="button"
         >
 
-            <OrgAvatar src={activeOrg.image} />
+            <OrgAvatar src={activeOrg.image} alt=""/>
             <OrgTitle>
               {activeOrg.shortName}
             </OrgTitle>

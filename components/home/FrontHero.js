@@ -8,11 +8,12 @@ import {
 import SVG from 'react-inlinesvg';
 import styled from 'styled-components';
 import { useTheme } from 'common/theme';
-import { useTranslation } from 'common/i18n';
+import { getActionTermContext, useTranslation } from 'common/i18n';
 import {
   IndicatorListLink,
   ActionListLink,
 } from 'common/links';
+import { usePlan } from 'context/plan';
 
 const HeroVisual = styled.div`
   position: relative;
@@ -107,7 +108,7 @@ const Highlight = styled.div`
   }
 
   p {
-    hyphens: auto;
+    hyphens: manual;
     margin-bottom: 0;
     color: ${(props) => props.theme.neutralDark};
   }
@@ -116,6 +117,7 @@ const Highlight = styled.div`
 function FrontHero(props) {
   const { t } = useTranslation();
   const theme = useTheme();
+  const plan = usePlan();
   const {
     bgImage, title, siteDescription, actionsDescription, indicatorsDescription,
   } = props;
@@ -149,7 +151,7 @@ function FrontHero(props) {
                     <IconActions />
                   </Illustration>
                   <div>
-                    <h3>{ t('actions') }</h3>
+                    <h3>{ t('actions', getActionTermContext(plan)) }</h3>
                     <p>
                       { actionsDescription || 'Action Description' }
                     </p>

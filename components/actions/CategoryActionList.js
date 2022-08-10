@@ -135,7 +135,6 @@ const CategoryActionList = (props) => {
             <ListColumn
               key={action.id}
               className="mb-4 d-flex align-items-stretch"
-              role="listitem"
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               layout

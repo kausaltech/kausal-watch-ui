@@ -4,7 +4,7 @@ import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
 import { gql, useQuery } from '@apollo/client';
 
-import { useTranslation } from 'common/i18n';
+import { getActionTermContext, useTranslation } from 'common/i18n';
 import ActionCard from 'components/actions/ActionCard';
 import ActionCardList from 'components/actions/ActionCardList';
 import ContentLoader from 'components/common/ContentLoader';
@@ -51,10 +51,10 @@ const ActionListBlock = (props) => {
   if (!planActions) {
     return <ErrorMessage statusCode={404} message={t('page-not-found')} />;
   }
-  const actions = planActions.map((act) => ({ ...act, iconUrl: act.categories.find((cat) => cat.iconUrl)?.iconUrl }));
+  const actions = planActions.map((act) => ({ ...act, iconSvgUrl: act.categories.find((cat) => cat.iconSvgUrl)?.iconSvgUrl }));
   const groupBy = plan.primaryOrgs.length > 0 ? 'primaryOrg' : 'none';
 
-  const heading = t('actions');
+  const heading = t('actions', getActionTermContext(plan));
   return (
     <ActionListSection color={color}>
       <Container>

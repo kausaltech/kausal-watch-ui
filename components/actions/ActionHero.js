@@ -5,8 +5,9 @@ import {
 } from 'reactstrap';
 import styled from 'styled-components';
 import { useTheme } from 'common/theme';
-import { useTranslation } from 'common/i18n';
+import { getActionTermContext, useTranslation } from 'common/i18n';
 import { ActionLink, ActionListLink, Link } from 'common/links';
+import { usePlan } from 'context/plan';
 
 import Icon from 'components/common/Icon';
 
@@ -70,9 +71,11 @@ const ActionsNav = styled.nav`
   justify-content: space-between;
   margin-bottom: ${(props) => props.theme.spaces.s100};
   font-size: ${(props) => props.theme.fontSizeSm};
+  font-family: ${(props) => props.theme.fontFamilyTiny};
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     font-size: ${(props) => props.theme.fontSizeBase};
+    font-family: ${(props) => props.theme.fontFamily};
   }
 `;
 
@@ -98,6 +101,7 @@ const ImageCredit = styled.span`
   padding: 0.25rem 0.5rem;
   background-color: rgba(255,255,255,0.66);
   font-size: ${(props) => props.theme.fontSizeSm};
+  font-family: ${(props) => props.theme.fontFamilyTiny};
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     top: inherit;
@@ -106,7 +110,7 @@ const ImageCredit = styled.span`
 `;
 
 const ActionHeadline = styled.h1`
-  hyphens: auto;
+  hyphens: manual;
   margin: ${(props) => props.theme.spaces.s100} 0;
   font-size: ${(props) => props.theme.fontSizeXl};
   color: ${(props) => props.theme.themeColors.black} !important;
@@ -119,6 +123,7 @@ const ActionHeadline = styled.h1`
 
 const ActionNumber = styled.span`
   margin-right: ${(props) => props.theme.spaces.s100};
+  white-space: nowrap;
 
   &:after {
     content: ".";
@@ -130,7 +135,7 @@ function ActionCategories(categories) {
   const { showIdentifiers } = theme.settings.categories;
 
   const displayCategories = [];
-  categories.categories.every((cat, indx) => {
+  categories.categories.forEach((cat, indx) => {
     if (cat.type.identifier !== 'action') return false;
     displayCategories[indx] = {};
     let categoryTitle = cat.name;
@@ -201,6 +206,7 @@ function ActionHero(props) {
   } = props;
   const theme = useTheme();
   const { t } = useTranslation();
+  const plan = usePlan();
 
   // Theme overlay color as fallback
   let categoryColor = theme.imageOverlay;
@@ -230,14 +236,15 @@ function ActionHero(props) {
                       <PrimaryOrg>
                         <OrgLogo
                           src={primaryOrg.logo?.rendition?.src || '/static/themes/default/images/default-avatar-org.png'}
+                          alt=""
                         />
                         <strong><ActionListLink query={{ primaryOrg: primaryOrg.id }}>{ primaryOrg.abbreviation || primaryOrg.name }</ActionListLink></strong>
                       </PrimaryOrg>
                     ) }
-                    <ActionsNav aria-label="Actions Pager">
+                    <ActionsNav aria-label={t('nav-actions-pager')}>
                       <ActionListLink>
                         <a>
-                          <IndexLink>{ t('actions') }</IndexLink>
+                          <IndexLink>{ t('actions', getActionTermContext(plan)) }</IndexLink>
                         </a>
                       </ActionListLink>
                       <div>

@@ -97,7 +97,7 @@ const PlanSelector = (props) => {
           data-toggle="dropdown"
           tag="button"
         >
-            <PlanAvatar src={plan.image?.small.src} />
+            <PlanAvatar src={plan.image?.small.src} alt=""/>
             <PlanTitle>
               {plan.shortName || plan.name}
             </PlanTitle>

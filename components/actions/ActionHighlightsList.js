@@ -9,7 +9,7 @@ import {
 } from 'reactstrap';
 import LazyLoad from 'react-lazyload';
 import Button from 'components/common/Button';
-import { withTranslation } from 'common/i18n';
+import { getActionTermContext, withTranslation } from 'common/i18n';
 import ContentLoader from 'components/common/ContentLoader';
 import { ActionListLink } from 'common/links';
 import images, { getActionImage } from 'common/images';
@@ -87,7 +87,7 @@ function ActionCardList({ t, actions, plan }) {
   return (
     <Row>
       <ListHeader xs="12">
-        <h2>{ t('recently-updated-actions') }</h2>
+        <h2>{ t('recently-updated-actions', getActionTermContext(plan)) }</h2>
       </ListHeader>
       {actions.map((item) => (
         <CardContainer
@@ -110,7 +110,7 @@ function ActionCardList({ t, actions, plan }) {
       <Col xs="12" className="mt-5 mb-5">
         <ActionListLink>
           <Button outline color="primary" tag="a">
-            { t('see-all-actions') }
+            { t('see-all-actions', getActionTermContext(plan)) }
             {' '}
             <Icon name="arrowRight" color="black" />
           </Button>
@@ -142,7 +142,7 @@ function ActionHighlightsList(props) {
     <Query query={GET_ACTION_LIST} variables={queryParams}>
       {({ data, loading, error }) => {
         if (loading) return <ContentLoader />;
-        if (error) return <p>{ t('error-loading-actions') }</p>;
+        if (error) return <p>{ t('error-loading-actions', getActionTermContext(plan)) }</p>;
         return <ActionCardList t={t} actions={data.planActions} plan={plan}/>;
       }}
     </Query>

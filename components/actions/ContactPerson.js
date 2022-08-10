@@ -42,6 +42,7 @@ const PersonRole = styled.p`
   margin-bottom: .5em;
   color: ${(props) => props.theme.themeColors.dark};
   font-size: ${(props) => props.theme.fontSizeSm};
+  font-family: ${(props) => props.theme.fontFamilyTiny};
   font-weight: ${(props) => props.theme.fontWeightBold};
   line-height: ${(props) => props.theme.lineHeightSm};
 `;
@@ -50,6 +51,7 @@ const PersonOrg = styled.p`
   margin-bottom: 1em;
   color: ${(props) => props.theme.themeColors.dark};
   font-size: ${(props) => props.theme.fontSizeSm};
+  font-family: ${(props) => props.theme.fontFamilyTiny};
   line-height: ${(props) => props.theme.lineHeightSm};
 `;
 
@@ -62,10 +64,15 @@ const Address = styled.address`
   margin-top: 1em;
   margin-bottom: 0;
   font-size: ${(props) => props.theme.fontSizeSm};
+  font-family: ${(props) => props.theme.fontFamilyTiny};
 `;
 
 const CollapseButton = styled(Button)`
   padding: 0;
+
+  &:hover {
+    text-decoration: none;
+  }
 `;
 
 const GET_CONTACT_DETAILS = gql`

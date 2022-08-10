@@ -9,6 +9,7 @@ import { withTranslation } from 'common/i18n';
 
 const Date = styled.span`
   font-size: ${(props) => props.theme.fontSizeSm};
+  font-family: ${(props) => props.theme.fontFamilyTiny};
   margin-left: ${(props) => props.theme.spaces.s025};
 `;
 
@@ -28,6 +29,7 @@ const TaskContent = styled.div`
 
   .text-content {
     font-size: ${(props) => props.theme.fontSizeSm};
+    font-family: ${(props) => props.theme.fontFamilyTiny};
 
     p:last-child {
       margin-bottom: 0;
@@ -42,13 +44,14 @@ const TaskContent = styled.div`
     word-wrap: break-word;
     word-break: break-all;
     word-break: break-word;
-    hyphens: auto;
+    hyphens: manual;
   }
 `;
 
 const ListGroup = styled(BaseListGroup)`
   h4 {
     font-size: ${(props) => props.theme.fontSizeBase};
+    font-family: ${(props) => props.theme.fontFamily};
   }
 `;
 

@@ -18,8 +18,12 @@ const CategoryListSection = styled.div`
     color: ${(props) => props.theme.themeColors.black};
 
     &:hover {
-      text-decoration: none;
       color: ${(props) => props.theme.themeColors.black};
+      text-decoration: none;
+
+      .card-title {
+        text-decoration: underline;
+      }
     }
   }
 
@@ -60,7 +64,7 @@ const CategoryListBlock = (props) => {
       <Container>
         { heading && (<SectionHeader>{ heading }</SectionHeader>)}
         <RichText html={lead} className="lead-text" />
-        <Row>
+        <Row tag="ul">
           { categories?.map((cat) => cat.categoryPage && (
             <Col
               tag="li"
@@ -70,7 +74,6 @@ const CategoryListBlock = (props) => {
               key={cat.id}
               className="mb-5 d-flex align-items-stretch"
               style={{ transition: 'all 0.5s ease' }}
-              role="listitem"
             >
               <Link href={cat.categoryPage.urlPath}>
                 <a className="card-wrapper">
@@ -80,7 +83,7 @@ const CategoryListBlock = (props) => {
                     imageTone={cat.color}
                   >
                     <div>
-                      <CardHeader>
+                      <CardHeader className="card-title">
                         { theme.settings.categories.showIdentifiers && (
                           <Identifier>
                             {cat.identifier}

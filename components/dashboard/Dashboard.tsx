@@ -14,7 +14,7 @@ import {
 } from 'reactstrap';
 import styled from 'styled-components';
 import { captureException } from 'common/sentry';
-import { useTranslation, withTranslation } from 'common/i18n';
+import { getActionTermContext, useTranslation, withTranslation } from 'common/i18n';
 import RichText from 'components/common/RichText';
 import ContentLoader from 'components/common/ContentLoader';
 import { usePlan } from 'context/plan';
@@ -90,6 +90,7 @@ export const GET_IMPACT_GROUP_LIST = gql`
 `;
 
 const DashboardTab = ({ t, segment }) => {
+  const plan = usePlan();
   let content;
   if (segment.actions.length) {
     content = (
@@ -100,7 +101,7 @@ const DashboardTab = ({ t, segment }) => {
     );
   } else {
     content = (
-      <div className="mb-5 pd-5">{t('impact-group-no-actions')}</div>
+      <div className="mb-5 pd-5">{t('impact-group-no-actions', getActionTermContext(plan))}</div>
     );
   }
 
@@ -257,7 +258,7 @@ export default function Dashboard(props) {
   if (loading) return <ContentLoader />;
   if (error) {
     captureException(error);
-    return <p>{ t('error-loading-actions') }</p>;
+    return <p>{ t('error-loading-actions', getActionTermContext(plan)) }</p>;
   }
 
   const leadContent = '<p>Olemme selvitt&auml;neet, kuinka paljon&nbsp;eri toimenpiteill&auml; olisi mahdollista saada&nbsp;p&auml;&auml;st&ouml;v&auml;hennyksi&auml; vuoteen 2035 menness&auml;. Toimenpiteet on useimmiten niputettu yhteen, koska yksitt&auml;isen toimenpiteen p&auml;&auml;st&ouml;v&auml;hennysvaikutusta on vaikea arvioida tarkasti ja monet toimenpiteist&auml; tukevat toisiaan. Suurimmat p&auml;&auml;st&ouml;v&auml;hennykset voidaan saada kaukol&auml;mm&ouml;ntuotannon puhdistumisesta (Helenin toimet), v&auml;hent&auml;m&auml;ll&auml; rakennusten l&auml;mm&ouml;nkulutusta, lis&auml;&auml;m&auml;ll&auml; maal&auml;mm&ouml;n tuotantoa&nbsp;ja tuottamalla enemm&auml;n s&auml;hk&ouml;&auml; aurinkopaneeleilla. P&auml;&auml;st&ouml;tavoitteen saavuttamisessa&nbsp;my&ouml;s s&auml;hk&ouml;autojen osuuden kasvattamisella on huomattava merkitys. On t&auml;rke&auml;&auml;, ett&auml; kaikki toimenpiteet toteutetaan,&nbsp;jotta tavoitteeseen p&auml;&auml;st&auml;&auml;n. P&auml;&auml;st&ouml;v&auml;hennysarvioon olemme laskeneet mukaan vain ne toimet, jotka v&auml;hent&auml;v&auml;t Helsingin v&auml;litt&ouml;mi&auml; p&auml;&auml;st&ouml;j&auml;&nbsp;ja jotka lasketaan 80 prosentin p&auml;&auml;st&ouml;v&auml;hennystavoitteeseen mukaan. Siin&auml; ei siis ole mukana toimenpiteit&auml;, jotka v&auml;hent&auml;v&auml;t v&auml;lillisi&auml; p&auml;&auml;st&ouml;j&auml;.&nbsp;</p>\r\n\r\n<p><em>T&auml;ll&auml; sivulla esitetty arvio&nbsp;p&auml;&auml;st&ouml;v&auml;hennyksist&auml; perustuu vuoden 2015 l&auml;ht&ouml;tietoihin. Arviota ei ole viel&auml; p&auml;ivitetty vastaamaan uusimpia saatavilla olevia tietoja. Tieto toimenpiteiden etenemisest&auml; puolestaan perustuu toimenpiteiden yhteyshenkil&ouml;iden tekem&auml;&auml;n seurantaan (katso p&auml;ivitysajankohta&nbsp;kunkin toimenpiteen omalta sivulta).</em></p>';

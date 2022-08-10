@@ -5,8 +5,9 @@ import {
 } from 'reactstrap';
 import styled from 'styled-components';
 import dayjs from '../../common/dayjs';
-import { withTranslation } from '../../common/i18n';
+import { getActionTermContext, withTranslation } from '../../common/i18n';
 import { IndicatorLink } from '../../common/links';
+import { usePlan } from 'context/plan';
 
 
 const IndicatorValue = styled.div`
@@ -16,11 +17,13 @@ const IndicatorValue = styled.div`
 
 const IndicatorValueUnit = styled.span`
   font-size: ${(props) => props.theme.fontSizeSm};
+  font-family: ${(props) => props.theme.fontFamilyTiny};
   font-weight: ${(props) => props.theme.fontWeightNormal};
 `;
 
 const IndicatorValueTime = styled.div`
   font-size: ${(props) => props.theme.fontSizeSm};
+  font-family: ${(props) => props.theme.fontFamilyTiny};
   font-weight: ${(props) => props.theme.fontWeightNormal};
 `;
 
@@ -34,7 +37,7 @@ const StyledLink = styled.a`
 `;
 
 const Indicator = styled(Card)`
-  hyphens: auto;
+  hyphens: manual;
   line-height: ${(props) => props.theme.lineHeightSm};
   border: 0;
   border-radius: ${(props) => props.theme.cardBorderRadius};
@@ -77,6 +80,7 @@ const Indicator = styled(Card)`
 
 const IndicatorType = styled.div`
   font-size: ${(props) => props.theme.fontSizeSm};
+  font-family: ${(props) => props.theme.fontFamilyTiny};
   margin-bottom: .5em;
 `;
 
@@ -139,13 +143,17 @@ function IndicatorCard(props) {
     latestValue,
     resolution,
   } = props;
+  const plan = usePlan();
+
+  // FIXME: It sucks that we only use the context for the translation key 'action'
+  const indicatorType = level === 'action' ? t('action', getActionTermContext(plan)) : t(level);
 
   return (
     <CardLink level={level} indicatorId={objectid}>
       <Indicator level={level}>
         <CardBody>
           <div>
-            <IndicatorType>{ t(level) }</IndicatorType>
+            <IndicatorType>{ indicatorType }</IndicatorType>
             <IndicatorTitle>
               { number && <IndicatorNumber>{ number }</IndicatorNumber> }
               { name }

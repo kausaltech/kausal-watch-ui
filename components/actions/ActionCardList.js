@@ -5,8 +5,9 @@ import styled from 'styled-components';
 import { useTheme } from 'common/theme';
 import ActionCard from './ActionCard';
 
-const ActionsList = styled.div`
+const ActionsList = styled.ul`
   margin-top: ${(props) => props.theme.spaces.s400};
+  padding: 0;
 `;
 
 const ActionGroupHeader = styled.h2`
@@ -25,6 +26,10 @@ const ActionGroup = styled(Row)`
   .card {
     height: 100%;
   }
+`;
+
+const ActionGroupList = styled(Row)`
+  padding: 0;
 `;
 
 const groupActions = (groupBy, actions, theme) => {
@@ -77,9 +82,9 @@ function ActionCardList(props) {
   const groups = groupActions(groupBy, actions, theme);
 
   return (
-    <ActionsList role="list">
+    <ActionsList>
       {groups.map((group) => (
-        <ActionGroup key={group.id} role="group">
+        <ActionGroup key={group.id} tag="li">
           {groups.length > 1 && <Col xs="12">
             <ActionGroupHeader>
               {group.displayIdentifier && (
@@ -90,21 +95,24 @@ function ActionCardList(props) {
               {group.name}
             </ActionGroupHeader>
           </Col>}
-          {group.elements.map((item) => (
-            <Col
-              tag="li"
-              xs="6"
-              sm="4"
-              lg="3"
-              xl="2"
-              key={item.id}
-              className="mb-4 d-flex align-items-stretch"
-              style={{ transition: 'all 0.5s ease' }}
-              role="listitem"
-            >
-              <ActionCard action={item} />
-            </Col>
-          ))}
+          <Col xs="12">
+            <ActionGroupList tag="ul">
+              {group.elements.map((item) => (
+                <Col
+                  tag="li"
+                  xs="6"
+                  sm="4"
+                  lg="3"
+                  xl="2"
+                  key={item.id}
+                  className="mb-4 d-flex align-items-stretch"
+                  style={{ transition: 'all 0.5s ease' }}
+                >
+                  <ActionCard action={item} />
+                </Col>
+              ))}
+            </ActionGroupList>
+          </Col>
         </ActionGroup>
       ))}
     </ActionsList>
