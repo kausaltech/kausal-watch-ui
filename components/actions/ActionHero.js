@@ -6,7 +6,7 @@ import {
 import styled from 'styled-components';
 import { useTheme } from 'common/theme';
 import { getActionTermContext, useTranslation } from 'common/i18n';
-import { ActionLink, ActionListLink, Link } from 'common/links';
+import { ActionLink, ActionListLink, OrganizationLink, Link } from 'common/links';
 import { usePlan } from 'context/plan';
 
 import Icon from 'components/common/Icon';
@@ -238,7 +238,11 @@ function ActionHero(props) {
                           src={primaryOrg.logo?.rendition?.src || '/static/themes/default/images/default-avatar-org.png'}
                           alt=""
                         />
-                        <strong><ActionListLink query={{ primaryOrg: primaryOrg.id }}>{ primaryOrg.abbreviation || primaryOrg.name }</ActionListLink></strong>
+                        <strong>
+                          <OrganizationLink organizationId={ primaryOrg.id }>
+                            { primaryOrg.abbreviation || primaryOrg.name }
+                          </OrganizationLink>
+                        </strong>
                       </PrimaryOrg>
                     ) }
                     <ActionsNav aria-label={t('nav-actions-pager')}>

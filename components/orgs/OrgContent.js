@@ -43,9 +43,14 @@ const Tab = styled.button`
   }
 `;
 
-const IndicatorsTabs = styled.div`
+const OrgTabs = styled.div`
   background-color: ${(props) => props.theme.brandDark};
   margin-bottom: 0;
+
+  .nav {
+    flex-wrap: nowrap;
+    overflow: auto;
+  }
 `;
 
 const HeaderContainer = styled(Container)`
@@ -108,6 +113,10 @@ const ActionTableHeader = styled.div`
     font-size: ${(props) => props.theme.fontSizeMd};
     margin: 0;
   }
+`;
+
+const ActionTableContainer = styled.div`
+  overflow: auto ;
 `;
 
 const GET_ORG_DETAILS = gql`
@@ -335,7 +344,7 @@ function OrgContent(props) {
             </Col>
           </Row>
         </HeaderContainer>
-        <IndicatorsTabs>
+        <OrgTabs>
           <Container>
             <Nav role="tablist">
               { plans?.map((p, i) => (
@@ -362,7 +371,7 @@ function OrgContent(props) {
               ))}
             </Nav>
           </Container>
-        </IndicatorsTabs>
+        </OrgTabs>
       </OrgHeader>
       <Container>
         <ActionTableHeader>
@@ -370,12 +379,14 @@ function OrgContent(props) {
             { t('actions:org-responsible-in-actions', { actionCount: plans[selectedPlanIndex]?.actions.length }) }
           </h2>
         </ActionTableHeader>
-        <ActionStatusTable
-          enableExport={false}
-          plan={plans[selectedPlanIndex]}
-          actions={[...plans[selectedPlanIndex]?.actions]}
-          orgs={[]}
-        />
+        <ActionTableContainer>
+          <ActionStatusTable
+            enableExport={false}
+            plan={plans[selectedPlanIndex]}
+            actions={[...plans[selectedPlanIndex]?.actions]}
+            orgs={[]}
+          />
+        </ActionTableContainer>
       </Container>
     </div>
   );
