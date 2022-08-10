@@ -13,7 +13,7 @@ export function getI18n() {
 }
 
 export function getActionTermContext(plan) {
-  const actionTerm = plan.generalContent.actionTerm;
+  const actionTerm = plan.generalContent?.actionTerm;
   return actionTerm === 'ACTION' ? undefined : { context: actionTerm };
 }
 

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { withTranslation } from 'common/i18n';
-import { ActionListLink } from 'common/links';
+import { OrganizationLink } from 'common/links';
 import { slugify } from 'common/utils';
 import BadgeTooltip from '../common/BadgeTooltip';
 
@@ -36,7 +36,7 @@ function ResponsibleBadge(props) {
   }
 
   return (
-    <ActionListLink query={{ organization: id }}>
+    <OrganizationLink organizationId={ id }>
       <BadgeTooltip
         id={`org-${slugify(id)}`}
         name={name}
@@ -44,7 +44,7 @@ function ResponsibleBadge(props) {
         abbreviation={abbreviation}
         size={size}
       />
-    </ActionListLink>
+    </OrganizationLink>
   );
 }
 

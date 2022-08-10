@@ -45,5 +45,6 @@
   "emission-scopes": "Utsläppsomfattningar",
   "no-defined-indicators": "",
   "not-being-implemented": ";Not being implemented;",
-  "not-being-monitored": ";Not monitored;"
+  "not-being-monitored": ";Not monitored;",
+  "org-responsible-in-actions": "Responsible in {{actionCount}} actions"
 }

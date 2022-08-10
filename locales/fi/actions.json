@@ -60,5 +60,6 @@
   "tasks-late": "Myöhästyneet tehtävät",
   "tasks-on-time": "Ajoissa olevat tehtävät",
   "action-implementation-phase-unknown": "Ei toteutusvaihetta",
-  "related-actions": "Liittyvät toimenpiteet"
+  "related-actions": "Liittyvät toimenpiteet",
+  "org-responsible-in-actions": "{{actionCount}} toimenpiteen vastuuorganisaationa"
 }

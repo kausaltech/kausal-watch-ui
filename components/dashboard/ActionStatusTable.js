@@ -5,7 +5,6 @@ import styled from 'styled-components';
 import { transparentize } from 'polished';
 import { usePopper } from 'react-popper';
 import { useTheme } from 'common/theme';
-import PlanContext from 'context/plan';
 import dayjs from 'common/dayjs';
 import { getActionTermContext, useTranslation } from 'common/i18n';
 import StatusBadge from 'components/common/StatusBadge';
@@ -378,7 +377,7 @@ function processAction(actionIn, orgMap) {
 
   action.responsibleParties = actionIn.responsibleParties.map((rp) => {
     const org = orgMap.get(rp.organization.id);
-    const found = action.contactPersons.some(({ person }) => {
+    const found = (action?.contactPersons ?? []).some(({ person }) => {
       if (!person.organization) return false;
       const personOrg = orgMap.get(person.organization.id);
       return isChildOrg(personOrg, org);
@@ -588,7 +587,7 @@ const ActionRow = React.memo(function ActionRow(props) {
           )}
         </td>
       )}
-      { !plan.hideActionIdentifiers && (
+      { plan.features.hasActionIdentifiers && (
       <td>
         { item.identifier }
         .
@@ -620,7 +619,7 @@ const ActionRow = React.memo(function ActionRow(props) {
           ) : (
             <StatusBadge
               statusIdentifier={actionStatus.identifier}
-              statusName={item.mergedWith? 'coucou' : actionStatus.name}
+              statusName={item.mergedWith ? t('actions:action-status-merged', getActionTermContext(plan)) : actionStatus.name}
             />
           )}
         </StatusDisplay>
@@ -718,7 +717,7 @@ const preprocessForSorting = (key, items, hasImplementationPhases) => {
 }
 
 const ActionStatusTable = (props) => {
-  const { actions, orgs, plan } = props;
+  const { actions, orgs, plan, enableExport } = props;
   const orgMap = new Map(orgs.map((org) => [org.id, org]));
   const theme = useTheme();
   const [ sort, setSort ] = useState({key: 'order', direction: 1});
@@ -752,7 +751,7 @@ const ActionStatusTable = (props) => {
   const { showResponsibles, showIndicators } = theme.settings.dashboard;
   const showColumn = {};
   showColumn.logos = plan.primaryOrgs.length > 0;
-  showColumn.actionIdentifiers = !plan.hideActionIdentifiers;
+  showColumn.actionIdentifiers = plan.features.hasActionIdentifiers;
   showColumn.impacts = plan.actionImpacts.length > 0;
   showColumn.responsibles = showResponsibles;
   showColumn.indicators = showIndicators;
@@ -795,7 +794,7 @@ const ActionStatusTable = (props) => {
         }
       </div>
     <div>
-      <ActionStatusExport actions={actions} actionStatuses={plan.actionStatuses} />
+      { enableExport && <ActionStatusExport actions={actions} actionStatuses={plan.actionStatuses} /> }
     </div>
     <DashTable role="list">
       <thead>

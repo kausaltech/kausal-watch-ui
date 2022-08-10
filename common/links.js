@@ -120,6 +120,12 @@ ActionLink.propTypes = {
   planUrl: PropTypes.string,
 };
 
+export function OrganizationLink(props) {
+  const { organizationId, ...other } = props;
+  const href = `/organizations/${organizationId}`;
+  return <Link href={href} passHref {...other} />;
+}
+
 export function ActionListLink(props) {
   const { query, ...other } = props;
   const pathname = '/actions';

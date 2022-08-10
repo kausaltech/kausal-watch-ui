@@ -58,5 +58,6 @@
   "tasks-on-time": "Pünktliche Aufgaben",
   "tasks-completed": "Erledigte Aufgaben",
   "responsible-organization-main": "Hauptverantwortlich",
-  "responsible-organization-other": "Andere Verantwortliche"
+  "responsible-organization-other": "Andere Verantwortliche",
+  "org-responsible-in-actions": "Responsible in {{actionCount}} actions"
 }
