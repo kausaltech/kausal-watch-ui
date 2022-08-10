@@ -60,5 +60,6 @@
   "responsible-organization-main": "Hovedansvarlig",
   "responsible-organization-other": "Andre ansvarlige",
   "action-implementation-phase-unknown": "Ingen implementeringsfase",
-  "related-actions": "Relaterede handlinger"
+  "related-actions": "Relaterede handlinger",
+  "org-responsible-in-actions": "Responsible in {{actionCount}} actions"
 }

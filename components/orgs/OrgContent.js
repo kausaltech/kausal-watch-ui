@@ -17,8 +17,7 @@ import { Link, ActionLink } from 'common/links';
 import ContentLoader from 'components/common/ContentLoader';
 import ErrorMessage from 'components/common/ErrorMessage';
 import { Meta } from 'components/layout';
-
-const ORG_DEFAULT_AVATAR = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAApgAAAKYB3X3/OAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAANCSURBVEiJtZZPbBtFFMZ/M7ubXdtdb1xSFyeilBapySVU8h8OoFaooFSqiihIVIpQBKci6KEg9Q6H9kovIHoCIVQJJCKE1ENFjnAgcaSGC6rEnxBwA04Tx43t2FnvDAfjkNibxgHxnWb2e/u992bee7tCa00YFsffekFY+nUzFtjW0LrvjRXrCDIAaPLlW0nHL0SsZtVoaF98mLrx3pdhOqLtYPHChahZcYYO7KvPFxvRl5XPp1sN3adWiD1ZAqD6XYK1b/dvE5IWryTt2udLFedwc1+9kLp+vbbpoDh+6TklxBeAi9TL0taeWpdmZzQDry0AcO+jQ12RyohqqoYoo8RDwJrU+qXkjWtfi8Xxt58BdQuwQs9qC/afLwCw8tnQbqYAPsgxE1S6F3EAIXux2oQFKm0ihMsOF71dHYx+f3NND68ghCu1YIoePPQN1pGRABkJ6Bus96CutRZMydTl+TvuiRW1m3n0eDl0vRPcEysqdXn+jsQPsrHMquGeXEaY4Yk4wxWcY5V/9scqOMOVUFthatyTy8QyqwZ+kDURKoMWxNKr2EeqVKcTNOajqKoBgOE28U4tdQl5p5bwCw7BWquaZSzAPlwjlithJtp3pTImSqQRrb2Z8PHGigD4RZuNX6JYj6wj7O4TFLbCO/Mn/m8R+h6rYSUb3ekokRY6f/YukArN979jcW+V/S8g0eT/N3VN3kTqWbQ428m9/8k0P/1aIhF36PccEl6EhOcAUCrXKZXXWS3XKd2vc/TRBG9O5ELC17MmWubD2nKhUKZa26Ba2+D3P+4/MNCFwg59oWVeYhkzgN/JDR8deKBoD7Y+ljEjGZ0sosXVTvbc6RHirr2reNy1OXd6pJsQ+gqjk8VWFYmHrwBzW/n+uMPFiRwHB2I7ih8ciHFxIkd/3Omk5tCDV1t+2nNu5sxxpDFNx+huNhVT3/zMDz8usXC3ddaHBj1GHj/As08fwTS7Kt1HBTmyN29vdwAw+/wbwLVOJ3uAD1wi/dUH7Qei66PfyuRj4Ik9is+hglfbkbfR3cnZm7chlUWLdwmprtCohX4HUtlOcQjLYCu+fzGJH2QRKvP3UNz8bWk1qMxjGTOMThZ3kvgLI5AzFfo379UAAAAASUVORK5CYII=";
+import ActionsStatusGraphs from 'components/dashboard/ActionStatusGraphs';
 
 const Tab = styled.button`
   background: ${(props) => props.theme.brandDark};
@@ -49,6 +48,9 @@ const IndicatorsTabs = styled.div`
   margin-bottom: 0;
 `;
 
+const HeaderContainer = styled(Container)`
+  margin-bottom: ${(props) => props.theme.spaces.s200};
+`;
 
 const OrgHeader = styled.div`
   padding: ${(props) => props.theme.spaces.s300} 0 0 0;
@@ -85,7 +87,6 @@ const OrgLogo = styled.img`
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     max-width: 100%;
-    float: right;
   }
 `;
 
@@ -98,6 +99,15 @@ const OrgLink = styled.a`
   font-size: ${(props) => props.theme.fontSizeSm};
   text-decoration: underline;
   color: ${(props) => props.theme.brandLight };
+`;
+
+const ActionTableHeader = styled.div`
+  margin: ${(props) => props.theme.spaces.s300} 0 ${(props) => props.theme.spaces.s100};
+
+  h2 {
+    font-size: ${(props) => props.theme.fontSizeMd};
+    margin: 0;
+  }
 `;
 
 const GET_ORG_DETAILS = gql`
@@ -118,6 +128,7 @@ const GET_ORG_DETAILS = gql`
         id
       }
       plansWithActionResponsibilities {
+        id
         name
         shortName
         organization {
@@ -139,36 +150,102 @@ const GET_ORG_DETAILS = gql`
             alt
           }
         }
+        actionStatuses {
+          id
+          identifier
+          name
+          isCompleted
+        }
+        features {
+          hasActionIdentifiers
+          hasActionOfficialName
+          hasActionPrimaryOrgs
+          publicContactPersons
+        }
         actions(responsibleOrganization: $id) {
-           id
-           identifier
-           name
-           updatedAt
-           tasks {
-             id
-           }
-           tasks {
-             id
-             state
-             dueAt
-           }
-           status {
-             identifier
-             name
-           }
-           plan {
-             id
-             viewUrl
-           }
-           responsibleParties {
-             id
-             organization {
-               id
-               abbreviation
-               name
-             }
-           }
+          id
+          identifier
+          name(hyphenated: true)
+          officialName
+          completion
+          updatedAt
+          scheduleContinuous
+          startDate
+          endDate
+          order
+          plan {
+            id
+          }
+          schedule {
+            id
+          }
+          status {
+            id
+            identifier
+            name
+          }
+          implementationPhase {
+            id
+            identifier
+            name
+            order
+          }
+          impact {
+            id
+            identifier
+          }
+          categories {
+            id
+          }
+          responsibleParties {
+            id
+            organization {
+              id
+              abbreviation
+              name
+            }
+          }
+          primaryOrg {
+            id
+            abbreviation
+            name
+            logo {
+              rendition(size: "128x128", crop: true) {
+                src
+              }
+            }
+          }
 
+          tasks {
+            id
+            state
+            dueAt
+          }
+          mergedWith {
+            id
+            identifier
+            plan {
+              id
+              shortName
+              viewUrl
+            }
+          }
+          indicators {
+            id
+            goals {
+              id
+            }
+          }
+          relatedIndicators {
+            id
+            indicatesActionProgress
+            indicator {
+              id
+              goals {
+                id
+              }
+            }
+          }
         }
       }
       actionCount
@@ -193,7 +270,7 @@ const GET_ORG_DETAILS = gql`
 function OrgContent(props) {
   const { id } = props;
   const plan = usePlan();
-  const { t } = useTranslation();
+  const { t } = useTranslation(['common', 'actions']);
   const [ selectedPlanIndex, setSelectedPlan ] = useState(0);
 
   const { data, loading, error } = useQuery(GET_ORG_DETAILS, {
@@ -207,30 +284,31 @@ function OrgContent(props) {
 
   const { organization:org } = data;
   if (!org) {
-    return <ErrorMessage statusCode={404} message={t('indicator-not-found')} />;
+    return <ErrorMessage statusCode={404} message={t('common:indicator-not-found')} />;
   }
 
   const plans = data?.organization?.plansWithActionResponsibilities;
 
-  console.log("DATA", data)
   return (
     <div className="mb-5">
       <Meta
         title={org.name}
       />
       <OrgHeader>
-        <Container>
+        <HeaderContainer>
           <Row>
-            <Col md={{ size: 6, offset: 2 }}>
+            <Col md={{ size: 6, offset: org.logo?.rendition.src ? 2 : 0 }}>
               <SectionTitle>
-                { t('organizations') }
+                { t('common:organizations') }
               </SectionTitle>
             </Col>
           </Row>
           <Row>
-            <Col md="2">
-              <OrgLogo src={org.logo?.rendition.src || ORG_DEFAULT_AVATAR} alt={org.logo?.altText} />
-            </Col>
+            { org.logo?.rendition.src &&
+              <Col md="2">
+                <OrgLogo src={org.logo?.rendition.src} />
+              </Col>
+            }
             <Col md="8" xl="7" className="mb-5">
               {org.parent?.id &&
                 <>
@@ -256,12 +334,12 @@ function OrgContent(props) {
               }
             </Col>
           </Row>
-        </Container>
+        </HeaderContainer>
         <IndicatorsTabs>
           <Container>
             <Nav role="tablist">
               { plans?.map((p, i) => (
-                <NavItem>
+                <NavItem key={p.id}>
                   <Tab
                     className={i === selectedPlanIndex ? "active" : ""}
                     aria-selected={i === selectedPlanIndex}
@@ -287,6 +365,11 @@ function OrgContent(props) {
         </IndicatorsTabs>
       </OrgHeader>
       <Container>
+        <ActionTableHeader>
+          <h2>
+            { t('actions:org-responsible-in-actions', { actionCount: plans[selectedPlanIndex]?.actions.length }) }
+          </h2>
+        </ActionTableHeader>
         <ActionStatusTable
           enableExport={false}
           plan={plans[selectedPlanIndex]}

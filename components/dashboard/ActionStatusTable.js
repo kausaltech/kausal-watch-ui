@@ -587,7 +587,7 @@ const ActionRow = React.memo(function ActionRow(props) {
           )}
         </td>
       )}
-      { !plan.hideActionIdentifiers && (
+      { plan.features.hasActionIdentifiers && (
       <td>
         { item.identifier }
         .
@@ -619,7 +619,7 @@ const ActionRow = React.memo(function ActionRow(props) {
           ) : (
             <StatusBadge
               statusIdentifier={actionStatus.identifier}
-              statusName={item.mergedWith? 'coucou' : actionStatus.name}
+              statusName={item.mergedWith ? t('actions:action-status-merged', getActionTermContext(plan)) : actionStatus.name}
             />
           )}
         </StatusDisplay>
@@ -751,7 +751,7 @@ const ActionStatusTable = (props) => {
   const { showResponsibles, showIndicators } = theme.settings.dashboard;
   const showColumn = {};
   showColumn.logos = plan.primaryOrgs.length > 0;
-  showColumn.actionIdentifiers = !plan.hideActionIdentifiers;
+  showColumn.actionIdentifiers = plan.features.hasActionIdentifiers;
   showColumn.impacts = plan.actionImpacts.length > 0;
   showColumn.responsibles = showResponsibles;
   showColumn.indicators = showIndicators;

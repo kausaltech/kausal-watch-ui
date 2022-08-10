@@ -31,7 +31,7 @@ const PlanOrg = styled.div`
   font-size: 75%;
   font-weight: ${(props) => props.theme.fontWeightNormal};
   font-family: ${(props) => props.theme.fontFamilyTiny};
-  color: ${(props) => props.negative ? props.theme.graphColors.grey090 : props.theme.graphColors.grey060};
+  color: ${(props) => props.negative ? props.theme.graphColors.grey030 : props.theme.graphColors.grey060};
 `;
 
 const PlanChip = React.forwardRef((props, ref) => {
@@ -64,7 +64,7 @@ const PlanChip = React.forwardRef((props, ref) => {
         >
           {planShortName}
         </PlanTitle>
-        <PlanOrg>
+        <PlanOrg negative={negative}>
           {organization}
         </PlanOrg>
       </PlanName>
