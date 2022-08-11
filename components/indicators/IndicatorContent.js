@@ -159,9 +159,10 @@ function IndicatorDetails({ id }) {
   const mainGoals = indicator.goals.filter((goal) => !goal.scenario);
 
   const allOrgs = [];
+  /* If indicator has a common indicator for another org in the plan add it in the orgs list */
   indicator.common?.indicators.forEach((common) => {
-    /* Make sure organization is included in this plan */
-    const orgInThisPlan = plan.primaryOrgs.find((org) => org.id === common.organization.id);
+    /* Make sure organization is included in this plan or is the organization of the active indicator */
+    const orgInThisPlan = plan.primaryOrgs.find((org) => org.id === common.organization.id) || indicator.organization.id === common.organization.id;
     if (orgInThisPlan) allOrgs.push({
       id: common.id,
       identifier: common.identifier,

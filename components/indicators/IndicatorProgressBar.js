@@ -149,8 +149,8 @@ function IndicatorProgressBar(props) {
   const graphValues = {
     name: note,
     startYear: dayjs(startDate).format('YYYY'),
-    latestYear: dayjs(startDate).format('YYYY'),
-    goalYear: dayjs(startDate).format('YYYY'),
+    latestYear: dayjs(latestDate).format('YYYY'),
+    goalYear: dayjs(goalDate).format('YYYY'),
     startValue: `${startValue} ${unit}`,
     latestValue: `${latestValue} ${unit}`,
     goalValue: `${goalValue} ${unit}`,
