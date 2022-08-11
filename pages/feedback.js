@@ -1,5 +1,6 @@
 import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
+import { useRouter } from 'next/router';
 import { gql, useMutation } from '@apollo/client';
 import { useForm, Controller } from 'react-hook-form';
 import { Container, Row, Col, Alert, Spinner } from 'reactstrap';
@@ -45,6 +46,7 @@ function FeedbackForm({ planIdentifier }) {
   const { t } = useTranslation();
   const [sent, setSent] = useState(false);
   const onDismiss = () => setSent(false);
+  const router = useRouter()
 
   const [
     createUserFeedback,
@@ -55,7 +57,7 @@ function FeedbackForm({ planIdentifier }) {
     const data = {
       ...formData,
       plan: planIdentifier,
-      url: window.location.href,
+      url: router.query.lastUrl
     };
     setSent(true);
     createUserFeedback({ variables: { input: data } });

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useTheme } from 'common/theme';
 import { useTranslation } from 'common/i18n';
+import { useRouter } from 'next/router';
 import PlanContext from 'context/plan';
 import SiteContext from 'context/site';
 import ApplicationStateBanner from './common/ApplicationStateBanner';
@@ -9,6 +10,7 @@ import SiteFooter from './common/SiteFooter';
 function Footer(props) {
   const plan = React.useContext(PlanContext);
   const site = React.useContext(SiteContext);
+  const router = useRouter()
   const generalContent = plan.generalContent || {};
   const theme = useTheme();
   const { siteTitle } = props;
@@ -58,6 +60,7 @@ function Footer(props) {
   }
 
   const utilityLinks = [];
+  const currentURL = router.asPath;
 
   if (plan.contactLink) {
     utilityLinks.push({ id: '1', name: t('contact'), slug: plan.contactLink });
@@ -67,7 +70,8 @@ function Footer(props) {
     utilityLinks.push({ id: '2', name: t('give-feedback'), slug: plan.feedbackLink });
   }
   else {
-    utilityLinks.push({ id: '2', name: t('give-feedback'), slug: '/feedback' });
+    utilityLinks.push({ id: '2', name: t('give-feedback'),
+                        slug: `/feedback?lastUrl=${encodeURIComponent(currentURL)}` });
   }
 
   if (plan.adminUrl) {
