@@ -66,6 +66,14 @@ query ActionDetails($plan: ID!, $id: ID!) {
       id
       identifier
       name
+      shortDescription
+      color
+      iconSvgUrl
+      iconImage {
+        rendition(size:"400x400", crop:false) {
+          src
+        }
+      }
       type {
         id
         identifier
@@ -79,7 +87,6 @@ query ActionDetails($plan: ID!, $id: ID!) {
       image {
         ...MultiUseImageFragment
       }
-      color
       categoryPage {
             title
             urlPath
