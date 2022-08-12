@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
 import styled, { css } from 'styled-components';
+import { Row, Col } from 'reactstrap';
 
 import RichText from 'components/common/RichText';
 import PlanContext from 'context/plan';
 import Icon from 'components/common/Icon';
-import CategoryMetaBar from '../actions/CategoryMetaBar';
 
 const ScaleIcon = styled(Icon)`
   font-size: ${(props) => {
@@ -28,13 +28,21 @@ const ScaleIcon = styled(Icon)`
   }
 `;
 
+const AttributeContainer = styled.div`
+  margin-bottom: ${(props) => props.theme.spaces.s300};
+`;
+
+
 const AttributesList = styled.dl`
   ${props => props.vertical && css`
     display: flex;
     flex-flow: row wrap;
   `}
-  max-width: 720px;
+
   margin: ${(props) => props.theme.spaces.s200} auto 0;
+  padding: ${(props) => props.theme.spaces.s200} 0 0;
+  border-top: 1px solid ${(props) => props.theme.graphColors.grey040};
+  border-bottom: 1px solid ${(props) => props.theme.graphColors.grey040};
 
   h3 {
     font-size: ${(props) => props.theme.fontSizeBase};
@@ -48,44 +56,22 @@ const AttributesList = styled.dl`
   dd {
     flex: 0 1 100%;
     margin-bottom: 1rem;
+  }
 
-    .text-content {
+  .text-content {
       text-align: left;
+      font-size: ${(props) => props.theme.fontSizeBase};
+      color: ${(props) => props.theme.graphColors.grey080};
     }
     .text-content > *:last-child {
       margin-bottom: 0;
     }
-  }
-
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
-    margin: ${(props) => props.theme.spaces.s400} auto 0;
-
-    dt {
-      flex: 0 0 30%;
-      text-align: right;
-    }
-
-    dd {
-      flex: 0 1 60%;
-      text-align: left;
-      padding-left: ${(props) => props.theme.spaces.s150};
-    }
-  }
 `;
 
-const AttributeChoiceLabel = styled.span`
-  margin-left: ${(props) => props.theme.spaces.s050};
+const AttributeChoiceLabel = styled.div`
   font-size: ${(props) => props.theme.fontSizeSm};
   font-family: ${(props) => props.theme.fontFamilyTiny};
 `;
-
-const formatEmissionSharePercent = (share, total) => {
-  const label = 'av totala utsläppen';
-  if (!share) return null;
-  const percent = share / total * 100;
-  if (percent < 1) return `< 1 % ${label}`;
-  return `${Math.round(percent)} % ${label}`;
-};
 
 function AttributeContent(props) {
   const { contentData, contentType, title, vertical } = props;
@@ -140,10 +126,10 @@ function AttributeContent(props) {
   }
   // Render horizontal layout
   return (
-    <div className="mb-4">
+    <AttributeContainer>
       <h3>{title}</h3>
       {dataElement}
-    </div>
+    </AttributeContainer>
   );
 }
 
@@ -158,7 +144,10 @@ function AttributesBlock(props) {
 
   return (
     <AttributesList vertical={vertical}>
+      <Row>
       {attributes.map((item) => (
+        item?.value &&
+        <Col md={6} lg={4}>
         <React.Fragment key={item.id}>
           <AttributeContent
             title={item.key}
@@ -167,7 +156,10 @@ function AttributesBlock(props) {
             vertical={vertical}
           />
         </React.Fragment>
+        </Col>
+
       ))}
+      </Row>
       {children}
     </AttributesList>
   );

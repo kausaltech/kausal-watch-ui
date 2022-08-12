@@ -459,6 +459,12 @@ function ActionContent({ id }) {
             ) : ''}
             <MergedActionList t={t} theme={theme} actions={mergedActions} plan={plan} />
 
+            { action.attributes.length > 0 && (
+              <ActionSection>
+                <AttributesBlock attributes={action.attributes} types={attributeTypes} />
+              </ActionSection>
+            )}
+
             { action.statusUpdates.length > 0
             && (
             <SolidSection>
@@ -568,11 +574,6 @@ function ActionContent({ id }) {
                 <CategoryTags data={action.categories} />
               </ActionSection>
             ) : null}
-            { action.attributes.length > 0 && (
-              <ActionSection>
-                <AttributesBlock attributes={action.attributes} types={attributeTypes} />
-              </ActionSection>
-            )}
             { action?.contactPersons.length > 0 && (
               <ActionSection>
                 <ContactPersons persons={action.contactPersons.map((item) => item.person)} />
