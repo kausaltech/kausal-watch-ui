@@ -12,6 +12,12 @@ query PlanContext($identifier: ID, $hostname: String, $clientUrl: String) {
     primaryLanguage
     otherLanguages
     hideActionIdentifiers
+    primaryActionClassification {
+      identifier
+    }
+    secondaryActionClassification {
+      identifier
+    }
     domain(hostname: $hostname) {
       id
       googleSiteVerificationTag

@@ -170,10 +170,9 @@ function ActionListMainFilter({
 }
 
 function ActionListFilterBadges({
-  filters, activeFilters, actionCount, onReset,
+  plan, filters, activeFilters, actionCount, onReset,
 }) {
   const { t } = useTranslation();
-  const plan = usePlan();
   const badges = filters.filter((item) => activeFilters[item.identifier]).map((item, index) => {
     let name;
     if (item.type !== 'text') {
@@ -225,6 +224,7 @@ function ActionListFilters(props) {
     hasActionPrimaryOrgs
   } = props;
   const { t } = useTranslation();
+  const plan = usePlan();
   const theme = useTheme();
   const sortedOrgs = generateSortedOrgTree(orgs.filter((org) => !org.parent), 0);
   const allFilters = [];
@@ -297,10 +297,10 @@ function ActionListFilters(props) {
     return mainCategories;
   };
 
-  /* TODO: identify the main category in generic way */
+  const highlightedCategoryType = plan.secondaryActionClassification?.identifier;
   categoryTypes.forEach((ct) => {
     allFilters.push({
-      main: ct?.common?.identifier === 'au_target_audience',
+      main: highlightedCategoryType != null && ct?.common?.identifier === highlightedCategoryType,
       label: ct.name,
       showAllLabel: t('filter-all-categories'),
       md: 6,
@@ -370,6 +370,7 @@ function ActionListFilters(props) {
       <Row>
         <Col>
           <ActionListFilterBadges
+            plan={plan}
             t={t}
             filters={allFilters}
             activeFilters={filters}
