@@ -99,7 +99,7 @@ const IndentableCellContentWrapper = styled.div`
   text-align: ${(props) => props.numeric === true ? 'right' : 'left'};
   font-weight: ${(props) => (props.sectionHeader === true ? props.theme.fontWeightBold : props.theme.fontWeightNormal)};
   line-height: ${(props) => props.theme.lineHeightMd};
-  border-left: ${(props) => 24 * props.indent}px solid ${(props) => props.theme.themeColors.light};
+  border-left: ${(props) => 24 * props.indent}px solid ${(props) => (props.sectionHeader || props.visibleIndentation) ? props.theme.themeColors.light : props.theme.themeColors.white};
   background-color: ${(props) => (props.sectionHeader === true ? props.theme.themeColors.light : 'inherit')};
 `;
 
@@ -109,6 +109,7 @@ const IndentableTableCell = (props) => (
       indent={props.indent}
       numeric={props.numeric}
       firstCol={props.firstCol}
+      visibleIndentation={props.visibleIndentation ?? false}
     >
       { props.children }
     </IndentableCellContentWrapper>
@@ -145,6 +146,14 @@ const IndentableTableHeader = (props) => {
   );
 };
 
+const Bullet = (props) => {
+  if (props.level === 0) {
+    return null;
+  }
+  const SYMBOLS = '▪▫•◦▸▹';
+  const symbol = SYMBOLS.charAt((props.level - 1) % SYMBOLS.length);
+  return <span>{symbol} </span>;
+}
 
 const levels = {
   operational: { fi: 'toiminnallinen', index: 1 },
@@ -167,20 +176,22 @@ function sortIndicators(hierarchy, indicators, displayMunicipality) {
   if (displayMunicipality) {
     sorted = indicators.sort((a, b) => a.organization.name.localeCompare(b.organization.name));
   }
-  if (hierarchy == null || Object.keys(hierarchy).length === 0) {
+  if (hierarchy != null && Object.keys(hierarchy).length > 0) {
+    sorted = indicators.sort((a, b) => {
+      if (a.common == null || b.common == null) {
+        return 0;
+      }
+      const [pathA, pathB] = [hierarchy[a.common.id]?.path ?? [], hierarchy[b.common.id]?.path ?? []];
+      for (let i = 0; i < pathA.length && i < pathB.length; i++) {
+        if (pathA[i] === pathB[i]) continue;
+        return pathA[i] - pathB[i];
+      }
+      return pathA.length - pathB.length;
+    });
+  }
+  if (hierarchy == null || Object.keys(hierarchy).length === 0 || !displayMunicipality) {
     return [sorted];
   }
-  sorted = indicators.sort((a, b) => {
-    if (a.common == null || b.common == null) {
-      return 0;
-    }
-    const [pathA, pathB] = [hierarchy[a.common.id].path, hierarchy[b.common.id].path];
-    for (let i = 0; i < pathA.length && i < pathB.length; i++) {
-      if (pathA[i] === pathB[i]) continue;
-      return pathA[i] - pathB[i];
-    }
-    return pathA.length - pathB.length;
-  });
   const grouped = new Map();
   sorted.forEach(indicator => {
     const commonId = indicator.common?.id;
@@ -282,18 +293,8 @@ const IndicatorListFiltered = (props) => {
       item.common == null ? 1 : (hierarchy[item.common.id]?.path?.length ?? 1) - 1
     );
 
-    // TODO: This is a quickfix to hide hierarchy from non-multiplans. This logic should be
-    const hierarchyEnabled = Object.keys(hierarchy).length > 1 && displayMunicipality;
-
-    // TODO: if we have a mix of hierarchical and non hierarchical indicators in non-multicity instance
-    // we have to awkwardly flatten the list
-    if (Object.keys(hierarchy).length > 1 && !displayMunicipality) {
-      const flatFilteredIndicators = [filteredIndicators[0]];
-      filteredIndicators.map((category, indx) => {
-        if(indx > 0) flatFilteredIndicators[0].push(...category);
-      });
-      filterIndicators[0] = [...flatFilteredIndicators];
-    }
+    const hierarchyEnabled = hierarchy != null && Object.keys(hierarchy).length > 1;
+    const indicatorNameColumnEnabled = !hierarchyEnabled || !displayMunicipality;
 
     return (
       <div className="mb-5 pb-5">
@@ -303,7 +304,7 @@ const IndicatorListFiltered = (props) => {
             const expanded = visibleGroups[idx] === true;
             const expandKey = `common-indicator-section-${idx}`;
             const headers = [];
-            if (!hierarchyEnabled) {
+            if (indicatorNameColumnEnabled) {
               headers.push(
                 <IndentableTableHeader key="hr-name">{ t('name') }</IndentableTableHeader>
               );
@@ -338,7 +339,7 @@ const IndicatorListFiltered = (props) => {
             }
 
             return (<React.Fragment key={`indicator-group-${idx}`}>
-            { hierarchyEnabled &&
+            { !indicatorNameColumnEnabled &&
               <tbody key="body-1">
                 <tr>
                   <IndentableTableHeader
@@ -380,11 +381,10 @@ const IndicatorListFiltered = (props) => {
                 }
                 return (
                   <tr key={item.id}>
-                    { !hierarchyEnabled &&
-                      <IndentableTableCell indent={0} >
-                        <IndicatorLink id={item.id}>
-                          { item.name }
-                        </IndicatorLink>
+                    { indicatorNameColumnEnabled &&
+                      <IndentableTableCell indent={hierarchyEnabled && indentationLevel(item)} visibleIndentation={false} >
+                        {hierarchyEnabled && <Bullet level={indentationLevel(item)} />}
+                        <IndicatorLink id={item.id}>{ item.name }</IndicatorLink>
                       </IndentableTableCell>
                     }
                     { !allIndicatorsHaveSameLevel &&
@@ -395,7 +395,7 @@ const IndicatorListFiltered = (props) => {
                       </IndentableTableCell>
                     }
                     { displayMunicipality &&
-                      <IndentableTableCell indent={indentationLevel(item)} firstCol>
+                      <IndentableTableCell indent={indentationLevel(item)} firstCol visibleIndentation={true}>
                         <IndicatorLink id={item.id}>
                           <a>{item.organization.name}</a>
                         </IndicatorLink>

@@ -160,6 +160,11 @@ class IndicatorList extends React.Component {
     }
 
     const rootIndicators = Object.values(processed).filter(i => i.isRoot);
+    if (rootIndicators.length === Object.keys(uniqueCommonIndicators).length) {
+      // The hierarchy is flat because all the common indicators are root
+      return {};
+    }
+
     return expandPaths(processed, rootIndicators, []);
   }
 
