@@ -373,21 +373,25 @@ function OrgContent(props) {
           </Container>
         </OrgTabs>
       </OrgHeader>
-      <Container>
-        <ActionTableHeader>
-          <h2>
-            { t('actions:org-responsible-in-actions', { actionCount: plans[selectedPlanIndex]?.actions.length }) }
-          </h2>
-        </ActionTableHeader>
-        <ActionTableContainer>
-          <ActionStatusTable
-            enableExport={false}
-            plan={plans[selectedPlanIndex]}
-            actions={[...plans[selectedPlanIndex]?.actions]}
-            orgs={[]}
-          />
-        </ActionTableContainer>
-      </Container>
+      { plans.length ?
+        <Container>
+          <ActionTableHeader>
+            <h2>
+              { t('actions:org-responsible-in-actions', { actionCount: plans[selectedPlanIndex]?.actions.length }) }
+            </h2>
+          </ActionTableHeader>
+          <ActionTableContainer>
+            <ActionStatusTable
+              enableExport={false}
+              plan={plans[selectedPlanIndex]}
+              actions={[...plans[selectedPlanIndex]?.actions]}
+              orgs={[]}
+            />
+          </ActionTableContainer>
+        </Container>
+        :
+        <Container />
+      }
     </div>
   );
 }

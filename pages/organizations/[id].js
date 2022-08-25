@@ -1,11 +1,11 @@
 import React from 'react';
 import Layout from 'components/layout';
-import IndicatorContent from 'components/orgs/OrgContent';
+import OrgContent from 'components/orgs/OrgContent';
 
 function OrgPage({ id }) {
   return (
     <Layout>
-      <IndicatorContent id={id} />
+      <OrgContent id={id} />
     </Layout>
   );
 }
