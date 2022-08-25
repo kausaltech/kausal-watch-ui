@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useQuery, gql } from '@apollo/client';
 import styled from 'styled-components';
+import { readableColor } from 'polished';
 import {
   Container, Row, Col, Input, Label, FormGroup, Alert
 } from 'reactstrap';
@@ -68,6 +69,9 @@ query SearchQuery($plan: ID!, $query: String!, $onlyOtherPlans: Boolean) {
 const SearchSection = styled.div`
   padding-bottom: ${(props) => props.theme.spaces.s050};
   background-color: ${(props) => props.theme.neutralLight};
+  color: ${
+    (props) => readableColor(props.theme.neutralLight, props.theme.themeColors.black, props.theme.themeColors.white)
+    };
 `;
 
 const SearchHeader = styled.div`
@@ -78,6 +82,9 @@ const SearchHeader = styled.div`
   h1 {
     font-size: ${(props) => props.theme.fontSizeXl};
     margin-bottom: ${(props) => props.theme.spaces.s150};
+    color: ${
+    (props) => readableColor(props.theme.neutralLight, props.theme.headingsColor, props.theme.themeColors.white)
+    };
 
     @media (min-width: ${(props) => props.theme.breakpointMd}) {
       font-size: ${(props) => props.theme.fontSizeXxl};

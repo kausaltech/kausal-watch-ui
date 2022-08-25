@@ -5,6 +5,7 @@ import {
   Container, Row, Col, Nav, NavItem,
 } from 'reactstrap';
 import styled from 'styled-components';
+import { readableColor } from 'polished';
 import RichText from 'components/common/RichText';
 import { withTranslation } from '../../common/i18n';
 import { NavigationLink } from '../../common/links';
@@ -12,10 +13,16 @@ import { NavigationLink } from '../../common/links';
 const IndicatorsJumbo = styled.div`
   background-color: ${(props) => props.theme.neutralLight};
   padding: 3em 0;
+  color: ${
+    (props) => readableColor(props.theme.neutralLight, props.theme.themeColors.black, props.theme.themeColors.white)
+    };
 
   h1 {
     font-size: ${(props) => props.theme.fontSizeXl};
     margin-bottom: ${(props) => props.theme.spaces.s150};
+    color: ${
+    (props) => readableColor(props.theme.neutralLight, props.theme.headingsColor, props.theme.themeColors.white)
+    };
 
     @media (min-width: ${(props) => props.theme.breakpointMd}) {
       font-size: ${(props) => props.theme.fontSizeXxl};

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
+import { readableColor } from 'polished';
 import { Link } from 'common/links';
 import { useTranslation } from 'common/i18n';
 import Icon from 'components/common/Icon';
@@ -10,6 +11,9 @@ import IndicatorVisualisation from 'components/indicators/IndicatorVisualisation
 const IndicatorGraphSection = styled.div`
   background-color: ${(props) => props.theme.neutralLight};
   padding: ${(props) => props.theme.spaces.s300};
+  color: ${
+    (props) => readableColor(props.theme.neutralLight, props.theme.themeColors.black, props.theme.themeColors.white)
+    };
 `;
 
 const IndicatorItem = (props) => {

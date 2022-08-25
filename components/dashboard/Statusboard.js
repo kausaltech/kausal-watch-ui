@@ -6,6 +6,7 @@ import {
   Container, Row, Col, Nav, NavItem, Alert
 } from 'reactstrap';
 import styled from 'styled-components';
+import { readableColor } from 'polished';
 import { getActionTermContext, useTranslation } from 'common/i18n';
 import { constructOrgHierarchy, orgHasActions } from 'common/organizations';
 import ContentLoader from 'components/common/ContentLoader';
@@ -21,6 +22,9 @@ const DynamicActionStatusTable = dynamic(() => import('./ActionStatusTable'));
 const ActionListSection = styled.div`
   padding-bottom: ${(props) => props.theme.spaces.s050};
   background-color: ${(props) => props.theme.neutralLight};
+  color: ${
+    (props) => readableColor(props.theme.neutralLight, props.theme.themeColors.black, props.theme.themeColors.white)
+    };
 `;
 
 const ActionListHeader = styled.div`
@@ -31,6 +35,9 @@ const ActionListHeader = styled.div`
   h1 {
     font-size: ${(props) => props.theme.fontSizeXl};
     margin-bottom: ${(props) => props.theme.spaces.s150};
+    color: ${
+    (props) => readableColor(props.theme.neutralLight, props.theme.headingsColor, props.theme.themeColors.white)
+    };
 
     @media (min-width: ${(props) => props.theme.breakpointMd}) {
       font-size: ${(props) => props.theme.fontSizeXxl};

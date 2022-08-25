@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Badge } from 'reactstrap';
 import styled from 'styled-components';
-import { lighten } from 'polished';
+import { lighten, readableColor } from 'polished';
 import { useTranslation } from 'common/i18n';
 import { Link } from 'common/links';
 import { slugify } from 'common/utils';
@@ -19,7 +19,9 @@ const Categories = styled.div`
 
   .badge {
     background-color: ${(props) => props.theme.neutralLight} !important;
-    color: ${(props) => props.theme.themeColors.black};
+    color: ${
+    (props) => readableColor(props.theme.neutralLight, props.theme.themeColors.black, props.theme.themeColors.white)
+    };
 
     &:hover {
       background-color: ${(props) => lighten(0.05, props.theme.neutralLight)} !important;

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
+import { readableColor } from 'polished';
 import RichText from 'components/common/RichText';
 import { useTheme } from 'common/theme';
 import { getBgImageAlignment } from 'common/images';
@@ -11,6 +12,15 @@ import Card from 'components/common/Card';
 const CategoryListSection = styled.div`
   background-color: ${(props) => props.theme.neutralLight};
   padding: ${(props) => props.theme.spaces.s400} 0;
+  color: ${
+    (props) => readableColor(props.theme.neutralLight, props.theme.themeColors.black, props.theme.themeColors.white)
+    };
+
+  h2 {
+    color: ${
+    (props) => readableColor(props.theme.neutralLight, props.theme.headingsColor, props.theme.themeColors.white)
+    };
+  }
 
   a.card-wrapper {
     display: flex;
