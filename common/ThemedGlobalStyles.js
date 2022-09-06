@@ -4,6 +4,10 @@ import { createGlobalStyle, withTheme } from 'styled-components';
 import { themeProp } from 'common/theme';
 
 const GlobalStyle = createGlobalStyle`
+  html {
+    scroll-behavior: auto !important;
+  }
+
   body {
     font-family: ${(props) => props.theme.fontFamily}, ${(props) => props.theme.fontFamilyFallback};
     font-size: ${(props) => props.theme.fontSizeBase};
