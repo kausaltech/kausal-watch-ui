@@ -220,7 +220,7 @@ function ActionListFilterBadges({
 
 function ActionListFilters(props) {
   const {
-    filters, orgs, primaryOrgs, categoryTypes, impacts, actionCount, onChange, phases, schedules,
+    filters, orgs, primaryOrgs, categoryTypes, attributeTypes, impacts, actionCount, onChange, phases, schedules,
     hasActionPrimaryOrgs
   } = props;
   const { t } = useTranslation();
@@ -312,6 +312,20 @@ function ActionListFilters(props) {
       })),
     });
   });
+
+  attributeTypes.forEach((attrType) => {
+    allFilters.push({
+      label: attrType.name,
+      showAllLabel: t('filter-all-categories'),
+      md: 6,
+      lg: 4,
+      identifier: `attr_${attrType.identifier}`,
+      options: attrType.choiceOptions.map((choice) => ({
+        id: choice.id,
+        label: choice.name,
+      })),
+    })
+  })
 
   allFilters[allFilters.length - 1].isLast = true;
 

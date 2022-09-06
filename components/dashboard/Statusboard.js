@@ -104,6 +104,17 @@ export const GET_ACTION_LIST = gql`
           }
         }
       }
+      actionAttributeTypes {
+        __typename
+        format
+        identifier
+        name
+        choiceOptions {
+          id
+          identifier
+          name
+        }
+      }
       primaryOrgs {
         id
         abbreviation
@@ -144,6 +155,25 @@ export const GET_ACTION_LIST = gql`
       }
       categories {
         id
+      }
+      attributes {
+        __typename
+        id
+        key
+        keyIdentifier
+        ...on AttributeChoice {
+          value
+          valueIdentifier
+          type {
+            identifier
+            name
+          }
+          choice {
+            id
+            identifier
+            name
+          }
+        }
       }
       responsibleParties {
         id
@@ -223,6 +253,7 @@ const ActionListResults = (props) => {
     planActions,
     planOrganizations,
     categoryTypes,
+    attributeTypes,
     filters,
     onFilterChange,
     title,
@@ -331,6 +362,20 @@ const ActionListResults = (props) => {
       return catTypeFound;
     });
     if (!allCatsFound) return false;
+    const allAttrsFound = attributeTypes.every((at) => {
+      const key = `attr_${at.identifier}`;
+      const val = filters[key];
+
+      if (!val) return true;
+      if (!item.attributes) return false;
+
+      const attrTypeFound = item.attributes.some((att) => {
+        if (att.keyIdentifier === at.identifier && att?.choice?.id === val) return true;
+        return false;
+      });
+      return attrTypeFound;
+    });
+    if (!allAttrsFound) return false;
     return true;
   }
 
@@ -358,6 +403,7 @@ const ActionListResults = (props) => {
               <Col sm="12">
                 <ActionListFilters
                   categoryTypes={catTypes}
+                  attributeTypes={attributeTypes}
                   orgs={orgs.filter(orgHasActions)}
                   primaryOrgs={primaryOrgs}
                   impacts={impacts}
@@ -471,7 +517,7 @@ function Statusboard(props) {
   if (error) return <ErrorMessage message={t('error-loading-actions', getActionTermContext(plan))} />;
 
   const { plan: loadedPlan, ...otherProps } = data;
-  const { categoryTypes, primaryOrgs } = loadedPlan;
+  const { categoryTypes, primaryOrgs, actionAttributeTypes } = loadedPlan;
 
   return (
     <ActionListResults
@@ -481,6 +527,7 @@ function Statusboard(props) {
       filters={filters}
       onFilterChange={onFilterChange}
       categoryTypes={categoryTypes}
+      attributeTypes={actionAttributeTypes?.filter((attrType) => attrType.format === 'ORDERED_CHOICE')}
       primaryOrgs={primaryOrgs}
       {...otherProps}
     />
