@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Badge } from 'reactstrap';
 import styled from 'styled-components';
-import { lighten, readableColor } from 'polished';
+import { darken, lighten, readableColor } from 'polished';
 import { useTranslation } from 'common/i18n';
 import { Link } from 'common/links';
 import { slugify } from 'common/utils';
@@ -80,6 +80,25 @@ const IconName = styled.div`
   color: black;
 `;
 
+const StyledBadge = styled(Badge)`
+  background-color: ${(props) => props.theme.badgeBackground} !important;
+  color: ${(props) => props.theme.badgeColor};
+  border-radius: ${(props) => props.theme.badgeBorderRadius};
+  padding: ${(props) => props.theme.badgePaddingY} ${(props) => props.theme.badgePaddingX};
+  font-weight: ${(props) => props.theme.badgeFontWeight};
+  margin-bottom: ${(props) => props.theme.spaces.s050};
+  max-width: 100%;
+  word-break: break-all;
+  word-break: break-word;
+  hyphens: manual;
+  white-space: normal;
+  text-align: left;
+
+  &.bg-secondary:hover {
+    background-color:  ${(props) => darken(0.05, props.theme.neutralLight)} !important;
+  }
+`;
+
 function Categorybadge(props) {
   const {
     id,
@@ -90,12 +109,12 @@ function Categorybadge(props) {
   return (
     <Link href={url}>
       <a>
-        <Badge
+        <StyledBadge
           id={`org-${slugify(id)}`}
           size={size}
         >
           {name}
-        </Badge>
+        </StyledBadge>
       </a>
     </Link>
   );

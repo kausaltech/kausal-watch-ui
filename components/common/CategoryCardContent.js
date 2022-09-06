@@ -18,7 +18,7 @@ const CategoryImage = styled.img`
 `;
 
 const CategoryText = styled.div`
-  font-size: 0.75rem;
+  font-size: ${(props) => props.theme.fontSizeSm};
 `;
 
 const formatEmissionSharePercent = (share, total) => {

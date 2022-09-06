@@ -2458,10 +2458,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@kausal/themes-private@npm:^0.2.8":
-  version: 0.2.8
-  resolution: "@kausal/themes-private@npm:0.2.8"
-  checksum: b5fdf4429fbd4d5cfcc4981c644bf29a40dec88c22d4acbee319ccf65a7251b748633dce455350660500debe3c9d1906f4f06adee9f734ec5667b6c70c29e113
+"@kausal/themes-private@npm:^0.2.9":
+  version: 0.2.9
+  resolution: "@kausal/themes-private@npm:0.2.9"
+  checksum: 12b4e784e9e33f0269ef5109232d2e53ea453c4897f42facbbe11f2c873ca041a1fdb41f1af1ee898dbcddf422c4c2c21612d20f5111fec8408a235cd8d64950
   languageName: node
   linkType: hard
 
@@ -15103,7 +15103,7 @@ __metadata:
     "@babel/plugin-proposal-decorators": ^7.17.9
     "@elastic/react-search-ui": ^1.11.2
     "@kausal/themes": ^0.4.0
-    "@kausal/themes-private": ^0.2.8
+    "@kausal/themes-private": ^0.2.9
     "@koa/router": ^10.1.1
     "@n8tb1t/use-scroll-position": ^2.0.3
     "@next/bundle-analyzer": ^12.1.6

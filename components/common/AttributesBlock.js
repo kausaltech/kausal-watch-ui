@@ -60,7 +60,8 @@ const AttributesList = styled.dl`
 
   .text-content {
       text-align: left;
-      font-size: ${(props) => props.theme.fontSizeBase};
+      font-size: ${(props) => props.theme.fontSizeSm};
+      line-height: ${(props) => props.theme.lineHeightMd};
       color: ${(props) => props.theme.graphColors.grey080};
     }
     .text-content > *:last-child {
