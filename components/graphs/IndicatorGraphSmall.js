@@ -42,7 +42,7 @@ const GET_INDICATOR_GRAPH_DATA = gql`
           }
         }
       }
-      goals(plan: $plan) {
+      goals {
         id
         date
         value

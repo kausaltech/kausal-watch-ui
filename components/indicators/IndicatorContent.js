@@ -85,7 +85,7 @@ const GET_INDICATOR_DETAILS = gql`
         date
         value
       }
-      goals(plan: $plan) {
+      goals {
         id
         date
         value
