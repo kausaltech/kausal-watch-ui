@@ -152,7 +152,6 @@ const STREAM_FIELD_FRAGMENT = gql`
       heading
       lead
       cards {
-        id
         ... on CardBlock {
           image {
             ...MultiUseImageFragment
