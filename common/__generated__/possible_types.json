@@ -1,0 +1,72 @@
+{
+  "possibleTypes": {
+    "AttributeInterface": [
+      "AttributeChoice",
+      "AttributeChoiceWithText",
+      "AttributeNumericValue",
+      "AttributeRichText"
+    ],
+    "MenuItem": [
+      "ExternalLinkMenuItem",
+      "PageMenuItem"
+    ],
+    "PageInterface": [
+      "ActionListPage",
+      "CategoryPage",
+      "CategoryTypePage",
+      "EmptyPage",
+      "ImpactGroupPage",
+      "IndicatorListPage",
+      "Page",
+      "PlanRootPage",
+      "StaticPage"
+    ],
+    "SearchHitObject": [
+      "Action",
+      "Indicator"
+    ],
+    "StreamFieldInterface": [
+      "ActionCategoryFilterCardBlock",
+      "ActionCategoryFilterCardsBlock",
+      "ActionHighlightsBlock",
+      "ActionListBlock",
+      "BlockQuoteBlock",
+      "BooleanBlock",
+      "CardBlock",
+      "CardListBlock",
+      "CategoryListBlock",
+      "CharBlock",
+      "ChoiceBlock",
+      "DateBlock",
+      "DateTimeBlock",
+      "DecimalBlock",
+      "DocumentChooserBlock",
+      "EmailBlock",
+      "EmbedBlock",
+      "FloatBlock",
+      "FrontPageHeroBlock",
+      "ImageChooserBlock",
+      "IndicatorBlock",
+      "IndicatorGroupBlock",
+      "IndicatorHighlightsBlock",
+      "IndicatorShowcaseBlock",
+      "IntegerBlock",
+      "PageChooserBlock",
+      "PageLinkBlock",
+      "QuestionAnswerBlock",
+      "QuestionBlock",
+      "RawHTMLBlock",
+      "RegexBlock",
+      "RelatedIndicatorsBlock",
+      "RelatedPlanListBlock",
+      "RichTextBlock",
+      "StaticBlock",
+      "StreamBlock",
+      "StreamFieldBlock",
+      "StructBlock",
+      "TextBlock",
+      "TimeBlock",
+      "URLBlock"
+    ]
+  }
+}

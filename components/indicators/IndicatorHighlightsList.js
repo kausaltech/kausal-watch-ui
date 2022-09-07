@@ -22,6 +22,7 @@ export const GET_INDICATOR_HIGHLIGHTS = gql`
       identifier
       name
       unit {
+        id
         name
         shortName
       }

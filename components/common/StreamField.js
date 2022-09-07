@@ -41,6 +41,7 @@ const STREAM_FIELD_FRAGMENT = gql`
     ...on QuestionAnswerBlock {
       heading
       questions {
+        id
         ... on QuestionBlock {
           question
           answer
@@ -54,12 +55,9 @@ const STREAM_FIELD_FRAGMENT = gql`
       }
     }
     ... on IndicatorGroupBlock {
-      id
-      blockType
-      rawValue
       items {
+        id
         ... on IndicatorBlock {
-          id
           style
           indicator {
             id
@@ -97,7 +95,6 @@ const STREAM_FIELD_FRAGMENT = gql`
       lead
     }
     ... on FrontPageHeroBlock {
-      id
       layout
       image {
         ...MultiUseImageFragment
@@ -106,11 +103,8 @@ const STREAM_FIELD_FRAGMENT = gql`
       lead
     }
     ... on IndicatorShowcaseBlock {
-      id
-      blockType
-      field
-      rawValue
       blocks {
+        id
         __typename
       }
       title
@@ -126,14 +120,17 @@ const STREAM_FIELD_FRAGMENT = gql`
         minValue
         maxValue
         latestValue {
+          id
           date
           value
         }
         values {
+          id
           date
           value
         }
         goals {
+          id
           date
           value
         }
@@ -152,10 +149,10 @@ const STREAM_FIELD_FRAGMENT = gql`
       }
     }
     ... on CardListBlock {
-      id
       heading
       lead
       cards {
+        id
         ... on CardBlock {
           image {
             ...MultiUseImageFragment
@@ -168,6 +165,7 @@ const STREAM_FIELD_FRAGMENT = gql`
     }
     ... on ActionCategoryFilterCardsBlock {
       cards {
+        id
         ... on ActionCategoryFilterCardBlock {
           heading
           lead
@@ -179,17 +177,6 @@ const STREAM_FIELD_FRAGMENT = gql`
           }
         }
       }
-    }
-    ... on ActionHighlightsBlock {
-      id
-      field
-    }
-    ... on IndicatorHighlightsBlock {
-      id
-      field
-    }
-    ... on RelatedIndicatorsBlock {
-      id
     }
   }
 ${images.fragments.multiUseImage}
@@ -210,7 +197,9 @@ export const possibleTypes = {
     'IndicatorGroupBlock',
     'CardListBlock',
     'RelatedIndicatorsBlock',
-    'ActionCategoryFilterCardsBlock'
+    'ActionCategoryFilterCardsBlock',
+    'ActionHighlightsBlock',
+    'IndicatorHighlightsBlock',
   ],
 };
 

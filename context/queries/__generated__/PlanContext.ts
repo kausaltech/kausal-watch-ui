@@ -3,9 +3,21 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
+import { ContentSiteGeneralContentActionTermChoices } from "./../../../__generated__/globalTypes";
+
 // ====================================================
 // GraphQL query operation: PlanContext
 // ====================================================
+
+export interface PlanContext_plan_primaryActionClassification {
+  __typename: "CategoryType";
+  identifier: string;
+}
+
+export interface PlanContext_plan_secondaryActionClassification {
+  __typename: "CategoryType";
+  identifier: string;
+}
 
 export interface PlanContext_plan_domain {
   __typename: "PlanDomain";
@@ -119,74 +131,94 @@ export interface PlanContext_plan_generalContent {
   creativeCommonsLicense: string;
   ownerUrl: string;
   ownerName: string;
+  /**
+   * Set if different from the owner of the site
+   */
+  accessibilityResponsibleBody: string | null;
+  accessibilityContactEmail: string | null;
+  actionTerm: ContentSiteGeneralContentActionTermChoices;
 }
 
-export interface PlanContext_plan_mainMenu_items_page {
-  __typename: "CategoryPage" | "Page" | "PlanRootPage" | "EmptyPage" | "StaticPage" | "ActionListPage" | "IndicatorListPage" | "ImpactGroupPage";
+export interface PlanContext_plan_mainMenu_items_PageMenuItem_page {
+  __typename: "PlanRootPage" | "Page" | "EmptyPage" | "StaticPage" | "CategoryTypePage" | "CategoryPage" | "ActionListPage" | "IndicatorListPage" | "ImpactGroupPage";
+  title: string;
   urlPath: string;
   slug: string;
 }
 
-export interface PlanContext_plan_mainMenu_items_parent_page {
-  __typename: "CategoryPage" | "Page" | "PlanRootPage" | "EmptyPage" | "StaticPage" | "ActionListPage" | "IndicatorListPage" | "ImpactGroupPage";
+export interface PlanContext_plan_mainMenu_items_PageMenuItem_parent_page {
+  __typename: "PlanRootPage" | "Page" | "EmptyPage" | "StaticPage" | "CategoryTypePage" | "CategoryPage" | "ActionListPage" | "IndicatorListPage" | "ImpactGroupPage";
 }
 
-export interface PlanContext_plan_mainMenu_items_parent {
-  __typename: "MenuItem";
+export interface PlanContext_plan_mainMenu_items_PageMenuItem_parent {
+  __typename: "PageMenuItem";
   id: string;
-  page: PlanContext_plan_mainMenu_items_parent_page | null;
+  page: PlanContext_plan_mainMenu_items_PageMenuItem_parent_page;
 }
 
-export interface PlanContext_plan_mainMenu_items {
-  __typename: "MenuItem";
+export interface PlanContext_plan_mainMenu_items_PageMenuItem {
+  __typename: "PageMenuItem";
   id: string;
+  page: PlanContext_plan_mainMenu_items_PageMenuItem_page;
+  parent: PlanContext_plan_mainMenu_items_PageMenuItem_parent | null;
+}
+
+export interface PlanContext_plan_mainMenu_items_ExternalLinkMenuItem {
+  __typename: "ExternalLinkMenuItem";
   linkText: string;
-  page: PlanContext_plan_mainMenu_items_page | null;
-  parent: PlanContext_plan_mainMenu_items_parent | null;
+  url: string;
 }
+
+export type PlanContext_plan_mainMenu_items = PlanContext_plan_mainMenu_items_PageMenuItem | PlanContext_plan_mainMenu_items_ExternalLinkMenuItem;
 
 export interface PlanContext_plan_mainMenu {
   __typename: "MainMenu";
   items: (PlanContext_plan_mainMenu_items | null)[];
 }
 
-export interface PlanContext_plan_footer_items_page {
-  __typename: "CategoryPage" | "Page" | "PlanRootPage" | "EmptyPage" | "StaticPage" | "ActionListPage" | "IndicatorListPage" | "ImpactGroupPage";
+export interface PlanContext_plan_footer_items_ExternalLinkMenuItem {
+  __typename: "ExternalLinkMenuItem";
+}
+
+export interface PlanContext_plan_footer_items_PageMenuItem_page {
+  __typename: "PlanRootPage" | "Page" | "EmptyPage" | "StaticPage" | "CategoryTypePage" | "CategoryPage" | "ActionListPage" | "IndicatorListPage" | "ImpactGroupPage";
+  title: string;
   urlPath: string;
   slug: string;
 }
 
-export interface PlanContext_plan_footer_items_parent_page {
-  __typename: "CategoryPage" | "Page" | "PlanRootPage" | "EmptyPage" | "StaticPage" | "ActionListPage" | "IndicatorListPage" | "ImpactGroupPage";
+export interface PlanContext_plan_footer_items_PageMenuItem_parent_page {
+  __typename: "PlanRootPage" | "Page" | "EmptyPage" | "StaticPage" | "CategoryTypePage" | "CategoryPage" | "ActionListPage" | "IndicatorListPage" | "ImpactGroupPage";
 }
 
-export interface PlanContext_plan_footer_items_parent {
-  __typename: "MenuItem";
+export interface PlanContext_plan_footer_items_PageMenuItem_parent {
+  __typename: "PageMenuItem";
   id: string;
-  page: PlanContext_plan_footer_items_parent_page | null;
+  page: PlanContext_plan_footer_items_PageMenuItem_parent_page;
 }
 
-export interface PlanContext_plan_footer_items_children_page {
-  __typename: "CategoryPage" | "Page" | "PlanRootPage" | "EmptyPage" | "StaticPage" | "ActionListPage" | "IndicatorListPage" | "ImpactGroupPage";
+export interface PlanContext_plan_footer_items_PageMenuItem_children_page {
+  __typename: "PlanRootPage" | "Page" | "EmptyPage" | "StaticPage" | "CategoryTypePage" | "CategoryPage" | "ActionListPage" | "IndicatorListPage" | "ImpactGroupPage";
+  title: string;
   urlPath: string;
   slug: string;
 }
 
-export interface PlanContext_plan_footer_items_children {
-  __typename: "MenuItem";
+export interface PlanContext_plan_footer_items_PageMenuItem_children {
+  __typename: "PageMenuItem";
   id: string;
-  linkText: string;
-  page: PlanContext_plan_footer_items_children_page | null;
+  page: PlanContext_plan_footer_items_PageMenuItem_children_page;
 }
 
-export interface PlanContext_plan_footer_items {
-  __typename: "MenuItem";
+export interface PlanContext_plan_footer_items_PageMenuItem {
+  __typename: "PageMenuItem";
   id: string;
-  linkText: string;
-  page: PlanContext_plan_footer_items_page | null;
-  parent: PlanContext_plan_footer_items_parent | null;
-  children: (PlanContext_plan_footer_items_children | null)[] | null;
+  page: PlanContext_plan_footer_items_PageMenuItem_page;
+  parent: PlanContext_plan_footer_items_PageMenuItem_parent | null;
+  children: (PlanContext_plan_footer_items_PageMenuItem_children | null)[] | null;
 }
+
+export type PlanContext_plan_footer_items = PlanContext_plan_footer_items_ExternalLinkMenuItem | PlanContext_plan_footer_items_PageMenuItem;
 
 export interface PlanContext_plan_footer {
   __typename: "Footer";
@@ -329,6 +361,14 @@ export interface PlanContext_plan {
   primaryLanguage: string;
   otherLanguages: string[] | null;
   hideActionIdentifiers: boolean | null;
+  /**
+   * Used for primary navigation and grouping of actions
+   */
+  primaryActionClassification: PlanContext_plan_primaryActionClassification | null;
+  /**
+   * Leave empty unless specifically required. Actionfilters based on this category are displayed more prominently than filters of other categories.
+   */
+  secondaryActionClassification: PlanContext_plan_secondaryActionClassification | null;
   domain: PlanContext_plan_domain | null;
   image: PlanContext_plan_image | null;
   serveFileBaseUrl: string;

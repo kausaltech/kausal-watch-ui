@@ -7,7 +7,7 @@ import getConfig from 'next/config';
 
 import { captureException, Sentry } from 'common/sentry';
 import { getI18n } from 'common/i18n';
-import { possibleTypes } from 'components/common/StreamField';
+import possibleTypes from 'common/__generated__/possible_types.json';
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -155,7 +155,7 @@ export function initializeApolloClient(opts) {
     link: ApolloLink.from([refererLink, localeMiddleware, refererLink, sentryTracingLink, sentryErrorLink, httpLink]),
     cache: new InMemoryCache({
       // https://www.apollographql.com/docs/react/data/fragments/#defining-possibletypes-manually
-      possibleTypes,
+      possibleTypes: possibleTypes.possibleTypes,
     }).restore(initialState || {}),
   };
   const apolloClient = new ApolloClient(clientOpts);
