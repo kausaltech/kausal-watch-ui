@@ -1,7 +1,8 @@
 #syntax=docker/dockerfile:1.2
 
-FROM node:17.2.0-alpine3.14 as base
+FROM node:18-alpine3.15 as base
 
+RUN mkdir -p /app
 WORKDIR /app
 
 # Python is required for node-gyp, which will be built with `yarn install`
@@ -15,10 +16,12 @@ ENV YARN_NPM_ALWAYS_AUTH=${YARN_NPM_ALWAYS_AUTH:-false}
 
 # Install dependencies first
 ENV YARN_CACHE_FOLDER /yarn-cache
-RUN yarn set version berry
+RUN yarn set version 3.2.1
 COPY yarn.lock package*.json ./
 COPY patches ./patches/
+
 RUN yarn config set nodeLinker 'node-modules'
+RUN yarn config set logFilters --json '[{"code": "YN0013", "level": "discard"}]'
 RUN --mount=type=cache,target=/yarn-cache yarn install
 
 COPY . .
