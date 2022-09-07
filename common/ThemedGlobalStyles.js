@@ -9,7 +9,10 @@ const GlobalStyle = createGlobalStyle`
   }
 
   body {
-    font-family: ${(props) => props.theme.fontFamily}, ${(props) => props.theme.fontFamilyFallback};
+    font-family: ${(props) =>
+      props.theme.fontFamily !== ''
+        ? `${props.theme.fontFamily}, ${props.theme.fontFamilyFallback}`
+        : props.theme.fontFamilyFallback};
     font-size: ${(props) => props.theme.fontSizeBase};
     line-height: ${(props) => props.theme.lineHeightBase};
     text-rendering: optimizeLegibility;
@@ -34,7 +37,10 @@ const GlobalStyle = createGlobalStyle`
   }
 
   h1, h2, h3 , h4, h5, h6 {
-    font-family: ${(props) => props.theme.fontFamilyHeadings}, ${(props) => props.theme.fontFamilyFallbackHeadings};
+    font-family: ${(props) =>
+      props.theme.fontFamilyHeadings !== ''
+        ? `${props.theme.fontFamilyHeadings}, ${props.theme.fontFamilyFallbackHeadings}`
+        : props.theme.fontFamilyFallbackHeadings};
     font-weight: ${(props) => props.theme.headingsFontWeight};
     line-height: ${(props) => props.theme.lineHeightMd};
     color: ${(props) => props.theme.headingsColor};
