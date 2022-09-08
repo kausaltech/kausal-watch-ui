@@ -164,7 +164,6 @@ const STREAM_FIELD_FRAGMENT = gql`
     }
     ... on ActionCategoryFilterCardsBlock {
       cards {
-        id
         ... on ActionCategoryFilterCardBlock {
           heading
           lead
