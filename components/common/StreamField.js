@@ -41,7 +41,6 @@ const STREAM_FIELD_FRAGMENT = gql`
     ...on QuestionAnswerBlock {
       heading
       questions {
-        id
         ... on QuestionBlock {
           question
           answer
