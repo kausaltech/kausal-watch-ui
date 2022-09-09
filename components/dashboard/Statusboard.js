@@ -282,7 +282,6 @@ const ActionListResults = (props) => {
       catById[cat.id] = cat;
     });
     rootCategories = rootCategories.sort((a, b) => a.name.localeCompare(b.name));
-
     return {
       categories,
       categoriesById,
@@ -295,10 +294,10 @@ const ActionListResults = (props) => {
     const act = { ...action };
     const rps = act.responsibleParties.map((rp) => ({ ...rp }));
 
+    act.rootCategory = null;
     act.categories = act.categories.map((cat) => {
       const out = catById[cat.id];
-      act.rootCategory = null;
-      if (out.type.identifier === 'action') {
+      if (out.type.identifier === plan.primaryActionClassification.identifier) {
         let root = out;
         while (root.parent != null) root = root.parent;
         act.rootCategory = root;

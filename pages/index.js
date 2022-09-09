@@ -83,7 +83,7 @@ function RootPage() {
   }
   const page = clone(planPage);
   page.category = {};
-  const cats = data.planCategories.filter((cat) => cat.type.identifier === 'action');
+  const cats = data.planCategories.filter((cat) => cat.type.identifier === plan.primaryActionClassification.identifier);
   page.category.children = getRootCategories(cats);
 
   if (page.body.length < 1) return (

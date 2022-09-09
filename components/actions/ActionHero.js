@@ -132,18 +132,21 @@ const ActionNumber = styled.span`
 
 function ActionCategories(categories) {
   const theme = useTheme();
+  const plan = usePlan();
   const { showIdentifiers } = theme.settings.categories;
 
   const displayCategories = [];
+  const primaryCatIdentifier = plan.primaryActionClassification.identifier;
+
   categories.categories.forEach((cat, indx) => {
-    if (cat.type.identifier !== 'action') return false;
+    if (cat.type.identifier !== primaryCatIdentifier) return false;
     displayCategories[indx] = {};
     let categoryTitle = cat.name;
     if (cat.categoryPage) {
       displayCategories[indx].url = cat.categoryPage.urlPath;
       if (cat.identifier && showIdentifiers) categoryTitle = `${cat.identifier}. ${cat.name}`;
     } else {
-      displayCategories[indx].url = `/actions?category_action=${cat.id}`;
+      displayCategories[indx].url = `/actions?category_${primaryCatIdentifier}=${cat.id}`;
     }
     displayCategories[indx].name = categoryTitle;
     displayCategories[indx].id = cat.id;
@@ -156,7 +159,7 @@ function ActionCategories(categories) {
           categoryParentTitle = `${cat.parent.identifier}. ${cat.parent.name}`;
         }
       } else {
-        displayCategories[indx].parent.url = `/actions?category_action=${cat.parent.id}`;
+        displayCategories[indx].parent.url = `/actions?category_${primaryCatIdentifier}=${cat.parent.id}`;
       }
       displayCategories[indx].parent.name = categoryParentTitle;
       displayCategories[indx].parent.id = cat.parent.id;
