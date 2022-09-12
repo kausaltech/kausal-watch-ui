@@ -84,6 +84,9 @@
     "@babel/plugin-proposal-decorators": "^7.17.9",
     "@graphql-codegen/cli": "2.12.0",
     "@graphql-codegen/fragment-matcher": "^3.3.1",
+    "@graphql-codegen/introspection": "2.2.1",
+    "@graphql-codegen/typescript": "2.7.3",
+    "@graphql-codegen/typescript-react-apollo": "3.3.3",
     "@next/eslint-plugin-next": "^12.1.6",
     "@storybook/addon-a11y": "^6.4.22",
     "@storybook/addon-essentials": "^6.4.22",
@@ -123,10 +126,7 @@
     "storybook-addon-styled-component-theme": "^2.0.0",
     "typescript": "^4.6.4",
     "typewiz-webpack": "^1.2.4",
-    "yarn-upgrade-all": "^0.7.1",
-    "@graphql-codegen/typescript-react-apollo": "3.3.3",
-    "@graphql-codegen/typescript": "2.7.3",
-    "@graphql-codegen/introspection": "2.2.1"
+    "yarn-upgrade-all": "^0.7.1"
   },
   "repository": {
     "type": "git",
@@ -141,6 +141,6 @@
   ],
   "packageManager": "yarn@3.2.0",
   "optionalDependencies": {
-    "@kausal/themes-private": "^0.2.9"
+    "@kausal/themes-private": "^0.2.10"
   }
 }
