@@ -57,6 +57,7 @@ const groupActions = (groupBy, actions, theme) => {
         displayIdentifier: `${(cat.identifier && theme.settings.categories.showIdentifiers) ? cat.identifier : ''}`,
         name: cat.name,
         identifier: cat.identifier || cat.name,
+        order: cat.order,
         elements: [],
       };
       groupMap[cat.id] = group;
@@ -73,7 +74,7 @@ const groupActions = (groupBy, actions, theme) => {
     elements: noGroupItems,
   });
 
-  return groups.sort((g1, g2) => (`${g1.identifier}`).localeCompare(g2.identifier));
+  return groups.sort((g1, g2) => (g1.order - g2.order))
 };
 function ActionCardList(props) {
   const { actions, groupBy } = props;

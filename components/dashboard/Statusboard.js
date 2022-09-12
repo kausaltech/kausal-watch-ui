@@ -93,6 +93,7 @@ export const GET_ACTION_LIST = gql`
         categories {
           id
           identifier
+          order
           name
           parent {
             id
