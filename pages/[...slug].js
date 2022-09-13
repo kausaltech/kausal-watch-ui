@@ -47,13 +47,13 @@ query GetPlanPageGeneral($plan: ID!, $path: String!) {
         indicators {
           id
         }
-        shortDescription
+        leadParagraph
         color
         children {
           id
           identifier
           name
-          shortDescription
+          leadParagraph
           level {
             name
             namePlural
@@ -175,7 +175,7 @@ const PageHeaderBlock = (props) => {
           title={page.title}
           categoryId={page.category.id}
           identifier={theme.settings.categories.showIdentifiers ? page.category.identifier : undefined}
-          lead={page.category.shortDescription}
+          lead={page.category.leadParagraph}
           headerImage={headerImage?.large.src}
           imageAlign={getBgImageAlignment(headerImage)}
           parentTitle={parentTitle}

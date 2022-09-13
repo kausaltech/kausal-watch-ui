@@ -103,7 +103,7 @@ const CategoryListBlock = (props) => {
                         )}
                         { cat.name }
                       </CardHeader>
-                      <p>{cat.shortDescription}</p>
+                      <p>{cat.leadParagraph}</p>
                     </div>
                   </Card>
                 </a>

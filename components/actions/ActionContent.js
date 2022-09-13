@@ -66,7 +66,7 @@ query ActionDetails($plan: ID!, $id: ID!) {
       id
       identifier
       name
-      shortDescription
+      leadParagraph
       color
       iconSvgUrl
       iconImage {
@@ -109,7 +109,7 @@ query ActionDetails($plan: ID!, $id: ID!) {
       id
       identifier
       name
-      shortDescription
+      leadParagraph
     }
     contactPersons {
       id

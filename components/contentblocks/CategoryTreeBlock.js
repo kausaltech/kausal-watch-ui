@@ -108,7 +108,7 @@ query GetCategoriesForTreeMap($plan: ID!, $categoryType: ID!) {
   planCategories(plan: $plan, categoryType: $categoryType) {
     id
     name
-    shortDescription
+    leadParagraph
     image {
       id
       title

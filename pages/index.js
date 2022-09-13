@@ -32,7 +32,7 @@ query GetPlanPageHomePage($plan: ID!, $path: String!) {
     id
     identifier
     name
-    shortDescription
+    leadParagraph
     image {
       ...MultiUseImageFragment
     }

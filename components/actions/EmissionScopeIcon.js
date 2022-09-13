@@ -12,7 +12,7 @@ const IconContainer = styled.a`
 
 const EmissionScopeIcon = (props) => {
   const { category, color, size } = props;
-  const { id, identifier, name, shortDescription } = category;
+  const { id, identifier, name, leadParagraph } = category;
   const iconId = `em-sc-${id}`;
   const fade = false;
 
@@ -40,7 +40,7 @@ const EmissionScopeIcon = (props) => {
     >
       <span className="visually-hidden">
         {name}
-        {shortDescription}
+        {leadParagraph}
       </span>
       <Icon name={mapIcon(identifier)} color={color} width={size} height={size} />
       <Tooltip
@@ -54,7 +54,7 @@ const EmissionScopeIcon = (props) => {
       >
         <strong>{name}</strong>
         <br />
-        {shortDescription}
+        {leadParagraph}
       </Tooltip>
     </IconContainer>
   );
