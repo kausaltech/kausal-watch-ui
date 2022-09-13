@@ -90,7 +90,7 @@ const CategoryListBlock = (props) => {
                   <Card
                     imageUrl={cat.image?.small.src || fallbackImage.small.src}
                     imageAlign={getBgImageAlignment(cat.image || fallbackImage)}
-                    imageTone={cat.color}
+                    colorEffect={cat.color}
                   >
                     <div>
                       <CardHeader className="card-title">

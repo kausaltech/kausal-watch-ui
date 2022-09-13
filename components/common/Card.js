@@ -17,6 +17,7 @@ const StyledCard = styled(BSCard)`
 
   .card-body {
     line-height: ${(props) => props.theme.lineHeightMd};
+    padding-bottom: .5rem;
   }
 
   &:hover {
@@ -36,7 +37,7 @@ const StyledCard = styled(BSCard)`
 
 const ImgArea = styled.div`
   position: relative;
-  background-color: ${(props) => props.imageTone};
+  border-bottom: ${(props) => props.colorEffect ? '6px' : '0'} solid ${(props) => props.colorEffect};
 `;
 
 const ImgBg = styled.div`
@@ -54,7 +55,7 @@ const ImgBg = styled.div`
 const Card = (props) => {
   const {
     imageUrl,
-    imageTone,
+    colorEffect,
     imageAlign,
     negative,
     customColor,
@@ -67,7 +68,7 @@ const Card = (props) => {
     >
       {/* TODO: maybe animate transition */}
       {imageUrl && (
-        <ImgArea imageTone={imageTone}>
+        <ImgArea colorEffect={colorEffect}>
           <ImgBg background={imageUrl} imageAlign={imageAlign} />
         </ImgArea>
       )}
@@ -81,7 +82,7 @@ const Card = (props) => {
 Card.defaultProps = {
   imageUrl: '',
   imageAlign: 'center',
-  imageTone: '#ffffff',
+  colorEffect: '#ffffff',
   negative: false,
   customColor: '',
 };
@@ -89,7 +90,7 @@ Card.defaultProps = {
 Card.propTypes = {
   imageUrl: PropTypes.string,
   imageAlign: PropTypes.string,
-  imageTone: PropTypes.string,
+  colorEffect: PropTypes.string,
   negative: PropTypes.bool,
   customColor: PropTypes.string,
   children: PropTypes.element.isRequired,
