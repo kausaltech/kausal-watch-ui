@@ -61,6 +61,7 @@ const Tab = styled.button`
   display: inline-block;
   border: none;
   margin: 0;
+  padding: ${(props) => props.theme.spaces.s050} ${(props) => props.theme.spaces.s150} ${(props) => props.theme.spaces.s100};
   text-decoration: none;
   cursor: pointer;
   text-align: center;
