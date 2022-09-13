@@ -86,6 +86,7 @@
     "@graphql-codegen/fragment-matcher": "^3.3.1",
     "@graphql-codegen/introspection": "2.2.1",
     "@graphql-codegen/typescript": "2.7.3",
+    "@graphql-codegen/typescript-operations": "^2.5.3",
     "@graphql-codegen/typescript-react-apollo": "3.3.3",
     "@next/eslint-plugin-next": "^12.1.6",
     "@storybook/addon-a11y": "^6.4.22",
