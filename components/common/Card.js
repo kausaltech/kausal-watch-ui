@@ -45,7 +45,6 @@ const ImgBg = styled.div`
   background-image: url(${(props) => props.background});
   background-position: ${(props) => props.imageAlign};
   background-size: cover;
-  mix-blend-mode: multiply;
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     height: 8rem;
@@ -82,7 +81,7 @@ const Card = (props) => {
 Card.defaultProps = {
   imageUrl: '',
   imageAlign: 'center',
-  colorEffect: '#ffffff',
+  colorEffect: undefined,
   negative: false,
   customColor: '',
 };
