@@ -43,7 +43,7 @@ const CatecoryCardContent = (props: CategoryCardContentProps) => {
     maximumSignificantDigits: 3,
   });
 
-  const textcontent = category?.categoryPage?.body.find((block) => block.__typename === 'RichTextBlock');
+  const textcontent = category?.leadParagraph;
   const catImageSrc = category?.image?.rendition.src;
   const categoryEmissions = category?.attributes[0]?.value;
   const emissionShare = formatEmissionSharePercent(categoryEmissions, sumValues);

@@ -542,6 +542,7 @@ export type AttributeType = {
   __typename?: 'AttributeType';
   choiceOptions: Array<AttributeTypeChoiceOption>;
   format: ActionsAttributeTypeFormatChoices;
+  helpText: Scalars['String'];
   id: Scalars['ID'];
   identifier: Scalars['String'];
   name: Scalars['String'];
@@ -610,17 +611,19 @@ export type Category = {
   color?: Maybe<Scalars['String']>;
   common?: Maybe<CommonCategory>;
   externalIdentifier?: Maybe<Scalars['String']>;
+  helpText: Scalars['String'];
   iconImage?: Maybe<Image>;
   iconSvgUrl?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   identifier: Scalars['String'];
   image?: Maybe<Image>;
   indicators: Array<Indicator>;
+  leadParagraph: Scalars['String'];
   level?: Maybe<CategoryLevel>;
   name: Scalars['String'];
   order: Scalars['Int'];
   parent?: Maybe<Category>;
-  shortDescription: Scalars['String'];
+  shortDescription?: Maybe<Scalars['String']>;
   type: CategoryType;
 };
 
@@ -778,10 +781,12 @@ export type CategoryType = {
   common?: Maybe<CommonCategoryType>;
   editableForActions: Scalars['Boolean'];
   editableForIndicators: Scalars['Boolean'];
+  helpText: Scalars['String'];
   /** Set if the categories do not have meaningful identifiers */
   hideCategoryIdentifiers: Scalars['Boolean'];
   id: Scalars['ID'];
   identifier: Scalars['String'];
+  leadParagraph?: Maybe<Scalars['String']>;
   levels: Array<CategoryLevel>;
   name: Scalars['String'];
   plan: Plan;
@@ -942,13 +947,15 @@ export type CommonCategory = {
   categoryInstances: Array<Category>;
   /** Set if the category has a theme color */
   color?: Maybe<Scalars['String']>;
+  helpText: Scalars['String'];
   iconImage?: Maybe<Image>;
   iconSvgUrl?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   identifier: Scalars['String'];
   image?: Maybe<Image>;
+  leadParagraph: Scalars['String'];
   name: Scalars['String'];
-  shortDescription: Scalars['String'];
+  shortDescription?: Maybe<Scalars['String']>;
   type: CommonCategoryType;
 };
 
@@ -957,7 +964,9 @@ export type CommonCategoryType = {
   categories: Array<CommonCategory>;
   editableForActions: Scalars['Boolean'];
   editableForIndicators: Scalars['Boolean'];
+  helpText: Scalars['String'];
   identifier: Scalars['String'];
+  leadParagraph?: Maybe<Scalars['String']>;
   name: Scalars['String'];
   shortDescription?: Maybe<Scalars['String']>;
   usableForActions: Scalars['Boolean'];
@@ -3048,7 +3057,7 @@ export type ActionDetailsQuery = (
       { id: string, identifier: string, officialName?: string | null }
       & { __typename?: 'Action' }
     )>, categories?: Array<(
-      { id: string, identifier: string, name: string, shortDescription: string, color?: string | null, iconSvgUrl?: string | null, iconImage?: (
+      { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, iconImage?: (
         { rendition?: (
           { src: string }
           & { __typename?: 'ImageRendition' }
@@ -3102,7 +3111,7 @@ export type ActionDetailsQuery = (
       ) | null }
       & { __typename?: 'Category' }
     ) | null> | null, emissionScopes?: Array<(
-      { id: string, identifier: string, name: string, shortDescription: string }
+      { id: string, identifier: string, name: string, leadParagraph: string }
       & { __typename?: 'Category' }
     ) | null> | null, contactPersons?: Array<(
       { id: string, person: (
@@ -3608,8 +3617,11 @@ type StreamFieldFragment_CategoryListBlock_Fragment = (
 );
 
 type StreamFieldFragment_CategoryTreeMapBlock_Fragment = (
-  { id?: string | null, blockType: string, field: string, valueAttribute?: (
-    { identifier: string }
+  { heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, valueAttribute?: (
+    { identifier: string, unit?: (
+      { shortName?: string | null }
+      & { __typename?: 'Unit' }
+    ) | null }
     & { __typename?: 'AttributeType' }
   ) | null, categoryType?: (
     { identifier: string }
@@ -3820,7 +3832,7 @@ export type GetCategoriesForTreeMapQueryVariables = Exact<{
 
 export type GetCategoriesForTreeMapQuery = (
   { planCategories?: Array<(
-    { id: string, name: string, shortDescription: string, color?: string | null, image?: (
+    { id: string, name: string, leadParagraph: string, color?: string | null, image?: (
       { id: string, title: string, imageCredit: string, altText: string, rendition?: (
         { id: string, width: number, height: number, src: string, alt: string }
         & { __typename?: 'ImageRendition' }
@@ -4727,7 +4739,7 @@ export type GetPlanPageGeneralQuery = (
     & { __typename: 'ActionListPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' }
   ) | (
     { id?: string | null, slug: string, title: string, lastPublishedAt?: any | null, category?: (
-      { id: string, identifier: string, shortDescription: string, color?: string | null, level?: (
+      { id: string, identifier: string, leadParagraph: string, color?: string | null, level?: (
         { name: string, namePlural?: string | null }
         & { __typename?: 'CategoryLevel' }
       ) | null, type: (
@@ -4752,7 +4764,7 @@ export type GetPlanPageGeneralQuery = (
         { id: string }
         & { __typename?: 'Indicator' }
       )>, children: Array<(
-        { id: string, identifier: string, name: string, shortDescription: string, color?: string | null, level?: (
+        { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, level?: (
           { name: string, namePlural?: string | null }
           & { __typename?: 'CategoryLevel' }
         ) | null, image?: (
@@ -4883,8 +4895,11 @@ export type GetPlanPageGeneralQuery = (
       ) | null }
       & { __typename?: 'CategoryListBlock' }
     ) | (
-      { id?: string | null, blockType: string, field: string, valueAttribute?: (
-        { identifier: string }
+      { heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, valueAttribute?: (
+        { identifier: string, unit?: (
+          { shortName?: string | null }
+          & { __typename?: 'Unit' }
+        ) | null }
         & { __typename?: 'AttributeType' }
       ) | null, categoryType?: (
         { identifier: string }
@@ -5075,8 +5090,11 @@ export type GetPlanPageGeneralQuery = (
       ) | null }
       & { __typename?: 'CategoryListBlock' }
     ) | (
-      { id?: string | null, blockType: string, field: string, valueAttribute?: (
-        { identifier: string }
+      { heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, valueAttribute?: (
+        { identifier: string, unit?: (
+          { shortName?: string | null }
+          & { __typename?: 'Unit' }
+        ) | null }
         & { __typename?: 'AttributeType' }
       ) | null, categoryType?: (
         { identifier: string }
@@ -5302,8 +5320,11 @@ export type GetHomePageQuery = (
       ) | null }
       & { __typename?: 'CategoryListBlock' }
     ) | (
-      { id?: string | null, blockType: string, field: string, valueAttribute?: (
-        { identifier: string }
+      { heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, valueAttribute?: (
+        { identifier: string, unit?: (
+          { shortName?: string | null }
+          & { __typename?: 'Unit' }
+        ) | null }
         & { __typename?: 'AttributeType' }
       ) | null, categoryType?: (
         { identifier: string }
@@ -5423,7 +5444,7 @@ export type GetHomePageQuery = (
   ) | null, plan?: (
     { primaryActionClassification?: (
       { categories?: Array<(
-        { id: string, identifier: string, name: string, shortDescription: string, color?: string | null, image?: (
+        { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, image?: (
           { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
             { id: string, width: number, height: number, src: string }
             & { __typename?: 'ImageRendition' }
