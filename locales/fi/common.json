@@ -167,5 +167,6 @@
   "form-action-filters": "Toimenpidelista filtterit",
   "nav-tools": "Työkalut",
   "nav-primary": "Ensisijainen",
-  "nav-footer": "Alatunniste"
+  "nav-footer": "Alatunniste",
+  "common.of-all-emissions": "kaikista päästöistä"
 }

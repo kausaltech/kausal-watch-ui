@@ -4,7 +4,7 @@ import { readableColor } from 'polished';
 import { useTranslation } from 'common/i18n';
 import { GetCategoriesForTreeMapQuery } from 'common/__generated__/graphql';
 
-function makeTrace(catsIn, i18n, unit) {
+function makeTrace(catsIn, i18n, unit, heading) {
   const { language } = i18n;
   const numberFormat = new Intl.NumberFormat(language, {
     maximumSignificantDigits: 3,
@@ -35,7 +35,7 @@ function makeTrace(catsIn, i18n, unit) {
 
   const trace = {
     type: 'icicle',
-    name: 'Utsläpp',
+    name: heading || '',
     labels: cats.map((cat) => `<b>${cat.name}</b>`),
     text: cats.map((cat) => `${numberFormat.format(cat.value)} ${unit.shortName}`),
     ids: cats.map((cat) => cat.id),
@@ -68,6 +68,7 @@ function makeTrace(catsIn, i18n, unit) {
 
 type CategoryTreeMapProps = {
   data: GetCategoriesForTreeMapQuery['planCategories'],
+  heading?: string,
   valueAttribute: {
     unit: {
       shortName: string,
@@ -75,16 +76,15 @@ type CategoryTreeMapProps = {
   }
   onChangeSection: (cat: string) => void,
 }
-function CategoryTreeMap(props: CategoryTreeMapProps) {
+const CategoryTreeMap = React.memo(function CategoryTreeMap(props: CategoryTreeMapProps) {
   if (!process.browser) {
     return null;
   }
-
-  const { data, onChangeSection, valueAttribute } = props;
+  const { data, onChangeSection, valueAttribute, heading } = props;
   const { i18n } = useTranslation();
 
   const Plot = dynamic(import('./Plot'));
-  const trace = makeTrace(data, i18n, valueAttribute.unit);
+  const trace = makeTrace(data, i18n, valueAttribute.unit, heading);
 
   const layout = {
     showlegend: false,
@@ -99,11 +99,9 @@ function CategoryTreeMap(props: CategoryTreeMapProps) {
   };
 
   const handleSectionChange = useCallback((evt) => {
-    console.log('handleSectionChange');
-    console.log(evt.frame);
-    const newCat = evt.frame.data[0].level;
+    const newCat: string = evt.frame.data[0].level;
     onChangeSection(newCat);
-  }, []);
+  }, [onChangeSection]);
 
   return (
     <Plot
@@ -115,6 +113,6 @@ function CategoryTreeMap(props: CategoryTreeMapProps) {
       style={{ width: '100%', height: '100%' }}
     />
   );
-}
+});
 
 export default CategoryTreeMap;

@@ -158,6 +158,8 @@ query GetCategoriesForTreeMap($plan: ID!, $categoryType: ID!, $attributeType: ID
 `;
 
 type CategoryTreeSectionProps = {
+  heading?: string,
+  lead?: string,
   sections: GetCategoriesForTreeMapQuery['planCategories'],
   valueAttribute: {
     unit: {
@@ -167,33 +169,30 @@ type CategoryTreeSectionProps = {
 };
 
 const CategoryTreeSection = (props: CategoryTreeSectionProps) => {
-  const { sections, valueAttribute } = props;
+  const { sections, valueAttribute, heading, lead } = props;
   // console.log(sections);
   const rootSection = sections.find((sect) => sect.parent === null);
-  // console.log(rootSection);
   const [activeCategory, setCategory] = useState(rootSection);
 
   // useCallback, so function prop does not cause graph re-rendering
   const onChangeSection = useCallback(
     (cat: string) => {
-      console.log('other onchange', cat);
       const allSections = concat(rootSection, sections);
       const newCat = allSections.find((sect) => sect.id === cat);
       setCategory(newCat);
-      return false;
     }, [sections, rootSection],
   );
-
   return (
     <CategoryListSection>
       <Container>
-        <h2>Utsläpp</h2>
+        {heading && (<h2>{heading}</h2>)}
         <CategoryTreeLayout>
           <CategoryCardColumn>
             <CategoryCard color={activeCategory.color}>
               <CategoryCardContent
                 category={activeCategory}
-                totalEmissions="50.921"
+                isRoot={activeCategory.id == rootSection.id}
+                sumValues={rootSection.attributes[0].value}
                 key={activeCategory.id}
               />
             </CategoryCard>
@@ -204,6 +203,7 @@ const CategoryTreeSection = (props: CategoryTreeSectionProps) => {
                 data={sections}
                 onChangeSection={onChangeSection}
                 valueAttribute={valueAttribute}
+                heading={heading}
               />
             </TreemapContent>
           </CategoryVizColumn>

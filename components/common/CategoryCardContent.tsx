@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { Link } from 'common/links';
 import { useTranslation } from 'common/i18n';
 import Icon from 'components/common/Icon';
+import { GetCategoriesForTreeMapQuery } from 'common/__generated__/graphql';
 
 const CardContent = styled(motion.div)`
   a {
@@ -21,16 +22,21 @@ const CategoryText = styled.div`
   font-size: ${(props) => props.theme.fontSizeSm};
 `;
 
-const formatEmissionSharePercent = (share, total) => {
-  const label = 'av totala utsläppen';
-  if (!share) return null;
+const formatEmissionSharePercent = (share: number, total: number) => {
+  if (share === undefined || share === null) return null;
   const percent = share / total * 100;
-  if (percent < 1) return `< 1 % ${label}`;
-  return `${Math.round(percent)} % ${label}`;
+  if (percent < 1) return `< 1 %`;
+  return `${Math.round(percent)} %`;
 };
 
-const CatecoryCardContent = (props) => {
-  const { category, totalEmissions } = props;
+type CategoryCardContentProps = {
+  category: GetCategoriesForTreeMapQuery['planCategories'][0],
+  isRoot: boolean,
+  sumValues: number,
+}
+
+const CatecoryCardContent = (props: CategoryCardContentProps) => {
+  const { category, sumValues, isRoot } = props;
   const { i18n, t } = useTranslation();
   const { language } = i18n;
   const numberFormat = new Intl.NumberFormat(language, {
@@ -40,7 +46,8 @@ const CatecoryCardContent = (props) => {
   const textcontent = category?.categoryPage?.body.find((block) => block.__typename === 'RichTextBlock');
   const catImageSrc = category?.image?.rendition.src;
   const categoryEmissions = category?.attributes[0]?.value;
-  const emissionShare = formatEmissionSharePercent(categoryEmissions, totalEmissions);
+  const emissionShare = formatEmissionSharePercent(categoryEmissions, sumValues);
+  const ofAllLabel = t('common.of-all-emissions');
 
   return (
     <CardContent
@@ -50,9 +57,11 @@ const CatecoryCardContent = (props) => {
       { catImageSrc && <CategoryImage src={catImageSrc} alt=""/> }
       <p>{category?.level?.name}</p>
       <h3>{category?.name}</h3>
-      <h5>
-        {emissionShare}
-      </h5>
+      {!isRoot && (
+        <h5>
+          {`${emissionShare} ${ofAllLabel}`}
+        </h5>
+      )}
       <CategoryText className="text-content" dangerouslySetInnerHTML={{ __html: textcontent?.value }} />
       { category?.categoryPage?.urlPath ? (
         <Link href={category?.categoryPage?.urlPath}>

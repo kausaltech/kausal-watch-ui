@@ -189,6 +189,8 @@ const STREAM_FIELD_FRAGMENT = gql`
       }
     }
     ...on CategoryTreeMapBlock {
+      heading
+      lead
       valueAttribute {
         identifier
         unit {
