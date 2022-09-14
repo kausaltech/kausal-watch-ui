@@ -35,6 +35,7 @@
       "CardBlock",
       "CardListBlock",
       "CategoryListBlock",
+      "CategoryTreeMapBlock",
       "CharBlock",
       "ChoiceBlock",
       "DateBlock",

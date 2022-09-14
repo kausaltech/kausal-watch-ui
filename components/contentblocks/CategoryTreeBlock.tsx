@@ -1,4 +1,4 @@
-import React, { useContext, useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { concat } from 'lodash';
 import styled from 'styled-components';
 import { Container } from 'reactstrap';
@@ -7,8 +7,10 @@ import { gql, useQuery } from '@apollo/client';
 import CategoryTreeMap from 'components/graphs/CategoryTreeMap';
 import CategoryCardContent from 'components/common/CategoryCardContent';
 
-import PlanContext from 'context/plan';
+import { usePlan } from 'context/plan';
 import CategoryActionList from 'components/actions/CategoryActionList';
+import ErrorMessage from 'components/common/ErrorMessage';
+import { GetCategoriesForTreeMapQuery } from 'common/__generated__/graphql';
 
 const CategoryListSection = styled.div`
   background-color: ${(props) => props.theme.neutralLight};
@@ -104,7 +106,7 @@ const CategoryVizColumn = styled.div`
 // TODO: clean out unecessary fields. Fetching a lot for now
 
 const GET_CATEGORIES_FOR_TREEMAP = gql`
-query GetCategoriesForTreeMap($plan: ID!, $categoryType: ID!) {
+query GetCategoriesForTreeMap($plan: ID!, $categoryType: ID!, $attributeType: ID!) {
   planCategories(plan: $plan, categoryType: $categoryType) {
     id
     name
@@ -146,7 +148,7 @@ query GetCategoriesForTreeMap($plan: ID!, $categoryType: ID!) {
       name
       namePlural
     }
-    attributes(id: "impact") {
+    attributes(id: $attributeType) {
       ...on AttributeNumericValue {
         value
       }
@@ -155,8 +157,17 @@ query GetCategoriesForTreeMap($plan: ID!, $categoryType: ID!) {
 }
 `;
 
-const CategoryTreeSection = (props) => {
-  const { sections } = props;
+type CategoryTreeSectionProps = {
+  sections: GetCategoriesForTreeMapQuery['planCategories'],
+  valueAttribute: {
+    unit: {
+      shortName: string,
+    }
+  }
+};
+
+const CategoryTreeSection = (props: CategoryTreeSectionProps) => {
+  const { sections, valueAttribute } = props;
   // console.log(sections);
   const rootSection = sections.find((sect) => sect.parent === null);
   // console.log(rootSection);
@@ -164,12 +175,13 @@ const CategoryTreeSection = (props) => {
 
   // useCallback, so function prop does not cause graph re-rendering
   const onChangeSection = useCallback(
-    (cat) => {
+    (cat: string) => {
+      console.log('other onchange', cat);
       const allSections = concat(rootSection, sections);
       const newCat = allSections.find((sect) => sect.id === cat);
       setCategory(newCat);
       return false;
-    }, [],
+    }, [sections, rootSection],
   );
 
   return (
@@ -191,48 +203,82 @@ const CategoryTreeSection = (props) => {
               <CategoryTreeMap
                 data={sections}
                 onChangeSection={onChangeSection}
+                valueAttribute={valueAttribute}
               />
             </TreemapContent>
           </CategoryVizColumn>
         </CategoryTreeLayout>
-        <CategoryActionList
-          categoryId={activeCategory.id === 'root' ? 0 : activeCategory.id}
+        { /* <CategoryActionList
+          categoryId={activeCategory.parent?? 0 : activeCategory.id}
           categories={sections}
-        />
+        /> */ }
       </Container>
     </CategoryListSection>
   );
 };
 
-const CategoryTreeBlock = () => {
-  const plan = useContext(PlanContext);
+type CategoryTreeBlockProps = {
+  categoryType: {
+    identifier: string,
+  },
+  valueAttribute: {
+    identifier: string,
+    unit: {
+      shortName: string,
+    }
+  },
+  categories: GetCategoriesForTreeMapQuery['planCategories']
+}
+
+
+function CategoryTreeBlockBrowser(props: CategoryTreeBlockProps) {
+  const cats = props.categories;
+  const catMap = useMemo(() => (new Map(cats.map((cat) => [cat.id, cat]))), [cats]);
+
+  const findFirstAncestorColor = useCallback((id) => {
+    const cat = catMap.get(id);
+    if (cat.color) return cat.color;
+    let parentId = cat.parent?.id;
+    while (parentId) {
+      const parent = catMap.get(parentId);
+      if (parent.color) return parent.color;
+      parentId = parent.parent?.id;
+    }
+    return null;
+  }, [catMap]);
+
+  const augmentedCategories = useMemo(() => (
+    cats.map((cat) => ({
+      ...cat,
+      color: findFirstAncestorColor(cat.id),
+    }))
+  ), [cats, findFirstAncestorColor]);
+
+  return (
+    <CategoryTreeSection sections={augmentedCategories} valueAttribute={props.valueAttribute} />
+  );
+}
+
+
+function CategoryTreeBlock(props: CategoryTreeBlockProps) {
   if (!process.browser) {
     return null;
   }
 
-  const { data, loading, error } = useQuery(GET_CATEGORIES_FOR_TREEMAP, {
+  const { categoryType, valueAttribute } = props;
+  const plan = usePlan();
+  const { data, loading, error } = useQuery<GetCategoriesForTreeMapQuery>(GET_CATEGORIES_FOR_TREEMAP, {
     variables: {
       plan: plan.identifier,
-      categoryType: 'transition', // FIXME
+      categoryType: categoryType.identifier,
+      attributeType: valueAttribute.identifier,
     },
   });
 
-  if (!data) return <ContentLoader />;
+  if (error) return <ErrorMessage message={error.message} />;
+  if (loading) return <ContentLoader />;
 
-  const findFirstAncestorColor = (id) => {
-    const currentCat = data?.planCategories.find((cat) => cat.id === id);
-    if (currentCat.color === null) return findFirstAncestorColor(currentCat.parent?.id);
-    return currentCat.color;
-  };
-
-  const augmentedCategories = data?.planCategories.map((cat) => ({
-    ...cat,
-    color: findFirstAncestorColor(cat.id),
-  }));
-
-  return (
-    <CategoryTreeSection sections={augmentedCategories} />
-  );
+  return <CategoryTreeBlockBrowser categories={data.planCategories} {...props} />
 };
 
 export default CategoryTreeBlock;

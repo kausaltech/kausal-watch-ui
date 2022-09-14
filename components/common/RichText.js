@@ -44,4 +44,5 @@ RichText.defaultProps = {
 
 RichText.propTypes = {
   html: PropTypes.string,
+  className: PropTypes.string,
 };

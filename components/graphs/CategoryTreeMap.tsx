@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import dynamic from 'next/dynamic';
 import { readableColor } from 'polished';
 import { useTranslation } from 'common/i18n';
+import { GetCategoriesForTreeMapQuery } from 'common/__generated__/graphql';
 
-function makeTrace(catsIn, i18n) {
+function makeTrace(catsIn, i18n, unit) {
   const { language } = i18n;
   const numberFormat = new Intl.NumberFormat(language, {
     maximumSignificantDigits: 3,
@@ -36,7 +37,7 @@ function makeTrace(catsIn, i18n) {
     type: 'icicle',
     name: 'Utsläpp',
     labels: cats.map((cat) => `<b>${cat.name}</b>`),
-    text: cats.map((cat) => `${numberFormat.format(cat.value)} Mt`),
+    text: cats.map((cat) => `${numberFormat.format(cat.value)} ${unit.shortName}`),
     ids: cats.map((cat) => cat.id),
     parents: cats.map((cat) => cat.parent?.id),
     values: cats.map((cat) => cat.value),
@@ -65,16 +66,25 @@ function makeTrace(catsIn, i18n) {
   return trace;
 }
 
-const CategoryTreeMap = React.memo((props) => {
-  const { data, onChangeSection } = props;
-  const { i18n } = useTranslation();
-
+type CategoryTreeMapProps = {
+  data: GetCategoriesForTreeMapQuery['planCategories'],
+  valueAttribute: {
+    unit: {
+      shortName: string,
+    }
+  }
+  onChangeSection: (cat: string) => void,
+}
+function CategoryTreeMap(props: CategoryTreeMapProps) {
   if (!process.browser) {
     return null;
   }
 
+  const { data, onChangeSection, valueAttribute } = props;
+  const { i18n } = useTranslation();
+
   const Plot = dynamic(import('./Plot'));
-  const trace = makeTrace(data, i18n);
+  const trace = makeTrace(data, i18n, valueAttribute.unit);
 
   const layout = {
     showlegend: false,
@@ -88,10 +98,12 @@ const CategoryTreeMap = React.memo((props) => {
     responsive: true,
   };
 
-  const handleSectionChange = (evt) => {
+  const handleSectionChange = useCallback((evt) => {
+    console.log('handleSectionChange');
+    console.log(evt.frame);
     const newCat = evt.frame.data[0].level;
     onChangeSection(newCat);
-  };
+  }, []);
 
   return (
     <Plot
@@ -103,6 +115,6 @@ const CategoryTreeMap = React.memo((props) => {
       style={{ width: '100%', height: '100%' }}
     />
   );
-});
+}
 
 export default CategoryTreeMap;

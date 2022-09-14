@@ -7,6 +7,7 @@ import RichText from 'components/common/RichText';
 import QuestionAnswerBlock from 'components/contentblocks/QuestionAnswerBlock';
 import ActionListBlock from 'components/contentblocks/ActionListBlock';
 import CategoryListBlock from 'components/contentblocks/CategoryListBlock';
+import CategoryTreeBlock from 'components/contentblocks/CategoryTreeBlock';
 import IndicatorGroupBlock from 'components/contentblocks/IndicatorGroupBlock';
 import FrontPageHeroBlock from 'components/contentblocks/FrontPageHeroBlock';
 import IndicatorShowcaseBlock from 'components/contentblocks/IndicatorShowcaseBlock';
@@ -16,6 +17,9 @@ import IndicatorHighlightsBlock from 'components/contentblocks/IndicatorHighligh
 import RelatedIndicatorsBlock from 'components/contentblocks/RelatedIndicatorsBlock';
 import RelatedPlanListBlock from 'components/contentblocks/RelatedPlanListBlock';
 import ActionCategoryFilterCardsBlock from 'components/contentblocks/ActionCategoryFilterCardsBlock';
+
+import type { StreamFieldFragmentFragment } from 'common/__generated__/graphql';
+
 
 const STREAM_FIELD_FRAGMENT = gql`
   fragment StreamFieldFragment on StreamFieldInterface {
@@ -92,6 +96,15 @@ const STREAM_FIELD_FRAGMENT = gql`
       style
       heading
       lead
+      categoryType {
+        categories {
+          id
+          name
+          parent {
+            id
+          }
+        }
+      }
     }
     ... on FrontPageHeroBlock {
       layout
@@ -175,38 +188,35 @@ const STREAM_FIELD_FRAGMENT = gql`
         }
       }
     }
+    ...on CategoryTreeMapBlock {
+      valueAttribute {
+        identifier
+        unit {
+          shortName
+        }
+      }
+      categoryType {
+        identifier
+      }
+    }
   }
 ${images.fragments.multiUseImage}
 `;
 
-export const possibleTypes = {
-  StreamFieldInterface: [
-    'CharBlock',
-    'TextBlock',
-    'RichTextBlock',
-    'ChoiceBlock',
-    'QuestionAnswerBlock',
-    'IndicatorBlock',
-    'ActionListBlock',
-    'CategoryListBlock',
-    'IndicatorShowcaseBlock',
-    'FrontPageHeroBlock',
-    'IndicatorGroupBlock',
-    'CardListBlock',
-    'RelatedIndicatorsBlock',
-    'ActionCategoryFilterCardsBlock',
-    'ActionHighlightsBlock',
-    'IndicatorHighlightsBlock',
-  ],
-};
+type StreamFieldBlockProps = {
+  page: any,
+  block: StreamFieldFragmentFragment,
+  color?: string,
+}
 
-function StreamFieldBlock(props) {
-  const { __typename, page } = props;
+function StreamFieldBlock(props: StreamFieldBlockProps) {
+  const { page, block, color } = props;
+  const { __typename } = block;
   const plan = useContext(PlanContext);
 
   switch (__typename) {
     case 'RichTextBlock': {
-      const { value } = props;
+      const { value } = block;
       return (
         <Container className="my-5">
           <Row>
@@ -218,29 +228,40 @@ function StreamFieldBlock(props) {
       );
     }
     case 'QuestionAnswerBlock': {
-      const { heading, questions } = props;
+      const { heading, questions } = block;
       return <QuestionAnswerBlock heading={heading} questions={questions} />;
     }
     case 'CharBlock': {
-      const { value } = props;
+      const { value } = block;
       return <Container><Row><Col><div>{value}</div></Col></Row></Container>;
     }
     case 'IndicatorGroupBlock': {
-      const { items } = props;
+      const { items } = block;
       return <IndicatorGroupBlock indicators={items} />;
     }
     case 'ActionListBlock': {
-      const { categoryFilter, color } = props;
+      const { categoryFilter, } = block;
       return <ActionListBlock categoryId={categoryFilter?.id || page.category.id} color={color} />;
     }
     case 'CategoryListBlock': {
-      const { color, heading, lead, style } = props;
-      const { category } = page;
-      const fallbackImage = (category?.image || plan.image);
+      const { heading, lead, style, categoryType } = block;
+      const { category: pageCategory } = page;
+      let categories;
+
+      /* If the block specifies a category type, use cats from there.
+       * Otherwise, fall back on the containing page's sub-categories.
+       * If even that doesn't work, use plan's main categories.
+       */
+      if (categoryType) {
+        categories = categoryType.categories.filter((cat) => cat.parent == null);
+      } else if (pageCategory) {
+        categories = pageCategory.children;
+      }
+      const fallbackImage = (pageCategory?.image || plan.image);
       return (
         <CategoryListBlock
           style={style}
-          categories={category.children}
+          categories={categories}
           color={color}
           fallbackImage={fallbackImage}
           heading={heading}
@@ -251,7 +272,7 @@ function StreamFieldBlock(props) {
     case 'FrontPageHeroBlock': {
       const {
         layout, image, heading, lead,
-      } = props;
+      } = block;
       return (
         <FrontPageHeroBlock
           layout={layout}
@@ -265,11 +286,11 @@ function StreamFieldBlock(props) {
       );
     }
     case 'IndicatorShowcaseBlock': {
-      const { indicator, title, body } = props;
+      const { indicator, title, body } = block;
       return <IndicatorShowcaseBlock indicator={indicator} title={title} body={body} />;
     }
     case 'CardListBlock': {
-      const { cards, lead, heading } = props;
+      const { cards, lead, heading } = block;
       return <CardListBlock cards={cards} lead={lead} heading={heading} />;
     }
     case 'ActionHighlightsBlock': {
@@ -285,8 +306,11 @@ function StreamFieldBlock(props) {
       return <RelatedPlanListBlock />;
     }
     case 'ActionCategoryFilterCardsBlock': {
-      const { cards } = props;
+      const { cards } = block;
       return <ActionCategoryFilterCardsBlock cards={cards} />;
+    }
+    case 'CategoryTreeMapBlock': {
+      return <CategoryTreeBlock {...block} />
     }
     default:
       return (
@@ -303,7 +327,7 @@ function StreamField(props) {
     <>
       { blocks.map((block) => (
         <StreamFieldBlock
-          {...block}
+          block={block}
           page={page}
           key={block.id}
           color={color}

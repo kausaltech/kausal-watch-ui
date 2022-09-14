@@ -8,6 +8,9 @@ import { getBgImageAlignment } from 'common/images';
 import { Link } from 'common/links';
 import CategoryTreeBlock from 'components/contentblocks/CategoryTreeBlock';
 import Card from 'components/common/Card';
+import { string } from 'prop-types';
+import { MultiUseImageFragmentFragment } from 'common/__generated__/graphql';
+import { useFallbackCategories } from 'context/categories';
 
 const CategoryListSection = styled.div`
   background-color: ${(props) => props.theme.neutralLight};
@@ -60,15 +63,35 @@ const Identifier = styled.span`
   color: ${(props) => props.theme.graphColors.grey050};
 `;
 
-const CategoryListBlock = (props) => {
-  const { categories, color, fallbackImage, heading, lead, style } = props;
+export type CategoryListBlockCategory = {
+    id: string,
+    image?: MultiUseImageFragmentFragment,
+    color?: string,
+    identifier: string,
+    name: string,
+    shortDescription?: string,
+    categoryPage: {
+        urlPath: string,
+    }
+}
+
+type CategoryListBlockProps = {
+    categories?: Array<CategoryListBlockCategory>,
+    color: string,
+    fallbackImage: MultiUseImageFragmentFragment,
+    heading?: string,
+    lead: string,
+    style?: "treemap" | "cards",
+}
+
+const CategoryListBlock = (props: CategoryListBlockProps) => {
+  let { categories } = props;
+  const { color, fallbackImage, heading, lead, style } = props;
   const themeColor = color;
   const theme = useTheme();
+  const fallbackCategories = useFallbackCategories();
 
-  if (style === 'treemap') {
-    return <CategoryTreeBlock />;
-  }
-
+  if (!categories) categories = fallbackCategories;
   return (
     <CategoryListSection bg={themeColor}>
       <Container>
@@ -103,7 +126,7 @@ const CategoryListBlock = (props) => {
                         )}
                         { cat.name }
                       </CardHeader>
-                      <p>{cat.leadParagraph}</p>
+                      { cat.leadParagraph && (<p>{cat.leadParagraph}</p>) }
                     </div>
                   </Card>
                 </a>

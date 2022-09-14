@@ -58,7 +58,7 @@ function LegacyHomePage(props) {
   if (plan.identifier === 'hnh2035') heroComponent = <HnhHero />;
 
   return (
-    <Layout>
+    <>
       { theme.settings.attentionBannerContent && (
         <AttentionBannerBlock
           {...theme.settings.attentionBannerContent}
@@ -75,7 +75,7 @@ function LegacyHomePage(props) {
           <IndicatorHighlightsList plan={plan} />
         </Container>
       </IndicatorsSection>
-    </Layout>
+    </>
   );
 }
 

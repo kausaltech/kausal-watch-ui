@@ -542,6 +542,7 @@ export type AttributeType = {
   __typename?: 'AttributeType';
   choiceOptions: Array<AttributeTypeChoiceOption>;
   format: ActionsAttributeTypeFormatChoices;
+  id: Scalars['ID'];
   identifier: Scalars['String'];
   name: Scalars['String'];
   unit?: Maybe<Unit>;
@@ -751,13 +752,17 @@ export type CategoryPageSiblingsArgs = {
   searchQuery?: InputMaybe<Scalars['String']>;
 };
 
-export type CategoryTreeMap = StreamFieldInterface & {
-  __typename?: 'CategoryTreeMap';
+export type CategoryTreeMapBlock = StreamFieldInterface & {
+  __typename?: 'CategoryTreeMapBlock';
   blockType: Scalars['String'];
   blocks: Array<StreamFieldInterface>;
+  categoryType?: Maybe<CategoryType>;
   field: Scalars['String'];
+  heading?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['String']>;
+  lead?: Maybe<Scalars['String']>;
   rawValue: Scalars['String'];
+  valueAttribute?: Maybe<AttributeType>;
 };
 
 /**
@@ -3533,14 +3538,14 @@ export type SearchQueryQuery = (
   & { __typename?: 'Query' }
 );
 
-type StreamFieldFragment_M5hRuBunZgYuvhubsUl8kXle4CpYpqwhtsHkDit4By_Fragment = (
+type StreamFieldFragment_62NAlQDbnV6UebIwNCaz_1WstdVEw6Tn6Jdo1Ux7Vm_Fragment = (
   { id?: string | null, blockType: string, field: string }
-  & { __typename?: 'ActionCategoryFilterCardBlock' | 'ActionHighlightsBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CategoryTreeMap' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'ImageChooserBlock' | 'IndicatorHighlightsBlock' | 'IntegerBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'QuestionBlock' | 'RawHTMLBlock' }
+  & { __typename?: 'ActionCategoryFilterCardBlock' | 'ActionHighlightsBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'ImageChooserBlock' | 'IndicatorHighlightsBlock' | 'IntegerBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' }
 );
 
-type StreamFieldFragment_0zb1NBwMwbsJWcDYEeQz5qcj2e2LbDwLNIo0UbI1I_Fragment = (
+type StreamFieldFragment_Y1rEgfJSjhy1xabeKkJq5nwe542BnVz8HHzZEuMwDgY_Fragment = (
   { id?: string | null, blockType: string, field: string }
-  & { __typename?: 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'StaticBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TimeBlock' | 'URLBlock' }
+  & { __typename?: 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'StaticBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TimeBlock' | 'URLBlock' }
 );
 
 type StreamFieldFragment_ActionCategoryFilterCardsBlock_Fragment = (
@@ -3553,7 +3558,7 @@ type StreamFieldFragment_ActionCategoryFilterCardsBlock_Fragment = (
       & { __typename?: 'Category' }
     ) | null }
     & { __typename?: 'ActionCategoryFilterCardBlock' }
-  ) | { __typename?: 'ActionCategoryFilterCardsBlock' | 'ActionHighlightsBlock' | 'ActionListBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CategoryListBlock' | 'CategoryTreeMap' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'ImageChooserBlock' } | { __typename?: 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IntegerBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'RichTextBlock' | 'StaticBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TextBlock' | 'TimeBlock' } | { __typename?: 'URLBlock' } | null> | null }
+  ) | { __typename?: 'ActionCategoryFilterCardsBlock' | 'ActionHighlightsBlock' | 'ActionListBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CategoryListBlock' | 'CategoryTreeMapBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'ImageChooserBlock' } | { __typename?: 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IntegerBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'RichTextBlock' | 'StaticBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TextBlock' | 'TimeBlock' } | { __typename?: 'URLBlock' } | null> | null }
   & { __typename?: 'ActionCategoryFilterCardsBlock' }
 );
 
@@ -3566,7 +3571,7 @@ type StreamFieldFragment_ActionListBlock_Fragment = (
 );
 
 type StreamFieldFragment_CardListBlock_Fragment = (
-  { heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, cards?: Array<{ __typename?: 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionHighlightsBlock' | 'ActionListBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardListBlock' | 'CategoryListBlock' | 'CategoryTreeMap' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'ImageChooserBlock' } | { __typename?: 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IntegerBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'RichTextBlock' | 'StaticBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TextBlock' | 'TimeBlock' } | { __typename?: 'URLBlock' } | (
+  { heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, cards?: Array<{ __typename?: 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionHighlightsBlock' | 'ActionListBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardListBlock' | 'CategoryListBlock' | 'CategoryTreeMapBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'ImageChooserBlock' } | { __typename?: 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IntegerBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'RichTextBlock' | 'StaticBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TextBlock' | 'TimeBlock' } | { __typename?: 'URLBlock' } | (
     { heading?: string | null, content?: string | null, link?: string | null, image?: (
       { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
         { id: string, width: number, height: number, src: string }
@@ -3600,6 +3605,17 @@ type StreamFieldFragment_CategoryListBlock_Fragment = (
     & { __typename?: 'CategoryType' }
   ) | null }
   & { __typename?: 'CategoryListBlock' }
+);
+
+type StreamFieldFragment_CategoryTreeMapBlock_Fragment = (
+  { id?: string | null, blockType: string, field: string, valueAttribute?: (
+    { identifier: string }
+    & { __typename?: 'AttributeType' }
+  ) | null, categoryType?: (
+    { identifier: string }
+    & { __typename?: 'CategoryType' }
+  ) | null }
+  & { __typename?: 'CategoryTreeMapBlock' }
 );
 
 type StreamFieldFragment_CharBlock_RichTextBlock_TextBlock_Fragment = (
@@ -3646,7 +3662,7 @@ type StreamFieldFragment_IndicatorBlock_Fragment = (
 type StreamFieldFragment_IndicatorGroupBlock_Fragment = (
   { id?: string | null, blockType: string, field: string, items: Array<(
     { id?: string | null }
-    & { __typename?: 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionHighlightsBlock' | 'ActionListBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CategoryListBlock' | 'CategoryTreeMap' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' }
+    & { __typename?: 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionHighlightsBlock' | 'ActionListBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CategoryListBlock' | 'CategoryTreeMapBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' }
   ) | (
     { id?: string | null }
     & { __typename?: 'ImageChooserBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IntegerBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'RichTextBlock' | 'StaticBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TextBlock' | 'TimeBlock' }
@@ -3675,7 +3691,7 @@ type StreamFieldFragment_IndicatorGroupBlock_Fragment = (
 type StreamFieldFragment_IndicatorShowcaseBlock_Fragment = (
   { title?: string | null, body?: string | null, id?: string | null, blockType: string, field: string, blocks: Array<(
     { id?: string | null }
-    & { __typename: 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionHighlightsBlock' | 'ActionListBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CategoryListBlock' | 'CategoryTreeMap' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' }
+    & { __typename: 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionHighlightsBlock' | 'ActionListBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CategoryListBlock' | 'CategoryTreeMapBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' }
   ) | (
     { id?: string | null }
     & { __typename: 'ImageChooserBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IntegerBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'RichTextBlock' | 'StaticBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TextBlock' }
@@ -3699,7 +3715,7 @@ type StreamFieldFragment_IndicatorShowcaseBlock_Fragment = (
     & { __typename?: 'Indicator' }
   ) | null, linkButton?: (
     { blockType: string }
-    & { __typename?: 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionHighlightsBlock' | 'ActionListBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CategoryListBlock' | 'CategoryTreeMap' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' }
+    & { __typename?: 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionHighlightsBlock' | 'ActionListBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CategoryListBlock' | 'CategoryTreeMapBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' }
   ) | (
     { blockType: string }
     & { __typename?: 'ImageChooserBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IntegerBlock' | 'PageChooserBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'RichTextBlock' | 'StaticBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TextBlock' | 'TimeBlock' }
@@ -3717,14 +3733,14 @@ type StreamFieldFragment_IndicatorShowcaseBlock_Fragment = (
 );
 
 type StreamFieldFragment_QuestionAnswerBlock_Fragment = (
-  { heading?: string | null, id?: string | null, blockType: string, field: string, questions?: Array<{ __typename?: 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionHighlightsBlock' | 'ActionListBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CategoryListBlock' | 'CategoryTreeMap' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' } | { __typename?: 'ImageChooserBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IntegerBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'QuestionAnswerBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'RichTextBlock' | 'StaticBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TextBlock' | 'TimeBlock' } | { __typename?: 'URLBlock' } | (
+  { heading?: string | null, id?: string | null, blockType: string, field: string, questions?: Array<{ __typename?: 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionHighlightsBlock' | 'ActionListBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CategoryListBlock' | 'CategoryTreeMapBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' } | { __typename?: 'ImageChooserBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IntegerBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'QuestionAnswerBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'RichTextBlock' | 'StaticBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TextBlock' | 'TimeBlock' } | { __typename?: 'URLBlock' } | (
     { question?: string | null, answer?: string | null }
     & { __typename?: 'QuestionBlock' }
   ) | null> | null }
   & { __typename?: 'QuestionAnswerBlock' }
 );
 
-export type StreamFieldFragmentFragment = StreamFieldFragment_M5hRuBunZgYuvhubsUl8kXle4CpYpqwhtsHkDit4By_Fragment | StreamFieldFragment_0zb1NBwMwbsJWcDYEeQz5qcj2e2LbDwLNIo0UbI1I_Fragment | StreamFieldFragment_ActionCategoryFilterCardsBlock_Fragment | StreamFieldFragment_ActionListBlock_Fragment | StreamFieldFragment_CardListBlock_Fragment | StreamFieldFragment_CategoryListBlock_Fragment | StreamFieldFragment_CharBlock_RichTextBlock_TextBlock_Fragment | StreamFieldFragment_ChoiceBlock_Fragment | StreamFieldFragment_FrontPageHeroBlock_Fragment | StreamFieldFragment_IndicatorBlock_Fragment | StreamFieldFragment_IndicatorGroupBlock_Fragment | StreamFieldFragment_IndicatorShowcaseBlock_Fragment | StreamFieldFragment_QuestionAnswerBlock_Fragment;
+export type StreamFieldFragmentFragment = StreamFieldFragment_62NAlQDbnV6UebIwNCaz_1WstdVEw6Tn6Jdo1Ux7Vm_Fragment | StreamFieldFragment_Y1rEgfJSjhy1xabeKkJq5nwe542BnVz8HHzZEuMwDgY_Fragment | StreamFieldFragment_ActionCategoryFilterCardsBlock_Fragment | StreamFieldFragment_ActionListBlock_Fragment | StreamFieldFragment_CardListBlock_Fragment | StreamFieldFragment_CategoryListBlock_Fragment | StreamFieldFragment_CategoryTreeMapBlock_Fragment | StreamFieldFragment_CharBlock_RichTextBlock_TextBlock_Fragment | StreamFieldFragment_ChoiceBlock_Fragment | StreamFieldFragment_FrontPageHeroBlock_Fragment | StreamFieldFragment_IndicatorBlock_Fragment | StreamFieldFragment_IndicatorGroupBlock_Fragment | StreamFieldFragment_IndicatorShowcaseBlock_Fragment | StreamFieldFragment_QuestionAnswerBlock_Fragment;
 
 export type GetActionListForBlockQueryVariables = Exact<{
   plan: Scalars['ID'];
@@ -3798,6 +3814,7 @@ export type GetCategoryAttributeTypesQuery = (
 export type GetCategoriesForTreeMapQueryVariables = Exact<{
   plan: Scalars['ID'];
   categoryType: Scalars['ID'];
+  attributeType: Scalars['ID'];
 }>;
 
 
@@ -3810,7 +3827,7 @@ export type GetCategoriesForTreeMapQuery = (
       ) | null }
       & { __typename?: 'Image' }
     ) | null, categoryPage?: (
-      { id?: string | null, title: string, path: string, slug: string, url?: string | null, urlPath: string, depth?: number | null, contentType: string, body?: Array<{ __typename?: 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionHighlightsBlock' | 'ActionListBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CategoryListBlock' | 'CategoryTreeMap' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' } | { __typename?: 'ImageChooserBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IntegerBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'StaticBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TextBlock' | 'TimeBlock' } | { __typename?: 'URLBlock' } | (
+      { id?: string | null, title: string, path: string, slug: string, url?: string | null, urlPath: string, depth?: number | null, contentType: string, body?: Array<{ __typename?: 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionHighlightsBlock' | 'ActionListBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CategoryListBlock' | 'CategoryTreeMapBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' } | { __typename?: 'ImageChooserBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IntegerBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'StaticBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TextBlock' | 'TimeBlock' } | { __typename?: 'URLBlock' } | (
         { value: string }
         & { __typename?: 'RichTextBlock' }
       ) | null> | null }
@@ -4810,10 +4827,10 @@ export type GetPlanPageGeneralQuery = (
       & { __typename?: 'Category' }
     ) | null, body?: Array<(
       { id?: string | null, blockType: string, field: string }
-      & { __typename?: 'ActionCategoryFilterCardBlock' | 'ActionHighlightsBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CategoryTreeMap' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'ImageChooserBlock' | 'IndicatorHighlightsBlock' | 'IntegerBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'QuestionBlock' | 'RawHTMLBlock' }
+      & { __typename?: 'ActionCategoryFilterCardBlock' | 'ActionHighlightsBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'ImageChooserBlock' | 'IndicatorHighlightsBlock' | 'IntegerBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' }
     ) | (
       { id?: string | null, blockType: string, field: string }
-      & { __typename?: 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'StaticBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TimeBlock' | 'URLBlock' }
+      & { __typename?: 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'StaticBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TimeBlock' | 'URLBlock' }
     ) | (
       { id?: string | null, blockType: string, field: string, cards?: Array<(
         { heading?: string | null, lead?: string | null, category?: (
@@ -4824,7 +4841,7 @@ export type GetPlanPageGeneralQuery = (
           & { __typename?: 'Category' }
         ) | null }
         & { __typename?: 'ActionCategoryFilterCardBlock' }
-      ) | { __typename?: 'ActionCategoryFilterCardsBlock' | 'ActionHighlightsBlock' | 'ActionListBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CategoryListBlock' | 'CategoryTreeMap' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'ImageChooserBlock' } | { __typename?: 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IntegerBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'RichTextBlock' | 'StaticBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TextBlock' | 'TimeBlock' } | { __typename?: 'URLBlock' } | null> | null }
+      ) | { __typename?: 'ActionCategoryFilterCardsBlock' | 'ActionHighlightsBlock' | 'ActionListBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CategoryListBlock' | 'CategoryTreeMapBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'ImageChooserBlock' } | { __typename?: 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IntegerBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'RichTextBlock' | 'StaticBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TextBlock' | 'TimeBlock' } | { __typename?: 'URLBlock' } | null> | null }
       & { __typename?: 'ActionCategoryFilterCardsBlock' }
     ) | (
       { id?: string | null, blockType: string, field: string, categoryFilter?: (
@@ -4833,7 +4850,7 @@ export type GetPlanPageGeneralQuery = (
       ) | null }
       & { __typename?: 'ActionListBlock' }
     ) | (
-      { heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, cards?: Array<{ __typename?: 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionHighlightsBlock' | 'ActionListBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardListBlock' | 'CategoryListBlock' | 'CategoryTreeMap' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'ImageChooserBlock' } | { __typename?: 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IntegerBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'RichTextBlock' | 'StaticBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TextBlock' | 'TimeBlock' } | { __typename?: 'URLBlock' } | (
+      { heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, cards?: Array<{ __typename?: 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionHighlightsBlock' | 'ActionListBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardListBlock' | 'CategoryListBlock' | 'CategoryTreeMapBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'ImageChooserBlock' } | { __typename?: 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IntegerBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'RichTextBlock' | 'StaticBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TextBlock' | 'TimeBlock' } | { __typename?: 'URLBlock' } | (
         { heading?: string | null, content?: string | null, link?: string | null, image?: (
           { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
             { id: string, width: number, height: number, src: string }
@@ -4865,6 +4882,15 @@ export type GetPlanPageGeneralQuery = (
         & { __typename?: 'CategoryType' }
       ) | null }
       & { __typename?: 'CategoryListBlock' }
+    ) | (
+      { id?: string | null, blockType: string, field: string, valueAttribute?: (
+        { identifier: string }
+        & { __typename?: 'AttributeType' }
+      ) | null, categoryType?: (
+        { identifier: string }
+        & { __typename?: 'CategoryType' }
+      ) | null }
+      & { __typename?: 'CategoryTreeMapBlock' }
     ) | (
       { value: string, id?: string | null, blockType: string, field: string }
       & { __typename?: 'CharBlock' | 'RichTextBlock' | 'TextBlock' }
@@ -4901,7 +4927,7 @@ export type GetPlanPageGeneralQuery = (
     ) | (
       { id?: string | null, blockType: string, field: string, items: Array<(
         { id?: string | null }
-        & { __typename?: 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionHighlightsBlock' | 'ActionListBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CategoryListBlock' | 'CategoryTreeMap' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' }
+        & { __typename?: 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionHighlightsBlock' | 'ActionListBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CategoryListBlock' | 'CategoryTreeMapBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' }
       ) | (
         { id?: string | null }
         & { __typename?: 'ImageChooserBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IntegerBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'RichTextBlock' | 'StaticBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TextBlock' | 'TimeBlock' }
@@ -4928,7 +4954,7 @@ export type GetPlanPageGeneralQuery = (
     ) | (
       { title?: string | null, body?: string | null, id?: string | null, blockType: string, field: string, blocks: Array<(
         { id?: string | null }
-        & { __typename: 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionHighlightsBlock' | 'ActionListBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CategoryListBlock' | 'CategoryTreeMap' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' }
+        & { __typename: 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionHighlightsBlock' | 'ActionListBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CategoryListBlock' | 'CategoryTreeMapBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' }
       ) | (
         { id?: string | null }
         & { __typename: 'ImageChooserBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IntegerBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'RichTextBlock' | 'StaticBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TextBlock' }
@@ -4952,7 +4978,7 @@ export type GetPlanPageGeneralQuery = (
         & { __typename?: 'Indicator' }
       ) | null, linkButton?: (
         { blockType: string }
-        & { __typename?: 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionHighlightsBlock' | 'ActionListBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CategoryListBlock' | 'CategoryTreeMap' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' }
+        & { __typename?: 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionHighlightsBlock' | 'ActionListBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CategoryListBlock' | 'CategoryTreeMapBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' }
       ) | (
         { blockType: string }
         & { __typename?: 'ImageChooserBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IntegerBlock' | 'PageChooserBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'RichTextBlock' | 'StaticBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TextBlock' | 'TimeBlock' }
@@ -4968,7 +4994,7 @@ export type GetPlanPageGeneralQuery = (
       ) | null }
       & { __typename?: 'IndicatorShowcaseBlock' }
     ) | (
-      { heading?: string | null, id?: string | null, blockType: string, field: string, questions?: Array<{ __typename?: 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionHighlightsBlock' | 'ActionListBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CategoryListBlock' | 'CategoryTreeMap' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' } | { __typename?: 'ImageChooserBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IntegerBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'QuestionAnswerBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'RichTextBlock' | 'StaticBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TextBlock' | 'TimeBlock' } | { __typename?: 'URLBlock' } | (
+      { heading?: string | null, id?: string | null, blockType: string, field: string, questions?: Array<{ __typename?: 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionHighlightsBlock' | 'ActionListBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CategoryListBlock' | 'CategoryTreeMapBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' } | { __typename?: 'ImageChooserBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IntegerBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'QuestionAnswerBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'RichTextBlock' | 'StaticBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TextBlock' | 'TimeBlock' } | { __typename?: 'URLBlock' } | (
         { question?: string | null, answer?: string | null }
         & { __typename?: 'QuestionBlock' }
       ) | null> | null }
@@ -4993,10 +5019,10 @@ export type GetPlanPageGeneralQuery = (
       & { __typename?: 'Image' }
     ) | null, body?: Array<(
       { id?: string | null, blockType: string, field: string }
-      & { __typename?: 'ActionCategoryFilterCardBlock' | 'ActionHighlightsBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CategoryTreeMap' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'ImageChooserBlock' | 'IndicatorHighlightsBlock' | 'IntegerBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'QuestionBlock' | 'RawHTMLBlock' }
+      & { __typename?: 'ActionCategoryFilterCardBlock' | 'ActionHighlightsBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'ImageChooserBlock' | 'IndicatorHighlightsBlock' | 'IntegerBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' }
     ) | (
       { id?: string | null, blockType: string, field: string }
-      & { __typename?: 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'StaticBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TimeBlock' | 'URLBlock' }
+      & { __typename?: 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'StaticBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TimeBlock' | 'URLBlock' }
     ) | (
       { id?: string | null, blockType: string, field: string, cards?: Array<(
         { heading?: string | null, lead?: string | null, category?: (
@@ -5007,7 +5033,7 @@ export type GetPlanPageGeneralQuery = (
           & { __typename?: 'Category' }
         ) | null }
         & { __typename?: 'ActionCategoryFilterCardBlock' }
-      ) | { __typename?: 'ActionCategoryFilterCardsBlock' | 'ActionHighlightsBlock' | 'ActionListBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CategoryListBlock' | 'CategoryTreeMap' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'ImageChooserBlock' } | { __typename?: 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IntegerBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'RichTextBlock' | 'StaticBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TextBlock' | 'TimeBlock' } | { __typename?: 'URLBlock' } | null> | null }
+      ) | { __typename?: 'ActionCategoryFilterCardsBlock' | 'ActionHighlightsBlock' | 'ActionListBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CategoryListBlock' | 'CategoryTreeMapBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'ImageChooserBlock' } | { __typename?: 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IntegerBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'RichTextBlock' | 'StaticBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TextBlock' | 'TimeBlock' } | { __typename?: 'URLBlock' } | null> | null }
       & { __typename?: 'ActionCategoryFilterCardsBlock' }
     ) | (
       { id?: string | null, blockType: string, field: string, categoryFilter?: (
@@ -5016,7 +5042,7 @@ export type GetPlanPageGeneralQuery = (
       ) | null }
       & { __typename?: 'ActionListBlock' }
     ) | (
-      { heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, cards?: Array<{ __typename?: 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionHighlightsBlock' | 'ActionListBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardListBlock' | 'CategoryListBlock' | 'CategoryTreeMap' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'ImageChooserBlock' } | { __typename?: 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IntegerBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'RichTextBlock' | 'StaticBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TextBlock' | 'TimeBlock' } | { __typename?: 'URLBlock' } | (
+      { heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, cards?: Array<{ __typename?: 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionHighlightsBlock' | 'ActionListBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardListBlock' | 'CategoryListBlock' | 'CategoryTreeMapBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'ImageChooserBlock' } | { __typename?: 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IntegerBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'RichTextBlock' | 'StaticBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TextBlock' | 'TimeBlock' } | { __typename?: 'URLBlock' } | (
         { heading?: string | null, content?: string | null, link?: string | null, image?: (
           { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
             { id: string, width: number, height: number, src: string }
@@ -5048,6 +5074,15 @@ export type GetPlanPageGeneralQuery = (
         & { __typename?: 'CategoryType' }
       ) | null }
       & { __typename?: 'CategoryListBlock' }
+    ) | (
+      { id?: string | null, blockType: string, field: string, valueAttribute?: (
+        { identifier: string }
+        & { __typename?: 'AttributeType' }
+      ) | null, categoryType?: (
+        { identifier: string }
+        & { __typename?: 'CategoryType' }
+      ) | null }
+      & { __typename?: 'CategoryTreeMapBlock' }
     ) | (
       { value: string, id?: string | null, blockType: string, field: string }
       & { __typename?: 'CharBlock' | 'RichTextBlock' | 'TextBlock' }
@@ -5084,7 +5119,7 @@ export type GetPlanPageGeneralQuery = (
     ) | (
       { id?: string | null, blockType: string, field: string, items: Array<(
         { id?: string | null }
-        & { __typename?: 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionHighlightsBlock' | 'ActionListBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CategoryListBlock' | 'CategoryTreeMap' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' }
+        & { __typename?: 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionHighlightsBlock' | 'ActionListBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CategoryListBlock' | 'CategoryTreeMapBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' }
       ) | (
         { id?: string | null }
         & { __typename?: 'ImageChooserBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IntegerBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'RichTextBlock' | 'StaticBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TextBlock' | 'TimeBlock' }
@@ -5111,7 +5146,7 @@ export type GetPlanPageGeneralQuery = (
     ) | (
       { title?: string | null, body?: string | null, id?: string | null, blockType: string, field: string, blocks: Array<(
         { id?: string | null }
-        & { __typename: 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionHighlightsBlock' | 'ActionListBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CategoryListBlock' | 'CategoryTreeMap' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' }
+        & { __typename: 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionHighlightsBlock' | 'ActionListBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CategoryListBlock' | 'CategoryTreeMapBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' }
       ) | (
         { id?: string | null }
         & { __typename: 'ImageChooserBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IntegerBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'RichTextBlock' | 'StaticBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TextBlock' }
@@ -5135,7 +5170,7 @@ export type GetPlanPageGeneralQuery = (
         & { __typename?: 'Indicator' }
       ) | null, linkButton?: (
         { blockType: string }
-        & { __typename?: 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionHighlightsBlock' | 'ActionListBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CategoryListBlock' | 'CategoryTreeMap' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' }
+        & { __typename?: 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionHighlightsBlock' | 'ActionListBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CategoryListBlock' | 'CategoryTreeMapBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' }
       ) | (
         { blockType: string }
         & { __typename?: 'ImageChooserBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IntegerBlock' | 'PageChooserBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'RichTextBlock' | 'StaticBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TextBlock' | 'TimeBlock' }
@@ -5151,7 +5186,7 @@ export type GetPlanPageGeneralQuery = (
       ) | null }
       & { __typename?: 'IndicatorShowcaseBlock' }
     ) | (
-      { heading?: string | null, id?: string | null, blockType: string, field: string, questions?: Array<{ __typename?: 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionHighlightsBlock' | 'ActionListBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CategoryListBlock' | 'CategoryTreeMap' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' } | { __typename?: 'ImageChooserBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IntegerBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'QuestionAnswerBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'RichTextBlock' | 'StaticBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TextBlock' | 'TimeBlock' } | { __typename?: 'URLBlock' } | (
+      { heading?: string | null, id?: string | null, blockType: string, field: string, questions?: Array<{ __typename?: 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionHighlightsBlock' | 'ActionListBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CategoryListBlock' | 'CategoryTreeMapBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' } | { __typename?: 'ImageChooserBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IntegerBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'QuestionAnswerBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'RichTextBlock' | 'StaticBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TextBlock' | 'TimeBlock' } | { __typename?: 'URLBlock' } | (
         { question?: string | null, answer?: string | null }
         & { __typename?: 'QuestionBlock' }
       ) | null> | null }
@@ -5211,10 +5246,10 @@ export type GetHomePageQuery = (
   ) | (
     { heroContent?: string | null, actionShortDescription?: string | null, indicatorShortDescription?: string | null, id?: string | null, slug: string, title: string, lastPublishedAt?: any | null, body?: Array<(
       { id?: string | null, blockType: string, field: string }
-      & { __typename?: 'ActionCategoryFilterCardBlock' | 'ActionHighlightsBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CategoryTreeMap' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'ImageChooserBlock' | 'IndicatorHighlightsBlock' | 'IntegerBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'QuestionBlock' | 'RawHTMLBlock' }
+      & { __typename?: 'ActionCategoryFilterCardBlock' | 'ActionHighlightsBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'ImageChooserBlock' | 'IndicatorHighlightsBlock' | 'IntegerBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' }
     ) | (
       { id?: string | null, blockType: string, field: string }
-      & { __typename?: 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'StaticBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TimeBlock' | 'URLBlock' }
+      & { __typename?: 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'StaticBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TimeBlock' | 'URLBlock' }
     ) | (
       { id?: string | null, blockType: string, field: string, cards?: Array<(
         { heading?: string | null, lead?: string | null, category?: (
@@ -5225,7 +5260,7 @@ export type GetHomePageQuery = (
           & { __typename?: 'Category' }
         ) | null }
         & { __typename?: 'ActionCategoryFilterCardBlock' }
-      ) | { __typename?: 'ActionCategoryFilterCardsBlock' | 'ActionHighlightsBlock' | 'ActionListBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CategoryListBlock' | 'CategoryTreeMap' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'ImageChooserBlock' } | { __typename?: 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IntegerBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'RichTextBlock' | 'StaticBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TextBlock' | 'TimeBlock' } | { __typename?: 'URLBlock' } | null> | null }
+      ) | { __typename?: 'ActionCategoryFilterCardsBlock' | 'ActionHighlightsBlock' | 'ActionListBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CategoryListBlock' | 'CategoryTreeMapBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'ImageChooserBlock' } | { __typename?: 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IntegerBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'RichTextBlock' | 'StaticBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TextBlock' | 'TimeBlock' } | { __typename?: 'URLBlock' } | null> | null }
       & { __typename?: 'ActionCategoryFilterCardsBlock' }
     ) | (
       { id?: string | null, blockType: string, field: string, categoryFilter?: (
@@ -5234,7 +5269,7 @@ export type GetHomePageQuery = (
       ) | null }
       & { __typename?: 'ActionListBlock' }
     ) | (
-      { heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, cards?: Array<{ __typename?: 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionHighlightsBlock' | 'ActionListBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardListBlock' | 'CategoryListBlock' | 'CategoryTreeMap' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'ImageChooserBlock' } | { __typename?: 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IntegerBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'RichTextBlock' | 'StaticBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TextBlock' | 'TimeBlock' } | { __typename?: 'URLBlock' } | (
+      { heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, cards?: Array<{ __typename?: 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionHighlightsBlock' | 'ActionListBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardListBlock' | 'CategoryListBlock' | 'CategoryTreeMapBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'ImageChooserBlock' } | { __typename?: 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IntegerBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'RichTextBlock' | 'StaticBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TextBlock' | 'TimeBlock' } | { __typename?: 'URLBlock' } | (
         { heading?: string | null, content?: string | null, link?: string | null, image?: (
           { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
             { id: string, width: number, height: number, src: string }
@@ -5266,6 +5301,15 @@ export type GetHomePageQuery = (
         & { __typename?: 'CategoryType' }
       ) | null }
       & { __typename?: 'CategoryListBlock' }
+    ) | (
+      { id?: string | null, blockType: string, field: string, valueAttribute?: (
+        { identifier: string }
+        & { __typename?: 'AttributeType' }
+      ) | null, categoryType?: (
+        { identifier: string }
+        & { __typename?: 'CategoryType' }
+      ) | null }
+      & { __typename?: 'CategoryTreeMapBlock' }
     ) | (
       { value: string, id?: string | null, blockType: string, field: string }
       & { __typename?: 'CharBlock' | 'RichTextBlock' | 'TextBlock' }
@@ -5302,7 +5346,7 @@ export type GetHomePageQuery = (
     ) | (
       { id?: string | null, blockType: string, field: string, items: Array<(
         { id?: string | null }
-        & { __typename?: 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionHighlightsBlock' | 'ActionListBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CategoryListBlock' | 'CategoryTreeMap' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' }
+        & { __typename?: 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionHighlightsBlock' | 'ActionListBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CategoryListBlock' | 'CategoryTreeMapBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' }
       ) | (
         { id?: string | null }
         & { __typename?: 'ImageChooserBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IntegerBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'RichTextBlock' | 'StaticBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TextBlock' | 'TimeBlock' }
@@ -5329,7 +5373,7 @@ export type GetHomePageQuery = (
     ) | (
       { title?: string | null, body?: string | null, id?: string | null, blockType: string, field: string, blocks: Array<(
         { id?: string | null }
-        & { __typename: 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionHighlightsBlock' | 'ActionListBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CategoryListBlock' | 'CategoryTreeMap' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' }
+        & { __typename: 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionHighlightsBlock' | 'ActionListBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CategoryListBlock' | 'CategoryTreeMapBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' }
       ) | (
         { id?: string | null }
         & { __typename: 'ImageChooserBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IntegerBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'RichTextBlock' | 'StaticBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TextBlock' }
@@ -5353,7 +5397,7 @@ export type GetHomePageQuery = (
         & { __typename?: 'Indicator' }
       ) | null, linkButton?: (
         { blockType: string }
-        & { __typename?: 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionHighlightsBlock' | 'ActionListBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CategoryListBlock' | 'CategoryTreeMap' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' }
+        & { __typename?: 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionHighlightsBlock' | 'ActionListBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CategoryListBlock' | 'CategoryTreeMapBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' }
       ) | (
         { blockType: string }
         & { __typename?: 'ImageChooserBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IntegerBlock' | 'PageChooserBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'RichTextBlock' | 'StaticBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TextBlock' | 'TimeBlock' }
@@ -5369,7 +5413,7 @@ export type GetHomePageQuery = (
       ) | null }
       & { __typename?: 'IndicatorShowcaseBlock' }
     ) | (
-      { heading?: string | null, id?: string | null, blockType: string, field: string, questions?: Array<{ __typename?: 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionHighlightsBlock' | 'ActionListBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CategoryListBlock' | 'CategoryTreeMap' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' } | { __typename?: 'ImageChooserBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IntegerBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'QuestionAnswerBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'RichTextBlock' | 'StaticBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TextBlock' | 'TimeBlock' } | { __typename?: 'URLBlock' } | (
+      { heading?: string | null, id?: string | null, blockType: string, field: string, questions?: Array<{ __typename?: 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionHighlightsBlock' | 'ActionListBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CategoryListBlock' | 'CategoryTreeMapBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' } | { __typename?: 'ImageChooserBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IntegerBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'QuestionAnswerBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'RichTextBlock' | 'StaticBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TextBlock' | 'TimeBlock' } | { __typename?: 'URLBlock' } | (
         { question?: string | null, answer?: string | null }
         & { __typename?: 'QuestionBlock' }
       ) | null> | null }

@@ -1,12 +1,12 @@
 import { useContext, createContext } from 'react';
 import getConfig from 'next/config';
 import GET_PLAN_CONTEXT from './queries/plan';
-import type { PlanContext_plan } from './queries/__generated__/PlanContext';
+import type { PlanContextFragment } from 'common/__generated__/graphql';
 
 
-export type PlanType = PlanContext_plan;
+export type PlanContextType = PlanContextFragment;
 
-export function customizePlan(plan: PlanContext_plan): PlanContext_plan {
+export function customizePlan(plan: PlanContextType): PlanContextType {
   const { publicRuntimeConfig } = getConfig();
   const features = {...plan.features};
   if (publicRuntimeConfig.forceFeatures) {
@@ -26,7 +26,7 @@ export function customizePlan(plan: PlanContext_plan): PlanContext_plan {
 }
 
 // @ts-ignore as context will be populated when it is used
-const PlanContext = createContext<PlanContext_plan>({});
+const PlanContext = createContext<PlanContextType>({});
 
 export { GET_PLAN_CONTEXT };
 export const usePlan = () => useContext(PlanContext);
