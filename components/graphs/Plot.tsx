@@ -1,10 +1,10 @@
-import Plotly from 'plotly.js/dist/plotly';
+import Plotly from '@kausal/plotly-custom/dist/plotly-custom';
 import { PlotParams } from 'react-plotly.js';
 import createPlotlyComponent from 'react-plotly.js/factory';
 
 window.Plotly = Plotly; // this is needed for the locale setting to work
-require('plotly.js/dist/plotly-locale-fi');
-require('plotly.js/dist/plotly-locale-sv');
+require('@kausal/plotly-custom/dist/plotly-locale-fi');
+require('@kausal/plotly-custom/dist/plotly-locale-sv');
 
 const PlotlyPlot = createPlotlyComponent(Plotly);
 

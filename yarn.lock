@@ -3014,6 +3014,63 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@kausal/plotly-custom@npm:^2.14.1":
+  version: 2.14.1
+  resolution: "@kausal/plotly-custom@npm:2.14.1"
+  dependencies:
+    "@plotly/d3": 3.8.0
+    "@plotly/d3-sankey": 0.7.2
+    "@plotly/d3-sankey-circular": 0.33.1
+    "@turf/area": ^6.4.0
+    "@turf/bbox": ^6.4.0
+    "@turf/centroid": ^6.0.2
+    canvas-fit: ^1.5.0
+    color-alpha: 1.0.4
+    color-normalize: 1.5.0
+    color-parse: 1.3.8
+    color-rgba: 2.1.1
+    country-regex: ^1.1.0
+    d3-force: ^1.2.1
+    d3-format: ^1.4.5
+    d3-geo: ^1.12.1
+    d3-geo-projection: ^2.9.0
+    d3-hierarchy: ^1.1.9
+    d3-interpolate: ^1.4.0
+    d3-time: ^1.1.0
+    d3-time-format: ^2.2.3
+    fast-isnumeric: ^1.1.4
+    gl-mat4: ^1.2.0
+    gl-text: ^1.3.1
+    glslify: ^7.1.1
+    has-hover: ^1.0.1
+    has-passive-events: ^1.0.0
+    is-mobile: ^2.2.2
+    mapbox-gl: 1.10.1
+    mouse-change: ^1.4.0
+    mouse-event-offset: ^3.0.2
+    mouse-wheel: ^1.2.0
+    native-promise-only: ^0.8.1
+    parse-svg-path: ^0.1.2
+    point-in-polygon: ^1.1.0
+    polybooljs: ^1.2.0
+    probe-image-size: ^7.2.3
+    regl: "npm:@plotly/regl@^2.1.2"
+    regl-error2d: ^2.0.12
+    regl-line2d: ^3.1.2
+    regl-scatter2d: ^3.2.8
+    regl-splom: ^1.0.14
+    strongly-connected-components: ^1.0.1
+    superscript-text: ^1.0.0
+    svg-path-sdf: ^1.1.3
+    tinycolor2: ^1.4.2
+    to-px: 1.0.1
+    topojson-client: ^3.1.0
+    webgl-context: ^2.2.0
+    world-calendars: ^1.0.3
+  checksum: 65f8d8f35ae09e5a15beaecc85a7ef61b9af1a8d0a65d8fb6e6f00fe06307329022cdec1203893a18938244565fd49fec76bc5097f2321256ba75832161556fd
+  languageName: node
+  linkType: hard
+
 "@kausal/themes-private@npm:^0.2.10":
   version: 0.2.10
   resolution: "@kausal/themes-private@npm:0.2.10"
@@ -16195,6 +16252,7 @@ __metadata:
     "@graphql-codegen/typescript": 2.7.3
     "@graphql-codegen/typescript-operations": ^2.5.3
     "@graphql-codegen/typescript-react-apollo": 3.3.3
+    "@kausal/plotly-custom": ^2.14.1
     "@kausal/themes": ^0.4.0
     "@kausal/themes-private": ^0.2.10
     "@koa/router": ^10.1.1
@@ -16262,7 +16320,6 @@ __metadata:
     next-with-apollo: ^5.3.0
     original-url: ^1.2.3
     patch-package: ^6.4.7
-    plotly.js: ^2.12.0
     polished: ^4.2.2
     popper.js: ^1.16.1
     postinstall-postinstall: ^2.1.0
@@ -19269,63 +19326,6 @@ __metadata:
   dependencies:
     find-up: ^5.0.0
   checksum: b167bb8dac7bbf22b1d5e30ec223e6b064b84b63010c9d49384619a36734caf95ed23ad23d4f9bd975e8e8082b60a83395f43a89bb192df53a7c25a38ecb57d9
-  languageName: node
-  linkType: hard
-
-"plotly.js@npm:^2.12.0":
-  version: 2.14.0
-  resolution: "plotly.js@npm:2.14.0"
-  dependencies:
-    "@plotly/d3": 3.8.0
-    "@plotly/d3-sankey": 0.7.2
-    "@plotly/d3-sankey-circular": 0.33.1
-    "@turf/area": ^6.4.0
-    "@turf/bbox": ^6.4.0
-    "@turf/centroid": ^6.0.2
-    canvas-fit: ^1.5.0
-    color-alpha: 1.0.4
-    color-normalize: 1.5.0
-    color-parse: 1.3.8
-    color-rgba: 2.1.1
-    country-regex: ^1.1.0
-    d3-force: ^1.2.1
-    d3-format: ^1.4.5
-    d3-geo: ^1.12.1
-    d3-geo-projection: ^2.9.0
-    d3-hierarchy: ^1.1.9
-    d3-interpolate: ^1.4.0
-    d3-time: ^1.1.0
-    d3-time-format: ^2.2.3
-    fast-isnumeric: ^1.1.4
-    gl-mat4: ^1.2.0
-    gl-text: ^1.3.1
-    glslify: ^7.1.1
-    has-hover: ^1.0.1
-    has-passive-events: ^1.0.0
-    is-mobile: ^2.2.2
-    mapbox-gl: 1.10.1
-    mouse-change: ^1.4.0
-    mouse-event-offset: ^3.0.2
-    mouse-wheel: ^1.2.0
-    native-promise-only: ^0.8.1
-    parse-svg-path: ^0.1.2
-    point-in-polygon: ^1.1.0
-    polybooljs: ^1.2.0
-    probe-image-size: ^7.2.3
-    regl: "npm:@plotly/regl@^2.1.2"
-    regl-error2d: ^2.0.12
-    regl-line2d: ^3.1.2
-    regl-scatter2d: ^3.2.8
-    regl-splom: ^1.0.14
-    strongly-connected-components: ^1.0.1
-    superscript-text: ^1.0.0
-    svg-path-sdf: ^1.1.3
-    tinycolor2: ^1.4.2
-    to-px: 1.0.1
-    topojson-client: ^3.1.0
-    webgl-context: ^2.2.0
-    world-calendars: ^1.0.3
-  checksum: 41ccb60081d9b88306784a21eb7dfd13762099aac8482e2cb52bf498b30ca8edf596f1defdd67c340cb9c68cc5ba5910e0eb2430d7eeff3012ded58abd675cce
   languageName: node
   linkType: hard
 
@@ -23626,7 +23626,7 @@ __metadata:
 
 "typescript@patch:typescript@>=2.4.2 <4.0.0#~builtin<compat/typescript>":
   version: 3.9.10
-  resolution: "typescript@patch:typescript@npm%3A3.9.10#~builtin<compat/typescript>::version=3.9.10&hash=bda367"
+  resolution: "typescript@patch:typescript@npm%3A3.9.10#~builtin<compat/typescript>::version=3.9.10&hash=7ad353"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
@@ -23636,7 +23636,7 @@ __metadata:
 
 "typescript@patch:typescript@^4.6.4#~builtin<compat/typescript>":
   version: 4.8.3
-  resolution: "typescript@patch:typescript@npm%3A4.8.3#~builtin<compat/typescript>::version=4.8.3&hash=bda367"
+  resolution: "typescript@patch:typescript@npm%3A4.8.3#~builtin<compat/typescript>::version=4.8.3&hash=7ad353"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver

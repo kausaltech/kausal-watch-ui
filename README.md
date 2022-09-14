@@ -24,6 +24,15 @@ Clone the repository, install dependencies and run the development server locall
 
 Preview the application locally on http://localhost:3000/
 
+#### Building the custom version of plotly.js
+
+Clone the plotly.js GitHub repository and run the following commands:
+
+    npm install
+    npx change-package-name @kausal/plotly-custom
+    npm run custom-bundle --unminified --traces scatter,icicle,pie
+    npm publish --access public
+
 ## Building and deploying in production
 
 To run the app in production:
