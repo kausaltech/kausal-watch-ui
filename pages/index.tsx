@@ -1,7 +1,6 @@
 import React, { useContext, useMemo } from 'react';
 
 import { gql, useQuery } from '@apollo/client';
-import { clone } from 'lodash';
 import { useTranslation } from 'common/i18n';
 import Layout from 'components/layout';
 import PlanContext, { usePlan } from 'context/plan';
@@ -9,7 +8,6 @@ import images from 'common/images';
 import ErrorMessage from 'components/common/ErrorMessage';
 import ContentLoader from 'components/common/ContentLoader';
 import StreamField from 'components/common/StreamField';
-import LegacyHomePage from 'components/home/LegacyHomePage';
 
 import { GetHomePageQuery } from 'common/__generated__/graphql';
 import CategoriesContext from 'context/categories';
