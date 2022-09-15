@@ -201,7 +201,10 @@ export const themeProp = exact({
     a11y: exact({
       responsibleBody: string,
       feedbackEmail: string
-    })
+    }),
+    frontHero: exact({
+      cardPlacement: string,
+    }),
   }),
 });
 

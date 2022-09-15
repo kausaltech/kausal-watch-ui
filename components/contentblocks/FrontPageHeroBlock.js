@@ -4,16 +4,15 @@ import HeroFullImage from 'components/home/HeroFullImage';
 
 const FrontPageHeroBlock = (props) => {
   const {
-    layout, imageSrc, imageAlign, heading, lead, actionsDescription, indicatorsDescription,
+    layout, imageSrc, imageAlign, heading, lead,
   } = props;
   return (
     <HeroFullImage
       bgImage={imageSrc}
       imageAlign={imageAlign}
       title={heading}
-      siteDescription={lead}
-      actionsDescription={actionsDescription}
-      indicatorsDescription={indicatorsDescription}
+      lead={lead}
+      layout={layout}
     />
   );
 };

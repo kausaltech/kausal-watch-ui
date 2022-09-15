@@ -1,28 +1,26 @@
 import React from 'react';
-import { getActionTermContext, useTranslation } from 'common/i18n';
 import { useTheme } from 'common/theme';
 import PropTypes from 'prop-types';
-import SVG from 'react-inlinesvg';
 import { Container } from 'reactstrap';
 
 import styled from 'styled-components';
-import Icon from 'components/common/Icon';
 import RichText from 'components/common/RichText';
-import {
-  IndicatorListLink,
-  ActionListLink,
-} from 'common/links';
-import { usePlan } from 'context/plan';
 
 const Hero = styled.div`
   width: 100%;
-  background-color: ${(props) => props.theme.neutralLight};
+  padding-bottom: 14rem;
+  background-color: ${(props) => props.theme.brandDark};
+
+  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    padding-bottom: 0;
+  }
 `;
 
 const HeroMain = styled.div`
   display: flex;
   align-items: stretch;
-  min-height: 24rem;
+  min-height: 12rem;
+  background-color: ${(props) => props.theme.brandDark};
   background-size: cover;
   background-position: ${(props) => props.imageAlign};
   background-image: url(${(props) => props.image});
@@ -36,16 +34,17 @@ const HeroMain = styled.div`
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     min-height: 30rem;
 
-  .container {
-    align-items: flex-start;
-  }
+    .container {
+      align-items: flex-start;
+      justify-content: ${(props) => props.alignment === 'right' ? 'flex-end' : 'flex-start'};
+    }
   }
 `;
 
 const MainCard = styled.div`
   max-width: ${(props) => props.theme.breakpointSm};
-  padding: ${(props) => props.theme.spaces.s200};
-  margin: 12rem 0 -2rem;
+  padding: ${(props) => props.theme.spaces.s200} ${(props) => props.theme.spaces.s200} ${(props) => props.theme.spaces.s100};
+  margin: 12rem 0 -12rem;
   border-radius: ${(props) => props.theme.cardBorderRadius};
   background-color: ${(props) => props.theme.themeColors.white};
   color: ${(props) => props.theme.neutralDark};
@@ -91,111 +90,23 @@ const MainCard = styled.div`
     }
   }
 `;
-
-const Highlight = styled.div`
-  height: 100%;
-  margin-bottom: 0;
-
-  &:hover {
-    h2 {
-      text-decoration: underline;
-    }
-  }
-
-  h2 {
-    color: ${(props) => props.theme.neutralDark};
-    font-size: ${(props) => props.theme.fontSizeMd};
-
-    .icon {
-      margin-left: ${(props) => props.theme.spaces.s025};
-    }
-  }
-
-  p {
-    hyphens: manual;
-    margin-bottom: 0;
-    color: ${(props) => props.theme.neutralDark};
-    font-size: ${(props) => props.theme.fontSizeBase};
-  }
-`;
-
-const Illustration = styled.div`
-  svg {
-    width: ${(props) => props.theme.spaces.s400};
-    height: ${(props) => props.theme.spaces.s400};
-    margin: 0 1rem 0 0;
-    display: block;
-    fill: ${(props) => props.theme.brandDark};
-  }
-`;
-
 function HeroFullImage(props) {
   const {
-    bgImage, imageAlign, title, siteDescription, actionsDescription, indicatorsDescription,
+    bgImage, imageAlign, title, lead
   } = props;
-  const { t } = useTranslation(['common']);
+  console.log("props", props);
   const theme = useTheme();
-  const plan = usePlan();
-  let ActionsIcon = null;
-  if (theme.iconActionsUrl !== '') ActionsIcon = () => <SVG src={theme.iconActionsUrl} />;
-  let IndicatorsIcon = null;
-  if (theme.iconIndicatorsUrl !== '') IndicatorsIcon = () => <SVG src={theme.iconIndicatorsUrl} />;
 
+  const cardPlacement = theme.settings?.frontHero ? theme.settings.frontHero.cardPlacement : 'left';
+
+  console.log(theme);
   return (
     <Hero>
-      <HeroMain image={bgImage} imageAlign={imageAlign}>
+      <HeroMain image={bgImage} imageAlign={imageAlign} alignment={cardPlacement}>
         <Container>
-          <MainCard>
+          <MainCard alignment={cardPlacement}>
             <h1>{ title }</h1>
-            <RichText html={siteDescription} className="lead-content" />
-            { actionsDescription && (
-            <ActionListLink>
-              <a>
-                <Highlight
-                  className="d-flex py-3 bd-highlight flex-row"
-                >
-                  {ActionsIcon && (
-                  <Illustration>
-                    <ActionsIcon />
-                  </Illustration>
-                  )}
-                  <div>
-                    <h2>
-                      { t('actions', getActionTermContext(plan)) }
-                      <Icon name="arrowRight" color={theme.neutralDark} />
-                    </h2>
-                    <p>
-                      { actionsDescription }
-                    </p>
-                  </div>
-                </Highlight>
-              </a>
-            </ActionListLink>
-            )}
-            { indicatorsDescription && (
-            <IndicatorListLink>
-              <a>
-                <Highlight
-                  className="d-flex py-3 bd-highlight flex-row"
-                >
-                  {IndicatorsIcon && (
-                  <Illustration>
-                    <IndicatorsIcon />
-                  </Illustration>
-                  )}
-                  <div>
-                    <h2>
-                      { t('indicators') }
-                      <Icon name="arrowRight" color={theme.neutralDark} />
-                    </h2>
-                    <p>
-                      { indicatorsDescription }
-                    </p>
-                  </div>
-                </Highlight>
-              </a>
-            </IndicatorListLink>
-            )}
+            <RichText html={lead} className="lead-content" />
           </MainCard>
         </Container>
       </HeroMain>
@@ -205,18 +116,14 @@ function HeroFullImage(props) {
 
 HeroFullImage.defaultProps = {
   imageAlign: 'center',
-  siteDescription: '',
-  actionsDescription: '',
-  indicatorsDescription: '',
+  lead: '',
 };
 
 HeroFullImage.propTypes = {
   bgImage: PropTypes.string.isRequired,
   imageAlign: PropTypes.string,
   title: PropTypes.string.isRequired,
-  siteDescription: PropTypes.string,
-  actionsDescription: PropTypes.string,
-  indicatorsDescription: PropTypes.string,
+  lead: PropTypes.string,
 };
 
 export default HeroFullImage;

@@ -282,8 +282,6 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
           imageAlign={getBgImageAlignment(image)}
           heading={heading}
           lead={lead}
-          actionsDescription={plan.generalContent.actionShortDescription}
-          indicatorsDescription={plan.generalContent.indicatorShortDescription}
         />
       );
     }
