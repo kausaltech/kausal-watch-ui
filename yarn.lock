@@ -3071,10 +3071,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@kausal/themes-private@npm:^0.2.10":
-  version: 0.2.10
-  resolution: "@kausal/themes-private@npm:0.2.10"
-  checksum: 388f0405f937a846ff890fb74d887869cb5f2c1227c8346bb73fa6bf62eaf7304ea26328cfe497a4bbcdeb5502dbf7df0916ee85403684ac986d52cf5a938816
+"@kausal/themes-private@npm:^0.2.11":
+  version: 0.2.11
+  resolution: "@kausal/themes-private@npm:0.2.11"
+  checksum: 5641dd2892bfb5d08c7c596999c2fad446b2386d03baf5620bd5fd886f0f0ed9a3fd148a85e594519a304fe57ac0562db060511e6694eaae0d12cf1b6b4504eb
   languageName: node
   linkType: hard
 
@@ -16254,7 +16254,7 @@ __metadata:
     "@graphql-codegen/typescript-react-apollo": 3.3.3
     "@kausal/plotly-custom": ^2.14.1
     "@kausal/themes": ^0.4.0
-    "@kausal/themes-private": ^0.2.10
+    "@kausal/themes-private": ^0.2.11
     "@koa/router": ^10.1.1
     "@n8tb1t/use-scroll-position": ^2.0.3
     "@next/bundle-analyzer": ^12.1.6
@@ -23626,7 +23626,7 @@ __metadata:
 
 "typescript@patch:typescript@>=2.4.2 <4.0.0#~builtin<compat/typescript>":
   version: 3.9.10
-  resolution: "typescript@patch:typescript@npm%3A3.9.10#~builtin<compat/typescript>::version=3.9.10&hash=7ad353"
+  resolution: "typescript@patch:typescript@npm%3A3.9.10#~builtin<compat/typescript>::version=3.9.10&hash=bda367"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
@@ -23636,7 +23636,7 @@ __metadata:
 
 "typescript@patch:typescript@^4.6.4#~builtin<compat/typescript>":
   version: 4.8.3
-  resolution: "typescript@patch:typescript@npm%3A4.8.3#~builtin<compat/typescript>::version=4.8.3&hash=7ad353"
+  resolution: "typescript@patch:typescript@npm%3A4.8.3#~builtin<compat/typescript>::version=4.8.3&hash=bda367"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
