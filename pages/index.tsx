@@ -75,11 +75,13 @@ type HomeProps = {
 
 function Home({ primaryActionClassification, page }: HomeProps) {
   const { t } = useTranslation(['common']);
+  const categories = primaryActionClassification?.categories;
+
   if (page.__typename != 'PlanRootPage') {
     throw new Error("Invalid home page type");
   }
   return (
-    <CategoriesContext.Provider value={primaryActionClassification.categories}>
+    <CategoriesContext.Provider value={categories}>
       <div className="content-area">
         {page.body && (
           <StreamField
