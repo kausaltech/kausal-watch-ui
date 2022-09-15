@@ -40,12 +40,22 @@ const FiltersList = styled.div`
 `;
 
 const StyledBadge = styled(Badge)`
+  display: inline-flex;
+  max-width: 100%;
+  white-space: normal;
   margin-bottom: ${(props) => props.theme.spaces.s050};
   margin-right: ${(props) => props.theme.spaces.s050};
   padding-left: 0;
   background-color: ${(props) => props.theme.brandDark} !important;
   color: ${(props) => props.theme.themeColors.light};
   line-height: 1.25;
+  text-align: left;
+
+  .btn-close {
+    margin: 0 .5rem;
+    width: 0.75rem;
+    height: 0.75rem;
+  }
 `;
 
 const MainCategoryLabel = styled.p`
@@ -205,9 +215,9 @@ function ActionListFilterBadges({
             className="me-3"
             color="primary"
           >
-            <Button
-              close size="sm"
-              className="btn-close-white"
+            <CloseButton
+              variant="white"
+              size="sm"
               onClick={makeCallback(item.identifier)}
               aria-label={t('remove-filter')}
             />
@@ -291,13 +301,17 @@ function ActionListFilters(props) {
   }
 
   // Find categories with no parents, if there is only one root category return the next level
-  const getRootCategories = (allCategories) => {
-    const mainCategories = allCategories.filter((cat) => cat.parent === null);
-    if (mainCategories.length === 1) return allCategories.filter((cat) => cat.parent?.id === mainCategories[0].id);
+  const getRootCategories = (categoryType) => {
+    const allCategories = categoryType.categories;
+    const activeFilter = filters[`category_${categoryType.identifier}`];
+    // If we have an active subcategory filter, make sure it gets added to the list also
+    const mainCategories = allCategories.filter((cat) => cat.parent === null|| cat.id === activeFilter);
+    if (mainCategories.length === 1) return allCategories.filter((cat) => cat.parent?.id === mainCategories[0].id || cat.id === activeFilter);
     return mainCategories;
   };
 
   const highlightedCategoryType = plan.secondaryActionClassification?.identifier;
+
   categoryTypes.forEach((ct) => {
     allFilters.push({
       main: highlightedCategoryType != null && ct?.common?.identifier === highlightedCategoryType,
@@ -306,7 +320,7 @@ function ActionListFilters(props) {
       md: 6,
       lg: 4,
       identifier: `category_${ct.identifier}`,
-      options: getRootCategories(ct.categories).map((topCat) => ({
+      options: getRootCategories(ct).map((topCat) => ({
         id: topCat.id,
         label: `${theme.settings.categories.showIdentifiers ? `${topCat.identifier}. ` : ''}${topCat.name}`,
       })),
