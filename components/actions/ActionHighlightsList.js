@@ -22,7 +22,7 @@ export const GET_ACTION_LIST = gql`
     planActions(plan: $plan, first: $first, orderBy: $orderBy) {
       id
       identifier
-      name
+      name(hyphenated: true)
       officialName
       completion
       updatedAt
