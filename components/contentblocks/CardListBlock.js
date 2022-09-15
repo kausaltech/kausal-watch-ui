@@ -22,6 +22,10 @@ const CardListSection = styled.div`
       }
     }
   }
+
+  ul {
+    padding: 0;
+  }
 `;
 
 const SectionHeader = styled.h2`

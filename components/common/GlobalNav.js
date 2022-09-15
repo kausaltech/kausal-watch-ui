@@ -21,11 +21,11 @@ import { usePlan } from 'context/plan';
 const TopNav = styled(Navbar)`
   padding: 0;
   background-color: ${(props) => props.theme.brandNavBackground};
-  border-bottom: 1px solid ${(props) => props.theme.themeColors.light};
   flex-wrap: nowrap;
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     padding: 0 ${(props) => props.theme.spaces.s100};
+    border-bottom: 1px solid ${(props) => props.theme.themeColors.light};
   }
 `;
 

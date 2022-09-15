@@ -40,6 +40,10 @@ const CategoryListSection = styled.div`
     }
   }
 
+  ul {
+    padding: 0;
+  }
+
   .lead-text {
     text-align: center;
     font-size: ${(props) => props.theme.fontSizeMd};
