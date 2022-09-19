@@ -74,6 +74,7 @@ const languageNames = {
   fi: 'Suomi',
   en: 'English',
   de: 'Deutsch',
+  sv: 'Svenska',
 };
 
 const LanguageSelector = (props) => {
