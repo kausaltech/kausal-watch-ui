@@ -520,7 +520,7 @@ function IndicatorVisualisation({ indicatorId }) {
     <div>
       <IndicatorVizHeader className="mb-2">{plotTitle}</IndicatorVizHeader>
       <span className="visually-hidden">{ t('indicator-graph-not-accessible') }</span>
-      { comparisonOrgs && (
+      { comparisonOrgs && comparisonOrgs.length > 0 && (
         <IndicatorComparisonSelect
           handleChange={setCompareTo}
           currentValue={compareTo}
