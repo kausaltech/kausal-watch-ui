@@ -136,7 +136,7 @@ function ActionCategories(categories) {
   const { showIdentifiers } = theme.settings.categories;
 
   const displayCategories = [];
-  const primaryCatIdentifier = plan.primaryActionClassification.identifier;
+  const primaryCatIdentifier = plan.primaryActionClassification?.identifier;
 
   categories.categories.forEach((cat, indx) => {
     if (cat.type.identifier !== primaryCatIdentifier) return false;

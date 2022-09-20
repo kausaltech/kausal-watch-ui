@@ -299,7 +299,7 @@ const ActionListResults = (props) => {
     act.rootCategory = null;
     act.categories = act.categories.map((cat) => {
       const out = catById[cat.id];
-      if (out.type.identifier === plan.primaryActionClassification.identifier) {
+      if (out.type.identifier === plan.primaryActionClassification?.identifier) {
         let root = out;
         while (root.parent != null) root = root.parent;
         act.rootCategory = root;
