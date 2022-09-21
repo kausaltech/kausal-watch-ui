@@ -160,6 +160,7 @@
   "organizations": "Organisationen",
   "indicator-compare-source": "Zeige an",
   "indicator-compare-to": "Vergleiche mit",
+  "indicator-normalize-per-capita": "Per capita",
   "indicator-progress-bar": "Im Jahr {{startYear}} betrug {{name}} {{startValue}}. Der letzte beobachtete Wert {{latestYear}} war {{latestValue}}. Das Ziel für das Jahr {{goalYear}} ist {{goalValue}}. Seit {{startYear}} beträgt die Reduktion {{reduced}}. {{toBeReduced}} muss noch reduziert werden vor dem Jahr {{goalYear}}.",
   "nav-actions-pager": "Maßnahmen-Pager",
   "form-action-filters": "Maßnahmenliste-Filter",

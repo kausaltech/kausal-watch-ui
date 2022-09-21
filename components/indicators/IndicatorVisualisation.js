@@ -12,6 +12,7 @@ import { capitalizeFirstLetter } from 'common/utils';
 import PlanContext from 'context/plan';
 import ContentLoader from 'components/common/ContentLoader';
 import IndicatorComparisonSelect from 'components/indicators/IndicatorComparisonSelect';
+import IndicatorNormalizationSelect from 'components/indicators/IndicatorNormalizationSelect';
 import IndicatorGraph from 'components/graphs/IndicatorGraph';
 
 const GET_INDICATOR_GRAPH_DATA = gql`
@@ -42,6 +43,10 @@ const GET_INDICATOR_GRAPH_DATA = gql`
         id
         date
         value
+        normalizedValues {
+          normalizerId
+          value
+        }
         categories {
           id
         }
@@ -74,6 +79,16 @@ const GET_INDICATOR_GRAPH_DATA = gql`
       common {
         id
         name
+        normalizations {
+          unit {
+            shortName
+          }
+          normalizer {
+            name
+            id
+            identifier
+          }
+        }
         indicators {
           id
           organization {
@@ -92,6 +107,10 @@ const GET_INDICATOR_GRAPH_DATA = gql`
             id
             date
             value
+            normalizedValues {
+              normalizerId
+              value
+            }
             categories {
               id
             }
@@ -316,7 +335,7 @@ function calculateBounds(values) {
   }
 }
 
-function getIndicatorGraphSpecification(indicator, compareOrganization, t) {
+function getIndicatorGraphSpecification(indicator, compareOrganization, t, normalizerId) {
   const specification = {}
   const indicators = [indicator];
   let dimensions = JSON.parse(JSON.stringify(indicator.dimensions));
@@ -343,7 +362,7 @@ function getIndicatorGraphSpecification(indicator, compareOrganization, t) {
     dimensions.push(comparisonDimension);
   }
 
-  const allValues = indicators.map(i => i.values.map(x => x.value)).flat();
+  const allValues = indicators.map(i => i.values.map(x => getNormalizedValue(x, normalizerId))).flat();
   specification.bounds = calculateBounds(allValues);
 
   const times = new Set(indicators.map(i => i.values.map(x => x.date)).flat());
@@ -394,27 +413,56 @@ function _addTotal(v, categoryCount) {
   return v;
 }
 
-function combineValues(indicator, compareTo, indicatorGraphSpecification) {
+function combineValues(indicator, comparisonIndicator, indicatorGraphSpecification) {
   let categoryCount = 0;
   const categoryAxis = indicatorGraphSpecification.axes.filter(a => a[0] === 'categories');
   if (categoryAxis.length > 0) {
     categoryCount = categoryAxis[0][1];
   }
-  const indicatorValues = indicator.values
-    .map(v => _addTotal(v, categoryCount))
-    .filter(v => v.categories.length === categoryCount);
-  if (compareTo == null) {
+  const getValues = (indicator) => (
+    indicator.values
+      .map(v => _addTotal(v, categoryCount))
+      .filter(v => v.categories.length === categoryCount)
+      .map(v => comparisonIndicator == null ? v : addOrganizationCategory(v, indicator.organization.id))
+  );
+  const indicatorValues = getValues(indicator)
+  if (comparisonIndicator == null) {
     return indicatorValues;
   }
-  const comparisonIndicator = indicator.common.indicators.find((ind) => ind.organization.id === compareTo);
-  const comparisonIndicatorValues = comparisonIndicator.values
-    .map(v => _addTotal(v, categoryCount))
-    .filter(v => v.categories.length === categoryCount);
-  return [
-    ...(indicatorValues.map(v => addOrganizationCategory(v, indicator.organization.id))),
-    ...(comparisonIndicatorValues.map(v => addOrganizationCategory(v, compareTo)))
-  ];
+  return indicatorValues.concat(getValues(comparisonIndicator));
+}
 
+const NORMALIZE_DEFAULT = 'default';
+const NORMALIZE_PREFER_ENABLED = 'enabled';
+const NORMALIZE_PREFER_DISABLED = 'disabled';
+
+function normalizeByPopulationSetter (callback) {
+  return (value) => {
+    callback(value ? NORMALIZE_PREFER_ENABLED : NORMALIZE_PREFER_DISABLED);
+  };
+}
+
+function getNormalizeByPopulation(preferNormalizeByPopulation, comparisonIndicator) {
+  if (preferNormalizeByPopulation === NORMALIZE_DEFAULT) {
+    return comparisonIndicator != null;
+  }
+  return preferNormalizeByPopulation === NORMALIZE_PREFER_ENABLED;
+}
+
+function getNormalizedValue(valueObject, normalizerId) {
+    if (normalizerId != null) {
+      return valueObject.normalizedValues.find(nv => nv.normalizerId === normalizerId).value;
+    }
+  return valueObject.value;
+}
+
+function normalizeValuesByNormalizer(values, normalizerId) {
+  return values.map(valueObject => (
+    Object.assign(
+      {},
+      valueObject,
+      {value: getNormalizedValue(valueObject, normalizerId)})
+  ));
 }
 
 function IndicatorVisualisation({ indicatorId }) {
@@ -425,6 +473,7 @@ function IndicatorVisualisation({ indicatorId }) {
   const plan = useContext(PlanContext);
   const { t, i18n } = useTranslation();
   const [compareTo, setCompareTo] = useState(undefined);
+  const [preferNormalizeByPopulation, setPreferNormalizeByPopulation] = useState(NORMALIZE_DEFAULT);
 
   const { loading, error, data } = useQuery(GET_INDICATOR_GRAPH_DATA, {
     variables: {
@@ -451,10 +500,44 @@ function IndicatorVisualisation({ indicatorId }) {
   if (indicator.values.length === 0) {
     return null;
   }
-  const indicatorGraphSpecification = getIndicatorGraphSpecification(indicator, compareTo, t);
+
+  const comparisonIndicator = indicator.common?.indicators.find(
+    indicator => indicator.organization.id === compareTo
+  );
+  const populationNormalizer = indicator.common?.normalizations.find(
+    normalization => normalization.normalizer.identifier === 'population'
+  );
+
+  let canBeNormalized = false;
+  if (populationNormalizer !== undefined) {
+    let values = indicator.values;
+    if (comparisonIndicator != null) {
+      values = values.concat(comparisonIndicator.values);
+    }
+    if (
+      values.find(
+        // There must be no values which cannot be normalized
+        // pre capita
+        v => v.normalizedValues?.find(
+          nv => nv?.normalizerId === populationNormalizer.normalizer.id
+        ) === undefined
+      ) === undefined
+    ) {
+      canBeNormalized = true;
+    }
+  }
+
+  const setNormalizeByPopulation = normalizeByPopulationSetter(setPreferNormalizeByPopulation);
+  let normalizeByPopulation = canBeNormalized ? getNormalizeByPopulation(
+    preferNormalizeByPopulation, comparisonIndicator
+  ) : false;
+
+  const indicatorGraphSpecification = getIndicatorGraphSpecification(
+    indicator, compareTo, t, normalizeByPopulation ? populationNormalizer.normalizer.id : null
+  );
 
   /// Determine Indicator unit label and y-axis range
-  const { unit } = indicator;
+  const { unit } = normalizeByPopulation ? populationNormalizer : indicator;
   const unitLabel = unit.name === 'no unit' ? '' : (unit.shortName || unit.name);
 
 
@@ -466,16 +549,20 @@ function IndicatorVisualisation({ indicatorId }) {
     plotTitle = indicator.name;
   }
 
-  const combinedValues = combineValues(indicator, compareTo, indicatorGraphSpecification);
+  let combinedValues = combineValues(indicator, comparisonIndicator, indicatorGraphSpecification);
+  if (normalizeByPopulation) {
+    combinedValues = normalizeValuesByNormalizer(combinedValues, populationNormalizer.normalizer.id);
+  }
   /// Process data for data traces
   const cube = generateCubeFromValues(indicator, indicatorGraphSpecification, combinedValues, i18n);
   indicatorGraphSpecification.cube = cube;
   const hasTimeDimension = indicatorGraphSpecification.axes.filter(a => a[0] === 'time').length > 0;
   const traces = getTraces(
     indicatorGraphSpecification.dimensions, cube, null, hasTimeDimension, i18n);
-  const [goalTraces, goalBounds] = generateGoalTraces(indicator, scenarios, i18n);
-  const [trendTrace, trendBounds] = hasTimeDimension ?
-        generateTrendTrace(indicator, traces, goalTraces, i18n) : [null, null];
+  const [goalTraces, goalBounds] = normalizeByPopulation ? [[], []] : generateGoalTraces(indicator, scenarios, i18n);
+  const [trendTrace, trendBounds] = (normalizeByPopulation || !hasTimeDimension) ? [null, null] : (
+    generateTrendTrace(indicator, traces, goalTraces, i18n)
+  );
 
   let bounds = indicatorGraphSpecification.bounds;
   for (const addBounds of [goalBounds, trendBounds]) {
@@ -538,6 +625,12 @@ function IndicatorVisualisation({ indicatorId }) {
           trendTrace={trendTrace}
         />
       </div>
+      { canBeNormalized &&
+        <IndicatorNormalizationSelect
+          handleChange={setNormalizeByPopulation}
+          currentValue={normalizeByPopulation}
+        />
+      }
     </div>
   );
 }

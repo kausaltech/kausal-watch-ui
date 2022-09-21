@@ -160,6 +160,7 @@
   "organizations": "Organizations",
   "indicator-compare-source": "Showing",
   "indicator-compare-to": "Compare to",
+  "indicator-normalize-per-capita": "Show per capita",
   "indicator-progress-bar": "On the year {{startYear}} {{name}} was {{startValue}}. Latest observed value in {{latestYear}} was {{latestValue}}. The goal for the year {{goalYear}} is {{goalValue}}. Since {{startYear}} reduction is {{reduced}}. {{toBeReduced}} still needs to be reduced before the year {{goalYear}}.",
   "nav-actions-pager": "Actions pager",
   "form-action-filters": "Action list filters",
