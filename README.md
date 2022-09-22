@@ -30,7 +30,10 @@ Clone the plotly.js GitHub repository and run the following commands:
 
     npm install
     npx change-package-name @kausal/plotly-custom
-    npm run custom-bundle --unminified --traces scatter,icicle,pie
+    npm run empty-dist && npm run locales && npm run bundle && npm run schema dist
+    TRACES=scatter,icicle,pie,bar
+    npm run custom-bundle -- --unminified --traces ${TRACES}
+    npm run custom-bundle -- --traces ${TRACES}
     npm publish --access public
 
 ## Building and deploying in production

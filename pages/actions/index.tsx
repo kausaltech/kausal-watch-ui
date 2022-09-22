@@ -2,14 +2,16 @@ import React, { useContext, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import { gql, useQuery } from '@apollo/client';
 import { getActionListLinkProps } from 'common/links';
-import PlanContext from 'context/plan';
+import { usePlan } from 'context/plan';
 import ErrorMessage from 'components/common/ErrorMessage';
 import ContentLoader from 'components/common/ContentLoader';
 import Layout, { Meta } from 'components/layout';
-import StatusBoard from 'components/dashboard/Statusboard';
+import ActionList from 'components/dashboard/ActionList';
+import type { GetActionListPageQuery } from 'common/__generated__/graphql';
 
-const GET_PLAN_PAGE = gql`
-query GetPlanPageActionList($plan: ID!, $path: String!) {
+
+const GET_ACTION_LIST_PAGE = gql`
+query GetActionListPage($plan: ID!, $path: String!) {
   planPage(plan: $plan, path: $path) {
     __typename
     id
@@ -17,18 +19,20 @@ query GetPlanPageActionList($plan: ID!, $path: String!) {
     title
     ... on ActionListPage {
       leadContent
+      ...ActionListPageFilters
     }
     lastPublishedAt
   }
 }
+${ActionList.fragments.listFilters}
 `;
 
 function ActionsListPage() {
   const router = useRouter();
-  const filters = StatusBoard.getFiltersFromQuery(router.query);
+  const filters = ActionList.getFiltersFromQuery(router.query);
 
   const path = '/actions';
-  const plan = useContext(PlanContext);
+  const plan = usePlan();
 
   const handleFilterChange = useCallback(
     (newFilters) => {
@@ -42,10 +46,10 @@ function ActionsListPage() {
       const link = getActionListLinkProps(query);
       router.replace(link.href, undefined, { shallow: true });
     },
-    [filters],
+    [router],
   );
 
-  const { loading, error, data } = useQuery(GET_PLAN_PAGE, {
+  const { loading, error, data } = useQuery<GetActionListPageQuery>(GET_ACTION_LIST_PAGE, {
     variables: {
       plan: plan.identifier,
       path,
@@ -54,16 +58,27 @@ function ActionsListPage() {
   if (loading) return <ContentLoader />;
   if (error) return <ErrorMessage message={error.message} />;
 
+  const { planPage } = data;
+  if (planPage.__typename !== 'ActionListPage') {
+    return <ErrorMessage message="Invalid action list page" />;
+  }
+  const { primaryFilters, mainFilters, advancedFilters } = planPage;
+  const availableFilters = {
+    primaryFilters,
+    mainFilters,
+    advancedFilters
+  };
+
   return (
     <Layout>
-      <Meta title={data.planPage.title} />
+      <Meta title={planPage.title} />
       {!process.browser ? <ContentLoader /> : (
-        <StatusBoard
-          plan={plan}
-          title={data.planPage.title}
-          leadContent={data.planPage.leadContent}
+        <ActionList
+          title={planPage.title}
+          leadContent={planPage.leadContent}
           filters={filters}
           onFilterChange={handleFilterChange}
+          availableFilters={availableFilters}
         />
       )}
     </Layout>
