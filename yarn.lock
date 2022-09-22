@@ -3014,9 +3014,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@kausal/plotly-custom@npm:^2.14.1":
-  version: 2.14.1
-  resolution: "@kausal/plotly-custom@npm:2.14.1"
+"@kausal/plotly-custom@npm:^2.14.3":
+  version: 2.14.3
+  resolution: "@kausal/plotly-custom@npm:2.14.3"
   dependencies:
     "@plotly/d3": 3.8.0
     "@plotly/d3-sankey": 0.7.2
@@ -3067,7 +3067,7 @@ __metadata:
     topojson-client: ^3.1.0
     webgl-context: ^2.2.0
     world-calendars: ^1.0.3
-  checksum: 65f8d8f35ae09e5a15beaecc85a7ef61b9af1a8d0a65d8fb6e6f00fe06307329022cdec1203893a18938244565fd49fec76bc5097f2321256ba75832161556fd
+  checksum: f9c7912b03231e756956c844ffd308f380b72fe627a6d53c4b0c4b4db88138e977d41347b5ed9e8d21677c1aeccb05a2bcd2ff6280ada0c4d8a7995fa40b2d8e
   languageName: node
   linkType: hard
 
@@ -16252,7 +16252,7 @@ __metadata:
     "@graphql-codegen/typescript": 2.7.3
     "@graphql-codegen/typescript-operations": ^2.5.3
     "@graphql-codegen/typescript-react-apollo": 3.3.3
-    "@kausal/plotly-custom": ^2.14.1
+    "@kausal/plotly-custom": ^2.14.3
     "@kausal/themes": ^0.4.0
     "@kausal/themes-private": ^0.2.11
     "@koa/router": ^10.1.1
@@ -23626,7 +23626,7 @@ __metadata:
 
 "typescript@patch:typescript@>=2.4.2 <4.0.0#~builtin<compat/typescript>":
   version: 3.9.10
-  resolution: "typescript@patch:typescript@npm%3A3.9.10#~builtin<compat/typescript>::version=3.9.10&hash=bda367"
+  resolution: "typescript@patch:typescript@npm%3A3.9.10#~builtin<compat/typescript>::version=3.9.10&hash=a1c5e5"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
@@ -23636,11 +23636,11 @@ __metadata:
 
 "typescript@patch:typescript@^4.6.4#~builtin<compat/typescript>":
   version: 4.8.3
-  resolution: "typescript@patch:typescript@npm%3A4.8.3#~builtin<compat/typescript>::version=4.8.3&hash=bda367"
+  resolution: "typescript@patch:typescript@npm%3A4.8.3#~builtin<compat/typescript>::version=4.8.3&hash=a1c5e5"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 0404a09c625df01934ef774b45ce1ca57ccae41cd625fcdbb82056715320d9329e70d9d75c2c732ec6ef947444ca978c189a332b71fa21f5c1437d5a83e24906
+  checksum: 2222d2382fb3146089b1d27ce2b55e9d1f99cc64118f1aba75809b693b856c5d3c324f052f60c75b577947fc538bc1c27bad0eb76cbdba9a63a253489504ba7e
   languageName: node
   linkType: hard
 
