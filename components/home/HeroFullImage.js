@@ -36,7 +36,7 @@ const HeroMain = styled.div`
 
     .container {
       align-items: flex-start;
-      justify-content: ${(props) => props.alignment === 'right' ? 'flex-end' : 'flex-start'};
+      justify-content: ${(props) => props.alignment};
     }
   }
 `;
@@ -90,21 +90,32 @@ const MainCard = styled.div`
     }
   }
 `;
-function HeroFullImage(props) {
+
+const getCardAlignment = (cardPlacement) => {
+  switch (cardPlacement) {
+    case 'right': return 'flex-end';
+    case 'center': return 'center';
+    case 'left':
+    default: return 'flex-start'
+  }
+}
+
+const HeroFullImage = (props) => {
   const {
     bgImage, imageAlign, title, lead
   } = props;
-  console.log("props", props);
+
   const theme = useTheme();
 
-  const cardPlacement = theme.settings?.frontHero ? theme.settings.frontHero.cardPlacement : 'left';
-
-  console.log(theme);
   return (
     <Hero>
-      <HeroMain image={bgImage} imageAlign={imageAlign} alignment={cardPlacement}>
+      <HeroMain
+        image={bgImage}
+        imageAlign={imageAlign}
+        alignment={getCardAlignment(theme.settings?.frontHero ? theme.settings.frontHero.cardPlacement : 'left')}
+      >
         <Container>
-          <MainCard alignment={cardPlacement}>
+          <MainCard>
             <h1>{ title }</h1>
             <RichText html={lead} className="lead-content" />
           </MainCard>

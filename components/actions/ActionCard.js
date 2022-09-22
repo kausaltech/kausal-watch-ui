@@ -90,6 +90,18 @@ const CategoryIcon = styled(SVG)`
   fill: white;
 `;
 
+const SecondaryIcon = styled(SVG)`
+  width: ${(props) => props.theme.spaces.s100};
+  margin-right: ${(props) => props.theme.spaces.s050};
+  opacity: .75;
+  fill: ${(props) => props.color};
+`;
+
+const SecondaryIconsContainer = styled.div`
+  text-align: right;
+  padding: 0 ${(props) => props.theme.spaces.s050} ${(props) => props.theme.spaces.s050};
+`;
+
 const ActionCardElement = styled.div`
   position: relative;
   width: 100%;
@@ -219,6 +231,25 @@ const ActionIdentifier = (props) => {
   )
 };
 
+const SecondaryIcons = (props) => {
+  const {action, secondaryClassification} = props;
+  const secondaryIcons =  action.categories?.filter((cat) => cat.type.id === secondaryClassification.id);
+
+  return (
+    <SecondaryIconsContainer>
+      {secondaryIcons.map((cat) =>
+            <SecondaryIcon
+              color={cat.color ? cat.color : 'black'}
+              key={cat.id}
+              src={cat.iconSvgUrl}
+              preserveAspectRatio="xMinYMid meet"
+              alt={cat.name}
+            />
+        )}
+    </SecondaryIconsContainer>
+  )
+};
+
 ActionIdentifier.propTypes = {
   showId: PropTypes.bool,
   identifier: PropTypes.string,
@@ -294,7 +325,7 @@ function ActionCard(props) {
               <StatusName>
                 { statusText }
               </StatusName>
-            )}
+            ) }
           </ActionPhase>
           { primaryOrg && (
               <ActionOrg>
@@ -310,6 +341,12 @@ function ActionCard(props) {
           <StyledCardTitle className="card-title">
             {actionName}
           </StyledCardTitle>
+          { plan.secondaryActionClassification && (
+            <SecondaryIcons
+              action={action}
+              secondaryClassification={plan.secondaryActionClassification}
+            />
+          )}
         </ActionCardElement>
       </StyledActionLink>
     </ActionLink>

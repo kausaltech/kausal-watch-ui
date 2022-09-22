@@ -162,6 +162,7 @@
   "organizations": "Organisaatiot",
   "indicator-compare-source": "Näytetään",
   "indicator-compare-to": "Vertaa",
+  "indicator-normalize-per-capita": "Suhteuta väkilukuun",
   "indicator-progress-bar": "On the year {{startYear}} {{name}} was {{startValue}}. Latest observed value in {{latestYear}} was {{latestValue}}. The goal for the year {{goalYear}} is {{goalValue}}. Since {{startYear}} reduction is {{reduced}}. {{toBeReduced}} still needs to be reduced before the year {{goalYear}}.",
   "nav-actions-pager": "Toimenpidelista sivutus",
   "form-action-filters": "Toimenpidelista filtterit",

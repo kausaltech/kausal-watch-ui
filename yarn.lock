@@ -3014,9 +3014,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@kausal/plotly-custom@npm:^2.14.1":
-  version: 2.14.1
-  resolution: "@kausal/plotly-custom@npm:2.14.1"
+"@kausal/plotly-custom@npm:^2.14.3":
+  version: 2.14.3
+  resolution: "@kausal/plotly-custom@npm:2.14.3"
   dependencies:
     "@plotly/d3": 3.8.0
     "@plotly/d3-sankey": 0.7.2
@@ -3067,14 +3067,14 @@ __metadata:
     topojson-client: ^3.1.0
     webgl-context: ^2.2.0
     world-calendars: ^1.0.3
-  checksum: 65f8d8f35ae09e5a15beaecc85a7ef61b9af1a8d0a65d8fb6e6f00fe06307329022cdec1203893a18938244565fd49fec76bc5097f2321256ba75832161556fd
+  checksum: f9c7912b03231e756956c844ffd308f380b72fe627a6d53c4b0c4b4db88138e977d41347b5ed9e8d21677c1aeccb05a2bcd2ff6280ada0c4d8a7995fa40b2d8e
   languageName: node
   linkType: hard
 
-"@kausal/themes-private@npm:^0.2.11":
-  version: 0.2.11
-  resolution: "@kausal/themes-private@npm:0.2.11"
-  checksum: 5641dd2892bfb5d08c7c596999c2fad446b2386d03baf5620bd5fd886f0f0ed9a3fd148a85e594519a304fe57ac0562db060511e6694eaae0d12cf1b6b4504eb
+"@kausal/themes-private@npm:^0.2.13":
+  version: 0.2.13
+  resolution: "@kausal/themes-private@npm:0.2.13"
+  checksum: 07eb0c60aec4f8c4ec131ab5934069348c832f3e8218c954bce58e0779db5a514cc683becdb3b709c2b0e7c2b5933b5278f78daf323378304985a8125509a212
   languageName: node
   linkType: hard
 
@@ -16252,9 +16252,9 @@ __metadata:
     "@graphql-codegen/typescript": 2.7.3
     "@graphql-codegen/typescript-operations": ^2.5.3
     "@graphql-codegen/typescript-react-apollo": 3.3.3
-    "@kausal/plotly-custom": ^2.14.1
+    "@kausal/plotly-custom": ^2.14.3
     "@kausal/themes": ^0.4.0
-    "@kausal/themes-private": ^0.2.11
+    "@kausal/themes-private": ^0.2.13
     "@koa/router": ^10.1.1
     "@n8tb1t/use-scroll-position": ^2.0.3
     "@next/bundle-analyzer": ^12.1.6

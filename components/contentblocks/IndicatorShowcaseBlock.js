@@ -11,8 +11,18 @@ const IndicatorShowcase = styled.div`
   background-color: ${(props) => props.theme.brandDark};
   color: ${(props) => props.theme.themeColors.white};
   text-align: center;
+
   h2 {
     color: ${(props) => props.theme.themeColors.white};
+  }
+
+  a {
+    color: ${(props) => props.theme.themeColors.white};
+    text-decoration: underline;
+
+    &:hover {
+      text-decoration: none;
+    }
   }
 `;
 
