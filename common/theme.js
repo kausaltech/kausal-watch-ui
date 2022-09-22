@@ -81,7 +81,7 @@ export const themeProp = exact({
   fontSizeSm: string.isRequired,
   fontSizeXl: string.isRequired,
   fontSizeXxl: string.isRequired,
-  fontUrl: string.isRequired,
+  fontUrl: string,
   fontWeightBase: number.isRequired,
   fontWeightBold: number.isRequired,
   fontWeightNormal: number.isRequired,
