@@ -99,6 +99,7 @@ export const GET_ACTION_LIST = gql`
           parent {
             id
           }
+          color
           iconSvgUrl
           categoryPage {
             id

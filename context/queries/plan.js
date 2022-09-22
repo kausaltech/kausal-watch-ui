@@ -17,9 +17,11 @@ fragment PlanContext on Plan {
   otherLanguages
   hideActionIdentifiers
   primaryActionClassification {
+    id
     identifier
   }
   secondaryActionClassification {
+    id
     identifier
   }
   domain(hostname: $hostname) {
