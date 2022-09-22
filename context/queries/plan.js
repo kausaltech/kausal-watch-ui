@@ -136,6 +136,7 @@ fragment PlanContext on Plan {
     hasActionPrimaryOrgs
     publicContactPersons
     showAdminLink
+    enableIndicatorComparison
   }
   allRelatedPlans {
     id

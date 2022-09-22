@@ -471,6 +471,7 @@ function IndicatorVisualisation({ indicatorId }) {
   }
 
   const plan = useContext(PlanContext);
+  const enableIndicatorComparison = plan.features.enableIndicatorComparison === true;
   const { t, i18n } = useTranslation();
   const [compareTo, setCompareTo] = useState(undefined);
   const [preferNormalizeByPopulation, setPreferNormalizeByPopulation] = useState(NORMALIZE_DEFAULT);
@@ -607,7 +608,7 @@ function IndicatorVisualisation({ indicatorId }) {
     <div>
       <IndicatorVizHeader className="mb-2">{plotTitle}</IndicatorVizHeader>
       <span className="visually-hidden">{ t('indicator-graph-not-accessible') }</span>
-      { comparisonOrgs && comparisonOrgs.length > 0 && (
+      { enableIndicatorComparison && comparisonOrgs && comparisonOrgs.length > 0 && (
         <IndicatorComparisonSelect
           handleChange={setCompareTo}
           currentValue={compareTo}
