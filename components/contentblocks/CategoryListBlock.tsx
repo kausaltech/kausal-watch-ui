@@ -101,7 +101,7 @@ const CategoryListBlock = (props: CategoryListBlockProps) => {
       <Container>
         { heading && (<SectionHeader>{ heading }</SectionHeader>)}
         <RichText html={lead} className="lead-text" />
-        <Row tag="ul">
+        <Row tag="ul" className="justify-content-center">
           { categories?.map((cat) => cat.categoryPage && (
             <Col
               tag="li"
