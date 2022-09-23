@@ -4,6 +4,8 @@ import {
   FormGroup,
   Label as BSLabel,
   FormFeedback,
+  InputProps,
+  Input,
 } from 'reactstrap';
 
 import styled from 'styled-components';
@@ -22,7 +24,15 @@ const Input = styled(BSInput)`
   border-color: ${(props) => props.theme.themeColors.dark};
 `;
 
-const TextInput = React.forwardRef((props, ref) => {
+
+type TextInputProps = InputProps & {
+  label?: string,
+  id: string,
+  placeholder?: string,
+  formFeedback?: string,
+}
+
+const TextInput = React.forwardRef<Input, TextInputProps>(function TextInput(props: TextInputProps, ref) {
   const {
     label,
     id,
@@ -43,7 +53,7 @@ const TextInput = React.forwardRef((props, ref) => {
         {...rest}
         ref={ref}
       />
-      <FormFeedback role="alert">{formFeedback}</FormFeedback>
+      {formFeedback ?? (<FormFeedback role="alert">{formFeedback}</FormFeedback>)}
     </FormGroup>
   );
 });

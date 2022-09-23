@@ -2,10 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { darken, transparentize } from 'polished';
-import { Button as BSButton } from 'reactstrap';
+import { Button as BSButton, ButtonProps } from 'reactstrap';
 
 const StyledButton = styled(BSButton)`
-
   padding: ${(props) => props.theme.inputBtnPaddingY} ${(props) => props.theme.inputBtnPaddingX};
   border-radius: ${(props) => props.theme.btnBorderRadius};
   border-width: ${(props) => props.theme.btnBorderWidth};
@@ -135,22 +134,12 @@ const StyledButton = styled(BSButton)`
   }
 `;
 
-const Button = React.forwardRef(function Button(props, ref) {
+const Button = React.forwardRef<typeof StyledButton, ButtonProps>(function Button(props, ref) {
   const { children } = props;
-
   return (
     <StyledButton ref={ref} {...props}>
       { children }
     </StyledButton>
   );
 });
-
-Button.defaultProps = {
-  children: null,
-};
-
-Button.propTypes = {
-  children: PropTypes.node,
-};
-
 export default Button;

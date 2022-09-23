@@ -13,9 +13,12 @@ import Button from 'components/common/Button';
 import DropDown, { DropDownTypeahead, DropDownTypeaheadOption } from 'components/common/DropDown';
 import { PlanContextType, usePlan } from 'context/plan';
 import PopoverTip from 'components/common/PopoverTip';
-import { ActionListAction, ActionListOrganization, ActionListPrimaryOrg, ActiveFilters, AvailableFilters } from 'components/dashboard/ActionList';
+import { ActionListAction, ActionListCategory, ActionListCategoryTypeFilterBlock, ActionListOrganization, ActionListPrimaryOrg, ActiveFilters, AvailableFilters } from 'components/dashboard/ActionList';
 import { ActionCategoryFilterCardBlock, ActionListFilterFragment, ActionListPageFiltersFragment, CategoryTypeFilterBlock, DashboardActionListQuery, ResponsiblePartyFilterBlock } from 'common/__generated__/graphql';
 import { I18n, TFunction } from 'next-i18next';
+import SelectDropdown, { SelectDropdownOption } from 'components/common/SelectDropdown';
+import { constructObjectHierarchy } from 'common/categories';
+import { createFilter } from 'react-select';
 
 const FiltersList = styled.div`
   margin: ${(props) => props.theme.spaces.s150} 0;
@@ -110,9 +113,10 @@ function ActionListTextInput({
   id, label, placeholder, currentValue, onChange,
 }: ActionListTextInputProps) {
   const [filterValue, setValue] = useState(currentValue);
-  const delayedQuery = useCallback(debounce(
-    (value) => onChange(id, value), 500,
-  ), [id, onChange]);
+  const delayedQuery = useMemo(
+    () => debounce((value) => onChange(id, value), 150),
+    [id, onChange]
+  );
 
   const callback = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);
@@ -135,30 +139,42 @@ type ActionListDropdownProps = {
   id: string,
   label: string,
   showAllLabel: string,
-  placeholder: string|undefined,
+  placeholder?: string,
   currentValue: string|undefined,
   onChange: FilterChangeCallback,
-  options: DropDownTypeaheadOption[],
+  options: SelectDropdownOption[],
 }
+
+const filterOption = createFilter({
+  ignoreCase: true,
+  ignoreAccents: true,
+  matchFrom: 'any',
+  stringify: option => option.label,
+  trim: true,
+});
+
 
 function ActionListDropdownInput({
   id, label, currentValue, onChange, showAllLabel, options, placeholder
 }: ActionListDropdownProps) {
-  const callback = useCallback((option: DropDownTypeaheadOption|null) => {
+  const callback = useCallback((option: SelectDropdownOption|null) => {
     onChange(id, option?.id);
   }, [id, onChange]);
 
   const selectedOption = currentValue ? options.find((opt) => opt.id === currentValue) : null;
 
   return (
-    <DropDownTypeahead
+    <SelectDropdown
       label={label}
       id={`${id}-field`}
       name={id}
       placeholder={showAllLabel}
       options={options}
-      selectedOption={selectedOption}
+      defaultValue={selectedOption}
       onChange={callback}
+      isClearable={true}
+      menuShouldScrollIntoView={true}
+      filterOption={filterOption}
     />
   );
 }
@@ -277,14 +293,14 @@ type ActionListFilterOption = {
 
 export interface ActionListFilter {
   id: string,
-  filterAction: (activeFilters: ActiveFilters, action: ActionListAction) => boolean,
+  filterAction: (value: string, action: ActionListAction) => boolean,
   getLabel: (t: TFunction) => string,
   getShowAllLabel: (t: TFunction) => string,
   sm: number|undefined,
   md: number,
   lg: number,
   options?: ActionListFilterOption[],
-  render: (activeFilters: ActiveFilters, onChange: FilterChangeCallback, t: TFunction) => JSX.Element,
+  render: (value: string|undefined, onChange: FilterChangeCallback, t: TFunction) => JSX.Element,
 };
 
 abstract class DefaultFilter implements ActionListFilter {
@@ -295,13 +311,13 @@ abstract class DefaultFilter implements ActionListFilter {
   abstract options?: ActionListFilter['options'];
 
   abstract getLabel(t: TFunction): string;
-  abstract filterAction(activeFilters: ActiveFilters, action: ActionListAction): boolean;
+  abstract filterAction(value: string, action: ActionListAction): boolean;
 
   getShowAllLabel(t: TFunction) {
     return t('filter-all-categories')
   };
 
-  render(activeFilters: ActiveFilters, onChange: FilterChangeCallback, t: TFunction) {
+  render(value: string|undefined, onChange: FilterChangeCallback, t: TFunction) {
     return (
       <Col
         sm={this.sm}
@@ -313,7 +329,7 @@ abstract class DefaultFilter implements ActionListFilter {
           id={this.id}
           label={this.getLabel(t)}
           showAllLabel={this.getShowAllLabel(t)}
-          currentValue={activeFilters[this.id]}
+          currentValue={value}
           onChange={onChange}
           options={this.options}
         />
@@ -324,7 +340,8 @@ abstract class DefaultFilter implements ActionListFilter {
 
 class ResponsiblePartyFilter extends DefaultFilter {
   id = 'responsible_party';
-  options: ActionListFilterOption[]
+  options: ActionListFilterOption[];
+  orgById: Map<string, ActionListOrganization>
 
   constructor(orgs: ActionListOrganization[]) {
     super();
@@ -334,12 +351,19 @@ class ResponsiblePartyFilter extends DefaultFilter {
       (org) => org.parent,
       (org) => org.children
     );
+    this.orgById = new Map(orgs.map(org => [org.id, org]));
     this.options = sortedOrgs.map((org) => ({id: org.id, label: org.name, indent: org.depth}));
   }
-  filterAction(activeFilters: ActiveFilters, action: ActionListAction) {
-    const value = activeFilters[this.id];
-    if (!value) return true;
-    return action.responsibleParties.some((rp) => rp.organization.id === value);
+  filterAction(value: string, action: ActionListAction) {
+    return action.responsibleParties.some((rp) => {
+      // @ts-ignore
+      let org: ActionListOrganization = rp.organization;
+      while (org) {
+        if (org.id === value) return true;
+        org = org.parent;
+      }
+      return false;
+    });
   }
   getLabel(t: TFunction) {
     return t('filter-organization');
@@ -351,26 +375,87 @@ class ResponsiblePartyFilter extends DefaultFilter {
 
 class CategoryFilter extends DefaultFilter {
   id: string;
-  ct: CategoryTypeFilterBlock['categoryType'];
+  ct: ActionListCategoryTypeFilterBlock['categoryType'];
+  options: ActionListFilterOption[];
+  catById: Map<string, ActionListCategory>
 
-  constructor(config: CategoryTypeFilterBlock) {
+  constructor(config: ActionListCategoryTypeFilterBlock) {
     super();
     this.ct = config.categoryType;
-    this.id = `${this.ct.id}`;
-    this.options = config.categoryType()
+    this.id = `cat-${this.ct.identifier}`;
+    const hierarchyCats = constructObjectHierarchy<ActionListCategory>(this.ct.categories);
+    const sortedCats = sortDepthFirst(
+      hierarchyCats,
+      (a, b) => a.order - b.order,
+      (cat) => cat.parent,
+      (cat) => cat.children
+    );
+    this.catById = new Map(sortedCats.map(org => [org.id, org]));
+    const getLabel = (cat: ActionListCategory) => (
+      this.ct.hideCategoryIdentifiers ? cat.name : `${cat.identifier}. ${cat.name}`
+    );
+    this.options = sortedCats.map((cat) => ({id: cat.id, label: getLabel(cat)}));
   }
-  filterAction(activeFilters: ActiveFilters, action: ActionListAction) {
-    const value = activeFilters[this.id];
-    if (!value) return true;
-    return action.responsibleParties.some((rp) => rp.organization.id === value);
+  filterAction(value: string, action: ActionListAction) {
+    return action.categories.some((actCat) => {
+      let cat = this.catById.get(actCat.id);
+      while (cat) {
+        if (cat.id === value) return true;
+        cat = cat.parent;
+      }
+      return false;
+    });
   }
   getLabel(t: TFunction) {
-    return t('filter-organization');
+    return this.ct.name;
   }
   getShowAllLabel(t: TFunction) {
-    return t('filter-all-organizations');
+    return t('filter-all-categories');
   }
 }
+
+
+class TextSearchFilter implements ActionListFilter {
+  id = 'q';
+  sm = 9;
+  md = 9;
+  lg = 6;
+
+  hasActionIdentifiers: boolean;
+
+  constructor(plan: PlanContextType) {
+    this.hasActionIdentifiers = plan.features.hasActionIdentifiers;
+  }
+
+  filterAction(value: string, action: ActionListAction) {
+    const searchStr = value.toLowerCase();
+    if (this.hasActionIdentifiers) {
+      if (action.identifier.toLowerCase().startsWith(searchStr)) return true;
+    }
+    if (action.name.replace(/\u00AD/g, '').toLowerCase().search(searchStr) !== -1) return true;
+    return false;
+  }
+  getLabel(t: TFunction) {
+    return t('filter-text');
+  }
+  getShowAllLabel(t: TFunction) {
+    return t('filter-text-default');
+  }
+  render(value: string|undefined, onChange: FilterChangeCallback, t: TFunction) {
+    return (
+      <Col m={this.sm} md={this.md} lg={this.lg} key={this.id}>
+        <ActionListTextInput
+          id={this.id}
+          label={this.getLabel(t)}
+          placeholder={this.getShowAllLabel(t)}
+          onChange={onChange}
+          currentValue={value}
+        />
+      </Col>
+    );
+  }
+}
+
 
 export type ActionListFilterSection = {
   id: string,
@@ -400,7 +485,10 @@ function ActionListFilters(props: ActionListFiltersProps) {
   const { t } = useTranslation();
   const plan = usePlan();
   const theme = useTheme();
-  const allFilters: ActionListFilter[] = filterSections[0].filters;
+  const allFilters: ActionListFilter[] = useMemo(
+    () => filterSections.map(section => section.filters).flat(),
+    [filterSections]
+  );
 
   /*
   if (primaryOrgs.length) allFilters.push(
@@ -416,20 +504,6 @@ function ActionListFilters(props: ActionListFiltersProps) {
       })),
     },
   );
-  if (!hasActionPrimaryOrgs) {
-    allFilters.push({
-      label: t('filter-organization'),
-      showAllLabel: t('filter-all-organizations'),
-      md: 6,
-      lg: 4,
-      identifier: 'organization',
-      options: sortedOrgs.map((org) => ({
-        id: org.id,
-        label: ' '.repeat(org.depth * 4) + org.name,
-      })),
-    });
-  }
-
   if (impacts.length > 0) {
     allFilters.push({
       label: t('filter-impact'),
@@ -507,18 +581,8 @@ function ActionListFilters(props: ActionListFiltersProps) {
   allFilters[allFilters.length - 1].isLast = true;
 
   allFilters.push({
-    label: t('filter-text'),
-    placeholder: t('filter-text-default'),
-    sm: 9,
-    md: 9,
-    lg: 6,
-    identifier: 'text',
-    type: 'text',
   });
   */
-  console.log(allFilters);
-  const filterComponents = allFilters.map((filter) => filter.render(activeFilters, onChange, t));
-  console.log(filterComponents);
   return (
     <div className="filters mb-2 text-left">
       <form
@@ -526,7 +590,16 @@ function ActionListFilters(props: ActionListFiltersProps) {
         role="search"
         aria-label={t('form-action-filters')}
       >
-        {filterComponents}
+        {filterSections.map(section => (
+          <Row key={section.id}>
+            {section.filters.map((filter) => filter.render(activeFilters[filter.id], onChange, t))}
+            {section.id === 'main' && (
+              <Col xs={6} sm={3} md={3} lg={2} xl={2} className="d-flex flex-column justify-content-end">
+                <Button type="submit" color="primary" className="mb-3" block>{ t('search') }</Button>
+              </Col>
+            )}
+          </Row>
+        ))}
       </form>
     </div>
   );
@@ -562,9 +635,6 @@ function ActionListFilters(props: ActionListFiltersProps) {
                 />
               </Col>
             ))}
-            <Col xs={6} sm={3} md={3} lg={2} xl={2} className="d-flex flex-column justify-content-end">
-              <Button type="submit" color="primary" className="mb-3" block>{ t('search') }</Button>
-            </Col>
           </Row>
       </form>
       <Row>
@@ -585,7 +655,10 @@ function ActionListFilters(props: ActionListFiltersProps) {
 */
 
 ActionListFilters.constructFilters = (
-  mainConfig: ActionListPageFiltersFragment, orgs: ActionListOrganization[], primaryOrgs: ActionListPrimaryOrg[]
+  mainConfig: ActionListPageFiltersFragment,
+  plan: PlanContextType,
+  orgs: ActionListOrganization[],
+  primaryOrgs: ActionListPrimaryOrg[]
 ) => {
   const { primaryFilters, mainFilters, advancedFilters } = mainConfig;
 
@@ -596,8 +669,13 @@ ActionListFilters.constructFilters = (
         case 'ResponsiblePartyFilterBlock':
           filters.push(new ResponsiblePartyFilter(orgs))
           break
+        case 'CategoryTypeFilterBlock':
+          filters.push(new CategoryFilter(block))
+          break
       }
     });
+    if (id === 'main')
+      filters.push(new TextSearchFilter(plan));
     const ret: ActionListFilterSection = {
       id,
       hidden,

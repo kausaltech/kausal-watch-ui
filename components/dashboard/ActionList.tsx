@@ -17,6 +17,7 @@ import ActionListFilters, { ActionListFilterSection } from 'components/actions/A
 import ActionCardList from 'components/actions/ActionCardList';
 import ActionStatusGraphs from './ActionStatusGraphs';
 import { ActionListFilterFragment, ActionListPageFiltersFragment, DashboardActionListQuery, GetActionListPageQuery } from 'common/__generated__/graphql';
+import { ObjectHierarchyMember } from 'common/categories';
 
 const DynamicActionStatusTable = dynamic(() => import('./ActionStatusTable'));
 
@@ -250,10 +251,13 @@ fragment ActionListFilter on StreamFieldInterface {
     categoryType {
       id
       identifier
+      name
       hideCategoryIdentifiers
       categories {
         id
+        identifier
         name
+        order
         parent {
           id
         }
@@ -314,6 +318,9 @@ type OrganizationInput = DashboardActionListQuery['planOrganizations'][0];
 export type ActionListOrganization = OrganizationInput & OrganizationHierarchyMember<OrganizationInput>;
 export type ActionListAction = DashboardActionListQuery['planActions'][0] & OrgMappedAction<ActionListOrganization>;
 
+export type ActionListCategoryTypeFilterBlock = ActionListFilterFragment & {__typename?: 'CategoryTypeFilterBlock'};
+type CategoryInput = ActionListCategoryTypeFilterBlock['categoryType']['categories'][0];
+export type ActionListCategory = CategoryInput & ObjectHierarchyMember<CategoryInput>;
 
 const ActionList = (props: ActionListProps) => {
   const {
@@ -334,8 +341,8 @@ const ActionList = (props: ActionListProps) => {
   }, [organizations]);
 
   const filterSections: ActionListFilterSection[] = useMemo(() => (
-    ActionListFilters.constructFilters(availableFilters, orgs, primaryOrgs)
-  ), [availableFilters, orgs, primaryOrgs]);
+    ActionListFilters.constructFilters(availableFilters, plan, orgs, primaryOrgs)
+  ), [availableFilters, plan, orgs, primaryOrgs]);
 
   const handleChange = useCallback(
     (filterType: string, val: string|undefined) => {
@@ -354,7 +361,7 @@ const ActionList = (props: ActionListProps) => {
 
   let filteredActions = mappedActions;
   enabledFilters.forEach(filter => {
-    filteredActions = filteredActions.filter((action) => filter.filterAction(activeFilters, action));
+    filteredActions = filteredActions.filter((action) => filter.filterAction(activeFilters[filter.id], action));
   });
   console.log(filteredActions);
 

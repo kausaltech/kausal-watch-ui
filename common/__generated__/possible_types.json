@@ -11,6 +11,7 @@
       "PageMenuItem"
     ],
     "PageInterface": [
+      "AccessibilityStatementPage",
       "ActionListPage",
       "CategoryPage",
       "CategoryTypePage",
@@ -19,6 +20,7 @@
       "IndicatorListPage",
       "Page",
       "PlanRootPage",
+      "PrivacyPolicyPage",
       "StaticPage"
     ],
     "SearchHitObject": [
@@ -26,6 +28,9 @@
       "Indicator"
     ],
     "StreamFieldInterface": [
+      "AccessibilityStatementComplianceStatusBlock",
+      "AccessibilityStatementContactInformationBlock",
+      "AccessibilityStatementPreparationInformationBlock",
       "ActionAsideContentBlock",
       "ActionAttributeTypeFilterBlock",
       "ActionCategoryFilterCardBlock",
