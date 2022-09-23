@@ -44,6 +44,16 @@ const SectionHeader = styled.h2`
   margin-bottom: ${(props) => props.theme.spaces.s300};
 `;
 
+const EmptyActionListHeader = styled.p`
+  text-align: center;
+  opacity: 0.6;
+  font-size: 1.2em;
+  padding: ${(props) => props.theme.spaces.s100};
+  border-radius: ${(props) => props.theme.cardBorderRadius};
+  margin-top: ${(props) => props.theme.spaces.s300};
+  margin-bottom: ${(props) => props.theme.spaces.s300};
+`;
+
 const ListRow = styled.ul`
   display: flex;
   flex-wrap: wrap;
@@ -91,8 +101,7 @@ const findAllChildren = (categoryID, cats, children = []) => {
 };
 
 const filterByCategory = (actions, catId, categories) => {
-  // TODO: match parent categories too
-  if (catId === 0) return actions;
+  if (catId === '0') return actions;
   const recursiveCategories = findAllChildren(catId, categories);
   recursiveCategories.push(catId);
   return actions.filter((action) => action.categories.find((cat) => recursiveCategories.indexOf(cat.id) > -1));
@@ -100,6 +109,11 @@ const filterByCategory = (actions, catId, categories) => {
 
 const CategoryActionList = (props) => {
   const { categoryId, categories } = props;
+  if (categoryId === '0') {
+    // Showing all the actions as highlights doesn't make sense in this context
+    return null;
+  }
+
   const { t } = useTranslation();
   const plan = useContext(PlanContext);
   const { loading, error, data } = useQuery(GET_ACTION_LIST, {
@@ -116,7 +130,11 @@ const CategoryActionList = (props) => {
   }
 
   const filteredActions = filterByCategory(planActions, categoryId, categories);
-  const heading = 'Styrmedel och åtaganden';
+  if (filteredActions.length === 0) {
+    return <EmptyActionListHeader>Ei toimenpiteitä</EmptyActionListHeader>;
+    return null;
+  }
+  const heading = t('filter-result-actions');
 
   // const MotionCard = motion(ActionCard);
   return (
