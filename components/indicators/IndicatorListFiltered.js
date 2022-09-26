@@ -251,94 +251,94 @@ const IndicatorListFiltered = (props) => {
     return sortIndicators(hierarchy, filtered, displayMunicipality);
   }
 
-    const filteredIndicators = filterIndicators(hierarchy, indicators, displayMunicipality);
-    const sortedCategories = [...categories].sort((a, b) => b.order - a.order);
+  const filteredIndicators = filterIndicators(hierarchy, indicators, displayMunicipality);
+  const sortedCategories = [...categories].sort((a, b) => b.order - a.order);
 
-    const someIndicatorsHaveCategories = filteredIndicators.flat().reduce(
-      ((cumul, cur) => Math.max(cumul, cur.categories.length)), 0) > 0;
-    const allIndicatorsHaveSameLevel = new Set(filteredIndicators.flat().map(i => i.level)).size === 1;
+  const someIndicatorsHaveCategories = filteredIndicators.flat().reduce(
+    ((cumul, cur) => Math.max(cumul, cur.categories.length)), 0) > 0;
+  const allIndicatorsHaveSameLevel = new Set(filteredIndicators.flat().map(i => i.level)).size === 1;
 
-    const indicatorElement = (item, itemName, indentLevel, expanded, expandKey) => (
-      <IndicatorName indentLevel={indentLevel} >
-        <SectionButton aria-controls={expandKey} aria-expanded={expanded}>
-          <Icon name={expanded ? 'angleDown' : 'angleRight'} />
-          {itemName}
-        </SectionButton>
-      </IndicatorName>
-    );
-    const seen = new Set();
+  const indicatorElement = (item, itemName, indentLevel, expanded, expandKey) => (
+    <IndicatorName indentLevel={indentLevel} >
+      <SectionButton aria-controls={expandKey} aria-expanded={expanded}>
+        <Icon name={expanded ? 'angleDown' : 'angleRight'} />
+        {itemName}
+      </SectionButton>
+    </IndicatorName>
+  );
+  const seen = new Set();
 
-    const indicatorName = (item, expanded, expandKey) => {
-      let result = null;
-      if (item.common == null || hierarchy === null || Object.keys(hierarchy).length === 0) {
-        result = item.name;
-        return indicatorElement(item, result, 0, expanded, expandKey);
-      }
+  const indicatorName = (item, expanded, expandKey) => {
+    let result = null;
+    if (item.common == null || hierarchy === null || Object.keys(hierarchy).length === 0) {
+      result = item.name;
+      return indicatorElement(item, result, 0, expanded, expandKey);
+    }
 
-      const pathNames = hierarchy[item.common.id]?.pathNames;
-      if (pathNames != null && pathNames.length > 0) {
-        result = pathNames[pathNames.length -1] ?? '--not-found--';
-      }
-      if (seen.has(item.common.id)) {
-        result = null;
-      }
-      seen.add(item.common.id);
-      if (result == null) {
-        return result;
-      }
-      const level = (hierarchy[item.common.id]?.path?.length ?? 1) - 1;
-      return indicatorElement(item, result, level, expanded, expandKey);
-    };
-    const indentationLevel = (item) => (
-      item.common == null ? 1 : (hierarchy[item.common.id]?.path?.length ?? 1) - 1
-    );
+    const pathNames = hierarchy[item.common.id]?.pathNames;
+    if (pathNames != null && pathNames.length > 0) {
+      result = pathNames[pathNames.length -1] ?? '--not-found--';
+    }
+    if (seen.has(item.common.id)) {
+      result = null;
+    }
+    seen.add(item.common.id);
+    if (result == null) {
+      return result;
+    }
+    const level = (hierarchy[item.common.id]?.path?.length ?? 1) - 1;
+    return indicatorElement(item, result, level, expanded, expandKey);
+  };
+  const indentationLevel = (item) => (
+    item.common == null ? 1 : (hierarchy[item.common.id]?.path?.length ?? 1) - 1
+  );
 
-    const hierarchyEnabled = hierarchy != null && Object.keys(hierarchy).length > 1;
-    const indicatorNameColumnEnabled = !hierarchyEnabled || !displayMunicipality;
+  const hierarchyEnabled = hierarchy != null && Object.keys(hierarchy).length > 1;
+  const indicatorNameColumnEnabled = !hierarchyEnabled || !displayMunicipality;
 
-    return (
-      <div className="mb-5 pb-5">
-        <IndicatorListFilters cats={sortedCategories} changeOption={handleChange} />
-        <IndentableTable hover>
-          {filteredIndicators.map((group, idx) => {
-            const expanded = visibleGroups[idx] === true;
-            const expandKey = `common-indicator-section-${idx}`;
-            const headers = [];
-            if (indicatorNameColumnEnabled) {
-              headers.push(
-                <IndentableTableHeader key="hr-name">{ t('name') }</IndentableTableHeader>
-              );
-            }
-            if (!allIndicatorsHaveSameLevel) {
-              headers.push(
-                <IndentableTableHeader key="hr-type">{ t('type') }</IndentableTableHeader>
-              );
-            }
-            if (displayMunicipality) {
-              headers.push(
-                <IndentableTableHeader
-                  key="hr-municipality"
-                  indent={indentationLevel(group[0])}
-                  firstCol
-                >
-                  { t('municipality') }
-                </IndentableTableHeader>
-              );
-            }
-            if (someIndicatorsHaveCategories) {
-              headers.push(
-                <IndentableTableHeader key="hr-themes">
-                  { t('themes') }
-                </IndentableTableHeader>
-              );
-            }
-            headers.push(<IndentableTableHeader key="hr-updated">{ t('updated') }</IndentableTableHeader>);
-            headers.push(<IndentableTableHeader key="hr-value" numeric>{ t('indicator-value') }</IndentableTableHeader>);
-            if (displayNormalizedValues) {
-              headers.push(<IndentableTableHeader key="hr-normalized-value" numeric>{ t('indicator-population-normalized-value') }</IndentableTableHeader>);
-            }
+  return (
+    <div className="mb-5 pb-5">
+      <IndicatorListFilters cats={sortedCategories} changeOption={handleChange} />
+      <IndentableTable hover>
+        {filteredIndicators.map((group, idx) => {
+          const expanded = visibleGroups[idx] === true;
+          const expandKey = `common-indicator-section-${idx}`;
+          const headers = [];
+          if (indicatorNameColumnEnabled) {
+            headers.push(
+              <IndentableTableHeader key="hr-name">{ t('name') }</IndentableTableHeader>
+            );
+          }
+          if (!allIndicatorsHaveSameLevel) {
+            headers.push(
+              <IndentableTableHeader key="hr-type">{ t('type') }</IndentableTableHeader>
+            );
+          }
+          if (displayMunicipality) {
+            headers.push(
+              <IndentableTableHeader
+                key="hr-municipality"
+                indent={indentationLevel(group[0])}
+                firstCol
+              >
+                { t('municipality') }
+              </IndentableTableHeader>
+            );
+          }
+          if (someIndicatorsHaveCategories) {
+            headers.push(
+              <IndentableTableHeader key="hr-themes">
+                { t('themes') }
+              </IndentableTableHeader>
+            );
+          }
+          headers.push(<IndentableTableHeader key="hr-updated">{ t('updated') }</IndentableTableHeader>);
+          headers.push(<IndentableTableHeader key="hr-value" numeric>{ t('indicator-value') }</IndentableTableHeader>);
+          if (displayNormalizedValues) {
+            headers.push(<IndentableTableHeader key="hr-normalized-value" numeric>{ t('indicator-population-normalized-value') }</IndentableTableHeader>);
+          }
 
-            return (<React.Fragment key={`indicator-group-${idx}`}>
+          return (<React.Fragment key={`indicator-group-${idx}`}>
             { !indicatorNameColumnEnabled &&
               <tbody key="body-1">
                 <tr>
@@ -436,10 +436,10 @@ const IndicatorListFiltered = (props) => {
                 );
               })}
             </tbody></React.Fragment>);
-          })}
-        </IndentableTable>
-      </div>
-    );
+        })}
+      </IndentableTable>
+    </div>
+  );
 }
 
 IndicatorListFiltered.propTypes = {
