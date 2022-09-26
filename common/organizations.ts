@@ -1,4 +1,3 @@
-import { Organization } from "./__generated__/graphql";
 
 export interface OrganizationInput<Type> {
   id: string,

@@ -1,11 +1,6 @@
 import React from 'react';
 import {
-  Input as BSInput,
-  FormGroup,
-  Label as BSLabel,
-  FormFeedback,
-  InputProps,
-  Input,
+  Input as BSInput, FormGroup, Label as BSLabel, FormFeedback, InputProps,
 } from 'reactstrap';
 
 import styled from 'styled-components';
@@ -32,7 +27,7 @@ type TextInputProps = InputProps & {
   formFeedback?: string,
 }
 
-const TextInput = React.forwardRef<Input, TextInputProps>(function TextInput(props: TextInputProps, ref) {
+const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(function TextInput(props: TextInputProps, ref) {
   const {
     label,
     id,
@@ -51,7 +46,7 @@ const TextInput = React.forwardRef<Input, TextInputProps>(function TextInput(pro
         id={id}
         placeholder={placeholder}
         {...rest}
-        ref={ref}
+        innerRef={ref}
       />
       {formFeedback ?? (<FormFeedback role="alert">{formFeedback}</FormFeedback>)}
     </FormGroup>

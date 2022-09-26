@@ -1,47 +1,114 @@
 
-
-export interface ObjectInput<Type> {
+export interface CategoryInput {
   id: string,
   parent?: {
     id: string,
   },
 }
 
-export interface ObjectHierarchyMember<Type> extends Omit<ObjectInput<Type>, 'parent'> {
+export interface CategoryTypeInput {
+  id: string,
+  categories: CategoryInput[],
+}
+
+export interface CategoryHierarchyMember<CTType> extends Omit<CategoryInput, 'parent' | 'type'> {
   depth: number,
   parent: null | this,
   children: this[],
+  type: CTType,
 };
 
-export function constructObjectHierarchy<Type extends ObjectHierarchyMember<Type>>(
-  objsIn: ObjectInput<Type>[]
-) {
-  const objsById = new Map();
+export interface CategoryTypeHierarchy<CatType> extends Omit<CategoryTypeInput, 'categories'> {
+  categories: CatType[],
+}
 
-  let objs: Type[] = objsIn.map((obj) => {
+export function constructCatHierarchy<
+  CatType extends CategoryHierarchyMember<CTType>,
+  CTType extends CategoryTypeHierarchy<CatType>,
+>(
+  ctsIn: CategoryTypeInput[],
+) {
+  const objsById: Map<string, CatType> = new Map();
+  const ctsById = new Map()
+
+  let cts: CTType[] = ctsIn.map((ctIn) => {
     // @ts-ignore
-    const newObj: Type = {
-      ...obj,
-      children: [],
-      depth: 0,
-    };
-    objsById.set(newObj.id, newObj);
-    return newObj;
+    const ct: CTType = {
+      ...ctIn,
+    }
+    ct.categories = ctIn.categories.map((cat) => {
+      // @ts-ignore
+      const newCat: CatType = {
+        ...cat,
+        type: ct,
+        children: [],
+      };
+      objsById.set(newCat.id, newCat);
+      return newCat;
+    });
+
+    ctsById.set(ct.id, ct);
+    return ct;
   });
-  objs.forEach((obj) => {
-    if (!obj.parent) return;
-    let parent = objsById.get(obj.parent.id);
-    parent.children.push(obj);
-    obj.parent = parent;
+  objsById.forEach((cat) => {
+    const parent = cat.parent ? objsById.get(cat.parent.id) : null;
+    if (!parent) return;
+    parent.children.push(cat);
+    cat.parent = parent;
   });
-  objs.forEach((obj) => {
-    let parent = obj.parent;
+  objsById.forEach((cat) => {
+    let parent = cat.parent;
     let depth = 0;
     while (parent) {
       depth += 1;
       parent = parent.parent;
     }
-    obj.depth = depth;
+    cat.depth = depth;
   });
-  return objs;
+  return cts;
+}
+
+
+export interface CategoryMappedAction<
+  CT extends CategoryTypeHierarchy<Cat>,
+  Cat extends CategoryHierarchyMember<CT>
+> {
+  primaryRootCategory: Cat | null,
+  categories: Cat[]
+}
+
+export interface CategoryMappedActionInput {
+  categories: {
+    id: string,
+  }[]
+}
+
+export function mapActionCategories<
+  CT extends CategoryTypeHierarchy<Cat>,
+  Cat extends CategoryHierarchyMember<CT>,
+  ActionType extends CategoryMappedAction<CT, Cat>,
+>(
+  actions: CategoryMappedActionInput[], cts: CategoryTypeHierarchy<Cat>[],
+  primaryRootCT: CT = null,
+) {
+  const cats = cts.map((ct) => ct.categories).flat();
+  const catsById: Map<string, Cat> = new Map(
+    cats.map(cat => [cat.id, cat])
+  );
+  const mappedActions: ActionType[] = actions.map((action) => {
+    let primaryRootCategory;
+    const cats: ActionType['categories'] = action.categories.map((cat) => {
+      const catObj = catsById.get(cat.id);
+      if (primaryRootCT && catObj.type.id == primaryRootCT.id) {
+        let root = catObj;
+        while (root.parent) root = root.parent;
+        primaryRootCategory = root;
+      }
+      return catObj;
+    });
+    // @ts-ignore
+    const mappedAction: ActionType = {...action, categories: cats, primaryRootCategory};
+    return mappedAction;
+  });
+  return mappedActions;
 }

@@ -1,9 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import {
-  FormGroup,
-  Label as BSLabel,
-  Input as BSCustomInput,
-} from 'reactstrap';
+import { FormGroup, Label as BSLabel, Input as BSCustomInput, } from 'reactstrap';
 import { Typeahead, Menu, MenuItem } from 'react-bootstrap-typeahead';
 
 import styled from 'styled-components';

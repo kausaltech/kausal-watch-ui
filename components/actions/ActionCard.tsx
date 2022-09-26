@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { transparentize } from 'polished';
 import SVG from 'react-inlinesvg';
@@ -9,8 +9,9 @@ import { cleanActionStatus, getStatusColor } from 'common/preprocess';
 import { ActionLink } from 'common/links';
 import { useTheme } from 'common/theme';
 import { getActionTermContext, useTranslation } from 'common/i18n';
-import PlanContext from 'context/plan';
+import { usePlan, PlanContextType } from 'context/plan';
 import PlanChip from 'components/plans/PlanChip';
+import { ActionCardFragment } from 'common/__generated__/graphql';
 
 const ACTION_CARD_FRAGMENT = gql`
   fragment ActionCard on Action {
@@ -65,6 +66,8 @@ const ACTION_CARD_FRAGMENT = gql`
     }
   }
 `;
+
+type ActionCardAction = ActionCardFragment;
 
 const StyledActionLink = styled.a`
   text-decoration: none;
@@ -137,7 +140,7 @@ const ActionNumber = styled.div`
   }
 `;
 
-const ActionStatusArea = styled.div`
+const ActionStatusArea = styled.div<{statusColor: string}>`
   display: flex;
   justify-content: space-between;
   flex-direction: column;
@@ -199,14 +202,12 @@ const OrgLogo = styled.img`
   height: ${(props) => props.theme.spaces.s150};
 `;
 
-function getIconUrl(action) {
+function getIconUrl(action: ActionCardAction, plan: PlanContextType) {
   if (action.iconSvgUrl) return action.iconSvgUrl;
 
-  const { rootCategory } = action;
-  if (!rootCategory) return null;
-
-  const plan = useContext(PlanContext);
-  const { identifier, iconSvgUrl } = rootCategory;
+  const { primaryRootCategory } = action;
+  if (!primaryRootCategory) return null;
+  const { identifier, iconSvgUrl } = primaryRootCategory;
   if (iconSvgUrl) return iconSvgUrl;
   if (plan.identifier === 'liiku') return `/static/themes/liiku/images/category-${identifier}.svg`;
   if (plan.identifier === 'hsy-kestava') return `/static/themes/hsy-kestava/images/category-${identifier}.svg`;
@@ -238,14 +239,14 @@ const SecondaryIcons = (props) => {
   return (
     <SecondaryIconsContainer>
       {secondaryIcons.map((cat) =>
-            <SecondaryIcon
-              color={cat.color ? cat.color : 'black'}
-              key={cat.id}
-              src={cat.iconSvgUrl}
-              preserveAspectRatio="xMinYMid meet"
-              alt={cat.name}
-            />
-        )}
+        <SecondaryIcon
+          color={cat.color ? cat.color : 'black'}
+          key={cat.id}
+          src={cat.iconSvgUrl}
+          preserveAspectRatio="xMinYMid meet"
+          alt={cat.name}
+        />
+      )}
     </SecondaryIconsContainer>
   )
 };
@@ -257,12 +258,12 @@ ActionIdentifier.propTypes = {
 };
 function ActionCard(props) {
   const { action, showPlan } = props;
-  const plan = useContext(PlanContext);
+  const plan = usePlan();
   const { t } = useTranslation(['common', 'actions']);
   const theme = useTheme();
 
   let actionName = action.name;
-  const iconUrl = getIconUrl(action) || '';
+  const iconUrl = getIconUrl(action, plan) || '';
 
   if (actionName.length > 120) actionName = `${action.name.substring(0, 120)}…`;
 
@@ -364,12 +365,12 @@ ActionCard.propTypes = {
     name: PropTypes.string,
     completion: PropTypes.number,
     iconSvgUrl: PropTypes.string,
-    rootCategory: PropTypes.shape(),
+    primaryRoot: PropTypes.object,
     status: PropTypes.shape({
       identifier: PropTypes.string,
       name: PropTypes.string,
     }),
-    mergedWith: PropTypes.shape(),
+    mergedWith: PropTypes.object,
     implementationPhase: PropTypes.shape({
       id: PropTypes.string,
       identifier: PropTypes.string,

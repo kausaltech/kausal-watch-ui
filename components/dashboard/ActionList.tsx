@@ -8,7 +8,7 @@ import {
 import styled from 'styled-components';
 import { readableColor } from 'polished';
 import { getActionTermContext, useTranslation } from 'common/i18n';
-import { constructOrgHierarchy, mapResponsibleParties, Organization, OrganizationHierarchyMember, orgHasActions, OrgMappedAction } from 'common/organizations';
+import { constructOrgHierarchy, mapResponsibleParties, OrganizationHierarchyMember, orgHasActions, OrgMappedAction } from 'common/organizations';
 import ContentLoader from 'components/common/ContentLoader';
 import ErrorMessage from 'components/common/ErrorMessage';
 import PlanContext, { usePlan } from 'context/plan';
@@ -17,7 +17,8 @@ import ActionListFilters, { ActionListFilterSection } from 'components/actions/A
 import ActionCardList from 'components/actions/ActionCardList';
 import ActionStatusGraphs from './ActionStatusGraphs';
 import { ActionListFilterFragment, ActionListPageFiltersFragment, DashboardActionListQuery, GetActionListPageQuery } from 'common/__generated__/graphql';
-import { ObjectHierarchyMember } from 'common/categories';
+import { CategoryTypeInput, CategoryMappedAction, CategoryHierarchyMember, CategoryTypeHierarchy, constructCatHierarchy, mapActionCategories } from 'common/categories';
+import { useEffect } from 'react';
 
 const DynamicActionStatusTable = dynamic(() => import('./ActionStatusTable'));
 
@@ -119,8 +120,22 @@ export const GET_ACTION_LIST = gql`
       id
       identifier
       name(hyphenated: true)
-      officialName
+      status {
+        id
+        identifier
+        name
+      }
+      categories {
+        id
+      }
+      implementationPhase {
+        id
+        identifier
+        name
+        order
+      }
       completion
+      officialName
       updatedAt
       scheduleContinuous
       startDate
@@ -132,23 +147,9 @@ export const GET_ACTION_LIST = gql`
       schedule {
         id
       }
-      status {
-        id
-        identifier
-        name
-      }
-      implementationPhase {
-        id
-        identifier
-        name
-        order
-      }
       impact {
         id
         identifier
-      }
-      categories {
-        id
       }
       attributes {
         __typename
@@ -248,16 +249,19 @@ fragment ActionListFilter on StreamFieldInterface {
   field
   id
   ... on CategoryTypeFilterBlock {
+    style
     categoryType {
       id
       identifier
       name
       hideCategoryIdentifiers
+      helpText
       categories {
         id
         identifier
         name
         order
+        helpText
         parent {
           id
         }
@@ -305,6 +309,7 @@ export type ActionListPrimaryOrg = DashboardActionListQuery['plan']['primaryOrgs
 
 type ActionListProps = {
   actions: DashboardActionListQuery['planActions'],
+  categoryTypes: DashboardActionListQuery['plan']['categoryTypes'],
   organizations: DashboardActionListQuery['planOrganizations'],
   availableFilters: ActionListPageFiltersFragment,
   activeFilters: ActiveFilters,
@@ -316,11 +321,16 @@ type ActionListProps = {
 
 type OrganizationInput = DashboardActionListQuery['planOrganizations'][0];
 export type ActionListOrganization = OrganizationInput & OrganizationHierarchyMember<OrganizationInput>;
-export type ActionListAction = DashboardActionListQuery['planActions'][0] & OrgMappedAction<ActionListOrganization>;
+type QueryAction = DashboardActionListQuery['planActions'][0]
+export type ActionListAction = QueryAction &
+  OrgMappedAction<ActionListOrganization> &
+  CategoryMappedAction<ActionListCategoryType, ActionListCategory>;
 
 export type ActionListCategoryTypeFilterBlock = ActionListFilterFragment & {__typename?: 'CategoryTypeFilterBlock'};
-type CategoryInput = ActionListCategoryTypeFilterBlock['categoryType']['categories'][0];
-export type ActionListCategory = CategoryInput & ObjectHierarchyMember<CategoryInput>;
+type QueryCategoryType = DashboardActionListQuery['plan']['categoryTypes'][0];
+type CategoryInput = QueryCategoryType['categories'][0];
+export type ActionListCategory = CategoryInput & CategoryHierarchyMember<ActionListCategoryType>;
+export type ActionListCategoryType = QueryCategoryType & CategoryTypeHierarchy<ActionListCategory>;
 
 const ActionList = (props: ActionListProps) => {
   const {
@@ -331,18 +341,29 @@ const ActionList = (props: ActionListProps) => {
     onFilterChange,
     title,
     leadContent,
+    categoryTypes,
     primaryOrgs } = props;
   const { t } = useTranslation('common');
   const plan = usePlan();
-  const primaryCatType = plan.primaryActionClassification;
   const displayDashboard = activeFilters.view === 'dashboard';
   const orgs: ActionListOrganization[] = useMemo(() => {
     return constructOrgHierarchy<ActionListOrganization>(organizations).filter(orgHasActions);
   }, [organizations]);
+  const cts: ActionListCategoryType[] = useMemo(() => {
+    return constructCatHierarchy<ActionListCategory, ActionListCategoryType>(categoryTypes);
+  }, [categoryTypes])
+  const primaryCatType = cts.find(ct => ct.id == plan.primaryActionClassification.id);
 
-  const filterSections: ActionListFilterSection[] = useMemo(() => (
-    ActionListFilters.constructFilters(availableFilters, plan, orgs, primaryOrgs)
-  ), [availableFilters, plan, orgs, primaryOrgs]);
+  const filterSections: ActionListFilterSection[] = useMemo(() => {
+    const opts = {
+      mainConfig: availableFilters,
+      plan,
+      orgs,
+      primaryOrgs,
+      t
+    };
+    return ActionListFilters.constructFilters(opts);
+  }, [availableFilters, plan, orgs, primaryOrgs, t]);
 
   const handleChange = useCallback(
     (filterType: string, val: string|undefined) => {
@@ -353,8 +374,11 @@ const ActionList = (props: ActionListProps) => {
     [onFilterChange, activeFilters],
   );
 
+  const actionsWithRps = mapResponsibleParties<ActionListAction, ActionListOrganization>(actions, orgs);
   const mappedActions: ActionListAction[] =
-    mapResponsibleParties<ActionListAction, ActionListOrganization>(actions, orgs);
+    mapActionCategories<ActionListCategoryType, ActionListCategory, ActionListAction>(
+      actionsWithRps, cts, primaryCatType
+    );
 
   const enabledFilters = filterSections
     .map(section => section.filters.filter(filter => activeFilters[filter.id])).flat();
@@ -363,121 +387,11 @@ const ActionList = (props: ActionListProps) => {
   enabledFilters.forEach(filter => {
     filteredActions = filteredActions.filter((action) => filter.filterAction(activeFilters[filter.id], action));
   });
-  console.log(filteredActions);
 
-  /*
-  const catById = {};
-  const catTypes = categoryTypes.map((ct) => {
-    const categoriesById = {};
-    const categories = ct.categories.map((cat) => {
-      const out = { ...cat };
-      categoriesById[out.id] = out;
-      return out;
-    });
-    let rootCategories = [];
-
-    categories.forEach((cat) => {
-      cat.type = ct;
-      if (cat.parent) {
-        cat.parent = categoriesById[cat.parent.id];
-      } else {
-        rootCategories.push(cat);
-      }
-      catById[cat.id] = cat;
-    });
-    rootCategories = rootCategories.sort((a, b) => a.name.localeCompare(b.name));
-    return {
-      categories,
-      categoriesById,
-      rootCategories,
-      ...ct,
-    };
-  });
-  const actions = planActions.map((action) => {
-    const act = { ...action };
-    const rps = act.responsibleParties.map((rp) => ({ ...rp }));
-
-    act.rootCategory = null;
-    act.categories = act.categories.map((cat) => {
-      const out = catById[cat.id];
-      if (out.type.identifier === plan.primaryActionClassification?.identifier) {
-        let root = out;
-        while (root.parent != null) root = root.parent;
-        act.rootCategory = root;
-      }
-      return out;
-    });
-
-    return { ...act, responsibleParties: rps };
-  });
-  */
-
-  /*
-  function filterAction(item) {
-    if (filters.primaryOrg && item.primaryOrg.id !== filters.primaryOrg) return false;
-    if (filters.organization) {
-      let found = false;
-      item.responsibleParties.forEach((rp) => {
-        let org = rp.organization;
-        while (org) {
-          if (org.id === filters.organization) {
-            found = true;
-            break;
-          }
-          org = org.parent;
-        }
-      });
-      if (!found) return false;
-    }
-    if (filters.impact && (!item.impact || (item.impact.id !== filters.impact))) return false;
-    if (filters.implementationPhase && (!item.implementationPhase || (item.implementationPhase.id !== filters.implementationPhase))) return false;
-    if (filters.schedule && (!item.schedule || !(item.schedule.find((sched) => sched.id === filters.schedule)))) return false;
-    if (filters.text) {
-      const searchStr = filters.text.toLowerCase();
-      if (item.identifier.toLowerCase().startsWith(searchStr)) return true;
-      if (item.name.replace(/\u00AD/g, '').toLowerCase().search(searchStr) !== -1) return true;
-      return false;
-    }
-    const allCatsFound = catTypes.every((ct) => {
-      const key = `category_${ct.identifier}`;
-      const val = filters[key];
-
-      if (!val) return true;
-      if (!item.categories) return false;
-
-      const catTypeFound = item.categories.some((cat) => {
-        if (cat.id === val) return true;
-        while (cat.parent) {
-          cat = cat.parent;
-          if (cat.id === val) return true;
-        }
-        return false;
-      });
-      return catTypeFound;
-    });
-    if (!allCatsFound) return false;
-    const allAttrsFound = attributeTypes.every((at) => {
-      const key = `attr_${at.identifier}`;
-      const val = filters[key];
-
-      if (!val) return true;
-      if (!item.attributes) return false;
-
-      const attrTypeFound = item.attributes.some((att) => {
-        if (att.keyIdentifier === at.identifier && att?.choice?.id === val) return true;
-        return false;
-      });
-      return attrTypeFound;
-    });
-    if (!allAttrsFound) return false;
-    return true;
+  let groupBy = 'category';
+  if (plan.features.hasActionPrimaryOrgs && `cat-${primaryCatType.identifier}` in activeFilters) {
+    groupBy = 'primaryOrg'
   }
-  */
-  const impacts = plan.actionImpacts;
-  const phases = plan.actionImplementationPhases;
-  const schedules = plan.actionSchedules;
-
-  const groupBy = (primaryOrgs.length && filters.category_action) ? 'primaryOrg' : 'category';
 
   return (
     <>
@@ -496,12 +410,6 @@ const ActionList = (props: ActionListProps) => {
               <Col sm="12">
                 <ActionListFilters
                   filterSections={filterSections}
-                  orgs={orgs.filter(orgHasActions)}
-                  primaryOrgs={primaryOrgs}
-                  impacts={impacts}
-                  phases={phases}
-                  hasActionPrimaryOrgs={plan.features.hasActionPrimaryOrgs}
-                  schedules={schedules}
                   activeFilters={activeFilters}
                   onChange={handleChange}
                   actionCount={filteredActions.length}
@@ -517,9 +425,8 @@ const ActionList = (props: ActionListProps) => {
             <Tab
               className={`nav-link ${!displayDashboard ? 'active' : ''}`}
               onClick={() => handleChange('view', 'list')}
-              passHref
               role="tab"
-              tabIndex="0"
+              tabIndex={0}
               aria-selected={!displayDashboard}
               aria-controls="list-view"
               id="list-tab"
@@ -529,9 +436,8 @@ const ActionList = (props: ActionListProps) => {
             <Tab
               className={`nav-link ${displayDashboard ? 'active' : ''}`}
               onClick={() => handleChange('view', 'dashboard')}
-              passHref
               role="tab"
-              tabIndex="0"
+              tabIndex={0}
               aria-selected={displayDashboard}
               aria-controls="dashboard-view"
               id="dashboard-tab"
@@ -617,6 +523,7 @@ function ActionListLoader(props: StatusboardProps) {
       onFilterChange={onFilterChange}
       organizations={planOrganizations}
       actions={planActions}
+      categoryTypes={categoryTypes}
       primaryOrgs={primaryOrgs}
     />
   );

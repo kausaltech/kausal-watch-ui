@@ -1,4 +1,4 @@
-import React, { useContext, useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { useRouter } from 'next/router';
 import { gql, useQuery } from '@apollo/client';
 import { getActionListLinkProps } from 'common/links';
@@ -62,12 +62,16 @@ function ActionsListPage() {
   if (planPage.__typename !== 'ActionListPage') {
     return <ErrorMessage message="Invalid action list page" />;
   }
-  const { primaryFilters, mainFilters, advancedFilters } = planPage;
-  const availableFilters = {
-    primaryFilters,
-    mainFilters,
-    advancedFilters
-  };
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const availableFilters = useMemo(() => {
+    const { primaryFilters, mainFilters, advancedFilters } = planPage;
+    return {
+      primaryFilters,
+      mainFilters,
+      advancedFilters
+    }
+  }, [planPage]);
 
   return (
     <Layout>

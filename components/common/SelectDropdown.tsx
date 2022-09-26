@@ -1,9 +1,17 @@
 import React from "react";
 import Select, { components, DropdownIndicatorProps, Theme as SelectTheme } from "react-select";
+import styled from 'styled-components';
 import Highlighter from "react-highlight-words";
-import { FormGroup, Label } from "reactstrap";
+import { FormGroup, Label as BSLabel } from "reactstrap";
 import { useTheme, Theme } from "common/theme";
 import { data } from "autoprefixer";
+
+
+const Label = styled(BSLabel)`
+  font-weight: ${(props) => props.theme.formLabelFontWeight};
+  line-height: ${(props) => props.theme.lineHeightSm};
+`;
+
 
 function getSelectStyles<Option extends SelectDropdownOption>(theme: Theme, multi: boolean, size: string='') {
 	const suffix = size ? `-${size}` : '';

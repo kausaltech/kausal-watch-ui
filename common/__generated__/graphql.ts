@@ -547,6 +547,9 @@ export type ActionResponsibleParty = {
   id: Scalars['ID'];
   order: Scalars['Int'];
   organization: Organization;
+  role?: Maybe<ActionsActionResponsiblePartyRoleChoices>;
+  /** The responsibility domain for the organization */
+  specifier: Scalars['String'];
 };
 
 /** A schedule for an action with begin and end dates. */
@@ -640,6 +643,16 @@ export type ActionTasksBlock = StreamFieldInterface & {
   rawValue: Scalars['String'];
   value: Scalars['String'];
 };
+
+/** An enumeration. */
+export enum ActionsActionResponsiblePartyRoleChoices {
+  /** Collaborator */
+  Collaborator = 'COLLABORATOR',
+  /** Unspecified */
+  None = 'NONE',
+  /** Primary responsible party */
+  Primary = 'PRIMARY'
+}
 
 /** An enumeration. */
 export enum ActionsActionTaskStateChoices {
@@ -2590,8 +2603,10 @@ export type PlanFeatures = {
   __typename?: 'PlanFeatures';
   /** Should custom images for individual actions be allowed */
   allowImagesForActions: Scalars['Boolean'];
+  /** Set to enable comparing indicators between organizations */
+  enableIndicatorComparison: Scalars['Boolean'];
   /** Enable site-wide search functionality */
-  enableSearch?: Maybe<Scalars['Boolean']>;
+  enableSearch: Scalars['Boolean'];
   /** Set if the plan uses meaningful action identifiers */
   hasActionIdentifiers: Scalars['Boolean'];
   /** Set if the plan uses the lead paragraph field */
@@ -3411,7 +3426,10 @@ export type ActionCardFragment = (
     { id: string, identifier: string, name: string }
     & { __typename?: 'ActionStatus' }
   ) | null, categories?: Array<(
-    { id: string, identifier: string, name: string, iconSvgUrl?: string | null }
+    { id: string, identifier: string, name: string, iconSvgUrl?: string | null, type: (
+      { id: string }
+      & { __typename?: 'CategoryType' }
+    ) }
     & { __typename?: 'Category' }
   ) | null> | null, implementationPhase?: (
     { id: string, identifier: string, name: string }
@@ -3592,7 +3610,10 @@ export type ActionDetailsQuery = (
         { id: string, identifier: string, name: string }
         & { __typename?: 'ActionStatus' }
       ) | null, categories?: Array<(
-        { id: string, identifier: string, name: string, iconSvgUrl?: string | null }
+        { id: string, identifier: string, name: string, iconSvgUrl?: string | null, type: (
+          { id: string }
+          & { __typename?: 'CategoryType' }
+        ) }
         & { __typename?: 'Category' }
       ) | null> | null, implementationPhase?: (
         { id: string, identifier: string, name: string }
@@ -3850,7 +3871,10 @@ export type GetActionListQuery = (
       { id: string, identifier: string, name: string }
       & { __typename?: 'ActionStatus' }
     ) | null, categories?: Array<(
-      { id: string, identifier: string, name: string, iconSvgUrl?: string | null }
+      { id: string, identifier: string, name: string, iconSvgUrl?: string | null, type: (
+        { id: string }
+        & { __typename?: 'CategoryType' }
+      ) }
       & { __typename?: 'Category' }
     ) | null> | null, implementationPhase?: (
       { id: string, identifier: string, name: string }
@@ -4197,7 +4221,10 @@ export type GetActionListForBlockQuery = (
       { id: string, identifier: string, name: string }
       & { __typename?: 'ActionStatus' }
     ) | null, categories?: Array<(
-      { id: string, identifier: string, name: string, iconSvgUrl?: string | null }
+      { id: string, identifier: string, name: string, iconSvgUrl?: string | null, type: (
+        { id: string }
+        & { __typename?: 'CategoryType' }
+      ) }
       & { __typename?: 'Category' }
     ) | null> | null, implementationPhase?: (
       { id: string, identifier: string, name: string }
@@ -4318,25 +4345,25 @@ export type DashboardActionListQuery = (
     ) | null> }
     & { __typename?: 'Plan' }
   ) | null, planActions?: Array<(
-    { id: string, identifier: string, name?: string | null, officialName?: string | null, completion?: number | null, updatedAt: any, scheduleContinuous: boolean, startDate?: any | null, endDate?: any | null, order: number, plan: (
+    { id: string, identifier: string, name?: string | null, completion?: number | null, officialName?: string | null, updatedAt: any, scheduleContinuous: boolean, startDate?: any | null, endDate?: any | null, order: number, status?: (
+      { id: string, identifier: string, name: string }
+      & { __typename?: 'ActionStatus' }
+    ) | null, categories?: Array<(
+      { id: string }
+      & { __typename?: 'Category' }
+    ) | null> | null, implementationPhase?: (
+      { id: string, identifier: string, name: string, order: number }
+      & { __typename?: 'ActionImplementationPhase' }
+    ) | null, plan: (
       { id: string }
       & { __typename?: 'Plan' }
     ), schedule: Array<(
       { id: string }
       & { __typename?: 'ActionSchedule' }
-    )>, status?: (
-      { id: string, identifier: string, name: string }
-      & { __typename?: 'ActionStatus' }
-    ) | null, implementationPhase?: (
-      { id: string, identifier: string, name: string, order: number }
-      & { __typename?: 'ActionImplementationPhase' }
-    ) | null, impact?: (
+    )>, impact?: (
       { id: string, identifier: string }
       & { __typename?: 'ActionImpact' }
-    ) | null, categories?: Array<(
-      { id: string }
-      & { __typename?: 'Category' }
-    ) | null> | null, attributes?: Array<(
+    ) | null, attributes?: Array<(
       { value: string, valueIdentifier: string, id: string, key: string, keyIdentifier: string, type: (
         { identifier: string, name: string }
         & { __typename?: 'AttributeType' }
@@ -4443,9 +4470,9 @@ type ActionListFilter_ActionAttributeTypeFilterBlock_Fragment = (
 );
 
 type ActionListFilter_CategoryTypeFilterBlock_Fragment = (
-  { field: string, id?: string | null, categoryType?: (
-    { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, categories: Array<(
-      { id: string, identifier: string, name: string, order: number, parent?: (
+  { style?: string | null, field: string, id?: string | null, categoryType?: (
+    { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, helpText: string, categories: Array<(
+      { id: string, identifier: string, name: string, order: number, helpText: string, parent?: (
         { id: string }
         & { __typename?: 'Category' }
       ) | null }
@@ -4481,9 +4508,9 @@ export type ActionListPageFiltersFragment = (
     ) | null }
     & { __typename: 'ActionAttributeTypeFilterBlock' }
   ) | (
-    { field: string, id?: string | null, categoryType?: (
-      { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, categories: Array<(
-        { id: string, identifier: string, name: string, order: number, parent?: (
+    { style?: string | null, field: string, id?: string | null, categoryType?: (
+      { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, helpText: string, categories: Array<(
+        { id: string, identifier: string, name: string, order: number, helpText: string, parent?: (
           { id: string }
           & { __typename?: 'Category' }
         ) | null }
@@ -4514,9 +4541,9 @@ export type ActionListPageFiltersFragment = (
     ) | null }
     & { __typename: 'ActionAttributeTypeFilterBlock' }
   ) | (
-    { field: string, id?: string | null, categoryType?: (
-      { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, categories: Array<(
-        { id: string, identifier: string, name: string, order: number, parent?: (
+    { style?: string | null, field: string, id?: string | null, categoryType?: (
+      { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, helpText: string, categories: Array<(
+        { id: string, identifier: string, name: string, order: number, helpText: string, parent?: (
           { id: string }
           & { __typename?: 'Category' }
         ) | null }
@@ -4547,9 +4574,9 @@ export type ActionListPageFiltersFragment = (
     ) | null }
     & { __typename: 'ActionAttributeTypeFilterBlock' }
   ) | (
-    { field: string, id?: string | null, categoryType?: (
-      { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, categories: Array<(
-        { id: string, identifier: string, name: string, order: number, parent?: (
+    { style?: string | null, field: string, id?: string | null, categoryType?: (
+      { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, helpText: string, categories: Array<(
+        { id: string, identifier: string, name: string, order: number, helpText: string, parent?: (
           { id: string }
           & { __typename?: 'Category' }
         ) | null }
@@ -5146,7 +5173,7 @@ export type GetPlanContextQuery = (
       ) | null> }
       & { __typename?: 'Footer' }
     ) | null, features: (
-      { enableSearch?: boolean | null, hasActionIdentifiers: boolean, hasActionOfficialName: boolean, hasActionLeadParagraph: boolean, hasActionPrimaryOrgs: boolean, publicContactPersons: boolean, showAdminLink: boolean }
+      { enableSearch: boolean, hasActionIdentifiers: boolean, hasActionOfficialName: boolean, hasActionLeadParagraph: boolean, hasActionPrimaryOrgs: boolean, publicContactPersons: boolean, showAdminLink: boolean, enableIndicatorComparison: boolean }
       & { __typename?: 'PlanFeatures' }
     ), allRelatedPlans: Array<(
       { id: string, identifier: string, name: string, shortName?: string | null, viewUrl?: string | null, image?: (
@@ -5273,7 +5300,7 @@ export type PlanContextFragment = (
     ) | null> }
     & { __typename?: 'Footer' }
   ) | null, features: (
-    { enableSearch?: boolean | null, hasActionIdentifiers: boolean, hasActionOfficialName: boolean, hasActionLeadParagraph: boolean, hasActionPrimaryOrgs: boolean, publicContactPersons: boolean, showAdminLink: boolean }
+    { enableSearch: boolean, hasActionIdentifiers: boolean, hasActionOfficialName: boolean, hasActionLeadParagraph: boolean, hasActionPrimaryOrgs: boolean, publicContactPersons: boolean, showAdminLink: boolean, enableIndicatorComparison: boolean }
     & { __typename?: 'PlanFeatures' }
   ), allRelatedPlans: Array<(
     { id: string, identifier: string, name: string, shortName?: string | null, viewUrl?: string | null, image?: (
@@ -5863,9 +5890,9 @@ export type GetActionListPageQuery = (
       ) | null }
       & { __typename: 'ActionAttributeTypeFilterBlock' }
     ) | (
-      { field: string, id?: string | null, categoryType?: (
-        { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, categories: Array<(
-          { id: string, identifier: string, name: string, order: number, parent?: (
+      { style?: string | null, field: string, id?: string | null, categoryType?: (
+        { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, helpText: string, categories: Array<(
+          { id: string, identifier: string, name: string, order: number, helpText: string, parent?: (
             { id: string }
             & { __typename?: 'Category' }
           ) | null }
@@ -5896,9 +5923,9 @@ export type GetActionListPageQuery = (
       ) | null }
       & { __typename: 'ActionAttributeTypeFilterBlock' }
     ) | (
-      { field: string, id?: string | null, categoryType?: (
-        { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, categories: Array<(
-          { id: string, identifier: string, name: string, order: number, parent?: (
+      { style?: string | null, field: string, id?: string | null, categoryType?: (
+        { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, helpText: string, categories: Array<(
+          { id: string, identifier: string, name: string, order: number, helpText: string, parent?: (
             { id: string }
             & { __typename?: 'Category' }
           ) | null }
@@ -5929,9 +5956,9 @@ export type GetActionListPageQuery = (
       ) | null }
       & { __typename: 'ActionAttributeTypeFilterBlock' }
     ) | (
-      { field: string, id?: string | null, categoryType?: (
-        { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, categories: Array<(
-          { id: string, identifier: string, name: string, order: number, parent?: (
+      { style?: string | null, field: string, id?: string | null, categoryType?: (
+        { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, helpText: string, categories: Array<(
+          { id: string, identifier: string, name: string, order: number, helpText: string, parent?: (
             { id: string }
             & { __typename?: 'Category' }
           ) | null }
