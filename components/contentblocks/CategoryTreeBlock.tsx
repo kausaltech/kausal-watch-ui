@@ -209,7 +209,7 @@ const CategoryTreeSection = (props: CategoryTreeSectionProps) => {
           </CategoryVizColumn>
         </CategoryTreeLayout>
         <CategoryActionList
-          categoryId={activeCategory.parent == null ? "0" : activeCategory.id}
+          activeCategory={activeCategory}
           categories={sections}
         />
       </Container>
