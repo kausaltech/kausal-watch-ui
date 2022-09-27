@@ -39,12 +39,16 @@ const LinkedIndicator = styled.div`
   }
 `;
 
+const formatValue = (value, locale) => {
+  return value.toLocaleString(locale, {maximumFractionDigits: 0})
+}
+
 const ValueGroup = (props) => {
   const { date, value, unit, locale, ...rest } = props;
   return (
     <text {...rest}>
       <DateText>{date}</DateText>
-      <ValueText x="0" dy="22">{value.toLocaleString(locale)}</ValueText>
+      <ValueText x="0" dy="22">{formatValue(value, locale)}</ValueText>
       <UnitText>
         {' '}
         {unit}
@@ -72,7 +76,7 @@ function Counter({ from, to, duration, locale}) {
       onUpdate(value) {
         // ref.current is null when navigating away from the page
         if (!ref.current) return;
-        ref.current.textContent = Math.round(value).toLocaleString(locale);
+        ref.current.textContent = formatValue(value, locale);
       },
     });
     return () => controls.stop();
@@ -196,7 +200,7 @@ function IndicatorProgressBar(props) {
           <ValueGroup
             transform={`translate(${completedBar.x + 4} 20)`}
             date={graphValues.startYear}
-            value={startValue.toLocaleString(i18n.language)}
+            value={startValue}
             unit={unit}
             locale={i18n.language}
           />
@@ -230,8 +234,9 @@ function IndicatorProgressBar(props) {
             <ValueGroup
               transform={`translate(${pendingBar.x + 4} 20)`}
               date={graphValues.latestYear}
-              value={latestValue.toLocaleString(i18n.language)}
+              value={latestValue}
               unit={unit}
+              locale={i18n.language}
             />
           </motion.g>
           <motion.text
@@ -241,7 +246,7 @@ function IndicatorProgressBar(props) {
           >
             <DateText>{t('to-reduce')}</DateText>
             <UnitText x="0" dy="20">
-              {(latestValue - goalValue).toLocaleString(i18n.language)}
+              {formatValue(latestValue - goalValue, i18n.language)}
               {' '}
               {unit}
             </UnitText>
@@ -263,8 +268,9 @@ function IndicatorProgressBar(props) {
           <ValueGroup
             transform={`translate(${goalBar.x + 4} 20)`}
             date={graphValues.goalYear}
-            value={goalValue.toLocaleString(i18n.language)}
+            value={goalValue}
             unit={unit}
+            locale={i18n.language}
           />
           <text transform={`translate(${goalBar.x + goalBar.w / 2} 110)`} textAnchor="middle">
             <DateText>{t('bar-goal')}</DateText>
