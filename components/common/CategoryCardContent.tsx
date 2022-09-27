@@ -62,7 +62,7 @@ const CatecoryCardContent = (props: CategoryCardContentProps) => {
           {`${emissionShare} ${ofAllLabel}`}
         </h5>
       )}
-      <CategoryText className="text-content" dangerouslySetInnerHTML={{ __html: textcontent?.value }} />
+      <CategoryText className="text-content" dangerouslySetInnerHTML={{ __html: textcontent }} />
       { category?.categoryPage?.urlPath ? (
         <Link href={category?.categoryPage?.urlPath}>
           <a>
