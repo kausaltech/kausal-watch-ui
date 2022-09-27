@@ -217,6 +217,9 @@ const isVisible = (indicator, hierarchy, visibleByParent) => {
   if (common == null) {
     return true;
   }
+  if (hierarchy == null || Object.keys(hierarchy).length === 0) {
+    return true;
+  }
   const { path } = hierarchy[common.id];
   for (const cid of path) {
     if (cid != common.id && visibleByParent[cid] === false) {
@@ -415,7 +418,8 @@ const IndicatorListFiltered = (props) => {
                 if (item.timeResolution === 'YEAR') {
                   timeFormat = 'YYYY';
                 }
-                const visible = filteredIndicators.length > 1 ? true : isVisible(item, hierarchy, visibleByParent);
+                const visible = (filteredIndicators.length > 1 || !hierarchyEnabled) ?
+                  true : isVisible(item, hierarchy, visibleByParent);
                 const collapseState = visibleByParent[item.common?.id];
                 const collapsible = collapseState !== undefined;
                 const collapsed = collapseState === true;
