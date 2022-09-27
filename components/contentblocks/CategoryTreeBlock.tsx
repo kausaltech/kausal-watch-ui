@@ -168,8 +168,7 @@ type CategoryTreeSectionProps = {
   }
 };
 
-const CategoryTreeSection = (props: CategoryTreeSectionProps) => {
-  const { sections, valueAttribute, heading, lead } = props;
+const CategoryTreeSection = ({ sections, valueAttribute, heading = 'Categories' }: CategoryTreeSectionProps) => {
   // console.log(sections);
   const rootSection = sections.find((sect) => sect.parent === null);
   const [activeCategory, setCategory] = useState(rootSection);
@@ -229,7 +228,6 @@ type CategoryTreeBlockProps = {
   },
   categories: GetCategoriesForTreeMapQuery['planCategories']
 }
-
 
 function CategoryTreeBlockBrowser(props: CategoryTreeBlockProps) {
   const cats = props.categories;

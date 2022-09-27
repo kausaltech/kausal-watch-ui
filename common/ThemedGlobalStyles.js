@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { createGlobalStyle, withTheme } from 'styled-components';
 import { themeProp } from 'common/theme';
 
+
 const GlobalStyle = createGlobalStyle`
   html {
     scroll-behavior: auto !important;
@@ -206,11 +207,6 @@ function ThemedGlobalStyles({ theme, children }) {
     </>
   );
 }
-
-ThemedGlobalStyles.defaultProps = {
-  children: '',
-};
-
 ThemedGlobalStyles.propTypes = {
   theme: themeProp.isRequired,
   children: PropTypes.node,

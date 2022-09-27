@@ -39,7 +39,7 @@ const groupActions = (groupBy, actions, theme) => {
 
   actions.forEach((action) => {
     let cat;
-    cat = action.rootCategory;
+    cat = action.primaryRootCategory;
     if (groupBy === 'primaryOrg') cat = action.primaryOrg;
     if (groupBy === 'none') cat = false;
 
