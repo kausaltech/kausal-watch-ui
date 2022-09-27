@@ -98,7 +98,7 @@ function FeedbackForm({ planIdentifier }) {
               render={({ field }) => (
                 <TextInput
                   {...field}
-                  label={t('email')}
+                  label={`${t('email')} (${t('required-field')})`}
                   invalid={errors.email?.type === 'required'}
                   formFeedback={errors.email && t('error-email-format')}
                 />
