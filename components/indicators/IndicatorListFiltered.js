@@ -419,6 +419,11 @@ const IndicatorListFiltered = (props) => {
                 const collapseState = visibleByParent[item.common?.id];
                 const collapsible = collapseState !== undefined;
                 const collapsed = collapseState === true;
+                const nameElement = (
+                  hierarchyEnabled ? item.name :
+                  <IndicatorLink id={item.id}>{ item.name }</IndicatorLink>
+                );
+
                 return (
                   <tr key={item.id} style={{display: (visible ? 'table-row' : 'none')}}>
                     { indicatorNameColumnEnabled &&
@@ -427,7 +432,8 @@ const IndicatorListFiltered = (props) => {
                         indent={hierarchyEnabled && indentationLevel(item)}
                         visibleIndentation={false}
                       >
-                        { collapsible && <Icon name={collapsed ? 'angleDown' : 'angleRight'} /> } { item.name }
+                        { collapsible && <Icon name={collapsed ? 'angleDown' : 'angleRight'} /> }
+                        { nameElement }
                       </IndentableTableCell>
                     }
                     { !allIndicatorsHaveSameLevel &&
