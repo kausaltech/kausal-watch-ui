@@ -20,21 +20,27 @@ function getSelectStyles<Option extends SelectDropdownOption>(
 ) {
   const suffix = size ? `-${size}` : "";
   const multiplicator = multi ? 2 : 1;
+  const inputHeight =
+    `calc((${theme.inputLineHeight}*${theme.fontSizeBase}) +`
+    + ` (${theme.inputPaddingY}*2) + (${theme.inputBorderWidth}*2))`;
+      
   const styles: SelectDropdownProps<Option>["styles"] = {
     control: (provided, { isDisabled, isFocused }) => ({
       ...provided,
       backgroundColor: `var(--bs-select${isDisabled ? "-disabled" : ""}-bg)`,
-      borderColor: `var(--bs-select${
-        isDisabled ? "-disabled" : isFocused ? "-focus" : ""
-      }-border-color)`,
-      borderWidth: "var(--bs-select-border-width)",
-      lineHeight: "var(--bs-select-line-height)",
+      borderColor: isDisabled
+        ? theme.graphColors.grey050 : isFocused
+        ? theme.inputBtnFocusColor : theme.themeColors.dark,
+      borderWidth: theme.inputBorderWidth,
+      borderRadius: theme.inputBorderRadius,
+      lineHeight: theme.inputLineHeight,
       fontSize: `var(--bs-select-font-size${suffix})`,
       fontWeight: "var(--bs-select-font-weight)",
-      minHeight: `calc((var(--bs-select-line-height)*var(--bs-select-font-size${suffix})) + (var(--bs-select-padding-y${suffix})*2) + (var(--bs-select-border-width)*2))`,
+      minHeight: inputHeight,
       ":hover": {
-        borderColor: "var(--bs-select-focus-border-color)",
+        borderColor: theme.themeColors.dark,
       },
+      boxShadow: isFocused ? '0 0 0 0.25rem #4e80a6' : 'inherit',
     }),
     singleValue: (
       { marginLeft, marginRight, ...provided },
@@ -45,7 +51,8 @@ function getSelectStyles<Option extends SelectDropdownOption>(
     }),
     valueContainer: (provided, state) => ({
       ...provided,
-      padding: `calc(var(--bs-select-padding-y${suffix})/${multiplicator}) calc(var(--bs-select-padding-x${suffix})/${multiplicator})`,
+      padding: `calc(var(--bs-select-padding-y${suffix})/${multiplicator}) `
+        + `calc(var(--bs-select-padding-x${suffix})/${multiplicator})`,
     }),
     dropdownIndicator: (provided, state) => ({
       height: "100%",
@@ -63,13 +70,13 @@ function getSelectStyles<Option extends SelectDropdownOption>(
       const { indent } = data;
       const ret = {
         ...provided,
-        //color: isFocused ? theme.brandLight : theme.neutralDark,
+        color: theme.themeColors.black,
         backgroundColor: isSelected
-          ? theme.brandLight
+          ? theme.graphColors.grey020
           : isFocused
-          ? theme.neutralLight
-          : theme.themeColors.white,
-        margin: `calc(var(--bs-select-padding-y${suffix})/2) calc(var(--bs-select-padding-x${suffix})/2)`,
+          ? theme.graphColors.grey005
+          : theme.graphColors.white,
+        margin: 0,
         //marginLeft: `${indent ?? 0}rem`,
       };
       return ret;
@@ -116,7 +123,6 @@ function getSelectTheme(theme: SelectTheme) {
 	const ret: SelectTheme = {
 		...theme,
     // @ts-ignore
-		borderRadius: "var(--bs-select-border-radius)",
 		colors: {
 			...theme.colors,
 			primary: "var(--bs-light)",

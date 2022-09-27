@@ -564,6 +564,7 @@ function ActionListFilters(props: ActionListFiltersProps) {
       <form
         onSubmit={(event) => { event.preventDefault(); }}
         role="search"
+        autocomplete="off"
         aria-label={t('form-action-filters')}
       >
         {filterSections.map(section => (
