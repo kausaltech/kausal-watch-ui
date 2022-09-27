@@ -130,7 +130,6 @@ class IndicatorList extends React.Component {
     }) !== undefined;
   };
 
-  /* TODO: Are we checking here if there is a mix of hierarchical and non-hierarchical indicators? */
   processCommonIndicatorHierarchy(planIndicators) {
     const makeLinks = (commonIndicator) => ({
       id: commonIndicator.id,

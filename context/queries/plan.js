@@ -72,8 +72,6 @@ fragment PlanContext on Plan {
     creativeCommonsLicense
     ownerUrl
     ownerName
-    accessibilityResponsibleBody
-    accessibilityContactEmail
     actionTerm
   }
   mainMenu {
@@ -186,6 +184,30 @@ fragment PlanContext on Plan {
       name
     }
     viewUrl(clientUrl: $clientUrl)
+  }
+  additionalLinks {
+    ... on AdditionalLinks {
+      items {
+        ... on PageMenuItem {
+          id
+          page {
+            title
+            ... on AccessibilityStatementPage {
+              body {
+                ... on AccessibilityStatementContactInformationBlock {
+                  blocks {
+                    field
+                    ... on CharBlock {
+                      value
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }
 ${images.fragments.multiUseImage}

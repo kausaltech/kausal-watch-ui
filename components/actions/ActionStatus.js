@@ -54,6 +54,7 @@ ActionStatus.propTypes = {
     'completed',
     'late',
     'severely_late',
+    'cancelled',
     'undefined',
     null,
   ]),
