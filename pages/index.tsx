@@ -31,6 +31,7 @@ query GetHomePage($plan: ID!, $path: String!) {
     lastPublishedAt
   }
   plan(id: $plan) {
+    id
     primaryActionClassification {
       categories(onlyRoot: true) {
         id
@@ -42,6 +43,7 @@ query GetHomePage($plan: ID!, $path: String!) {
         }
         color
         categoryPage {
+          id
           title
           urlPath
         }
