@@ -214,6 +214,9 @@ const defaultVisibleByParent = (indicators, hierarchy) => {
 
 const isVisible = (indicator, hierarchy, visibleByParent) => {
   const { common } = indicator;
+  if (common == null) {
+    return true;
+  }
   const { path } = hierarchy[common.id];
   for (const cid of path) {
     if (cid != common.id && visibleByParent[cid] === false) {
