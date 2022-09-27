@@ -63,7 +63,7 @@ ValueGroup.defaultProps = {
 
 ValueGroup.propTypes = {
   date: PropTypes.string,
-  value: PropTypes.string.isRequired,
+  value: PropTypes.number.isRequired,
   unit: PropTypes.string.isRequired,
 };
 
