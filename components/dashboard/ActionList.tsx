@@ -303,7 +303,7 @@ export type ActiveFilters = {
   [key: string]: string | undefined,
 }
 
-type FilterChangeCallback = (newFilters: ActiveFilters) => void;
+type FilterChangeCallback = (id: string, value: string|undefined) => void;
 
 export type ActionListPrimaryOrg = DashboardActionListQuery['plan']['primaryOrgs'][0];
 
@@ -366,12 +366,10 @@ const ActionList = (props: ActionListProps) => {
   }, [availableFilters, plan, orgs, primaryOrgs, t]);
 
   const handleChange = useCallback(
-    (filterType: string, val: string|undefined) => {
-      const newFilters = { ...activeFilters };
-      newFilters[filterType] = val;
-      onFilterChange(newFilters);
+    (id: string, val: string|undefined) => {
+      onFilterChange(id, val);
     },
-    [onFilterChange, activeFilters],
+    [onFilterChange],
   );
 
   const actionsWithRps = mapResponsibleParties<ActionListAction, ActionListOrganization>(actions, orgs);
