@@ -104,7 +104,7 @@ const IndentableCellContentWrapper = styled.div`
 `;
 
 const IndentableTableCell = (props) => (
-  <td>
+  <td onClick={props.onClick}>
     <IndentableCellContentWrapper
       indent={props.indent}
       numeric={props.numeric}
@@ -201,12 +201,45 @@ function sortIndicators(hierarchy, indicators, displayMunicipality) {
   return [...grouped.values()];
 }
 
+const DEFAULT_UNCOLLAPSED_DEPTH = 1;
+
+const defaultVisibleByParent = (indicators, hierarchy) => {
+  const collapsibleCommonIndicators = (
+    Object.values(hierarchy).filter(v => v.children.length > 0)
+  );
+  return Object.fromEntries(collapsibleCommonIndicators.map(v => (
+    [v.id, v.path.length > DEFAULT_UNCOLLAPSED_DEPTH ? false : true]))
+  );
+}
+
+const isVisible = (indicator, hierarchy, visibleByParent) => {
+  const { common } = indicator;
+  const { path } = hierarchy[common.id];
+  for (const cid of path) {
+    if (cid != common.id && visibleByParent[cid] === false) {
+      return false;
+    }
+  }
+  return true;
+}
+
 const IndicatorListFiltered = (props) => {
   const { t, categories, indicators, i18n, displayMunicipality, hierarchy, displayNormalizedValues } = props;
 
   const [activeCategory, setActiveCategory] = useState('');
   const [activeSearch, setActiveSearch] = useState('');
+  // used for multi-city group expanding/collapsing
+  // TODO: merge with single city version
   const [visibleGroups, setVisibleGroups] = useState({ 0: true });
+  // used for single city expanding/collapsing
+  const [visibleByParent, setVisibleByParent] = useState(() => defaultVisibleByParent(indicators, hierarchy));
+  const toggleVisibility = (indicator) => {
+    setVisibleByParent(prev => {
+      const cid = indicator.common.id;
+      const previouslyVisible = prev[cid];
+      return Object.assign({}, prev, {[cid]: !previouslyVisible});
+    });
+  };
   const plan = usePlan();
 
   const toggleHidden = (idx) => {
@@ -379,12 +412,19 @@ const IndicatorListFiltered = (props) => {
                 if (item.timeResolution === 'YEAR') {
                   timeFormat = 'YYYY';
                 }
+                const visible = filteredIndicators.length > 1 ? true : isVisible(item, hierarchy, visibleByParent);
+                const collapseState = visibleByParent[item.common?.id];
+                const collapsible = collapseState !== undefined;
+                const collapsed = collapseState === true;
                 return (
-                  <tr key={item.id}>
+                  <tr key={item.id} style={{display: (visible ? 'table-row' : 'none')}}>
                     { indicatorNameColumnEnabled &&
-                      <IndentableTableCell indent={hierarchyEnabled && indentationLevel(item)} visibleIndentation={false} >
-                        {hierarchyEnabled && <Bullet level={indentationLevel(item)} />}
-                        <IndicatorLink id={item.id}>{ item.name }</IndicatorLink>
+                      <IndentableTableCell
+                        onClick={collapsible ? (() => toggleVisibility(item)) : undefined}
+                        indent={hierarchyEnabled && indentationLevel(item)}
+                        visibleIndentation={false}
+                      >
+                        { collapsible && <Icon name={collapsed ? 'angleDown' : 'angleRight'} /> } { item.name }
                       </IndentableTableCell>
                     }
                     { !allIndicatorsHaveSameLevel &&
