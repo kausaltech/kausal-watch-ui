@@ -34,9 +34,27 @@ const AccessibilityPage = () => {
   if (!(locale in accessibilityStatementData)) {
     locale = 'en';
   }
+
+  let additionalLinks = plan.additionalLinks;
+  let blocks = null;
+  let accessibilityContact = null;
+  if (additionalLinks != null && additionalLinks.items != null) {
+    blocks = additionalLinks.items.find(
+      i => i.page.__typename == 'AccessibilityStatementPage'
+    )?.page?.body?.find(
+      b => b.__typename == 'AccessibilityStatementContactInformationBlock'
+    )?.blocks;
+  }
+  if (blocks != null) {
+    accessibilityContact = Object.fromEntries(
+      blocks.map(
+        b => [b.field, b.value]
+      )
+    );
+  }
   const accessibilityProblems = accessibilityStatementData[locale].nonAccessibleContent.nonCompliant;
-  const accessibilityContactEmail = plan.generalContent.accessibilityContactEmail || 'accessibility@kausal.tech';
-  const responsibleBody =  plan.generalContent.accessibilityResponsibleBody || plan.generalContent.ownerName;
+  const accessibilityContactEmail = accessibilityContact?.email || 'accessibility@kausal.tech';
+  const responsibleBody =  accessibilityContact?.publisher_name || plan.generalContent.ownerName;
 
   return (
     <Layout>

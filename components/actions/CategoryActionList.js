@@ -44,6 +44,16 @@ const SectionHeader = styled.h2`
   margin-bottom: ${(props) => props.theme.spaces.s300};
 `;
 
+const EmptyActionListHeader = styled.p`
+  text-align: center;
+  opacity: 0.6;
+  font-size: 1.2em;
+  padding: ${(props) => props.theme.spaces.s100};
+  border-radius: ${(props) => props.theme.cardBorderRadius};
+  margin-top: ${(props) => props.theme.spaces.s300};
+  margin-bottom: ${(props) => props.theme.spaces.s300};
+`;
+
 const ListRow = styled.ul`
   display: flex;
   flex-wrap: wrap;
@@ -90,16 +100,16 @@ const findAllChildren = (categoryID, cats, children = []) => {
   return allChildren;
 };
 
-const filterByCategory = (actions, catId, categories) => {
-  // TODO: match parent categories too
-  if (catId === 0) return actions;
-  const recursiveCategories = findAllChildren(catId, categories);
+const filterByCategory = (actions, catId, categories, categoryIsRoot) => {
+  // For the root category, don't show _all_ actions recursively but
+  // only the ones which are directly connected to the root category.
+  const recursiveCategories = categoryIsRoot ? [] : findAllChildren(catId, categories);
   recursiveCategories.push(catId);
   return actions.filter((action) => action.categories.find((cat) => recursiveCategories.indexOf(cat.id) > -1));
 };
 
 const CategoryActionList = (props) => {
-  const { categoryId, categories } = props;
+  const { activeCategory, categories } = props;
   const { t } = useTranslation();
   const plan = useContext(PlanContext);
   const { loading, error, data } = useQuery(GET_ACTION_LIST, {
@@ -115,8 +125,12 @@ const CategoryActionList = (props) => {
     return <ErrorMessage statusCode={404} message={t('page-not-found')} />;
   }
 
-  const filteredActions = filterByCategory(planActions, categoryId, categories);
-  const heading = 'Styrmedel och åtaganden';
+  const filteredActions = filterByCategory(planActions, activeCategory.id, categories, activeCategory.parent == null);
+  if (filteredActions.length === 0) {
+    return <EmptyActionListHeader>Ei toimenpiteitä</EmptyActionListHeader>;
+    return null;
+  }
+  const heading = t('filter-result-actions');
 
   // const MotionCard = motion(ActionCard);
   return (
@@ -153,7 +167,8 @@ const CategoryActionList = (props) => {
 };
 
 CategoryActionList.propTypes = {
-  categoryId: PropTypes.string.isRequired,
+  activeCategory: PropTypes.any.isRequired,
+  categories: PropTypes.array,
 };
 
 export default CategoryActionList;

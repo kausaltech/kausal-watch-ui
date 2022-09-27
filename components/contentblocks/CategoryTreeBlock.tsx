@@ -207,10 +207,10 @@ const CategoryTreeSection = ({ sections, valueAttribute, heading = 'Categories' 
             </TreemapContent>
           </CategoryVizColumn>
         </CategoryTreeLayout>
-        { /* <CategoryActionList
-          categoryId={activeCategory.parent?? 0 : activeCategory.id}
+        <CategoryActionList
+          activeCategory={activeCategory}
           categories={sections}
-        /> */ }
+        />
       </Container>
     </CategoryListSection>
   );
@@ -253,7 +253,7 @@ function CategoryTreeBlockBrowser(props: CategoryTreeBlockProps) {
   ), [cats, findFirstAncestorColor]);
 
   return (
-    <CategoryTreeSection sections={augmentedCategories} valueAttribute={props.valueAttribute} />
+    <CategoryTreeSection heading={props.heading} lead={props.lead} sections={augmentedCategories} valueAttribute={props.valueAttribute} />
   );
 }
 
