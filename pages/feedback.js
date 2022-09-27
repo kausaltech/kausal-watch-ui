@@ -41,6 +41,17 @@ const CREATE_USER_FEEDBACK = gql`
   }
 `;
 
+function makeAbsoluteUrl (url) {
+  let baseUrl = null;
+  if (window?.location?.href === undefined) {
+    baseUrl = 'https://unknown.site.kausal.tech';
+  }
+  else {
+    baseUrl = (new URL(window.location.href)).origin;
+  }
+  return new URL(url, baseUrl);
+}
+
 function FeedbackForm({ planIdentifier }) {
   const { control, formState: { errors }, handleSubmit } = useForm();
   const { t } = useTranslation();
@@ -57,7 +68,7 @@ function FeedbackForm({ planIdentifier }) {
     const data = {
       ...formData,
       plan: planIdentifier,
-      url: router.query.lastUrl
+      url: makeAbsoluteUrl(decodeURIComponent(router.query.lastUrl))
     };
     setSent(true);
     createUserFeedback({ variables: { input: data } });
