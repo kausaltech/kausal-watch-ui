@@ -55,23 +55,24 @@ function ActionsListPage() {
       path,
     },
   });
-  if (loading) return <ContentLoader />;
-  if (error) return <ErrorMessage message={error.message} />;
+  const planPage = data?.planPage;
 
-  const { planPage } = data;
-  if (planPage.__typename !== 'ActionListPage') {
-    return <ErrorMessage message="Invalid action list page" />;
-  }
-
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const availableFilters = useMemo(() => {
-    const { primaryFilters, mainFilters, advancedFilters } = planPage;
+    // @ts-ignore
+    const { primaryFilters, mainFilters, advancedFilters } = planPage || {};
     return {
       primaryFilters,
       mainFilters,
       advancedFilters
     }
   }, [planPage]);
+
+  if (loading) return <ContentLoader />;
+  if (error) return <ErrorMessage message={error.message} />;
+
+  if (planPage.__typename !== 'ActionListPage') {
+    return <ErrorMessage message="Invalid action list page" />;
+  }
 
   return (
     <Layout>

@@ -13,74 +13,90 @@ const Label = styled(BSLabel)`
 `;
 
 
-function getSelectStyles<Option extends SelectDropdownOption>(theme: Theme, multi: boolean, size: string='') {
-	const suffix = size ? `-${size}` : '';
-	const multiplicator = multi ? 2 : 1;
-  const styles: SelectDropdownProps<Option>['styles'] = {
-		control: (provided, { isDisabled, isFocused }) => ({
-			...provided,
-			backgroundColor: `var(--bs-select${isDisabled ? '-disabled' : ''}-bg)`,
-			borderColor: `var(--bs-select${isDisabled ? '-disabled' : (isFocused ? '-focus' : '')}-border-color)`,
-			borderWidth: "var(--bs-select-border-width)",
-			lineHeight: "var(--bs-select-line-height)",
-			fontSize: `var(--bs-select-font-size${suffix})`,
-			fontWeight: "var(--bs-select-font-weight)",
-			minHeight: `calc((var(--bs-select-line-height)*var(--bs-select-font-size${suffix})) + (var(--bs-select-padding-y${suffix})*2) + (var(--bs-select-border-width)*2))`,
-			':hover': {
-				borderColor: "var(--bs-select-focus-border-color)",
-			},
-		}),
-		singleValue: ({marginLeft, marginRight, ...provided}, { isDisabled }) => ({
-			...provided,
-			color: `var(--bs-select${isDisabled ? '-disabled' : ''}-color)`,
-		}),
-		valueContainer: (provided, state) => ({
-			...provided,
-			padding: `calc(var(--bs-select-padding-y${suffix})/${multiplicator}) calc(var(--bs-select-padding-x${suffix})/${multiplicator})`,
-		}),
-		dropdownIndicator: (provided, state) => ({
-			height: "100%",
-			width: "var(--bs-select-indicator-padding)",
-			backgroundImage: "var(--bs-select-indicator)",
-			backgroundRepeat: "no-repeat",
-			backgroundPosition: `right var(--bs-select-padding-x) center`,
-			backgroundSize: "var(--bs-select-bg-size)",
-		}),
-		input: ({margin, paddingTop, paddingBottom, ...provided}, state) => ({
-			...provided
-		}),
-		option: (provided, state) => {
+function getSelectStyles<Option extends SelectDropdownOption>(
+  theme: Theme,
+  multi: boolean,
+  size: string = ""
+) {
+  const suffix = size ? `-${size}` : "";
+  const multiplicator = multi ? 2 : 1;
+  const styles: SelectDropdownProps<Option>["styles"] = {
+    control: (provided, { isDisabled, isFocused }) => ({
+      ...provided,
+      backgroundColor: `var(--bs-select${isDisabled ? "-disabled" : ""}-bg)`,
+      borderColor: `var(--bs-select${
+        isDisabled ? "-disabled" : isFocused ? "-focus" : ""
+      }-border-color)`,
+      borderWidth: "var(--bs-select-border-width)",
+      lineHeight: "var(--bs-select-line-height)",
+      fontSize: `var(--bs-select-font-size${suffix})`,
+      fontWeight: "var(--bs-select-font-weight)",
+      minHeight: `calc((var(--bs-select-line-height)*var(--bs-select-font-size${suffix})) + (var(--bs-select-padding-y${suffix})*2) + (var(--bs-select-border-width)*2))`,
+      ":hover": {
+        borderColor: "var(--bs-select-focus-border-color)",
+      },
+    }),
+    singleValue: (
+      { marginLeft, marginRight, ...provided },
+      { isDisabled }
+    ) => ({
+      ...provided,
+      color: `var(--bs-select${isDisabled ? "-disabled" : ""}-color)`,
+    }),
+    valueContainer: (provided, state) => ({
+      ...provided,
+      padding: `calc(var(--bs-select-padding-y${suffix})/${multiplicator}) calc(var(--bs-select-padding-x${suffix})/${multiplicator})`,
+    }),
+    dropdownIndicator: (provided, state) => ({
+      height: "100%",
+      width: "var(--bs-select-indicator-padding)",
+      backgroundImage: "var(--bs-select-indicator)",
+      backgroundRepeat: "no-repeat",
+      backgroundPosition: `right var(--bs-select-padding-x) center`,
+      backgroundSize: "var(--bs-select-bg-size)",
+    }),
+    input: ({ margin, paddingTop, paddingBottom, ...provided }, state) => ({
+      ...provided,
+    }),
+    option: (provided, state) => {
       const { isSelected, isFocused, data } = state;
       const { indent } = data;
       const ret = {
         ...provided,
         //color: isFocused ? theme.brandLight : theme.neutralDark,
-        backgroundColor: isSelected ? theme.brandLight : (isFocused ? theme.neutralLight : theme.themeColors.white),
+        backgroundColor: isSelected
+          ? theme.brandLight
+          : isFocused
+          ? theme.neutralLight
+          : theme.themeColors.white,
         margin: `calc(var(--bs-select-padding-y${suffix})/2) calc(var(--bs-select-padding-x${suffix})/2)`,
         //marginLeft: `${indent ?? 0}rem`,
       };
       return ret;
-		},
-		menu: ({marginTop, ...provided}, state) => ({
-			...provided
-		}),
-		multiValue: (provided, state) => ({
-			...provided,
-			margin: `calc(var(--bs-select-padding-y${suffix})/2) calc(var(--bs-select-padding-x${suffix})/2)`,
-		}),
-		clearIndicator: ({padding, ...provided}, state) => ({
-			...provided,
-			alignItems: "center",
-			justifyContent: "center",
-			height: "100%",
-			width: "var(--bs-select-indicator-padding)"
-		}),
-		multiValueLabel: ({padding, paddingLeft, fontSize, ...provided}, state) => ({
-			...provided,
-			padding: `0 var(--bs-select-padding-y${suffix})`,
-			whiteSpace: "normal"
-		})
-	};
+    },
+    menu: ({ marginTop, ...provided }, state) => ({
+      ...provided,
+    }),
+    multiValue: (provided, state) => ({
+      ...provided,
+      margin: `calc(var(--bs-select-padding-y${suffix})/2) calc(var(--bs-select-padding-x${suffix})/2)`,
+    }),
+    clearIndicator: ({ padding, ...provided }, state) => ({
+      ...provided,
+      alignItems: "center",
+      justifyContent: "center",
+      height: "100%",
+      width: "var(--bs-select-indicator-padding)",
+    }),
+    multiValueLabel: (
+      { padding, paddingLeft, fontSize, ...provided },
+      state
+    ) => ({
+      ...provided,
+      padding: `0 var(--bs-select-padding-y${suffix})`,
+      whiteSpace: "normal",
+    }),
+  };
   return styles;
 }
 
