@@ -29,6 +29,9 @@ const ACTION_CARD_FRAGMENT = gql`
       identifier
       name
       iconSvgUrl
+      type {
+        id
+      }
     }
     implementationPhase {
       id
@@ -233,8 +236,11 @@ const ActionIdentifier = (props) => {
 };
 
 const SecondaryIcons = (props) => {
-  const {action, secondaryClassification} = props;
-  const secondaryIcons =  action.categories?.filter((cat) => cat.type.id === secondaryClassification.id);
+  const {actionCategories, secondaryClassificationId} = props;
+  const secondaryIcons = actionCategories?.filter((cat) =>
+    cat.type.id === secondaryClassificationId && cat.iconSvgUrl !== null);
+
+  if (secondaryIcons.length < 1) return undefined;
 
   return (
     <SecondaryIconsContainer>
@@ -256,7 +262,12 @@ ActionIdentifier.propTypes = {
   identifier: PropTypes.string,
   plan: PropTypes.shape({}),
 };
-function ActionCard(props) {
+
+type ActionCardProps = {
+  action: ActionCardFragment,
+  showPlan: boolean,
+}
+function ActionCard(props: ActionCardProps) {
   const { action, showPlan } = props;
   const plan = usePlan();
   const { t } = useTranslation(['common', 'actions']);
@@ -344,8 +355,8 @@ function ActionCard(props) {
           </StyledCardTitle>
           { plan.secondaryActionClassification && (
             <SecondaryIcons
-              action={action}
-              secondaryClassification={plan.secondaryActionClassification}
+              actionCategories={action.categories}
+              secondaryClassificationId={plan.secondaryActionClassification.id}
             />
           )}
         </ActionCardElement>
