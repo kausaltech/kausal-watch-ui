@@ -136,6 +136,11 @@ const GlobalStyle = createGlobalStyle`
     h5 {
       font-size: ${(props) => props.theme.fontSizeBase}
     }
+
+    ul {
+      margin-left: -2rem;
+      list-style: disc;
+    }
   }
 
   .richtext-image {

@@ -5,7 +5,7 @@ import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
 import PlanContext from 'context/plan';
 import { Link } from 'common/links';
-import ActionGroupStatus from 'components/actions/ActionGroupStatus';
+import CategoryMetaBar from 'components/actions/CategoryMetaBar';
 import AttributesBlock from 'components/common/AttributesBlock';
 
 export const GET_CATEGORY_ATTRIBUTE_TYPES = gql`
@@ -85,6 +85,11 @@ const HeaderContent = styled.div`
   }
 `;
 
+const AttributesContainer = styled.div`
+  max-width: 600px;
+  margin: 0 auto;
+`;
+
 const Breadcrumb = styled.div`
   font-size: ${(props) => props.theme.fontSizeMd};
   margin-bottom: ${(props) => props.theme.spaces.s100};
@@ -151,9 +156,15 @@ function CategoryPageHeaderBlock(props) {
               {level}
               <p>{ lead }</p>
               { attributes?.length > 0 && (
-                <AttributesBlock attributes={attributes} color={color} id={categoryId} types={attributeTypes} vertical>
-                  {plan.actionStatuses.length ? <ActionGroupStatus category={categoryId} /> : null}
-                </AttributesBlock>
+                <AttributesContainer>
+                <AttributesBlock
+                  attributes={attributes}
+                  color={color}
+                  id={categoryId}
+                  types={attributeTypes}
+                />
+                {plan.actionStatuses.length ? <CategoryMetaBar category={categoryId} /> : null}
+                </AttributesContainer>
               )}
             </HeaderContent>
           </Col>
