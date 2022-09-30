@@ -354,7 +354,6 @@ const IndicatorListFiltered = (props) => {
     if (name == null) {
       return name;
     }
-    const level = (hierarchy[item.common.id]?.path?.length ?? 1) - 1;
     return indicatorElement(collapsible, name, expanded, expandKey, options);
   };
   const indentationLevel = (item) => (
