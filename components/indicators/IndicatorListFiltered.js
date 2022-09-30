@@ -72,6 +72,9 @@ const SectionButton = (props) => {
       <a>{ props.children }</a>
     </IndicatorLink>;
   }
+  if (props['aria-controls'] == null) {
+    return <div className="indicator-name">{props.children}</div>
+  }
   const buttonProps = Object.assign({}, props);
   delete buttonProps.sectionHeading;
   delete buttonProps.linkTo;
@@ -83,11 +86,12 @@ const StyledSectionButton = styled(SectionButton)`
   background: none;
   padding-left: 0;
   text-align: left;
+  color: ${(props) => props.theme.themeColors.black};
   font-weight: ${(props) => (props.sectionHeading ? props.theme.fontWeightBold: 'normal')};
 `;
 
 const IndicatorName = styled.div`
-  a {
+  a, .indicator-name {
     color: ${(props) => props.theme.themeColors.black};
   }
 `;
@@ -252,7 +256,11 @@ const descendantIds = (indicator, hierarchy) => {
   if (hierarchy == null || Object.keys(hierarchy).length === 0) {
     return [];
   }
-  return hierarchy[common.id]?.descendants.map(d => indicatorElementId(d)).join(' ');
+  const descendants = hierarchy[common.id]?.descendants.map(d => indicatorElementId(d));
+  if (descendants.length === 0) {
+    return null;
+  }
+  return descendants.join(' ');
 }
 
 const IndicatorListFiltered = (props) => {
