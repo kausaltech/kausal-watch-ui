@@ -67,15 +67,22 @@ const StyledBadge = styled(Badge)`
 `;
 
 const SectionButton = (props) => {
+  if (props.linkTo != null) {
+    return <IndicatorLink id={props.linkTo}>
+      <a>{ props.children }</a>
+    </IndicatorLink>;
+  }
   const buttonProps = Object.assign({}, props);
   delete buttonProps.sectionHeading;
-  return <button {...buttonProps} />
+  delete buttonProps.linkTo;
+  return <button {...buttonProps} />;
 }
 
 const StyledSectionButton = styled(SectionButton)`
   border: none;
   background: none;
   padding-left: 0;
+  text-align: left;
   font-weight: ${(props) => (props.sectionHeading ? props.theme.fontWeightBold: 'normal')};
 `;
 
@@ -245,7 +252,7 @@ const descendantIds = (indicator, hierarchy) => {
   if (hierarchy == null || Object.keys(hierarchy).length === 0) {
     return [];
   }
-    return hierarchy[common.id].descendants.map(d => indicatorElementId(d)).join(' ');
+  return hierarchy[common.id]?.descendants.map(d => indicatorElementId(d)).join(' ');
 }
 
 const IndicatorListFiltered = (props) => {
@@ -315,11 +322,12 @@ const IndicatorListFiltered = (props) => {
     ((cumul, cur) => Math.max(cumul, cur.categories.length)), 0) > 0;
   const allIndicatorsHaveSameLevel = new Set(filteredIndicators.flat().map(i => i.level)).size === 1;
 
-  const indicatorElement = (collapsible, itemName, indentLevel, expanded, expandKey, options) => (
+  const indicatorElement = (collapsible, itemName, expanded, expandKey, options) => (
     <IndicatorName>
       <StyledSectionButton
         aria-controls={expandKey}
         aria-expanded={expanded}
+        linkTo={options?.linkTo}
         sectionHeading={options?.type === 'section'}>
         { collapsible && <Icon name={expanded ? 'angleDown' : 'angleRight'} /> }
         { itemName }
@@ -332,7 +340,7 @@ const IndicatorListFiltered = (props) => {
     let name = null;
     if (item.common == null || hierarchy === null || Object.keys(hierarchy).length === 0) {
       name = item.name;
-      return indicatorElement(collapsible, name, 0, expanded, expandKey, options);
+      return indicatorElement(collapsible, name, expanded, expandKey, options);
     }
 
     const pathNames = hierarchy[item.common.id]?.pathNames;
@@ -347,7 +355,7 @@ const IndicatorListFiltered = (props) => {
       return name;
     }
     const level = (hierarchy[item.common.id]?.path?.length ?? 1) - 1;
-    return indicatorElement(collapsible, name, level, expanded, expandKey, options);
+    return indicatorElement(collapsible, name, expanded, expandKey, options);
   };
   const indentationLevel = (item) => (
     item.common == null ? 1 : (hierarchy[item.common.id]?.path?.length ?? 1) - 1
@@ -445,7 +453,10 @@ const IndicatorListFiltered = (props) => {
                 const collapsible = collapseState !== undefined;
                 const collapsed = collapseState === true;
                 const nameElement = (
-                  indicatorName(item, collapsible, collapsed, descendantIds(item, hierarchy), {type: 'indicator'})
+                  indicatorName(
+                    item, collapsible, collapsed,
+                    descendantIds(item, hierarchy),
+                    {type: 'indicator', linkTo: hierarchyEnabled ? null : item.id})
                 );
 
                 return (
