@@ -1,13 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { withTranslation } from 'common/i18n';
+import { useTranslation } from 'common/i18n';
 import { OrganizationLink } from 'common/links';
 import { slugify } from 'common/utils';
 import BadgeTooltip from '../common/BadgeTooltip';
 
 const Responsibles = styled.div`
-  font-size: ${(props) => props.theme.fontSizeMd};
   a {
     margin-right: ${(props) => props.theme.spaces.s050};
   }
@@ -17,18 +16,39 @@ const Responsibles = styled.div`
   }
 `;
 
+const ResponsiblesList = styled.ul`
+  margin-bottom: ${(props) => props.theme.spaces.s150};
+  list-style: none;
+  padding: 0;
+`;
+
+const ResponsibleItem = styled.li`
+  font-size: ${(props) => props.theme.fontSizeSm};
+
+  .badge {
+    margin-bottom: 0;
+  }
+`;
+
+const ResponsibleSpecifier = styled.div`
+    margin-bottom: ${(props) => props.theme.spaces.s050};
+`;
 function ResponsibleBadge(props) {
   const {
-    t,
     index,
     id,
     name,
     abbreviation,
+    role,
+    specifier
   } = props;
+  const { t } = useTranslation(['common', 'actions']);
   let size = 'md';
   let ariaLabel;
 
-  if (index === 0) {
+  // PRIMARY, COLLABORATOR
+
+  if (role === 'PRIMARY') {
     size = 'lg';
     ariaLabel = `${t('responsible-party-main')}: ${abbreviation} ${name}`;
   } else {
@@ -36,38 +56,48 @@ function ResponsibleBadge(props) {
   }
 
   return (
-    <OrganizationLink organizationId={ id }>
-      <BadgeTooltip
-        id={`org-${slugify(id)}`}
-        name={name}
-        ariaLabel={ariaLabel}
-        abbreviation={abbreviation}
-        size={size}
-      />
-    </OrganizationLink>
+    <ResponsibleItem>
+      <OrganizationLink organizationId={ id }>
+        <BadgeTooltip
+          id={`org-${slugify(id)}`}
+          name={name !== abbreviation ? name : ''}
+          ariaLabel={ariaLabel}
+          abbreviation={abbreviation}
+          size={size}
+        />
+      </OrganizationLink>
+      { specifier &&
+        <ResponsibleSpecifier>
+          {specifier}
+        </ResponsibleSpecifier>
+      }
+    </ResponsibleItem>
   );
 }
 
 function ResponsibleList(props) {
-  const { t, data } = props;
-
+  const { responsibleParties } = props;
+  const { t } = useTranslation(['common', 'actions']);
     /* TODO: a11y - this should probably be a list markup */
 
   return (
     <Responsibles>
       <h3>{t('responsible-parties')}</h3>
-      { data
-        ? data.map((item, index) => (
+      <ResponsiblesList>
+      { responsibleParties.map((item, index) => (
           <ResponsibleBadge
             t={t}
-            key={item.id}
+            key={item.organization.id}
             index={index}
-            id={item.id}
-            name={item.name}
-            abbreviation={item.abbreviation}
+            id={item.organization.id}
+            name={item.organization.name}
+            abbreviation={item.organization.abbreviation}
+            role={item.role}
+            specifier={item.specifier}
           />
         ))
-        : <h6>{t('responsible-parties-missing')}</h6> }
+      }
+      </ResponsiblesList>
     </Responsibles>
   );
 }
@@ -77,10 +107,12 @@ ResponsibleBadge.propTypes = {
   index: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
   abbreviation: PropTypes.string,
+  role: PropTypes.string,
+  specifier: PropTypes.string,
 };
 
 ResponsibleList.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.shape({
+  responsibleParties: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     abbreviation: PropTypes.string,
@@ -88,4 +120,4 @@ ResponsibleList.propTypes = {
   t: PropTypes.func.isRequired,
 };
 
-export default withTranslation('common')(ResponsibleList);
+export default ResponsibleList;

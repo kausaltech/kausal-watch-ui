@@ -141,6 +141,8 @@ query ActionDetails($plan: ID!, $id: ID!) {
         abbreviation
         name
       }
+      role
+      specifier
     }
     tasks {
       id, name, dueAt, completedAt, comment, state
@@ -575,7 +577,7 @@ function ActionContent({ id }) {
             ) : null}
             { action.responsibleParties.length ? (
               <ActionSection>
-                <ResponsibleList data={action.responsibleParties.map((item) => item.organization)} />
+                <ResponsibleList responsibleParties={action.responsibleParties} />
               </ActionSection>
             ) : null}
             { action.categories.length ? (
