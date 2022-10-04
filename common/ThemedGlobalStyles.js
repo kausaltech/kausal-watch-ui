@@ -115,12 +115,12 @@ const GlobalStyle = createGlobalStyle`
     }
 
     h2 {
-      margin-top: ${(props) => props.theme.spaces.s150};
+      margin-top: ${(props) => props.theme.spaces.s200};
       font-size: ${(props) => props.theme.fontSizeLg};
     }
 
     h3 {
-      margin-top: ${(props) => props.theme.spaces.s150};
+      margin-top: ${(props) => props.theme.spaces.s200};
       font-size: ${(props) => props.theme.fontSizeMd};
     }
 

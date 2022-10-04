@@ -31,5 +31,5 @@
   "enforcement-body-url": "https://www.saavutettavuusvaatimukset.fi",
   "enforcement-body-email": "saavutettavuus@avi.fi",
   "enforcement-body-tel": "Telefon +358 295 016 000",
-  "responsible-for-maintenance": "Dieser Dienst wird von <1>{{responsibleBody}}</1> bereitgestellt."
+  "responsible-for-maintenance": "Dieser Dienst wird von {{responsibleBody}}ss bereitgestellt."
 }

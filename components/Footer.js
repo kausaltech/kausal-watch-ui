@@ -52,11 +52,24 @@ function Footer(props) {
 
   const additionalLinks = [];
 
-  if (plan.accessibilityStatementUrl) {
-    additionalLinks.push({ id: '1', name: t('accessibility'), slug: plan.accessibilityStatementUrl });
-  }
-  else {
-    additionalLinks.push({ id: '1', name: t('accessibility'), slug: '/accessibility' });
+
+  plan.additionalLinks.items?.map((link) => (
+    additionalLinks.push({
+      id: link.id,
+      name: link.page.title,
+      slug: link.page.slug,
+    })
+  ));
+
+  // If there is no custom a11y page set, or if there is no external a11y statement link
+  // use the standard a11y statement
+  if (!plan.additionalLinks.items.find((link) => link.page.__typename === 'AccessibilityStatementPage')) {
+    if (plan.accessibilityStatementUrl) {
+      additionalLinks.push({ id: '1', name: t('accessibility'), slug: plan.accessibilityStatementUrl });
+    }
+    else {
+      additionalLinks.push({ id: '1', name: t('accessibility'), slug: '/accessibility' });
+    }
   }
 
   const utilityLinks = [];

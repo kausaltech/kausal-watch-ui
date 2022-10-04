@@ -8,6 +8,7 @@ import { useTheme } from 'common/theme';
 import ErrorMessage from 'components/common/ErrorMessage';
 import ContentLoader from 'components/common/ContentLoader';
 import StreamField from 'components/common/StreamField';
+import AccessibilityPage from 'pages/accessibility-legacy';
 import images, { getBgImageAlignment } from 'common/images';
 import CategoryPageHeaderBlock from 'components/contentblocks/CategoryPageHeaderBlock';
 import ContentPageHeaderBlock from 'components/contentblocks/ContentPageHeaderBlock';
@@ -25,6 +26,11 @@ query GetPlanPageGeneral($plan: ID!, $path: String!) {
         ...MultiUseImageFragment
       }
       leadParagraph
+      body {
+        ...StreamFieldFragment
+      }
+    }
+    ... on AccessibilityStatementPage {
       body {
         ...StreamFieldFragment
       }
@@ -143,6 +149,9 @@ function StaticPage({ slug }) {
   if (error) return <ErrorMessage message={error.message} />;
 
   const { planPage } = data;
+
+  // Handle legacy overrides
+  if (path === '/accessibility' && !planPage?.body.length > 0) return <AccessibilityPage />
   if (!planPage) {
     return <ErrorMessage statusCode={404} message={t('page-not-found')} />;
   }

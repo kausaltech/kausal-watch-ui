@@ -192,6 +192,7 @@ fragment PlanContext on Plan {
           id
           page {
             title
+            slug
             ... on AccessibilityStatementPage {
               body {
                 ... on AccessibilityStatementContactInformationBlock {
