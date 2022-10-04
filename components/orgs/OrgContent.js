@@ -13,7 +13,7 @@ import RichText from 'components/common/RichText';
 
 import { usePlan } from 'context/plan';
 import { useTranslation } from 'common/i18n';
-import { Link, ActionLink } from 'common/links';
+import { OrganizationLink } from 'common/links';
 import ContentLoader from 'components/common/ContentLoader';
 import ErrorMessage from 'components/common/ErrorMessage';
 import { Meta } from 'components/layout';
@@ -293,9 +293,10 @@ function OrgContent(props) {
 
   const { organization:org } = data;
   if (!org) {
-    return <ErrorMessage statusCode={404} message={t('common:indicator-not-found')} />;
+    return <ErrorMessage statusCode={404} message={t('common:organization-not-found')} />;
   }
 
+  console.log("org", org);
   const plans = data?.organization?.plansWithActionResponsibilities;
 
   return (
@@ -321,9 +322,9 @@ function OrgContent(props) {
             <Col md="8" xl="7" className="mb-5">
               {org.parent?.id &&
                 <>
-                  <Link href={`/organizations/${org.parent.id}`}>
+                  <OrganizationLink organizationId={org.parent.id}>
                     {org.parent.name}
-                  </Link>
+                  </OrganizationLink>
                   {' '}
                   /
                 </>
