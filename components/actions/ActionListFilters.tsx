@@ -1,4 +1,4 @@
-import React, { createRef, Ref, useCallback, useMemo, useState } from 'react';
+import React, { createRef, Ref, useCallback, useEffect, useMemo, useState } from 'react';
 import { Row, Col, Badge, CloseButton } from 'reactstrap';
 import { debounce, filter } from 'lodash';
 import styled from 'styled-components';
@@ -395,7 +395,7 @@ class CategoryFilter extends DefaultFilter {
     const getLabel = (cat: ActionListCategory) => (
       this.ct.hideCategoryIdentifiers ? cat.name : `${cat.identifier}. ${cat.name}`
     );
-    this.options = sortedCats.map((cat) => ({id: cat.id, label: getLabel(cat)}));
+    this.options = sortedCats.map((cat) => ({id: cat.id, label: getLabel(cat), indent: cat.depth}));
   }
   filterAction(value: string, action: ActionListAction) {
     return action.categories.some((actCat) => {
@@ -521,6 +521,19 @@ export type ActionListFilterSection = {
 }
 
 
+type FilterColProps = {
+  filter: ActionListFilter,
+  onFilterChange: (id: string, val: string|undefined, debounce: number) => void,
+  state: string|undefined,
+}
+const FilterCol = React.memo(function FilterCol({ filter, onFilterChange, state }: FilterColProps) {
+  const { t } = useTranslation();
+
+  // eslint-disable-next-line react/prop-types
+  return filter.render(state, onFilterChange, t);
+});
+
+
 type ActionListFiltersProps = {
   activeFilters: ActiveFilters,
   filterSections: ActionListFilterSection[],
@@ -564,13 +577,18 @@ function ActionListFilters(props: ActionListFiltersProps) {
       <form
         onSubmit={(event) => { event.preventDefault(); }}
         role="search"
-        autocomplete="off"
+        autoComplete="off"
         aria-label={t('form-action-filters')}
       >
         {filterSections.map(section => (
           <Row key={section.id}>
-            {section.filters.map((filter) => filter.render(
-              filterState[filter.id], onFilterChange, t
+            {section.filters.map((filter) => (
+              <FilterCol
+                key={filter.id}
+                filter={filter}
+                onFilterChange={onFilterChange}
+                state={filterState[filter.id]}
+              />
             ))}
             {section.id === 'main' && (
               <Col xs={6} sm={3} md={3} lg={2} xl={2} className="d-flex flex-column justify-content-end">

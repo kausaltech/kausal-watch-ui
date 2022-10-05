@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
 import { gql, useQuery } from '@apollo/client';
 import { getActionListLinkProps } from 'common/links';
@@ -29,26 +29,31 @@ ${ActionList.fragments.listFilters}
 
 function ActionsListPage() {
   const router = useRouter();
-  const filters = ActionList.getFiltersFromQuery(router.query);
-
+  const defaultFilters = ActionList.getFiltersFromQuery(router.query);
+  const [filters, setFilters] = useState(defaultFilters);
   const path = '/actions';
   const plan = usePlan();
 
   const handleFilterChange = useCallback(
-    (newFilters) => {
-      const query = {};
+    (id: string, val: string|undefined) => {
+      setFilters((state) => {
+        const newFilters = {
+          ...state,
+          [id]: val,
+        };
 
-      Object.entries(newFilters).forEach(([key, val]) => {
-        if (!val) return;
-        query[key] = val;
+        const query = {};
+        Object.entries(newFilters).forEach(([key, val]) => {
+          if (!val) return;
+          query[key] = val;
+        });
+        const link = getActionListLinkProps(query);
+        router.replace(link.href, undefined, { shallow: true });
+        return newFilters;
       });
-
-      const link = getActionListLinkProps(query);
-      router.replace(link.href, undefined, { shallow: true });
-    },
-    [router],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [setFilters],
   );
-
   const { loading, error, data } = useQuery<GetActionListPageQuery>(GET_ACTION_LIST_PAGE, {
     variables: {
       plan: plan.identifier,
