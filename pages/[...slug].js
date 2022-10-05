@@ -55,6 +55,12 @@ query GetPlanPageGeneral($plan: ID!, $path: String!) {
         }
         leadParagraph
         color
+        iconSvgUrl
+        iconImage {
+          rendition(size:"400x400", crop:false) {
+            src
+          }
+        }
         children {
           id
           identifier
@@ -87,6 +93,12 @@ query GetPlanPageGeneral($plan: ID!, $path: String!) {
             ...MultiUseImageFragment
           }
           color
+          iconSvgUrl
+          iconImage {
+            rendition(size:"400x400", crop:false) {
+              src
+            }
+          }
           categoryPage {
             title
             urlPath
@@ -179,12 +191,14 @@ const PageHeaderBlock = (props) => {
         : page.category.level?.namePlural;
       const parentUrl = page.category.parent?.categoryPage?.urlPath || '/';
       const headerImage = page.category.image || page.category.parent?.image;
+      const iconImage = page.category.iconImage?.rendition.src;
       return (
         <CategoryPageHeaderBlock
           title={page.title}
           categoryId={page.category.id}
           identifier={theme.settings.categories.showIdentifiers ? page.category.identifier : undefined}
           lead={page.category.leadParagraph}
+          iconImage={iconImage}
           headerImage={headerImage?.large.src}
           imageAlign={getBgImageAlignment(headerImage)}
           parentTitle={parentTitle}

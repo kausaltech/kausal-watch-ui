@@ -95,12 +95,18 @@ const Breadcrumb = styled.div`
   margin-bottom: ${(props) => props.theme.spaces.s100};
 `;
 
+const CategoryIconImage = styled.img`
+  max-height: ${(props) => props.theme.spaces.s600};
+  margin-bottom: ${(props) => props.theme.spaces.s100};
+`;
+
 function CategoryPageHeaderBlock(props) {
   const {
     title,
     categoryId,
     identifier,
     lead,
+    iconImage,
     headerImage,
     imageAlign,
     parentTitle,
@@ -110,6 +116,7 @@ function CategoryPageHeaderBlock(props) {
     typeId,
     level,
   } = props;
+
   const plan = useContext(PlanContext);
 
   let attributeTypes = [];
@@ -143,6 +150,11 @@ function CategoryPageHeaderBlock(props) {
                   /
                 </Breadcrumb>
               )}
+              {
+                iconImage && (
+                  <CategoryIconImage src={iconImage} alt />
+                )
+              }
               <h1>
                 { identifier && (
                 <Identifier>
