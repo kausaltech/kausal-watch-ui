@@ -12,6 +12,7 @@ import { getActionTermContext, useTranslation } from 'common/i18n';
 import { usePlan, PlanContextType } from 'context/plan';
 import PlanChip from 'components/plans/PlanChip';
 import { ActionCardFragment } from 'common/__generated__/graphql';
+import { ContactPersonLeader } from 'stories/actions/ContactPerson.stories';
 
 const ACTION_CARD_FRAGMENT = gql`
   fragment ActionCard on Action {
@@ -87,19 +88,28 @@ const StyledActionLink = styled.a`
 
 `;
 
-const CategoryIcon = styled(SVG)`
+const PrimarySvgIcon = styled(SVG)`
   position: absolute;
   right: ${(props) => props.theme.spaces.s050};
   top: ${(props) => props.theme.spaces.s050};
   width: ${(props) => props.theme.spaces.s300};
-  opacity: .75;
   fill: white;
+`;
+
+const PrimaryImageIcon = styled.div`
+  position: absolute;
+  right: ${(props) => props.theme.spaces.s050};
+  top: ${(props) => props.theme.spaces.s050};
+  width: ${(props) => props.theme.spaces.s300};
+  height: ${(props) => props.theme.spaces.s300};
+  background-image: url(${(props) => props.imagesrc || 'none'});
+  background-size: cover;
+  background-position: center center;
 `;
 
 const SecondaryIcon = styled(SVG)`
   width: ${(props) => props.theme.spaces.s100};
   margin-right: ${(props) => props.theme.spaces.s050};
-  opacity: .75;
   fill: ${(props) => props.color};
 `;
 
@@ -205,18 +215,6 @@ const OrgLogo = styled.img`
   height: ${(props) => props.theme.spaces.s150};
 `;
 
-function getIconUrl(action: ActionCardAction, plan: PlanContextType) {
-  if (action.iconSvgUrl) return action.iconSvgUrl;
-
-  const { primaryRootCategory } = action;
-  if (!primaryRootCategory) return null;
-  const { identifier, iconSvgUrl } = primaryRootCategory;
-  if (iconSvgUrl) return iconSvgUrl;
-  if (plan.identifier === 'liiku') return `/static/themes/liiku/images/category-${identifier}.svg`;
-  if (plan.identifier === 'hsy-kestava') return `/static/themes/hsy-kestava/images/category-${identifier}.svg`;
-  return null;
-}
-
 const ActionIdentifier = (props) => {
   const {showId, identifier, plan} = props;
   if (!showId && !plan) return <div/>
@@ -233,6 +231,14 @@ const ActionIdentifier = (props) => {
     { showId && <ActionNumber>{ identifier }</ActionNumber> }
     </ActionId>
   )
+};
+
+const PrimaryIcon = (props) => {
+  const { category } = props;
+  if (!category) return null;
+  if (category.iconSvgUrl) return <PrimarySvgIcon src={category.iconSvgUrl} />
+  if (category.iconImage) return <PrimaryImageIcon imagesrc={category.iconImage.rendition.src} />
+  else return null;
 };
 
 const SecondaryIcons = (props) => {
@@ -274,7 +280,6 @@ function ActionCard(props: ActionCardProps) {
   const theme = useTheme();
 
   let actionName = action.name;
-  const iconUrl = getIconUrl(action, plan) || '';
 
   if (actionName.length > 120) actionName = `${action.name.substring(0, 120)}…`;
 
@@ -311,12 +316,9 @@ function ActionCard(props: ActionCardProps) {
           <ActionStatusArea
             statusColor={getStatusColor(status.identifier, theme)}
           >
-            { iconUrl && (
-              <CategoryIcon
-                src={iconUrl}
-                preserveAspectRatio="xMinYMid meet"
-              />
-            )}
+            <PrimaryIcon
+              category={action.primaryRootCategory}
+            />
             <ActionIdentifier
               showId={!plan.hideActionIdentifiers}
               identifier={action.identifier}

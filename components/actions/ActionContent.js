@@ -99,6 +99,12 @@ query ActionDetails($plan: ID!, $id: ID!) {
           ...MultiUseImageFragment
         }
         color
+        iconSvgUrl
+        iconImage {
+          rendition(size:"400x400", crop:false) {
+            src
+          }
+        }
         categoryPage {
             title
             urlPath

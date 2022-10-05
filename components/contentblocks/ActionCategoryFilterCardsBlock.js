@@ -74,7 +74,7 @@ const CategoryListBlock = (props) => {
               className="mb-5 d-flex align-items-stretch"
               style={{ transition: 'all 0.5s ease' }}
             >
-              <Link href={`/actions?category_${card.category.type.identifier}=${card.category.id}`}>
+              <Link href={`/actions?cat-${card.category.type.identifier}=${card.category.id}`}>
                 <a className="card-wrapper">
                   <Card
                     customColor={theme.brandDark}

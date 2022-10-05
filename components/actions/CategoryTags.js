@@ -1,11 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Badge } from 'reactstrap';
+import SVG from 'react-inlinesvg';
 import styled from 'styled-components';
 import { darken, lighten, readableColor } from 'polished';
 import { useTranslation } from 'common/i18n';
 import { Link } from 'common/links';
 import { slugify } from 'common/utils';
+import { isCompositeComponent } from 'react-dom/test-utils';
 
 const Categories = styled.div`
   font-size: ${(props) => props.theme.fontSizeMd};
@@ -51,25 +53,32 @@ const CatIconListItem = styled.li`
 
 const IconBadge = styled.div`
   display: flex;
-  min-height: ${(props) => props.theme.spaces.s600};
+  align-items: center;
   max-width: 320px;
   background-color: ${(props) => props.theme.neutralLight} !important;
   border-radius: ${(props) => props.theme.badgeBorderRadius};
 
   &:hover {
-    background-color: ${(props) => lighten(0.05, props.theme.neutralLight)} !important;
+    background-color: ${(props) => darken(0.05, props.theme.neutralLight)} !important;
   }
 `;
 
 const IconImage = styled.div`
   display: block;
-  height: ${(props) => props.theme.spaces.s600};
-  flex: 0 0 ${(props) => props.theme.spaces.s600};
+  text-align: center;
+  height: ${(props) => props.imageSrc ? props.theme.spaces.s600 : props.theme.spaces.s300};
+  flex: 0 0 ${(props) => props.imageSrc ? props.theme.spaces.s600 : props.theme.spaces.s300};
   margin-right: ${(props) => props.theme.spaces.s050};
-  background-color: ${(props) => props.theme.graphColors.grey030};
+  background-color: ${(props) => props.theme.neutralLight};
   background-image: url(${(props) => props.imageSrc || 'none'});
   background-size: cover;
   background-position: center center;
+`;
+
+const IconSvg = styled(SVG)`
+  height: ${(props) => props.theme.spaces.s200};
+  margin: ${(props) => props.theme.spaces.s050};
+  fill: ${(props) => props.theme.brandDark};
 `;
 
 const IconName = styled.div`
@@ -126,6 +135,7 @@ function CategoryIcon(props) {
     name,
     url,
     iconImage,
+    iconSvg
   } = props;
 
   return (
@@ -133,7 +143,9 @@ function CategoryIcon(props) {
     <Link href={url}>
       <a>
         <IconBadge>
-          <IconImage imageSrc={iconImage} />
+          {iconSvg
+            ? <IconImage><IconSvg src={iconSvg} preserveAspectRatio="xMinYMid meet" /></IconImage>
+            : <IconImage imageSrc={iconImage} />}
           <IconName>{name}</IconName>
         </IconBadge>
       </a>
@@ -156,7 +168,7 @@ function CategoryTags(props) {
     <Categories>
       { categoryGroups
         && categoryGroups.map((catGroup, index) => (
-          catGroup.find((item) => item.iconImage) ?
+          catGroup.find((item) => item.iconImage || item.iconSvgUrl || item.parent?.iconImage || item.parent?.iconSvgUrl) ?
           <div key={catGroup[0].id} className="mb-4">
             <h3>{catGroup[0].type.name}</h3>
             <CatIconList>
@@ -166,8 +178,11 @@ function CategoryTags(props) {
                     key={item.id}
                     id={item.id}
                     name={item.name}
-                    iconImage={item.iconImage?.rendition.src}
-                    url={item.categoryPage ? item.categoryPage.urlPath : `/actions?category_${item.type.identifier}=${item.id}`}
+                    iconImage={item.iconImage?.rendition.src || item.parent?.iconImage?.rendition.src}
+                    iconSvg={item.iconSvgUrl || item.parent?.iconSvgUrl}
+                    url={item.categoryPage
+                      ? item.categoryPage.urlPath
+                      : `/actions?cat-${item.type.identifier}=${item.id}`}
                   />
                 ))}
               </CatIconList>
@@ -181,7 +196,7 @@ function CategoryTags(props) {
                 key={item.id}
                 id={item.id}
                 name={item.name}
-                url={item.categoryPage ? item.categoryPage.urlPath : `/actions?category_${item.type.identifier}=${item.id}`}
+                url={item.categoryPage ? item.categoryPage.urlPath : `/actions?cat-${item.type.identifier}=${item.id}`}
               />
             ))}
           </div>

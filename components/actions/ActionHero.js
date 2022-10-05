@@ -146,7 +146,7 @@ function ActionCategories(categories) {
       displayCategories[indx].url = cat.categoryPage.urlPath;
       if (cat.identifier && showIdentifiers) categoryTitle = `${cat.identifier}. ${cat.name}`;
     } else {
-      displayCategories[indx].url = `/actions?category_${primaryCatIdentifier}=${cat.id}`;
+      displayCategories[indx].url = `/actions?cat-${primaryCatIdentifier}=${cat.id}`;
     }
     displayCategories[indx].name = categoryTitle;
     displayCategories[indx].id = cat.id;
@@ -159,7 +159,7 @@ function ActionCategories(categories) {
           categoryParentTitle = `${cat.parent.identifier}. ${cat.parent.name}`;
         }
       } else {
-        displayCategories[indx].parent.url = `/actions?category_${primaryCatIdentifier}=${cat.parent.id}`;
+        displayCategories[indx].parent.url = `/actions?cat-${primaryCatIdentifier}=${cat.parent.id}`;
       }
       displayCategories[indx].parent.name = categoryParentTitle;
       displayCategories[indx].parent.id = cat.parent.id;

@@ -104,6 +104,11 @@ export const GET_ACTION_LIST = gql`
           }
           color
           iconSvgUrl
+          iconImage {
+            rendition(size:"120x120", crop:false) {
+              src
+            }
+          }
           categoryPage {
             id
             live
