@@ -66,15 +66,32 @@ const StyledBadge = styled(Badge)`
   color: ${(props) => props.theme.themeColors.black};
 `;
 
-const SectionButton = styled.button`
+const SectionButton = (props) => {
+  if (props.linkTo != null) {
+    return <IndicatorLink id={props.linkTo}>
+      <a>{ props.children }</a>
+    </IndicatorLink>;
+  }
+  if (props['aria-controls'] == null) {
+    return <div className="indicator-name">{props.children}</div>
+  }
+  const buttonProps = Object.assign({}, props);
+  delete buttonProps.sectionHeading;
+  delete buttonProps.linkTo;
+  return <button {...buttonProps} />;
+}
+
+const StyledSectionButton = styled(SectionButton)`
   border: none;
   background: none;
   padding-left: 0;
-  font-weight: ${(props) => props.theme.fontWeightBold};
+  text-align: left;
+  color: ${(props) => props.theme.themeColors.black};
+  font-weight: ${(props) => (props.sectionHeading ? props.theme.fontWeightBold: 'normal')};
 `;
 
 const IndicatorName = styled.div`
-  a {
+  a, .indicator-name {
     color: ${(props) => props.theme.themeColors.black};
   }
 `;
@@ -229,9 +246,25 @@ const isVisible = (indicator, hierarchy, visibleByParent) => {
   return true;
 }
 
+const indicatorElementId = (id) => `indicator-${id}`;
+
+const descendantIds = (indicator, hierarchy) => {
+  const { common } = indicator;
+  if (common == null) {
+    return [];
+  }
+  if (hierarchy == null || Object.keys(hierarchy).length === 0) {
+    return [];
+  }
+  const descendants = hierarchy[common.id]?.descendants.map(d => indicatorElementId(d));
+  if (descendants.length === 0) {
+    return null;
+  }
+  return descendants.join(' ');
+}
+
 const IndicatorListFiltered = (props) => {
   const { t, categories, indicators, i18n, displayMunicipality, hierarchy, displayNormalizedValues } = props;
-
   const [activeCategory, setActiveCategory] = useState('');
   const [activeSearch, setActiveSearch] = useState('');
   // used for multi-city group expanding/collapsing
@@ -297,36 +330,39 @@ const IndicatorListFiltered = (props) => {
     ((cumul, cur) => Math.max(cumul, cur.categories.length)), 0) > 0;
   const allIndicatorsHaveSameLevel = new Set(filteredIndicators.flat().map(i => i.level)).size === 1;
 
-  const indicatorElement = (item, itemName, indentLevel, expanded, expandKey) => (
-    <IndicatorName indentLevel={indentLevel} >
-      <SectionButton aria-controls={expandKey} aria-expanded={expanded}>
-        <Icon name={expanded ? 'angleDown' : 'angleRight'} />
-        {itemName}
-      </SectionButton>
+  const indicatorElement = (collapsible, itemName, expanded, expandKey, options) => (
+    <IndicatorName>
+      <StyledSectionButton
+        aria-controls={expandKey}
+        aria-expanded={expanded}
+        linkTo={options?.linkTo}
+        sectionHeading={options?.type === 'section'}>
+        { collapsible && <Icon name={expanded ? 'angleDown' : 'angleRight'} /> }
+        { itemName }
+      </StyledSectionButton>
     </IndicatorName>
   );
   const seen = new Set();
 
-  const indicatorName = (item, expanded, expandKey) => {
-    let result = null;
+  const indicatorName = (item, collapsible, expanded, expandKey, options) => {
+    let name = null;
     if (item.common == null || hierarchy === null || Object.keys(hierarchy).length === 0) {
-      result = item.name;
-      return indicatorElement(item, result, 0, expanded, expandKey);
+      name = item.name;
+      return indicatorElement(collapsible, name, expanded, expandKey, options);
     }
 
     const pathNames = hierarchy[item.common.id]?.pathNames;
     if (pathNames != null && pathNames.length > 0) {
-      result = pathNames[pathNames.length -1] ?? '--not-found--';
+      name = pathNames[pathNames.length -1] ?? '--not-found--';
     }
     if (seen.has(item.common.id)) {
-      result = null;
+      name = null;
     }
     seen.add(item.common.id);
-    if (result == null) {
-      return result;
+    if (name == null) {
+      return name;
     }
-    const level = (hierarchy[item.common.id]?.path?.length ?? 1) - 1;
-    return indicatorElement(item, result, level, expanded, expandKey);
+    return indicatorElement(collapsible, name, expanded, expandKey, options);
   };
   const indentationLevel = (item) => (
     item.common == null ? 1 : (hierarchy[item.common.id]?.path?.length ?? 1) - 1
@@ -387,7 +423,7 @@ const IndicatorListFiltered = (props) => {
                     colSpan={headers.length}
                     indent={indentationLevel(group[0])}
                   >
-                    {indicatorName(group[0], expanded, expandKey)}
+                    {indicatorName(group[0], true, expanded, expandKey, {type: 'section'})}
                   </IndentableTableHeader>
                 </tr>
               </tbody>
@@ -424,19 +460,20 @@ const IndicatorListFiltered = (props) => {
                 const collapsible = collapseState !== undefined;
                 const collapsed = collapseState === true;
                 const nameElement = (
-                  hierarchyEnabled ? item.name :
-                  <IndicatorLink id={item.id}>{ item.name }</IndicatorLink>
+                  indicatorName(
+                    item, collapsible, collapsed,
+                    descendantIds(item, hierarchy),
+                    {type: 'indicator', linkTo: hierarchyEnabled ? null : item.id})
                 );
 
                 return (
-                  <tr key={item.id} style={{display: (visible ? 'table-row' : 'none')}}>
+                  <tr key={item.id} id={indicatorElementId(item.common?.id ?? item.id)} style={{display: (visible ? 'table-row' : 'none')}}>
                     { indicatorNameColumnEnabled &&
                       <IndentableTableCell
                         onClick={collapsible ? (() => toggleVisibility(item)) : undefined}
                         indent={hierarchyEnabled && indentationLevel(item)}
                         visibleIndentation={false}
                       >
-                        { collapsible && <Icon name={collapsed ? 'angleDown' : 'angleRight'} /> }
                         { nameElement }
                       </IndentableTableCell>
                     }

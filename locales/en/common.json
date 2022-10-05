@@ -167,5 +167,6 @@
   "nav-tools": "Tools",
   "nav-primary": "Primary",
   "nav-footer": "Footer",
-  "common.of-all-emissions": "of all emissions"
+  "common.of-all-emissions": "of all emissions",
+  "organization-not-found": "Organization not found"
 }

@@ -8,6 +8,9 @@ const BadgeWrapper = styled.a`
   &.lg {
     font-size: ${(props) => props.theme.fontSizeLg};
   }
+  &.md {
+    font-size: ${(props) => props.theme.fontSizeMd};
+  }
 `;
 
 const StyledBadge = styled(Badge)`
@@ -55,14 +58,16 @@ const BadgeTooltip = React.forwardRef(function BadgeTooltip(props, ref) {
       <StyledBadge>
         {abbreviation || name}
       </StyledBadge>
-      <Tooltip
-        placement="top"
-        isOpen={tooltipOpen}
-        target={badgeId}
-        toggle={toggle}
-      >
-        {name}
-      </Tooltip>
+      { abbreviation &&
+        <Tooltip
+          placement="top"
+          isOpen={tooltipOpen}
+          target={badgeId}
+          toggle={toggle}
+        >
+          {name}
+        </Tooltip>
+      }
     </BadgeWrapper>
   );
 });

@@ -1,13 +1,16 @@
 import React, { useContext } from 'react';
-import { Trans } from 'react-i18next';
-
 import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
 import { useTranslation } from 'common/i18n';
-import { useTheme } from 'common/theme';
 import Layout, { Meta } from 'components/layout';
 import PlanContext from 'context/plan';
+
+import AccessibilityStatementComplianceStatusBlock
+  from 'components/contentblocks/AccessibilityStatementComplianceStatusBlock';
+import AccessibilityStatementContactInformationBlock
+  from 'components/contentblocks/AccessibilityStatementContactInformationBlock';
 import accessibilityStatementData from 'public/static/accessibility';
+
 
 const HeaderBg = styled.div`
   background-color: ${(props) => props.theme.brandDark};
@@ -27,7 +30,6 @@ const ContentHeader = styled.header`
 const AccessibilityPage = () => {
   const { t, i18n } = useTranslation(['a11y']);
 
-  const theme = useTheme();
   const plan = useContext(PlanContext);
 
   let locale = i18n.language;
@@ -52,9 +54,6 @@ const AccessibilityPage = () => {
       )
     );
   }
-  const accessibilityProblems = accessibilityStatementData[locale].nonAccessibleContent.nonCompliant;
-  const accessibilityContactEmail = accessibilityContact?.email || 'accessibility@kausal.tech';
-  const responsibleBody =  accessibilityContact?.publisher_name || plan.generalContent.ownerName;
 
   return (
     <Layout>
@@ -91,90 +90,14 @@ const AccessibilityPage = () => {
                 {t('a11y:website')}
                 .
               </p>
-              <p>
-                {t('a11y:target-commitment-start')}
-                {' '}
-                <a href={t('a11y:wcag-url')}>{t('a11y:target-level')}</a>
-                {' '}
-                {t('a11y:target-commitment-end')}
-              </p>
-              <h2>{t('a11y:compliance-status')}</h2>
-              <p>
-                {t('a11y:partially-compliant')}
-                {' '}
-                <a href={t('a11y:wcag-url')}>{t('a11y:target-level')}</a>
-                {' '}
-                {t('a11y:due-to')}
-              </p>
             </Col>
           </Row>
-        </Container>
-        { accessibilityProblems.length > 0
-          && (
-            <Container>
-              <Row>
-                <Col lg={{ size: 8, offset: 2 }} md={{ size: 10, offset: 1 }}>
-                  <h2>{t('a11y:non-accessible-content')}</h2>
-                  <h3>{t('a11y:non-compliance-aa')}</h3>
-                  <p>
-                    {t('a11y:non-compliance-below')}
-                    :
-                  </p>
-                  <ul>
-                    { accessibilityProblems.map((problem) => (
-                      <li key={problem.id}>
-                        <h4>{problem.title}</h4>
-                        <p dangerouslySetInnerHTML={{ __html: problem.description }}/>
-                        <p>
-                          WCAG:
-                          {' '}
-                          {problem.WCAGSection}
-                        </p>
-                      </li>
-                    ))}
-                  </ul>
-                  <p>
-                    {t('a11y:when-fixed')}
-                  </p>
-                </Col>
-              </Row>
-            </Container>
-          )}
-        <Container>
+          </Container>
+          <AccessibilityStatementComplianceStatusBlock />
+          <AccessibilityStatementContactInformationBlock />
+          <Container>
           <Row>
             <Col lg={{ size: 8, offset: 2 }} md={{ size: 10, offset: 1 }}>
-              <h2>{t('a11y:preparation')}</h2>
-              <p>
-                {t('a11y:prepared-on')}
-                {' '}
-                {accessibilityStatementData.en.preparedOn}
-                .
-              </p>
-              <p>
-                {t('a11y:prepared-how')}
-              </p>
-              <p>
-                {t('a11y:reviewed-on')}
-                {' '}
-                {accessibilityStatementData.en.reviewedOn}
-                .
-              </p>
-              <h2>{t('a11y:feedback-contact')}</h2>
-              <p>
-                <Trans i18nKey="responsible-for-maintenance">
-                  This page is published by
-                  <strong>{{responsibleBody}}</strong>
-                </Trans>
-              </p>
-              <p>
-                {t('a11y:feedback-text')}
-                {' '}
-                <a href={`mailto:${accessibilityContactEmail}`}>
-                  {accessibilityContactEmail}
-                </a>
-                {' '}
-                {t('a11y:response-time')}
-              </p>
               <h2>{t('a11y:enforcement-procedure')}</h2>
               <p>
                 {t('a11y:enforcement-step-1')}

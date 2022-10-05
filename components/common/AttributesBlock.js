@@ -29,33 +29,27 @@ const ScaleIcon = styled(Icon)`
 `;
 
 const AttributeContainer = styled.div`
-  margin-bottom: ${(props) => props.theme.spaces.s300};
+  margin-bottom: ${(props) => props.theme.spaces.s200};
 `;
 
-
-const AttributesList = styled.dl`
+const Attributes = styled.div`
   ${props => props.vertical && css`
-    display: flex;
-    flex-flow: row wrap;
+    max-width: 320px;
   `}
-
-  margin: ${(props) => props.theme.spaces.s200} auto 0;
+  margin: ${(props) => props.theme.spaces.s100} auto;
   padding: ${(props) => props.theme.spaces.s200} 0 0;
   border-top: 1px solid ${(props) => props.theme.graphColors.grey040};
   border-bottom: 1px solid ${(props) => props.theme.graphColors.grey040};
+  text-align: left;
+`;
+
+const AttributesList = styled(Row)`
+  list-style: none;
+  padding: 0;
+  margin-bottom: 0;
 
   h3 {
     font-size: ${(props) => props.theme.fontSizeBase};
-  }
-
-  dt {
-    flex: 0 0 100%;
-    margin-bottom: .5rem;
-  }
-
-  dd {
-    flex: 0 1 100%;
-    margin-bottom: 1rem;
   }
 
   .text-content {
@@ -67,6 +61,10 @@ const AttributesList = styled.dl`
     .text-content > *:last-child {
       margin-bottom: 0;
     }
+`;
+
+const AttributeItem = styled(Col)`
+  display: block;
 `;
 
 const AttributeChoiceLabel = styled.div`
@@ -117,14 +115,6 @@ function AttributeContent(props) {
       break;
     default: return <div />;
   }
-  if (vertical) {
-    return (
-      <>
-        <dt>{title}</dt>
-        <dd>{dataElement}</dd>
-      </>
-    );
-  }
   // Render horizontal layout
   return (
     <AttributeContainer>
@@ -144,11 +134,18 @@ function AttributesBlock(props) {
   } = props;
 
   return (
-    <AttributesList vertical={vertical}>
-      <Row>
+    <Attributes vertical={vertical}>
+      <AttributesList
+        vertical={vertical}
+        tag="ul"
+      >
       {attributes.map((item) => (
         item?.value &&
-        <Col md={6} lg={4}>
+        <AttributeItem
+          tag="li"
+          key={item.id}
+          md={vertical ? 12 : 6} lg={vertical ? 12 : 4}
+        >
         <React.Fragment key={item.id}>
           <AttributeContent
             title={item.key}
@@ -157,12 +154,12 @@ function AttributesBlock(props) {
             vertical={vertical}
           />
         </React.Fragment>
-        </Col>
+        </AttributeItem>
 
       ))}
-      </Row>
+      </AttributesList>
       {children}
-    </AttributesList>
+    </Attributes>
   );
 }
 

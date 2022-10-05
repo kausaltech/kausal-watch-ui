@@ -31,5 +31,5 @@
   "enforcement-body-url": "https://www.saavutettavuusvaatimukset.fi",
   "enforcement-body-email": "saavutettavuus@avi.fi",
   "enforcement-body-tel": "Puhelinnumero vaihde 0295 016 000",
-  "responsible-for-maintenance": "Sivuston ylläpidosta vastaa <1>{{responsibleBody}}</1>."
+  "responsible-for-maintenance": "Sivuston ylläpidosta vastaa {{responsibleBody}}."
 }

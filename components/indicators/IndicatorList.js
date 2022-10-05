@@ -148,14 +148,16 @@ class IndicatorList extends React.Component {
       Object.values(uniqueCommonIndicators)
         .map(i => ([i.id, makeLinks(i)]))
     );
-    const expandPaths = (processed, indicators, path) => {
-      indicators.forEach(i => {
-        const newPath = [...path, i.id]
-        processed[i.id].path = newPath;
-        processed[i.id].pathNames = newPath.map(p => uniqueCommonIndicators[p].name);
-        expandPaths(processed, i.children.map(c => processed[c]), newPath)
+    const expandPaths = (indicators, path) => {
+      let descendants = [];
+      indicators.forEach(indicator => {
+        const newPath = [...path, indicator.id]
+        indicator.path = newPath;
+        indicator.pathNames = newPath.map(p => uniqueCommonIndicators[p].name);
+        indicator.descendants = expandPaths(indicator.children.map(c => processed[c]), newPath);
+        descendants = descendants.concat(indicator.descendants, [indicator.id])
       });
-      return processed;
+      return descendants;
     }
 
     const rootIndicators = Object.values(processed).filter(i => i.isRoot);
@@ -164,7 +166,8 @@ class IndicatorList extends React.Component {
       return {};
     }
 
-    return expandPaths(processed, rootIndicators, []);
+    expandPaths(rootIndicators, []);
+    return processed;
   }
 
   processDataToProps(data) {

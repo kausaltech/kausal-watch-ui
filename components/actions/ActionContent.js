@@ -141,6 +141,8 @@ query ActionDetails($plan: ID!, $id: ID!) {
         abbreviation
         name
       }
+      role
+      specifier
     }
     tasks {
       id, name, dueAt, completedAt, comment, state
@@ -298,6 +300,15 @@ const ActionNumberBadge = styled(Badge)`
 const MergedActionSection = styled.div`
   margin-bottom: ${(props) => props.theme.spaces.s100};
 `;
+
+const RelatedActionList = styled(Row)`
+  padding-left: 0;
+`;
+
+const RelatedActionItem = styled(Col)`
+  list-style: none;
+`;
+
 
 function MergedAction({ action, theme }) {
   const { identifier, officialName } = action;
@@ -566,7 +577,7 @@ function ActionContent({ id }) {
             ) : null}
             { action.responsibleParties.length ? (
               <ActionSection>
-                <ResponsibleList data={action.responsibleParties.map((item) => item.organization)} />
+                <ResponsibleList responsibleParties={action.responsibleParties} />
               </ActionSection>
             ) : null}
             { action.categories.length ? (
@@ -597,9 +608,9 @@ function ActionContent({ id }) {
                 <SectionHeader>{ t('actions:related-actions') }</SectionHeader>
               </Col>
             </Row>
-            <Row tag="ul">
+            <RelatedActionList tag="ul">
               {action.relatedActions.map((relAction) => (
-                <Col
+                <RelatedActionItem
                   tag="li"
                   xs="12"
                   sm="6"
@@ -612,9 +623,9 @@ function ActionContent({ id }) {
                     action={relAction}
                     showPlan={true}
                   />
-                </Col>
+                </RelatedActionItem>
               ))}
-            </Row>
+            </RelatedActionList>
           </Container>
         </div>
       )}

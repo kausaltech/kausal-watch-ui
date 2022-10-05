@@ -17,6 +17,10 @@ import IndicatorHighlightsBlock from 'components/contentblocks/IndicatorHighligh
 import RelatedIndicatorsBlock from 'components/contentblocks/RelatedIndicatorsBlock';
 import RelatedPlanListBlock from 'components/contentblocks/RelatedPlanListBlock';
 import ActionCategoryFilterCardsBlock from 'components/contentblocks/ActionCategoryFilterCardsBlock';
+import AccessibilityStatementComplianceStatusBlock
+  from 'components/contentblocks/AccessibilityStatementComplianceStatusBlock';
+import AccessibilityStatementContactInformationBlock
+  from 'components/contentblocks/AccessibilityStatementContactInformationBlock';
 
 import type { StreamFieldFragmentFragment } from 'common/__generated__/graphql';
 
@@ -201,6 +205,28 @@ const STREAM_FIELD_FRAGMENT = gql`
         identifier
       }
     }
+    ...on AccessibilityStatementComplianceStatusBlock {
+      id
+      blockType
+      field
+    }
+    ...on AccessibilityStatementPreparationInformationBlock {
+      id
+      blockType
+      field
+    }
+    ...on AccessibilityStatementContactInformationBlock {
+      id
+      blockType
+      field
+      blocks {
+        id
+        field
+        ...on CharBlock {
+          value
+        }
+      }
+    }
   }
 ${images.fragments.multiUseImage}
 `;
@@ -311,6 +337,13 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
     }
     case 'CategoryTreeMapBlock': {
       return <CategoryTreeBlock {...block} />
+    }
+    case 'AccessibilityStatementComplianceStatusBlock': {
+      return <AccessibilityStatementComplianceStatusBlock {...block} />
+    }
+    case 'AccessibilityStatementContactInformationBlock': {
+      const { blocks } = block;
+      return <AccessibilityStatementContactInformationBlock content={blocks}/>
     }
     default:
       return (
