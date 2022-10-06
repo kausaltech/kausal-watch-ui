@@ -17,7 +17,6 @@ import { OrganizationLink } from 'common/links';
 import ContentLoader from 'components/common/ContentLoader';
 import ErrorMessage from 'components/common/ErrorMessage';
 import { Meta } from 'components/layout';
-import ActionsStatusGraphs from 'components/dashboard/ActionStatusGraphs';
 
 const Tab = styled.button`
   background: ${(props) => props.theme.brandDark};
@@ -140,6 +139,7 @@ const GET_ORG_DETAILS = gql`
         id
         name
         shortName
+        viewUrl
         organization {
           id
           name
@@ -158,6 +158,12 @@ const GET_ORG_DETAILS = gql`
             src
             alt
           }
+        }
+        actionImplementationPhases {
+          id
+          identifier
+          name
+          order
         }
         actionStatuses {
           id
@@ -184,6 +190,7 @@ const GET_ORG_DETAILS = gql`
           order
           plan {
             id
+            viewUrl
           }
           schedule {
             id
@@ -296,8 +303,12 @@ function OrgContent(props) {
     return <ErrorMessage statusCode={404} message={t('common:organization-not-found')} />;
   }
 
-  console.log("org", org);
-  const plans = data?.organization?.plansWithActionResponsibilities;
+  const unsortedPlans = data?.organization?.plansWithActionResponsibilities;
+  // Make sure host plan is first
+  const plans = [...unsortedPlans].sort(function(x,y){ return x.id == plan.id ? -1 : y.id == plan.id ? 1 : 0; });
+
+  // TODO: this is a hacky way to find the viewUrl for the active plan
+  const planViewUrl = plan.allRelatedPlans.find((p) => p.id === plans[selectedPlanIndex].id)?.viewUrl;
 
   return (
     <div className="mb-5">
@@ -384,6 +395,7 @@ function OrgContent(props) {
           <ActionTableContainer>
             <ActionStatusTable
               enableExport={false}
+              planViewUrl={planViewUrl}
               plan={plans[selectedPlanIndex]}
               actions={[...plans[selectedPlanIndex]?.actions]}
               orgs={[]}
