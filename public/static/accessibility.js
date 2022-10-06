@@ -26,7 +26,7 @@ const accessibilityStatementData = {
       notInScope: [],
     },
     preparedOn: '7.10.2020',
-    reviewedOn: '7.10.2020',
+    reviewedOn: '7.10.2022',
     feedbackEmail: 'accessibility@kausal.tech',
     feedbackLink: '',
   },
@@ -57,7 +57,7 @@ const accessibilityStatementData = {
       notInScope: [],
     },
     preparedOn: '7.10.2020',
-    reviewedOn: '7.10.2020',
+    reviewedOn: '7.10.2022',
     feedbackLink: '',
   },
 };
