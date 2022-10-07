@@ -3,8 +3,10 @@ import React, { useContext } from 'react';
 import { gql, useQuery } from '@apollo/client';
 import { useTranslation } from 'common/i18n';
 import Layout, { Meta } from 'components/layout';
+import { Container, Row, Col } from 'reactstrap';
 import PlanContext from 'context/plan';
 import { useTheme } from 'common/theme';
+import RichText from 'components/common/RichText';
 import ErrorMessage from 'components/common/ErrorMessage';
 import ContentLoader from 'components/common/ContentLoader';
 import StreamField from 'components/common/StreamField';
@@ -34,6 +36,9 @@ query GetPlanPageGeneral($plan: ID!, $path: String!) {
       body {
         ...StreamFieldFragment
       }
+    }
+    ... on PrivacyPolicyPage {
+      leadContent
     }
     ... on CategoryPage {
       category {
@@ -240,6 +245,15 @@ const Content = ({ page }) => {
       />
       <PageHeaderBlock page={page} color={pageSectionColor} />
       <div className="content-area">
+        {page.leadContent && (
+          <Container className="my-5">
+            <Row>
+              <Col lg={{ size: 8, offset: 2 }} md={{ size: 10, offset: 1 }}>
+                <RichText html={page.leadContent} />
+              </Col>
+            </Row>
+          </Container>
+        )}
         {page.body && (
           <StreamField
             page={page}
