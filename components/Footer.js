@@ -7,6 +7,15 @@ import SiteContext from 'context/site';
 import ApplicationStateBanner from './common/ApplicationStateBanner';
 import SiteFooter from './common/SiteFooter';
 
+const getFeedbackUrl = (currentURL) => {
+  const feedbackPageUrlBase = '/feedback';
+  if (currentURL.startsWith(feedbackPageUrlBase)) {
+    return null;
+  }
+  const feedbackPageQueryPart = `?lastUrl=${encodeURIComponent(currentURL)}`;
+  return `${feedbackPageUrlBase}${feedbackPageQueryPart}`;
+}
+
 function Footer(props) {
   const plan = React.useContext(PlanContext);
   const site = React.useContext(SiteContext);
@@ -73,7 +82,6 @@ function Footer(props) {
   }
 
   const utilityLinks = [];
-  const currentURL = router.asPath;
 
   if (plan.contactLink) {
     utilityLinks.push({ id: '1', name: t('contact'), slug: plan.contactLink });
@@ -83,8 +91,10 @@ function Footer(props) {
     utilityLinks.push({ id: '2', name: t('give-feedback'), slug: plan.feedbackLink });
   }
   else {
-    utilityLinks.push({ id: '2', name: t('give-feedback'),
-                        slug: `/feedback?lastUrl=${encodeURIComponent(currentURL)}` });
+    const url = getFeedbackUrl(router.asPath);
+    if (url != null) {
+      utilityLinks.push({ id: '2', name: t('give-feedback'), slug: url });
+    }
   }
 
   if (plan.adminUrl) {
