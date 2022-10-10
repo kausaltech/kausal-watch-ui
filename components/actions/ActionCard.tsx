@@ -223,7 +223,7 @@ const ActionIdentifier = (props) => {
     <ActionId>
     { plan && (
       <PlanChip
-        planImage={plan.image.rendition.src}
+        planImage={plan.image?.rendition?.src}
         planShortName={plan.shortName || plan.name}
         size="sm"
       />

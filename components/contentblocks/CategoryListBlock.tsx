@@ -115,7 +115,7 @@ const CategoryListBlock = (props: CategoryListBlockProps) => {
               <Link href={cat.categoryPage.urlPath}>
                 <a className="card-wrapper">
                   <Card
-                    imageUrl={cat.image?.small.src || fallbackImage.small.src}
+                    imageUrl={cat.image?.small.src || fallbackImage?.small?.src}
                     imageAlign={getBgImageAlignment(cat.image || fallbackImage)}
                     colorEffect={cat.color}
                   >

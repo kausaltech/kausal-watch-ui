@@ -304,7 +304,7 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
       return (
         <FrontPageHeroBlock
           layout={layout}
-          imageSrc={image.large.src}
+          imageSrc={image?.large?.src}
           imageAlign={getBgImageAlignment(image)}
           heading={heading}
           lead={lead}
