@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { transparentize } from 'polished';
 import styled from 'styled-components';
 
 const Tag = styled.div`
@@ -15,6 +16,7 @@ const PlanAvatar = styled.img`
   height: ${(props) => props.theme.spaces[props.size]};
   margin-right: ${(props) => props.size === 's300' ? props.theme.spaces.s050 : props.theme.spaces.s050};
   border-radius: 50%;
+  box-shadow: 0 0 3px 1px ${(props) => transparentize(0.8, props.theme.themeColors.black)};
 `;
 
 const PlanName = styled.div`

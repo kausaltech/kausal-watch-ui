@@ -23,7 +23,7 @@ const PlanAvatar = styled.img`
   width: 1.5rem;
   height: 1.5rem;
   border-radius: 50%;
-  border: 1px solid ${(props)=> transparentize(0.8, props.theme.brandNavColor)};
+  box-shadow: 0 0 3px 1px ${(props) => transparentize(0.8, props.theme.themeColors.black)};
 `;
 
 const PlanTitle = styled.div`
