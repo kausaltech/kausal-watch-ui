@@ -43,7 +43,8 @@ function captureException(err, ctx) {
       scope.setExtra('http_status', res.statusCode);
     }
 
-    if (process.browser) {
+    const isServer = typeof window === "undefined";
+    if (!isServer) {
       scope.setTag('ssr', false);
       scope.setExtra('query', query);
       scope.setExtra('pathname', pathname);

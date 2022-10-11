@@ -4,7 +4,8 @@ import PropTypes from 'prop-types';
 export default function ErrorMessage(props) {
   const { message, statusCode } = props;
 
-  if (statusCode && !process.browser) {
+  const isServer = typeof window === "undefined";
+  if (statusCode && isServer) {
     const e = new Error(message);
     e.statusCode = statusCode;
     if (statusCode === 404) e.code = 'NOENT';

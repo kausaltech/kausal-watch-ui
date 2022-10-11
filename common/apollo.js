@@ -141,6 +141,7 @@ let globalApolloClient;
 
 export function initializeApolloClient(opts) {
   const { ctx, initialState, planIdentifier } = opts;
+  const isServer = typeof window === "undefined";
 
   if (planIdentifier) {
     globalPlanIdentifier = planIdentifier;
@@ -149,9 +150,9 @@ export function initializeApolloClient(opts) {
   }
   if (ctx) globalRequestContext = ctx;
 
-  if (globalApolloClient && process.browser) return globalApolloClient;
+  if (globalApolloClient && !isServer) return globalApolloClient;
   const clientOpts = {
-    ssrMode: !process.browser,
+    ssrMode: isServer,
     link: ApolloLink.from([refererLink, localeMiddleware, refererLink, sentryTracingLink, sentryErrorLink, httpLink]),
     cache: new InMemoryCache({
       // https://www.apollographql.com/docs/react/data/fragments/#defining-possibletypes-manually
@@ -159,7 +160,8 @@ export function initializeApolloClient(opts) {
     }).restore(initialState || {}),
   };
   const apolloClient = new ApolloClient(clientOpts);
-  if (process.browser) globalApolloClient = apolloClient;
+
+  if (!isServer) globalApolloClient = apolloClient;
   return apolloClient;
 }
 

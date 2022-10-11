@@ -19,10 +19,11 @@ import PlanContext, { GET_PLAN_CONTEXT, customizePlan } from 'context/plan';
 import SiteContext from 'context/site';
 
 const { publicRuntimeConfig } = getConfig();
+const isServer = typeof window === "undefined";
 
 require('../styles/default/main.scss');
 
-if (process.browser) {
+if (!isServer) {
   setBasePath();
 }
 
@@ -68,7 +69,7 @@ function WatchApp(props: WatchAppProps) {
 
   useEffect(() => {
     // Launch Piwik after rendering the app
-    if (piwik || !process.browser || !matomoURL || !matomoSiteId) return;
+    if (piwik || isServer || !matomoURL || !matomoSiteId) return;
     piwik = new ReactPiwik({
       url: matomoURL,
       siteId: matomoSiteId,
@@ -84,7 +85,7 @@ function WatchApp(props: WatchAppProps) {
 
   dayjs.locale(router.locale)
 
-  if (process.browser) {
+  if (!isServer) {
     setTheme(themeProps);
     setApolloPlanIdentifier(plan.identifier);
   }
@@ -167,7 +168,7 @@ WatchApp.getInitialProps = async (appContext) => {
   setBasePath();
   const appProps = await App.getInitialProps(appContext);
 
-  if (process.browser) {
+  if (!isServer) {
     const nextData = window.__NEXT_DATA__;
     const { _nextI18Next } = nextData.props.pageProps;
     const { plan, themeProps, siteProps } = nextData.props;

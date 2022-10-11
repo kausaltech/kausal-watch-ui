@@ -259,7 +259,8 @@ function CategoryTreeBlockBrowser(props: CategoryTreeBlockProps) {
 
 
 function CategoryTreeBlock(props: CategoryTreeBlockProps) {
-  if (!process.browser) {
+  const isServer = typeof window === "undefined";
+  if (isServer) {
     return null;
   }
 

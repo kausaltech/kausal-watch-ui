@@ -318,7 +318,8 @@ function getSubplotHeaders(subPlotRowCount, names) {
 }
 
 function IndicatorGraph(props) {
-  if (!process.browser) {
+  const isServer = typeof window === "undefined";
+  if (isServer) {
     return null;
   }
   const {

@@ -49,7 +49,8 @@ const StatusDonut = (props) => {
   const theme = useTheme();
   const { i18n } = useTranslation();
 
-  if (!process.browser) {
+  const isServer = typeof window === "undefined";
+  if (isServer) {
     return null;
   }
 

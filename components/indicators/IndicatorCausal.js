@@ -279,6 +279,7 @@ class IndicatorCausal extends React.Component {
     } = this.state;
 
     const { theme } = this.props;
+    const isServer = typeof window === "undefined";
 
     if (error) {
       return (
@@ -288,7 +289,7 @@ class IndicatorCausal extends React.Component {
         </Alert>
       );
     }
-    if (!process.browser || !isLoaded) {
+    if (isServer || !isLoaded) {
       return <ContentLoader />;
     }
     const combinedData = this.combineData(nodes, edges);

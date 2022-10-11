@@ -77,7 +77,8 @@ type CategoryTreeMapProps = {
   onChangeSection: (cat: string) => void,
 }
 const CategoryTreeMap = React.memo(function CategoryTreeMap(props: CategoryTreeMapProps) {
-  if (!process.browser) {
+  const isServer = typeof window === "undefined";
+  if (isServer) {
     return null;
   }
   const { data, onChangeSection, valueAttribute, heading } = props;

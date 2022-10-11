@@ -73,7 +73,8 @@ class VisPage extends React.Component {
 
     let content;
 
-    if (process.browser) {
+    const isServer = typeof window === "undefined";
+    if (!isServer) {
       if (loading) {
         content = <ContentLoader />;
       } else {

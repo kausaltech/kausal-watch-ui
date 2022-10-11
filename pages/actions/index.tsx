@@ -79,10 +79,11 @@ function ActionsListPage() {
     return <ErrorMessage message="Invalid action list page" />;
   }
 
+  const isServer = typeof window === "undefined";
   return (
     <Layout>
       <Meta title={planPage.title} />
-      {!process.browser ? <ContentLoader /> : (
+      {isServer ? <ContentLoader /> : (
         <ActionList
           title={planPage.title}
           leadContent={planPage.leadContent}

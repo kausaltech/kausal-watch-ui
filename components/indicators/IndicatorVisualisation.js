@@ -465,8 +465,9 @@ function normalizeValuesByNormalizer(values, normalizerId) {
   ));
 }
 
+const isServer = typeof window === "undefined";
 function IndicatorVisualisation({ indicatorId }) {
-  if (!process.browser) {
+  if (isServer) {
     return null;
   }
 

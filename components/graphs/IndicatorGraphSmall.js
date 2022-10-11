@@ -504,9 +504,9 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
   const plot = { data: traces, layout };
   return plot;
 }
-
+const isServer = typeof window === "undefined";
 function IndicatorGraphSmall({ indicatorId }) {
-  if (!process.browser) {
+  if (isServer) {
     return null;
   }
 

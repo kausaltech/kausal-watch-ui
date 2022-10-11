@@ -28,10 +28,12 @@ function DashboardPage() {
     // Use shallow routing to avoid page re-rendering
     router.replace(link.href, undefined, { shallow: true });
   };
+
+  const isServer = typeof window === "undefined";
   return (
     <Layout>
       <Meta title={t('dashboard')} />
-      {!process.browser ? <ContentLoader /> : (
+      {isServer ? <ContentLoader /> : (
         <Dashboard onFilterChange={handleFilterChange} />
       )}
     </Layout>
