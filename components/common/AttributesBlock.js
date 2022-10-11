@@ -86,14 +86,14 @@ function AttributeContent(props) {
         dataElement = (
           <div>
             { contentType.choiceOptions.map((choice, idx) => (
-              <ScaleIcon
+              (idx > 0 || !contentType.hasZeroOption) && <ScaleIcon
                 name="circleFull"
                 className={idx <= valueIndex ? 'icon-on' : 'icon-off'}
                 size="md"
                 key={choice.identifier}
               />
             ))}
-            <AttributeChoiceLabel>{ contentData.value }</AttributeChoiceLabel>
+            { contentType.showChoiceNames && <AttributeChoiceLabel>{ contentData.value }</AttributeChoiceLabel> }
           </div>
         );
       }

@@ -245,6 +245,8 @@ query ActionDetails($plan: ID!, $id: ID!) {
       choiceOptions {
         identifier
       }
+      showChoiceNames
+      hasZeroOption
     }
   }
 }
