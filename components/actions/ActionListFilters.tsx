@@ -2,9 +2,11 @@ import React, { createRef, Ref, useCallback, useEffect, useMemo, useState } from
 import { Row, Col, Badge, CloseButton } from 'reactstrap';
 import { debounce, filter } from 'lodash';
 import styled from 'styled-components';
+import { readableColor } from 'polished';
 import {ButtonGroup, Button as RButton} from 'reactstrap';
 
 import { getActionTermContext, useTranslation } from 'common/i18n';
+import { useTheme } from 'common/theme';
 import TextInput from 'components/common/TextInput';
 import Button from 'components/common/Button';
 import { PlanContextType, usePlan } from 'context/plan';
@@ -139,6 +141,7 @@ function ActionListTextInput({
 type ActionListDropdownProps = {
   id: string,
   label: string,
+  helpText: string,
   showAllLabel?: string,
   currentValue: string|undefined,
   onChange: FilterChangeCallback,
@@ -154,13 +157,19 @@ const filterOption = createFilter({
 });
 
 
-function ActionListDropdownInput({
-  id, label, currentValue, onChange, showAllLabel, options
-}: ActionListDropdownProps) {
+function ActionListDropdownInput(props: ActionListDropdownProps) {
+  const {
+    id, label, helpText, currentValue, onChange, showAllLabel, options,
+  } = props;
+  // check if we need to inverse component colors depending on section bg
+  const theme = useTheme();
+  const invert = readableColor(
+    theme.neutralLight,
+    theme.themeColors.black,
+    theme.themeColors.white) === theme.themeColors.white;
   const callback = useCallback((option: SelectDropdownOption|null) => {
     onChange(id, option?.id);
   }, [id, onChange]);
-
   const selectedOption = currentValue ? options.find((opt) => opt.id === currentValue) : null;
 
   return (
@@ -175,6 +184,8 @@ function ActionListDropdownInput({
       isClearable={true}
       menuShouldScrollIntoView={true}
       filterOption={filterOption}
+      helpText={helpText}
+      invert={invert}
     />
   );
 }
@@ -253,6 +264,7 @@ export interface ActionListFilter {
   id: string,
   filterAction: (value: string, action: ActionListAction) => boolean,
   getLabel: (t: TFunction) => string,
+  getHelpText: (t: TFunction) => string,
   getShowAllLabel: (t: TFunction) => string,
   sm: number|undefined,
   md: number,
@@ -270,6 +282,7 @@ abstract class DefaultFilter implements ActionListFilter {
   abstract options?: ActionListFilter['options'];
 
   abstract getLabel(t: TFunction): string;
+  abstract getHelpText(t: TFunction): string;
   abstract filterAction(value: string, action: ActionListAction): boolean;
 
   getShowAllLabel(t: TFunction) {
@@ -287,6 +300,7 @@ abstract class DefaultFilter implements ActionListFilter {
         <ActionListDropdownInput
           id={this.id}
           label={this.getLabel(t)}
+          helpText={this.getHelpText(t)}
           showAllLabel={this.getShowAllLabel(t)}
           currentValue={value}
           onChange={onChange}
@@ -303,26 +317,32 @@ type GenericSelectFilterOpts = {
   options: ActionListFilterOption[],
   filterAction: (value: string, action: ActionListAction) => boolean,
   label: string,
+  helpText: string,
   showAllLabel?: string,
 }
 
 class GenericSelectFilter extends DefaultFilter {
   options: ActionListFilterOption[];
   label: string;
+  helpText: string|undefined;
   showAllLabel: string|undefined;
   filterAction: (value: string, action: ActionListAction) => boolean;
 
   constructor(opts: GenericSelectFilterOpts) {
-    const { id, options, label, showAllLabel, filterAction } = opts;
+    const { id, options, label, helpText, showAllLabel, filterAction } = opts;
     super();
     this.id = id;
     this.options = options;
     this.label = label;
+    this.helpText = helpText;
     this.showAllLabel = showAllLabel;
     this.filterAction = filterAction;
   }
   getLabel(t: TFunction) {
     return this.label;
+  }
+  getHelpText(t: TFunction) {
+    return this.helpText;
   }
   getShowAllLabel(t: TFunction) {
     return this.showAllLabel;
@@ -359,6 +379,9 @@ class ResponsiblePartyFilter extends DefaultFilter {
   }
   getLabel(t: TFunction) {
     return t('filter-organization');
+  }
+  getHelpText(t: TFunction) {
+    return t('filter-organization-help', '');
   }
   getShowAllLabel(t: TFunction) {
     return t('filter-all-organizations');
@@ -462,6 +485,9 @@ class CategoryFilter extends DefaultFilter {
   getLabel(t: TFunction) {
     return this.ct.name;
   }
+  getHelpText(t: TFunction) {
+    return this.ct.helpText;
+  }
   getShowAllLabel(t: TFunction) {
     return t('filter-all-categories');
   }
@@ -545,9 +571,11 @@ function ActionListFilters(props: ActionListFiltersProps) {
   const {
     activeFilters, filterSections, actionCount, onChange
   } = props;
+
   const [filterState, setFilterState] = useState(activeFilters);
   const { t } = useTranslation();
   const plan = usePlan();
+
   const allFilters: ActionListFilter[] = useMemo(
     () => filterSections.map(section => section.filters).flat(),
     [filterSections]
@@ -647,6 +675,7 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
             id: 'phase',
             options: plan.actionImplementationPhases.map((obj) => ({id: obj.id, label: obj.name})),
             label: t('filter-phase'),
+            helpText: t('filter-phase-help', ''),
             showAllLabel: t('filter-all-phases'),
             filterAction: (val: string, act: ActionListAction) => {
               if (act.implementationPhase?.id === val) return true;
@@ -660,6 +689,7 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
             id: 'primary_org',
             options: primaryOrgs.map((obj) => ({id: obj.id, label: obj.abbreviation || obj.name})),
             label: t('filter-primary-organization'),
+            helpText: t('filter-primary-organization-help', ''),
             showAllLabel: t('filter-all-organizations'),
             filterAction: (val: string, act: ActionListAction) => {
               if (act.primaryOrg?.id === val) return true;
@@ -674,6 +704,7 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
             id: 'schedule',
             options: plan.actionSchedules.map((obj) => ({id: obj.id, label: obj.name})),
             label: t('filter-schedule'),
+            helpText: t('filter-schedule-help', ''),
             showAllLabel: t('filter-all-schedules'),
             filterAction: (val: string, act: ActionListAction) => {
               if (act.schedule.some((sch) => sch.id === val)) return true;
@@ -693,6 +724,7 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
           id: 'impact',
           options: plan.actionImpacts.map((obj) => ({id: obj.id, label: obj.name})),
           label: t('filter-impact'),
+          helpText: t('filter-impact-help', ''),
           showAllLabel: t('filter-all-impacts'),
           filterAction: (val: string, act: ActionListAction) => {
             if (act.impact?.id === val) return true;

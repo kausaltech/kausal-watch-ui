@@ -168,5 +168,10 @@
   "nav-primary": "Primary",
   "nav-footer": "Footer",
   "common.of-all-emissions": "of all emissions",
-  "organization-not-found": "Organization not found"
+  "organization-not-found": "Organization not found",
+  "filter-impact-help": "Show actions with selected impact",
+  "filter-organization-help": "Show actions that the selected organization is responsible for",
+  "filter-phase-help": "Show actions in selected implementation phase",
+  "filter-primary-organization-help": "Show actions of selected municipality",
+  "filter-schedule-help": "Show actions spanning across selected schedule"
 }

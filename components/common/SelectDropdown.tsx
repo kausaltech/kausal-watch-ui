@@ -5,6 +5,8 @@ import Highlighter from "react-highlight-words";
 import { FormGroup, Label as BSLabel } from "reactstrap";
 import { useTheme, Theme } from "common/theme";
 import { data } from "autoprefixer";
+import PopoverTip from 'components/common/PopoverTip';
+import { TRUE } from "sass";
 
 
 const Label = styled(BSLabel)`
@@ -142,10 +144,12 @@ type SelectDropdownProps<Option extends SelectDropdownOption> = Parameters<typeo
   id: string,
   label?: string,
   size?: string,
+  helpText?: string,
+  invert?: boolean,
 };
 
 function SelectDropdown<Option extends SelectDropdownOption>(props: SelectDropdownProps<Option>) {
-  const { size, components, id, label, onChange, ...rest } = props;
+  const { size, components, id, label, onChange, helpText, invert, ...rest } = props;
 	const extendedComponents = { DropdownIndicator, IndicatorSeparator, ...components };
   const theme = useTheme();
   const styles = getSelectStyles(theme, 'isMulti' in props, size);
@@ -155,6 +159,13 @@ function SelectDropdown<Option extends SelectDropdownOption>(props: SelectDropdo
       { label && (
         <Label for={id}>
           { label }
+          {helpText && (
+            <PopoverTip
+              content={helpText}
+              identifier={id}
+              invert={invert}
+            />
+          )}
         </Label>
       )}
       <Select

@@ -169,5 +169,9 @@
   "nav-tools": "Työkalut",
   "nav-primary": "Ensisijainen",
   "nav-footer": "Alatunniste",
-  "common.of-all-emissions": "kaikista päästöistä"
+  "common.of-all-emissions": "kaikista päästöistä",
+  "filter-impact-help": "Näytä toimenpiteet joilla valittu vaikutus",
+  "filter-schedule-help": "Näytä toimenpiteet jotka sijoittuvat valittuun ajankohtaan",
+  "filter-phase-help": "Näytä toimenpiteet jotka ovat valitussa toteutusvaiheessa",
+  "filter-organization-help": "Näytä toimenpiteet joissa valittu organisaatio on vastuutoimijana"
 }
