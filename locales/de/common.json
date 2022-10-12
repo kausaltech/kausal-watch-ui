@@ -160,11 +160,18 @@
   "organizations": "Organisationen",
   "indicator-compare-source": "Zeige an",
   "indicator-compare-to": "Vergleiche mit",
-  "indicator-normalize-per-capita": "Per capita",
+  "indicator-normalize-per-capita": "Show per capita",
   "indicator-progress-bar": "Im Jahr {{startYear}} betrug {{name}} {{startValue}}. Der letzte beobachtete Wert {{latestYear}} war {{latestValue}}. Das Ziel für das Jahr {{goalYear}} ist {{goalValue}}. Seit {{startYear}} beträgt die Reduktion {{reduced}}. {{toBeReduced}} muss noch reduziert werden vor dem Jahr {{goalYear}}.",
   "nav-actions-pager": "Maßnahmen-Pager",
   "form-action-filters": "Maßnahmenliste-Filter",
   "nav-tools": "Werkzeuge",
   "nav-primary": "Primär",
-  "nav-footer": "Fußzeile"
+  "nav-footer": "Fußzeile",
+  "common.of-all-emissions": "of all emissions",
+  "organization-not-found": "Organization not found",
+  "filter-impact-help": "Show actions with selected impact",
+  "filter-organization-help": "Show actions that the selected organization is responsible for",
+  "filter-phase-help": "Show actions in selected implementation phase",
+  "filter-primary-organization-help": "Show actions of selected municipality",
+  "filter-schedule-help": "Show actions spanning across selected schedule"
 }
