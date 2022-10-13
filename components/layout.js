@@ -6,6 +6,7 @@ import styled from 'styled-components';
 
 import PlanContext from 'context/plan';
 import SiteContext from 'context/site';
+import EmbedContext from 'context/embed';
 import ThemedGlobalStyles from 'common/ThemedGlobalStyles';
 import theme from 'common/theme';
 import { CombinedIconSymbols } from 'components/common/Icon';
@@ -14,12 +15,13 @@ import Header from './header';
 import Footer from './Footer';
 
 const Content = styled.main`
-  min-height: 800px;
+  min-height: ${(props) => props.embed ? '0' : '800px'}
 `;
 
 function Layout({ children }) {
   const plan = useContext(PlanContext);
   const site = useContext(SiteContext);
+  const embed = useContext(EmbedContext);
   const iconBase = theme.name ? `/static/themes/${theme.name}/images/favicon` : null;
   const googleSiteVerificationTag = plan.domain?.googleSiteVerificationTag;
 
@@ -57,18 +59,20 @@ function Layout({ children }) {
             <link rel="apple-touch-icon" href={`${iconBase}/apple.png`} />
           </>
         )}
+        {// TODO: perhaps hide google tag on embed?
+        }
         { googleSiteVerificationTag && <meta name="google-site-verification" content={googleSiteVerificationTag} />}
       </Head>
-      <Header
+      {!embed.active && <Header
         siteTitle={displaySite.navigationTitle}
-      />
-      <Content id="main">
+      />}
+      <Content id="main" embed={embed.active}>
         <CombinedIconSymbols />
         {children}
       </Content>
-      <Footer
+      {!embed.active && <Footer
         siteTitle={displaySite.navigationTitle}
-      />
+      />}
     </>
   );
 }

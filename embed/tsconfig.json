@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "lib": [
+      "dom",
+    ],
+    "removeComments": true,
+    "allowJs": false,
+    "skipLibCheck": false,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": false,
+    "esModuleInterop": false,
+    "module": "none",
+    "moduleResolution": "node",
+    "resolveJsonModule": false,
+    "isolatedModules": false,
+    "incremental": false,
+    "outDir": "../public/static",
+  },
+  "include": [
+    "embed-*.ts",
+  ],
+}

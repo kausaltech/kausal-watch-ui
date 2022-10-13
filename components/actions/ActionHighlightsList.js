@@ -1,13 +1,13 @@
 /* eslint-disable max-classes-per-file */
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { gql } from '@apollo/client';
 import { Query } from '@apollo/client/react/components';
 import styled from 'styled-components';
-import {
-  Row, Col,
-} from 'reactstrap';
+import { Row, Col } from 'reactstrap';
 import LazyLoad from 'react-lazyload';
+
+import EmbedContext from 'context/embed';
 import Button from 'components/common/Button';
 import { getActionTermContext, withTranslation } from 'common/i18n';
 import ContentLoader from 'components/common/ContentLoader';
@@ -71,8 +71,17 @@ const ListHeader = styled(Col)`
   }
 `;
 
-const CardContainer = styled(Col)`
+const ReactStrapCol = (props) => {
+  const childProps = Object.assign(
+    // remove the embed prop so it won't end up as a DOM attribute
+    {}, props, {embed: undefined, children: undefined}
+  );
+  return <Col {...childProps}>{props.children}</Col>
+}
+
+const StyledCardContainer = styled(ReactStrapCol)`
   margin-bottom: ${(props) => props.theme.spaces.s150};
+  ${(props) => props.embed.active ? '' : 'transition: all 0.5s ease;'}
 
   .card {
     height: 100%;
@@ -83,12 +92,34 @@ const CardContainer = styled(Col)`
   }
 `;
 
-function ActionCardList({ t, actions, plan }) {
+const ConditionalLazyLoad = (props) => {
+  if (props.embed?.active) {
+    return <>{ props.children }</>;
+  }
+  return (
+    <LazyLoad height={300}>
+      {props.children}
+    </LazyLoad>
+  );
+}
+
+const CardContainer = (props) => {
+  return <StyledCardContainer {...props}>
+    <ConditionalLazyLoad {...props}>
+      {props.children}
+    </ConditionalLazyLoad>
+  </StyledCardContainer>
+}
+
+function ActionCardList({ t, actions, plan, displayHeader }) {
+  // Components which use the EmbedContext support embeding
+  const embed = useContext(EmbedContext);
+
   return (
     <Row>
-      <ListHeader xs="12">
+      { displayHeader && <ListHeader xs="12">
         <h2>{ t('recently-updated-actions', getActionTermContext(plan)) }</h2>
-      </ListHeader>
+      </ListHeader> }
       {actions.map((item) => (
         <CardContainer
           xs="12"
@@ -96,15 +127,13 @@ function ActionCardList({ t, actions, plan }) {
           lg="4"
           key={item.id}
           className="d-flex align-items-stretch"
-          style={{ transition: 'all 0.5s ease' }}
+          embed={embed}
         >
-          <LazyLoad height={300}>
-            <ActionHighlightCard
-              action={item}
-              imageUrl={getActionImage(plan, item)?.small.src}
-              hideIdentifier={plan.hideActionIdentifiers}
-            />
-          </LazyLoad>
+          <ActionHighlightCard
+            action={item}
+            imageUrl={getActionImage(plan, item)?.small.src}
+            hideIdentifier={plan.hideActionIdentifiers}
+          />
         </CardContainer>
       ))}
       <Col xs="12" className="mt-5 mb-5">
@@ -123,6 +152,7 @@ function ActionCardList({ t, actions, plan }) {
 ActionCardList.propTypes = {
   t: PropTypes.func.isRequired,
   actions: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  displayHeader: PropTypes.bool,
   plan: PropTypes.shape({
     identifier: PropTypes.string,
   }).isRequired,
@@ -130,11 +160,12 @@ ActionCardList.propTypes = {
 
 function ActionHighlightsList(props) {
   const {
-    t, plan,
+    t, plan, count, displayHeader
   } = props;
+  console.log(count);
   const queryParams = {
     plan: plan.identifier,
-    first: 6,
+    first: count ?? 6,
     orderBy: '-updatedAt',
   };
 
@@ -143,7 +174,7 @@ function ActionHighlightsList(props) {
       {({ data, loading, error }) => {
         if (loading) return <ContentLoader />;
         if (error) return <p>{ t('error-loading-actions', getActionTermContext(plan)) }</p>;
-        return <ActionCardList t={t} actions={data.planActions} plan={plan}/>;
+        return <ActionCardList t={t} actions={data.planActions} plan={plan} displayHeader={displayHeader ?? true}/>;
       }}
     </Query>
   );
@@ -151,6 +182,8 @@ function ActionHighlightsList(props) {
 
 ActionHighlightsList.propTypes = {
   t: PropTypes.func.isRequired,
+  count: PropTypes.number,
+  displayHeader: PropTypes.bool,
   plan: PropTypes.shape({
     identifier: PropTypes.string,
   }).isRequired,
