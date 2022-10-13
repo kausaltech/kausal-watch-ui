@@ -1,10 +1,11 @@
 import React, { useContext } from 'react';
 import styled, { css } from 'styled-components';
 import { Row, Col } from 'reactstrap';
-
+import { useTranslation } from 'common/i18n';
 import RichText from 'components/common/RichText';
 import PlanContext from 'context/plan';
 import Icon from 'components/common/Icon';
+import { CategoryContent } from 'components/actions/CategoryTags';
 
 const ScaleIcon = styled(Icon)`
   font-size: ${(props) => {
@@ -73,7 +74,7 @@ const AttributeChoiceLabel = styled.div`
 `;
 
 function AttributeContent(props) {
-  const { contentData, contentType, title, vertical } = props;
+  const { contentData, contentType, title, vertical, t } = props;
 
   let dataElement;
   switch (contentData.__typename) {
@@ -113,6 +114,11 @@ function AttributeContent(props) {
         </span>
       );
       break;
+    case 'AttributeCategoryChoice':
+      dataElement = (
+        <CategoryContent category={contentData.categories} t={t}/>
+      );
+      break;
     default: return <div />;
   }
   // Render horizontal layout
@@ -126,6 +132,7 @@ function AttributeContent(props) {
 
 function AttributesBlock(props) {
   const plan = useContext(PlanContext);
+  const { t } = useTranslation();
   const {
     attributes,
     children,  // extra children that can be passed by nesting in the JSX tag
@@ -133,6 +140,7 @@ function AttributesBlock(props) {
     vertical,
   } = props;
 
+  console.log("Atributes block", props);
   return (
     <Attributes vertical={vertical}>
       <AttributesList
@@ -140,7 +148,7 @@ function AttributesBlock(props) {
         tag="ul"
       >
       {attributes.map((item) => (
-        item?.value &&
+        (item?.value || item?.categories) &&
         <AttributeItem
           tag="li"
           key={item.id}
@@ -152,6 +160,7 @@ function AttributesBlock(props) {
             contentData={item}
             contentType={types?.find((type) => type.identifier === item.keyIdentifier)}
             vertical={vertical}
+            t={t}
           />
         </React.Fragment>
         </AttributeItem>

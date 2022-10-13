@@ -57,15 +57,14 @@ function ResponsibleBadge(props) {
 
   return (
     <ResponsibleItem>
-      <OrganizationLink organizationId={ id }>
         <BadgeTooltip
           id={`org-${slugify(id)}`}
           name={name !== abbreviation ? name : ''}
           ariaLabel={ariaLabel}
           abbreviation={abbreviation}
           size={size}
+          url={`/organizations/${id}`}
         />
-      </OrganizationLink>
       { specifier &&
         <ResponsibleSpecifier>
           {specifier}

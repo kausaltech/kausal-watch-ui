@@ -7,7 +7,7 @@ import { darken, lighten, readableColor } from 'polished';
 import { useTranslation } from 'common/i18n';
 import { Link } from 'common/links';
 import { slugify } from 'common/utils';
-import { isCompositeComponent } from 'react-dom/test-utils';
+import BadgeTooltip from 'components/common/BadgeTooltip';
 
 const Categories = styled.div`
   font-size: ${(props) => props.theme.fontSizeMd};
@@ -154,6 +154,44 @@ function CategoryIcon(props) {
   );
 }
 
+export const CategoryContent = (props) => {
+
+  const { category, t } = props;
+  console.log("categorycontent", props);
+  return (
+    <>
+    { category.find((item) => item.iconImage || item.iconSvgUrl || item.parent?.iconImage || item.parent?.iconSvgUrl) ?
+      <CatIconList>
+        { category.map((item) => (
+            <CategoryIcon
+              t={t}
+              key={item.id}
+              id={item.id}
+              name={item.name}
+              iconImage={item.iconImage?.rendition.src || item.parent?.iconImage?.rendition.src}
+              iconSvg={item.iconSvgUrl || item.parent?.iconSvgUrl}
+              url={item.categoryPage
+                ? item.categoryPage.urlPath
+                : `/actions?cat-${item.type.identifier}=${item.id}`}
+            />
+          ))}
+        </CatIconList>
+    :
+    category.map((item) => (
+        <div
+          t={t}
+          key={item.id}
+          id={item.id}
+          name={item.helpText}
+          abbreviation={item.name}
+          size="md"
+          url="/organizations/55"
+        />
+      ))
+  }
+  </>)
+};
+
 function CategoryTags(props) {
   const { data } = props;
   const { t } = useTranslation();
@@ -162,49 +200,22 @@ function CategoryTags(props) {
   // const categoryLevels = [...new Set(data.map((cat) => cat.level?.id))];
   const categoryGroups = categoryTypes.map((catType) => data.filter((cat) => cat.type.id === catType));
 
+  console.log("categorytags", props);
+  //const categryLink = {item.categoryPage ? item.categoryPage.urlPath : `/actions?cat-${item.type.identifier}=${item.id}`};
   /* TODO: a11y - this should probably be a list markup */
   /* If any of the categories in the group have an icon set, display all as iconed type  */
   return (
     <Categories>
       { categoryGroups
         && categoryGroups.map((catGroup, index) => (
-          catGroup.find((item) => item.iconImage || item.iconSvgUrl || item.parent?.iconImage || item.parent?.iconSvgUrl) ?
-          <div key={catGroup[0].id} className="mb-4">
-            <h3>{catGroup[0].type.name}</h3>
-            <CatIconList>
-              { catGroup.map((item) => (
-                  <CategoryIcon
-                    t={t}
-                    key={item.id}
-                    id={item.id}
-                    name={item.name}
-                    iconImage={item.iconImage?.rendition.src || item.parent?.iconImage?.rendition.src}
-                    iconSvg={item.iconSvgUrl || item.parent?.iconSvgUrl}
-                    url={item.categoryPage
-                      ? item.categoryPage.urlPath
-                      : `/actions?cat-${item.type.identifier}=${item.id}`}
-                  />
-                ))}
-              </CatIconList>
-          </div>
-          :
           <div key={catGroup[0].id} className="mb-4">
           <h3>{catGroup[0].type.name}</h3>
-          { catGroup.map((item) => (
-              <Categorybadge
-                t={t}
-                key={item.id}
-                id={item.id}
-                name={item.name}
-                url={item.categoryPage ? item.categoryPage.urlPath : `/actions?cat-${item.type.identifier}=${item.id}`}
-              />
-            ))}
-          </div>
-        ))}
+          <CategoryContent category={catGroup} t={t}/>
+        </div>))
+      }
     </Categories>
   );
 }
-
 Categorybadge.propTypes = {
   id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,

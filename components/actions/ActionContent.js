@@ -67,6 +67,7 @@ query ActionDetails($plan: ID!, $id: ID!) {
       identifier
       name
       leadParagraph
+      helpText
       color
       iconSvgUrl
       iconImage {

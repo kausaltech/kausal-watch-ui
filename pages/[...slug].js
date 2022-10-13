@@ -139,6 +139,18 @@ query GetPlanPageGeneral($plan: ID!, $path: String!) {
               }
             }
           }
+          ... on AttributeCategoryChoice {
+            categories {
+              name
+              identifier
+              iconSvgUrl
+              iconImage {
+                rendition(size:"400x400", crop:false) {
+                  src
+                }
+              }
+            }
+          }
         }
       }
       body {

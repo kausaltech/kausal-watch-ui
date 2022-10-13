@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 import { Badge, Tooltip } from 'reactstrap';
 import styled from 'styled-components';
 import { lighten } from 'polished';
+import { Link } from 'common/links';
 
-const BadgeWrapper = styled.a`
+const BadgeLink = styled(Link)`
   &.lg {
     font-size: ${(props) => props.theme.fontSizeLg};
   }
@@ -39,36 +40,38 @@ const BadgeTooltip = React.forwardRef(function BadgeTooltip(props, ref) {
     name,
     size,
     id,
-    href,
+    url,
     ariaLabel,
   } = props;
-
-  const badgeId = id.replace(/[: ]/g, '_');
+  console.log("badge with tooltip",props);
+  const badgeId = `btt${id.replace(/[: ]/g, '_')}`;
   const [tooltipOpen, setTooltipOpen] = useState(false);
   const toggle = () => setTooltipOpen(!tooltipOpen);
 
   return (
-    <BadgeWrapper
-      className={size}
-      href={href}
-      id={badgeId}
-      aria-label={ariaLabel}
-      ref={ref}
-    >
-      <StyledBadge>
-        {abbreviation || name}
-      </StyledBadge>
+    <>
+      <BadgeLink
+        className={size}
+        href={url}
+        id={badgeId}
+        aria-label={ariaLabel}
+        ref={ref}
+      >
+        <StyledBadge>
+          {abbreviation || name}
+        </StyledBadge>
+      </BadgeLink>
       { abbreviation &&
-        <Tooltip
-          placement="top"
-          isOpen={tooltipOpen}
-          target={badgeId}
-          toggle={toggle}
-        >
-          {name}
-        </Tooltip>
-      }
-    </BadgeWrapper>
+          <Tooltip
+            placement="top"
+            isOpen={tooltipOpen}
+            target={badgeId}
+            toggle={toggle}
+          >
+            {name}
+          </Tooltip>
+        }
+    </>
   );
 });
 
@@ -82,12 +85,12 @@ BadgeTooltip.propTypes = {
   id: PropTypes.string.isRequired,
   ariaLabel: PropTypes.string,
   size: PropTypes.string,
-  href: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+  url: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
 };
 BadgeTooltip.defaultProps = {
   ariaLabel: null,
   abbreviation: null,
-  href: null,
+  url: undefined,
 };
 
 export default BadgeTooltip;
