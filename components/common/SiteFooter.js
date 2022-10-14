@@ -435,9 +435,11 @@ function SiteFooter(props) {
           <UtilityColumn>
             <UtilityItem>
               <OrgTitle>
+                { ownerUrl ?
                 <a href={ownerUrl} target="_blank" rel="noreferrer">
                   {ownerName}
                 </a>
+                : ownerName }
               </OrgTitle>
             </UtilityItem>
           </UtilityColumn>
