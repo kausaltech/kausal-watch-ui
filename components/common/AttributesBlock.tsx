@@ -114,7 +114,7 @@ function AttributeContent(props: AttributeContentProps | AttributeContentNestedT
             />
           ))}
           { type.showChoiceNames && <AttributeChoiceLabel>{ attribute.choice?.name }</AttributeChoiceLabel> }
-          { attribute.text ?? (<p>{ attribute.text }</p>)}
+          { attribute.text ? <RichText html={attribute.text} /> : null}
         </div>
       );
       break;
