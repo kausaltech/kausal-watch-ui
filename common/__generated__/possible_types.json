@@ -1,8 +1,8 @@
 {
   "possibleTypes": {
     "AttributeInterface": [
+      "AttributeCategoryChoice",
       "AttributeChoice",
-      "AttributeChoiceWithText",
       "AttributeNumericValue",
       "AttributeRichText"
     ],
@@ -77,6 +77,7 @@
       "IntegerBlock",
       "PageChooserBlock",
       "PageLinkBlock",
+      "PrimaryOrganizationFilterBlock",
       "QuestionAnswerBlock",
       "QuestionBlock",
       "RawHTMLBlock",
@@ -85,6 +86,7 @@
       "RelatedPlanListBlock",
       "ResponsiblePartyFilterBlock",
       "RichTextBlock",
+      "SnippetChooserBlock",
       "StaticBlock",
       "StreamBlock",
       "StreamFieldBlock",

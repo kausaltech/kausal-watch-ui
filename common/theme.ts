@@ -1,10 +1,13 @@
 import { useContext } from 'react';
 import PropTypes, { number, exact, string, oneOfType, bool, array, object } from 'prop-types';
 import { ThemeContext } from 'styled-components';
+import 'styled-components';
 import { cloneDeep, merge } from 'lodash';
 
 import type { StandardProperties as css } from 'csstype';
 
+
+type cssColor = NonNullable<css['color']>;
 
 /* eslint-disable */
 const defaultTheme = require('public/static/themes/default/theme.json');
@@ -41,7 +44,7 @@ if (process.env.NODE_ENV === 'development') {
   };
 }
 
-export type Theme = {
+export interface Theme {
   actionColor: string,
   actionColorFg: string,
   actionCompletedColor: string,
@@ -50,16 +53,16 @@ export type Theme = {
   actionNotStartedColor: string,
   actionOnTimeColor: string,
   actionSeverelyLateColor: string,
-  badgeBackground: css['color'],
-  badgeColor: css['color'],
+  badgeBackground: cssColor,
+  badgeColor: cssColor,
   badgeBorderRadius: string|number,
   badgeFontWeight: number,
   badgePaddingX: string,
   badgePaddingY: string,
-  brandDark: css['color'],
-  brandLight: css['color'],
-  brandNavBackground: css['color'],
-  brandNavColor: css['color'],
+  brandDark: cssColor,
+  brandLight: cssColor,
+  brandNavBackground: cssColor,
+  brandNavColor: cssColor,
   breakpointLg: string,
   breakpointMd: string,
   breakpointSm: string,
@@ -68,9 +71,9 @@ export type Theme = {
   btnBorderWidth: css['borderWidth'],
   cardBorderRadius: css['borderRadius'],
   cardBorderWidth: css['borderWidth'],
-  causalityDecreasesColor: css['color'],
-  causalityIncreasesColor: css['color'],
-  causalityIsPartOfColor: css['color'],
+  causalityDecreasesColor: cssColor,
+  causalityIncreasesColor: cssColor,
+  causalityIsPartOfColor: cssColor,
   combinedIconsFilename: string,
   componentActiveBg: string,
   customSelectIndicator: string,
@@ -95,44 +98,44 @@ export type Theme = {
   footerLogoPlacement: string,
   footerLogoSize?: string,
   footerLogoLink?: string,
-  footerBackgroundColor: css['color'],
-  footerColor: css['color'],
+  footerBackgroundColor: cssColor,
+  footerColor: cssColor,
   formLabelFontWeight: number,
   graphColors: {
-    grey000: css['color'],
-    grey005: css['color'],
-    grey010: css['color'],
-    grey020: css['color'],
-    grey030: css['color'],
-    grey040: css['color'],
-    grey050: css['color'],
-    grey060: css['color'],
-    grey070: css['color'],
-    grey080: css['color'],
-    grey090: css['color'],
-    grey100: css['color'],
-    green010: css['color'],
-    green030: css['color'],
-    green050: css['color'],
-    green070: css['color'],
-    green090: css['color'],
-    red010: css['color'],
-    red030: css['color'],
-    red050: css['color'],
-    red070: css['color'],
-    red090: css['color'],
-    blue010: css['color'],
-    blue030: css['color'],
-    blue050: css['color'],
-    blue070: css['color'],
-    blue090: css['color'],
-    yellow010: css['color'],
-    yellow030: css['color'],
-    yellow050: css['color'],
-    yellow070: css['color'],
-    yellow090: css['color'],
+    grey000: cssColor,
+    grey005: cssColor,
+    grey010: cssColor,
+    grey020: cssColor,
+    grey030: cssColor,
+    grey040: cssColor,
+    grey050: cssColor,
+    grey060: cssColor,
+    grey070: cssColor,
+    grey080: cssColor,
+    grey090: cssColor,
+    grey100: cssColor,
+    green010: cssColor,
+    green030: cssColor,
+    green050: cssColor,
+    green070: cssColor,
+    green090: cssColor,
+    red010: cssColor,
+    red030: cssColor,
+    red050: cssColor,
+    red070: cssColor,
+    red090: cssColor,
+    blue010: cssColor,
+    blue030: cssColor,
+    blue050: cssColor,
+    blue070: cssColor,
+    blue090: cssColor,
+    yellow010: cssColor,
+    yellow030: cssColor,
+    yellow050: cssColor,
+    yellow070: cssColor,
+    yellow090: cssColor,
   },
-  headingsColor: css['color'],
+  headingsColor: cssColor,
   headingsFontWeight: css['fontWeight'],
   iconActionsUrl: string,
   iconIndicatorsUrl: string,
@@ -151,16 +154,16 @@ export type Theme = {
   lineHeightLg: number,
   lineHeightMd: number,
   lineHeightSm: number,
-  linkColor: css['color'],
+  linkColor: cssColor,
   linkHoverColor: string,
   listGroupActiveBg: string,
   listGroupActiveBorderColor: string,
   name: string,
   navPillsLinkActiveBg: string,
-  neutralDark: css['color'],
-  neutralLight: css['color'],
-  operationalIndicatorColor: css['color'],
-  operationalIndicatorColorFg: css['color'],
+  neutralDark: cssColor,
+  neutralLight: cssColor,
+  operationalIndicatorColor: cssColor,
+  operationalIndicatorColorFg: cssColor,
   space: string,
   spaces: {
     s000: number,
@@ -211,6 +214,10 @@ export type Theme = {
       cardPlacement?: string,
     },
   },
+}
+
+declare module 'styled-components' {
+  export interface DefaultTheme extends Theme {}
 }
 
 export const themeProp = exact({

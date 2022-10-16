@@ -28,13 +28,13 @@ export const GET_CATEGORY_ATTRIBUTE_TYPES = gql`
   }
 `;
 
-const HeaderBackground = styled.div`
+const HeaderBackground = styled.div<{bg: string}>`
   position: relative;
   min-height: 26rem;
   background-color: ${(props) => props.bg};
 `;
 
-const CategoryPageHeader = styled.div`
+const CategoryPageHeader = styled.div<{bg: string, image: string, imageAlign: string}>`
   position: absolute;
   height: 26rem;
   width: 100%;
@@ -171,8 +171,6 @@ function CategoryPageHeaderBlock(props) {
                 <AttributesContainer>
                 <AttributesBlock
                   attributes={attributes}
-                  color={color}
-                  id={categoryId}
                   types={attributeTypes}
                 />
                 {plan.actionStatuses.length ? <CategoryMetaBar category={categoryId} /> : null}

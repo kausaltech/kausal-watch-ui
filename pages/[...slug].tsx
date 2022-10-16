@@ -14,6 +14,9 @@ import AccessibilityPage from 'pages/accessibility-legacy';
 import images, { getBgImageAlignment } from 'common/images';
 import CategoryPageHeaderBlock from 'components/contentblocks/CategoryPageHeaderBlock';
 import ContentPageHeaderBlock from 'components/contentblocks/ContentPageHeaderBlock';
+import AttributesBlock from 'components/common/AttributesBlock';
+import { GetPlanPageGeneralQuery } from 'common/__generated__/graphql';
+
 
 const GET_PLAN_PAGE = gql`
 query GetPlanPageGeneral($plan: ID!, $path: String!) {
@@ -110,35 +113,7 @@ query GetPlanPageGeneral($plan: ID!, $path: String!) {
           }
         }
         attributes {
-          __typename
-          id
-          key
-          keyIdentifier
-          ...on AttributeChoice {
-            value
-            valueIdentifier
-            type {
-              identifier
-              name
-            }
-          }
-          ...on AttributeRichText {
-            value
-            type {
-              identifier
-              name
-            }
-          }
-          ...on AttributeNumericValue {
-            numericValue: value
-            type {
-              identifier
-              name
-              unit {
-                name
-              }
-            }
-          }
+          ...AttributesBlockAttributeWithNestedType
         }
       }
       body {
@@ -150,68 +125,48 @@ query GetPlanPageGeneral($plan: ID!, $path: String!) {
 }
 ${StreamField.fragments.streamField}
 ${images.fragments.multiUseImage}
+${AttributesBlock.fragments.attributeWithNestedType}
 `;
 
-function StaticPage({ slug }) {
-  const { t } = useTranslation();
-  const path = `/${slug.join('/')}`;
-  const plan = useContext(PlanContext);
-  const { loading, error, data } = useQuery(GET_PLAN_PAGE, {
-    variables: {
-      plan: plan.identifier,
-      path,
-    },
-  });
-  if (loading) return <ContentLoader />;
-  if (error) return <ErrorMessage message={error.message} />;
+type GeneralPlanPage = NonNullable<GetPlanPageGeneralQuery['planPage']>;
 
-  const { planPage } = data;
-
-  // Handle legacy overrides
-  if (path === '/accessibility' && !planPage?.body.length > 0) return <AccessibilityPage />
-  if (!planPage) {
-    return <ErrorMessage statusCode={404} message={t('page-not-found')} />;
-  }
-  return (
-    <Layout>
-      <Content page={planPage} />
-    </Layout>
-  );
+type PageHeaderBlockProps = {
+  page: GeneralPlanPage,
+  color?: string|null,
 }
-StaticPage.getInitialProps = async ({ query }) => ({
-  slug: query.slug,
-  namespacesRequired: ['common', 'action'],
-});
-
-const PageHeaderBlock = (props) => {
+const PageHeaderBlock = (props: PageHeaderBlockProps) => {
   const { color, page } = props;
   const theme = useTheme();
 
   switch (page.__typename) {
     case 'CategoryPage': {
+      const category = page.category;
+      if (!category) {
+        throw new Error("Category page without category configured");
+      }
       const parentIdentifier = theme.settings.categories.showIdentifiers
-        ? `${page.category.parent?.identifier}.` : '';
-      const parentTitle = page.category.parent?.categoryPage
-        ? `${parentIdentifier} ${page.category.parent?.categoryPage.title}`
-        : page.category.level?.namePlural;
-      const parentUrl = page.category.parent?.categoryPage?.urlPath || '/';
-      const headerImage = page.category.image || page.category.parent?.image;
-      const iconImage = page.category.iconImage?.rendition.src;
+        ? `${category.parent?.identifier}.` : '';
+      const parentTitle = category.parent?.categoryPage
+        ? `${parentIdentifier} ${category.parent?.categoryPage.title}`
+        : category.level?.namePlural;
+      const parentUrl = category.parent?.categoryPage?.urlPath || '/';
+      const headerImage = category.image || category.parent?.image;
+      const iconImage = category.iconImage?.rendition?.src;
       return (
         <CategoryPageHeaderBlock
           title={page.title}
-          categoryId={page.category.id}
-          identifier={theme.settings.categories.showIdentifiers ? page.category.identifier : undefined}
-          lead={page.category.leadParagraph}
+          categoryId={category.id}
+          identifier={theme.settings.categories.showIdentifiers ? category.identifier : undefined}
+          lead={category.leadParagraph}
           iconImage={iconImage}
-          headerImage={headerImage?.large.src}
+          headerImage={headerImage?.large?.src}
           imageAlign={getBgImageAlignment(headerImage)}
           parentTitle={parentTitle}
           parentUrl={parentUrl}
           color={color}
-          attributes={page.category.attributes}
-          typeId={page.category.type.id}
-          level={page.category.parent?.categoryPage ? page.category?.level?.name : null}
+          attributes={category.attributes}
+          typeId={category.type.id}
+          level={category.parent?.categoryPage ? page.category?.level?.name : null}
         />
       );
     }
@@ -229,13 +184,14 @@ const PageHeaderBlock = (props) => {
   }
 };
 
-const Content = ({ page }) => {
+const Content = ({ page }:{ page: GeneralPlanPage}) => {
   // TODO: Resolve shareImageUrl by pagetype
   const { title, headerImage } = page;
   const imageUrl = headerImage?.large.src;
 
   const theme = useTheme();
-  const pageSectionColor = page.category?.color || page.category?.parent?.color || theme.brandLight;
+  const categoryColor = (page.__typename === 'CategoryPage') && (page.category?.color || page.category?.parent?.color);
+  const pageSectionColor = categoryColor || theme.brandLight;
   return (
     <article>
       <Meta
@@ -265,5 +221,37 @@ const Content = ({ page }) => {
     </article>
   );
 };
+
+
+function StaticPage({ slug }: { slug: string[] }) {
+  const { t } = useTranslation();
+  const path = `/${slug.join('/')}`;
+  const plan = useContext(PlanContext);
+  const { loading, error, data } = useQuery<GetPlanPageGeneralQuery>(GET_PLAN_PAGE, {
+    variables: {
+      plan: plan.identifier,
+      path,
+    },
+  });
+  if (loading) return <ContentLoader />;
+  if (error) return <ErrorMessage message={error.message} />;
+
+  const { planPage } = data || {};
+
+  // Handle legacy overrides
+  if (path === '/accessibility' && !(planPage?.body?.length > 0)) return <AccessibilityPage />
+  if (!planPage) {
+    return <ErrorMessage statusCode={404} message={t('page-not-found')} />;
+  }
+  return (
+    <Layout>
+      <Content page={planPage} />
+    </Layout>
+  );
+}
+StaticPage.getInitialProps = async ({ query }) => ({
+  slug: query.slug,
+  namespacesRequired: ['common', 'action'],
+});
 
 export default StaticPage;

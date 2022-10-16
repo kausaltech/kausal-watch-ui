@@ -159,18 +159,12 @@ export const GET_ACTION_LIST = gql`
       attributes {
         __typename
         id
-        key
-        keyIdentifier
+        type {
+          id
+        }
         ...on AttributeChoice {
-          value
-          valueIdentifier
-          type {
-            identifier
-            name
-          }
           choice {
             id
-            identifier
             name
           }
         }
@@ -255,6 +249,7 @@ fragment ActionListFilter on StreamFieldInterface {
   id
   ... on CategoryTypeFilterBlock {
     style
+    showAllLabel
     categoryType {
       id
       identifier
@@ -274,11 +269,13 @@ fragment ActionListFilter on StreamFieldInterface {
     }
   }
   ... on ActionAttributeTypeFilterBlock {
+    showAllLabel
     attributeType {
       id
       identifier
       format
       name
+      helpText
       choiceOptions {
         id
         identifier
@@ -332,6 +329,8 @@ export type ActionListAction = QueryAction &
   CategoryMappedAction<ActionListCategoryType, ActionListCategory>;
 
 export type ActionListCategoryTypeFilterBlock = ActionListFilterFragment & {__typename?: 'CategoryTypeFilterBlock'};
+export type ActionListActionAttributeTypeFilterBlock = ActionListFilterFragment & {__typename?: 'ActionAttributeTypeFilterBlock'};
+
 type QueryCategoryType = DashboardActionListQuery['plan']['categoryTypes'][0];
 type CategoryInput = QueryCategoryType['categories'][0];
 export type ActionListCategory = CategoryInput & CategoryHierarchyMember<ActionListCategoryType>;

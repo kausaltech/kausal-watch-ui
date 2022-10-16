@@ -206,53 +206,21 @@ query ActionDetails($plan: ID!, $id: ID!) {
       identifier
     }
     attributes {
-      __typename
-      id
-      key
-      keyIdentifier
-      ...on AttributeChoice {
-        value
-        valueIdentifier
-        type {
-          identifier
-          name
-        }
-      }
-      ...on AttributeRichText {
-        value
-        type {
-          identifier
-          name
-        }
-      }
-      ...on AttributeNumericValue {
-        numericValue: value
-        type {
-          identifier
-          name
-          unit {
-            name
-          }
-        }
-      }
+      ...AttributesBlockAttribute
     }
   }
   plan(id: $plan) {
     actionAttributeTypes {
-      __typename
-      format
-      identifier
-      choiceOptions {
-        identifier
-      }
-      showChoiceNames
-      hasZeroOption
+      ...AttributesBlockAttributeType
     }
   }
 }
-${images.fragments.multiUseImage}
 ${ActionCard.fragments.action}
+${images.fragments.multiUseImage}
+${AttributesBlock.fragments.attribute}
+${AttributesBlock.fragments.attributeType}
 `;
+
 
 const LastUpdated = styled.div`
   margin-bottom: 1em;
