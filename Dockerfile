@@ -22,7 +22,7 @@ COPY patches ./patches/
 
 RUN yarn config set nodeLinker 'node-modules'
 RUN yarn config set logFilters --json '[{"code": "YN0013", "level": "discard"}]'
-RUN --mount=type=cache,target=/yarn-cache yarn install
+RUN --mount=type=cache,target=/yarn-cache yarn install --immutable
 
 COPY . .
 
