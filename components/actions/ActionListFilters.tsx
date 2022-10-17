@@ -1,6 +1,6 @@
-import React, { createRef, Ref, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { createRef, Ref, useCallback, useMemo, useState } from 'react';
 import { Row, Col, Badge, CloseButton } from 'reactstrap';
-import { debounce, filter } from 'lodash';
+import { debounce, } from 'lodash';
 import styled from 'styled-components';
 import { readableColor } from 'polished';
 import {ButtonGroup, Button as RButton} from 'reactstrap';
@@ -12,11 +12,11 @@ import Button from 'components/common/Button';
 import { PlanContextType, usePlan } from 'context/plan';
 import PopoverTip from 'components/common/PopoverTip';
 import {
-  ActionListAction, ActionListCategory, ActionListCategoryTypeFilterBlock,
+  ActionListAction, ActionListActionAttributeTypeFilterBlock, ActionListCategory, ActionListCategoryTypeFilterBlock,
   ActionListOrganization, ActionListPrimaryOrg, ActiveFilters,
 } from 'components/dashboard/ActionList';
 import {
-  ActionListFilterFragment, ActionListPageFiltersFragment, DashboardActionListQuery
+  ActionListFilterFragment, ActionListPageFiltersFragment,
 } from 'common/__generated__/graphql';
 import { TFunction } from 'next-i18next';
 import SelectDropdown, { SelectDropdownOption } from 'components/common/SelectDropdown';
@@ -24,7 +24,6 @@ import {
   CategoryHierarchyMember, CategoryTypeHierarchy, constructCatHierarchy
 } from 'common/categories';
 import { createFilter } from 'react-select';
-import { on } from 'events';
 
 
 const FiltersList = styled.div`
@@ -264,7 +263,7 @@ export interface ActionListFilter {
   id: string,
   filterAction: (value: string, action: ActionListAction) => boolean,
   getLabel: (t: TFunction) => string,
-  getHelpText: (t: TFunction) => string,
+  getHelpText: (t: TFunction) => string|undefined|null,
   getShowAllLabel: (t: TFunction) => string,
   sm: number|undefined,
   md: number,
@@ -282,7 +281,7 @@ abstract class DefaultFilter implements ActionListFilter {
   abstract options?: ActionListFilter['options'];
 
   abstract getLabel(t: TFunction): string;
-  abstract getHelpText(t: TFunction): string;
+  abstract getHelpText(t: TFunction): string|undefined|null;
   abstract filterAction(value: string, action: ActionListAction): boolean;
 
   getShowAllLabel(t: TFunction) {
@@ -398,12 +397,14 @@ class CategoryFilter extends DefaultFilter {
   ct: ActionListCategoryTypeFilterBlock['categoryType'];
   options: ActionListFilterOption[];
   style: 'dropdown'|'buttons';
+  showAllLabel: string|undefined|null;
   catById: Map<string, FilterCategory>
 
   constructor(config: ActionListCategoryTypeFilterBlock) {
     super();
     this.ct = config.categoryType;
     this.id = `cat-${this.ct.identifier}`;
+    this.showAllLabel = config.showAllLabel;
     //@ts-ignore
     const style = config.style === 'dropdown' ? 'dropdown' : 'buttons';
     this.style = style;
@@ -489,7 +490,47 @@ class CategoryFilter extends DefaultFilter {
     return this.ct.helpText;
   }
   getShowAllLabel(t: TFunction) {
-    return t('filter-all-categories');
+    return this.showAllLabel || t('filter-all-categories');
+  }
+}
+
+
+type AttributeTypeChoice = ActionListActionAttributeTypeFilterBlock['attributeType']['choiceOptions'][0]
+
+class AttributeTypeFilter extends DefaultFilter {
+  id: string;
+  att: ActionListActionAttributeTypeFilterBlock['attributeType'];
+  options: ActionListFilterOption[];
+  showAllLabel: string|undefined|null;
+  choiceById: Map<string, AttributeTypeChoice>
+
+  constructor(config: ActionListActionAttributeTypeFilterBlock) {
+    super();
+    this.att = config.attributeType;
+    this.showAllLabel = config.showAllLabel;
+    this.id = `att-${this.att.identifier}`;
+    const choices = this.att.choiceOptions;
+    this.choiceById = new Map(choices.map(choice => [choice.id, choice]));
+    const getLabel = (choice: AttributeTypeChoice) => choice.name;
+    this.options = choices.map((choice) => ({id: choice.id, label: getLabel(choice)}));
+  }
+  filterAction(value: string, action: ActionListAction) {
+    return action.attributes.some((actAtt) => {
+      if (actAtt.__typename !== 'AttributeChoice') return false;
+      const { choice } = actAtt;
+      if (!choice) return false;
+      if (choice.id === value) return true;
+      return false;
+    });
+  }
+  getLabel(t: TFunction) {
+    return this.att.name;
+  }
+  getHelpText(t: TFunction) {
+    return this.att.helpText;
+  }
+  getShowAllLabel(t: TFunction) {
+    return this.showAllLabel || t('filter-all-categories');
   }
 }
 
@@ -522,6 +563,9 @@ class ActionNameFilter implements ActionListFilter {
   }
   getShowAllLabel(t: TFunction) {
     return t('filter-text-default');
+  }
+  getHelpText(t: TFunction) {
+    return null;
   }
   render(value: string|undefined, onChange: FilterChangeCallback, t: TFunction) {
     return (
@@ -668,6 +712,14 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
           break
         case 'CategoryTypeFilterBlock':
           filters.push(new CategoryFilter(block))
+          break
+        case 'ActionAttributeTypeFilterBlock':
+          const allowedFormats = ['ORDERED_CHOICE', 'OPTIONAL_CHOICE'];
+          if (!allowedFormats.includes(block.attributeType.format)) {
+            console.error("Invalid format for ActionAttributeTypeFilterBlock: ", block.attributeType.format);
+            break
+          }
+          filters.push(new AttributeTypeFilter(block))
           break
         case 'ActionImplementationPhaseFilterBlock':
           if (!plan.actionImplementationPhases.length) break;

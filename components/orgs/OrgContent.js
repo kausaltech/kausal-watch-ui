@@ -308,7 +308,7 @@ function OrgContent(props) {
   const plans = [...unsortedPlans].sort(function(x,y){ return x.id == plan.id ? -1 : y.id == plan.id ? 1 : 0; });
 
   // TODO: this is a hacky way to find the viewUrl for the active plan
-  const planViewUrl = plan.allRelatedPlans.find((p) => p.id === plans[selectedPlanIndex].id)?.viewUrl;
+  const planViewUrl = plan.allRelatedPlans.find((p) => p.id === plans[selectedPlanIndex]?.id)?.viewUrl;
 
   return (
     <div className="mb-5">

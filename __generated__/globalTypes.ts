@@ -10,7 +10,16 @@
 /**
  * An enumeration.
  */
-export enum ActionsActionTaskStateChoices {
+export enum ActionResponsiblePartyRole {
+  COLLABORATOR = "COLLABORATOR",
+  NONE = "NONE",
+  PRIMARY = "PRIMARY",
+}
+
+/**
+ * An enumeration.
+ */
+export enum ActionTaskState {
   CANCELLED = "CANCELLED",
   COMPLETED = "COMPLETED",
   IN_PROGRESS = "IN_PROGRESS",
@@ -20,7 +29,8 @@ export enum ActionsActionTaskStateChoices {
 /**
  * An enumeration.
  */
-export enum ActionsAttributeTypeFormatChoices {
+export enum AttributeTypeFormat {
+  CATEGORY_CHOICE = "CATEGORY_CHOICE",
   NUMERIC = "NUMERIC",
   OPTIONAL_CHOICE = "OPTIONAL_CHOICE",
   ORDERED_CHOICE = "ORDERED_CHOICE",
@@ -30,15 +40,7 @@ export enum ActionsAttributeTypeFormatChoices {
 /**
  * An enumeration.
  */
-export enum ContentSiteGeneralContentActionTermChoices {
-  ACTION = "ACTION",
-  STRATEGY = "STRATEGY",
-}
-
-/**
- * An enumeration.
- */
-export enum IndicatorsIndicatorLevelLevelChoices {
+export enum IndicatorLevelLevel {
   OPERATIONAL = "OPERATIONAL",
   STRATEGIC = "STRATEGIC",
   TACTICAL = "TACTICAL",
@@ -47,17 +49,16 @@ export enum IndicatorsIndicatorLevelLevelChoices {
 /**
  * An enumeration.
  */
-export enum IndicatorsIndicatorTimeResolutionChoices {
+export enum IndicatorTimeResolution {
   DAY = "DAY",
   MONTH = "MONTH",
-  WEEK = "WEEK",
   YEAR = "YEAR",
 }
 
 /**
  * An enumeration.
  */
-export enum IndicatorsRelatedCommonIndicatorEffectTypeChoices {
+export enum RelatedCommonIndicatorEffectType {
   DECREASES = "DECREASES",
   INCREASES = "INCREASES",
   PART_OF = "PART_OF",
@@ -66,7 +67,7 @@ export enum IndicatorsRelatedCommonIndicatorEffectTypeChoices {
 /**
  * An enumeration.
  */
-export enum IndicatorsRelatedIndicatorConfidenceLevelChoices {
+export enum RelatedIndicatorConfidenceLevel {
   HIGH = "HIGH",
   LOW = "LOW",
   MEDIUM = "MEDIUM",
@@ -75,10 +76,18 @@ export enum IndicatorsRelatedIndicatorConfidenceLevelChoices {
 /**
  * An enumeration.
  */
-export enum IndicatorsRelatedIndicatorEffectTypeChoices {
+export enum RelatedIndicatorEffectType {
   DECREASES = "DECREASES",
   INCREASES = "INCREASES",
   PART_OF = "PART_OF",
+}
+
+/**
+ * An enumeration.
+ */
+export enum SiteGeneralContentActionTerm {
+  ACTION = "ACTION",
+  STRATEGY = "STRATEGY",
 }
 
 export interface UserFeedbackMutationInput {
