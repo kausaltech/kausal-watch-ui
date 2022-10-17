@@ -139,7 +139,6 @@ function CategoryIcon(props) {
   } = props;
 
   return (
-    <CatIconListItem>
     <Link href={url}>
       <a>
         <IconBadge>
@@ -150,7 +149,6 @@ function CategoryIcon(props) {
         </IconBadge>
       </a>
     </Link>
-    </CatIconListItem>
   );
 }
 
@@ -158,38 +156,40 @@ export const CategoryContent = (props) => {
 
   const { category, t } = props;
   console.log("categorycontent", props);
+
+  const getCategoryPath = (cat) => cat.categoryPage
+  ? cat.categoryPage.urlPath
+  : `/actions?cat-${cat.type?.identifier}=${cat.id}`;
+
+  const categoryHasIcon = (cat) =>
+  !!(cat.iconImage || cat.iconSvgUrl || cat.parent?.iconImage || cat.parent?.iconSvgUrl);
+
   return (
-    <>
-    { category.find((item) => item.iconImage || item.iconSvgUrl || item.parent?.iconImage || item.parent?.iconSvgUrl) ?
       <CatIconList>
-        { category.map((item) => (
-            <CategoryIcon
-              t={t}
-              key={item.id}
-              id={item.id}
-              name={item.name}
-              iconImage={item.iconImage?.rendition.src || item.parent?.iconImage?.rendition.src}
-              iconSvg={item.iconSvgUrl || item.parent?.iconSvgUrl}
-              url={item.categoryPage
-                ? item.categoryPage.urlPath
-                : `/actions?cat-${item.type.identifier}=${item.id}`}
-            />
-          ))}
-        </CatIconList>
-    :
-    category.map((item) => (
-        <div
-          t={t}
-          key={item.id}
-          id={item.id}
-          name={item.helpText}
-          abbreviation={item.name}
-          size="md"
-          url="/organizations/55"
-        />
-      ))
-  }
-  </>)
+        { category.map((item) =>
+          <CatIconListItem key={item.id}>
+            { categoryHasIcon(item) ?
+              <CategoryIcon
+                t={t}
+                id={item.id}
+                name={item.name}
+                iconImage={item.iconImage?.rendition.src || item.parent?.iconImage?.rendition.src}
+                iconSvg={item.iconSvgUrl || item.parent?.iconSvgUrl}
+                url={getCategoryPath(item)}
+              />
+              :
+              <BadgeTooltip
+                t={t}
+                id={item.id}
+                name={item.helpText}
+                abbreviation={item.name}
+                size="md"
+                url={getCategoryPath(item)}
+              />
+            }
+          </CatIconListItem>
+          )}
+        </CatIconList>)
 };
 
 function CategoryTags(props) {

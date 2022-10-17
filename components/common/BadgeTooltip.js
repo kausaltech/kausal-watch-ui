@@ -5,15 +5,6 @@ import styled from 'styled-components';
 import { lighten } from 'polished';
 import { Link } from 'common/links';
 
-const BadgeLink = styled(Link)`
-  &.lg {
-    font-size: ${(props) => props.theme.fontSizeLg};
-  }
-  &.md {
-    font-size: ${(props) => props.theme.fontSizeMd};
-  }
-`;
-
 const StyledBadge = styled(Badge)`
   background-color: ${(props) => props.theme.badgeBackground} !important;
   color: ${(props) => props.theme.badgeColor};
@@ -31,6 +22,13 @@ const StyledBadge = styled(Badge)`
   &.bg-secondary:hover {
     background-color:  ${(props) => lighten(0.05, props.theme.badgeBackground)} !important;
     color: ${(props) => props.theme.badgeColor};
+  }
+
+  &.lg {
+    font-size: ${(props) => props.theme.fontSizeLg};
+  }
+  &.md {
+    font-size: ${(props) => props.theme.fontSizeMd};
   }
 `;
 
@@ -50,18 +48,19 @@ const BadgeTooltip = React.forwardRef(function BadgeTooltip(props, ref) {
 
   return (
     <>
-      <BadgeLink
-        className={size}
-        href={url}
-        id={badgeId}
-        aria-label={ariaLabel}
-        ref={ref}
-      >
-        <StyledBadge>
-          {abbreviation || name}
-        </StyledBadge>
-      </BadgeLink>
-      { abbreviation &&
+      <Link href={url}>
+        <a>
+          <StyledBadge
+            className={size}
+            id={badgeId}
+            aria-label={ariaLabel}
+            ref={ref}
+          >
+            {abbreviation || name}
+          </StyledBadge>
+        </a>
+      </Link>
+      { abbreviation && name &&
           <Tooltip
             placement="top"
             isOpen={tooltipOpen}

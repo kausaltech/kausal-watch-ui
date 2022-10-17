@@ -1,10 +1,13 @@
 import React, { ReactElement } from 'react';
 import styled, { css } from 'styled-components';
 import { Row, Col } from 'reactstrap';
+import { useTranslation } from 'common/i18n';
+import { TFunction } from 'next-i18next';
 import { gql } from '@apollo/client';
 
 import RichText from 'components/common/RichText';
 import Icon from 'components/common/Icon';
+import { CategoryContent } from 'components/actions/CategoryTags';
 import {
   AttributesBlockAttributeFragment, AttributesBlockAttributeTypeFragment,
   AttributesBlockAttributeWithNestedTypeFragment
@@ -84,6 +87,7 @@ const AttributeChoiceLabel = styled.div`
 type AttributeContentProps = {
   attribute: AttributesBlockAttributeFragment,
   attributeType: AttributesBlockAttributeTypeFragment,
+  t: TFunction, 
 }
 
 type AttributeContentNestedTypeProps = {
@@ -92,7 +96,7 @@ type AttributeContentNestedTypeProps = {
 }
 
 function AttributeContent(props: AttributeContentProps | AttributeContentNestedTypeProps) {
-  const { attribute, attributeType } = props;
+  const { attribute, attributeType, t } = props;
   let type = attributeType ?? attribute.type;
 
   let dataElement: ReactElement;
@@ -130,6 +134,11 @@ function AttributeContent(props: AttributeContentProps | AttributeContentNestedT
         </span>
       );
       break;
+    case 'AttributeCategoryChoice':
+      dataElement = (
+        <CategoryContent category={attribute.categories} t={t}/>
+      );
+      break;
     default: return <div />;
   }
   // Render horizontal layout
@@ -159,6 +168,7 @@ function AttributesBlock(props: AttributesBlockProps) {
     types,
     vertical,
   } = props;
+  const { t } = useTranslation();
 
   let typesById: Map<string, AttributeContentProps['attributeType']> | null;
 
@@ -193,6 +203,7 @@ function AttributesBlock(props: AttributesBlockProps) {
           >
             {/* @ts-ignore */}
             <AttributeContent
+              t={t}
               key={item.id}
               attribute={item}
               attributeType={typesById && typesById.get(item.type.id)}
@@ -225,6 +236,18 @@ fragment AttributesBlockAttribute on AttributeInterface {
   }
   ...on AttributeNumericValue {
     numericValue: value
+  }
+  ...on AttributeCategoryChoice {
+    categories {
+      name
+      identifier
+      iconSvgUrl
+      iconImage {
+        rendition(size:"400x400", crop:false) {
+          src
+        }
+      }
+    }
   }
 }
 `;

@@ -3508,7 +3508,7 @@ export type ActionDetailsQuery = (
       { id: string, identifier: string, officialName?: string | null }
       & { __typename?: 'Action' }
     )>, categories?: Array<(
-      { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, iconImage?: (
+      { id: string, identifier: string, name: string, leadParagraph: string, helpText: string, color?: string | null, iconSvgUrl?: string | null, iconImage?: (
         { rendition?: (
           { src: string }
           & { __typename?: 'ImageRendition' }
@@ -3673,7 +3673,16 @@ export type ActionDetailsQuery = (
       { id: string, identifier: string }
       & { __typename?: 'Action' }
     ) | null, attributes?: Array<(
-      { id: string, type: (
+      { id: string, categories: Array<(
+        { name: string, identifier: string, iconSvgUrl?: string | null, iconImage?: (
+          { rendition?: (
+            { src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null }
+          & { __typename?: 'Image' }
+        ) | null }
+        & { __typename?: 'Category' }
+      )>, type: (
         { id: string }
         & { __typename?: 'AttributeType' }
       ) }
@@ -3960,7 +3969,16 @@ export type ContactDetailsQuery = (
 );
 
 type AttributesBlockAttribute_AttributeCategoryChoice_Fragment = (
-  { id: string, type: (
+  { id: string, categories: Array<(
+    { name: string, identifier: string, iconSvgUrl?: string | null, iconImage?: (
+      { rendition?: (
+        { src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null }
+      & { __typename?: 'Image' }
+    ) | null }
+    & { __typename?: 'Category' }
+  )>, type: (
     { id: string }
     & { __typename?: 'AttributeType' }
   ) }
@@ -4017,7 +4035,16 @@ type AttributesBlockAttributeWithNestedType_AttributeCategoryChoice_Fragment = (
       & { __typename?: 'Unit' }
     ) | null }
     & { __typename: 'AttributeType' }
-  ) }
+  ), categories: Array<(
+    { name: string, identifier: string, iconSvgUrl?: string | null, iconImage?: (
+      { rendition?: (
+        { src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null }
+      & { __typename?: 'Image' }
+    ) | null }
+    & { __typename?: 'Category' }
+  )> }
   & { __typename: 'AttributeCategoryChoice' }
 );
 
@@ -4412,19 +4439,7 @@ export type GetActionListForBlockQuery = (
       & { __typename?: 'Plan' }
     ) }
     & { __typename?: 'Action' }
-  ) | null> | null, plan?: (
-    { id: string, primaryActionClassification?: (
-      { id: string, categories: Array<(
-        { id: string, parent?: (
-          { id: string }
-          & { __typename?: 'Category' }
-        ) | null }
-        & { __typename?: 'Category' }
-      ) | null> }
-      & { __typename?: 'CategoryType' }
-    ) | null }
-    & { __typename?: 'Plan' }
-  ) | null }
+  ) | null> | null }
   & { __typename?: 'Query' }
 );
 
@@ -5902,7 +5917,16 @@ export type GetPlanPageGeneralQuery = (
             & { __typename?: 'Unit' }
           ) | null }
           & { __typename: 'AttributeType' }
-        ) }
+        ), categories: Array<(
+          { name: string, identifier: string, iconSvgUrl?: string | null, iconImage?: (
+            { rendition?: (
+              { src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null }
+          & { __typename?: 'Category' }
+        )> }
         & { __typename: 'AttributeCategoryChoice' }
       ) | (
         { text?: string | null, id: string, type: (
