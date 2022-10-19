@@ -148,9 +148,10 @@ type SelectDropdownProps<Option extends SelectDropdownOption> = Parameters<typeo
   invert?: boolean,
 };
 
+const customComponents = { DropdownIndicator, IndicatorSeparator }
+
 function SelectDropdown<Option extends SelectDropdownOption>(props: SelectDropdownProps<Option>) {
-  const { size, components, id, label, onChange, helpText, invert, ...rest } = props;
-	const extendedComponents = { DropdownIndicator, IndicatorSeparator, ...components };
+  const { size, id, label, onChange, helpText, invert, ...rest } = props;
   const theme = useTheme();
   const styles = getSelectStyles(theme, 'isMulti' in props, size);
 
@@ -169,7 +170,7 @@ function SelectDropdown<Option extends SelectDropdownOption>(props: SelectDropdo
         </Label>
       )}
       <Select
-        components={extendedComponents}
+        components={customComponents}
         theme={getSelectTheme}
         styles={styles}
         getOptionLabel={option => option.label}

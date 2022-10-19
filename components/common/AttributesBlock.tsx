@@ -143,7 +143,7 @@ function AttributeContent(props: AttributeContentProps | AttributeContentNestedT
 
 type AttributesBlockProps = {
   children?: any,
-  vertical: boolean,
+  vertical?: boolean,
 } & ({
   attributes: AttributeContentProps['attribute'][],
   types: AttributeContentProps['attributeType'][],
@@ -179,7 +179,7 @@ function AttributesBlock(props: AttributesBlockProps) {
   const attributesWithValue = attributes.filter(attributeHasValue);
 
   return (
-    <Attributes vertical={vertical}>
+    <Attributes vertical={vertical ?? false}>
       <AttributesList
         vertical={vertical}
         tag="ul"

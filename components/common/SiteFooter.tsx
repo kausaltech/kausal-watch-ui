@@ -7,11 +7,12 @@ import { transparentize } from 'polished';
 import SVG from 'react-inlinesvg';
 import styled, { withTheme } from 'styled-components';
 
-import { withTranslation } from 'common/i18n';
+import { useTranslation, withTranslation } from 'common/i18n';
 import { NavigationLink, Link } from 'common/links';
 import Icon from './Icon';
 import PlanSelector from 'components/plans/PlanSelector';
 import { usePlan } from 'context/plan';
+import { useTheme } from 'common/theme';
 
 const StyledFooter = styled.footer`
   position: relative;
@@ -342,9 +343,9 @@ const FundingInstrumentContainer = styled.div`
 `;
 
 function SiteFooter(props) {
+  const { t } = useTranslation();
+  const theme = useTheme();
   const {
-    t,
-    theme,
     siteTitle,
     ownerUrl,
     ownerName,
@@ -545,8 +546,6 @@ SiteFooter.defaultProps = {
 
 SiteFooter.propTypes = {
   siteTitle: PropTypes.string.isRequired,
-  t: PropTypes.func.isRequired,
-  theme: PropTypes.shape({}).isRequired,
   ownerUrl: PropTypes.string.isRequired,
   ownerName: PropTypes.string.isRequired,
   creativeCommonsLicense: PropTypes.string.isRequired,

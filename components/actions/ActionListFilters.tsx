@@ -89,7 +89,7 @@ function sortDepthFirst<Type>(
   getParent: (item: Type) => Type|null,
   getChildren: (item: Type) => Type[],
 ) {
-  const out = [];
+  const out: Type[] = [];
 
   function walkTree(objs: Type[]) {
     const sorted = [...objs];
@@ -140,7 +140,7 @@ function ActionListTextInput({
 type ActionListDropdownProps = {
   id: string,
   label: string,
-  helpText: string,
+  helpText?: string,
   showAllLabel?: string,
   currentValue: string|undefined,
   onChange: FilterChangeCallback,
@@ -204,14 +204,15 @@ function ActionListFilterBadges({
   const enabled = allFilters.filter((item) => activeFilters[item.id])
   const badges = enabled.map((item: ActionListFilter) => {
     let label: string;
-    const value: string = activeFilters[item.id];
+    const value: string = activeFilters[item.id] as string;
 
     if (item.id === 'name') {
       label = value;
-    } else {
-      const activeOption = item.options.find((opt) => opt.id === value);
+    } if (item.options) {
+      const activeOption = item.options.find((opt) => opt.id === value) as ActionListFilterOption;
       label = activeOption.label
-    }
+    } else
+      return null;
     return {
       key: item.id,
       id: item.id,
@@ -220,7 +221,7 @@ function ActionListFilterBadges({
         onReset(item.id);
       },
     };
-  });
+  }).filter(item => item != null);
 
   return (
     <FiltersList aria-live="assertive">
@@ -263,7 +264,7 @@ export interface ActionListFilter {
   id: string,
   filterAction: (value: string, action: ActionListAction) => boolean,
   getLabel: (t: TFunction) => string,
-  getHelpText: (t: TFunction) => string|undefined|null,
+  getHelpText: (t: TFunction) => string|undefined,
   getShowAllLabel: (t: TFunction) => string,
   sm: number|undefined,
   md: number,
@@ -274,14 +275,14 @@ export interface ActionListFilter {
 };
 
 abstract class DefaultFilter implements ActionListFilter {
-  id: string|undefined = undefined;
+  id: string;
   sm = undefined;
   md = 6;
   lg = 4;
-  abstract options?: ActionListFilter['options'];
+  abstract options: NonNullable<ActionListFilter['options']>;
 
   abstract getLabel(t: TFunction): string;
-  abstract getHelpText(t: TFunction): string|undefined|null;
+  abstract getHelpText(t: TFunction): string|undefined;
   abstract filterAction(value: string, action: ActionListAction): boolean;
 
   getShowAllLabel(t: TFunction) {
@@ -316,15 +317,15 @@ type GenericSelectFilterOpts = {
   options: ActionListFilterOption[],
   filterAction: (value: string, action: ActionListAction) => boolean,
   label: string,
-  helpText: string,
-  showAllLabel?: string,
+  helpText?: string,
+  showAllLabel: string,
 }
 
 class GenericSelectFilter extends DefaultFilter {
   options: ActionListFilterOption[];
   label: string;
   helpText: string|undefined;
-  showAllLabel: string|undefined;
+  showAllLabel: string;
   filterAction: (value: string, action: ActionListAction) => boolean;
 
   constructor(opts: GenericSelectFilterOpts) {
@@ -388,13 +389,13 @@ class ResponsiblePartyFilter extends DefaultFilter {
 }
 
 type QueryFilterCategoryType = ActionListCategoryTypeFilterBlock['categoryType'];
-type QueryFilterCategory = QueryFilterCategoryType['categories'][0];
+type QueryFilterCategory = NonNullable<QueryFilterCategoryType>['categories'][0];
 type FilterCategoryType = QueryFilterCategoryType & CategoryTypeHierarchy<FilterCategory>;
 type FilterCategory = QueryFilterCategory & CategoryHierarchyMember<FilterCategoryType>;
 
 class CategoryFilter extends DefaultFilter {
   id: string;
-  ct: ActionListCategoryTypeFilterBlock['categoryType'];
+  ct: NonNullable<ActionListCategoryTypeFilterBlock['categoryType']>;
   options: ActionListFilterOption[];
   style: 'dropdown'|'buttons';
   showAllLabel: string|undefined|null;
@@ -402,8 +403,8 @@ class CategoryFilter extends DefaultFilter {
 
   constructor(config: ActionListCategoryTypeFilterBlock) {
     super();
-    this.ct = config.categoryType;
-    this.id = `cat-${this.ct.identifier}`;
+    this.ct = config.categoryType!;
+    this.id = `cat-${this.ct!.identifier}`;
     this.showAllLabel = config.showAllLabel;
     //@ts-ignore
     const style = config.style === 'dropdown' ? 'dropdown' : 'buttons';
@@ -435,6 +436,7 @@ class CategoryFilter extends DefaultFilter {
     if (this.style === 'dropdown') {
       return super.render(value, onChange, t);
     }
+    const seeAll: string = t('see-all-actions');
     return (
       <Col
         sm={this.sm}
@@ -464,7 +466,7 @@ class CategoryFilter extends DefaultFilter {
               aria-checked={value === undefined}
               role="radio"
             >
-              {t('see-all-actions')}
+              {seeAll}
             </RButton>
             {this.options.map((opt) => (
             <RButton
@@ -490,23 +492,25 @@ class CategoryFilter extends DefaultFilter {
     return this.ct.helpText;
   }
   getShowAllLabel(t: TFunction) {
-    return this.showAllLabel || t('filter-all-categories');
+    return this.showAllLabel || t('filter-all-categories')!;
   }
 }
 
 
-type AttributeTypeChoice = ActionListActionAttributeTypeFilterBlock['attributeType']['choiceOptions'][0]
+type AttributeTypeChoice = NonNullable<
+  ActionListActionAttributeTypeFilterBlock['attributeType']
+>['choiceOptions'][0]
 
 class AttributeTypeFilter extends DefaultFilter {
   id: string;
-  att: ActionListActionAttributeTypeFilterBlock['attributeType'];
+  att: NonNullable<ActionListActionAttributeTypeFilterBlock['attributeType']>;
   options: ActionListFilterOption[];
   showAllLabel: string|undefined|null;
   choiceById: Map<string, AttributeTypeChoice>
 
   constructor(config: ActionListActionAttributeTypeFilterBlock) {
     super();
-    this.att = config.attributeType;
+    this.att = config.attributeType!;
     this.showAllLabel = config.showAllLabel;
     this.id = `att-${this.att.identifier}`;
     const choices = this.att.choiceOptions;
@@ -530,7 +534,7 @@ class AttributeTypeFilter extends DefaultFilter {
     return this.att.helpText;
   }
   getShowAllLabel(t: TFunction) {
-    return this.showAllLabel || t('filter-all-categories');
+    return this.showAllLabel || t('filter-all-categories')!;
   }
 }
 
@@ -565,7 +569,7 @@ class ActionNameFilter implements ActionListFilter {
     return t('filter-text-default');
   }
   getHelpText(t: TFunction) {
-    return null;
+    return undefined;
   }
   render(value: string|undefined, onChange: FilterChangeCallback, t: TFunction) {
     return (
@@ -685,11 +689,6 @@ function ActionListFilters(props: ActionListFiltersProps) {
   );
 }
 
-/*
-    </div>
-  );
-}
-*/
 
 type ConstructFiltersOpts = {
   mainConfig: ActionListPageFiltersFragment,
@@ -704,7 +703,7 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
   const { primaryFilters, mainFilters, advancedFilters } = mainConfig;
 
   function makeSection(id: string, hidden: boolean, blocks: ActionListFilterFragment[]) {
-    const filters = [];
+    const filters: ActionListFilter[] = [];
     blocks.forEach((block) => {
       switch (block.__typename) {
         case 'ResponsiblePartyFilterBlock':
@@ -795,7 +794,7 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
     return ret;
   }
 
-  const sections = [];
+  const sections: ActionListFilterSection[] = [];
   if (primaryFilters?.length) sections.push(makeSection('primary', false, primaryFilters));
   if (mainFilters?.length) sections.push(makeSection('main', false, mainFilters));
   if (advancedFilters?.length) sections.push(makeSection('advanced', true, advancedFilters));

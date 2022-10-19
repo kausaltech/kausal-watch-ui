@@ -12,8 +12,6 @@ type cssColor = NonNullable<css['color']>;
 /* eslint-disable */
 const defaultTheme = require('public/static/themes/default/theme.json');
 
-const themeCache = {};
-
 const theme = {};
 
 export function useTheme() {

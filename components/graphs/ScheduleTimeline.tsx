@@ -2,6 +2,7 @@ import React from 'react';
 import dynamic from 'next/dynamic';
 import { useTranslation } from 'common/i18n';
 import { useTheme } from 'common/theme';
+import type { PlotParams } from 'react-plotly.js';
 
 
 const Plot = dynamic(
@@ -46,7 +47,7 @@ const ScheduleTimeline = ({ schedules, allSchedules }) => {
   if (nrYears > 10) dtick = 'M36';
   else dtick = 'M12';
 
-  const data = [
+  const data: PlotParams['data'] = [
     {
       x: [actStartDate, actEndDate],
       y: [1, 1],
@@ -58,10 +59,8 @@ const ScheduleTimeline = ({ schedules, allSchedules }) => {
       },
     },
   ];
-  const layout = {
+  const layout: PlotParams['layout'] = {
     showlegend: false,
-    showline: true,
-    zeroline: true,
     margin: {
       l: 0,
       r: 0,
@@ -82,11 +81,9 @@ const ScheduleTimeline = ({ schedules, allSchedules }) => {
       },
     },
     yaxis: {
-      ticks: '',
       visible: false,
     },
     plot_bgcolor: theme.themeColors.light,
-    width: null, // Is resized automatically by plotly
     height: 36,
     autosize: true,
   };

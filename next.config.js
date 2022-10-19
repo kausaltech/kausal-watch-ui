@@ -14,10 +14,10 @@ const sentryAuthToken = secrets.SENTRY_AUTH_TOKEN || process.env.SENTRY_AUTH_TOK
 function initializeThemes() {
   const destPath = path.join(__dirname, 'public', 'static', 'themes');
   const { generateThemeSymlinks: generateThemeSymlinksPublic } = require('@kausal/themes');
-  generateThemeSymlinksPublic(destPath, { verbose: true });
+  generateThemeSymlinksPublic(destPath, { verbose: false });
   try {
     const { generateThemeSymlinks: generateThemeSymlinksPrivate } = require('@kausal/themes-private');
-    generateThemeSymlinksPrivate(destPath, { verbose: true });
+    generateThemeSymlinksPrivate(destPath, { verbose: false });
   } catch (error) {
     console.error(error);
   }

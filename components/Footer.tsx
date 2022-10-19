@@ -61,12 +61,11 @@ function Footer(props) {
 
   const additionalLinks = [];
 
-
   plan.additionalLinks.items?.map((link) => (
     additionalLinks.push({
       id: link.id,
       name: link.page.title,
-      slug: link.page.slug,
+      slug: link.page.urlPath,
     })
   ));
 

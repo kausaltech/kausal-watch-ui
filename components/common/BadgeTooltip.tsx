@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { ForwardedRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Badge, Tooltip } from 'reactstrap';
 import styled from 'styled-components';
 import { lighten } from 'polished';
 
-const BadgeWrapper = styled.a`
+const BadgeWrapper = styled.a<{ref: React.Ref<HTMLAnchorElement>}>`
   &.lg {
     font-size: ${(props) => props.theme.fontSizeLg};
   }
@@ -33,11 +33,21 @@ const StyledBadge = styled(Badge)`
   }
 `;
 
-const BadgeTooltip = React.forwardRef(function BadgeTooltip(props, ref) {
+type BadgeTooltipProps = {
+  abbreviation?: string,
+  name: string,
+  size?: 'lg' | 'md',
+  id: string,
+  href: string,
+  ariaLabel: string,
+}
+const BadgeTooltip = React.forwardRef(function BadgeTooltip(
+  props: BadgeTooltipProps, ref: ForwardedRef<HTMLAnchorElement>
+) {
   const {
     abbreviation,
     name,
-    size,
+    size = 'md',
     id,
     href,
     ariaLabel,
@@ -74,20 +84,6 @@ const BadgeTooltip = React.forwardRef(function BadgeTooltip(props, ref) {
 
 BadgeTooltip.defaultProps = {
   size: 'md',
-};
-
-BadgeTooltip.propTypes = {
-  abbreviation: PropTypes.string,
-  name: PropTypes.string.isRequired,
-  id: PropTypes.string.isRequired,
-  ariaLabel: PropTypes.string,
-  size: PropTypes.string,
-  href: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
-};
-BadgeTooltip.defaultProps = {
-  ariaLabel: null,
-  abbreviation: null,
-  href: null,
 };
 
 export default BadgeTooltip;
