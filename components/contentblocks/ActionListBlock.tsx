@@ -1,5 +1,6 @@
-import React from 'react';
-import { Container, Row } from 'reactstrap';
+import React, { useContext } from 'react';
+import PropTypes from 'prop-types';
+import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
 import { gql, useQuery } from '@apollo/client';
 
@@ -8,35 +9,12 @@ import ActionCard from 'components/actions/ActionCard';
 import ActionCardList from 'components/actions/ActionCardList';
 import ContentLoader from 'components/common/ContentLoader';
 import ErrorMessage from 'components/common/ErrorMessage';
-import { usePlan } from 'context/plan';
-import { GetActionListForBlockQuery } from 'common/__generated__/graphql';
-import { constructCatHierarchy, mapActionCategories } from 'common/categories';
+import PlanContext from 'context/plan';
 
 const GET_ACTION_LIST_FOR_BLOCK = gql`
 query GetActionListForBlock($plan: ID!, $category: ID) {
   planActions(plan: $plan, category: $category) {
     ...ActionCard
-  }
-  plan(id: $plan) {
-    id
-    primaryActionClassification {
-      id
-      categories {
-        id
-        parent {
-          id
-        }
-      }
-    }
-    secondaryActionClassification {
-      id
-      categories {
-        id
-        parent {
-          id
-        }
-      }
-    }
   }
 }
 ${ActionCard.fragments.action}
@@ -56,16 +34,11 @@ const SectionHeader = styled.h2`
   margin-bottom: ${(props) => props.theme.spaces.s300};
 `;
 
-type ActionListBlockProps = {
-  categoryId: string,
-  color?: string,
-}
-
-const ActionListBlock = (props: ActionListBlockProps) => {
+const ActionListBlock = (props) => {
   const { categoryId, color } = props;
   const { t } = useTranslation();
-  const plan = usePlan();
-  const { loading, error, data } = useQuery<GetActionListForBlockQuery>(GET_ACTION_LIST_FOR_BLOCK, {
+  const plan = useContext(PlanContext);
+  const { loading, error, data } = useQuery(GET_ACTION_LIST_FOR_BLOCK, {
     variables: {
       plan: plan.identifier,
       category: categoryId,
@@ -74,14 +47,10 @@ const ActionListBlock = (props: ActionListBlockProps) => {
   if (loading) return <ContentLoader />;
   if (error) return <ErrorMessage message={error.message} />;
 
-  const { planActions, plan: queriedPlan } = data || {};
-  if (!planActions || !queriedPlan) {
+  const { planActions } = data;
+  if (!planActions) {
     return <ErrorMessage statusCode={404} message={t('page-not-found')} />;
   }
-
-  const cts = constructCatHierarchy([queriedPlan.primaryActionClassification]);
-  const actions = mapActionCategories()
-
   const groupBy = plan.primaryOrgs.length > 0 ? 'primaryOrg' : 'none';
 
   const heading = t('actions', getActionTermContext(plan));
@@ -98,6 +67,10 @@ const ActionListBlock = (props: ActionListBlockProps) => {
       </Container>
     </ActionListSection>
   );
+};
+
+ActionListBlock.propTypes = {
+  categoryId: PropTypes.string.isRequired,
 };
 
 export default ActionListBlock;
