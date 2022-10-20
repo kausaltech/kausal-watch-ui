@@ -1,10 +1,9 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { useTranslation } from 'common/i18n';
 import { OrganizationLink } from 'common/links';
 import { slugify } from 'common/utils';
-import BadgeTooltip from '../common/BadgeTooltip';
+import BadgeTooltip, { BadgeTooltipProps } from 'components/common/BadgeTooltip';
 import { ActionContentAction } from './ActionContent';
 
 const Responsibles = styled.div`
@@ -44,7 +43,7 @@ function ResponsibleBadge({ responsibleParty }: ResponsibleBadgeProps) {
     specifier
   } = responsibleParty;
   const { t } = useTranslation(['common', 'actions']);
-  let size = 'md';
+  let size = 'md' as BadgeTooltipProps["size"];
   let ariaLabel;
 
   // PRIMARY, COLLABORATOR
@@ -69,6 +68,8 @@ function ResponsibleBadge({ responsibleParty }: ResponsibleBadgeProps) {
             ariaLabel={ariaLabel}
             content={org.abbreviation || org.name}
             size={size}
+            color="brandDark"
+            isLink
           />
         </a>
       </OrganizationLink>

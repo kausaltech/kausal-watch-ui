@@ -1,22 +1,14 @@
-import React, { ForwardedRef, useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { useState } from 'react';
 import { Badge, Tooltip } from 'reactstrap';
 import SVG from 'react-inlinesvg';
 import styled from 'styled-components';
-import { darken, lighten } from 'polished';
+import { darken, readableColor } from 'polished';
 
-const BadgeWrapper = styled.a<{ref: React.Ref<HTMLAnchorElement>}>`
-  &.lg {
-    font-size: ${(props) => props.theme.fontSizeLg};
-  }
-  &.md {
-    font-size: ${(props) => props.theme.fontSizeMd};
-  }
-`;
-
-const StyledBadge = styled(Badge)`
-  background-color: ${(props) => props.theme.badgeBackground} !important;
-  color: ${(props) => props.theme.badgeColor};
+const StyledBadge = styled(Badge)<{color: string, isLink: boolean}>`
+  background-color: ${(props) => props.theme[props.color]} !important;
+  color: ${
+    (props) => readableColor(props.theme[props.color], props.theme.themeColors.black, props.theme.themeColors.white)
+  };
   border-radius: ${(props) => props.theme.badgeBorderRadius};
   padding: ${(props) => props.theme.badgePaddingY} ${(props) => props.theme.badgePaddingX};
   font-weight: ${(props) => props.theme.badgeFontWeight};
@@ -27,9 +19,8 @@ const StyledBadge = styled(Badge)`
   white-space: normal;
   text-align: left;
 
-  &.bg-secondary:hover {
-    background-color:  ${(props) => lighten(0.05, props.theme.badgeBackground)} !important;
-    color: ${(props) => props.theme.badgeColor};
+  &:hover {
+    background-color:  ${(props) => props.isLink && darken(0.05, props.theme[props.color])} !important;
   }
 
   &.lg {
@@ -43,19 +34,22 @@ const StyledBadge = styled(Badge)`
   }
 `;
 
-const IconBadge = styled.div`
+const IconBadge = styled.div<{color: string, isLink: boolean}>`
   display: flex;
   align-items: center;
   max-width: 320px;
-  background-color: ${(props) => props.theme.neutralLight} !important;
+  background-color: ${(props) => props.theme[props.color]} !important;
+  color: ${
+    (props) => readableColor(props.theme[props.color], props.theme.themeColors.black, props.theme.themeColors.white)
+  };
   border-radius: ${(props) => props.theme.badgeBorderRadius};
 
   &:hover {
-    background-color: ${(props) => darken(0.05, props.theme.neutralLight)} !important;
+    background-color: ${(props) => props.isLink && darken(0.05, props.theme[props.color])} !important;
   }
 `;
 
-const IconImage = styled.div`
+const IconImage = styled.div<{imageSrc?: string}>`
   display: block;
   text-align: center;
   height: ${(props) => props.imageSrc ? props.theme.spaces.s600 : props.theme.spaces.s300};
@@ -78,31 +72,45 @@ const IconName = styled.div`
   font-size: ${(props) => props.theme.fontSizeBase};
   line-height: ${(props) => props.theme.lineHeightSm};
   font-weight: ${(props) => props.theme.fontWeightBold};
-  color: black;
 `;
 
-const BadgeContent = (props) => {
-  const { content, size, iconSvg, iconImage, ariaLabel } = props;
+type BadgeContentProps = {
+  content: string,
+  size?: 'lg' | 'md' | 'sm',
+  ariaLabel?: string,
+  iconSvg?: string,
+  iconImage?: string,
+  color?: 'brandDark' | 'brandLight'| 'neutralDark'| 'neutralLight',
+  isLink: boolean,
+}
+
+const BadgeContent = (props: BadgeContentProps) => {
+  const { content, size, iconSvg, iconImage, ariaLabel, color, isLink } = props;
   const hasIcon = (iconSvg == null) && (iconImage == null);
 
   return ( hasIcon ?
-  <StyledBadge
-    className={size}
-    aria-label={ariaLabel}
-  >
-    {content}
-  </StyledBadge>
-  :
-  <IconBadge>
-    {iconSvg
-      ? <IconImage><IconSvg src={iconSvg} preserveAspectRatio="xMinYMid meet" /></IconImage>
-      : <IconImage imageSrc={iconImage} />}
-    <IconName>{content}</IconName>
-  </IconBadge>
+    <StyledBadge
+      className={size}
+      aria-label={ariaLabel}
+      color={color}
+      isLink={isLink}
+    >
+      {content}
+    </StyledBadge>
+    :
+    <IconBadge
+      color={color}
+      isLink={isLink}
+    >
+      {iconSvg
+        ? <IconImage><IconSvg src={iconSvg} preserveAspectRatio="xMinYMid meet" /></IconImage>
+        : <IconImage imageSrc={iconImage} />}
+      <IconName>{content}</IconName>
+    </IconBadge>
   )
 };
 
-type BadgeTooltipProps = {
+export type BadgeTooltipProps = {
   content: string,
   tooltip?: string,
   size?: 'lg' | 'md' | 'sm',
@@ -110,6 +118,8 @@ type BadgeTooltipProps = {
   ariaLabel?: string,
   iconSvg?: string,
   iconImage?: string,
+  color?: 'brandDark' | 'brandLight'| 'neutralDark'| 'neutralLight',
+  isLink: boolean,
 }
 
 const BadgeTooltip = (
@@ -123,6 +133,8 @@ const BadgeTooltip = (
     ariaLabel,
     iconSvg = null,
     iconImage = null,
+    color ='brandDark',
+    isLink = false
   } = props;
   const badgeId = `btt${id.replace(/[: ]/g, '_')}`;
   const [tooltipOpen, setTooltipOpen] = useState(false);
@@ -136,6 +148,8 @@ const BadgeTooltip = (
         iconSvg={iconSvg}
         iconImage={iconImage}
         ariaLabel={ariaLabel}
+        color={color}
+        isLink={isLink}
       />
       { tooltip &&
         <Tooltip

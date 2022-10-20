@@ -1,7 +1,6 @@
 import React, { PropsWithChildren } from 'react';
 import { gql } from '@apollo/client';
 import styled from 'styled-components';
-import { lighten, readableColor } from 'polished';
 import { ActionListLink, StaticPageLink } from 'common/links';
 import BadgeTooltip from 'components/common/BadgeTooltip';
 import PopoverTip from 'components/common/PopoverTip';
@@ -19,17 +18,6 @@ const Categories = styled.div`
 
   h3 {
     font-size: ${(props) => props.theme.fontSizeBase};
-  }
-
-  .badge {
-    background-color: ${(props) => props.theme.neutralLight} !important;
-    color: ${
-    (props) => readableColor(props.theme.neutralLight, props.theme.themeColors.black, props.theme.themeColors.white)
-    };
-
-    &:hover {
-      background-color: ${(props) => lighten(0.05, props.theme.neutralLight)} !important;
-    }
   }
 `;
 
@@ -139,6 +127,8 @@ export const CategoryContent = (props: CategoryContentProps) => {
                 iconImage={item.iconImage?.rendition.src || item.parent?.iconImage?.rendition.src}
                 iconSvg={item.iconSvgUrl || item.parent?.iconSvgUrl}
                 size="md"
+                color="neutralLight"
+                isLink={!noLink}
               />
             </CategoryLink>
           </CategoryListItem>
