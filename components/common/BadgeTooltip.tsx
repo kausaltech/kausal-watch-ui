@@ -114,9 +114,9 @@ type BadgeTooltipProps = {
   iconImage?: string,
 }
 
-const BadgeTooltip = React.forwardRef(function BadgeTooltip(
-  props: BadgeTooltipProps, ref: ForwardedRef<HTMLAnchorElement>
-) {
+const BadgeTooltip = (
+  props: BadgeTooltipProps
+) => {
   const {
     content,
     tooltip,
@@ -155,6 +155,6 @@ const BadgeTooltip = React.forwardRef(function BadgeTooltip(
         }
     </>
   );
-});
+};
 
 export default BadgeTooltip;

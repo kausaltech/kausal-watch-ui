@@ -98,7 +98,7 @@ type AttributeContentNestedTypeProps = {
 function AttributeContent(props: AttributeContentProps | AttributeContentNestedTypeProps) {
   const { attribute, attributeType, t } = props;
   let type = attributeType ?? attribute.type;
-
+  console.log("attributecontent", props);
   let dataElement: ReactElement;
 
   switch (attribute.__typename) {
@@ -136,7 +136,10 @@ function AttributeContent(props: AttributeContentProps | AttributeContentNestedT
       break;
     case 'AttributeCategoryChoice':
       dataElement = (
-        <CategoryContent category={attribute.categories} t={t}/>
+        <CategoryContent
+          categories={attribute.categories}
+          categoryType={attribute.type}
+        />
       );
       break;
     default: return <div />;
