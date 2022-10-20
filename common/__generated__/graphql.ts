@@ -3674,7 +3674,7 @@ export type ActionDetailsQuery = (
       & { __typename?: 'Action' }
     ) | null, attributes?: Array<(
       { id: string, categories: Array<(
-        { name: string, identifier: string, iconSvgUrl?: string | null, iconImage?: (
+        { id: string, name: string, identifier: string, helpText: string, iconSvgUrl?: string | null, iconImage?: (
           { rendition?: (
             { src: string }
             & { __typename?: 'ImageRendition' }
@@ -3970,7 +3970,7 @@ export type ContactDetailsQuery = (
 
 type AttributesBlockAttribute_AttributeCategoryChoice_Fragment = (
   { id: string, categories: Array<(
-    { name: string, identifier: string, iconSvgUrl?: string | null, iconImage?: (
+    { id: string, name: string, identifier: string, helpText: string, iconSvgUrl?: string | null, iconImage?: (
       { rendition?: (
         { src: string }
         & { __typename?: 'ImageRendition' }
@@ -4036,7 +4036,7 @@ type AttributesBlockAttributeWithNestedType_AttributeCategoryChoice_Fragment = (
     ) | null }
     & { __typename: 'AttributeType' }
   ), categories: Array<(
-    { name: string, identifier: string, iconSvgUrl?: string | null, iconImage?: (
+    { id: string, name: string, identifier: string, helpText: string, iconSvgUrl?: string | null, iconImage?: (
       { rendition?: (
         { src: string }
         & { __typename?: 'ImageRendition' }
@@ -5918,7 +5918,7 @@ export type GetPlanPageGeneralQuery = (
           ) | null }
           & { __typename: 'AttributeType' }
         ), categories: Array<(
-          { name: string, identifier: string, iconSvgUrl?: string | null, iconImage?: (
+          { id: string, name: string, identifier: string, helpText: string, iconSvgUrl?: string | null, iconImage?: (
             { rendition?: (
               { src: string }
               & { __typename?: 'ImageRendition' }

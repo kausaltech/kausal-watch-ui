@@ -23,15 +23,13 @@ const ResponsiblesList = styled.ul`
 `;
 
 const ResponsibleItem = styled.li`
+  margin-bottom: ${(props) => props.theme.spaces.s100};
   font-size: ${(props) => props.theme.fontSizeSm};
-
-  .badge {
-    margin-bottom: 0;
-  }
 `;
 
 const ResponsibleSpecifier = styled.div`
     margin-bottom: ${(props) => props.theme.spaces.s050};
+    line-height: ${(props) => props.theme.lineHeightMd};
 `;
 function ResponsibleBadge(props) {
   const {
@@ -51,6 +49,9 @@ function ResponsibleBadge(props) {
   if (role === 'PRIMARY') {
     size = 'lg';
     ariaLabel = `${t('responsible-party-main')}: ${abbreviation} ${name}`;
+  } if (role === 'COLLABORATOR') {
+    size = 'sm';
+    ariaLabel = `${t('responsible-party-main')}: ${abbreviation} ${name}`;
   } else {
     ariaLabel = `${abbreviation} ${name}`;
   }
@@ -59,9 +60,9 @@ function ResponsibleBadge(props) {
     <ResponsibleItem>
         <BadgeTooltip
           id={`org-${slugify(id)}`}
-          name={name !== abbreviation ? name : ''}
+          tooltip={abbreviation !== "" ? name : undefined}
           ariaLabel={ariaLabel}
-          abbreviation={abbreviation}
+          content={abbreviation || name}
           size={size}
           url={`/organizations/${id}`}
         />
@@ -79,6 +80,7 @@ function ResponsibleList(props) {
   const { t } = useTranslation(['common', 'actions']);
     /* TODO: a11y - this should probably be a list markup */
 
+  console.log("responsibles", props);
   return (
     <Responsibles>
       <h3>{t('responsible-parties')}</h3>

@@ -239,8 +239,10 @@ fragment AttributesBlockAttribute on AttributeInterface {
   }
   ...on AttributeCategoryChoice {
     categories {
+      id
       name
       identifier
+      helpText
       iconSvgUrl
       iconImage {
         rendition(size:"400x400", crop:false) {

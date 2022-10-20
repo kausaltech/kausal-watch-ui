@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Badge } from 'reactstrap';
-import SVG from 'react-inlinesvg';
+
 import styled from 'styled-components';
 import { darken, lighten, readableColor } from 'polished';
 import { useTranslation } from 'common/i18n';
@@ -31,13 +31,13 @@ const Categories = styled.div`
   }
 `;
 
-const CatIconList = styled.ul`
+const CategoryList = styled.ul`
   list-style: none;
   margin: 0;
   padding: 0;
 `;
 
-const CatIconListItem = styled.li`
+const CategoryListItem = styled.li`
   margin-bottom: ${(props) => props.theme.spaces.s100};
 
   a {
@@ -49,44 +49,6 @@ const CatIconListItem = styled.li`
       text-decoration: none;
     }
   }
-`;
-
-const IconBadge = styled.div`
-  display: flex;
-  align-items: center;
-  max-width: 320px;
-  background-color: ${(props) => props.theme.neutralLight} !important;
-  border-radius: ${(props) => props.theme.badgeBorderRadius};
-
-  &:hover {
-    background-color: ${(props) => darken(0.05, props.theme.neutralLight)} !important;
-  }
-`;
-
-const IconImage = styled.div`
-  display: block;
-  text-align: center;
-  height: ${(props) => props.imageSrc ? props.theme.spaces.s600 : props.theme.spaces.s300};
-  flex: 0 0 ${(props) => props.imageSrc ? props.theme.spaces.s600 : props.theme.spaces.s300};
-  margin-right: ${(props) => props.theme.spaces.s050};
-  background-color: ${(props) => props.theme.neutralLight};
-  background-image: url(${(props) => props.imageSrc || 'none'});
-  background-size: cover;
-  background-position: center center;
-`;
-
-const IconSvg = styled(SVG)`
-  height: ${(props) => props.theme.spaces.s200};
-  margin: ${(props) => props.theme.spaces.s050};
-  fill: ${(props) => props.theme.brandDark};
-`;
-
-const IconName = styled.div`
-  padding: ${(props) => props.theme.spaces.s050};
-  font-size: ${(props) => props.theme.fontSizeBase};
-  line-height: ${(props) => props.theme.lineHeightSm};
-  font-weight: ${(props) => props.theme.fontWeightBold};
-  color: black;
 `;
 
 const StyledBadge = styled(Badge)`
@@ -129,28 +91,6 @@ function Categorybadge(props) {
   );
 }
 
-function CategoryIcon(props) {
-  const {
-    id,
-    name,
-    url,
-    iconImage,
-    iconSvg
-  } = props;
-
-  return (
-    <Link href={url}>
-      <a>
-        <IconBadge>
-          {iconSvg
-            ? <IconImage><IconSvg src={iconSvg} preserveAspectRatio="xMinYMid meet" /></IconImage>
-            : <IconImage imageSrc={iconImage} />}
-          <IconName>{name}</IconName>
-        </IconBadge>
-      </a>
-    </Link>
-  );
-}
 
 export const CategoryContent = (props) => {
 
@@ -165,31 +105,22 @@ export const CategoryContent = (props) => {
   !!(cat.iconImage || cat.iconSvgUrl || cat.parent?.iconImage || cat.parent?.iconSvgUrl);
 
   return (
-      <CatIconList>
+      <CategoryList>
         { category.map((item) =>
-          <CatIconListItem key={item.id}>
-            { categoryHasIcon(item) ?
-              <CategoryIcon
-                t={t}
-                id={item.id}
-                name={item.name}
-                iconImage={item.iconImage?.rendition.src || item.parent?.iconImage?.rendition.src}
-                iconSvg={item.iconSvgUrl || item.parent?.iconSvgUrl}
-                url={getCategoryPath(item)}
-              />
-              :
+          <CategoryListItem key={item.id}>
               <BadgeTooltip
                 t={t}
-                id={item.id}
-                name={item.helpText}
-                abbreviation={item.name}
+                id={item.id || item.identifier}
+                tooltip={item.helpText}
+                content={item.name}
+                iconImage={item.iconImage?.rendition.src || item.parent?.iconImage?.rendition.src}
+                iconSvg={item.iconSvgUrl || item.parent?.iconSvgUrl}
                 size="md"
                 url={getCategoryPath(item)}
               />
-            }
-          </CatIconListItem>
+          </CategoryListItem>
           )}
-        </CatIconList>)
+        </CategoryList>)
 };
 
 function CategoryTags(props) {
