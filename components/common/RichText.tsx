@@ -5,6 +5,7 @@ import parse, { domToReact } from 'html-react-parser';
 import 'react-medium-image-zoom/dist/styles.css'
 
 import { usePlan } from 'context/plan';
+import styled from 'styled-components';
 
 
 type RichTextImageProps = {
@@ -13,6 +14,16 @@ type RichTextImageProps = {
     [key: string]: any,
   },
 }
+
+function ICompress() {
+  // eslint-disable-next-line max-len
+  return (React.createElement("svg", { "aria-hidden": "true", "data-rmiz-btn-unzoom-icon": true, fill: "currentColor", focusable: "false", viewBox: "0 0 16 16", xmlns: "http://www.w3.org/2000/svg" },
+      // eslint-disable-next-line max-len
+      React.createElement("path", { d: "M 14.144531 1.148438 L 9 6.292969 L 9 3 L 8 3 L 8 8 L 13 8 L 13 7 L 9.707031 7 L 14.855469 1.851563 Z M 8 8 L 3 8 L 3 9 L 6.292969 9 L 1.148438 14.144531 L 1.851563 14.855469 L 7 9.707031 L 7 13 L 8 13 Z" })));
+}
+const CompressIcon = styled(ICompress)`
+  vertical-align: baseline;
+`;
 
 function RichTextImage(props: RichTextImageProps) {
   const plan = usePlan();
@@ -40,7 +51,7 @@ function RichTextImage(props: RichTextImageProps) {
         width: origWidth,
       }
       return (
-        <Zoom zoomImg={zoomImgAttribs}>
+        <Zoom zoomImg={zoomImgAttribs} IconUnzoom={CompressIcon}>
           {imgElement}
         </Zoom>
       )
