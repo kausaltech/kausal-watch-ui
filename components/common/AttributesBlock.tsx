@@ -8,6 +8,7 @@ import { gql } from '@apollo/client';
 import RichText from 'components/common/RichText';
 import Icon from 'components/common/Icon';
 import { CategoryContent } from 'components/actions/CategoryTags';
+import PopoverTip from 'components/common/PopoverTip';
 import {
   AttributesBlockAttributeFragment, AttributesBlockAttributeTypeFragment,
   AttributesBlockAttributeWithNestedTypeFragment
@@ -80,8 +81,10 @@ const AttributeItem = styled(Col)`
 `;
 
 const AttributeChoiceLabel = styled.div`
+  margin-bottom: ${(props) => props.theme.spaces.s100};
   font-size: ${(props) => props.theme.fontSizeSm};
   font-family: ${(props) => props.theme.fontFamilyTiny};
+  font-weight: 700;
 `;
 
 type AttributeContentProps = {
@@ -96,7 +99,7 @@ type AttributeContentNestedTypeProps = {
 }
 
 function AttributeContent(props: AttributeContentProps | AttributeContentNestedTypeProps) {
-  const { attribute, attributeType, t } = props;
+  const { attribute, attributeType } = props;
   let type = attributeType ?? attribute.type;
   let dataElement: ReactElement;
 
@@ -147,7 +150,15 @@ function AttributeContent(props: AttributeContentProps | AttributeContentNestedT
   // Render horizontal layout
   return (
     <AttributeContainer>
-      <h3>{type.name}</h3>
+      <h3>
+        {type.name}
+        {type.helpText && (
+          <PopoverTip
+            content={type.helpText}
+            identifier={type.id}
+          />
+        )}
+      </h3>
       {dataElement}
     </AttributeContainer>
   );
@@ -202,7 +213,7 @@ function AttributesBlock(props: AttributesBlockProps) {
           <AttributeItem
             tag="li"
             key={item.id}
-            md={vertical ? 12 : 6} lg={vertical ? 12 : 4}
+            md={vertical ? 12 : 6}
           >
             {/* @ts-ignore */}
             <AttributeContent
@@ -268,6 +279,7 @@ fragment AttributesBlockAttributeType on AttributeType {
   format
   name
   identifier
+  helpText
   choiceOptions {
     id
     identifier

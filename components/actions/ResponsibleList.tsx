@@ -29,7 +29,7 @@ const ResponsibleItem = styled.li`
 `;
 
 const ResponsibleSpecifier = styled.div`
-    margin-bottom: ${(props) => props.theme.spaces.s050};
+    margin: ${(props) => props.theme.spaces.s050} 0 ${(props) => props.theme.spaces.s050};
     line-height: ${(props) => props.theme.lineHeightMd};
 `;
 

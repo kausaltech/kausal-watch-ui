@@ -3505,7 +3505,7 @@ export type GetActionDetailsQuery = (
       ) }
       & { __typename?: 'Action' }
     )>, categories?: Array<(
-      { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, iconImage?: (
+      { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, iconImage?: (
         { rendition?: (
           { src: string }
           & { __typename?: 'ImageRendition' }
@@ -3714,7 +3714,7 @@ export type GetActionDetailsQuery = (
     { actionListPage?: (
       { detailsMainTop?: Array<(
         { id?: string | null, attributeType: (
-          { id: string, format: AttributeTypeFormat, name: string, identifier: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
+          { id: string, format: AttributeTypeFormat, name: string, identifier: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
             { id: string, identifier: string }
             & { __typename?: 'AttributeTypeChoiceOption' }
           )>, unit?: (
@@ -3726,7 +3726,7 @@ export type GetActionDetailsQuery = (
         & { __typename: 'ActionContentAttributeTypeBlock' }
       ) | (
         { id?: string | null, categoryType: (
-          { id: string, name: string, identifier: string, hideCategoryIdentifiers: boolean }
+          { id: string, name: string, identifier: string, helpText: string, hideCategoryIdentifiers: boolean }
           & { __typename?: 'CategoryType' }
         ) }
         & { __typename: 'ActionContentCategoryTypeBlock' }
@@ -3735,7 +3735,7 @@ export type GetActionDetailsQuery = (
         & { __typename: 'ActionDescriptionBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionTasksBlock' }
       )> | null, detailsMainBottom?: Array<(
         { id?: string | null, attributeType: (
-          { id: string, format: AttributeTypeFormat, name: string, identifier: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
+          { id: string, format: AttributeTypeFormat, name: string, identifier: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
             { id: string, identifier: string }
             & { __typename?: 'AttributeTypeChoiceOption' }
           )>, unit?: (
@@ -3747,7 +3747,7 @@ export type GetActionDetailsQuery = (
         & { __typename: 'ActionContentAttributeTypeBlock' }
       ) | (
         { id?: string | null, categoryType: (
-          { id: string, name: string, identifier: string, hideCategoryIdentifiers: boolean }
+          { id: string, name: string, identifier: string, helpText: string, hideCategoryIdentifiers: boolean }
           & { __typename?: 'CategoryType' }
         ) }
         & { __typename: 'ActionContentCategoryTypeBlock' }
@@ -3759,7 +3759,7 @@ export type GetActionDetailsQuery = (
         & { __typename: 'ActionContactPersonsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionScheduleBlock' }
       ) | (
         { id?: string | null, attributeType: (
-          { id: string, format: AttributeTypeFormat, name: string, identifier: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
+          { id: string, format: AttributeTypeFormat, name: string, identifier: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
             { id: string, identifier: string }
             & { __typename?: 'AttributeTypeChoiceOption' }
           )>, unit?: (
@@ -3771,14 +3771,14 @@ export type GetActionDetailsQuery = (
         & { __typename: 'ActionContentAttributeTypeBlock' }
       ) | (
         { id?: string | null, categoryType: (
-          { id: string, name: string, identifier: string, hideCategoryIdentifiers: boolean }
+          { id: string, name: string, identifier: string, helpText: string, hideCategoryIdentifiers: boolean }
           & { __typename?: 'CategoryType' }
         ) }
         & { __typename: 'ActionContentCategoryTypeBlock' }
       )> | null }
       & { __typename?: 'ActionListPage' }
     ) | null, actionAttributeTypes: Array<(
-      { id: string, format: AttributeTypeFormat, name: string, identifier: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
+      { id: string, format: AttributeTypeFormat, name: string, identifier: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
         { id: string, identifier: string }
         & { __typename?: 'AttributeTypeChoiceOption' }
       )>, unit?: (
@@ -3799,7 +3799,7 @@ type ActionAsideContentBlocksFragment_ActionContactPersonsBlock_ActionResponsibl
 
 type ActionAsideContentBlocksFragment_ActionContentAttributeTypeBlock_Fragment = (
   { id?: string | null, attributeType: (
-    { id: string, format: AttributeTypeFormat, name: string, identifier: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
+    { id: string, format: AttributeTypeFormat, name: string, identifier: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
       { id: string, identifier: string }
       & { __typename?: 'AttributeTypeChoiceOption' }
     )>, unit?: (
@@ -3813,7 +3813,7 @@ type ActionAsideContentBlocksFragment_ActionContentAttributeTypeBlock_Fragment =
 
 type ActionAsideContentBlocksFragment_ActionContentCategoryTypeBlock_Fragment = (
   { id?: string | null, categoryType: (
-    { id: string, name: string, identifier: string, hideCategoryIdentifiers: boolean }
+    { id: string, name: string, identifier: string, helpText: string, hideCategoryIdentifiers: boolean }
     & { __typename?: 'CategoryType' }
   ) }
   & { __typename: 'ActionContentCategoryTypeBlock' }
@@ -3823,7 +3823,7 @@ export type ActionAsideContentBlocksFragmentFragment = ActionAsideContentBlocksF
 
 type ActionMainContentBlocksFragment_ActionContentAttributeTypeBlock_Fragment = (
   { id?: string | null, attributeType: (
-    { id: string, format: AttributeTypeFormat, name: string, identifier: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
+    { id: string, format: AttributeTypeFormat, name: string, identifier: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
       { id: string, identifier: string }
       & { __typename?: 'AttributeTypeChoiceOption' }
     )>, unit?: (
@@ -3837,7 +3837,7 @@ type ActionMainContentBlocksFragment_ActionContentAttributeTypeBlock_Fragment = 
 
 type ActionMainContentBlocksFragment_ActionContentCategoryTypeBlock_Fragment = (
   { id?: string | null, categoryType: (
-    { id: string, name: string, identifier: string, hideCategoryIdentifiers: boolean }
+    { id: string, name: string, identifier: string, helpText: string, hideCategoryIdentifiers: boolean }
     & { __typename?: 'CategoryType' }
   ) }
   & { __typename: 'ActionContentCategoryTypeBlock' }
@@ -4071,7 +4071,7 @@ export type GetActionStatusesQuery = (
 );
 
 export type CategoryTagsCategoryFragment = (
-  { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, iconImage?: (
+  { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, iconImage?: (
     { rendition?: (
       { src: string }
       & { __typename?: 'ImageRendition' }
@@ -4133,7 +4133,7 @@ export type CategoryTagsCategoryFragment = (
 );
 
 export type CategoryTagsCategoryTypeFragment = (
-  { id: string, name: string, identifier: string, hideCategoryIdentifiers: boolean }
+  { id: string, name: string, identifier: string, helpText: string, hideCategoryIdentifiers: boolean }
   & { __typename?: 'CategoryType' }
 );
 
@@ -4209,7 +4209,7 @@ type AttributesBlockAttribute_AttributeRichText_Fragment = (
 export type AttributesBlockAttributeFragment = AttributesBlockAttribute_AttributeCategoryChoice_Fragment | AttributesBlockAttribute_AttributeChoice_Fragment | AttributesBlockAttribute_AttributeNumericValue_Fragment | AttributesBlockAttribute_AttributeRichText_Fragment;
 
 export type AttributesBlockAttributeTypeFragment = (
-  { id: string, format: AttributeTypeFormat, name: string, identifier: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
+  { id: string, format: AttributeTypeFormat, name: string, identifier: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
     { id: string, identifier: string }
     & { __typename?: 'AttributeTypeChoiceOption' }
   )>, unit?: (
@@ -4221,7 +4221,7 @@ export type AttributesBlockAttributeTypeFragment = (
 
 type AttributesBlockAttributeWithNestedType_AttributeCategoryChoice_Fragment = (
   { id: string, type: (
-    { id: string, identifier: string, format: AttributeTypeFormat, name: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
+    { id: string, identifier: string, format: AttributeTypeFormat, name: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
       { id: string, identifier: string }
       & { __typename?: 'AttributeTypeChoiceOption' }
     )>, unit?: (
@@ -4247,7 +4247,7 @@ type AttributesBlockAttributeWithNestedType_AttributeCategoryChoice_Fragment = (
 
 type AttributesBlockAttributeWithNestedType_AttributeChoice_Fragment = (
   { text?: string | null, id: string, type: (
-    { id: string, identifier: string, format: AttributeTypeFormat, name: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
+    { id: string, identifier: string, format: AttributeTypeFormat, name: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
       { id: string, identifier: string }
       & { __typename?: 'AttributeTypeChoiceOption' }
     )>, unit?: (
@@ -4264,7 +4264,7 @@ type AttributesBlockAttributeWithNestedType_AttributeChoice_Fragment = (
 
 type AttributesBlockAttributeWithNestedType_AttributeNumericValue_Fragment = (
   { id: string, numericValue: number, type: (
-    { id: string, identifier: string, format: AttributeTypeFormat, name: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
+    { id: string, identifier: string, format: AttributeTypeFormat, name: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
       { id: string, identifier: string }
       & { __typename?: 'AttributeTypeChoiceOption' }
     )>, unit?: (
@@ -4278,7 +4278,7 @@ type AttributesBlockAttributeWithNestedType_AttributeNumericValue_Fragment = (
 
 type AttributesBlockAttributeWithNestedType_AttributeRichText_Fragment = (
   { value: string, id: string, type: (
-    { id: string, identifier: string, format: AttributeTypeFormat, name: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
+    { id: string, identifier: string, format: AttributeTypeFormat, name: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
       { id: string, identifier: string }
       & { __typename?: 'AttributeTypeChoiceOption' }
     )>, unit?: (
@@ -6079,7 +6079,7 @@ export type GetPlanPageGeneralQuery = (
         & { __typename?: 'Category' }
       ) | null, attributes?: Array<(
         { id: string, type: (
-          { id: string, identifier: string, format: AttributeTypeFormat, name: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
+          { id: string, identifier: string, format: AttributeTypeFormat, name: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
             { id: string, identifier: string }
             & { __typename?: 'AttributeTypeChoiceOption' }
           )>, unit?: (
@@ -6103,7 +6103,7 @@ export type GetPlanPageGeneralQuery = (
         & { __typename: 'AttributeCategoryChoice' }
       ) | (
         { text?: string | null, id: string, type: (
-          { id: string, identifier: string, format: AttributeTypeFormat, name: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
+          { id: string, identifier: string, format: AttributeTypeFormat, name: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
             { id: string, identifier: string }
             & { __typename?: 'AttributeTypeChoiceOption' }
           )>, unit?: (
@@ -6118,7 +6118,7 @@ export type GetPlanPageGeneralQuery = (
         & { __typename: 'AttributeChoice' }
       ) | (
         { id: string, numericValue: number, type: (
-          { id: string, identifier: string, format: AttributeTypeFormat, name: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
+          { id: string, identifier: string, format: AttributeTypeFormat, name: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
             { id: string, identifier: string }
             & { __typename?: 'AttributeTypeChoiceOption' }
           )>, unit?: (
@@ -6130,7 +6130,7 @@ export type GetPlanPageGeneralQuery = (
         & { __typename: 'AttributeNumericValue' }
       ) | (
         { value: string, id: string, type: (
-          { id: string, identifier: string, format: AttributeTypeFormat, name: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
+          { id: string, identifier: string, format: AttributeTypeFormat, name: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
             { id: string, identifier: string }
             & { __typename?: 'AttributeTypeChoiceOption' }
           )>, unit?: (

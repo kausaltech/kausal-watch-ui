@@ -1,13 +1,14 @@
 import React, { PropsWithChildren } from 'react';
 import { gql } from '@apollo/client';
 import styled from 'styled-components';
-import { darken, lighten, readableColor } from 'polished';
-import { ActionListLink, Link, StaticPageLink } from 'common/links';
+import { lighten, readableColor } from 'polished';
+import { ActionListLink, StaticPageLink } from 'common/links';
 import BadgeTooltip from 'components/common/BadgeTooltip';
+import PopoverTip from 'components/common/PopoverTip';
 import {
   CategoryTagsCategoryFragment,
   CategoryTagsCategoryTypeFragment,
-  CategoryTagsFragmentFragment } from 'common/__generated__/graphql';
+ } from 'common/__generated__/graphql';
 
 
 const Categories = styled.div`
@@ -52,10 +53,24 @@ const CategoryListItem = styled.li`
   }
 `;
 
-function CategoryLink(props: PropsWithChildren<CategoryBadgeProps>) {
-  const { category, categoryType, children } = props;
+type CategoryLinkProps<ExtraCatProps = {}, ExtraCTProps = {}> = {
+  category: {
+    id: string,
+    name: string,
+    categoryPage?: null | {
+      urlPath: string,
+    }
+  } & ExtraCatProps,
+  categoryType: {
+    identifier: string,
+  } & ExtraCTProps,
+  noLink?: boolean,
+}
 
-  if(category == false)return children;
+function CategoryLink(props: PropsWithChildren<CategoryLinkProps>) {
+  const { category, categoryType, noLink = false, children } = props;
+
+  if (noLink) return <>{children}</>;
 
   if (category.categoryPage) {
     return (
@@ -112,7 +127,11 @@ export const CategoryContent = (props: CategoryContentProps) => {
       <CategoryList>
         { categories.map((item) =>
           <CategoryListItem key={item.id}>
-            <CategoryLink category={!noLink && item} categoryType={categoryType}>
+            <CategoryLink
+              category={item}
+              categoryType={categoryType}
+              noLink={noLink}
+            >
               <BadgeTooltip
                 id={item.id}
                 tooltip={item.helpText}
@@ -132,20 +151,25 @@ type CategoryTagsProps = {
   types: CategoryTagsCategoryTypeFragment[],
 }
 
-function CategoryTags({ categories, types }: CategoryTagsProps) {
+function CategoryTags(props: CategoryTagsProps) {
+  const { categories, types } = props;
   const typeById = new Map(types.map(ct => [ct.id, ct]));
 
-  /* TODO: a11y - this should probably be a list markup */
-  /* If any of the categories in the group have an icon set, display all as iconed type  */
   const groupElements = types.map((ct) => {
     const cats = categories.filter(cat => cat.type.id === ct.id);
     if (!cats.length) return null; 
-    const svgUrl = cats.map(cat => (cat.iconSvgUrl || cat.parent?.iconSvgUrl)).find(url => url);
-    const iconImage = cats.map(cat => (cat.iconImage || cat.parent?.iconImage)).find(image => image);
 
     return (
       <div key={ct.id} className="mb-4">
-        <h3>{ct.name}</h3>
+        <h3>
+          {ct.name}
+          {ct.helpText && (
+            <PopoverTip
+              content={ct.helpText}
+              identifier={ct.id}
+            />
+          )}
+        </h3>
         <CategoryContent
           categories={cats}
           categoryType={ct}
@@ -168,6 +192,7 @@ fragment CategoryTagsCategory on Category {
   leadParagraph
   color
   iconSvgUrl
+  helpText
   iconImage {
     rendition(size:"400x400", crop:false) {
       src
@@ -216,6 +241,7 @@ fragment CategoryTagsCategoryType on CategoryType {
   id
   name
   identifier
+  helpText
   hideCategoryIdentifiers
 }
 `;
