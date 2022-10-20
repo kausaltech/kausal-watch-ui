@@ -1,8 +1,8 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React from 'react';
+import React, { PropsWithChildren } from 'react';
 import { setBasePath as setNextRouterBasePath } from 'next/dist/shared/lib/router/router';
 import { useRouter } from 'next/router';
-import Link from 'next/link';
+import Link, { LinkProps } from 'next/link';
 import PropTypes from 'prop-types';
 import getConfig from 'next/config';
 
@@ -30,12 +30,13 @@ export function getIndicatorLinkProps(id) {
   };
 }
 
-export function getActionLinkProps(id, planUrl) {
+export function getActionLinkProps(id: string, planUrl?: string) {
   if (planUrl) return {
     href: `${planUrl}/actions/${id}`
   }
   return {
     href: `/actions/${id}`,
+    as: undefined,
   };
 }
 
@@ -126,25 +127,40 @@ export function OrganizationLink(props) {
   return <Link href={href} passHref {...other} />;
 }
 
-export function ActionListLink(props) {
-  const { query, ...other } = props;
+type ActionListLinkProps = {
+  categoryFilters?: {
+    typeIdentifier: string,
+    categoryId: string,
+  }[],
+  organizationFilter?: {
+    id: string,
+  },
+};
+
+type OtherLinkProps = Omit<LinkProps, 'href' | 'as'>;
+
+
+export function ActionListLink(props: PropsWithChildren<OtherLinkProps & ActionListLinkProps>) {
+  const linkProps = ActionListLink.getLinkProps(props);
+  return <Link passHref {...linkProps} />;
+}
+ActionListLink.getLinkProps = (opts: ActionListLinkProps, rest?: OtherLinkProps) => {
+  const { categoryFilters, organizationFilter, ...other } = opts;
   const pathname = '/actions';
+
+  const query = {};
+  if (categoryFilters) {
+    categoryFilters.forEach(f => query[`cat-${f.typeIdentifier}`] = f.categoryId);
+  }
+  if (organizationFilter) {
+    query['responsible_party'] = organizationFilter.id;
+  }
   const href = {
     pathname,
     query,
   };
-
-  return <Link href={href} passHref {...other} />;
+  return { ...opts, ...(rest || {}), href };
 }
-ActionListLink.propTypes = {
-  query: PropTypes.shape({
-    organization: PropTypes.string,
-  }),
-  ...Link.propTypes,
-};
-ActionListLink.defaultProps = {
-  query: null,
-};
 
 export function IndicatorListLink(props) {
   return <Link href="/indicators" passHref {...props} />;
@@ -160,16 +176,24 @@ DashboardLink.propTypes = {
   ...Link.propTypes,
 };
 
-export function StaticPageLink(props) {
-  const { slug, ...other } = props;
-  return <Link href={`/${slug}`} {...other} />;
+type StaticPageLinkProps = {
+  slug: string,
+  page?: undefined,
+} | {
+  slug?: undefined,
+  page: {
+    urlPath: string,
+  }
 }
-StaticPageLink.propTypes = {
-  slug: PropTypes.string.isRequired,
-  ...Link.propTypes,
-};
 
-export function NavigationLink(props) {
+export function StaticPageLink(props: PropsWithChildren<OtherLinkProps & StaticPageLinkProps>) {
+  const { slug, page, ...other } = props;
+  if (slug) return <Link href={`/${slug}`} {...other} />;
+  return <Link href={page!.urlPath} {...other} />
+}
+
+type NavigationLinkProps = PropsWithChildren<OtherLinkProps & { slug: string }>;
+export function NavigationLink(props: NavigationLinkProps) {
   const { slug, children, ...other } = props;
   return slug?.startsWith('http')
     ? <a href={slug} {...other}>{children}</a>

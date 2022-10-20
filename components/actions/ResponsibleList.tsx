@@ -5,6 +5,7 @@ import { useTranslation } from 'common/i18n';
 import { OrganizationLink } from 'common/links';
 import { slugify } from 'common/utils';
 import BadgeTooltip from '../common/BadgeTooltip';
+import { ActionContentAction } from './ActionContent';
 
 const Responsibles = styled.div`
   a {
@@ -31,15 +32,17 @@ const ResponsibleSpecifier = styled.div`
     margin-bottom: ${(props) => props.theme.spaces.s050};
     line-height: ${(props) => props.theme.lineHeightMd};
 `;
-function ResponsibleBadge(props) {
+
+type ResponsibleBadgeProps = {
+  responsibleParty: ActionContentAction['responsibleParties'][0];
+}
+
+function ResponsibleBadge({ responsibleParty }: ResponsibleBadgeProps) {
   const {
-    index,
-    id,
-    name,
-    abbreviation,
+    organization: org,
     role,
     specifier
-  } = props;
+  } = responsibleParty;
   const { t } = useTranslation(['common', 'actions']);
   let size = 'md';
   let ariaLabel;
@@ -48,24 +51,26 @@ function ResponsibleBadge(props) {
 
   if (role === 'PRIMARY') {
     size = 'lg';
-    ariaLabel = `${t('responsible-party-main')}: ${abbreviation} ${name}`;
+    ariaLabel = `${t('responsible-party-main')}: ${org.abbreviation} ${org.name}`;
   } if (role === 'COLLABORATOR') {
     size = 'sm';
-    ariaLabel = `${t('responsible-party-main')}: ${abbreviation} ${name}`;
+    ariaLabel = `${t('responsible-party-main')}: ${org.abbreviation} ${org.name}`;
   } else {
-    ariaLabel = `${abbreviation} ${name}`;
+    ariaLabel = `${org.abbreviation} ${org.name}`;
   }
 
   return (
     <ResponsibleItem>
+      <OrganizationLink organizationId={ org.id }>
         <BadgeTooltip
-          id={`org-${slugify(id)}`}
-          tooltip={abbreviation !== "" ? name : undefined}
+          id={`org-${slugify(org.id)}`}
+          tooltip={org.abbreviation !== "" ? org.name : undefined}
           ariaLabel={ariaLabel}
-          content={abbreviation || name}
+          content={org.abbreviation || org.name}
           size={size}
-          url={`/organizations/${id}`}
+          url={`/organizations/${org.id}`}
         />
+      </OrganizationLink>
       { specifier &&
         <ResponsibleSpecifier>
           {specifier}
@@ -75,50 +80,26 @@ function ResponsibleBadge(props) {
   );
 }
 
-function ResponsibleList(props) {
+type ResponsibleListProps = {
+  responsibleParties: ActionContentAction['responsibleParties']
+}
+function ResponsibleList(props: ResponsibleListProps) {
   const { responsibleParties } = props;
   const { t } = useTranslation(['common', 'actions']);
-    /* TODO: a11y - this should probably be a list markup */
+  /* TODO: a11y - this should probably be a list markup */
 
   console.log("responsibles", props);
   return (
     <Responsibles>
       <h3>{t('responsible-parties')}</h3>
       <ResponsiblesList>
-      { responsibleParties.map((item, index) => (
-          <ResponsibleBadge
-            t={t}
-            key={item.organization.id}
-            index={index}
-            id={item.organization.id}
-            name={item.organization.name}
-            abbreviation={item.organization.abbreviation}
-            role={item.role}
-            specifier={item.specifier}
-          />
+      { responsibleParties.map((item) => (
+          <ResponsibleBadge key={item.id} responsibleParty={item} />
         ))
       }
       </ResponsiblesList>
     </Responsibles>
   );
 }
-
-ResponsibleBadge.propTypes = {
-  id: PropTypes.string.isRequired,
-  index: PropTypes.number.isRequired,
-  name: PropTypes.string.isRequired,
-  abbreviation: PropTypes.string,
-  role: PropTypes.string,
-  specifier: PropTypes.string,
-};
-
-ResponsibleList.propTypes = {
-  responsibleParties: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    abbreviation: PropTypes.string,
-  })).isRequired,
-  t: PropTypes.func.isRequired,
-};
 
 export default ResponsibleList;

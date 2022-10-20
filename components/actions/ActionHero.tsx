@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {
   Container, Row, Col,
 } from 'reactstrap';
@@ -11,7 +10,7 @@ import { usePlan } from 'context/plan';
 
 import Icon from 'components/common/Icon';
 
-const Hero = styled.header`
+const Hero = styled.header<{bgColor: string}>`
   position: relative;
   background-color: ${(props) => props.bgColor};
   margin-bottom: ${(props) => props.theme.spaces.s400};
@@ -24,7 +23,7 @@ const Hero = styled.header`
   }
 `;
 
-const ActionBgImage = styled.div`
+const ActionBgImage = styled.div<{bgColor: string, bgImage: string, imageAlign: string}>`
   background-color: ${(props) => props.bgColor};
   background-image: url(${(props) => props.bgImage});
   background-position: ${(props) => props.imageAlign};
@@ -130,16 +129,16 @@ const ActionNumber = styled.span`
   }
 `;
 
-function ActionCategories(categories) {
+function ActionCategories(props) {
+  const { categories } = props;
   const theme = useTheme();
   const plan = usePlan();
-  const { showIdentifiers } = theme.settings.categories;
-
+  const showIdentifiers = !plan.primaryActionClassification?.hideCategoryIdentifiers;
   const displayCategories = [];
-  const primaryCatIdentifier = plan.primaryActionClassification?.identifier;
+  const primaryCatId = plan.primaryActionClassification?.id;
 
-  categories.categories.forEach((cat, indx) => {
-    if (cat.type.identifier !== primaryCatIdentifier) return false;
+  categories.forEach((cat, indx) => {
+    if (cat.type.id !== primaryCatId) return;
     displayCategories[indx] = {};
     let categoryTitle = cat.name;
     if (cat.categoryPage) {

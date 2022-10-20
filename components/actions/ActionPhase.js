@@ -106,7 +106,6 @@ function ActionPhase(props) {
     status,
     activePhase,
     reason,
-    mergedWith,
     phases,
     compact,
     ...rest } = props;
@@ -174,7 +173,6 @@ ActionPhase.propTypes = {
       description: PropTypes.string,
     },
   )),
-  mergedWith: PropTypes.string,
   compact: PropTypes.bool,
 };
 
@@ -182,7 +180,6 @@ ActionPhase.defaultProps = {
   activePhase: {},
   reason: '',
   phases: [],
-  mergedWith: '',
   compact: false,
 };
 

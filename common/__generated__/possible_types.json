@@ -1,5 +1,32 @@
 {
   "possibleTypes": {
+    "ActionAsideContentBlock": [
+      "ActionContactPersonsBlock",
+      "ActionContentAttributeTypeBlock",
+      "ActionContentCategoryTypeBlock",
+      "ActionResponsiblePartiesBlock",
+      "ActionScheduleBlock"
+    ],
+    "ActionListFilterBlock": [
+      "ActionAttributeTypeFilterBlock",
+      "ActionImplementationPhaseFilterBlock",
+      "ActionScheduleFilterBlock",
+      "CategoryTypeFilterBlock",
+      "PrimaryOrganizationFilterBlock",
+      "ResponsiblePartyFilterBlock"
+    ],
+    "ActionMainContentBlock": [
+      "ActionContentAttributeTypeBlock",
+      "ActionContentCategoryTypeBlock",
+      "ActionDescriptionBlock",
+      "ActionLeadParagraphBlock",
+      "ActionLinksBlock",
+      "ActionMergedActionsBlock",
+      "ActionOfficialNameBlock",
+      "ActionRelatedActionsBlock",
+      "ActionRelatedIndicatorsBlock",
+      "ActionTasksBlock"
+    ],
     "AttributeInterface": [
       "AttributeCategoryChoice",
       "AttributeChoice",
@@ -31,19 +58,18 @@
       "AccessibilityStatementComplianceStatusBlock",
       "AccessibilityStatementContactInformationBlock",
       "AccessibilityStatementPreparationInformationBlock",
-      "ActionAsideContentBlock",
       "ActionAttributeTypeFilterBlock",
       "ActionCategoryFilterCardBlock",
       "ActionCategoryFilterCardsBlock",
       "ActionContactPersonsBlock",
+      "ActionContentAttributeTypeBlock",
+      "ActionContentCategoryTypeBlock",
       "ActionDescriptionBlock",
       "ActionHighlightsBlock",
       "ActionImplementationPhaseFilterBlock",
       "ActionLeadParagraphBlock",
       "ActionLinksBlock",
       "ActionListBlock",
-      "ActionListFilterBlock",
-      "ActionMainContentBlock",
       "ActionMergedActionsBlock",
       "ActionOfficialNameBlock",
       "ActionRelatedActionsBlock",
@@ -86,7 +112,6 @@
       "RelatedPlanListBlock",
       "ResponsiblePartyFilterBlock",
       "RichTextBlock",
-      "SnippetChooserBlock",
       "StaticBlock",
       "StreamBlock",
       "StreamFieldBlock",

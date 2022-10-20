@@ -99,13 +99,14 @@ export function mapActionCategories<
     let primaryRootCategory;
     const cats: ActionType['categories'] = action.categories.map((cat) => {
       const catObj = catsById.get(cat.id);
+      if (!catObj) return null;
       if (primaryRootCT && catObj.type.id == primaryRootCT.id) {
         let root = catObj;
         while (root.parent) root = root.parent;
         primaryRootCategory = root;
       }
       return catObj;
-    });
+    }).filter((cat) => cat != null);
     // @ts-ignore
     const mappedAction: ActionType = {...action, categories: cats, primaryRootCategory};
     return mappedAction;

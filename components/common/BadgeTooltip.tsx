@@ -1,10 +1,18 @@
-import React, { useState } from 'react';
+import React, { ForwardedRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Badge, Tooltip } from 'reactstrap';
 import SVG from 'react-inlinesvg';
 import styled from 'styled-components';
 import { darken, lighten } from 'polished';
-import { Link } from 'common/links';
+
+const BadgeWrapper = styled.a<{ref: React.Ref<HTMLAnchorElement>}>`
+  &.lg {
+    font-size: ${(props) => props.theme.fontSizeLg};
+  }
+  &.md {
+    font-size: ${(props) => props.theme.fontSizeMd};
+  }
+`;
 
 const StyledBadge = styled(Badge)`
   background-color: ${(props) => props.theme.badgeBackground} !important;
@@ -25,10 +33,10 @@ const StyledBadge = styled(Badge)`
   }
 
   &.lg {
-    font-size: ${(props) => props.theme.fontSizeLg};
+    font-size: ${(props) => props.theme.fontSizeMd};
   }
   &.md {
-    font-size: ${(props) => props.theme.fontSizeMd};
+    font-size: ${(props) => props.theme.fontSizeBase};
   }
   &.sm {
     font-size: ${(props) => props.theme.fontSizeSm};
@@ -95,16 +103,28 @@ const BadgeContent = (props) => {
   )
 };
 
-const BadgeTooltip = (props) => {
+type BadgeTooltipProps = {
+  content: string,
+  tooltip?: string,
+  size?: 'lg' | 'md' | 'sm',
+  id: string,
+  href: string,
+  ariaLabel: string,
+  iconSvg?: string,
+  iconImage?: string,
+}
+
+const BadgeTooltip = React.forwardRef(function BadgeTooltip(
+  props: BadgeTooltipProps, ref: ForwardedRef<HTMLAnchorElement>
+) {
   const {
     content,
     tooltip,
-    size,
+    size = 'md',
     id,
-    url,
     ariaLabel,
-    iconSvg,
-    iconImage,
+    iconSvg = null,
+    iconImage = null,
   } = props;
   console.log("badge with tooltip",props);
   const badgeId = `btt${id.replace(/[: ]/g, '_')}`;
@@ -114,7 +134,6 @@ const BadgeTooltip = (props) => {
 
   return (
     <>
-      <Link href={url}>
         <a id={badgeId}>
           <BadgeContent
             content={content}
@@ -124,7 +143,6 @@ const BadgeTooltip = (props) => {
             ariaLabel={ariaLabel}
           />
         </a>
-      </Link>
       { tooltip &&
           <Tooltip
             placement="top"
@@ -137,26 +155,6 @@ const BadgeTooltip = (props) => {
         }
     </>
   );
-};
-
-BadgeTooltip.defaultProps = {
-  ariaLabel: null,
-  abbreviation: null,
-  url: undefined,
-  size: 'md',
-  iconImage: undefined,
-  iconSvg: undefined,
-};
-
-BadgeTooltip.propTypes = {
-  tooltip: PropTypes.string,
-  content: PropTypes.string.isRequired,
-  id: PropTypes.string.isRequired,
-  ariaLabel: PropTypes.string,
-  size: PropTypes.string,
-  url: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
-  iconImage: PropTypes.string,
-  iconSvg: PropTypes.string,
-};
+});
 
 export default BadgeTooltip;

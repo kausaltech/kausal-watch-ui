@@ -19,6 +19,7 @@ fragment PlanContext on Plan {
   primaryActionClassification {
     id
     identifier
+    hideCategoryIdentifiers
   }
   secondaryActionClassification {
     id
@@ -192,6 +193,7 @@ fragment PlanContext on Plan {
           id
           page {
             title
+            urlPath
             slug
             ... on AccessibilityStatementPage {
               body {

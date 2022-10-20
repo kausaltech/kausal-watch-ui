@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import { Badge } from 'reactstrap';
 import { useTranslation } from 'common/i18n';
 import { useTheme } from 'common/theme';
+import type { PlotParams } from 'react-plotly.js';
 
 const StatusTitle = styled.div`
   text-align: left;
@@ -45,7 +46,7 @@ const Timeline = (props) => {
   if (!startDate && !endDate) { displayRange[1] = maxEndDate; displayRange[0] = dayjs(); }
   const data = [
     {
-      x: [displayRange[0].format(), displayRange[1].format()],
+      x: [displayRange[0]?.format(), displayRange[1]?.format()],
       y: [1, 1],
       type: 'scatter',
       mode: 'lines',
@@ -55,10 +56,10 @@ const Timeline = (props) => {
       },
     },
   ];
-  const layout = {
+  const layout: PlotParams['layout'] = {
     showlegend: false,
-    showline: true,
-    zeroline: true,
+    //showline: true,
+    //zeroline: true,
     margin: {
       l: 0,
       r: 0,
@@ -66,7 +67,7 @@ const Timeline = (props) => {
       b: 12,
     },
     xaxis: {
-      range: [plotStartDate.format(), plotEndDate.format()],
+      range: [plotStartDate?.format(), plotEndDate?.format()],
       autorange: false,
       tickformat: '         %Y', // FUUUUUU
       ticks: '',
@@ -78,11 +79,10 @@ const Timeline = (props) => {
       },
     },
     yaxis: {
-      ticks: '',
+      //ticks: "",
       visible: false,
     },
     plot_bgcolor: theme.themeColors.light,
-    width: null, // Is resized automatically by plotly
     height: 36,
     autosize: true,
   };
