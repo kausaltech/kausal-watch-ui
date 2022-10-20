@@ -112,7 +112,7 @@ export const CategoryContent = (props: CategoryContentProps) => {
       <CategoryList>
         { categories.map((item) =>
           <CategoryListItem key={item.id}>
-            <CategoryLink category={!noLink ?? item} categoryType={categoryType}>
+            <CategoryLink category={!noLink && item} categoryType={categoryType}>
               <BadgeTooltip
                 id={item.id}
                 tooltip={item.helpText}
