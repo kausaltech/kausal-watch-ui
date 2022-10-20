@@ -55,10 +55,12 @@ const CategoryListItem = styled.li`
 function CategoryLink(props: PropsWithChildren<CategoryBadgeProps>) {
   const { category, categoryType, children } = props;
 
+  if(category == false)return children;
+
   if (category.categoryPage) {
     return (
       <StaticPageLink page={category.categoryPage}>
-        { children }
+        <a>{ children }</a>
       </StaticPageLink>
     )
   } else {
@@ -68,7 +70,7 @@ function CategoryLink(props: PropsWithChildren<CategoryBadgeProps>) {
     }];
     return (
       <ActionListLink categoryFilters={filters}>
-        { children }
+        <a>{ children }</a>
       </ActionListLink>
     )
   }
@@ -82,15 +84,15 @@ type CategoryContentProps<ExtraCatProps = {}, ExtraCTProps = {}> = {
     categoryPage?: null | {
       urlPath: string,
     }
-    helpText: string,
-    iconsSvgUrl: string,
+    helpText?: string,
+    iconSvgUrl?: string,
     iconImage?: {
       rendition?: {
         src: string,
       }
     }
     parent?: {
-      iconsSvgUrl: string,
+      iconSvgUrl?: string,
       iconImage?: {
         rendition?: {
           src: string,
@@ -101,21 +103,16 @@ type CategoryContentProps<ExtraCatProps = {}, ExtraCTProps = {}> = {
   categoryType: {
     identifier: string,
   } & ExtraCTProps,
+  noLink?: boolean,
 }
 
 export const CategoryContent = (props: CategoryContentProps) => {
-
-  const { categories, categoryType } = props;
-  console.log("categorycontent", props);
-
-  const categoryHasIcon = (cat) =>
-  !!(cat.iconImage || cat.iconSvgUrl || cat.parent?.iconImage || cat.parent?.iconSvgUrl);
-
+  const { categories, categoryType, noLink=false } = props;
   return (
       <CategoryList>
         { categories.map((item) =>
           <CategoryListItem key={item.id}>
-            <CategoryLink category={item} categoryType={categoryType}>
+            <CategoryLink category={!noLink ?? item} categoryType={categoryType}>
               <BadgeTooltip
                 id={item.id}
                 tooltip={item.helpText}
@@ -178,6 +175,7 @@ fragment CategoryTagsCategory on Category {
   }
   type {
     id
+    identifier
   }
   level {
     id

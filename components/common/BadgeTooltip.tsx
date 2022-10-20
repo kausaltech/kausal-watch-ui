@@ -83,7 +83,6 @@ const IconName = styled.div`
 
 const BadgeContent = (props) => {
   const { content, size, iconSvg, iconImage, ariaLabel } = props;
-  console.log("badge content", props);
   const hasIcon = (iconSvg == null) && (iconImage == null);
 
   return ( hasIcon ?
@@ -108,8 +107,7 @@ type BadgeTooltipProps = {
   tooltip?: string,
   size?: 'lg' | 'md' | 'sm',
   id: string,
-  href: string,
-  ariaLabel: string,
+  ariaLabel?: string,
   iconSvg?: string,
   iconImage?: string,
 }
@@ -126,34 +124,30 @@ const BadgeTooltip = (
     iconSvg = null,
     iconImage = null,
   } = props;
-  console.log("badge with tooltip",props);
   const badgeId = `btt${id.replace(/[: ]/g, '_')}`;
-  console.log("ID for", content, badgeId);
   const [tooltipOpen, setTooltipOpen] = useState(false);
   const toggle = () => setTooltipOpen(!tooltipOpen);
 
   return (
-    <>
-        <a id={badgeId}>
-          <BadgeContent
-            content={content}
-            size={size}
-            iconSvg={iconSvg}
-            iconImage={iconImage}
-            ariaLabel={ariaLabel}
-          />
-        </a>
+    <span id={badgeId}>
+      <BadgeContent
+        content={content}
+        size={size}
+        iconSvg={iconSvg}
+        iconImage={iconImage}
+        ariaLabel={ariaLabel}
+      />
       { tooltip &&
-          <Tooltip
-            placement="top"
-            isOpen={tooltipOpen}
-            target={badgeId}
-            toggle={toggle}
-          >
-            {tooltip}
-          </Tooltip>
-        }
-    </>
+        <Tooltip
+          placement="top"
+          isOpen={tooltipOpen}
+          target={badgeId}
+          toggle={toggle}
+        >
+          {tooltip}
+        </Tooltip>
+      }
+    </span>
   );
 };
 

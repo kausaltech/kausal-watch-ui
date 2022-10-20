@@ -98,7 +98,6 @@ type AttributeContentNestedTypeProps = {
 function AttributeContent(props: AttributeContentProps | AttributeContentNestedTypeProps) {
   const { attribute, attributeType, t } = props;
   let type = attributeType ?? attribute.type;
-  console.log("attributecontent", props);
   let dataElement: ReactElement;
 
   switch (attribute.__typename) {
@@ -139,6 +138,7 @@ function AttributeContent(props: AttributeContentProps | AttributeContentNestedT
         <CategoryContent
           categories={attribute.categories}
           categoryType={attribute.type}
+          noLink={true}
         />
       );
       break;
@@ -226,6 +226,7 @@ fragment AttributesBlockAttribute on AttributeInterface {
   id
   type {
     id
+    identifier
   }
   ...on AttributeChoice {
     choice {
@@ -251,6 +252,9 @@ fragment AttributesBlockAttribute on AttributeInterface {
         rendition(size:"400x400", crop:false) {
           src
         }
+      }
+      categoryPage {
+        urlPath
       }
     }
   }

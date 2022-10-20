@@ -118,7 +118,6 @@ function CategoryPageHeaderBlock(props) {
   } = props;
 
   const plan = useContext(PlanContext);
-  console.log("category header props", props);
   let attributeTypes = [];
   if (attributes?.length) {
     const { loading, error, data } = useQuery(GET_CATEGORY_ATTRIBUTE_TYPES, {

@@ -62,14 +62,15 @@ function ResponsibleBadge({ responsibleParty }: ResponsibleBadgeProps) {
   return (
     <ResponsibleItem>
       <OrganizationLink organizationId={ org.id }>
-        <BadgeTooltip
-          id={`org-${slugify(org.id)}`}
-          tooltip={org.abbreviation !== "" ? org.name : undefined}
-          ariaLabel={ariaLabel}
-          content={org.abbreviation || org.name}
-          size={size}
-          url={`/organizations/${org.id}`}
-        />
+        <a>
+          <BadgeTooltip
+            id={`org-${slugify(org.id)}`}
+            tooltip={org.abbreviation !== "" ? org.name : undefined}
+            ariaLabel={ariaLabel}
+            content={org.abbreviation || org.name}
+            size={size}
+          />
+        </a>
       </OrganizationLink>
       { specifier &&
         <ResponsibleSpecifier>
@@ -88,7 +89,6 @@ function ResponsibleList(props: ResponsibleListProps) {
   const { t } = useTranslation(['common', 'actions']);
   /* TODO: a11y - this should probably be a list markup */
 
-  console.log("responsibles", props);
   return (
     <Responsibles>
       <h3>{t('responsible-parties')}</h3>
