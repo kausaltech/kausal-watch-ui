@@ -1,25 +1,17 @@
-import React, { ForwardedRef, useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { useState } from 'react';
 import { Badge, Tooltip } from 'reactstrap';
+import SVG from 'react-inlinesvg';
 import styled from 'styled-components';
-import { lighten } from 'polished';
+import { darken, readableColor } from 'polished';
 
-const BadgeWrapper = styled.a<{ref: React.Ref<HTMLAnchorElement>}>`
-  &.lg {
-    font-size: ${(props) => props.theme.fontSizeLg};
-  }
-  &.md {
-    font-size: ${(props) => props.theme.fontSizeMd};
-  }
-`;
-
-const StyledBadge = styled(Badge)`
-  background-color: ${(props) => props.theme.badgeBackground} !important;
-  color: ${(props) => props.theme.badgeColor};
+const StyledBadge = styled(Badge)<{color: string, isLink: boolean}>`
+  background-color: ${(props) => props.theme[props.color]} !important;
+  color: ${
+    (props) => readableColor(props.theme[props.color], props.theme.themeColors.black, props.theme.themeColors.white)
+  };
   border-radius: ${(props) => props.theme.badgeBorderRadius};
   padding: ${(props) => props.theme.badgePaddingY} ${(props) => props.theme.badgePaddingX};
   font-weight: ${(props) => props.theme.badgeFontWeight};
-  margin-bottom: ${(props) => props.theme.spaces.s050};
   max-width: 100%;
   word-break: break-all;
   word-break: break-word;
@@ -27,63 +19,150 @@ const StyledBadge = styled(Badge)`
   white-space: normal;
   text-align: left;
 
-  &.bg-secondary:hover {
-    background-color:  ${(props) => lighten(0.05, props.theme.badgeBackground)} !important;
-    color: ${(props) => props.theme.badgeColor};
+  &:hover {
+    background-color:  ${(props) => props.isLink && darken(0.05, props.theme[props.color])} !important;
+  }
+
+  &.lg {
+    font-size: ${(props) => props.theme.fontSizeMd};
+  }
+  &.md {
+    font-size: ${(props) => props.theme.fontSizeBase};
+  }
+  &.sm {
+    font-size: ${(props) => props.theme.fontSizeSm};
   }
 `;
 
-type BadgeTooltipProps = {
-  abbreviation?: string,
-  name: string,
-  size?: 'lg' | 'md',
-  id: string,
-  href: string,
-  ariaLabel: string,
+const IconBadge = styled.div<{color: string, isLink: boolean}>`
+  display: flex;
+  align-items: center;
+  max-width: 320px;
+  background-color: ${(props) => props.theme[props.color]} !important;
+  color: ${
+    (props) => readableColor(props.theme[props.color], props.theme.themeColors.black, props.theme.themeColors.white)
+  };
+  border-radius: ${(props) => props.theme.badgeBorderRadius};
+
+  &:hover {
+    background-color: ${(props) => props.isLink && darken(0.05, props.theme[props.color])} !important;
+  }
+`;
+
+const IconImage = styled.div<{imageSrc?: string}>`
+  display: block;
+  text-align: center;
+  height: ${(props) => props.imageSrc ? props.theme.spaces.s600 : props.theme.spaces.s300};
+  flex: 0 0 ${(props) => props.imageSrc ? props.theme.spaces.s600 : props.theme.spaces.s300};
+  margin-right: ${(props) => props.theme.spaces.s050};
+  background-color: ${(props) => props.theme.neutralLight};
+  background-image: url(${(props) => props.imageSrc || 'none'});
+  background-size: cover;
+  background-position: center center;
+`;
+
+const IconSvg = styled(SVG)`
+  height: ${(props) => props.theme.spaces.s200};
+  margin: ${(props) => props.theme.spaces.s050};
+  fill: ${(props) => props.theme.brandDark};
+`;
+
+const IconName = styled.div`
+  padding: ${(props) => props.theme.spaces.s050};
+  font-size: ${(props) => props.theme.fontSizeBase};
+  line-height: ${(props) => props.theme.lineHeightSm};
+  font-weight: ${(props) => props.theme.fontWeightBold};
+`;
+
+type BadgeContentProps = {
+  content: string,
+  size?: 'lg' | 'md' | 'sm',
+  ariaLabel?: string,
+  iconSvg?: string,
+  iconImage?: string,
+  color?: 'brandDark' | 'brandLight'| 'neutralDark'| 'neutralLight',
+  isLink: boolean,
 }
-const BadgeTooltip = React.forwardRef(function BadgeTooltip(
-  props: BadgeTooltipProps, ref: ForwardedRef<HTMLAnchorElement>
-) {
+
+const BadgeContent = (props: BadgeContentProps) => {
+  const { content, size, iconSvg, iconImage, ariaLabel, color, isLink } = props;
+  const hasIcon = (iconSvg == null) && (iconImage == null);
+
+  return ( hasIcon ?
+    <StyledBadge
+      className={size}
+      aria-label={ariaLabel}
+      color={color}
+      isLink={isLink}
+    >
+      {content}
+    </StyledBadge>
+    :
+    <IconBadge
+      color={color}
+      isLink={isLink}
+    >
+      {iconSvg
+        ? <IconImage><IconSvg src={iconSvg} preserveAspectRatio="xMinYMid meet" /></IconImage>
+        : <IconImage imageSrc={iconImage} />}
+      <IconName>{content}</IconName>
+    </IconBadge>
+  )
+};
+
+export type BadgeTooltipProps = {
+  content: string,
+  tooltip?: string,
+  size?: 'lg' | 'md' | 'sm',
+  id: string,
+  ariaLabel?: string,
+  iconSvg?: string,
+  iconImage?: string,
+  color?: 'brandDark' | 'brandLight'| 'neutralDark'| 'neutralLight',
+  isLink: boolean,
+}
+
+const BadgeTooltip = (
+  props: BadgeTooltipProps
+) => {
   const {
-    abbreviation,
-    name,
+    content,
+    tooltip,
     size = 'md',
     id,
-    href,
     ariaLabel,
+    iconSvg = null,
+    iconImage = null,
+    color ='brandDark',
+    isLink = false
   } = props;
-
-  const badgeId = id.replace(/[: ]/g, '_');
+  const badgeId = `btt${id.replace(/[: ]/g, '_')}`;
   const [tooltipOpen, setTooltipOpen] = useState(false);
   const toggle = () => setTooltipOpen(!tooltipOpen);
 
   return (
-    <BadgeWrapper
-      className={size}
-      href={href}
-      id={badgeId}
-      aria-label={ariaLabel}
-      ref={ref}
-    >
-      <StyledBadge>
-        {abbreviation || name}
-      </StyledBadge>
-      { abbreviation &&
+    <span id={badgeId}>
+      <BadgeContent
+        content={content}
+        size={size}
+        iconSvg={iconSvg}
+        iconImage={iconImage}
+        ariaLabel={ariaLabel}
+        color={color}
+        isLink={isLink}
+      />
+      { tooltip &&
         <Tooltip
           placement="top"
           isOpen={tooltipOpen}
           target={badgeId}
           toggle={toggle}
         >
-          {name}
+          {tooltip}
         </Tooltip>
       }
-    </BadgeWrapper>
+    </span>
   );
-});
-
-BadgeTooltip.defaultProps = {
-  size: 'md',
 };
 
 export default BadgeTooltip;

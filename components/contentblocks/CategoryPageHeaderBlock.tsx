@@ -118,7 +118,6 @@ function CategoryPageHeaderBlock(props) {
   } = props;
 
   const plan = useContext(PlanContext);
-
   let attributeTypes = [];
   if (attributes?.length) {
     const { loading, error, data } = useQuery(GET_CATEGORY_ATTRIBUTE_TYPES, {

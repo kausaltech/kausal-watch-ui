@@ -1,10 +1,9 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { useTranslation } from 'common/i18n';
 import { OrganizationLink } from 'common/links';
 import { slugify } from 'common/utils';
-import BadgeTooltip from '../common/BadgeTooltip';
+import BadgeTooltip, { BadgeTooltipProps } from 'components/common/BadgeTooltip';
 import { ActionContentAction } from './ActionContent';
 
 const Responsibles = styled.div`
@@ -24,15 +23,13 @@ const ResponsiblesList = styled.ul`
 `;
 
 const ResponsibleItem = styled.li`
+  margin-bottom: ${(props) => props.theme.spaces.s100};
   font-size: ${(props) => props.theme.fontSizeSm};
-
-  .badge {
-    margin-bottom: 0;
-  }
 `;
 
 const ResponsibleSpecifier = styled.div`
-    margin-bottom: ${(props) => props.theme.spaces.s050};
+    margin: ${(props) => props.theme.spaces.s050} 0 ${(props) => props.theme.spaces.s050};
+    line-height: ${(props) => props.theme.lineHeightMd};
 `;
 
 type ResponsibleBadgeProps = {
@@ -46,13 +43,16 @@ function ResponsibleBadge({ responsibleParty }: ResponsibleBadgeProps) {
     specifier
   } = responsibleParty;
   const { t } = useTranslation(['common', 'actions']);
-  let size = 'md';
+  let size = 'md' as BadgeTooltipProps["size"];
   let ariaLabel;
 
   // PRIMARY, COLLABORATOR
 
   if (role === 'PRIMARY') {
     size = 'lg';
+    ariaLabel = `${t('responsible-party-main')}: ${org.abbreviation} ${org.name}`;
+  } if (role === 'COLLABORATOR') {
+    size = 'sm';
     ariaLabel = `${t('responsible-party-main')}: ${org.abbreviation} ${org.name}`;
   } else {
     ariaLabel = `${org.abbreviation} ${org.name}`;
@@ -61,13 +61,17 @@ function ResponsibleBadge({ responsibleParty }: ResponsibleBadgeProps) {
   return (
     <ResponsibleItem>
       <OrganizationLink organizationId={ org.id }>
-        <BadgeTooltip
-          id={`org-${slugify(org.id)}`}
-          name={org.name !== org.abbreviation ? org.name : ''}
-          ariaLabel={ariaLabel}
-          abbreviation={org.abbreviation}
-          size={size}
-        />
+        <a>
+          <BadgeTooltip
+            id={`org-${slugify(org.id)}`}
+            tooltip={org.abbreviation !== "" ? org.name : undefined}
+            ariaLabel={ariaLabel}
+            content={org.abbreviation || org.name}
+            size={size}
+            color="brandDark"
+            isLink
+          />
+        </a>
       </OrganizationLink>
       { specifier &&
         <ResponsibleSpecifier>

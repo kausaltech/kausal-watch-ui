@@ -234,7 +234,8 @@ export type ActionContentAction = NonNullable<GetActionDetailsQuery['action']>
 const LastUpdated = styled.div`
   margin-bottom: 1em;
   color: ${(props) => props.theme.themeColors.dark};
-  font-family: ${(props) => props.theme.fontFamilyContent};
+  font-size: ${(props) => props.theme.fontSizeSm};
+  font-family: ${(props) => props.theme.fontFamilyTiny};
 `;
 
 const ActionSection = styled.div`
