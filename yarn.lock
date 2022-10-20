@@ -16356,6 +16356,7 @@ __metadata:
     react-inlinesvg: ^3.0.0
     react-intersection-observer: ^9.1.0
     react-lazyload: ^3.2.0
+    react-medium-image-zoom: ^5.1.1
     react-piwik: ^1.12.0
     react-plotly.js: ^2.5.1
     react-popper: ^2.3.0
@@ -20360,6 +20361,16 @@ __metadata:
   version: 3.0.4
   resolution: "react-lifecycles-compat@npm:3.0.4"
   checksum: a904b0fc0a8eeb15a148c9feb7bc17cec7ef96e71188280061fc340043fd6d8ee3ff233381f0e8f95c1cf926210b2c4a31f38182c8f35ac55057e453d6df204f
+  languageName: node
+  linkType: hard
+
+"react-medium-image-zoom@npm:^5.1.1":
+  version: 5.1.1
+  resolution: "react-medium-image-zoom@npm:5.1.1"
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+  checksum: 8d57b765ab990459c34e9803ff5f4ba0c8e50c7267babe59d139eab30445d47a832d46ee795cbe538882da8761d674e8efa6742a43b677953c17d660a994bb18
   languageName: node
   linkType: hard
 
