@@ -159,7 +159,7 @@ function ActionCategories(props) {
           categoryParentTitle = `${cat.parent.identifier}. ${cat.parent.name}`;
         }
       } else {
-        displayCategories[indx].parent.url = `/actions?cat-${primaryCatIdentifier}=${cat.parent.id}`;
+        displayCategories[indx].parent.url = `/actions?cat-${primaryCT.identifier}=${cat.parent.id}`;
       }
       displayCategories[indx].parent.name = categoryParentTitle;
       displayCategories[indx].parent.id = cat.parent.id;
