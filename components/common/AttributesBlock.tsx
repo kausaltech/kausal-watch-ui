@@ -197,6 +197,8 @@ function AttributesBlock(props: AttributesBlockProps) {
       return !!(attribute.choice || attribute.text);
     } else if (__typename === 'AttributeRichText') {
       return !!attribute.value;
+    } else if (__typename === 'AttributeCategoryChoice') {
+      return !!attribute.categories.length;
     }
     return true;
   }
