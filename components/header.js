@@ -1,8 +1,5 @@
 import React, { useMemo, useContext } from 'react';
 import PropTypes from 'prop-types';
-
-import { useTranslation } from 'common/i18n';
-import { useTheme } from 'common/theme';
 import PlanContext from 'context/plan';
 import SiteContext from 'context/site';
 
@@ -31,20 +28,10 @@ const getMenuStructure = ((pages, rootId, activeBranch) => {
 function Header({ siteTitle }) {
   const plan = useContext(PlanContext);
   const site = useContext(SiteContext);
-  const { t } = useTranslation(['common']);
-  const theme = useTheme();
-  const hasActionImpacts = plan.impactGroups?.length > 0;
   const activeBranch = getActiveBranch();
 
   const navLinks = useMemo(() => {
     let links = [];
-    if (hasActionImpacts) links.push({
-      id: '1',
-      name: t('dashboard'),
-      slug: 'dashboard',
-      urlPath: '/dashboard',
-      active: activeBranch === 'dashboard',
-    });
 
     const pageMenuItems = plan.mainMenu.items.filter(item => item.__typename == 'PageMenuItem');
     if (pageMenuItems.length > 0) {
@@ -58,7 +45,7 @@ function Header({ siteTitle }) {
       links = links.concat(staticPages);
     }
     return links;
-  }, [hasActionImpacts, activeBranch, plan.mainMenu]);
+  }, [activeBranch, plan.mainMenu]);
 
   const externalLinks = useMemo(() => {
     return plan.mainMenu.items.filter(item => item.__typename == 'ExternalLinkMenuItem').map(item => ({

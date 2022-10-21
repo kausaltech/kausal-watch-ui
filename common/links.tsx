@@ -58,24 +58,6 @@ export function getSearchResultsLinkProps(query) {
   };
 }
 
-export function getDashboardLinkProps(query) {
-  return {
-    href: {
-      pathname: '/dashboard',
-      query,
-    },
-  };
-}
-
-export function getStatusboardLinkProps(query) {
-  return {
-    href: {
-      pathname: '/dashboard/status',
-      query,
-    },
-  };
-}
-
 export const replaceHashWithoutScrolling = (hash) => window.history.replaceState(
   {}, // state, not used
   '', // title, not used
@@ -166,13 +148,6 @@ export function IndicatorListLink(props) {
   return <Link href="/indicators" passHref {...props} />;
 }
 IndicatorListLink.propTypes = {
-  ...Link.propTypes,
-};
-
-export function DashboardLink(props) {
-  return <Link href="/dashboard" passHref {...props} />;
-}
-DashboardLink.propTypes = {
   ...Link.propTypes,
 };
 

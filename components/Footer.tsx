@@ -28,9 +28,6 @@ function Footer(props) {
   const { t } = useTranslation();
   let navLinks = [];
   let staticPages = [];
-  const hasActionImpacts = plan.impactGroups?.length > 0;
-
-  if (hasActionImpacts) navLinks.push({ id: '1', name: t('dashboard'), slug: '/dashboard' }); //
 
   plan.footer.items?.forEach((navItem) => {
     const children = navItem.children.length > 0 ? [] : null;
