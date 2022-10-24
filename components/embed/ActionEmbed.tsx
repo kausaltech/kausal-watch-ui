@@ -1,32 +1,83 @@
-import { useContext } from 'react';
-import ActionHighlightsList from 'components/actions/ActionHighlightsList';
+import { gql, useQuery } from '@apollo/client';
 import { usePlan } from 'context/plan';
-import { useTranslation } from 'common/i18n';
-import { useRouter } from 'next/router';
+import images from 'common/images';
 
-import EmbedContext from 'context/embed';
+import { InvalidEmbedAddressError } from 'context/embed';
+import ActionHighlightCard from 'components/actions/ActionHighlightCard';
+import { GetEmbedActionQuery } from 'common/__generated__/graphql';
 
-const DEFAULT_COUNT = 3
-const DEFAULT_DISPLAY_HEADER = true;
-
-const validateQueryParameters = (query) => {
-  const count = Number.parseInt(query['count'] ?? DEFAULT_COUNT.toString(), 10);
-  const displayHeader = (query['header'] ?? DEFAULT_DISPLAY_HEADER.toString()) === 'true';
-  return {
-    count,
-    displayHeader,
+const GET_ACTION = gql`
+  query GetEmbedAction($plan: ID!, $identifier: ID!) {
+    action(plan: $plan, identifier: $identifier) {
+      id
+      identifier
+      name(hyphenated: true)
+      officialName
+      completion
+      updatedAt
+      image {
+        ...MultiUseImageFragment
+      }
+      plan {
+        id
+      }
+      status {
+        id
+        identifier
+        name
+      }
+      implementationPhase {
+        id
+        identifier
+      }
+      categories {
+        id
+        image {
+          ...MultiUseImageFragment
+        }
+        parent {
+          id
+          image {
+            ...MultiUseImageFragment
+          }
+          parent {
+            id
+            image {
+              ...MultiUseImageFragment
+            }
+          }
+        }
+      }
+    }
   }
+  ${images.fragments.multiUseImage}
+`;
+
+interface ActionEmbedPropsType {
+  path: string[]
 }
 
-const ActionEmbed = () => {
+const ActionEmbed = ({path} : ActionEmbedPropsType) => {
   const plan = usePlan();
-  const { t } = useTranslation();
-  const { query } = useRouter();
-  const { count, displayHeader } = validateQueryParameters(query);
-  const embedContext = useContext(EmbedContext);
-  return <ActionHighlightsList
-    plan={plan} t={t} count={count} displayHeader={displayHeader}
+  if (path.length < 1) {
+    throw new InvalidEmbedAddressError('Could not retrieve action data');
+  }
+  const { loading, error, data } = useQuery<GetEmbedActionQuery>(GET_ACTION, {
+     variables: {
+      plan: plan.identifier,
+      identifier: path[0],
+    }
+  });
+  if (loading) return null;
+  if (error || data == null || data.action == null) {
+    throw new InvalidEmbedAddressError('Could not retrieve action data');
+  }
+  return <ActionHighlightCard
+    action={data.action}
+    imageUrl={data.action?.image?.rendition?.src || undefined}
+    hideIdentifier={plan.hideActionIdentifiers}
   />;
+
 }
 
 export default ActionEmbed;

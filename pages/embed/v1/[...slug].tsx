@@ -4,7 +4,8 @@ import Icon from '../../../components/common/Icon';
 import { Container } from 'reactstrap';
 import styled from 'styled-components';
 import { useTheme } from 'common/theme';
-import EmbedContext from '../../../context/embed';
+import EmbedContext, { InvalidEmbedAddressError } from '../../../context/embed';
+import ErrorBoundary from 'components/common/ErrorBoundary';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import * as Sentry from "@sentry/nextjs";
@@ -34,11 +35,14 @@ const UnknownEmbedPlaceholder = () => {
   );
 }
 
-const RecentActionsEmbed = dynamic(() => import('components/embed/RecentActionsEmbed', {
-  suspense: true,
-}));
+const RecentActionsEmbed = dynamic(() => import('components/embed/RecentActionsEmbed'), {
+  // TODO: try to enable real React 18 mode and enable suspense
+  //suspense: true,
+});
 
-class InvalidEmbedAddressError extends Error {};
+const ActionEmbed = dynamic(() => import('components/embed/ActionEmbed'), {
+  //suspense: true,
+});
 
 const validateUrl = (slug: string[] | undefined) : InvalidEmbedAddressError | null => {
   if (slug == null) {
@@ -75,8 +79,8 @@ const EmbeddablePage = () => {
       case 'actions-recent':
         component = <RecentActionsEmbed />;
         break;
-      case 'action':
-        component = <UnknownEmbedPlaceholder />;
+      case 'actions':
+        component = <ActionEmbed path={slug.slice(1)} />;
         break;
       default:
         component = <UnknownEmbedPlaceholder />;
@@ -95,7 +99,7 @@ const EmbeddablePage = () => {
     <EmbedContext.Provider value={embedContext}>
       <Layout>
         <div ref={wrapperElement}>
-          <EmbedContainer>
+          <EmbedContainer embedType={embedType}>
             { component }
           </EmbedContainer>
         </div>

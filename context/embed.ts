@@ -1,5 +1,7 @@
 import React from 'react';
 
+export class InvalidEmbedAddressError extends Error {};
+
 interface EmbedContext {
   active: boolean,
   type: string | null,
