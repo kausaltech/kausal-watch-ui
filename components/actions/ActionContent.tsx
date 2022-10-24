@@ -411,7 +411,34 @@ function ActionContentBlock({ block, action, section }: ActionContentBlockProps)
       if (!action.mergedActions.length) return null;
       return <MergedActionList actions={action.mergedActions} />;
     case 'ActionRelatedActionsBlock':
-      break
+      if (!action.relatedActions.length) return null;
+      return (
+        <div>
+          <Row>
+            <Col>
+              <SectionHeader>{ t('actions:related-actions') }</SectionHeader>
+              <RelatedActionList tag="ul">
+                {action.relatedActions.map((relAction) => (
+                  <RelatedActionItem
+                    tag="li"
+                    xs="12"
+                    sm="6"
+                    lg="4"
+                    className="mb-5 d-flex align-items-stretch"
+                    style={{ transition: 'all 0.5s ease' }}
+                    key={relAction.id}
+                  >
+                    <ActionCard
+                      action={relAction}
+                      showPlan={true}
+                    />
+                  </RelatedActionItem>
+                ))}
+              </RelatedActionList>
+            </Col>
+          </Row>
+        </div>
+      );
     case 'ActionRelatedIndicatorsBlock':
       if (!action.relatedIndicators.length) return null;
       return (
@@ -713,35 +740,13 @@ function ActionContent({ action, extraPlanData }: ActionContentProps) {
           </Col>
         </Row>
       </Container>
-      {action?.relatedActions.length > 0 && (
-        <div>
-          <Container>
-            <Row>
-              <Col sm="12">
-                <SectionHeader>{ t('actions:related-actions') }</SectionHeader>
-              </Col>
-            </Row>
-            <RelatedActionList tag="ul">
-              {action.relatedActions.map((relAction) => (
-                <RelatedActionItem
-                  tag="li"
-                  xs="12"
-                  sm="6"
-                  lg="4"
-                  className="mb-5 d-flex align-items-stretch"
-                  style={{ transition: 'all 0.5s ease' }}
-                  key={relAction.id}
-                >
-                  <ActionCard
-                    action={relAction}
-                    showPlan={true}
-                  />
-                </RelatedActionItem>
-              ))}
-            </RelatedActionList>
-          </Container>
-        </div>
-      )}
+      <Container>
+        <Row>
+          <Col md="7" lg="8">
+          { makeComponents('detailsMainBottom') }
+          </Col>
+        </Row>
+      </Container>
       {action?.relatedIndicators.length > 0 && (
         <div>
           <Container>
