@@ -22,7 +22,7 @@ ${ActionCard.fragments.action}
 
 const ActionListSection = styled.div`
   background-color: ${(props) => props.color};
-  padding: ${(props) => props.theme.spaces.s600} 0 ${(props) => props.theme.spaces.s600};
+  padding: ${(props) => props.theme.spaces.s400} 0};
 `;
 
 const SectionHeader = styled.h2`
@@ -58,12 +58,10 @@ const ActionListBlock = (props) => {
     <ActionListSection color={color}>
       <Container>
         { heading && (<SectionHeader>{ heading }</SectionHeader>)}
-        <Row>
-          <ActionCardList
-            actions={planActions}
-            groupBy={groupBy}
-          />
-        </Row>
+        <ActionCardList
+          actions={planActions}
+          groupBy={groupBy}
+        />
       </Container>
     </ActionListSection>
   );
