@@ -19,6 +19,7 @@ query GetActionListPage($plan: ID!, $path: String!) {
     title
     ... on ActionListPage {
       leadContent
+      defaultView
       ...ActionListPageFilters
     }
     lastPublishedAt
@@ -87,6 +88,7 @@ function ActionsListPage() {
         <ActionList
           title={planPage.title}
           leadContent={planPage.leadContent}
+          defaultView={planPage.defaultView}
           filters={filters}
           onFilterChange={handleFilterChange}
           availableFilters={availableFilters}

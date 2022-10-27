@@ -16,7 +16,7 @@ import RichText from 'components/common/RichText';
 import ActionListFilters, { ActionListFilterSection } from 'components/actions/ActionListFilters';
 import ActionCardList from 'components/actions/ActionCardList';
 import ActionStatusGraphs from './ActionStatusGraphs';
-import { ActionListFilterFragment, ActionListPageFiltersFragment, DashboardActionListQuery, GetActionListPageQuery } from 'common/__generated__/graphql';
+import { ActionListFilterFragment, ActionListPageFiltersFragment, ActionListPageView, DashboardActionListQuery, GetActionListPageQuery } from 'common/__generated__/graphql';
 import { CategoryTypeInput, CategoryMappedAction, CategoryHierarchyMember, CategoryTypeHierarchy, constructCatHierarchy, mapActionCategories } from 'common/categories';
 import { useEffect } from 'react';
 
@@ -318,6 +318,7 @@ type ActionListProps = {
   onFilterChange: FilterChangeCallback,
   title: string,
   leadContent: string,
+  defaultView: ActionListPageView,
   primaryOrgs: ActionListPrimaryOrg[],
 }
 
@@ -339,17 +340,18 @@ export type ActionListCategoryType = QueryCategoryType & CategoryTypeHierarchy<A
 const ActionList = (props: ActionListProps) => {
   const {
     actions,
-    availableFilters,
+    categoryTypes,
     organizations,
+    availableFilters,
     activeFilters,
     onFilterChange,
     title,
     leadContent,
-    categoryTypes,
+    defaultView,
     primaryOrgs } = props;
   const { t } = useTranslation('common');
   const plan = usePlan();
-  const displayDashboard = activeFilters.view === 'dashboard';
+  const displayDashboard = activeFilters.view === 'dashboard' || (activeFilters.view == null && defaultView === 'DASHBOARD');
   const orgs: ActionListOrganization[] = useMemo(() => {
     return constructOrgHierarchy<ActionListOrganization>(organizations).filter(orgHasActions);
   }, [organizations]);
@@ -491,6 +493,7 @@ ActionList.getFiltersFromQuery = (query) => {
 type StatusboardProps = {
   title: string,
   leadContent: string,
+  defaultView: ActionListPageView,
   availableFilters: ActionListPageFiltersFragment,
   filters: ActiveFilters,
   onFilterChange: FilterChangeCallback,
@@ -500,6 +503,7 @@ function ActionListLoader(props: StatusboardProps) {
   const {
     title,
     leadContent,
+    defaultView,
     filters,
     onFilterChange,
     availableFilters
@@ -520,6 +524,7 @@ function ActionListLoader(props: StatusboardProps) {
     <ActionList
       title={title}
       leadContent={leadContent}
+      defaultView={defaultView}
       availableFilters={availableFilters}
       activeFilters={filters}
       onFilterChange={onFilterChange}
