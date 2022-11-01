@@ -3071,10 +3071,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@kausal/themes-private@npm:^0.2.21":
-  version: 0.2.21
-  resolution: "@kausal/themes-private@npm:0.2.21"
-  checksum: 71c965250c1db33be75887b369d62ba6e09746b088fd289127c864eecdfa7db13a3ffaf279f8bf207ef3e9204ec58f6e023a80fe46a0b2f2ba7432a60400aae7
+"@kausal/themes-private@npm:^0.2.22":
+  version: 0.2.22
+  resolution: "@kausal/themes-private@npm:0.2.22"
+  checksum: 692794f27006d7b3f4388513b4b4bfd73642e09a4daa3725503d0b64a786353ba13a44fb24c6170e2c44a9ddf7eeee7deeb60a65add5e540d109a4720bfd212a
   languageName: node
   linkType: hard
 
@@ -16272,7 +16272,7 @@ __metadata:
     "@graphql-codegen/typescript-react-apollo": 3.3.3
     "@kausal/plotly-custom": ^2.14.3
     "@kausal/themes": ^0.4.0
-    "@kausal/themes-private": ^0.2.21
+    "@kausal/themes-private": ^0.2.22
     "@koa/router": ^10.1.1
     "@n8tb1t/use-scroll-position": ^2.0.3
     "@next/bundle-analyzer": ^12.1.6
