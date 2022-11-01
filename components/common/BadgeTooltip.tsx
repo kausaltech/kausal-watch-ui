@@ -4,7 +4,7 @@ import SVG from 'react-inlinesvg';
 import styled from 'styled-components';
 import { darken, readableColor } from 'polished';
 
-const StyledBadge = styled(Badge)<{color: string, isLink: boolean}>`
+const StyledBadge = styled(({isLink, ...rest}) => <Badge {...rest}/>)<{color: string, isLink: boolean}>`
   background-color: ${(props) => props.theme[props.color]} !important;
   color: ${
     (props) => readableColor(props.theme[props.color], props.theme.themeColors.black, props.theme.themeColors.white)
