@@ -25,7 +25,7 @@ function getSelectStyles<Option extends SelectDropdownOption>(
   const inputHeight =
     `calc((${theme.inputLineHeight}*${theme.fontSizeBase}) +`
     + ` (${theme.inputPaddingY}*2) + (${theme.inputBorderWidth}*2))`;
-      
+
   const styles: SelectDropdownProps<Option>["styles"] = {
     control: (provided, { isDisabled, isFocused }) => ({
       ...provided,
@@ -110,27 +110,27 @@ function getSelectStyles<Option extends SelectDropdownOption>(
 }
 
 function IndicatorSeparator() {
-	return null;
+        return null;
 }
 
 function DropdownIndicator(props: DropdownIndicatorProps) {
-	return (
-		<components.DropdownIndicator {...props}>
-			<span></span>
-		</components.DropdownIndicator>
-	);
+        return (
+                <components.DropdownIndicator {...props}>
+                        <span></span>
+                </components.DropdownIndicator>
+        );
 }
 
 function getSelectTheme(theme: SelectTheme) {
-	const ret: SelectTheme = {
-		...theme,
+        const ret: SelectTheme = {
+                ...theme,
     // @ts-ignore
-		colors: {
-			...theme.colors,
-			primary: "var(--bs-light)",
-			danger: "var(--bs-danger)",
-		}
-	}
+                colors: {
+                        ...theme.colors,
+                        primary: "var(--bs-light)",
+                        danger: "var(--bs-danger)",
+                }
+        }
   return ret;
 }
 
