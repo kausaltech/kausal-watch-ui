@@ -22,7 +22,6 @@ function getSelectStyles<Option extends SelectDropdownOption>(
   size: string = ""
 ) {
   const suffix = size ? `-${size}` : "";
-  const multiplicator = multi ? 2 : 1;
   const inputHeight =
     `calc((${theme.inputLineHeight}*${theme.fontSizeBase}) +`
     + ` (${theme.inputPaddingY}*2) + (${theme.inputBorderWidth}*2))`;
@@ -50,12 +49,13 @@ function getSelectStyles<Option extends SelectDropdownOption>(
       { isDisabled }
     ) => ({
       ...provided,
+      maxWidth: `${multi ? "80%": "100%"}`,
       color: `var(--bs-select${isDisabled ? "-disabled" : ""}-color)`,
     }),
     valueContainer: (provided, state) => ({
       ...provided,
-      padding: `calc(var(--bs-select-padding-y${suffix})/${multiplicator}) `
-        + `calc(var(--bs-select-padding-x${suffix})/${multiplicator})`,
+      padding: `calc(var(--bs-select-padding-y${suffix})) `
+        + `calc(var(--bs-select-padding-x${suffix}))`,
     }),
     dropdownIndicator: (provided, state) => ({
       height: "100%",
@@ -136,35 +136,35 @@ function getSelectTheme(theme: SelectTheme) {
 }
 
 const CountContainer = styled.span`
-  margin-left: 0.2em;
-`
+  opacity: 0.5;
+  font-style: italic;
+  margin: 0 0.4em;
+`;
+
+const Counter = ({count}: {count: number}) => (
+  <CountContainer> + {count}</CountContainer>
+)
 
 const ValueContainer = (props: ValueContainerProps) => {
   const { children, ...rest } = props;
   const [firstChild, ...remainingChildren] = children;
-  const realChildren = ((firstChild?.length ?? 0) > 1) ? [firstChild[0], ...remainingChildren] : children;
-  return <components.ValueContainer {...rest} >{realChildren}</components.ValueContainer>
+  const realChildren = ((firstChild?.length ?? 0) > 1) ? [
+    firstChild[0],
+    <Counter count={firstChild.length - 1}/>,
+    ...remainingChildren
+  ] : children;
+  return <components.ValueContainer {...rest} >
+    {realChildren}
+  </components.ValueContainer>;
 };
 
-const SingleValue = (props) => {
-  const { t } = useTranslation();
-  const {children, ...rest} = props;
-
-  return <components.SingleValue {...rest}>
-    { props.data.label }
-    <CountContainer>{ props.data.count > 1 && ` + ${props.data.count - 1}` }</CountContainer>
-  </components.SingleValue>;
-}
-
-
 const MultiValue = (props: MultiValueProps) => {
-  const { getValue, data, children, ...rest } = props;
+  const { data, ...rest } = props;
   const newData = {
     id: '__combined__',
-    label: getValue()[0].label,
-    count: (getValue().length),
-    indent: Math.min(...getValue().map(v => v.indent))};
-  return <SingleValue data={newData} {...rest}></SingleValue>;
+    label: props.getValue()[0].label,
+    indent: Math.min(...props.getValue().map(v => v.indent))};
+  return <components.SingleValue data={newData} {...rest}></components.SingleValue>;
 }
 
 const getCustomComponents = (isMulti: boolean) => Object.assign(
@@ -194,7 +194,7 @@ function SelectDropdown<Option extends SelectDropdownOption, IsMulti extends boo
 ) {
   const { size, id, label, value, onChange, helpText, invert, isMulti, ...rest } = props;
   const theme = useTheme();
-  const styles = getSelectStyles(theme, 'isMulti' in props, size);
+  const styles = getSelectStyles(theme, props.isMulti === true, size);
   return (
     <FormGroup>
       { label && (
