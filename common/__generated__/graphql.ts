@@ -522,10 +522,12 @@ export type ActionMergedActionsBlock = StreamFieldInterface & {
 export type ActionOfficialNameBlock = StreamFieldInterface & {
   __typename?: 'ActionOfficialNameBlock';
   blockType: Scalars['String'];
+  blocks: Array<StreamFieldInterface>;
+  caption?: Maybe<Scalars['String']>;
   field: Scalars['String'];
+  fieldLabel?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['String']>;
   rawValue: Scalars['String'];
-  value: Scalars['String'];
 };
 
 export type ActionRelatedActionsBlock = StreamFieldInterface & {
@@ -3757,7 +3759,10 @@ export type GetActionDetailsQuery = (
         & { __typename: 'ActionContentCategoryTypeBlock' }
       ) | (
         { id?: string | null }
-        & { __typename: 'ActionDescriptionBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionTasksBlock' }
+        & { __typename: 'ActionDescriptionBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionMergedActionsBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionTasksBlock' }
+      ) | (
+        { id?: string | null, fieldLabel?: string | null, caption?: string | null }
+        & { __typename: 'ActionOfficialNameBlock' }
       )> | null, detailsMainBottom?: Array<(
         { id?: string | null, attributeType: (
           { id: string, format: AttributeTypeFormat, name: string, identifier: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
@@ -3778,7 +3783,10 @@ export type GetActionDetailsQuery = (
         & { __typename: 'ActionContentCategoryTypeBlock' }
       ) | (
         { id?: string | null }
-        & { __typename: 'ActionDescriptionBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionTasksBlock' }
+        & { __typename: 'ActionDescriptionBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionMergedActionsBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionTasksBlock' }
+      ) | (
+        { id?: string | null, fieldLabel?: string | null, caption?: string | null }
+        & { __typename: 'ActionOfficialNameBlock' }
       )> | null, detailsAside?: Array<(
         { id?: string | null }
         & { __typename: 'ActionContactPersonsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionScheduleBlock' }
@@ -3868,12 +3876,17 @@ type ActionMainContentBlocksFragment_ActionContentCategoryTypeBlock_Fragment = (
   & { __typename: 'ActionContentCategoryTypeBlock' }
 );
 
-type ActionMainContentBlocksFragment_Wbi3ZrjDgGxRl8zsm03pCgNAwY07do3KcAjNr9ohLWk_Fragment = (
+type ActionMainContentBlocksFragment_6BcBJmD8IFwBu5Wuh9zsZjz_45yKhLxTzz6qM1g7V4_Fragment = (
   { id?: string | null }
-  & { __typename: 'ActionDescriptionBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionTasksBlock' }
+  & { __typename: 'ActionDescriptionBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionMergedActionsBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionTasksBlock' }
 );
 
-export type ActionMainContentBlocksFragmentFragment = ActionMainContentBlocksFragment_ActionContentAttributeTypeBlock_Fragment | ActionMainContentBlocksFragment_ActionContentCategoryTypeBlock_Fragment | ActionMainContentBlocksFragment_Wbi3ZrjDgGxRl8zsm03pCgNAwY07do3KcAjNr9ohLWk_Fragment;
+type ActionMainContentBlocksFragment_ActionOfficialNameBlock_Fragment = (
+  { id?: string | null, fieldLabel?: string | null, caption?: string | null }
+  & { __typename: 'ActionOfficialNameBlock' }
+);
+
+export type ActionMainContentBlocksFragmentFragment = ActionMainContentBlocksFragment_ActionContentAttributeTypeBlock_Fragment | ActionMainContentBlocksFragment_ActionContentCategoryTypeBlock_Fragment | ActionMainContentBlocksFragment_6BcBJmD8IFwBu5Wuh9zsZjz_45yKhLxTzz6qM1g7V4_Fragment | ActionMainContentBlocksFragment_ActionOfficialNameBlock_Fragment;
 
 export type ActionHightlightListQueryVariables = Exact<{
   plan: Scalars['ID'];

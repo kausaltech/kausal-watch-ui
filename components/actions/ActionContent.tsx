@@ -208,6 +208,10 @@ fragment ActionMainContentBlocksFragment on ActionMainContentBlock {
   ... on StreamFieldInterface {
     id
   }
+  ... on ActionOfficialNameBlock {
+    fieldLabel
+    caption
+  }
   ... on ActionContentAttributeTypeBlock {
     attributeType {
       ...AttributesBlockAttributeType
@@ -379,13 +383,15 @@ function ActionContentBlock({ block, action, section }: ActionContentBlockProps)
       const generalContent = plan.generalContent || {};
       const cleanOfficialText = action.officialName?.replace(/(?:\r\n|\r|\n)/g, '<br>') || '';
       if (!cleanOfficialText) return null;
+      const caption = block.caption || generalContent.officialNameDescription;
+      const fieldLabel = block.fieldLabel || t('actions:action-description-official');
       return (
         <OfficialText>
-          <h2>{ t('actions:action-description-official') }</h2>
+          <h2>{ fieldLabel }</h2>
           <div className="official-text-content">
             <div dangerouslySetInnerHTML={{ __html: cleanOfficialText }} />
-            {generalContent.officialNameDescription && (
-              <small>{`(${generalContent.officialNameDescription})`}</small>
+            {caption && (
+              <small>{`(${caption})`}</small>
             )}
           </div>
         </OfficialText>
