@@ -1,5 +1,5 @@
 import React from "react";
-import Select, { components, DropdownIndicatorProps, Theme as SelectTheme } from "react-select";
+import Select, { components, DropdownIndicatorProps, GroupBase, MultiValueProps, Theme as SelectTheme, ValueContainerProps } from "react-select";
 import styled from 'styled-components';
 import Highlighter from "react-highlight-words";
 import { FormGroup, Label as BSLabel } from "reactstrap";
@@ -7,6 +7,7 @@ import { useTheme, Theme } from "common/theme";
 import { data } from "autoprefixer";
 import PopoverTip from 'components/common/PopoverTip';
 import { TRUE } from "sass";
+import { useTranslation } from "common/i18n";
 
 
 const Label = styled(BSLabel)`
@@ -134,6 +135,43 @@ function getSelectTheme(theme: SelectTheme) {
   return ret;
 }
 
+const CountContainer = styled.span`
+  margin-left: 0.2em;
+`
+
+const ValueContainer = (props: ValueContainerProps) => {
+  const { children, ...rest } = props;
+  const [firstChild, ...remainingChildren] = children;
+  const realChildren = ((firstChild?.length ?? 0) > 1) ? [firstChild[0], ...remainingChildren] : children;
+  return <components.ValueContainer {...rest} >{realChildren}</components.ValueContainer>
+};
+
+const SingleValue = (props) => {
+  const { t } = useTranslation();
+  const {children, ...rest} = props;
+
+  return <components.SingleValue {...rest}>
+    { props.data.label }
+    <CountContainer>{ props.data.count > 1 && ` + ${props.data.count - 1}` }</CountContainer>
+  </components.SingleValue>;
+}
+
+
+const MultiValue = (props: MultiValueProps) => {
+  const { getValue, data, children, ...rest } = props;
+  const newData = {
+    id: '__combined__',
+    label: getValue()[0].label,
+    count: (getValue().length),
+    indent: Math.min(...getValue().map(v => v.indent))};
+  return <SingleValue data={newData} {...rest}></SingleValue>;
+}
+
+const getCustomComponents = (isMulti: boolean) => Object.assign(
+  { DropdownIndicator, IndicatorSeparator },
+  isMulti ? { ValueContainer, MultiValue } : {}
+);
+
 export interface SelectDropdownOption {
   id: string,
   label: string,
@@ -146,15 +184,17 @@ type SelectDropdownProps<Option extends SelectDropdownOption> = Parameters<typeo
   size?: string,
   helpText?: string,
   invert?: boolean,
+  isMulti: boolean,
+  value: SelectDropdownOption[]|SelectDropdownOption|null,
+  onChange: (option:SelectDropdownOption[]|SelectDropdownOption|null)=>void
 };
 
-const customComponents = { DropdownIndicator, IndicatorSeparator }
-
-function SelectDropdown<Option extends SelectDropdownOption>(props: SelectDropdownProps<Option>) {
-  const { size, id, label, onChange, helpText, invert, ...rest } = props;
+function SelectDropdown<Option extends SelectDropdownOption, IsMulti extends boolean = false>(
+    props: SelectDropdownProps<Option>
+) {
+  const { size, id, label, value, onChange, helpText, invert, isMulti, ...rest } = props;
   const theme = useTheme();
   const styles = getSelectStyles(theme, 'isMulti' in props, size);
-
   return (
     <FormGroup>
       { label && (
@@ -169,9 +209,11 @@ function SelectDropdown<Option extends SelectDropdownOption>(props: SelectDropdo
           )}
         </Label>
       )}
-      <Select
-        components={customComponents}
+      <Select<SelectDropdownOption, IsMulti>
+        isMulti={isMulti}
+        components={getCustomComponents(isMulti)}
         theme={getSelectTheme}
+        value={value}
         styles={styles}
         getOptionLabel={option => option.label}
         getOptionValue={option => option.id}
@@ -182,10 +224,10 @@ function SelectDropdown<Option extends SelectDropdownOption>(props: SelectDropdo
             <Highlighter highlightTag="b" searchWords={[inputValue]} textToHighlight={label} />
           );
           if (context === 'value' || !indent) return highlighted;
-          let spans = [];
+          let spans : JSX.Element[] = [];
           for (let i = 0; i < indent; i++) {
             spans.push(
-              <span style={{borderLeft: '1px solid #ccc', paddingLeft: '0.5em'}} />
+              <span key={`span-${i}`} style={{borderLeft: '1px solid #ccc', paddingLeft: '0.5em'}} />
             );
           }
           return <>
@@ -197,6 +239,6 @@ function SelectDropdown<Option extends SelectDropdownOption>(props: SelectDropdo
         {...rest}
       />
     </FormGroup>
-	);
+        );
 }
 export default SelectDropdown;

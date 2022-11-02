@@ -13,10 +13,10 @@ import { PlanContextType, usePlan } from 'context/plan';
 import PopoverTip from 'components/common/PopoverTip';
 import {
   ActionListAction, ActionListActionAttributeTypeFilterBlock, ActionListCategory, ActionListCategoryTypeFilterBlock,
-  ActionListOrganization, ActionListPrimaryOrg, ActiveFilters,
+  ActionListOrganization, ActionListPrimaryOrg,
 } from 'components/dashboard/ActionList';
 import {
-  ActionListFilterFragment, ActionListPageFiltersFragment,
+  ActionListFilterFragment, ActionListPageFiltersFragment, CategoryTypeSelectWidget,
 } from 'common/__generated__/graphql';
 import { TFunction } from 'next-i18next';
 import SelectDropdown, { SelectDropdownOption } from 'components/common/SelectDropdown';
@@ -25,6 +25,20 @@ import {
 } from 'common/categories';
 import { createFilter } from 'react-select';
 
+
+type MultipleFilterValue = string[];
+type SingleFilterValue = string|undefined;
+
+export type FilterValue = MultipleFilterValue | SingleFilterValue;
+function isMultipleFilterValue(value: FilterValue): value is MultipleFilterValue {
+  return Array.isArray(value);
+}
+function isSingleFilterValue(value: FilterValue): value is SingleFilterValue {
+  return !isMultipleFilterValue(value);
+}
+export type Filters<Value extends FilterValue = FilterValue> = {
+  [key: string]: Value;
+}
 
 const FiltersList = styled.div`
   margin: 0 0 ${(props) => props.theme.spaces.s150} 0;
@@ -113,13 +127,12 @@ function sortDepthFirst<Type>(
   return out;
 }
 
-
 type ActionListTextInputProps = {
   id: string,
   label: string,
   placeholder: string,
   currentValue: string|undefined,
-  onChange: FilterChangeCallback,
+  onChange: FilterChangeCallback<string|undefined>,
   inputRef?: Ref<HTMLInputElement>
 }
 
@@ -144,14 +157,15 @@ function ActionListTextInput({
   );
 }
 
-type ActionListDropdownProps = {
+type ActionListDropdownProps<Value extends FilterValue> = {
   id: string,
   label: string,
   helpText?: string,
   showAllLabel?: string,
-  currentValue: string|undefined,
-  onChange: FilterChangeCallback,
+  currentValue: Value,
+  onChange: FilterChangeCallback<Value>,
   options: SelectDropdownOption[],
+  isMulti: Value extends MultipleFilterValue ? boolean : false
 }
 
 const filterOption = createFilter({
@@ -162,10 +176,9 @@ const filterOption = createFilter({
   trim: true,
 });
 
-
-function ActionListDropdownInput(props: ActionListDropdownProps) {
+function ActionListDropdownInput<Value extends FilterValue>(props: ActionListDropdownProps<Value>) {
   const {
-    id, label, helpText, currentValue, onChange, showAllLabel, options,
+    id, label, helpText, currentValue, onChange, showAllLabel, options, isMulti
   } = props;
   // check if we need to inverse component colors depending on section bg
   const theme = useTheme();
@@ -173,16 +186,35 @@ function ActionListDropdownInput(props: ActionListDropdownProps) {
     theme.neutralLight,
     theme.themeColors.black,
     theme.themeColors.white) === theme.themeColors.white;
-  const callback = useCallback((option: SelectDropdownOption|null) => {
-    onChange(id, option?.id);
+  const callback = useCallback((option: (
+    Value extends MultipleFilterValue ? SelectDropdownOption[] : SelectDropdownOption|null
+  )) => {
+    // Found no way to automatically narrow the type of option (or currentValue)
+    if (isMulti) {
+      (onChange as FilterChangeCallback<MultipleFilterValue>)(id, (option as SelectDropdownOption[])?.map(o => o.id));
+      return;
+    }
+    else {
+      (onChange as FilterChangeCallback<SingleFilterValue>)(id, (option as SelectDropdownOption | null)?.id);
+      return;
+    }
+
   }, [id, onChange]);
-  const selectedOption = currentValue ? options.find((opt) => opt.id === currentValue) : null;
+
+  let selectedOption: SelectDropdownOption[] | SelectDropdownOption | null;
+  if (isSingleFilterValue(currentValue)) {
+    selectedOption = currentValue ? options.find((opt) => opt.id === currentValue) ?? null : null;
+  }
+  else {
+    selectedOption = currentValue.length === 0 ? [] : options.filter(opt => currentValue.find(v => opt.id === v));
+  }
 
   return (
-    <SelectDropdown
+    <SelectDropdown<SelectDropdownOption, Value extends MultipleFilterValue ? true : false>
       label={label}
       id={`${id}-field`}
       name={id}
+      isMulti={isMulti}
       placeholder={showAllLabel}
       options={options}
       value={selectedOption}
@@ -199,36 +231,41 @@ function ActionListDropdownInput(props: ActionListDropdownProps) {
 type ActionListFilterBadgesProps = {
   plan: PlanContextType,
   allFilters: ActionListFilter[],
-  activeFilters: ActiveFilters,
+  activeFilters: Filters,
   actionCount: number,
-  onReset: (id: string) => void,
+  onReset: (id: string, value: SingleFilterValue) => void,
 }
 
 function ActionListFilterBadges({
   plan, allFilters, activeFilters, actionCount, onReset,
 }: ActionListFilterBadgesProps) {
   const { t } = useTranslation();
-  const enabled = allFilters.filter((item) => activeFilters[item.id])
-  const badges = enabled.map((item: ActionListFilter) => {
-    let label: string;
-    const value: string = activeFilters[item.id] as string;
+  const enabled = allFilters.filter((item) => activeFilters[item.id]);
 
+  const createBadge = (item: ActionListFilter, value: SingleFilterValue) => {
+    let label: string;
     if (item.id === 'name') {
-      label = value;
+      label = value ?? '';
     } if (item.options) {
       const activeOption = item.options.find((opt) => opt.id === value) as ActionListFilterOption;
       label = activeOption.label
-    } else
+    } else {
       return null;
+    }
     return {
       key: item.id,
       id: item.id,
+      value,
       label,
       onReset: () => {
-        onReset(item.id);
+        onReset(item.id, value);
       },
     };
-  }).filter(item => item != null);
+  }
+  const badges = enabled.map((item: ActionListFilter) => {
+    const value = activeFilters[item.id];
+    return (isSingleFilterValue(value) ? [value] : value).map(v => createBadge(item, v));
+  }).flat().filter(item => item != null);
 
   return (
     <FiltersList aria-live="assertive">
@@ -242,7 +279,7 @@ function ActionListFilterBadges({
       {/* TODO: animate transition */}
         {badges.map((item) => (
           <StyledBadge
-            key={item.id}
+            key={`${item.id}-${item.value}`}
             className="me-3"
             color="primary"
           >
@@ -259,7 +296,7 @@ function ActionListFilterBadges({
   );
 }
 
-type FilterChangeCallback = (filterId: string, val: string|undefined, debounce?: number) => void;
+type FilterChangeCallback<Value> = (filterId: string, val: Value, debounce?: number) => void;
 
 
 type ActionListFilterOption = {
@@ -267,9 +304,9 @@ type ActionListFilterOption = {
   label: string,
 };
 
-export interface ActionListFilter {
+export interface ActionListFilter<Value extends FilterValue = FilterValue> {
   id: string,
-  filterAction: (value: string, action: ActionListAction) => boolean,
+  filterAction: (value: Value, action: ActionListAction) => boolean,
   getLabel: (t: TFunction) => string,
   getHelpText: (t: TFunction) => string|undefined,
   getShowAllLabel: (t: TFunction) => string,
@@ -278,10 +315,10 @@ export interface ActionListFilter {
   lg: number,
   options?: ActionListFilterOption[],
   debounce?: number|undefined,
-  render: (value: string|undefined, onChange: FilterChangeCallback, t: TFunction) => JSX.Element,
+  render: (value: Value, onChange: FilterChangeCallback<Value>, t: TFunction) => JSX.Element,
 };
 
-abstract class DefaultFilter implements ActionListFilter {
+abstract class DefaultFilter<Value extends FilterValue> implements ActionListFilter<Value> {
   id: string;
   sm = undefined;
   md = 6;
@@ -290,13 +327,14 @@ abstract class DefaultFilter implements ActionListFilter {
 
   abstract getLabel(t: TFunction): string;
   abstract getHelpText(t: TFunction): string|undefined;
-  abstract filterAction(value: string, action: ActionListAction): boolean;
+  abstract filterAction(value: Value, action: ActionListAction): boolean;
 
   getShowAllLabel(t: TFunction) {
     return t('filter-all-categories')
   };
 
-  render(value: string|undefined, onChange: FilterChangeCallback, t: TFunction) {
+  render(value: Value, onChange: FilterChangeCallback<Value>, t: TFunction, isMulti?: Value extends MultipleFilterValue ? boolean : false) {
+    const _isMulti = isMulti ?? false;
     return (
       <Col
         sm={this.sm}
@@ -305,6 +343,7 @@ abstract class DefaultFilter implements ActionListFilter {
         key={this.id}
       >
         <ActionListDropdownInput
+          isMulti={_isMulti}
           id={this.id}
           label={this.getLabel(t)}
           helpText={this.getHelpText(t)}
@@ -322,18 +361,18 @@ abstract class DefaultFilter implements ActionListFilter {
 type GenericSelectFilterOpts = {
   id: string,
   options: ActionListFilterOption[],
-  filterAction: (value: string, action: ActionListAction) => boolean,
+  filterAction: (value: FilterValue, action: ActionListAction) => boolean,
   label: string,
   helpText?: string,
   showAllLabel: string,
 }
 
-class GenericSelectFilter extends DefaultFilter {
+class GenericSelectFilter extends DefaultFilter<string|undefined> {
   options: ActionListFilterOption[];
   label: string;
   helpText: string|undefined;
   showAllLabel: string;
-  filterAction: (value: string, action: ActionListAction) => boolean;
+  filterAction: (value: string|undefined, action: ActionListAction) => boolean;
 
   constructor(opts: GenericSelectFilterOpts) {
     const { id, options, label, helpText, showAllLabel, filterAction } = opts;
@@ -357,7 +396,7 @@ class GenericSelectFilter extends DefaultFilter {
 }
 
 
-class ResponsiblePartyFilter extends DefaultFilter {
+class ResponsiblePartyFilter extends DefaultFilter<string|undefined> {
   id = 'responsible_party';
   options: ActionListFilterOption[];
   orgById: Map<string, ActionListOrganization>
@@ -373,7 +412,7 @@ class ResponsiblePartyFilter extends DefaultFilter {
     this.orgById = new Map(orgs.map(org => [org.id, org]));
     this.options = sortedOrgs.map((org) => ({id: org.id, label: org.name, indent: org.depth}));
   }
-  filterAction(value: string, action: ActionListAction) {
+  filterAction(value: string|undefined, action: ActionListAction) {
     return action.responsibleParties.some((rp) => {
       // @ts-ignore
       let org: ActionListOrganization = rp.organization;
@@ -383,6 +422,9 @@ class ResponsiblePartyFilter extends DefaultFilter {
       }
       return false;
     });
+  }
+  render(value: string|undefined, onChange: FilterChangeCallback<string|undefined>, t: TFunction) {
+    return super.render(value, onChange, t);
   }
   getLabel(t: TFunction) {
     return t('filter-organization');
@@ -400,19 +442,21 @@ type QueryFilterCategory = NonNullable<QueryFilterCategoryType>['categories'][0]
 type FilterCategoryType = QueryFilterCategoryType & CategoryTypeHierarchy<FilterCategory>;
 type FilterCategory = QueryFilterCategory & CategoryHierarchyMember<FilterCategoryType>;
 
-class CategoryFilter extends DefaultFilter {
+class CategoryFilter extends DefaultFilter<FilterValue> {
   id: string;
   ct: NonNullable<ActionListCategoryTypeFilterBlock['categoryType']>;
   options: ActionListFilterOption[];
   style: 'dropdown'|'buttons';
   showAllLabel: string|undefined|null;
   catById: Map<string, FilterCategory>
+  hasMultipleValues: boolean;
 
   constructor(config: ActionListCategoryTypeFilterBlock) {
     super();
     this.ct = config.categoryType!;
     this.id = `cat-${this.ct!.identifier}`;
     this.showAllLabel = config.showAllLabel;
+    this.hasMultipleValues = this.ct!.selectionType === CategoryTypeSelectWidget.Multiple;
     //@ts-ignore
     const style = config.style === 'dropdown' ? 'dropdown' : 'buttons';
     this.style = style;
@@ -429,19 +473,25 @@ class CategoryFilter extends DefaultFilter {
     );
     this.options = sortedCats.map((cat) => ({id: cat.id, label: getLabel(cat), indent: cat.depth}));
   }
-  filterAction(value: string, action: ActionListAction) {
+  filterSingleCategory(action: ActionListAction, categoryId: string|undefined) {
     return action.categories.some((actCat) => {
       let cat = this.catById.get(actCat.id);
       while (cat) {
-        if (cat.id === value) return true;
-        cat = cat.parent;
+        if (cat.id === categoryId) return true;
+        cat = cat.parent ?? undefined;
       }
       return false;
     });
   }
-  render(value: string|undefined, onChange: FilterChangeCallback, t: TFunction) {
+  filterAction(value: FilterValue, action: ActionListAction) {
+    if (isSingleFilterValue(value)) {
+      return this.filterSingleCategory(action, value);
+    }
+    return value.every(v => this.filterSingleCategory(action, v));
+  }
+  render(value: FilterValue, onChange: FilterChangeCallback<FilterValue>, t: TFunction) {
     if (this.style === 'dropdown') {
-      return super.render(value, onChange, t);
+      return super.render(value, onChange, t, this.hasMultipleValues);
     }
     const seeAll: string = t('see-all-actions');
     return (
@@ -508,7 +558,7 @@ type AttributeTypeChoice = NonNullable<
   ActionListActionAttributeTypeFilterBlock['attributeType']
 >['choiceOptions'][0]
 
-class AttributeTypeFilter extends DefaultFilter {
+class AttributeTypeFilter extends DefaultFilter<string|undefined> {
   id: string;
   att: NonNullable<ActionListActionAttributeTypeFilterBlock['attributeType']>;
   options: ActionListFilterOption[];
@@ -525,7 +575,7 @@ class AttributeTypeFilter extends DefaultFilter {
     const getLabel = (choice: AttributeTypeChoice) => choice.name;
     this.options = choices.map((choice) => ({id: choice.id, label: getLabel(choice)}));
   }
-  filterAction(value: string, action: ActionListAction) {
+  filterAction(value: string|undefined, action: ActionListAction) {
     return action.attributes.some((actAtt) => {
       if (actAtt.__typename !== 'AttributeChoice') return false;
       const { choice } = actAtt;
@@ -546,7 +596,7 @@ class AttributeTypeFilter extends DefaultFilter {
 }
 
 
-class ActionNameFilter implements ActionListFilter {
+class ActionNameFilter implements ActionListFilter<string|undefined> {
   id = 'name';
   sm = 9;
   md = 9;
@@ -578,7 +628,7 @@ class ActionNameFilter implements ActionListFilter {
   getHelpText(t: TFunction) {
     return undefined;
   }
-  render(value: string|undefined, onChange: FilterChangeCallback, t: TFunction) {
+  render(value: string|undefined, onChange: FilterChangeCallback<string|undefined>, t: TFunction) {
     return (
       <Col m={this.sm} md={this.md} lg={this.lg} key={this.id}>
         <ActionListTextInput
@@ -604,8 +654,8 @@ export type ActionListFilterSection = {
 
 type FilterColProps = {
   filter: ActionListFilter,
-  onFilterChange: (id: string, val: string|undefined, debounce: number) => void,
-  state: string|undefined,
+  onFilterChange: (id: string, val: FilterValue, debounce: number) => void,
+  state: FilterValue,
 }
 const FilterCol = React.memo(function FilterCol({ filter, onFilterChange, state }: FilterColProps) {
   const { t } = useTranslation();
@@ -616,10 +666,10 @@ const FilterCol = React.memo(function FilterCol({ filter, onFilterChange, state 
 
 
 type ActionListFiltersProps = {
-  activeFilters: ActiveFilters,
+  activeFilters: Filters,
   filterSections: ActionListFilterSection[],
   actionCount: number,
-  onChange: (filterType: string, val: string|undefined) => void,
+  onChange: (filterType: string, val: FilterValue) => void,
 }
 
 function ActionListFilters(props: ActionListFiltersProps) {
@@ -641,11 +691,13 @@ function ActionListFilters(props: ActionListFiltersProps) {
     [onChange]
   )
 
-  const onFilterChange = useCallback((id: string, val: string|undefined, debounce: number = 0) => {
-    setFilterState(state => ({
-      ...state,
-      [id]: val,
-    }));
+  const onFilterChange = useCallback((id: string, val: FilterValue, debounce: number = 0) => {
+    setFilterState(state => {
+      return {
+        ...state,
+        [id]: val,
+      };
+    });
     if (debounce) {
       debouncedFilterChange(id, val);
     } else {
@@ -653,7 +705,17 @@ function ActionListFilters(props: ActionListFiltersProps) {
     }
   }, [setFilterState, onChange, debouncedFilterChange]);
 
-  const onReset = useCallback((id: string) => onFilterChange(id, undefined), [onFilterChange]);
+  const deleteFilterValues = (id: string, value: SingleFilterValue) => {
+    const filterVal = filterState[id];
+    if (Array.isArray(filterVal)) {
+      return filterVal.filter(valueId => value !== valueId);
+    }
+    return undefined;
+  }
+
+  const onReset = useCallback((id: string, value: SingleFilterValue) => {
+    onFilterChange(id, deleteFilterValues(id, value))
+  }, [onFilterChange, deleteFilterValues]);
 
   return (
     <div className="filters mb-2 text-left">

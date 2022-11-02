@@ -8,6 +8,7 @@ import ContentLoader from 'components/common/ContentLoader';
 import Layout, { Meta } from 'components/layout';
 import ActionList from 'components/dashboard/ActionList';
 import type { GetActionListPageQuery } from 'common/__generated__/graphql';
+import { Filters, FilterValue } from 'components/actions/ActionListFilters';
 
 
 const GET_ACTION_LIST_PAGE = gql`
@@ -30,13 +31,13 @@ ${ActionList.fragments.listFilters}
 
 function ActionsListPage() {
   const router = useRouter();
-  const defaultFilters = ActionList.getFiltersFromQuery(router.query);
+  const defaultFilters: Filters<FilterValue> = ActionList.getFiltersFromQuery(router.query);
   const [filters, setFilters] = useState(defaultFilters);
   const path = '/actions';
   const plan = usePlan();
 
   const handleFilterChange = useCallback(
-    (id: string, val: string|undefined) => {
+    (id: string, val: FilterValue) => {
       setFilters((state) => {
         const newFilters = {
           ...state,

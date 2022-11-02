@@ -4899,7 +4899,7 @@ type ActionListFilter_ActionAttributeTypeFilterBlock_Fragment = (
 
 type ActionListFilter_CategoryTypeFilterBlock_Fragment = (
   { style?: string | null, showAllLabel?: string | null, field: string, id?: string | null, categoryType?: (
-    { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, helpText: string, categories: Array<(
+    { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
       { id: string, identifier: string, name: string, order: number, helpText: string, parent?: (
         { id: string }
         & { __typename?: 'Category' }
@@ -4928,7 +4928,7 @@ export type ActionListPageFiltersFragment = (
     & { __typename: 'ActionImplementationPhaseFilterBlock' | 'ActionScheduleFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'ResponsiblePartyFilterBlock' }
   ) | (
     { style?: string | null, showAllLabel?: string | null, field: string, id?: string | null, categoryType?: (
-      { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, helpText: string, categories: Array<(
+      { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
         { id: string, identifier: string, name: string, order: number, helpText: string, parent?: (
           { id: string }
           & { __typename?: 'Category' }
@@ -4952,7 +4952,7 @@ export type ActionListPageFiltersFragment = (
     & { __typename: 'ActionImplementationPhaseFilterBlock' | 'ActionScheduleFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'ResponsiblePartyFilterBlock' }
   ) | (
     { style?: string | null, showAllLabel?: string | null, field: string, id?: string | null, categoryType?: (
-      { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, helpText: string, categories: Array<(
+      { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
         { id: string, identifier: string, name: string, order: number, helpText: string, parent?: (
           { id: string }
           & { __typename?: 'Category' }
@@ -4976,7 +4976,7 @@ export type ActionListPageFiltersFragment = (
     & { __typename: 'ActionImplementationPhaseFilterBlock' | 'ActionScheduleFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'ResponsiblePartyFilterBlock' }
   ) | (
     { style?: string | null, showAllLabel?: string | null, field: string, id?: string | null, categoryType?: (
-      { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, helpText: string, categories: Array<(
+      { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
         { id: string, identifier: string, name: string, order: number, helpText: string, parent?: (
           { id: string }
           & { __typename?: 'Category' }
@@ -6790,7 +6790,7 @@ export type GetActionListPageQuery = (
       & { __typename: 'ActionImplementationPhaseFilterBlock' | 'ActionScheduleFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'ResponsiblePartyFilterBlock' }
     ) | (
       { style?: string | null, showAllLabel?: string | null, field: string, id?: string | null, categoryType?: (
-        { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, helpText: string, categories: Array<(
+        { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
           { id: string, identifier: string, name: string, order: number, helpText: string, parent?: (
             { id: string }
             & { __typename?: 'Category' }
@@ -6814,7 +6814,7 @@ export type GetActionListPageQuery = (
       & { __typename: 'ActionImplementationPhaseFilterBlock' | 'ActionScheduleFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'ResponsiblePartyFilterBlock' }
     ) | (
       { style?: string | null, showAllLabel?: string | null, field: string, id?: string | null, categoryType?: (
-        { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, helpText: string, categories: Array<(
+        { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
           { id: string, identifier: string, name: string, order: number, helpText: string, parent?: (
             { id: string }
             & { __typename?: 'Category' }
@@ -6838,7 +6838,7 @@ export type GetActionListPageQuery = (
       & { __typename: 'ActionImplementationPhaseFilterBlock' | 'ActionScheduleFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'ResponsiblePartyFilterBlock' }
     ) | (
       { style?: string | null, showAllLabel?: string | null, field: string, id?: string | null, categoryType?: (
-        { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, helpText: string, categories: Array<(
+        { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
           { id: string, identifier: string, name: string, order: number, helpText: string, parent?: (
             { id: string }
             & { __typename?: 'Category' }

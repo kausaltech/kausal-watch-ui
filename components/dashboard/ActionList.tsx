@@ -13,7 +13,7 @@ import ContentLoader from 'components/common/ContentLoader';
 import ErrorMessage from 'components/common/ErrorMessage';
 import PlanContext, { usePlan } from 'context/plan';
 import RichText from 'components/common/RichText';
-import ActionListFilters, { ActionListFilterSection } from 'components/actions/ActionListFilters';
+import ActionListFilters, { ActionListFilterSection, Filters, FilterValue } from 'components/actions/ActionListFilters';
 import ActionCardList from 'components/actions/ActionCardList';
 import ActionStatusGraphs from './ActionStatusGraphs';
 import { ActionListFilterFragment, ActionListPageFiltersFragment, ActionListPageView, DashboardActionListQuery, GetActionListPageQuery } from 'common/__generated__/graphql';
@@ -255,6 +255,7 @@ fragment ActionListFilter on StreamFieldInterface {
       identifier
       name
       hideCategoryIdentifiers
+      selectionType
       helpText
       categories {
         id
@@ -301,11 +302,7 @@ fragment ActionListPageFilters on ActionListPage {
 ${ACTION_LIST_FILTER}
 `;
 
-export type ActiveFilters = {
-  [key: string]: string | undefined,
-}
-
-type FilterChangeCallback = (id: string, value: string|undefined) => void;
+type FilterChangeCallback = (id: string, value: FilterValue) => void;
 
 export type ActionListPrimaryOrg = DashboardActionListQuery['plan']['primaryOrgs'][0];
 
@@ -314,7 +311,7 @@ type ActionListProps = {
   categoryTypes: DashboardActionListQuery['plan']['categoryTypes'],
   organizations: DashboardActionListQuery['planOrganizations'],
   availableFilters: ActionListPageFiltersFragment,
-  activeFilters: ActiveFilters,
+  activeFilters: Filters,
   onFilterChange: FilterChangeCallback,
   title: string,
   leadContent: string,
@@ -351,7 +348,9 @@ const ActionList = (props: ActionListProps) => {
     primaryOrgs } = props;
   const { t } = useTranslation('common');
   const plan = usePlan();
-  const displayDashboard = activeFilters.view === 'dashboard' || (activeFilters.view == null && defaultView === 'DASHBOARD');
+  const displayDashboard = activeFilters.view === 'dashboard' || (
+    activeFilters.view == null && defaultView === 'DASHBOARD'
+  );
   const orgs: ActionListOrganization[] = useMemo(() => {
     return constructOrgHierarchy<ActionListOrganization>(organizations).filter(orgHasActions);
   }, [organizations]);
