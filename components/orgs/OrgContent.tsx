@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import ActionStatusTable from 'components/dashboard/ActionStatusTable';
@@ -6,7 +6,7 @@ import ActionStatusTable from 'components/dashboard/ActionStatusTable';
 import styled from 'styled-components';
 import { gql, useQuery } from '@apollo/client';
 import {
-  Container, Row, Col, TabContent, TabPane, Nav, NavItem
+  Container, Row, Col, Nav, NavItem
 } from 'reactstrap';
 import PlanChip from 'components/plans/PlanChip';
 import RichText from 'components/common/RichText';
@@ -17,6 +17,7 @@ import { OrganizationLink } from 'common/links';
 import ContentLoader from 'components/common/ContentLoader';
 import ErrorMessage from 'components/common/ErrorMessage';
 import { Meta } from 'components/layout';
+import { OrganizationDetailsQuery, OrganizationDetailsQueryVariables } from 'common/__generated__/graphql';
 
 const Tab = styled.button`
   background: ${(props) => props.theme.brandDark};
@@ -119,7 +120,7 @@ const ActionTableContainer = styled.div`
 `;
 
 const GET_ORG_DETAILS = gql`
-  query OrganizationDetails($id: ID!) {
+  query OrganizationDetails($id: ID!, $planId: ID!, $clientUrl: String!) {
     organization(id: $id) {
       id
       classification {
@@ -135,134 +136,8 @@ const GET_ORG_DETAILS = gql`
       ancestors {
         id
       }
-      plansWithActionResponsibilities {
-        id
-        name
-        shortName
-        viewUrl
-        organization {
-          id
-          name
-          abbreviation
-        }
-        primaryOrgs {
-          id
-          name
-        }
-        actionImpacts {
-          id
-        }
-        image {
-          rendition(size: "128x128", crop: true) {
-            id
-            src
-            alt
-          }
-        }
-        actionImplementationPhases {
-          id
-          identifier
-          name
-          order
-        }
-        actionStatuses {
-          id
-          identifier
-          name
-          isCompleted
-        }
-        features {
-          hasActionIdentifiers
-          hasActionOfficialName
-          hasActionPrimaryOrgs
-          publicContactPersons
-        }
-        actions(responsibleOrganization: $id) {
-          id
-          identifier
-          name(hyphenated: true)
-          officialName
-          completion
-          updatedAt
-          scheduleContinuous
-          startDate
-          endDate
-          order
-          plan {
-            id
-            viewUrl
-          }
-          schedule {
-            id
-          }
-          status {
-            id
-            identifier
-            name
-          }
-          implementationPhase {
-            id
-            identifier
-            name
-            order
-          }
-          impact {
-            id
-            identifier
-          }
-          categories {
-            id
-          }
-          responsibleParties {
-            id
-            organization {
-              id
-              abbreviation
-              name
-            }
-          }
-          primaryOrg {
-            id
-            abbreviation
-            name
-            logo {
-              rendition(size: "128x128", crop: true) {
-                src
-              }
-            }
-          }
-
-          tasks {
-            id
-            state
-            dueAt
-          }
-          mergedWith {
-            id
-            identifier
-            plan {
-              id
-              shortName
-              viewUrl
-            }
-          }
-          indicators {
-            id
-            goals {
-              id
-            }
-          }
-          relatedIndicators {
-            id
-            indicatesActionProgress
-            indicator {
-              id
-              goals {
-                id
-              }
-            }
-          }
-        }
+      plansWithActionResponsibilities(exceptPlan: $planId) {
+        ...OrgContentPlan
       }
       actionCount
       contactPersonCount
@@ -280,6 +155,139 @@ const GET_ORG_DETAILS = gql`
         }
       }
     }
+    plan(id: $planId) {
+      ...OrgContentPlan
+    }
+  }
+
+  fragment OrgContentPlan on Plan {
+    id
+    name
+    shortName
+    viewUrl(clientUrl: $clientUrl)
+    organization {
+      id
+      name
+      abbreviation
+    }
+    primaryOrgs {
+      id
+      name
+    }
+    actionImpacts {
+      id
+    }
+    image {
+      rendition(size: "128x128", crop: true) {
+        id
+        src
+        alt
+      }
+    }
+    actionImplementationPhases {
+      id
+      identifier
+      name
+      order
+    }
+    actionStatuses {
+      id
+      identifier
+      name
+      isCompleted
+    }
+    features {
+      hasActionIdentifiers
+      hasActionOfficialName
+      hasActionPrimaryOrgs
+      publicContactPersons
+    }
+    actions(responsibleOrganization: $id) {
+      id
+      identifier
+      name(hyphenated: true)
+      officialName
+      completion
+      updatedAt
+      scheduleContinuous
+      startDate
+      endDate
+      order
+      plan {
+        id
+        viewUrl(clientUrl: $clientUrl)
+      }
+      schedule {
+        id
+      }
+      status {
+        id
+        identifier
+        name
+      }
+      implementationPhase {
+        id
+        identifier
+        name
+        order
+      }
+      impact {
+        id
+        identifier
+      }
+      categories {
+        id
+      }
+      responsibleParties {
+        id
+        organization {
+          id
+          abbreviation
+          name
+        }
+      }
+      primaryOrg {
+        id
+        abbreviation
+        name
+        logo {
+          rendition(size: "128x128", crop: true) {
+            src
+          }
+        }
+      }
+
+      tasks {
+        id
+        state
+        dueAt
+      }
+      mergedWith {
+        id
+        identifier
+        plan {
+          id
+          shortName
+          viewUrl(clientUrl: $clientUrl)
+        }
+      }
+      indicators {
+        id
+        goals {
+          id
+        }
+      }
+      relatedIndicators {
+        id
+        indicatesActionProgress
+        indicator {
+          id
+          goals {
+            id
+          }
+        }
+      }
+    }
   }
 `;
 
@@ -289,26 +297,27 @@ function OrgContent(props) {
   const { t } = useTranslation(['common', 'actions']);
   const [ selectedPlanIndex, setSelectedPlan ] = useState(0);
 
-  const { data, loading, error } = useQuery(GET_ORG_DETAILS, {
+  const { data, loading, error } = useQuery<
+    OrganizationDetailsQuery, OrganizationDetailsQueryVariables
+  >(GET_ORG_DETAILS, {
     variables: {
       id,
+      planId: plan.identifier,
+      clientUrl: plan.viewUrl!,
     },
   });
 
   if (loading) return <ContentLoader />;
   if (error) return <ErrorMessage message={error.message} />;
-
-  const { organization:org } = data;
-  if (!org) {
+  if (!data || !data.organization || !data.plan) {
     return <ErrorMessage statusCode={404} message={t('common:organization-not-found')} />;
   }
 
-  const unsortedPlans = data?.organization?.plansWithActionResponsibilities;
-  // Make sure host plan is first
-  const plans = [...unsortedPlans].sort(function(x,y){ return x.id == plan.id ? -1 : y.id == plan.id ? 1 : 0; });
+  const { organization: org, plan: planFromQuery } = data;
 
-  // TODO: this is a hacky way to find the viewUrl for the active plan
-  const planViewUrl = plan.allRelatedPlans.find((p) => p.id === plans[selectedPlanIndex]?.id)?.viewUrl;
+  // Make sure host plan is first
+  const allPlans = [planFromQuery, ...org.plansWithActionResponsibilities];
+  const selectedPlan = allPlans[selectedPlanIndex];
 
   return (
     <div className="mb-5">
@@ -318,14 +327,14 @@ function OrgContent(props) {
       <OrgHeader>
         <HeaderContainer>
           <Row>
-            <Col md={{ size: 6, offset: org.logo?.rendition.src ? 2 : 0 }}>
+            <Col md={{ size: 6, offset: org.logo?.rendition?.src ? 2 : 0 }}>
               <SectionTitle>
                 { t('common:organizations') }
               </SectionTitle>
             </Col>
           </Row>
           <Row>
-            { org.logo?.rendition.src &&
+            { org.logo?.rendition?.src &&
               <Col md="2">
                 <OrgLogo src={org.logo?.rendition.src} />
               </Col>
@@ -359,7 +368,7 @@ function OrgContent(props) {
         <OrgTabs>
           <Container>
             <Nav role="tablist">
-              { plans?.map((p, i) => (
+              { allPlans.map((p, i) => (
                 <NavItem key={p.id}>
                   <Tab
                     className={i === selectedPlanIndex ? "active" : ""}
@@ -372,7 +381,7 @@ function OrgContent(props) {
                     onClick={() => setSelectedPlan(i)}
                   >
                     <PlanChip
-                      planImage={p?.image?.rendition.src}
+                      planImage={p.image?.rendition?.src}
                       planShortName={p.shortName || p.name}
                       organization={p.shortName ? p.name : p.organization.abbreviation}
                       size="md"
@@ -385,19 +394,19 @@ function OrgContent(props) {
           </Container>
         </OrgTabs>
       </OrgHeader>
-      { plans.length ?
+      { allPlans.length ?
         <Container>
           <ActionTableHeader>
             <h2>
-              { t('actions:org-responsible-in-actions', { actionCount: plans[selectedPlanIndex]?.actions.length }) }
+              { t('actions:org-responsible-in-actions', { actionCount: selectedPlan.actions.length }) }
             </h2>
           </ActionTableHeader>
           <ActionTableContainer>
             <ActionStatusTable
               enableExport={false}
-              planViewUrl={planViewUrl}
-              plan={plans[selectedPlanIndex]}
-              actions={[...plans[selectedPlanIndex]?.actions]}
+              planViewUrl={selectedPlan.viewUrl}
+              plan={selectedPlan}
+              actions={selectedPlan.actions}
               orgs={[]}
             />
           </ActionTableContainer>

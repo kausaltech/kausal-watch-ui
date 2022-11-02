@@ -256,13 +256,12 @@ const ActionTableRow = React.memo(function ActionTableRow(props) {
   const hideTooltip = (evt) => {
     popperRef(null, null);
   };
-
   return (
     <StyledRow>
       { plan.primaryOrgs.length > 0 && (
         <td
           className="logo-column has-tooltip"
-          onMouseEnter={(e)=> showTooltip(e, primaryOrgTooltipContent(t, item.primaryOrg.name))}
+          onMouseEnter={(e)=> showTooltip(e, primaryOrgTooltipContent(t, item.primaryOrg?.name))}
           onMouseLeave={(e)=> hideTooltip(e)}
         >
           { item.primaryOrg && (

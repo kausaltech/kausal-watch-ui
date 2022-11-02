@@ -209,7 +209,7 @@ const ActionStatusTable = (props) => {
     );
     return (direction === 1 ? val : -val);
   };
-  const sortedActions = actions.sort(comparator)
+  const sortedActions = [...actions].sort(comparator)
     .map((action) => processAction(action, orgMap));
 
   const { showResponsibles, showIndicators } = theme.settings.dashboard;

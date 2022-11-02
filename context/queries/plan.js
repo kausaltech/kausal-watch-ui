@@ -16,6 +16,7 @@ fragment PlanContext on Plan {
   primaryLanguage
   otherLanguages
   hideActionIdentifiers
+  viewUrl(clientUrl: $clientUrl)
   primaryActionClassification {
     id
     identifier
