@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled, { withTheme } from 'styled-components';
-import { transparentize, darken, readableColor } from 'polished';
+import { transparentize, shade, readableColor } from 'polished';
 import { Tooltip } from 'reactstrap';
 import { withTranslation } from '../../common/i18n';
 
@@ -16,7 +16,7 @@ const Segment = styled.button`
   z-index: 2;
   cursor: pointer;
   overflow: hidden;
-  /* button reset styles */ 
+  /* button reset styles */
   border: none;
   margin: 0;
   padding: 0;
@@ -47,15 +47,15 @@ const Segment = styled.button`
   }
 
   &:nth-child(3n + 1) {
-    background-color: ${(props) => darken(0.15, props.theme.themeColors.white)};
+    background-color: ${(props) => shade(0.15, props.theme.themeColors.white)};
   }
 
   &:nth-child(3n + 2) {
-    background-color: ${(props) => darken(0.10, props.theme.themeColors.white)};
+    background-color: ${(props) => shade(0.10, props.theme.themeColors.white)};
   }
 
   &:nth-child(3n) {
-    background-color: ${(props) => darken(0.05, props.theme.themeColors.white)};
+    background-color: ${(props) => shade(0.05, props.theme.themeColors.white)};
   }
 
   &.active {

@@ -70,8 +70,12 @@ const OrgHeader = styled.div`
   }
 
   a {
-    color: ${(props) => props.theme.themeColors.white };
+    color: ${(props) => props.theme.themeColors.white};
     line-height: ${(props) => props.theme.lineHeightSm};
+
+    &:hover {
+      color: ${(props) => props.theme.themeColors.white};
+    }
   }
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {

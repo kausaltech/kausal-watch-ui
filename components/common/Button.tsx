@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { darken, transparentize } from 'polished';
+import { shade, transparentize } from 'polished';
 import { Button as BSButton, ButtonProps } from 'reactstrap';
 
 const StyledButton = styled(BSButton)`
@@ -26,13 +26,13 @@ const StyledButton = styled(BSButton)`
     border-color: ${(props) => props.theme.brandDark};
 
     &:hover {
-      background-color: ${(props) => darken(0.05, props.theme.brandDark)};
-      border-color: ${(props) => darken(0.05, props.theme.brandDark)};
+      background-color: ${(props) => shade(0.05, props.theme.brandDark)};
+      border-color: ${(props) => shade(0.05, props.theme.brandDark)};
     }
 
     &:not(:disabled):not(.disabled):active {
-      background-color: ${(props) => darken(0.075, props.theme.brandDark)};
-      border-color: ${(props) => darken(0.075, props.theme.brandDark)};
+      background-color: ${(props) => shade(0.075, props.theme.brandDark)};
+      border-color: ${(props) => shade(0.075, props.theme.brandDark)};
     }
   }
 
@@ -41,13 +41,13 @@ const StyledButton = styled(BSButton)`
     border-color: ${(props) => props.theme.brandLight};
 
     &:hover {
-      background-color: ${(props) => darken(0.05, props.theme.brandLight)};
-      border-color: ${(props) => darken(0.1, props.theme.brandLight)};
+      background-color: ${(props) => shade(0.05, props.theme.brandLight)};
+      border-color: ${(props) => shade(0.1, props.theme.brandLight)};
     }
 
     &:not(:disabled):not(.disabled):active {
-      background-color: ${(props) => darken(0.1, props.theme.brandLight)};
-      border-color: ${(props) => darken(0.1, props.theme.brandLight)};
+      background-color: ${(props) => shade(0.1, props.theme.brandLight)};
+      border-color: ${(props) => shade(0.1, props.theme.brandLight)};
     }
   }
 

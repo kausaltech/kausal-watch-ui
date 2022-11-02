@@ -41,10 +41,8 @@ const CategoryListSection = styled.div`
   }
 `;
 
-const SectionHeader = styled.h2`
-  text-align: center;
-  color: ${(props) => props.theme.headingsColor};
-  margin-bottom: ${(props) => props.theme.spaces.s100};
+const CardLead = styled.p`
+  margin-bottom: ${(props) => props.theme.spaces.s050};
 `;
 
 const CardHeader = styled.h3`
@@ -63,7 +61,7 @@ const CategoryListBlock = (props) => {
   return (
     <CategoryListSection bg={theme.themeColors.dark}>
       <Container>
-        <Row tag="ul">
+        <Row tag="ul" className="justify-content-center">
           { cards?.map((card) => (
             <Col
               tag="li"
@@ -71,7 +69,7 @@ const CategoryListBlock = (props) => {
               sm="6"
               lg="4"
               key={card.category.id}
-              className="mb-5 d-flex align-items-stretch"
+              className="mb-2 d-flex align-items-stretch"
               style={{ transition: 'all 0.5s ease' }}
             >
               <Link href={`/actions?cat-${card.category.type.identifier}=${card.category.id}`}>
@@ -83,7 +81,7 @@ const CategoryListBlock = (props) => {
                       <CardHeader className="card-title">
                         { card.heading }
                       </CardHeader>
-                      <p>{card.lead}</p>
+                      <CardLead>{card.lead}</CardLead>
                     </div>
                   </Card>
                 </a>

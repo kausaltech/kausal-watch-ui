@@ -7,7 +7,7 @@ import {
   CardFooter,
 } from 'reactstrap';
 import styled from 'styled-components';
-
+import { readableColor, shade } from 'polished';
 import IndicatorVisualisation from 'components/indicators/IndicatorVisualisation';
 import { withTranslation } from '../../common/i18n';
 import { ActionLink, IndicatorLink } from '../../common/links';
@@ -23,9 +23,24 @@ const Card = styled(BaseCard)`
 `;
 
 const Badge = styled(BaseBadge)`
-  border-radius: ${(props) => props.theme.btnBorderRadius};
-  color: ${(props) => props.theme.themeColors.white};
-  background-color: ${(props) => props.theme.brandDark};
+  background-color: ${(props) => props.theme.brandLight};
+  color: ${
+    (props) => readableColor(props.theme.brandLight, props.theme.themeColors.black, props.theme.themeColors.white)
+  };
+  border-radius: ${(props) => props.theme.badgeBorderRadius};
+  padding: ${(props) => props.theme.badgePaddingY} ${(props) => props.theme.badgePaddingX};
+  font-weight: ${(props) => props.theme.badgeFontWeight};
+  max-width: 100%;
+  word-break: break-all;
+  word-break: break-word;
+  hyphens: manual;
+  white-space: normal;
+  text-align: left;
+
+  &:hover {
+    background-color:  ${(props) => shade(0.01, props.theme.brandLight)} !important;
+  }
+
 `;
 
 function ActionIndicator(props) {

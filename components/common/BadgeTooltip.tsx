@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Badge, Tooltip } from 'reactstrap';
 import SVG from 'react-inlinesvg';
 import styled from 'styled-components';
-import { darken, readableColor } from 'polished';
+import { shade, readableColor } from 'polished';
 
 const StyledBadge = styled(({isLink, ...rest}) => <Badge {...rest}/>)<{color: string, isLink: boolean}>`
   background-color: ${(props) => props.theme[props.color]} !important;
@@ -20,7 +20,7 @@ const StyledBadge = styled(({isLink, ...rest}) => <Badge {...rest}/>)<{color: st
   text-align: left;
 
   &:hover {
-    background-color:  ${(props) => props.isLink && darken(0.05, props.theme[props.color])} !important;
+    background-color:  ${(props) => props.isLink && shade(0.05, props.theme[props.color])} !important;
   }
 
   &.lg {
@@ -45,7 +45,7 @@ const IconBadge = styled.div<{color: string, isLink: boolean}>`
   border-radius: ${(props) => props.theme.badgeBorderRadius};
 
   &:hover {
-    background-color: ${(props) => props.isLink && darken(0.05, props.theme[props.color])} !important;
+    background-color: ${(props) => props.isLink && shade(0.05, props.theme[props.color])} !important;
   }
 `;
 

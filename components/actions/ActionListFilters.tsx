@@ -27,7 +27,7 @@ import { createFilter } from 'react-select';
 
 
 const FiltersList = styled.div`
-  margin: ${(props) => props.theme.spaces.s150} 0;
+  margin: 0 0 ${(props) => props.theme.spaces.s150} 0;
   padding: ${(props) => props.theme.spaces.s100} 0;
   font-size: ${(props) => props.theme.fontSizeLg};
   line-height: ${(props) => props.theme.lineHeightBase};
@@ -50,6 +50,14 @@ const FiltersList = styled.div`
     margin-left: .75em;
     font-size: ${(props) => props.theme.fontSizeMd};
   }
+`;
+
+const FilterSection = styled(Row)`
+  margin-bottom: ${(props) => props.theme.spaces.s200};
+`;
+
+const FilterSectionDivider = styled.div`
+  border-bottom: 1px solid #333;
 `;
 
 const StyledBadge = styled(Badge)`
@@ -79,8 +87,7 @@ const MainCategoryLabel = styled.p`
 
 const MainCategory = styled.div`
   padding: 0 0 ${(props) => props.theme.spaces.s200} 0;
-  margin: 0 0 ${(props) => props.theme.spaces.s200} 0;
-  border-bottom: 1px solid black;
+  margin: 0;
 `;
 
 function sortDepthFirst<Type>(
@@ -657,7 +664,7 @@ function ActionListFilters(props: ActionListFiltersProps) {
         aria-label={t('form-action-filters')}
       >
         {filterSections.map(section => (
-          <Row key={section.id}>
+          <FilterSection key={section.id}>
             {section.filters.map((filter) => (
               <FilterCol
                 key={filter.id}
@@ -671,7 +678,12 @@ function ActionListFilters(props: ActionListFiltersProps) {
                 <Button type="submit" color="primary" className="mb-3" block>{ t('search') }</Button>
               </Col>
             )}
-          </Row>
+            {section.id == 'primary' &&
+              <Col xs={12}>
+                <FilterSectionDivider />
+              </Col>
+            }
+          </FilterSection>
         ))}
         <Row>
           <Col>
