@@ -12,13 +12,15 @@ import * as Sentry from "@sentry/nextjs";
 
 const postHeight = (height: number) => {
   window.parent.postMessage({source: 'kausal-watch-embed', height }, '*');
+  // TODO : every embed needs to have an unique id
+  // so the message gets routed to the correct url
 };
 
 const UnknownWrapper = styled.div`
   padding: ${(props) => props.theme.spaces.s400};
 `;
 
-const EmbedContainer = styled(Container)`
+const EmbedContainer = styled(({embedType, ...props}) => <Container {...props}/>)`
   padding: ${(props) => props.theme.spaces.s150};
 `;
 
@@ -44,6 +46,10 @@ const ActionEmbed = dynamic(() => import('components/embed/ActionEmbed'), {
   //suspense: true,
 });
 
+const IndicatorEmbed = dynamic(() => import('components/embed/IndicatorEmbed'), {
+  //suspense: true,
+});
+
 const validateUrl = (slug: string[] | undefined) : InvalidEmbedAddressError | null => {
   if (slug == null) {
     return new InvalidEmbedAddressError('Invalid null embed path');
@@ -56,15 +62,15 @@ const validateUrl = (slug: string[] | undefined) : InvalidEmbedAddressError | nu
 
 const EmbeddablePage = () => {
   const wrapperElement = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
+  const postWrapperHeight = (e) => {
     const el = wrapperElement.current;
-    el && postHeight(el.offsetHeight);
-    window.addEventListener('resize', (event) => {
-      const el = wrapperElement.current;
-      el && postHeight(el.offsetHeight);
-    });
-  });
+    if (el !== null) postHeight(el.offsetHeight);
+  }
+  useEffect(() => {
+    postWrapperHeight(null);
+    window.addEventListener('resize', (e) => postWrapperHeight(e));
+    document.addEventListener('indicator_graph_ready', (e) => postWrapperHeight(e));
+  }), [];
   const { query } = useRouter();
   const slug = query.slug as string[];
   let error = validateUrl(slug);
@@ -81,6 +87,9 @@ const EmbeddablePage = () => {
         break;
       case 'actions':
         component = <ActionEmbed path={slug.slice(1)} />;
+        break;
+      case 'indicators':
+        component = <IndicatorEmbed path={slug.slice(1)} />;
         break;
       default:
         component = <UnknownEmbedPlaceholder />;
