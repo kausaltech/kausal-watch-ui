@@ -112,7 +112,7 @@ const CardContainer = (props) => {
 }
 
 function ActionCardList({ t, actions, plan, displayHeader }) {
-  // Components which use the EmbedContext support embeding
+  // Components which use the EmbedContext support embedding
   const embed = useContext(EmbedContext);
 
   return (

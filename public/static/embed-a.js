@@ -19,6 +19,7 @@
         iframe.width = '100%';
         iframe.height = INITIAL_HEIGHT;
         iframe.style.border = 'none';
+        iframe.style.overflow = 'hidden';
         iframe.src = url;
         return iframe;
     };

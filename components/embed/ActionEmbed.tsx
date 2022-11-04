@@ -5,6 +5,7 @@ import images from 'common/images';
 import { InvalidEmbedAddressError } from 'context/embed';
 import ActionHighlightCard from 'components/actions/ActionHighlightCard';
 import { GetEmbedActionQuery } from 'common/__generated__/graphql';
+import styled from 'styled-components';
 
 const GET_ACTION = gql`
   query GetEmbedAction($plan: ID!, $identifier: ID!) {
@@ -57,6 +58,13 @@ interface ActionEmbedPropsType {
   path: string[]
 }
 
+const ActionCardWrapper = styled.div`
+  max-width: 500px;
+  @media (max-width: ${(props) => props.theme.breakpointMd}) {
+    max-width: 100%;
+  }
+`;
+
 const ActionEmbed = ({path} : ActionEmbedPropsType) => {
   const plan = usePlan();
   if (path.length < 1) {
@@ -72,12 +80,15 @@ const ActionEmbed = ({path} : ActionEmbedPropsType) => {
   if (error || data == null || data.action == null) {
     throw new InvalidEmbedAddressError('Could not retrieve action data');
   }
-  return <ActionHighlightCard
-    action={data.action}
-    imageUrl={data.action?.image?.rendition?.src || undefined}
-    hideIdentifier={plan.hideActionIdentifiers}
-  />;
-
+  return (
+    <ActionCardWrapper>
+      <ActionHighlightCard
+        action={data.action}
+        imageUrl={data.action?.image?.rendition?.src || undefined}
+        hideIdentifier={plan.hideActionIdentifiers}
+      />
+    </ActionCardWrapper>
+  );
 }
 
 export default ActionEmbed;

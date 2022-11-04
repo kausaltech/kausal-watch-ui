@@ -1,7 +1,8 @@
 (() => {
   /* IMPORTANT: remember to manually run the typescript compilation
   with "yarn build-embed-script" when you want to release any changes
-  to this script.  */
+  to this script -- or use yarn watch-embed-script to automatically
+  compile upon changes while developing.  */
 
   const KAUSAL_PRODUCT = 'Watch';
   const KAUSAL_EMBED_NAME = `Kausal ${KAUSAL_PRODUCT} Embed`;
@@ -55,6 +56,7 @@
     iframe.width = '100%';
     iframe.height = INITIAL_HEIGHT;
     iframe.style.border = 'none';
+    iframe.style.overflow = 'hidden';
     iframe.src = url;
     return iframe;
   }
@@ -77,7 +79,6 @@
         staticPathIndex + 2 !== pathElements.length ||
         pathElements[pathElements.length - 1] !== SCRIPT_NAME
     ) {
-      // TODO: remove check and/or check in build
       throw new Error(`This script expects to be served from a ${STATIC_PATH_NAME}/${SCRIPT_NAME} path.`);
     }
     const url = new URL(scriptUrl.origin);
