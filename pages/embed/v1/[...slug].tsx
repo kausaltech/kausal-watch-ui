@@ -4,14 +4,14 @@ import Icon from '../../../components/common/Icon';
 import { Container } from 'reactstrap';
 import styled from 'styled-components';
 import { useTheme } from 'common/theme';
+import { debounce } from 'lodash';
 import EmbedContext, { InvalidEmbedAddressError } from '../../../context/embed';
-import ErrorBoundary from 'components/common/ErrorBoundary';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import * as Sentry from "@sentry/nextjs";
 
-const postHeight = (height: number, embId: number) => {
-  window.parent.postMessage({source: embId, height }, '*');
+const postHeight = (height: number, embId: string) => {
+  window.parent.postMessage({source: embId, height}, '*');
 };
 
 const UnknownWrapper = styled.div`
@@ -62,15 +62,16 @@ const EmbeddablePage = () => {
   const wrapperElement = useRef<HTMLDivElement>(null);
   const { query } = useRouter();
   const embId = (Array.isArray(query.embId) ? query.embId[0] : query.embId) ?? 'kausal-watch-embed';
-  const postWrapperHeight = useCallback((e) => {
+  const postWrapperHeight = () => {
     const el = wrapperElement.current;
     if (el !== null) postHeight(el.offsetHeight, embId);
-  }, [embId])
+  };
+  const debouncedPostWrapperHeight = useRef(debounce(postWrapperHeight, 200));
   useEffect(() => {
-    postWrapperHeight(null);
-    window.addEventListener('resize', (e) => postWrapperHeight(e));
-    document.addEventListener('indicator_graph_ready', (e) => postWrapperHeight(e));
-  }), [];
+    postWrapperHeight();
+    document.addEventListener('indicator_graph_ready', postWrapperHeight);
+    window.addEventListener('resize', debouncedPostWrapperHeight.current);
+  }), [embId, wrapperElement];
   const slug = query.slug as string[];
   let error = validateUrl(slug);
   let component : JSX.Element;
