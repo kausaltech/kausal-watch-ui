@@ -10,6 +10,8 @@ import { useTranslation } from 'common/i18n';
 import { captureMessage } from 'common/sentry';
 import { capitalizeFirstLetter } from 'common/utils';
 import PlanContext from 'context/plan';
+import EmbedContext from 'context/embed';
+import { getIndicatorLinkProps } from '../../common/links';
 import ContentLoader from 'components/common/ContentLoader';
 import IndicatorComparisonSelect from 'components/indicators/IndicatorComparisonSelect';
 import IndicatorNormalizationSelect from 'components/indicators/IndicatorNormalizationSelect';
@@ -472,6 +474,7 @@ function IndicatorVisualisation({ indicatorId }) {
   }
 
   const plan = useContext(PlanContext);
+  const embed = useContext(EmbedContext);
   const enableIndicatorComparison = plan.features.enableIndicatorComparison === true;
   const { t, i18n } = useTranslation();
   const [compareTo, setCompareTo] = useState(undefined);
@@ -605,9 +608,14 @@ function IndicatorVisualisation({ indicatorId }) {
     .map((common) => common.organization)
     .filter((org) => org.id !== indicator.organization.id);
 
+  const title = (embed.active ?
+    <a href={getIndicatorLinkProps(indicator.id).href} target="_blank">{plotTitle}</a>
+    : plotTitle
+  );
+
   return (
     <div>
-      <IndicatorVizHeader className="mb-2">{plotTitle}</IndicatorVizHeader>
+      <IndicatorVizHeader className="mb-2">{title}</IndicatorVizHeader>
       <span className="visually-hidden">{ t('indicator-graph-not-accessible') }</span>
       { enableIndicatorComparison && comparisonOrgs && comparisonOrgs.length > 0 && (
         <IndicatorComparisonSelect

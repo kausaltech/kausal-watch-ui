@@ -81,7 +81,9 @@
     "deploy-storybook": "storybook-to-ghpages",
     "lint": "next lint",
     "test": "jest",
-    "graphql-codegen": "graphql-codegen --config codegen.ts"
+    "graphql-codegen": "graphql-codegen --config codegen.ts",
+    "build-embed-script": "tsc --project embed",
+    "watch-embed-script": "tsc --watch --project embed"
   },
   "devDependencies": {
     "@babel/core": "^7.17.10",
