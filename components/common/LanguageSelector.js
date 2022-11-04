@@ -70,6 +70,8 @@ const StyledDropdownMenu = styled(DropdownMenu)`
   right: 0;
 `;
 
+// For now, we only show language names without variants (e.g., "English" instead of "English (Australia)" as it's
+// arguably unlikely that a site uses two variants of the same base language.
 const languageNames = {
   fi: 'Suomi',
   en: 'English',
@@ -87,19 +89,21 @@ const LanguageSelector = (props) => {
     ev.preventDefault();
     window.location.href = ev.target.href;
   };
+  // Strip language variant (if any)
+  const languageCode = router.locale.split('-')[0];
 
   return (
       <Selector nav inNavbar mobile={mobile.toString()} className={mobile && 'd-md-none'}>
         <DropdownToggle nav>
           <Icon name="globe" width="1.25rem" height="1.25rem" />
-          <CurrentLanguage mobile={mobile.toString()}>{ router.locale }</CurrentLanguage>
+          <CurrentLanguage mobile={mobile.toString()}>{ languageCode }</CurrentLanguage>
         </DropdownToggle>
         <StyledDropdownMenu end>
           { locales.map((locale) => (
             <DropdownItem key={locale} tag="div">
                 <Link locale={locale} href='/'>
                   <a onClick={handleLocaleChange}>
-                    {languageNames[locale]}
+                    {languageNames[locale.split('-')[0]]}
                   </a>
                 </Link>
               </DropdownItem>
