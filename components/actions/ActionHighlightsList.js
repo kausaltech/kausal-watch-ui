@@ -136,15 +136,17 @@ function ActionCardList({ t, actions, plan, displayHeader }) {
           />
         </CardContainer>
       ))}
-      <Col xs="12" className="mt-5 mb-5">
-        <ActionListLink>
-          <Button outline color="primary" tag="a">
+      {!embed.active &&
+        <Col xs="12" className="mt-5 mb-5">
+          <ActionListLink>
+            <Button outline color="primary" tag="a">
             { t('see-all-actions', getActionTermContext(plan)) }
             {' '}
             <Icon name="arrowRight" color="black" />
           </Button>
         </ActionListLink>
       </Col>
+      }
     </Row>
   );
 }
@@ -162,7 +164,6 @@ function ActionHighlightsList(props) {
   const {
     t, plan, count, displayHeader
   } = props;
-  console.log(count);
   const queryParams = {
     plan: plan.identifier,
     first: count ?? 6,

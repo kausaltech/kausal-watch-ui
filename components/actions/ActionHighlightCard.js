@@ -7,6 +7,7 @@ import {
 import styled from 'styled-components';
 import { transparentize } from 'polished';
 import PlanContext from 'context/plan';
+import EmbedContext from 'context/embed';
 import { cleanActionStatus } from 'common/preprocess';
 import { ActionLink } from 'common/links';
 import Icon from 'components/common/Icon';
@@ -104,12 +105,13 @@ const ActionNumber = styled.div`
 function ActionHighlightCard(props) {
   const { action, imageUrl, hideIdentifier } = props;
   const plan = useContext(PlanContext);
+  const embed = useContext(EmbedContext);
   const actionStatus = cleanActionStatus(action, plan.actionStatuses);
   let actionName = action.name;
   if (actionName.length > 120) actionName = `${action.name.substring(0, 120)}…`;
   return (
     <ActionLink action={action} prefetch={false}>
-      <CardLink href>
+      <CardLink href target={embed.active ? '_blank' : undefined}>
         <StyledCard>
           <ImgArea>
             { imageUrl && <ImgBg background={imageUrl} /> }
