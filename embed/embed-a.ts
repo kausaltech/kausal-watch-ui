@@ -23,11 +23,14 @@
   this script as path elements */
   interface EmbedSpecification {
     type: string;
-    /* This is the major API version supported by the embedded view, and
-    is part of the view url. The API consists of the subpath and query
+    /* The major API version supported by the embedded view, and is
+    part of the view url. The API consists of the subpath and query
     parameters supported by the view.
      */
     version: string;
+    /* This is used to differentiate between multiple embeds
+       on the same page.  */
+    identifier: string;
   };
 
   /* These parameters are set from data attributes and are handled by
@@ -56,11 +59,11 @@
     return iframe;
   }
 
-  const addMessageListenerToWindow = (iframe: HTMLIFrameElement) => {
+  const addMessageListenerToWindow = (iframe: HTMLIFrameElement, embId: string) => {
     window.addEventListener('message', (event) => {
-      if (event.data?.source == 'kausal-watch-embed' &&
+      if (event.data?.source == embId &&
         event.data?.height != null) {
-          iframe.height = event.data.height;
+          iframe.height = event.data.height + 1;
       }
     });
   }
@@ -85,11 +88,12 @@
     Object.entries(params).forEach(([k, v]) => {
       url.searchParams.append(k, v);
     });
+    url.searchParams.set('embId', specs.identifier);
     return url;
   }
 
   const validateSpecification = (
-    specs: {type: string|undefined, version: string|undefined},
+    specs: {type: string|undefined, version: string|undefined, identifier: string},
     dataset: DOMStringMap
   ) : EmbedSpecification => {
     const { type, version } = specs;
@@ -105,15 +109,31 @@
     if (!version.match(ALLOWED_VERSION_REGEX)) {
       throw new Error(`Unallowed embed version ${version}`);
     }
-    return { type, version };
+    return { type, version, identifier: specs.identifier };
+  }
+
+  const getUniqueDOMPosition = (el: HTMLScriptElement) => {
+    /* Since there can be many embeds on a single page, a single embed
+    must react only to height messages from it's own embedded view, not
+    the others.
+     */
+    const elements = document.getElementsByClassName(el.className);
+    for (let i = 0; i < elements.length; i++) {
+      if (elements[i] === el) {
+        return `${el.className}-${i.toString()}`;
+      }
+    }
+    return el.className;
   }
 
   const getEmbedSpecification = (el: HTMLScriptElement): [EmbedSpecification, EmbedParameters] => {
     const type = el.dataset.type;
     const version = el.dataset.version;
+    const identifier = getUniqueDOMPosition(el);
     const specs = {
       type,
       version,
+      identifier
     };
     const validSpecs = validateSpecification(specs, el.dataset);
     return [validSpecs, getEmbedParameters(validSpecs, el.dataset)];
@@ -137,7 +157,7 @@
     const [specs, parameters] = getEmbedSpecification(scriptElement);
     const embedUrl = getEmbedUrl(scriptElement, specs, parameters);
     const iframe = createIFrame(embedUrl.href);
-    addMessageListenerToWindow(iframe);
+    addMessageListenerToWindow(iframe, specs.identifier);
     scriptElement.after(iframe);
   } catch (exception: any) {
     warn(exception.toString());

@@ -22,12 +22,12 @@
         iframe.src = url;
         return iframe;
     };
-    var addMessageListenerToWindow = function (iframe) {
+    var addMessageListenerToWindow = function (iframe, embId) {
         window.addEventListener('message', function (event) {
             var _a, _b;
-            if (((_a = event.data) === null || _a === void 0 ? void 0 : _a.source) == 'kausal-watch-embed' &&
+            if (((_a = event.data) === null || _a === void 0 ? void 0 : _a.source) == embId &&
                 ((_b = event.data) === null || _b === void 0 ? void 0 : _b.height) != null) {
-                iframe.height = event.data.height;
+                iframe.height = event.data.height + 1;
             }
         });
     };
@@ -50,6 +50,7 @@
             var k = _a[0], v = _a[1];
             url.searchParams.append(k, v);
         });
+        url.searchParams.set('embId', specs.identifier);
         return url;
     };
     var validateSpecification = function (specs, dataset) {
@@ -66,14 +67,25 @@
         if (!version.match(ALLOWED_VERSION_REGEX)) {
             throw new Error("Unallowed embed version ".concat(version));
         }
-        return { type: type, version: version };
+        return { type: type, version: version, identifier: specs.identifier };
+    };
+    var getUniqueDOMPosition = function (el) {
+        var elements = document.getElementsByClassName(el.className);
+        for (var i = 0; i < elements.length; i++) {
+            if (elements[i] === el) {
+                return "".concat(el.className, "-").concat(i.toString());
+            }
+        }
+        return el.className;
     };
     var getEmbedSpecification = function (el) {
         var type = el.dataset.type;
         var version = el.dataset.version;
+        var identifier = getUniqueDOMPosition(el);
         var specs = {
             type: type,
             version: version,
+            identifier: identifier
         };
         var validSpecs = validateSpecification(specs, el.dataset);
         return [validSpecs, getEmbedParameters(validSpecs, el.dataset)];
@@ -95,7 +107,7 @@
         var _a = getEmbedSpecification(scriptElement), specs = _a[0], parameters = _a[1];
         var embedUrl = getEmbedUrl(scriptElement, specs, parameters);
         var iframe = createIFrame(embedUrl.href);
-        addMessageListenerToWindow(iframe);
+        addMessageListenerToWindow(iframe, specs.identifier);
         scriptElement.after(iframe);
     }
     catch (exception) {

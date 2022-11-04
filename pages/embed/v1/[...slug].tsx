@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, Suspense } from 'react';
+import React, { useEffect, useRef, useState, Suspense, useCallback } from 'react';
 import Layout from 'components/layout';
 import Icon from '../../../components/common/Icon';
 import { Container } from 'reactstrap';
@@ -10,10 +10,8 @@ import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import * as Sentry from "@sentry/nextjs";
 
-const postHeight = (height: number) => {
-  window.parent.postMessage({source: 'kausal-watch-embed', height }, '*');
-  // TODO : every embed needs to have an unique id
-  // so the message gets routed to the correct url
+const postHeight = (height: number, embId: number) => {
+  window.parent.postMessage({source: embId, height }, '*');
 };
 
 const UnknownWrapper = styled.div`
@@ -62,16 +60,17 @@ const validateUrl = (slug: string[] | undefined) : InvalidEmbedAddressError | nu
 
 const EmbeddablePage = () => {
   const wrapperElement = useRef<HTMLDivElement>(null);
-  const postWrapperHeight = (e) => {
+  const { query } = useRouter();
+  const embId = (Array.isArray(query.embId) ? query.embId[0] : query.embId) ?? 'kausal-watch-embed';
+  const postWrapperHeight = useCallback((e) => {
     const el = wrapperElement.current;
-    if (el !== null) postHeight(el.offsetHeight);
-  }
+    if (el !== null) postHeight(el.offsetHeight, embId);
+  }, [embId])
   useEffect(() => {
     postWrapperHeight(null);
     window.addEventListener('resize', (e) => postWrapperHeight(e));
     document.addEventListener('indicator_graph_ready', (e) => postWrapperHeight(e));
   }), [];
-  const { query } = useRouter();
   const slug = query.slug as string[];
   let error = validateUrl(slug);
   let component : JSX.Element;
