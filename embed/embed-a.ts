@@ -83,7 +83,10 @@
     const url = new URL(scriptUrl.origin);
     url.pathname = pathElements
       .slice(0, staticPathIndex)
-      .concat([KAUSAL_EMBED_VIEW_PATH, `${specs.version}`, specs.type])
+      .concat([
+        KAUSAL_EMBED_VIEW_PATH,
+        `${specs.version}`,
+        specs.type])
       .join('/');
     Object.entries(params).forEach(([k, v]) => {
       url.searchParams.append(k, v);

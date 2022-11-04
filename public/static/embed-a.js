@@ -44,7 +44,11 @@
         var url = new URL(scriptUrl.origin);
         url.pathname = pathElements
             .slice(0, staticPathIndex)
-            .concat([KAUSAL_EMBED_VIEW_PATH, "".concat(specs.version), specs.type])
+            .concat([
+            KAUSAL_EMBED_VIEW_PATH,
+            "".concat(specs.version),
+            specs.type
+        ])
             .join('/');
         Object.entries(params).forEach(function (_a) {
             var k = _a[0], v = _a[1];
