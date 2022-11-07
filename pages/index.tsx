@@ -19,11 +19,7 @@ query GetHomePage($plan: ID!, $path: String!) {
     __typename
     id
     slug
-    title
     ... on PlanRootPage {
-      heroContent
-      actionShortDescription
-      indicatorShortDescription
       body {
         ...StreamFieldFragment
       }
