@@ -20,9 +20,16 @@ const CategoryListSection = styled.div`
     };
 
   h2 {
+    font-size: ${(props) => props.theme.fontSizeLg};
     color: ${
     (props) => readableColor(props.theme.neutralLight, props.theme.headingsColor, props.theme.themeColors.white)
     };
+  }
+
+  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    h2 {
+      font-size: ${(props) => props.theme.fontSizeXl};
+    }
   }
 
   a.card-wrapper {
@@ -45,9 +52,19 @@ const CategoryListSection = styled.div`
   }
 
   .lead-text {
+    max-width: 720px;
+    margin: 0 auto;
     text-align: center;
-    font-size: ${(props) => props.theme.fontSizeMd};
+    font-size: ${(props) => props.theme.fontSizeBase};
+    line-height: ${(props) => props.theme.lineHeightMd};
     margin-bottom: ${(props) => props.theme.spaces.s300};
+  }
+
+  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    .lead-text {
+      font-size: ${(props) => props.theme.fontSizeMd};
+      line-height: ${(props) => props.theme.lineHeightBase};
+    }
   }
 `;
 

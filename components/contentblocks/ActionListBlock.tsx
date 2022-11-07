@@ -25,14 +25,20 @@ const ActionListSection = styled.div`
   padding: ${(props) => props.theme.spaces.s400} 0};
 `;
 
-const SectionHeader = styled.h2`
+const SectionHeader = styled.h2` 
   text-align: center;
   padding: ${(props) => props.theme.spaces.s100};
   border-radius: ${(props) => props.theme.cardBorderRadius};
   background-color: ${(props) => props.theme.themeColors.white};
   color: ${(props) => props.theme.headingsColor};
   margin-bottom: ${(props) => props.theme.spaces.s300};
+  font-size: ${(props) => props.theme.fontSizeLg};
+
+  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    font-size: ${(props) => props.theme.fontSizeXl};
+  }
 `;
+
 
 const ActionListBlock = (props) => {
   const { categoryId, color } = props;

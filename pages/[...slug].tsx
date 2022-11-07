@@ -199,7 +199,7 @@ const Content = ({ page }:{ page: GeneralPlanPage}) => {
         shareImageUrl={imageUrl}
         description={`${page.searchDescription || title}`}
       />
-      <PageHeaderBlock page={page} color={pageSectionColor} />
+      <PageHeaderBlock page={page} color={categoryColor || undefined} />
       <div className="content-area">
         {page.leadContent && (
           <Container className="my-5">

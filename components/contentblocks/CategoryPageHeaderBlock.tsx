@@ -40,7 +40,7 @@ const CategoryPageHeader = styled.div<{bg: string, image: string, imageAlign: st
   width: 100%;
   top: 0;
   left: 0;
-  background-color: ${(props) => props.bg};
+  background-color: ${(props) => props.bg ? props.bg : props.theme.brandDark};
   padding: ${(props) => props.theme.spaces.s200} ${(props) => props.theme.spaces.s050};
   background-image: url(${(props) => props.image});
   background-position: ${(props) => props.imageAlign};
