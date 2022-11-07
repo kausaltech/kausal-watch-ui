@@ -12,23 +12,24 @@ import {
 import Icon from './Icon';
 
 const Selector = styled(UncontrolledDropdown)`
-  margin-left: ${(props) => props.theme.spaces.s050};
+  margin-left: ${(props) => props.theme.spaces.s100};
   padding: 0;
-  border-bottom: 3px solid ${(props) => props.theme.brandNavBackground};
+  border-bottom: 3px solid transparent;
   text-decoration: none;
 
   &:hover {
-    border-bottom: 3px solid ${(props) => props.theme.brandNavColor};
-    background-color:  ${(props) => props.theme.brandNavBackground};
+    background-color:  transparent;
     text-decoration: none;
   }
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
-    &:hover {
+  span {
+    margin-left: ${(props) => props.theme.spaces.s025};
+  }
 
-      svg.icon {
-      fill: ${(props) => props.mobile === 'true' ? props.theme.themeColors.dark : props.theme.brandNavColor} !important;
-      }
+  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+
+    &:hover {
+      border-bottom: 3px solid ${(props) => props.theme.brandNavColor};
 
       span {
         text-decoration: none;
@@ -41,17 +42,21 @@ const StyledDropdownToggle = styled(DropdownToggle)`
   height: 100%;
   display: flex;
   align-items: center;
-  margin: 0 0 ${(props) => props.theme.spaces.s050} ${(props) => props.theme.spaces.s100};
+  margin: 0;
   padding: 0 !important;
   text-decoration: none;
+
+  svg.icon {
+    fill: ${(props) => props.theme.themeColors.dark} !important;
+  }
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     align-self: center;
     margin: 0;
-  }
 
-  svg.icon {
-    fill: ${(props) => props.mobile === 'true' ? props.theme.themeColors.dark : props.theme.brandNavColor} !important;
+    svg.icon {
+      fill: ${(props) => props.theme.brandNavColor} !important;
+    }
   }
 `;
 
