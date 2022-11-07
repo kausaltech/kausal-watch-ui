@@ -408,7 +408,6 @@ export type ActionListPage = PageInterface & {
   ancestors: Array<PageInterface>;
   children: Array<PageInterface>;
   contentType: Scalars['String'];
-  defaultView: ActionListPageView;
   depth?: Maybe<Scalars['Int']>;
   descendants: Array<PageInterface>;
   detailsAside?: Maybe<Array<ActionAsideContentBlock>>;
@@ -502,11 +501,6 @@ export type ActionListPageSiblingsArgs = {
   order?: InputMaybe<Scalars['String']>;
   searchQuery?: InputMaybe<Scalars['String']>;
 };
-
-export enum ActionListPageView {
-  Cards = 'CARDS',
-  Dashboard = 'DASHBOARD'
-}
 
 export type ActionMainContentBlock = ActionContentAttributeTypeBlock | ActionContentCategoryTypeBlock | ActionDescriptionBlock | ActionLeadParagraphBlock | ActionLinksBlock | ActionMergedActionsBlock | ActionOfficialNameBlock | ActionRelatedActionsBlock | ActionRelatedIndicatorsBlock | ActionTasksBlock;
 
@@ -3531,7 +3525,7 @@ export type GetActionDetailsQuery = (
         & { __typename?: 'Plan' }
       ) }
       & { __typename?: 'Action' }
-    )>, categories: Array<(
+    )>, categories?: Array<(
       { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, iconImage?: (
         { rendition?: (
           { src: string }
@@ -4674,7 +4668,7 @@ export type GetActionListForBlockQuery = (
       & { __typename?: 'Plan' }
     ) }
     & { __typename?: 'Action' }
-  )> | null }
+  ) | null> | null }
   & { __typename?: 'Query' }
 );
 
@@ -4988,6 +4982,132 @@ export type ActionListPageFiltersFragment = (
     & { __typename: 'CategoryTypeFilterBlock' }
   )> | null }
   & { __typename?: 'ActionListPage' }
+);
+
+export type ImpactGroupListQueryVariables = Exact<{
+  plan: Scalars['ID'];
+}>;
+
+
+export type ImpactGroupListQuery = (
+  { plan?: (
+    { id: string, impactGroups: Array<(
+      { id: string, identifier: string, name: string, weight?: number | null, color?: string | null, actions: Array<(
+        { action: (
+          { id: string, identifier: string, name: string, mergedWith?: (
+            { id: string }
+            & { __typename?: 'Action' }
+          ) | null, status?: (
+            { id: string, identifier: string, name: string }
+            & { __typename?: 'ActionStatus' }
+          ) | null, implementationPhase?: (
+            { id: string, identifier: string, name: string }
+            & { __typename?: 'ActionImplementationPhase' }
+          ) | null }
+          & { __typename?: 'Action' }
+        ), impact: (
+          { id: string }
+          & { __typename?: 'ActionImpact' }
+        ) }
+        & { __typename?: 'ImpactGroupAction' }
+      )> }
+      & { __typename?: 'ImpactGroup' }
+    ) | null> }
+    & { __typename?: 'Plan' }
+  ) | null }
+  & { __typename?: 'Query' }
+);
+
+export type GetEmbedActionQueryVariables = Exact<{
+  plan: Scalars['ID'];
+  identifier: Scalars['ID'];
+}>;
+
+
+export type GetEmbedActionQuery = (
+  { action?: (
+    { id: string, identifier: string, name: string, officialName?: string | null, completion?: number | null, updatedAt: any, image?: (
+      { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null, small?: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null, social?: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null, rendition?: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null }
+      & { __typename?: 'Image' }
+    ) | null, plan: (
+      { id: string }
+      & { __typename?: 'Plan' }
+    ), status?: (
+      { id: string, identifier: string, name: string }
+      & { __typename?: 'ActionStatus' }
+    ) | null, implementationPhase?: (
+      { id: string, identifier: string }
+      & { __typename?: 'ActionImplementationPhase' }
+    ) | null, categories: Array<(
+      { id: string, image?: (
+        { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, small?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, social?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, rendition?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null }
+        & { __typename?: 'Image' }
+      ) | null, parent?: (
+        { id: string, image?: (
+          { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, small?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, social?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, rendition?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null }
+          & { __typename?: 'Image' }
+        ) | null, parent?: (
+          { id: string, image?: (
+            { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, small?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, social?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, rendition?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null }
+          & { __typename?: 'Category' }
+        ) | null }
+        & { __typename?: 'Category' }
+      ) | null }
+      & { __typename?: 'Category' }
+    )> }
+    & { __typename?: 'Action' }
+  ) | null }
+  & { __typename?: 'Query' }
 );
 
 export type IndicatorGraphDataSmallQueryVariables = Exact<{
@@ -6776,7 +6896,7 @@ export type GetActionListPageQuery = (
     { id?: string | null, slug: string, title: string, lastPublishedAt?: any | null }
     & { __typename: 'AccessibilityStatementPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PrivacyPolicyPage' | 'StaticPage' }
   ) | (
-    { leadContent?: string | null, defaultView: ActionListPageView, id?: string | null, slug: string, title: string, lastPublishedAt?: any | null, primaryFilters?: Array<(
+    { leadContent?: string | null, id?: string | null, slug: string, title: string, lastPublishedAt?: any | null, primaryFilters?: Array<(
       { showAllLabel?: string | null, field: string, id?: string | null, attributeType: (
         { id: string, identifier: string, format: AttributeTypeFormat, name: string, helpText: string, choiceOptions: Array<(
           { id: string, identifier: string, name: string }
