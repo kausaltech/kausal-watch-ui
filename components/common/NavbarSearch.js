@@ -17,7 +17,9 @@ import { getActionTermContext, useTranslation } from 'common/i18n';
 const TextInput = styled.input`
   display: ${(props) => (props.isOpen === 'true' ? 'block' : 'hidden')};
   width: ${(props) => (props.isOpen === 'true' ? 'auto' : '0')};
-  height: calc(${(props) => props.theme.inputLineHeight}em + ${(props) => props.theme.inputPaddingY} + ${(props) => props.theme.inputPaddingY});
+  height: calc(${(props) =>
+      props.theme.inputLineHeight}em + ${(props) => props.theme.inputPaddingY} + ${(props) => props.theme.inputPaddingY
+    });
   padding: ${(props) => (props.isOpen === 'true' ? `${props.theme.inputPaddingY} ${props.theme.inputPaddingY}` : '0')};
   color: ${(props) => props.theme.themeColors.black};
   background-color: ${(props) => props.theme.themeColors.white};
@@ -32,18 +34,27 @@ const TextInput = styled.input`
 const SearchButton = styled.button`
   display: flex;
   align-items: center;
-  height: calc(${(props) => props.theme.inputLineHeight}em + ${(props) => props.theme.inputPaddingY} + ${(props) => props.theme.inputPaddingY});
+  height: calc(${(props) =>
+      props.theme.inputLineHeight}em + ${(props) => props.theme.inputPaddingY} + ${(props) => props.theme.inputPaddingY
+    });
   padding: 0 .5rem;
-  background-color: ${(props) => props.isActive === 'true' ? props.theme.themeColors.black : props.theme.brandNavBackground};
-  border: 0;
-  border-radius: ${(props) => props.theme.btnBorderRadius};
-  border-width: ${(props) => props.theme.btnBorderWidth};
+  background-color: ${(props) =>
+      props.isActive === 'true' ? props.theme.brandNavColor : props.theme.brandNavBackground
+    };
+  border:0;
+  border-bottom: 3px solid;
+  border-bottom-color: ${(props) =>
+      props.isActive === 'true' ? props.theme.brandNavColor : props.theme.brandNavBackground
+    };
+  border-radius: 0;
 
   &:hover {
-    background-color: ${(props) => transparentize(0.4, props.theme.themeColors.black)};
+    border-bottom: 3px solid ${(props) => props.theme.brandNavColor};
   }
   .icon {
-    fill: ${(props) => props.isActive === 'true' ? props.theme.themeColors.white : props.theme.brandNavColor} !important;
+    fill: ${(props) =>
+        props.isActive === 'true' ? props.theme.brandNavBackground : props.theme.brandNavColor
+      } !important;
   }
 `;
 

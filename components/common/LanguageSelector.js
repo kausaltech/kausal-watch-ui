@@ -12,17 +12,19 @@ import {
 import Icon from './Icon';
 
 const Selector = styled(UncontrolledDropdown)`
+  margin-left: ${(props) => props.theme.spaces.s050};
+  padding: 0;
+  border-bottom: 3px solid ${(props) => props.theme.brandNavBackground};
+  text-decoration: none;
 
-  margin-left: ${(props) => props.theme.spaces.s025};
-  border-radius: ${(props) => props.theme.btnBorderRadius};
-
-  &:hover span {
-    text-decoration: underline;
+  &:hover {
+    border-bottom: 3px solid ${(props) => props.theme.brandNavColor};
+    background-color:  ${(props) => props.theme.brandNavBackground};
+    text-decoration: none;
   }
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     &:hover {
-      background-color: ${(props) => transparentize(0.4, props.theme.themeColors.black)};
 
       svg.icon {
       fill: ${(props) => props.mobile === 'true' ? props.theme.themeColors.dark : props.theme.brandNavColor} !important;
@@ -33,23 +35,19 @@ const Selector = styled(UncontrolledDropdown)`
       }
     }
   }
+`;
 
-  a {
-    height: 100%;
-    display: flex;
-    align-items: center;
-    margin: 0 0 ${(props) => props.theme.spaces.s050} ${(props) => props.theme.spaces.s100};
-    color: ${(props) => props.theme.neutralDark};
+const StyledDropdownToggle = styled(DropdownToggle)`
+  height: 100%;
+  display: flex;
+  align-items: center;
+  margin: 0 0 ${(props) => props.theme.spaces.s050} ${(props) => props.theme.spaces.s100};
+  padding: 0 !important;
+  text-decoration: none;
 
-    &:hover {
-      color: ${(props) => props.theme.neutralDark};
-      text-decoration: none;
-    }
-
-    @media (min-width: ${(props) => props.theme.breakpointMd}) {
-      align-self: center;
-      margin: 0;
-    }
+  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    align-self: center;
+    margin: 0;
   }
 
   svg.icon {
@@ -60,7 +58,7 @@ const Selector = styled(UncontrolledDropdown)`
 const CurrentLanguage = styled.span`
   display: inline-block;
   width: 1.5rem;
-  margin: 0 .5rem;
+  margin: 0;
   text-transform: uppercase;
   font-size: 90%;
   color: ${(props) => props.mobile === 'true' ? props.theme.themeColors.dark : props.theme.brandNavColor};
@@ -93,11 +91,11 @@ const LanguageSelector = (props) => {
   const languageCode = router.locale.split('-')[0];
 
   return (
-      <Selector nav inNavbar mobile={mobile.toString()} className={mobile && 'd-md-none'}>
-        <DropdownToggle nav>
+      <Selector inNavbar mobile={mobile.toString()} className={mobile && 'd-md-none'}>
+        <StyledDropdownToggle color="link">
           <Icon name="globe" width="1.25rem" height="1.25rem" />
           <CurrentLanguage mobile={mobile.toString()}>{ languageCode }</CurrentLanguage>
-        </DropdownToggle>
+        </StyledDropdownToggle>
         <StyledDropdownMenu end>
           { locales.map((locale) => (
             <DropdownItem key={locale} tag="div">
