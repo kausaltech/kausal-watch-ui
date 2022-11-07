@@ -5,7 +5,7 @@ import { themeProp } from 'common/theme';
 
 
 const GlobalStyle = createGlobalStyle`
-  html {
+  :root {
     scroll-behavior: auto !important;
   }
 
@@ -201,6 +201,10 @@ const GlobalStyle = createGlobalStyle`
     {
       break-inside: avoid-page;
     }
+  }
+
+  .tooltip {
+    line-height: 1.25;
   }
 `;
 
