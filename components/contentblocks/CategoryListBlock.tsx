@@ -109,7 +109,6 @@ const CategoryListBlock = (props: CategoryListBlockProps) => {
   let { categories } = props;
   const { color, fallbackImage, heading, lead, style } = props;
   const themeColor = color;
-  const theme = useTheme();
   const fallbackCategories = useFallbackCategories();
 
   if (!categories) categories = fallbackCategories;
@@ -138,7 +137,7 @@ const CategoryListBlock = (props: CategoryListBlockProps) => {
                   >
                     <div>
                       <CardHeader className="card-title">
-                        { theme.settings.categories.showIdentifiers && (
+                        { !cat?.type.hideCategoryIdentifiers && (
                           <Identifier>
                             {cat.identifier}
                             .

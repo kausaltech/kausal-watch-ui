@@ -191,6 +191,7 @@ fragment CategoryTagsCategory on Category {
   type {
     id
     identifier
+    hideCategoryIdentifiers
   }
   level {
     id

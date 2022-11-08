@@ -50,6 +50,10 @@ query GetHomePage($plan: ID!, $path: String!) {
         parent {
           id
         }
+        type {
+          id
+          hideCategoryIdentifiers
+        }
       }
     }
   }

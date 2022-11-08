@@ -148,6 +148,10 @@ query GetCategoriesForTreeMap($plan: ID!, $categoryType: ID!, $attributeType: ID
       name
       namePlural
     }
+    type {
+      id
+      hideCategoryIdentifiers
+    }
     attributes(id: $attributeType) {
       ...on AttributeNumericValue {
         value

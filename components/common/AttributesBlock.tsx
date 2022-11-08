@@ -269,6 +269,10 @@ fragment AttributesBlockAttribute on AttributeInterface {
       categoryPage {
         urlPath
       }
+      type {
+        id
+        hideCategoryIdentifiers
+      }
     }
   }
 }

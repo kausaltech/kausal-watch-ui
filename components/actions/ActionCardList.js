@@ -54,7 +54,7 @@ const groupActions = (groupBy, actions, theme) => {
     } else {
       group = {
         id: cat.id,
-        displayIdentifier: `${(cat.identifier && theme.settings.categories.showIdentifiers) ? cat.identifier : ''}`,
+        displayIdentifier: `${(cat.identifier && !cat.type.hideCategoryIdentifiers) ? cat.identifier : ''}`,
         name: cat.name,
         identifier: cat.identifier || cat.name,
         order: cat.order,

@@ -53,6 +53,7 @@ query GetPlanPageGeneral($plan: ID!, $path: String!) {
         }
         type {
           id
+          hideCategoryIdentifiers
         }
         image {
           id
@@ -87,6 +88,10 @@ query GetPlanPageGeneral($plan: ID!, $path: String!) {
             title
             urlPath
           }
+          type {
+            id
+            hideCategoryIdentifiers
+          }
         }
         parent {
           id
@@ -110,6 +115,10 @@ query GetPlanPageGeneral($plan: ID!, $path: String!) {
           categoryPage {
             title
             urlPath
+          }
+          type {
+            id
+            hideCategoryIdentifiers
           }
         }
         attributes {
@@ -144,7 +153,7 @@ const PageHeaderBlock = (props: PageHeaderBlockProps) => {
       if (!category) {
         throw new Error("Category page without category configured");
       }
-      const parentIdentifier = theme.settings.categories.showIdentifiers
+      const parentIdentifier = !category.type.hideCategoryIdentifiers
         ? `${category.parent?.identifier}.` : '';
       const parentTitle = category.parent?.categoryPage
         ? `${parentIdentifier} ${category.parent?.categoryPage.title}`
@@ -156,7 +165,7 @@ const PageHeaderBlock = (props: PageHeaderBlockProps) => {
         <CategoryPageHeaderBlock
           title={page.title}
           categoryId={category.id}
-          identifier={theme.settings.categories.showIdentifiers ? category.identifier : undefined}
+          identifier={!category.type.hideCategoryIdentifiers ? category.identifier : undefined}
           lead={category.leadParagraph}
           iconImage={iconImage}
           headerImage={headerImage?.large?.src}

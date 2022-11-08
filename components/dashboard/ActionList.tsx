@@ -90,6 +90,7 @@ export const GET_ACTION_LIST = gql`
         identifier
         name
         usableForActions
+        hideCategoryIdentifiers
         common {
           identifier
           name

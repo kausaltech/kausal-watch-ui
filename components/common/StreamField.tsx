@@ -101,6 +101,8 @@ const STREAM_FIELD_FRAGMENT = gql`
       heading
       lead
       categoryType {
+        id
+        hideCategoryIdentifiers
         categories {
           id
           name
