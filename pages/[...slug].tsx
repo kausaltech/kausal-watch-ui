@@ -13,6 +13,7 @@ import StreamField from 'components/common/StreamField';
 import AccessibilityPage from 'pages/accessibility-legacy';
 import images, { getBgImageAlignment } from 'common/images';
 import CategoryPageHeaderBlock from 'components/contentblocks/CategoryPageHeaderBlock';
+import CategoryListBlock from 'components/contentblocks/CategoryListBlock';
 import ContentPageHeaderBlock from 'components/contentblocks/ContentPageHeaderBlock';
 import AttributesBlock from 'components/common/AttributesBlock';
 import { GetPlanPageGeneralQuery } from 'common/__generated__/graphql';
@@ -71,27 +72,7 @@ query GetPlanPageGeneral($plan: ID!, $path: String!) {
           }
         }
         children {
-          id
-          identifier
-          name
-          leadParagraph
-          level {
-            name
-            namePlural
-          }
-          image {
-            id
-            ...MultiUseImageFragment
-          }
-          color
-          categoryPage {
-            title
-            urlPath
-          }
-          type {
-            id
-            hideCategoryIdentifiers
-          }
+          ...CategoryListCategory
         }
         parent {
           id
@@ -135,6 +116,7 @@ query GetPlanPageGeneral($plan: ID!, $path: String!) {
 ${StreamField.fragments.streamField}
 ${images.fragments.multiUseImage}
 ${AttributesBlock.fragments.attributeWithNestedType}
+${CategoryListBlock.fragments.category}
 `;
 
 type GeneralPlanPage = NonNullable<GetPlanPageGeneralQuery['planPage']>;

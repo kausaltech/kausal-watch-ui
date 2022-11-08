@@ -104,11 +104,7 @@ const STREAM_FIELD_FRAGMENT = gql`
         id
         hideCategoryIdentifiers
         categories {
-          id
-          name
-          parent {
-            id
-          }
+          ...CategoryListCategory
         }
       }
     }
@@ -231,6 +227,7 @@ const STREAM_FIELD_FRAGMENT = gql`
     }
   }
 ${images.fragments.multiUseImage}
+${CategoryListBlock.fragments.category}
 `;
 
 type StreamFieldBlockProps = {

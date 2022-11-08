@@ -11,6 +11,35 @@ import Card from 'components/common/Card';
 import { string } from 'prop-types';
 import { MultiUseImageFragmentFragment } from 'common/__generated__/graphql';
 import { useFallbackCategories } from 'context/categories';
+import { gql } from '@apollo/client';
+
+const CATEGORY_FRAGMENT = gql`
+  fragment CategoryListCategory on Category {
+    id
+    identifier
+    name
+    leadParagraph
+    level {
+      name
+      namePlural
+    }
+    image {
+      id
+      ...MultiUseImageFragment
+    }
+    color
+    categoryPage {
+      title
+      urlPath
+    }
+    type {
+      id
+      hideCategoryIdentifiers
+    }
+  }
+`;
+
+
 
 const CategoryListSection = styled.div`
   background-color: ${(props) => props.theme.neutralLight};
@@ -158,5 +187,9 @@ const CategoryListBlock = (props: CategoryListBlockProps) => {
     </CategoryListSection>
   );
 };
+
+CategoryListBlock.fragments = {
+  category: CATEGORY_FRAGMENT
+}
 
 export default CategoryListBlock;
