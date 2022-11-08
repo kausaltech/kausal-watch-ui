@@ -166,5 +166,12 @@
   "form-action-filters": "Maßnahmenliste-Filter",
   "nav-tools": "Werkzeuge",
   "nav-primary": "Primär",
-  "nav-footer": "Fußzeile"
+  "nav-footer": "Fußzeile",
+  "common.of-all-emissions": "von allen Emissionen",
+  "organization-not-found": "Organisation nicht gefunden",
+  "filter-impact-help": "Zeige Maßnahmen mit gewählten Auswirkungen",
+  "filter-organization-help": "Zeige Maßnahmen, für die die gewählte Organisation zuständig ist",
+  "filter-phase-help": "Zeige Maßnahmen in ausgewählter Umsetzungsphase",
+  "filter-primary-organization-help": "Zeige Maßnahmen in ausgewählter Gemeinde",
+  "filter-schedule-help": "Zeige Maßnahmen, die sich über den gewählten Zeitplan erstrecken"
 }
