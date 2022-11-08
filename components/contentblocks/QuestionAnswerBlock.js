@@ -24,9 +24,10 @@ const FaqSection = styled.section`
 
 const QuestionAnswerBlock = (props) => {
   const { heading, questions } = props;
-  const questionList = [];
-  // create ids
-  questions?.forEach((question, index) => questionList.push({
+  if (questions == null) {
+    return null;
+  }
+  const questionList = questions.map((question, index) => ({
     id: index.toString(),
     ...question,
   }));
@@ -61,7 +62,7 @@ QuestionAnswerBlock.defaultProps = {
 
 QuestionAnswerBlock.propTypes = {
   heading: PropTypes.string,
-  questions: PropTypes.arrayOf(PropTypes.object).isRequired,
+  questions: PropTypes.arrayOf(PropTypes.object),
 };
 
 export default QuestionAnswerBlock;

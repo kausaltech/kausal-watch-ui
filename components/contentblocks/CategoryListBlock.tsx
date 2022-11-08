@@ -3,12 +3,9 @@ import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
 import { readableColor } from 'polished';
 import RichText from 'components/common/RichText';
-import { useTheme } from 'common/theme';
 import { getBgImageAlignment } from 'common/images';
 import { Link } from 'common/links';
-import CategoryTreeBlock from 'components/contentblocks/CategoryTreeBlock';
 import Card from 'components/common/Card';
-import { string } from 'prop-types';
 import { MultiUseImageFragmentFragment } from 'common/__generated__/graphql';
 import { useFallbackCategories } from 'context/categories';
 import { gql } from '@apollo/client';
@@ -104,7 +101,7 @@ const SectionHeader = styled.h2`
 `;
 
 const CardHeader = styled.h3`
-  color: ${(props) => props.theme.themeColors.neutralDark};
+  color: ${(props) => props.theme.neutralDark};
   font-size: ${(props) => props.theme.fontSizeMd};
   line-height: ${(props) => props.theme.lineHeightMd};
 `;
@@ -114,20 +111,23 @@ const Identifier = styled.span`
 `;
 
 export type CategoryListBlockCategory = {
-    id: string,
-    image?: MultiUseImageFragmentFragment,
-    color?: string,
-    identifier: string,
-    name: string,
-    shortDescription?: string,
-    categoryPage: {
-        urlPath: string,
-    }
+  id: string,
+  image?: MultiUseImageFragmentFragment,
+  color?: string,
+  identifier: string,
+  name: string,
+  shortDescription?: string,
+  leadParagraph?: string,
+  categoryPage: {
+    urlPath: string,
+  }
+  type: {
+    hideCategoryIdentifiers: boolean
+  }
 }
 
 type CategoryListBlockProps = {
     categories?: Array<CategoryListBlockCategory>,
-    color: string,
     fallbackImage: MultiUseImageFragmentFragment,
     heading?: string,
     lead: string,
@@ -136,13 +136,12 @@ type CategoryListBlockProps = {
 
 const CategoryListBlock = (props: CategoryListBlockProps) => {
   let { categories } = props;
-  const { color, fallbackImage, heading, lead, style } = props;
-  const themeColor = color;
+  const { fallbackImage, heading, lead } = props;
   const fallbackCategories = useFallbackCategories();
 
   if (!categories) categories = fallbackCategories;
   return (
-    <CategoryListSection bg={themeColor}>
+    <CategoryListSection>
       <Container>
         { heading && (<SectionHeader>{ heading }</SectionHeader>)}
         <RichText html={lead} className="lead-text" />
@@ -160,7 +159,7 @@ const CategoryListBlock = (props: CategoryListBlockProps) => {
               <Link href={cat.categoryPage.urlPath}>
                 <a className="card-wrapper">
                   <Card
-                    imageUrl={cat.image?.small.src || fallbackImage?.small?.src}
+                    imageUrl={cat.image?.small?.src || fallbackImage?.small?.src}
                     imageAlign={getBgImageAlignment(cat.image || fallbackImage)}
                     colorEffect={cat.color}
                   >

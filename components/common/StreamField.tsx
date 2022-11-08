@@ -233,7 +233,7 @@ ${CategoryListBlock.fragments.category}
 type StreamFieldBlockProps = {
   page: any,
   block: StreamFieldFragmentFragment,
-  color?: string,
+  color: string,
 }
 
 function StreamFieldBlock(props: StreamFieldBlockProps) {
@@ -271,7 +271,7 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
       return <ActionListBlock categoryId={categoryFilter?.id || page.category.id} color={color} />;
     }
     case 'CategoryListBlock': {
-      const { heading, lead, style, categoryType } = block;
+      const { heading, lead, categoryType } = block;
       const { category: pageCategory } = page;
       let categories;
 
@@ -287,11 +287,10 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
       const fallbackImage = (pageCategory?.image || plan.image);
       return (
         <CategoryListBlock
-          style={style}
           categories={categories}
           color={color}
           fallbackImage={fallbackImage}
-          heading={heading}
+          heading={heading ?? undefined}
           lead={lead}
         />
       );
@@ -353,7 +352,13 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
   }
 }
 
-function StreamField(props) {
+interface StreamFieldProps {
+  color: string,
+  page: any,
+  blocks: any,
+}
+
+function StreamField(props: StreamFieldProps) {
   const { page, blocks, color } = props;
   return (
     <>

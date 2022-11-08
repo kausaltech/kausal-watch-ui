@@ -25,7 +25,7 @@ const ActionListSection = styled.div`
   padding: ${(props) => props.theme.spaces.s400} 0};
 `;
 
-const SectionHeader = styled.h2` 
+const SectionHeader = styled.h2`
   text-align: center;
   padding: ${(props) => props.theme.spaces.s100};
   border-radius: ${(props) => props.theme.cardBorderRadius};
@@ -75,6 +75,7 @@ const ActionListBlock = (props) => {
 
 ActionListBlock.propTypes = {
   categoryId: PropTypes.string.isRequired,
+  color: PropTypes.string
 };
 
 export default ActionListBlock;
