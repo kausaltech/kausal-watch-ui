@@ -150,6 +150,14 @@ const GlobalStyle = createGlobalStyle`
       max-width: 100%;
       height: auto;
     }
+
+    &.left {
+      float: left;
+    }
+
+    &.right {
+      float: right;
+    }
   }
 
   thead {
