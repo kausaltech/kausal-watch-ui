@@ -543,7 +543,16 @@ function ActionContentBlockGroup(props: ActionContentBlockGroupProps) {
       return [attributeType!.id, attributeType!];
     }));
 
-    const attributes = action.attributes.filter(att => types.get(att.type.id));
+    // Render attributes in the order specified by blocks; action.attributes may have different order
+    const attributesByType = new Map(action.attributes.map(att => [att.type.id, att]));
+    const attributes: typeof action.attributes = [];
+    for (const block of blocks) {
+      const typeId = (block as ActionContentAttributeTypeBlock).attributeType.id;
+      const attribute = attributesByType.get(typeId);
+      if (attribute != null) {
+        attributes.push(attribute);
+      }
+    }
     if (!attributes.length) return null;
     return (
       <ActionSection>
