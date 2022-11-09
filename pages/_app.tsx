@@ -12,7 +12,7 @@ import withApollo, {
   initializeApolloClient, setApolloPlanIdentifier
 } from 'common/apollo';
 import { setBasePath } from 'common/links';
-import theme, { setTheme, applyTheme } from 'common/theme';
+import { loadTheme } from 'common/theme';
 import { getI18n } from 'common/i18n';
 import dayjs from 'common/dayjs';
 import PlanContext, { GET_PLAN_CONTEXT, customizePlan } from 'context/plan';
@@ -86,12 +86,11 @@ function WatchApp(props: WatchAppProps) {
   dayjs.locale(router.locale)
 
   if (!isServer) {
-    setTheme(themeProps);
     setApolloPlanIdentifier(plan.identifier);
   }
   return (
     <SiteContext.Provider value={siteProps}>
-      <ThemeProvider theme={theme}>
+      <ThemeProvider theme={themeProps}>
         <ApolloProvider client={apollo}>
           <PlanContext.Provider value={plan}>
             <Component {...pageProps} />
@@ -195,7 +194,7 @@ WatchApp.getInitialProps = async (appContext) => {
     ...appProps.pageProps,
     ...i18nProps,
   }
-  await applyTheme(plan.themeIdentifier || plan.identifier);
+  const theme = await loadTheme(plan.themeIdentifier || plan.identifier);
   return {
     ...appProps,
     plan,

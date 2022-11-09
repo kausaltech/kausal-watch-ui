@@ -12,8 +12,6 @@ type cssColor = NonNullable<css['color']>;
 /* eslint-disable */
 const defaultTheme = require('public/static/themes/default/theme.json');
 
-const theme = {};
-
 export function useTheme() {
   return useContext<Theme>(ThemeContext);
 }
@@ -395,15 +393,17 @@ export function mergeWithDefaultTheme(newTheme) {
   return merge(cloneDeep(defaultTheme), newTheme);
 }
 
-export function setTheme(newTheme) {
+export function getTheme(newTheme) {
   const out = mergeWithDefaultTheme(newTheme);
-  PropTypes.checkPropTypes({ theme: themeProp.isRequired }, { theme: out }, 'prop', 'GlobalTheme');
-
-  Object.getOwnPropertyNames(theme).forEach((prop) => delete theme[prop]);
-  Object.assign(theme, out);
+  PropTypes.checkPropTypes(
+    { theme: themeProp.isRequired },
+    { theme: out },
+    'prop',
+    'GlobalTheme');
+  return out;
 }
 
-export async function applyTheme(themeIdentifier) {
+export async function loadTheme(themeIdentifier) {
   let themeProps;
   try {
     const theme = await import(`public/static/themes/${themeIdentifier}/theme.json`);
@@ -415,11 +415,9 @@ export async function applyTheme(themeIdentifier) {
   if (!themeProps) {
     themeProps = {};
   }
-  setTheme(themeProps);
+  return getTheme(themeProps);
 }
 
 export function getThemeCSS(themeIdentifier: string) {
   return `/static/themes/${themeIdentifier}/main.css`;
 }
-
-export default theme;

@@ -8,7 +8,7 @@ import PlanContext from 'context/plan';
 import SiteContext from 'context/site';
 import EmbedContext from 'context/embed';
 import ThemedGlobalStyles from 'common/ThemedGlobalStyles';
-import theme from 'common/theme';
+import { useTheme } from 'common/theme';
 import { CombinedIconSymbols } from 'components/common/Icon';
 
 import Header from './header';
@@ -22,6 +22,7 @@ function Layout({ children }) {
   const plan = useContext(PlanContext);
   const site = useContext(SiteContext);
   const embed = useContext(EmbedContext);
+  const theme = useTheme();
   const iconBase = theme.name ? `/static/themes/${theme.name}/images/favicon` : null;
   const googleSiteVerificationTag = plan.domain?.googleSiteVerificationTag;
 
