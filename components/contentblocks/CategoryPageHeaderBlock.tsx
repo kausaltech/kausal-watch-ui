@@ -28,27 +28,42 @@ export const GET_CATEGORY_ATTRIBUTE_TYPES = gql`
   }
 `;
 
-const HeaderBackground = styled.div<{bg: string}>`
-  position: relative;
-  min-height: 26rem;
-  background-color: ${(props) => props.bg};
-`;
-
-const CategoryPageHeader = styled.div<{bg: string, image: string, imageAlign: string}>`
-  position: absolute;
-  height: 26rem;
+const CategoryHeader = styled.div`
   width: 100%;
-  top: 0;
-  left: 0;
+  position: relative;
   background-color: ${(props) => props.bg ? props.bg : props.theme.brandDark};
-  padding: ${(props) => props.theme.spaces.s200} ${(props) => props.theme.spaces.s050};
-  background-image: url(${(props) => props.image});
-  background-position: ${(props) => props.imageAlign};
-  background-size: cover;
-
+  padding: 0 0 2rem;
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
-    padding: ${(props) => props.theme.spaces.s400} ${(props) => props.theme.spaces.s050};
+    display: flex;
+    align-items: flex-start;
+    min-height: ${(props) => props.hasImage ? '32rem' : '0'};
+    padding: 0;
+  }
+
+  @media (min-width: ${(props) => props.theme.breakpointLg}) {
+    ${(props) => props.hasImage ? '28rem' : '0'};
+  }
+
+  @media (min-width: ${(props) => props.theme.breakpointXl}) {
+    ${(props) => props.hasImage ? '30rem' : '0'};
+  }
+`;
+
+const CategoryHeaderImage = styled.div`
+  min-height: ${(props) => props.image ? '14rem' : '0'};
+  margin: 0 -1rem;
+  background-size: cover;
+  background-color: ${(props) => props.bg ? props.bg : props.theme.branddark};
+  background-position: ${(props) => props.imageAlign};
+  background-image: url(${(props) => props.image});
+  background-repeat: no-repeat;
+
+  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    position: absolute;
+    width: 100%;
+    min-height: ${(props) => props.image ? '32rem' : '0'};
+    margin: 0;
   }
 `;
 
@@ -58,27 +73,38 @@ const Identifier = styled.span`
 
 const HeaderContent = styled.div`
   position: relative;
-  padding: ${(props) => props.theme.spaces.s150};
-  margin: ${(props) => props.theme.spaces.s800} 0 ${(props) => props.theme.spaces.s400};
-  overflow: hidden;
-  border-width: ${(props) => props.theme.cardBorderWidth};
+  max-width: ${(props) => props.theme.breakpointMd};
+  margin: ${(props) => props.hasImage ? '-2rem auto 0' : '1rem auto'};
+  padding: ${(props) =>
+    `${props.theme.spaces.s200}`};
+  text-align: center;
   border-radius: ${(props) => props.theme.cardBorderRadius};
   background-color: ${(props) => props.theme.themeColors.white};
+  color: ${(props) => props.theme.neutralDark};
   box-shadow: 4px 4px 8px rgba(0,0,0,0.1);
-  text-align: center;
+  z-index: 100;
 
   h1 {
     font-size: ${(props) => props.theme.fontSizeLg};
     margin-bottom: ${(props) => props.theme.spaces.s200};
+
+    &:last-child {
+      margin-bottom: 0;
+    }
   }
 
   p {
     font-size: ${(props) => props.theme.fontSizeMd};
-    margin-bottom: 0;
+    margin-bottom: ${(props) => props.theme.spaces.s100};
+
+    &:last-child {
+      margin-bottom: 0;
+    }
   }
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
-    padding: ${(props) => props.theme.spaces.s300};
+    margin: ${(props) => props.hasImage ? '14rem auto 3rem' : '3rem auto'};
+
     h1 {
       font-size: ${(props) => props.theme.fontSizeXl};
     }
@@ -86,7 +112,7 @@ const HeaderContent = styled.div`
 `;
 
 const AttributesContainer = styled.div`
-  max-width: 600px;
+  max-width: ${(props) => props.theme.breakpointMd};
   margin: 0 auto;
 `;
 
@@ -132,16 +158,21 @@ function CategoryPageHeaderBlock(props) {
   }
 
   return (
-    <HeaderBackground bg={color}>
-      <CategoryPageHeader
+    <CategoryHeader
+      bg={color}
+      hasImage={!!headerImage}
+    >
+      <CategoryHeaderImage
         bg={color}
         imageAlign={imageAlign}
         image={headerImage}
       />
       <Container className="header-container">
         <Row>
-          <Col lg={{ size: 10, offset: 1 }}>
-            <HeaderContent>
+          <Col lg={{ size: 10, offset: 1 }} xl={{ size: 12, offset: 0 }}>
+            <HeaderContent
+              hasImage={!!headerImage}
+            >
               { parentTitle && (
                 <Breadcrumb>
                   <Link href={parentUrl}><a>{parentTitle}</a></Link>
@@ -165,7 +196,7 @@ function CategoryPageHeaderBlock(props) {
                 { title }
               </h1>
               {level}
-              <p>{ lead }</p>
+              { lead && <p>{ lead }</p> }
               { attributes?.length > 0 && (
                 <AttributesContainer>
                 <AttributesBlock
@@ -179,7 +210,7 @@ function CategoryPageHeaderBlock(props) {
           </Col>
         </Row>
       </Container>
-    </HeaderBackground>
+    </CategoryHeader>
   );
 }
 

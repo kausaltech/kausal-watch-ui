@@ -40,6 +40,10 @@ const PlanDropdownItem = styled.a`
   border-radius: .5rem;
   text-decoration: none !important;
 
+  &:last-child {
+    margin-bottom: 0;
+  }
+
   &:hover {
     background: ${(props)=> props.theme.themeColors.light};
     border-color: ${(props)=> props.theme.themeColors.light};

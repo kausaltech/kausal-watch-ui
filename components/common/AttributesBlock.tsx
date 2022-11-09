@@ -47,7 +47,7 @@ type AttributeProps = {
 
 const Attributes = styled.div<AttributeProps>`
   ${props => props.vertical && css`
-    max-width: 320px;
+    max-width: ${(props) => props.theme.breakpointSm};
   `}
   margin: ${(props) => props.theme.spaces.s100} auto;
   padding: ${(props) => props.theme.spaces.s200} 0 0;
