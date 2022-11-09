@@ -401,16 +401,18 @@ function GlobalNav(props) {
                   </NavItem>
                 )
             ))}
-            <NavItem className="d-md-none">
-              <NavLink>
-                <NavigationLink slug="/search">
-                  <NavHighlighter>
-                    <Icon name="search" className="me-2" />
-                    {t('search')}
-                  </NavHighlighter>
-                </NavigationLink>
-              </NavLink>
-            </NavItem>
+            { plan.features.enableSearch && (
+              <NavItem className="d-md-none">
+                <NavLink>
+                  <NavigationLink slug="/search">
+                    <NavHighlighter>
+                      <Icon name="search" className="me-2" />
+                      {t('search')}
+                    </NavHighlighter>
+                  </NavigationLink>
+                </NavLink>
+              </NavItem>
+            )}
             <LanguageSelector mobile="true"/>
           </Nav>
           <Nav navbar>
