@@ -98,6 +98,10 @@ let config = {
       SYNC_THEME: '',
       FORCE_SENTRY_SEND: '',
     }));
+    cfg.plugins.push(new webpack.DefinePlugin({
+      __SENTRY_DEBUG__: false,
+    }))
+    cfg.experiments = {...cfg.experiments, topLevelAwait: true}
 
     return cfg;
   },
