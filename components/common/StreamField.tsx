@@ -24,6 +24,7 @@ import AccessibilityStatementContactInformationBlock
   from 'components/contentblocks/AccessibilityStatementContactInformationBlock';
 
 import type { StreamFieldFragmentFragment } from 'common/__generated__/graphql';
+import CartographyVisualisationBlock from 'components/contentblocks/CartographyVisualisationBlock';
 
 
 const STREAM_FIELD_FRAGMENT = gql`
@@ -95,6 +96,15 @@ const STREAM_FIELD_FRAGMENT = gql`
     ... on ActionListBlock {
       categoryFilter {
         id
+      }
+    }
+    ... on CartographyVisualisationBlock {
+      style
+      styleOverrides
+      account {
+        provider
+        account
+        publicAccessToken
       }
     }
     ... on CategoryListBlock {
@@ -358,6 +368,17 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
                 {...block}
                 hasSidebar={hasSidebar}
               />
+    }
+    case 'CartographyVisualisationBlock': {
+      const { account, style, styleOverrides } = block;
+      const accessToken = account?.publicAccessToken;
+      return <CartographyVisualisationBlock
+        styleUrl={style}
+        accessToken={accessToken}
+        styleOverrides={styleOverrides}
+        hasSidebar={hasSidebar}
+      />;
+
     }
     case 'AccessibilityStatementComplianceStatusBlock': {
       return <AccessibilityStatementComplianceStatusBlock {...block} />

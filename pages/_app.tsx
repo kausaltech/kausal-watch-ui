@@ -19,6 +19,11 @@ import dayjs from 'common/dayjs';
 import PlanContext, { GET_PLAN_CONTEXT, customizePlan } from 'context/plan';
 import SiteContext from 'context/site';
 
+import '@kausal/mapboxgl-legend/dist/style.css';
+
+
+//import 'mapbox-gl/dist/mapbox-gl.css';
+
 const { publicRuntimeConfig } = getConfig();
 const isServer = typeof window === "undefined";
 
