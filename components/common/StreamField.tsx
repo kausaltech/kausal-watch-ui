@@ -234,10 +234,11 @@ type StreamFieldBlockProps = {
   page: any,
   block: StreamFieldFragmentFragment,
   color: string,
+  hasSidebar: boolean,
 }
 
 function StreamFieldBlock(props: StreamFieldBlockProps) {
-  const { page, block, color } = props;
+  const { page, block, color, hasSidebar } = props;
   const { __typename } = block;
   const plan = useContext(PlanContext);
 
@@ -247,7 +248,7 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
       return (
         <Container className="my-5">
           <Row>
-            <Col lg={{ size: 8, offset: 2 }} md={{ size: 10, offset: 1 }}>
+            <Col lg={{ size: 8, offset: hasSidebar ? 4 : 2 }} md={{ size: 10, offset: hasSidebar ? 2 : 1 }}>
               <RichText html={value} />
             </Col>
           </Row>
@@ -256,7 +257,11 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
     }
     case 'QuestionAnswerBlock': {
       const { heading, questions } = block;
-      return <QuestionAnswerBlock heading={heading} questions={questions} />;
+      return <QuestionAnswerBlock
+                heading={heading}
+                questions={questions}
+                hasSidebar={hasSidebar}
+              />;
     }
     case 'CharBlock': {
       const { value } = block;
@@ -356,10 +361,11 @@ interface StreamFieldProps {
   color: string,
   page: any,
   blocks: any,
+  hasSidebar: boolean,
 }
 
 function StreamField(props: StreamFieldProps) {
-  const { page, blocks, color } = props;
+  const { page, blocks, color, hasSidebar = false } = props;
   return (
     <>
       { blocks.map((block) => (
@@ -368,6 +374,7 @@ function StreamField(props: StreamFieldProps) {
           page={page}
           key={block.id}
           color={color}
+          hasSidebar={hasSidebar}
         />
       ))}
     </>
