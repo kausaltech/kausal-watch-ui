@@ -138,7 +138,6 @@ const GlobalStyle = createGlobalStyle`
     }
 
     ul {
-      margin-left: -2rem;
       list-style: disc;
     }
   }
