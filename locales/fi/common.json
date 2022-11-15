@@ -111,6 +111,7 @@
   "nav-menu-open": "Navigaatio",
   "next": "Seuraava",
   "no-graph": "Ei kuvaajaa",
+  "no-actions": "Ei toimenpiteitä",
   "number-of-search-results_one": "1 osuma haulle",
   "number-of-search-results_other": "{{count}} osumaa haulle",
   "operational": "Toiminnallinen mittari",

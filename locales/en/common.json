@@ -109,6 +109,7 @@
   "nav-menu-open": "Navigation menu",
   "next": "Next",
   "no-graph": "No graph",
+  "no-actions": "No actions",
   "number-of-search-results_one": "one hit for search",
   "number-of-search-results_other": "{{count}} hits for search",
   "operational": "Operational indicator",
