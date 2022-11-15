@@ -86,7 +86,20 @@ const EmbeddablePage = () => {
         component = <RecentActionsEmbed />;
         break;
       case 'actions':
-        component = <ActionEmbed path={slug.slice(1)} />;
+        let maxWidth : string[] | string | number | undefined = query.maxWidth;
+        if (Array.isArray(maxWidth)) {
+          maxWidth = maxWidth[0];
+        }
+        if (maxWidth !== undefined) {
+          maxWidth = Number.parseInt(maxWidth, 10);
+          if (isNaN(maxWidth)) {
+            maxWidth = undefined;
+          }
+          else {
+            maxWidth = Math.min(maxWidth, 1200);
+          }
+        }
+        component = <ActionEmbed path={slug.slice(1)} maxWidth={maxWidth} />;
         break;
       case 'indicators':
         component = <IndicatorEmbed path={slug.slice(1)} />;
