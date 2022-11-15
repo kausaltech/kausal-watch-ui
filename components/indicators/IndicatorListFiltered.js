@@ -331,7 +331,7 @@ const IndicatorListFiltered = (props) => {
   const allIndicatorsHaveSameLevel = new Set(filteredIndicators.flat().map(i => i.level)).size === 1;
 
   const indicatorElement = (collapsible, itemName, expanded, expandKey, options) => (
-    <IndicatorName>
+    itemName && <IndicatorName>
       <StyledSectionButton
         aria-controls={expandKey}
         aria-expanded={expanded}
@@ -342,25 +342,25 @@ const IndicatorListFiltered = (props) => {
       </StyledSectionButton>
     </IndicatorName>
   );
-  const seen = new Set();
-
   const indicatorName = (item, collapsible, expanded, expandKey, options) => {
     let name = null;
-    if (item.common == null || hierarchy === null || Object.keys(hierarchy).length === 0) {
+    if (
+      item.name != null &&
+        item.name.length > 0 && (
+          options.singleOrganization === true ||
+            item.common == null ||
+            hierarchy == null ||
+            Object.keys(hierarchy).length === 0
+        )
+    ) {
       name = item.name;
-      return indicatorElement(collapsible, name, expanded, expandKey, options);
     }
-
-    const pathNames = hierarchy[item.common.id]?.pathNames;
-    if (pathNames != null && pathNames.length > 0) {
-      name = pathNames[pathNames.length -1] ?? '--not-found--';
-    }
-    if (seen.has(item.common.id)) {
-      name = null;
-    }
-    seen.add(item.common.id);
-    if (name == null) {
-      return name;
+    else if (item.common?.name != null) {
+      /* The name of the common indicator is currently used only for
+       plans which have multiple organizations with multiple
+       indicators grouped together by their common indicator.
+       */
+      name = item.common.name;
     }
     return indicatorElement(collapsible, name, expanded, expandKey, options);
   };
@@ -423,7 +423,16 @@ const IndicatorListFiltered = (props) => {
                     colSpan={headers.length}
                     indent={indentationLevel(group[0])}
                   >
-                    {indicatorName(group[0], true, expanded, expandKey, {type: 'section'})}
+                    {indicatorName(
+                      group[0],
+                      true,
+                      expanded,
+                      expandKey,
+                      {
+                        type: 'section',
+                        singleOrganization: !displayMunicipality
+                      })
+                    }
                   </IndentableTableHeader>
                 </tr>
               </tbody>
@@ -459,12 +468,6 @@ const IndicatorListFiltered = (props) => {
                 const collapseState = visibleByParent[item.common?.id];
                 const collapsible = collapseState !== undefined;
                 const collapsed = collapseState === true;
-                const nameElement = (
-                  indicatorName(
-                    item, collapsible, collapsed,
-                    descendantIds(item, hierarchy),
-                    {type: 'indicator', linkTo: hierarchyEnabled ? null : item.id})
-                );
 
                 return (
                   <tr key={item.id} id={indicatorElementId(item.common?.id ?? item.id)} style={{display: (visible ? 'table-row' : 'none')}}>
@@ -474,7 +477,17 @@ const IndicatorListFiltered = (props) => {
                         indent={hierarchyEnabled && indentationLevel(item)}
                         visibleIndentation={false}
                       >
-                        { nameElement }
+                        { indicatorName(
+                            item,
+                            collapsible,
+                            collapsed,
+                            descendantIds(item, hierarchy),
+                            {
+                              type: 'indicator',
+                              linkTo: hierarchyEnabled ? null : item.id,
+                              singleOrganization: !displayMunicipality
+                            }
+                        )}
                       </IndentableTableCell>
                     }
                     { !allIndicatorsHaveSameLevel &&
