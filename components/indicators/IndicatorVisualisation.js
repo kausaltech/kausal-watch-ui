@@ -609,7 +609,7 @@ function IndicatorVisualisation({ indicatorId }) {
     .filter((org) => org.id !== indicator.organization.id);
 
   const title = (embed.active ?
-    <a href={getIndicatorLinkProps(indicator.id).href} target="_blank">{plotTitle}</a>
+    <a href={getIndicatorLinkProps(indicator.id).href} target="_blank" rel="noreferrer">{plotTitle}</a>
     : plotTitle
   );
 

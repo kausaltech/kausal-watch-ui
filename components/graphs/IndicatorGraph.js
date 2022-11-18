@@ -2,9 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import dynamic from 'next/dynamic';
 import { merge, uniq } from 'lodash';
-import dayjs from 'common/dayjs';
 import styled from 'styled-components';
-import { useTranslation } from 'common/i18n';
 import { useTheme } from 'common/theme';
 import { splitLines } from 'common/utils';
 
@@ -19,12 +17,9 @@ const CATEGORY_XAXIS_LABEL_EXTRA_MARGIN = 200;
 function getTraces(dimensions, cube, names, hasTimeDimension) {
   if (dimensions.length === 0) {
     return [{
-      xType: cube.length === 1 ? 'category' : 'time',
+      xType: cube.length === 1 ? 'category' : 'scaled',
       name: '',
-      x: cube.map(val => {
-        const d = dayjs(val.date)
-        return cube.length < 2 ? d.year() : val.date;
-      }),
+      x: cube.map(val => val.date),
       y: cube.map(val => val.value)
     }];
   }
@@ -36,11 +31,11 @@ function getTraces(dimensions, cube, names, hasTimeDimension) {
           (new Set(names ?? undefined)).add(cat.name)
         ).join(', ');
         let x, y, xType, _cube = cube[idx];
-        xType = 'time';
+        xType = 'scaled';
         x = _cube.map(val => val.date);
         y = _cube.map(val => val.value);
         return {
-          xType: 'time',
+          xType: 'scaled',
           name: traceName,
           _parentName: names ? Array.from(names).join(', ') : null,
           x, y
@@ -68,37 +63,6 @@ function getTraces(dimensions, cube, names, hasTimeDimension) {
   return traces.filter(t => (t.x.length > 0));
 }
 
-const generateTrendTrace = (indicator, traces, goals, i18n) => {
-  const hasPotentialScenario = traces.find((goal) => goal.scenario?.identifier === 'potential');
-  if (indicator.timeResolution === 'YEAR' && traces[0].y.length >= 5 && !hasPotentialScenario) {
-    const values = [...indicator.values].sort((a, b) => a.date - b.date).map((item) => {
-      const { date, value, categories } = item;
-      const newDate = indicator.timeResolution === 'YEAR' ? date.split('-')[0] : date;
-      return { date: newDate, value, categories };
-    });
-    const mainValues = values.filter((item) => !item.categories.length);
-    const numberOfYears = Math.min(mainValues.length, 10);
-    const regData = mainValues.slice(mainValues.length - numberOfYears, mainValues.length)
-      .map((item) => [parseInt(item.date, 10), item.value]);
-    const model = linearRegression(regData);
-    const predictedTrace = {
-      x: regData.map((item) => item[0]),
-      name: i18n.t('current-trend'),
-    };
-
-    const highestDataYear = traces[0].y[traces[0].y.length - 1];
-    const highestGoalYear = Math.max(...goals.map((goal) => goal.x[goal.x.length - 1]));
-    if (highestGoalYear && highestGoalYear > highestDataYear) {
-      predictedTrace.x.push(highestGoalYear);
-    }
-
-    predictedTrace.y = predictedTrace.x.map((year) => model.m * year + model.b);
-    return predictedTrace;
-  }
-  return undefined;
-};
-
-
 const createLayout = (
   timeResolution,
   yRange,
@@ -114,6 +78,7 @@ const createLayout = (
     yaxis: {
       hoverformat: `${config.maxDigits === 0 ? '' : '.'}${config.maxDigits}r`,
       separatethousands: true,
+      tickformat: 'f',
       fixedrange: true,
       tickfont: {
         family: fontFamily,
@@ -144,6 +109,7 @@ const createLayout = (
     yaxes[`yaxis${y}`] = yaxes.yaxis;
   }
 
+  // X axis can be time or category
   const xaxes = hasCategories
     ? {
       xaxis: {
@@ -159,9 +125,8 @@ const createLayout = (
       xaxis: {
         showgrid: false,
         showline: false,
-        type: timeResolution === 'YEAR' ? 'linear' : 'date',
         fixedrange: false,
-        tickformat: timeResolution === 'YEAR' ? 'd' : '%d.%m.%Y',
+        tickformat: timeResolution === 'YEAR' ? '%Y' : '%b %Y',
         tickmode: null,
         tickfont: {
           family: fontFamily,
@@ -190,9 +155,7 @@ const createLayout = (
     autosize: true,
     colorway: plotColors.mainScale,
     font: { family: fontFamily, size: 12 },
-
     // showlegend: false,
-    separators: ', ',
     hoverlabel: {
       namelength: 0,
     },
@@ -275,7 +238,7 @@ const createTraces = (traces, unit, plotColors, styleCount, categoryCount, hasTi
       };
     }
     if (modTrace.type === 'scatter') modTrace.mode = (trace.x.length > 30) ? 'lines' : 'lines+markers';
-    modTrace.hovertemplate = `(%{x})<br> ${trace.name}: %{y} ${unit}`;
+    modTrace.hovertemplate = `(%{x|%x})<br> ${trace.name}: %{y:f} ${unit}`;
     modTrace.hoverinfo = 'none';
     modTrace.hoverlabel = {
       bgcolor: plotColors.mainScale[idx % numColors],
@@ -318,6 +281,7 @@ function getSubplotHeaders(subPlotRowCount, names) {
 }
 
 function IndicatorGraph(props) {
+  const theme = useTheme();
   const isServer = typeof window === "undefined";
   if (isServer) {
     return null;
@@ -332,8 +296,6 @@ function IndicatorGraph(props) {
   } = props;
 
   const Plot = dynamic(import('./Plot'));
-  const theme = useTheme();
-  const { i18n } = useTranslation();
 
   const plotColors = {
     trace: theme.graphColors.red070,
@@ -434,7 +396,7 @@ function IndicatorGraph(props) {
       color: plotColors.trend,
       dash: 'dash',
     },
-    hoverinfo: 'none',
+    //info: 'none',
     ...trendTrace,
   });
 
@@ -456,7 +418,7 @@ function IndicatorGraph(props) {
           color: plotColors.goalScale[idx % plotColors.goalScale.length],
         },
         opacity: 0.7,
-        hoverinfo: 'none',
+        //hoverinfo: 'none',
         hovertemplate: `(%{x}) ${goalTrace.name}: %{y} ${yRange.unit}`,
         hoverlabel: {
           namelength: 0,
@@ -476,7 +438,8 @@ function IndicatorGraph(props) {
   );
   const height = layoutConfig?.grid?.rows ?
         layoutConfig.grid.rows * 300 :
-        450 + (!hasTimeDimension ? CATEGORY_XAXIS_LABEL_EXTRA_MARGIN : 0)
+        450 + (!hasTimeDimension ? CATEGORY_XAXIS_LABEL_EXTRA_MARGIN : 0);
+
   return (
     <PlotContainer data-element="indicator-graph-plot-container"
                    vizHeight={height}>
@@ -490,7 +453,6 @@ function IndicatorGraph(props) {
           document.dispatchEvent(event);
         }}
         config={{
-          locale: i18n.language,
           displayModeBar: false,
           showSendToCloud: true,
           staticPlot: false,
