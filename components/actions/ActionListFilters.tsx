@@ -3,7 +3,7 @@ import { Row, Col, Badge, CloseButton } from 'reactstrap';
 import { debounce, } from 'lodash';
 import styled from 'styled-components';
 import { readableColor } from 'polished';
-import {ButtonGroup, Button as RButton} from 'reactstrap';
+import {ButtonGroup, Button as RButton, Collapse} from 'reactstrap';
 
 import { getActionTermContext, useTranslation } from 'common/i18n';
 import { useTheme } from 'common/theme';
@@ -23,6 +23,7 @@ import SelectDropdown, { SelectDropdownOption } from 'components/common/SelectDr
 import {
   CategoryHierarchyMember, CategoryTypeHierarchy, constructCatHierarchy
 } from 'common/categories';
+import Icon from 'components/common/Icon';
 import { createFilter } from 'react-select';
 
 
@@ -678,6 +679,8 @@ function ActionListFilters(props: ActionListFiltersProps) {
   } = props;
 
   const [filterState, setFilterState] = useState(activeFilters);
+  const [isOpen, setIsOpen] = useState(false);
+
   const { t } = useTranslation();
   const plan = usePlan();
 
@@ -717,6 +720,8 @@ function ActionListFilters(props: ActionListFiltersProps) {
     onFilterChange(id, deleteFilterValues(id, value))
   }, [onFilterChange, deleteFilterValues]);
 
+  const toggle = () => setIsOpen(!isOpen);
+
   return (
     <div className="filters mb-2 text-left">
       <form
@@ -726,6 +731,21 @@ function ActionListFilters(props: ActionListFiltersProps) {
         aria-label={t('form-action-filters')}
       >
         {filterSections.map(section => (
+          <>
+          { section.hidden ? (
+            <Button
+              color="link"
+              style={{
+                padding: '0',
+                marginBottom: '1.5rem',
+                fontWeight: '400',
+              }}
+              onClick={toggle}
+            >
+              Advanced filters
+              <Icon name={isOpen ? 'angle-up' : 'angle-down'} />
+            </Button> ) : null }
+          <Collapse isOpen={section.hidden ? isOpen : true} >
           <FilterSection key={section.id}>
             {section.filters.map((filter) => (
               <FilterCol
@@ -746,6 +766,8 @@ function ActionListFilters(props: ActionListFiltersProps) {
               </Col>
             }
           </FilterSection>
+          </Collapse>
+          </>
         ))}
         <Row>
           <Col>
