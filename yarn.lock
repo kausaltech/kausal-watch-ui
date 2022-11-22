@@ -8027,6 +8027,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"bignumber.js@npm:^8.1.1":
+  version: 8.1.1
+  resolution: "bignumber.js@npm:8.1.1"
+  checksum: 71544348507cd16c2c152699a8e5146964d9cf4f46108075bcd16a964dffb3963256259fc6ffc9753b4d33dfd0cf863a6b564103a3a20e10002f12a1902e8075
+  languageName: node
+  linkType: hard
+
 "binary-extensions@npm:^1.0.0":
   version: 1.13.1
   resolution: "binary-extensions@npm:1.13.1"
@@ -16338,6 +16345,7 @@ __metadata:
     next-i18next: ^11.0.0
     next-images: ^1.8.4
     next-with-apollo: ^5.3.0
+    numbro: ^2.3.6
     original-url: ^1.2.3
     patch-package: ^6.4.7
     polished: ^4.2.2
@@ -18383,6 +18391,15 @@ __metadata:
   version: 1.0.1
   resolution: "number-is-nan@npm:1.0.1"
   checksum: 13656bc9aa771b96cef209ffca31c31a03b507ca6862ba7c3f638a283560620d723d52e626d57892c7fff475f4c36ac07f0600f14544692ff595abff214b9ffb
+  languageName: node
+  linkType: hard
+
+"numbro@npm:^2.3.6":
+  version: 2.3.6
+  resolution: "numbro@npm:2.3.6"
+  dependencies:
+    bignumber.js: ^8.1.1
+  checksum: a659bb418d15310c0accc99e73d5865f20ebe1ded319f78634aec81a07d90389b8c970d16608daf4ded8c47cb896e200ecd81aacc6955fc8c565f4faf33f1a6a
   languageName: node
   linkType: hard
 
@@ -23679,7 +23696,7 @@ __metadata:
 
 "typescript@patch:typescript@>=2.4.2 <4.0.0#~builtin<compat/typescript>":
   version: 3.9.10
-  resolution: "typescript@patch:typescript@npm%3A3.9.10#~builtin<compat/typescript>::version=3.9.10&hash=7ad353"
+  resolution: "typescript@patch:typescript@npm%3A3.9.10#~builtin<compat/typescript>::version=3.9.10&hash=bda367"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
@@ -23689,7 +23706,7 @@ __metadata:
 
 "typescript@patch:typescript@^4.6.4#~builtin<compat/typescript>":
   version: 4.8.3
-  resolution: "typescript@patch:typescript@npm%3A4.8.3#~builtin<compat/typescript>::version=4.8.3&hash=7ad353"
+  resolution: "typescript@patch:typescript@npm%3A4.8.3#~builtin<compat/typescript>::version=4.8.3&hash=bda367"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver

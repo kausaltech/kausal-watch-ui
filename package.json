@@ -41,6 +41,7 @@
     "next-i18next": "^11.0.0",
     "next-images": "^1.8.4",
     "next-with-apollo": "^5.3.0",
+    "numbro": "^2.3.6",
     "original-url": "^1.2.3",
     "patch-package": "^6.4.7",
     "polished": "^4.2.2",
