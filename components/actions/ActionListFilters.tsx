@@ -68,7 +68,7 @@ const FiltersList = styled.div`
 `;
 
 const FilterSection = styled(Row)`
-  margin-bottom: ${(props) => props.theme.spaces.s200};
+  margin-bottom: ${(props) => props.theme.spaces.s100};
 `;
 
 const FilterSectionDivider = styled.div`
@@ -91,6 +91,22 @@ const StyledBadge = styled(Badge)`
     margin: 0 .5rem;
     width: 0.75rem;
     height: 0.75rem;
+  }
+`;
+
+const ToggleButton = styled(RButton)`
+  padding: 0;
+  margin: 0 0 ${(props) => props.theme.spaces.s100} 0;
+  color: ${(props) => props.theme.themeColors.dark};
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+    background-color: transparent;
+  }
+
+  &.open {
+    color: ${(props) => props.theme.graphColors.grey050};
   }
 `;
 
@@ -733,18 +749,13 @@ function ActionListFilters(props: ActionListFiltersProps) {
         {filterSections.map(section => (
           <>
           { section.hidden ? (
-            <Button
+            <ToggleButton
               color="link"
-              style={{
-                padding: '0',
-                marginBottom: '1.5rem',
-                fontWeight: '400',
-              }}
               onClick={toggle}
             >
-              Advanced filters
-              <Icon name={isOpen ? 'angle-up' : 'angle-down'} />
-            </Button> ) : null }
+              { t('additional-filters') }
+              <Icon name={isOpen ? 'angle-down' : 'angle-right'} />
+            </ToggleButton> ) : null }
           <Collapse isOpen={section.hidden ? isOpen : true} >
           <FilterSection key={section.id}>
             {section.filters.map((filter) => (

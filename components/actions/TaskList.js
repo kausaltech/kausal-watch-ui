@@ -26,9 +26,10 @@ const ToggleButton = styled(Button)`
   padding: 0;
   margin: 0;
   color: ${(props) => props.theme.themeColors.dark};
+  text-decoration: none;
 
   &:hover {
-    text-decoration: none;
+    text-decoration: underline;
   }
 
   &.open {
@@ -140,7 +141,7 @@ const Task = (props) => {
             className={isOpen ? 'open' : ''}
           >
             { isOpen ? t('actions:action-task-hide-comment') : t('actions:action-task-show-comment') }
-            <Icon name={isOpen ? 'angle-up' : 'angle-down'} />
+            <Icon name={isOpen ? 'angle-down' : 'angle-right'} />
           </ToggleButton>
           <Collapse isOpen={isOpen}>
             <div className="task-comment">

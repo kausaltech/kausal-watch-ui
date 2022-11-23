@@ -174,5 +174,6 @@
   "filter-organization-help": "Zeige Maßnahmen, für die die gewählte Organisation zuständig ist",
   "filter-phase-help": "Zeige Maßnahmen in ausgewählter Umsetzungsphase",
   "filter-primary-organization-help": "Zeige Maßnahmen in ausgewählter Gemeinde",
-  "filter-schedule-help": "Zeige Maßnahmen, die sich über den gewählten Zeitplan erstrecken"
+  "filter-schedule-help": "Zeige Maßnahmen, die sich über den gewählten Zeitplan erstrecken",
+  "additional-filters": "Mehr Optionen"
 }

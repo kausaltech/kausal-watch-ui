@@ -174,5 +174,6 @@
   "filter-impact-help": "Näytä toimenpiteet joilla valittu vaikutus",
   "filter-schedule-help": "Näytä toimenpiteet jotka sijoittuvat valittuun ajankohtaan",
   "filter-phase-help": "Näytä toimenpiteet jotka ovat valitussa toteutusvaiheessa",
-  "filter-organization-help": "Näytä toimenpiteet joissa valittu organisaatio on vastuutoimijana"
+  "filter-organization-help": "Näytä toimenpiteet joissa valittu organisaatio on vastuutoimijana",
+  "additional-filters": "Lisävalinnat"
 }
