@@ -46,12 +46,12 @@
   "filter-all-organizations": "Kaikki organisaatiot",
   "filter-all-phases": "Ei vaiherajausta",
   "filter-all-schedules": "Kaikki kaudet",
-  "filter-category": "Rajaa teeman mukaan",
-  "filter-emission-scope": "Rajaa päästöluokkien mukaan",
-  "filter-impact": "Rajaa vaikuttavuuden mukaan",
-  "filter-organization": "Rajaa vastuuorganisaation mukaan",
-  "filter-phase": "Rajaa toteutusvaiheen mukaan",
-  "filter-primary-organization": "Rajaa pääorganisaation mukaan",
+  "filter-category": "Teema",
+  "filter-emission-scope": "Päästöluokka",
+  "filter-impact": "Vaikuttavuus",
+  "filter-organization": "Vastuuorganisaatio",
+  "filter-phase": "Toteutusvaihe",
+  "filter-primary-organization": "Pääorganisaatio",
   "filter-result-actions": "toimenpidettä",
   "filter-result-actions_STRATEGY": "strategiaa",
   "filter-schedule": "Aikataulu",
@@ -175,5 +175,6 @@
   "filter-schedule-help": "Näytä toimenpiteet jotka sijoittuvat valittuun ajankohtaan",
   "filter-phase-help": "Näytä toimenpiteet jotka ovat valitussa toteutusvaiheessa",
   "filter-organization-help": "Näytä toimenpiteet joissa valittu organisaatio on vastuutoimijana",
-  "additional-filters": "Lisävalinnat"
+  "additional-filters": "Lisävalinnat",
+  "actions-filter-by": "Rajaukset"
 }

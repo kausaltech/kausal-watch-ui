@@ -67,6 +67,16 @@ const FiltersList = styled.div`
   }
 `;
 
+const FiltersHeader = styled.h2`
+  margin-bottom: ${(props) => props.theme.spaces.s100};
+  font-size: ${(props) => props.theme.fontSizeMd};
+  font-family: ${(props) => props.theme.fontFamily};
+  font-weight: ${(props) => props.theme.fontWeightBold};
+  color: ${
+    (props) => readableColor(props.theme.neutralLight, props.theme.headingsColor, props.theme.themeColors.white)
+    };
+`;
+
 const FilterSection = styled(Row)`
   margin-bottom: ${(props) => props.theme.spaces.s100};
 `;
@@ -746,6 +756,7 @@ function ActionListFilters(props: ActionListFiltersProps) {
         autoComplete="off"
         aria-label={t('form-action-filters')}
       >
+        <FiltersHeader>{t('actions-filter-by')}</FiltersHeader>
         {filterSections.map(section => (
           <>
           { section.hidden ? (

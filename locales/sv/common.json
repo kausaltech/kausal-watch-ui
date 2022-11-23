@@ -40,12 +40,12 @@
   "filter-all-organizations": "Alla organisationer",
   "filter-all-phases": "Inget fasfilter",
   "filter-all-schedules": "All tidsramar",
-  "filter-category": "Filtrera efter tema",
-  "filter-emission-scope": "Filtrera efter utsläpp",
+  "filter-category": "Tema",
+  "filter-emission-scope": "Utsläpp",
   "filter-impact": "Filtrera efter påverkan",
-  "filter-organization": "Filtrera efter organisation",
-  "filter-phase": "Filtrera efter fas",
-  "filter-primary-organization": "Filtera efter primär organisation",
+  "filter-organization": "Organisation",
+  "filter-phase": "Fas",
+  "filter-primary-organization": "Primär organisation",
   "filter-result-actions": "åtgärder",
   "filter-schedule": "Tidsram",
   "filter-text": "Textsökning",
@@ -136,5 +136,6 @@
   "admin-login-not-defined": " Admininloggningssida är inte definierad",
   "indicator-progress-bar": "On the year {{startYear}} {{name}} was {{startValue}}. Latest observed value in {{latestYear}} was {{latestValue}}. The goal for the year {{goalYear}} is {{goalValue}}. Since {{startYear}} reduction is {{reduced}}. {{toBeReduced}} still needs to be reduced before the year {{goalYear}}.",
   "organizations": "Organisationer",
-  "additional-filters": "Fler alternativ"
+  "additional-filters": "Fler alternativ",
+  "actions-filter-by": "Filtera"
 }

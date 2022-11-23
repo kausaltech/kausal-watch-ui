@@ -46,12 +46,12 @@
   "filter-all-organizations": "All organizations",
   "filter-all-phases": "No phase filter",
   "filter-all-schedules": "All schedules",
-  "filter-category": "Filter by theme",
-  "filter-emission-scope": "Filter by emission scope",
-  "filter-impact": "Filter by impact",
-  "filter-organization": "Filter by organization",
-  "filter-phase": "Filter by phase",
-  "filter-primary-organization": "Filter by primary organization",
+  "filter-category": "Theme",
+  "filter-emission-scope": "Emission scope",
+  "filter-impact": "Impact",
+  "filter-organization": "Organization",
+  "filter-phase": "Phase",
+  "filter-primary-organization": "Primary organization",
   "filter-result-actions": "actions",
   "filter-result-actions_STRATEGY": "strategies",
   "filter-schedule": "Schedule",
@@ -175,5 +175,6 @@
   "filter-phase-help": "Show actions in selected implementation phase",
   "filter-primary-organization-help": "Show actions of selected municipality",
   "filter-schedule-help": "Show actions spanning across selected schedule",
-  "additional-filters": "Additional filters"
+  "additional-filters": "Additional filters",
+  "actions-filter-by": "Filter"
 }
