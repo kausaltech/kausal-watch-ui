@@ -61,5 +61,7 @@
   "tasks-on-time": "Ajoissa olevat tehtävät",
   "action-implementation-phase-unknown": "Ei toteutusvaihetta",
   "related-actions": "Liittyvät toimenpiteet",
-  "org-responsible-in-actions": "{{actionCount}} toimenpiteen vastuuorganisaationa"
+  "org-responsible-in-actions": "{{actionCount}} toimenpiteen vastuuorganisaationa",
+  "action-task-hide-comment": "Piilota lisätiedot",
+  "action-task-show-comment": "Näytä lisätiedot"
 }

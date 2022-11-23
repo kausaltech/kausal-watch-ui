@@ -61,5 +61,7 @@
   "responsible-organization-other": "Andere Verantwortliche",
   "action-implementation-phase-unknown": "Keine Implementierungsphase",
   "related-actions": "Verbundene Maßnahmen",
-  "org-responsible-in-actions": "Verantwortlich für {{actionCount}} Maßnahmen"
+  "org-responsible-in-actions": "Verantwortlich für {{actionCount}} Maßnahmen",
+  "action-task-show-comment": "Informationen anzeigen",
+  "action-task-hide-comment": "Informationen ausblenden"
 }

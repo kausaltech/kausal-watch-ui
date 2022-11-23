@@ -61,5 +61,7 @@
   "responsible-organization-other": "Other responsibles",
   "action-implementation-phase-unknown": "No implementation phase",
   "related-actions": "Related actions",
-  "org-responsible-in-actions": "Responsible in {{actionCount}} actions"
+  "org-responsible-in-actions": "Responsible in {{actionCount}} actions",
+  "action-task-hide-comment": "Hide details",
+  "action-task-show-comment": "Show details"
 }

@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { PropTypes } from 'prop-types';
-import { ListGroup as BaseListGroup, ListGroupItem as BaseListGroupItem } from 'reactstrap';
-import styled, { withTheme } from 'styled-components';
+import { ListGroup as BaseListGroup, ListGroupItem as BaseListGroupItem, Button, Collapse } from 'reactstrap';
+import styled from 'styled-components';
+import { useTheme } from 'common/theme';
 import dayjs from 'common/dayjs';
 import Icon from 'components/common/Icon';
 import RichText from 'components/common/RichText';
-import { withTranslation } from 'common/i18n';
+import { useTranslation } from 'common/i18n';
 
 const Date = styled.span`
   font-size: ${(props) => props.theme.fontSizeSm};
@@ -18,13 +19,26 @@ const TaskWrapper = styled.div`
 `;
 
 const TaskMeta = styled.div`
-  margin-top: ${(props) => props.theme.spaces.s050};
   flex: 0 0 ${(props) => props.theme.spaces.s800};
 `;
 
+const ToggleButton = styled(Button)`
+  padding: 0;
+  margin: 0;
+  color: ${(props) => props.theme.themeColors.dark};
+
+  &:hover {
+    text-decoration: none;
+  }
+
+  &.open {
+    color: ${(props) => props.theme.graphColors.grey050};
+  }
+`;
+
 const TaskContent = styled.div`
+  margin: ${(props) => props.theme.spaces.s025} 0;
   border-left: 1px solid ${(props) => props.theme.themeColors.light};
-  margin: ${(props) => props.theme.spaces.s050};
   padding-left: ${(props) => props.theme.spaces.s100};
 
   .text-content {
@@ -35,6 +49,11 @@ const TaskContent = styled.div`
       margin-bottom: 0;
     }
   }
+
+  .task-comment {
+    margin-top: ${(props) => props.theme.spaces.s100};
+  }
+
   .task-comment h4 {
     margin-top: 1rem;
   }
@@ -46,12 +65,21 @@ const TaskContent = styled.div`
     word-break: break-word;
     hyphens: manual;
   }
+
+  img {
+    max-width: 100%;
+    height: auto !important;
+  }
 `;
 
 const ListGroup = styled(BaseListGroup)`
   h4 {
+    margin: 0;
     font-size: ${(props) => props.theme.fontSizeBase};
     font-family: ${(props) => props.theme.fontFamily};
+    font-weight: ${(props) => props.theme.fontWeightBold};
+    line-height: ${(props) => props.theme.lineHeightMd};
+    color: ${(props) => props.theme.themeColors.dark};
   }
 `;
 
@@ -82,8 +110,55 @@ function parseTimestamp(timestamp) {
   return dayjs(timestamp).format(timeFormat);
 }
 
+const Task = (props) => {
+  const { task, theme, t, completed } = props;
+  const [isOpen, setIsOpen] = useState(false);
+  const toggle = () => setIsOpen(!isOpen);
+
+  return (
+    <TaskWrapper>
+      { completed ? (
+      <TaskMeta>
+        <Icon name="check" color={theme.graphColors.green050} alt={t('actions:action-task-done')} />
+        <Date>{parseTimestamp(task.completedAt)}</Date>
+      </TaskMeta>
+      ) : (
+        <TaskMeta>
+        <Icon name="calendar" color={theme.graphColors.blue070} alt={t('actions:action-task-todo')} />
+        <Date>{parseTimestamp(task.dueAt)}</Date>
+      </TaskMeta>
+      )}
+      <TaskContent>
+        <h4 className="task-title">{task.name}</h4>
+        {/* Strip HTML tags to see if comment field is actually empty */}
+        { task.comment.replace(/(<([^>]+)>)/gi, "").length > 0 && (
+          <>
+          <ToggleButton
+            color="link"
+            onClick={toggle}
+            size="sm"
+            className={isOpen ? 'open' : ''}
+          >
+            { isOpen ? t('actions:action-task-hide-comment') : t('actions:action-task-show-comment') }
+            <Icon name={isOpen ? 'angle-up' : 'angle-down'} />
+          </ToggleButton>
+          <Collapse isOpen={isOpen}>
+            <div className="task-comment">
+              <RichText html={task.comment} />
+            </div>
+          </Collapse>
+          </>
+        )}
+      </TaskContent>
+    </TaskWrapper>
+  );
+};
+
 function TaskList(props) {
-  const { t, theme, tasks } = props;
+  const { tasks } = props;
+  const theme = useTheme();
+  const { t } = useTranslation();
+
   const sortedTasks = [...tasks]
     .sort((a, b) => {
       const adate = a.completedAt ? a.completedAt : a.dueAt;
@@ -95,18 +170,7 @@ function TaskList(props) {
     .filter((item) => item.completedAt === null && item.state !== 'CANCELLED')
     .map((item) => (
       <ListGroupItem key={item.id} className={`state--${item.state}`}>
-        <TaskWrapper>
-          <TaskMeta>
-            <Icon name="calendar" color={theme.themeColors.dark} alt={t('actions:action-task-todo')} />
-            <Date>{parseTimestamp(item.dueAt)}</Date>
-          </TaskMeta>
-          <TaskContent>
-            <h4 className="task-title">{item.name}</h4>
-            <div className="task-comment">
-              {item.comment && (<RichText html={item.comment} />)}
-            </div>
-          </TaskContent>
-        </TaskWrapper>
+        <Task task={item} theme={theme} t={t} completed={false}/>
       </ListGroupItem>
     ));
 
@@ -115,18 +179,7 @@ function TaskList(props) {
     .filter((item) => item.completedAt !== null && item.state !== 'CANCELLED')
     .map((item) => (
       <ListGroupItem key={item.id} className={`state--${item.state}`}>
-        <TaskWrapper>
-          <TaskMeta>
-            <Icon name="check" color={theme.themeColors.dark} alt={t('actions:action-task-done')} />
-            <Date>{parseTimestamp(item.completedAt)}</Date>
-          </TaskMeta>
-          <TaskContent>
-            <h4 className="task-title">{item.name}</h4>
-            <div className="task-comment">
-              {item.comment && (<RichText html={item.comment} />)}
-            </div>
-          </TaskContent>
-        </TaskWrapper>
+        <Task task={item} theme={theme} t={t} completed={true}/>
       </ListGroupItem>
     ));
 
@@ -156,8 +209,7 @@ function TaskList(props) {
 }
 
 TaskList.propTypes = {
-  t: PropTypes.func.isRequired,
   tasks: PropTypes.arrayOf(PropTypes.shape).isRequired,
 };
 
-export default withTranslation(['common', 'actions'])(withTheme(TaskList));
+export default TaskList;
