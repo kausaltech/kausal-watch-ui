@@ -15,6 +15,14 @@ const StyledCard = styled(BSCard)`
   background-color: ${(props) => (props.customcolor ? props.customcolor : props.theme.themeColors.white)};
   box-shadow: 2px 2px 8px ${(props) => transparentize(0.9, props.theme.themeColors.dark)};
 
+  &.negative {
+  }
+
+  &.outline {
+    border-color: ${(props) => props.theme.themeColors.white};
+    border-width: 1px;
+  }
+
   .card-body {
     line-height: ${(props) => props.theme.lineHeightMd};
     padding-bottom: .5rem;
@@ -58,11 +66,13 @@ const Card = (props) => {
     imageAlign,
     negative,
     customColor,
-    children } = props;
+    children,
+    outline,
+  } = props;
 
   return (
     <StyledCard
-      className={negative && 'negative'}
+      className={`${negative && 'negative'} ${outline && 'outline'}`}
       customcolor={customColor}
     >
       {/* TODO: maybe animate transition */}
@@ -84,6 +94,7 @@ Card.defaultProps = {
   colorEffect: undefined,
   negative: false,
   customColor: '',
+  outline: false,
 };
 
 Card.propTypes = {
@@ -93,6 +104,7 @@ Card.propTypes = {
   negative: PropTypes.bool,
   customColor: PropTypes.string,
   children: PropTypes.element.isRequired,
+  outline: PropTypes.bool,
 };
 
 export default Card;
