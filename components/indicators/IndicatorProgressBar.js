@@ -8,7 +8,6 @@ import dayjs from 'common/dayjs';
 import { IndicatorLink } from 'common/links';
 
 const BarBase = styled.rect`
-
 `;
 
 const DateText = styled.tspan`
@@ -37,6 +36,10 @@ const LinkedIndicator = styled.div`
   &:hover {
     text-decoration: underline;
   }
+`;
+
+const SourceLink = styled.div`
+  font-size: ${(props) => props.theme.fontSizeSm};
 `;
 
 const formatValue = (value, locale) => {
@@ -93,33 +96,50 @@ function IndicatorProgressBar(props) {
     unit, note, indicatorId,
     animate } = props;
 
+  console.log(props);
   const theme = useContext(ThemeContext);
   const { t, i18n } = useTranslation();
-  const pendingBarControls = useAnimation();
+  const latestBarControls = useAnimation();
   const completedBarControls = useAnimation();
   const latestValueControls = useAnimation();
 
   const canvas = { w: 800, h: 150 };
-  const bar = { w: 720, h: 32 };
-  const scale = (bar.w - 8) / startValue;
+  const barHeight = 16;
+  const barMargin = 4;
+  const bottomMargin = 90;
+  const topMargin = 50;
+  const bars = { w: 800, h: 3 * barHeight };
+  const scale = bars.w / startValue;
 
   // const animatedLatestValue = useSpring({ latest: latestValue, from: { latest: startValue } });
   // For simplicity, currently only supports indicators
   // where the goal is towards reduction of a value
   // TODO: catch possible edge cases
 
-  const completedBar = { x: 44, w: (startValue - latestValue) * scale };
-  const pendingBar = { x: 44 + completedBar.w, w: (latestValue - goalValue) * scale };
-  const goalBar = { x: 44 + completedBar.w + pendingBar.w, w: (goalValue) * scale };
+  const startBar = {
+    x: 0,
+    y: topMargin,
+    w: startValue * scale
+  };
+  const latestBar = {
+    x: bars.w - (latestValue * scale),
+    y: topMargin + barHeight,
+    w: latestValue * scale
+  };
+  const goalBar = {
+    x: bars.w - (goalValue * scale),
+    y: topMargin + (2 * barHeight),
+    w: goalValue * scale
+  };
 
   let reductionCounterFrom = startValue - latestValue;
   const reductionCounterTo = startValue - latestValue;
   const reductionCounterDuration = 3;
 
   useEffect(() => {
-    pendingBarControls.set({
-      x: 44,
-      width: completedBar.w + pendingBar.w,
+    latestBarControls.set({
+      x: 0,
+      width: bars.w,
     });
     latestValueControls.set({
       opacity: 0,
@@ -130,9 +150,9 @@ function IndicatorProgressBar(props) {
   }, []);
 
   const sequenceOn = async () => {
-    await pendingBarControls.start({
-      x: 44 + completedBar.w,
-      width: (latestValue - goalValue) * scale,
+    await latestBarControls.start({
+      x: bars.w - (latestValue * scale),
+      width: latestValue * scale,
       transition: { duration: 3 },
     });
     await latestValueControls.start({
@@ -175,36 +195,33 @@ function IndicatorProgressBar(props) {
         <span>{ animate }</span>
         <svg viewBox={`0 0 ${canvas.w} ${canvas.h}`}>
           <title>{t('indicator-progress-bar', graphValues)}</title>
-          <BarBase
-            x="40"
-            y="60"
-            width={bar.w}
-            height={bar.h}
-            fill={theme.themeColors.light}
-          />
+          {/* completed bar */}
           <motion.rect
             initial={{ width: 0 }}
-            animate={{ width: completedBar.w }}
-            x={completedBar.x}
-            y="64"
-            height={bar.h - 8}
-            fill={theme.themeColors.light}
+            animate={{ width: startBar.w }}
+            x={startBar.x}
+            y={startBar.y}
+            height={barHeight - barMargin}
+            fill={theme.graphColors.yellow010}
           />
           <line
-            x1={completedBar.x}
-            x2={completedBar.x}
-            y1={10}
-            y2={64 + bar.h - 8}
+            x1={startBar.x}
+            x2={startBar.x}
+            y1={0}
+            y2={bottomMargin + bars.h - barMargin}
             stroke={theme.themeColors.light}
           />
           <ValueGroup
-            transform={`translate(${completedBar.x + 4} 20)`}
+            transform={`translate(${startBar.x + 4} 16)`}
             date={graphValues.startYear}
             value={startValue}
             unit={unit}
             locale={i18n.language}
           />
-          <text transform={`translate(${completedBar.x + completedBar.w / 2} 110)`} textAnchor="middle">
+          <text
+            transform={`translate(${(bars.w - latestBar.w) / 2} 116)`}
+            textAnchor="middle"
+          >
             <DateText>{t('reduced')}</DateText>
             <UnitText x="0" dy="20">
               <Counter
@@ -217,22 +234,23 @@ function IndicatorProgressBar(props) {
               {unit}
             </UnitText>
           </text>
+          {/* pending from goal bar */}
           <motion.rect
-            animate={pendingBarControls}
-            y="64"
-            height={bar.h - 8}
+            animate={latestBarControls}
+            y={latestBar.y}
+            height={barHeight - barMargin}
             fill={theme.graphColors.red030}
           />
           <motion.g animate={latestValueControls}>
             <line
-              x1={pendingBar.x}
-              x2={pendingBar.x}
-              y1={10}
-              y2={64 + bar.h - 8}
+              x1={latestBar.x}
+              x2={latestBar.x}
+              y1={0}
+              y2={bottomMargin + bars.h - barMargin}
               stroke={theme.themeColors.light}
             />
             <ValueGroup
-              transform={`translate(${pendingBar.x + 4} 20)`}
+              transform={`translate(${latestBar.x + 4} 16)`}
               date={graphValues.latestYear}
               value={latestValue}
               unit={unit}
@@ -241,7 +259,7 @@ function IndicatorProgressBar(props) {
           </motion.g>
           <motion.text
             animate={completedBarControls}
-            transform={`translate(${pendingBar.x + pendingBar.w / 2} 110)`}
+            transform={`translate(${bars.w - ((latestBar.w + goalBar.w) / 2)} 116)`}
             textAnchor="middle"
           >
             <DateText>{t('to-reduce')}</DateText>
@@ -253,30 +271,35 @@ function IndicatorProgressBar(props) {
           </motion.text>
           <BarBase
             x={goalBar.x}
-            y="64"
+            y={goalBar.y}
             width={goalBar.w}
-            height={bar.h - 8}
-            fill={theme.graphColors.green070}
+            height={barHeight - barMargin}
+            fill={theme.graphColors.green050}
           />
           <line
             x1={goalBar.x}
             x2={goalBar.x}
-            y1={10}
-            y2={64 + bar.h - 8}
+            y1={0}
+            y2={bottomMargin + bars.h - barMargin}
             stroke={theme.themeColors.light}
           />
           <ValueGroup
-            transform={`translate(${goalBar.x + 4} 20)`}
+            transform={`translate(${goalBar.x + 4} 16)`}
             date={graphValues.goalYear}
             value={goalValue}
             unit={unit}
             locale={i18n.language}
           />
-          <text transform={`translate(${goalBar.x + goalBar.w / 2} 110)`} textAnchor="middle">
+          <text
+            transform={`translate(${goalBar.x + (goalBar.w / 2)} 116)`} textAnchor="middle"
+          >
             <DateText>{t('bar-goal')}</DateText>
           </text>
         </svg>
-        <div className="text-center"><small>{ note }</small></div>
+        <SourceLink className="text-end mt-3">
+          { note }
+        </SourceLink>
+
       </LinkedIndicator>
     </IndicatorLink>
   );
