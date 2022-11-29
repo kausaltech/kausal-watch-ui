@@ -9,6 +9,13 @@ import PlanContext from 'context/plan';
 import { useTranslation } from 'common/i18n';
 import StatusDonut from 'components/graphs/StatusDonut';
 
+import type { TFunction } from 'next-i18next';
+import type { PlanContextFragment } from 'common/__generated__/graphql';
+import type { Theme } from '@kausal/themes/types'
+import type { ActionListAction } from './ActionList';
+
+type ActionStatus = PlanContextFragment['actionStatuses'][0];
+
 const StatusGraphs = styled.div`
   width: auto;
   display: flex;
@@ -29,20 +36,35 @@ const StatusGraphs = styled.div`
   }
 `;
 
-const getTimelinessData = (actions, actionStatuses, theme, t) => {
-  const timeliness = {
+interface TimelinessInterval {
+  values: number[],
+  labels: string[],
+  good: number,
+  total: string | undefined,
+  colors: string[]
+}
+
+const getTimelinessData = (
+  actions: ActionListAction[],
+  actionStatuses: ActionStatus[],
+  targetInterval: number,
+  acceptableInterval: number,
+  theme: Theme,
+  t: TFunction,
+) => {
+
+  const timeliness: TimelinessInterval = {
     values: [],
     labels: [],
     good: 0,
-    total: 0,
+    total: undefined,
     colors: [],
   };
 
   const now = dayjs();
-  let under30 = 0;
-  let under60 = 0;
-  let over60 = 0;
-  let notActive = 0;
+  let withinTargetInterval = 0;
+  let withinAcceptableInterval = 0;
+  let outsideAcceptableInterval = 0;
   let total = 0;
   let good = 0;
 
@@ -54,31 +76,30 @@ const getTimelinessData = (actions, actionStatuses, theme, t) => {
 
     // Filter out merged, inactive and completed actions from timeliness calculation
     if (['postponed', 'cancelled', 'completed', 'merged'].includes(actionStatus.identifier)) {
-      notActive += 1;
       total -= 1;
     } else {
-      if (age >= 60) {
-        over60 += 1;
-      } else if (age >= 30) {
-        under60 += 1;
+      if (age >= acceptableInterval) {
+        outsideAcceptableInterval += 1;
+      } else if (age >= targetInterval) {
+        withinAcceptableInterval += 1;
         good += 1;
       } else {
-        under30 += 1;
+        withinTargetInterval += 1;
         good += 1;
       }
     }
   });
 
-  timeliness.values.push(under30);
-  timeliness.labels.push(t('under-x-days', { days: 30 }));
+  timeliness.values.push(withinTargetInterval);
+  timeliness.labels.push(t('under-x-days', { days: targetInterval }));
   timeliness.colors.push(theme.graphColors.green070);
 
-  timeliness.values.push(under60);
-  timeliness.labels.push(t('under-x-days', { days: 60 }));
+  timeliness.values.push(withinAcceptableInterval);
+  timeliness.labels.push(t('under-x-days', { days: acceptableInterval }));
   timeliness.colors.push(theme.graphColors.green030);
 
-  timeliness.values.push(over60);
-  timeliness.labels.push(t('over-x-days', { days: 60 }));
+  timeliness.values.push(outsideAcceptableInterval);
+  timeliness.labels.push(t('over-x-days', { days: acceptableInterval }));
   timeliness.colors.push(theme.graphColors.yellow050);
 
   /*
@@ -92,7 +113,6 @@ const getTimelinessData = (actions, actionStatuses, theme, t) => {
   */
 
   timeliness.total = `${Math.round((good / total) * 100)}%`;
-
   return timeliness;
 };
 
@@ -104,7 +124,14 @@ const ActionsStatusGraphs = (props) => {
 
   const progressData = getStatusData(actions, plan.actionStatuses, theme);
   progressData.labels = progressData.labels.map((label) => label || t('unknown'));
-  const timelinessData = getTimelinessData(actions, plan.actionStatuses, theme, t);
+  const timelinessData = getTimelinessData(
+    actions,
+    plan.actionStatuses,
+    plan.actionUpdateTargetInterval,
+    plan.actionUpdateAcceptableInterval,
+    theme,
+    t
+  );
   let phaseData;
   if (plan.actionImplementationPhases.length > 0) {
     phaseData = getPhaseData(actions, plan.actionImplementationPhases, plan.actionStatuses, theme, t);
@@ -133,7 +160,9 @@ const ActionsStatusGraphs = (props) => {
         currentValue={timelinessData.total}
         colors={timelinessData.colors.length > 0 ? timelinessData.colors : []}
         header={t('actions-updated')}
-        helpText={t('actions-updated-help')}
+        helpText={t('actions-updated-help', {
+          interval: dayjs.duration({days: plan.actionUpdateAcceptableInterval}).humanize()
+        })}
       />
     </StatusGraphs>
   );

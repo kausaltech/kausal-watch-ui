@@ -17,6 +17,8 @@ fragment PlanContext on Plan {
   otherLanguages
   hideActionIdentifiers
   viewUrl(clientUrl: $clientUrl)
+  actionUpdateTargetInterval
+  actionUpdateAcceptableInterval
   primaryActionClassification {
     id
     identifier
