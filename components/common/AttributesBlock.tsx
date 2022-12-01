@@ -4,6 +4,7 @@ import { Row, Col } from 'reactstrap';
 import { useTranslation } from 'common/i18n';
 import { TFunction } from 'next-i18next';
 import { gql } from '@apollo/client';
+import numbro from 'numbro';
 
 import RichText from 'components/common/RichText';
 import Icon from 'components/common/Icon';
@@ -130,9 +131,10 @@ function AttributeContent(props: AttributeContentProps | AttributeContentNestedT
       );
       break;
     case 'AttributeNumericValue':
+      const formattedValue = numbro(attribute.numericValue).format({thousandSeparated: true});
       dataElement = (
         <span>
-          {attribute.numericValue} {type.unit?.name}
+          {formattedValue} {type.unit?.name}
         </span>
       );
       break;

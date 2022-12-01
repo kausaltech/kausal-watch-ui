@@ -23,9 +23,11 @@ async function exportActions(t, actions, actionStatuses, plan, fileFormat = 'exc
     { header: t('actions:tasks-completed'), key: 'completedTasks', width: 10 },
     { header: t('actions:action-tasks'), key: 'tasks', width: 10 },
     // TODO: i18n
-    { header: t('actions:responsible-organization-main'), key: 'mainResponsibleOrg', width: 20 },
+    { header: t('actions:responsible-organizations-primary'), key: 'primaryResponsibleOrgs', width: 20 },
     // TODO: i18n
-    { header: t('actions:responsible-organization-other'), key: 'otherResponsibleOrgs', width: 20 },
+    { header: t('actions:responsible-organizations-collaborator'), key: 'collaboratorResponsibleOrgs', width: 20 },
+    // TODO: i18n
+    { header: t('actions:responsible-organizations-other'), key: 'otherResponsibleOrgs', width: 20 },
   ];
   actions.forEach((act) => {
     const status = cleanActionStatus(act, actionStatuses);
@@ -60,9 +62,12 @@ async function exportActions(t, actions, actionStatuses, plan, fileFormat = 'exc
       }
     });
 
-    const responsibleOrgs = act.responsibleParties.map(({ organization }) => organization.name);
-    const mainResponsibleOrg = responsibleOrgs.length > 0 ? responsibleOrgs[0] : null;
-    const otherResponsibleOrgs = responsibleOrgs.slice(1);
+    const getOrgName = ({organization}) => (organization.name);
+
+    const parties = act.responsibleParties;
+    const primaryResponsibleOrgs = parties.filter(p => p.role === 'PRIMARY').map(getOrgName);
+    const collaboratorResponsibleOrgs = parties.filter(p => p.role === 'COLLABORATOR').map(getOrgName);
+    const otherResponsibleOrgs = parties.filter(p => p.role === null).map(getOrgName);
 
     worksheet.addRow([
       act.identifier,
@@ -74,8 +79,9 @@ async function exportActions(t, actions, actionStatuses, plan, fileFormat = 'exc
       lateTasks,
       completedTasks,
       tasksCount,
-      mainResponsibleOrg,
-      otherResponsibleOrgs.join(';'),
+      primaryResponsibleOrgs.join(';'),
+      collaboratorResponsibleOrgs.join(';'),
+      otherResponsibleOrgs.join(';')
     ]);
   });
 

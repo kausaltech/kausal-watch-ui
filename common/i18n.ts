@@ -1,6 +1,13 @@
 import * as NextI18Next from 'next-i18next';
 import { ContentSiteGeneralContentActionTermChoices } from './__generated__/graphql';
+import numbro from "numbro";
+import numbroDe from 'numbro/dist/languages/de-DE.min.js';
 
+
+numbro.registerLanguage({
+  ...numbroDe,
+  languageTag: 'de',
+});
 
 const {
   appWithTranslation,

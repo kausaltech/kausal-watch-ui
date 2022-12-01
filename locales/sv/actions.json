@@ -46,5 +46,7 @@
   "no-defined-indicators": "",
   "not-being-implemented": ";Not being implemented;",
   "not-being-monitored": ";Not monitored;",
-  "org-responsible-in-actions": "Responsible in {{actionCount}} actions"
+  "org-responsible-in-actions": "Responsible in {{actionCount}} actions",
+  "action-task-show-comment": " Visa information",
+  "action-task-hide-comment": "Dölj information"
 }

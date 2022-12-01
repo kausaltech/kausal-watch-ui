@@ -5,6 +5,7 @@ import { gql, ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client
 import ReactPiwik from 'react-piwik';
 import { ThemeProvider } from 'styled-components';
 import { Router, useRouter } from 'next/router';
+import numbro from "numbro";
 
 import { captureException } from 'common/sentry';
 import { appWithTranslation } from 'common/i18n';
@@ -84,6 +85,11 @@ function WatchApp(props: WatchAppProps) {
   }, [matomoURL, matomoSiteId]);
 
   dayjs.locale(router.locale)
+
+  const i18n = getI18n();
+  if (i18n) {
+    numbro.setLanguage(i18n.language);
+  }
 
   if (!isServer) {
     setApolloPlanIdentifier(plan.identifier);

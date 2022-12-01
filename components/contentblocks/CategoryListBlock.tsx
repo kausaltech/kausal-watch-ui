@@ -40,7 +40,7 @@ const CATEGORY_FRAGMENT = gql`
 
 const CategoryListSection = styled.div`
   background-color: ${(props) => props.theme.neutralLight};
-  padding: ${(props) => props.theme.spaces.s400} 0;
+  padding: ${(props) => `${props.theme.spaces.s400} 0 ${props.theme.spaces.s100} 0`};
   color: ${
     (props) => readableColor(props.theme.neutralLight, props.theme.themeColors.black, props.theme.themeColors.white)
     };
@@ -154,7 +154,6 @@ const CategoryListBlock = (props: CategoryListBlockProps) => {
               lg="4"
               key={cat.id}
               className="mb-5 d-flex align-items-stretch"
-              style={{ transition: 'all 0.5s ease' }}
             >
               <Link href={cat.categoryPage.urlPath}>
                 <a className="card-wrapper">

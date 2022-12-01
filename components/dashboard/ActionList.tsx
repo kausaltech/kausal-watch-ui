@@ -46,11 +46,6 @@ const ActionListHeader = styled.div`
       font-size: ${(props) => props.theme.fontSizeXxl};
     }
   }
-
-  h2 {
-    font-size: ${(props) => props.theme.fontSizeLg};
-    margin-bottom: ${(props) => props.theme.spaces.s200};
-  }
 `;
 
 const IndicatorsTabs = styled.div`
@@ -172,6 +167,7 @@ export const GET_ACTION_LIST = gql`
       }
       responsibleParties {
         id
+        role
         organization {
           id
           abbreviation

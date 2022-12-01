@@ -46,12 +46,12 @@
   "filter-all-organizations": "Alle organisationer",
   "filter-all-phases": "Intet fasefilter",
   "filter-all-schedules": "Alle tidsplaner",
-  "filter-category": "Filtrer efter tema",
-  "filter-emission-scope": "Filtrer efter emissionsomfang",
-  "filter-impact": "Filtrer efter indvirkning",
-  "filter-organization": "Filtrer efter organisation",
-  "filter-phase": "Filtrer efter fase",
-  "filter-primary-organization": "Filtrer efter primær organisation",
+  "filter-category": "Tema",
+  "filter-emission-scope": "Emissionsomfang",
+  "filter-impact": "Indvirkning",
+  "filter-organization": "Organisation",
+  "filter-phase": "Fase",
+  "filter-primary-organization": "Primær organisation",
   "filter-result-actions": "handlinger",
   "filter-result-actions_STRATEGY": "strategies",
   "filter-schedule": "Tidsplan",
@@ -164,5 +164,7 @@
   "form-action-filters": "Aktionslistefiltre",
   "nav-tools": "Værktøjer",
   "nav-primary": "Primær",
-  "nav-footer": "Sidefod"
+  "nav-footer": "Sidefod",
+  "additional-filters": "Flere muligheder",
+  "actions-filter-by": "Filtrer"
 }

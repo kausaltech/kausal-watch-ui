@@ -6,6 +6,7 @@ import { gql } from '@apollo/client';
 
 import { Button, Collapse } from 'reactstrap';
 import { withTranslation } from '../../common/i18n';
+import Icon from 'components/common/Icon';
 
 const Person = styled.div`
   display: flex;
@@ -69,9 +70,10 @@ const Address = styled.address`
 
 const CollapseButton = styled(Button)`
   padding: 0;
+  text-decoration: none;
 
   &:hover {
-    text-decoration: none;
+    text-decoration: underline;
   }
 `;
 
@@ -182,6 +184,7 @@ class ContactPerson extends React.Component {
             aria-controls={`contact-${person.id}`}
           >
             { t('contact-info') }
+            <Icon name={collapse ? 'angle-down' : 'angle-right'} />
           </CollapseButton>
           <Collapse isOpen={collapse} id={`contact-${person.id}`}>
             {collapse && <ContactDetails id={person.id} t={t} />}

@@ -3,7 +3,7 @@ import { Row, Col, Badge, CloseButton } from 'reactstrap';
 import { debounce, } from 'lodash';
 import styled from 'styled-components';
 import { readableColor } from 'polished';
-import {ButtonGroup, Button as RButton} from 'reactstrap';
+import {ButtonGroup, Button as RButton, Collapse} from 'reactstrap';
 
 import { getActionTermContext, useTranslation } from 'common/i18n';
 import { useTheme } from 'common/theme';
@@ -23,6 +23,7 @@ import SelectDropdown, { SelectDropdownOption } from 'components/common/SelectDr
 import {
   CategoryHierarchyMember, CategoryTypeHierarchy, constructCatHierarchy
 } from 'common/categories';
+import Icon from 'components/common/Icon';
 import { createFilter } from 'react-select';
 
 
@@ -66,8 +67,18 @@ const FiltersList = styled.div`
   }
 `;
 
+const FiltersHeader = styled.h2`
+  margin-bottom: ${(props) => props.theme.spaces.s100};
+  font-size: ${(props) => props.theme.fontSizeMd};
+  font-family: ${(props) => props.theme.fontFamily};
+  font-weight: ${(props) => props.theme.fontWeightBold};
+  color: ${
+    (props) => readableColor(props.theme.neutralLight, props.theme.headingsColor, props.theme.themeColors.white)
+    };
+`;
+
 const FilterSection = styled(Row)`
-  margin-bottom: ${(props) => props.theme.spaces.s200};
+  margin-bottom: ${(props) => props.theme.spaces.s100};
 `;
 
 const FilterSectionDivider = styled.div`
@@ -90,6 +101,22 @@ const StyledBadge = styled(Badge)`
     margin: 0 .5rem;
     width: 0.75rem;
     height: 0.75rem;
+  }
+`;
+
+const ToggleButton = styled(RButton)`
+  padding: 0;
+  margin: 0 0 ${(props) => props.theme.spaces.s100} 0;
+  color: ${(props) => props.theme.themeColors.dark};
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+    background-color: transparent;
+  }
+
+  &.open {
+    color: ${(props) => props.theme.graphColors.grey050};
   }
 `;
 
@@ -678,6 +705,8 @@ function ActionListFilters(props: ActionListFiltersProps) {
   } = props;
 
   const [filterState, setFilterState] = useState(activeFilters);
+  const [isOpen, setIsOpen] = useState(false);
+
   const { t } = useTranslation();
   const plan = usePlan();
 
@@ -717,6 +746,8 @@ function ActionListFilters(props: ActionListFiltersProps) {
     onFilterChange(id, deleteFilterValues(id, value))
   }, [onFilterChange, deleteFilterValues]);
 
+  const toggle = () => setIsOpen(!isOpen);
+
   return (
     <div className="filters mb-2 text-left">
       <form
@@ -725,7 +756,18 @@ function ActionListFilters(props: ActionListFiltersProps) {
         autoComplete="off"
         aria-label={t('form-action-filters')}
       >
+        <FiltersHeader>{t('actions-filter-by')}</FiltersHeader>
         {filterSections.map(section => (
+          <>
+          { section.hidden ? (
+            <ToggleButton
+              color="link"
+              onClick={toggle}
+            >
+              { t('additional-filters') }
+              <Icon name={isOpen ? 'angle-down' : 'angle-right'} />
+            </ToggleButton> ) : null }
+          <Collapse isOpen={section.hidden ? isOpen : true} >
           <FilterSection key={section.id}>
             {section.filters.map((filter) => (
               <FilterCol
@@ -746,6 +788,8 @@ function ActionListFilters(props: ActionListFiltersProps) {
               </Col>
             }
           </FilterSection>
+          </Collapse>
+          </>
         ))}
         <Row>
           <Col>

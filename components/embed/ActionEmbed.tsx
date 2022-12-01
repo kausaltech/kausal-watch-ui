@@ -55,17 +55,24 @@ const GET_ACTION = gql`
 `;
 
 interface ActionEmbedPropsType {
-  path: string[]
+  path: string[],
+  maxWidth?: number,
 }
 
-const ActionCardWrapper = styled.div`
-  max-width: 500px;
+interface ActionCardWrapperProps {
+  maxWidth: number,
+}
+
+const DEFAULT_MAX_WIDTH = 600;
+
+const ActionCardWrapper = styled.div<ActionCardWrapperProps>`
+  max-width: ${(props) => props.maxWidth}px;
   @media (max-width: ${(props) => props.theme.breakpointMd}) {
     max-width: 100%;
   }
 `;
 
-const ActionEmbed = ({path} : ActionEmbedPropsType) => {
+const ActionEmbed = ({path, maxWidth} : ActionEmbedPropsType) => {
   const plan = usePlan();
   if (path.length < 1) {
     throw new InvalidEmbedAddressError('Could not retrieve action data');
@@ -81,10 +88,10 @@ const ActionEmbed = ({path} : ActionEmbedPropsType) => {
     throw new InvalidEmbedAddressError('Could not retrieve action data');
   }
   return (
-    <ActionCardWrapper>
+    <ActionCardWrapper maxWidth={maxWidth ?? DEFAULT_MAX_WIDTH}>
       <ActionHighlightCard
         action={data.action}
-        imageUrl={data.action?.image?.rendition?.src || undefined}
+        imageUrl={data.action?.image?.large?.src || undefined}
         hideIdentifier={plan.hideActionIdentifiers}
       />
     </ActionCardWrapper>

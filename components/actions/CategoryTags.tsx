@@ -143,16 +143,20 @@ type CategoryTagsProps = {
 
 function CategoryTags(props: CategoryTagsProps) {
   const { categories, types } = props;
-  const typeById = new Map(types.map(ct => [ct.id, ct]));
-
+  // const typeById = new Map(types.map(ct => [ct.id, ct]));
   const groupElements = types.map((ct) => {
     const cats = categories.filter(cat => cat.type.id === ct.id);
     if (!cats.length) return null; 
+      /* If category type seems to have levels,
+        use the level name of the first selected categoory
+        as section header */
+    const categoryTypeHeader = ct.levels.length > 0
+      ? cats[0].level.name : ct.name;
 
     return (
       <div key={ct.id} className="mb-4">
         <h3>
-          {ct.name}
+          {categoryTypeHeader}
           {ct.helpText && (
             <PopoverTip
               content={ct.helpText}
@@ -234,6 +238,12 @@ fragment CategoryTagsCategoryType on CategoryType {
   identifier
   helpText
   hideCategoryIdentifiers
+  levels {
+      id
+      order
+      name
+      namePlural
+    }
 }
 `;
 

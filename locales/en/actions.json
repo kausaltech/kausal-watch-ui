@@ -57,9 +57,12 @@
   "tasks-late": "Late tasks",
   "tasks-on-time": "On-time tasks",
   "tasks-completed": "Completed tasks",
-  "responsible-organization-main": "Main responsible",
-  "responsible-organization-other": "Other responsibles",
+  "responsible-organizations-primary": "Main responsibles",
+  "responsible-organizations-collaborator": "Collaborators",
+  "responsible-organizations-other": "Other responsibles",
   "action-implementation-phase-unknown": "No implementation phase",
   "related-actions": "Related actions",
-  "org-responsible-in-actions": "Responsible in {{actionCount}} actions"
+  "org-responsible-in-actions": "Responsible in {{actionCount}} actions",
+  "action-task-hide-comment": "Hide details",
+  "action-task-show-comment": "Show details"
 }

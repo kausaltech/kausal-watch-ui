@@ -127,8 +127,7 @@ const CategoryActionList = (props) => {
 
   const filteredActions = filterByCategory(planActions, activeCategory.id, categories, activeCategory.parent == null);
   if (filteredActions.length === 0) {
-    return <EmptyActionListHeader>Ei toimenpiteitä</EmptyActionListHeader>;
-    return null;
+    return <EmptyActionListHeader>{ t('no-actions') }</EmptyActionListHeader>;
   }
   const heading = t('filter-result-actions');
 

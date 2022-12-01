@@ -1,12 +1,11 @@
 import React from 'react';
 import { Container, Row, Col } from 'reactstrap';
-import styled from 'styled-components';
-import { getBgImageAlignment } from 'common/images';
+import styled, { useTheme } from 'styled-components';
 import Card from 'components/common/Card';
 
 const CardListSection = styled.div`
-  background-color: ${(props) => props.theme.themeColors.white};
-  padding: ${(props) => props.theme.spaces.s400} 0;
+  background-color: ${(props) => props.backgroundColor};
+  padding: ${(props) => `${props.theme.spaces.s400} 0 ${props.theme.spaces.s100} 0`};
 
   a.card-wrapper {
     display: flex;
@@ -30,12 +29,13 @@ const CardListSection = styled.div`
 
 const SectionHeader = styled.h2`
   text-align: center;
-  color: ${(props) => props.theme.themeColors.black};
+  color: ${(props) => props.color};
   margin-bottom: ${(props) => props.theme.spaces.s100};
 `;
 
 const Content = styled.p`
   text-align: center;
+  color: ${(props) => props.color};
   font-size: ${(props) => props.theme.fontSizeMd};
   margin-bottom: ${(props) => props.theme.spaces.s300};
 `;
@@ -47,30 +47,49 @@ const CardHeader = styled.h3`
 `;
 
 const CardListBlock = (props) => {
-  const { heading, lead, cards } = props;
+  const { heading, lead, cards, style } = props;
+  const theme = useTheme();
 
+  console.log(props);
+  const blockStyle = {
+    backgroundColor: theme.themeColors.white,
+    cardStyle: 'negative',
+    cardOutline: false,
+  }
+
+  switch (style) {
+    case 'negative':
+      blockStyle.backgroundColor = theme.brandDark;
+      blockStyle.color = theme.themeColors.white;
+      blockStyle.cardBackgroundColor = theme.brandDark;
+      blockStyle.cardStyle = 'negative';
+      blockStyle.cardOutline = true;
+      break;
+  }
+  console.log(blockStyle);
   // TODO : Summon a key value for cards
   return (
-    <CardListSection>
+    <CardListSection backgroundColor={blockStyle.backgroundColor}>
       <Container>
-        { heading && (<SectionHeader>{ heading }</SectionHeader>)}
-        <Content>{ lead }</Content>
-        <Row tag="ul">
+        { heading && (<SectionHeader color={blockStyle.color}>{ heading }</SectionHeader>)}
+        <Content color={blockStyle.color}>{ lead }</Content>
+        <Row tag="ul" className="justify-content-center">
           { cards?.map((card,inx) => (
             <Col
               tag="li"
               xs="12"
               sm="6"
               lg="4"
-              className="mb-5 d-flex align-items-stretch mx-auto"
-              style={{ transition: 'all 0.5s ease' }}
+              className="mb-5 d-flex align-items-stretch"
               key={inx}
             >
               <a href={card.link} className="card-wrapper">
                 <Card
                   imageUrl={card.image && card.image.rendition.src}
                   imageAlign="center"
+                  customColor={blockStyle.cardBackgroundColor}
                   negative
+                  outline={blockStyle.cardOutline}
                 >
                   <div>
                     <CardHeader className="card-title">{ card.heading }</CardHeader>

@@ -57,9 +57,12 @@
   "tasks-late": "Verspätete Aufgaben",
   "tasks-on-time": "Pünktliche Aufgaben",
   "tasks-completed": "Erledigte Aufgaben",
-  "responsible-organization-main": "Hauptverantwortlich",
-  "responsible-organization-other": "Andere Verantwortliche",
+  "responsible-organizations-primary": "Hauptverantwortliche",
+  "responsible-organizations-collaborator": "Mirwirkende Stelle",
+  "responsible-organizations-other": "Andere Verantwortliche",
   "action-implementation-phase-unknown": "Keine Implementierungsphase",
   "related-actions": "Verbundene Maßnahmen",
-  "org-responsible-in-actions": "Verantwortlich für {{actionCount}} Maßnahmen"
+  "org-responsible-in-actions": "Verantwortlich für {{actionCount}} Maßnahmen",
+  "action-task-show-comment": "Informationen anzeigen",
+  "action-task-hide-comment": "Informationen ausblenden"
 }

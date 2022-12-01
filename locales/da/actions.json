@@ -61,5 +61,7 @@
   "responsible-organization-other": "Andre ansvarlige",
   "action-implementation-phase-unknown": "Ingen implementeringsfase",
   "related-actions": "Relaterede handlinger",
-  "org-responsible-in-actions": "Responsible in {{actionCount}} actions"
+  "org-responsible-in-actions": "Responsible in {{actionCount}} actions",
+  "action-task-show-comment": " Vis oplysninger",
+  "action-task-hide-comment": "Skjul oplysninger"
 }
