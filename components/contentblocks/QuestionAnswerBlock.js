@@ -35,7 +35,11 @@ const QuestionAnswerBlock = (props) => {
     <FaqSection>
       <Container>
         <Row>
-          <Col lg={{ size: 8, offset: hasSidebar ? 4 : 2 }} md={{ size: 10, offset: hasSidebar ? 2 : 1 }}>
+          <Col
+            xl={{ size: 7, offset: hasSidebar ? 4 : 2 }}
+            lg={{ size: 8, offset: hasSidebar ? 4 : 2 }}
+            md={{ size: 10, offset: 1 }}
+          >
             { heading && (<h2>{ heading }</h2>)}
             <Accordion>
               { questionList.map((q) => (

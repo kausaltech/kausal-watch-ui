@@ -226,17 +226,11 @@ const Content = ({ page }:{ page: GeneralPlanPage}) => {
           </Container>
         )}
         { siblings.length > 1 && (
-          <Container className='position-absolute start-0 end-0'>
-            <Row>
-              <Col md={3}>
-            <SecondaryNavigation
-              links={siblings}
-              activeLink={page.id}
-              title={page?.parent?.title || ''}
-            />
-            </Col>
-            </Row>
-          </Container>
+          <SecondaryNavigation
+            links={siblings}
+            activeLink={page.id}
+            title={page?.parent?.title || ''}
+          />
         )}
         {page.body && (
           <StreamField

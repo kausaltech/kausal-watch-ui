@@ -246,9 +246,14 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
     case 'RichTextBlock': {
       const { value } = block;
       return (
-        <Container className="my-5">
+        <Container>
           <Row>
-            <Col lg={{ size: 8, offset: hasSidebar ? 4 : 2 }} md={{ size: 10, offset: hasSidebar ? 2 : 1 }}>
+            <Col
+              xl={{ size: 7, offset: hasSidebar ? 4 : 2 }}
+              lg={{ size: 8, offset: hasSidebar ? 4 : 2 }}
+              md={{ size: 10, offset: 1 }}
+              className="my-4"
+            >
               <RichText html={value} />
             </Col>
           </Row>
