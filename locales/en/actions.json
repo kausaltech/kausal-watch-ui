@@ -48,7 +48,7 @@
   "actions-status": "Actions by status",
   "actions-status-help": "Proportion of actions that are on schedule",
   "actions-updated": "Active actions last updated",
-  "actions-updated-help": "Proportion of actions that have been updated within {{interval}}",
+  "actions-updated-help": "Proportion of actions that have been updated within two months",
   "emission-scopes": "Emission scopes",
   "no-defined-indicators": "No indicators defined",
   "not-being-implemented": "Not being implemented",
