@@ -167,6 +167,7 @@ export const GET_ACTION_LIST = gql`
       }
       responsibleParties {
         id
+        role
         organization {
           id
           abbreviation
