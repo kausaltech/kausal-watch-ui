@@ -321,7 +321,11 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
     }
     case 'IndicatorShowcaseBlock': {
       const { indicator, title, body } = block;
-      return <IndicatorShowcaseBlock indicator={indicator} title={title} body={body} />;
+      return <IndicatorShowcaseBlock
+                indicator={indicator}
+                title={title}
+                body={body}
+              />;
     }
     case 'CardListBlock': {
       const { cards, lead, heading } = block;
@@ -349,7 +353,10 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
       return <ActionCategoryFilterCardsBlock cards={cards} />;
     }
     case 'CategoryTreeMapBlock': {
-      return <CategoryTreeBlock {...block} />
+      return <CategoryTreeBlock
+                {...block}
+                hasSidebar={hasSidebar}
+              />
     }
     case 'AccessibilityStatementComplianceStatusBlock': {
       return <AccessibilityStatementComplianceStatusBlock {...block} />
