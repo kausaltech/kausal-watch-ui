@@ -200,7 +200,6 @@ const Content = ({ page }:{ page: GeneralPlanPage}) => {
   // TODO: Resolve shareImageUrl by pagetype
   const { title, headerImage } = page;
   const imageUrl = headerImage?.large.src;
-  console.log('page', page);
   const theme = useTheme();
   const categoryColor = (page.__typename === 'CategoryPage') && (page.category?.color || page.category?.parent?.color);
   const pageSectionColor = categoryColor || theme.brandLight;

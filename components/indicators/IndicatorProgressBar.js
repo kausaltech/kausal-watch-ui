@@ -117,7 +117,6 @@ function IndicatorProgressBar(props) {
     unit, note, indicatorId,
     animate } = props;
 
-  console.log(props);
   const theme = useContext(ThemeContext);
   const { t, i18n } = useTranslation();
   const latestBarControls = useAnimation();
