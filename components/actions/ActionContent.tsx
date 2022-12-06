@@ -16,23 +16,30 @@ import { cleanActionStatus } from 'common/preprocess';
 import { Meta } from 'components/layout';
 import images, { getBgImageAlignment, getActionImage } from 'common/images';
 import IndicatorCausal from 'components/indicators/IndicatorCausal';
-import Timeline from 'components/graphs/Timeline';
-import ScheduleTimeline from 'components/graphs/ScheduleTimeline';
 import AttributesBlock from 'components/common/AttributesBlock';
-import RichText from 'components/common/RichText';
-import TaskList from './TaskList';
-import ResponsibleList from './ResponsibleList';
 import CategoryTags from './CategoryTags';
-import ContactPersons from './ContactPersons';
 import ActionPhase from './ActionPhase';
 import ActionStatus from './ActionStatus';
 import ActionImpact from './ActionImpact';
-import ActionIndicators from './ActionIndicators';
 import ActionHero from './ActionHero';
 import ActionPager from './ActionPager';
 import ActionCard from './ActionCard';
 import ActionUpdatesList from './ActionUpdatesList';
 import EmissionScopeIcon from './EmissionScopeIcon';
+
+import ActionMergedActionsBlock from 'components/actions/blocks/ActionMergedActionsBlock';
+//import ActionLinksBlock from 'components/actions/blocks/ActionLinksBlock';
+import ActionDescriptionBlock from 'components/actions/blocks/ActionDescriptionBlock';
+import ActionLeadParagraphBlock from './blocks/ActionLeadParagraphBlock';
+import ActionOfficialNameBlock from './blocks/ActionOfficialNameBlock';
+import ActionLinksBlock from './blocks/ActionLinksBlock';
+import ActionRelatedActionsBlock from './blocks/ActionRelatedActionsBlock';
+import ActionRelatedIndicatorsBlock from './blocks/ActionRelatedIndicatorsBlock';
+import ActionTasksBlock from './blocks/ActionTasksBlock';
+import ActionContactPersonsBlock from './blocks/ActionContactPersonsBlock';
+import ActionResponsiblePartiesBlock from './blocks/ActionResponsiblePartiesBlock';
+import ActionScheduleBlock from './blocks/ActionScheduleBlock';
+
 import type {
   ActionAsideContentBlocksFragmentFragment, ActionMainContentBlocksFragmentFragment,
   GetActionDetailsQuery
@@ -242,7 +249,7 @@ const LastUpdated = styled.div`
   font-family: ${(props) => props.theme.fontFamilyTiny};
 `;
 
-const ActionSection = styled.div`
+export const ActionSection = styled.div`
   margin-bottom: ${(props) => props.theme.spaces.s200};
 `;
 
@@ -254,94 +261,15 @@ const SideHeader = styled.h3`
   font-size: ${(props) => props.theme.fontSizeBase};
 `;
 
-const SectionHeader = styled.h2`
+export const SectionHeader = styled.h2`
   font-size: ${(props) => props.theme.fontSizeLg};
   margin-bottom: ${(props) => props.theme.spaces.s200};
-`;
-
-const OfficialText = styled.div`
-  margin-bottom: ${(props) => props.theme.spaces.s300};
-  font-family: ${(props) => props.theme.fontFamilyContent};
-
-  .official-text-content {
-    color: ${(props) => props.theme.neutralDark};
-    padding-left: ${(props) => props.theme.spaces.s100};
-    border-left: 4px solid ${(props) => props.theme.neutralLight};
-  }
-
-  h2 {
-    font-size: ${(props) => props.theme.fontSizeBase};
-  }
 `;
 
 const SolidSection = styled.div`
   padding:  ${(props) => props.theme.spaces.s100} 0;
   margin-bottom: ${(props) => props.theme.spaces.s300};
 `;
-
-const ActionNumberBadge = styled(Badge)`
-  font-size: ${(props) => props.theme.fontSizeBase};
-  padding: ${(props) => props.theme.spaces.s025};
-  border-radius: ${(props) => props.theme.btnBorderRadius};
-  background-color: ${(props) => props.theme.brandDark};
-  color: ${(props) => props.theme.themeColors.white};
-`;
-
-const MergedActionSection = styled.div`
-  margin-bottom: ${(props) => props.theme.spaces.s100};
-`;
-
-const RelatedActionList = styled(Row)`
-  padding-left: 0;
-`;
-
-const RelatedActionItem = styled(Col)`
-  list-style: none;
-`;
-
-type MergedActionProps = {
-  action: ActionContentAction['mergedActions'][0],
-}
-function MergedAction({ action }: MergedActionProps) {
-  const { identifier, officialName, plan, name } = action;
-  const currentPlan = usePlan();
-  if (currentPlan.id != plan.id) {
-    // TODO: Show the target plan of the merging
-  }
-  return (
-    <MergedActionSection>
-      <ActionNumberBadge key={identifier} className="me-1">
-        {identifier}
-      </ActionNumberBadge>
-      {officialName || name}
-    </MergedActionSection>
-  );
-}
-
-type MergedActionListProps = {
-  actions: MergedActionProps['action'][],
-}
-
-function MergedActionList({ actions }: MergedActionListProps) {
-  const { t } = useTranslation();
-  const plan = usePlan();
-
-  if (!actions || !actions.length) {
-    // render nothing
-    return null;
-  }
-
-  const mergedActions = actions.map((act) => (
-    <MergedAction action={act} key={act.id} />
-  ));
-
-  return (
-    <ActionSection>
-      <h2>{ t('actions:action-merged', getActionTermContext(plan)) }</h2>
-      {mergedActions}
-    </ActionSection>
-  );
-}
 
 function getMaxImpact(plan: PlanContextType) {
   const max = plan.actionImpacts.reduce((planMax, item) => {
@@ -359,7 +287,8 @@ type ActionContentBlockProps = {
   action: ActionContentAction,
   section: SectionIdentifier,
 }
-function ActionContentBlock({ block, action, section }: ActionContentBlockProps) {
+function ActionContentBlock(props: ActionContentBlockProps) {
+  const { block, action, section } = props;
   const { t } = useTranslation();
   const plan = usePlan();
 
@@ -367,152 +296,89 @@ function ActionContentBlock({ block, action, section }: ActionContentBlockProps)
     case 'ActionDescriptionBlock':
       if (!action.description) return null;
       return (
-        <ActionSection className="text-content">
-          <h2 className="visually-hidden">{ t('actions:action-description') }</h2>
-          <RichText html={action.description} />
-        </ActionSection>
+        <ActionDescriptionBlock
+          content = {action.leadParagraph}
+        />
       );
     case 'ActionLeadParagraphBlock':
       if (!action.leadParagraph) return null;
       return (
-        <ActionSection className="text-content">
-          <strong><RichText html={action.leadParagraph} /></strong>
-        </ActionSection>
+        <ActionLeadParagraphBlock
+          content = {action.leadParagraph}
+        />
       )
     case 'ActionOfficialNameBlock':
-      const generalContent = plan.generalContent || {};
-      const cleanOfficialText = action.officialName?.replace(/(?:\r\n|\r|\n)/g, '<br>') || '';
-      if (!cleanOfficialText) return null;
-      const caption = block.caption || generalContent.officialNameDescription;
-      const fieldLabel = block.fieldLabel || t('actions:action-description-official');
+
       return (
-        <OfficialText>
-          <h2>{ fieldLabel }</h2>
-          <div className="official-text-content">
-            <div dangerouslySetInnerHTML={{ __html: cleanOfficialText }} />
-            {caption && (
-              <small>{`(${caption})`}</small>
-            )}
-          </div>
-        </OfficialText>
+        <ActionOfficialNameBlock
+          plan = {plan}
+          block = {block}
+          action={action}
+        />
       )
     case 'ActionLinksBlock':
       const { links } = action;
       if (!links.length) return null;
       return (
-        <>
-          <h4>{t('read-more')}</h4>
-          <ul>
-            {links.map((actionLink) => (
-              <li key={actionLink.id}>
-                <a href={actionLink.url}>
-                  {actionLink.title}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </>
+        <ActionLinksBlock
+          links={links}
+        />
       );
     case 'ActionMergedActionsBlock':
       if (!action.mergedActions.length) return null;
-      return <MergedActionList actions={action.mergedActions} />;
+      return (
+        <ActionMergedActionsBlock
+          actions={action.mergedActions}
+        />
+      );
     case 'ActionRelatedActionsBlock':
       if (!action.relatedActions.length) return null;
       return (
-        <div>
-          <Row>
-            <Col>
-              <SectionHeader>{ t('actions:related-actions') }</SectionHeader>
-              <RelatedActionList tag="ul">
-                {action.relatedActions.map((relAction) => (
-                  <RelatedActionItem
-                    tag="li"
-                    xs="12"
-                    sm="6"
-                    lg="4"
-                    className="mb-5 d-flex align-items-stretch"
-                    style={{ transition: 'all 0.5s ease' }}
-                    key={relAction.id}
-                  >
-                    <ActionCard
-                      action={relAction}
-                      showPlan={true}
-                    />
-                  </RelatedActionItem>
-                ))}
-              </RelatedActionList>
-            </Col>
-          </Row>
-        </div>
+        <ActionRelatedActionsBlock
+          relatedActions = {action.relatedActions}
+        />
       );
     case 'ActionRelatedIndicatorsBlock':
       if (!action.relatedIndicators.length) return null;
       return (
-        <div>
-          <Row>
-            <Col>
-              <SectionHeader>{ t('indicators') }</SectionHeader>
-            </Col>
-          </Row>
-          <Row>
-            <Col sm="12">
-              <ActionIndicators actionId={action.id} relatedIndicators={action.relatedIndicators} />
-            </Col>
-          </Row>
-        </div>
+        <ActionRelatedIndicatorsBlock
+          actionId = {action.id}
+          indicators = {action.relatedIndicators} 
+        />
       )
     case 'ActionTasksBlock':
       if (!action.tasks.length) return null;
       return (
-        <div>
-          <Row>
-            <Col>
-              <SectionHeader>{ t('actions:action-tasks') }</SectionHeader>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <ActionSection>
-                <TaskList tasks={action.tasks} />
-              </ActionSection>
-            </Col>
-          </Row>
-        </div>
+        <ActionTasksBlock
+          tasks = {action.tasks}
+        />
       );
     case 'ActionContactPersonsBlock':
       if (!action.contactPersons?.length) return null;
       return (
-        <ActionSection>
-          <ContactPersons persons={action.contactPersons.map((item) => item.person)} />
-        </ActionSection>
+        <ActionContactPersonsBlock
+          contactPersons = {action.contactPersons}
+        />
       );
     case 'ActionResponsiblePartiesBlock':
       if (!action.responsibleParties.length) return null;
       return (
-        <ActionSection>
-          <ResponsibleList responsibleParties={action.responsibleParties} />
-        </ActionSection>
+        <ActionResponsiblePartiesBlock
+          responsibleParties = {action.responsibleParties}
+        />
       );
     case'ActionScheduleBlock':
       return (
-        <>
-        { action.schedule.length ? (
-          <ActionSection>
-            <SideHeader>{ t('actions:action-timeline') }</SideHeader>
-            <ScheduleTimeline schedules={action.schedule} allSchedules={plan.actionSchedules} />
-          </ActionSection>
-        ) : null}
-        { action.startDate || action.endDate || action.scheduleContinuous ? (
-          <ActionSection>
-            <SideHeader>{ t('actions:action-timeline') }</SideHeader>
-            <Timeline
-              startDate={action.startDate}
-              endDate={action.endDate}
-              continuous={action.scheduleContinuous}
-            />
-          </ActionSection>
-        ) : null}
-        </>
+        <ActionScheduleBlock
+          action = {action}
+        />
+      )
+    case 'ActionContentSectionBlock':
+      console.log('ActionContentSectionBlock', block);
+      return (
+        <div>
+          Action content section
+        </div>
       )
     default:
       console.error("Unknown action content block", block.__typename);
@@ -582,12 +448,14 @@ type ActionContentProps = {
   action: ActionContentAction,
   extraPlanData: NonNullable<GetActionDetailsQuery['plan']>
 }
-function ActionContent({ action, extraPlanData }: ActionContentProps) {
+function ActionContent(props: ActionContentProps) {
+  const { action, extraPlanData } = props;
   const plan = usePlan();
   const theme = useTheme();
   const router = useRouter();
   const { t } = useTranslation();
 
+  console.log("ActionContent", props);
   useHotkeys('ctrl+left, ctrl+right', (ev) => {
     if (!action) return;
     const next = (ev.code == 'ArrowLeft' ? action.previousAction : action.nextAction);
