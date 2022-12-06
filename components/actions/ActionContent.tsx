@@ -29,15 +29,15 @@ import EmissionScopeIcon from './EmissionScopeIcon';
 
 import ActionMergedActionsBlock from 'components/actions/blocks/ActionMergedActionsBlock';
 import ActionDescriptionBlock from 'components/actions/blocks/ActionDescriptionBlock';
-import ActionLeadParagraphBlock from './blocks/ActionLeadParagraphBlock';
-import ActionOfficialNameBlock from './blocks/ActionOfficialNameBlock';
-import ActionLinksBlock from './blocks/ActionLinksBlock';
-import ActionRelatedActionsBlock from './blocks/ActionRelatedActionsBlock';
-import ActionRelatedIndicatorsBlock from './blocks/ActionRelatedIndicatorsBlock';
-import ActionTasksBlock from './blocks/ActionTasksBlock';
-import ActionContactPersonsBlock from './blocks/ActionContactPersonsBlock';
-import ActionResponsiblePartiesBlock from './blocks/ActionResponsiblePartiesBlock';
-import ActionScheduleBlock from './blocks/ActionScheduleBlock';
+import ActionLeadParagraphBlock from 'components/actions/blocks/ActionLeadParagraphBlock';
+import ActionOfficialNameBlock from 'components/actions/blocks/ActionOfficialNameBlock';
+import ActionLinksBlock from 'components/actions/blocks/ActionLinksBlock';
+import ActionRelatedActionsBlock from 'components/actions/blocks/ActionRelatedActionsBlock';
+import ActionRelatedIndicatorsBlock from 'components/actions/blocks/ActionRelatedIndicatorsBlock';
+import ActionTasksBlock from 'components/actions/blocks/ActionTasksBlock';
+import ActionContactPersonsBlock from 'components/actions/blocks/ActionContactPersonsBlock';
+import ActionResponsiblePartiesBlock from 'components/actions/blocks/ActionResponsiblePartiesBlock';
+import ActionScheduleBlock from 'components/actions/blocks/ActionScheduleBlock';
 
 import type {
   ActionAsideContentBlocksFragmentFragment, ActionMainContentBlocksFragmentFragment,
@@ -230,8 +230,13 @@ fragment ActionMainContentBlocksFragment on ActionMainContentBlock {
   }
   ... on ActionContentSectionBlock {
     id
-    ... on StreamFieldInterface {
-      id
+    heading
+    helpText
+    layout
+    blocks {
+      ... on StreamFieldInterface {
+        id
+      }
     }
   }
 }
@@ -380,9 +385,15 @@ function ActionContentBlock(props: ActionContentBlockProps) {
       )
     case 'ActionContentSectionBlock':
       console.log('ActionContentSectionBlock', block);
+      const { heading, helpText, layout, blocks } = block;
       return (
         <div>
-          Action content section
+          <h2>{ heading }</h2>
+          <ActionContentBlockGroup
+            blocks={blocks}
+            action={action}
+            section={section}
+          />
         </div>
       )
     default:
@@ -407,6 +418,7 @@ type ActionContentCategoryTypeBlock = ActionContentBlockProps['block'] & {
 function ActionContentBlockGroup(props: ActionContentBlockGroupProps) {
   const { blocks, action, section } = props;
   const blockType = blocks[0].__typename;
+  console.log("RENDERING GROUP", props);
 
   if (blockType === 'ActionContentAttributeTypeBlock') {
     const types = new Map(blocks.map(block => {
@@ -444,7 +456,13 @@ function ActionContentBlockGroup(props: ActionContentBlockGroupProps) {
       </ActionSection>
     )
   } else {
-    console.error("Unsupported content block group", blockType);
+    console.log("RENDERING SECTION", blocks);
+    return (
+      <div>
+        ACTION GROUP BLOCKS
+      </div>
+    )
+    // console.error("Unsupported content block group", blockType);
   }
   return null;
 }
@@ -504,17 +522,30 @@ function ActionContent(props: ActionContentProps) {
       groupedBlocks = [];
     }
 
-    const groupedBlockTypes = [
+    const automaticallyGroupedBlockTypes = [
       'ActionContentAttributeTypeBlock',
       'ActionContentCategoryTypeBlock',
-    ]
+    ];
+
+    const groupableBlockTypes = [
+      'ActionContentAttributeTypeBlock',
+      'ActionContentCategoryTypeBlock',
+      'ActionOfficialNameBlock',
+      'ActionLeadParagraphBlock',
+      'ActionDescriptionBlock',
+      'ActionLinksBlock',
+      'ActionTasksBlock',
+      'ActionMergedActionsBlock',
+      'ActionRelatedActionsBlock',
+      'ActionIndicatorsBlock',
+    ];
 
     for (const block of blocks) {
       if (previousSectionBlock && block.__typename !== previousSectionBlock.__typename) {
         emitGroupedBlocks();
       }
       // some blocks get special treatment so that they can be grouped together
-      if (groupedBlockTypes.includes(block.__typename)) {
+      if (automaticallyGroupedBlockTypes.includes(block.__typename)) {
         previousSectionBlock = block;
         // @ts-ignore
         groupedBlocks.push(block);
