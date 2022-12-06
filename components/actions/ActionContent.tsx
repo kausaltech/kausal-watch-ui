@@ -28,7 +28,6 @@ import ActionUpdatesList from './ActionUpdatesList';
 import EmissionScopeIcon from './EmissionScopeIcon';
 
 import ActionMergedActionsBlock from 'components/actions/blocks/ActionMergedActionsBlock';
-//import ActionLinksBlock from 'components/actions/blocks/ActionLinksBlock';
 import ActionDescriptionBlock from 'components/actions/blocks/ActionDescriptionBlock';
 import ActionLeadParagraphBlock from './blocks/ActionLeadParagraphBlock';
 import ActionOfficialNameBlock from './blocks/ActionOfficialNameBlock';
@@ -227,6 +226,12 @@ fragment ActionMainContentBlocksFragment on ActionMainContentBlock {
   ... on ActionContentCategoryTypeBlock {
     categoryType {
       ...CategoryTagsCategoryType
+    }
+  }
+  ... on ActionContentSectionBlock {
+    id
+    ... on StreamFieldInterface {
+      id
     }
   }
 }

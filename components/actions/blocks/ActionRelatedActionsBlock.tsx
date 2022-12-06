@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import {
   Row, Col,
 } from 'reactstrap';
+import { useTranslation } from 'common/i18n';
 import { ActionSection, SectionHeader } from 'components/actions/ActionContent';
 import ActionCard from 'components/actions/ActionCard';
 
