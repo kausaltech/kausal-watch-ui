@@ -50,7 +50,6 @@ const CardListBlock = (props) => {
   const { heading, lead, cards, style } = props;
   const theme = useTheme();
 
-  console.log(props);
   const blockStyle = {
     backgroundColor: theme.themeColors.white,
     cardStyle: 'negative',
@@ -66,7 +65,7 @@ const CardListBlock = (props) => {
       blockStyle.cardOutline = true;
       break;
   }
-  console.log(blockStyle);
+
   // TODO : Summon a key value for cards
   return (
     <CardListSection backgroundColor={blockStyle.backgroundColor}>
