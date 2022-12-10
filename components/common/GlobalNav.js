@@ -14,6 +14,7 @@ import { NavigationLink, Link } from 'common/links';
 
 import Icon from './Icon';
 import PlanSelector from 'components/plans/PlanSelector';
+import VersionSelector from 'components/versioning/VersionSelector';
 import LanguageSelector from './LanguageSelector';
 import NavbarSearch from './NavbarSearch';
 import { usePlan } from 'context/plan';
@@ -124,6 +125,7 @@ const EmptyLogo = styled.div`
 `;
 
 const NavLink = styled.div`
+  line-height: ${(props) => props.theme.lineHeightSm};
   a {
     display: block;
     margin: 0 0 ${(props) => props.theme.spaces.s050} ${(props) => props.theme.spaces.s100};
@@ -416,6 +418,7 @@ function GlobalNav(props) {
             <LanguageSelector mobile="true"/>
           </Nav>
           <Nav navbar>
+            <VersionSelector />
             { externalItems.length > 0 && externalItems.map((item, index) => (
               <NavItem key={`external${index}`}>
                 <NavLink>
