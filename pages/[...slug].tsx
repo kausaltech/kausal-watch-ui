@@ -204,7 +204,10 @@ const Content = ({ page }:{ page: GeneralPlanPage}) => {
   const categoryColor = (page.__typename === 'CategoryPage') && (page.category?.color || page.category?.parent?.color);
   const pageSectionColor = categoryColor || theme.brandLight;
 
-  const siblings = page.parent.__typename === 'Page' ? page?.parent?.children || [] : [];
+  const hasSecondaryNav = false // TODO: page.parent.childrenUseSecondaryNavigation;
+  const siblings = hasSecondaryNav
+    ? page.parent.__typename === 'Page' ? page?.parent?.children || [] : []
+    : [];
 
   return (
     <article>
