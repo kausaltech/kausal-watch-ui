@@ -44,6 +44,12 @@ query GetPlanPageGeneral($plan: ID!, $path: String!) {
         urlPath
       }
       parent {
+        ... on EmptyPage {
+          childrenUseSecondaryNavigation
+        }
+        ... on StaticPage {
+          childrenUseSecondaryNavigation
+        }
         id
         title
         slug
@@ -204,10 +210,9 @@ const Content = ({ page }:{ page: GeneralPlanPage}) => {
   const categoryColor = (page.__typename === 'CategoryPage') && (page.category?.color || page.category?.parent?.color);
   const pageSectionColor = categoryColor || theme.brandLight;
 
-  const hasSecondaryNav = false // TODO: page.parent.childrenUseSecondaryNavigation;
-  const siblings = hasSecondaryNav
-    ? page.parent.__typename === 'Page' ? page?.parent?.children || [] : []
-    : [];
+  const hasSecondaryNav = page.parent?.childrenUseSecondaryNavigation ?? false;
+  // Restrict the secondary nav to be shown on StaticPages only currently
+  const siblings = (hasSecondaryNav && page.__typename === 'StaticPage') ? page?.parent?.children: [];
 
   return (
     <article>
