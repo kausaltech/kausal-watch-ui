@@ -28,6 +28,10 @@ const ContentHeader = styled.header`
     font-size: ${(props) => props.theme.fontSizeXxl};
     color: ${(props) => props.theme.themeColors.white} !important;
   }
+
+  .lead {
+    max-width: ${(props) => props.theme.breakpointLg};
+  }
 `;
 
 const ContentPageHeaderBlock = (props) => {

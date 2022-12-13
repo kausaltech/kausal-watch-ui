@@ -23,7 +23,7 @@ const FaqSection = styled.section`
 `;
 
 const QuestionAnswerBlock = (props) => {
-  const { heading, questions } = props;
+  const { heading, questions, hasSidebar } = props;
   if (questions == null) {
     return null;
   }
@@ -35,7 +35,11 @@ const QuestionAnswerBlock = (props) => {
     <FaqSection>
       <Container>
         <Row>
-          <Col lg={{ size: 8, offset: 2 }} md={{ size: 10, offset: 1 }}>
+          <Col
+            xl={{ size: 7, offset: hasSidebar ? 4 : 2 }}
+            lg={{ size: 8, offset: hasSidebar ? 4 : 2 }}
+            md={{ size: 10, offset: 1 }}
+          >
             { heading && (<h2>{ heading }</h2>)}
             <Accordion>
               { questionList.map((q) => (

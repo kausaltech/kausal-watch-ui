@@ -16,6 +16,7 @@ import CategoryPageHeaderBlock from 'components/contentblocks/CategoryPageHeader
 import CategoryListBlock from 'components/contentblocks/CategoryListBlock';
 import ContentPageHeaderBlock from 'components/contentblocks/ContentPageHeaderBlock';
 import AttributesBlock from 'components/common/AttributesBlock';
+import SecondaryNavigation from 'components/common/SecondaryNavigation';
 import { GetPlanPageGeneralQuery } from 'common/__generated__/graphql';
 
 
@@ -34,6 +35,26 @@ query GetPlanPageGeneral($plan: ID!, $path: String!) {
       leadParagraph
       body {
         ...StreamFieldFragment
+      }
+      siblings {
+        id
+        title
+        slug
+        live
+        urlPath
+      }
+      parent {
+        id
+        title
+        slug
+        urlPath
+        children {
+          id
+          title
+          slug
+          live
+          urlPath
+        }
       }
     }
     ... on AccessibilityStatementPage {
@@ -179,10 +200,15 @@ const Content = ({ page }:{ page: GeneralPlanPage}) => {
   // TODO: Resolve shareImageUrl by pagetype
   const { title, headerImage } = page;
   const imageUrl = headerImage?.large.src;
-
   const theme = useTheme();
   const categoryColor = (page.__typename === 'CategoryPage') && (page.category?.color || page.category?.parent?.color);
   const pageSectionColor = categoryColor || theme.brandLight;
+
+  const hasSecondaryNav = false // TODO: page.parent.childrenUseSecondaryNavigation;
+  const siblings = hasSecondaryNav
+    ? page.parent.__typename === 'Page' ? page?.parent?.children || [] : []
+    : [];
+
   return (
     <article>
       <Meta
@@ -201,11 +227,19 @@ const Content = ({ page }:{ page: GeneralPlanPage}) => {
             </Row>
           </Container>
         )}
+        { siblings.length > 1 && (
+          <SecondaryNavigation
+            links={siblings}
+            activeLink={page.id}
+            title={page?.parent?.title || ''}
+          />
+        )}
         {page.body && (
           <StreamField
             page={page}
             blocks={page.body}
             color={pageSectionColor}
+            hasSidebar={siblings.length > 1}
           />
         )}
       </div>
