@@ -125,7 +125,6 @@ const EmptyLogo = styled.div`
 `;
 
 const NavLink = styled.div`
-  line-height: ${(props) => props.theme.lineHeightSm};
   a {
     display: block;
     margin: 0 0 ${(props) => props.theme.spaces.s050} ${(props) => props.theme.spaces.s100};
