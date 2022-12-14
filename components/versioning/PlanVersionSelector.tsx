@@ -106,6 +106,10 @@ const PlanVersionSelector = (props) => {
     })),
   ];
 
+  if (allVersions.length === 1) {
+    return null;
+  }
+
   const activeVersion = allVersions.find((v) => v.active);
   const latestVersion = allVersions[allVersions.length - 1];
 
