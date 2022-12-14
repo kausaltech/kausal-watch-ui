@@ -32,6 +32,7 @@ import ActionHero from './ActionHero';
 import ActionPager from './ActionPager';
 import ActionCard from './ActionCard';
 import ActionUpdatesList from './ActionUpdatesList';
+import ActionVersionHistory from 'components/versioning/ActionVersionHistory';
 import EmissionScopeIcon from './EmissionScopeIcon';
 import type {
   ActionAsideContentBlocksFragmentFragment, ActionMainContentBlocksFragmentFragment,
@@ -40,7 +41,7 @@ import type {
 import { useTheme } from 'common/theme';
 
 const GET_ACTION_DETAILS = gql`
-query GetActionDetails($plan: ID!, $id: ID!) {
+query GetActionDetails($plan: ID!, $id: ID!, $clientUrl: String!) {
   action(plan: $plan, identifier: $id) {
     id
     identifier
@@ -66,7 +67,7 @@ query GetActionDetails($plan: ID!, $id: ID!) {
       officialName
       plan {
         id
-        viewUrl
+        viewUrl(clientUrl: $clientUrl)
       }
     }
     categories {
@@ -158,6 +159,21 @@ query GetActionDetails($plan: ID!, $id: ID!) {
     relatedActions {
       ...ActionCard
     }
+    mergedWith {
+        id
+        identifier
+        plan {
+          id
+          shortName
+          viewUrl(clientUrl: $clientUrl)
+        }
+      }
+    supersededBy {
+      ...ActionCard
+    }
+    supersededActions {
+      ...ActionCard
+    }
     nextAction {
       id
       identifier
@@ -168,6 +184,17 @@ query GetActionDetails($plan: ID!, $id: ID!) {
     }
     attributes {
       ...AttributesBlockAttribute
+    }
+    plan {
+      id
+      shortName
+      viewUrl(clientUrl: $clientUrl)
+      hideActionIdentifiers
+      image {
+        rendition(size: "128x128", crop: true) {
+          src
+        }
+      }
     }
   }
   plan(id: $plan) {
@@ -745,6 +772,13 @@ function ActionContent({ action, extraPlanData }: ActionContentProps) {
                 ))}
               </ActionSection>
             ) : null}
+            { (action.supersededBy || action.supersededActions.length > 0) && (
+              <ActionSection>
+                <ActionVersionHistory
+                  action={action}
+                  />
+              </ActionSection>
+            )}
             <ActionSection>
               <LastUpdated>
                 { t('actions:action-last-updated') }

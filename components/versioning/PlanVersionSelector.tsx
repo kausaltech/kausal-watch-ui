@@ -1,11 +1,19 @@
 import styled from 'styled-components';
-import { transparentize } from 'polished';
 import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import Icon from 'components/common/Icon';
+import { useTranslation } from 'common/i18n';
 
 const VersionSelect = styled.div`
   display: flex;
   align-items: center;
+
+  .dropdown-header {
+    margin: 0 .5rem .5rem;
+    padding: .5rem 0;
+    border-bottom: 1px solid ${(props)=> props.theme.themeColors.light};
+    font-weight: ${(props)=> props.theme.fontWeightNormal};
+    font-size: ${(props)=> props.theme.fontSizeBase};
+  }
 `;
 
 const VersionDropdownItem = styled.a`
@@ -15,6 +23,8 @@ const VersionDropdownItem = styled.a`
   border: 1px solid ${(props)=> props.theme.themeColors.light};
   border-radius: .5rem;
   text-decoration: none !important;
+  /*font-weight: ${(props)=> props.latest === true ? props.theme.fontWeightBold : 'inherit'};*/
+  /*background: ${(props)=> props.active === true ? props.theme.themeColors.light : 'none'};*/
 
   &:last-child {
     margin-bottom: 0;
@@ -28,7 +38,7 @@ const VersionDropdownItem = styled.a`
 `;
 
 const VersionName = styled.div`
-  font-weight: ${(props)=> props.theme.fontWeightBold};
+  font-size: ${(props)=> props.theme.fontSizeSm};
 `;
 
 const VersionDate = styled.div`
@@ -45,12 +55,12 @@ const StyledDropdownToggle = styled(DropdownToggle)`
   border-radius: 1.75rem;
   font-size: 1rem;
   color: ${(props)=> props.theme.themeColors.dark};
+  background: ${(props)=> props.isLatest === true ? 'none' : props.theme.graphColors.red010 };
   font: inherit;
   cursor: pointer;
   outline: inherit;
 
   &:hover {
-    background: ${(props) => props.theme.themeColors.white};
     border-color: ${(props) => props.theme.themeColors.dark};
     color: ${(props) => props.theme.themeColors.dark};
 
@@ -64,28 +74,40 @@ const StyledDropdownToggle = styled(DropdownToggle)`
   }
 `;
 
-const VersionSelector = (props) => {
+const PlanVersionSelector = (props) => {
 
-  const versions = [
+  const { plan } = props;
+  const { t } = useTranslation();
+
+  const supersededVersions = plan.supersededPlans;
+  const supersedingVersions = plan.supersedingPlans;
+
+  const allVersions = [
+    ...supersededVersions.map((v) => ({
+      identifier: v.identifier,
+      shortName: v.name.slice(0, 15),
+      versionName: v.shortName,
+      viewUrl: v.viewUrl,
+      active: false,
+    })),
     {
-      identifier: '2022',
-      name: 'Kiertotalous',
-      startDate: '2022-01-01',
-      endDate: '2024-12-31',
-      viewUrl: '#',
+      identifier: plan.identifier,
+      shortName: plan.name.slice(0, 15),
+      versionName: plan.shortName,
+      viewUrl: plan.viewUrl,
       active: true,
     },
-    {
-      identifier: '2020',
-      name: 'Kiertotalous',
-      startDate: '2020-01-01',
-      endDate: '2022-12-31',
-      viewUrl: '#',
+    ...supersedingVersions.map((v) => ({
+      identifier: v.identifier,
+      shortName: v.name.slice(0, 15),
+      versionName: v.shortName,
+      viewUrl: v.viewUrl,
       active: false,
-    },
+    })),
   ];
 
-  const activeVersion = versions.find((v) => v.active);
+  const activeVersion = allVersions.find((v) => v.active);
+  const latestVersion = allVersions[allVersions.length - 1];
 
   return (
     <VersionSelect>
@@ -93,27 +115,24 @@ const VersionSelector = (props) => {
         <StyledDropdownToggle
           data-toggle="dropdown"
           tag="button"
+          isLatest = {activeVersion.identifier === latestVersion.identifier}
         >
-            <Icon name="sync" className="me-2" />
-            {(new Date(activeVersion.startDate)).getFullYear()}
-            {` - `}
-            {(new Date(activeVersion.endDate)).getFullYear()}
+            <Icon name="version" className="me-2" width="1.25rem" height="1.25rem" />
+            {activeVersion.versionName}
             <Icon name="angle-down" />
         </StyledDropdownToggle>
         <DropdownMenu>
-          <DropdownItem header>Versions</DropdownItem>
-          { versions.map((v) => (
+          <DropdownItem header>
+            { t('common:versions-list')}
+          </DropdownItem>
+          { allVersions.reverse().map((v) => (
             <VersionDropdownItem
               href={v.viewUrl}
               key={v.identifier}
+              latest={v.identifier === latestVersion.identifier}
             >
-              <VersionName>
-              {v.name}
-              </VersionName>
               <VersionDate>
-                {(new Date(v.startDate)).getFullYear()}
-                {` - `}
-                {(new Date(v.endDate)).getFullYear()}
+                {v.versionName}
               </VersionDate>
             </VersionDropdownItem>
           ))}
@@ -123,4 +142,4 @@ const VersionSelector = (props) => {
   )
 };
 
-export default VersionSelector;
+export default PlanVersionSelector;

@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Container } from 'reactstrap';
-
+import { usePlan } from 'context/plan';
 import { useTranslation } from 'common/i18n';
+import PlanVersionBanner from 'components/versioning/PlanVersionBanner';
 
 const Banner = styled.div`
   padding: 8px 16px;
@@ -12,7 +12,7 @@ const Banner = styled.div`
   'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif,
   helvetica neue, helvetica, Ubuntu, roboto, noto, segoe ui, arial, sans-serif;
   font-size: 12px;
-  background-color: black;
+  background-color: ${(props) => props.theme.themeColors.black};
   color: silver;
   @media print {
     display: none;
@@ -44,6 +44,9 @@ function ApplicationStateBanner(props) {
   let typeLabel;
   let typeMessage;
 
+  const plan = usePlan();
+  const supersedingVersions = plan.supersedingPlans;
+
   switch (deploymentType) {
     case 'production':
       return null;
@@ -61,10 +64,18 @@ function ApplicationStateBanner(props) {
   }
 
   return (
-    <Banner>
-      <Label type={deploymentType}>{typeLabel.toUpperCase()}</Label>
-      {` ${typeMessage}`}
-    </Banner>
+    <>
+      <Banner>
+        <Label type={deploymentType}>{typeLabel.toUpperCase()}</Label>
+        {` ${typeMessage}`}
+      </Banner>
+      {supersedingVersions?.length > 0 && (
+        <PlanVersionBanner
+          currentVersion={plan}
+          latestVersion={supersedingVersions[supersedingVersions.length - 1]}
+        />
+      )}
+    </>
   );
 }
 

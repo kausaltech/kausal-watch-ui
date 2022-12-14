@@ -153,6 +153,24 @@ fragment PlanContext on Plan {
     }
     viewUrl(clientUrl: $clientUrl)
   }
+  supersededBy {
+      name
+      shortName
+      identifier
+      viewUrl(clientUrl: $clientUrl)
+    }
+  supersededPlans(recursive: true) {
+    name
+    shortName
+    identifier
+    viewUrl(clientUrl: $clientUrl)
+  }
+  supersedingPlans(recursive: true) {
+    name
+    shortName
+    identifier
+    viewUrl(clientUrl: $clientUrl)
+  }
   children {
     id
     identifier
