@@ -39,12 +39,6 @@ const applyStyleOverrides = (style, overrides) => {
           labelOverrides[paint[key]] = layerName;
           layerName = ' ';
         }
-        else if (Array.isArray(paint[key])) {
-          if (paint[key][0] === 'step') {
-            /* https://github.com/markusand/mapboxgl-legend/issues/13 */
-            labelOverrides['other'] = `< ${paint[key][3]}`;
-          }
-        }
       }
       layer.metadata = {
         labels: Object.assign({}, DEFAULT_LABELS, labelOverrides),
