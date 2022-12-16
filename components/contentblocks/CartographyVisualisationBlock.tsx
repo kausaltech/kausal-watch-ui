@@ -30,7 +30,7 @@ const applyStyleOverrides = (style, overrides) => {
         }
       }
       const { paint } = layer;
-      for (const key of ['circle-color', 'fill-color']) {
+      for (const key of ['circle-color', 'fill-color', 'line-color']) {
         /* mapboxgl-legend displays the color code for these
            simple one-color layers. Override that for a simpler
            legend.
