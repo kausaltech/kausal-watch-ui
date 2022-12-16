@@ -47,7 +47,7 @@ const applyStyleOverrides = (style, overrides) => {
         }
       }
       layer.metadata = {
-        labels: Object.assign(DEFAULT_LABELS, labelOverrides),
+        labels: Object.assign({}, DEFAULT_LABELS, labelOverrides),
         name: layerName
       };
     });
