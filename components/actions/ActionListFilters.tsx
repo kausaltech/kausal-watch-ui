@@ -274,8 +274,13 @@ function ActionListFilterBadges({
     if (item.id === 'name') {
       label = value ?? '';
     } if (item.options) {
-      const activeOption = item.options.find((opt) => opt.id === value) as ActionListFilterOption;
-      label = activeOption.label
+      const matchingFilters = enabled.filter(i => i.id === item.id);
+      let activeOption : any = undefined;
+      for (const filter of matchingFilters) {
+        activeOption = filter.options?.find((opt) => opt.id === value) as ActionListFilterOption;
+        if (activeOption !== undefined) break;
+      }
+      label = activeOption.label;
     } else {
       return null;
     }
@@ -289,7 +294,17 @@ function ActionListFilterBadges({
       },
     };
   }
-  const badges = enabled.map((item: ActionListFilter) => {
+  const seenFilterKeyValues = new Set();
+  const badgesToCreate = enabled
+    .filter((item: ActionListFilter) => {
+      const uniqueKey = `${item.id}-${activeFilters[item.id]}`;
+      if (seenFilterKeyValues.has(uniqueKey)) {
+        return false;
+      }
+      seenFilterKeyValues.add(uniqueKey);
+      return true;
+    });
+  const badges = badgesToCreate.map((item: ActionListFilter) => {
     const value = activeFilters[item.id];
     return (isSingleFilterValue(value) ? [value] : value).map(v => createBadge(item, v));
   }).flat().filter(item => item != null);
@@ -487,6 +502,7 @@ class CategoryFilter extends DefaultFilter<FilterValue> {
     //@ts-ignore
     const style = config.style === 'dropdown' ? 'dropdown' : 'buttons';
     this.style = style;
+    this.depth = config.depth ?? (this.style === 'dropdown' ? 2 : 1);
     const hierarchyCt = constructCatHierarchy<FilterCategory, FilterCategoryType>([this.ct])[0];
     const sortedCats = sortDepthFirst(
       hierarchyCt.categories,
@@ -498,7 +514,7 @@ class CategoryFilter extends DefaultFilter<FilterValue> {
     const getLabel = (cat: ActionListCategory) => (
       this.ct.hideCategoryIdentifiers ? cat.name : `${cat.identifier}. ${cat.name}`
     );
-    this.options = sortedCats.map((cat) => ({id: cat.id, label: getLabel(cat), indent: cat.depth}));
+    this.options = sortedCats.filter((cat) => cat.depth < this.depth).map((cat) => ({id: cat.id, label: getLabel(cat), indent: cat.depth}));
   }
   filterSingleCategory(action: ActionListAction, categoryId: string|undefined) {
     return action.categories.some((actCat) => {

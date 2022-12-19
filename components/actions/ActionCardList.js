@@ -32,14 +32,20 @@ const ActionGroupList = styled(Row)`
   padding: 0;
 `;
 
-const groupActions = (groupBy, actions, theme) => {
+const groupActions = (groupBy, depth, actions, theme) => {
   const groupMap = {};
   const groups = [];
   const noGroupItems = [];
 
   actions.forEach((action) => {
+    const { primaryCategories } = action;
     let cat;
-    cat = action.primaryRootCategory;
+    cat = primaryCategories[primaryCategories.length - 1];
+    const categoryCrumb = (
+      primaryCategories.length > 1 ?
+      primaryCategories.slice(0, primaryCategories.length - 1).map(c => c.name):
+      null
+    );
     if (groupBy === 'primaryOrg') cat = action.primaryOrg;
     if (groupBy === 'none') cat = false;
 
@@ -54,6 +60,7 @@ const groupActions = (groupBy, actions, theme) => {
     } else {
       group = {
         id: cat.id,
+        crumb: categoryCrumb,
         displayIdentifier: `${(cat.identifier && !cat.type.hideCategoryIdentifiers) ? cat.identifier : ''}`,
         name: cat.name,
         identifier: cat.identifier || cat.name,
@@ -70,17 +77,19 @@ const groupActions = (groupBy, actions, theme) => {
     id: 'zzzz',
     displayIdentifier: '',
     name: '',
+    crumb: null,
     identifier: 'zzzz',
     elements: noGroupItems,
   });
 
   return groups.sort((g1, g2) => (g1.order - g2.order))
 };
+
 function ActionCardList(props) {
-  const { actions, groupBy } = props;
+  const { actions, groupBy, headingHierarchyDepth } = props;
   const theme = useTheme();
 
-  const groups = groupActions(groupBy, actions, theme);
+  const groups = groupActions(groupBy, headingHierarchyDepth, actions, theme);
 
   return (
     <ActionsList>
@@ -88,6 +97,14 @@ function ActionCardList(props) {
         <ActionGroup key={group.id} tag="li">
           {groups.length > 1 && <Col xs="12">
             <ActionGroupHeader>
+              {group.crumb && (
+                <>
+                  <span className="category-crumb">
+                    {group.crumb.join(' ')}
+                  </span>
+                  <br/>
+                </>
+              )}
               {group.displayIdentifier && (
                 <span className="category-identifier">
                   {`${group.displayIdentifier}. `}

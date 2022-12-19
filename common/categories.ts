@@ -1,4 +1,3 @@
-
 export interface CategoryInput {
   id: string,
   parent?: {
@@ -73,7 +72,7 @@ export interface CategoryMappedAction<
   CT extends CategoryTypeHierarchy<Cat>,
   Cat extends CategoryHierarchyMember<CT>
 > {
-  primaryRootCategory: Cat | null,
+  primaryCategories: Cat[] | null,
   categories: Cat[]
 }
 
@@ -89,26 +88,34 @@ export function mapActionCategories<
   ActionType extends CategoryMappedAction<CT, Cat>,
 >(
   actions: CategoryMappedActionInput[], cts: CategoryTypeHierarchy<Cat>[],
-  primaryRootCT: CT = null,
+  primaryRootCT: CT = null, depth: number
 ) {
   const cats = cts.map((ct) => ct.categories).flat();
   const catsById: Map<string, Cat> = new Map(
     cats.map(cat => [cat.id, cat])
   );
   const mappedActions: ActionType[] = actions.map((action) => {
-    let primaryRootCategory;
+    let primaryCategories = [];
     const cats: ActionType['categories'] = action.categories.map((cat) => {
       const catObj = catsById.get(cat.id);
       if (!catObj) return null;
+      const categoryPath = [];
       if (primaryRootCT && catObj.type.id == primaryRootCT.id) {
         let root = catObj;
-        while (root.parent) root = root.parent;
-        primaryRootCategory = root;
+        categoryPath.unshift(root);
+        while (root.parent) {
+          root = root.parent;
+          categoryPath.unshift(root);
+        }
+        if (depth > categoryPath.length) {
+          depth = categoryPath.length;
+        }
+        primaryCategories = categoryPath.slice(0, depth);
       }
       return catObj;
     }).filter((cat) => cat != null);
     // @ts-ignore
-    const mappedAction: ActionType = {...action, categories: cats, primaryRootCategory};
+    const mappedAction: ActionType = {...action, categories: cats, primaryCategories};
     return mappedAction;
   });
   return mappedActions;
