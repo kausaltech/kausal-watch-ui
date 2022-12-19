@@ -18,6 +18,9 @@ const applyStyleOverrides = (style, overrides) => {
   style.layers
     .filter(l => l.source !== undefined && l.source !== 'composite')
     .forEach(layer => {
+      if (layer?.paint === undefined) {
+        return;
+      }
       let labelOverrides = {};
       let layerName = layer.id;
 
