@@ -118,6 +118,12 @@ const STREAM_FIELD_FRAGMENT = gql`
           ...CategoryListCategory
         }
       }
+      category {
+        id
+        children {
+          ...CategoryListCategory
+        }
+      }
     }
     ... on FrontPageHeroBlock {
       layout
@@ -292,7 +298,7 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
       return <ActionListBlock categoryId={categoryFilter?.id || page.category.id} color={color} />;
     }
     case 'CategoryListBlock': {
-      const { heading, lead, categoryType } = block;
+      const { heading, lead, categoryType, category } = block;
       const { category: pageCategory } = page;
       let categories;
 
@@ -300,7 +306,10 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
        * Otherwise, fall back on the containing page's sub-categories.
        * If even that doesn't work, use plan's main categories.
        */
-      if (categoryType) {
+      if (category) {
+        categories = category.children;
+      }
+      else if (categoryType) {
         categories = categoryType.categories.filter((cat) => cat.parent == null);
       } else if (pageCategory) {
         categories = pageCategory.children;

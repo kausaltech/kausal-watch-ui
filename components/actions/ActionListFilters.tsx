@@ -295,15 +295,12 @@ function ActionListFilterBadges({
     };
   }
   const seenFilterKeyValues = new Set();
-  const badgesToCreate = enabled
-    .filter((item: ActionListFilter) => {
-      const uniqueKey = `${item.id}-${activeFilters[item.id]}`;
-      if (seenFilterKeyValues.has(uniqueKey)) {
-        return false;
-      }
-      seenFilterKeyValues.add(uniqueKey);
-      return true;
-    });
+  const badgesToCreate = enabled.filter((item: ActionListFilter) => {
+    const uniqueKey = `${item.id}-${activeFilters[item.id]}`;
+    if (seenFilterKeyValues.has(uniqueKey)) return false;
+    seenFilterKeyValues.add(uniqueKey);
+    return true;
+  });
   const badges = badgesToCreate.map((item: ActionListFilter) => {
     const value = activeFilters[item.id];
     return (isSingleFilterValue(value) ? [value] : value).map(v => createBadge(item, v));
@@ -514,7 +511,9 @@ class CategoryFilter extends DefaultFilter<FilterValue> {
     const getLabel = (cat: ActionListCategory) => (
       this.ct.hideCategoryIdentifiers ? cat.name : `${cat.identifier}. ${cat.name}`
     );
-    this.options = sortedCats.filter((cat) => cat.depth < this.depth).map((cat) => ({id: cat.id, label: getLabel(cat), indent: cat.depth}));
+    this.options = sortedCats
+      .filter((cat) => cat.depth < this.depth)
+      .map((cat) => ({id: cat.id, label: getLabel(cat), indent: cat.depth}));
   }
   filterSingleCategory(action: ActionListAction, categoryId: string|undefined) {
     return action.categories.some((actCat) => {

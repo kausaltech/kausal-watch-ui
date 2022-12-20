@@ -15,8 +15,12 @@ const ActionGroupHeader = styled.h2`
   padding-bottom: ${(props) => props.theme.spaces.s100};
   margin-bottom: ${(props) => props.theme.spaces.s200};
 
-  .category-identifier {
+  .category-identifier, .category-crumb {
     color: ${(props) => props.theme.graphColors.grey050};
+  }
+
+  .category-crumb {
+    font-size: ${(props) => props.theme.fontSizeLg};
   }
 `;
 
@@ -39,13 +43,17 @@ const groupActions = (groupBy, depth, actions, theme) => {
 
   actions.forEach((action) => {
     const { primaryCategories } = action;
-    let cat;
-    cat = primaryCategories[primaryCategories.length - 1];
-    const categoryCrumb = (
-      primaryCategories.length > 1 ?
-      primaryCategories.slice(0, primaryCategories.length - 1).map(c => c.name):
-      null
-    );
+    let cat = undefined;
+    let categoryCrumb = undefined;
+    if (primaryCategories !== undefined) {
+      const idx = Math.max(0, primaryCategories.length - 1)
+      cat = primaryCategories[idx];
+      categoryCrumb = (
+        primaryCategories.length > 1 ?
+        primaryCategories.slice(0, idx).map(c => c.name):
+        undefined
+      )
+    }
     if (groupBy === 'primaryOrg') cat = action.primaryOrg;
     if (groupBy === 'none') cat = false;
 
