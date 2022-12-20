@@ -88,18 +88,18 @@ export function mapActionCategories<
   ActionType extends CategoryMappedAction<CT, Cat>,
 >(
   actions: CategoryMappedActionInput[], cts: CategoryTypeHierarchy<Cat>[],
-  primaryRootCT: CT = null, depth: number
+  primaryRootCT: CT|null = null, depth: number
 ) {
   const cats = cts.map((ct) => ct.categories).flat();
   const catsById: Map<string, Cat> = new Map(
     cats.map(cat => [cat.id, cat])
   );
   const mappedActions: ActionType[] = actions.map((action) => {
-    let primaryCategories = [];
-    const cats: ActionType['categories'] = action.categories.map((cat) => {
+    let primaryCategories: Cat[] = [];
+    const cats: (ActionType['categories'][0] | null)[] = action.categories.map((cat) => {
       const catObj = catsById.get(cat.id);
       if (!catObj) return null;
-      const categoryPath = [];
+      const categoryPath: Cat[] = [];
       if (primaryRootCT && catObj.type.id == primaryRootCT.id) {
         let root = catObj;
         categoryPath.unshift(root);
