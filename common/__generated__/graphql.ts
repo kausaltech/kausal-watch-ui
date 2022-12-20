@@ -456,6 +456,7 @@ export type ActionListPage = PageInterface & {
   firstPublishedAt?: Maybe<Scalars['DateTime']>;
   goLiveAt?: Maybe<Scalars['DateTime']>;
   hasUnpublishedChanges: Scalars['Boolean'];
+  headingHierarchyDepth: Scalars['Int'];
   id?: Maybe<Scalars['ID']>;
   lastPublishedAt?: Maybe<Scalars['DateTime']>;
   latestRevisionCreatedAt?: Maybe<Scalars['DateTime']>;
@@ -1048,6 +1049,7 @@ export type CategoryListBlock = StreamFieldInterface & {
   __typename?: 'CategoryListBlock';
   blockType: Scalars['String'];
   blocks: Array<StreamFieldInterface>;
+  category?: Maybe<Category>;
   categoryType?: Maybe<CategoryType>;
   field: Scalars['String'];
   heading?: Maybe<Scalars['String']>;
@@ -1212,6 +1214,7 @@ export type CategoryTypeFilterBlock = StreamFieldInterface & {
   blockType: Scalars['String'];
   blocks: Array<StreamFieldInterface>;
   categoryType?: Maybe<CategoryType>;
+  depth?: Maybe<Scalars['Int']>;
   field: Scalars['String'];
   id?: Maybe<Scalars['String']>;
   rawValue: Scalars['String'];
@@ -3560,6 +3563,7 @@ export type UserFeedbackNode = {
   createdAt: Scalars['DateTime'];
   email?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
+  isProcessed: Scalars['Boolean'];
   name?: Maybe<Scalars['String']>;
   plan: Plan;
   url: Scalars['String'];
@@ -4481,6 +4485,25 @@ type AttributesBlockAttributeWithNestedType_AttributeRichText_Fragment = (
 
 export type AttributesBlockAttributeWithNestedTypeFragment = AttributesBlockAttributeWithNestedType_AttributeCategoryChoice_Fragment | AttributesBlockAttributeWithNestedType_AttributeChoice_Fragment | AttributesBlockAttributeWithNestedType_AttributeNumericValue_Fragment | AttributesBlockAttributeWithNestedType_AttributeRichText_Fragment;
 
+export type CreateUserFeedbackMutationVariables = Exact<{
+  input: UserFeedbackMutationInput;
+}>;
+
+
+export type CreateUserFeedbackMutation = (
+  { createUserFeedback?: (
+    { feedback?: (
+      { createdAt: any }
+      & { __typename?: 'UserFeedbackNode' }
+    ) | null, errors?: Array<(
+      { field: string, messages: Array<string> }
+      & { __typename?: 'ErrorType' }
+    ) | null> | null }
+    & { __typename?: 'UserFeedbackMutationPayload' }
+  ) | null }
+  & { __typename?: 'Mutation' }
+);
+
 export type SearchQueryQueryVariables = Exact<{
   plan: Scalars['ID'];
   query: Scalars['String'];
@@ -4658,6 +4681,36 @@ type StreamFieldFragment_CategoryListBlock_Fragment = (
       & { __typename?: 'Category' }
     )> }
     & { __typename?: 'CategoryType' }
+  ) | null, category?: (
+    { id: string, children: Array<(
+      { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, level?: (
+        { name: string, namePlural?: string | null }
+        & { __typename?: 'CategoryLevel' }
+      ) | null, image?: (
+        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, small?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, social?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, rendition?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null }
+        & { __typename?: 'Image' }
+      ) | null, categoryPage?: (
+        { title: string, urlPath: string }
+        & { __typename?: 'CategoryPage' }
+      ) | null, type: (
+        { id: string, hideCategoryIdentifiers: boolean }
+        & { __typename?: 'CategoryType' }
+      ) }
+      & { __typename?: 'Category' }
+    )> }
+    & { __typename?: 'Category' }
   ) | null }
   & { __typename?: 'CategoryListBlock' }
 );
@@ -5111,7 +5164,7 @@ type ActionListFilter_ActionAttributeTypeFilterBlock_Fragment = (
 );
 
 type ActionListFilter_CategoryTypeFilterBlock_Fragment = (
-  { style?: string | null, showAllLabel?: string | null, field: string, id?: string | null, categoryType?: (
+  { style?: string | null, showAllLabel?: string | null, depth?: number | null, field: string, id?: string | null, categoryType?: (
     { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
       { id: string, identifier: string, name: string, order: number, helpText: string, parent?: (
         { id: string }
@@ -5140,7 +5193,7 @@ export type ActionListPageFiltersFragment = (
     { field: string, id?: string | null }
     & { __typename: 'ActionImplementationPhaseFilterBlock' | 'ActionScheduleFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'ResponsiblePartyFilterBlock' }
   ) | (
-    { style?: string | null, showAllLabel?: string | null, field: string, id?: string | null, categoryType?: (
+    { style?: string | null, showAllLabel?: string | null, depth?: number | null, field: string, id?: string | null, categoryType?: (
       { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
         { id: string, identifier: string, name: string, order: number, helpText: string, parent?: (
           { id: string }
@@ -5164,7 +5217,7 @@ export type ActionListPageFiltersFragment = (
     { field: string, id?: string | null }
     & { __typename: 'ActionImplementationPhaseFilterBlock' | 'ActionScheduleFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'ResponsiblePartyFilterBlock' }
   ) | (
-    { style?: string | null, showAllLabel?: string | null, field: string, id?: string | null, categoryType?: (
+    { style?: string | null, showAllLabel?: string | null, depth?: number | null, field: string, id?: string | null, categoryType?: (
       { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
         { id: string, identifier: string, name: string, order: number, helpText: string, parent?: (
           { id: string }
@@ -5188,7 +5241,7 @@ export type ActionListPageFiltersFragment = (
     { field: string, id?: string | null }
     & { __typename: 'ActionImplementationPhaseFilterBlock' | 'ActionScheduleFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'ResponsiblePartyFilterBlock' }
   ) | (
-    { style?: string | null, showAllLabel?: string | null, field: string, id?: string | null, categoryType?: (
+    { style?: string | null, showAllLabel?: string | null, depth?: number | null, field: string, id?: string | null, categoryType?: (
       { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
         { id: string, identifier: string, name: string, order: number, helpText: string, parent?: (
           { id: string }
@@ -6369,6 +6422,36 @@ export type GetPlanPageGeneralQuery = (
           & { __typename?: 'Category' }
         )> }
         & { __typename?: 'CategoryType' }
+      ) | null, category?: (
+        { id: string, children: Array<(
+          { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, level?: (
+            { name: string, namePlural?: string | null }
+            & { __typename?: 'CategoryLevel' }
+          ) | null, image?: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, small?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, social?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, rendition?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, categoryPage?: (
+            { title: string, urlPath: string }
+            & { __typename?: 'CategoryPage' }
+          ) | null, type: (
+            { id: string, hideCategoryIdentifiers: boolean }
+            & { __typename?: 'CategoryType' }
+          ) }
+          & { __typename?: 'Category' }
+        )> }
+        & { __typename?: 'Category' }
       ) | null }
       & { __typename?: 'CategoryListBlock' }
     ) | (
@@ -6768,6 +6851,36 @@ export type GetPlanPageGeneralQuery = (
           & { __typename?: 'Category' }
         )> }
         & { __typename?: 'CategoryType' }
+      ) | null, category?: (
+        { id: string, children: Array<(
+          { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, level?: (
+            { name: string, namePlural?: string | null }
+            & { __typename?: 'CategoryLevel' }
+          ) | null, image?: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, small?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, social?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, rendition?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, categoryPage?: (
+            { title: string, urlPath: string }
+            & { __typename?: 'CategoryPage' }
+          ) | null, type: (
+            { id: string, hideCategoryIdentifiers: boolean }
+            & { __typename?: 'CategoryType' }
+          ) }
+          & { __typename?: 'Category' }
+        )> }
+        & { __typename?: 'Category' }
       ) | null }
       & { __typename?: 'CategoryListBlock' }
     ) | (
@@ -7023,6 +7136,36 @@ export type GetPlanPageGeneralQuery = (
           & { __typename?: 'Category' }
         )> }
         & { __typename?: 'CategoryType' }
+      ) | null, category?: (
+        { id: string, children: Array<(
+          { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, level?: (
+            { name: string, namePlural?: string | null }
+            & { __typename?: 'CategoryLevel' }
+          ) | null, image?: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, small?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, social?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, rendition?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, categoryPage?: (
+            { title: string, urlPath: string }
+            & { __typename?: 'CategoryPage' }
+          ) | null, type: (
+            { id: string, hideCategoryIdentifiers: boolean }
+            & { __typename?: 'CategoryType' }
+          ) }
+          & { __typename?: 'Category' }
+        )> }
+        & { __typename?: 'Category' }
       ) | null }
       & { __typename?: 'CategoryListBlock' }
     ) | (
@@ -7186,7 +7329,7 @@ export type GetActionListPageQuery = (
     { id?: string | null, slug: string, title: string, lastPublishedAt?: any | null }
     & { __typename: 'AccessibilityStatementPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PrivacyPolicyPage' | 'StaticPage' }
   ) | (
-    { leadContent?: string | null, defaultView: ActionListPageView, id?: string | null, slug: string, title: string, lastPublishedAt?: any | null, primaryFilters?: Array<(
+    { leadContent?: string | null, defaultView: ActionListPageView, headingHierarchyDepth: number, id?: string | null, slug: string, title: string, lastPublishedAt?: any | null, primaryFilters?: Array<(
       { showAllLabel?: string | null, field: string, id?: string | null, attributeType: (
         { id: string, identifier: string, format: AttributeTypeFormat, name: string, helpText: string, choiceOptions: Array<(
           { id: string, identifier: string, name: string }
@@ -7199,7 +7342,7 @@ export type GetActionListPageQuery = (
       { field: string, id?: string | null }
       & { __typename: 'ActionImplementationPhaseFilterBlock' | 'ActionScheduleFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'ResponsiblePartyFilterBlock' }
     ) | (
-      { style?: string | null, showAllLabel?: string | null, field: string, id?: string | null, categoryType?: (
+      { style?: string | null, showAllLabel?: string | null, depth?: number | null, field: string, id?: string | null, categoryType?: (
         { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
           { id: string, identifier: string, name: string, order: number, helpText: string, parent?: (
             { id: string }
@@ -7223,7 +7366,7 @@ export type GetActionListPageQuery = (
       { field: string, id?: string | null }
       & { __typename: 'ActionImplementationPhaseFilterBlock' | 'ActionScheduleFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'ResponsiblePartyFilterBlock' }
     ) | (
-      { style?: string | null, showAllLabel?: string | null, field: string, id?: string | null, categoryType?: (
+      { style?: string | null, showAllLabel?: string | null, depth?: number | null, field: string, id?: string | null, categoryType?: (
         { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
           { id: string, identifier: string, name: string, order: number, helpText: string, parent?: (
             { id: string }
@@ -7247,7 +7390,7 @@ export type GetActionListPageQuery = (
       { field: string, id?: string | null }
       & { __typename: 'ActionImplementationPhaseFilterBlock' | 'ActionScheduleFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'ResponsiblePartyFilterBlock' }
     ) | (
-      { style?: string | null, showAllLabel?: string | null, field: string, id?: string | null, categoryType?: (
+      { style?: string | null, showAllLabel?: string | null, depth?: number | null, field: string, id?: string | null, categoryType?: (
         { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
           { id: string, identifier: string, name: string, order: number, helpText: string, parent?: (
             { id: string }
@@ -7262,25 +7405,6 @@ export type GetActionListPageQuery = (
     & { __typename: 'ActionListPage' }
   ) | null }
   & { __typename?: 'Query' }
-);
-
-export type CreateUserFeedbackMutationVariables = Exact<{
-  input: UserFeedbackMutationInput;
-}>;
-
-
-export type CreateUserFeedbackMutation = (
-  { createUserFeedback?: (
-    { feedback?: (
-      { createdAt: any }
-      & { __typename?: 'UserFeedbackNode' }
-    ) | null, errors?: Array<(
-      { field: string, messages: Array<string> }
-      & { __typename?: 'ErrorType' }
-    ) | null> | null }
-    & { __typename?: 'UserFeedbackMutationPayload' }
-  ) | null }
-  & { __typename?: 'Mutation' }
 );
 
 export type GetHomePageQueryVariables = Exact<{
@@ -7397,6 +7521,36 @@ export type GetHomePageQuery = (
           & { __typename?: 'Category' }
         )> }
         & { __typename?: 'CategoryType' }
+      ) | null, category?: (
+        { id: string, children: Array<(
+          { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, level?: (
+            { name: string, namePlural?: string | null }
+            & { __typename?: 'CategoryLevel' }
+          ) | null, image?: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, small?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, social?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, rendition?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, categoryPage?: (
+            { title: string, urlPath: string }
+            & { __typename?: 'CategoryPage' }
+          ) | null, type: (
+            { id: string, hideCategoryIdentifiers: boolean }
+            & { __typename?: 'CategoryType' }
+          ) }
+          & { __typename?: 'Category' }
+        )> }
+        & { __typename?: 'Category' }
       ) | null }
       & { __typename?: 'CategoryListBlock' }
     ) | (
