@@ -19,3 +19,4 @@ yarn-error.log
 /Attic/
 /.envrc
 /public/static/themes/
+/.rgignore

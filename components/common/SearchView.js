@@ -15,11 +15,11 @@ import { usePlan } from 'context/plan';
 import ContentLoader from './ContentLoader';
 
 const SEARCH_QUERY = gql`
-query SearchQuery($plan: ID!, $query: String!, $onlyOtherPlans: Boolean) {
+query SearchQuery($plan: ID!, $query: String!, $onlyOtherPlans: Boolean, $clientUrl: String) {
   search(plan: $plan, query: $query, includeRelatedPlans: true, onlyOtherPlans: $onlyOtherPlans) {
     hits {
       title
-      url
+      url(clientUrl: $clientUrl)
       highlight
       plan {
         identifier
@@ -220,6 +220,7 @@ function SearchResults({ search }) {
       plan: plan.identifier,
       query: search.q,
       onlyOtherPlans: search.onlyOtherPlans,
+      clientUrl: plan.viewUrl,
     },
   });
   if (error) {

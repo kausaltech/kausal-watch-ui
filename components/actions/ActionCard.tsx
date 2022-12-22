@@ -306,7 +306,7 @@ function ActionCard(props: ActionCardProps) {
     if (mergedWith.plan.id !== planId) return `${mergedWith.plan.shortName} ${mergedWith.identifier}`;
     else return mergedWith.identifier;
   };
-
+  const primaryRootCategory = action.primaryCategories ? action.primaryCategories[0] : null;
   return (
     <ActionLink
       action={action}
@@ -318,7 +318,7 @@ function ActionCard(props: ActionCardProps) {
             statusColor={getStatusColor(status.identifier, theme)}
           >
             <PrimaryIcon
-              category={action.primaryRootCategory}
+              category={primaryRootCategory}
             />
             <ActionIdentifier
               showId={!plan.hideActionIdentifiers}

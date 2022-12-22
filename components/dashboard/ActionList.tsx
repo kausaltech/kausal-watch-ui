@@ -247,6 +247,7 @@ fragment ActionListFilter on StreamFieldInterface {
   ... on CategoryTypeFilterBlock {
     style
     showAllLabel
+    depth
     categoryType {
       id
       identifier
@@ -312,6 +313,7 @@ type ActionListProps = {
   onFilterChange: FilterChangeCallback,
   title: string,
   leadContent: string,
+  headingHierarchyDepth: number,
   defaultView: ActionListPageView,
   primaryOrgs: ActionListPrimaryOrg[],
 }
@@ -342,6 +344,7 @@ const ActionList = (props: ActionListProps) => {
     title,
     leadContent,
     defaultView,
+    headingHierarchyDepth,
     primaryOrgs } = props;
   const { t } = useTranslation('common');
   const plan = usePlan();
@@ -377,7 +380,7 @@ const ActionList = (props: ActionListProps) => {
   const actionsWithRps = mapResponsibleParties<ActionListAction, ActionListOrganization>(actions, orgs);
   const mappedActions: ActionListAction[] =
     mapActionCategories<ActionListCategoryType, ActionListCategory, ActionListAction>(
-      actionsWithRps, cts, primaryCatType
+      actionsWithRps, cts, primaryCatType, headingHierarchyDepth
     );
 
   const enabledFilters = filterSections
@@ -465,6 +468,7 @@ const ActionList = (props: ActionListProps) => {
               <ActionCardList
                 actions={filteredActions}
                 groupBy={groupBy}
+                headingHierarchyDepth={headingHierarchyDepth}
               />
             ) : (
               <Alert color="primary">
@@ -493,6 +497,7 @@ type StatusboardProps = {
   availableFilters: ActionListPageFiltersFragment,
   filters: ActiveFilters,
   onFilterChange: FilterChangeCallback,
+  headingHierarchyDepth: number
 };
 
 function ActionListLoader(props: StatusboardProps) {
@@ -502,7 +507,8 @@ function ActionListLoader(props: StatusboardProps) {
     defaultView,
     filters,
     onFilterChange,
-    availableFilters
+    availableFilters,
+    headingHierarchyDepth
   } = props;
   const plan = usePlan();
   const { t } = useTranslation('common');
@@ -521,6 +527,7 @@ function ActionListLoader(props: StatusboardProps) {
       title={title}
       leadContent={leadContent}
       defaultView={defaultView}
+      headingHierarchyDepth={headingHierarchyDepth}
       availableFilters={availableFilters}
       activeFilters={filters}
       onFilterChange={onFilterChange}
