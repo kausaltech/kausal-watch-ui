@@ -15,6 +15,7 @@ const AccessibilityStatementContactFormBlock = (props) => {
         <Col lg={{ size: 8, offset: 2 }} md={{ size: 10, offset: 1 }}>
           <FeedbackForm
             planIdentifier={plan.identifier}
+            formContext="accessibility"
             heading={t('a11y:feedback-heading')}
             description={t('a11y:feedback-description')}
             prompt={t('a11y:feedback-prompt')}

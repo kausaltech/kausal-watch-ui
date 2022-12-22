@@ -33,7 +33,7 @@ const ContactTriggerButton = styled.button`
 `;
 
 const ActionContactFormBlock = (props) => {
-  const { context, formContext } = props;
+  const { action, context } = props;
   const { t } = useTranslation(['a11y']);
   const plan = useContext(PlanContext);
   const [isOpen, setIsOpen] = useState(false);
@@ -61,10 +61,11 @@ const ActionContactFormBlock = (props) => {
     <Collapse isOpen={isOpen}>
     <FeedbackForm
       planIdentifier={plan.identifier}
+      actionId={action.id}
       heading=""
       description=""
       prompt=""
-      formContext={formContext}
+      formContext="action"
     />
     </Collapse>
     </ActionContactFormSection>
