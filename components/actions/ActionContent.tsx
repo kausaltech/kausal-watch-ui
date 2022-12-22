@@ -24,6 +24,7 @@ import TaskList from './TaskList';
 import ResponsibleList from './ResponsibleList';
 import CategoryTags from './CategoryTags';
 import ContactPersons from './ContactPersons';
+import ActionContactFormBlock from 'components/contentblocks/ActionContactFormBlock';
 import ActionPhase from './ActionPhase';
 import ActionStatus from './ActionStatus';
 import ActionImpact from './ActionImpact';
@@ -541,6 +542,9 @@ function ActionContentBlock({ block, action, section }: ActionContentBlockProps)
         ) : null}
         </>
       )
+    case 'ActionContactFormBlock': {
+      return <ActionContactFormBlock {...block} action={action} />
+    }
     default:
       console.error("Unknown action content block", block.__typename);
       return null;

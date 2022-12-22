@@ -34,7 +34,7 @@ function makeAbsoluteUrl (url) {
   return new URL(url, baseUrl);
 }
 
-const FeedbackForm = ({ planIdentifier, heading, description, prompt, formContext }) => {
+const FeedbackForm = ({ planIdentifier, actionId, heading, description, prompt, formContext }) => {
   const { control, formState: { errors }, handleSubmit } = useForm();
   const { t } = useTranslation();
   const [sent, setSent] = useState(false);
@@ -49,8 +49,9 @@ const FeedbackForm = ({ planIdentifier, heading, description, prompt, formContex
   const onSubmit = (formData) => {
     const data = {
       ...formData,
-      comment: formContext ? formData.comment.concat('\n\n', 'Form context: ', formContext ?? '-') : formData.comment,
+      type: formContext,
       plan: planIdentifier,
+      action: actionId,
       url: makeAbsoluteUrl(decodeURIComponent(router.query.lastUrl || router.asPath))
     };
     setSent(true);
@@ -155,10 +156,12 @@ const FeedbackForm = ({ planIdentifier, heading, description, prompt, formContex
 
 FeedbackForm.defaultProps = {
   formContext: null,
+  actionId: null,
 };
 
 FeedbackForm.propTypes = {
   planIdentifier: PropTypes.string.isRequired,
+  actionId: PropTypes.string,
   heading: PropTypes.string,
   description: PropTypes.string,
   prompt: PropTypes.string,
