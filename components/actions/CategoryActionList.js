@@ -12,7 +12,7 @@ import ErrorMessage from 'components/common/ErrorMessage';
 import PlanContext from 'context/plan';
 
 const GET_ACTION_LIST = gql`
-query GetActionList($plan: ID!) {
+query GetActionList($plan: ID!, $clientUrl: String!) {
   planActions(plan: $plan) {
     ...ActionCard
     image {
@@ -115,6 +115,7 @@ const CategoryActionList = (props) => {
   const { loading, error, data } = useQuery(GET_ACTION_LIST, {
     variables: {
       plan: plan.identifier,
+      clientUrl: plan.viewUrl,
     },
   });
   if (loading) return <ContentLoader />;

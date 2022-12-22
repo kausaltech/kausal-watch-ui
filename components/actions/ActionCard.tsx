@@ -55,13 +55,15 @@ const ACTION_CARD_FRAGMENT = gql`
         plan {
           id
           shortName
-          viewUrl
+          viewUrl(clientUrl: $clientUrl)
         }
       }
     plan {
       id
       shortName
-      viewUrl
+      viewUrl(clientUrl: $clientUrl)
+      hideActionIdentifiers
+      publishedAt
       image {
         rendition(size: "128x128", crop: true) {
           src

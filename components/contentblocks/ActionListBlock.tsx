@@ -12,7 +12,7 @@ import ErrorMessage from 'components/common/ErrorMessage';
 import PlanContext from 'context/plan';
 
 const GET_ACTION_LIST_FOR_BLOCK = gql`
-query GetActionListForBlock($plan: ID!, $category: ID) {
+query GetActionListForBlock($plan: ID!, $category: ID, $clientUrl: String) {
   planActions(plan: $plan, category: $category) {
     ...ActionCard
   }
@@ -48,6 +48,7 @@ const ActionListBlock = (props) => {
     variables: {
       plan: plan.identifier,
       category: categoryId,
+      clientUrl: plan.viewUrl,
     },
   });
   if (loading) return <ContentLoader />;

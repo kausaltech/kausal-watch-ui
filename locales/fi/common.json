@@ -176,5 +176,9 @@
   "filter-phase-help": "Näytä toimenpiteet jotka ovat valitussa toteutusvaiheessa",
   "filter-organization-help": "Näytä toimenpiteet joissa valittu organisaatio on vastuutoimijana",
   "additional-filters": "Lisävalinnat",
-  "actions-filter-by": "Rajaukset"
+  "actions-filter-by": "Rajaukset",
+  "version-this-is-old": "Tämä on vanhentunut versio",
+  "version-switch-to-active": "Uusin versio",
+  "versions-list": "Kaikki versiot",
+  "version-history": "Versiohistoria"
 }
