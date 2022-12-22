@@ -51,7 +51,7 @@ const FeedbackForm = ({ planIdentifier, heading, description, prompt, formContex
       ...formData,
       comment: formContext ? formData.comment.concat('\n\n', 'Form context: ', formContext ?? '-') : formData.comment,
       plan: planIdentifier,
-      url: makeAbsoluteUrl(decodeURIComponent(router.query.lastUrl))
+      url: makeAbsoluteUrl(decodeURIComponent(router.query.lastUrl || router.asPath))
     };
     setSent(true);
     createUserFeedback({ variables: { input: data } });
