@@ -63,6 +63,7 @@ const ACTION_CARD_FRAGMENT = gql`
       shortName
       viewUrl(clientUrl: $clientUrl)
       hideActionIdentifiers
+      publishedAt
       image {
         rendition(size: "128x128", crop: true) {
           src

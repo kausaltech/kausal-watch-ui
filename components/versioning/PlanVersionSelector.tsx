@@ -1,7 +1,9 @@
+import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import Icon from 'components/common/Icon';
 import { useTranslation } from 'common/i18n';
+import SiteContext from 'context/site';
 
 const VersionSelect = styled.div`
   display: flex;
@@ -75,12 +77,18 @@ const StyledDropdownToggle = styled(DropdownToggle)`
 `;
 
 const PlanVersionSelector = (props) => {
-
   const { plan } = props;
   const { t } = useTranslation();
+  const site = useContext(SiteContext);
+  const isProduction = site.deploymentType === 'production';
 
-  const supersededVersions = plan.supersededPlans;
-  const supersedingVersions = plan.supersedingPlans;
+  const supersededVersions = !isProduction
+    ? plan.supersededPlans
+    : plan.supersededPlans.filter((p) => p.publishedAt);
+
+  const supersedingVersions = !isProduction
+    ? plan.supersedingPlans
+    : plan.supersedingPlans.filter((p) => p.publishedAt);
 
   const allVersions = [
     ...supersededVersions.map((v) => ({

@@ -16,6 +16,7 @@ fragment PlanContext on Plan {
   primaryLanguage
   otherLanguages
   hideActionIdentifiers
+  publishedAt
   viewUrl(clientUrl: $clientUrl)
   primaryActionClassification {
     id
@@ -158,18 +159,21 @@ fragment PlanContext on Plan {
       shortName
       identifier
       viewUrl(clientUrl: $clientUrl)
+      publishedAt
     }
   supersededPlans(recursive: true) {
     name
     shortName
     identifier
     viewUrl(clientUrl: $clientUrl)
+    publishedAt
   }
   supersedingPlans(recursive: true) {
     name
     shortName
     identifier
     viewUrl(clientUrl: $clientUrl)
+    publishedAt
   }
   children {
     id

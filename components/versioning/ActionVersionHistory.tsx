@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import styled from "styled-components";
 import { Collapse, Button } from "reactstrap";
 import { useTranslation } from "common/i18n";
 import { ActionLink } from "common/links";
 import Icon from "components/common/Icon";
+import SiteContext from 'context/site';
 
 const VersionHistory = styled.div`
   color: ${(props) => props.theme.graphColors.grey090};
@@ -54,15 +55,23 @@ const ActionVersionHistory = (props: ActionVersionHistoryProps) => {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(action.supersededBy ? true : false);
   const toggle = () => setIsOpen(!isOpen);
+  const site = useContext(SiteContext);
+  const isProduction = site.deploymentType === 'production';
 
   const versions = [];
-  if (action?.supersededActions) {
-    versions.push(...action?.supersededActions);
-  }
+  const supersededActions = !isProduction
+    ? action?.supersededActions || []
+    : action?.supersededActions.filter((a) => a.plan.publishedAt);
+
+  versions.push(...supersededActions);
   versions.push(action);
-  if (action?.supersededBy) {
-    versions.push(action?.supersededBy);
+
+  if(action?.supersededBy) {
+    !isProduction
+    ? versions.push(action.supersededBy)
+    : action.supersededBy.plan.publishedAt && versions.push(action.supersededBy);
   }
+  if (versions.length < 2) return null;
 
   return (
     <VersionHistory>

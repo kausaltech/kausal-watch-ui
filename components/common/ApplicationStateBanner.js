@@ -45,7 +45,12 @@ function ApplicationStateBanner(props) {
   let typeMessage;
 
   const plan = usePlan();
-  const supersedingVersions = plan.supersedingPlans;
+
+  // Only show superseding versions in production if they are published
+  const supersedingVersions =
+    deploymentType !== 'production'
+    ? plan.supersedingPlans
+    : plan.supersedingPlans.filter((p) => p.publishedAt);
 
   switch (deploymentType) {
     case 'production':
