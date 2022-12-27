@@ -168,6 +168,7 @@ const GET_ORG_DETAILS = gql`
     id
     name
     shortName
+    versionName
     viewUrl(clientUrl: $clientUrl)
     organization {
       id
@@ -272,6 +273,7 @@ const GET_ORG_DETAILS = gql`
         plan {
           id
           shortName
+          versionName
           viewUrl(clientUrl: $clientUrl)
         }
       }
@@ -386,7 +388,7 @@ function OrgContent(props) {
                   >
                     <PlanChip
                       planImage={p.image?.rendition?.src}
-                      planShortName={p.shortName || p.name}
+                      planShortName={`${p.shortName || p.name}${p.versionName ? ` (${p.versionName})` : ''}`}
                       organization={p.shortName ? p.name : p.organization.abbreviation}
                       size="md"
                       negative={i!== selectedPlanIndex}
