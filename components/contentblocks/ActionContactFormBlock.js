@@ -34,7 +34,7 @@ const ContactTriggerButton = styled.button`
 
 const ActionContactFormBlock = (props) => {
   const { action, context } = props;
-  const { t } = useTranslation(['a11y']);
+  const { t } = useTranslation(['actions']);
   const plan = useContext(PlanContext);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -53,8 +53,8 @@ const ActionContactFormBlock = (props) => {
     >
       <Icon name="commenting" width="2rem" height="2rem"/>
       <div>
-        <h2>{t('feedback-on-action')}</h2>
-        {t('feedback-on-action-description')}
+        <h2>{t('actions:feedback-on-action')}</h2>
+        {t('actions:feedback-on-action-description')}
       </div>
       <Icon name={isOpen ? 'angle-down' : 'angle-right'} width="2rem" height="2rem"/>
     </ContactTriggerButton>
