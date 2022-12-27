@@ -12,6 +12,7 @@ fragment PlanContext on Plan {
   identifier
   name
   shortName
+  versionName
   themeIdentifier
   primaryLanguage
   otherLanguages
@@ -157,6 +158,7 @@ fragment PlanContext on Plan {
   supersededBy {
       name
       shortName
+      versionName
       identifier
       viewUrl(clientUrl: $clientUrl)
       publishedAt
@@ -164,6 +166,7 @@ fragment PlanContext on Plan {
   supersededPlans(recursive: true) {
     name
     shortName
+    versionName
     identifier
     viewUrl(clientUrl: $clientUrl)
     publishedAt
@@ -171,6 +174,7 @@ fragment PlanContext on Plan {
   supersedingPlans(recursive: true) {
     name
     shortName
+    versionName
     identifier
     viewUrl(clientUrl: $clientUrl)
     publishedAt

@@ -99,7 +99,7 @@ const ActionVersionHistory = (props: ActionVersionHistoryProps) => {
             active={v.identifier === action.identifier}
           >
             <VersionHistoryListItemDate>
-              {v.plan.shortName}
+              {v.plan?.versionName || v.plan.shortName}
             </VersionHistoryListItemDate>
             <ActionLink
               action={v}

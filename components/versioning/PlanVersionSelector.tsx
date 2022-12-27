@@ -50,9 +50,10 @@ const VersionDate = styled.div`
 const StyledDropdownToggle = styled(DropdownToggle)`
   display: flex;
   align-items: center;
+  text-align: left;
   padding: .25rem;
   background: none;
-  line-height: 1.5rem;
+  line-height: 1 !important;
   border: 1px solid transparent;
   border-radius: 1.75rem;
   font-size: 1rem;
@@ -94,21 +95,21 @@ const PlanVersionSelector = (props) => {
     ...supersededVersions.map((v) => ({
       identifier: v.identifier,
       shortName: v.name.slice(0, 15),
-      versionName: v.shortName,
+      versionName: v?.versionName || v?.shortName,
       viewUrl: v.viewUrl,
       active: false,
     })),
     {
       identifier: plan.identifier,
       shortName: plan.name.slice(0, 15),
-      versionName: plan.shortName,
+      versionName: plan?.versionName || plan?.shortName,
       viewUrl: plan.viewUrl,
       active: true,
     },
     ...supersedingVersions.map((v) => ({
       identifier: v.identifier,
       shortName: v.name.slice(0, 15),
-      versionName: v.shortName,
+      versionName: v?.versionName || v?.shortName,
       viewUrl: v.viewUrl,
       active: false,
     })),

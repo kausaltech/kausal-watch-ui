@@ -55,12 +55,14 @@ const ACTION_CARD_FRAGMENT = gql`
         plan {
           id
           shortName
+          versionName
           viewUrl(clientUrl: $clientUrl)
         }
       }
     plan {
       id
       shortName
+      versionName
       viewUrl(clientUrl: $clientUrl)
       hideActionIdentifiers
       publishedAt

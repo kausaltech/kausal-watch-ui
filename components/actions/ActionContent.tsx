@@ -166,6 +166,7 @@ query GetActionDetails($plan: ID!, $id: ID!, $clientUrl: String!) {
         plan {
           id
           shortName
+          versionName
           viewUrl(clientUrl: $clientUrl)
         }
       }
@@ -189,6 +190,7 @@ query GetActionDetails($plan: ID!, $id: ID!, $clientUrl: String!) {
     plan {
       id
       shortName
+      versionName
       viewUrl(clientUrl: $clientUrl)
       hideActionIdentifiers
       image {
