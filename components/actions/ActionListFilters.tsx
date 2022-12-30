@@ -439,6 +439,7 @@ class ResponsiblePartyFilter extends DefaultFilter<string|undefined> {
   id = 'responsible_party';
   options: ActionListFilterOption[];
   orgById: Map<string, ActionListOrganization>
+  onlyPrimary: boolean;
 
   constructor(orgs: ActionListOrganization[]) {
     super();
@@ -450,9 +451,15 @@ class ResponsiblePartyFilter extends DefaultFilter<string|undefined> {
     );
     this.orgById = new Map(orgs.map(org => [org.id, org]));
     this.options = sortedOrgs.map((org) => ({id: org.id, label: org.name, indent: org.depth}));
+    this.onlyPrimary = false;
   }
   filterAction(value: string|undefined, action: ActionListAction) {
-    return action.responsibleParties.some((rp) => {
+    console.log(action.responsibleParties);
+    const relevantParties = this.onlyPrimary
+      ? action.responsibleParties.filter((rp) => rp.role === 'PRIMARY')
+      : action.responsibleParties;
+    console.log("RELEVANT", relevantParties);
+    return relevantParties.some((rp) => {
       // @ts-ignore
       let org: ActionListOrganization = rp.organization;
       while (org) {
@@ -463,7 +470,36 @@ class ResponsiblePartyFilter extends DefaultFilter<string|undefined> {
     });
   }
   render(value: string|undefined, onChange: FilterChangeCallback<string|undefined>, t: TFunction) {
-    return super.render(value, onChange, t);
+    // return super.render(value, onChange, t);
+    // TODO: Needs to rerender on this.onlyPrimary change
+    return (
+      <Col
+        sm={this.sm}
+        md={this.md}
+        lg={this.lg}
+        key={this.id}
+        className="d-flex align-items-center"
+      >
+        <ActionListDropdownInput
+          isMulti={false}
+          id={this.id}
+          label={this.getLabel(t)}
+          helpText={this.getHelpText(t)}
+          showAllLabel={this.getShowAllLabel(t)}
+          currentValue={value}
+          onChange={onChange}
+          options={this.options}
+        />
+        <Button
+          color="primary"
+          outline
+          onClick={(e) => {this.onlyPrimary = !this.onlyPrimary; onChange(this.id, value)}}
+          active={value && this.onlyPrimary}
+        >
+          { this.onlyPrimary ? t('filter-primary') : t('filter-all')}
+        </Button>
+      </Col>
+    )
   }
   getLabel(t: TFunction) {
     return t('filter-organization');
