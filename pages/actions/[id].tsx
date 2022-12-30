@@ -19,6 +19,7 @@ function ActionPage() {
     variables: {
       id,
       plan: plan.identifier,
+      clientUrl: plan.viewUrl,
     },
   });
   let component;

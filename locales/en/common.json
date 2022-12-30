@@ -176,5 +176,9 @@
   "filter-primary-organization-help": "Show actions of selected municipality",
   "filter-schedule-help": "Show actions spanning across selected schedule",
   "additional-filters": "Additional filters",
-  "actions-filter-by": "Filter"
+  "actions-filter-by": "Filter",
+  "version-this-is-old": "This is an old version",
+  "version-switch-to-active": "Latest version",
+  "versions-list": "All versions",
+  "version-history": "Version history"
 }

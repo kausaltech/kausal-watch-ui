@@ -64,5 +64,7 @@
   "related-actions": "Liittyvät toimenpiteet",
   "org-responsible-in-actions": "{{actionCount}} toimenpiteen vastuuorganisaationa",
   "action-task-hide-comment": "Piilota lisätiedot",
-  "action-task-show-comment": "Näytä lisätiedot"
+  "action-task-show-comment": "Näytä lisätiedot",
+  "feedback-on-action": "Anna palautetta toimenpiteestä",
+  "feedback-on-action-description": "Tästä voit lähettää palautetta tai kommentin koskien tätä toimenpidettä"
 }

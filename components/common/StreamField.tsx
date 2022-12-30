@@ -19,10 +19,12 @@ import RelatedPlanListBlock from 'components/contentblocks/RelatedPlanListBlock'
 import ActionCategoryFilterCardsBlock from 'components/contentblocks/ActionCategoryFilterCardsBlock';
 import AccessibilityStatementComplianceStatusBlock
   from 'components/contentblocks/AccessibilityStatementComplianceStatusBlock';
+import AccessibilityStatementContactFormBlock from 'components/contentblocks/AccessibilityStatementContactFormBlock';
 import AccessibilityStatementContactInformationBlock
   from 'components/contentblocks/AccessibilityStatementContactInformationBlock';
 
 import type { StreamFieldFragmentFragment } from 'common/__generated__/graphql';
+import CartographyVisualisationBlock from 'components/contentblocks/CartographyVisualisationBlock';
 
 
 const STREAM_FIELD_FRAGMENT = gql`
@@ -96,6 +98,15 @@ const STREAM_FIELD_FRAGMENT = gql`
         id
       }
     }
+    ... on CartographyVisualisationBlock {
+      style
+      styleOverrides
+      account {
+        provider
+        account
+        publicAccessToken
+      }
+    }
     ... on CategoryListBlock {
       style
       heading
@@ -104,6 +115,12 @@ const STREAM_FIELD_FRAGMENT = gql`
         id
         hideCategoryIdentifiers
         categories {
+          ...CategoryListCategory
+        }
+      }
+      category {
+        id
+        children {
           ...CategoryListCategory
         }
       }
@@ -234,10 +251,11 @@ type StreamFieldBlockProps = {
   page: any,
   block: StreamFieldFragmentFragment,
   color: string,
+  hasSidebar: boolean,
 }
 
 function StreamFieldBlock(props: StreamFieldBlockProps) {
-  const { page, block, color } = props;
+  const { page, block, color, hasSidebar } = props;
   const { __typename } = block;
   const plan = useContext(PlanContext);
 
@@ -245,9 +263,14 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
     case 'RichTextBlock': {
       const { value } = block;
       return (
-        <Container className="my-5">
+        <Container>
           <Row>
-            <Col lg={{ size: 8, offset: 2 }} md={{ size: 10, offset: 1 }}>
+            <Col
+              xl={{ size: 7, offset: hasSidebar ? 4 : 2 }}
+              lg={{ size: 8, offset: hasSidebar ? 4 : 2 }}
+              md={{ size: 10, offset: 1 }}
+              className="my-4"
+            >
               <RichText html={value} />
             </Col>
           </Row>
@@ -256,7 +279,11 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
     }
     case 'QuestionAnswerBlock': {
       const { heading, questions } = block;
-      return <QuestionAnswerBlock heading={heading} questions={questions} />;
+      return <QuestionAnswerBlock
+                heading={heading}
+                questions={questions}
+                hasSidebar={hasSidebar}
+              />;
     }
     case 'CharBlock': {
       const { value } = block;
@@ -271,7 +298,7 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
       return <ActionListBlock categoryId={categoryFilter?.id || page.category.id} color={color} />;
     }
     case 'CategoryListBlock': {
-      const { heading, lead, categoryType } = block;
+      const { heading, lead, categoryType, category } = block;
       const { category: pageCategory } = page;
       let categories;
 
@@ -279,7 +306,10 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
        * Otherwise, fall back on the containing page's sub-categories.
        * If even that doesn't work, use plan's main categories.
        */
-      if (categoryType) {
+      if (category) {
+        categories = category.children;
+      }
+      else if (categoryType) {
         categories = categoryType.categories.filter((cat) => cat.parent == null);
       } else if (pageCategory) {
         categories = pageCategory.children;
@@ -311,7 +341,11 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
     }
     case 'IndicatorShowcaseBlock': {
       const { indicator, title, body } = block;
-      return <IndicatorShowcaseBlock indicator={indicator} title={title} body={body} />;
+      return <IndicatorShowcaseBlock
+                indicator={indicator}
+                title={title}
+                body={body}
+              />;
     }
     case 'CardListBlock': {
       const { cards, lead, heading } = block;
@@ -339,10 +373,27 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
       return <ActionCategoryFilterCardsBlock cards={cards} />;
     }
     case 'CategoryTreeMapBlock': {
-      return <CategoryTreeBlock {...block} />
+      return <CategoryTreeBlock
+                {...block}
+                hasSidebar={hasSidebar}
+              />
+    }
+    case 'CartographyVisualisationBlock': {
+      const { account, style, styleOverrides } = block;
+      const accessToken = account?.publicAccessToken;
+      return <CartographyVisualisationBlock
+        styleUrl={style}
+        accessToken={accessToken}
+        styleOverrides={styleOverrides}
+        hasSidebar={hasSidebar}
+      />;
+
     }
     case 'AccessibilityStatementComplianceStatusBlock': {
       return <AccessibilityStatementComplianceStatusBlock {...block} />
+    }
+    case 'AccessibilityStatementContactFormBlock': {
+      return <AccessibilityStatementContactFormBlock {...block} />
     }
     case 'AccessibilityStatementContactInformationBlock': {
       const { blocks } = block;
@@ -361,10 +412,11 @@ interface StreamFieldProps {
   color: string,
   page: any,
   blocks: any,
+  hasSidebar: boolean,
 }
 
 function StreamField(props: StreamFieldProps) {
-  const { page, blocks, color } = props;
+  const { page, blocks, color, hasSidebar = false } = props;
   return (
     <>
       { blocks.map((block) => (
@@ -373,6 +425,7 @@ function StreamField(props: StreamFieldProps) {
           page={page}
           key={block.id}
           color={color}
+          hasSidebar={hasSidebar}
         />
       ))}
     </>

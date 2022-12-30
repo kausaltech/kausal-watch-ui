@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { concat } from 'lodash';
 import styled from 'styled-components';
-import { Container } from 'reactstrap';
+import { Container, Row, Col } from 'reactstrap';
 import ContentLoader from 'components/common/ContentLoader';
 import { gql, useQuery } from '@apollo/client';
 import CategoryTreeMap from 'components/graphs/CategoryTreeMap';
@@ -172,7 +172,7 @@ type CategoryTreeSectionProps = {
   }
 };
 
-const CategoryTreeSection = ({ sections, valueAttribute, heading = 'Categories' }: CategoryTreeSectionProps) => {
+const CategoryTreeSection = ({ sections, valueAttribute, heading = 'Categories', hasSidebar }: CategoryTreeSectionProps) => {
   // console.log(sections);
   const rootSection = sections.find((sect) => sect.parent === null);
   const [activeCategory, setCategory] = useState(rootSection);
@@ -188,6 +188,12 @@ const CategoryTreeSection = ({ sections, valueAttribute, heading = 'Categories' 
   return (
     <CategoryListSection>
       <Container>
+        <Row>
+        <Col
+            xl={{ size: 9, offset: hasSidebar ? 3 : 2 }}
+            lg={{ size: 8, offset: hasSidebar ? 4 : 2 }}
+            md={{ size: 10, offset: 1 }}
+          >
         {heading && (<h2>{heading}</h2>)}
         <CategoryTreeLayout>
           <CategoryCardColumn>
@@ -215,6 +221,8 @@ const CategoryTreeSection = ({ sections, valueAttribute, heading = 'Categories' 
           activeCategory={activeCategory}
           categories={sections}
         />
+        </Col>
+        </Row>
       </Container>
     </CategoryListSection>
   );
@@ -230,11 +238,12 @@ type CategoryTreeBlockProps = {
       shortName: string,
     }
   },
-  categories: GetCategoriesForTreeMapQuery['planCategories']
+  categories: GetCategoriesForTreeMapQuery['planCategories'],
+  hasSidebar: boolean,
 }
 
 function CategoryTreeBlockBrowser(props: CategoryTreeBlockProps) {
-  const cats = props.categories;
+  const { categories:cats, heading, lead, hasSidebar } = props;
   const catMap = useMemo(() => (new Map(cats.map((cat) => [cat.id, cat]))), [cats]);
 
   const findFirstAncestorColor = useCallback((id) => {
@@ -257,7 +266,13 @@ function CategoryTreeBlockBrowser(props: CategoryTreeBlockProps) {
   ), [cats, findFirstAncestorColor]);
 
   return (
-    <CategoryTreeSection heading={props.heading} lead={props.lead} sections={augmentedCategories} valueAttribute={props.valueAttribute} />
+    <CategoryTreeSection
+      heading={heading}
+      lead={lead}
+      sections={augmentedCategories}
+      valueAttribute={props.valueAttribute}
+      hasSidebar={hasSidebar}
+    />
   );
 }
 
@@ -268,7 +283,7 @@ function CategoryTreeBlock(props: CategoryTreeBlockProps) {
     return null;
   }
 
-  const { categoryType, valueAttribute } = props;
+  const { categoryType, valueAttribute, hasSidebar } = props;
   const plan = usePlan();
   const { data, loading, error } = useQuery<GetCategoriesForTreeMapQuery>(GET_CATEGORIES_FOR_TREEMAP, {
     variables: {
@@ -281,7 +296,7 @@ function CategoryTreeBlock(props: CategoryTreeBlockProps) {
   if (error) return <ErrorMessage message={error.message} />;
   if (loading) return <ContentLoader />;
 
-  return <CategoryTreeBlockBrowser categories={data.planCategories} {...props} />
+  return <CategoryTreeBlockBrowser categories={data.planCategories} {...props} hasSidebar={hasSidebar}/>
 };
 
 export default CategoryTreeBlock;

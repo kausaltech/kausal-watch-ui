@@ -10,7 +10,9 @@ const AccessibilityStatementContactInformationBlock = (props) => {
   const plan = useContext(PlanContext);
 
   const accessibilityContactEmail = content?.find((block) => block.id==='email')?.value || 'accessibility@kausal.tech';
-  const responsibleBody =  content?.find((block) => block.id==='publisher')?.value || plan.generalContent.ownerName;
+  const publisher = content?.find((block) => block.id === 'publisher')?.value;
+  const customParagraph = content?.find((block) => block.id === 'maintenance_responsibility_paragraph')?.value;
+  const responsibleBody = publisher || plan.generalContent.ownerName;
 
   return (
     <Container className="my-5 text-content">
@@ -18,7 +20,7 @@ const AccessibilityStatementContactInformationBlock = (props) => {
         <Col lg={{ size: 8, offset: 2 }} md={{ size: 10, offset: 1 }}>
           <h2>{t('a11y:feedback-contact')}</h2>
           <p>
-            {t('a11y:responsible-for-maintenance',{responsibleBody: responsibleBody} )}
+            {customParagraph || t('a11y:responsible-for-maintenance', {responsibleBody} )}
           </p>
           <p>
             {t('a11y:feedback-text')}

@@ -16,6 +16,21 @@
       "ResponsiblePartyFilterBlock"
     ],
     "ActionMainContentBlock": [
+      "ActionContactFormBlock",
+      "ActionContentAttributeTypeBlock",
+      "ActionContentCategoryTypeBlock",
+      "ActionContentSectionBlock",
+      "ActionDescriptionBlock",
+      "ActionLeadParagraphBlock",
+      "ActionLinksBlock",
+      "ActionMergedActionsBlock",
+      "ActionOfficialNameBlock",
+      "ActionRelatedActionsBlock",
+      "ActionRelatedIndicatorsBlock",
+      "ActionTasksBlock"
+    ],
+    "ActionMainContentSectionElementBlock": [
+      "ActionContactFormBlock",
       "ActionContentAttributeTypeBlock",
       "ActionContentCategoryTypeBlock",
       "ActionContentSectionBlock",
@@ -69,11 +84,13 @@
     ],
     "StreamFieldInterface": [
       "AccessibilityStatementComplianceStatusBlock",
+      "AccessibilityStatementContactFormBlock",
       "AccessibilityStatementContactInformationBlock",
       "AccessibilityStatementPreparationInformationBlock",
       "ActionAttributeTypeFilterBlock",
       "ActionCategoryFilterCardBlock",
       "ActionCategoryFilterCardsBlock",
+      "ActionContactFormBlock",
       "ActionContactPersonsBlock",
       "ActionContentAttributeTypeBlock",
       "ActionContentCategoryTypeBlock",
@@ -130,6 +147,7 @@
       "ReportFieldBlock",
       "ResponsiblePartyFilterBlock",
       "RichTextBlock",
+      "SnippetChooserBlock",
       "StaticBlock",
       "StreamBlock",
       "StreamFieldBlock",

@@ -55,13 +55,17 @@ const ACTION_CARD_FRAGMENT = gql`
         plan {
           id
           shortName
-          viewUrl
+          versionName
+          viewUrl(clientUrl: $clientUrl)
         }
       }
     plan {
       id
       shortName
-      viewUrl
+      versionName
+      viewUrl(clientUrl: $clientUrl)
+      hideActionIdentifiers
+      publishedAt
       image {
         rendition(size: "128x128", crop: true) {
           src
@@ -305,7 +309,7 @@ function ActionCard(props: ActionCardProps) {
     if (mergedWith.plan.id !== planId) return `${mergedWith.plan.shortName} ${mergedWith.identifier}`;
     else return mergedWith.identifier;
   };
-
+  const primaryRootCategory = action.primaryCategories ? action.primaryCategories[0] : null;
   return (
     <ActionLink
       action={action}
@@ -317,7 +321,7 @@ function ActionCard(props: ActionCardProps) {
             statusColor={getStatusColor(status.identifier, theme)}
           >
             <PrimaryIcon
-              category={action.primaryRootCategory}
+              category={primaryRootCategory}
             />
             <ActionIdentifier
               showId={!plan.hideActionIdentifiers}

@@ -64,5 +64,7 @@
   "related-actions": "Related actions",
   "org-responsible-in-actions": "Responsible in {{actionCount}} actions",
   "action-task-hide-comment": "Hide details",
-  "action-task-show-comment": "Show details"
+  "action-task-show-comment": "Show details",
+  "feedback-on-action": "Give feedback on this action",
+  "feedback-on-action-description": "You can leave a comment or feedback on this action"
 }

@@ -14,6 +14,7 @@ import { NavigationLink, Link } from 'common/links';
 
 import Icon from './Icon';
 import PlanSelector from 'components/plans/PlanSelector';
+import PlanVersionSelector from 'components/versioning/PlanVersionSelector';
 import LanguageSelector from './LanguageSelector';
 import NavbarSearch from './NavbarSearch';
 import { usePlan } from 'context/plan';
@@ -416,6 +417,9 @@ function GlobalNav(props) {
             <LanguageSelector mobile="true"/>
           </Nav>
           <Nav navbar>
+            <PlanVersionSelector
+              plan={plan}
+            />
             { externalItems.length > 0 && externalItems.map((item, index) => (
               <NavItem key={`external${index}`}>
                 <NavLink>

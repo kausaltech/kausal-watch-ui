@@ -12,10 +12,12 @@ fragment PlanContext on Plan {
   identifier
   name
   shortName
+  versionName
   themeIdentifier
   primaryLanguage
   otherLanguages
   hideActionIdentifiers
+  publishedAt
   viewUrl(clientUrl: $clientUrl)
   primaryActionClassification {
     id
@@ -152,6 +154,30 @@ fragment PlanContext on Plan {
       name
     }
     viewUrl(clientUrl: $clientUrl)
+  }
+  supersededBy {
+      name
+      shortName
+      versionName
+      identifier
+      viewUrl(clientUrl: $clientUrl)
+      publishedAt
+    }
+  supersededPlans(recursive: true) {
+    name
+    shortName
+    versionName
+    identifier
+    viewUrl(clientUrl: $clientUrl)
+    publishedAt
+  }
+  supersedingPlans(recursive: true) {
+    name
+    shortName
+    versionName
+    identifier
+    viewUrl(clientUrl: $clientUrl)
+    publishedAt
   }
   children {
     id
