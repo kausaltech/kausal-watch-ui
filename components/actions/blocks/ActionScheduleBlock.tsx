@@ -11,7 +11,7 @@ const SideHeader = styled.h3`
 `;
 
 const ActionScheduleBlock = (props) => {
-  const { action } = props;
+  const { action, plan } = props;
   const { t } = useTranslation();
 
   return (

@@ -1,6 +1,6 @@
 import React, { Children, useCallback } from 'react';
 import {
-  Container, Row, Col, Badge,
+  Container, Row, Col,
 } from 'reactstrap';
 import styled from 'styled-components';
 import { gql } from '@apollo/client';
@@ -18,7 +18,6 @@ import images, { getBgImageAlignment, getActionImage } from 'common/images';
 import IndicatorCausal from 'components/indicators/IndicatorCausal';
 import AttributesBlock from 'components/common/AttributesBlock';
 import CategoryTags from './CategoryTags';
-import ContactPersons from './ContactPersons';
 import ActionContactFormBlock from 'components/contentblocks/ActionContactFormBlock';
 import ActionPhase from './ActionPhase';
 import ActionStatus from './ActionStatus';
@@ -412,6 +411,7 @@ function ActionContentBlock(props: ActionContentBlockProps) {
       return (
         <ActionScheduleBlock
           action = {action}
+          plan = {plan}
         />
       )
     case 'ActionContentSectionBlock':
@@ -473,7 +473,11 @@ function ActionContentBlockGroup(props: ActionContentBlockGroupProps) {
     if (!attributes.length) return null;
     return (
       <ActionSection>
-        <AttributesBlock attributes={attributes} types={Array.from(types.values())} />
+        <AttributesBlock
+          attributes={attributes}
+          types={Array.from(types.values())}
+          vertical = {section === 'detailsAside'}
+        />
       </ActionSection>
     )
   } else if (blockType === 'ActionContentCategoryTypeBlock') {
@@ -486,7 +490,10 @@ function ActionContentBlockGroup(props: ActionContentBlockGroupProps) {
     if (!categories.length) return null;
     return (
       <ActionSection>
-        <CategoryTags categories={categories} types={Array.from(types.values())} />
+        <CategoryTags
+          categories={categories}
+          types={Array.from(types.values())}
+        />
       </ActionSection>
     )
   } else {
