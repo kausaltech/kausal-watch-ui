@@ -2,7 +2,7 @@ import React, { Children, useCallback } from 'react';
 import {
   Container, Row, Col,
 } from 'reactstrap';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { gql } from '@apollo/client';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { useRouter } from 'next/router';
@@ -15,6 +15,7 @@ import { cleanActionStatus } from 'common/preprocess';
 
 import { Meta } from 'components/layout';
 import images, { getBgImageAlignment, getActionImage } from 'common/images';
+import PopoverTip from 'components/common/PopoverTip';
 import IndicatorCausal from 'components/indicators/IndicatorCausal';
 import AttributesBlock from 'components/common/AttributesBlock';
 import CategoryTags from './CategoryTags';
@@ -326,10 +327,20 @@ const SolidSection = styled.div`
   margin-bottom: ${(props) => props.theme.spaces.s300};
 `;
 
-const ActionContentSection = styled.div`
-`;
+const ContentGroup = styled.div`
+  ${props => props.vertical && css`
+    max-width: ${(props) => props.theme.breakpointSm};
+  `}
+  margin: ${(props) => props.theme.spaces.s100} auto ${(props) => props.theme.spaces.s300};
+  padding: ${(props) => props.theme.spaces.s200} 0 0;
+  border-top: 1px solid ${(props) => props.theme.graphColors.grey040};
+  border-bottom: 1px solid ${(props) => props.theme.graphColors.grey040};
+  text-align: left;
 
-const ActionContentSectionItem = styled.div`
+  h2 {
+    font-size: ${(props) => props.theme.fontSizeLg};
+    margin-bottom: ${(props) => props.theme.spaces.s200};
+  }
 `;
 
 function getMaxImpact(plan: PlanContextType) {
@@ -451,18 +462,24 @@ function ActionContentBlock(props: ActionContentBlockProps) {
       return <ActionContactFormBlock {...block} action={action} />
     }
     case 'ActionContentCategoryTypeBlock': {
-      return <div>category</div>
+      console.log("ActionContentCatTypeBlock", block);
+      console.log('ActionContentCatTypeBlock', action);
+      const categories = action.categories.filter((cat) => cat.type.id === block.categoryType.id);
+      return (
+        <CategoryTags
+          categories={categories}
+          types={[block.categoryType]}
+        />
+      );
     }
     case 'ActionContentAttributeTypeBlock': {
-      console.log("ActionContentAttributeTypeBlock", block);
-      console.log('ActionContentAttributeTypeBlock', action);
       const attribute = action.attributes.find((attr) => attr.type.id === block.attributeType.id);
       return  (
         <ActionAttribute
           attribute={attribute}
           attributeType={block.attributeType}
         />
-        )
+      )
     }
     default:
       console.error("Unknown action content block", block.__typename);
@@ -541,11 +558,19 @@ function ActionContentSectionBlock(props) {
   console.log("RENDERING ACTION CONTENT GROUP", props);
 
   return (
-    <div>
-      <h2>{ heading }</h2>
+    <ContentGroup vertical={layout !== 'grid'}>
+      <h2>
+        { heading }
+        {helpText && (
+            <PopoverTip
+              content={helpText}
+              identifier={section.id}
+            />
+          )}
+      </h2>
       <Row>
       { blocks.map((block) => (
-        <Col md={layout === "grid" ? 4 : 12} key={block.id}>
+        <Col md={layout === "grid" ? 4 : 12} key={block.id} className="mb-3">
           <ActionContentBlock
             key={block.id}
             block={block}
@@ -555,7 +580,7 @@ function ActionContentSectionBlock(props) {
         </Col>
       ))}
       </Row>
-    </div>
+    </ContentGroup>
   )
     // console.error("Unsupported content block group", blockType);
   return null;
