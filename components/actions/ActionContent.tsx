@@ -329,7 +329,6 @@ type ActionContentBlockProps = {
 }
 function ActionContentBlock(props: ActionContentBlockProps) {
   const { block, action, section } = props;
-  const { t } = useTranslation();
   const plan = usePlan();
 
   switch (block.__typename) {
@@ -337,7 +336,7 @@ function ActionContentBlock(props: ActionContentBlockProps) {
       if (!action.description) return null;
       return (
         <ActionDescriptionBlock
-          content = {action.leadParagraph}
+          content = {action.description}
         />
       );
     case 'ActionLeadParagraphBlock':
@@ -452,7 +451,7 @@ type ActionContentCategoryTypeBlock = ActionContentBlockProps['block'] & {
 function ActionContentBlockGroup(props: ActionContentBlockGroupProps) {
   const { blocks, action, section } = props;
   const blockType = blocks[0].__typename;
-  console.log("RENDERING GROUP", props);
+  //console.log("RENDERING GROUP", props);
 
   if (blockType === 'ActionContentAttributeTypeBlock') {
     const types = new Map(blocks.map(block => {
@@ -500,7 +499,12 @@ function ActionContentBlockGroup(props: ActionContentBlockGroupProps) {
     console.log("RENDERING SECTION", blocks);
     return (
       <div>
-        ACTION GROUP BLOCKS
+        { blocks.map((block) => (
+          <div key={block.id}>
+            { block.__typename}
+            <ActionContentBlock key={block.id} block={block} action={action} section={section} />
+          </div>
+        ))}
       </div>
     )
     // console.error("Unsupported content block group", blockType);
