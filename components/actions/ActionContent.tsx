@@ -46,6 +46,7 @@ import type {
   GetActionDetailsQuery
 } from 'common/__generated__/graphql';
 import { useTheme } from 'common/theme';
+import ActionAttribute from 'components/common/ActionAttribute';
 
 const GET_ACTION_DETAILS = gql`
 query GetActionDetails($plan: ID!, $id: ID!, $clientUrl: String!) {
@@ -267,14 +268,28 @@ fragment ActionMainContentBlocksFragment on ActionMainContentBlock {
       ... on StreamFieldInterface {
         id
       }
+      ... on ActionOfficialNameBlock {
+        fieldLabel
+        caption
+      }
+      ... on ActionContentAttributeTypeBlock {
+        attributeType {
+          ...AttributesBlockAttributeType
+        }
+      }
+      ... on ActionContentCategoryTypeBlock {
+        categoryType {
+          ...CategoryTagsCategoryType
+        }
+      }
     }
   }
 }
 
 ${ActionCard.fragments.action}
 ${images.fragments.multiUseImage}
-${AttributesBlock.fragments.attribute}
-${AttributesBlock.fragments.attributeType}
+${ActionAttribute.fragments.attribute}
+${ActionAttribute.fragments.attributeType}
 ${CategoryTags.fragments.category}
 ${CategoryTags.fragments.categoryType}
 `;
@@ -309,6 +324,12 @@ export const SectionHeader = styled.h2`
 const SolidSection = styled.div`
   padding:  ${(props) => props.theme.spaces.s100} 0;
   margin-bottom: ${(props) => props.theme.spaces.s300};
+`;
+
+const ActionContentSection = styled.div`
+`;
+
+const ActionContentSectionItem = styled.div`
 `;
 
 function getMaxImpact(plan: PlanContextType) {
@@ -417,17 +438,31 @@ function ActionContentBlock(props: ActionContentBlockProps) {
       console.log('ActionContentSectionBlock', block);
       const { heading, helpText, layout, blocks } = block;
       return (
-        <div>
-          <h2>{ heading }</h2>
-          <ActionContentBlockGroup
-            blocks={blocks}
-            action={action}
-            section={section}
-          />
-        </div>
+            <ActionContentSectionBlock
+              blocks={blocks}
+              action={action}
+              section={section}
+              heading={heading}
+              layout={layout}
+              helpText={helpText}
+            />
       )
     case 'ActionContactFormBlock': {
       return <ActionContactFormBlock {...block} action={action} />
+    }
+    case 'ActionContentCategoryTypeBlock': {
+      return <div>category</div>
+    }
+    case 'ActionContentAttributeTypeBlock': {
+      console.log("ActionContentAttributeTypeBlock", block);
+      console.log('ActionContentAttributeTypeBlock', action);
+      const attribute = action.attributes.find((attr) => attr.type.id === block.attributeType.id);
+      return  (
+        <ActionAttribute
+          attribute={attribute}
+          attributeType={block.attributeType}
+        />
+        )
     }
     default:
       console.error("Unknown action content block", block.__typename);
@@ -451,7 +486,7 @@ type ActionContentCategoryTypeBlock = ActionContentBlockProps['block'] & {
 function ActionContentBlockGroup(props: ActionContentBlockGroupProps) {
   const { blocks, action, section } = props;
   const blockType = blocks[0].__typename;
-  //console.log("RENDERING GROUP", props);
+  console.log("RENDERING ACTION CONTENT GROUP", props);
 
   if (blockType === 'ActionContentAttributeTypeBlock') {
     const types = new Map(blocks.map(block => {
@@ -496,19 +531,33 @@ function ActionContentBlockGroup(props: ActionContentBlockGroupProps) {
       </ActionSection>
     )
   } else {
-    console.log("RENDERING SECTION", blocks);
-    return (
-      <div>
-        { blocks.map((block) => (
-          <div key={block.id}>
-            { block.__typename}
-            <ActionContentBlock key={block.id} block={block} action={action} section={section} />
-          </div>
-        ))}
-      </div>
-    )
-    // console.error("Unsupported content block group", blockType);
+    console.error("Unsupported content block group", blockType);
   }
+  return null;
+}
+
+function ActionContentSectionBlock(props) {
+  const { blocks, action, section, heading, helpText, layout } = props;
+  console.log("RENDERING ACTION CONTENT GROUP", props);
+
+  return (
+    <div>
+      <h2>{ heading }</h2>
+      <Row>
+      { blocks.map((block) => (
+        <Col md={layout === "grid" ? 4 : 12} key={block.id}>
+          <ActionContentBlock
+            key={block.id}
+            block={block}
+            action={action}
+            section={section}
+          />
+        </Col>
+      ))}
+      </Row>
+    </div>
+  )
+    // console.error("Unsupported content block group", blockType);
   return null;
 }
 
