@@ -1,8 +1,8 @@
 import React, { Children, useCallback } from 'react';
 import {
-  Container, Row, Col, Badge,
+  Container, Row, Col,
 } from 'reactstrap';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { gql } from '@apollo/client';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { useRouter } from 'next/router';
@@ -15,31 +15,39 @@ import { cleanActionStatus } from 'common/preprocess';
 
 import { Meta } from 'components/layout';
 import images, { getBgImageAlignment, getActionImage } from 'common/images';
+import PopoverTip from 'components/common/PopoverTip';
 import IndicatorCausal from 'components/indicators/IndicatorCausal';
-import Timeline from 'components/graphs/Timeline';
-import ScheduleTimeline from 'components/graphs/ScheduleTimeline';
 import AttributesBlock from 'components/common/AttributesBlock';
-import RichText from 'components/common/RichText';
-import TaskList from './TaskList';
-import ResponsibleList from './ResponsibleList';
 import CategoryTags from './CategoryTags';
-import ContactPersons from './ContactPersons';
 import ActionContactFormBlock from 'components/contentblocks/ActionContactFormBlock';
 import ActionPhase from './ActionPhase';
 import ActionStatus from './ActionStatus';
 import ActionImpact from './ActionImpact';
-import ActionIndicators from './ActionIndicators';
 import ActionHero from './ActionHero';
 import ActionPager from './ActionPager';
 import ActionCard from './ActionCard';
 import ActionUpdatesList from './ActionUpdatesList';
 import ActionVersionHistory from 'components/versioning/ActionVersionHistory';
 import EmissionScopeIcon from './EmissionScopeIcon';
+
+import ActionMergedActionsBlock from 'components/actions/blocks/ActionMergedActionsBlock';
+import ActionDescriptionBlock from 'components/actions/blocks/ActionDescriptionBlock';
+import ActionLeadParagraphBlock from 'components/actions/blocks/ActionLeadParagraphBlock';
+import ActionOfficialNameBlock from 'components/actions/blocks/ActionOfficialNameBlock';
+import ActionLinksBlock from 'components/actions/blocks/ActionLinksBlock';
+import ActionRelatedActionsBlock from 'components/actions/blocks/ActionRelatedActionsBlock';
+import ActionRelatedIndicatorsBlock from 'components/actions/blocks/ActionRelatedIndicatorsBlock';
+import ActionTasksBlock from 'components/actions/blocks/ActionTasksBlock';
+import ActionContactPersonsBlock from 'components/actions/blocks/ActionContactPersonsBlock';
+import ActionResponsiblePartiesBlock from 'components/actions/blocks/ActionResponsiblePartiesBlock';
+import ActionScheduleBlock from 'components/actions/blocks/ActionScheduleBlock';
+
 import type {
   ActionAsideContentBlocksFragmentFragment, ActionMainContentBlocksFragmentFragment,
   GetActionDetailsQuery
 } from 'common/__generated__/graphql';
 import { useTheme } from 'common/theme';
+import ActionAttribute from 'components/common/ActionAttribute';
 
 const GET_ACTION_DETAILS = gql`
 query GetActionDetails($plan: ID!, $id: ID!, $clientUrl: String!) {
@@ -252,12 +260,37 @@ fragment ActionMainContentBlocksFragment on ActionMainContentBlock {
       ...CategoryTagsCategoryType
     }
   }
+  ... on ActionContentSectionBlock {
+    id
+    heading
+    helpText
+    layout
+    blocks {
+      ... on StreamFieldInterface {
+        id
+      }
+      ... on ActionOfficialNameBlock {
+        fieldLabel
+        caption
+      }
+      ... on ActionContentAttributeTypeBlock {
+        attributeType {
+          ...AttributesBlockAttributeType
+        }
+      }
+      ... on ActionContentCategoryTypeBlock {
+        categoryType {
+          ...CategoryTagsCategoryType
+        }
+      }
+    }
+  }
 }
 
 ${ActionCard.fragments.action}
 ${images.fragments.multiUseImage}
-${AttributesBlock.fragments.attribute}
-${AttributesBlock.fragments.attributeType}
+${ActionAttribute.fragments.attribute}
+${ActionAttribute.fragments.attributeType}
 ${CategoryTags.fragments.category}
 ${CategoryTags.fragments.categoryType}
 `;
@@ -272,7 +305,7 @@ const LastUpdated = styled.div`
   font-family: ${(props) => props.theme.fontFamilyTiny};
 `;
 
-const ActionSection = styled.div`
+export const ActionSection = styled.div`
   margin-bottom: ${(props) => props.theme.spaces.s200};
 `;
 
@@ -284,24 +317,9 @@ const SideHeader = styled.h3`
   font-size: ${(props) => props.theme.fontSizeBase};
 `;
 
-const SectionHeader = styled.h2`
+export const SectionHeader = styled.h2`
   font-size: ${(props) => props.theme.fontSizeLg};
   margin-bottom: ${(props) => props.theme.spaces.s200};
-`;
-
-const OfficialText = styled.div`
-  margin-bottom: ${(props) => props.theme.spaces.s300};
-  font-family: ${(props) => props.theme.fontFamilyContent};
-
-  .official-text-content {
-    color: ${(props) => props.theme.neutralDark};
-    padding-left: ${(props) => props.theme.spaces.s100};
-    border-left: 4px solid ${(props) => props.theme.neutralLight};
-  }
-
-  h2 {
-    font-size: ${(props) => props.theme.fontSizeBase};
-  }
 `;
 
 const SolidSection = styled.div`
@@ -309,69 +327,21 @@ const SolidSection = styled.div`
   margin-bottom: ${(props) => props.theme.spaces.s300};
 `;
 
-const ActionNumberBadge = styled(Badge)`
-  font-size: ${(props) => props.theme.fontSizeBase};
-  padding: ${(props) => props.theme.spaces.s025};
-  border-radius: ${(props) => props.theme.btnBorderRadius};
-  background-color: ${(props) => props.theme.brandDark};
-  color: ${(props) => props.theme.themeColors.white};
-`;
+const ContentGroup = styled.div<{vertical: boolean}>`
+  ${props => props.vertical && css`
+    max-width: ${(props) => props.theme.breakpointSm};
+  `}
+  margin: ${(props) => props.theme.spaces.s100} auto ${(props) => props.theme.spaces.s300};
+  padding: ${(props) => props.theme.spaces.s200} 0 0;
+  border-top: 1px solid ${(props) => props.theme.graphColors.grey040};
+  border-bottom: 1px solid ${(props) => props.theme.graphColors.grey040};
+  text-align: left;
 
-const MergedActionSection = styled.div`
-  margin-bottom: ${(props) => props.theme.spaces.s100};
-`;
-
-const RelatedActionList = styled(Row)`
-  padding-left: 0;
-`;
-
-const RelatedActionItem = styled(Col)`
-  list-style: none;
-`;
-
-type MergedActionProps = {
-  action: ActionContentAction['mergedActions'][0],
-}
-function MergedAction({ action }: MergedActionProps) {
-  const { identifier, officialName, plan, name } = action;
-  const currentPlan = usePlan();
-  if (currentPlan.id != plan.id) {
-    // TODO: Show the target plan of the merging
+  h2 {
+    font-size: ${(props) => props.theme.fontSizeLg};
+    margin-bottom: ${(props) => props.theme.spaces.s200};
   }
-  return (
-    <MergedActionSection>
-      <ActionNumberBadge key={identifier} className="me-1">
-        {identifier}
-      </ActionNumberBadge>
-      {officialName || name}
-    </MergedActionSection>
-  );
-}
-
-type MergedActionListProps = {
-  actions: MergedActionProps['action'][],
-}
-
-function MergedActionList({ actions }: MergedActionListProps) {
-  const { t } = useTranslation();
-  const plan = usePlan();
-
-  if (!actions || !actions.length) {
-    // render nothing
-    return null;
-  }
-
-  const mergedActions = actions.map((act) => (
-    <MergedAction action={act} key={act.id} />
-  ));
-
-  return (
-    <ActionSection>
-      <h2>{ t('actions:action-merged', getActionTermContext(plan)) }</h2>
-      {mergedActions}
-    </ActionSection>
-  );
-}
+`;
 
 function getMaxImpact(plan: PlanContextType) {
   const max = plan.actionImpacts.reduce((planMax, item) => {
@@ -389,163 +359,125 @@ type ActionContentBlockProps = {
   action: ActionContentAction,
   section: SectionIdentifier,
 }
-function ActionContentBlock({ block, action, section }: ActionContentBlockProps) {
-  const { t } = useTranslation();
+function ActionContentBlock(props: ActionContentBlockProps) {
+  const { block, action, section } = props;
   const plan = usePlan();
 
   switch (block.__typename) {
     case 'ActionDescriptionBlock':
       if (!action.description) return null;
       return (
-        <ActionSection className="text-content">
-          <h2 className="visually-hidden">{ t('actions:action-description') }</h2>
-          <RichText html={action.description} />
-        </ActionSection>
+        <ActionDescriptionBlock
+          content = {action.description}
+        />
       );
     case 'ActionLeadParagraphBlock':
       if (!action.leadParagraph) return null;
       return (
-        <ActionSection className="text-content">
-          <strong><RichText html={action.leadParagraph} /></strong>
-        </ActionSection>
+        <ActionLeadParagraphBlock
+          content = {action.leadParagraph}
+        />
       )
     case 'ActionOfficialNameBlock':
-      const generalContent = plan.generalContent || {};
-      const cleanOfficialText = action.officialName?.replace(/(?:\r\n|\r|\n)/g, '<br>') || '';
-      if (!cleanOfficialText) return null;
-      const caption = block.caption || generalContent.officialNameDescription;
-      const fieldLabel = block.fieldLabel || t('actions:action-description-official');
+
       return (
-        <OfficialText>
-          <h2>{ fieldLabel }</h2>
-          <div className="official-text-content">
-            <div dangerouslySetInnerHTML={{ __html: cleanOfficialText }} />
-            {caption && (
-              <small>{`(${caption})`}</small>
-            )}
-          </div>
-        </OfficialText>
+        <ActionOfficialNameBlock
+          plan = {plan}
+          block = {block}
+          action={action}
+        />
       )
     case 'ActionLinksBlock':
       const { links } = action;
       if (!links.length) return null;
       return (
-        <>
-          <h4>{t('read-more')}</h4>
-          <ul>
-            {links.map((actionLink) => (
-              <li key={actionLink.id}>
-                <a href={actionLink.url}>
-                  {actionLink.title}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </>
+        <ActionLinksBlock
+          links={links}
+        />
       );
     case 'ActionMergedActionsBlock':
       if (!action.mergedActions.length) return null;
-      return <MergedActionList actions={action.mergedActions} />;
+      return (
+        <ActionMergedActionsBlock
+          actions={action.mergedActions}
+        />
+      );
     case 'ActionRelatedActionsBlock':
       if (!action.relatedActions.length) return null;
       return (
-        <div>
-          <Row>
-            <Col>
-              <SectionHeader>{ t('actions:related-actions') }</SectionHeader>
-              <RelatedActionList tag="ul">
-                {action.relatedActions.map((relAction) => (
-                  <RelatedActionItem
-                    tag="li"
-                    xs="12"
-                    sm="6"
-                    lg="4"
-                    className="mb-5 d-flex align-items-stretch"
-                    style={{ transition: 'all 0.5s ease' }}
-                    key={relAction.id}
-                  >
-                    <ActionCard
-                      action={relAction}
-                      showPlan={true}
-                    />
-                  </RelatedActionItem>
-                ))}
-              </RelatedActionList>
-            </Col>
-          </Row>
-        </div>
+        <ActionRelatedActionsBlock
+          relatedActions = {action.relatedActions}
+        />
       );
     case 'ActionRelatedIndicatorsBlock':
       if (!action.relatedIndicators.length) return null;
       return (
-        <div>
-          <Row>
-            <Col>
-              <SectionHeader>{ t('indicators') }</SectionHeader>
-            </Col>
-          </Row>
-          <Row>
-            <Col sm="12">
-              <ActionIndicators actionId={action.id} relatedIndicators={action.relatedIndicators} />
-            </Col>
-          </Row>
-        </div>
+        <ActionRelatedIndicatorsBlock
+          actionId = {action.id}
+          indicators = {action.relatedIndicators} 
+        />
       )
     case 'ActionTasksBlock':
       if (!action.tasks.length) return null;
       return (
-        <div>
-          <Row>
-            <Col>
-              <SectionHeader>{ t('actions:action-tasks') }</SectionHeader>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <ActionSection>
-                <TaskList tasks={action.tasks} />
-              </ActionSection>
-            </Col>
-          </Row>
-        </div>
+        <ActionTasksBlock
+          tasks = {action.tasks}
+        />
       );
     case 'ActionContactPersonsBlock':
       if (!action.contactPersons?.length) return null;
       return (
-        <ActionSection>
-          <ContactPersons persons={action.contactPersons.map((item) => item.person)} />
-        </ActionSection>
+        <ActionContactPersonsBlock
+          contactPersons = {action.contactPersons}
+        />
       );
     case 'ActionResponsiblePartiesBlock':
       if (!action.responsibleParties.length) return null;
       return (
-        <ActionSection>
-          <ResponsibleList responsibleParties={action.responsibleParties} />
-        </ActionSection>
+        <ActionResponsiblePartiesBlock
+          responsibleParties = {action.responsibleParties}
+        />
       );
     case'ActionScheduleBlock':
       return (
-        <>
-        { action.schedule.length ? (
-          <ActionSection>
-            <SideHeader>{ t('actions:action-timeline') }</SideHeader>
-            <ScheduleTimeline schedules={action.schedule} allSchedules={plan.actionSchedules} />
-          </ActionSection>
-        ) : null}
-        { action.startDate || action.endDate || action.scheduleContinuous ? (
-          <ActionSection>
-            <SideHeader>{ t('actions:action-timeline') }</SideHeader>
-            <Timeline
-              startDate={action.startDate}
-              endDate={action.endDate}
-              continuous={action.scheduleContinuous}
+        <ActionScheduleBlock
+          action = {action}
+          plan = {plan}
+        />
+      )
+    case 'ActionContentSectionBlock':
+      const { heading, helpText, layout, blocks } = block;
+      return (
+            <ActionContentSectionBlock
+              blocks={blocks}
+              action={action}
+              section={section}
+              heading={heading}
+              layout={layout}
+              helpText={helpText}
             />
-          </ActionSection>
-        ) : null}
-        </>
       )
     case 'ActionContactFormBlock': {
       return <ActionContactFormBlock {...block} action={action} />
+    }
+    case 'ActionContentCategoryTypeBlock': {
+      const categories = action.categories.filter((cat) => cat.type.id === block.categoryType.id);
+      return (
+        <CategoryTags
+          categories={categories}
+          types={[block.categoryType]}
+        />
+      );
+    }
+    case 'ActionContentAttributeTypeBlock': {
+      const attribute = action.attributes.find((attr) => attr.type.id === block.attributeType.id);
+      if (!attribute) return null;
+      return  (
+        <ActionAttribute
+          attribute={attribute}
+          attributeType={block.attributeType}
+        />
+      )
     }
     default:
       console.error("Unknown action content block", block.__typename);
@@ -589,7 +521,11 @@ function ActionContentBlockGroup(props: ActionContentBlockGroupProps) {
     if (!attributes.length) return null;
     return (
       <ActionSection>
-        <AttributesBlock attributes={attributes} types={Array.from(types.values())} />
+        <AttributesBlock
+          attributes={attributes}
+          types={Array.from(types.values())}
+          vertical={section === 'detailsAside'}
+        />
       </ActionSection>
     )
   } else if (blockType === 'ActionContentCategoryTypeBlock') {
@@ -602,7 +538,10 @@ function ActionContentBlockGroup(props: ActionContentBlockGroupProps) {
     if (!categories.length) return null;
     return (
       <ActionSection>
-        <CategoryTags categories={categories} types={Array.from(types.values())} />
+        <CategoryTags
+          categories={categories}
+          types={Array.from(types.values())}
+        />
       </ActionSection>
     )
   } else {
@@ -611,11 +550,44 @@ function ActionContentBlockGroup(props: ActionContentBlockGroupProps) {
   return null;
 }
 
+function ActionContentSectionBlock(props) {
+  const { blocks, action, section, heading, helpText, layout } = props;
+
+  return (
+    <ContentGroup vertical={layout !== 'grid'}>
+      <h2>
+        { heading }
+        {helpText && (
+            <PopoverTip
+              content={helpText}
+              identifier={section.id}
+            />
+          )}
+      </h2>
+      <Row>
+      { blocks.map((block) => (
+        <Col md={layout === "grid" ? 4 : 12} key={block.id} className="mb-3">
+          <ActionContentBlock
+            key={block.id}
+            block={block}
+            action={action}
+            section={section}
+          />
+        </Col>
+      ))}
+      </Row>
+    </ContentGroup>
+  )
+    // console.error("Unsupported content block group", blockType);
+  return null;
+}
+
 type ActionContentProps = {
   action: ActionContentAction,
   extraPlanData: NonNullable<GetActionDetailsQuery['plan']>
 }
-function ActionContent({ action, extraPlanData }: ActionContentProps) {
+function ActionContent(props: ActionContentProps) {
+  const { action, extraPlanData } = props;
   const plan = usePlan();
   const theme = useTheme();
   const router = useRouter();
@@ -664,17 +636,30 @@ function ActionContent({ action, extraPlanData }: ActionContentProps) {
       groupedBlocks = [];
     }
 
-    const groupedBlockTypes = [
+    const automaticallyGroupedBlockTypes = [
       'ActionContentAttributeTypeBlock',
       'ActionContentCategoryTypeBlock',
-    ]
+    ];
+
+    const groupableBlockTypes = [
+      'ActionContentAttributeTypeBlock',
+      'ActionContentCategoryTypeBlock',
+      'ActionOfficialNameBlock',
+      'ActionLeadParagraphBlock',
+      'ActionDescriptionBlock',
+      'ActionLinksBlock',
+      'ActionTasksBlock',
+      'ActionMergedActionsBlock',
+      'ActionRelatedActionsBlock',
+      'ActionIndicatorsBlock',
+    ];
 
     for (const block of blocks) {
       if (previousSectionBlock && block.__typename !== previousSectionBlock.__typename) {
         emitGroupedBlocks();
       }
       // some blocks get special treatment so that they can be grouped together
-      if (groupedBlockTypes.includes(block.__typename)) {
+      if (automaticallyGroupedBlockTypes.includes(block.__typename)) {
         previousSectionBlock = block;
         // @ts-ignore
         groupedBlocks.push(block);

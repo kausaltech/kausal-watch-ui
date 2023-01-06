@@ -126,6 +126,11 @@ const CategoryIconImage = styled.img`
   margin-bottom: ${(props) => props.theme.spaces.s100};
 `;
 
+const CategoryLevelName = styled.div`
+  color: ${(props) => props.theme.graphColors.grey070};
+  margin-bottom: ${(props) => props.theme.spaces.s100};
+`;
+
 function CategoryPageHeaderBlock(props) {
   const {
     title,
@@ -157,6 +162,15 @@ function CategoryPageHeaderBlock(props) {
     }
   }
 
+  // AttributeCategoryChoice type can be empty, so we need to filter out those
+  const attributesWithContent = attributes?.filter(
+    (attribute) => {
+      if (attribute.__typename === 'AttributeCategoryChoice') {
+        return attribute.categories?.length > 0;
+      } else return true;
+    }
+    );
+
   return (
     <CategoryHeader
       bg={color}
@@ -173,6 +187,7 @@ function CategoryPageHeaderBlock(props) {
             <HeaderContent
               hasImage={!!headerImage}
             >
+              { level && <CategoryLevelName>{level}</CategoryLevelName> }
               { parentTitle && (
                 <Breadcrumb>
                   <Link href={parentUrl}><a>{parentTitle}</a></Link>
@@ -195,9 +210,8 @@ function CategoryPageHeaderBlock(props) {
                 {' '}
                 { title }
               </h1>
-              {level}
               { lead && <p>{ lead }</p> }
-              { attributes?.length > 0 && (
+              { attributesWithContent.length > 0 && (
                 <AttributesContainer>
                 <AttributesBlock
                   attributes={attributes}

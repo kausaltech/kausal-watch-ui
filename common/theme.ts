@@ -15,6 +15,7 @@ declare module 'styled-components' {
   export interface DefaultTheme extends Theme {}
 }
 
+// TODO: Missing css validator is throwing errors
 export const themeProp = await makeThemePropType();
 
 export async function loadTheme(themeIdentifier: string) {
