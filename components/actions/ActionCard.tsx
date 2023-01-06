@@ -203,7 +203,7 @@ const ActionOrg = styled.div`
 `;
 
 const ActionOrgAvatar = styled.div`
-  margin: ${(props) => props.theme.spaces.s050}
+  margin: ${(props) => props.theme.spaces.s050};
 `;
 
 const ActionOrgName = styled.div`

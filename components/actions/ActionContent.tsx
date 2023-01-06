@@ -327,7 +327,7 @@ const SolidSection = styled.div`
   margin-bottom: ${(props) => props.theme.spaces.s300};
 `;
 
-const ContentGroup = styled.div`
+const ContentGroup = styled.div<{vertical: boolean}>`
   ${props => props.vertical && css`
     max-width: ${(props) => props.theme.breakpointSm};
   `}
@@ -446,7 +446,6 @@ function ActionContentBlock(props: ActionContentBlockProps) {
         />
       )
     case 'ActionContentSectionBlock':
-      console.log('ActionContentSectionBlock', block);
       const { heading, helpText, layout, blocks } = block;
       return (
             <ActionContentSectionBlock
@@ -462,8 +461,6 @@ function ActionContentBlock(props: ActionContentBlockProps) {
       return <ActionContactFormBlock {...block} action={action} />
     }
     case 'ActionContentCategoryTypeBlock': {
-      console.log("ActionContentCatTypeBlock", block);
-      console.log('ActionContentCatTypeBlock', action);
       const categories = action.categories.filter((cat) => cat.type.id === block.categoryType.id);
       return (
         <CategoryTags
@@ -474,6 +471,7 @@ function ActionContentBlock(props: ActionContentBlockProps) {
     }
     case 'ActionContentAttributeTypeBlock': {
       const attribute = action.attributes.find((attr) => attr.type.id === block.attributeType.id);
+      if (!attribute) return null;
       return  (
         <ActionAttribute
           attribute={attribute}
@@ -503,7 +501,6 @@ type ActionContentCategoryTypeBlock = ActionContentBlockProps['block'] & {
 function ActionContentBlockGroup(props: ActionContentBlockGroupProps) {
   const { blocks, action, section } = props;
   const blockType = blocks[0].__typename;
-  console.log("RENDERING ACTION CONTENT GROUP", props);
 
   if (blockType === 'ActionContentAttributeTypeBlock') {
     const types = new Map(blocks.map(block => {
@@ -527,7 +524,7 @@ function ActionContentBlockGroup(props: ActionContentBlockGroupProps) {
         <AttributesBlock
           attributes={attributes}
           types={Array.from(types.values())}
-          vertical = {section === 'detailsAside'}
+          vertical={section === 'detailsAside'}
         />
       </ActionSection>
     )
@@ -555,7 +552,6 @@ function ActionContentBlockGroup(props: ActionContentBlockGroupProps) {
 
 function ActionContentSectionBlock(props) {
   const { blocks, action, section, heading, helpText, layout } = props;
-  console.log("RENDERING ACTION CONTENT GROUP", props);
 
   return (
     <ContentGroup vertical={layout !== 'grid'}>
@@ -597,7 +593,6 @@ function ActionContent(props: ActionContentProps) {
   const router = useRouter();
   const { t } = useTranslation();
 
-  console.log("ActionContent", props);
   useHotkeys('ctrl+left, ctrl+right', (ev) => {
     if (!action) return;
     const next = (ev.code == 'ArrowLeft' ? action.previousAction : action.nextAction);

@@ -1,16 +1,16 @@
 import React, { ReactElement } from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { TFunction } from 'next-i18next';
 import { gql } from '@apollo/client';
 import numbro from 'numbro';
 
 import RichText from 'components/common/RichText';
 import Icon from 'components/common/Icon';
-import { CategoryContent } from 'components/actions/CategoryTags';
+import { CategoryContent, categoryFragment, } from 'components/actions/CategoryTags';
 import PopoverTip from 'components/common/PopoverTip';
 import {
   AttributesBlockAttributeFragment, AttributesBlockAttributeTypeFragment,
-  AttributesBlockAttributeWithNestedTypeFragment
+  AttributesBlockAttributeWithNestedTypeFragment,
  } from 'common/__generated__/graphql';
 
 
@@ -61,6 +61,15 @@ const AttributeChoiceLabel = styled.div`
   font-weight: 700;
 `;
 
+const NumericValue = styled.span`
+  font-weight: 700;
+  margin-right: 0.2rem;
+`;
+
+const NumericValueUnit = styled.span`
+  font-size: ${(props) => props.theme.fontSizeSm};
+`;
+
 type AttributeContentProps = {
   attribute: AttributesBlockAttributeFragment,
   attributeType: AttributesBlockAttributeTypeFragment,
@@ -106,9 +115,14 @@ const ActionAttribute = (props: AttributeContentProps | AttributeContentNestedTy
     case 'AttributeNumericValue':
       const formattedValue = numbro(attribute.numericValue).format({thousandSeparated: true});
       dataElement = (
-        <span>
-          {formattedValue} {type.unit?.name}
-        </span>
+        <div>
+          <NumericValue>
+            {formattedValue}
+          </NumericValue>
+          <NumericValueUnit>
+            {type.unit?.name}
+          </NumericValueUnit>
+        </div>
       );
       break;
     case 'AttributeCategoryChoice':
@@ -140,6 +154,7 @@ const ActionAttribute = (props: AttributeContentProps | AttributeContentNestedTy
 }
 
 const attributeFragment = gql`
+${categoryFragment}
 fragment AttributesBlockAttribute on AttributeInterface {
   __typename
   id
@@ -162,23 +177,7 @@ fragment AttributesBlockAttribute on AttributeInterface {
   }
   ...on AttributeCategoryChoice {
     categories {
-      id
-      name
-      identifier
-      helpText
-      iconSvgUrl
-      iconImage {
-        rendition(size:"400x400", crop:false) {
-          src
-        }
-      }
-      categoryPage {
-        urlPath
-      }
-      type {
-        id
-        hideCategoryIdentifiers
-      }
+      ...CategoryTagsCategory
     }
   }
 }
