@@ -86,7 +86,8 @@ const LegendWithOverrides = ({styleOverrides}) => {
   return null;
 }
 
-const CartographyVisualisationBlock = ({styleUrl, accessToken, styleOverrides, hasSidebar}: CartographyVisualisationBlockProps) => {
+const CartographyVisualisationBlock = (props: CartographyVisualisationBlockProps) => {
+  const {styleUrl, accessToken, styleOverrides, hasSidebar} = props;
   if (accessToken === undefined) {
     console.warn('No access token provided for MapBox visualisation.');
     return null;
@@ -95,7 +96,7 @@ const CartographyVisualisationBlock = ({styleUrl, accessToken, styleOverrides, h
     <Container>
       <Row>
         <Col
-          xl={{ size: 9, offset: hasSidebar ? 3 : 2 }}
+          xl={{ size: 8, offset: hasSidebar ? 4 : 2 }}
           lg={{ size: 8, offset: hasSidebar ? 4 : 2 }}
           md={{ size: 10, offset: 1 }}
         >
