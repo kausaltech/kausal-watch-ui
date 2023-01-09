@@ -102,6 +102,7 @@ const CartographyVisualisationBlock = ({styleUrl, accessToken, styleOverrides, h
           <Map
             style={{width: '100%', height: 500}}
             mapboxAccessToken={accessToken}
+            cooperativeGestures={true}
             mapStyle={`mapbox://styles/ilmastogis/${styleUrl}` ?? ''}
           >
             <LegendWithOverrides styleOverrides={styleOverrides} />
