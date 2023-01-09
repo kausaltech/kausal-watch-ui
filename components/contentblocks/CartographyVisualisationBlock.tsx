@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container, Col, Row } from 'reactstrap';
-import Map, {useControl, useMap} from 'react-map-gl';
+import Map, {useControl, useMap, NavigationControl} from 'react-map-gl';
 
 import LegendControl from '@kausal/mapboxgl-legend';
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -106,6 +106,7 @@ const CartographyVisualisationBlock = ({styleUrl, accessToken, styleOverrides, h
             mapStyle={`mapbox://styles/ilmastogis/${styleUrl}` ?? ''}
           >
             <LegendWithOverrides styleOverrides={styleOverrides} />
+            <NavigationControl showZoom={true} showCompass={false} />
           </Map>
         </Col>
       </Row>
