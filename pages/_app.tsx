@@ -7,6 +7,7 @@ import { ThemeProvider } from 'styled-components';
 import { Router, useRouter } from 'next/router';
 import numbro from "numbro";
 
+import StatusMessage from 'components/common/StatusMessage';
 import { captureException } from 'common/sentry';
 import { appWithTranslation } from 'common/i18n';
 import withApollo, {
@@ -60,7 +61,8 @@ interface WatchAppProps extends AppProps, GlobalProps {
 }
 
 function WatchApp(props: WatchAppProps) {
-  const { Component, pageProps, apollo, siteProps, themeProps, plan } = props;
+  const { Component, pageProps, apollo, siteProps, themeProps, plan, unpublished, statusMessage } = props;
+
   const router = useRouter();
   const matomoAnalyticsUrl = plan?.domain?.matomoAnalyticsUrl;
   let matomoURL, matomoSiteId;
@@ -86,6 +88,12 @@ function WatchApp(props: WatchAppProps) {
     ReactPiwik.push(['trackPageView']);
     Router.events.on('routeChangeComplete', onRouteChange);
   }, [matomoURL, matomoSiteId]);
+
+  if (unpublished === true) {
+    return (
+      <StatusMessage message={statusMessage} noindex={true} />
+    );
+  }
 
   dayjs.locale(router.locale)
 
@@ -191,6 +199,14 @@ WatchApp.getInitialProps = async (appContext) => {
       },
     };
     return ret;
+  }
+  const { publicationStatus, publicationStatusMessage } = ctx.req;
+  if (publicationStatus != null && publicationStatus !== 'PUBLISHED') {
+    return {
+      ...appProps,
+      unpublished: true,
+      statusMessage: publicationStatusMessage
+    }
   }
   /*
   if (err) {
