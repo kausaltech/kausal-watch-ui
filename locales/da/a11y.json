@@ -14,10 +14,10 @@
   "non-accessible-content": "Ikke-tilgængeligt indhold",
   "non-compliance-aa": "Manglende overholdelse af WCAG 2.1",
   "non-compliance-below": "Indholdet nedenfor er ikke tilgængeligt af følgende årsager",
-  "when-fixed": "Vi arbejder på løsninger til anførte undtagelser og vil frigive rettelser inden udgangen af 2020.",
+  "when-fixed": "Vi arbejder på løsninger til anførte undtagelser og sigte mot at løse dem i 2023.",
   "preparation": "Udarbejdelse af denne tilgængelighedserklæring",
   "prepared-on": "Denne redegørelse er udarbejdet på",
-  "prepared-how": "Tilgængelighed er blevet selvvurderet.",
+  "prepared-how": "Tilgængelighed er blevet selvvurderet af Kausal.",
   "reviewed-on": "Udtalelsen blev sidst gennemgået",
   "feedback-contact": "Feedback og kontaktoplysninger",
   "feedback-text": "Vi arbejder konstant på en bedre tilgængelighedsoplevelse på denne service. Har du bemærket noget andet vi kan forbedre i tilgængelighed? Send os venligst en e-mail på",
@@ -31,5 +31,8 @@
   "enforcement-body-url": "https://www.saavutettavuusvaatimukset.fi",
   "enforcement-body-email": "saavutettavuus@avi.fi",
   "enforcement-body-tel": "Telefon 0295 016 000",
-  "responsible-for-maintenance": "Denne tjeneste er udgivet af {{responsibleBody}}."
+  "responsible-for-maintenance": "Denne tjeneste er udgivet af {{responsibleBody}}.",
+  "feedback-heading": "Tilgængelighedsfeedback",
+  "feedback-description": "Vi arbejder hele tiden mod en bedre tilgængelighedsoplevelse af denne tjeneste. Har du bemærket noget, vi kan forbedre i tilgængeligheden?",
+  "feedback-prompt": "Fortæl os det ved at udfylde og sende denne formular. Vi svarer inden for 14 dage."
 }
