@@ -241,6 +241,11 @@ class WatchServer {
     else {
       ctx.req.publicationStatus = publicationStatus;
       ctx.req.publicationStatusMessage = domain.statusMessage;
+      const plan = plans[0];
+      const primaryLanguage = plan?.primaryLanguage;
+      if (primaryLanguage != null) {
+        this.setLocale(primaryLanguage, primaryLanguage, []);
+      }
     }
     ctx.req.currentURL = getCurrentURL(ctx.req);
     await this.nextHandleRequest(ctx.req, ctx.res);
