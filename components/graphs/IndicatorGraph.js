@@ -126,8 +126,9 @@ const createLayout = (
         showgrid: false,
         showline: false,
         fixedrange: false,
+        nticks: config?.xTicksMax,
         tickformat: timeResolution === 'YEAR' ? '%Y' : '%b %Y',
-        tickmode: null,
+        tickmode: 'auto',
         tickfont: {
           family: fontFamily,
           size: 14,
@@ -246,13 +247,16 @@ const createTraces = (traces, unit, plotColors, styleCount, categoryCount, hasTi
     };
     return modTrace;
   });
+  const uniqueXValues = uniq(allXValues.sort(), true);
   if (layoutConfig.xaxis?.type !== 'category') {
-    const uniqueXValues = uniq(allXValues.sort(), true);
     if (uniqueXValues.length < 4) {
       layoutConfig.xaxis.tickvals = uniqueXValues;
     }
   }
   layoutConfig.maxDigits = maxDigits > 3 ? 3 : maxDigits;
+
+  // Avoid repetitive years to set max value of xaxis ticks
+  layoutConfig.xTicksMax = uniqueXValues.length;
 
   return {
     layoutConfig,
@@ -370,6 +374,7 @@ function IndicatorGraph(props) {
     mainTraces.layoutConfig.yRange = [0, 100];
     mainTraces.layoutConfig.subplotCount = combinationCount;
     mainTraces.layoutConfig.annotations = getSubplotHeaders(subplotRowCount, subplotHeaderTitles);
+    mainTraces.layoutConfig.xTicksMax = mainTraces.traces[0].length;
     mainTraces.traces.forEach((t, idx) => {
       const axisIndex = hasTimeDimension ? Math.floor(idx / 2) + 1: idx + 1;
       if (!hasTimeDimension || idx > 1) {
