@@ -266,7 +266,7 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
         <Container>
           <Row>
             <Col
-              xl={{ size: 7, offset: hasSidebar ? 4 : 2 }}
+              xl={{ size: hasSidebar ? 7 : 6, offset: hasSidebar ? 4 : 3 }}
               lg={{ size: 8, offset: hasSidebar ? 4 : 2 }}
               md={{ size: 10, offset: 1 }}
               className="my-4"
