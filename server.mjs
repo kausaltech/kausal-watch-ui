@@ -226,6 +226,11 @@ class WatchServer {
   }
 
   async handleRequest(ctx) {
+    ctx.req.currentURL = getCurrentURL(ctx.req);
+    if (ctx.req.currentURL.path === '/_health') {
+      res.status(200).send('OK');
+      return;
+    }
     const plans = await this.getAvailablePlans(ctx);
     if (!plans) return;
     const domain = plans[0].domains[0];
@@ -247,7 +252,6 @@ class WatchServer {
         this.setLocale(primaryLanguage, primaryLanguage, []);
       }
     }
-    ctx.req.currentURL = getCurrentURL(ctx.req);
     await this.nextHandleRequest(ctx.req, ctx.res);
     ctx.respond = false;
   }
