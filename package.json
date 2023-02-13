@@ -153,6 +153,6 @@
   ],
   "packageManager": "yarn@3.2.1",
   "optionalDependencies": {
-    "@kausal/themes-private": "^0.2.39"
+    "@kausal/themes-private": "^0.2.40"
   }
 }
