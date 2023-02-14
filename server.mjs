@@ -228,7 +228,8 @@ class WatchServer {
   async handleRequest(ctx) {
     ctx.req.currentURL = getCurrentURL(ctx.req);
     if (ctx.req.currentURL.path === '/_health') {
-      res.status(200).send('OK');
+      ctx.res.statusCode = 200;
+      ctx.res.statusMessage = 'OK';
       return;
     }
     const plans = await this.getAvailablePlans(ctx);
