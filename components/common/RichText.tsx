@@ -6,6 +6,7 @@ import 'react-medium-image-zoom/dist/styles.css'
 
 import { usePlan } from 'context/plan';
 import styled from 'styled-components';
+import Icon from 'components/common/Icon';
 
 
 type RichTextImageProps = {
@@ -71,9 +72,6 @@ export default function RichText(props: RichTextProps) {
 
   if (typeof html !== 'string') return <div />;
 
-  console.log(props);
-  console.log(plan);
-
   // FIXME: Hacky hack to figure out if the rich text links are internal
   const cutHttp = (url) => url.replace(/^https?:\/\//, '');
   const currentDomain = plan.viewUrl ? cutHttp(plan.viewUrl.split('.')[0]) : '';
@@ -93,7 +91,13 @@ export default function RichText(props: RichTextProps) {
         if (cutHttp(attribs.href.split('.')[0]) === currentDomain) {
           return <a href={attribs.href}>{domToReact(children, options)}</a>;
         }
-        return <a target='_blank' href={attribs.href} rel="noreferrer">{domToReact(children, options)}</a>;
+        return (
+          <a target='_blank' href={attribs.href} rel="noreferrer">
+            <Icon name="link"/>
+            {' '}
+            {domToReact(children, options)}
+          </a>
+        );
       } else if (name === 'img') {
         if (attribs.src && attribs.src[0] === '/') {
           return <RichTextImage attribs={attribs} />
