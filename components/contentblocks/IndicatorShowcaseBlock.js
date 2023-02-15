@@ -39,6 +39,9 @@ const IndicatorShowcaseBlock = (props) => {
   // The bar is built for showing reduction goals
   // we swap the goal and start values if the goal is to increase
   // TODO: enable the viz to handle goals to increase
+
+  if (indicator.goals.length == 0) return <div />;
+
   const goalValue = indicator.goals[indicator.goals.length-1].value;
   const startValue = indicator.values[0].value;
 
