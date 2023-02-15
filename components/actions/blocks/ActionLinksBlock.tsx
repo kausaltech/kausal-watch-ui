@@ -10,7 +10,7 @@ const ActionLinksBlock = (props) => {
       <ul>
         {links.map((actionLink) => (
           <li key={actionLink.id}>
-            <a href={actionLink.url}>
+            <a href={actionLink.url} target="_blank" rel="noreferrer">
               {actionLink.title}
             </a>
           </li>
