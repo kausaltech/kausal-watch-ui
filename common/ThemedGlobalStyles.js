@@ -143,18 +143,24 @@ const GlobalStyle = createGlobalStyle`
   }
 
   .richtext-image {
-    margin: ${(props) => props.theme.spaces.s150} 0;
+
+    margin: ${(props) => props.theme.spaces.s300} auto;
 
     &.full-width {
+      display: block;
       max-width: 100%;
       height: auto;
     }
 
     &.left {
+      display: inline-block;
+      margin: ${(props) => props.theme.spaces.s150};
       float: left;
     }
 
     &.right {
+      display: inline-block;
+      margin: ${(props) => props.theme.spaces.s150};
       float: right;
     }
   }
