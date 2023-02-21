@@ -107,6 +107,12 @@ const ActionAttribute = (props: AttributeContentProps | AttributeContentNestedTy
         </div>
       );
       break;
+    case 'AttributeText':
+      // FIXME: attribute.value is not HTML
+      dataElement = (
+        <RichText html={attribute.value} />
+      );
+      break;
     case 'AttributeRichText':
       dataElement = (
         <RichText html={attribute.value} />
@@ -168,6 +174,9 @@ fragment AttributesBlockAttribute on AttributeInterface {
       name
     }
     text
+  }
+  ...on AttributeText {
+    value
   }
   ...on AttributeRichText {
     value

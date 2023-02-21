@@ -27,7 +27,8 @@
       "ActionOfficialNameBlock",
       "ActionRelatedActionsBlock",
       "ActionRelatedIndicatorsBlock",
-      "ActionTasksBlock"
+      "ActionTasksBlock",
+      "ReportComparisonBlock"
     ],
     "ActionMainContentSectionElementBlock": [
       "ActionContactFormBlock",
@@ -40,13 +41,15 @@
       "ActionOfficialNameBlock",
       "ActionRelatedActionsBlock",
       "ActionRelatedIndicatorsBlock",
-      "ActionTasksBlock"
+      "ActionTasksBlock",
+      "ReportComparisonBlock"
     ],
     "AttributeInterface": [
       "AttributeCategoryChoice",
       "AttributeChoice",
       "AttributeNumericValue",
-      "AttributeRichText"
+      "AttributeRichText",
+      "AttributeText"
     ],
     "MenuItem": [
       "ExternalLinkMenuItem",
@@ -64,6 +67,10 @@
       "PlanRootPage",
       "PrivacyPolicyPage",
       "StaticPage"
+    ],
+    "PlanInterface": [
+      "Plan",
+      "RestrictedPlanNode"
     ],
     "SearchHitObject": [
       "Action",
@@ -131,7 +138,9 @@
       "RegexBlock",
       "RelatedIndicatorsBlock",
       "RelatedPlanListBlock",
+      "ReportComparisonBlock",
       "ReportFieldBlock",
+      "ReportTypeFieldChooserBlock",
       "ResponsiblePartyFilterBlock",
       "RichTextBlock",
       "StaticBlock",

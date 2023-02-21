@@ -77,7 +77,7 @@ function AttributesBlock(props: AttributesBlockProps) {
 
     if (__typename === 'AttributeChoice') {
       return !!(attribute.choice || attribute.text);
-    } else if (__typename === 'AttributeRichText') {
+    } else if (__typename === 'AttributeText' || __typename === 'AttributeRichText') {
       return !!attribute.value;
     } else if (__typename === 'AttributeCategoryChoice') {
       return !!attribute.categories.length;
