@@ -52,6 +52,7 @@ const Icon = (props) => {
     width,
     height,
     className,
+    alt,
     ...rest
   } = props;
 
@@ -59,7 +60,11 @@ const Icon = (props) => {
     <svg className={`icon ${className}`}
          onError={(error) => console.log(error.message)}
          key={`${theme.name}-${name}`}
-         style={{width, height}}>
+         style={{width, height}}
+         aria-hidden={ alt ? 'false' : 'true' }
+         focusable={ alt ? 'true' : 'false' }
+    >
+      { alt ? <title>{alt}</title> : null}
       <use
         fill={color}
         xlinkHref={`#symbol-icon-${camelToKebabCase(name)}`}
@@ -89,6 +94,7 @@ Icon.defaultProps = {
   width: '1em',
   height: '1em',
   className: '',
+  alt: undefined,
 };
 
 Icon.propTypes = {
@@ -97,6 +103,7 @@ Icon.propTypes = {
   width: PropTypes.string,
   height: PropTypes.string,
   className: PropTypes.string,
+  alt: PropTypes.string,
 };
 
 export default React.memo(Icon);
