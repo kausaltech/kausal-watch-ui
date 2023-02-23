@@ -177,7 +177,8 @@ function generateCubeFromValues(indicator, indicatorGraphSpecification, combined
   const traces = [];
   const values = [...combinedValues].sort((a, b) => a.date - b.date).map((item) => {
     const { date, value, categories } = item;
-    const newDate = indicator.timeResolution === 'YEAR' ? date.split('-')[0] : date;
+    // Make yearly value dates YYYY-1-1 so plotly places them correctly on axis
+    const newDate = indicator.timeResolution === 'YEAR' ? `${date.split('-')[0]}-1-1` : date;
     return { date: newDate, value, categories };
   });
   if (indicatorGraphSpecification.dimensions.length === 0) {
@@ -255,7 +256,8 @@ const generateTrendTrace = (indicator, traces, goals, i18n) => {
   if (indicator.timeResolution === 'YEAR' && traces[0].y.length >= 5 && !hasPotentialScenario) {
     const values = [...indicator.values].sort((a, b) => a.date - b.date).map((item) => {
       const { date, value, categories } = item;
-      const newDate = indicator.timeResolution === 'YEAR' ? date.split('-')[0] : date;
+      // Make yearly value dates YYYY-1-1 so plotly places them correctly on axis
+      const newDate = indicator.timeResolution === 'YEAR' ? `${date.split('-')[0]}-1-1` : date;
       return { date: newDate, value, categories };
     });
     const mainValues = values.filter((item) => !item.categories.length);
@@ -305,7 +307,7 @@ const generateGoalTraces = (indicator, planScenarios, i18n) => {
     const { goals } = scenario;
     scenario.goals = goals.sort((a, b) => a.date - b.date).map((item) => {
       const { date, value, categories } = item;
-      const newDate = indicator.timeResolution === 'YEAR' ? date.split('-')[0] : date;
+      const newDate = indicator.timeResolution === 'YEAR' ? `${date.split('-')[0]}-1-1` : date;
       return { date: newDate, value, categories };
     });
   });

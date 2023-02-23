@@ -59,6 +59,7 @@ function Header({ siteTitle }) {
       <SkipToContent />
       <ApplicationStateBanner deploymentType={site.deploymentType} />
       <GlobalNav
+        activeBranch={activeBranch}
         siteTitle={siteTitle}
         ownerName={plan.generalContent ? plan.generalContent.ownerName : plan.name}
         navItems={navLinks}

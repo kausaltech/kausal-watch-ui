@@ -187,7 +187,7 @@ function TaskList(props) {
   return (
     <div>
       { undoneTasks.length > 0
-        ? (
+        && (
           <>
             <ListGroupTitle>{ t('actions:action-tasks-todo') }</ListGroupTitle>
             <ListGroup className="mb-5">
@@ -195,7 +195,7 @@ function TaskList(props) {
             </ListGroup>
           </>
         )
-        : <h4 className="text-muted mb-4">{ t('actions:action-tasks-todo-empty') }</h4> }
+      }
       { doneTasks.length > 0 && (
         <>
           <ListGroupTitle>{ t('actions:action-tasks-done') }</ListGroupTitle>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container, Col, Row } from 'reactstrap';
-import Map, {useControl, useMap} from 'react-map-gl';
+import Map, {useControl, useMap, NavigationControl} from 'react-map-gl';
 
 import LegendControl from '@kausal/mapboxgl-legend';
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -86,7 +86,8 @@ const LegendWithOverrides = ({styleOverrides}) => {
   return null;
 }
 
-const CartographyVisualisationBlock = ({styleUrl, accessToken, styleOverrides, hasSidebar}: CartographyVisualisationBlockProps) => {
+const CartographyVisualisationBlock = (props: CartographyVisualisationBlockProps) => {
+  const {styleUrl, accessToken, styleOverrides, hasSidebar} = props;
   if (accessToken === undefined) {
     console.warn('No access token provided for MapBox visualisation.');
     return null;
@@ -95,16 +96,18 @@ const CartographyVisualisationBlock = ({styleUrl, accessToken, styleOverrides, h
     <Container>
       <Row>
         <Col
-          xl={{ size: 9, offset: hasSidebar ? 3 : 2 }}
+          xl={{ size: 8, offset: hasSidebar ? 4 : 2 }}
           lg={{ size: 8, offset: hasSidebar ? 4 : 2 }}
           md={{ size: 10, offset: 1 }}
         >
           <Map
             style={{width: '100%', height: 500}}
             mapboxAccessToken={accessToken}
+            cooperativeGestures={true}
             mapStyle={`mapbox://styles/ilmastogis/${styleUrl}` ?? ''}
           >
             <LegendWithOverrides styleOverrides={styleOverrides} />
+            <NavigationControl showZoom={true} showCompass={false} />
           </Map>
         </Col>
       </Row>

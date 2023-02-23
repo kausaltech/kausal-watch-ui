@@ -1,4 +1,4 @@
-const SUPPORTED_LANGUAGES = ['en', 'en-AU', 'en-GB', 'fi', 'sv', 'de', 'de-CH', 'dk'];
+const SUPPORTED_LANGUAGES = ['en', 'en-AU', 'en-GB', 'fi', 'sv', 'de', 'de-CH', 'da'];
 
 module.exports = {
   i18n: {

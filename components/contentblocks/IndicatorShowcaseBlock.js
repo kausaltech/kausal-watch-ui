@@ -5,6 +5,7 @@ import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
 import RichText from 'components/common/RichText';
 import IndicatorProgressBar from 'components/indicators/IndicatorProgressBar';
+import IndicatorVisualisation from 'components/indicators/IndicatorVisualisation';
 
 const IndicatorShowcase = styled.div`
   padding: ${(props) => props.theme.spaces.s400} 0;
@@ -39,8 +40,12 @@ const IndicatorShowcaseBlock = (props) => {
   // The bar is built for showing reduction goals
   // we swap the goal and start values if the goal is to increase
   // TODO: enable the viz to handle goals to increase
-  const goalValue = indicator.goals[indicator.goals.length-1].value;
+
+  const indicatorHasGoal = indicator.goals.length > 0;
+
+  const goalValue = indicator.goals[indicator.goals.length-1]?.value;
   const startValue = indicator.values[0].value;
+
 
   return (
     <IndicatorShowcase>
@@ -52,6 +57,7 @@ const IndicatorShowcaseBlock = (props) => {
           >
             <h2>{title}</h2>
             <RichText html={body} className="mb-5" />
+            { indicatorHasGoal ? (
             <IndicatorProgressBar
               indicatorId={indicator.id}
               startDate={indicator.values[0].date}
@@ -63,7 +69,9 @@ const IndicatorShowcaseBlock = (props) => {
               unit={indicator.unit.shortName}
               note={indicator.name}
               animate={inView}
-            />
+            />) : (
+            <IndicatorVisualisation indicatorId={indicator.id} />
+            )}
             <span ref={ref} />
           </Col>
         </Row>

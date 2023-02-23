@@ -3216,17 +3216,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@kausal/themes-private@npm:^0.2.29":
-  version: 0.2.29
-  resolution: "@kausal/themes-private@npm:0.2.29"
-  checksum: 3081ad706e32e426f706b59da9b980085a3d5c97884cb2dfbe58e7b7a9d2aa7d9f9578d15b6548d1103cacb76c97efaf235a9869a17246bf80abc9452230c3b1
+"@kausal/themes-private@npm:^0.2.42":
+  version: 0.2.42
+  resolution: "@kausal/themes-private@npm:0.2.42"
+  checksum: afad05ffabeabd155874cf5d78067e50d5e093a098854b662444b48bca9b7ae0b15b0e7ef733f1a08725b41e91694bd27bd8b81d37ed28ee14bc7f8677164b07
   languageName: node
   linkType: hard
 
-"@kausal/themes@npm:^0.5.0":
-  version: 0.5.0
-  resolution: "@kausal/themes@npm:0.5.0"
-  checksum: 693dcbb76353e6a093b2da26d51d42aacb5c16c9211ff25b03f8346e39d301bd54385a5e965488d3f853b7ec2ac4187f0f765aafa1f92f2faaea199bf2fc622f
+"@kausal/themes@npm:^0.5.1":
+  version: 0.5.1
+  resolution: "@kausal/themes@npm:0.5.1"
+  checksum: eef32d26cad89ee88c06d878db81a74460bb503139c79107f01e3da93d0b069323e180f1a3a513b6f7cbe989aab529dc912e153b5131f3044d2ed0d9cbbe9702
   languageName: node
   linkType: hard
 
@@ -16630,8 +16630,8 @@ __metadata:
     "@graphql-codegen/typescript-react-apollo": 3.3.3
     "@kausal/mapboxgl-legend": ^1.7.2
     "@kausal/plotly-custom": ^2.14.3
-    "@kausal/themes": ^0.5.0
-    "@kausal/themes-private": ^0.2.29
+    "@kausal/themes": ^0.5.1
+    "@kausal/themes-private": ^0.2.42
     "@koa/router": ^10.1.1
     "@n8tb1t/use-scroll-position": ^2.0.3
     "@next/bundle-analyzer": ^12.1.6
@@ -24151,6 +24151,7 @@ __metadata:
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
+  checksum: dc7141ab555b23a8650a6787f98845fc11692063d02b75ff49433091b3af2fe3d773650dea18389d7c21f47d620fb3b110ea363dab4ab039417a6ccbbaf96fc2
   languageName: node
   linkType: hard
 
@@ -24160,6 +24161,7 @@ __metadata:
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
+  checksum: 37f6e2c3c5e2aa5934b85b0fddbf32eeac8b1bacf3a5b51d01946936d03f5377fe86255d4e5a4ae628fd0cd553386355ad362c57f13b4635064400f3e8e05b9d
   languageName: node
   linkType: hard
 

@@ -15,9 +15,9 @@ import images, { getBgImageAlignment } from 'common/images';
 import CategoryPageHeaderBlock from 'components/contentblocks/CategoryPageHeaderBlock';
 import CategoryListBlock from 'components/contentblocks/CategoryListBlock';
 import ContentPageHeaderBlock from 'components/contentblocks/ContentPageHeaderBlock';
-import AttributesBlock from 'components/common/AttributesBlock';
 import SecondaryNavigation from 'components/common/SecondaryNavigation';
 import { GetPlanPageGeneralQuery } from 'common/__generated__/graphql';
+import ActionAttribute from 'components/common/ActionAttribute';
 
 
 const GET_PLAN_PAGE = gql`
@@ -142,7 +142,7 @@ query GetPlanPageGeneral($plan: ID!, $path: String!) {
 }
 ${StreamField.fragments.streamField}
 ${images.fragments.multiUseImage}
-${AttributesBlock.fragments.attributeWithNestedType}
+${ActionAttribute.fragments.attributeWithNestedType}
 ${CategoryListBlock.fragments.category}
 `;
 

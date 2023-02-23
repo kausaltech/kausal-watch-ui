@@ -75,14 +75,18 @@ Error.stackTraceLimit = 30;
 const GET_PLANS_BY_HOSTNAME = gql`
 query GetPlansByHostname($hostname: String) {
   plansForHostname(hostname: $hostname) {
-    id
-    identifier
     domains {
       hostname
       basePath
+      status
+      statusMessage
     }
     primaryLanguage
-    otherLanguages
+    ... on Plan {
+      id
+      identifier
+      otherLanguages
+    }
   }
 }
 `;
@@ -222,13 +226,33 @@ class WatchServer {
   }
 
   async handleRequest(ctx) {
+    ctx.req.currentURL = getCurrentURL(ctx.req);
+    if (ctx.req.currentURL.path === '/_health') {
+      ctx.res.statusCode = 200;
+      ctx.res.statusMessage = 'OK';
+      return;
+    }
     const plans = await this.getAvailablePlans(ctx);
     if (!plans) return;
-    const { plan, locale, basePath } = this.parseRequestPath(ctx, plans);
-    this.setBasePath(basePath);
-    this.setLocale(locale, plan.primaryLanguage, plan.otherLanguages);
-    ctx.req.planIdentifier = plan.identifier;
-    ctx.req.currentURL = getCurrentURL(ctx.req);
+    const domain = plans[0].domains[0];
+    // The domain is not shown for automatically configured domains
+    const publicationStatus = domain?.status ?? 'PUBLISHED';
+    const published = publicationStatus === 'PUBLISHED'
+    if (published) {
+      const { plan, locale, basePath } = this.parseRequestPath(ctx, plans);
+      this.setBasePath(basePath);
+      this.setLocale(locale, plan.primaryLanguage, plan.otherLanguages);
+      ctx.req.planIdentifier = plan.identifier;
+    }
+    else {
+      ctx.req.publicationStatus = publicationStatus;
+      ctx.req.publicationStatusMessage = domain.statusMessage;
+      const plan = plans[0];
+      const primaryLanguage = plan?.primaryLanguage;
+      if (primaryLanguage != null) {
+        this.setLocale(primaryLanguage, primaryLanguage, []);
+      }
+    }
     await this.nextHandleRequest(ctx.req, ctx.res);
     ctx.respond = false;
   }

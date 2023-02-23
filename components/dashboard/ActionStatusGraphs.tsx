@@ -69,6 +69,11 @@ const getTimelinessData = (actions, actionStatuses, theme, t) => {
     }
   });
 
+  if (total === 0) {
+    timeliness.total = '0%';
+    return timeliness;
+  }
+
   timeliness.values.push(under30);
   timeliness.labels.push(t('under-x-days', { days: 30 }));
   timeliness.colors.push(theme.graphColors.green070);

@@ -34,7 +34,15 @@ const NavItem = styled.li<{ isActive: boolean }>`
   padding: 0;
   
   a {
+    color: ${(props) => (props.isActive ? props.theme.brandDark : props.theme.themeColors.black)};
+    border-bottom: 3px solid ${(props) => (props.isActive ? props.theme.brandDark : 'transparent')};
     font-weight: ${(props) => (props.isActive ? 'bold' : 'normal')};
+
+    &:hover {
+      color: ${(props) => (props.isActive ? props.theme.brandDark : props.theme.themeColors.black)};
+      text-decoration: none;
+      border-bottom: 3px solid ${(props) => (props.theme.brandDark)};
+    }
   }
 `;
 
@@ -66,7 +74,6 @@ const SecondaryNavigation = (props: SecondaryNavigationProps) => {
           <Nav>
             {links.map((link) => (
               <NavItem key={link.id} isActive={ link.id === activeLink}>
-                { link.id === activeLink ? <Icon name="angle-right" /> : null }
                 <Link href={link.urlPath}>
                   {link.title}
                 </Link>

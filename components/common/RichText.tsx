@@ -3,9 +3,10 @@ import Zoom from 'react-medium-image-zoom';
 import parse, { domToReact } from 'html-react-parser';
 
 import 'react-medium-image-zoom/dist/styles.css'
-
+// import { useTranslation } from 'common/i18n';
 import { usePlan } from 'context/plan';
 import styled from 'styled-components';
+import Icon from 'components/common/Icon';
 
 
 type RichTextImageProps = {
@@ -68,8 +69,13 @@ type RichTextProps = {
 export default function RichText(props: RichTextProps) {
   const { html, className, ...rest } = props;
   const plan = usePlan();
+  // const { t } = useTranslation(); // FIXME: Unsure if we need alt/title for icons
 
   if (typeof html !== 'string') return <div />;
+
+  // FIXME: Hacky hack to figure out if the rich text links are internal
+  const cutHttp = (url) => url.replace(/^https?:\/\//, '');
+  const currentDomain = plan.viewUrl ? cutHttp(plan.viewUrl.split('.')[0]) : '';
 
   const options = {
     replace: (domNode) => {
@@ -79,11 +85,22 @@ export default function RichText(props: RichTextProps) {
       if (type !== 'tag') return null;
       // Rewrite <a> tags to point to the FQDN
       if (name === 'a') {
+        // File link
         if (attribs['data-link-type']) {
           // FIXME: Add icon based on attribs['data-file-extension']
           return <a href={`${plan.serveFileBaseUrl}${attribs.href}`}>{domToReact(children, options)}</a>;
         }
-        return <a target='_blank' href={attribs.href} rel="noreferrer">{domToReact(children, options)}</a>;
+        // Internal link
+        if (cutHttp(attribs.href.split('.')[0]) === currentDomain) {
+          return <a href={attribs.href}>{domToReact(children, options)}</a>;
+        }
+        // Assumed external link, open in new tab
+        return (
+          <a target='_blank' href={attribs.href} rel="noreferrer">
+            <Icon name="arrow-up-right-from-square"/>
+            {domToReact(children, options)}
+          </a>
+        );
       } else if (name === 'img') {
         if (attribs.src && attribs.src[0] === '/') {
           return <RichTextImage attribs={attribs} />
