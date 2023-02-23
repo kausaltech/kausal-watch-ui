@@ -167,6 +167,14 @@ fragment AttributesBlockAttribute on AttributeInterface {
   type {
     id
     identifier
+    format
+    reportField
+    report {
+      identifier
+      name
+      startDate
+      endDate
+    }
   }
   ...on AttributeChoice {
     choice {

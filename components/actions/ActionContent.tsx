@@ -41,6 +41,7 @@ import ActionTasksBlock from 'components/actions/blocks/ActionTasksBlock';
 import ActionContactPersonsBlock from 'components/actions/blocks/ActionContactPersonsBlock';
 import ActionResponsiblePartiesBlock from 'components/actions/blocks/ActionResponsiblePartiesBlock';
 import ActionScheduleBlock from 'components/actions/blocks/ActionScheduleBlock';
+import ReportComparisonBlock from 'components/actions/blocks/ReportComparisonBlock';
 
 import type {
   ActionAsideContentBlocksFragmentFragment, ActionMainContentBlocksFragmentFragment,
@@ -260,6 +261,12 @@ fragment ActionMainContentBlocksFragment on ActionMainContentBlock {
       ...CategoryTagsCategoryType
     }
   }
+  ... on ReportComparisonBlock {
+    reportField
+    reportsToCompare {
+      identifier
+    }
+  }
   ... on ActionContentSectionBlock {
     id
     heading
@@ -281,6 +288,12 @@ fragment ActionMainContentBlocksFragment on ActionMainContentBlock {
       ... on ActionContentCategoryTypeBlock {
         categoryType {
           ...CategoryTagsCategoryType
+        }
+      }
+      ... on ReportComparisonBlock {
+        reportField
+        reportsToCompare {
+          identifier
         }
       }
     }
@@ -379,7 +392,6 @@ function ActionContentBlock(props: ActionContentBlockProps) {
         />
       )
     case 'ActionOfficialNameBlock':
-
       return (
         <ActionOfficialNameBlock
           plan = {plan}
@@ -479,6 +491,14 @@ function ActionContentBlock(props: ActionContentBlockProps) {
         />
       )
     }
+    case 'ReportComparisonBlock':
+      return (
+        <ReportComparisonBlock
+          plan={plan}
+          block={block}
+          action={action}
+        />
+      )
     default:
       console.error("Unknown action content block", block.__typename);
       return null;
