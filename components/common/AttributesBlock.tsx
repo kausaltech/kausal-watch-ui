@@ -101,7 +101,6 @@ function AttributesBlock(props: AttributesBlockProps) {
           >
             {/* @ts-ignore */}
             <ActionAttribute
-              t={t}
               key={item.id}
               attribute={item}
               attributeType={typesById && typesById.get(item.type.id)}

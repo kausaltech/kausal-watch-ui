@@ -167,6 +167,12 @@ fragment AttributesBlockAttribute on AttributeInterface {
   type {
     id
     identifier
+    name
+    unit {
+      id
+      name
+      shortName
+    }
     format
     reportField
     report {
