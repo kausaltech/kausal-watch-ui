@@ -6,7 +6,7 @@ import { beautifyValue } from 'common/data/format';
 import Icon from 'components/common/Icon';
 
 const CollapsibleTable = styled.div`
-  background-color: ${(props) => props.theme.themeColors.light};
+  background-color: ${(props) => props.theme.themeColors.white};
   padding: ${(props) => props.theme.spaces.s050};
 `;
 
@@ -16,6 +16,7 @@ const Trigger = styled.div`
 
 const TableContainer = styled.div`
   padding: ${(props) => props.theme.spaces.s100};
+  background-color: ${(props) => props.theme.themeColors.white};
 
   table {
     font-family: ${(props) => props.theme.fontFamilyContent};
