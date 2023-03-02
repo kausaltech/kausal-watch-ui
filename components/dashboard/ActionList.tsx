@@ -450,32 +450,34 @@ const ActionList = (props: ActionListProps) => {
           </div>
         </Container>
       </IndicatorsTabs>
+      <Container fluid="lg">
+        <div id="list-view" role="tabpanel" tabIndex={0} aria-labelledby="list-tab" hidden={!displayDashboard}>
+          { displayDashboard && filteredActions.length > 0 ? (
+            <>
+              <ActionStatusGraphs actions={filteredActions} />
+              <DynamicActionStatusTable actions={filteredActions} orgs={orgs} plan={plan} enableExport={true} />
+            </>
+          ) : (
+            <Alert color="primary">
+              {t('search-no-results')}
+            </Alert>
+          )}
+        </div>
+      </Container>
       <Container>
-          <div id="list-view" role="tabpanel" tabIndex={0} aria-labelledby="list-tab" hidden={!displayDashboard}>
-            { displayDashboard && filteredActions.length > 0 ? (
-              <>
-                <ActionStatusGraphs actions={filteredActions} />
-                <DynamicActionStatusTable actions={filteredActions} orgs={orgs} plan={plan} enableExport={true} />
-              </>
-            ) : (
-              <Alert color="primary">
-                {t('search-no-results')}
-              </Alert>
-            )}
-          </div>
-          <div id="dashboard-view" role="tabpanel" tabIndex={0} aria-labelledby="dashboard-tab" hidden={displayDashboard}>
-            { !displayDashboard && filteredActions.length > 0 ? (
-              <ActionCardList
-                actions={filteredActions}
-                groupBy={groupBy}
-                headingHierarchyDepth={headingHierarchyDepth}
-              />
-            ) : (
-              <Alert color="primary">
-                {t('search-no-results')}
-              </Alert>
-            )}
-          </div>
+        <div id="dashboard-view" role="tabpanel" tabIndex={0} aria-labelledby="dashboard-tab" hidden={displayDashboard}>
+          { !displayDashboard && filteredActions.length > 0 ? (
+            <ActionCardList
+              actions={filteredActions}
+              groupBy={groupBy}
+              headingHierarchyDepth={headingHierarchyDepth}
+            />
+          ) : (
+            <Alert color="primary">
+              {t('search-no-results')}
+            </Alert>
+          )}
+        </div>
       </Container>
     </>
   );

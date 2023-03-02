@@ -13,23 +13,21 @@ import ActionTableRow from 'components/dashboard/ActionTableRow';
 import ActionStatusExport from './ActionStatusExport';
 
 const TableWrapper = styled.div`
-  width: auto;
+  width: 100%;
   display: flex;
-  flex-flow: wrap;
-  background-image: ${(props) =>
-    `linear-gradient(to right, ${props.theme.themeColors.white}, ${props.theme.themeColors.white}),
-    linear-gradient(to right, ${props.theme.themeColors.white}, ${props.theme.themeColors.white}),
-    linear-gradient(to right, rgba(0, 0, 0, 0.25), ${transparentize(0, props.theme.themeColors.white)}),
-    linear-gradient(to left, rgba(0, 0, 0, 0.25), ${transparentize(0, props.theme.themeColors.white)})`};
-  background-position: left center, right center, left center, right center;
-  background-repeat: no-repeat;
-  background-color: ${(props) => props.theme.themeColors.white};
-  background-size: 20px 100%, 20px 100%, 10px 100%, 10px 100%;
-  background-attachment: local, local, scroll, scroll;
+  overflow-x: auto;
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
-    background-image: none;
-  }
+  padding: 0 0 ${(props) => props.theme.spaces.s100} 0;
+  background-image:
+    linear-gradient(to right, white, white),
+    linear-gradient(to right, white, white),
+    linear-gradient(to right, rgba(0,0,0,.25), rgba(255,255,255,0)),
+    linear-gradient(to left, rgba(0,0,0,.25), rgba(255,255,255,0));
+  background-position: left center, right center, left center, right center;
+	background-repeat: no-repeat;
+	background-color: white;
+	background-size: 20px 100%, 20px 100%, 10px 100%, 10px 100%;
+	background-attachment: local, local, scroll, scroll;
 `;
 
 const DashTable = styled(Table)`
@@ -40,6 +38,16 @@ const DashTable = styled(Table)`
   .logo-column {
     width: 2rem;
   }
+`;
+
+const ToolBar = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: ${(props) => props.theme.spaces.s050};
+`;
+
+const ResetSorting = styled.div`
 `;
 
 
@@ -248,18 +256,18 @@ const ActionStatusTable = (props) => {
   };
 
   return (
-    <TableWrapper>
-      <div style={{flexGrow: 4, alignSelf: 'end' }}>
-        { sort.key !== 'order' && <>
+    <>
+    <ToolBar>
+      <ResetSorting>
+        { sort.key !== 'order' && (
           <Button outline size="sm" color="primary" onClick={clickHandler('order')}>
             {t('common:default-sorting')}
           </Button>
-        </>
-        }
-      </div>
-    <div>
+        ) }
+      </ResetSorting>
       { enableExport && <ActionStatusExport actions={actions} actionStatuses={plan.actionStatuses} /> }
-    </div>
+    </ToolBar>
+    <TableWrapper>
     <DashTable role="list">
       <thead>
         <tr>
@@ -303,7 +311,9 @@ const ActionStatusTable = (props) => {
         <Arrow ref={setArrowElement} style={styles.arrow} />
       </Tooltip>
     )}
-  </TableWrapper>);
+  </TableWrapper>
+  </>
+  );
 };
 
 ActionStatusTable.propTypes = {

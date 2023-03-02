@@ -401,7 +401,7 @@ function OrgContent(props) {
         </OrgTabs>
       </OrgHeader>
       { allPlans.length ?
-        <Container>
+        <Container fluid="lg">
           <ActionTableHeader>
             <h2>
               { t('actions:org-responsible-in-actions', { actionCount: selectedPlan.actions.length }) }
