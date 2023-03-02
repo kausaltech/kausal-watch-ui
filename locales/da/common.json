@@ -184,5 +184,6 @@
   "report": "Rapport",
   "navigation-home": "Forsiden",
   "graph-hideTable": "Skjul datatabel",
-  "graph-showTable": "Vis datatabel"
+  "graph-showTable": "Vis datatabel",
+  "open": "Åben"
 }

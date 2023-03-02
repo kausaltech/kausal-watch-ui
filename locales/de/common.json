@@ -180,5 +180,6 @@
   "report": "Bericht",
   "navigation-home": "Startseite",
   "graph-hideTable": "Datentabelle ausblenden",
-  "graph-showTable": " Datentabelle anzeigen"
+  "graph-showTable": " Datentabelle anzeigen",
+  "open": "Offen"
 }

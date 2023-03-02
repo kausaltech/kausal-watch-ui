@@ -184,5 +184,6 @@
   "report": "Raportti",
   "navigation-home": "Etusivu",
   "graph-hideTable": "Piilota taulukko",
-  "graph-showTable": "Näytä taulukkona"
+  "graph-showTable": "Näytä taulukkona",
+  "open": "Avaa"
 }
