@@ -619,7 +619,6 @@ function IndicatorVisualisation({ indicatorId }) {
   return (
     <div>
       <IndicatorVizHeader className="mb-2">{title}</IndicatorVizHeader>
-      <span className="visually-hidden">{ t('indicator-graph-not-accessible') }</span>
       { enableIndicatorComparison && comparisonOrgs && comparisonOrgs.length > 0 && (
         <IndicatorComparisonSelect
           handleChange={setCompareTo}
@@ -648,6 +647,7 @@ function IndicatorVisualisation({ indicatorId }) {
         specification={yRange}
         timeResolution={indicator.timeResolution}
         data={traces}
+        goalTraces={goalTraces}
         title={title}
         language={i18n.language}
         t={t}

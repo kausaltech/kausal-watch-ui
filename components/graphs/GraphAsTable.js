@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import dayjs from 'common/dayjs';
 import { Table, Collapse, Button } from 'reactstrap';
 import { beautifyValue } from 'common/data/format';
 import Icon from 'components/common/Icon';
@@ -49,37 +50,55 @@ function GraphAsTable(props) {
     specification,
     title,
     language,
+    goalTraces,
     t,
   } = props;
 
+
+  // Collect all x values from all traces and filter out duplicates
   const allRows = [];
   data.map((trace, i) => {
     trace.x.map((x, i) => {
       allRows.push(x)
     })
   });
+  goalTraces.map((trace, i) => {
+    trace.x.map((x, i) => {
+      allRows.push(x)
+    })
+  });
   const tableRows = allRows.filter((row, index, rows) => rows.indexOf(row) === index);
 
-  const dateFormat = timeResolution === 'YEAR'
-    ? { year: "numeric" }
-    : { year: "numeric", month: "numeric", day: "numeric" };
+  // Sort rows by date if we are dealing with time series
+  if (data[0].xType === 'time') {
+    tableRows.sort((a, b) => dayjs(a).diff(dayjs(b)));
+  }
 
+  const dateFormat = timeResolution === 'YEAR'
+    ? 'YYYY'
+    : 'l';
+
+  // Create table data row by row
   const tableData = [];
   tableRows.map((row, i) => {
     const rowObj = {};
-    rowObj.label = data[0].xType === 'time' ? new Date(row).toLocaleString(language, dateFormat) : row;
+    rowObj.label = data[0].xType === 'time' ? dayjs(row).format(dateFormat): row;
     rowObj.values = [];
     data.map((trace, i) => {
+      const indexOfX = trace.x.indexOf(row);
+      trace.y[indexOfX] ? rowObj.values.push(trace.y[indexOfX]) : rowObj.values.push(null);
+    });
+    goalTraces.map((trace, i) => {
       const indexOfX = trace.x.indexOf(row);
       trace.y[indexOfX] ? rowObj.values.push(trace.y[indexOfX]) : rowObj.values.push(null);
     });
     tableData.push(rowObj);
   });
 
-  // Create table category headers
+  // Check if there are dimensions and create table category headers for them
   const tableCategoryHeaders = [];
   const categoryCounts = data.map((trace, idx, traces) => {
-    if(idx !== 0 && trace._parentName === traces[idx-1]?._parentName) {
+    if(idx !== 0 && trace._parentName && trace._parentName === traces[idx-1]?._parentName) {
       tableCategoryHeaders[tableCategoryHeaders.length - 1].count++;
       return tableCategoryHeaders[tableCategoryHeaders.length - 1].count;
     }
@@ -97,7 +116,7 @@ function GraphAsTable(props) {
           color="link"
           onClick={toggle}
         >
-          Indicator data as table
+          {isOpen ? t('graph-hideTable') : t('graph-showTable')}
           <Icon name={isOpen ? 'angle-down' : 'angle-right'} />
         </TriggerButton>
       </Trigger>
@@ -129,6 +148,12 @@ function GraphAsTable(props) {
               {data.map((trace, i) => (
                 <th key={i} scope="col">
                   {trace.name.replace(`${trace._parentName}, `, '')}
+                  {specification.unit ? ` (${specification.unit})` : ''}
+                </th>
+              ))}
+              {goalTraces.map((trace, i) => (
+                <th key={i} scope="col">
+                  {trace.name}
                   {specification.unit ? ` (${specification.unit})` : ''}
                 </th>
               ))}
