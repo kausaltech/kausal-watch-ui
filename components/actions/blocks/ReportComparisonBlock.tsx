@@ -3,32 +3,47 @@ import dayjs from 'common/dayjs';
 import styled from 'styled-components';
 import { Row, Col } from 'reactstrap';
 import { ActionSection, SectionHeader } from 'components/actions/ActionContent';
-import RichText from 'components/common/RichText';
-import { getActionTermContext, useTranslation } from 'common/i18n';
+import { useTranslation } from 'common/i18n';
 import ActionAttribute from 'components/common/ActionAttribute';
 
 const FieldHeader = styled.div`
   font-size: ${(props) => props.theme.fontSizeSm};
-  color: ${(props) => props.theme.graphColors.grey040};
   margin-bottom: ${(props) => props.theme.spaces.s100};
 `;
 
-const ReportName = styled.h3`
-  font-size: ${(props) => props.theme.fontSizeBase};
+const ReportName = styled.div`
+`;
+
+const ReportFieldComparison = styled.div`
+  display: flex;
+  overflow-x: auto;
+  padding: ${(props) => props.theme.spaces.s100} 0;
+  background-image: 
+    linear-gradient(to right, white, white),
+    linear-gradient(to right, white, white),
+    linear-gradient(to right, rgba(0,0,0,.25), rgba(255,255,255,0)),
+    linear-gradient(to left, rgba(0,0,0,.25), rgba(255,255,255,0));   
+  background-position: left center, right center, left center, right center;
+	background-repeat: no-repeat;
+	background-color: white;
+	background-size: 20px 100%, 20px 100%, 10px 100%, 10px 100%;
+	background-attachment: local, local, scroll, scroll;
+`;
+
+const ReportField = styled.div`
+  flex: 2 0 320px;
+  padding: ${(props) => `${props.theme.spaces.s050} ${props.theme.spaces.s050} 0 ${props.theme.spaces.s050}`};
+  margin-right: ${(props) => props.theme.spaces.s100};
+  border: 1px solid ${(props) => props.theme.graphColors.grey020};
 `;
 
 const ReportDate = styled.span`
   font-size: ${(props) => props.theme.fontSizeSm};
-  color: ${(props) => props.theme.graphColors.grey040};
+  color: ${(props) => props.theme.graphColors.grey060};
 `;
-
-const FieldName = styled.h3`
-  font-size: ${(props) => props.theme.fontSizeBase};
-`;
-
 
 const ReportComparisonBlock = (props) => {
-  const { plan, block, action } = props;
+  const { block, action } = props;
   const { t } = useTranslation();
   const { reportField, reportsToCompare } = block;
   const reportIdentifiers = reportsToCompare.map(({ identifier }) => identifier);
@@ -43,35 +58,34 @@ const ReportComparisonBlock = (props) => {
       return dayjs(aDate).diff(dayjs(bDate));
     })
   );
-  console.log('attributes', attributes);
-  console.log('action', action);
-  console.log('plan', plan);
-  // TODO: Display attributes so that they can be nicely compared with each other.
-  // They are not necessarily rich text. You may want to check attribute.__typename or attribute.type.format.
+
   return (
     <ActionSection className="text-content">
       <Row>
         <Col>
-          <SectionHeader>Reports</SectionHeader>
+          <SectionHeader>{block.reportType.name}</SectionHeader>
         </Col>
       </Row>
+      <ReportFieldComparison>
       { attributes && attributes.map((attribute) => (
-        <div key={attribute.id}>
+        <ReportField key={attribute.id}>
           <FieldHeader>
-            <ReportName>{attribute.type.report.name}</ReportName>
             <ReportDate>
-              {attribute.type.report.startDate}
-              &ndash;
-              {attribute.type.report.endDate}
+              { `${t('report')}: ` }
+              { dayjs(attribute.type.report.startDate).format('l') }
+              {` `}&ndash;{` `}
+              { dayjs(attribute.type.report.endDate).format('l') }
             </ReportDate>
+            <ReportName>{attribute.type.report.name}</ReportName>
           </FieldHeader>
           <ActionAttribute
             key={attribute.id}
             attribute={attribute}
             attributeType={undefined}
-            />
-        </div>
+          />
+        </ReportField>
       ))}
+      </ReportFieldComparison>
     </ActionSection>
   );
 };

@@ -263,6 +263,10 @@ fragment ActionMainContentBlocksFragment on ActionMainContentBlock {
   }
   ... on ReportComparisonBlock {
     reportField
+    reportType {
+      id
+      name
+    }
     reportsToCompare {
       identifier
     }

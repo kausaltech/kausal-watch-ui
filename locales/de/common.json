@@ -176,5 +176,6 @@
   "filter-primary-organization-help": "Zeige Maßnahmen in ausgewählter Gemeinde",
   "filter-schedule-help": "Zeige Maßnahmen, die sich über den gewählten Zeitplan erstrecken",
   "additional-filters": "Mehr Optionen",
-  "actions-filter-by": "Zeige"
+  "actions-filter-by": "Zeige",
+  "report": "Bericht"
 }
