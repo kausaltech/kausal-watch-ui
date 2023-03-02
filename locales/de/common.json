@@ -177,5 +177,7 @@
   "filter-schedule-help": "Zeige Maßnahmen, die sich über den gewählten Zeitplan erstrecken",
   "additional-filters": "Mehr Optionen",
   "actions-filter-by": "Zeige",
-  "navigation-home": "Startseite"
+  "navigation-home": "Startseite",
+  "graph-hideTable": "Datentabelle ausblenden",
+  "graph-showTable": " Datentabelle anzeigen"
 }

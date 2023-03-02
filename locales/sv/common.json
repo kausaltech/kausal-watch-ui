@@ -138,5 +138,7 @@
   "organizations": "Organisationer",
   "additional-filters": "Fler alternativ",
   "actions-filter-by": "Filtera",
-  "navigation-home": "Start"
+  "navigation-home": "Start",
+  "graph-showTable": " Visa datatabell",
+  "graph-hideTable": "Dölj datatabell"
 }

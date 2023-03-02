@@ -181,5 +181,7 @@
   "version-switch-to-active": "Uusin versio",
   "versions-list": "Kaikki versiot",
   "version-history": "Versiohistoria",
-  "navigation-home": "Etusivu"
+  "navigation-home": "Etusivu",
+  "graph-hideTable": "Piilota taulukko",
+  "graph-showTable": "Näytä taulukkona"
 }
