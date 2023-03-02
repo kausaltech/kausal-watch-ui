@@ -12,29 +12,30 @@ import {
 import Icon from './Icon';
 
 const Selector = styled(UncontrolledDropdown)`
-  margin-left: ${(props) => props.theme.spaces.s100};
-  padding: 0;
-  border-bottom: 3px solid transparent;
-  text-decoration: none;
-
-  &:hover {
-    background-color:  transparent;
-    text-decoration: none;
-  }
-
-  span {
-    margin-left: ${(props) => props.theme.spaces.s025};
-  }
-
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  a {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    margin: 0 0 ${(props) => props.theme.spaces.s050} ${(props) => props.theme.spaces.s100};
+    color: ${(props) => props.theme.neutralDark};
 
     &:hover {
-      border-bottom: 3px solid ${(props) => props.theme.brandNavColor};
-
-      span {
         text-decoration: none;
+        color: ${(props) => props.theme.neutralDark};
+
+        .highlighter {
+          border-bottom: 5px solid ${(props) => props.theme.brandDark};
+        }
       }
+
+    @media (min-width: ${(props) => props.theme.breakpointMd}) {
+      align-self: center;
+      margin: 0;
     }
+  }
+
+  svg {
+    fill: ${(props) => props.mobile === 'true' ? props.theme.themeColors.dark : props.theme.brandNavColor} !important;
   }
 `;
 
@@ -80,6 +81,8 @@ const languageNames = {
   en: 'English',
   de: 'Deutsch',
   sv: 'Svenska',
+  es: 'Espagnol',
+  da: 'Dansk',
 };
 
 const LanguageSelector = (props) => {

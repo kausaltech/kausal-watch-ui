@@ -15,6 +15,7 @@ import { getIndicatorLinkProps } from '../../common/links';
 import ContentLoader from 'components/common/ContentLoader';
 import IndicatorComparisonSelect from 'components/indicators/IndicatorComparisonSelect';
 import IndicatorNormalizationSelect from 'components/indicators/IndicatorNormalizationSelect';
+import GraphAsTable from 'components/graphs/GraphAsTable';
 import IndicatorGraph from 'components/graphs/IndicatorGraph';
 
 const GET_INDICATOR_GRAPH_DATA = gql`
@@ -618,7 +619,6 @@ function IndicatorVisualisation({ indicatorId }) {
   return (
     <div>
       <IndicatorVizHeader className="mb-2">{title}</IndicatorVizHeader>
-      <span className="visually-hidden">{ t('indicator-graph-not-accessible') }</span>
       { enableIndicatorComparison && comparisonOrgs && comparisonOrgs.length > 0 && (
         <IndicatorComparisonSelect
           handleChange={setCompareTo}
@@ -627,6 +627,12 @@ function IndicatorVisualisation({ indicatorId }) {
           defaultOrg={indicator.organization}
         />
       )}
+      { canBeNormalized &&
+        <IndicatorNormalizationSelect
+          handleChange={setNormalizeByPopulation}
+          currentValue={normalizeByPopulation}
+        />
+      }
       <div aria-hidden="true">
         <IndicatorGraph
           specification={indicatorGraphSpecification}
@@ -637,12 +643,15 @@ function IndicatorVisualisation({ indicatorId }) {
           trendTrace={trendTrace}
         />
       </div>
-      { canBeNormalized &&
-        <IndicatorNormalizationSelect
-          handleChange={setNormalizeByPopulation}
-          currentValue={normalizeByPopulation}
-        />
-      }
+      <GraphAsTable
+        specification={yRange}
+        timeResolution={indicator.timeResolution}
+        data={traces}
+        goalTraces={goalTraces}
+        title={title}
+        language={i18n.language}
+        t={t}
+      />
     </div>
   );
 }

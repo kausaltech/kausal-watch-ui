@@ -138,5 +138,8 @@
   "organizations": "Organisationer",
   "additional-filters": "Fler alternativ",
   "actions-filter-by": "Filtera",
-  "report": "Bericht"
+  "report": "Bericht",
+  "navigation-home": "Start",
+  "graph-showTable": " Visa datatabell",
+  "graph-hideTable": "Dölj datatabell"
 }

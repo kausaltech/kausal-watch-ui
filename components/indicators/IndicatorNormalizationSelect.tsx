@@ -6,7 +6,7 @@ import { useTranslation } from 'common/i18n';
 
 const NormalizerChooser = styled.div`
   display: flex;
-  justify-content: flex-start;
+  justify-content: flex-end;
   gap: ${(props) => props.theme.spaces.s100};
   margin-top: ${(props) => props.theme.spaces.s200};
   padding: ${(props) => props.theme.spaces.s050} ${(props) => props.theme.spaces.s150};

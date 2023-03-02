@@ -181,5 +181,8 @@
   "version-switch-to-active": "Latest version",
   "versions-list": "All versions",
   "version-history": "Version history",
-  "report": "Report"
+  "report": "Report",
+  "navigation-home": "Home",
+  "graph-hideTable": "Hide table",
+  "graph-showTable": "Show data table"
 }

@@ -159,6 +159,10 @@ const NavHighlighter = styled.span`
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     padding: ${(props) => props.theme.spaces.s150} 0 calc(${(props) => props.theme.spaces.s150} - 5px);
   }
+
+  .icon {
+    margin: -0.25rem 0;
+  }
 `;
 
 const StyledDropdownToggle = styled(DropdownToggle)`
@@ -300,7 +304,7 @@ function GlobalNav(props) {
   const [isOpen, toggleOpen] = useState(false);
   const {
     theme, siteTitle, ownerName, navItems, externalItems,
-    fullwidth, sticky,
+    fullwidth, sticky, activeBranch,
   } = props;
 
   const OrgLogo = () => {
@@ -327,6 +331,8 @@ function GlobalNav(props) {
       300,
     );
   }
+
+  const homeLink = theme.settings.homeLink || false;
 
   const siblings = plan.allRelatedPlans.filter((pl) => pl.id !== plan.parent?.id);
   const hideLogoOnMobile = theme.navTitleVisible && siblings.length;
@@ -381,6 +387,19 @@ function GlobalNav(props) {
       >
         <Collapse isOpen={isOpen} navbar>
           <Nav navbar className="me-auto">
+            { homeLink && (
+              <NavItem active={activeBranch === ''}>
+                <NavLink>
+                  <NavigationLink slug={rootLink}>
+                    <NavHighlighter className={`highlighter ${activeBranch === '' ? 'active' : ''}`}>
+                      { homeLink === 'icon'
+                        ? <Icon name="home" width="1.5rem" height="1.5rem" />
+                        : <span>{t('navigation-home')}</span> }
+                    </NavHighlighter>
+                  </NavigationLink>
+                </NavLink>
+              </NavItem>
+            )}
             { navItems && navItems.map((page) => (
               page.children
                 ? (
@@ -446,6 +465,7 @@ GlobalNav.defaultProps = {
 };
 
 GlobalNav.propTypes = {
+  activeBranch: PropTypes.string.isRequired,
   siteTitle: PropTypes.string.isRequired,
   ownerName: PropTypes.string,
   navItems: PropTypes.arrayOf(PropTypes.shape({

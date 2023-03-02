@@ -521,7 +521,11 @@ function SiteFooter(props) {
         <FundingInstruments>
           { otherLogos.map((logo) => (
             <FundingInstrumentContainer key={logo.id}>
-              <a href={logo.link} target="_blank" rel="noreferrer">
+              <a
+                href={logo.link ? logo.link : "#"}
+                target={logo.link ? "_blank" : "_self"}
+                rel={logo.link ? "noreferrer" : ""}
+              >
                 <SVG
                   src={logo.logo}
                   preserveAspectRatio="xMidYMid meet"

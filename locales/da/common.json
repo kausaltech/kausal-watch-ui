@@ -181,5 +181,8 @@
   "version-switch-to-active": "Nyeste version",
   "versions-list": "Alle versioner",
   "version-history": "Versionshistorik",
-  "report": "Rapport"
+  "report": "Rapport",
+  "navigation-home": "Forsiden",
+  "graph-hideTable": "Skjul datatabel",
+  "graph-showTable": "Vis datatabel"
 }
