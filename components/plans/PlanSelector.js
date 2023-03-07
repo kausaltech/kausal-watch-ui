@@ -109,7 +109,13 @@ const PlanSelector = (props) => {
         </StyledDropdownToggle>
         <DropdownMenu>
           { selectablePlans.map((pl) => (
-            <PlanDropdownItem href={pl.viewUrl} key={pl.identifier}>
+            <PlanDropdownItem
+              href={pl.viewUrl}
+              key={pl.identifier}
+              type="button"
+              tabIndex={0}
+              role="menuitem"
+            >
               <PlanChip
                 planImage={pl.image?.rendition.src}
                 planShortName={pl.shortName}

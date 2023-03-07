@@ -15,8 +15,11 @@ const RelatedActionItem = styled(Col)`
 `;
 
 const ActionRelatedActionsBlock = (props) => {
-  const { relatedActions } = props;
+  const { relatedActions, plan } = props;
   const { t } = useTranslation();
+
+  // Display the plan name only if there are related actions from other plans
+  const hasRelatedActionsFromOtherPlans = relatedActions.some((relAction) => relAction.plan.id !== plan.id);
 
   return (
     <div>
@@ -36,7 +39,7 @@ const ActionRelatedActionsBlock = (props) => {
               >
                 <ActionCard
                   action={relAction}
-                  showPlan={true}
+                  showPlan={hasRelatedActionsFromOtherPlans}
                 />
               </RelatedActionItem>
             ))}

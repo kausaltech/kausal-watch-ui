@@ -106,6 +106,10 @@ function getSelectStyles<Option extends SelectDropdownOption>(
       padding: `0 var(--bs-select-padding-y${suffix})`,
       whiteSpace: "normal",
     }),
+    placeholder: (provided, state) => ({
+      ...provided,
+      color: theme.graphColors.grey070,
+    }),
   };
   return styles;
 }
@@ -210,6 +214,7 @@ function SelectDropdown<Option extends SelectDropdownOption, IsMulti extends boo
         </Label>
       )}
       <Select<SelectDropdownOption, IsMulti>
+        inputId={id}
         isMulti={isMulti}
         components={getCustomComponents(isMulti)}
         theme={getSelectTheme}

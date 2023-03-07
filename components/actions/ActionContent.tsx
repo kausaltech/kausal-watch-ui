@@ -422,6 +422,7 @@ function ActionContentBlock(props: ActionContentBlockProps) {
       if (!action.relatedActions.length) return null;
       return (
         <ActionRelatedActionsBlock
+          plan={plan}
           relatedActions = {action.relatedActions}
         />
       );

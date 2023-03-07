@@ -139,10 +139,10 @@ function ActionCardList({ t, actions, plan, displayHeader }) {
       {!embed.active &&
         <Col xs="12" className="mt-5 mb-5">
           <ActionListLink>
-            <Button outline color="primary" tag="a">
+            <Button color="primary" tag="a">
             { t('see-all-actions', getActionTermContext(plan)) }
             {' '}
-            <Icon name="arrowRight" color="black" />
+            <Icon name="arrowRight" />
           </Button>
         </ActionListLink>
       </Col>

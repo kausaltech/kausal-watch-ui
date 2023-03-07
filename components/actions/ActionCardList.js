@@ -16,7 +16,7 @@ const ActionGroupHeader = styled.h2`
   margin-bottom: ${(props) => props.theme.spaces.s200};
 
   .category-identifier, .category-crumb {
-    color: ${(props) => props.theme.graphColors.grey050};
+    color: ${(props) => props.theme.graphColors.grey060};
   }
 
   .category-crumb {

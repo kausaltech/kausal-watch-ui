@@ -17,6 +17,10 @@ const Input = styled(BSInput)`
   border-radius: ${(props) => props.theme.inputBorderRadius};
   border-width: ${(props) => props.theme.inputBorderWidth};
   border-color: ${(props) => props.theme.themeColors.dark};
+
+  ::placeholder {
+    color: ${(props) => props.theme.graphColors.grey070};
+  }
 `;
 
 

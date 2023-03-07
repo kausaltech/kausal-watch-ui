@@ -107,7 +107,7 @@ const CardHeader = styled.h3`
 `;
 
 const Identifier = styled.span`
-  color: ${(props) => props.theme.graphColors.grey050};
+  color: ${(props) => props.theme.graphColors.grey070};
 `;
 
 export type CategoryListBlockCategory = {
