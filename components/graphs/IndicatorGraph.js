@@ -183,7 +183,9 @@ function getSignificantDigitCount(n) {
   return Math.floor(Math.log(val) / log10) + 1; // get number of digits
 }
 
-const createTraces = (traces, unit, plotColors, styleCount, categoryCount, hasTimeDimension) => {
+const createTraces = (
+  traces, unit, plotColors, styleCount, categoryCount, hasTimeDimension, timeResolution
+  ) => {
   // Figure out what we need to draw depending on dataset
   // and define trace and layout setup accordingly
   // First trace is always main/total
@@ -246,7 +248,8 @@ const createTraces = (traces, unit, plotColors, styleCount, categoryCount, hasTi
       };
     }
     if (modTrace.type === 'scatter') modTrace.mode = (trace.x.length > 30) ? 'lines' : 'lines+markers';
-    modTrace.hovertemplate = `(%{x|%x})<br> ${trace.name}: %{y:f} ${unit}`;
+    const timeFormat = timeResolution === 'YEAR' ? '%Y' : '%x';
+    modTrace.hovertemplate = `(%{x|${timeFormat}})<br> ${trace.name}: %{y:f} ${unit}`;
     modTrace.hoverinfo = 'none';
     modTrace.hoverlabel = {
       bgcolor: plotColors.mainScale[idx % numColors],
@@ -366,7 +369,9 @@ function IndicatorGraph(props) {
     // Shift to blue.
     plotColors.mainScale.shift();
   }
-  mainTraces = createTraces(traces, yRange.unit, plotColors, styleCount, categoryCount, hasTimeDimension);
+  mainTraces = createTraces(
+    traces, yRange.unit, plotColors, styleCount, categoryCount, hasTimeDimension, timeResolution
+    );
 
   if (subplotsNeeded) {
     const categoryDimensions = specification.dimensions.slice(0, categoryCount);
