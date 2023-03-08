@@ -12,7 +12,7 @@ const Banner = styled.div`
   'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif,
   helvetica neue, helvetica, Ubuntu, roboto, noto, segoe ui, arial, sans-serif;
   font-size: 12px;
-  background-color: ${(props) => props.theme.themeColors.black};
+  background-color: #000000;
   color: silver;
   @media print {
     display: none;

@@ -127,7 +127,7 @@ function IndicatorValueSummary(props) {
   }
 
   const nextGoal = goals.find((goal) => dayjs(goal.date).isSameOrAfter(now));
-  let goalDisplay = <h6>{ t('indicator-time-no-goals') }</h6>;
+  let goalDisplay = undefined;
 
   if (nextGoal) {
     const nextGoalDate = dayjs(nextGoal.date).format(timeFormat);
@@ -145,7 +145,7 @@ function IndicatorValueSummary(props) {
   }
 
   // Find the next upcoming goal
-  let differenceDisplay = <h6>-</h6>;
+  let differenceDisplay = undefined;
   if (values.length > 0 && nextGoal) {
     const difference = nextGoal.value - values[values.length - 1].value;
     const timeToGoal = `${dayjs(nextGoal.date).diff(now, 'years', true).toFixed(0)} ${' '} ${t('indicator-resolution-years')}`;

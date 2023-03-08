@@ -64,18 +64,20 @@ function getTraces(dimensions, cube, names, hasTimeDimension) {
 }
 
 const createLayout = (
+  theme,
   timeResolution,
   yRange,
   plotColors,
   config,
   hasTimeDimension,
-  subplotsNeeded
+  subplotsNeeded,
 ) => {
   const fontFamily = '-apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Ubuntu, roboto, noto, arial, sans-serif';
   const hasCategories = !hasTimeDimension;
 
   const yaxes = {
     yaxis: {
+      automargin: true,
       hoverformat: `${config.maxDigits === 0 ? '' : '.'}${config.maxDigits}r`,
       separatethousands: true,
       tickformat: 'f',
@@ -113,6 +115,7 @@ const createLayout = (
   const xaxes = hasCategories
     ? {
       xaxis: {
+        automargin: true,
         type: 'category',
         tickangle: subplotsNeeded ? 'auto' : 90,
         tickfont: {
@@ -123,6 +126,7 @@ const createLayout = (
     }
     : {
       xaxis: {
+        automargin: true,
         showgrid: false,
         showline: false,
         fixedrange: false,
@@ -145,14 +149,16 @@ const createLayout = (
     title: null,
     margin: {
       t: 25,
-      r: 50,
-      b: 80 + (hasCategories ? CATEGORY_XAXIS_LABEL_EXTRA_MARGIN : 0),
-      l: 75,
+      r: 25,
+      b: 25,
+      l: 25,
       pad: 4,
       autoexpand: true,
     },
     ...yaxes,
     ...xaxes,
+    paper_bgcolor: theme.themeColors.white,
+    plot_bgcolor: theme.themeColors.white,
     barmode: hasCategories && 'group',
     autosize: true,
     colorway: plotColors.mainScale,
@@ -365,7 +371,10 @@ function IndicatorGraph(props) {
   if (subplotsNeeded) {
     const categoryDimensions = specification.dimensions.slice(0, categoryCount);
     const organizationDimension = specification.dimensions[categoryCount];
-    const combinationCount = categoryDimensions.reduce(((p, c) => (p * c.categories.length)), 1)
+    // Assume there is always type='aggregate' that doesn't get multiplied
+    const combinationCount =
+      categoryDimensions.reduce(((p, c) => (p * (c.categories.length-1))), 1)
+      + categoryDimensions.length;
     const subplotRowCount = Math.ceil(combinationCount/2);
     const comparisonCount = hasTimeDimension ? 2 : 1;
     const subplotHeaderTitles = mainTraces.traces.filter((_,i) => (
@@ -435,6 +444,7 @@ function IndicatorGraph(props) {
   }
 
   const layout = createLayout(
+    theme,
     timeResolution,
     yRange,
     plotColors,

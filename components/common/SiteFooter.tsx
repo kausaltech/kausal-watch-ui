@@ -387,11 +387,7 @@ function SiteFooter(props) {
                   </a>
                 )
                 : (
-                  <Link href="/">
-                    <a>
-                      <OrgLogo aria-hidden="true" className="footer-org-logo" />
-                    </a>
-                  </Link>
+                  <OrgLogo aria-hidden="true" className="footer-org-logo" />
                 )}
             </Logo>
             { !theme.settings.footerLogoOnly
