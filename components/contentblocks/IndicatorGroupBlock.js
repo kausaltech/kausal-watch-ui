@@ -3,6 +3,9 @@ import PropTypes from 'prop-types';
 import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
 import { readableColor } from 'polished';
+import Icon from 'components/common/Icon';
+import { useTranslation } from 'common/i18n';
+import { IndicatorLink } from 'common/links';
 import IndicatorHighlightCard from 'components/indicators/IndicatorHighlightCard';
 import IndicatorVisualisation from 'components/indicators/IndicatorVisualisation';
 
@@ -12,6 +15,23 @@ const IndicatorGraphSection = styled.div`
   color: ${
     (props) => readableColor(props.theme.neutralLight, props.theme.themeColors.black, props.theme.themeColors.white)
     };
+
+  h2 {
+    text-align: center;
+    margin-bottom: ${(props) => props.theme.spaces.s300};
+    color: ${
+    (props) => readableColor(props.theme.neutralLight, props.theme.themeColors.black, props.theme.themeColors.white)
+    };
+  }
+`;
+
+const IndicatorContainer = styled.div`
+  h3 {
+    font-size: ${(props) => props.theme.fontSizeBase};
+    color: ${
+      (props) => readableColor(props.theme.neutralLight, props.theme.themeColors.black, props.theme.themeColors.white)
+      };
+  }
 `;
 
 const IndicatorItem = (props) => {
@@ -19,9 +39,19 @@ const IndicatorItem = (props) => {
   if (display === 'graph') return (
     <Col
       className="mb-5"
-      lg={{ size: 8, offset: 2 }}
+      lg={{ size: 8 }}
     >
-      <IndicatorVisualisation indicatorId={indicator.id} />
+      <IndicatorContainer>
+        <IndicatorLink id={indicator.id}>
+          <a>
+            <h3>
+              {indicator.name}
+              <Icon name="arrowRight" color="" />
+            </h3>
+          </a>
+        </IndicatorLink>
+        <IndicatorVisualisation indicatorId={indicator.id} />
+      </IndicatorContainer>
     </Col>
   );
   return (
@@ -37,12 +67,15 @@ const IndicatorItem = (props) => {
   );
 };
 
+// TODO: Format as list for a11y
 const IndicatorGroupBlock = (props) => {
   const { indicators } = props;
+  const { t } = useTranslation();
   return (
     <IndicatorGraphSection>
       <Container>
-        <Row>
+        <h2>{t('indicators')}</h2>
+        <Row className="justify-content-center">
           { indicators.map((item) => (
             <IndicatorItem
               indicator={item.indicator}

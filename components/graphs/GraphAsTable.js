@@ -11,15 +11,17 @@ const CollapsibleTable = styled.div`
 `;
 
 const Trigger = styled.div`
-  text-align: right;
+  background-color: ${(props) => props.theme.graphColors.grey005};
+  text-align: center;
 `;
 
 const TableContainer = styled.div`
-  padding: ${(props) => props.theme.spaces.s100};
-  background-color: ${(props) => props.theme.themeColors.white};
+  padding: ${(props) => `${props.theme.spaces.s200} ${props.theme.spaces.s050} ${props.theme.spaces.s100}`};
+  background-color: ${(props) => props.theme.graphColors.grey005};
 
   table {
     font-family: ${(props) => props.theme.fontFamilyContent};
+    font-size: ${(props) => props.theme.fontSizeSm};
     line-height: 1.25;
     background-color: ${(props) => props.theme.themeColors.white};
     width: auto;
@@ -28,6 +30,7 @@ const TableContainer = styled.div`
 
     > caption {
       text-align: center;
+      color: ${(props) => props.theme.themeColors.black};
     }
 
     td, th {
@@ -115,6 +118,7 @@ function GraphAsTable(props) {
       <Trigger>
         <TriggerButton
           color="link"
+          size="sm"
           onClick={toggle}
         >
           {isOpen ? t('graph-hideTable') : t('graph-showTable')}
@@ -138,7 +142,7 @@ function GraphAsTable(props) {
               <tr>
                 <th></th>
                 {tableCategoryHeaders.map((header, i) => (
-                  <th key={i} colspan={header.count} scope="colgroup">
+                  <th key={i} colSpan={header.count} scope="colgroup">
                     {header.name}
                   </th>
                 ))}

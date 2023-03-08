@@ -131,6 +131,20 @@ const Section = styled.section`
   }
 `;
 
+const GraphContainer = styled.div`
+  border: 1px solid ${(props) => props.theme.themeColors.light};
+  padding: ${(props) => props.theme.spaces.s100};
+
+  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    padding: ${(props) => props.theme.spaces.s200};
+  }
+
+  h2 {
+    font-size: ${(props) => props.theme.fontSizeBase};
+    text-align: center;
+  }
+`;
+
 function IndicatorDetails({ id }) {
   const plan = usePlan();
   const { t } = useTranslation();
@@ -194,9 +208,12 @@ function IndicatorDetails({ id }) {
         && (
           <Row>
             <Col className="mb-5">
-              <ErrorBoundary>
-                <IndicatorVisualisation indicatorId={indicator.id} />
-              </ErrorBoundary>
+              <GraphContainer>
+                <ErrorBoundary>
+                  <h2>{indicator.name}</h2>
+                  <IndicatorVisualisation indicatorId={indicator.id} />
+                </ErrorBoundary>
+              </GraphContainer>
             </Col>
           </Row>
         )}

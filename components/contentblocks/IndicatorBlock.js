@@ -16,6 +16,7 @@ const IndicatorBlock = (props) => {
       <Container>
         <Row>
           <Col>
+            <h2>{ indicator.id }</h2>
             <IndicatorVisualisation indicatorId={indicator.id} />
           </Col>
         </Row>

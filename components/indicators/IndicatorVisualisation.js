@@ -10,8 +10,6 @@ import { useTranslation } from 'common/i18n';
 import { captureMessage } from 'common/sentry';
 import { capitalizeFirstLetter } from 'common/utils';
 import PlanContext from 'context/plan';
-import EmbedContext from 'context/embed';
-import { getIndicatorLinkProps } from '../../common/links';
 import ContentLoader from 'components/common/ContentLoader';
 import IndicatorComparisonSelect from 'components/indicators/IndicatorComparisonSelect';
 import IndicatorNormalizationSelect from 'components/indicators/IndicatorNormalizationSelect';
@@ -400,6 +398,8 @@ function getIndicatorGraphSpecification(indicator, compareOrganization, t, norma
 
   specification.axes = axes;
   specification.dimensions = dimensions;
+  specification.name = indicator.name;
+
   return specification;
 }
 
@@ -471,13 +471,12 @@ function normalizeValuesByNormalizer(values, normalizerId) {
 }
 
 const isServer = typeof window === "undefined";
-function IndicatorVisualisation({ indicatorId }) {
+function IndicatorVisualisation({ indicatorId, indicatorLink }) {
   if (isServer) {
     return null;
   }
 
   const plan = useContext(PlanContext);
-  const embed = useContext(EmbedContext);
   const enableIndicatorComparison = plan.features.enableIndicatorComparison === true;
   const { t, i18n } = useTranslation();
   const [compareTo, setCompareTo] = useState(undefined);
@@ -611,14 +610,15 @@ function IndicatorVisualisation({ indicatorId }) {
     .map((common) => common.organization)
     .filter((org) => org.id !== indicator.organization.id);
 
-  const title = (embed.active ?
-    <a href={getIndicatorLinkProps(indicator.id).href} target="_blank" rel="noreferrer">{plotTitle}</a>
-    : plotTitle
-  );
-
   return (
     <div>
-      <IndicatorVizHeader className="mb-2">{title}</IndicatorVizHeader>
+      { indicatorLink && (
+        <a href={indicatorLink} target="_blank" rel="noreferrer">
+          <h2>
+            {plotTitle}
+          </h2>
+        </a>
+      )}
       { enableIndicatorComparison && comparisonOrgs && comparisonOrgs.length > 0 && (
         <IndicatorComparisonSelect
           handleChange={setCompareTo}
@@ -641,6 +641,7 @@ function IndicatorVisualisation({ indicatorId }) {
           traces={traces}
           goalTraces={goalTraces}
           trendTrace={trendTrace}
+          title={plotTitle}
         />
       </div>
       <GraphAsTable
@@ -648,7 +649,7 @@ function IndicatorVisualisation({ indicatorId }) {
         timeResolution={indicator.timeResolution}
         data={traces}
         goalTraces={goalTraces}
-        title={title}
+        title={plotTitle}
         language={i18n.language}
         t={t}
       />
@@ -656,8 +657,13 @@ function IndicatorVisualisation({ indicatorId }) {
   );
 }
 
+IndicatorVisualisation.defaultProps = {
+  indicatorLink: undefined,
+};
+
 IndicatorVisualisation.propTypes = {
   indicatorId: PropTypes.string.isRequired,
+  indicatorLink: PropTypes.string,
 };
 
 export default IndicatorVisualisation;

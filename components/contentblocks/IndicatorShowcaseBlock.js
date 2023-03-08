@@ -70,7 +70,10 @@ const IndicatorShowcaseBlock = (props) => {
               note={indicator.name}
               animate={inView}
             />) : (
-            <IndicatorVisualisation indicatorId={indicator.id} />
+            <>
+              <h2>{indicator.name}</h2>
+              <IndicatorVisualisation indicatorId={indicator.id} />
+            </>
             )}
             <span ref={ref} />
           </Col>
