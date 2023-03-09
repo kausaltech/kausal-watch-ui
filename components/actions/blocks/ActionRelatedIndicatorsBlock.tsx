@@ -48,6 +48,23 @@ const Badge = styled(BaseBadge)`
 
 `;
 
+const IndicatorActionsList = styled.ul`
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  &[title]::before {
+    content: attr(title);
+    display: inline-block;
+    margin-right: ${(props) => props.theme.spaces.s100};
+    font-size: ${(props) => props.theme.fontSizeSm};
+  }
+`;
+
+const IndicatorActionListItem = styled.li`
+  display: inline-block;
+`;
+
 function ActionIndicator(props) {
   const { t, relatedIndicator, actionId } = props;
   const { indicator } = relatedIndicator;
@@ -71,18 +88,17 @@ function ActionIndicator(props) {
       </CardBody>
       {actions.length > 0 && (
         <CardFooter>
-            <span>
-              {t('indicator-also-for-actions')}
-              :
-              {' '}
-              {actions.map((action) => (
-                <ActionLink key={action.identifier} action={action}>
-                  <a className="me-2">
-                    <Badge>{action.identifier}</Badge>
-                  </a>
-                </ActionLink>
-              ))}
-            </span>
+          <IndicatorActionsList title={t('indicator-also-for-actions')}>
+          {actions.map((action) => (
+            <IndicatorActionListItem key={action.identifier}>
+              <ActionLink action={action}>
+                <a className="me-2">
+                  <Badge>{action.identifier}</Badge>
+                </a>
+              </ActionLink>
+            </IndicatorActionListItem>
+          ))}
+          </IndicatorActionsList>
         </CardFooter>
       )}
     </Card>
