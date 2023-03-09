@@ -184,5 +184,6 @@
   "report": "Report",
   "navigation-home": "Home",
   "graph-hideTable": "Hide table",
-  "graph-showTable": "Show data table"
+  "graph-showTable": "Show data table",
+  "definition": "Definition"
 }
