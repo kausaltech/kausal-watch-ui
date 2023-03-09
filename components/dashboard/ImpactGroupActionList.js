@@ -40,10 +40,10 @@ const ImpactGroupActionList = (props) => {
       <Table hover>
         <thead>
           <tr>
-            <th>{t('action-num')}</th>
-            <th>{t('action-name-title', getActionTermContext(plan))}</th>
-            <th>{t('action-impact')}</th>
-            <th>{t('action-progress')}</th>
+            <th scope="col">{t('action-num')}</th>
+            <th scope="col">{t('action-name-title', getActionTermContext(plan))}</th>
+            <th scope="col">{t('action-impact')}</th>
+            <th scope="col">{t('action-progress')}</th>
           </tr>
         </thead>
         <tbody>

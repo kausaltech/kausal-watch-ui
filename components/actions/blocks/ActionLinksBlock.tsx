@@ -6,7 +6,7 @@ const ActionLinksBlock = (props) => {
 
   return (
     <>
-      <h4>{t('read-more')}</h4>
+      <h3>{t('read-more')}</h3>
       <ul>
         {links.map((actionLink) => (
           <li key={actionLink.id}>

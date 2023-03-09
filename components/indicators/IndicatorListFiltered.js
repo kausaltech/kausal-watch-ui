@@ -150,7 +150,7 @@ const IndentableTableHeader = (props) => {
   // const theme = useTheme();
   const { onClick, colSpan, indent, sectionHeader, numeric, firstCol, children } = props;
   return (
-    <th onClick={onClick} colSpan={colSpan}>
+    <th scope="col" onClick={onClick} colSpan={colSpan}>
       <IndentableCellContentWrapper
         indent={indent}
         sectionHeader={sectionHeader}

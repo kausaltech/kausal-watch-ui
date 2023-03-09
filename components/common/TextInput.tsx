@@ -42,7 +42,7 @@ const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(function Te
   return (
     <FormGroup>
       { label && (
-        <Label for={id}>
+        <Label htmlFor={id}>
           { label }
         </Label>
       )}

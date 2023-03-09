@@ -283,9 +283,10 @@ function SearchView(props) {
     } else {
       value = target.value;
     }
+    // We use form- as a prefix to avoid name collisions with other components
     setUserSearch({
       ...userSearch,
-      [name]: value,
+      [name.replace('form-','')]: value,
     });
   };
   const handleSubmit = (event) => {
@@ -304,7 +305,7 @@ function SearchView(props) {
                 <form>
                   <TextInput
                     type="search"
-                    id="q"
+                    id="form-q"
                     name="q"
                     placeholder={t('search-from-plans')}
                     value={userSearch?.q}
@@ -314,7 +315,7 @@ function SearchView(props) {
                   <FormGroup switch>
                     <Input
                       type="switch"
-                      id="other-plans-only"
+                      id="form-other-plans-only"
                       name="onlyOtherPlans"
                       checked={userSearch?.onlyOtherPlans}
                       onChange={handleValueChange}
