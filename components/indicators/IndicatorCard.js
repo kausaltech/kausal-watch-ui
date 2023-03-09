@@ -47,11 +47,11 @@ const Indicator = styled(Card)`
       case 'action':
         return props.theme.actionColorFg;
       case 'operational':
-        return props.theme.operationalIndicatorColorFg;
+        return props.theme.themeColors.white;
       case 'tactical':
-        return props.theme.tacticalIndicatorColorFg;
+        return props.theme.themeColors.black;
       case 'strategic':
-        return props.theme.strategicIndicatorColorFg;
+        return props.theme.themeColors.black;
       default:
         return props.theme.themeColors.black;
     }
@@ -61,11 +61,11 @@ const Indicator = styled(Card)`
       case 'action':
         return props.theme.actionColor;
       case 'operational':
-        return props.theme.operationalIndicatorColor;
+        return props.theme.graphColors.blue070;
       case 'tactical':
-        return props.theme.tacticalIndicatorColor;
+        return props.theme.graphColors.blue030;
       case 'strategic':
-        return props.theme.strategicIndicatorColor;
+        return props.theme.graphColors.blue010;
       default:
         return '#cccccc';
     }
