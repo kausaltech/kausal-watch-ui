@@ -76,12 +76,14 @@ const FeedbackForm = ({ planIdentifier, actionId, heading, description, prompt, 
       )}
       { (!sent || mutationError) && (
         <div className="mt-4">
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form onSubmit={handleSubmit(onSubmit)} autoComplete='true'>
             <Controller
               render={({ field }) => (
                 <TextInput
-                  label={t('name')}
                   {...field}
+                  id="name-field"
+                  autoComplete='name'
+                  label={t('name')}
                 />
               )}
               name="name"
@@ -93,6 +95,8 @@ const FeedbackForm = ({ planIdentifier, actionId, heading, description, prompt, 
               render={({ field }) => (
                 <TextInput
                   {...field}
+                  id="email-field"
+                  autoComplete='email'
                   label={`${t('email')} (${t('required-field')})`}
                   invalid={errors.email?.type === 'required'}
                   formFeedback={errors.email && t('error-email-format')}
@@ -113,6 +117,7 @@ const FeedbackForm = ({ planIdentifier, actionId, heading, description, prompt, 
               render={({ field }) => (
                 <TextInput
                   {...field}
+                  id="comment-field"
                   label={`${t('feedback')} (${t('required-field')})`}
                   invalid={errors.comment?.type === 'required'}
                   type="textarea"
