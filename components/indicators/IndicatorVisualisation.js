@@ -317,7 +317,10 @@ const generateGoalTraces = (indicator, planScenarios, i18n) => {
     const trace = {
       scenario: scenario.config,
       y: goals.map((item) => item.value),
-      x: goals.map((item) => item.date),
+      x: goals.map((item) => {
+        const newDate = indicator.timeResolution === 'YEAR' ? `${item.date.split('-')[0]}` : item.date;
+        return newDate;
+      }),
       name: scenario.name,
     };
 
