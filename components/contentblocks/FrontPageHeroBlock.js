@@ -5,6 +5,7 @@ import HeroFullImage from 'components/home/HeroFullImage';
 const FrontPageHeroBlock = (props) => {
   const {
     layout, imageSrc, imageAlign, heading, lead,
+    altText, imageCredit,
   } = props;
   return (
     <HeroFullImage
@@ -13,6 +14,8 @@ const FrontPageHeroBlock = (props) => {
       title={heading}
       lead={lead}
       layout={layout}
+      imageCredit={imageCredit}
+      altText={altText}
     />
   );
 };
@@ -22,6 +25,8 @@ FrontPageHeroBlock.defaultProps = {
   imageSrc: '',
   imageAlign: 'left',
   lead: '',
+  altText: '',
+  imageCredit: '',
 };
 
 FrontPageHeroBlock.propTypes = {
@@ -30,6 +35,8 @@ FrontPageHeroBlock.propTypes = {
   imageAlign: PropTypes.string,
   heading: PropTypes.string.isRequired,
   lead: PropTypes.string,
+  altText: PropTypes.string,
+  imageCredit: PropTypes.string,
 };
 
 export default FrontPageHeroBlock;

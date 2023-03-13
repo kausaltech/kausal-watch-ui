@@ -293,7 +293,7 @@ function ActionHero(props) {
           </Container>
           { imageCredit
             && (
-            <ImageCredit>
+            <ImageCredit aria-hidden="true">
               {`${t('image-credit')}: ${imageCredit}`}
             </ImageCredit>
             )}

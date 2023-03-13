@@ -710,9 +710,9 @@ function ActionContent(props: ActionContentProps) {
         identifier={action.identifier}
         name={action.name}
         imageUrl={actionImage?.large.src}
-        imageCredit={action?.image?.imageCredit}
-        imageTitle={action?.image?.title}
-        altText={action?.image?.altText}
+        imageCredit={actionImage?.imageCredit}
+        imageTitle={actionImage?.title}
+        altText={actionImage?.altText}
         imageAlign={getBgImageAlignment(actionImage)}
         hideActionIdentifiers={plan.hideActionIdentifiers}
         primaryOrg={action.primaryOrg}

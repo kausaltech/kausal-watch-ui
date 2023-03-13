@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
+import { useTranslation } from 'common/i18n';
 import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
 
@@ -34,13 +34,33 @@ const ContentHeader = styled.header`
   }
 `;
 
+const ImageCredit = styled.span`
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0.25rem 0.5rem;
+  background-color: rgba(255,255,255,0.66);
+  color: #000000;
+  font-size: ${(props) => props.theme.fontSizeSm};
+  font-family: ${(props) => props.theme.fontFamilyTiny};
+
+  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    top: inherit;
+    bottom: 0;
+  }
+`;
+
 const ContentPageHeaderBlock = (props) => {
   const {
     title,
     lead,
     headerImage,
-    imageAlign
+    imageAlign,
+    altText,
+    imageCredit,
   } = props;
+
+  const { t } = useTranslation();
 
   return (
     <>
@@ -48,6 +68,12 @@ const ContentPageHeaderBlock = (props) => {
       <HeaderBg>
         { headerImage && (
           <HeaderImage image={headerImage} imageAlign={imageAlign} />
+        )}
+        { imageCredit
+        && (
+        <ImageCredit aria-hidden="true">
+          {`${t('image-credit')}: ${imageCredit}`}
+        </ImageCredit>
         )}
       </HeaderBg>
       <HeaderBg>

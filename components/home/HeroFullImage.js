@@ -93,9 +93,25 @@ const MainCard = styled.div`
   }
 `;
 
+const ImageCredit = styled.span`
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0.25rem 0.5rem;
+  background-color: rgba(255,255,255,0.66);
+  font-size: ${(props) => props.theme.fontSizeSm};
+  font-family: ${(props) => props.theme.fontFamilyTiny};
+
+  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    top: inherit;
+    bottom: 0;
+  }
+`;
+
 const HeroFullImage = (props) => {
   const {
-    bgImage, imageAlign, title, lead
+    bgImage, imageAlign, title, lead,
+    altText, imageCredit,
   } = props;
 
   const theme = useTheme();
@@ -106,6 +122,11 @@ const HeroFullImage = (props) => {
         image={bgImage}
         imageAlign={imageAlign}
       />
+      {imageCredit && (
+        <ImageCredit aria-hidden="true">
+          {imageCredit}
+        </ImageCredit>
+      )}
       <Container>
       <MainCard
         alignment={theme.settings?.frontHero ? theme.settings.frontHero.cardPlacement : 'left'}
@@ -121,6 +142,8 @@ const HeroFullImage = (props) => {
 HeroFullImage.defaultProps = {
   imageAlign: 'left',
   lead: '',
+  altText: '',
+  imageCredit: '',
 };
 
 HeroFullImage.propTypes = {
@@ -128,6 +151,8 @@ HeroFullImage.propTypes = {
   imageAlign: PropTypes.string,
   title: PropTypes.string.isRequired,
   lead: PropTypes.string,
+  altText: PropTypes.string,
+  imageCredit: PropTypes.string,
 };
 
 export default HeroFullImage;

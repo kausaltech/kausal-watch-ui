@@ -71,6 +71,21 @@ const Identifier = styled.span`
   color: ${(props) => props.theme.graphColors.grey050};
 `;
 
+const ImageCredit = styled.span`
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0.25rem 0.5rem;
+  background-color: rgba(255,255,255,0.66);
+  font-size: ${(props) => props.theme.fontSizeSm};
+  font-family: ${(props) => props.theme.fontFamilyTiny};
+
+  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    top: inherit;
+    bottom: 0;
+  }
+`;
+
 const HeaderContent = styled.div`
   position: relative;
   max-width: ${(props) => props.theme.breakpointMd};
@@ -179,8 +194,9 @@ function CategoryPageHeaderBlock(props) {
       <CategoryHeaderImage
         bg={color}
         imageAlign={imageAlign}
-        image={headerImage}
-      />
+        image={headerImage?.large?.src}
+      >
+      </CategoryHeaderImage>
       <Container className="header-container">
         <Row>
           <Col lg={{ size: 10, offset: 1 }} xl={{ size: 12, offset: 0 }}>
@@ -224,6 +240,12 @@ function CategoryPageHeaderBlock(props) {
           </Col>
         </Row>
       </Container>
+      { headerImage?.imageCredit
+        && (
+        <ImageCredit aria-hidden="true">
+          {`${headerImage?.imageCredit}`}
+        </ImageCredit>
+      )}
     </CategoryHeader>
   );
 }

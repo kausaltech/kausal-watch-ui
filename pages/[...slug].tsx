@@ -154,7 +154,6 @@ type PageHeaderBlockProps = {
 }
 const PageHeaderBlock = (props: PageHeaderBlockProps) => {
   const { color, page } = props;
-  const theme = useTheme();
 
   switch (page.__typename) {
     case 'CategoryPage': {
@@ -177,7 +176,7 @@ const PageHeaderBlock = (props: PageHeaderBlockProps) => {
           identifier={!category.type.hideCategoryIdentifiers ? category.identifier : undefined}
           lead={category.leadParagraph}
           iconImage={iconImage}
-          headerImage={headerImage?.large?.src}
+          headerImage={headerImage}
           imageAlign={getBgImageAlignment(headerImage)}
           parentTitle={parentTitle}
           parentUrl={parentUrl}
@@ -196,6 +195,8 @@ const PageHeaderBlock = (props: PageHeaderBlockProps) => {
           lead={page.leadParagraph}
           headerImage={headerImage?.large.src}
           imageAlign={getBgImageAlignment(headerImage)}
+          altText={headerImage?.altText}
+          imageCredit={headerImage?.imageCredit}
         />
       );
     }

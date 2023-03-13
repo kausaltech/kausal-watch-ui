@@ -336,6 +336,8 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
           imageAlign={getBgImageAlignment(image)}
           heading={heading}
           lead={lead}
+          altText={image?.altText}
+          imageCredit={image?.imageCredit}
         />
       );
     }
