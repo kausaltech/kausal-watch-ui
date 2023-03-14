@@ -71,7 +71,7 @@
     "sass": "^1.51.0",
     "sentry-testkit": "^3.3.7",
     "styled-components": "^5.3.5",
-    "webpack": "^5.72.0"
+    "webpack": "^5.76.0"
   },
   "license": "AGPL-3.0-or-later",
   "main": "next.config.js",
