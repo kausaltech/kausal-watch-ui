@@ -19,7 +19,7 @@ const StyledFooter = styled.footer`
   min-height: 14em;
   clear: both;
   background-color: ${(props) => props.theme.footerBackgroundColor};
-  color: ${(props) => props.theme.footerColor};
+  color: ${(props) => transparentize(0.2, props.theme.footerColor)}};
   padding: ${(props) => props.theme.spaces.s400} 0;
 
   a {
@@ -115,35 +115,34 @@ const FooterNav = styled.nav`
 
 const FooterNavItems = styled.ul`
   display: flex;
+  justify-content: flex-start;
+  gap: ${(props) => props.theme.spaces.s300};
   flex-wrap: wrap;
   list-style: none;
   padding: 0;
+  margin-bottom: ${(props) => props.theme.spaces.s300};
 
   @media (max-width: ${(props) => props.theme.breakpointMd}) {
+    gap: ${(props) => props.theme.spaces.s300} ${(props) => props.theme.spaces.s200};
     justify-content: center;
     width: 100%;
   }
 `;
 
 const FooterNavItem = styled.li`
-  max-width: 240px;
-  padding-right: ${(props) => props.theme.spaces.s300};
-  margin-bottom: ${(props) => props.theme.spaces.s300};
+  flex: 1 0 240px;
   font-size: ${(props) => props.theme.fontSizeBase};
- font-weight: ${(props) => props.theme.fontWeightBold};
+  font-weight: ${(props) => props.theme.fontWeightBold};
 
-  @media (max-width: ${(props) => props.theme.breakpointLg}) {
-    width: 25%;
+  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    flex: 1 0 auto;
+    max-width: 240px;
   }
 
-  @media (max-width: ${(props) => props.theme.breakpointMd}) {
-    max-width: 100%;
-    width: 50%;
-    padding: 0 ${(props) => props.theme.spaces.s100};
-
-    &:last-child:nth-child(odd) {
-      margin-right: 50%;
-    }
+  .parent-item {
+    &:after {
+      content: '';
+    };
   }
 `;
 
@@ -407,7 +406,16 @@ function SiteFooter(props) {
               <FooterNavItem key={page.id}>
                 { !page.children && page.slug && (
                 <NavigationLink slug={page.slug} className="parent-item">
-                  {page.name}
+                  <>
+                   { theme?.navLinkIcons && (
+                    <Icon
+                      name="angleRight"
+                      color={theme.footerColor}
+                      aria-hidden="true"
+                      className="me-1"
+                    /> )}
+                    {page.name}
+                  </>
                 </NavigationLink>
                 )}
                 { page.children && (
@@ -417,7 +425,16 @@ function SiteFooter(props) {
                     { page.children.map((childPage) => (
                       <FooterNavSubItem key={childPage.slug}>
                         <NavigationLink slug={childPage.slug}>
+                          <>
+                          { theme?.navLinkIcons && (
+                            <Icon
+                              name="angleRight"
+                              color={theme.footerColor}
+                              aria-hidden="true"
+                              className="me-1"
+                            /> )}
                           {childPage.name}
+                          </>
                         </NavigationLink>
                       </FooterNavSubItem>
                     ))}
@@ -432,11 +449,18 @@ function SiteFooter(props) {
           <UtilityColumn>
             <UtilityItem>
               <OrgTitle>
-                { ownerUrl ?
+                { ownerUrl ? (
                 <a href={ownerUrl} target="_blank" rel="noreferrer">
+                  { theme?.navLinkIcons && (
+                  <Icon
+                    name="angleRight"
+                    color={theme.footerColor}
+                    aria-hidden="true"
+                    className="me-1"
+                  /> )}
                   {ownerName}
                 </a>
-                : ownerName }
+                ) : ownerName }
               </OrgTitle>
             </UtilityItem>
           </UtilityColumn>

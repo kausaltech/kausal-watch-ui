@@ -50,8 +50,8 @@ const MainCard = styled.div`
   padding: ${(props) =>
     `${props.theme.spaces.s200} ${props.theme.spaces.s200} ${props.theme.spaces.s100}`};
   border-radius: ${(props) => props.theme.cardBorderRadius};
-  background-color: ${(props) => props.theme.themeColors.white};
-  color: ${(props) => props.theme.neutralDark};
+  background-color: ${(props) => props.color === 'dark' ? props.theme.brandDark : props.theme.themeColors.white};
+  color: ${(props) => props.color === 'dark' ? props.theme.themeColors.white : props.theme.neutralDark};
   box-shadow: 4px 4px 8px rgba(0,0,0,0.1);
   z-index: 100;
 
@@ -60,8 +60,12 @@ const MainCard = styled.div`
     margin-bottom: ${(props) => props.theme.spaces.s100};
   }
 
+  h1, h2, h3, h4 {
+    color: ${(props) => props.color === 'dark' ? props.theme.themeColors.white : props.theme.brandDark};
+  }
+
   a {
-    color: ${(props) => props.theme.neutralDark};
+    color: ${(props) => props.color === 'dark' ? props.theme.themeColors.white : props.theme.neutralDark};
 
     &:hover {
       text-decoration: none;
@@ -130,6 +134,7 @@ const HeroFullImage = (props) => {
       <Container>
       <MainCard
         alignment={theme.settings?.frontHero ? theme.settings.frontHero.cardPlacement : 'left'}
+        color={theme.settings?.frontHero ? theme.settings.frontHero?.color : 'light'}
       >
         <h1>{ title }</h1>
         <RichText html={lead} className="lead-content" />
