@@ -19,7 +19,10 @@ import RelatedPlanListBlock from 'components/contentblocks/RelatedPlanListBlock'
 import ActionCategoryFilterCardsBlock from 'components/contentblocks/ActionCategoryFilterCardsBlock';
 import AccessibilityStatementComplianceStatusBlock
   from 'components/contentblocks/AccessibilityStatementComplianceStatusBlock';
-import AccessibilityStatementContactFormBlock from 'components/contentblocks/AccessibilityStatementContactFormBlock';
+import AccessibilityStatementPreparationInformationBlock
+  from 'components/contentblocks/AccessibilityStatementPreparationInformationBlock';
+import AccessibilityStatementContactFormBlock
+  from 'components/contentblocks/AccessibilityStatementContactFormBlock';
 import AccessibilityStatementContactInformationBlock
   from 'components/contentblocks/AccessibilityStatementContactInformationBlock';
 
@@ -400,6 +403,9 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
     case 'AccessibilityStatementContactInformationBlock': {
       const { blocks } = block;
       return <AccessibilityStatementContactInformationBlock content={blocks}/>
+    }
+    case 'AccessibilityStatementPreparationInformationBlock': {
+      return <AccessibilityStatementPreparationInformationBlock {...block}/>
     }
     default:
       return (

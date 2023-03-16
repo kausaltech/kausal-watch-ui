@@ -12,22 +12,29 @@ const AccessibilityStatementComplianceStatusBlock = (props) => {
     locale = 'en';
   }
   const accessibilityProblems = accessibilityStatementData[locale].nonAccessibleContent.nonCompliant;
+  const complianceStatus = accessibilityStatementData[locale].complianceStatus;
+  const complianceStatusText = t(`a11y:${complianceStatus}-compliant`);
 
   return (
     <Container className="my-5 text-content">
       <Row>
-        <Col lg={{ size: 8, offset: 2 }} md={{ size: 10, offset: 1 }}>
+        <Col
+          xl={{ size: 6, offset: 3 }}
+          lg={{ size: 8, offset: 2 }}
+          md={{ size: 10, offset: 1 }}
+          className="my-4"
+        >
           <h2>{t('a11y:compliance-status')}</h2>
           <p>
-            {t('a11y:partially-compliant')}
+            {complianceStatusText}
             {' '}
             <a href={t('a11y:wcag-url')}>{t('a11y:target-level')}</a>
-            {' '}
-            {t('a11y:due-to')}
           </p>
         { accessibilityProblems.length > 0
           && (
             <>
+              {' '}
+              {t('a11y:due-to')}
               <h2>{t('a11y:non-accessible-content')}</h2>
               <h3>{t('a11y:non-compliance-aa')}</h3>
               <p>
@@ -52,22 +59,6 @@ const AccessibilityStatementComplianceStatusBlock = (props) => {
               </p>
             </>
           )}
-          <h2>{t('a11y:preparation')}</h2>
-          <p>
-            {t('a11y:prepared-on')}
-            {' '}
-            {accessibilityStatementData.en.preparedOn}
-            .
-          </p>
-          <p>
-            {t('a11y:prepared-how')}
-          </p>
-          <p>
-            {t('a11y:reviewed-on')}
-            {' '}
-            {accessibilityStatementData.en.reviewedOn}
-            .
-          </p>
         </Col>
       </Row>
     </Container>
