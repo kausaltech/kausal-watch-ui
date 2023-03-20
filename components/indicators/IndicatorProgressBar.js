@@ -282,8 +282,8 @@ function IndicatorProgressBar(props) {
             y1={segmentsY}
             y2={segmentsY}
             stroke={startColor}
-            stroke-width="2"
-            marker-end="url(#reducedArrow)"
+            strokeWidth="2"
+            markerEnd="url(#reducedArrow)"
           />
           <line
             x1={startBar.x + 1}
@@ -291,8 +291,8 @@ function IndicatorProgressBar(props) {
             x2={startBar.x + 1}
             y2={segmentsY}
             stroke={startColor}
-            stroke-width="2"
-            stroke-dasharray="2,4"
+            strokeWidth="2"
+            strokeDasharray="2,4"
           />
           <ValueGroup
             transform={`translate(${startBar.x + 4} 0)`}
@@ -330,8 +330,8 @@ function IndicatorProgressBar(props) {
             x2={goalBar.x - 14}
             y2={segmentsY}
             stroke={latestColor}
-            stroke-width="2"
-            marker-end="url(#toBeReducedArrow)"
+            strokeWidth="2"
+            markerEnd="url(#toBeReducedArrow)"
           />
           <motion.g animate={latestValueControls}>
             <line
@@ -340,8 +340,8 @@ function IndicatorProgressBar(props) {
               y1={latestBar.y}
               y2={segmentsY}
               stroke={latestColor}
-              stroke-width="2"
-              stroke-dasharray="2,4"
+              strokeWidth="2"
+              strokeDasharray="2,4"
             />
             <ValueGroup
               transform={`translate(${latestBar.x + 4} ${latestBar.y})`}
@@ -377,8 +377,8 @@ function IndicatorProgressBar(props) {
             x2={goalBar.x + 1}
             y2={segmentsY}
             stroke={goalColor}
-            stroke-width="2"
-            stroke-dasharray="2,4"
+            strokeWidth="2"
+            strokeDasharray="2,4"
           />}
           <line
             x1={goalBar.x}
@@ -386,7 +386,7 @@ function IndicatorProgressBar(props) {
             x2={goalBar.x + goalBar.w }
             y2={segmentsY}
             stroke={goalColor}
-            stroke-width="2"
+            strokeWidth="2"
           />
           <ValueGroup
             transform={`translate(${goalBar.w > 80 ? goalBar.x + 4 : goalBar.x - 50} ${goalBar.y})`}

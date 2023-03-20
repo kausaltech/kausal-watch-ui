@@ -9,7 +9,7 @@ import LazyLoad from 'react-lazyload';
 
 import EmbedContext from 'context/embed';
 import Button from 'components/common/Button';
-import { getActionTermContext, withTranslation } from 'common/i18n';
+import { getActionTermContext, useTranslation } from 'common/i18n';
 import ContentLoader from 'components/common/ContentLoader';
 import { ActionListLink } from 'common/links';
 import images, { getActionImage } from 'common/images';
@@ -140,12 +140,12 @@ function ActionCardList({ t, actions, plan, displayHeader }) {
         <Col xs="12" className="mt-5 mb-5">
           <ActionListLink>
             <Button color="primary" tag="a">
-            { t('see-all-actions', getActionTermContext(plan)) }
-            {' '}
-            <Icon name="arrowRight" />
-          </Button>
-        </ActionListLink>
-      </Col>
+              { t('see-all-actions', getActionTermContext(plan)) }
+              {' '}
+              <Icon name="arrowRight" />
+            </Button>
+          </ActionListLink>
+        </Col>
       }
     </Row>
   );
@@ -162,8 +162,11 @@ ActionCardList.propTypes = {
 
 function ActionHighlightsList(props) {
   const {
-    t, plan, count, displayHeader
+    plan, count, displayHeader
   } = props;
+
+  const { t } = useTranslation();
+
   const queryParams = {
     plan: plan.identifier,
     first: count ?? 6,
@@ -182,7 +185,6 @@ function ActionHighlightsList(props) {
 }
 
 ActionHighlightsList.propTypes = {
-  t: PropTypes.func.isRequired,
   count: PropTypes.number,
   displayHeader: PropTypes.bool,
   plan: PropTypes.shape({
@@ -190,4 +192,4 @@ ActionHighlightsList.propTypes = {
   }).isRequired,
 };
 
-export default withTranslation('common')(ActionHighlightsList);
+export default ActionHighlightsList;

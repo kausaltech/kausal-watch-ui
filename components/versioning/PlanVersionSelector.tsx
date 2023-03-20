@@ -47,7 +47,7 @@ const VersionDate = styled.div`
   color: ${(props)=> props.theme.themeColors.dark};
 `;
 
-const StyledDropdownToggle = styled(DropdownToggle)`
+const StyledDropdownToggle = styled(DropdownToggle)<{islatest?: string}>`
   display: flex;
   align-items: center;
   text-align: left;
@@ -58,7 +58,7 @@ const StyledDropdownToggle = styled(DropdownToggle)`
   border-radius: 1.75rem;
   font-size: 1rem;
   color: ${(props)=> props.theme.themeColors.dark};
-  background: ${(props)=> props.isLatest === true ? 'none' : props.theme.graphColors.red010 };
+  background: ${(props)=> props.islatest === 'true' ? 'none' : props.theme.graphColors.red010 };
   font: inherit;
   cursor: pointer;
   outline: inherit;
@@ -128,7 +128,7 @@ const PlanVersionSelector = (props) => {
         <StyledDropdownToggle
           data-toggle="dropdown"
           tag="button"
-          isLatest = {activeVersion.identifier === latestVersion.identifier}
+          islatest = {(activeVersion.identifier === latestVersion.identifier).toString()}
         >
             <Icon name="version" className="me-2" width="1.25rem" height="1.25rem" />
             {activeVersion.versionName}

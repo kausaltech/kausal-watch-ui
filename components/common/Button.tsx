@@ -134,12 +134,17 @@ const StyledButton = styled(BSButton)`
   }
 `;
 
-const Button = React.forwardRef<typeof StyledButton, ButtonProps>(function Button(props, ref) {
+const Button = React.forwardRef<typeof StyledButton, ButtonProps>((props, ref) => {
   const { children } = props;
+
+  // TODO: Do we need a ref here?
   return (
-    <StyledButton ref={ref} {...props}>
+    <StyledButton {...props}>
       { children }
     </StyledButton>
   );
 });
+
+Button.displayName = "Button";
+
 export default Button;
