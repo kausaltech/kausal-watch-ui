@@ -10,13 +10,12 @@ const AccessibilityStatementContactFormBlock = (props) => {
   const plan = useContext(PlanContext);
 
   return (
-    <Container className="my-5 text-content">
+    <Container className="my-2 text-content">
       <Row>
         <Col
           xl={{ size: 6, offset: 3 }}
           lg={{ size: 8, offset: 2 }}
           md={{ size: 10, offset: 1 }}
-          className="my-4"
         >
           <FeedbackForm
             planIdentifier={plan.identifier}

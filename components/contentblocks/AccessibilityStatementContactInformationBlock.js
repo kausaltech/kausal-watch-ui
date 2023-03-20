@@ -15,13 +15,12 @@ const AccessibilityStatementContactInformationBlock = (props) => {
   const responsibleBody = publisher || plan.generalContent.ownerName;
 
   return (
-    <Container className="my-5 text-content">
+    <Container className="my-2 text-content">
       <Row>
         <Col
           xl={{ size: 6, offset: 3 }}
           lg={{ size: 8, offset: 2 }}
           md={{ size: 10, offset: 1 }}
-          className="my-4"
         >
           <h2>{t('a11y:feedback-contact')}</h2>
           <p>

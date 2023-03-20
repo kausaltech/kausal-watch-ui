@@ -10,11 +10,14 @@ import AccessibilityStatementComplianceStatusBlock
 import AccessibilityStatementContactInformationBlock
   from 'components/contentblocks/AccessibilityStatementContactInformationBlock';
 import accessibilityStatementData from 'public/static/accessibility';
+import AccessibilityStatementPreparationInformationBlock
+  from 'components/contentblocks/AccessibilityStatementPreparationInformationBlock';
 
 
 const HeaderBg = styled.div`
   background-color: ${(props) => props.theme.brandDark};
   position: relative;
+  margin-bottom: ${(props) => props.theme.spaces.s400};
 `;
 
 const ContentHeader = styled.header`
@@ -71,10 +74,14 @@ const AccessibilityPage = () => {
           </Row>
         </Container>
       </HeaderBg>
-      <div className="content-area text-content my-5">
+      <div className="content-area text-content my-2">
         <Container>
           <Row>
-            <Col lg={{ size: 8, offset: 2 }} md={{ size: 10, offset: 1 }}>
+          <Col
+            xl={{ size: 6, offset: 3 }}
+            lg={{ size: 8, offset: 2 }}
+            md={{ size: 10, offset: 1 }}
+          >
               <p>
                 {plan.generalContent.ownerName}
                 {' '}
@@ -94,10 +101,15 @@ const AccessibilityPage = () => {
           </Row>
           </Container>
           <AccessibilityStatementComplianceStatusBlock />
+          <AccessibilityStatementPreparationInformationBlock />
           <AccessibilityStatementContactInformationBlock />
           <Container>
           <Row>
-            <Col lg={{ size: 8, offset: 2 }} md={{ size: 10, offset: 1 }}>
+          <Col
+            xl={{ size: 6, offset: 3 }}
+            lg={{ size: 8, offset: 2 }}
+            md={{ size: 10, offset: 1 }}
+          >
               <h2>{t('a11y:enforcement-procedure')}</h2>
               <p>
                 {t('a11y:enforcement-step-1')}
