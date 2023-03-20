@@ -54,6 +54,13 @@ class WatchSearchAPIConnector {
     this.apolloClient = apolloClient;
     this.plan = plan;
   }
+
+  async onSearch(opts, queryConfig) {
+    // Not implemented, stub here just to silence the warning about
+    // unimplemented method.
+    return { results: [] }
+  }
+
   async onAutocomplete(opts, queryConfig) {
     const { searchTerm } = opts;
     const res = await this.apolloClient.query({
