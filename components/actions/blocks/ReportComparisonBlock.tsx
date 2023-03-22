@@ -132,12 +132,14 @@ const ReportComparisonBlock = (props) => {
               </ReportDate>
               <ReportName>{report.name}</ReportName>
             </FieldHeader>
-            { report.attribute && (
+            { report.attribute ? (
               <ActionAttribute
                 key={report.attribute.id}
                 attribute={report.attribute}
                 attributeType={undefined}
               />
+            ) : (
+              <div>{t('no-action-data-for-report')}</div>
             )}
           </ReportField>
         ))}

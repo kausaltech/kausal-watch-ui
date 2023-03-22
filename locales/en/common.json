@@ -185,5 +185,6 @@
   "navigation-home": "Home",
   "graph-hideTable": "Hide table",
   "graph-showTable": "Show data table",
-  "definition": "Definition"
+  "definition": "Definition",
+  "no-action-data-for-report": "The report contains no data for this action."
 }
