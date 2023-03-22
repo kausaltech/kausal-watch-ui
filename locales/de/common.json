@@ -182,5 +182,6 @@
   "graph-hideTable": "Datentabelle ausblenden",
   "graph-showTable": " Datentabelle anzeigen",
   "open": "Öffnen",
-  "definition": "Definition"
+  "definition": "Definition",
+  "no-action-data-for-report": "Der Bericht enthält keine Daten für diese Maßnahme."
 }
