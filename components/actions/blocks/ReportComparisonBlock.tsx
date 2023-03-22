@@ -95,6 +95,12 @@ const ReportComparisonBlock = (props) => {
           field.id === reportField && field.__typename === 'ActionAttributeTypeReportFieldBlock'
         ))?.[0]?.attribute,
   }));
+  reports.sort((a, b) => {
+    if (a.endDate == null || b.endDate == null) {
+      return 0;
+    }
+    return dayjs(a.endDate).diff(dayjs(b.endDate));
+  });
 
   return (
     <ReportSection className="text-content">
