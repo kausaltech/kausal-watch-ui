@@ -1,5 +1,4 @@
 import React, { useContext, useState, useEffect, useCallback } from 'react';
-import { useRouter } from 'next/router';
 import { Collapse, UncontrolledTooltip } from 'reactstrap';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
@@ -7,7 +6,6 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import SiteContext from 'context/site';
 
 import { useTranslation } from 'common/i18n';
-// import { withTranslation } from 'common/i18n';
 import Icon from 'components/common/Icon';
 import { replaceHashWithoutScrolling } from '../../common/links';
 
@@ -108,9 +106,6 @@ TooltipContent.propTypes = {
 const LinkCopyButton = React.memo((props) => {
   const { identifier } = props;
   const site = useContext(SiteContext);
-  const router = useRouter();
-  // console.log(site);
-  // console.log('router', router);
   const { t } = useTranslation();
   const [tooltipOpen, setTooltipOpen] = useState(false);
   const [copyText, setCopyText] = useState(t('copy-to-clipboard'));
@@ -143,7 +138,7 @@ const LinkCopyButton = React.memo((props) => {
         )}
       </UncontrolledTooltip>
       <CopyToClipboard
-        text={`${site.baseURL}${site.path}#q${identifier}`}
+        text={`${site.hostname}${site.path}#q${identifier}`}
         id={`tooltip-${identifier}`}
         onCopy={onCopy}
       >
@@ -160,6 +155,8 @@ const LinkCopyButton = React.memo((props) => {
 LinkCopyButton.propTypes = {
   identifier: PropTypes.string,
 };
+
+LinkCopyButton.displayName = 'LinkCopyButton';
 
 const AccordionHeader = ({
   children, onClick, isOpen, identifier,
