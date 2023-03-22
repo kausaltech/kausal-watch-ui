@@ -108,6 +108,7 @@ const ReportComparisonBlock = (props) => {
         <Col>
           <SectionHeader>
             <h2>{block.reportType.name}</h2>
+            { reports && reports.length > 0 && (
             <ToggleButton
               color="link"
               onClick={toggle}
@@ -116,12 +117,14 @@ const ReportComparisonBlock = (props) => {
               { isOpen ? t('close') : t('open') }
               <Icon name={isOpen ? 'angle-down' : 'angle-right'} />
             </ToggleButton>
+            )}
           </SectionHeader>
         </Col>
       </Row>
+      { reports && reports.length > 0 ? (
       <Collapse isOpen={isOpen}>
         <ReportFieldComparison>
-        { reports && reports.length > 0 ? reports.map((report) => (
+        { reports.map((report) => (
           <ReportField key={report.identifier}>
             <FieldHeader>
               <ReportDate>
@@ -142,11 +145,12 @@ const ReportComparisonBlock = (props) => {
               <div>{t('no-action-data-for-report')}</div>
             )}
           </ReportField>
-        )) : (
-          <div>{t('no-reports')}</div>
-        )}
+        ))}
         </ReportFieldComparison>
       </Collapse>
+      ) : (
+      <div>{t('no-reports')}</div>
+      )}
     </ReportSection>
   );
 };
