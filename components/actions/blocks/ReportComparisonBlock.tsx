@@ -87,18 +87,16 @@ const ReportComparisonBlock = (props) => {
   const toggle = () => setIsOpen(!isOpen);
 
   const { reportField, reportsToCompare } = block;
-  const reportIdentifiers = reportsToCompare.map(({ identifier }) => identifier);
-  const attributes = (action.attributes
-    .filter(({ type }) => reportIdentifiers.includes(type.report?.identifier) && type.reportField === reportField)
-    .sort((a, b) => {
-      const aDate = a?.type?.report?.startDate;
-      const bDate = b?.type?.report?.startDate;
-      if (aDate == null || bDate == null) {
-        return 0;
-      }
-      return dayjs(aDate).diff(dayjs(bDate));
-    })
-  );
+  // Augment each report with the field we're looking for
+  // TODO: Right now we're only interested in attributes. Display report field values of other types as well.
+  const reports = reportsToCompare.map(report => ({
+    ...report,
+    attribute: (report.valuesForAction
+                .filter(({ field }) => (
+                  field.id === reportField && field.__typename === 'ActionAttributeTypeReportFieldBlock'
+                ))[0].attribute
+               ),
+  }));
 
   return (
     <ReportSection className="text-content">
@@ -119,20 +117,20 @@ const ReportComparisonBlock = (props) => {
       </Row>
       <Collapse isOpen={isOpen}>
         <ReportFieldComparison>
-        { attributes && attributes.map((attribute) => (
-          <ReportField key={attribute.id}>
+        { reports && reports.map((report) => (
+          <ReportField key={report.identifier}>
             <FieldHeader>
               <ReportDate>
                 { `${t('report')}: ` }
-                { dayjs(attribute.type.report.startDate).format('l') }
+                { dayjs(report.startDate).format('l') }
                 {` `}&ndash;{` `}
-                { dayjs(attribute.type.report.endDate).format('l') }
+                { dayjs(report.endDate).format('l') }
               </ReportDate>
-              <ReportName>{attribute.type.report.name}</ReportName>
+              <ReportName>{report.name}</ReportName>
             </FieldHeader>
             <ActionAttribute
-              key={attribute.id}
-              attribute={attribute}
+              key={report.attribute.id}
+              attribute={report.attribute}
               attributeType={undefined}
             />
           </ReportField>

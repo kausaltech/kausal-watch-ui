@@ -174,13 +174,6 @@ fragment AttributesBlockAttribute on AttributeInterface {
       shortName
     }
     format
-    reportField
-    report {
-      identifier
-      name
-      startDate
-      endDate
-    }
   }
   ...on AttributeChoice {
     choice {

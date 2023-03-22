@@ -72,6 +72,14 @@
       "Plan",
       "RestrictedPlanNode"
     ],
+    "ReportFieldBlock": [
+      "ActionAttributeTypeReportFieldBlock",
+      "ActionImplementationPhaseReportFieldBlock"
+    ],
+    "ReportValueInterface": [
+      "ActionAttributeReportValue",
+      "ActionImplementationPhaseReportValue"
+    ],
     "SearchHitObject": [
       "Action",
       "Indicator"
@@ -82,6 +90,7 @@
       "AccessibilityStatementContactInformationBlock",
       "AccessibilityStatementPreparationInformationBlock",
       "ActionAttributeTypeFilterBlock",
+      "ActionAttributeTypeReportFieldBlock",
       "ActionCategoryFilterCardBlock",
       "ActionCategoryFilterCardsBlock",
       "ActionContactFormBlock",
@@ -104,7 +113,6 @@
       "ActionScheduleBlock",
       "ActionScheduleFilterBlock",
       "ActionTasksBlock",
-      "ActionTextAttributeTypeReportFieldBlock",
       "BlockQuoteBlock",
       "BooleanBlock",
       "CardBlock",
@@ -139,7 +147,6 @@
       "RelatedIndicatorsBlock",
       "RelatedPlanListBlock",
       "ReportComparisonBlock",
-      "ReportFieldBlock",
       "ReportTypeFieldChooserBlock",
       "ResponsiblePartyFilterBlock",
       "RichTextBlock",

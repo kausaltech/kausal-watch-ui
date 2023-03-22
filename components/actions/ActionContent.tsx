@@ -262,14 +262,7 @@ fragment ActionMainContentBlocksFragment on ActionMainContentBlock {
     }
   }
   ... on ReportComparisonBlock {
-    reportField
-    reportType {
-      id
-      name
-    }
-    reportsToCompare {
-      identifier
-    }
+      ...ReportComparisonBlockActionContent
   }
   ... on ActionContentSectionBlock {
     id
@@ -295,9 +288,31 @@ fragment ActionMainContentBlocksFragment on ActionMainContentBlock {
         }
       }
       ... on ReportComparisonBlock {
-        reportField
-        reportsToCompare {
-          identifier
+        ...ReportComparisonBlockActionContent
+      }
+    }
+  }
+}
+fragment ReportComparisonBlockActionContent on ReportComparisonBlock {
+  reportField
+  reportType {
+    name
+  }
+  reportsToCompare {
+    identifier
+    name
+    startDate
+    endDate
+    valuesForAction(actionIdentifier: $id) {
+      field {
+        __typename
+        ... on StreamFieldInterface {
+          id
+        }
+      }
+      ... on ActionAttributeReportValue {
+        attribute {
+          ...AttributesBlockAttribute
         }
       }
     }
@@ -431,7 +446,7 @@ function ActionContentBlock(props: ActionContentBlockProps) {
       return (
         <ActionRelatedIndicatorsBlock
           actionId = {action.id}
-          indicators = {action.relatedIndicators} 
+          indicators = {action.relatedIndicators}
         />
       )
     case 'ActionTasksBlock':
