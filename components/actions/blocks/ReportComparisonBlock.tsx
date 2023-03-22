@@ -91,11 +91,9 @@ const ReportComparisonBlock = (props) => {
   // TODO: Right now we're only interested in attributes. Display report field values of other types as well.
   const reports = reportsToCompare.map(report => ({
     ...report,
-    attribute: (report.valuesForAction
-                .filter(({ field }) => (
-                  field.id === reportField && field.__typename === 'ActionAttributeTypeReportFieldBlock'
-                ))[0].attribute
-               ),
+    attribute: report.valuesForAction?.filter(({ field }) => (
+          field.id === reportField && field.__typename === 'ActionAttributeTypeReportFieldBlock'
+        ))?.[0]?.attribute,
   }));
 
   return (
@@ -128,11 +126,13 @@ const ReportComparisonBlock = (props) => {
               </ReportDate>
               <ReportName>{report.name}</ReportName>
             </FieldHeader>
-            <ActionAttribute
-              key={report.attribute.id}
-              attribute={report.attribute}
-              attributeType={undefined}
-            />
+            { report.attribute && (
+              <ActionAttribute
+                key={report.attribute.id}
+                attribute={report.attribute}
+                attributeType={undefined}
+              />
+            )}
           </ReportField>
         ))}
         </ReportFieldComparison>
