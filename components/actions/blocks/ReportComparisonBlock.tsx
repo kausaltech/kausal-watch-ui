@@ -121,7 +121,7 @@ const ReportComparisonBlock = (props) => {
       </Row>
       <Collapse isOpen={isOpen}>
         <ReportFieldComparison>
-        { reports && reports.map((report) => (
+        { reports && reports.length > 0 ? reports.map((report) => (
           <ReportField key={report.identifier}>
             <FieldHeader>
               <ReportDate>
@@ -142,7 +142,9 @@ const ReportComparisonBlock = (props) => {
               <div>{t('no-action-data-for-report')}</div>
             )}
           </ReportField>
-        ))}
+        )) : (
+          <div>{t('no-reports')}</div>
+        )}
         </ReportFieldComparison>
       </Collapse>
     </ReportSection>
