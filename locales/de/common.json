@@ -183,5 +183,6 @@
   "graph-showTable": " Datentabelle anzeigen",
   "open": "Öffnen",
   "definition": "Definition",
+  "no-reports": "Es liegen keine Berichte vor.",
   "no-action-data-for-report": "Der Bericht enthält keine Daten für diese Maßnahme."
 }

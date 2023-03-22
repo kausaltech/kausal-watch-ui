@@ -186,5 +186,6 @@
   "graph-hideTable": "Hide table",
   "graph-showTable": "Show data table",
   "definition": "Definition",
+  "no-reports": "No reports are available.",
   "no-action-data-for-report": "The report contains no data for this action."
 }
