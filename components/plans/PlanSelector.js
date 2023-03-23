@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { transparentize } from 'polished';
 import { UncontrolledDropdown, DropdownToggle, DropdownMenu } from 'reactstrap';
 import { usePlan } from 'context/plan';
+import { useTheme } from 'common/theme';
 import Icon from 'components/common/Icon';
 import PlanChip from './PlanChip';
 
@@ -34,7 +35,7 @@ const PlanTitle = styled.div`
 
 const PlanDropdownItem = styled.a`
   display: block;
-  padding: .25rem .75rem .25rem .25rem;
+  padding: .25rem 0;
   margin: 0 .5rem .5rem;
   border: 1px solid ${(props)=> props.theme.themeColors.light};
   border-radius: .5rem;
@@ -82,7 +83,8 @@ const StyledDropdownToggle = styled(DropdownToggle)`
 
 const PlanSelector = (props) => {
   const plan = usePlan();
-
+  const theme = useTheme();
+  //console.log(theme)
   const { allRelatedPlans } = plan;
   if (!allRelatedPlans.length) return null;
 
@@ -119,7 +121,7 @@ const PlanSelector = (props) => {
               <PlanChip
                 planImage={pl.image?.rendition.src}
                 planShortName={pl.shortName}
-                organization={pl.name}
+                organization={theme.settings?.multiplan?.hideLongPlanNames ? undefined : pl.name}
                 size="md"
               />
             </PlanDropdownItem>

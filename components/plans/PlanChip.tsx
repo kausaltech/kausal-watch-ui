@@ -4,9 +4,10 @@ import { transparentize } from 'polished';
 import styled from 'styled-components';
 import { Theme } from 'common/theme';
 
-const Tag = styled.div`
+const Tag = styled.div<{minWidth: string}>`
   display: flex;
-  align-items: flex-start;
+  align-items: center;
+  min-width: ${(props) => props.minWidth};
   max-width: 600px;
   border-radius: 4px;
 `;
@@ -19,7 +20,7 @@ const PlanAvatar = styled.img<PlanAvatarProps>`
   display: block;
   width: ${(props) => props.theme.spaces[props.size]};
   height: ${(props) => props.theme.spaces[props.size]};
-  margin-right: ${(props) => props.size === 's300' ? props.theme.spaces.s050 : props.theme.spaces.s050};
+  margin: 0  ${(props) => props.size === 's300' ? props.theme.spaces.s100 : props.theme.spaces.s050};
   border-radius: 50%;
   box-shadow: 0 0 3px 1px ${(props) => transparentize(0.8, props.theme.themeColors.black)};
 `;
@@ -32,6 +33,7 @@ const PlanName = styled.div<{negative?: boolean}>`
 const PlanTitle = styled.div<{size: string, weight: 'fontWeightNormal' | 'fontWeightBold'}>`
   font-size: ${(props) => props.theme[props.size]};
   font-weight: ${(props) => props.theme[props.weight]};
+  line-height: 1.2;
 `;
 
 const PlanOrg = styled.div<{negative?: boolean}>`
@@ -61,6 +63,12 @@ const FONT_SIZES = {
   'lg': 'fontSizeMd',
 }
 
+const MIN_WIDTH = {
+  'sm': '200px',
+  'md': '200px',
+  'lg': '240px',
+}
+
 const PlanChip = React.forwardRef((props: PlanChipProps, ref) => {
   const {
     planImage,
@@ -71,7 +79,7 @@ const PlanChip = React.forwardRef((props: PlanChipProps, ref) => {
   } = props;
 
   return (
-    <Tag ref={ref} {...props}>
+    <Tag ref={ref} minWidth={MIN_WIDTH[size]} {...props}>
       { planImage && (<PlanAvatar src={planImage} size={IMAGE_SIZES[size]} alt=""/>) }
       <PlanName negative={negative}>
         <PlanTitle
