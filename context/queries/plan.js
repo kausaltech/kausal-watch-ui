@@ -23,6 +23,9 @@ fragment PlanContext on Plan {
     id
     identifier
     hideCategoryIdentifiers
+    common {
+      identifier
+    }
   }
   secondaryActionClassification {
     id

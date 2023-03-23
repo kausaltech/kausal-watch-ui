@@ -76,9 +76,17 @@ const Tab = styled.button`
   }
 `;
 
-export const GET_ACTION_LIST = gql`
-  query DashboardActionList($plan: ID!) {
-    plan(id: $plan) {
+const getPlanFragment = (includeCommonCategory: boolean = false) => {
+  let commonCategory = !includeCommonCategory ? '' : `
+      common {
+        id
+        identifier
+        name
+        order
+      }
+   `;
+  return gql`
+    fragment PlanFragment on Plan {
       id
       categoryTypes(usableForActions: true) {
         id
@@ -89,6 +97,7 @@ export const GET_ACTION_LIST = gql`
         common {
           identifier
           name
+          hideCategoryIdentifiers
         }
         categories {
           id
@@ -98,6 +107,8 @@ export const GET_ACTION_LIST = gql`
           parent {
             id
           }
+          ${commonCategory}
+
           color
           iconSvgUrl
           iconImage {
@@ -117,126 +128,182 @@ export const GET_ACTION_LIST = gql`
         name
       }
     }
-    planActions(plan: $plan) {
+`;
+}
+
+const getActionFragment = (crossPlan: boolean = false) => {
+  let viewUrl = ''
+  let plan = '';
+  if (crossPlan === true) {
+    viewUrl = 'viewUrl';
+    plan = 'plan { id }';
+  }
+  const actionFragment = gql`
+  fragment ${crossPlan ? 'Related' : ''}ActionFragment on Action {
+    id
+    identifier
+    name(hyphenated: true)
+    ${viewUrl}
+    ${plan}
+    status {
       id
       identifier
-      name(hyphenated: true)
-      status {
-        id
-        identifier
-        name
-      }
-      categories {
+      name
+    }
+    categories {
+      id
+      common {
         id
       }
-      implementationPhase {
-        id
-        identifier
-        name
-        order
-      }
-      completion
-      officialName
-      updatedAt
-      scheduleContinuous
-      startDate
-      endDate
+    }
+    implementationPhase {
+      id
+      identifier
+      name
       order
-      plan {
+    }
+    completion
+    officialName
+    updatedAt
+    scheduleContinuous
+    startDate
+    endDate
+    order
+    plan {
+      id
+    }
+    schedule {
+      id
+    }
+    impact {
+      id
+      identifier
+    }
+    attributes {
+      __typename
+      id
+      type {
         id
       }
-      schedule {
-        id
-      }
-      impact {
-        id
-        identifier
-      }
-      attributes {
-        __typename
-        id
-        type {
+      ...on AttributeChoice {
+        choice {
           id
-        }
-        ...on AttributeChoice {
-          choice {
-            id
-            name
-          }
-        }
-      }
-      responsibleParties {
-        id
-        role
-        organization {
-          id
-          abbreviation
           name
         }
       }
-      primaryOrg {
+    }
+    responsibleParties {
+      id
+      role
+      organization {
         id
         abbreviation
         name
-        logo {
-          rendition(size: "128x128", crop: true) {
-            src
-          }
+      }
+    }
+    primaryOrg {
+      id
+      abbreviation
+      name
+      logo {
+        rendition(size: "128x128", crop: true) {
+          src
         }
       }
-      contactPersons {
-        id
-        person {
-          organization {
-            id
-          }
-        }
-      }
-      tasks {
-        id
-        state
-        dueAt
-      }
-      mergedWith {
-        id
-        identifier
-        plan {
+    }
+    contactPersons {
+      id
+      person {
+        organization {
           id
-          shortName
-          viewUrl
         }
       }
-      indicators {
+    }
+    tasks {
+      id
+      state
+      dueAt
+    }
+    mergedWith {
+      id
+      identifier
+      plan {
+        id
+        shortName
+        viewUrl
+      }
+    }
+    indicators {
+      id
+      goals {
+        id
+      }
+    }
+    relatedIndicators {
+      id
+      indicatesActionProgress
+      indicator {
         id
         goals {
           id
         }
       }
-      relatedIndicators {
-        id
-        indicatesActionProgress
-        indicator {
-          id
-          goals {
-            id
-          }
-        }
-      }
-    }
-    planOrganizations(plan: $plan, withAncestors: true, forContactPersons: true, forResponsibleParties: true) {
-      id
-      abbreviation
-      name
-      contactPersonCount
-      actionCount
-      classification {
-        name
-      }
-      parent {
-        id
-      }
     }
   }
+  `;
+  return actionFragment;
+}
+
+
+
+const organizationFragment = gql`
+fragment OrganizationFragment on Organization {
+  id
+  abbreviation
+  name
+  contactPersonCount
+  actionCount
+  classification {
+    name
+  }
+  parent {
+    id
+  }
+}
+`;
+
+export const GET_ACTION_LIST = gql`
+  query DashboardActionList($plan: ID!) {
+    plan(id: $plan) {
+      ...PlanFragment
+    }
+    planActions(plan: $plan) {
+      ...ActionFragment
+    }
+    planOrganizations(plan: $plan, withAncestors: true, forContactPersons: true, forResponsibleParties: true) {
+      ...OrganizationFragment
+    }
+  }
+  ${getPlanFragment(false)}
+  ${getActionFragment(false)}
+  ${organizationFragment}
+`;
+
+export const GET_RELATED_PLAN_ACTION_LIST = gql`
+  query DashboardActionList($plan: ID!) {
+    plan(id: $plan) {
+      ...PlanFragment
+    }
+    relatedPlanActions(plan: $plan) {
+      ...RelatedActionFragment
+    }
+    planOrganizations(plan: $plan, withAncestors: true, forContactPersons: true, forResponsibleParties: true) {
+      ...OrganizationFragment
+    }
+  }
+  ${getPlanFragment(true)}
+  ${getActionFragment(true)}
+  ${organizationFragment}
 `;
 
 const ACTION_LIST_FILTER = gql`
@@ -345,7 +412,9 @@ const ActionList = (props: ActionListProps) => {
     leadContent,
     defaultView,
     headingHierarchyDepth,
-    primaryOrgs } = props;
+    primaryOrgs,
+    groupByCommonCategories,
+ } = props;
   const { t } = useTranslation('common');
   const plan = usePlan();
   const displayDashboard = activeFilters.view === 'dashboard' || (
@@ -355,9 +424,13 @@ const ActionList = (props: ActionListProps) => {
     return constructOrgHierarchy<ActionListOrganization>(organizations).filter(orgHasActions);
   }, [organizations]);
   const cts: ActionListCategoryType[] = useMemo(() => {
-    return constructCatHierarchy<ActionListCategory, ActionListCategoryType>(categoryTypes);
+    return constructCatHierarchy<ActionListCategory, ActionListCategoryType>(categoryTypes, groupByCommonCategories);
   }, [categoryTypes])
-  const primaryCatType = cts.find(ct => ct.id == plan.primaryActionClassification.id);
+  const primaryActionClassification = groupByCommonCategories
+    ? plan.primaryActionClassification.common
+    : plan.primaryActionClassification;
+
+  const primaryCatType = cts.find(ct => ct.id == primaryActionClassification.id);
 
   const filterSections: ActionListFilterSection[] = useMemo(() => {
     const opts = {
@@ -499,7 +572,8 @@ type StatusboardProps = {
   availableFilters: ActionListPageFiltersFragment,
   filters: ActiveFilters,
   onFilterChange: FilterChangeCallback,
-  headingHierarchyDepth: number
+  headingHierarchyDepth: number,
+  includeRelatedPlans: boolean,
 };
 
 function ActionListLoader(props: StatusboardProps) {
@@ -510,19 +584,22 @@ function ActionListLoader(props: StatusboardProps) {
     filters,
     onFilterChange,
     availableFilters,
-    headingHierarchyDepth
+    headingHierarchyDepth,
+    includeRelatedPlans,
   } = props;
   const plan = usePlan();
   const { t } = useTranslation('common');
-  const { loading, error, data } = useQuery<DashboardActionListQuery>(GET_ACTION_LIST, {
+  const query = includeRelatedPlans ? GET_RELATED_PLAN_ACTION_LIST : GET_ACTION_LIST;
+  const { loading, error, data } = useQuery<DashboardActionListQuery>(query, {
     variables: { plan: plan.identifier },
   });
 
   if (loading) return <ContentLoader />;
   if (error) return <ErrorMessage message={t('error-loading-actions', getActionTermContext(plan))} />;
 
-  const { plan: loadedPlan, planOrganizations, planActions } = data;
+  const { plan: loadedPlan, planOrganizations } = data;
   const { categoryTypes, primaryOrgs } = loadedPlan;
+  const actions = includeRelatedPlans ? data.relatedPlanActions : data.planActions;
 
   return (
     <ActionList
@@ -534,9 +611,10 @@ function ActionListLoader(props: StatusboardProps) {
       activeFilters={filters}
       onFilterChange={onFilterChange}
       organizations={planOrganizations}
-      actions={planActions}
+      actions={actions}
       categoryTypes={categoryTypes}
       primaryOrgs={primaryOrgs}
+      groupByCommonCategories={includeRelatedPlans}
     />
   );
 }
