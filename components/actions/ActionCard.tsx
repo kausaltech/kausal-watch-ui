@@ -19,6 +19,7 @@ const ACTION_CARD_FRAGMENT = gql`
     id
     identifier
     name(hyphenated: true)
+    viewUrl
     status {
       id
       identifier
@@ -298,7 +299,6 @@ function ActionCard(props: ActionCardProps) {
     // Let's assume if status is completed the phase is irrelevant
     if (status.identifier === 'completed') statusText = status.name;
   }
-
   const getPlanUrl = (mergedWith, actionPlan, planId) => {
     if (mergedWith && (mergedWith?.plan.id !== planId)) return mergedWith.plan.viewUrl;
     if (actionPlan.id !== planId) return actionPlan.viewUrl;
@@ -313,7 +313,9 @@ function ActionCard(props: ActionCardProps) {
   return (
     <ActionLink
       action={action}
+      viewUrl={action.viewUrl}
       planUrl={getPlanUrl(mergedWith, action.plan, plan.id)}
+      crossPlan={action?.plan && action.plan.id !== plan.id}
     >
       <StyledActionLink>
         <ActionCardElement>

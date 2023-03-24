@@ -94,7 +94,7 @@ const groupActions = (groupBy, depth, actions, theme) => {
 };
 
 function ActionCardList(props) {
-  const { actions, groupBy, headingHierarchyDepth } = props;
+  const { actions, groupBy, headingHierarchyDepth, includeRelatedPlans } = props;
   const theme = useTheme();
 
   const groups = groupActions(groupBy, headingHierarchyDepth, actions, theme);

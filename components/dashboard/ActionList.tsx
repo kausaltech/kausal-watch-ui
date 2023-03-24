@@ -86,7 +86,7 @@ const getPlanFragment = (includeCommonCategory: boolean = false) => {
       }
    `;
   return gql`
-    fragment PlanFragment on Plan {
+    fragment ${includeCommonCategory ? 'Related' : ''}PlanFragment on Plan {
       id
       categoryTypes(usableForActions: true) {
         id
@@ -171,6 +171,7 @@ const getActionFragment = (crossPlan: boolean = false) => {
     order
     plan {
       id
+      viewUrl
     }
     schedule {
       id
@@ -292,7 +293,7 @@ export const GET_ACTION_LIST = gql`
 export const GET_RELATED_PLAN_ACTION_LIST = gql`
   query DashboardActionList($plan: ID!) {
     plan(id: $plan) {
-      ...PlanFragment
+      ...RelatedPlanFragment
     }
     relatedPlanActions(plan: $plan) {
       ...RelatedActionFragment
@@ -413,7 +414,7 @@ const ActionList = (props: ActionListProps) => {
     defaultView,
     headingHierarchyDepth,
     primaryOrgs,
-    groupByCommonCategories,
+    includeRelatedPlans
  } = props;
   const { t } = useTranslation('common');
   const plan = usePlan();
@@ -424,9 +425,9 @@ const ActionList = (props: ActionListProps) => {
     return constructOrgHierarchy<ActionListOrganization>(organizations).filter(orgHasActions);
   }, [organizations]);
   const cts: ActionListCategoryType[] = useMemo(() => {
-    return constructCatHierarchy<ActionListCategory, ActionListCategoryType>(categoryTypes, groupByCommonCategories);
+    return constructCatHierarchy<ActionListCategory, ActionListCategoryType>(categoryTypes, includeRelatedPlans);
   }, [categoryTypes])
-  const primaryActionClassification = groupByCommonCategories
+  const primaryActionClassification = includeRelatedPlans
     ? plan.primaryActionClassification.common
     : plan.primaryActionClassification;
 
@@ -509,7 +510,7 @@ const ActionList = (props: ActionListProps) => {
             >
               { t('actions-as-list') }
             </Tab>
-            <Tab
+            { !includeRelatedPlans && <Tab
               className={`nav-link ${displayDashboard ? 'active' : ''}`}
               onClick={() => handleChange('view', 'dashboard')}
               role="tab"
@@ -519,7 +520,7 @@ const ActionList = (props: ActionListProps) => {
               id="dashboard-tab"
             >
               { t('dashboard') }
-            </Tab>
+            </Tab> }
           </div>
         </Container>
       </IndicatorsTabs>
@@ -543,6 +544,7 @@ const ActionList = (props: ActionListProps) => {
             <ActionCardList
               actions={filteredActions}
               groupBy={groupBy}
+              includeRelatedPlans={includeRelatedPlans}
               headingHierarchyDepth={headingHierarchyDepth}
             />
           ) : (
@@ -614,7 +616,7 @@ function ActionListLoader(props: StatusboardProps) {
       actions={actions}
       categoryTypes={categoryTypes}
       primaryOrgs={primaryOrgs}
-      groupByCommonCategories={includeRelatedPlans}
+      includeRelatedPlans={includeRelatedPlans}
     />
   );
 }

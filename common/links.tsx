@@ -84,14 +84,17 @@ export const actionPropType = PropTypes.shape({
 });
 
 export function ActionLink(props) {
-  const { action, planUrl, ...other } = props;
+  const { action, planUrl, viewUrl, crossPlan, ...other } = props;
   // If this action is merged with another, replace all links with
   // a link to the master action.
   const targetIdentifier = action.mergedWith ? action.mergedWith.identifier : action.identifier;
-
-  return (
-    <Link {...getActionLinkProps(targetIdentifier, planUrl)} passHref {...other} />
-  );
+  if (crossPlan) {
+    // nextjs Link doesn't properly handle links across plans in some cases,
+    // specifically when we are in a plan without basepath and the link is to
+    // a plan in the same hostname but with a basepath.
+    return React.cloneElement(React.Children.only(other.children), {href: viewUrl})
+  }
+  return <Link {...getActionLinkProps(targetIdentifier, planUrl)} passHref {...other} />;
 }
 
 ActionLink.defaultProps = {
