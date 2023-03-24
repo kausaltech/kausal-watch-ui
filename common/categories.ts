@@ -26,29 +26,40 @@ export function constructCatHierarchy<
   CTType extends CategoryTypeHierarchy<CatType>,
 >(
   ctsIn: CategoryTypeInput[],
+  mapToCommonCategories: boolean = false
 ) {
   const objsById: Map<string, CatType> = new Map();
   const ctsById = new Map()
 
-  let cts: CTType[] = ctsIn.map((ctIn) => {
-    // @ts-ignore
-    const ct: CTType = {
-      ...ctIn,
-    }
-    ct.categories = ctIn.categories.map((cat) => {
+  let cts: CTType[] = ctsIn
+    .filter((ctIn) => ((mapToCommonCategories === false) || (ctIn.common != null)))
+    .map((ctIn) => {
       // @ts-ignore
-      const newCat: CatType = {
-        ...cat,
-        type: ct,
-        children: [],
-      };
-      objsById.set(newCat.id, newCat);
-      return newCat;
-    });
+      const categoryOrCommonCategoryType = mapToCommonCategories ? ctIn.common : ctIn;
+      const ct: CTType = {
+        ...categoryOrCommonCategoryType,
+      }
+      ct.categories = ctIn.categories.map((cat) => {
+        // @ts-ignore
+        const categoryOrCommon = mapToCommonCategories ? cat.common : cat;
+        const newCat: CatType = {
+          ...categoryOrCommon,
+          type: ct,
+          children: [],
+        };
+        if (mapToCommonCategories) {
+          newCat.parent = cat.parent?.common ?? null;
+        }
+        else {
+          newCat.parent = cat.parent;
+        }
+        objsById.set(newCat.id, newCat);
+        return newCat;
+      });
 
-    ctsById.set(ct.id, ct);
-    return ct;
-  });
+      ctsById.set(ct.id, ct);
+      return ct;
+    });
   objsById.forEach((cat) => {
     const parent = cat.parent ? objsById.get(cat.parent.id) : null;
     if (!parent) return;
@@ -90,17 +101,21 @@ export function mapActionCategories<
   actions: CategoryMappedActionInput[], categoryTypes: CategoryTypeHierarchy<Cat>[],
   primaryRootCT: CT|null = null, depth: number
 ) {
+  const useCommonCategories = (primaryRootCT?.__typename === 'CommonCategoryType') ?? false;
   const categories = categoryTypes.map((ct) => ct.categories).flat();
+
   const categoriesById: Map<string, Cat> = new Map(
-    categories.map(cat => [cat.id, cat])
+    categories.map(c => [c.id, c])
   );
   const mappedActions: ActionType[] = actions.map((action) => {
     let actionPrimaryCategories: Cat[] = [];
     const actionCategories: (ActionType['categories'][0] | null)[] = action.categories.map((cat) => {
-      const catObj = categoriesById.get(cat.id);
+      if (useCommonCategories && cat.common == null) return;
+      const category = useCommonCategories ? cat.common : cat;
+      let catObj = categoriesById.get(category.id);
       if (!catObj) return null;
       const categoryPath: Cat[] = [];
-      if (primaryRootCT && catObj.type.id == primaryRootCT.id) {
+      if (primaryRootCT && catObj.type.identifier === primaryRootCT.identifier) {
         let root = catObj;
         categoryPath.unshift(root);
         while (root.parent) {
