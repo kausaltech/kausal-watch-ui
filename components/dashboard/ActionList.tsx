@@ -171,7 +171,16 @@ const getActionFragment = (crossPlan: boolean = false) => {
     order
     plan {
       id
+      shortName
+      versionName
       viewUrl
+      hideActionIdentifiers
+      publishedAt
+      image {
+        rendition(size: "128x128", crop: true) {
+          src
+        }
+      }
     }
     schedule {
       id

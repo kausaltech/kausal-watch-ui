@@ -134,7 +134,7 @@ function ActionCardList(props) {
                   className="mb-4 d-flex align-items-stretch"
                   style={{ transition: 'all 0.5s ease' }}
                 >
-                  <ActionCard action={item} />
+                  <ActionCard action={item} showPlan={includeRelatedPlans} size="xs" />
                 </Col>
               ))}
             </ActionGroupList>

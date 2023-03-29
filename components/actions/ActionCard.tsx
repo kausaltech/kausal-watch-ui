@@ -221,7 +221,7 @@ const OrgLogo = styled.img`
 `;
 
 const ActionIdentifier = (props) => {
-  const {showId, identifier, plan} = props;
+  const {showId, identifier, plan, size} = props;
   if (!showId && !plan) return <div/>
 
   return (
@@ -230,7 +230,7 @@ const ActionIdentifier = (props) => {
       <PlanChip
         planImage={plan.image?.rendition?.src}
         planShortName={plan.shortName || plan.name}
-        size="sm"
+        size={size}
       />
     )}
     { showId && <ActionNumber>{ identifier }</ActionNumber> }
@@ -277,9 +277,11 @@ ActionIdentifier.propTypes = {
 type ActionCardProps = {
   action: ActionCardFragment,
   showPlan: boolean,
+  size?: string
 }
 function ActionCard(props: ActionCardProps) {
-  const { action, showPlan } = props;
+  const { action, showPlan, size } = props;
+
   const plan = usePlan();
   const { t } = useTranslation(['common', 'actions']);
   const theme = useTheme();
@@ -328,6 +330,7 @@ function ActionCard(props: ActionCardProps) {
             <ActionIdentifier
               showId={!plan.hideActionIdentifiers}
               identifier={action.identifier}
+              size={size ?? 'sm'}
               plan={showPlan ? action.plan : null}
             />
           </ActionStatusArea>
