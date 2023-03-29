@@ -47,23 +47,26 @@ type PlanChipProps = {
   planImage?: string,
   planShortName: string,
   organization: string,
-  size: 'sm' | 'md' | 'lg',
+  size: 'xs' | 'sm' | 'md' | 'lg',
   negative?: boolean,
 }
 
 const IMAGE_SIZES = {
+  'xs': 's100',
   'sm': 's100',
   'md': 's200',
   'lg': 's300',
 }
 
 const FONT_SIZES = {
+  'xs': 'fontSizeSm',
   'sm': 'fontSizeSm',
   'md': 'fontSizeSm',
   'lg': 'fontSizeMd',
 }
 
 const MIN_WIDTH = {
+  'xs': '80px',
   'sm': '200px',
   'md': '200px',
   'lg': '240px',
