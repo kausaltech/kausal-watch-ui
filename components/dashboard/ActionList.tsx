@@ -307,7 +307,7 @@ export const GET_RELATED_PLAN_ACTION_LIST = gql`
     relatedPlanActions(plan: $plan) {
       ...RelatedActionFragment
     }
-    planOrganizations(plan: $plan, withAncestors: true, forContactPersons: true, forResponsibleParties: true) {
+    planOrganizations(plan: $plan, withAncestors: true, forContactPersons: false, forResponsibleParties: false) {
       ...OrganizationFragment
     }
   }
@@ -394,6 +394,7 @@ type ActionListProps = {
   title: string,
   leadContent: string,
   headingHierarchyDepth: number,
+  includeRelatedPlans: boolean,
   defaultView: ActionListPageView,
   primaryOrgs: ActionListPrimaryOrg[],
 }
@@ -434,8 +435,13 @@ const ActionList = (props: ActionListProps) => {
     activeFilters.view == null && defaultView === 'DASHBOARD'
   );
   const orgs: ActionListOrganization[] = useMemo(() => {
-    return constructOrgHierarchy<ActionListOrganization>(organizations).filter(orgHasActions);
-  }, [organizations]);
+    const result = constructOrgHierarchy<ActionListOrganization>(organizations);
+    if (includeRelatedPlans) {
+      // Organizations can have actions in other plans
+      return result;
+    }
+    return result.filter(orgHasActions);
+  }, [organizations, includeRelatedPlans]);
   const cts: ActionListCategoryType[] = useMemo(() => {
     return constructCatHierarchy<ActionListCategory, ActionListCategoryType>(categoryTypes, includeRelatedPlans);
   }, [categoryTypes])
