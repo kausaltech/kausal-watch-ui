@@ -487,15 +487,17 @@ class CategoryFilter extends DefaultFilter<FilterValue> {
   options: ActionListFilterOption[];
   style: 'dropdown'|'buttons';
   showAllLabel: string|undefined|null;
+  filterByCommonCategory: boolean;
   catById: Map<string, FilterCategory>
   hasMultipleValues: boolean;
 
-  constructor(config: ActionListCategoryTypeFilterBlock) {
+  constructor(config: ActionListCategoryTypeFilterBlock, filterByCommonCategory: boolean) {
     super();
     this.ct = config.categoryType!;
     this.id = `cat-${this.ct!.identifier}`;
     this.showAllLabel = config.showAllLabel;
     this.hasMultipleValues = this.ct!.selectionType === CategoryTypeSelectWidget.Multiple;
+    this.filterByCommonCategory = filterByCommonCategory;
     //@ts-ignore
     const style = config.style === 'dropdown' ? 'dropdown' : 'buttons';
     this.style = style;
@@ -507,7 +509,11 @@ class CategoryFilter extends DefaultFilter<FilterValue> {
       (cat) => cat.parent,
       (cat) => cat.children
     );
-    this.catById = new Map(sortedCats.map(org => [org.id, org]));
+    this.catById = (
+      this.filterByCommonCategory ?
+      new Map(sortedCats.map(c => [c.common.id, c])) :
+      new Map(sortedCats.map(c => [c.id, c]))
+    );
     const getLabel = (cat: ActionListCategory) => (
       this.ct.hideCategoryIdentifiers ? cat.name : `${cat.identifier}. ${cat.name}`
     );
@@ -828,11 +834,12 @@ type ConstructFiltersOpts = {
   plan: PlanContextType,
   t: TFunction,
   orgs: ActionListOrganization[],
-  primaryOrgs: ActionListPrimaryOrg[]
+  primaryOrgs: ActionListPrimaryOrg[],
+  filterByCommonCategory: boolean,
 }
 
 ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
-  const { mainConfig, plan, t, orgs, primaryOrgs } = opts;
+  const { mainConfig, plan, t, orgs, primaryOrgs, filterByCommonCategory } = opts;
   const { primaryFilters, mainFilters, advancedFilters } = mainConfig;
 
   function makeSection(id: string, hidden: boolean, blocks: ActionListFilterFragment[]) {
@@ -843,7 +850,7 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
           filters.push(new ResponsiblePartyFilter(orgs))
           break
         case 'CategoryTypeFilterBlock':
-          filters.push(new CategoryFilter(block))
+          filters.push(new CategoryFilter(block, filterByCommonCategory))
           break
         case 'ActionAttributeTypeFilterBlock':
           const allowedFormats = ['ORDERED_CHOICE', 'OPTIONAL_CHOICE'];

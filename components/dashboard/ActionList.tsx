@@ -341,6 +341,9 @@ fragment ActionListFilter on StreamFieldInterface {
         parent {
           id
         }
+        common {
+          id
+        }
       }
     }
   }
@@ -448,10 +451,11 @@ const ActionList = (props: ActionListProps) => {
       plan,
       orgs,
       primaryOrgs,
+      filterByCommonCategory: includeRelatedPlans,
       t
     };
     return ActionListFilters.constructFilters(opts);
-  }, [availableFilters, plan, orgs, primaryOrgs, t]);
+  }, [availableFilters, plan, orgs, primaryOrgs, includeRelatedPlans, t]);
 
   const handleChange = useCallback(
     (id: string, val: string|undefined) => {
