@@ -65,7 +65,8 @@ const SourceLink = styled.div`
 `;
 
 const formatValue = (value, locale) => {
-  return value.toLocaleString(locale, {maximumFractionDigits: 0})
+  // Two significant figures
+  return parseFloat(Number(value).toPrecision(3).toLocaleString(locale));
 }
 
 const ValueGroup = (props) => {
