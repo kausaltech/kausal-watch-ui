@@ -116,16 +116,19 @@ const GlobalStyle = createGlobalStyle`
 
     h2 {
       margin-top: ${(props) => props.theme.spaces.s200};
+      margin-bottom: ${(props) => props.theme.spaces.s100};
       font-size: ${(props) => props.theme.fontSizeLg};
     }
 
     h3 {
       margin-top: ${(props) => props.theme.spaces.s200};
+      margin-bottom: ${(props) => props.theme.spaces.s100};
       font-size: ${(props) => props.theme.fontSizeMd};
     }
 
     h4 {
       margin-top: ${(props) => props.theme.spaces.s150};
+      margin-bottom: ${(props) => props.theme.spaces.s050};
       font-size: ${(props) => props.theme.fontSizeBase};
 
       &:first-child {

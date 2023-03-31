@@ -1,13 +1,45 @@
-import React from 'react';
+import React, { useState, ReactElement } from 'react';
 import Zoom from 'react-medium-image-zoom';
 import parse, { domToReact } from 'html-react-parser';
-
+import { Collapse } from 'reactstrap';
+import Button from 'components/common/Button';
 import 'react-medium-image-zoom/dist/styles.css'
-// import { useTranslation } from 'common/i18n';
+import { useTranslation } from 'common/i18n';
 import { usePlan } from 'context/plan';
 import styled from 'styled-components';
 import Icon from 'components/common/Icon';
 
+const BreakPoint = styled.div<{fade: boolean}>`
+  text-align: center;
+  margin-bottom: ${(props) => props.theme.spaces.s150};
+  position: relative;
+
+  &:before {
+    content: '';
+    display: ${(props) => (props.fade ? 'none' : 'block')};
+    position: absolute;
+    height: 75px;
+    top: -90px;
+    width: 100%;
+    background: linear-gradient(to bottom, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 100%);
+  }
+`;
+
+const ToggleButton = styled(Button)`
+  margin: auto;
+  width: 25%;
+  min-width: 120px;
+  color: ${(props) => props.theme.themeColors.dark};
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &.open {
+    color: ${(props) => props.theme.graphColors.grey050};
+  }
+`;
 
 type RichTextImageProps = {
   attribs: {
@@ -61,13 +93,72 @@ function RichTextImage(props: RichTextImageProps) {
   return imgElement;
 }
 
-type RichTextProps = {
-  html: string,
+type CollapsibleTextProps = {
+  parsedContent: string | JSX.Element | JSX.Element[],
   className?: string,
 };
 
+const CollapsibleText = (props: CollapsibleTextProps) => {
+  const { parsedContent, className, ...rest } = props;
+  const { t } = useTranslation();
+  const [isOpen, setIsOpen] = useState(false);
+  const toggle = () => setIsOpen(!isOpen);
+
+  const BREAK_POINT = 400; // characters at least visible
+  // Make sure we do not break inside html elements, only break after <p> tags
+  const intro : ReactElement[] = [];
+  const restOfContent : ReactElement[] = [];
+  let previousNodeType : string | React.JSXElementConstructor<any> = '';
+  let introLength = 0;
+
+  Array.isArray(parsedContent) && parsedContent.forEach((node, indx) => {
+    if (indx === 0) {
+      intro.push(node);
+      introLength += node.props?.children.length;
+    }
+    if (indx > 0 && restOfContent.length === 0) {
+      if (previousNodeType === 'p' && introLength > BREAK_POINT) restOfContent.push(node)
+      else {
+        intro.push(node);
+        introLength += node.props?.children.length;
+      }
+    }
+    else if (restOfContent.length > 0) restOfContent.push(node);
+    previousNodeType = node.type;
+  });
+
+  return (
+    <div {...rest} className={`text-content ${className || ''}`}>
+      { intro }
+      { restOfContent.length > 0 && (
+        <>
+          <Collapse isOpen={isOpen}>
+            { restOfContent }
+          </Collapse>
+          <BreakPoint fade={isOpen}>
+            <ToggleButton
+              color="link"
+              onClick={toggle}
+              className={isOpen ? 'open' : ''}
+            >
+              { isOpen ? t('close') : t('read-more') }
+              <Icon name={isOpen ? 'angle-up' : 'angle-down'} />
+            </ToggleButton>
+          </BreakPoint>
+        </>
+      )}
+    </div>
+  )
+}
+
+type RichTextProps = {
+  html: string,
+  className?: string,
+  isCollapsible?: boolean,
+};
+
 export default function RichText(props: RichTextProps) {
-  const { html, className, ...rest } = props;
+  const { html, isCollapsible, className, ...rest } = props;
   const plan = usePlan();
   // const { t } = useTranslation(); // FIXME: Unsure if we need alt/title for icons
 
@@ -110,5 +201,18 @@ export default function RichText(props: RichTextProps) {
     },
   };
 
-  return <div {...rest} className={`text-content ${className || ''}`}>{parse(html, options)}</div>;
+  const parsedContent = parse(html, options);
+
+  if (isCollapsible) return (
+    <CollapsibleText
+      parsedContent={parsedContent}
+      className={className}
+    />
+  );
+
+  return (
+    <div {...rest} className={`text-content ${className || ''}`}>
+      {parsedContent}
+    </div>
+  );
 }
