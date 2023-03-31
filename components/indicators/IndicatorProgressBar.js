@@ -118,6 +118,7 @@ function IndicatorProgressBar(props) {
     unit, note, indicatorId,
     animate } = props;
 
+  console.log('IndicatorProgressBar', props)
   const theme = useContext(ThemeContext);
   const { t, i18n } = useTranslation();
   const latestBarControls = useAnimation();
@@ -139,6 +140,7 @@ function IndicatorProgressBar(props) {
   const latestColor = theme.graphColors.blue030;
   const startColor = theme.graphColors.red030;
   const canvas = { w: bars.w + rightMargin, h: bars.h + topMargin + bottomMargin };
+  const hasStartValue = startValue !== latestValue;
 
   // const animatedLatestValue = useSpring({ latest: latestValue, from: { latest: startValue } });
   // For simplicity, currently only supports indicators
@@ -270,54 +272,58 @@ function IndicatorProgressBar(props) {
             </marker>
           </defs>
           {/* completed bar */}
-          <motion.rect
-            initial={{ width: 0 }}
-            animate={{ width: startBar.w }}
-            x={startBar.x}
-            y={startBar.y}
-            height={barHeight - barMargin}
-            fill={startColor}
-          />
-          <motion.line
-            animate={reducedSegmentControls}
-            y1={segmentsY}
-            y2={segmentsY}
-            stroke={startColor}
-            strokeWidth="2"
-            markerEnd="url(#reducedArrow)"
-          />
-          <line
-            x1={startBar.x + 1}
-            y1={startBar.y}
-            x2={startBar.x + 1}
-            y2={segmentsY}
-            stroke={startColor}
-            strokeWidth="2"
-            strokeDasharray="2,4"
-          />
-          <ValueGroup
-            transform={`translate(${startBar.x + 4} 0)`}
-            date={graphValues.startYear}
-            value={startValue}
-            unit={unit}
-            locale={i18n.language}
-          />
-          <text
-            transform={`translate(${(bars.w - latestBar.w) / 2} ${segmentsY + barMargin * 3})`}
-            textAnchor="middle"
-          >
-            <SegmentHeader>{t('reduced')}</SegmentHeader>
-            <SegmentValue x="0" dy="16">
-              <Counter
-                from={reductionCounterFrom}
-                to={reductionCounterTo}
-                duration={reductionCounterDuration}
+          { hasStartValue && (
+            <>
+              <motion.rect
+                initial={{ width: 0 }}
+                animate={{ width: startBar.w }}
+                x={startBar.x}
+                y={startBar.y}
+                height={barHeight - barMargin}
+                fill={startColor}
+              />
+              <motion.line
+                animate={reducedSegmentControls}
+                y1={segmentsY}
+                y2={segmentsY}
+                stroke={startColor}
+                strokeWidth="2"
+                markerEnd="url(#reducedArrow)"
+              />
+              <line
+                x1={startBar.x + 1}
+                y1={startBar.y}
+                x2={startBar.x + 1}
+                y2={segmentsY}
+                stroke={startColor}
+                strokeWidth="2"
+                strokeDasharray="2,4"
+              />
+              <ValueGroup
+                transform={`translate(${startBar.x + 4} 0)`}
+                date={graphValues.startYear}
+                value={startValue}
+                unit={unit}
                 locale={i18n.language}
               />
-              {' '}
-              {unit}
-            </SegmentValue>
-          </text>
+              <text
+                transform={`translate(${(bars.w - latestBar.w) / 2} ${segmentsY + barMargin * 3})`}
+                textAnchor="middle"
+              >
+                <SegmentHeader>{t('reduced')}</SegmentHeader>
+                <SegmentValue x="0" dy="16">
+                  <Counter
+                    from={reductionCounterFrom}
+                    to={reductionCounterTo}
+                    duration={reductionCounterDuration}
+                    locale={i18n.language}
+                  />
+                  {' '}
+                  {unit}
+                </SegmentValue>
+              </text>
+            </>
+          )}
           {/* pending from goal bar */}
           <motion.rect
             animate={latestBarControls}
@@ -406,15 +412,17 @@ function IndicatorProgressBar(props) {
           <line
             x1={bars.w - 1}
             x2={bars.w - 1}
-            y1={0}
+            y1={hasStartValue ? 0 : barHeight}
             y2={segmentsY + barMargin}
             stroke={theme.themeColors.light}
           />
-          <text
-            transform={`translate(${canvas.w - 10} ${startBar.y + (barHeight/2)})`} textAnchor="end"
-          >
-            <DateText>{graphValues.startYear}</DateText>
-          </text>
+          { hasStartValue && (
+            <text
+              transform={`translate(${canvas.w - 10} ${startBar.y + (barHeight/2)})`} textAnchor="end"
+            >
+              <DateText>{graphValues.startYear}</DateText>
+            </text>
+          )}
           <text
             transform={`translate(${canvas.w - 10} ${latestBar.y + (barHeight/2)})`} textAnchor="end"
           >
