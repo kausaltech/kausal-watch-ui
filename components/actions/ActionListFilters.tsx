@@ -904,7 +904,19 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
           };
           filters.push(new GenericSelectFilter(scheduleOpts))
           break;
-
+        case 'PlanFilterBlock':
+          const relatedPlans = plan.allRelatedPlans;
+          if (relatedPlans == null || relatedPlans.length === 0) break;
+          const planOpts = {
+            id: 'plan',
+            options: relatedPlans.map(p => ({id: p.id, label: p.name})),
+            label: t('filter-plan'),
+            helpText: t('filter-plan-help', ''),
+            showAllLabel: t('filter-all-plans'),
+            filterAction: (val: string, act: ActionListAction) => (act.plan.id === val),
+          };
+          filters.push(new GenericSelectFilter(planOpts))
+          break;
       }
     });
 
