@@ -450,7 +450,7 @@ const IndicatorListFiltered = (props) => {
                 if (displayNormalizedValues && normalizations != null && normalizations.length > 0) {
                   const populationNormalization = normalizations.find(n => n.normalizer.identifier === 'population');
                   if (populationNormalization != null) {
-                    const normalizedValueObject = item.latestValue.normalizedValues.find(
+                    const normalizedValueObject = item.latestValue?.normalizedValues.find(
                       v => v.normalizerId === populationNormalization.normalizer.id
                     );
                     if (normalizedValueObject != null) {
