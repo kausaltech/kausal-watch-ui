@@ -1,5 +1,7 @@
 import { cloneDeep } from 'lodash';
-import { ORDERED_ACTION_STATUSES } from './data/actions';
+
+import { ActionListAction } from '../components/dashboard/ActionList';
+import { Plan, Sentiment } from './__generated__/graphql';
 
 // Clean up actionStatus so UI can handle edge cases
 const cleanActionStatus = (action, actionStatuses) => {
@@ -21,7 +23,10 @@ const cleanActionStatus = (action, actionStatuses) => {
     newStatus.id = '13'; // this is the old completed id in api
     newStatus.name = actionStatuses.find(
       (statusType) => statusType.identifier === 'completed',
-    )?.name || implementationPhase.name;
+    )?.name || implementationPhase.name; // TODO -- some plans don't have
+    // in practice in db, the names of these are the same
+    // status, phase
+    // (migrate first) //
     newStatus.identifier = 'completed';
     newStatus.isCompleted = true;
   }
@@ -45,7 +50,8 @@ const cleanActionStatus = (action, actionStatuses) => {
   return newStatus;
 };
 
-const getStatusColor = (statusIdentifier, theme) => {
+const getStatusColor = (color, theme) => {
+  return theme.graphColors[color];
   let statusColor = theme.graphColors.grey090;
 
   const statusColors = {
@@ -68,32 +74,37 @@ const getStatusColor = (statusIdentifier, theme) => {
 /*
  Process a list of actions and return an ordered list of statuses for statistics
  */
-const getStatusData = (actions, actionStatuses, theme) => {
-  const progress = {
+const getStatusData = (actions, actionStatusSummaries, theme) => {
+  type Progress = {
+    values: number[];
+    labels: string[];
+    colors: string[];
+    good: number;
+    total: string;
+  }
+
+  const progress: Progress = {
     values: [],
     labels: [],
-    good: 0,
-    total: 0,
     colors: [],
+    good: 0,
+    total: '',
   };
   let totalCount = 0;
 
-  ORDERED_ACTION_STATUSES.forEach((statusIdentifier) => {
-    let statusCount = 0;
-    let statusName = '';
-    actions.forEach((action) => {
-      const actionStatus = cleanActionStatus(action, actionStatuses);
-      if (actionStatus.identifier === statusIdentifier) {
-        statusCount += 1;
-        totalCount += 1;
-        statusName = actionStatus.name;
-      }
-    });
+  console.log(actionStatusSummaries);
+  const counts: Map<string, number> = new Map();
+  for (const {statusSummary: {identifier}} of actions) {
+    const val = (counts.get(identifier)) ?? 0 + 1;
+    counts.set(identifier, val);
+  }
+  actionStatusSummaries.forEach(({identifier, label, color, sentiment}) => {
+    const statusCount = counts.get(identifier) ?? 0;
     if (statusCount > 0) {
       progress.values.push(statusCount);
-      progress.labels.push(statusName);
-      progress.colors.push(getStatusColor(statusIdentifier, theme));
-      if (['completed', 'on_time', 'in_progress'].includes(statusIdentifier)) progress.good += statusCount;
+      progress.labels.push(label);
+      progress.colors.push(getStatusColor(color, theme));
+      if (sentiment === Sentiment.Positive) progress.good += 1;
     }
   });
 
@@ -159,4 +170,11 @@ const getPhaseData = (actions, phases, actionStatuses, theme, t) => {
   return phaseData;
 };
 
-export { cleanActionStatus, getStatusColor, getStatusData, getPhaseData };
+type StatusSummary = Plan['actionStatusSummaries'][0];
+
+const mapActionStatusSummaries = (actions: ActionListAction[], statusSummaries: StatusSummary[]) => {
+  const summaryById = new Map<StatusSummary['identifier'], StatusSummary>(statusSummaries.map(s => [s.identifier, s]));
+  return actions.map(a => (Object.assign({}, a, {statusSummary: summaryById.get(a.statusSummary)})));
+}
+
+export { cleanActionStatus, getStatusColor, getStatusData, getPhaseData, mapActionStatusSummaries };

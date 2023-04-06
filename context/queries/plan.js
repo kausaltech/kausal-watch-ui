@@ -64,6 +64,14 @@ fragment PlanContext on Plan {
     name
     isCompleted
   }
+  actionStatusSummaries {
+    identifier
+    label
+    color
+    isCompleted
+    isActive
+    sentiment
+  }
   impactGroups {
     id
   }

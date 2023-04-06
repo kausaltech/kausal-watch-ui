@@ -8,6 +8,7 @@ import {
 import styled from 'styled-components';
 import { readableColor } from 'polished';
 import { getActionTermContext, useTranslation } from 'common/i18n';
+import { mapActionStatusSummaries } from 'common/preprocess';
 import { constructOrgHierarchy, mapResponsibleParties, OrganizationHierarchyMember, orgHasActions, OrgMappedAction } from 'common/organizations';
 import ContentLoader from 'components/common/ContentLoader';
 import ErrorMessage from 'components/common/ErrorMessage';
@@ -162,6 +163,7 @@ const actionFragment = gql`
       name
       order
     }
+    statusSummary
     completion
     officialName
     updatedAt
@@ -461,14 +463,17 @@ const ActionList = (props: ActionListProps) => {
     mapActionCategories<ActionListCategoryType, ActionListCategory, ActionListAction>(
       actionsWithRps, cts, primaryCatType, headingHierarchyDepth
     );
+  const actionsWithStatusSummaries = mapActionStatusSummaries(mappedActions, plan.actionStatusSummaries);
 
   const enabledFilters = filterSections
     .map(section => section.filters.filter(filter => activeFilters[filter.id])).flat();
 
-  let filteredActions = mappedActions;
+  let filteredActions = actionsWithStatusSummaries;
   enabledFilters.forEach(filter => {
     filteredActions = filteredActions.filter((action) => filter.filterAction(activeFilters[filter.id], action));
   });
+
+  console.log(filteredActions);
 
   let groupBy = 'category';
   if (plan.features.hasActionPrimaryOrgs && `cat-${primaryCatType.identifier}` in activeFilters) {

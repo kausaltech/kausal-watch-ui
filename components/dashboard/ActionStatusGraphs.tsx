@@ -107,7 +107,7 @@ const ActionsStatusGraphs = (props) => {
   const plan = useContext(PlanContext);
   const { t } = useTranslation(['common']);
 
-  const progressData = getStatusData(actions, plan.actionStatuses, theme);
+  const progressData = getStatusData(actions, plan.actionStatusSummaries, theme);
   progressData.labels = progressData.labels.map((label) => label || t('unknown'));
   const timelinessData = getTimelinessData(actions, plan.actionStatuses, theme, t);
   let phaseData;
