@@ -12,6 +12,7 @@
       "ActionImplementationPhaseFilterBlock",
       "ActionScheduleFilterBlock",
       "CategoryTypeFilterBlock",
+      "PlanFilterBlock",
       "PrimaryOrganizationFilterBlock",
       "ResponsiblePartyFilterBlock"
     ],
@@ -139,6 +140,7 @@
       "IntegerBlock",
       "PageChooserBlock",
       "PageLinkBlock",
+      "PlanFilterBlock",
       "PrimaryOrganizationFilterBlock",
       "QuestionAnswerBlock",
       "QuestionBlock",

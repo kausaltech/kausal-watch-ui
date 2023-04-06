@@ -76,17 +76,19 @@ const Tab = styled.button`
   }
 `;
 
-const getPlanFragment = (includeCommonCategory: boolean = false) => {
-  let commonCategory = !includeCommonCategory ? '' : `
-      common {
-        id
-        identifier
-        name
-        order
-      }
-   `;
-  return gql`
-    fragment ${includeCommonCategory ? 'Related' : ''}PlanFragment on Plan {
+const commonCategoryFragment = gql`
+fragment CommonCategoryFragment on Category {
+  common {
+    id
+    identifier
+    name
+    order
+  }
+}
+`;
+
+const planFragment = gql`
+    fragment PlanFragment on Plan {
       id
       categoryTypes(usableForActions: true) {
         id
@@ -107,7 +109,7 @@ const getPlanFragment = (includeCommonCategory: boolean = false) => {
           parent {
             id
           }
-          ${commonCategory}
+          ...CommonCategoryFragment @include(if: $relatedPlanActions)
 
           color
           iconSvgUrl
@@ -128,23 +130,15 @@ const getPlanFragment = (includeCommonCategory: boolean = false) => {
         name
       }
     }
+    ${commonCategoryFragment}
 `;
-}
 
-const getActionFragment = (crossPlan: boolean = false) => {
-  let viewUrl = ''
-  let plan = '';
-  if (crossPlan === true) {
-    viewUrl = 'viewUrl';
-    plan = 'plan { id }';
-  }
-  const actionFragment = gql`
-  fragment ${crossPlan ? 'Related' : ''}ActionFragment on Action {
+const actionFragment = gql`
+  fragment ActionFragment on Action {
     id
     identifier
     name(hyphenated: true)
-    ${viewUrl}
-    ${plan}
+    viewUrl @include(if: $relatedPlanActions)
     status {
       id
       identifier
@@ -169,7 +163,7 @@ const getActionFragment = (crossPlan: boolean = false) => {
     startDate
     endDate
     order
-    plan {
+    plan @include(if: $relatedPlanActions) {
       id
       shortName
       versionName
@@ -181,6 +175,9 @@ const getActionFragment = (crossPlan: boolean = false) => {
           src
         }
       }
+    }
+    plan @skip(if: $relatedPlanActions) {
+      id
     }
     schedule {
       id
@@ -260,11 +257,7 @@ const getActionFragment = (crossPlan: boolean = false) => {
       }
     }
   }
-  `;
-  return actionFragment;
-}
-
-
+`;
 
 const organizationFragment = gql`
 fragment OrganizationFragment on Organization {
@@ -283,36 +276,23 @@ fragment OrganizationFragment on Organization {
 `;
 
 export const GET_ACTION_LIST = gql`
-  query DashboardActionList($plan: ID!) {
+  query DashboardActionList($plan: ID!, $relatedPlanActions: Boolean!) {
     plan(id: $plan) {
       ...PlanFragment
     }
-    planActions(plan: $plan) {
+    planActions(plan: $plan) @skip(if: $relatedPlanActions) {
       ...ActionFragment
     }
+    relatedPlanActions(plan: $plan) @include(if: $relatedPlanActions) {
+      ...ActionFragment
+    }
+
     planOrganizations(plan: $plan, withAncestors: true, forContactPersons: true, forResponsibleParties: true) {
       ...OrganizationFragment
     }
   }
-  ${getPlanFragment(false)}
-  ${getActionFragment(false)}
-  ${organizationFragment}
-`;
-
-export const GET_RELATED_PLAN_ACTION_LIST = gql`
-  query DashboardActionList($plan: ID!) {
-    plan(id: $plan) {
-      ...RelatedPlanFragment
-    }
-    relatedPlanActions(plan: $plan) {
-      ...RelatedActionFragment
-    }
-    planOrganizations(plan: $plan, withAncestors: true, forContactPersons: false, forResponsibleParties: false) {
-      ...OrganizationFragment
-    }
-  }
-  ${getPlanFragment(true)}
-  ${getActionFragment(true)}
+  ${planFragment}
+  ${actionFragment}
   ${organizationFragment}
 `;
 
@@ -610,9 +590,8 @@ function ActionListLoader(props: StatusboardProps) {
   } = props;
   const plan = usePlan();
   const { t } = useTranslation('common');
-  const query = includeRelatedPlans ? GET_RELATED_PLAN_ACTION_LIST : GET_ACTION_LIST;
-  const { loading, error, data } = useQuery<DashboardActionListQuery>(query, {
-    variables: { plan: plan.identifier },
+  const { loading, error, data } = useQuery<DashboardActionListQuery>(GET_ACTION_LIST, {
+    variables: { plan: plan.identifier, relatedPlanActions: includeRelatedPlans },
   });
 
   if (loading) return <ContentLoader />;
