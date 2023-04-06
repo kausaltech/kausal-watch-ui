@@ -30,11 +30,11 @@ const StatusGraphs = styled.div`
 `;
 
 const getTimelinessData = (actions, actionStatuses, theme, t) => {
-  const timeliness = {
+  const timeliness: Progress = {
     values: [],
     labels: [],
     good: 0,
-    total: 0,
+    total: '',
     colors: [],
   };
 
@@ -42,21 +42,15 @@ const getTimelinessData = (actions, actionStatuses, theme, t) => {
   let under30 = 0;
   let under60 = 0;
   let over60 = 0;
-  let notActive = 0;
   let total = 0;
   let good = 0;
 
   actions.forEach((action) => {
     const actionUpdated = dayjs(action.updatedAt);
     const age = now.diff(actionUpdated, 'day');
-    const actionStatus = cleanActionStatus(action, actionStatuses);
-    total += 1;
-
     // Filter out merged, inactive and completed actions from timeliness calculation
-    if (['postponed', 'cancelled', 'completed', 'merged'].includes(actionStatus.identifier)) {
-      notActive += 1;
-      total -= 1;
-    } else {
+    if (action.statusSummary.isActive) {
+      total += 1;
       if (age >= 60) {
         over60 += 1;
       } else if (age >= 30) {

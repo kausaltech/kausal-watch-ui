@@ -1,7 +1,7 @@
 import { cloneDeep } from 'lodash';
 
 import { ActionListAction } from '../components/dashboard/ActionList';
-import { Plan, Sentiment } from './__generated__/graphql';
+import { Action, ActionStatus, ActionImplementationPhase, Plan, Sentiment, ActionStatusSummaryIdentifier } from './__generated__/graphql';
 
 // Clean up actionStatus so UI can handle edge cases
 const cleanActionStatus = (action, actionStatuses) => {
@@ -71,17 +71,19 @@ const getStatusColor = (color, theme) => {
   return statusColor;
 };
 
+type Progress = {
+  values: number[];
+  labels: string[];
+  colors: string[];
+  good: number;
+  total: string;
+}
+
+
 /*
  Process a list of actions and return an ordered list of statuses for statistics
  */
 const getStatusData = (actions, actionStatusSummaries, theme) => {
-  type Progress = {
-    values: number[];
-    labels: string[];
-    colors: string[];
-    good: number;
-    total: string;
-  }
 
   const progress: Progress = {
     values: [],
@@ -95,7 +97,7 @@ const getStatusData = (actions, actionStatusSummaries, theme) => {
   console.log(actionStatusSummaries);
   const counts: Map<string, number> = new Map();
   for (const {statusSummary: {identifier}} of actions) {
-    const val = (counts.get(identifier)) ?? 0 + 1;
+    const val = 1 + (counts.get(identifier) ?? 0);
     counts.set(identifier, val);
   }
   actionStatusSummaries.forEach(({identifier, label, color, sentiment}) => {
@@ -104,10 +106,12 @@ const getStatusData = (actions, actionStatusSummaries, theme) => {
       progress.values.push(statusCount);
       progress.labels.push(label);
       progress.colors.push(getStatusColor(color, theme));
-      if (sentiment === Sentiment.Positive) progress.good += 1;
+      if (sentiment === Sentiment.Positive) {
+        progress.good = progress.good + statusCount;
+      }
     }
+    totalCount += statusCount;
   });
-
   progress.total = `${Math.round((progress.good / totalCount) * 100)}%`;
   return progress;
 };
@@ -115,13 +119,15 @@ const getStatusData = (actions, actionStatusSummaries, theme) => {
 /*
  Process a list of actions and return an ordered list of phases for statistics
  */
-const getPhaseData = (actions, phases, actionStatuses, theme, t) => {
-  const phaseData = {
+const getPhaseData = (actions: Action[], phases: ActionImplemetationPhase[], actionStatuses: ActionStatus[], theme, t) => {
+  const phaseData: Progress = {
     labels: [],
     values: [],
     colors: [],
-    total: 0,
+    good: 0,
+    total: '',
   };
+  let totalCount = 0;
 
   const phaseColors = [
     theme.graphColors.green010,
@@ -134,39 +140,33 @@ const getPhaseData = (actions, phases, actionStatuses, theme, t) => {
 
   // Process actions and ignore set phase if action's status trumps it
   const phasedActions = actions.map((action) => {
-    const actionStatus = cleanActionStatus(action, actionStatuses);
-    const realphase = {
-      id: action.implementationPhase?.id,
-      identifier: action.implementationPhase?.identifier,
-      name: action.implementationPhase?.name,
-    };
-
-    if (['cancelled', 'merged', 'postponed', 'completed'].includes(actionStatus.identifier)) {
-      realphase.id = actionStatus.id;
-      realphase.identifier = actionStatus.identifier;
-      realphase.name = `No phase (${actionStatus.name})`;
+    const {implementationPhase, statusSummary} = action;
+    const phase = Object.assign({}, ((statusSummary.isActive && implementationPhase != null) ? implementationPhase : statusSummary));
+    if (statusSummary.isActive === false) {
+      phase.name = `No phase (${phase.name})`;
     }
-
-    if (actionStatus.identifier === 'completed') {
-      realphase.name = actionStatus.name;
+    if (statusSummary.identifier === ActionStatusSummaryIdentifier.Completed) {
+      phase.name = statusSummary.name;
     }
-
-    return { phase: realphase };
+    // TODO: better way to handle phase---summary -matching
+    phase.identifier = phase?.identifier?.toLowerCase();
+    return { phase };
   });
 
   phases.forEach((phase, index) => {
-    const actionCountOnPhase = phasedActions.filter((action) => action.phase.identifier === phase.identifier);
+    const actionCountOnPhase = phasedActions.filter((action) => action.phase?.identifier === phase.identifier);
 
     phaseData.labels.push(phase.name);
     phaseData.values.push(actionCountOnPhase.length);
     phaseData.colors.push(phaseColors[index]);
-    phaseData.total += actionCountOnPhase.length;
+    totalCount += actionCountOnPhase.length;
   });
 
   phaseData.labels.push(t('unknown'));
-  phaseData.values.push(actions.length - phaseData.total);
+  phaseData.values.push(actions.length - totalCount);
   phaseData.colors.push(theme.graphColors.grey010);
 
+  phaseData.total = totalCount.toString();
   return phaseData;
 };
 
