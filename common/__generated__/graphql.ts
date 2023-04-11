@@ -207,6 +207,7 @@ export type Action = {
   /** Set if this action is superseded by another action */
   supersededBy?: Maybe<Action>;
   tasks: Array<ActionTask>;
+  timeliness: ActionTimelinessIdentifier;
   updatedAt: Scalars['DateTime'];
   uuid: Scalars['UUID'];
   viewUrl: Scalars['String'];
@@ -691,12 +692,12 @@ export type ActionStatus = {
 
 export type ActionStatusSummary = {
   __typename?: 'ActionStatusSummary';
-  color?: Maybe<Scalars['String']>;
-  identifier?: Maybe<ActionStatusSummaryIdentifier>;
-  isActive?: Maybe<Scalars['Boolean']>;
-  isCompleted?: Maybe<Scalars['Boolean']>;
-  label?: Maybe<Scalars['String']>;
-  sentiment?: Maybe<Sentiment>;
+  color: Scalars['String'];
+  identifier: ActionStatusSummaryIdentifier;
+  isActive: Scalars['Boolean'];
+  isCompleted: Scalars['Boolean'];
+  label: Scalars['String'];
+  sentiment: Sentiment;
 };
 
 /** An enumeration. */
@@ -782,6 +783,24 @@ export type ActionTasksBlock = StreamFieldInterface & {
   rawValue: Scalars['String'];
   value: Scalars['String'];
 };
+
+export type ActionTimeliness = {
+  __typename?: 'ActionTimeliness';
+  color: Scalars['String'];
+  comparison: Comparison;
+  days: Scalars['Int'];
+  identifier: ActionTimelinessIdentifier;
+  label: Scalars['String'];
+  sentiment: Sentiment;
+};
+
+/** An enumeration. */
+export enum ActionTimelinessIdentifier {
+  Acceptable = 'ACCEPTABLE',
+  Late = 'LATE',
+  Optimal = 'OPTIMAL',
+  Stale = 'STALE'
+}
 
 export type AdditionalLinks = {
   __typename?: 'AdditionalLinks';
@@ -1484,6 +1503,12 @@ export type CommonIndicatorNormalization = {
   normalizer?: Maybe<CommonIndicator>;
   unit?: Maybe<Unit>;
 };
+
+/** An enumeration. */
+export enum Comparison {
+  Gt = 'GT',
+  Lte = 'LTE'
+}
 
 export type CreateOrganizationMutationInput = {
   /** A simplified short version of name for the general public */
@@ -2612,8 +2637,9 @@ export type Plan = PlanInterface & {
   actionImplementationPhases: Array<ActionImplementationPhase>;
   actionListPage?: Maybe<ActionListPage>;
   actionSchedules: Array<ActionSchedule>;
-  actionStatusSummaries?: Maybe<Array<Maybe<ActionStatusSummary>>>;
+  actionStatusSummaries: Array<ActionStatusSummary>;
   actionStatuses: Array<ActionStatus>;
+  actionTimelinessClasses: Array<ActionTimeliness>;
   actionUpdateAcceptableInterval?: Maybe<Scalars['Int']>;
   actionUpdateTargetInterval?: Maybe<Scalars['Int']>;
   actions: Array<Maybe<Action>>;
@@ -6454,16 +6480,7 @@ export type PlanFragmentFragment = (
 );
 
 export type ActionFragmentFragment = (
-  { id: string, identifier: string, name: string, viewUrl?: string, statusSummary: ActionStatusSummaryIdentifier, completion?: number | null, officialName?: string | null, updatedAt: any, scheduleContinuous: boolean, startDate?: any | null, endDate?: any | null, order: number, plan?: (
-    { id: string, shortName?: string | null, versionName: string, viewUrl?: string | null, hideActionIdentifiers?: boolean | null, publishedAt?: any | null, image?: (
-      { rendition?: (
-        { src: string }
-        & { __typename?: 'ImageRendition' }
-      ) | null }
-      & { __typename?: 'Image' }
-    ) | null }
-    & { __typename?: 'Plan' }
-  ), status?: (
+  { id: string, identifier: string, name: string, viewUrl?: string, statusSummary: ActionStatusSummaryIdentifier, timeliness: ActionTimelinessIdentifier, completion?: number | null, officialName?: string | null, updatedAt: any, scheduleContinuous: boolean, startDate?: any | null, endDate?: any | null, order: number, status?: (
     { id: string, identifier: string, name: string }
     & { __typename?: 'ActionStatus' }
   ) | null, categories: Array<(
@@ -6475,7 +6492,16 @@ export type ActionFragmentFragment = (
   )>, implementationPhase?: (
     { id: string, identifier: string, name: string, order: number }
     & { __typename?: 'ActionImplementationPhase' }
-  ) | null, schedule: Array<(
+  ) | null, plan?: (
+    { id: string, shortName?: string | null, versionName: string, viewUrl?: string | null, hideActionIdentifiers?: boolean | null, publishedAt?: any | null, image?: (
+      { rendition?: (
+        { src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null }
+      & { __typename?: 'Image' }
+    ) | null }
+    & { __typename?: 'Plan' }
+  ), schedule: Array<(
     { id: string }
     & { __typename?: 'ActionSchedule' }
   )>, impact?: (
@@ -6597,16 +6623,7 @@ export type DashboardActionListQuery = (
     ) | null> }
     & { __typename?: 'Plan' }
   ) | null, planActions?: Array<(
-    { id: string, identifier: string, name: string, viewUrl?: string, statusSummary: ActionStatusSummaryIdentifier, completion?: number | null, officialName?: string | null, updatedAt: any, scheduleContinuous: boolean, startDate?: any | null, endDate?: any | null, order: number, plan?: (
-      { id: string, shortName?: string | null, versionName: string, viewUrl?: string | null, hideActionIdentifiers?: boolean | null, publishedAt?: any | null, image?: (
-        { rendition?: (
-          { src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null }
-        & { __typename?: 'Image' }
-      ) | null }
-      & { __typename?: 'Plan' }
-    ), status?: (
+    { id: string, identifier: string, name: string, viewUrl?: string, statusSummary: ActionStatusSummaryIdentifier, timeliness: ActionTimelinessIdentifier, completion?: number | null, officialName?: string | null, updatedAt: any, scheduleContinuous: boolean, startDate?: any | null, endDate?: any | null, order: number, status?: (
       { id: string, identifier: string, name: string }
       & { __typename?: 'ActionStatus' }
     ) | null, categories: Array<(
@@ -6618,7 +6635,16 @@ export type DashboardActionListQuery = (
     )>, implementationPhase?: (
       { id: string, identifier: string, name: string, order: number }
       & { __typename?: 'ActionImplementationPhase' }
-    ) | null, schedule: Array<(
+    ) | null, plan?: (
+      { id: string, shortName?: string | null, versionName: string, viewUrl?: string | null, hideActionIdentifiers?: boolean | null, publishedAt?: any | null, image?: (
+        { rendition?: (
+          { src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null }
+        & { __typename?: 'Image' }
+      ) | null }
+      & { __typename?: 'Plan' }
+    ), schedule: Array<(
       { id: string }
       & { __typename?: 'ActionSchedule' }
     )>, impact?: (
@@ -6690,16 +6716,7 @@ export type DashboardActionListQuery = (
     )> }
     & { __typename?: 'Action' }
   )> | null, relatedPlanActions?: Array<(
-    { id: string, identifier: string, name: string, viewUrl?: string, statusSummary: ActionStatusSummaryIdentifier, completion?: number | null, officialName?: string | null, updatedAt: any, scheduleContinuous: boolean, startDate?: any | null, endDate?: any | null, order: number, plan?: (
-      { id: string, shortName?: string | null, versionName: string, viewUrl?: string | null, hideActionIdentifiers?: boolean | null, publishedAt?: any | null, image?: (
-        { rendition?: (
-          { src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null }
-        & { __typename?: 'Image' }
-      ) | null }
-      & { __typename?: 'Plan' }
-    ), status?: (
+    { id: string, identifier: string, name: string, viewUrl?: string, statusSummary: ActionStatusSummaryIdentifier, timeliness: ActionTimelinessIdentifier, completion?: number | null, officialName?: string | null, updatedAt: any, scheduleContinuous: boolean, startDate?: any | null, endDate?: any | null, order: number, status?: (
       { id: string, identifier: string, name: string }
       & { __typename?: 'ActionStatus' }
     ) | null, categories: Array<(
@@ -6711,7 +6728,16 @@ export type DashboardActionListQuery = (
     )>, implementationPhase?: (
       { id: string, identifier: string, name: string, order: number }
       & { __typename?: 'ActionImplementationPhase' }
-    ) | null, schedule: Array<(
+    ) | null, plan?: (
+      { id: string, shortName?: string | null, versionName: string, viewUrl?: string | null, hideActionIdentifiers?: boolean | null, publishedAt?: any | null, image?: (
+        { rendition?: (
+          { src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null }
+        & { __typename?: 'Image' }
+      ) | null }
+      & { __typename?: 'Plan' }
+    ), schedule: Array<(
       { id: string }
       & { __typename?: 'ActionSchedule' }
     )>, impact?: (
@@ -7714,10 +7740,13 @@ export type GetPlanContextQuery = (
     )>, actionStatuses: Array<(
       { id: string, identifier: string, name: string, isCompleted: boolean }
       & { __typename?: 'ActionStatus' }
-    )>, actionStatusSummaries?: Array<(
-      { identifier?: ActionStatusSummaryIdentifier | null, label?: string | null, color?: string | null, isCompleted?: boolean | null, isActive?: boolean | null, sentiment?: Sentiment | null }
+    )>, actionStatusSummaries: Array<(
+      { identifier: ActionStatusSummaryIdentifier, label: string, color: string, isCompleted: boolean, isActive: boolean, sentiment: Sentiment }
       & { __typename?: 'ActionStatusSummary' }
-    ) | null> | null, impactGroups: Array<(
+    )>, actionTimelinessClasses: Array<(
+      { identifier: ActionTimelinessIdentifier, label: string, color: string, sentiment: Sentiment, comparison: Comparison, days: number }
+      & { __typename?: 'ActionTimeliness' }
+    )>, impactGroups: Array<(
       { id: string }
       & { __typename?: 'ImpactGroup' }
     ) | null>, primaryOrgs: Array<(
@@ -7886,10 +7915,13 @@ export type PlanContextFragment = (
   )>, actionStatuses: Array<(
     { id: string, identifier: string, name: string, isCompleted: boolean }
     & { __typename?: 'ActionStatus' }
-  )>, actionStatusSummaries?: Array<(
-    { identifier?: ActionStatusSummaryIdentifier | null, label?: string | null, color?: string | null, isCompleted?: boolean | null, isActive?: boolean | null, sentiment?: Sentiment | null }
+  )>, actionStatusSummaries: Array<(
+    { identifier: ActionStatusSummaryIdentifier, label: string, color: string, isCompleted: boolean, isActive: boolean, sentiment: Sentiment }
     & { __typename?: 'ActionStatusSummary' }
-  ) | null> | null, impactGroups: Array<(
+  )>, actionTimelinessClasses: Array<(
+    { identifier: ActionTimelinessIdentifier, label: string, color: string, sentiment: Sentiment, comparison: Comparison, days: number }
+    & { __typename?: 'ActionTimeliness' }
+  )>, impactGroups: Array<(
     { id: string }
     & { __typename?: 'ImpactGroup' }
   ) | null>, primaryOrgs: Array<(

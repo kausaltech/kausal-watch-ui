@@ -72,6 +72,14 @@ fragment PlanContext on Plan {
     isActive
     sentiment
   }
+  actionTimelinessClasses {
+    identifier
+    label
+    color
+    sentiment
+    comparison
+    days
+  }
   impactGroups {
     id
   }

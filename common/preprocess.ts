@@ -1,7 +1,11 @@
 import { cloneDeep } from 'lodash';
 
 import { ActionListAction } from '../components/dashboard/ActionList';
-import { Action, ActionStatus, ActionImplementationPhase, Plan, Sentiment, ActionStatusSummaryIdentifier } from './__generated__/graphql';
+import { Action, ActionStatus, ActionImplementationPhase, Plan, Sentiment, ActionStatusSummary, ActionStatusSummaryIdentifier } from './__generated__/graphql';
+
+interface ActionWithStatusSummary extends Omit<Action, 'statusSummary'> {
+  statusSummary: ActionStatusSummary;
+}
 
 // Clean up actionStatus so UI can handle edge cases
 const cleanActionStatus = (action, actionStatuses) => {
@@ -94,7 +98,6 @@ const getStatusData = (actions, actionStatusSummaries, theme) => {
   };
   let totalCount = 0;
 
-  console.log(actionStatusSummaries);
   const counts: Map<string, number> = new Map();
   for (const {statusSummary: {identifier}} of actions) {
     const val = 1 + (counts.get(identifier) ?? 0);
@@ -119,7 +122,7 @@ const getStatusData = (actions, actionStatusSummaries, theme) => {
 /*
  Process a list of actions and return an ordered list of phases for statistics
  */
-const getPhaseData = (actions: Action[], phases: ActionImplemetationPhase[], actionStatuses: ActionStatus[], theme, t) => {
+const getPhaseData = (actions: ActionWithStatusSummary[], phases: ActionImplemetationPhase[], theme, t) => {
   const phaseData: Progress = {
     labels: [],
     values: [],
@@ -141,7 +144,10 @@ const getPhaseData = (actions: Action[], phases: ActionImplemetationPhase[], act
   // Process actions and ignore set phase if action's status trumps it
   const phasedActions = actions.map((action) => {
     const {implementationPhase, statusSummary} = action;
-    const phase = Object.assign({}, ((statusSummary.isActive && implementationPhase != null) ? implementationPhase : statusSummary));
+    const phase = Object.assign(
+      {},
+      (statusSummary.isActive && implementationPhase != null) ? implementationPhase : statusSummary
+    );
     if (statusSummary.isActive === false) {
       phase.name = `No phase (${phase.name})`;
     }
@@ -172,7 +178,9 @@ const getPhaseData = (actions: Action[], phases: ActionImplemetationPhase[], act
 
 type StatusSummary = Plan['actionStatusSummaries'][0];
 
-const mapActionStatusSummaries = (actions: ActionListAction[], statusSummaries: StatusSummary[]) => {
+const mapActionStatusSummaries = (
+  actions: ActionListAction[], statusSummaries: StatusSummary[]): ActionWithStatusSummary[] =>
+{
   const summaryById = new Map<StatusSummary['identifier'], StatusSummary>(statusSummaries.map(s => [s.identifier, s]));
   return actions.map(a => (Object.assign({}, a, {statusSummary: summaryById.get(a.statusSummary)})));
 }

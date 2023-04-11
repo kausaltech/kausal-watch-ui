@@ -164,6 +164,7 @@ const actionFragment = gql`
       order
     }
     statusSummary
+    timeliness
     completion
     officialName
     updatedAt
@@ -472,8 +473,6 @@ const ActionList = (props: ActionListProps) => {
   enabledFilters.forEach(filter => {
     filteredActions = filteredActions.filter((action) => filter.filterAction(activeFilters[filter.id], action));
   });
-
-  console.log(filteredActions);
 
   let groupBy = 'category';
   if (plan.features.hasActionPrimaryOrgs && `cat-${primaryCatType.identifier}` in activeFilters) {

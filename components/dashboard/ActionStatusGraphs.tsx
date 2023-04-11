@@ -9,10 +9,13 @@ import PlanContext from 'context/plan';
 import { useTranslation } from 'common/i18n';
 import StatusDonut from 'components/graphs/StatusDonut';
 
+import { Sentiment, ActionTimeliness, ActionStatusSummary, ActionTimelinessIdentifier, Action } from 'common/__generated__/graphql';
+
+
 const StatusGraphs = styled.div`
   width: auto;
   display: flex;
-  overflow-x: scroll;
+  overflow-x: auto;
   margin-bottom: ${(props) => props.theme.spaces.s300};
   background-image: ${(props) => `linear-gradient(to right, ${props.theme.themeColors.white}, ${props.theme.themeColors.white}),
     linear-gradient(to right, ${props.theme.themeColors.white}, ${props.theme.themeColors.white}),
@@ -29,70 +32,51 @@ const StatusGraphs = styled.div`
   }
 `;
 
-const getTimelinessData = (actions, actionStatuses, theme, t) => {
-  const timeliness: Progress = {
+const getTimelinessData = (actions: ActionWithStatusSummary[], timelinessClasses: ActionTimeliness[], theme) => {
+  const aggregates: Progress = {
     values: [],
     labels: [],
     good: 0,
-    total: '',
+    total: '0%',
     colors: [],
   };
 
-  const now = dayjs();
-  let under30 = 0;
-  let under60 = 0;
-  let over60 = 0;
   let total = 0;
   let good = 0;
 
-  actions.forEach((action) => {
-    const actionUpdated = dayjs(action.updatedAt);
-    const age = now.diff(actionUpdated, 'day');
-    // Filter out merged, inactive and completed actions from timeliness calculation
-    if (action.statusSummary.isActive) {
-      total += 1;
-      if (age >= 60) {
-        over60 += 1;
-      } else if (age >= 30) {
-        under60 += 1;
-        good += 1;
-      } else {
-        under30 += 1;
-        good += 1;
-      }
-    }
-  });
+  const counts = new Map<ActionTimelinessIdentifier|undefined, number>(
+    timelinessClasses.map(c => [c.identifier, 0])
+  );
+  const classes =  new Map<ActionTimelinessIdentifier|undefined, ActionTimeliness>(
+    timelinessClasses.map(c => [c.identifier, c])
+  );
 
-  if (total === 0) {
-    timeliness.total = '0%';
-    return timeliness;
+  const activeActions = actions.filter(action => action.statusSummary.isActive);
+  if (activeActions.length === 0) {
+    return aggregates;
   }
 
-  timeliness.values.push(under30);
-  timeliness.labels.push(t('under-x-days', { days: 30 }));
-  timeliness.colors.push(theme.graphColors.green070);
+  activeActions.forEach(({timeliness}) => {
+    const count = counts.get(timeliness) ?? 0;
+    counts.set(timeliness, count + 1);
+    total += 1;
+    if (classes.get(timeliness)?.sentiment !== Sentiment.Negative) good += 1;
 
-  timeliness.values.push(under60);
-  timeliness.labels.push(t('under-x-days', { days: 60 }));
-  timeliness.colors.push(theme.graphColors.green030);
+  });
+  for (const identifier of [ActionTimelinessIdentifier.Optimal,
+                            ActionTimelinessIdentifier.Acceptable,
+                            ActionTimelinessIdentifier.Late]) {
+    const timeliness = classes.get(identifier);
+    if (timeliness == null) {
+      return;
+    }
+    aggregates.values.push(counts.get(identifier));
+    aggregates.labels.push(timeliness.label);
+    aggregates.colors.push(theme.graphColors[timeliness.color]);
+  }
 
-  timeliness.values.push(over60);
-  timeliness.labels.push(t('over-x-days', { days: 60 }));
-  timeliness.colors.push(theme.graphColors.yellow050);
-
-  /*
-   * Do not report on the timeliness of actions that are not
-   * being monitored anymore.
-   */
-  /*
-  timeliness.values.push(notActive);
-  timeliness.labels.push(t('not-being-monitored'));
-  timeliness.colors.push(theme.graphColors.grey030);
-  */
-
-  timeliness.total = `${Math.round((good / total) * 100)}%`;
-
-  return timeliness;
+  aggregates.total = `${Math.round((good / total) * 100)}%`;
+  return aggregates;
 };
 
 const ActionsStatusGraphs = (props) => {
@@ -103,10 +87,10 @@ const ActionsStatusGraphs = (props) => {
 
   const progressData = getStatusData(actions, plan.actionStatusSummaries, theme);
   progressData.labels = progressData.labels.map((label) => label || t('unknown'));
-  const timelinessData = getTimelinessData(actions, plan.actionStatuses, theme, t);
+  const timelinessData = getTimelinessData(actions, plan.actionTimelinessClasses, theme);
   let phaseData;
   if (plan.actionImplementationPhases.length > 0) {
-    phaseData = getPhaseData(actions, plan.actionImplementationPhases, plan.actionStatuses, theme, t);
+    phaseData = getPhaseData(actions, plan.actionImplementationPhases, theme, t);
   }
 
   return (
