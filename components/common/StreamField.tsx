@@ -13,6 +13,7 @@ import FrontPageHeroBlock from 'components/contentblocks/FrontPageHeroBlock';
 import IndicatorShowcaseBlock from 'components/contentblocks/IndicatorShowcaseBlock';
 import CardListBlock from 'components/contentblocks/CardListBlock';
 import ActionHighlightsBlock from 'components/contentblocks/ActionHighlightsBlock';
+import ActionStatusGraphsBlock from 'components/contentblocks/ActionStatusGraphsBlock';
 import IndicatorHighlightsBlock from 'components/contentblocks/IndicatorHighlightsBlock';
 import RelatedIndicatorsBlock from 'components/contentblocks/RelatedIndicatorsBlock';
 import RelatedPlanListBlock from 'components/contentblocks/RelatedPlanListBlock';
@@ -368,6 +369,9 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
     }
     case 'ActionHighlightsBlock': {
       return <ActionHighlightsBlock />;
+    }
+    case 'ActionStatusGraphsBlock': {
+      return <ActionStatusGraphsBlock />;
     }
     case 'IndicatorHighlightsBlock': {
       return <IndicatorHighlightsBlock />;
