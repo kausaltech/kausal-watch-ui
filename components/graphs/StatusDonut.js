@@ -92,6 +92,7 @@ const StatusDonut = (props) => {
     margin: {"t": 0, "b": 0, "l": 0, "r": 0},
   };
   const config = {
+    displaylogo: false,
     locale: i18n.language,
     locales: {
       fi: {
