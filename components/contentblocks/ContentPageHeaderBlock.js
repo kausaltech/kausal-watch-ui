@@ -69,9 +69,10 @@ const ContentPageHeaderBlock = (props) => {
         { headerImage && (
           <HeaderImage image={headerImage} imageAlign={imageAlign} />
         )}
+        { altText && <span className="sr-only" role="img" aria-label={altText} /> }
         { imageCredit
         && (
-        <ImageCredit aria-hidden="true">
+        <ImageCredit>
           {`${t('image-credit')}: ${imageCredit}`}
         </ImageCredit>
         )}

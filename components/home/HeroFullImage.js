@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useTransition } from 'react';
 import { useTheme } from 'common/theme';
 import PropTypes from 'prop-types';
 import { Container } from 'reactstrap';
 import styled from 'styled-components';
+import { useTranslation } from 'common/i18n';
 import RichText from 'components/common/RichText';
 
 const Hero = styled.div`
@@ -118,6 +119,7 @@ const HeroFullImage = (props) => {
     altText, imageCredit,
   } = props;
 
+  const { t } = useTranslation();
   const theme = useTheme();
 
   return (
@@ -126,9 +128,10 @@ const HeroFullImage = (props) => {
         image={bgImage}
         imageAlign={imageAlign}
       />
+      { altText && <span className="sr-only" role="img" aria-label={altText} /> }
       {imageCredit && (
-        <ImageCredit aria-hidden="true">
-          {imageCredit}
+        <ImageCredit>
+          {`${t('image-credit')}: ${imageCredit}`}
         </ImageCredit>
       )}
       <Container>

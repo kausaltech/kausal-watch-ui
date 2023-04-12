@@ -192,7 +192,22 @@ function ActionCategories(props) {
   );
 }
 
-function ActionHero(props) {
+type ActionHeroProps = {
+  categories: [],
+  previousAction: any, //TODO: type these
+  nextAction: any,
+  identifier: string,
+  name: string,
+  imageUrl: string,
+  imageAlign: string,
+  altText?: string,
+  imageCredit?: string,
+  imageTitle?: string,
+  hideActionIdentifiers?: boolean,
+  primaryOrg: any,
+};
+
+function ActionHero(props: ActionHeroProps) {
   const {
     categories,
     previousAction,
@@ -204,7 +219,7 @@ function ActionHero(props) {
     altText,
     imageCredit,
     imageTitle,
-    hideActionIdentifiers,
+    hideActionIdentifiers = true,
     primaryOrg,
   } = props;
   const theme = useTheme();
@@ -291,9 +306,10 @@ function ActionHero(props) {
               </Col>
             </Row>
           </Container>
+          { altText && <span className="sr-only" role="img" aria-label={altText} /> }
           { imageCredit
             && (
-            <ImageCredit aria-hidden="true">
+            <ImageCredit>
               {`${t('image-credit')}: ${imageCredit}`}
             </ImageCredit>
             )}

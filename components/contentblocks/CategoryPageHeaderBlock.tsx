@@ -5,6 +5,7 @@ import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
 import PlanContext from 'context/plan';
 import { Link } from 'common/links';
+import { useTranslation } from 'common/i18n';
 import CategoryMetaBar from 'components/actions/CategoryMetaBar';
 import AttributesBlock from 'components/common/AttributesBlock';
 
@@ -164,6 +165,8 @@ function CategoryPageHeaderBlock(props) {
   } = props;
 
   const plan = useContext(PlanContext);
+  const { t } = useTranslation();
+
   let attributeTypes = [];
   if (attributes?.length) {
     const { loading, error, data } = useQuery(GET_CATEGORY_ATTRIBUTE_TYPES, {
@@ -240,10 +243,11 @@ function CategoryPageHeaderBlock(props) {
           </Col>
         </Row>
       </Container>
+      { headerImage?.altText && <span className="sr-only" role="img" aria-label={headerImage?.altText} /> }
       { headerImage?.imageCredit
         && (
-        <ImageCredit aria-hidden="true">
-          {`${headerImage?.imageCredit}`}
+        <ImageCredit>
+          {`${t('image-credit')}: ${headerImage?.imageCredit}`}
         </ImageCredit>
       )}
     </CategoryHeader>
