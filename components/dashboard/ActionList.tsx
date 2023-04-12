@@ -28,6 +28,12 @@ const ActionListSection = styled.div`
   color: ${
     (props) => readableColor(props.theme.neutralLight, props.theme.themeColors.black, props.theme.themeColors.white)
     };
+  
+  a {
+    color: ${
+    (props) => readableColor(props.theme.neutralLight, props.theme.themeColors.black, props.theme.themeColors.white)
+    };
+  }
 `;
 
 const ActionListHeader = styled.div`
@@ -59,7 +65,7 @@ const Tab = styled.button`
   display: inline-block;
   border: none;
   margin: 0;
-  padding: ${(props) => props.theme.spaces.s050} ${(props) => props.theme.spaces.s150} ${(props) => props.theme.spaces.s100};
+  padding: ${(props) => `${props.theme.spaces.s050} ${props.theme.spaces.s150} ${props.theme.spaces.s100}`};
   text-decoration: none;
   cursor: pointer;
   text-align: center;
