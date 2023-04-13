@@ -46,7 +46,9 @@ const FiltersList = styled.div`
   padding: ${(props) => props.theme.spaces.s100} 0;
   font-size: ${(props) => props.theme.fontSizeLg};
   line-height: ${(props) => props.theme.lineHeightBase};
-  border-color: ${(props) => props.theme.themeColors.dark};
+  border-color: ${
+    (props) => readableColor(props.theme.neutralLight, props.theme.headingsColor, props.theme.themeColors.white)
+    };
   border-top: 1px solid;
   border-bottom: 1px solid;
 
@@ -107,12 +109,17 @@ const StyledBadge = styled(Badge)`
 const ToggleButton = styled(RButton)`
   padding: 0;
   margin: 0 0 ${(props) => props.theme.spaces.s100} 0;
-  color: ${(props) => props.theme.themeColors.dark};
+  color: ${
+    (props) => readableColor(props.theme.neutralLight, props.theme.headingsColor, props.theme.themeColors.white)
+  };
   text-decoration: none;
 
-  &:hover {
+  &:hover, &:focus {
     text-decoration: underline;
     background-color: transparent;
+    color: ${
+      (props) => readableColor(props.theme.neutralLight, props.theme.headingsColor, props.theme.themeColors.white)
+    };
   }
 
   &.open {
