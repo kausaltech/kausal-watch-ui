@@ -2,7 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled, { useTheme } from 'styled-components';
 import { Progress } from 'reactstrap';
-import { getStatusColor } from 'common/preprocess';
+import { getStatusColorFromPlan } from 'common/preprocess';
+import { ActionStatusSummaryIdentifier, Plan } from './__generated__/graphql';
 
 const Status = styled.div`
   color: ${(props) => props.theme.themeColors.black};
@@ -27,13 +28,20 @@ const ActionProgress = styled(Progress)`
     color: ${(props) => props.theme.themeColors.black};
   }
 `;
-function ActionStatus(props) {
-  const { identifier: statusIdentifier, name: statusName, completion, ...rest } = props;
+
+interface ActionStatusProps {
+  plan: Plan;
+  statusSummaryIdentifier: ActionStatusSummaryIdentifier;
+  completion?: number;
+}
+
+function ActionStatus(props: ActionStatusProps) {
+  const { plan, statusSummaryIdentifier, completion } = props;
   const theme = useTheme();
-  const statusColor = getStatusColor(statusIdentifier, theme);
+  const statusColor = getStatusColorFromPlan(statusSummaryIdentifier, plan, theme);
 
   return (
-    <Status {...rest}>
+    <Status theme={theme}>
       <ActionProgress
         value={completion}
         color={statusColor}
@@ -45,22 +53,6 @@ function ActionStatus(props) {
     </Status>
   );
 }
-
-ActionStatus.propTypes = {
-  identifier: PropTypes.oneOf([
-    'not_started',
-    'on_time',
-    'in_progress',
-    'completed',
-    'late',
-    'severely_late',
-    'cancelled',
-    'undefined',
-    null,
-  ]),
-  name: PropTypes.string,
-  completion: PropTypes.number,
-};
 
 ActionStatus.defaultProps = {
   identifier: 'not_started',

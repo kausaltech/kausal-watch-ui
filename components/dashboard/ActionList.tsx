@@ -29,7 +29,6 @@ const ActionListSection = styled.div`
   color: ${
     (props) => readableColor(props.theme.neutralLight, props.theme.themeColors.black, props.theme.themeColors.white)
     };
-  
   a {
     color: ${
     (props) => readableColor(props.theme.neutralLight, props.theme.themeColors.black, props.theme.themeColors.white)

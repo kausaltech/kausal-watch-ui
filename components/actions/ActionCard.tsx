@@ -5,7 +5,8 @@ import SVG from 'react-inlinesvg';
 import styled from 'styled-components';
 import { gql } from '@apollo/client';
 
-import { cleanActionStatus, getStatusColor } from 'common/preprocess';
+import { cleanActionStatus } from 'common/preprocess';
+import { getStatusColor, getStatusColorForAction } from 'common/ActionStatusSummary';
 import { ActionLink } from 'common/links';
 import { useTheme } from 'common/theme';
 import { getActionTermContext, useTranslation } from 'common/i18n';
@@ -34,6 +35,9 @@ const ACTION_CARD_FRAGMENT = gql`
       type {
         id
       }
+    }
+    statusSummary {
+      identifier
     }
     implementationPhase {
       id
@@ -312,6 +316,7 @@ function ActionCard(props: ActionCardProps) {
     else return mergedWith.identifier;
   };
   const primaryRootCategory = action.primaryCategories ? action.primaryCategories[0] : null;
+  const statusColor = getStatusColorForAction(action, plan, theme);
   return (
     <ActionLink
       action={action}
@@ -322,7 +327,7 @@ function ActionCard(props: ActionCardProps) {
       <StyledActionLink>
         <ActionCardElement>
           <ActionStatusArea
-            statusColor={getStatusColor(status.identifier, theme)}
+            statusColor={statusColor}
           >
             <PrimaryIcon
               category={primaryRootCategory}
@@ -335,7 +340,7 @@ function ActionCard(props: ActionCardProps) {
             />
           </ActionStatusArea>
           <ActionPhase
-            statusColor={getStatusColor(status.identifier, theme)}
+            statusColor={statusColor}
             hasStatus={(mergedWith !== null || statusText !== null).toString()}
           >
             { mergedWith ? (

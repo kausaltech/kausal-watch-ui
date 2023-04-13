@@ -248,6 +248,7 @@ const ActionTableRow = React.memo(function ActionTableRow(props) {
 
   const { t } = useTranslation(['common', 'actions']);
   const actionStatus = cleanActionStatus(item, plan.actionStatuses);
+  const actionStatusSummary = item.statusSummary;
 
   const showTooltip = (evt, content) => {
     content && popperRef(evt.currentTarget, content);
@@ -291,14 +292,14 @@ const ActionTableRow = React.memo(function ActionTableRow(props) {
         className="has-tooltip"
         onMouseEnter={(e)=>
           showTooltip(e, phasesTooltipContent(
-            t, hasImplementationPhases, actionStatus, item.implementationPhase, item.mergedWith, plan
+            t, hasImplementationPhases, actionStatusSummary, item.implementationPhase, item.mergedWith, plan
             ))}
         onMouseLeave={(e)=> hideTooltip(e)}
       >
         <StatusDisplay>
           { hasImplementationPhases ? (
             <ActionPhase
-              status={actionStatus}
+              status={actionStatusSummary}
               activePhase={item.implementationPhase}
               reason={item.manualStatusReason}
               mergedWith={item.mergedWith?.identifier}
@@ -307,10 +308,11 @@ const ActionTableRow = React.memo(function ActionTableRow(props) {
             />
           ) : (
             <StatusBadge
-              statusIdentifier={actionStatus.identifier}
+              statusSummary={actionStatusSummary}
+              plan={plan}
               statusName={item.mergedWith
                 ? t('actions:action-status-merged', getActionTermContext(plan))
-                : actionStatus.name}
+                : actionStatusSummary.label}
             />
           )}
         </StatusDisplay>

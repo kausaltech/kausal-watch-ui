@@ -32,7 +32,7 @@ const StatusGraphs = styled.div`
   }
 `;
 
-const getTimelinessData = (actions: ActionWithStatusSummary[], timelinessClasses: ActionTimeliness[], theme) => {
+const getTimelinessData = (actions: Action[], timelinessClasses: ActionTimeliness[], theme) => {
   const aggregates: Progress = {
     values: [],
     labels: [],
@@ -57,11 +57,12 @@ const getTimelinessData = (actions: ActionWithStatusSummary[], timelinessClasses
   }
 
   activeActions.forEach(({timeliness}) => {
-    const count = counts.get(timeliness) ?? 0;
-    counts.set(timeliness, count + 1);
+    const count = counts.get(timeliness.identifier) ?? 0;
+    counts.set(timeliness.identifier, count + 1);
+    if (classes.get(timeliness.identifier)?.sentiment !== Sentiment.Negative) {
+      good += 1;
+    }
     total += 1;
-    if (classes.get(timeliness)?.sentiment !== Sentiment.Negative) good += 1;
-
   });
   for (const identifier of [ActionTimelinessIdentifier.Optimal,
                             ActionTimelinessIdentifier.Acceptable,

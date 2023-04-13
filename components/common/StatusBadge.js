@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { useTheme } from 'common/theme';
 
-import { getStatusColor } from 'common/preprocess';
+import { getStatusColorForAction } from 'common/ActionStatusSummary';
 
 const StatusBar = styled.div`
 
@@ -21,11 +21,11 @@ background-color: ${(props) => props.theme.themeColors.light};
 `;
 
 const StatusBadge = (props) => {
-  const { statusIdentifier, statusName } = props;
+  const { statusSummary, statusName, plan } = props;
   const theme = useTheme();
 
   return (
-    <StatusBar statusColor={getStatusColor(statusIdentifier, theme)}>
+    <StatusBar statusColor={getStatusColorForAction({statusSummary}, plan, theme)}>
       <div className="color-bar" />
       <div className="label">{ statusName }</div>
     </StatusBar>

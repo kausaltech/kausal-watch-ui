@@ -52,6 +52,7 @@ const Status = (props) => {
 
   return (
     <StatusBadge
+      plan={plan}
       statusIdentifier={checkedStatus.identifier}
       statusName={checkedStatus.name}
     />

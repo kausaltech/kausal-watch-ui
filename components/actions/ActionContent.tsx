@@ -788,8 +788,8 @@ function ActionContent(props: ActionContentProps) {
                 </strong>
                 ) }
                 <ActionStatus
-                  name={actionStatus.name}
-                  identifier={actionStatus.identifier}
+                  plan={plan}
+                  statusSummaryIdentifier={action.statusSummary}
                   completion={action.completion}
                 />
               </ActionSection>

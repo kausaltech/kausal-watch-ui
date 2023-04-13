@@ -2,10 +2,8 @@ import { cloneDeep } from 'lodash';
 
 import { ActionListAction } from '../components/dashboard/ActionList';
 import { Action, ActionStatus, ActionImplementationPhase, Plan, Sentiment, ActionStatusSummary, ActionStatusSummaryIdentifier } from './__generated__/graphql';
+import type { Theme } from '@kausal/themes/types';
 
-interface ActionWithStatusSummary extends Omit<Action, 'statusSummary'> {
-  statusSummary: ActionStatusSummary;
-}
 
 // Clean up actionStatus so UI can handle edge cases
 const cleanActionStatus = (action, actionStatuses) => {
@@ -54,27 +52,6 @@ const cleanActionStatus = (action, actionStatuses) => {
   return newStatus;
 };
 
-const getStatusColor = (color, theme) => {
-  return theme.graphColors[color];
-  let statusColor = theme.graphColors.grey090;
-
-  const statusColors = {
-    on_time: theme.graphColors.green050,
-    in_progress: theme.graphColors.green050,
-    completed: theme.graphColors.green090,
-    late: theme.graphColors.yellow050,
-    cancelled: theme.graphColors.grey030,
-    merged: theme.graphColors.grey030,
-    postponed: theme.graphColors.blue030,
-    not_started: theme.graphColors.green010,
-    undefined: theme.graphColors.grey010,
-  };
-
-  statusColor = statusColors[statusIdentifier];
-
-  return statusColor;
-};
-
 type Progress = {
   values: number[];
   labels: string[];
@@ -99,7 +76,8 @@ const getStatusData = (actions, actionStatusSummaries, theme) => {
   let totalCount = 0;
 
   const counts: Map<string, number> = new Map();
-  for (const {statusSummary: {identifier}} of actions) {
+  for (const action of actions) {
+    const {statusSummary: {identifier}} = action;
     const val = 1 + (counts.get(identifier) ?? 0);
     counts.set(identifier, val);
   }
@@ -108,8 +86,8 @@ const getStatusData = (actions, actionStatusSummaries, theme) => {
     if (statusCount > 0) {
       progress.values.push(statusCount);
       progress.labels.push(label);
-      progress.colors.push(getStatusColor(color, theme));
-      if (sentiment === Sentiment.Positive) {
+      progress.colors.push(theme.graphColors[color]);
+      if (sentiment == Sentiment.Positive) {
         progress.good = progress.good + statusCount;
       }
     }
@@ -122,7 +100,7 @@ const getStatusData = (actions, actionStatusSummaries, theme) => {
 /*
  Process a list of actions and return an ordered list of phases for statistics
  */
-const getPhaseData = (actions: ActionWithStatusSummary[], phases: ActionImplemetationPhase[], theme, t) => {
+const getPhaseData = (actions: Action[], phases: ActionImplemetationPhase[], theme, t) => {
   const phaseData: Progress = {
     labels: [],
     values: [],
@@ -133,10 +111,11 @@ const getPhaseData = (actions: ActionWithStatusSummary[], phases: ActionImplemet
   let totalCount = 0;
 
   const phaseColors = [
-    theme.graphColors.green010,
+    theme.graphColors.grey020,
     theme.graphColors.green030,
     theme.graphColors.green050,
     theme.graphColors.green070,
+    theme.graphColors.green090,
     theme.graphColors.green090,
     theme.graphColors.grey010,
   ];
@@ -160,12 +139,14 @@ const getPhaseData = (actions: ActionWithStatusSummary[], phases: ActionImplemet
   });
 
   phases.forEach((phase, index) => {
-    const actionCountOnPhase = phasedActions.filter((action) => action.phase?.identifier === phase.identifier);
+    const actionCountOnPhase = phasedActions.filter((action) => action.phase?.identifier === phase.identifier.toLowerCase());
 
     phaseData.labels.push(phase.name);
     phaseData.values.push(actionCountOnPhase.length);
     phaseData.colors.push(phaseColors[index]);
-    totalCount += actionCountOnPhase.length;
+    if (phase.identifier !== 'not_started') {
+      totalCount += actionCountOnPhase.length;
+    }
   });
 
   phaseData.labels.push(t('unknown'));
@@ -179,10 +160,10 @@ const getPhaseData = (actions: ActionWithStatusSummary[], phases: ActionImplemet
 type StatusSummary = Plan['actionStatusSummaries'][0];
 
 const mapActionStatusSummaries = (
-  actions: ActionListAction[], statusSummaries: StatusSummary[]): ActionWithStatusSummary[] =>
+  actions: ActionListAction[], statusSummaries: StatusSummary[]): Action[] =>
 {
   const summaryById = new Map<StatusSummary['identifier'], StatusSummary>(statusSummaries.map(s => [s.identifier, s]));
-  return actions.map(a => (Object.assign({}, a, {statusSummary: summaryById.get(a.statusSummary)})));
+  return actions.map(a => (Object.assign({}, a, {statusSummary: summaryById.get(a.statusSummary.identifier)})));
 }
 
-export { cleanActionStatus, getStatusColor, getStatusData, getPhaseData, mapActionStatusSummaries };
+export { cleanActionStatus, getStatusData, getPhaseData, mapActionStatusSummaries };

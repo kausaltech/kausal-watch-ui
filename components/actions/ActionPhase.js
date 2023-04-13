@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { useTheme } from 'common/theme';
 import { getActionTermContext, useTranslation } from 'common/i18n';
-import { getStatusColor } from 'common/preprocess';
+import { getStatusColorForAction } from 'common/ActionStatusSummary';
 import { usePlan } from 'context/plan';
 
 const Status = styled.div`
@@ -69,23 +69,24 @@ const PhaseBlock = styled.div`
 
 function Phase(props) {
   const { name } = props.phase;
-  const { statusIdentifier, active, passed, disabled, compact } = props;
+  const { statusSummary, active, passed, compact, plan } = props;
   const theme = useTheme();
 
   let blockColor = theme.themeColors.light;
+  const color = getStatusColorForAction({statusSummary}, plan, theme);
 
   let labelClass = 'disabled';
 
   // Passed phase gets active status color
   if (passed) {
     // phaseClass = 'bg-active';
-    blockColor = getStatusColor(statusIdentifier, theme);
+    blockColor = color;
     labelClass = '';
   } else if (active) {
-    blockColor = getStatusColor(statusIdentifier, theme);
+    blockColor = color;
     labelClass = 'active';
-  } else if (statusIdentifier === 'completed') {
-    blockColor = getStatusColor(statusIdentifier, theme);
+  } else if (statusSummary.isCompleted) {
+    blockColor = color;
     labelClass = 'disabled';
   }
 
@@ -121,7 +122,13 @@ function ActionPhase(props) {
   }
   // Override phase name in special case statuses
   const inactive = ['cancelled', 'merged', 'postponed', 'completed'].includes(status.identifier);
-  if (inactive) activePhaseName = status.identifier === 'merged' ? `${t('actions:action-status-merged', getActionTermContext(plan))}` : status.name;
+  if (inactive) {
+    activePhaseName = (
+      status.identifier === ActionStatusSummaryIdentifier.Merged
+        ? `${t('actions:action-status-merged', getActionTermContext(plan))}`
+        : status.label
+    )
+  }
 
   return (
     <Status {...rest} className={compact && 'compact'}>
@@ -129,10 +136,10 @@ function ActionPhase(props) {
         { phases.map((phase, indx) => (
           <Phase
             phase={phase}
+            plan={plan}
             passed={indx < phaseIndex}
             active={indx === phaseIndex}
-            statusIdentifier={status.identifier}
-            statusName={status.name}
+            statusSummary={status}
             disabled={inactive}
             key={phase.id}
             compact={compact}
@@ -141,7 +148,7 @@ function ActionPhase(props) {
       </ul>
       { !compact && (
         <>
-          <strong>{ status.name }</strong>
+          <strong>{ status.label }</strong>
           { reason && (
             <PhaseReason>
               <strong>
