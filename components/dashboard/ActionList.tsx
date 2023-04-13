@@ -163,8 +163,12 @@ const actionFragment = gql`
       name
       order
     }
-    statusSummary
-    timeliness
+    statusSummary {
+      identifier
+    }
+    timeliness {
+      identifier
+    }
     completion
     officialName
     updatedAt
