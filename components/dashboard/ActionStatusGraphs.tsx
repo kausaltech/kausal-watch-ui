@@ -88,6 +88,7 @@ const ActionsStatusGraphs = (props) => {
   const progressData = getStatusData(actions, plan.actionStatusSummaries, theme);
   progressData.labels = progressData.labels.map((label) => label || t('unknown'));
   const timelinessData = getTimelinessData(actions, plan.actionTimelinessClasses, theme);
+  const daysVisible = plan.actionTimelinessClasses.find(c => c.identifier === ActionTimelinessIdentifier.Acceptable).days
   let phaseData;
   if (plan.actionImplementationPhases.length > 0) {
     phaseData = getPhaseData(actions, plan.actionImplementationPhases, theme, t);
@@ -116,7 +117,7 @@ const ActionsStatusGraphs = (props) => {
         currentValue={timelinessData.total}
         colors={timelinessData.colors.length > 0 ? timelinessData.colors : []}
         header={t('actions-updated')}
-        helpText={t('actions-updated-help')}
+        helpText={t('actions-updated-help', {count: daysVisible})}
       />
     </StatusGraphs>
   );

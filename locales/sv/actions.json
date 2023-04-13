@@ -41,7 +41,7 @@
   "actions-status": "Åtgärds komplettering",
   "actions-status-help": "Andelen åtgärder som är enligt schemat",
   "actions-updated": "Åtgärds uppdaterad",
-  "actions-updated-help": "Andelen åtgärder som har uppdaterats inom två månader",
+  "actions-updated-help": "Andelen åtgärder som har uppdaterats inom {{count}} dagar",
   "emission-scopes": "Utsläppsomfattningar",
   "no-defined-indicators": "",
   "not-being-implemented": ";Not being implemented;",

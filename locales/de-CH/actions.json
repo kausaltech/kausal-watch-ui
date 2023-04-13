@@ -11,7 +11,7 @@
   "actions-status": "Massnahmen nach Status",
   "actions-status-help": "Anteil der Massnahmen, die im Zeitplan liegen",
   "actions-updated": "Aktive Massnahmen zuletzt aktualisiert",
-  "actions-updated-help": "Anteil der Massnahmen, die innerhalb von zwei Monaten aktualisiert wurden",
+  "actions-updated-help": "Anteil der Massnahmen, die innerhalb von {{count}} Tagen aktualisiert wurden",
   "related-actions": "Verbundene Massnahmen",
   "org-responsible-in-actions": "Verantwortlich für {{actionCount}} Massnahmen"
 }

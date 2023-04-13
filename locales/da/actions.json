@@ -48,7 +48,7 @@
   "actions-status": "Handlinger efter status",
   "actions-status-help": "Andel af handlinger, der følger tidsplanen",
   "actions-updated": "Aktive handlinger sidst opdateret",
-  "actions-updated-help": "Andel af handlinger, der er blevet opdateret inden for to måneder.",
+  "actions-updated-help": "Andel af handlinger, der er blevet opdateret inden for {{count}} dage.",
   "emission-scopes": "Emissionsomfang",
   "no-defined-indicators": "Ingen indikatorer defineret",
   "not-being-implemented": "Ikke implementeret",
