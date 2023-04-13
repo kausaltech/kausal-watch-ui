@@ -77,12 +77,13 @@ function RichTextImage(props: RichTextImageProps) {
   const [origWidth, origHeight] = [Number(rest['data-original-width']), Number(rest['data-original-height'])];
   if (!isNaN(origWidth) && !isNaN(origHeight) && rest['data-original-src']) {
     if (origWidth > Number(height) * 1.2 || origHeight > Number(width) * 1.2) {
-      const zoomImgAttribs = {
+      // Only stretch zoomed image full width if original has width > 1000px
+      const zoomImgAttribs = (origWidth > 1000) ?{
         src: `${plan.serveFileBaseUrl}${rest['data-original-src']}`,
         alt,
         height: origHeight,
         width: origWidth,
-      }
+      } : {};
       return (
         <Zoom zoomImg={zoomImgAttribs} IconUnzoom={CompressIcon}>
           {imgElement}
