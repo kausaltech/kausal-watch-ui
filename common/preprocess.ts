@@ -2,8 +2,10 @@ import { cloneDeep } from 'lodash';
 
 import { ActionListAction } from '../components/dashboard/ActionList';
 import { Action, ActionStatus, ActionImplementationPhase, Plan, Sentiment, ActionStatusSummary, ActionStatusSummaryIdentifier } from './__generated__/graphql';
+import { getStatusSummary } from '../common/ActionStatusSummary';
 import type { Theme } from '@kausal/themes/types';
-
+import type { Progress } from '../components/dashboard/ActionStatusGraphs';
+import type { PlanContextType } from '../context/plan';
 
 // Clean up actionStatus so UI can handle edge cases
 const cleanActionStatus = (action, actionStatuses) => {
@@ -52,19 +54,11 @@ const cleanActionStatus = (action, actionStatuses) => {
   return newStatus;
 };
 
-type Progress = {
-  values: number[];
-  labels: string[];
-  colors: string[];
-  good: number;
-  total: string;
-}
-
 
 /*
  Process a list of actions and return an ordered list of statuses for statistics
  */
-const getStatusData = (actions, actionStatusSummaries, theme) => {
+const getStatusData = (actions: ActionListAction[], actionStatusSummaries: ActionStatusSummary[], theme: Theme) => {
 
   const progress: Progress = {
     values: [],
@@ -100,7 +94,7 @@ const getStatusData = (actions, actionStatusSummaries, theme) => {
 /*
  Process a list of actions and return an ordered list of phases for statistics
  */
-const getPhaseData = (actions: Action[], phases: ActionImplemetationPhase[], theme, t) => {
+const getPhaseData = (actions: ActionListAction[], plan: PlanContextType, theme, t): Progress => {
   const phaseData: Progress = {
     labels: [],
     values: [],
@@ -109,6 +103,8 @@ const getPhaseData = (actions: Action[], phases: ActionImplemetationPhase[], the
     total: '',
   };
   let totalCount = 0;
+
+  const phases = plan.actionImplementationPhases;
 
   const phaseColors = [
     theme.graphColors.grey020,
@@ -122,11 +118,12 @@ const getPhaseData = (actions: Action[], phases: ActionImplemetationPhase[], the
 
   // Process actions and ignore set phase if action's status trumps it
   const phasedActions = actions.map((action) => {
-    const {implementationPhase, statusSummary} = action;
-    const phase = Object.assign(
-      {},
-      (statusSummary.isActive && implementationPhase != null) ? implementationPhase : statusSummary
-    );
+    const { implementationPhase } = action;
+    const statusSummary = getStatusSummary(plan, action.statusSummary);
+    const base = (statusSummary.isActive && implementationPhase != null)
+      ? implementationPhase
+      : statusSummary;
+    const phase = Object.assign({}, base);
     if (statusSummary.isActive === false) {
       phase.name = `No phase (${phase.name})`;
     }
@@ -139,7 +136,9 @@ const getPhaseData = (actions: Action[], phases: ActionImplemetationPhase[], the
   });
 
   phases.forEach((phase, index) => {
-    const actionCountOnPhase = phasedActions.filter((action) => action.phase?.identifier === phase.identifier.toLowerCase());
+    const actionCountOnPhase = phasedActions.filter(
+      (action) => action.phase?.identifier === phase.identifier.toLowerCase()
+    );
 
     phaseData.labels.push(phase.name);
     phaseData.values.push(actionCountOnPhase.length);
@@ -163,7 +162,13 @@ const mapActionStatusSummaries = (
   actions: ActionListAction[], statusSummaries: StatusSummary[]): Action[] =>
 {
   const summaryById = new Map<StatusSummary['identifier'], StatusSummary>(statusSummaries.map(s => [s.identifier, s]));
-  return actions.map(a => (Object.assign({}, a, {statusSummary: summaryById.get(a.statusSummary.identifier)})));
+  return actions.map(
+    a => (
+      Object.assign(
+        {},
+        a,
+        {statusSummary: summaryById.get(a.statusSummary.identifier)}))
+  );
 }
 
 export { cleanActionStatus, getStatusData, getPhaseData, mapActionStatusSummaries };

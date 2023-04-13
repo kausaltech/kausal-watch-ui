@@ -43,7 +43,7 @@ const ActionStatusGraphsBlock = () => {
     return <ErrorMessage statusCode={404} message={t('page-not-found')} />;
   }
   return <Container><Row><Col xl={{size: 8, offset: 2}} lg={{ size: 10, offset: 1}}>
-    <ActionStatusGraphs actions={mapActionStatusSummaries(planActions, plan.actionStatusSummaries)} />;
+    <ActionStatusGraphs actions={planActions} />;
   </Col></Row></Container>
 }
 

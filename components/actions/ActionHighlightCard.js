@@ -127,8 +127,7 @@ function ActionHighlightCard(props) {
           </ImgArea>
           {actionStatus && (
           <StyledActionStatus
-            name={actionStatus.name}
-            identifier={actionStatus.identifier}
+            statusSummary={action.statusSummary}
             completion={action.completion}
           />
           )}

@@ -48,6 +48,7 @@ import type {
   GetActionDetailsQuery
 } from 'common/__generated__/graphql';
 import { useTheme } from 'common/theme';
+import { getStatusSummary } from 'common/ActionStatusSummary';
 import ActionAttribute from 'components/common/ActionAttribute';
 
 const GET_ACTION_DETAILS = gql`
@@ -62,6 +63,14 @@ query GetActionDetails($plan: ID!, $id: ID!, $clientUrl: String!) {
     completion
     image {
       ...MultiUseImageFragment
+    }
+    statusSummary {
+      identifier
+      label
+      color
+      sentiment
+      isCompleted
+      isActive
     }
     links {
       id
@@ -739,7 +748,7 @@ function ActionContent(props: ActionContentProps) {
               <ActionSection>
                 <PrimaryHeader>{ t('actions:action-progress') }</PrimaryHeader>
                 <ActionPhase
-                  status={actionStatus}
+                  status={getStatusSummary(plan, action.statusSummary)}
                   activePhase={action.implementationPhase}
                   reason={action.manualStatusReason}
                   phases={plan.actionImplementationPhases}
@@ -789,7 +798,7 @@ function ActionContent(props: ActionContentProps) {
                 ) }
                 <ActionStatus
                   plan={plan}
-                  statusSummaryIdentifier={action.statusSummary}
+                  statusSummary={action.statusSummary}
                   completion={action.completion}
                 />
               </ActionSection>

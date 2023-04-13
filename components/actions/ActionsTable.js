@@ -7,6 +7,7 @@ import { getActionTermContext, withTranslation } from 'common/i18n';
 import { ActionLink } from 'common/links';
 import PlanContext from 'context/plan';
 import { cleanActionStatus } from 'common/preprocess';
+import { getStatusSummary } from 'common/ActionStatusSummary';
 import StatusBadge from 'components/common/StatusBadge';
 import ActionImpact from 'components/actions/ActionImpact';
 import { useTranslation } from 'next-i18next';
@@ -53,8 +54,7 @@ const Status = (props) => {
   return (
     <StatusBadge
       plan={plan}
-      statusIdentifier={checkedStatus.identifier}
-      statusName={checkedStatus.name}
+      statusSummary={getStatusSummary(plan, action.statusSummary)}
     />
   );
 };

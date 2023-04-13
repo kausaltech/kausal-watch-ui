@@ -9,7 +9,6 @@ import ActionImpact from 'components/actions/ActionImpact';
 import ActionPhase from 'components/actions/ActionPhase';
 import { ActionLink } from 'common/links';
 import Icon from 'components/common/Icon';
-import { cleanActionStatus } from 'common/preprocess';
 import {
   primaryOrgTooltipContent,
   tasksTooltipContent,
@@ -247,7 +246,6 @@ const ActionTableRow = React.memo(function ActionTableRow(props) {
   const theme = useTheme();
 
   const { t } = useTranslation(['common', 'actions']);
-  const actionStatus = cleanActionStatus(item, plan.actionStatuses);
   const actionStatusSummary = item.statusSummary;
 
   const showTooltip = (evt, content) => {

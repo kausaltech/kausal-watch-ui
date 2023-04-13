@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled, { useTheme } from 'styled-components';
 import { Progress } from 'reactstrap';
-import { getStatusColorFromPlan } from 'common/preprocess';
-import { ActionStatusSummaryIdentifier, Plan } from './__generated__/graphql';
+import { getStatusSummary } from 'common/ActionStatusSummary';
+import { ActionStatusSummary, Plan } from './__generated__/graphql';
 
 const Status = styled.div`
   color: ${(props) => props.theme.themeColors.black};
@@ -31,14 +31,17 @@ const ActionProgress = styled(Progress)`
 
 interface ActionStatusProps {
   plan: Plan;
-  statusSummaryIdentifier: ActionStatusSummaryIdentifier;
+  statusSummary: ActionStatusSummary;
   completion?: number;
 }
 
 function ActionStatus(props: ActionStatusProps) {
-  const { plan, statusSummaryIdentifier, completion } = props;
+  const { plan, statusSummary, completion } = props;
   const theme = useTheme();
-  const statusColor = getStatusColorFromPlan(statusSummaryIdentifier, plan, theme);
+  const enrichedStatusSummary = getStatusSummary(plan, statusSummary);
+  const statusColor = enrichedStatusSummary.color;
+
+  const statusName = enrichedStatusSummary.label;
 
   return (
     <Status theme={theme}>

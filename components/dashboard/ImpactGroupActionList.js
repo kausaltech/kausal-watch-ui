@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Table } from 'reactstrap';
 import styled from 'styled-components';
 
-import { cleanActionStatus } from 'common/preprocess';
+import { getStatusSummary } from 'common/ActionStatusSummary';
 import { ActionLink } from 'common/links';
 import PlanContext from 'context/plan';
 import { getActionTermContext, withTranslation } from 'common/i18n';
@@ -18,13 +18,11 @@ const ActionName = styled.span`
 
 const Status = (props) => {
   const { action, plan } = props;
-  const checkedStatus = cleanActionStatus(action, plan.actionStatuses);
 
   return (
     <StatusBadge
       plan={plan}
-      statusIdentifier={checkedStatus.identifier}
-      statusName={checkedStatus.name}
+      statusSummary={getStatusSummary(plan, action.statusSummary)}
     />
   );
 };

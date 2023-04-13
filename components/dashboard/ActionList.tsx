@@ -378,7 +378,7 @@ export type ActionListPrimaryOrg = DashboardActionListQuery['plan']['primaryOrgs
 
 type ActionListProps = {
   actions: DashboardActionListQuery['planActions'],
-  categoryTypes: DashboardActionListQuery['plan']['categoryTypes'],
+  categoryTypes: NonNullable<DashboardActionListQuery['plan']>['categoryTypes'],
   organizations: DashboardActionListQuery['planOrganizations'],
   availableFilters: ActionListPageFiltersFragment,
   activeFilters: Filters,
@@ -391,9 +391,9 @@ type ActionListProps = {
   primaryOrgs: ActionListPrimaryOrg[],
 }
 
-type OrganizationInput = DashboardActionListQuery['planOrganizations'][0];
+type OrganizationInput = NonNullable<DashboardActionListQuery['planOrganizations']>[0];
 export type ActionListOrganization = OrganizationInput & OrganizationHierarchyMember<OrganizationInput>;
-type QueryAction = DashboardActionListQuery['planActions'][0]
+type QueryAction = NonNullable<DashboardActionListQuery['planActions']>[0]
 export type ActionListAction = QueryAction &
   OrgMappedAction<ActionListOrganization> &
   CategoryMappedAction<ActionListCategoryType, ActionListCategory>;
@@ -467,12 +467,10 @@ const ActionList = (props: ActionListProps) => {
     mapActionCategories<ActionListCategoryType, ActionListCategory, ActionListAction>(
       actionsWithRps, cts, primaryCatType, headingHierarchyDepth
     );
-  const actionsWithStatusSummaries = mapActionStatusSummaries(mappedActions, plan.actionStatusSummaries);
-
   const enabledFilters = filterSections
     .map(section => section.filters.filter(filter => activeFilters[filter.id])).flat();
 
-  let filteredActions = actionsWithStatusSummaries;
+  let filteredActions = mappedActions;
   enabledFilters.forEach(filter => {
     filteredActions = filteredActions.filter((action) => filter.filterAction(activeFilters[filter.id], action));
   });

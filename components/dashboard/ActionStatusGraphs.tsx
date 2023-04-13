@@ -5,12 +5,14 @@ import { transparentize } from 'polished';
 import dayjs from 'common/dayjs';
 import { cleanActionStatus, getPhaseData, getStatusData } from 'common/preprocess';
 import { useTheme } from 'common/theme';
-import PlanContext from 'context/plan';
+import type { Theme } from '@kausal/themes/types'
+import PlanContext, {PlanContextType} from 'context/plan';
 import { useTranslation } from 'common/i18n';
+import { getStatusSummary} from 'common/ActionStatusSummary';
 import StatusDonut from 'components/graphs/StatusDonut';
 
-import { Sentiment, ActionTimeliness, ActionStatusSummary, ActionTimelinessIdentifier, Action } from 'common/__generated__/graphql';
-
+import { Sentiment, ActionTimeliness, ActionTimelinessIdentifier, Action } from 'common/__generated__/graphql';
+import type { ActionListAction } from './ActionList';
 
 const StatusGraphs = styled.div`
   width: auto;
@@ -32,7 +34,15 @@ const StatusGraphs = styled.div`
   }
 `;
 
-const getTimelinessData = (actions: Action[], timelinessClasses: ActionTimeliness[], theme) => {
+export type Progress = {
+  values: number[];
+  labels: string[];
+  colors: string[];
+  good: number;
+  total: string;
+}
+
+const getTimelinessData = (actions: ActionListAction[], plan: PlanContextType, theme: Theme) => {
   const aggregates: Progress = {
     values: [],
     labels: [],
@@ -44,14 +54,16 @@ const getTimelinessData = (actions: Action[], timelinessClasses: ActionTimelines
   let total = 0;
   let good = 0;
 
+  const { actionTimelinessClasses } = plan;
+
   const counts = new Map<ActionTimelinessIdentifier|undefined, number>(
-    timelinessClasses.map(c => [c.identifier, 0])
+    actionTimelinessClasses.map(c => [c.identifier, 0])
   );
   const classes =  new Map<ActionTimelinessIdentifier|undefined, ActionTimeliness>(
-    timelinessClasses.map(c => [c.identifier, c])
+    actionTimelinessClasses.map(c => [c.identifier, c])
   );
 
-  const activeActions = actions.filter(action => action.statusSummary.isActive);
+  const activeActions = actions.filter(action => getStatusSummary(plan, action.statusSummary).isActive);
   if (activeActions.length === 0) {
     return aggregates;
   }
@@ -64,14 +76,13 @@ const getTimelinessData = (actions: Action[], timelinessClasses: ActionTimelines
     }
     total += 1;
   });
-  for (const identifier of [ActionTimelinessIdentifier.Optimal,
-                            ActionTimelinessIdentifier.Acceptable,
-                            ActionTimelinessIdentifier.Late]) {
+  const { Optimal, Acceptable, Late } = ActionTimelinessIdentifier;
+  for (const identifier of [Optimal, Acceptable, Late]) {
     const timeliness = classes.get(identifier);
     if (timeliness == null) {
-      return;
+      continue;
     }
-    aggregates.values.push(counts.get(identifier));
+    aggregates.values.push(counts.get(identifier) ?? 0);
     aggregates.labels.push(timeliness.label);
     aggregates.colors.push(theme.graphColors[timeliness.color]);
   }
@@ -80,7 +91,11 @@ const getTimelinessData = (actions: Action[], timelinessClasses: ActionTimelines
   return aggregates;
 };
 
-const ActionsStatusGraphs = (props) => {
+interface ActionsStatusGraphsProps {
+  actions: ActionListAction[];
+}
+
+const ActionsStatusGraphs = (props: ActionsStatusGraphsProps) => {
   const { actions } = props;
   const theme = useTheme();
   const plan = useContext(PlanContext);
@@ -88,11 +103,13 @@ const ActionsStatusGraphs = (props) => {
 
   const progressData = getStatusData(actions, plan.actionStatusSummaries, theme);
   progressData.labels = progressData.labels.map((label) => label || t('unknown'));
-  const timelinessData = getTimelinessData(actions, plan.actionTimelinessClasses, theme);
-  const daysVisible = plan.actionTimelinessClasses.find(c => c.identifier === ActionTimelinessIdentifier.Acceptable).days
-  let phaseData;
+  const timelinessData = getTimelinessData(actions, plan, theme);
+  const daysVisible = plan.actionTimelinessClasses.find(
+    c => c.identifier === ActionTimelinessIdentifier.Acceptable
+  )!.days
+  let phaseData: Progress|undefined = undefined;
   if (plan.actionImplementationPhases.length > 0) {
-    phaseData = getPhaseData(actions, plan.actionImplementationPhases, theme, t);
+    phaseData = getPhaseData(actions, plan, theme, t);
   }
 
   return (

@@ -5,7 +5,7 @@ import type { Theme } from '@kausal/themes/types'
 import type { PlanContextType } from 'context/plan';
 import type { ActionStatusSummary } from 'common/__generated__/graphql';
 
-import { getStatusColorForAction } from 'common/ActionStatusSummary';
+import { MinimalActionStatusSummary, getStatusColorForAction } from 'common/ActionStatusSummary';
 
 interface StatusBarProps {
   theme: Theme;
