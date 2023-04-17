@@ -129,6 +129,7 @@ function ActionHighlightCard(props) {
           <StyledActionStatus
             statusSummary={action.statusSummary}
             completion={action.completion}
+            plan={plan}
           />
           )}
           <CardBody>

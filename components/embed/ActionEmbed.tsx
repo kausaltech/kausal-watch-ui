@@ -22,6 +22,9 @@ const GET_ACTION = gql`
       plan {
         id
       }
+      statusSummary {
+        identifier
+      }
       status {
         id
         identifier

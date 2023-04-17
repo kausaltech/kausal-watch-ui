@@ -222,6 +222,9 @@ const GET_ORG_DETAILS = gql`
         id
         viewUrl(clientUrl: $clientUrl)
       }
+      statusSummary {
+        identifier
+      }
       schedule {
         id
       }

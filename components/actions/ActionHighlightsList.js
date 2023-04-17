@@ -37,6 +37,9 @@ export const GET_ACTION_LIST = gql`
         identifier
         name
       }
+      statusSummary {
+        identifier
+      }
       implementationPhase {
         id
         identifier
