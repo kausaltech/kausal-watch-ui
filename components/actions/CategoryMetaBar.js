@@ -19,6 +19,9 @@ export const GET_ACTION_STATUSES = gql`
         identifier
         name
       }
+      statussummary {
+        identifier
+      }
       implementationPhase {
         id
         identifier
@@ -101,7 +104,7 @@ function CategoryMetaBar(props) {
   if (error) return <div />;
 
   const { planActions } = data;
-  statusData = getStatusData(planActions, plan.actionStatuses, theme);
+  statusData = getStatusData(planActions, plan.actionStatusSummaries, theme);
   actionCount = statusData.values.reduce((total, num) => total + num, 0);
 
   if (statusData.values.length < 1) return null;
