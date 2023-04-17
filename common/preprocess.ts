@@ -163,17 +163,4 @@ const getPhaseData = (actions: ActionListAction[], plan: PlanContextType, theme,
 
 type StatusSummary = Plan['actionStatusSummaries'][0];
 
-const mapActionStatusSummaries = (
-  actions: ActionListAction[], statusSummaries: StatusSummary[]): Action[] =>
-{
-  const summaryById = new Map<StatusSummary['identifier'], StatusSummary>(statusSummaries.map(s => [s.identifier, s]));
-  return actions.map(
-    a => (
-      Object.assign(
-        {},
-        a,
-        {statusSummary: summaryById.get(a.statusSummary.identifier)}))
-  );
-}
-
-export { cleanActionStatus, getStatusData, getPhaseData, mapActionStatusSummaries };
+export { cleanActionStatus, getStatusData, getPhaseData };

@@ -8,7 +8,6 @@ import ErrorMessage from 'components/common/ErrorMessage';
 import PlanContext from 'context/plan';
 
 import { useTranslation } from 'common/i18n';
-import { mapActionStatusSummaries } from 'common/preprocess';
 import ActionStatusGraphs from 'components/dashboard/ActionStatusGraphs';
 
 const GET_ACTION_LIST_FOR_GRAPHS = gql`
