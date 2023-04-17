@@ -137,19 +137,24 @@ const getPhaseData = (actions: ActionListAction[], plan: PlanContextType, theme,
 
   phases.forEach((phase, index) => {
     const actionCountOnPhase = phasedActions.filter(
-      (action) => action.phase?.identifier === phase.identifier.toLowerCase()
-    );
+      action => action.phase?.identifier === phase.identifier.toLowerCase());
 
     phaseData.labels.push(phase.name);
     phaseData.values.push(actionCountOnPhase.length);
     phaseData.colors.push(phaseColors[index]);
     if (phase.identifier !== 'not_started') {
+      // TODO: make this an attribute of the phase in the backend
       totalCount += actionCountOnPhase.length;
     }
   });
 
+  const unknownActions = new Set(
+    phasedActions.filter(a => (
+      !phases.find(p => p.identifier.toLowerCase() === a.phase?.identifier)
+    ))
+  );
   phaseData.labels.push(t('unknown'));
-  phaseData.values.push(actions.length - totalCount);
+  phaseData.values.push(unknownActions.size);
   phaseData.colors.push(theme.graphColors.grey010);
 
   phaseData.total = totalCount.toString();
