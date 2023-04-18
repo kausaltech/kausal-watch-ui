@@ -115,13 +115,13 @@ const CollapsibleText = (props: CollapsibleTextProps) => {
   Array.isArray(parsedContent) && parsedContent.forEach((node, indx) => {
     if (indx === 0) {
       intro.push(node);
-      introLength += node.props?.children.length;
+      introLength += node.props?.children?.length ?? 0;
     }
     if (indx > 0 && restOfContent.length === 0) {
       if (previousNodeType === 'p' && introLength > BREAK_POINT) restOfContent.push(node)
       else {
         intro.push(node);
-        introLength += node.props?.children.length;
+        introLength += node.props?.children?.length ?? 0;
       }
     }
     else if (restOfContent.length > 0) restOfContent.push(node);
