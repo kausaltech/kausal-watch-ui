@@ -182,6 +182,14 @@ const GET_ORG_DETAILS = gql`
     actionImpacts {
       id
     }
+    actionStatusSummaries {
+      identifier
+      label
+      color
+      isCompleted
+      isActive
+      sentiment
+    }
     image {
       rendition(size: "128x128", crop: true) {
         id
