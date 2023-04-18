@@ -27,6 +27,9 @@ const ACTION_ROW_FRAGMENT = gql`
       identifier
       name
     }
+    statusSummary {
+      identifier
+    }
     completion
     categories {
       id
