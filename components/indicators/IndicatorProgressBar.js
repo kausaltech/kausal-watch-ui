@@ -140,7 +140,7 @@ function IndicatorProgressBar(props) {
   const latestColor = theme.graphColors.blue030;
   const startColor = theme.graphColors.red030;
   const canvas = { w: bars.w + rightMargin, h: bars.h + topMargin + bottomMargin };
-  const hasStartValue = startValue !== latestValue;
+  const hasStartValue = Math.abs(startValue - latestValue)/latestValue > 0.01;
 
   // const animatedLatestValue = useSpring({ latest: latestValue, from: { latest: startValue } });
   // For simplicity, currently only supports indicators
@@ -332,7 +332,7 @@ function IndicatorProgressBar(props) {
             fill={latestColor}
           />
           <motion.line
-            animate={latestSegmentControls}
+            animate={hasStartValue && latestSegmentControls}
             y1={segmentsY}
             x2={goalBar.x - 14}
             y2={segmentsY}
@@ -340,7 +340,7 @@ function IndicatorProgressBar(props) {
             strokeWidth="2"
             markerEnd="url(#toBeReducedArrow)"
           />
-          <motion.g animate={latestValueControls}>
+          <motion.g animate={hasStartValue && latestValueControls}>
             <line
               x1={latestBar.x + 1}
               x2={latestBar.x + 1}
@@ -359,7 +359,7 @@ function IndicatorProgressBar(props) {
             />
           </motion.g>
           <motion.text
-            animate={completedBarControls}
+            animate={hasStartValue && completedBarControls}
             transform={`translate(${bars.w - ((latestBar.w + goalBar.w) / 2)} ${segmentsY + barMargin * 3})`}
             textAnchor="middle"
           >
