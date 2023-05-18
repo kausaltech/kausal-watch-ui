@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import { getActionTermContext, useTranslation } from 'common/i18n';
 import { IndicatorListLink } from 'common/links';
 import OrgSelector from 'components/orgs/OrgSelector';
-import IndicatorValueSummary from 'components/indicators//IndicatorValueSummary';
+import IndicatorValueSummary from 'components/indicators/IndicatorValueSummary';
 import { usePlan } from 'context/plan';
 
 import { IndicatorDetailsQuery } from 'common/__generated__/graphql';
