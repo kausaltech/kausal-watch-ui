@@ -1,19 +1,19 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {
   Container, Row, Col,
 } from 'reactstrap';
 import styled from 'styled-components';
-import { useTheme } from 'common/theme';
-import { useTranslation } from 'common/i18n';
-import { IndicatorLink, IndicatorListLink, Link } from 'common/links';
+import { getActionTermContext, useTranslation } from 'common/i18n';
+import { IndicatorListLink } from 'common/links';
 import OrgSelector from 'components/orgs/OrgSelector';
 import IndicatorValueSummary from 'components/indicators//IndicatorValueSummary';
 import { usePlan } from 'context/plan';
 
+import { IndicatorDetailsQuery } from 'common/__generated__/graphql';
+
 const Hero = styled.header`
   position: relative;
-  background-color: ${(props) => props.bgColor};
+  background-color: ${(props) => props.theme.brandDark};
   margin-bottom: ${(props) => props.theme.spaces.s400};
   a {
     color: ${(props) => props.theme.brandDark};
@@ -24,12 +24,22 @@ const Hero = styled.header`
   }
 `;
 
-const IndicatorBgImage = styled.div`
-  background-color: ${(props) => props.bgColor};
-  background-image: url(${(props) => props.bgImage});
-  background-position: ${(props) => props.imageAlign};
+interface IndicatorBgImageProps {
+  bgColor?: string;
+  bgImage?: string;
+  imageAlign?: string;
+}
+
+const IndicatorBgImage = styled.div<IndicatorBgImageProps>`
   background-size: cover;
   background-blend-mode: multiply;
+  background-color:
+    ${p => p.bgColor ?? 'unset'};
+  background-image: url(
+    ${p => p.bgImage ?? 'unset'}
+  );
+  background-position:
+    ${p => p.imageAlign ?? 'unset'};
 `;
 
 const PrimaryOrg = styled.div`
@@ -60,7 +70,7 @@ const OverlayContainer = styled.div`
   padding: ${(props) => props.theme.spaces.s300} 0 ${(props) => props.theme.spaces.s300};
 `;
 
-const IndicatorLevel = styled.span`
+const IndicatorLevel = styled.span<{level: string}>`
 a {
   display: inline-block;
   border-radius: ${(props) => props.theme.badgeBorderRadius};
@@ -134,23 +144,32 @@ const IndicatorHeadline = styled.h1`
   }
 `;
 
-function IndicatorHero(props) {
+interface IndicatorHeroProps {
+  indicator: NonNullable<IndicatorDetailsQuery['indicator']>;
+  orgs: any;
+  goals: any;
+}
+
+function IndicatorHero(props: IndicatorHeroProps) {
   const {
     indicator,
     orgs,
     goals,
   } = props;
-  const theme = useTheme();
+  // const theme = useTheme();
   const { t } = useTranslation();
   const plan = usePlan();
 
   // FIXME: It sucks that we only use the context for the translation key 'action'
-  const indicatorType = indicator.level === 'action' ? t('action', getActionTermContext(plan)) : t(indicator.level);
+  const indicatorType = indicator.level === 'action' ?
+    t('action', getActionTermContext(plan)) :
+    indicator.level != null ?
+      t(indicator.level) :
+      null;
 
   return (
-    <Hero bgColor={theme.brandDark}>
-      <IndicatorBgImage
-      >
+    <Hero>
+      <IndicatorBgImage>
         <OverlayContainer>
           <Container>
             <Row>
@@ -180,13 +199,13 @@ function IndicatorHero(props) {
                         goals={goals}
                       />
                     )}
-                    <IndicatorLevel level={indicator.level}>
+                    { indicator.level && <IndicatorLevel level={indicator.level}>
                       <IndicatorListLink>
                         <a>
                           { indicatorType }
                         </a>
                       </IndicatorListLink>
-                    </IndicatorLevel>
+                    </IndicatorLevel> }
                   </CardContent>
                 </HeroCardBg>
               </Col>

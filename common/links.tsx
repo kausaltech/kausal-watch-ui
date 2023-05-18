@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { PropsWithChildren } from 'react';
+import React, { ReactElement, PropsWithChildren } from 'react';
 import { setBasePath as setNextRouterBasePath } from 'next/dist/shared/lib/router/router';
 import { useRouter } from 'next/router';
 import Link, { LinkProps } from 'next/link';
@@ -147,12 +147,9 @@ ActionListLink.getLinkProps = (opts: ActionListLinkProps, rest?: OtherLinkProps)
   return { ...opts, ...(rest || {}), href };
 }
 
-export function IndicatorListLink(props) {
+export function IndicatorListLink(props: Omit<LinkProps, "href"> & {children: ReactElement}) {
   return <Link href="/indicators" passHref {...props} />;
 }
-IndicatorListLink.propTypes = {
-  ...Link.propTypes,
-};
 
 type StaticPageLinkProps = {
   slug: string,
