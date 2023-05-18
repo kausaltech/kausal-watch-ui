@@ -79,7 +79,7 @@ function CategoryLink(props: PropsWithChildren<CategoryLinkProps>) {
   }
 
 }
- 
+
 type CategoryContentProps = {
   categories: CategoryTagsCategoryFragment[],
   categoryType: CategoryTagsCategoryTypeFragment,
@@ -116,14 +116,15 @@ export const CategoryContent = (props: CategoryContentProps) => {
 type CategoryTagsProps = {
   categories: CategoryTagsCategoryFragment[],
   types: CategoryTagsCategoryTypeFragment[],
+  noLink?: boolean
 }
 
 function CategoryTags(props: CategoryTagsProps) {
-  const { categories, types } = props;
+  const { categories, types, noLink=false } = props;
   // const typeById = new Map(types.map(ct => [ct.id, ct]));
   const groupElements = types.map((ct) => {
     const cats = categories.filter(cat => cat.type.id === ct.id);
-    if (!cats.length) return null; 
+    if (!cats.length) return null;
       /* If category type seems to have levels,
         use the level name of the first selected categoory
         as section header */
@@ -144,6 +145,7 @@ function CategoryTags(props: CategoryTagsProps) {
         <CategoryContent
           categories={cats}
           categoryType={ct}
+          noLink={noLink}
         />
       </div>
     );

@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 
+import CategoryTags from 'components/actions/CategoryTags';
 import {
   Container, Row, Col,
 } from 'reactstrap';
@@ -45,6 +46,20 @@ const GET_INDICATOR_DETAILS = gql`
           id
           rendition(size: "128x128", crop: true) {
             src
+          }
+        }
+      }
+      categories {
+        identifier
+        name
+        id
+        type {
+          identifier
+          name
+          id
+          levels {
+            id
+            name
           }
         }
       }
@@ -200,8 +215,15 @@ function IndicatorDetails({ id }) {
       />
       <Container>
         <Row>
-          <Col md="10" className="mb-5 pt-4">
+          <Col md="7" lg="8" className="mb-5">
             <RichText html={indicator.description} />
+          </Col>
+          <Col md="5" lg="4" className="mb-5">
+            <CategoryTags
+              categories={indicator.categories}
+              types={indicator.categories.map(c => c.type)}
+              noLink={true}
+            />
           </Col>
         </Row>
         {(indicator.latestGraph || indicator.values.length > 0)
