@@ -62,6 +62,7 @@ const StyledCardTitle = styled(CardTitle)`
 `;
 
 const ImgArea = styled.div`
+  min-height: 9rem;
   position: relative;
   background-color: ${(props) => (props.theme.brandDark)};
 `;

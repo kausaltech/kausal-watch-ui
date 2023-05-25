@@ -6,7 +6,6 @@ import { gql, useQuery } from '@apollo/client';
 
 import { useTranslation } from 'common/i18n';
 import ActionCard from 'components/actions/ActionCard';
-import ActionHighlightCard from 'components/actions/ActionHighlightCard';
 import ContentLoader from 'components/common/ContentLoader';
 import ErrorMessage from 'components/common/ErrorMessage';
 import PlanContext from 'context/plan';
@@ -126,6 +125,7 @@ const CategoryActionList = (props) => {
     return <ErrorMessage statusCode={404} message={t('page-not-found')} />;
   }
 
+  console.log('planActions', planActions);
   const filteredActions = filterByCategory(planActions, activeCategory.id, categories, activeCategory.parent == null);
   if (filteredActions.length === 0) {
     return <EmptyActionListHeader>{ t('no-actions') }</EmptyActionListHeader>;
@@ -153,10 +153,8 @@ const CategoryActionList = (props) => {
               exit={{ opacity: 0 }}
               layout
             >
-              <ActionHighlightCard
+              <ActionCard
                 action={action}
-                imageUrl={action?.image?.rendition?.src || undefined}
-                hideIdentifier={plan.hideActionIdentifiers}
               />
             </ListColumn>
           ))}
