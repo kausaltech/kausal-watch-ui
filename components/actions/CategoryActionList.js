@@ -125,7 +125,6 @@ const CategoryActionList = (props) => {
     return <ErrorMessage statusCode={404} message={t('page-not-found')} />;
   }
 
-  console.log('planActions', planActions);
   const filteredActions = filterByCategory(planActions, activeCategory.id, categories, activeCategory.parent == null);
   if (filteredActions.length === 0) {
     return <EmptyActionListHeader>{ t('no-actions') }</EmptyActionListHeader>;
