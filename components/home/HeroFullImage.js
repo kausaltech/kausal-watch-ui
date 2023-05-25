@@ -14,7 +14,6 @@ const Hero = styled.div`
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     display: flex;
-    align-items: flex-start;
     min-height: 24rem;
     padding: 0;
   }
@@ -42,6 +41,13 @@ const HeroImage = styled.div`
     height: 100%;
     margin: 0;
   }
+`;
+
+const HeroContent = styled.div`
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
 `;
 
 const MainCard = styled.div`
@@ -135,13 +141,15 @@ const HeroFullImage = (props) => {
         </ImageCredit>
       )}
       <Container>
-      <MainCard
-        alignment={theme.settings?.frontHero ? theme.settings.frontHero.cardPlacement : 'left'}
-        color={theme.settings?.frontHero ? theme.settings.frontHero?.color : 'light'}
-      >
-        <h1>{ title }</h1>
-        <RichText html={lead} className="lead-content" />
-      </MainCard>
+        <HeroContent>
+          <MainCard
+            alignment={theme.settings?.frontHero ? theme.settings.frontHero.cardPlacement : 'left'}
+            color={theme.settings?.frontHero ? theme.settings.frontHero?.color : 'light'}
+          >
+            <h1>{ title }</h1>
+            <RichText html={lead} className="lead-content" />
+          </MainCard>
+        </HeroContent>
       </Container>
     </Hero>
   );
