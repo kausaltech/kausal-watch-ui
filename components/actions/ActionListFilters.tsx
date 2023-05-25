@@ -136,6 +136,11 @@ const MainCategoryLabel = styled.p`
 const MainCategory = styled.div`
   padding: 0 0 ${(props) => props.theme.spaces.s200} 0;
   margin: 0;
+
+  button {
+    line-height: 1;
+    padding: ${(props) => `${props.theme.spaces.s150} ${props.theme.spaces.s100}`};
+  }
 `;
 
 function sortDepthFirst<Type>(
@@ -551,9 +556,9 @@ class CategoryFilter extends DefaultFilter<FilterValue> {
     const seeAll: string = t('see-all-actions');
     return (
       <Col
-        sm={this.sm}
-        md={this.md}
-        lg={this.lg}
+        sm={12}
+        md={12}
+        lg={12}
         key={this.id}
       >
         <MainCategory>
