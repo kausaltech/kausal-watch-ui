@@ -231,7 +231,6 @@ const BaseSection = styled.div`
   display: flex;
   justify-content: space-between;
   padding: ${(props) => props.theme.spaces.s200} 0;
-  margin-bottom: ${(props) => props.theme.spaces.s200};
   border-top: 1px solid  ${(props) => transparentize(0.8, props.theme.footerColor)};
   line-height: ${(props) => props.theme.lineHeightSm};
 
@@ -301,7 +300,33 @@ const BaseLink = styled.li`
   }
 `;
 
+const FooterExtras = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    flex-direction: row;
+    width: 100%;
+  }
+`;
+
+const FooterStatement = styled.div`
+  max-width: 800px;
+  margin-bottom: ${(props) => props.theme.spaces.s100};
+
+  h1, h2, h3 {
+    font-size: ${(props) => props.theme.fontSizeBase};
+    color: ${(props) => props.theme.footerColor};
+  }
+
+  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    margin-right: ${(props) => props.theme.spaces.s200};
+  }
+`;
+
 const FundingInstruments = styled.div`
+  flex: 1 0 auto;
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
@@ -355,6 +380,7 @@ function SiteFooter(props) {
     utilityLinks,
     fundingInstruments,
     otherLogos,
+    footerStatement,
   } = props;
 
   function OrgLogo() {
@@ -520,7 +546,8 @@ function SiteFooter(props) {
             </BaseLink>
           </BaseColumn>
         </BaseSection>
-
+        <FooterExtras>
+        { footerStatement && <FooterStatement dangerouslySetInnerHTML={{ __html: footerStatement }} />}
         {fundingInstruments?.length > 0 && (
         <FundingInstruments>
           <FundingHeader>{t('supported-by')}</FundingHeader>
@@ -557,6 +584,7 @@ function SiteFooter(props) {
           ))}
         </FundingInstruments>
         )}
+        </FooterExtras>
       </Container>
     </StyledFooter>
   );
@@ -566,6 +594,7 @@ SiteFooter.defaultProps = {
   utilityLinks: [],
   additionalLinks: [],
   fundingInstruments: [],
+  FooterStatement: undefined,
 };
 
 SiteFooter.propTypes = {
@@ -579,6 +608,7 @@ SiteFooter.propTypes = {
   additionalLinks: PropTypes.arrayOf(PropTypes.shape({})),
   fundingInstruments: PropTypes.arrayOf(PropTypes.shape({})),
   otherLogos: PropTypes.arrayOf(PropTypes.shape({})),
+  footerStatement: PropTypes.string,
 };
 
 export default withTranslation('common')(withTheme(SiteFooter));

@@ -24,7 +24,7 @@ function Footer(props) {
   const theme = useTheme();
   const { siteTitle } = props;
 
-  const { fundingInstruments, otherLogos } = theme.settings;
+  const { fundingInstruments, otherLogos, footerStatement } = theme.settings;
   const { t } = useTranslation();
   let navLinks = [];
   let staticPages = [];
@@ -110,6 +110,7 @@ function Footer(props) {
         navItems={navLinks}
         fundingInstruments={fundingInstruments}
         otherLogos={otherLogos}
+        footerStatement={footerStatement}
       />
       <ApplicationStateBanner deploymentType={site.deploymentType} />
     </>
