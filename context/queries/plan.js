@@ -149,6 +149,7 @@ fragment PlanContext on Plan {
   }
   adminUrl
   accessibilityStatementUrl
+  externalFeedbackUrl
   features {
     enableSearch
     hasActionIdentifiers

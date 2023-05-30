@@ -83,8 +83,8 @@ function Footer(props) {
     utilityLinks.push({ id: '1', name: t('contact'), slug: plan.contactLink });
   }
 
-  if (plan.feedbackLink) {
-    utilityLinks.push({ id: '2', name: t('give-feedback'), slug: plan.feedbackLink });
+  if (plan.externalFeedbackUrl) {
+    utilityLinks.push({ id: '2', name: t('give-feedback'), slug: plan.externalFeedbackUrl });
   }
   else {
     const url = getFeedbackUrl(router.asPath);
