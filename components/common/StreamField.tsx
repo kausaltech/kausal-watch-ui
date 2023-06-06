@@ -163,11 +163,31 @@ const STREAM_FIELD_FRAGMENT = gql`
           id
           date
           value
+          normalizedValues {
+            normalizerId
+            value
+          }
+          categories {
+            id
+          }
         }
         goals {
           id
           date
           value
+        }
+        common {
+          id
+          normalizations {
+            unit {
+              shortName
+            }
+            normalizer {
+              name
+              id
+              identifier
+            }
+          }
         }
       }
       linkButton {

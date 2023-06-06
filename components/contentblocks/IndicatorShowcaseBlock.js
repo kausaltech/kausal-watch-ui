@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { useInView } from 'react-intersection-observer';
 import { Container, Row, Col } from 'reactstrap';
@@ -27,25 +27,14 @@ const IndicatorShowcase = styled.div`
   }
 `;
 
-const Content = styled.div`
-  margin-bottom: ${(props) => props.theme.spaces.s200};
-`;
-
 const IndicatorShowcaseBlock = (props) => {
   const { indicator, title, body } = props;
   // Animation hook:  trigger when visible on screen
   const { ref, inView, entry } = useInView({
     triggerOnce: true,
   });
-  // The bar is built for showing reduction goals
-  // we swap the goal and start values if the goal is to increase
-  // TODO: enable the viz to handle goals to increase
 
   const indicatorHasGoal = indicator.goals.length > 0;
-
-  const goalValue = indicator.goals[indicator.goals.length-1]?.value;
-  const startValue = indicator.values[0].value;
-
 
   return (
     <IndicatorShowcase>
@@ -59,15 +48,7 @@ const IndicatorShowcaseBlock = (props) => {
             <RichText html={body} className="mb-5" />
             { indicatorHasGoal ? (
             <IndicatorProgressBar
-              indicatorId={indicator.id}
-              startDate={indicator.values[0].date}
-              startValue={(goalValue < startValue) ? startValue : goalValue}
-              latestDate={indicator.latestValue.date}
-              latestValue={indicator.latestValue.value}
-              goalDate={indicator.goals[indicator.goals.length-1].date}
-              goalValue={(goalValue < startValue) ? goalValue : startValue}
-              unit={indicator.unit.shortName}
-              note={indicator.name}
+              indicator={indicator}
               animate={inView}
             />) : (
             <>

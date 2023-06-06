@@ -2,11 +2,11 @@
 import React, { useContext, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import styled, { ThemeContext } from 'styled-components';
-import { transparentize } from 'polished';
 import { motion, useAnimation, animate, MotionConfig } from 'framer-motion';
 import { useTranslation } from 'common/i18n';
 import dayjs from 'common/dayjs';
 import { IndicatorLink } from 'common/links';
+// import { normalizeValuesByNormalizer } from './IndicatorVisualisation';
 
 const BarBase = styled.rect`
 `;
@@ -64,16 +64,26 @@ const SourceLink = styled.div`
   font-size: ${(props) => props.theme.fontSizeSm};
 `;
 
-const formatValue = (value, locale) => {
+const formatValue = (value, locale, precision) => {
   // Two significant figures
-  return parseFloat(Number(value).toPrecision(3).toLocaleString(locale));
+  return parseFloat(Number(value).toPrecision(precision).toLocaleString(locale));
+}
+
+const findPrecision = (comparableValues) => {
+  for (let i = 2; i < 4; i++) {
+    const set = new Set(comparableValues.map(value => value.toPrecision(i)));
+    if (set.size === comparableValues.length) {
+      return i;
+    }
+  }
+  return 4;
 }
 
 const ValueGroup = (props) => {
-  const { date, value, unit, locale, negative, ...rest } = props;
+  const { date, value, unit, negative, ...rest } = props;
   return (
     <text {...rest}>
-      <ValueText x="0" dy="16" className={negative ? 'negative' : ''}>{formatValue(value, locale)}</ValueText>
+      <ValueText x="0" dy="16" className={negative ? 'negative' : ''}>{ value }</ValueText>
       <UnitText className={negative ? 'negative' : ''}>
         {' '}
         {unit}
@@ -88,11 +98,11 @@ ValueGroup.defaultProps = {
 
 ValueGroup.propTypes = {
   date: PropTypes.string,
-  value: PropTypes.number.isRequired,
+  value: PropTypes.string.isRequired,
   unit: PropTypes.string.isRequired,
 };
 
-function Counter({ from, to, duration, locale}) {
+function Counter({ from, to, duration, locale, precision}) {
   const ref = useRef();
 
   useEffect(() => {
@@ -101,7 +111,7 @@ function Counter({ from, to, duration, locale}) {
       onUpdate(value) {
         // ref.current is null when navigating away from the page
         if (!ref.current) return;
-        ref.current.textContent = formatValue(value, locale);
+        ref.current.textContent = formatValue(value, locale, precision);
       },
     });
     return () => controls.stop();
@@ -112,13 +122,35 @@ function Counter({ from, to, duration, locale}) {
 
 function IndicatorProgressBar(props) {
   const {
-    startDate, startValue,
-    latestDate, latestValue,
-    goalDate, goalValue,
-    unit, note, indicatorId,
+    indicator,
     animate } = props;
 
-  console.log('IndicatorProgressBar', props)
+  /*
+  // Sketching normalization toggle
+  const populationNormalizer = indicator.common?.normalizations.find(
+    normalization => normalization.normalizer.identifier === 'population'
+  );
+  const indicatorValues = normalizeValuesByNormalizer(indicator.values, populationNormalizer.normalizer.id);
+  */
+  const indicatorValues = indicator.values;
+  const lastGoal = indicator.goals[indicator.goals.length-1];
+  const firstValue = indicatorValues[0];
+  const lastValue = indicatorValues[indicator.values.length-1];
+
+  // The bar is built for showing reduction goals
+  // we swap the goal and start values if the goal is to increase
+  // TODO: enable the viz to handle goals to increase
+  const indicatorId = indicator.id;
+  const startDate = firstValue.date;
+  const startValue = (lastGoal.value < firstValue.value) ? firstValue.value : lastGoal.value;
+  const latestDate= lastValue.date;
+  const latestValue = lastValue.value;
+  const goalDate = lastGoal.date;
+  const goalValue = (lastGoal.value < firstValue.value) ? lastGoal.value : firstValue.value;
+  const unit = indicator.unit.shortName;
+  const note = indicator.name;
+
+  const minPrecision = findPrecision([startValue, latestValue, goalValue]);
   const theme = useContext(ThemeContext);
   const { t, i18n } = useTranslation();
   const latestBarControls = useAnimation();
@@ -140,7 +172,9 @@ function IndicatorProgressBar(props) {
   const latestColor = theme.graphColors.blue030;
   const startColor = theme.graphColors.red030;
   const canvas = { w: bars.w + rightMargin, h: bars.h + topMargin + bottomMargin };
-  const hasStartValue = Math.abs(startValue - latestValue)/latestValue > 0.01;
+  //const hasStartValue = Math.abs(startValue - latestValue)/latestValue > 0.01;
+  const hasStartValue = true;
+  const showReduction = latestValue/startValue < 0.8; // show reduction if change is more than 20%
 
   // const animatedLatestValue = useSpring({ latest: latestValue, from: { latest: startValue } });
   // For simplicity, currently only supports indicators
@@ -165,7 +199,7 @@ function IndicatorProgressBar(props) {
 
   let reductionCounterFrom = startValue - latestValue;
   const reductionCounterTo = startValue - latestValue;
-  const reductionCounterDuration = 3;
+  const reductionCounterDuration = showReduction ? 3 : 0;
 
   useEffect(() => {
     latestBarControls.set({
@@ -196,21 +230,21 @@ function IndicatorProgressBar(props) {
       latestBarControls.start({
         x: bars.w - (latestValue * scale),
         width: latestValue * scale,
-        transition: { duration: 3 },
+        transition: { duration: reductionCounterDuration },
       }),
       reducedSegmentControls.start({
         x1: 0,
         x2: latestBar.x - 14,
-        transition: { duration: 3 },
+        transition: { duration: reductionCounterDuration },
       }),
       latestSegmentTickControls.start({
         x1:latestBar.x + 1,
         x2:latestBar.x + 1,
-        transition: { duration: 3 },
+        transition: { duration: reductionCounterDuration },
       }),
       latestSegmentControls.start({
         x1:latestBar.x + 1,
-        transition: { duration: 3 },
+        transition: { duration: reductionCounterDuration },
       })
   ]);
     await latestValueControls.start({
@@ -248,20 +282,23 @@ function IndicatorProgressBar(props) {
   */
 
   return (
+    <div>
     <IndicatorLink id={indicatorId}>
       <LinkedIndicator>
         <span>{ animate }</span>
         <svg viewBox={`0 0 ${canvas.w} ${canvas.h}`}>
           <title>{t('indicator-progress-bar', graphValues)}</title>
           <defs>
-            <marker
-              id="reducedArrow"
-              markerWidth="7" markerHeight="7"
-              refX="0" refY="3.5"
-              orient="auto" fill={startColor}
-            >
-              <polygon points="0 0, 7 3.5, 0 7" />
-            </marker>
+            { showReduction && (
+              <marker
+                id="reducedArrow"
+                markerWidth="7" markerHeight="7"
+                refX="0" refY="3.5"
+                orient="auto" fill={startColor}
+              >
+                <polygon points="0 0, 7 3.5, 0 7" />
+              </marker>
+            )}
             <marker
               id="toBeReducedArrow"
               markerWidth="7" markerHeight="7"
@@ -302,10 +339,11 @@ function IndicatorProgressBar(props) {
               <ValueGroup
                 transform={`translate(${startBar.x + 4} 0)`}
                 date={graphValues.startYear}
-                value={startValue}
+                value={formatValue(startValue, i18n.language, minPrecision)}
                 unit={unit}
                 locale={i18n.language}
               />
+              { showReduction && (
               <text
                 transform={`translate(${(bars.w - latestBar.w) / 2} ${segmentsY + barMargin * 3})`}
                 textAnchor="middle"
@@ -317,11 +355,13 @@ function IndicatorProgressBar(props) {
                     to={reductionCounterTo}
                     duration={reductionCounterDuration}
                     locale={i18n.language}
+                    precision={minPrecision}
                   />
                   {' '}
                   {unit}
                 </SegmentValue>
               </text>
+              )}
             </>
           )}
           {/* pending from goal bar */}
@@ -353,7 +393,7 @@ function IndicatorProgressBar(props) {
             <ValueGroup
               transform={`translate(${latestBar.x + 4} ${latestBar.y})`}
               date={graphValues.latestYear}
-              value={latestValue}
+              value={formatValue(latestValue, i18n.language, minPrecision)}
               unit={unit}
               locale={i18n.language}
             />
@@ -365,7 +405,7 @@ function IndicatorProgressBar(props) {
           >
             <SegmentHeader>{t('to-reduce')}</SegmentHeader>
             <SegmentValue x="0" dy="16">
-              {formatValue(latestValue - goalValue, i18n.language)}
+              {formatValue(latestValue - goalValue, i18n.language, minPrecision)}
               {' '}
               {unit}
             </SegmentValue>
@@ -398,7 +438,7 @@ function IndicatorProgressBar(props) {
           <ValueGroup
             transform={`translate(${goalBar.w > 80 ? goalBar.x + 4 : goalBar.x - 50} ${goalBar.y})`}
             date={graphValues.goalYear}
-            value={goalValue}
+            value={formatValue(goalValue, i18n.language, minPrecision)}
             unit={unit}
             locale={i18n.language}
             negative={goalBar.w < 80}
@@ -440,6 +480,7 @@ function IndicatorProgressBar(props) {
 
       </LinkedIndicator>
     </IndicatorLink>
+    </div>
   );
 };
 
