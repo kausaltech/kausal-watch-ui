@@ -168,16 +168,14 @@ function CategoryPageHeaderBlock(props) {
   const { t } = useTranslation();
 
   let attributeTypes = [];
-  if (attributes?.length) {
-    const { loading, error, data } = useQuery(GET_CATEGORY_ATTRIBUTE_TYPES, {
-      variables: {
-        plan: plan.identifier,
-      },
-    });
-    if (data) {
-      const thisType = data.plan.categoryTypes.find((type) => type.id === typeId);
-      attributeTypes = thisType.attributeTypes;
-    }
+  const { loading, error, data } = useQuery(GET_CATEGORY_ATTRIBUTE_TYPES, {
+    variables: {
+      plan: plan.identifier,
+    },
+  });
+  if (data) {
+    const thisType = data.plan.categoryTypes.find((type) => type.id === typeId);
+    attributeTypes = thisType.attributeTypes;
   }
 
   // AttributeCategoryChoice type can be empty, so we need to filter out those
