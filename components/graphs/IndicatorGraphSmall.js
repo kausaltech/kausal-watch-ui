@@ -1,3 +1,5 @@
+/* Candidate for deletion -- not used? */
+
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import dynamic from 'next/dynamic';

@@ -16,6 +16,7 @@ const CATEGORY_FRAGMENT = gql`
     identifier
     name
     leadParagraph
+    order
     level {
       name
       namePlural

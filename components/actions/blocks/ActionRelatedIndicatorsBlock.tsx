@@ -93,7 +93,10 @@ function ActionIndicator(props) {
             <IndicatorActionListItem key={action.identifier}>
               <ActionLink action={action}>
                 <a className="me-2">
-                  <Badge>{action.identifier}</Badge>
+                  <Badge>
+                    {!plan.hideActionIdentifiers && `${action.identifier}. `}
+                    {action.name}
+                  </Badge>
                 </a>
               </ActionLink>
             </IndicatorActionListItem>
