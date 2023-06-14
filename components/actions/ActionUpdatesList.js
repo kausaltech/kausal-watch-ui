@@ -66,12 +66,8 @@ function ActionStatusUpdate(props) {
     title,
     content,
   } = props;
-  let avatarUrl = '/static/themes/default/images/default-avatar-user.png';
-  let name = 'Ylläpitäjä';
-  if (author) {
-    avatarUrl = author.avatarUrl;
-    name = `${author.firstName} ${author.lastName}`;
-  }
+
+  const defaultAvatarUrl = '/static/themes/default/images/default-avatar-user.png';
 
   return (
     <ActionUpdate>
@@ -79,14 +75,14 @@ function ActionStatusUpdate(props) {
         <Media className="mb-3">
           <Media left top>
             <AuthorAvatar
-              src={avatarUrl}
+              src={author?.avatarUrl || defaultAvatarUrl}
               className="rounded-circle"
-              alt={name}
+              alt={author ? `${author.firstName} ${author.lastName}` : 'Author'}
             />
           </Media>
           <Media body>
             <AuthorName>
-              {name}
+              {author ? `${author.firstName} ${author.lastName}` : 'Author'}
             </AuthorName>
             <UpdateDate>
               <time dateTime={date}>{ dayjs(date).format('L') }</time>
