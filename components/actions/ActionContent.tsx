@@ -127,6 +127,7 @@ query GetActionDetails($plan: ID!, $id: ID!, $clientUrl: String!) {
         id
         abbreviation
         name
+        email
       }
       role
       specifier

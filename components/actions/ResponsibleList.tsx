@@ -32,6 +32,13 @@ const ResponsibleSpecifier = styled.div`
     line-height: ${(props) => props.theme.lineHeightMd};
 `;
 
+const Address = styled.address`
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  font-size: ${(props) => props.theme.fontSizeSm};
+  font-family: ${(props) => props.theme.fontFamilyTiny};
+`;
+
 type ResponsibleBadgeProps = {
   responsibleParty: ActionContentAction['responsibleParties'][0];
 }
@@ -40,7 +47,7 @@ function ResponsibleBadge({ responsibleParty }: ResponsibleBadgeProps) {
   const {
     organization: org,
     role,
-    specifier
+    specifier,
   } = responsibleParty;
   const { t } = useTranslation(['common', 'actions']);
   let size = 'md' as BadgeTooltipProps["size"];
@@ -77,6 +84,14 @@ function ResponsibleBadge({ responsibleParty }: ResponsibleBadgeProps) {
         <ResponsibleSpecifier>
           {specifier}
         </ResponsibleSpecifier>
+      }
+      { org.email &&
+        <Address>
+          { t('email') }
+          :
+          {' '}
+          <a href={`mailto:${org.email}`}>{org.email}</a>
+        </Address>
       }
     </ResponsibleItem>
   );

@@ -422,7 +422,6 @@ export type ActionIndicator = {
   indicator: Indicator;
 };
 
-/** An enumeration. */
 export enum ActionIndicatorEffectType {
   /** decreases */
   Decreases = 'DECREASES',
@@ -642,7 +641,6 @@ export type ActionResponsibleParty = {
   specifier: Scalars['String'];
 };
 
-/** An enumeration. */
 export enum ActionResponsiblePartyRole {
   /** Collaborator */
   Collaborator = 'COLLABORATOR',
@@ -709,7 +707,6 @@ export type ActionStatusSummary = {
   sentiment: Sentiment;
 };
 
-/** An enumeration. */
 export enum ActionStatusSummaryIdentifier {
   Cancelled = 'CANCELLED',
   Completed = 'COMPLETED',
@@ -748,6 +745,8 @@ export type ActionTask = {
   commentEn?: Maybe<Scalars['String']>;
   commentEnAu?: Maybe<Scalars['String']>;
   commentEnGb?: Maybe<Scalars['String']>;
+  commentEs?: Maybe<Scalars['String']>;
+  commentEsUs?: Maybe<Scalars['String']>;
   commentFi?: Maybe<Scalars['String']>;
   commentI18n?: Maybe<Scalars['String']>;
   commentSv?: Maybe<Scalars['String']>;
@@ -766,13 +765,14 @@ export type ActionTask = {
   nameEn: Scalars['String'];
   nameEnAu: Scalars['String'];
   nameEnGb: Scalars['String'];
+  nameEs: Scalars['String'];
+  nameEsUs: Scalars['String'];
   nameFi: Scalars['String'];
   nameI18n: Scalars['String'];
   nameSv: Scalars['String'];
   state: ActionTaskState;
 };
 
-/** An enumeration. */
 export enum ActionTaskState {
   /** cancelled */
   Cancelled = 'CANCELLED',
@@ -803,7 +803,6 @@ export type ActionTimeliness = {
   sentiment: Sentiment;
 };
 
-/** An enumeration. */
 export enum ActionTimelinessIdentifier {
   Acceptable = 'ACCEPTABLE',
   Late = 'LATE',
@@ -999,7 +998,6 @@ export type AttributeTypeChoiceOption = {
   name: Scalars['String'];
 };
 
-/** An enumeration. */
 export enum AttributeTypeFormat {
   /** Category */
   CategoryChoice = 'CATEGORY_CHOICE',
@@ -1067,7 +1065,6 @@ export type CartographyProviderCredentials = {
   publicAccessToken: Scalars['String'];
 };
 
-/** An enumeration. */
 export enum CartographyProviderCredentialsProvider {
   /** MapBox */
   Mapbox = 'MAPBOX'
@@ -1409,7 +1406,6 @@ export type CategoryTypePageSiblingsArgs = {
   searchQuery?: InputMaybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum CategoryTypeSelectWidget {
   /** Multiple */
   Multiple = 'MULTIPLE',
@@ -1513,7 +1509,6 @@ export type CommonIndicatorNormalization = {
   unit?: Maybe<Unit>;
 };
 
-/** An enumeration. */
 export enum Comparison {
   Gt = 'GT',
   Lte = 'LTE'
@@ -2057,7 +2052,6 @@ export type IndicatorLevel = {
   plan: Plan;
 };
 
-/** An enumeration. */
 export enum IndicatorLevelLevel {
   /** operational */
   Operational = 'OPERATIONAL',
@@ -2171,12 +2165,12 @@ export type IndicatorShowcaseBlock = StreamFieldInterface & {
   field: Scalars['String'];
   id?: Maybe<Scalars['String']>;
   indicator?: Maybe<Indicator>;
+  indicatorIsNormalized?: Maybe<Scalars['Boolean']>;
   linkButton?: Maybe<StreamFieldInterface>;
   rawValue: Scalars['String'];
   title?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum IndicatorTimeResolution {
   /** day */
   Day = 'DAY',
@@ -2233,6 +2227,8 @@ export type MonitoringQualityPoint = {
   descriptionNoEn: Scalars['String'];
   descriptionNoEnAu: Scalars['String'];
   descriptionNoEnGb: Scalars['String'];
+  descriptionNoEs: Scalars['String'];
+  descriptionNoEsUs: Scalars['String'];
   descriptionNoFi: Scalars['String'];
   descriptionNoI18n: Scalars['String'];
   descriptionNoSv: Scalars['String'];
@@ -2243,6 +2239,8 @@ export type MonitoringQualityPoint = {
   descriptionYesEn: Scalars['String'];
   descriptionYesEnAu: Scalars['String'];
   descriptionYesEnGb: Scalars['String'];
+  descriptionYesEs: Scalars['String'];
+  descriptionYesEsUs: Scalars['String'];
   descriptionYesFi: Scalars['String'];
   descriptionYesI18n: Scalars['String'];
   descriptionYesSv: Scalars['String'];
@@ -2256,6 +2254,8 @@ export type MonitoringQualityPoint = {
   nameEn: Scalars['String'];
   nameEnAu: Scalars['String'];
   nameEnGb: Scalars['String'];
+  nameEs: Scalars['String'];
+  nameEsUs: Scalars['String'];
   nameFi: Scalars['String'];
   nameI18n: Scalars['String'];
   nameSv: Scalars['String'];
@@ -2336,6 +2336,7 @@ export type Organization = {
   description: Scalars['String'];
   /** A distinct name for this organization (generated automatically) */
   distinctName?: Maybe<Scalars['String']>;
+  email: Scalars['String'];
   id: Scalars['ID'];
   location?: Maybe<Scalars['PointScalar']>;
   logo?: Maybe<Image>;
@@ -2372,6 +2373,8 @@ export type OrganizationClass = {
   nameEn: Scalars['String'];
   nameEnAu: Scalars['String'];
   nameEnGb: Scalars['String'];
+  nameEs: Scalars['String'];
+  nameEsUs: Scalars['String'];
   nameFi: Scalars['String'];
   nameI18n: Scalars['String'];
   nameSv: Scalars['String'];
@@ -2662,6 +2665,8 @@ export type Plan = PlanInterface & {
   children: Array<Plan>;
   domain?: Maybe<PlanDomain>;
   domains?: Maybe<Array<Maybe<PlanDomain>>>;
+  /** If not empty, the system's built-in user feedback feature will be replaced by a link to an external feedback form available at this web address. */
+  externalFeedbackUrl?: Maybe<Scalars['String']>;
   features: PlanFeatures;
   footer?: Maybe<Footer>;
   generalContent: SiteGeneralContent;
@@ -3063,7 +3068,6 @@ export type PrivacyPolicyPageSiblingsArgs = {
   searchQuery?: InputMaybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum PublicationStatus {
   Published = 'PUBLISHED',
   Scheduled = 'SCHEDULED',
@@ -3244,7 +3248,6 @@ export type RelatedCommonIndicator = {
   id: Scalars['ID'];
 };
 
-/** An enumeration. */
 export enum RelatedCommonIndicatorEffectType {
   /** decreases */
   Decreases = 'DECREASES',
@@ -3266,7 +3269,6 @@ export type RelatedIndicator = {
   id: Scalars['ID'];
 };
 
-/** An enumeration. */
 export enum RelatedIndicatorConfidenceLevel {
   /** high */
   High = 'HIGH',
@@ -3276,7 +3278,6 @@ export enum RelatedIndicatorConfidenceLevel {
   Medium = 'MEDIUM'
 }
 
-/** An enumeration. */
 export enum RelatedIndicatorEffectType {
   /** decreases */
   Decreases = 'DECREASES',
@@ -3425,7 +3426,6 @@ export type SearchResults = {
   hits?: Maybe<Array<Maybe<SearchHit>>>;
 };
 
-/** An enumeration. */
 export enum Sentiment {
   Negative = 'NEGATIVE',
   Neutral = 'NEUTRAL',
@@ -3449,7 +3449,6 @@ export type SiteGeneralContent = {
   siteTitle: Scalars['String'];
 };
 
-/** An enumeration. */
 export enum SiteGeneralContentActionTerm {
   /** Action */
   Action = 'ACTION',
@@ -3787,7 +3786,6 @@ export type UserFeedbackNode = {
   url: Scalars['String'];
 };
 
-/** An enumeration. */
 export enum UserFeedbackType {
   /** Accessibility */
   Accessibility = 'ACCESSIBILITY',
@@ -3882,7 +3880,10 @@ export type GetActionDetailsQuery = (
         & { __typename?: 'ImageRendition' }
       ) | null }
       & { __typename?: 'Image' }
-    ) | null, links: Array<(
+    ) | null, statusSummary: (
+      { identifier: ActionStatusSummaryIdentifier, label: string, color: string, sentiment: Sentiment, isCompleted: boolean, isActive: boolean }
+      & { __typename?: 'ActionStatusSummary' }
+    ), links: Array<(
       { id: string, order: number, url: string, title: string }
       & { __typename?: 'ActionLink' }
     )>, mergedActions: Array<(
@@ -3974,7 +3975,7 @@ export type GetActionDetailsQuery = (
       & { __typename?: 'Organization' }
     ) | null, responsibleParties: Array<(
       { id: string, role?: ActionResponsiblePartyRole | null, specifier: string, organization: (
-        { id: string, abbreviation: string, name: string }
+        { id: string, abbreviation: string, name: string, email: string }
         & { __typename?: 'Organization' }
       ) }
       & { __typename?: 'ActionResponsibleParty' }
@@ -5418,7 +5419,10 @@ export type ActionHightlightListQuery = (
     ), status?: (
       { id: string, identifier: string, name: string }
       & { __typename?: 'ActionStatus' }
-    ) | null, implementationPhase?: (
+    ) | null, statusSummary: (
+      { identifier: ActionStatusSummaryIdentifier }
+      & { __typename?: 'ActionStatusSummary' }
+    ), implementationPhase?: (
       { id: string, identifier: string }
       & { __typename?: 'ActionImplementationPhase' }
     ) | null, categories: Array<(
@@ -5508,7 +5512,10 @@ export type ActionsTableFragment = (
   ) | null, implementationPhase?: (
     { id: string, identifier: string, name: string }
     & { __typename?: 'ActionImplementationPhase' }
-  ) | null, categories: Array<(
+  ) | null, statusSummary: (
+    { identifier: ActionStatusSummaryIdentifier }
+    & { __typename?: 'ActionStatusSummary' }
+  ), categories: Array<(
     { id: string, identifier: string, name: string, image?: (
       { rendition?: (
         { id: string, src: string }
@@ -5597,7 +5604,10 @@ export type GetActionStatusesQuery = (
     ), status?: (
       { id: string, identifier: string, name: string }
       & { __typename?: 'ActionStatus' }
-    ) | null, implementationPhase?: (
+    ) | null, statusSummary: (
+      { identifier: ActionStatusSummaryIdentifier }
+      & { __typename?: 'ActionStatusSummary' }
+    ), implementationPhase?: (
       { id: string, identifier: string, name: string }
       & { __typename?: 'ActionImplementationPhase' }
     ) | null, mergedWith?: (
@@ -6113,7 +6123,7 @@ type StreamFieldFragment_CartographyVisualisationBlock_Fragment = (
 type StreamFieldFragment_CategoryListBlock_Fragment = (
   { style?: string | null, heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, categoryType?: (
     { id: string, hideCategoryIdentifiers: boolean, categories: Array<(
-      { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, level?: (
+      { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, level?: (
         { name: string, namePlural?: string | null }
         & { __typename?: 'CategoryLevel' }
       ) | null, image?: (
@@ -6143,7 +6153,7 @@ type StreamFieldFragment_CategoryListBlock_Fragment = (
     & { __typename?: 'CategoryType' }
   ) | null, category?: (
     { id: string, children: Array<(
-      { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, level?: (
+      { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, level?: (
         { name: string, namePlural?: string | null }
         & { __typename?: 'CategoryLevel' }
       ) | null, image?: (
@@ -6283,12 +6293,30 @@ type StreamFieldFragment_IndicatorShowcaseBlock_Fragment = (
       { id: string, date?: string | null, value: number }
       & { __typename?: 'IndicatorValue' }
     ) | null, values?: Array<(
-      { id: string, date?: string | null, value: number }
+      { id: string, date?: string | null, value: number, normalizedValues?: Array<(
+        { normalizerId?: string | null, value?: number | null }
+        & { __typename?: 'NormalizedValue' }
+      ) | null> | null, categories: Array<(
+        { id: string }
+        & { __typename?: 'DimensionCategory' }
+      )> }
       & { __typename?: 'IndicatorValue' }
     ) | null> | null, goals?: Array<(
       { id: string, date?: string | null, value: number }
       & { __typename?: 'IndicatorGoal' }
-    ) | null> | null }
+    ) | null> | null, common?: (
+      { id: string, normalizations?: Array<(
+        { unit?: (
+          { shortName?: string | null }
+          & { __typename?: 'Unit' }
+        ) | null, normalizer?: (
+          { name: string, id: string, identifier?: string | null }
+          & { __typename?: 'CommonIndicator' }
+        ) | null }
+        & { __typename?: 'CommonIndicatorNormalization' }
+      ) | null> | null }
+      & { __typename?: 'CommonIndicator' }
+    ) | null }
     & { __typename?: 'Indicator' }
   ) | null, linkButton?: (
     { blockType: string }
@@ -6399,7 +6427,7 @@ export type GetActionListForGraphsQuery = (
 );
 
 export type CategoryListCategoryFragment = (
-  { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, level?: (
+  { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, level?: (
     { name: string, namePlural?: string | null }
     & { __typename?: 'CategoryLevel' }
   ) | null, image?: (
@@ -7050,6 +7078,9 @@ export type GetEmbedActionQuery = (
     ) | null, plan: (
       { id: string }
       & { __typename?: 'Plan' }
+    ), statusSummary: (
+      { identifier: ActionStatusSummaryIdentifier }
+      & { __typename?: 'ActionStatusSummary' }
     ), status?: (
       { id: string, identifier: string, name: string }
       & { __typename?: 'ActionStatus' }
@@ -7178,7 +7209,16 @@ export type IndicatorDetailsQuery = (
         & { __typename?: 'Image' }
       ) | null }
       & { __typename?: 'Organization' }
-    ), common?: (
+    ), categories: Array<(
+      { identifier: string, name: string, id: string, type: (
+        { identifier: string, name: string, id: string, levels: Array<(
+          { id: string, name: string }
+          & { __typename?: 'CategoryLevel' }
+        )> }
+        & { __typename?: 'CategoryType' }
+      ) }
+      & { __typename?: 'Category' }
+    )>, common?: (
       { id: string, indicators: Array<(
         { id: string, identifier?: string | null, organization: (
           { id: string, name: string, abbreviation: string, classification?: (
@@ -7218,7 +7258,10 @@ export type IndicatorDetailsQuery = (
       ) | null, implementationPhase?: (
         { id: string, identifier: string, name: string }
         & { __typename?: 'ActionImplementationPhase' }
-      ) | null, categories: Array<(
+      ) | null, statusSummary: (
+        { identifier: ActionStatusSummaryIdentifier }
+        & { __typename?: 'ActionStatusSummary' }
+      ), categories: Array<(
         { id: string, identifier: string, name: string, image?: (
           { rendition?: (
             { id: string, src: string }
@@ -7491,6 +7534,9 @@ export type OrganizationDetailsQuery = (
       ) | null>, actionImpacts: Array<(
         { id: string }
         & { __typename?: 'ActionImpact' }
+      )>, actionStatusSummaries: Array<(
+        { identifier: ActionStatusSummaryIdentifier, label: string, color: string, isCompleted: boolean, isActive: boolean, sentiment: Sentiment }
+        & { __typename?: 'ActionStatusSummary' }
       )>, image?: (
         { rendition?: (
           { id: string, src: string, alt: string }
@@ -7510,6 +7556,9 @@ export type OrganizationDetailsQuery = (
         { id: string, identifier: string, name: string, officialName?: string | null, completion?: number | null, updatedAt: any, scheduleContinuous: boolean, startDate?: any | null, endDate?: any | null, order: number, plan: (
           { id: string, viewUrl?: string | null }
           & { __typename?: 'Plan' }
+        ), statusSummary: (
+          { identifier: ActionStatusSummaryIdentifier }
+          & { __typename?: 'ActionStatusSummary' }
         ), schedule: Array<(
           { id: string }
           & { __typename?: 'ActionSchedule' }
@@ -7589,6 +7638,9 @@ export type OrganizationDetailsQuery = (
     ) | null>, actionImpacts: Array<(
       { id: string }
       & { __typename?: 'ActionImpact' }
+    )>, actionStatusSummaries: Array<(
+      { identifier: ActionStatusSummaryIdentifier, label: string, color: string, isCompleted: boolean, isActive: boolean, sentiment: Sentiment }
+      & { __typename?: 'ActionStatusSummary' }
     )>, image?: (
       { rendition?: (
         { id: string, src: string, alt: string }
@@ -7608,6 +7660,9 @@ export type OrganizationDetailsQuery = (
       { id: string, identifier: string, name: string, officialName?: string | null, completion?: number | null, updatedAt: any, scheduleContinuous: boolean, startDate?: any | null, endDate?: any | null, order: number, plan: (
         { id: string, viewUrl?: string | null }
         & { __typename?: 'Plan' }
+      ), statusSummary: (
+        { identifier: ActionStatusSummaryIdentifier }
+        & { __typename?: 'ActionStatusSummary' }
       ), schedule: Array<(
         { id: string }
         & { __typename?: 'ActionSchedule' }
@@ -7680,6 +7735,9 @@ export type OrgContentPlanFragment = (
   ) | null>, actionImpacts: Array<(
     { id: string }
     & { __typename?: 'ActionImpact' }
+  )>, actionStatusSummaries: Array<(
+    { identifier: ActionStatusSummaryIdentifier, label: string, color: string, isCompleted: boolean, isActive: boolean, sentiment: Sentiment }
+    & { __typename?: 'ActionStatusSummary' }
   )>, image?: (
     { rendition?: (
       { id: string, src: string, alt: string }
@@ -7699,6 +7757,9 @@ export type OrgContentPlanFragment = (
     { id: string, identifier: string, name: string, officialName?: string | null, completion?: number | null, updatedAt: any, scheduleContinuous: boolean, startDate?: any | null, endDate?: any | null, order: number, plan: (
       { id: string, viewUrl?: string | null }
       & { __typename?: 'Plan' }
+    ), statusSummary: (
+      { identifier: ActionStatusSummaryIdentifier }
+      & { __typename?: 'ActionStatusSummary' }
     ), schedule: Array<(
       { id: string }
       & { __typename?: 'ActionSchedule' }
@@ -7768,7 +7829,7 @@ export type GetPlanContextQueryVariables = Exact<{
 
 export type GetPlanContextQuery = (
   { plan?: (
-    { id: string, identifier: string, name: string, shortName?: string | null, versionName: string, themeIdentifier?: string | null, primaryLanguage: string, otherLanguages?: Array<string> | null, hideActionIdentifiers?: boolean | null, publishedAt?: any | null, viewUrl?: string | null, serveFileBaseUrl: string, adminUrl?: string | null, accessibilityStatementUrl?: string | null, primaryActionClassification?: (
+    { id: string, identifier: string, name: string, shortName?: string | null, versionName: string, themeIdentifier?: string | null, primaryLanguage: string, otherLanguages?: Array<string> | null, hideActionIdentifiers?: boolean | null, publishedAt?: any | null, viewUrl?: string | null, serveFileBaseUrl: string, adminUrl?: string | null, accessibilityStatementUrl?: string | null, externalFeedbackUrl?: string | null, primaryActionClassification?: (
       { id: string, identifier: string, hideCategoryIdentifiers: boolean, common?: (
         { identifier: string }
         & { __typename?: 'CommonCategoryType' }
@@ -7943,7 +8004,7 @@ export type GetPlanContextQuery = (
 );
 
 export type PlanContextFragment = (
-  { id: string, identifier: string, name: string, shortName?: string | null, versionName: string, themeIdentifier?: string | null, primaryLanguage: string, otherLanguages?: Array<string> | null, hideActionIdentifiers?: boolean | null, publishedAt?: any | null, viewUrl?: string | null, serveFileBaseUrl: string, adminUrl?: string | null, accessibilityStatementUrl?: string | null, primaryActionClassification?: (
+  { id: string, identifier: string, name: string, shortName?: string | null, versionName: string, themeIdentifier?: string | null, primaryLanguage: string, otherLanguages?: Array<string> | null, hideActionIdentifiers?: boolean | null, publishedAt?: any | null, viewUrl?: string | null, serveFileBaseUrl: string, adminUrl?: string | null, accessibilityStatementUrl?: string | null, externalFeedbackUrl?: string | null, primaryActionClassification?: (
     { id: string, identifier: string, hideCategoryIdentifiers: boolean, common?: (
       { identifier: string }
       & { __typename?: 'CommonCategoryType' }
@@ -8198,7 +8259,7 @@ export type GetPlanPageGeneralQuery = (
     ) | (
       { style?: string | null, heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, categoryType?: (
         { id: string, hideCategoryIdentifiers: boolean, categories: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, level?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, level?: (
             { name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
@@ -8228,7 +8289,7 @@ export type GetPlanPageGeneralQuery = (
         & { __typename?: 'CategoryType' }
       ) | null, category?: (
         { id: string, children: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, level?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, level?: (
             { name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
@@ -8354,12 +8415,30 @@ export type GetPlanPageGeneralQuery = (
           { id: string, date?: string | null, value: number }
           & { __typename?: 'IndicatorValue' }
         ) | null, values?: Array<(
-          { id: string, date?: string | null, value: number }
+          { id: string, date?: string | null, value: number, normalizedValues?: Array<(
+            { normalizerId?: string | null, value?: number | null }
+            & { __typename?: 'NormalizedValue' }
+          ) | null> | null, categories: Array<(
+            { id: string }
+            & { __typename?: 'DimensionCategory' }
+          )> }
           & { __typename?: 'IndicatorValue' }
         ) | null> | null, goals?: Array<(
           { id: string, date?: string | null, value: number }
           & { __typename?: 'IndicatorGoal' }
-        ) | null> | null }
+        ) | null> | null, common?: (
+          { id: string, normalizations?: Array<(
+            { unit?: (
+              { shortName?: string | null }
+              & { __typename?: 'Unit' }
+            ) | null, normalizer?: (
+              { name: string, id: string, identifier?: string | null }
+              & { __typename?: 'CommonIndicator' }
+            ) | null }
+            & { __typename?: 'CommonIndicatorNormalization' }
+          ) | null> | null }
+          & { __typename?: 'CommonIndicator' }
+        ) | null }
         & { __typename?: 'Indicator' }
       ) | null, linkButton?: (
         { blockType: string }
@@ -8425,7 +8504,7 @@ export type GetPlanPageGeneralQuery = (
         ) | null }
         & { __typename?: 'Image' }
       ) | null, children: Array<(
-        { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, level?: (
+        { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, level?: (
           { name: string, namePlural?: string | null }
           & { __typename?: 'CategoryLevel' }
         ) | null, image?: (
@@ -8672,7 +8751,7 @@ export type GetPlanPageGeneralQuery = (
     ) | (
       { style?: string | null, heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, categoryType?: (
         { id: string, hideCategoryIdentifiers: boolean, categories: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, level?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, level?: (
             { name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
@@ -8702,7 +8781,7 @@ export type GetPlanPageGeneralQuery = (
         & { __typename?: 'CategoryType' }
       ) | null, category?: (
         { id: string, children: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, level?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, level?: (
             { name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
@@ -8828,12 +8907,30 @@ export type GetPlanPageGeneralQuery = (
           { id: string, date?: string | null, value: number }
           & { __typename?: 'IndicatorValue' }
         ) | null, values?: Array<(
-          { id: string, date?: string | null, value: number }
+          { id: string, date?: string | null, value: number, normalizedValues?: Array<(
+            { normalizerId?: string | null, value?: number | null }
+            & { __typename?: 'NormalizedValue' }
+          ) | null> | null, categories: Array<(
+            { id: string }
+            & { __typename?: 'DimensionCategory' }
+          )> }
           & { __typename?: 'IndicatorValue' }
         ) | null> | null, goals?: Array<(
           { id: string, date?: string | null, value: number }
           & { __typename?: 'IndicatorGoal' }
-        ) | null> | null }
+        ) | null> | null, common?: (
+          { id: string, normalizations?: Array<(
+            { unit?: (
+              { shortName?: string | null }
+              & { __typename?: 'Unit' }
+            ) | null, normalizer?: (
+              { name: string, id: string, identifier?: string | null }
+              & { __typename?: 'CommonIndicator' }
+            ) | null }
+            & { __typename?: 'CommonIndicatorNormalization' }
+          ) | null> | null }
+          & { __typename?: 'CommonIndicator' }
+        ) | null }
         & { __typename?: 'Indicator' }
       ) | null, linkButton?: (
         { blockType: string }
@@ -8957,7 +9054,7 @@ export type GetPlanPageGeneralQuery = (
     ) | (
       { style?: string | null, heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, categoryType?: (
         { id: string, hideCategoryIdentifiers: boolean, categories: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, level?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, level?: (
             { name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
@@ -8987,7 +9084,7 @@ export type GetPlanPageGeneralQuery = (
         & { __typename?: 'CategoryType' }
       ) | null, category?: (
         { id: string, children: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, level?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, level?: (
             { name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
@@ -9113,12 +9210,30 @@ export type GetPlanPageGeneralQuery = (
           { id: string, date?: string | null, value: number }
           & { __typename?: 'IndicatorValue' }
         ) | null, values?: Array<(
-          { id: string, date?: string | null, value: number }
+          { id: string, date?: string | null, value: number, normalizedValues?: Array<(
+            { normalizerId?: string | null, value?: number | null }
+            & { __typename?: 'NormalizedValue' }
+          ) | null> | null, categories: Array<(
+            { id: string }
+            & { __typename?: 'DimensionCategory' }
+          )> }
           & { __typename?: 'IndicatorValue' }
         ) | null> | null, goals?: Array<(
           { id: string, date?: string | null, value: number }
           & { __typename?: 'IndicatorGoal' }
-        ) | null> | null }
+        ) | null> | null, common?: (
+          { id: string, normalizations?: Array<(
+            { unit?: (
+              { shortName?: string | null }
+              & { __typename?: 'Unit' }
+            ) | null, normalizer?: (
+              { name: string, id: string, identifier?: string | null }
+              & { __typename?: 'CommonIndicator' }
+            ) | null }
+            & { __typename?: 'CommonIndicatorNormalization' }
+          ) | null> | null }
+          & { __typename?: 'CommonIndicator' }
+        ) | null }
         & { __typename?: 'Indicator' }
       ) | null, linkButton?: (
         { blockType: string }
@@ -9351,7 +9466,7 @@ export type GetHomePageQuery = (
     ) | (
       { style?: string | null, heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, categoryType?: (
         { id: string, hideCategoryIdentifiers: boolean, categories: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, level?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, level?: (
             { name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
@@ -9381,7 +9496,7 @@ export type GetHomePageQuery = (
         & { __typename?: 'CategoryType' }
       ) | null, category?: (
         { id: string, children: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, level?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, level?: (
             { name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
@@ -9507,12 +9622,30 @@ export type GetHomePageQuery = (
           { id: string, date?: string | null, value: number }
           & { __typename?: 'IndicatorValue' }
         ) | null, values?: Array<(
-          { id: string, date?: string | null, value: number }
+          { id: string, date?: string | null, value: number, normalizedValues?: Array<(
+            { normalizerId?: string | null, value?: number | null }
+            & { __typename?: 'NormalizedValue' }
+          ) | null> | null, categories: Array<(
+            { id: string }
+            & { __typename?: 'DimensionCategory' }
+          )> }
           & { __typename?: 'IndicatorValue' }
         ) | null> | null, goals?: Array<(
           { id: string, date?: string | null, value: number }
           & { __typename?: 'IndicatorGoal' }
-        ) | null> | null }
+        ) | null> | null, common?: (
+          { id: string, normalizations?: Array<(
+            { unit?: (
+              { shortName?: string | null }
+              & { __typename?: 'Unit' }
+            ) | null, normalizer?: (
+              { name: string, id: string, identifier?: string | null }
+              & { __typename?: 'CommonIndicator' }
+            ) | null }
+            & { __typename?: 'CommonIndicatorNormalization' }
+          ) | null> | null }
+          & { __typename?: 'CommonIndicator' }
+        ) | null }
         & { __typename?: 'Indicator' }
       ) | null, linkButton?: (
         { blockType: string }

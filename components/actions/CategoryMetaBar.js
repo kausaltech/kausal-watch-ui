@@ -19,7 +19,7 @@ export const GET_ACTION_STATUSES = gql`
         identifier
         name
       }
-      statussummary {
+      statusSummary {
         identifier
       }
       implementationPhase {
