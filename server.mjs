@@ -284,7 +284,7 @@ class WatchServer {
 
     if (!this.validateCredentials(ctx)) {
       ctx.res.statusCode = 401;
-      ctx.res.statusMessage = 'Please provide username and password';
+      ctx.res.statusMessage = 'Please provide a valid username and password combination';
       ctx.set('WWW-Authenticate', `Basic realm="Access to ${ctx.hostname}", charset="UTF-8"`);
       return;
     }
