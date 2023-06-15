@@ -28,6 +28,7 @@ const isProductionInstance = process.env.DEPLOYMENT_TYPE === 'production';
 
 const AUTH_CONFIG_PATTERN = /^[^:]+:[^:]+:[^:]+$/
 const BASIC_AUTH_PATTERN = /^Basic [^ ]+$/
+const BASIC_AUTH_ENV_VARIABLE = 'BASIC_AUTH_FOR_HOSTNAMES'
 
 function parseBasicAuthConfig(encodedValue) {
   const result = {};
@@ -37,7 +38,9 @@ function parseBasicAuthConfig(encodedValue) {
   const hostnameConfigs = encodedValue.split(',');
   for (const config of hostnameConfigs) {
     if (!AUTH_CONFIG_PATTERN.test(config)) {
-      console.log('Invalid basic auth configuration.')
+      const error = `Invalid basic auth configuration. Check the syntax of ENV variable ${BASIC_AUTH_ENV_VARIABLE}.`
+      Sentry.captureMessage(error);
+      console.error(error);
       continue;
     }
     const [hostname, username, password] = config.split(':');
@@ -46,7 +49,7 @@ function parseBasicAuthConfig(encodedValue) {
   return result;
 }
 
-const basicAuthForHostnames = parseBasicAuthConfig(process.env.BASIC_AUTH_FOR_HOSTNAMES);
+const basicAuthForHostnames = parseBasicAuthConfig(process.env[BASIC_AUTH_ENV_VARIABLE]);
 
 /*
 let ssrCache;
@@ -247,8 +250,8 @@ class WatchServer {
     srv.incrementalCache.locales = loc;
   }
 
-  validateCredentials(ctx, hostname) {
-    const requiredCredentials = basicAuthForHostnames[hostname];
+  validateCredentials(ctx) {
+    const requiredCredentials = basicAuthForHostnames[ctx.hostname];
     if (requiredCredentials == null) {
       return true;
     }
@@ -279,11 +282,10 @@ class WatchServer {
       return;
     }
 
-    const { hostname } = ctx;
-    if (!this.validateCredentials(ctx, hostname)) {
+    if (!this.validateCredentials(ctx)) {
       ctx.res.statusCode = 401;
       ctx.res.statusMessage = 'Please provide username and password';
-      ctx.set('WWW-Authenticate', `Basic realm="Access to ${hostname}", charset="UTF-8"`);
+      ctx.set('WWW-Authenticate', `Basic realm="Access to ${ctx.hostname}", charset="UTF-8"`);
       return;
     }
 
