@@ -26,6 +26,28 @@ const serverPort = process.env.PORT || 3000;
 const isDevMode = process.env.NODE_ENV !== 'production';
 const isProductionInstance = process.env.DEPLOYMENT_TYPE === 'production';
 
+const AUTH_CONFIG_PATTERN = /^[^:]+:[^:]+:[^:]+$/
+const BASIC_AUTH_PATTERN = /^Basic [^ ]+$/
+
+function parseBasicAuthConfig(encodedValue) {
+  const result = {};
+  if (encodedValue == null || encodedValue.trim().length === 0) {
+    return result;
+  }
+  const hostnameConfigs = encodedValue.split(',');
+  for (const config of hostnameConfigs) {
+    if (!AUTH_CONFIG_PATTERN.test(config)) {
+      console.log('Invalid basic auth configuration.')
+      continue;
+    }
+    const [hostname, username, password] = config.split(':');
+    result[hostname] = [username, password];
+  }
+  return result;
+}
+
+const basicAuthForHostnames = parseBasicAuthConfig(process.env.BASIC_AUTH_FOR_HOSTNAMES);
+
 /*
 let ssrCache;
 if (false && (('ENABLE_CACHE' in process.env)
@@ -225,11 +247,43 @@ class WatchServer {
     srv.incrementalCache.locales = loc;
   }
 
+  validateCredentials(ctx, hostname) {
+    const requiredCredentials = basicAuthForHostnames[hostname];
+    if (requiredCredentials == null) {
+      return true;
+    }
+    const { authorization } = ctx.req.headers;
+    if (authorization == null) {
+      return false;
+    }
+    if (!BASIC_AUTH_PATTERN.test(authorization)) {
+      return false;
+    }
+    const providedCredentials = Buffer
+      .from(authorization.split(' ')[1], 'base64')
+      .toString('utf-8')
+      .split(':');
+    for (const prop of ["length", 0, 1]) {
+      if (providedCredentials[prop] !== requiredCredentials[prop]) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   async handleRequest(ctx) {
     ctx.req.currentURL = getCurrentURL(ctx.req);
     if (ctx.req.currentURL.path === '/_health') {
       ctx.res.statusCode = 200;
       ctx.res.statusMessage = 'OK';
+      return;
+    }
+
+    const { hostname } = ctx;
+    if (!this.validateCredentials(ctx, hostname)) {
+      ctx.res.statusCode = 401;
+      ctx.res.statusMessage = 'Please provide username and password';
+      ctx.set('WWW-Authenticate', `Basic realm="Access to ${hostname}", charset="UTF-8"`);
       return;
     }
 
