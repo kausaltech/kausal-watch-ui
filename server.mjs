@@ -158,7 +158,7 @@ class WatchServer {
   }
 
   async getAvailablePlans(ctx) {
-    const { hostname, path } = ctx;
+    const { hostname } = ctx;
     let plansForHostname;
     const obj = this.hostnameCache.get(hostname);
 
@@ -168,13 +168,13 @@ class WatchServer {
       const { data } = await this.apolloClient.query({
         query: GET_PLANS_BY_HOSTNAME,
         variables: {
-          hostname: ctx.hostname,
+          hostname: hostname,
         },
         fetchPolicy: 'no-cache',
       });
       plansForHostname = data.plansForHostname;
     } catch (error) {
-      console.error(`Unable to get plan for hostname: ${ctx.hostname}`)
+      console.error(`Unable to get plan for hostname: ${hostname}`)
       if (error.networkError) {
         if (!error.networkError.result) {
           console.error(error.networkError);
@@ -185,14 +185,14 @@ class WatchServer {
         console.error(error);
       }
       Sentry.withScope((scope) => {
-        scope.setTag('hostname', ctx.hostname);
+        scope.setTag('hostname', hostname);
         Sentry.captureException(error);
       });
       ctx.throw(500, 'Internal server error (unable to get plan data)');
       return null;
     }
     if (!plansForHostname.length) {
-      const msg = `Unknown hostname: ${ctx.hostname}`;
+      const msg = `Unknown hostname: ${hostname}`;
       console.error(msg);
       ctx.throw(404, msg);
     }
@@ -232,6 +232,7 @@ class WatchServer {
       ctx.res.statusMessage = 'OK';
       return;
     }
+
     const plans = await this.getAvailablePlans(ctx);
     if (!plans) return;
     const domain = plans[0].domains[0];
