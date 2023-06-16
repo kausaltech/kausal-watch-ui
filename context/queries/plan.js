@@ -51,6 +51,7 @@ fragment PlanContext on Plan {
     identifier
     name
     order
+    color
   }
   actionImpacts {
     id

@@ -106,15 +106,18 @@ const getPhaseData = (actions: ActionListAction[], plan: PlanContextType, theme,
 
   const phases = plan.actionImplementationPhases;
 
-  const phaseColors = [
-    theme.graphColors.grey020,
-    theme.graphColors.green030,
-    theme.graphColors.green050,
-    theme.graphColors.green070,
-    theme.graphColors.green090,
-    theme.graphColors.green090,
-    theme.graphColors.grey010,
-  ];
+  let phaseColors = phases.map(p => theme.graphColors[p.color]).filter(c => c != null);
+  if (phaseColors.length != phases.length) {
+    phaseColors = [
+      theme.graphColors.grey020,
+      theme.graphColors.green030,
+      theme.graphColors.green050,
+      theme.graphColors.green070,
+      theme.graphColors.green090,
+      theme.graphColors.green090,
+      theme.graphColors.grey010,
+    ];
+  }
 
   // Process actions and ignore set phase if action's status trumps it
   const phasedActions = actions.map((action) => {
