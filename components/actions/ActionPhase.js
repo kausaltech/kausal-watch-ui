@@ -148,7 +148,7 @@ function ActionPhase(props) {
           />
         ))}
       </ul>
-      { !compact && (
+      { !compact && status.identifier !== 'UNDEFINED' && (
         <>
           <strong>{ status.label }</strong>
           { reason && (
