@@ -144,6 +144,7 @@ const actionFragment = gql`
     identifier
     name(hyphenated: true)
     viewUrl @include(if: $relatedPlanActions)
+    color
     status {
       id
       identifier

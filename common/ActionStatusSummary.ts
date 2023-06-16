@@ -34,6 +34,10 @@ interface ActionWithStatusSummary {
 }
 
 export const getStatusColorForAction = (action: ActionWithStatusSummary, plan: PlanContextType, theme: Theme) => {
+  const c = action?.color;
+  if (c != null) {
+    return getStatusColor(c, theme);
+  }
   const s = action?.statusSummary;
   if (s == null || (s?.identifier == null && s?.color == null)) {
     throw new Error('Action data is missing statusSummary');

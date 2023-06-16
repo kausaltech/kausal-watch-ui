@@ -22,6 +22,7 @@ const GET_ACTION = gql`
       plan {
         id
       }
+      color
       statusSummary {
         identifier
       }

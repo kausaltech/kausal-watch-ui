@@ -21,6 +21,7 @@ const ACTION_CARD_FRAGMENT = gql`
     identifier
     name(hyphenated: true)
     viewUrl
+    color
     status {
       id
       identifier

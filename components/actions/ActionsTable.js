@@ -17,6 +17,7 @@ const ACTION_ROW_FRAGMENT = gql`
     id
     identifier
     name
+    color
     status {
       id
       identifier

@@ -64,6 +64,7 @@ query GetActionDetails($plan: ID!, $id: ID!, $clientUrl: String!) {
     image {
       ...MultiUseImageFragment
     }
+    color
     statusSummary {
       identifier
       label
@@ -749,6 +750,7 @@ function ActionContent(props: ActionContentProps) {
               <ActionSection>
                 <PrimaryHeader>{ t('actions:action-progress') }</PrimaryHeader>
                 <ActionPhase
+                  action={action}
                   status={getStatusSummary(plan, action.statusSummary)}
                   activePhase={action.implementationPhase}
                   reason={action.manualStatusReason}

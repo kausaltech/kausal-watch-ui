@@ -69,11 +69,11 @@ const PhaseBlock = styled.div`
 
 function Phase(props) {
   const { name } = props.phase;
-  const { statusSummary, active, passed, compact, plan } = props;
+  const { statusSummary, active, passed, compact, plan, action } = props;
   const theme = useTheme();
 
   let blockColor = theme.themeColors.light;
-  const color = getStatusColorForAction({statusSummary}, plan, theme);
+  const color = getStatusColorForAction(action, plan, theme);
 
   let labelClass = 'disabled';
 
@@ -107,6 +107,7 @@ function ActionPhase(props) {
     status,
     activePhase,
     reason,
+    action,
     phases,
     compact,
     ...rest } = props;
@@ -135,6 +136,7 @@ function ActionPhase(props) {
       <ul>
         { phases.map((phase, indx) => (
           <Phase
+            action={action}
             phase={phase}
             plan={plan}
             passed={indx < phaseIndex}

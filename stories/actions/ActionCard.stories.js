@@ -183,6 +183,7 @@ const ACTION_CARD_FRAGMENT = gql`
   fragment ActionCard on Action {
     id
     identifier
+    color
     name(hyphenated: true)
     status {
       id

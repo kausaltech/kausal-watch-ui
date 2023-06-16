@@ -13,6 +13,7 @@ import ActionStatusGraphs from 'components/dashboard/ActionStatusGraphs';
 const GET_ACTION_LIST_FOR_GRAPHS = gql`
 query GetActionListForGraphs($plan: ID!) {
   planActions(plan: $plan) {
+    color
     statusSummary {
       identifier
     }

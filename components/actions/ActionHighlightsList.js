@@ -32,6 +32,7 @@ export const GET_ACTION_LIST = gql`
       plan {
         id
       }
+      color
       status {
         id
         identifier

@@ -297,6 +297,7 @@ const ActionTableRow = React.memo(function ActionTableRow(props) {
         <StatusDisplay>
           { hasImplementationPhases ? (
             <ActionPhase
+              action={item}
               status={actionStatusSummary}
               activePhase={item.implementationPhase}
               reason={item.manualStatusReason}

@@ -14,6 +14,7 @@ export const GET_ACTION_STATUSES = gql`
       plan {
         id
       }
+      color
       status {
         id
         identifier
