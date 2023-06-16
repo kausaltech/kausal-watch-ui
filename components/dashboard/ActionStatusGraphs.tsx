@@ -123,13 +123,13 @@ const ActionsStatusGraphs = (props: ActionsStatusGraphsProps) => {
           helpText={t('actions-phases-help')}
         />
       )}
-      <StatusDonut
+      { !plan.features.minimalStatuses && <StatusDonut
         data={{ values: progressData.values, labels: progressData.labels }}
         currentValue={progressData.total}
         colors={progressData.colors.length > 0 ? progressData.colors : []}
         header={t('actions-status')}
         helpText={t('actions-status-help')}
-      />
+      /> }
       <StatusDonut
         data={{ values: timelinessData.values, labels: timelinessData.labels }}
         currentValue={timelinessData.total}

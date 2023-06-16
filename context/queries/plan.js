@@ -159,6 +159,7 @@ fragment PlanContext on Plan {
     publicContactPersons
     showAdminLink
     enableIndicatorComparison
+    minimalStatuses
   }
   allRelatedPlans {
     id
