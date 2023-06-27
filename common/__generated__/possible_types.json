@@ -115,6 +115,7 @@
       "ActionScheduleFilterBlock",
       "ActionStatusGraphsBlock",
       "ActionTasksBlock",
+      "AdaptiveEmbedBlock",
       "BlockQuoteBlock",
       "BooleanBlock",
       "CardBlock",

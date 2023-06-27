@@ -102,6 +102,11 @@ const STREAM_FIELD_FRAGMENT = gql`
         id
       }
     }
+    ... on AdaptiveEmbedBlock {
+      embed {
+        html
+      }
+    }
     ... on CartographyVisualisationBlock {
       style
       styleOverrides
@@ -411,6 +416,20 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
                 {...block}
                 hasSidebar={hasSidebar}
               />
+    }
+    case 'AdaptiveEmbedBlock': {
+      return <Container>
+        <Row>
+          <Col
+            xl={{ size: hasSidebar ? 7 : 6, offset: hasSidebar ? 4 : 3 }}
+            lg={{ size: 8, offset: hasSidebar ? 4 : 2 }}
+            md={{ size: 10, offset: 1 }}
+            className="my-4"
+          >
+            <div dangerouslySetInnerHTML={{__html: block.embed.html }}></div>
+          </Col>
+        </Row>
+      </Container>
     }
     case 'CartographyVisualisationBlock': {
       const { account, style, styleOverrides } = block;
