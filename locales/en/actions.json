@@ -48,7 +48,7 @@
   "actions-status": "Actions by status",
   "actions-status-help": "Actions that are on schedule",
   "actions-updated": "Active actions last updated",
-  "actions-updated-help": "Actions that have been updated within the {{count}} days",
+  "actions-updated-help": "Actions that have been updated within the last {{count}} days",
   "emission-scopes": "Emission scopes",
   "no-defined-indicators": "No indicators defined",
   "not-being-implemented": "Not being implemented",
