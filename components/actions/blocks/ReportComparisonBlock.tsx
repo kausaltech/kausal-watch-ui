@@ -28,7 +28,7 @@ const SectionHeader = styled.div`
 `;
 
 const FieldHeader = styled.div`
-  font-size: ${(props) => props.theme.fontSizeSm};
+  font-size: ${(props) => props.theme.fontSizeBase};
   margin-bottom: ${(props) => props.theme.spaces.s100};
 `;
 
@@ -51,32 +51,31 @@ const ToggleButton = styled(Button)`
 `;
 
 const ReportFieldComparison = styled.div`
-  display: flex;
   overflow-x: auto;
   padding: ${(props) => props.theme.spaces.s050} 0;
   margin-bottom: ${(props) => props.theme.spaces.s050};
 
-  background-image: 
+  background-image:
     linear-gradient(to right, white, white),
     linear-gradient(to right, white, white),
     linear-gradient(to right, rgba(0,0,0,.25), rgba(255,255,255,0)),
-    linear-gradient(to left, rgba(0,0,0,.25), rgba(255,255,255,0));   
+    linear-gradient(to left, rgba(0,0,0,.25), rgba(255,255,255,0));
   background-position: left center, right center, left center, right center;
-	background-repeat: no-repeat;
-	background-color: white;
-	background-size: 20px 100%, 20px 100%, 10px 100%, 10px 100%;
-	background-attachment: local, local, scroll, scroll;
+        background-repeat: no-repeat;
+        background-color: white;
+        background-size: 20px 100%, 20px 100%, 10px 100%, 10px 100%;
+        background-attachment: local, local, scroll, scroll;
 `;
 
 const ReportField = styled.div`
-  flex: 2 0 320px;
   padding: ${(props) => `${props.theme.spaces.s050} ${props.theme.spaces.s050} 0 ${props.theme.spaces.s050}`};
   margin-right: ${(props) => props.theme.spaces.s100};
+  margin-bottom: ${(props) => props.theme.spaces.s100};
   border: 1px solid ${(props) => props.theme.graphColors.grey020};
 `;
 
 const ReportDate = styled.span`
-  font-size: ${(props) => props.theme.fontSizeSm};
+  font-size: ${(props) => props.theme.fontSizeBase};
   color: ${(props) => props.theme.graphColors.grey060};
 `;
 
@@ -140,6 +139,7 @@ const ReportComparisonBlock = (props) => {
                 key={report.attribute.id}
                 attribute={report.attribute}
                 attributeType={undefined}
+                fontSize="fontSizeBase"
               />
             ) : (
               <div>{t('no-action-data-for-report')}</div>

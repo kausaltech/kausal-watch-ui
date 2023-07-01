@@ -45,7 +45,7 @@ const AttributeContainer = styled.div`
 
   .text-content {
     text-align: left;
-    font-size: ${(props) => props.theme.fontSizeSm};
+    font-size: ${(props) => props.theme[props.fontSize ?? 'fontSizeSm']};
     line-height: ${(props) => props.theme.lineHeightMd};
     color: ${(props) => props.theme.graphColors.grey080};
   }
@@ -73,7 +73,8 @@ const NumericValueUnit = styled.span`
 type AttributeContentProps = {
   attribute: AttributesBlockAttributeFragment,
   attributeType: AttributesBlockAttributeTypeFragment,
-  t: TFunction, 
+  t: TFunction,
+  fontSize: string
 }
 
 type AttributeContentNestedTypeProps = {
@@ -82,7 +83,7 @@ type AttributeContentNestedTypeProps = {
 }
 
 const ActionAttribute = (props: AttributeContentProps | AttributeContentNestedTypeProps) => {
-  const { attribute, attributeType } = props;
+  const { attribute, attributeType, fontSize } = props;
   let type = attributeType ?? attribute.type;
   let dataElement: ReactElement;
 
@@ -144,7 +145,7 @@ const ActionAttribute = (props: AttributeContentProps | AttributeContentNestedTy
   }
   // Render horizontal layout
   return (
-    <AttributeContainer>
+    <AttributeContainer fontSize={fontSize}>
       <h3>
         {type.name}
         {type.helpText && (

@@ -344,7 +344,7 @@ export type ActionContentAction = NonNullable<GetActionDetailsQuery['action']>
 const LastUpdated = styled.div`
   margin-bottom: 1em;
   color: ${(props) => props.theme.themeColors.dark};
-  font-size: ${(props) => props.theme.fontSizeSm};
+  font-size: ${(props) => props.theme.fontSizeMd};
   font-family: ${(props) => props.theme.fontFamilyTiny};
 `;
 
