@@ -176,7 +176,7 @@ function IndicatorHero(props: IndicatorHeroProps) {
               <Col lg={8}>
                 <HeroCardBg>
                   <CardContent>
-                  { orgs && (
+                  { orgs && orgs.length > 0 && (
                     <PrimaryOrg>
                       <OrgSelector
                         orgs={orgs}

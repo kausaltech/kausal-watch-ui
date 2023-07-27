@@ -63,6 +63,9 @@ const StyledDropdownToggle = styled(DropdownToggle)`
 const OrgSelector = (props) => {
   const { orgs } = props;
   const activeOrg = orgs.find((org) => org.active === true);
+  if (!activeOrg) {
+      throw new Error("No active organization");
+  }
   return (
 
     <OrgSelect>
