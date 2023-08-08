@@ -165,8 +165,8 @@ const PageHeaderBlock = (props: PageHeaderBlockProps) => {
         ? `${category.parent?.identifier}.` : '';
       const parentTitle = category.parent?.categoryPage
         ? `${parentIdentifier} ${category.parent?.categoryPage.title}`
-        : category.level?.namePlural;
-      const parentUrl = category.parent?.categoryPage?.urlPath || '/';
+        : null;
+      const parentUrl = category.parent?.categoryPage?.urlPath || null;
       const headerImage = category.image || category.parent?.image;
       const iconImage = category.iconImage?.rendition?.src;
       return (
@@ -183,7 +183,7 @@ const PageHeaderBlock = (props: PageHeaderBlockProps) => {
           color={color}
           attributes={category.attributes}
           typeId={category.type.id}
-          level={category.parent?.categoryPage ? page.category?.level?.name : null}
+          level={page.category?.level?.name}
         />
       );
     }
