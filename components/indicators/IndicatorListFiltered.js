@@ -261,7 +261,7 @@ const descendantIds = (indicator, hierarchy) => {
     return null;
   }
   return descendants.join(' ');
-}
+};
 
 const IndicatorListFiltered = (props) => {
   const { t, categories, indicators, i18n, displayMunicipality, hierarchy, displayNormalizedValues } = props;
@@ -280,7 +280,6 @@ const IndicatorListFiltered = (props) => {
     });
   };
   const plan = usePlan();
-
   const toggleHidden = (idx) => {
     const newGroups = {};
     newGroups[idx] = idx in visibleGroups ? visibleGroups[idx] === false :  true;
@@ -470,7 +469,11 @@ const IndicatorListFiltered = (props) => {
                 const collapsed = collapseState === true;
 
                 return (
-                  <tr key={item.id} id={indicatorElementId(item.common?.id ?? item.id)} style={{display: (visible ? 'table-row' : 'none')}}>
+                  <tr
+                    key={item.id}
+                    id={indicatorElementId(item.common?.id ?? item.id)}
+                    style={{display: (visible ? 'table-row' : 'none')}}
+                  >
                     { indicatorNameColumnEnabled &&
                       <IndentableTableCell
                         onClick={collapsible ? (() => toggleVisibility(item)) : undefined}
@@ -520,19 +523,25 @@ const IndicatorListFiltered = (props) => {
                       )}
                     </IndentableTableCell>
                     <IndentableTableCell numeric>
-                      {item.latestValue && (
                         <IndicatorLink id={item.id}>
                           <a>
-                            <Value>{beautifyValue(item.latestValue.value, i18n.language)}</Value>
-                            <Unit>{item.unit?.shortName ?? ''}</Unit>
+                            <Value>
+                              { item.latestValue ?
+                                beautifyValue(item.latestValue.value, i18n.language)
+                                : '-' }
+                            </Value>
+                            {item.latestValue && <Unit>{item.unit?.shortName ?? ''}</Unit>}
                           </a>
                         </IndicatorLink>
-                      )}
                     </IndentableTableCell>
                     { (displayNormalizedValues) &&
                       <IndentableTableCell numeric>
-                        <Value>{beautifyValue(normalizedValue, i18n.language)}</Value>
-                        <Unit>{normalizedUnit ?? ''}</Unit>
+                        <IndicatorLink id={item.id}>
+                          <a>
+                            <Value>{beautifyValue(normalizedValue, i18n.language)}</Value>
+                            <Unit>{normalizedUnit ?? ''}</Unit>
+                          </a>
+                        </IndicatorLink>
                       </IndentableTableCell>
                     }
                   </tr>
