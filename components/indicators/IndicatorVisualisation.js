@@ -66,6 +66,10 @@ const GET_INDICATOR_GRAPH_DATA = gql`
         id
         date
         value
+        normalizedValues {
+          normalizerId
+          value
+        }
         scenario {
           id
         }
@@ -130,6 +134,10 @@ const GET_INDICATOR_GRAPH_DATA = gql`
             id
             date
             value
+            normalizedValues {
+              normalizerId
+              value
+            }
             scenario {
               id
             }

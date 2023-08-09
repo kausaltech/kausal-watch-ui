@@ -1,12 +1,12 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled, { ThemeContext } from 'styled-components';
 import { motion, useAnimation, animate, MotionConfig } from 'framer-motion';
 import { useTranslation } from 'common/i18n';
 import dayjs from 'common/dayjs';
 import { IndicatorLink } from 'common/links';
-// import { normalizeValuesByNormalizer } from './IndicatorVisualisation';
+import Switch from 'components/common/Switch';
 
 const BarBase = styled.rect`
 `;
@@ -64,9 +64,17 @@ const SourceLink = styled.div`
   font-size: ${(props) => props.theme.fontSizeSm};
 `;
 
+const NormalizerChooser = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: ${(props) => props.theme.spaces.s100};
+  margin-top: ${(props) => props.theme.spaces.s200};
+  padding: ${(props) => props.theme.spaces.s050} ${(props) => props.theme.spaces.s150};
+`;
+
 const formatValue = (value, locale, precision) => {
   // Two significant figures
-  return parseFloat(Number(value).toPrecision(precision).toLocaleString(locale));
+  return parseFloat(Number(value).toPrecision(precision)).toLocaleString(locale);
 }
 
 const findPrecision = (comparableValues) => {
@@ -125,29 +133,52 @@ function IndicatorProgressBar(props) {
     indicator,
     animate } = props;
 
-  /*
-  // Sketching normalization toggle
+  const [ isNormalized, setIsNormalized ] = useState(false);
+
   const populationNormalizer = indicator.common?.normalizations.find(
     normalization => normalization.normalizer.identifier === 'population'
   );
-  const indicatorValues = normalizeValuesByNormalizer(indicator.values, populationNormalizer.normalizer.id);
-  */
-  const indicatorValues = indicator.values;
+
+  const getNormalizedValue = (indicatorValue) => {
+    if (populationNormalizer && indicatorValue.normalizedValues.length > 0) {
+      const normalized = indicatorValue.normalizedValues.find((normed) =>
+        normed.normalizerId === populationNormalizer.normalizer.id);
+      return normalized.value;
+    } else {
+      return undefined;
+    }
+  };
+
   const lastGoal = indicator.goals[indicator.goals.length-1];
-  const firstValue = indicatorValues[0];
-  const lastValue = indicatorValues[indicator.values.length-1];
+  const firstValue = indicator.values[0];
+  const lastValue = indicator.values[indicator.values.length-1];
+
+  const canNormalize = getNormalizedValue(firstValue) && getNormalizedValue(lastValue) && getNormalizedValue(lastGoal);
+
+  useEffect(() => {
+    if (canNormalize) {
+      setIsNormalized(true);
+    }
+  }, [canNormalize]);
 
   // The bar is built for showing reduction goals
   // we swap the goal and start values if the goal is to increase
   // TODO: enable the viz to handle goals to increase
   const indicatorId = indicator.id;
   const startDate = firstValue.date;
-  const startValue = (lastGoal.value < firstValue.value) ? firstValue.value : lastGoal.value;
+  const startValue = (lastGoal.value < firstValue.value) ?
+    (isNormalized ? getNormalizedValue(firstValue) : firstValue.value) :
+    (isNormalized ? getNormalizedValue(lastGoal) : lastGoal.value);
+
   const latestDate= lastValue.date;
-  const latestValue = lastValue.value;
+  const latestValue = isNormalized ? getNormalizedValue(lastValue) : lastValue.value;
+
   const goalDate = lastGoal.date;
-  const goalValue = (lastGoal.value < firstValue.value) ? lastGoal.value : firstValue.value;
-  const unit = indicator.unit.shortName;
+  const goalValue = (lastGoal.value < firstValue.value) ?
+  (isNormalized ? getNormalizedValue(lastGoal) : lastGoal.value) :
+  (isNormalized ? getNormalizedValue(firstValue) : firstValue.value);
+
+  const unit = isNormalized ? populationNormalizer.unit.shortName : indicator.unit.shortName;
   const note = indicator.name;
 
   const minPrecision = findPrecision([startValue, latestValue, goalValue]);
@@ -283,13 +314,21 @@ function IndicatorProgressBar(props) {
 
   return (
     <div>
+    { canNormalize && (
+      <NormalizerChooser>
+        <Switch
+          label={t('indicator-normalize-per-capita')}
+          state={isNormalized || false}
+          onChange={() => setIsNormalized(!isNormalized)}
+        />
+      </NormalizerChooser>
+    )}
     <IndicatorLink id={indicatorId}>
       <LinkedIndicator>
         <span>{ animate }</span>
         <svg viewBox={`0 0 ${canvas.w} ${canvas.h}`}>
           <title>{t('indicator-progress-bar', graphValues)}</title>
           <defs>
-            { showReduction && (
               <marker
                 id="reducedArrow"
                 markerWidth="7" markerHeight="7"
@@ -298,7 +337,6 @@ function IndicatorProgressBar(props) {
               >
                 <polygon points="0 0, 7 3.5, 0 7" />
               </marker>
-            )}
             <marker
               id="toBeReducedArrow"
               markerWidth="7" markerHeight="7"
@@ -438,7 +476,7 @@ function IndicatorProgressBar(props) {
           <ValueGroup
             transform={`translate(${goalBar.w > 80 ? goalBar.x + 4 : goalBar.x - 50} ${goalBar.y})`}
             date={graphValues.goalYear}
-            value={formatValue(goalValue, i18n.language, minPrecision)}
+            value={formatValue(goalValue, i18n.language, isNormalized ? minPrecision : 4)}
             unit={unit}
             locale={i18n.language}
             negative={goalBar.w < 80}
@@ -484,22 +522,23 @@ function IndicatorProgressBar(props) {
   );
 };
 
-IndicatorProgressBar.defaultProps = {
-  startDate: '',
-  latestDate: '',
-  goalDate: '',
-  note: '',
-};
-
 IndicatorProgressBar.propTypes = {
-  startDate: PropTypes.string,
-  startValue: PropTypes.number.isRequired,
-  latestDate: PropTypes.string,
-  latestValue: PropTypes.number.isRequired,
-  goalDate: PropTypes.string,
-  goalValue: PropTypes.number.isRequired,
-  unit: PropTypes.string.isRequired,
-  note: PropTypes.string,
+  indicator: PropTypes.shape({
+    id: PropTypes.string,
+    name: PropTypes.string,
+    unit: PropTypes.shape({
+      shortName: PropTypes.string,
+    }),
+    values: PropTypes.arrayOf(PropTypes.shape({
+      date: PropTypes.string,
+      value: PropTypes.number,
+    })),
+    goals: PropTypes.arrayOf(PropTypes.shape({
+      date: PropTypes.string,
+      value: PropTypes.number,
+    })),
+  }),
+  animate: PropTypes.bool,
 };
 
 export default IndicatorProgressBar;

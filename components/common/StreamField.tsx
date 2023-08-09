@@ -180,6 +180,10 @@ const STREAM_FIELD_FRAGMENT = gql`
           id
           date
           value
+          normalizedValues {
+            normalizerId
+            value
+          }
         }
         common {
           id
