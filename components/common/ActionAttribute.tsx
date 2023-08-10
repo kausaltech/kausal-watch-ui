@@ -59,6 +59,13 @@ const AttributeChoiceLabel = styled.div`
   font-size: ${(props) => props.theme.fontSizeSm};
   font-family: ${(props) => props.theme.fontFamilyTiny};
   font-weight: 700;
+
+  &.highlighted {
+    display: inline-block;
+    background-color: ${(props) => props.theme.brandLight};
+    padding: ${(props) => props.theme.spaces.s025} ${(props) => props.theme.spaces.s050};
+    border-radius: ${(props) => props.theme.badgeBorderRadius};
+  }
 `;
 
 const NumericValue = styled.span`
@@ -95,7 +102,7 @@ const ActionAttribute = (props: AttributeContentProps | AttributeContentNestedTy
       // const choiceCount = contentType.choiceOptions.length;
       dataElement = (
         <div>
-          { type.choiceOptions.map((choice, idx) => (
+          { type.format === 'ORDERED_CHOICE' && type.choiceOptions.map((choice, idx) => (
             (idx > 0 || !type.hasZeroOption) && <ScaleIcon
               name="circleFull"
               className={idx <= valueIndex ? 'icon-on' : 'icon-off'}
@@ -103,7 +110,11 @@ const ActionAttribute = (props: AttributeContentProps | AttributeContentNestedTy
               key={choice.identifier}
             />
           ))}
-          { type.showChoiceNames && <AttributeChoiceLabel>{ attribute.choice?.name }</AttributeChoiceLabel> }
+          { type.showChoiceNames && (
+            <AttributeChoiceLabel className={ type.format === 'OPTIONAL_CHOICE' ? 'highlighted' : ''}>
+              { attribute.choice?.name }
+            </AttributeChoiceLabel>
+          )}
           { attribute.text ? <RichText html={attribute.text} /> : null}
         </div>
       );
