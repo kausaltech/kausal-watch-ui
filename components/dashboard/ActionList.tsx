@@ -480,6 +480,9 @@ const ActionList = (props: ActionListProps) => {
     groupBy = 'primaryOrg'
   }
 
+  // add plan.feature.showActionUpdateStatus to backend
+  const showUpdateStatus = plan.id !== 'klima-winterthur';
+
   return (
     <>
       <ActionListSection id="actions">
@@ -538,8 +541,11 @@ const ActionList = (props: ActionListProps) => {
         <div id="list-view" role="tabpanel" tabIndex={0} aria-labelledby="list-tab" hidden={!displayDashboard}>
           { displayDashboard && filteredActions.length > 0 ? (
             <>
-              <ActionStatusGraphs actions={filteredActions} />
-              <DynamicActionStatusTable actions={filteredActions} orgs={orgs} plan={plan} enableExport={true} />
+              <ActionStatusGraphs actions={filteredActions} showUpdateStatus={showUpdateStatus} />
+              <DynamicActionStatusTable
+                actions={filteredActions} orgs={orgs} plan={plan}
+                enableExport={true} showUpdateStatus={showUpdateStatus}
+              />
             </>
           ) : (
             <Alert color="primary">

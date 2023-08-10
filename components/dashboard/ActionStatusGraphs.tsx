@@ -93,10 +93,11 @@ const getTimelinessData = (actions: ActionListAction[], plan: PlanContextType, t
 
 interface ActionsStatusGraphsProps {
   actions: ActionListAction[];
+  showUpdateStatus?: boolean;
 }
 
 const ActionsStatusGraphs = (props: ActionsStatusGraphsProps) => {
-  const { actions } = props;
+  const { actions, showUpdateStatus = true } = props;
   const theme = useTheme();
   const plan = useContext(PlanContext);
   const { t } = useTranslation(['common']);
@@ -130,13 +131,15 @@ const ActionsStatusGraphs = (props: ActionsStatusGraphsProps) => {
         header={t('actions-status')}
         helpText={t('actions-status-help')}
       /> }
-      <StatusDonut
-        data={{ values: timelinessData.values, labels: timelinessData.labels }}
-        currentValue={timelinessData.total}
-        colors={timelinessData.colors.length > 0 ? timelinessData.colors : []}
-        header={t('actions-updated')}
-        helpText={t('actions-updated-help', {count: daysVisible})}
-      />
+      { showUpdateStatus && (
+        <StatusDonut
+          data={{ values: timelinessData.values, labels: timelinessData.labels }}
+          currentValue={timelinessData.total}
+          colors={timelinessData.colors.length > 0 ? timelinessData.colors : []}
+          header={t('actions-updated')}
+          helpText={t('actions-updated-help', {count: daysVisible})}
+        />
+      )}
     </StatusGraphs>
   );
 };

@@ -188,7 +188,7 @@ const preprocessForSorting = (key, items, hasImplementationPhases) => {
 }
 
 const ActionStatusTable = (props) => {
-  const { actions, orgs, plan, enableExport, planViewUrl } = props;
+  const { actions, orgs, plan, enableExport, planViewUrl, showUpdateStatus } = props;
 
   const orgMap = new Map(orgs.map((org) => [org.id, org]));
   const theme = useTheme();
@@ -227,6 +227,7 @@ const ActionStatusTable = (props) => {
   showColumn.impacts = plan.actionImpacts.length > 0;
   showColumn.responsibles = showResponsibles;
   showColumn.indicators = showIndicators;
+  showColumn.updateStatus = showUpdateStatus;
 
   const clickHandler = (key) => () => {
     let direction = 1
@@ -284,9 +285,11 @@ const ActionStatusTable = (props) => {
           { showColumn.responsibles && <th>{t('actions:action-responsibles-short')}</th> }
           { showColumn.impacts && <th>{t('actions:action-impact')}</th> }
           { showColumn.indicators && <th>{ t('common:indicators') }</th> }
-          <SortableTableHeader sort={sort} headerKey="updatedAt" onClick={clickHandler('updatedAt')}>
-          { columnLabel.updatedAt }
-          </SortableTableHeader>
+          { showColumn.updateStatus && (
+            <SortableTableHeader sort={sort} headerKey="updatedAt" onClick={clickHandler('updatedAt')}>
+              { columnLabel.updatedAt }
+            </SortableTableHeader>
+          )}
         </tr>
       </thead>
       <tbody>
@@ -300,6 +303,7 @@ const ActionStatusTable = (props) => {
             hasImpacts={showColumn.impacts}
             hasIndicators={showColumn.indicators}
             hasImplementationPhases={hasImplementationPhases}
+            hasUpdateStatus={showColumn.updateStatus}
             popperRef={handleTooltip}
           />
         ))}

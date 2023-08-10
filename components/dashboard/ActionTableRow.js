@@ -242,7 +242,11 @@ const ResponsiblesViz = (props) => {
 };
 
 const ActionTableRow = React.memo(function ActionTableRow(props) {
-  const { item, plan, planViewUrl, hasResponsibles, hasImpacts, hasIndicators, hasImplementationPhases, popperRef } = props;
+  const {
+    item, plan, planViewUrl,
+    hasResponsibles, hasImpacts, hasIndicators, hasImplementationPhases, hasUpdateStatus,
+    popperRef } = props;
+
   const theme = useTheme();
 
   const { t } = useTranslation(['common', 'actions']);
@@ -363,6 +367,7 @@ const ActionTableRow = React.memo(function ActionTableRow(props) {
             && <IndicatorsViz relatedIndicators={item.relatedIndicators}/>}
         </td>
       )}
+      { hasUpdateStatus && (
       <td
         className="has-tooltip"
         onMouseEnter={(e)=> showTooltip(e, lastUpdatedTooltipContent(t, item.updatedAt))}
@@ -371,7 +376,7 @@ const ActionTableRow = React.memo(function ActionTableRow(props) {
         <UpdatedAgo>
           { `${dayjs(item.updatedAt).fromNow(false)}` }
         </UpdatedAgo>
-      </td>
+      </td> )}
     </StyledRow>
   );
 });

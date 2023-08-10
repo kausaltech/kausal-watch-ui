@@ -336,6 +336,9 @@ function OrgContent(props) {
   const allPlans = [planFromQuery, ...org.plansWithActionResponsibilities];
   const selectedPlan = allPlans[selectedPlanIndex];
 
+    // add plan.feature.showActionUpdateStatus to backend
+    const showUpdateStatus = plan.id !== 'klima-winterthur';
+
   return (
     <div className="mb-5">
       <Meta
@@ -425,6 +428,7 @@ function OrgContent(props) {
               plan={selectedPlan}
               actions={selectedPlan.actions}
               orgs={[]}
+              showUpdateStatus={showUpdateStatus}
             />
           </ActionTableContainer>
         </Container>
