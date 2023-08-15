@@ -81,7 +81,7 @@ const languageNames = {
   en: 'English',
   de: 'Deutsch',
   sv: 'Svenska',
-  es: 'Espagnol',
+  es: 'Español',
   da: 'Dansk',
 };
 
