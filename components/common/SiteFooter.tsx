@@ -383,7 +383,7 @@ function SiteFooter(props) {
     footerStatement,
   } = props;
 
-  function OrgLogo() {
+  const OrgLogo = () => {
     return (
       <SVG
         src={theme.themeLogoWhiteUrl}
@@ -404,6 +404,7 @@ function SiteFooter(props) {
       <Container>
         <FooterNav aria-label={t('nav-footer')}>
           <Branding>
+            { theme.themeLogoWhiteUrl !== '' && (
             <Logo>
               { theme?.footerLogoLink
                 ? (
@@ -414,7 +415,7 @@ function SiteFooter(props) {
                 : (
                   <OrgLogo aria-hidden="true" className="footer-org-logo" />
                 )}
-            </Logo>
+            </Logo> )}
             { !theme.settings.footerLogoOnly
             && (
             <ServiceTitle>
