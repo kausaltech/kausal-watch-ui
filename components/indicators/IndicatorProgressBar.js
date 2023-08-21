@@ -142,8 +142,9 @@ function IndicatorProgressBar(props) {
   const getNormalizedValue = (indicatorValue) => {
     if (populationNormalizer && indicatorValue.normalizedValues.length > 0) {
       const normalized = indicatorValue.normalizedValues.find((normed) =>
-        normed.normalizerId === populationNormalizer.normalizer.id);
-      return normalized.value;
+        normed.normalizerId === populationNormalizer.normalizer.id
+      );
+      return normalized?.value;
     } else {
       return undefined;
     }
