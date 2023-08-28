@@ -309,7 +309,8 @@ const IndicatorList = ({ title, leadContent }: Props) => {
           filterSections={filterSections}
           activeFilters={filters}
           onChange={handleFilterChange}
-          actionCount={999} // TODO: Get indicator count and customise label
+          actionCount={999}
+          actionCountLabel={t('indicators')}
         />
       </IndicatorsHero>
 
