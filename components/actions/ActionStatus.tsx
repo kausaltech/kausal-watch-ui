@@ -45,11 +45,12 @@ function ActionStatus(props: ActionStatusProps) {
 
   return (
     <Status theme={theme}>
+      { completion && (
       <ActionProgress
         value={completion}
         color={statusColor}
         aria-hidden
-      />
+      /> )}
       <StatusTitle>
         { statusName }
       </StatusTitle>
