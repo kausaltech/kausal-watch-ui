@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useTranslation } from 'common/i18n';
 import { Collapse } from 'reactstrap';
 import Icon from 'components/common/Icon';
-import PlanContext from 'context/plan';
+import { usePlan } from 'context/plan';
 import FeedbackForm from 'components/common/FeedbackForm';
 
 const ActionContactFormSection = styled.div`
@@ -35,7 +35,7 @@ const ContactTriggerButton = styled.button`
 const ActionContactFormBlock = (props) => {
   const { action, context } = props;
   const { t } = useTranslation(['actions']);
-  const plan = useContext(PlanContext);
+  const plan = usePlan();
   const [isOpen, setIsOpen] = useState(false);
 
   const toggle = () => setIsOpen(!isOpen);

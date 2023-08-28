@@ -152,12 +152,12 @@ fragment PlanContext on Plan {
   accessibilityStatementUrl
   externalFeedbackUrl
   features {
+    contactPersonsPublicData
     enableSearch
     hasActionIdentifiers
     hasActionOfficialName
     hasActionLeadParagraph
     hasActionPrimaryOrgs
-    publicContactPersons
     showAdminLink
     enableIndicatorComparison
     minimalStatuses

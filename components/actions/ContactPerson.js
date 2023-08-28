@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Query } from '@apollo/client/react/components';
 import { gql } from '@apollo/client';
 
 import { Button, Collapse } from 'reactstrap';
-import { withTranslation } from '../../common/i18n';
+import { useTranslation, withTranslation } from 'common/i18n';
 import Icon from 'components/common/Icon';
+import { usePlan } from 'context/plan';
+import { PlanFeaturesContactPersonsPublicData } from 'common/__generated__/graphql';
 
 const Person = styled.div`
   display: flex;
@@ -96,7 +98,8 @@ query ContactDetails($id: ID!) {
 }`;
 
 function ContactDetails(props) {
-  const { t, id } = props;
+  const { id } = props;
+  const { t } = useTranslation();
   return (
     <Query query={GET_CONTACT_DETAILS} variables={{ id }}>
       {({ loading, error, data }) => {
@@ -140,44 +143,35 @@ function ContactDetails(props) {
   );
 }
 
-class ContactPerson extends React.Component {
-  constructor(props) {
-    super(props);
-    this.toggle = this.toggle.bind(this);
-    this.state = { collapse: false };
-  }
+function ContactPerson(props) {
+  const { person, leader } = props;
+  const plan = usePlan();
+  const { t } = useTranslation();
+  const [collapse, setCollapse] = useState(false);
+  const isLeader = leader ? 'leader' : '';
+  const fullName = `${person.firstName} ${person.lastName}`;
+  const role = isLeader ? t('contact-person-main') : '';
 
-  toggle() {
-    this.setState((state) => ({ collapse: !state.collapse }));
-  }
-
-  render() {
-    const { t, person, leader } = this.props;
-    const { collapse } = this.state;
-    let isLeader = '';
-    isLeader = leader ? 'leader' : '';
-    const fullName = `${person.firstName} ${person.lastName}`;
-    const role = isLeader ? t('contact-person-main') : '';
-
-    return (
-      <Person className={isLeader}>
-        <div>
-          <Avatar
-            src={person.avatarUrl || '/static/themes/default/images/default-avatar-user.png'}
-            className={`rounded-circle ${isLeader}`}
-            alt={`${role} ${fullName}`}
-          />
-        </div>
-        <PersonDetails body>
-          <Name>
-            {fullName}
-          </Name>
-          <PersonRole>{person.title}</PersonRole>
-          {person.organization && (
-          <PersonOrg>{person.organization.name}</PersonOrg>
-          )}
+  return (
+    <Person className={isLeader}>
+      <div>
+        <Avatar
+          src={person.avatarUrl || '/static/themes/default/images/default-avatar-user.png'}
+          className={`rounded-circle ${isLeader}`}
+          alt={`${role} ${fullName}`}
+        />
+      </div>
+      <PersonDetails body>
+        <Name>
+          {fullName}
+        </Name>
+        <PersonRole>{person.title}</PersonRole>
+        {person.organization && (
+        <PersonOrg>{person.organization.name}</PersonOrg>
+        )}
+        {plan.features.contactPersonsPublicData === PlanFeaturesContactPersonsPublicData.All && (
           <CollapseButton
-            onClick={this.toggle}
+            onClick={() => setCollapse(!collapse)}
             color="link"
             size="sm"
             aria-expanded={collapse}
@@ -186,13 +180,13 @@ class ContactPerson extends React.Component {
             { t('contact-info') }
             <Icon name={collapse ? 'angle-down' : 'angle-right'} />
           </CollapseButton>
-          <Collapse isOpen={collapse} id={`contact-${person.id}`}>
-            {collapse && <ContactDetails id={person.id} t={t} />}
-          </Collapse>
-        </PersonDetails>
-      </Person>
-    );
-  }
+        )}
+        <Collapse isOpen={collapse} id={`contact-${person.id}`}>
+          {collapse && <ContactDetails id={person.id} />}
+        </Collapse>
+      </PersonDetails>
+    </Person>
+  );
 }
 
 ContactPerson.defaultProps = {
@@ -201,7 +195,6 @@ ContactPerson.defaultProps = {
 
 ContactDetails.propTypes = {
   id: PropTypes.string.isRequired,
-  t: PropTypes.func.isRequired,
 };
 
 ContactPerson.propTypes = {
@@ -216,7 +209,6 @@ ContactPerson.propTypes = {
     }),
   }).isRequired,
   leader: PropTypes.bool,
-  t: PropTypes.func.isRequired,
 };
 
 export default withTranslation('common')(ContactPerson);

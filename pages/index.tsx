@@ -3,7 +3,7 @@ import React, { useContext, useMemo } from 'react';
 import { gql, useQuery } from '@apollo/client';
 import { useTranslation } from 'common/i18n';
 import Layout from 'components/layout';
-import PlanContext, { usePlan } from 'context/plan';
+import { usePlan } from 'context/plan';
 import images from 'common/images';
 import ErrorMessage from 'components/common/ErrorMessage';
 import ContentLoader from 'components/common/ContentLoader';

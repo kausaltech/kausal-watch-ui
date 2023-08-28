@@ -112,6 +112,7 @@
     "no-actions": "No actions",
     "number-of-search-results_one": "one hit for search",
     "number-of-search-results_other": "{{count}} hits for search",
+    "open": "open",
     "operational": "Operational indicator",
     "other-plans-only": "Search all other plans",
     "over-x-days": "Over {{days}} days",

@@ -442,7 +442,6 @@ export type ActionIndicator = {
   indicator: Indicator;
 };
 
-/** An enumeration. */
 export enum ActionIndicatorEffectType {
   /** decreases */
   Decreases = 'DECREASES',
@@ -678,7 +677,6 @@ export type ActionResponsiblePartyReporteportValue = ReportValueInterface & {
   responsibleParty?: Maybe<ActionResponsibleParty>;
 };
 
-/** An enumeration. */
 export enum ActionResponsiblePartyRole {
   /** Collaborator */
   Collaborator = 'COLLABORATOR',
@@ -760,7 +758,6 @@ export type ActionStatusSummary = {
   sentiment: Sentiment;
 };
 
-/** An enumeration. */
 export enum ActionStatusSummaryIdentifier {
   Cancelled = 'CANCELLED',
   Completed = 'COMPLETED',
@@ -827,7 +824,6 @@ export type ActionTask = {
   state: ActionTaskState;
 };
 
-/** An enumeration. */
 export enum ActionTaskState {
   /** cancelled */
   Cancelled = 'CANCELLED',
@@ -858,7 +854,6 @@ export type ActionTimeliness = {
   sentiment: Sentiment;
 };
 
-/** An enumeration. */
 export enum ActionTimelinessIdentifier {
   Acceptable = 'ACCEPTABLE',
   Late = 'LATE',
@@ -1073,7 +1068,6 @@ export type AttributeTypeChoiceOption = {
   name: Scalars['String'];
 };
 
-/** An enumeration. */
 export enum AttributeTypeFormat {
   /** Category */
   CategoryChoice = 'CATEGORY_CHOICE',
@@ -1141,7 +1135,6 @@ export type CartographyProviderCredentials = {
   publicAccessToken: Scalars['String'];
 };
 
-/** An enumeration. */
 export enum CartographyProviderCredentialsProvider {
   /** MapBox */
   Mapbox = 'MAPBOX'
@@ -1485,7 +1478,6 @@ export type CategoryTypePageSiblingsArgs = {
   searchQuery?: InputMaybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum CategoryTypeSelectWidget {
   /** Multiple */
   Multiple = 'MULTIPLE',
@@ -1589,7 +1581,6 @@ export type CommonIndicatorNormalization = {
   unit?: Maybe<Unit>;
 };
 
-/** An enumeration. */
 export enum Comparison {
   Gt = 'GT',
   Lte = 'LTE'
@@ -2141,7 +2132,6 @@ export type IndicatorLevel = {
   plan: Plan;
 };
 
-/** An enumeration. */
 export enum IndicatorLevelLevel {
   /** operational */
   Operational = 'OPERATIONAL',
@@ -2262,7 +2252,6 @@ export type IndicatorShowcaseBlock = StreamFieldInterface & {
   title?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum IndicatorTimeResolution {
   /** day */
   Day = 'DAY',
@@ -2914,6 +2903,8 @@ export type PlanFeatures = {
   __typename?: 'PlanFeatures';
   /** Should custom images for individual actions be allowed */
   allowImagesForActions: Scalars['Boolean'];
+  /** Choose which information about contact persons is visible in the public UI */
+  contactPersonsPublicData: PlanFeaturesContactPersonsPublicData;
   /** Set to enable comparing indicators between organizations */
   enableIndicatorComparison: Scalars['Boolean'];
   /** Enable site-wide search functionality */
@@ -2930,11 +2921,19 @@ export type PlanFeatures = {
   hasActionPrimaryOrgs: Scalars['Boolean'];
   /** Set to prevent showing status-specific graphs and other elements if statuses aren't systematically used in this action plan */
   minimalStatuses: Scalars['Boolean'];
-  /** Set if the contact persons should be visible in the public UI */
   publicContactPersons: Scalars['Boolean'];
   /** Should the public website contain a link to the admin login? */
   showAdminLink: Scalars['Boolean'];
 };
+
+export enum PlanFeaturesContactPersonsPublicData {
+  /** Show all information */
+  All = 'ALL',
+  /** Show only name, role and affiliation */
+  Name = 'NAME',
+  /** Do not show contact persons publicly */
+  None = 'NONE'
+}
 
 export type PlanFilterBlock = StreamFieldInterface & {
   __typename?: 'PlanFilterBlock';
@@ -3170,7 +3169,6 @@ export type PrivacyPolicyPageSiblingsArgs = {
   searchQuery?: InputMaybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum PublicationStatus {
   Published = 'PUBLISHED',
   Scheduled = 'SCHEDULED',
@@ -3350,7 +3348,6 @@ export type RelatedCommonIndicator = {
   id: Scalars['ID'];
 };
 
-/** An enumeration. */
 export enum RelatedCommonIndicatorEffectType {
   /** decreases */
   Decreases = 'DECREASES',
@@ -3372,7 +3369,6 @@ export type RelatedIndicator = {
   id: Scalars['ID'];
 };
 
-/** An enumeration. */
 export enum RelatedIndicatorConfidenceLevel {
   /** high */
   High = 'HIGH',
@@ -3382,7 +3378,6 @@ export enum RelatedIndicatorConfidenceLevel {
   Medium = 'MEDIUM'
 }
 
-/** An enumeration. */
 export enum RelatedIndicatorEffectType {
   /** decreases */
   Decreases = 'DECREASES',
@@ -3531,7 +3526,6 @@ export type SearchResults = {
   hits?: Maybe<Array<Maybe<SearchHit>>>;
 };
 
-/** An enumeration. */
 export enum Sentiment {
   Negative = 'NEGATIVE',
   Neutral = 'NEUTRAL',
@@ -3555,7 +3549,6 @@ export type SiteGeneralContent = {
   siteTitle: Scalars['String'];
 };
 
-/** An enumeration. */
 export enum SiteGeneralContentActionTerm {
   /** Action */
   Action = 'ACTION',
@@ -3894,7 +3887,6 @@ export type UserFeedbackNode = {
   url: Scalars['String'];
 };
 
-/** An enumeration. */
 export enum UserFeedbackType {
   /** Accessibility */
   Accessibility = 'ACCESSIBILITY',
@@ -7681,7 +7673,7 @@ export type OrganizationDetailsQuery = (
         { id: string, identifier: string, name: string, isCompleted: boolean }
         & { __typename?: 'ActionStatus' }
       )>, features: (
-        { hasActionIdentifiers: boolean, hasActionOfficialName: boolean, hasActionPrimaryOrgs: boolean, publicContactPersons: boolean }
+        { hasActionIdentifiers: boolean, hasActionOfficialName: boolean, hasActionPrimaryOrgs: boolean }
         & { __typename?: 'PlanFeatures' }
       ), actions: Array<(
         { id: string, identifier: string, name: string, officialName?: string | null, completion?: number | null, updatedAt: any, scheduleContinuous: boolean, startDate?: any | null, endDate?: any | null, order: number, plan: (
@@ -7785,7 +7777,7 @@ export type OrganizationDetailsQuery = (
       { id: string, identifier: string, name: string, isCompleted: boolean }
       & { __typename?: 'ActionStatus' }
     )>, features: (
-      { hasActionIdentifiers: boolean, hasActionOfficialName: boolean, hasActionPrimaryOrgs: boolean, publicContactPersons: boolean }
+      { hasActionIdentifiers: boolean, hasActionOfficialName: boolean, hasActionPrimaryOrgs: boolean }
       & { __typename?: 'PlanFeatures' }
     ), actions: Array<(
       { id: string, identifier: string, name: string, officialName?: string | null, completion?: number | null, updatedAt: any, scheduleContinuous: boolean, startDate?: any | null, endDate?: any | null, order: number, plan: (
@@ -7882,7 +7874,7 @@ export type OrgContentPlanFragment = (
     { id: string, identifier: string, name: string, isCompleted: boolean }
     & { __typename?: 'ActionStatus' }
   )>, features: (
-    { hasActionIdentifiers: boolean, hasActionOfficialName: boolean, hasActionPrimaryOrgs: boolean, publicContactPersons: boolean }
+    { hasActionIdentifiers: boolean, hasActionOfficialName: boolean, hasActionPrimaryOrgs: boolean }
     & { __typename?: 'PlanFeatures' }
   ), actions: Array<(
     { id: string, identifier: string, name: string, officialName?: string | null, completion?: number | null, updatedAt: any, scheduleContinuous: boolean, startDate?: any | null, endDate?: any | null, order: number, plan: (
@@ -8048,7 +8040,7 @@ export type GetPlanContextQuery = (
       ) | null> }
       & { __typename?: 'Footer' }
     ) | null, features: (
-      { enableSearch: boolean, hasActionIdentifiers: boolean, hasActionOfficialName: boolean, hasActionLeadParagraph: boolean, hasActionPrimaryOrgs: boolean, publicContactPersons: boolean, showAdminLink: boolean, enableIndicatorComparison: boolean, minimalStatuses: boolean }
+      { contactPersonsPublicData: PlanFeaturesContactPersonsPublicData, enableSearch: boolean, hasActionIdentifiers: boolean, hasActionOfficialName: boolean, hasActionLeadParagraph: boolean, hasActionPrimaryOrgs: boolean, showAdminLink: boolean, enableIndicatorComparison: boolean, minimalStatuses: boolean }
       & { __typename?: 'PlanFeatures' }
     ), allRelatedPlans: Array<(
       { id: string, identifier: string, name: string, shortName?: string | null, viewUrl?: string | null, image?: (
@@ -8223,7 +8215,7 @@ export type PlanContextFragment = (
     ) | null> }
     & { __typename?: 'Footer' }
   ) | null, features: (
-    { enableSearch: boolean, hasActionIdentifiers: boolean, hasActionOfficialName: boolean, hasActionLeadParagraph: boolean, hasActionPrimaryOrgs: boolean, publicContactPersons: boolean, showAdminLink: boolean, enableIndicatorComparison: boolean, minimalStatuses: boolean }
+    { contactPersonsPublicData: PlanFeaturesContactPersonsPublicData, enableSearch: boolean, hasActionIdentifiers: boolean, hasActionOfficialName: boolean, hasActionLeadParagraph: boolean, hasActionPrimaryOrgs: boolean, showAdminLink: boolean, enableIndicatorComparison: boolean, minimalStatuses: boolean }
     & { __typename?: 'PlanFeatures' }
   ), allRelatedPlans: Array<(
     { id: string, identifier: string, name: string, shortName?: string | null, viewUrl?: string | null, image?: (

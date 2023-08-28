@@ -112,6 +112,7 @@
     "no-actions": "Keine Maßnahmen",
     "number-of-search-results_one": "Ein Suchergebnis",
     "number-of-search-results_other": "{{count}} Suchergebnisse",
+    "open": "Öffnen",
     "operational": "Operativer Indikator",
     "other-plans-only": "Suche in allen anderen Plänen",
     "over-x-days": "Mehr als {{days}} Tage",

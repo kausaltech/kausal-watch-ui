@@ -213,7 +213,6 @@ const GET_ORG_DETAILS = gql`
       hasActionIdentifiers
       hasActionOfficialName
       hasActionPrimaryOrgs
-      publicContactPersons
     }
     actions(responsibleOrganization: $id) {
       id
