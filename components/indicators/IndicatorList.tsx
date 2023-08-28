@@ -155,6 +155,16 @@ const GET_INDICATOR_LIST = gql`
     }
   }
 `;
+
+const filterIndicators = (indicators, filters) =>
+  indicators.filter(
+    (item) =>
+      (!filters['cat-theme'] ||
+        item.categories.find(({ id }) => id === filters['cat-theme'])) &&
+      (!filters['name'] ||
+        item.name.toLowerCase().includes(filters['name'].toLowerCase()))
+  );
+
 interface Props {
   title: string;
   leadContent: IndicatorListPage['leadContent'];
@@ -291,12 +301,17 @@ const IndicatorList = ({ title, leadContent }: Props) => {
   const filterSections: ActionListFilterSection[] =
     ActionListFilters.constructFilters({
       mainConfig: filterConfig,
-      primaryOrgs: [], // NOTE
-      orgs: [], // NOTE
+      primaryOrgs: [],
+      orgs: [],
       plan,
       filterByCommonCategory: false,
       t,
     });
+
+  const filteredIndicators = filterIndicators(
+    indicatorListProps.indicators,
+    filters
+  );
 
   return (
     <>
@@ -309,7 +324,7 @@ const IndicatorList = ({ title, leadContent }: Props) => {
           filterSections={filterSections}
           activeFilters={filters}
           onChange={handleFilterChange}
-          actionCount={999}
+          actionCount={filteredIndicators.length}
           actionCountLabel={t('indicators')}
         />
       </IndicatorsHero>
@@ -317,6 +332,7 @@ const IndicatorList = ({ title, leadContent }: Props) => {
       <Container>
         <IndicatorListFiltered
           {...indicatorListProps}
+          indicators={filteredIndicators}
           filters={filters}
           hierarchy={hierarchy}
         />
