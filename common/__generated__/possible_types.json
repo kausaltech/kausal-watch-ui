@@ -32,18 +32,8 @@
       "ReportComparisonBlock"
     ],
     "ActionMainContentSectionElementBlock": [
-      "ActionContactFormBlock",
       "ActionContentAttributeTypeBlock",
-      "ActionContentCategoryTypeBlock",
-      "ActionDescriptionBlock",
-      "ActionLeadParagraphBlock",
-      "ActionLinksBlock",
-      "ActionMergedActionsBlock",
-      "ActionOfficialNameBlock",
-      "ActionRelatedActionsBlock",
-      "ActionRelatedIndicatorsBlock",
-      "ActionTasksBlock",
-      "ReportComparisonBlock"
+      "ActionContentCategoryTypeBlock"
     ],
     "AttributeInterface": [
       "AttributeCategoryChoice",
@@ -75,11 +65,17 @@
     ],
     "ReportFieldBlock": [
       "ActionAttributeTypeReportFieldBlock",
-      "ActionImplementationPhaseReportFieldBlock"
+      "ActionCategoryReportFieldBlock",
+      "ActionImplementationPhaseReportFieldBlock",
+      "ActionResponsiblePartyReportFieldBlock",
+      "ActionStatusReportFieldBlock"
     ],
     "ReportValueInterface": [
       "ActionAttributeReportValue",
-      "ActionImplementationPhaseReportValue"
+      "ActionCategoryReportValue",
+      "ActionImplementationPhaseReportValue",
+      "ActionResponsiblePartyReporteportValue",
+      "ActionStatusReportValue"
     ],
     "SearchHitObject": [
       "Action",
@@ -94,6 +90,7 @@
       "ActionAttributeTypeReportFieldBlock",
       "ActionCategoryFilterCardBlock",
       "ActionCategoryFilterCardsBlock",
+      "ActionCategoryReportFieldBlock",
       "ActionContactFormBlock",
       "ActionContactPersonsBlock",
       "ActionContentAttributeTypeBlock",
@@ -111,9 +108,11 @@
       "ActionRelatedActionsBlock",
       "ActionRelatedIndicatorsBlock",
       "ActionResponsiblePartiesBlock",
+      "ActionResponsiblePartyReportFieldBlock",
       "ActionScheduleBlock",
       "ActionScheduleFilterBlock",
       "ActionStatusGraphsBlock",
+      "ActionStatusReportFieldBlock",
       "ActionTasksBlock",
       "AdaptiveEmbedBlock",
       "BlockQuoteBlock",

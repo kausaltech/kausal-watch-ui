@@ -1,9 +1,6 @@
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import {
-  Badge, Table,
-} from 'reactstrap';
-
+import { Alert, Badge, Table } from 'reactstrap';
 import styled from 'styled-components';
 
 import { useTheme } from 'common/theme';
@@ -14,11 +11,12 @@ import { getActionTermContext, withTranslation } from '../../common/i18n';
 import { beautifyValue } from '../../common/data/format';
 import { usePlan } from 'context/plan';
 
-import IndicatorListFilters from './IndicatorListFilters';
+export const isEmptyFilter = (val) => val == null || val === '';
 
 const IndicatorType = styled(Badge)`
   border-radius: ${(props) => props.theme.badgeBorderRadius};
-  padding: ${(props) => props.theme.badgePaddingY} ${(props) => props.theme.badgePaddingX};
+  padding: ${(props) => props.theme.badgePaddingY}
+    ${(props) => props.theme.badgePaddingX};
   font-weight: ${(props) => props.theme.badgeFontWeight};
 
   color: ${(props) => {
@@ -52,15 +50,16 @@ const IndicatorType = styled(Badge)`
 `;
 
 const IndicatorDate = styled.span`
-  color: ${(props) => props.theme.graphColors.grey060}
-`
+  color: ${(props) => props.theme.graphColors.grey060};
+`;
 
 const StyledBadge = styled(Badge)`
   white-space: normal;
   margin-right: ${(props) => props.theme.spaces.s050};
   margin-bottom: ${(props) => props.theme.spaces.s050};
   border-radius: ${(props) => props.theme.badgeBorderRadius};
-  padding: ${(props) => props.theme.badgePaddingY} ${(props) => props.theme.badgePaddingX};
+  padding: ${(props) => props.theme.badgePaddingY}
+    ${(props) => props.theme.badgePaddingX};
   font-weight: ${(props) => props.theme.badgeFontWeight};
   background-color: ${(props) => props.theme.themeColors.light} !important;
   color: ${(props) => props.theme.themeColors.black};
@@ -68,18 +67,20 @@ const StyledBadge = styled(Badge)`
 
 const SectionButton = (props) => {
   if (props.linkTo != null) {
-    return <IndicatorLink id={props.linkTo}>
-      <a>{ props.children }</a>
-    </IndicatorLink>;
+    return (
+      <IndicatorLink id={props.linkTo}>
+        <a>{props.children}</a>
+      </IndicatorLink>
+    );
   }
   if (props['aria-controls'] == null) {
-    return <div className="indicator-name">{props.children}</div>
+    return <div className="indicator-name">{props.children}</div>;
   }
   const buttonProps = Object.assign({}, props);
   delete buttonProps.sectionHeading;
   delete buttonProps.linkTo;
   return <button {...buttonProps} />;
-}
+};
 
 const StyledSectionButton = styled(SectionButton)`
   border: none;
@@ -87,11 +88,13 @@ const StyledSectionButton = styled(SectionButton)`
   padding-left: 0;
   text-align: left;
   color: ${(props) => props.theme.themeColors.black};
-  font-weight: ${(props) => (props.sectionHeading ? props.theme.fontWeightBold: 'normal')};
+  font-weight: ${(props) =>
+    props.sectionHeading ? props.theme.fontWeightBold : 'normal'};
 `;
 
 const IndicatorName = styled.div`
-  a, .indicator-name {
+  a,
+  .indicator-name {
     color: ${(props) => props.theme.themeColors.black};
   }
 `;
@@ -103,21 +106,28 @@ const IndentableTable = styled(Table)`
   }
 
   > :not(:first-child) {
-    border-top: 3px solid ${props => props.theme.themeColors.white};
-}
+    border-top: 3px solid ${(props) => props.theme.themeColors.white};
+  }
 `;
 
 const IndentableCellContentWrapper = styled.div`
-  padding: ${(props) => (
+  padding: ${(props) =>
     props.sectionHeader === true
-    ? `.5rem`
-    : `0.5rem 0.5rem .5rem ${+(props.firstCol ?? 0) + .5}rem`
-  )};
-  text-align: ${(props) => props.numeric === true ? 'right' : 'left'};
-  font-weight: ${(props) => (props.sectionHeader === true ? props.theme.fontWeightBold : props.theme.fontWeightNormal)};
+      ? `.5rem`
+      : `0.5rem 0.5rem .5rem ${+(props.firstCol ?? 0) + 0.5}rem`};
+  text-align: ${(props) => (props.numeric === true ? 'right' : 'left')};
+  font-weight: ${(props) =>
+    props.sectionHeader === true
+      ? props.theme.fontWeightBold
+      : props.theme.fontWeightNormal};
   line-height: ${(props) => props.theme.lineHeightMd};
-  border-left: ${(props) => 24 * props.indent}px solid ${(props) => (props.sectionHeader || props.visibleIndentation) ? props.theme.themeColors.light : props.theme.themeColors.white};
-  background-color: ${(props) => (props.sectionHeader === true ? props.theme.themeColors.light : 'inherit')};
+  border-left: ${(props) => 24 * props.indent}px solid
+    ${(props) =>
+      props.sectionHeader || props.visibleIndentation
+        ? props.theme.themeColors.light
+        : props.theme.themeColors.white};
+  background-color: ${(props) =>
+    props.sectionHeader === true ? props.theme.themeColors.light : 'inherit'};
 `;
 
 const IndentableTableCell = (props) => (
@@ -128,17 +138,15 @@ const IndentableTableCell = (props) => (
       firstCol={props.firstCol}
       visibleIndentation={props.visibleIndentation ?? false}
     >
-      { props.children }
+      {props.children}
     </IndentableCellContentWrapper>
   </td>
 );
 
-const Value = styled.span`
-
-`;
+const Value = styled.span``;
 
 const Unit = styled.span`
-  margin-left: .5rem;
+  margin-left: 0.5rem;
   font-size: 80%;
 `;
 
@@ -148,7 +156,15 @@ const DarkenedTableHeader = styled.th`
 
 const IndentableTableHeader = (props) => {
   // const theme = useTheme();
-  const { onClick, colSpan, indent, sectionHeader, numeric, firstCol, children } = props;
+  const {
+    onClick,
+    colSpan,
+    indent,
+    sectionHeader,
+    numeric,
+    firstCol,
+    children,
+  } = props;
   return (
     <th scope="col" onClick={onClick} colSpan={colSpan}>
       <IndentableCellContentWrapper
@@ -157,7 +173,7 @@ const IndentableTableHeader = (props) => {
         numeric={numeric}
         firstCol={firstCol}
       >
-        { children }
+        {children}
       </IndentableCellContentWrapper>
     </th>
   );
@@ -170,7 +186,7 @@ const Bullet = (props) => {
   const SYMBOLS = '▪▫•◦▸▹';
   const symbol = SYMBOLS.charAt((props.level - 1) % SYMBOLS.length);
   return <span>{symbol} </span>;
-}
+};
 
 const levels = {
   operational: { fi: 'toiminnallinen', index: 1 },
@@ -191,14 +207,19 @@ function sortIndicators(hierarchy, indicators, displayMunicipality) {
     return 0;
   });
   if (displayMunicipality) {
-    sorted = indicators.sort((a, b) => a.organization.name.localeCompare(b.organization.name));
+    sorted = indicators.sort((a, b) =>
+      a.organization.name.localeCompare(b.organization.name)
+    );
   }
   if (hierarchy != null && Object.keys(hierarchy).length > 0) {
     sorted = indicators.sort((a, b) => {
       if (a.common == null || b.common == null) {
         return 0;
       }
-      const [pathA, pathB] = [hierarchy[a.common.id]?.path ?? [], hierarchy[b.common.id]?.path ?? []];
+      const [pathA, pathB] = [
+        hierarchy[a.common.id]?.path ?? [],
+        hierarchy[b.common.id]?.path ?? [],
+      ];
       for (let i = 0; i < pathA.length && i < pathB.length; i++) {
         if (pathA[i] === pathB[i]) continue;
         return pathA[i] - pathB[i];
@@ -206,11 +227,15 @@ function sortIndicators(hierarchy, indicators, displayMunicipality) {
       return pathA.length - pathB.length;
     });
   }
-  if (hierarchy == null || Object.keys(hierarchy).length === 0 || !displayMunicipality) {
+  if (
+    hierarchy == null ||
+    Object.keys(hierarchy).length === 0 ||
+    !displayMunicipality
+  ) {
     return [sorted];
   }
   const grouped = new Map();
-  sorted.forEach(indicator => {
+  sorted.forEach((indicator) => {
     const commonId = indicator.common?.id;
     const group = grouped.get(commonId) ?? [];
     grouped.set(commonId, [...group, indicator]);
@@ -221,13 +246,16 @@ function sortIndicators(hierarchy, indicators, displayMunicipality) {
 const DEFAULT_UNCOLLAPSED_DEPTH = 1;
 
 const defaultVisibleByParent = (indicators, hierarchy) => {
-  const collapsibleCommonIndicators = (
-    Object.values(hierarchy).filter(v => v.children.length > 0)
+  const collapsibleCommonIndicators = Object.values(hierarchy).filter(
+    (v) => v.children.length > 0
   );
-  return Object.fromEntries(collapsibleCommonIndicators.map(v => (
-    [v.id, v.path.length > DEFAULT_UNCOLLAPSED_DEPTH ? false : true]))
+  return Object.fromEntries(
+    collapsibleCommonIndicators.map((v) => [
+      v.id,
+      v.path.length > DEFAULT_UNCOLLAPSED_DEPTH ? false : true,
+    ])
   );
-}
+};
 
 const isVisible = (indicator, hierarchy, visibleByParent) => {
   const { common } = indicator;
@@ -244,7 +272,7 @@ const isVisible = (indicator, hierarchy, visibleByParent) => {
     }
   }
   return true;
-}
+};
 
 const indicatorElementId = (id) => `indicator-${id}`;
 
@@ -256,7 +284,9 @@ const descendantIds = (indicator, hierarchy) => {
   if (hierarchy == null || Object.keys(hierarchy).length === 0) {
     return [];
   }
-  const descendants = hierarchy[common.id]?.descendants.map(d => indicatorElementId(d));
+  const descendants = hierarchy[common.id]?.descendants.map((d) =>
+    indicatorElementId(d)
+  );
   if (descendants.length === 0) {
     return null;
   }
@@ -264,97 +294,86 @@ const descendantIds = (indicator, hierarchy) => {
 };
 
 const IndicatorListFiltered = (props) => {
-  const { t, categories, indicators, i18n, displayMunicipality, hierarchy, displayNormalizedValues } = props;
-  const [activeCategory, setActiveCategory] = useState('');
-  const [activeSearch, setActiveSearch] = useState('');
+  const {
+    t,
+    indicators,
+    i18n,
+    displayMunicipality,
+    hierarchy,
+    displayNormalizedValues,
+  } = props;
+
   // used for multi-city group expanding/collapsing
   // TODO: merge with single city version
   const [visibleGroups, setVisibleGroups] = useState({ 0: true });
   // used for single city expanding/collapsing
-  const [visibleByParent, setVisibleByParent] = useState(() => defaultVisibleByParent(indicators, hierarchy));
+  const [visibleByParent, setVisibleByParent] = useState(() =>
+    defaultVisibleByParent(indicators, hierarchy)
+  );
   const toggleVisibility = (indicator) => {
-    setVisibleByParent(prev => {
+    setVisibleByParent((prev) => {
       const cid = indicator.common.id;
       const previouslyVisible = prev[cid];
-      return Object.assign({}, prev, {[cid]: !previouslyVisible});
+      return Object.assign({}, prev, { [cid]: !previouslyVisible });
     });
   };
   const plan = usePlan();
   const toggleHidden = (idx) => {
     const newGroups = {};
-    newGroups[idx] = idx in visibleGroups ? visibleGroups[idx] === false :  true;
+    newGroups[idx] = idx in visibleGroups ? visibleGroups[idx] === false : true;
 
-    setVisibleGroups(visibleGroups => ({
+    setVisibleGroups((visibleGroups) => ({
       ...visibleGroups,
       ...newGroups,
     }));
     return null;
-  }
+  };
 
-  const handleChange = (filterType, val) => {
-    if(filterType === 'Search') {
-      setActiveSearch(val);
-    }
-    if(filterType === 'Category') {
-      setActiveCategory(val);
-    }
-  }
-
-  const filterIndicators = (hierarchy, indicators, displayMunicipality) => {
-    let i;
-    const filtered = indicators.filter((item) => {
-
-      if (activeCategory) {
-        let catMatch = false;
-        for (i = 0; i < item.categories.length; i += 1) {
-          if (item.categories[i].id === activeCategory) catMatch = true;
-        }
-        if (!catMatch) return false;
-      }
-
-      if (activeSearch) {
-        if (item.name.toLowerCase().indexOf(activeSearch.toLowerCase()) !== -1) return true;
-        return false;
-      }
-      return true;
-    });
-
-    return sortIndicators(hierarchy, filtered, displayMunicipality);
-  }
-
-  const filteredIndicators = filterIndicators(hierarchy, indicators, displayMunicipality);
-  const sortedCategories = [...categories].sort((a, b) => b.order - a.order);
-
-  const someIndicatorsHaveCategories = filteredIndicators.flat().reduce(
-    ((cumul, cur) => Math.max(cumul, cur.categories.length)), 0) > 0;
-  const allIndicatorsHaveSameLevel = new Set(filteredIndicators.flat().map(i => i.level)).size === 1;
-
-  const indicatorElement = (collapsible, itemName, expanded, expandKey, options) => (
-    itemName && <IndicatorName>
-      <StyledSectionButton
-        aria-controls={expandKey}
-        aria-expanded={expanded}
-        linkTo={options?.linkTo}
-        sectionHeading={options?.type === 'section'}>
-        { collapsible && <Icon name={expanded ? 'angleDown' : 'angleRight'} /> }
-        { itemName }
-      </StyledSectionButton>
-    </IndicatorName>
+  const sortedIndicators = sortIndicators(
+    hierarchy,
+    indicators,
+    displayMunicipality
   );
+
+  const someIndicatorsHaveCategories =
+    sortedIndicators
+      .flat()
+      .reduce((cumul, cur) => Math.max(cumul, cur.categories.length), 0) > 0;
+  const allIndicatorsHaveSameLevel =
+    new Set(sortedIndicators.flat().map((i) => i.level)).size === 1;
+
+  const indicatorElement = (
+    collapsible,
+    itemName,
+    expanded,
+    expandKey,
+    options
+  ) =>
+    itemName && (
+      <IndicatorName>
+        <StyledSectionButton
+          aria-controls={expandKey}
+          aria-expanded={expanded}
+          linkTo={options?.linkTo}
+          sectionHeading={options?.type === 'section'}
+        >
+          {collapsible && <Icon name={expanded ? 'angleDown' : 'angleRight'} />}
+          {itemName}
+        </StyledSectionButton>
+      </IndicatorName>
+    );
   const indicatorName = (item, collapsible, expanded, expandKey, options) => {
     let name = null;
     if (
       item.name != null &&
-        item.name.length > 0 && (
-          options.singleOrganization === true ||
-            item.common == null ||
-            hierarchy == null ||
-            Object.keys(hierarchy).length === 0
-        )
+      item.name.length > 0 &&
+      (options.singleOrganization === true ||
+        item.common == null ||
+        hierarchy == null ||
+        Object.keys(hierarchy).length === 0)
     ) {
       name = item.name;
-    }
-    else if (item.common?.name != null) {
+    } else if (item.common?.name != null) {
       /* The name of the common indicator is currently used only for
        plans which have multiple organizations with multiple
        indicators grouped together by their common indicator.
@@ -363,29 +382,42 @@ const IndicatorListFiltered = (props) => {
     }
     return indicatorElement(collapsible, name, expanded, expandKey, options);
   };
-  const indentationLevel = (item) => (
-    item.common == null ? 1 : (hierarchy[item.common.id]?.path?.length ?? 1) - 1
-  );
+  const indentationLevel = (item) =>
+    item.common == null
+      ? 1
+      : (hierarchy[item.common.id]?.path?.length ?? 1) - 1;
 
-  const hierarchyEnabled = hierarchy != null && Object.keys(hierarchy).length > 1;
+  const hierarchyEnabled =
+    hierarchy != null && Object.keys(hierarchy).length > 1;
   const indicatorNameColumnEnabled = !hierarchyEnabled || !displayMunicipality;
 
+  if (sortedIndicators.flat().length === 0) {
+    return (
+      <div className="mt-5 mb-5 pb-5">
+        <Alert color="primary">{t('search-no-results')}</Alert>
+      </div>
+    );
+  }
+
   return (
-    <div className="mb-5 pb-5">
-      <IndicatorListFilters cats={sortedCategories} changeOption={handleChange} />
+    <div className="mt-5 mb-5 pb-5">
       <IndentableTable hover>
-        {filteredIndicators.map((group, idx) => {
+        {sortedIndicators.map((group, idx) => {
           const expanded = visibleGroups[idx] === true;
           const expandKey = `common-indicator-section-${idx}`;
           const headers = [];
           if (indicatorNameColumnEnabled) {
             headers.push(
-              <IndentableTableHeader key="hr-name">{ t('name') }</IndentableTableHeader>
+              <IndentableTableHeader key="hr-name">
+                {t('name')}
+              </IndentableTableHeader>
             );
           }
           if (!allIndicatorsHaveSameLevel) {
             headers.push(
-              <IndentableTableHeader key="hr-type">{ t('type') }</IndentableTableHeader>
+              <IndentableTableHeader key="hr-type">
+                {t('type')}
+              </IndentableTableHeader>
             );
           }
           if (displayMunicipality) {
@@ -395,92 +427,120 @@ const IndicatorListFiltered = (props) => {
                 indent={indentationLevel(group[0])}
                 firstCol
               >
-                { t('municipality') }
+                {t('municipality')}
               </IndentableTableHeader>
             );
           }
           if (someIndicatorsHaveCategories) {
             headers.push(
               <IndentableTableHeader key="hr-themes">
-                { t('themes') }
+                {t('themes')}
               </IndentableTableHeader>
             );
           }
-          headers.push(<IndentableTableHeader key="hr-updated">{ t('updated') }</IndentableTableHeader>);
-          headers.push(<IndentableTableHeader key="hr-value" numeric>{ t('indicator-value') }</IndentableTableHeader>);
+          headers.push(
+            <IndentableTableHeader key="hr-updated">
+              {t('updated')}
+            </IndentableTableHeader>
+          );
+          headers.push(
+            <IndentableTableHeader key="hr-value" numeric>
+              {t('indicator-value')}
+            </IndentableTableHeader>
+          );
           if (displayNormalizedValues) {
-            headers.push(<IndentableTableHeader key="hr-normalized-value" numeric>{ t('indicator-population-normalized-value') }</IndentableTableHeader>);
+            headers.push(
+              <IndentableTableHeader key="hr-normalized-value" numeric>
+                {t('indicator-population-normalized-value')}
+              </IndentableTableHeader>
+            );
           }
 
-          return (<React.Fragment key={`indicator-group-${idx}`}>
-            { !indicatorNameColumnEnabled &&
-              <tbody key="body-1">
-                <tr>
-                  <IndentableTableHeader
-                    sectionHeader={true}
-                    onClick={event => toggleHidden(idx)}
-                    colSpan={headers.length}
-                    indent={indentationLevel(group[0])}
-                  >
-                    {indicatorName(
-                      group[0],
-                      true,
-                      expanded,
-                      expandKey,
-                      {
+          return (
+            <React.Fragment key={`indicator-group-${idx}`}>
+              {!indicatorNameColumnEnabled && (
+                <tbody key="body-1">
+                  <tr>
+                    <IndentableTableHeader
+                      sectionHeader={true}
+                      onClick={(event) => toggleHidden(idx)}
+                      colSpan={headers.length}
+                      indent={indentationLevel(group[0])}
+                    >
+                      {indicatorName(group[0], true, expanded, expandKey, {
                         type: 'section',
-                        singleOrganization: !displayMunicipality
-                      })
-                    }
-                  </IndentableTableHeader>
-                </tr>
-              </tbody>
-            }
-            <tbody key="body-2" id={expandKey} aria-hidden={!expanded} style={{display: (expanded ? "table-row-group": "none")}}>
-              <tr>
-                { headers }
-              </tr>
-              {group.map((item) => {
-                // FIXME: It sucks that we only use the context for the translation key 'action'
-                const indicatorType = item.level === 'action' ? t('action', getActionTermContext(plan)) : t(item.level);
-                let [normalizedValue, normalizedUnit] = [null, null];
-                // We currently support only one normalizer, the population indicator
-                const normalizations = item.common?.normalizations;
-                if (displayNormalizedValues && normalizations != null && normalizations.length > 0) {
-                  const populationNormalization = normalizations.find(n => n.normalizer.identifier === 'population');
-                  if (populationNormalization != null) {
-                    const normalizedValueObject = item.latestValue?.normalizedValues.find(
-                      v => v.normalizerId === populationNormalization.normalizer.id
+                        singleOrganization: !displayMunicipality,
+                      })}
+                    </IndentableTableHeader>
+                  </tr>
+                </tbody>
+              )}
+              <tbody
+                key="body-2"
+                id={expandKey}
+                aria-hidden={!expanded}
+                style={{ display: expanded ? 'table-row-group' : 'none' }}
+              >
+                <tr>{headers}</tr>
+                {group.map((item) => {
+                  // FIXME: It sucks that we only use the context for the translation key 'action'
+                  const indicatorType =
+                    item.level === 'action'
+                      ? t('action', getActionTermContext(plan))
+                      : t(item.level);
+                  let [normalizedValue, normalizedUnit] = [null, null];
+                  // We currently support only one normalizer, the population indicator
+                  const normalizations = item.common?.normalizations;
+                  if (
+                    displayNormalizedValues &&
+                    normalizations != null &&
+                    normalizations.length > 0
+                  ) {
+                    const populationNormalization = normalizations.find(
+                      (n) => n.normalizer.identifier === 'population'
                     );
-                    if (normalizedValueObject != null) {
-                      normalizedValue = normalizedValueObject.value;
-                      normalizedUnit = populationNormalization.unit.shortName;
+                    if (populationNormalization != null) {
+                      const normalizedValueObject =
+                        item.latestValue?.normalizedValues.find(
+                          (v) =>
+                            v.normalizerId ===
+                            populationNormalization.normalizer.id
+                        );
+                      if (normalizedValueObject != null) {
+                        normalizedValue = normalizedValueObject.value;
+                        normalizedUnit = populationNormalization.unit.shortName;
+                      }
                     }
                   }
-                }
-                let timeFormat = 'l';
-                if (item.timeResolution === 'YEAR') {
-                  timeFormat = 'YYYY';
-                }
-                const visible = (filteredIndicators.length > 1 || !hierarchyEnabled) ?
-                  true : isVisible(item, hierarchy, visibleByParent);
-                const collapseState = visibleByParent[item.common?.id];
-                const collapsible = collapseState !== undefined;
-                const collapsed = collapseState === true;
+                  let timeFormat = 'l';
+                  if (item.timeResolution === 'YEAR') {
+                    timeFormat = 'YYYY';
+                  }
+                  const visible =
+                    sortedIndicators.length > 1 || !hierarchyEnabled
+                      ? true
+                      : isVisible(item, hierarchy, visibleByParent);
+                  const collapseState = visibleByParent[item.common?.id];
+                  const collapsible = collapseState !== undefined;
+                  const collapsed = collapseState === true;
 
-                return (
-                  <tr
-                    key={item.id}
-                    id={indicatorElementId(item.common?.id ?? item.id)}
-                    style={{display: (visible ? 'table-row' : 'none')}}
-                  >
-                    { indicatorNameColumnEnabled &&
-                      <IndentableTableCell
-                        onClick={collapsible ? (() => toggleVisibility(item)) : undefined}
-                        indent={hierarchyEnabled && indentationLevel(item)}
-                        visibleIndentation={false}
-                      >
-                        { indicatorName(
+                  return (
+                    <tr
+                      key={item.id}
+                      id={indicatorElementId(item.common?.id ?? item.id)}
+                      style={{ display: visible ? 'table-row' : 'none' }}
+                    >
+                      {indicatorNameColumnEnabled && (
+                        <IndentableTableCell
+                          onClick={
+                            collapsible
+                              ? () => toggleVisibility(item)
+                              : undefined
+                          }
+                          indent={hierarchyEnabled && indentationLevel(item)}
+                          visibleIndentation={false}
+                        >
+                          {indicatorName(
                             item,
                             collapsible,
                             collapsed,
@@ -488,71 +548,89 @@ const IndicatorListFiltered = (props) => {
                             {
                               type: 'indicator',
                               linkTo: hierarchyEnabled ? null : item.id,
-                              singleOrganization: !displayMunicipality
+                              singleOrganization: !displayMunicipality,
                             }
+                          )}
+                        </IndentableTableCell>
+                      )}
+                      {!allIndicatorsHaveSameLevel && (
+                        <IndentableTableCell>
+                          <IndicatorType level={item.level}>
+                            {indicatorType || <span>-</span>}
+                          </IndicatorType>
+                        </IndentableTableCell>
+                      )}
+                      {displayMunicipality && (
+                        <IndentableTableCell
+                          indent={indentationLevel(item)}
+                          firstCol
+                          visibleIndentation={true}
+                        >
+                          <IndicatorLink id={item.id}>
+                            <a>{item.organization.name}</a>
+                          </IndicatorLink>
+                        </IndentableTableCell>
+                      )}
+                      {someIndicatorsHaveCategories && (
+                        <IndentableTableCell>
+                          {item.categories.map((cat) => {
+                            if (cat)
+                              return (
+                                <StyledBadge key={cat.id}>
+                                  {cat.name}
+                                </StyledBadge>
+                              );
+                            return false;
+                          })}
+                        </IndentableTableCell>
+                      )}
+                      <IndentableTableCell>
+                        {item.latestValue && (
+                          <IndicatorDate>
+                            {dayjs(item.latestValue.date).format(timeFormat)}
+                          </IndicatorDate>
                         )}
                       </IndentableTableCell>
-                    }
-                    { !allIndicatorsHaveSameLevel &&
-                      <IndentableTableCell>
-                        <IndicatorType level={item.level}>
-                          { indicatorType || <span>-</span> }
-                        </IndicatorType>
-                      </IndentableTableCell>
-                    }
-                    { displayMunicipality &&
-                      <IndentableTableCell indent={indentationLevel(item)} firstCol visibleIndentation={true}>
-                        <IndicatorLink id={item.id}>
-                          <a>{item.organization.name}</a>
-                        </IndicatorLink>
-                      </IndentableTableCell>
-                    }
-                    { someIndicatorsHaveCategories &&
-                      <IndentableTableCell>
-                        {item.categories.map((cat) => {
-                          if (cat) return <StyledBadge key={cat.id}>{cat.name}</StyledBadge>;
-                          return false;
-                        })}
-                      </IndentableTableCell>
-                    }
-                    <IndentableTableCell>
-                      {item.latestValue && (
-                        <IndicatorDate>
-                          { dayjs(item.latestValue.date).format(timeFormat) }
-                        </IndicatorDate>
-                      )}
-                    </IndentableTableCell>
-                    <IndentableTableCell numeric>
-                        <IndicatorLink id={item.id}>
-                          <a>
-                            <Value>
-                              { item.latestValue ?
-                                beautifyValue(item.latestValue.value, i18n.language)
-                                : '-' }
-                            </Value>
-                            {item.latestValue && <Unit>{item.unit?.shortName ?? ''}</Unit>}
-                          </a>
-                        </IndicatorLink>
-                    </IndentableTableCell>
-                    { (displayNormalizedValues) &&
                       <IndentableTableCell numeric>
                         <IndicatorLink id={item.id}>
                           <a>
-                            <Value>{beautifyValue(normalizedValue, i18n.language)}</Value>
-                            <Unit>{normalizedUnit ?? ''}</Unit>
+                            <Value>
+                              {item.latestValue
+                                ? beautifyValue(
+                                    item.latestValue.value,
+                                    i18n.language
+                                  )
+                                : '-'}
+                            </Value>
+                            {item.latestValue && (
+                              <Unit>{item.unit?.shortName ?? ''}</Unit>
+                            )}
                           </a>
                         </IndicatorLink>
                       </IndentableTableCell>
-                    }
-                  </tr>
-                );
-              })}
-            </tbody></React.Fragment>);
+                      {displayNormalizedValues && (
+                        <IndentableTableCell numeric>
+                          <IndicatorLink id={item.id}>
+                            <a>
+                              <Value>
+                                {beautifyValue(normalizedValue, i18n.language)}
+                              </Value>
+                              <Unit>{normalizedUnit ?? ''}</Unit>
+                            </a>
+                          </IndicatorLink>
+                        </IndentableTableCell>
+                      )}
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </React.Fragment>
+          );
         })}
       </IndentableTable>
     </div>
   );
-}
+};
 
 IndicatorListFiltered.propTypes = {
   t: PropTypes.func.isRequired,

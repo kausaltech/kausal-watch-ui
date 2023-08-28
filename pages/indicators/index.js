@@ -7,18 +7,18 @@ import ContentLoader from 'components/common/ContentLoader';
 import IndicatorList from 'components/indicators/IndicatorList';
 
 const GET_PLAN_PAGE = gql`
-query GetPlanPageIndicatorList($plan: ID!, $path: String!) {
-  planPage(plan: $plan, path: $path) {
-    __typename
-    id
-    slug
-    title
-    ... on IndicatorListPage {
-      leadContent
+  query GetPlanPageIndicatorList($plan: ID!, $path: String!) {
+    planPage(plan: $plan, path: $path) {
+      __typename
+      id
+      slug
+      title
+      ... on IndicatorListPage {
+        leadContent
+      }
+      lastPublishedAt
     }
-    lastPublishedAt
   }
-}
 `;
 
 function IndicatorsPage() {
@@ -43,10 +43,5 @@ function IndicatorsPage() {
     </Layout>
   );
 }
-
-const initialProps = {
-  namespacesRequired: ['common', 'actions'],
-};
-IndicatorList.getInitialProps = async () => (initialProps);
 
 export default IndicatorsPage;
