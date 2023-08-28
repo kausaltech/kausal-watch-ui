@@ -29,7 +29,7 @@ const createFilterUnusedCategories =
       categories.find(
         ({ id, parent }) => id === category.id || parent?.id === category.id
       )
-  );
+    );
 
 const getFilterConfig = (categoryType, indicators) => ({
   mainFilters: [
@@ -89,6 +89,9 @@ const GET_INDICATOR_LIST = gql`
             id
             name
             parent {
+              id
+            }
+            type {
               id
             }
           }
@@ -342,6 +345,9 @@ const IndicatorList = ({ title, leadContent }: Props) => {
           indicators={filteredIndicators}
           filters={filters}
           hierarchy={hierarchy}
+          shouldDisplayCategory={(category: Category) =>
+            category.type.id === data?.plan?.categoryTypes[0]?.id
+          }
         />
       </Container>
     </>
