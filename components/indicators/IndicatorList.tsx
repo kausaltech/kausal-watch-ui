@@ -338,6 +338,7 @@ const IndicatorList = ({ title, leadContent }: Props) => {
       <Container>
         <IndicatorListFiltered
           {...indicatorListProps}
+          categoryColumnLabel={data?.plan?.categoryTypes[0]?.name}
           indicators={filteredIndicators}
           filters={filters}
           hierarchy={hierarchy}
