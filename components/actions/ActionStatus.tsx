@@ -33,15 +33,15 @@ interface ActionStatusProps {
   plan: Plan;
   statusSummary: ActionStatusSummary;
   completion?: number;
+  text?: String;
 }
 
 function ActionStatus(props: ActionStatusProps) {
-  const { plan, statusSummary, completion } = props;
+  const { plan, statusSummary, completion, text } = props;
   const theme = useTheme();
   const enrichedStatusSummary = getStatusSummary(plan, statusSummary);
   const statusColor = enrichedStatusSummary.color;
-
-  const statusName = enrichedStatusSummary.label;
+  const statusName = text ?? enrichedStatusSummary.label;
 
   return (
     <Status theme={theme}>
