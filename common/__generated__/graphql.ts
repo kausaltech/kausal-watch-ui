@@ -7467,7 +7467,13 @@ export type IndicatorListQuery = (
           ) | null> | null }
           & { __typename?: 'CommonIndicator' }
         ) | null, categories: Array<(
-          { id: string, name: string }
+          { id: string, name: string, parent?: (
+            { id: string }
+            & { __typename?: 'Category' }
+          ) | null, type: (
+            { id: string }
+            & { __typename?: 'CategoryType' }
+          ) }
           & { __typename?: 'Category' }
         )>, latestGraph?: (
           { id: string }
