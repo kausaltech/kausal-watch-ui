@@ -108,6 +108,18 @@ function ActionHighlightCard(props) {
   const plan = useContext(PlanContext);
   const embed = useContext(EmbedContext);
   const actionStatus = cleanActionStatus(action, plan.actionStatuses);
+
+  let statusText = actionStatus.name || null;
+
+  // if Action is set in one of the phases, create message accordingly
+  const { implementationPhase } = action;
+  if (implementationPhase) {
+    statusText = implementationPhase.name;
+    if (actionStatus.name) statusText = `${statusText} (${actionStatus.name})`;
+    // Let's assume if status is completed the phase is irrelevant
+    if (actionStatus.identifier === 'completed') statusText = actionStatus.name;
+  }
+
   let actionName = action.name;
   if (actionName.length > 120) actionName = `${action.name.substring(0, 120)}…`;
   return (
@@ -126,10 +138,11 @@ function ActionHighlightCard(props) {
               )}
             </ImgOverlay>
           </ImgArea>
-          {actionStatus && (
+          {statusText && (
           <StyledActionStatus
             statusSummary={action.statusSummary}
             completion={action.completion}
+            text={statusText}
             plan={plan}
           />
           )}
