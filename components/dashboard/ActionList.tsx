@@ -324,7 +324,7 @@ fragment ActionListFilter on StreamFieldInterface {
       hideCategoryIdentifiers
       selectionType
       helpText
-      categories {
+      categories(onlyWithActions: true) {
         id
         identifier
         name
