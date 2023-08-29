@@ -43,6 +43,7 @@ export const GET_ACTION_LIST = gql`
       }
       implementationPhase {
         id
+        name
         identifier
       }
       categories {

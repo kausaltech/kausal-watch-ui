@@ -7,8 +7,10 @@ import {
 import styled from 'styled-components';
 import { transparentize } from 'polished';
 import PlanContext from 'context/plan';
+import { useTheme } from 'common/theme';
 import EmbedContext from 'context/embed';
 import { cleanActionStatus } from 'common/preprocess';
+import { getStatusColorForAction } from 'common/ActionStatusSummary';
 import { ActionLink } from 'common/links';
 import Icon from 'components/common/Icon';
 import ActionStatus from 'components/actions/ActionStatus';
@@ -64,7 +66,7 @@ const StyledCardTitle = styled(CardTitle)`
 const ImgArea = styled.div`
   min-height: 9rem;
   position: relative;
-  background-color: ${(props) => (props.theme.brandDark)};
+  background-color: ${(props) => (props.bgcolor || props.theme.themeColors.light)};
 `;
 
 const ImgBg = styled.div`
@@ -107,14 +109,28 @@ function ActionHighlightCard(props) {
   const { action, imageUrl, hideIdentifier } = props;
   const plan = useContext(PlanContext);
   const embed = useContext(EmbedContext);
+  const theme = useTheme();
   const actionStatus = cleanActionStatus(action, plan.actionStatuses);
+
+  let statusText = actionStatus.name || null;
+  const statusColor = getStatusColorForAction(action, plan, theme);
+
+  // if Action is set in one of the phases, create message accordingly
+  const { implementationPhase } = action;
+  if (implementationPhase) {
+    statusText = implementationPhase.name;
+    if (actionStatus.name) statusText = `${statusText} (${actionStatus.name})`;
+    // Let's assume if status is completed the phase is irrelevant
+    if (actionStatus.identifier === 'completed') statusText = actionStatus.name;
+  }
+
   let actionName = action.name;
   if (actionName.length > 120) actionName = `${action.name.substring(0, 120)}…`;
   return (
     <ActionLink action={action} prefetch={false}>
       <CardLink href target={embed.active ? '_blank' : undefined}>
         <StyledCard>
-          <ImgArea>
+          <ImgArea bgcolor={statusColor}>
             { imageUrl && <ImgBg background={imageUrl} /> }
             <ImgOverlay>
               { !hideIdentifier && (
@@ -126,10 +142,11 @@ function ActionHighlightCard(props) {
               )}
             </ImgOverlay>
           </ImgArea>
-          {actionStatus && (
+          {statusText && (
           <StyledActionStatus
             statusSummary={action.statusSummary}
             completion={action.completion}
+            text={statusText}
             plan={plan}
           />
           )}
