@@ -29,6 +29,7 @@ const CATEGORY_FRAGMENT = gql`
     categoryPage {
       title
       urlPath
+      live
     }
     type {
       id
@@ -121,6 +122,7 @@ export type CategoryListBlockCategory = {
   leadParagraph?: string,
   categoryPage: {
     urlPath: string,
+    live: boolean
   }
   type: {
     hideCategoryIdentifiers: boolean
@@ -147,7 +149,7 @@ const CategoryListBlock = (props: CategoryListBlockProps) => {
         { heading && (<SectionHeader>{ heading }</SectionHeader>)}
         <RichText html={lead} className="lead-text" />
         <Row tag="ul" className="justify-content-center">
-          { categories?.map((cat) => cat.categoryPage && (
+          { categories?.filter((cat) => cat?.categoryPage?.live).map((cat) => cat.categoryPage && (
             <Col
               tag="li"
               xs="12"

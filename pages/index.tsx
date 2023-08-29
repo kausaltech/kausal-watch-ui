@@ -39,6 +39,7 @@ query GetHomePage($plan: ID!, $path: String!) {
         }
         color
         categoryPage {
+          live
           id
           title
           urlPath

@@ -442,6 +442,7 @@ export type ActionIndicator = {
   indicator: Indicator;
 };
 
+/** An enumeration. */
 export enum ActionIndicatorEffectType {
   /** decreases */
   Decreases = 'DECREASES',
@@ -677,6 +678,7 @@ export type ActionResponsiblePartyReporteportValue = ReportValueInterface & {
   responsibleParty?: Maybe<ActionResponsibleParty>;
 };
 
+/** An enumeration. */
 export enum ActionResponsiblePartyRole {
   /** Collaborator */
   Collaborator = 'COLLABORATOR',
@@ -758,6 +760,7 @@ export type ActionStatusSummary = {
   sentiment: Sentiment;
 };
 
+/** An enumeration. */
 export enum ActionStatusSummaryIdentifier {
   Cancelled = 'CANCELLED',
   Completed = 'COMPLETED',
@@ -824,6 +827,7 @@ export type ActionTask = {
   state: ActionTaskState;
 };
 
+/** An enumeration. */
 export enum ActionTaskState {
   /** cancelled */
   Cancelled = 'CANCELLED',
@@ -854,6 +858,7 @@ export type ActionTimeliness = {
   sentiment: Sentiment;
 };
 
+/** An enumeration. */
 export enum ActionTimelinessIdentifier {
   Acceptable = 'ACCEPTABLE',
   Late = 'LATE',
@@ -1068,6 +1073,7 @@ export type AttributeTypeChoiceOption = {
   name: Scalars['String'];
 };
 
+/** An enumeration. */
 export enum AttributeTypeFormat {
   /** Category */
   CategoryChoice = 'CATEGORY_CHOICE',
@@ -1135,6 +1141,7 @@ export type CartographyProviderCredentials = {
   publicAccessToken: Scalars['String'];
 };
 
+/** An enumeration. */
 export enum CartographyProviderCredentialsProvider {
   /** MapBox */
   Mapbox = 'MAPBOX'
@@ -1364,6 +1371,7 @@ export type CategoryType = {
  */
 export type CategoryTypeCategoriesArgs = {
   onlyRoot?: InputMaybe<Scalars['Boolean']>;
+  onlyWithActions?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type CategoryTypeFilterBlock = StreamFieldInterface & {
@@ -1478,6 +1486,7 @@ export type CategoryTypePageSiblingsArgs = {
   searchQuery?: InputMaybe<Scalars['String']>;
 };
 
+/** An enumeration. */
 export enum CategoryTypeSelectWidget {
   /** Multiple */
   Multiple = 'MULTIPLE',
@@ -1581,6 +1590,7 @@ export type CommonIndicatorNormalization = {
   unit?: Maybe<Unit>;
 };
 
+/** An enumeration. */
 export enum Comparison {
   Gt = 'GT',
   Lte = 'LTE'
@@ -2132,6 +2142,7 @@ export type IndicatorLevel = {
   plan: Plan;
 };
 
+/** An enumeration. */
 export enum IndicatorLevelLevel {
   /** operational */
   Operational = 'OPERATIONAL',
@@ -2252,6 +2263,7 @@ export type IndicatorShowcaseBlock = StreamFieldInterface & {
   title?: Maybe<Scalars['String']>;
 };
 
+/** An enumeration. */
 export enum IndicatorTimeResolution {
   /** day */
   Day = 'DAY',
@@ -2926,6 +2938,7 @@ export type PlanFeatures = {
   showAdminLink: Scalars['Boolean'];
 };
 
+/** An enumeration. */
 export enum PlanFeaturesContactPersonsPublicData {
   /** Show all information */
   All = 'ALL',
@@ -3169,6 +3182,7 @@ export type PrivacyPolicyPageSiblingsArgs = {
   searchQuery?: InputMaybe<Scalars['String']>;
 };
 
+/** An enumeration. */
 export enum PublicationStatus {
   Published = 'PUBLISHED',
   Scheduled = 'SCHEDULED',
@@ -3348,6 +3362,7 @@ export type RelatedCommonIndicator = {
   id: Scalars['ID'];
 };
 
+/** An enumeration. */
 export enum RelatedCommonIndicatorEffectType {
   /** decreases */
   Decreases = 'DECREASES',
@@ -3369,6 +3384,7 @@ export type RelatedIndicator = {
   id: Scalars['ID'];
 };
 
+/** An enumeration. */
 export enum RelatedIndicatorConfidenceLevel {
   /** high */
   High = 'HIGH',
@@ -3378,6 +3394,7 @@ export enum RelatedIndicatorConfidenceLevel {
   Medium = 'MEDIUM'
 }
 
+/** An enumeration. */
 export enum RelatedIndicatorEffectType {
   /** decreases */
   Decreases = 'DECREASES',
@@ -3526,6 +3543,7 @@ export type SearchResults = {
   hits?: Maybe<Array<Maybe<SearchHit>>>;
 };
 
+/** An enumeration. */
 export enum Sentiment {
   Negative = 'NEGATIVE',
   Neutral = 'NEUTRAL',
@@ -3549,6 +3567,7 @@ export type SiteGeneralContent = {
   siteTitle: Scalars['String'];
 };
 
+/** An enumeration. */
 export enum SiteGeneralContentActionTerm {
   /** Action */
   Action = 'ACTION',
@@ -3887,6 +3906,7 @@ export type UserFeedbackNode = {
   url: Scalars['String'];
 };
 
+/** An enumeration. */
 export enum UserFeedbackType {
   /** Accessibility */
   Accessibility = 'ACCESSIBILITY',
@@ -5524,7 +5544,7 @@ export type ActionHightlightListQuery = (
       { identifier: ActionStatusSummaryIdentifier }
       & { __typename?: 'ActionStatusSummary' }
     ), implementationPhase?: (
-      { id: string, identifier: string }
+      { id: string, name: string, identifier: string }
       & { __typename?: 'ActionImplementationPhase' }
     ) | null, categories: Array<(
       { id: string, image?: (
@@ -6256,7 +6276,7 @@ type StreamFieldFragment_CategoryListBlock_Fragment = (
         ) | null }
         & { __typename?: 'Image' }
       ) | null, categoryPage?: (
-        { title: string, urlPath: string }
+        { title: string, urlPath: string, live: boolean }
         & { __typename?: 'CategoryPage' }
       ) | null, type: (
         { id: string, hideCategoryIdentifiers: boolean }
@@ -6286,7 +6306,7 @@ type StreamFieldFragment_CategoryListBlock_Fragment = (
         ) | null }
         & { __typename?: 'Image' }
       ) | null, categoryPage?: (
-        { title: string, urlPath: string }
+        { title: string, urlPath: string, live: boolean }
         & { __typename?: 'CategoryPage' }
       ) | null, type: (
         { id: string, hideCategoryIdentifiers: boolean }
@@ -6563,7 +6583,7 @@ export type CategoryListCategoryFragment = (
     ) | null }
     & { __typename?: 'Image' }
   ) | null, categoryPage?: (
-    { title: string, urlPath: string }
+    { title: string, urlPath: string, live: boolean }
     & { __typename?: 'CategoryPage' }
   ) | null, type: (
     { id: string, hideCategoryIdentifiers: boolean }
@@ -8416,7 +8436,7 @@ export type GetPlanPageGeneralQuery = (
             ) | null }
             & { __typename?: 'Image' }
           ) | null, categoryPage?: (
-            { title: string, urlPath: string }
+            { title: string, urlPath: string, live: boolean }
             & { __typename?: 'CategoryPage' }
           ) | null, type: (
             { id: string, hideCategoryIdentifiers: boolean }
@@ -8446,7 +8466,7 @@ export type GetPlanPageGeneralQuery = (
             ) | null }
             & { __typename?: 'Image' }
           ) | null, categoryPage?: (
-            { title: string, urlPath: string }
+            { title: string, urlPath: string, live: boolean }
             & { __typename?: 'CategoryPage' }
           ) | null, type: (
             { id: string, hideCategoryIdentifiers: boolean }
@@ -8664,7 +8684,7 @@ export type GetPlanPageGeneralQuery = (
           ) | null }
           & { __typename?: 'Image' }
         ) | null, categoryPage?: (
-          { title: string, urlPath: string }
+          { title: string, urlPath: string, live: boolean }
           & { __typename?: 'CategoryPage' }
         ) | null, type: (
           { id: string, hideCategoryIdentifiers: boolean }
@@ -8920,7 +8940,7 @@ export type GetPlanPageGeneralQuery = (
             ) | null }
             & { __typename?: 'Image' }
           ) | null, categoryPage?: (
-            { title: string, urlPath: string }
+            { title: string, urlPath: string, live: boolean }
             & { __typename?: 'CategoryPage' }
           ) | null, type: (
             { id: string, hideCategoryIdentifiers: boolean }
@@ -8950,7 +8970,7 @@ export type GetPlanPageGeneralQuery = (
             ) | null }
             & { __typename?: 'Image' }
           ) | null, categoryPage?: (
-            { title: string, urlPath: string }
+            { title: string, urlPath: string, live: boolean }
             & { __typename?: 'CategoryPage' }
           ) | null, type: (
             { id: string, hideCategoryIdentifiers: boolean }
@@ -9235,7 +9255,7 @@ export type GetPlanPageGeneralQuery = (
             ) | null }
             & { __typename?: 'Image' }
           ) | null, categoryPage?: (
-            { title: string, urlPath: string }
+            { title: string, urlPath: string, live: boolean }
             & { __typename?: 'CategoryPage' }
           ) | null, type: (
             { id: string, hideCategoryIdentifiers: boolean }
@@ -9265,7 +9285,7 @@ export type GetPlanPageGeneralQuery = (
             ) | null }
             & { __typename?: 'Image' }
           ) | null, categoryPage?: (
-            { title: string, urlPath: string }
+            { title: string, urlPath: string, live: boolean }
             & { __typename?: 'CategoryPage' }
           ) | null, type: (
             { id: string, hideCategoryIdentifiers: boolean }
@@ -9659,7 +9679,7 @@ export type GetHomePageQuery = (
             ) | null }
             & { __typename?: 'Image' }
           ) | null, categoryPage?: (
-            { title: string, urlPath: string }
+            { title: string, urlPath: string, live: boolean }
             & { __typename?: 'CategoryPage' }
           ) | null, type: (
             { id: string, hideCategoryIdentifiers: boolean }
@@ -9689,7 +9709,7 @@ export type GetHomePageQuery = (
             ) | null }
             & { __typename?: 'Image' }
           ) | null, categoryPage?: (
-            { title: string, urlPath: string }
+            { title: string, urlPath: string, live: boolean }
             & { __typename?: 'CategoryPage' }
           ) | null, type: (
             { id: string, hideCategoryIdentifiers: boolean }
@@ -9871,7 +9891,7 @@ export type GetHomePageQuery = (
           ) | null }
           & { __typename?: 'Image' }
         ) | null, categoryPage?: (
-          { id?: string | null, title: string, urlPath: string }
+          { live: boolean, id?: string | null, title: string, urlPath: string }
           & { __typename?: 'CategoryPage' }
         ) | null, level?: (
           { name: string, namePlural?: string | null }
