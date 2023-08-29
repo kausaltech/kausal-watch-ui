@@ -297,10 +297,12 @@ const IndicatorListFiltered = (props) => {
   const {
     t,
     indicators,
+    categoryColumnLabel,
     i18n,
     displayMunicipality,
     hierarchy,
     displayNormalizedValues,
+    shouldDisplayCategory,
   } = props;
 
   // used for multi-city group expanding/collapsing
@@ -434,7 +436,7 @@ const IndicatorListFiltered = (props) => {
           if (someIndicatorsHaveCategories) {
             headers.push(
               <IndentableTableHeader key="hr-themes">
-                {t('themes')}
+                {categoryColumnLabel || t('themes')}
               </IndentableTableHeader>
             );
           }
@@ -574,7 +576,7 @@ const IndicatorListFiltered = (props) => {
                       {someIndicatorsHaveCategories && (
                         <IndentableTableCell>
                           {item.categories.map((cat) => {
-                            if (cat)
+                            if (cat && (shouldDisplayCategory?.(cat) ?? true))
                               return (
                                 <StyledBadge key={cat.id}>
                                   {cat.name}
@@ -633,9 +635,10 @@ const IndicatorListFiltered = (props) => {
 };
 
 IndicatorListFiltered.propTypes = {
+  categoryColumnLabel: PropTypes.string,
   t: PropTypes.func.isRequired,
   indicators: PropTypes.arrayOf(PropTypes.object).isRequired,
-  categories: PropTypes.arrayOf(PropTypes.object).isRequired,
+  shouldDisplayCategory: PropTypes.func,
 };
 
 export default withTranslation('common')(IndicatorListFiltered);

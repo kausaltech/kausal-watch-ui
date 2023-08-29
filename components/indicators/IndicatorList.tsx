@@ -15,20 +15,23 @@ import ActionListFilters, {
   FilterValue,
 } from 'components/actions/ActionListFilters';
 import {
-  CategoryType,
+  Category,
+  Indicator,
   IndicatorListPage,
   IndicatorListQuery,
 } from 'common/__generated__/graphql';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 
-const getCategoriesFromTypes = (categoryTypes: CategoryType[]) =>
-  categoryTypes.reduce(
-    (categories, categoryType) => [...categories, ...categoryType.categories],
-    []
-  );
+const createFilterUnusedCategories =
+  (indicators: Indicator[]) => (category: Category) =>
+    indicators.find(({ categories }) =>
+      categories.find(
+        ({ id, parent }) => id === category.id || parent?.id === category.id
+      )
+    );
 
-const getFilterConfig = (categoryType) => ({
+const getFilterConfig = (categoryType, indicators) => ({
   mainFilters: [
     {
       __typename: 'CategoryTypeFilterBlock',
@@ -39,6 +42,9 @@ const getFilterConfig = (categoryType) => ({
       depth: null,
       categoryType: {
         ...categoryType,
+        categories: categoryType.categories.filter(
+          createFilterUnusedCategories(indicators)
+        ),
         hideCategoryIdentifiers: true,
         selectionType: 'SINGLE',
       },
@@ -82,6 +88,12 @@ const GET_INDICATOR_LIST = gql`
           categories {
             id
             name
+            parent {
+              id
+            }
+            type {
+              id
+            }
           }
           latestGraph {
             id
@@ -277,11 +289,8 @@ const IndicatorList = ({ title, leadContent }: Props) => {
       return { ...indicator, level: level.toLowerCase() };
     });
 
-    const categories = getCategoriesFromTypes(categoryTypes);
-
     return {
       indicators,
-      categories,
       leadContent: generalContent.indicatorListLeadContent,
       displayMunicipality,
       displayNormalizedValues,
@@ -295,7 +304,7 @@ const IndicatorList = ({ title, leadContent }: Props) => {
   const hierarchy = processCommonIndicatorHierarchy(data?.planIndicators);
   const showInsights = hasInsights(data);
   const filterConfig = !!data?.plan?.categoryTypes[0]
-    ? getFilterConfig(data.plan.categoryTypes[0])
+    ? getFilterConfig(data.plan.categoryTypes[0], indicatorListProps.indicators)
     : {};
 
   const filterSections: ActionListFilterSection[] =
@@ -332,9 +341,13 @@ const IndicatorList = ({ title, leadContent }: Props) => {
       <Container>
         <IndicatorListFiltered
           {...indicatorListProps}
+          categoryColumnLabel={data?.plan?.categoryTypes[0]?.name}
           indicators={filteredIndicators}
           filters={filters}
           hierarchy={hierarchy}
+          shouldDisplayCategory={(category: Category) =>
+            category.type.id === data?.plan?.categoryTypes[0]?.id
+          }
         />
       </Container>
     </>
