@@ -381,6 +381,7 @@ function SiteFooter(props) {
     fundingInstruments,
     otherLogos,
     footerStatement,
+    ownerLinks,
   } = props;
 
   const OrgLogo = () => {
@@ -490,6 +491,20 @@ function SiteFooter(props) {
                 ) : ownerName }
               </OrgTitle>
             </UtilityItem>
+            { ownerLinks && ownerLinks.map((page) => (
+              <UtilityItem key={page.id}>
+                <NavigationLink slug={page.url}>
+                  { theme?.navLinkIcons && (
+                  <Icon
+                    name="angleRight"
+                    color={theme.footerColor}
+                    aria-hidden="true"
+                    className="me-1"
+                  /> )}
+                  {page.title}
+                </NavigationLink>
+              </UtilityItem>
+            ))}
           </UtilityColumn>
           <UtilityColumn>
             { utilityLinks && utilityLinks.map((page) => (
@@ -596,6 +611,7 @@ SiteFooter.defaultProps = {
   additionalLinks: [],
   fundingInstruments: [],
   FooterStatement: undefined,
+  ownerLinks: [],
 };
 
 SiteFooter.propTypes = {
@@ -610,6 +626,7 @@ SiteFooter.propTypes = {
   fundingInstruments: PropTypes.arrayOf(PropTypes.shape({})),
   otherLogos: PropTypes.arrayOf(PropTypes.shape({})),
   footerStatement: PropTypes.string,
+  ownerLinks: PropTypes.arrayOf(PropTypes.shape({})),
 };
 
 export default withTranslation('common')(withTheme(SiteFooter));

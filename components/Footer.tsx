@@ -66,6 +66,8 @@ function Footer(props) {
     })
   ));
 
+  const ownerLinks = theme.settings?.footerAdditionalLinks;
+
   // If there is no custom a11y page set, or if there is no external a11y statement link
   // use the standard a11y statement
   if (!plan.additionalLinks.items.find((link) => link.page.__typename === 'AccessibilityStatementPage')) {
@@ -111,6 +113,7 @@ function Footer(props) {
         fundingInstruments={fundingInstruments}
         otherLogos={otherLogos}
         footerStatement={footerStatement}
+        ownerLinks={ownerLinks}
       />
       <ApplicationStateBanner deploymentType={site.deploymentType} />
     </>
