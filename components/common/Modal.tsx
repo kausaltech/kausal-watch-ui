@@ -1,7 +1,7 @@
-import React, { useRef, useEffect } from "react";
-import styled from "styled-components";
-import Icon from "components/common/Icon";
-import { useTheme } from "common/theme";
+import React, { useRef, useEffect } from 'react';
+import styled from 'styled-components';
+import Icon from 'components/common/Icon';
+import { useTheme } from 'common/theme';
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -61,12 +61,12 @@ const Modal = (props) => {
   useEffect(() => {
     const closeOnEscape = (e) => {
       console.log(isOpen);
-      if (e.key === "Escape") onClose();
+      if (e.key === 'Escape') onClose();
     };
 
-    window.addEventListener("keydown", closeOnEscape);
+    window.addEventListener('keydown', closeOnEscape);
     return () => {
-      window.removeEventListener("keydown", closeOnEscape);
+      window.removeEventListener('keydown', closeOnEscape);
     };
   }, [isOpen, onClose]);
   return (
@@ -77,7 +77,7 @@ const Modal = (props) => {
             <ModalHeader theme={theme}>{header}</ModalHeader>
             <ModalSubHeader theme={theme}>{helpText}</ModalSubHeader>
             <CloseButton onClick={() => onClose()}>
-              <Icon name="times" />
+              <Icon name='times' />
             </CloseButton>
             {children}
           </ModalBody>

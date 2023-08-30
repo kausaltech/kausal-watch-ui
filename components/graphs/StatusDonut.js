@@ -1,11 +1,11 @@
-import React, { useState } from "react";
-import dynamic from "next/dynamic";
-import styled from "styled-components";
-import { useTheme } from "common/theme";
-import { useTranslation } from "common/i18n";
-import Card from "components/common/Card";
-import ContentLoader from "components/common/ContentLoader";
-import Modal from "components/common/Modal";
+import React, { useState } from 'react';
+import dynamic from 'next/dynamic';
+import styled from 'styled-components';
+import { useTheme } from 'common/theme';
+import { useTranslation } from 'common/i18n';
+import Card from 'components/common/Card';
+import ContentLoader from 'components/common/ContentLoader';
+import Modal from 'components/common/Modal';
 
 const GraphCard = styled.div`
   display: flex;
@@ -32,7 +32,7 @@ const HelpText = styled.p`
   line-height: ${(props) => props.theme.lineHeightMd};
 `;
 
-const Plot = dynamic(() => import("./Plot"), {
+const Plot = dynamic(() => import('./Plot'), {
   loading: () => <ContentLoader />,
   ssr: false,
 });
@@ -45,7 +45,7 @@ const StatusDonut = (props) => {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
-  const isServer = typeof window === "undefined";
+  const isServer = typeof window === 'undefined';
   if (isServer) {
     return null;
   }
@@ -54,13 +54,13 @@ const StatusDonut = (props) => {
     values: [...data.values],
     labels: [...data.labels],
     domain: { column: 0 },
-    hoverinfo: "label+value+percent",
-    hovertemplate: "%{label}<br>%{value}<br>%{percent:.0%}<extra></extra>",
+    hoverinfo: 'label+value+percent',
+    hovertemplate: '%{label}<br>%{value}<br>%{percent:.0%}<extra></extra>',
     hole: 0.5,
-    type: "pie",
+    type: 'pie',
     sort: false,
-    direction: "clockwise",
-    textinfo: "none",
+    direction: 'clockwise',
+    textinfo: 'none',
     marker: {
       colors: [...colors],
     },
@@ -84,7 +84,7 @@ const StatusDonut = (props) => {
     height: 175,
     width: 175,
     showlegend: false,
-    paper_bgcolor: "rgba(0,0,0,0)",
+    paper_bgcolor: 'rgba(0,0,0,0)',
     margin: { t: 0, b: 0, l: 0, r: 0 },
   };
   const config = {
@@ -93,8 +93,8 @@ const StatusDonut = (props) => {
     locales: {
       fi: {
         format: {
-          decimal: ",",
-          thousands: " ",
+          decimal: ',',
+          thousands: ' ',
           grouping: [3],
         },
       },
@@ -103,7 +103,7 @@ const StatusDonut = (props) => {
 
   const pieDataWithPercent = {
     ...pieData,
-    textinfo: "percent",
+    textinfo: 'percent',
   };
   const pieLayoutWithLegend = {
     ...pieLayout,
@@ -112,12 +112,12 @@ const StatusDonut = (props) => {
     showlegend: true,
     legend: {
       y: 0.9,
-      yanchor: "auto",
+      yanchor: 'auto',
     },
   };
   const configNoButton = {
     ...config,
-    modeBarButtonsToRemove: ["toImage"],
+    modeBarButtonsToRemove: ['toImage'],
   };
   return (
     <>
