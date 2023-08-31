@@ -16,6 +16,7 @@ import type { ActionListAction } from './ActionList';
 
 const StatusGraphs = styled.div`
   width: auto;
+  margin: 0 auto;
   display: flex;
   overflow-x: auto;
   margin-bottom: ${(props) => props.theme.spaces.s300};
@@ -31,6 +32,7 @@ const StatusGraphs = styled.div`
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     background-image: none;
+    justify-content: center;
   }
 `;
 

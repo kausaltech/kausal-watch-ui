@@ -12,6 +12,7 @@ import PlanChip from 'components/plans/PlanChip';
 import RichText from 'components/common/RichText';
 
 import { usePlan } from 'context/plan';
+import { useTheme } from 'common/theme';
 import { useTranslation } from 'common/i18n';
 import { OrganizationLink } from 'common/links';
 import ContentLoader from 'components/common/ContentLoader';
@@ -311,6 +312,7 @@ function OrgContent(props) {
   const { id } = props;
   const plan = usePlan();
   const { t } = useTranslation(['common', 'actions']);
+  const theme = useTheme();
   const [ selectedPlanIndex, setSelectedPlan ] = useState(0);
 
   const { data, loading, error } = useQuery<
@@ -335,8 +337,8 @@ function OrgContent(props) {
   const allPlans = [planFromQuery, ...org.plansWithActionResponsibilities];
   const selectedPlan = allPlans[selectedPlanIndex];
 
-    // add plan.feature.showActionUpdateStatus to backend
-    const showUpdateStatus = plan.id !== 'klima-winterthur';
+  // add plan.feature.showActionUpdateStatus to backend
+  const showUpdateStatus = theme.settings.dashboard?.showActionUpdateStatus;
 
   return (
     <div className="mb-5">

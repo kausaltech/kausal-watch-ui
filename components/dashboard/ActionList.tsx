@@ -11,7 +11,8 @@ import { getActionTermContext, useTranslation } from 'common/i18n';
 import { constructOrgHierarchy, mapResponsibleParties, OrganizationHierarchyMember, orgHasActions, OrgMappedAction } from 'common/organizations';
 import ContentLoader from 'components/common/ContentLoader';
 import ErrorMessage from 'components/common/ErrorMessage';
-import PlanContext, { usePlan } from 'context/plan';
+import { usePlan } from 'context/plan';
+import { useTheme } from 'common/theme';
 import RichText from 'components/common/RichText';
 import ActionListFilters, { ActionListFilterSection, Filters, FilterValue } from 'components/actions/ActionListFilters';
 import ActionCardList from 'components/actions/ActionCardList';
@@ -422,6 +423,7 @@ const ActionList = (props: ActionListProps) => {
     includeRelatedPlans
  } = props;
   const { t } = useTranslation('common');
+  const theme = useTheme();
   const plan = usePlan();
   const displayDashboard = activeFilters.view === 'dashboard' || (
     activeFilters.view == null && defaultView === 'DASHBOARD'
@@ -481,7 +483,7 @@ const ActionList = (props: ActionListProps) => {
   }
 
   // add plan.feature.showActionUpdateStatus to backend
-  const showUpdateStatus = plan.id !== 'klima-winterthur';
+  const showUpdateStatus = theme.settings.dashboard?.showActionUpdateStatus;
 
   return (
     <>
