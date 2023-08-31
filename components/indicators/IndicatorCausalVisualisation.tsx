@@ -1,13 +1,11 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import styled, { withTheme } from 'styled-components';
-import { Alert } from 'reactstrap';
-
-import PlanContext from 'context/plan';
+import React, { ReactElement, useState, useEffect } from 'react';
+import styled from 'styled-components';
+import { usePlan } from 'context/plan';
+import { useTheme } from 'common/theme';
 import { aplans } from 'common/api';
-import ContentLoader from 'components/common/ContentLoader';
+import { Alert } from 'reactstrap';
 import { captureException } from 'common/sentry';
-
+import ContentLoader from 'components/common/ContentLoader';
 import IndicatorCard from './IndicatorCard';
 import Connector from './Connector';
 
@@ -129,19 +127,19 @@ function drawEdge(nodes, edge, toIndex, gridHeight, theme) {
 
 function createChain(nodes, theme) {
   let column = 0;
-  const chain = [];
+  const chain : ReactElement[] = [];
   const gridHeight = getGridHeight(nodes);
   let columnIndicators = nodes;
 
   while (columnIndicators.length !== 0) {
-    const children = [];
+    const children : ReactElement[] = [];
 
     columnIndicators = nodes.filter((item) => item.column === column);
 
     columnIndicators.forEach((indicator) => {
       let indicatorLevel = 'action';
       if (indicator.type !== 'action') indicatorLevel = indicator.indicator_level;
-      const connectionsTo = [];
+      const connectionsTo : ReactElement[] = [];
       indicator.to.forEach((edge, index) => {
         const edgeElement = drawEdge(nodes, edge, index, gridHeight, theme);
         if (!edgeElement) return;
@@ -151,6 +149,7 @@ function createChain(nodes, theme) {
           </span>,
         );
       });
+
       children.push(
         <Indicator level={indicatorLevel} key={indicator.id}>
           <IndicatorCard
@@ -171,139 +170,114 @@ function createChain(nodes, theme) {
   return chain;
 }
 
-class IndicatorCausal extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isLoaded: false,
-      error: null,
-    };
-  }
+const setColumns = (nodes, index, column) => {
+  // Assign indicators with columns
+  const columned = nodes;
 
-  componentDidMount() {
-    this.fetchData();
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
-    return true;
-  }
-
-  componentDidUpdate(prevProps) {
-    const { actionId } = this.props;
-    if (prevProps.actionId !== actionId) {
-      this.fetchData();
-    }
-  }
-
-  setColumns(nodes, index, column) {
-    // Assign indicators with columns
-    const columned = nodes;
-
-    // Sanity check: Bail out if we have already processed this.
-    // FIXME: Otherwise setColumns() can sometimes loop forever
-    if ('column' in columned[index]) {
-      return columned;
-    }
-    columned[index].column = column;
-    if (columned[index].indicator_level !== 'strategic') {
-      columned[index].from.forEach((edge) => {
-        const nodeIndex = columned.findIndex(item => item.id === edge.to);
-        this.setColumns(columned, nodeIndex, column + 1);
-      });
-    }
+  // Sanity check: Bail out if we have already processed this.
+  // FIXME: Otherwise setColumns() can sometimes loop forever
+  if ('column' in columned[index]) {
     return columned;
   }
-
-  setRows(nodes) {
-    // Assign columned indicators with rows
-    this.columnIndicators = nodes;
-    this.griddedIndicators = [];
-    let column = 0;
-    while (this.columnIndicators.length !== 0) {
-      this.columnIndicators = nodes.filter(item => item.column === column);
-      this.columnIndicators.forEach((indicator, row) => {
-        const rowIndicator = indicator;
-        rowIndicator.row = row;
-        this.griddedIndicators.push(rowIndicator);
-      });
-      column += 1;
-    }
-    return this.griddedIndicators;
-  }
-
-  fetchData() {
-    const plan = this.context;
-    const { actionId } = this.props;
-
-    aplans.get('insight', {
-      params: {
-        plan: plan.identifier, action: actionId,
-      },
-    }).then((result) => {
-      const { nodes, edges } = result;
-      this.setState({
-        isLoaded: true,
-        nodes,
-        edges,
-      });
-    }).catch((error) => {
-      captureException(error);
-      this.setState({
-        isLoaded: true,
-        error,
-      });
+  columned[index].column = column;
+  if (columned[index].indicator_level !== 'strategic') {
+    columned[index].from.forEach((edge) => {
+      const nodeIndex = columned.findIndex(item => item.id === edge.to);
+      setColumns(columned, nodeIndex, column + 1);
     });
   }
-
-  combineData(nodes, edges) {
-    // Combine edges data to indicator nodes
-    this.indicators = nodes;
-    this.indicators.forEach((item, index) => {
-      this.indicators[index].from = edges.filter((edge) => edge.from === item.id);
-      this.indicators[index].to = edges.filter((edge) => edge.to === item.id);
-    });
-
-    this.rootIndex = this.indicators.findIndex((item) => item.to.length === 0);
-    this.indicators = this.setColumns(this.indicators, this.rootIndex, 0);
-    this.indicators = this.setRows(this.indicators);
-
-    return this.indicators;
-  }
-
-  render() {
-    const {
-      error,
-      isLoaded,
-      nodes,
-      edges,
-    } = this.state;
-
-    const { theme } = this.props;
-    const isServer = typeof window === "undefined";
-
-    if (error) {
-      return (
-        <Alert color="danger">
-          Error:
-          {error.message}
-        </Alert>
-      );
-    }
-    if (isServer || !isLoaded) {
-      return <ContentLoader />;
-    }
-    const combinedData = this.combineData(nodes, edges);
-    return (
-      <CausalChain className="causal-chain-visualisation">
-        { createChain(combinedData, theme) }
-      </CausalChain>
-    );
-  }
+  return columned;
 }
 
-IndicatorCausal.propTypes = {
-  actionId: PropTypes.string.isRequired,
-};
-IndicatorCausal.contextType = PlanContext;
+const setRows = (nodes) => {
+  // Assign columned indicators with rows
+  let columnIndicators = nodes;
+  const griddedIndicators = [];
+  let column = 0;
+  while (columnIndicators.length !== 0) {
+    columnIndicators = nodes.filter(item => item.column === column);
+    columnIndicators.forEach((indicator, row) => {
+      const rowIndicator = indicator;
+      rowIndicator.row = row;
+      griddedIndicators.push(rowIndicator);
+    });
+    column += 1;
+  }
+  return griddedIndicators;
+}
 
-export default withTheme(IndicatorCausal);
+const combineData = (nodes, edges) => {
+  // Combine edges data to indicator nodes
+  const indicators = nodes;
+  indicators.forEach((item, index) => {
+    indicators[index].from = edges.filter((edge) => edge.from === item.id);
+    indicators[index].to = edges.filter((edge) => edge.to === item.id);
+  });
+
+  const rootIndex = indicators.findIndex((item) => item.to.length === 0);
+  const columned = setColumns(indicators, rootIndex, 0);
+  const gridded = setRows(columned);
+  return gridded;
+
+}
+interface Props {
+  actionId?: string;
+}
+
+function IndicatorCausalVisualisation({
+  actionId,
+}: Props) {
+  const plan = usePlan();
+  const theme = useTheme();
+  const isServer = typeof window === "undefined";
+
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [error, setError] = useState(null);
+  const [data, setData] = useState('');
+
+  useEffect(() => {
+    // React advises to declare the async function directly inside useEffect
+    async function fetchData() {
+      aplans.get('insight', {
+        params: {
+          plan: plan.identifier, action: actionId,
+        },
+      }).then((result) => {
+        setData(result);
+        setIsLoaded(true);
+      }).catch((error) => {
+        captureException(error);
+        setError(error);
+        setIsLoaded(true);
+      });
+    };
+
+    // You need to restrict it at some point
+    // This is just dummy code and should be replaced by actual
+    if (!data) {
+      fetchData();
+    }
+  }, [actionId, plan.identifier, data]);
+
+  if (error) {
+    return (
+      <Alert color="danger">
+        Error:
+        {error.message}
+      </Alert>
+    );
+  }
+  if (isServer || !isLoaded) {
+    return <ContentLoader />;
+  }
+
+  const combinedData = combineData(data?.nodes, data?.edges);
+
+  return (
+    <CausalChain className="causal-chain-visualisation">
+      { createChain(combinedData, theme) }
+    </CausalChain>
+  );
+}
+
+export default IndicatorCausalVisualisation;

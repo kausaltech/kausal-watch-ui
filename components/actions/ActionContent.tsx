@@ -16,7 +16,7 @@ import { cleanActionStatus } from 'common/preprocess';
 import { Meta } from 'components/layout';
 import images, { getBgImageAlignment, getActionImage } from 'common/images';
 import PopoverTip from 'components/common/PopoverTip';
-import IndicatorCausal from 'components/indicators/IndicatorCausal';
+import IndicatorCausalVisualisation from 'components/indicators/IndicatorCausalVisualisation';
 import AttributesBlock from 'components/common/AttributesBlock';
 import CategoryTags from './CategoryTags';
 import ActionContactFormBlock from 'components/contentblocks/ActionContactFormBlock';
@@ -847,7 +847,7 @@ function ActionContent(props: ActionContentProps) {
               </Col>
             </Row>
           </Container>
-          <IndicatorCausal actionId={action.id} />
+          <IndicatorCausalVisualisation actionId={action.id} />
         </div>
       )}
       <Container>

@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Card, CardBody, CardTitle, Alert,
+  Card, CardBody, CardTitle,
 } from 'reactstrap';
 import styled from 'styled-components';
-import dayjs from '../../common/dayjs';
-import { getActionTermContext, withTranslation } from '../../common/i18n';
-import { IndicatorLink } from '../../common/links';
+import dayjs from 'common/dayjs';
+import { getActionTermContext, useTranslation } from 'common/i18n';
+import { IndicatorLink } from 'common/links';
 import { usePlan } from 'context/plan';
 
 
@@ -114,7 +114,7 @@ function IndicatorLatestValue(props) {
 
   return (
     <IndicatorValue>
-      {Number.isInteger(latestValue) ? latestValue : latestValue.toFixed(2).replace('.', ',')}
+      {latestValue}
       {' '}
       <IndicatorValueUnit>
         {unit}
@@ -129,13 +129,16 @@ function IndicatorLatestValue(props) {
 function CardLink(props) {
   const { level, indicatorId, children } = props;
 
-  if (level !== 'action') return <IndicatorLink id={indicatorId}><StyledLink href>{ children }</StyledLink></IndicatorLink>;
+  if (level !== 'action') return (
+    <IndicatorLink id={indicatorId}>
+      <StyledLink href>{ children }</StyledLink>
+    </IndicatorLink>
+  );
   return <>{children}</>;
 }
 
 function IndicatorCard(props) {
   const {
-    t,
     level,
     objectid,
     name,
@@ -144,10 +147,11 @@ function IndicatorCard(props) {
     resolution,
   } = props;
   const plan = usePlan();
+  const { t, i18n } = useTranslation();
 
   // FIXME: It sucks that we only use the context for the translation key 'action'
   const indicatorType = level === 'action' ? t('action', getActionTermContext(plan)) : t(level);
-
+  const formattedValue = latestValue ? latestValue.value.toLocaleString(i18n.language) : null;
   return (
     <CardLink level={level} indicatorId={objectid}>
       <Indicator level={level}>
@@ -159,7 +163,13 @@ function IndicatorCard(props) {
               { name }
             </IndicatorTitle>
           </div>
-          { latestValue && <IndicatorLatestValue latestValue={latestValue.value} date={latestValue.date} unit={latestValue.unit} resolution={resolution} />}
+          { latestValue &&
+            <IndicatorLatestValue
+              latestValue={formattedValue}
+              date={latestValue.date}
+              unit={latestValue.unit}
+              resolution={resolution}
+            />}
         </CardBody>
       </Indicator>
     </CardLink>
@@ -183,4 +193,4 @@ IndicatorCard.propTypes = {
   resolution: PropTypes.string,
 };
 
-export default withTranslation('common')(IndicatorCard);
+export default IndicatorCard;
