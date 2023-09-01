@@ -16,6 +16,10 @@ const iconsList = [
   'calendar',
   'chartLine',
   'check',
+  'chevronDown',
+  'chevronLeft',
+  'chevronRight',
+  'chevronUp',
   'circleFull',
   'circleOutline',
   'commenting',
@@ -35,7 +39,9 @@ const Icons = (props) => {
   const showIcons = iconsList.map((item) => (
     <div className="py-2 d-flex d-flex-row" key={item}>
       <Icon name={item} color={iconColor} width="2rem" height="2rem" />
-      <small className="ml-3" style={{ lineHeight: '2rem' }}>{item}</small>
+      <small className="ml-3" style={{ lineHeight: '2rem' }}>
+        {item}
+      </small>
     </div>
   ));
 
@@ -51,12 +57,18 @@ const IconsLayout = () => {
         <div className="col-6">
           <Icons />
         </div>
-        <div className="col-6" style={{ backgroundColor: theme.brandDark, color: theme.themeColors.light }}>
+        <div
+          className="col-6"
+          style={{
+            backgroundColor: theme.brandDark,
+            color: theme.themeColors.light,
+          }}
+        >
           <Icons iconColor={theme.brandLight} />
         </div>
       </div>
     </div>
-  )
+  );
 };
 
 export const IconsStory = (theme) => <IconsLayout theme={theme} />;
