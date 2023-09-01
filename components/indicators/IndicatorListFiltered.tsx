@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import PropTypes, { bool } from 'prop-types';
 import { Alert, Badge, Table } from 'reactstrap';
 import styled from 'styled-components';
 
@@ -93,6 +93,9 @@ const StyledSectionButton = styled(SectionButton)`
 `;
 
 const IndicatorName = styled.div`
+  display: flex;
+  align-items: center;
+
   a,
   .indicator-name {
     color: ${(props) => props.theme.themeColors.black};
@@ -150,8 +153,30 @@ const Unit = styled.span`
   font-size: 80%;
 `;
 
-const DarkenedTableHeader = styled.th`
-  background-color: red;
+const ExpandButton = styled.button`
+  position: relative;
+  background: transparent;
+  color: inherit;
+  border: none;
+  margin: ${({ theme }) => `
+    -${theme.spaces.s050}
+    ${theme.spaces.s050}
+    -${theme.spaces.s050}
+    -${theme.spaces.s025}
+  `};
+  padding: ${({ theme }) => theme.spaces.s050};
+  font-size: 0;
+  transition: all 0.2s;
+  border-radius: 50%;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.07);
+  }
+`;
+
+const ExpandIcon = styled(Icon)<{ $expanded: boolean }>`
+  transition: transform 0.2s;
+  transform: rotate(${({ $expanded }) => ($expanded ? '90deg' : '0deg')});
 `;
 
 const IndentableTableHeader = (props) => {
@@ -312,6 +337,7 @@ const IndicatorListFiltered = (props) => {
   const [visibleByParent, setVisibleByParent] = useState(() =>
     defaultVisibleByParent(indicators, hierarchy)
   );
+
   const toggleVisibility = (indicator) => {
     setVisibleByParent((prev) => {
       const cid = indicator.common.id;
@@ -345,6 +371,7 @@ const IndicatorListFiltered = (props) => {
     new Set(sortedIndicators.flat().map((i) => i.level)).size === 1;
 
   const indicatorElement = (
+    item,
     collapsible,
     itemName,
     expanded,
@@ -353,17 +380,31 @@ const IndicatorListFiltered = (props) => {
   ) =>
     itemName && (
       <IndicatorName>
+        {collapsible && (
+          <ExpandButton
+            aria-label={t(expanded ? 'collapse-row' : 'expand-row')}
+            onClick={() => toggleVisibility(item)}
+          >
+            <ExpandIcon
+              width="16px"
+              height="16px"
+              $expanded={expanded}
+              name="angleRight"
+            />
+          </ExpandButton>
+        )}
+
         <StyledSectionButton
           aria-controls={expandKey}
           aria-expanded={expanded}
           linkTo={options?.linkTo}
           sectionHeading={options?.type === 'section'}
         >
-          {collapsible && <Icon name={expanded ? 'angleDown' : 'angleRight'} />}
           {itemName}
         </StyledSectionButton>
       </IndicatorName>
     );
+
   const indicatorName = (item, collapsible, expanded, expandKey, options) => {
     let name = null;
     if (
@@ -382,7 +423,14 @@ const IndicatorListFiltered = (props) => {
        */
       name = item.common.name;
     }
-    return indicatorElement(collapsible, name, expanded, expandKey, options);
+    return indicatorElement(
+      item,
+      collapsible,
+      name,
+      expanded,
+      expandKey,
+      options
+    );
   };
   const indentationLevel = (item) =>
     item.common == null
@@ -534,11 +582,6 @@ const IndicatorListFiltered = (props) => {
                     >
                       {indicatorNameColumnEnabled && (
                         <IndentableTableCell
-                          onClick={
-                            collapsible
-                              ? () => toggleVisibility(item)
-                              : undefined
-                          }
                           indent={hierarchyEnabled && indentationLevel(item)}
                           visibleIndentation={false}
                         >
@@ -549,7 +592,7 @@ const IndicatorListFiltered = (props) => {
                             descendantIds(item, hierarchy),
                             {
                               type: 'indicator',
-                              linkTo: hierarchyEnabled ? null : item.id,
+                              linkTo: item.id,
                               singleOrganization: !displayMunicipality,
                             }
                           )}
