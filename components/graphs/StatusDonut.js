@@ -6,6 +6,7 @@ import { useTranslation } from 'common/i18n';
 import Card from 'components/common/Card';
 import ContentLoader from 'components/common/ContentLoader';
 import Modal from 'components/common/Modal';
+import Icon from 'components/common/Icon';
 
 const GraphCard = styled.div`
   display: flex;
@@ -31,6 +32,37 @@ const HelpText = styled.p`
   font-family: ${(props) => props.theme.fontFamilyTiny};
   line-height: ${(props) => props.theme.lineHeightMd};
 `;
+
+const PlotWrapper = styled.div`
+  position: relative;
+`;
+
+
+const OpenModalButton = styled.button`
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  width: 30px;
+  height: 30px;
+  align-item: center;
+  justify-content: center;
+  z-index: 2;
+  border: none;
+  font-size: 20px;
+  display: inline-block;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  border-radius: ${(props) => props.theme.btnBorderRadius};
+
+  ${GraphCard}:hover & {
+    opacity: 1;
+  }
+  svg  {
+     color: ${(props) => props.theme.themeColors.dark};
+  }
+`;
+
 
 const Plot = dynamic(() => import('./Plot'), {
   loading: () => <ContentLoader />,
@@ -124,12 +156,17 @@ const StatusDonut = (props) => {
       <GraphCard onClick={openModal}>
         <GraphHeader>{header}</GraphHeader>
         <HelpText>{helpText}</HelpText>
+        <PlotWrapper>
+        <OpenModalButton onClick={openModal}>
+            <Icon name='arrowUpRightFromSquare'/>
+          </OpenModalButton>
         <Plot
           data={[pieData]}
           layout={pieLayout}
           config={configNoButton}
           onClick={openModal}
         />
+        </PlotWrapper>
       </GraphCard>
       <Modal
         isOpen={isModalOpen}
