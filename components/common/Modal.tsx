@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, ReactNode } from 'react';
 import styled from 'styled-components';
 import Icon from 'components/common/Icon';
 import { useTheme } from 'common/theme';
@@ -48,19 +48,26 @@ const ModalSubHeader = styled.p`
   line-height: ${(props) => props.theme.lineHeightMd};
 `;
 
-const Modal = (props) => {
-  const { isOpen, onClose, header, helpText, children } = props;
+interface ModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  header: string;
+  helpText: string;
+  children: ReactNode;
+}
+
+const Modal: React.FC<ModalProps> = ({ isOpen, onClose, header, helpText, children }) => {
   const theme = useTheme();
-  const modalRef = useRef();
-  const closeModalOnOverlayClick = (e) => {
-    if (modalRef.current && !modalRef.current.contains(e.target)) {
+  const modalRef = useRef<HTMLDivElement>(null);
+  
+  const closeModalOnOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
       onClose();
     }
   };
 
   useEffect(() => {
-    const closeOnEscape = (e) => {
-      console.log(isOpen);
+    const closeOnEscape = (e:KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
     };
 
