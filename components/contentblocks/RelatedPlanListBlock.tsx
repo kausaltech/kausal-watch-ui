@@ -39,7 +39,11 @@ const PlanList = styled.div`
   }
 `;
 
-const RelatedPlanListBlock = (props) => {
+interface Props {
+  id?: string
+}
+
+const RelatedPlanListBlock = ({ id }: Props) => {
   const plan = usePlan();
   const theme = useTheme();
   if (!plan.allRelatedPlans) return null;
@@ -47,7 +51,7 @@ const RelatedPlanListBlock = (props) => {
   const isParentPlan = plan.children.length > 0;
 
   return (
-    <PlanListSection>
+    <PlanListSection id={id}>
       <Container>
       <h2>
         <a href={plan.parent?.viewUrl || null}>

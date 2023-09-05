@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import PlanContext from 'context/plan';
 
 import IndicatorHighlightsList from 'components/indicators/IndicatorHighlightsList';
+import { CommonContentBlockProps } from 'common/blocks.types';
 
 const IndicatorsSection = styled.div`
   background-color: ${(props) => props.theme.themeColors.white};
@@ -16,11 +17,11 @@ const IndicatorsSection = styled.div`
   }
 `;
 
-const IndicatorHighlightsBlock = () => {
+const IndicatorHighlightsBlock = ({ id = '' }: CommonContentBlockProps) => {
   const plan = useContext(PlanContext);
 
   return (
-    <IndicatorsSection className="indicators-section">
+    <IndicatorsSection id={id} className="indicators-section">
       <Container>
         <IndicatorHighlightsList plan={plan} />
       </Container>

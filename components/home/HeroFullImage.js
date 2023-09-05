@@ -121,7 +121,7 @@ const ImageCredit = styled.span`
 
 const HeroFullImage = (props) => {
   const {
-    bgImage, imageAlign, title, lead,
+    id = '', bgImage, imageAlign, title, lead,
     altText, imageCredit,
   } = props;
 
@@ -129,7 +129,7 @@ const HeroFullImage = (props) => {
   const theme = useTheme();
 
   return (
-    <Hero>
+    <Hero id={id}>
       <HeroImage
         image={bgImage}
         imageAlign={imageAlign}
@@ -163,6 +163,7 @@ HeroFullImage.defaultProps = {
 };
 
 HeroFullImage.propTypes = {
+  id: PropTypes.string,
   bgImage: PropTypes.string.isRequired,
   imageAlign: PropTypes.string,
   title: PropTypes.string.isRequired,

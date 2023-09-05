@@ -41,7 +41,7 @@ const SectionHeader = styled.h2`
 
 
 const ActionListBlock = (props) => {
-  const { categoryId, color } = props;
+  const { id = '', categoryId, color } = props;
   const { t } = useTranslation();
   const plan = useContext(PlanContext);
   const { loading, error, data } = useQuery(GET_ACTION_LIST_FOR_BLOCK, {
@@ -62,7 +62,7 @@ const ActionListBlock = (props) => {
 
   const heading = t('actions', getActionTermContext(plan));
   return (
-    <ActionListSection color={color}>
+    <ActionListSection id={id} color={color}>
       <Container>
         { heading && (<SectionHeader>{ heading }</SectionHeader>)}
         <ActionCardList
@@ -75,6 +75,7 @@ const ActionListBlock = (props) => {
 };
 
 ActionListBlock.propTypes = {
+  id: PropTypes.string,
   categoryId: PropTypes.string.isRequired,
   color: PropTypes.string
 };

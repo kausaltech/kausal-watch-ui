@@ -11,6 +11,7 @@ import { usePlan } from 'context/plan';
 import CategoryActionList from 'components/actions/CategoryActionList';
 import ErrorMessage from 'components/common/ErrorMessage';
 import { GetCategoriesForTreeMapQuery } from 'common/__generated__/graphql';
+import { CommonContentBlockProps } from 'common/blocks.types';
 
 const CategoryListSection = styled.div`
   background-color: ${(props) => props.theme.neutralLight};
@@ -162,6 +163,7 @@ query GetCategoriesForTreeMap($plan: ID!, $categoryType: ID!, $attributeType: ID
 `;
 
 type CategoryTreeSectionProps = {
+  id?: string;
   heading?: string,
   lead?: string,
   sections: GetCategoriesForTreeMapQuery['planCategories'],
@@ -172,7 +174,7 @@ type CategoryTreeSectionProps = {
   }
 };
 
-const CategoryTreeSection = ({ sections, valueAttribute, heading = 'Categories', hasSidebar }: CategoryTreeSectionProps) => {
+const CategoryTreeSection = ({ id = '', sections, valueAttribute, heading = 'Categories', hasSidebar }: CategoryTreeSectionProps) => {
   // console.log(sections);
   const rootSection = sections.find((sect) => sect.parent === null);
   const [activeCategory, setCategory] = useState(rootSection);
@@ -186,7 +188,7 @@ const CategoryTreeSection = ({ sections, valueAttribute, heading = 'Categories',
     }, [sections, rootSection],
   );
   return (
-    <CategoryListSection>
+    <CategoryListSection id={id}>
       <Container>
         <Row>
         <Col
@@ -228,7 +230,7 @@ const CategoryTreeSection = ({ sections, valueAttribute, heading = 'Categories',
   );
 };
 
-type CategoryTreeBlockProps = {
+interface CategoryTreeBlockProps extends CommonContentBlockProps {
   categoryType: {
     identifier: string,
   },
@@ -243,7 +245,7 @@ type CategoryTreeBlockProps = {
 }
 
 function CategoryTreeBlockBrowser(props: CategoryTreeBlockProps) {
-  const { categories:cats, heading, lead, hasSidebar } = props;
+  const { id = '', categories:cats, heading, lead, hasSidebar } = props;
   const catMap = useMemo(() => (new Map(cats.map((cat) => [cat.id, cat]))), [cats]);
 
   const findFirstAncestorColor = useCallback((id) => {
@@ -267,6 +269,7 @@ function CategoryTreeBlockBrowser(props: CategoryTreeBlockProps) {
 
   return (
     <CategoryTreeSection
+      id={id}
       heading={heading}
       lead={lead}
       sections={augmentedCategories}

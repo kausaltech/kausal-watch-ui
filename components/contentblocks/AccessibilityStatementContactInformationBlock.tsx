@@ -3,9 +3,13 @@ import PropTypes from 'prop-types';
 import { useTranslation } from 'common/i18n';
 import { Container, Row, Col } from 'reactstrap';
 import PlanContext from 'context/plan';
+import { CommonContentBlockProps } from 'common/blocks.types';
 
-const AccessibilityStatementContactInformationBlock = (props) => {
-  const { content } = props;
+interface Props extends CommonContentBlockProps {
+  content: unknown // TODO: Type this prop
+}
+
+const AccessibilityStatementContactInformationBlock = ({ id = '', content }: Props) => {
   const { t, i18n } = useTranslation(['a11y']);
   const plan = useContext(PlanContext);
 
@@ -15,7 +19,7 @@ const AccessibilityStatementContactInformationBlock = (props) => {
   const responsibleBody = publisher || plan.generalContent.ownerName;
 
   return (
-    <Container className="my-2 text-content">
+    <Container id={id} className="my-2 text-content">
       <Row>
         <Col
           xl={{ size: 6, offset: 3 }}

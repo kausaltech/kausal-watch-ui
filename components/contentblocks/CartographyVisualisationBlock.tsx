@@ -4,8 +4,9 @@ import Map, {useControl, useMap, NavigationControl} from 'react-map-gl';
 
 import LegendControl from '@kausal/mapboxgl-legend';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import { CommonContentBlockProps } from 'common/blocks.types';
 
-interface CartographyVisualisationBlockProps {
+interface CartographyVisualisationBlockProps extends CommonContentBlockProps {
   styleUrl: string;
   accessToken: string;
   hasSidebar: boolean;
@@ -87,13 +88,13 @@ const LegendWithOverrides = ({styleOverrides}) => {
 }
 
 const CartographyVisualisationBlock = (props: CartographyVisualisationBlockProps) => {
-  const {styleUrl, accessToken, styleOverrides, hasSidebar} = props;
+  const {id = '', styleUrl, accessToken, styleOverrides, hasSidebar} = props;
   if (accessToken === undefined) {
     console.warn('No access token provided for MapBox visualisation.');
     return null;
   }
   return (
-    <Container>
+    <Container id={id}>
       <Row>
         <Col
           xl={{ size: 8, offset: hasSidebar ? 4 : 2 }}

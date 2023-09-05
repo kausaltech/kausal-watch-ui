@@ -4,13 +4,14 @@ import { Container, Row, Col } from 'reactstrap';
 
 import PlanContext from 'context/plan';
 import FeedbackForm from 'components/common/FeedbackForm';
+import { CommonContentBlockProps } from 'common/blocks.types';
 
-const AccessibilityStatementContactFormBlock = (props) => {
+const AccessibilityStatementContactFormBlock = ({ id = ''}: CommonContentBlockProps) => {
   const { t } = useTranslation(['a11y']);
   const plan = useContext(PlanContext);
 
   return (
-    <Container className="my-2 text-content">
+    <Container id={id} className="my-2 text-content">
       <Row>
         <Col
           xl={{ size: 6, offset: 3 }}

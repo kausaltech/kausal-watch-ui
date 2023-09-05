@@ -281,6 +281,7 @@ ${CategoryListBlock.fragments.category}
 `;
 
 type StreamFieldBlockProps = {
+  id: string;
   page: any,
   block: StreamFieldFragmentFragment,
   color: string,
@@ -288,7 +289,7 @@ type StreamFieldBlockProps = {
 }
 
 function StreamFieldBlock(props: StreamFieldBlockProps) {
-  const { page, block, color, hasSidebar } = props;
+  const { id, page, block, color, hasSidebar } = props;
   const { __typename } = block;
   const plan = useContext(PlanContext);
 
@@ -298,7 +299,7 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
       const COLLAPSIBLE_BREAKPOINT = 1200;
       const isCollapsible = (page.__typename === 'CategoryPage') && (value.length > COLLAPSIBLE_BREAKPOINT);
       return (
-        <Container>
+        <Container id={id}>
           <Row>
             <Col
               xl={{ size: hasSidebar ? 7 : 6, offset: hasSidebar ? 4 : 3 }}
@@ -318,6 +319,7 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
     case 'QuestionAnswerBlock': {
       const { heading, questions } = block;
       return <QuestionAnswerBlock
+                id={id}
                 heading={heading}
                 questions={questions}
                 hasSidebar={hasSidebar}
@@ -325,7 +327,7 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
     }
     case 'CharBlock': {
       const { value } = block;
-      return <Container><Row><Col><div>{value}</div></Col></Row></Container>;
+      return <Container id={id}><Row><Col><div>{value}</div></Col></Row></Container>;
     }
     case 'IndicatorGroupBlock': {
       const { items } = block;
@@ -355,6 +357,7 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
       const fallbackImage = (pageCategory?.image || plan.image);
       return (
         <CategoryListBlock
+          id={id}
           categories={categories}
           color={color}
           fallbackImage={fallbackImage}
@@ -369,6 +372,7 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
       } = block;
       return (
         <FrontPageHeroBlock
+          id={id}
           layout={layout}
           imageSrc={image?.large?.src}
           imageAlign={getBgImageAlignment(image)}
@@ -382,6 +386,7 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
     case 'IndicatorShowcaseBlock': {
       const { indicator, title, body } = block;
       return <IndicatorShowcaseBlock
+                id={id}
                 indicator={indicator}
                 title={title}
                 body={body}
@@ -390,6 +395,7 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
     case 'CardListBlock': {
       const { cards, lead, heading } = block;
       return <CardListBlock
+        id={id}
         cards={cards}
         lead={lead}
         heading={heading}
@@ -397,32 +403,33 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
         />;
     }
     case 'ActionHighlightsBlock': {
-      return <ActionHighlightsBlock />;
+      return <ActionHighlightsBlock id={id} />;
     }
     case 'ActionStatusGraphsBlock': {
-      return <ActionStatusGraphsBlock />;
+      return <ActionStatusGraphsBlock id={id} />;
     }
     case 'IndicatorHighlightsBlock': {
-      return <IndicatorHighlightsBlock />;
+      return <IndicatorHighlightsBlock id={id} />;
     }
     case 'RelatedIndicatorsBlock': {
-      return <RelatedIndicatorsBlock indicators={page?.category?.indicators} />;
+      return <RelatedIndicatorsBlock id={id} indicators={page?.category?.indicators} />;
     }
     case 'RelatedPlanListBlock': {
-      return <RelatedPlanListBlock />;
+      return <RelatedPlanListBlock id={id} />;
     }
     case 'ActionCategoryFilterCardsBlock': {
       const { cards } = block;
-      return <ActionCategoryFilterCardsBlock cards={cards} />;
+      return <ActionCategoryFilterCardsBlock id={id} cards={cards} />;
     }
     case 'CategoryTreeMapBlock': {
       return <CategoryTreeBlock
                 {...block}
+                id={id}
                 hasSidebar={hasSidebar}
               />
     }
     case 'AdaptiveEmbedBlock': {
-      return <Container>
+      return <Container id={id}>
         <Row>
           <Col
             xl={{ size: hasSidebar ? 7 : 6, offset: hasSidebar ? 4 : 3 }}
@@ -439,6 +446,7 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
       const { account, style, styleOverrides } = block;
       const accessToken = account?.publicAccessToken;
       return <CartographyVisualisationBlock
+        id={id}
         styleUrl={style}
         accessToken={accessToken}
         styleOverrides={styleOverrides}
@@ -447,21 +455,21 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
 
     }
     case 'AccessibilityStatementComplianceStatusBlock': {
-      return <AccessibilityStatementComplianceStatusBlock {...block} />
+      return <AccessibilityStatementComplianceStatusBlock {...block} id={id} />
     }
     case 'AccessibilityStatementContactFormBlock': {
-      return <AccessibilityStatementContactFormBlock {...block} />
+      return <AccessibilityStatementContactFormBlock {...block} id={id} />
     }
     case 'AccessibilityStatementContactInformationBlock': {
       const { blocks } = block;
-      return <AccessibilityStatementContactInformationBlock content={blocks}/>
+      return <AccessibilityStatementContactInformationBlock id={id} content={blocks}/>
     }
     case 'AccessibilityStatementPreparationInformationBlock': {
-      return <AccessibilityStatementPreparationInformationBlock {...block}/>
+      return <AccessibilityStatementPreparationInformationBlock {...block} id={id} />
     }
     default:
       return (
-        <div>
+        <div id={id}>
           { `Component for ${__typename} does not exist` }
         </div>
       );
@@ -479,8 +487,9 @@ function StreamField(props: StreamFieldProps) {
   const { page, blocks, color, hasSidebar = false } = props;
   return (
     <>
-      { blocks.map((block) => (
+      { blocks.map((block, index) => (
         <StreamFieldBlock
+          id={`block-${index + 1}`}
           block={block}
           page={page}
           key={block.id}

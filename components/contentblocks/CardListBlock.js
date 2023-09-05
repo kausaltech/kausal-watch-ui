@@ -47,7 +47,7 @@ const CardHeader = styled.h3`
 `;
 
 const CardListBlock = (props) => {
-  const { heading, lead, cards, style } = props;
+  const { id = '', heading, lead, cards, style } = props;
   const theme = useTheme();
 
   const blockStyle = {
@@ -68,7 +68,7 @@ const CardListBlock = (props) => {
 
   // TODO : Summon a key value for cards
   return (
-    <CardListSection backgroundColor={blockStyle.backgroundColor}>
+    <CardListSection id={id} backgroundColor={blockStyle.backgroundColor}>
       <Container>
         { heading && (<SectionHeader color={blockStyle.color}>{ heading }</SectionHeader>)}
         <Content color={blockStyle.color}>{ lead }</Content>

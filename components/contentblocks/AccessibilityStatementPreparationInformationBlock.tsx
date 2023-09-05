@@ -4,8 +4,9 @@ import dayjs from 'common/dayjs';
 import { useTranslation } from 'common/i18n';
 import { Container, Row, Col } from 'reactstrap';
 import accessibilityStatementData from 'public/static/accessibility';
+import { CommonContentBlockProps } from 'common/blocks.types';
 
-const AccessibilityStatementPreparationInformationBlock = (props) => {
+const AccessibilityStatementPreparationInformationBlock = ({ id = '' }: CommonContentBlockProps) => {
   const { t, i18n } = useTranslation(['a11y']);
 
   let locale = i18n.language;
@@ -14,7 +15,7 @@ const AccessibilityStatementPreparationInformationBlock = (props) => {
   }
 
   return (
-    <Container className="my-2 text-content">
+    <Container id={id} className="my-2 text-content">
       <Row>
         <Col
           xl={{ size: 6, offset: 3 }}
