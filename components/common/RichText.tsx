@@ -183,7 +183,7 @@ export default function RichText(props: RichTextProps) {
           return <a href={`${plan.serveFileBaseUrl}${attribs.href}`}>{domToReact(children, options)}</a>;
         }
         // Internal link
-        if (cutHttp(attribs.href.split('.')[0]) === currentDomain) {
+        if (cutHttp(attribs.href.split('.')[0]) === currentDomain || attribs.href.startsWith('#')) {
           return <a href={attribs.href}>{domToReact(children, options)}</a>;
         }
         // Assumed external link, open in new tab
