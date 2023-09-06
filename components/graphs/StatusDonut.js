@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
 import styled from 'styled-components';
 import { useTheme } from 'common/theme';
 import { useTranslation } from 'common/i18n';
 import Card from 'components/common/Card';
 import ContentLoader from 'components/common/ContentLoader';
+import Modal from 'components/common/Modal';
+import Icon from 'components/common/Icon';
 
 const GraphCard = styled.div`
   display: flex;
@@ -14,6 +16,7 @@ const GraphCard = styled.div`
   padding: 1rem;
   margin: 1rem;
   max-width: 260px;
+  cursor: pointer;
 `;
 
 const GraphHeader = styled.h2`
@@ -30,26 +33,51 @@ const HelpText = styled.p`
   line-height: ${(props) => props.theme.lineHeightMd};
 `;
 
-const Plot = dynamic(
-  () => import('./Plot'),
-  {
-    loading: () => <ContentLoader />,
-    ssr: false,
+const PlotWrapper = styled.div`
+  position: relative;
+`;
+
+
+const OpenModalButton = styled.button`
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  width: 30px;
+  height: 30px;
+  align-item: center;
+  justify-content: center;
+  z-index: 2;
+  border: none;
+  font-size: 20px;
+  display: inline-block;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  border-radius: ${(props) => props.theme.btnBorderRadius};
+
+  ${GraphCard}:hover & {
+    opacity: 1;
   }
-);
+  svg  {
+     color: ${(props) => props.theme.themeColors.dark};
+  }
+`;
+
+
+const Plot = dynamic(() => import('./Plot'), {
+  loading: () => <ContentLoader />,
+  ssr: false,
+});
 
 const StatusDonut = (props) => {
-  const {
-    data,
-    currentValue,
-    colors,
-    header,
-    helpText,
-  } = props;
+  const { data, currentValue, colors, header, helpText } = props;
   const theme = useTheme();
   const { i18n } = useTranslation();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
 
-  const isServer = typeof window === "undefined";
+  const isServer = typeof window === 'undefined';
   if (isServer) {
     return null;
   }
@@ -89,7 +117,7 @@ const StatusDonut = (props) => {
     width: 175,
     showlegend: false,
     paper_bgcolor: 'rgba(0,0,0,0)',
-    margin: {"t": 0, "b": 0, "l": 0, "r": 0},
+    margin: { t: 0, b: 0, l: 0, r: 0 },
   };
   const config = {
     displaylogo: false,
@@ -104,12 +132,55 @@ const StatusDonut = (props) => {
       },
     },
   };
+
+  const pieDataWithPercent = {
+    ...pieData,
+    textinfo: 'percent',
+  };
+  const pieLayoutWithLegend = {
+    ...pieLayout,
+    height: 350,
+    width: 350,
+    showlegend: true,
+    legend: {
+      y: 0.9,
+      yanchor: 'auto',
+    },
+  };
+  const configNoButton = {
+    ...config,
+    modeBarButtonsToRemove: ['toImage'],
+  };
   return (
-    <GraphCard>
-      <GraphHeader>{header}</GraphHeader>
-      <HelpText>{ helpText }</HelpText>
-      <Plot data={[pieData]} layout={pieLayout} config={config} />
-    </GraphCard>
+    <>
+      <GraphCard onClick={openModal}>
+        <GraphHeader>{header}</GraphHeader>
+        <HelpText>{helpText}</HelpText>
+        <PlotWrapper>
+        <OpenModalButton onClick={openModal}>
+            <Icon name='arrowUpRightFromSquare'/>
+          </OpenModalButton>
+        <Plot
+          data={[pieData]}
+          layout={pieLayout}
+          config={configNoButton}
+          onClick={openModal}
+        />
+        </PlotWrapper>
+      </GraphCard>
+      <Modal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        header={header}
+        helpText={helpText}
+      >
+        <Plot
+          data={[pieDataWithPercent]}
+          layout={pieLayoutWithLegend}
+          config={config}
+        />
+      </Modal>
+    </>
   );
 };
 
