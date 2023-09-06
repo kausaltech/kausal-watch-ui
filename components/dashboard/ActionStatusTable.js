@@ -161,12 +161,16 @@ const SortableTableHeader = ({children, headerKey, sort, onClick}) => {
     (sort.direction ?? 1) === 1 ? 'sortDown' : 'sortUp' :
     'sort'
   return (
-    <StyledTableHeader onClick={onClick}>
+    <StyledTableHeader
+      onClick={onClick}
+      scope="col"
+      aria-sort={selected ? (sort.direction === 1 ? 'ascending' : 'descending') : 'none'}
+    >
       <HeaderContentWrapper selected={selected}>
         <div>
           { children }
         </div>
-        <TableSortingIcon name={iconName} selected={selected} />
+        <TableSortingIcon name={iconName} selected={selected} aria-hidden="true" />
       </HeaderContentWrapper>
     </StyledTableHeader>
   );
@@ -269,7 +273,9 @@ const ActionStatusTable = (props) => {
       { enableExport && <ActionStatusExport actions={actions} actionStatuses={plan.actionStatuses} /> }
     </ToolBar>
     <TableWrapper>
-    <DashTable role="list">
+    <DashTable
+      aria-rowcount={sortedActions.length}
+    >
       <thead>
         <tr>
           { showColumn.logos && <th className="logo-column" />}
@@ -310,7 +316,13 @@ const ActionStatusTable = (props) => {
       </tbody>
     </DashTable>
     { showTooltip && (
-      <Tooltip ref={setPopperElement} style={styles.popper} {...attributes.popper}>
+      <Tooltip
+        ref={setPopperElement}
+        style={styles.popper}
+        id="table-tooltip-content"
+        role="tooltip"
+        {...attributes.popper}
+      >
         {popperContent}
         <Arrow ref={setArrowElement} style={styles.arrow} />
       </Tooltip>

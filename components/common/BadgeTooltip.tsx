@@ -150,6 +150,7 @@ const BadgeTooltip = (
         ariaLabel={ariaLabel}
         color={color}
         isLink={isLink}
+        aria-describedby={`tt-content-${badgeId}`}
       />
       { tooltip &&
         <Tooltip
@@ -157,6 +158,8 @@ const BadgeTooltip = (
           isOpen={tooltipOpen}
           target={badgeId}
           toggle={toggle}
+          role="tooltip"
+          id={`tt-content-${badgeId}`}
         >
           {tooltip}
         </Tooltip>

@@ -39,6 +39,7 @@ const PopoverTip = (props :PopoverTipProps) => {
         id={id}
         color="link"
         invert={invert.toString()}
+        aria-describedby={`tt-content-${identifier}`}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -58,6 +59,8 @@ const PopoverTip = (props :PopoverTipProps) => {
         isOpen={tooltipOpen}
         autohide={false}
         toggle={toggle}
+        role="tooltip"
+        id={`tt-content-${identifier}`}
       >
         { content }
       </Tooltip>

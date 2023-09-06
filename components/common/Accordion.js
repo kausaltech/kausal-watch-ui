@@ -129,6 +129,8 @@ const LinkCopyButton = React.memo((props) => {
         placement="top"
         isOpen={tooltipOpen}
         target={`tooltip-${identifier}`}
+        id={`tt-content-${identifier}`}
+        role="tooltip"
         toggle={toggle}
       >
         {({ scheduleUpdate }) => (
@@ -141,6 +143,7 @@ const LinkCopyButton = React.memo((props) => {
         text={`${site.hostname}${site.path}#q${identifier}`}
         id={`tooltip-${identifier}`}
         onCopy={onCopy}
+        aria-describedby={`tt-content-${identifier}`}
       >
         <CopyLink
           className="copy-link"

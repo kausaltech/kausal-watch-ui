@@ -41,6 +41,10 @@ const StyledRow = styled.tr`
     }
   }
 
+  th.row-title {
+    font-weight: ${(props) => props.theme.fontWeightNormal};
+  }
+
   a {
     color: ${(props) => props.theme.themeColors.black};
     text-decoration: none;
@@ -282,63 +286,88 @@ const ActionTableRow = React.memo(function ActionTableRow(props) {
         .
       </td>
       )}
-      <td className="has-tooltip">
+      <th
+        scope="row"
+        className="row-title"
+      >
         <ActionLink
           action={item}
           planUrl={planViewUrl}
         >
           { item.name }
         </ActionLink>
-      </td>
+      </th>
       <td
         className="has-tooltip"
-        onMouseEnter={(e)=>
+      >
+        <div
+          role="button"
+          onMouseEnter={(e)=>
           showTooltip(e, phasesTooltipContent(
             t, hasImplementationPhases, actionStatusSummary, item.implementationPhase, item.mergedWith, plan
             ))}
-        onMouseLeave={(e)=> hideTooltip(e)}
-      >
-        <StatusDisplay>
-          { hasImplementationPhases ? (
-            <ActionPhase
-              action={item}
-              status={actionStatusSummary}
-              activePhase={item.implementationPhase}
-              reason={item.manualStatusReason}
-              mergedWith={item.mergedWith?.identifier}
-              phases={plan.actionImplementationPhases}
-              compact
-            />
-          ) : (
-            <StatusBadge
-              statusSummary={actionStatusSummary}
-              plan={plan}
-              statusName={item.mergedWith
-                ? t('actions:action-status-merged', getActionTermContext(plan))
-                : actionStatusSummary.label}
-            />
-          )}
-        </StatusDisplay>
+          onMouseLeave={(e)=> hideTooltip(e)}
+        >
+          <StatusDisplay>
+            { hasImplementationPhases ? (
+              <ActionPhase
+                action={item}
+                status={actionStatusSummary}
+                activePhase={item.implementationPhase}
+                reason={item.manualStatusReason}
+                mergedWith={item.mergedWith?.identifier}
+                phases={plan.actionImplementationPhases}
+                compact
+              />
+            ) : (
+              <StatusBadge
+                statusSummary={actionStatusSummary}
+                plan={plan}
+                statusName={item.mergedWith
+                  ? t('actions:action-status-merged', getActionTermContext(plan))
+                  : actionStatusSummary.label}
+              />
+            )}
+          </StatusDisplay>
+        </div>
       </td>
       <td
         className="has-tooltip"
-        onMouseEnter={(e)=> showTooltip(e, tasksTooltipContent(t, getTaskCounts(item.tasks, t)))}
-        onMouseLeave={(e)=> hideTooltip(e)}
       >
-        <TasksStatusBar
-          tasks={item.tasks}
-        />
+        <div
+          role="button"
+          onMouseEnter={(e)=> showTooltip(e, tasksTooltipContent(t, getTaskCounts(item.tasks, t)))}
+          onMouseLeave={(e)=> hideTooltip(e)}
+          aria-describedby={`tasks-${item.identifier}`}
+        >
+          <TasksStatusBar
+            tasks={item.tasks}
+          />
+        </div>
+        {/* Content for screenreaders */}
+        <div hidden id={`tasks-${item.identifier}`}>
+          { tasksTooltipContent(t, getTaskCounts(item.tasks, t)) }
+        </div>
       </td>
       { hasResponsibles && (
         <td
           className="has-tooltip"
-          onMouseEnter={(e)=> showTooltip(e, responsiblesTooltipContent(t, theme, item.responsibleParties))}
-          onMouseLeave={(e)=> hideTooltip(e)}
         >
-          <ResponsiblesViz
-            parties={item.responsibleParties}
-            persons={item.contactPersons}
-          />
+          <div
+            role="button"
+            onMouseEnter={(e)=> showTooltip(e, responsiblesTooltipContent(t, theme, item.responsibleParties))}
+            onMouseLeave={(e)=> hideTooltip(e)}
+            aria-describedby={`parties-${item.identifier}`}
+          >
+            <ResponsiblesViz
+              parties={item.responsibleParties}
+              persons={item.contactPersons}
+            />
+          </div>
+          {/* Content for screenreaders */}
+          <div hidden id={`parties-${item.identifier}`}>
+            { responsiblesTooltipContent(t, theme, item.responsibleParties) }
+          </div>
         </td>
       )}
       { hasImpacts && (
@@ -355,16 +384,26 @@ const ActionTableRow = React.memo(function ActionTableRow(props) {
               size="sm"
             />
           )}
+          {/* TODO: Tooltip accessibility */}
         </td>
       )}
       { hasIndicators && (
         <td
           className="has-tooltip"
-          onMouseEnter={(e) => showTooltip(e, indicatorsTooltipContent(t, theme, item.relatedIndicators))}
-          onMouseLeave={(e)=> hideTooltip(e)}
         >
+          <div
+            role="button"
+            onMouseEnter={(e) => showTooltip(e, indicatorsTooltipContent(t, theme, item.relatedIndicators))}
+            onMouseLeave={(e)=> hideTooltip(e)}
+            aria-describedby={`indicators-${item.identifier}`}
+          >
           { item.relatedIndicators && !item.mergedWith
             && <IndicatorsViz relatedIndicators={item.relatedIndicators}/>}
+          </div>
+          {/* Content for screenreaders */}
+          <div hidden id={`indicators-${item.identifier}`}>
+            { indicatorsTooltipContent(t, theme, item.relatedIndicators) }
+          </div>
         </td>
       )}
       { hasUpdateStatus && (
