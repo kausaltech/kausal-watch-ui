@@ -1,1 +1,24 @@
-{}
+{
+    "action-num": "#",
+    "action-not-found": "Rīcība nav atrasta",
+    "actions-status": "Rīcības pēc statusa",
+    "actions-updated-help": "Rīcības, kas atjauninātas pēdējo {{count}} dienu laikā",
+    "actions-updated": "Pēdējo reizi atjauninātas aktīvās rīcības",
+    "action-task-done": "Paveikts",
+    "action-status-updates": "Jaunākie atjauninājumi",
+    "feedback-on-action": "Sniedziet atsauksmes par šo rīcība",
+    "action-task-hide-comment": "Paslēpt informāciju",
+    "action-completion-percentage": "Pabeigšana",
+    "action-description": "Apraksts",
+    "action-id": "ID",
+    "action-identifier": "Identifikators",
+    "action-impact": "Ietekme",
+    "action-implementation-phase": "Īstenošanas posms",
+    "action-last-updated": "Atjaunināta informācija",
+    "action-merged": "Apvienotie rīcības",
+    "action-name-title": "Rīcības nosaukums",
+    "actions-phases": "Rīcības pa posmiem",
+    "actions-status-help": "Rīcības, kas tiek veiktas saskaņā ar grafiku",
+    "action-as-in-plan": "Apraksts no sākotnējā plāna",
+    "action-what-effect-this-has": "Kā šī rīcība sekmē rezultātu"
+}
