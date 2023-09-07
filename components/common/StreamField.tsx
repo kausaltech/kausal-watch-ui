@@ -489,7 +489,7 @@ function StreamField(props: StreamFieldProps) {
     <>
       { blocks.map((block, index) => (
         <StreamFieldBlock
-          id={`block-${index + 1}`}
+          id={`section-${index + 1}`}
           block={block}
           page={page}
           key={block.id}
