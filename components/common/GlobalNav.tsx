@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   Collapse,
@@ -10,9 +10,10 @@ import {
   DropdownItem,
   DropdownMenu,
 } from 'reactstrap';
+import debounce from 'lodash/debounce';
 import SVG from 'react-inlinesvg';
 import styled, { withTheme } from 'styled-components';
-import { themeProp } from 'common/theme';
+import { themeProp, useTheme } from 'common/theme';
 import { useScrollPosition } from '@n8tb1t/use-scroll-position';
 import { transparentize } from 'polished';
 import { useTranslation } from 'common/i18n';
@@ -24,6 +25,7 @@ import PlanVersionSelector from 'components/versioning/PlanVersionSelector';
 import LanguageSelector from './LanguageSelector';
 import NavbarSearch from './NavbarSearch';
 import { usePlan } from 'context/plan';
+import { isServer } from 'common/environment';
 
 const TopNav = styled(Navbar)`
   padding: 0;
@@ -306,11 +308,55 @@ DropdownList.propTypes = {
   active: PropTypes.bool,
 };
 
+const NavSpacer = styled.div<{ $height?: number }>`
+  display: block;
+  width: 100%;
+  height: ${({ $height = 0 }) => $height}px;
+`;
+
+/**
+ * Monitors and returns the height of the nav bar to support
+ * rendering a nav spacer. This prevents content from jumping
+ * when the main nav switches from static to fixed.
+ */
+const useNavSpacer = () => {
+  // Ref of the sticky nav bar, this may be the primary or secondary nav depending on screen size
+  const navRef = useRef<HTMLDivElement>(null);
+  const [width, setWidth] = useState(!isServer ? window.innerWidth : 0);
+  const [navHeight, setNavHeight] = useState<number>();
+  const theme = useTheme();
+
+  useEffect(() => {
+    const handleSetNavHeight = () => {
+      if (navRef.current) {
+        setNavHeight(navRef.current.clientHeight);
+      }
+    };
+
+    const handleResize = debounce(() => {
+      setWidth(window.innerWidth);
+      handleSetNavHeight();
+    }, 200);
+
+    window.addEventListener('resize', handleResize);
+    handleSetNavHeight();
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  return {
+    ref: navRef,
+    navHeight,
+    isPrimaryNavSticky: width < parseInt(theme.breakpointMd), // On mobile
+  };
+};
+
 function GlobalNav(props) {
   const { t } = useTranslation();
   const plan = usePlan();
-  const [navIsFixed, setnavIsFixed] = useState(false);
+  const [navIsFixed, setNavIsFixed] = useState(false);
   const [isOpen, toggleOpen] = useState(false);
+  const { ref, navHeight, isPrimaryNavSticky } = useNavSpacer();
   const {
     theme,
     siteTitle,
@@ -335,18 +381,17 @@ function GlobalNav(props) {
     return logoElement;
   };
 
-  if (sticky) {
-    useScrollPosition(
-      ({ prevPos, currPos }) => {
-        const goingUp = currPos.y > prevPos.y && currPos.y < -70;
-        if (goingUp !== navIsFixed) setnavIsFixed(goingUp);
-      },
-      [navIsFixed],
-      null,
-      false,
-      300
-    );
-  }
+  useScrollPosition(
+    ({ prevPos, currPos }) => {
+      if (sticky) {
+        setNavIsFixed(currPos.y > prevPos.y && currPos.y < -70);
+      }
+    },
+    undefined,
+    undefined,
+    false,
+    100
+  );
 
   const homeLink = theme.settings.homeLink || false;
 
@@ -360,124 +405,131 @@ function GlobalNav(props) {
 
   return (
     <div>
-      <TopNav
-        expand="md"
-        id="branding-navigation-bar"
-        aria-label={t('nav-tools')}
-        container={fullwidth ? 'fluid' : true}
-      >
-        <Site>
-          <Link href={rootLink} passHref>
-            <HomeLink hideLogoOnMobile={hideLogoOnMobile.toString()}>
-              <OrgLogo className="org-logo" />
-              <SiteTitle>
-                {theme.navTitleVisible ? siteTitle : '\u00A0'}
-              </SiteTitle>
-            </HomeLink>
-          </Link>
-          <PlanSelector />
-        </Site>
-
-        <Nav navbar className="ml-auto d-none d-md-flex">
-          <NavbarSearch />
-          <LanguageSelector mobile={false} />
-        </Nav>
-        <NavbarToggler
-          onClick={() => toggleOpen(!isOpen)}
-          aria-label={isOpen ? t('nav-menu-close') : t('nav-menu-open')}
-          aria-controls="global-navigation-bar"
-          aria-expanded={isOpen}
-          type="button"
+      <div ref={isPrimaryNavSticky ? ref : undefined}>
+        <TopNav
+          expand="md"
+          fixed={navIsFixed && isPrimaryNavSticky ? 'top' : ''}
+          id="branding-navigation-bar"
+          aria-label={t('nav-tools')}
+          container={fullwidth ? 'fluid' : true}
         >
-          {isOpen ? (
-            <Icon name="times" color={theme.brandNavColor} />
-          ) : (
-            <Icon name="bars" color={theme.brandNavColor} />
-          )}
-        </NavbarToggler>
-      </TopNav>
-      <BotNav
-        expand="md"
-        fixed={navIsFixed ? 'top' : ''}
-        id="global-navigation-bar"
-        container={fullwidth ? 'fluid' : true}
-        aria-label={t('nav-primary')}
-      >
-        <Collapse isOpen={isOpen} navbar>
-          <Nav navbar className="me-auto">
-            {homeLink && (
-              <NavItem active={activeBranch === ''}>
-                <NavLink>
-                  <NavigationLink slug={rootLink}>
-                    <NavHighlighter
-                      className={`highlighter ${
-                        activeBranch === '' ? 'active' : ''
-                      }`}
-                    >
-                      {homeLink === 'icon' ? (
-                        <Icon name="home" width="1.5rem" height="1.5rem" />
-                      ) : (
-                        <span>{t('navigation-home')}</span>
-                      )}
-                    </NavHighlighter>
-                  </NavigationLink>
-                </NavLink>
-              </NavItem>
-            )}
-            {navItems &&
-              navItems.map((page) =>
-                page.children ? (
-                  <DropdownList
-                    parentName={page.name}
-                    items={page.children}
-                    active={page.active}
-                    key={page.slug}
-                  />
-                ) : (
-                  <NavItem key={page.slug} active={page.active}>
-                    <NavLink>
-                      <NavigationLink slug={page.urlPath}>
-                        <NavHighlighter
-                          className={`highlighter ${page.active && 'active'}`}
-                        >
-                          {page.name}
-                        </NavHighlighter>
-                      </NavigationLink>
-                    </NavLink>
-                  </NavItem>
-                )
-              )}
-            {plan.features.enableSearch && (
-              <NavItem className="d-md-none">
-                <NavLink>
-                  <NavigationLink slug="/search">
-                    <NavHighlighter>
-                      <Icon name="search" className="me-2" />
-                      {t('search')}
-                    </NavHighlighter>
-                  </NavigationLink>
-                </NavLink>
-              </NavItem>
-            )}
-            <LanguageSelector mobile="true" />
+          <Site>
+            <Link href={rootLink} passHref>
+              <HomeLink hideLogoOnMobile={hideLogoOnMobile.toString()}>
+                <OrgLogo className="org-logo" />
+                <SiteTitle>
+                  {theme.navTitleVisible ? siteTitle : '\u00A0'}
+                </SiteTitle>
+              </HomeLink>
+            </Link>
+            <PlanSelector />
+          </Site>
+
+          <Nav navbar className="ml-auto d-none d-md-flex">
+            <NavbarSearch />
+            <LanguageSelector mobile={false} />
           </Nav>
-          <Nav navbar>
-            <PlanVersionSelector plan={plan} />
-            {externalItems.length > 0 &&
-              externalItems.map((item, index) => (
-                <NavItem key={`external${index}`}>
+          <NavbarToggler
+            onClick={() => toggleOpen(!isOpen)}
+            aria-label={isOpen ? t('nav-menu-close') : t('nav-menu-open')}
+            aria-controls="global-navigation-bar"
+            aria-expanded={isOpen}
+            type="button"
+          >
+            {isOpen ? (
+              <Icon name="times" color={theme.brandNavColor} />
+            ) : (
+              <Icon name="bars" color={theme.brandNavColor} />
+            )}
+          </NavbarToggler>
+        </TopNav>
+      </div>
+
+      <div ref={!isPrimaryNavSticky ? ref : undefined}>
+        <BotNav
+          expand="md"
+          fixed={navIsFixed && !isPrimaryNavSticky ? 'top' : ''}
+          id="global-navigation-bar"
+          container={fullwidth ? 'fluid' : true}
+          aria-label={t('nav-primary')}
+        >
+          <Collapse isOpen={isOpen} navbar>
+            <Nav navbar className="me-auto">
+              {homeLink && (
+                <NavItem active={activeBranch === ''}>
                   <NavLink>
-                    <NavigationLink slug={item.url}>
-                      <NavHighlighter className="highlighter">
-                        {item.name}
+                    <NavigationLink slug={rootLink}>
+                      <NavHighlighter
+                        className={`highlighter ${
+                          activeBranch === '' ? 'active' : ''
+                        }`}
+                      >
+                        {homeLink === 'icon' ? (
+                          <Icon name="home" width="1.5rem" height="1.5rem" />
+                        ) : (
+                          <span>{t('navigation-home')}</span>
+                        )}
                       </NavHighlighter>
                     </NavigationLink>
                   </NavLink>
                 </NavItem>
-              ))}
-          </Nav>
-        </Collapse>
-      </BotNav>
+              )}
+              {navItems &&
+                navItems.map((page) =>
+                  page.children ? (
+                    <DropdownList
+                      parentName={page.name}
+                      items={page.children}
+                      active={page.active}
+                      key={page.slug}
+                    />
+                  ) : (
+                    <NavItem key={page.slug} active={page.active}>
+                      <NavLink>
+                        <NavigationLink slug={page.urlPath}>
+                          <NavHighlighter
+                            className={`highlighter ${page.active && 'active'}`}
+                          >
+                            {page.name}
+                          </NavHighlighter>
+                        </NavigationLink>
+                      </NavLink>
+                    </NavItem>
+                  )
+                )}
+              {plan.features.enableSearch && (
+                <NavItem className="d-md-none">
+                  <NavLink>
+                    <NavigationLink slug="/search">
+                      <NavHighlighter>
+                        <Icon name="search" className="me-2" />
+                        {t('search')}
+                      </NavHighlighter>
+                    </NavigationLink>
+                  </NavLink>
+                </NavItem>
+              )}
+              <LanguageSelector mobile="true" />
+            </Nav>
+            <Nav navbar>
+              <PlanVersionSelector plan={plan} />
+              {externalItems.length > 0 &&
+                externalItems.map((item, index) => (
+                  <NavItem key={`external${index}`}>
+                    <NavLink>
+                      <NavigationLink slug={item.url}>
+                        <NavHighlighter className="highlighter">
+                          {item.name}
+                        </NavHighlighter>
+                      </NavigationLink>
+                    </NavLink>
+                  </NavItem>
+                ))}
+            </Nav>
+          </Collapse>
+        </BotNav>
+      </div>
+      {navIsFixed && <NavSpacer $height={navHeight} />}
     </div>
   );
 }
