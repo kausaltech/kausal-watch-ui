@@ -23,7 +23,7 @@ const FaqSection = styled.section`
 `;
 
 const QuestionAnswerBlock = (props) => {
-  const { heading, questions, hasSidebar } = props;
+  const { id = '', heading, questions, hasSidebar } = props;
   if (questions == null) {
     return null;
   }
@@ -32,7 +32,7 @@ const QuestionAnswerBlock = (props) => {
     ...question,
   }));
   return (
-    <FaqSection>
+    <FaqSection id={id}>
       <Container>
         <Row>
           <Col
@@ -65,6 +65,8 @@ QuestionAnswerBlock.defaultProps = {
 };
 
 QuestionAnswerBlock.propTypes = {
+  id: PropTypes.string,
+  hasSidebar: PropTypes.bool,
   heading: PropTypes.string,
   questions: PropTypes.arrayOf(PropTypes.object),
 };

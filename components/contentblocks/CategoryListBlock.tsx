@@ -9,6 +9,7 @@ import Card from 'components/common/Card';
 import { MultiUseImageFragmentFragment } from 'common/__generated__/graphql';
 import { useFallbackCategories } from 'context/categories';
 import { gql } from '@apollo/client';
+import { CommonContentBlockProps } from 'common/blocks.types';
 
 const CATEGORY_FRAGMENT = gql`
   fragment CategoryListCategory on Category {
@@ -129,22 +130,26 @@ export type CategoryListBlockCategory = {
   }
 }
 
-type CategoryListBlockProps = {
-    categories?: Array<CategoryListBlockCategory>,
-    fallbackImage: MultiUseImageFragmentFragment,
-    heading?: string,
-    lead: string,
-    style?: "treemap" | "cards",
+interface CategoryListBlockProps extends CommonContentBlockProps {
+  categories?: Array<CategoryListBlockCategory>,
+  fallbackImage: MultiUseImageFragmentFragment,
+  heading?: string,
+  lead: string,
+  style?: "treemap" | "cards",
 }
 
 const CategoryListBlock = (props: CategoryListBlockProps) => {
-  let { categories } = props;
-  const { fallbackImage, heading, lead } = props;
   const fallbackCategories = useFallbackCategories();
+  const {
+    id = '',
+    fallbackImage,
+    heading,
+    lead,
+    categories = fallbackCategories,
+  } = props;
 
-  if (!categories) categories = fallbackCategories;
   return (
-    <CategoryListSection>
+    <CategoryListSection id={id}>
       <Container>
         { heading && (<SectionHeader>{ heading }</SectionHeader>)}
         <RichText html={lead} className="lead-text" />

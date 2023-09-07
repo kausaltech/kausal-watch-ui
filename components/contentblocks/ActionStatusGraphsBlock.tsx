@@ -9,31 +9,32 @@ import PlanContext from 'context/plan';
 import { useTheme } from 'common/theme';
 import { useTranslation } from 'common/i18n';
 import ActionStatusGraphs from 'components/dashboard/ActionStatusGraphs';
+import { CommonContentBlockProps } from 'common/blocks.types';
 
 const GET_ACTION_LIST_FOR_GRAPHS = gql`
-query GetActionListForGraphs($plan: ID!) {
-  planActions(plan: $plan) {
-    color
-    statusSummary {
-      identifier
-    }
-    timeliness {
-      identifier
-    }
-    implementationPhase {
-      identifier
-      name
+  query GetActionListForGraphs($plan: ID!) {
+    planActions(plan: $plan) {
+      color
+      statusSummary {
+        identifier
+      }
+      timeliness {
+        identifier
+      }
+      implementationPhase {
+        identifier
+        name
+      }
     }
   }
-}
-`
+`;
 
-const ActionStatusGraphsBlock = () => {
+const ActionStatusGraphsBlock = ({ id = '' }: CommonContentBlockProps) => {
   const plan = useContext(PlanContext);
   const { t } = useTranslation();
   const theme = useTheme();
 
-   // add plan.feature.showActionUpdateStatus to backend
+  // add plan.feature.showActionUpdateStatus to backend
   const showUpdateStatus = theme.settings.dashboard?.showActionUpdateStatus;
 
   const { loading, error, data } = useQuery(GET_ACTION_LIST_FOR_GRAPHS, {
@@ -47,9 +48,18 @@ const ActionStatusGraphsBlock = () => {
   if (!planActions) {
     return <ErrorMessage statusCode={404} message={t('page-not-found')} />;
   }
-  return <Container><Row><Col xl={{size: 8, offset: 2}} lg={{ size: 10, offset: 1}}>
-    <ActionStatusGraphs actions={planActions} showUpdateStatus={showUpdateStatus} />
-  </Col></Row></Container>
-}
+  return (
+    <Container id={id}>
+      <Row>
+        <Col xl={{ size: 8, offset: 2 }} lg={{ size: 10, offset: 1 }}>
+          <ActionStatusGraphs
+            actions={planActions}
+            showUpdateStatus={showUpdateStatus}
+          />
+        </Col>
+      </Row>
+    </Container>
+  );
+};
 
 export default ActionStatusGraphsBlock;

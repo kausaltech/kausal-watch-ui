@@ -28,7 +28,7 @@ const IndicatorShowcase = styled.div`
 `;
 
 const IndicatorShowcaseBlock = (props) => {
-  const { indicator, title, body } = props;
+  const { id = '', indicator, title, body } = props;
   // Animation hook:  trigger when visible on screen
   const { ref, inView, entry } = useInView({
     triggerOnce: true,
@@ -37,7 +37,7 @@ const IndicatorShowcaseBlock = (props) => {
   const indicatorHasGoal = indicator.goals.length > 0;
 
   return (
-    <IndicatorShowcase>
+    <IndicatorShowcase id={id}>
       <Container>
         <Row>
           <Col
@@ -76,6 +76,7 @@ const IndicatorShowcaseBlock = (props) => {
   */
 
 IndicatorShowcaseBlock.propTypes = {
+  id: PropTypes.string,
   indicator: PropTypes.shape({
     id: PropTypes.string,
   }).isRequired,

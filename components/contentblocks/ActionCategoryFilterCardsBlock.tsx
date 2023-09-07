@@ -7,6 +7,7 @@ import { getBgImageAlignment } from 'common/images';
 import { Link } from 'common/links';
 import CategoryTreeBlock from 'components/contentblocks/CategoryTreeBlock';
 import Card from 'components/common/Card';
+import { CommonContentBlockProps } from 'common/blocks.types';
 
 
 const CategoryListSection = styled.div`
@@ -55,11 +56,14 @@ const Identifier = styled.span`
   color: ${(props) => props.theme.graphColors.grey050};
 `;
 
-const CategoryListBlock = (props) => {
-  const { cards } = props;
+interface Props extends CommonContentBlockProps {
+  cards: unknown // TODO: Type this prop
+}
+
+const CategoryListBlock = ({ id = '', cards }: Props) => {
   const theme = useTheme();
   return (
-    <CategoryListSection bg={theme.themeColors.dark}>
+    <CategoryListSection id={id} bg={theme.themeColors.dark}>
       <Container>
         <Row tag="ul" className="justify-content-center">
           { cards?.map((card) => (

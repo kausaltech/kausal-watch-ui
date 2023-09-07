@@ -43,9 +43,9 @@ const IndicatorItem = (props) => {
 };
 
 const RelatedIndicatorsblock = (props) => {
-  const { indicators } = props;
+  const { id = '', indicators } = props;
   return (
-    <IndicatorGraphSection>
+    <IndicatorGraphSection id={id}>
       <Container>
         <Row className="align-items-end">
           { indicators?.map((item) => (
@@ -62,6 +62,7 @@ const RelatedIndicatorsblock = (props) => {
 };
 
 RelatedIndicatorsblock.propTypes = {
+  id: PropTypes.string,
   indicators: PropTypes.arrayOf(
     PropTypes.shape(),
   ).isRequired,

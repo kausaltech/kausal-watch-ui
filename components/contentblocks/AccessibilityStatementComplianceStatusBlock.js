@@ -4,7 +4,7 @@ import { useTranslation } from 'common/i18n';
 import { Container, Row, Col } from 'reactstrap';
 import accessibilityStatementData from 'public/static/accessibility';
 
-const AccessibilityStatementComplianceStatusBlock = (props) => {
+const AccessibilityStatementComplianceStatusBlock = ({ id = '' }) => {
   const { t, i18n } = useTranslation(['a11y']);
 
   let locale = i18n.language;
@@ -16,7 +16,7 @@ const AccessibilityStatementComplianceStatusBlock = (props) => {
   const complianceStatusText = t(`a11y:${complianceStatus}-compliant`);
 
   return (
-    <Container className="my-2 text-content">
+    <Container id={id} className="my-2 text-content">
       <Row>
         <Col
           xl={{ size: 6, offset: 3 }}
