@@ -1,8 +1,14 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Collapse, Navbar, Nav, NavItem,
-  UncontrolledDropdown, DropdownToggle, DropdownItem, DropdownMenu,
+  Collapse,
+  Navbar,
+  Nav,
+  NavItem,
+  UncontrolledDropdown,
+  DropdownToggle,
+  DropdownItem,
+  DropdownMenu,
 } from 'reactstrap';
 import SVG from 'react-inlinesvg';
 import styled, { withTheme } from 'styled-components';
@@ -33,7 +39,7 @@ const TopNav = styled(Navbar)`
 const BotNav = styled(Navbar)`
   background-color: ${(props) => props.theme.themeColors.white};
   padding: 0;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.07);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.07);
 
   .container {
     flex-wrap: nowrap;
@@ -57,7 +63,8 @@ const BotNav = styled(Navbar)`
 const SiteTitle = styled.div`
   font-size: ${(props) => props.theme.fontSizeBase};
   line-height: 1;
-  padding: ${(props) => props.theme.spaces.s150} 0 ${(props) => props.theme.spaces.s150};
+  padding: ${(props) => props.theme.spaces.s150} 0
+    ${(props) => props.theme.spaces.s150};
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     font-size: ${(props) => props.theme.fontSizeMd};
@@ -84,60 +91,62 @@ const HomeLink = styled.a`
   }
 
   svg {
-      display: ${(props) => props.hideLogoOnMobile === 'true' ? 'none' : 'block'};
-      max-width: 6em;
-      height: ${(props) => props.theme.spaces.s200};
-      margin: ${(props) => props.theme.spaces.s050}
-              ${(props) => props.theme.spaces.s100}
-              ${(props) => props.theme.spaces.s050}
-              0;
+    display: ${(props) =>
+      props.hideLogoOnMobile === 'true' ? 'none' : 'block'};
+    max-width: 6em;
+    height: ${(props) => props.theme.spaces.s200};
+    margin: ${(props) => props.theme.spaces.s050}
+      ${(props) => props.theme.spaces.s100}
+      ${(props) => props.theme.spaces.s050} 0;
   }
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     svg {
-    display: block;
-    max-width: 10em;
-    height: calc(${(props) => props.theme.spaces.s200} + ${(props) => props.theme.spaces.s050});
-    margin: ${(props) => props.theme.spaces.s050}
-          ${(props) => props.theme.spaces.s150}
+      display: block;
+      max-width: 10em;
+      height: calc(
+        ${(props) => props.theme.spaces.s200} +
           ${(props) => props.theme.spaces.s050}
-          0;
+      );
+      margin: ${(props) => props.theme.spaces.s050}
+        ${(props) => props.theme.spaces.s150}
+        ${(props) => props.theme.spaces.s050} 0;
     }
   }
 `;
 
 const EmptyLogo = styled.div`
-      width: 0;
-      height: ${(props) => props.theme.spaces.s200};
-      margin: ${(props) => props.theme.spaces.s050}
-              0
-              ${(props) => props.theme.spaces.s050}
-              0;
+  width: 0;
+  height: ${(props) => props.theme.spaces.s200};
+  margin: ${(props) => props.theme.spaces.s050} 0
+    ${(props) => props.theme.spaces.s050} 0;
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     width: 0;
-    height: calc(${(props) => props.theme.spaces.s200} + ${(props) => props.theme.spaces.s050});
-    margin: ${(props) => props.theme.spaces.s050}
-          0
-          ${(props) => props.theme.spaces.s050}
-          0;
+    height: calc(
+      ${(props) => props.theme.spaces.s200} +
+        ${(props) => props.theme.spaces.s050}
+    );
+    margin: ${(props) => props.theme.spaces.s050} 0
+      ${(props) => props.theme.spaces.s050} 0;
   }
 `;
 
 const NavLink = styled.div`
   a {
     display: block;
-    margin: 0 0 ${(props) => props.theme.spaces.s050} ${(props) => props.theme.spaces.s100};
+    margin: 0 0 ${(props) => props.theme.spaces.s050}
+      ${(props) => props.theme.spaces.s100};
     color: ${(props) => props.theme.neutralDark};
 
     &:hover {
-        text-decoration: none;
-        color: ${(props) => props.theme.neutralDark};
+      text-decoration: none;
+      color: ${(props) => props.theme.neutralDark};
 
-        .highlighter {
-          border-bottom: 5px solid ${(props) => props.theme.brandDark};
-        }
+      .highlighter {
+        border-bottom: 5px solid ${(props) => props.theme.brandDark};
       }
+    }
 
     @media (min-width: ${(props) => props.theme.breakpointMd}) {
       align-self: flex-end;
@@ -148,7 +157,8 @@ const NavLink = styled.div`
 
 const NavHighlighter = styled.span`
   display: inline-block;
-  padding: ${(props) => props.theme.spaces.s050} 0 calc(${(props) => props.theme.spaces.s050} - 5px);
+  padding: ${(props) => props.theme.spaces.s050} 0
+    calc(${(props) => props.theme.spaces.s050} - 5px);
   border-bottom: 5px solid transparent;
   transition: border 200ms;
 
@@ -157,7 +167,8 @@ const NavHighlighter = styled.span`
   }
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
-    padding: ${(props) => props.theme.spaces.s150} 0 calc(${(props) => props.theme.spaces.s150} - 5px);
+    padding: ${(props) => props.theme.spaces.s150} 0
+      calc(${(props) => props.theme.spaces.s150} - 5px);
   }
 
   .icon {
@@ -168,7 +179,8 @@ const NavHighlighter = styled.span`
 const StyledDropdownToggle = styled(DropdownToggle)`
   display: block;
   padding: 0;
-  margin: 0 0 ${(props) => props.theme.spaces.s100} ${(props) => props.theme.spaces.s100};
+  margin: 0 0 ${(props) => props.theme.spaces.s100}
+    ${(props) => props.theme.spaces.s100};
   color: ${(props) => props.theme.neutralDark};
 
   &:hover {
@@ -219,7 +231,8 @@ const StyledDropdown = styled(UncontrolledDropdown)`
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     .dropdown-menu {
       background-color: ${(props) => props.theme.themeColors.white};
-      box-shadow: 3px 3px 6px 2px ${(props) => transparentize(0.85, props.theme.themeColors.black)}};
+      box-shadow: 3px 3px 6px 2px ${(props) =>
+        transparentize(0.85, props.theme.themeColors.black)}};
     }
 
     .dropdown-item {
@@ -252,31 +265,25 @@ const NavbarToggler = styled.button`
 function DropdownList(props) {
   const { parentName, items, active } = props;
   return (
-    <StyledDropdown
-      nav
-      inNavbar
-      className={active && 'active'}
-    >
-      <StyledDropdownToggle
-        nav
-        caret
-      >
+    <StyledDropdown nav inNavbar className={active && 'active'}>
+      <StyledDropdownToggle nav caret>
         <NavHighlighter className={`highlighter ${active && 'active'}`}>
-          { parentName }
+          {parentName}
         </NavHighlighter>
       </StyledDropdownToggle>
       <DropdownMenu end>
-        { items && items.map((child) => (
-          <DropdownItem key={child.id}>
-            <NavLink>
-              <NavigationLink slug={child.urlPath}>
-                <NavHighlighter className="highlighter">
-                  {child.name}
-                </NavHighlighter>
-              </NavigationLink>
-            </NavLink>
-          </DropdownItem>
-        ))}
+        {items &&
+          items.map((child) => (
+            <DropdownItem key={child.id}>
+              <NavLink>
+                <NavigationLink slug={child.urlPath}>
+                  <NavHighlighter className="highlighter">
+                    {child.name}
+                  </NavHighlighter>
+                </NavigationLink>
+              </NavLink>
+            </DropdownItem>
+          ))}
       </DropdownMenu>
     </StyledDropdown>
   );
@@ -288,12 +295,14 @@ DropdownList.defaultProps = {
 
 DropdownList.propTypes = {
   parentName: PropTypes.string.isRequired,
-  items: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.string,
-    name: PropTypes.string,
-    slug: PropTypes.string,
-    children: PropTypes.node,
-  })).isRequired,
+  items: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string,
+      name: PropTypes.string,
+      slug: PropTypes.string,
+      children: PropTypes.node,
+    })
+  ).isRequired,
   active: PropTypes.bool,
 };
 
@@ -303,19 +312,26 @@ function GlobalNav(props) {
   const [navIsFixed, setnavIsFixed] = useState(false);
   const [isOpen, toggleOpen] = useState(false);
   const {
-    theme, siteTitle, ownerName, navItems, externalItems,
-    fullwidth, sticky, activeBranch,
+    theme,
+    siteTitle,
+    ownerName,
+    navItems,
+    externalItems,
+    fullwidth,
+    sticky,
+    activeBranch,
   } = props;
 
   const OrgLogo = () => {
-    const logoElement = theme.navLogoVisible
-      ? (
-        <SVG
-          src={theme.themeLogoUrl}
-          title={`${ownerName}, ${siteTitle} ${t('front-page')}`}
-          preserveAspectRatio="xMinYMid meet"
-        />
-      ) : <EmptyLogo />;
+    const logoElement = theme.navLogoVisible ? (
+      <SVG
+        src={theme.themeLogoUrl}
+        title={`${ownerName}, ${siteTitle} ${t('front-page')}`}
+        preserveAspectRatio="xMinYMid meet"
+      />
+    ) : (
+      <EmptyLogo />
+    );
     return logoElement;
   };
 
@@ -328,16 +344,18 @@ function GlobalNav(props) {
       [navIsFixed],
       null,
       false,
-      300,
+      300
     );
   }
 
   const homeLink = theme.settings.homeLink || false;
 
-  const siblings = plan.allRelatedPlans.filter((pl) => pl.id !== plan.parent?.id);
+  const siblings = plan.allRelatedPlans.filter(
+    (pl) => pl.id !== plan.parent?.id
+  );
   const hideLogoOnMobile = theme.navTitleVisible && siblings.length;
 
-  const displayTitle = plan.parent ? plan.parent.name  : siteTitle;
+  const displayTitle = plan.parent ? plan.parent.name : siteTitle;
   const rootLink = plan.parent ? plan.parent.viewUrl : '/';
 
   return (
@@ -353,18 +371,17 @@ function GlobalNav(props) {
             <HomeLink hideLogoOnMobile={hideLogoOnMobile.toString()}>
               <OrgLogo className="org-logo" />
               <SiteTitle>
-                { theme.navTitleVisible ? siteTitle : '\u00A0' }
+                {theme.navTitleVisible ? siteTitle : '\u00A0'}
               </SiteTitle>
             </HomeLink>
           </Link>
           <PlanSelector />
         </Site>
 
-
-          <Nav navbar className="ml-auto d-none d-md-flex">
-            <NavbarSearch />
-            <LanguageSelector mobile={false} />
-          </Nav>
+        <Nav navbar className="ml-auto d-none d-md-flex">
+          <NavbarSearch />
+          <LanguageSelector mobile={false} />
+        </Nav>
         <NavbarToggler
           onClick={() => toggleOpen(!isOpen)}
           aria-label={isOpen ? t('nav-menu-close') : t('nav-menu-open')}
@@ -372,11 +389,12 @@ function GlobalNav(props) {
           aria-expanded={isOpen}
           type="button"
         >
-          { isOpen
-            ? <Icon name="times" color={theme.brandNavColor} />
-            : <Icon name="bars" color={theme.brandNavColor} /> }
+          {isOpen ? (
+            <Icon name="times" color={theme.brandNavColor} />
+          ) : (
+            <Icon name="bars" color={theme.brandNavColor} />
+          )}
         </NavbarToggler>
-
       </TopNav>
       <BotNav
         expand="md"
@@ -387,22 +405,28 @@ function GlobalNav(props) {
       >
         <Collapse isOpen={isOpen} navbar>
           <Nav navbar className="me-auto">
-            { homeLink && (
+            {homeLink && (
               <NavItem active={activeBranch === ''}>
                 <NavLink>
                   <NavigationLink slug={rootLink}>
-                    <NavHighlighter className={`highlighter ${activeBranch === '' ? 'active' : ''}`}>
-                      { homeLink === 'icon'
-                        ? <Icon name="home" width="1.5rem" height="1.5rem" />
-                        : <span>{t('navigation-home')}</span> }
+                    <NavHighlighter
+                      className={`highlighter ${
+                        activeBranch === '' ? 'active' : ''
+                      }`}
+                    >
+                      {homeLink === 'icon' ? (
+                        <Icon name="home" width="1.5rem" height="1.5rem" />
+                      ) : (
+                        <span>{t('navigation-home')}</span>
+                      )}
                     </NavHighlighter>
                   </NavigationLink>
                 </NavLink>
               </NavItem>
             )}
-            { navItems && navItems.map((page) => (
-              page.children
-                ? (
+            {navItems &&
+              navItems.map((page) =>
+                page.children ? (
                   <DropdownList
                     parentName={page.name}
                     items={page.children}
@@ -413,15 +437,17 @@ function GlobalNav(props) {
                   <NavItem key={page.slug} active={page.active}>
                     <NavLink>
                       <NavigationLink slug={page.urlPath}>
-                        <NavHighlighter className={`highlighter ${page.active && 'active'}`}>
+                        <NavHighlighter
+                          className={`highlighter ${page.active && 'active'}`}
+                        >
                           {page.name}
                         </NavHighlighter>
                       </NavigationLink>
                     </NavLink>
                   </NavItem>
                 )
-            ))}
-            { plan.features.enableSearch && (
+              )}
+            {plan.features.enableSearch && (
               <NavItem className="d-md-none">
                 <NavLink>
                   <NavigationLink slug="/search">
@@ -433,23 +459,22 @@ function GlobalNav(props) {
                 </NavLink>
               </NavItem>
             )}
-            <LanguageSelector mobile="true"/>
+            <LanguageSelector mobile="true" />
           </Nav>
           <Nav navbar>
-            <PlanVersionSelector
-              plan={plan}
-            />
-            { externalItems.length > 0 && externalItems.map((item, index) => (
-              <NavItem key={`external${index}`}>
-                <NavLink>
-                  <NavigationLink slug={item.url}>
-                    <NavHighlighter className="highlighter">
-                      {item.name}
-                    </NavHighlighter>
-                  </NavigationLink>
-                </NavLink>
-              </NavItem>
-            ))}
+            <PlanVersionSelector plan={plan} />
+            {externalItems.length > 0 &&
+              externalItems.map((item, index) => (
+                <NavItem key={`external${index}`}>
+                  <NavLink>
+                    <NavigationLink slug={item.url}>
+                      <NavHighlighter className="highlighter">
+                        {item.name}
+                      </NavHighlighter>
+                    </NavigationLink>
+                  </NavLink>
+                </NavItem>
+              ))}
           </Nav>
         </Collapse>
       </BotNav>
@@ -468,21 +493,25 @@ GlobalNav.propTypes = {
   activeBranch: PropTypes.string.isRequired,
   siteTitle: PropTypes.string.isRequired,
   ownerName: PropTypes.string,
-  navItems: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.string,
-    name: PropTypes.string,
-    slug: PropTypes.string,
-    urlPath: PropTypes.string,
-    active: PropTypes.bool,
-    children: PropTypes.arrayOf(PropTypes.shape),
-  })).isRequired,
+  navItems: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string,
+      name: PropTypes.string,
+      slug: PropTypes.string,
+      urlPath: PropTypes.string,
+      active: PropTypes.bool,
+      children: PropTypes.arrayOf(PropTypes.shape),
+    })
+  ).isRequired,
   theme: themeProp.isRequired,
   fullwidth: PropTypes.bool,
   sticky: PropTypes.bool,
-  externalItems: PropTypes.arrayOf(PropTypes.shape({
-    name: PropTypes.string,
-    url: PropTypes.string,
-  })),
+  externalItems: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string,
+      url: PropTypes.string,
+    })
+  ),
 };
 
 export default withTheme(React.memo(GlobalNav));
