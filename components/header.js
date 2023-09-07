@@ -7,6 +7,7 @@ import GlobalNav from 'components/common/GlobalNav';
 import SkipToContent from 'components/common/SkipToContent';
 import ApplicationStateBanner from 'components/common/ApplicationStateBanner';
 import { getActiveBranch } from 'common/links';
+import { useTheme } from 'common/theme';
 
 const getMenuStructure = (pages, rootId, activeBranch) => {
   const menuLevelItems = [];
@@ -28,6 +29,7 @@ const getMenuStructure = (pages, rootId, activeBranch) => {
 function Header({ siteTitle }) {
   const plan = useContext(PlanContext);
   const site = useContext(SiteContext);
+  const theme = useTheme();
   const activeBranch = getActiveBranch();
 
   const navLinks = useMemo(() => {
@@ -72,6 +74,7 @@ function Header({ siteTitle }) {
         }
         navItems={navLinks}
         externalItems={externalLinks}
+        sticky={theme.settings.stickyNavigation}
       />
     </header>
   );
