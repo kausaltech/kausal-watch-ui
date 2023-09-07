@@ -79,7 +79,7 @@
     "dev": "node server.mjs",
     "build": "next build",
     "start": "NODE_ENV=production node server.mjs",
-    "postinstall": "patch-package",
+    "postinstall": "patch-package && husky install",
     "storybook": "start-storybook -p 6006 -s ./public",
     "build-storybook": "build-storybook -s ./public",
     "deploy-storybook": "storybook-to-ghpages",
@@ -127,10 +127,12 @@
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-jsx-a11y": "^6.5.1",
     "eslint-plugin-react": "^7.29.4",
+    "husky": "^8.0.3",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^28.0.3",
     "jest-dom": "^4.0.0",
     "jest-environment-jsdom": "^28.1.0",
+    "lint-staged": "^14.0.1",
     "prettier": "^2.6.2",
     "react-color": "^2.19.3",
     "regenerator-runtime": "^0.13.9",
@@ -154,5 +156,8 @@
   "packageManager": "yarn@3.2.1",
   "optionalDependencies": {
     "@kausal/themes-private": "^0.2.59"
+  },
+  "lint-staged": {
+    "*.{tsx,ts,js,css,scss,md,json}": "prettier --write"
   }
 }
