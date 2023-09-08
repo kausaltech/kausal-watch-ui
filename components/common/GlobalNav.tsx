@@ -19,6 +19,7 @@ import { transparentize } from 'polished';
 import { useTranslation } from 'common/i18n';
 import { NavigationLink, Link } from 'common/links';
 
+import type { Theme } from '@kausal/themes/types';
 import Icon from './Icon';
 import PlanSelector from 'components/plans/PlanSelector';
 import PlanVersionSelector from 'components/versioning/PlanVersionSelector';
@@ -38,10 +39,19 @@ const TopNav = styled(Navbar)`
   }
 `;
 
-const BotNav = styled(Navbar)`
+const BotNav = styled(Navbar)<{ $offsetTop?: number }>`
   background-color: ${(props) => props.theme.themeColors.white};
   padding: 0;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.07);
+
+  ${({ $offsetTop }) =>
+    !!$offsetTop &&
+    `
+    // Allow secondary nav to be scrolled when expanded
+    max-height: calc(100vh - ${$offsetTop}px);
+    overflow: scroll;
+    top: ${$offsetTop}px;
+  `}
 
   .container {
     flex-wrap: nowrap;
@@ -314,49 +324,76 @@ const NavSpacer = styled.div<{ $height?: number }>`
   height: ${({ $height = 0 }) => $height}px;
 `;
 
+const getIsPrimaryNavSticky = (theme: Theme, width: number) =>
+  width < parseInt(theme.breakpointMd);
+
 /**
  * Monitors and returns the height of the nav bar to support
  * rendering a nav spacer. This prevents content from jumping
  * when the main nav switches from static to fixed.
  */
-const useNavSpacer = () => {
-  // Ref of the sticky nav bar, this may be the primary or secondary nav depending on screen size
-  const navRef = useRef<HTMLDivElement>(null);
+const useStickyNavigation = (isStickyEnabled: boolean = false) => {
+  const primaryNavRef = useRef<HTMLDivElement>(null);
+  const secondaryNavRef = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(!isServer ? window.innerWidth : 0);
+  const [isNavFixed, setIsNavFixed] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [navHeight, setNavHeight] = useState<number>();
   const theme = useTheme();
 
+  const isPrimaryNavSticky = getIsPrimaryNavSticky(theme, width);
+
   useEffect(() => {
-    const handleSetNavHeight = () => {
-      if (navRef.current) {
-        setNavHeight(navRef.current.clientHeight);
-      }
+    if (!isStickyEnabled) {
+      return;
+    }
+
+    const handleSetNavHeight = (width: number) => {
+      const navRef = getIsPrimaryNavSticky(theme, width)
+        ? primaryNavRef
+        : secondaryNavRef;
+
+      setNavHeight((height) => navRef.current?.clientHeight || height);
     };
 
     const handleResize = debounce(() => {
+      handleSetNavHeight(window.innerWidth);
       setWidth(window.innerWidth);
-      handleSetNavHeight();
+      setIsOpen(false);
     }, 200);
 
+    handleSetNavHeight(window.innerWidth);
     window.addEventListener('resize', handleResize);
-    handleSetNavHeight();
 
     return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  }, [isStickyEnabled, theme]);
+
+  useScrollPosition(
+    ({ prevPos, currPos }) => {
+      if (isStickyEnabled && !isOpen) {
+        setIsNavFixed(currPos.y > prevPos.y && currPos.y < -70);
+      }
+    },
+    [isStickyEnabled, isOpen, isNavFixed],
+    undefined,
+    false,
+    100
+  );
 
   return {
-    ref: navRef,
+    isOpen,
+    setIsOpen,
+    isNavFixed,
     navHeight,
-    isPrimaryNavSticky: width < parseInt(theme.breakpointMd), // On mobile
+    primaryNavRef,
+    secondaryNavRef,
+    isPrimaryNavSticky,
   };
 };
 
 function GlobalNav(props) {
   const { t } = useTranslation();
   const plan = usePlan();
-  const [navIsFixed, setNavIsFixed] = useState(false);
-  const [isOpen, toggleOpen] = useState(false);
-  const { ref, navHeight, isPrimaryNavSticky } = useNavSpacer();
   const {
     theme,
     siteTitle,
@@ -367,6 +404,15 @@ function GlobalNav(props) {
     sticky,
     activeBranch,
   } = props;
+  const {
+    isOpen,
+    setIsOpen,
+    isNavFixed,
+    navHeight,
+    primaryNavRef,
+    secondaryNavRef,
+    isPrimaryNavSticky,
+  } = useStickyNavigation(sticky);
 
   const OrgLogo = () => {
     const logoElement = theme.navLogoVisible ? (
@@ -381,18 +427,6 @@ function GlobalNav(props) {
     return logoElement;
   };
 
-  useScrollPosition(
-    ({ prevPos, currPos }) => {
-      if (sticky) {
-        setNavIsFixed(currPos.y > prevPos.y && currPos.y < -70);
-      }
-    },
-    undefined,
-    undefined,
-    false,
-    100
-  );
-
   const homeLink = theme.settings.homeLink || false;
 
   const siblings = plan.allRelatedPlans.filter(
@@ -400,15 +434,14 @@ function GlobalNav(props) {
   );
   const hideLogoOnMobile = theme.navTitleVisible && siblings.length;
 
-  const displayTitle = plan.parent ? plan.parent.name : siteTitle;
   const rootLink = plan.parent ? plan.parent.viewUrl : '/';
 
   return (
     <div>
-      <div ref={isPrimaryNavSticky ? ref : undefined}>
+      <div ref={primaryNavRef}>
         <TopNav
           expand="md"
-          fixed={navIsFixed && isPrimaryNavSticky ? 'top' : ''}
+          fixed={isNavFixed && isPrimaryNavSticky ? 'top' : ''}
           id="branding-navigation-bar"
           aria-label={t('nav-tools')}
           container={fullwidth ? 'fluid' : true}
@@ -430,7 +463,7 @@ function GlobalNav(props) {
             <LanguageSelector mobile={false} />
           </Nav>
           <NavbarToggler
-            onClick={() => toggleOpen(!isOpen)}
+            onClick={() => setIsOpen(!isOpen)}
             aria-label={isOpen ? t('nav-menu-close') : t('nav-menu-open')}
             aria-controls="global-navigation-bar"
             aria-expanded={isOpen}
@@ -445,10 +478,13 @@ function GlobalNav(props) {
         </TopNav>
       </div>
 
-      <div ref={!isPrimaryNavSticky ? ref : undefined}>
+      <div ref={secondaryNavRef}>
         <BotNav
+          $offsetTop={
+            isNavFixed && isPrimaryNavSticky && isOpen ? navHeight : undefined
+          }
           expand="md"
-          fixed={navIsFixed && !isPrimaryNavSticky ? 'top' : ''}
+          fixed={isNavFixed && (!isPrimaryNavSticky || isOpen) ? 'top' : ''}
           id="global-navigation-bar"
           container={fullwidth ? 'fluid' : true}
           aria-label={t('nav-primary')}
@@ -529,7 +565,7 @@ function GlobalNav(props) {
           </Collapse>
         </BotNav>
       </div>
-      {navIsFixed && <NavSpacer $height={navHeight} />}
+      {isNavFixed && <NavSpacer $height={navHeight} />}
     </div>
   );
 }
