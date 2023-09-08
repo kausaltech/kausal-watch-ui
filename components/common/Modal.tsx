@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import Icon from 'components/common/Icon';
 import { useTheme } from 'common/theme';
 
+
 const ModalOverlay = styled.div`
   position: fixed;
   inset: 0;
@@ -56,13 +57,7 @@ interface ModalProps {
   children: ReactNode;
 }
 
-const Modal: React.FC<ModalProps> = ({
-  isOpen,
-  onClose,
-  header,
-  helpText,
-  children,
-}) => {
+const Modal = ({ isOpen, onClose, header, helpText, children }: ModalProps) => {
   const theme = useTheme();
   const modalRef = useRef<HTMLDivElement>(null);
 
