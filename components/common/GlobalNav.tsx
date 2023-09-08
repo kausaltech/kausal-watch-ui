@@ -12,7 +12,7 @@ import {
 } from 'reactstrap';
 import debounce from 'lodash/debounce';
 import SVG from 'react-inlinesvg';
-import styled, { withTheme } from 'styled-components';
+import styled, { css, withTheme } from 'styled-components';
 import { themeProp, useTheme } from 'common/theme';
 import { useScrollPosition } from '@n8tb1t/use-scroll-position';
 import { transparentize } from 'polished';
@@ -28,10 +28,26 @@ import NavbarSearch from './NavbarSearch';
 import { usePlan } from 'context/plan';
 import { isServer } from 'common/environment';
 
+const baseFixedNavStyles = css`
+  @keyframes slide-in {
+    0% {
+      top: -100%;
+    }
+    100% {
+      top: 0px;
+    }
+  }
+
+  box-shadow: 3px 3px 6px -2px ${({ theme }) => transparentize(0.9, theme.themeColors.black)};
+  animation: slide-in 0.4s;
+`;
+
 const TopNav = styled(Navbar)`
   padding: 0;
   background-color: ${(props) => props.theme.brandNavBackground};
   flex-wrap: nowrap;
+
+  ${({ fixed }) => fixed && baseFixedNavStyles}
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     padding: 0 ${(props) => props.theme.spaces.s100};
@@ -39,19 +55,21 @@ const TopNav = styled(Navbar)`
   }
 `;
 
-const BotNav = styled(Navbar)<{ $offsetTop?: number }>`
+const BotNav = styled(Navbar)<{ $offsetTop?: number; $expanded: boolean }>`
   background-color: ${(props) => props.theme.themeColors.white};
   padding: 0;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.07);
 
-  ${({ $offsetTop }) =>
-    !!$offsetTop &&
-    `
+  ${({ fixed, $expanded }) => fixed && !$expanded && baseFixedNavStyles}
+
+  ${({ $offsetTop, $expanded }) =>
+    !!$expanded &&
     // Allow secondary nav to be scrolled when expanded
+    `
     max-height: calc(100vh - ${$offsetTop}px);
     overflow: scroll;
     top: ${$offsetTop}px;
-  `}
+    `}
 
   .container {
     flex-wrap: nowrap;
@@ -483,6 +501,7 @@ function GlobalNav(props) {
           $offsetTop={
             isNavFixed && isPrimaryNavSticky && isOpen ? navHeight : undefined
           }
+          $expanded={isOpen}
           expand="md"
           fixed={isNavFixed && (!isPrimaryNavSticky || isOpen) ? 'top' : ''}
           id="global-navigation-bar"
