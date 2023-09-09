@@ -1,7 +1,5 @@
 import React, { Children, useCallback } from 'react';
-import {
-  Container, Row, Col,
-} from 'reactstrap';
+import { Container, Row, Col } from 'reactstrap';
 import styled, { css } from 'styled-components';
 import { gql } from '@apollo/client';
 import { useHotkeys } from 'react-hotkeys-hook';
@@ -44,143 +42,156 @@ import ActionScheduleBlock from 'components/actions/blocks/ActionScheduleBlock';
 import ReportComparisonBlock from 'components/actions/blocks/ReportComparisonBlock';
 
 import type {
-  ActionAsideContentBlocksFragmentFragment, ActionMainContentBlocksFragmentFragment,
-  GetActionDetailsQuery
+  ActionAsideContentBlocksFragmentFragment,
+  ActionMainContentBlocksFragmentFragment,
+  GetActionDetailsQuery,
 } from 'common/__generated__/graphql';
 import { useTheme } from 'common/theme';
 import { getStatusSummary } from 'common/ActionStatusSummary';
 import ActionAttribute from 'components/common/ActionAttribute';
 
 const GET_ACTION_DETAILS = gql`
-query GetActionDetails($plan: ID!, $id: ID!, $clientUrl: String!) {
-  action(plan: $plan, identifier: $id) {
-    id
-    identifier
-    name
-    officialName
-    leadParagraph
-    description
-    completion
-    image {
-      ...MultiUseImageFragment
-    }
-    color
-    statusSummary {
-      identifier
-      label
-      color
-      sentiment
-      isCompleted
-      isActive
-    }
-    links {
-      id
-      order
-      url
-      title
-    }
-    updatedAt
-    mergedActions {
+  query GetActionDetails($plan: ID!, $id: ID!, $clientUrl: String!) {
+    action(plan: $plan, identifier: $id) {
       id
       identifier
       name
       officialName
-      plan {
-        id
-        viewUrl(clientUrl: $clientUrl)
-      }
-    }
-    categories {
-      ...CategoryTagsCategory
-    }
-    emissionScopes: categories(categoryType: "emission_scope") {
-      id
-      identifier
-      name
       leadParagraph
-    }
-    contactPersons {
-      id
-      person {
+      description
+      completion
+      image {
+        ...MultiUseImageFragment
+      }
+      color
+      statusSummary {
+        identifier
+        label
+        color
+        sentiment
+        isCompleted
+        isActive
+      }
+      links {
         id
-        firstName
-        lastName
-        avatarUrl(size: "150x150")
+        order
+        url
         title
-        organization {
-          name
+      }
+      updatedAt
+      mergedActions {
+        id
+        identifier
+        name
+        officialName
+        plan {
+          id
+          viewUrl(clientUrl: $clientUrl)
         }
       }
-    }
-    primaryOrg {
-      id
-      abbreviation
-      name
-      logo {
-        rendition(size: "128x128", crop: true) {
-          src
+      categories {
+        ...CategoryTagsCategory
+      }
+      emissionScopes: categories(categoryType: "emission_scope") {
+        id
+        identifier
+        name
+        leadParagraph
+      }
+      contactPersons {
+        id
+        person {
+          id
+          firstName
+          lastName
+          avatarUrl(size: "150x150")
+          title
+          organization {
+            name
+          }
         }
       }
-    }
-    responsibleParties {
-      id
-      organization {
+      primaryOrg {
         id
         abbreviation
         name
-        email
+        logo {
+          rendition(size: "128x128", crop: true) {
+            src
+          }
+        }
       }
-      role
-      specifier
-    }
-    tasks {
-      id, name, dueAt, completedAt, comment, state
-    }
-    status {
-      id, identifier, name
-    }
-    manualStatusReason
-    implementationPhase {
-      id
-      identifier
-      name
-    }
-    schedule {
-      id, name, beginsAt, endsAt
-    }
-    scheduleContinuous
-    startDate
-    endDate
-    impact {
-      id, identifier, name
-    }
-    statusUpdates {
-      id
-    }
-    relatedIndicators {
-      id
-      indicator {
+      responsibleParties {
+        id
+        organization {
+          id
+          abbreviation
+          name
+          email
+        }
+        role
+        specifier
+      }
+      tasks {
         id
         name
-        latestGraph {
+        dueAt
+        completedAt
+        comment
+        state
+      }
+      status {
+        id
+        identifier
+        name
+      }
+      manualStatusReason
+      implementationPhase {
+        id
+        identifier
+        name
+      }
+      schedule {
+        id
+        name
+        beginsAt
+        endsAt
+      }
+      scheduleContinuous
+      startDate
+      endDate
+      impact {
+        id
+        identifier
+        name
+      }
+      statusUpdates {
+        id
+      }
+      relatedIndicators {
+        id
+        indicator {
           id
-        }
-        latestValue {
-          id
-          date
-          value
-        }
-        actions {
-          id
-          identifier
           name
+          latestGraph {
+            id
+          }
+          latestValue {
+            id
+            date
+            value
+          }
+          actions {
+            id
+            identifier
+            name
+          }
         }
       }
-    }
-    relatedActions {
-      ...ActionCard
-    }
-    mergedWith {
+      relatedActions {
+        ...ActionCard
+      }
+      mergedWith {
         id
         identifier
         plan {
@@ -190,156 +201,155 @@ query GetActionDetails($plan: ID!, $id: ID!, $clientUrl: String!) {
           viewUrl(clientUrl: $clientUrl)
         }
       }
-    supersededBy {
-      ...ActionCard
-    }
-    supersededActions {
-      ...ActionCard
-    }
-    nextAction {
-      id
-      identifier
-    }
-    previousAction {
-      id
-      identifier
-    }
-    attributes {
-      ...AttributesBlockAttribute
-    }
-    plan {
-      id
-      shortName
-      versionName
-      viewUrl(clientUrl: $clientUrl)
-      hideActionIdentifiers
-      image {
-        rendition(size: "128x128", crop: true) {
-          src
-        }
+      supersededBy {
+        ...ActionCard
       }
-    }
-  }
-  plan(id: $plan) {
-    actionListPage {
-      detailsMainTop {
-        ...ActionMainContentBlocksFragment
+      supersededActions {
+        ...ActionCard
       }
-      detailsMainBottom {
-        ...ActionMainContentBlocksFragment
-      }
-      detailsAside {
-        ...ActionAsideContentBlocksFragment
-      }
-    }
-    actionAttributeTypes {
-      ...AttributesBlockAttributeType
-    }
-  }
-}
-fragment ActionAsideContentBlocksFragment on ActionAsideContentBlock {
-  __typename
-  ... on StreamFieldInterface {
-    id
-  }
-  ... on ActionContentAttributeTypeBlock {
-    attributeType {
-      ...AttributesBlockAttributeType
-    }
-  }
-  ... on ActionContentCategoryTypeBlock {
-    categoryType {
-      ...CategoryTagsCategoryType
-    }
-  }
-}
-fragment ActionMainContentBlocksFragment on ActionMainContentBlock {
-  __typename
-  ... on StreamFieldInterface {
-    id
-  }
-  ... on ActionOfficialNameBlock {
-    fieldLabel
-    caption
-  }
-  ... on ActionContentAttributeTypeBlock {
-    attributeType {
-      ...AttributesBlockAttributeType
-    }
-  }
-  ... on ActionContentCategoryTypeBlock {
-    categoryType {
-      ...CategoryTagsCategoryType
-    }
-  }
-  ... on ReportComparisonBlock {
-      ...ReportComparisonBlockActionContent
-  }
-  ... on ActionContentSectionBlock {
-    id
-    heading
-    helpText
-    layout
-    blocks {
-      ... on StreamFieldInterface {
+      nextAction {
         id
+        identifier
       }
-      ... on ActionOfficialNameBlock {
-        fieldLabel
-        caption
+      previousAction {
+        id
+        identifier
       }
-      ... on ActionContentAttributeTypeBlock {
-        attributeType {
-          ...AttributesBlockAttributeType
+      attributes {
+        ...AttributesBlockAttribute
+      }
+      plan {
+        id
+        shortName
+        versionName
+        viewUrl(clientUrl: $clientUrl)
+        hideActionIdentifiers
+        image {
+          rendition(size: "128x128", crop: true) {
+            src
+          }
         }
       }
-      ... on ActionContentCategoryTypeBlock {
-        categoryType {
-          ...CategoryTagsCategoryType
+    }
+    plan(id: $plan) {
+      actionListPage {
+        detailsMainTop {
+          ...ActionMainContentBlocksFragment
+        }
+        detailsMainBottom {
+          ...ActionMainContentBlocksFragment
+        }
+        detailsAside {
+          ...ActionAsideContentBlocksFragment
         }
       }
-      ... on ReportComparisonBlock {
-        ...ReportComparisonBlockActionContent
+      actionAttributeTypes {
+        ...AttributesBlockAttributeType
       }
     }
   }
-}
-fragment ReportComparisonBlockActionContent on ReportComparisonBlock {
-  reportField
-  reportType {
-    name
+  fragment ActionAsideContentBlocksFragment on ActionAsideContentBlock {
+    __typename
+    ... on StreamFieldInterface {
+      id
+    }
+    ... on ActionContentAttributeTypeBlock {
+      attributeType {
+        ...AttributesBlockAttributeType
+      }
+    }
+    ... on ActionContentCategoryTypeBlock {
+      categoryType {
+        ...CategoryTagsCategoryType
+      }
+    }
   }
-  reportsToCompare {
-    identifier
-    name
-    startDate
-    endDate
-    valuesForAction(actionIdentifier: $id) {
-      field {
-        __typename
+  fragment ActionMainContentBlocksFragment on ActionMainContentBlock {
+    __typename
+    ... on StreamFieldInterface {
+      id
+    }
+    ... on ActionOfficialNameBlock {
+      fieldLabel
+      caption
+    }
+    ... on ActionContentAttributeTypeBlock {
+      attributeType {
+        ...AttributesBlockAttributeType
+      }
+    }
+    ... on ActionContentCategoryTypeBlock {
+      categoryType {
+        ...CategoryTagsCategoryType
+      }
+    }
+    ... on ReportComparisonBlock {
+      ...ReportComparisonBlockActionContent
+    }
+    ... on ActionContentSectionBlock {
+      id
+      heading
+      helpText
+      layout
+      blocks {
         ... on StreamFieldInterface {
           id
         }
-      }
-      ... on ActionAttributeReportValue {
-        attribute {
-          ...AttributesBlockAttribute
+        ... on ActionOfficialNameBlock {
+          fieldLabel
+          caption
+        }
+        ... on ActionContentAttributeTypeBlock {
+          attributeType {
+            ...AttributesBlockAttributeType
+          }
+        }
+        ... on ActionContentCategoryTypeBlock {
+          categoryType {
+            ...CategoryTagsCategoryType
+          }
+        }
+        ... on ReportComparisonBlock {
+          ...ReportComparisonBlockActionContent
         }
       }
     }
   }
-}
+  fragment ReportComparisonBlockActionContent on ReportComparisonBlock {
+    reportField
+    reportType {
+      name
+    }
+    reportsToCompare {
+      identifier
+      name
+      startDate
+      endDate
+      valuesForAction(actionIdentifier: $id) {
+        field {
+          __typename
+          ... on StreamFieldInterface {
+            id
+          }
+        }
+        ... on ActionAttributeReportValue {
+          attribute {
+            ...AttributesBlockAttribute
+          }
+        }
+      }
+    }
+  }
 
-${ActionCard.fragments.action}
-${images.fragments.multiUseImage}
-${ActionAttribute.fragments.attribute}
-${ActionAttribute.fragments.attributeType}
-${CategoryTags.fragments.category}
-${CategoryTags.fragments.categoryType}
+  ${ActionCard.fragments.action}
+  ${images.fragments.multiUseImage}
+  ${ActionAttribute.fragments.attribute}
+  ${ActionAttribute.fragments.attributeType}
+  ${CategoryTags.fragments.category}
+  ${CategoryTags.fragments.categoryType}
 `;
 
-export type ActionContentAction = NonNullable<GetActionDetailsQuery['action']>
-
+export type ActionContentAction = NonNullable<GetActionDetailsQuery['action']>;
 
 const LastUpdated = styled.div`
   margin-bottom: 1em;
@@ -365,15 +375,18 @@ export const SectionHeader = styled.h2`
 `;
 
 const SolidSection = styled.div`
-  padding:  ${(props) => props.theme.spaces.s100} 0;
+  padding: ${(props) => props.theme.spaces.s100} 0;
   margin-bottom: ${(props) => props.theme.spaces.s300};
 `;
 
-const ContentGroup = styled.div<{vertical: boolean}>`
-  ${props => props.vertical && css`
-    max-width: ${(props) => props.theme.breakpointSm};
-  `}
-  margin: ${(props) => props.theme.spaces.s100} auto ${(props) => props.theme.spaces.s300};
+const ContentGroup = styled.div<{ vertical: boolean }>`
+  ${(props) =>
+    props.vertical &&
+    css`
+      max-width: ${(props) => props.theme.breakpointSm};
+    `}
+  margin: ${(props) => props.theme.spaces.s100} auto ${(props) =>
+    props.theme.spaces.s300};
   padding: ${(props) => props.theme.spaces.s200} 0 0;
   border-top: 1px solid ${(props) => props.theme.graphColors.grey040};
   border-bottom: 1px solid ${(props) => props.theme.graphColors.grey040};
@@ -394,13 +407,18 @@ function getMaxImpact(plan: PlanContextType) {
   return max;
 }
 
-type SectionIdentifier = 'detailsMainTop' | 'detailsMainBottom' | 'detailsAside';
+type SectionIdentifier =
+  | 'detailsMainTop'
+  | 'detailsMainBottom'
+  | 'detailsAside';
 
 type ActionContentBlockProps = {
-  block: ActionMainContentBlocksFragmentFragment | ActionAsideContentBlocksFragmentFragment,
-  action: ActionContentAction,
-  section: SectionIdentifier,
-}
+  block:
+    | ActionMainContentBlocksFragmentFragment
+    | ActionAsideContentBlocksFragmentFragment;
+  action: ActionContentAction;
+  section: SectionIdentifier;
+};
 function ActionContentBlock(props: ActionContentBlockProps) {
   const { block, action, section } = props;
   const plan = usePlan();
@@ -408,161 +426,131 @@ function ActionContentBlock(props: ActionContentBlockProps) {
   switch (block.__typename) {
     case 'ActionDescriptionBlock':
       if (!action.description) return null;
-      return (
-        <ActionDescriptionBlock
-          content = {action.description}
-        />
-      );
+      return <ActionDescriptionBlock content={action.description} />;
     case 'ActionLeadParagraphBlock':
       if (!action.leadParagraph) return null;
-      return (
-        <ActionLeadParagraphBlock
-          content = {action.leadParagraph}
-        />
-      )
+      return <ActionLeadParagraphBlock content={action.leadParagraph} />;
     case 'ActionOfficialNameBlock':
       return (
-        <ActionOfficialNameBlock
-          plan = {plan}
-          block = {block}
-          action={action}
-        />
-      )
+        <ActionOfficialNameBlock plan={plan} block={block} action={action} />
+      );
     case 'ActionLinksBlock':
       const { links } = action;
       if (!links.length) return null;
-      return (
-        <ActionLinksBlock
-          links={links}
-        />
-      );
+      return <ActionLinksBlock links={links} />;
     case 'ActionMergedActionsBlock':
       if (!action.mergedActions.length) return null;
-      return (
-        <ActionMergedActionsBlock
-          actions={action.mergedActions}
-        />
-      );
+      return <ActionMergedActionsBlock actions={action.mergedActions} />;
     case 'ActionRelatedActionsBlock':
       if (!action.relatedActions.length) return null;
       return (
         <ActionRelatedActionsBlock
           plan={plan}
-          relatedActions = {action.relatedActions}
+          relatedActions={action.relatedActions}
         />
       );
     case 'ActionRelatedIndicatorsBlock':
       if (!action.relatedIndicators.length) return null;
       return (
         <ActionRelatedIndicatorsBlock
-          actionId = {action.id}
-          indicators = {action.relatedIndicators}
-        />
-      )
-    case 'ActionTasksBlock':
-      if (!action.tasks.length) return null;
-      return (
-        <ActionTasksBlock
-          tasks = {action.tasks}
+          actionId={action.id}
+          indicators={action.relatedIndicators}
         />
       );
+    case 'ActionTasksBlock':
+      if (!action.tasks.length) return null;
+      return <ActionTasksBlock tasks={action.tasks} />;
     case 'ActionContactPersonsBlock':
       if (!action.contactPersons?.length) return null;
       return (
-        <ActionContactPersonsBlock
-          contactPersons = {action.contactPersons}
-        />
+        <ActionContactPersonsBlock contactPersons={action.contactPersons} />
       );
     case 'ActionResponsiblePartiesBlock':
       if (!action.responsibleParties.length) return null;
       return (
         <ActionResponsiblePartiesBlock
-          responsibleParties = {action.responsibleParties}
+          responsibleParties={action.responsibleParties}
         />
       );
-    case'ActionScheduleBlock':
-      return (
-        <ActionScheduleBlock
-          action = {action}
-          plan = {plan}
-        />
-      )
+    case 'ActionScheduleBlock':
+      return <ActionScheduleBlock action={action} plan={plan} />;
     case 'ActionContentSectionBlock':
       const { heading, helpText, layout, blocks } = block;
       return (
-            <ActionContentSectionBlock
-              blocks={blocks}
-              action={action}
-              section={section}
-              heading={heading}
-              layout={layout}
-              helpText={helpText}
-            />
-      )
+        <ActionContentSectionBlock
+          blocks={blocks}
+          action={action}
+          section={section}
+          heading={heading}
+          layout={layout}
+          helpText={helpText}
+        />
+      );
     case 'ActionContactFormBlock': {
-      return <ActionContactFormBlock {...block} action={action} />
+      return <ActionContactFormBlock {...block} action={action} />;
     }
     case 'ActionContentCategoryTypeBlock': {
-      const categories = action.categories.filter((cat) => cat.type.id === block.categoryType.id);
+      const categories = action.categories.filter(
+        (cat) => cat.type.id === block.categoryType.id
+      );
       return (
-        <CategoryTags
-          categories={categories}
-          types={[block.categoryType]}
-        />
+        <CategoryTags categories={categories} types={[block.categoryType]} />
       );
     }
     case 'ActionContentAttributeTypeBlock': {
-      const attribute = action.attributes.find((attr) => attr.type.id === block.attributeType.id);
+      const attribute = action.attributes.find(
+        (attr) => attr.type.id === block.attributeType.id
+      );
       if (!attribute) return null;
-      return  (
+      return (
         <ActionAttribute
           attribute={attribute}
           attributeType={block.attributeType}
         />
-      )
+      );
     }
     case 'ReportComparisonBlock':
       return (
-        <ReportComparisonBlock
-          plan={plan}
-          block={block}
-          action={action}
-        />
-      )
+        <ReportComparisonBlock plan={plan} block={block} action={action} />
+      );
     default:
-      console.error("Unknown action content block", block.__typename);
+      console.error('Unknown action content block', block.__typename);
       return null;
   }
   return null;
 }
 
 type ActionContentBlockGroupProps = Omit<ActionContentBlockProps, 'block'> & {
-  blocks: ActionContentBlockProps['block'][]
+  blocks: ActionContentBlockProps['block'][];
 };
 
 type ActionContentAttributeTypeBlock = ActionContentBlockProps['block'] & {
-  __typename: 'ActionContentAttributeTypeBlock'
-}
+  __typename: 'ActionContentAttributeTypeBlock';
+};
 type ActionContentCategoryTypeBlock = ActionContentBlockProps['block'] & {
-  __typename: 'ActionContentCategoryTypeBlock'
-}
-
+  __typename: 'ActionContentCategoryTypeBlock';
+};
 
 function ActionContentBlockGroup(props: ActionContentBlockGroupProps) {
   const { blocks, action, section } = props;
   const blockType = blocks[0].__typename;
 
   if (blockType === 'ActionContentAttributeTypeBlock') {
-    const types = new Map(blocks.map(block => {
-      const { attributeType } = block as ActionContentAttributeTypeBlock;
-      return [attributeType!.id, attributeType!];
-    }));
+    const types = new Map(
+      blocks.map((block) => {
+        const { attributeType } = block as ActionContentAttributeTypeBlock;
+        return [attributeType!.id, attributeType!];
+      })
+    );
 
     // Render attributes in the order specified by blocks; action.attributes may have different order
-    const attributesByType = new Map(action.attributes.map(att => [att.type.id, att]));
+    const attributesByType = new Map(
+      action.attributes.map((att) => [att.type.id, att])
+    );
     const attributes: typeof action.attributes = [];
     for (const block of blocks) {
-      const typeId = (block as ActionContentAttributeTypeBlock).attributeType.id;
+      const typeId = (block as ActionContentAttributeTypeBlock).attributeType
+        .id;
       const attribute = attributesByType.get(typeId);
       if (attribute != null) {
         attributes.push(attribute);
@@ -577,13 +565,17 @@ function ActionContentBlockGroup(props: ActionContentBlockGroupProps) {
           vertical={section === 'detailsAside'}
         />
       </ActionSection>
-    )
+    );
   } else if (blockType === 'ActionContentCategoryTypeBlock') {
-    const types = new Map(blocks.map(block => {
-      const { categoryType } = block as ActionContentCategoryTypeBlock;
-      return [categoryType!.id, categoryType!];
-    }));
-    const categories = (action.categories || []).filter(cat => types.get(cat.type.id));
+    const types = new Map(
+      blocks.map((block) => {
+        const { categoryType } = block as ActionContentCategoryTypeBlock;
+        return [categoryType!.id, categoryType!];
+      })
+    );
+    const categories = (action.categories || []).filter((cat) =>
+      types.get(cat.type.id)
+    );
 
     if (!categories.length) return null;
     return (
@@ -593,9 +585,9 @@ function ActionContentBlockGroup(props: ActionContentBlockGroupProps) {
           types={Array.from(types.values())}
         />
       </ActionSection>
-    )
+    );
   } else {
-    console.error("Unsupported content block group", blockType);
+    console.error('Unsupported content block group', blockType);
   }
   return null;
 }
@@ -606,36 +598,31 @@ function ActionContentSectionBlock(props) {
   return (
     <ContentGroup vertical={layout !== 'grid'}>
       <h2>
-        { heading }
-        {helpText && (
-            <PopoverTip
-              content={helpText}
-              identifier={section.id}
-            />
-          )}
+        {heading}
+        {helpText && <PopoverTip content={helpText} identifier={section.id} />}
       </h2>
       <Row>
-      { blocks.map((block) => (
-        <Col md={layout === "grid" ? 4 : 12} key={block.id} className="mb-3">
-          <ActionContentBlock
-            key={block.id}
-            block={block}
-            action={action}
-            section={section}
-          />
-        </Col>
-      ))}
+        {blocks.map((block) => (
+          <Col md={layout === 'grid' ? 4 : 12} key={block.id} className="mb-3">
+            <ActionContentBlock
+              key={block.id}
+              block={block}
+              action={action}
+              section={section}
+            />
+          </Col>
+        ))}
       </Row>
     </ContentGroup>
-  )
-    // console.error("Unsupported content block group", blockType);
+  );
+  // console.error("Unsupported content block group", blockType);
   return null;
 }
 
 type ActionContentProps = {
-  action: ActionContentAction,
-  extraPlanData: NonNullable<GetActionDetailsQuery['plan']>
-}
+  action: ActionContentAction;
+  extraPlanData: NonNullable<GetActionDetailsQuery['plan']>;
+};
 function ActionContent(props: ActionContentProps) {
   const { action, extraPlanData } = props;
   const plan = usePlan();
@@ -643,19 +630,29 @@ function ActionContent(props: ActionContentProps) {
   const router = useRouter();
   const { t } = useTranslation();
 
-  useHotkeys('ctrl+left, ctrl+right', (ev) => {
-    if (!action) return;
-    const next = (ev.code == 'ArrowLeft' ? action.previousAction : action.nextAction);
-    if (!next) {
-      return;
-    }
-    const { href, as } = getActionLinkProps(next.identifier);
-    router.push(href, as);
-  }, {}, [action, router]);
+  useHotkeys(
+    'ctrl+left, ctrl+right',
+    (ev) => {
+      if (!action) return;
+      const next =
+        ev.code == 'ArrowLeft' ? action.previousAction : action.nextAction;
+      if (!next) {
+        return;
+      }
+      const { href, as } = getActionLinkProps(next.identifier);
+      router.push(href, as);
+    },
+    {},
+    [action, router]
+  );
 
   const actionListPage = extraPlanData.actionListPage!;
 
   const updated = dayjs(action.updatedAt).format('L');
+
+  const actionState = 'live';
+  // TODO: plug in action state from backend here. "draft" would display a banner
+
   const actionStatus = cleanActionStatus(action, plan.actionStatuses);
   const { emissionScopes } = action;
   const actionImage = getActionImage(plan, action);
@@ -666,60 +663,74 @@ function ActionContent(props: ActionContentProps) {
     ? `${t('action', getActionTermContext(plan))}: ${action.name}`
     : `${t('action', getActionTermContext(plan))} ${action.identifier}`;
 
-  const makeComponents = useCallback((section: SectionIdentifier) => {
-    const blocks = actionListPage[section];
-    if (!blocks) return null;
+  const makeComponents = useCallback(
+    (section: SectionIdentifier) => {
+      const blocks = actionListPage[section];
+      if (!blocks) return null;
 
-    let allSections: JSX.Element[] = [];
-    let previousSectionBlock: undefined | typeof blocks[0];
-    let groupedBlocks: typeof blocks = [];
+      let allSections: JSX.Element[] = [];
+      let previousSectionBlock: undefined | typeof blocks[0];
+      let groupedBlocks: typeof blocks = [];
 
-    const staticProps = {
-      action,
-      section,
-    };
+      const staticProps = {
+        action,
+        section,
+      };
 
-    function emitGroupedBlocks() {
-      if (!groupedBlocks.length) return;
-      allSections.push(<ActionContentBlockGroup key={groupedBlocks[0].id} blocks={groupedBlocks} {...staticProps} />);
-      previousSectionBlock = undefined;
-      groupedBlocks = [];
-    }
-
-    const automaticallyGroupedBlockTypes = [
-      'ActionContentAttributeTypeBlock',
-      'ActionContentCategoryTypeBlock',
-    ];
-
-    const groupableBlockTypes = [
-      'ActionContentAttributeTypeBlock',
-      'ActionContentCategoryTypeBlock',
-      'ActionOfficialNameBlock',
-      'ActionLeadParagraphBlock',
-      'ActionDescriptionBlock',
-      'ActionLinksBlock',
-      'ActionTasksBlock',
-      'ActionMergedActionsBlock',
-      'ActionRelatedActionsBlock',
-      'ActionIndicatorsBlock',
-    ];
-
-    for (const block of blocks) {
-      if (previousSectionBlock && block.__typename !== previousSectionBlock.__typename) {
-        emitGroupedBlocks();
+      function emitGroupedBlocks() {
+        if (!groupedBlocks.length) return;
+        allSections.push(
+          <ActionContentBlockGroup
+            key={groupedBlocks[0].id}
+            blocks={groupedBlocks}
+            {...staticProps}
+          />
+        );
+        previousSectionBlock = undefined;
+        groupedBlocks = [];
       }
-      // some blocks get special treatment so that they can be grouped together
-      if (automaticallyGroupedBlockTypes.includes(block.__typename)) {
-        previousSectionBlock = block;
-        // @ts-ignore
-        groupedBlocks.push(block);
-      } else {
-        allSections.push(<ActionContentBlock key={block.id} block={block} {...staticProps} />)
+
+      const automaticallyGroupedBlockTypes = [
+        'ActionContentAttributeTypeBlock',
+        'ActionContentCategoryTypeBlock',
+      ];
+
+      const groupableBlockTypes = [
+        'ActionContentAttributeTypeBlock',
+        'ActionContentCategoryTypeBlock',
+        'ActionOfficialNameBlock',
+        'ActionLeadParagraphBlock',
+        'ActionDescriptionBlock',
+        'ActionLinksBlock',
+        'ActionTasksBlock',
+        'ActionMergedActionsBlock',
+        'ActionRelatedActionsBlock',
+        'ActionIndicatorsBlock',
+      ];
+
+      for (const block of blocks) {
+        if (
+          previousSectionBlock &&
+          block.__typename !== previousSectionBlock.__typename
+        ) {
+          emitGroupedBlocks();
+        }
+        // some blocks get special treatment so that they can be grouped together
+        if (automaticallyGroupedBlockTypes.includes(block.__typename)) {
+          previousSectionBlock = block;
+          // @ts-ignore
+          groupedBlocks.push(block);
+        } else {
+          allSections.push(
+            <ActionContentBlock key={block.id} block={block} {...staticProps} />
+          );
+        }
       }
-    }
-    emitGroupedBlocks();
-    return allSections;
-  }, [actionListPage, action]);
+      emitGroupedBlocks();
+      return allSections;
+    },
+    [actionListPage, action]
+  );
 
   return (
     <div>
@@ -741,13 +752,14 @@ function ActionContent(props: ActionContentProps) {
         imageAlign={getBgImageAlignment(actionImage)}
         hideActionIdentifiers={plan.hideActionIdentifiers}
         primaryOrg={action.primaryOrg}
+        state={actionState}
       />
       <Container>
         <Row>
           <Col md="7" lg="8">
             {hasPhases && (
               <ActionSection>
-                <PrimaryHeader>{ t('actions:action-progress') }</PrimaryHeader>
+                <PrimaryHeader>{t('actions:action-progress')}</PrimaryHeader>
                 <ActionPhase
                   action={action}
                   status={getStatusSummary(plan, action.statusSummary)}
@@ -758,46 +770,48 @@ function ActionContent(props: ActionContentProps) {
               </ActionSection>
             )}
 
-            <div className="action-main-top">{makeComponents('detailsMainTop')}</div>
+            <div className="action-main-top">
+              {makeComponents('detailsMainTop')}
+            </div>
 
-            { action.statusUpdates.length > 0
-            && (
-            <SolidSection>
-              <Row>
-                <Col>
-                  <SectionHeader>{ t('actions:action-status-updates') }</SectionHeader>
-                </Col>
-              </Row>
-              <ActionUpdatesList id={action.id} />
-            </SolidSection>
+            {action.statusUpdates.length > 0 && (
+              <SolidSection>
+                <Row>
+                  <Col>
+                    <SectionHeader>
+                      {t('actions:action-status-updates')}
+                    </SectionHeader>
+                  </Col>
+                </Row>
+                <ActionUpdatesList id={action.id} />
+              </SolidSection>
             )}
           </Col>
 
           <Col md="5" lg="4">
-            <h2 className="visually-hidden">{ t('actions:action-meta-header') }</h2>
-            { action.impact
-              && (
+            <h2 className="visually-hidden">
+              {t('actions:action-meta-header')}
+            </h2>
+            {action.impact && (
               <ActionSection>
-                <SideHeader>{ t('actions:action-impact') }</SideHeader>
+                <SideHeader>{t('actions:action-impact')}</SideHeader>
                 <ActionImpact
                   name={action.impact.name}
                   identifier={action.impact.identifier}
                   max={getMaxImpact(plan)}
                 />
               </ActionSection>
-              )}
-            { (!hasPhases || action.completion) && (
+            )}
+            {(!hasPhases || action.completion) && (
               <ActionSection>
-                <SideHeader>{ t('actions:action-completion-percentage') }</SideHeader>
-                { (action.completion ?? 0) > 0
-                && (
-                <strong>
-                  {action.completion}
-                  %
-                  {' '}
-                  { t('actions:action-percent-ready') }
-                </strong>
-                ) }
+                <SideHeader>
+                  {t('actions:action-completion-percentage')}
+                </SideHeader>
+                {(action.completion ?? 0) > 0 && (
+                  <strong>
+                    {action.completion}% {t('actions:action-percent-ready')}
+                  </strong>
+                )}
                 <ActionStatus
                   plan={plan}
                   statusSummary={action.statusSummary}
@@ -805,27 +819,28 @@ function ActionContent(props: ActionContentProps) {
                 />
               </ActionSection>
             )}
-            { makeComponents('detailsAside') }
-            { emissionScopes?.length ? (
+            {makeComponents('detailsAside')}
+            {emissionScopes?.length ? (
               <ActionSection>
-                <SideHeader>{ t('actions:emission-scopes') }</SideHeader>
+                <SideHeader>{t('actions:emission-scopes')}</SideHeader>
                 {emissionScopes.map((item) => (
-                  <EmissionScopeIcon key={item.id} category={item} color={theme.brandDark} size="2em" />
+                  <EmissionScopeIcon
+                    key={item.id}
+                    category={item}
+                    color={theme.brandDark}
+                    size="2em"
+                  />
                 ))}
               </ActionSection>
             ) : null}
-            { (action.supersededBy || action.supersededActions.length > 0) && (
+            {(action.supersededBy || action.supersededActions.length > 0) && (
               <ActionSection>
-                <ActionVersionHistory
-                  action={action}
-                  />
+                <ActionVersionHistory action={action} />
               </ActionSection>
             )}
             <ActionSection>
               <LastUpdated>
-                { t('actions:action-last-updated') }
-                {' '}
-                { updated }
+                {t('actions:action-last-updated')} {updated}
               </LastUpdated>
             </ActionSection>
           </Col>
@@ -834,7 +849,7 @@ function ActionContent(props: ActionContentProps) {
       <Container>
         <Row>
           <Col md="7" lg="8">
-          { makeComponents('detailsMainBottom') }
+            {makeComponents('detailsMainBottom')}
           </Col>
         </Row>
       </Container>
@@ -843,7 +858,12 @@ function ActionContent(props: ActionContentProps) {
           <Container>
             <Row>
               <Col sm="12">
-                <SectionHeader>{ t('actions:action-what-effect-this-has', getActionTermContext(plan)) }</SectionHeader>
+                <SectionHeader>
+                  {t(
+                    'actions:action-what-effect-this-has',
+                    getActionTermContext(plan)
+                  )}
+                </SectionHeader>
               </Col>
             </Row>
           </Container>

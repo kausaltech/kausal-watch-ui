@@ -1,16 +1,19 @@
 import React from 'react';
-import {
-  Container, Row, Col,
-} from 'reactstrap';
+import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
 import { useTheme } from 'common/theme';
 import { getActionTermContext, useTranslation } from 'common/i18n';
-import { ActionLink, ActionListLink, OrganizationLink, Link } from 'common/links';
+import {
+  ActionLink,
+  ActionListLink,
+  OrganizationLink,
+  Link,
+} from 'common/links';
 import { usePlan } from 'context/plan';
 
 import Icon from 'components/common/Icon';
 
-const Hero = styled.header<{bgColor: string}>`
+const Hero = styled.header<{ bgColor: string }>`
   position: relative;
   background-color: ${(props) => props.bgColor};
   margin-bottom: ${(props) => props.theme.spaces.s400};
@@ -23,7 +26,11 @@ const Hero = styled.header<{bgColor: string}>`
   }
 `;
 
-const ActionBgImage = styled.div<{bgColor: string, bgImage: string, imageAlign: string}>`
+const ActionBgImage = styled.div<{
+  bgColor: string;
+  bgImage: string;
+  imageAlign: string;
+}>`
   background-color: ${(props) => props.bgColor};
   background-image: url(${(props) => props.bgImage});
   background-position: ${(props) => props.imageAlign};
@@ -44,10 +51,23 @@ const OrgLogo = styled.img`
 
 const HeroCardBg = styled.div`
   overflow: hidden;
+  position: relative;
   margin-bottom: -${(props) => props.theme.spaces.s400};
-  background-color: white;
+  background-color: ${(props) => props.theme.themeColors.white};
   border-radius: ${(props) => props.theme.cardBorderRadius};
-  box-shadow: 4px 4px 8px rgba(0,0,0,0.1);
+  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.1);
+`;
+
+const DraftBanner = styled.div`
+  padding: ${(props) => props.theme.spaces.s150};
+  background-color: ${(props) => props.theme.graphColors.yellow010};
+  border-radius: ${(props) =>
+    `${props.theme.cardBorderRadius} ${props.theme.cardBorderRadius} 0 0`};
+
+  p {
+    margin-bottom: 0;
+    font-weight: ${(props) => props.theme.fontWeightBold};
+  }
 `;
 
 const CardContent = styled.div`
@@ -62,7 +82,8 @@ const OverlayContainer = styled.div`
   display: flex;
   align-items: flex-end;
   min-height: 24rem;
-  padding: ${(props) => props.theme.spaces.s300} 0 ${(props) => props.theme.spaces.s300};
+  padding: ${(props) => props.theme.spaces.s300} 0
+    ${(props) => props.theme.spaces.s300};
 `;
 
 const ActionsNav = styled.nav`
@@ -98,7 +119,7 @@ const ImageCredit = styled.span`
   top: 0;
   right: 0;
   padding: 0.25rem 0.5rem;
-  background-color: rgba(255,255,255,0.66);
+  background-color: rgba(255, 255, 255, 0.66);
   font-size: ${(props) => props.theme.fontSizeSm};
   font-family: ${(props) => props.theme.fontFamilyTiny};
 
@@ -125,7 +146,7 @@ const ActionNumber = styled.span`
   white-space: nowrap;
 
   &:after {
-    content: ".";
+    content: '.';
   }
 `;
 
@@ -133,7 +154,8 @@ function ActionCategories(props) {
   const { categories } = props;
   const theme = useTheme();
   const plan = usePlan();
-  const showIdentifiers = !plan.primaryActionClassification?.hideCategoryIdentifiers;
+  const showIdentifiers =
+    !plan.primaryActionClassification?.hideCategoryIdentifiers;
   const displayCategories = [];
   const primaryCT = plan.primaryActionClassification;
   const primaryCatId = primaryCT?.id;
@@ -144,9 +166,12 @@ function ActionCategories(props) {
     let categoryTitle = cat.name;
     if (cat.categoryPage) {
       displayCategories[indx].url = cat.categoryPage.urlPath;
-      if (cat.identifier && showIdentifiers) categoryTitle = `${cat.identifier}. ${cat.name}`;
+      if (cat.identifier && showIdentifiers)
+        categoryTitle = `${cat.identifier}. ${cat.name}`;
     } else if (primaryCT) {
-      displayCategories[indx].url = `/actions?cat-${primaryCT.identifier}=${cat.id}`;
+      displayCategories[
+        indx
+      ].url = `/actions?cat-${primaryCT.identifier}=${cat.id}`;
     }
     displayCategories[indx].name = categoryTitle;
     displayCategories[indx].id = cat.id;
@@ -159,7 +184,9 @@ function ActionCategories(props) {
           categoryParentTitle = `${cat.parent.identifier}. ${cat.parent.name}`;
         }
       } else {
-        displayCategories[indx].parent.url = `/actions?cat-${primaryCT.identifier}=${cat.parent.id}`;
+        displayCategories[
+          indx
+        ].parent.url = `/actions?cat-${primaryCT.identifier}=${cat.parent.id}`;
       }
       displayCategories[indx].parent.name = categoryParentTitle;
       displayCategories[indx].parent.id = cat.parent.id;
@@ -174,18 +201,14 @@ function ActionCategories(props) {
             <span>
               <Link href={item.parent.url} passHref>
                 {item.parent.name}
-              </Link>
-              {' '}
-              /
-              {' '}
+              </Link>{' '}
+              /{' '}
             </span>
           )}
           <Link href={item.url} passHref>
             {item.name}
-          </Link>
-          {' '}
-          /
-          {' '}
+          </Link>{' '}
+          /{' '}
         </div>
       ))}
     </CategoriesBreadcrumb>
@@ -193,18 +216,19 @@ function ActionCategories(props) {
 }
 
 type ActionHeroProps = {
-  categories: [],
-  previousAction: any, //TODO: type these
-  nextAction: any,
-  identifier: string,
-  name: string,
-  imageUrl: string,
-  imageAlign: string,
-  altText?: string,
-  imageCredit?: string,
-  imageTitle?: string,
-  hideActionIdentifiers?: boolean,
-  primaryOrg: any,
+  categories: [];
+  previousAction: any; //TODO: type these
+  nextAction: any;
+  identifier: string;
+  name: string;
+  imageUrl: string;
+  imageAlign: string;
+  altText?: string;
+  imageCredit?: string;
+  imageTitle?: string;
+  hideActionIdentifiers?: boolean;
+  primaryOrg: any;
+  state: string;
 };
 
 function ActionHero(props: ActionHeroProps) {
@@ -221,6 +245,7 @@ function ActionHero(props: ActionHeroProps) {
     imageTitle,
     hideActionIdentifiers = true,
     primaryOrg,
+    state,
   } = props;
   const theme = useTheme();
   const { t } = useTranslation();
@@ -229,12 +254,15 @@ function ActionHero(props: ActionHeroProps) {
   // Theme overlay color as fallback
   let categoryColor = theme.imageOverlay;
   // If category or its parent has color defined
-  const categoryWithColor = categories.find((cat) => (
-    cat.color !== null || (cat.parent !== null && cat.parent.color !== null)
-  ));
+  const categoryWithColor = categories.find(
+    (cat) =>
+      cat.color !== null || (cat.parent !== null && cat.parent.color !== null)
+  );
   // Override overlay color with that
   if (categoryWithColor && theme.imageOverlay !== 'rgb(255, 255, 255)') {
-    categoryColor = categoryWithColor.color ? categoryWithColor.color : categoryWithColor?.parent.color;
+    categoryColor = categoryWithColor.color
+      ? categoryWithColor.color
+      : categoryWithColor?.parent.color;
   }
 
   return (
@@ -249,56 +277,69 @@ function ActionHero(props: ActionHeroProps) {
             <Row>
               <Col lg={8}>
                 <HeroCardBg>
+                  {state === 'draft' && (
+                    <DraftBanner>
+                      <p role="status">{t('action-draft')}</p>
+                    </DraftBanner>
+                  )}
                   <CardContent>
-                    { primaryOrg && (
+                    {primaryOrg && (
                       <PrimaryOrg>
                         <OrgLogo
-                          src={primaryOrg.logo?.rendition?.src || '/static/themes/default/images/default-avatar-org.png'}
+                          src={
+                            primaryOrg.logo?.rendition?.src ||
+                            '/static/themes/default/images/default-avatar-org.png'
+                          }
                           alt=""
                         />
                         <strong>
-                          <OrganizationLink organizationId={ primaryOrg.id }>
-                            { primaryOrg.abbreviation || primaryOrg.name }
+                          <OrganizationLink organizationId={primaryOrg.id}>
+                            {primaryOrg.abbreviation || primaryOrg.name}
                           </OrganizationLink>
                         </strong>
                       </PrimaryOrg>
-                    ) }
+                    )}
                     <ActionsNav aria-label={t('nav-actions-pager')}>
                       <ActionListLink>
                         <a>
-                          <IndexLink>{ t('actions', getActionTermContext(plan)) }</IndexLink>
+                          <IndexLink>
+                            {t('actions', getActionTermContext(plan))}
+                          </IndexLink>
                         </a>
                       </ActionListLink>
                       <div>
-                        { previousAction
-                              && (
-                                <ActionLink action={previousAction}>
-                                  <a>
-                                    <Icon name="arrowLeft" color={theme.brandDark} aria-hidden="true" />
-                                    {' '}
-                                    { t('previous') }
-                                  </a>
-                                </ActionLink>
-                              )}
-                        { nextAction
-                              && previousAction
-                              && (
-                                <NavDivider />
-                              )}
-                        { nextAction
-                              && (
-                                <ActionLink action={nextAction}>
-                                  <a>
-                                    { t('next') }
-                                    <Icon name="arrowRight" color={theme.brandDark} aria-hidden="true" />
-                                  </a>
-                                </ActionLink>
-                              )}
+                        {previousAction && (
+                          <ActionLink action={previousAction}>
+                            <a>
+                              <Icon
+                                name="arrowLeft"
+                                color={theme.brandDark}
+                                aria-hidden="true"
+                              />{' '}
+                              {t('previous')}
+                            </a>
+                          </ActionLink>
+                        )}
+                        {nextAction && previousAction && <NavDivider />}
+                        {nextAction && (
+                          <ActionLink action={nextAction}>
+                            <a>
+                              {t('next')}
+                              <Icon
+                                name="arrowRight"
+                                color={theme.brandDark}
+                                aria-hidden="true"
+                              />
+                            </a>
+                          </ActionLink>
+                        )}
                       </div>
                     </ActionsNav>
                     <ActionCategories categories={categories} />
                     <ActionHeadline>
-                      { !hideActionIdentifiers && <ActionNumber>{identifier}</ActionNumber> }
+                      {!hideActionIdentifiers && (
+                        <ActionNumber>{identifier}</ActionNumber>
+                      )}
                       <span>{name}</span>
                     </ActionHeadline>
                   </CardContent>
@@ -306,13 +347,12 @@ function ActionHero(props: ActionHeroProps) {
               </Col>
             </Row>
           </Container>
-          { altText && <span className="sr-only" role="img" aria-label={altText} /> }
-          { imageCredit
-            && (
-            <ImageCredit>
-              {`${t('image-credit')}: ${imageCredit}`}
-            </ImageCredit>
-            )}
+          {altText && (
+            <span className="sr-only" role="img" aria-label={altText} />
+          )}
+          {imageCredit && (
+            <ImageCredit>{`${t('image-credit')}: ${imageCredit}`}</ImageCredit>
+          )}
         </OverlayContainer>
       </ActionBgImage>
     </Hero>

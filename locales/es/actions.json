@@ -66,5 +66,6 @@
   "action-task-hide-comment": "Ocultar detalles",
   "action-task-show-comment": "Mostrar detalles",
   "feedback-on-action": "Opine sobre esta acción",
-  "feedback-on-action-description": "Puede dejar un comentario o una opinión sobre esta acción"
+  "feedback-on-action-description": "Puede dejar un comentario o una opinión sobre esta acción",
+  "action-draft": "Borrador"
 }

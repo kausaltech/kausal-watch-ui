@@ -66,5 +66,6 @@
   "action-task-hide-comment": "Piilota lisätiedot",
   "action-task-show-comment": "Näytä lisätiedot",
   "feedback-on-action": "Anna palautetta toimenpiteestä",
-  "feedback-on-action-description": "Tästä voit lähettää palautetta tai kommentin koskien tätä toimenpidettä"
+  "feedback-on-action-description": "Tästä voit lähettää palautetta tai kommentin koskien tätä toimenpidettä",
+  "action-draft": "Luonnos"
 }
