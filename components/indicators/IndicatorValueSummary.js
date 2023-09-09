@@ -31,7 +31,7 @@ const ValueDisplay = styled.div`
 `;
 
 const ValueUnit = styled.span`
-  margin: 0 .5em 0 .25em;
+  margin: 0 0.5em 0 0.25em;
   font-size: ${(props) => props.theme.fontSizeBase};
   font-weight: ${(props) => props.theme.fontWeightNormal};
   color: ${(props) => props.theme.themeColors.dark};
@@ -44,7 +44,7 @@ const ValueChange = styled.div`
 `;
 
 const ChangeSymbol = styled.span`
-  margin-right: .5em;
+  margin-right: 0.5em;
   font-size: ${(props) => props.theme.fontSizeSm};
   font-family: ${(props) => props.theme.fontFamilyTiny};
 `;
@@ -64,9 +64,11 @@ function determineDesirableDirection(values, goals) {
 function IndicatorValueSummary(props) {
   const { timeResolution, values, goals, unit, t, theme, i18n } = props;
   const desirableDirection = determineDesirableDirection(values, goals);
-  const pluralUnitName = unit.verboseNamePlural || unit.verboseName || unit.shortName || unit.name;
+  const pluralUnitName =
+    unit.verboseNamePlural || unit.verboseName || unit.shortName || unit.name;
   const shortUnitName = unit.shortName || unit.name;
-  const diffUnitName = unit.name === '%' ? t('percent-point-abbreviation') : shortUnitName;
+  const diffUnitName =
+    unit.name === '%' ? t('percent-point-abbreviation') : shortUnitName;
   const now = dayjs();
   let timeFormat = 'l';
 
@@ -74,7 +76,7 @@ function IndicatorValueSummary(props) {
     timeFormat = 'YYYY';
   }
 
-  let valueDisplay = <h6>{ t('indicator-no-values') }</h6>;
+  let valueDisplay = <h6>{t('indicator-no-values')}</h6>;
   if (values.length > 0) {
     const latestValue = values[values.length - 1];
     let absChange;
@@ -87,10 +89,12 @@ function IndicatorValueSummary(props) {
       absChange = latestValue.value - values[values.length - 2].value;
       relChange = latestValue.value ? absChange / latestValue.value : 0;
       if (desirableDirection) {
-        if ((absChange > 0 && desirableDirection === '+')
-            || (absChange < 0 && desirableDirection === '-')) {
+        if (
+          (absChange > 0 && desirableDirection === '+') ||
+          (absChange < 0 && desirableDirection === '-')
+        ) {
           desirableChange = true;
-          changeColor = theme.graphColors.green070;
+          changeColor = theme.graphColors.green090;
         } else if (absChange === 0) {
           desirableChange = null;
           changeColor = theme.themeColors.dark;
@@ -108,7 +112,7 @@ function IndicatorValueSummary(props) {
     const latestValueDisplay = beautifyValue(latestValue.value, i18n.language);
     valueDisplay = (
       <div className="mb-4">
-        <ValueLabel>{ t('indicator-latest-value') }</ValueLabel>
+        <ValueLabel>{t('indicator-latest-value')}</ValueLabel>
         <ValueDate>{dayjs(latestValue.date).format(timeFormat)}</ValueDate>
         <ValueDisplay>
           {latestValueDisplay}
@@ -116,8 +120,7 @@ function IndicatorValueSummary(props) {
           {changeSymbol && (
             <ValueChange color={changeColor}>
               <ChangeSymbol>{changeSymbol}</ChangeSymbol>
-              <span>{beautifyValue(absChange, i18n.language)}</span>
-              {' '}
+              <span>{beautifyValue(absChange, i18n.language)}</span>{' '}
               <small>{diffUnitName}</small>
             </ValueChange>
           )}
@@ -134,7 +137,7 @@ function IndicatorValueSummary(props) {
     const nextGoalValue = beautifyValue(nextGoal.value, i18n.language);
     goalDisplay = (
       <div className="mb-4">
-        <ValueLabel>{ t('indicator-goal') }</ValueLabel>
+        <ValueLabel>{t('indicator-goal')}</ValueLabel>
         <ValueDate>{nextGoalDate}</ValueDate>
         <ValueDisplay>
           {nextGoalValue}
@@ -148,10 +151,12 @@ function IndicatorValueSummary(props) {
   let differenceDisplay = undefined;
   if (values.length > 0 && nextGoal) {
     const difference = nextGoal.value - values[values.length - 1].value;
-    const timeToGoal = `${dayjs(nextGoal.date).diff(now, 'years', true).toFixed(0)} ${' '} ${t('indicator-resolution-years')}`;
+    const timeToGoal = `${dayjs(nextGoal.date)
+      .diff(now, 'years', true)
+      .toFixed(0)} ${' '} ${t('indicator-resolution-years')}`;
     differenceDisplay = (
       <div className="mb-4">
-        <ValueLabel>{ t('indicator-time-to-goal') }</ValueLabel>
+        <ValueLabel>{t('indicator-time-to-goal')}</ValueLabel>
         <ValueDate>{timeToGoal}</ValueDate>
         <ValueDisplay>
           {beautifyValue(difference, i18n.language)}
@@ -163,15 +168,9 @@ function IndicatorValueSummary(props) {
   return (
     <ValueSummary>
       <Row>
-        <Col sm={4}>
-          {valueDisplay}
-        </Col>
-        <Col sm={4}>
-          {differenceDisplay}
-        </Col>
-        <Col sm={4}>
-          {goalDisplay}
-        </Col>
+        <Col sm={4}>{valueDisplay}</Col>
+        <Col sm={4}>{differenceDisplay}</Col>
+        <Col sm={4}>{goalDisplay}</Col>
       </Row>
     </ValueSummary>
   );
