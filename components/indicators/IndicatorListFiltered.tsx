@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import PropTypes, { bool } from 'prop-types';
 import { Alert, Badge, Table } from 'reactstrap';
 import styled from 'styled-components';
-
-import { useTheme } from 'common/theme';
+import { readableColor } from 'polished';
 import { IndicatorLink } from '../../common/links';
 import Icon from '../common/Icon';
 import dayjs from '../../common/dayjs';
@@ -22,13 +21,13 @@ const IndicatorType = styled(Badge)`
   color: ${(props) => {
     switch (props.level) {
       case 'action':
-        return props.theme.actionColorFg;
+        return readableColor(props.theme.actionColor);
       case 'operational':
-        return props.theme.themeColors.white;
+        return readableColor(props.theme.graphColors.blue070);
       case 'tactical':
-        return props.theme.themeColors.black;
+        return readableColor(props.theme.graphColors.blue030);
       case 'strategic':
-        return props.theme.themeColors.black;
+        return readableColor(props.theme.graphColors.blue010);
       default:
         return props.theme.themeColors.black;
     }
@@ -50,7 +49,7 @@ const IndicatorType = styled(Badge)`
 `;
 
 const IndicatorDate = styled.span`
-  color: ${(props) => props.theme.graphColors.grey060};
+  color: ${(props) => props.theme.graphColors.grey070};
 `;
 
 const StyledBadge = styled(Badge)`

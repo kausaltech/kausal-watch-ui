@@ -1,15 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  Card, CardImgOverlay, CardBody, CardTitle,
-} from 'reactstrap';
+import { Card, CardImgOverlay, CardBody, CardTitle } from 'reactstrap';
 import styled from 'styled-components';
 import { getActionTermContext, withTranslation } from '../../common/i18n';
 import { IndicatorLink } from '../../common/links';
 import { usePlan } from 'context/plan';
+import { readableColor } from 'polished';
 
 const IndicatorType = styled.div`
-  margin-bottom: .5em;
+  margin-bottom: 0.5em;
   text-align: left;
   font-size: ${(props) => props.theme.fontSizeSm};
   font-family: ${(props) => props.theme.fontFamilyTiny};
@@ -46,7 +45,7 @@ const StyledCard = styled(Card)`
   }
   &:hover {
     transform: translateY(-5px);
-    box-shadow: 4px 4px 8px rgba(82,90,101,0.5);
+    box-shadow: 4px 4px 8px rgba(82, 90, 101, 0.5);
   }
 `;
 
@@ -58,13 +57,13 @@ const IndicatorValue = styled.div`
   color: ${(props) => {
     switch (props.level) {
       case 'action':
-        return props.theme.actionColorFg;
+        return readableColor(props.theme.actionColor);
       case 'operational':
-        return props.theme.themeColors.white;
+        return readableColor(props.theme.graphColors.blue070);
       case 'tactical':
-        return props.theme.themeColors.black;
+        return readableColor(props.theme.graphColors.blue030);
       case 'strategic':
-        return props.theme.themeColors.black;
+        return readableColor(props.theme.graphColors.blue010);
       default:
         return props.theme.themeColors.black;
     }
@@ -72,7 +71,7 @@ const IndicatorValue = styled.div`
 `;
 
 const IndicatorUnit = styled.span`
-  margin-left: .25em;
+  margin-left: 0.25em;
   font-size: ${(props) => props.theme.fontSizeSm};
 `;
 
@@ -83,7 +82,6 @@ const StyledCardTitle = styled(CardTitle)`
   text-align: left;
   hyphens: manual;
 `;
-
 
 function beautifyValue(x) {
   let out;
@@ -99,18 +97,12 @@ function beautifyValue(x) {
 }
 
 function IndicatorHighlightCard(props) {
-  const {
-    t,
-    level,
-    objectid,
-    name,
-    value,
-    unit,
-  } = props;
+  const { t, level, objectid, name, value, unit } = props;
   const plan = usePlan();
 
   // FIXME: It sucks that we only use the context for the translation key 'action'
-  const indicatorType = level === 'action' ? t('action', getActionTermContext(plan)) : t(level);
+  const indicatorType =
+    level === 'action' ? t('action', getActionTermContext(plan)) : t(level);
 
   return (
     <StyledCard>
@@ -119,21 +111,18 @@ function IndicatorHighlightCard(props) {
         <a>
           <IndicatorBg level={level} />
           <CardImgOverlay>
-            <IndicatorValue
-              level={level}
-              className="action-number"
-            >
-              { beautifyValue(value) }
+            <IndicatorValue level={level} className="action-number">
+              {beautifyValue(value)}
               <IndicatorUnit>{unit}</IndicatorUnit>
             </IndicatorValue>
           </CardImgOverlay>
         </a>
       </IndicatorLink>
       <CardBody>
-        <IndicatorType>{ indicatorType }</IndicatorType>
+        <IndicatorType>{indicatorType}</IndicatorType>
         <IndicatorLink id={objectid}>
           <a>
-            <StyledCardTitle tag="h3">{ name }</StyledCardTitle>
+            <StyledCardTitle tag="h3">{name}</StyledCardTitle>
           </a>
         </IndicatorLink>
       </CardBody>

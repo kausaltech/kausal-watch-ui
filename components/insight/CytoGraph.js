@@ -1,10 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Col, Container, Row, UncontrolledButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem,
+  Col,
+  Container,
+  Row,
+  UncontrolledButtonDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
 } from 'reactstrap';
 import dayjs from 'dayjs';
 import styled, { withTheme } from 'styled-components';
+import { readableColor } from 'polished';
 import cytoscape from 'cytoscape';
 import dagre from 'cytoscape-dagre';
 import { withRouter } from 'next/router';
@@ -129,7 +136,9 @@ class CytoGraph extends React.Component {
     const url = window.URL.createObjectURL(blob);
     target.href = url;
     target.target = '_blank';
-    target.download = `nakemysverkko-${dayjs().format('YYYY-MM-DD-HH-mm-ss')}.png`;
+    target.download = `nakemysverkko-${dayjs().format(
+      'YYYY-MM-DD-HH-mm-ss'
+    )}.png`;
   }
 
   renderNetwork() {
@@ -192,15 +201,15 @@ class CytoGraph extends React.Component {
       */
       switch (edge.effect_type) {
         case 'increases':
-          color = theme.causalityIncreasesColor;
+          color = theme.graphColors.green050;
           label = '+';
           break;
         case 'decreases':
-          color = theme.causalityDecreasesColor;
+          color = theme.graphColors.red050;
           label = '–';
           break;
         case 'part_of':
-          color = theme.causalityIsPartOfColor;
+          color = theme.graphColors.blue070;
           label = '';
           break;
         default:
@@ -247,7 +256,8 @@ class CytoGraph extends React.Component {
       zoomingEnabled: true,
       maxZoom: 2,
       minZoom: 0.1,
-      style: [ // the stylesheet for the graph
+      style: [
+        // the stylesheet for the graph
         {
           selector: '*',
           style: {
@@ -293,7 +303,7 @@ class CytoGraph extends React.Component {
           style: {
             shape: 'rectangle',
             'background-color': theme.actionColor,
-            color: theme.actionColorFg,
+            color: readableColor(theme.actionColor),
             width: 'label',
             height: 'label',
             'text-valign': 'center',
@@ -304,8 +314,8 @@ class CytoGraph extends React.Component {
           selector: 'node[level="operational"]',
           style: {
             shape: 'rectangle',
-            'background-color': theme.operationalIndicatorColor,
-            color: theme.operationalIndicatorColorFg,
+            'background-color': theme.graphColors.blue070,
+            color: readableColor(theme.graphColors.blue070),
             width: 'label',
             height: 'label',
             'text-valign': 'center',
@@ -316,8 +326,8 @@ class CytoGraph extends React.Component {
           selector: 'node[level="tactical"]',
           style: {
             shape: 'rectangle',
-            'background-color': theme.tacticalIndicatorColor,
-            color: theme.tacticalIndicatorColorFg,
+            'background-color': theme.graphColors.blue030,
+            color: readableColor(theme.graphColors.blue030),
             width: 'label',
             height: 'label',
             'text-valign': 'center',
@@ -328,8 +338,8 @@ class CytoGraph extends React.Component {
           selector: 'node[level="strategic"]',
           style: {
             shape: 'rectangle',
-            'background-color': theme.strategicIndicatorColor,
-            color: theme.strategicIndicatorColorFg,
+            'background-color': theme.graphColors.blue010,
+            color: readableColor(theme.graphColors.blue010),
             width: 'label',
             height: 'label',
             'text-valign': 'center',
@@ -346,7 +356,10 @@ class CytoGraph extends React.Component {
 
       if (rootNode) {
         const selectedNodes = rootNode.predecessors();
-        const removeNodes = cy.nodes().difference(selectedNodes).filter((node) => node.id() != rootNode.id());
+        const removeNodes = cy
+          .nodes()
+          .difference(selectedNodes)
+          .filter((node) => node.id() != rootNode.id());
         removeNodes.remove();
         cy.layout(cyLayoutOptions).run();
         cy.center(rootNode);
@@ -396,7 +409,11 @@ class CytoGraph extends React.Component {
                   {t('insight-download-label')}
                 </DropdownToggle>
                 <DropdownMenu right>
-                  <DropdownItem tag="a" href="#" onClick={(e) => this.downloadAs(e)}>
+                  <DropdownItem
+                    tag="a"
+                    href="#"
+                    onClick={(e) => this.downloadAs(e)}
+                  >
                     {t('insight-download-png')}
                   </DropdownItem>
                 </DropdownMenu>

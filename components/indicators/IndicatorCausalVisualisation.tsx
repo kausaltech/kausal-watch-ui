@@ -43,7 +43,8 @@ function getGridHeight(nodes) {
 
   while (columnIndicators.length !== 0) {
     columnIndicators = nodes.filter((item) => item.column === column);
-    if (columnIndicators.length > highestColumn) highestColumn = columnIndicators.length;
+    if (columnIndicators.length > highestColumn)
+      highestColumn = columnIndicators.length;
     column += 1;
   }
 
@@ -66,17 +67,19 @@ function drawEdge(nodes, edge, toIndex, gridHeight, theme) {
   const fromIndex = fromNode.from.findIndex((x) => x.id === edge.id);
 
   const nodeHeight = 160;
-  const fromNodeHeight = (gridHeight / getColumnHeight(nodes, fromNode.column)) * nodeHeight;
+  const fromNodeHeight =
+    (gridHeight / getColumnHeight(nodes, fromNode.column)) * nodeHeight;
   const fromNodeFromTop = fromNode.row * fromNodeHeight;
 
-  const toNodeHeight = (gridHeight / getColumnHeight(nodes, toNode.column)) * nodeHeight;
+  const toNodeHeight =
+    (gridHeight / getColumnHeight(nodes, toNode.column)) * nodeHeight;
   const toNodeFromTop = toNode.row * toNodeHeight;
 
-  const fromDistribution = (fromNodeHeight / fromNode.from.length);
+  const fromDistribution = fromNodeHeight / fromNode.from.length;
   const fromOffset = fromIndex * fromDistribution + fromDistribution / 2;
   let startY = fromNodeFromTop - toNodeFromTop + fromOffset;
 
-  const toDistribution = (toNodeHeight / toNode.to.length);
+  const toDistribution = toNodeHeight / toNode.to.length;
   const toOffset = toIndex * toDistribution + toDistribution / 2;
   let endY = toOffset;
 
@@ -88,7 +91,7 @@ function drawEdge(nodes, edge, toIndex, gridHeight, theme) {
   if (fromNode.column === toNode.column && fromNode.row < toNode.row) {
     startX = endX = 120;
     endY = -5;
-    startY = fromNodeFromTop + (fromNodeHeight) - toNodeFromTop - 25;
+    startY = fromNodeFromTop + fromNodeHeight - toNodeFromTop - 25;
     bend = 0;
   }
 
@@ -102,13 +105,13 @@ function drawEdge(nodes, edge, toIndex, gridHeight, theme) {
   let edgeColor;
   switch (edge.effect_type) {
     case 'increases':
-      edgeColor = theme.causalityIncreasesColor;
+      edgeColor = theme.graphColors.green050;
       break;
     case 'decreases':
-      edgeColor = theme.causalityDecreasesColor;
+      edgeColor = theme.graphColors.red050;
       break;
     case 'part_of':
-      edgeColor = theme.causalityIsPartOfColor;
+      edgeColor = theme.graphColors.blue070;
       break;
     default:
       edgeColor = theme.themeColors.dark;
@@ -127,27 +130,24 @@ function drawEdge(nodes, edge, toIndex, gridHeight, theme) {
 
 function createChain(nodes, theme) {
   let column = 0;
-  const chain : ReactElement[] = [];
+  const chain: ReactElement[] = [];
   const gridHeight = getGridHeight(nodes);
   let columnIndicators = nodes;
 
   while (columnIndicators.length !== 0) {
-    const children : ReactElement[] = [];
+    const children: ReactElement[] = [];
 
     columnIndicators = nodes.filter((item) => item.column === column);
 
     columnIndicators.forEach((indicator) => {
       let indicatorLevel = 'action';
-      if (indicator.type !== 'action') indicatorLevel = indicator.indicator_level;
-      const connectionsTo : ReactElement[] = [];
+      if (indicator.type !== 'action')
+        indicatorLevel = indicator.indicator_level;
+      const connectionsTo: ReactElement[] = [];
       indicator.to.forEach((edge, index) => {
         const edgeElement = drawEdge(nodes, edge, index, gridHeight, theme);
         if (!edgeElement) return;
-        connectionsTo.push(
-          <span key={edge.id}>
-            {edgeElement}
-          </span>,
-        );
+        connectionsTo.push(<span key={edge.id}>{edgeElement}</span>);
       });
 
       children.push(
@@ -161,7 +161,7 @@ function createChain(nodes, theme) {
             resolution={indicator.time_resolution}
           />
           {connectionsTo}
-        </Indicator>,
+        </Indicator>
       );
     });
     chain.push(<Column key={column}>{children}</Column>);
@@ -182,12 +182,12 @@ const setColumns = (nodes, index, column) => {
   columned[index].column = column;
   if (columned[index].indicator_level !== 'strategic') {
     columned[index].from.forEach((edge) => {
-      const nodeIndex = columned.findIndex(item => item.id === edge.to);
+      const nodeIndex = columned.findIndex((item) => item.id === edge.to);
       setColumns(columned, nodeIndex, column + 1);
     });
   }
   return columned;
-}
+};
 
 const setRows = (nodes) => {
   // Assign columned indicators with rows
@@ -195,7 +195,7 @@ const setRows = (nodes) => {
   const griddedIndicators = [];
   let column = 0;
   while (columnIndicators.length !== 0) {
-    columnIndicators = nodes.filter(item => item.column === column);
+    columnIndicators = nodes.filter((item) => item.column === column);
     columnIndicators.forEach((indicator, row) => {
       const rowIndicator = indicator;
       rowIndicator.row = row;
@@ -204,7 +204,7 @@ const setRows = (nodes) => {
     column += 1;
   }
   return griddedIndicators;
-}
+};
 
 const combineData = (nodes, edges) => {
   // Combine edges data to indicator nodes
@@ -218,18 +218,15 @@ const combineData = (nodes, edges) => {
   const columned = setColumns(indicators, rootIndex, 0);
   const gridded = setRows(columned);
   return gridded;
-
-}
+};
 interface Props {
   actionId?: string;
 }
 
-function IndicatorCausalVisualisation({
-  actionId,
-}: Props) {
+function IndicatorCausalVisualisation({ actionId }: Props) {
   const plan = usePlan();
   const theme = useTheme();
-  const isServer = typeof window === "undefined";
+  const isServer = typeof window === 'undefined';
 
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState(null);
@@ -238,19 +235,23 @@ function IndicatorCausalVisualisation({
   useEffect(() => {
     // React advises to declare the async function directly inside useEffect
     async function fetchData() {
-      aplans.get('insight', {
-        params: {
-          plan: plan.identifier, action: actionId,
-        },
-      }).then((result) => {
-        setData(result);
-        setIsLoaded(true);
-      }).catch((error) => {
-        captureException(error);
-        setError(error);
-        setIsLoaded(true);
-      });
-    };
+      aplans
+        .get('insight', {
+          params: {
+            plan: plan.identifier,
+            action: actionId,
+          },
+        })
+        .then((result) => {
+          setData(result);
+          setIsLoaded(true);
+        })
+        .catch((error) => {
+          captureException(error);
+          setError(error);
+          setIsLoaded(true);
+        });
+    }
 
     // You need to restrict it at some point
     // This is just dummy code and should be replaced by actual
@@ -275,7 +276,7 @@ function IndicatorCausalVisualisation({
 
   return (
     <CausalChain className="causal-chain-visualisation">
-      { createChain(combinedData, theme) }
+      {createChain(combinedData, theme)}
     </CausalChain>
   );
 }

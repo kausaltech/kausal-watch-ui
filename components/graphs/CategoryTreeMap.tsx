@@ -19,25 +19,30 @@ function makeTrace(catsIn, i18n, unit, heading) {
     }
   });
   // Aggregate the treemap values starting from the leaves
-  cats.filter((cat) => cat.children.length === 0).forEach((cat) => {
-    let { parent } = cat;
-    cat.value = cat.attributes[0].value;
-    while (parent) {
-      const p = catMap.get(parent.id);
-      p.value += cat.value;
-      parent = p.parent;
-    }
-  });
+  cats
+    .filter((cat) => cat.children.length === 0)
+    .forEach((cat) => {
+      let { parent } = cat;
+      cat.value = cat.attributes[0].value;
+      while (parent) {
+        const p = catMap.get(parent.id);
+        p.value += cat.value;
+        parent = p.parent;
+      }
+    });
 
   const segmentBgColors = cats.map((cat) => cat.color);
-  const segmentTextColors = segmentBgColors.map((segment) => (
-    segment ? readableColor(segment, '#000000', '#ffffff') : null));
+  const segmentTextColors = segmentBgColors.map((segment) =>
+    segment ? readableColor(segment) : null
+  );
 
   const trace = {
     type: 'icicle',
     name: heading || '',
     labels: cats.map((cat) => `<b>${cat.name}</b>`),
-    text: cats.map((cat) => `${numberFormat.format(cat.value)} ${unit.shortName}`),
+    text: cats.map(
+      (cat) => `${numberFormat.format(cat.value)} ${unit.shortName}`
+    ),
     ids: cats.map((cat) => cat.id),
     parents: cats.map((cat) => cat.parent?.id),
     values: cats.map((cat) => cat.value),
@@ -53,9 +58,10 @@ function makeTrace(catsIn, i18n, unit, heading) {
       side: 'top',
     },
     textfont: {
-      family: "-apple-system, -apple-system, BlinkMacSystemFont, 'Segoe UI', "
-      + "Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', "
-      + 'sans-serif, helvetica neue, helvetica, Ubuntu, roboto, noto, segoe ui, arial, sans-serif',
+      family:
+        "-apple-system, -apple-system, BlinkMacSystemFont, 'Segoe UI', " +
+        "Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', " +
+        'sans-serif, helvetica neue, helvetica, Ubuntu, roboto, noto, segoe ui, arial, sans-serif',
       color: segmentTextColors,
       size: 13,
     },
@@ -67,17 +73,19 @@ function makeTrace(catsIn, i18n, unit, heading) {
 }
 
 type CategoryTreeMapProps = {
-  data: GetCategoriesForTreeMapQuery['planCategories'],
-  heading?: string,
+  data: GetCategoriesForTreeMapQuery['planCategories'];
+  heading?: string;
   valueAttribute: {
     unit: {
-      shortName: string,
-    }
-  }
-  onChangeSection: (cat: string) => void,
-}
-const CategoryTreeMap = React.memo(function CategoryTreeMap(props: CategoryTreeMapProps) {
-  const isServer = typeof window === "undefined";
+      shortName: string;
+    };
+  };
+  onChangeSection: (cat: string) => void;
+};
+const CategoryTreeMap = React.memo(function CategoryTreeMap(
+  props: CategoryTreeMapProps
+) {
+  const isServer = typeof window === 'undefined';
   if (isServer) {
     return null;
   }
@@ -99,10 +107,13 @@ const CategoryTreeMap = React.memo(function CategoryTreeMap(props: CategoryTreeM
     responsive: true,
   };
 
-  const handleSectionChange = useCallback((evt) => {
-    const newCat: string = evt.frame.data[0].level;
-    onChangeSection(newCat);
-  }, [onChangeSection]);
+  const handleSectionChange = useCallback(
+    (evt) => {
+      const newCat: string = evt.frame.data[0].level;
+      onChangeSection(newCat);
+    },
+    [onChangeSection]
+  );
 
   return (
     <Plot

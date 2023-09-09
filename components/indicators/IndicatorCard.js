@@ -1,14 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  Card, CardBody, CardTitle,
-} from 'reactstrap';
+import { Card, CardBody, CardTitle } from 'reactstrap';
+import { readableColor } from 'polished';
 import styled from 'styled-components';
 import dayjs from 'common/dayjs';
 import { getActionTermContext, useTranslation } from 'common/i18n';
 import { IndicatorLink } from 'common/links';
 import { usePlan } from 'context/plan';
-
 
 const IndicatorValue = styled.div`
   margin-top: 1em;
@@ -45,7 +43,7 @@ const Indicator = styled(Card)`
   color: ${(props) => {
     switch (props.level) {
       case 'action':
-        return props.theme.actionColorFg;
+        return readableColor(props.theme.actionColor);
       case 'operational':
         return props.theme.themeColors.white;
       case 'tactical':
@@ -74,14 +72,14 @@ const Indicator = styled(Card)`
   transition: all 0.25s ease;
   &:hover {
     transform: translateY(-5px);
-    box-shadow: 4px 4px 8px rgba(82,90,101,0.5);
+    box-shadow: 4px 4px 8px rgba(82, 90, 101, 0.5);
   }
 `;
 
 const IndicatorType = styled.div`
   font-size: ${(props) => props.theme.fontSizeSm};
   font-family: ${(props) => props.theme.fontFamilyTiny};
-  margin-bottom: .5em;
+  margin-bottom: 0.5em;
 `;
 
 const IndicatorNumber = styled.span`
@@ -114,11 +112,7 @@ function IndicatorLatestValue(props) {
 
   return (
     <IndicatorValue>
-      {latestValue}
-      {' '}
-      <IndicatorValueUnit>
-        {unit}
-      </IndicatorValueUnit>
+      {latestValue} <IndicatorValueUnit>{unit}</IndicatorValueUnit>
       <IndicatorValueTime>
         <time dateTime={tagVal}>{formattedTime}</time>
       </IndicatorValueTime>
@@ -129,47 +123,45 @@ function IndicatorLatestValue(props) {
 function CardLink(props) {
   const { level, indicatorId, children } = props;
 
-  if (level !== 'action') return (
-    <IndicatorLink id={indicatorId}>
-      <StyledLink href>{ children }</StyledLink>
-    </IndicatorLink>
-  );
+  if (level !== 'action')
+    return (
+      <IndicatorLink id={indicatorId}>
+        <StyledLink href>{children}</StyledLink>
+      </IndicatorLink>
+    );
   return <>{children}</>;
 }
 
 function IndicatorCard(props) {
-  const {
-    level,
-    objectid,
-    name,
-    number,
-    latestValue,
-    resolution,
-  } = props;
+  const { level, objectid, name, number, latestValue, resolution } = props;
   const plan = usePlan();
   const { t, i18n } = useTranslation();
 
   // FIXME: It sucks that we only use the context for the translation key 'action'
-  const indicatorType = level === 'action' ? t('action', getActionTermContext(plan)) : t(level);
-  const formattedValue = latestValue ? latestValue.value.toLocaleString(i18n.language) : null;
+  const indicatorType =
+    level === 'action' ? t('action', getActionTermContext(plan)) : t(level);
+  const formattedValue = latestValue
+    ? latestValue.value.toLocaleString(i18n.language)
+    : null;
   return (
     <CardLink level={level} indicatorId={objectid}>
       <Indicator level={level}>
         <CardBody>
           <div>
-            <IndicatorType>{ indicatorType }</IndicatorType>
+            <IndicatorType>{indicatorType}</IndicatorType>
             <IndicatorTitle>
-              { number && <IndicatorNumber>{ number }</IndicatorNumber> }
-              { name }
+              {number && <IndicatorNumber>{number}</IndicatorNumber>}
+              {name}
             </IndicatorTitle>
           </div>
-          { latestValue &&
+          {latestValue && (
             <IndicatorLatestValue
               latestValue={formattedValue}
               date={latestValue.date}
               unit={latestValue.unit}
               resolution={resolution}
-            />}
+            />
+          )}
         </CardBody>
       </Indicator>
     </CardLink>
@@ -189,7 +181,11 @@ IndicatorCard.propTypes = {
   objectid: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   number: PropTypes.number,
-  latestValue: PropTypes.shape({ value: PropTypes.number, date: PropTypes.string, unit: PropTypes.string }),
+  latestValue: PropTypes.shape({
+    value: PropTypes.number,
+    date: PropTypes.string,
+    unit: PropTypes.string,
+  }),
   resolution: PropTypes.string,
 };
 
