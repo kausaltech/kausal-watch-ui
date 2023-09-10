@@ -111,7 +111,9 @@ const ActionAttribute = (props: AttributeContentProps | AttributeContentNestedTy
             />
           ))}
           { type.showChoiceNames && (
-            <AttributeChoiceLabel className={ type.format === 'OPTIONAL_CHOICE' ? 'highlighted' : ''}>
+            <AttributeChoiceLabel
+              className={ (type.format === 'OPTIONAL_CHOICE' || type.format === 'UNORDERED_CHOICE') ? 'highlighted' : ''}
+            >
               { attribute.choice?.name }
             </AttributeChoiceLabel>
           )}

@@ -803,6 +803,7 @@ export type ActionTask = {
   commentEsUs?: Maybe<Scalars['String']>;
   commentFi?: Maybe<Scalars['String']>;
   commentI18n?: Maybe<Scalars['String']>;
+  commentLv?: Maybe<Scalars['String']>;
   commentSv?: Maybe<Scalars['String']>;
   /** The date when the task was completed */
   completedAt?: Maybe<Scalars['Date']>;
@@ -823,6 +824,7 @@ export type ActionTask = {
   nameEsUs: Scalars['String'];
   nameFi: Scalars['String'];
   nameI18n: Scalars['String'];
+  nameLv: Scalars['String'];
   nameSv: Scalars['String'];
   state: ActionTaskState;
 };
@@ -1086,7 +1088,9 @@ export enum AttributeTypeFormat {
   /** Rich text */
   RichText = 'RICH_TEXT',
   /** Text */
-  Text = 'TEXT'
+  Text = 'TEXT',
+  /** Choice */
+  UnorderedChoice = 'UNORDERED_CHOICE'
 }
 
 export type BlockQuoteBlock = StreamFieldInterface & {
@@ -2324,6 +2328,7 @@ export type MonitoringQualityPoint = {
   descriptionNoEsUs: Scalars['String'];
   descriptionNoFi: Scalars['String'];
   descriptionNoI18n: Scalars['String'];
+  descriptionNoLv: Scalars['String'];
   descriptionNoSv: Scalars['String'];
   descriptionYes?: Maybe<Scalars['String']>;
   descriptionYesDa: Scalars['String'];
@@ -2336,6 +2341,7 @@ export type MonitoringQualityPoint = {
   descriptionYesEsUs: Scalars['String'];
   descriptionYesFi: Scalars['String'];
   descriptionYesI18n: Scalars['String'];
+  descriptionYesLv: Scalars['String'];
   descriptionYesSv: Scalars['String'];
   i18n?: Maybe<Scalars['JSONString']>;
   id: Scalars['ID'];
@@ -2351,6 +2357,7 @@ export type MonitoringQualityPoint = {
   nameEsUs: Scalars['String'];
   nameFi: Scalars['String'];
   nameI18n: Scalars['String'];
+  nameLv: Scalars['String'];
   nameSv: Scalars['String'];
   order: Scalars['Int'];
   plan: Plan;
@@ -2471,6 +2478,7 @@ export type OrganizationClass = {
   nameEsUs: Scalars['String'];
   nameFi: Scalars['String'];
   nameI18n: Scalars['String'];
+  nameLv: Scalars['String'];
   nameSv: Scalars['String'];
   /** An organization category, e.g. committee */
   organizationSet: Array<Organization>;
@@ -2770,6 +2778,7 @@ export type Plan = PlanInterface & {
   hideActionLeadParagraph?: Maybe<Scalars['Boolean']>;
   hideActionOfficialName?: Maybe<Scalars['Boolean']>;
   id: Scalars['ID'];
+  /** A unique identifier for the plan used internally to distinguish between plans. This becomes part of the test site URL: https://[identifier].watch-test.kausal.tech. Use lowercase letters and dashes. */
   identifier: Scalars['String'];
   image?: Maybe<Image>;
   impactGroups: Array<Maybe<ImpactGroup>>;
@@ -2777,6 +2786,7 @@ export type Plan = PlanInterface & {
   lastActionIdentifier?: Maybe<Scalars['ID']>;
   mainMenu?: Maybe<MainMenu>;
   monitoringQualityPoints: Array<MonitoringQualityPoint>;
+  /** The official plan name in full form */
   name: Scalars['String'];
   organization: Organization;
   otherLanguages?: Maybe<Array<Scalars['String']>>;
@@ -2793,6 +2803,7 @@ export type Plan = PlanInterface & {
   /** Leave empty unless specifically required. Action filters based on this category are displayed more prominently than filters of other categories. */
   secondaryActionClassification?: Maybe<CategoryType>;
   serveFileBaseUrl: Scalars['String'];
+  /** A shorter version of the plan name */
   shortName?: Maybe<Scalars['String']>;
   /** Set if this plan is superseded by another plan */
   supersededBy?: Maybe<Plan>;
@@ -2902,8 +2913,10 @@ export type PlanViewUrlArgs = {
 /** A domain (hostname) where an UI for a Plan might live. */
 export type PlanDomain = {
   __typename?: 'PlanDomain';
+  /** Fill this for a multi-plan site when the plan does not live in the root of the domain. */
   basePath?: Maybe<Scalars['String']>;
   googleSiteVerificationTag?: Maybe<Scalars['String']>;
+  /** The fully qualified domain name, eg. climate.cityname.gov. Leave blank if not yet known. */
   hostname: Scalars['String'];
   id: Scalars['ID'];
   matomoAnalyticsUrl?: Maybe<Scalars['String']>;
@@ -3571,6 +3584,8 @@ export type SiteGeneralContent = {
 export enum SiteGeneralContentActionTerm {
   /** Action */
   Action = 'ACTION',
+  /** Case study */
+  CaseStudy = 'CASE_STUDY',
   /** Strategy */
   Strategy = 'STRATEGY'
 }
