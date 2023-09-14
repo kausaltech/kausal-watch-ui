@@ -33,7 +33,8 @@ const Segment = styled.button`
   color: ${(props) => props.theme.themeColors.black};
 
   &:hover {
-    background-color: ${(props) => transparentize(0.1, props.theme.themeColors.white)};
+    background-color: ${(props) =>
+      transparentize(0.1, props.theme.themeColors.white)};
   }
 
   &.small {
@@ -51,7 +52,7 @@ const Segment = styled.button`
   }
 
   &:nth-child(3n + 2) {
-    background-color: ${(props) => shade(0.10, props.theme.themeColors.white)};
+    background-color: ${(props) => shade(0.1, props.theme.themeColors.white)};
   }
 
   &:nth-child(3n) {
@@ -81,15 +82,7 @@ class BarSegment extends React.Component {
   }
 
   render() {
-    const {
-      t,
-      theme,
-      active,
-      segment,
-      width,
-      color,
-      onSelect,
-    } = this.props;
+    const { t, theme, active, segment, width, color, onSelect } = this.props;
     const id = `segment-${segment.id}`;
 
     let className = 'bar-segment';
@@ -101,7 +94,11 @@ class BarSegment extends React.Component {
       className += ' active';
       if (color) {
         style.backgroundColor = color;
-        style.color = readableColor(color, theme.themeColors.black, theme.themeColors.white);
+        style.color = readableColor(
+          color,
+          theme.themeColors.black,
+          theme.themeColors.white
+        );
       }
     }
     if (segment.value <= VALUE_VERY_SMALL) {
@@ -118,13 +115,14 @@ class BarSegment extends React.Component {
           style={style}
           onClick={() => onSelect(segment)}
           role="tab"
-          aria-label={`${segment.name}: ${t('dashboard-segment-description')} ${Math.round(segment.value)} %`}
+          aria-label={`${segment.name}: ${t(
+            'dashboard-segment-description'
+          )} ${Math.round(segment.value)} %`}
           aria-selected={active}
           aria-controls={`tab-${segment.id}`}
           tabIndex={active ? '0' : '-1'}
         >
-          {`${Math.round(segment.value)}`}
-          %
+          {`${Math.round(segment.value)}`}%
         </Segment>
         <Tooltip
           placement="top"

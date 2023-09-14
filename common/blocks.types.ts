@@ -1,3 +1,3 @@
 export interface CommonContentBlockProps {
-    id?: string
+  id?: string;
 }

@@ -6,7 +6,10 @@ import styled from 'styled-components';
 import { gql } from '@apollo/client';
 
 import { cleanActionStatus } from 'common/preprocess';
-import { getStatusColor, getStatusColorForAction } from 'common/ActionStatusSummary';
+import {
+  getStatusColor,
+  getStatusColorForAction,
+} from 'common/ActionStatusSummary';
 import { ActionLink } from 'common/links';
 import { useTheme } from 'common/theme';
 import { getActionTermContext, useTranslation } from 'common/i18n';
@@ -56,15 +59,15 @@ const ACTION_CARD_FRAGMENT = gql`
       }
     }
     mergedWith {
+      id
+      identifier
+      plan {
         id
-        identifier
-        plan {
-          id
-          shortName
-          versionName
-          viewUrl(clientUrl: $clientUrl)
-        }
+        shortName
+        versionName
+        viewUrl(clientUrl: $clientUrl)
       }
+    }
     plan {
       id
       shortName
@@ -95,7 +98,6 @@ const StyledActionLink = styled.a`
       text-decoration: underline;
     }
   }
-
 `;
 
 const PrimarySvgIcon = styled(SVG)`
@@ -125,7 +127,8 @@ const SecondaryIcon = styled(SVG)`
 
 const SecondaryIconsContainer = styled.div`
   text-align: right;
-  padding: 0 ${(props) => props.theme.spaces.s050} ${(props) => props.theme.spaces.s050};
+  padding: 0 ${(props) => props.theme.spaces.s050}
+    ${(props) => props.theme.spaces.s050};
 `;
 
 const ActionCardElement = styled.div`
@@ -135,11 +138,13 @@ const ActionCardElement = styled.div`
   border-width: ${(props) => props.theme.cardBorderWidth};
   border-radius: ${(props) => props.theme.cardBorderRadius};
   overflow: hidden;
-  box-shadow: 2px 2px 8px ${(props) => transparentize(0.9, props.theme.themeColors.dark)};
+  box-shadow: 2px 2px 8px
+    ${(props) => transparentize(0.9, props.theme.themeColors.dark)};
   transition: all 0.5s ease;
   &:hover {
     transform: translateY(-5px);
-    box-shadow: 4px 4px 8px ${(props) => transparentize(0.8, props.theme.themeColors.dark)};
+    box-shadow: 4px 4px 8px
+      ${(props) => transparentize(0.8, props.theme.themeColors.dark)};
   }
 `;
 
@@ -159,11 +164,11 @@ const ActionNumber = styled.div`
   margin-left: ${(props) => props.theme.spaces.s050};
 
   &:after {
-    content: ".";
+    content: '.';
   }
 `;
 
-const ActionStatusArea = styled.div<{statusColor: string}>`
+const ActionStatusArea = styled.div<{ statusColor: string }>`
   display: flex;
   justify-content: space-between;
   flex-direction: column;
@@ -174,7 +179,10 @@ const ActionStatusArea = styled.div<{statusColor: string}>`
 `;
 
 const ActionPhase = styled.div`
-  background-color: ${(props) => props.hasStatus === 'true' ? props.theme.themeColors.light : props.statusColor};
+  background-color: ${(props) =>
+    props.hasStatus === 'true'
+      ? props.theme.themeColors.light
+      : props.statusColor};
   color: ${(props) => props.theme.themeColors.dark};
 `;
 
@@ -185,7 +193,7 @@ const StatusName = styled.div`
   line-height: 1;
 
   &:after {
-    content: "\\00a0";
+    content: '\\00a0';
   }
 `;
 
@@ -226,41 +234,44 @@ const OrgLogo = styled.img`
 `;
 
 const ActionIdentifier = (props) => {
-  const {showId, identifier, plan, size} = props;
-  if (!showId && !plan) return <div/>
+  const { showId, identifier, plan, size } = props;
+  if (!showId && !plan) return <div />;
 
   return (
     <ActionId>
-    { plan && (
-      <PlanChip
-        planImage={plan.image?.rendition?.src}
-        planShortName={plan.shortName || plan.name}
-        size={size}
-      />
-    )}
-    { showId && <ActionNumber>{ identifier }</ActionNumber> }
+      {plan && (
+        <PlanChip
+          planImage={plan.image?.rendition?.src}
+          planShortName={plan.shortName || plan.name}
+          size={size}
+        />
+      )}
+      {showId && <ActionNumber>{identifier}</ActionNumber>}
     </ActionId>
-  )
+  );
 };
 
 const PrimaryIcon = (props) => {
   const { category } = props;
   if (!category) return null;
-  if (category.iconSvgUrl) return <PrimarySvgIcon src={category.iconSvgUrl} />
-  if (category.iconImage) return <PrimaryImageIcon imagesrc={category.iconImage.rendition.src} />
+  if (category.iconSvgUrl) return <PrimarySvgIcon src={category.iconSvgUrl} />;
+  if (category.iconImage)
+    return <PrimaryImageIcon imagesrc={category.iconImage.rendition.src} />;
   else return null;
 };
 
 const SecondaryIcons = (props) => {
-  const {actionCategories, secondaryClassificationId} = props;
-  const secondaryIcons = actionCategories?.filter((cat) =>
-    cat.type.id === secondaryClassificationId && cat.iconSvgUrl !== null);
+  const { actionCategories, secondaryClassificationId } = props;
+  const secondaryIcons = actionCategories?.filter(
+    (cat) =>
+      cat.type.id === secondaryClassificationId && cat.iconSvgUrl !== null
+  );
 
   if (secondaryIcons.length < 1) return undefined;
 
   return (
     <SecondaryIconsContainer>
-      {secondaryIcons.map((cat) =>
+      {secondaryIcons.map((cat) => (
         <SecondaryIcon
           color={cat.color ? cat.color : 'black'}
           key={cat.id}
@@ -268,9 +279,9 @@ const SecondaryIcons = (props) => {
           preserveAspectRatio="xMinYMid meet"
           alt={cat.name}
         />
-      )}
+      ))}
     </SecondaryIconsContainer>
-  )
+  );
 };
 
 ActionIdentifier.propTypes = {
@@ -280,10 +291,10 @@ ActionIdentifier.propTypes = {
 };
 
 type ActionCardProps = {
-  action: ActionCardFragment,
-  showPlan: boolean,
-  size?: string
-}
+  action: ActionCardFragment;
+  showPlan: boolean;
+  size?: string;
+};
 function ActionCard(props: ActionCardProps) {
   const { action, showPlan, size } = props;
 
@@ -307,16 +318,20 @@ function ActionCard(props: ActionCardProps) {
     if (status.identifier === 'completed') statusText = status.name;
   }
   const getPlanUrl = (mergedWith, actionPlan, planId) => {
-    if (mergedWith && (mergedWith?.plan.id !== planId)) return mergedWith.plan.viewUrl;
+    if (mergedWith && mergedWith?.plan.id !== planId)
+      return mergedWith.plan.viewUrl;
     if (actionPlan.id !== planId) return actionPlan.viewUrl;
     return undefined;
   };
 
   const getMergedName = (mergedWith, planId) => {
-    if (mergedWith.plan.id !== planId) return `${mergedWith.plan.shortName} ${mergedWith.identifier}`;
+    if (mergedWith.plan.id !== planId)
+      return `${mergedWith.plan.shortName} ${mergedWith.identifier}`;
     else return mergedWith.identifier;
   };
-  const primaryRootCategory = action.primaryCategories ? action.primaryCategories[0] : null;
+  const primaryRootCategory = action.primaryCategories
+    ? action.primaryCategories[0]
+    : null;
   const statusColor = getStatusColorForAction(action, plan, theme);
   return (
     <ActionLink
@@ -327,12 +342,8 @@ function ActionCard(props: ActionCardProps) {
     >
       <StyledActionLink>
         <ActionCardElement>
-          <ActionStatusArea
-            statusColor={statusColor}
-          >
-            <PrimaryIcon
-              category={primaryRootCategory}
-            />
+          <ActionStatusArea statusColor={statusColor}>
+            <PrimaryIcon category={primaryRootCategory} />
             <ActionIdentifier
               showId={!plan.hideActionIdentifiers}
               identifier={action.identifier}
@@ -344,33 +355,34 @@ function ActionCard(props: ActionCardProps) {
             statusColor={statusColor}
             hasStatus={(mergedWith !== null || statusText !== null).toString()}
           >
-            { mergedWith ? (
+            {mergedWith ? (
               <StatusName>
-                { t('actions:action-status-merged', getActionTermContext(plan)) }
+                {t('actions:action-status-merged', getActionTermContext(plan))}
                 <span> &rarr; </span>
-                { getMergedName(mergedWith, plan.id) }
+                {getMergedName(mergedWith, plan.id)}
               </StatusName>
             ) : (
-              <StatusName>
-                { statusText }
-              </StatusName>
-            ) }
-          </ActionPhase>
-          { primaryOrg && (
-              <ActionOrg>
-                <ActionOrgAvatar>
-                  <OrgLogo
-                    src={primaryOrg?.logo?.rendition?.src || '/static/themes/default/images/default-avatar-org.png'}
-                    alt=""
-                  />
-                </ActionOrgAvatar>
-                <ActionOrgName>{primaryOrg.abbreviation || primaryOrg.name}</ActionOrgName>
-              </ActionOrg>
+              <StatusName>{statusText}</StatusName>
             )}
-          <StyledCardTitle className="card-title">
-            {actionName}
-          </StyledCardTitle>
-          { plan.secondaryActionClassification && (
+          </ActionPhase>
+          {primaryOrg && (
+            <ActionOrg>
+              <ActionOrgAvatar>
+                <OrgLogo
+                  src={
+                    primaryOrg?.logo?.rendition?.src ||
+                    '/static/themes/default/images/default-avatar-org.png'
+                  }
+                  alt=""
+                />
+              </ActionOrgAvatar>
+              <ActionOrgName>
+                {primaryOrg.abbreviation || primaryOrg.name}
+              </ActionOrgName>
+            </ActionOrg>
+          )}
+          <StyledCardTitle className="card-title">{actionName}</StyledCardTitle>
+          {plan.secondaryActionClassification && (
             <SecondaryIcons
               actionCategories={action.categories}
               secondaryClassificationId={plan.secondaryActionClassification.id}

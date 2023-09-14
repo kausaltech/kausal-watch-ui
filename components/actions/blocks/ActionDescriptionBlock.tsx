@@ -7,10 +7,10 @@ const ActionDescriptionBlock = (props) => {
   const { t } = useTranslation();
   return (
     <ActionSection className="text-content">
-      <h2 className="visually-hidden">{ t('actions:action-description') }</h2>
+      <h2 className="visually-hidden">{t('actions:action-description')}</h2>
       <RichText html={content} />
     </ActionSection>
-  )
-}
+  );
+};
 
 export default ActionDescriptionBlock;

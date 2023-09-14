@@ -14,25 +14,12 @@ const Inputs = () => {
         name="search"
         placeholder="Placeholder"
       />
-      <TextInput
-        id="searchfield"
-        name="search"
-        placeholder="No Label"
-      />
+      <TextInput id="searchfield" name="search" placeholder="No Label" />
       <h3 className="mt-4">Dropdowns</h3>
-      <DropDown
-        label="Dropdown Label"
-        id="impactfield"
-        name="impact"
-        value=""
-      >
+      <DropDown label="Dropdown Label" id="impactfield" name="impact" value="">
         <option value="">Option</option>
       </DropDown>
-      <DropDown
-        id="impactfield"
-        name="impact"
-        value=""
-      >
+      <DropDown id="impactfield" name="impact" value="">
         <option value="">No label</option>
       </DropDown>
     </div>
@@ -48,12 +35,15 @@ const InputsLayout = () => {
         <div className="col-6">
           <Inputs />
         </div>
-        <div className="col-6" style={{ backgroundColor: theme.themeColors.light }}>
+        <div
+          className="col-6"
+          style={{ backgroundColor: theme.themeColors.light }}
+        >
           <Inputs />
         </div>
       </div>
     </div>
-  )
+  );
 };
 
 export const InputStory = (theme) => <InputsLayout theme={theme} />;

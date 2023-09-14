@@ -1,8 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  Card as BSCard, CardBody,
-} from 'reactstrap';
+import { Card as BSCard, CardBody } from 'reactstrap';
 import styled from 'styled-components';
 import { transparentize } from 'polished';
 
@@ -12,8 +10,10 @@ const StyledCard = styled(BSCard)`
   overflow: hidden;
   border-width: ${(props) => props.theme.cardBorderWidth};
   border-radius: ${(props) => props.theme.cardBorderRadius};
-  background-color: ${(props) => (props.customcolor ? props.customcolor : props.theme.themeColors.white)};
-  box-shadow: 2px 2px 8px ${(props) => transparentize(0.9, props.theme.themeColors.dark)};
+  background-color: ${(props) =>
+    props.customcolor ? props.customcolor : props.theme.themeColors.white};
+  box-shadow: 2px 2px 8px
+    ${(props) => transparentize(0.9, props.theme.themeColors.dark)};
 
   &.negative {
   }
@@ -25,19 +25,26 @@ const StyledCard = styled(BSCard)`
 
   .card-body {
     line-height: ${(props) => props.theme.lineHeightMd};
-    padding-bottom: .5rem;
+    padding-bottom: 0.5rem;
   }
 
   &:hover {
     transform: translateY(-5px);
-    box-shadow: 4px 4px 8px ${(props) => transparentize(0.8, props.theme.themeColors.dark)};
+    box-shadow: 4px 4px 8px
+      ${(props) => transparentize(0.8, props.theme.themeColors.dark)};
   }
 
   &.negative {
     color: ${(props) => props.theme.themeColors.white};
-    background-color: ${(props) => (props.customcolor ? props.customcolor : props.theme.themeColors.black)};
+    background-color: ${(props) =>
+      props.customcolor ? props.customcolor : props.theme.themeColors.black};
 
-    h1, h2, h3, h4, h5, h6 {
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
       color: ${(props) => props.theme.themeColors.white};
     }
   }
@@ -45,7 +52,8 @@ const StyledCard = styled(BSCard)`
 
 const ImgArea = styled.div`
   position: relative;
-  border-bottom: ${(props) => props.colorEffect ? '6px' : '0'} solid ${(props) => props.colorEffect};
+  border-bottom: ${(props) => (props.colorEffect ? '6px' : '0')} solid
+    ${(props) => props.colorEffect};
 `;
 
 const ImgBg = styled.div`
@@ -81,9 +89,7 @@ const Card = (props) => {
           <ImgBg background={imageUrl} imageAlign={imageAlign} />
         </ImgArea>
       )}
-      <CardBody>
-        { children }
-      </CardBody>
+      <CardBody>{children}</CardBody>
     </StyledCard>
   );
 };

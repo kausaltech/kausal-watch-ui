@@ -5,19 +5,22 @@ import { useTranslation } from 'common/i18n';
 import { TFunction } from 'next-i18next';
 
 import {
-  AttributesBlockAttributeFragment, AttributesBlockAttributeTypeFragment,
-  AttributesBlockAttributeWithNestedTypeFragment
- } from 'common/__generated__/graphql';
+  AttributesBlockAttributeFragment,
+  AttributesBlockAttributeTypeFragment,
+  AttributesBlockAttributeWithNestedTypeFragment,
+} from 'common/__generated__/graphql';
 import ActionAttribute from './ActionAttribute';
 
 type AttributeProps = {
-  vertical: boolean,
-}
+  vertical: boolean;
+};
 
 const Attributes = styled.div<AttributeProps>`
-  ${props => props.vertical && css`
-    max-width: ${(props) => props.theme.breakpointSm};
-  `}
+  ${(props) =>
+    props.vertical &&
+    css`
+      max-width: ${(props) => props.theme.breakpointSm};
+    `}
   margin: ${(props) => props.theme.spaces.s100} auto;
   padding: ${(props) => props.theme.spaces.s200} 0 0;
   border-top: 1px solid ${(props) => props.theme.graphColors.grey040};
@@ -36,31 +39,34 @@ const AttributeItem = styled(Col)`
 `;
 
 type AttributeContentProps = {
-  attribute: AttributesBlockAttributeFragment,
-  attributeType: AttributesBlockAttributeTypeFragment,
-  t: TFunction, 
-}
+  attribute: AttributesBlockAttributeFragment;
+  attributeType: AttributesBlockAttributeTypeFragment;
+  t: TFunction;
+};
 
 type AttributeContentNestedTypeProps = {
-  attribute: AttributesBlockAttributeWithNestedTypeFragment,
-  attributeType: null | undefined,
-}
+  attribute: AttributesBlockAttributeWithNestedTypeFragment;
+  attributeType: null | undefined;
+};
 
 type AttributesBlockProps = {
-  children?: any,
-  vertical?: boolean,
-} & ({
-  attributes: AttributeContentProps['attribute'][],
-  types: AttributeContentProps['attributeType'][],
-} | {
-  attributes: AttributeContentNestedTypeProps['attribute'][],
-  types: undefined,
-});
+  children?: any;
+  vertical?: boolean;
+} & (
+  | {
+      attributes: AttributeContentProps['attribute'][];
+      types: AttributeContentProps['attributeType'][];
+    }
+  | {
+      attributes: AttributeContentNestedTypeProps['attribute'][];
+      types: undefined;
+    }
+);
 
 function AttributesBlock(props: AttributesBlockProps) {
   const {
     attributes,
-    children,  // extra children that can be passed by nesting in the JSX tag
+    children, // extra children that can be passed by nesting in the JSX tag
     types,
     vertical,
   } = props;
@@ -77,7 +83,10 @@ function AttributesBlock(props: AttributesBlockProps) {
 
     if (__typename === 'AttributeChoice') {
       return !!(attribute.choice || attribute.text);
-    } else if (__typename === 'AttributeText' || __typename === 'AttributeRichText') {
+    } else if (
+      __typename === 'AttributeText' ||
+      __typename === 'AttributeRichText'
+    ) {
       return !!attribute.value;
     } else if (__typename === 'AttributeCategoryChoice') {
       return !!attribute.categories.length;
@@ -88,26 +97,19 @@ function AttributesBlock(props: AttributesBlockProps) {
 
   return (
     <Attributes vertical={vertical ?? false}>
-      <AttributesList
-        vertical={vertical}
-        tag="ul"
-      >
-      {attributesWithValue.map((item: typeof attributes[0]) => {
-        return (
-          <AttributeItem
-            tag="li"
-            key={item.id}
-            md={vertical ? 12 : 6}
-          >
-            {/* @ts-ignore */}
-            <ActionAttribute
-              key={item.id}
-              attribute={item}
-              attributeType={typesById && typesById.get(item.type.id)}
-            />
-          </AttributeItem>
-        );
-      })}
+      <AttributesList vertical={vertical} tag="ul">
+        {attributesWithValue.map((item: typeof attributes[0]) => {
+          return (
+            <AttributeItem tag="li" key={item.id} md={vertical ? 12 : 6}>
+              {/* @ts-ignore */}
+              <ActionAttribute
+                key={item.id}
+                attribute={item}
+                attributeType={typesById && typesById.get(item.type.id)}
+              />
+            </AttributeItem>
+          );
+        })}
       </AttributesList>
       {children}
     </Attributes>

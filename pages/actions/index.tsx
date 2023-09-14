@@ -10,30 +10,31 @@ import ActionList from 'components/dashboard/ActionList';
 import type { GetActionListPageQuery } from 'common/__generated__/graphql';
 import { Filters, FilterValue } from 'components/actions/ActionListFilters';
 
-
 const GET_ACTION_LIST_PAGE = gql`
-query GetActionListPage($plan: ID!, $path: String!) {
-  planPage(plan: $plan, path: $path) {
-    __typename
-    id
-    slug
-    title
-    ... on ActionListPage {
-      leadContent
-      defaultView
-      headingHierarchyDepth
-      includeRelatedPlans
-      ...ActionListPageFilters
+  query GetActionListPage($plan: ID!, $path: String!) {
+    planPage(plan: $plan, path: $path) {
+      __typename
+      id
+      slug
+      title
+      ... on ActionListPage {
+        leadContent
+        defaultView
+        headingHierarchyDepth
+        includeRelatedPlans
+        ...ActionListPageFilters
+      }
+      lastPublishedAt
     }
-    lastPublishedAt
   }
-}
-${ActionList.fragments.listFilters}
+  ${ActionList.fragments.listFilters}
 `;
 
 function ActionsListPage() {
   const router = useRouter();
-  const defaultFilters: Filters<FilterValue> = ActionList.getFiltersFromQuery(router.query);
+  const defaultFilters: Filters<FilterValue> = ActionList.getFiltersFromQuery(
+    router.query
+  );
   const [filters, setFilters] = useState(defaultFilters);
   const path = '/actions';
   const plan = usePlan();
@@ -55,15 +56,19 @@ function ActionsListPage() {
         router.replace(link.href, undefined, { shallow: true });
         return newFilters;
       });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [setFilters],
-  );
-  const { loading, error, data } = useQuery<GetActionListPageQuery>(GET_ACTION_LIST_PAGE, {
-    variables: {
-      plan: plan.identifier,
-      path,
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     },
-  });
+    [setFilters]
+  );
+  const { loading, error, data } = useQuery<GetActionListPageQuery>(
+    GET_ACTION_LIST_PAGE,
+    {
+      variables: {
+        plan: plan.identifier,
+        path,
+      },
+    }
+  );
   const planPage = data?.planPage;
 
   const availableFilters = useMemo(() => {
@@ -72,8 +77,8 @@ function ActionsListPage() {
     return {
       primaryFilters,
       mainFilters,
-      advancedFilters
-    }
+      advancedFilters,
+    };
   }, [planPage]);
 
   if (loading) return <ContentLoader />;
@@ -83,11 +88,13 @@ function ActionsListPage() {
     return <ErrorMessage message="Invalid action list page" />;
   }
 
-  const isServer = typeof window === "undefined";
+  const isServer = typeof window === 'undefined';
   return (
     <Layout>
       <Meta title={planPage.title} />
-      {isServer ? <ContentLoader /> : (
+      {isServer ? (
+        <ContentLoader />
+      ) : (
         <ActionList
           title={planPage.title}
           leadContent={planPage.leadContent}

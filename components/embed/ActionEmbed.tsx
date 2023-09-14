@@ -59,12 +59,12 @@ const GET_ACTION = gql`
 `;
 
 interface ActionEmbedPropsType {
-  path: string[],
-  maxWidth?: number,
+  path: string[];
+  maxWidth?: number;
 }
 
 interface ActionCardWrapperProps {
-  maxWidth: number,
+  maxWidth: number;
 }
 
 const DEFAULT_MAX_WIDTH = 600;
@@ -76,16 +76,16 @@ const ActionCardWrapper = styled.div<ActionCardWrapperProps>`
   }
 `;
 
-const ActionEmbed = ({path, maxWidth} : ActionEmbedPropsType) => {
+const ActionEmbed = ({ path, maxWidth }: ActionEmbedPropsType) => {
   const plan = usePlan();
   if (path.length < 1) {
     throw new InvalidEmbedAddressError('Could not retrieve action data');
   }
   const { loading, error, data } = useQuery<GetEmbedActionQuery>(GET_ACTION, {
-     variables: {
+    variables: {
       plan: plan.identifier,
       identifier: path[0],
-    }
+    },
   });
   if (loading) return null;
   if (error || data == null || data.action == null) {
@@ -100,6 +100,6 @@ const ActionEmbed = ({path, maxWidth} : ActionEmbedPropsType) => {
       />
     </ActionCardWrapper>
   );
-}
+};
 
 export default ActionEmbed;

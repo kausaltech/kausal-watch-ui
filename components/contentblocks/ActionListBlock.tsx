@@ -12,12 +12,12 @@ import ErrorMessage from 'components/common/ErrorMessage';
 import PlanContext from 'context/plan';
 
 const GET_ACTION_LIST_FOR_BLOCK = gql`
-query GetActionListForBlock($plan: ID!, $category: ID, $clientUrl: String) {
-  planActions(plan: $plan, category: $category) {
-    ...ActionCard
+  query GetActionListForBlock($plan: ID!, $category: ID, $clientUrl: String) {
+    planActions(plan: $plan, category: $category) {
+      ...ActionCard
+    }
   }
-}
-${ActionCard.fragments.action}
+  ${ActionCard.fragments.action}
 `;
 
 const ActionListSection = styled.div`
@@ -38,7 +38,6 @@ const SectionHeader = styled.h2`
     font-size: ${(props) => props.theme.fontSizeXl};
   }
 `;
-
 
 const ActionListBlock = (props) => {
   const { id = '', categoryId, color } = props;
@@ -64,11 +63,8 @@ const ActionListBlock = (props) => {
   return (
     <ActionListSection id={id} color={color}>
       <Container>
-        { heading && (<SectionHeader>{ heading }</SectionHeader>)}
-        <ActionCardList
-          actions={planActions}
-          groupBy={groupBy}
-        />
+        {heading && <SectionHeader>{heading}</SectionHeader>}
+        <ActionCardList actions={planActions} groupBy={groupBy} />
       </Container>
     </ActionListSection>
   );
@@ -77,7 +73,7 @@ const ActionListBlock = (props) => {
 ActionListBlock.propTypes = {
   id: PropTypes.string,
   categoryId: PropTypes.string.isRequired,
-  color: PropTypes.string
+  color: PropTypes.string,
 };
 
 export default ActionListBlock;

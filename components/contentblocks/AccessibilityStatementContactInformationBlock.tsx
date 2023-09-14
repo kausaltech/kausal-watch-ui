@@ -6,16 +6,23 @@ import PlanContext from 'context/plan';
 import { CommonContentBlockProps } from 'common/blocks.types';
 
 interface Props extends CommonContentBlockProps {
-  content: unknown // TODO: Type this prop
+  content: unknown; // TODO: Type this prop
 }
 
-const AccessibilityStatementContactInformationBlock = ({ id = '', content }: Props) => {
+const AccessibilityStatementContactInformationBlock = ({
+  id = '',
+  content,
+}: Props) => {
   const { t, i18n } = useTranslation(['a11y']);
   const plan = useContext(PlanContext);
 
-  const accessibilityContactEmail = content?.find((block) => block.id==='email')?.value || 'accessibility@kausal.tech';
+  const accessibilityContactEmail =
+    content?.find((block) => block.id === 'email')?.value ||
+    'accessibility@kausal.tech';
   const publisher = content?.find((block) => block.id === 'publisher')?.value;
-  const customParagraph = content?.find((block) => block.id === 'maintenance_responsibility_paragraph')?.value;
+  const customParagraph = content?.find(
+    (block) => block.id === 'maintenance_responsibility_paragraph'
+  )?.value;
   const responsibleBody = publisher || plan.generalContent.ownerName;
 
   return (
@@ -28,15 +35,14 @@ const AccessibilityStatementContactInformationBlock = ({ id = '', content }: Pro
         >
           <h2>{t('a11y:feedback-contact')}</h2>
           <p>
-            {customParagraph || t('a11y:responsible-for-maintenance', {responsibleBody} )}
+            {customParagraph ||
+              t('a11y:responsible-for-maintenance', { responsibleBody })}
           </p>
           <p>
-            {t('a11y:feedback-text')}
-            {' '}
+            {t('a11y:feedback-text')}{' '}
             <a href={`mailto:${accessibilityContactEmail}`}>
               {accessibilityContactEmail}
-            </a>
-            {' '}
+            </a>{' '}
             {t('a11y:response-time')}
           </p>
         </Col>

@@ -11,7 +11,13 @@ function IndicatorCards() {
   const theme = useContext(ThemeContext);
 
   return (
-    <div className="container" style={{ backgroundColor: theme.neutralLight, color: theme.themeColors.light }}>
+    <div
+      className="container"
+      style={{
+        backgroundColor: theme.neutralLight,
+        color: theme.themeColors.light,
+      }}
+    >
       <div className="row p-2 pm-5">
         <div className="col col-sm-8 col-md-6">
           <IndicatorHighlightCard

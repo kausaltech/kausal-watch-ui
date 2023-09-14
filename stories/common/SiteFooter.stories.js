@@ -14,7 +14,8 @@ const testPages = [
 
 const testTree = [
   { id: '1', name: 'Link 1', slug: 'link1' },
-  { id: '2',
+  {
+    id: '2',
     name: 'Link 2',
     slug: 'link2',
     children: [
@@ -25,7 +26,8 @@ const testTree = [
   { id: '3', name: 'Link 3', slug: 'link2' },
   { id: '4', name: 'Link 4 with a longer title', slug: 'link3' },
   { id: '5', name: 'Link 1', slug: 'link1' },
-  { id: '6',
+  {
+    id: '6',
     name: 'Link with children and long title',
     slug: 'link2',
     children: [
@@ -58,7 +60,7 @@ const fundingInstruments = [
     link: '',
     logo: '/static/images/hnh2035/climate-kic-logo-white.svg',
   },
-]
+];
 
 export const SiteFooterBasic = () => (
   <div style={{ backgroundColor: '#cccccc', height: '50rem' }}>

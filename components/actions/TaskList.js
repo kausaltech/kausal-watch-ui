@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
 import { PropTypes } from 'prop-types';
-import { ListGroup as BaseListGroup, ListGroupItem as BaseListGroupItem, Button, Collapse } from 'reactstrap';
+import {
+  ListGroup as BaseListGroup,
+  ListGroupItem as BaseListGroupItem,
+  Button,
+  Collapse,
+} from 'reactstrap';
 import styled from 'styled-components';
 import { useTheme } from 'common/theme';
 import dayjs from 'common/dayjs';
@@ -118,36 +123,46 @@ const Task = (props) => {
 
   return (
     <TaskWrapper>
-      { completed ? (
-      <TaskMeta>
-        <Icon name="check" color={theme.graphColors.green050} alt={t('actions:action-task-done')} />
-        <Date>{parseTimestamp(task.completedAt)}</Date>
-      </TaskMeta>
+      {completed ? (
+        <TaskMeta>
+          <Icon
+            name="check"
+            color={theme.graphColors.green050}
+            alt={t('actions:action-task-done')}
+          />
+          <Date>{parseTimestamp(task.completedAt)}</Date>
+        </TaskMeta>
       ) : (
         <TaskMeta>
-        <Icon name="calendar" color={theme.graphColors.blue070} alt={t('actions:action-task-todo')} />
-        <Date>{parseTimestamp(task.dueAt)}</Date>
-      </TaskMeta>
+          <Icon
+            name="calendar"
+            color={theme.graphColors.blue070}
+            alt={t('actions:action-task-todo')}
+          />
+          <Date>{parseTimestamp(task.dueAt)}</Date>
+        </TaskMeta>
       )}
       <TaskContent>
         <h4 className="task-title">{task.name}</h4>
         {/* Strip HTML tags to see if comment field is actually empty */}
-        { task.comment.replace(/(<([^>]+)>)/gi, "").length > 0 && (
+        {task.comment.replace(/(<([^>]+)>)/gi, '').length > 0 && (
           <>
-          <ToggleButton
-            color="link"
-            onClick={toggle}
-            size="sm"
-            className={isOpen ? 'open' : ''}
-          >
-            { isOpen ? t('actions:action-task-hide-comment') : t('actions:action-task-show-comment') }
-            <Icon name={isOpen ? 'angle-down' : 'angle-right'} />
-          </ToggleButton>
-          <Collapse isOpen={isOpen}>
-            <div className="task-comment">
-              <RichText html={task.comment} />
-            </div>
-          </Collapse>
+            <ToggleButton
+              color="link"
+              onClick={toggle}
+              size="sm"
+              className={isOpen ? 'open' : ''}
+            >
+              {isOpen
+                ? t('actions:action-task-hide-comment')
+                : t('actions:action-task-show-comment')}
+              <Icon name={isOpen ? 'angle-down' : 'angle-right'} />
+            </ToggleButton>
+            <Collapse isOpen={isOpen}>
+              <div className="task-comment">
+                <RichText html={task.comment} />
+              </div>
+            </Collapse>
           </>
         )}
       </TaskContent>
@@ -160,18 +175,17 @@ function TaskList(props) {
   const theme = useTheme();
   const { t } = useTranslation();
 
-  const sortedTasks = [...tasks]
-    .sort((a, b) => {
-      const adate = a.completedAt ? a.completedAt : a.dueAt;
-      const bdate = b.completedAt ? b.completedAt : b.dueAt;
-      return dayjs(adate).diff(dayjs(bdate));
-    });
+  const sortedTasks = [...tasks].sort((a, b) => {
+    const adate = a.completedAt ? a.completedAt : a.dueAt;
+    const bdate = b.completedAt ? b.completedAt : b.dueAt;
+    return dayjs(adate).diff(dayjs(bdate));
+  });
 
   const undoneTasks = sortedTasks
     .filter((item) => item.completedAt === null && item.state !== 'CANCELLED')
     .map((item) => (
       <ListGroupItem key={item.id} className={`state--${item.state}`}>
-        <Task task={item} theme={theme} t={t} completed={false}/>
+        <Task task={item} theme={theme} t={t} completed={false} />
       </ListGroupItem>
     ));
 
@@ -180,32 +194,25 @@ function TaskList(props) {
     .filter((item) => item.completedAt !== null && item.state !== 'CANCELLED')
     .map((item) => (
       <ListGroupItem key={item.id} className={`state--${item.state}`}>
-        <Task task={item} theme={theme} t={t} completed={true}/>
+        <Task task={item} theme={theme} t={t} completed={true} />
       </ListGroupItem>
     ));
 
   return (
     <div>
-      { undoneTasks.length > 0
-        && (
-          <>
-            <ListGroupTitle>{ t('actions:action-tasks-todo') }</ListGroupTitle>
-            <ListGroup className="mb-5">
-              {undoneTasks}
-            </ListGroup>
-          </>
-        )
-      }
-      { doneTasks.length > 0 && (
+      {undoneTasks.length > 0 && (
         <>
-          <ListGroupTitle>{ t('actions:action-tasks-done') }</ListGroupTitle>
-          <ListGroup className="mb-5">
-            {doneTasks}
-          </ListGroup>
+          <ListGroupTitle>{t('actions:action-tasks-todo')}</ListGroupTitle>
+          <ListGroup className="mb-5">{undoneTasks}</ListGroup>
+        </>
+      )}
+      {doneTasks.length > 0 && (
+        <>
+          <ListGroupTitle>{t('actions:action-tasks-done')}</ListGroupTitle>
+          <ListGroup className="mb-5">{doneTasks}</ListGroup>
         </>
       )}
     </div>
-
   );
 }
 

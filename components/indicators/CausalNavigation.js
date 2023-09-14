@@ -1,9 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {
-  Container, Row, Col,
-} from 'reactstrap';
+import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
 import { withTranslation } from '../../common/i18n';
 import IndicatorCard from './IndicatorCard';
@@ -30,10 +28,10 @@ function CausalNavigation(props) {
       <Container>
         <Row>
           <Col sm="6" lg={{ size: 5 }} className="mb-5">
-            { causes.length > 0 && (
+            {causes.length > 0 && (
               <div>
-                <h3>{ t('indicator-affected-by') }</h3>
-                { causes.map((cause) => (
+                <h3>{t('indicator-affected-by')}</h3>
+                {causes.map((cause) => (
                   <CardWrapper key={cause.causalIndicator.id}>
                     <IndicatorCard
                       objectid={cause.causalIndicator.id}
@@ -47,10 +45,10 @@ function CausalNavigation(props) {
           </Col>
 
           <Col sm="6" lg={{ size: 5, offset: 2 }} className="mb-5">
-            { effects.length > 0 && (
+            {effects.length > 0 && (
               <div>
-                <h3>{ t('indicator-has-effect-on') }</h3>
-                { effects.map((effect) => (
+                <h3>{t('indicator-has-effect-on')}</h3>
+                {effects.map((effect) => (
                   <CardWrapper key={effect.effectIndicator.id}>
                     <IndicatorCard
                       objectid={effect.effectIndicator.id}
@@ -68,8 +66,7 @@ function CausalNavigation(props) {
   );
 }
 
-CausalNavigation.propTypes = {
-};
+CausalNavigation.propTypes = {};
 
 CausalNavigation.propTypes = {
   causes: PropTypes.arrayOf(PropTypes.shape).isRequired,

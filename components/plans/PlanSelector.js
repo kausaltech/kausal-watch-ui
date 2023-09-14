@@ -14,8 +14,8 @@ const PlanSelect = styled.div`
 const PlanDivider = styled.div`
   &:before {
     content: '/';
-    margin: 0 .25rem 0 .5rem;
-    color: ${(props)=> props.theme.brandNavColor};
+    margin: 0 0.25rem 0 0.5rem;
+    color: ${(props) => props.theme.brandNavColor};
   }
 `;
 
@@ -24,21 +24,22 @@ const PlanAvatar = styled.img`
   width: 1.5rem;
   height: 1.5rem;
   border-radius: 50%;
-  box-shadow: 0 0 3px 1px ${(props) => transparentize(0.8, props.theme.themeColors.black)};
+  box-shadow: 0 0 3px 1px
+    ${(props) => transparentize(0.8, props.theme.themeColors.black)};
 `;
 
 const PlanTitle = styled.div`
-  margin-left: .5rem;
+  margin-left: 0.5rem;
   font-size: ${(props) => props.theme.fontSizeSm};
   font-weight: ${(props) => props.theme[props.weight]};
 `;
 
 const PlanDropdownItem = styled.a`
   display: block;
-  padding: .25rem 0;
-  margin: 0 .5rem .5rem;
-  border: 1px solid ${(props)=> props.theme.themeColors.light};
-  border-radius: .5rem;
+  padding: 0.25rem 0;
+  margin: 0 0.5rem 0.5rem;
+  border: 1px solid ${(props) => props.theme.themeColors.light};
+  border-radius: 0.5rem;
   text-decoration: none !important;
 
   &:last-child {
@@ -46,8 +47,8 @@ const PlanDropdownItem = styled.a`
   }
 
   &:hover {
-    background: ${(props)=> props.theme.themeColors.light};
-    border-color: ${(props)=> props.theme.themeColors.light};
+    background: ${(props) => props.theme.themeColors.light};
+    border-color: ${(props) => props.theme.themeColors.light};
     text-decoration: none;
   }
 `;
@@ -55,13 +56,13 @@ const PlanDropdownItem = styled.a`
 const StyledDropdownToggle = styled(DropdownToggle)`
   display: flex;
   align-items: center;
-  padding: .25rem;
+  padding: 0.25rem;
   background: none;
   line-height: 1.5rem;
   border: 1px solid transparent;
   border-radius: 1.75rem;
   font-size: 1rem;
-  color: ${(props)=> props.theme.brandNavColor};
+  color: ${(props) => props.theme.brandNavColor};
   font: inherit;
   cursor: pointer;
   outline: inherit;
@@ -77,7 +78,7 @@ const StyledDropdownToggle = styled(DropdownToggle)`
   }
 
   svg {
-    fill: ${(props)=> props.theme.brandNavColor} !important;
+    fill: ${(props) => props.theme.brandNavColor} !important;
   }
 `;
 
@@ -88,7 +89,9 @@ const PlanSelector = (props) => {
   const { allRelatedPlans } = plan;
   if (!allRelatedPlans.length) return null;
 
-  const selectablePlans = plan.allRelatedPlans.filter((pl) => pl.id !== plan.parent?.id);
+  const selectablePlans = plan.allRelatedPlans.filter(
+    (pl) => pl.id !== plan.parent?.id
+  );
   if (!plan.children.length) {
     selectablePlans.unshift({
       ...plan,
@@ -99,18 +102,13 @@ const PlanSelector = (props) => {
     <PlanSelect>
       <PlanDivider />
       <UncontrolledDropdown>
-        <StyledDropdownToggle
-          data-toggle="dropdown"
-          tag="button"
-        >
-            <PlanAvatar src={plan.image?.small.src} alt=""/>
-            <PlanTitle>
-              {plan.shortName || plan.name}
-            </PlanTitle>
-            <Icon name="angle-down" />
+        <StyledDropdownToggle data-toggle="dropdown" tag="button">
+          <PlanAvatar src={plan.image?.small.src} alt="" />
+          <PlanTitle>{plan.shortName || plan.name}</PlanTitle>
+          <Icon name="angle-down" />
         </StyledDropdownToggle>
         <DropdownMenu>
-          { selectablePlans.map((pl) => (
+          {selectablePlans.map((pl) => (
             <PlanDropdownItem
               href={pl.viewUrl}
               key={pl.identifier}
@@ -121,7 +119,11 @@ const PlanSelector = (props) => {
               <PlanChip
                 planImage={pl.image?.rendition.src}
                 planShortName={pl.shortName}
-                organization={theme.settings?.multiplan?.hideLongPlanNames ? undefined : pl.name}
+                organization={
+                  theme.settings?.multiplan?.hideLongPlanNames
+                    ? undefined
+                    : pl.name
+                }
                 size="md"
               />
             </PlanDropdownItem>
@@ -129,7 +131,7 @@ const PlanSelector = (props) => {
         </DropdownMenu>
       </UncontrolledDropdown>
     </PlanSelect>
-  )
+  );
 };
 
 export default PlanSelector;

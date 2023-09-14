@@ -6,30 +6,32 @@ import {
   categoriesData,
   nonHierarchicalIndicatorsData,
   hierarchy,
-  hierarchicalIndicatorsData
+  hierarchicalIndicatorsData,
 } from './indicators.fixtures';
 
 export default {
   title: 'Indicators/List',
 };
 
-const Template = args => {
+const Template = (args) => {
   console.log(args);
-  return <div className="p-5">
-    <IndicatorListFiltered {...args} />
-  </div>
-}
+  return (
+    <div className="p-5">
+      <IndicatorListFiltered {...args} />
+    </div>
+  );
+};
 
 export const SimpleList = Template.bind({});
 SimpleList.args = {
   indicators: nonHierarchicalIndicatorsData,
-  categories: categoriesData
-}
+  categories: categoriesData,
+};
 
 export const HierarchicalList = Template.bind({});
 HierarchicalList.args = {
   indicators: hierarchicalIndicatorsData,
   categories: categoriesData,
   displayMunicipality: true,
-  hierarchy
-}
+  hierarchy,
+};

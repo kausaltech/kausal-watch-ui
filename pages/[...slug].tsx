@@ -19,139 +19,138 @@ import SecondaryNavigation from 'components/common/SecondaryNavigation';
 import { GetPlanPageGeneralQuery } from 'common/__generated__/graphql';
 import ActionAttribute from 'components/common/ActionAttribute';
 
-
 const GET_PLAN_PAGE = gql`
-query GetPlanPageGeneral($plan: ID!, $path: String!) {
-  planPage(plan: $plan, path: $path) {
-    __typename
-    id
-    slug
-    title
-    ... on StaticPage {
-      headerImage {
-        id
-        ...MultiUseImageFragment
-      }
-      leadParagraph
-      body {
-        ...StreamFieldFragment
-      }
-      siblings {
-        id
-        title
-        slug
-        live
-        urlPath
-      }
-      parent {
-        ... on EmptyPage {
-          childrenUseSecondaryNavigation
+  query GetPlanPageGeneral($plan: ID!, $path: String!) {
+    planPage(plan: $plan, path: $path) {
+      __typename
+      id
+      slug
+      title
+      ... on StaticPage {
+        headerImage {
+          id
+          ...MultiUseImageFragment
         }
-        ... on StaticPage {
-          childrenUseSecondaryNavigation
+        leadParagraph
+        body {
+          ...StreamFieldFragment
         }
-        id
-        title
-        slug
-        urlPath
-        children {
+        siblings {
           id
           title
           slug
           live
           urlPath
         }
-      }
-    }
-    ... on AccessibilityStatementPage {
-      body {
-        ...StreamFieldFragment
-      }
-    }
-    ... on PrivacyPolicyPage {
-      leadContent
-    }
-    ... on CategoryPage {
-      category {
-        id
-        identifier
-        level {
-          name
-          namePlural
-        }
-        type {
+        parent {
+          ... on EmptyPage {
+            childrenUseSecondaryNavigation
+          }
+          ... on StaticPage {
+            childrenUseSecondaryNavigation
+          }
           id
-          hideCategoryIdentifiers
-        }
-        image {
-          id
-          ...MultiUseImageFragment
-        }
-        indicators {
-          id
-        }
-        leadParagraph
-        color
-        iconSvgUrl
-        iconImage {
-          rendition(size:"400x400", crop:false) {
-            src
+          title
+          slug
+          urlPath
+          children {
+            id
+            title
+            slug
+            live
+            urlPath
           }
         }
-        children {
-          ...CategoryListCategory
+      }
+      ... on AccessibilityStatementPage {
+        body {
+          ...StreamFieldFragment
         }
-        parent {
+      }
+      ... on PrivacyPolicyPage {
+        leadContent
+      }
+      ... on CategoryPage {
+        category {
           id
           identifier
-          name
           level {
             name
             namePlural
-          }
-          image {
-            id
-            ...MultiUseImageFragment
-          }
-          color
-          iconSvgUrl
-          iconImage {
-            rendition(size:"400x400", crop:false) {
-              src
-            }
-          }
-          categoryPage {
-            title
-            urlPath
           }
           type {
             id
             hideCategoryIdentifiers
           }
+          image {
+            id
+            ...MultiUseImageFragment
+          }
+          indicators {
+            id
+          }
+          leadParagraph
+          color
+          iconSvgUrl
+          iconImage {
+            rendition(size: "400x400", crop: false) {
+              src
+            }
+          }
+          children {
+            ...CategoryListCategory
+          }
+          parent {
+            id
+            identifier
+            name
+            level {
+              name
+              namePlural
+            }
+            image {
+              id
+              ...MultiUseImageFragment
+            }
+            color
+            iconSvgUrl
+            iconImage {
+              rendition(size: "400x400", crop: false) {
+                src
+              }
+            }
+            categoryPage {
+              title
+              urlPath
+            }
+            type {
+              id
+              hideCategoryIdentifiers
+            }
+          }
+          attributes {
+            ...AttributesBlockAttributeWithNestedType
+          }
         }
-        attributes {
-          ...AttributesBlockAttributeWithNestedType
+        body {
+          ...StreamFieldFragment
         }
       }
-      body {
-        ...StreamFieldFragment
-      }
+      lastPublishedAt
     }
-    lastPublishedAt
   }
-}
-${StreamField.fragments.streamField}
-${images.fragments.multiUseImage}
-${ActionAttribute.fragments.attributeWithNestedType}
-${CategoryListBlock.fragments.category}
+  ${StreamField.fragments.streamField}
+  ${images.fragments.multiUseImage}
+  ${ActionAttribute.fragments.attributeWithNestedType}
+  ${CategoryListBlock.fragments.category}
 `;
 
 type GeneralPlanPage = NonNullable<GetPlanPageGeneralQuery['planPage']>;
 
 type PageHeaderBlockProps = {
-  page: GeneralPlanPage,
-  color?: string|null,
-}
+  page: GeneralPlanPage;
+  color?: string | null;
+};
 const PageHeaderBlock = (props: PageHeaderBlockProps) => {
   const { color, page } = props;
 
@@ -159,10 +158,11 @@ const PageHeaderBlock = (props: PageHeaderBlockProps) => {
     case 'CategoryPage': {
       const category = page.category;
       if (!category) {
-        throw new Error("Category page without category configured");
+        throw new Error('Category page without category configured');
       }
       const parentIdentifier = !category.type.hideCategoryIdentifiers
-        ? `${category.parent?.identifier}.` : '';
+        ? `${category.parent?.identifier}.`
+        : '';
       const parentTitle = category.parent?.categoryPage
         ? `${parentIdentifier} ${category.parent?.categoryPage.title}`
         : null;
@@ -173,7 +173,11 @@ const PageHeaderBlock = (props: PageHeaderBlockProps) => {
         <CategoryPageHeaderBlock
           title={page.title}
           categoryId={category.id}
-          identifier={!category.type.hideCategoryIdentifiers ? category.identifier : undefined}
+          identifier={
+            !category.type.hideCategoryIdentifiers
+              ? category.identifier
+              : undefined
+          }
           lead={category.leadParagraph}
           iconImage={iconImage}
           headerImage={headerImage}
@@ -203,17 +207,22 @@ const PageHeaderBlock = (props: PageHeaderBlockProps) => {
   }
 };
 
-const Content = ({ page }:{ page: GeneralPlanPage}) => {
+const Content = ({ page }: { page: GeneralPlanPage }) => {
   // TODO: Resolve shareImageUrl by pagetype
   const { title, headerImage } = page;
   const imageUrl = headerImage?.large.src;
   const theme = useTheme();
-  const categoryColor = (page.__typename === 'CategoryPage') && (page.category?.color || page.category?.parent?.color);
+  const categoryColor =
+    page.__typename === 'CategoryPage' &&
+    (page.category?.color || page.category?.parent?.color);
   const pageSectionColor = categoryColor || theme.brandLight;
 
   const hasSecondaryNav = page.parent?.childrenUseSecondaryNavigation ?? false;
   // Restrict the secondary nav to be shown on StaticPages only currently
-  const siblings = (hasSecondaryNav && page.__typename === 'StaticPage') ? page?.parent?.children: [];
+  const siblings =
+    hasSecondaryNav && page.__typename === 'StaticPage'
+      ? page?.parent?.children
+      : [];
 
   return (
     <article>
@@ -233,7 +242,7 @@ const Content = ({ page }:{ page: GeneralPlanPage}) => {
             </Row>
           </Container>
         )}
-        { siblings.length > 1 && (
+        {siblings.length > 1 && (
           <SecondaryNavigation
             links={siblings}
             activeLink={page.id}
@@ -253,24 +262,27 @@ const Content = ({ page }:{ page: GeneralPlanPage}) => {
   );
 };
 
-
 function StaticPage({ slug }: { slug: string[] }) {
   const { t } = useTranslation();
   const path = `/${slug.join('/')}`;
   const plan = useContext(PlanContext);
-  const { loading, error, data } = useQuery<GetPlanPageGeneralQuery>(GET_PLAN_PAGE, {
-    variables: {
-      plan: plan.identifier,
-      path,
-    },
-  });
+  const { loading, error, data } = useQuery<GetPlanPageGeneralQuery>(
+    GET_PLAN_PAGE,
+    {
+      variables: {
+        plan: plan.identifier,
+        path,
+      },
+    }
+  );
   if (loading) return <ContentLoader />;
   if (error) return <ErrorMessage message={error.message} />;
 
   const { planPage } = data || {};
 
   // Handle legacy overrides
-  if (path === '/accessibility' && !(planPage?.body?.length > 0)) return <AccessibilityPage />
+  if (path === '/accessibility' && !(planPage?.body?.length > 0))
+    return <AccessibilityPage />;
   if (!planPage) {
     return <ErrorMessage statusCode={404} message={t('page-not-found')} />;
   }

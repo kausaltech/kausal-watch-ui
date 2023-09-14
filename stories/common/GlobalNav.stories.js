@@ -13,7 +13,8 @@ const testPages = [
 
 const testTree = [
   { id: '1', name: 'Link 1', slug: 'link1' },
-  { id: '2',
+  {
+    id: '2',
     name: 'Link 2',
     slug: 'link2',
     active: true,
@@ -26,14 +27,10 @@ const testTree = [
   { id: '4', name: 'Link 4', slug: 'link3' },
 ];
 
-
 export const GlobalNavBasic = () => {
   return (
     <div style={{ backgroundColor: '#cccccc', height: '50rem' }}>
-      <GlobalNav
-        siteTitle="Kausal Watch"
-        navItems={testPages}
-      />
+      <GlobalNav siteTitle="Kausal Watch" navItems={testPages} />
     </div>
   );
 };
@@ -41,11 +38,7 @@ export const GlobalNavBasic = () => {
 export const GlobalNavSticky = () => {
   return (
     <div style={{ backgroundColor: '#cccccc', height: '50rem' }}>
-      <GlobalNav
-        siteTitle="Kausal Watch"
-        navItems={testPages}
-        sticky
-      />
+      <GlobalNav siteTitle="Kausal Watch" navItems={testPages} sticky />
       <p style={{ padding: '2rem' }}>(Navbar gets sticky when scrolling up)</p>
     </div>
   );
@@ -54,12 +47,10 @@ export const GlobalNavSticky = () => {
 export const GlobalNavFullWidth = () => {
   return (
     <div style={{ backgroundColor: '#cccccc', height: '50rem' }}>
-      <GlobalNav
-        siteTitle="Kausal Watch"
-        navItems={testPages}
-        fullwidth
-      />
-      <p style={{ padding: '2rem' }}>(Navbar content not aligned with content container)</p>
+      <GlobalNav siteTitle="Kausal Watch" navItems={testPages} fullwidth />
+      <p style={{ padding: '2rem' }}>
+        (Navbar content not aligned with content container)
+      </p>
     </div>
   );
 };
@@ -67,10 +58,7 @@ export const GlobalNavFullWidth = () => {
 export const GlobalNavWithChildren = () => {
   return (
     <div style={{ backgroundColor: '#cccccc', height: '50rem' }}>
-      <GlobalNav
-        siteTitle="Kausal Watch"
-        navItems={testTree}
-      />
+      <GlobalNav siteTitle="Kausal Watch" navItems={testTree} />
     </div>
   );
 };

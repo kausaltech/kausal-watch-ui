@@ -1,4 +1,3 @@
-
 import styled from 'styled-components';
 import { getActionTermContext, useTranslation } from 'common/i18n';
 
@@ -21,22 +20,22 @@ const ActionOfficialNameBlock = (props) => {
   const { plan, block, action } = props;
   const { t } = useTranslation();
   const generalContent = plan.generalContent || {};
-  const cleanOfficialText = action.officialName?.replace(/(?:\r\n|\r|\n)/g, '<br>') || '';
+  const cleanOfficialText =
+    action.officialName?.replace(/(?:\r\n|\r|\n)/g, '<br>') || '';
   if (!cleanOfficialText) return null;
   const caption = block.caption || generalContent.officialNameDescription;
-  const fieldLabel = block.fieldLabel || t('actions:action-description-official');
+  const fieldLabel =
+    block.fieldLabel || t('actions:action-description-official');
 
   return (
     <OfficialText>
-      <h2>{ fieldLabel }</h2>
+      <h2>{fieldLabel}</h2>
       <div className="official-text-content">
         <div dangerouslySetInnerHTML={{ __html: cleanOfficialText }} />
-        {caption && (
-          <small>{`(${caption})`}</small>
-        )}
+        {caption && <small>{`(${caption})`}</small>}
       </div>
     </OfficialText>
-  )
-}
+  );
+};
 
 export default ActionOfficialNameBlock;

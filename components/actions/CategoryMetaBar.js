@@ -62,7 +62,7 @@ const BarGraph = styled.div`
 
 const Segment = styled.div`
   background-color: ${(props) => props.color};
-  width:  ${(props) => props.portion}%;
+  width: ${(props) => props.portion}%;
   height: 1rem;
 `;
 
@@ -74,9 +74,10 @@ const Labels = styled.div`
 const SegmentLabel = styled.span`
   display: flex;
   flex-direction: column;
-  flex-basis:  ${(props) => props.portion}%;
+  flex-basis: ${(props) => props.portion}%;
   text-align: left;
-  margin: ${(props) => props.theme.spaces.s050} ${(props) => props.theme.spaces.s050} 0 0;
+  margin: ${(props) => props.theme.spaces.s050}
+    ${(props) => props.theme.spaces.s050} 0 0;
   font-size: ${(props) => props.theme.fontSizeSm};
   font-family: ${(props) => props.theme.fontFamilyTiny};
   line-height: ${(props) => props.theme.lineHeightMd};
@@ -115,7 +116,7 @@ function CategoryMetaBar(props) {
     label: statusData.labels[indx],
     value: `${Math.round((statusData.values[indx] / actionCount) * 100)} %`,
     portion: statusData.values[indx] / actionCount,
-    color: statusData.colors[indx]
+    color: statusData.colors[indx],
   }));
 
   return (
@@ -128,20 +129,18 @@ function CategoryMetaBar(props) {
               <Segment
                 key={segment.id}
                 color={segment.color}
-                portion={(segment.portion) * 100}
+                portion={segment.portion * 100}
               />
             ))}
           </BarGraph>
           <Labels>
             {segments.map((segment) => (
-              <SegmentLabel key={segment.id} portion={(segments.length === 1 ? 1 : segment.portion) * 100}>
-                <span className="value">
-                  { segment.value }
-                </span>
-                <span>
-                  {' '}
-                  { segment.label }
-                </span>
+              <SegmentLabel
+                key={segment.id}
+                portion={(segments.length === 1 ? 1 : segment.portion) * 100}
+              >
+                <span className="value">{segment.value}</span>
+                <span> {segment.label}</span>
               </SegmentLabel>
             ))}
           </Labels>
@@ -152,10 +151,8 @@ function CategoryMetaBar(props) {
 }
 
 // TODO: prop types and defaults
-CategoryMetaBar.propTypes = {
-};
+CategoryMetaBar.propTypes = {};
 
-CategoryMetaBar.defaultProps = {
-};
+CategoryMetaBar.defaultProps = {};
 
 export default CategoryMetaBar;

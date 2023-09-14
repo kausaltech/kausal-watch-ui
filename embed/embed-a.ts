@@ -8,8 +8,12 @@
   const KAUSAL_EMBED_NAME = `Kausal ${KAUSAL_PRODUCT} Embed`;
 
   const warn = (message: string) => {
-    console.warn(KAUSAL_EMBED_NAME, `${KAUSAL_EMBED_MAJOR_SCRIPT_VERSION}:`, message);
-  }
+    console.warn(
+      KAUSAL_EMBED_NAME,
+      `${KAUSAL_EMBED_MAJOR_SCRIPT_VERSION}:`,
+      message
+    );
+  };
   /* In script version a the contract is that all data attributes get
    forwarded as query parameters to the view except for the type data
    attribute which gets used as the url subpath and the version data
@@ -32,14 +36,14 @@
     /* This is used to differentiate between multiple embeds
        on the same page.  */
     identifier: string;
-  };
+  }
 
   /* These parameters are set from data attributes and are handled by
   this script as query parameters. They are intentionally left
   unvalidated */
   interface EmbedParameters {
-    [key: string]: string
-  };
+    [key: string]: string;
+  }
 
   // This is needed to find out the embed view base path relative to
   // the source url of this script
@@ -59,47 +63,57 @@
     iframe.style.overflow = 'hidden';
     iframe.src = url;
     return iframe;
-  }
+  };
 
-  const addMessageListenerToWindow = (iframe: HTMLIFrameElement, embId: string) => {
+  const addMessageListenerToWindow = (
+    iframe: HTMLIFrameElement,
+    embId: string
+  ) => {
     window.addEventListener('message', (event) => {
-      if (event.data?.source == embId &&
-        event.data?.height != null) {
-          iframe.height = event.data.height + 1;
+      if (event.data?.source == embId && event.data?.height != null) {
+        iframe.height = event.data.height + 1;
       }
     });
-  }
+  };
 
-  const getEmbedUrl = (el: HTMLScriptElement, specs: EmbedSpecification, params: EmbedParameters): URL => {
+  const getEmbedUrl = (
+    el: HTMLScriptElement,
+    specs: EmbedSpecification,
+    params: EmbedParameters
+  ): URL => {
     const scriptUrl: URL = new URL(el.src);
     const pathElements = scriptUrl.pathname.split('/');
     const staticPathIndex = pathElements.indexOf(STATIC_PATH_NAME);
-    if (staticPathIndex === -1 ||
-        pathElements.length < 2 ||
-        staticPathIndex + 2 !== pathElements.length ||
-        pathElements[pathElements.length - 1] !== SCRIPT_NAME
+    if (
+      staticPathIndex === -1 ||
+      pathElements.length < 2 ||
+      staticPathIndex + 2 !== pathElements.length ||
+      pathElements[pathElements.length - 1] !== SCRIPT_NAME
     ) {
-      throw new Error(`This script expects to be served from a ${STATIC_PATH_NAME}/${SCRIPT_NAME} path.`);
+      throw new Error(
+        `This script expects to be served from a ${STATIC_PATH_NAME}/${SCRIPT_NAME} path.`
+      );
     }
     const url = new URL(scriptUrl.origin);
     url.pathname = pathElements
       .slice(0, staticPathIndex)
-      .concat([
-        KAUSAL_EMBED_VIEW_PATH,
-        `${specs.version}`,
-        specs.type])
+      .concat([KAUSAL_EMBED_VIEW_PATH, `${specs.version}`, specs.type])
       .join('/');
     Object.entries(params).forEach(([k, v]) => {
       url.searchParams.append(k, v);
     });
     url.searchParams.set('embId', specs.identifier);
     return url;
-  }
+  };
 
   const validateSpecification = (
-    specs: {type: string|undefined, version: string|undefined, identifier: string},
+    specs: {
+      type: string | undefined;
+      version: string | undefined;
+      identifier: string;
+    },
     dataset: DOMStringMap
-  ) : EmbedSpecification => {
+  ): EmbedSpecification => {
     const { type, version } = specs;
     if (type === undefined) {
       throw new Error(`Invalid embed type ${dataset.type}`);
@@ -114,7 +128,7 @@
       throw new Error(`Unallowed embed version ${version}`);
     }
     return { type, version, identifier: specs.identifier };
-  }
+  };
 
   const getUniqueDOMPosition = (el: HTMLScriptElement) => {
     /* Since there can be many embeds on a single page, a single embed
@@ -128,23 +142,27 @@
       }
     }
     return el.className;
-  }
+  };
 
-  const getEmbedSpecification = (el: HTMLScriptElement): [EmbedSpecification, EmbedParameters] => {
+  const getEmbedSpecification = (
+    el: HTMLScriptElement
+  ): [EmbedSpecification, EmbedParameters] => {
     const type = el.dataset.type;
     const version = el.dataset.version;
     const identifier = getUniqueDOMPosition(el);
     const specs = {
       type,
       version,
-      identifier
+      identifier,
     };
     const validSpecs = validateSpecification(specs, el.dataset);
     return [validSpecs, getEmbedParameters(validSpecs, el.dataset)];
-  }
+  };
 
-  const getEmbedParameters = (specs: EmbedSpecification, dataset: DOMStringMap) =>
-  {
+  const getEmbedParameters = (
+    specs: EmbedSpecification,
+    dataset: DOMStringMap
+  ) => {
     const params: EmbedParameters = {};
     for (const key in dataset) {
       if (Object.keys(specs).includes(key)) continue;
@@ -154,7 +172,7 @@
       }
     }
     return params;
-  }
+  };
 
   try {
     const scriptElement = document.currentScript as HTMLScriptElement;

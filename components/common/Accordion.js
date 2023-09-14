@@ -30,7 +30,7 @@ const CopyLink = styled.button`
   visibility: hidden;
   width: 2rem;
   right: -1rem;
-  top: -.5rem;
+  top: -0.5rem;
   border: none;
   border-radius: 0;
   margin: 0;
@@ -89,9 +89,7 @@ const AccordionContent = styled(Collapse)`
 const TooltipContent = (props) => {
   const { scheduleUpdate, children } = props;
   scheduleUpdate();
-  return (
-    <>{ children }</>
-  );
+  return <>{children}</>;
 };
 
 TooltipContent.defaultProps = {
@@ -109,19 +107,13 @@ const LinkCopyButton = React.memo((props) => {
   const { t } = useTranslation();
   const [tooltipOpen, setTooltipOpen] = useState(false);
   const [copyText, setCopyText] = useState(t('copy-to-clipboard'));
-  const toggle = useCallback(
-    () => {
-      setTooltipOpen(!tooltipOpen);
-      if (!tooltipOpen) setCopyText(t('copy-to-clipboard'));
-    },
-    [tooltipOpen, setCopyText],
-  );
-  const onCopy = useCallback(
-    () => {
-      setCopyText(t('copied-to-clipboard'));
-    },
-    [setCopyText],
-  );
+  const toggle = useCallback(() => {
+    setTooltipOpen(!tooltipOpen);
+    if (!tooltipOpen) setCopyText(t('copy-to-clipboard'));
+  }, [tooltipOpen, setCopyText]);
+  const onCopy = useCallback(() => {
+    setCopyText(t('copied-to-clipboard'));
+  }, [setCopyText]);
 
   return (
     <>
@@ -135,7 +127,7 @@ const LinkCopyButton = React.memo((props) => {
       >
         {({ scheduleUpdate }) => (
           <TooltipContent scheduleUpdate={scheduleUpdate}>
-            { copyText }
+            {copyText}
           </TooltipContent>
         )}
       </UncontrolledTooltip>
@@ -145,9 +137,7 @@ const LinkCopyButton = React.memo((props) => {
         onCopy={onCopy}
         aria-describedby={`tt-content-${identifier}`}
       >
-        <CopyLink
-          className="copy-link"
-        >
+        <CopyLink className="copy-link">
           <Icon name="link" />
         </CopyLink>
       </CopyToClipboard>
@@ -161,9 +151,7 @@ LinkCopyButton.propTypes = {
 
 LinkCopyButton.displayName = 'LinkCopyButton';
 
-const AccordionHeader = ({
-  children, onClick, isOpen, identifier,
-}) => (
+const AccordionHeader = ({ children, onClick, isOpen, identifier }) => (
   <Header className={isOpen && 'is-open'}>
     <QuestionTrigger
       className="question-trigger"
@@ -172,19 +160,16 @@ const AccordionHeader = ({
       aria-controls={`#collapse-${identifier}`}
       id={`heading-${identifier}`}
     >
-      <TriggerIcon>
-        {isOpen ? '-' : '+'}
-      </TriggerIcon>
-      <span className="question-title">
-        {children}
-      </span>
+      <TriggerIcon>{isOpen ? '-' : '+'}</TriggerIcon>
+      <span className="question-title">{children}</span>
     </QuestionTrigger>
     <LinkCopyButton identifier={identifier} />
   </Header>
 );
 
 AccordionHeader.propTypes = {
-  children: PropTypes.oneOfType([PropTypes.element, PropTypes.string]).isRequired,
+  children: PropTypes.oneOfType([PropTypes.element, PropTypes.string])
+    .isRequired,
   isOpen: PropTypes.bool,
   onClick: PropTypes.func,
   identifier: PropTypes.string,
@@ -208,9 +193,7 @@ AccordionBody.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-const AccordionItem = ({
-  children, isOpen, onClick, identifier,
-}) => (
+const AccordionItem = ({ children, isOpen, onClick, identifier }) => (
   <div id={`q${identifier}`}>
     {React.Children.map(children, (child) => {
       if (child.type === AccordionHeader) {

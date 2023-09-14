@@ -15,7 +15,8 @@ const ActionGroupHeader = styled.h2`
   padding-bottom: ${(props) => props.theme.spaces.s100};
   margin-bottom: ${(props) => props.theme.spaces.s200};
 
-  .category-identifier, .category-crumb {
+  .category-identifier,
+  .category-crumb {
     color: ${(props) => props.theme.graphColors.grey060};
   }
 
@@ -46,13 +47,12 @@ const groupActions = (groupBy, depth, actions, theme) => {
     let cat = undefined;
     let categoryCrumb = undefined;
     if (primaryCategories !== undefined) {
-      const idx = Math.max(0, primaryCategories.length - 1)
+      const idx = Math.max(0, primaryCategories.length - 1);
       cat = primaryCategories[idx];
-      categoryCrumb = (
-        primaryCategories.length > 1 ?
-        primaryCategories.slice(0, idx).map(c => c.name):
-        undefined
-      )
+      categoryCrumb =
+        primaryCategories.length > 1
+          ? primaryCategories.slice(0, idx).map((c) => c.name)
+          : undefined;
     }
     if (groupBy === 'primaryOrg') cat = action.primaryOrg;
     if (groupBy === 'none') cat = false;
@@ -69,7 +69,11 @@ const groupActions = (groupBy, depth, actions, theme) => {
       group = {
         id: cat.id,
         crumb: categoryCrumb,
-        displayIdentifier: `${(cat.identifier && !cat.type.hideCategoryIdentifiers) ? cat.identifier : ''}`,
+        displayIdentifier: `${
+          cat.identifier && !cat.type.hideCategoryIdentifiers
+            ? cat.identifier
+            : ''
+        }`,
         name: cat.name,
         identifier: cat.identifier || cat.name,
         order: cat.order,
@@ -81,20 +85,22 @@ const groupActions = (groupBy, depth, actions, theme) => {
     group.elements.push(action);
   });
 
-  if (noGroupItems.length) groups.push({
-    id: 'zzzz',
-    displayIdentifier: '',
-    name: '',
-    crumb: null,
-    identifier: 'zzzz',
-    elements: noGroupItems,
-  });
+  if (noGroupItems.length)
+    groups.push({
+      id: 'zzzz',
+      displayIdentifier: '',
+      name: '',
+      crumb: null,
+      identifier: 'zzzz',
+      elements: noGroupItems,
+    });
 
-  return groups.sort((g1, g2) => (g1.order - g2.order))
+  return groups.sort((g1, g2) => g1.order - g2.order);
 };
 
 function ActionCardList(props) {
-  const { actions, groupBy, headingHierarchyDepth, includeRelatedPlans } = props;
+  const { actions, groupBy, headingHierarchyDepth, includeRelatedPlans } =
+    props;
   const theme = useTheme();
 
   const groups = groupActions(groupBy, headingHierarchyDepth, actions, theme);
@@ -103,24 +109,26 @@ function ActionCardList(props) {
     <ActionsList>
       {groups.map((group) => (
         <ActionGroup key={group.id} tag="li">
-          {groups.length > 1 && <Col xs="12">
-            <ActionGroupHeader>
-              {group.crumb && (
-                <>
-                  <span className="category-crumb">
-                    {group.crumb.join(' ')}
+          {groups.length > 1 && (
+            <Col xs="12">
+              <ActionGroupHeader>
+                {group.crumb && (
+                  <>
+                    <span className="category-crumb">
+                      {group.crumb.join(' ')}
+                    </span>
+                    <br />
+                  </>
+                )}
+                {group.displayIdentifier && (
+                  <span className="category-identifier">
+                    {`${group.displayIdentifier}. `}
                   </span>
-                  <br/>
-                </>
-              )}
-              {group.displayIdentifier && (
-                <span className="category-identifier">
-                  {`${group.displayIdentifier}. `}
-                </span>
-              )}
-              {group.name}
-            </ActionGroupHeader>
-          </Col>}
+                )}
+                {group.name}
+              </ActionGroupHeader>
+            </Col>
+          )}
           <Col xs="12">
             <ActionGroupList tag="ul">
               {group.elements.map((item) => (
@@ -134,7 +142,11 @@ function ActionCardList(props) {
                   className="mb-4 d-flex align-items-stretch"
                   style={{ transition: 'all 0.5s ease' }}
                 >
-                  <ActionCard action={item} showPlan={includeRelatedPlans} size="xs" />
+                  <ActionCard
+                    action={item}
+                    showPlan={includeRelatedPlans}
+                    size="xs"
+                  />
                 </Col>
               ))}
             </ActionGroupList>

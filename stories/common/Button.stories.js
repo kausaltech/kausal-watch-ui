@@ -13,16 +13,24 @@ const Buttons = () => {
         <Button color="secondary">Secondary Button</Button>
       </div>
       <div className="py-4">
-        <Button outline color="primary">Primary Outline Button</Button>
+        <Button outline color="primary">
+          Primary Outline Button
+        </Button>
       </div>
       <div className="py-4">
-        <Button outline color="secondary">Secondary Outline Button</Button>
+        <Button outline color="secondary">
+          Secondary Outline Button
+        </Button>
       </div>
       <div className="py-4">
-        <Button outline color="light">Light Outline Button</Button>
+        <Button outline color="light">
+          Light Outline Button
+        </Button>
       </div>
       <div className="py-4">
-        <Button outline color="dark">Dark Outline Button</Button>
+        <Button outline color="dark">
+          Dark Outline Button
+        </Button>
       </div>
       <div className="py-4">
         <Button color="link">Link Button</Button>
@@ -40,12 +48,15 @@ const ButtonsLayout = () => {
         <div className="col-6">
           <Buttons />
         </div>
-        <div className="col-6" style={{ backgroundColor: theme.themeColors.dark }}>
+        <div
+          className="col-6"
+          style={{ backgroundColor: theme.themeColors.dark }}
+        >
           <Buttons />
         </div>
       </div>
     </div>
-  )
+  );
 };
 
 export const ButtonsStory = (theme) => <ButtonsLayout theme={theme} />;

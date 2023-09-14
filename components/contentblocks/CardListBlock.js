@@ -5,7 +5,8 @@ import Card from 'components/common/Card';
 
 const CardListSection = styled.div`
   background-color: ${(props) => props.backgroundColor};
-  padding: ${(props) => `${props.theme.spaces.s400} 0 ${props.theme.spaces.s100} 0`};
+  padding: ${(props) =>
+    `${props.theme.spaces.s400} 0 ${props.theme.spaces.s100} 0`};
 
   a.card-wrapper {
     display: flex;
@@ -54,7 +55,7 @@ const CardListBlock = (props) => {
     backgroundColor: theme.themeColors.white,
     cardStyle: 'negative',
     cardOutline: false,
-  }
+  };
 
   switch (style) {
     case 'negative':
@@ -70,10 +71,12 @@ const CardListBlock = (props) => {
   return (
     <CardListSection id={id} backgroundColor={blockStyle.backgroundColor}>
       <Container>
-        { heading && (<SectionHeader color={blockStyle.color}>{ heading }</SectionHeader>)}
-        <Content color={blockStyle.color}>{ lead }</Content>
+        {heading && (
+          <SectionHeader color={blockStyle.color}>{heading}</SectionHeader>
+        )}
+        <Content color={blockStyle.color}>{lead}</Content>
         <Row tag="ul" className="justify-content-center">
-          { cards?.map((card,inx) => (
+          {cards?.map((card, inx) => (
             <Col
               tag="li"
               xs="12"
@@ -91,7 +94,9 @@ const CardListBlock = (props) => {
                   outline={blockStyle.cardOutline}
                 >
                   <div>
-                    <CardHeader className="card-title">{ card.heading }</CardHeader>
+                    <CardHeader className="card-title">
+                      {card.heading}
+                    </CardHeader>
                     <p>{card.content}</p>
                   </div>
                 </Card>

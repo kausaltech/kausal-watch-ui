@@ -1,7 +1,5 @@
 import styled from 'styled-components';
-import {
-  Row, Col,
-} from 'reactstrap';
+import { Row, Col } from 'reactstrap';
 import { useTranslation } from 'common/i18n';
 import { ActionSection, SectionHeader } from 'components/actions/ActionContent';
 import ActionCard from 'components/actions/ActionCard';
@@ -19,13 +17,15 @@ const ActionRelatedActionsBlock = (props) => {
   const { t } = useTranslation();
 
   // Display the plan name only if there are related actions from other plans
-  const hasRelatedActionsFromOtherPlans = relatedActions.some((relAction) => relAction.plan.id !== plan.id);
+  const hasRelatedActionsFromOtherPlans = relatedActions.some(
+    (relAction) => relAction.plan.id !== plan.id
+  );
 
   return (
     <div>
       <Row>
         <Col>
-          <SectionHeader>{ t('actions:related-actions') }</SectionHeader>
+          <SectionHeader>{t('actions:related-actions')}</SectionHeader>
           <RelatedActionList tag="ul">
             {relatedActions.map((relAction) => (
               <RelatedActionItem
@@ -47,7 +47,7 @@ const ActionRelatedActionsBlock = (props) => {
         </Col>
       </Row>
     </div>
-  )
-}
+  );
+};
 
 export default ActionRelatedActionsBlock;

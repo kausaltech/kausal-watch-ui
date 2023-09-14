@@ -1,8 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  Container,
-} from 'reactstrap';
+import { Container } from 'reactstrap';
 import { transparentize } from 'polished';
 import SVG from 'react-inlinesvg';
 import styled, { withTheme } from 'styled-components';
@@ -72,12 +70,17 @@ const Branding = styled.div`
 `;
 
 const Logo = styled.div`
-  height: calc(${(props) => props.theme.footerLogoSize} * ${(props) => props.theme.spaces.s400});
-  max-width: calc(${(props) => props.theme.footerLogoSize} * 4 * ${(props) => props.theme.spaces.s300});
+  height: calc(
+    ${(props) => props.theme.footerLogoSize} *
+      ${(props) => props.theme.spaces.s400}
+  );
+  max-width: calc(
+    ${(props) => props.theme.footerLogoSize} * 4 *
+      ${(props) => props.theme.spaces.s300}
+  );
   margin-right: ${(props) => props.theme.spaces.s200};
   margin: ${(props) => props.theme.spaces.s150}
-    ${(props) => props.theme.spaces.s200}
-    ${(props) => props.theme.spaces.s150}
+    ${(props) => props.theme.spaces.s200} ${(props) => props.theme.spaces.s150}
     0;
 
   svg {
@@ -123,7 +126,8 @@ const FooterNavItems = styled.ul`
   margin-bottom: ${(props) => props.theme.spaces.s300};
 
   @media (max-width: ${(props) => props.theme.breakpointMd}) {
-    gap: ${(props) => props.theme.spaces.s300} ${(props) => props.theme.spaces.s200};
+    gap: ${(props) => props.theme.spaces.s300}
+      ${(props) => props.theme.spaces.s200};
     justify-content: center;
     width: 100%;
   }
@@ -142,7 +146,7 @@ const FooterNavItem = styled.li`
   .parent-item {
     &:after {
       content: '';
-    };
+    }
   }
 `;
 
@@ -162,7 +166,8 @@ const UtilitySection = styled.div`
   justify-content: space-between;
   margin: 0;
   padding: ${(props) => props.theme.spaces.s200} 0 0;
-  border-top: 1px solid  ${(props) => transparentize(0.8, props.theme.footerColor)};
+  border-top: 1px solid
+    ${(props) => transparentize(0.8, props.theme.footerColor)};
   line-height: ${(props) => props.theme.lineHeightSm};
 
   @media (max-width: ${(props) => props.theme.breakpointMd}) {
@@ -202,7 +207,7 @@ const UtilityItem = styled.li`
     margin-left: 0;
 
     &:before {
-      content: "";
+      content: '';
       margin-left: 0;
     }
   }
@@ -218,7 +223,7 @@ const TopButton = styled.button`
   color: ${(props) => props.theme.footerColor};
 
   .icon {
-    margin-top: -.25em;
+    margin-top: -0.25em;
   }
 
   &:hover {
@@ -231,7 +236,8 @@ const BaseSection = styled.div`
   display: flex;
   justify-content: space-between;
   padding: ${(props) => props.theme.spaces.s200} 0;
-  border-top: 1px solid  ${(props) => transparentize(0.8, props.theme.footerColor)};
+  border-top: 1px solid
+    ${(props) => transparentize(0.8, props.theme.footerColor)};
   line-height: ${(props) => props.theme.lineHeightSm};
 
   @media (max-width: ${(props) => props.theme.breakpointLg}) {
@@ -257,10 +263,11 @@ const BaseColumn = styled.ul`
 `;
 
 const BaseItem = styled.li`
-  margin: 0 0 ${(props) => props.theme.spaces.s100} ${(props) => props.theme.spaces.s050};
+  margin: 0 0 ${(props) => props.theme.spaces.s100}
+    ${(props) => props.theme.spaces.s050};
 
   &:before {
-    content: "\\2022";
+    content: '\\2022';
     margin-right: ${(props) => props.theme.spaces.s050};
   }
 
@@ -268,18 +275,17 @@ const BaseItem = styled.li`
     margin-left: 0;
 
     &:before {
-      content: "";
+      content: '';
       margin-right: 0;
     }
   }
 `;
 
 const BaseLink = styled.li`
-
   margin-left: ${(props) => props.theme.spaces.s200};
 
   a {
-  text-decoration: underline;
+    text-decoration: underline;
 
     &:hover {
       text-decoration: none;
@@ -315,7 +321,9 @@ const FooterStatement = styled.div`
   max-width: 800px;
   margin-bottom: ${(props) => props.theme.spaces.s100};
 
-  h1, h2, h3 {
+  h1,
+  h2,
+  h3 {
     font-size: ${(props) => props.theme.fontSizeBase};
     color: ${(props) => props.theme.footerColor};
   }
@@ -350,8 +358,8 @@ const FundingHeader = styled.div`
 `;
 
 const FundingInstrumentContainer = styled.div`
-  height: calc( 2 * ${(props) => props.theme.spaces.s600});
-  width: calc( 2 * ${(props) => props.theme.spaces.s800});
+  height: calc(2 * ${(props) => props.theme.spaces.s600});
+  width: calc(2 * ${(props) => props.theme.spaces.s800});
   margin-left: ${(props) => props.theme.spaces.s300};
   text-align: right;
 
@@ -393,7 +401,7 @@ function SiteFooter(props) {
         style={{ display: 'block' }}
       />
     );
-  }
+  };
 
   function scrollToTop(e) {
     e.preventDefault();
@@ -405,127 +413,135 @@ function SiteFooter(props) {
       <Container>
         <FooterNav aria-label={t('nav-footer')}>
           <Branding>
-            { theme.themeLogoWhiteUrl !== '' && (
-            <Logo>
-              { theme?.footerLogoLink
-                ? (
-                  <a href={theme.footerLogoLink} target="_blank" rel="noreferrer">
+            {theme.themeLogoWhiteUrl !== '' && (
+              <Logo>
+                {theme?.footerLogoLink ? (
+                  <a
+                    href={theme.footerLogoLink}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
                     <OrgLogo aria-hidden="true" className="footer-org-logo" />
                   </a>
-                )
-                : (
+                ) : (
                   <OrgLogo aria-hidden="true" className="footer-org-logo" />
                 )}
-            </Logo> )}
-            { !theme.settings.footerLogoOnly
-            && (
-            <ServiceTitle>
-              <Link href="/">
-                <a>
-                  {siteTitle}
-                </a>
-              </Link>
-              <PlanSelector />
-            </ServiceTitle>
+              </Logo>
+            )}
+            {!theme.settings.footerLogoOnly && (
+              <ServiceTitle>
+                <Link href="/">
+                  <a>{siteTitle}</a>
+                </Link>
+                <PlanSelector />
+              </ServiceTitle>
             )}
           </Branding>
           <FooterNavItems>
-            { navItems && navItems.map((page) => (
-              <FooterNavItem key={page.id}>
-                { !page.children && page.slug && (
-                <NavigationLink slug={page.slug} className="parent-item">
-                  <>
-                   { theme?.navLinkIcons && (
-                    <Icon
-                      name="angleRight"
-                      color={theme.footerColor}
-                      aria-hidden="true"
-                      className="me-1"
-                    /> )}
-                    {page.name}
-                  </>
-                </NavigationLink>
-                )}
-                { page.children && (
-                <>
-                  <span className="parent-item">{page.name}</span>
-                  <FooterSubnav>
-                    { page.children.map((childPage) => (
-                      <FooterNavSubItem key={childPage.slug}>
-                        <NavigationLink slug={childPage.slug}>
-                          <>
-                          { theme?.navLinkIcons && (
-                            <Icon
-                              name="angleRight"
-                              color={theme.footerColor}
-                              aria-hidden="true"
-                              className="me-1"
-                            /> )}
-                          {childPage.name}
-                          </>
-                        </NavigationLink>
-                      </FooterNavSubItem>
-                    ))}
-                  </FooterSubnav>
-                </>
-                )}
-              </FooterNavItem>
-            ))}
+            {navItems &&
+              navItems.map((page) => (
+                <FooterNavItem key={page.id}>
+                  {!page.children && page.slug && (
+                    <NavigationLink slug={page.slug} className="parent-item">
+                      <>
+                        {theme?.navLinkIcons && (
+                          <Icon
+                            name="angleRight"
+                            color={theme.footerColor}
+                            aria-hidden="true"
+                            className="me-1"
+                          />
+                        )}
+                        {page.name}
+                      </>
+                    </NavigationLink>
+                  )}
+                  {page.children && (
+                    <>
+                      <span className="parent-item">{page.name}</span>
+                      <FooterSubnav>
+                        {page.children.map((childPage) => (
+                          <FooterNavSubItem key={childPage.slug}>
+                            <NavigationLink slug={childPage.slug}>
+                              <>
+                                {theme?.navLinkIcons && (
+                                  <Icon
+                                    name="angleRight"
+                                    color={theme.footerColor}
+                                    aria-hidden="true"
+                                    className="me-1"
+                                  />
+                                )}
+                                {childPage.name}
+                              </>
+                            </NavigationLink>
+                          </FooterNavSubItem>
+                        ))}
+                      </FooterSubnav>
+                    </>
+                  )}
+                </FooterNavItem>
+              ))}
           </FooterNavItems>
         </FooterNav>
         <UtilitySection>
           <UtilityColumn>
             <UtilityItem>
               <OrgTitle>
-                { ownerUrl ? (
-                <a href={ownerUrl} target="_blank" rel="noreferrer">
-                  { theme?.navLinkIcons && (
-                  <Icon
-                    name="angleRight"
-                    color={theme.footerColor}
-                    aria-hidden="true"
-                    className="me-1"
-                  /> )}
-                  {ownerName}
-                </a>
-                ) : ownerName }
+                {ownerUrl ? (
+                  <a href={ownerUrl} target="_blank" rel="noreferrer">
+                    {theme?.navLinkIcons && (
+                      <Icon
+                        name="angleRight"
+                        color={theme.footerColor}
+                        aria-hidden="true"
+                        className="me-1"
+                      />
+                    )}
+                    {ownerName}
+                  </a>
+                ) : (
+                  ownerName
+                )}
               </OrgTitle>
             </UtilityItem>
-            { ownerLinks && ownerLinks.map((page) => (
-              <UtilityItem key={page.id}>
-                <NavigationLink slug={page.url}>
-                  { theme?.navLinkIcons && (
-                  <Icon
-                    name="angleRight"
-                    color={theme.footerColor}
-                    aria-hidden="true"
-                    className="me-1"
-                  /> )}
-                  {page.title}
-                </NavigationLink>
-              </UtilityItem>
-            ))}
+            {ownerLinks &&
+              ownerLinks.map((page) => (
+                <UtilityItem key={page.id}>
+                  <NavigationLink slug={page.url}>
+                    {theme?.navLinkIcons && (
+                      <Icon
+                        name="angleRight"
+                        color={theme.footerColor}
+                        aria-hidden="true"
+                        className="me-1"
+                      />
+                    )}
+                    {page.title}
+                  </NavigationLink>
+                </UtilityItem>
+              ))}
           </UtilityColumn>
           <UtilityColumn>
-            { utilityLinks && utilityLinks.map((page) => (
-              <UtilityItem key={page.id}>
-                <NavigationLink slug={page.slug}>
-                  { page.icon && (
-                  <Icon
-                    name={page.icon}
-                    color={theme.footerColor}
-                    aria-hidden="true"
-                    className="me-1"
-                  />
-                  )}
-                  {page.name}
-                </NavigationLink>
-              </UtilityItem>
-            ))}
+            {utilityLinks &&
+              utilityLinks.map((page) => (
+                <UtilityItem key={page.id}>
+                  <NavigationLink slug={page.slug}>
+                    {page.icon && (
+                      <Icon
+                        name={page.icon}
+                        color={theme.footerColor}
+                        aria-hidden="true"
+                        className="me-1"
+                      />
+                    )}
+                    {page.name}
+                  </NavigationLink>
+                </UtilityItem>
+              ))}
             <UtilityItem>
               <TopButton type="button" onClick={scrollToTop}>
-                {t('back-to-top')}
-                {' '}
+                {t('back-to-top')}{' '}
                 <Icon
                   name="arrowUp"
                   color={theme.footerColor}
@@ -539,67 +555,73 @@ function SiteFooter(props) {
         </UtilitySection>
         <BaseSection>
           <BaseColumn>
-            { copyrightText && (
-            <BaseItem>
-              &copy;
-              {copyrightText}
-            </BaseItem>
+            {copyrightText && (
+              <BaseItem>
+                &copy;
+                {copyrightText}
+              </BaseItem>
             )}
-            { creativeCommonsLicense && <BaseItem>{creativeCommonsLicense}</BaseItem> }
+            {creativeCommonsLicense && (
+              <BaseItem>{creativeCommonsLicense}</BaseItem>
+            )}
           </BaseColumn>
           <BaseColumn>
-            { additionalLinks && additionalLinks.map((page) => (
-              <BaseLink key={page.slug}>
-                <NavigationLink slug={page.slug}>
-                  {page.name}
-                </NavigationLink>
-              </BaseLink>
-            ))}
+            {additionalLinks &&
+              additionalLinks.map((page) => (
+                <BaseLink key={page.slug}>
+                  <NavigationLink slug={page.slug}>{page.name}</NavigationLink>
+                </BaseLink>
+              ))}
             <BaseLink>
-              {t('published-on')}
-              {' '}
-              <a href="https://kausal.tech" target="_blank" rel="noreferrer">Kausal Watch</a>
+              {t('published-on')}{' '}
+              <a href="https://kausal.tech" target="_blank" rel="noreferrer">
+                Kausal Watch
+              </a>
             </BaseLink>
           </BaseColumn>
         </BaseSection>
         <FooterExtras>
-        { footerStatement && <FooterStatement dangerouslySetInnerHTML={{ __html: footerStatement }} />}
-        {fundingInstruments?.length > 0 && (
-        <FundingInstruments>
-          <FundingHeader>{t('supported-by')}</FundingHeader>
-          { fundingInstruments.map((funder) => (
-            <FundingInstrumentContainer key={funder.id}>
-              <a href={funder.link} target="_blank" rel="noreferrer">
-                <SVG
-                  src={funder.logo}
-                  preserveAspectRatio="xMidYMid meet"
-                  title={funder.name}
-                />
-              </a>
-            </FundingInstrumentContainer>
-          ))}
-        </FundingInstruments>
-        )}
-        {otherLogos?.length > 0 && (
-        <FundingInstruments>
-          { otherLogos.map((logo) => (
-            <FundingInstrumentContainer key={logo.id}>
-              <a
-                href={logo.link ? logo.link : "#"}
-                target={logo.link ? "_blank" : "_self"}
-                rel={logo.link ? "noreferrer" : ""}
-              >
-                <SVG
-                  src={logo.logo}
-                  preserveAspectRatio="xMidYMid meet"
-                  title={logo.name}
-                  style={{ display: 'block' }}
-                />
-              </a>
-            </FundingInstrumentContainer>
-          ))}
-        </FundingInstruments>
-        )}
+          {footerStatement && (
+            <FooterStatement
+              dangerouslySetInnerHTML={{ __html: footerStatement }}
+            />
+          )}
+          {fundingInstruments?.length > 0 && (
+            <FundingInstruments>
+              <FundingHeader>{t('supported-by')}</FundingHeader>
+              {fundingInstruments.map((funder) => (
+                <FundingInstrumentContainer key={funder.id}>
+                  <a href={funder.link} target="_blank" rel="noreferrer">
+                    <SVG
+                      src={funder.logo}
+                      preserveAspectRatio="xMidYMid meet"
+                      title={funder.name}
+                    />
+                  </a>
+                </FundingInstrumentContainer>
+              ))}
+            </FundingInstruments>
+          )}
+          {otherLogos?.length > 0 && (
+            <FundingInstruments>
+              {otherLogos.map((logo) => (
+                <FundingInstrumentContainer key={logo.id}>
+                  <a
+                    href={logo.link ? logo.link : '#'}
+                    target={logo.link ? '_blank' : '_self'}
+                    rel={logo.link ? 'noreferrer' : ''}
+                  >
+                    <SVG
+                      src={logo.logo}
+                      preserveAspectRatio="xMidYMid meet"
+                      title={logo.name}
+                      style={{ display: 'block' }}
+                    />
+                  </a>
+                </FundingInstrumentContainer>
+              ))}
+            </FundingInstruments>
+          )}
         </FooterExtras>
       </Container>
     </StyledFooter>

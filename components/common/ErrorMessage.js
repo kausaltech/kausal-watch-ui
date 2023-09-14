@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 export default function ErrorMessage(props) {
   const { message, statusCode } = props;
 
-  const isServer = typeof window === "undefined";
+  const isServer = typeof window === 'undefined';
   if (statusCode && isServer) {
     const e = new Error(message);
     e.statusCode = statusCode;

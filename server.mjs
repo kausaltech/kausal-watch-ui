@@ -9,7 +9,7 @@ import originalUrl from 'original-url';
 //import normalizeUrl from 'normalize-url';
 import LRU from 'lru-cache';
 import apollo from '@apollo/client';
-import 'dotenv/config'
+import 'dotenv/config';
 import next from 'next';
 
 console.log('> 💡 Starting server');
@@ -26,9 +26,9 @@ const serverPort = process.env.PORT || 3000;
 const isDevMode = process.env.NODE_ENV !== 'production';
 const isProductionInstance = process.env.DEPLOYMENT_TYPE === 'production';
 
-const AUTH_CONFIG_PATTERN = /^[^:]+:[^:]+:[^:]+$/
-const BASIC_AUTH_PATTERN = /^Basic [^ ]+$/
-const BASIC_AUTH_ENV_VARIABLE = 'BASIC_AUTH_FOR_HOSTNAMES'
+const AUTH_CONFIG_PATTERN = /^[^:]+:[^:]+:[^:]+$/;
+const BASIC_AUTH_PATTERN = /^Basic [^ ]+$/;
+const BASIC_AUTH_ENV_VARIABLE = 'BASIC_AUTH_FOR_HOSTNAMES';
 
 function parseBasicAuthConfig(encodedValue) {
   const result = {};
@@ -38,7 +38,7 @@ function parseBasicAuthConfig(encodedValue) {
   const hostnameConfigs = encodedValue.split(',');
   for (const config of hostnameConfigs) {
     if (!AUTH_CONFIG_PATTERN.test(config)) {
-      const error = `Invalid basic auth configuration. Check the syntax of ENV variable ${BASIC_AUTH_ENV_VARIABLE}.`
+      const error = `Invalid basic auth configuration. Check the syntax of ENV variable ${BASIC_AUTH_ENV_VARIABLE}.`;
       Sentry.captureMessage(error);
       console.error(error);
       continue;
@@ -49,7 +49,9 @@ function parseBasicAuthConfig(encodedValue) {
   return result;
 }
 
-const basicAuthForHostnames = parseBasicAuthConfig(process.env[BASIC_AUTH_ENV_VARIABLE]);
+const basicAuthForHostnames = parseBasicAuthConfig(
+  process.env[BASIC_AUTH_ENV_VARIABLE]
+);
 
 /*
 let ssrCache;
@@ -98,22 +100,22 @@ function getCurrentURL(req) {
 Error.stackTraceLimit = 30;
 
 const GET_PLANS_BY_HOSTNAME = gql`
-query GetPlansByHostname($hostname: String) {
-  plansForHostname(hostname: $hostname) {
-    domains {
-      hostname
-      basePath
-      status
-      statusMessage
-    }
-    primaryLanguage
-    ... on Plan {
-      id
-      identifier
-      otherLanguages
+  query GetPlansByHostname($hostname: String) {
+    plansForHostname(hostname: $hostname) {
+      domains {
+        hostname
+        basePath
+        status
+        statusMessage
+      }
+      primaryLanguage
+      ... on Plan {
+        id
+        identifier
+        otherLanguages
+      }
     }
   }
-}
 `;
 
 class WatchServer {
@@ -128,7 +130,8 @@ class WatchServer {
   }
 
   initApollo() {
-    const uri = this.nextConfig.publicRuntimeConfig.aplansApiBaseURL + '/graphql/';
+    const uri =
+      this.nextConfig.publicRuntimeConfig.aplansApiBaseURL + '/graphql/';
     const httpLink = new HttpLink({
       uri,
     });
@@ -142,7 +145,8 @@ class WatchServer {
 
   parseRequestPath(ctx, plans) {
     const { path } = ctx;
-    let matchedPlan = null, basePath = null;
+    let matchedPlan = null,
+      basePath = null;
     let parts = path.split('/').splice(1);
 
     for (const plan of plans) {
@@ -157,7 +161,7 @@ class WatchServer {
         // Root plan
         matchedPlan = plan;
         basePath = '';
-        continue
+        continue;
       }
       if (prefix === parts[0]) {
         matchedPlan = plan;
@@ -179,7 +183,7 @@ class WatchServer {
         }
       }
     }
-    return { plan: matchedPlan, locale, basePath};
+    return { plan: matchedPlan, locale, basePath };
   }
 
   async getAvailablePlans(ctx) {
@@ -199,7 +203,7 @@ class WatchServer {
       });
       plansForHostname = data.plansForHostname;
     } catch (error) {
-      console.error(`Unable to get plan for hostname: ${hostname}`)
+      console.error(`Unable to get plan for hostname: ${hostname}`);
       if (error.networkError) {
         if (!error.networkError.result) {
           console.error(error.networkError);
@@ -262,11 +266,13 @@ class WatchServer {
     if (!BASIC_AUTH_PATTERN.test(authorization)) {
       return false;
     }
-    const providedCredentials = Buffer
-      .from(authorization.split(' ')[1], 'base64')
+    const providedCredentials = Buffer.from(
+      authorization.split(' ')[1],
+      'base64'
+    )
       .toString('utf-8')
       .split(':');
-    for (const prop of ["length", 0, 1]) {
+    for (const prop of ['length', 0, 1]) {
       if (providedCredentials[prop] !== requiredCredentials[prop]) {
         return false;
       }
@@ -284,8 +290,12 @@ class WatchServer {
 
     if (!this.validateCredentials(ctx)) {
       ctx.res.statusCode = 401;
-      ctx.res.statusMessage = 'Please provide a valid username and password combination';
-      ctx.set('WWW-Authenticate', `Basic realm="Access to ${ctx.hostname}", charset="UTF-8"`);
+      ctx.res.statusMessage =
+        'Please provide a valid username and password combination';
+      ctx.set(
+        'WWW-Authenticate',
+        `Basic realm="Access to ${ctx.hostname}", charset="UTF-8"`
+      );
       return;
     }
 
@@ -294,14 +304,13 @@ class WatchServer {
     const domain = plans[0].domains[0];
     // The domain is not shown for automatically configured domains
     const publicationStatus = domain?.status ?? 'PUBLISHED';
-    const published = publicationStatus === 'PUBLISHED'
+    const published = publicationStatus === 'PUBLISHED';
     if (published) {
       const { plan, locale, basePath } = this.parseRequestPath(ctx, plans);
       this.setBasePath(basePath);
       this.setLocale(locale, plan.primaryLanguage, plan.otherLanguages);
       ctx.req.planIdentifier = plan.identifier;
-    }
-    else {
+    } else {
       ctx.req.publicationStatus = publicationStatus;
       ctx.req.publicationStatusMessage = domain.statusMessage;
       const plan = plans[0];
@@ -316,7 +325,7 @@ class WatchServer {
 
   async init() {
     await this.app.prepare();
-    this.nextConfig = (await import("next/config.js")).default.default();
+    this.nextConfig = (await import('next/config.js')).default.default();
     const router = new Router();
     const server = new Koa();
 
@@ -345,7 +354,9 @@ class WatchServer {
       // Do not report HTTP 404s to Sentry
       if (err.statusCode && err.statusCode === 404) return;
       Sentry.withScope((scope) => {
-        scope.addEventProcessor((event) => Sentry.Handlers.parseRequest(event, ctx.request));
+        scope.addEventProcessor((event) =>
+          Sentry.Handlers.parseRequest(event, ctx.request)
+        );
         Sentry.captureException(err);
       });
       console.error(err);

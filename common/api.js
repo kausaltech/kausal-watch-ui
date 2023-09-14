@@ -22,4 +22,4 @@ export const aplans = {
     const data = resp.json();
     return data;
   },
-}
+};

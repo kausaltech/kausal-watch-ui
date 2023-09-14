@@ -4,15 +4,15 @@
 
 React UI for browsing and visualizing action plans. Built using [Next.js](https://nextjs.org).
 
-* Displays data from [Kausal Watch API](https://github.com/kausaltech/kausal-watch)
+- Displays data from [Kausal Watch API](https://github.com/kausaltech/kausal-watch)
 
 ## Development
 
 #### Prerequisites
 
-* [Node.js](https://nodejs.org/) 18.x 
-* [Yarn](https://yarnpkg.com/) 3.2.1
-  
+- [Node.js](https://nodejs.org/) 18.x
+- [Yarn](https://yarnpkg.com/) 3.2.1
+
 #### Getting Started
 
 Clone the repository, install dependencies and run the development server locally:

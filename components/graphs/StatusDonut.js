@@ -37,7 +37,6 @@ const PlotWrapper = styled.div`
   position: relative;
 `;
 
-
 const OpenModalButton = styled.button`
   position: absolute;
   top: 0px;
@@ -58,11 +57,10 @@ const OpenModalButton = styled.button`
   ${GraphCard}:hover & {
     opacity: 1;
   }
-  svg  {
-     color: ${(props) => props.theme.themeColors.dark};
+  svg {
+    color: ${(props) => props.theme.themeColors.dark};
   }
 `;
-
 
 const Plot = dynamic(() => import('./Plot'), {
   loading: () => <ContentLoader />,
@@ -157,15 +155,15 @@ const StatusDonut = (props) => {
         <GraphHeader>{header}</GraphHeader>
         <HelpText>{helpText}</HelpText>
         <PlotWrapper>
-        <OpenModalButton onClick={openModal}>
-            <Icon name='arrowUpRightFromSquare'/>
+          <OpenModalButton onClick={openModal}>
+            <Icon name="arrowUpRightFromSquare" />
           </OpenModalButton>
-        <Plot
-          data={[pieData]}
-          layout={pieLayout}
-          config={configNoButton}
-          onClick={openModal}
-        />
+          <Plot
+            data={[pieData]}
+            layout={pieLayout}
+            config={configNoButton}
+            onClick={openModal}
+          />
         </PlotWrapper>
       </GraphCard>
       <Modal

@@ -42,9 +42,7 @@ function ActionTableStory() {
 
   return (
     <div className="p-5">
-      <ActionsTable
-        actions={actionsData}
-      />
+      <ActionsTable actions={actionsData} />
     </div>
   );
 }

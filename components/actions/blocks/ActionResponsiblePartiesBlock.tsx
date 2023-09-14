@@ -10,7 +10,7 @@ const ActionResponsiblePartiesBlock = (props) => {
     <ActionSection>
       <ResponsibleList responsibleParties={responsibleParties} />
     </ActionSection>
-  )
-}
+  );
+};
 
 export default ActionResponsiblePartiesBlock;

@@ -12,7 +12,6 @@ const personProp = {
 
 export default {
   title: 'Action/Contact Person',
-
 };
 
 export const ContactPersonTest = () => {

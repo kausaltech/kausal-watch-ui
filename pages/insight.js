@@ -9,7 +9,6 @@ import IndicatorsHero from '../components/indicators/IndicatorsHero';
 import PlanContext from '../context/plan';
 import ContentLoader from '../components/common/ContentLoader';
 
-
 class VisPage extends React.Component {
   static contextType = PlanContext;
 
@@ -66,14 +65,12 @@ class VisPage extends React.Component {
   }
 
   render() {
-    const {
-      edges, nodes, loading,
-    } = this.state;
+    const { edges, nodes, loading } = this.state;
     const { filters } = this.props;
 
     let content;
 
-    const isServer = typeof window === "undefined";
+    const isServer = typeof window === 'undefined';
     if (!isServer) {
       if (loading) {
         content = <ContentLoader />;

@@ -11,19 +11,19 @@ const Connection = styled.div`
   &:before {
     content: '';
     position: absolute;
-    width: ${(props) => `${(Math.abs(props.hLength) / 2) + props.offset}px`};
-    left: ${(props) => `${(-props.hLength / 2) - props.offset}px`};
-    bottom: ${(props) => (props.vLength < 0) ? '0px' : 'none'};
+    width: ${(props) => `${Math.abs(props.hLength) / 2 + props.offset}px`};
+    left: ${(props) => `${-props.hLength / 2 - props.offset}px`};
+    bottom: ${(props) => (props.vLength < 0 ? '0px' : 'none')};
     border-top: 6px solid ${(props) => props.color};
   }
   &:after {
     content: '';
     position: absolute;
-    right: ${(props) => (props.hLength >= 0) ? '-7px' : 'auto'};
-    left: ${(props) => (props.hLength < 0) ? '7px' : 'auto'};
-    bottom: ${(props) => (props.vLength >= 0) ? '-13px' : 'auto'};
-    top: ${(props) => (props.vLength < 0) ? '-13px' : 'auto'};
-    width: 0; 
+    right: ${(props) => (props.hLength >= 0 ? '-7px' : 'auto')};
+    left: ${(props) => (props.hLength < 0 ? '7px' : 'auto')};
+    bottom: ${(props) => (props.vLength >= 0 ? '-13px' : 'auto')};
+    top: ${(props) => (props.vLength < 0 ? '-13px' : 'auto')};
+    width: 0;
     height: 0;
     transform: ${(props) => `rotate(${props.direction * 90}deg)`};
     transform-origin: center left;
@@ -34,12 +34,7 @@ const Connection = styled.div`
 `;
 
 function Connector(props) {
-  const {
-    startPoint,
-    endPoint,
-    color,
-    bend,
-  } = props;
+  const { startPoint, endPoint, color, bend } = props;
 
   const offset = bend ? bend : 0;
   const edgeWidth = endPoint.x - startPoint.x;
@@ -47,16 +42,16 @@ function Connector(props) {
   let direction = 0;
 
   let edgeStyle = {
-    width: `${(Math.abs(edgeWidth) / 2) - offset}px`,
+    width: `${Math.abs(edgeWidth) / 2 - offset}px`,
     height: `${Math.abs(edgeHeight) + 6}px`,
     borderStyle: 'solid',
   };
 
   if (edgeWidth >= 0) {
-    edgeStyle.left = `${startPoint.x + (edgeWidth / 2) - 3 + offset}px`;
+    edgeStyle.left = `${startPoint.x + edgeWidth / 2 - 3 + offset}px`;
     edgeStyle.borderLeftWidth = '6px';
     edgeStyle.borderRightWidth = '0px';
-  };
+  }
 
   if (edgeWidth < 0) {
     edgeStyle.left = `${endPoint.x + 3}px`;

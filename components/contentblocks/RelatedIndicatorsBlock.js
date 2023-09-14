@@ -11,9 +11,12 @@ import IndicatorVisualisation from 'components/indicators/IndicatorVisualisation
 const IndicatorGraphSection = styled.div`
   background-color: ${(props) => props.theme.neutralLight};
   padding: ${(props) => props.theme.spaces.s300};
-  color: ${
-    (props) => readableColor(props.theme.neutralLight, props.theme.themeColors.black, props.theme.themeColors.white)
-    };
+  color: ${(props) =>
+    readableColor(
+      props.theme.neutralLight,
+      props.theme.themeColors.black,
+      props.theme.themeColors.white
+    )};
 `;
 
 const IndicatorItem = (props) => {
@@ -28,15 +31,15 @@ const IndicatorItem = (props) => {
       lg={{ size: singleIndicator ? 8 : 6, offset: singleIndicator ? 2 : 0 }}
     >
       <IndicatorVisualisation indicatorId={indicator} />
-      { showLink && (
-      <div className="mt-2 text-right">
-        <Link href={`/indicators/${indicator}`}>
-          <a>
-            {t('read-more')}
-            <Icon name="arrowRight" />
-          </a>
-        </Link>
-      </div>
+      {showLink && (
+        <div className="mt-2 text-right">
+          <Link href={`/indicators/${indicator}`}>
+            <a>
+              {t('read-more')}
+              <Icon name="arrowRight" />
+            </a>
+          </Link>
+        </div>
       )}
     </Col>
   );
@@ -48,7 +51,7 @@ const RelatedIndicatorsblock = (props) => {
     <IndicatorGraphSection id={id}>
       <Container>
         <Row className="align-items-end">
-          { indicators?.map((item) => (
+          {indicators?.map((item) => (
             <IndicatorItem
               indicator={item.id}
               key={item.id}
@@ -63,9 +66,7 @@ const RelatedIndicatorsblock = (props) => {
 
 RelatedIndicatorsblock.propTypes = {
   id: PropTypes.string,
-  indicators: PropTypes.arrayOf(
-    PropTypes.shape(),
-  ).isRequired,
+  indicators: PropTypes.arrayOf(PropTypes.shape()).isRequired,
 };
 
 export default RelatedIndicatorsblock;

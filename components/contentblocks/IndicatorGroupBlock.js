@@ -12,48 +12,55 @@ import IndicatorVisualisation from 'components/indicators/IndicatorVisualisation
 const IndicatorGraphSection = styled.div`
   background-color: ${(props) => props.theme.neutralLight};
   padding: ${(props) => props.theme.spaces.s300};
-  color: ${
-    (props) => readableColor(props.theme.neutralLight, props.theme.themeColors.black, props.theme.themeColors.white)
-    };
+  color: ${(props) =>
+    readableColor(
+      props.theme.neutralLight,
+      props.theme.themeColors.black,
+      props.theme.themeColors.white
+    )};
 
   h2 {
     text-align: center;
     margin-bottom: ${(props) => props.theme.spaces.s300};
-    color: ${
-    (props) => readableColor(props.theme.neutralLight, props.theme.themeColors.black, props.theme.themeColors.white)
-    };
+    color: ${(props) =>
+      readableColor(
+        props.theme.neutralLight,
+        props.theme.themeColors.black,
+        props.theme.themeColors.white
+      )};
   }
 `;
 
 const IndicatorContainer = styled.div`
   h3 {
     font-size: ${(props) => props.theme.fontSizeBase};
-    color: ${
-      (props) => readableColor(props.theme.neutralLight, props.theme.themeColors.black, props.theme.themeColors.white)
-      };
+    color: ${(props) =>
+      readableColor(
+        props.theme.neutralLight,
+        props.theme.themeColors.black,
+        props.theme.themeColors.white
+      )};
   }
 `;
 
 const IndicatorItem = (props) => {
   const { indicator, display } = props;
-  if (display === 'graph') return (
-    <Col
-      className="mb-5"
-      lg={{ size: 8 }}
-    >
-      <IndicatorContainer>
-        <IndicatorLink id={indicator.id}>
-          <a>
-            <h3>
-              {indicator.name}
-              <Icon name="arrowRight" color="" />
-            </h3>
-          </a>
-        </IndicatorLink>
-        <IndicatorVisualisation indicatorId={indicator.id} />
-      </IndicatorContainer>
-    </Col>
-  );
+  if (display === 'graph')
+    return (
+      <Col className="mb-5" lg={{ size: 8 }}>
+        <IndicatorContainer>
+          <IndicatorLink id={indicator.id}>
+            <a>
+              <h3>
+                {indicator.name}
+                <Icon name="arrowRight" color="" />
+              </h3>
+            </a>
+          </IndicatorLink>
+          <IndicatorVisualisation indicatorId={indicator.id} />
+        </IndicatorContainer>
+      </Col>
+    );
   return (
     <Col md={6} xl={4} className="mb-5">
       <IndicatorHighlightCard
@@ -76,7 +83,7 @@ const IndicatorGroupBlock = (props) => {
       <Container>
         <h2>{t('indicators')}</h2>
         <Row className="justify-content-center">
-          { indicators.map((item) => (
+          {indicators.map((item) => (
             <IndicatorItem
               indicator={item.indicator}
               display={item.style}
@@ -91,9 +98,7 @@ const IndicatorGroupBlock = (props) => {
 
 IndicatorGroupBlock.propTypes = {
   id: PropTypes.string,
-  indicators: PropTypes.arrayOf(
-    PropTypes.shape(),
-  ).isRequired,
+  indicators: PropTypes.arrayOf(PropTypes.shape()).isRequired,
 };
 
 export default IndicatorGroupBlock;

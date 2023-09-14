@@ -1,7 +1,15 @@
 import { cloneDeep } from 'lodash';
 
 import { ActionListAction } from '../components/dashboard/ActionList';
-import { Action, ActionStatus, ActionImplementationPhase, Plan, Sentiment, ActionStatusSummary, ActionStatusSummaryIdentifier } from './__generated__/graphql';
+import {
+  Action,
+  ActionStatus,
+  ActionImplementationPhase,
+  Plan,
+  Sentiment,
+  ActionStatusSummary,
+  ActionStatusSummaryIdentifier,
+} from './__generated__/graphql';
 import { getStatusSummary } from '../common/ActionStatusSummary';
 import type { Theme } from '@kausal/themes/types';
 import type { Progress } from '../components/dashboard/ActionStatusGraphs';
@@ -25,9 +33,9 @@ const cleanActionStatus = (action, actionStatuses) => {
   // if implementationPhase is completed, make new status of completed
   if (implementationPhase?.identifier === 'completed') {
     newStatus.id = '13'; // this is the old completed id in api
-    newStatus.name = actionStatuses.find(
-      (statusType) => statusType.identifier === 'completed',
-    )?.name || implementationPhase.name; // TODO -- some plans don't have
+    newStatus.name =
+      actionStatuses.find((statusType) => statusType.identifier === 'completed')
+        ?.name || implementationPhase.name; // TODO -- some plans don't have
     // in practice in db, the names of these are the same
     // status, phase
     // (migrate first) //
@@ -36,7 +44,10 @@ const cleanActionStatus = (action, actionStatuses) => {
   }
 
   // if implementationPhase is not_started, and implementationPhase on_time create new status of not_started
-  if (implementationPhase?.identifier === 'not_started' && status?.identifier === 'on_time') {
+  if (
+    implementationPhase?.identifier === 'not_started' &&
+    status?.identifier === 'on_time'
+  ) {
     newStatus.id = '70'; // this is the old not_started id in api
     newStatus.name = status.name;
     newStatus.identifier = 'not_started';
@@ -54,12 +65,14 @@ const cleanActionStatus = (action, actionStatuses) => {
   return newStatus;
 };
 
-
 /*
  Process a list of actions and return an ordered list of statuses for statistics
  */
-const getStatusData = (actions: ActionListAction[], actionStatusSummaries: ActionStatusSummary[], theme: Theme) => {
-
+const getStatusData = (
+  actions: ActionListAction[],
+  actionStatusSummaries: ActionStatusSummary[],
+  theme: Theme
+) => {
   const progress: Progress = {
     values: [],
     labels: [],
@@ -71,11 +84,13 @@ const getStatusData = (actions: ActionListAction[], actionStatusSummaries: Actio
 
   const counts: Map<string, number> = new Map();
   for (const action of actions) {
-    const {statusSummary: {identifier}} = action;
+    const {
+      statusSummary: { identifier },
+    } = action;
     const val = 1 + (counts.get(identifier) ?? 0);
     counts.set(identifier, val);
   }
-  actionStatusSummaries.forEach(({identifier, label, color, sentiment}) => {
+  actionStatusSummaries.forEach(({ identifier, label, color, sentiment }) => {
     const statusCount = counts.get(identifier) ?? 0;
     if (statusCount > 0) {
       progress.values.push(statusCount);
@@ -94,7 +109,12 @@ const getStatusData = (actions: ActionListAction[], actionStatusSummaries: Actio
 /*
  Process a list of actions and return an ordered list of phases for statistics
  */
-const getPhaseData = (actions: ActionListAction[], plan: PlanContextType, theme, t): Progress => {
+const getPhaseData = (
+  actions: ActionListAction[],
+  plan: PlanContextType,
+  theme,
+  t
+): Progress => {
   const phaseData: Progress = {
     labels: [],
     values: [],
@@ -106,7 +126,9 @@ const getPhaseData = (actions: ActionListAction[], plan: PlanContextType, theme,
 
   const phases = plan.actionImplementationPhases;
 
-  let phaseColors = phases.map(p => theme.graphColors[p.color]).filter(c => c != null);
+  let phaseColors = phases
+    .map((p) => theme.graphColors[p.color])
+    .filter((c) => c != null);
   if (phaseColors.length != phases.length) {
     phaseColors = [
       theme.graphColors.grey020,
@@ -123,9 +145,10 @@ const getPhaseData = (actions: ActionListAction[], plan: PlanContextType, theme,
   const phasedActions = actions.map((action) => {
     const { implementationPhase } = action;
     const statusSummary = getStatusSummary(plan, action.statusSummary);
-    const base = (statusSummary.isActive && implementationPhase != null)
-      ? implementationPhase
-      : statusSummary;
+    const base =
+      statusSummary.isActive && implementationPhase != null
+        ? implementationPhase
+        : statusSummary;
     const phase = Object.assign({}, base);
     if (statusSummary.isActive === false) {
       phase.name = `No phase (${phase.name})`;
@@ -140,7 +163,8 @@ const getPhaseData = (actions: ActionListAction[], plan: PlanContextType, theme,
 
   phases.forEach((phase, index) => {
     const actionCountOnPhase = phasedActions.filter(
-      action => action.phase?.identifier === phase.identifier.toLowerCase());
+      (action) => action.phase?.identifier === phase.identifier.toLowerCase()
+    );
 
     phaseData.labels.push(phase.name);
     phaseData.values.push(actionCountOnPhase.length);
@@ -152,9 +176,10 @@ const getPhaseData = (actions: ActionListAction[], plan: PlanContextType, theme,
   });
 
   const unknownActions = new Set(
-    phasedActions.filter(a => (
-      !phases.find(p => p.identifier.toLowerCase() === a.phase?.identifier)
-    ))
+    phasedActions.filter(
+      (a) =>
+        !phases.find((p) => p.identifier.toLowerCase() === a.phase?.identifier)
+    )
   );
   phaseData.labels.push(t('unknown'));
   phaseData.values.push(unknownActions.size);

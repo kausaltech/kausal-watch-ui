@@ -28,10 +28,7 @@ const Status = (props) => {
 };
 
 const ImpactGroupActionList = (props) => {
-  const {
-    t,
-    actions,
-  } = props;
+  const { t, actions } = props;
   const plan = useContext(PlanContext);
   const impacts = Object.fromEntries(plan.actionImpacts.map((x) => [x.id, x]));
   return (
@@ -40,7 +37,9 @@ const ImpactGroupActionList = (props) => {
         <thead>
           <tr>
             <th scope="col">{t('action-num')}</th>
-            <th scope="col">{t('action-name-title', getActionTermContext(plan))}</th>
+            <th scope="col">
+              {t('action-name-title', getActionTermContext(plan))}
+            </th>
             <th scope="col">{t('action-impact')}</th>
             <th scope="col">{t('action-progress')}</th>
           </tr>

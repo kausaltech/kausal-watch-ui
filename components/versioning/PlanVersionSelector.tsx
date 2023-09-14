@@ -1,6 +1,11 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
-import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import {
+  UncontrolledDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
+} from 'reactstrap';
 import Icon from 'components/common/Icon';
 import { useTranslation } from 'common/i18n';
 import SiteContext from 'context/site';
@@ -10,55 +15,58 @@ const VersionSelect = styled.div`
   align-items: center;
 
   .dropdown-header {
-    margin: 0 .5rem .5rem;
-    padding: .5rem 0;
-    border-bottom: 1px solid ${(props)=> props.theme.themeColors.light};
-    font-weight: ${(props)=> props.theme.fontWeightNormal};
-    font-size: ${(props)=> props.theme.fontSizeBase};
+    margin: 0 0.5rem 0.5rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid ${(props) => props.theme.themeColors.light};
+    font-weight: ${(props) => props.theme.fontWeightNormal};
+    font-size: ${(props) => props.theme.fontSizeBase};
   }
 `;
 
 const VersionDropdownItem = styled.a`
   display: block;
-  padding: .25rem .75rem .25rem .25rem;
-  margin: 0 .5rem .5rem;
-  border: 1px solid ${(props)=> props.theme.themeColors.light};
-  border-radius: .5rem;
+  padding: 0.25rem 0.75rem 0.25rem 0.25rem;
+  margin: 0 0.5rem 0.5rem;
+  border: 1px solid ${(props) => props.theme.themeColors.light};
+  border-radius: 0.5rem;
   text-decoration: none !important;
-  /*font-weight: ${(props)=> props.latest === true ? props.theme.fontWeightBold : 'inherit'};*/
-  /*background: ${(props)=> props.active === true ? props.theme.themeColors.light : 'none'};*/
+  /*font-weight: ${(props) =>
+    props.latest === true ? props.theme.fontWeightBold : 'inherit'};*/
+  /*background: ${(props) =>
+    props.active === true ? props.theme.themeColors.light : 'none'};*/
 
   &:last-child {
     margin-bottom: 0;
   }
 
   &:hover {
-    background: ${(props)=> props.theme.themeColors.light};
-    border-color: ${(props)=> props.theme.themeColors.light};
+    background: ${(props) => props.theme.themeColors.light};
+    border-color: ${(props) => props.theme.themeColors.light};
     text-decoration: none;
   }
 `;
 
 const VersionName = styled.div`
-  font-size: ${(props)=> props.theme.fontSizeSm};
+  font-size: ${(props) => props.theme.fontSizeSm};
 `;
 
 const VersionDate = styled.div`
-  color: ${(props)=> props.theme.themeColors.dark};
+  color: ${(props) => props.theme.themeColors.dark};
 `;
 
-const StyledDropdownToggle = styled(DropdownToggle)<{islatest?: string}>`
+const StyledDropdownToggle = styled(DropdownToggle)<{ islatest?: string }>`
   display: flex;
   align-items: center;
   text-align: left;
-  padding: .25rem;
+  padding: 0.25rem;
   background: none;
   line-height: 1 !important;
   border: 1px solid transparent;
   border-radius: 1.75rem;
   font-size: 1rem;
-  color: ${(props)=> props.theme.themeColors.dark};
-  background: ${(props)=> props.islatest === 'true' ? 'none' : props.theme.graphColors.red010 };
+  color: ${(props) => props.theme.themeColors.dark};
+  background: ${(props) =>
+    props.islatest === 'true' ? 'none' : props.theme.graphColors.red010};
   font: inherit;
   cursor: pointer;
   outline: inherit;
@@ -73,7 +81,7 @@ const StyledDropdownToggle = styled(DropdownToggle)<{islatest?: string}>`
   }
 
   svg {
-    fill: ${(props)=> props.theme.brandNavColor} !important;
+    fill: ${(props) => props.theme.brandNavColor} !important;
   }
 `;
 
@@ -128,31 +136,34 @@ const PlanVersionSelector = (props) => {
         <StyledDropdownToggle
           data-toggle="dropdown"
           tag="button"
-          islatest = {(activeVersion.identifier === latestVersion.identifier).toString()}
+          islatest={(
+            activeVersion.identifier === latestVersion.identifier
+          ).toString()}
         >
-            <Icon name="version" className="me-2" width="1.25rem" height="1.25rem" />
-            {activeVersion.versionName}
-            <Icon name="angle-down" />
+          <Icon
+            name="version"
+            className="me-2"
+            width="1.25rem"
+            height="1.25rem"
+          />
+          {activeVersion.versionName}
+          <Icon name="angle-down" />
         </StyledDropdownToggle>
         <DropdownMenu>
-          <DropdownItem header>
-            { t('common:versions-list')}
-          </DropdownItem>
-          { allVersions.reverse().map((v) => (
+          <DropdownItem header>{t('common:versions-list')}</DropdownItem>
+          {allVersions.reverse().map((v) => (
             <VersionDropdownItem
               href={v.viewUrl}
               key={v.identifier}
               latest={v.identifier === latestVersion.identifier}
             >
-              <VersionDate>
-                {v.versionName}
-              </VersionDate>
+              <VersionDate>{v.versionName}</VersionDate>
             </VersionDropdownItem>
           ))}
         </DropdownMenu>
       </UncontrolledDropdown>
     </VersionSelect>
-  )
+  );
 };
 
 export default PlanVersionSelector;

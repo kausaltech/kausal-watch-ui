@@ -2,53 +2,51 @@ import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
 import { PlanType } from 'context/plan';
 import { title } from 'process';
 
-
 const GET_AUTOCOMPLETE_RESULTS = gql`
-query GetAutocompleteResults($plan: ID!, $term: String!) {
-  search(plan: $plan, autocomplete: $term, includeRelatedPlans: true) {
-    hits {
-      id
-      title
-      url
-      highlight
-      plan {
-        identifier
-        image {
-          rendition(size: "128x128", crop: true) {
-            src
+  query GetAutocompleteResults($plan: ID!, $term: String!) {
+    search(plan: $plan, autocomplete: $term, includeRelatedPlans: true) {
+      hits {
+        id
+        title
+        url
+        highlight
+        plan {
+          identifier
+          image {
+            rendition(size: "128x128", crop: true) {
+              src
+            }
+          }
+          name
+          shortName
+        }
+        object {
+          __typename
+          ... on Action {
+            identifier
+          }
+          ... on Indicator {
+            id
           }
         }
-        name
-        shortName
-      }
-      object {
-        __typename
-        ... on Action {
-          identifier
-        }
-        ... on Indicator {
-          id
-        }
-      }
-      page {
-        title
-        ... on CategoryPage {
-          category {
-            level {
-              name
+        page {
+          title
+          ... on CategoryPage {
+            category {
+              level {
+                name
+              }
             }
           }
         }
       }
     }
   }
-}
-`
-
+`;
 
 class WatchSearchAPIConnector {
-  apolloClient: ApolloClient<InMemoryCache>
-  plan: PlanType
+  apolloClient: ApolloClient<InMemoryCache>;
+  plan: PlanType;
 
   constructor({ apolloClient, plan }) {
     this.apolloClient = apolloClient;
@@ -58,7 +56,7 @@ class WatchSearchAPIConnector {
   async onSearch(opts, queryConfig) {
     // Not implemented, stub here just to silence the warning about
     // unimplemented method.
-    return { results: [] }
+    return { results: [] };
   }
 
   async onAutocomplete(opts, queryConfig) {
@@ -74,11 +72,11 @@ class WatchSearchAPIConnector {
     if (!hits) return [];
     const results = hits.map((hit) => {
       return {
-        ...hit
+        ...hit,
       };
     });
     return { results };
   }
-};
+}
 
 export default WatchSearchAPIConnector;

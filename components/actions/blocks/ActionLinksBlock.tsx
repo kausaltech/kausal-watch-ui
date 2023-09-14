@@ -17,7 +17,7 @@ const ActionLinksBlock = (props) => {
         ))}
       </ul>
     </>
-  )
-}
+  );
+};
 
 export default ActionLinksBlock;

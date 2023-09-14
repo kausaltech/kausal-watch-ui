@@ -31,9 +31,10 @@ export function getIndicatorLinkProps(id) {
 }
 
 export function getActionLinkProps(id: string, planUrl?: string) {
-  if (planUrl) return {
-    href: `${planUrl}/actions/${id}`
-  }
+  if (planUrl)
+    return {
+      href: `${planUrl}/actions/${id}`,
+    };
   return {
     href: `/actions/${id}`,
     as: undefined,
@@ -58,18 +59,17 @@ export function getSearchResultsLinkProps(query) {
   };
 }
 
-export const replaceHashWithoutScrolling = (hash) => window.history.replaceState(
-  {}, // state, not used
-  '', // title, not used
-  hash ? `#${hash}` : `${window.location.pathname}${window.location.search}`,
-);
+export const replaceHashWithoutScrolling = (hash) =>
+  window.history.replaceState(
+    {}, // state, not used
+    '', // title, not used
+    hash ? `#${hash}` : `${window.location.pathname}${window.location.search}`
+  );
 
 export function IndicatorLink(props) {
   const { id, ...other } = props;
 
-  return (
-    <Link {...getIndicatorLinkProps(id)} passHref {...other} />
-  );
+  return <Link {...getIndicatorLinkProps(id)} passHref {...other} />;
 }
 IndicatorLink.propTypes = {
   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
@@ -87,14 +87,24 @@ export function ActionLink(props) {
   const { action, planUrl, viewUrl, crossPlan, ...other } = props;
   // If this action is merged with another, replace all links with
   // a link to the master action.
-  const targetIdentifier = action.mergedWith ? action.mergedWith.identifier : action.identifier;
+  const targetIdentifier = action.mergedWith
+    ? action.mergedWith.identifier
+    : action.identifier;
   if (crossPlan) {
     // nextjs Link doesn't properly handle links across plans in some cases,
     // specifically when we are in a plan without basepath and the link is to
     // a plan in the same hostname but with a basepath.
-    return React.cloneElement(React.Children.only(other.children), {href: viewUrl})
+    return React.cloneElement(React.Children.only(other.children), {
+      href: viewUrl,
+    });
   }
-  return <Link {...getActionLinkProps(targetIdentifier, planUrl)} passHref {...other} />;
+  return (
+    <Link
+      {...getActionLinkProps(targetIdentifier, planUrl)}
+      passHref
+      {...other}
+    />
+  );
 }
 
 ActionLink.defaultProps = {
@@ -114,28 +124,34 @@ export function OrganizationLink(props) {
 
 type ActionListLinkProps = {
   categoryFilters?: {
-    typeIdentifier: string,
-    categoryId: string,
-  }[],
+    typeIdentifier: string;
+    categoryId: string;
+  }[];
   organizationFilter?: {
-    id: string,
-  },
+    id: string;
+  };
 };
 
 type OtherLinkProps = Omit<LinkProps, 'href' | 'as'>;
 
-
-export function ActionListLink(props: PropsWithChildren<OtherLinkProps & ActionListLinkProps>) {
+export function ActionListLink(
+  props: PropsWithChildren<OtherLinkProps & ActionListLinkProps>
+) {
   const linkProps = ActionListLink.getLinkProps(props);
   return <Link passHref {...linkProps} />;
 }
-ActionListLink.getLinkProps = (opts: ActionListLinkProps, rest?: OtherLinkProps) => {
+ActionListLink.getLinkProps = (
+  opts: ActionListLinkProps,
+  rest?: OtherLinkProps
+) => {
   const { categoryFilters, organizationFilter, ...other } = opts;
   const pathname = '/actions';
 
   const query = {};
   if (categoryFilters) {
-    categoryFilters.forEach(f => query[`cat-${f.typeIdentifier}`] = f.categoryId);
+    categoryFilters.forEach(
+      (f) => (query[`cat-${f.typeIdentifier}`] = f.categoryId)
+    );
   }
   if (organizationFilter) {
     query['responsible_party'] = organizationFilter.id;
@@ -145,34 +161,46 @@ ActionListLink.getLinkProps = (opts: ActionListLinkProps, rest?: OtherLinkProps)
     query,
   };
   return { ...opts, ...(rest || {}), href };
-}
+};
 
-export function IndicatorListLink(props: Omit<LinkProps, "href"> & {children: ReactElement}) {
+export function IndicatorListLink(
+  props: Omit<LinkProps, 'href'> & { children: ReactElement }
+) {
   return <Link href="/indicators" passHref {...props} />;
 }
 
-type StaticPageLinkProps = {
-  slug: string,
-  page?: undefined,
-} | {
-  slug?: undefined,
-  page: {
-    urlPath: string,
-  }
-}
+type StaticPageLinkProps =
+  | {
+      slug: string;
+      page?: undefined;
+    }
+  | {
+      slug?: undefined;
+      page: {
+        urlPath: string;
+      };
+    };
 
-export function StaticPageLink(props: PropsWithChildren<OtherLinkProps & StaticPageLinkProps>) {
+export function StaticPageLink(
+  props: PropsWithChildren<OtherLinkProps & StaticPageLinkProps>
+) {
   const { slug, page, ...other } = props;
   if (slug) return <Link href={`/${slug}`} {...other} />;
-  return <Link href={page!.urlPath} {...other} />
+  return <Link href={page!.urlPath} {...other} />;
 }
 
 type NavigationLinkProps = PropsWithChildren<OtherLinkProps & { slug: string }>;
 export function NavigationLink(props: NavigationLinkProps) {
   const { slug, children, ...other } = props;
-  return slug?.startsWith('http')
-    ? <a href={slug} {...other}>{children}</a>
-    : <Link href={`${slug}`} {...other}><a>{children}</a></Link>;
+  return slug?.startsWith('http') ? (
+    <a href={slug} {...other}>
+      {children}
+    </a>
+  ) : (
+    <Link href={`${slug}`} {...other}>
+      <a>{children}</a>
+    </Link>
+  );
 }
 
 NavigationLink.propTypes = {

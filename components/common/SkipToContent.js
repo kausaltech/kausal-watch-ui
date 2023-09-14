@@ -14,17 +14,15 @@ const SkipLink = styled.a`
   transform: translateY(-100%);
   transition: transform 0.2s;
 
- &:focus {
-   transform: translateY(0%);
- }
+  &:focus {
+    transform: translateY(0%);
+  }
 `;
 
 function SkipToContent() {
   const { t } = useTranslation();
 
-  return (
-    <SkipLink href="#main">{t('skip-to-content')}</SkipLink>
-  );
+  return <SkipLink href="#main">{t('skip-to-content')}</SkipLink>;
 }
 
 export default SkipToContent;
