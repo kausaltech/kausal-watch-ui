@@ -139,7 +139,6 @@ function IndicatorValueSummaryStory() {
         unit={unitData2}
         goals={goalsData2}
       />
-
     </div>
   );
 }

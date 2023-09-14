@@ -4,9 +4,7 @@ import { ThemeProvider } from 'styled-components';
 import theme from '../public/static/themes/default/theme.json';
 
 const AllTheProviders = ({ children }) => (
-  <ThemeProvider theme={theme}>
-    {children}
-  </ThemeProvider>
+  <ThemeProvider theme={theme}>{children}</ThemeProvider>
 );
 
 const customRender = (ui, options) =>

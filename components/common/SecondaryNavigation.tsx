@@ -32,30 +32,33 @@ const Nav = styled.ul`
 const NavItem = styled.li<{ isActive: boolean }>`
   margin-bottom: 0.5rem;
   padding: 0;
-  
+
   a {
-    color: ${(props) => (props.isActive ? props.theme.brandDark : props.theme.themeColors.black)};
-    border-bottom: 3px solid ${(props) => (props.isActive ? props.theme.brandDark : 'transparent')};
+    color: ${(props) =>
+      props.isActive ? props.theme.brandDark : props.theme.themeColors.black};
+    border-bottom: 3px solid
+      ${(props) => (props.isActive ? props.theme.brandDark : 'transparent')};
     font-weight: ${(props) => (props.isActive ? 'bold' : 'normal')};
 
     &:hover {
-      color: ${(props) => (props.isActive ? props.theme.brandDark : props.theme.themeColors.black)};
+      color: ${(props) =>
+        props.isActive ? props.theme.brandDark : props.theme.themeColors.black};
       text-decoration: none;
-      border-bottom: 3px solid ${(props) => (props.theme.brandDark)};
+      border-bottom: 3px solid ${(props) => props.theme.brandDark};
     }
   }
 `;
 
 export interface SecondaryNavigationLink {
-  id: string,
-  title: string,
-  urlPath: string,
+  id: string;
+  title: string;
+  urlPath: string;
 }
 
 interface SecondaryNavigationProps {
-  links: SecondaryNavigationLink[],
-  activeLink: string,
-  title?: string,
+  links: SecondaryNavigationLink[];
+  activeLink: string;
+  title?: string;
 }
 
 const SecondaryNavigation = (props: SecondaryNavigationProps) => {
@@ -63,28 +66,21 @@ const SecondaryNavigation = (props: SecondaryNavigationProps) => {
 
   return (
     <NavigationContainer>
-    <Row>
-      <Col
-        md={{ size: 10, offset: 1 }}
-        lg={{ size: 4, offset: 0 }}
-        xl={3}
-      >
-        <NavigationCard>
-          { title && <h3>{ title }</h3> }
-          <Nav>
-            {links.map((link) => (
-              <NavItem key={link.id} isActive={ link.id === activeLink}>
-                <Link href={link.urlPath}>
-                  {link.title}
-                </Link>
-              </NavItem>
-            ))}
-          </Nav>
-        </NavigationCard>
-      </Col>
-    </Row>
-  </NavigationContainer>
-
+      <Row>
+        <Col md={{ size: 10, offset: 1 }} lg={{ size: 4, offset: 0 }} xl={3}>
+          <NavigationCard>
+            {title && <h3>{title}</h3>}
+            <Nav>
+              {links.map((link) => (
+                <NavItem key={link.id} isActive={link.id === activeLink}>
+                  <Link href={link.urlPath}>{link.title}</Link>
+                </NavItem>
+              ))}
+            </Nav>
+          </NavigationCard>
+        </Col>
+      </Row>
+    </NavigationContainer>
   );
 };
 

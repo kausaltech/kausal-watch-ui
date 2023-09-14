@@ -92,25 +92,15 @@ function Phase(props) {
 
   return (
     <li>
-      { !compact && (
-        <PhaseLabel className={labelClass}>
-          {name}
-        </PhaseLabel>
-      )}
+      {!compact && <PhaseLabel className={labelClass}>{name}</PhaseLabel>}
       <PhaseBlock blockColor={blockColor} />
     </li>
   );
 }
 
 function ActionPhase(props) {
-  const {
-    status,
-    activePhase,
-    reason,
-    action,
-    phases,
-    compact,
-    ...rest } = props;
+  const { status, activePhase, reason, action, phases, compact, ...rest } =
+    props;
 
   const { t } = useTranslation(['common', 'actions']);
   const plan = usePlan();
@@ -119,22 +109,25 @@ function ActionPhase(props) {
 
   // Find position of the active phase
   if (activePhase?.identifier) {
-    phaseIndex = phases.findIndex((phase) => phase.identifier === activePhase.identifier);
+    phaseIndex = phases.findIndex(
+      (phase) => phase.identifier === activePhase.identifier
+    );
   }
   // Override phase name in special case statuses
-  const inactive = ['cancelled', 'merged', 'postponed', 'completed'].includes(status.identifier);
+  const inactive = ['cancelled', 'merged', 'postponed', 'completed'].includes(
+    status.identifier
+  );
   if (inactive) {
-    activePhaseName = (
+    activePhaseName =
       status.identifier === ActionStatusSummaryIdentifier.Merged
         ? `${t('actions:action-status-merged', getActionTermContext(plan))}`
-        : status.label
-    )
+        : status.label;
   }
 
   return (
     <Status {...rest} className={compact && 'compact'}>
       <ul>
-        { phases.map((phase, indx) => (
+        {phases.map((phase, indx) => (
           <Phase
             action={action}
             phase={phase}
@@ -148,24 +141,18 @@ function ActionPhase(props) {
           />
         ))}
       </ul>
-      { !compact && status.identifier !== 'UNDEFINED' && (
+      {!compact && status.identifier !== 'UNDEFINED' && (
         <>
-          <strong>{ status.label }</strong>
-          { reason && (
+          <strong>{status.label}</strong>
+          {reason && (
             <PhaseReason>
-              <strong>
-                { t('action-status-reason') }
-                :
-                {' '}
-              </strong>
-              { reason }
+              <strong>{t('action-status-reason')}: </strong>
+              {reason}
             </PhaseReason>
           )}
         </>
       )}
-      { compact && (
-        <span>{ activePhaseName }</span>
-      )}
+      {compact && <span>{activePhaseName}</span>}
     </Status>
   );
 }
@@ -174,14 +161,14 @@ ActionPhase.propTypes = {
   status: PropTypes.shape().isRequired,
   activePhase: PropTypes.shape(),
   reason: PropTypes.string,
-  phases: PropTypes.arrayOf(PropTypes.shape(
-    {
+  phases: PropTypes.arrayOf(
+    PropTypes.shape({
       id: PropTypes.string,
       identifier: PropTypes.string,
       name: PropTypes.string,
       description: PropTypes.string,
-    },
-  )),
+    })
+  ),
   compact: PropTypes.bool,
 };
 

@@ -3,7 +3,6 @@ import { Alert } from 'reactstrap';
 
 import { Sentry } from '../../common/sentry';
 
-
 class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);

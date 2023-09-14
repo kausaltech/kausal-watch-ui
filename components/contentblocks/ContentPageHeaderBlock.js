@@ -20,7 +20,8 @@ const HeaderBg = styled.div`
 `;
 
 const ContentHeader = styled.header`
-  padding: ${(props) => props.theme.spaces.s400} 0 ${(props) => props.theme.spaces.s200};
+  padding: ${(props) => props.theme.spaces.s400} 0
+    ${(props) => props.theme.spaces.s200};
   font-family: ${(props) => props.theme.fontFamilyContent};
 
   h1 {
@@ -39,7 +40,7 @@ const ImageCredit = styled.span`
   top: 0;
   right: 0;
   padding: 0.25rem 0.5rem;
-  background-color: rgba(255,255,255,0.66);
+  background-color: rgba(255, 255, 255, 0.66);
   color: #000000;
   font-size: ${(props) => props.theme.fontSizeSm};
   font-family: ${(props) => props.theme.fontFamilyTiny};
@@ -51,14 +52,7 @@ const ImageCredit = styled.span`
 `;
 
 const ContentPageHeaderBlock = (props) => {
-  const {
-    title,
-    lead,
-    headerImage,
-    imageAlign,
-    altText,
-    imageCredit,
-  } = props;
+  const { title, lead, headerImage, imageAlign, altText, imageCredit } = props;
 
   const { t } = useTranslation();
 
@@ -66,15 +60,14 @@ const ContentPageHeaderBlock = (props) => {
     <>
       {/* TODO: animate image entry? */}
       <HeaderBg>
-        { headerImage && (
+        {headerImage && (
           <HeaderImage image={headerImage} imageAlign={imageAlign} />
         )}
-        { altText && <span className="sr-only" role="img" aria-label={altText} /> }
-        { imageCredit
-        && (
-        <ImageCredit>
-          {`${t('image-credit')}: ${imageCredit}`}
-        </ImageCredit>
+        {altText && (
+          <span className="sr-only" role="img" aria-label={altText} />
+        )}
+        {imageCredit && (
+          <ImageCredit>{`${t('image-credit')}: ${imageCredit}`}</ImageCredit>
         )}
       </HeaderBg>
       <HeaderBg>
@@ -83,7 +76,7 @@ const ContentPageHeaderBlock = (props) => {
             <Col>
               <ContentHeader>
                 <h1>{title}</h1>
-                {lead && <p className="lead">{ lead }</p>}
+                {lead && <p className="lead">{lead}</p>}
               </ContentHeader>
             </Col>
           </Row>

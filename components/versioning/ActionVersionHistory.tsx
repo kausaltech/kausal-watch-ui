@@ -1,9 +1,9 @@
-import React, { useState, useContext } from "react";
-import styled from "styled-components";
-import { Collapse, Button } from "reactstrap";
-import { useTranslation } from "common/i18n";
-import { ActionLink } from "common/links";
-import Icon from "components/common/Icon";
+import React, { useState, useContext } from 'react';
+import styled from 'styled-components';
+import { Collapse, Button } from 'reactstrap';
+import { useTranslation } from 'common/i18n';
+import { ActionLink } from 'common/links';
+import Icon from 'components/common/Icon';
 import SiteContext from 'context/site';
 
 const VersionHistory = styled.div`
@@ -35,10 +35,11 @@ const VersionHistoryList = styled.ul`
 `;
 
 const VersionHistoryListItem = styled.li`
-  margin-left: .5rem;
+  margin-left: 0.5rem;
   padding: 1rem;
   border-left: 2px solid ${(props) => props.theme.graphColors.grey090};
-  background-color: ${(props) => props.active ? props.theme.graphColors.blue010 : 'none'};
+  background-color: ${(props) =>
+    props.active ? props.theme.graphColors.blue010 : 'none'};
 `;
 
 const VersionHistoryListItemDate = styled.div`
@@ -46,9 +47,7 @@ const VersionHistoryListItemDate = styled.div`
   font-weight: ${(props) => props.theme.fontWeightBold};
 `;
 
-const VersionHistoryListItemName = styled.span`
-
-`;
+const VersionHistoryListItemName = styled.span``;
 
 const ActionVersionHistory = (props: ActionVersionHistoryProps) => {
   const { action } = props;
@@ -66,10 +65,11 @@ const ActionVersionHistory = (props: ActionVersionHistoryProps) => {
   versions.push(...supersededActions);
   versions.push(action);
 
-  if(action?.supersededBy) {
+  if (action?.supersededBy) {
     !isProduction
-    ? versions.push(action.supersededBy)
-    : action.supersededBy.plan.publishedAt && versions.push(action.supersededBy);
+      ? versions.push(action.supersededBy)
+      : action.supersededBy.plan.publishedAt &&
+        versions.push(action.supersededBy);
   }
   if (versions.length < 2) return null;
 
@@ -92,33 +92,31 @@ const ActionVersionHistory = (props: ActionVersionHistoryProps) => {
         </VersionHistoryTitle>
       </ToggleButton>
       <Collapse isOpen={isOpen}>
-      <VersionHistoryList>
-        {versions.reverse().map((v) => (
-          <VersionHistoryListItem
-            key={v.identifier}
-            active={v.identifier === action.identifier}
-          >
-            <VersionHistoryListItemDate>
-              {v.plan?.versionName || v.plan.shortName}
-            </VersionHistoryListItemDate>
-            <ActionLink
-              action={v}
-              planUrl={v.plan.viewUrl}
+        <VersionHistoryList>
+          {versions.reverse().map((v) => (
+            <VersionHistoryListItem
+              key={v.identifier}
+              active={v.identifier === action.identifier}
             >
-              <a href>
-                <VersionHistoryListItemName>
-                  {v.plan?.hideActionIdentifiers !== true && `${v.identifier}. ` }
-                  {v.name}
-                  {v.viewUrl}
-                </VersionHistoryListItemName>
-              </a>
-            </ActionLink>
+              <VersionHistoryListItemDate>
+                {v.plan?.versionName || v.plan.shortName}
+              </VersionHistoryListItemDate>
+              <ActionLink action={v} planUrl={v.plan.viewUrl}>
+                <a href>
+                  <VersionHistoryListItemName>
+                    {v.plan?.hideActionIdentifiers !== true &&
+                      `${v.identifier}. `}
+                    {v.name}
+                    {v.viewUrl}
+                  </VersionHistoryListItemName>
+                </a>
+              </ActionLink>
             </VersionHistoryListItem>
-        ))}
-      </VersionHistoryList>
+          ))}
+        </VersionHistoryList>
       </Collapse>
     </VersionHistory>
   );
-}
+};
 
 export default ActionVersionHistory;

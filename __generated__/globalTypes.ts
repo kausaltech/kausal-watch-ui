@@ -11,83 +11,83 @@
  * An enumeration.
  */
 export enum ActionResponsiblePartyRole {
-  COLLABORATOR = "COLLABORATOR",
-  NONE = "NONE",
-  PRIMARY = "PRIMARY",
+  COLLABORATOR = 'COLLABORATOR',
+  NONE = 'NONE',
+  PRIMARY = 'PRIMARY',
 }
 
 /**
  * An enumeration.
  */
 export enum ActionTaskState {
-  CANCELLED = "CANCELLED",
-  COMPLETED = "COMPLETED",
-  IN_PROGRESS = "IN_PROGRESS",
-  NOT_STARTED = "NOT_STARTED",
+  CANCELLED = 'CANCELLED',
+  COMPLETED = 'COMPLETED',
+  IN_PROGRESS = 'IN_PROGRESS',
+  NOT_STARTED = 'NOT_STARTED',
 }
 
 /**
  * An enumeration.
  */
 export enum AttributeTypeFormat {
-  CATEGORY_CHOICE = "CATEGORY_CHOICE",
-  NUMERIC = "NUMERIC",
-  OPTIONAL_CHOICE = "OPTIONAL_CHOICE",
-  ORDERED_CHOICE = "ORDERED_CHOICE",
-  RICH_TEXT = "RICH_TEXT",
+  CATEGORY_CHOICE = 'CATEGORY_CHOICE',
+  NUMERIC = 'NUMERIC',
+  OPTIONAL_CHOICE = 'OPTIONAL_CHOICE',
+  ORDERED_CHOICE = 'ORDERED_CHOICE',
+  RICH_TEXT = 'RICH_TEXT',
 }
 
 /**
  * An enumeration.
  */
 export enum IndicatorLevelLevel {
-  OPERATIONAL = "OPERATIONAL",
-  STRATEGIC = "STRATEGIC",
-  TACTICAL = "TACTICAL",
+  OPERATIONAL = 'OPERATIONAL',
+  STRATEGIC = 'STRATEGIC',
+  TACTICAL = 'TACTICAL',
 }
 
 /**
  * An enumeration.
  */
 export enum IndicatorTimeResolution {
-  DAY = "DAY",
-  MONTH = "MONTH",
-  YEAR = "YEAR",
+  DAY = 'DAY',
+  MONTH = 'MONTH',
+  YEAR = 'YEAR',
 }
 
 /**
  * An enumeration.
  */
 export enum RelatedCommonIndicatorEffectType {
-  DECREASES = "DECREASES",
-  INCREASES = "INCREASES",
-  PART_OF = "PART_OF",
+  DECREASES = 'DECREASES',
+  INCREASES = 'INCREASES',
+  PART_OF = 'PART_OF',
 }
 
 /**
  * An enumeration.
  */
 export enum RelatedIndicatorConfidenceLevel {
-  HIGH = "HIGH",
-  LOW = "LOW",
-  MEDIUM = "MEDIUM",
+  HIGH = 'HIGH',
+  LOW = 'LOW',
+  MEDIUM = 'MEDIUM',
 }
 
 /**
  * An enumeration.
  */
 export enum RelatedIndicatorEffectType {
-  DECREASES = "DECREASES",
-  INCREASES = "INCREASES",
-  PART_OF = "PART_OF",
+  DECREASES = 'DECREASES',
+  INCREASES = 'INCREASES',
+  PART_OF = 'PART_OF',
 }
 
 /**
  * An enumeration.
  */
 export enum SiteGeneralContentActionTerm {
-  ACTION = "ACTION",
-  STRATEGY = "STRATEGY",
+  ACTION = 'ACTION',
+  STRATEGY = 'STRATEGY',
 }
 
 export interface UserFeedbackMutationInput {

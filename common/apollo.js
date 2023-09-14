@@ -1,6 +1,11 @@
 import withApollo from 'next-with-apollo';
-import { ApolloClient, HttpLink, ApolloLink, ApolloProvider } from '@apollo/client';
-import { getDataFromTree } from "@apollo/client/react/ssr";
+import {
+  ApolloClient,
+  HttpLink,
+  ApolloLink,
+  ApolloProvider,
+} from '@apollo/client';
+import { getDataFromTree } from '@apollo/client/react/ssr';
 import { InMemoryCache } from '@apollo/client/cache';
 import { onError } from '@apollo/client/link/error';
 import getConfig from 'next/config';
@@ -35,22 +40,24 @@ const localeMiddleware = new ApolloLink((operation, forward) => {
       kind: 'Name',
       value: 'locale',
     },
-    arguments: [{
-      kind: 'Argument',
-      name: { kind: 'Name', value: 'lang' },
-      value: { kind: 'StringValue', value: locale, block: false },
-    }],
+    arguments: [
+      {
+        kind: 'Argument',
+        name: { kind: 'Name', value: 'lang' },
+        value: { kind: 'StringValue', value: locale, block: false },
+      },
+    ],
   };
 
   operation.query = {
     ...query,
-    definitions: [{
-      ...definitions[0],
-      directives: [
-        ...definitions[0].directives,
-        localeDirective,
-      ],
-    }, ...definitions.slice(1)],
+    definitions: [
+      {
+        ...definitions[0],
+        directives: [...definitions[0].directives, localeDirective],
+      },
+      ...definitions.slice(1),
+    ],
   };
 
   return forward(operation);
@@ -69,7 +76,8 @@ const refererLink = new ApolloLink((operation, forward) => {
       const { req } = globalRequestContext;
       const { currentURL } = req;
       const { baseURL, path } = currentURL;
-      const remoteAddress = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+      const remoteAddress =
+        req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 
       newHeaders.referer = baseURL + path;
       newHeaders['x-forwarded-for'] = remoteAddress;
@@ -78,7 +86,8 @@ const refererLink = new ApolloLink((operation, forward) => {
       newHeaders['x-cache-plan-domain'] = ctx.planDomain;
     }
     if (ctx.planIdentifier || globalPlanIdentifier) {
-      newHeaders['x-cache-plan-identifier'] = ctx.planIdentifier || globalPlanIdentifier;
+      newHeaders['x-cache-plan-identifier'] =
+        ctx.planIdentifier || globalPlanIdentifier;
     }
     return {
       headers: {
@@ -121,7 +130,9 @@ const sentryErrorLink = onError(({ graphQLErrors, networkError }) => {
     graphQLErrors.forEach(({ message, locations, path }) => {
       const locationsStr = JSON.stringify(locations);
       if (process.env.NODE_ENV !== 'production')
-        console.error(`[GraphQL error]: Message: ${message}, Location: ${locationsStr}, Path: ${path}`);
+        console.error(
+          `[GraphQL error]: Message: ${message}, Location: ${locationsStr}, Path: ${path}`
+        );
     });
     captureException(graphQLErrors[0]);
   }
@@ -141,7 +152,7 @@ let globalApolloClient;
 
 export function initializeApolloClient(opts) {
   const { ctx, initialState, planIdentifier } = opts;
-  const isServer = typeof window === "undefined";
+  const isServer = typeof window === 'undefined';
 
   if (planIdentifier) {
     globalPlanIdentifier = planIdentifier;
@@ -153,7 +164,14 @@ export function initializeApolloClient(opts) {
   if (globalApolloClient && !isServer) return globalApolloClient;
   const clientOpts = {
     ssrMode: isServer,
-    link: ApolloLink.from([refererLink, localeMiddleware, refererLink, sentryTracingLink, sentryErrorLink, httpLink]),
+    link: ApolloLink.from([
+      refererLink,
+      localeMiddleware,
+      refererLink,
+      sentryTracingLink,
+      sentryErrorLink,
+      httpLink,
+    ]),
     cache: new InMemoryCache({
       // https://www.apollographql.com/docs/react/data/fragments/#defining-possibletypes-manually
       possibleTypes: possibleTypes.possibleTypes,
@@ -165,16 +183,13 @@ export function initializeApolloClient(opts) {
   return apolloClient;
 }
 
-export default withApollo(
-  (opts) => initializeApolloClient(opts),
-  {
-    render: ({ Page, props }) => {
-      return (
-        <ApolloProvider client={props.apollo}>
-          <Page {...props} />
-        </ApolloProvider>
-      );
-    },
-    getDataFromTree,
+export default withApollo((opts) => initializeApolloClient(opts), {
+  render: ({ Page, props }) => {
+    return (
+      <ApolloProvider client={props.apollo}>
+        <Page {...props} />
+      </ApolloProvider>
+    );
   },
-);
+  getDataFromTree,
+});

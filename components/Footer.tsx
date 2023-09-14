@@ -14,12 +14,12 @@ const getFeedbackUrl = (currentURL) => {
   }
   const feedbackPageQueryPart = `?lastUrl=${encodeURIComponent(currentURL)}`;
   return `${feedbackPageUrlBase}${feedbackPageQueryPart}`;
-}
+};
 
 function Footer(props) {
   const plan = React.useContext(PlanContext);
   const site = React.useContext(SiteContext);
-  const router = useRouter()
+  const router = useRouter();
   const generalContent = plan.generalContent || {};
   const theme = useTheme();
   const { siteTitle } = props;
@@ -50,32 +50,45 @@ function Footer(props) {
 
   if (plan.staticPages) {
     const topMenuPages = plan.staticPages.filter((page) => page.footer);
-    staticPages = topMenuPages.map((page, index) => (
-      { id: `s${index}`, name: page.name, slug: page.slug }
-    ));
+    staticPages = topMenuPages.map((page, index) => ({
+      id: `s${index}`,
+      name: page.name,
+      slug: page.slug,
+    }));
     navLinks = navLinks.concat(staticPages);
   }
 
   const additionalLinks = [];
 
-  plan.additionalLinks.items?.map((link) => (
+  plan.additionalLinks.items?.map((link) =>
     additionalLinks.push({
       id: link.id,
       name: link.page.title,
       slug: link.page.urlPath,
     })
-  ));
+  );
 
   const ownerLinks = theme.settings?.footerAdditionalLinks;
 
   // If there is no custom a11y page set, or if there is no external a11y statement link
   // use the standard a11y statement
-  if (!plan.additionalLinks.items.find((link) => link.page.__typename === 'AccessibilityStatementPage')) {
+  if (
+    !plan.additionalLinks.items.find(
+      (link) => link.page.__typename === 'AccessibilityStatementPage'
+    )
+  ) {
     if (plan.accessibilityStatementUrl) {
-      additionalLinks.push({ id: '1', name: t('accessibility'), slug: plan.accessibilityStatementUrl });
-    }
-    else {
-      additionalLinks.push({ id: '1', name: t('accessibility'), slug: '/accessibility' });
+      additionalLinks.push({
+        id: '1',
+        name: t('accessibility'),
+        slug: plan.accessibilityStatementUrl,
+      });
+    } else {
+      additionalLinks.push({
+        id: '1',
+        name: t('accessibility'),
+        slug: '/accessibility',
+      });
     }
   }
 
@@ -86,9 +99,12 @@ function Footer(props) {
   }
 
   if (plan.externalFeedbackUrl) {
-    utilityLinks.push({ id: '2', name: t('give-feedback'), slug: plan.externalFeedbackUrl });
-  }
-  else {
+    utilityLinks.push({
+      id: '2',
+      name: t('give-feedback'),
+      slug: plan.externalFeedbackUrl,
+    });
+  } else {
     const url = getFeedbackUrl(router.asPath);
     if (url != null) {
       utilityLinks.push({ id: '2', name: t('give-feedback'), slug: url });
@@ -96,7 +112,12 @@ function Footer(props) {
   }
 
   if (plan.adminUrl) {
-    utilityLinks.push({ id: '3', name: t('admin-login'), slug: plan.adminUrl, icon: 'lock' });
+    utilityLinks.push({
+      id: '3',
+      name: t('admin-login'),
+      slug: plan.adminUrl,
+      icon: 'lock',
+    });
   }
 
   return (

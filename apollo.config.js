@@ -10,7 +10,9 @@ module.exports = {
     ],
     service: {
       name: 'kausal-watch-backend',
-      url: `${process.env.APLANS_API_BASE_URL || 'https://api.watch.kausal.tech/v1'}/graphql/`,
+      url: `${
+        process.env.APLANS_API_BASE_URL || 'https://api.watch.kausal.tech/v1'
+      }/graphql/`,
     },
   },
 };

@@ -2,23 +2,44 @@ import React, { useContext, useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import dynamic from 'next/dynamic';
 import { gql, useQuery } from '@apollo/client';
-import {
-  Container, Row, Col, Nav, NavItem, Alert
-} from 'reactstrap';
+import { Container, Row, Col, Nav, NavItem, Alert } from 'reactstrap';
 import styled from 'styled-components';
 import { readableColor } from 'polished';
 import { getActionTermContext, useTranslation } from 'common/i18n';
-import { constructOrgHierarchy, mapResponsibleParties, OrganizationHierarchyMember, orgHasActions, OrgMappedAction } from 'common/organizations';
+import {
+  constructOrgHierarchy,
+  mapResponsibleParties,
+  OrganizationHierarchyMember,
+  orgHasActions,
+  OrgMappedAction,
+} from 'common/organizations';
 import ContentLoader from 'components/common/ContentLoader';
 import ErrorMessage from 'components/common/ErrorMessage';
 import { usePlan } from 'context/plan';
 import { useTheme } from 'common/theme';
 import RichText from 'components/common/RichText';
-import ActionListFilters, { ActionListFilterSection, Filters, FilterValue } from 'components/actions/ActionListFilters';
+import ActionListFilters, {
+  ActionListFilterSection,
+  Filters,
+  FilterValue,
+} from 'components/actions/ActionListFilters';
 import ActionCardList from 'components/actions/ActionCardList';
 import ActionStatusGraphs from './ActionStatusGraphs';
-import { ActionListFilterFragment, ActionListPageFiltersFragment, ActionListPageView, DashboardActionListQuery, GetActionListPageQuery } from 'common/__generated__/graphql';
-import { CategoryTypeInput, CategoryMappedAction, CategoryHierarchyMember, CategoryTypeHierarchy, constructCatHierarchy, mapActionCategories } from 'common/categories';
+import {
+  ActionListFilterFragment,
+  ActionListPageFiltersFragment,
+  ActionListPageView,
+  DashboardActionListQuery,
+  GetActionListPageQuery,
+} from 'common/__generated__/graphql';
+import {
+  CategoryTypeInput,
+  CategoryMappedAction,
+  CategoryHierarchyMember,
+  CategoryTypeHierarchy,
+  constructCatHierarchy,
+  mapActionCategories,
+} from 'common/categories';
 import { useEffect } from 'react';
 
 const DynamicActionStatusTable = dynamic(() => import('./ActionStatusTable'));
@@ -26,13 +47,19 @@ const DynamicActionStatusTable = dynamic(() => import('./ActionStatusTable'));
 const ActionListSection = styled.div`
   padding-bottom: ${(props) => props.theme.spaces.s050};
   background-color: ${(props) => props.theme.neutralLight};
-  color: ${
-    (props) => readableColor(props.theme.neutralLight, props.theme.themeColors.black, props.theme.themeColors.white)
-    };
+  color: ${(props) =>
+    readableColor(
+      props.theme.neutralLight,
+      props.theme.themeColors.black,
+      props.theme.themeColors.white
+    )};
   a {
-    color: ${
-    (props) => readableColor(props.theme.neutralLight, props.theme.themeColors.black, props.theme.themeColors.white)
-    };
+    color: ${(props) =>
+      readableColor(
+        props.theme.neutralLight,
+        props.theme.themeColors.black,
+        props.theme.themeColors.white
+      )};
   }
 `;
 
@@ -44,9 +71,12 @@ const ActionListHeader = styled.div`
   h1 {
     font-size: ${(props) => props.theme.fontSizeXl};
     margin-bottom: ${(props) => props.theme.spaces.s150};
-    color: ${
-    (props) => readableColor(props.theme.neutralLight, props.theme.headingsColor, props.theme.themeColors.white)
-    };
+    color: ${(props) =>
+      readableColor(
+        props.theme.neutralLight,
+        props.theme.headingsColor,
+        props.theme.themeColors.white
+      )};
 
     @media (min-width: ${(props) => props.theme.breakpointMd}) {
       font-size: ${(props) => props.theme.fontSizeXxl};
@@ -65,12 +95,14 @@ const Tab = styled.button`
   display: inline-block;
   border: none;
   margin: 0;
-  padding: ${(props) => `${props.theme.spaces.s050} ${props.theme.spaces.s150} ${props.theme.spaces.s100}`};
+  padding: ${(props) =>
+    `${props.theme.spaces.s050} ${props.theme.spaces.s150} ${props.theme.spaces.s100}`};
   text-decoration: none;
   cursor: pointer;
   text-align: center;
 
-  &:hover, &:focus {
+  &:hover,
+  &:focus {
     color: ${(props) => props.theme.brandLight};
   }
   &.active {
@@ -83,60 +115,60 @@ const Tab = styled.button`
 `;
 
 const commonCategoryFragment = gql`
-fragment CommonCategoryFragment on Category {
-  common {
-    id
-    identifier
-    name
-    order
+  fragment CommonCategoryFragment on Category {
+    common {
+      id
+      identifier
+      name
+      order
+    }
   }
-}
 `;
 
 const planFragment = gql`
-    fragment PlanFragment on Plan {
+  fragment PlanFragment on Plan {
+    id
+    categoryTypes(usableForActions: true) {
       id
-      categoryTypes(usableForActions: true) {
-        id
+      identifier
+      name
+      usableForActions
+      hideCategoryIdentifiers
+      common {
         identifier
         name
-        usableForActions
         hideCategoryIdentifiers
-        common {
-          identifier
-          name
-          hideCategoryIdentifiers
-        }
-        categories {
-          id
-          identifier
-          order
-          name
-          parent {
-            id
-          }
-          ...CommonCategoryFragment @include(if: $relatedPlanActions)
-
-          color
-          iconSvgUrl
-          iconImage {
-            rendition(size:"120x120", crop:false) {
-              src
-            }
-          }
-          categoryPage {
-            id
-            live
-          }
-        }
       }
-      primaryOrgs {
+      categories {
         id
-        abbreviation
+        identifier
+        order
         name
+        parent {
+          id
+        }
+        ...CommonCategoryFragment @include(if: $relatedPlanActions)
+
+        color
+        iconSvgUrl
+        iconImage {
+          rendition(size: "120x120", crop: false) {
+            src
+          }
+        }
+        categoryPage {
+          id
+          live
+        }
       }
     }
-    ${commonCategoryFragment}
+    primaryOrgs {
+      id
+      abbreviation
+      name
+    }
+  }
+  ${commonCategoryFragment}
 `;
 
 const actionFragment = gql`
@@ -205,7 +237,7 @@ const actionFragment = gql`
       type {
         id
       }
-      ...on AttributeChoice {
+      ... on AttributeChoice {
         choice {
           id
           name
@@ -273,19 +305,19 @@ const actionFragment = gql`
 `;
 
 const organizationFragment = gql`
-fragment OrganizationFragment on Organization {
-  id
-  abbreviation
-  name
-  contactPersonCount
-  actionCount
-  classification {
-    name
-  }
-  parent {
+  fragment OrganizationFragment on Organization {
     id
+    abbreviation
+    name
+    contactPersonCount
+    actionCount
+    classification {
+      name
+    }
+    parent {
+      id
+    }
   }
-}
 `;
 
 export const GET_ACTION_LIST = gql`
@@ -300,7 +332,12 @@ export const GET_ACTION_LIST = gql`
       ...ActionFragment
     }
 
-    planOrganizations(plan: $plan, withAncestors: true, forContactPersons: true, forResponsibleParties: true) {
+    planOrganizations(
+      plan: $plan
+      withAncestors: true
+      forContactPersons: true
+      forResponsibleParties: true
+    ) {
       ...OrganizationFragment
     }
   }
@@ -310,102 +347,111 @@ export const GET_ACTION_LIST = gql`
 `;
 
 const ACTION_LIST_FILTER = gql`
-fragment ActionListFilter on StreamFieldInterface {
-  __typename
-  field
-  id
-  ... on CategoryTypeFilterBlock {
-    style
-    showAllLabel
-    depth
-    categoryType {
-      id
-      identifier
-      name
-      hideCategoryIdentifiers
-      selectionType
-      helpText
-      categories(onlyWithActions: true) {
+  fragment ActionListFilter on StreamFieldInterface {
+    __typename
+    field
+    id
+    ... on CategoryTypeFilterBlock {
+      style
+      showAllLabel
+      depth
+      categoryType {
         id
         identifier
         name
-        order
+        hideCategoryIdentifiers
+        selectionType
         helpText
-        parent {
+        categories(onlyWithActions: true) {
           id
-        }
-        common {
-          id
+          identifier
+          name
+          order
+          helpText
+          parent {
+            id
+          }
+          common {
+            id
+          }
         }
       }
     }
-  }
-  ... on ActionAttributeTypeFilterBlock {
-    showAllLabel
-    attributeType {
-      id
-      identifier
-      format
-      name
-      helpText
-      choiceOptions {
+    ... on ActionAttributeTypeFilterBlock {
+      showAllLabel
+      attributeType {
         id
         identifier
+        format
         name
+        helpText
+        choiceOptions {
+          id
+          identifier
+          name
+        }
       }
     }
   }
-}
 `;
 
 const ALL_ACTION_LIST_FILTERS = gql`
-fragment ActionListPageFilters on ActionListPage {
-  primaryFilters {
-    ...ActionListFilter
+  fragment ActionListPageFilters on ActionListPage {
+    primaryFilters {
+      ...ActionListFilter
+    }
+    mainFilters {
+      ...ActionListFilter
+    }
+    advancedFilters {
+      ...ActionListFilter
+    }
   }
-  mainFilters {
-    ...ActionListFilter
-  }
-  advancedFilters {
-    ...ActionListFilter
-  }
-}
-${ACTION_LIST_FILTER}
+  ${ACTION_LIST_FILTER}
 `;
 
 type FilterChangeCallback = (id: string, value: FilterValue) => void;
 
-export type ActionListPrimaryOrg = DashboardActionListQuery['plan']['primaryOrgs'][0];
+export type ActionListPrimaryOrg =
+  DashboardActionListQuery['plan']['primaryOrgs'][0];
 
 type ActionListProps = {
-  actions: DashboardActionListQuery['planActions'],
-  categoryTypes: NonNullable<DashboardActionListQuery['plan']>['categoryTypes'],
-  organizations: DashboardActionListQuery['planOrganizations'],
-  availableFilters: ActionListPageFiltersFragment,
-  activeFilters: Filters,
-  onFilterChange: FilterChangeCallback,
-  title: string,
-  leadContent: string,
-  headingHierarchyDepth: number,
-  includeRelatedPlans: boolean,
-  defaultView: ActionListPageView,
-  primaryOrgs: ActionListPrimaryOrg[],
-}
+  actions: DashboardActionListQuery['planActions'];
+  categoryTypes: NonNullable<DashboardActionListQuery['plan']>['categoryTypes'];
+  organizations: DashboardActionListQuery['planOrganizations'];
+  availableFilters: ActionListPageFiltersFragment;
+  activeFilters: Filters;
+  onFilterChange: FilterChangeCallback;
+  title: string;
+  leadContent: string;
+  headingHierarchyDepth: number;
+  includeRelatedPlans: boolean;
+  defaultView: ActionListPageView;
+  primaryOrgs: ActionListPrimaryOrg[];
+};
 
-type OrganizationInput = NonNullable<DashboardActionListQuery['planOrganizations']>[0];
-export type ActionListOrganization = OrganizationInput & OrganizationHierarchyMember<OrganizationInput>;
-type QueryAction = NonNullable<DashboardActionListQuery['planActions']>[0]
+type OrganizationInput = NonNullable<
+  DashboardActionListQuery['planOrganizations']
+>[0];
+export type ActionListOrganization = OrganizationInput &
+  OrganizationHierarchyMember<OrganizationInput>;
+type QueryAction = NonNullable<DashboardActionListQuery['planActions']>[0];
 export type ActionListAction = QueryAction &
   OrgMappedAction<ActionListOrganization> &
   CategoryMappedAction<ActionListCategoryType, ActionListCategory>;
 
-export type ActionListCategoryTypeFilterBlock = ActionListFilterFragment & {__typename?: 'CategoryTypeFilterBlock'};
-export type ActionListActionAttributeTypeFilterBlock = ActionListFilterFragment & {__typename?: 'ActionAttributeTypeFilterBlock'};
+export type ActionListCategoryTypeFilterBlock = ActionListFilterFragment & {
+  __typename?: 'CategoryTypeFilterBlock';
+};
+export type ActionListActionAttributeTypeFilterBlock =
+  ActionListFilterFragment & { __typename?: 'ActionAttributeTypeFilterBlock' };
 
 type QueryCategoryType = DashboardActionListQuery['plan']['categoryTypes'][0];
 type CategoryInput = QueryCategoryType['categories'][0];
-export type ActionListCategory = CategoryInput & CategoryHierarchyMember<ActionListCategoryType>;
-export type ActionListCategoryType = QueryCategoryType & CategoryTypeHierarchy<ActionListCategory>;
+export type ActionListCategory = CategoryInput &
+  CategoryHierarchyMember<ActionListCategoryType>;
+export type ActionListCategoryType = QueryCategoryType &
+  CategoryTypeHierarchy<ActionListCategory>;
 
 const ActionList = (props: ActionListProps) => {
   const {
@@ -420,14 +466,14 @@ const ActionList = (props: ActionListProps) => {
     defaultView,
     headingHierarchyDepth,
     primaryOrgs,
-    includeRelatedPlans
- } = props;
+    includeRelatedPlans,
+  } = props;
   const { t } = useTranslation('common');
   const theme = useTheme();
   const plan = usePlan();
-  const displayDashboard = activeFilters.view === 'dashboard' || (
-    activeFilters.view == null && defaultView === 'DASHBOARD'
-  );
+  const displayDashboard =
+    activeFilters.view === 'dashboard' ||
+    (activeFilters.view == null && defaultView === 'DASHBOARD');
   const orgs: ActionListOrganization[] = useMemo(() => {
     const result = constructOrgHierarchy<ActionListOrganization>(organizations);
     if (includeRelatedPlans) {
@@ -437,13 +483,18 @@ const ActionList = (props: ActionListProps) => {
     return result.filter(orgHasActions);
   }, [organizations, includeRelatedPlans]);
   const cts: ActionListCategoryType[] = useMemo(() => {
-    return constructCatHierarchy<ActionListCategory, ActionListCategoryType>(categoryTypes, includeRelatedPlans);
-  }, [categoryTypes])
+    return constructCatHierarchy<ActionListCategory, ActionListCategoryType>(
+      categoryTypes,
+      includeRelatedPlans
+    );
+  }, [categoryTypes]);
   const primaryActionClassification = includeRelatedPlans
     ? plan.primaryActionClassification.common
     : plan.primaryActionClassification;
 
-  const primaryCatType = cts.find(ct => ct.id == primaryActionClassification.id);
+  const primaryCatType = cts.find(
+    (ct) => ct.id == primaryActionClassification.id
+  );
 
   const filterSections: ActionListFilterSection[] = useMemo(() => {
     const opts = {
@@ -452,34 +503,46 @@ const ActionList = (props: ActionListProps) => {
       orgs,
       primaryOrgs,
       filterByCommonCategory: includeRelatedPlans,
-      t
+      t,
     };
     return ActionListFilters.constructFilters(opts);
   }, [availableFilters, plan, orgs, primaryOrgs, includeRelatedPlans, t]);
 
   const handleChange = useCallback(
-    (id: string, val: string|undefined) => {
+    (id: string, val: string | undefined) => {
       onFilterChange(id, val);
     },
-    [onFilterChange],
+    [onFilterChange]
   );
 
-  const actionsWithRps = mapResponsibleParties<ActionListAction, ActionListOrganization>(actions, orgs);
-  const mappedActions: ActionListAction[] =
-    mapActionCategories<ActionListCategoryType, ActionListCategory, ActionListAction>(
-      actionsWithRps, cts, primaryCatType, headingHierarchyDepth
-    );
+  const actionsWithRps = mapResponsibleParties<
+    ActionListAction,
+    ActionListOrganization
+  >(actions, orgs);
+  const mappedActions: ActionListAction[] = mapActionCategories<
+    ActionListCategoryType,
+    ActionListCategory,
+    ActionListAction
+  >(actionsWithRps, cts, primaryCatType, headingHierarchyDepth);
   const enabledFilters = filterSections
-    .map(section => section.filters.filter(filter => activeFilters[filter.id])).flat();
+    .map((section) =>
+      section.filters.filter((filter) => activeFilters[filter.id])
+    )
+    .flat();
 
   let filteredActions = mappedActions;
-  enabledFilters.forEach(filter => {
-    filteredActions = filteredActions.filter((action) => filter.filterAction(activeFilters[filter.id], action));
+  enabledFilters.forEach((filter) => {
+    filteredActions = filteredActions.filter((action) =>
+      filter.filterAction(activeFilters[filter.id], action)
+    );
   });
 
   let groupBy = 'category';
-  if (plan.features.hasActionPrimaryOrgs && `cat-${primaryCatType.identifier}` in activeFilters) {
-    groupBy = 'primaryOrg'
+  if (
+    plan.features.hasActionPrimaryOrgs &&
+    `cat-${primaryCatType.identifier}` in activeFilters
+  ) {
+    groupBy = 'primaryOrg';
   }
 
   // add plan.feature.showActionUpdateStatus to backend
@@ -490,7 +553,7 @@ const ActionList = (props: ActionListProps) => {
       <ActionListSection id="actions">
         <ActionListHeader>
           <Container>
-            <h1>{ title }</h1>
+            <h1>{title}</h1>
             {leadContent && (
               <Row>
                 <Col sm="12" md="8" className="mb-5">
@@ -523,42 +586,60 @@ const ActionList = (props: ActionListProps) => {
               aria-controls="list-view"
               id="list-tab"
             >
-              { t('actions-as-list') }
+              {t('actions-as-list')}
             </Tab>
-            { !includeRelatedPlans && <Tab
-              className={`nav-link ${displayDashboard ? 'active' : ''}`}
-              onClick={() => handleChange('view', 'dashboard')}
-              role="tab"
-              tabIndex={0}
-              aria-selected={displayDashboard}
-              aria-controls="dashboard-view"
-              id="dashboard-tab"
-            >
-              { t('dashboard') }
-            </Tab> }
+            {!includeRelatedPlans && (
+              <Tab
+                className={`nav-link ${displayDashboard ? 'active' : ''}`}
+                onClick={() => handleChange('view', 'dashboard')}
+                role="tab"
+                tabIndex={0}
+                aria-selected={displayDashboard}
+                aria-controls="dashboard-view"
+                id="dashboard-tab"
+              >
+                {t('dashboard')}
+              </Tab>
+            )}
           </div>
         </Container>
       </IndicatorsTabs>
       <Container fluid="lg">
-        <div id="list-view" role="tabpanel" tabIndex={0} aria-labelledby="list-tab" hidden={!displayDashboard}>
-          { displayDashboard && filteredActions.length > 0 ? (
+        <div
+          id="list-view"
+          role="tabpanel"
+          tabIndex={0}
+          aria-labelledby="list-tab"
+          hidden={!displayDashboard}
+        >
+          {displayDashboard && filteredActions.length > 0 ? (
             <>
-              <ActionStatusGraphs actions={filteredActions} showUpdateStatus={showUpdateStatus} />
+              <ActionStatusGraphs
+                actions={filteredActions}
+                showUpdateStatus={showUpdateStatus}
+              />
               <DynamicActionStatusTable
-                actions={filteredActions} orgs={orgs} plan={plan}
-                enableExport={true} showUpdateStatus={showUpdateStatus}
+                actions={filteredActions}
+                orgs={orgs}
+                plan={plan}
+                enableExport={true}
+                showUpdateStatus={showUpdateStatus}
               />
             </>
           ) : (
-            <Alert color="primary">
-              {t('search-no-results')}
-            </Alert>
+            <Alert color="primary">{t('search-no-results')}</Alert>
           )}
         </div>
       </Container>
       <Container>
-        <div id="dashboard-view" role="tabpanel" tabIndex={0} aria-labelledby="dashboard-tab" hidden={displayDashboard}>
-          { !displayDashboard && filteredActions.length > 0 ? (
+        <div
+          id="dashboard-view"
+          role="tabpanel"
+          tabIndex={0}
+          aria-labelledby="dashboard-tab"
+          hidden={displayDashboard}
+        >
+          {!displayDashboard && filteredActions.length > 0 ? (
             <ActionCardList
               actions={filteredActions}
               groupBy={groupBy}
@@ -566,9 +647,7 @@ const ActionList = (props: ActionListProps) => {
               headingHierarchyDepth={headingHierarchyDepth}
             />
           ) : (
-            <Alert color="primary">
-              {t('search-no-results')}
-            </Alert>
+            <Alert color="primary">{t('search-no-results')}</Alert>
           )}
         </div>
       </Container>
@@ -577,23 +656,24 @@ const ActionList = (props: ActionListProps) => {
 };
 
 ActionList.getFiltersFromQuery = (query) => {
-  const {
-    organization, text, impact, ...rest
-  } = query;
+  const { organization, text, impact, ...rest } = query;
   return {
-    organization, text, impact, ...rest,
+    organization,
+    text,
+    impact,
+    ...rest,
   };
 };
 
 type StatusboardProps = {
-  title: string,
-  leadContent: string,
-  defaultView: ActionListPageView,
-  availableFilters: ActionListPageFiltersFragment,
-  filters: ActiveFilters,
-  onFilterChange: FilterChangeCallback,
-  headingHierarchyDepth: number,
-  includeRelatedPlans: boolean,
+  title: string;
+  leadContent: string;
+  defaultView: ActionListPageView;
+  availableFilters: ActionListPageFiltersFragment;
+  filters: ActiveFilters;
+  onFilterChange: FilterChangeCallback;
+  headingHierarchyDepth: number;
+  includeRelatedPlans: boolean;
 };
 
 function ActionListLoader(props: StatusboardProps) {
@@ -609,16 +689,29 @@ function ActionListLoader(props: StatusboardProps) {
   } = props;
   const plan = usePlan();
   const { t } = useTranslation('common');
-  const { loading, error, data } = useQuery<DashboardActionListQuery>(GET_ACTION_LIST, {
-    variables: { plan: plan.identifier, relatedPlanActions: includeRelatedPlans },
-  });
+  const { loading, error, data } = useQuery<DashboardActionListQuery>(
+    GET_ACTION_LIST,
+    {
+      variables: {
+        plan: plan.identifier,
+        relatedPlanActions: includeRelatedPlans,
+      },
+    }
+  );
 
   if (loading) return <ContentLoader />;
-  if (error) return <ErrorMessage message={t('error-loading-actions', getActionTermContext(plan))} />;
+  if (error)
+    return (
+      <ErrorMessage
+        message={t('error-loading-actions', getActionTermContext(plan))}
+      />
+    );
 
   const { plan: loadedPlan, planOrganizations } = data;
   const { categoryTypes, primaryOrgs } = loadedPlan;
-  const actions = includeRelatedPlans ? data.relatedPlanActions : data.planActions;
+  const actions = includeRelatedPlans
+    ? data.relatedPlanActions
+    : data.planActions;
 
   return (
     <ActionList
@@ -640,6 +733,7 @@ function ActionListLoader(props: StatusboardProps) {
 ActionListLoader.fragments = {
   listFilters: ALL_ACTION_LIST_FILTERS,
 };
-ActionListLoader.getFiltersFromQuery = (query) => ActionList.getFiltersFromQuery(query);
+ActionListLoader.getFiltersFromQuery = (query) =>
+  ActionList.getFiltersFromQuery(query);
 
 export default ActionListLoader;

@@ -8,7 +8,7 @@ import SkipToContent from 'components/common/SkipToContent';
 import ApplicationStateBanner from 'components/common/ApplicationStateBanner';
 import { getActiveBranch } from 'common/links';
 
-const getMenuStructure = ((pages, rootId, activeBranch) => {
+const getMenuStructure = (pages, rootId, activeBranch) => {
   const menuLevelItems = [];
   pages.forEach((page) => {
     if (page.parent.id === rootId) {
@@ -23,7 +23,7 @@ const getMenuStructure = ((pages, rootId, activeBranch) => {
     }
   });
   return menuLevelItems.length > 0 ? menuLevelItems : null;
-});
+};
 
 function Header({ siteTitle }) {
   const plan = useContext(PlanContext);
@@ -33,14 +33,18 @@ function Header({ siteTitle }) {
   const navLinks = useMemo(() => {
     let links = [];
 
-    const pageMenuItems = plan.mainMenu.items.filter(item => item.__typename == 'PageMenuItem');
+    const pageMenuItems = plan.mainMenu.items.filter(
+      (item) => item.__typename == 'PageMenuItem'
+    );
     if (pageMenuItems.length > 0) {
       // find one menu item with root as parent to access the id of the rootPage
-      const rootItemIndex = pageMenuItems.findIndex((page) => page.parent.page.__typename === 'PlanRootPage');
+      const rootItemIndex = pageMenuItems.findIndex(
+        (page) => page.parent.page.__typename === 'PlanRootPage'
+      );
       const staticPages = getMenuStructure(
         pageMenuItems,
         pageMenuItems[rootItemIndex].parent.id,
-        activeBranch,
+        activeBranch
       );
       links = links.concat(staticPages);
     }
@@ -48,10 +52,12 @@ function Header({ siteTitle }) {
   }, [activeBranch, plan.mainMenu]);
 
   const externalLinks = useMemo(() => {
-    return plan.mainMenu.items.filter(item => item.__typename == 'ExternalLinkMenuItem').map(item => ({
-      name: item.linkText,
-      url: item.url,
-    }));
+    return plan.mainMenu.items
+      .filter((item) => item.__typename == 'ExternalLinkMenuItem')
+      .map((item) => ({
+        name: item.linkText,
+        url: item.url,
+      }));
   }, [plan.mainMenu]);
 
   return (
@@ -61,7 +67,9 @@ function Header({ siteTitle }) {
       <GlobalNav
         activeBranch={activeBranch}
         siteTitle={siteTitle}
-        ownerName={plan.generalContent ? plan.generalContent.ownerName : plan.name}
+        ownerName={
+          plan.generalContent ? plan.generalContent.ownerName : plan.name
+        }
         navItems={navLinks}
         externalItems={externalLinks}
       />

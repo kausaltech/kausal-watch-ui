@@ -4,7 +4,13 @@ import { useQuery, gql } from '@apollo/client';
 import styled from 'styled-components';
 import { readableColor } from 'polished';
 import {
-  Container, Row, Col, Input, Label, FormGroup, Alert
+  Container,
+  Row,
+  Col,
+  Input,
+  Label,
+  FormGroup,
+  Alert,
 } from 'reactstrap';
 import { Link } from 'common/links';
 import { getActionTermContext, useTranslation } from 'common/i18n';
@@ -15,63 +21,76 @@ import { usePlan } from 'context/plan';
 import ContentLoader from './ContentLoader';
 
 const SEARCH_QUERY = gql`
-query SearchQuery($plan: ID!, $query: String!, $onlyOtherPlans: Boolean, $clientUrl: String) {
-  search(plan: $plan, query: $query, includeRelatedPlans: true, onlyOtherPlans: $onlyOtherPlans) {
-    hits {
-      title
-      url(clientUrl: $clientUrl)
-      highlight
-      plan {
-        identifier
-        image {
-          rendition(size: "128x128", crop: true) {
-            src
+  query SearchQuery(
+    $plan: ID!
+    $query: String!
+    $onlyOtherPlans: Boolean
+    $clientUrl: String
+  ) {
+    search(
+      plan: $plan
+      query: $query
+      includeRelatedPlans: true
+      onlyOtherPlans: $onlyOtherPlans
+    ) {
+      hits {
+        title
+        url(clientUrl: $clientUrl)
+        highlight
+        plan {
+          identifier
+          image {
+            rendition(size: "128x128", crop: true) {
+              src
+            }
+          }
+          name
+          shortName
+          organization {
+            name
           }
         }
-        name
-        shortName
-        organization {
-          name
-        }
-      }
-      object {
-        __typename
-        ... on Action {
-          identifier
-          primaryOrg {
-            name
-            logo {
-              rendition(size: "128x128", crop: true) {
-                src
+        object {
+          __typename
+          ... on Action {
+            identifier
+            primaryOrg {
+              name
+              logo {
+                rendition(size: "128x128", crop: true) {
+                  src
+                }
               }
             }
           }
+          ... on Indicator {
+            id
+          }
         }
-        ... on Indicator {
-          id
-        }
-      }
-      page {
-        title
-        ... on CategoryPage {
-          category {
-            level {
-              name
+        page {
+          title
+          ... on CategoryPage {
+            category {
+              level {
+                name
+              }
             }
           }
         }
       }
     }
   }
-}
 `;
 
 const SearchSection = styled.div`
   padding-bottom: ${(props) => props.theme.spaces.s050};
   background-color: ${(props) => props.theme.neutralLight};
-  color: ${
-    (props) => readableColor(props.theme.neutralLight, props.theme.themeColors.black, props.theme.themeColors.white)
-    };
+  color: ${(props) =>
+    readableColor(
+      props.theme.neutralLight,
+      props.theme.themeColors.black,
+      props.theme.themeColors.white
+    )};
 `;
 
 const SearchHeader = styled.div`
@@ -82,9 +101,12 @@ const SearchHeader = styled.div`
   h1 {
     font-size: ${(props) => props.theme.fontSizeXl};
     margin-bottom: ${(props) => props.theme.spaces.s150};
-    color: ${
-    (props) => readableColor(props.theme.neutralLight, props.theme.headingsColor, props.theme.themeColors.white)
-    };
+    color: ${(props) =>
+      readableColor(
+        props.theme.neutralLight,
+        props.theme.headingsColor,
+        props.theme.themeColors.white
+      )};
 
     @media (min-width: ${(props) => props.theme.breakpointMd}) {
       font-size: ${(props) => props.theme.fontSizeXxl};
@@ -98,7 +120,8 @@ const SearchHeader = styled.div`
 `;
 
 const ResultsHeader = styled.h2`
-  margin: ${(props) => props.theme.spaces.s300} 0 ${(props) => props.theme.spaces.s300} 0;
+  margin: ${(props) => props.theme.spaces.s300} 0
+    ${(props) => props.theme.spaces.s300} 0;
   font-size: ${(props) => props.theme.fontSizeBase};
 `;
 
@@ -124,7 +147,8 @@ const SearchResultList = styled.ul`
 
 const StyledSearchResultItem = styled.li`
   margin: 0;
-  padding: ${(props) => props.theme.spaces.s100} 0 ${(props) => props.theme.spaces.s150} 0;
+  padding: ${(props) => props.theme.spaces.s100} 0
+    ${(props) => props.theme.spaces.s150} 0;
   border-top: 1px solid ${(props) => props.theme.themeColors.dark};
 
   h3 {
@@ -176,23 +200,24 @@ function SearchResultItem({ hit }) {
     if (!hitTypeName) hitTypeName = t('page');
   }
   const showPlanChip = true;
-  const hitImage = primaryOrg?.logo?.rendition.src
-    || hit.plan.image?.rendition.src
-    || 'https://via.placeholder.com/64/AAAAAA/EEEEEE';
+  const hitImage =
+    primaryOrg?.logo?.rendition.src ||
+    hit.plan.image?.rendition.src ||
+    'https://via.placeholder.com/64/AAAAAA/EEEEEE';
   const hitOrganization = primaryOrg?.name || hit.plan.organization.name;
 
   return (
     <StyledSearchResultItem>
       <SearchResultMeta>
         {showPlanChip && (
-        <PlanChip
-          planImage={hitImage}
-          planShortName={hit.plan.shortName || hit.plan.name}
-          organization={hitOrganization}
-          size="md"
-        />
+          <PlanChip
+            planImage={hitImage}
+            planShortName={hit.plan.shortName || hit.plan.name}
+            organization={hitOrganization}
+            size="md"
+          />
         )}
-        {hitTypeName && (<HitType>{hitTypeName}</HitType>)}
+        {hitTypeName && <HitType>{hitTypeName}</HitType>}
       </SearchResultMeta>
       <Link href={hit.url} passHref>
         <a>
@@ -200,7 +225,8 @@ function SearchResultItem({ hit }) {
         </a>
       </Link>
       <ResultExcerpt>
-        <span dangerouslySetInnerHTML={{ __html: hit.highlight }} />...
+        <span dangerouslySetInnerHTML={{ __html: hit.highlight }} />
+        ...
       </ResultExcerpt>
       {/* TODO: Add ellipsis or indication for truncated text */}
     </StyledSearchResultItem>
@@ -234,7 +260,11 @@ function SearchResults({ search }) {
     );
   }
   if (loading) {
-    return <ResultsHeader><ContentLoader /></ResultsHeader>;
+    return (
+      <ResultsHeader>
+        <ContentLoader />
+      </ResultsHeader>
+    );
   }
   const { hits } = data.search;
 
@@ -250,7 +280,7 @@ function SearchResults({ search }) {
           </ResultsHeader>
         </div>
         <SearchResultList>
-          { hits.map((hit) => (
+          {hits.map((hit) => (
             <SearchResultItem key={hit.url} hit={hit} />
           ))}
         </SearchResultList>
@@ -263,10 +293,7 @@ SearchResults.propTypes = {
 };
 
 function SearchView(props) {
-  const {
-    search,
-    onSearchChange,
-  } = props;
+  const { search, onSearchChange } = props;
   const [userSearch, setUserSearch] = useState(null);
   const { t } = useTranslation('common');
 
@@ -286,7 +313,7 @@ function SearchView(props) {
     // We use form- as a prefix to avoid name collisions with other components
     setUserSearch({
       ...userSearch,
-      [name.replace('form-','')]: value,
+      [name.replace('form-', '')]: value,
     });
   };
   const handleSubmit = (event) => {
@@ -320,7 +347,9 @@ function SearchView(props) {
                       checked={userSearch?.onlyOtherPlans}
                       onChange={handleValueChange}
                     />
-                    <Label for="other-plans-only">{t('other-plans-only')}</Label>
+                    <Label for="other-plans-only">
+                      {t('other-plans-only')}
+                    </Label>
                   </FormGroup>
                   <Button
                     type="submit"
@@ -329,7 +358,7 @@ function SearchView(props) {
                     onClick={handleSubmit}
                     block
                   >
-                    { t('search') }
+                    {t('search')}
                   </Button>
                 </form>
               </Col>
@@ -338,7 +367,7 @@ function SearchView(props) {
         </SearchHeader>
       </SearchSection>
       <Container>
-        { search.q ? (
+        {search.q ? (
           <SearchResults search={search} />
         ) : (
           <Col sm="12" md={{ offset: 2, size: 8 }} className="mt-5">
@@ -352,9 +381,7 @@ function SearchView(props) {
   );
 }
 SearchView.getSearchFromQuery = (query) => {
-  const {
-    q, onlyOtherPlans, ...rest
-  } = query;
+  const { q, onlyOtherPlans, ...rest } = query;
   return {
     q,
     onlyOtherPlans: onlyOtherPlans === 'true',

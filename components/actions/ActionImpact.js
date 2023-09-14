@@ -7,9 +7,12 @@ import Icon from '../common/Icon';
 const ImpactIcon = styled(Icon)`
   font-size: ${(props) => {
     switch (props.size) {
-      case 'sm': return '.8em';
-      case 'md': return '1.5em';
-      default: return '1.5em';
+      case 'sm':
+        return '.8em';
+      case 'md':
+        return '1.5em';
+      default:
+        return '1.5em';
     }
   }};
 
@@ -27,12 +30,7 @@ const ImpactIcon = styled(Icon)`
 `;
 
 function ActionImpact(props) {
-  const {
-    identifier,
-    name,
-    max,
-    size,
-  } = props;
+  const { identifier, name, max, size } = props;
 
   const bullets = [];
   const num = Number(identifier);
@@ -49,11 +47,32 @@ function ActionImpact(props) {
   const impactVisual = bullets.map((item) => {
     switch (item.type) {
       case 'bad':
-        return <ImpactIcon key={item.key} name="exclamationCircle" className="icon-bad" size={size} />;
+        return (
+          <ImpactIcon
+            key={item.key}
+            name="exclamationCircle"
+            className="icon-bad"
+            size={size}
+          />
+        );
       case 'off':
-        return <ImpactIcon key={item.key} name="circleFull" className="icon-off" size={size} />;
+        return (
+          <ImpactIcon
+            key={item.key}
+            name="circleFull"
+            className="icon-off"
+            size={size}
+          />
+        );
       case 'on':
-        return <ImpactIcon key={item.key} name="circleFull" className="icon-on" size={size} />;
+        return (
+          <ImpactIcon
+            key={item.key}
+            name="circleFull"
+            className="icon-on"
+            size={size}
+          />
+        );
       default:
         return null;
     }
@@ -62,12 +81,9 @@ function ActionImpact(props) {
   return (
     <div>
       <div className="d-flex">
-        { impactVisual }
-        <strong className="ml-2">
-          {name}
-        </strong>
+        {impactVisual}
+        <strong className="ml-2">{name}</strong>
       </div>
-
     </div>
   );
 }

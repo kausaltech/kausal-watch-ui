@@ -1,5 +1,9 @@
 import React, { useCallback, useState } from 'react';
-import { FormGroup, Label as BSLabel, Input as BSCustomInput, } from 'reactstrap';
+import {
+  FormGroup,
+  Label as BSLabel,
+  Input as BSCustomInput,
+} from 'reactstrap';
 import { Typeahead, Menu, MenuItem } from 'react-bootstrap-typeahead';
 
 import styled from 'styled-components';
@@ -10,10 +14,12 @@ const Label = styled(BSLabel)`
 `;
 
 const CustomInput = styled(BSCustomInput)`
-  padding: ${(props) => props.theme.inputPaddingY} ${(props) => props.theme.inputPaddingX};
+  padding: ${(props) => props.theme.inputPaddingY}
+    ${(props) => props.theme.inputPaddingX};
   height: calc(
-    ${(props) => props.theme.inputLineHeight}em + 
-      ${(props) => props.theme.inputPaddingY} + ${(props) => props.theme.inputPaddingY}
+    ${(props) => props.theme.inputLineHeight}em +
+      ${(props) => props.theme.inputPaddingY} +
+      ${(props) => props.theme.inputPaddingY}
   );
   border-radius: ${(props) => props.theme.inputBorderRadius};
   border-width: ${(props) => props.theme.inputBorderWidth};
@@ -24,24 +30,12 @@ const CustomInput = styled(BSCustomInput)`
 `;
 
 function DropDown(props) {
-  const {
-    label,
-    id,
-    name,
-    value,
-    onChange,
-    children,
-    disabled,
-  } = props;
+  const { label, id, name, value, onChange, children, disabled } = props;
   const [singleSelections, setSingleSelections] = useState([]);
 
   return (
     <FormGroup>
-      { label && (
-        <Label for={id}>
-          { label }
-        </Label>
-      )}
+      {label && <Label for={id}>{label}</Label>}
       <CustomInput
         type="select"
         id={id}
@@ -50,7 +44,7 @@ function DropDown(props) {
         onChange={onChange}
         disabled={disabled}
       >
-        { children }
+        {children}
       </CustomInput>
     </FormGroup>
   );
@@ -59,58 +53,56 @@ function DropDown(props) {
 export default DropDown;
 
 export type DropDownTypeaheadOption = {
-  id: string,
-  label: string,
-  indent?: number,
+  id: string;
+  label: string;
+  indent?: number;
 };
 
 type DropDownTypeaheadProps = {
-  label?: string,
-  id: string,
-  name: string,
-  options: DropDownTypeaheadOption[],
-  selectedOption: DropDownTypeaheadOption|null,
-  placeholder?: string,
-  onChange: (selected: DropDownTypeaheadOption|null) => void,
-}
+  label?: string;
+  id: string;
+  name: string;
+  options: DropDownTypeaheadOption[];
+  selectedOption: DropDownTypeaheadOption | null;
+  placeholder?: string;
+  onChange: (selected: DropDownTypeaheadOption | null) => void;
+};
 
 export function DropDownTypeahead(props: DropDownTypeaheadProps) {
-  const {
-    label,
-    id,
-    name,
-    placeholder,
-    selectedOption,
-    onChange,
-    options,
-  } = props;
-  const [selection, setSelection] = useState(selectedOption ? [selectedOption] : []);
-  const typeaheadOnChange = useCallback((selected: DropDownTypeaheadOption[]) => {
-    setSelection(selected);
-    onChange(selected.length ? selected[0] : null);
-  }, [setSelection, onChange])
+  const { label, id, name, placeholder, selectedOption, onChange, options } =
+    props;
+  const [selection, setSelection] = useState(
+    selectedOption ? [selectedOption] : []
+  );
+  const typeaheadOnChange = useCallback(
+    (selected: DropDownTypeaheadOption[]) => {
+      setSelection(selected);
+      onChange(selected.length ? selected[0] : null);
+    },
+    [setSelection, onChange]
+  );
 
   const renderMenu = (results, menuProps) => (
     <Menu {...menuProps}>
-    {results.map((result: DropDownTypeaheadOption, index) => (
-      <MenuItem
-        key={result.id}
-        style={{marginLeft: `${result.indent ?? 0}rem`, borderLeft: '1px solid #ccc'}}
-        option={result}
-        position={index}>
-        {result.label}
-      </MenuItem>
-    ))}
+      {results.map((result: DropDownTypeaheadOption, index) => (
+        <MenuItem
+          key={result.id}
+          style={{
+            marginLeft: `${result.indent ?? 0}rem`,
+            borderLeft: '1px solid #ccc',
+          }}
+          option={result}
+          position={index}
+        >
+          {result.label}
+        </MenuItem>
+      ))}
     </Menu>
-  )
+  );
 
   return (
     <FormGroup>
-      { label && (
-        <Label for={id}>
-          { label }
-        </Label>
-      )}
+      {label && <Label for={id}>{label}</Label>}
       <Typeahead
         id={id}
         onChange={typeaheadOnChange}
@@ -119,7 +111,7 @@ export function DropDownTypeahead(props: DropDownTypeaheadProps) {
         selected={selection}
         renderMenu={renderMenu}
       />
-      { /* 
+      {/* 
         renderMenu={(results, menuProps) => (
         )}
     */}

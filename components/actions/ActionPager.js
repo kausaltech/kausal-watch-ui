@@ -28,7 +28,7 @@ const PageButton = styled(Button)`
     fill: ${(props) => props.theme.brandDark} !important;
   }
 `;
- 
+
 const ActionPager = (props) => {
   const { t, nextAction, previousAction } = props;
   const plan = usePlan();
@@ -36,30 +36,28 @@ const ActionPager = (props) => {
   return (
     <Pager>
       <Previous>
-        { previousAction
-          && (
-            <ActionLink action={previousAction}>
-              <a>
-                <PageButton color="primary" outline>
-                  <Icon name="arrowLeft" />
-                  { t('action-previous', getActionTermContext(plan)) }
-                </PageButton>
-              </a>
-            </ActionLink>
-          )}
+        {previousAction && (
+          <ActionLink action={previousAction}>
+            <a>
+              <PageButton color="primary" outline>
+                <Icon name="arrowLeft" />
+                {t('action-previous', getActionTermContext(plan))}
+              </PageButton>
+            </a>
+          </ActionLink>
+        )}
       </Previous>
       <Next>
-        { nextAction
-          && (
-            <ActionLink action={nextAction}>
-              <a>
-                <PageButton color="primary" outline>
-                  { t('action-next', getActionTermContext(plan)) }
-                  <Icon name="arrowRight" />
-                </PageButton>
-              </a>
-            </ActionLink>
-          )}
+        {nextAction && (
+          <ActionLink action={nextAction}>
+            <a>
+              <PageButton color="primary" outline>
+                {t('action-next', getActionTermContext(plan))}
+                <Icon name="arrowRight" />
+              </PageButton>
+            </a>
+          </ActionLink>
+        )}
       </Next>
     </Pager>
   );

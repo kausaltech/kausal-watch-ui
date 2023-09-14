@@ -20,11 +20,7 @@ const StatusTitle = styled.div`
   }
 `;
 
-const Plot = dynamic(
-  () => import('./Plot'),
-  { ssr: false }
-)
-
+const Plot = dynamic(() => import('./Plot'), { ssr: false });
 
 const Timeline = (props) => {
   const { startDate: startDateRaw, endDate: endDateRaw, continuous } = props;
@@ -34,16 +30,23 @@ const Timeline = (props) => {
   const startDate = startDateRaw ? dayjs(startDateRaw) : undefined; // .format('L');
   const endDate = endDateRaw ? dayjs(endDateRaw) : undefined; // .format('L');
 
-  const plotStartDate = dayjs().isAfter(startDate || dayjs()) ? startDate : dayjs();
+  const plotStartDate = dayjs().isAfter(startDate || dayjs())
+    ? startDate
+    : dayjs();
 
   const maxEndDate = dayjs('2050-01-01');
-  const plotEndDate = maxEndDate.isBefore(endDate || maxEndDate) ? endDate : maxEndDate;
+  const plotEndDate = maxEndDate.isBefore(endDate || maxEndDate)
+    ? endDate
+    : maxEndDate;
 
   const displayRange = [startDate, endDate];
   if (!startDate && endDate) displayRange[0] = endDate.subtract(2, 'month');
   if (startDate && !endDate) displayRange[1] = startDate.add(2, 'month');
   if (startDate && continuous) displayRange[1] = maxEndDate;
-  if (!startDate && !endDate) { displayRange[1] = maxEndDate; displayRange[0] = dayjs(); }
+  if (!startDate && !endDate) {
+    displayRange[1] = maxEndDate;
+    displayRange[0] = dayjs();
+  }
   const data = [
     {
       x: [displayRange[0]?.format(), displayRange[1]?.format()],
@@ -100,10 +103,10 @@ const Timeline = (props) => {
         />
       </div>
       <StatusTitle>
-        { startDate && `${startDate.format('L')} \u2192 ` }
-        { continuous && <Badge>{`${t('action-continuous')}`}</Badge>}
-        { ((!startDate && endDate) || (continuous && endDate)) && ' \u2192 '}
-        { endDate && `${endDate.format('L')}` }
+        {startDate && `${startDate.format('L')} \u2192 `}
+        {continuous && <Badge>{`${t('action-continuous')}`}</Badge>}
+        {((!startDate && endDate) || (continuous && endDate)) && ' \u2192 '}
+        {endDate && `${endDate.format('L')}`}
       </StatusTitle>
     </div>
   );

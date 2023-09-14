@@ -71,31 +71,33 @@ function ActionsTable(props) {
     <Table hover responsive>
       <thead>
         <tr>
-          <th colSpan="2" scope="col">{ t('action', getActionTermContext(plan)) }</th>
-          <th scope="col">{ t('action-progress') }</th>
-          <th scope="col">{ t('action-impact') }</th>
+          <th colSpan="2" scope="col">
+            {t('action', getActionTermContext(plan))}
+          </th>
+          <th scope="col">{t('action-progress')}</th>
+          <th scope="col">{t('action-impact')}</th>
         </tr>
       </thead>
       <tbody>
-        { actions.map((action) => (
+        {actions.map((action) => (
           <ActionLink action={action} key={action.id}>
             <tr>
-              <td><strong>{ action.identifier }</strong></td>
-              <td><strong>{ action.name }</strong></td>
-              <td width="200">
-                { action.status
-                  && (
-                    <Status action={action} plan={plan} />
-                  )}
+              <td>
+                <strong>{action.identifier}</strong>
               </td>
               <td>
-                { action.impact
-                  && (
+                <strong>{action.name}</strong>
+              </td>
+              <td width="200">
+                {action.status && <Status action={action} plan={plan} />}
+              </td>
+              <td>
+                {action.impact && (
                   <ActionImpact
                     identifier={action.impact.identifier}
                     name={action.impact.name}
                   />
-                  )}
+                )}
               </td>
             </tr>
           </ActionLink>

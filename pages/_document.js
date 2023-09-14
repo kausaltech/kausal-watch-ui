@@ -1,6 +1,6 @@
 import React from 'react';
 import Document, { Html, Head, Main, NextScript } from 'next/document';
-import * as Sentry from "@sentry/nextjs";
+import * as Sentry from '@sentry/nextjs';
 // Import styled components ServerStyleSheet
 import { ServerStyleSheet } from 'styled-components';
 
@@ -13,16 +13,20 @@ export default class WatchDocument extends Document {
     let themeProps;
     let basePath;
 
-    const sentryTraceId = Sentry.getCurrentHub()?.getScope()?.getTransaction()?.toTraceparent();
+    const sentryTraceId = Sentry.getCurrentHub()
+      ?.getScope()
+      ?.getTransaction()
+      ?.toTraceparent();
 
     try {
-      ctx.renderPage = () => originalRenderPage({
-        enhanceApp: (App) => (props) => {
-          themeProps = props.themeProps;
-          basePath = props.router.basePath;
-          return sheet.collectStyles(<App {...props} />);
-        },
-      });
+      ctx.renderPage = () =>
+        originalRenderPage({
+          enhanceApp: (App) => (props) => {
+            themeProps = props.themeProps;
+            basePath = props.router.basePath;
+            return sheet.collectStyles(<App {...props} />);
+          },
+        });
       const initialProps = await Document.getInitialProps(ctx);
       return {
         ...initialProps,
@@ -31,7 +35,11 @@ export default class WatchDocument extends Document {
             {initialProps.styles}
             {sheet.getStyleElement()}
             {themeProps && (
-              <link rel="stylesheet" type="text/css" href={getThemeCSS(themeProps.name)} />
+              <link
+                rel="stylesheet"
+                type="text/css"
+                href={getThemeCSS(themeProps.name)}
+              />
             )}
             {false && sentryTraceId && (
               <meta name="sentry-trace" content={sentryTraceId} />
@@ -49,9 +57,7 @@ export default class WatchDocument extends Document {
     let serverError;
 
     if (!nextData) {
-      serverError = (
-        <h1>Internal Server Error</h1>
-      );
+      serverError = <h1>Internal Server Error</h1>;
     }
 
     return (

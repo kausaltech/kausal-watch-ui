@@ -42,10 +42,7 @@
       "AttributeRichText",
       "AttributeText"
     ],
-    "MenuItem": [
-      "ExternalLinkMenuItem",
-      "PageMenuItem"
-    ],
+    "MenuItem": ["ExternalLinkMenuItem", "PageMenuItem"],
     "PageInterface": [
       "AccessibilityStatementPage",
       "ActionListPage",
@@ -59,10 +56,7 @@
       "PrivacyPolicyPage",
       "StaticPage"
     ],
-    "PlanInterface": [
-      "Plan",
-      "RestrictedPlanNode"
-    ],
+    "PlanInterface": ["Plan", "RestrictedPlanNode"],
     "ReportFieldBlock": [
       "ActionAttributeTypeReportFieldBlock",
       "ActionCategoryReportFieldBlock",
@@ -77,10 +71,7 @@
       "ActionResponsiblePartyReporteportValue",
       "ActionStatusReportValue"
     ],
-    "SearchHitObject": [
-      "Action",
-      "Indicator"
-    ],
+    "SearchHitObject": ["Action", "Indicator"],
     "StreamFieldInterface": [
       "AccessibilityStatementComplianceStatusBlock",
       "AccessibilityStatementContactFormBlock",

@@ -4,8 +4,14 @@ import HeroFullImage from 'components/home/HeroFullImage';
 
 const FrontPageHeroBlock = (props) => {
   const {
-    id = '', layout, imageSrc, imageAlign, heading, lead,
-    altText, imageCredit,
+    id = '',
+    layout,
+    imageSrc,
+    imageAlign,
+    heading,
+    lead,
+    altText,
+    imageCredit,
   } = props;
   return (
     <HeroFullImage

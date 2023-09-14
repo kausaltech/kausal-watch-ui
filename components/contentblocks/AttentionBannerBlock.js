@@ -18,10 +18,8 @@ const AttentionBanner = styled.div`
 const AttentionBox = styled(UncontrolledAlert)`
   background-color: ${(props) => props.theme.themeColors.white};
   margin: ${(props) => props.theme.spaces.s100} auto;
-  padding:
-    ${(props) => props.theme.spaces.s150}
-    ${(props) => props.theme.spaces.s200}
-    ${(props) => props.theme.spaces.s050};
+  padding: ${(props) => props.theme.spaces.s150}
+    ${(props) => props.theme.spaces.s200} ${(props) => props.theme.spaces.s050};
   max-width: 850px;
   border: none;
 
@@ -30,7 +28,8 @@ const AttentionBox = styled(UncontrolledAlert)`
   }
 
   .btn {
-    margin: ${(props) => props.theme.spaces.s100} ${(props) => props.theme.spaces.s050};
+    margin: ${(props) => props.theme.spaces.s100}
+      ${(props) => props.theme.spaces.s050};
   }
 
   .close {
@@ -39,11 +38,7 @@ const AttentionBox = styled(UncontrolledAlert)`
 `;
 
 const AttentionBannerBlock = (props) => {
-  const {
-    header,
-    content,
-    buttons,
-  } = props;
+  const { header, content, buttons } = props;
 
   const plan = useContext(PlanContext);
 
@@ -51,16 +46,11 @@ const AttentionBannerBlock = (props) => {
     <AttentionBanner className="actions">
       <Container>
         <AttentionBox color="dark">
-          <h1>{ header }</h1>
+          <h1>{header}</h1>
           <p dangerouslySetInnerHTML={{ __html: content }} />
-          { buttons.map((button) => (
-            <Button
-              key={button.id}
-              href={button.url}
-              color="primary"
-              outline
-            >
-              { button.label }
+          {buttons.map((button) => (
+            <Button key={button.id} href={button.url} color="primary" outline>
+              {button.label}
               <Icon name="arrowRight" color="" />
             </Button>
           ))}

@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { createGlobalStyle, withTheme } from 'styled-components';
 import { themeProp } from 'common/theme';
 
-
 const GlobalStyle = createGlobalStyle`
   :root {
     scroll-behavior: auto !important;

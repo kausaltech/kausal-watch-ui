@@ -6,20 +6,26 @@ import numbro from 'numbro';
 
 import RichText from 'components/common/RichText';
 import Icon from 'components/common/Icon';
-import { CategoryContent, categoryFragment, } from 'components/actions/CategoryTags';
+import {
+  CategoryContent,
+  categoryFragment,
+} from 'components/actions/CategoryTags';
 import PopoverTip from 'components/common/PopoverTip';
 import {
-  AttributesBlockAttributeFragment, AttributesBlockAttributeTypeFragment,
+  AttributesBlockAttributeFragment,
+  AttributesBlockAttributeTypeFragment,
   AttributesBlockAttributeWithNestedTypeFragment,
- } from 'common/__generated__/graphql';
-
+} from 'common/__generated__/graphql';
 
 const ScaleIcon = styled(Icon)`
   font-size: ${(props) => {
     switch (props.size) {
-      case 'sm': return '.8em';
-      case 'md': return '1.5em';
-      default: return '1.5em';
+      case 'sm':
+        return '.8em';
+      case 'md':
+        return '1.5em';
+      default:
+        return '1.5em';
     }
   }};
 
@@ -63,7 +69,8 @@ const AttributeChoiceLabel = styled.div`
   &.highlighted {
     display: inline-block;
     background-color: ${(props) => props.theme.brandLight};
-    padding: ${(props) => props.theme.spaces.s025} ${(props) => props.theme.spaces.s050};
+    padding: ${(props) => props.theme.spaces.s025}
+      ${(props) => props.theme.spaces.s050};
     border-radius: ${(props) => props.theme.badgeBorderRadius};
   }
 `;
@@ -78,18 +85,20 @@ const NumericValueUnit = styled.span`
 `;
 
 type AttributeContentProps = {
-  attribute: AttributesBlockAttributeFragment,
-  attributeType: AttributesBlockAttributeTypeFragment,
-  t: TFunction,
-  fontSize: string
-}
+  attribute: AttributesBlockAttributeFragment;
+  attributeType: AttributesBlockAttributeTypeFragment;
+  t: TFunction;
+  fontSize: string;
+};
 
 type AttributeContentNestedTypeProps = {
-  attribute: AttributesBlockAttributeWithNestedTypeFragment,
-  attributeType: null | undefined,
-}
+  attribute: AttributesBlockAttributeWithNestedTypeFragment;
+  attributeType: null | undefined;
+};
 
-const ActionAttribute = (props: AttributeContentProps | AttributeContentNestedTypeProps) => {
+const ActionAttribute = (
+  props: AttributeContentProps | AttributeContentNestedTypeProps
+) => {
   const { attribute, attributeType, fontSize } = props;
   let type = attributeType ?? attribute.type;
   let dataElement: ReactElement;
@@ -102,46 +111,49 @@ const ActionAttribute = (props: AttributeContentProps | AttributeContentNestedTy
       // const choiceCount = contentType.choiceOptions.length;
       dataElement = (
         <div>
-          { type.format === 'ORDERED_CHOICE' && type.choiceOptions.map((choice, idx) => (
-            (idx > 0 || !type.hasZeroOption) && <ScaleIcon
-              name="circleFull"
-              className={idx <= valueIndex ? 'icon-on' : 'icon-off'}
-              size="md"
-              key={choice.identifier}
-            />
-          ))}
-          { type.showChoiceNames && (
+          {type.format === 'ORDERED_CHOICE' &&
+            type.choiceOptions.map(
+              (choice, idx) =>
+                (idx > 0 || !type.hasZeroOption) && (
+                  <ScaleIcon
+                    name="circleFull"
+                    className={idx <= valueIndex ? 'icon-on' : 'icon-off'}
+                    size="md"
+                    key={choice.identifier}
+                  />
+                )
+            )}
+          {type.showChoiceNames && (
             <AttributeChoiceLabel
-              className={ (type.format === 'OPTIONAL_CHOICE' || type.format === 'UNORDERED_CHOICE') ? 'highlighted' : ''}
+              className={
+                type.format === 'OPTIONAL_CHOICE' ||
+                type.format === 'UNORDERED_CHOICE'
+                  ? 'highlighted'
+                  : ''
+              }
             >
-              { attribute.choice?.name }
+              {attribute.choice?.name}
             </AttributeChoiceLabel>
           )}
-          { attribute.text ? <RichText html={attribute.text} /> : null}
+          {attribute.text ? <RichText html={attribute.text} /> : null}
         </div>
       );
       break;
     case 'AttributeText':
       // FIXME: attribute.value is not HTML
-      dataElement = (
-        <RichText html={attribute.value} />
-      );
+      dataElement = <RichText html={attribute.value} />;
       break;
     case 'AttributeRichText':
-      dataElement = (
-        <RichText html={attribute.value} />
-      );
+      dataElement = <RichText html={attribute.value} />;
       break;
     case 'AttributeNumericValue':
-      const formattedValue = numbro(attribute.numericValue).format({thousandSeparated: true});
+      const formattedValue = numbro(attribute.numericValue).format({
+        thousandSeparated: true,
+      });
       dataElement = (
         <div>
-          <NumericValue>
-            {formattedValue}
-          </NumericValue>
-          <NumericValueUnit>
-            {type.unit?.name}
-          </NumericValueUnit>
+          <NumericValue>{formattedValue}</NumericValue>
+          <NumericValueUnit>{type.unit?.name}</NumericValueUnit>
         </div>
       );
       break;
@@ -154,7 +166,8 @@ const ActionAttribute = (props: AttributeContentProps | AttributeContentNestedTy
         />
       );
       break;
-    default: return <div />;
+    default:
+      return <div />;
   }
   // Render horizontal layout
   return (
@@ -162,94 +175,90 @@ const ActionAttribute = (props: AttributeContentProps | AttributeContentNestedTy
       <h3>
         {type.name}
         {type.helpText && (
-          <PopoverTip
-            content={type.helpText}
-            identifier={type.id}
-          />
+          <PopoverTip content={type.helpText} identifier={type.id} />
         )}
       </h3>
       {dataElement}
     </AttributeContainer>
   );
-}
+};
 
 const attributeFragment = gql`
-${categoryFragment}
-fragment AttributesBlockAttribute on AttributeInterface {
-  __typename
-  id
-  type {
+  ${categoryFragment}
+  fragment AttributesBlockAttribute on AttributeInterface {
+    __typename
     id
-    identifier
-    name
-    unit {
+    type {
       id
+      identifier
       name
-      shortName
+      unit {
+        id
+        name
+        shortName
+      }
+      format
     }
-    format
-  }
-  ...on AttributeChoice {
-    choice {
-      id
-      name
+    ... on AttributeChoice {
+      choice {
+        id
+        name
+      }
+      text
     }
-    text
-  }
-  ...on AttributeText {
-    value
-  }
-  ...on AttributeRichText {
-    value
-  }
-  ...on AttributeNumericValue {
-    numericValue: value
-  }
-  ...on AttributeCategoryChoice {
-    categories {
-      ...CategoryTagsCategory
+    ... on AttributeText {
+      value
+    }
+    ... on AttributeRichText {
+      value
+    }
+    ... on AttributeNumericValue {
+      numericValue: value
+    }
+    ... on AttributeCategoryChoice {
+      categories {
+        ...CategoryTagsCategory
+      }
     }
   }
-}
 `;
 
 const attributeTypeFragment = gql`
-fragment AttributesBlockAttributeType on AttributeType {
-  __typename
-  id
-  format
-  name
-  identifier
-  helpText
-  choiceOptions {
+  fragment AttributesBlockAttributeType on AttributeType {
+    __typename
     id
-    identifier
-  }
-  unit {
-    id
+    format
     name
+    identifier
+    helpText
+    choiceOptions {
+      id
+      identifier
+    }
+    unit {
+      id
+      name
+    }
+    showChoiceNames
+    hasZeroOption
   }
-  showChoiceNames
-  hasZeroOption
-}
 `;
 
 const attributeWithNestedTypeFragment = gql`
-fragment AttributesBlockAttributeWithNestedType on AttributeInterface {
-  ...AttributesBlockAttribute
-  type {
-    ...AttributesBlockAttributeType
+  fragment AttributesBlockAttributeWithNestedType on AttributeInterface {
+    ...AttributesBlockAttribute
+    type {
+      ...AttributesBlockAttributeType
+    }
   }
-}
-${attributeFragment}
-${attributeTypeFragment}
+  ${attributeFragment}
+  ${attributeTypeFragment}
 `;
-
 
 ActionAttribute.fragments = {
   attribute: attributeFragment,
   attributeType: attributeTypeFragment,
   attributeWithNestedType: attributeWithNestedTypeFragment,
-}
+};
 
 export default ActionAttribute;

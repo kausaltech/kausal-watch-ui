@@ -4,7 +4,12 @@ import { InputGroup, Popover, PopoverBody } from 'reactstrap';
 import { usePopper } from 'react-popper';
 import styled from 'styled-components';
 import { transparentize } from 'polished';
-import { SearchProvider, WithSearch, SearchBox, Results } from '@elastic/react-search-ui';
+import {
+  SearchProvider,
+  WithSearch,
+  SearchBox,
+  Results,
+} from '@elastic/react-search-ui';
 import { Link } from 'common/links';
 import { useTheme } from 'common/theme';
 import WatchSearchAPIConnector from 'common/search';
@@ -17,16 +22,22 @@ import { getActionTermContext, useTranslation } from 'common/i18n';
 const TextInput = styled.input`
   display: ${(props) => (props.isOpen === 'true' ? 'block' : 'hidden')};
   width: ${(props) => (props.isOpen === 'true' ? 'auto' : '0')};
-  height: calc(${(props) =>
-      props.theme.inputLineHeight}em + ${(props) => props.theme.inputPaddingY} + ${(props) => props.theme.inputPaddingY
-    });
-  padding: ${(props) => (props.isOpen === 'true' ? `${props.theme.inputPaddingY} ${props.theme.inputPaddingY}` : '0')};
+  height: calc(
+    ${(props) => props.theme.inputLineHeight}em +
+      ${(props) => props.theme.inputPaddingY} +
+      ${(props) => props.theme.inputPaddingY}
+  );
+  padding: ${(props) =>
+    props.isOpen === 'true'
+      ? `${props.theme.inputPaddingY} ${props.theme.inputPaddingY}`
+      : '0'};
   color: ${(props) => props.theme.themeColors.black};
   background-color: ${(props) => props.theme.themeColors.white};
   border-radius: ${(props) => props.theme.inputBorderRadius};
   border: 0;
 
-  &:focus, &:focus-visible {
+  &:focus,
+  &:focus-visible {
     outline: 3px solid ${(props) => props.theme.inputBtnFocusColor};
   }
 `;
@@ -34,18 +45,22 @@ const TextInput = styled.input`
 const SearchButton = styled.button`
   display: flex;
   align-items: center;
-  height: calc(${(props) =>
-      props.theme.inputLineHeight}em + ${(props) => props.theme.inputPaddingY} + ${(props) => props.theme.inputPaddingY
-    });
-  padding: 0 .5rem;
+  height: calc(
+    ${(props) => props.theme.inputLineHeight}em +
+      ${(props) => props.theme.inputPaddingY} +
+      ${(props) => props.theme.inputPaddingY}
+  );
+  padding: 0 0.5rem;
   background-color: ${(props) =>
-      props.isActive === 'true' ? props.theme.brandNavColor : props.theme.brandNavBackground
-    };
-  border:0;
+    props.isActive === 'true'
+      ? props.theme.brandNavColor
+      : props.theme.brandNavBackground};
+  border: 0;
   border-bottom: 3px solid;
   border-bottom-color: ${(props) =>
-      props.isActive === 'true' ? props.theme.brandNavColor : props.theme.brandNavBackground
-    };
+    props.isActive === 'true'
+      ? props.theme.brandNavColor
+      : props.theme.brandNavBackground};
   border-radius: 0;
 
   &:hover {
@@ -53,8 +68,9 @@ const SearchButton = styled.button`
   }
   .icon {
     fill: ${(props) =>
-        props.isActive === 'true' ? props.theme.brandNavBackground : props.theme.brandNavColor
-      } !important;
+      props.isActive === 'true'
+        ? props.theme.brandNavBackground
+        : props.theme.brandNavColor} !important;
   }
 `;
 
@@ -65,8 +81,8 @@ const ResultsBox = styled.div`
   padding: 5px 10px;
   font-size: 13px;
   border-radius: 6px;
-  background: #FFFFFF;
-  box-shadow: 2px 2px 8px 1px rgba(0, 0, 0, .5);
+  background: #ffffff;
+  box-shadow: 2px 2px 8px 1px rgba(0, 0, 0, 0.5);
 `;
 
 const ResultsHeader = styled.div`
@@ -76,8 +92,8 @@ const ResultsHeader = styled.div`
 `;
 
 const ResultCount = styled.div`
-    font-size: ${(props) => props.theme.fontSizeSm};
-    font-family: ${(props) => props.theme.fontFamilyTiny};
+  font-size: ${(props) => props.theme.fontSizeSm};
+  font-family: ${(props) => props.theme.fontFamilyTiny};
 `;
 
 const ResultsFooter = styled.div`
@@ -151,7 +167,6 @@ const SearchControls = styled.div`
   align-items: center;
 `;
 
-
 const Arrow = styled.div`
   position: absolute;
   width: 8px;
@@ -196,7 +211,7 @@ function ResultItem(props) {
       }
       return t('page');
     }
-  }
+  };
 
   return (
     <HitItem key={hit.id}>
@@ -209,16 +224,16 @@ function ResultItem(props) {
           />
           <HitType>{typeName(hit)}</HitType>
         </HitHeader>
-        <h6>{ hit.title }</h6>
+        <h6>{hit.title}</h6>
         {hit.highlight && (
           <HitHighlight>
-            <span dangerouslySetInnerHTML={{__html: hit.highlight}} />
+            <span dangerouslySetInnerHTML={{ __html: hit.highlight }} />
             ...
           </HitHighlight>
         )}
       </a>
     </HitItem>
-  )
+  );
 }
 
 const ResultList = (props) => {
@@ -233,43 +248,51 @@ const ResultList = (props) => {
     },
     {
       name: 'Actions',
-      count: results.filter((result) => result.object?.__typename === 'Action').length,
+      count: results.filter((result) => result.object?.__typename === 'Action')
+        .length,
     },
     {
       name: 'Indicators',
-      count: results.filter((result) => result.object?.__typename === 'Indicator').length,
-    }
+      count: results.filter(
+        (result) => result.object?.__typename === 'Indicator'
+      ).length,
+    },
   ];
 
   // FIXME: can we limit the number of results earlier?
   // We could show { counts.map((count) => count.count > 0 ? `${count.name}: ${count.count} ` : '' ) }
   return (
-        <>
-          <ResultsHeader>
-            {t('searching-for', {term: searchTerm})}
-            <ResultCount>
-              { results.length > 0 ? '' : t('search-no-results')}
-            </ResultCount>
-          </ResultsHeader>
-          <HitList>
-            {results.slice(0,RESULTS_LIMIT).map(r => (
-              <ResultItem hit={r} />
-            ))}
-          </HitList>
-          <ResultsFooter>
-            { results.length > 0 ?
-            <Link href={`/search?q=${searchTerm}`}>
-              <a>
-                { t('see-all-results', {count: results.length})}
-                <Icon name="arrow-right" />
-              </a>
-            </Link>
-            :
-            <Link href={`/search`}><a>{t('search-advanced')} <Icon name="arrow-right" /></a></Link>}
-          </ResultsFooter>
-        </>
+    <>
+      <ResultsHeader>
+        {t('searching-for', { term: searchTerm })}
+        <ResultCount>
+          {results.length > 0 ? '' : t('search-no-results')}
+        </ResultCount>
+      </ResultsHeader>
+      <HitList>
+        {results.slice(0, RESULTS_LIMIT).map((r) => (
+          <ResultItem hit={r} />
+        ))}
+      </HitList>
+      <ResultsFooter>
+        {results.length > 0 ? (
+          <Link href={`/search?q=${searchTerm}`}>
+            <a>
+              {t('see-all-results', { count: results.length })}
+              <Icon name="arrow-right" />
+            </a>
+          </Link>
+        ) : (
+          <Link href={`/search`}>
+            <a>
+              {t('search-advanced')} <Icon name="arrow-right" />
+            </a>
+          </Link>
+        )}
+      </ResultsFooter>
+    </>
   );
-}
+};
 
 function NavbarSearch(props) {
   const theme = useTheme(null);
@@ -285,21 +308,28 @@ function NavbarSearch(props) {
 
   const connector = new WatchSearchAPIConnector({ plan, apolloClient });
   return (
-    <SearchProvider config={{
-      apiConnector: connector,
-      debug: false,
-      hasA11yNotifications: true,
-      a11yNotificationMessages: {
-        searchResults: ({ start, end, totalResults, searchTerm }) =>
-          `Searching for "${searchTerm}". Showing ${start} to ${end} results out of ${totalResults}.`
-      },
-    }} >
+    <SearchProvider
+      config={{
+        apiConnector: connector,
+        debug: false,
+        hasA11yNotifications: true,
+        a11yNotificationMessages: {
+          searchResults: ({ start, end, totalResults, searchTerm }) =>
+            `Searching for "${searchTerm}". Showing ${start} to ${end} results out of ${totalResults}.`,
+        },
+      }}
+    >
       <WithSearch
-        mapContextToProps={({ isLoading, searchTerm, setSearchTerm, results }) => ({
+        mapContextToProps={({
           isLoading,
           searchTerm,
           setSearchTerm,
-          results
+          results,
+        }) => ({
+          isLoading,
+          searchTerm,
+          setSearchTerm,
+          results,
         })}
       >
         {(context) => {
@@ -313,7 +343,7 @@ function NavbarSearch(props) {
           // Clear search term if the input is hidden
           const closeSearch = () => {
             setSearchOpen(false);
-            setSearchTerm("");
+            setSearchTerm('');
           };
 
           // Close results modal if clicked outside search ui
@@ -321,23 +351,29 @@ function NavbarSearch(props) {
             const handlePageClick = (e) => {
               if (!searchElement.current.contains(e.target)) closeSearch();
             };
-            searchOpen && document.addEventListener("mousedown", handlePageClick);
+            searchOpen &&
+              document.addEventListener('mousedown', handlePageClick);
             return () => {
-              document.removeEventListener("mousedown", handlePageClick);
+              document.removeEventListener('mousedown', handlePageClick);
             };
           }, [searchOpen]);
 
           // Use popper to place and size search modal
-          const { styles, attributes, update } = usePopper(referenceElement, popperElement, {
-            modifiers: [
-              { name: 'arrow', options: { element: arrowElement } },
-              {
-                name: 'offset',
-                options: {
-                  offset: [0, 10],
+          const { styles, attributes, update } = usePopper(
+            referenceElement,
+            popperElement,
+            {
+              modifiers: [
+                { name: 'arrow', options: { element: arrowElement } },
+                {
+                  name: 'offset',
+                  options: {
+                    offset: [0, 10],
+                  },
                 },
-              },],
-          });
+              ],
+            }
+          );
 
           const handleSubmit = (event) => {
             event.preventDefault();
@@ -356,64 +392,66 @@ function NavbarSearch(props) {
           return (
             <li ref={searchElement} className="nav-item">
               <SearchControls ref={setReferenceElement}>
-              <form
-                autoComplete="off"
-                aria-label={t('search')}
-              >
-                <InputGroup>
-                  <TextInput
-                    type="search"
-                    id="q"
-                    name="q"
-                    autocomplete="off"
-                    aria-autocomplete="list"
-                    placeholder={t('search')}
-                    aria-label={t('search')}
-                    role="combobox"
-                    aria-expanded={searchTerm.length > 1}
-                    aria-haspopup="listbox"
-                    value={searchTerm}
-                    onChange={e => setSearchTerm(e.target.value, {
-                      autocompleteResults: true,
-                      autocompleteMinimumCharacters: 2,
-                      debounce: 200,
-                    })}
-                    onFocus={e => setSearchOpen(true)}
-                    ref={searchInput}
-                    isOpen={searchOpen.toString()}
-                  />
-                  <SearchButton
-                    isActive={searchOpen.toString()}
-                    type="submit"
-                    onClick={handleSubmit}
-                    aria-label={t('search')}
-                  >
-                    <Icon
-                      name="search"
-                      width="1.25rem"
-                      height="1.25rem"
-                      aria-hidden="true"
-                      focusable="false"
+                <form autoComplete="off" aria-label={t('search')}>
+                  <InputGroup>
+                    <TextInput
+                      type="search"
+                      id="q"
+                      name="q"
+                      autocomplete="off"
+                      aria-autocomplete="list"
+                      placeholder={t('search')}
+                      aria-label={t('search')}
+                      role="combobox"
+                      aria-expanded={searchTerm.length > 1}
+                      aria-haspopup="listbox"
+                      value={searchTerm}
+                      onChange={(e) =>
+                        setSearchTerm(e.target.value, {
+                          autocompleteResults: true,
+                          autocompleteMinimumCharacters: 2,
+                          debounce: 200,
+                        })
+                      }
+                      onFocus={(e) => setSearchOpen(true)}
+                      ref={searchInput}
+                      isOpen={searchOpen.toString()}
                     />
-                  </SearchButton>
-                </InputGroup>
-              </form>
+                    <SearchButton
+                      isActive={searchOpen.toString()}
+                      type="submit"
+                      onClick={handleSubmit}
+                      aria-label={t('search')}
+                    >
+                      <Icon
+                        name="search"
+                        width="1.25rem"
+                        height="1.25rem"
+                        aria-hidden="true"
+                        focusable="false"
+                      />
+                    </SearchButton>
+                  </InputGroup>
+                </form>
               </SearchControls>
               {/* TODO: is there a way to control results visibility better? */}
               {/* TODO: display loading state but currently isLoading does not update itself */}
-              { searchTerm.length > 1 && searchOpen &&
+              {searchTerm.length > 1 && searchOpen && (
                 <ResultsBox
                   ref={setPopperElement}
                   style={styles.popper}
                   {...attributes.popper}
                 >
                   <Arrow ref={setArrowElement} style={styles.arrow} />
-                  <ResultList results={results} searchTerm={searchTerm} anchor={referenceElement}/>
+                  <ResultList
+                    results={results}
+                    searchTerm={searchTerm}
+                    anchor={referenceElement}
+                  />
                 </ResultsBox>
-              }
-
+              )}
             </li>
-          )
+          );
         }}
       </WithSearch>
     </SearchProvider>

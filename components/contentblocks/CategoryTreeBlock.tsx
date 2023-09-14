@@ -15,7 +15,8 @@ import { CommonContentBlockProps } from 'common/blocks.types';
 
 const CategoryListSection = styled.div`
   background-color: ${(props) => props.theme.neutralLight};
-  padding: ${(props) => props.theme.spaces.s400} 0 ${(props) => props.theme.spaces.s100};
+  padding: ${(props) => props.theme.spaces.s400} 0
+    ${(props) => props.theme.spaces.s100};
 
   h2 {
     text-align: center;
@@ -46,9 +47,9 @@ const CategoryCard = styled.div`
   background-color: white;
   padding: 1rem;
   margin: 1rem 3px 3px 3px;
-  filter: drop-shadow(0 1px 2px rgba(0,0,0,.5));
-  border-left: .5rem solid ${(props) => props.color};
-  border-radius: .5rem;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
+  border-left: 0.5rem solid ${(props) => props.color};
+  border-radius: 0.5rem;
 
   &::after {
     content: '';
@@ -69,13 +70,13 @@ const CategoryCard = styled.div`
     height: calc(100% - 2rem);
 
     &::after {
-    right: -1.5rem;
-    top: 33%;
-    border-top: 1.5rem solid transparent;
-    border-bottom: 1.5rem solid transparent;
-    border-left: 1.5rem solid white;
-    border-right: 0;
-  }
+      right: -1.5rem;
+      top: 33%;
+      border-top: 1.5rem solid transparent;
+      border-bottom: 1.5rem solid transparent;
+      border-left: 1.5rem solid white;
+      border-right: 0;
+    }
   }
 `;
 
@@ -107,74 +108,84 @@ const CategoryVizColumn = styled.div`
 // TODO: clean out unecessary fields. Fetching a lot for now
 
 const GET_CATEGORIES_FOR_TREEMAP = gql`
-query GetCategoriesForTreeMap($plan: ID!, $categoryType: ID!, $attributeType: ID!) {
-  planCategories(plan: $plan, categoryType: $categoryType) {
-    id
-    name
-    leadParagraph
-    image {
+  query GetCategoriesForTreeMap(
+    $plan: ID!
+    $categoryType: ID!
+    $attributeType: ID!
+  ) {
+    planCategories(plan: $plan, categoryType: $categoryType) {
       id
-      title
-      imageCredit
-      altText
-      rendition(size:"600x300") {
+      name
+      leadParagraph
+      image {
         id
-        width
-        height
-        src
-        alt
+        title
+        imageCredit
+        altText
+        rendition(size: "600x300") {
+          id
+          width
+          height
+          src
+          alt
+        }
       }
-    }
-    categoryPage {
-      id
-      title
-      path
-      slug
-      url
-      urlPath
-      depth
-      contentType
-      body {
-        ... on RichTextBlock {
+      categoryPage {
+        id
+        title
+        path
+        slug
+        url
+        urlPath
+        depth
+        contentType
+        body {
+          ... on RichTextBlock {
+            value
+          }
+        }
+      }
+      color
+      parent {
+        id
+      }
+      level {
+        id
+        name
+        namePlural
+      }
+      type {
+        id
+        hideCategoryIdentifiers
+      }
+      attributes(id: $attributeType) {
+        ... on AttributeNumericValue {
           value
         }
       }
     }
-    color
-    parent {
-      id
-    }
-    level {
-      id
-      name
-      namePlural
-    }
-    type {
-      id
-      hideCategoryIdentifiers
-    }
-    attributes(id: $attributeType) {
-      ...on AttributeNumericValue {
-        value
-      }
-    }
   }
-}
 `;
 
 type CategoryTreeSectionProps = {
   id?: string;
-  heading?: string,
-  lead?: string,
-  sections: GetCategoriesForTreeMapQuery['planCategories'],
+  heading?: string;
+  lead?: string;
+  sections: GetCategoriesForTreeMapQuery['planCategories'];
   valueAttribute: {
     unit: {
-      shortName: string,
-    }
-  }
+      shortName: string;
+    };
+  };
 };
 
-const CategoryTreeSection = ({ id = '', sections, valueAttribute, heading = 'Categories', hasSidebar }: CategoryTreeSectionProps) => {
+const CategoryTreeSection = ({
+  id = '',
+  sections,
+  valueAttribute,
+  heading = 'Categories',
+  hasSidebar,
+}: CategoryTreeSectionProps) => {
   // console.log(sections);
   const rootSection = sections.find((sect) => sect.parent === null);
   const [activeCategory, setCategory] = useState(rootSection);
@@ -185,45 +196,46 @@ const CategoryTreeSection = ({ id = '', sections, valueAttribute, heading = 'Cat
       const allSections = concat(rootSection, sections);
       const newCat = allSections.find((sect) => sect.id === cat);
       setCategory(newCat);
-    }, [sections, rootSection],
+    },
+    [sections, rootSection]
   );
   return (
     <CategoryListSection id={id}>
       <Container>
         <Row>
-        <Col
+          <Col
             xl={{ size: 9, offset: hasSidebar ? 3 : 2 }}
             lg={{ size: 8, offset: hasSidebar ? 4 : 2 }}
             md={{ size: 10, offset: 1 }}
           >
-        {heading && (<h2>{heading}</h2>)}
-        <CategoryTreeLayout>
-          <CategoryCardColumn>
-            <CategoryCard color={activeCategory.color}>
-              <CategoryCardContent
-                category={activeCategory}
-                isRoot={activeCategory.id == rootSection.id}
-                sumValues={rootSection.attributes[0].value}
-                key={activeCategory.id}
-              />
-            </CategoryCard>
-          </CategoryCardColumn>
-          <CategoryVizColumn>
-            <TreemapContent>
-              <CategoryTreeMap
-                data={sections}
-                onChangeSection={onChangeSection}
-                valueAttribute={valueAttribute}
-                heading={heading}
-              />
-            </TreemapContent>
-          </CategoryVizColumn>
-        </CategoryTreeLayout>
-        <CategoryActionList
-          activeCategory={activeCategory}
-          categories={sections}
-        />
-        </Col>
+            {heading && <h2>{heading}</h2>}
+            <CategoryTreeLayout>
+              <CategoryCardColumn>
+                <CategoryCard color={activeCategory.color}>
+                  <CategoryCardContent
+                    category={activeCategory}
+                    isRoot={activeCategory.id == rootSection.id}
+                    sumValues={rootSection.attributes[0].value}
+                    key={activeCategory.id}
+                  />
+                </CategoryCard>
+              </CategoryCardColumn>
+              <CategoryVizColumn>
+                <TreemapContent>
+                  <CategoryTreeMap
+                    data={sections}
+                    onChangeSection={onChangeSection}
+                    valueAttribute={valueAttribute}
+                    heading={heading}
+                  />
+                </TreemapContent>
+              </CategoryVizColumn>
+            </CategoryTreeLayout>
+            <CategoryActionList
+              activeCategory={activeCategory}
+              categories={sections}
+            />
+          </Col>
         </Row>
       </Container>
     </CategoryListSection>
@@ -232,40 +244,48 @@ const CategoryTreeSection = ({ id = '', sections, valueAttribute, heading = 'Cat
 
 interface CategoryTreeBlockProps extends CommonContentBlockProps {
   categoryType: {
-    identifier: string,
-  },
+    identifier: string;
+  };
   valueAttribute: {
-    identifier: string,
+    identifier: string;
     unit: {
-      shortName: string,
-    }
-  },
-  categories: GetCategoriesForTreeMapQuery['planCategories'],
-  hasSidebar: boolean,
+      shortName: string;
+    };
+  };
+  categories: GetCategoriesForTreeMapQuery['planCategories'];
+  hasSidebar: boolean;
 }
 
 function CategoryTreeBlockBrowser(props: CategoryTreeBlockProps) {
-  const { id = '', categories:cats, heading, lead, hasSidebar } = props;
-  const catMap = useMemo(() => (new Map(cats.map((cat) => [cat.id, cat]))), [cats]);
+  const { id = '', categories: cats, heading, lead, hasSidebar } = props;
+  const catMap = useMemo(
+    () => new Map(cats.map((cat) => [cat.id, cat])),
+    [cats]
+  );
 
-  const findFirstAncestorColor = useCallback((id) => {
-    const cat = catMap.get(id);
-    if (cat.color) return cat.color;
-    let parentId = cat.parent?.id;
-    while (parentId) {
-      const parent = catMap.get(parentId);
-      if (parent.color) return parent.color;
-      parentId = parent.parent?.id;
-    }
-    return null;
-  }, [catMap]);
+  const findFirstAncestorColor = useCallback(
+    (id) => {
+      const cat = catMap.get(id);
+      if (cat.color) return cat.color;
+      let parentId = cat.parent?.id;
+      while (parentId) {
+        const parent = catMap.get(parentId);
+        if (parent.color) return parent.color;
+        parentId = parent.parent?.id;
+      }
+      return null;
+    },
+    [catMap]
+  );
 
-  const augmentedCategories = useMemo(() => (
-    cats.map((cat) => ({
-      ...cat,
-      color: findFirstAncestorColor(cat.id),
-    }))
-  ), [cats, findFirstAncestorColor]);
+  const augmentedCategories = useMemo(
+    () =>
+      cats.map((cat) => ({
+        ...cat,
+        color: findFirstAncestorColor(cat.id),
+      })),
+    [cats, findFirstAncestorColor]
+  );
 
   return (
     <CategoryTreeSection
@@ -279,27 +299,35 @@ function CategoryTreeBlockBrowser(props: CategoryTreeBlockProps) {
   );
 }
 
-
 function CategoryTreeBlock(props: CategoryTreeBlockProps) {
-  const isServer = typeof window === "undefined";
+  const isServer = typeof window === 'undefined';
   if (isServer) {
     return null;
   }
 
   const { categoryType, valueAttribute, hasSidebar } = props;
   const plan = usePlan();
-  const { data, loading, error } = useQuery<GetCategoriesForTreeMapQuery>(GET_CATEGORIES_FOR_TREEMAP, {
-    variables: {
-      plan: plan.identifier,
-      categoryType: categoryType.identifier,
-      attributeType: valueAttribute.identifier,
-    },
-  });
+  const { data, loading, error } = useQuery<GetCategoriesForTreeMapQuery>(
+    GET_CATEGORIES_FOR_TREEMAP,
+    {
+      variables: {
+        plan: plan.identifier,
+        categoryType: categoryType.identifier,
+        attributeType: valueAttribute.identifier,
+      },
+    }
+  );
 
   if (error) return <ErrorMessage message={error.message} />;
   if (loading) return <ContentLoader />;
 
-  return <CategoryTreeBlockBrowser categories={data.planCategories} {...props} hasSidebar={hasSidebar}/>
-};
+  return (
+    <CategoryTreeBlockBrowser
+      categories={data.planCategories}
+      {...props}
+      hasSidebar={hasSidebar}
+    />
+  );
+}
 
 export default CategoryTreeBlock;

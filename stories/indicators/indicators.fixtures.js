@@ -19,191 +19,191 @@ export const categoriesData = [
     name: 'Sub Category 3',
     parent: {
       id: '1',
-    }
+    },
   },
   {
     id: '4',
     identifier: '1.1.3',
     name: 'Sub Category 4',
     parent: {
-      id: '1'
-    }
+      id: '1',
+    },
   },
   {
     id: '5',
     identifier: '1.1.4',
     name: 'Sub Category 5',
     parent: {
-      id: '1'
-    }
+      id: '1',
+    },
   },
 ];
 
 export const hierarchy = {
-  '23': {
+  23: {
     id: '23',
     isRoot: true,
-    children: [ '24', '25', '26', '27', '28' ],
-    path: [ '23' ],
-    pathNames: [ 'Kokonaispäästöt (scope 2)' ]
+    children: ['24', '25', '26', '27', '28'],
+    path: ['23'],
+    pathNames: ['Kokonaispäästöt (scope 2)'],
   },
-  '24': {
+  24: {
     id: '24',
     isRoot: false,
     children: [],
-    path: [ '23', '24' ],
-    pathNames: [ 'Kokonaispäästöt (scope 2)', 'Kulutussähkön päästöt' ]
+    path: ['23', '24'],
+    pathNames: ['Kokonaispäästöt (scope 2)', 'Kulutussähkön päästöt'],
   },
-  '25': {
+  25: {
     id: '25',
     isRoot: false,
-    children: [ '29', '32', '33', '34', '35' ],
-    path: [ '23', '25' ],
-    pathNames: [ 'Kokonaispäästöt (scope 2)', 'Rakennusten lämmityksen päästöt' ]
+    children: ['29', '32', '33', '34', '35'],
+    path: ['23', '25'],
+    pathNames: ['Kokonaispäästöt (scope 2)', 'Rakennusten lämmityksen päästöt'],
   },
-  '26': {
+  26: {
     id: '26',
     isRoot: false,
-    children: [ '36' ],
-    path: [ '23', '26' ],
-    pathNames: [ 'Kokonaispäästöt (scope 2)', 'Liikenteen päästöt' ]
+    children: ['36'],
+    path: ['23', '26'],
+    pathNames: ['Kokonaispäästöt (scope 2)', 'Liikenteen päästöt'],
   },
-  '27': {
+  27: {
     id: '27',
     isRoot: false,
     children: [],
-    path: [ '23', '27' ],
-    pathNames: [ 'Kokonaispäästöt (scope 2)', 'Maatalouden päästöt' ]
+    path: ['23', '27'],
+    pathNames: ['Kokonaispäästöt (scope 2)', 'Maatalouden päästöt'],
   },
-  '28': {
+  28: {
     id: '28',
     isRoot: false,
     children: [],
-    path: [ '23', '28' ],
-    pathNames: [ 'Kokonaispäästöt (scope 2)', 'Jätteiden käsittelyn päästöt' ]
+    path: ['23', '28'],
+    pathNames: ['Kokonaispäästöt (scope 2)', 'Jätteiden käsittelyn päästöt'],
   },
-  '29': {
+  29: {
     id: '29',
     isRoot: false,
-    children: [ '30', '31' ],
-    path: [ '23', '25', '29' ],
+    children: ['30', '31'],
+    path: ['23', '25', '29'],
     pathNames: [
       'Kokonaispäästöt (scope 2)',
       'Rakennusten lämmityksen päästöt',
-      'Rakennusten sähkölämmityksen päästöt'
-    ]
+      'Rakennusten sähkölämmityksen päästöt',
+    ],
   },
-  '30': {
+  30: {
     id: '30',
     isRoot: false,
     children: [],
-    path: [ '23', '25', '29', '30' ],
+    path: ['23', '25', '29', '30'],
     pathNames: [
       'Kokonaispäästöt (scope 2)',
       'Rakennusten lämmityksen päästöt',
       'Rakennusten sähkölämmityksen päästöt',
-      'Rakennusten suoran sähkölämmityksen päästöt'
-    ]
+      'Rakennusten suoran sähkölämmityksen päästöt',
+    ],
   },
-  '31': {
+  31: {
     id: '31',
     isRoot: false,
     children: [],
-    path: [ '23', '25', '29', '31' ],
+    path: ['23', '25', '29', '31'],
     pathNames: [
       'Kokonaispäästöt (scope 2)',
       'Rakennusten lämmityksen päästöt',
       'Rakennusten sähkölämmityksen päästöt',
-      'Maalämmön päästöt'
-    ]
+      'Maalämmön päästöt',
+    ],
   },
-  '32': {
+  32: {
     id: '32',
     isRoot: false,
     children: [],
-    path: [ '23', '25', '32' ],
+    path: ['23', '25', '32'],
     pathNames: [
       'Kokonaispäästöt (scope 2)',
       'Rakennusten lämmityksen päästöt',
-      'Kaukolämmön päästöt'
-    ]
+      'Kaukolämmön päästöt',
+    ],
   },
-  '33': {
+  33: {
     id: '33',
     isRoot: false,
     children: [],
-    path: [ '23', '25', '33' ],
+    path: ['23', '25', '33'],
     pathNames: [
       'Kokonaispäästöt (scope 2)',
       'Rakennusten lämmityksen päästöt',
-      'Öljylämmityksen päästöt'
-    ]
+      'Öljylämmityksen päästöt',
+    ],
   },
-  '34': {
+  34: {
     id: '34',
     isRoot: false,
     children: [],
-    path: [ '23', '25', '34' ],
+    path: ['23', '25', '34'],
     pathNames: [
       'Kokonaispäästöt (scope 2)',
       'Rakennusten lämmityksen päästöt',
-      'Puulämmityksen päästöt'
-    ]
+      'Puulämmityksen päästöt',
+    ],
   },
-  '35': {
+  35: {
     id: '35',
     isRoot: false,
     children: [],
-    path: [ '23', '25', '35' ],
+    path: ['23', '25', '35'],
     pathNames: [
       'Kokonaispäästöt (scope 2)',
       'Rakennusten lämmityksen päästöt',
-      'Rakennusten muun lämmityksen päästöt'
-    ]
+      'Rakennusten muun lämmityksen päästöt',
+    ],
   },
-  '36': {
+  36: {
     id: '36',
     isRoot: false,
-    children: [ '37', '38' ],
-    path: [ '23', '26', '36' ],
+    children: ['37', '38'],
+    path: ['23', '26', '36'],
     pathNames: [
       'Kokonaispäästöt (scope 2)',
       'Liikenteen päästöt',
-      'Tieliikenteen päästöt'
-    ]
+      'Tieliikenteen päästöt',
+    ],
   },
-  '37': {
+  37: {
     id: '37',
     isRoot: false,
     children: [],
-    path: [ '23', '26', '36', '37' ],
+    path: ['23', '26', '36', '37'],
     pathNames: [
       'Kokonaispäästöt (scope 2)',
       'Liikenteen päästöt',
       'Tieliikenteen päästöt',
-      'Tieliikenteen päästöt maanteillä'
-    ]
+      'Tieliikenteen päästöt maanteillä',
+    ],
   },
-  '38': {
+  38: {
     id: '38',
     isRoot: false,
     children: [],
-    path: [ '23', '26', '36', '38' ],
+    path: ['23', '26', '36', '38'],
     pathNames: [
       'Kokonaispäästöt (scope 2)',
       'Liikenteen päästöt',
       'Tieliikenteen päästöt',
-      'Tieliikenteen päästöt kaduilla'
-    ]
+      'Tieliikenteen päästöt kaduilla',
+    ],
   },
-  '39': {
+  39: {
     id: '39',
     isRoot: true,
     children: [],
-    path: [ '39' ],
-    pathNames: [ 'Väestö' ]
-  }
-}
+    path: ['39'],
+    pathNames: ['Väestö'],
+  },
+};
 
 const municipalityNames = [
   'Basildon',
@@ -220,44 +220,46 @@ const municipalityNames = [
   'Rochford',
   'Tendring',
   'Harwich',
-  'Uttlesford'
-]
+  'Uttlesford',
+];
 
-const municipalities = municipalityNames.map((name, id) => ({id, name}));
+const municipalities = municipalityNames.map((name, id) => ({ id, name }));
 
 const indicatorMaker = (() => ({
   runningId: 10000,
-  make: (commonIndicatorId) => (
-    municipalities.map(muni => ({
+  make: (commonIndicatorId) =>
+    municipalities.map((muni) => ({
       id: (indicatorMaker.runningId++).toString(),
       name: `From common ${commonIndicatorId}`,
       level: 'strategic',
       categories: [],
       organization: {
         id: muni.id,
-        name: muni.name
+        name: muni.name,
       },
       common: {
         name: `Common indicator ${commonIndicatorId}`,
-        id: commonIndicatorId
-      }
-    }))
-  )
+        id: commonIndicatorId,
+      },
+    })),
 }))();
 
 const handleCommonIndicator = (hierarchy, id) => {
   let result = [];
   const commonIndicator = hierarchy[id];
   result = result.concat(indicatorMaker.make(id));
-  commonIndicator.children.forEach(childId => {
+  commonIndicator.children.forEach((childId) => {
     result = result.concat(handleCommonIndicator(hierarchy, childId));
   });
   return result;
-}
+};
 
-export const hierarchicalIndicatorsData = Object.values(hierarchy).filter(e => e.isRoot).reduce(
-  ((cumul, curr) => (cumul.concat(handleCommonIndicator(hierarchy, curr.id)))), []
-);
+export const hierarchicalIndicatorsData = Object.values(hierarchy)
+  .filter((e) => e.isRoot)
+  .reduce(
+    (cumul, curr) => cumul.concat(handleCommonIndicator(hierarchy, curr.id)),
+    []
+  );
 
 export const nonHierarchicalIndicatorsData = [
   {
@@ -277,8 +279,8 @@ export const nonHierarchicalIndicatorsData = [
     },
     level: 'tactical',
     unit: {
-      'shortName': 'kt/a'
-    }
+      shortName: 'kt/a',
+    },
   },
   {
     id: '2',
@@ -297,8 +299,8 @@ export const nonHierarchicalIndicatorsData = [
     },
     level: 'operational',
     unit: {
-      'shortName': 'kt/a'
-    }
+      shortName: 'kt/a',
+    },
   },
   {
     id: '111',
@@ -317,15 +319,13 @@ export const nonHierarchicalIndicatorsData = [
     },
     level: 'strategic',
     unit: {
-      'shortName': 'kt/a'
-    }
+      shortName: 'kt/a',
+    },
   },
   {
     id: '165',
     name: 'Another one with longer title',
-    categories: [
-      null,
-    ],
+    categories: [null],
     latestGraph: null,
     latestValue: {
       value: 235.666,
@@ -334,8 +334,8 @@ export const nonHierarchicalIndicatorsData = [
     },
     level: 'strategic',
     unit: {
-      'shortName': 'kt/a'
-    }
+      shortName: 'kt/a',
+    },
   },
   {
     id: '4',
@@ -354,7 +354,7 @@ export const nonHierarchicalIndicatorsData = [
     latestValue: null,
     level: 'tactical',
     unit: {
-      'shortName': 'kt/a'
-    }
+      shortName: 'kt/a',
+    },
   },
 ];

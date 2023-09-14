@@ -1,11 +1,14 @@
-import React, { PropsWithChildren} from 'react';
+import React, { PropsWithChildren } from 'react';
 import styled from 'styled-components';
 import { useTheme } from 'common/theme';
-import type { Theme } from '@kausal/themes/types'
+import type { Theme } from '@kausal/themes/types';
 import type { PlanContextType } from 'context/plan';
 import type { ActionStatusSummary } from 'common/__generated__/graphql';
 
-import { MinimalActionStatusSummary, getStatusColorForAction } from 'common/ActionStatusSummary';
+import {
+  MinimalActionStatusSummary,
+  getStatusColorForAction,
+} from 'common/ActionStatusSummary';
 
 interface StatusBarProps {
   theme: Theme;
@@ -29,10 +32,12 @@ const StyledStatusBar = styled.div<StatusBarProps>`
 
 const StatusBar = (props: PropsWithChildren<StatusBarProps>) => {
   const { theme, statusColor, children } = props;
-  return <StyledStatusBar theme={theme} statusColor={statusColor}>
-    {children}
-  </StyledStatusBar>;
-}
+  return (
+    <StyledStatusBar theme={theme} statusColor={statusColor}>
+      {children}
+    </StyledStatusBar>
+  );
+};
 
 interface StatusBadgeProps {
   statusSummary: ActionStatusSummary;
@@ -43,11 +48,11 @@ interface StatusBadgeProps {
 const StatusBadge = (props: StatusBadgeProps) => {
   const { statusSummary, statusName, plan } = props;
   const theme = useTheme();
-  const statusColor = getStatusColorForAction({statusSummary}, plan, theme);
+  const statusColor = getStatusColorForAction({ statusSummary }, plan, theme);
   return (
     <StatusBar statusColor={statusColor} theme={theme}>
       <div className="color-bar" />
-      <div className="label">{ statusName ?? statusSummary.label }</div>
+      <div className="label">{statusName ?? statusSummary.label}</div>
     </StatusBar>
   );
 };

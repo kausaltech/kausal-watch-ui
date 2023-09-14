@@ -16,51 +16,64 @@ const CATEGORY_XAXIS_LABEL_EXTRA_MARGIN = 200;
 
 function getTraces(dimensions, cube, names, hasTimeDimension) {
   if (dimensions.length === 0) {
-    return [{
-      xType: cube.length === 1 ? 'category' : 'scaled',
-      name: '',
-      x: cube.map(val => val.date),
-      y: cube.map(val => val.value)
-    }];
+    return [
+      {
+        xType: cube.length === 1 ? 'category' : 'scaled',
+        name: '',
+        x: cube.map((val) => val.date),
+        y: cube.map((val) => val.value),
+      },
+    ];
   }
   const [firstDimension, ...rest] = dimensions;
   if (dimensions.length === 1) {
     if (hasTimeDimension) {
       return firstDimension.categories.map((cat, idx) => {
         const traceName = Array.from(
-          (new Set(names ?? undefined)).add(cat.name)
+          new Set(names ?? undefined).add(cat.name)
         ).join(', ');
-        let x, y, xType, _cube = cube[idx];
+        let x,
+          y,
+          xType,
+          _cube = cube[idx];
         xType = 'scaled';
-        x = _cube.map(val => val.date);
-        y = _cube.map(val => val.value);
+        x = _cube.map((val) => val.date);
+        y = _cube.map((val) => val.value);
         return {
           xType: 'scaled',
           name: traceName,
           _parentName: names ? Array.from(names).join(', ') : null,
-          x, y
+          x,
+          y,
         };
       });
     }
 
     // No time dimension, 'x' axis will be categories
-    return [{
-      xType: 'category',
-      name: Array.from(new Set(names ?? [firstDimension.name])).join(', '),
-      _parentName:  names ? Array.from(names).join(', ') : null,
-      x: firstDimension.categories.map((cat) => cat.name),
-      y: cube.map(c => c[0]?.value),
-    }];
+    return [
+      {
+        xType: 'category',
+        name: Array.from(new Set(names ?? [firstDimension.name])).join(', '),
+        _parentName: names ? Array.from(names).join(', ') : null,
+        x: firstDimension.categories.map((cat) => cat.name),
+        y: cube.map((c) => c[0]?.value),
+      },
+    ];
   }
   let traces = [];
 
   firstDimension.categories.forEach((cat, idx) => {
-    const out = getTraces(rest, cube[idx], (new Set(names ?? undefined)).add(cat.name), hasTimeDimension);
+    const out = getTraces(
+      rest,
+      cube[idx],
+      new Set(names ?? undefined).add(cat.name),
+      hasTimeDimension
+    );
     traces = traces.concat(out);
   });
   // Filter out empty traces resulting from
   // unavailable (total, category) combinations
-  return traces.filter(t => (t.x.length > 0));
+  return traces.filter((t) => t.x.length > 0);
 }
 
 const createLayout = (
@@ -70,9 +83,10 @@ const createLayout = (
   plotColors,
   config,
   hasTimeDimension,
-  subplotsNeeded,
+  subplotsNeeded
 ) => {
-  const fontFamily = '-apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Ubuntu, roboto, noto, arial, sans-serif';
+  const fontFamily =
+    '-apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Ubuntu, roboto, noto, arial, sans-serif';
   const hasCategories = !hasTimeDimension;
 
   const yaxes = {
@@ -114,31 +128,31 @@ const createLayout = (
   // X axis can be time or category
   const xaxes = hasCategories
     ? {
-      xaxis: {
-        automargin: true,
-        type: 'category',
-        tickangle: subplotsNeeded ? 'auto' : 90,
-        tickfont: {
-          family: fontFamily,
-          size: 14,
+        xaxis: {
+          automargin: true,
+          type: 'category',
+          tickangle: subplotsNeeded ? 'auto' : 90,
+          tickfont: {
+            family: fontFamily,
+            size: 14,
+          },
         },
-      },
-    }
+      }
     : {
-      xaxis: {
-        automargin: true,
-        showgrid: false,
-        showline: false,
-        fixedrange: false,
-        nticks: config?.xTicksMax,
-        tickformat: timeResolution === 'YEAR' ? '%Y' : '%b %Y',
-        tickmode: 'auto',
-        tickfont: {
-          family: fontFamily,
-          size: 14,
+        xaxis: {
+          automargin: true,
+          showgrid: false,
+          showline: false,
+          fixedrange: false,
+          nticks: config?.xTicksMax,
+          tickformat: timeResolution === 'YEAR' ? '%Y' : '%b %Y',
+          tickmode: 'auto',
+          tickfont: {
+            family: fontFamily,
+            size: 14,
+          },
         },
-      },
-    };
+      };
 
   // copy x-axis settings to all subplots
   for (let x = 2; x <= config.subplotCount; x += 1) {
@@ -184,8 +198,14 @@ function getSignificantDigitCount(n) {
 }
 
 const createTraces = (
-  traces, unit, plotColors, styleCount, categoryCount, hasTimeDimension, timeResolution
-  ) => {
+  traces,
+  unit,
+  plotColors,
+  styleCount,
+  categoryCount,
+  hasTimeDimension,
+  timeResolution
+) => {
   // Figure out what we need to draw depending on dataset
   // and define trace and layout setup accordingly
   // First trace is always main/total
@@ -198,7 +218,12 @@ const createTraces = (
 
   let numColors = plotColors.mainScale.length;
   let numSymbols = plotColors.symbols.length;
-  if (styleCount != null && styleCount > 0 && styleCount < numColors && styleCount < numSymbols) {
+  if (
+    styleCount != null &&
+    styleCount > 0 &&
+    styleCount < numColors &&
+    styleCount < numSymbols
+  ) {
     numSymbols = numColors = styleCount;
   }
 
@@ -217,12 +242,13 @@ const createTraces = (
 
     // we have multiple categories in one time point - draw bar groups
     if (!hasTimeDimension) {
-      modTrace.x = modTrace.x.map(name => splitLines(name));
+      modTrace.x = modTrace.x.map((name) => splitLines(name));
       modTrace.type = 'bar';
       modTrace.marker = {
-        color: (categoryCount < 2 ?
-                trace.y.map((y, i) => plotColors.mainScale[i % numColors]) :
-                plotColors.mainScale[idx % numColors]),
+        color:
+          categoryCount < 2
+            ? trace.y.map((y, i) => plotColors.mainScale[i % numColors])
+            : plotColors.mainScale[idx % numColors],
       };
       layoutConfig.barmode = 'group';
       layoutConfig.xaxis.type = 'category';
@@ -247,7 +273,8 @@ const createTraces = (
         },
       };
     }
-    if (modTrace.type === 'scatter') modTrace.mode = (trace.x.length > 30) ? 'lines' : 'lines+markers';
+    if (modTrace.type === 'scatter')
+      modTrace.mode = trace.x.length > 30 ? 'lines' : 'lines+markers';
     const timeFormat = timeResolution === 'YEAR' ? '%Y' : '%x';
     modTrace.hovertemplate = `(%{x|${timeFormat}})<br> ${trace.name}: %{y:f} ${unit}`;
     modTrace.hoverinfo = 'none';
@@ -285,7 +312,7 @@ function getSubplotHeaders(subPlotRowCount, names) {
       },
       showarrow: false,
       x: column + column * 0.1 + 0.02,
-      y: 1 - row - (row * 0.3 * (1 / subPlotRowCount)), // wild improvisation
+      y: 1 - row - row * 0.3 * (1 / subPlotRowCount), // wild improvisation
       xref: 'paper',
       xanchor: 'left',
       yref: 'paper',
@@ -296,7 +323,7 @@ function getSubplotHeaders(subPlotRowCount, names) {
 
 function IndicatorGraph(props) {
   const theme = useTheme();
-  const isServer = typeof window === "undefined";
+  const isServer = typeof window === 'undefined';
   if (isServer) {
     return null;
   }
@@ -306,7 +333,7 @@ function IndicatorGraph(props) {
     traces,
     goalTraces,
     trendTrace,
-    specification
+    specification,
   } = props;
 
   const Plot = dynamic(import('./Plot'));
@@ -347,20 +374,25 @@ function IndicatorGraph(props) {
 
   let mainTraces = [];
   let isComparison = false;
-  const subplotsNeeded = specification.axes.filter(a => ['comparison', 'categories'].includes(a[0])).length > 1;
-  const comparisonAxis = specification.axes.filter(a => a[0] === 'comparison');
-  const hasTimeDimension = specification.axes.filter(a => a[0] === 'time').length > 0;
-  const categoryCount = specification.axes.length > 0 ? specification.axes[0][1] : 0;
+  const subplotsNeeded =
+    specification.axes.filter((a) =>
+      ['comparison', 'categories'].includes(a[0])
+    ).length > 1;
+  const comparisonAxis = specification.axes.filter(
+    (a) => a[0] === 'comparison'
+  );
+  const hasTimeDimension =
+    specification.axes.filter((a) => a[0] === 'time').length > 0;
+  const categoryCount =
+    specification.axes.length > 0 ? specification.axes[0][1] : 0;
   let styleCount = null;
   if (comparisonAxis.length > 0) {
     styleCount = comparisonAxis[0][1] + 1;
     isComparison = true;
-  }
-  else if (!hasTimeDimension && !subplotsNeeded) {
+  } else if (!hasTimeDimension && !subplotsNeeded) {
     if (categoryCount > 1) {
       styleCount = specification.dimensions[0].categories.length;
-    }
-    else {
+    } else {
       styleCount = 1;
     }
   }
@@ -370,32 +402,44 @@ function IndicatorGraph(props) {
     plotColors.mainScale.shift();
   }
   mainTraces = createTraces(
-    traces, yRange.unit, plotColors, styleCount, categoryCount, hasTimeDimension, timeResolution
-    );
+    traces,
+    yRange.unit,
+    plotColors,
+    styleCount,
+    categoryCount,
+    hasTimeDimension,
+    timeResolution
+  );
 
   if (subplotsNeeded) {
     const categoryDimensions = specification.dimensions.slice(0, categoryCount);
     const organizationDimension = specification.dimensions[categoryCount];
     // Assume there is always type='aggregate' that doesn't get multiplied
     const combinationCount =
-      categoryDimensions.reduce(((p, c) => (p * (c.categories.length-1))), 1)
-      + categoryDimensions.length;
-    const subplotRowCount = Math.ceil(combinationCount/2);
+      categoryDimensions.reduce((p, c) => p * (c.categories.length - 1), 1) +
+      categoryDimensions.length;
+    const subplotRowCount = Math.ceil(combinationCount / 2);
     const comparisonCount = hasTimeDimension ? 2 : 1;
-    const subplotHeaderTitles = mainTraces.traces.filter((_,i) => (
-      (i % comparisonCount) == 0)
-    ).map(t => t._parentName);
-    mainTraces.layoutConfig.grid = { rows: subplotRowCount, columns: 2, pattern: 'independent' };
+    const subplotHeaderTitles = mainTraces.traces
+      .filter((_, i) => i % comparisonCount == 0)
+      .map((t) => t._parentName);
+    mainTraces.layoutConfig.grid = {
+      rows: subplotRowCount,
+      columns: 2,
+      pattern: 'independent',
+    };
     mainTraces.layoutConfig.yRange = [0, 100];
     mainTraces.layoutConfig.subplotCount = combinationCount;
-    mainTraces.layoutConfig.annotations = getSubplotHeaders(subplotRowCount, subplotHeaderTitles);
+    mainTraces.layoutConfig.annotations = getSubplotHeaders(
+      subplotRowCount,
+      subplotHeaderTitles
+    );
     mainTraces.layoutConfig.xTicksMax = mainTraces.traces[0].length;
     mainTraces.traces.forEach((t, idx) => {
-      const axisIndex = hasTimeDimension ? Math.floor(idx / 2) + 1: idx + 1;
+      const axisIndex = hasTimeDimension ? Math.floor(idx / 2) + 1 : idx + 1;
       if (!hasTimeDimension || idx > 1) {
         t.showlegend = false;
-      }
-      else {
+      } else {
         t.legendGroup = t.name = organizationDimension.categories[idx % 2].name;
       }
       if (axisIndex > 1) {
@@ -408,17 +452,18 @@ function IndicatorGraph(props) {
   const { layoutConfig, traces: plotlyData } = mainTraces;
 
   // add trend if defined
-  if (!isComparison && trendTrace) plotlyData.push({
-    type: 'scatter',
-    mode: 'lines',
-    line: {
-      width: 3,
-      color: plotColors.trend,
-      dash: 'dash',
-    },
-    //info: 'none',
-    ...trendTrace,
-  });
+  if (!isComparison && trendTrace)
+    plotlyData.push({
+      type: 'scatter',
+      mode: 'lines',
+      line: {
+        width: 3,
+        color: plotColors.trend,
+        dash: 'dash',
+      },
+      //info: 'none',
+      ...trendTrace,
+    });
 
   // add goals if defined
   if (!isComparison && goalTraces.length) {
@@ -457,13 +502,15 @@ function IndicatorGraph(props) {
     hasTimeDimension,
     subplotsNeeded
   );
-  const height = layoutConfig?.grid?.rows ?
-        layoutConfig.grid.rows * 300 :
-        450 + (!hasTimeDimension ? CATEGORY_XAXIS_LABEL_EXTRA_MARGIN : 0);
+  const height = layoutConfig?.grid?.rows
+    ? layoutConfig.grid.rows * 300
+    : 450 + (!hasTimeDimension ? CATEGORY_XAXIS_LABEL_EXTRA_MARGIN : 0);
 
   return (
-    <PlotContainer data-element="indicator-graph-plot-container"
-                   vizHeight={height}>
+    <PlotContainer
+      data-element="indicator-graph-plot-container"
+      vizHeight={height}
+    >
       <Plot
         data={plotlyData}
         layout={layout}

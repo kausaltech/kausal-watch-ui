@@ -24,7 +24,7 @@ const actionPropCompleted = {
   completion: 100,
 };
 
-const actionPropLate= {
+const actionPropLate = {
   identifier: '7',
   name: 'This action is Late. Action title goes here',
   status: {
@@ -34,7 +34,7 @@ const actionPropLate= {
   completion: 15,
 };
 
-const actionPropSeverelyLate= {
+const actionPropSeverelyLate = {
   identifier: '68',
   name: 'This action is Severely Late. Action title goes here',
   status: {
@@ -52,7 +52,13 @@ const ActionCards = () => {
   const theme = useContext(ThemeContext);
 
   return (
-    <div className="container" style={{ backgroundColor: theme.neutralLight, color: theme.themeColors.light }}>
+    <div
+      className="container"
+      style={{
+        backgroundColor: theme.neutralLight,
+        color: theme.themeColors.light,
+      }}
+    >
       <div className="row p-2 pm-5">
         <div className="col col-sm-8 col-md-6">
           <ActionHighlightCard
@@ -99,10 +105,18 @@ export const ActionStatusBars = () => {
         <ActionStatus identifier="late" name="Late" completion={25} />
       </div>
       <div className="col-6 p-5">
-        <ActionStatus identifier="severely_late" name="Severely Late" completion={10} />
+        <ActionStatus
+          identifier="severely_late"
+          name="Severely Late"
+          completion={10}
+        />
       </div>
       <div className="col-6 p-5">
-        <ActionStatus identifier="not_started" name="Not Started" completion={0} />
+        <ActionStatus
+          identifier="not_started"
+          name="Not Started"
+          completion={0}
+        />
       </div>
     </div>
   );

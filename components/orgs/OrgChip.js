@@ -26,21 +26,20 @@ const OrgTitle = styled.div`
 `;
 
 const OrgChip = React.forwardRef((props, ref) => {
-  const {
-    image,
-    name,
-    size } = props;
+  const { image, name, size } = props;
 
-    const IMAGE_SIZES = {
-      'sm': 's100',
-      'md': 's200',
-    }
+  const IMAGE_SIZES = {
+    sm: 's100',
+    md: 's200',
+  };
 
   return (
     <Tag ref={ref} {...props}>
-      <OrgAvatar src={image} size={IMAGE_SIZES[size]} alt=""/>
+      <OrgAvatar src={image} size={IMAGE_SIZES[size]} alt="" />
       <OrgName>
-        <OrgTitle weight={size==='sm' ? 'fontWeightNormal' : 'fontWeightBold'}>
+        <OrgTitle
+          weight={size === 'sm' ? 'fontWeightNormal' : 'fontWeightBold'}
+        >
           {name}
         </OrgTitle>
       </OrgName>
@@ -48,7 +47,7 @@ const OrgChip = React.forwardRef((props, ref) => {
   );
 });
 
-OrgChip.displayName = "OrgChip";
+OrgChip.displayName = 'OrgChip';
 
 OrgChip.defaultProps = {
   size: 'md',

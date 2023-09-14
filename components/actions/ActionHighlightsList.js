@@ -79,14 +79,16 @@ const ListHeader = styled(Col)`
 const ReactStrapCol = (props) => {
   const childProps = Object.assign(
     // remove the embed prop so it won't end up as a DOM attribute
-    {}, props, {embed: undefined, children: undefined}
+    {},
+    props,
+    { embed: undefined, children: undefined }
   );
-  return <Col {...childProps}>{props.children}</Col>
-}
+  return <Col {...childProps}>{props.children}</Col>;
+};
 
 const StyledCardContainer = styled(ReactStrapCol)`
   margin-bottom: ${(props) => props.theme.spaces.s150};
-  ${(props) => props.embed.active ? '' : 'transition: all 0.5s ease;'}
+  ${(props) => (props.embed.active ? '' : 'transition: all 0.5s ease;')}
 
   .card {
     height: 100%;
@@ -99,22 +101,18 @@ const StyledCardContainer = styled(ReactStrapCol)`
 
 const ConditionalLazyLoad = (props) => {
   if (props.embed?.active) {
-    return <>{ props.children }</>;
+    return <>{props.children}</>;
   }
-  return (
-    <LazyLoad height={300}>
-      {props.children}
-    </LazyLoad>
-  );
-}
+  return <LazyLoad height={300}>{props.children}</LazyLoad>;
+};
 
 const CardContainer = (props) => {
-  return <StyledCardContainer {...props}>
-    <ConditionalLazyLoad {...props}>
-      {props.children}
-    </ConditionalLazyLoad>
-  </StyledCardContainer>
-}
+  return (
+    <StyledCardContainer {...props}>
+      <ConditionalLazyLoad {...props}>{props.children}</ConditionalLazyLoad>
+    </StyledCardContainer>
+  );
+};
 
 function ActionCardList({ t, actions, plan, displayHeader }) {
   // Components which use the EmbedContext support embedding
@@ -122,9 +120,11 @@ function ActionCardList({ t, actions, plan, displayHeader }) {
 
   return (
     <Row>
-      { displayHeader && <ListHeader xs="12">
-        <h2>{ t('recently-updated-actions', getActionTermContext(plan)) }</h2>
-      </ListHeader> }
+      {displayHeader && (
+        <ListHeader xs="12">
+          <h2>{t('recently-updated-actions', getActionTermContext(plan))}</h2>
+        </ListHeader>
+      )}
       {actions.map((item) => (
         <CardContainer
           xs="12"
@@ -141,17 +141,16 @@ function ActionCardList({ t, actions, plan, displayHeader }) {
           />
         </CardContainer>
       ))}
-      {!embed.active &&
+      {!embed.active && (
         <Col xs="12" className="mt-5 mb-5">
           <ActionListLink>
             <Button color="primary" tag="a">
-              { t('see-all-actions', getActionTermContext(plan)) }
-              {' '}
+              {t('see-all-actions', getActionTermContext(plan))}{' '}
               <Icon name="arrowRight" />
             </Button>
           </ActionListLink>
         </Col>
-      }
+      )}
     </Row>
   );
 }
@@ -166,9 +165,7 @@ ActionCardList.propTypes = {
 };
 
 function ActionHighlightsList(props) {
-  const {
-    plan, count, displayHeader
-  } = props;
+  const { plan, count, displayHeader } = props;
 
   const { t } = useTranslation();
 
@@ -182,8 +179,18 @@ function ActionHighlightsList(props) {
     <Query query={GET_ACTION_LIST} variables={queryParams}>
       {({ data, loading, error }) => {
         if (loading) return <ContentLoader />;
-        if (error) return <p>{ t('error-loading-actions', getActionTermContext(plan)) }</p>;
-        return <ActionCardList t={t} actions={data.planActions} plan={plan} displayHeader={displayHeader ?? true}/>;
+        if (error)
+          return (
+            <p>{t('error-loading-actions', getActionTermContext(plan))}</p>
+          );
+        return (
+          <ActionCardList
+            t={t}
+            actions={data.planActions}
+            plan={plan}
+            displayHeader={displayHeader ?? true}
+          />
+        );
       }}
     </Query>
   );

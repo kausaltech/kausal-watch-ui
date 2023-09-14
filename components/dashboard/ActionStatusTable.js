@@ -18,11 +18,10 @@ const TableWrapper = styled.div`
   overflow-x: auto;
 
   padding: 0 0 ${(props) => props.theme.spaces.s100} 0;
-  background-image:
+  background-image: linear-gradient(to right, white, white),
     linear-gradient(to right, white, white),
-    linear-gradient(to right, white, white),
-    linear-gradient(to right, rgba(0,0,0,.25), rgba(255,255,255,0)),
-    linear-gradient(to left, rgba(0,0,0,.25), rgba(255,255,255,0));
+    linear-gradient(to right, rgba(0, 0, 0, 0.25), rgba(255, 255, 255, 0)),
+    linear-gradient(to left, rgba(0, 0, 0, 0.25), rgba(255, 255, 255, 0));
   background-position: left center, right center, left center, right center;
   background-repeat: no-repeat;
   background-color: white;
@@ -47,20 +46,18 @@ const ToolBar = styled.div`
   margin-bottom: ${(props) => props.theme.spaces.s050};
 `;
 
-const ResetSorting = styled.div`
-`;
-
+const ResetSorting = styled.div``;
 
 const StyledTableHeader = styled.th`
   cursor: pointer;
-  paddingRight: 15;
+  paddingright: 15;
 `;
 
 const HeaderContentWrapper = styled.div`
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
-  text-decoration: ${(props) => props.selected ? 'underline' : null};
+  text-decoration: ${(props) => (props.selected ? 'underline' : null)};
   align-items: flex-end;
 `;
 
@@ -73,11 +70,13 @@ const TableSortingIcon = styled(Icon)`
 const Tooltip = styled.div`
   background: ${(props) => props.theme.themeColors.white};
   color: ${(props) => props.theme.themeColors.black};
-  padding: ${(props) => props.theme.spaces.s050} ${(props) => props.theme.spaces.s100};
+  padding: ${(props) => props.theme.spaces.s050}
+    ${(props) => props.theme.spaces.s100};
   font-size: ${(props) => props.theme.fontSizeSm};
   font-family: ${(props) => props.theme.fontFamilyTiny};
   border-radius: 4px;
-  box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px,
+    rgba(0, 0, 0, 0.22) 0px 10px 10px;
 
   &[data-popper-placement^='top'] > div {
     bottom: -4px;
@@ -153,56 +152,61 @@ function processAction(actionIn, orgMap) {
   return action;
 }
 
-
-
-const SortableTableHeader = ({children, headerKey, sort, onClick}) => {
-  const selected = (sort.key == headerKey);
-  const iconName = selected ?
-    (sort.direction ?? 1) === 1 ? 'sortDown' : 'sortUp' :
-    'sort'
+const SortableTableHeader = ({ children, headerKey, sort, onClick }) => {
+  const selected = sort.key == headerKey;
+  const iconName = selected
+    ? (sort.direction ?? 1) === 1
+      ? 'sortDown'
+      : 'sortUp'
+    : 'sort';
   return (
     <StyledTableHeader
       onClick={onClick}
       scope="col"
-      aria-sort={selected ? (sort.direction === 1 ? 'ascending' : 'descending') : 'none'}
+      aria-sort={
+        selected ? (sort.direction === 1 ? 'ascending' : 'descending') : 'none'
+      }
     >
       <HeaderContentWrapper selected={selected}>
-        <div>
-          { children }
-        </div>
-        <TableSortingIcon name={iconName} selected={selected} aria-hidden="true" />
+        <div>{children}</div>
+        <TableSortingIcon
+          name={iconName}
+          selected={selected}
+          aria-hidden="true"
+        />
       </HeaderContentWrapper>
     </StyledTableHeader>
   );
-}
+};
 
 const preprocessForSorting = (key, items, hasImplementationPhases) => {
-  const values = items.map(item => item[key]);
+  const values = items.map((item) => item[key]);
   switch (key) {
-  case 'updatedAt':
-    const [x, y] = values;
-    return [y, x];
-  case 'implementationPhase':
-    return hasImplementationPhases ?
-      items.map(item => item[key]?.order) :
-      items.map(item => actionStatusOrder(item.status));
-  default:
-    return values;
+    case 'updatedAt':
+      const [x, y] = values;
+      return [y, x];
+    case 'implementationPhase':
+      return hasImplementationPhases
+        ? items.map((item) => item[key]?.order)
+        : items.map((item) => actionStatusOrder(item.status));
+    default:
+      return values;
   }
-}
+};
 
 const ActionStatusTable = (props) => {
-  const { actions, orgs, plan, enableExport, planViewUrl, showUpdateStatus } = props;
+  const { actions, orgs, plan, enableExport, planViewUrl, showUpdateStatus } =
+    props;
 
   const orgMap = new Map(orgs.map((org) => [org.id, org]));
   const theme = useTheme();
-  const [ sort, setSort ] = useState({key: 'order', direction: 1});
+  const [sort, setSort] = useState({ key: 'order', direction: 1 });
   const { key, direction } = sort;
   const [showTooltip, setShowTooltip] = useState(false);
   const [referenceElement, setReferenceElement] = useState(null);
   const [popperElement, setPopperElement] = useState(null);
   const [arrowElement, setArrowElement] = useState(null);
-  const [popperContent, setPopperContent] = useState("null");
+  const [popperContent, setPopperContent] = useState('null');
   const { styles, attributes } = usePopper(referenceElement, popperElement, {
     placement: 'top',
     modifiers: [
@@ -212,16 +216,13 @@ const ActionStatusTable = (props) => {
   });
   const hasImplementationPhases = plan.actionImplementationPhases?.length > 0;
 
-
-  const comparator = (g1, g2) =>  {
+  const comparator = (g1, g2) => {
     let [v1, v2] = preprocessForSorting(key, [g1, g2], hasImplementationPhases);
-    const val = (
-      v1 == v2 ? 0
-        : (v1 == null || (v2 > v1)) ? -1 : 1
-    );
-    return (direction === 1 ? val : -val);
+    const val = v1 == v2 ? 0 : v1 == null || v2 > v1 ? -1 : 1;
+    return direction === 1 ? val : -val;
   };
-  const sortedActions = [...actions].sort(comparator)
+  const sortedActions = [...actions]
+    .sort(comparator)
     .map((action) => processAction(action, orgMap));
 
   const { showResponsibles, showIndicators } = theme.settings.dashboard;
@@ -234,25 +235,25 @@ const ActionStatusTable = (props) => {
   showColumn.updateStatus = showUpdateStatus;
 
   const clickHandler = (key) => () => {
-    let direction = 1
+    let direction = 1;
     if (key === sort.key) {
       direction -= sort.direction;
     }
-    setSort({key, direction});
-  }
+    setSort({ key, direction });
+  };
 
   const { t } = useTranslation(['common', 'actions']);
-  const directionLabel = direction === 1 ? t('common:ascending') : t('common:descending');
+  const directionLabel =
+    direction === 1 ? t('common:ascending') : t('common:descending');
   const columnLabel = {
     identifier: t('actions:action-id'),
     name: t('actions:action-name-title', getActionTermContext(plan)),
     updatedAt: t('actions:action-last-updated'),
-    implementationPhase: t('actions:action-implementation-phase')
-
+    implementationPhase: t('actions:action-implementation-phase'),
   };
 
   const handleTooltip = (target, content) => {
-    if (!target) setShowTooltip(false)
+    if (!target) setShowTooltip(false);
     else {
       setPopperContent(content);
       setReferenceElement(target);
@@ -262,73 +263,98 @@ const ActionStatusTable = (props) => {
 
   return (
     <>
-    <ToolBar>
-      <ResetSorting>
-        { sort.key !== 'order' && (
-          <Button outline size="sm" color="primary" onClick={clickHandler('order')}>
-            {t('common:default-sorting')}
-          </Button>
-        ) }
-      </ResetSorting>
-      { enableExport && <ActionStatusExport actions={actions} actionStatuses={plan.actionStatuses} /> }
-    </ToolBar>
-    <TableWrapper>
-    <DashTable
-      aria-rowcount={sortedActions.length}
-    >
-      <thead>
-        <tr>
-          { showColumn.logos && <th className="logo-column" />}
-          { showColumn.actionIdentifiers && <th><abbr>{ columnLabel.identifier }</abbr></th> }
-          <SortableTableHeader sort={sort} headerKey="name" onClick={clickHandler('name')}>
-            { columnLabel.name }
-          </SortableTableHeader>
-          <SortableTableHeader sort={sort} headerKey="implementationPhase"
-                               onClick={clickHandler('implementationPhase')}>
-            { columnLabel.implementationPhase }
-          </SortableTableHeader>
-          <th>{ t('actions:action-tasks') }</th>
-          { showColumn.responsibles && <th>{t('actions:action-responsibles-short')}</th> }
-          { showColumn.impacts && <th>{t('actions:action-impact')}</th> }
-          { showColumn.indicators && <th>{ t('common:indicators') }</th> }
-          { showColumn.updateStatus && (
-            <SortableTableHeader sort={sort} headerKey="updatedAt" onClick={clickHandler('updatedAt')}>
-              { columnLabel.updatedAt }
-            </SortableTableHeader>
+      <ToolBar>
+        <ResetSorting>
+          {sort.key !== 'order' && (
+            <Button
+              outline
+              size="sm"
+              color="primary"
+              onClick={clickHandler('order')}
+            >
+              {t('common:default-sorting')}
+            </Button>
           )}
-        </tr>
-      </thead>
-      <tbody>
-        {sortedActions.map((item) => (
-          <ActionTableRow
-            item={item}
-            key={item.id}
-            planViewUrl={planViewUrl}
-            plan={plan}
-            hasResponsibles={showResponsibles}
-            hasImpacts={showColumn.impacts}
-            hasIndicators={showColumn.indicators}
-            hasImplementationPhases={hasImplementationPhases}
-            hasUpdateStatus={showColumn.updateStatus}
-            popperRef={handleTooltip}
+        </ResetSorting>
+        {enableExport && (
+          <ActionStatusExport
+            actions={actions}
+            actionStatuses={plan.actionStatuses}
           />
-        ))}
-      </tbody>
-    </DashTable>
-    { showTooltip && (
-      <Tooltip
-        ref={setPopperElement}
-        style={styles.popper}
-        id="table-tooltip-content"
-        role="tooltip"
-        {...attributes.popper}
-      >
-        {popperContent}
-        <Arrow ref={setArrowElement} style={styles.arrow} />
-      </Tooltip>
-    )}
-  </TableWrapper>
-  </>
+        )}
+      </ToolBar>
+      <TableWrapper>
+        <DashTable aria-rowcount={sortedActions.length}>
+          <thead>
+            <tr>
+              {showColumn.logos && <th className="logo-column" />}
+              {showColumn.actionIdentifiers && (
+                <th>
+                  <abbr>{columnLabel.identifier}</abbr>
+                </th>
+              )}
+              <SortableTableHeader
+                sort={sort}
+                headerKey="name"
+                onClick={clickHandler('name')}
+              >
+                {columnLabel.name}
+              </SortableTableHeader>
+              <SortableTableHeader
+                sort={sort}
+                headerKey="implementationPhase"
+                onClick={clickHandler('implementationPhase')}
+              >
+                {columnLabel.implementationPhase}
+              </SortableTableHeader>
+              <th>{t('actions:action-tasks')}</th>
+              {showColumn.responsibles && (
+                <th>{t('actions:action-responsibles-short')}</th>
+              )}
+              {showColumn.impacts && <th>{t('actions:action-impact')}</th>}
+              {showColumn.indicators && <th>{t('common:indicators')}</th>}
+              {showColumn.updateStatus && (
+                <SortableTableHeader
+                  sort={sort}
+                  headerKey="updatedAt"
+                  onClick={clickHandler('updatedAt')}
+                >
+                  {columnLabel.updatedAt}
+                </SortableTableHeader>
+              )}
+            </tr>
+          </thead>
+          <tbody>
+            {sortedActions.map((item) => (
+              <ActionTableRow
+                item={item}
+                key={item.id}
+                planViewUrl={planViewUrl}
+                plan={plan}
+                hasResponsibles={showResponsibles}
+                hasImpacts={showColumn.impacts}
+                hasIndicators={showColumn.indicators}
+                hasImplementationPhases={hasImplementationPhases}
+                hasUpdateStatus={showColumn.updateStatus}
+                popperRef={handleTooltip}
+              />
+            ))}
+          </tbody>
+        </DashTable>
+        {showTooltip && (
+          <Tooltip
+            ref={setPopperElement}
+            style={styles.popper}
+            id="table-tooltip-content"
+            role="tooltip"
+            {...attributes.popper}
+          >
+            {popperContent}
+            <Arrow ref={setArrowElement} style={styles.arrow} />
+          </Tooltip>
+        )}
+      </TableWrapper>
+    </>
   );
 };
 

@@ -7,7 +7,10 @@ import { withTranslation } from '../../common/i18n';
 function InsightFilter(props) {
   const { nodes, activeFilterNode, t } = props;
   const options = nodes
-    .filter(node => node.indicator_level === 'strategic' || node.id == activeFilterNode)
+    .filter(
+      (node) =>
+        node.indicator_level === 'strategic' || node.id == activeFilterNode
+    )
     .map((node) => {
       const out = {};
       out.id = node.id;
@@ -29,14 +32,14 @@ function InsightFilter(props) {
 
   let defaultSelected;
   if (activeFilterNode) {
-    defaultSelected = options.filter(opt => opt.id === activeFilterNode);
+    defaultSelected = options.filter((opt) => opt.id === activeFilterNode);
   } else {
     defaultSelected = [];
   }
 
   return (
     <div className="mb-4">
-      <h5>{ t('insight-filter-label') }</h5>
+      <h5>{t('insight-filter-label')}</h5>
 
       <Typeahead
         id="insight-filter"

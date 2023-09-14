@@ -1,27 +1,27 @@
-
 export interface OrganizationInput<Type> {
-  id: string,
+  id: string;
   classification?: {
-    name: string,
-  },
+    name: string;
+  };
   parent?: {
-    id: string
-  },
-  actionCount: number,
-  contactPersonCount: number,
-};
+    id: string;
+  };
+  actionCount: number;
+  contactPersonCount: number;
+}
 
-export interface OrganizationHierarchyMember<Type> extends Omit<OrganizationInput<Type>, 'parent'> {
-  descendantActionCount: number,
-  descendantContactPersonCount: number,
-  depth: number,
-  parent: null | this,
-  children: this[],
-};
+export interface OrganizationHierarchyMember<Type>
+  extends Omit<OrganizationInput<Type>, 'parent'> {
+  descendantActionCount: number;
+  descendantContactPersonCount: number;
+  depth: number;
+  parent: null | this;
+  children: this[];
+}
 
-export function constructOrgHierarchy<Type extends OrganizationHierarchyMember<Type>>(
-  orgsIn: OrganizationInput<Type>[]
-) {
+export function constructOrgHierarchy<
+  Type extends OrganizationHierarchyMember<Type>
+>(orgsIn: OrganizationInput<Type>[]) {
   const orgsById = new Map();
   const skipClasses = ['Hallitus', 'Valtuusto', 'Lautakunta', 'Jaosto'];
 
@@ -82,38 +82,37 @@ export function constructOrgHierarchy<Type extends OrganizationHierarchyMember<T
   return orgs;
 }
 
-
-export interface OrgMappedAction<OrgType extends OrganizationHierarchyMember<OrgType>> {
+export interface OrgMappedAction<
+  OrgType extends OrganizationHierarchyMember<OrgType>
+> {
   responsibleParties: {
-    organization: OrgType
-  }[]
+    organization: OrgType;
+  }[];
 }
 
 export interface ActionInput {
   responsibleParties: {
     organization: {
-      id: string,
-    }
-  }[]
+      id: string;
+    };
+  }[];
 }
 
 export function mapResponsibleParties<
   ActionType extends OrgMappedAction<OrgType>,
   OrgType extends OrganizationHierarchyMember<OrgType>
->(
-  actions: ActionInput[], orgs: OrgType[]
-) {
+>(actions: ActionInput[], orgs: OrgType[]) {
   const orgsById = new Map(orgs.map((org) => [org.id, org]));
   const mappedActions: ActionType[] = actions.map((action) => {
     const rps = action.responsibleParties.map((rp) => {
       const organization = orgsById.get(rp.organization.id);
       const mappedRp: ActionType['responsibleParties'][0] = {
         ...rp,
-        organization
-      }
+        organization,
+      };
       return mappedRp;
     });
-    const mappedAction: ActionType = {...action, responsibleParties: rps};
+    const mappedAction: ActionType = { ...action, responsibleParties: rps };
     return mappedAction;
   });
   return mappedActions;

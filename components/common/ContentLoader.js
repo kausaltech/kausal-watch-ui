@@ -6,7 +6,8 @@ import { Spinner } from 'reactstrap';
 import { withTranslation } from '../../common/i18n';
 
 const Loader = styled.div`
-  padding: ${(props) => props.theme.spaces.s800} ${(props) => props.theme.spaces.s300};
+  padding: ${(props) => props.theme.spaces.s800}
+    ${(props) => props.theme.spaces.s300};
   text-align: center;
 `;
 
@@ -52,7 +53,7 @@ class ContentLoader extends React.Component {
         <StyledSpinner type="grow" className="mx-1" />
         <StyledSpinner type="grow" className="mx-1" />
         <StyledSpinner type="grow" className="mx-1" />
-        <div className="visually-hidden">{ t('loading') }</div>
+        <div className="visually-hidden">{t('loading')}</div>
       </Loader>
     );
   }

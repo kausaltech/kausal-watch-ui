@@ -3,42 +3,45 @@ import fs from 'fs';
 import { initializeApolloClient } from 'common/apollo';
 import { gql } from '@apollo/client';
 
-const Sitemap  = () => null;
+const Sitemap = () => null;
 
 const EXCLUDE_FROM_STATIC_SITEMAP = [
-  "_app.js",
-  "_app.tsx",
-  "_document.js",
-  "_error.js",
-  "index.js",
-  "[...slug].js",
-  "sitemap.xml.js",
-  "dashboard",
+  '_app.js',
+  '_app.tsx',
+  '_document.js',
+  '_error.js',
+  'index.js',
+  '[...slug].js',
+  'sitemap.xml.js',
+  'dashboard',
 ];
 
-const EXCLUDE_FROM_SITEMAP = [
-  'impact-groups'
-];
+const EXCLUDE_FROM_SITEMAP = ['impact-groups'];
 
-function getStaticPages () {
+function getStaticPages() {
   return fs
     .readdirSync('pages')
     .filter((staticPage) => {
       return !EXCLUDE_FROM_STATIC_SITEMAP.includes(staticPage);
-    }).map(p => `/${p}`);
+    })
+    .map((p) => `/${p}`);
 }
 
-function getDynamicPages (data) {
-  const contentPages = data.plan.pages.map(p => p.urlPath).filter(u => !EXCLUDE_FROM_SITEMAP.includes(u));
+function getDynamicPages(data) {
+  const contentPages = data.plan.pages
+    .map((p) => p.urlPath)
+    .filter((u) => !EXCLUDE_FROM_SITEMAP.includes(u));
   contentPages.push('actions?view=dashboard');
   const result = [
     contentPages,
-    data.plan.actions.map(p => `actions/${p.identifier}`),
-    data.planIndicators.map(i => `indicators/${i.id}`),
+    data.plan.actions.map((p) => `actions/${p.identifier}`),
+    data.planIndicators.map((i) => `indicators/${i.id}`),
   ];
-  const impactGroups = data.plan.impactGroups.map(g => g.identifier);
+  const impactGroups = data.plan.impactGroups.map((g) => g.identifier);
   if (impactGroups.length > 0) {
-    result.push(impactGroups.concat(['_others']).map(g => `dashboard?group=${g}`));
+    result.push(
+      impactGroups.concat(['_others']).map((g) => `dashboard?group=${g}`)
+    );
   }
   return result;
 }
@@ -59,17 +62,25 @@ function urlElement(baseURL, url, priority) {
 }
 
 async function getSiteData(planIdentifier) {
-  const apollo = initializeApolloClient({planIdentifier});
+  const apollo = initializeApolloClient({ planIdentifier });
   let plan;
 
   const QUERY = gql`
     query PlanSite($identifier: ID!) {
       plan(id: $identifier) {
-        pages { urlPath },
-        actions { identifier },
-        impactGroups { identifier }
+        pages {
+          urlPath
+        }
+        actions {
+          identifier
+        }
+        impactGroups {
+          identifier
+        }
       }
-      planIndicators(plan: $identifier) { id }
+      planIndicators(plan: $identifier) {
+        id
+      }
     }
   `;
 
@@ -81,14 +92,16 @@ async function getSiteData(planIdentifier) {
   });
   if (error) throw error;
   if (!data) {
-    throw new Error(`No plan found for identifier '${planIdentifier}'`)
+    throw new Error(`No plan found for identifier '${planIdentifier}'`);
   }
   return data;
 }
 
-
 export const getServerSideProps = async ({ req, res }) => {
-  const { planIdentifier, currentURL: { baseURL } } = req;
+  const {
+    planIdentifier,
+    currentURL: { baseURL },
+  } = req;
 
   const data = await getSiteData(planIdentifier, req);
   const pageGroups = getDynamicPages(data, baseURL);
@@ -103,7 +116,7 @@ export const getServerSideProps = async ({ req, res }) => {
 
   pageGroups.push(staticPages);
   const priorityStep = 1 / pageGroups.length;
-  let urls = []
+  let urls = [];
   let priority = 1;
   for (let group of pageGroups) {
     for (let url of group) {
@@ -120,7 +133,7 @@ export const getServerSideProps = async ({ req, res }) => {
     </urlset>
   `;
 
-  res.setHeader("Content-Type", "text/xml");
+  res.setHeader('Content-Type', 'text/xml');
   res.write(sitemap);
   res.end();
 

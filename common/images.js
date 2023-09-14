@@ -51,39 +51,39 @@ const images = {};
 
 images.fragments = {
   multiUseImage: gql`
-  fragment MultiUseImageFragment on Image {
-    title
-    altText
-    imageCredit
-    width
-    height
-    focalPointX
-    focalPointY
-    large: rendition(size:"1600x600") {
-      id
+    fragment MultiUseImageFragment on Image {
+      title
+      altText
+      imageCredit
       width
       height
-      src
+      focalPointX
+      focalPointY
+      large: rendition(size: "1600x600") {
+        id
+        width
+        height
+        src
+      }
+      small: rendition(size: "600x300") {
+        id
+        width
+        height
+        src
+      }
+      social: rendition(size: "1200x627") {
+        id
+        width
+        height
+        src
+      }
+      rendition(size: "300x200") {
+        id
+        width
+        height
+        src
+      }
     }
-    small: rendition(size:"600x300") {
-      id
-      width
-      height
-      src
-    }
-    social: rendition(size:"1200x627") {
-      id
-      width
-      height
-      src
-    }
-    rendition(size:"300x200") {
-      id
-      width
-      height
-      src
-    }
-  }
   `,
 };
 

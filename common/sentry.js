@@ -43,7 +43,7 @@ function captureException(err, ctx) {
       scope.setExtra('http_status', res.statusCode);
     }
 
-    const isServer = typeof window === "undefined";
+    const isServer = typeof window === 'undefined';
     if (!isServer) {
       scope.setTag('ssr', false);
       scope.setExtra('query', query);
@@ -62,7 +62,9 @@ function captureException(err, ctx) {
     }
 
     if (errorInfo) {
-      Object.keys(errorInfo).forEach(key => scope.setExtra(key, errorInfo[key]));
+      Object.keys(errorInfo).forEach((key) =>
+        scope.setExtra(key, errorInfo[key])
+      );
     }
   });
 
