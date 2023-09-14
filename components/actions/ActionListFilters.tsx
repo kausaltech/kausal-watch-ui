@@ -1012,7 +1012,7 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
           filters.push(new CategoryFilter(block, filterByCommonCategory));
           break;
         case 'ActionAttributeTypeFilterBlock':
-          const allowedFormats = ['ORDERED_CHOICE', 'OPTIONAL_CHOICE'];
+          const allowedFormats = ['ORDERED_CHOICE', 'UNORDERED_CHOICE', 'OPTIONAL_CHOICE'];
           if (!allowedFormats.includes(block.attributeType.format)) {
             console.error(
               'Invalid format for ActionAttributeTypeFilterBlock: ',
