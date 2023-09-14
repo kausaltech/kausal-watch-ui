@@ -145,7 +145,6 @@ const GlobalStyle = createGlobalStyle`
   }
 
   .richtext-image {
-
     margin: ${(props) => props.theme.spaces.s300} auto;
 
     &.full-width {
@@ -157,12 +156,14 @@ const GlobalStyle = createGlobalStyle`
     &.left {
       display: inline-block;
       margin: ${(props) => props.theme.spaces.s150};
+      margin-left: 0;
       float: left;
     }
 
     &.right {
       display: inline-block;
       margin: ${(props) => props.theme.spaces.s150};
+      margin-right: 0;
       float: right;
     }
   }
