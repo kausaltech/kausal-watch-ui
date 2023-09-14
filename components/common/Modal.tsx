@@ -82,8 +82,8 @@ const Modal = ({ isOpen, onClose, header, helpText, children }: ModalProps) => {
       {isOpen && (
         <ModalOverlay data-testid='modal-overlay' onClick={closeModalOnOverlayClick}>
           <ModalBody ref={modalRef}>
-            <ModalHeader theme={theme}>{header}</ModalHeader>
-            <ModalSubHeader theme={theme}>{helpText}</ModalSubHeader>
+            <ModalHeader>{header}</ModalHeader>
+            <ModalSubHeader>{helpText}</ModalSubHeader>
             <CloseButton data-testid='close-button' onClick={() => onClose()}>
               <Icon name='times' />
             </CloseButton>

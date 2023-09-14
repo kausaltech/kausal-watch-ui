@@ -1,6 +1,7 @@
 import React from 'react';
-import { render, fireEvent, screen } from '@testing-library/react';
-import Modal from './Modal';  
+import { fireEvent, screen } from '@testing-library/react';
+import { render } from '../test-utils';
+import Modal from '../../components/common/Modal';  
 
 describe('Modal component', () => {
   const header = 'Test Header';
