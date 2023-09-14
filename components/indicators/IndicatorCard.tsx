@@ -3,14 +3,26 @@ import PropTypes from 'prop-types';
 import { Card, CardBody, CardTitle } from 'reactstrap';
 import { readableColor } from 'polished';
 import styled from 'styled-components';
+import { TFunction } from 'next-i18next';
 import dayjs from 'common/dayjs';
 import { getActionTermContext, useTranslation } from 'common/i18n';
 import { IndicatorLink } from 'common/links';
 import { usePlan } from 'context/plan';
 
-const IndicatorValue = styled.div`
+const IndicatorValueDisplay = styled.div`
   margin-top: 1em;
   font-weight: ${(props) => props.theme.fontWeightBold};
+`;
+
+const IndicatorValues = styled.div`
+  display: flex;
+  gap: ${(props) => props.theme.spaces.s150};
+`;
+
+const IndicatorValueType = styled.div`
+  font-size: ${(props) => props.theme.fontSizeSm};
+  font-family: ${(props) => props.theme.fontFamilyTiny};
+  font-weight: ${(props) => props.theme.fontWeightNormal};
 `;
 
 const IndicatorValueUnit = styled.span`
@@ -90,11 +102,7 @@ const IndicatorTitle = styled(CardTitle)`
   font-weight: ${(props) => props.theme.fontWeightBold};
 `;
 
-function IndicatorLatestValue(props) {
-  const { latestValue, date, unit, resolution } = props;
-
-  if (!latestValue) return null;
-
+const formatTime = (date, resolution) => {
   const time = dayjs(date, 'YYYY-MM-DD');
   let tagVal;
   let formattedTime;
@@ -110,13 +118,53 @@ function IndicatorLatestValue(props) {
     tagVal = time.format(); // ISO format
   }
 
+  return { formattedTime, tagVal };
+};
+
+interface IndicatorValueProps {
+  latestValue: string | null;
+  date: string;
+  unit: string;
+  resolution: string;
+  goalValue?: string | null;
+  goalDate?: string | null;
+  t: TFunction;
+}
+
+function IndicatorValue({
+  latestValue,
+  date,
+  unit,
+  resolution,
+  goalValue = null,
+  goalDate = null,
+  t,
+}: IndicatorValueProps) {
+  if (!latestValue) return null;
+
   return (
-    <IndicatorValue>
-      {latestValue} <IndicatorValueUnit>{unit}</IndicatorValueUnit>
-      <IndicatorValueTime>
-        <time dateTime={tagVal}>{formattedTime}</time>
-      </IndicatorValueTime>
-    </IndicatorValue>
+    <IndicatorValues>
+      <IndicatorValueDisplay>
+        <IndicatorValueType>{t('indicator-latest-value')}</IndicatorValueType>
+        {latestValue} <IndicatorValueUnit>{unit}</IndicatorValueUnit>
+        <IndicatorValueTime>
+          <time dateTime={formatTime(date, resolution).tagVal}>
+            {formatTime(date, resolution).formattedTime}
+          </time>
+        </IndicatorValueTime>
+      </IndicatorValueDisplay>
+      {goalValue && (
+        <IndicatorValueDisplay>
+          <IndicatorValueType>{t('indicator-goal')}</IndicatorValueType>
+          {goalValue} <IndicatorValueUnit>{unit}</IndicatorValueUnit>
+          <IndicatorValueTime>
+            <time dateTime={formatTime(goalDate, resolution).tagVal}>
+              {formatTime(goalDate, resolution).formattedTime}
+            </time>
+          </IndicatorValueTime>
+        </IndicatorValueDisplay>
+      )}
+    </IndicatorValues>
   );
 }
 
@@ -132,17 +180,40 @@ function CardLink(props) {
   return <>{children}</>;
 }
 
-function IndicatorCard(props) {
-  const { level, objectid, name, number, latestValue, resolution } = props;
+interface IndicatorCardProps {
+  level?: string | null;
+  objectid: string;
+  name: string;
+  number?: number | null;
+  latestValue?: {
+    value: number;
+    date: string;
+    unit: string;
+  } | null;
+  resolution: string;
+  goalValue?: {
+    value: number;
+    date: string;
+    unit: string;
+  } | null;
+}
+
+function IndicatorCard({
+  level = null,
+  objectid,
+  name,
+  number = null,
+  latestValue = null,
+  resolution = 'day',
+  goalValue = null,
+}: IndicatorCardProps) {
   const plan = usePlan();
   const { t, i18n } = useTranslation();
 
   // FIXME: It sucks that we only use the context for the translation key 'action'
   const indicatorType =
     level === 'action' ? t('action', getActionTermContext(plan)) : t(level);
-  const formattedValue = latestValue
-    ? latestValue.value.toLocaleString(i18n.language)
-    : null;
+
   return (
     <CardLink level={level} indicatorId={objectid}>
       <Indicator level={level}>
@@ -155,11 +226,16 @@ function IndicatorCard(props) {
             </IndicatorTitle>
           </div>
           {latestValue && (
-            <IndicatorLatestValue
-              latestValue={formattedValue}
+            <IndicatorValue
+              latestValue={latestValue.value.toLocaleString(i18n.language)}
               date={latestValue.date}
               unit={latestValue.unit}
               resolution={resolution}
+              goalValue={
+                goalValue ? goalValue.value.toLocaleString(i18n.language) : null
+              }
+              goalDate={goalValue ? goalValue.date : null}
+              t={t}
             />
           )}
         </CardBody>
@@ -167,26 +243,5 @@ function IndicatorCard(props) {
     </CardLink>
   );
 }
-
-IndicatorCard.defaultProps = {
-  number: null,
-  level: null,
-  latestValue: null,
-  resolution: 'day',
-};
-
-IndicatorCard.propTypes = {
-  t: PropTypes.func,
-  level: PropTypes.string,
-  objectid: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
-  number: PropTypes.number,
-  latestValue: PropTypes.shape({
-    value: PropTypes.number,
-    date: PropTypes.string,
-    unit: PropTypes.string,
-  }),
-  resolution: PropTypes.string,
-};
 
 export default IndicatorCard;

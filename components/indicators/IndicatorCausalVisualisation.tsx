@@ -6,8 +6,8 @@ import { aplans } from 'common/api';
 import { Alert } from 'reactstrap';
 import { captureException } from 'common/sentry';
 import ContentLoader from 'components/common/ContentLoader';
-import IndicatorCard from './IndicatorCard';
-import Connector from './Connector';
+import IndicatorCard from 'components/indicators/IndicatorCard';
+import Connector from 'components/indicators/Connector';
 
 const CausalChain = styled.div`
   background-color: ${(props) => props.theme.themeColors.light};
@@ -134,6 +134,8 @@ function createChain(nodes, theme) {
   const gridHeight = getGridHeight(nodes);
   let columnIndicators = nodes;
 
+  const indicatorGoal = null; //FIXME: get goal value from API
+
   while (columnIndicators.length !== 0) {
     const children: ReactElement[] = [];
 
@@ -159,6 +161,7 @@ function createChain(nodes, theme) {
             key={indicator.id}
             latestValue={indicator.latest_value}
             resolution={indicator.time_resolution}
+            goalValue={indicatorGoal}
           />
           {connectionsTo}
         </Indicator>
