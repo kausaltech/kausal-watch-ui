@@ -3,12 +3,11 @@ import getConfig from 'next/config';
 import GET_PLAN_CONTEXT from './queries/plan';
 import type { PlanContextFragment } from 'common/__generated__/graphql';
 
-
 export type PlanContextType = PlanContextFragment;
 
 export function customizePlan(plan: PlanContextType): PlanContextType {
   const { publicRuntimeConfig } = getConfig();
-  const features = {...plan.features};
+  const features = { ...plan.features };
   if (publicRuntimeConfig.forceFeatures) {
     for (let feat of publicRuntimeConfig.forceFeatures) {
       let enabled = true;

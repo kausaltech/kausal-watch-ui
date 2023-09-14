@@ -40,13 +40,11 @@ const QuestionAnswerBlock = (props) => {
             lg={{ size: 8, offset: hasSidebar ? 4 : 2 }}
             md={{ size: 10, offset: 1 }}
           >
-            { heading && (<h2>{ heading }</h2>)}
+            {heading && <h2>{heading}</h2>}
             <Accordion>
-              { questionList.map((q) => (
+              {questionList.map((q) => (
                 <Accordion.Item key={q.id} id={q.id}>
-                  <Accordion.Header>
-                    {q.question}
-                  </Accordion.Header>
+                  <Accordion.Header>{q.question}</Accordion.Header>
                   <Accordion.Body>
                     <RichText html={q.answer} />
                   </Accordion.Body>

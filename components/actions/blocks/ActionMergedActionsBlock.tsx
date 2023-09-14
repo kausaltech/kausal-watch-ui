@@ -1,12 +1,9 @@
-
 import styled from 'styled-components';
-import {
-  Row, Col, Badge,
-} from 'reactstrap';
+import { Row, Col, Badge } from 'reactstrap';
 import { readableColor } from 'polished';
 import { getActionTermContext, useTranslation } from 'common/i18n';
 import { usePlan } from 'context/plan';
-import type {ActionContentAction} from 'components/actions/ActionContent';
+import type { ActionContentAction } from 'components/actions/ActionContent';
 import { ActionSection, SectionHeader } from 'components/actions/ActionContent';
 
 const ActionNumberBadge = styled(Badge)`
@@ -14,18 +11,21 @@ const ActionNumberBadge = styled(Badge)`
   padding: ${(props) => props.theme.spaces.s025};
   border-radius: ${(props) => props.theme.btnBorderRadius};
   background-color: ${(props) => props.theme.brandDark} !important;
-  color: ${
-    (props) => readableColor(props.theme.brandDark, props.theme.themeColors.black, props.theme.themeColors.white)
-    };
+  color: ${(props) =>
+    readableColor(
+      props.theme.brandDark,
+      props.theme.themeColors.black,
+      props.theme.themeColors.white
+    )};
 `;
 
 const MergedActionSection = styled.div`
-margin-bottom: ${(props) => props.theme.spaces.s100};
+  margin-bottom: ${(props) => props.theme.spaces.s100};
 `;
 
 type MergedActionProps = {
-  action: ActionContentAction['mergedActions'][0],
-}
+  action: ActionContentAction['mergedActions'][0];
+};
 
 function MergedAction({ action }: MergedActionProps) {
   const { identifier, officialName, plan, name } = action;
@@ -44,8 +44,8 @@ function MergedAction({ action }: MergedActionProps) {
 }
 
 type ActionMergedActionsBlockProps = {
-  actions: MergedActionProps['action'][],
-}
+  actions: MergedActionProps['action'][];
+};
 
 function ActionMergedActionsBlock({ actions }: ActionMergedActionsBlockProps) {
   const { t } = useTranslation();
@@ -62,21 +62,19 @@ function ActionMergedActionsBlock({ actions }: ActionMergedActionsBlockProps) {
 
   return (
     <div>
-    <Row>
-      <Col>
-        <SectionHeader>
-          { t('actions:action-merged', getActionTermContext(plan)) }
-        </SectionHeader>
-      </Col>
-    </Row>
-    <Row>
-      <Col>
-        <ActionSection>
-          {mergedActions}
-        </ActionSection>
-      </Col>
-    </Row>
-  </div>
+      <Row>
+        <Col>
+          <SectionHeader>
+            {t('actions:action-merged', getActionTermContext(plan))}
+          </SectionHeader>
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <ActionSection>{mergedActions}</ActionSection>
+        </Col>
+      </Row>
+    </div>
   );
 }
 

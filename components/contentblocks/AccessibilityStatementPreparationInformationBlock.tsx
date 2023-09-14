@@ -6,7 +6,9 @@ import { Container, Row, Col } from 'reactstrap';
 import accessibilityStatementData from 'public/static/accessibility';
 import { CommonContentBlockProps } from 'common/blocks.types';
 
-const AccessibilityStatementPreparationInformationBlock = ({ id = '' }: CommonContentBlockProps) => {
+const AccessibilityStatementPreparationInformationBlock = ({
+  id = '',
+}: CommonContentBlockProps) => {
   const { t, i18n } = useTranslation(['a11y']);
 
   let locale = i18n.language;
@@ -24,19 +26,13 @@ const AccessibilityStatementPreparationInformationBlock = ({ id = '' }: CommonCo
         >
           <h2>{t('a11y:preparation')}</h2>
           <p>
-            {t('a11y:prepared-on')}
-            {' '}
-            {dayjs(accessibilityStatementData.en.preparedOn).format('L')}
-            .
+            {t('a11y:prepared-on')}{' '}
+            {dayjs(accessibilityStatementData.en.preparedOn).format('L')}.
           </p>
+          <p>{t('a11y:prepared-how')}</p>
           <p>
-            {t('a11y:prepared-how')}
-          </p>
-          <p>
-            {t('a11y:reviewed-on')}
-            {' '}
-            {dayjs(accessibilityStatementData.en.reviewedOn).format('L')}
-            .
+            {t('a11y:reviewed-on')}{' '}
+            {dayjs(accessibilityStatementData.en.reviewedOn).format('L')}.
           </p>
         </Col>
       </Row>

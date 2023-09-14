@@ -33,16 +33,17 @@ const EmissionScopeIcon = (props) => {
   }
 
   return (
-    <IconContainer
-      id={iconId}
-      style={{ width: size, height: size }}
-      href="#"
-    >
+    <IconContainer id={iconId} style={{ width: size, height: size }} href="#">
       <span className="visually-hidden">
         {name}
         {leadParagraph}
       </span>
-      <Icon name={mapIcon(identifier)} color={color} width={size} height={size} />
+      <Icon
+        name={mapIcon(identifier)}
+        color={color}
+        width={size}
+        height={size}
+      />
       <Tooltip
         placement="top"
         isOpen={tooltipOpen}

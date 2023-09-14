@@ -1,17 +1,23 @@
 import React, { useEffect } from 'react';
 import App, { AppProps } from 'next/app';
 import getConfig from 'next/config';
-import { gql, ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
+import {
+  gql,
+  ApolloProvider,
+  ApolloClient,
+  InMemoryCache,
+} from '@apollo/client';
 import ReactPiwik from 'react-piwik';
 import { ThemeProvider } from 'styled-components';
 import { Router, useRouter } from 'next/router';
-import numbro from "numbro";
+import numbro from 'numbro';
 
 import StatusMessage from 'components/common/StatusMessage';
 import { captureException } from 'common/sentry';
 import { appWithTranslation } from 'common/i18n';
 import withApollo, {
-  initializeApolloClient, setApolloPlanIdentifier
+  initializeApolloClient,
+  setApolloPlanIdentifier,
 } from 'common/apollo';
 import { setBasePath } from 'common/links';
 import { loadTheme } from 'common/theme';
@@ -22,9 +28,8 @@ import SiteContext from 'context/site';
 
 import '@kausal/mapboxgl-legend/dist/style.css';
 
-
 const { publicRuntimeConfig } = getConfig();
-const isServer = typeof window === "undefined";
+const isServer = typeof window === 'undefined';
 
 require('../styles/default/main.scss');
 
@@ -42,7 +47,6 @@ function onRouteChange(url) {
   piwik.track({ path, pathname, search: '' });
 }
 
-
 interface SiteContext {
   deploymentType: string;
   domain: string;
@@ -50,18 +54,26 @@ interface SiteContext {
 }
 
 interface GlobalProps {
-  siteProps: SiteContext,
-  themeProps: any,
-  plan: any,
+  siteProps: SiteContext;
+  themeProps: any;
+  plan: any;
 }
 
-
 interface WatchAppProps extends AppProps, GlobalProps {
-  apollo: ApolloClient<InMemoryCache>,
+  apollo: ApolloClient<InMemoryCache>;
 }
 
 function WatchApp(props: WatchAppProps) {
-  const { Component, pageProps, apollo, siteProps, themeProps, plan, unpublished, statusMessage } = props;
+  const {
+    Component,
+    pageProps,
+    apollo,
+    siteProps,
+    themeProps,
+    plan,
+    unpublished,
+    statusMessage,
+  } = props;
 
   const router = useRouter();
   const matomoAnalyticsUrl = plan?.domain?.matomoAnalyticsUrl;
@@ -90,12 +102,10 @@ function WatchApp(props: WatchAppProps) {
   }, [matomoURL, matomoSiteId]);
 
   if (unpublished === true) {
-    return (
-      <StatusMessage message={statusMessage} noindex={true} />
-    );
+    return <StatusMessage message={statusMessage} noindex={true} />;
   }
 
-  dayjs.locale(router.locale)
+  dayjs.locale(router.locale);
 
   const i18n = getI18n();
   if (i18n) {
@@ -119,14 +129,16 @@ function WatchApp(props: WatchAppProps) {
 }
 
 async function getI18nProps(ctx) {
-  const { serverSideTranslations } = require('next-i18next/serverSideTranslations');
+  const {
+    serverSideTranslations,
+  } = require('next-i18next/serverSideTranslations');
   const nextI18nConfig = require('../next-i18next.config');
   const { publicRuntimeConfig } = getConfig();
   let locale = ctx.locale || publicRuntimeConfig.locale;
   const i18n = getI18n();
 
   if (!locale) {
-    throw new Error("Locale not set");
+    throw new Error('Locale not set');
   }
   if (i18n) {
     await i18n.changeLanguage(locale);
@@ -137,10 +149,12 @@ async function getI18nProps(ctx) {
       ...nextI18nConfig.i18n,
       defaultLocale: ctx.defaultLocale,
       locales: ctx.locales,
-    }
+    },
   };
   const i18nConfig = await serverSideTranslations(
-    locale, ['common', 'actions', 'a11y'], conf
+    locale,
+    ['common', 'actions', 'a11y'],
+    conf
   );
   return i18nConfig;
 }
@@ -162,7 +176,7 @@ async function getPlan(ctx) {
   plan = data.plan;
 
   if (!plan) {
-    throw new Error(`No plan found for identifier '${planIdentifier}'`)
+    throw new Error(`No plan found for identifier '${planIdentifier}'`);
   }
   return customizePlan(plan);
 }
@@ -175,7 +189,7 @@ function getSiteContext(ctx) {
     deploymentType,
     hostname: currentURL.hostname,
     path: currentURL.path,
-  }
+  };
 }
 
 WatchApp.getInitialProps = async (appContext) => {
@@ -205,8 +219,8 @@ WatchApp.getInitialProps = async (appContext) => {
     return {
       ...appProps,
       unpublished: true,
-      statusMessage: publicationStatusMessage
-    }
+      statusMessage: publicationStatusMessage,
+    };
   }
   /*
   if (err) {
@@ -218,7 +232,7 @@ WatchApp.getInitialProps = async (appContext) => {
   const pageProps = {
     ...appProps.pageProps,
     ...i18nProps,
-  }
+  };
   const theme = await loadTheme(plan.themeIdentifier || plan.identifier);
   return {
     ...appProps,

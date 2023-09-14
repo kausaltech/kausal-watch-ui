@@ -7,11 +7,13 @@ import { usePlan } from 'context/plan';
 import FeedbackForm from 'components/common/FeedbackForm';
 
 const ActionContactFormSection = styled.div`
-  padding: ${(props) => props.size === 'sm' ? props.theme.spaces.s050 : props.theme.spaces.s100};
+  padding: ${(props) =>
+    props.size === 'sm' ? props.theme.spaces.s050 : props.theme.spaces.s100};
   background-color: ${(props) => props.theme.graphColors.blue010};
 
   h2 {
-    font-size: ${(props) => props.size === 'sm' ? props.theme.fontSizeMd : props.theme.fontSizeLg};
+    font-size: ${(props) =>
+      props.size === 'sm' ? props.theme.fontSizeMd : props.theme.fontSizeLg};
   }
 `;
 
@@ -42,32 +44,32 @@ const ActionContactFormBlock = (props) => {
   let size = 'md';
   if (context === 'sidebar') {
     size = 'sm';
-  };
+  }
 
   return (
     <ActionContactFormSection size={size}>
-
-    <ContactTriggerButton
-      color="link"
-      onClick={toggle}
-    >
-      <Icon name="commenting" width="2rem" height="2rem"/>
-      <div>
-        <h2>{t('actions:feedback-on-action')}</h2>
-        {t('actions:feedback-on-action-description')}
-      </div>
-      <Icon name={isOpen ? 'angle-down' : 'angle-right'} width="2rem" height="2rem"/>
-    </ContactTriggerButton>
-    <Collapse isOpen={isOpen}>
-    <FeedbackForm
-      planIdentifier={plan.identifier}
-      actionId={action.id}
-      heading=""
-      description=""
-      prompt=""
-      formContext="action"
-    />
-    </Collapse>
+      <ContactTriggerButton color="link" onClick={toggle}>
+        <Icon name="commenting" width="2rem" height="2rem" />
+        <div>
+          <h2>{t('actions:feedback-on-action')}</h2>
+          {t('actions:feedback-on-action-description')}
+        </div>
+        <Icon
+          name={isOpen ? 'angle-down' : 'angle-right'}
+          width="2rem"
+          height="2rem"
+        />
+      </ContactTriggerButton>
+      <Collapse isOpen={isOpen}>
+        <FeedbackForm
+          planIdentifier={plan.identifier}
+          actionId={action.id}
+          heading=""
+          description=""
+          prompt=""
+          formContext="action"
+        />
+      </Collapse>
     </ActionContactFormSection>
   );
 };

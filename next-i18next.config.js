@@ -1,4 +1,15 @@
-const SUPPORTED_LANGUAGES = ['en', 'en-AU', 'en-GB', 'fi', 'sv', 'de', 'de-CH', 'da', 'es-US', 'es'];
+const SUPPORTED_LANGUAGES = [
+  'en',
+  'en-AU',
+  'en-GB',
+  'fi',
+  'sv',
+  'de',
+  'de-CH',
+  'da',
+  'es-US',
+  'es',
+];
 
 module.exports = {
   i18n: {
@@ -11,7 +22,7 @@ module.exports = {
     'en-GB': ['en'],
     'de-CH': ['de'],
     'es-US': ['es'],
-    'default': ['en'],
+    default: ['en'],
   },
   localePath: './locales',
   localeExtension: 'json',

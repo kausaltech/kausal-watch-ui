@@ -39,20 +39,25 @@ const CATEGORY_FRAGMENT = gql`
   }
 `;
 
-
-
 const CategoryListSection = styled.div`
   background-color: ${(props) => props.theme.neutralLight};
-  padding: ${(props) => `${props.theme.spaces.s400} 0 ${props.theme.spaces.s100} 0`};
-  color: ${
-    (props) => readableColor(props.theme.neutralLight, props.theme.themeColors.black, props.theme.themeColors.white)
-    };
+  padding: ${(props) =>
+    `${props.theme.spaces.s400} 0 ${props.theme.spaces.s100} 0`};
+  color: ${(props) =>
+    readableColor(
+      props.theme.neutralLight,
+      props.theme.themeColors.black,
+      props.theme.themeColors.white
+    )};
 
   h2 {
     font-size: ${(props) => props.theme.fontSizeLg};
-    color: ${
-    (props) => readableColor(props.theme.neutralLight, props.theme.headingsColor, props.theme.themeColors.white)
-    };
+    color: ${(props) =>
+      readableColor(
+        props.theme.neutralLight,
+        props.theme.headingsColor,
+        props.theme.themeColors.white
+      )};
   }
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
@@ -114,28 +119,28 @@ const Identifier = styled.span`
 `;
 
 export type CategoryListBlockCategory = {
-  id: string,
-  image?: MultiUseImageFragmentFragment,
-  color?: string,
-  identifier: string,
-  name: string,
-  shortDescription?: string,
-  leadParagraph?: string,
+  id: string;
+  image?: MultiUseImageFragmentFragment;
+  color?: string;
+  identifier: string;
+  name: string;
+  shortDescription?: string;
+  leadParagraph?: string;
   categoryPage: {
-    urlPath: string,
-    live: boolean
-  }
+    urlPath: string;
+    live: boolean;
+  };
   type: {
-    hideCategoryIdentifiers: boolean
-  }
-}
+    hideCategoryIdentifiers: boolean;
+  };
+};
 
 interface CategoryListBlockProps extends CommonContentBlockProps {
-  categories?: Array<CategoryListBlockCategory>,
-  fallbackImage: MultiUseImageFragmentFragment,
-  heading?: string,
-  lead: string,
-  style?: "treemap" | "cards",
+  categories?: Array<CategoryListBlockCategory>;
+  fallbackImage: MultiUseImageFragmentFragment;
+  heading?: string;
+  lead: string;
+  style?: 'treemap' | 'cards';
 }
 
 const CategoryListBlock = (props: CategoryListBlockProps) => {
@@ -151,43 +156,48 @@ const CategoryListBlock = (props: CategoryListBlockProps) => {
   return (
     <CategoryListSection id={id}>
       <Container>
-        { heading && (<SectionHeader>{ heading }</SectionHeader>)}
+        {heading && <SectionHeader>{heading}</SectionHeader>}
         <RichText html={lead} className="lead-text" />
         <Row tag="ul" className="justify-content-center">
-          { categories?.filter((cat) => cat?.categoryPage?.live).map((cat) => cat.categoryPage && (
-            <Col
-              tag="li"
-              xs="12"
-              sm="6"
-              lg="4"
-              key={cat.id}
-              className="mb-5 d-flex align-items-stretch"
-            >
-              <Link href={cat.categoryPage.urlPath}>
-                <a className="card-wrapper">
-                  <Card
-                    imageUrl={cat.image?.small?.src || fallbackImage?.small?.src}
-                    imageAlign={getBgImageAlignment(cat.image || fallbackImage)}
-                    colorEffect={cat.color}
+          {categories
+            ?.filter((cat) => cat?.categoryPage?.live)
+            .map(
+              (cat) =>
+                cat.categoryPage && (
+                  <Col
+                    tag="li"
+                    xs="12"
+                    sm="6"
+                    lg="4"
+                    key={cat.id}
+                    className="mb-5 d-flex align-items-stretch"
                   >
-                    <div>
-                      <CardHeader className="card-title">
-                        { !cat?.type.hideCategoryIdentifiers && (
-                          <Identifier>
-                            {cat.identifier}
-                            .
-                            {' '}
-                          </Identifier>
-                        )}
-                        { cat.name }
-                      </CardHeader>
-                      { cat.leadParagraph && (<p>{cat.leadParagraph}</p>) }
-                    </div>
-                  </Card>
-                </a>
-              </Link>
-            </Col>
-          ))}
+                    <Link href={cat.categoryPage.urlPath}>
+                      <a className="card-wrapper">
+                        <Card
+                          imageUrl={
+                            cat.image?.small?.src || fallbackImage?.small?.src
+                          }
+                          imageAlign={getBgImageAlignment(
+                            cat.image || fallbackImage
+                          )}
+                          colorEffect={cat.color}
+                        >
+                          <div>
+                            <CardHeader className="card-title">
+                              {!cat?.type.hideCategoryIdentifiers && (
+                                <Identifier>{cat.identifier}. </Identifier>
+                              )}
+                              {cat.name}
+                            </CardHeader>
+                            {cat.leadParagraph && <p>{cat.leadParagraph}</p>}
+                          </div>
+                        </Card>
+                      </a>
+                    </Link>
+                  </Col>
+                )
+            )}
         </Row>
       </Container>
     </CategoryListSection>
@@ -195,7 +205,7 @@ const CategoryListBlock = (props: CategoryListBlockProps) => {
 };
 
 CategoryListBlock.fragments = {
-  category: CATEGORY_FRAGMENT
-}
+  category: CATEGORY_FRAGMENT,
+};
 
 export default CategoryListBlock;

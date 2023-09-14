@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container, Col, Row } from 'reactstrap';
-import Map, {useControl, useMap, NavigationControl} from 'react-map-gl';
+import Map, { useControl, useMap, NavigationControl } from 'react-map-gl';
 
 import LegendControl from '@kausal/mapboxgl-legend';
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -17,8 +17,8 @@ const DEFAULT_LABELS = { other: false };
 
 const applyStyleOverrides = (style, overrides) => {
   style.layers
-    .filter(l => l.source !== undefined && l.source !== 'composite')
-    .forEach(layer => {
+    .filter((l) => l.source !== undefined && l.source !== 'composite')
+    .forEach((layer) => {
       if (layer?.paint === undefined) {
         return;
       }
@@ -46,22 +46,24 @@ const applyStyleOverrides = (style, overrides) => {
       }
       layer.metadata = {
         labels: Object.assign({}, DEFAULT_LABELS, labelOverrides),
-        name: layerName
+        name: layerName,
       };
     });
 
   style.layers = style.layers.filter(
-    l => (overrides.selections.layers[l.id] ?? true) !== false
+    (l) => (overrides.selections.layers[l.id] ?? true) !== false
   );
   return style;
-}
+};
 
-const LegendWithOverrides = ({styleOverrides}) => {
-  const overrides = (styleOverrides && styleOverrides.length > 0) ? JSON.parse(styleOverrides) : null
-  const {current: map} = useMap();
+const LegendWithOverrides = ({ styleOverrides }) => {
+  const overrides =
+    styleOverrides && styleOverrides.length > 0
+      ? JSON.parse(styleOverrides)
+      : null;
+  const { current: map } = useMap();
   let mapLegendApplied = false;
   map?.getMap().on('styledata', () => {
-
     const style = map.getStyle();
 
     const center = style.center;
@@ -75,20 +77,26 @@ const LegendWithOverrides = ({styleOverrides}) => {
 
     applyStyleOverrides(style, overrides);
     const layersToAdd = style.layers
-      .filter(l => overrides.labels === undefined || (overrides.labels[l.id] ?? {})[l.id] !== '-')
-      .map(l => l.id);
+      .filter(
+        (l) =>
+          overrides.labels === undefined ||
+          (overrides.labels[l.id] ?? {})[l.id] !== '-'
+      )
+      .map((l) => l.id);
 
-    const legend = new LegendControl({layers: layersToAdd});
+    const legend = new LegendControl({ layers: layersToAdd });
     map.getMap().addControl(legend, 'top-left');
-    map.getMap().setStyle(style, {diff: false})
+    map.getMap().setStyle(style, { diff: false });
 
     mapLegendApplied = true;
   });
   return null;
-}
+};
 
-const CartographyVisualisationBlock = (props: CartographyVisualisationBlockProps) => {
-  const {id = '', styleUrl, accessToken, styleOverrides, hasSidebar} = props;
+const CartographyVisualisationBlock = (
+  props: CartographyVisualisationBlockProps
+) => {
+  const { id = '', styleUrl, accessToken, styleOverrides, hasSidebar } = props;
   if (accessToken === undefined) {
     console.warn('No access token provided for MapBox visualisation.');
     return null;
@@ -102,7 +110,7 @@ const CartographyVisualisationBlock = (props: CartographyVisualisationBlockProps
           md={{ size: 10, offset: 1 }}
         >
           <Map
-            style={{width: '100%', height: 500}}
+            style={{ width: '100%', height: 500 }}
             mapboxAccessToken={accessToken}
             cooperativeGestures={true}
             mapStyle={`mapbox://styles/ilmastogis/${styleUrl}` ?? ''}
@@ -113,7 +121,7 @@ const CartographyVisualisationBlock = (props: CartographyVisualisationBlockProps
         </Col>
       </Row>
     </Container>
-  )
-}
+  );
+};
 
 export default CartographyVisualisationBlock;

@@ -23,7 +23,7 @@ const actionPropCompleted = {
   completion: 100,
 };
 
-const actionPropLate= {
+const actionPropLate = {
   identifier: '7',
   name: 'This action is Late. Action title goes here',
   status: {
@@ -33,7 +33,7 @@ const actionPropLate= {
   completion: 15,
 };
 
-const actionPropSeverelyLate= {
+const actionPropSeverelyLate = {
   identifier: '68',
   name: 'This action is Severely Late. Action title goes here',
   status: {
@@ -51,23 +51,11 @@ export const normal = () => {
   return (
     <div className="row">
       <div className="col-8 p-5">
-        <ActionImpact
-          name="High Impact"
-          identifier="4"
-          max="4"
-        />
+        <ActionImpact name="High Impact" identifier="4" max="4" />
         <br />
-        <ActionImpact
-          name="Very Low Impact"
-          identifier="1"
-          max="6"
-        />
+        <ActionImpact name="Very Low Impact" identifier="1" max="6" />
         <br />
-        <ActionImpact
-          name="Opposite Impact"
-          identifier="-4"
-          max="6"
-        />
+        <ActionImpact name="Opposite Impact" identifier="-4" max="6" />
       </div>
     </div>
   );

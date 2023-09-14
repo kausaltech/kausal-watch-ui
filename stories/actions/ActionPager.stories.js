@@ -22,19 +22,11 @@ const ActionPagerExample = () => {
 
   return (
     <div className="container">
-      <ActionPager
-        nextAction={nextAction}
-        previousAction={prevAction}
-      />
+      <ActionPager nextAction={nextAction} previousAction={prevAction} />
       <br />
-      <ActionPager
-        nextAction={nextAction}
-      />
+      <ActionPager nextAction={nextAction} />
       <br />
-      <ActionPager
-        nextAction={null}
-        previousAction={prevAction}
-      />
+      <ActionPager nextAction={null} previousAction={prevAction} />
     </div>
   );
 };

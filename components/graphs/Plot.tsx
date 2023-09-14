@@ -15,7 +15,7 @@ const getSeparators = (locale: string) => {
   if (locale === 'fi') {
     return ', ';
   } else if (locale === 'sv') {
-    return  '.,';
+    return '.,';
   } else if (locale === 'en' || locale.slice(0, 2) === 'en') {
     return '.,';
   } else if (locale === 'de-CH') {
@@ -38,6 +38,10 @@ export default function Plot(props: PlotParams) {
     console.warn(ret);
   }
 
-  props = { ...props, config: { ...props.config, locale }, layout: { ...layout, separators } };
-  return <PlotlyPlot {...props} />
+  props = {
+    ...props,
+    config: { ...props.config, locale },
+    layout: { ...layout, separators },
+  };
+  return <PlotlyPlot {...props} />;
 }

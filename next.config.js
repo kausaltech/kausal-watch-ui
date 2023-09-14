@@ -8,15 +8,19 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 });
 
-const sentryAuthToken = secrets.SENTRY_AUTH_TOKEN || process.env.SENTRY_AUTH_TOKEN;
-
+const sentryAuthToken =
+  secrets.SENTRY_AUTH_TOKEN || process.env.SENTRY_AUTH_TOKEN;
 
 function initializeThemes() {
   const destPath = path.join(__dirname, 'public', 'static', 'themes');
-  const { generateThemeSymlinks: generateThemeSymlinksPublic } = require('@kausal/themes/setup.cjs');
+  const {
+    generateThemeSymlinks: generateThemeSymlinksPublic,
+  } = require('@kausal/themes/setup.cjs');
   generateThemeSymlinksPublic(destPath, { verbose: false });
   try {
-    const { generateThemeSymlinks: generateThemeSymlinksPrivate } = require('@kausal/themes-private/setup.cjs');
+    const {
+      generateThemeSymlinks: generateThemeSymlinksPrivate,
+    } = require('@kausal/themes-private/setup.cjs');
     generateThemeSymlinksPrivate(destPath, { verbose: false });
   } catch (error) {
     console.error(error);
@@ -51,7 +55,7 @@ let config = {
   productionBrowserSourceMaps: true,
   compiler: {
     // Enables the styled-components SWC transform
-    styledComponents: true
+    styledComponents: true,
   },
   swcMinify: true,
   experimental: {
@@ -67,8 +71,10 @@ let config = {
     ];
     return rewrites;
   },
-  publicRuntimeConfig: { // Will be available on both server and client
-    aplansApiBaseURL: process.env.APLANS_API_BASE_URL || 'https://api.watch.kausal.tech/v1',
+  publicRuntimeConfig: {
+    // Will be available on both server and client
+    aplansApiBaseURL:
+      process.env.APLANS_API_BASE_URL || 'https://api.watch.kausal.tech/v1',
     // the default value for PLAN_IDENTIFIER is set below in webpack config
     defaultPlanIdentifier: process.env.PLAN_IDENTIFIER,
     defaultThemeIdentifier: process.env.THEME_IDENTIFIER,
@@ -89,19 +95,23 @@ let config = {
       cfg.resolve.alias['./next-i18next.config'] = false;
       cfg.resolve.symlinks = true;
     }
-    cfg.plugins.push(new webpack.EnvironmentPlugin({
-      PLAN_IDENTIFIER: '',
-      THEME_IDENTIFIER: '',
-      DISABLE_THEME_CACHE: '',
-      MATOMO_URL: '',
-      MATOMO_SITE_ID: '',
-      SYNC_THEME: '',
-      FORCE_SENTRY_SEND: '',
-    }));
-    cfg.plugins.push(new webpack.DefinePlugin({
-      __SENTRY_DEBUG__: false,
-    }))
-    cfg.experiments = {...cfg.experiments, topLevelAwait: true}
+    cfg.plugins.push(
+      new webpack.EnvironmentPlugin({
+        PLAN_IDENTIFIER: '',
+        THEME_IDENTIFIER: '',
+        DISABLE_THEME_CACHE: '',
+        MATOMO_URL: '',
+        MATOMO_SITE_ID: '',
+        SYNC_THEME: '',
+        FORCE_SENTRY_SEND: '',
+      })
+    );
+    cfg.plugins.push(
+      new webpack.DefinePlugin({
+        __SENTRY_DEBUG__: false,
+      })
+    );
+    cfg.experiments = { ...cfg.experiments, topLevelAwait: true };
 
     return cfg;
   },

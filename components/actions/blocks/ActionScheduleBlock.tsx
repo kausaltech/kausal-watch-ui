@@ -5,7 +5,6 @@ import { ActionSection, SectionHeader } from 'components/actions/ActionContent';
 import Timeline from 'components/graphs/Timeline';
 import ScheduleTimeline from 'components/graphs/ScheduleTimeline';
 
-
 const SideHeader = styled.h3`
   font-size: ${(props) => props.theme.fontSizeBase};
 `;
@@ -16,15 +15,18 @@ const ActionScheduleBlock = (props) => {
 
   return (
     <>
-      { action.schedule.length ? (
+      {action.schedule.length ? (
         <ActionSection>
-          <SideHeader>{ t('actions:action-timeline') }</SideHeader>
-          <ScheduleTimeline schedules={action.schedule} allSchedules={plan.actionSchedules} />
+          <SideHeader>{t('actions:action-timeline')}</SideHeader>
+          <ScheduleTimeline
+            schedules={action.schedule}
+            allSchedules={plan.actionSchedules}
+          />
         </ActionSection>
       ) : null}
-      { action.startDate || action.endDate || action.scheduleContinuous ? (
+      {action.startDate || action.endDate || action.scheduleContinuous ? (
         <ActionSection>
-          <SideHeader>{ t('actions:action-timeline') }</SideHeader>
+          <SideHeader>{t('actions:action-timeline')}</SideHeader>
           <Timeline
             startDate={action.startDate}
             endDate={action.endDate}
@@ -33,7 +35,7 @@ const ActionScheduleBlock = (props) => {
         </ActionSection>
       ) : null}
     </>
-  )
-}
+  );
+};
 
 export default ActionScheduleBlock;

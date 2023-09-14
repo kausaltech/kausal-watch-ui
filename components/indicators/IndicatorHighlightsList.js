@@ -2,9 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { gql, useQuery } from '@apollo/client';
-import {
-  Row, Col,
-} from 'reactstrap';
+import { Row, Col } from 'reactstrap';
 import styled from 'styled-components';
 import LazyLoad from 'react-lazyload';
 import { withTranslation } from '../../common/i18n';
@@ -17,7 +15,13 @@ import Button from '../common/Button';
 
 export const GET_INDICATOR_HIGHLIGHTS = gql`
   query IndicatorHightlightList($plan: ID!, $first: Int!, $orderBy: String!) {
-    planIndicators(plan: $plan, first: $first, orderBy: $orderBy, hasData: true, hasGoals: true) {
+    planIndicators(
+      plan: $plan
+      first: $first
+      orderBy: $orderBy
+      hasData: true
+      hasGoals: true
+    ) {
       id
       identifier
       name
@@ -60,7 +64,7 @@ function IndicatorCardList(props) {
   return (
     <Row>
       <ListHeader xs="12">
-        <h2>{ t('recently-updated-indicators') }</h2>
+        <h2>{t('recently-updated-indicators')}</h2>
       </ListHeader>
       {indicators.map((item) => (
         <CardContainer
@@ -85,9 +89,7 @@ function IndicatorCardList(props) {
       <Col xs="12" className="mt-5 mb-3">
         <IndicatorListLink>
           <Button color="primary" tag="a">
-            { t('see-all-indicators') }
-            {' '}
-            <Icon name="arrowRight" />
+            {t('see-all-indicators')} <Icon name="arrowRight" />
           </Button>
         </IndicatorListLink>
       </Col>
@@ -101,9 +103,7 @@ IndicatorCardList.propTypes = {
 };
 
 function IndicatorHighlightsList(props) {
-  const {
-    t, plan,
-  } = props;
+  const { t, plan } = props;
   const queryParams = {
     plan: plan.identifier,
     first: 6,
@@ -115,7 +115,7 @@ function IndicatorHighlightsList(props) {
   });
 
   if (loading) return <ContentLoader />;
-  if (error) return <p>{ t('error-loading-indicators') }</p>;
+  if (error) return <p>{t('error-loading-indicators')}</p>;
   return <IndicatorCardList t={t} indicators={data.planIndicators} />;
 }
 

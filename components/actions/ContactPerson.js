@@ -30,19 +30,20 @@ const Person = styled.div`
 const PersonDetails = styled.div`
   margin-left: 1em;
 
-  .btn-link, .btn-link:hover {
+  .btn-link,
+  .btn-link:hover {
     color: ${(props) => props.theme.brandDark};
   }
 `;
 
 const Name = styled.p`
   line-height: ${(props) => props.theme.lineHeightSm};
-  margin-bottom: .5em;
+  margin-bottom: 0.5em;
   font-weight: ${(props) => props.theme.fontWeightBold};
 `;
 
 const PersonRole = styled.p`
-  margin-bottom: .5em;
+  margin-bottom: 0.5em;
   color: ${(props) => props.theme.themeColors.dark};
   font-size: ${(props) => props.theme.fontSizeSm};
   font-family: ${(props) => props.theme.fontFamilyTiny};
@@ -80,22 +81,23 @@ const CollapseButton = styled(Button)`
 `;
 
 const GET_CONTACT_DETAILS = gql`
-query ContactDetails($id: ID!) {
-  person(id: $id) {
-    email
-    organization {
-      id
-      name
-      ancestors {
+  query ContactDetails($id: ID!) {
+    person(id: $id) {
+      email
+      organization {
+        id
         name
-        classification {
-          id
+        ancestors {
           name
+          classification {
+            id
+            name
+          }
         }
       }
     }
   }
-}`;
+`;
 
 function ContactDetails(props) {
   const { id } = props;
@@ -103,7 +105,7 @@ function ContactDetails(props) {
   return (
     <Query query={GET_CONTACT_DETAILS} variables={{ id }}>
       {({ loading, error, data }) => {
-        if (loading) return <span>{ t('loading') }</span>;
+        if (loading) return <span>{t('loading')}</span>;
         if (error) return <span>{error.message}</span>;
         const { person } = data;
 
@@ -111,9 +113,16 @@ function ContactDetails(props) {
 
         if (person.organization && person.organization.ancestors) {
           orgAncestors = person.organization.ancestors
-            .filter((org) => org.classification?.name !== 'Valtuusto' && org.classification?.name !== 'Hallitus')
+            .filter(
+              (org) =>
+                org.classification?.name !== 'Valtuusto' &&
+                org.classification?.name !== 'Hallitus'
+            )
             .map((org) => ({ id: org.id, name: org.name }));
-          orgAncestors.push({ id: person.organization.id, name: person.organization.name });
+          orgAncestors.push({
+            id: person.organization.id,
+            name: person.organization.name,
+          });
         } else {
           orgAncestors = [];
         }
@@ -131,9 +140,7 @@ function ContactDetails(props) {
               </PersonOrg>
             )}
             <Address>
-              { t('email') }
-              :
-              {' '}
+              {t('email')}:{' '}
               <a href={`mailto:${person.email}`}>{person.email}</a>
             </Address>
           </div>
@@ -156,20 +163,22 @@ function ContactPerson(props) {
     <Person className={isLeader}>
       <div>
         <Avatar
-          src={person.avatarUrl || '/static/themes/default/images/default-avatar-user.png'}
+          src={
+            person.avatarUrl ||
+            '/static/themes/default/images/default-avatar-user.png'
+          }
           className={`rounded-circle ${isLeader}`}
           alt={`${role} ${fullName}`}
         />
       </div>
       <PersonDetails body>
-        <Name>
-          {fullName}
-        </Name>
+        <Name>{fullName}</Name>
         <PersonRole>{person.title}</PersonRole>
         {person.organization && (
-        <PersonOrg>{person.organization.name}</PersonOrg>
+          <PersonOrg>{person.organization.name}</PersonOrg>
         )}
-        {plan.features.contactPersonsPublicData === PlanFeaturesContactPersonsPublicData.All && (
+        {plan.features.contactPersonsPublicData ===
+          PlanFeaturesContactPersonsPublicData.All && (
           <CollapseButton
             onClick={() => setCollapse(!collapse)}
             color="link"
@@ -177,7 +186,7 @@ function ContactPerson(props) {
             aria-expanded={collapse}
             aria-controls={`contact-${person.id}`}
           >
-            { t('contact-info') }
+            {t('contact-info')}
             <Icon name={collapse ? 'angle-down' : 'angle-right'} />
           </CollapseButton>
         )}

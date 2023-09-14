@@ -33,9 +33,7 @@ export default {
 export const normal = () => (
   <div className="row">
     <div className="col-8 p-5">
-      <ResponsibleList
-        data={orgData}
-      />
+      <ResponsibleList data={orgData} />
     </div>
   </div>
 );

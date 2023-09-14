@@ -6,11 +6,9 @@ const ActionContactPersonsBlock = (props) => {
 
   return (
     <ActionSection>
-      <ContactPersons
-        persons={contactPersons.map((item) => item.person)}
-      />
+      <ContactPersons persons={contactPersons.map((item) => item.person)} />
     </ActionSection>
-  )
-}
+  );
+};
 
 export default ActionContactPersonsBlock;

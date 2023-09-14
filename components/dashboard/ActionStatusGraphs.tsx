@@ -3,15 +3,24 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { transparentize } from 'polished';
 import dayjs from 'common/dayjs';
-import { cleanActionStatus, getPhaseData, getStatusData } from 'common/preprocess';
+import {
+  cleanActionStatus,
+  getPhaseData,
+  getStatusData,
+} from 'common/preprocess';
 import { useTheme } from 'common/theme';
-import type { Theme } from '@kausal/themes/types'
-import PlanContext, {PlanContextType} from 'context/plan';
+import type { Theme } from '@kausal/themes/types';
+import PlanContext, { PlanContextType } from 'context/plan';
 import { useTranslation } from 'common/i18n';
-import { getStatusSummary} from 'common/ActionStatusSummary';
+import { getStatusSummary } from 'common/ActionStatusSummary';
 import StatusDonut from 'components/graphs/StatusDonut';
 
-import { Sentiment, ActionTimeliness, ActionTimelinessIdentifier, Action } from 'common/__generated__/graphql';
+import {
+  Sentiment,
+  ActionTimeliness,
+  ActionTimelinessIdentifier,
+  Action,
+} from 'common/__generated__/graphql';
 import type { ActionListAction } from './ActionList';
 
 const StatusGraphs = styled.div`
@@ -20,10 +29,20 @@ const StatusGraphs = styled.div`
   display: flex;
   overflow-x: auto;
   margin-bottom: ${(props) => props.theme.spaces.s300};
-  background-image: ${(props) => `linear-gradient(to right, ${props.theme.themeColors.white}, ${props.theme.themeColors.white}),
-    linear-gradient(to right, ${props.theme.themeColors.white}, ${props.theme.themeColors.white}),
-    linear-gradient(to right, rgba(0, 0, 0, 0.25), ${transparentize(0, props.theme.themeColors.white)}),
-    linear-gradient(to left, rgba(0, 0, 0, 0.25), ${transparentize(0, props.theme.themeColors.white)})`};
+  background-image: ${(props) => `linear-gradient(to right, ${
+    props.theme.themeColors.white
+  }, ${props.theme.themeColors.white}),
+    linear-gradient(to right, ${props.theme.themeColors.white}, ${
+    props.theme.themeColors.white
+  }),
+    linear-gradient(to right, rgba(0, 0, 0, 0.25), ${transparentize(
+      0,
+      props.theme.themeColors.white
+    )}),
+    linear-gradient(to left, rgba(0, 0, 0, 0.25), ${transparentize(
+      0,
+      props.theme.themeColors.white
+    )})`};
   background-position: left center, right center, left center, right center;
   background-repeat: no-repeat;
   background-color: ${(props) => props.theme.themeColors.white};
@@ -42,9 +61,13 @@ export type Progress = {
   colors: string[];
   good: number;
   total: string;
-}
+};
 
-const getTimelinessData = (actions: ActionListAction[], plan: PlanContextType, theme: Theme) => {
+const getTimelinessData = (
+  actions: ActionListAction[],
+  plan: PlanContextType,
+  theme: Theme
+) => {
   const aggregates: Progress = {
     values: [],
     labels: [],
@@ -58,19 +81,22 @@ const getTimelinessData = (actions: ActionListAction[], plan: PlanContextType, t
 
   const { actionTimelinessClasses } = plan;
 
-  const counts = new Map<ActionTimelinessIdentifier|undefined, number>(
-    actionTimelinessClasses.map(c => [c.identifier, 0])
+  const counts = new Map<ActionTimelinessIdentifier | undefined, number>(
+    actionTimelinessClasses.map((c) => [c.identifier, 0])
   );
-  const classes =  new Map<ActionTimelinessIdentifier|undefined, ActionTimeliness>(
-    actionTimelinessClasses.map(c => [c.identifier, c])
-  );
+  const classes = new Map<
+    ActionTimelinessIdentifier | undefined,
+    ActionTimeliness
+  >(actionTimelinessClasses.map((c) => [c.identifier, c]));
 
-  const activeActions = actions.filter(action => getStatusSummary(plan, action.statusSummary).isActive);
+  const activeActions = actions.filter(
+    (action) => getStatusSummary(plan, action.statusSummary).isActive
+  );
   if (activeActions.length === 0) {
     return aggregates;
   }
 
-  activeActions.forEach(({timeliness}) => {
+  activeActions.forEach(({ timeliness }) => {
     const count = counts.get(timeliness.identifier) ?? 0;
     counts.set(timeliness.identifier, count + 1);
     if (classes.get(timeliness.identifier)?.sentiment !== Sentiment.Negative) {
@@ -104,20 +130,26 @@ const ActionsStatusGraphs = (props: ActionsStatusGraphsProps) => {
   const plan = useContext(PlanContext);
   const { t } = useTranslation(['common']);
 
-  const progressData = getStatusData(actions, plan.actionStatusSummaries, theme);
-  progressData.labels = progressData.labels.map((label) => label || t('unknown'));
+  const progressData = getStatusData(
+    actions,
+    plan.actionStatusSummaries,
+    theme
+  );
+  progressData.labels = progressData.labels.map(
+    (label) => label || t('unknown')
+  );
   const timelinessData = getTimelinessData(actions, plan, theme);
   const daysVisible = plan.actionTimelinessClasses.find(
-    c => c.identifier === ActionTimelinessIdentifier.Acceptable
-  )!.days
-  let phaseData: Progress|undefined = undefined;
+    (c) => c.identifier === ActionTimelinessIdentifier.Acceptable
+  )!.days;
+  let phaseData: Progress | undefined = undefined;
   if (plan.actionImplementationPhases.length > 0) {
     phaseData = getPhaseData(actions, plan, theme, t);
   }
 
   return (
     <StatusGraphs>
-      { phaseData && (
+      {phaseData && (
         <StatusDonut
           data={{ values: phaseData.values, labels: phaseData.labels }}
           currentValue={phaseData.total}
@@ -126,20 +158,25 @@ const ActionsStatusGraphs = (props: ActionsStatusGraphsProps) => {
           helpText={t('actions-phases-help')}
         />
       )}
-      { !plan.features.minimalStatuses && <StatusDonut
-        data={{ values: progressData.values, labels: progressData.labels }}
-        currentValue={progressData.total}
-        colors={progressData.colors.length > 0 ? progressData.colors : []}
-        header={t('actions-status')}
-        helpText={t('actions-status-help')}
-      /> }
-      { showUpdateStatus && (
+      {!plan.features.minimalStatuses && (
         <StatusDonut
-          data={{ values: timelinessData.values, labels: timelinessData.labels }}
+          data={{ values: progressData.values, labels: progressData.labels }}
+          currentValue={progressData.total}
+          colors={progressData.colors.length > 0 ? progressData.colors : []}
+          header={t('actions-status')}
+          helpText={t('actions-status-help')}
+        />
+      )}
+      {showUpdateStatus && (
+        <StatusDonut
+          data={{
+            values: timelinessData.values,
+            labels: timelinessData.labels,
+          }}
           currentValue={timelinessData.total}
           colors={timelinessData.colors.length > 0 ? timelinessData.colors : []}
           header={t('actions-updated')}
-          helpText={t('actions-updated-help', {count: daysVisible})}
+          helpText={t('actions-updated-help', { count: daysVisible })}
         />
       )}
     </StatusGraphs>

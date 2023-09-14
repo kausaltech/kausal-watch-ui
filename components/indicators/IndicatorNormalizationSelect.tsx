@@ -9,7 +9,8 @@ const NormalizerChooser = styled.div`
   justify-content: flex-end;
   gap: ${(props) => props.theme.spaces.s100};
   margin-top: ${(props) => props.theme.spaces.s200};
-  padding: ${(props) => props.theme.spaces.s050} ${(props) => props.theme.spaces.s150};
+  padding: ${(props) => props.theme.spaces.s050}
+    ${(props) => props.theme.spaces.s150};
 `;
 
 const IndicatorNormalizationSelect = (props) => {

@@ -2,7 +2,6 @@ import React from 'react';
 import { Container, Row } from 'reactstrap';
 import Head from 'next/head';
 
-
 function wordWrap(inputStr, maxWidth) {
   const newLineStr = '\n';
   let done = false;
@@ -37,7 +36,6 @@ function wordWrap(inputStr, maxWidth) {
   return res + str;
 }
 
-
 class VisGraph extends React.Component {
   constructor(props) {
     super(props);
@@ -55,7 +53,7 @@ class VisGraph extends React.Component {
     if (!this.props.nodes) {
       return;
     }
-    this.renderNetwork(); 
+    this.renderNetwork();
   }
 
   renderNetwork() {
@@ -119,7 +117,10 @@ class VisGraph extends React.Component {
       const color = {};
       out.color = color;
       out.font = {
-        size: 24, align: 'horizontal', strokeWidth: 4, bold: true,
+        size: 24,
+        align: 'horizontal',
+        strokeWidth: 4,
+        bold: true,
       };
       switch (edge.effect_type) {
         case 'increases':
@@ -160,8 +161,17 @@ class VisGraph extends React.Component {
     return (
       <Container style={{ paddingBottom: 3150 }}>
         <Head>
-          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" integrity="sha256-iq5ygGJ7021Pi7H5S+QAUXCPUfaBzfqeplbg/KlEssg=" crossOrigin="anonymous" />
-          <script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.js" integrity="sha256-ff7iz7mLH5QJA9IUC44b+sqjMi7c2aTR9YO2DSzAGZo=" crossOrigin="anonymous" />
+          <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css"
+            integrity="sha256-iq5ygGJ7021Pi7H5S+QAUXCPUfaBzfqeplbg/KlEssg="
+            crossOrigin="anonymous"
+          />
+          <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.js"
+            integrity="sha256-ff7iz7mLH5QJA9IUC44b+sqjMi7c2aTR9YO2DSzAGZo="
+            crossOrigin="anonymous"
+          />
         </Head>
         <Row>
           <div ref={this.visRef} style={{ height: 800, width: '100%' }} />

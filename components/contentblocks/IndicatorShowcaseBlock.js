@@ -40,21 +40,16 @@ const IndicatorShowcaseBlock = (props) => {
     <IndicatorShowcase id={id}>
       <Container>
         <Row>
-          <Col
-            xl={{ size: 8, offset: 2 }}
-            lg={{ size: 10, offset: 1 }}
-          >
+          <Col xl={{ size: 8, offset: 2 }} lg={{ size: 10, offset: 1 }}>
             <h2>{title}</h2>
             <RichText html={body} className="mb-5" />
-            { indicatorHasGoal ? (
-            <IndicatorProgressBar
-              indicator={indicator}
-              animate={inView}
-            />) : (
-            <>
-              <h2>{indicator.name}</h2>
-              <IndicatorVisualisation indicatorId={indicator.id} />
-            </>
+            {indicatorHasGoal ? (
+              <IndicatorProgressBar indicator={indicator} animate={inView} />
+            ) : (
+              <>
+                <h2>{indicator.name}</h2>
+                <IndicatorVisualisation indicatorId={indicator.id} />
+              </>
             )}
             <span ref={ref} />
           </Col>

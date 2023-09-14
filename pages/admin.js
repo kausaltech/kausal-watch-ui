@@ -1,10 +1,7 @@
 import React, { useContext } from 'react';
 import PlanContext from 'context/plan';
 import styled from 'styled-components';
-import {
-  Card, CardBody,
-  Container, Row, Col,
-} from 'reactstrap';
+import { Card, CardBody, Container, Row, Col } from 'reactstrap';
 import { Link } from 'common/links';
 import { useTranslation } from 'common/i18n';
 import Layout from '../components/layout';
@@ -40,22 +37,23 @@ const AdminPage = () => {
   const plan = useContext(PlanContext);
 
   const { t } = useTranslation();
-  if (typeof window !== "undefined" && plan.adminUrl) window.location.replace(plan.adminUrl);
+  if (typeof window !== 'undefined' && plan.adminUrl)
+    window.location.replace(plan.adminUrl);
 
   return (
     <Layout>
       <ErrorBackground className="mb-5">
         <Container>
           <Row>
-            <Col md={{ size: 6, offset: 3}}>
+            <Col md={{ size: 6, offset: 3 }}>
               <StyledCard>
                 <CardBody>
-                  <h1>{ t('page-not-found') }</h1>
-                  <h2>{ t('admin-login-not-defined') }</h2>
+                  <h1>{t('page-not-found')}</h1>
+                  <h2>{t('admin-login-not-defined')}</h2>
                   <Link href="/">
                     <a>
                       <Button outline color="dark" size="sm">
-                        { t('return-to-front') }
+                        {t('return-to-front')}
                       </Button>
                     </a>
                   </Link>
@@ -73,6 +71,6 @@ const initialProps = {
   namespacesRequired: ['common'],
 };
 
-AdminPage.getInitialProps = async () => (initialProps);
+AdminPage.getInitialProps = async () => initialProps;
 
 export default AdminPage;

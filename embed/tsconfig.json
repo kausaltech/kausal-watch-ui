@@ -1,9 +1,7 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": [
-      "dom",
-    ],
+    "lib": ["dom"],
     "removeComments": true,
     "allowJs": false,
     "skipLibCheck": false,
@@ -16,9 +14,7 @@
     "resolveJsonModule": false,
     "isolatedModules": false,
     "incremental": false,
-    "outDir": "../public/static",
+    "outDir": "../public/static"
   },
-  "include": [
-    "embed-*.ts",
-  ],
+  "include": ["embed-*.ts"]
 }

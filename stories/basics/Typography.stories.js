@@ -19,32 +19,56 @@ const TypeList = () => {
           </tr>
           <tr>
             <td>fontSizeSm</td>
-            <td><TypeExample size="fontSizeSm">Lorem ipsum <strong>dolor</strong></TypeExample></td>
+            <td>
+              <TypeExample size="fontSizeSm">
+                Lorem ipsum <strong>dolor</strong>
+              </TypeExample>
+            </td>
             <td>{themeContext.fontSizeSm}</td>
           </tr>
           <tr>
             <td>fontSizeBase</td>
-            <td><TypeExample size="fontSizeBase">Lorem ipsum <strong>dolor</strong></TypeExample></td>
+            <td>
+              <TypeExample size="fontSizeBase">
+                Lorem ipsum <strong>dolor</strong>
+              </TypeExample>
+            </td>
             <td>{themeContext.fontSizeBase}</td>
           </tr>
           <tr>
             <td>fontSizeMd</td>
-            <td><TypeExample size="fontSizeMd">Lorem ipsum <strong>dolor</strong></TypeExample></td>
+            <td>
+              <TypeExample size="fontSizeMd">
+                Lorem ipsum <strong>dolor</strong>
+              </TypeExample>
+            </td>
             <td>{themeContext.fontSizeMd}</td>
           </tr>
           <tr>
             <td>fontSizeLg</td>
-            <td><TypeExample size="fontSizeLg">Lorem ipsum <strong>dolor</strong></TypeExample></td>
+            <td>
+              <TypeExample size="fontSizeLg">
+                Lorem ipsum <strong>dolor</strong>
+              </TypeExample>
+            </td>
             <td>{themeContext.fontSizeLg}</td>
           </tr>
           <tr>
             <td>fontSizeXl</td>
-            <td><TypeExample size="fontSizeXl">Lorem ipsum <strong>dolor</strong></TypeExample></td>
+            <td>
+              <TypeExample size="fontSizeXl">
+                Lorem ipsum <strong>dolor</strong>
+              </TypeExample>
+            </td>
             <td>{themeContext.fontSizeXl}</td>
           </tr>
           <tr>
             <td>fontSizeXxl</td>
-            <td><TypeExample size="fontSizeXxl">Lorem ipsum <strong>dolor</strong></TypeExample></td>
+            <td>
+              <TypeExample size="fontSizeXxl">
+                Lorem ipsum <strong>dolor</strong>
+              </TypeExample>
+            </td>
             <td>{themeContext.fontSizeXxl}</td>
           </tr>
           <tr>
@@ -52,12 +76,24 @@ const TypeList = () => {
           </tr>
           <tr>
             <td>fontWeightNormal</td>
-            <td><TypeExample size="fontSizeMd"><span style={{ fontWeight: themeContext.fontWeightNormal }}>Font Weight</span></TypeExample></td>
+            <td>
+              <TypeExample size="fontSizeMd">
+                <span style={{ fontWeight: themeContext.fontWeightNormal }}>
+                  Font Weight
+                </span>
+              </TypeExample>
+            </td>
             <td>{themeContext.fontWeightNormal}</td>
           </tr>
           <tr>
             <td>fontWeightNormal</td>
-            <td><TypeExample size="fontSizeMd"><span style={{ fontWeight: themeContext.fontWeightBold }}>Font Weight</span></TypeExample></td>
+            <td>
+              <TypeExample size="fontSizeMd">
+                <span style={{ fontWeight: themeContext.fontWeightBold }}>
+                  Font Weight
+                </span>
+              </TypeExample>
+            </td>
             <td>{themeContext.fontWeightNormal}</td>
           </tr>
           <tr>
@@ -68,7 +104,11 @@ const TypeList = () => {
             <td>
               <TypeExample size="fontSizeBase">
                 <div style={{ lineHeight: themeContext.lineHeightSm }}>
-                  Deserunt veniam ipsum deserunt est non officia excepteur culpa. In et culpa cupidatat tempor sit ea aute officia ipsum sunt culpa. Non aute eiusmod Lorem laborum do incididunt nulla minim sint. Voluptate est nisi esse ullamco deserunt laboris mollit tempor cillum exercitation esse excepteur.
+                  Deserunt veniam ipsum deserunt est non officia excepteur
+                  culpa. In et culpa cupidatat tempor sit ea aute officia ipsum
+                  sunt culpa. Non aute eiusmod Lorem laborum do incididunt nulla
+                  minim sint. Voluptate est nisi esse ullamco deserunt laboris
+                  mollit tempor cillum exercitation esse excepteur.
                 </div>
               </TypeExample>
             </td>
@@ -79,7 +119,11 @@ const TypeList = () => {
             <td>
               <TypeExample size="fontSizeBase">
                 <div style={{ lineHeight: themeContext.lineHeightMd }}>
-                  Deserunt veniam ipsum deserunt est non officia excepteur culpa. In et culpa cupidatat tempor sit ea aute officia ipsum sunt culpa. Non aute eiusmod Lorem laborum do incididunt nulla minim sint. Voluptate est nisi esse ullamco deserunt laboris mollit tempor cillum exercitation esse excepteur.
+                  Deserunt veniam ipsum deserunt est non officia excepteur
+                  culpa. In et culpa cupidatat tempor sit ea aute officia ipsum
+                  sunt culpa. Non aute eiusmod Lorem laborum do incididunt nulla
+                  minim sint. Voluptate est nisi esse ullamco deserunt laboris
+                  mollit tempor cillum exercitation esse excepteur.
                 </div>
               </TypeExample>
             </td>
@@ -90,7 +134,11 @@ const TypeList = () => {
             <td>
               <TypeExample size="fontSizeBase">
                 <div style={{ lineHeight: themeContext.lineHeightBase }}>
-                  Deserunt veniam ipsum deserunt est non officia excepteur culpa. In et culpa cupidatat tempor sit ea aute officia ipsum sunt culpa. Non aute eiusmod Lorem laborum do incididunt nulla minim sint. Voluptate est nisi esse ullamco deserunt laboris mollit tempor cillum exercitation esse excepteur.
+                  Deserunt veniam ipsum deserunt est non officia excepteur
+                  culpa. In et culpa cupidatat tempor sit ea aute officia ipsum
+                  sunt culpa. Non aute eiusmod Lorem laborum do incididunt nulla
+                  minim sint. Voluptate est nisi esse ullamco deserunt laboris
+                  mollit tempor cillum exercitation esse excepteur.
                 </div>
               </TypeExample>
             </td>
@@ -101,7 +149,11 @@ const TypeList = () => {
             <td>
               <TypeExample size="fontSizeBase">
                 <div style={{ lineHeight: themeContext.lineHeightLg }}>
-                  Deserunt veniam ipsum deserunt est non officia excepteur culpa. In et culpa cupidatat tempor sit ea aute officia ipsum sunt culpa. Non aute eiusmod Lorem laborum do incididunt nulla minim sint. Voluptate est nisi esse ullamco deserunt laboris mollit tempor cillum exercitation esse excepteur.
+                  Deserunt veniam ipsum deserunt est non officia excepteur
+                  culpa. In et culpa cupidatat tempor sit ea aute officia ipsum
+                  sunt culpa. Non aute eiusmod Lorem laborum do incididunt nulla
+                  minim sint. Voluptate est nisi esse ullamco deserunt laboris
+                  mollit tempor cillum exercitation esse excepteur.
                 </div>
               </TypeExample>
             </td>

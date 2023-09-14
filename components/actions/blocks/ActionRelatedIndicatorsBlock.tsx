@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import {
-  Row, Col,
+  Row,
+  Col,
   Badge as BaseBadge,
   Card as BaseCard,
   CardBody,
@@ -29,11 +30,15 @@ const Card = styled(BaseCard)`
 
 const Badge = styled(BaseBadge)`
   background-color: ${(props) => props.theme.brandLight};
-  color: ${
-    (props) => readableColor(props.theme.brandLight, props.theme.themeColors.black, props.theme.themeColors.white)
-  };
+  color: ${(props) =>
+    readableColor(
+      props.theme.brandLight,
+      props.theme.themeColors.black,
+      props.theme.themeColors.white
+    )};
   border-radius: ${(props) => props.theme.badgeBorderRadius};
-  padding: ${(props) => props.theme.badgePaddingY} ${(props) => props.theme.badgePaddingX};
+  padding: ${(props) => props.theme.badgePaddingY}
+    ${(props) => props.theme.badgePaddingX};
   font-weight: ${(props) => props.theme.badgeFontWeight};
   max-width: 100%;
   word-break: break-all;
@@ -43,9 +48,9 @@ const Badge = styled(BaseBadge)`
   text-align: left;
 
   &:hover {
-    background-color:  ${(props) => shade(0.01, props.theme.brandLight)} !important;
+    background-color: ${(props) =>
+      shade(0.01, props.theme.brandLight)} !important;
   }
-
 `;
 
 const IndicatorActionsList = styled.ul`
@@ -82,25 +87,25 @@ function ActionIndicator(props) {
             </h3>
           </a>
         </IndicatorLink>
-        {(indicator.latestGraph || indicator.latestValue)
-          ? <IndicatorVisualisation indicatorId={indicator.id} />
-          : null}
+        {indicator.latestGraph || indicator.latestValue ? (
+          <IndicatorVisualisation indicatorId={indicator.id} />
+        ) : null}
       </CardBody>
       {actions.length > 0 && (
         <CardFooter>
           <IndicatorActionsList title={t('indicator-also-for-actions')}>
-          {actions.map((action) => (
-            <IndicatorActionListItem key={action.identifier}>
-              <ActionLink action={action}>
-                <a className="me-2">
-                  <Badge>
-                    {!plan.hideActionIdentifiers && `${action.identifier}. `}
-                    {action.name}
-                  </Badge>
-                </a>
-              </ActionLink>
-            </IndicatorActionListItem>
-          ))}
+            {actions.map((action) => (
+              <IndicatorActionListItem key={action.identifier}>
+                <ActionLink action={action}>
+                  <a className="me-2">
+                    <Badge>
+                      {!plan.hideActionIdentifiers && `${action.identifier}. `}
+                      {action.name}
+                    </Badge>
+                  </a>
+                </ActionLink>
+              </IndicatorActionListItem>
+            ))}
           </IndicatorActionsList>
         </CardFooter>
       )}
@@ -114,27 +119,27 @@ const ActionRelatedIndicatorsBlock = (props) => {
 
   return (
     <div>
-    <Row>
-      <Col>
-        <SectionHeader>{ t('indicators') }</SectionHeader>
-      </Col>
-    </Row>
-    <Row>
-      <Col sm="12">
-        <IndicatorsSection>
-          {indicators.map((relatedIndicator) => (
-            <ActionIndicator
-              t={t}
-              key={relatedIndicator.indicator.id}
-              actionId={actionId}
-              relatedIndicator={relatedIndicator}
-            />
-          ))}
-        </IndicatorsSection>
-      </Col>
-    </Row>
-  </div>
-  )
-}
+      <Row>
+        <Col>
+          <SectionHeader>{t('indicators')}</SectionHeader>
+        </Col>
+      </Row>
+      <Row>
+        <Col sm="12">
+          <IndicatorsSection>
+            {indicators.map((relatedIndicator) => (
+              <ActionIndicator
+                t={t}
+                key={relatedIndicator.indicator.id}
+                actionId={actionId}
+                relatedIndicator={relatedIndicator}
+              />
+            ))}
+          </IndicatorsSection>
+        </Col>
+      </Row>
+    </div>
+  );
+};
 
 export default ActionRelatedIndicatorsBlock;

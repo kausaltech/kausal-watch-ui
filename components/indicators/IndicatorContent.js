@@ -2,9 +2,7 @@ import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 
 import CategoryTags from 'components/actions/CategoryTags';
-import {
-  Container, Row, Col,
-} from 'reactstrap';
+import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
 import { gql, useQuery } from '@apollo/client';
 
@@ -23,7 +21,6 @@ import ActionsTable from 'components/actions/ActionsTable';
 
 import CausalNavigation from 'components/indicators/CausalNavigation';
 import IndicatorHero from './IndicatorHero';
-
 
 const GET_INDICATOR_DETAILS = gql`
   query IndicatorDetails($id: ID, $plan: ID, $identifier: ID) {
@@ -184,30 +181,32 @@ function IndicatorDetails({ id }) {
     return <ErrorMessage statusCode={404} message={t('indicator-not-found')} />;
   }
 
-  const hasImpacts = indicator.relatedCauses.length > 0 || indicator.relatedEffects.length > 0;
+  const hasImpacts =
+    indicator.relatedCauses.length > 0 || indicator.relatedEffects.length > 0;
   const mainGoals = indicator.goals.filter((goal) => !goal.scenario);
 
   const allOrgs = [];
   /* If indicator has a common indicator for another org in the plan add it in the orgs list */
   indicator.common?.indicators.forEach((common) => {
     /* Make sure organization is included in this plan or is the organization of the active indicator */
-    const orgInThisPlan = plan.primaryOrgs.find((org) => org.id === common.organization.id) || indicator.organization.id === common.organization.id;
-    if (orgInThisPlan) allOrgs.push({
-      id: common.id,
-      identifier: common.identifier,
-      image: common.organization.logo?.rendition.src,
-      name: common.organization.name,
-      shortName: common.organization.abbreviation,
-      active: common.organization.id === indicator.organization.id,
-      orgUrl: `/indicators/${common.id}`,
-    });
+    const orgInThisPlan =
+      plan.primaryOrgs.find((org) => org.id === common.organization.id) ||
+      indicator.organization.id === common.organization.id;
+    if (orgInThisPlan)
+      allOrgs.push({
+        id: common.id,
+        identifier: common.identifier,
+        image: common.organization.logo?.rendition.src,
+        name: common.organization.name,
+        shortName: common.organization.abbreviation,
+        active: common.organization.id === indicator.organization.id,
+        orgUrl: `/indicators/${common.id}`,
+      });
   });
 
   return (
     <div className="mb-5">
-      <Meta
-        title={indicator.name}
-      />
+      <Meta title={indicator.name} />
       <IndicatorHero
         indicator={indicator}
         orgs={plan.features.hasActionPrimaryOrgs ? allOrgs : null}
@@ -221,13 +220,12 @@ function IndicatorDetails({ id }) {
           <Col md="5" lg="4" className="mb-5">
             <CategoryTags
               categories={indicator.categories}
-              types={indicator.categories.map(c => c.type)}
+              types={indicator.categories.map((c) => c.type)}
               noLink={true}
             />
           </Col>
         </Row>
-        {(indicator.latestGraph || indicator.values.length > 0)
-        && (
+        {(indicator.latestGraph || indicator.values.length > 0) && (
           <Row>
             <Col className="mb-5">
               <GraphContainer>
@@ -240,32 +238,30 @@ function IndicatorDetails({ id }) {
           </Row>
         )}
       </Container>
-      { indicator.actions.length > 0 && (
+      {indicator.actions.length > 0 && (
         <Section>
           <Container>
             <Row>
               <Col className="mb-4">
-                <h2>{t('indicator-related-actions', getActionTermContext(plan))}</h2>
+                <h2>
+                  {t('indicator-related-actions', getActionTermContext(plan))}
+                </h2>
               </Col>
             </Row>
             <Row>
               <Col>
-                <ActionsTable
-                  actions={indicator.actions}
-                  t={t}
-                />
+                <ActionsTable actions={indicator.actions} t={t} />
               </Col>
             </Row>
           </Container>
         </Section>
       )}
-      { hasImpacts
-        && (
-          <CausalNavigation
-            causes={indicator.relatedCauses}
-            effects={indicator.relatedEffects}
-          />
-        )}
+      {hasImpacts && (
+        <CausalNavigation
+          causes={indicator.relatedCauses}
+          effects={indicator.relatedEffects}
+        />
+      )}
     </div>
   );
 }

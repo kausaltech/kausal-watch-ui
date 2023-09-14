@@ -27,14 +27,16 @@ const tasksList = [
     name: 'Action has a primary contact person',
     dueAt: '2019-10-23',
     completedAt: '2019-10-23',
-    comment: '<p>This description is wrapped in p-tag as it sometimes happens. Can also use <strong>bold</strong> or <em>italic</em> maybe</em></strong></p>',
+    comment:
+      '<p>This description is wrapped in p-tag as it sometimes happens. Can also use <strong>bold</strong> or <em>italic</em> maybe</em></strong></p>',
   },
   {
     id: '854',
     name: 'This task has a link in description and a longer title that wraps on several lines',
     dueAt: '2019-09-17',
     completedAt: '2019-09-17',
-    comment: '<p><a href="https://example.com/this-url-does-not-exist">https://example.com/this-url-does-not-exist</a></p>',
+    comment:
+      '<p><a href="https://example.com/this-url-does-not-exist">https://example.com/this-url-does-not-exist</a></p>',
   },
 ];
 
@@ -45,9 +47,7 @@ const TaskLists = () => {
     <div className="container mt-5">
       <div className="row">
         <div className="col">
-          <TaskList
-            tasks={tasksList}
-          />
+          <TaskList tasks={tasksList} />
         </div>
       </div>
     </div>

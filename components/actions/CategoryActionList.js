@@ -11,27 +11,28 @@ import ErrorMessage from 'components/common/ErrorMessage';
 import PlanContext from 'context/plan';
 
 const GET_ACTION_LIST = gql`
-query GetActionList($plan: ID!, $clientUrl: String!) {
-  planActions(plan: $plan) {
-    ...ActionCard
-    image {
-      id
-      rendition(size:"600x300") {
+  query GetActionList($plan: ID!, $clientUrl: String!) {
+    planActions(plan: $plan) {
+      ...ActionCard
+      image {
         id
-        width
-        height
-        src
-        alt
+        rendition(size: "600x300") {
+          id
+          width
+          height
+          src
+          alt
+        }
       }
     }
   }
-}
-${ActionCard.fragments.action}
+  ${ActionCard.fragments.action}
 `;
 
 const ActionListSection = styled.div`
   background-color: ${(props) => props.color};
-  padding: ${(props) => props.theme.spaces.s200} 0 ${(props) => props.theme.spaces.s400};
+  padding: ${(props) => props.theme.spaces.s200} 0
+    ${(props) => props.theme.spaces.s400};
 `;
 
 const SectionHeader = styled.h2`
@@ -57,7 +58,7 @@ const ListRow = styled.ul`
   display: flex;
   flex-wrap: wrap;
   align-items: stretch;
-  margin: 0 -.5rem;
+  margin: 0 -0.5rem;
   padding: 0;
 
   .lazyload-wrapper {
@@ -71,7 +72,7 @@ const ListRow = styled.ul`
 
 const ListColumn = styled.li`
   flex: 0 0 50%;
-  padding: .5rem;
+  padding: 0.5rem;
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     flex: 0 0 33%;
@@ -87,24 +88,33 @@ const childIds = (categoryID, cats) => {
     if (categoryID === 0) return cat.parent === null;
     return cat.parent?.id === categoryID;
   });
-  return immediateChildren.length > 0 ? immediateChildren.map((child) => child.id) : null;
+  return immediateChildren.length > 0
+    ? immediateChildren.map((child) => child.id)
+    : null;
 };
 
 const findAllChildren = (categoryID, cats, children = []) => {
   const immediateChildren = childIds(categoryID, cats);
-  let allChildren = immediateChildren ? children.concat(immediateChildren) : children;
-  if (immediateChildren?.length > 0) immediateChildren.forEach((element) => {
-    allChildren = findAllChildren(element, cats, allChildren);
-  });
+  let allChildren = immediateChildren
+    ? children.concat(immediateChildren)
+    : children;
+  if (immediateChildren?.length > 0)
+    immediateChildren.forEach((element) => {
+      allChildren = findAllChildren(element, cats, allChildren);
+    });
   return allChildren;
 };
 
 const filterByCategory = (actions, catId, categories, categoryIsRoot) => {
   // For the root category, don't show _all_ actions recursively but
   // only the ones which are directly connected to the root category.
-  const recursiveCategories = categoryIsRoot ? [] : findAllChildren(catId, categories);
+  const recursiveCategories = categoryIsRoot
+    ? []
+    : findAllChildren(catId, categories);
   recursiveCategories.push(catId);
-  return actions.filter((action) => action.categories.find((cat) => recursiveCategories.indexOf(cat.id) > -1));
+  return actions.filter((action) =>
+    action.categories.find((cat) => recursiveCategories.indexOf(cat.id) > -1)
+  );
 };
 
 const CategoryActionList = (props) => {
@@ -125,9 +135,14 @@ const CategoryActionList = (props) => {
     return <ErrorMessage statusCode={404} message={t('page-not-found')} />;
   }
 
-  const filteredActions = filterByCategory(planActions, activeCategory.id, categories, activeCategory.parent == null);
+  const filteredActions = filterByCategory(
+    planActions,
+    activeCategory.id,
+    categories,
+    activeCategory.parent == null
+  );
   if (filteredActions.length === 0) {
-    return <EmptyActionListHeader>{ t('no-actions') }</EmptyActionListHeader>;
+    return <EmptyActionListHeader>{t('no-actions')}</EmptyActionListHeader>;
   }
   const heading = t('filter-result-actions');
 
@@ -135,16 +150,14 @@ const CategoryActionList = (props) => {
   return (
     <ActionListSection>
       <Container>
-        { heading && (
-        <SectionHeader>
-          {filteredActions.length}
-          {' '}
-          { heading }
-        </SectionHeader>
+        {heading && (
+          <SectionHeader>
+            {filteredActions.length} {heading}
+          </SectionHeader>
         )}
         {/* TODO: animate transition with Framer */}
         <ListRow>
-          { filteredActions.map((action) => (
+          {filteredActions.map((action) => (
             <ListColumn
               key={action.id}
               className="mb-4 d-flex align-items-stretch"
@@ -152,9 +165,7 @@ const CategoryActionList = (props) => {
               exit={{ opacity: 0 }}
               layout
             >
-              <ActionCard
-                action={action}
-              />
+              <ActionCard action={action} />
             </ListColumn>
           ))}
         </ListRow>

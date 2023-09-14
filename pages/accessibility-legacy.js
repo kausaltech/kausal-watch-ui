@@ -5,14 +5,10 @@ import { useTranslation } from 'common/i18n';
 import Layout, { Meta } from 'components/layout';
 import PlanContext from 'context/plan';
 
-import AccessibilityStatementComplianceStatusBlock
-  from 'components/contentblocks/AccessibilityStatementComplianceStatusBlock';
-import AccessibilityStatementContactInformationBlock
-  from 'components/contentblocks/AccessibilityStatementContactInformationBlock';
+import AccessibilityStatementComplianceStatusBlock from 'components/contentblocks/AccessibilityStatementComplianceStatusBlock';
+import AccessibilityStatementContactInformationBlock from 'components/contentblocks/AccessibilityStatementContactInformationBlock';
 import accessibilityStatementData from 'public/static/accessibility';
-import AccessibilityStatementPreparationInformationBlock
-  from 'components/contentblocks/AccessibilityStatementPreparationInformationBlock';
-
+import AccessibilityStatementPreparationInformationBlock from 'components/contentblocks/AccessibilityStatementPreparationInformationBlock';
 
 const HeaderBg = styled.div`
   background-color: ${(props) => props.theme.brandDark};
@@ -21,7 +17,8 @@ const HeaderBg = styled.div`
 `;
 
 const ContentHeader = styled.header`
-  padding: ${(props) => props.theme.spaces.s400} 0 ${(props) => props.theme.spaces.s200};
+  padding: ${(props) => props.theme.spaces.s400} 0
+    ${(props) => props.theme.spaces.s200};
 
   h1 {
     margin-bottom: ${(props) => props.theme.spaces.s150};
@@ -44,25 +41,21 @@ const AccessibilityPage = () => {
   let blocks = null;
   let accessibilityContact = null;
   if (additionalLinks != null && additionalLinks.items != null) {
-    blocks = additionalLinks.items.find(
-      i => i.page.__typename == 'AccessibilityStatementPage'
-    )?.page?.body?.find(
-      b => b.__typename == 'AccessibilityStatementContactInformationBlock'
-    )?.blocks;
+    blocks = additionalLinks.items
+      .find((i) => i.page.__typename == 'AccessibilityStatementPage')
+      ?.page?.body?.find(
+        (b) => b.__typename == 'AccessibilityStatementContactInformationBlock'
+      )?.blocks;
   }
   if (blocks != null) {
     accessibilityContact = Object.fromEntries(
-      blocks.map(
-        b => [b.field, b.value]
-      )
+      blocks.map((b) => [b.field, b.value])
     );
   }
 
   return (
     <Layout>
-      <Meta
-        title={t('a11y:accessibility-statement')}
-      />
+      <Meta title={t('a11y:accessibility-statement')} />
       <HeaderBg>
         <Container>
           <Row>
@@ -77,46 +70,35 @@ const AccessibilityPage = () => {
       <div className="content-area text-content my-2">
         <Container>
           <Row>
-          <Col
-            xl={{ size: 6, offset: 3 }}
-            lg={{ size: 8, offset: 2 }}
-            md={{ size: 10, offset: 1 }}
-          >
+            <Col
+              xl={{ size: 6, offset: 3 }}
+              lg={{ size: 8, offset: 2 }}
+              md={{ size: 10, offset: 1 }}
+            >
               <p>
-                {plan.generalContent.ownerName}
-                {' '}
-                {t('a11y:commitment')}
-                {' '}
+                {plan.generalContent.ownerName} {t('a11y:commitment')}{' '}
                 {t('a11y:legislation')}
               </p>
               <p>
-                {t('a11y:applies-to')}
-                {' '}
-                {plan.generalContent.siteTitle}
-                {' '}
-                {t('a11y:website')}
-                .
+                {t('a11y:applies-to')} {plan.generalContent.siteTitle}{' '}
+                {t('a11y:website')}.
               </p>
             </Col>
           </Row>
-          </Container>
-          <AccessibilityStatementComplianceStatusBlock />
-          <AccessibilityStatementPreparationInformationBlock />
-          <AccessibilityStatementContactInformationBlock />
-          <Container>
+        </Container>
+        <AccessibilityStatementComplianceStatusBlock />
+        <AccessibilityStatementPreparationInformationBlock />
+        <AccessibilityStatementContactInformationBlock />
+        <Container>
           <Row>
-          <Col
-            xl={{ size: 6, offset: 3 }}
-            lg={{ size: 8, offset: 2 }}
-            md={{ size: 10, offset: 1 }}
-          >
+            <Col
+              xl={{ size: 6, offset: 3 }}
+              lg={{ size: 8, offset: 2 }}
+              md={{ size: 10, offset: 1 }}
+            >
               <h2>{t('a11y:enforcement-procedure')}</h2>
-              <p>
-                {t('a11y:enforcement-step-1')}
-              </p>
-              <p>
-                {t('a11y:enforcement-step-2')}
-              </p>
+              <p>{t('a11y:enforcement-step-1')}</p>
+              <p>{t('a11y:enforcement-step-2')}</p>
               <p>
                 <a href={t('a11y:enforcement-url')}>
                   {t('a11y:enforcement-url')}
@@ -124,9 +106,7 @@ const AccessibilityPage = () => {
               </p>
               <h3>{t('a11y:enforcement-contact')}</h3>
               <p>
-                <strong>
-                  {t('a11y:enforcement-body')}
-                </strong>
+                <strong>{t('a11y:enforcement-body')}</strong>
               </p>
               <a href={t('a11y:enforcement-body-url')}>
                 {t('a11y:enforcement-body-url')}
@@ -135,9 +115,7 @@ const AccessibilityPage = () => {
               <a href={`mailto:${t('a11y:enforcement-body-email')}`}>
                 {t('a11y:enforcement-body-email')}
               </a>
-              <p>
-                {t('a11y:enforcement-body-tel')}
-              </p>
+              <p>{t('a11y:enforcement-body-tel')}</p>
             </Col>
           </Row>
         </Container>
@@ -150,6 +128,6 @@ const initialProps = {
   namespacesRequired: ['common', 'a11y'],
 };
 
-AccessibilityPage.getInitialProps = async () => (initialProps);
+AccessibilityPage.getInitialProps = async () => initialProps;
 
 export default AccessibilityPage;

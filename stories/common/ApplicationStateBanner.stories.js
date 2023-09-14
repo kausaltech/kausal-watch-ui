@@ -6,13 +6,9 @@ export default {
 };
 
 export const ApplicationStateTesting = () => (
-  <ApplicationStateBanner
-    deploymentType="testing"
-  />
+  <ApplicationStateBanner deploymentType="testing" />
 );
 
 export const ApplicationStateDevelopment = () => (
-  <ApplicationStateBanner
-    deploymentType="development"
-  />
+  <ApplicationStateBanner deploymentType="development" />
 );

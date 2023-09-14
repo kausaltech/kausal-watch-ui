@@ -4,11 +4,7 @@ import { useTranslation } from 'common/i18n';
 import { useTheme } from 'common/theme';
 import type { PlotParams } from 'react-plotly.js';
 
-
-const Plot = dynamic(
-  () => import('./Plot'),
-  { ssr: false }
-);
+const Plot = dynamic(() => import('./Plot'), { ssr: false });
 
 const ScheduleTimeline = ({ schedules, allSchedules }) => {
   const { t } = useTranslation('common');
@@ -36,7 +32,10 @@ const ScheduleTimeline = ({ schedules, allSchedules }) => {
     }
   });
 
-  const yearrange = `${parseInt(actStartDate.split('-')[0], 10)} - ${parseInt(actEndDate.split('-')[0], 10)}`;
+  const yearrange = `${parseInt(actStartDate.split('-')[0], 10)} - ${parseInt(
+    actEndDate.split('-')[0],
+    10
+  )}`;
   const description = `${t('action-timeline-between')} ${yearrange}`;
 
   const startYear = parseInt(minDate.split('-')[0], 10);
@@ -90,9 +89,7 @@ const ScheduleTimeline = ({ schedules, allSchedules }) => {
 
   return (
     <div role="presentation">
-      <span className="visually-hidden">
-        {description}
-      </span>
+      <span className="visually-hidden">{description}</span>
       <div aria-hidden>
         <Plot
           data={data}

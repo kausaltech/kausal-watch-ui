@@ -1,9 +1,6 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
-import {
-  Card, CardBody,
-  CardTitle, Badge,
-} from 'reactstrap';
+import { Card, CardBody, CardTitle, Badge } from 'reactstrap';
 import styled from 'styled-components';
 import { transparentize } from 'polished';
 import PlanContext from 'context/plan';
@@ -25,7 +22,8 @@ const StyledCard = styled(Card)`
 
   &:hover {
     transform: translateY(-5px);
-    box-shadow: 4px 4px 8px ${(props) => transparentize(0.8, props.theme.themeColors.dark)};
+    box-shadow: 4px 4px 8px
+      ${(props) => transparentize(0.8, props.theme.themeColors.dark)};
   }
 `;
 
@@ -66,7 +64,8 @@ const StyledCardTitle = styled(CardTitle)`
 const ImgArea = styled.div`
   min-height: 9rem;
   position: relative;
-  background-color: ${(props) => (props.bgcolor || props.theme.themeColors.light)};
+  background-color: ${(props) =>
+    props.bgcolor || props.theme.themeColors.light};
 `;
 
 const ImgBg = styled.div`
@@ -97,11 +96,11 @@ const ActionNumber = styled.div`
   color: ${(props) => props.theme.themeColors.light};
   background: ${(props) => transparentize(0.1, props.theme.brandDark)};
   line-height: 1;
-  padding: .5rem 1rem;
+  padding: 0.5rem 1rem;
   border-radius: 1.75rem;
 
   &:after {
-    content: ".";
+    content: '.';
   }
 `;
 
@@ -131,33 +130,32 @@ function ActionHighlightCard(props) {
       <CardLink href target={embed.active ? '_blank' : undefined}>
         <StyledCard>
           <ImgArea bgcolor={statusColor}>
-            { imageUrl && <ImgBg background={imageUrl} /> }
+            {imageUrl && <ImgBg background={imageUrl} />}
             <ImgOverlay>
-              { !hideIdentifier && (
+              {!hideIdentifier && (
                 <ActionNumber>
-                  <span>
-                    {action.identifier}
-                  </span>
+                  <span>{action.identifier}</span>
                 </ActionNumber>
               )}
             </ImgOverlay>
           </ImgArea>
           {statusText && (
-          <StyledActionStatus
-            statusSummary={action.statusSummary}
-            completion={action.completion}
-            text={statusText}
-            plan={plan}
-          />
+            <StyledActionStatus
+              statusSummary={action.statusSummary}
+              completion={action.completion}
+              text={statusText}
+              plan={plan}
+            />
           )}
           <CardBody>
-            { actionStatus && actionStatus.identifier === 'completed'
-                  && (
-                    <ReadyBadge pill>
-                      <Icon name="check" color="#ffffff" width="2em" height="2em" />
-                    </ReadyBadge>
-                  )}
-            <StyledCardTitle tag="h3" className="card-title">{actionName}</StyledCardTitle>
+            {actionStatus && actionStatus.identifier === 'completed' && (
+              <ReadyBadge pill>
+                <Icon name="check" color="#ffffff" width="2em" height="2em" />
+              </ReadyBadge>
+            )}
+            <StyledCardTitle tag="h3" className="card-title">
+              {actionName}
+            </StyledCardTitle>
           </CardBody>
         </StyledCard>
       </CardLink>

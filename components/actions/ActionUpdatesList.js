@@ -13,7 +13,7 @@ const ActionUpdate = styled.article`
   padding: ${(props) => props.theme.spaces.s100};
   margin: 0 0 ${(props) => props.theme.spaces.s150};
   background: ${(props) => props.theme.themeColors.white};
-  border: 2px solid  ${(props) => props.theme.themeColors.light};
+  border: 2px solid ${(props) => props.theme.themeColors.light};
   border-radius: ${(props) => props.theme.cardBorderRadius};
 `;
 
@@ -42,9 +42,9 @@ const UpdateDate = styled.div`
 `;
 
 const GET_ACTION_UPDATES = gql`
-query ActionUpdates($plan: ID!, $id: ID!) {
-  action(plan: $plan, id: $id) {
-    statusUpdates {
+  query ActionUpdates($plan: ID!, $id: ID!) {
+    action(plan: $plan, id: $id) {
+      statusUpdates {
         id
         title
         date
@@ -55,19 +55,16 @@ query ActionUpdates($plan: ID!, $id: ID!) {
           avatarUrl(size: "150x150")
         }
         content
+      }
     }
   }
-}`;
+`;
 
 function ActionStatusUpdate(props) {
-  const {
-    author,
-    date,
-    title,
-    content,
-  } = props;
+  const { author, date, title, content } = props;
 
-  const defaultAvatarUrl = '/static/themes/default/images/default-avatar-user.png';
+  const defaultAvatarUrl =
+    '/static/themes/default/images/default-avatar-user.png';
 
   return (
     <ActionUpdate>
@@ -85,11 +82,11 @@ function ActionStatusUpdate(props) {
               {author ? `${author.firstName} ${author.lastName}` : 'Author'}
             </AuthorName>
             <UpdateDate>
-              <time dateTime={date}>{ dayjs(date).format('L') }</time>
+              <time dateTime={date}>{dayjs(date).format('L')}</time>
             </UpdateDate>
           </Media>
         </Media>
-        <h3>{ title }</h3>
+        <h3>{title}</h3>
       </ActionUpdateHeader>
       <RichText html={content} />
     </ActionUpdate>
@@ -104,15 +101,18 @@ class ActionUpdatesList extends React.Component {
     const plan = this.context;
 
     return (
-      <Query query={GET_ACTION_UPDATES} variables={{ id, plan: plan.identifier }}>
+      <Query
+        query={GET_ACTION_UPDATES}
+        variables={{ id, plan: plan.identifier }}
+      >
         {({ loading, error, data }) => {
-          if (loading) return <span>{ t('loading') }</span>;
+          if (loading) return <span>{t('loading')}</span>;
           if (error) return <span>{error.message}</span>;
 
           const { action } = data;
           return (
             <Row>
-              { action.statusUpdates.map((update) => (
+              {action.statusUpdates.map((update) => (
                 <Col sm="12" key={update.id}>
                   <ActionStatusUpdate
                     author={update.author}

@@ -32,30 +32,30 @@ export const GET_CATEGORY_ATTRIBUTE_TYPES = gql`
 const CategoryHeader = styled.div`
   width: 100%;
   position: relative;
-  background-color: ${(props) => props.bg ? props.bg : props.theme.brandDark};
+  background-color: ${(props) => (props.bg ? props.bg : props.theme.brandDark)};
   padding: 0 0 2rem;
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     display: flex;
     align-items: flex-start;
-    min-height: ${(props) => props.hasImage ? '32rem' : '0'};
+    min-height: ${(props) => (props.hasImage ? '32rem' : '0')};
     padding: 0;
   }
 
   @media (min-width: ${(props) => props.theme.breakpointLg}) {
-    ${(props) => props.hasImage ? '28rem' : '0'};
+    ${(props) => (props.hasImage ? '28rem' : '0')};
   }
 
   @media (min-width: ${(props) => props.theme.breakpointXl}) {
-    ${(props) => props.hasImage ? '30rem' : '0'};
+    ${(props) => (props.hasImage ? '30rem' : '0')};
   }
 `;
 
 const CategoryHeaderImage = styled.div`
-  min-height: ${(props) => props.image ? '14rem' : '0'};
+  min-height: ${(props) => (props.image ? '14rem' : '0')};
   margin: 0 -1rem;
   background-size: cover;
-  background-color: ${(props) => props.bg ? props.bg : props.theme.branddark};
+  background-color: ${(props) => (props.bg ? props.bg : props.theme.branddark)};
   background-position: ${(props) => props.imageAlign};
   background-image: url(${(props) => props.image});
   background-repeat: no-repeat;
@@ -63,7 +63,7 @@ const CategoryHeaderImage = styled.div`
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     position: absolute;
     width: 100%;
-    min-height: ${(props) => props.image ? '32rem' : '0'};
+    min-height: ${(props) => (props.image ? '32rem' : '0')};
     margin: 0;
   }
 `;
@@ -77,7 +77,7 @@ const ImageCredit = styled.span`
   top: 0;
   right: 0;
   padding: 0.25rem 0.5rem;
-  background-color: rgba(255,255,255,0.66);
+  background-color: rgba(255, 255, 255, 0.66);
   font-size: ${(props) => props.theme.fontSizeSm};
   font-family: ${(props) => props.theme.fontFamilyTiny};
 
@@ -90,14 +90,13 @@ const ImageCredit = styled.span`
 const HeaderContent = styled.div`
   position: relative;
   max-width: ${(props) => props.theme.breakpointMd};
-  margin: ${(props) => props.hasImage ? '-2rem auto 0' : '1rem auto'};
-  padding: ${(props) =>
-    `${props.theme.spaces.s200}`};
+  margin: ${(props) => (props.hasImage ? '-2rem auto 0' : '1rem auto')};
+  padding: ${(props) => `${props.theme.spaces.s200}`};
   text-align: center;
   border-radius: ${(props) => props.theme.cardBorderRadius};
   background-color: ${(props) => props.theme.themeColors.white};
   color: ${(props) => props.theme.neutralDark};
-  box-shadow: 4px 4px 8px rgba(0,0,0,0.1);
+  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.1);
   z-index: 100;
 
   h1 {
@@ -119,7 +118,7 @@ const HeaderContent = styled.div`
   }
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
-    margin: ${(props) => props.hasImage ? '14rem auto 3rem' : '3rem auto'};
+    margin: ${(props) => (props.hasImage ? '14rem auto 3rem' : '3rem auto')};
 
     h1 {
       font-size: ${(props) => props.theme.fontSizeXl};
@@ -179,71 +178,60 @@ function CategoryPageHeaderBlock(props) {
   }
 
   // AttributeCategoryChoice type can be empty, so we need to filter out those
-  const attributesWithContent = attributes?.filter(
-    (attribute) => {
-      if (attribute.__typename === 'AttributeCategoryChoice') {
-        return attribute.categories?.length > 0;
-      } else return true;
-    }
-    );
+  const attributesWithContent = attributes?.filter((attribute) => {
+    if (attribute.__typename === 'AttributeCategoryChoice') {
+      return attribute.categories?.length > 0;
+    } else return true;
+  });
 
   return (
-    <CategoryHeader
-      bg={color}
-      hasImage={!!headerImage}
-    >
+    <CategoryHeader bg={color} hasImage={!!headerImage}>
       <CategoryHeaderImage
         bg={color}
         imageAlign={imageAlign}
         image={headerImage?.large?.src}
-      >
-      </CategoryHeaderImage>
+      ></CategoryHeaderImage>
       <Container className="header-container">
         <Row>
           <Col lg={{ size: 10, offset: 1 }} xl={{ size: 12, offset: 0 }}>
-            <HeaderContent
-              hasImage={!!headerImage}
-            >
-              { level && <CategoryLevelName>{level}</CategoryLevelName> }
-              { parentTitle && (
+            <HeaderContent hasImage={!!headerImage}>
+              {level && <CategoryLevelName>{level}</CategoryLevelName>}
+              {parentTitle && (
                 <Breadcrumb>
-                  <Link href={parentUrl}><a>{parentTitle}</a></Link>
-                  {' '}
+                  <Link href={parentUrl}>
+                    <a>{parentTitle}</a>
+                  </Link>{' '}
                   /
                 </Breadcrumb>
               )}
-              {
-                iconImage && (
-                  <CategoryIconImage src={iconImage} alt />
-                )
-              }
+              {iconImage && <CategoryIconImage src={iconImage} alt />}
               <h1>
-                { identifier && (
-                <Identifier>
-                  {identifier}
-                  .
-                </Identifier>
-                )}
-                {' '}
-                { title }
+                {identifier && <Identifier>{identifier}.</Identifier>} {title}
               </h1>
-              { lead && <p>{ lead }</p> }
-              { attributesWithContent.length > 0 && (
+              {lead && <p>{lead}</p>}
+              {attributesWithContent.length > 0 && (
                 <AttributesContainer>
-                <AttributesBlock
-                  attributes={attributes}
-                  types={attributeTypes}
-                />
-                {plan.actionStatuses.length ? <CategoryMetaBar category={categoryId} /> : null}
+                  <AttributesBlock
+                    attributes={attributes}
+                    types={attributeTypes}
+                  />
+                  {plan.actionStatuses.length ? (
+                    <CategoryMetaBar category={categoryId} />
+                  ) : null}
                 </AttributesContainer>
               )}
             </HeaderContent>
           </Col>
         </Row>
       </Container>
-      { headerImage?.altText && <span className="sr-only" role="img" aria-label={headerImage?.altText} /> }
-      { headerImage?.imageCredit
-        && (
+      {headerImage?.altText && (
+        <span
+          className="sr-only"
+          role="img"
+          aria-label={headerImage?.altText}
+        />
+      )}
+      {headerImage?.imageCredit && (
         <ImageCredit>
           {`${t('image-credit')}: ${headerImage?.imageCredit}`}
         </ImageCredit>

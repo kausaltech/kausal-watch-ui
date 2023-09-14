@@ -63,7 +63,7 @@ class Bar extends React.Component {
         }
         val += segments[i].value;
       }
-      return val / sum * 100;
+      return (val / sum) * 100;
     };
 
     const arrowStyle = {
@@ -73,16 +73,13 @@ class Bar extends React.Component {
 
     return (
       <div className="mb-4">
-        <SegmentContainer
-          role="tablist"
-          aria-label={t('dashboard-tabs')}
-        >
+        <SegmentContainer role="tablist" aria-label={t('dashboard-tabs')}>
           {segments.map((segment) => (
             <BarSegment
               key={segment.id}
               segment={segment}
               active={segment.id === active}
-              width={segment.value / sum * 100 + 0.001}
+              width={(segment.value / sum) * 100 + 0.001}
               color={segment.color}
               onSelect={this.onSelect}
             />

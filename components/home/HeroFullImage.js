@@ -57,9 +57,15 @@ const MainCard = styled.div`
   padding: ${(props) =>
     `${props.theme.spaces.s200} ${props.theme.spaces.s200} ${props.theme.spaces.s100}`};
   border-radius: ${(props) => props.theme.cardBorderRadius};
-  background-color: ${(props) => props.color === 'dark' ? props.theme.brandDark : props.theme.themeColors.white};
-  color: ${(props) => props.color === 'dark' ? props.theme.themeColors.white : props.theme.neutralDark};
-  box-shadow: 4px 4px 8px rgba(0,0,0,0.1);
+  background-color: ${(props) =>
+    props.color === 'dark'
+      ? props.theme.brandDark
+      : props.theme.themeColors.white};
+  color: ${(props) =>
+    props.color === 'dark'
+      ? props.theme.themeColors.white
+      : props.theme.neutralDark};
+  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.1);
   z-index: 100;
 
   h1 {
@@ -67,12 +73,21 @@ const MainCard = styled.div`
     margin-bottom: ${(props) => props.theme.spaces.s100};
   }
 
-  h1, h2, h3, h4 {
-    color: ${(props) => props.color === 'dark' ? props.theme.themeColors.white : props.theme.brandDark};
+  h1,
+  h2,
+  h3,
+  h4 {
+    color: ${(props) =>
+      props.color === 'dark'
+        ? props.theme.themeColors.white
+        : props.theme.brandDark};
   }
 
   a {
-    color: ${(props) => props.color === 'dark' ? props.theme.themeColors.white : props.theme.neutralDark};
+    color: ${(props) =>
+      props.color === 'dark'
+        ? props.theme.themeColors.white
+        : props.theme.neutralDark};
 
     &:hover {
       text-decoration: none;
@@ -86,13 +101,19 @@ const MainCard = styled.div`
   }
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
-    margin: 3rem ${(props) => {
-      switch(props.alignment) {
-        case 'left': return '0 2rem 0';
-        case 'right': return '0 2rem auto';
-        case 'center': return 'auto';
-        default: return '0';
-      }}};
+    margin: 3rem
+      ${(props) => {
+        switch (props.alignment) {
+          case 'left':
+            return '0 2rem 0';
+          case 'right':
+            return '0 2rem auto';
+          case 'center':
+            return 'auto';
+          default:
+            return '0';
+        }
+      }};
 
     h1 {
       font-size: ${(props) => props.theme.fontSizeXl};
@@ -109,7 +130,7 @@ const ImageCredit = styled.span`
   top: 0;
   right: 0;
   padding: 0.25rem 0.5rem;
-  background-color: rgba(255,255,255,0.66);
+  background-color: rgba(255, 255, 255, 0.66);
   font-size: ${(props) => props.theme.fontSizeSm};
   font-family: ${(props) => props.theme.fontFamilyTiny};
 
@@ -121,8 +142,13 @@ const ImageCredit = styled.span`
 
 const HeroFullImage = (props) => {
   const {
-    id = '', bgImage, imageAlign, title, lead,
-    altText, imageCredit,
+    id = '',
+    bgImage,
+    imageAlign,
+    title,
+    lead,
+    altText,
+    imageCredit,
   } = props;
 
   const { t } = useTranslation();
@@ -130,30 +156,33 @@ const HeroFullImage = (props) => {
 
   return (
     <Hero id={id}>
-      <HeroImage
-        image={bgImage}
-        imageAlign={imageAlign}
-      />
-      { altText && <span className="sr-only" role="img" aria-label={altText} /> }
+      <HeroImage image={bgImage} imageAlign={imageAlign} />
+      {altText && <span className="sr-only" role="img" aria-label={altText} />}
       {imageCredit && (
-        <ImageCredit>
-          {`${t('image-credit')}: ${imageCredit}`}
-        </ImageCredit>
+        <ImageCredit>{`${t('image-credit')}: ${imageCredit}`}</ImageCredit>
       )}
       <Container>
         <HeroContent>
           <MainCard
-            alignment={theme.settings?.frontHero ? theme.settings.frontHero.cardPlacement : 'left'}
-            color={theme.settings?.frontHero ? theme.settings.frontHero?.color : 'light'}
+            alignment={
+              theme.settings?.frontHero
+                ? theme.settings.frontHero.cardPlacement
+                : 'left'
+            }
+            color={
+              theme.settings?.frontHero
+                ? theme.settings.frontHero?.color
+                : 'light'
+            }
           >
-            <h1>{ title }</h1>
+            <h1>{title}</h1>
             <RichText html={lead} className="lead-content" />
           </MainCard>
         </HeroContent>
       </Container>
     </Hero>
   );
-}
+};
 
 HeroFullImage.defaultProps = {
   imageAlign: 'left',

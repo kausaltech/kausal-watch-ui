@@ -23,23 +23,33 @@ const CREATE_USER_FEEDBACK = gql`
   }
 `;
 
-function makeAbsoluteUrl (url) {
+function makeAbsoluteUrl(url) {
   let baseUrl = null;
   if (window?.location?.href === undefined) {
     baseUrl = 'https://unknown.site.kausal.tech';
-  }
-  else {
-    baseUrl = (new URL(window.location.href)).origin;
+  } else {
+    baseUrl = new URL(window.location.href).origin;
   }
   return new URL(url, baseUrl);
 }
 
-const FeedbackForm = ({ planIdentifier, actionId, heading, description, prompt, formContext }) => {
-  const { control, formState: { errors }, handleSubmit } = useForm();
+const FeedbackForm = ({
+  planIdentifier,
+  actionId,
+  heading,
+  description,
+  prompt,
+  formContext,
+}) => {
+  const {
+    control,
+    formState: { errors },
+    handleSubmit,
+  } = useForm();
   const { t } = useTranslation();
   const [sent, setSent] = useState(false);
   const onDismiss = () => setSent(false);
-  const router = useRouter()
+  const router = useRouter();
 
   const [
     createUserFeedback,
@@ -52,7 +62,9 @@ const FeedbackForm = ({ planIdentifier, actionId, heading, description, prompt, 
       type: formContext,
       plan: planIdentifier,
       action: actionId,
-      url: makeAbsoluteUrl(decodeURIComponent(router.query.lastUrl || router.asPath))
+      url: makeAbsoluteUrl(
+        decodeURIComponent(router.query.lastUrl || router.asPath)
+      ),
     };
     setSent(true);
     createUserFeedback({ variables: { input: data } });
@@ -63,7 +75,7 @@ const FeedbackForm = ({ planIdentifier, actionId, heading, description, prompt, 
       <h2 className="mb-4">{heading ?? t('give-feedback')}</h2>
       <p>{description ?? t('feedback-description')}</p>
       <p>{prompt ?? t('feedback-prompt')}</p>
-      {(mutationData && !mutationLoading && !mutationError) && (
+      {mutationData && !mutationLoading && !mutationError && (
         <Alert
           color="primary"
           isOpen={sent}
@@ -74,15 +86,15 @@ const FeedbackForm = ({ planIdentifier, actionId, heading, description, prompt, 
           <p>{t('feedback-thankyou-content')}</p>
         </Alert>
       )}
-      { (!sent || mutationError) && (
+      {(!sent || mutationError) && (
         <div className="mt-4">
-          <form onSubmit={handleSubmit(onSubmit)} autoComplete='true'>
+          <form onSubmit={handleSubmit(onSubmit)} autoComplete="true">
             <Controller
               render={({ field }) => (
                 <TextInput
                   {...field}
                   id="name-field"
-                  autoComplete='name'
+                  autoComplete="name"
                   label={t('name')}
                 />
               )}
@@ -96,7 +108,7 @@ const FeedbackForm = ({ planIdentifier, actionId, heading, description, prompt, 
                 <TextInput
                   {...field}
                   id="email-field"
-                  autoComplete='email'
+                  autoComplete="email"
                   label={`${t('email')} (${t('required-field')})`}
                   invalid={errors.email?.type === 'required'}
                   formFeedback={errors.email && t('error-email-format')}

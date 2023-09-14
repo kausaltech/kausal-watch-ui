@@ -12,84 +12,82 @@ import StreamField from 'components/common/StreamField';
 import { GetHomePageQuery } from 'common/__generated__/graphql';
 import CategoriesContext from 'context/categories';
 
-
 const GET_HOME_PAGE = gql`
-query GetHomePage($plan: ID!, $path: String!) {
-  planPage(plan: $plan, path: $path) {
-    __typename
-    id
-    slug
-    ... on PlanRootPage {
-      body {
-        ...StreamFieldFragment
+  query GetHomePage($plan: ID!, $path: String!) {
+    planPage(plan: $plan, path: $path) {
+      __typename
+      id
+      slug
+      ... on PlanRootPage {
+        body {
+          ...StreamFieldFragment
+        }
       }
+      lastPublishedAt
     }
-    lastPublishedAt
-  }
-  plan(id: $plan) {
-    id
-    primaryActionClassification {
-      categories(onlyRoot: true) {
-        id
-        identifier
-        name
-        leadParagraph
-        image {
-          ...MultiUseImageFragment
-        }
-        color
-        categoryPage {
-          live
+    plan(id: $plan) {
+      id
+      primaryActionClassification {
+        categories(onlyRoot: true) {
           id
-          title
-          urlPath
-        }
-        level {
+          identifier
           name
-          namePlural
-        }
-        parent {
-          id
-        }
-        type {
-          id
-          hideCategoryIdentifiers
+          leadParagraph
+          image {
+            ...MultiUseImageFragment
+          }
+          color
+          categoryPage {
+            live
+            id
+            title
+            urlPath
+          }
+          level {
+            name
+            namePlural
+          }
+          parent {
+            id
+          }
+          type {
+            id
+            hideCategoryIdentifiers
+          }
         }
       }
     }
   }
-}
-${StreamField.fragments.streamField}
-${images.fragments.multiUseImage}
+  ${StreamField.fragments.streamField}
+  ${images.fragments.multiUseImage}
 `;
 
 const getRootCategories = (allCategories) => {
   const mainCategories = allCategories.filter((cat) => cat.parent === null);
-  if (mainCategories.length === 1) return allCategories.filter((cat) => cat.parent?.id === mainCategories[0].id);
+  if (mainCategories.length === 1)
+    return allCategories.filter(
+      (cat) => cat.parent?.id === mainCategories[0].id
+    );
   return mainCategories;
 };
 
 type HomeProps = {
-  primaryActionClassification: GetHomePageQuery['plan']['primaryActionClassification'],
-  page: GetHomePageQuery['planPage'],
-}
+  primaryActionClassification: GetHomePageQuery['plan']['primaryActionClassification'];
+  page: GetHomePageQuery['planPage'];
+};
 
 function Home({ primaryActionClassification, page }: HomeProps) {
   const { t } = useTranslation(['common']);
   const categories = primaryActionClassification?.categories;
 
   if (page.__typename != 'PlanRootPage') {
-    throw new Error("Invalid home page type");
+    throw new Error('Invalid home page type');
   }
   return (
     <CategoriesContext.Provider value={categories}>
       <div className="content-area">
         {page.body && (
-          <StreamField
-            page={page}
-            blocks={page.body}
-            color="#ffffff"
-          />
+          <StreamField page={page} blocks={page.body} color="#ffffff" />
         )}
       </div>
     </CategoriesContext.Provider>
@@ -115,13 +113,14 @@ function RootPage() {
     if (!planPage) {
       return <ErrorMessage statusCode={404} message={t('page-not-found')} />;
     }
-    component = <Home page={planPage} primaryActionClassification={queriedPlan.primaryActionClassification} />
+    component = (
+      <Home
+        page={planPage}
+        primaryActionClassification={queriedPlan.primaryActionClassification}
+      />
+    );
   }
-  return (
-    <Layout>
-      {component}
-    </Layout>
-  );
+  return <Layout>{component}</Layout>;
 }
 
 export default RootPage;

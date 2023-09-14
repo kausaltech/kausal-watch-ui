@@ -16,14 +16,14 @@ import {
   responsiblesTooltipContent,
   indicatorsTooltipContent,
   lastUpdatedTooltipContent,
-  impactTooltipContent } from './ActionTableTooltips';
-
+  impactTooltipContent,
+} from './ActionTableTooltips';
 
 const StyledRow = styled.tr`
   font-family: ${(props) => props.theme.fontFamilyContent};
 
   &.merged {
-    opacity: .25;
+    opacity: 0.25;
   }
 
   td {
@@ -37,7 +37,8 @@ const StyledRow = styled.tr`
     }
 
     &.has-tooltip:hover {
-      box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+      box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px,
+        rgba(0, 0, 0, 0.24) 0px 1px 2px;
     }
   }
 
@@ -81,9 +82,7 @@ const UpdatedAgo = styled.div`
   padding: ${(props) => props.theme.spaces.s050};
 `;
 
-const TaskTooltip = styled.div`
-
-`;
+const TaskTooltip = styled.div``;
 
 const TaskStatusViz = styled.div`
   display: flex;
@@ -133,7 +132,7 @@ const getTaskCounts = (tasks, t) => {
   let completedTasks = 0;
   const nowDate = new Date();
 
-  if (!tasks) return (<span />);
+  if (!tasks) return <span />;
 
   tasks.forEach((task) => {
     const taskDue = new Date(task.dueAt);
@@ -151,9 +150,10 @@ const getTaskCounts = (tasks, t) => {
     }
   });
 
-  const displayTasksCount = tasksCount === 0
-    ? t('actions:action-no-tasks')
-    : `${tasksCount} ${t('actions:action-tasks-count')}`;
+  const displayTasksCount =
+    tasksCount === 0
+      ? t('actions:action-no-tasks')
+      : `${tasksCount} ${t('actions:action-tasks-count')}`;
 
   return {
     total: tasksCount,
@@ -161,9 +161,8 @@ const getTaskCounts = (tasks, t) => {
     onTime: ontimeTasks,
     late: lateTasks,
     completed: completedTasks,
-  }
+  };
 };
-
 
 const TasksStatusBar = (props) => {
   const { t } = useTranslation(['common', 'actions']);
@@ -175,7 +174,9 @@ const TasksStatusBar = (props) => {
       <TaskStatusViz>
         <div
           className="completed"
-          style={{ width: `${(taskCounts.completed / taskCounts.total) * 100}%` }}
+          style={{
+            width: `${(taskCounts.completed / taskCounts.total) * 100}%`,
+          }}
         />
         <div
           className="late"
@@ -186,8 +187,10 @@ const TasksStatusBar = (props) => {
           style={{ width: `${(taskCounts.onTime / taskCounts.total) * 100}%` }}
         />
       </TaskStatusViz>
-      <VizLabel className={taskCounts.total === 0 && 'disabled'}>{taskCounts.displayTotal}</VizLabel>
-      </>
+      <VizLabel className={taskCounts.total === 0 && 'disabled'}>
+        {taskCounts.displayTotal}
+      </VizLabel>
+    </>
   );
 };
 
@@ -208,13 +211,17 @@ const IndicatorsViz = (props) => {
     <IndicatorsDisplay>
       <Icon
         name="tachometer"
-        color={hasIndicators ? theme.graphColors.green070 : theme.graphColors.grey030}
+        color={
+          hasIndicators ? theme.graphColors.green070 : theme.graphColors.grey030
+        }
         height="1.2em"
         width="1.2em"
       />
       <Icon
         name="bullseye"
-        color={hasGoals ? theme.graphColors.green070 : theme.graphColors.grey030}
+        color={
+          hasGoals ? theme.graphColors.green070 : theme.graphColors.grey030
+        }
         height="1.2em"
         width="1.2em"
       />
@@ -235,11 +242,23 @@ const ResponsiblesViz = (props) => {
 
   return (
     <ResponsibleList>
-      { contactList.map((contact) => (
-        <Icon name="dot-circle" color={theme.actionOnTimeColor} key={contact} width=".8em" height=".8em" />
+      {contactList.map((contact) => (
+        <Icon
+          name="dot-circle"
+          color={theme.actionOnTimeColor}
+          key={contact}
+          width=".8em"
+          height=".8em"
+        />
       ))}
-      { noContactList.map((contact) => (
-        <Icon name="circle-outline" color={theme.actionOnTimeColor} key={contact} width=".8em" height=".8em" />
+      {noContactList.map((contact) => (
+        <Icon
+          name="circle-outline"
+          color={theme.actionOnTimeColor}
+          key={contact}
+          width=".8em"
+          height=".8em"
+        />
       ))}
     </ResponsibleList>
   );
@@ -247,9 +266,16 @@ const ResponsiblesViz = (props) => {
 
 const ActionTableRow = React.memo(function ActionTableRow(props) {
   const {
-    item, plan, planViewUrl,
-    hasResponsibles, hasImpacts, hasIndicators, hasImplementationPhases, hasUpdateStatus,
-    popperRef } = props;
+    item,
+    plan,
+    planViewUrl,
+    hasResponsibles,
+    hasImpacts,
+    hasIndicators,
+    hasImplementationPhases,
+    hasUpdateStatus,
+    popperRef,
+  } = props;
 
   const theme = useTheme();
 
@@ -265,51 +291,52 @@ const ActionTableRow = React.memo(function ActionTableRow(props) {
   };
   return (
     <StyledRow>
-      { plan.primaryOrgs.length > 0 && (
+      {plan.primaryOrgs.length > 0 && (
         <td
           className="logo-column has-tooltip"
-          onMouseEnter={(e)=> showTooltip(e, primaryOrgTooltipContent(t, item.primaryOrg?.name))}
-          onMouseLeave={(e)=> hideTooltip(e)}
+          onMouseEnter={(e) =>
+            showTooltip(e, primaryOrgTooltipContent(t, item.primaryOrg?.name))
+          }
+          onMouseLeave={(e) => hideTooltip(e)}
         >
-          { item.primaryOrg && (
+          {item.primaryOrg && (
             <OrgLogo
-              src={item.primaryOrg?.logo?.rendition?.src || '/static/themes/default/images/default-avatar-org.png'}
+              src={
+                item.primaryOrg?.logo?.rendition?.src ||
+                '/static/themes/default/images/default-avatar-org.png'
+              }
               alt={item.primaryOrg.name}
               id={`L${item.primaryOrg.id}`}
             />
           )}
         </td>
       )}
-      { plan.features.hasActionIdentifiers && (
-      <td>
-        { item.identifier }
-        .
-      </td>
-      )}
-      <th
-        scope="row"
-        className="row-title"
-      >
-        <ActionLink
-          action={item}
-          planUrl={planViewUrl}
-        >
-          { item.name }
+      {plan.features.hasActionIdentifiers && <td>{item.identifier}.</td>}
+      <th scope="row" className="row-title">
+        <ActionLink action={item} planUrl={planViewUrl}>
+          {item.name}
         </ActionLink>
       </th>
-      <td
-        className="has-tooltip"
-      >
+      <td className="has-tooltip">
         <div
           role="button"
-          onMouseEnter={(e)=>
-          showTooltip(e, phasesTooltipContent(
-            t, hasImplementationPhases, actionStatusSummary, item.implementationPhase, item.mergedWith, plan
-            ))}
-          onMouseLeave={(e)=> hideTooltip(e)}
+          onMouseEnter={(e) =>
+            showTooltip(
+              e,
+              phasesTooltipContent(
+                t,
+                hasImplementationPhases,
+                actionStatusSummary,
+                item.implementationPhase,
+                item.mergedWith,
+                plan
+              )
+            )
+          }
+          onMouseLeave={(e) => hideTooltip(e)}
         >
           <StatusDisplay>
-            { hasImplementationPhases ? (
+            {hasImplementationPhases ? (
               <ActionPhase
                 action={item}
                 status={actionStatusSummary}
@@ -323,40 +350,46 @@ const ActionTableRow = React.memo(function ActionTableRow(props) {
               <StatusBadge
                 statusSummary={actionStatusSummary}
                 plan={plan}
-                statusName={item.mergedWith
-                  ? t('actions:action-status-merged', getActionTermContext(plan))
-                  : actionStatusSummary.label}
+                statusName={
+                  item.mergedWith
+                    ? t(
+                        'actions:action-status-merged',
+                        getActionTermContext(plan)
+                      )
+                    : actionStatusSummary.label
+                }
               />
             )}
           </StatusDisplay>
         </div>
       </td>
-      <td
-        className="has-tooltip"
-      >
+      <td className="has-tooltip">
         <div
           role="button"
-          onMouseEnter={(e)=> showTooltip(e, tasksTooltipContent(t, getTaskCounts(item.tasks, t)))}
-          onMouseLeave={(e)=> hideTooltip(e)}
+          onMouseEnter={(e) =>
+            showTooltip(e, tasksTooltipContent(t, getTaskCounts(item.tasks, t)))
+          }
+          onMouseLeave={(e) => hideTooltip(e)}
           aria-describedby={`tasks-${item.identifier}`}
         >
-          <TasksStatusBar
-            tasks={item.tasks}
-          />
+          <TasksStatusBar tasks={item.tasks} />
         </div>
         {/* Content for screenreaders */}
         <div hidden id={`tasks-${item.identifier}`}>
-          { tasksTooltipContent(t, getTaskCounts(item.tasks, t)) }
+          {tasksTooltipContent(t, getTaskCounts(item.tasks, t))}
         </div>
       </td>
-      { hasResponsibles && (
-        <td
-          className="has-tooltip"
-        >
+      {hasResponsibles && (
+        <td className="has-tooltip">
           <div
             role="button"
-            onMouseEnter={(e)=> showTooltip(e, responsiblesTooltipContent(t, theme, item.responsibleParties))}
-            onMouseLeave={(e)=> hideTooltip(e)}
+            onMouseEnter={(e) =>
+              showTooltip(
+                e,
+                responsiblesTooltipContent(t, theme, item.responsibleParties)
+              )
+            }
+            onMouseLeave={(e) => hideTooltip(e)}
             aria-describedby={`parties-${item.identifier}`}
           >
             <ResponsiblesViz
@@ -366,17 +399,22 @@ const ActionTableRow = React.memo(function ActionTableRow(props) {
           </div>
           {/* Content for screenreaders */}
           <div hidden id={`parties-${item.identifier}`}>
-            { responsiblesTooltipContent(t, theme, item.responsibleParties) }
+            {responsiblesTooltipContent(t, theme, item.responsibleParties)}
           </div>
         </td>
       )}
-      { hasImpacts && (
+      {hasImpacts && (
         <td
           className="has-tooltip"
-          onMouseEnter={(e)=> showTooltip(e, impactTooltipContent(t, item.impact, plan.actionImpacts))}
-          onMouseLeave={(e)=> hideTooltip(e)}
+          onMouseEnter={(e) =>
+            showTooltip(
+              e,
+              impactTooltipContent(t, item.impact, plan.actionImpacts)
+            )
+          }
+          onMouseLeave={(e) => hideTooltip(e)}
         >
-          { item.impact && (
+          {item.impact && (
             <ActionImpact
               identifier={item.impact.identifier}
               name=""
@@ -387,35 +425,40 @@ const ActionTableRow = React.memo(function ActionTableRow(props) {
           {/* TODO: Tooltip accessibility */}
         </td>
       )}
-      { hasIndicators && (
-        <td
-          className="has-tooltip"
-        >
+      {hasIndicators && (
+        <td className="has-tooltip">
           <div
             role="button"
-            onMouseEnter={(e) => showTooltip(e, indicatorsTooltipContent(t, theme, item.relatedIndicators))}
-            onMouseLeave={(e)=> hideTooltip(e)}
+            onMouseEnter={(e) =>
+              showTooltip(
+                e,
+                indicatorsTooltipContent(t, theme, item.relatedIndicators)
+              )
+            }
+            onMouseLeave={(e) => hideTooltip(e)}
             aria-describedby={`indicators-${item.identifier}`}
           >
-          { item.relatedIndicators && !item.mergedWith
-            && <IndicatorsViz relatedIndicators={item.relatedIndicators}/>}
+            {item.relatedIndicators && !item.mergedWith && (
+              <IndicatorsViz relatedIndicators={item.relatedIndicators} />
+            )}
           </div>
           {/* Content for screenreaders */}
           <div hidden id={`indicators-${item.identifier}`}>
-            { indicatorsTooltipContent(t, theme, item.relatedIndicators) }
+            {indicatorsTooltipContent(t, theme, item.relatedIndicators)}
           </div>
         </td>
       )}
-      { hasUpdateStatus && (
-      <td
-        className="has-tooltip"
-        onMouseEnter={(e)=> showTooltip(e, lastUpdatedTooltipContent(t, item.updatedAt))}
-        onMouseLeave={(e)=> hideTooltip(e)}
-      >
-        <UpdatedAgo>
-          { `${dayjs(item.updatedAt).fromNow(false)}` }
-        </UpdatedAgo>
-      </td> )}
+      {hasUpdateStatus && (
+        <td
+          className="has-tooltip"
+          onMouseEnter={(e) =>
+            showTooltip(e, lastUpdatedTooltipContent(t, item.updatedAt))
+          }
+          onMouseLeave={(e) => hideTooltip(e)}
+        >
+          <UpdatedAgo>{`${dayjs(item.updatedAt).fromNow(false)}`}</UpdatedAgo>
+        </td>
+      )}
     </StyledRow>
   );
 });

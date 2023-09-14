@@ -11,7 +11,8 @@ const AccessibilityStatementComplianceStatusBlock = ({ id = '' }) => {
   if (!(locale in accessibilityStatementData)) {
     locale = 'en';
   }
-  const accessibilityProblems = accessibilityStatementData[locale].nonAccessibleContent.nonCompliant;
+  const accessibilityProblems =
+    accessibilityStatementData[locale].nonAccessibleContent.nonCompliant;
   const complianceStatus = accessibilityStatementData[locale].complianceStatus;
   const complianceStatusText = t(`a11y:${complianceStatus}-compliant`);
 
@@ -25,37 +26,28 @@ const AccessibilityStatementComplianceStatusBlock = ({ id = '' }) => {
         >
           <h2>{t('a11y:compliance-status')}</h2>
           <p>
-            {complianceStatusText}
-            {' '}
+            {complianceStatusText}{' '}
             <a href={t('a11y:wcag-url')}>{t('a11y:target-level')}</a>
           </p>
-        { accessibilityProblems.length > 0
-          && (
+          {accessibilityProblems.length > 0 && (
             <>
               {' '}
               {t('a11y:due-to')}
               <h2>{t('a11y:non-accessible-content')}</h2>
               <h3>{t('a11y:non-compliance-aa')}</h3>
-              <p>
-                {t('a11y:non-compliance-below')}
-                :
-              </p>
+              <p>{t('a11y:non-compliance-below')}:</p>
               <ul>
-                { accessibilityProblems.map((problem) => (
+                {accessibilityProblems.map((problem) => (
                   <li key={problem.id}>
                     <h4>{problem.title}</h4>
-                    <p dangerouslySetInnerHTML={{ __html: problem.description }}/>
-                    <p>
-                      WCAG:
-                      {' '}
-                      {problem.WCAGSection}
-                    </p>
+                    <p
+                      dangerouslySetInnerHTML={{ __html: problem.description }}
+                    />
+                    <p>WCAG: {problem.WCAGSection}</p>
                   </li>
                 ))}
               </ul>
-              <p>
-                {t('a11y:when-fixed')}
-              </p>
+              <p>{t('a11y:when-fixed')}</p>
             </>
           )}
         </Col>

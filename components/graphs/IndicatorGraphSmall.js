@@ -148,10 +148,7 @@ function getTraces(dimensions, cube, names) {
     // If the cube has a time dimension, the values will be objects (and not straight numbers)
     if (typeof cube[0] === 'object') {
       return dim.categories.map((cat, idx) => {
-        const traceName = [
-          ...(names || []),
-          cat.name,
-        ].join(', ');
+        const traceName = [...(names || []), cat.name].join(', ');
         return {
           name: traceName,
           type: 'lines+markers',
@@ -162,12 +159,14 @@ function getTraces(dimensions, cube, names) {
     }
 
     // No time dimension, 'x' axis will be categories
-    return [{
-      name: (names || [dim.name]).join(', '),
-      type: 'bar',
-      x: dim.categories.map((cat) => cat.name),
-      y: cube,
-    }];
+    return [
+      {
+        name: (names || [dim.name]).join(', '),
+        type: 'bar',
+        x: dim.categories.map((cat) => cat.name),
+        y: cube,
+      },
+    ];
   }
   let traces = [];
   const rest = dimensions.splice(1);
@@ -181,14 +180,18 @@ function getTraces(dimensions, cube, names) {
 
 function generateSingleYearPlot(indicator, values, i18n, plotColors) {
   // Choose the dimension with the most categories as the X axis
-  const dimensions = indicator.dimensions.map((indicatorDim) => indicatorDim.dimension)
-    .sort((a, b) => (a.categories.length - b.categories.length));
+  const dimensions = indicator.dimensions
+    .map((indicatorDim) => indicatorDim.dimension)
+    .sort((a, b) => a.categories.length - b.categories.length);
   const cube = generateCube(dimensions, values);
   const allTraces = [];
   const dim = dimensions;
   let path;
 
-  const traces = getTraces(dimensions, cube).map((trace, idx) => ({ marker: { color: plotColors.mainScale[idx + 1] }, ...trace }));
+  const traces = getTraces(dimensions, cube).map((trace, idx) => ({
+    marker: { color: plotColors.mainScale[idx + 1] },
+    ...trace,
+  }));
 
   return {
     data: traces,
@@ -200,10 +203,17 @@ function generateSingleYearPlot(indicator, values, i18n, plotColors) {
 }
 
 function generateDataTraces(indicator, values, i18n, plotColors, unitLabel) {
-  const dimensions = indicator.dimensions.map((indicatorDim) => indicatorDim.dimension)
-    .sort((a, b) => (a.categories.length - b.categories.length));
+  const dimensions = indicator.dimensions
+    .map((indicatorDim) => indicatorDim.dimension)
+    .sort((a, b) => a.categories.length - b.categories.length);
   const symbols = [
-    'square', 'diamond', 'pentagon', 'hexagram', 'star-diamond', 'hash', 'y-down',
+    'square',
+    'diamond',
+    'pentagon',
+    'hexagram',
+    'star-diamond',
+    'hash',
+    'y-down',
   ];
   const cube = generateCube(dimensions, values);
   const dataTraces = getTraces(dimensions, cube).map((trace, idx) => {
@@ -245,7 +255,7 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
   let onlyIntegers = true;
   let maxDigits = 0;
   const { unit } = indicator;
-  const unitLabel = unit.name === 'no unit' ? '' : (unit.shortName || unit.name);
+  const unitLabel = unit.name === 'no unit' ? '' : unit.shortName || unit.name;
   const traces = [];
 
   function processItem(item) {
@@ -265,18 +275,26 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
     return { date, value, categories };
   }
 
-  const values = [...indicator.values].sort((a, b) => a.date - b.date).map(processItem);
+  const values = [...indicator.values]
+    .sort((a, b) => a.date - b.date)
+    .map(processItem);
   const dimensionedValues = values.filter((val) => val.categories.length > 0);
   const dates = Array.from(new Set(values.map((item) => item.date))).sort();
 
   // Render in a different way for datasets with only one time point
-  if (dates.length == 1 && indicator.dimensions.length && dimensionedValues.length) {
+  if (
+    dates.length == 1 &&
+    indicator.dimensions.length &&
+    dimensionedValues.length
+  ) {
     return generateSingleYearPlot(indicator, values, i18n, plotColors);
   }
 
   // Draw the main historical series (non-dimensioned)
   const mainValues = values.filter((item) => !item.categories.length);
-  let traceName = indicator.quantity ? capitalizeFirstLetter(indicator.quantity.name) : null;
+  let traceName = indicator.quantity
+    ? capitalizeFirstLetter(indicator.quantity.name)
+    : null;
   if (dimensionedValues.length) {
     traceName = capitalizeFirstLetter(i18n.t('total'));
   }
@@ -285,7 +303,9 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
     x: mainValues.map((item) => item.date),
     name: traceName,
     color: plotColors.trace,
-    hovertemplate: dimensionedValues.length ? `%{x} ${traceName}: %{y} ${unitLabel}` : `%{x}: %{y} ${unitLabel}`,
+    hovertemplate: dimensionedValues.length
+      ? `%{x} ${traceName}: %{y} ${unitLabel}`
+      : `%{x}: %{y} ${unitLabel}`,
     hoverinfo: 'x+y',
     hoverlabel: {
       namelength: 0,
@@ -357,7 +377,9 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
 
     if (!scenarios.has(scenarioId)) {
       // Default scenario (organization goal) is plotted with color #1
-      const color = scenarioId ? plotColors.goalScale[colorIdx++] : plotColors.goalScale[1];
+      const color = scenarioId
+        ? plotColors.goalScale[colorIdx++]
+        : plotColors.goalScale[1];
       const scenario = { goals: [], color };
 
       if (scenarioId) {
@@ -388,7 +410,9 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
       x: goals.map((item) => item.date),
       type: 'scatter',
       mode: 'lines+markers',
-      name: dataTrace.name ? `${dataTrace.name} (${scenario.name})` : scenario.name,
+      name: dataTrace.name
+        ? `${dataTrace.name} (${scenario.name})`
+        : scenario.name,
       line: {
         width: 3,
         dash: 'dash',
@@ -414,7 +438,8 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
   // Draw current trend line
   if (indicator.timeResolution === 'YEAR' && mainValues.length >= 5) {
     const numberOfYears = Math.min(mainValues.length, 10);
-    const regData = mainValues.slice(mainValues.length - numberOfYears, mainValues.length)
+    const regData = mainValues
+      .slice(mainValues.length - numberOfYears, mainValues.length)
       .map((item) => [parseInt(item.date, 10), item.value]);
     const model = linearRegression(regData);
     const predictedTrace = {
@@ -426,7 +451,9 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
         color: plotColors.trend,
         dash: 'dash',
       },
-      name: dataTrace.name ? `${dataTrace.name} (${i18n.t('current-trend')})` : i18n.t('current-trend'),
+      name: dataTrace.name
+        ? `${dataTrace.name} (${i18n.t('current-trend')})`
+        : i18n.t('current-trend'),
       hoverinfo: 'none',
     };
 
@@ -475,7 +502,13 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
   }
 
   if (indicator.dimensions.length && dimensionedValues.length) {
-    const dimensionTraces = generateDataTraces(indicator, values, i18n, plotColors, unitLabel);
+    const dimensionTraces = generateDataTraces(
+      indicator,
+      values,
+      i18n,
+      plotColors,
+      unitLabel
+    );
     dimensionTraces.forEach((trace) => traces.push(trace));
   }
 
@@ -506,7 +539,7 @@ function generatePlotFromValues(indicator, i18n, plotColors) {
   const plot = { data: traces, layout };
   return plot;
 }
-const isServer = typeof window === "undefined";
+const isServer = typeof window === 'undefined';
 function IndicatorGraphSmall({ indicatorId }) {
   if (isServer) {
     return null;
@@ -566,18 +599,12 @@ function IndicatorGraphSmall({ indicatorId }) {
   });
 
   if (loading) return <ContentLoader />;
-  if (error) return (
-    <Alert color="danger">
-      {`${t('error')}: ${error.message}`}
-    </Alert>
-  );
+  if (error)
+    return <Alert color="danger">{`${t('error')}: ${error.message}`}</Alert>;
 
   const { indicator } = data;
-  if (!indicator) return (
-    <Alert color="danger">
-      {t('indicator-not-found')}
-    </Alert>
-  );
+  if (!indicator)
+    return <Alert color="danger">{t('indicator-not-found')}</Alert>;
 
   const Plot = dynamic(import('./Plot'));
 
@@ -595,7 +622,9 @@ function IndicatorGraphSmall({ indicatorId }) {
   return (
     <div>
       <h5 className="mb-3">{plotTitle}</h5>
-      <span className="visually-hidden">{ t('indicator-graph-not-accessible') }</span>
+      <span className="visually-hidden">
+        {t('indicator-graph-not-accessible')}
+      </span>
       <div aria-hidden="true">
         <Plot
           data={plot.data}

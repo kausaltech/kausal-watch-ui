@@ -1,14 +1,15 @@
 {
   "extends": ["next/core-web-vitals"],
   "rules": {
-    "max-len": [1, 120, 2, {"ignoreComments": true}],
+    "max-len": [1, 120, 2, { "ignoreComments": true }],
     "curly": ["off"],
     "object-curly-newline": ["off"],
     "react/prop-types": [2],
     "react/jsx-props-no-spreading": ["off"],
-    "import/no-extraneous-dependencies": ["error", {"devDependencies": true}],
+    "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
     "import/extensions": [
-      "warn", {
+      "warn",
+      {
         ".js": "never",
         ".mjs": "never",
         ".jsx": "never",

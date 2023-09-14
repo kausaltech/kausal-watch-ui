@@ -15,7 +15,7 @@ import Header from './header';
 import Footer from './Footer';
 
 const Content = styled.main`
-  min-height: ${(props) => props.embed ? '0' : '800px'}
+  min-height: ${(props) => (props.embed ? '0' : '800px')};
 `;
 
 function Layout({ children }) {
@@ -23,7 +23,9 @@ function Layout({ children }) {
   const site = useContext(SiteContext);
   const embed = useContext(EmbedContext);
   const theme = useTheme();
-  const iconBase = theme.name ? `/static/themes/${theme.name}/images/favicon` : null;
+  const iconBase = theme.name
+    ? `/static/themes/${theme.name}/images/favicon`
+    : null;
   const googleSiteVerificationTag = plan.domain?.googleSiteVerificationTag;
 
   const displaySite = {
@@ -35,8 +37,9 @@ function Layout({ children }) {
   if (plan.parent) {
     // Plan has a parent plan
     displaySite.title = plan.parent.name;
-    displaySite.navigationTitle = plan.parent.generalContent.siteTitle || plan.parent.name;
-  };
+    displaySite.navigationTitle =
+      plan.parent.generalContent.siteTitle || plan.parent.name;
+  }
 
   //const hideLogoOnMobile = theme.navTitleVisible && hasPlanSiblings;
   //const displayTitle = plan.parent ? plan.parent.name  : siteTitle;
@@ -55,25 +58,31 @@ function Layout({ children }) {
         <meta property="og:site_name" content={displaySite.title} />
         {iconBase && (
           <>
-            <link rel="icon" href={`${iconBase}/icon.svg`} type="image/svg+xml" />
+            <link
+              rel="icon"
+              href={`${iconBase}/icon.svg`}
+              type="image/svg+xml"
+            />
             <link rel="icon" href={`${iconBase}/favicon.ico`} />
             <link rel="apple-touch-icon" href={`${iconBase}/apple.png`} />
           </>
         )}
-        {// TODO: perhaps hide google tag on embed?
+        {
+          // TODO: perhaps hide google tag on embed?
         }
-        { googleSiteVerificationTag && <meta name="google-site-verification" content={googleSiteVerificationTag} />}
+        {googleSiteVerificationTag && (
+          <meta
+            name="google-site-verification"
+            content={googleSiteVerificationTag}
+          />
+        )}
       </Head>
-      {!embed.active && <Header
-        siteTitle={displaySite.navigationTitle}
-      />}
+      {!embed.active && <Header siteTitle={displaySite.navigationTitle} />}
       <Content id="main" embed={embed.active}>
         <CombinedIconSymbols />
         {children}
       </Content>
-      {!embed.active && <Footer
-        siteTitle={displaySite.navigationTitle}
-      />}
+      {!embed.active && <Footer siteTitle={displaySite.navigationTitle} />}
     </>
   );
 }
@@ -86,22 +95,29 @@ export default Layout;
 export function Meta(props) {
   const plan = React.useContext(PlanContext);
   const { title, shareImageUrl, description } = props;
-  const parentPlanTitle = plan.parent ? `${plan.parent.name}/${plan.shortName
-     || plan.name}` : null;
-  const siteTitle = parentPlanTitle || plan.generalContent.siteTitle || plan.name;
+  const parentPlanTitle = plan.parent
+    ? `${plan.parent.name}/${plan.shortName || plan.name}`
+    : null;
+  const siteTitle =
+    parentPlanTitle || plan.generalContent.siteTitle || plan.name;
   const generalContent = plan.generalContent || {};
   const pageTitle = title ? `${title} | ${siteTitle}` : siteTitle;
   // In ogTitle we don't want to repeat the site name.
   const ogTitle = title || siteTitle;
   const ogDescription = description || generalContent.siteDescription;
-  const ogImage = shareImageUrl || plan.image?.social?.src || plan.image?.rendition.src;
+  const ogImage =
+    shareImageUrl || plan.image?.social?.src || plan.image?.rendition.src;
 
   return (
     <Head>
       <title key="head-title">{pageTitle}</title>
       <meta property="og:title" key="head-og-title" content={ogTitle} />
       {ogDescription && (
-        <meta property="og:description" key="head-og-description" content={ogDescription} />
+        <meta
+          property="og:description"
+          key="head-og-description"
+          content={ogDescription}
+        />
       )}
       {ogImage && (
         <meta property="og:image" key="head-og-image" content={ogImage} />

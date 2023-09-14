@@ -8,9 +8,9 @@ import PlanVersionBanner from 'components/versioning/PlanVersionBanner';
 const Banner = styled.div`
   padding: 8px 16px;
   text-align: right;
-  font-family: -apple-system, -apple-system, BlinkMacSystemFont,
-  'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif,
-  helvetica neue, helvetica, Ubuntu, roboto, noto, segoe ui, arial, sans-serif;
+  font-family: -apple-system, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif,
+    helvetica neue, helvetica, Ubuntu, roboto, noto, segoe ui, arial, sans-serif;
   font-size: 12px;
   background-color: #000000;
   color: silver;
@@ -21,20 +21,20 @@ const Banner = styled.div`
 
 const Label = styled.strong`
   color: goldenrod;
-  margin-right: .5em;
+  margin-right: 0.5em;
 
   &:before {
     margin-right: 1em;
     content: ${(props) => {
-    switch (props.type) {
-      case 'production':
-        return '';
-      case 'testing':
-        return '"\\1F50D"'; /* magnifying emoji for test */
-      default:
-        return '"\\1F6A7"'; /* construction emoji for dev */
-    }
-  }}
+      switch (props.type) {
+        case 'production':
+          return '';
+        case 'testing':
+          return '"\\1F50D"'; /* magnifying emoji for test */
+        default:
+          return '"\\1F6A7"'; /* construction emoji for dev */
+      }
+    }};
   }
 `;
 
@@ -49,8 +49,8 @@ function ApplicationStateBanner(props) {
   // Only show superseding versions in production if they are published
   const supersedingVersions =
     deploymentType !== 'production'
-    ? plan.supersedingPlans
-    : plan.supersedingPlans.filter((p) => p.publishedAt);
+      ? plan.supersedingPlans
+      : plan.supersedingPlans.filter((p) => p.publishedAt);
 
   switch (deploymentType) {
     case 'production':
@@ -89,7 +89,12 @@ ApplicationStateBanner.defaultProps = {
 };
 
 ApplicationStateBanner.propTypes = {
-  deploymentType: PropTypes.oneOf(['production', 'testing', 'staging', 'development']),
+  deploymentType: PropTypes.oneOf([
+    'production',
+    'testing',
+    'staging',
+    'development',
+  ]),
 };
 
 export default ApplicationStateBanner;

@@ -17,39 +17,40 @@ const ContactList = styled.ul`
 `;
 
 const Note = styled.div`
-    color: ${(props) => props.theme.themeColors.dark};
+  color: ${(props) => props.theme.themeColors.dark};
 `;
 
 function ContactPersons(props) {
   const { t, persons } = props;
   return (
     <>
-      <SectionHeader>{ t('contact-persons') }</SectionHeader>
+      <SectionHeader>{t('contact-persons')}</SectionHeader>
       <ContactList>
-        { persons.length !== 0
-          ? persons.map((person, index) => (
+        {persons.length !== 0 ? (
+          persons.map((person, index) => (
             <li key={person.id}>
-              <ContactPerson
-                person={person}
-                leader={index === 0}
-              />
+              <ContactPerson person={person} leader={index === 0} />
             </li>
           ))
-          : <Note>{ t('contact-persons-missing') }</Note>}
+        ) : (
+          <Note>{t('contact-persons-missing')}</Note>
+        )}
       </ContactList>
     </>
   );
 }
 ContactPersons.propTypes = {
-  persons: PropTypes.arrayOf(PropTypes.shape({
-    firstName: PropTypes.string.isRequired,
-    lastName: PropTypes.string.isRequired,
-    avatarUrl: PropTypes.string,
-    title: PropTypes.string,
-    organization: PropTypes.shape({
-      name: PropTypes.string,
-    }),
-  })).isRequired,
+  persons: PropTypes.arrayOf(
+    PropTypes.shape({
+      firstName: PropTypes.string.isRequired,
+      lastName: PropTypes.string.isRequired,
+      avatarUrl: PropTypes.string,
+      title: PropTypes.string,
+      organization: PropTypes.shape({
+        name: PropTypes.string,
+      }),
+    })
+  ).isRequired,
   t: PropTypes.func.isRequired,
 };
 

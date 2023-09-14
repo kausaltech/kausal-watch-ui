@@ -25,7 +25,7 @@ function SearchPage() {
       const link = getSearchResultsLinkProps(query);
       router.replace(link.href, undefined, { shallow: true });
     },
-    [search],
+    [search]
   );
 
   if (!plan.features.enableSearch) {
@@ -34,10 +34,7 @@ function SearchPage() {
 
   return (
     <Layout>
-      <SearchView
-        search={search}
-        onSearchChange={handleSearchChange}
-      />
+      <SearchView search={search} onSearchChange={handleSearchChange} />
     </Layout>
   );
 }

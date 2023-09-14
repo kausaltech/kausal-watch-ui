@@ -1,7 +1,7 @@
-import styled from "styled-components";
-import { Container } from "reactstrap";
-import { useTranslation } from "common/i18n";
-import Icon from "components/common/Icon";
+import styled from 'styled-components';
+import { Container } from 'reactstrap';
+import { useTranslation } from 'common/i18n';
+import Icon from 'components/common/Icon';
 
 const VersionBannerSection = styled.div`
   padding: ${(props) => props.theme.spaces.s100} 0;
@@ -62,8 +62,8 @@ const PlanVersionBanner = (props) => {
               height="2.25rem"
             />
             <VersionName>
-            {t('common:version-this-is-old')}
-              <br/>
+              {t('common:version-this-is-old')}
+              <br />
               <CurrentVersionName>
                 {currentVersion?.versionName || currentVersion?.shortName}
               </CurrentVersionName>
@@ -71,7 +71,8 @@ const PlanVersionBanner = (props) => {
           </VersionNote>
           <LinkToLatestVersion>
             <a href={latestVersion?.viewUrl} className="ms-2">
-              {t('common:version-switch-to-active')}<br />
+              {t('common:version-switch-to-active')}
+              <br />
               <LatestVersionName>
                 {latestVersion?.versionName || latestVersion?.shortName}
               </LatestVersionName>
@@ -86,6 +87,7 @@ const PlanVersionBanner = (props) => {
         </VersionBanner>
       </Container>
     </VersionBannerSection>
-  )};
+  );
+};
 
-  export default PlanVersionBanner;
+export default PlanVersionBanner;

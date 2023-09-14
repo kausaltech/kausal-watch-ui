@@ -1,19 +1,40 @@
 import { getActionTermContext, useTranslation } from 'common/i18n';
 import { cleanActionStatus } from 'common/preprocess';
 import { usePlan } from 'context/plan';
-import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import {
+  UncontrolledDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
+} from 'reactstrap';
 
-async function exportActions(t, actions, actionStatuses, plan, fileFormat = 'excel') {
+async function exportActions(
+  t,
+  actions,
+  actionStatuses,
+  plan,
+  fileFormat = 'excel'
+) {
   const Excel = (await import('exceljs')).default;
   const fileSaver = (await import('file-saver')).default;
   const workbook = new Excel.Workbook();
-  const worksheet = workbook.addWorksheet(t('actions', getActionTermContext(plan)));
+  const worksheet = workbook.addWorksheet(
+    t('actions', getActionTermContext(plan))
+  );
   worksheet.columns = [
     { header: t('actions:action-identifier'), key: 'id', width: 10 },
-    { header: t('actions:action-name-title', getActionTermContext(plan)), key: 'name', width: 50 },
+    {
+      header: t('actions:action-name-title', getActionTermContext(plan)),
+      key: 'name',
+      width: 50,
+    },
     // TODO: i18n
     { header: t('actions:status'), key: 'status', width: 20 },
-    { header: t('actions:action-implementation-phase'), key: 'implementationPhase', width: 20 },
+    {
+      header: t('actions:action-implementation-phase'),
+      key: 'implementationPhase',
+      width: 20,
+    },
     { header: t('actions:action-last-updated'), key: 'lastUpdated', width: 15 },
     // TODO: i18n
     { header: t('actions:tasks-on-time'), key: 'ontimeTasks', width: 10 },
@@ -23,18 +44,35 @@ async function exportActions(t, actions, actionStatuses, plan, fileFormat = 'exc
     { header: t('actions:tasks-completed'), key: 'completedTasks', width: 10 },
     { header: t('actions:action-tasks'), key: 'tasks', width: 10 },
     // TODO: i18n
-    { header: t('actions:responsible-organizations-primary'), key: 'primaryResponsibleOrgs', width: 20 },
+    {
+      header: t('actions:responsible-organizations-primary'),
+      key: 'primaryResponsibleOrgs',
+      width: 20,
+    },
     // TODO: i18n
-    { header: t('actions:responsible-organizations-collaborator'), key: 'collaboratorResponsibleOrgs', width: 20 },
+    {
+      header: t('actions:responsible-organizations-collaborator'),
+      key: 'collaboratorResponsibleOrgs',
+      width: 20,
+    },
     // TODO: i18n
-    { header: t('actions:responsible-organizations-other'), key: 'otherResponsibleOrgs', width: 20 },
+    {
+      header: t('actions:responsible-organizations-other'),
+      key: 'otherResponsibleOrgs',
+      width: 20,
+    },
   ];
   actions.forEach((act) => {
     const status = cleanActionStatus(act, actionStatuses);
     let activePhaseName = act.implementationPhase?.name;
     if (status != null) {
       // FIXME: Duplicated logic from ActionPhase.js
-      const inactive = ['cancelled', 'merged', 'postponed', 'completed'].includes(status.identifier);
+      const inactive = [
+        'cancelled',
+        'merged',
+        'postponed',
+        'completed',
+      ].includes(status.identifier);
       if (inactive) activePhaseName = status.name;
     }
 
@@ -62,12 +100,18 @@ async function exportActions(t, actions, actionStatuses, plan, fileFormat = 'exc
       }
     });
 
-    const getOrgName = ({organization}) => (organization.name);
+    const getOrgName = ({ organization }) => organization.name;
 
     const parties = act.responsibleParties;
-    const primaryResponsibleOrgs = parties.filter(p => p.role === 'PRIMARY').map(getOrgName);
-    const collaboratorResponsibleOrgs = parties.filter(p => p.role === 'COLLABORATOR').map(getOrgName);
-    const otherResponsibleOrgs = parties.filter(p => p.role === null).map(getOrgName);
+    const primaryResponsibleOrgs = parties
+      .filter((p) => p.role === 'PRIMARY')
+      .map(getOrgName);
+    const collaboratorResponsibleOrgs = parties
+      .filter((p) => p.role === 'COLLABORATOR')
+      .map(getOrgName);
+    const otherResponsibleOrgs = parties
+      .filter((p) => p.role === null)
+      .map(getOrgName);
 
     worksheet.addRow([
       act.identifier,
@@ -81,17 +125,19 @@ async function exportActions(t, actions, actionStatuses, plan, fileFormat = 'exc
       tasksCount,
       primaryResponsibleOrgs.join(';'),
       collaboratorResponsibleOrgs.join(';'),
-      otherResponsibleOrgs.join(';')
+      otherResponsibleOrgs.join(';'),
     ]);
   });
 
   const today = new Date().toISOString().split('T')[0];
-  switch(fileFormat) {
+  switch (fileFormat) {
     case 'excel':
       const xls64 = await workbook.xlsx.writeBuffer({ base64: true });
       fileSaver.saveAs(
-        new Blob([xls64], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }),
-        `${t('actions', getActionTermContext(plan))}-${today}.xlsx`,
+        new Blob([xls64], {
+          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        }),
+        `${t('actions', getActionTermContext(plan))}-${today}.xlsx`
       );
       break;
 
@@ -99,12 +145,12 @@ async function exportActions(t, actions, actionStatuses, plan, fileFormat = 'exc
       const csv64 = await workbook.csv.writeBuffer({ base64: true });
       fileSaver.saveAs(
         new Blob([csv64], { type: 'text/csv' }),
-        `${t('actions', getActionTermContext(plan))}-${today}.csv`,
+        `${t('actions', getActionTermContext(plan))}-${today}.csv`
       );
       break;
 
     default:
-      throw new Error("Unknown file format");
+      throw new Error('Unknown file format');
   }
 }
 
@@ -117,13 +163,11 @@ export default function ActionStatusExport({ actions }) {
   };
   return (
     <UncontrolledDropdown>
-      <DropdownToggle caret>
-        { t('common:export') }
-      </DropdownToggle>
+      <DropdownToggle caret>{t('common:export')}</DropdownToggle>
       <DropdownMenu>
         <DropdownItem onClick={() => handleExport('excel')}>Excel</DropdownItem>
         <DropdownItem onClick={() => handleExport('csv')}>CSV</DropdownItem>
       </DropdownMenu>
-   </UncontrolledDropdown>
+    </UncontrolledDropdown>
   );
 }

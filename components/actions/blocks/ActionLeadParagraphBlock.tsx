@@ -14,7 +14,7 @@ const ActionLeadParagraphBlock = (props) => {
         <RichText html={content} />
       </LeadParagraph>
     </ActionSection>
-  )
-}
+  );
+};
 
 export default ActionLeadParagraphBlock;

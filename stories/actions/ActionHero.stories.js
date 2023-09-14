@@ -7,42 +7,43 @@ export default {
   title: 'Action/Hero',
 };
 
-const categories = [{
-  id: '103',
-  identifier: '3',
-  name: 'Action Category 1 With a very Long Title',
-  imageUrl: null,
-  type: {
-    identifier: 'action',
-  },
-  parent: {
-    id: '102',
-    identifier: '2',
-    name: 'Parent Category',
-    imageUrl: '',
+const categories = [
+  {
+    id: '103',
+    identifier: '3',
+    name: 'Action Category 1 With a very Long Title',
+    imageUrl: null,
     type: {
       identifier: 'action',
     },
+    parent: {
+      id: '102',
+      identifier: '2',
+      name: 'Parent Category',
+      imageUrl: '',
+      type: {
+        identifier: 'action',
+      },
+    },
   },
-},
-{
-  id: '104',
-  identifier: '4',
-  name: 'Category 2',
-  imageUrl: null,
-  type: {
-    identifier: 'action',
-  },
-  parent: {
-    id: '102',
-    identifier: '2',
-    name: 'Parent Category 2',
-    imageUrl: '',
+  {
+    id: '104',
+    identifier: '4',
+    name: 'Category 2',
+    imageUrl: null,
     type: {
       identifier: 'action',
     },
+    parent: {
+      id: '102',
+      identifier: '2',
+      name: 'Parent Category 2',
+      imageUrl: '',
+      type: {
+        identifier: 'action',
+      },
+    },
   },
-},
 ];
 
 function ActionHeros() {

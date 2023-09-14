@@ -33,7 +33,7 @@ jobs:
         run: |
           echo "SENTRY_AUTH_TOKEN=$SENTRY_AUTH_TOKEN" >> $GITHUB_ENV
         env:
-          SENTRY_AUTH_TOKEN: "${{ secrets.SENTRY_AUTH_TOKEN }}"
+          SENTRY_AUTH_TOKEN: '${{ secrets.SENTRY_AUTH_TOKEN }}'
 
       - name: Building NextJS bundles
         run: |

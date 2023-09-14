@@ -6,7 +6,9 @@ import PlanContext from 'context/plan';
 import FeedbackForm from 'components/common/FeedbackForm';
 import { CommonContentBlockProps } from 'common/blocks.types';
 
-const AccessibilityStatementContactFormBlock = ({ id = ''}: CommonContentBlockProps) => {
+const AccessibilityStatementContactFormBlock = ({
+  id = '',
+}: CommonContentBlockProps) => {
   const { t } = useTranslation(['a11y']);
   const plan = useContext(PlanContext);
 

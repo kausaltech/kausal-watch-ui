@@ -4,13 +4,20 @@ import SVG from 'react-inlinesvg';
 import styled from 'styled-components';
 import { shade, readableColor } from 'polished';
 
-const StyledBadge = styled(({isLink, ...rest}) => <Badge {...rest}/>)<{color: string, isLink: boolean}>`
+const StyledBadge = styled(({ isLink, ...rest }) => <Badge {...rest} />)<{
+  color: string;
+  isLink: boolean;
+}>`
   background-color: ${(props) => props.theme[props.color]} !important;
-  color: ${
-    (props) => readableColor(props.theme[props.color], props.theme.themeColors.black, props.theme.themeColors.white)
-  };
+  color: ${(props) =>
+    readableColor(
+      props.theme[props.color],
+      props.theme.themeColors.black,
+      props.theme.themeColors.white
+    )};
   border-radius: ${(props) => props.theme.badgeBorderRadius};
-  padding: ${(props) => props.theme.badgePaddingY} ${(props) => props.theme.badgePaddingX};
+  padding: ${(props) => props.theme.badgePaddingY}
+    ${(props) => props.theme.badgePaddingX};
   font-weight: ${(props) => props.theme.badgeFontWeight};
   max-width: 100%;
   word-break: break-all;
@@ -20,7 +27,8 @@ const StyledBadge = styled(({isLink, ...rest}) => <Badge {...rest}/>)<{color: st
   text-align: left;
 
   &:hover {
-    background-color:  ${(props) => props.isLink && shade(0.05, props.theme[props.color])} !important;
+    background-color: ${(props) =>
+      props.isLink && shade(0.05, props.theme[props.color])} !important;
   }
 
   &.lg {
@@ -34,26 +42,33 @@ const StyledBadge = styled(({isLink, ...rest}) => <Badge {...rest}/>)<{color: st
   }
 `;
 
-const IconBadge = styled.div<{color: string, isLink: boolean}>`
+const IconBadge = styled.div<{ color: string; isLink: boolean }>`
   display: flex;
   align-items: center;
   max-width: 320px;
   background-color: ${(props) => props.theme[props.color]} !important;
-  color: ${
-    (props) => readableColor(props.theme[props.color], props.theme.themeColors.black, props.theme.themeColors.white)
-  };
+  color: ${(props) =>
+    readableColor(
+      props.theme[props.color],
+      props.theme.themeColors.black,
+      props.theme.themeColors.white
+    )};
   border-radius: ${(props) => props.theme.badgeBorderRadius};
 
   &:hover {
-    background-color: ${(props) => props.isLink && shade(0.05, props.theme[props.color])} !important;
+    background-color: ${(props) =>
+      props.isLink && shade(0.05, props.theme[props.color])} !important;
   }
 `;
 
-const IconImage = styled.div<{imageSrc?: string}>`
+const IconImage = styled.div<{ imageSrc?: string }>`
   display: block;
   text-align: center;
-  height: ${(props) => props.imageSrc ? props.theme.spaces.s600 : props.theme.spaces.s300};
-  flex: 0 0 ${(props) => props.imageSrc ? props.theme.spaces.s600 : props.theme.spaces.s300};
+  height: ${(props) =>
+    props.imageSrc ? props.theme.spaces.s600 : props.theme.spaces.s300};
+  flex: 0 0
+    ${(props) =>
+      props.imageSrc ? props.theme.spaces.s600 : props.theme.spaces.s300};
   margin-right: ${(props) => props.theme.spaces.s050};
   background-color: ${(props) => props.theme.neutralLight};
   background-image: url(${(props) => props.imageSrc || 'none'});
@@ -75,20 +90,20 @@ const IconName = styled.div`
 `;
 
 type BadgeContentProps = {
-  content: string,
-  size?: 'lg' | 'md' | 'sm',
-  ariaLabel?: string,
-  iconSvg?: string,
-  iconImage?: string,
-  color?: 'brandDark' | 'brandLight'| 'neutralDark'| 'neutralLight',
-  isLink: boolean,
-}
+  content: string;
+  size?: 'lg' | 'md' | 'sm';
+  ariaLabel?: string;
+  iconSvg?: string;
+  iconImage?: string;
+  color?: 'brandDark' | 'brandLight' | 'neutralDark' | 'neutralLight';
+  isLink: boolean;
+};
 
 const BadgeContent = (props: BadgeContentProps) => {
   const { content, size, iconSvg, iconImage, ariaLabel, color, isLink } = props;
-  const hasIcon = (iconSvg == null) && (iconImage == null);
+  const hasIcon = iconSvg == null && iconImage == null;
 
-  return ( hasIcon ?
+  return hasIcon ? (
     <StyledBadge
       className={size}
       aria-label={ariaLabel}
@@ -97,34 +112,33 @@ const BadgeContent = (props: BadgeContentProps) => {
     >
       {content}
     </StyledBadge>
-    :
-    <IconBadge
-      color={color}
-      isLink={isLink}
-    >
-      {iconSvg
-        ? <IconImage><IconSvg src={iconSvg} preserveAspectRatio="xMinYMid meet" /></IconImage>
-        : <IconImage imageSrc={iconImage} />}
+  ) : (
+    <IconBadge color={color} isLink={isLink}>
+      {iconSvg ? (
+        <IconImage>
+          <IconSvg src={iconSvg} preserveAspectRatio="xMinYMid meet" />
+        </IconImage>
+      ) : (
+        <IconImage imageSrc={iconImage} />
+      )}
       <IconName>{content}</IconName>
     </IconBadge>
-  )
+  );
 };
 
 export type BadgeTooltipProps = {
-  content: string,
-  tooltip?: string,
-  size?: 'lg' | 'md' | 'sm',
-  id: string,
-  ariaLabel?: string,
-  iconSvg?: string,
-  iconImage?: string,
-  color?: 'brandDark' | 'brandLight'| 'neutralDark'| 'neutralLight',
-  isLink: boolean,
-}
+  content: string;
+  tooltip?: string;
+  size?: 'lg' | 'md' | 'sm';
+  id: string;
+  ariaLabel?: string;
+  iconSvg?: string;
+  iconImage?: string;
+  color?: 'brandDark' | 'brandLight' | 'neutralDark' | 'neutralLight';
+  isLink: boolean;
+};
 
-const BadgeTooltip = (
-  props: BadgeTooltipProps
-) => {
+const BadgeTooltip = (props: BadgeTooltipProps) => {
   const {
     content,
     tooltip,
@@ -133,8 +147,8 @@ const BadgeTooltip = (
     ariaLabel,
     iconSvg = null,
     iconImage = null,
-    color ='brandDark',
-    isLink = false
+    color = 'brandDark',
+    isLink = false,
   } = props;
   const badgeId = `btt${id.replace(/[: ]/g, '_')}`;
   const [tooltipOpen, setTooltipOpen] = useState(false);
@@ -152,7 +166,7 @@ const BadgeTooltip = (
         isLink={isLink}
         aria-describedby={`tt-content-${badgeId}`}
       />
-      { tooltip &&
+      {tooltip && (
         <Tooltip
           placement="top"
           isOpen={tooltipOpen}
@@ -163,7 +177,7 @@ const BadgeTooltip = (
         >
           {tooltip}
         </Tooltip>
-      }
+      )}
     </span>
   );
 };

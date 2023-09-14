@@ -9,7 +9,8 @@ const CompareChooser = styled.div`
   justify-content: flex-start;
   gap: ${(props) => props.theme.spaces.s100};
   margin-top: ${(props) => props.theme.spaces.s200};
-  padding: ${(props) => props.theme.spaces.s050} ${(props) => props.theme.spaces.s150};
+  padding: ${(props) => props.theme.spaces.s050}
+    ${(props) => props.theme.spaces.s150};
   background-color: ${(props) => props.theme.themeColors.light};
 `;
 
@@ -53,7 +54,7 @@ const IndicatorComparisonSelect = (props) => {
           <option value="">-</option>
           {options.map((opt) => (
             <option value={opt.id} key={opt.id}>
-              { opt.name }
+              {opt.name}
             </option>
           ))}
         </DropDown>

@@ -56,10 +56,16 @@ interface ModalProps {
   children: ReactNode;
 }
 
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose, header, helpText, children }) => {
+const Modal: React.FC<ModalProps> = ({
+  isOpen,
+  onClose,
+  header,
+  helpText,
+  children,
+}) => {
   const theme = useTheme();
   const modalRef = useRef<HTMLDivElement>(null);
-  
+
   const closeModalOnOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
       onClose();
@@ -67,7 +73,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, header, helpText, childr
   };
 
   useEffect(() => {
-    const closeOnEscape = (e:KeyboardEvent) => {
+    const closeOnEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
     };
 
@@ -84,7 +90,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, header, helpText, childr
             <ModalHeader theme={theme}>{header}</ModalHeader>
             <ModalSubHeader theme={theme}>{helpText}</ModalSubHeader>
             <CloseButton onClick={() => onClose()}>
-              <Icon name='times' />
+              <Icon name="times" />
             </CloseButton>
             {children}
           </ModalBody>

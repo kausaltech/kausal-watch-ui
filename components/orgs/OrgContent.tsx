@@ -5,9 +5,7 @@ import ActionStatusTable from 'components/dashboard/ActionStatusTable';
 
 import styled from 'styled-components';
 import { gql, useQuery } from '@apollo/client';
-import {
-  Container, Row, Col, Nav, NavItem
-} from 'reactstrap';
+import { Container, Row, Col, Nav, NavItem } from 'reactstrap';
 import PlanChip from 'components/plans/PlanChip';
 import RichText from 'components/common/RichText';
 
@@ -18,13 +16,17 @@ import { OrganizationLink } from 'common/links';
 import ContentLoader from 'components/common/ContentLoader';
 import ErrorMessage from 'components/common/ErrorMessage';
 import { Meta } from 'components/layout';
-import { OrganizationDetailsQuery, OrganizationDetailsQueryVariables } from 'common/__generated__/graphql';
+import {
+  OrganizationDetailsQuery,
+  OrganizationDetailsQueryVariables,
+} from 'common/__generated__/graphql';
 
 const Tab = styled.button`
   background: ${(props) => props.theme.brandDark};
   color: ${(props) => props.theme.themeColors.white};
   padding: ${(props) => props.theme.spaces.s100};
-  border-radius: ${(props) => props.theme.btnBorderRadius} ${(props) => props.theme.btnBorderRadius} 0 0;
+  border-radius: ${(props) => props.theme.btnBorderRadius}
+    ${(props) => props.theme.btnBorderRadius} 0 0;
   display: inline-block;
   border: none;
   margin: 0;
@@ -32,7 +34,8 @@ const Tab = styled.button`
   cursor: pointer;
   text-align: left;
 
-  &:hover, &:focus {
+  &:hover,
+  &:focus {
     color: ${(props) => props.theme.brandLight};
   }
   &.active {
@@ -61,11 +64,11 @@ const HeaderContainer = styled(Container)`
 const OrgHeader = styled.div`
   padding: ${(props) => props.theme.spaces.s300} 0 0 0;
   background-color: ${(props) => props.theme.brandDark};
-  color: ${(props) => props.theme.themeColors.white };
+  color: ${(props) => props.theme.themeColors.white};
 
   h1 {
     margin-bottom: ${(props) => props.theme.spaces.s150};
-    color: ${(props) => props.theme.themeColors.white };
+    color: ${(props) => props.theme.themeColors.white};
     line-height: ${(props) => props.theme.lineHeightSm};
     font-size: ${(props) => props.theme.fontSizeXl};
   }
@@ -108,11 +111,12 @@ const OrgLink = styled.a`
   display: block;
   font-size: ${(props) => props.theme.fontSizeSm};
   text-decoration: underline;
-  color: ${(props) => props.theme.brandLight };
+  color: ${(props) => props.theme.brandLight};
 `;
 
 const ActionTableHeader = styled.div`
-  margin: ${(props) => props.theme.spaces.s300} 0 ${(props) => props.theme.spaces.s100};
+  margin: ${(props) => props.theme.spaces.s300} 0
+    ${(props) => props.theme.spaces.s100};
 
   h2 {
     font-size: ${(props) => props.theme.fontSizeMd};
@@ -121,7 +125,7 @@ const ActionTableHeader = styled.div`
 `;
 
 const ActionTableContainer = styled.div`
-  overflow: auto ;
+  overflow: auto;
 `;
 
 const GET_ORG_DETAILS = gql`
@@ -313,10 +317,11 @@ function OrgContent(props) {
   const plan = usePlan();
   const { t } = useTranslation(['common', 'actions']);
   const theme = useTheme();
-  const [ selectedPlanIndex, setSelectedPlan ] = useState(0);
+  const [selectedPlanIndex, setSelectedPlan] = useState(0);
 
   const { data, loading, error } = useQuery<
-    OrganizationDetailsQuery, OrganizationDetailsQueryVariables
+    OrganizationDetailsQuery,
+    OrganizationDetailsQueryVariables
   >(GET_ORG_DETAILS, {
     variables: {
       id,
@@ -328,7 +333,12 @@ function OrgContent(props) {
   if (loading) return <ContentLoader />;
   if (error) return <ErrorMessage message={error.message} />;
   if (!data || !data.organization || !data.plan) {
-    return <ErrorMessage statusCode={404} message={t('common:organization-not-found')} />;
+    return (
+      <ErrorMessage
+        statusCode={404}
+        message={t('common:organization-not-found')}
+      />
+    );
   }
 
   const { organization: org, plan: planFromQuery } = data;
@@ -342,57 +352,46 @@ function OrgContent(props) {
 
   return (
     <div className="mb-5">
-      <Meta
-        title={org.name}
-      />
+      <Meta title={org.name} />
       <OrgHeader>
         <HeaderContainer>
           <Row>
             <Col md={{ size: 6, offset: org.logo?.rendition?.src ? 2 : 0 }}>
-              <SectionTitle>
-                { t('common:organizations') }
-              </SectionTitle>
+              <SectionTitle>{t('common:organizations')}</SectionTitle>
             </Col>
           </Row>
           <Row>
-            { org.logo?.rendition?.src &&
+            {org.logo?.rendition?.src && (
               <Col md="2">
                 <OrgLogo src={org.logo?.rendition.src} />
               </Col>
-            }
+            )}
             <Col md="8" xl="7" className="mb-5">
-              {org.parent?.id &&
+              {org.parent?.id && (
                 <>
                   <OrganizationLink organizationId={org.parent.id}>
                     {org.parent.name}
-                  </OrganizationLink>
-                  {' '}
+                  </OrganizationLink>{' '}
                   /
                 </>
-              }
+              )}
               <h1>{org.name}</h1>
-              { org.description &&
+              {org.description && (
                 <OrgDescription>
                   <RichText html={org.description} />
                 </OrgDescription>
-              }
-              { org.url &&
-                <OrgLink
-                  href={org.url}
-                >
-                  {org.url}
-                </OrgLink>
-              }
+              )}
+              {org.url && <OrgLink href={org.url}>{org.url}</OrgLink>}
             </Col>
           </Row>
         </HeaderContainer>
         <OrgTabs>
           <Container>
             <Nav role="tablist">
-              { allPlans.map((p, i) => (
+              {allPlans.map((p, i) => (
                 <NavItem key={p.id}>
                   <Tab
-                    className={i === selectedPlanIndex ? "active" : ""}
+                    className={i === selectedPlanIndex ? 'active' : ''}
                     aria-selected={i === selectedPlanIndex}
                     passHref
                     role="tab"
@@ -403,10 +402,14 @@ function OrgContent(props) {
                   >
                     <PlanChip
                       planImage={p.image?.rendition?.src}
-                      planShortName={`${p.shortName || p.name}${p.versionName ? ` (${p.versionName})` : ''}`}
-                      organization={p.shortName ? p.name : p.organization.abbreviation}
+                      planShortName={`${p.shortName || p.name}${
+                        p.versionName ? ` (${p.versionName})` : ''
+                      }`}
+                      organization={
+                        p.shortName ? p.name : p.organization.abbreviation
+                      }
                       size="md"
-                      negative={i!== selectedPlanIndex}
+                      negative={i !== selectedPlanIndex}
                     />
                   </Tab>
                 </NavItem>
@@ -415,11 +418,13 @@ function OrgContent(props) {
           </Container>
         </OrgTabs>
       </OrgHeader>
-      { allPlans.length ?
+      {allPlans.length ? (
         <Container fluid="lg">
           <ActionTableHeader>
             <h2>
-              { t('actions:org-responsible-in-actions', { actionCount: selectedPlan.actions.length }) }
+              {t('actions:org-responsible-in-actions', {
+                actionCount: selectedPlan.actions.length,
+              })}
             </h2>
           </ActionTableHeader>
           <ActionTableContainer>
@@ -433,9 +438,9 @@ function OrgContent(props) {
             />
           </ActionTableContainer>
         </Container>
-        :
+      ) : (
         <Container />
-      }
+      )}
     </div>
   );
 }

@@ -2,14 +2,12 @@ import { useContext } from 'react';
 import { ThemeContext } from 'styled-components';
 import 'styled-components';
 
-import type { Theme } from '@kausal/themes/types'
+import type { Theme } from '@kausal/themes/types';
 import { makeThemePropType } from '@kausal/themes/props';
-
 
 export function useTheme() {
   return useContext<Theme>(ThemeContext);
 }
-
 
 declare module 'styled-components' {
   export interface DefaultTheme extends Theme {}
@@ -22,7 +20,9 @@ export async function loadTheme(themeIdentifier: string) {
   let themeProps: Theme;
 
   try {
-    const theme = await import(`public/static/themes/${themeIdentifier}/theme.json`);
+    const theme = await import(
+      `public/static/themes/${themeIdentifier}/theme.json`
+    );
     themeProps = theme.default;
   } catch (error) {
     console.error(`Theme with identifier ${themeIdentifier} not found`);

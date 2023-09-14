@@ -9,7 +9,6 @@ import CategoryTreeBlock from 'components/contentblocks/CategoryTreeBlock';
 import Card from 'components/common/Card';
 import { CommonContentBlockProps } from 'common/blocks.types';
 
-
 const CategoryListSection = styled.div`
   background-color: ${(props) => props.theme.brandDark};
   padding: ${(props) => props.theme.spaces.s400} 0;
@@ -57,7 +56,7 @@ const Identifier = styled.span`
 `;
 
 interface Props extends CommonContentBlockProps {
-  cards: unknown // TODO: Type this prop
+  cards: unknown; // TODO: Type this prop
 }
 
 const CategoryListBlock = ({ id = '', cards }: Props) => {
@@ -66,7 +65,7 @@ const CategoryListBlock = ({ id = '', cards }: Props) => {
     <CategoryListSection id={id} bg={theme.themeColors.dark}>
       <Container>
         <Row tag="ul" className="justify-content-center">
-          { cards?.map((card) => (
+          {cards?.map((card) => (
             <Col
               tag="li"
               xs="12"
@@ -76,14 +75,14 @@ const CategoryListBlock = ({ id = '', cards }: Props) => {
               className="mb-2 d-flex align-items-stretch"
               style={{ transition: 'all 0.5s ease' }}
             >
-              <Link href={`/actions?cat-${card.category.type.identifier}=${card.category.id}`}>
+              <Link
+                href={`/actions?cat-${card.category.type.identifier}=${card.category.id}`}
+              >
                 <a className="card-wrapper">
-                  <Card
-                    customColor={theme.brandDark}
-                  >
+                  <Card customColor={theme.brandDark}>
                     <div>
                       <CardHeader className="card-title">
-                        { card.heading }
+                        {card.heading}
                       </CardHeader>
                       <CardLead>{card.lead}</CardLead>
                     </div>
