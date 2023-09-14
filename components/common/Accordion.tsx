@@ -9,9 +9,10 @@ import { useTranslation } from 'common/i18n';
 import Icon from 'components/common/Icon';
 import { replaceHashWithoutScrolling } from '../../common/links';
 
-const Header = styled.h3`
+const Header = styled.h3<{ $small?: boolean }>`
   position: relative;
-  font-size: ${(props) => props.theme.fontSizeLg};
+  font-size: ${({ theme, $small }) =>
+    $small ? theme.fontSizeMd : theme.fontSizeLg};
 
   &:hover {
     .copy-link {
@@ -151,8 +152,14 @@ LinkCopyButton.propTypes = {
 
 LinkCopyButton.displayName = 'LinkCopyButton';
 
-const AccordionHeader = ({ children, onClick, isOpen, identifier }) => (
-  <Header className={isOpen && 'is-open'}>
+const AccordionHeader = ({
+  children,
+  onClick,
+  isOpen,
+  identifier,
+  small = false,
+}) => (
+  <Header className={isOpen && 'is-open'} $small={small}>
     <QuestionTrigger
       className="question-trigger"
       onClick={onClick}
@@ -173,6 +180,7 @@ AccordionHeader.propTypes = {
   isOpen: PropTypes.bool,
   onClick: PropTypes.func,
   identifier: PropTypes.string,
+  small: PropTypes.bool,
 };
 
 const AccordionBody = ({ children, isOpen, identifier }) => (
