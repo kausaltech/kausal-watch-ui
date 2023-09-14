@@ -32,7 +32,7 @@ const StyledBadge = styled(({ isLink, ...rest }) => <Badge {...rest} />)<{
   }
 
   &.lg {
-    font-size: ${(props) => props.theme.fontSizeMd};
+    font-size: ${(props) => props.theme.fontSizeBaseLg};
   }
   &.md {
     font-size: ${(props) => props.theme.fontSizeBase};

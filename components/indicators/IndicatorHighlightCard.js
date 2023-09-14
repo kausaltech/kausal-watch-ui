@@ -51,7 +51,7 @@ const StyledCard = styled(Card)`
 
 const IndicatorValue = styled.div`
   margin-top: ${(props) => props.theme.spaces.s050};
-  font-size: ${(props) => props.theme.fontSizeXl};
+  font-size: ${(props) => props.theme.fontSizeLg};
   font-weight: ${(props) => props.theme.fontWeightBold};
   line-height: ${(props) => props.theme.lineHeightSm};
   color: ${(props) => {
@@ -77,7 +77,7 @@ const IndicatorUnit = styled.span`
 
 const StyledCardTitle = styled(CardTitle)`
   margin-bottom: 0;
-  font-size: ${(props) => props.theme.fontSizeMd};
+  font-size: ${(props) => props.theme.fontSizeBaseLg};
   color: ${(props) => props.theme.neutralDark};
   text-align: left;
   hyphens: manual;

@@ -11,7 +11,7 @@ const FaqSection = styled.section`
 
   h2 {
     text-align: center;
-    font-size: ${(props) => props.theme.fontSizeXl};
+    font-size: ${(props) => props.theme.fontSizeLg};
     margin-bottom: ${(props) => props.theme.spaces.s300};
   }
 

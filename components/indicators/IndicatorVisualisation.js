@@ -156,7 +156,7 @@ const GET_INDICATOR_GRAPH_DATA = gql`
 `;
 
 const IndicatorVizHeader = styled.h2`
-  font-size: ${(props) => props.theme.fontSizeMd};
+  font-size: ${(props) => props.theme.fontSizeBaseLg};
 `;
 
 function generateCube(dimensions, values, path) {

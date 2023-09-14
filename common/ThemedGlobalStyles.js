@@ -1,7 +1,83 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { createGlobalStyle, withTheme } from 'styled-components';
+import { createGlobalStyle, withTheme, css } from 'styled-components';
 import { themeProp } from 'common/theme';
+
+const headingStyles = ({ theme }) => css`
+  font-weight: ${theme.headingsFontWeight};
+  font-family: ${theme.fontFamilyHeadings !== ''
+    ? `${theme.fontFamilyHeadings}, ${theme.fontFamilyFallbackHeadings}`
+    : theme.fontFamilyFallbackHeadings};
+  line-height: ${theme.lineHeightMd};
+  color: ${theme.headingsColor};
+`;
+
+export const typography = {
+  h1: ({ theme }) => css`
+    ${headingStyles};
+    font-size: ${theme.fontSizeXl};
+
+    @media (min-width: ${theme.breakpointMd}) {
+      font-size: ${theme.fontSizeXxl};
+    }
+  `,
+
+  h2: ({ theme }) => css`
+    ${headingStyles};
+    font-size: ${theme.fontSizeLg};
+
+    @media (min-width: ${theme.breakpointMd}) {
+      font-size: ${theme.fontSizeXl};
+    }
+  `,
+
+  h3: ({ theme }) => css`
+    ${headingStyles};
+    font-size: ${theme.fontSizeMd};
+
+    @media (min-width: ${theme.breakpointMd}) {
+      font-size: ${theme.fontSizeLg};
+    }
+  `,
+
+  h4: ({ theme }) => css`
+    ${headingStyles};
+    font-size: ${theme.fontSizeBaseLg};
+
+    @media (min-width: ${theme.breakpointMd}) {
+      font-size: ${theme.fontSizeMd};
+    }
+  `,
+
+  h5: ({ theme }) => css`
+    ${headingStyles};
+    font-size: ${theme.fontSizeBase};
+
+    @media (min-width: ${theme.breakpointMd}) {
+      font-size: ${theme.fontSizeBaseMd};
+    }
+  `,
+
+  h6: ({ theme }) => css`
+    ${headingStyles};
+    font-size: ${theme.fontSizeSm};
+  `,
+
+  caption: ({ theme }) => css`
+    font-size: ${theme.fontSizeSm};
+    font-family: ${theme.fontFamilyTiny};
+  `,
+
+  lead: ({ theme }) => css`
+    font-size: ${theme.fontSizeBase};
+    line-height: ${theme.lineHeightMd};
+    font-family: ${theme.fontFamilyContent};
+
+    @media (min-width: ${theme.breakpointMd}) {
+      font-size: ${theme.fontSizeBaseLg};
+    }
+  `,
+};
 
 const GlobalStyle = createGlobalStyle`
   :root {
@@ -41,33 +117,32 @@ const GlobalStyle = createGlobalStyle`
       props.theme.fontFamilyHeadings !== ''
         ? `${props.theme.fontFamilyHeadings}, ${props.theme.fontFamilyFallbackHeadings}`
         : props.theme.fontFamilyFallbackHeadings};
-    font-weight: ${(props) => props.theme.headingsFontWeight};
     line-height: ${(props) => props.theme.lineHeightMd};
     color: ${(props) => props.theme.headingsColor};
   }
 
   h1 {
-    font-size: ${(props) => props.theme.fontSizeXxl};
+    ${typography.h1};
   }
 
   h2 {
-    font-size: ${(props) => props.theme.fontSizeXl};
+    ${typography.h2};
   }
 
   h3 {
-    font-size: ${(props) => props.theme.fontSizeLg};
+    ${typography.h3};
   }
 
   h4 {
-    font-size: ${(props) => props.theme.fontSizeMd};
+    ${typography.h4};
   }
 
   h5 {
-    font-size: ${(props) => props.theme.fontSizeBase};
+    ${typography.h5};
   }
 
   h6 {
-    font-size: ${(props) => props.theme.fontSizeSm};
+    ${typography.h6};
   }
 
   p {
@@ -100,7 +175,7 @@ const GlobalStyle = createGlobalStyle`
 
   .text-content {
     font-family: ${(props) => props.theme.fontFamilyContent};
-
+    
     a {
       text-decoration: underline;
       overflow-wrap: break-word;
@@ -116,27 +191,20 @@ const GlobalStyle = createGlobalStyle`
     h2 {
       margin-top: ${(props) => props.theme.spaces.s200};
       margin-bottom: ${(props) => props.theme.spaces.s100};
-      font-size: ${(props) => props.theme.fontSizeLg};
     }
 
     h3 {
       margin-top: ${(props) => props.theme.spaces.s200};
       margin-bottom: ${(props) => props.theme.spaces.s100};
-      font-size: ${(props) => props.theme.fontSizeMd};
     }
 
     h4 {
       margin-top: ${(props) => props.theme.spaces.s150};
       margin-bottom: ${(props) => props.theme.spaces.s050};
-      font-size: ${(props) => props.theme.fontSizeBase};
 
       &:first-child {
         margin-top: 0;
       }
-    }
-
-    h5 {
-      font-size: ${(props) => props.theme.fontSizeBase}
     }
 
     ul {

@@ -13,7 +13,9 @@ const ActionContactFormSection = styled.div`
 
   h2 {
     font-size: ${(props) =>
-      props.size === 'sm' ? props.theme.fontSizeMd : props.theme.fontSizeLg};
+      props.size === 'sm'
+        ? props.theme.fontSizeBaseLg
+        : props.theme.fontSizeMd};
   }
 `;
 

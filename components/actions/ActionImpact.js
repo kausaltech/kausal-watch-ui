@@ -5,7 +5,8 @@ import styled from 'styled-components';
 import Icon from '../common/Icon';
 
 const ImpactIcon = styled(Icon)`
-  font-size: ${(props) => {
+  font-size: // Ignore
+    ${(props) => {
     switch (props.size) {
       case 'sm':
         return '.8em';

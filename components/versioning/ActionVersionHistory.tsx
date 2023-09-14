@@ -11,7 +11,7 @@ const VersionHistory = styled.div`
 `;
 
 const VersionHistoryTitle = styled.h2`
-  font-size: ${(props) => props.theme.fontSizeMd};
+  font-size: ${(props) => props.theme.fontSizeBaseLg};
 `;
 
 const ToggleButton = styled(Button)`

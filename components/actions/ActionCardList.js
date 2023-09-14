@@ -21,7 +21,7 @@ const ActionGroupHeader = styled.h2`
   }
 
   .category-crumb {
-    font-size: ${(props) => props.theme.fontSizeLg};
+    font-size: ${(props) => props.theme.fontSizeMd}; // Ignore
   }
 `;
 

@@ -11,7 +11,7 @@ import { replaceHashWithoutScrolling } from '../../common/links';
 
 const Header = styled.h3`
   position: relative;
-  font-size: ${(props) => props.theme.fontSizeLg};
+  font-size: ${(props) => props.theme.fontSizeMd};
 
   &:hover {
     .copy-link {

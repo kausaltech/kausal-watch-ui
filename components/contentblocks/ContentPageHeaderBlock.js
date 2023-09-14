@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { useTranslation } from 'common/i18n';
 import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
+import { typography } from 'common/ThemedGlobalStyles';
 
 const HeaderImage = styled.div`
   background-image: url(${(props) => props.image});
@@ -26,7 +27,7 @@ const ContentHeader = styled.header`
 
   h1 {
     margin-bottom: ${(props) => props.theme.spaces.s150};
-    font-size: ${(props) => props.theme.fontSizeXxl};
+    ${typography.h1};
     color: ${(props) => props.theme.themeColors.white} !important;
   }
 

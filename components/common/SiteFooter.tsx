@@ -99,7 +99,7 @@ const ServiceTitle = styled.div`
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  font-size: ${(props) => props.theme.fontSizeMd};
+  font-size: ${(props) => props.theme.fontSizeBaseLg};
   font-weight: ${(props) => props.theme.fontWeightBold};
 
   @media (max-width: ${(props) => props.theme.breakpointMd}) {

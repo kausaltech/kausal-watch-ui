@@ -32,10 +32,10 @@ const SectionHeader = styled.h2`
   background-color: ${(props) => props.theme.themeColors.white};
   color: ${(props) => props.theme.headingsColor};
   margin-bottom: ${(props) => props.theme.spaces.s300};
-  font-size: ${(props) => props.theme.fontSizeLg};
+  font-size: ${(props) => props.theme.fontSizeMd};
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
-    font-size: ${(props) => props.theme.fontSizeXl};
+    font-size: ${(props) => props.theme.fontSizeLg};
   }
 `;
 

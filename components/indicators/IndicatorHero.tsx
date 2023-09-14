@@ -132,12 +132,12 @@ const IndexLink = styled.span`
 const IndicatorHeadline = styled.h1`
   hyphens: manual;
   margin: ${(props) => props.theme.spaces.s100} 0;
-  font-size: ${(props) => props.theme.fontSizeXl};
+  font-size: ${(props) => props.theme.fontSizeLg};
   color: ${(props) => props.theme.themeColors.black} !important;
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     display: flex;
-    font-size: ${(props) => props.theme.fontSizeXl};
+    font-size: ${(props) => props.theme.fontSizeLg};
   }
 `;
 

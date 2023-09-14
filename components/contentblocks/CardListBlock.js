@@ -37,13 +37,13 @@ const SectionHeader = styled.h2`
 const Content = styled.p`
   text-align: center;
   color: ${(props) => props.color};
-  font-size: ${(props) => props.theme.fontSizeMd};
+  font-size: ${(props) => props.theme.fontSizeBaseLg};
   margin-bottom: ${(props) => props.theme.spaces.s300};
 `;
 
 const CardHeader = styled.h3`
   color: ${(props) => props.theme.themeColors.black};
-  font-size: ${(props) => props.theme.fontSizeMd};
+  font-size: ${(props) => props.theme.fontSizeBaseLg};
   line-height: ${(props) => props.theme.lineHeightSm};
 `;
 

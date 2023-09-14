@@ -42,7 +42,7 @@ export const GET_INDICATOR_HIGHLIGHTS = gql`
 
 const ListHeader = styled(Col)`
   h2 {
-    font-size: ${(props) => props.theme.fontSizeXl};
+    font-size: ${(props) => props.theme.fontSizeLg};
     margin-bottom: ${(props) => props.theme.spaces.s400};
   }
 `;

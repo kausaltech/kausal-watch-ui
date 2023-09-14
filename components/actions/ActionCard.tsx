@@ -17,6 +17,7 @@ import { usePlan, PlanContextType } from 'context/plan';
 import PlanChip from 'components/plans/PlanChip';
 import { ActionCardFragment } from 'common/__generated__/graphql';
 import { ContactPersonLeader } from 'stories/actions/ContactPerson.stories';
+import { typography } from 'common/ThemedGlobalStyles';
 
 const ACTION_CARD_FRAGMENT = gql`
   fragment ActionCard on Action {
@@ -153,7 +154,7 @@ const ActionId = styled.div`
   display: flex;
   align-items: center;
   padding: ${(props) => props.theme.spaces.s050};
-  font-size: ${(props) => props.theme.fontSizeBase};
+  font-size: ${(props) => props.theme.fontSizeBase}; // Ignore
   font-weight: ${(props) => props.theme.fontWeightBold};
   line-height: ${(props) => props.theme.lineHeightSm};
   color: ${(props) => props.theme.themeColors.black};
@@ -188,8 +189,7 @@ const ActionPhase = styled.div`
 
 const StatusName = styled.div`
   padding: ${(props) => props.theme.spaces.s050};
-  font-size: ${(props) => props.theme.fontSizeSm};
-  font-family: ${(props) => props.theme.fontFamilyTiny};
+  ${typography.caption};
   line-height: 1;
 
   &:after {
@@ -202,7 +202,7 @@ const StyledCardTitle = styled.div`
   margin-bottom: 0;
   padding: ${(props) => props.theme.spaces.s050};
   color: ${(props) => props.theme.themeColors.black};
-  font-size: ${(props) => props.theme.fontSizeBase};
+  font-size: ${(props) => props.theme.fontSizeBase}; // Ignore
   line-height: ${(props) => props.theme.lineHeightMd};
   text-align: left;
   word-break: break-word;
@@ -221,8 +221,7 @@ const ActionOrgAvatar = styled.div`
 `;
 
 const ActionOrgName = styled.div`
-  font-size: ${(props) => props.theme.fontSizeSm};
-  font-family: ${(props) => props.theme.fontFamilyTiny};
+  ${typography.caption};
   color: ${(props) => props.theme.themeColors.dark};
   line-height: 1;
 `;

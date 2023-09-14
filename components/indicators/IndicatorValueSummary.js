@@ -25,7 +25,7 @@ const ValueDate = styled.div`
 `;
 
 const ValueDisplay = styled.div`
-  font-size: ${(props) => props.theme.fontSizeLg};
+  font-size: ${(props) => props.theme.fontSizeMd};
   font-weight: ${(props) => props.theme.fontWeightBold};
   line-height: ${(props) => props.theme.lineHeightSm};
 `;

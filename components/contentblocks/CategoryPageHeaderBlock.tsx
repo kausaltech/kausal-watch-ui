@@ -100,7 +100,7 @@ const HeaderContent = styled.div`
   z-index: 100;
 
   h1 {
-    font-size: ${(props) => props.theme.fontSizeLg};
+    font-size: ${(props) => props.theme.fontSizeMd};
     margin-bottom: ${(props) => props.theme.spaces.s200};
 
     &:last-child {
@@ -109,7 +109,7 @@ const HeaderContent = styled.div`
   }
 
   p {
-    font-size: ${(props) => props.theme.fontSizeMd};
+    font-size: ${(props) => props.theme.fontSizeBaseLg};
     margin-bottom: ${(props) => props.theme.spaces.s100};
 
     &:last-child {
@@ -121,7 +121,7 @@ const HeaderContent = styled.div`
     margin: ${(props) => (props.hasImage ? '14rem auto 3rem' : '3rem auto')};
 
     h1 {
-      font-size: ${(props) => props.theme.fontSizeXl};
+      font-size: ${(props) => props.theme.fontSizeLg};
     }
   }
 `;
@@ -132,7 +132,7 @@ const AttributesContainer = styled.div`
 `;
 
 const Breadcrumb = styled.div`
-  font-size: ${(props) => props.theme.fontSizeMd};
+  font-size: ${(props) => props.theme.fontSizeBaseLg};
   margin-bottom: ${(props) => props.theme.spaces.s100};
 `;
 

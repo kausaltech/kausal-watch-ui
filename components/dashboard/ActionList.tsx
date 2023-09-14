@@ -69,7 +69,7 @@ const ActionListHeader = styled.div`
   background-color: ${(props) => props.theme.neutralLight};
 
   h1 {
-    font-size: ${(props) => props.theme.fontSizeXl};
+    font-size: ${(props) => props.theme.fontSizeLg};
     margin-bottom: ${(props) => props.theme.spaces.s150};
     color: ${(props) =>
       readableColor(

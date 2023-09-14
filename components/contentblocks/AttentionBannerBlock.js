@@ -24,7 +24,7 @@ const AttentionBox = styled(UncontrolledAlert)`
   border: none;
 
   h1 {
-    font-size: ${(props) => props.theme.fontSizeLg};
+    font-size: ${(props) => props.theme.fontSizeMd};
   }
 
   .btn {

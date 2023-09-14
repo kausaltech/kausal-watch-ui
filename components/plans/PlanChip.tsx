@@ -76,7 +76,7 @@ const FONT_SIZES = {
   xs: 'fontSizeSm',
   sm: 'fontSizeSm',
   md: 'fontSizeSm',
-  lg: 'fontSizeMd',
+  lg: 'fontSizeBaseLg',
 };
 
 const MIN_WIDTH = {

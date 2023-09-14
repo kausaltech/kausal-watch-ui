@@ -70,7 +70,7 @@ const OrgHeader = styled.div`
     margin-bottom: ${(props) => props.theme.spaces.s150};
     color: ${(props) => props.theme.themeColors.white};
     line-height: ${(props) => props.theme.lineHeightSm};
-    font-size: ${(props) => props.theme.fontSizeXl};
+    font-size: ${(props) => props.theme.fontSizeLg};
   }
 
   a {
@@ -119,7 +119,7 @@ const ActionTableHeader = styled.div`
     ${(props) => props.theme.spaces.s100};
 
   h2 {
-    font-size: ${(props) => props.theme.fontSizeMd};
+    font-size: ${(props) => props.theme.fontSizeBaseLg};
     margin: 0;
   }
 `;

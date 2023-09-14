@@ -37,8 +37,8 @@ const UnknownEmbedPlaceholder = () => {
       <Icon
         name="exclamation-circle"
         color={theme.themeColors.light}
-        width={theme.fontSizeXl}
-        height={theme.fontSizeXl}
+        width={theme.fontSizeLg}
+        height={theme.fontSizeLg}
       />
     </UnknownWrapper>
   );

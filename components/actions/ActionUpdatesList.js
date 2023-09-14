@@ -19,7 +19,7 @@ const ActionUpdate = styled.article`
 
 const ActionUpdateHeader = styled.header`
   h3 {
-    font-size: ${(props) => props.theme.fontSizeMd};
+    font-size: ${(props) => props.theme.fontSizeBaseLg};
     line-height: ${(props) => props.theme.lineHeightMd};
   }
 `;

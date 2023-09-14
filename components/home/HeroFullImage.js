@@ -5,6 +5,7 @@ import { Container } from 'reactstrap';
 import styled from 'styled-components';
 import { useTranslation } from 'common/i18n';
 import RichText from 'components/common/RichText';
+import { typography } from 'common/ThemedGlobalStyles';
 
 const Hero = styled.div`
   width: 100%;
@@ -69,8 +70,20 @@ const MainCard = styled.div`
   z-index: 100;
 
   h1 {
-    font-size: ${(props) => props.theme.fontSizeLg};
+    ${typography.h3};
     margin-bottom: ${(props) => props.theme.spaces.s100};
+  }
+
+  h2 {
+    ${typography.h4};
+  }
+
+  h3 {
+    ${typography.h5};
+  }
+
+  h4 {
+    ${typography.h6};
   }
 
   h1,
@@ -95,9 +108,7 @@ const MainCard = styled.div`
   }
 
   .lead-content {
-    font-size: ${(props) => props.theme.fontSizeBase};
-    line-height: ${(props) => props.theme.lineHeightMd};
-    font-family: ${(props) => props.theme.fontFamilyContent};
+    ${typography.lead};
   }
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
@@ -114,14 +125,6 @@ const MainCard = styled.div`
             return '0';
         }
       }};
-
-    h1 {
-      font-size: ${(props) => props.theme.fontSizeXl};
-    }
-
-    .lead-content {
-      font-size: ${(props) => props.theme.fontSizeMd};
-    }
   }
 `;
 
@@ -131,8 +134,7 @@ const ImageCredit = styled.span`
   right: 0;
   padding: 0.25rem 0.5rem;
   background-color: rgba(255, 255, 255, 0.66);
-  font-size: ${(props) => props.theme.fontSizeSm};
-  font-family: ${(props) => props.theme.fontFamilyTiny};
+  ${typography.caption};
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     top: inherit;

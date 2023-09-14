@@ -54,7 +54,7 @@ const ReadyBadge = styled(Badge)`
 `;
 
 const StyledCardTitle = styled(CardTitle)`
-  font-size: ${(props) => props.theme.fontSizeMd};
+  font-size: ${(props) => props.theme.fontSizeBaseLg}; // Ignore
   color: ${(props) => props.theme.neutralDark};
   text-align: left;
   hyphens: manual;
@@ -91,7 +91,7 @@ const ImgOverlay = styled.div`
 
 const ActionNumber = styled.div`
   text-align: center;
-  font-size: ${(props) => props.theme.fontSizeXl};
+  font-size: ${(props) => props.theme.fontSizeLg}; // Ignore
   font-weight: ${(props) => props.theme.fontWeightBold};
   color: ${(props) => props.theme.themeColors.light};
   background: ${(props) => transparentize(0.1, props.theme.brandDark)};

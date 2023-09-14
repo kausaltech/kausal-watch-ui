@@ -90,7 +90,7 @@ const ListGroup = styled(BaseListGroup)`
 `;
 
 const ListGroupTitle = styled.h3`
-  font-size: ${(props) => props.theme.fontSizeMd};
+  font-size: ${(props) => props.theme.fontSizeBaseLg};
 `;
 
 const ListGroupItem = styled(BaseListGroupItem)`

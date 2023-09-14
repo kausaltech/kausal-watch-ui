@@ -24,7 +24,7 @@ const Card = styled(BaseCard)`
   border-radius: ${(props) => props.theme.cardBorderRadius};
 
   h3 {
-    font-size: ${(props) => props.theme.fontSizeMd};
+    font-size: ${(props) => props.theme.fontSizeBaseLg};
   }
 `;
 

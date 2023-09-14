@@ -10,7 +10,7 @@ import {
 } from 'common/__generated__/graphql';
 
 const Categories = styled.div`
-  font-size: ${(props) => props.theme.fontSizeMd};
+  font-size: ${(props) => props.theme.fontSizeBaseLg};
   a {
     margin-right: ${(props) => props.theme.spaces.s050};
   }

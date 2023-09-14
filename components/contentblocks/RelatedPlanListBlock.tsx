@@ -15,7 +15,7 @@ const PlanListSection = styled.div`
   h2 a {
     text-align: center;
     margin-bottom: ${(props) => props.theme.spaces.s100};
-    font-size: ${(props) => props.theme.fontSizeMd};
+    font-size: ${(props) => props.theme.fontSizeBaseLg};
     color: ${(props) => props.theme.themeColors.white};
   }
 `;

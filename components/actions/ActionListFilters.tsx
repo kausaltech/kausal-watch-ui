@@ -55,7 +55,7 @@ export type Filters<Value extends FilterValue = FilterValue> = {
 const FiltersList = styled.div`
   margin: 0 0 ${(props) => props.theme.spaces.s150} 0;
   padding: ${(props) => props.theme.spaces.s100} 0;
-  font-size: ${(props) => props.theme.fontSizeLg};
+  font-size: ${(props) => props.theme.fontSizeMd};
   line-height: ${(props) => props.theme.lineHeightBase};
   border-color: ${(props) =>
     readableColor(
@@ -72,19 +72,19 @@ const FiltersList = styled.div`
       ${(props) => props.theme.spaces.s100} 0;
     padding-bottom: ${(props) => props.theme.spaces.s100};
     font-weight: ${(props) => props.theme.fontWeightBold};
-    font-size: ${(props) => props.theme.fontSizeMd};
+    font-size: ${(props) => props.theme.fontSizeBaseLg};
   }
 
   .close {
     color: ${(props) => props.theme.themeColors.white};
     margin-left: 0.75em;
-    font-size: ${(props) => props.theme.fontSizeMd};
+    font-size: ${(props) => props.theme.fontSizeBaseLg};
   }
 `;
 
 const FiltersHeader = styled.h2`
   margin-bottom: ${(props) => props.theme.spaces.s100};
-  font-size: ${(props) => props.theme.fontSizeMd};
+  font-size: ${(props) => props.theme.fontSizeBaseLg};
   font-family: ${(props) => props.theme.fontFamily};
   font-weight: ${(props) => props.theme.fontWeightBold};
   color: ${(props) =>

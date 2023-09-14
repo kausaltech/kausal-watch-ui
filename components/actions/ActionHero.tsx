@@ -12,6 +12,7 @@ import {
 import { usePlan } from 'context/plan';
 
 import Icon from 'components/common/Icon';
+import { typography } from 'common/ThemedGlobalStyles';
 
 const Hero = styled.header<{ bgColor: string }>`
   position: relative;
@@ -90,12 +91,11 @@ const ActionsNav = styled.nav`
   display: flex;
   justify-content: space-between;
   margin-bottom: ${(props) => props.theme.spaces.s100};
-  font-size: ${(props) => props.theme.fontSizeSm};
-  font-family: ${(props) => props.theme.fontFamilyTiny};
+  ${typography.caption};
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
-    font-size: ${(props) => props.theme.fontSizeBase};
-    font-family: ${(props) => props.theme.fontFamily};
+    font-size: ${(props) => props.theme.fontSizeBase}; // Possibly new style
+    font-family: ${(props) => props.theme.fontFamily}; // Possibly new style
   }
 `;
 
@@ -120,8 +120,7 @@ const ImageCredit = styled.span`
   right: 0;
   padding: 0.25rem 0.5rem;
   background-color: rgba(255, 255, 255, 0.66);
-  font-size: ${(props) => props.theme.fontSizeSm};
-  font-family: ${(props) => props.theme.fontFamilyTiny};
+  ${typography.caption}
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     top: inherit;
@@ -132,12 +131,11 @@ const ImageCredit = styled.span`
 const ActionHeadline = styled.h1`
   hyphens: manual;
   margin: ${(props) => props.theme.spaces.s100} 0;
-  font-size: ${(props) => props.theme.fontSizeXl};
   color: ${(props) => props.theme.themeColors.black} !important;
+  ${typography.h3}
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     display: flex;
-    font-size: ${(props) => props.theme.fontSizeXl};
   }
 `;
 

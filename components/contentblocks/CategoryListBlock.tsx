@@ -51,7 +51,7 @@ const CategoryListSection = styled.div`
     )};
 
   h2 {
-    font-size: ${(props) => props.theme.fontSizeLg};
+    font-size: ${(props) => props.theme.fontSizeMd};
     color: ${(props) =>
       readableColor(
         props.theme.neutralLight,
@@ -62,7 +62,7 @@ const CategoryListSection = styled.div`
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     h2 {
-      font-size: ${(props) => props.theme.fontSizeXl};
+      font-size: ${(props) => props.theme.fontSizeLg};
     }
   }
 
@@ -96,7 +96,7 @@ const CategoryListSection = styled.div`
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     .lead-text {
-      font-size: ${(props) => props.theme.fontSizeMd};
+      font-size: ${(props) => props.theme.fontSizeBaseLg};
       line-height: ${(props) => props.theme.lineHeightBase};
     }
   }
@@ -110,7 +110,7 @@ const SectionHeader = styled.h2`
 
 const CardHeader = styled.h3`
   color: ${(props) => props.theme.neutralDark};
-  font-size: ${(props) => props.theme.fontSizeMd};
+  font-size: ${(props) => props.theme.fontSizeBaseLg};
   line-height: ${(props) => props.theme.lineHeightMd};
 `;
 

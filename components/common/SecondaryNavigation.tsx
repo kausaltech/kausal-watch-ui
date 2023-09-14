@@ -19,7 +19,7 @@ const NavigationCard = styled.div`
   background-color: #f2f2f2;
 
   h3 {
-    font-size: ${(props) => props.theme.fontSizeMd};
+    font-size: ${(props) => props.theme.fontSizeBaseLg};
     margin-bottom: ${(props) => props.theme.spaces.s100};
   }
 `;

@@ -11,7 +11,7 @@ const CausalNavigationWrapper = styled.div`
   background-color: ${(props) => props.theme.themeColors.light};
 
   h3 {
-    font-size: ${(props) => props.theme.fontSizeLg};
+    font-size: ${(props) => props.theme.fontSizeMd};
     margin-bottom: ${(props) => props.theme.spaces.s200};
   }
 `;

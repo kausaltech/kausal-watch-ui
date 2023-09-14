@@ -67,7 +67,7 @@ const SiteTitle = styled.div`
     ${(props) => props.theme.spaces.s150};
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
-    font-size: ${(props) => props.theme.fontSizeMd};
+    font-size: ${(props) => props.theme.fontSizeBaseLg};
   }
 `;
 

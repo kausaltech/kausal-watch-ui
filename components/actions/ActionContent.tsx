@@ -354,7 +354,7 @@ export type ActionContentAction = NonNullable<GetActionDetailsQuery['action']>;
 const LastUpdated = styled.div`
   margin-bottom: 1em;
   color: ${(props) => props.theme.themeColors.dark};
-  font-size: ${(props) => props.theme.fontSizeBase};
+  font-size: ${(props) => props.theme.fontSizeBase}; // Ignore
 `;
 
 export const ActionSection = styled.div`
@@ -362,15 +362,15 @@ export const ActionSection = styled.div`
 `;
 
 const PrimaryHeader = styled.h2`
-  font-size: ${(props) => props.theme.fontSizeBase};
+  font-size: ${(props) => props.theme.fontSizeBase}; // Ignore
 `;
 
 const SideHeader = styled.h3`
-  font-size: ${(props) => props.theme.fontSizeBase};
+  font-size: ${(props) => props.theme.fontSizeBase}; // Ignore
 `;
 
 export const SectionHeader = styled.h2`
-  font-size: ${(props) => props.theme.fontSizeLg};
+  font-size: ${(props) => props.theme.fontSizeMd}; // Ignore
   margin-bottom: ${(props) => props.theme.spaces.s200};
 `;
 
@@ -393,7 +393,7 @@ const ContentGroup = styled.div<{ vertical: boolean }>`
   text-align: left;
 
   h2 {
-    font-size: ${(props) => props.theme.fontSizeLg};
+    font-size: ${(props) => props.theme.fontSizeMd}; // Ignore
     margin-bottom: ${(props) => props.theme.spaces.s200};
   }
 `;

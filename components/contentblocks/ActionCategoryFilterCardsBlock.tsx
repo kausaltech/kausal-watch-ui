@@ -36,7 +36,7 @@ const CategoryListSection = styled.div`
 
   .lead-text {
     text-align: center;
-    font-size: ${(props) => props.theme.fontSizeMd};
+    font-size: ${(props) => props.theme.fontSizeBaseLg};
     margin-bottom: ${(props) => props.theme.spaces.s300};
   }
 `;
@@ -47,7 +47,7 @@ const CardLead = styled.p`
 
 const CardHeader = styled.h3`
   color: ${(props) => props.theme.themeColors.white};
-  font-size: ${(props) => props.theme.fontSizeMd};
+  font-size: ${(props) => props.theme.fontSizeBaseLg};
   line-height: ${(props) => props.theme.lineHeightMd};
 `;
 

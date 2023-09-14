@@ -138,7 +138,7 @@ const Section = styled.section`
   padding: ${(props) => props.theme.spaces.s300} 0;
 
   h2 {
-    font-size: ${(props) => props.theme.fontSizeLg};
+    font-size: ${(props) => props.theme.fontSizeMd};
     margin-bottom: ${(props) => props.theme.spaces.s100};
   }
 `;

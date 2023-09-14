@@ -21,7 +21,7 @@ const SectionHeader = styled.div`
   margin: ${(props) => props.theme.spaces.s050} 0;
 
   h2 {
-    font-size: ${(props) => props.theme.fontSizeLg};
+    font-size: ${(props) => props.theme.fontSizeMd};
     margin: 0;
   }
 `;

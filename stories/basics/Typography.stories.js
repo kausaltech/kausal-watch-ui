@@ -36,6 +36,15 @@ const TypeList = () => {
             <td>{themeContext.fontSizeBase}</td>
           </tr>
           <tr>
+            <td>fontSizeBaseLg</td>
+            <td>
+              <TypeExample size="fontSizeBaseLg">
+                Lorem ipsum <strong>dolor</strong>
+              </TypeExample>
+            </td>
+            <td>{themeContext.fontSizeBaseLg}</td>
+          </tr>
+          <tr>
             <td>fontSizeMd</td>
             <td>
               <TypeExample size="fontSizeMd">
@@ -54,15 +63,6 @@ const TypeList = () => {
             <td>{themeContext.fontSizeLg}</td>
           </tr>
           <tr>
-            <td>fontSizeXl</td>
-            <td>
-              <TypeExample size="fontSizeXl">
-                Lorem ipsum <strong>dolor</strong>
-              </TypeExample>
-            </td>
-            <td>{themeContext.fontSizeXl}</td>
-          </tr>
-          <tr>
             <td>fontSizeXxl</td>
             <td>
               <TypeExample size="fontSizeXxl">
@@ -77,7 +77,7 @@ const TypeList = () => {
           <tr>
             <td>fontWeightNormal</td>
             <td>
-              <TypeExample size="fontSizeMd">
+              <TypeExample size="fontSizeBaseLg">
                 <span style={{ fontWeight: themeContext.fontWeightNormal }}>
                   Font Weight
                 </span>
@@ -88,7 +88,7 @@ const TypeList = () => {
           <tr>
             <td>fontWeightNormal</td>
             <td>
-              <TypeExample size="fontSizeMd">
+              <TypeExample size="fontSizeBaseLg">
                 <span style={{ fontWeight: themeContext.fontWeightBold }}>
                   Font Weight
                 </span>
