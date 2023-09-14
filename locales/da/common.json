@@ -146,7 +146,7 @@
     "tactical": "Taktisk indikator",
     "themes": "Temaer",
     "to-reduce": "Skal reduceres",
-    "total": "",
+    "total": "I alt",
     "type": "Type",
     "under-x-days": "Under {{days}} dage",
     "unknown": "Ukendt",
@@ -188,5 +188,14 @@
     "graph-showTable": "Vis datatabel",
     "definition": "Definition",
     "no-reports": "Ingen rapporter er tilgængelige.",
-    "no-action-data-for-report": "Rapporten indeholder ingen data for denne handling."
+    "no-action-data-for-report": "Rapporten indeholder ingen data for denne handling.",
+    "action_CASE_STUDY": "Casestudie",
+    "actions_CASE_STUDY": "Casestudier",
+    "impact-group-no-actions_CASE_STUDY": "Ingen definerede casestudier.",
+    "indicator-related-actions_CASE_STUDY": "Casestudier, der påvirker denne indikator",
+    "see-all-actions_CASE_STUDY": "Se alle casestudier",
+    "error-loading-actions_CASE_STUDY": "Fejl ved indlæsning af listen over casestudier",
+    "filter-result-actions_CASE_STUDY": "casestudier",
+    "recently-updated-actions_CASE_STUDY": "Nyligt opdaterede casestudier",
+    "open": "åben"
 }
