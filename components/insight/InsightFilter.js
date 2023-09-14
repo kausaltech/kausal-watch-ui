@@ -1,8 +1,15 @@
 import React from 'react';
 import { Container, Row, Col } from 'reactstrap';
-
 import { Typeahead } from 'react-bootstrap-typeahead';
 import { withTranslation } from '../../common/i18n';
+import styled from 'styled-components';
+import 'react-bootstrap-typeahead/css/Typeahead.css';
+
+const StyledTypeahead = styled(Typeahead)`
+  .rbt-close-content {
+    display: none;
+  }
+`;
 
 function InsightFilter(props) {
   const { nodes, activeFilterNode, t } = props;
@@ -37,16 +44,15 @@ function InsightFilter(props) {
   return (
     <div className="mb-4">
       <h5>{ t('insight-filter-label') }</h5>
-
-      <Typeahead
-        id="insight-filter"
-        onChange={handleChange}
-        ignoreDiacritics={false}
-        clearButton
-        emptyLabel={t('insight-filter-no-results')}
-        defaultSelected={defaultSelected}
-        options={options}
-      />
+        <StyledTypeahead
+          id="insight-filter"
+          clearButton
+          onChange={handleChange}
+          ignoreDiacritics={false}
+          emptyLabel={t('insight-filter-no-results')}
+          defaultSelected={defaultSelected}
+          options={options}
+        />
     </div>
   );
 }
