@@ -154,6 +154,8 @@ const HeroFullImage = (props) => {
   const { t } = useTranslation();
   const theme = useTheme();
 
+  const showContentBox = title || lead;
+
   return (
     <Hero id={id}>
       <HeroImage image={bgImage} imageAlign={imageAlign} />
@@ -161,25 +163,27 @@ const HeroFullImage = (props) => {
       {imageCredit && (
         <ImageCredit>{`${t('image-credit')}: ${imageCredit}`}</ImageCredit>
       )}
-      <Container>
-        <HeroContent>
-          <MainCard
-            alignment={
-              theme.settings?.frontHero
-                ? theme.settings.frontHero.cardPlacement
-                : 'left'
-            }
-            color={
-              theme.settings?.frontHero
-                ? theme.settings.frontHero?.color
-                : 'light'
-            }
-          >
-            <h1>{title}</h1>
-            <RichText html={lead} className="lead-content" />
-          </MainCard>
-        </HeroContent>
-      </Container>
+      {showContentBox && (
+        <Container>
+          <HeroContent>
+            <MainCard
+              alignment={
+                theme.settings?.frontHero
+                  ? theme.settings.frontHero.cardPlacement
+                  : 'left'
+              }
+              color={
+                theme.settings?.frontHero
+                  ? theme.settings.frontHero?.color
+                  : 'light'
+              }
+            >
+              <h1>{title}</h1>
+              <RichText html={lead} className="lead-content" />
+            </MainCard>
+          </HeroContent>
+        </Container>
+      )}
     </Hero>
   );
 };
