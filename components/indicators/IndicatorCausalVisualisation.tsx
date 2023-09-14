@@ -56,7 +56,7 @@ function getColumnHeight(nodes, column) {
   return columnIndicators.length;
 }
 
-function drawEdge(nodes, edge, toIndex, gridHeight, theme) {
+function drawEdge(nodes, edge, toIndex, gridHeight, theme, hoverId) {
   const fromNode = nodes.find((item) => edge.from === item.id);
   const toNode = nodes.find((item) => edge.to === item.id);
 
@@ -64,18 +64,20 @@ function drawEdge(nodes, edge, toIndex, gridHeight, theme) {
     return '';
   }
 
+  const faded =
+    hoverId && hoverId !== fromNode.id && hoverId != toNode.id ? true : false;
   const fromIndex = fromNode.from.findIndex((x) => x.id === edge.id);
 
   const nodeHeight = 160;
   const fromNodeHeight =
     (gridHeight / getColumnHeight(nodes, fromNode.column)) * nodeHeight;
-  const fromNodeFromTop = fromNode.row * fromNodeHeight;
+  const fromNodeFromTop = fromNode.row * (fromNodeHeight + 20);
 
   const toNodeHeight =
     (gridHeight / getColumnHeight(nodes, toNode.column)) * nodeHeight;
-  const toNodeFromTop = toNode.row * toNodeHeight;
+  const toNodeFromTop = toNode.row * (toNodeHeight + 20);
 
-  const fromDistribution = fromNodeHeight / fromNode.from.length;
+  const fromDistribution = fromNodeHeight / (fromNode.from.length + 1);
   const fromOffset = fromIndex * fromDistribution + fromDistribution / 2;
   let startY = fromNodeFromTop - toNodeFromTop + fromOffset;
 
@@ -88,30 +90,43 @@ function drawEdge(nodes, edge, toIndex, gridHeight, theme) {
 
   let bend = startY < endY ? -5 : 5;
 
+  // Pointing backward
+  if (fromNode.column > toNode.column) {
+    startX = (fromNode.column - toNode.column) * 280;
+    endX = 235;
+  }
+
+  // Pointing down
   if (fromNode.column === toNode.column && fromNode.row < toNode.row) {
-    startX = endX = 120;
+    startX = endX = 200;
     endY = -5;
     startY = fromNodeFromTop + fromNodeHeight - toNodeFromTop - 25;
     bend = 0;
   }
 
+  // Pointing up
   if (fromNode.column === toNode.column && fromNode.row > toNode.row) {
-    startX = endX = 120;
-    endY = toNodeHeight;
-    startY = fromNodeFromTop - toNodeFromTop + 25;
+    startX = endX = 200;
+    endY = toNodeHeight + 5;
+    startY = fromNodeFromTop - toNodeFromTop;
     bend = 0;
   }
 
   let edgeColor;
+  let edgeIcon = '';
+
   switch (edge.effect_type) {
     case 'increases':
-      edgeColor = theme.graphColors.green050;
+      edgeColor = theme.graphColors.green070;
+      edgeIcon = '+';
       break;
     case 'decreases':
       edgeColor = theme.graphColors.red050;
+      edgeIcon = '-';
       break;
     case 'part_of':
       edgeColor = theme.graphColors.blue070;
+      edgeIcon = '⊂';
       break;
     default:
       edgeColor = theme.themeColors.dark;
@@ -124,53 +139,10 @@ function drawEdge(nodes, edge, toIndex, gridHeight, theme) {
       endPoint={{ x: endX, y: endY }}
       color={edgeColor}
       bend={bend}
+      icon={edgeIcon}
+      faded={faded}
     />
   );
-}
-
-function createChain(nodes, theme) {
-  let column = 0;
-  const chain: ReactElement[] = [];
-  const gridHeight = getGridHeight(nodes);
-  let columnIndicators = nodes;
-
-  const indicatorGoal = null; //FIXME: get goal value from API
-
-  while (columnIndicators.length !== 0) {
-    const children: ReactElement[] = [];
-
-    columnIndicators = nodes.filter((item) => item.column === column);
-
-    columnIndicators.forEach((indicator) => {
-      let indicatorLevel = 'action';
-      if (indicator.type !== 'action')
-        indicatorLevel = indicator.indicator_level;
-      const connectionsTo: ReactElement[] = [];
-      indicator.to.forEach((edge, index) => {
-        const edgeElement = drawEdge(nodes, edge, index, gridHeight, theme);
-        if (!edgeElement) return;
-        connectionsTo.push(<span key={edge.id}>{edgeElement}</span>);
-      });
-
-      children.push(
-        <Indicator level={indicatorLevel} key={indicator.id}>
-          <IndicatorCard
-            objectid={String(indicator.object_id)}
-            name={indicator.name}
-            level={indicatorLevel}
-            key={indicator.id}
-            latestValue={indicator.latest_value}
-            resolution={indicator.time_resolution}
-            goalValue={indicatorGoal}
-          />
-          {connectionsTo}
-        </Indicator>
-      );
-    });
-    chain.push(<Column key={column}>{children}</Column>);
-    column += 1;
-  }
-  return chain;
 }
 
 const setColumns = (nodes, index, column) => {
@@ -226,9 +198,81 @@ interface Props {
   actionId?: string;
 }
 
+const InteractiveCausalChain = ({ nodes }) => {
+  const theme = useTheme();
+  const [cardHover, setCardHover] = useState(null);
+
+  let column = 0;
+  const chain: ReactElement[] = [];
+  const gridHeight = getGridHeight(nodes);
+  let columnIndicators = nodes;
+
+  const indicatorGoal = null; //FIXME: get goal value from API
+
+  while (columnIndicators.length !== 0) {
+    const children: ReactElement[] = [];
+
+    columnIndicators = nodes.filter((item) => item.column === column);
+
+    columnIndicators.forEach((indicator) => {
+      let indicatorLevel = 'action';
+      if (indicator.type !== 'action')
+        indicatorLevel = indicator.indicator_level;
+      const connectionsTo: ReactElement[] = [];
+      indicator.to.forEach((edge, index) => {
+        const edgeElement = drawEdge(
+          nodes,
+          edge,
+          index,
+          gridHeight,
+          theme,
+          cardHover
+        );
+        if (!edgeElement) return;
+        connectionsTo.push(<span key={edge.id}>{edgeElement}</span>);
+      });
+
+      const isConnected =
+        cardHover &&
+        (cardHover === indicator.id ||
+          indicator.to.some((edge) => edge.from === cardHover));
+
+      children.push(
+        <Indicator
+          level={indicatorLevel}
+          key={indicator.id}
+          onMouseEnter={(e) => {
+            setCardHover(indicator.id);
+          }}
+          onMouseLeave={(e) => {
+            setCardHover(null);
+          }}
+        >
+          <IndicatorCard
+            objectid={String(indicator.id)}
+            name={indicator.name}
+            level={indicatorLevel}
+            key={indicator.id}
+            latestValue={indicator.latest_value}
+            resolution={indicator.time_resolution}
+            goalValue={indicatorGoal}
+            disabled={cardHover && !isConnected}
+          />
+          {connectionsTo}
+        </Indicator>
+      );
+    });
+    chain.push(<Column key={column}>{children}</Column>);
+    column += 1;
+  }
+
+  return (
+    <CausalChain className="causal-chain-visualisation">{chain}</CausalChain>
+  );
+};
+
 function IndicatorCausalVisualisation({ actionId }: Props) {
   const plan = usePlan();
-  const theme = useTheme();
   const isServer = typeof window === 'undefined';
 
   const [isLoaded, setIsLoaded] = useState(false);
@@ -275,12 +319,10 @@ function IndicatorCausalVisualisation({ actionId }: Props) {
     return <ContentLoader />;
   }
 
-  const combinedData = combineData(data?.nodes, data?.edges);
-
   return (
-    <CausalChain className="causal-chain-visualisation">
-      {createChain(combinedData, theme)}
-    </CausalChain>
+    <div>
+      <InteractiveCausalChain nodes={combineData(data?.nodes, data?.edges)} />
+    </div>
   );
 }
 

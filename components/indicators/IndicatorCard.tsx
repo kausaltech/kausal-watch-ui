@@ -67,6 +67,7 @@ const Indicator = styled(Card)`
     }
   }};
   background-color: ${(props) => {
+    if (props.disabled) return props.theme.graphColors.grey050;
     switch (props.level) {
       case 'action':
         return props.theme.actionColor;
@@ -196,6 +197,7 @@ interface IndicatorCardProps {
     date: string;
     unit: string;
   } | null;
+  disabled?: boolean | null;
 }
 
 function IndicatorCard({
@@ -206,6 +208,7 @@ function IndicatorCard({
   latestValue = null,
   resolution = 'day',
   goalValue = null,
+  disabled = false,
 }: IndicatorCardProps) {
   const plan = usePlan();
   const { t, i18n } = useTranslation();
@@ -216,7 +219,7 @@ function IndicatorCard({
 
   return (
     <CardLink level={level} indicatorId={objectid}>
-      <Indicator level={level}>
+      <Indicator level={level} disabled={disabled}>
         <CardBody>
           <div>
             <IndicatorType>{indicatorType}</IndicatorType>
