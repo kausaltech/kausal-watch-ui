@@ -138,7 +138,7 @@ const LinkCopyButton = React.memo((props) => {
         onCopy={onCopy}
         aria-describedby={`tt-content-${identifier}`}
       >
-        <CopyLink className="copy-link">
+        <CopyLink data-testid="link-copy-btn" className="copy-link">
           <Icon name="link" />
         </CopyLink>
       </CopyToClipboard>
