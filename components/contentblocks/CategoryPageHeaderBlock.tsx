@@ -8,6 +8,7 @@ import { Link } from 'common/links';
 import { useTranslation } from 'common/i18n';
 import CategoryMetaBar from 'components/actions/CategoryMetaBar';
 import AttributesBlock from 'components/common/AttributesBlock';
+import { useTheme } from 'common/theme';
 
 export const GET_CATEGORY_ATTRIBUTE_TYPES = gql`
   query GetCategoryAttributeTypes($plan: ID!) {
@@ -87,12 +88,21 @@ const ImageCredit = styled.span`
   }
 `;
 
-const HeaderContent = styled.div`
+const HeaderContent = styled.div<{
+  $alignWithContent?: boolean;
+  hasImage: boolean;
+}>`
   position: relative;
   max-width: ${(props) => props.theme.breakpointMd};
-  margin: ${(props) => (props.hasImage ? '-2rem auto 0' : '1rem auto')};
-  padding: ${(props) => `${props.theme.spaces.s200}`};
-  text-align: center;
+  margin-top: ${({ hasImage }) => (hasImage ? '-2rem' : '1rem')};
+  margin-bottom: ${({ hasImage }) => (hasImage ? '0' : undefined)};
+  margin-left: ${({ $alignWithContent, theme }) =>
+    $alignWithContent ? `-${theme.spaces.s200}` : 'auto'};
+  margin-right: ${({ $alignWithContent, theme }) =>
+    $alignWithContent ? `-${theme.spaces.s200}` : 'auto'};
+  text-align: ${({ $alignWithContent }) =>
+    $alignWithContent ? 'left' : 'center'};
+  padding: ${({ theme }) => theme.spaces.s200};
   border-radius: ${(props) => props.theme.cardBorderRadius};
   background-color: ${(props) => props.theme.themeColors.white};
   color: ${(props) => props.theme.neutralDark};
@@ -118,7 +128,8 @@ const HeaderContent = styled.div`
   }
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
-    margin: ${(props) => (props.hasImage ? '14rem auto 3rem' : '3rem auto')};
+    margin-top: ${({ hasImage }) => (hasImage ? '14rem' : '3rem')};
+    margin-bottom: ${({ hasImage }) => (hasImage ? '3rem' : undefined)};
 
     h1 {
       font-size: ${(props) => props.theme.fontSizeXl};
@@ -164,6 +175,7 @@ function CategoryPageHeaderBlock(props) {
   } = props;
 
   const plan = useContext(PlanContext);
+  const theme = useTheme();
   const { t } = useTranslation();
 
   let attributeTypes = [];
@@ -184,17 +196,31 @@ function CategoryPageHeaderBlock(props) {
     } else return true;
   });
 
+  const columnSizing = theme.settings.leftAlignCategoryPages
+    ? {
+        xl: { size: 6, offset: 3 },
+        lg: { size: 8, offset: 2 },
+        md: { size: 10, offset: 1 },
+      }
+    : {
+        lg: { size: 10, offset: 1 },
+        xl: { size: 12, offset: 0 },
+      };
+
   return (
     <CategoryHeader bg={color} hasImage={!!headerImage}>
       <CategoryHeaderImage
         bg={color}
         imageAlign={imageAlign}
         image={headerImage?.large?.src}
-      ></CategoryHeaderImage>
+      />
       <Container className="header-container">
         <Row>
-          <Col lg={{ size: 10, offset: 1 }} xl={{ size: 12, offset: 0 }}>
-            <HeaderContent hasImage={!!headerImage}>
+          <Col {...columnSizing}>
+            <HeaderContent
+              $alignWithContent={theme.settings.leftAlignCategoryPages}
+              hasImage={!!headerImage}
+            >
               {level && <CategoryLevelName>{level}</CategoryLevelName>}
               {parentTitle && (
                 <Breadcrumb>

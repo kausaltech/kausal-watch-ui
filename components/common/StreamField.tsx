@@ -25,6 +25,7 @@ import AccessibilityStatementContactInformationBlock from 'components/contentblo
 
 import type { StreamFieldFragmentFragment } from 'common/__generated__/graphql';
 import CartographyVisualisationBlock from 'components/contentblocks/CartographyVisualisationBlock';
+import { useTheme } from 'common/theme';
 
 const STREAM_FIELD_FRAGMENT = gql`
   fragment StreamFieldFragment on StreamFieldInterface {
@@ -286,6 +287,7 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
   const { id, page, block, color, hasSidebar } = props;
   const { __typename } = block;
   const plan = useContext(PlanContext);
+  const theme = useTheme();
 
   switch (__typename) {
     case 'RichTextBlock': {
@@ -311,9 +313,14 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
     }
     case 'QuestionAnswerBlock': {
       const { heading, questions } = block;
+
       return (
         <QuestionAnswerBlock
           id={id}
+          alignWithContent={
+            page.__typename === 'CategoryPage' &&
+            theme.settings.leftAlignCategoryPages
+          }
           heading={heading}
           questions={questions}
           hasSidebar={hasSidebar}
@@ -503,6 +510,7 @@ interface StreamFieldProps {
 
 function StreamField(props: StreamFieldProps) {
   const { page, blocks, color, hasSidebar = false } = props;
+
   return (
     <>
       {blocks.map((block, index) => (
