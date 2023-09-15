@@ -249,7 +249,7 @@ const InteractiveCausalChain = ({ nodes }) => {
           }}
         >
           <IndicatorCard
-            objectid={String(indicator.id)}
+            objectid={String(indicator.object_id)}
             name={indicator.name}
             level={indicatorLevel}
             key={indicator.id}
