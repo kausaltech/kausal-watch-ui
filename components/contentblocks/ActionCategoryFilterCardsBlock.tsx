@@ -8,6 +8,7 @@ import { Link } from 'common/links';
 import CategoryTreeBlock from 'components/contentblocks/CategoryTreeBlock';
 import Card from 'components/common/Card';
 import { CommonContentBlockProps } from 'common/blocks.types';
+import { getCategoryString } from 'common/categories';
 
 const CategoryListSection = styled.div`
   background-color: ${(props) => props.theme.brandDark};
@@ -76,7 +77,9 @@ const CategoryListBlock = ({ id = '', cards }: Props) => {
               style={{ transition: 'all 0.5s ease' }}
             >
               <Link
-                href={`/actions?cat-${card.category.type.identifier}=${card.category.id}`}
+                href={`/actions?${getCategoryString(
+                  card.category.type.identifier
+                )}=${card.category.id}`}
               >
                 <a className="card-wrapper">
                   <Card customColor={theme.brandDark}>

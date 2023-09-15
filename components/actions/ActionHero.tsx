@@ -12,6 +12,7 @@ import {
 import { usePlan } from 'context/plan';
 
 import Icon from 'components/common/Icon';
+import { getCategoryString } from 'common/categories';
 
 const Hero = styled.header<{ bgColor: string }>`
   position: relative;
@@ -169,9 +170,9 @@ function ActionCategories(props) {
       if (cat.identifier && showIdentifiers)
         categoryTitle = `${cat.identifier}. ${cat.name}`;
     } else if (primaryCT) {
-      displayCategories[
-        indx
-      ].url = `/actions?cat-${primaryCT.identifier}=${cat.id}`;
+      displayCategories[indx].url = `/actions?${getCategoryString(
+        primaryCT.identifier
+      )}=${cat.id}`;
     }
     displayCategories[indx].name = categoryTitle;
     displayCategories[indx].id = cat.id;
@@ -184,9 +185,9 @@ function ActionCategories(props) {
           categoryParentTitle = `${cat.parent.identifier}. ${cat.parent.name}`;
         }
       } else {
-        displayCategories[
-          indx
-        ].parent.url = `/actions?cat-${primaryCT.identifier}=${cat.parent.id}`;
+        displayCategories[indx].parent.url = `/actions?${getCategoryString(
+          primaryCT.identifier
+        )}=${cat.parent.id}`;
       }
       displayCategories[indx].parent.name = categoryParentTitle;
       displayCategories[indx].parent.id = cat.parent.id;
