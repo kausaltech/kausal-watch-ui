@@ -16,7 +16,6 @@ import { getActionTermContext, useTranslation } from 'common/i18n';
 import { usePlan, PlanContextType } from 'context/plan';
 import PlanChip from 'components/plans/PlanChip';
 import { ActionCardFragment } from 'common/__generated__/graphql';
-import { ContactPersonLeader } from 'stories/actions/ContactPerson.stories';
 
 const ACTION_CARD_FRAGMENT = gql`
   fragment ActionCard on Action {
@@ -148,20 +147,21 @@ const ActionCardElement = styled.div`
   }
 `;
 
-const ActionId = styled.div`
-  align-self: flex-start;
-  display: flex;
-  align-items: center;
+const ActionPlan = styled.div`
+  padding: ${(props) =>
+    `${props.theme.spaces.s050} ${props.theme.spaces.s050} ${props.theme.spaces.s050} 0`};
+  background: ${(props) => props.theme.themeColors.white};
+  border-bottom: 1px solid ${(props) => props.theme.themeColors.light};
+`;
+
+const ActionNumber = styled.div`
+  display: inline-block;
   padding: ${(props) => props.theme.spaces.s050};
   font-size: ${(props) => props.theme.fontSizeBase};
   font-weight: ${(props) => props.theme.fontWeightBold};
   line-height: ${(props) => props.theme.lineHeightSm};
   color: ${(props) => props.theme.themeColors.black};
   background: ${(props) => props.theme.themeColors.white};
-`;
-
-const ActionNumber = styled.div`
-  margin-left: ${(props) => props.theme.spaces.s050};
 
   &:after {
     content: '.';
@@ -169,9 +169,6 @@ const ActionNumber = styled.div`
 `;
 
 const ActionStatusArea = styled.div<{ statusColor: string }>`
-  display: flex;
-  justify-content: space-between;
-  flex-direction: column;
   color: ${(props) => props.theme.themeColors.white};
   background-color: ${(props) => props.statusColor};
   min-height: ${(props) => props.theme.spaces.s400};
@@ -233,24 +230,6 @@ const OrgLogo = styled.img`
   height: ${(props) => props.theme.spaces.s150};
 `;
 
-const ActionIdentifier = (props) => {
-  const { showId, identifier, plan, size } = props;
-  if (!showId && !plan) return <div />;
-
-  return (
-    <ActionId>
-      {plan && (
-        <PlanChip
-          planImage={plan.image?.rendition?.src}
-          planShortName={plan.shortName || plan.name}
-          size={size}
-        />
-      )}
-      {showId && <ActionNumber>{identifier}</ActionNumber>}
-    </ActionId>
-  );
-};
-
 const PrimaryIcon = (props) => {
   const { category } = props;
   if (!category) return null;
@@ -282,12 +261,6 @@ const SecondaryIcons = (props) => {
       ))}
     </SecondaryIconsContainer>
   );
-};
-
-ActionIdentifier.propTypes = {
-  showId: PropTypes.bool,
-  identifier: PropTypes.string,
-  plan: PropTypes.shape({}),
 };
 
 type ActionCardProps = {
@@ -344,12 +317,9 @@ function ActionCard(props: ActionCardProps) {
         <ActionCardElement>
           <ActionStatusArea statusColor={statusColor}>
             <PrimaryIcon category={primaryRootCategory} />
-            <ActionIdentifier
-              showId={!plan.hideActionIdentifiers}
-              identifier={action.identifier}
-              size={size ?? 'sm'}
-              plan={showPlan ? action.plan : null}
-            />
+            {!plan.hideActionIdentifiers && !showPlan && (
+              <ActionNumber>{action.identifier}</ActionNumber>
+            )}
           </ActionStatusArea>
           <ActionPhase
             statusColor={statusColor}
@@ -381,7 +351,19 @@ function ActionCard(props: ActionCardProps) {
               </ActionOrgName>
             </ActionOrg>
           )}
-          <StyledCardTitle className="card-title">{actionName}</StyledCardTitle>
+          {showPlan && (
+            <ActionPlan>
+              <PlanChip
+                planImage={action.plan.image?.rendition?.src}
+                planShortName={action.plan.shortName || action.plan.name}
+                size="xs"
+              />
+            </ActionPlan>
+          )}
+          <StyledCardTitle className="card-title">
+            {showPlan && <strong>{action.identifier}. </strong>}
+            {actionName}
+          </StyledCardTitle>
           {plan.secondaryActionClassification && (
             <SecondaryIcons
               actionCategories={action.categories}
