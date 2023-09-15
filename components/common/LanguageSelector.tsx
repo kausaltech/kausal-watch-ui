@@ -1,8 +1,6 @@
-import { useState, useRef, useEffect } from 'react';
 import { Link } from 'common/links';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
-import { transparentize } from 'polished';
 import {
   UncontrolledDropdown,
   DropdownToggle,
@@ -10,6 +8,7 @@ import {
   DropdownItem,
 } from 'reactstrap';
 import Icon from './Icon';
+import { useTheme } from 'common/theme';
 
 const Selector = styled(UncontrolledDropdown)`
   a {
@@ -94,16 +93,21 @@ const languageNames = {
 
 const LanguageSelector = (props) => {
   const router = useRouter();
+  const theme = useTheme();
   const { mobile } = props;
 
-  const { locales } = router;
+  const locales =
+    router.locales?.filter(
+      (locale) => !theme.settings.hiddenLocales?.includes(locale)
+    ) ?? [];
+
   if (locales?.length < 2) return null;
   const handleLocaleChange = (ev) => {
     ev.preventDefault();
     window.location.href = ev.target.href;
   };
   // Strip language variant (if any)
-  const languageCode = router.locale.split('-')[0];
+  const languageCode = router.locale?.split('-')[0];
 
   return (
     <Selector
