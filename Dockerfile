@@ -8,6 +8,8 @@ WORKDIR /app
 # Python is required for node-gyp, which will be built with `yarn install`
 RUN apk --no-cache add g++ make python3 git
 
+RUN corepack enable
+
 ARG YARN_NPM_REGISTRY_SERVER
 ARG YARN_NPM_AUTH_IDENT
 
@@ -16,7 +18,6 @@ ENV YARN_NPM_ALWAYS_AUTH=${YARN_NPM_ALWAYS_AUTH:-false}
 
 # Install dependencies first
 ENV YARN_CACHE_FOLDER /yarn-cache
-RUN yarn set version 3.2.1
 COPY yarn.lock package*.json ./
 COPY patches ./patches/
 
