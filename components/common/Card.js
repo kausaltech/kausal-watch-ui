@@ -82,11 +82,12 @@ const Card = (props) => {
     <StyledCard
       className={`${negative && 'negative'} ${outline && 'outline'}`}
       customcolor={customColor}
+      data-testid='card'
     >
       {/* TODO: maybe animate transition */}
       {imageUrl && (
         <ImgArea colorEffect={colorEffect}>
-          <ImgBg background={imageUrl} imageAlign={imageAlign} />
+          <ImgBg data-testid='image-bg' background={imageUrl} imageAlign={imageAlign} />
         </ImgArea>
       )}
       <CardBody>{children}</CardBody>
