@@ -35,7 +35,8 @@ const ActionStatusGraphsBlock = ({ id = '' }: CommonContentBlockProps) => {
   const theme = useTheme();
 
   // add plan.feature.showActionUpdateStatus to backend
-  const showUpdateStatus = theme.settings.dashboard?.showActionUpdateStatus;
+  const showUpdateStatus =
+    theme.settings.dashboard?.showActionUpdateStatus === false ? false : true;
 
   const { loading, error, data } = useQuery(GET_ACTION_LIST_FOR_GRAPHS, {
     variables: {
