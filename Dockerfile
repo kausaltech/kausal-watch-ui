@@ -1,6 +1,6 @@
 #syntax=docker/dockerfile:1.2
 
-FROM node:18-alpine3.15 as base
+FROM node:20-alpine as base
 
 RUN mkdir -p /app
 WORKDIR /app
