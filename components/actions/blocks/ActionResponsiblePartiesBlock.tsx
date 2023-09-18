@@ -3,12 +3,15 @@ import { ActionSection, SectionHeader } from 'components/actions/ActionContent';
 import ResponsibleList from 'components/actions/ResponsibleList';
 
 const ActionResponsiblePartiesBlock = (props) => {
-  const { responsibleParties } = props;
+  const { block, responsibleParties } = props;
   const { t } = useTranslation();
 
   return (
     <ActionSection>
-      <ResponsibleList responsibleParties={responsibleParties} />
+      <ResponsibleList
+        heading={block?.heading}
+        responsibleParties={responsibleParties}
+      />
     </ActionSection>
   );
 };

@@ -442,7 +442,6 @@ export type ActionIndicator = {
   indicator: Indicator;
 };
 
-/** An enumeration. */
 export enum ActionIndicatorEffectType {
   /** decreases */
   Decreases = 'DECREASES',
@@ -646,10 +645,11 @@ export type ActionRelatedIndicatorsBlock = StreamFieldInterface & {
 export type ActionResponsiblePartiesBlock = StreamFieldInterface & {
   __typename?: 'ActionResponsiblePartiesBlock';
   blockType: Scalars['String'];
+  blocks: Array<StreamFieldInterface>;
   field: Scalars['String'];
+  heading?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['String']>;
   rawValue: Scalars['String'];
-  value: Scalars['String'];
 };
 
 export type ActionResponsibleParty = {
@@ -678,7 +678,6 @@ export type ActionResponsiblePartyReporteportValue = ReportValueInterface & {
   responsibleParty?: Maybe<ActionResponsibleParty>;
 };
 
-/** An enumeration. */
 export enum ActionResponsiblePartyRole {
   /** Collaborator */
   Collaborator = 'COLLABORATOR',
@@ -760,7 +759,6 @@ export type ActionStatusSummary = {
   sentiment: Sentiment;
 };
 
-/** An enumeration. */
 export enum ActionStatusSummaryIdentifier {
   Cancelled = 'CANCELLED',
   Completed = 'COMPLETED',
@@ -829,7 +827,6 @@ export type ActionTask = {
   state: ActionTaskState;
 };
 
-/** An enumeration. */
 export enum ActionTaskState {
   /** cancelled */
   Cancelled = 'CANCELLED',
@@ -860,7 +857,6 @@ export type ActionTimeliness = {
   sentiment: Sentiment;
 };
 
-/** An enumeration. */
 export enum ActionTimelinessIdentifier {
   Acceptable = 'ACCEPTABLE',
   Late = 'LATE',
@@ -1075,7 +1071,6 @@ export type AttributeTypeChoiceOption = {
   name: Scalars['String'];
 };
 
-/** An enumeration. */
 export enum AttributeTypeFormat {
   /** Category */
   CategoryChoice = 'CATEGORY_CHOICE',
@@ -1145,7 +1140,6 @@ export type CartographyProviderCredentials = {
   publicAccessToken: Scalars['String'];
 };
 
-/** An enumeration. */
 export enum CartographyProviderCredentialsProvider {
   /** MapBox */
   Mapbox = 'MAPBOX'
@@ -1490,7 +1484,6 @@ export type CategoryTypePageSiblingsArgs = {
   searchQuery?: InputMaybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum CategoryTypeSelectWidget {
   /** Multiple */
   Multiple = 'MULTIPLE',
@@ -1594,7 +1587,6 @@ export type CommonIndicatorNormalization = {
   unit?: Maybe<Unit>;
 };
 
-/** An enumeration. */
 export enum Comparison {
   Gt = 'GT',
   Lte = 'LTE'
@@ -2146,7 +2138,6 @@ export type IndicatorLevel = {
   plan: Plan;
 };
 
-/** An enumeration. */
 export enum IndicatorLevelLevel {
   /** operational */
   Operational = 'OPERATIONAL',
@@ -2267,7 +2258,6 @@ export type IndicatorShowcaseBlock = StreamFieldInterface & {
   title?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum IndicatorTimeResolution {
   /** day */
   Day = 'DAY',
@@ -2951,7 +2941,6 @@ export type PlanFeatures = {
   showAdminLink: Scalars['Boolean'];
 };
 
-/** An enumeration. */
 export enum PlanFeaturesContactPersonsPublicData {
   /** Show all information */
   All = 'ALL',
@@ -3195,7 +3184,6 @@ export type PrivacyPolicyPageSiblingsArgs = {
   searchQuery?: InputMaybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum PublicationStatus {
   Published = 'PUBLISHED',
   Scheduled = 'SCHEDULED',
@@ -3375,7 +3363,6 @@ export type RelatedCommonIndicator = {
   id: Scalars['ID'];
 };
 
-/** An enumeration. */
 export enum RelatedCommonIndicatorEffectType {
   /** decreases */
   Decreases = 'DECREASES',
@@ -3397,7 +3384,6 @@ export type RelatedIndicator = {
   id: Scalars['ID'];
 };
 
-/** An enumeration. */
 export enum RelatedIndicatorConfidenceLevel {
   /** high */
   High = 'HIGH',
@@ -3407,7 +3393,6 @@ export enum RelatedIndicatorConfidenceLevel {
   Medium = 'MEDIUM'
 }
 
-/** An enumeration. */
 export enum RelatedIndicatorEffectType {
   /** decreases */
   Decreases = 'DECREASES',
@@ -3556,7 +3541,6 @@ export type SearchResults = {
   hits?: Maybe<Array<Maybe<SearchHit>>>;
 };
 
-/** An enumeration. */
 export enum Sentiment {
   Negative = 'NEGATIVE',
   Neutral = 'NEUTRAL',
@@ -3580,7 +3564,6 @@ export type SiteGeneralContent = {
   siteTitle: Scalars['String'];
 };
 
-/** An enumeration. */
 export enum SiteGeneralContentActionTerm {
   /** Action */
   Action = 'ACTION',
@@ -3921,7 +3904,6 @@ export type UserFeedbackNode = {
   url: Scalars['String'];
 };
 
-/** An enumeration. */
 export enum UserFeedbackType {
   /** Accessibility */
   Accessibility = 'ACCESSIBILITY',
@@ -5012,7 +4994,7 @@ export type GetActionDetailsQuery = (
         & { __typename: 'ReportComparisonBlock' }
       )> | null, detailsAside?: Array<(
         { id?: string | null }
-        & { __typename: 'ActionContactPersonsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionScheduleBlock' }
+        & { __typename: 'ActionContactPersonsBlock' | 'ActionScheduleBlock' }
       ) | (
         { id?: string | null, attributeType: (
           { id: string, format: AttributeTypeFormat, name: string, identifier: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
@@ -5034,6 +5016,9 @@ export type GetActionDetailsQuery = (
           & { __typename?: 'CategoryType' }
         ) }
         & { __typename: 'ActionContentCategoryTypeBlock' }
+      ) | (
+        { heading?: string | null, id?: string | null }
+        & { __typename: 'ActionResponsiblePartiesBlock' }
       )> | null }
       & { __typename?: 'ActionListPage' }
     ) | null, actionAttributeTypes: Array<(
@@ -5051,9 +5036,9 @@ export type GetActionDetailsQuery = (
   & { __typename?: 'Query' }
 );
 
-type ActionAsideContentBlocksFragment_ActionContactPersonsBlock_ActionResponsiblePartiesBlock_ActionScheduleBlock_Fragment = (
+type ActionAsideContentBlocksFragment_ActionContactPersonsBlock_ActionScheduleBlock_Fragment = (
   { id?: string | null }
-  & { __typename: 'ActionContactPersonsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionScheduleBlock' }
+  & { __typename: 'ActionContactPersonsBlock' | 'ActionScheduleBlock' }
 );
 
 type ActionAsideContentBlocksFragment_ActionContentAttributeTypeBlock_Fragment = (
@@ -5081,7 +5066,12 @@ type ActionAsideContentBlocksFragment_ActionContentCategoryTypeBlock_Fragment = 
   & { __typename: 'ActionContentCategoryTypeBlock' }
 );
 
-export type ActionAsideContentBlocksFragmentFragment = ActionAsideContentBlocksFragment_ActionContactPersonsBlock_ActionResponsiblePartiesBlock_ActionScheduleBlock_Fragment | ActionAsideContentBlocksFragment_ActionContentAttributeTypeBlock_Fragment | ActionAsideContentBlocksFragment_ActionContentCategoryTypeBlock_Fragment;
+type ActionAsideContentBlocksFragment_ActionResponsiblePartiesBlock_Fragment = (
+  { heading?: string | null, id?: string | null }
+  & { __typename: 'ActionResponsiblePartiesBlock' }
+);
+
+export type ActionAsideContentBlocksFragmentFragment = ActionAsideContentBlocksFragment_ActionContactPersonsBlock_ActionScheduleBlock_Fragment | ActionAsideContentBlocksFragment_ActionContentAttributeTypeBlock_Fragment | ActionAsideContentBlocksFragment_ActionContentCategoryTypeBlock_Fragment | ActionAsideContentBlocksFragment_ActionResponsiblePartiesBlock_Fragment;
 
 type ActionMainContentBlocksFragment_FVKamQUfmT6JjFbafBAu3ifcqx9spC4XsfbOqsBaoA_Fragment = (
   { id?: string | null }

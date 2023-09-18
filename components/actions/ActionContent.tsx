@@ -250,6 +250,9 @@ const GET_ACTION_DETAILS = gql`
   }
   fragment ActionAsideContentBlocksFragment on ActionAsideContentBlock {
     __typename
+    ... on ActionResponsiblePartiesBlock {
+      heading
+    }
     ... on StreamFieldInterface {
       id
     }
@@ -469,6 +472,7 @@ function ActionContentBlock(props: ActionContentBlockProps) {
       if (!action.responsibleParties.length) return null;
       return (
         <ActionResponsiblePartiesBlock
+          block={block}
           responsibleParties={action.responsibleParties}
         />
       );

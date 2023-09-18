@@ -95,16 +95,17 @@ function ResponsibleBadge({ responsibleParty }: ResponsibleBadgeProps) {
 }
 
 type ResponsibleListProps = {
+  heading: ActionResponsiblePartiesBlock['heading'];
   responsibleParties: ActionContentAction['responsibleParties'];
 };
 function ResponsibleList(props: ResponsibleListProps) {
-  const { responsibleParties } = props;
+  const { heading, responsibleParties } = props;
   const { t } = useTranslation(['common', 'actions']);
   /* TODO: a11y - this should probably be a list markup */
 
   return (
     <Responsibles>
-      <h3>{t('responsible-parties')}</h3>
+      <h3>{heading || t('responsible-parties')}</h3>
       <ResponsiblesList>
         {responsibleParties.map((item) => (
           <ResponsibleBadge key={item.id} responsibleParty={item} />
