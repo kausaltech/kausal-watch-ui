@@ -86,6 +86,10 @@ type CategoryContentProps = {
   noLink?: boolean;
 };
 
+const Identifier = styled.span`
+  color: ${(props) => props.theme.graphColors.grey060};
+`;
+
 export const CategoryContent = (props: CategoryContentProps) => {
   const { categories, categoryType, noLink = false } = props;
   return (
@@ -100,12 +104,20 @@ export const CategoryContent = (props: CategoryContentProps) => {
             <BadgeTooltip
               id={item.id}
               tooltip={item.helpText}
-              content={item.name}
-              iconImage={
-                item.iconImage?.rendition.src ||
-                item.parent?.iconImage?.rendition.src
+              content={
+                item.identifier && !item.type.hideCategoryIdentifiers ? (
+                  <>
+                    <Identifier>{item.identifier}.</Identifier> {item.name}
+                  </>
+                ) : (
+                  item.name
+                )
               }
-              iconSvg={item.iconSvgUrl || item.parent?.iconSvgUrl}
+              iconImage={
+                item.iconImage?.rendition?.src ||
+                item.parent?.iconImage?.rendition?.src
+              }
+              iconSvg={item.iconSvgUrl || item.parent?.iconSvgUrl || undefined}
               size="md"
               color="neutralLight"
               isLink={!noLink}
