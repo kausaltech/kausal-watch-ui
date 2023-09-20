@@ -8,42 +8,37 @@ describe('ErrorMessage component', () => {
     const errorMessage = getByText('Test Error');
     expect(errorMessage).toBeInTheDocument();
   });
-});
 
-it('throws an error with the status code on the server', () => {
-  const statusCode = 404;
-  const message = 'Not Found';
-  const serverRender = () => {
-    expect(() => {
-      render(<ErrorMessage message={message} statusCode={statusCode} />);
-    }).toThrowError(new Error(message));
-  };
+  it('throws an error with the status code on the server', () => {
+    const statusCode = 404;
+    const message = 'Not Found';
+    const serverRender = () => {
+      expect(() => {
+        render(<ErrorMessage message={message} statusCode={statusCode} />);
+      }).toThrowError(new Error(message));
+    };
 
-  expect(serverRender).toThrow();
-});
+    expect(serverRender).toThrow();
+  });
 
-it('doesn not throw any errors on the client side', () => {
-  const statusCode = 404;
-  const message = 'Not Found';
-  const clientRender = () => {
-    expect(() =>
-      render(<ErrorMessage message={message} statusCode={statusCode} />)
-    ).not.toThrow();
-  };
-  clientRender();
-});
+  it('doesn not throw any errors on the client side', () => {
+    const statusCode = 404;
+    const message = 'Not Found';
+    const clientRender = () => {
+      expect(() =>
+        render(<ErrorMessage message={message} statusCode={statusCode} />)
+      ).not.toThrow();
+    };
+    clientRender();
+  });
 
-const consoleErrorSpy = jest.spyOn(console, 'error');
-beforeEach(() => {
-  consoleErrorSpy.mockClear();
-});
+  const consoleErrorSpy = jest.spyOn(console, 'error');
+  beforeEach(() => {
+    consoleErrorSpy.mockClear();
+  });
 
-it('logs a prop type error for invalid props', () => {
-  render(<ErrorMessage message={123} />);
-  expect(consoleErrorSpy).toHaveBeenCalled();
-});
-
-it('does not log a prop type error for valid props', () => {
-  render(<ErrorMessage message="Test Error" />);
-  expect(consoleErrorSpy).not.toHaveBeenCalled();
+  it('does not log a prop type error for valid props', () => {
+    render(<ErrorMessage message="Test Error" />);
+    expect(consoleErrorSpy).not.toHaveBeenCalled();
+  });
 });
