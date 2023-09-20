@@ -109,6 +109,7 @@ export const CategoryContent = (props: CategoryContentProps) => {
               size="md"
               color="neutralLight"
               isLink={!noLink}
+              maxLines={2}
             />
           </CategoryLink>
         </CategoryListItem>

@@ -42,6 +42,13 @@ const StyledBadge = styled(({ isLink, ...rest }) => <Badge {...rest} />)<{
   }
 `;
 
+const TruncatedContent = styled.span<{ $maxLines: number }>`
+  display: -webkit-box;
+  -webkit-line-clamp: ${({ $maxLines }) => $maxLines};
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+`;
+
 const IconBadge = styled.div<{ color: string; isLink: boolean }>`
   display: flex;
   align-items: center;
@@ -89,28 +96,44 @@ const IconName = styled.div`
   font-weight: ${(props) => props.theme.fontWeightBold};
 `;
 
-type BadgeContentProps = {
-  content: string;
+interface BadgeContentProps {
+  content: string | React.ReactNode;
   size?: 'lg' | 'md' | 'sm';
   ariaLabel?: string;
   iconSvg?: string;
   iconImage?: string;
   color?: 'brandDark' | 'brandLight' | 'neutralDark' | 'neutralLight';
   isLink: boolean;
-};
+  maxLines?: number;
+}
 
 const BadgeContent = (props: BadgeContentProps) => {
-  const { content, size, iconSvg, iconImage, ariaLabel, color, isLink } = props;
-  const hasIcon = iconSvg == null && iconImage == null;
+  const {
+    content,
+    size = 'md',
+    iconSvg,
+    iconImage,
+    ariaLabel,
+    color = 'brandDark',
+    isLink = false,
+    maxLines,
+  } = props;
+  const hasNoIcon = iconSvg == null && iconImage == null;
 
-  return hasIcon ? (
+  const renderContent = maxLines ? (
+    <TruncatedContent $maxLines={maxLines}>{content}</TruncatedContent>
+  ) : (
+    content
+  );
+
+  return hasNoIcon ? (
     <StyledBadge
       className={size}
       aria-label={ariaLabel}
       color={color}
       isLink={isLink}
     >
-      {content}
+      {renderContent}
     </StyledBadge>
   ) : (
     <IconBadge color={color} isLink={isLink}>
@@ -121,35 +144,18 @@ const BadgeContent = (props: BadgeContentProps) => {
       ) : (
         <IconImage imageSrc={iconImage} />
       )}
-      <IconName>{content}</IconName>
+      <IconName>{renderContent}</IconName>
     </IconBadge>
   );
 };
 
-export type BadgeTooltipProps = {
-  content: string;
+export interface BadgeTooltipProps extends BadgeContentProps {
   tooltip?: string;
-  size?: 'lg' | 'md' | 'sm';
   id: string;
-  ariaLabel?: string;
-  iconSvg?: string;
-  iconImage?: string;
-  color?: 'brandDark' | 'brandLight' | 'neutralDark' | 'neutralLight';
-  isLink: boolean;
-};
+}
 
 const BadgeTooltip = (props: BadgeTooltipProps) => {
-  const {
-    content,
-    tooltip,
-    size = 'md',
-    id,
-    ariaLabel,
-    iconSvg = null,
-    iconImage = null,
-    color = 'brandDark',
-    isLink = false,
-  } = props;
+  const { tooltip, id, ...badgeContentProps } = props;
   const badgeId = `btt${id.replace(/[: ]/g, '_')}`;
   const [tooltipOpen, setTooltipOpen] = useState(false);
   const toggle = () => setTooltipOpen(!tooltipOpen);
@@ -157,14 +163,8 @@ const BadgeTooltip = (props: BadgeTooltipProps) => {
   return (
     <span id={badgeId}>
       <BadgeContent
-        content={content}
-        size={size}
-        iconSvg={iconSvg}
-        iconImage={iconImage}
-        ariaLabel={ariaLabel}
-        color={color}
-        isLink={isLink}
         aria-describedby={`tt-content-${badgeId}`}
+        {...badgeContentProps}
       />
       {tooltip && (
         <Tooltip
