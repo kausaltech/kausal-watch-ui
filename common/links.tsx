@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import Link, { LinkProps } from 'next/link';
 import PropTypes from 'prop-types';
 import getConfig from 'next/config';
+import { getCategoryString } from './categories';
 
 export function setBasePath() {
   const { publicRuntimeConfig } = getConfig();
@@ -150,7 +151,7 @@ ActionListLink.getLinkProps = (
   const query = {};
   if (categoryFilters) {
     categoryFilters.forEach(
-      (f) => (query[`cat-${f.typeIdentifier}`] = f.categoryId)
+      (f) => (query[getCategoryString(f.typeIdentifier)] = f.categoryId)
     );
   }
   if (organizationFilter) {

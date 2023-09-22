@@ -39,6 +39,7 @@ import {
   CategoryTypeHierarchy,
   constructCatHierarchy,
   mapActionCategories,
+  getCategoryString,
 } from 'common/categories';
 import { useEffect } from 'react';
 
@@ -540,7 +541,7 @@ const ActionList = (props: ActionListProps) => {
   let groupBy = 'category';
   if (
     plan.features.hasActionPrimaryOrgs &&
-    `cat-${primaryCatType.identifier}` in activeFilters
+    `${getCategoryString(primaryCatType.identifier)}` in activeFilters
   ) {
     groupBy = 'primaryOrg';
   }

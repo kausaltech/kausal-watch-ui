@@ -147,3 +147,9 @@ export function mapActionCategories<
   });
   return mappedActions;
 }
+
+/**
+ * Format category identifier for query parameters
+ */
+export const getCategoryString = (catIdentifier: string) =>
+  `cat-${catIdentifier}`;

@@ -22,6 +22,7 @@ import {
 } from 'common/__generated__/graphql';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
+import { getCategoryString } from 'common/categories';
 
 const createFilterUnusedCategories =
   (indicators: Indicator[]) => (category: Category) =>
@@ -93,6 +94,7 @@ const GET_INDICATOR_LIST = gql`
             }
             type {
               id
+              identifier
             }
           }
           latestGraph {
@@ -168,13 +170,41 @@ const GET_INDICATOR_LIST = gql`
   }
 `;
 
-const filterIndicators = (indicators, filters) =>
-  indicators.filter(
-    (item) =>
-      (!filters['cat-theme'] ||
-        item.categories.find(({ id }) => id === filters['cat-theme'])) &&
-      (!filters['name'] ||
-        item.name.toLowerCase().includes(filters['name'].toLowerCase()))
+interface Filters {
+  name: string;
+  [category: string]: FilterValue;
+}
+
+const filterIndicators = (
+  indicators,
+  filters: Filters,
+  categoryIdentifier?: string
+) => {
+  const filterByCategory = (indicator) =>
+    !categoryIdentifier ||
+    !filters[getCategoryString(categoryIdentifier)] ||
+    !!indicator.categories.find(
+      ({ type, id }) => filters[getCategoryString(type.identifier)] === id
+    );
+
+  const filterBySearch = (indicator) =>
+    !filters['name'] ||
+    indicator.name.toLowerCase().includes(filters['name'].toLowerCase());
+
+  return indicators.filter(
+    (indicator) => filterByCategory(indicator) && filterBySearch(indicator)
+  );
+};
+
+/**
+ * IndicatorListFiltered currently only accepts and displays a single category type,
+ * so we use the first usableForIndicators category type which has associated indicators.
+ */
+const getFirstUsableCategoryType = (categoryTypes, indicators) =>
+  categoryTypes.find((categoryType) =>
+    indicators.find((indicator) =>
+      indicator.categories.find(({ type }) => type.id === categoryType.id)
+    )
   );
 
 interface Props {
@@ -193,7 +223,7 @@ const IndicatorList = ({ title, leadContent }: Props) => {
     }
   );
 
-  const [filters, setFilters] = useState(router.query);
+  const [filters, setFilters] = useState<Filters>(router.query);
 
   const handleFilterChange = (id: string, val: FilterValue) => {
     setFilters((state) => {
@@ -303,8 +333,14 @@ const IndicatorList = ({ title, leadContent }: Props) => {
   const indicatorListProps = getIndicatorListProps(data);
   const hierarchy = processCommonIndicatorHierarchy(data?.planIndicators);
   const showInsights = hasInsights(data);
-  const filterConfig = !!data?.plan?.categoryTypes[0]
-    ? getFilterConfig(data.plan.categoryTypes[0], indicatorListProps.indicators)
+
+  const categoryType = getFirstUsableCategoryType(
+    data?.plan?.categoryTypes,
+    indicatorListProps.indicators
+  );
+
+  const filterConfig = categoryType
+    ? getFilterConfig(categoryType, indicatorListProps.indicators)
     : {};
 
   const filterSections: ActionListFilterSection[] =
@@ -319,7 +355,8 @@ const IndicatorList = ({ title, leadContent }: Props) => {
 
   const filteredIndicators = filterIndicators(
     indicatorListProps.indicators,
-    filters
+    filters,
+    categoryType?.identifier
   );
 
   return (
@@ -341,12 +378,12 @@ const IndicatorList = ({ title, leadContent }: Props) => {
       <Container>
         <IndicatorListFiltered
           {...indicatorListProps}
-          categoryColumnLabel={data?.plan?.categoryTypes[0]?.name}
+          categoryColumnLabel={categoryType?.name}
           indicators={filteredIndicators}
           filters={filters}
           hierarchy={hierarchy}
           shouldDisplayCategory={(category: Category) =>
-            category.type.id === data?.plan?.categoryTypes[0]?.id
+            category.type.id === categoryType?.id
           }
         />
       </Container>

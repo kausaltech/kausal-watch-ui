@@ -32,6 +32,7 @@ import {
   CategoryHierarchyMember,
   CategoryTypeHierarchy,
   constructCatHierarchy,
+  getCategoryString,
 } from 'common/categories';
 import Icon from 'components/common/Icon';
 import { createFilter } from 'react-select';
@@ -610,7 +611,7 @@ class CategoryFilter extends DefaultFilter<FilterValue> {
   ) {
     super();
     this.ct = config.categoryType!;
-    this.id = `cat-${this.ct!.identifier}`;
+    this.id = getCategoryString(this.ct!.identifier);
     this.showAllLabel = config.showAllLabel;
     this.hasMultipleValues =
       this.ct!.selectionType === CategoryTypeSelectWidget.Multiple;
@@ -1012,7 +1013,11 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
           filters.push(new CategoryFilter(block, filterByCommonCategory));
           break;
         case 'ActionAttributeTypeFilterBlock':
-          const allowedFormats = ['ORDERED_CHOICE', 'UNORDERED_CHOICE', 'OPTIONAL_CHOICE'];
+          const allowedFormats = [
+            'ORDERED_CHOICE',
+            'UNORDERED_CHOICE',
+            'OPTIONAL_CHOICE',
+          ];
           if (!allowedFormats.includes(block.attributeType.format)) {
             console.error(
               'Invalid format for ActionAttributeTypeFilterBlock: ',
