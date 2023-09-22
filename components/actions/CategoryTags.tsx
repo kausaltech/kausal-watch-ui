@@ -164,7 +164,7 @@ function CategoryTags(props: CategoryTagsProps) {
 }
 
 export const categoryFragment = gql`
-  fragment CategoryTagsCategory on Category {
+  fragment CategoryFieldsFragment on Category {
     id
     identifier
     name
@@ -194,25 +194,24 @@ export const categoryFragment = gql`
       title
       urlPath
     }
+  }
+
+  # Support parent categories up to two levels deep
+  fragment CategoriesRecursiveFragment on Category {
     parent {
-      id
-      identifier
-      name
-      image {
-        ...MultiUseImageFragment
-      }
-      color
-      iconSvgUrl
-      iconImage {
-        rendition(size: "400x400", crop: false) {
-          src
+      ...CategoryFieldsFragment
+      parent {
+        ...CategoryFieldsFragment
+        parent {
+          ...CategoryFieldsFragment
         }
       }
-      categoryPage {
-        title
-        urlPath
-      }
     }
+  }
+
+  fragment CategoryTagsCategory on Category {
+    ...CategoryFieldsFragment
+    ...CategoriesRecursiveFragment
   }
 `;
 
