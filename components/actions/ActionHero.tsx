@@ -1,5 +1,6 @@
 import React from 'react';
 import { Container, Row, Col, UncontrolledTooltip } from 'reactstrap';
+import flatMapDeep from 'lodash/flatMapDeep';
 import styled from 'styled-components';
 import { useTheme } from 'common/theme';
 import { getActionTermContext, useTranslation } from 'common/i18n';
@@ -173,9 +174,26 @@ const getCategoryUrl = (category: Category, primaryCategory) => {
   return undefined;
 };
 
+/**
+ * Check whether multiple categories at different levels of a single category type hierarchy
+ * have been added to an action. Required to filter duplicate categories from the breadcrumb.
+ */
+const isCategoryInSiblingsParentTree = (
+  category: Category,
+  siblingParentCategory: Category
+) =>
+  category.id === siblingParentCategory.id ||
+  (siblingParentCategory.parent &&
+    isCategoryInSiblingsParentTree(category, siblingParentCategory.parent));
+
+// Convert a category parent hierarchy to a flat array
+const getDeepParents = (category: Category): Category[] =>
+  !category.parent
+    ? [category]
+    : [...getDeepParents(category.parent), category];
+
 type PartialCategory = Pick<Category, 'id' | 'name'> & {
   url?: string;
-  parent?: PartialCategory;
 };
 
 function Crumb({ category }: { category: PartialCategory }) {
@@ -222,28 +240,32 @@ function ActionCategories({ categories }: { categories: Category[] }) {
   const primaryCatId = primaryCT?.id;
 
   const displayCategories: PartialCategory[] = categories
-    .filter((cat) => cat.type.id === primaryCatId)
-    .map((cat) => ({
-      id: cat.id,
-      name: getCategoryName(cat, showIdentifiers),
-      url: getCategoryUrl(cat, primaryCT),
-      parent: cat.parent
-        ? {
-            id: cat.parent.id,
-            name: getCategoryName(cat.parent, showIdentifiers),
-            url: getCategoryUrl(cat.parent, primaryCT),
-          }
-        : undefined,
+    .filter(
+      (category) =>
+        category.type.id === primaryCatId &&
+        // Check whether this category is included in a sibling's parent
+        !categories.some(
+          (otherCategory) =>
+            otherCategory.id !== category.id &&
+            otherCategory.parent &&
+            isCategoryInSiblingsParentTree(category, otherCategory.parent)
+        )
+    )
+    .reduce(
+      // Convert categories to a flat array representing the hierarchy
+      (categories, category) => [...getDeepParents(category), ...categories],
+      []
+    )
+    .map((category) => ({
+      id: category.id,
+      name: getCategoryName(category, showIdentifiers),
+      url: getCategoryUrl(category, primaryCT),
     }));
 
   return (
     <CategoriesBreadcrumb>
       {displayCategories.map((category) => (
-        <div key={category.id} className="me-3">
-          {category.parent && <Crumb category={category.parent} />}
-
-          <Crumb category={category} />
-        </div>
+        <Crumb key={category.id} category={category} />
       ))}
     </CategoriesBreadcrumb>
   );
