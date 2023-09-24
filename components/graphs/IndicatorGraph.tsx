@@ -8,7 +8,7 @@ import { splitLines } from 'common/utils';
 
 const log10 = Math.log(10);
 
-const PlotContainer = styled.div`
+const PlotContainer = styled.div<{ vizHeight: number }>`
   height: ${(props) => props.vizHeight}px;
 `;
 
@@ -83,7 +83,8 @@ const createLayout = (
   plotColors,
   config,
   hasTimeDimension,
-  subplotsNeeded
+  subplotsNeeded,
+  graphCustomBackground
 ) => {
   const fontFamily =
     '-apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Ubuntu, roboto, noto, arial, sans-serif';
@@ -172,7 +173,7 @@ const createLayout = (
     ...yaxes,
     ...xaxes,
     paper_bgcolor: theme.themeColors.white,
-    plot_bgcolor: theme.themeColors.white,
+    plot_bgcolor: graphCustomBackground || theme.themeColors.white,
     barmode: hasCategories && 'group',
     autosize: true,
     colorway: plotColors.mainScale,
@@ -204,7 +205,9 @@ const createTraces = (
   styleCount,
   categoryCount,
   hasTimeDimension,
-  timeResolution
+  timeResolution,
+  lineShape,
+  useAreaGraph
 ) => {
   // Figure out what we need to draw depending on dataset
   // and define trace and layout setup accordingly
@@ -257,10 +260,11 @@ const createTraces = (
     // we have multiple categories as time series - draw lines and markers
     if (hasTimeDimension) {
       modTrace.type = 'scatter';
+      modTrace.fill = useAreaGraph ? 'tozeroy' : undefined;
       modTrace.line = {
         width: trace.dataType === 'total' ? 3 : 2, // TODO extension trace total vs dimension
-        shape: 'spline',
-        smoothing: 0.7,
+        shape: lineShape,
+        smoothing: lineShape === 'spline' ? 0.7 : undefined,
         color: plotColors.mainScale[idx % numColors],
       };
       modTrace.marker = {
@@ -321,7 +325,19 @@ function getSubplotHeaders(subPlotRowCount, names) {
   });
 }
 
-function IndicatorGraph(props) {
+interface IndicatorGraphProps {
+  yRange: any;
+  timeResolution?: 'YEAR' | 'MONTH';
+  traces: any;
+  goalTraces: any;
+  trendTrace: any;
+  specification: {
+    axes: any;
+    dimensions: any;
+  };
+}
+
+function IndicatorGraph(props: IndicatorGraphProps) {
   const theme = useTheme();
   const isServer = typeof window === 'undefined';
   if (isServer) {
@@ -372,6 +388,10 @@ function IndicatorGraph(props) {
     ],
   };
 
+  const lineShape = theme.settings?.graphs?.lineShape || 'spline';
+  const useAreaGraph = true;
+  const graphCustomBackground = '#dff5f4';
+
   let mainTraces = [];
   let isComparison = false;
   const subplotsNeeded =
@@ -408,7 +428,10 @@ function IndicatorGraph(props) {
     styleCount,
     categoryCount,
     hasTimeDimension,
-    timeResolution
+    timeResolution,
+    lineShape,
+    useAreaGraph,
+    graphCustomBackground
   );
 
   if (subplotsNeeded) {
@@ -500,7 +523,8 @@ function IndicatorGraph(props) {
     plotColors,
     layoutConfig,
     hasTimeDimension,
-    subplotsNeeded
+    subplotsNeeded,
+    graphCustomBackground
   );
   const height = layoutConfig?.grid?.rows
     ? layoutConfig.grid.rows * 300
@@ -529,17 +553,5 @@ function IndicatorGraph(props) {
     </PlotContainer>
   );
 }
-
-IndicatorGraph.defaultProps = {
-  goalTraces: [],
-  trendTrace: {},
-};
-
-IndicatorGraph.propTypes = {
-  yRange: PropTypes.shape().isRequired,
-  timeResolution: PropTypes.string.isRequired,
-  goalTraces: PropTypes.arrayOf(PropTypes.shape),
-  trendTrace: PropTypes.shape(),
-};
 
 export default IndicatorGraph;
