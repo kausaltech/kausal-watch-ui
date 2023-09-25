@@ -1,5 +1,6 @@
 import React from 'react';
-import { Container, Row, Col } from 'reactstrap';
+import { Container, Row, Col, UncontrolledTooltip } from 'reactstrap';
+import flatMapDeep from 'lodash/flatMapDeep';
 import styled from 'styled-components';
 import { useTheme } from 'common/theme';
 import { getActionTermContext, useTranslation } from 'common/i18n';
@@ -13,6 +14,7 @@ import { usePlan } from 'context/plan';
 
 import Icon from 'components/common/Icon';
 import { getCategoryString } from 'common/categories';
+import { Category } from 'common/__generated__/graphql';
 
 const Hero = styled.header<{ bgColor: string }>`
   position: relative;
@@ -151,66 +153,120 @@ const ActionNumber = styled.span`
   }
 `;
 
-function ActionCategories(props) {
-  const { categories } = props;
-  const theme = useTheme();
+const MAX_CRUMB_LENGTH = 90;
+
+const isIdentifierVisible = (category: Category, showIdentifiers: boolean) =>
+  category.categoryPage && category.identifier && showIdentifiers;
+
+const getCategoryName = (category: Category, showIdentifiers: boolean) =>
+  isIdentifierVisible(category, showIdentifiers)
+    ? `${category.identifier}. ${category.name}`
+    : category.name;
+
+const getCategoryUrl = (category: Category, primaryCategory) => {
+  if (category.categoryPage) {
+    return category.categoryPage.urlPath;
+  }
+
+  if (primaryCategory) {
+    return `/actions?cat-${primaryCategory.identifier}=${category.id}`;
+  }
+
+  return undefined;
+};
+
+/**
+ * Check whether multiple categories at different levels of a single category type hierarchy
+ * have been added to an action. Required to filter duplicate categories from the breadcrumb.
+ */
+const isCategoryInSiblingsParentTree = (
+  category: Category,
+  siblingParentCategory: Category
+) =>
+  category.id === siblingParentCategory.id ||
+  (siblingParentCategory.parent &&
+    isCategoryInSiblingsParentTree(category, siblingParentCategory.parent));
+
+// Convert a category parent hierarchy to a flat array
+const getDeepParents = (category: Category): Category[] =>
+  !category.parent
+    ? [category]
+    : [...getDeepParents(category.parent), category];
+
+type PartialCategory = Pick<Category, 'id' | 'name'> & {
+  url?: string;
+};
+
+function Crumb({ category }: { category: PartialCategory }) {
+  const id = `crumb-${category.id}`;
+  const ariaId = `tt-content-${category.id}`;
+  const isTruncated = category.name.length > MAX_CRUMB_LENGTH;
+  const name = isTruncated
+    ? `${category.name.slice(0, MAX_CRUMB_LENGTH).trim()}...`
+    : category.name;
+
+  return (
+    <>
+      <span id={id} aria-describedby={isTruncated ? ariaId : undefined}>
+        {category.url ? (
+          <Link href={category.url} passHref>
+            {name}
+          </Link>
+        ) : (
+          name
+        )}
+        {` / `}
+      </span>
+
+      {isTruncated && (
+        <UncontrolledTooltip
+          target={id}
+          id={ariaId}
+          placement="top"
+          role="tooltip"
+          trigger="focus hover"
+        >
+          {category.name}
+        </UncontrolledTooltip>
+      )}
+    </>
+  );
+}
+
+function ActionCategories({ categories }: { categories: Category[] }) {
   const plan = usePlan();
   const showIdentifiers =
     !plan.primaryActionClassification?.hideCategoryIdentifiers;
-  const displayCategories = [];
   const primaryCT = plan.primaryActionClassification;
   const primaryCatId = primaryCT?.id;
 
-  categories.forEach((cat, indx) => {
-    if (cat.type.id !== primaryCatId) return;
-    displayCategories[indx] = {};
-    let categoryTitle = cat.name;
-    if (cat.categoryPage) {
-      displayCategories[indx].url = cat.categoryPage.urlPath;
-      if (cat.identifier && showIdentifiers)
-        categoryTitle = `${cat.identifier}. ${cat.name}`;
-    } else if (primaryCT) {
-      displayCategories[indx].url = `/actions?${getCategoryString(
-        primaryCT.identifier
-      )}=${cat.id}`;
-    }
-    displayCategories[indx].name = categoryTitle;
-    displayCategories[indx].id = cat.id;
-    if (cat.parent) {
-      displayCategories[indx].parent = {};
-      let categoryParentTitle = cat.parent.name;
-      if (cat.parent.categoryPage) {
-        displayCategories[indx].parent.url = cat.parent.categoryPage.urlPath;
-        if (cat.parent.identifier && showIdentifiers) {
-          categoryParentTitle = `${cat.parent.identifier}. ${cat.parent.name}`;
-        }
-      } else {
-        displayCategories[indx].parent.url = `/actions?${getCategoryString(
-          primaryCT.identifier
-        )}=${cat.parent.id}`;
-      }
-      displayCategories[indx].parent.name = categoryParentTitle;
-      displayCategories[indx].parent.id = cat.parent.id;
-    }
-    return true;
-  });
+  const displayCategories: PartialCategory[] = categories
+    .filter(
+      (category) =>
+        category.type.id === primaryCatId &&
+        // Check whether this category is included in a sibling's parent
+        !categories.some(
+          (otherCategory) =>
+            otherCategory.id !== category.id &&
+            otherCategory.parent &&
+            isCategoryInSiblingsParentTree(category, otherCategory.parent)
+        )
+    )
+    .reduce(
+      // Convert categories to a flat array representing the hierarchy
+      (categories, category) => [...getDeepParents(category), ...categories],
+      []
+    )
+    .map((category) => ({
+      id: category.id,
+      name: getCategoryName(category, showIdentifiers),
+      url: getCategoryUrl(category, primaryCT),
+    }));
+
   return (
     <CategoriesBreadcrumb>
-      {displayCategories.map((item) => (
-        <div key={item.id} className="me-3">
-          {item.parent && (
-            <span>
-              <Link href={item.parent.url} passHref>
-                {item.parent.name}
-              </Link>{' '}
-              /{' '}
-            </span>
-          )}
-          <Link href={item.url} passHref>
-            {item.name}
-          </Link>{' '}
-          /{' '}
-        </div>
+      {displayCategories.map((category) => (
+        <Crumb key={category.id} category={category} />
       ))}
     </CategoriesBreadcrumb>
   );
