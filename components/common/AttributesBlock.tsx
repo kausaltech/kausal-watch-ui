@@ -15,7 +15,7 @@ type AttributeProps = {
   vertical: boolean;
 };
 
-const Attributes = styled.div<AttributeProps>`
+export const Attributes = styled.div<AttributeProps>`
   ${(props) =>
     props.vertical &&
     css`
@@ -37,6 +37,24 @@ const AttributesList = styled(Row)`
 const AttributeItem = styled(Col)`
   display: block;
 `;
+
+export function attributeHasValue(
+  attribute: AttributesBlockProps['attributes'][0]
+) {
+  const { __typename } = attribute;
+
+  if (__typename === 'AttributeChoice') {
+    return !!(attribute.choice || attribute.text);
+  } else if (
+    __typename === 'AttributeText' ||
+    __typename === 'AttributeRichText'
+  ) {
+    return !!attribute.value;
+  } else if (__typename === 'AttributeCategoryChoice') {
+    return !!attribute.categories.length;
+  }
+  return true;
+}
 
 type AttributeContentProps = {
   attribute: AttributesBlockAttributeFragment;
@@ -78,21 +96,6 @@ function AttributesBlock(props: AttributesBlockProps) {
     typesById = new Map(types.map((type) => [type.id, type]));
   }
 
-  function attributeHasValue(attribute: AttributesBlockProps['attributes'][0]) {
-    const { __typename } = attribute;
-
-    if (__typename === 'AttributeChoice') {
-      return !!(attribute.choice || attribute.text);
-    } else if (
-      __typename === 'AttributeText' ||
-      __typename === 'AttributeRichText'
-    ) {
-      return !!attribute.value;
-    } else if (__typename === 'AttributeCategoryChoice') {
-      return !!attribute.categories.length;
-    }
-    return true;
-  }
   const attributesWithValue = attributes.filter(attributeHasValue);
 
   return (

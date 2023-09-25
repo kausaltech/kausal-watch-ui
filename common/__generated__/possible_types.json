@@ -42,6 +42,19 @@
       "AttributeRichText",
       "AttributeText"
     ],
+    "CategoryPageAsideBlock": [
+      "CategoryPageAttributeTypeBlock"
+    ],
+    "CategoryPageMainBottomBlock": [
+      "CategoryPageAttributeTypeBlock",
+      "CategoryPageBodyBlock",
+      "CategoryPageCategoryListBlock",
+      "CategoryPageContactFormBlock"
+    ],
+    "CategoryPageMainTopBlock": [
+      "CategoryPageAttributeTypeBlock",
+      "CategoryPageProgressBlock"
+    ],
     "MenuItem": [
       "ExternalLinkMenuItem",
       "PageMenuItem"
@@ -121,6 +134,11 @@
       "CardListBlock",
       "CartographyVisualisationBlock",
       "CategoryListBlock",
+      "CategoryPageAttributeTypeBlock",
+      "CategoryPageBodyBlock",
+      "CategoryPageCategoryListBlock",
+      "CategoryPageContactFormBlock",
+      "CategoryPageProgressBlock",
       "CategoryTreeMapBlock",
       "CategoryTypeFilterBlock",
       "CharBlock",

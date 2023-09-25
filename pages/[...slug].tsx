@@ -19,6 +19,35 @@ import SecondaryNavigation from 'components/common/SecondaryNavigation';
 import { GetPlanPageGeneralQuery } from 'common/__generated__/graphql';
 import ActionAttribute from 'components/common/ActionAttribute';
 
+const templatedCategoryPageFragment = gql`
+  fragment TemplatedCategoryPageFragment on CategoryPage {
+    layout {
+      __typename
+      layoutMainTop {
+        __typename
+        ... on CategoryPageAttributeTypeBlock {
+          attributeType {
+            identifier
+          }
+        }
+        ... on CategoryPageProgressBlock {
+          blocks {
+            ... on ChoiceBlock {
+              value
+            }
+          }
+        }
+      }
+      layoutMainBottom {
+        __typename
+      }
+      layoutAside {
+        __typename
+      }
+    }
+  }
+`;
+
 const GET_PLAN_PAGE = gql`
   query GetPlanPageGeneral($plan: ID!, $path: String!) {
     planPage(plan: $plan, path: $path) {
@@ -71,6 +100,7 @@ const GET_PLAN_PAGE = gql`
         leadContent
       }
       ... on CategoryPage {
+        ...TemplatedCategoryPageFragment
         category {
           id
           identifier
@@ -139,6 +169,7 @@ const GET_PLAN_PAGE = gql`
       lastPublishedAt
     }
   }
+  ${templatedCategoryPageFragment}
   ${StreamField.fragments.streamField}
   ${images.fragments.multiUseImage}
   ${ActionAttribute.fragments.attributeWithNestedType}
@@ -151,15 +182,15 @@ type PageHeaderBlockProps = {
   page: GeneralPlanPage;
   color?: string | null;
 };
-const PageHeaderBlock = (props: PageHeaderBlockProps) => {
-  const { color, page } = props;
-
+const PageHeaderBlock = ({ color, page }: PageHeaderBlockProps) => {
   switch (page.__typename) {
     case 'CategoryPage': {
       const category = page.category;
+
       if (!category) {
         throw new Error('Category page without category configured');
       }
+
       const parentIdentifier = !category.type.hideCategoryIdentifiers
         ? `${category.parent?.identifier}.`
         : '';
@@ -169,10 +200,12 @@ const PageHeaderBlock = (props: PageHeaderBlockProps) => {
       const parentUrl = category.parent?.categoryPage?.urlPath || null;
       const headerImage = category.image || category.parent?.image;
       const iconImage = category.iconImage?.rendition?.src;
+
       return (
         <CategoryPageHeaderBlock
           title={page.title}
           categoryId={category.id}
+          layout={page.layout?.layoutMainTop}
           identifier={
             !category.type.hideCategoryIdentifiers
               ? category.identifier

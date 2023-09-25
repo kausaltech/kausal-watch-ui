@@ -91,8 +91,11 @@ const SegmentLabel = styled.span`
   }
 `;
 
-function CategoryMetaBar(props) {
-  const { category } = props;
+interface Props {
+  category: string;
+}
+
+function CategoryMetaBar({ category }: Props) {
   const plan = useContext(PlanContext);
   const { t } = useTranslation(['actions']);
   const theme = useTheme();
@@ -149,10 +152,5 @@ function CategoryMetaBar(props) {
     </CategoryMetaStatus>
   );
 }
-
-// TODO: prop types and defaults
-CategoryMetaBar.propTypes = {};
-
-CategoryMetaBar.defaultProps = {};
 
 export default CategoryMetaBar;
