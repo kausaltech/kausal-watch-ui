@@ -210,9 +210,10 @@ const getFirstUsableCategoryType = (categoryTypes, indicators) =>
 interface Props {
   title: string;
   leadContent: IndicatorListPage['leadContent'];
+  displayInsights: boolean;
 }
 
-const IndicatorList = ({ title, leadContent }: Props) => {
+const IndicatorList = ({ title, leadContent, displayInsights }: Props) => {
   const plan = usePlan();
   const { t } = useTranslation('common');
   const router = useRouter();
@@ -332,7 +333,7 @@ const IndicatorList = ({ title, leadContent }: Props) => {
 
   const indicatorListProps = getIndicatorListProps(data);
   const hierarchy = processCommonIndicatorHierarchy(data?.planIndicators);
-  const showInsights = hasInsights(data);
+  const showInsights = displayInsights && hasInsights(data);
 
   const categoryType = getFirstUsableCategoryType(
     data?.plan?.categoryTypes,
