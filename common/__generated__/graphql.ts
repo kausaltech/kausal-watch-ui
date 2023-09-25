@@ -9257,6 +9257,9 @@ export type GetPlanContextQuery = (
         & { __typename?: 'PageMenuItem' }
       ) | null> }
       & { __typename?: 'AdditionalLinks' }
+    ) | null, actionListPage?: (
+      { includeRelatedPlans?: boolean | null }
+      & { __typename?: 'ActionListPage' }
     ) | null }
     & { __typename?: 'Plan' }
   ) | null }
@@ -9435,6 +9438,9 @@ export type PlanContextFragment = (
       & { __typename?: 'PageMenuItem' }
     ) | null> }
     & { __typename?: 'AdditionalLinks' }
+  ) | null, actionListPage?: (
+    { includeRelatedPlans?: boolean | null }
+    & { __typename?: 'ActionListPage' }
   ) | null }
   & { __typename?: 'Plan' }
 );
@@ -10692,6 +10698,7 @@ export type GetPlanPageGeneralQuery = (
 export type GetActionListPageQueryVariables = Exact<{
   plan: Scalars['ID'];
   path: Scalars['String'];
+  singlePlan: Scalars['Boolean'];
 }>;
 
 
@@ -10700,7 +10707,7 @@ export type GetActionListPageQuery = (
     { id?: string | null, slug: string, title: string, lastPublishedAt?: any | null }
     & { __typename: 'AccessibilityStatementPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PrivacyPolicyPage' | 'StaticPage' }
   ) | (
-    { leadContent?: string | null, defaultView: ActionListPageView, headingHierarchyDepth: number, includeRelatedPlans?: boolean | null, id?: string | null, slug: string, title: string, lastPublishedAt?: any | null, primaryFilters?: Array<(
+    { leadContent?: string | null, defaultView: ActionListPageView, headingHierarchyDepth: number, id?: string | null, slug: string, title: string, lastPublishedAt?: any | null, primaryFilters?: Array<(
       { showAllLabel?: string | null, field: string, id?: string | null, attributeType: (
         { id: string, identifier: string, format: AttributeTypeFormat, name: string, helpText: string, choiceOptions: Array<(
           { id: string, identifier: string, name: string }

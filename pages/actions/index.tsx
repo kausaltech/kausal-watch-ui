@@ -11,7 +11,7 @@ import type { GetActionListPageQuery } from 'common/__generated__/graphql';
 import { Filters, FilterValue } from 'components/actions/ActionListFilters';
 
 const GET_ACTION_LIST_PAGE = gql`
-  query GetActionListPage($plan: ID!, $path: String!) {
+  query GetActionListPage($plan: ID!, $path: String!, $singlePlan: Boolean!) {
     planPage(plan: $plan, path: $path) {
       __typename
       id
@@ -21,7 +21,6 @@ const GET_ACTION_LIST_PAGE = gql`
         leadContent
         defaultView
         headingHierarchyDepth
-        includeRelatedPlans
         ...ActionListPageFilters
       }
       lastPublishedAt
@@ -65,6 +64,7 @@ function ActionsListPage() {
     {
       variables: {
         plan: plan.identifier,
+        singlePlan: !plan.actionListPage.includeRelatedPlans,
         path,
       },
     }
@@ -99,7 +99,7 @@ function ActionsListPage() {
           title={planPage.title}
           leadContent={planPage.leadContent}
           defaultView={planPage.defaultView}
-          includeRelatedPlans={planPage.includeRelatedPlans}
+          includeRelatedPlans={plan.actionListPage.includeRelatedPlans}
           headingHierarchyDepth={planPage.headingHierarchyDepth}
           filters={filters}
           onFilterChange={handleFilterChange}

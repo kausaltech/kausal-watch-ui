@@ -363,7 +363,7 @@ const ACTION_LIST_FILTER = gql`
         hideCategoryIdentifiers
         selectionType
         helpText
-        categories(onlyWithActions: true) {
+        categories(onlyWithActions: $singlePlan) {
           id
           identifier
           name
