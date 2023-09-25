@@ -261,6 +261,9 @@ export default gql`
         }
       }
     }
+    actionListPage {
+      includeRelatedPlans
+    }
   }
   ${images.fragments.multiUseImage}
 `;
