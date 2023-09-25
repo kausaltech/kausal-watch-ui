@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 
-import CategoryTags from 'components/actions/CategoryTags';
 import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
 import { gql, useQuery } from '@apollo/client';
@@ -16,6 +15,7 @@ import ErrorMessage from 'components/common/ErrorMessage';
 import ErrorBoundary from 'components/common/ErrorBoundary';
 import { Meta } from 'components/layout';
 
+import CategoryTags from 'components/actions/CategoryTags';
 import IndicatorVisualisation from 'components/indicators/IndicatorVisualisation';
 import ActionsTable from 'components/actions/ActionsTable';
 
@@ -51,13 +51,7 @@ const GET_INDICATOR_DETAILS = gql`
         name
         id
         type {
-          identifier
-          name
-          id
-          levels {
-            id
-            name
-          }
+          ...CategoryTagsCategoryType
         }
       }
       common {
@@ -132,6 +126,7 @@ const GET_INDICATOR_DETAILS = gql`
     }
   }
   ${ActionsTable.fragments.action}
+  ${CategoryTags.fragments.categoryType}
 `;
 
 const Section = styled.section`
