@@ -144,7 +144,6 @@ const Section = styled.section`
 `;
 
 const GraphContainer = styled.div`
-  border: 1px solid ${(props) => props.theme.themeColors.light};
   padding: ${(props) => props.theme.spaces.s100};
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {

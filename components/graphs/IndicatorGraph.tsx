@@ -8,73 +8,11 @@ import { splitLines } from 'common/utils';
 
 const log10 = Math.log(10);
 
-const PlotContainer = styled.div`
+const PlotContainer = styled.div<{ vizHeight: number }>`
   height: ${(props) => props.vizHeight}px;
 `;
 
 const CATEGORY_XAXIS_LABEL_EXTRA_MARGIN = 200;
-
-function getTraces(dimensions, cube, names, hasTimeDimension) {
-  if (dimensions.length === 0) {
-    return [
-      {
-        xType: cube.length === 1 ? 'category' : 'scaled',
-        name: '',
-        x: cube.map((val) => val.date),
-        y: cube.map((val) => val.value),
-      },
-    ];
-  }
-  const [firstDimension, ...rest] = dimensions;
-  if (dimensions.length === 1) {
-    if (hasTimeDimension) {
-      return firstDimension.categories.map((cat, idx) => {
-        const traceName = Array.from(
-          new Set(names ?? undefined).add(cat.name)
-        ).join(', ');
-        let x,
-          y,
-          xType,
-          _cube = cube[idx];
-        xType = 'scaled';
-        x = _cube.map((val) => val.date);
-        y = _cube.map((val) => val.value);
-        return {
-          xType: 'scaled',
-          name: traceName,
-          _parentName: names ? Array.from(names).join(', ') : null,
-          x,
-          y,
-        };
-      });
-    }
-
-    // No time dimension, 'x' axis will be categories
-    return [
-      {
-        xType: 'category',
-        name: Array.from(new Set(names ?? [firstDimension.name])).join(', '),
-        _parentName: names ? Array.from(names).join(', ') : null,
-        x: firstDimension.categories.map((cat) => cat.name),
-        y: cube.map((c) => c[0]?.value),
-      },
-    ];
-  }
-  let traces = [];
-
-  firstDimension.categories.forEach((cat, idx) => {
-    const out = getTraces(
-      rest,
-      cube[idx],
-      new Set(names ?? undefined).add(cat.name),
-      hasTimeDimension
-    );
-    traces = traces.concat(out);
-  });
-  // Filter out empty traces resulting from
-  // unavailable (total, category) combinations
-  return traces.filter((t) => t.x.length > 0);
-}
 
 const createLayout = (
   theme,
@@ -83,7 +21,8 @@ const createLayout = (
   plotColors,
   config,
   hasTimeDimension,
-  subplotsNeeded
+  subplotsNeeded,
+  graphCustomBackground
 ) => {
   const fontFamily =
     '-apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Ubuntu, roboto, noto, arial, sans-serif';
@@ -104,7 +43,7 @@ const createLayout = (
   };
 
   // Define y-axis range
-  yaxes.yaxis.title = yRange.unit;
+  yaxes.yaxis.title = { text: yRange.unit };
   if (yRange.includeZero) {
     yaxes.yaxis.rangemode = 'tozero';
   }
@@ -160,7 +99,7 @@ const createLayout = (
   }
 
   const newLayout = {
-    title: null,
+    title: {},
     margin: {
       t: 25,
       r: 25,
@@ -172,8 +111,7 @@ const createLayout = (
     ...yaxes,
     ...xaxes,
     paper_bgcolor: theme.themeColors.white,
-    plot_bgcolor: theme.themeColors.white,
-    barmode: hasCategories && 'group',
+    plot_bgcolor: graphCustomBackground || theme.themeColors.white,
     autosize: true,
     colorway: plotColors.mainScale,
     font: { family: fontFamily, size: 12 },
@@ -181,9 +119,11 @@ const createLayout = (
     hoverlabel: {
       namelength: 0,
     },
-    annotations: config?.annotations,
   };
 
+  if (config?.annotations?.length > 0) {
+    newLayout.annotations = config.annotations;
+  }
   merge(newLayout, config);
 
   return newLayout;
@@ -204,13 +144,17 @@ const createTraces = (
   styleCount,
   categoryCount,
   hasTimeDimension,
-  timeResolution
+  timeResolution,
+  lineShape,
+  useAreaGraph
 ) => {
   // Figure out what we need to draw depending on dataset
   // and define trace and layout setup accordingly
   // First trace is always main/total
 
-  if (!traces.length) return [];
+  const traceCount = traces.length;
+
+  if (!traceCount) return [];
   let maxDigits = 0;
   const layoutConfig = {
     xaxis: {},
@@ -254,25 +198,32 @@ const createTraces = (
       layoutConfig.xaxis.type = 'category';
       layoutConfig.xaxis.tickvals = null;
     }
-    // we have multiple categories as time series - draw lines and markers
+    // we have one or more categories as time series - draw lines and markers
     if (hasTimeDimension) {
+      // Only one category, draw line/area graph, no symbols
       modTrace.type = 'scatter';
+      modTrace.fill = categoryCount === 1 && useAreaGraph ? 'tozeroy' : 'none';
+      //modTrace.fillcolor could be defined here, defaults to trace color
       modTrace.line = {
         width: trace.dataType === 'total' ? 3 : 2, // TODO extension trace total vs dimension
-        shape: 'spline',
-        smoothing: 0.7,
+        shape: lineShape,
+        smoothing: lineShape === 'spline' ? 0.7 : undefined,
         color: plotColors.mainScale[idx % numColors],
       };
-      modTrace.marker = {
-        size: 6,
-        symbol: plotColors.symbols[idx % numSymbols],
-        color: '#ffffff',
-        line: {
-          width: 2,
-          color: plotColors.mainScale[idx % numColors],
-        },
-      };
+      // Multiple categories, draw lines & symbols
+      if (categoryCount > 1) {
+        modTrace.marker = {
+          size: 6,
+          symbol: plotColors.symbols[idx % numSymbols],
+          color: '#ffffff',
+          line: {
+            width: 2,
+            color: plotColors.mainScale[idx % numColors],
+          },
+        };
+      }
     }
+    // Leave out markers for long time series
     if (modTrace.type === 'scatter')
       modTrace.mode = trace.x.length > 30 ? 'lines' : 'lines+markers';
     const timeFormat = timeResolution === 'YEAR' ? '%Y' : '%x';
@@ -321,7 +272,19 @@ function getSubplotHeaders(subPlotRowCount, names) {
   });
 }
 
-function IndicatorGraph(props) {
+interface IndicatorGraphProps {
+  yRange: any;
+  timeResolution?: 'YEAR' | 'MONTH';
+  traces: any;
+  goalTraces: any;
+  trendTrace: any;
+  specification: {
+    axes: any;
+    dimensions: any;
+  };
+}
+
+function IndicatorGraph(props: IndicatorGraphProps) {
   const theme = useTheme();
   const isServer = typeof window === 'undefined';
   if (isServer) {
@@ -372,6 +335,10 @@ function IndicatorGraph(props) {
     ],
   };
 
+  const lineShape = theme.settings?.graphs?.lineShape || 'spline';
+  const useAreaGraph = theme.settings?.graphs?.areaGraphs;
+  const graphCustomBackground = theme.settings?.graphs?.customBackground;
+
   let mainTraces = [];
   let isComparison = false;
   const subplotsNeeded =
@@ -408,7 +375,10 @@ function IndicatorGraph(props) {
     styleCount,
     categoryCount,
     hasTimeDimension,
-    timeResolution
+    timeResolution,
+    lineShape,
+    useAreaGraph,
+    graphCustomBackground
   );
 
   if (subplotsNeeded) {
@@ -500,7 +470,8 @@ function IndicatorGraph(props) {
     plotColors,
     layoutConfig,
     hasTimeDimension,
-    subplotsNeeded
+    subplotsNeeded,
+    graphCustomBackground
   );
   const height = layoutConfig?.grid?.rows
     ? layoutConfig.grid.rows * 300
@@ -529,17 +500,5 @@ function IndicatorGraph(props) {
     </PlotContainer>
   );
 }
-
-IndicatorGraph.defaultProps = {
-  goalTraces: [],
-  trendTrace: {},
-};
-
-IndicatorGraph.propTypes = {
-  yRange: PropTypes.shape().isRequired,
-  timeResolution: PropTypes.string.isRequired,
-  goalTraces: PropTypes.arrayOf(PropTypes.shape),
-  trendTrace: PropTypes.shape(),
-};
 
 export default IndicatorGraph;

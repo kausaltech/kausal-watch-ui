@@ -135,14 +135,6 @@ function GraphAsTable(props) {
         <TableContainer>
           <Table responsive bordered size="sm">
             <caption>{title}</caption>
-            {tableCategoryHeaders.length > 0 && (
-              <>
-                <col />
-                {tableCategoryHeaders.map((header, i) => (
-                  <colgroup key={i} span={header.count} />
-                ))}
-              </>
-            )}
             <thead>
               {tableCategoryHeaders.length > 0 && (
                 <tr>
