@@ -86,6 +86,10 @@ type CategoryContentProps = {
   noLink?: boolean;
 };
 
+const Identifier = styled.span`
+  color: ${(props) => props.theme.graphColors.grey060};
+`;
+
 export const CategoryContent = (props: CategoryContentProps) => {
   const { categories, categoryType, noLink = false } = props;
   return (
@@ -100,15 +104,24 @@ export const CategoryContent = (props: CategoryContentProps) => {
             <BadgeTooltip
               id={item.id}
               tooltip={item.helpText}
-              content={item.name}
-              iconImage={
-                item.iconImage?.rendition.src ||
-                item.parent?.iconImage?.rendition.src
+              content={
+                item.identifier && !item.type.hideCategoryIdentifiers ? (
+                  <>
+                    <Identifier>{item.identifier}.</Identifier> {item.name}
+                  </>
+                ) : (
+                  item.name
+                )
               }
-              iconSvg={item.iconSvgUrl || item.parent?.iconSvgUrl}
+              iconImage={
+                item.iconImage?.rendition?.src ||
+                item.parent?.iconImage?.rendition?.src
+              }
+              iconSvg={item.iconSvgUrl || item.parent?.iconSvgUrl || undefined}
               size="md"
               color="neutralLight"
               isLink={!noLink}
+              maxLines={2}
             />
           </CategoryLink>
         </CategoryListItem>
@@ -151,7 +164,7 @@ function CategoryTags(props: CategoryTagsProps) {
 }
 
 export const categoryFragment = gql`
-  fragment CategoryTagsCategory on Category {
+  fragment CategoryFieldsFragment on Category {
     id
     identifier
     name
@@ -181,25 +194,24 @@ export const categoryFragment = gql`
       title
       urlPath
     }
+  }
+
+  # Support parent categories up to two levels deep
+  fragment CategoriesRecursiveFragment on Category {
     parent {
-      id
-      identifier
-      name
-      image {
-        ...MultiUseImageFragment
-      }
-      color
-      iconSvgUrl
-      iconImage {
-        rendition(size: "400x400", crop: false) {
-          src
+      ...CategoryFieldsFragment
+      parent {
+        ...CategoryFieldsFragment
+        parent {
+          ...CategoryFieldsFragment
         }
       }
-      categoryPage {
-        title
-        urlPath
-      }
     }
+  }
+
+  fragment CategoryTagsCategory on Category {
+    ...CategoryFieldsFragment
+    ...CategoriesRecursiveFragment
   }
 `;
 
