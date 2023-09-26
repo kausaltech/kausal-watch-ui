@@ -505,7 +505,7 @@ interface StreamFieldProps {
   color: string;
   page: any;
   blocks: any;
-  hasSidebar: boolean;
+  hasSidebar?: boolean;
 }
 
 function StreamField(props: StreamFieldProps) {

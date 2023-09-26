@@ -18,6 +18,7 @@ import ContentPageHeaderBlock from 'components/contentblocks/ContentPageHeaderBl
 import SecondaryNavigation from 'components/common/SecondaryNavigation';
 import { GetPlanPageGeneralQuery } from 'common/__generated__/graphql';
 import ActionAttribute from 'components/common/ActionAttribute';
+import CategoryPageStreamField from 'components/common/CategoryPageStreamField';
 
 const templatedCategoryPageFragment = gql`
   fragment TemplatedCategoryPageFragment on CategoryPage {
@@ -40,6 +41,15 @@ const templatedCategoryPageFragment = gql`
       }
       layoutMainBottom {
         __typename
+        ... on CategoryPageAttributeTypeBlock {
+          attributeType {
+            identifier
+          }
+        }
+        ... on CategoryPageContactFormBlock {
+          heading
+          description
+        }
       }
       layoutAside {
         __typename
@@ -203,6 +213,7 @@ const PageHeaderBlock = ({ color, page }: PageHeaderBlockProps) => {
 
       return (
         <CategoryPageHeaderBlock
+          page={page}
           title={page.title}
           categoryId={category.id}
           layout={page.layout?.layoutMainTop}
@@ -256,6 +267,8 @@ const Content = ({ page }: { page: GeneralPlanPage }) => {
     hasSecondaryNav && page.__typename === 'StaticPage'
       ? page?.parent?.children
       : [];
+  const hasMainContentTemplate =
+    page.__typename === 'CategoryPage' && !!page.layout?.layoutMainBottom;
 
   return (
     <article>
@@ -275,19 +288,28 @@ const Content = ({ page }: { page: GeneralPlanPage }) => {
             </Row>
           </Container>
         )}
-        {siblings.length > 1 && (
+
+        {!!siblings && siblings.length > 1 && (
           <SecondaryNavigation
             links={siblings}
             activeLink={page.id}
             title={page?.parent?.title || ''}
           />
         )}
-        {page.body && (
+
+        {hasMainContentTemplate &&
+          page.layout?.layoutMainBottom?.map((block, i) => {
+            return (
+              <CategoryPageStreamField key={i} page={page} block={block} />
+            );
+          })}
+
+        {page.body && !hasMainContentTemplate && (
           <StreamField
             page={page}
             blocks={page.body}
             color={pageSectionColor}
-            hasSidebar={siblings.length > 1}
+            hasSidebar={!!siblings && siblings.length > 1}
           />
         )}
       </div>

@@ -120,8 +120,8 @@ const Identifier = styled.span`
 
 export type CategoryListBlockCategory = {
   id: string;
-  image?: MultiUseImageFragmentFragment;
-  color?: string;
+  image?: MultiUseImageFragmentFragment | null;
+  color?: string | null;
   identifier: string;
   name: string;
   shortDescription?: string;
@@ -137,7 +137,7 @@ export type CategoryListBlockCategory = {
 
 interface CategoryListBlockProps extends CommonContentBlockProps {
   categories?: Array<CategoryListBlockCategory>;
-  fallbackImage: MultiUseImageFragmentFragment;
+  fallbackImage?: MultiUseImageFragmentFragment;
   heading?: string;
   lead: string;
   style?: 'treemap' | 'cards';

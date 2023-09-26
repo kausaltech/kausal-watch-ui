@@ -1,5 +1,4 @@
 import React, { useContext } from 'react';
-import PropTypes from 'prop-types';
 import { gql, useQuery } from '@apollo/client';
 import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
@@ -17,7 +16,9 @@ import {
   CategoryTypePageLevelLayout,
   GetCategoryAttributeTypesQuery,
 } from 'common/__generated__/graphql';
-import ActionAttribute from 'components/common/ActionAttribute';
+import CategoryPageStreamField, {
+  CategoryPage,
+} from 'components/common/CategoryPageStreamField';
 
 export const GET_CATEGORY_ATTRIBUTE_TYPES = gql`
   query GetCategoryAttributeTypes($plan: ID!) {
@@ -170,72 +171,29 @@ type CategoryTypes = NonNullable<
   GetCategoryAttributeTypesQuery['plan']
 >['categoryTypes'];
 
-interface CategoryHeaderBlockProps
-  extends Pick<Props, 'attributes' | 'categoryId'> {
-  block: CategoryPageMainTopBlock;
-}
-
-const AttributeBlock = ({
-  block,
-  attributes,
-  categoryId,
-}: CategoryHeaderBlockProps) => {
-  switch (block.__typename) {
-    case 'CategoryPageAttributeTypeBlock':
-      const attribute = attributes.find(
-        (attribute) =>
-          attribute.type.identifier === block.attributeType.identifier
-      );
-
-      if (attribute && attributeHasValue(attribute)) {
-        return (
-          <Col md={6}>
-            <ActionAttribute attribute={attribute} attributeType={undefined} />
-          </Col>
-        );
-      }
-
-      return null;
-
-    case 'CategoryPageProgressBlock':
-      return (
-        <Col xs={12}>
-          <CategoryMetaBar category={categoryId} />
-        </Col>
-      );
-
-    default:
-      return null;
-  }
-};
-
-interface CategoryHeaderAttributesProps
-  extends Pick<Props, 'attributes' | 'categoryId'> {
+interface CategoryHeaderAttributesProps extends Pick<Props, 'page'> {
   layout: CategoryPageMainTopBlock[];
 }
 
 const CategoryHeaderAttributes = ({
   layout,
-  attributes,
-  categoryId,
-}: CategoryHeaderAttributesProps) => {
-  return (
-    <AttributesContainer>
-      <Attributes>
-        <Row>
-          {layout.map((block) => (
-            <AttributeBlock
-              key={block.id}
-              block={block}
-              attributes={attributes}
-              categoryId={categoryId}
-            />
-          ))}
-        </Row>
-      </Attributes>
-    </AttributesContainer>
-  );
-};
+  page,
+}: CategoryHeaderAttributesProps) => (
+  <AttributesContainer>
+    <Attributes>
+      <Row>
+        {layout.map((block, i) => (
+          <CategoryPageStreamField
+            key={i}
+            block={block}
+            page={page}
+            context="hero"
+          />
+        ))}
+      </Row>
+    </Attributes>
+  </AttributesContainer>
+);
 
 interface LegacyCategoryHeaderAttributesProps
   extends Pick<Props, 'attributes' | 'categoryId' | 'typeId'> {
@@ -273,6 +231,7 @@ const LegacyCategoryHeaderAttributes = ({
 
 // TODO: Type props
 interface Props {
+  page: CategoryPage;
   title: string;
   categoryId: string;
   identifier;
@@ -290,6 +249,7 @@ interface Props {
 }
 
 function CategoryPageHeaderBlock({
+  page,
   title,
   categoryId,
   identifier,
@@ -359,11 +319,7 @@ function CategoryPageHeaderBlock({
               {lead && <p>{lead}</p>}
 
               {layout ? (
-                <CategoryHeaderAttributes
-                  attributes={attributes}
-                  layout={layout}
-                  categoryId={categoryId}
-                />
+                <CategoryHeaderAttributes page={page} layout={layout} />
               ) : (
                 <LegacyCategoryHeaderAttributes
                   attributes={attributes}
