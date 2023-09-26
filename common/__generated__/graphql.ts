@@ -2230,6 +2230,7 @@ export type IndicatorListPage = PageInterface & {
   contentType: Scalars['String'];
   depth?: Maybe<Scalars['Int']>;
   descendants: Array<PageInterface>;
+  displayInsights?: Maybe<Scalars['Boolean']>;
   draftTitle: Scalars['String'];
   expireAt?: Maybe<Scalars['DateTime']>;
   expired: Scalars['Boolean'];
@@ -11164,7 +11165,7 @@ export type GetPlanPageIndicatorListQuery = (
     { id?: string | null, slug: string, title: string, lastPublishedAt?: any | null }
     & { __typename: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'Page' | 'PlanRootPage' | 'PrivacyPolicyPage' | 'StaticPage' }
   ) | (
-    { leadContent?: string | null, id?: string | null, slug: string, title: string, lastPublishedAt?: any | null }
+    { leadContent?: string | null, displayInsights?: boolean | null, id?: string | null, slug: string, title: string, lastPublishedAt?: any | null }
     & { __typename: 'IndicatorListPage' }
   ) | null }
   & { __typename?: 'Query' }

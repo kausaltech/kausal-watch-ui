@@ -15,6 +15,7 @@ const GET_PLAN_PAGE = gql`
       title
       ... on IndicatorListPage {
         leadContent
+        displayInsights
       }
       lastPublishedAt
     }
@@ -39,6 +40,7 @@ function IndicatorsPage() {
       <IndicatorList
         title={data.planPage.title}
         leadContent={data.planPage.leadContent}
+        displayInsights={data.planPage.displayInsights}
       />
     </Layout>
   );
