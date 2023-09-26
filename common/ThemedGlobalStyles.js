@@ -99,7 +99,8 @@ const GlobalStyle = createGlobalStyle`
   }
 
   .text-content {
-    font-family: ${(props) => props.theme.fontFamilyContent};
+    font-family: ${(props) =>
+      `${props.theme.fontFamilyContent}, ${props.theme.fontFamilyFallback}`};
 
     a {
       text-decoration: underline;
