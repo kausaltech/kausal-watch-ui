@@ -17,7 +17,7 @@ import PopoverTip from 'components/common/PopoverTip';
 import IndicatorCausalVisualisation from 'components/indicators/IndicatorCausalVisualisation';
 import AttributesBlock from 'components/common/AttributesBlock';
 import CategoryTags from './CategoryTags';
-import ActionContactFormBlock from 'components/contentblocks/ActionContactFormBlock';
+import ExpandableFeedbackFormBlock from 'components/contentblocks/ExpandableFeedbackFormBlock';
 import ActionPhase from './ActionPhase';
 import ActionStatus from './ActionStatus';
 import ActionImpact from './ActionImpact';
@@ -491,7 +491,7 @@ function ActionContentBlock(props: ActionContentBlockProps) {
         />
       );
     case 'ActionContactFormBlock': {
-      return <ActionContactFormBlock {...block} action={action} />;
+      return <ExpandableFeedbackFormBlock {...block} action={action} />;
     }
     case 'ActionContentCategoryTypeBlock': {
       const categories = action.categories.filter(

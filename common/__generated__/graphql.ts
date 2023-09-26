@@ -1172,7 +1172,7 @@ export type Category = {
   categoryPage?: Maybe<CategoryPage>;
   categoryPages: Array<CategoryPage>;
   children: Array<Category>;
-  /** Set if the category has a theme colour */
+  /** Set if the category has a theme color */
   color?: Maybe<Scalars['String']>;
   common?: Maybe<CommonCategory>;
   externalIdentifier?: Maybe<Scalars['String']>;
@@ -1605,7 +1605,7 @@ export type CollectionObjectType = {
 export type CommonCategory = {
   __typename?: 'CommonCategory';
   categoryInstances: Array<Category>;
-  /** Set if the category has a theme colour */
+  /** Set if the category has a theme color */
   color?: Maybe<Scalars['String']>;
   helpText: Scalars['String'];
   iconImage?: Maybe<Image>;
@@ -1674,7 +1674,7 @@ export type CreateOrganizationMutationInput = {
   dissolutionDate?: InputMaybe<Scalars['Date']>;
   /** A date of founding */
   foundingDate?: InputMaybe<Scalars['Date']>;
-  /** A primary name, e.g. a legally recognised name */
+  /** A primary name, e.g. a legally recognized name */
   name: Scalars['String'];
   parent?: InputMaybe<Scalars['ID']>;
 };
@@ -2099,9 +2099,9 @@ export type Indicator = {
   latestGraph?: Maybe<IndicatorGraph>;
   latestValue?: Maybe<IndicatorValue>;
   level?: Maybe<Scalars['String']>;
-  /** What is the maximum value this indicator can reach? It is used in visualisations as the Y axis maximum. */
+  /** What is the maximum value this indicator can reach? It is used in visualizations as the Y axis maximum. */
   maxValue?: Maybe<Scalars['Float']>;
-  /** What is the minimum value this indicator can reach? It is used in visualisations as the Y axis minimum. */
+  /** What is the minimum value this indicator can reach? It is used in visualizations as the Y axis minimum. */
   minValue?: Maybe<Scalars['Float']>;
   name: Scalars['String'];
   organization: Organization;
@@ -2230,6 +2230,7 @@ export type IndicatorListPage = PageInterface & {
   contentType: Scalars['String'];
   depth?: Maybe<Scalars['Int']>;
   descendants: Array<PageInterface>;
+  displayInsights?: Maybe<Scalars['Boolean']>;
   draftTitle: Scalars['String'];
   expireAt?: Maybe<Scalars['DateTime']>;
   expired: Scalars['Boolean'];
@@ -2494,19 +2495,19 @@ export type Organization = {
   actionCount: Scalars['Int'];
   adminButtons: Array<AdminButton>;
   ancestors?: Maybe<Array<Maybe<Organization>>>;
-  /** An organisation category, e.g. committee */
+  /** An organization category, e.g. committee */
   classification?: Maybe<OrganizationClass>;
   /** Number of contact persons that are associated with this organization */
   contactPersonCount: Scalars['Int'];
   descendants?: Maybe<Array<Maybe<Organization>>>;
   description: Scalars['String'];
-  /** A distinct name for this organisation (generated automatically) */
+  /** A distinct name for this organization (generated automatically) */
   distinctName?: Maybe<Scalars['String']>;
   email: Scalars['String'];
   id: Scalars['ID'];
   location?: Maybe<Scalars['PointScalar']>;
   logo?: Maybe<Image>;
-  /** A primary name, e.g. a legally recognised name */
+  /** A primary name, e.g. a legally recognized name */
   name: Scalars['String'];
   parent?: Maybe<Organization>;
   plansWithActionResponsibilities: Array<Plan>;
@@ -2545,7 +2546,7 @@ export type OrganizationClass = {
   nameI18n: Scalars['String'];
   nameLv: Scalars['String'];
   nameSv: Scalars['String'];
-  /** An organisation category, e.g. committee */
+  /** An organization category, e.g. committee */
   organizationSet: Array<Organization>;
 };
 
@@ -2795,7 +2796,7 @@ export type Person = {
   firstName: Scalars['String'];
   id: Scalars['ID'];
   lastName: Scalars['String'];
-  /** What is this person's organisation */
+  /** What is this person's organization */
   organization: Organization;
   title?: Maybe<Scalars['String']>;
 };
@@ -3632,7 +3633,7 @@ export type SiteGeneralContent = {
   __typename?: 'SiteGeneralContent';
   actionTerm: SiteGeneralContentActionTerm;
   copyrightText: Scalars['String'];
-  /** If the site is under a Creative Commons licence, which CC licence it is */
+  /** If the site is under a Creative Commons license, which CC license it is */
   creativeCommonsLicense: Scalars['String'];
   githubApiRepository: Scalars['String'];
   githubUiRepository: Scalars['String'];
@@ -3915,7 +3916,7 @@ export type UpdateOrganizationMutationInput = {
   /** A date of founding */
   foundingDate?: InputMaybe<Scalars['Date']>;
   id?: InputMaybe<Scalars['ID']>;
-  /** A primary name, e.g. a legally recognised name */
+  /** A primary name, e.g. a legally recognized name */
   name: Scalars['String'];
   parent?: InputMaybe<Scalars['ID']>;
 };
@@ -8450,7 +8451,22 @@ export type TemplatedCategoryPageFragmentFragment = (
         & { __typename?: 'ChoiceBlock' }
       )> }
       & { __typename: 'CategoryPageProgressBlock' }
-    )> | null, layoutMainBottom?: Array<{ __typename: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' }> | null, layoutAside?: Array<{ __typename: 'CategoryPageAttributeTypeBlock' }> | null }
+    )> | null, layoutMainBottom?: Array<(
+      { attributeType: (
+        { identifier: string }
+        & { __typename?: 'AttributeType' }
+      ) }
+      & { __typename: 'CategoryPageAttributeTypeBlock' }
+    ) | { __typename: 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' } | (
+      { heading?: string | null, description?: string | null }
+      & { __typename: 'CategoryPageContactFormBlock' }
+    )> | null, layoutAside?: Array<(
+      { attributeType: (
+        { identifier: string }
+        & { __typename?: 'AttributeType' }
+      ) }
+      & { __typename: 'CategoryPageAttributeTypeBlock' }
+    )> | null }
     & { __typename: 'CategoryTypePageLevelLayout' }
   ) | null }
   & { __typename?: 'CategoryPage' }
@@ -9299,7 +9315,22 @@ export type GetPlanPageGeneralQuery = (
           & { __typename?: 'ChoiceBlock' }
         )> }
         & { __typename: 'CategoryPageProgressBlock' }
-      )> | null, layoutMainBottom?: Array<{ __typename: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' }> | null, layoutAside?: Array<{ __typename: 'CategoryPageAttributeTypeBlock' }> | null }
+      )> | null, layoutMainBottom?: Array<(
+        { attributeType: (
+          { identifier: string }
+          & { __typename?: 'AttributeType' }
+        ) }
+        & { __typename: 'CategoryPageAttributeTypeBlock' }
+      ) | { __typename: 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' } | (
+        { heading?: string | null, description?: string | null }
+        & { __typename: 'CategoryPageContactFormBlock' }
+      )> | null, layoutAside?: Array<(
+        { attributeType: (
+          { identifier: string }
+          & { __typename?: 'AttributeType' }
+        ) }
+        & { __typename: 'CategoryPageAttributeTypeBlock' }
+      )> | null }
       & { __typename: 'CategoryTypePageLevelLayout' }
     ) | null }
     & { __typename: 'CategoryPage' }

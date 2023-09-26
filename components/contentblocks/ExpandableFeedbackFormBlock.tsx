@@ -5,8 +5,9 @@ import { Collapse } from 'reactstrap';
 import Icon from 'components/common/Icon';
 import { usePlan } from 'context/plan';
 import FeedbackForm from 'components/common/FeedbackForm';
+import { ActionContentAction } from 'components/actions/ActionContent';
 
-const ActionContactFormSection = styled.div`
+const FeedbackFormSection = styled.div`
   padding: ${(props) =>
     props.size === 'sm' ? props.theme.spaces.s050 : props.theme.spaces.s100};
   background-color: ${(props) => props.theme.graphColors.blue010};
@@ -34,25 +35,33 @@ const ContactTriggerButton = styled.button`
   }
 `;
 
-const ActionContactFormBlock = (props) => {
-  const { action, context } = props;
+interface Props {
+  action?: ActionContentAction;
+  context?: 'sidebar' | 'default';
+  heading?: string;
+  description?: string;
+}
+
+const ExpandableFeedbackFormBlock = ({
+  action,
+  context = 'default',
+  heading,
+  description,
+}: Props) => {
   const { t } = useTranslation(['actions']);
   const plan = usePlan();
   const [isOpen, setIsOpen] = useState(false);
 
   const toggle = () => setIsOpen(!isOpen);
-  let size = 'md';
-  if (context === 'sidebar') {
-    size = 'sm';
-  }
+  const size = context === 'sidebar' ? 'sm' : 'md';
 
   return (
-    <ActionContactFormSection size={size}>
+    <FeedbackFormSection size={size}>
       <ContactTriggerButton color="link" onClick={toggle}>
         <Icon name="commenting" width="2rem" height="2rem" />
         <div>
-          <h2>{t('actions:feedback-on-action')}</h2>
-          {t('actions:feedback-on-action-description')}
+          <h2>{heading || t('actions:feedback-on-action')}</h2>
+          {description || t('actions:feedback-on-action-description')}
         </div>
         <Icon
           name={isOpen ? 'angle-down' : 'angle-right'}
@@ -63,15 +72,15 @@ const ActionContactFormBlock = (props) => {
       <Collapse isOpen={isOpen}>
         <FeedbackForm
           planIdentifier={plan.identifier}
-          actionId={action.id}
+          actionId={action?.id}
           heading=""
           description=""
           prompt=""
           formContext="action"
         />
       </Collapse>
-    </ActionContactFormSection>
+    </FeedbackFormSection>
   );
 };
 
-export default ActionContactFormBlock;
+export default ExpandableFeedbackFormBlock;
