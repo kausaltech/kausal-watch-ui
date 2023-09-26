@@ -338,6 +338,7 @@ export const GET_ACTION_LIST = gql`
       withAncestors: true
       forContactPersons: true
       forResponsibleParties: true
+      includeRelatedPlans: $relatedPlanActions
     ) {
       ...OrganizationFragment
     }
