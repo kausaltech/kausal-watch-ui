@@ -8460,7 +8460,13 @@ export type TemplatedCategoryPageFragmentFragment = (
     ) | { __typename: 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' } | (
       { heading?: string | null, description?: string | null }
       & { __typename: 'CategoryPageContactFormBlock' }
-    )> | null, layoutAside?: Array<{ __typename: 'CategoryPageAttributeTypeBlock' }> | null }
+    )> | null, layoutAside?: Array<(
+      { attributeType: (
+        { identifier: string }
+        & { __typename?: 'AttributeType' }
+      ) }
+      & { __typename: 'CategoryPageAttributeTypeBlock' }
+    )> | null }
     & { __typename: 'CategoryTypePageLevelLayout' }
   ) | null }
   & { __typename?: 'CategoryPage' }
@@ -9318,7 +9324,13 @@ export type GetPlanPageGeneralQuery = (
       ) | { __typename: 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' } | (
         { heading?: string | null, description?: string | null }
         & { __typename: 'CategoryPageContactFormBlock' }
-      )> | null, layoutAside?: Array<{ __typename: 'CategoryPageAttributeTypeBlock' }> | null }
+      )> | null, layoutAside?: Array<(
+        { attributeType: (
+          { identifier: string }
+          & { __typename?: 'AttributeType' }
+        ) }
+        & { __typename: 'CategoryPageAttributeTypeBlock' }
+      )> | null }
       & { __typename: 'CategoryTypePageLevelLayout' }
     ) | null }
     & { __typename: 'CategoryPage' }

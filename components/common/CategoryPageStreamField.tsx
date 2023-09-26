@@ -27,10 +27,10 @@ type OmitFields<T> = OmitUnion<
 
 interface WrapperProps {
   children: React.ReactNode;
-  withContainer: boolean;
+  withContainer?: boolean;
 }
 
-const Wrapper = ({ children, withContainer }: WrapperProps) =>
+const Wrapper = ({ children, withContainer = true }: WrapperProps) =>
   withContainer ? (
     <Container>
       <Row>{children}</Row>
@@ -46,34 +46,65 @@ const DEFAULT_COL_PROPS = {
   className: 'my-4',
 };
 
+const TIGHT_COL_PROPS = {
+  xl: { size: 8, offset: 2 },
+  lg: { size: 10, offset: 1 },
+  md: { size: 12 },
+  className: 'my-4',
+};
+
 interface Props {
   page: CategoryPage;
   context?: 'hero' | 'main' | 'aside';
+  /** Passed down to reactstrap Col components */
+  columnProps?: any;
+  hasAsideColumn?: boolean;
   block:
     | OmitFields<CategoryPageMainTopBlock>
     | OmitFields<CategoryPageMainBottomBlock>;
 }
 
+const findAttributeByType = (attributeTypeIdentifier: string, page) =>
+  page.category?.attributes?.find(
+    (attribute) => attribute.type.identifier === attributeTypeIdentifier
+  );
+
+export const checkAttributeHasValueByType = (
+  attributeTypeIdentifier: string,
+  page
+) => {
+  const attribute = findAttributeByType(attributeTypeIdentifier, page);
+
+  return attribute && attributeHasValue(attribute);
+};
+
 export const CategoryPageStreamField = ({
   block,
   page,
   context = 'main',
+  columnProps: customColumnProps,
+  hasAsideColumn = false,
 }: Props) => {
   const theme = useTheme();
   const plan = usePlan();
+  const columnProps =
+    context === 'main' && hasAsideColumn ? TIGHT_COL_PROPS : DEFAULT_COL_PROPS;
 
   switch (block.__typename) {
     case 'CategoryPageAttributeTypeBlock': {
       const withContainer = context === 'main';
-      const attribute = page.category?.attributes?.find(
-        (attribute) =>
-          attribute.type.identifier === block.attributeType.identifier
+      const attribute = findAttributeByType(
+        block.attributeType.identifier,
+        page
       );
 
       if (attribute && attributeHasValue(attribute)) {
         return (
           <Wrapper withContainer={withContainer}>
-            <Col {...(withContainer ? DEFAULT_COL_PROPS : { md: 6 })}>
+            <Col
+              {...(withContainer ? columnProps : { md: 6 })}
+              {...customColumnProps}
+            >
               <ActionAttribute
                 attribute={attribute}
                 attributeType={undefined}
@@ -88,8 +119,8 @@ export const CategoryPageStreamField = ({
 
     case 'CategoryPageContactFormBlock': {
       return (
-        <Wrapper withContainer>
-          <Col {...DEFAULT_COL_PROPS}>
+        <Wrapper>
+          <Col {...columnProps} {...customColumnProps}>
             <ExpandableFeedbackFormBlock
               heading={block.heading || undefined}
               description={block.description || undefined}
@@ -106,7 +137,7 @@ export const CategoryPageStreamField = ({
 
       return (
         <Wrapper withContainer={context === 'main'}>
-          <Col xs={12}>
+          <Col xs={12} {...customColumnProps}>
             <CategoryMetaBar category={page.category.id} />
           </Col>
         </Wrapper>
@@ -119,7 +150,15 @@ export const CategoryPageStreamField = ({
         page.category?.parent?.color ||
         theme.brandLight;
 
-      return <StreamField page={page} blocks={page.body} color={color} />;
+      return (
+        <StreamField
+          page={page}
+          blocks={page.body}
+          color={color}
+          hasSidebar={hasAsideColumn}
+          columnProps={columnProps}
+        />
+      );
     }
 
     case 'CategoryPageCategoryListBlock': {
