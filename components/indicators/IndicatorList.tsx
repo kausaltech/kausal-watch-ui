@@ -210,7 +210,7 @@ const getFirstUsableCategoryType = (categoryTypes, indicators) =>
 interface Props {
   title: string;
   leadContent: IndicatorListPage['leadContent'];
-  displayInsights: boolean;
+  displayInsights: IndicatorListPage['displayInsights'];
 }
 
 const IndicatorList = ({ title, leadContent, displayInsights }: Props) => {
@@ -333,7 +333,7 @@ const IndicatorList = ({ title, leadContent, displayInsights }: Props) => {
 
   const indicatorListProps = getIndicatorListProps(data);
   const hierarchy = processCommonIndicatorHierarchy(data?.planIndicators);
-  const showInsights = displayInsights && hasInsights(data);
+  const showInsights = (displayInsights ?? true) && hasInsights(data);
 
   const categoryType = getFirstUsableCategoryType(
     data?.plan?.categoryTypes,
