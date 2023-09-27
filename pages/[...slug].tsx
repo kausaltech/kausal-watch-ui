@@ -281,7 +281,10 @@ const Content = ({ page }: { page: GeneralPlanPage }) => {
         shareImageUrl={imageUrl}
         description={`${page.searchDescription || title}`}
       />
-      <PageHeaderBlock page={page} color={categoryColor || undefined} />
+      <PageHeaderBlock
+        page={page}
+        color={isCategoryPage ? pageSectionColor : undefined}
+      />
 
       {isCategoryPage ? (
         <CategoryPageContent page={page} pageSectionColor={pageSectionColor} />
