@@ -52,7 +52,7 @@ type RichTextImageProps = {
   };
 };
 
-const RichTextStyles = styled.div`
+const StyledRichText = styled.div`
   .responsive-object {
     position: relative;
   }
@@ -255,7 +255,7 @@ export default function RichText(props: RichTextProps) {
 
   return (
     <div {...rest} className={`text-content ${className || ''}`}>
-      <RichTextStyles>{parsedContent}</RichTextStyles>
+      <StyledRichText>{parsedContent}</StyledRichText>
     </div>
   );
 }
