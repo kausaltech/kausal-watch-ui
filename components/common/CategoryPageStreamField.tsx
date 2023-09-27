@@ -1,7 +1,6 @@
 import React from 'react';
 import { Container, Row, Col, ColProps } from 'reactstrap';
 import { usePlan } from 'context/plan';
-import CategoryMetaBar from 'components/actions/CategoryMetaBar';
 import { attributeHasValue } from 'components/common/AttributesBlock';
 import { useTheme } from 'common/theme';
 import {
@@ -13,6 +12,8 @@ import ActionAttribute from 'components/common/ActionAttribute';
 import CategoryListBlock from 'components/contentblocks/CategoryListBlock';
 import ExpandableFeedbackFormBlock from 'components/contentblocks/ExpandableFeedbackFormBlock';
 import StreamField from 'components/common/StreamField';
+import ActionStatusGraphsBlock from 'components/contentblocks/ActionStatusGraphsBlock';
+import { ChartType } from 'components/dashboard/ActionStatusGraphs';
 
 export type CategoryPage = { __typename: 'CategoryPage' } & NonNullable<
   GetPlanPageGeneralQuery['planPage']
@@ -20,10 +21,7 @@ export type CategoryPage = { __typename: 'CategoryPage' } & NonNullable<
 
 type OmitUnion<T, K extends keyof any> = T extends any ? Omit<T, K> : never;
 
-type OmitFields<T> = OmitUnion<
-  T,
-  'blockType' | 'field' | 'rawValue' | 'blocks'
->;
+type OmitFields<T> = OmitUnion<T, 'blockType' | 'field' | 'rawValue'>;
 
 interface WrapperProps {
   children: React.ReactNode;
@@ -135,10 +133,21 @@ export const CategoryPageStreamField = ({
         return null;
       }
 
+      // The editor specifies whether to visualise action progress by implementation phase or status
+      const progressDataset = block.blocks[0].value || 'implementation_phase';
+
       return (
         <Wrapper withContainer={context === 'main'}>
           <Col xs={12} {...customColumnProps}>
-            <CategoryMetaBar category={page.category.id} />
+            <ActionStatusGraphsBlock
+              categoryId={page.category.id}
+              chart={ChartType.BAR}
+              shownDatasets={{
+                progress: progressDataset !== 'implementation_phase', // TODO get proper types
+                phase: progressDataset === 'implementation_phase',
+              }}
+              columnProps={{ md: 12, lg: 12, xl: 12 }}
+            />
           </Col>
         </Wrapper>
       );

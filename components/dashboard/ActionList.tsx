@@ -619,7 +619,11 @@ const ActionList = (props: ActionListProps) => {
             <>
               <ActionStatusGraphs
                 actions={filteredActions}
-                showUpdateStatus={showUpdateStatus}
+                shownDatasets={{
+                  phase: true,
+                  progress: true,
+                  timeliness: showUpdateStatus,
+                }}
               />
               <DynamicActionStatusTable
                 actions={filteredActions}

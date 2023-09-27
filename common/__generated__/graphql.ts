@@ -3358,6 +3358,7 @@ export type QueryPlanIndicatorsArgs = {
 export type QueryPlanOrganizationsArgs = {
   forContactPersons?: InputMaybe<Scalars['Boolean']>;
   forResponsibleParties?: InputMaybe<Scalars['Boolean']>;
+  includeRelatedPlans?: InputMaybe<Scalars['Boolean']>;
   plan?: InputMaybe<Scalars['ID']>;
   withAncestors?: InputMaybe<Scalars['Boolean']>;
 };
@@ -7647,6 +7648,7 @@ export type GetActionListForBlockQuery = (
 
 export type GetActionListForGraphsQueryVariables = Exact<{
   plan: Scalars['ID'];
+  categoryId?: InputMaybe<Scalars['ID']>;
 }>;
 
 
