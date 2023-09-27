@@ -178,22 +178,23 @@ interface CategoryHeaderAttributesProps extends Pick<Props, 'page'> {
 const CategoryHeaderAttributes = ({
   layout,
   page,
-}: CategoryHeaderAttributesProps) => (
-  <AttributesContainer>
-    <Attributes>
-      <Row>
-        {layout.map((block, i) => (
-          <CategoryPageStreamField
-            key={i}
-            block={block}
-            page={page}
-            context="hero"
-          />
-        ))}
-      </Row>
-    </Attributes>
-  </AttributesContainer>
-);
+}: CategoryHeaderAttributesProps) =>
+  layout.length ? (
+    <AttributesContainer>
+      <Attributes>
+        <Row>
+          {layout.map((block, i) => (
+            <CategoryPageStreamField
+              key={i}
+              block={block}
+              page={page}
+              context="hero"
+            />
+          ))}
+        </Row>
+      </Attributes>
+    </AttributesContainer>
+  ) : null;
 
 interface LegacyCategoryHeaderAttributesProps
   extends Pick<Props, 'attributes' | 'categoryId' | 'typeId'> {
