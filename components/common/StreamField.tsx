@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Container, Row, Col } from 'reactstrap';
+import { Container, Row, Col, ColProps } from 'reactstrap';
 import { gql } from '@apollo/client';
 import PlanContext from 'context/plan';
 import images, { getBgImageAlignment } from 'common/images';
@@ -281,7 +281,7 @@ type StreamFieldBlockProps = {
   block: StreamFieldFragmentFragment;
   color: string;
   hasSidebar: boolean;
-  columnProps?: any;
+  columnProps?: ColProps;
 };
 
 function StreamFieldBlock(props: StreamFieldBlockProps) {
@@ -326,6 +326,7 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
           heading={heading}
           questions={questions}
           hasSidebar={hasSidebar}
+          columnProps={columnProps}
         />
       );
     }
@@ -509,7 +510,7 @@ interface StreamFieldProps {
   page: any;
   blocks: any;
   hasSidebar?: boolean;
-  columnProps?: any;
+  columnProps?: ColProps;
 }
 
 function StreamField(props: StreamFieldProps) {
