@@ -26,6 +26,7 @@ import AccessibilityStatementContactInformationBlock from 'components/contentblo
 import type { StreamFieldFragmentFragment } from 'common/__generated__/graphql';
 import CartographyVisualisationBlock from 'components/contentblocks/CartographyVisualisationBlock';
 import { useTheme } from 'common/theme';
+import styled from 'styled-components';
 
 const STREAM_FIELD_FRAGMENT = gql`
   fragment StreamFieldFragment on StreamFieldInterface {
@@ -275,6 +276,35 @@ const STREAM_FIELD_FRAGMENT = gql`
   ${CategoryListBlock.fragments.category}
 `;
 
+const ResponsiveStyles = styled.div`
+  .responsive-object {
+    width: 100%;
+    text-align: center;
+  }
+
+  .responsive-object iframe,
+  .responsive-object object,
+  .responsive-object embed {
+    width: 100%;
+    height: 100%;
+  }
+
+  .responsive-object-small iframe {
+    aspect-ratio: 16 / 9;
+    max-width: 300px;
+  }
+
+  .responsive-object-medium iframe {
+    aspect-ratio: 16 / 9;
+    max-width: 480px;
+  }
+
+  .responsive-object-large iframe {
+    aspect-ratio: 16 / 9;
+    max-width: 960px;
+  }
+`;
+
 type StreamFieldBlockProps = {
   id: string;
   page: any;
@@ -457,7 +487,9 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
               md={{ size: 10, offset: 1 }}
               className="my-4"
             >
-              <div dangerouslySetInnerHTML={{ __html: block.embed.html }}></div>
+              <ResponsiveStyles
+                dangerouslySetInnerHTML={{ __html: block.embed.html }}
+              ></ResponsiveStyles>
             </Col>
           </Row>
         </Container>

@@ -52,6 +52,22 @@ type RichTextImageProps = {
   };
 };
 
+const StyledRichText = styled.div`
+  .responsive-object {
+    position: relative;
+  }
+
+  .responsive-object iframe,
+  .responsive-object object,
+  .responsive-object embed {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+`;
+
 function ICompress() {
   // eslint-disable-next-line max-len
   return React.createElement(
@@ -239,7 +255,7 @@ export default function RichText(props: RichTextProps) {
 
   return (
     <div {...rest} className={`text-content ${className || ''}`}>
-      {parsedContent}
+      <StyledRichText>{parsedContent}</StyledRichText>
     </div>
   );
 }
