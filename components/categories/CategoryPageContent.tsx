@@ -17,11 +17,10 @@ const MainContent = styled.div``;
 const AsideContent = styled.div`
   position: sticky;
   top: ${({ theme }) => theme.spaces.s200};
-  flex: 0 1 300px;
-  width: 300px;
+  flex: 0 1 320px;
   background-color: ${({ theme }) => theme.themeColors.white};
   border-radius: ${({ theme }) => theme.cardBorderRadius};
-  padding: ${({ theme }) => theme.spaces.s100} 0;
+  padding: ${({ theme }) => `${theme.spaces.s200} ${theme.spaces.s100}`};
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -35,7 +34,7 @@ const columnLayout = css`
   gap: ${({ theme }) => theme.spaces.s300};
 
   ${MainContent} {
-    flex: 0 2 800px;
+    flex: 0 2 ${({ theme }) => theme.breakpointMd};
     padding: 0 ${({ theme }) => theme.spaces.s100};
     background-color: ${({ theme }) => theme.themeColors.white};
     border-radius: ${({ theme }) => theme.cardBorderRadius};

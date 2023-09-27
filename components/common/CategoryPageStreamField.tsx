@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Row, Col } from 'reactstrap';
+import { Container, Row, Col, ColProps } from 'reactstrap';
 import { usePlan } from 'context/plan';
 import CategoryMetaBar from 'components/actions/CategoryMetaBar';
 import { attributeHasValue } from 'components/common/AttributesBlock';
@@ -47,8 +47,8 @@ const DEFAULT_COL_PROPS = {
 };
 
 const TIGHT_COL_PROPS = {
-  xl: { size: 8, offset: 2 },
-  lg: { size: 10, offset: 1 },
+  xl: { size: 12 },
+  lg: { size: 12 },
   md: { size: 12 },
   className: 'my-4',
 };
@@ -57,7 +57,7 @@ interface Props {
   page: CategoryPage;
   context?: 'hero' | 'main' | 'aside';
   /** Passed down to reactstrap Col components */
-  columnProps?: any;
+  columnProps?: ColProps;
   hasAsideColumn?: boolean;
   block:
     | OmitFields<CategoryPageMainTopBlock>
