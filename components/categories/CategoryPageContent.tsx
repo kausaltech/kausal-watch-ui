@@ -65,7 +65,7 @@ const columnLayout = css`
 `;
 
 const ContentArea = styled.div<{
-  $columnLayout: boolean;
+  $columnLayout?: boolean;
   $backgroundColor?: string;
 }>`
   ${({ $columnLayout }) => $columnLayout && columnLayout};
