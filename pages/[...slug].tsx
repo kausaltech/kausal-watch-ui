@@ -24,6 +24,7 @@ const templatedCategoryPageFragment = gql`
   fragment TemplatedCategoryPageFragment on CategoryPage {
     layout {
       __typename
+      iconSize
       layoutMainTop {
         __typename
         ... on CategoryPageAttributeTypeBlock {

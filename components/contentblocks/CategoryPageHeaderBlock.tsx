@@ -2,14 +2,12 @@ import React, { useContext } from 'react';
 import { gql, useQuery } from '@apollo/client';
 import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
+import { Theme } from '@kausal/themes/types';
 import PlanContext, { usePlan } from 'context/plan';
 import { Link } from 'common/links';
 import { useTranslation } from 'common/i18n';
 import CategoryMetaBar from 'components/actions/CategoryMetaBar';
-import AttributesBlock, {
-  Attributes,
-  attributeHasValue,
-} from 'components/common/AttributesBlock';
+import AttributesBlock, { Attributes } from 'components/common/AttributesBlock';
 import { useTheme } from 'common/theme';
 import {
   CategoryPageMainTopBlock,
@@ -39,6 +37,12 @@ export const GET_CATEGORY_ATTRIBUTE_TYPES = gql`
     }
   }
 `;
+
+enum IconSize {
+  S = 'S',
+  M = 'M',
+  L = 'L',
+}
 
 const CategoryHeader = styled.div`
   width: 100%;
@@ -157,8 +161,20 @@ const Breadcrumb = styled.div`
   margin-bottom: ${(props) => props.theme.spaces.s100};
 `;
 
-const CategoryIconImage = styled.img`
-  max-height: ${(props) => props.theme.spaces.s600};
+const getIconHeight = (size: IconSize = IconSize.M, theme: Theme) => {
+  switch (size) {
+    case IconSize.L:
+      return '180px';
+    case IconSize.S:
+      return theme.spaces.s400;
+    case IconSize.M:
+    default:
+      return theme.spaces.s600;
+  }
+};
+
+const CategoryIconImage = styled.img<{ size?: IconSize }>`
+  max-height: ${({ theme, size }) => getIconHeight(size, theme)};
   margin-bottom: ${(props) => props.theme.spaces.s100};
 `;
 
@@ -313,7 +329,13 @@ function CategoryPageHeaderBlock({
                   /
                 </Breadcrumb>
               )}
-              {iconImage && <CategoryIconImage src={iconImage} alt />}
+              {iconImage && (
+                <CategoryIconImage
+                  size={(page?.layout?.iconSize as IconSize) ?? undefined}
+                  src={iconImage}
+                  alt=""
+                />
+              )}
               <h1>
                 {identifier && <Identifier>{identifier}.</Identifier>} {title}
               </h1>
