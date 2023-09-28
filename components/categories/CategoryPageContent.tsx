@@ -79,7 +79,7 @@ const CategoryPageContent = ({
   page: CategoryPage;
   pageSectionColor: string;
 }) => {
-  const hasMainContentTemplate = !!page.layout?.layoutMainBottom;
+  const hasMainContentTemplate = !!page.layout?.layoutMainBottom?.length;
   const hasAsideTemplate = !!page.layout?.layoutAside;
   const hasAside =
     hasAsideTemplate &&
