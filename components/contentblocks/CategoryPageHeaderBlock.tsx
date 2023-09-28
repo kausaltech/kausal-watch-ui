@@ -1,14 +1,24 @@
 import React, { useContext } from 'react';
-import PropTypes from 'prop-types';
 import { gql, useQuery } from '@apollo/client';
 import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
-import PlanContext from 'context/plan';
+import PlanContext, { usePlan } from 'context/plan';
 import { Link } from 'common/links';
 import { useTranslation } from 'common/i18n';
 import CategoryMetaBar from 'components/actions/CategoryMetaBar';
-import AttributesBlock from 'components/common/AttributesBlock';
+import AttributesBlock, {
+  Attributes,
+  attributeHasValue,
+} from 'components/common/AttributesBlock';
 import { useTheme } from 'common/theme';
+import {
+  CategoryPageMainTopBlock,
+  CategoryTypePageLevelLayout,
+  GetCategoryAttributeTypesQuery,
+} from 'common/__generated__/graphql';
+import CategoryPageStreamField, {
+  CategoryPage,
+} from 'components/common/CategoryPageStreamField';
 
 export const GET_CATEGORY_ATTRIBUTE_TYPES = gql`
   query GetCategoryAttributeTypes($plan: ID!) {
@@ -157,44 +167,117 @@ const CategoryLevelName = styled.div`
   margin-bottom: ${(props) => props.theme.spaces.s100};
 `;
 
-function CategoryPageHeaderBlock(props) {
-  const {
-    title,
-    categoryId,
-    identifier,
-    lead,
-    iconImage,
-    headerImage,
-    imageAlign,
-    parentTitle,
-    parentUrl,
-    color,
-    attributes,
-    typeId,
-    level,
-  } = props;
+type CategoryTypes = NonNullable<
+  GetCategoryAttributeTypesQuery['plan']
+>['categoryTypes'];
 
+interface CategoryHeaderAttributesProps extends Pick<Props, 'page'> {
+  layout: CategoryPageMainTopBlock[];
+}
+
+const CategoryHeaderAttributes = ({
+  layout,
+  page,
+}: CategoryHeaderAttributesProps) =>
+  layout.length ? (
+    <AttributesContainer>
+      <Attributes>
+        <Row>
+          {layout.map((block, i) => (
+            <CategoryPageStreamField
+              key={i}
+              block={block}
+              page={page}
+              context="hero"
+            />
+          ))}
+        </Row>
+      </Attributes>
+    </AttributesContainer>
+  ) : null;
+
+interface LegacyCategoryHeaderAttributesProps
+  extends Pick<Props, 'attributes' | 'categoryId' | 'typeId'> {
+  categoryTypes?: CategoryTypes;
+}
+
+const LegacyCategoryHeaderAttributes = ({
+  attributes,
+  categoryId,
+  categoryTypes,
+  typeId,
+}: LegacyCategoryHeaderAttributesProps) => {
+  const plan = usePlan();
+
+  const attributeTypes = categoryTypes
+    ? categoryTypes.find((type) => type.id === typeId)?.attributeTypes ?? []
+    : [];
+
+  // AttributeCategoryChoice type can be empty, so we need to filter those out
+  const attributesWithContent = attributes?.filter(
+    (attribute) =>
+      attribute.__typename !== 'AttributeCategoryChoice' ||
+      attribute.categories?.length > 0
+  );
+
+  return attributesWithContent.length > 0 ? (
+    <AttributesContainer>
+      <AttributesBlock attributes={attributes} types={attributeTypes} />
+      {plan.actionStatuses.length ? (
+        <CategoryMetaBar category={categoryId} />
+      ) : null}
+    </AttributesContainer>
+  ) : null;
+};
+
+// TODO: Type props
+interface Props {
+  page: CategoryPage;
+  title: string;
+  categoryId: string;
+  identifier;
+  lead?: string;
+  iconImage;
+  headerImage;
+  imageAlign?: string;
+  parentTitle;
+  parentUrl;
+  color;
+  attributes;
+  typeId;
+  level;
+  layout?: CategoryTypePageLevelLayout['layoutMainTop'];
+}
+
+function CategoryPageHeaderBlock({
+  page,
+  title,
+  categoryId,
+  identifier,
+  lead,
+  iconImage,
+  headerImage,
+  imageAlign = 'center',
+  parentTitle,
+  parentUrl,
+  color,
+  attributes,
+  typeId,
+  level,
+  layout,
+}: Props) {
   const plan = useContext(PlanContext);
   const theme = useTheme();
   const { t } = useTranslation();
 
-  let attributeTypes = [];
-  const { loading, error, data } = useQuery(GET_CATEGORY_ATTRIBUTE_TYPES, {
-    variables: {
-      plan: plan.identifier,
-    },
-  });
-  if (data) {
-    const thisType = data.plan.categoryTypes.find((type) => type.id === typeId);
-    attributeTypes = thisType.attributeTypes;
-  }
-
-  // AttributeCategoryChoice type can be empty, so we need to filter out those
-  const attributesWithContent = attributes?.filter((attribute) => {
-    if (attribute.__typename === 'AttributeCategoryChoice') {
-      return attribute.categories?.length > 0;
-    } else return true;
-  });
+  const { loading, error, data } = useQuery<GetCategoryAttributeTypesQuery>(
+    GET_CATEGORY_ATTRIBUTE_TYPES,
+    {
+      variables: {
+        plan: plan.identifier,
+      },
+    }
+  );
 
   const columnSizing = theme.settings.leftAlignCategoryPages
     ? {
@@ -235,16 +318,16 @@ function CategoryPageHeaderBlock(props) {
                 {identifier && <Identifier>{identifier}.</Identifier>} {title}
               </h1>
               {lead && <p>{lead}</p>}
-              {attributesWithContent.length > 0 && (
-                <AttributesContainer>
-                  <AttributesBlock
-                    attributes={attributes}
-                    types={attributeTypes}
-                  />
-                  {plan.actionStatuses.length ? (
-                    <CategoryMetaBar category={categoryId} />
-                  ) : null}
-                </AttributesContainer>
+
+              {layout ? (
+                <CategoryHeaderAttributes page={page} layout={layout} />
+              ) : (
+                <LegacyCategoryHeaderAttributes
+                  attributes={attributes}
+                  categoryTypes={data?.plan?.categoryTypes}
+                  categoryId={categoryId}
+                  typeId={typeId}
+                />
               )}
             </HeaderContent>
           </Col>
@@ -265,18 +348,5 @@ function CategoryPageHeaderBlock(props) {
     </CategoryHeader>
   );
 }
-
-CategoryPageHeaderBlock.defaultProps = {
-  lead: null,
-  headerImage: null,
-  imageAlign: 'center',
-};
-
-CategoryPageHeaderBlock.propTypes = {
-  title: PropTypes.string.isRequired,
-  lead: PropTypes.string,
-  headerImage: PropTypes.string,
-  imageAlign: PropTypes.string,
-};
 
 export default CategoryPageHeaderBlock;

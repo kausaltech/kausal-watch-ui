@@ -18,6 +18,50 @@ import ContentPageHeaderBlock from 'components/contentblocks/ContentPageHeaderBl
 import SecondaryNavigation from 'components/common/SecondaryNavigation';
 import { GetPlanPageGeneralQuery } from 'common/__generated__/graphql';
 import ActionAttribute from 'components/common/ActionAttribute';
+import CategoryPageContent from 'components/categories/CategoryPageContent';
+
+const templatedCategoryPageFragment = gql`
+  fragment TemplatedCategoryPageFragment on CategoryPage {
+    layout {
+      __typename
+      layoutMainTop {
+        __typename
+        ... on CategoryPageAttributeTypeBlock {
+          attributeType {
+            identifier
+          }
+        }
+        ... on CategoryPageProgressBlock {
+          blocks {
+            ... on ChoiceBlock {
+              value
+            }
+          }
+        }
+      }
+      layoutMainBottom {
+        __typename
+        ... on CategoryPageAttributeTypeBlock {
+          attributeType {
+            identifier
+          }
+        }
+        ... on CategoryPageContactFormBlock {
+          heading
+          description
+        }
+      }
+      layoutAside {
+        __typename
+        ... on CategoryPageAttributeTypeBlock {
+          attributeType {
+            identifier
+          }
+        }
+      }
+    }
+  }
+`;
 
 const GET_PLAN_PAGE = gql`
   query GetPlanPageGeneral($plan: ID!, $path: String!) {
@@ -71,6 +115,7 @@ const GET_PLAN_PAGE = gql`
         leadContent
       }
       ... on CategoryPage {
+        ...TemplatedCategoryPageFragment
         category {
           id
           identifier
@@ -139,6 +184,7 @@ const GET_PLAN_PAGE = gql`
       lastPublishedAt
     }
   }
+  ${templatedCategoryPageFragment}
   ${StreamField.fragments.streamField}
   ${images.fragments.multiUseImage}
   ${ActionAttribute.fragments.attributeWithNestedType}
@@ -151,15 +197,16 @@ type PageHeaderBlockProps = {
   page: GeneralPlanPage;
   color?: string | null;
 };
-const PageHeaderBlock = (props: PageHeaderBlockProps) => {
-  const { color, page } = props;
 
+const PageHeaderBlock = ({ color, page }: PageHeaderBlockProps) => {
   switch (page.__typename) {
     case 'CategoryPage': {
       const category = page.category;
+
       if (!category) {
         throw new Error('Category page without category configured');
       }
+
       const parentIdentifier = !category.type.hideCategoryIdentifiers
         ? `${category.parent?.identifier}.`
         : '';
@@ -169,10 +216,13 @@ const PageHeaderBlock = (props: PageHeaderBlockProps) => {
       const parentUrl = category.parent?.categoryPage?.urlPath || null;
       const headerImage = category.image || category.parent?.image;
       const iconImage = category.iconImage?.rendition?.src;
+
       return (
         <CategoryPageHeaderBlock
+          page={page}
           title={page.title}
           categoryId={category.id}
+          layout={page.layout?.layoutMainTop}
           identifier={
             !category.type.hideCategoryIdentifiers
               ? category.identifier
@@ -212,16 +262,16 @@ const Content = ({ page }: { page: GeneralPlanPage }) => {
   const { title, headerImage } = page;
   const imageUrl = headerImage?.large.src;
   const theme = useTheme();
+  const isCategoryPage = page.__typename === 'CategoryPage';
   const categoryColor =
-    page.__typename === 'CategoryPage' &&
-    (page.category?.color || page.category?.parent?.color);
+    isCategoryPage && (page.category?.color || page.category?.parent?.color);
   const pageSectionColor = categoryColor || theme.brandLight;
 
   const hasSecondaryNav = page.parent?.childrenUseSecondaryNavigation ?? false;
   // Restrict the secondary nav to be shown on StaticPages only currently
   const siblings =
     hasSecondaryNav && page.__typename === 'StaticPage'
-      ? page?.parent?.children
+      ? page?.parent?.children ?? []
       : [];
 
   return (
@@ -231,33 +281,43 @@ const Content = ({ page }: { page: GeneralPlanPage }) => {
         shareImageUrl={imageUrl}
         description={`${page.searchDescription || title}`}
       />
-      <PageHeaderBlock page={page} color={categoryColor || undefined} />
-      <div className="content-area">
-        {page.leadContent && (
-          <Container className="my-5">
-            <Row>
-              <Col lg={{ size: 8, offset: 2 }} md={{ size: 10, offset: 1 }}>
-                <RichText html={page.leadContent} />
-              </Col>
-            </Row>
-          </Container>
-        )}
-        {siblings.length > 1 && (
-          <SecondaryNavigation
-            links={siblings}
-            activeLink={page.id}
-            title={page?.parent?.title || ''}
-          />
-        )}
-        {page.body && (
-          <StreamField
-            page={page}
-            blocks={page.body}
-            color={pageSectionColor}
-            hasSidebar={siblings.length > 1}
-          />
-        )}
-      </div>
+      <PageHeaderBlock
+        page={page}
+        color={isCategoryPage ? pageSectionColor : undefined}
+      />
+
+      {isCategoryPage ? (
+        <CategoryPageContent page={page} pageSectionColor={pageSectionColor} />
+      ) : (
+        <div className="content-area">
+          {page.leadContent && (
+            <Container className="my-5">
+              <Row>
+                <Col lg={{ size: 8, offset: 2 }} md={{ size: 10, offset: 1 }}>
+                  <RichText html={page.leadContent} />
+                </Col>
+              </Row>
+            </Container>
+          )}
+
+          {siblings.length > 1 && (
+            <SecondaryNavigation
+              links={siblings}
+              activeLink={page.id}
+              title={page?.parent?.title || ''}
+            />
+          )}
+
+          {page.body && (
+            <StreamField
+              page={page}
+              blocks={page.body}
+              color={pageSectionColor}
+              hasSidebar={siblings.length > 1}
+            />
+          )}
+        </div>
+      )}
     </article>
   );
 };

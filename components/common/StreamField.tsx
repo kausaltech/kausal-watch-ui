@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Container, Row, Col } from 'reactstrap';
+import { Container, Row, Col, ColProps } from 'reactstrap';
 import { gql } from '@apollo/client';
 import PlanContext from 'context/plan';
 import images, { getBgImageAlignment } from 'common/images';
@@ -311,10 +311,11 @@ type StreamFieldBlockProps = {
   block: StreamFieldFragmentFragment;
   color: string;
   hasSidebar: boolean;
+  columnProps?: ColProps;
 };
 
 function StreamFieldBlock(props: StreamFieldBlockProps) {
-  const { id, page, block, color, hasSidebar } = props;
+  const { id, page, block, color, hasSidebar, columnProps } = props;
   const { __typename } = block;
   const plan = useContext(PlanContext);
   const theme = useTheme();
@@ -334,6 +335,7 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
               lg={{ size: 8, offset: hasSidebar ? 4 : 2 }}
               md={{ size: 10, offset: 1 }}
               className="my-4"
+              {...columnProps}
             >
               <RichText html={value} isCollapsible={isCollapsible} />
             </Col>
@@ -354,6 +356,7 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
           heading={heading}
           questions={questions}
           hasSidebar={hasSidebar}
+          columnProps={columnProps}
         />
       );
     }
@@ -362,7 +365,7 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
       return (
         <Container id={id}>
           <Row>
-            <Col>
+            <Col {...columnProps}>
               <div>{value}</div>
             </Col>
           </Row>
@@ -486,6 +489,7 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
               lg={{ size: 8, offset: hasSidebar ? 4 : 2 }}
               md={{ size: 10, offset: 1 }}
               className="my-4"
+              {...columnProps}
             >
               <ResponsiveStyles
                 dangerouslySetInnerHTML={{ __html: block.embed.html }}
@@ -537,11 +541,12 @@ interface StreamFieldProps {
   color: string;
   page: any;
   blocks: any;
-  hasSidebar: boolean;
+  hasSidebar?: boolean;
+  columnProps?: ColProps;
 }
 
 function StreamField(props: StreamFieldProps) {
-  const { page, blocks, color, hasSidebar = false } = props;
+  const { page, blocks, color, hasSidebar = false, columnProps } = props;
 
   return (
     <>
@@ -553,6 +558,7 @@ function StreamField(props: StreamFieldProps) {
           key={block.id}
           color={color}
           hasSidebar={hasSidebar}
+          columnProps={columnProps}
         />
       ))}
     </>

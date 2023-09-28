@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Row, Col } from 'reactstrap';
+import { Container, Row, Col, ColProps } from 'reactstrap';
 import styled, { css } from 'styled-components';
 import RichText from 'components/common/RichText';
 import Accordion from 'components/common/Accordion';
@@ -41,6 +41,7 @@ const QuestionAnswerBlock = ({
   questions,
   hasSidebar,
   alignWithContent = false,
+  columnProps,
 }: Props) => {
   if (questions == null) {
     return null;
@@ -62,7 +63,7 @@ const QuestionAnswerBlock = ({
     <FaqSection id={id} $inline={alignWithContent}>
       <Container>
         <Row>
-          <Col {...colSizes}>
+          <Col {...colSizes} {...columnProps}>
             {heading && <h2>{heading}</h2>}
             <Accordion>
               {questions.map((q, i) => (
@@ -89,6 +90,7 @@ interface Props {
   heading?: string;
   questions: { question: string; answer: string }[];
   alignWithContent?: boolean;
+  columnProps?: ColProps;
 }
 
 export default QuestionAnswerBlock;

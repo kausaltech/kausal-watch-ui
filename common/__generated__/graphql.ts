@@ -9446,6 +9446,41 @@ export type PlanContextFragment = (
   & { __typename?: 'Plan' }
 );
 
+export type TemplatedCategoryPageFragmentFragment = (
+  { layout?: (
+    { layoutMainTop?: Array<(
+      { attributeType: (
+        { identifier: string }
+        & { __typename?: 'AttributeType' }
+      ) }
+      & { __typename: 'CategoryPageAttributeTypeBlock' }
+    ) | (
+      { blocks: Array<{ __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' } | { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' } | { __typename?: 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'ImageChooserBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' } | { __typename?: 'IntegerBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TextBlock' } | { __typename?: 'TimeBlock' | 'URLBlock' } | (
+        { value: string }
+        & { __typename?: 'ChoiceBlock' }
+      )> }
+      & { __typename: 'CategoryPageProgressBlock' }
+    )> | null, layoutMainBottom?: Array<(
+      { attributeType: (
+        { identifier: string }
+        & { __typename?: 'AttributeType' }
+      ) }
+      & { __typename: 'CategoryPageAttributeTypeBlock' }
+    ) | { __typename: 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' } | (
+      { heading?: string | null, description?: string | null }
+      & { __typename: 'CategoryPageContactFormBlock' }
+    )> | null, layoutAside?: Array<(
+      { attributeType: (
+        { identifier: string }
+        & { __typename?: 'AttributeType' }
+      ) }
+      & { __typename: 'CategoryPageAttributeTypeBlock' }
+    )> | null }
+    & { __typename: 'CategoryTypePageLevelLayout' }
+  ) | null }
+  & { __typename?: 'CategoryPage' }
+);
+
 export type GetPlanPageGeneralQueryVariables = Exact<{
   plan: Scalars['ID'];
   path: Scalars['String'];
@@ -10348,7 +10383,37 @@ export type GetPlanPageGeneralQuery = (
         & { __typename?: 'QuestionBlock' }
       ) | null> | null }
       & { __typename?: 'QuestionAnswerBlock' }
-    ) | null> | null }
+    ) | null> | null, layout?: (
+      { layoutMainTop?: Array<(
+        { attributeType: (
+          { identifier: string }
+          & { __typename?: 'AttributeType' }
+        ) }
+        & { __typename: 'CategoryPageAttributeTypeBlock' }
+      ) | (
+        { blocks: Array<{ __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' } | { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' } | { __typename?: 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'ImageChooserBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' } | { __typename?: 'IntegerBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TextBlock' } | { __typename?: 'TimeBlock' | 'URLBlock' } | (
+          { value: string }
+          & { __typename?: 'ChoiceBlock' }
+        )> }
+        & { __typename: 'CategoryPageProgressBlock' }
+      )> | null, layoutMainBottom?: Array<(
+        { attributeType: (
+          { identifier: string }
+          & { __typename?: 'AttributeType' }
+        ) }
+        & { __typename: 'CategoryPageAttributeTypeBlock' }
+      ) | { __typename: 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' } | (
+        { heading?: string | null, description?: string | null }
+        & { __typename: 'CategoryPageContactFormBlock' }
+      )> | null, layoutAside?: Array<(
+        { attributeType: (
+          { identifier: string }
+          & { __typename?: 'AttributeType' }
+        ) }
+        & { __typename: 'CategoryPageAttributeTypeBlock' }
+      )> | null }
+      & { __typename: 'CategoryTypePageLevelLayout' }
+    ) | null }
     & { __typename: 'CategoryPage' }
   ) | (
     { leadContent?: string | null, id?: string | null, slug: string, title: string, lastPublishedAt?: any | null }
