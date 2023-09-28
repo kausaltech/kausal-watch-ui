@@ -1,7 +1,6 @@
 import React from 'react';
 import { Container, Row, Col, ColProps } from 'reactstrap';
 import { usePlan } from 'context/plan';
-import CategoryMetaBar from 'components/actions/CategoryMetaBar';
 import { attributeHasValue } from 'components/common/AttributesBlock';
 import { useTheme } from 'common/theme';
 import {
@@ -13,6 +12,8 @@ import ActionAttribute from 'components/common/ActionAttribute';
 import CategoryListBlock from 'components/contentblocks/CategoryListBlock';
 import ExpandableFeedbackFormBlock from 'components/contentblocks/ExpandableFeedbackFormBlock';
 import StreamField from 'components/common/StreamField';
+import ActionStatusGraphsBlock from 'components/contentblocks/ActionStatusGraphsBlock';
+import { ChartType } from 'components/dashboard/ActionStatusGraphs';
 
 export type CategoryPage = { __typename: 'CategoryPage' } & NonNullable<
   GetPlanPageGeneralQuery['planPage']
@@ -20,10 +21,12 @@ export type CategoryPage = { __typename: 'CategoryPage' } & NonNullable<
 
 type OmitUnion<T, K extends keyof any> = T extends any ? Omit<T, K> : never;
 
-type OmitFields<T> = OmitUnion<
-  T,
-  'blockType' | 'field' | 'rawValue' | 'blocks'
->;
+type OmitFields<T> = OmitUnion<T, 'blockType' | 'field' | 'rawValue'>;
+
+enum ProgressBasis {
+  PHASE = 'implementation_phase',
+  STATUS = 'status',
+}
 
 interface WrapperProps {
   children: React.ReactNode;
@@ -135,10 +138,24 @@ export const CategoryPageStreamField = ({
         return null;
       }
 
+      /**
+       * CategoryPageProgressBlock contains a single dropdown allowing allows the editor to
+       * specify whether to visualise action progress by implementation phase or status.
+       */
+      const progressBasis = block.blocks[0]?.value || ProgressBasis.PHASE;
+
       return (
         <Wrapper withContainer={context === 'main'}>
           <Col xs={12} {...customColumnProps}>
-            <CategoryMetaBar category={page.category.id} />
+            <ActionStatusGraphsBlock
+              categoryId={page.category.id}
+              chart={ChartType.BAR}
+              shownDatasets={{
+                progress: progressBasis === ProgressBasis.STATUS,
+                phase: progressBasis === ProgressBasis.PHASE,
+              }}
+              columnProps={{ md: 12, lg: 12, xl: 12 }}
+            />
           </Col>
         </Wrapper>
       );

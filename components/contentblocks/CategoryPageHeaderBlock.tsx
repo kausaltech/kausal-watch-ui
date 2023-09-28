@@ -6,7 +6,6 @@ import { Theme } from '@kausal/themes/types';
 import PlanContext, { usePlan } from 'context/plan';
 import { Link } from 'common/links';
 import { useTranslation } from 'common/i18n';
-import CategoryMetaBar from 'components/actions/CategoryMetaBar';
 import AttributesBlock, { Attributes } from 'components/common/AttributesBlock';
 import { useTheme } from 'common/theme';
 import {
@@ -17,6 +16,8 @@ import {
 import CategoryPageStreamField, {
   CategoryPage,
 } from 'components/common/CategoryPageStreamField';
+import { ChartType } from 'components/dashboard/ActionStatusGraphs';
+import ActionStatusGraphsBlock from './ActionStatusGraphsBlock';
 
 export const GET_CATEGORY_ATTRIBUTE_TYPES = gql`
   query GetCategoryAttributeTypes($plan: ID!) {
@@ -240,7 +241,12 @@ const LegacyCategoryHeaderAttributes = ({
     <AttributesContainer>
       <AttributesBlock attributes={attributes} types={attributeTypes} />
       {plan.actionStatuses.length ? (
-        <CategoryMetaBar category={categoryId} />
+        <ActionStatusGraphsBlock
+          categoryId={categoryId}
+          chart={ChartType.BAR}
+          shownDatasets={{ progress: true }}
+          columnProps={{ md: 12, lg: 12, xl: 12 }}
+        />
       ) : null}
     </AttributesContainer>
   ) : null;

@@ -22,8 +22,9 @@ import {
   Action,
 } from 'common/__generated__/graphql';
 import type { ActionListAction } from './ActionList';
+import BarChart from 'components/common/BarChart';
 
-const StatusGraphs = styled.div`
+const StatusDonutsWrapper = styled.div`
   width: auto;
   margin: 0 auto;
   display: flex;
@@ -119,36 +120,68 @@ const getTimelinessData = (
   return aggregates;
 };
 
-interface ActionsStatusGraphsProps {
-  actions: ActionListAction[];
-  showUpdateStatus?: boolean;
+interface DatasetConfig {
+  phase?: boolean;
+  progress?: boolean;
+  timeliness?: boolean;
 }
 
-const ActionsStatusGraphs = (props: ActionsStatusGraphsProps) => {
-  const { actions, showUpdateStatus = true } = props;
+export enum ChartType {
+  BAR = 'BAR',
+  DONUT = 'DONUT',
+}
+
+const DEFAULT_DATASETS: DatasetConfig = {
+  phase: true,
+  progress: true,
+  timeliness: true,
+};
+
+export interface ActionsStatusGraphsProps {
+  actions: ActionListAction[];
+  chart?: ChartType;
+  shownDatasets?: DatasetConfig;
+}
+
+const ActionsStatusGraphs = ({
+  actions,
+  chart = ChartType.DONUT,
+  shownDatasets = DEFAULT_DATASETS,
+}: ActionsStatusGraphsProps) => {
   const theme = useTheme();
   const plan = useContext(PlanContext);
   const { t } = useTranslation(['common']);
 
-  const progressData = getStatusData(
-    actions,
-    plan.actionStatusSummaries,
-    theme
-  );
-  progressData.labels = progressData.labels.map(
-    (label) => label || t('unknown')
-  );
-  const timelinessData = getTimelinessData(actions, plan, theme);
+  const progressData =
+    shownDatasets.progress &&
+    getStatusData(actions, plan.actionStatusSummaries, theme, t('unknown'));
+
+  const timelinessData =
+    shownDatasets.timeliness && getTimelinessData(actions, plan, theme);
+
   const daysVisible = plan.actionTimelinessClasses.find(
     (c) => c.identifier === ActionTimelinessIdentifier.Acceptable
   )!.days;
-  let phaseData: Progress | undefined = undefined;
-  if (plan.actionImplementationPhases.length > 0) {
-    phaseData = getPhaseData(actions, plan, theme, t);
+
+  const phaseData =
+    shownDatasets.phase && plan.actionImplementationPhases.length > 0
+      ? getPhaseData(actions, plan, theme, t)
+      : undefined;
+
+  if (chart === ChartType.BAR) {
+    return (
+      <>
+        {progressData && (
+          <BarChart title={t('actions-status')} data={progressData} />
+        )}
+
+        {phaseData && <BarChart title={t('actions-phases')} data={phaseData} />}
+      </>
+    );
   }
 
   return (
-    <StatusGraphs>
+    <StatusDonutsWrapper>
       {phaseData && (
         <StatusDonut
           data={{ values: phaseData.values, labels: phaseData.labels }}
@@ -158,7 +191,8 @@ const ActionsStatusGraphs = (props: ActionsStatusGraphsProps) => {
           helpText={t('actions-phases-help')}
         />
       )}
-      {!plan.features.minimalStatuses && (
+
+      {!plan.features.minimalStatuses && progressData && (
         <StatusDonut
           data={{ values: progressData.values, labels: progressData.labels }}
           currentValue={progressData.total}
@@ -167,7 +201,8 @@ const ActionsStatusGraphs = (props: ActionsStatusGraphsProps) => {
           helpText={t('actions-status-help')}
         />
       )}
-      {showUpdateStatus && (
+
+      {timelinessData && (
         <StatusDonut
           data={{
             values: timelinessData.values,
@@ -179,12 +214,8 @@ const ActionsStatusGraphs = (props: ActionsStatusGraphsProps) => {
           helpText={t('actions-updated-help', { count: daysVisible })}
         />
       )}
-    </StatusGraphs>
+    </StatusDonutsWrapper>
   );
-};
-
-ActionsStatusGraphs.propTypes = {
-  actions: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default ActionsStatusGraphs;

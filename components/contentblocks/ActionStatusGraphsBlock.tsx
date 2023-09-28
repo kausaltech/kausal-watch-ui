@@ -8,12 +8,14 @@ import ErrorMessage from 'components/common/ErrorMessage';
 import PlanContext from 'context/plan';
 import { useTheme } from 'common/theme';
 import { useTranslation } from 'common/i18n';
-import ActionStatusGraphs from 'components/dashboard/ActionStatusGraphs';
+import ActionStatusGraphs, {
+  ActionsStatusGraphsProps,
+} from 'components/dashboard/ActionStatusGraphs';
 import { CommonContentBlockProps } from 'common/blocks.types';
 
 const GET_ACTION_LIST_FOR_GRAPHS = gql`
-  query GetActionListForGraphs($plan: ID!) {
-    planActions(plan: $plan) {
+  query GetActionListForGraphs($plan: ID!, $categoryId: ID) {
+    planActions(plan: $plan, category: $categoryId) {
       color
       statusSummary {
         identifier
@@ -29,7 +31,18 @@ const GET_ACTION_LIST_FOR_GRAPHS = gql`
   }
 `;
 
-const ActionStatusGraphsBlock = ({ id = '' }: CommonContentBlockProps) => {
+interface Props
+  extends CommonContentBlockProps,
+    Pick<ActionsStatusGraphsProps, 'chart' | 'shownDatasets'> {
+  categoryId?: string;
+}
+
+const ActionStatusGraphsBlock = ({
+  id = '',
+  categoryId,
+  columnProps,
+  ...graphsProps
+}: Props) => {
   const plan = useContext(PlanContext);
   const { t } = useTranslation();
   const theme = useTheme();
@@ -41,8 +54,10 @@ const ActionStatusGraphsBlock = ({ id = '' }: CommonContentBlockProps) => {
   const { loading, error, data } = useQuery(GET_ACTION_LIST_FOR_GRAPHS, {
     variables: {
       plan: plan.identifier,
+      categoryId,
     },
   });
+
   if (loading) return <ContentLoader />;
   if (error) return <ErrorMessage message={error.message} />;
   const { planActions } = data;
@@ -52,10 +67,19 @@ const ActionStatusGraphsBlock = ({ id = '' }: CommonContentBlockProps) => {
   return (
     <Container id={id}>
       <Row>
-        <Col xl={{ size: 8, offset: 2 }} lg={{ size: 10, offset: 1 }}>
+        <Col
+          xl={{ size: 8, offset: 2 }}
+          lg={{ size: 10, offset: 1 }}
+          {...columnProps}
+        >
           <ActionStatusGraphs
             actions={planActions}
-            showUpdateStatus={showUpdateStatus}
+            shownDatasets={{
+              phase: true,
+              progress: true,
+              timeliness: showUpdateStatus,
+            }}
+            {...graphsProps}
           />
         </Col>
       </Row>

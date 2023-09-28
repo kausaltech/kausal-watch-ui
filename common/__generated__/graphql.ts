@@ -3358,6 +3358,7 @@ export type QueryPlanIndicatorsArgs = {
 export type QueryPlanOrganizationsArgs = {
   forContactPersons?: InputMaybe<Scalars['Boolean']>;
   forResponsibleParties?: InputMaybe<Scalars['Boolean']>;
+  includeRelatedPlans?: InputMaybe<Scalars['Boolean']>;
   plan?: InputMaybe<Scalars['ID']>;
   withAncestors?: InputMaybe<Scalars['Boolean']>;
 };
@@ -6448,38 +6449,6 @@ export type GetActionListQuery = (
   & { __typename?: 'Query' }
 );
 
-export type GetActionStatusesQueryVariables = Exact<{
-  plan: Scalars['ID'];
-  actionCategory?: InputMaybe<Scalars['ID']>;
-}>;
-
-
-export type GetActionStatusesQuery = (
-  { planActions?: Array<(
-    { id: string, identifier: string, color?: string | null, plan: (
-      { id: string }
-      & { __typename?: 'Plan' }
-    ), status?: (
-      { id: string, identifier: string, name: string }
-      & { __typename?: 'ActionStatus' }
-    ) | null, statusSummary: (
-      { identifier: ActionStatusSummaryIdentifier }
-      & { __typename?: 'ActionStatusSummary' }
-    ), implementationPhase?: (
-      { id: string, identifier: string, name: string }
-      & { __typename?: 'ActionImplementationPhase' }
-    ) | null, mergedWith?: (
-      { id: string, identifier: string, plan: (
-        { id: string, shortName?: string | null, viewUrl?: string | null }
-        & { __typename?: 'Plan' }
-      ) }
-      & { __typename?: 'Action' }
-    ) | null }
-    & { __typename?: 'Action' }
-  )> | null }
-  & { __typename?: 'Query' }
-);
-
 export type CategoryFieldsFragmentFragment = (
   { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, iconImage?: (
     { rendition?: (
@@ -7647,6 +7616,7 @@ export type GetActionListForBlockQuery = (
 
 export type GetActionListForGraphsQueryVariables = Exact<{
   plan: Scalars['ID'];
+  categoryId?: InputMaybe<Scalars['ID']>;
 }>;
 
 
@@ -8457,8 +8427,8 @@ export type IndicatorDetailsQuery = (
       & { __typename?: 'Organization' }
     ), categories: Array<(
       { identifier: string, name: string, id: string, type: (
-        { identifier: string, name: string, id: string, levels: Array<(
-          { id: string, name: string }
+        { id: string, name: string, identifier: string, helpText: string, hideCategoryIdentifiers: boolean, levels: Array<(
+          { id: string, order: number, name: string, namePlural?: string | null }
           & { __typename?: 'CategoryLevel' }
         )> }
         & { __typename?: 'CategoryType' }

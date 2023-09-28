@@ -2,9 +2,6 @@ import { cloneDeep } from 'lodash';
 
 import { ActionListAction } from '../components/dashboard/ActionList';
 import {
-  Action,
-  ActionStatus,
-  ActionImplementationPhase,
   Plan,
   Sentiment,
   ActionStatusSummary,
@@ -71,7 +68,8 @@ const cleanActionStatus = (action, actionStatuses) => {
 const getStatusData = (
   actions: ActionListAction[],
   actionStatusSummaries: ActionStatusSummary[],
-  theme: Theme
+  theme: Theme,
+  unknownLabelText: string = ''
 ) => {
   const progress: Progress = {
     values: [],
@@ -94,7 +92,7 @@ const getStatusData = (
     const statusCount = counts.get(identifier) ?? 0;
     if (statusCount > 0) {
       progress.values.push(statusCount);
-      progress.labels.push(label);
+      progress.labels.push(label || unknownLabelText);
       progress.colors.push(theme.graphColors[color]);
       if (sentiment == Sentiment.Positive) {
         progress.good = progress.good + statusCount;
