@@ -23,6 +23,11 @@ type OmitUnion<T, K extends keyof any> = T extends any ? Omit<T, K> : never;
 
 type OmitFields<T> = OmitUnion<T, 'blockType' | 'field' | 'rawValue'>;
 
+enum ProgressBasis {
+  PHASE = 'implementation_phase',
+  STATUS = 'status',
+}
+
 interface WrapperProps {
   children: React.ReactNode;
   withContainer?: boolean;
@@ -133,8 +138,11 @@ export const CategoryPageStreamField = ({
         return null;
       }
 
-      // The editor specifies whether to visualise action progress by implementation phase or status
-      const progressDataset = block.blocks[0].value || 'implementation_phase';
+      /**
+       * CategoryPageProgressBlock contains a single dropdown allowing allows the editor to
+       * specify whether to visualise action progress by implementation phase or status.
+       */
+      const progressBasis = block.blocks[0]?.value || ProgressBasis.PHASE;
 
       return (
         <Wrapper withContainer={context === 'main'}>
@@ -143,8 +151,8 @@ export const CategoryPageStreamField = ({
               categoryId={page.category.id}
               chart={ChartType.BAR}
               shownDatasets={{
-                progress: progressDataset !== 'implementation_phase', // TODO get proper types
-                phase: progressDataset === 'implementation_phase',
+                progress: progressBasis === ProgressBasis.STATUS,
+                phase: progressBasis === ProgressBasis.PHASE,
               }}
               columnProps={{ md: 12, lg: 12, xl: 12 }}
             />
