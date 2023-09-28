@@ -9448,7 +9448,7 @@ export type PlanContextFragment = (
 
 export type TemplatedCategoryPageFragmentFragment = (
   { layout?: (
-    { layoutMainTop?: Array<(
+    { iconSize?: string | null, layoutMainTop?: Array<(
       { attributeType: (
         { identifier: string }
         & { __typename?: 'AttributeType' }
@@ -10384,7 +10384,7 @@ export type GetPlanPageGeneralQuery = (
       ) | null> | null }
       & { __typename?: 'QuestionAnswerBlock' }
     ) | null> | null, layout?: (
-      { layoutMainTop?: Array<(
+      { iconSize?: string | null, layoutMainTop?: Array<(
         { attributeType: (
           { identifier: string }
           & { __typename?: 'AttributeType' }
