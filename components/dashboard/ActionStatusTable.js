@@ -5,7 +5,11 @@ import styled from 'styled-components';
 import { transparentize } from 'polished';
 import { usePopper } from 'react-popper';
 import { useTheme } from 'common/theme';
-import { getActionTermContext, useTranslation } from 'common/i18n';
+import {
+  getActionTaskTermContext,
+  getActionTermContext,
+  useTranslation,
+} from 'common/i18n';
 import Icon from 'components/common/Icon';
 import { actionStatusOrder } from 'common/data/actions';
 import ActionTableRow from 'components/dashboard/ActionTableRow';
@@ -307,7 +311,9 @@ const ActionStatusTable = (props) => {
               >
                 {columnLabel.implementationPhase}
               </SortableTableHeader>
-              <th>{t('actions:action-tasks')}</th>
+              <th>
+                {t('actions:action-tasks', getActionTaskTermContext(plan))}
+              </th>
               {showColumn.responsibles && (
                 <th>{t('actions:action-responsibles-short')}</th>
               )}

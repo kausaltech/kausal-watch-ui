@@ -1,4 +1,8 @@
-import { getActionTermContext, useTranslation } from 'common/i18n';
+import {
+  getActionTaskTermContext,
+  getActionTermContext,
+  useTranslation,
+} from 'common/i18n';
 import { cleanActionStatus } from 'common/preprocess';
 import { usePlan } from 'context/plan';
 import {
@@ -37,12 +41,28 @@ async function exportActions(
     },
     { header: t('actions:action-last-updated'), key: 'lastUpdated', width: 15 },
     // TODO: i18n
-    { header: t('actions:tasks-on-time'), key: 'ontimeTasks', width: 10 },
+    {
+      header: t('actions:tasks-on-time', getActionTaskTermContext(plan)),
+      key: 'ontimeTasks',
+      width: 10,
+    },
     // TODO: i18n
-    { header: t('actions:tasks-late'), key: 'lateTasks', width: 10 },
+    {
+      header: t('actions:tasks-late', getActionTaskTermContext(plan)),
+      key: 'lateTasks',
+      width: 10,
+    },
     // TODO: i18n
-    { header: t('actions:tasks-completed'), key: 'completedTasks', width: 10 },
-    { header: t('actions:action-tasks'), key: 'tasks', width: 10 },
+    {
+      header: t('actions:tasks-completed', getActionTaskTermContext(plan)),
+      key: 'completedTasks',
+      width: 10,
+    },
+    {
+      header: t('actions:action-tasks', getActionTaskTermContext(plan)),
+      key: 'tasks',
+      width: 10,
+    },
     // TODO: i18n
     {
       header: t('actions:responsible-organizations-primary'),

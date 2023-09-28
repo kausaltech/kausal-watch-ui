@@ -3,7 +3,11 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { useTheme } from 'common/theme';
 import dayjs from 'common/dayjs';
-import { getActionTermContext, useTranslation } from 'common/i18n';
+import {
+  getActionTaskTermContext,
+  getActionTermContext,
+  useTranslation,
+} from 'common/i18n';
 import StatusBadge from 'components/common/StatusBadge';
 import ActionImpact from 'components/actions/ActionImpact';
 import ActionPhase from 'components/actions/ActionPhase';
@@ -125,7 +129,7 @@ const IndicatorsDisplay = styled.div`
   padding: ${(props) => props.theme.spaces.s050};
 `;
 
-const getTaskCounts = (tasks, t) => {
+const getTaskCounts = (tasks, plan, t) => {
   let tasksCount = tasks.length;
   let ontimeTasks = 0;
   let lateTasks = 0;
@@ -152,8 +156,11 @@ const getTaskCounts = (tasks, t) => {
 
   const displayTasksCount =
     tasksCount === 0
-      ? t('actions:action-no-tasks')
-      : `${tasksCount} ${t('actions:action-tasks-count')}`;
+      ? t('actions:action-no-tasks', getActionTaskTermContext(plan))
+      : `${tasksCount} ${t(
+          'actions:action-tasks-count',
+          getActionTaskTermContext(plan)
+        )}`;
 
   return {
     total: tasksCount,
@@ -166,8 +173,8 @@ const getTaskCounts = (tasks, t) => {
 
 const TasksStatusBar = (props) => {
   const { t } = useTranslation(['common', 'actions']);
-  const { tasks } = props;
-  const taskCounts = getTaskCounts(tasks, t);
+  const { tasks, plan } = props;
+  const taskCounts = getTaskCounts(tasks, plan, t);
 
   return (
     <>
@@ -367,16 +374,19 @@ const ActionTableRow = React.memo(function ActionTableRow(props) {
         <div
           role="button"
           onMouseEnter={(e) =>
-            showTooltip(e, tasksTooltipContent(t, getTaskCounts(item.tasks, t)))
+            showTooltip(
+              e,
+              tasksTooltipContent(plan, t, getTaskCounts(item.tasks, plan, t))
+            )
           }
           onMouseLeave={(e) => hideTooltip(e)}
           aria-describedby={`tasks-${item.identifier}`}
         >
-          <TasksStatusBar tasks={item.tasks} />
+          <TasksStatusBar tasks={item.tasks} plan={plan} />
         </div>
         {/* Content for screenreaders */}
         <div hidden id={`tasks-${item.identifier}`}>
-          {tasksTooltipContent(t, getTaskCounts(item.tasks, t))}
+          {tasksTooltipContent(plan, t, getTaskCounts(item.tasks, plan, t))}
         </div>
       </td>
       {hasResponsibles && (

@@ -442,7 +442,6 @@ export type ActionIndicator = {
   indicator: Indicator;
 };
 
-/** An enumeration. */
 export enum ActionIndicatorEffectType {
   /** decreases */
   Decreases = 'DECREASES',
@@ -679,7 +678,6 @@ export type ActionResponsiblePartyReporteportValue = ReportValueInterface & {
   responsibleParty?: Maybe<ActionResponsibleParty>;
 };
 
-/** An enumeration. */
 export enum ActionResponsiblePartyRole {
   /** Collaborator */
   Collaborator = 'COLLABORATOR',
@@ -761,7 +759,6 @@ export type ActionStatusSummary = {
   sentiment: Sentiment;
 };
 
-/** An enumeration. */
 export enum ActionStatusSummaryIdentifier {
   Cancelled = 'CANCELLED',
   Completed = 'COMPLETED',
@@ -830,7 +827,6 @@ export type ActionTask = {
   state: ActionTaskState;
 };
 
-/** An enumeration. */
 export enum ActionTaskState {
   /** cancelled */
   Cancelled = 'CANCELLED',
@@ -861,7 +857,6 @@ export type ActionTimeliness = {
   sentiment: Sentiment;
 };
 
-/** An enumeration. */
 export enum ActionTimelinessIdentifier {
   Acceptable = 'ACCEPTABLE',
   Late = 'LATE',
@@ -1076,7 +1071,6 @@ export type AttributeTypeChoiceOption = {
   name: Scalars['String'];
 };
 
-/** An enumeration. */
 export enum AttributeTypeFormat {
   /** Category */
   CategoryChoice = 'CATEGORY_CHOICE',
@@ -1146,7 +1140,6 @@ export type CartographyProviderCredentials = {
   publicAccessToken: Scalars['String'];
 };
 
-/** An enumeration. */
 export enum CartographyProviderCredentialsProvider {
   /** MapBox */
   Mapbox = 'MAPBOX'
@@ -1555,7 +1548,6 @@ export type CategoryTypePageLevelLayout = {
   layoutMainTop?: Maybe<Array<CategoryPageMainTopBlock>>;
 };
 
-/** An enumeration. */
 export enum CategoryTypeSelectWidget {
   /** Multiple */
   Multiple = 'MULTIPLE',
@@ -1659,7 +1651,6 @@ export type CommonIndicatorNormalization = {
   unit?: Maybe<Unit>;
 };
 
-/** An enumeration. */
 export enum Comparison {
   Gt = 'GT',
   Lte = 'LTE'
@@ -2211,7 +2202,6 @@ export type IndicatorLevel = {
   plan: Plan;
 };
 
-/** An enumeration. */
 export enum IndicatorLevelLevel {
   /** operational */
   Operational = 'OPERATIONAL',
@@ -2333,7 +2323,6 @@ export type IndicatorShowcaseBlock = StreamFieldInterface & {
   title?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum IndicatorTimeResolution {
   /** day */
   Day = 'DAY',
@@ -3017,7 +3006,6 @@ export type PlanFeatures = {
   showAdminLink: Scalars['Boolean'];
 };
 
-/** An enumeration. */
 export enum PlanFeaturesContactPersonsPublicData {
   /** Show all information */
   All = 'ALL',
@@ -3261,7 +3249,6 @@ export type PrivacyPolicyPageSiblingsArgs = {
   searchQuery?: InputMaybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum PublicationStatus {
   Published = 'PUBLISHED',
   Scheduled = 'SCHEDULED',
@@ -3442,7 +3429,6 @@ export type RelatedCommonIndicator = {
   id: Scalars['ID'];
 };
 
-/** An enumeration. */
 export enum RelatedCommonIndicatorEffectType {
   /** decreases */
   Decreases = 'DECREASES',
@@ -3464,7 +3450,6 @@ export type RelatedIndicator = {
   id: Scalars['ID'];
 };
 
-/** An enumeration. */
 export enum RelatedIndicatorConfidenceLevel {
   /** high */
   High = 'HIGH',
@@ -3474,7 +3459,6 @@ export enum RelatedIndicatorConfidenceLevel {
   Medium = 'MEDIUM'
 }
 
-/** An enumeration. */
 export enum RelatedIndicatorEffectType {
   /** decreases */
   Decreases = 'DECREASES',
@@ -3623,7 +3607,6 @@ export type SearchResults = {
   hits?: Maybe<Array<Maybe<SearchHit>>>;
 };
 
-/** An enumeration. */
 export enum Sentiment {
   Negative = 'NEGATIVE',
   Neutral = 'NEUTRAL',
@@ -3632,6 +3615,7 @@ export enum Sentiment {
 
 export type SiteGeneralContent = {
   __typename?: 'SiteGeneralContent';
+  actionTaskTerm: SiteGeneralContentActionTaskTerm;
   actionTerm: SiteGeneralContentActionTerm;
   copyrightText: Scalars['String'];
   /** If the site is under a Creative Commons license, which CC license it is */
@@ -3647,7 +3631,13 @@ export type SiteGeneralContent = {
   siteTitle: Scalars['String'];
 };
 
-/** An enumeration. */
+export enum SiteGeneralContentActionTaskTerm {
+  /** Milestone */
+  Milestone = 'MILESTONE',
+  /** Task */
+  Task = 'TASK'
+}
+
 export enum SiteGeneralContentActionTerm {
   /** Action */
   Action = 'ACTION',
@@ -3988,7 +3978,6 @@ export type UserFeedbackNode = {
   url: Scalars['String'];
 };
 
-/** An enumeration. */
 export enum UserFeedbackType {
   /** Accessibility */
   Accessibility = 'ACCESSIBILITY',
@@ -9109,7 +9098,7 @@ export type GetPlanContextQuery = (
       { id: string }
       & { __typename?: 'Organization' }
     ) | null>, generalContent: (
-      { id: string, siteTitle: string, siteDescription: string, officialNameDescription: string, copyrightText: string, creativeCommonsLicense: string, ownerUrl: string, ownerName: string, actionTerm: SiteGeneralContentActionTerm }
+      { id: string, siteTitle: string, siteDescription: string, officialNameDescription: string, copyrightText: string, creativeCommonsLicense: string, ownerUrl: string, ownerName: string, actionTerm: SiteGeneralContentActionTerm, actionTaskTerm: SiteGeneralContentActionTaskTerm }
       & { __typename?: 'SiteGeneralContent' }
     ), mainMenu?: (
       { items: Array<(
@@ -9290,7 +9279,7 @@ export type PlanContextFragment = (
     { id: string }
     & { __typename?: 'Organization' }
   ) | null>, generalContent: (
-    { id: string, siteTitle: string, siteDescription: string, officialNameDescription: string, copyrightText: string, creativeCommonsLicense: string, ownerUrl: string, ownerName: string, actionTerm: SiteGeneralContentActionTerm }
+    { id: string, siteTitle: string, siteDescription: string, officialNameDescription: string, copyrightText: string, creativeCommonsLicense: string, ownerUrl: string, ownerName: string, actionTerm: SiteGeneralContentActionTerm, actionTaskTerm: SiteGeneralContentActionTaskTerm }
     & { __typename?: 'SiteGeneralContent' }
   ), mainMenu?: (
     { items: Array<(

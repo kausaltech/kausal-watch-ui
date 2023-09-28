@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import dayjs from 'common/dayjs';
-import { getActionTermContext } from 'common/i18n';
+import { getActionTaskTermContext, getActionTermContext } from 'common/i18n';
 import Icon from 'components/common/Icon';
 
 const ResponsibleTooltipList = styled.ul`
@@ -31,33 +31,37 @@ export const primaryOrgTooltipContent = (t, primaryOrg) => (
   </div>
 );
 
-export const tasksTooltipContent = (t, taskCounts) => {
+export const tasksTooltipContent = (plan, t, taskCounts) => {
   if (taskCounts.total < 1)
     return (
       <div>
-        <h5>{t('actions:action-no-tasks')}</h5>
+        <h5>{t('actions:action-no-tasks', getActionTaskTermContext(plan))}</h5>
       </div>
     );
   return (
     <TaskTooltip>
-      <h5>{t('actions:action-tasks')} </h5>
+      <h5>{t('actions:action-tasks', getActionTaskTermContext(plan))} </h5>
       <table>
         <tbody>
           {taskCounts.completed > 0 && (
             <tr>
-              <td>{t('actions:tasks-completed')}</td>
+              <td>
+                {t('actions:tasks-completed', getActionTaskTermContext(plan))}
+              </td>
               <td>{taskCounts.completed}</td>
             </tr>
           )}
           {taskCounts.late > 0 && (
             <tr>
-              <td>{t('actions:tasks-late')}</td>
+              <td>{t('actions:tasks-late', getActionTaskTermContext(plan))}</td>
               <td>{taskCounts.late}</td>
             </tr>
           )}
           {taskCounts.onTime > 0 && (
             <tr>
-              <td>{t('actions:tasks-on-time')}</td>
+              <td>
+                {t('actions:tasks-on-time', getActionTaskTermContext(plan))}
+              </td>
               <td>{taskCounts.onTime}</td>
             </tr>
           )}
