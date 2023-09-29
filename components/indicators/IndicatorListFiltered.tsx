@@ -536,7 +536,7 @@ const IndicatorListFiltered = (props) => {
                   const indicatorType =
                     item.level === 'action'
                       ? t('action', getActionTermContext(plan))
-                      : t(item.level);
+                      : t(`${item.level}-indicator`);
                   let [normalizedValue, normalizedUnit] = [null, null];
                   // We currently support only one normalizer, the population indicator
                   const normalizations = item.common?.normalizations;

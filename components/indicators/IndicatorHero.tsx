@@ -158,7 +158,7 @@ function IndicatorHero(props: IndicatorHeroProps) {
     indicator.level === 'action'
       ? t('action', getActionTermContext(plan))
       : indicator.level != null
-      ? t(indicator.level)
+      ? t(`${indicator.level}-indicator`)
       : null;
 
   return (

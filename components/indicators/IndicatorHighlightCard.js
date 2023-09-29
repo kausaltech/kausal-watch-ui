@@ -102,7 +102,9 @@ function IndicatorHighlightCard(props) {
 
   // FIXME: It sucks that we only use the context for the translation key 'action'
   const indicatorType =
-    level === 'action' ? t('action', getActionTermContext(plan)) : t(level);
+    level === 'action'
+      ? t('action', getActionTermContext(plan))
+      : t(`${level}-indicator`);
 
   return (
     <StyledCard>
