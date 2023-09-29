@@ -1045,6 +1045,24 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
           };
           filters.push(new GenericSelectFilter(phaseOpts));
           break;
+        case 'ActionStatusFilterBlock':
+          if (!plan.actionStatuses.length) break;
+          const statusOpts = {
+            id: 'status',
+            options: plan.actionStatuses.map((obj) => ({
+              id: obj.id,
+              label: obj.name,
+            })),
+            label: t('filter-status'),
+            helpText: t('filter-status-help', ''),
+            showAllLabel: t('filter-all-statuses'),
+            filterAction: (val: string, act: ActionListAction) => {
+              if (act.status?.id === val) return true;
+              return false;
+            },
+          };
+          filters.push(new GenericSelectFilter(statusOpts));
+          break;
         case 'PrimaryOrganizationFilterBlock':
           const primaryOrgOpts = {
             id: 'primary_org',
