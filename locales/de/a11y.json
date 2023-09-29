@@ -21,8 +21,8 @@
     "prepared-on": "Diese Erklärung wurde erstellt am",
     "prepared-how": "Die Barrierefreiheit wurde von Kausal selbst bewertet.",
     "reviewed-on": "Die Erklärung wurde zuletzt überprüft am",
-    "feedback-contact": "Feedback und Kontaktinformationen",
-    "feedback-text": "Wir arbeiten ständig an einer besseren Barrierefreiheit für diesen Dienst. Ist Ihnen noch etwas aufgefallen, das wir bei der Barrierefreiheit verbessern können? Bitte senden Sie uns eine E-Mail an",
+    "a11y-feedback-contact": "Feedback und Kontaktinformationen",
+    "a11y-feedback-text": "Wir arbeiten ständig an einer besseren Barrierefreiheit für diesen Dienst. Ist Ihnen noch etwas aufgefallen, das wir bei der Barrierefreiheit verbessern können? Bitte senden Sie uns eine E-Mail an",
     "response-time": "und wir werden innerhalb von 14 Tagen antworten.",
     "enforcement-procedure": "Durchsetzungsverfahren",
     "enforcement-contact": "Kontaktdaten der Durchsetzungsstelle",
@@ -34,7 +34,7 @@
     "enforcement-body-email": "saavutettavuus@avi.fi",
     "enforcement-body-tel": "Telefon +358 295 016 000",
     "responsible-for-maintenance": "Dieser Dienst wird von {{responsibleBody}} bereitgestellt.",
-    "feedback-heading": "Feedback zur Barrierefreiheit",
-    "feedback-description": "Wir arbeiten ständig an einer besseren Barrierefreiheit für diesen Dienst. Ist Ihnen noch etwas aufgefallen, das wir bei der Barrierefreiheit verbessern können?",
-    "feedback-prompt": "Bitte teilen Sie uns dies mit, indem Sie dieses Formular ausfüllen und absenden. Wir werden innerhalb von 14 Tagen antworten."
+    "a11y-feedback-heading": "Feedback zur Barrierefreiheit",
+    "a11y-feedback-description": "Wir arbeiten ständig an einer besseren Barrierefreiheit für diesen Dienst. Ist Ihnen noch etwas aufgefallen, das wir bei der Barrierefreiheit verbessern können?",
+    "a11y-feedback-prompt": "Bitte teilen Sie uns dies mit, indem Sie dieses Formular ausfüllen und absenden. Wir werden innerhalb von 14 Tagen antworten."
 }

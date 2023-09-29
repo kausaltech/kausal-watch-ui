@@ -21,8 +21,8 @@
     "prepared-on": "This statement was prepared on",
     "prepared-how": "Accessibility has been self-assessed by Kausal.",
     "reviewed-on": "The statement was last reviewed on",
-    "feedback-contact": "Feedback and contact information",
-    "feedback-text": "We are constantly working towards better accessibility experience on this service. Did you notice something else we can improve in accessibility? Please send us email at",
+    "a11y-feedback-contact": "Feedback and contact information",
+    "a11y-feedback-text": "We are constantly working towards better accessibility experience on this service. Did you notice something else we can improve in accessibility? Please send us email at",
     "response-time": "and we will respond within 14 days.",
     "enforcement-procedure": "Enforcement procedure",
     "enforcement-contact": "Contact information of the enforcement body",
@@ -34,7 +34,7 @@
     "enforcement-body-email": "saavutettavuus@avi.fi",
     "enforcement-body-tel": "Telephone 0295 016 000",
     "responsible-for-maintenance": "This service is published by {{responsibleBody}}.",
-    "feedback-prompt": "Vänligen meddela oss genom att fylla i och skicka detta formulär. Vi kommer att svara inom 14 dagar.",
-    "feedback-heading": "Feedback om tillgänglighet",
-    "feedback-description": "Vi arbetar ständigt för att förbättra tillgänglighetsupplevelsen i den här tjänsten. Har du lagt märke till något som vi kan förbättra när det gäller tillgänglighet?"
+    "a11y-feedback-prompt": "Vänligen meddela oss genom att fylla i och skicka detta formulär. Vi kommer att svara inom 14 dagar.",
+    "a11y-feedback-heading": "Feedback om tillgänglighet",
+    "a11y-feedback-description": "Vi arbetar ständigt för att förbättra tillgänglighetsupplevelsen i den här tjänsten. Har du lagt märke till något som vi kan förbättra när det gäller tillgänglighet?"
 }

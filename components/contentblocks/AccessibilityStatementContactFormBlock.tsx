@@ -23,9 +23,9 @@ const AccessibilityStatementContactFormBlock = ({
           <FeedbackForm
             planIdentifier={plan.identifier}
             formContext="accessibility"
-            heading={t('a11y:feedback-heading')}
-            description={t('a11y:feedback-description')}
-            prompt={t('a11y:feedback-prompt')}
+            heading={t('a11y:a11y-feedback-heading')}
+            description={t('a11y:a11y-feedback-description')}
+            prompt={t('a11y:a11y-feedback-prompt')}
           />
         </Col>
       </Row>

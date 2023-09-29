@@ -21,8 +21,8 @@
   "prepared-on": "Denne redegørelse er udarbejdet på",
   "prepared-how": "Den tekniske tilgængelighed er blevet selvvurderet af Kausal.",
   "reviewed-on": "Udtalelsen blev sidst gennemgået",
-  "feedback-contact": "Feedback og kontaktoplysninger",
-  "feedback-text": "Vi arbejder konstant på en bedre tilgængelighedsoplevelse på denne service. Har du bemærket noget andet vi kan forbedre i tilgængelighed? Send os venligst en e-mail på",
+  "a11y-feedback-contact": "Feedback og kontaktoplysninger",
+  "a11y-feedback-text": "Vi arbejder konstant på en bedre tilgængelighedsoplevelse på denne service. Har du bemærket noget andet vi kan forbedre i tilgængelighed? Send os venligst en e-mail på",
   "response-time": "og vi svarer inden for 14 dage.",
   "enforcement-procedure": "Fuldbyrdelsesprocedure",
   "enforcement-contact": "Håndhævelsesorganets kontaktoplysninger",
@@ -34,7 +34,7 @@
   "enforcement-body-email": "saavutettavuus@avi.fi",
   "enforcement-body-tel": "Telefon 0295 016 000",
   "responsible-for-maintenance": "Denne tjeneste er udgivet af {{responsibleBody}}.",
-  "feedback-heading": "Tilgængelighedsfeedback",
-  "feedback-description": "Vi arbejder hele tiden mod en bedre tilgængelighedsoplevelse af denne tjeneste. Har du bemærket noget, vi kan forbedre i tilgængeligheden?",
-  "feedback-prompt": "Fortæl os det ved at udfylde og sende denne formular. Vi svarer inden for 14 dage."
+  "a11y-feedback-heading": "Tilgængelighedsfeedback",
+  "a11y-feedback-description": "Vi arbejder hele tiden mod en bedre tilgængelighedsoplevelse af denne tjeneste. Har du bemærket noget, vi kan forbedre i tilgængeligheden?",
+  "a11y-feedback-prompt": "Fortæl os det ved at udfylde og sende denne formular. Vi svarer inden for 14 dage."
 }

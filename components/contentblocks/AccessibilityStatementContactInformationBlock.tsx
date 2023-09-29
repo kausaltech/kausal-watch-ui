@@ -33,13 +33,13 @@ const AccessibilityStatementContactInformationBlock = ({
           lg={{ size: 8, offset: 2 }}
           md={{ size: 10, offset: 1 }}
         >
-          <h2>{t('a11y:feedback-contact')}</h2>
+          <h2>{t('a11y:a11y-feedback-contact')}</h2>
           <p>
             {customParagraph ||
               t('a11y:responsible-for-maintenance', { responsibleBody })}
           </p>
           <p>
-            {t('a11y:feedback-text')}{' '}
+            {t('a11y:a11y-feedback-text')}{' '}
             <a href={`mailto:${accessibilityContactEmail}`}>
               {accessibilityContactEmail}
             </a>{' '}

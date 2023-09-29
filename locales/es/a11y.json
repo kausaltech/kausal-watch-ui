@@ -21,8 +21,8 @@
   "prepared-on": "Esta declaración se preparó el",
   "prepared-how": "La accesibilidad técnica ha sido autoevaluada por Kausal.",
   "reviewed-on": "La declaración fue revisada por última vez el",
-  "feedback-contact": "Comentarios e información de contacto",
-  "feedback-text": "Trabajamos constantemente para mejorar la experiencia de accesibilidad en este servicio. ¿Ha notado algo más que podamos mejorar en materia de accesibilidad? Envíenos un correo electrónico a",
+  "a11y-feedback-contact": "Comentarios e información de contacto",
+  "a11y-feedback-text": "Trabajamos constantemente para mejorar la experiencia de accesibilidad en este servicio. ¿Ha notado algo más que podamos mejorar en materia de accesibilidad? Envíenos un correo electrónico a",
   "response-time": "y le responderemos en un plazo de 14 días.",
   "enforcement-procedure": "Procedimiento de ejecución",
   "enforcement-contact": "Información de contacto del organismo de ejecución",
@@ -34,7 +34,7 @@
   "enforcement-body-email": "saavutettavuus@avi.fi",
   "enforcement-body-tel": "Teléfono 0295 016 000",
   "responsible-for-maintenance": "Este servicio es publicado por {{responsibleBody}}.",
-  "feedback-heading": "Comentarios sobre accesibilidad",
-  "feedback-description": "Trabajamos constantemente para mejorar la experiencia de accesibilidad en este servicio. ¿Ha observado algo que podamos mejorar en materia de accesibilidad?",
-  "feedback-prompt": "Por favor, háganoslo saber rellenando y enviando este formulario. Le responderemos en un plazo de 14 días."
+  "a11y-feedback-heading": "Comentarios sobre accesibilidad",
+  "a11y-feedback-description": "Trabajamos constantemente para mejorar la experiencia de accesibilidad en este servicio. ¿Ha observado algo que podamos mejorar en materia de accesibilidad?",
+  "a11y-feedback-prompt": "Por favor, háganoslo saber rellenando y enviando este formulario. Le responderemos en un plazo de 14 días."
 }
