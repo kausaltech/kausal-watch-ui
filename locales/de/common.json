@@ -189,5 +189,16 @@
     "version-switch-to-active": "Neueste Version",
     "versions-list": "Alle Versionen",
     "version-history": "Versionsverlauf",
-    "version-this-is-old": "Dies ist eine alte Version"
+    "version-this-is-old": "Dies ist eine alte Version",
+    "filter-all-statuses": "Alle Status",
+    "filter-result-actions_CASE_STUDY": "Fallstudien",
+    "filter-status": "Status",
+    "see-all-actions_CASE_STUDY": "Alle Fallstudien anzeigen",
+    "actions_CASE_STUDY": "Fallstudien",
+    "indicator-related-actions_CASE_STUDY": "Fallstudien, die sich auf diesen Indikator auswirken",
+    "recently-updated-actions_CASE_STUDY": "Kürzlich aktualisierte Fallstudien",
+    "filter-status-help": "Zeige Maßnahmen mit ausgewähltem Status",
+    "action_CASE_STUDY": "Fallstudie",
+    "error-loading-actions_CASE_STUDY": "Fehler beim Laden der Fallstudienliste",
+    "impact-group-no-actions_CASE_STUDY": "Keine definierten Fallstudien."
 }
