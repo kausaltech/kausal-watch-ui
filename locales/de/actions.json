@@ -73,5 +73,12 @@
     "action-task-hide-comment": "Informationen ausblenden",
     "feedback-on-action": "Geben Sie Feedback zu dieser Maßnahme",
     "feedback-on-action-description": "Sie können einen Kommentar oder Feedback zu dieser Maßnahme hinterlassen",
-    "action-draft": "Entwurf"
+    "action-draft": "Entwurf",
+    "action-next_CASE_STUDY": "Nächste Fallstudie",
+    "action-merged_CASE_STUDY": "Zusammengeführte Fallstudien",
+    "action-name-title_CASE_STUDY": "Titel der Fallstudie",
+    "action-not-found_CASE_STUDY": "Fallstudie nicht gefunden",
+    "action-previous_CASE_STUDY": "Vorherige Fallstudie",
+    "action-status-merged_CASE_STUDY": "Zusammengeführt mit Fallstudie",
+    "action-what-effect-this-has_CASE_STUDY": "Wie diese Fallstudie zum Ergebnis beiträgt"
 }
