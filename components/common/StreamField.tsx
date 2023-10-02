@@ -276,6 +276,11 @@ const STREAM_FIELD_FRAGMENT = gql`
   ${CategoryListBlock.fragments.category}
 `;
 
+enum EmbedProvider {
+  YOUTUBE = 'YouTube',
+  PLOTLY = 'Plotly Chart Studio',
+}
+
 const ResponsiveStyles = styled.div`
   .responsive-object {
     width: 100%;
@@ -289,19 +294,46 @@ const ResponsiveStyles = styled.div`
     height: 100%;
   }
 
-  .responsive-object-small iframe {
-    aspect-ratio: 16 / 9;
-    max-width: 300px;
+  .responsive-object-small {
+    &.responsive-object[data-embed-provider='${EmbedProvider.YOUTUBE}'] {
+      iframe {
+        aspect-ratio: 16 / 9;
+        max-width: 300px;
+      }
+    }
+    &.responsive-object[data-embed-provider='${EmbedProvider.PLOTLY}'] {
+      iframe {
+        height: 400px;
+      }
+    }
   }
 
-  .responsive-object-medium iframe {
-    aspect-ratio: 16 / 9;
-    max-width: 480px;
+  .responsive-object-medium {
+    &.responsive-object[data-embed-provider='${EmbedProvider.YOUTUBE}'] {
+      iframe {
+        aspect-ratio: 16 / 9;
+        max-width: 480px;
+      }
+    }
+    &.responsive-object[data-embed-provider='${EmbedProvider.PLOTLY}'] {
+      iframe {
+        height: 600px;
+      }
+    }
   }
 
-  .responsive-object-large iframe {
-    aspect-ratio: 16 / 9;
-    max-width: 960px;
+  .responsive-object-large {
+    &.responsive-object[data-embed-provider='${EmbedProvider.YOUTUBE}'] {
+      iframe {
+        aspect-ratio: 16 / 9;
+        max-width: 960px;
+      }
+    }
+    &.responsive-object[data-embed-provider='${EmbedProvider.PLOTLY}'] {
+      iframe {
+        height: 800px;
+      }
+    }
   }
 `;
 
