@@ -4,6 +4,7 @@ import dynamic from 'next/dynamic';
 import { merge, uniq } from 'lodash';
 import styled from 'styled-components';
 import { useTheme } from 'common/theme';
+import { transparentize } from 'polished';
 import { splitLines } from 'common/utils';
 
 const log10 = Math.log(10);
@@ -200,28 +201,36 @@ const createTraces = (
     }
     // we have one or more categories as time series - draw lines and markers
     if (hasTimeDimension) {
-      // Only one category, draw line/area graph, no symbols
       modTrace.type = 'scatter';
-      modTrace.fill = categoryCount === 1 && useAreaGraph ? 'tozeroy' : 'none';
-      //modTrace.fillcolor could be defined here, defaults to trace color
+      // we fill traces if there is only one trace and area graph is enabled
+      if (traceCount === 1 && useAreaGraph) {
+        modTrace.fill = 'tozeroy';
+        modTrace.fillcolor = transparentize(
+          0.8,
+          plotColors.mainScale[idx % numColors]
+        );
+      }
+
       modTrace.line = {
         width: trace.dataType === 'total' ? 3 : 2, // TODO extension trace total vs dimension
-        shape: lineShape,
-        smoothing: lineShape === 'spline' ? 0.7 : undefined,
         color: plotColors.mainScale[idx % numColors],
       };
-      // Multiple categories, draw lines & symbols
-      if (categoryCount > 1) {
-        modTrace.marker = {
-          size: 6,
-          symbol: plotColors.symbols[idx % numSymbols],
-          color: '#ffffff',
-          line: {
-            width: 2,
-            color: plotColors.mainScale[idx % numColors],
-          },
-        };
+
+      // if we prefer smooth lines, set spline shape
+      if (lineShape === 'spline') {
+        modTrace.line.shape = 'spline';
+        modTrace.line.smoothing = 1.3;
       }
+
+      modTrace.marker = {
+        size: 8,
+        symbol: plotColors.symbols[idx % numSymbols],
+        color: '#ffffff',
+        line: {
+          width: 2,
+          color: plotColors.mainScale[idx % numColors],
+        },
+      };
     }
     // Leave out markers for long time series
     if (modTrace.type === 'scatter')
@@ -335,8 +344,10 @@ function IndicatorGraph(props: IndicatorGraphProps) {
     ],
   };
 
+  // TODO: these ought to be set in the backend
   const lineShape = theme.settings?.graphs?.lineShape || 'spline';
   const useAreaGraph = theme.settings?.graphs?.areaGraphs;
+  const showTrendline = theme.settings?.graphs?.showTrendline ?? true;
   const graphCustomBackground = theme.settings?.graphs?.customBackground;
 
   let mainTraces = [];
@@ -422,7 +433,7 @@ function IndicatorGraph(props: IndicatorGraphProps) {
   const { layoutConfig, traces: plotlyData } = mainTraces;
 
   // add trend if defined
-  if (!isComparison && trendTrace)
+  if (!isComparison && trendTrace && showTrendline)
     plotlyData.push({
       type: 'scatter',
       mode: 'lines',
@@ -435,6 +446,9 @@ function IndicatorGraph(props: IndicatorGraphProps) {
       ...trendTrace,
     });
 
+  // we fill goal trace too if there is only one data trace and area graph is enabled
+  const fillTraces = traces.length === 1 && useAreaGraph;
+
   // add goals if defined
   if (!isComparison && goalTraces.length) {
     goalTraces.forEach((goalTrace, idx) => {
@@ -442,6 +456,11 @@ function IndicatorGraph(props: IndicatorGraphProps) {
         ...goalTrace,
         type: 'scatter',
         mode: goalTrace.scenario ? 'markers' : 'lines+markers',
+        fill: fillTraces ? 'tozeroy' : 'none',
+        fillcolor: transparentize(
+          0.8,
+          plotColors.goalScale[idx % plotColors.goalScale.length]
+        ),
         line: {
           width: 3,
           dash: 'dash',
