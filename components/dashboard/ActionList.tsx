@@ -198,6 +198,8 @@ const actionFragment = gql`
     }
     statusSummary {
       identifier
+      label
+      color
     }
     timeliness {
       identifier
