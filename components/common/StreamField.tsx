@@ -294,42 +294,39 @@ const ResponsiveStyles = styled.div`
     height: 100%;
   }
 
-  .responsive-object-small {
-    &.responsive-object[data-embed-provider='${EmbedProvider.YOUTUBE}'] {
+  .responsive-object[data-embed-provider='${EmbedProvider.YOUTUBE}'] {
+    &.responsive-object-small {
       iframe {
         aspect-ratio: 16 / 9;
         max-width: 300px;
       }
     }
-    &.responsive-object[data-embed-provider='${EmbedProvider.PLOTLY}'] {
-      iframe {
-        height: 400px;
-      }
-    }
-  }
-
-  .responsive-object-medium {
-    &.responsive-object[data-embed-provider='${EmbedProvider.YOUTUBE}'] {
+    &.responsive-object-medium {
       iframe {
         aspect-ratio: 16 / 9;
         max-width: 480px;
       }
     }
-    &.responsive-object[data-embed-provider='${EmbedProvider.PLOTLY}'] {
-      iframe {
-        height: 600px;
-      }
-    }
-  }
-
-  .responsive-object-large {
-    &.responsive-object[data-embed-provider='${EmbedProvider.YOUTUBE}'] {
+    &.responsive-object-large {
       iframe {
         aspect-ratio: 16 / 9;
         max-width: 960px;
       }
     }
-    &.responsive-object[data-embed-provider='${EmbedProvider.PLOTLY}'] {
+  }
+
+  .responsive-object[data-embed-provider='${EmbedProvider.PLOTLY}'] {
+    &.responsive-object-small {
+      iframe {
+        height: 400px;
+      }
+    }
+    &.responsive-object-medium {
+      iframe {
+        height: 600px;
+      }
+    }
+    &.responsive-object-large {
       iframe {
         height: 800px;
       }
