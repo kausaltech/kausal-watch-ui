@@ -108,16 +108,18 @@ export const phasesTooltipContent = (
   plan
 ) => {
   const getMergedName = (mergedWith, planId) => {
-    if (mergedWith.plan.id !== planId)
+    if (mergedWith.plan.id !== planId) {
       return `${mergedWith.plan.shortName} ${mergedWith.identifier}`;
-    else return mergedWith.identifier;
+    } else {
+      return mergedWith.identifier;
+    }
   };
 
   const statusDisplay = (
     <StatusLabel color={status?.color}>{status.label}</StatusLabel>
   );
   // If action is merged, display merged status
-  if (merged)
+  if (merged) {
     return (
       <TooltipTitle>
         {` ${t(
@@ -126,13 +128,15 @@ export const phasesTooltipContent = (
         )}: ${getMergedName(merged, plan.id)}.`}
       </TooltipTitle>
     );
+  }
   // If action has no active phase or it's cancelled, or plan has no implementation phases : display only status
   if (
     !activePhase ||
     status?.identifier === 'cancelled' ||
     !hasImplementationPhases
-  )
+  ) {
     return statusDisplay;
+  }
 
   return (
     <div>
