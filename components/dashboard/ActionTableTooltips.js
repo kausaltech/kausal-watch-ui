@@ -4,6 +4,11 @@ import dayjs from 'common/dayjs';
 import { getActionTaskTermContext, getActionTermContext } from 'common/i18n';
 import Icon from 'components/common/Icon';
 
+const TooltipTitle = styled.p`
+  font-weight: ${(props) => props.theme.fontWeightBold};
+  margin-bottom: ${(props) => props.theme.spaces.s025};
+`;
+
 const ResponsibleTooltipList = styled.ul`
   margin: 0;
   padding: 0;
@@ -24,9 +29,28 @@ const PhasesTooltipListItem = styled.li`
 
 const TaskTooltip = styled.div``;
 
+const StatusLabel = styled.div`
+  &:before {
+    content: '';
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    margin-right: 0.5em;
+    margin-bottom: -0.1em;
+    border-radius: 50%;
+    background-color: ${(props) => props.theme.graphColors[props.color]};
+    color: ${(props) => props.theme.graphColors[props.color]};
+  }
+`;
+
+const Divider = styled.div`
+  margin: ${(props) => props.theme.spaces.s025} 0;
+  border-bottom: 1px solid ${(props) => props.theme.graphColors.grey030};
+`;
+
 export const primaryOrgTooltipContent = (t, primaryOrg) => (
   <div>
-    <h5>{t('common:primary-organization')}</h5>
+    <TooltipTitle>{t('common:primary-organization')}</TooltipTitle>
     {primaryOrg}
   </div>
 );
@@ -35,12 +59,16 @@ export const tasksTooltipContent = (plan, t, taskCounts) => {
   if (taskCounts.total < 1)
     return (
       <div>
-        <h5>{t('actions:action-no-tasks', getActionTaskTermContext(plan))}</h5>
+        <TooltipTitle>
+          {t('actions:action-no-tasks', getActionTaskTermContext(plan))}
+        </TooltipTitle>
       </div>
     );
   return (
     <TaskTooltip>
-      <h5>{t('actions:action-tasks', getActionTaskTermContext(plan))} </h5>
+      <TooltipTitle>
+        {t('actions:action-tasks', getActionTaskTermContext(plan))}{' '}
+      </TooltipTitle>
       <table>
         <tbody>
           {taskCounts.completed > 0 && (
@@ -80,40 +108,41 @@ export const phasesTooltipContent = (
   plan
 ) => {
   const getMergedName = (mergedWith, planId) => {
-    if (mergedWith.plan.id !== planId)
+    if (mergedWith.plan.id !== planId) {
       return `${mergedWith.plan.shortName} ${mergedWith.identifier}`;
-    else return mergedWith.identifier;
+    } else {
+      return mergedWith.identifier;
+    }
   };
 
-  if (merged)
+  const statusDisplay = (
+    <StatusLabel color={status?.color}>{status.label}</StatusLabel>
+  );
+  // If action is merged, display merged status
+  if (merged) {
     return (
-      <div>
-        <h5>
-          {` ${t(
-            'actions:action-status-merged',
-            getActionTermContext(plan)
-          )}: ${getMergedName(merged, plan.id)}.`}
-        </h5>
-      </div>
+      <TooltipTitle>
+        {` ${t(
+          'actions:action-status-merged',
+          getActionTermContext(plan)
+        )}: ${getMergedName(merged, plan.id)}.`}
+      </TooltipTitle>
     );
-  if (!activePhase)
-    return (
-      <div>
-        {!status?.name && (
-          <h5>{t('actions:action-implementation-phase-unknown')}</h5>
-        )}
-        {status?.name}
-      </div>
-    );
-  if (status?.identifier === 'cancelled')
-    return (
-      <div>
-        <h5>{status.name}</h5>
-      </div>
-    );
-  return hasImplementationPhases ? (
+  }
+  // If action has no active phase or it's cancelled, or plan has no implementation phases : display only status
+  if (
+    !activePhase ||
+    status?.identifier === 'cancelled' ||
+    !hasImplementationPhases
+  ) {
+    return statusDisplay;
+  }
+
+  return (
     <div>
-      <h5>{t('actions:action-implementation-phase')}</h5>
+      {statusDisplay}
+      <Divider />
+      <TooltipTitle>{t('actions:action-implementation-phase')}:</TooltipTitle>
       <PhasesTooltipList>
         {plan.actionImplementationPhases.map((phase) => (
           <PhasesTooltipListItem
@@ -128,11 +157,6 @@ export const phasesTooltipContent = (
         ))}
       </PhasesTooltipList>
     </div>
-  ) : (
-    <div>
-      <h5>Status</h5>
-      {status.name}
-    </div>
   );
 };
 
@@ -140,12 +164,12 @@ export const responsiblesTooltipContent = (t, theme, parties) => {
   if (parties.length < 1)
     return (
       <div>
-        <h5>{t('common:responsible-parties')}</h5>
+        <TooltipTitle>{t('common:responsible-parties')}</TooltipTitle>
       </div>
     );
   return (
     <div>
-      <h5>{t('common:responsible-parties')}</h5>
+      <TooltipTitle>{t('common:responsible-parties')}</TooltipTitle>
       {parties.find((party) => party.hasContactPerson) && (
         <strong>{t('common:with-contact-persons')}:</strong>
       )}
@@ -193,7 +217,7 @@ export const indicatorsTooltipContent = (t, theme, relatedIndicators) => {
   );
   return (
     <div>
-      <h5>{t('common:indicators')}</h5>
+      <TooltipTitle>{t('common:indicators')}</TooltipTitle>
       <Icon
         name="tachometer"
         color={
@@ -224,7 +248,7 @@ export const indicatorsTooltipContent = (t, theme, relatedIndicators) => {
 
 export const lastUpdatedTooltipContent = (t, updateDate) => (
   <div>
-    <h5>{t('common:latest-update')}</h5>
+    <TooltipTitle>{t('common:latest-update')}</TooltipTitle>
     {dayjs(updateDate).format('L')}
   </div>
 );
@@ -234,7 +258,7 @@ export const impactTooltipContent = (t, impact, impacts) => {
   const activeImpact = impacts.find((item) => item.id === impact.id);
   return (
     <div>
-      <h5>{t('common:impact')}</h5>
+      <TooltipTitle>{t('common:impact')}</TooltipTitle>
       {activeImpact.identifier !== '0' && (
         <div>
           {activeImpact.identifier}/{impacts.length - 1}
