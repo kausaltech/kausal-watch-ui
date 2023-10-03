@@ -3395,17 +3395,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@kausal/themes-private@npm:^0.2.68":
-  version: 0.2.68
-  resolution: "@kausal/themes-private@npm:0.2.68"
-  checksum: 8d473f85a13b8f70f2a6c904f23644c30ac1543aaaec15267a899dd772da92dd39a150b1cdec84b0552b5ce4316d819647fbb708b2e1d3681b4b0f17fa2395f0
+"@kausal/themes-private@npm:^0.2.69":
+  version: 0.2.69
+  resolution: "@kausal/themes-private@npm:0.2.69"
+  checksum: 072ddc60a7cd7a067c4052b136d8762a98a7d28cada2805d623b02d32f34096237d8def087af040a057ae95c374a73aed0795c680f37b253597e3cf839003f88
   languageName: node
   linkType: hard
 
-"@kausal/themes@npm:^0.6.3":
-  version: 0.6.3
-  resolution: "@kausal/themes@npm:0.6.3"
-  checksum: 5cca72397dd2c298f63023b0021fc10c65035bf849aabe4e8954f0df05d34e0d148506a3354e4be6ead99eddbf35192a8fec8c4da8e9ae8b02ad0fe6b8c69e6d
+"@kausal/themes@npm:^0.6.4":
+  version: 0.6.4
+  resolution: "@kausal/themes@npm:0.6.4"
+  checksum: 3223c70910df7c439b8aa9193686f34088c24c759a1bf8c0ee9056e2c1fa1815cabef1cee3559a2e4f7a38161338902ea82d6d0653d575f543dc81334d1540aa
   languageName: node
   linkType: hard
 
@@ -16899,8 +16899,8 @@ __metadata:
     "@graphql-codegen/typescript-react-apollo": ^3.3.7
     "@kausal/mapboxgl-legend": ^1.7.2
     "@kausal/plotly-custom": ^2.14.3
-    "@kausal/themes": ^0.6.3
-    "@kausal/themes-private": ^0.2.68
+    "@kausal/themes": ^0.6.4
+    "@kausal/themes-private": ^0.2.69
     "@koa/router": ^10.1.1
     "@n8tb1t/use-scroll-position": ^2.0.3
     "@next/bundle-analyzer": ^12.1.6
