@@ -87,10 +87,10 @@ const ImageCredit = styled.span`
 interface HeroSmallImageProps {
   id?: string;
   bgImage: string;
-  title?: string;
-  lead?: string;
-  altText?: string;
-  imageCredit?: string;
+  title: string | null | undefined;
+  lead: string | null | undefined;
+  altText?: string | null | undefined;
+  imageCredit?: string | null | undefined;
 }
 
 const HeroSmallImage = (props: HeroSmallImageProps) => {

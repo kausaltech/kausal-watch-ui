@@ -7,10 +7,10 @@ interface FrontPageHeroProps {
   layout: 'small_image' | 'big_image';
   image: any;
   imageAlign: string;
-  heading?: string;
-  lead: string;
-  altText: string;
-  imageCredit: string;
+  heading: string | null | undefined;
+  lead: string | null | undefined;
+  altText: string | null | undefined;
+  imageCredit: string | null | undefined;
 }
 
 const FrontPageHeroBlock = (props: FrontPageHeroProps) => {
