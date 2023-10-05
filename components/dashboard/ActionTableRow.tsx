@@ -296,6 +296,7 @@ const ActionTableRow = React.memo(function ActionTableRow(props) {
   const hideTooltip = (evt) => {
     popperRef(null, null);
   };
+
   return (
     <StyledRow>
       {plan.primaryOrgs.length > 0 && (
