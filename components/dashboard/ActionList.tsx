@@ -30,10 +30,8 @@ import {
   ActionListPageFiltersFragment,
   ActionListPageView,
   DashboardActionListQuery,
-  GetActionListPageQuery,
 } from 'common/__generated__/graphql';
 import {
-  CategoryTypeInput,
   CategoryMappedAction,
   CategoryHierarchyMember,
   CategoryTypeHierarchy,
@@ -41,7 +39,7 @@ import {
   mapActionCategories,
   getCategoryString,
 } from 'common/categories';
-import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 
 const DynamicActionStatusTable = dynamic(() => import('./ActionStatusTable'));
 
@@ -323,8 +321,19 @@ const organizationFragment = gql`
   }
 `;
 
+// const actionTableColumnFragment = gql`
+//   fragment ActionTableColumnFragment on ActionListPage {
+//     dashboardColumns {
+//       _typename
+//     }
+//   }
+// `;
+
 export const GET_ACTION_LIST = gql`
-  query DashboardActionList($plan: ID!, $relatedPlanActions: Boolean!) {
+  query DashboardActionList(
+    $plan: ID!
+    $relatedPlanActions: Boolean! # $path: String!
+  ) {
     plan(id: $plan) {
       ...PlanFragment
     }
@@ -334,6 +343,9 @@ export const GET_ACTION_LIST = gql`
     relatedPlanActions(plan: $plan) @include(if: $relatedPlanActions) {
       ...ActionFragment
     }
+    # planPage(plan: $plan, path: $path) {
+    #   ...ActionTableColumnFragment
+    # }
 
     planOrganizations(
       plan: $plan
@@ -349,6 +361,7 @@ export const GET_ACTION_LIST = gql`
   ${actionFragment}
   ${organizationFragment}
 `;
+//  ${actionTableColumnFragment}
 
 const ACTION_LIST_FILTER = gql`
   fragment ActionListFilter on StreamFieldInterface {
@@ -698,12 +711,14 @@ function ActionListLoader(props: StatusboardProps) {
   } = props;
   const plan = usePlan();
   const { t } = useTranslation('common');
+  const { pathname } = useRouter();
   const { loading, error, data } = useQuery<DashboardActionListQuery>(
     GET_ACTION_LIST,
     {
       variables: {
         plan: plan.identifier,
         relatedPlanActions: includeRelatedPlans,
+        // path: pathname,
       },
     }
   );
