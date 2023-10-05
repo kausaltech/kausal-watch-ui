@@ -59,6 +59,12 @@ images.fragments = {
       height
       focalPointX
       focalPointY
+      full: rendition(size: "1600x1600", crop: false) {
+        id
+        width
+        height
+        src
+      }
       large: rendition(size: "1600x600") {
         id
         width
