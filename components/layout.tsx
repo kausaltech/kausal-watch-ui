@@ -5,7 +5,7 @@ import Head from 'next/head';
 import styled from 'styled-components';
 
 import PlanContext from 'context/plan';
-import SiteContext from 'context/site';
+import { useSite } from 'context/site';
 import EmbedContext from 'context/embed';
 import ThemedGlobalStyles from 'common/ThemedGlobalStyles';
 import { useTheme } from 'common/theme';
@@ -20,7 +20,7 @@ const Content = styled.main`
 
 function Layout({ children }) {
   const plan = useContext(PlanContext);
-  const site = useContext(SiteContext);
+  const site = useSite();
   const embed = useContext(EmbedContext);
   const theme = useTheme();
   const iconBase = theme.name
@@ -45,6 +45,13 @@ function Layout({ children }) {
   //const displayTitle = plan.parent ? plan.parent.name  : siteTitle;
   //const rootLink = plan.parent ? plan.parent.viewUrl : '/';
 
+  const websiteJson = `{
+    "@context" : "https://schema.org",
+    "@type" : "WebSite",
+    "name" : "${displaySite.title}",
+    "url" : "${site.baseURL}"
+  }`;
+
   return (
     <>
       <Meta />
@@ -53,7 +60,10 @@ function Layout({ children }) {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
         <meta property="og:type" content="website" />
         {site.baseURL && (
-          <meta property="og:url" content={site.baseURL + site.path} />
+          <>
+            <meta property="og:url" content={site.baseURL + site.path} />
+            <link rel="canonical" href={`${site.baseURL + site.path}`} />
+          </>
         )}
         <meta property="og:site_name" content={displaySite.title} />
         {iconBase && (
@@ -76,6 +86,10 @@ function Layout({ children }) {
             content={googleSiteVerificationTag}
           />
         )}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: websiteJson }}
+        />
       </Head>
       {!embed.active && <Header siteTitle={displaySite.navigationTitle} />}
       <Content id="main" embed={embed.active}>
@@ -92,9 +106,14 @@ Layout.propTypes = {
 
 export default Layout;
 
-export function Meta(props) {
+type MetaProps = {
+  title?: string;
+  shareImageUrl?: string;
+  description?: string;
+};
+
+export function Meta({ title, shareImageUrl, description }: MetaProps) {
   const plan = React.useContext(PlanContext);
-  const { title, shareImageUrl, description } = props;
   const parentPlanTitle = plan.parent
     ? `${plan.parent.name}/${plan.shortName || plan.name}`
     : null;
@@ -106,7 +125,7 @@ export function Meta(props) {
   const ogTitle = title || siteTitle;
   const ogDescription = description || generalContent.siteDescription;
   const ogImage =
-    shareImageUrl || plan.image?.social?.src || plan.image?.rendition.src;
+    shareImageUrl || plan.image?.social?.src || plan.image?.rendition?.src;
 
   return (
     <Head>
@@ -125,15 +144,3 @@ export function Meta(props) {
     </Head>
   );
 }
-
-Meta.defaultProps = {
-  title: null,
-  shareImageUrl: null,
-  description: null,
-};
-
-Meta.propTypes = {
-  title: PropTypes.string,
-  shareImageUrl: PropTypes.string,
-  description: PropTypes.string,
-};

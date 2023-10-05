@@ -12,4 +12,5 @@ const SiteContext = React.createContext<Partial<SiteContextProps>>({
   deploymentType: 'development',
 });
 
+export const useSite = () => useContext(SiteContext);
 export default SiteContext;
