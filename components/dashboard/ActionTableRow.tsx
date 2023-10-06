@@ -1,27 +1,10 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { useCallback, useState } from 'react';
 import styled from 'styled-components';
-import { useTheme } from 'common/theme';
-import dayjs from 'common/dayjs';
-import {
-  getActionTaskTermContext,
-  getActionTermContext,
-  useTranslation,
-} from 'common/i18n';
-import StatusBadge from 'components/common/StatusBadge';
-import ActionImpact from 'components/actions/ActionImpact';
-import ActionPhase from 'components/actions/ActionPhase';
-import { ActionLink } from 'common/links';
-import Icon from 'components/common/Icon';
-import {
-  primaryOrgTooltipContent,
-  tasksTooltipContent,
-  phasesTooltipContent,
-  responsiblesTooltipContent,
-  indicatorsTooltipContent,
-  lastUpdatedTooltipContent,
-  impactTooltipContent,
-} from './ActionTableTooltips';
+import { UncontrolledTooltip } from 'reactstrap';
+
+import { PlanContextFragment } from 'common/__generated__/graphql';
+import { ActionListAction, ColumnConfig } from './dashboard.types';
+import { COLUMN_CONFIG } from './dashboard.constants';
 
 const StyledRow = styled.tr`
   font-family: ${(props) => props.theme.fontFamilyContent};
@@ -58,420 +41,111 @@ const StyledRow = styled.tr`
       text-decoration: underline;
     }
   }
-`;
 
-const OrgLogo = styled.img`
-  display: block;
-  width: ${(props) => props.theme.spaces.s200};
-  height: ${(props) => props.theme.spaces.s200};
-`;
-
-const StatusDisplay = styled.div`
-  padding: ${(props) => props.theme.spaces.s050};
-  height: 100%;
-`;
-
-const ResponsibleList = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  padding: ${(props) => props.theme.spaces.s050};
-`;
-
-const UpdatedAgo = styled.div`
-  display: inline-block;
-  font-size: ${(props) => props.theme.fontSizeSm};
-  font-family: ${(props) => props.theme.fontFamilyTiny};
-  white-space: nowrap;
-  cursor: default;
-  padding: ${(props) => props.theme.spaces.s050};
-`;
-
-const TaskTooltip = styled.div``;
-
-const TaskStatusViz = styled.div`
-  display: flex;
-  min-width: ${(props) => props.theme.spaces.s600};
-  height: 8px;
-  margin-bottom: ${(props) => props.theme.spaces.s050};
-  background-color: ${(props) => props.theme.themeColors.light};
-
-  .on-time {
-    display: inline-block;
-    background-color: ${(props) => props.theme.graphColors.green010};
-  }
-  .late {
-    display: inline-block;
-    background-color: ${(props) => props.theme.graphColors.yellow050};
-  }
-  .completed {
-    display: inline-block;
-    background-color: ${(props) => props.theme.graphColors.green070};
-  }
-`;
-
-const VizLabel = styled.div`
-  font-size: ${(props) => props.theme.fontSizeSm};
-  font-family: ${(props) => props.theme.fontFamilyTiny};
-  line-height: ${(props) => props.theme.lineHeightMd};
-  hyphens: manual;
-
-  &.active {
-    font-weight: ${(props) => props.theme.fontWeightBold};
+  // Tooltip wrapper
+  > div {
+    padding: 0;
+    background-color: transparent;
+    border-bottom-width: 0px;
+    box-shadow: none;
   }
 
-  &.disabled {
-    color: ${(props) => props.theme.themeColors.dark};
-  }
-`;
+  .tooltip {
+    --bs-tooltip-opacity: 1;
 
-const IndicatorsDisplay = styled.div`
-  display: inline-block;
-  padding: ${(props) => props.theme.spaces.s050};
-`;
-
-const getTaskCounts = (tasks, plan, t) => {
-  let tasksCount = tasks.length;
-  let ontimeTasks = 0;
-  let lateTasks = 0;
-  let completedTasks = 0;
-  const nowDate = new Date();
-
-  if (!tasks) return <span />;
-
-  tasks.forEach((task) => {
-    const taskDue = new Date(task.dueAt);
-    switch (task.state) {
-      case 'NOT_STARTED':
-      case 'IN_PROGRESS':
-        if (taskDue < nowDate) lateTasks += 1;
-        else ontimeTasks += 1;
-        break;
-      case 'COMPLETED':
-        completedTasks += 1;
-        break;
-      default:
-        tasksCount -= 1;
+    &[data-popper-placement^='top'] .tooltip-arrow::before {
+      border-top-color: ${(props) => props.theme.themeColors.white};
     }
-  });
 
-  const displayTasksCount =
-    tasksCount === 0
-      ? t('actions:action-no-tasks', getActionTaskTermContext(plan))
-      : `${tasksCount} ${t(
-          'actions:action-tasks-count',
-          getActionTaskTermContext(plan)
-        )}`;
+    &[data-popper-placement^='bottom'] .tooltip-arrow::before {
+      border-bottom-color: ${(props) => props.theme.themeColors.white};
+    }
 
-  return {
-    total: tasksCount,
-    displayTotal: displayTasksCount,
-    onTime: ontimeTasks,
-    late: lateTasks,
-    completed: completedTasks,
-  };
-};
+    &[data-popper-placement^='left'] .tooltip-arrow::before {
+      border-left-color: ${(props) => props.theme.themeColors.white};
+    }
 
-const TasksStatusBar = (props) => {
-  const { t } = useTranslation(['common', 'actions']);
-  const { tasks, plan } = props;
-  const taskCounts = getTaskCounts(tasks, plan, t);
+    &[data-popper-placement^='right'] .tooltip-arrow::before {
+      border-right-color: ${(props) => props.theme.themeColors.white};
+    }
+  }
 
-  return (
-    <>
-      <TaskStatusViz>
-        <div
-          className="completed"
-          style={{
-            width: `${(taskCounts.completed / taskCounts.total) * 100}%`,
-          }}
-        />
-        <div
-          className="late"
-          style={{ width: `${(taskCounts.late / taskCounts.total) * 100}%` }}
-        />
-        <div
-          className="on-time"
-          style={{ width: `${(taskCounts.onTime / taskCounts.total) * 100}%` }}
-        />
-      </TaskStatusViz>
-      <VizLabel className={taskCounts.total === 0 && 'disabled'}>
-        {taskCounts.displayTotal}
-      </VizLabel>
-    </>
-  );
-};
+  .tooltip-inner {
+    text-align: left;
+    background: ${(props) => props.theme.themeColors.white};
+    color: ${(props) => props.theme.themeColors.black};
+    padding: ${(props) => props.theme.spaces.s050}
+      ${(props) => props.theme.spaces.s100};
+    font-size: ${(props) => props.theme.fontSizeSm};
+    font-family: ${(props) => props.theme.fontFamilyTiny};
+    border-radius: 4px;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px,
+      rgba(0, 0, 0, 0.22) 0px 10px 10px;
 
-const IndicatorsViz = (props) => {
-  const { relatedIndicators } = props;
-  const theme = useTheme();
-  let hasProgress = false;
-  let hasGoals = false;
-  const hasIndicators = relatedIndicators.length > 0;
+    h5 {
+      font-weight: ${(props) => props.theme.fontWeightBold};
+      font-size: ${(props) => props.theme.fontSizeSm};
+      font-family: ${(props) => props.theme.fontFamilyTiny};
+      color: ${(props) => props.theme.themeColors.black};
+    }
+  }
+`;
 
-  relatedIndicators.forEach((ri) => {
-    const { indicator, indicatesActionProgress } = ri;
-    if (indicatesActionProgress) hasProgress = true;
-    if (indicator.goals.length > 0) hasGoals = true;
-  });
+interface Props {
+  action: ActionListAction;
+  columns: ColumnConfig[];
+  plan: PlanContextFragment;
+  planViewUrl?: string | null;
+}
+
+const ActionTableRow = ({ columns, action, plan, planViewUrl }: Props) => {
+  /**
+   * Store the row element to attach tooltips to the row rather than document
+   * body, allowing us to style the tooltip without global styles
+   */
+  const [rowEl, setRowEl] = useState(null);
+  const rowRef = useCallback((rowEl) => setRowEl(rowEl), []);
 
   return (
-    <IndicatorsDisplay>
-      <Icon
-        name="tachometer"
-        color={
-          hasIndicators ? theme.graphColors.green070 : theme.graphColors.grey030
+    <StyledRow ref={rowRef}>
+      {columns.map((column, i) => {
+        const columnConfig = COLUMN_CONFIG[column.__typename];
+
+        if (!columnConfig) {
+          return null;
         }
-        height="1.2em"
-        width="1.2em"
-      />
-      <Icon
-        name="bullseye"
-        color={
-          hasGoals ? theme.graphColors.green070 : theme.graphColors.grey030
+
+        const { renderTooltipContent, cellClassName, rowHeader, renderCell } =
+          columnConfig;
+        const hasTooltip = !!renderTooltipContent;
+        const content = renderCell(action, plan, planViewUrl);
+        const id = `${action.identifier}-${i}`;
+        const className = `${cellClassName} ${
+          hasTooltip ? 'has-tooltip' : ''
+        } ${rowHeader ? 'row-title' : ''}`;
+
+        if (rowHeader) {
+          return (
+            <th key={i} id={id} scope="row" className={className}>
+              {content}
+            </th>
+          );
         }
-        height="1.2em"
-        width="1.2em"
-      />
-    </IndicatorsDisplay>
-  );
-};
 
-const ResponsiblesViz = (props) => {
-  const { parties } = props;
-  const theme = useTheme();
-  const contactList = [];
-  const noContactList = [];
+        return (
+          <td key={i} id={id} className={className}>
+            {content}
 
-  parties.forEach((party) => {
-    if (party.hasContactPerson) contactList.push(party.organization.id);
-    else noContactList.push(party.organization.id);
-  });
-
-  return (
-    <ResponsibleList>
-      {contactList.map((contact) => (
-        <Icon
-          name="dot-circle"
-          color={theme.actionOnTimeColor}
-          key={contact}
-          width=".8em"
-          height=".8em"
-        />
-      ))}
-      {noContactList.map((contact) => (
-        <Icon
-          name="circle-outline"
-          color={theme.actionOnTimeColor}
-          key={contact}
-          width=".8em"
-          height=".8em"
-        />
-      ))}
-    </ResponsibleList>
-  );
-};
-
-const ActionTableRow = React.memo(function ActionTableRow(props) {
-  const {
-    item,
-    plan,
-    planViewUrl,
-    hasResponsibles,
-    hasImpacts,
-    hasIndicators,
-    hasImplementationPhases,
-    hasUpdateStatus,
-    popperRef,
-  } = props;
-
-  const theme = useTheme();
-
-  const { t } = useTranslation(['common', 'actions']);
-  const actionStatusSummary = item.statusSummary;
-
-  const showTooltip = (evt, content) => {
-    content && popperRef(evt.currentTarget, content);
-  };
-
-  const hideTooltip = (evt) => {
-    popperRef(null, null);
-  };
-
-  return (
-    <StyledRow>
-      {plan.primaryOrgs.length > 0 && (
-        <td
-          className="logo-column has-tooltip"
-          onMouseEnter={(e) =>
-            showTooltip(e, primaryOrgTooltipContent(t, item.primaryOrg?.name))
-          }
-          onMouseLeave={(e) => hideTooltip(e)}
-        >
-          {item.primaryOrg && (
-            <OrgLogo
-              src={
-                item.primaryOrg?.logo?.rendition?.src ||
-                '/static/themes/default/images/default-avatar-org.png'
-              }
-              alt={item.primaryOrg.name}
-              id={`L${item.primaryOrg.id}`}
-            />
-          )}
-        </td>
-      )}
-      {plan.features.hasActionIdentifiers && <td>{item.identifier}.</td>}
-      <th scope="row" className="row-title">
-        <ActionLink action={item} planUrl={planViewUrl}>
-          {item.name}
-        </ActionLink>
-      </th>
-      <td className="has-tooltip">
-        <div
-          role="button"
-          onMouseEnter={(e) =>
-            showTooltip(
-              e,
-              phasesTooltipContent(
-                t,
-                hasImplementationPhases,
-                actionStatusSummary,
-                item.implementationPhase,
-                item.mergedWith,
-                plan
-              )
-            )
-          }
-          onMouseLeave={(e) => hideTooltip(e)}
-        >
-          <StatusDisplay>
-            {hasImplementationPhases ? (
-              <ActionPhase
-                action={item}
-                status={actionStatusSummary}
-                activePhase={item.implementationPhase}
-                reason={item.manualStatusReason}
-                mergedWith={item.mergedWith?.identifier}
-                phases={plan.actionImplementationPhases}
-                compact
-              />
-            ) : (
-              <StatusBadge
-                statusSummary={actionStatusSummary}
-                plan={plan}
-                statusName={
-                  item.mergedWith
-                    ? t(
-                        'actions:action-status-merged',
-                        getActionTermContext(plan)
-                      )
-                    : actionStatusSummary.label
-                }
-              />
+            {hasTooltip && (
+              <UncontrolledTooltip container={rowEl ?? undefined} target={id}>
+                {renderTooltipContent(action, plan)}
+              </UncontrolledTooltip>
             )}
-          </StatusDisplay>
-        </div>
-      </td>
-      <td className="has-tooltip">
-        <div
-          role="button"
-          onMouseEnter={(e) =>
-            showTooltip(
-              e,
-              tasksTooltipContent(plan, t, getTaskCounts(item.tasks, plan, t))
-            )
-          }
-          onMouseLeave={(e) => hideTooltip(e)}
-          aria-describedby={`tasks-${item.identifier}`}
-        >
-          <TasksStatusBar tasks={item.tasks} plan={plan} />
-        </div>
-        {/* Content for screenreaders */}
-        <div hidden id={`tasks-${item.identifier}`}>
-          {tasksTooltipContent(plan, t, getTaskCounts(item.tasks, plan, t))}
-        </div>
-      </td>
-      {hasResponsibles && (
-        <td className="has-tooltip">
-          <div
-            role="button"
-            onMouseEnter={(e) =>
-              showTooltip(
-                e,
-                responsiblesTooltipContent(t, theme, item.responsibleParties)
-              )
-            }
-            onMouseLeave={(e) => hideTooltip(e)}
-            aria-describedby={`parties-${item.identifier}`}
-          >
-            <ResponsiblesViz
-              parties={item.responsibleParties}
-              persons={item.contactPersons}
-            />
-          </div>
-          {/* Content for screenreaders */}
-          <div hidden id={`parties-${item.identifier}`}>
-            {responsiblesTooltipContent(t, theme, item.responsibleParties)}
-          </div>
-        </td>
-      )}
-      {hasImpacts && (
-        <td
-          className="has-tooltip"
-          onMouseEnter={(e) =>
-            showTooltip(
-              e,
-              impactTooltipContent(t, item.impact, plan.actionImpacts)
-            )
-          }
-          onMouseLeave={(e) => hideTooltip(e)}
-        >
-          {item.impact && (
-            <ActionImpact
-              identifier={item.impact.identifier}
-              name=""
-              max={plan.actionImpacts.length - 1}
-              size="sm"
-            />
-          )}
-          {/* TODO: Tooltip accessibility */}
-        </td>
-      )}
-      {hasIndicators && (
-        <td className="has-tooltip">
-          <div
-            role="button"
-            onMouseEnter={(e) =>
-              showTooltip(
-                e,
-                indicatorsTooltipContent(t, theme, item.relatedIndicators)
-              )
-            }
-            onMouseLeave={(e) => hideTooltip(e)}
-            aria-describedby={`indicators-${item.identifier}`}
-          >
-            {item.relatedIndicators && !item.mergedWith && (
-              <IndicatorsViz relatedIndicators={item.relatedIndicators} />
-            )}
-          </div>
-          {/* Content for screenreaders */}
-          <div hidden id={`indicators-${item.identifier}`}>
-            {indicatorsTooltipContent(t, theme, item.relatedIndicators)}
-          </div>
-        </td>
-      )}
-      {hasUpdateStatus && (
-        <td
-          className="has-tooltip"
-          onMouseEnter={(e) =>
-            showTooltip(e, lastUpdatedTooltipContent(t, item.updatedAt))
-          }
-          onMouseLeave={(e) => hideTooltip(e)}
-        >
-          <UpdatedAgo>{`${dayjs(item.updatedAt).fromNow(false)}`}</UpdatedAgo>
-        </td>
-      )}
+          </td>
+        );
+      })}
     </StyledRow>
   );
-});
+};
 
 export default ActionTableRow;

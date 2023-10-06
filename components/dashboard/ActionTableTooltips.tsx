@@ -1,8 +1,16 @@
 import React from 'react';
 import styled from 'styled-components';
 import dayjs from 'common/dayjs';
-import { getActionTaskTermContext, getActionTermContext } from 'common/i18n';
+import {
+  getActionTaskTermContext,
+  getActionTermContext,
+  useTranslation,
+} from 'common/i18n';
 import Icon from 'components/common/Icon';
+import { ActionListAction } from './dashboard.types';
+import { PlanContextFragment } from 'common/__generated__/graphql';
+import { getTaskCounts } from './cells/TasksStatusCell';
+import { useTheme } from 'common/theme';
 
 const TooltipTitle = styled.p`
   font-weight: ${(props) => props.theme.fontWeightBold};
@@ -23,13 +31,13 @@ const PhasesTooltipList = styled.ul`
   list-style: none;
 `;
 
-const PhasesTooltipListItem = styled.li`
-  color: ${(props) => (props.active === 'true' ? '#333' : '#ccc')};
+const PhasesTooltipListItem = styled.li<{ active: boolean }>`
+  color: ${(props) => (props.active ? '#333' : '#ccc')};
 `;
 
 const TaskTooltip = styled.div``;
 
-const StatusLabel = styled.div`
+const StatusLabel = styled.div<{ color: string }>`
   &:before {
     content: '';
     display: inline-block;
@@ -48,14 +56,29 @@ const Divider = styled.div`
   border-bottom: 1px solid ${(props) => props.theme.graphColors.grey030};
 `;
 
-export const primaryOrgTooltipContent = (t, primaryOrg) => (
-  <div>
-    <TooltipTitle>{t('common:primary-organization')}</TooltipTitle>
-    {primaryOrg}
-  </div>
-);
+interface TooltipProps {
+  action: ActionListAction;
+}
 
-export const tasksTooltipContent = (plan, t, taskCounts) => {
+interface TooltipWithPlanProps extends TooltipProps {
+  plan: PlanContextFragment;
+}
+
+export const OrganizationTooltipContent = ({ action }: TooltipProps) => {
+  const { t } = useTranslation(['common', 'actions']);
+
+  return (
+    <div>
+      <TooltipTitle>{t('common:primary-organization')}</TooltipTitle>
+      {action.primaryOrg?.name}
+    </div>
+  );
+};
+
+export const TasksTooltipContent = ({ action, plan }: TooltipWithPlanProps) => {
+  const { t } = useTranslation(['common', 'actions']);
+  const taskCounts = getTaskCounts(action.tasks, plan, t);
+
   if (taskCounts.total < 1)
     return (
       <div>
@@ -64,6 +87,7 @@ export const tasksTooltipContent = (plan, t, taskCounts) => {
         </TooltipTitle>
       </div>
     );
+
   return (
     <TaskTooltip>
       <TooltipTitle>
@@ -99,14 +123,17 @@ export const tasksTooltipContent = (plan, t, taskCounts) => {
   );
 };
 
-export const phasesTooltipContent = (
-  t,
-  hasImplementationPhases,
-  status,
-  activePhase,
-  merged,
-  plan
-) => {
+// TODO: Should we split implementation phase and status?
+export const ImplementationPhaseTooltipContent = ({
+  action,
+  plan,
+}: TooltipWithPlanProps) => {
+  const { t } = useTranslation(['common', 'actions']);
+
+  const activePhase = action.implementationPhase;
+  const merged = action.mergedWith;
+  const status = action.statusSummary;
+
   const getMergedName = (mergedWith, planId) => {
     if (mergedWith.plan.id !== planId) {
       return `${mergedWith.plan.shortName} ${mergedWith.identifier}`;
@@ -130,11 +157,7 @@ export const phasesTooltipContent = (
     );
   }
   // If action has no active phase or it's cancelled, or plan has no implementation phases : display only status
-  if (
-    !activePhase ||
-    status?.identifier === 'cancelled' ||
-    !hasImplementationPhases
-  ) {
+  if (!activePhase || status?.identifier === 'cancelled') {
     return statusDisplay;
   }
 
@@ -147,7 +170,7 @@ export const phasesTooltipContent = (
         {plan.actionImplementationPhases.map((phase) => (
           <PhasesTooltipListItem
             key={phase.id}
-            active={(activePhase?.id === phase.id).toString()}
+            active={activePhase.id === phase.id}
           >
             {phase.name}
             {activePhase?.id === phase.id && status.name && !status.isCompleted
@@ -160,16 +183,23 @@ export const phasesTooltipContent = (
   );
 };
 
-export const responsiblesTooltipContent = (t, theme, parties) => {
+export const ResponsiblePartiesTooltipContent = ({ action }: TooltipProps) => {
+  const { t } = useTranslation(['common', 'actions']);
+  const theme = useTheme();
+
+  const parties = action.responsibleParties;
+
   if (parties.length < 1)
     return (
       <div>
         <TooltipTitle>{t('common:responsible-parties')}</TooltipTitle>
       </div>
     );
+
   return (
     <div>
       <TooltipTitle>{t('common:responsible-parties')}</TooltipTitle>
+      {/* TODO: Fix missing type property. hasContactPerson is added to actions higher in the component tree */}
       {parties.find((party) => party.hasContactPerson) && (
         <strong>{t('common:with-contact-persons')}:</strong>
       )}
@@ -210,10 +240,14 @@ export const responsiblesTooltipContent = (t, theme, parties) => {
   );
 };
 
-export const indicatorsTooltipContent = (t, theme, relatedIndicators) => {
+export const IndicatorsTooltipContent = ({ action }: TooltipProps) => {
+  const { t } = useTranslation(['common', 'actions']);
+  const theme = useTheme();
+
+  const relatedIndicators = action.relatedIndicators;
   const hasIndicators = relatedIndicators.length > 0;
   const hasGoals = relatedIndicators.find(
-    (ri) => ri.indicator.goals.length > 0
+    (ri) => ri.indicator.goals?.length ?? 0 > 0
   );
   return (
     <div>
@@ -241,30 +275,17 @@ export const indicatorsTooltipContent = (t, theme, relatedIndicators) => {
       {hasGoals
         ? ` ${t('common:has-goals')}`
         : ` ${t('common:indicator-time-no-goals')}`}
-      {}
     </div>
   );
 };
 
-export const lastUpdatedTooltipContent = (t, updateDate) => (
-  <div>
-    <TooltipTitle>{t('common:latest-update')}</TooltipTitle>
-    {dayjs(updateDate).format('L')}
-  </div>
-);
+export const LastUpdatedTooltipContent = ({ action }: TooltipProps) => {
+  const { t } = useTranslation(['common', 'actions']);
 
-export const impactTooltipContent = (t, impact, impacts) => {
-  if (!impact) return null;
-  const activeImpact = impacts.find((item) => item.id === impact.id);
   return (
     <div>
-      <TooltipTitle>{t('common:impact')}</TooltipTitle>
-      {activeImpact.identifier !== '0' && (
-        <div>
-          {activeImpact.identifier}/{impacts.length - 1}
-        </div>
-      )}
-      {activeImpact.name}
+      <TooltipTitle>{t('common:latest-update')}</TooltipTitle>
+      {dayjs(action.updatedAt).format('L')}
     </div>
   );
 };

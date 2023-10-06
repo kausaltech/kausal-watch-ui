@@ -115,6 +115,7 @@ ActionLink.defaultProps = {
 ActionLink.propTypes = {
   action: actionPropType.isRequired,
   planUrl: PropTypes.string,
+  children: PropTypes.node.isRequired,
 };
 
 export function OrganizationLink(props) {
