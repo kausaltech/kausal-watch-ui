@@ -1,17 +1,14 @@
-import React, { useContext, useCallback, useMemo } from 'react';
-import PropTypes from 'prop-types';
+import React, { useCallback, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import { gql, useQuery } from '@apollo/client';
-import { Container, Row, Col, Nav, NavItem, Alert } from 'reactstrap';
+import { Container, Row, Col, Alert } from 'reactstrap';
 import styled from 'styled-components';
 import { readableColor } from 'polished';
 import { getActionTermContext, useTranslation } from 'common/i18n';
 import {
   constructOrgHierarchy,
   mapResponsibleParties,
-  OrganizationHierarchyMember,
   orgHasActions,
-  OrgMappedAction,
 } from 'common/organizations';
 import ContentLoader from 'components/common/ContentLoader';
 import ErrorMessage from 'components/common/ErrorMessage';
@@ -26,20 +23,27 @@ import ActionListFilters, {
 import ActionCardList from 'components/actions/ActionCardList';
 import ActionStatusGraphs from './ActionStatusGraphs';
 import {
-  ActionListFilterFragment,
   ActionListPageFiltersFragment,
   ActionListPageView,
   DashboardActionListQuery,
 } from 'common/__generated__/graphql';
 import {
-  CategoryMappedAction,
-  CategoryHierarchyMember,
-  CategoryTypeHierarchy,
   constructCatHierarchy,
   mapActionCategories,
   getCategoryString,
 } from 'common/categories';
 import { useRouter } from 'next/router';
+import {
+  ActionListAction,
+  ActionListCategory,
+  ActionListCategoryType,
+  ActionListOrganization,
+  ActionListPrimaryOrg,
+  ColumnConfig,
+} from './dashboard.types';
+
+// Legacy exports preserved after migrating types to dashboard.types
+export * from './dashboard.types';
 
 const DynamicActionStatusTable = dynamic(() => import('./ActionStatusTable'));
 
@@ -177,6 +181,7 @@ const actionFragment = gql`
     name(hyphenated: true)
     viewUrl @include(if: $relatedPlanActions)
     color
+    manualStatusReason
     status {
       id
       identifier
@@ -198,6 +203,9 @@ const actionFragment = gql`
       identifier
       label
       color
+      isActive
+      isCompleted
+      sentiment
     }
     timeliness {
       identifier
@@ -321,18 +329,22 @@ const organizationFragment = gql`
   }
 `;
 
-// const actionTableColumnFragment = gql`
-//   fragment ActionTableColumnFragment on ActionListPage {
-//     dashboardColumns {
-//       _typename
-//     }
-//   }
-// `;
+const actionTableColumnFragment = gql`
+  fragment ActionTableColumnFragment on ActionListPage {
+    dashboardColumns {
+      __typename
+      ... on DashboardColumnInterface {
+        columnLabel
+      }
+    }
+  }
+`;
 
 export const GET_ACTION_LIST = gql`
   query DashboardActionList(
     $plan: ID!
-    $relatedPlanActions: Boolean! # $path: String!
+    $relatedPlanActions: Boolean!
+    $path: String!
   ) {
     plan(id: $plan) {
       ...PlanFragment
@@ -343,9 +355,10 @@ export const GET_ACTION_LIST = gql`
     relatedPlanActions(plan: $plan) @include(if: $relatedPlanActions) {
       ...ActionFragment
     }
-    # planPage(plan: $plan, path: $path) {
-    #   ...ActionTableColumnFragment
-    # }
+    planPage(plan: $plan, path: $path) {
+      __typename
+      ...ActionTableColumnFragment
+    }
 
     planOrganizations(
       plan: $plan
@@ -360,8 +373,8 @@ export const GET_ACTION_LIST = gql`
   ${planFragment}
   ${actionFragment}
   ${organizationFragment}
+  ${actionTableColumnFragment}
 `;
-//  ${actionTableColumnFragment}
 
 const ACTION_LIST_FILTER = gql`
   fragment ActionListFilter on StreamFieldInterface {
@@ -429,11 +442,9 @@ const ALL_ACTION_LIST_FILTERS = gql`
 
 type FilterChangeCallback = (id: string, value: FilterValue) => void;
 
-export type ActionListPrimaryOrg =
-  DashboardActionListQuery['plan']['primaryOrgs'][0];
-
 type ActionListProps = {
   actions: DashboardActionListQuery['planActions'];
+  columns: ColumnConfig[];
   categoryTypes: NonNullable<DashboardActionListQuery['plan']>['categoryTypes'];
   organizations: DashboardActionListQuery['planOrganizations'];
   availableFilters: ActionListPageFiltersFragment;
@@ -446,29 +457,6 @@ type ActionListProps = {
   defaultView: ActionListPageView;
   primaryOrgs: ActionListPrimaryOrg[];
 };
-
-type OrganizationInput = NonNullable<
-  DashboardActionListQuery['planOrganizations']
->[0];
-export type ActionListOrganization = OrganizationInput &
-  OrganizationHierarchyMember<OrganizationInput>;
-type QueryAction = NonNullable<DashboardActionListQuery['planActions']>[0];
-export type ActionListAction = QueryAction &
-  OrgMappedAction<ActionListOrganization> &
-  CategoryMappedAction<ActionListCategoryType, ActionListCategory>;
-
-export type ActionListCategoryTypeFilterBlock = ActionListFilterFragment & {
-  __typename?: 'CategoryTypeFilterBlock';
-};
-export type ActionListActionAttributeTypeFilterBlock =
-  ActionListFilterFragment & { __typename?: 'ActionAttributeTypeFilterBlock' };
-
-type QueryCategoryType = DashboardActionListQuery['plan']['categoryTypes'][0];
-type CategoryInput = QueryCategoryType['categories'][0];
-export type ActionListCategory = CategoryInput &
-  CategoryHierarchyMember<ActionListCategoryType>;
-export type ActionListCategoryType = QueryCategoryType &
-  CategoryTypeHierarchy<ActionListCategory>;
 
 const ActionList = (props: ActionListProps) => {
   const {
@@ -484,7 +472,9 @@ const ActionList = (props: ActionListProps) => {
     headingHierarchyDepth,
     primaryOrgs,
     includeRelatedPlans,
+    columns,
   } = props;
+
   const { t } = useTranslation('common');
   const theme = useTheme();
   const plan = usePlan();
@@ -645,7 +635,7 @@ const ActionList = (props: ActionListProps) => {
                 orgs={orgs}
                 plan={plan}
                 enableExport={true}
-                showUpdateStatus={showUpdateStatus}
+                columns={columns}
               />
             </>
           ) : (
@@ -718,20 +708,20 @@ function ActionListLoader(props: StatusboardProps) {
       variables: {
         plan: plan.identifier,
         relatedPlanActions: includeRelatedPlans,
-        // path: pathname,
+        path: pathname,
       },
     }
   );
 
   if (loading) return <ContentLoader />;
-  if (error)
+  if (error || !data)
     return (
       <ErrorMessage
         message={t('error-loading-actions', getActionTermContext(plan))}
       />
     );
 
-  const { plan: loadedPlan, planOrganizations } = data;
+  const { plan: loadedPlan, planOrganizations, planPage } = data;
   const { categoryTypes, primaryOrgs } = loadedPlan;
   const actions = includeRelatedPlans
     ? data.relatedPlanActions
@@ -740,6 +730,11 @@ function ActionListLoader(props: StatusboardProps) {
   return (
     <ActionList
       title={title}
+      columns={
+        planPage?.__typename === 'ActionListPage'
+          ? planPage.dashboardColumns ?? []
+          : []
+      }
       leadContent={leadContent}
       defaultView={defaultView}
       headingHierarchyDepth={headingHierarchyDepth}
