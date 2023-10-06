@@ -184,11 +184,11 @@ async function getPlan(ctx) {
 function getSiteContext(ctx) {
   const { currentURL } = ctx.req;
   const { deploymentType } = publicRuntimeConfig;
-
   return {
     deploymentType,
     hostname: currentURL.hostname,
     path: currentURL.path,
+    baseURL: currentURL.baseURL,
   };
 }
 

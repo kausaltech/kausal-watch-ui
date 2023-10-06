@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
 type SiteContextProps = {
   deploymentType: string;
@@ -12,4 +12,5 @@ const SiteContext = React.createContext<Partial<SiteContextProps>>({
   deploymentType: 'development',
 });
 
+export const useSite = () => useContext(SiteContext);
 export default SiteContext;
