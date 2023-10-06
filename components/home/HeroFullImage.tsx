@@ -1,6 +1,4 @@
-import React, { useTransition } from 'react';
 import { useTheme } from 'common/theme';
-import PropTypes from 'prop-types';
 import { Container } from 'reactstrap';
 import styled from 'styled-components';
 import { useTranslation } from 'common/i18n';
@@ -27,7 +25,7 @@ const Hero = styled.div`
   }
 `;
 
-const HeroImage = styled.div`
+const HeroImage = styled.div<{ image: string; imageAlign: string }>`
   min-height: 14rem;
   margin: 0 -1rem;
   background-size: cover;
@@ -50,7 +48,7 @@ const HeroContent = styled.div`
   align-items: center;
 `;
 
-const MainCard = styled.div`
+const MainCard = styled.div<{ alignment: string; color: string }>`
   position: relative;
   max-width: ${(props) => props.theme.breakpointSm};
   margin: -2rem auto 0;
@@ -140,11 +138,21 @@ const ImageCredit = styled.span`
   }
 `;
 
-const HeroFullImage = (props) => {
+interface HeroFullImageProps {
+  id?: string;
+  bgImage: string;
+  imageAlign?: string;
+  title?: string;
+  lead?: string;
+  altText?: string;
+  imageCredit?: string;
+}
+
+const HeroFullImage = (props: HeroFullImageProps) => {
   const {
     id = '',
     bgImage,
-    imageAlign,
+    imageAlign = 'center center',
     title,
     lead,
     altText,
@@ -153,6 +161,14 @@ const HeroFullImage = (props) => {
 
   const { t } = useTranslation();
   const theme = useTheme();
+
+  const contentAlignment = theme.settings?.frontHero?.cardPlacement
+    ? theme.settings.frontHero.cardPlacement
+    : 'left';
+
+  const contentColor = theme.settings?.frontHero?.color
+    ? theme.settings.frontHero.color
+    : 'light';
 
   const showContentBox = title || lead;
 
@@ -166,18 +182,7 @@ const HeroFullImage = (props) => {
       {showContentBox && (
         <Container>
           <HeroContent>
-            <MainCard
-              alignment={
-                theme.settings?.frontHero
-                  ? theme.settings.frontHero.cardPlacement
-                  : 'left'
-              }
-              color={
-                theme.settings?.frontHero
-                  ? theme.settings.frontHero?.color
-                  : 'light'
-              }
-            >
+            <MainCard alignment={contentAlignment} color={contentColor}>
               <h1>{title}</h1>
               <RichText html={lead} className="lead-content" />
             </MainCard>
@@ -186,23 +191,6 @@ const HeroFullImage = (props) => {
       )}
     </Hero>
   );
-};
-
-HeroFullImage.defaultProps = {
-  imageAlign: 'left',
-  lead: '',
-  altText: '',
-  imageCredit: '',
-};
-
-HeroFullImage.propTypes = {
-  id: PropTypes.string,
-  bgImage: PropTypes.string.isRequired,
-  imageAlign: PropTypes.string,
-  title: PropTypes.string.isRequired,
-  lead: PropTypes.string,
-  altText: PropTypes.string,
-  imageCredit: PropTypes.string,
 };
 
 export default HeroFullImage;

@@ -446,11 +446,12 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
     }
     case 'FrontPageHeroBlock': {
       const { layout, image, heading, lead } = block;
+      // TODO: Typecheck layout to be either 'small_image' or 'big_image'
       return (
         <FrontPageHeroBlock
           id={id}
           layout={layout}
-          imageSrc={image?.large?.src}
+          image={image}
           imageAlign={getBgImageAlignment(image)}
           heading={heading}
           lead={lead}
