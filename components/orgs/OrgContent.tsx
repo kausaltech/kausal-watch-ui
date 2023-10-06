@@ -20,6 +20,7 @@ import {
   OrganizationDetailsQuery,
   OrganizationDetailsQueryVariables,
 } from 'common/__generated__/graphql';
+import { actionTableColumnFragment } from 'components/dashboard/ActionList';
 
 const Tab = styled.button`
   background: ${(props) => props.theme.brandDark};
@@ -167,6 +168,11 @@ const GET_ORG_DETAILS = gql`
     plan(id: $planId) {
       ...OrgContentPlan
     }
+    # Org actions table uses the custom column config from the actions list page
+    planPage(plan: $planId, path: "/actions") {
+      __typename
+      ...ActionTableColumnFragment
+    }
   }
 
   fragment OrgContentPlan on Plan {
@@ -310,6 +316,8 @@ const GET_ORG_DETAILS = gql`
       }
     }
   }
+
+  ${actionTableColumnFragment}
 `;
 
 function OrgContent(props) {
@@ -341,7 +349,7 @@ function OrgContent(props) {
     );
   }
 
-  const { organization: org, plan: planFromQuery } = data;
+  const { organization: org, plan: planFromQuery, planPage } = data;
 
   // Make sure host plan is first
   const allPlans = [planFromQuery, ...org.plansWithActionResponsibilities];
@@ -429,6 +437,11 @@ function OrgContent(props) {
           </ActionTableHeader>
           <ActionTableContainer>
             <ActionStatusTable
+              columns={
+                planPage?.__typename === 'ActionListPage'
+                  ? planPage.dashboardColumns ?? []
+                  : []
+              }
               enableExport={false}
               planViewUrl={selectedPlan.viewUrl}
               plan={selectedPlan}

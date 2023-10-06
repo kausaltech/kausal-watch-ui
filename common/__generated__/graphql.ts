@@ -9072,6 +9072,12 @@ export type OrganizationDetailsQuery = (
       & { __typename?: 'Action' }
     )> }
     & { __typename?: 'Plan' }
+  ) | null, planPage?: { __typename: 'AccessibilityStatementPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PrivacyPolicyPage' | 'StaticPage' } | (
+    { dashboardColumns?: Array<(
+      { columnLabel?: string | null }
+      & { __typename: 'IdentifierColumnBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorsColumnBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'ResponsiblePartiesColumnBlock' | 'StatusColumnBlock' | 'TasksColumnBlock' | 'UpdatedAtColumnBlock' }
+    )> | null }
+    & { __typename: 'ActionListPage' }
   ) | null }
   & { __typename?: 'Query' }
 );

@@ -329,7 +329,7 @@ const organizationFragment = gql`
   }
 `;
 
-const actionTableColumnFragment = gql`
+export const actionTableColumnFragment = gql`
   fragment ActionTableColumnFragment on ActionListPage {
     dashboardColumns {
       __typename
