@@ -31,7 +31,7 @@ jobs:
           restore-keys: |
               ${{ runner.os }}-yarn-
 
-        # FIXME: Remove the two lines below whenever possible
+      # FIXME: Remove the two lines below whenever possible
       - run: yarn config set enableImmutableInstalls false
       - run: yarn remove @kausal/themes-private
 
