@@ -7,6 +7,8 @@ import SiteContext from 'context/site';
 import ApplicationStateBanner from './common/ApplicationStateBanner';
 import SiteFooter from './common/SiteFooter';
 
+const a;
+
 const getFeedbackUrl = (currentURL) => {
   const feedbackPageUrlBase = '/feedback';
   if (currentURL.startsWith(feedbackPageUrlBase)) {
