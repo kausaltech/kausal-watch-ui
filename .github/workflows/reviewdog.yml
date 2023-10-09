@@ -13,6 +13,7 @@ jobs:
         with:
           node-version-file: ".nvmrc"
           cache: yarn
+      - run: corepack enable
       # FIXME: Remove when possible
       - run: yarn remove @kausal/themes-private
       - run: yarn install
