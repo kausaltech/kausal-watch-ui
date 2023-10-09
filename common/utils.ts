@@ -42,3 +42,5 @@ export function splitLines(text, lineSeparator = '<br>') {
 
   return lines.map((l) => l.join(' ')).join(lineSeparator);
 }
+
+export const stripTrailingSlash = (path: string) => path.replace(/\/$/, '');

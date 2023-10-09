@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes, { string } from 'prop-types';
 import { transparentize } from 'polished';
 import styled from 'styled-components';
-import { Theme } from 'common/theme';
+import { Theme } from '@kausal/themes/types';
 
 const Tag = styled.div<{ minWidth: string }>`
   display: flex;
