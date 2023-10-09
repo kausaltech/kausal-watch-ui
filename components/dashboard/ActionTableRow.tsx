@@ -119,15 +119,21 @@ const ActionTableRow = ({ columns, action, plan, planViewUrl }: Props) => {
           columnConfig;
         const hasTooltip = !!renderTooltipContent;
         const content = renderCell(action, plan, planViewUrl);
-        const id = `${action.identifier}-${i}`;
+        const id = `row-${action.id}-${i}`;
         const className = `${cellClassName} ${
           hasTooltip ? 'has-tooltip' : ''
         } ${rowHeader ? 'row-title' : ''}`;
+        const tooltip = hasTooltip && (
+          <UncontrolledTooltip container={rowEl ?? undefined} target={id}>
+            {renderTooltipContent(action, plan)}
+          </UncontrolledTooltip>
+        );
 
         if (rowHeader) {
           return (
             <th key={i} id={id} scope="row" className={className}>
               {content}
+              {tooltip}
             </th>
           );
         }
@@ -135,12 +141,7 @@ const ActionTableRow = ({ columns, action, plan, planViewUrl }: Props) => {
         return (
           <td key={i} id={id} className={className}>
             {content}
-
-            {hasTooltip && (
-              <UncontrolledTooltip container={rowEl ?? undefined} target={id}>
-                {renderTooltipContent(action, plan)}
-              </UncontrolledTooltip>
-            )}
+            {tooltip}
           </td>
         );
       })}
