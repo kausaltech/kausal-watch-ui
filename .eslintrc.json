@@ -1,5 +1,8 @@
 {
-  "extends": ["next/core-web-vitals"],
+  "extends": ["next/core-web-vitals", "plugin:@typescript-eslint/recommended"],
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint"],
+  "root": true,
   "rules": {
     "max-len": [1, 120, 2, { "ignoreComments": true }],
     "curly": ["off"],
@@ -16,6 +19,8 @@
         ".ts": "never",
         ".tsx": "never"
       }
-    ]
+    ],
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": "warn"
   }
 }
