@@ -1,19 +1,13 @@
 import React, { useEffect } from 'react';
 import App, { AppProps } from 'next/app';
 import getConfig from 'next/config';
-import {
-  gql,
-  ApolloProvider,
-  ApolloClient,
-  InMemoryCache,
-} from '@apollo/client';
+import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
 import ReactPiwik from 'react-piwik';
 import { ThemeProvider } from 'styled-components';
 import { Router, useRouter } from 'next/router';
 import numbro from 'numbro';
 
 import StatusMessage from 'components/common/StatusMessage';
-import { captureException } from 'common/sentry';
 import { appWithTranslation } from 'common/i18n';
 import withApollo, {
   initializeApolloClient,
