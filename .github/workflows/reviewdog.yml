@@ -12,13 +12,29 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version-file: ".nvmrc"
-          cache: yarn
+          cache: ''
+
       - run: corepack enable
       - run: yarn config set nodeLinker node-modules
-      - run: cat .yarnrc.yml || true
-      # FIXME: Remove the two lines below whenever possible
+      - name: Get yarn version
+        id: yarn-version
+        run: echo "::set-output name=ver::$(yarn -v)"
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn config get cacheFolder)"
+      - name: Cache yarn cache
+        uses: actions/cache@v3
+        id: cache-yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ steps.yarn-version.outputs.ver }}
+          restore-keys: |
+              ${{ runner.os }}-yarn-
+
+        # FIXME: Remove the two lines below whenever possible
       - run: yarn config set enableImmutableInstalls false
       - run: yarn remove @kausal/themes-private
+
       - run: yarn install
       - uses: reviewdog/action-eslint@v1
         with:
