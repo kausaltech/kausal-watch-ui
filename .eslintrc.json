@@ -10,6 +10,7 @@
     "react/prop-types": [2],
     "react/jsx-props-no-spreading": ["off"],
     "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
+    "no-unused-vars": ["warn"],
     "import/extensions": [
       "warn",
       {

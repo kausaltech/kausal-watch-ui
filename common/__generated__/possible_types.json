@@ -7,6 +7,18 @@
       "ActionResponsiblePartiesBlock",
       "ActionScheduleBlock"
     ],
+    "ActionDashboardColumnBlock": [
+      "IdentifierColumnBlock",
+      "ImpactColumnBlock",
+      "ImplementationPhaseColumnBlock",
+      "IndicatorsColumnBlock",
+      "NameColumnBlock",
+      "OrganizationColumnBlock",
+      "ResponsiblePartiesColumnBlock",
+      "StatusColumnBlock",
+      "TasksColumnBlock",
+      "UpdatedAtColumnBlock"
+    ],
     "ActionListFilterBlock": [
       "ActionAttributeTypeFilterBlock",
       "ActionImplementationPhaseFilterBlock",
@@ -55,6 +67,18 @@
     "CategoryPageMainTopBlock": [
       "CategoryPageAttributeTypeBlock",
       "CategoryPageProgressBlock"
+    ],
+    "DashboardColumnInterface": [
+      "IdentifierColumnBlock",
+      "ImpactColumnBlock",
+      "ImplementationPhaseColumnBlock",
+      "IndicatorsColumnBlock",
+      "NameColumnBlock",
+      "OrganizationColumnBlock",
+      "ResponsiblePartiesColumnBlock",
+      "StatusColumnBlock",
+      "TasksColumnBlock",
+      "UpdatedAtColumnBlock"
     ],
     "MenuItem": [
       "ExternalLinkMenuItem",
@@ -153,12 +177,18 @@
       "EmbedBlock",
       "FloatBlock",
       "FrontPageHeroBlock",
+      "IdentifierColumnBlock",
       "ImageChooserBlock",
+      "ImpactColumnBlock",
+      "ImplementationPhaseColumnBlock",
       "IndicatorBlock",
       "IndicatorGroupBlock",
       "IndicatorHighlightsBlock",
       "IndicatorShowcaseBlock",
+      "IndicatorsColumnBlock",
       "IntegerBlock",
+      "NameColumnBlock",
+      "OrganizationColumnBlock",
       "PageChooserBlock",
       "PageLinkBlock",
       "PlanFilterBlock",
@@ -171,15 +201,19 @@
       "RelatedPlanListBlock",
       "ReportComparisonBlock",
       "ReportTypeFieldChooserBlock",
+      "ResponsiblePartiesColumnBlock",
       "ResponsiblePartyFilterBlock",
       "RichTextBlock",
       "StaticBlock",
+      "StatusColumnBlock",
       "StreamBlock",
       "StreamFieldBlock",
       "StructBlock",
+      "TasksColumnBlock",
       "TextBlock",
       "TimeBlock",
-      "URLBlock"
+      "URLBlock",
+      "UpdatedAtColumnBlock"
     ]
   }
 }
