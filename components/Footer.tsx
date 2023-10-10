@@ -104,7 +104,7 @@ function Footer(props) {
       name: t('give-feedback'),
       slug: plan.externalFeedbackUrl,
     });
-  } else {
+  } else if (router.pathname !== '/feedback') {
     const url = getFeedbackUrl(router.asPath);
     if (url != null) {
       utilityLinks.push({ id: '2', name: t('give-feedback'), slug: url });
