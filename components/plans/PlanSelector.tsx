@@ -2,9 +2,9 @@ import styled from 'styled-components';
 import { transparentize } from 'polished';
 import { UncontrolledDropdown, DropdownToggle, DropdownMenu } from 'reactstrap';
 import { usePlan } from 'context/plan';
-import { useTheme } from 'common/theme';
 import Icon from 'components/common/Icon';
-import PlanChip from './PlanChip';
+import { useTranslation } from 'common/i18n';
+import PlanLink from './PlanLink';
 
 const PlanSelect = styled.div`
   display: flex;
@@ -31,26 +31,6 @@ const PlanAvatar = styled.img`
 const PlanTitle = styled.div`
   margin-left: 0.5rem;
   font-size: ${(props) => props.theme.fontSizeSm};
-  font-weight: ${(props) => props.theme[props.weight]};
-`;
-
-const PlanDropdownItem = styled.a`
-  display: block;
-  padding: 0.25rem 0;
-  margin: 0 0.5rem 0.5rem;
-  border: 1px solid ${(props) => props.theme.themeColors.light};
-  border-radius: 0.5rem;
-  text-decoration: none !important;
-
-  &:last-child {
-    margin-bottom: 0;
-  }
-
-  &:hover {
-    background: ${(props) => props.theme.themeColors.light};
-    border-color: ${(props) => props.theme.themeColors.light};
-    text-decoration: none;
-  }
 `;
 
 const StyledDropdownToggle = styled(DropdownToggle)`
@@ -82,52 +62,29 @@ const StyledDropdownToggle = styled(DropdownToggle)`
   }
 `;
 
-const PlanSelector = (props) => {
+const PlanSelector = () => {
   const plan = usePlan();
-  const theme = useTheme();
-  //console.log(theme)
   const { allRelatedPlans } = plan;
   if (!allRelatedPlans.length) return null;
 
-  const selectablePlans = plan.allRelatedPlans.filter(
-    (pl) => pl.id !== plan.parent?.id
-  );
-  if (!plan.children.length) {
-    selectablePlans.unshift({
-      ...plan,
-      viewUrl: '/',
-    });
-  }
+  const selectablePlans = [
+    { ...plan, viewUrl: '/' },
+    ...plan.allRelatedPlans.filter((pl) => pl?.id !== plan.parent?.id),
+  ];
+
   return (
     <PlanSelect>
       <PlanDivider />
       <UncontrolledDropdown>
         <StyledDropdownToggle data-toggle="dropdown" tag="button">
-          <PlanAvatar src={plan.image?.small.src} alt="" />
+          <PlanAvatar src={plan.image?.small?.src} alt="" />
           <PlanTitle>{plan.shortName || plan.name}</PlanTitle>
           <Icon name="angle-down" />
         </StyledDropdownToggle>
         <DropdownMenu>
-          {selectablePlans.map((pl) => (
-            <PlanDropdownItem
-              href={pl.viewUrl}
-              key={pl.identifier}
-              type="button"
-              tabIndex={0}
-              role="menuitem"
-            >
-              <PlanChip
-                planImage={pl.image?.rendition.src}
-                planShortName={pl.shortName}
-                organization={
-                  theme.settings?.multiplan?.hideLongPlanNames
-                    ? undefined
-                    : pl.name
-                }
-                size="md"
-              />
-            </PlanDropdownItem>
-          ))}
+          {selectablePlans.map(
+            (plan) => !!plan && <PlanLink key={plan?.id} plan={plan} />
+          )}
         </DropdownMenu>
       </UncontrolledDropdown>
     </PlanSelect>
