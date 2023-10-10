@@ -4098,7 +4098,10 @@ export enum UserFeedbackType {
 }
 
 export type MultiUseImageFragmentFragment = (
-  { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+  { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+    { id: string, width: number, height: number, src: string }
+    & { __typename?: 'ImageRendition' }
+  ) | null, large?: (
     { id: string, width: number, height: number, src: string }
     & { __typename?: 'ImageRendition' }
   ) | null, small?: (
@@ -4168,7 +4171,10 @@ export type GetActionDetailsQueryVariables = Exact<{
 export type GetActionDetailsQuery = (
   { action?: (
     { id: string, identifier: string, name: string, officialName?: string | null, leadParagraph: string, description?: string | null, completion?: number | null, color?: string | null, updatedAt: any, manualStatusReason?: string | null, scheduleContinuous: boolean, startDate?: any | null, endDate?: any | null, image?: (
-      { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+      { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null, large?: (
         { id: string, width: number, height: number, src: string }
         & { __typename?: 'ImageRendition' }
       ) | null, small?: (
@@ -4208,7 +4214,10 @@ export type GetActionDetailsQuery = (
         { id: string, name: string, namePlural?: string | null }
         & { __typename?: 'CategoryLevel' }
       ) | null, image?: (
-        { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+        { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, large?: (
           { id: string, width: number, height: number, src: string }
           & { __typename?: 'ImageRendition' }
         ) | null, small?: (
@@ -4241,7 +4250,10 @@ export type GetActionDetailsQuery = (
               { id: string, name: string, namePlural?: string | null }
               & { __typename?: 'CategoryLevel' }
             ) | null, image?: (
-              { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+              { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, large?: (
                 { id: string, width: number, height: number, src: string }
                 & { __typename?: 'ImageRendition' }
               ) | null, small?: (
@@ -4273,7 +4285,10 @@ export type GetActionDetailsQuery = (
             { id: string, name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
-            { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+            { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, large?: (
               { id: string, width: number, height: number, src: string }
               & { __typename?: 'ImageRendition' }
             ) | null, small?: (
@@ -4305,7 +4320,10 @@ export type GetActionDetailsQuery = (
           { id: string, name: string, namePlural?: string | null }
           & { __typename?: 'CategoryLevel' }
         ) | null, image?: (
-          { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+          { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, large?: (
             { id: string, width: number, height: number, src: string }
             & { __typename?: 'ImageRendition' }
           ) | null, small?: (
@@ -4539,7 +4557,10 @@ export type GetActionDetailsQuery = (
           { id: string, name: string, namePlural?: string | null }
           & { __typename?: 'CategoryLevel' }
         ) | null, image?: (
-          { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+          { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, large?: (
             { id: string, width: number, height: number, src: string }
             & { __typename?: 'ImageRendition' }
           ) | null, small?: (
@@ -4572,7 +4593,10 @@ export type GetActionDetailsQuery = (
                 { id: string, name: string, namePlural?: string | null }
                 & { __typename?: 'CategoryLevel' }
               ) | null, image?: (
-                { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+                { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null, large?: (
                   { id: string, width: number, height: number, src: string }
                   & { __typename?: 'ImageRendition' }
                 ) | null, small?: (
@@ -4604,7 +4628,10 @@ export type GetActionDetailsQuery = (
               { id: string, name: string, namePlural?: string | null }
               & { __typename?: 'CategoryLevel' }
             ) | null, image?: (
-              { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+              { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, large?: (
                 { id: string, width: number, height: number, src: string }
                 & { __typename?: 'ImageRendition' }
               ) | null, small?: (
@@ -4636,7 +4663,10 @@ export type GetActionDetailsQuery = (
             { id: string, name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
-            { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+            { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, large?: (
               { id: string, width: number, height: number, src: string }
               & { __typename?: 'ImageRendition' }
             ) | null, small?: (
@@ -4793,7 +4823,10 @@ export type GetActionDetailsQuery = (
                     { id: string, name: string, namePlural?: string | null }
                     & { __typename?: 'CategoryLevel' }
                   ) | null, image?: (
-                    { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+                    { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                      { id: string, width: number, height: number, src: string }
+                      & { __typename?: 'ImageRendition' }
+                    ) | null, large?: (
                       { id: string, width: number, height: number, src: string }
                       & { __typename?: 'ImageRendition' }
                     ) | null, small?: (
@@ -4826,7 +4859,10 @@ export type GetActionDetailsQuery = (
                           { id: string, name: string, namePlural?: string | null }
                           & { __typename?: 'CategoryLevel' }
                         ) | null, image?: (
-                          { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+                          { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                            { id: string, width: number, height: number, src: string }
+                            & { __typename?: 'ImageRendition' }
+                          ) | null, large?: (
                             { id: string, width: number, height: number, src: string }
                             & { __typename?: 'ImageRendition' }
                           ) | null, small?: (
@@ -4858,7 +4894,10 @@ export type GetActionDetailsQuery = (
                         { id: string, name: string, namePlural?: string | null }
                         & { __typename?: 'CategoryLevel' }
                       ) | null, image?: (
-                        { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+                        { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                          { id: string, width: number, height: number, src: string }
+                          & { __typename?: 'ImageRendition' }
+                        ) | null, large?: (
                           { id: string, width: number, height: number, src: string }
                           & { __typename?: 'ImageRendition' }
                         ) | null, small?: (
@@ -4890,7 +4929,10 @@ export type GetActionDetailsQuery = (
                       { id: string, name: string, namePlural?: string | null }
                       & { __typename?: 'CategoryLevel' }
                     ) | null, image?: (
-                      { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+                      { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                        { id: string, width: number, height: number, src: string }
+                        & { __typename?: 'ImageRendition' }
+                      ) | null, large?: (
                         { id: string, width: number, height: number, src: string }
                         & { __typename?: 'ImageRendition' }
                       ) | null, small?: (
@@ -4990,7 +5032,10 @@ export type GetActionDetailsQuery = (
                   { id: string, name: string, namePlural?: string | null }
                   & { __typename?: 'CategoryLevel' }
                 ) | null, image?: (
-                  { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+                  { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename?: 'ImageRendition' }
+                  ) | null, large?: (
                     { id: string, width: number, height: number, src: string }
                     & { __typename?: 'ImageRendition' }
                   ) | null, small?: (
@@ -5023,7 +5068,10 @@ export type GetActionDetailsQuery = (
                         { id: string, name: string, namePlural?: string | null }
                         & { __typename?: 'CategoryLevel' }
                       ) | null, image?: (
-                        { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+                        { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                          { id: string, width: number, height: number, src: string }
+                          & { __typename?: 'ImageRendition' }
+                        ) | null, large?: (
                           { id: string, width: number, height: number, src: string }
                           & { __typename?: 'ImageRendition' }
                         ) | null, small?: (
@@ -5055,7 +5103,10 @@ export type GetActionDetailsQuery = (
                       { id: string, name: string, namePlural?: string | null }
                       & { __typename?: 'CategoryLevel' }
                     ) | null, image?: (
-                      { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+                      { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                        { id: string, width: number, height: number, src: string }
+                        & { __typename?: 'ImageRendition' }
+                      ) | null, large?: (
                         { id: string, width: number, height: number, src: string }
                         & { __typename?: 'ImageRendition' }
                       ) | null, small?: (
@@ -5087,7 +5138,10 @@ export type GetActionDetailsQuery = (
                     { id: string, name: string, namePlural?: string | null }
                     & { __typename?: 'CategoryLevel' }
                   ) | null, image?: (
-                    { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+                    { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                      { id: string, width: number, height: number, src: string }
+                      & { __typename?: 'ImageRendition' }
+                    ) | null, large?: (
                       { id: string, width: number, height: number, src: string }
                       & { __typename?: 'ImageRendition' }
                     ) | null, small?: (
@@ -5246,7 +5300,10 @@ export type GetActionDetailsQuery = (
                     { id: string, name: string, namePlural?: string | null }
                     & { __typename?: 'CategoryLevel' }
                   ) | null, image?: (
-                    { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+                    { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                      { id: string, width: number, height: number, src: string }
+                      & { __typename?: 'ImageRendition' }
+                    ) | null, large?: (
                       { id: string, width: number, height: number, src: string }
                       & { __typename?: 'ImageRendition' }
                     ) | null, small?: (
@@ -5279,7 +5336,10 @@ export type GetActionDetailsQuery = (
                           { id: string, name: string, namePlural?: string | null }
                           & { __typename?: 'CategoryLevel' }
                         ) | null, image?: (
-                          { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+                          { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                            { id: string, width: number, height: number, src: string }
+                            & { __typename?: 'ImageRendition' }
+                          ) | null, large?: (
                             { id: string, width: number, height: number, src: string }
                             & { __typename?: 'ImageRendition' }
                           ) | null, small?: (
@@ -5311,7 +5371,10 @@ export type GetActionDetailsQuery = (
                         { id: string, name: string, namePlural?: string | null }
                         & { __typename?: 'CategoryLevel' }
                       ) | null, image?: (
-                        { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+                        { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                          { id: string, width: number, height: number, src: string }
+                          & { __typename?: 'ImageRendition' }
+                        ) | null, large?: (
                           { id: string, width: number, height: number, src: string }
                           & { __typename?: 'ImageRendition' }
                         ) | null, small?: (
@@ -5343,7 +5406,10 @@ export type GetActionDetailsQuery = (
                       { id: string, name: string, namePlural?: string | null }
                       & { __typename?: 'CategoryLevel' }
                     ) | null, image?: (
-                      { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+                      { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                        { id: string, width: number, height: number, src: string }
+                        & { __typename?: 'ImageRendition' }
+                      ) | null, large?: (
                         { id: string, width: number, height: number, src: string }
                         & { __typename?: 'ImageRendition' }
                       ) | null, small?: (
@@ -5443,7 +5509,10 @@ export type GetActionDetailsQuery = (
                   { id: string, name: string, namePlural?: string | null }
                   & { __typename?: 'CategoryLevel' }
                 ) | null, image?: (
-                  { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+                  { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename?: 'ImageRendition' }
+                  ) | null, large?: (
                     { id: string, width: number, height: number, src: string }
                     & { __typename?: 'ImageRendition' }
                   ) | null, small?: (
@@ -5476,7 +5545,10 @@ export type GetActionDetailsQuery = (
                         { id: string, name: string, namePlural?: string | null }
                         & { __typename?: 'CategoryLevel' }
                       ) | null, image?: (
-                        { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+                        { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                          { id: string, width: number, height: number, src: string }
+                          & { __typename?: 'ImageRendition' }
+                        ) | null, large?: (
                           { id: string, width: number, height: number, src: string }
                           & { __typename?: 'ImageRendition' }
                         ) | null, small?: (
@@ -5508,7 +5580,10 @@ export type GetActionDetailsQuery = (
                       { id: string, name: string, namePlural?: string | null }
                       & { __typename?: 'CategoryLevel' }
                     ) | null, image?: (
-                      { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+                      { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                        { id: string, width: number, height: number, src: string }
+                        & { __typename?: 'ImageRendition' }
+                      ) | null, large?: (
                         { id: string, width: number, height: number, src: string }
                         & { __typename?: 'ImageRendition' }
                       ) | null, small?: (
@@ -5540,7 +5615,10 @@ export type GetActionDetailsQuery = (
                     { id: string, name: string, namePlural?: string | null }
                     & { __typename?: 'CategoryLevel' }
                   ) | null, image?: (
-                    { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+                    { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                      { id: string, width: number, height: number, src: string }
+                      & { __typename?: 'ImageRendition' }
+                    ) | null, large?: (
                       { id: string, width: number, height: number, src: string }
                       & { __typename?: 'ImageRendition' }
                     ) | null, small?: (
@@ -5786,7 +5864,10 @@ type ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment = (
               { id: string, name: string, namePlural?: string | null }
               & { __typename?: 'CategoryLevel' }
             ) | null, image?: (
-              { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+              { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, large?: (
                 { id: string, width: number, height: number, src: string }
                 & { __typename?: 'ImageRendition' }
               ) | null, small?: (
@@ -5819,7 +5900,10 @@ type ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment = (
                     { id: string, name: string, namePlural?: string | null }
                     & { __typename?: 'CategoryLevel' }
                   ) | null, image?: (
-                    { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+                    { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                      { id: string, width: number, height: number, src: string }
+                      & { __typename?: 'ImageRendition' }
+                    ) | null, large?: (
                       { id: string, width: number, height: number, src: string }
                       & { __typename?: 'ImageRendition' }
                     ) | null, small?: (
@@ -5851,7 +5935,10 @@ type ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment = (
                   { id: string, name: string, namePlural?: string | null }
                   & { __typename?: 'CategoryLevel' }
                 ) | null, image?: (
-                  { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+                  { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename?: 'ImageRendition' }
+                  ) | null, large?: (
                     { id: string, width: number, height: number, src: string }
                     & { __typename?: 'ImageRendition' }
                   ) | null, small?: (
@@ -5883,7 +5970,10 @@ type ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment = (
                 { id: string, name: string, namePlural?: string | null }
                 & { __typename?: 'CategoryLevel' }
               ) | null, image?: (
-                { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+                { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null, large?: (
                   { id: string, width: number, height: number, src: string }
                   & { __typename?: 'ImageRendition' }
                 ) | null, small?: (
@@ -5987,7 +6077,10 @@ type ActionMainContentBlocksFragment_ReportComparisonBlock_Fragment = (
             { id: string, name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
-            { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+            { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, large?: (
               { id: string, width: number, height: number, src: string }
               & { __typename?: 'ImageRendition' }
             ) | null, small?: (
@@ -6020,7 +6113,10 @@ type ActionMainContentBlocksFragment_ReportComparisonBlock_Fragment = (
                   { id: string, name: string, namePlural?: string | null }
                   & { __typename?: 'CategoryLevel' }
                 ) | null, image?: (
-                  { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+                  { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename?: 'ImageRendition' }
+                  ) | null, large?: (
                     { id: string, width: number, height: number, src: string }
                     & { __typename?: 'ImageRendition' }
                   ) | null, small?: (
@@ -6052,7 +6148,10 @@ type ActionMainContentBlocksFragment_ReportComparisonBlock_Fragment = (
                 { id: string, name: string, namePlural?: string | null }
                 & { __typename?: 'CategoryLevel' }
               ) | null, image?: (
-                { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+                { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null, large?: (
                   { id: string, width: number, height: number, src: string }
                   & { __typename?: 'ImageRendition' }
                 ) | null, small?: (
@@ -6084,7 +6183,10 @@ type ActionMainContentBlocksFragment_ReportComparisonBlock_Fragment = (
               { id: string, name: string, namePlural?: string | null }
               & { __typename?: 'CategoryLevel' }
             ) | null, image?: (
-              { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+              { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, large?: (
                 { id: string, width: number, height: number, src: string }
                 & { __typename?: 'ImageRendition' }
               ) | null, small?: (
@@ -6183,7 +6285,10 @@ export type ReportComparisonBlockActionContentFragment = (
             { id: string, name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
-            { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+            { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, large?: (
               { id: string, width: number, height: number, src: string }
               & { __typename?: 'ImageRendition' }
             ) | null, small?: (
@@ -6216,7 +6321,10 @@ export type ReportComparisonBlockActionContentFragment = (
                   { id: string, name: string, namePlural?: string | null }
                   & { __typename?: 'CategoryLevel' }
                 ) | null, image?: (
-                  { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+                  { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename?: 'ImageRendition' }
+                  ) | null, large?: (
                     { id: string, width: number, height: number, src: string }
                     & { __typename?: 'ImageRendition' }
                   ) | null, small?: (
@@ -6248,7 +6356,10 @@ export type ReportComparisonBlockActionContentFragment = (
                 { id: string, name: string, namePlural?: string | null }
                 & { __typename?: 'CategoryLevel' }
               ) | null, image?: (
-                { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+                { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null, large?: (
                   { id: string, width: number, height: number, src: string }
                   & { __typename?: 'ImageRendition' }
                 ) | null, small?: (
@@ -6280,7 +6391,10 @@ export type ReportComparisonBlockActionContentFragment = (
               { id: string, name: string, namePlural?: string | null }
               & { __typename?: 'CategoryLevel' }
             ) | null, image?: (
-              { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+              { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, large?: (
                 { id: string, width: number, height: number, src: string }
                 & { __typename?: 'ImageRendition' }
               ) | null, small?: (
@@ -6366,7 +6480,10 @@ export type ActionHightlightListQueryVariables = Exact<{
 export type ActionHightlightListQuery = (
   { planActions?: Array<(
     { id: string, identifier: string, name: string, officialName?: string | null, completion?: number | null, updatedAt: any, color?: string | null, image?: (
-      { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+      { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null, large?: (
         { id: string, width: number, height: number, src: string }
         & { __typename?: 'ImageRendition' }
       ) | null, small?: (
@@ -6394,7 +6511,10 @@ export type ActionHightlightListQuery = (
       & { __typename?: 'ActionImplementationPhase' }
     ) | null, categories: Array<(
       { id: string, image?: (
-        { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+        { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, large?: (
           { id: string, width: number, height: number, src: string }
           & { __typename?: 'ImageRendition' }
         ) | null, small?: (
@@ -6410,7 +6530,10 @@ export type ActionHightlightListQuery = (
         & { __typename?: 'Image' }
       ) | null, parent?: (
         { id: string, image?: (
-          { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+          { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, large?: (
             { id: string, width: number, height: number, src: string }
             & { __typename?: 'ImageRendition' }
           ) | null, small?: (
@@ -6426,7 +6549,10 @@ export type ActionHightlightListQuery = (
           & { __typename?: 'Image' }
         ) | null, parent?: (
           { id: string, image?: (
-            { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+            { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, large?: (
               { id: string, width: number, height: number, src: string }
               & { __typename?: 'ImageRendition' }
             ) | null, small?: (
@@ -6571,7 +6697,10 @@ export type CategoryFieldsFragmentFragment = (
     { id: string, name: string, namePlural?: string | null }
     & { __typename?: 'CategoryLevel' }
   ) | null, image?: (
-    { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+    { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+      { id: string, width: number, height: number, src: string }
+      & { __typename?: 'ImageRendition' }
+    ) | null, large?: (
       { id: string, width: number, height: number, src: string }
       & { __typename?: 'ImageRendition' }
     ) | null, small?: (
@@ -6609,7 +6738,10 @@ export type CategoriesRecursiveFragmentFragment = (
           { id: string, name: string, namePlural?: string | null }
           & { __typename?: 'CategoryLevel' }
         ) | null, image?: (
-          { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+          { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, large?: (
             { id: string, width: number, height: number, src: string }
             & { __typename?: 'ImageRendition' }
           ) | null, small?: (
@@ -6641,7 +6773,10 @@ export type CategoriesRecursiveFragmentFragment = (
         { id: string, name: string, namePlural?: string | null }
         & { __typename?: 'CategoryLevel' }
       ) | null, image?: (
-        { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+        { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, large?: (
           { id: string, width: number, height: number, src: string }
           & { __typename?: 'ImageRendition' }
         ) | null, small?: (
@@ -6673,7 +6808,10 @@ export type CategoriesRecursiveFragmentFragment = (
       { id: string, name: string, namePlural?: string | null }
       & { __typename?: 'CategoryLevel' }
     ) | null, image?: (
-      { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+      { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null, large?: (
         { id: string, width: number, height: number, src: string }
         & { __typename?: 'ImageRendition' }
       ) | null, small?: (
@@ -6710,7 +6848,10 @@ export type CategoryTagsCategoryFragment = (
     { id: string, name: string, namePlural?: string | null }
     & { __typename?: 'CategoryLevel' }
   ) | null, image?: (
-    { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+    { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+      { id: string, width: number, height: number, src: string }
+      & { __typename?: 'ImageRendition' }
+    ) | null, large?: (
       { id: string, width: number, height: number, src: string }
       & { __typename?: 'ImageRendition' }
     ) | null, small?: (
@@ -6743,7 +6884,10 @@ export type CategoryTagsCategoryFragment = (
           { id: string, name: string, namePlural?: string | null }
           & { __typename?: 'CategoryLevel' }
         ) | null, image?: (
-          { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+          { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, large?: (
             { id: string, width: number, height: number, src: string }
             & { __typename?: 'ImageRendition' }
           ) | null, small?: (
@@ -6775,7 +6919,10 @@ export type CategoryTagsCategoryFragment = (
         { id: string, name: string, namePlural?: string | null }
         & { __typename?: 'CategoryLevel' }
       ) | null, image?: (
-        { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+        { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, large?: (
           { id: string, width: number, height: number, src: string }
           & { __typename?: 'ImageRendition' }
         ) | null, small?: (
@@ -6807,7 +6954,10 @@ export type CategoryTagsCategoryFragment = (
       { id: string, name: string, namePlural?: string | null }
       & { __typename?: 'CategoryLevel' }
     ) | null, image?: (
-      { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+      { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null, large?: (
         { id: string, width: number, height: number, src: string }
         & { __typename?: 'ImageRendition' }
       ) | null, small?: (
@@ -6875,7 +7025,10 @@ type AttributesBlockAttribute_AttributeCategoryChoice_Fragment = (
       { id: string, name: string, namePlural?: string | null }
       & { __typename?: 'CategoryLevel' }
     ) | null, image?: (
-      { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+      { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null, large?: (
         { id: string, width: number, height: number, src: string }
         & { __typename?: 'ImageRendition' }
       ) | null, small?: (
@@ -6908,7 +7061,10 @@ type AttributesBlockAttribute_AttributeCategoryChoice_Fragment = (
             { id: string, name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
-            { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+            { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, large?: (
               { id: string, width: number, height: number, src: string }
               & { __typename?: 'ImageRendition' }
             ) | null, small?: (
@@ -6940,7 +7096,10 @@ type AttributesBlockAttribute_AttributeCategoryChoice_Fragment = (
           { id: string, name: string, namePlural?: string | null }
           & { __typename?: 'CategoryLevel' }
         ) | null, image?: (
-          { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+          { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, large?: (
             { id: string, width: number, height: number, src: string }
             & { __typename?: 'ImageRendition' }
           ) | null, small?: (
@@ -6972,7 +7131,10 @@ type AttributesBlockAttribute_AttributeCategoryChoice_Fragment = (
         { id: string, name: string, namePlural?: string | null }
         & { __typename?: 'CategoryLevel' }
       ) | null, image?: (
-        { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+        { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, large?: (
           { id: string, width: number, height: number, src: string }
           & { __typename?: 'ImageRendition' }
         ) | null, small?: (
@@ -7076,7 +7238,10 @@ type AttributesBlockAttributeWithNestedType_AttributeCategoryChoice_Fragment = (
       { id: string, name: string, namePlural?: string | null }
       & { __typename?: 'CategoryLevel' }
     ) | null, image?: (
-      { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+      { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null, large?: (
         { id: string, width: number, height: number, src: string }
         & { __typename?: 'ImageRendition' }
       ) | null, small?: (
@@ -7109,7 +7274,10 @@ type AttributesBlockAttributeWithNestedType_AttributeCategoryChoice_Fragment = (
             { id: string, name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
-            { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+            { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, large?: (
               { id: string, width: number, height: number, src: string }
               & { __typename?: 'ImageRendition' }
             ) | null, small?: (
@@ -7141,7 +7309,10 @@ type AttributesBlockAttributeWithNestedType_AttributeCategoryChoice_Fragment = (
           { id: string, name: string, namePlural?: string | null }
           & { __typename?: 'CategoryLevel' }
         ) | null, image?: (
-          { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+          { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, large?: (
             { id: string, width: number, height: number, src: string }
             & { __typename?: 'ImageRendition' }
           ) | null, small?: (
@@ -7173,7 +7344,10 @@ type AttributesBlockAttributeWithNestedType_AttributeCategoryChoice_Fragment = (
         { id: string, name: string, namePlural?: string | null }
         & { __typename?: 'CategoryLevel' }
       ) | null, image?: (
-        { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+        { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, large?: (
           { id: string, width: number, height: number, src: string }
           & { __typename?: 'ImageRendition' }
         ) | null, small?: (
@@ -7398,7 +7572,10 @@ type StreamFieldFragment_AdaptiveEmbedBlock_Fragment = (
 type StreamFieldFragment_CardListBlock_Fragment = (
   { heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, cards?: Array<{ __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' } | { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' } | { __typename?: 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' } | { __typename?: 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' } | { __typename?: 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
     { heading?: string | null, content?: string | null, link?: string | null, image?: (
-      { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+      { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null, large?: (
         { id: string, width: number, height: number, src: string }
         & { __typename?: 'ImageRendition' }
       ) | null, small?: (
@@ -7433,7 +7610,10 @@ type StreamFieldFragment_CategoryListBlock_Fragment = (
         { name: string, namePlural?: string | null }
         & { __typename?: 'CategoryLevel' }
       ) | null, image?: (
-        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, large?: (
           { id: string, width: number, height: number, src: string }
           & { __typename?: 'ImageRendition' }
         ) | null, small?: (
@@ -7463,7 +7643,10 @@ type StreamFieldFragment_CategoryListBlock_Fragment = (
         { name: string, namePlural?: string | null }
         & { __typename?: 'CategoryLevel' }
       ) | null, image?: (
-        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, large?: (
           { id: string, width: number, height: number, src: string }
           & { __typename?: 'ImageRendition' }
         ) | null, small?: (
@@ -7520,7 +7703,10 @@ type StreamFieldFragment_ChoiceBlock_Fragment = (
 
 type StreamFieldFragment_FrontPageHeroBlock_Fragment = (
   { layout?: string | null, heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, image?: (
-    { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+    { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+      { id: string, width: number, height: number, src: string }
+      & { __typename?: 'ImageRendition' }
+    ) | null, large?: (
       { id: string, width: number, height: number, src: string }
       & { __typename?: 'ImageRendition' }
     ) | null, small?: (
@@ -7750,7 +7936,10 @@ export type CategoryListCategoryFragment = (
     { name: string, namePlural?: string | null }
     & { __typename?: 'CategoryLevel' }
   ) | null, image?: (
-    { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+    { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+      { id: string, width: number, height: number, src: string }
+      & { __typename?: 'ImageRendition' }
+    ) | null, large?: (
       { id: string, width: number, height: number, src: string }
       & { __typename?: 'ImageRendition' }
     ) | null, small?: (
@@ -8400,7 +8589,10 @@ export type GetEmbedActionQueryVariables = Exact<{
 export type GetEmbedActionQuery = (
   { action?: (
     { id: string, identifier: string, name: string, officialName?: string | null, completion?: number | null, updatedAt: any, color?: string | null, image?: (
-      { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+      { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null, large?: (
         { id: string, width: number, height: number, src: string }
         & { __typename?: 'ImageRendition' }
       ) | null, small?: (
@@ -8428,7 +8620,10 @@ export type GetEmbedActionQuery = (
       & { __typename?: 'ActionImplementationPhase' }
     ) | null, categories: Array<(
       { id: string, image?: (
-        { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+        { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, large?: (
           { id: string, width: number, height: number, src: string }
           & { __typename?: 'ImageRendition' }
         ) | null, small?: (
@@ -8444,7 +8639,10 @@ export type GetEmbedActionQuery = (
         & { __typename?: 'Image' }
       ) | null, parent?: (
         { id: string, image?: (
-          { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+          { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, large?: (
             { id: string, width: number, height: number, src: string }
             & { __typename?: 'ImageRendition' }
           ) | null, small?: (
@@ -8460,7 +8658,10 @@ export type GetEmbedActionQuery = (
           & { __typename?: 'Image' }
         ) | null, parent?: (
           { id: string, image?: (
-            { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+            { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, large?: (
               { id: string, width: number, height: number, src: string }
               & { __typename?: 'ImageRendition' }
             ) | null, small?: (
@@ -8980,7 +9181,13 @@ export type OrganizationDetailsQuery = (
     ) | null }
     & { __typename?: 'Organization' }
   ) | null, plan?: (
-    { id: string, name: string, shortName?: string | null, versionName: string, viewUrl?: string | null, organization: (
+    { id: string, name: string, shortName?: string | null, versionName: string, viewUrl?: string | null, actionListPage?: (
+      { dashboardColumns?: Array<(
+        { columnLabel?: string | null }
+        & { __typename: 'IdentifierColumnBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorsColumnBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'ResponsiblePartiesColumnBlock' | 'StatusColumnBlock' | 'TasksColumnBlock' | 'UpdatedAtColumnBlock' }
+      )> | null }
+      & { __typename?: 'ActionListPage' }
+    ) | null, organization: (
       { id: string, name: string, abbreviation: string }
       & { __typename?: 'Organization' }
     ), primaryOrgs: Array<(
@@ -9072,12 +9279,6 @@ export type OrganizationDetailsQuery = (
       & { __typename?: 'Action' }
     )> }
     & { __typename?: 'Plan' }
-  ) | null, planPage?: { __typename: 'AccessibilityStatementPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PrivacyPolicyPage' | 'StaticPage' } | (
-    { dashboardColumns?: Array<(
-      { columnLabel?: string | null }
-      & { __typename: 'IdentifierColumnBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorsColumnBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'ResponsiblePartiesColumnBlock' | 'StatusColumnBlock' | 'TasksColumnBlock' | 'UpdatedAtColumnBlock' }
-    )> | null }
-    & { __typename: 'ActionListPage' }
   ) | null }
   & { __typename?: 'Query' }
 );
@@ -9199,7 +9400,10 @@ export type GetPlanContextQuery = (
       { id: string, googleSiteVerificationTag?: string | null, matomoAnalyticsUrl?: string | null }
       & { __typename?: 'PlanDomain' }
     ) | null, image?: (
-      { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+      { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null, large?: (
         { id: string, width: number, height: number, src: string }
         & { __typename?: 'ImageRendition' }
       ) | null, small?: (
@@ -9380,7 +9584,10 @@ export type PlanContextFragment = (
     { id: string, googleSiteVerificationTag?: string | null, matomoAnalyticsUrl?: string | null }
     & { __typename?: 'PlanDomain' }
   ) | null, image?: (
-    { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+    { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+      { id: string, width: number, height: number, src: string }
+      & { __typename?: 'ImageRendition' }
+    ) | null, large?: (
       { id: string, width: number, height: number, src: string }
       & { __typename?: 'ImageRendition' }
     ) | null, small?: (
@@ -9648,7 +9855,10 @@ export type GetPlanPageGeneralQuery = (
     ) | (
       { heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, cards?: Array<{ __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' } | { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' } | { __typename?: 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' } | { __typename?: 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' } | { __typename?: 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
         { heading?: string | null, content?: string | null, link?: string | null, image?: (
-          { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+          { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, large?: (
             { id: string, width: number, height: number, src: string }
             & { __typename?: 'ImageRendition' }
           ) | null, small?: (
@@ -9679,7 +9889,10 @@ export type GetPlanPageGeneralQuery = (
             { name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
-            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, large?: (
               { id: string, width: number, height: number, src: string }
               & { __typename?: 'ImageRendition' }
             ) | null, small?: (
@@ -9709,7 +9922,10 @@ export type GetPlanPageGeneralQuery = (
             { name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
-            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, large?: (
               { id: string, width: number, height: number, src: string }
               & { __typename?: 'ImageRendition' }
             ) | null, small?: (
@@ -9758,7 +9974,10 @@ export type GetPlanPageGeneralQuery = (
       & { __typename?: 'ChoiceBlock' }
     ) | (
       { layout?: string | null, heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, image?: (
-        { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+        { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, large?: (
           { id: string, width: number, height: number, src: string }
           & { __typename?: 'ImageRendition' }
         ) | null, small?: (
@@ -9908,7 +10127,10 @@ export type GetPlanPageGeneralQuery = (
         { id: string, hideCategoryIdentifiers: boolean }
         & { __typename?: 'CategoryType' }
       ), image?: (
-        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, large?: (
           { id: string, width: number, height: number, src: string }
           & { __typename?: 'ImageRendition' }
         ) | null, small?: (
@@ -9936,7 +10158,10 @@ export type GetPlanPageGeneralQuery = (
           { name: string, namePlural?: string | null }
           & { __typename?: 'CategoryLevel' }
         ) | null, image?: (
-          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, large?: (
             { id: string, width: number, height: number, src: string }
             & { __typename?: 'ImageRendition' }
           ) | null, small?: (
@@ -9963,7 +10188,10 @@ export type GetPlanPageGeneralQuery = (
           { name: string, namePlural?: string | null }
           & { __typename?: 'CategoryLevel' }
         ) | null, image?: (
-          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, large?: (
             { id: string, width: number, height: number, src: string }
             & { __typename?: 'ImageRendition' }
           ) | null, small?: (
@@ -10015,7 +10243,10 @@ export type GetPlanPageGeneralQuery = (
             { id: string, name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
-            { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+            { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, large?: (
               { id: string, width: number, height: number, src: string }
               & { __typename?: 'ImageRendition' }
             ) | null, small?: (
@@ -10048,7 +10279,10 @@ export type GetPlanPageGeneralQuery = (
                   { id: string, name: string, namePlural?: string | null }
                   & { __typename?: 'CategoryLevel' }
                 ) | null, image?: (
-                  { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+                  { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename?: 'ImageRendition' }
+                  ) | null, large?: (
                     { id: string, width: number, height: number, src: string }
                     & { __typename?: 'ImageRendition' }
                   ) | null, small?: (
@@ -10080,7 +10314,10 @@ export type GetPlanPageGeneralQuery = (
                 { id: string, name: string, namePlural?: string | null }
                 & { __typename?: 'CategoryLevel' }
               ) | null, image?: (
-                { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+                { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null, large?: (
                   { id: string, width: number, height: number, src: string }
                   & { __typename?: 'ImageRendition' }
                 ) | null, small?: (
@@ -10112,7 +10349,10 @@ export type GetPlanPageGeneralQuery = (
               { id: string, name: string, namePlural?: string | null }
               & { __typename?: 'CategoryLevel' }
             ) | null, image?: (
-              { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+              { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, large?: (
                 { id: string, width: number, height: number, src: string }
                 & { __typename?: 'ImageRendition' }
               ) | null, small?: (
@@ -10236,7 +10476,10 @@ export type GetPlanPageGeneralQuery = (
     ) | (
       { heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, cards?: Array<{ __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' } | { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' } | { __typename?: 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' } | { __typename?: 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' } | { __typename?: 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
         { heading?: string | null, content?: string | null, link?: string | null, image?: (
-          { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+          { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, large?: (
             { id: string, width: number, height: number, src: string }
             & { __typename?: 'ImageRendition' }
           ) | null, small?: (
@@ -10267,7 +10510,10 @@ export type GetPlanPageGeneralQuery = (
             { name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
-            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, large?: (
               { id: string, width: number, height: number, src: string }
               & { __typename?: 'ImageRendition' }
             ) | null, small?: (
@@ -10297,7 +10543,10 @@ export type GetPlanPageGeneralQuery = (
             { name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
-            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, large?: (
               { id: string, width: number, height: number, src: string }
               & { __typename?: 'ImageRendition' }
             ) | null, small?: (
@@ -10346,7 +10595,10 @@ export type GetPlanPageGeneralQuery = (
       & { __typename?: 'ChoiceBlock' }
     ) | (
       { layout?: string | null, heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, image?: (
-        { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+        { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, large?: (
           { id: string, width: number, height: number, src: string }
           & { __typename?: 'ImageRendition' }
         ) | null, small?: (
@@ -10519,7 +10771,10 @@ export type GetPlanPageGeneralQuery = (
     & { __typename: 'PrivacyPolicyPage' }
   ) | (
     { leadParagraph?: string | null, id?: string | null, slug: string, title: string, lastPublishedAt?: any | null, headerImage?: (
-      { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+      { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null, large?: (
         { id: string, width: number, height: number, src: string }
         & { __typename?: 'ImageRendition' }
       ) | null, small?: (
@@ -10593,7 +10848,10 @@ export type GetPlanPageGeneralQuery = (
     ) | (
       { heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, cards?: Array<{ __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' } | { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' } | { __typename?: 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' } | { __typename?: 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' } | { __typename?: 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
         { heading?: string | null, content?: string | null, link?: string | null, image?: (
-          { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+          { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, large?: (
             { id: string, width: number, height: number, src: string }
             & { __typename?: 'ImageRendition' }
           ) | null, small?: (
@@ -10624,7 +10882,10 @@ export type GetPlanPageGeneralQuery = (
             { name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
-            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, large?: (
               { id: string, width: number, height: number, src: string }
               & { __typename?: 'ImageRendition' }
             ) | null, small?: (
@@ -10654,7 +10915,10 @@ export type GetPlanPageGeneralQuery = (
             { name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
-            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, large?: (
               { id: string, width: number, height: number, src: string }
               & { __typename?: 'ImageRendition' }
             ) | null, small?: (
@@ -10703,7 +10967,10 @@ export type GetPlanPageGeneralQuery = (
       & { __typename?: 'ChoiceBlock' }
     ) | (
       { layout?: string | null, heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, image?: (
-        { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+        { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, large?: (
           { id: string, width: number, height: number, src: string }
           & { __typename?: 'ImageRendition' }
         ) | null, small?: (
@@ -11030,7 +11297,10 @@ export type GetHomePageQuery = (
     ) | (
       { heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, cards?: Array<{ __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' } | { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' } | { __typename?: 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' } | { __typename?: 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' } | { __typename?: 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
         { heading?: string | null, content?: string | null, link?: string | null, image?: (
-          { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+          { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, large?: (
             { id: string, width: number, height: number, src: string }
             & { __typename?: 'ImageRendition' }
           ) | null, small?: (
@@ -11061,7 +11331,10 @@ export type GetHomePageQuery = (
             { name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
-            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, large?: (
               { id: string, width: number, height: number, src: string }
               & { __typename?: 'ImageRendition' }
             ) | null, small?: (
@@ -11091,7 +11364,10 @@ export type GetHomePageQuery = (
             { name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
-            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, large?: (
               { id: string, width: number, height: number, src: string }
               & { __typename?: 'ImageRendition' }
             ) | null, small?: (
@@ -11140,7 +11416,10 @@ export type GetHomePageQuery = (
       & { __typename?: 'ChoiceBlock' }
     ) | (
       { layout?: string | null, heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, image?: (
-        { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+        { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, large?: (
           { id: string, width: number, height: number, src: string }
           & { __typename?: 'ImageRendition' }
         ) | null, small?: (
@@ -11282,7 +11561,10 @@ export type GetHomePageQuery = (
     { id: string, primaryActionClassification?: (
       { categories: Array<(
         { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, image?: (
-          { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, large?: (
+          { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, large?: (
             { id: string, width: number, height: number, src: string }
             & { __typename?: 'ImageRendition' }
           ) | null, small?: (
