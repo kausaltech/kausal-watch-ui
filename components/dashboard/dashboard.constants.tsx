@@ -33,7 +33,7 @@ interface Column {
   renderHeader: (
     t: TFunction,
     plan: PlanContextFragment,
-    label?: string
+    label?: string | null
   ) => ReactNode;
   renderCell: (
     action: ActionListAction,

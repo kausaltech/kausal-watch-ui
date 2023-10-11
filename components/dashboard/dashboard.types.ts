@@ -53,5 +53,5 @@ export type ColumnBlock = NonNullable<ActionDashboardColumnBlock['__typename']>;
 
 export interface ColumnConfig {
   __typename: ColumnBlock;
-  columnLabel?: string;
+  columnLabel?: string | null;
 }

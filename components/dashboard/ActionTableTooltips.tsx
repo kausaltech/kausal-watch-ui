@@ -31,13 +31,13 @@ const PhasesTooltipList = styled.ul`
   list-style: none;
 `;
 
-const PhasesTooltipListItem = styled.li<{ active: boolean }>`
-  color: ${(props) => (props.active ? '#333' : '#ccc')};
+const PhasesTooltipListItem = styled.li<{ $active: boolean }>`
+  color: ${(props) => (props.$active ? '#333' : '#ccc')};
 `;
 
 const TaskTooltip = styled.div``;
 
-const StatusLabel = styled.div<{ color: string }>`
+const StatusLabel = styled.div<{ $color: string }>`
   &:before {
     content: '';
     display: inline-block;
@@ -46,8 +46,8 @@ const StatusLabel = styled.div<{ color: string }>`
     margin-right: 0.5em;
     margin-bottom: -0.1em;
     border-radius: 50%;
-    background-color: ${(props) => props.theme.graphColors[props.color]};
-    color: ${(props) => props.theme.graphColors[props.color]};
+    background-color: ${(props) => props.theme.graphColors[props.$color]};
+    color: ${(props) => props.theme.graphColors[props.$color]};
   }
 `;
 
@@ -143,7 +143,7 @@ export const ImplementationPhaseTooltipContent = ({
   };
 
   const statusDisplay = (
-    <StatusLabel color={status?.color}>{status.label}</StatusLabel>
+    <StatusLabel $color={status?.color}>{status.label}</StatusLabel>
   );
   // If action is merged, display merged status
   if (merged) {
@@ -170,7 +170,7 @@ export const ImplementationPhaseTooltipContent = ({
         {plan.actionImplementationPhases.map((phase) => (
           <PhasesTooltipListItem
             key={phase.id}
-            active={activePhase.id === phase.id}
+            $active={activePhase.id === phase.id}
           >
             {phase.name}
             {activePhase?.id === phase.id && status.name && !status.isCompleted

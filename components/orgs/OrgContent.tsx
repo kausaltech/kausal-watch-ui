@@ -167,11 +167,11 @@ const GET_ORG_DETAILS = gql`
     }
     plan(id: $planId) {
       ...OrgContentPlan
-    }
-    # Org actions table uses the custom column config from the actions list page
-    planPage(plan: $planId, path: "/actions") {
-      __typename
-      ...ActionTableColumnFragment
+
+      # Org actions table uses the custom column config from the actions list page
+      actionListPage {
+        ...ActionTableColumnFragment
+      }
     }
   }
 
@@ -349,7 +349,7 @@ function OrgContent(props) {
     );
   }
 
-  const { organization: org, plan: planFromQuery, planPage } = data;
+  const { organization: org, plan: planFromQuery } = data;
 
   // Make sure host plan is first
   const allPlans = [planFromQuery, ...org.plansWithActionResponsibilities];
@@ -438,8 +438,8 @@ function OrgContent(props) {
           <ActionTableContainer>
             <ActionStatusTable
               columns={
-                planPage?.__typename === 'ActionListPage'
-                  ? planPage.dashboardColumns ?? []
+                planFromQuery.actionListPage?.__typename === 'ActionListPage'
+                  ? planFromQuery.actionListPage.dashboardColumns ?? []
                   : []
               }
               enableExport={false}
