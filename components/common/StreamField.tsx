@@ -139,6 +139,18 @@ const STREAM_FIELD_FRAGMENT = gql`
       heading
       lead
     }
+    ... on LargeImageBlock {
+      image {
+        title
+        altText
+        width
+        height
+        renditionUncropped: rendition(size: "1320x1320", crop: false) {
+          src
+        }
+      }
+      width
+    }
     ... on IndicatorShowcaseBlock {
       blocks {
         id
@@ -458,6 +470,48 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
           altText={image?.altText}
           imageCredit={image?.imageCredit}
         />
+      );
+    }
+    case 'LargeImageBlock': {
+      /*
+       * LargeImageBlock can have two widths:
+       * maximum: image is full container size
+       * fit_to_column: image is limited to text block width
+       * Image keeps it original ratio and doesn't crop
+       */
+      const getColSize = (breakpoint) => {
+        if (block.width === 'maximum') return {};
+        switch (breakpoint) {
+          case 'xl':
+            return { size: hasSidebar ? 7 : 6, offset: hasSidebar ? 4 : 3 };
+          case 'lg':
+            return { size: 8, offset: hasSidebar ? 4 : 2 };
+          case 'md':
+          default:
+            return { size: 10, offset: 1 };
+        }
+      };
+
+      return (
+        <Container id={id}>
+          <Row>
+            <Col
+              xl={getColSize('xl')}
+              lg={getColSize('lg')}
+              md={getColSize('md')}
+            >
+              <img
+                src={block.image?.renditionUncropped?.src}
+                alt={block.image?.altText}
+                style={{
+                  display: 'block',
+                  width: '100%',
+                  marginBottom: theme.spaces.s600,
+                }}
+              />
+            </Col>
+          </Row>
+        </Container>
       );
     }
     case 'IndicatorShowcaseBlock': {

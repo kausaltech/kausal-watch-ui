@@ -187,6 +187,7 @@
       "IndicatorShowcaseBlock",
       "IndicatorsColumnBlock",
       "IntegerBlock",
+      "LargeImageBlock",
       "NameColumnBlock",
       "OrganizationColumnBlock",
       "PageChooserBlock",
