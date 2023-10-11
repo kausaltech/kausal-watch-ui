@@ -55,7 +55,7 @@ const ImgArea = styled.div<{ colorEffect?: string }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: ${(props) => props.colorEffect};
+  background-color: ${(props) => props.colorEffect || props.theme.brandDark};
   border-bottom: ${(props) => (props.colorEffect ? '6px' : '0')} solid
     ${(props) => props.colorEffect};
 
@@ -77,10 +77,7 @@ const ImgBg = styled.div<{ background: string; imageAlign: string }>`
 `;
 
 const SvgIcon = styled(SVG)`
-  position: absolute;
-  right: ${(props) => props.theme.spaces.s050};
-  top: ${(props) => props.theme.spaces.s050};
-  width: ${(props) => props.theme.spaces.s300};
+  width: ${(props) => props.theme.spaces.s800};
   fill: white;
 `;
 
@@ -121,14 +118,14 @@ const Card = (props: CardProps) => {
   const ImageComponent = () => {
     if (imageType === 'svgIcon') {
       return (
-        <ImgArea colorEffect={colorEffect}>
+        <ImgArea colorEffect={colorEffect} data-testid="svg-icon">
           {imageUrl && <SvgIcon src={imageUrl} />}
         </ImgArea>
       );
     }
     if (imageType === 'bitmapIcon') {
       return (
-        <ImgArea colorEffect={colorEffect}>
+        <ImgArea colorEffect={colorEffect} data-testid="bitmap-icon">
           {imageUrl && <BitmapIcon imageSrc={imageUrl} />}
         </ImgArea>
       );
@@ -136,7 +133,11 @@ const Card = (props: CardProps) => {
     if (imageType === 'image' && imageUrl) {
       return (
         <ImgArea colorEffect={colorEffect}>
-          <ImgBg background={imageUrl} imageAlign={imageAlign} />
+          <ImgBg
+            background={imageUrl}
+            imageAlign={imageAlign}
+            data-testid="image-bg"
+          />
         </ImgArea>
       );
     }

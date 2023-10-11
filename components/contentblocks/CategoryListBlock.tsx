@@ -168,6 +168,7 @@ const CategoryListBlock = (props: CategoryListBlockProps) => {
   /*
     Determine what image to use on category card
     If category has no own image but has icon use icon on colored bg
+    If category has no own color use bradDark color as background
     If category has no own image and no icon use fallback image
     If category has own image use that
   */
