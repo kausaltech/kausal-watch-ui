@@ -4,7 +4,7 @@ import { useTranslation } from 'common/i18n';
 import { Button, Tooltip } from 'reactstrap';
 
 const InfoButton = styled(Button)`
-  padding: 0 0.5rem 0.1rem;
+  padding: 0 0.25rem 0.1rem;
   line-height: 0.5rem;
   opacity: 0.5;
   svg {
