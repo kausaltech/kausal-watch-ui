@@ -168,6 +168,12 @@ const MainCategory = styled.div`
   }
 `;
 
+const FilterColumn = styled(Col)`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+`;
+
 function sortDepthFirst<Type>(
   items: Type[],
   compareItem: (a: Type, b: Type) => number,
@@ -481,7 +487,7 @@ abstract class DefaultFilter<Value extends FilterValue>
   ) {
     const _isMulti = isMulti ?? false;
     return (
-      <Col sm={this.sm} md={this.md} lg={this.lg} key={this.id}>
+      <FilterColumn sm={this.sm} md={this.md} lg={this.lg} key={this.id}>
         <ActionListDropdownInput
           isMulti={_isMulti}
           id={this.id}
@@ -492,7 +498,7 @@ abstract class DefaultFilter<Value extends FilterValue>
           onChange={onChange}
           options={this.options}
         />
-      </Col>
+      </FilterColumn>
     );
   }
 }
@@ -806,7 +812,7 @@ class ActionNameFilter implements ActionListFilter<string | undefined> {
     t: TFunction
   ) {
     return (
-      <Col m={this.sm} md={this.md} lg={this.lg} key={this.id}>
+      <FilterColumn m={this.sm} md={this.md} lg={this.lg} key={this.id}>
         <ActionListTextInput
           id={this.id}
           label={this.getLabel(t)}
@@ -815,7 +821,7 @@ class ActionNameFilter implements ActionListFilter<string | undefined> {
           currentValue={value}
           inputRef={this.ref}
         />
-      </Col>
+      </FilterColumn>
     );
   }
 }
