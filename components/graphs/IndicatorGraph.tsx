@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import dynamic from 'next/dynamic';
 import { merge, uniq } from 'lodash';
 import styled from 'styled-components';
@@ -344,6 +343,11 @@ function IndicatorGraph(props: IndicatorGraphProps) {
     ],
   };
 
+  /* Override goal line color from theme, only supports single color */
+  if (theme.settings?.graphs?.goalLineColor) {
+    plotColors.goalScale = [theme.settings.graphs.goalLineColor];
+  }
+
   // TODO: these ought to be set in the backend
   const lineShape = theme.settings?.graphs?.lineShape || 'spline';
   const useAreaGraph = theme.settings?.graphs?.areaGraphs;
@@ -424,7 +428,7 @@ function IndicatorGraph(props: IndicatorGraphProps) {
         t.legendGroup = t.name = organizationDimension.categories[idx % 2].name;
       }
       if (axisIndex > 1) {
-        for (let c of ['x', 'y']) {
+        for (const c of ['x', 'y']) {
           t[`${c}axis`] = `${c}${axisIndex}`;
         }
       }
@@ -446,9 +450,6 @@ function IndicatorGraph(props: IndicatorGraphProps) {
       ...trendTrace,
     });
 
-  // we fill goal trace too if there is only one data trace and area graph is enabled
-  const fillTraces = traces.length === 1 && useAreaGraph;
-
   // add goals if defined
   if (!isComparison && goalTraces.length) {
     goalTraces.forEach((goalTrace, idx) => {
@@ -456,11 +457,6 @@ function IndicatorGraph(props: IndicatorGraphProps) {
         ...goalTrace,
         type: 'scatter',
         mode: goalTrace.scenario ? 'markers' : 'lines+markers',
-        fill: fillTraces ? 'tozeroy' : 'none',
-        fillcolor: transparentize(
-          0.8,
-          plotColors.goalScale[idx % plotColors.goalScale.length]
-        ),
         line: {
           width: 3,
           dash: 'dash',
@@ -472,7 +468,6 @@ function IndicatorGraph(props: IndicatorGraphProps) {
           color: plotColors.goalScale[idx % plotColors.goalScale.length],
         },
         opacity: 0.7,
-        //hoverinfo: 'none',
         hovertemplate: `(%{x}) ${goalTrace.name}: %{y} ${yRange.unit}`,
         hoverlabel: {
           namelength: 0,

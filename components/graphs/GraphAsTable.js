@@ -11,6 +11,7 @@ const CollapsibleTable = styled.div`
 `;
 
 const Trigger = styled.div`
+  padding-bottom: ${(props) => props.theme.spaces.s050};
   background-color: ${(props) => props.theme.graphColors.grey005};
   text-align: center;
 `;
@@ -43,6 +44,12 @@ const TableContainer = styled.div`
 
 const TriggerButton = styled(Button)`
   text-decoration: none;
+  color: ${(props) => props.theme.linkColor};
+
+  &:hover {
+    text-decoration: underline;
+    color: ${(props) => props.theme.linkColor};
+  }
 `;
 
 function GraphAsTable(props) {
