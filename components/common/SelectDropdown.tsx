@@ -2,7 +2,6 @@ import React from 'react';
 import Select, {
   components,
   DropdownIndicatorProps,
-  GroupBase,
   MultiValueProps,
   Theme as SelectTheme,
   ValueContainerProps,
@@ -11,14 +10,15 @@ import styled from 'styled-components';
 import Highlighter from 'react-highlight-words';
 import { FormGroup, Label as BSLabel } from 'reactstrap';
 import { useTheme, Theme } from 'common/theme';
-import { data } from 'autoprefixer';
 import PopoverTip from 'components/common/PopoverTip';
-import { TRUE } from 'sass';
-import { useTranslation } from 'common/i18n';
 
 const Label = styled(BSLabel)`
   font-weight: ${(props) => props.theme.formLabelFontWeight};
   line-height: ${(props) => props.theme.lineHeightSm};
+`;
+
+const TooltipWrapper = styled.span`
+  white-space: nowrap; // Prevents the tooltip from wrapping
 `;
 
 function getSelectStyles<Option extends SelectDropdownOption>(
@@ -81,11 +81,15 @@ function getSelectStyles<Option extends SelectDropdownOption>(
       const { indent } = data;
       const ret = {
         ...provided,
-        color: theme.themeColors.black,
-        backgroundColor: isSelected
-          ? theme.graphColors.grey020
+        color: isSelected
+          ? theme.themeColors.white
           : isFocused
-          ? theme.graphColors.grey005
+          ? theme.themeColors.black
+          : theme.themeColors.black,
+        backgroundColor: isSelected
+          ? theme.graphColors.grey080
+          : isFocused
+          ? theme.graphColors.grey020
           : theme.graphColors.white,
         margin: 0,
         //marginLeft: `${indent ?? 0}rem`,
@@ -231,14 +235,27 @@ function SelectDropdown<
   } = props;
   const theme = useTheme();
   const styles = getSelectStyles(theme, props.isMulti === true, size);
+
+  /* Do not wrap the tooltip icon on a new line alone */
+  /* Join it with the last word of the label instead */
+  /* TODO: Make this a part of the label/PopoverTip component */
+  const labelLastWord = label?.split(' ').pop();
+  const labelText = helpText
+    ? label?.slice(0, label.length - (labelLastWord?.length || 0))
+    : label;
+  const tooltipElement = helpText ? (
+    <TooltipWrapper>
+      {labelLastWord}
+      <PopoverTip content={helpText} identifier={id} invert={invert} />
+    </TooltipWrapper>
+  ) : null;
+
   return (
     <FormGroup>
       {label && (
         <Label for={id}>
-          {label}
-          {helpText && (
-            <PopoverTip content={helpText} identifier={id} invert={invert} />
-          )}
+          {labelText}
+          {tooltipElement}
         </Label>
       )}
       <Select<SelectDropdownOption, IsMulti>
@@ -261,7 +278,7 @@ function SelectDropdown<
             />
           );
           if (context === 'value' || !indent) return highlighted;
-          let spans: JSX.Element[] = [];
+          const spans: JSX.Element[] = [];
           for (let i = 0; i < indent; i++) {
             spans.push(
               <span
