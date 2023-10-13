@@ -81,11 +81,15 @@ function getSelectStyles<Option extends SelectDropdownOption>(
       const { indent } = data;
       const ret = {
         ...provided,
-        color: theme.themeColors.black,
-        backgroundColor: isSelected
-          ? theme.graphColors.grey020
+        color: isSelected
+          ? theme.themeColors.white
           : isFocused
-          ? theme.graphColors.grey005
+          ? theme.themeColors.black
+          : theme.themeColors.black,
+        backgroundColor: isSelected
+          ? theme.graphColors.grey080
+          : isFocused
+          ? theme.graphColors.grey020
           : theme.graphColors.white,
         margin: 0,
         //marginLeft: `${indent ?? 0}rem`,
