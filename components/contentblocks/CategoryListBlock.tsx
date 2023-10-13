@@ -27,6 +27,12 @@ const CATEGORY_FRAGMENT = gql`
       ...MultiUseImageFragment
     }
     color
+    iconSvgUrl
+    iconImage {
+      rendition(size: "400x400", crop: false) {
+        src
+      }
+    }
     categoryPage {
       title
       urlPath
@@ -122,6 +128,12 @@ export type CategoryListBlockCategory = {
   id: string;
   image?: MultiUseImageFragmentFragment | null;
   color?: string | null;
+  iconSvgUrl?: string | null;
+  iconImage?: {
+    rendition: {
+      src: string;
+    };
+  };
   identifier: string;
   name: string;
   shortDescription?: string;
@@ -153,6 +165,43 @@ const CategoryListBlock = (props: CategoryListBlockProps) => {
     categories = fallbackCategories,
   } = props;
 
+  /*
+    Determine what image to use on category card
+    If category has no own image but has icon use icon on colored bg
+    If category has no own color use bradDark color as background
+    If category has no own image and no icon use fallback image
+    If category has own image use that
+  */
+  type CardImageType = (category: CategoryListBlockCategory) => {
+    type: 'image' | 'svgIcon' | 'bitmapIcon';
+    src: string | undefined;
+    alignment: string;
+  };
+
+  const getCardImage: CardImageType = (category) => {
+    const categryImageSrc = category.image?.small?.src;
+
+    if (!categryImageSrc && category.iconSvgUrl) {
+      return {
+        type: 'svgIcon',
+        src: category.iconSvgUrl,
+        alignment: 'center',
+      };
+    }
+    if (!categryImageSrc && category.iconImage) {
+      return {
+        type: 'bitmapIcon',
+        src: category.iconImage?.rendition?.src,
+        alignment: 'center',
+      };
+    } else
+      return {
+        type: 'image',
+        src: categryImageSrc || fallbackImage?.small?.src,
+        alignment: getBgImageAlignment(category.image || fallbackImage),
+      };
+  };
+
   return (
     <CategoryListSection id={id}>
       <Container>
@@ -175,13 +224,10 @@ const CategoryListBlock = (props: CategoryListBlockProps) => {
                     <Link href={cat.categoryPage.urlPath}>
                       <a className="card-wrapper">
                         <Card
-                          imageUrl={
-                            cat.image?.small?.src || fallbackImage?.small?.src
-                          }
-                          imageAlign={getBgImageAlignment(
-                            cat.image || fallbackImage
-                          )}
-                          colorEffect={cat.color}
+                          imageUrl={getCardImage(cat).src}
+                          imageAlign={getCardImage(cat).alignment}
+                          imageType={getCardImage(cat).type}
+                          colorEffect={cat.color ?? undefined}
                         >
                           <div>
                             <CardHeader className="card-title">
