@@ -7,6 +7,7 @@ module.exports = {
       'components/**/*.{js,tsx}',
       'common/**/*.{js,tsx}',
       'context/**/*.{js,tsx}',
+      'e2e-tests/**/*.ts',
     ],
     service: {
       name: 'kausal-watch-backend',
