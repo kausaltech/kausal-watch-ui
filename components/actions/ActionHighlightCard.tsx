@@ -1,5 +1,4 @@
 import React, { useContext } from 'react';
-import PropTypes from 'prop-types';
 import { Card, CardBody, CardTitle, Badge } from 'reactstrap';
 import styled from 'styled-components';
 import { transparentize } from 'polished';
@@ -7,6 +6,7 @@ import PlanContext from 'context/plan';
 import { useTheme } from 'common/theme';
 import EmbedContext from 'context/embed';
 import { cleanActionStatus } from 'common/preprocess';
+import { ActionHighlightListAction } from './ActionHighlightsList';
 import { getStatusColorForAction } from 'common/ActionStatusSummary';
 import { ActionLink } from 'common/links';
 import Icon from 'components/common/Icon';
@@ -61,14 +61,14 @@ const StyledCardTitle = styled(CardTitle)`
   margin-bottom: 0;
 `;
 
-const ImgArea = styled.div`
+const ImgArea = styled.div<{ bgcolor?: string }>`
   min-height: 9rem;
   position: relative;
   background-color: ${(props) =>
     props.bgcolor || props.theme.themeColors.light};
 `;
 
-const ImgBg = styled.div`
+const ImgBg = styled.div<{ background: string }>`
   height: 9rem;
   background-image: url(${(props) => props.background});
   background-position: center;
@@ -104,7 +104,15 @@ const ActionNumber = styled.div`
   }
 `;
 
-function ActionHighlightCard(props) {
+type ActionHighlightCardProps = {
+  action: ActionHighlightListAction;
+  imageUrl?: string;
+  hideIdentifier?: boolean;
+};
+
+// TODO: FIX typechecking
+
+function ActionHighlightCard(props: ActionHighlightCardProps) {
   const { action, imageUrl, hideIdentifier } = props;
   const plan = useContext(PlanContext);
   const embed = useContext(EmbedContext);
@@ -162,24 +170,5 @@ function ActionHighlightCard(props) {
     </ActionLink>
   );
 }
-
-ActionHighlightCard.defaultProps = {
-  hideIdentifier: false,
-  imageUrl: undefined,
-};
-
-ActionHighlightCard.propTypes = {
-  action: PropTypes.shape({
-    identifier: PropTypes.string,
-    name: PropTypes.string,
-    status: PropTypes.shape({
-      name: PropTypes.string,
-      identifier: PropTypes.string,
-    }),
-    completion: PropTypes.number,
-  }).isRequired,
-  imageUrl: PropTypes.string,
-  hideIdentifier: PropTypes.bool,
-};
 
 export default React.memo(ActionHighlightCard);
