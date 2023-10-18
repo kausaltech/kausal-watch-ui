@@ -23,7 +23,7 @@ const IndicatorHighlightsBlock = ({ id = '' }: CommonContentBlockProps) => {
   return (
     <IndicatorsSection id={id} className="indicators-section">
       <Container>
-        <IndicatorHighlightsList plan={plan} />
+        <IndicatorHighlightsList planIdentifier={plan.identifier} />
       </Container>
     </IndicatorsSection>
   );

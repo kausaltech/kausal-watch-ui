@@ -1,9 +1,8 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Card, CardImgOverlay, CardBody, CardTitle } from 'reactstrap';
 import styled from 'styled-components';
-import { getActionTermContext, withTranslation } from '../../common/i18n';
-import { IndicatorLink } from '../../common/links';
+import { getActionTermContext, withTranslation } from 'common/i18n';
+import { IndicatorLink } from 'common/links';
 import { usePlan } from 'context/plan';
 import { readableColor } from 'polished';
 
@@ -96,8 +95,16 @@ function beautifyValue(x) {
   return displayNumber.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 }
 
-function IndicatorHighlightCard(props) {
-  const { t, level, objectid, name, value, unit } = props;
+type IndicatorHighlightCardProps = {
+  level: string | null | undefined;
+  objectid: string;
+  name: string;
+  value?: number;
+  unit?: string;
+};
+
+function IndicatorHighlightCard(props: IndicatorHighlightCardProps) {
+  const { t, level, objectid, name, value = null, unit = '' } = props;
   const plan = usePlan();
 
   // FIXME: It sucks that we only use the context for the translation key 'action'
@@ -108,7 +115,6 @@ function IndicatorHighlightCard(props) {
 
   return (
     <StyledCard>
-      {/* TODO: animate transition */}
       <IndicatorLink id={objectid} prefetch={false}>
         <a>
           <IndicatorBg level={level} />
@@ -131,18 +137,5 @@ function IndicatorHighlightCard(props) {
     </StyledCard>
   );
 }
-
-IndicatorHighlightCard.defaultProps = {
-  value: null,
-  unit: '-',
-};
-
-IndicatorHighlightCard.propTypes = {
-  level: PropTypes.string.isRequired,
-  objectid: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
-  value: PropTypes.number,
-  unit: PropTypes.string,
-};
 
 export default withTranslation('common')(IndicatorHighlightCard);

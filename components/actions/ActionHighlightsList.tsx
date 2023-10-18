@@ -1,12 +1,13 @@
 /* eslint-disable max-classes-per-file */
 import React, { useContext } from 'react';
-import PropTypes from 'prop-types';
 import { gql } from '@apollo/client';
 import { Query } from '@apollo/client/react/components';
 import styled from 'styled-components';
 import { Row, Col } from 'reactstrap';
-import LazyLoad from 'react-lazyload';
-
+import {
+  ActionHightlightListQuery,
+  PlanContextFragment,
+} from 'common/__generated__/graphql';
 import EmbedContext from 'context/embed';
 import Button from 'components/common/Button';
 import { getActionTermContext, useTranslation } from 'common/i18n';
@@ -93,28 +94,21 @@ const StyledCardContainer = styled(ReactStrapCol)`
   .card {
     height: 100%;
   }
-
-  .lazyload-wrapper {
-    width: 100%;
-  }
 `;
 
-const ConditionalLazyLoad = (props) => {
-  if (props.embed?.active) {
-    return <>{props.children}</>;
-  }
-  return <LazyLoad height={300}>{props.children}</LazyLoad>;
+export type ActionHighlightListAction = NonNullable<
+  ActionHightlightListQuery['planActions']
+>;
+
+type ActionCardListProps = {
+  t: (arg0: string, arg1: Record<string, unknown>) => string;
+  actions: ActionHighlightListAction;
+  plan: PlanContextFragment;
+  displayHeader?: boolean;
 };
 
-const CardContainer = (props) => {
-  return (
-    <StyledCardContainer {...props}>
-      <ConditionalLazyLoad {...props}>{props.children}</ConditionalLazyLoad>
-    </StyledCardContainer>
-  );
-};
-
-function ActionCardList({ t, actions, plan, displayHeader }) {
+function ActionCardList(props: ActionCardListProps) {
+  const { t, actions, plan, displayHeader } = props;
   // Components which use the EmbedContext support embedding
   const embed = useContext(EmbedContext);
 
@@ -122,11 +116,13 @@ function ActionCardList({ t, actions, plan, displayHeader }) {
     <Row>
       {displayHeader && (
         <ListHeader xs="12">
-          <h2>{t('recently-updated-actions', getActionTermContext(plan))}</h2>
+          <h2>
+            {t('recently-updated-actions', getActionTermContext(plan) || {})}
+          </h2>
         </ListHeader>
       )}
-      {actions.map((item) => (
-        <CardContainer
+      {actions?.map((item) => (
+        <StyledCardContainer
           xs="12"
           md="6"
           lg="4"
@@ -137,15 +133,15 @@ function ActionCardList({ t, actions, plan, displayHeader }) {
           <ActionHighlightCard
             action={item}
             imageUrl={getActionImage(plan, item)?.small.src}
-            hideIdentifier={plan.hideActionIdentifiers}
+            hideIdentifier={plan.hideActionIdentifiers || false}
           />
-        </CardContainer>
+        </StyledCardContainer>
       ))}
       {!embed.active && (
         <Col xs="12" className="mt-5 mb-5">
           <ActionListLink>
             <Button color="primary" tag="a">
-              {t('see-all-actions', getActionTermContext(plan))}{' '}
+              {t('see-all-actions', getActionTermContext(plan) || {})}{' '}
               <Icon name="arrowRight" />
             </Button>
           </ActionListLink>
@@ -155,26 +151,22 @@ function ActionCardList({ t, actions, plan, displayHeader }) {
   );
 }
 
-ActionCardList.propTypes = {
-  t: PropTypes.func.isRequired,
-  actions: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  displayHeader: PropTypes.bool,
-  plan: PropTypes.shape({
-    identifier: PropTypes.string,
-  }).isRequired,
+type ActionHighlightsListProps = {
+  plan: PlanContextFragment;
 };
 
-function ActionHighlightsList(props) {
-  const { plan, count, displayHeader } = props;
+function ActionHighlightsList(props: ActionHighlightsListProps) {
+  const { plan } = props;
 
   const { t } = useTranslation();
 
   const queryParams = {
     plan: plan.identifier,
-    first: count ?? 6,
+    first: 6,
     orderBy: '-updatedAt',
   };
 
+  // TODO: Convert to useQuery
   return (
     <Query query={GET_ACTION_LIST} variables={queryParams}>
       {({ data, loading, error }) => {
@@ -183,25 +175,10 @@ function ActionHighlightsList(props) {
           return (
             <p>{t('error-loading-actions', getActionTermContext(plan))}</p>
           );
-        return (
-          <ActionCardList
-            t={t}
-            actions={data.planActions}
-            plan={plan}
-            displayHeader={displayHeader ?? true}
-          />
-        );
+        return <ActionCardList t={t} actions={data.planActions} plan={plan} />;
       }}
     </Query>
   );
 }
-
-ActionHighlightsList.propTypes = {
-  count: PropTypes.number,
-  displayHeader: PropTypes.bool,
-  plan: PropTypes.shape({
-    identifier: PropTypes.string,
-  }).isRequired,
-};
 
 export default ActionHighlightsList;
