@@ -2,6 +2,7 @@ import React, { ReactElement, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { usePlan } from 'context/plan';
 import { useTheme } from 'common/theme';
+import { useTranslation } from 'common/i18n';
 import { aplans } from 'common/api';
 import { Alert } from 'reactstrap';
 import { captureException } from 'common/sentry';
@@ -274,6 +275,7 @@ const InteractiveCausalChain = ({ nodes }) => {
 function IndicatorCausalVisualisation({ actionId }: Props) {
   const plan = usePlan();
   const isServer = typeof window === 'undefined';
+  const { i18n } = useTranslation();
 
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState(null);
@@ -282,13 +284,13 @@ function IndicatorCausalVisualisation({ actionId }: Props) {
   useEffect(() => {
     // React advises to declare the async function directly inside useEffect
     async function fetchData() {
+      const params = {
+        plan: plan.identifier,
+        action: actionId,
+        language: i18n.language,
+      };
       aplans
-        .get('insight', {
-          params: {
-            plan: plan.identifier,
-            action: actionId,
-          },
-        })
+        .get('insight', { params })
         .then((result) => {
           setData(result);
           setIsLoaded(true);
