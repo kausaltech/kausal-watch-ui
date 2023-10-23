@@ -65,8 +65,8 @@ const STREAM_FIELD_FRAGMENT = gql`
       }
     }
     ... on IndicatorGroupBlock {
-      items {
-        id
+      title
+      indicators {
         ... on IndicatorBlock {
           style
           indicator {
@@ -414,8 +414,18 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
       );
     }
     case 'IndicatorGroupBlock': {
-      const { items } = block;
-      return <IndicatorGroupBlock indicators={items} />;
+      const { indicators, title } = block;
+
+      if (!indicators?.length) {
+        return null;
+      }
+
+      return (
+        <IndicatorGroupBlock
+          title={title ?? undefined}
+          indicators={indicators}
+        />
+      );
     }
     case 'ActionListBlock': {
       const { categoryFilter } = block;
