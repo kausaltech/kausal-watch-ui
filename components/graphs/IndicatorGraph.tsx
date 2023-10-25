@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { useTheme } from 'common/theme';
 import { transparentize } from 'polished';
 import { splitLines } from 'common/utils';
+import { Layout } from 'plotly.js';
 
 const log10 = Math.log(10);
 
@@ -28,7 +29,7 @@ const createLayout = (
     '-apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Ubuntu, roboto, noto, arial, sans-serif';
   const hasCategories = !hasTimeDimension;
 
-  const yaxes = {
+  const yaxes: NonNullable<Pick<Layout, 'yaxis'>> = {
     yaxis: {
       automargin: true,
       hoverformat: `${config.maxDigits === 0 ? '' : '.'}${config.maxDigits}r`,
@@ -174,7 +175,8 @@ const createTraces = (
   const allXValues = [];
 
   const newTraces = traces.map((trace, idx) => {
-    const modTrace = trace;
+    const modTrace = { ...trace, cliponaxis: false };
+
     trace.y.forEach((value) => {
       // Determine the highest number of significant digits in the dataset
       // to be able to set suitable number formating.
