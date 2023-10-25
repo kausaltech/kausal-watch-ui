@@ -197,5 +197,6 @@
     "other-plans-only": "Sök i alla andra planer",
     "recently-updated-actions_STRATEGY": "Nyligen uppdaterade strategier",
     "search-from-plans": "Sök från planer",
-    "see-all-actions_STRATEGY": "Se alla strategier"
+    "see-all-actions_STRATEGY": "Se alla strategier",
+    "select-sector-for-actions": "Välj en utsläppssektor för att se relaterade åtgärder"
 }

@@ -50,7 +50,6 @@ const EmptyActionListHeader = styled.p`
   font-size: 1.2em;
   padding: ${(props) => props.theme.spaces.s100};
   border-radius: ${(props) => props.theme.cardBorderRadius};
-  margin-top: ${(props) => props.theme.spaces.s300};
   margin-bottom: ${(props) => props.theme.spaces.s300};
 `;
 
@@ -131,6 +130,8 @@ const CategoryActionList = (props) => {
   if (error) return <ErrorMessage message={error.message} />;
 
   const { planActions } = data;
+  const isCategoryRoot = activeCategory.parent == null;
+
   if (!planActions) {
     return <ErrorMessage statusCode={404} message={t('page-not-found')} />;
   }
@@ -139,10 +140,14 @@ const CategoryActionList = (props) => {
     planActions,
     activeCategory.id,
     categories,
-    activeCategory.parent == null
+    isCategoryRoot
   );
   if (filteredActions.length === 0) {
-    return <EmptyActionListHeader>{t('no-actions')}</EmptyActionListHeader>;
+    return (
+      <EmptyActionListHeader>
+        {isCategoryRoot ? t('select-sector-for-actions') : t('no-actions')}
+      </EmptyActionListHeader>
+    );
   }
   const heading = t('filter-result-actions');
 

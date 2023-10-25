@@ -188,5 +188,6 @@
     "graph-showTable": "Mostrar tabla de datos",
     "definition": "Definición",
     "no-reports": "No hay informes disponibles.",
-    "no-action-data-for-report": "El informe no contiene datos para esta acción."
+    "no-action-data-for-report": "El informe no contiene datos para esta acción.",
+    "select-sector-for-actions": "Seleccione un sector de emisión para ver acciones relacionadas"
 }
