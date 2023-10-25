@@ -1,10 +1,15 @@
 import React from 'react';
 import { Card, CardImgOverlay, CardBody, CardTitle } from 'reactstrap';
 import styled from 'styled-components';
-import { getActionTermContext, withTranslation } from 'common/i18n';
+import {
+  getActionTermContext,
+  useTranslation,
+  withTranslation,
+} from 'common/i18n';
 import { IndicatorLink } from 'common/links';
 import { usePlan } from 'context/plan';
 import { readableColor } from 'polished';
+import { beautifyValue } from 'common/data/format';
 
 const IndicatorType = styled.div`
   margin-bottom: 0.5em;
@@ -82,19 +87,6 @@ const StyledCardTitle = styled(CardTitle)`
   hyphens: manual;
 `;
 
-function beautifyValue(x) {
-  let out;
-
-  if (!Number.isInteger(x)) {
-    out = x.toFixed(2);
-  } else {
-    out = x;
-  }
-  const s = out.toString();
-  const displayNumber = s.replace('.', ',');
-  return displayNumber.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-}
-
 type IndicatorHighlightCardProps = {
   level: string | null | undefined;
   objectid: string;
@@ -104,7 +96,8 @@ type IndicatorHighlightCardProps = {
 };
 
 function IndicatorHighlightCard(props: IndicatorHighlightCardProps) {
-  const { t, level, objectid, name, value = null, unit = '' } = props;
+  const { level, objectid, name, value = null, unit = '' } = props;
+  const { t, i18n } = useTranslation();
   const plan = usePlan();
 
   // FIXME: It sucks that we only use the context for the translation key 'action'
@@ -120,7 +113,7 @@ function IndicatorHighlightCard(props: IndicatorHighlightCardProps) {
           <IndicatorBg level={level} />
           <CardImgOverlay>
             <IndicatorValue level={level} className="action-number">
-              {beautifyValue(value)}
+              {beautifyValue(value, i18n.language)}
               <IndicatorUnit>{unit}</IndicatorUnit>
             </IndicatorValue>
           </CardImgOverlay>
