@@ -5,6 +5,8 @@ import dynamic from 'next/dynamic';
 import { withRouter } from 'next/router';
 import Layout from '../components/layout';
 import { aplans } from '../common/api';
+import { getI18n } from 'common/i18n';
+
 import IndicatorsHero from '../components/indicators/IndicatorsHero';
 import PlanContext from '../context/plan';
 import ContentLoader from '../components/common/ContentLoader';
@@ -42,11 +44,12 @@ class VisPage extends React.Component {
 
   async componentDidMount() {
     const plan = this.context;
-    const resp = await aplans.get('insight', {
-      params: {
-        plan: plan.identifier,
-      },
-    });
+    const i18n = getI18n();
+    const params = {
+      language: i18n.language,
+      plan: plan.identifier,
+    };
+    const resp = await aplans.get('insight', { params });
 
     const { edges, nodes } = resp;
 
