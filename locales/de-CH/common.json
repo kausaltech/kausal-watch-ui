@@ -12,5 +12,6 @@
     "nav-actions-pager": "Massnahmen-Pager",
     "form-action-filters": "Massnahmenliste-Filter",
     "nav-footer": "Fusszeile",
-    "indicator-related-actions": "Massnahmen, die sich auf diesen Indikator auswirken"
+    "indicator-related-actions": "Massnahmen, die sich auf diesen Indikator auswirken",
+    "select-sector-for-actions": "Wähle en Emissionssektor, um zugehörigi Massnahme ahzuzeigen"
 }

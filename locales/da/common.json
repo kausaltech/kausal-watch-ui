@@ -197,5 +197,6 @@
     "error-loading-actions_CASE_STUDY": "Fejl ved indlæsning af listen over casestudier",
     "filter-result-actions_CASE_STUDY": "casestudier",
     "recently-updated-actions_CASE_STUDY": "Nyligt opdaterede casestudier",
-    "open": "åben"
+    "open": "åben",
+    "select-sector-for-actions": "Vælg en emissionssektor for at se relaterede handlinger"
 }

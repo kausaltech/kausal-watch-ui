@@ -186,5 +186,6 @@
     "navigation-home": "Etusivu",
     "graph-hideTable": "Piilota taulukko",
     "graph-showTable": "Näytä taulukkona",
-    "definition": "Selite"
+    "definition": "Selite",
+    "select-sector-for-actions": "Valitse päästösektori nähdäksesi siihen liittyvät toimenpiteet"
 }
