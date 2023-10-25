@@ -1,6 +1,13 @@
 #!/bin/sh
 [ -n "$CI" ] && exit 0
 
+# This loads nvm.sh, sets the correct PATH before running hook, and ensures the project version of Node
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+if [[ -f ".nvmrc" ]]; then
+  nvm use
+fi
+
 . "$(dirname "$0")/_/husky.sh"
 
 npx lint-staged

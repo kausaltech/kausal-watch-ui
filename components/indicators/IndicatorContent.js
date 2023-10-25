@@ -5,7 +5,6 @@ import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
 import { gql, useQuery } from '@apollo/client';
 
-import { IndicatorListLink } from 'common/links';
 import { usePlan } from 'context/plan';
 import { getActionTermContext, useTranslation } from 'common/i18n';
 
