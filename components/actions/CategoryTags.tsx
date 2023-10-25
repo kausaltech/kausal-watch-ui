@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { ActionListLink, StaticPageLink } from 'common/links';
 import BadgeTooltip from 'components/common/BadgeTooltip';
 import PopoverTip from 'components/common/PopoverTip';
+import { readableColor } from 'polished';
 import {
   CategoryTagsCategoryFragment,
   CategoryTagsCategoryTypeFragment,
@@ -87,7 +88,12 @@ type CategoryContentProps = {
 };
 
 const Identifier = styled.span`
-  color: ${(props) => props.theme.graphColors.grey060};
+  color: ${(props) =>
+    readableColor(
+      props.theme.neutralLight,
+      props.theme.graphColors.grey070,
+      props.theme.graphColors.grey020
+    )};
 `;
 
 export const CategoryContent = (props: CategoryContentProps) => {
