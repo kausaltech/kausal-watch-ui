@@ -3413,7 +3413,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@kausal/themes-private@npm:^0.3.3":
+"@kausal/themes-private@npm:^0.3.1":
   version: 0.3.3
   resolution: "@kausal/themes-private@npm:0.3.3"
   checksum: 34ae72b9825ca8c3dcc8e0da2c9d6b3afa78974aa11857d1a759f8184b1793b9a2340759b49f33e1a5e49f5e32ee1a4dc46a5eee9e1efa0f09d3f27563cfb4a5
@@ -17086,7 +17086,7 @@ __metadata:
     "@kausal/mapboxgl-legend": ^1.7.2
     "@kausal/plotly-custom": ^2.14.3
     "@kausal/themes": ^0.7.0
-    "@kausal/themes-private": ^0.3.3
+    "@kausal/themes-private": ^0.3.1
     "@koa/router": ^10.1.1
     "@n8tb1t/use-scroll-position": ^2.0.3
     "@next/bundle-analyzer": ^12.1.6
