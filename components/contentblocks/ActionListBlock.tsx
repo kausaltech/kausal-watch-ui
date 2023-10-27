@@ -21,8 +21,8 @@ const GET_ACTION_LIST_FOR_BLOCK = gql`
 `;
 
 const ActionListSection = styled.div`
-  background-color: ${(props) => props.color};
-  padding: ${(props) => props.theme.spaces.s400} 0};
+  background-color: ${(props) => props.theme.neutralLight};
+  padding: ${(props) => props.theme.spaces.s400} 0;
 `;
 
 const SectionHeader = styled.h2`
@@ -61,7 +61,7 @@ const ActionListBlock = (props) => {
 
   const heading = t('actions', getActionTermContext(plan));
   return (
-    <ActionListSection id={id} color={color}>
+    <ActionListSection id={id}>
       <Container>
         {heading && <SectionHeader>{heading}</SectionHeader>}
         <ActionCardList actions={planActions} groupBy={groupBy} />

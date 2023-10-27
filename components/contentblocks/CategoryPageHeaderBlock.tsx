@@ -45,41 +45,50 @@ enum IconSize {
   L = 'L',
 }
 
-const CategoryHeader = styled.div`
+const CategoryHeader = styled.div<{
+  $bg?: string;
+  $hasImage?: boolean;
+}>`
   width: 100%;
   position: relative;
-  background-color: ${(props) => (props.bg ? props.bg : props.theme.brandDark)};
+  background-color: ${(props) =>
+    props.$bg ? props.$bg : props.theme.neutralLight};
   padding: 0 0 2rem;
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     display: flex;
     align-items: flex-start;
-    min-height: ${(props) => (props.hasImage ? '32rem' : '0')};
+    min-height: ${(props) => (props.$hasImage ? '32rem' : '0')};
     padding: 0;
   }
 
   @media (min-width: ${(props) => props.theme.breakpointLg}) {
-    ${(props) => (props.hasImage ? '28rem' : '0')};
+    ${(props) => (props.$hasImage ? '28rem' : '0')};
   }
 
   @media (min-width: ${(props) => props.theme.breakpointXl}) {
-    ${(props) => (props.hasImage ? '30rem' : '0')};
+    ${(props) => (props.$hasImage ? '30rem' : '0')};
   }
 `;
 
-const CategoryHeaderImage = styled.div`
-  min-height: ${(props) => (props.image ? '14rem' : '0')};
+const CategoryHeaderImage = styled.div<{
+  $bg?: string;
+  $image?: string;
+  $imageAlign?: string;
+}>`
+  min-height: ${(props) => (props.$image ? '14rem' : '0')};
   margin: 0 -1rem;
   background-size: cover;
-  background-color: ${(props) => (props.bg ? props.bg : props.theme.branddark)};
-  background-position: ${(props) => props.imageAlign};
-  background-image: url(${(props) => props.image});
+  background-color: ${(props) =>
+    props.$bg ? props.$bg : props.theme.brandDark};
+  background-position: ${(props) => props.$imageAlign};
+  background-image: url(${(props) => props.$image});
   background-repeat: no-repeat;
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     position: absolute;
     width: 100%;
-    min-height: ${(props) => (props.image ? '32rem' : '0')};
+    min-height: ${(props) => (props.$image ? '32rem' : '0')};
     margin: 0;
   }
 `;
@@ -144,7 +153,7 @@ const HeaderContent = styled.div<{
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     margin-top: ${({ hasImage }) => (hasImage ? '14rem' : '3rem')};
-    margin-bottom: ${({ hasImage }) => (hasImage ? '3rem' : undefined)};
+    margin-bottom: 3rem;
 
     h1 {
       font-size: ${(props) => props.theme.fontSizeXl};
@@ -313,11 +322,11 @@ function CategoryPageHeaderBlock({
       };
 
   return (
-    <CategoryHeader bg={color} hasImage={!!headerImage}>
+    <CategoryHeader $bg={color} $hasImage={!!headerImage}>
       <CategoryHeaderImage
-        bg={color}
-        imageAlign={imageAlign}
-        image={headerImage?.large?.src}
+        $bg={color}
+        $imageAlign={imageAlign}
+        $image={headerImage?.large?.src}
       />
       <Container className="header-container">
         <Row>
