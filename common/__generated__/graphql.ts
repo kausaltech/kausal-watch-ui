@@ -444,7 +444,6 @@ export type ActionIndicator = {
   indicator: Indicator;
 };
 
-/** An enumeration. */
 export enum ActionIndicatorEffectType {
   /** decreases */
   Decreases = 'DECREASES',
@@ -682,7 +681,6 @@ export type ActionResponsiblePartyReporteportValue = ReportValueInterface & {
   responsibleParty?: Maybe<ActionResponsibleParty>;
 };
 
-/** An enumeration. */
 export enum ActionResponsiblePartyRole {
   /** Collaborator */
   Collaborator = 'COLLABORATOR',
@@ -773,7 +771,6 @@ export type ActionStatusSummary = {
   sentiment: Sentiment;
 };
 
-/** An enumeration. */
 export enum ActionStatusSummaryIdentifier {
   Cancelled = 'CANCELLED',
   Completed = 'COMPLETED',
@@ -817,6 +814,8 @@ export type ActionTask = {
   commentFi?: Maybe<Scalars['String']>;
   commentI18n?: Maybe<Scalars['String']>;
   commentLv?: Maybe<Scalars['String']>;
+  commentPt?: Maybe<Scalars['String']>;
+  commentPtBr?: Maybe<Scalars['String']>;
   commentSv?: Maybe<Scalars['String']>;
   /** The date when the task was completed */
   completedAt?: Maybe<Scalars['Date']>;
@@ -838,11 +837,12 @@ export type ActionTask = {
   nameFi: Scalars['String'];
   nameI18n: Scalars['String'];
   nameLv: Scalars['String'];
+  namePt: Scalars['String'];
+  namePtBr: Scalars['String'];
   nameSv: Scalars['String'];
   state: ActionTaskState;
 };
 
-/** An enumeration. */
 export enum ActionTaskState {
   /** cancelled */
   Cancelled = 'CANCELLED',
@@ -873,7 +873,6 @@ export type ActionTimeliness = {
   sentiment: Sentiment;
 };
 
-/** An enumeration. */
 export enum ActionTimelinessIdentifier {
   Acceptable = 'ACCEPTABLE',
   Late = 'LATE',
@@ -1062,7 +1061,6 @@ export type AttributeTypeChoiceOption = {
   name: Scalars['String'];
 };
 
-/** An enumeration. */
 export enum AttributeTypeFormat {
   /** Category */
   CategoryChoice = 'CATEGORY_CHOICE',
@@ -1132,7 +1130,6 @@ export type CartographyProviderCredentials = {
   publicAccessToken: Scalars['String'];
 };
 
-/** An enumeration. */
 export enum CartographyProviderCredentialsProvider {
   /** MapBox */
   Mapbox = 'MAPBOX'
@@ -1158,7 +1155,7 @@ export type Category = {
   categoryPage?: Maybe<CategoryPage>;
   categoryPages: Array<CategoryPage>;
   children: Array<Category>;
-  /** Set if the category has a theme colour */
+  /** Set if the category has a theme color */
   color?: Maybe<Scalars['String']>;
   common?: Maybe<CommonCategory>;
   externalIdentifier?: Maybe<Scalars['String']>;
@@ -1541,7 +1538,6 @@ export type CategoryTypePageLevelLayout = {
   layoutMainTop?: Maybe<Array<CategoryPageMainTopBlock>>;
 };
 
-/** An enumeration. */
 export enum CategoryTypeSelectWidget {
   /** Multiple */
   Multiple = 'MULTIPLE',
@@ -1591,7 +1587,7 @@ export type CollectionObjectType = {
 export type CommonCategory = {
   __typename?: 'CommonCategory';
   categoryInstances: Array<Category>;
-  /** Set if the category has a theme colour */
+  /** Set if the category has a theme color */
   color?: Maybe<Scalars['String']>;
   helpText: Scalars['String'];
   iconImage?: Maybe<Image>;
@@ -1645,7 +1641,6 @@ export type CommonIndicatorNormalization = {
   unit?: Maybe<Unit>;
 };
 
-/** An enumeration. */
 export enum Comparison {
   Gt = 'GT',
   Lte = 'LTE'
@@ -1660,7 +1655,7 @@ export type CreateOrganizationMutationInput = {
   dissolutionDate?: InputMaybe<Scalars['Date']>;
   /** A date of founding */
   foundingDate?: InputMaybe<Scalars['Date']>;
-  /** A primary name, e.g. a legally recognised name */
+  /** A primary name, e.g. a legally recognized name */
   name: Scalars['String'];
   parent?: InputMaybe<Scalars['ID']>;
 };
@@ -2119,9 +2114,9 @@ export type Indicator = {
   latestGraph?: Maybe<IndicatorGraph>;
   latestValue?: Maybe<IndicatorValue>;
   level?: Maybe<Scalars['String']>;
-  /** What is the maximum value this indicator can reach? It is used in visualisations as the Y axis maximum. */
+  /** What is the maximum value this indicator can reach? It is used in visualizations as the Y axis maximum. */
   maxValue?: Maybe<Scalars['Float']>;
-  /** What is the minimum value this indicator can reach? It is used in visualisations as the Y axis minimum. */
+  /** What is the minimum value this indicator can reach? It is used in visualizations as the Y axis minimum. */
   minValue?: Maybe<Scalars['Float']>;
   name: Scalars['String'];
   organization: Organization;
@@ -2203,10 +2198,12 @@ export type IndicatorGraph = {
 export type IndicatorGroupBlock = StreamFieldInterface & {
   __typename?: 'IndicatorGroupBlock';
   blockType: Scalars['String'];
+  blocks: Array<StreamFieldInterface>;
   field: Scalars['String'];
   id?: Maybe<Scalars['String']>;
-  items: Array<StreamFieldInterface>;
+  indicators?: Maybe<Array<Maybe<StreamFieldInterface>>>;
   rawValue: Scalars['String'];
+  title?: Maybe<Scalars['String']>;
 };
 
 export type IndicatorHighlightsBlock = StreamFieldInterface & {
@@ -2231,7 +2228,6 @@ export type IndicatorLevel = {
   plan: Plan;
 };
 
-/** An enumeration. */
 export enum IndicatorLevelLevel {
   /** operational */
   Operational = 'OPERATIONAL',
@@ -2353,7 +2349,6 @@ export type IndicatorShowcaseBlock = StreamFieldInterface & {
   title?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum IndicatorTimeResolution {
   /** day */
   Day = 'DAY',
@@ -2436,6 +2431,8 @@ export type MonitoringQualityPoint = {
   descriptionNoFi: Scalars['String'];
   descriptionNoI18n: Scalars['String'];
   descriptionNoLv: Scalars['String'];
+  descriptionNoPt: Scalars['String'];
+  descriptionNoPtBr: Scalars['String'];
   descriptionNoSv: Scalars['String'];
   descriptionYes?: Maybe<Scalars['String']>;
   descriptionYesDa: Scalars['String'];
@@ -2449,6 +2446,8 @@ export type MonitoringQualityPoint = {
   descriptionYesFi: Scalars['String'];
   descriptionYesI18n: Scalars['String'];
   descriptionYesLv: Scalars['String'];
+  descriptionYesPt: Scalars['String'];
+  descriptionYesPtBr: Scalars['String'];
   descriptionYesSv: Scalars['String'];
   i18n?: Maybe<Scalars['JSONString']>;
   id: Scalars['ID'];
@@ -2465,6 +2464,8 @@ export type MonitoringQualityPoint = {
   nameFi: Scalars['String'];
   nameI18n: Scalars['String'];
   nameLv: Scalars['String'];
+  namePt: Scalars['String'];
+  namePtBr: Scalars['String'];
   nameSv: Scalars['String'];
   order: Scalars['Int'];
   plan: Plan;
@@ -2546,19 +2547,19 @@ export type Organization = {
   actionCount: Scalars['Int'];
   adminButtons: Array<AdminButton>;
   ancestors?: Maybe<Array<Maybe<Organization>>>;
-  /** An organisation category, e.g. committee */
+  /** An organization category, e.g. committee */
   classification?: Maybe<OrganizationClass>;
   /** Number of contact persons that are associated with this organization */
   contactPersonCount: Scalars['Int'];
   descendants?: Maybe<Array<Maybe<Organization>>>;
   description: Scalars['String'];
-  /** A distinct name for this organisation (generated automatically) */
+  /** A distinct name for this organization (generated automatically) */
   distinctName?: Maybe<Scalars['String']>;
   email: Scalars['String'];
   id: Scalars['ID'];
   location?: Maybe<Scalars['PointScalar']>;
   logo?: Maybe<Image>;
-  /** A primary name, e.g. a legally recognised name */
+  /** A primary name, e.g. a legally recognized name */
   name: Scalars['String'];
   parent?: Maybe<Organization>;
   plansWithActionResponsibilities: Array<Plan>;
@@ -2596,8 +2597,10 @@ export type OrganizationClass = {
   nameFi: Scalars['String'];
   nameI18n: Scalars['String'];
   nameLv: Scalars['String'];
+  namePt: Scalars['String'];
+  namePtBr: Scalars['String'];
   nameSv: Scalars['String'];
-  /** An organisation category, e.g. committee */
+  /** An organization category, e.g. committee */
   organizationSet: Array<Organization>;
 };
 
@@ -2857,7 +2860,7 @@ export type Person = {
   firstName: Scalars['String'];
   id: Scalars['ID'];
   lastName: Scalars['String'];
-  /** What is this person's organisation */
+  /** What is this person's organization */
   organization: Organization;
   title?: Maybe<Scalars['String']>;
 };
@@ -3078,7 +3081,6 @@ export type PlanFeatures = {
   showAdminLink: Scalars['Boolean'];
 };
 
-/** An enumeration. */
 export enum PlanFeaturesContactPersonsPublicData {
   /** Show all information */
   All = 'ALL',
@@ -3322,7 +3324,6 @@ export type PrivacyPolicyPageSiblingsArgs = {
   searchQuery?: InputMaybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum PublicationStatus {
   Published = 'PUBLISHED',
   Scheduled = 'SCHEDULED',
@@ -3503,7 +3504,6 @@ export type RelatedCommonIndicator = {
   id: Scalars['ID'];
 };
 
-/** An enumeration. */
 export enum RelatedCommonIndicatorEffectType {
   /** decreases */
   Decreases = 'DECREASES',
@@ -3525,7 +3525,6 @@ export type RelatedIndicator = {
   id: Scalars['ID'];
 };
 
-/** An enumeration. */
 export enum RelatedIndicatorConfidenceLevel {
   /** high */
   High = 'HIGH',
@@ -3535,7 +3534,6 @@ export enum RelatedIndicatorConfidenceLevel {
   Medium = 'MEDIUM'
 }
 
-/** An enumeration. */
 export enum RelatedIndicatorEffectType {
   /** decreases */
   Decreases = 'DECREASES',
@@ -3694,7 +3692,6 @@ export type SearchResults = {
   hits?: Maybe<Array<Maybe<SearchHit>>>;
 };
 
-/** An enumeration. */
 export enum Sentiment {
   Negative = 'NEGATIVE',
   Neutral = 'NEUTRAL',
@@ -3719,7 +3716,6 @@ export type SiteGeneralContent = {
   siteTitle: Scalars['String'];
 };
 
-/** An enumeration. */
 export enum SiteGeneralContentActionTaskTerm {
   /** Milestone */
   Milestone = 'MILESTONE',
@@ -3727,7 +3723,6 @@ export enum SiteGeneralContentActionTaskTerm {
   Task = 'TASK'
 }
 
-/** An enumeration. */
 export enum SiteGeneralContentActionTerm {
   /** Action */
   Action = 'ACTION',
@@ -4017,7 +4012,7 @@ export type UpdateOrganizationMutationInput = {
   /** A date of founding */
   foundingDate?: InputMaybe<Scalars['Date']>;
   id?: InputMaybe<Scalars['ID']>;
-  /** A primary name, e.g. a legally recognised name */
+  /** A primary name, e.g. a legally recognized name */
   name: Scalars['String'];
   parent?: InputMaybe<Scalars['ID']>;
 };
@@ -4098,7 +4093,6 @@ export type UserFeedbackNode = {
   url: Scalars['String'];
 };
 
-/** An enumeration. */
 export enum UserFeedbackType {
   /** Accessibility */
   Accessibility = 'ACCESSIBILITY',
@@ -7617,7 +7611,7 @@ type StreamFieldFragment_CartographyVisualisationBlock_Fragment = (
 type StreamFieldFragment_CategoryListBlock_Fragment = (
   { style?: string | null, heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, categoryType?: (
     { id: string, hideCategoryIdentifiers: boolean, categories: Array<(
-      { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, level?: (
+      { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, level?: (
         { name: string, namePlural?: string | null }
         & { __typename?: 'CategoryLevel' }
       ) | null, image?: (
@@ -7638,6 +7632,12 @@ type StreamFieldFragment_CategoryListBlock_Fragment = (
           & { __typename?: 'ImageRendition' }
         ) | null }
         & { __typename?: 'Image' }
+      ) | null, iconImage?: (
+        { rendition?: (
+          { src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null }
+        & { __typename?: 'Image' }
       ) | null, categoryPage?: (
         { title: string, urlPath: string, live: boolean }
         & { __typename?: 'CategoryPage' }
@@ -7650,7 +7650,7 @@ type StreamFieldFragment_CategoryListBlock_Fragment = (
     & { __typename?: 'CategoryType' }
   ) | null, category?: (
     { id: string, children: Array<(
-      { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, level?: (
+      { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, level?: (
         { name: string, namePlural?: string | null }
         & { __typename?: 'CategoryLevel' }
       ) | null, image?: (
@@ -7668,6 +7668,12 @@ type StreamFieldFragment_CategoryListBlock_Fragment = (
           & { __typename?: 'ImageRendition' }
         ) | null, rendition?: (
           { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null }
+        & { __typename?: 'Image' }
+      ) | null, iconImage?: (
+        { rendition?: (
+          { src: string }
           & { __typename?: 'ImageRendition' }
         ) | null }
         & { __typename?: 'Image' }
@@ -7744,7 +7750,7 @@ type StreamFieldFragment_IndicatorBlock_Fragment = (
 );
 
 type StreamFieldFragment_IndicatorGroupBlock_Fragment = (
-  { id?: string | null, blockType: string, field: string, items: Array<(
+  { title?: string | null, id?: string | null, blockType: string, field: string, indicators?: Array<(
     { id?: string | null }
     & { __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' }
   ) | (
@@ -7774,7 +7780,7 @@ type StreamFieldFragment_IndicatorGroupBlock_Fragment = (
       & { __typename?: 'Indicator' }
     ) | null }
     & { __typename?: 'IndicatorBlock' }
-  )> }
+  ) | null> | null }
   & { __typename?: 'IndicatorGroupBlock' }
 );
 
@@ -7954,7 +7960,7 @@ export type GetActionListForGraphsQuery = (
 );
 
 export type CategoryListCategoryFragment = (
-  { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, level?: (
+  { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, level?: (
     { name: string, namePlural?: string | null }
     & { __typename?: 'CategoryLevel' }
   ) | null, image?: (
@@ -7972,6 +7978,12 @@ export type CategoryListCategoryFragment = (
       & { __typename?: 'ImageRendition' }
     ) | null, rendition?: (
       { id: string, width: number, height: number, src: string }
+      & { __typename?: 'ImageRendition' }
+    ) | null }
+    & { __typename?: 'Image' }
+  ) | null, iconImage?: (
+    { rendition?: (
+      { src: string }
       & { __typename?: 'ImageRendition' }
     ) | null }
     & { __typename?: 'Image' }
@@ -9774,6 +9786,52 @@ export type PlanContextFragment = (
   & { __typename?: 'Plan' }
 );
 
+export type PlaywrightGetPlanBasicsQueryVariables = Exact<{
+  plan: Scalars['ID'];
+}>;
+
+
+export type PlaywrightGetPlanBasicsQuery = (
+  { plan?: (
+    { id: string, identifier: string, primaryLanguage: string, otherLanguages?: Array<string> | null }
+    & { __typename?: 'Plan' }
+  ) | null }
+  & { __typename?: 'Query' }
+);
+
+export type PlaywrightGetPlanInfoQueryVariables = Exact<{
+  plan: Scalars['ID'];
+  locale: Scalars['String'];
+  clientURL: Scalars['String'];
+}>;
+
+
+export type PlaywrightGetPlanInfoQuery = (
+  { plan?: (
+    { id: string, identifier: string, name: string, shortName?: string | null, primaryLanguage: string, otherLanguages?: Array<string> | null, generalContent: (
+      { id: string, siteTitle: string, siteDescription: string }
+      & { __typename?: 'SiteGeneralContent' }
+    ), actionListPage?: (
+      { urlPath: string }
+      & { __typename?: 'ActionListPage' }
+    ) | null, actions: Array<(
+      { identifier: string, viewUrl: string }
+      & { __typename?: 'Action' }
+    )>, mainMenu?: (
+      { items: Array<{ __typename?: 'ExternalLinkMenuItem' } | (
+        { page: (
+          { id?: string | null, title: string, slug: string, urlPath: string }
+          & { __typename?: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PrivacyPolicyPage' | 'StaticPage' }
+        ) }
+        & { __typename?: 'PageMenuItem' }
+      ) | null> }
+      & { __typename?: 'MainMenu' }
+    ) | null }
+    & { __typename?: 'Plan' }
+  ) | null }
+  & { __typename?: 'Query' }
+);
+
 export type TemplatedCategoryPageFragmentFragment = (
   { layout?: (
     { iconSize?: string | null, layoutMainTop?: Array<(
@@ -9907,7 +9965,7 @@ export type GetPlanPageGeneralQuery = (
     ) | (
       { style?: string | null, heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, categoryType?: (
         { id: string, hideCategoryIdentifiers: boolean, categories: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, level?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, level?: (
             { name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
@@ -9928,6 +9986,12 @@ export type GetPlanPageGeneralQuery = (
               & { __typename?: 'ImageRendition' }
             ) | null }
             & { __typename?: 'Image' }
+          ) | null, iconImage?: (
+            { rendition?: (
+              { src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
           ) | null, categoryPage?: (
             { title: string, urlPath: string, live: boolean }
             & { __typename?: 'CategoryPage' }
@@ -9940,7 +10004,7 @@ export type GetPlanPageGeneralQuery = (
         & { __typename?: 'CategoryType' }
       ) | null, category?: (
         { id: string, children: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, level?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, level?: (
             { name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
@@ -9958,6 +10022,12 @@ export type GetPlanPageGeneralQuery = (
               & { __typename?: 'ImageRendition' }
             ) | null, rendition?: (
               { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, iconImage?: (
+            { rendition?: (
+              { src: string }
               & { __typename?: 'ImageRendition' }
             ) | null }
             & { __typename?: 'Image' }
@@ -10022,7 +10092,7 @@ export type GetPlanPageGeneralQuery = (
       ) | null }
       & { __typename?: 'IndicatorBlock' }
     ) | (
-      { id?: string | null, blockType: string, field: string, items: Array<(
+      { title?: string | null, id?: string | null, blockType: string, field: string, indicators?: Array<(
         { id?: string | null }
         & { __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' }
       ) | (
@@ -10052,7 +10122,7 @@ export type GetPlanPageGeneralQuery = (
           & { __typename?: 'Indicator' }
         ) | null }
         & { __typename?: 'IndicatorBlock' }
-      )> }
+      ) | null> | null }
       & { __typename?: 'IndicatorGroupBlock' }
     ) | (
       { title?: string | null, body?: string | null, id?: string | null, blockType: string, field: string, blocks: Array<(
@@ -10185,7 +10255,7 @@ export type GetPlanPageGeneralQuery = (
         ) | null }
         & { __typename?: 'Image' }
       ) | null, children: Array<(
-        { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, level?: (
+        { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, level?: (
           { name: string, namePlural?: string | null }
           & { __typename?: 'CategoryLevel' }
         ) | null, image?: (
@@ -10203,6 +10273,12 @@ export type GetPlanPageGeneralQuery = (
             & { __typename?: 'ImageRendition' }
           ) | null, rendition?: (
             { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null }
+          & { __typename?: 'Image' }
+        ) | null, iconImage?: (
+          { rendition?: (
+            { src: string }
             & { __typename?: 'ImageRendition' }
           ) | null }
           & { __typename?: 'Image' }
@@ -10537,7 +10613,7 @@ export type GetPlanPageGeneralQuery = (
     ) | (
       { style?: string | null, heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, categoryType?: (
         { id: string, hideCategoryIdentifiers: boolean, categories: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, level?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, level?: (
             { name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
@@ -10558,6 +10634,12 @@ export type GetPlanPageGeneralQuery = (
               & { __typename?: 'ImageRendition' }
             ) | null }
             & { __typename?: 'Image' }
+          ) | null, iconImage?: (
+            { rendition?: (
+              { src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
           ) | null, categoryPage?: (
             { title: string, urlPath: string, live: boolean }
             & { __typename?: 'CategoryPage' }
@@ -10570,7 +10652,7 @@ export type GetPlanPageGeneralQuery = (
         & { __typename?: 'CategoryType' }
       ) | null, category?: (
         { id: string, children: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, level?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, level?: (
             { name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
@@ -10588,6 +10670,12 @@ export type GetPlanPageGeneralQuery = (
               & { __typename?: 'ImageRendition' }
             ) | null, rendition?: (
               { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, iconImage?: (
+            { rendition?: (
+              { src: string }
               & { __typename?: 'ImageRendition' }
             ) | null }
             & { __typename?: 'Image' }
@@ -10652,7 +10740,7 @@ export type GetPlanPageGeneralQuery = (
       ) | null }
       & { __typename?: 'IndicatorBlock' }
     ) | (
-      { id?: string | null, blockType: string, field: string, items: Array<(
+      { title?: string | null, id?: string | null, blockType: string, field: string, indicators?: Array<(
         { id?: string | null }
         & { __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' }
       ) | (
@@ -10682,7 +10770,7 @@ export type GetPlanPageGeneralQuery = (
           & { __typename?: 'Indicator' }
         ) | null }
         & { __typename?: 'IndicatorBlock' }
-      )> }
+      ) | null> | null }
       & { __typename?: 'IndicatorGroupBlock' }
     ) | (
       { title?: string | null, body?: string | null, id?: string | null, blockType: string, field: string, blocks: Array<(
@@ -10918,7 +11006,7 @@ export type GetPlanPageGeneralQuery = (
     ) | (
       { style?: string | null, heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, categoryType?: (
         { id: string, hideCategoryIdentifiers: boolean, categories: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, level?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, level?: (
             { name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
@@ -10939,6 +11027,12 @@ export type GetPlanPageGeneralQuery = (
               & { __typename?: 'ImageRendition' }
             ) | null }
             & { __typename?: 'Image' }
+          ) | null, iconImage?: (
+            { rendition?: (
+              { src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
           ) | null, categoryPage?: (
             { title: string, urlPath: string, live: boolean }
             & { __typename?: 'CategoryPage' }
@@ -10951,7 +11045,7 @@ export type GetPlanPageGeneralQuery = (
         & { __typename?: 'CategoryType' }
       ) | null, category?: (
         { id: string, children: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, level?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, level?: (
             { name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
@@ -10969,6 +11063,12 @@ export type GetPlanPageGeneralQuery = (
               & { __typename?: 'ImageRendition' }
             ) | null, rendition?: (
               { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, iconImage?: (
+            { rendition?: (
+              { src: string }
               & { __typename?: 'ImageRendition' }
             ) | null }
             & { __typename?: 'Image' }
@@ -11033,7 +11133,7 @@ export type GetPlanPageGeneralQuery = (
       ) | null }
       & { __typename?: 'IndicatorBlock' }
     ) | (
-      { id?: string | null, blockType: string, field: string, items: Array<(
+      { title?: string | null, id?: string | null, blockType: string, field: string, indicators?: Array<(
         { id?: string | null }
         & { __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' }
       ) | (
@@ -11063,7 +11163,7 @@ export type GetPlanPageGeneralQuery = (
           & { __typename?: 'Indicator' }
         ) | null }
         & { __typename?: 'IndicatorBlock' }
-      )> }
+      ) | null> | null }
       & { __typename?: 'IndicatorGroupBlock' }
     ) | (
       { title?: string | null, body?: string | null, id?: string | null, blockType: string, field: string, blocks: Array<(
@@ -11376,7 +11476,7 @@ export type GetHomePageQuery = (
     ) | (
       { style?: string | null, heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, categoryType?: (
         { id: string, hideCategoryIdentifiers: boolean, categories: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, level?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, level?: (
             { name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
@@ -11397,6 +11497,12 @@ export type GetHomePageQuery = (
               & { __typename?: 'ImageRendition' }
             ) | null }
             & { __typename?: 'Image' }
+          ) | null, iconImage?: (
+            { rendition?: (
+              { src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
           ) | null, categoryPage?: (
             { title: string, urlPath: string, live: boolean }
             & { __typename?: 'CategoryPage' }
@@ -11409,7 +11515,7 @@ export type GetHomePageQuery = (
         & { __typename?: 'CategoryType' }
       ) | null, category?: (
         { id: string, children: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, level?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, level?: (
             { name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
@@ -11427,6 +11533,12 @@ export type GetHomePageQuery = (
               & { __typename?: 'ImageRendition' }
             ) | null, rendition?: (
               { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, iconImage?: (
+            { rendition?: (
+              { src: string }
               & { __typename?: 'ImageRendition' }
             ) | null }
             & { __typename?: 'Image' }
@@ -11491,7 +11603,7 @@ export type GetHomePageQuery = (
       ) | null }
       & { __typename?: 'IndicatorBlock' }
     ) | (
-      { id?: string | null, blockType: string, field: string, items: Array<(
+      { title?: string | null, id?: string | null, blockType: string, field: string, indicators?: Array<(
         { id?: string | null }
         & { __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' }
       ) | (
@@ -11521,7 +11633,7 @@ export type GetHomePageQuery = (
           & { __typename?: 'Indicator' }
         ) | null }
         & { __typename?: 'IndicatorBlock' }
-      )> }
+      ) | null> | null }
       & { __typename?: 'IndicatorGroupBlock' }
     ) | (
       { title?: string | null, body?: string | null, id?: string | null, blockType: string, field: string, blocks: Array<(

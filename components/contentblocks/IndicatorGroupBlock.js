@@ -76,12 +76,12 @@ const IndicatorItem = (props) => {
 
 // TODO: Format as list for a11y
 const IndicatorGroupBlock = (props) => {
-  const { id = '', indicators } = props;
+  const { id = '', title, indicators } = props;
   const { t } = useTranslation();
   return (
     <IndicatorGraphSection id={id}>
       <Container>
-        <h2>{t('indicators')}</h2>
+        <h2>{title || t('indicators')}</h2>
         <Row className="justify-content-center">
           {indicators.map((item) => (
             <IndicatorItem
@@ -98,6 +98,7 @@ const IndicatorGroupBlock = (props) => {
 
 IndicatorGroupBlock.propTypes = {
   id: PropTypes.string,
+  title: PropTypes.string,
   indicators: PropTypes.arrayOf(PropTypes.shape()).isRequired,
 };
 
