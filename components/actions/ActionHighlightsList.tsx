@@ -153,16 +153,17 @@ function ActionCardList(props: ActionCardListProps) {
 
 type ActionHighlightsListProps = {
   plan: PlanContextFragment;
+  count?: number;
+  displayHeader?: boolean;
 };
 
 function ActionHighlightsList(props: ActionHighlightsListProps) {
-  const { plan } = props;
-
+  const { plan, count, displayHeader } = props;
   const { t } = useTranslation();
 
   const queryParams = {
     plan: plan.identifier,
-    first: 6,
+    first: count ?? 6,
     orderBy: '-updatedAt',
   };
 
@@ -175,7 +176,14 @@ function ActionHighlightsList(props: ActionHighlightsListProps) {
           return (
             <p>{t('error-loading-actions', getActionTermContext(plan))}</p>
           );
-        return <ActionCardList t={t} actions={data.planActions} plan={plan} />;
+        return (
+          <ActionCardList
+            t={t}
+            actions={data.planActions}
+            plan={plan}
+            displayHeader={displayHeader ?? true}
+          />
+        );
       }}
     </Query>
   );
