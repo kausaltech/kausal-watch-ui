@@ -9,7 +9,6 @@ import { useTranslation, withTranslation } from 'common/i18n';
 import { NavigationLink, Link } from 'common/links';
 import Icon from './Icon';
 import PlanSelector from 'components/plans/PlanSelector';
-import { usePlan } from 'context/plan';
 import { useTheme } from 'common/theme';
 
 const StyledFooter = styled.footer`
@@ -17,19 +16,19 @@ const StyledFooter = styled.footer`
   min-height: 14em;
   clear: both;
   background-color: ${(props) => props.theme.footerBackgroundColor};
-  color: ${(props) => transparentize(0.2, props.theme.footerColor)}};
+  color: ${(props) => transparentize(0.2, props.theme.footerColor)};
   padding: ${(props) => props.theme.spaces.s400} 0;
 
   a {
+    color: ${(props) => props.theme.footerColor};
+
+    &:hover {
       color: ${(props) => props.theme.footerColor};
-
-      &:hover {
-        color: ${(props) => props.theme.footerColor};
-        text-decoration: underline;
-      }
+      text-decoration: underline;
     }
+  }
 
-  .footer-column{
+  .footer-column {
     @media (max-width: ${(props) => props.theme.breakpointMd}) {
       margin-bottom: ${(props) => props.theme.spaces.s300};
       text-align: center;
@@ -37,8 +36,8 @@ const StyledFooter = styled.footer`
   }
 
   @media (max-width: ${(props) => props.theme.breakpointMd}) {
-      text-align: center;
-    }
+    text-align: center;
+  }
 
   @media print {
     display: none;
@@ -306,15 +305,13 @@ const BaseLink = styled.li`
   }
 `;
 
-const FooterExtras = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+const SecondFooter = styled.div`
+  background-color: ${(props) => props.theme.secondFooterBackgroundColor};
+  color: ${(props) => props.theme.secondFooterColor};
+`;
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
-    flex-direction: row;
-    width: 100%;
-  }
+const FooterExtras = styled.div`
+  padding: ${(props) => props.theme.spaces.s100} 0;
 `;
 
 const FooterStatement = styled.div`
@@ -334,6 +331,7 @@ const FooterStatement = styled.div`
 `;
 
 const FundingInstruments = styled.div`
+  width: 100%;
   flex: 1 0 auto;
   display: flex;
   flex-wrap: wrap;
@@ -362,6 +360,11 @@ const FundingInstrumentContainer = styled.div`
   width: calc(2 * ${(props) => props.theme.spaces.s800});
   margin-left: ${(props) => props.theme.spaces.s300};
   text-align: right;
+
+  &.small {
+    height: calc(2 * ${(props) => props.theme.spaces.s400});
+    width: calc(2 * ${(props) => props.theme.spaces.s400});
+  }
 
   svg {
     height: 100%;
@@ -580,50 +583,57 @@ function SiteFooter(props) {
             </BaseLink>
           </BaseColumn>
         </BaseSection>
-        <FooterExtras>
-          {footerStatement && (
-            <FooterStatement
-              dangerouslySetInnerHTML={{ __html: footerStatement }}
-            />
-          )}
-          {fundingInstruments?.length > 0 && (
-            <FundingInstruments>
-              <FundingHeader>{t('supported-by')}</FundingHeader>
-              {fundingInstruments.map((funder) => (
-                <FundingInstrumentContainer key={funder.id}>
-                  <a href={funder.link} target="_blank" rel="noreferrer">
-                    <SVG
-                      src={funder.logo}
-                      preserveAspectRatio="xMidYMid meet"
-                      title={funder.name}
-                    />
-                  </a>
-                </FundingInstrumentContainer>
-              ))}
-            </FundingInstruments>
-          )}
-          {otherLogos?.length > 0 && (
-            <FundingInstruments>
-              {otherLogos.map((logo) => (
-                <FundingInstrumentContainer key={logo.id}>
-                  <a
-                    href={logo.link ? logo.link : '#'}
-                    target={logo.link ? '_blank' : '_self'}
-                    rel={logo.link ? 'noreferrer' : ''}
-                  >
-                    <SVG
-                      src={logo.logo}
-                      preserveAspectRatio="xMidYMid meet"
-                      title={logo.name}
-                      style={{ display: 'block' }}
-                    />
-                  </a>
-                </FundingInstrumentContainer>
-              ))}
-            </FundingInstruments>
-          )}
-        </FooterExtras>
       </Container>
+      <SecondFooter>
+        <Container>
+          <FooterExtras>
+            {fundingInstruments?.length > 0 && (
+              <FundingInstruments>
+                <FundingHeader>{t('supported-by')}</FundingHeader>
+                {fundingInstruments.map((funder) => (
+                  <FundingInstrumentContainer key={funder.id}>
+                    <a href={funder.link} target="_blank" rel="noreferrer">
+                      <SVG
+                        src={funder.logo}
+                        preserveAspectRatio="xMidYMid meet"
+                        title={funder.name}
+                      />
+                    </a>
+                  </FundingInstrumentContainer>
+                ))}
+              </FundingInstruments>
+            )}
+            {otherLogos?.length > 0 && (
+              <FundingInstruments>
+                {otherLogos.map((logo) => (
+                  <FundingInstrumentContainer
+                    key={logo.id}
+                    className={otherLogos.length > 3 ? 'small' : ''}
+                  >
+                    <a
+                      href={logo.link ? logo.link : '#'}
+                      target={logo.link ? '_blank' : '_self'}
+                      rel={logo.link ? 'noreferrer' : ''}
+                    >
+                      <SVG
+                        src={logo.logo}
+                        preserveAspectRatio="xMidYMid meet"
+                        title={logo.name}
+                        style={{ display: 'block' }}
+                      />
+                    </a>
+                  </FundingInstrumentContainer>
+                ))}
+              </FundingInstruments>
+            )}
+            {footerStatement && (
+              <FooterStatement
+                dangerouslySetInnerHTML={{ __html: footerStatement }}
+              />
+            )}
+          </FooterExtras>
+        </Container>
+      </SecondFooter>
     </StyledFooter>
   );
 }
