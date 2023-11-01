@@ -24,9 +24,29 @@ Clone the repository, install dependencies and run the development server locall
 
 Preview the application locally on http://localhost:3000/
 
+#### End-to-end testing
+
+Before the first run, ensure the browsers Playwright needs are installed:
+
+    node_modules/.bin/playwright install
+
+Then add the plan identifiers you want to test to your `.env` file:
+
+    TEST_PLAN_IDENTIFIERS=abcd,efgh,ijlk
+
+Now you should be able to run the test suite. You might want to start the
+either the development or production server first. If you don't, the
+test suite will start one for you (the dev server will be started if the
+`TEST_DEVSERVER` env variable is set). You should be able to run the test
+suite like this:
+
+    node_modules/.bin/playwright test
+
 #### Building the custom version of plotly.js
 
-Clone the plotly.js GitHub repository and run the following commands:
+If you need to add new plot types, or update to the upstream version of plotly.js,
+clone the [plotly.js GitHub repository](https://github.com/plotly/plotly.js) and
+run the following commands:
 
     npm install
     npx change-package-name @kausal/plotly-custom
@@ -38,7 +58,7 @@ Clone the plotly.js GitHub repository and run the following commands:
 
 ## Building and deploying in production
 
-To run the app in production:
+To run the app in production mode:
 
     yarn install
     yarn build
