@@ -1,11 +1,7 @@
 import React from 'react';
 import { Card, CardImgOverlay, CardBody, CardTitle } from 'reactstrap';
 import styled from 'styled-components';
-import {
-  getActionTermContext,
-  useTranslation,
-  withTranslation,
-} from 'common/i18n';
+import { getActionTermContext, useTranslation } from 'common/i18n';
 import { IndicatorLink } from 'common/links';
 import { usePlan } from 'context/plan';
 import { readableColor } from 'polished';
@@ -95,8 +91,13 @@ type IndicatorHighlightCardProps = {
   unit?: string;
 };
 
-function IndicatorHighlightCard(props: IndicatorHighlightCardProps) {
-  const { level, objectid, name, value = null, unit = '' } = props;
+function IndicatorHighlightCard({
+  level,
+  objectid,
+  name,
+  value,
+  unit = '',
+}: IndicatorHighlightCardProps) {
   const { t, i18n } = useTranslation();
   const plan = usePlan();
 
@@ -113,7 +114,7 @@ function IndicatorHighlightCard(props: IndicatorHighlightCardProps) {
           <IndicatorBg level={level} />
           <CardImgOverlay>
             <IndicatorValue level={level} className="action-number">
-              {beautifyValue(value, i18n.language)}
+              {typeof value === 'number' ? beautifyValue(value) : '-'}
               <IndicatorUnit>{unit}</IndicatorUnit>
             </IndicatorValue>
           </CardImgOverlay>
@@ -131,4 +132,4 @@ function IndicatorHighlightCard(props: IndicatorHighlightCardProps) {
   );
 }
 
-export default withTranslation('common')(IndicatorHighlightCard);
+export default IndicatorHighlightCard;
