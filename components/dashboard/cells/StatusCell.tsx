@@ -18,6 +18,10 @@ const StatusDisplay = styled.div`
 const StatusCell = ({ action, plan }: Props) => {
   const { t } = useTranslation();
 
+  if (action.statusSummary.identifier === 'UNDEFINED') {
+    return null;
+  }
+
   return (
     <StatusDisplay>
       <StatusBadge
