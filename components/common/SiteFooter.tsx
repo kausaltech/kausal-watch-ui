@@ -3,9 +3,8 @@ import PropTypes from 'prop-types';
 import { Container } from 'reactstrap';
 import { transparentize } from 'polished';
 import SVG from 'react-inlinesvg';
-import styled, { withTheme } from 'styled-components';
-
-import { useTranslation, withTranslation } from 'common/i18n';
+import styled from 'styled-components';
+import { useTranslation } from 'common/i18n';
 import { NavigationLink, Link } from 'common/links';
 import Icon from './Icon';
 import PlanSelector from 'components/plans/PlanSelector';
@@ -377,7 +376,50 @@ const FundingInstrumentContainer = styled.div`
   }
 `;
 
-function SiteFooter(props) {
+type SiteFooterProps = {
+  siteTitle: string;
+  ownerUrl: string;
+  ownerName: string;
+  creativeCommonsLicense: string;
+  copyrightText: string;
+  footerStatement: string;
+  ownerLinks: { id: string; title: string; url: string }[];
+  navItems: {
+    id: string;
+    name: string;
+    slug: string;
+    children: {
+      id: string;
+      name: string;
+      slug: string;
+    }[];
+  }[];
+  utilityLinks: {
+    id: string;
+    name: string;
+    slug: string;
+    icon: string;
+  }[];
+  additionalLinks: {
+    id: string;
+    name: string;
+    slug: string;
+  }[];
+  fundingInstruments: {
+    id: string;
+    name: string;
+    link: string;
+    logo: string;
+  }[];
+  otherLogos: {
+    id: string;
+    name: string;
+    link: string;
+    logo: string;
+  }[];
+};
+
+function SiteFooter(props: SiteFooterProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const {
@@ -661,4 +703,4 @@ SiteFooter.propTypes = {
   ownerLinks: PropTypes.arrayOf(PropTypes.shape({})),
 };
 
-export default withTranslation('common')(withTheme(SiteFooter));
+export default SiteFooter;
