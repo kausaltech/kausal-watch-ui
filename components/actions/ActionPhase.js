@@ -73,7 +73,9 @@ function Phase(props) {
   const theme = useTheme();
 
   let blockColor = theme.themeColors.light;
-  const color = getStatusColorForAction(action, plan, theme);
+  const color = statusSummary
+    ? getStatusColorForAction(action, plan, theme)
+    : theme.graphColors.grey050;
 
   let labelClass = 'disabled';
 
@@ -85,7 +87,7 @@ function Phase(props) {
   } else if (active) {
     blockColor = color;
     labelClass = 'active';
-  } else if (statusSummary.isCompleted) {
+  } else if (statusSummary?.isCompleted) {
     blockColor = color;
     labelClass = 'disabled';
   }
@@ -115,9 +117,10 @@ function ActionPhase(props) {
   }
   // Override phase name in special case statuses
   const inactive = ['cancelled', 'merged', 'postponed', 'completed'].includes(
-    status.identifier
+    status?.identifier
   );
-  if (inactive) {
+
+  if (status && inactive) {
     activePhaseName =
       status.identifier === ActionStatusSummaryIdentifier.Merged
         ? `${t('actions:action-status-merged', getActionTermContext(plan))}`
@@ -141,7 +144,7 @@ function ActionPhase(props) {
           />
         ))}
       </ul>
-      {!compact && status.identifier !== 'UNDEFINED' && (
+      {!compact && !!status && status.identifier !== 'UNDEFINED' && (
         <>
           <strong>{status.label}</strong>
           {reason && (
@@ -158,7 +161,8 @@ function ActionPhase(props) {
 }
 
 ActionPhase.propTypes = {
-  status: PropTypes.shape().isRequired,
+  /** If status is undefined, status colors and labels will be hidden */
+  status: PropTypes.shape(),
   activePhase: PropTypes.shape(),
   reason: PropTypes.string,
   phases: PropTypes.arrayOf(
