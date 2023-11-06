@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from 'react';
+import React, { ReactNode, useState, createContext } from 'react';
 import { Table, Button } from 'reactstrap';
 import styled from 'styled-components';
 
@@ -15,6 +15,21 @@ import {
 } from './dashboard.types';
 import { PlanContextFragment } from 'common/__generated__/graphql';
 import { COLUMN_CONFIG } from './dashboard.constants';
+
+type TActionTableContext = {
+  plan?: PlanContextFragment;
+  planViewUrl?: string | null;
+  /** Custom configuration for cell components */
+  config: {
+    hasPhaseAndStatusColumns?: boolean;
+  };
+};
+
+export const ActionTableContext = createContext<TActionTableContext>({
+  plan: undefined,
+  planViewUrl: undefined,
+  config: {},
+});
 
 const TableWrapper = styled.div`
   width: 100%;
@@ -163,6 +178,12 @@ const preprocessForSorting = (
   }
 };
 
+const hasPhaseAndStatusColumns = (columns: ColumnConfig[]) =>
+  !!(
+    columns.find((c) => c.__typename === 'ImplementationPhaseColumnBlock') &&
+    columns.find((c) => c.__typename === 'StatusColumnBlock')
+  );
+
 interface Props {
   actions: ActionListAction[];
   orgs: ActionListOrganization[];
@@ -232,7 +253,15 @@ const ActionStatusTable = (props: Props) => {
     : columns;
 
   return (
-    <>
+    <ActionTableContext.Provider
+      value={{
+        plan,
+        planViewUrl,
+        config: {
+          hasPhaseAndStatusColumns: hasPhaseAndStatusColumns(filteredColumns),
+        },
+      }}
+    >
       <ToolBar>
         <ResetSorting>
           {sort.key && (
@@ -294,7 +323,7 @@ const ActionStatusTable = (props: Props) => {
           </tbody>
         </DashTable>
       </TableWrapper>
-    </>
+    </ActionTableContext.Provider>
   );
 };
 

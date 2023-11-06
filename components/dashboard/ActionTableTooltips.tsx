@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
 import dayjs from 'common/dayjs';
 import {
@@ -11,6 +11,7 @@ import { ActionListAction } from './dashboard.types';
 import { PlanContextFragment } from 'common/__generated__/graphql';
 import { getTaskCounts } from './cells/TasksStatusCell';
 import { useTheme } from 'common/theme';
+import { ActionTableContext } from './ActionStatusTable';
 
 const TooltipTitle = styled.p`
   font-weight: ${(props) => props.theme.fontWeightBold};
@@ -126,13 +127,17 @@ export const TasksTooltipContent = ({ action, plan }: TooltipWithPlanProps) => {
 // TODO: Should we split implementation phase and status?
 export const ImplementationPhaseTooltipContent = ({
   action,
-  plan,
 }: TooltipWithPlanProps) => {
   const { t } = useTranslation(['common', 'actions']);
+  const { plan, config } = useContext(ActionTableContext);
 
   const activePhase = action.implementationPhase;
   const merged = action.mergedWith;
   const status = action.statusSummary;
+
+  if (!plan) {
+    return null;
+  }
 
   const getMergedName = (mergedWith, planId) => {
     if (mergedWith.plan.id !== planId) {
@@ -145,6 +150,7 @@ export const ImplementationPhaseTooltipContent = ({
   const statusDisplay = (
     <StatusLabel $color={status?.color}>{status.label}</StatusLabel>
   );
+
   // If action is merged, display merged status
   if (merged) {
     return (
@@ -156,6 +162,7 @@ export const ImplementationPhaseTooltipContent = ({
       </TooltipTitle>
     );
   }
+
   // If action has no active phase or it's cancelled, or plan has no implementation phases : display only status
   if (!activePhase || status?.identifier === 'cancelled') {
     return statusDisplay;
@@ -163,8 +170,12 @@ export const ImplementationPhaseTooltipContent = ({
 
   return (
     <div>
-      {statusDisplay}
-      <Divider />
+      {!config.hasPhaseAndStatusColumns && (
+        <>
+          {statusDisplay}
+          <Divider />
+        </>
+      )}
       <TooltipTitle>{t('actions:action-implementation-phase')}:</TooltipTitle>
       <PhasesTooltipList>
         {plan.actionImplementationPhases.map((phase) => (
