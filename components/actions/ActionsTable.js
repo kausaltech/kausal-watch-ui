@@ -54,13 +54,9 @@ const ACTION_ROW_FRAGMENT = gql`
 const Status = (props) => {
   const { action, plan } = props;
   const checkedStatus = cleanActionStatus(action, plan.actionStatuses);
-
-  return (
-    <StatusBadge
-      plan={plan}
-      statusSummary={getStatusSummary(plan, action.statusSummary)}
-    />
-  );
+  const statusSummary = getStatusSummary(plan, action.statusSummary);
+  const actionWithStatusSummary = Object.assign({}, action, { statusSummary });
+  return <StatusBadge plan={plan} action={actionWithStatusSummary} />;
 };
 function ActionsTable(props) {
   const { t } = useTranslation();

@@ -25,7 +25,7 @@ const StatusCell = ({ action, plan }: Props) => {
   return (
     <StatusDisplay>
       <StatusBadge
-        statusSummary={action.statusSummary}
+        action={action}
         plan={plan}
         statusName={
           action.mergedWith

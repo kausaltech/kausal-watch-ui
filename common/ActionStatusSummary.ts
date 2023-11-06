@@ -36,16 +36,17 @@ const getCacheKey = (
 
 export const getStatusSummary = memoize(_getStatusSummary, getCacheKey);
 
-export const getStatusColor = (color: string, theme: Theme) => {
+export const getThemeColor = (color: string, theme: Theme) => {
   return theme.graphColors[color];
 };
 
-interface ActionWithStatusSummary {
+export interface ActionWithStatusSummary {
   statusSummary?: {
     color?: string;
     identifier?: ActionStatusSummaryIdentifier;
+    label?: string;
   };
-  color?: string;
+  color?: string | null;
 }
 
 export const getStatusColorForAction = (
@@ -53,14 +54,20 @@ export const getStatusColorForAction = (
   plan: PlanContextType,
   theme: Theme
 ) => {
-  const c = action?.color;
-  if (c != null) {
-    return getStatusColor(c, theme);
+  const { color } = action;
+  if (color != null) {
+    return getThemeColor(color, theme);
   }
-  const s = action?.statusSummary;
-  if (s == null || (s?.identifier == null && s?.color == null)) {
+  const { statusSummary } = action;
+  if (statusSummary == null) {
     throw new Error('Action data is missing statusSummary');
   }
-  const statusSummary = s?.color == null ? getStatusSummary(plan, s) : s;
-  return getStatusColor(statusSummary.color, theme);
+  if (statusSummary.color != null) {
+    return getThemeColor(statusSummary.color, theme);
+  }
+  if (statusSummary.identifier == null) {
+    throw new Error('Action data is missing statusSummary identifier');
+  }
+  const statusSummaryWithColor = getStatusSummary(plan, statusSummary);
+  return getThemeColor(statusSummaryWithColor.color, theme);
 };

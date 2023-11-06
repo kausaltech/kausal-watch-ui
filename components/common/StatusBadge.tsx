@@ -6,6 +6,7 @@ import type { PlanContextType } from 'context/plan';
 import type { ActionStatusSummary } from 'common/__generated__/graphql';
 
 import {
+  ActionWithStatusSummary,
   MinimalActionStatusSummary,
   getStatusColorForAction,
 } from 'common/ActionStatusSummary';
@@ -40,19 +41,20 @@ const StatusBar = (props: PropsWithChildren<StatusBarProps>) => {
 };
 
 interface StatusBadgeProps {
-  statusSummary: ActionStatusSummary;
+  action: ActionWithStatusSummary;
   statusName?: string;
   plan: PlanContextType;
 }
 
 const StatusBadge = (props: StatusBadgeProps) => {
-  const { statusSummary, statusName, plan } = props;
+  const { action, statusName, plan } = props;
+  const { statusSummary } = action;
   const theme = useTheme();
-  const statusColor = getStatusColorForAction({ statusSummary }, plan, theme);
+  const statusColor = getStatusColorForAction(action, plan, theme);
   return (
     <StatusBar statusColor={statusColor} theme={theme}>
       <div className="color-bar" />
-      <div className="label">{statusName ?? statusSummary.label}</div>
+      <div className="label">{statusName ?? statusSummary?.label ?? ''}</div>
     </StatusBar>
   );
 };
