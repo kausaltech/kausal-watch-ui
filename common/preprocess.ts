@@ -81,19 +81,22 @@ const getStatusData = (
   let totalCount = 0;
 
   const counts: Map<string, number> = new Map();
+  const colors: Map<string, string | null> = new Map();
   for (const action of actions) {
     const {
       statusSummary: { identifier },
+      color,
     } = action;
     const val = 1 + (counts.get(identifier) ?? 0);
     counts.set(identifier, val);
+    colors.set(identifier, color ?? null);
   }
   actionStatusSummaries.forEach(({ identifier, label, color, sentiment }) => {
     const statusCount = counts.get(identifier) ?? 0;
     if (statusCount > 0) {
       progress.values.push(statusCount);
       progress.labels.push(label || unknownLabelText);
-      progress.colors.push(theme.graphColors[color]);
+      progress.colors.push(theme.graphColors[colors.get(identifier) ?? color]);
       if (sentiment == Sentiment.Positive) {
         progress.good = progress.good + statusCount;
       }
