@@ -49,24 +49,25 @@ export interface ActionWithStatusSummary {
   color?: string | null;
 }
 
+const DEFAULT_COLOR = 'grey050';
+
 export const getStatusColorForAction = (
   action: ActionWithStatusSummary,
   plan: PlanContextType,
   theme: Theme
 ) => {
-  const { color } = action;
+  const { color, statusSummary } = action;
   if (color != null) {
     return getThemeColor(color, theme);
   }
-  const { statusSummary } = action;
-  if (statusSummary == null) {
-    throw new Error('Action data is missing statusSummary');
+  if (
+    statusSummary == null ||
+    (statusSummary.color == null && statusSummary.identifier == null)
+  ) {
+    return getThemeColor(DEFAULT_COLOR, theme);
   }
   if (statusSummary.color != null) {
     return getThemeColor(statusSummary.color, theme);
-  }
-  if (statusSummary.identifier == null) {
-    throw new Error('Action data is missing statusSummary identifier');
   }
   const statusSummaryWithColor = getStatusSummary(plan, statusSummary);
   return getThemeColor(statusSummaryWithColor.color, theme);
