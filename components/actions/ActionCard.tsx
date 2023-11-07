@@ -6,10 +6,7 @@ import styled from 'styled-components';
 import { gql } from '@apollo/client';
 
 import { cleanActionStatus } from 'common/preprocess';
-import {
-  getStatusColor,
-  getStatusColorForAction,
-} from 'common/ActionStatusSummary';
+import { getStatusColorForAction } from 'common/ActionStatusSummary';
 import { ActionLink } from 'common/links';
 import { useTheme } from 'common/theme';
 import { getActionTermContext, useTranslation } from 'common/i18n';

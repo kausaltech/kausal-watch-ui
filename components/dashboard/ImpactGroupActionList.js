@@ -18,13 +18,9 @@ const ActionName = styled.span`
 
 const Status = (props) => {
   const { action, plan } = props;
-
-  return (
-    <StatusBadge
-      plan={plan}
-      statusSummary={getStatusSummary(plan, action.statusSummary)}
-    />
-  );
+  const statusSummary = getStatusSummary(plan, action.statusSummary);
+  const actionWithStatusSummary = Objects.assign({}, action, { statusSummary });
+  return <StatusBadge plan={plan} action={actionWithStatusSummary} />;
 };
 
 const ImpactGroupActionList = (props) => {
