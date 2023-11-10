@@ -151,6 +151,7 @@ const ActionsStatusGraphs = ({
   const theme = useTheme();
   const plan = useContext(PlanContext);
   const { t } = useTranslation(['common']);
+  const showTotals = theme.settings.dashboard.showActionDonutTotals ?? true;
 
   const progressData =
     shownDatasets.progress &&
@@ -185,7 +186,7 @@ const ActionsStatusGraphs = ({
       {phaseData && (
         <StatusDonut
           data={{ values: phaseData.values, labels: phaseData.labels }}
-          currentValue={phaseData.total}
+          currentValue={showTotals ? phaseData.total : undefined}
           colors={phaseData.colors.length > 0 ? phaseData.colors : []}
           header={t('actions-phases')}
           helpText={t('actions-phases-help')}
@@ -195,7 +196,7 @@ const ActionsStatusGraphs = ({
       {!plan.features.minimalStatuses && progressData && (
         <StatusDonut
           data={{ values: progressData.values, labels: progressData.labels }}
-          currentValue={progressData.total}
+          currentValue={showTotals ? progressData.total : undefined}
           colors={progressData.colors.length > 0 ? progressData.colors : []}
           header={t('actions-status')}
           helpText={t('actions-status-help')}
@@ -208,7 +209,7 @@ const ActionsStatusGraphs = ({
             values: timelinessData.values,
             labels: timelinessData.labels,
           }}
-          currentValue={timelinessData.total}
+          currentValue={showTotals ? timelinessData.total : undefined}
           colors={timelinessData.colors.length > 0 ? timelinessData.colors : []}
           header={t('actions-updated')}
           helpText={t('actions-updated-help', { count: daysVisible })}
