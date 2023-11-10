@@ -313,7 +313,9 @@ function ActionCard(props: ActionCardProps) {
       <StyledActionLink>
         <ActionCardElement>
           <ActionStatusArea statusColor={statusColor}>
-            <PrimaryIcon category={primaryRootCategory} />
+            {!theme.settings.hideIconOnActionListCards && (
+              <PrimaryIcon category={primaryRootCategory} />
+            )}
             {!plan.hideActionIdentifiers && !showPlan && (
               <ActionNumber>{action.identifier}</ActionNumber>
             )}
