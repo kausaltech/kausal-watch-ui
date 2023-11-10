@@ -198,5 +198,7 @@
     "filter-result-actions_CASE_STUDY": "casestudier",
     "recently-updated-actions_CASE_STUDY": "Nyligt opdaterede casestudier",
     "open": "åben",
-    "select-sector-for-actions": "Vælg en emissionssektor for at se relaterede handlinger"
+    "select-sector-for-actions": "Vælg en emissionssektor for at se relaterede handlinger",
+    "no-phase": "Ingen fase",
+    "no-status": "Ingen status"
 }

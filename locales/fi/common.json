@@ -187,5 +187,7 @@
     "graph-hideTable": "Piilota taulukko",
     "graph-showTable": "Näytä taulukkona",
     "definition": "Selite",
-    "select-sector-for-actions": "Valitse päästösektori nähdäksesi siihen liittyvät toimenpiteet"
+    "select-sector-for-actions": "Valitse päästösektori nähdäksesi siihen liittyvät toimenpiteet",
+    "no-phase": "Ei vaihetta",
+    "no-status": "Ei tilaa"
 }
