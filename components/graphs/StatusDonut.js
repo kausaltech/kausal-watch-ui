@@ -100,17 +100,19 @@ const StatusDonut = (props) => {
     font: {
       family: theme.fontFamilyTiny,
     },
-    annotations: [
-      {
-        font: {
-          size: 20,
-        },
-        showarrow: false,
-        text: currentValue,
-        x: 0.5,
-        y: 0.5,
-      },
-    ],
+    annotations: !!currentValue
+      ? [
+          {
+            font: {
+              size: 20,
+            },
+            showarrow: false,
+            text: currentValue,
+            x: 0.5,
+            y: 0.5,
+          },
+        ]
+      : undefined,
     height: 175,
     width: 175,
     showlegend: false,
