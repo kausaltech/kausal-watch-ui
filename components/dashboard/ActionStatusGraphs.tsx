@@ -154,7 +154,7 @@ const ActionsStatusGraphs = ({
 
   const progressData =
     shownDatasets.progress &&
-    getStatusData(actions, plan.actionStatusSummaries, theme, t('unknown'));
+    getStatusData(actions, plan.actionStatusSummaries, theme, t('no-status'));
 
   const timelinessData =
     shownDatasets.timeliness && getTimelinessData(actions, plan, theme);

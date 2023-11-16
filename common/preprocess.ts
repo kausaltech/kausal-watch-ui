@@ -95,7 +95,11 @@ const getStatusData = (
     const statusCount = counts.get(identifier) ?? 0;
     if (statusCount > 0) {
       progress.values.push(statusCount);
-      progress.labels.push(label || unknownLabelText);
+      progress.labels.push(
+        identifier === ActionStatusSummaryIdentifier.Undefined
+          ? unknownLabelText
+          : label || unknownLabelText
+      );
       progress.colors.push(theme.graphColors[colors.get(identifier) ?? color]);
       if (sentiment == Sentiment.Positive) {
         progress.good = progress.good + statusCount;
@@ -182,7 +186,7 @@ const getPhaseData = (
         !phases.find((p) => p.identifier.toLowerCase() === a.phase?.identifier)
     )
   );
-  phaseData.labels.push(t('unknown'));
+  phaseData.labels.push(t('no-phase'));
   phaseData.values.push(unknownActions.size);
   phaseData.colors.push(theme.graphColors.grey010);
 

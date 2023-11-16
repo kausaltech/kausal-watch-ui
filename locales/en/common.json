@@ -201,5 +201,7 @@
     "definition": "Definition",
     "no-reports": "No reports are available.",
     "no-action-data-for-report": "The report contains no data for this action.",
-    "select-sector-for-actions": "Select an emission sector to view related actions"
+    "select-sector-for-actions": "Select an emission sector to view related actions",
+    "no-phase": "No phase set",
+    "no-status": "No status set"
 }
