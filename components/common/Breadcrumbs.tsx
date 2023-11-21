@@ -16,6 +16,7 @@ type Props = {
 };
 
 const StyledContainer = styled.div`
+  font-size: ${(props) => props.theme.fontSizeMd};
   margin-bottom: ${(props) => props.theme.spaces.s100};
 `;
 

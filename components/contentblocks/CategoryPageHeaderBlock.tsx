@@ -168,11 +168,6 @@ const AttributesContainer = styled.div`
   margin: 0 auto;
 `;
 
-const Breadcrumb = styled.div`
-  font-size: ${(props) => props.theme.fontSizeMd};
-  margin-bottom: ${(props) => props.theme.spaces.s100};
-`;
-
 const getIconHeight = (size: IconSize = IconSize.M, theme: Theme) => {
   switch (size) {
     case IconSize.L:
