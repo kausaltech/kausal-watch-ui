@@ -113,9 +113,26 @@ function ActionIndicator(props) {
   );
 }
 
-const ActionRelatedIndicatorsBlock = (props) => {
+// FIXME: Type properly
+type ActionRelatedIndicatorsBlockProps = {
+  indicators: any[];
+  actionId: string;
+};
+
+const ActionRelatedIndicatorsBlock = (
+  props: ActionRelatedIndicatorsBlockProps
+) => {
   const { indicators, actionId } = props;
   const { t } = useTranslation();
+
+  // FIXME: Assume indicator not connected to any plan are "draft" until we have API solution for this
+  const filteredIndicators = indicators.filter(
+    (relatedIndicator) => relatedIndicator.indicator.plans.length > 0
+  );
+
+  if (filteredIndicators.length === 0) {
+    return null;
+  }
 
   return (
     <div>
@@ -127,7 +144,7 @@ const ActionRelatedIndicatorsBlock = (props) => {
       <Row>
         <Col sm="12">
           <IndicatorsSection>
-            {indicators.map((relatedIndicator) => (
+            {filteredIndicators.map((relatedIndicator) => (
               <ActionIndicator
                 t={t}
                 key={relatedIndicator.indicator.id}

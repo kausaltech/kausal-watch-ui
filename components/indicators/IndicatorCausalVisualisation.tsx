@@ -182,8 +182,18 @@ const setRows = (nodes) => {
   return griddedIndicators;
 };
 
-const combineData = (nodes, edges) => {
+const combineData = (unfilteredNodes, unfilteredEdges) => {
   // Combine edges data to indicator nodes
+
+  // FIXME: Use available data from old insight API to filter out "draft" indicators
+  const nodes = unfilteredNodes.filter(
+    (item) => item.type !== 'indicator' || item?.indicator_level !== ''
+  );
+  const nodeIds = nodes.map((item) => item.id);
+  const edges = unfilteredEdges.filter(
+    (item) => nodeIds.includes(item.from) && nodeIds.includes(item.to)
+  );
+
   const indicators = nodes;
   indicators.forEach((item, index) => {
     indicators[index].from = edges.filter((edge) => edge.from === item.id);
@@ -195,11 +205,14 @@ const combineData = (nodes, edges) => {
   const gridded = setRows(columned);
   return gridded;
 };
-interface Props {
-  actionId?: string;
-}
 
-const InteractiveCausalChain = ({ nodes }) => {
+// FIXME: Type properly
+type InteractiveCausalChainProps = {
+  nodes: any[];
+};
+
+const InteractiveCausalChain = (props: InteractiveCausalChainProps) => {
+  const { nodes } = props;
   const theme = useTheme();
   const [cardHover, setCardHover] = useState(null);
 
@@ -272,7 +285,13 @@ const InteractiveCausalChain = ({ nodes }) => {
   );
 };
 
-function IndicatorCausalVisualisation({ actionId }: Props) {
+type IndicatorCausalVisualisationProps = {
+  actionId: string;
+};
+
+function IndicatorCausalVisualisation({
+  actionId,
+}: IndicatorCausalVisualisationProps) {
   const plan = usePlan();
   const isServer = typeof window === 'undefined';
   const { i18n } = useTranslation();

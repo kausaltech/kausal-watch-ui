@@ -186,6 +186,9 @@ const GET_ACTION_DETAILS = gql`
             identifier
             name
           }
+          plans {
+            id
+          }
         }
       }
       relatedActions {
@@ -672,7 +675,7 @@ function ActionContent(props: ActionContentProps) {
       const blocks = actionListPage[section];
       if (!blocks) return null;
 
-      let allSections: JSX.Element[] = [];
+      const allSections: JSX.Element[] = [];
       let previousSectionBlock: undefined | typeof blocks[0];
       let groupedBlocks: typeof blocks = [];
 
