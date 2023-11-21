@@ -2202,6 +2202,8 @@ export type IndicatorGroupBlock = StreamFieldInterface & {
   field: Scalars['String'];
   id?: Maybe<Scalars['String']>;
   indicators?: Maybe<Array<Maybe<StreamFieldInterface>>>;
+  /** @deprecated Use 'indicators' instead */
+  items?: Maybe<Array<Maybe<StreamFieldInterface>>>;
   rawValue: Scalars['String'];
   title?: Maybe<Scalars['String']>;
 };
@@ -9852,6 +9854,55 @@ export type TemplatedCategoryPageFragmentFragment = (
   & { __typename?: 'CategoryPage' }
 );
 
+export type RecursiveCategoryParentFragmentFragment = (
+  { parent?: (
+    { name: string, parent?: (
+      { identifier: string, name: string, parent?: (
+        { identifier: string, name: string, categoryPage?: (
+          { urlPath: string }
+          & { __typename?: 'CategoryPage' }
+        ) | null, type: (
+          { id: string, hideCategoryIdentifiers: boolean }
+          & { __typename?: 'CategoryType' }
+        ), parent?: (
+          { identifier: string, name: string, categoryPage?: (
+            { urlPath: string }
+            & { __typename?: 'CategoryPage' }
+          ) | null, type: (
+            { id: string, hideCategoryIdentifiers: boolean }
+            & { __typename?: 'CategoryType' }
+          ) }
+          & { __typename?: 'Category' }
+        ) | null }
+        & { __typename?: 'Category' }
+      ) | null, categoryPage?: (
+        { urlPath: string }
+        & { __typename?: 'CategoryPage' }
+      ) | null, type: (
+        { id: string, hideCategoryIdentifiers: boolean }
+        & { __typename?: 'CategoryType' }
+      ) }
+      & { __typename?: 'Category' }
+    ) | null }
+    & { __typename?: 'Category' }
+  ) | null }
+  & { __typename?: 'Category' }
+);
+
+export type CategoryParentFragmentFragment = (
+  { name: string, parent?: (
+    { identifier: string, name: string, categoryPage?: (
+      { urlPath: string }
+      & { __typename?: 'CategoryPage' }
+    ) | null, type: (
+      { id: string, hideCategoryIdentifiers: boolean }
+      & { __typename?: 'CategoryType' }
+    ) }
+    & { __typename?: 'Category' }
+  ) | null }
+  & { __typename?: 'Category' }
+);
+
 export type GetPlanPageGeneralQueryVariables = Exact<{
   plan: Scalars['ID'];
   path: Scalars['String'];
@@ -10294,7 +10345,43 @@ export type GetPlanPageGeneralQuery = (
         ) | null, type: (
           { id: string, hideCategoryIdentifiers: boolean }
           & { __typename?: 'CategoryType' }
-        ) }
+        ), parent?: (
+          { identifier: string, name: string, categoryPage?: (
+            { urlPath: string }
+            & { __typename?: 'CategoryPage' }
+          ) | null, type: (
+            { id: string, hideCategoryIdentifiers: boolean }
+            & { __typename?: 'CategoryType' }
+          ), parent?: (
+            { identifier: string, name: string, parent?: (
+              { identifier: string, name: string, categoryPage?: (
+                { urlPath: string }
+                & { __typename?: 'CategoryPage' }
+              ) | null, type: (
+                { id: string, hideCategoryIdentifiers: boolean }
+                & { __typename?: 'CategoryType' }
+              ), parent?: (
+                { identifier: string, name: string, categoryPage?: (
+                  { urlPath: string }
+                  & { __typename?: 'CategoryPage' }
+                ) | null, type: (
+                  { id: string, hideCategoryIdentifiers: boolean }
+                  & { __typename?: 'CategoryType' }
+                ) }
+                & { __typename?: 'Category' }
+              ) | null }
+              & { __typename?: 'Category' }
+            ) | null, categoryPage?: (
+              { urlPath: string }
+              & { __typename?: 'CategoryPage' }
+            ) | null, type: (
+              { id: string, hideCategoryIdentifiers: boolean }
+              & { __typename?: 'CategoryType' }
+            ) }
+            & { __typename?: 'Category' }
+          ) | null }
+          & { __typename?: 'Category' }
+        ) | null }
         & { __typename?: 'Category' }
       ) | null, attributes?: Array<(
         { id: string, type: (

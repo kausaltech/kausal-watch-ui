@@ -1,3 +1,5 @@
+import { Category, PlanContextFragment } from './__generated__/graphql';
+
 export interface CategoryInput {
   id: string;
   parent?: {
@@ -153,3 +155,57 @@ export function mapActionCategories<
  */
 export const getCategoryString = (catIdentifier: string) =>
   `cat-${catIdentifier}`;
+
+export const MAX_CRUMB_LENGTH = 90;
+
+export const isIdentifierVisible = (
+  category: Category,
+  showIdentifiers: boolean
+) => category.categoryPage && category.identifier && showIdentifiers;
+
+export const getCategoryName = (category: Category, showIdentifiers: boolean) =>
+  isIdentifierVisible(category, showIdentifiers)
+    ? `${category.identifier}. ${category.name}`
+    : category.name;
+
+export const getCategoryUrl = (
+  category: Category,
+  primaryCategory?: PlanContextFragment['primaryActionClassification']
+) => {
+  if (category.categoryPage) {
+    return category.categoryPage.urlPath;
+  }
+
+  if (primaryCategory) {
+    return `/actions?cat-${primaryCategory.identifier}=${category.id}`;
+  }
+
+  return undefined;
+};
+
+// Convert a category parent hierarchy to a flat array
+export const getDeepParents = (category: Category): Category[] =>
+  !category.parent
+    ? [category]
+    : [...getDeepParents(category.parent), category];
+
+/**
+ * Converts a category with nested parents to a flat array of
+ * parents starting with the top-level parent category.
+ */
+export const getBreadcrumbsFromCategoryHierarchy = (
+  categories: Category[],
+  showIdentifiers: boolean,
+  primaryCategory?: PlanContextFragment['primaryActionClassification']
+) =>
+  categories
+    .reduce(
+      // Convert categories to a flat array representing the hierarchy
+      (categories, category) => [...getDeepParents(category), ...categories],
+      []
+    )
+    .map((category) => ({
+      id: category.id,
+      name: getCategoryName(category, showIdentifiers),
+      url: getCategoryUrl(category, primaryCategory),
+    }));
