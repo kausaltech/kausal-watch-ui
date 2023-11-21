@@ -18,6 +18,8 @@ import CategoryPageStreamField, {
 } from 'components/common/CategoryPageStreamField';
 import { ChartType } from 'components/dashboard/ActionStatusGraphs';
 import ActionStatusGraphsBlock from './ActionStatusGraphsBlock';
+import { Breadcrumbs } from 'components/common/Breadcrumbs';
+import { getBreadcrumbsFromCategoryHierarchy } from 'common/categories';
 
 export const GET_CATEGORY_ATTRIBUTE_TYPES = gql`
   query GetCategoryAttributeTypes($plan: ID!) {
@@ -271,8 +273,6 @@ interface Props {
   iconImage;
   headerImage;
   imageAlign?: string;
-  parentTitle;
-  parentUrl;
   color;
   attributes;
   typeId;
@@ -289,8 +289,6 @@ function CategoryPageHeaderBlock({
   iconImage,
   headerImage,
   imageAlign = 'center',
-  parentTitle,
-  parentUrl,
   color,
   attributes,
   typeId,
@@ -300,6 +298,9 @@ function CategoryPageHeaderBlock({
   const plan = useContext(PlanContext);
   const theme = useTheme();
   const { t } = useTranslation();
+
+  const showIdentifiers =
+    !plan.primaryActionClassification?.hideCategoryIdentifiers;
 
   const { loading, error, data } = useQuery<GetCategoryAttributeTypesQuery>(
     GET_CATEGORY_ATTRIBUTE_TYPES,
@@ -336,14 +337,16 @@ function CategoryPageHeaderBlock({
               hasImage={!!headerImage}
             >
               {level && <CategoryLevelName>{level}</CategoryLevelName>}
-              {parentTitle && (
-                <Breadcrumb>
-                  <Link href={parentUrl}>
-                    <a>{parentTitle}</a>
-                  </Link>{' '}
-                  /
-                </Breadcrumb>
+
+              {!!page.category?.parent && (
+                <Breadcrumbs
+                  breadcrumbs={getBreadcrumbsFromCategoryHierarchy(
+                    [page.category.parent],
+                    showIdentifiers
+                  )}
+                />
               )}
+
               {iconImage && (
                 <CategoryIconImage
                   size={(page?.layout?.iconSize as IconSize) ?? undefined}

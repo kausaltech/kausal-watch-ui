@@ -120,6 +120,10 @@ const GET_PLAN_PAGE = gql`
         category {
           id
           identifier
+          name
+          categoryPage {
+            urlPath
+          }
           level {
             name
             namePlural
@@ -147,6 +151,8 @@ const GET_PLAN_PAGE = gql`
             ...CategoryListCategory
           }
           parent {
+            ...CategoryParentFragment
+            ...RecursiveCategoryParentFragment
             id
             identifier
             name
@@ -190,6 +196,33 @@ const GET_PLAN_PAGE = gql`
   ${images.fragments.multiUseImage}
   ${ActionAttribute.fragments.attributeWithNestedType}
   ${CategoryListBlock.fragments.category}
+
+  fragment CategoryParentFragment on Category {
+    parent {
+      identifier
+      name
+      categoryPage {
+        urlPath
+      }
+      type {
+        id
+        hideCategoryIdentifiers
+      }
+    }
+  }
+
+  # Fetch basic parent category data up to three levels deep for breadcrumbs
+  fragment RecursiveCategoryParentFragment on Category {
+    parent {
+      ...CategoryParentFragment
+      parent {
+        ...CategoryParentFragment
+        parent {
+          ...CategoryParentFragment
+        }
+      }
+    }
+  }
 `;
 
 type GeneralPlanPage = NonNullable<GetPlanPageGeneralQuery['planPage']>;
@@ -208,13 +241,6 @@ const PageHeaderBlock = ({ color, page }: PageHeaderBlockProps) => {
         throw new Error('Category page without category configured');
       }
 
-      const parentIdentifier = !category.type.hideCategoryIdentifiers
-        ? `${category.parent?.identifier}.`
-        : '';
-      const parentTitle = category.parent?.categoryPage
-        ? `${parentIdentifier} ${category.parent?.categoryPage.title}`
-        : null;
-      const parentUrl = category.parent?.categoryPage?.urlPath || null;
       const headerImage = category.image || category.parent?.image;
       const iconImage = category.iconImage?.rendition?.src;
 
@@ -233,8 +259,6 @@ const PageHeaderBlock = ({ color, page }: PageHeaderBlockProps) => {
           iconImage={iconImage}
           headerImage={headerImage}
           imageAlign={getBgImageAlignment(headerImage)}
-          parentTitle={parentTitle}
-          parentUrl={parentUrl}
           color={color}
           attributes={category.attributes}
           typeId={category.type.id}

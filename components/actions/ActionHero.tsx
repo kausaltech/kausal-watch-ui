@@ -1,20 +1,15 @@
 import React from 'react';
-import { Container, Row, Col, UncontrolledTooltip } from 'reactstrap';
-import flatMapDeep from 'lodash/flatMapDeep';
+import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
 import { useTheme } from 'common/theme';
 import { getActionTermContext, useTranslation } from 'common/i18n';
-import {
-  ActionLink,
-  ActionListLink,
-  OrganizationLink,
-  Link,
-} from 'common/links';
+import { ActionLink, ActionListLink, OrganizationLink } from 'common/links';
 import { usePlan } from 'context/plan';
 
 import Icon from 'components/common/Icon';
-import { getCategoryString } from 'common/categories';
+import { getBreadcrumbsFromCategoryHierarchy } from 'common/categories';
 import { Category } from 'common/__generated__/graphql';
+import { Breadcrumbs } from 'components/common/Breadcrumbs';
 
 const Hero = styled.header<{ bgColor: string }>`
   position: relative;
@@ -102,10 +97,6 @@ const ActionsNav = styled.nav`
   }
 `;
 
-const CategoriesBreadcrumb = styled.div`
-  margin-bottom: ${(props) => props.theme.spaces.s100};
-`;
-
 const NavDivider = styled.span`
   color: ${(props) => props.theme.brandDark};
   &::after {
@@ -153,28 +144,6 @@ const ActionNumber = styled.span`
   }
 `;
 
-const MAX_CRUMB_LENGTH = 90;
-
-const isIdentifierVisible = (category: Category, showIdentifiers: boolean) =>
-  category.categoryPage && category.identifier && showIdentifiers;
-
-const getCategoryName = (category: Category, showIdentifiers: boolean) =>
-  isIdentifierVisible(category, showIdentifiers)
-    ? `${category.identifier}. ${category.name}`
-    : category.name;
-
-const getCategoryUrl = (category: Category, primaryCategory) => {
-  if (category.categoryPage) {
-    return category.categoryPage.urlPath;
-  }
-
-  if (primaryCategory) {
-    return `/actions?cat-${primaryCategory.identifier}=${category.id}`;
-  }
-
-  return undefined;
-};
-
 /**
  * Check whether multiple categories at different levels of a single category type hierarchy
  * have been added to an action. Required to filter duplicate categories from the breadcrumb.
@@ -187,52 +156,6 @@ const isCategoryInSiblingsParentTree = (
   (siblingParentCategory.parent &&
     isCategoryInSiblingsParentTree(category, siblingParentCategory.parent));
 
-// Convert a category parent hierarchy to a flat array
-const getDeepParents = (category: Category): Category[] =>
-  !category.parent
-    ? [category]
-    : [...getDeepParents(category.parent), category];
-
-type PartialCategory = Pick<Category, 'id' | 'name'> & {
-  url?: string;
-};
-
-function Crumb({ category }: { category: PartialCategory }) {
-  const id = `crumb-${category.id}`;
-  const ariaId = `tt-content-${category.id}`;
-  const isTruncated = category.name.length > MAX_CRUMB_LENGTH;
-  const name = isTruncated
-    ? `${category.name.slice(0, MAX_CRUMB_LENGTH).trim()}...`
-    : category.name;
-
-  return (
-    <>
-      <span id={id} aria-describedby={isTruncated ? ariaId : undefined}>
-        {category.url ? (
-          <Link href={category.url} passHref>
-            {name}
-          </Link>
-        ) : (
-          name
-        )}
-        {` / `}
-      </span>
-
-      {isTruncated && (
-        <UncontrolledTooltip
-          target={id}
-          id={ariaId}
-          placement="top"
-          role="tooltip"
-          trigger="focus hover"
-        >
-          {category.name}
-        </UncontrolledTooltip>
-      )}
-    </>
-  );
-}
-
 function ActionCategories({ categories }: { categories: Category[] }) {
   const plan = usePlan();
   const showIdentifiers =
@@ -240,35 +163,26 @@ function ActionCategories({ categories }: { categories: Category[] }) {
   const primaryCT = plan.primaryActionClassification;
   const primaryCatId = primaryCT?.id;
 
-  const displayCategories: PartialCategory[] = categories
-    .filter(
-      (category) =>
-        category.type.id === primaryCatId &&
-        // Check whether this category is included in a sibling's parent
-        !categories.some(
-          (otherCategory) =>
-            otherCategory.id !== category.id &&
-            otherCategory.parent &&
-            isCategoryInSiblingsParentTree(category, otherCategory.parent)
-        )
-    )
-    .reduce(
-      // Convert categories to a flat array representing the hierarchy
-      (categories, category) => [...getDeepParents(category), ...categories],
-      []
-    )
-    .map((category) => ({
-      id: category.id,
-      name: getCategoryName(category, showIdentifiers),
-      url: getCategoryUrl(category, primaryCT),
-    }));
+  const displayCategories = categories.filter(
+    (category) =>
+      category.type.id === primaryCatId &&
+      // Check whether this category is included in a sibling's parent
+      !categories.some(
+        (otherCategory) =>
+          otherCategory.id !== category.id &&
+          otherCategory.parent &&
+          isCategoryInSiblingsParentTree(category, otherCategory.parent)
+      )
+  );
 
   return (
-    <CategoriesBreadcrumb>
-      {displayCategories.map((category) => (
-        <Crumb key={category.id} category={category} />
-      ))}
-    </CategoriesBreadcrumb>
+    <Breadcrumbs
+      breadcrumbs={getBreadcrumbsFromCategoryHierarchy(
+        displayCategories,
+        showIdentifiers,
+        primaryCT
+      )}
+    />
   );
 }
 
