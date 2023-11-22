@@ -87,8 +87,7 @@ const Logo = styled.div`
   }
 
   @media (max-width: ${(props) => props.theme.breakpointMd}) {
-    width: 100%;
-    margin: 0 auto ${(props) => props.theme.spaces.s150};
+    margin: 0 auto ${(props) => props.theme.spaces.s200};
   }
 `;
 
