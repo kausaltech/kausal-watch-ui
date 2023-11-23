@@ -775,11 +775,13 @@ class ActionNameFilter implements ActionListFilter<string | undefined> {
   lg = 6;
   debounce = 150;
 
+  private actionTermContext?: { context: string };
   hasActionIdentifiers: boolean;
   ref: Ref<HTMLInputElement>;
 
   constructor(plan: PlanContextType) {
     this.hasActionIdentifiers = plan.features.hasActionIdentifiers;
+    this.actionTermContext = getActionTermContext(plan);
     this.ref = createRef();
   }
 
@@ -798,7 +800,7 @@ class ActionNameFilter implements ActionListFilter<string | undefined> {
     return false;
   }
   getLabel(t: TFunction) {
-    return t('filter-text');
+    return t('filter-text', this.actionTermContext);
   }
   getShowAllLabel(t: TFunction) {
     return t('filter-text-default');
