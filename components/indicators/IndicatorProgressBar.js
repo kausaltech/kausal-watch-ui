@@ -2,11 +2,13 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled, { ThemeContext } from 'styled-components';
-import { motion, useAnimation, animate, MotionConfig } from 'framer-motion';
+import { motion, useAnimation, animate } from 'framer-motion';
 import { useTranslation } from 'common/i18n';
 import dayjs from 'common/dayjs';
 import { IndicatorLink } from 'common/links';
 import Switch from 'components/common/Switch';
+import { useWindowSize } from 'common/hooks/use-window-size';
+import { useTheme } from 'common/theme';
 
 const BarBase = styled.rect``;
 
@@ -129,9 +131,34 @@ function Counter({ from, to, duration, locale, precision }) {
   return <tspan ref={ref} />;
 }
 
+const CHART_WIDTHS = {
+  sm: 400,
+  md: 800,
+};
+
+function useChartWidth() {
+  const theme = useTheme();
+  const { width: windowWidth } = useWindowSize(400);
+  const [width, setWidth] = useState(CHART_WIDTHS.md);
+
+  useEffect(() => {
+    const nextWidth =
+      windowWidth < parseInt(theme.breakpointMd)
+        ? CHART_WIDTHS.sm
+        : CHART_WIDTHS.md;
+
+    if (width !== nextWidth) {
+      setWidth(nextWidth);
+    }
+  }, [width, windowWidth, theme.breakpointMd]);
+
+  return width;
+}
+
 function IndicatorProgressBar(props) {
   const { indicator, animate } = props;
 
+  const width = useChartWidth();
   const [isNormalized, setIsNormalized] = useState(false);
 
   const populationNormalizer = indicator.common?.normalizations.find(
@@ -213,7 +240,7 @@ function IndicatorProgressBar(props) {
   const bottomMargin = 70;
   const rightMargin = 50;
   const topMargin = 0;
-  const bars = { w: 800 - rightMargin, h: 3 * barHeight };
+  const bars = { w: width - rightMargin, h: 3 * barHeight };
   const scale = bars.w / startValue;
   const segmentsY = bars.h + barMargin * 2;
   const goalColor = theme.graphColors.green030;
