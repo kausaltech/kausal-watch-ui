@@ -290,7 +290,7 @@ const Content = ({ page }: { page: GeneralPlanPage }) => {
   const isCategoryPage = page.__typename === 'CategoryPage';
   const categoryColor =
     isCategoryPage && (page.category?.color || page.category?.parent?.color);
-  const pageSectionColor = categoryColor || theme.brandLight;
+  const pageSectionColor = categoryColor || theme.themeColors.white;
 
   const hasSecondaryNav = page.parent?.childrenUseSecondaryNavigation ?? false;
   // Restrict the secondary nav to be shown on StaticPages only currently
