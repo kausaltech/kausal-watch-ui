@@ -316,6 +316,9 @@ function CategoryPageHeaderBlock({
         xl: { size: 12, offset: 0 },
       };
 
+  const showLevel =
+    level && !theme.settings.categories.categoryPageHideCategoryLabel;
+
   return (
     <CategoryHeader $bg={color} $hasImage={!!headerImage}>
       <CategoryHeaderImage
@@ -330,7 +333,7 @@ function CategoryPageHeaderBlock({
               $alignWithContent={theme.settings.leftAlignCategoryPages}
               hasImage={!!headerImage}
             >
-              {level && <CategoryLevelName>{level}</CategoryLevelName>}
+              {showLevel && <CategoryLevelName>{level}</CategoryLevelName>}
 
               {!!page.category?.parent && (
                 <Breadcrumbs

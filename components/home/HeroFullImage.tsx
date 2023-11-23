@@ -27,7 +27,6 @@ const Hero = styled.div`
 
 const HeroImage = styled.div<{ image: string; imageAlign: string }>`
   min-height: 14rem;
-  margin: 0 -1rem;
   background-size: cover;
   background-position: ${(props) => props.imageAlign};
   background-image: url(${(props) => props.image});
@@ -37,7 +36,6 @@ const HeroImage = styled.div<{ image: string; imageAlign: string }>`
     position: absolute;
     width: 100%;
     height: 100%;
-    margin: 0;
   }
 `;
 

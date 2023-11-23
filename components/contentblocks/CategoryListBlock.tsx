@@ -1,7 +1,6 @@
 import React from 'react';
 import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
-import { readableColor } from 'polished';
 import RichText from 'components/common/RichText';
 import { getBgImageAlignment } from 'common/images';
 import { Link } from 'common/links';
@@ -10,6 +9,8 @@ import { MultiUseImageFragmentFragment } from 'common/__generated__/graphql';
 import { useFallbackCategories } from 'context/categories';
 import { gql } from '@apollo/client';
 import { CommonContentBlockProps } from 'common/blocks.types';
+import { readableColor } from 'polished';
+import { Theme } from '@kausal/themes/types';
 
 const CATEGORY_FRAGMENT = gql`
   fragment CategoryListCategory on Category {
@@ -45,25 +46,22 @@ const CATEGORY_FRAGMENT = gql`
   }
 `;
 
+const getColor = (theme: Theme, darkFallback = theme.themeColors.black) =>
+  theme.section.categoryList?.color ||
+  readableColor(theme.neutralLight, darkFallback, theme.themeColors.white);
+
+const getBackgroundColor = (theme: Theme) =>
+  theme.section.categoryList?.background || theme.neutralLight;
+
 const CategoryListSection = styled.div`
-  background-color: ${(props) => props.theme.neutralLight};
+  background-color: ${({ theme }) => getBackgroundColor(theme)};
   padding: ${(props) =>
     `${props.theme.spaces.s400} 0 ${props.theme.spaces.s100} 0`};
-  color: ${(props) =>
-    readableColor(
-      props.theme.neutralLight,
-      props.theme.themeColors.black,
-      props.theme.themeColors.white
-    )};
+  color: ${({ theme }) => getColor(theme)};
 
   h2 {
     font-size: ${(props) => props.theme.fontSizeLg};
-    color: ${(props) =>
-      readableColor(
-        props.theme.neutralLight,
-        props.theme.headingsColor,
-        props.theme.themeColors.white
-      )};
+    color: ${({ theme }) => getColor(theme, theme.headingsColor)};
   }
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
@@ -75,10 +73,10 @@ const CategoryListSection = styled.div`
   a.card-wrapper {
     display: flex;
     width: 100%;
-    color: ${(props) => props.theme.themeColors.black};
+    color: ${({ theme }) => theme.themeColors.black};
 
     &:hover {
-      color: ${(props) => props.theme.themeColors.black};
+      color: ${({ theme }) => theme.themeColors.black};
       text-decoration: none;
 
       .card-title {

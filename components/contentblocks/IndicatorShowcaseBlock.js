@@ -9,16 +9,17 @@ import IndicatorVisualisation from 'components/indicators/IndicatorVisualisation
 
 const IndicatorShowcase = styled.div`
   padding: ${(props) => props.theme.spaces.s400} 0;
-  background-color: ${(props) => props.theme.brandDark};
-  color: ${(props) => props.theme.themeColors.white};
+  background-color: ${({ theme }) =>
+    theme.section.indicatorShowcase.background};
+  color: ${({ theme }) => theme.section.indicatorShowcase.color};
   text-align: center;
 
   h2 {
-    color: ${(props) => props.theme.themeColors.white};
+    color: ${({ theme }) => theme.section.indicatorShowcase.color};
   }
 
   a {
-    color: ${(props) => props.theme.themeColors.white};
+    color: ${({ theme }) => theme.section.indicatorShowcase.color};
     text-decoration: underline;
 
     &:hover {
