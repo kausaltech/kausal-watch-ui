@@ -92,6 +92,7 @@ const BotNav = styled(Navbar)<{ $offsetTop?: number; $expanded: boolean }>`
 
 const SiteTitle = styled.div`
   font-size: ${(props) => props.theme.fontSizeBase};
+  font-family: ${(props) => props.theme.brandNavFontFamily};
   line-height: 1;
   padding: ${(props) => props.theme.spaces.s150} 0
     ${(props) => props.theme.spaces.s150};
