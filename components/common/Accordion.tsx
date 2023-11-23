@@ -1,9 +1,10 @@
-import React, { useContext, useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Collapse, UncontrolledTooltip } from 'reactstrap';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import SiteContext from 'context/site';
+import { useRouter } from 'next/router';
+import { isServer } from 'common/environment';
 
 import { useTranslation } from 'common/i18n';
 import Icon from 'components/common/Icon';
@@ -87,38 +88,29 @@ const AccordionContent = styled(Collapse)`
   margin-left: ${(props) => props.theme.spaces.s200};
 `;
 
-const TooltipContent = (props) => {
-  const { scheduleUpdate, children } = props;
-  scheduleUpdate();
-  return <>{children}</>;
-};
-
-TooltipContent.defaultProps = {
-  scheduleUpdate: () => null,
-};
-
-TooltipContent.propTypes = {
-  scheduleUpdate: PropTypes.func,
-  children: PropTypes.node.isRequired,
-};
-
-const LinkCopyButton = React.memo((props) => {
-  const { identifier } = props;
-  const site = useContext(SiteContext);
+const LinkCopyButton = ({ identifier }: { identifier: string }) => {
   const { t } = useTranslation();
+  const { asPath } = useRouter();
   const [tooltipOpen, setTooltipOpen] = useState(false);
-  const [copyText, setCopyText] = useState(t('copy-to-clipboard'));
-  const toggle = useCallback(() => {
+  const [copyText, setCopyText] = useState(() => t('copy-to-clipboard'));
+
+  const path = asPath.replace(/#.*/, '');
+  const origin =
+    !isServer && window.location.origin ? window.location.origin : '';
+
+  const toggle = () => {
     setTooltipOpen(!tooltipOpen);
     if (!tooltipOpen) setCopyText(t('copy-to-clipboard'));
-  }, [tooltipOpen, setCopyText]);
-  const onCopy = useCallback(() => {
+  };
+
+  const onCopy = () => {
     setCopyText(t('copied-to-clipboard'));
-  }, [setCopyText]);
+  };
 
   return (
     <>
       <UncontrolledTooltip
+        key={copyText} // Force rerender on tooltip content change for content positioning
         placement="top"
         isOpen={tooltipOpen}
         target={`tooltip-${identifier}`}
@@ -126,14 +118,10 @@ const LinkCopyButton = React.memo((props) => {
         role="tooltip"
         toggle={toggle}
       >
-        {({ scheduleUpdate }) => (
-          <TooltipContent scheduleUpdate={scheduleUpdate}>
-            {copyText}
-          </TooltipContent>
-        )}
+        <span>{copyText}</span>
       </UncontrolledTooltip>
       <CopyToClipboard
-        text={`${site.hostname}${site.path}#q${identifier}`}
+        text={`${origin}${path}#q${identifier}`}
         id={`tooltip-${identifier}`}
         onCopy={onCopy}
         aria-describedby={`tt-content-${identifier}`}
@@ -144,13 +132,7 @@ const LinkCopyButton = React.memo((props) => {
       </CopyToClipboard>
     </>
   );
-});
-
-LinkCopyButton.propTypes = {
-  identifier: PropTypes.string,
 };
-
-LinkCopyButton.displayName = 'LinkCopyButton';
 
 const AccordionHeader = ({
   children,
