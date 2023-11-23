@@ -19,10 +19,10 @@ import {
   Sentiment,
   ActionTimeliness,
   ActionTimelinessIdentifier,
-  Action,
 } from 'common/__generated__/graphql';
 import type { ActionListAction } from './ActionList';
 import BarChart from 'components/common/BarChart';
+import { TFunction } from 'next-i18next';
 
 const StatusDonutsWrapper = styled.div`
   width: auto;
@@ -137,6 +137,20 @@ const DEFAULT_DATASETS: DatasetConfig = {
   timeliness: true,
 };
 
+const DAYS_IN_MONTH = 30.437;
+
+function getTimelinessHelpText(days: number, t: TFunction) {
+  if (days < 30) {
+    return t('actions-updated-help-days', {
+      count: days,
+    });
+  }
+
+  return t('actions-updated-help-months', {
+    count: Math.round(days / DAYS_IN_MONTH),
+  });
+}
+
 export interface ActionsStatusGraphsProps {
   actions: ActionListAction[];
   chart?: ChartType;
@@ -212,7 +226,7 @@ const ActionsStatusGraphs = ({
           currentValue={showTotals ? timelinessData.total : undefined}
           colors={timelinessData.colors.length > 0 ? timelinessData.colors : []}
           header={t('actions-updated')}
-          helpText={t('actions-updated-help', { count: daysVisible })}
+          helpText={getTimelinessHelpText(daysVisible, t)}
         />
       )}
     </StatusDonutsWrapper>
