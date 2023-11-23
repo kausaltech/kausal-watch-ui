@@ -1,13 +1,7 @@
 import React, { useContext } from 'react';
-import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { transparentize } from 'polished';
-import dayjs from 'common/dayjs';
-import {
-  cleanActionStatus,
-  getPhaseData,
-  getStatusData,
-} from 'common/preprocess';
+import { getPhaseData, getStatusData } from 'common/preprocess';
 import { useTheme } from 'common/theme';
 import type { Theme } from '@kausal/themes/types';
 import PlanContext, { PlanContextType } from 'context/plan';
@@ -19,7 +13,6 @@ import {
   Sentiment,
   ActionTimeliness,
   ActionTimelinessIdentifier,
-  Action,
 } from 'common/__generated__/graphql';
 import type { ActionListAction } from './ActionList';
 import BarChart from 'components/common/BarChart';

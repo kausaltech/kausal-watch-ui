@@ -105,7 +105,9 @@ const getStatusData = (
         progress.good = progress.good + statusCount;
       }
     }
-    totalCount += statusCount;
+    if (identifier !== ActionStatusSummaryIdentifier.Undefined) {
+      totalCount += statusCount;
+    }
   });
   progress.total = `${Math.round((progress.good / totalCount) * 100)}%`;
   return progress;
