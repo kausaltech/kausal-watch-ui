@@ -4,7 +4,6 @@ import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
 import { Theme } from '@kausal/themes/types';
 import PlanContext, { usePlan } from 'context/plan';
-import { Link } from 'common/links';
 import { useTranslation } from 'common/i18n';
 import AttributesBlock, { Attributes } from 'components/common/AttributesBlock';
 import { useTheme } from 'common/theme';
@@ -53,8 +52,8 @@ const CategoryHeader = styled.div<{
 }>`
   width: 100%;
   position: relative;
-  background-color: ${(props) =>
-    props.$bg ? props.$bg : props.theme.neutralLight};
+  background-color: ${({ $bg, theme }) =>
+    $bg ? $bg : theme.themeColors.white};
   padding: 0 0 2rem;
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
