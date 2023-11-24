@@ -2,6 +2,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled, { ThemeContext } from 'styled-components';
+import { readableColor } from 'polished';
 import { motion, useAnimation, animate } from 'framer-motion';
 import { useTranslation } from 'common/i18n';
 import dayjs from 'common/dayjs';
@@ -243,9 +244,9 @@ function IndicatorProgressBar(props) {
   const bars = { w: width - rightMargin, h: 3 * barHeight };
   const scale = bars.w / startValue;
   const segmentsY = bars.h + barMargin * 2;
-  const goalColor = theme.graphColors.green030;
-  const latestColor = theme.graphColors.blue030;
-  const startColor = theme.graphColors.red030;
+  const goalColor = theme.section.indicatorShowcase.goalColor;
+  const latestColor = theme.section.indicatorShowcase.latestColor;
+  const startColor = theme.section.indicatorShowcase.startColor;
   const canvas = {
     w: bars.w + rightMargin,
     h: bars.h + topMargin + bottomMargin,
@@ -433,6 +434,7 @@ function IndicatorProgressBar(props) {
                   value={formatValue(startValue, i18n.language, minPrecision)}
                   unit={unit}
                   locale={i18n.language}
+                  negative={readableColor(startColor) === '#ffffff'}
                 />
                 {showReduction && (
                   <text
@@ -488,6 +490,7 @@ function IndicatorProgressBar(props) {
                 value={formatValue(latestValue, i18n.language, minPrecision)}
                 unit={unit}
                 locale={i18n.language}
+                negative={readableColor(latestColor) === '#ffffff'}
               />
             </motion.g>
             <motion.text
@@ -546,7 +549,9 @@ function IndicatorProgressBar(props) {
               )}
               unit={unit}
               locale={i18n.language}
-              negative={goalBar.w < 80}
+              negative={
+                readableColor(goalColor) === '#ffffff' || goalBar.w < 80
+              }
             />
             <text
               transform={`translate(${goalBar.x + goalBar.w / 2} ${
