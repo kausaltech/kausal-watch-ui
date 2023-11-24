@@ -76,7 +76,7 @@ const MainCard = styled.div<{ alignment: string; color: string }>`
     color: ${(props) =>
       props.color === 'dark'
         ? props.theme.themeColors.white
-        : props.theme.brandDark};
+        : props.theme.headingsColor};
   }
 
   a {
