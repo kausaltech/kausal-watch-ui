@@ -2,6 +2,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled, { ThemeContext } from 'styled-components';
+import { readableColor } from 'polished';
 import { motion, useAnimation, animate } from 'framer-motion';
 import { useTranslation } from 'common/i18n';
 import dayjs from 'common/dayjs';
@@ -243,9 +244,9 @@ function IndicatorProgressBar(props) {
   const bars = { w: width - rightMargin, h: 3 * barHeight };
   const scale = bars.w / startValue;
   const segmentsY = bars.h + barMargin * 2;
-  const goalColor = theme.graphColors.green030;
-  const latestColor = theme.graphColors.blue030;
-  const startColor = theme.graphColors.red030;
+  const goalColor = theme.section.indicatorShowcase.goalColor;
+  const latestColor = theme.section.indicatorShowcase.latestColor;
+  const startColor = theme.section.indicatorShowcase.startColor;
   const canvas = {
     w: bars.w + rightMargin,
     h: bars.h + topMargin + bottomMargin,
@@ -433,6 +434,13 @@ function IndicatorProgressBar(props) {
                   value={formatValue(startValue, i18n.language, minPrecision)}
                   unit={unit}
                   locale={i18n.language}
+                  negative={
+                    readableColor(
+                      startColor,
+                      theme.themeColors.black,
+                      theme.themeColors.white
+                    ) === theme.themeColors.white
+                  }
                 />
                 {showReduction && (
                   <text
@@ -488,6 +496,13 @@ function IndicatorProgressBar(props) {
                 value={formatValue(latestValue, i18n.language, minPrecision)}
                 unit={unit}
                 locale={i18n.language}
+                negative={
+                  readableColor(
+                    latestColor,
+                    theme.themeColors.black,
+                    theme.themeColors.white
+                  ) === theme.themeColors.white
+                }
               />
             </motion.g>
             <motion.text
@@ -515,7 +530,7 @@ function IndicatorProgressBar(props) {
               height={barHeight - barMargin}
               fill={goalColor}
             />
-            {goalBar.w > 0 && (
+            {goalBar.w > 3 && (
               <line
                 x1={goalBar.x + 1}
                 y1={goalBar.y}
@@ -535,8 +550,9 @@ function IndicatorProgressBar(props) {
               strokeWidth="2"
             />
             <ValueGroup
+              text-anchor={goalBar.w > 120 ? 'start' : 'end'}
               transform={`translate(${
-                goalBar.w > 80 ? goalBar.x + 4 : goalBar.x - 50
+                goalBar.w > 120 ? goalBar.x + 4 : goalBar.x - 8
               } ${goalBar.y})`}
               date={graphValues.goalYear}
               value={formatValue(
@@ -546,7 +562,13 @@ function IndicatorProgressBar(props) {
               )}
               unit={unit}
               locale={i18n.language}
-              negative={goalBar.w < 80}
+              negative={
+                readableColor(
+                  startColor,
+                  theme.themeColors.black,
+                  theme.themeColors.white
+                ) === theme.themeColors.white || goalBar.w < 120
+              }
             />
             <text
               transform={`translate(${goalBar.x + goalBar.w / 2} ${
