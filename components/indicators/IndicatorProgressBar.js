@@ -518,7 +518,7 @@ function IndicatorProgressBar(props) {
               height={barHeight - barMargin}
               fill={goalColor}
             />
-            {goalBar.w > 0 && (
+            {goalBar.w > 3 && (
               <line
                 x1={goalBar.x + 1}
                 y1={goalBar.y}
@@ -538,8 +538,9 @@ function IndicatorProgressBar(props) {
               strokeWidth="2"
             />
             <ValueGroup
+              text-anchor={goalBar.w > 120 ? 'start' : 'end'}
               transform={`translate(${
-                goalBar.w > 80 ? goalBar.x + 4 : goalBar.x - 50
+                goalBar.w > 120 ? goalBar.x + 4 : goalBar.x - 8
               } ${goalBar.y})`}
               date={graphValues.goalYear}
               value={formatValue(
@@ -550,7 +551,7 @@ function IndicatorProgressBar(props) {
               unit={unit}
               locale={i18n.language}
               negative={
-                readableColor(goalColor) === '#ffffff' || goalBar.w < 80
+                readableColor(goalColor) === '#ffffff' || goalBar.w < 120
               }
             />
             <text
