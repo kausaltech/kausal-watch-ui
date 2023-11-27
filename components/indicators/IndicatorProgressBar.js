@@ -434,7 +434,13 @@ function IndicatorProgressBar(props) {
                   value={formatValue(startValue, i18n.language, minPrecision)}
                   unit={unit}
                   locale={i18n.language}
-                  negative={readableColor(startColor) === '#ffffff'}
+                  negative={
+                    readableColor(
+                      startColor,
+                      theme.themeColors.black,
+                      theme.themeColors.white
+                    ) === theme.themeColors.white
+                  }
                 />
                 {showReduction && (
                   <text
@@ -490,7 +496,13 @@ function IndicatorProgressBar(props) {
                 value={formatValue(latestValue, i18n.language, minPrecision)}
                 unit={unit}
                 locale={i18n.language}
-                negative={readableColor(latestColor) === '#ffffff'}
+                negative={
+                  readableColor(
+                    latestColor,
+                    theme.themeColors.black,
+                    theme.themeColors.white
+                  ) === theme.themeColors.white
+                }
               />
             </motion.g>
             <motion.text
@@ -551,7 +563,11 @@ function IndicatorProgressBar(props) {
               unit={unit}
               locale={i18n.language}
               negative={
-                readableColor(goalColor) === '#ffffff' || goalBar.w < 120
+                readableColor(
+                  startColor,
+                  theme.themeColors.black,
+                  theme.themeColors.white
+                ) === theme.themeColors.white || goalBar.w < 120
               }
             />
             <text
