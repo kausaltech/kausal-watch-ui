@@ -49,6 +49,7 @@ import type {
 import { useTheme } from 'common/theme';
 import { getStatusSummary } from 'common/ActionStatusSummary';
 import ActionAttribute from 'components/common/ActionAttribute';
+import { PhaseTimeline } from './PhaseTimeline';
 
 const GET_ACTION_DETAILS = gql`
   query GetActionDetails($plan: ID!, $id: ID!, $clientUrl: String!) {
@@ -373,6 +374,13 @@ const PrimaryHeader = styled.h2`
 
 const SideHeader = styled.h3`
   font-size: ${(props) => props.theme.fontSizeBase};
+`;
+
+const StyledCard = styled.div`
+  background: ${({ theme }) => theme.cardBackground.secondary};
+  border-radius: ${({ theme }) => theme.cardBorderRadius};
+  padding: ${({ theme }) => `${theme.spaces.s200} ${theme.spaces.s100}`};
+  margin-bottom: ${(props) => props.theme.spaces.s200};
 `;
 
 export const SectionHeader = styled.h2`
@@ -767,6 +775,17 @@ function ActionContent(props: ActionContentProps) {
             {hasPhases && (
               <ActionSection>
                 <PrimaryHeader>{t('actions:action-progress')}</PrimaryHeader>
+                <StyledCard>
+                  {!!action.implementationPhase && (
+                    <PhaseTimeline activePhase={action.implementationPhase} />
+                  )}
+                </StyledCard>
+                <div>
+                  {/* Status viz in progress */}
+                  <p>{action.statusSummary.color}</p>
+                  <p>{action.statusSummary.label}</p>
+                  <p>{action.manualStatusReason}</p>
+                </div>
                 <ActionPhase
                   action={action}
                   status={getStatusSummary(plan, action.statusSummary)}
