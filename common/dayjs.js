@@ -5,6 +5,7 @@ require('dayjs/locale/sv');
 require('dayjs/locale/en-gb');
 require('dayjs/locale/en-au');
 require('dayjs/locale/de');
+require('dayjs/locale/es');
 
 const isSameOrAfter = require('dayjs/plugin/isSameOrAfter');
 const localizedFormat = require('dayjs/plugin/localizedFormat');

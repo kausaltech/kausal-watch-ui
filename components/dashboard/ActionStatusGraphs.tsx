@@ -13,10 +13,12 @@ import {
   Sentiment,
   ActionTimeliness,
   ActionTimelinessIdentifier,
+  Comparison,
 } from 'common/__generated__/graphql';
 import type { ActionListAction } from './ActionList';
 import BarChart from 'components/common/BarChart';
 import { TFunction } from 'next-i18next';
+import dayjs from 'dayjs';
 
 const StatusDonutsWrapper = styled.div`
   width: auto;
@@ -58,10 +60,29 @@ export type Progress = {
   total: string;
 };
 
+function getTimelinessLabel(
+  days: number,
+  comparison: Comparison,
+  t: TFunction
+) {
+  const relativeTime = dayjs().subtract(days, 'days').fromNow(true);
+
+  if (comparison === Comparison.Gt) {
+    return t('over-relative-time', { relativeTime });
+  }
+
+  if (comparison === Comparison.Lte) {
+    return t('under-relative-time', { relativeTime });
+  }
+
+  return relativeTime;
+}
+
 const getTimelinessData = (
   actions: ActionListAction[],
   plan: PlanContextType,
-  theme: Theme
+  theme: Theme,
+  t: TFunction
 ) => {
   const aggregates: Progress = {
     values: [],
@@ -106,7 +127,9 @@ const getTimelinessData = (
       continue;
     }
     aggregates.values.push(counts.get(identifier) ?? 0);
-    aggregates.labels.push(timeliness.label);
+    aggregates.labels.push(
+      getTimelinessLabel(timeliness.days, timeliness.comparison, t)
+    );
     aggregates.colors.push(theme.graphColors[timeliness.color]);
   }
 
@@ -166,7 +189,7 @@ const ActionsStatusGraphs = ({
     getStatusData(actions, plan.actionStatusSummaries, theme, t('no-status'));
 
   const timelinessData =
-    shownDatasets.timeliness && getTimelinessData(actions, plan, theme);
+    shownDatasets.timeliness && getTimelinessData(actions, plan, theme, t);
 
   const daysVisible = plan.actionTimelinessClasses.find(
     (c) => c.identifier === ActionTimelinessIdentifier.Acceptable
