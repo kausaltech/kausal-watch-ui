@@ -82,5 +82,6 @@
   "action-task-show-comment": "Show details",
   "feedback-on-action": "Give feedback on this action",
   "feedback-on-action-description": "You can leave a comment or feedback on this action",
-  "action-draft": "Draft"
+  "action-draft": "Draft",
+  "logo": "Logo"
 }

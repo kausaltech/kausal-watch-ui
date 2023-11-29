@@ -40,7 +40,7 @@ const PopoverTip = (props: PopoverTipProps) => {
         id={id}
         color="link"
         invert={invert.toString()}
-        aria-describedby={`tt-content-${identifier}`}
+        aria-describedby={tooltipOpen ? `tt-content-${identifier}` : undefined}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

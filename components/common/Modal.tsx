@@ -2,7 +2,7 @@ import React, { useRef, useEffect, ReactNode } from 'react';
 import styled from 'styled-components';
 import Icon from 'components/common/Icon';
 import { useTheme } from 'common/theme';
-
+import { useTranslation } from 'common/i18n';
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -60,6 +60,7 @@ interface ModalProps {
 const Modal = ({ isOpen, onClose, header, helpText, children }: ModalProps) => {
   const theme = useTheme();
   const modalRef = useRef<HTMLDivElement>(null);
+  const { t } = useTranslation();
 
   const closeModalOnOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
@@ -80,12 +81,19 @@ const Modal = ({ isOpen, onClose, header, helpText, children }: ModalProps) => {
   return (
     <>
       {isOpen && (
-        <ModalOverlay data-testid='modal-overlay' onClick={closeModalOnOverlayClick}>
+        <ModalOverlay
+          data-testid="modal-overlay"
+          onClick={closeModalOnOverlayClick}
+        >
           <ModalBody ref={modalRef}>
             <ModalHeader>{header}</ModalHeader>
             <ModalSubHeader>{helpText}</ModalSubHeader>
-            <CloseButton data-testid='close-button' onClick={() => onClose()}>
-              <Icon name='times' />
+            <CloseButton
+              data-testid="close-button"
+              aria-label={t('close')}
+              onClick={() => onClose()}
+            >
+              <Icon name="times" />
             </CloseButton>
             {children}
           </ModalBody>
