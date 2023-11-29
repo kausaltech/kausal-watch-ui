@@ -172,11 +172,12 @@ const ActionStatusArea = styled.div<{ statusColor: string }>`
   line-height: ${(props) => props.theme.lineHeightSm};
 `;
 
-const ActionPhase = styled.div`
+const StyledActionPhase = styled.div<{
+  statusColor: string;
+  hasStatus: boolean;
+}>`
   background-color: ${(props) =>
-    props.hasStatus === 'true'
-      ? props.theme.themeColors.light
-      : props.statusColor};
+    props.hasStatus ? props.theme.themeColors.light : props.statusColor};
   color: ${(props) => props.theme.themeColors.dark};
 `;
 
@@ -320,9 +321,9 @@ function ActionCard(props: ActionCardProps) {
               <ActionNumber>{action.identifier}</ActionNumber>
             )}
           </ActionStatusArea>
-          <ActionPhase
+          <StyledActionPhase
             statusColor={statusColor}
-            hasStatus={(mergedWith !== null || statusText !== null).toString()}
+            hasStatus={mergedWith !== null || statusText !== null}
           >
             {mergedWith ? (
               <StatusName>
@@ -333,7 +334,7 @@ function ActionCard(props: ActionCardProps) {
             ) : (
               <StatusName>{statusText}</StatusName>
             )}
-          </ActionPhase>
+          </StyledActionPhase>
           {primaryOrg && (
             <ActionOrg>
               <ActionOrgAvatar>
