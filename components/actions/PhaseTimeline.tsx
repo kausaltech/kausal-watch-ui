@@ -24,7 +24,6 @@ const StyledContainer = styled.ul`
   display: grid;
   grid-auto-flow: column;
   grid-auto-columns: 1fr;
-  //   grid-template-columns: max-content repeat(2, auto) max-content;
   margin: 0;
   padding: 0;
   list-style-type: none;
