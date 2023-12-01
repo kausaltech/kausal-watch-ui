@@ -18,7 +18,6 @@ import IndicatorCausalVisualisation from 'components/indicators/IndicatorCausalV
 import AttributesBlock from 'components/common/AttributesBlock';
 import CategoryTags from './CategoryTags';
 import ExpandableFeedbackFormBlock from 'components/contentblocks/ExpandableFeedbackFormBlock';
-import ActionPhase from './ActionPhase';
 import ActionStatus from './ActionStatus';
 import ActionImpact from './ActionImpact';
 import ActionHero from './ActionHero';
@@ -48,7 +47,6 @@ import {
   type GetActionDetailsQuery,
 } from 'common/__generated__/graphql';
 import { useTheme } from 'common/theme';
-import { getStatusSummary } from 'common/ActionStatusSummary';
 import ActionAttribute from 'components/common/ActionAttribute';
 import { PhaseTimeline } from './PhaseTimeline';
 import StatusBadge from 'components/common/StatusBadge';
