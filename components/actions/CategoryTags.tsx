@@ -156,12 +156,14 @@ function CategoryTags(props: CategoryTagsProps) {
 
     return (
       <div key={ct.id} className="mb-4">
-        <h3>
-          {categoryTypeHeader}
-          {ct.helpText && (
-            <PopoverTip content={ct.helpText} identifier={ct.id} />
-          )}
-        </h3>
+        {categoryTypeHeader || (ct.helpText && ct.id) ? (
+          <h3>
+            {categoryTypeHeader}
+            {ct.helpText && (
+              <PopoverTip content={ct.helpText} identifier={ct.id} />
+            )}
+          </h3>
+        ) : null}
         <CategoryContent categories={cats} categoryType={ct} noLink={noLink} />
       </div>
     );

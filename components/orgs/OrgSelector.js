@@ -72,10 +72,10 @@ const OrgSelector = (props) => {
           <OrgTitle>{activeOrg.shortName}</OrgTitle>
           <Icon name="angle-down" />
         </StyledDropdownToggle>
-        <DropdownMenu>
+        <DropdownMenu role="menu">
           <DropdownContent>
             {orgs.map((org) => (
-              <OrgDropdownItem href={org.orgUrl} key={org.id}>
+              <OrgDropdownItem href={org.orgUrl} key={org.id} role="menuitem">
                 <OrgChip image={org.image} name={org.shortName} size="md" />
               </OrgDropdownItem>
             ))}

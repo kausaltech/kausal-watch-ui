@@ -78,7 +78,7 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
 
   OrganizationColumnBlock: {
     headerClassName: 'logo-column',
-    renderHeader: (t, _, label) => label || '',
+    renderHeader: (t, _, label) => label || t<string>('actions:logo'),
     renderCell: (action) => <OrganizationCell action={action} />,
     renderTooltipContent: (action) => (
       <OrganizationTooltipContent action={action} />

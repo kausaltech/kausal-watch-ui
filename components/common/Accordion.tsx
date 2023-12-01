@@ -124,9 +124,14 @@ const LinkCopyButton = ({ identifier }: { identifier: string }) => {
         text={`${origin}${path}#q${identifier}`}
         id={`tooltip-${identifier}`}
         onCopy={onCopy}
-        aria-describedby={`tt-content-${identifier}`}
+        aria-describedby={tooltipOpen ? `tt-content-${identifier}` : undefined}
       >
-        <CopyLink data-testid="link-copy-btn" className="copy-link">
+        <CopyLink
+          as="button"
+          data-testid="link-copy-btn"
+          aria-label={t('copy-to-clipboard')}
+          className="copy-link"
+        >
           <Icon name="link" />
         </CopyLink>
       </CopyToClipboard>

@@ -70,7 +70,7 @@ const Plot = dynamic(() => import('./Plot'), {
 const StatusDonut = (props) => {
   const { data, currentValue, colors, header, helpText } = props;
   const theme = useTheme();
-  const { i18n } = useTranslation();
+  const { t } = useTranslation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -121,7 +121,7 @@ const StatusDonut = (props) => {
   };
   const config = {
     displaylogo: false,
-    locale: i18n.language,
+    locale: t.language,
     locales: {
       fi: {
         format: {
@@ -157,7 +157,7 @@ const StatusDonut = (props) => {
         <GraphHeader>{header}</GraphHeader>
         <HelpText>{helpText}</HelpText>
         <PlotWrapper>
-          <OpenModalButton onClick={openModal}>
+          <OpenModalButton onClick={openModal} aria-label={t('open')}>
             <Icon name="arrowUpRightFromSquare" />
           </OpenModalButton>
           <Plot
