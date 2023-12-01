@@ -2,11 +2,18 @@ import get from 'lodash/get';
 import { useTheme } from 'common/theme';
 import Icon from 'components/common/Icon';
 import { usePlan } from 'context/plan';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { ActionContentAction } from './ActionContent';
 import { Theme } from '@kausal/themes/types';
+import { RefObject, useEffect, useRef, useState } from 'react';
+import { debounce } from 'lodash';
 
 type PhaseType = 'completed' | 'current' | 'todo';
+
+type PhaseTimelineProps = {
+  activePhase: NonNullable<ActionContentAction['implementationPhase']>;
+  layout?: 'vertical' | 'horizontal' | 'mini';
+};
 
 type PhaseIndicatorProps = {
   index: number;
@@ -14,41 +21,75 @@ type PhaseIndicatorProps = {
   type: PhaseType;
   color: string;
   nextColor?: string;
+  layout: PhaseTimelineProps['layout'];
 };
 
-type PhaseTimelineProps = {
-  activePhase: NonNullable<ActionContentAction['implementationPhase']>;
-};
+const verticalContainerStyles = css`
+  grid-auto-flow: row;
+`;
 
-const StyledContainer = styled.ul`
-  display: grid;
+const horizontalContainerStyles = css<{ $isMini?: boolean }>`
   grid-auto-flow: column;
-  grid-auto-columns: 1fr;
+  justify-content: start;
+  ${({ $isMini }) => !$isMini && 'grid-auto-columns: 1fr;'}
+`;
+
+const StyledContainer = styled.ul<{ $isVertical?: boolean; $isMini?: boolean }>`
+  display: grid;
   margin: 0;
   padding: 0;
   list-style-type: none;
+
+  ${({ $isVertical }) =>
+    $isVertical ? verticalContainerStyles : horizontalContainerStyles}
 `;
 
-const StyledPhaseIndicatorContainer = styled.div`
-  display: flex;
-  width: 100%;
+const verticalIndicatorStyles = css`
+  flex-direction: column;
   align-items: center;
-  gap: 1px;
 `;
 
-const StyledPhaseName = styled.p<{ $color: string; $type: PhaseType }>`
-  text-align: center;
+const horizontalIndicatorStyles = css`
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+`;
+
+const StyledPhaseIndicatorContainer = styled.div<{ $isVertical: boolean }>`
+  display: flex;
+  gap: 1px;
+
+  ${({ $isVertical }) =>
+    $isVertical ? verticalIndicatorStyles : horizontalIndicatorStyles}
+`;
+
+const StyledMiniPhaseName = styled.p`
   font-size: ${({ theme }) => theme.fontSizeSm};
   line-height: ${({ theme }) => theme.lineHeightSm};
   font-family: ${({ theme }) => theme.fontFamilyTiny};
+  color: ${({ theme }) => theme.textColor.primary};
+  margin-top: ${({ theme }) => theme.spaces.s050};
+`;
+
+const StyledPhaseName = styled(StyledMiniPhaseName)<{
+  $isVertical?: boolean;
+  $color?: string;
+  $type: PhaseType;
+}>`
+  text-align: center;
   padding: 0 ${({ theme }) => theme.spaces.s050};
-  margin: ${({ theme }) => theme.spaces.s050} 0 0;
+  margin: ${({ theme, $isVertical }) =>
+    $isVertical ? '4px 0 0' : `${theme.spaces.s050} 0 0`};
   color: ${({ $color }) => $color};
   ${({ $type }) => $type === 'current' && 'font-weight: bold;'}
 `;
 
-const StyledPhase = styled.li`
-  display: flex;
+const verticalPhaseStyles = css`
+  flex-direction: row;
+  align-items: flex-start;
+`;
+
+const horizontalPhaseStyles = css`
   flex-direction: column;
 
   &:first-of-type ${StyledPhaseName} {
@@ -60,12 +101,36 @@ const StyledPhase = styled.li`
   }
 `;
 
-const StyledPhaseLine = styled.div<{ $hidden: boolean; $color: string }>`
-  background: ${({ $color }) => $color};
-  height: 2px;
-  flex: 1 0 auto;
+const StyledPhase = styled.li<{ $isVertical: boolean }>`
+  display: flex;
 
+  ${({ $isVertical }) =>
+    $isVertical ? verticalPhaseStyles : horizontalPhaseStyles}
+`;
+
+const verticalLineStyles = css<{ $hidden?: boolean }>`
+  width: 2px;
+  height: 14px;
+  ${({ $hidden }) => $hidden && 'display: none;'}
+`;
+
+const horizontalLineStyles = css<{ $hidden?: boolean; $isMini?: boolean }>`
+  height: 2px;
+
+  ${({ $isMini }) => ($isMini ? 'width: 8px;' : 'flex: 1 0 auto;')}
   ${({ $hidden }) => $hidden && 'visibility: hidden;'}
+`;
+
+const StyledPhaseLine = styled.div<{
+  $isMini?: boolean;
+  $isVertical?: boolean;
+  $hidden: boolean;
+  $color: string;
+}>`
+  background: ${({ $color }) => $color};
+
+  ${({ $isVertical }) =>
+    $isVertical ? verticalLineStyles : horizontalLineStyles}
 `;
 
 const PHASE_CONFIG: {
@@ -83,7 +148,7 @@ const PHASE_CONFIG: {
   },
   todo: {
     icon: 'circle-outline',
-    colorKey: 'graphColors.grey030',
+    colorKey: 'graphColors.grey040',
     textColorKey: 'textColor.tertiary',
   },
 };
@@ -125,17 +190,25 @@ function PhaseIndicator({
   type,
   color,
   nextColor,
+  layout,
 }: PhaseIndicatorProps) {
+  const isVertical = layout === 'vertical';
+  const iconSize = layout === 'mini' ? '16px' : '20px';
+
   return (
-    <StyledPhaseIndicatorContainer>
-      <StyledPhaseLine $hidden={index === 0} $color={color} />
+    <StyledPhaseIndicatorContainer $isVertical={isVertical}>
+      {layout === 'horizontal' && (
+        <StyledPhaseLine $hidden={index === 0} $color={color} />
+      )}
       <Icon
         name={getIconFromType(type, index === totalPhases - 1)}
         color={color}
-        width="20px"
-        height="20px"
+        width={iconSize}
+        height={iconSize}
       />
       <StyledPhaseLine
+        $isMini={layout === 'mini'}
+        $isVertical={isVertical}
         $hidden={index === totalPhases - 1}
         $color={nextColor ?? color}
       />
@@ -143,46 +216,108 @@ function PhaseIndicator({
   );
 }
 
-export function PhaseTimeline({ activePhase }: PhaseTimelineProps) {
+/**
+ * Switch to the vertical layout on small screens.
+ *
+ * Because of the complexity of the timeline layout, manage the switch between
+ * horizontal and vertical layouts for small devices with JS. Checks whether the
+ * number of phases multiplied by a phase width is greater than the container width.
+ *
+ * Note: Styled Components v6 will support `@container` queries, which can replace this.
+ */
+function useOverrideLayout<T extends HTMLElement>(
+  initialLayout: NonNullable<PhaseTimelineProps['layout']>,
+  phaseCount: number,
+  ref: RefObject<T>
+) {
+  const [isVerticalForced, setIsVerticalForced] = useState(false);
+
+  // Not an exact science
+  const ROUGH_PHASE_WIDTH = 100;
+
+  useEffect(() => {
+    // Ignore mini and initially vertical layouts
+    if (initialLayout !== 'horizontal') {
+      return;
+    }
+
+    const getParentWidth = () => ref.current?.parentElement?.offsetWidth ?? 0;
+
+    const handleResize = () => {
+      setIsVerticalForced(phaseCount * ROUGH_PHASE_WIDTH > getParentWidth());
+    };
+
+    const handleResizeDebounced = debounce(handleResize, 200);
+
+    if (ref.current) {
+      handleResize();
+    }
+
+    window.addEventListener('resize', handleResizeDebounced);
+
+    return () => {
+      window.removeEventListener('resize', handleResizeDebounced);
+    };
+  }, [phaseCount, initialLayout, ref]);
+
+  return isVerticalForced ? 'vertical' : initialLayout;
+}
+
+export function PhaseTimeline({
+  activePhase,
+  layout = 'horizontal',
+}: PhaseTimelineProps) {
+  const ref = useRef<HTMLUListElement>(null);
   const plan = usePlan();
   const theme = useTheme();
   const phases = plan.actionImplementationPhases;
+  const overriddenLayout = useOverrideLayout(layout, phases.length, ref);
+  const isVertical = overriddenLayout === 'vertical';
+  const isMini = overriddenLayout === 'mini';
   const activePhaseIndex = phases.findIndex(
     (phase) => phase.identifier === activePhase.identifier
   );
 
   return (
-    <StyledContainer>
-      {phases.map((phase, index) => {
-        const phaseType = getPhaseType(index, activePhaseIndex);
-        const nextPhaseType =
-          index + 1 < phases.length
-            ? getPhaseType(index + 1, activePhaseIndex)
-            : undefined;
+    <>
+      <StyledContainer ref={ref} $isVertical={isVertical} $isMini={isMini}>
+        {phases.map((phase, index) => {
+          const phaseType = getPhaseType(index, activePhaseIndex);
+          const nextPhaseType =
+            index + 1 < phases.length
+              ? getPhaseType(index + 1, activePhaseIndex)
+              : undefined;
 
-        return (
-          <StyledPhase key={phase.id}>
-            <PhaseIndicator
-              index={index}
-              totalPhases={phases.length}
-              type={phaseType}
-              color={getColorFromType(phaseType, theme)}
-              nextColor={
-                nextPhaseType
-                  ? getColorFromType(nextPhaseType, theme)
-                  : undefined
-              }
-            />
+          return (
+            <StyledPhase key={phase.id} $isVertical={isVertical}>
+              <PhaseIndicator
+                layout={overriddenLayout}
+                index={index}
+                totalPhases={phases.length}
+                type={phaseType}
+                color={getColorFromType(phaseType, theme)}
+                nextColor={
+                  nextPhaseType
+                    ? getColorFromType(nextPhaseType, theme)
+                    : undefined
+                }
+              />
 
-            <StyledPhaseName
-              $type={phaseType}
-              $color={getColorFromType(phaseType, theme, 'textColorKey')}
-            >
-              {phase.name}
-            </StyledPhaseName>
-          </StyledPhase>
-        );
-      })}
-    </StyledContainer>
+              {layout !== 'mini' && (
+                <StyledPhaseName
+                  $isVertical={isVertical}
+                  $type={phaseType}
+                  $color={getColorFromType(phaseType, theme, 'textColorKey')}
+                >
+                  {phase.name}
+                </StyledPhaseName>
+              )}
+            </StyledPhase>
+          );
+        })}
+      </StyledContainer>
+
+      {isMini && <StyledMiniPhaseName>{activePhase.name}</StyledMiniPhaseName>}
+    </>
   );
 }

@@ -36,7 +36,7 @@ const StyledStatusBadge = styled.div<StatusProps>`
 `;
 
 const StyledStatusBadgeWithReason = styled(StyledStatusBadge)`
-  padding: ${({ theme }) => `${theme.spaces.s200} ${theme.spaces.s100}`};
+  padding: ${({ theme }) => theme.spaces.s100};
 `;
 
 const StyledStatusIndicator = styled.div<StatusProps>`
@@ -48,18 +48,9 @@ const StyledStatusIndicator = styled.div<StatusProps>`
 
 const StyledStatusLabel = styled.div<{ $emphasize?: boolean }>`
   color: ${({ theme }) => theme.textColor.primary};
-
-  ${({ theme, $emphasize }) =>
-    $emphasize
-      ? `
-        font-size: ${theme.fontSizeBase};
-        line-height: ${theme.lineHeightMd};
-        font-weight: ${theme.fontWeightBold};
-      `
-      : `
-        font-size: ${theme.fontSizeSm};
-        line-height: ${theme.lineHeightSm};
-      `}
+  font-size: ${({ theme }) => theme.fontSizeSm};
+  line-height: ${({ theme }) => theme.lineHeightSm};
+  font-weight: ${({ theme }) => theme.fontWeightBold};
 `;
 
 const StyledStatusWrapper = styled.div`
