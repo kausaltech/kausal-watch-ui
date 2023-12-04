@@ -548,7 +548,7 @@ class ResponsiblePartyFilter extends DefaultFilter<string | undefined> {
   options: ActionListFilterOption[];
   orgById: Map<string, ActionListOrganization>;
 
-  constructor(orgs: ActionListOrganization[]) {
+  constructor(orgs: ActionListOrganization[], private plan: PlanContextType) {
     super();
     const sortedOrgs = sortDepthFirst(
       orgs,
@@ -581,14 +581,17 @@ class ResponsiblePartyFilter extends DefaultFilter<string | undefined> {
   ) {
     return super.render(value, onChange, t);
   }
+  private getOrgTermContext() {
+    return { context: this.plan.generalContent.organizationTerm };
+  }
   getLabel(t: TFunction) {
-    return t('filter-organization');
+    return t('filter-organization', this.getOrgTermContext());
   }
   getHelpText(t: TFunction) {
-    return t('filter-organization-help', '');
+    return t('filter-organization-help', this.getOrgTermContext());
   }
   getShowAllLabel(t: TFunction) {
-    return t('filter-all-organizations');
+    return t('filter-all-organizations', this.getOrgTermContext());
   }
 }
 
@@ -1015,7 +1018,7 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
     blocks.forEach((block) => {
       switch (block.__typename) {
         case 'ResponsiblePartyFilterBlock':
-          filters.push(new ResponsiblePartyFilter(orgs));
+          filters.push(new ResponsiblePartyFilter(orgs, plan));
           break;
         case 'CategoryTypeFilterBlock':
           filters.push(new CategoryFilter(block, filterByCommonCategory));

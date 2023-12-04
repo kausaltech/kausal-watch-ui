@@ -12,6 +12,7 @@ import { PlanContextFragment } from 'common/__generated__/graphql';
 import { getTaskCounts } from './cells/TasksStatusCell';
 import { useTheme } from 'common/theme';
 import { ActionTableContext } from './ActionStatusTable';
+import { usePlan } from 'context/plan';
 
 const TooltipTitle = styled.p`
   font-weight: ${(props) => props.theme.fontWeightBold};
@@ -197,19 +198,25 @@ export const ImplementationPhaseTooltipContent = ({
 export const ResponsiblePartiesTooltipContent = ({ action }: TooltipProps) => {
   const { t } = useTranslation(['common', 'actions']);
   const theme = useTheme();
+  const plan = usePlan();
+  const { organizationTerm } = plan.generalContent;
 
   const parties = action.responsibleParties;
 
   if (parties.length < 1)
     return (
       <div>
-        <TooltipTitle>{t('common:responsible-parties')}</TooltipTitle>
+        <TooltipTitle>
+          {t('common:responsible-parties', { context: organizationTerm })}
+        </TooltipTitle>
       </div>
     );
 
   return (
     <div>
-      <TooltipTitle>{t('common:responsible-parties')}</TooltipTitle>
+      <TooltipTitle>
+        {t('common:responsible-parties', { context: organizationTerm })}
+      </TooltipTitle>
       {/* TODO: Fix missing type property. hasContactPerson is added to actions higher in the component tree */}
       {parties.find((party) => party.hasContactPerson) && (
         <strong>{t('common:with-contact-persons')}:</strong>

@@ -365,7 +365,11 @@ function OrgContent(props) {
         <HeaderContainer>
           <Row>
             <Col md={{ size: 6, offset: org.logo?.rendition?.src ? 2 : 0 }}>
-              <SectionTitle>{t('common:organizations')}</SectionTitle>
+              <SectionTitle>
+                {t('common:organizations', {
+                  context: plan.generalContent.organizationTerm,
+                })}
+              </SectionTitle>
             </Col>
           </Row>
           <Row>

@@ -98,6 +98,7 @@ export default gql`
       ownerName
       actionTerm
       actionTaskTerm
+      organizationTerm
     }
     mainMenu {
       items(withDescendants: true) {
