@@ -7,6 +7,7 @@ import BadgeTooltip, {
   BadgeTooltipProps,
 } from 'components/common/BadgeTooltip';
 import { ActionContentAction } from './ActionContent';
+import { usePlan } from 'context/plan';
 
 const Responsibles = styled.div`
   a {
@@ -101,11 +102,15 @@ type ResponsibleListProps = {
 function ResponsibleList(props: ResponsibleListProps) {
   const { heading, responsibleParties } = props;
   const { t } = useTranslation(['common', 'actions']);
+  const plan = usePlan();
+  const { organizationTerm } = plan.generalContent;
   /* TODO: a11y - this should probably be a list markup */
 
   return (
     <Responsibles>
-      <h3>{heading || t('responsible-parties')}</h3>
+      <h3>
+        {heading || t('responsible-parties', { context: organizationTerm })}
+      </h3>
       <ResponsiblesList>
         {responsibleParties.map((item) => (
           <ResponsibleBadge key={item.id} responsibleParty={item} />

@@ -3712,6 +3712,7 @@ export type SiteGeneralContent = {
   id: Scalars['ID'];
   /** The text to show when displaying official content */
   officialNameDescription: Scalars['String'];
+  organizationTerm: SiteGeneralContentOrganizationTerm;
   ownerName: Scalars['String'];
   ownerUrl: Scalars['String'];
   siteDescription: Scalars['String'];
@@ -3732,6 +3733,13 @@ export enum SiteGeneralContentActionTerm {
   CaseStudy = 'CASE_STUDY',
   /** Strategy */
   Strategy = 'STRATEGY'
+}
+
+export enum SiteGeneralContentOrganizationTerm {
+  /** Division */
+  Division = 'DIVISION',
+  /** Organization */
+  Organization = 'ORGANIZATION'
 }
 
 export type SiteObjectType = {
@@ -4407,7 +4415,10 @@ export type GetActionDetailsQuery = (
         ) | null, actions?: Array<(
           { id: string, identifier: string, name: string }
           & { __typename?: 'Action' }
-        ) | null> | null }
+        ) | null> | null, plans: Array<(
+          { id: string }
+          & { __typename?: 'Plan' }
+        )> }
         & { __typename?: 'Indicator' }
       ) }
       & { __typename?: 'ActionIndicator' }
@@ -9463,7 +9474,7 @@ export type GetPlanContextQuery = (
       { id: string }
       & { __typename?: 'Organization' }
     ) | null>, generalContent: (
-      { id: string, siteTitle: string, siteDescription: string, officialNameDescription: string, copyrightText: string, creativeCommonsLicense: string, ownerUrl: string, ownerName: string, actionTerm: SiteGeneralContentActionTerm, actionTaskTerm: SiteGeneralContentActionTaskTerm }
+      { id: string, siteTitle: string, siteDescription: string, officialNameDescription: string, copyrightText: string, creativeCommonsLicense: string, ownerUrl: string, ownerName: string, actionTerm: SiteGeneralContentActionTerm, actionTaskTerm: SiteGeneralContentActionTaskTerm, organizationTerm: SiteGeneralContentOrganizationTerm }
       & { __typename?: 'SiteGeneralContent' }
     ), mainMenu?: (
       { items: Array<(
@@ -9647,7 +9658,7 @@ export type PlanContextFragment = (
     { id: string }
     & { __typename?: 'Organization' }
   ) | null>, generalContent: (
-    { id: string, siteTitle: string, siteDescription: string, officialNameDescription: string, copyrightText: string, creativeCommonsLicense: string, ownerUrl: string, ownerName: string, actionTerm: SiteGeneralContentActionTerm, actionTaskTerm: SiteGeneralContentActionTaskTerm }
+    { id: string, siteTitle: string, siteDescription: string, officialNameDescription: string, copyrightText: string, creativeCommonsLicense: string, ownerUrl: string, ownerName: string, actionTerm: SiteGeneralContentActionTerm, actionTaskTerm: SiteGeneralContentActionTaskTerm, organizationTerm: SiteGeneralContentOrganizationTerm }
     & { __typename?: 'SiteGeneralContent' }
   ), mainMenu?: (
     { items: Array<(
@@ -9852,55 +9863,6 @@ export type TemplatedCategoryPageFragmentFragment = (
     & { __typename: 'CategoryTypePageLevelLayout' }
   ) | null }
   & { __typename?: 'CategoryPage' }
-);
-
-export type RecursiveCategoryParentFragmentFragment = (
-  { parent?: (
-    { name: string, parent?: (
-      { identifier: string, name: string, parent?: (
-        { identifier: string, name: string, categoryPage?: (
-          { urlPath: string }
-          & { __typename?: 'CategoryPage' }
-        ) | null, type: (
-          { id: string, hideCategoryIdentifiers: boolean }
-          & { __typename?: 'CategoryType' }
-        ), parent?: (
-          { identifier: string, name: string, categoryPage?: (
-            { urlPath: string }
-            & { __typename?: 'CategoryPage' }
-          ) | null, type: (
-            { id: string, hideCategoryIdentifiers: boolean }
-            & { __typename?: 'CategoryType' }
-          ) }
-          & { __typename?: 'Category' }
-        ) | null }
-        & { __typename?: 'Category' }
-      ) | null, categoryPage?: (
-        { urlPath: string }
-        & { __typename?: 'CategoryPage' }
-      ) | null, type: (
-        { id: string, hideCategoryIdentifiers: boolean }
-        & { __typename?: 'CategoryType' }
-      ) }
-      & { __typename?: 'Category' }
-    ) | null }
-    & { __typename?: 'Category' }
-  ) | null }
-  & { __typename?: 'Category' }
-);
-
-export type CategoryParentFragmentFragment = (
-  { name: string, parent?: (
-    { identifier: string, name: string, categoryPage?: (
-      { urlPath: string }
-      & { __typename?: 'CategoryPage' }
-    ) | null, type: (
-      { id: string, hideCategoryIdentifiers: boolean }
-      & { __typename?: 'CategoryType' }
-    ) }
-    & { __typename?: 'Category' }
-  ) | null }
-  & { __typename?: 'Category' }
 );
 
 export type GetPlanPageGeneralQueryVariables = Exact<{
@@ -10242,7 +10204,10 @@ export type GetPlanPageGeneralQuery = (
     & { __typename: 'ActionListPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' }
   ) | (
     { id?: string | null, slug: string, title: string, lastPublishedAt?: any | null, category?: (
-      { id: string, identifier: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, level?: (
+      { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, categoryPage?: (
+        { urlPath: string }
+        & { __typename?: 'CategoryPage' }
+      ) | null, level?: (
         { name: string, namePlural?: string | null }
         & { __typename?: 'CategoryLevel' }
       ) | null, type: (
@@ -11301,6 +11266,55 @@ export type GetPlanPageGeneralQuery = (
     & { __typename: 'StaticPage' }
   ) | null }
   & { __typename?: 'Query' }
+);
+
+export type CategoryParentFragmentFragment = (
+  { parent?: (
+    { identifier: string, name: string, categoryPage?: (
+      { urlPath: string }
+      & { __typename?: 'CategoryPage' }
+    ) | null, type: (
+      { id: string, hideCategoryIdentifiers: boolean }
+      & { __typename?: 'CategoryType' }
+    ) }
+    & { __typename?: 'Category' }
+  ) | null }
+  & { __typename?: 'Category' }
+);
+
+export type RecursiveCategoryParentFragmentFragment = (
+  { parent?: (
+    { parent?: (
+      { identifier: string, name: string, parent?: (
+        { identifier: string, name: string, categoryPage?: (
+          { urlPath: string }
+          & { __typename?: 'CategoryPage' }
+        ) | null, type: (
+          { id: string, hideCategoryIdentifiers: boolean }
+          & { __typename?: 'CategoryType' }
+        ), parent?: (
+          { identifier: string, name: string, categoryPage?: (
+            { urlPath: string }
+            & { __typename?: 'CategoryPage' }
+          ) | null, type: (
+            { id: string, hideCategoryIdentifiers: boolean }
+            & { __typename?: 'CategoryType' }
+          ) }
+          & { __typename?: 'Category' }
+        ) | null }
+        & { __typename?: 'Category' }
+      ) | null, categoryPage?: (
+        { urlPath: string }
+        & { __typename?: 'CategoryPage' }
+      ) | null, type: (
+        { id: string, hideCategoryIdentifiers: boolean }
+        & { __typename?: 'CategoryType' }
+      ) }
+      & { __typename?: 'Category' }
+    ) | null }
+    & { __typename?: 'Category' }
+  ) | null }
+  & { __typename?: 'Category' }
 );
 
 export type GetActionListPageQueryVariables = Exact<{
