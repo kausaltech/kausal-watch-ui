@@ -43,7 +43,7 @@
   "actions-updated": "Åtgärds uppdaterad",
   "actions-updated-help-days": "Andelen åtgärder som har uppdaterats inom {{count}} dagar",
   "actions-updated-help-months_one": "Andelen åtgärder som har uppdaterats inom den senaste månaden",
-  "actions-updated-help-months_other": "Andelen åtgärder som har uppdaterats inom {{count}} månaderna",  
+  "actions-updated-help-months_other": "Andelen åtgärder som har uppdaterats inom {{count}} månaderna",
   "emission-scopes": "Utsläppsomfattningar",
   "no-defined-indicators": "Inga indikatorer definierade",
   "not-being-implemented": ";Not being implemented;",
@@ -76,5 +76,6 @@
   "action-next_STRATEGY": "Nästa strategi",
   "action-status-merged_STRATEGY": "Sammanslagen med strategi",
   "responsible-organizations-primary": "Huvudansvariga",
-  "action-draft": "Förslag"
+  "action-draft": "Förslag",
+  "other": "Annat"
 }

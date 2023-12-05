@@ -4,6 +4,7 @@ import { Row, Col } from 'reactstrap';
 import styled from 'styled-components';
 import { useTheme } from 'common/theme';
 import ActionCard from './ActionCard';
+import { useTranslation } from 'common/i18n';
 
 const ActionsList = styled.ul`
   margin-top: ${(props) => props.theme.spaces.s400};
@@ -37,7 +38,7 @@ const ActionGroupList = styled(Row)`
   padding: 0;
 `;
 
-const groupActions = (groupBy, depth, actions, theme) => {
+const groupActions = (groupBy, depth, actions, theme, t) => {
   const groupMap = {};
   const groups = [];
   const noGroupItems = [];
@@ -89,7 +90,7 @@ const groupActions = (groupBy, depth, actions, theme) => {
     groups.push({
       id: 'zzzz',
       displayIdentifier: '',
-      name: '',
+      name: t('other'),
       crumb: null,
       identifier: 'zzzz',
       elements: noGroupItems,
@@ -102,14 +103,20 @@ function ActionCardList(props) {
   const { actions, groupBy, headingHierarchyDepth, includeRelatedPlans } =
     props;
   const theme = useTheme();
-
-  const groups = groupActions(groupBy, headingHierarchyDepth, actions, theme);
+  const { t } = useTranslation();
+  const groups = groupActions(
+    groupBy,
+    headingHierarchyDepth,
+    actions,
+    theme,
+    t
+  );
 
   return (
     <ActionsList>
       {groups.map((group) => (
         <ActionGroup key={group.id} tag="li">
-          {groups.length > 1 && (
+          {(groups.length > 1 || group.id === 'zzzz') && (
             <Col xs="12">
               <ActionGroupHeader>
                 {group.crumb && (

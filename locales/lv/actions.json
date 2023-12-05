@@ -20,5 +20,6 @@
     "actions-phases": "Rīcības pa posmiem",
     "actions-status-help": "Rīcības, kas tiek veiktas saskaņā ar grafiku",
     "action-as-in-plan": "Apraksts no sākotnējā plāna",
-    "action-what-effect-this-has": "Kā šī rīcība sekmē rezultātu"
+    "action-what-effect-this-has": "Kā šī rīcība sekmē rezultātu",
+    "other": "Cits"
 }

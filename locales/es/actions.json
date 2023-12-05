@@ -50,7 +50,7 @@
   "actions-updated": "Acciones activas actualizadas por última vez",
   "actions-updated-help-days": "Acciones que se han actualizado en los últimos {{count}} días",
   "actions-updated-help-months_one": "Acciones que se han actualizado en el último mes",
-  "actions-updated-help-months_other": "Acciones que se han actualizado en los últimos {{count}} meses",  
+  "actions-updated-help-months_other": "Acciones que se han actualizado en los últimos {{count}} meses",
   "emission-scopes": "Ámbitos de emisión",
   "no-defined-indicators": "No se han definido indicadores",
   "not-being-implemented": "No se está aplicando",
@@ -69,5 +69,6 @@
   "action-task-show-comment": "Mostrar detalles",
   "feedback-on-action": "Opine sobre esta acción",
   "feedback-on-action-description": "Puede dejar un comentario o una opinión sobre esta acción",
-  "action-draft": "Borrador"
+  "action-draft": "Borrador",
+  "other": "Otro"
 }
