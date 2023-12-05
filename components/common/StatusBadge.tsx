@@ -9,10 +9,10 @@ import {
   getStatusColorForAction,
 } from 'common/ActionStatusSummary';
 
-interface StatusProps {
+type StatusProps = {
   $subtle?: boolean;
   $statusColor: string;
-}
+};
 
 const StyledStatusBadge = styled.div<StatusProps>`
   display: inline-block;
@@ -25,6 +25,7 @@ const StyledStatusBadge = styled.div<StatusProps>`
 
 const StyledStatusBadgeWithReason = styled(StyledStatusBadge)`
   padding: ${({ theme }) => theme.spaces.s100};
+  display: block;
 `;
 
 const StyledStatusIndicator = styled.div<StatusProps>`
