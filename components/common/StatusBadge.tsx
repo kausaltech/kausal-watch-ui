@@ -10,6 +10,7 @@ import {
 } from 'common/ActionStatusSummary';
 
 interface StatusProps {
+  $subtle?: boolean;
   $statusColor: string;
 }
 
@@ -29,7 +30,8 @@ const StyledStatusBar = styled.div<StatusProps>`
 `;
 
 const StyledStatusBadge = styled.div<StatusProps>`
-  border: 2px solid ${({ $statusColor }) => $statusColor};
+  border: ${({ $subtle, $statusColor }) =>
+    $subtle ? 'none' : `2px solid ${$statusColor}`};
   background: ${({ $statusColor }) => setLightness(0.95, $statusColor)};
   border-radius: ${({ theme }) => theme.badgeBorderRadius};
   padding: ${({ theme }) => theme.spaces.s050};
@@ -44,13 +46,15 @@ const StyledStatusIndicator = styled.div<StatusProps>`
   border-radius: 10px;
   width: 10px;
   height: 10px;
+  flex-shrink: 0;
 `;
 
-const StyledStatusLabel = styled.div<{ $emphasize?: boolean }>`
+const StyledStatusLabel = styled.div<{ $subtle?: boolean }>`
   color: ${({ theme }) => theme.textColor.primary};
   font-size: ${({ theme }) => theme.fontSizeSm};
   line-height: ${({ theme }) => theme.lineHeightSm};
-  font-weight: ${({ theme }) => theme.fontWeightBold};
+  font-weight: ${({ $subtle, theme }) =>
+    $subtle ? theme.fontWeightNormal : theme.fontWeightBold};
 `;
 
 const StyledStatusWrapper = styled.div`
@@ -74,6 +78,8 @@ interface StatusBadgeProps {
   // Render the status as a horizontal bar or badge with a colored dot
   asBar?: boolean;
   reason?: string;
+  // Best used when rendering many badges together, e.g. in a table view
+  subtle?: boolean;
 }
 
 const StatusBadge = ({
@@ -82,6 +88,7 @@ const StatusBadge = ({
   plan,
   asBar = true,
   reason,
+  subtle = false,
 }: StatusBadgeProps) => {
   const { statusSummary } = action;
   const theme = useTheme();
@@ -103,20 +110,20 @@ const StatusBadge = ({
 
   if (!reason) {
     return (
-      <StyledStatusBadge $statusColor={statusColor}>
+      <StyledStatusBadge $subtle={subtle} $statusColor={statusColor}>
         <StyledStatusWrapper>
           <StyledStatusIndicator $statusColor={statusColor} />
-          <StyledStatusLabel>{label}</StyledStatusLabel>
+          <StyledStatusLabel $subtle={subtle}>{label}</StyledStatusLabel>
         </StyledStatusWrapper>
       </StyledStatusBadge>
     );
   }
 
   return (
-    <StyledStatusBadgeWithReason $statusColor={statusColor}>
+    <StyledStatusBadgeWithReason $subtle={subtle} $statusColor={statusColor}>
       <StyledStatusWrapper>
         <StyledStatusIndicator $statusColor={statusColor} />
-        <StyledStatusLabel $emphasize>{label}</StyledStatusLabel>
+        <StyledStatusLabel $subtle={subtle}>{label}</StyledStatusLabel>
       </StyledStatusWrapper>
       <StyledReason>{reason}</StyledReason>
     </StyledStatusBadgeWithReason>
