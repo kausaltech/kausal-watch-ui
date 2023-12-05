@@ -30,6 +30,7 @@ const StyledStatusBar = styled.div<StatusProps>`
 `;
 
 const StyledStatusBadge = styled.div<StatusProps>`
+  display: inline-block;
   border: ${({ $subtle, $statusColor }) =>
     $subtle ? 'none' : `2px solid ${$statusColor}`};
   background: ${({ $statusColor }) => setLightness(0.95, $statusColor)};

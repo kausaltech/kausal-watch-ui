@@ -3,10 +3,9 @@ import PropTypes from 'prop-types';
 import { Table } from 'reactstrap';
 import { gql } from '@apollo/client';
 
-import { getActionTermContext, withTranslation } from 'common/i18n';
+import { getActionTermContext } from 'common/i18n';
 import { ActionLink } from 'common/links';
 import PlanContext from 'context/plan';
-import { cleanActionStatus } from 'common/preprocess';
 import { getStatusSummary } from 'common/ActionStatusSummary';
 import StatusBadge from 'components/common/StatusBadge';
 import ActionImpact from 'components/actions/ActionImpact';
@@ -51,13 +50,6 @@ const ACTION_ROW_FRAGMENT = gql`
   }
 `;
 
-const Status = (props) => {
-  const { action, plan } = props;
-  const checkedStatus = cleanActionStatus(action, plan.actionStatuses);
-  const statusSummary = getStatusSummary(plan, action.statusSummary);
-  const actionWithStatusSummary = Object.assign({}, action, { statusSummary });
-  return <StatusBadge plan={plan} action={actionWithStatusSummary} />;
-};
 function ActionsTable(props) {
   const { t } = useTranslation();
   const { actions } = props;
@@ -85,7 +77,19 @@ function ActionsTable(props) {
                 <strong>{action.name}</strong>
               </td>
               <td width="200">
-                {action.status && <Status action={action} plan={plan} />}
+                {action.status && (
+                  <StatusBadge
+                    plan={plan}
+                    asBar={false}
+                    action={{
+                      ...action,
+                      statusSummary: getStatusSummary(
+                        plan,
+                        action.statusSummary
+                      ),
+                    }}
+                  />
+                )}
               </td>
               <td>
                 {action.impact && (
