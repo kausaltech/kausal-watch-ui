@@ -8,7 +8,8 @@ import { Theme } from '@kausal/themes/types';
 import { RefObject, useEffect, useRef, useState } from 'react';
 import { debounce } from 'lodash';
 
-type PhaseType = 'completed' | 'current' | 'todo';
+// Used to determine the style of icon visualizing a phase, not to be confused with phase identifiers
+type PhaseType = 'done' | 'current' | 'todo';
 
 type PhaseTimelineProps = {
   activePhase: NonNullable<ActionContentAction['implementationPhase']>;
@@ -16,6 +17,7 @@ type PhaseTimelineProps = {
 };
 
 type PhaseIndicatorProps = {
+  phaseIdentifier: string;
   index: number;
   totalPhases: number;
   type: PhaseType;
@@ -136,7 +138,7 @@ const StyledPhaseLine = styled.div<{
 const PHASE_CONFIG: {
   [key in PhaseType]: { icon: string; colorKey: string; textColorKey: string };
 } = {
-  completed: {
+  done: {
     icon: 'circle-full',
     colorKey: 'phaseTimelineColor',
     textColorKey: 'textColor.primary',
@@ -153,9 +155,11 @@ const PHASE_CONFIG: {
   },
 };
 
-function getIconFromType(type: PhaseType, isLastPhase: boolean) {
-  // Always display a checked circle if all phases are complete
-  if (type === 'current' && isLastPhase) {
+function getIconFromType(type: PhaseType, phaseIdentifier: string) {
+  const isCurrent = type === 'current';
+  const isCompleted = phaseIdentifier === 'completed';
+
+  if (isCurrent && isCompleted) {
     return 'check-circle';
   }
 
@@ -174,7 +178,7 @@ function getColorFromType(
 
 function getPhaseType(phaseIndex: number, activePhaseIndex: number): PhaseType {
   if (activePhaseIndex > phaseIndex) {
-    return 'completed';
+    return 'done';
   }
 
   if (activePhaseIndex === phaseIndex) {
@@ -185,6 +189,7 @@ function getPhaseType(phaseIndex: number, activePhaseIndex: number): PhaseType {
 }
 
 function PhaseIndicator({
+  phaseIdentifier,
   index,
   totalPhases,
   type,
@@ -201,7 +206,7 @@ function PhaseIndicator({
         <StyledPhaseLine $hidden={index === 0} $color={color} />
       )}
       <Icon
-        name={getIconFromType(type, index === totalPhases - 1)}
+        name={getIconFromType(type, phaseIdentifier)}
         color={color}
         width={iconSize}
         height={iconSize}
@@ -291,6 +296,7 @@ export function PhaseTimeline({
           return (
             <StyledPhase key={phase.id} $isVertical={isVertical}>
               <PhaseIndicator
+                phaseIdentifier={phase.identifier}
                 layout={overriddenLayout}
                 index={index}
                 totalPhases={phases.length}
