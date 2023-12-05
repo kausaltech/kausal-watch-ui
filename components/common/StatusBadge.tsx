@@ -14,21 +14,6 @@ interface StatusProps {
   $statusColor: string;
 }
 
-const StyledStatusBar = styled.div<StatusProps>`
-  background-color: ${(props) => props.theme.themeColors.light};
-
-  .color-bar {
-    height: 8px;
-    background-color: ${(props) => props.$statusColor};
-  }
-
-  .label {
-    padding: 3px 6px;
-    font-size: ${(props) => props.theme.fontSizeSm};
-    font-family: ${(props) => props.theme.fontFamilyTiny};
-  }
-`;
-
 const StyledStatusBadge = styled.div<StatusProps>`
   display: inline-block;
   border: ${({ $subtle, $statusColor }) =>
@@ -76,8 +61,6 @@ interface StatusBadgeProps {
   action: ActionWithStatusSummary;
   statusName?: string;
   plan: PlanContextType;
-  // Render the status as a horizontal bar or badge with a colored dot
-  asBar?: boolean;
   reason?: string;
   // Best used when rendering many badges together, e.g. in a table view
   subtle?: boolean;
@@ -87,7 +70,6 @@ const StatusBadge = ({
   action,
   statusName,
   plan,
-  asBar = true,
   reason,
   subtle = false,
 }: StatusBadgeProps) => {
@@ -98,15 +80,6 @@ const StatusBadge = ({
 
   if (!label) {
     return null;
-  }
-
-  if (asBar) {
-    return (
-      <StyledStatusBar $statusColor={statusColor}>
-        <div className="color-bar" />
-        <div className="label">{label ?? ''}</div>
-      </StyledStatusBar>
-    );
   }
 
   if (!reason) {

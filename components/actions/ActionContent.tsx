@@ -632,7 +632,6 @@ function ActionContentProgressContainer({
   const commonStatusBadgeProps = {
     action,
     plan,
-    asBar: false,
     statusName: action.mergedWith
       ? t('actions:action-status-merged', getActionTermContext(plan))
       : action.statusSummary.label,

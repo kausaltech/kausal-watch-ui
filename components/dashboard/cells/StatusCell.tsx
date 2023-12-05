@@ -25,7 +25,6 @@ const StatusCell = ({ action, plan }: Props) => {
   return (
     <StatusDisplay>
       <StatusBadge
-        asBar={false}
         action={action}
         plan={plan}
         subtle

@@ -80,7 +80,6 @@ function ActionsTable(props) {
                 {action.status && (
                   <StatusBadge
                     plan={plan}
-                    asBar={false}
                     action={{
                       ...action,
                       statusSummary: getStatusSummary(
