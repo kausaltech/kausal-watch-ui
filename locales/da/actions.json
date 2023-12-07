@@ -76,5 +76,6 @@
     "action-not-found_CASE_STUDY": "Casestudie ikke fundet",
     "action-status-merged_CASE_STUDY": "Sammenlagt med casestudie",
     "action-what-effect-this-has_CASE_STUDY": "Hvordan dette casestudie bidrager til resultatet",
-    "action-draft": "Udkast"
+    "action-draft": "Udkast",
+    "other": "Anden"
 }

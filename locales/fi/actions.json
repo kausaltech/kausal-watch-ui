@@ -54,7 +54,7 @@
   "actions-updated": "Aktiivisten toimenpiteiden päivitys",
   "actions-updated-help-days": "Viimeisen {{count}} päivän aikana päivitettyjen toimenpiteiden osuus",
   "actions-updated-help-months_one": "Toimenpiteet, jotka on päivitetty viimeisen kuukauden aikana",
-  "actions-updated-help-months_other": "Toimenpiteet, jotka on päivitetty viimeisten {{count}} kuukauden aikana",  
+  "actions-updated-help-months_other": "Toimenpiteet, jotka on päivitetty viimeisten {{count}} kuukauden aikana",
   "status": "Tila",
   "tasks-completed": "Valmistuneet tehtävät",
   "responsible-organizations-primary": "Päävastuutahot",
@@ -69,5 +69,6 @@
   "action-task-show-comment": "Näytä lisätiedot",
   "feedback-on-action": "Anna palautetta toimenpiteestä",
   "feedback-on-action-description": "Tästä voit lähettää palautetta tai kommentin koskien tätä toimenpidettä",
-  "action-draft": "Luonnos"
+  "action-draft": "Luonnos",
+  "other": "Muut"
 }

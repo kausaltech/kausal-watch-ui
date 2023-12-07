@@ -4,6 +4,7 @@ import { Row, Col } from 'reactstrap';
 import styled from 'styled-components';
 import { useTheme } from 'common/theme';
 import ActionCard from './ActionCard';
+import { useTranslation } from 'common/i18n';
 
 const ActionsList = styled.ul`
   margin-top: ${(props) => props.theme.spaces.s400};
@@ -36,8 +37,9 @@ const ActionGroup = styled(Row)`
 const ActionGroupList = styled(Row)`
   padding: 0;
 `;
+const OTHER_GROUP_ID = 'other';
 
-const groupActions = (groupBy, depth, actions, theme) => {
+const groupActions = (groupBy, depth, actions, theme, t) => {
   const groupMap = {};
   const groups = [];
   const noGroupItems = [];
@@ -87,11 +89,11 @@ const groupActions = (groupBy, depth, actions, theme) => {
 
   if (noGroupItems.length)
     groups.push({
-      id: 'zzzz',
+      id: OTHER_GROUP_ID,
       displayIdentifier: '',
-      name: '',
+      name: t('other'),
       crumb: null,
-      identifier: 'zzzz',
+      identifier: OTHER_GROUP_ID,
       elements: noGroupItems,
     });
 
@@ -102,14 +104,20 @@ function ActionCardList(props) {
   const { actions, groupBy, headingHierarchyDepth, includeRelatedPlans } =
     props;
   const theme = useTheme();
-
-  const groups = groupActions(groupBy, headingHierarchyDepth, actions, theme);
+  const { t } = useTranslation();
+  const groups = groupActions(
+    groupBy,
+    headingHierarchyDepth,
+    actions,
+    theme,
+    t
+  );
 
   return (
     <ActionsList>
       {groups.map((group) => (
         <ActionGroup key={group.id} tag="li">
-          {groups.length > 1 && (
+          {(groups.length > 1 || group.id === OTHER_GROUP_ID) && (
             <Col xs="12">
               <ActionGroupHeader>
                 {group.crumb && (
