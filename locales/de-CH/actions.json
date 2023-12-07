@@ -13,6 +13,5 @@
   "actions-updated": "Aktive Massnahmen zuletzt aktualisiert",
   "actions-updated-help-days": "Anteil der Massnahmen, die innerhalb von {{count}} Tagen aktualisiert wurden",
   "related-actions": "Verbundene Massnahmen",
-  "org-responsible-in-actions": "Verantwortlich für {{actionCount}} Massnahmen",
-  "other": "Andere"
+  "org-responsible-in-actions": "Verantwortlich für {{actionCount}} Massnahmen"
 }

@@ -37,6 +37,7 @@ const ActionGroup = styled(Row)`
 const ActionGroupList = styled(Row)`
   padding: 0;
 `;
+const OTHER_GROUP_ID = 'other';
 
 const groupActions = (groupBy, depth, actions, theme, t) => {
   const groupMap = {};
@@ -88,11 +89,11 @@ const groupActions = (groupBy, depth, actions, theme, t) => {
 
   if (noGroupItems.length)
     groups.push({
-      id: 'zzzz',
+      id: OTHER_GROUP_ID,
       displayIdentifier: '',
       name: t('other'),
       crumb: null,
-      identifier: 'zzzz',
+      identifier: OTHER_GROUP_ID,
       elements: noGroupItems,
     });
 
@@ -116,7 +117,7 @@ function ActionCardList(props) {
     <ActionsList>
       {groups.map((group) => (
         <ActionGroup key={group.id} tag="li">
-          {(groups.length > 1 || group.id === 'zzzz') && (
+          {(groups.length > 1 || group.id === OTHER_GROUP_ID) && (
             <Col xs="12">
               <ActionGroupHeader>
                 {group.crumb && (
