@@ -71,15 +71,12 @@ const NormalizerChooser = styled.div`
   justify-content: flex-end;
   gap: ${(props) => props.theme.spaces.s100};
   margin-top: ${(props) => props.theme.spaces.s200};
-  padding: ${(props) => props.theme.spaces.s050}
-    ${(props) => props.theme.spaces.s150};
+  padding: ${(props) =>
+    `${props.theme.spaces.s050} ${props.theme.spaces.s150}`};
 `;
 
-const formatValue = (value, locale, precision) => {
-  // Two significant figures
-  return parseFloat(Number(value).toPrecision(precision)).toLocaleString(
-    locale
-  );
+const formatValue = (value, locale) => {
+  return parseFloat(Number(value)).toLocaleString(locale);
 };
 
 const findPrecision = (comparableValues) => {
@@ -221,12 +218,19 @@ function IndicatorProgressBar(props) {
       ? getNormalizedValue(firstValue)
       : firstValue.value;
 
+  const minPrecision = findPrecision([startValue, latestValue, goalValue]);
+
+  const roundedValues = {
+    start: startValue.toPrecision(minPrecision),
+    latest: latestValue.toPrecision(minPrecision),
+    goal: goalValue.toPrecision(isNormalized ? minPrecision : 4),
+  };
+
   const unit = isNormalized
     ? populationNormalizer.unit.shortName
     : indicator.unit.shortName;
   const note = indicator.name;
 
-  const minPrecision = findPrecision([startValue, latestValue, goalValue]);
   const theme = useContext(ThemeContext);
   const { t, i18n } = useTranslation();
   const latestBarControls = useAnimation();
@@ -242,7 +246,7 @@ function IndicatorProgressBar(props) {
   const rightMargin = 50;
   const topMargin = 0;
   const bars = { w: width - rightMargin, h: 3 * barHeight };
-  const scale = bars.w / startValue;
+  const scale = bars.w / roundedValues.start;
   const segmentsY = bars.h + barMargin * 2;
   const goalColor = theme.section.indicatorShowcase.goalColor;
   const latestColor = theme.section.indicatorShowcase.latestColor;
@@ -253,7 +257,7 @@ function IndicatorProgressBar(props) {
   };
   //const hasStartValue = Math.abs(startValue - latestValue)/latestValue > 0.01;
   const hasStartValue = true;
-  const showReduction = latestValue / startValue < 0.8; // show reduction if change is more than 20%
+  const showReduction = latestValue / roundedValues.start < 0.8; // show reduction if change is more than 20%
 
   // const animatedLatestValue = useSpring({ latest: latestValue, from: { latest: startValue } });
   // For simplicity, currently only supports indicators
@@ -263,21 +267,21 @@ function IndicatorProgressBar(props) {
   const startBar = {
     x: 0,
     y: topMargin,
-    w: startValue * scale,
+    w: roundedValues.start * scale,
   };
   const latestBar = {
-    x: bars.w - latestValue * scale,
+    x: bars.w - roundedValues.latest * scale,
     y: topMargin + barHeight,
-    w: latestValue * scale,
+    w: roundedValues.latest * scale,
   };
   const goalBar = {
-    x: bars.w - goalValue * scale,
+    x: bars.w - roundedValues.goal * scale,
     y: topMargin + 2 * barHeight,
-    w: goalValue * scale,
+    w: roundedValues.goal * scale,
   };
 
-  let reductionCounterFrom = startValue - latestValue;
-  const reductionCounterTo = startValue - latestValue;
+  let reductionCounterFrom = roundedValues.start - roundedValues.latest;
+  const reductionCounterTo = roundedValues.start - roundedValues.latest;
   const reductionCounterDuration = showReduction ? 3 : 0;
 
   useEffect(() => {
@@ -307,8 +311,8 @@ function IndicatorProgressBar(props) {
   const sequenceOn = async () => {
     await Promise.all([
       latestBarControls.start({
-        x: bars.w - latestValue * scale,
-        width: latestValue * scale,
+        x: bars.w - roundedValues.latest * scale,
+        width: roundedValues.latest * scale,
         transition: { duration: reductionCounterDuration },
       }),
       reducedSegmentControls.start({
@@ -346,11 +350,11 @@ function IndicatorProgressBar(props) {
     startYear: dayjs(startDate).format('YYYY'),
     latestYear: dayjs(latestDate).format('YYYY'),
     goalYear: dayjs(goalDate).format('YYYY'),
-    startValue: `${startValue} ${unit}`,
-    latestValue: `${latestValue} ${unit}`,
-    goalValue: `${goalValue} ${unit}`,
+    startValue: `${roundedValues.start} ${unit}`,
+    latestValue: `${roundedValues.latest} ${unit}`,
+    goalValue: `${roundedValues.goal} ${unit}`,
     reduced: `${reductionCounterTo.toFixed(1)} ${unit}`,
-    toBeReduced: `${latestValue - goalValue} ${unit}`,
+    toBeReduced: `${roundedValues.latest - roundedValues.goal} ${unit}`,
   };
   /*
     On the year {{startYear}} {{name}} was {{startValue}}.
@@ -431,7 +435,7 @@ function IndicatorProgressBar(props) {
                 <ValueGroup
                   transform={`translate(${startBar.x + 4} 0)`}
                   date={graphValues.startYear}
-                  value={formatValue(startValue, i18n.language, minPrecision)}
+                  value={formatValue(roundedValues.start, i18n.language)}
                   unit={unit}
                   locale={i18n.language}
                   negative={
@@ -493,7 +497,7 @@ function IndicatorProgressBar(props) {
               <ValueGroup
                 transform={`translate(${latestBar.x + 4} ${latestBar.y})`}
                 date={graphValues.latestYear}
-                value={formatValue(latestValue, i18n.language, minPrecision)}
+                value={formatValue(roundedValues.latest, i18n.language)}
                 unit={unit}
                 locale={i18n.language}
                 negative={
@@ -515,9 +519,8 @@ function IndicatorProgressBar(props) {
               <SegmentHeader>{t('to-reduce')}</SegmentHeader>
               <SegmentValue x="0" dy="16">
                 {formatValue(
-                  latestValue - goalValue,
-                  i18n.language,
-                  minPrecision
+                  roundedValues.latest - roundedValues.goal,
+                  i18n.language
                 )}{' '}
                 {unit}
               </SegmentValue>
@@ -555,11 +558,7 @@ function IndicatorProgressBar(props) {
                 goalBar.w > 120 ? goalBar.x + 4 : goalBar.x - 8
               } ${goalBar.y})`}
               date={graphValues.goalYear}
-              value={formatValue(
-                goalValue,
-                i18n.language,
-                isNormalized ? minPrecision : 4
-              )}
+              value={formatValue(roundedValues.goal, i18n.language)}
               unit={unit}
               locale={i18n.language}
               negative={
