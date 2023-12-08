@@ -24,9 +24,10 @@ const createLayout = (
   hasTimeDimension,
   subplotsNeeded,
   graphCustomBackground
-) => {
+): Partial<Layout> => {
   const fontFamily =
-    '-apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Ubuntu, roboto, noto, arial, sans-serif';
+    '-apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, ' +
+    'helvetica neue, helvetica, Ubuntu, roboto, noto, arial, sans-serif';
   const hasCategories = !hasTimeDimension;
 
   const yaxes: NonNullable<Pick<Layout, 'yaxis'>> = {
@@ -100,7 +101,7 @@ const createLayout = (
     xaxes[`xaxis${x}`] = xaxes.xaxis;
   }
 
-  const newLayout = {
+  const newLayout: Partial<Layout> = {
     title: {},
     margin: {
       t: 25,
@@ -108,7 +109,6 @@ const createLayout = (
       b: 25,
       l: 25,
       pad: 4,
-      autoexpand: true,
     },
     ...yaxes,
     ...xaxes,
