@@ -218,52 +218,127 @@ const levels = {
   strategic: { fi: 'strateginen', index: 3 },
 };
 
-function sortIndicators(hierarchy, indicators, displayMunicipality) {
-  let sorted = indicators;
-  sorted = indicators.sort((a, b) => a.name.localeCompare(b.name));
-  sorted = indicators.sort((a, b) => {
-    if (levels[a.level].index < levels[b.level].index) {
-      return -1;
+type Hierarchy = {
+  [key: string]: {
+    id: string;
+    isRoot: boolean;
+    children: string[];
+    path: string[];
+    // Doesn't seem to be used
+    pathNames: string[];
+  };
+};
+
+type Indicators = {
+  name: string;
+  level: string;
+  organization: {
+    name: string;
+  };
+  common: {
+    id: string;
+  };
+}[];
+
+function groupIndicatorsByHierarchy(
+  indicators: Indicators,
+  hierarchy: Hierarchy
+): {
+  nonHierarchicalIndicators: Indicators;
+  hierarchicalIndicators: Indicators;
+} {
+  return indicators.reduce(
+    (groups, indicator) =>
+      !!indicator.common && hierarchy[indicator.common.id]
+        ? {
+            ...groups,
+            hierarchicalIndicators: [
+              ...groups.hierarchicalIndicators,
+              indicator,
+            ],
+          }
+        : {
+            ...groups,
+            nonHierarchicalIndicators: [
+              ...groups.nonHierarchicalIndicators,
+              indicator,
+            ],
+          },
+    {
+      nonHierarchicalIndicators: [],
+      hierarchicalIndicators: [],
     }
-    if (levels[a.level].index > levels[b.level].index) {
-      return 1;
-    }
-    return 0;
-  });
+  );
+}
+
+function sortIndicators(
+  hierarchy: Hierarchy,
+  indicators: Indicators,
+  displayMunicipality: boolean
+) {
+  const isHierarchical = !!hierarchy && Object.keys(hierarchy).length > 0;
+
+  const sortedIndicators = [...indicators]
+    .sort((a, b) => a.name.localeCompare(b.name))
+    .sort((a, b) => {
+      if (levels[a.level].index < levels[b.level].index) {
+        return -1;
+      }
+      if (levels[a.level].index > levels[b.level].index) {
+        return 1;
+      }
+      return 0;
+    });
+
   if (displayMunicipality) {
-    sorted = indicators.sort((a, b) =>
+    sortedIndicators.sort((a, b) =>
       a.organization.name.localeCompare(b.organization.name)
     );
   }
-  if (hierarchy != null && Object.keys(hierarchy).length > 0) {
-    sorted = indicators.sort((a, b) => {
+
+  /**
+   * Split indicators that belong to a hierarchy (visualised as a tree in the table)
+   * so that they can be sorted separately from non hierarchical indicators
+   */
+  const { nonHierarchicalIndicators, hierarchicalIndicators } = isHierarchical
+    ? groupIndicatorsByHierarchy(sortedIndicators, hierarchy)
+    : {
+        nonHierarchicalIndicators: sortedIndicators,
+        hierarchicalIndicators: [],
+      };
+
+  if (hierarchicalIndicators.length) {
+    hierarchicalIndicators.sort((a, b) => {
       if (a.common == null || b.common == null) {
         return 0;
       }
-      const [pathA, pathB] = [
-        hierarchy[a.common.id]?.path ?? [],
-        hierarchy[b.common.id]?.path ?? [],
-      ];
+
+      const pathA = hierarchy[a.common.id]?.path ?? [];
+      const pathB = hierarchy[b.common.id]?.path ?? [];
+
       for (let i = 0; i < pathA.length && i < pathB.length; i++) {
         if (pathA[i] === pathB[i]) continue;
-        return pathA[i] - pathB[i];
+
+        return parseInt(pathA[i]) - parseInt(pathB[i]);
       }
+
       return pathA.length - pathB.length;
     });
   }
-  if (
-    hierarchy == null ||
-    Object.keys(hierarchy).length === 0 ||
-    !displayMunicipality
-  ) {
-    return [sorted];
+
+  if (!isHierarchical || !displayMunicipality) {
+    return [[...nonHierarchicalIndicators, ...hierarchicalIndicators]];
   }
+
   const grouped = new Map();
-  sorted.forEach((indicator) => {
-    const commonId = indicator.common?.id;
-    const group = grouped.get(commonId) ?? [];
-    grouped.set(commonId, [...group, indicator]);
-  });
+  [...nonHierarchicalIndicators, ...hierarchicalIndicators].forEach(
+    (indicator) => {
+      const commonId = indicator.common?.id;
+      const group = grouped.get(commonId) ?? [];
+      grouped.set(commonId, [...group, indicator]);
+    }
+  );
+
   return [...grouped.values()];
 }
 

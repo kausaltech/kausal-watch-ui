@@ -3,10 +3,10 @@ import { gql, useQuery } from '@apollo/client';
 import { Container } from 'reactstrap';
 import omitBy from 'lodash/omitBy';
 
-import ContentLoader from '../common/ContentLoader';
+import ContentLoader from 'components/common/ContentLoader';
 import { usePlan } from '../../context/plan';
 import { Meta } from '../layout';
-import ErrorMessage from '../common/ErrorMessage';
+import ErrorMessage from 'components/common/ErrorMessage';
 
 import IndicatorsHero from './IndicatorsHero';
 import IndicatorListFiltered, { isEmptyFilter } from './IndicatorListFiltered';
@@ -23,6 +23,7 @@ import {
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { getCategoryString } from 'common/categories';
+import { processCommonIndicatorHierarchy } from './process-indicators';
 
 const createFilterUnusedCategories =
   (indicators: Indicator[]) => (category: Category) =>
@@ -252,53 +253,6 @@ const IndicatorList = ({ title, leadContent, displayInsights }: Props) => {
         );
       }) !== undefined
     );
-  };
-
-  const processCommonIndicatorHierarchy = (planIndicators) => {
-    const uniqueCommonIndicators = {};
-    planIndicators.forEach((i) => {
-      if (i.common != null && !(i.common.id in uniqueCommonIndicators)) {
-        uniqueCommonIndicators[i.common.id] = i.common;
-      }
-    });
-    const makeLinks = (commonIndicator) => ({
-      id: commonIndicator.id,
-      isRoot:
-        commonIndicator.relatedEffects.filter((e) => e.effectType === 'PART_OF')
-          .length === 0,
-      children: commonIndicator.relatedCauses
-        .filter((e) => e.effectType === 'PART_OF')
-        .filter((e) => uniqueCommonIndicators[e.causalIndicator.id] != null)
-        .map((e) => e.causalIndicator.id),
-    });
-    const processed = Object.fromEntries(
-      Object.values(uniqueCommonIndicators).map((i) => [i.id, makeLinks(i)])
-    );
-    const expandPaths = (indicators, path) => {
-      let descendants = [];
-      indicators.forEach((indicator) => {
-        const newPath = [...path, indicator.id];
-        indicator.path = newPath;
-        indicator.pathNames = newPath.map(
-          (p) => uniqueCommonIndicators[p].name
-        );
-        indicator.descendants = expandPaths(
-          indicator.children.map((c) => processed[c]),
-          newPath
-        );
-        descendants = descendants.concat(indicator.descendants, [indicator.id]);
-      });
-      return descendants;
-    };
-
-    const rootIndicators = Object.values(processed).filter((i) => i.isRoot);
-    if (rootIndicators.length === Object.keys(uniqueCommonIndicators).length) {
-      // The hierarchy is flat because all the common indicators are root
-      return {};
-    }
-
-    expandPaths(rootIndicators, []);
-    return processed;
   };
 
   const getIndicatorListProps = (data) => {
