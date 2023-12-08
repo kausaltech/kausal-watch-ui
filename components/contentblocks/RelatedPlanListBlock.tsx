@@ -87,7 +87,7 @@ const RelatedPlanListBlock = ({ id }: Props) => {
                 organization={
                   theme.settings?.multiplan?.hideLongPlanNames
                     ? undefined
-                    : plan.name
+                    : pl.name
                 }
                 size="lg"
                 negative={true}
