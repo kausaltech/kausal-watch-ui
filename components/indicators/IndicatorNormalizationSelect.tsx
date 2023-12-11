@@ -21,11 +21,14 @@ const IndicatorNormalizationSelect = (props) => {
 
   return (
     <NormalizerChooser>
-      <Switch
-        label={t('indicator-normalize-per-capita')}
-        state={currentValue || false}
-        onChange={callback}
-      />
+      <label>
+        {t('indicator-normalize-per-capita')}
+        <Switch
+          label={t('indicator-normalize-per-capita')}
+          state={currentValue || false}
+          onChange={callback}
+        />
+      </label>
     </NormalizerChooser>
   );
 };

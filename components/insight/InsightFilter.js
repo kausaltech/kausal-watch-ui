@@ -9,6 +9,14 @@ const StyledTypeahead = styled(Typeahead)`
   .rbt-close-content {
     display: none;
   }
+  width: 100%;
+`;
+
+const StyledLabel = styled.label`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
 `;
 
 function InsightFilter(props) {
@@ -46,16 +54,18 @@ function InsightFilter(props) {
 
   return (
     <div className="mb-4">
-      <h5>{t('insight-filter-label')}</h5>
-      <StyledTypeahead
-        id="insight-filter"
-        clearButton
-        onChange={handleChange}
-        ignoreDiacritics={false}
-        emptyLabel={t('insight-filter-no-results')}
-        defaultSelected={defaultSelected}
-        options={options}
-      />
+      <StyledLabel htmlFor="insight-filter">
+        {t('insight-filter-label')}
+        <StyledTypeahead
+          id="insight-filter"
+          clearButton
+          onChange={handleChange}
+          ignoreDiacritics={false}
+          emptyLabel={t('insight-filter-no-results')}
+          defaultSelected={defaultSelected}
+          options={options}
+        />
+      </StyledLabel>
     </div>
   );
 }

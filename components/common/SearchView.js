@@ -342,7 +342,7 @@ function SearchView(props) {
                   <FormGroup switch>
                     <Input
                       type="switch"
-                      id="form-other-plans-only"
+                      id="other-plans-only"
                       name="onlyOtherPlans"
                       checked={userSearch?.onlyOtherPlans}
                       onChange={handleValueChange}

@@ -364,11 +364,13 @@ function IndicatorProgressBar(props) {
     <div>
       {canNormalize && (
         <NormalizerChooser>
-          <Switch
-            label={t('indicator-normalize-per-capita')}
-            state={isNormalized || false}
-            onChange={() => setIsNormalized(!isNormalized)}
-          />
+          <label>
+            {t('indicator-normalize-per-capita')}
+            <Switch
+              state={isNormalized || false}
+              onChange={() => setIsNormalized(!isNormalized)}
+            />
+          </label>
         </NormalizerChooser>
       )}
       <IndicatorLink id={indicatorId}>
