@@ -3,6 +3,13 @@ import { Container } from 'reactstrap';
 import styled from 'styled-components';
 import { useTranslation } from 'common/i18n';
 import RichText from 'components/common/RichText';
+import { Theme } from '@kausal/themes/types';
+
+/**
+ * Pulls the specified hero height from the theme if defined
+ */
+const getHeight = (theme: Theme, defaultHeight: string) =>
+  theme.settings.frontHero?.height ?? defaultHeight;
 
 const Hero = styled.div`
   width: 100%;
@@ -12,16 +19,16 @@ const Hero = styled.div`
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     display: flex;
-    min-height: 24rem;
+    min-height: ${({ theme }) => getHeight(theme, '24rem')};
     padding: 0;
   }
 
   @media (min-width: ${(props) => props.theme.breakpointLg}) {
-    min-height: 28rem;
+    min-height: ${({ theme }) => getHeight(theme, '28rem')};
   }
 
   @media (min-width: ${(props) => props.theme.breakpointXl}) {
-    min-height: 30rem;
+    min-height: ${({ theme }) => getHeight(theme, '30rem')};
   }
 `;
 
