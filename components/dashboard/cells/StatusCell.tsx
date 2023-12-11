@@ -27,7 +27,6 @@ const StatusCell = ({ action, plan }: Props) => {
       <StatusBadge
         action={action}
         plan={plan}
-        subtle
         statusName={
           action.mergedWith
             ? t('actions:action-status-merged', getActionTermContext(plan))

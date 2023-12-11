@@ -50,7 +50,6 @@ const TruncatedContent = styled.span<{ $maxLines: number }>`
 `;
 
 const IconBadge = styled.div<{ color: string; isLink: boolean }>`
-  overflow: hidden;
   display: flex;
   align-items: center;
   max-width: 320px;

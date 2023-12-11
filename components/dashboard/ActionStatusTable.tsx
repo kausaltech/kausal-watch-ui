@@ -19,11 +19,16 @@ import { COLUMN_CONFIG } from './dashboard.constants';
 type TActionTableContext = {
   plan?: PlanContextFragment;
   planViewUrl?: string | null;
+  /** Custom configuration for cell components */
+  config: {
+    hasPhaseAndStatusColumns?: boolean;
+  };
 };
 
 export const ActionTableContext = createContext<TActionTableContext>({
   plan: undefined,
   planViewUrl: undefined,
+  config: {},
 });
 
 const TableWrapper = styled.div`
@@ -173,6 +178,12 @@ const preprocessForSorting = (
   }
 };
 
+const hasPhaseAndStatusColumns = (columns: ColumnConfig[]) =>
+  !!(
+    columns.find((c) => c.__typename === 'ImplementationPhaseColumnBlock') &&
+    columns.find((c) => c.__typename === 'StatusColumnBlock')
+  );
+
 interface Props {
   actions: ActionListAction[];
   orgs: ActionListOrganization[];
@@ -246,6 +257,9 @@ const ActionStatusTable = (props: Props) => {
       value={{
         plan,
         planViewUrl,
+        config: {
+          hasPhaseAndStatusColumns: hasPhaseAndStatusColumns(filteredColumns),
+        },
       }}
     >
       <ToolBar>
