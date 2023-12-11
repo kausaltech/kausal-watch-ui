@@ -1,107 +1,61 @@
-import React from 'react';
-import { setLightness } from 'polished';
+import React, { PropsWithChildren } from 'react';
 import styled from 'styled-components';
 import { useTheme } from 'common/theme';
+import type { Theme } from '@kausal/themes/types';
 import type { PlanContextType } from 'context/plan';
+import type { ActionStatusSummary } from 'common/__generated__/graphql';
 
 import {
   ActionWithStatusSummary,
+  MinimalActionStatusSummary,
   getStatusColorForAction,
 } from 'common/ActionStatusSummary';
 
-type StatusProps = {
-  $subtle?: boolean;
-  $statusColor: string;
+interface StatusBarProps {
+  theme: Theme;
+  statusColor: string;
+}
+
+const StyledStatusBar = styled.div<StatusBarProps>`
+  background-color: ${(props) => props.theme.themeColors.light};
+
+  .color-bar {
+    height: 8px;
+    background-color: ${(props) => props.statusColor};
+  }
+
+  .label {
+    padding: 3px 6px;
+    font-size: ${(props) => props.theme.fontSizeSm};
+    font-family: ${(props) => props.theme.fontFamilyTiny};
+  }
+`;
+
+const StatusBar = (props: PropsWithChildren<StatusBarProps>) => {
+  const { theme, statusColor, children } = props;
+  return (
+    <StyledStatusBar theme={theme} statusColor={statusColor}>
+      {children}
+    </StyledStatusBar>
+  );
 };
-
-const StyledStatusBadge = styled.div<StatusProps>`
-  display: inline-block;
-  border: ${({ $subtle, $statusColor }) =>
-    $subtle ? 'none' : `2px solid ${$statusColor}`};
-  background: ${({ $statusColor }) => setLightness(0.95, $statusColor)};
-  border-radius: ${({ theme }) => theme.badgeBorderRadius};
-  padding: ${({ theme }) => theme.spaces.s050};
-`;
-
-const StyledStatusBadgeWithReason = styled(StyledStatusBadge)`
-  padding: ${({ theme }) => theme.spaces.s100};
-  display: block;
-`;
-
-const StyledStatusIndicator = styled.div<StatusProps>`
-  background: ${({ $statusColor }) => $statusColor};
-  border-radius: 10px;
-  width: 10px;
-  height: 10px;
-  flex-shrink: 0;
-`;
-
-const StyledStatusLabel = styled.div<{ $subtle?: boolean }>`
-  color: ${({ theme }) => theme.textColor.primary};
-  font-size: ${({ theme }) => theme.fontSizeSm};
-  line-height: ${({ theme }) => theme.lineHeightSm};
-  font-weight: ${({ $subtle, theme }) =>
-    $subtle ? theme.fontWeightNormal : theme.fontWeightBold};
-`;
-
-const StyledStatusWrapper = styled.div`
-  display: flex;
-  gap: ${({ theme }) => theme.spaces.s050};
-  align-items: center;
-`;
-
-const StyledReason = styled.p`
-  color: ${({ theme }) => theme.textColor.primary};
-  margin-top: ${({ theme }) => theme.spaces.s100};
-  margin-bottom: 0;
-  font-size: ${({ theme }) => theme.fontSizeSm};
-  line-height: ${({ theme }) => theme.lineHeightMd};
-`;
 
 interface StatusBadgeProps {
   action: ActionWithStatusSummary;
   statusName?: string;
   plan: PlanContextType;
-  reason?: string;
-  // Best used when rendering many badges together, e.g. in a table view
-  subtle?: boolean;
 }
 
-const StatusBadge = ({
-  action,
-  statusName,
-  plan,
-  reason,
-  subtle = false,
-}: StatusBadgeProps) => {
+const StatusBadge = (props: StatusBadgeProps) => {
+  const { action, statusName, plan } = props;
   const { statusSummary } = action;
   const theme = useTheme();
   const statusColor = getStatusColorForAction(action, plan, theme);
-  const label = statusName ?? statusSummary?.label;
-
-  if (!label) {
-    return null;
-  }
-
-  if (!reason) {
-    return (
-      <StyledStatusBadge $subtle={subtle} $statusColor={statusColor}>
-        <StyledStatusWrapper>
-          <StyledStatusIndicator $statusColor={statusColor} />
-          <StyledStatusLabel $subtle={subtle}>{label}</StyledStatusLabel>
-        </StyledStatusWrapper>
-      </StyledStatusBadge>
-    );
-  }
-
   return (
-    <StyledStatusBadgeWithReason $subtle={subtle} $statusColor={statusColor}>
-      <StyledStatusWrapper>
-        <StyledStatusIndicator $statusColor={statusColor} />
-        <StyledStatusLabel $subtle={subtle}>{label}</StyledStatusLabel>
-      </StyledStatusWrapper>
-      <StyledReason>{reason}</StyledReason>
-    </StyledStatusBadgeWithReason>
+    <StatusBar statusColor={statusColor} theme={theme}>
+      <div className="color-bar" />
+      <div className="label">{statusName ?? statusSummary?.label ?? ''}</div>
+    </StatusBar>
   );
 };
 

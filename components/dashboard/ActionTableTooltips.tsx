@@ -8,15 +8,11 @@ import {
 } from 'common/i18n';
 import Icon from 'components/common/Icon';
 import { ActionListAction } from './dashboard.types';
-import {
-  ActionStatusSummaryIdentifier,
-  PlanContextFragment,
-} from 'common/__generated__/graphql';
+import { PlanContextFragment } from 'common/__generated__/graphql';
 import { getTaskCounts } from './cells/TasksStatusCell';
 import { useTheme } from 'common/theme';
 import { ActionTableContext } from './ActionStatusTable';
 import { usePlan } from 'context/plan';
-import { PhaseTimeline } from 'components/actions/PhaseTimeline';
 
 const TooltipTitle = styled.p`
   font-weight: ${(props) => props.theme.fontWeightBold};
@@ -129,15 +125,12 @@ export const TasksTooltipContent = ({ action, plan }: TooltipWithPlanProps) => {
   );
 };
 
-const StyledPhaseTimelineContainer = styled.div`
-  margin: ${({ theme }) => theme.spaces.s100} 0;
-`;
-
+// TODO: Should we split implementation phase and status?
 export const ImplementationPhaseTooltipContent = ({
   action,
 }: TooltipWithPlanProps) => {
   const { t } = useTranslation(['common', 'actions']);
-  const { plan } = useContext(ActionTableContext);
+  const { plan, config } = useContext(ActionTableContext);
 
   const activePhase = action.implementationPhase;
   const merged = action.mergedWith;
@@ -172,24 +165,32 @@ export const ImplementationPhaseTooltipContent = ({
   }
 
   // If action has no active phase or it's cancelled, or plan has no implementation phases : display only status
-  if (
-    !activePhase ||
-    status?.identifier === ActionStatusSummaryIdentifier.Cancelled
-  ) {
+  if (!activePhase || status?.identifier === 'cancelled') {
     return statusDisplay;
   }
 
   return (
     <div>
+      {!config.hasPhaseAndStatusColumns && (
+        <>
+          {statusDisplay}
+          <Divider />
+        </>
+      )}
       <TooltipTitle>{t('actions:action-implementation-phase')}:</TooltipTitle>
-      <StyledPhaseTimelineContainer>
-        {!!action.implementationPhase && (
-          <PhaseTimeline
-            layout="vertical"
-            activePhase={action.implementationPhase}
-          />
-        )}
-      </StyledPhaseTimelineContainer>
+      <PhasesTooltipList>
+        {plan.actionImplementationPhases.map((phase) => (
+          <PhasesTooltipListItem
+            key={phase.id}
+            $active={activePhase.id === phase.id}
+          >
+            {phase.name}
+            {activePhase?.id === phase.id && status.name && !status.isCompleted
+              ? ` (${status.name})`
+              : ''}
+          </PhasesTooltipListItem>
+        ))}
+      </PhasesTooltipList>
     </div>
   );
 };

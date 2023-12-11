@@ -18,6 +18,7 @@ import IndicatorCausalVisualisation from 'components/indicators/IndicatorCausalV
 import AttributesBlock from 'components/common/AttributesBlock';
 import CategoryTags from './CategoryTags';
 import ExpandableFeedbackFormBlock from 'components/contentblocks/ExpandableFeedbackFormBlock';
+import ActionPhase from './ActionPhase';
 import ActionStatus from './ActionStatus';
 import ActionImpact from './ActionImpact';
 import ActionHero from './ActionHero';
@@ -40,16 +41,14 @@ import ActionResponsiblePartiesBlock from 'components/actions/blocks/ActionRespo
 import ActionScheduleBlock from 'components/actions/blocks/ActionScheduleBlock';
 import ReportComparisonBlock from 'components/actions/blocks/ReportComparisonBlock';
 
-import {
-  ActionStatusSummaryIdentifier,
-  type ActionAsideContentBlocksFragmentFragment,
-  type ActionMainContentBlocksFragmentFragment,
-  type GetActionDetailsQuery,
+import type {
+  ActionAsideContentBlocksFragmentFragment,
+  ActionMainContentBlocksFragmentFragment,
+  GetActionDetailsQuery,
 } from 'common/__generated__/graphql';
 import { useTheme } from 'common/theme';
+import { getStatusSummary } from 'common/ActionStatusSummary';
 import ActionAttribute from 'components/common/ActionAttribute';
-import { PhaseTimeline } from './PhaseTimeline';
-import StatusBadge from 'components/common/StatusBadge';
 
 const GET_ACTION_DETAILS = gql`
   query GetActionDetails($plan: ID!, $id: ID!, $clientUrl: String!) {
@@ -372,26 +371,8 @@ const PrimaryHeader = styled.h2`
   font-size: ${(props) => props.theme.fontSizeBase};
 `;
 
-const PrimaryHeaderInline = styled(PrimaryHeader)`
-  margin-bottom: 0;
-`;
-
 const SideHeader = styled.h3`
   font-size: ${(props) => props.theme.fontSizeBase};
-`;
-
-const StyledProgressCard = styled.div`
-  background: ${({ theme }) => theme.cardBackground.secondary};
-  border-radius: ${({ theme }) => theme.cardBorderRadius};
-  padding: ${({ theme }) => `${theme.spaces.s200} ${theme.spaces.s100}`};
-  margin-bottom: ${(props) => props.theme.spaces.s050};
-`;
-
-const StyledProgressHeaderContainer = styled.div`
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  margin-bottom: ${(props) => props.theme.spaces.s050};
 `;
 
 export const SectionHeader = styled.h2`
@@ -618,50 +599,6 @@ function ActionContentBlockGroup(props: ActionContentBlockGroupProps) {
   return null;
 }
 
-function ActionContentProgressContainer({
-  action,
-}: Pick<ActionContentProps, 'action'>) {
-  const plan = usePlan();
-  const { t } = useTranslation();
-  const hasReason = !!action.manualStatusReason;
-  const isBadgeVisible =
-    action.status &&
-    action.status.identifier !== ActionStatusSummaryIdentifier.Undefined &&
-    !hasReason;
-
-  const commonStatusBadgeProps = {
-    action,
-    plan,
-    statusName: action.mergedWith
-      ? t('actions:action-status-merged', getActionTermContext(plan))
-      : action.statusSummary.label,
-  };
-
-  return (
-    <>
-      <StyledProgressHeaderContainer>
-        <PrimaryHeaderInline>
-          {t('actions:action-progress')}
-        </PrimaryHeaderInline>
-        {isBadgeVisible && <StatusBadge {...commonStatusBadgeProps} />}
-      </StyledProgressHeaderContainer>
-
-      {!!action.implementationPhase && (
-        <StyledProgressCard>
-          <PhaseTimeline activePhase={action.implementationPhase} />
-        </StyledProgressCard>
-      )}
-
-      {hasReason && (
-        <StatusBadge
-          {...commonStatusBadgeProps}
-          reason={action.manualStatusReason ?? undefined}
-        />
-      )}
-    </>
-  );
-}
-
 function ActionContentSectionBlock(props) {
   const { blocks, action, section, heading, helpText, layout } = props;
 
@@ -829,7 +766,14 @@ function ActionContent(props: ActionContentProps) {
           <Col md="7" lg="8">
             {hasPhases && (
               <ActionSection>
-                <ActionContentProgressContainer action={action} />
+                <PrimaryHeader>{t('actions:action-progress')}</PrimaryHeader>
+                <ActionPhase
+                  action={action}
+                  status={getStatusSummary(plan, action.statusSummary)}
+                  activePhase={action.implementationPhase}
+                  reason={action.manualStatusReason}
+                  phases={plan.actionImplementationPhases}
+                />
               </ActionSection>
             )}
 
