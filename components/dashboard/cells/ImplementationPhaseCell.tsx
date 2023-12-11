@@ -1,9 +1,9 @@
 import { ActionListAction } from '../dashboard.types';
 import styled from 'styled-components';
 import { PlanContextFragment } from 'common/__generated__/graphql';
-import ActionPhase from 'components/actions/ActionPhase';
 import { useContext } from 'react';
 import { ActionTableContext } from '../ActionStatusTable';
+import { PhaseTimeline } from 'components/actions/PhaseTimeline';
 
 interface Props {
   action: ActionListAction;
@@ -16,7 +16,7 @@ const StatusDisplay = styled.div`
 `;
 
 const ImplementationPhaseCell = ({ action }: Props) => {
-  const { plan, config } = useContext(ActionTableContext);
+  const { plan } = useContext(ActionTableContext);
 
   if (!plan) {
     return null;
@@ -24,17 +24,9 @@ const ImplementationPhaseCell = ({ action }: Props) => {
 
   return (
     <StatusDisplay>
-      <ActionPhase
-        action={action}
-        status={
-          config.hasPhaseAndStatusColumns ? undefined : action.statusSummary
-        }
-        activePhase={action.implementationPhase}
-        reason={action.manualStatusReason}
-        mergedWith={action.mergedWith?.identifier}
-        phases={plan.actionImplementationPhases}
-        compact
-      />
+      {!!action.implementationPhase && (
+        <PhaseTimeline layout="mini" activePhase={action.implementationPhase} />
+      )}
     </StatusDisplay>
   );
 };
