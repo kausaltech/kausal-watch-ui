@@ -64,7 +64,11 @@ const ActionListBlock = (props) => {
     <ActionListSection id={id}>
       <Container>
         {heading && <SectionHeader>{heading}</SectionHeader>}
-        <ActionCardList actions={planActions} groupBy={groupBy} />
+        <ActionCardList
+          actions={planActions}
+          groupBy={groupBy}
+          showOtherCategory={false}
+        />
       </Container>
     </ActionListSection>
   );
