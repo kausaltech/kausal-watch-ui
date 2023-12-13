@@ -117,7 +117,8 @@ function ActionCardList(props) {
     <ActionsList>
       {groups.map((group) => (
         <ActionGroup key={group.id} tag="li">
-          {(groups.length > 1 || group.id === OTHER_GROUP_ID) && (
+          {(groups.length > 1 ||
+            (group.id === OTHER_GROUP_ID && props.showOtherCategory)) && (
             <Col xs="12">
               <ActionGroupHeader>
                 {group.crumb && (
@@ -167,11 +168,13 @@ function ActionCardList(props) {
 
 ActionCardList.defaultProps = {
   groupBy: 'category',
+  showOtherCategory: true,
 };
 
 ActionCardList.propTypes = {
   actions: PropTypes.arrayOf(PropTypes.object).isRequired,
   groupBy: PropTypes.string,
+  showOtherCategory: PropTypes.bool,
 };
 
 export default ActionCardList;
