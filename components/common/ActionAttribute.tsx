@@ -30,7 +30,8 @@ const ScaleIcon = styled(Icon)`
   }};
 
   &.icon-on {
-    fill: ${(props) => props.theme.brandDark} !important;
+    fill: ${({ theme }) =>
+      theme.actionAttributeColor ?? theme.brandDark} !important;
   }
 
   &.icon-off {
