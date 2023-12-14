@@ -70,7 +70,9 @@ export const replaceHashWithoutScrolling = (hash) =>
 export function IndicatorLink(props) {
   const { id, ...other } = props;
 
-  return <Link {...getIndicatorLinkProps(id)} passHref {...other} />;
+  return (
+    <Link {...getIndicatorLinkProps(id)} passHref {...other} legacyBehavior />
+  );
 }
 IndicatorLink.propTypes = {
   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
@@ -104,6 +106,7 @@ export function ActionLink(props) {
       {...getActionLinkProps(targetIdentifier, planUrl)}
       passHref
       {...other}
+      legacyBehavior
     />
   );
 }
@@ -121,7 +124,7 @@ ActionLink.propTypes = {
 export function OrganizationLink(props) {
   const { organizationId, ...other } = props;
   const href = `/organizations/${organizationId}`;
-  return <Link href={href} passHref {...other} />;
+  return <Link href={href} passHref {...other} legacyBehavior />;
 }
 
 type ActionListLinkProps = {
@@ -140,7 +143,7 @@ export function ActionListLink(
   props: PropsWithChildren<OtherLinkProps & ActionListLinkProps>
 ) {
   const linkProps = ActionListLink.getLinkProps(props);
-  return <Link passHref {...linkProps} />;
+  return <Link passHref {...linkProps} legacyBehavior />;
 }
 ActionListLink.getLinkProps = (
   opts: ActionListLinkProps,
@@ -168,7 +171,7 @@ ActionListLink.getLinkProps = (
 export function IndicatorListLink(
   props: Omit<LinkProps, 'href'> & { children: ReactElement }
 ) {
-  return <Link href="/indicators" passHref {...props} />;
+  return <Link href="/indicators" passHref {...props} legacyBehavior />;
 }
 
 type StaticPageLinkProps =
@@ -187,8 +190,8 @@ export function StaticPageLink(
   props: PropsWithChildren<OtherLinkProps & StaticPageLinkProps>
 ) {
   const { slug, page, ...other } = props;
-  if (slug) return <Link href={`/${slug}`} {...other} />;
-  return <Link href={page!.urlPath} {...other} />;
+  if (slug) return <Link href={`/${slug}`} {...other} legacyBehavior />;
+  return <Link href={page!.urlPath} {...other} legacyBehavior />;
 }
 
 type NavigationLinkProps = PropsWithChildren<OtherLinkProps & { slug: string }>;
@@ -200,7 +203,7 @@ export function NavigationLink(props: NavigationLinkProps) {
     </a>
   ) : (
     <Link href={`${slug}`} {...other}>
-      <a>{children}</a>
+      {children}
     </Link>
   );
 }
