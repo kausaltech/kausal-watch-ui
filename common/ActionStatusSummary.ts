@@ -41,6 +41,9 @@ export const getThemeColor = (color: string, theme: Theme) => {
 };
 
 export interface ActionWithStatusSummary {
+  status?: {
+    color?: string;
+  };
   statusSummary?: {
     color?: string;
     identifier?: ActionStatusSummaryIdentifier;

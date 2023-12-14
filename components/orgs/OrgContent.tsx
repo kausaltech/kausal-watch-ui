@@ -250,6 +250,7 @@ const GET_ORG_DETAILS = gql`
         id
         identifier
         name
+        color
       }
       implementationPhase {
         id

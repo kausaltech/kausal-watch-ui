@@ -30,6 +30,7 @@ const GET_ACTION = gql`
         id
         identifier
         name
+        color
       }
       implementationPhase {
         id

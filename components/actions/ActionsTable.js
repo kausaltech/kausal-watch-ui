@@ -21,6 +21,7 @@ const ACTION_ROW_FRAGMENT = gql`
       id
       identifier
       name
+      color
     }
     implementationPhase {
       id

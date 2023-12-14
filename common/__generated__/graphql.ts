@@ -721,6 +721,7 @@ export type ActionScheduleFilterBlock = StreamFieldInterface & {
 /** The current status for the action ("on time", "late", "completed", etc.). */
 export type ActionStatus = {
   __typename?: 'ActionStatus';
+  color?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   identifier: Scalars['String'];
   isCompleted: Scalars['Boolean'];
@@ -763,6 +764,7 @@ export type ActionStatusReportValue = ReportValueInterface & {
 
 export type ActionStatusSummary = {
   __typename?: 'ActionStatusSummary';
+  /** @deprecated This field is an internal implementation detail; most often you should use action.color */
   color: Scalars['String'];
   identifier: ActionStatusSummaryIdentifier;
   isActive: Scalars['Boolean'];
@@ -869,6 +871,7 @@ export type ActionTimeliness = {
   comparison: Comparison;
   days: Scalars['Int'];
   identifier: ActionTimelinessIdentifier;
+  /** @deprecated Generate human-friendly labels in the UI. */
   label: Scalars['String'];
   sentiment: Sentiment;
 };
@@ -4134,7 +4137,7 @@ export type MultiUseImageFragmentFragment = (
 
 export type ActionCardFragment = (
   { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, completion?: number | null, status?: (
-    { id: string, identifier: string, name: string }
+    { id: string, identifier: string, name: string, color?: string | null }
     & { __typename?: 'ActionStatus' }
   ) | null, categories: Array<(
     { id: string, identifier: string, name: string, iconSvgUrl?: string | null, type: (
@@ -4390,7 +4393,7 @@ export type GetActionDetailsQuery = (
       { id: string, name: string, dueAt: any, completedAt?: any | null, comment?: string | null, state: ActionTaskState }
       & { __typename?: 'ActionTask' }
     )>, status?: (
-      { id: string, identifier: string, name: string }
+      { id: string, identifier: string, name: string, color?: string | null }
       & { __typename?: 'ActionStatus' }
     ) | null, implementationPhase?: (
       { id: string, identifier: string, name: string }
@@ -4424,7 +4427,7 @@ export type GetActionDetailsQuery = (
       & { __typename?: 'ActionIndicator' }
     )>, relatedActions: Array<(
       { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, completion?: number | null, status?: (
-        { id: string, identifier: string, name: string }
+        { id: string, identifier: string, name: string, color?: string | null }
         & { __typename?: 'ActionStatus' }
       ) | null, categories: Array<(
         { id: string, identifier: string, name: string, iconSvgUrl?: string | null, type: (
@@ -4472,7 +4475,7 @@ export type GetActionDetailsQuery = (
       & { __typename?: 'Action' }
     ) | null, supersededBy?: (
       { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, completion?: number | null, status?: (
-        { id: string, identifier: string, name: string }
+        { id: string, identifier: string, name: string, color?: string | null }
         & { __typename?: 'ActionStatus' }
       ) | null, categories: Array<(
         { id: string, identifier: string, name: string, iconSvgUrl?: string | null, type: (
@@ -4514,7 +4517,7 @@ export type GetActionDetailsQuery = (
       & { __typename?: 'Action' }
     ) | null, supersededActions: Array<(
       { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, completion?: number | null, status?: (
-        { id: string, identifier: string, name: string }
+        { id: string, identifier: string, name: string, color?: string | null }
         & { __typename?: 'ActionStatus' }
       ) | null, categories: Array<(
         { id: string, identifier: string, name: string, iconSvgUrl?: string | null, type: (
@@ -6519,7 +6522,7 @@ export type ActionHightlightListQuery = (
       { id: string }
       & { __typename?: 'Plan' }
     ), status?: (
-      { id: string, identifier: string, name: string }
+      { id: string, identifier: string, name: string, color?: string | null }
       & { __typename?: 'ActionStatus' }
     ) | null, statusSummary: (
       { identifier: ActionStatusSummaryIdentifier }
@@ -6618,7 +6621,7 @@ export type ActionUpdatesQuery = (
 
 export type ActionsTableFragment = (
   { id: string, identifier: string, name: string, color?: string | null, completion?: number | null, status?: (
-    { id: string, identifier: string, name: string }
+    { id: string, identifier: string, name: string, color?: string | null }
     & { __typename?: 'ActionStatus' }
   ) | null, implementationPhase?: (
     { id: string, identifier: string, name: string }
@@ -6657,7 +6660,7 @@ export type GetActionListQuery = (
       ) | null }
       & { __typename?: 'Image' }
     ) | null, status?: (
-      { id: string, identifier: string, name: string }
+      { id: string, identifier: string, name: string, color?: string | null }
       & { __typename?: 'ActionStatus' }
     ) | null, categories: Array<(
       { id: string, identifier: string, name: string, iconSvgUrl?: string | null, type: (
@@ -7890,7 +7893,7 @@ export type GetActionListForBlockQueryVariables = Exact<{
 export type GetActionListForBlockQuery = (
   { planActions?: Array<(
     { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, completion?: number | null, status?: (
-      { id: string, identifier: string, name: string }
+      { id: string, identifier: string, name: string, color?: string | null }
       & { __typename?: 'ActionStatus' }
     ) | null, categories: Array<(
       { id: string, identifier: string, name: string, iconSvgUrl?: string | null, type: (
@@ -8098,7 +8101,7 @@ export type PlanFragmentFragment = (
 
 export type ActionFragmentFragment = (
   { id: string, identifier: string, name: string, viewUrl?: string, color?: string | null, manualStatusReason?: string | null, completion?: number | null, officialName?: string | null, updatedAt: any, scheduleContinuous: boolean, startDate?: any | null, endDate?: any | null, order: number, status?: (
-    { id: string, identifier: string, name: string }
+    { id: string, identifier: string, name: string, color?: string | null }
     & { __typename?: 'ActionStatus' }
   ) | null, categories: Array<(
     { id: string, common?: (
@@ -8256,7 +8259,7 @@ export type DashboardActionListQuery = (
     & { __typename?: 'Plan' }
   ) | null, planActions?: Array<(
     { id: string, identifier: string, name: string, viewUrl?: string, color?: string | null, manualStatusReason?: string | null, completion?: number | null, officialName?: string | null, updatedAt: any, scheduleContinuous: boolean, startDate?: any | null, endDate?: any | null, order: number, status?: (
-      { id: string, identifier: string, name: string }
+      { id: string, identifier: string, name: string, color?: string | null }
       & { __typename?: 'ActionStatus' }
     ) | null, categories: Array<(
       { id: string, common?: (
@@ -8355,7 +8358,7 @@ export type DashboardActionListQuery = (
     & { __typename?: 'Action' }
   )> | null, relatedPlanActions?: Array<(
     { id: string, identifier: string, name: string, viewUrl?: string, color?: string | null, manualStatusReason?: string | null, completion?: number | null, officialName?: string | null, updatedAt: any, scheduleContinuous: boolean, startDate?: any | null, endDate?: any | null, order: number, status?: (
-      { id: string, identifier: string, name: string }
+      { id: string, identifier: string, name: string, color?: string | null }
       & { __typename?: 'ActionStatus' }
     ) | null, categories: Array<(
       { id: string, common?: (
@@ -8645,7 +8648,7 @@ export type GetEmbedActionQuery = (
       { identifier: ActionStatusSummaryIdentifier }
       & { __typename?: 'ActionStatusSummary' }
     ), status?: (
-      { id: string, identifier: string, name: string }
+      { id: string, identifier: string, name: string, color?: string | null }
       & { __typename?: 'ActionStatus' }
     ) | null, implementationPhase?: (
       { id: string, identifier: string }
@@ -8825,7 +8828,7 @@ export type IndicatorDetailsQuery = (
       & { __typename?: 'IndicatorGoal' }
     ) | null> | null, actions?: Array<(
       { id: string, identifier: string, name: string, color?: string | null, completion?: number | null, status?: (
-        { id: string, identifier: string, name: string }
+        { id: string, identifier: string, name: string, color?: string | null }
         & { __typename?: 'ActionStatus' }
       ) | null, implementationPhase?: (
         { id: string, identifier: string, name: string }
@@ -9147,7 +9150,7 @@ export type OrganizationDetailsQuery = (
           { id: string }
           & { __typename?: 'ActionSchedule' }
         )>, status?: (
-          { id: string, identifier: string, name: string }
+          { id: string, identifier: string, name: string, color?: string | null }
           & { __typename?: 'ActionStatus' }
         ) | null, implementationPhase?: (
           { id: string, identifier: string, name: string, order: number }
@@ -9257,7 +9260,7 @@ export type OrganizationDetailsQuery = (
         { id: string }
         & { __typename?: 'ActionSchedule' }
       )>, status?: (
-        { id: string, identifier: string, name: string }
+        { id: string, identifier: string, name: string, color?: string | null }
         & { __typename?: 'ActionStatus' }
       ) | null, implementationPhase?: (
         { id: string, identifier: string, name: string, order: number }
@@ -9354,7 +9357,7 @@ export type OrgContentPlanFragment = (
       { id: string }
       & { __typename?: 'ActionSchedule' }
     )>, status?: (
-      { id: string, identifier: string, name: string }
+      { id: string, identifier: string, name: string, color?: string | null }
       & { __typename?: 'ActionStatus' }
     ) | null, implementationPhase?: (
       { id: string, identifier: string, name: string, order: number }

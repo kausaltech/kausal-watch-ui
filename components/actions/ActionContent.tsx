@@ -145,6 +145,7 @@ const GET_ACTION_DETAILS = gql`
         id
         identifier
         name
+        color
       }
       manualStatusReason
       implementationPhase {

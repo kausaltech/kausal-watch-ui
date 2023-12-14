@@ -74,9 +74,12 @@ const StatusBadge = ({
   reason,
   subtle = false,
 }: StatusBadgeProps) => {
-  const { statusSummary } = action;
+  const { statusSummary, status } = action;
+
   const theme = useTheme();
-  const statusColor = getStatusColorForAction(action, plan, theme);
+  const statusColor = status?.color
+    ? theme.graphColors[status.color]
+    : getStatusColorForAction(action, plan, theme);
   const label = statusName ?? statusSummary?.label;
 
   if (!label) {

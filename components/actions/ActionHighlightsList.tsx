@@ -38,6 +38,7 @@ export const GET_ACTION_LIST = gql`
         id
         identifier
         name
+        color
       }
       statusSummary {
         identifier
