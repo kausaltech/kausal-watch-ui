@@ -186,6 +186,7 @@ const actionFragment = gql`
       id
       identifier
       name
+      color
     }
     categories {
       id

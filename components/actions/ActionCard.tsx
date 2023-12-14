@@ -25,6 +25,7 @@ const ACTION_CARD_FRAGMENT = gql`
       id
       identifier
       name
+      color
     }
     completion
     categories {
@@ -173,11 +174,11 @@ const ActionStatusArea = styled.div<{ statusColor: string }>`
 `;
 
 const StyledActionPhase = styled.div<{
-  statusColor: string;
-  hasStatus: boolean;
+  $hasStatus: boolean;
+  $statusColor: string;
 }>`
-  background-color: ${(props) =>
-    props.hasStatus ? props.theme.themeColors.light : props.statusColor};
+  background-color: ${({ $hasStatus, theme, $statusColor }) =>
+    $hasStatus ? theme.themeColors.light : $statusColor};
   color: ${(props) => props.theme.themeColors.dark};
 `;
 
@@ -322,8 +323,8 @@ function ActionCard(props: ActionCardProps) {
             )}
           </ActionStatusArea>
           <StyledActionPhase
-            statusColor={statusColor}
-            hasStatus={mergedWith !== null || statusText !== null}
+            $statusColor={statusColor}
+            $hasStatus={mergedWith !== null || statusText !== null}
           >
             {mergedWith ? (
               <StatusName>
