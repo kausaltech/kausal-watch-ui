@@ -2,7 +2,6 @@ import React, { ReactElement } from 'react';
 import styled from 'styled-components';
 import { TFunction } from 'next-i18next';
 import { gql } from '@apollo/client';
-import numbro from 'numbro';
 
 import RichText from 'components/common/RichText';
 import Icon from 'components/common/Icon';
@@ -16,6 +15,7 @@ import {
   AttributesBlockAttributeTypeFragment,
   AttributesBlockAttributeWithNestedTypeFragment,
 } from 'common/__generated__/graphql';
+import { useTranslation } from 'common/i18n';
 
 const ScaleIcon = styled(Icon)`
   font-size: ${(props) => {
@@ -100,6 +100,7 @@ type AttributeContentNestedTypeProps = {
 const ActionAttribute = (
   props: AttributeContentProps | AttributeContentNestedTypeProps
 ) => {
+  const { i18n } = useTranslation();
   const { attribute, attributeType, fontSize } = props;
   let type = attributeType ?? attribute.type;
   let dataElement: ReactElement;
@@ -148,9 +149,10 @@ const ActionAttribute = (
       dataElement = <RichText html={attribute.value} />;
       break;
     case 'AttributeNumericValue':
-      const formattedValue = numbro(attribute.numericValue).format({
-        thousandSeparated: true,
-      });
+      const formattedValue = attribute.numericValue.toLocaleString(
+        i18n.language
+      );
+
       dataElement = (
         <div>
           <NumericValue>{formattedValue}</NumericValue>

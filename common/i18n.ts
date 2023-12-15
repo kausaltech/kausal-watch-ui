@@ -3,13 +3,6 @@ import {
   ContentSiteGeneralContentActionTermChoices,
   ContentSiteGeneralContentActionTaskTermChoices,
 } from './__generated__/graphql';
-import numbro from 'numbro';
-import numbroDe from 'numbro/dist/languages/de-DE.min.js';
-
-numbro.registerLanguage({
-  ...numbroDe,
-  languageTag: 'de',
-});
 
 const { appWithTranslation, withTranslation, Trans, useTranslation } =
   NextI18Next;
