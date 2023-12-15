@@ -81,3 +81,7 @@ City of Helsinki would like to request that when this source code is forked and 
 Or in Finnish:
 
 > Palvelu on avointa lähdekoodia ja perustuu alun perin Helsingin kaupungin kehittämään [Helsingin ilmastovahti -palveluun](https://github.com/City-of-Helsinki/cnh-ui). Helsingin ilmastovahti on saanut tukea EU:n Climate-KIC-ohjelmasta.
+
+## Good to know
+
+- If you're using VSCode, install the Apollo GraphQL extension for GQL query autocompletion and deprecation warnings
