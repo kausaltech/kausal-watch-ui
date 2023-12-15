@@ -62,15 +62,15 @@ const TaskStatusViz = styled.div`
 
   .on-time {
     display: inline-block;
-    background-color: ${(props) => props.theme.graphColors.green010};
+    background-color: ${({ theme }) => theme.taskStatusColors.onTime};
   }
   .late {
     display: inline-block;
-    background-color: ${(props) => props.theme.graphColors.yellow050};
+    background-color: ${({ theme }) => theme.taskStatusColors.late};
   }
   .completed {
     display: inline-block;
-    background-color: ${(props) => props.theme.graphColors.green070};
+    background-color: ${({ theme }) => theme.taskStatusColors.completed};
   }
 `;
 
