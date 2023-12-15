@@ -372,6 +372,7 @@ function IndicatorProgressBar(props) {
             label={t('indicator-normalize-per-capita')}
             state={isNormalized || false}
             onChange={() => setIsNormalized(!isNormalized)}
+            id="normalize-per-capita-switch"
           />
         </NormalizerChooser>
       )}
