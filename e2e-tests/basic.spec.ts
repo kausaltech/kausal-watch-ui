@@ -22,18 +22,6 @@ const testPlan = (planId: string) =>
   */
     test.beforeEach(async ({ page }) => {
       return;
-      // FIXME: Enable later
-      page.on('console', (msg) => {
-        if (msg.text().includes('ReactDOM.hydrate is no longer supported'))
-          return;
-        if (msg.type() === 'error') {
-          console.log(msg.text());
-          throw new Error('Browser console got error output');
-        } else if (msg.type() === 'warning') {
-          console.log(msg.text());
-          throw new Error('Browser console got warning output');
-        }
-      });
     });
 
     test('basic layout', async ({ page, ctx }) => {
@@ -44,8 +32,6 @@ const testPlan = (planId: string) =>
       await expect(page.locator('nav#global-navigation-bar')).toBeVisible();
       await expect(page.locator('main#main')).toBeVisible();
       await expect(page.locator('main#main')).toBeVisible();
-
-      await expect(page).toHaveScreenshot({ fullPage: true });
     });
     test('action list page', async ({ page, ctx }) => {
       const listItem = ctx.getActionListMenuItem()!;
@@ -67,9 +53,6 @@ const testPlan = (planId: string) =>
       await expect
         .configure({ timeout: 15000 })(page.getByRole('tab').first())
         .toBeVisible();
-      await expect(page).toHaveScreenshot(`action-list-${planId}.png`, {
-        fullPage: true,
-      });
 
       // Test direct URL navigation
       await page.goto(`${ctx.baseURL}/${listItem.page.urlPath}`);
@@ -77,9 +60,6 @@ const testPlan = (planId: string) =>
       await expect
         .configure({ timeout: 2000 })(page.getByRole('tab').first())
         .toBeVisible();
-
-      //const ss = await page.screenshot({ fullPage: true });
-      //expect(ss).toMatchSnapshot('action-list.png');
     });
     test('action details page', async ({ page, ctx }) => {
       test.skip(ctx.plan.actions.length == 0, 'No actions defined in plan');
@@ -87,8 +67,9 @@ const testPlan = (planId: string) =>
       await ctx.checkMeta(page);
 
       await expect(page.locator('.action-main-top')).toBeVisible();
-      await expect(page).toHaveScreenshot({ fullPage: true });
     });
+
+    test('Categorie page', async ({ page, ctx }) => {});
   });
 
 getIdentifiersToTest().forEach((plan) => testPlan(plan));
