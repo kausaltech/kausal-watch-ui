@@ -99,6 +99,7 @@ export default gql`
       actionTerm
       actionTaskTerm
       organizationTerm
+      sitewideAnnouncement
     }
     mainMenu {
       items(withDescendants: true) {
