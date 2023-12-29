@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { usePlan } from 'context/plan';
 import { useTranslation } from 'common/i18n';
 import PlanVersionBanner from 'components/versioning/PlanVersionBanner';
+import { AnnouncementBannerWithRichTextMessage } from 'components/common/AnnouncementBanner';
 
 const Banner = styled.div`
   padding: 8px 16px;
@@ -78,11 +79,16 @@ function ApplicationStateBanner(props) {
 
   return (
     <>
-      { banner }
-      { supersedingVersions?.length > 0 && (
+      {banner}
+      {supersedingVersions?.length > 0 && (
         <PlanVersionBanner
           currentVersion={plan}
           latestVersion={supersedingVersions[supersedingVersions.length - 1]}
+        />
+      )}
+      {plan.generalContent.sitewideAnnouncement != null && (
+        <AnnouncementBannerWithRichTextMessage
+          message={plan.generalContent.sitewideAnnouncement}
         />
       )}
     </>
