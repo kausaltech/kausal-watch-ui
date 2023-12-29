@@ -1,7 +1,24 @@
 import styled from 'styled-components';
+import { Container } from 'reactstrap';
 import { useTranslation } from 'common/i18n';
 import Icon from 'components/common/Icon';
-import AnnouncementBanner from 'components/common/AnnouncementBanner';
+
+const VersionBannerSection = styled.div`
+  padding: ${(props) => props.theme.spaces.s100} 0;
+  background-color: ${(props) => props.theme.graphColors.blue070};
+  color: ${(props) => props.theme.graphColors.grey010};
+`;
+
+const VersionBanner = styled.div`
+  display: flex;
+  justify-content: space-between;
+  padding: 0;
+  background-color: ${(props) => props.theme.graphColors.blue070};
+  color: ${(props) => props.theme.graphColors.grey010};
+
+  @media (max-width: ${(props) => props.theme.breakpointMd}) {
+  }
+`;
 
 const VersionNote = styled.div`
   display: flex;
@@ -34,38 +51,42 @@ const PlanVersionBanner = (props) => {
   const { t } = useTranslation();
 
   return (
-    <AnnouncementBanner>
-      <VersionNote>
-        <Icon
-          name="version"
-          className="me-2"
-          width="2.25rem"
-          height="2.25rem"
-        />
-        <VersionName>
-          {t('common:version-this-is-old')}
-          <br />
-          <CurrentVersionName>
-            {currentVersion?.versionName || currentVersion?.shortName}
-          </CurrentVersionName>
-        </VersionName>
-      </VersionNote>
-      <LinkToLatestVersion>
-        <a href={latestVersion?.viewUrl} className="ms-2">
-          {t('common:version-switch-to-active')}
-          <br />
-          <LatestVersionName>
-            {latestVersion?.versionName || latestVersion?.shortName}
-          </LatestVersionName>
-        </a>
-        <Icon
-          name="arrow-right"
-          className="ms-2"
-          width="2.25rem"
-          height="2.25rem"
-        />
-      </LinkToLatestVersion>
-    </AnnouncementBanner>
+    <VersionBannerSection>
+      <Container>
+        <VersionBanner>
+          <VersionNote>
+            <Icon
+              name="version"
+              className="me-2"
+              width="2.25rem"
+              height="2.25rem"
+            />
+            <VersionName>
+              {t('common:version-this-is-old')}
+              <br />
+              <CurrentVersionName>
+                {currentVersion?.versionName || currentVersion?.shortName}
+              </CurrentVersionName>
+            </VersionName>
+          </VersionNote>
+          <LinkToLatestVersion>
+            <a href={latestVersion?.viewUrl} className="ms-2">
+              {t('common:version-switch-to-active')}
+              <br />
+              <LatestVersionName>
+                {latestVersion?.versionName || latestVersion?.shortName}
+              </LatestVersionName>
+            </a>
+            <Icon
+              name="arrow-right"
+              className="ms-2"
+              width="2.25rem"
+              height="2.25rem"
+            />
+          </LinkToLatestVersion>
+        </VersionBanner>
+      </Container>
+    </VersionBannerSection>
   );
 };
 
