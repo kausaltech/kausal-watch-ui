@@ -1,13 +1,13 @@
 import styled from 'styled-components';
 import { Container } from 'reactstrap';
 
-export const AnnouncementBannerSection = styled.div`
+export const StyledAnnouncementBannerSection = styled.div`
   padding: ${(props) => props.theme.spaces.s100} 0;
   background-color: ${(props) => props.theme.graphColors.blue070};
   color: ${(props) => props.theme.graphColors.grey010};
 `;
 
-export const AnnouncementBannerWrapper = styled.div`
+export const StyledAnnouncementBannerWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   padding: 0;
@@ -24,8 +24,6 @@ export const AnnouncementBannerWrapper = styled.div`
     color: ${(props) => props.theme.themeColors.white};
     font-weight: bold;
   }
-  @media (max-width: ${(props) => props.theme.breakpointMd}) {
-  }
 `;
 
 export const AnnouncementBannerWithRichTextMessage = ({
@@ -39,11 +37,13 @@ export const AnnouncementBannerWithRichTextMessage = ({
 );
 
 const AnnouncementBanner = ({ children }: { children: React.ReactNode }) => (
-  <AnnouncementBannerSection>
+  <StyledAnnouncementBannerSection>
     <Container>
-      <AnnouncementBannerWrapper>{children}</AnnouncementBannerWrapper>
+      <StyledAnnouncementBannerWrapper>
+        {children}
+      </StyledAnnouncementBannerWrapper>
     </Container>
-  </AnnouncementBannerSection>
+  </StyledAnnouncementBannerSection>
 );
 
 export default AnnouncementBanner;
