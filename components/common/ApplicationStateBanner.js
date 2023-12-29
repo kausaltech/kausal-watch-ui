@@ -47,14 +47,14 @@ function ApplicationStateBanner(props) {
   const plan = usePlan();
 
   // Only show superseding versions in production if they are published
-  let supersedingVersions = plan.supersedingPlans;
-  if (deploymentType === 'production') {
-    supersedingVersions = supersedingVersions.filter((p) => p.publishedAt);
-  }
+  const supersedingVersions =
+    deploymentType !== 'production'
+      ? plan.supersedingPlans
+      : plan.supersedingPlans.filter((p) => p.publishedAt);
 
   switch (deploymentType) {
     case 'production':
-      typeLabel = null;
+      return null;
     case 'testing':
       typeLabel = t('instance-type-testing-label');
       typeMessage = t('instance-type-testing-message');
@@ -67,18 +67,14 @@ function ApplicationStateBanner(props) {
       typeLabel = t('instance-type-development-label');
       typeMessage = t('instance-type-development-message');
   }
-  const banner =
-    typeLabel != null ? (
+
+  return (
+    <>
       <Banner>
         <Label type={deploymentType}>{typeLabel.toUpperCase()}</Label>
         {` ${typeMessage}`}
       </Banner>
-    ) : null;
-
-  return (
-    <>
-      { banner }
-      { supersedingVersions?.length > 0 && (
+      {supersedingVersions?.length > 0 && (
         <PlanVersionBanner
           currentVersion={plan}
           latestVersion={supersedingVersions[supersedingVersions.length - 1]}
