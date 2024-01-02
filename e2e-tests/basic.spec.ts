@@ -69,7 +69,34 @@ const testPlan = (planId: string) =>
       await expect(page.locator('.action-main-top')).toBeVisible();
     });
 
-    test('Categorie page', async ({ page, ctx }) => {});
+    test('category pages', async ({ page, ctx }) => {
+      const categoryTypeItem = ctx.getCategoryTypeMenuItem();
+      test.skip(!categoryTypeItem, 'No category type for plan');
+
+      const items = ctx.getCategoryMenuItems();
+      test.skip(!items, 'No category pages for plan');
+
+      await page.goto(ctx.baseURL);
+      await ctx.checkMeta(page);
+
+      for (const item of items) {
+        const nav = page.locator('nav#global-navigation-bar');
+        const categoryTypeLink = nav.getByRole('link', {
+          name: categoryTypeItem?.page.title,
+          exact: true,
+        });
+        await categoryTypeLink.click();
+
+        const link = nav.getByRole('link', {
+          name: item.page.title,
+          exact: true,
+        });
+        await link.click();
+        await expect(page.locator('main#main')).toBeVisible();
+
+        console.log(link);
+      }
+    });
   });
 
 getIdentifiersToTest().forEach((plan) => testPlan(plan));

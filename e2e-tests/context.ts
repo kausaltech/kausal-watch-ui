@@ -49,14 +49,25 @@ const GET_PLAN_INFO = gql`
         viewUrl(clientUrl: $clientURL)
       }
       mainMenu {
-        items {
+        items(withDescendants: true) {
+          __typename
           ... on PageMenuItem {
+            id
             page {
-              id
               title
-              slug
               urlPath
+              slug
             }
+            parent {
+              id
+              page {
+                __typename
+              }
+            }
+          }
+          ... on ExternalLinkMenuItem {
+            linkText
+            url
           }
         }
       }
@@ -74,6 +85,16 @@ export type PageMenuItem = MainMenuItem & {
 export type ActionListMenuItem = PageMenuItem & {
   page: {
     __typename: 'ActionListPage';
+  };
+};
+export type CategoryMenuItem = PageMenuItem & {
+  page: {
+    __typename: 'CategoryPage';
+  };
+};
+export type CategoryTypeMenuItem = PageMenuItem & {
+  page: {
+    __typename: 'CategoryTypePage';
   };
 };
 
@@ -98,6 +119,28 @@ export class PlanContext {
 
   getActionURL(action: ActionInfo) {
     return action.viewUrl;
+  }
+
+  getCategoryTypeMenuItem(): CategoryTypeMenuItem | null {
+    function isCategoryType(item: MainMenuItem): item is CategoryTypeMenuItem {
+      if (item?.__typename !== 'PageMenuItem') return false;
+      if (item.page.__typename !== 'CategoryTypePage') return false;
+      return true;
+    }
+    const item = (this.plan.mainMenu?.items ?? []).find(isCategoryType) || null;
+    return item;
+  }
+
+  getCategoryMenuItems(): CategoryMenuItem[] {
+    console.log(this.plan.mainMenu?.items);
+    function isCategoryItem(item: MainMenuItem): item is CategoryMenuItem {
+      if (item?.__typename !== 'PageMenuItem') return false;
+      if (item.page.__typename !== 'CategoryPage') return false;
+      return true;
+    }
+    const items =
+      (this.plan.mainMenu?.items ?? []).filter(isCategoryItem) || [];
+    return items;
   }
 
   async checkMeta(page: Page) {
