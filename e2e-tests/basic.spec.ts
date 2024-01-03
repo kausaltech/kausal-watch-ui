@@ -97,6 +97,25 @@ const testPlan = (planId: string) =>
         console.log(link);
       }
     });
+
+    test('static pages', async ({ page, ctx }) => {
+      const staticPageItems = ctx.getStaticPageMenuItem();
+      console.log(staticPageItems);
+      test.skip(!staticPageItems, 'No static pages for plan');
+
+      await page.goto(ctx.baseURL);
+      await ctx.checkMeta(page);
+
+      for (const staticPageItem of staticPageItems) {
+        const nav = page.locator('nav#global-navigation-bar');
+        const staticPageLink = nav.getByRole('link', {
+          name: staticPageItem?.page.title,
+          exact: true,
+        });
+        await staticPageLink.click();
+        await expect(page.locator('main#main')).toBeVisible();
+      }
+    });
   });
 
 getIdentifiersToTest().forEach((plan) => testPlan(plan));

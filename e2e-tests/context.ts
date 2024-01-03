@@ -97,7 +97,11 @@ export type CategoryTypeMenuItem = PageMenuItem & {
     __typename: 'CategoryTypePage';
   };
 };
-
+export type StaticPageMenuItem = PageMenuItem & {
+  page: {
+    __typename: 'StaticPage';
+  };
+};
 export class PlanContext {
   plan: PlanInfo;
   baseURL: string;
@@ -140,6 +144,17 @@ export class PlanContext {
     }
     const items =
       (this.plan.mainMenu?.items ?? []).filter(isCategoryItem) || [];
+    return items;
+  }
+
+  getStaticPageMenuItem(): StaticPageMenuItem[] {
+    function isStaticPageItem(item: MainMenuItem): item is StaticPageMenuItem {
+      if (item?.__typename !== 'PageMenuItem') return false;
+      if (item.page.__typename !== 'StaticPage') return false;
+      return true;
+    }
+    const items =
+      (this.plan.mainMenu?.items ?? []).filter(isStaticPageItem) || [];
     return items;
   }
 
