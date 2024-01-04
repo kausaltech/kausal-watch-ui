@@ -108,7 +108,17 @@ export async function middleware(request: NextRequest) {
   // Get hostname of request (e.g. demo.kausal.tech, demo.localhost:3000)
   const hostname = request.headers
     .get('host')!
-    .replace('.localhost:3000', `.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`);
+    .replace('.localhost:3000', `.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`)
+    .replace(
+      'kausal-watch-ui.vercel.app',
+      `.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`
+    );
+
+  console.log(`
+      > Middleware
+        > host: ${request.headers.get('host')}
+        > hostname: ${hostname}
+    `);
 
   // Rewrite root application to `sunnydale` tenant
   if (
