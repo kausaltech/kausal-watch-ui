@@ -1,14 +1,15 @@
 import React, { ReactElement, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { usePlan } from 'context/plan';
-import { useTheme } from 'common/theme';
-import { useTranslation } from 'common/i18n';
+import { useTheme } from 'styled-components';
+
 import { aplans } from 'common/api';
 import { Alert } from 'reactstrap';
 import { captureException } from 'common/sentry';
 import ContentLoader from 'components/common/ContentLoader';
 import IndicatorCard from 'components/indicators/IndicatorCard';
 import Connector from 'components/indicators/Connector';
+import { useLocale } from 'next-intl';
 
 const CausalChain = styled.div`
   background-color: ${(props) => props.theme.themeColors.light};
@@ -25,7 +26,7 @@ const Column = styled.div`
   flex-direction: column;
 `;
 
-const Indicator = styled.div`
+const StyledIndicator = styled.div`
   flex: 1 1 0;
   position: relative;
   width: 240px;
@@ -252,8 +253,7 @@ const InteractiveCausalChain = (props: InteractiveCausalChainProps) => {
           indicator.to.some((edge) => edge.from === cardHover));
 
       children.push(
-        <Indicator
-          level={indicatorLevel}
+        <StyledIndicator
           key={indicator.id}
           onMouseEnter={(e) => {
             setCardHover(indicator.id);
@@ -273,7 +273,7 @@ const InteractiveCausalChain = (props: InteractiveCausalChainProps) => {
             disabled={cardHover && !isConnected}
           />
           {connectionsTo}
-        </Indicator>
+        </StyledIndicator>
       );
     });
     chain.push(<Column key={column}>{children}</Column>);
@@ -294,19 +294,20 @@ function IndicatorCausalVisualisation({
 }: IndicatorCausalVisualisationProps) {
   const plan = usePlan();
   const isServer = typeof window === 'undefined';
-  const { i18n } = useTranslation();
+  const locale = useLocale();
 
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState(null);
   const [data, setData] = useState('');
 
+  const baseUrl = '';
   useEffect(() => {
     // React advises to declare the async function directly inside useEffect
     async function fetchData() {
       const params = {
         plan: plan.identifier,
         action: actionId,
-        language: i18n.language,
+        language: locale,
       };
       aplans
         .get('insight', { params })

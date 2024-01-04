@@ -1,10 +1,7 @@
-import {
-  getActionTaskTermContext,
-  getActionTermContext,
-  useTranslation,
-} from 'common/i18n';
+import { getActionTaskTermContext, getActionTermContext } from 'common/i18n';
 import { cleanActionStatus } from 'common/preprocess';
 import { usePlan } from 'context/plan';
+import { useTranslations } from 'next-intl';
 import {
   UncontrolledDropdown,
   DropdownToggle,
@@ -26,58 +23,58 @@ async function exportActions(
     t('actions', getActionTermContext(plan))
   );
   worksheet.columns = [
-    { header: t('actions:action-identifier'), key: 'id', width: 10 },
+    { header: t('action-identifier'), key: 'id', width: 10 },
     {
-      header: t('actions:action-name-title', getActionTermContext(plan)),
+      header: t('action-name-title', getActionTermContext(plan)),
       key: 'name',
       width: 50,
     },
     // TODO: i18n
-    { header: t('actions:status'), key: 'status', width: 20 },
+    { header: t('status'), key: 'status', width: 20 },
     {
-      header: t('actions:action-implementation-phase'),
+      header: t('action-implementation-phase'),
       key: 'implementationPhase',
       width: 20,
     },
-    { header: t('actions:action-last-updated'), key: 'lastUpdated', width: 15 },
+    { header: t('action-last-updated'), key: 'lastUpdated', width: 15 },
     // TODO: i18n
     {
-      header: t('actions:tasks-on-time', getActionTaskTermContext(plan)),
+      header: t('tasks-on-time', getActionTaskTermContext(plan)),
       key: 'ontimeTasks',
       width: 10,
     },
     // TODO: i18n
     {
-      header: t('actions:tasks-late', getActionTaskTermContext(plan)),
+      header: t('tasks-late', getActionTaskTermContext(plan)),
       key: 'lateTasks',
       width: 10,
     },
     // TODO: i18n
     {
-      header: t('actions:tasks-completed', getActionTaskTermContext(plan)),
+      header: t('tasks-completed', getActionTaskTermContext(plan)),
       key: 'completedTasks',
       width: 10,
     },
     {
-      header: t('actions:action-tasks', getActionTaskTermContext(plan)),
+      header: t('action-tasks', getActionTaskTermContext(plan)),
       key: 'tasks',
       width: 10,
     },
     // TODO: i18n
     {
-      header: t('actions:responsible-organizations-primary'),
+      header: t('responsible-organizations-primary'),
       key: 'primaryResponsibleOrgs',
       width: 20,
     },
     // TODO: i18n
     {
-      header: t('actions:responsible-organizations-collaborator'),
+      header: t('responsible-organizations-collaborator'),
       key: 'collaboratorResponsibleOrgs',
       width: 20,
     },
     // TODO: i18n
     {
-      header: t('actions:responsible-organizations-other'),
+      header: t('responsible-organizations-other'),
       key: 'otherResponsibleOrgs',
       width: 20,
     },
@@ -175,7 +172,7 @@ async function exportActions(
 }
 
 export default function ActionStatusExport({ actions }) {
-  const { t } = useTranslation(['common', 'actions']);
+  const t = useTranslations();
   const plan = usePlan();
   const { actionStatuses } = plan;
   const handleExport = async (format) => {
@@ -183,7 +180,7 @@ export default function ActionStatusExport({ actions }) {
   };
   return (
     <UncontrolledDropdown>
-      <DropdownToggle caret>{t('common:export')}</DropdownToggle>
+      <DropdownToggle caret>{t('export')}</DropdownToggle>
       <DropdownMenu>
         <DropdownItem onClick={() => handleExport('excel')}>Excel</DropdownItem>
         <DropdownItem onClick={() => handleExport('csv')}>CSV</DropdownItem>

@@ -5,8 +5,8 @@ import styled from 'styled-components';
 import { readableColor } from 'polished';
 import { ButtonGroup, Button as RButton, Collapse } from 'reactstrap';
 
-import { getActionTermContext, useTranslation } from 'common/i18n';
-import { useTheme } from 'common/theme';
+import { getActionTermContext } from 'common/i18n';
+import { useTheme } from 'styled-components';
 import TextInput from 'components/common/TextInput';
 import Button from 'components/common/Button';
 import { PlanContextType, usePlan } from 'context/plan';
@@ -24,7 +24,7 @@ import {
   ActionListPageFiltersFragment,
   CategoryTypeSelectWidget,
 } from 'common/__generated__/graphql';
-import { TFunction } from 'next-i18next';
+import { TFunction } from '@/common/i18n';
 import SelectDropdown, {
   SelectDropdownOption,
 } from 'components/common/SelectDropdown';
@@ -36,6 +36,7 @@ import {
 } from 'common/categories';
 import Icon from 'components/common/Icon';
 import { createFilter } from 'react-select';
+import { useTranslations } from 'next-intl';
 
 type MultipleFilterValue = string[];
 type SingleFilterValue = string | undefined;
@@ -350,7 +351,8 @@ function ActionListFilterBadges({
   actionCountLabel,
   onReset,
 }: ActionListFilterBadgesProps) {
-  const { t } = useTranslation();
+  const t = useTranslations();
+
   const enabled = allFilters.filter((item) => activeFilters[item.id]);
 
   const createBadge = (item: ActionListFilter, value: SingleFilterValue) => {
@@ -532,13 +534,13 @@ class GenericSelectFilter extends DefaultFilter<string | undefined> {
     this.showAllLabel = showAllLabel;
     this.filterAction = filterAction;
   }
-  getLabel(t: TFunction) {
+  getLabel() {
     return this.label;
   }
-  getHelpText(t: TFunction) {
+  getHelpText() {
     return this.helpText;
   }
-  getShowAllLabel(t: TFunction) {
+  getShowAllLabel() {
     return this.showAllLabel;
   }
 }
@@ -716,10 +718,10 @@ class CategoryFilter extends DefaultFilter<FilterValue> {
       </Col>
     );
   }
-  getLabel(t: TFunction) {
+  getLabel() {
     return this.ct.name;
   }
-  getHelpText(t: TFunction) {
+  getHelpText() {
     return this.ct.helpText;
   }
   getShowAllLabel(t: TFunction) {
@@ -760,10 +762,10 @@ class AttributeTypeFilter extends DefaultFilter<string | undefined> {
       return false;
     });
   }
-  getLabel(t: TFunction) {
+  getLabel() {
     return this.att.name;
   }
-  getHelpText(t: TFunction) {
+  getHelpText() {
     return this.att.helpText;
   }
   getShowAllLabel(t: TFunction) {
@@ -808,7 +810,7 @@ class ActionNameFilter implements ActionListFilter<string | undefined> {
   getShowAllLabel(t: TFunction) {
     return t('filter-text-default');
   }
-  getHelpText(t: TFunction) {
+  getHelpText() {
     return undefined;
   }
   render(
@@ -847,7 +849,7 @@ const FilterCol = React.memo(function FilterCol({
   onFilterChange,
   state,
 }: FilterColProps) {
-  const { t } = useTranslation();
+  const t = useTranslations();
 
   // eslint-disable-next-line react/prop-types
   return filter.render(state, onFilterChange, t);
@@ -873,7 +875,7 @@ function ActionListFilters(props: ActionListFiltersProps) {
   const [filterState, setFilterState] = useState(activeFilters);
   const [isOpen, setIsOpen] = useState(false);
 
-  const { t } = useTranslation();
+  const t = useTranslations();
   const plan = usePlan();
 
   const allFilters: ActionListFilter[] = useMemo(

@@ -1,5 +1,7 @@
 import dayjs from 'dayjs';
 
+// TODO: Switch tot imports
+
 require('dayjs/locale/fi');
 require('dayjs/locale/sv');
 require('dayjs/locale/en-gb');

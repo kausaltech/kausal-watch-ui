@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 
-import { getActionTermContext, useTranslation } from 'common/i18n';
-import { ActionSection, SectionHeader } from 'components/actions/ActionContent';
+import { ActionSection } from 'components/actions/ActionContent';
 import Timeline from 'components/graphs/Timeline';
 import ScheduleTimeline from 'components/graphs/ScheduleTimeline';
+import { useTranslations } from 'next-intl';
 
 const SideHeader = styled.h3`
   font-size: ${(props) => props.theme.fontSizeBase};
@@ -11,13 +11,13 @@ const SideHeader = styled.h3`
 
 const ActionScheduleBlock = (props) => {
   const { action, plan } = props;
-  const { t } = useTranslation();
+  const t = useTranslations();
 
   return (
     <>
       {action.schedule.length ? (
         <ActionSection>
-          <SideHeader>{t('actions:action-timeline')}</SideHeader>
+          <SideHeader>{t('action-timeline')}</SideHeader>
           <ScheduleTimeline
             schedules={action.schedule}
             allSchedules={plan.actionSchedules}
@@ -26,7 +26,7 @@ const ActionScheduleBlock = (props) => {
       ) : null}
       {action.startDate || action.endDate || action.scheduleContinuous ? (
         <ActionSection>
-          <SideHeader>{t('actions:action-timeline')}</SideHeader>
+          <SideHeader>{t('action-timeline')}</SideHeader>
           <Timeline
             startDate={action.startDate}
             endDate={action.endDate}

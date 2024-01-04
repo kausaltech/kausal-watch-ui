@@ -1,15 +1,15 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import styled, { ThemeContext } from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import { readableColor } from 'polished';
 import { motion, useAnimation, animate } from 'framer-motion';
-import { useTranslation } from 'common/i18n';
+
 import dayjs from 'common/dayjs';
 import { IndicatorLink } from 'common/links';
 import Switch from 'components/common/Switch';
 import { useWindowSize } from 'common/hooks/use-window-size';
-import { useTheme } from 'common/theme';
+import { useLocale, useTranslations } from 'next-intl';
 
 const BarBase = styled.rect``;
 
@@ -89,8 +89,7 @@ const findPrecision = (comparableValues) => {
   return 4;
 };
 
-const ValueGroup = (props) => {
-  const { date, value, unit, negative, ...rest } = props;
+const ValueGroup = ({ date = '', value, unit, negative, ...rest }) => {
   return (
     <text {...rest}>
       <ValueText x="0" dy="16" className={negative ? 'negative' : ''}>
@@ -99,10 +98,6 @@ const ValueGroup = (props) => {
       <UnitText className={negative ? 'negative' : ''}> {unit}</UnitText>
     </text>
   );
-};
-
-ValueGroup.defaultProps = {
-  date: '',
 };
 
 ValueGroup.propTypes = {
@@ -231,8 +226,9 @@ function IndicatorProgressBar(props) {
     : indicator.unit.shortName;
   const note = indicator.name;
 
-  const theme = useContext(ThemeContext);
-  const { t, i18n } = useTranslation();
+  const theme = useTheme();
+  const t = useTranslations();
+  const locale = useLocale();
   const latestBarControls = useAnimation();
   const reducedSegmentControls = useAnimation();
   const completedBarControls = useAnimation();
@@ -435,9 +431,9 @@ function IndicatorProgressBar(props) {
                 <ValueGroup
                   transform={`translate(${startBar.x + 4} 0)`}
                   date={graphValues.startYear}
-                  value={formatValue(roundedValues.start, i18n.language)}
+                  value={formatValue(roundedValues.start, locale)}
                   unit={unit}
-                  locale={i18n.language}
+                  locale={locale}
                   negative={
                     readableColor(
                       startColor,
@@ -459,7 +455,7 @@ function IndicatorProgressBar(props) {
                         from={reductionCounterFrom}
                         to={reductionCounterTo}
                         duration={reductionCounterDuration}
-                        locale={i18n.language}
+                        locale={locale}
                         precision={minPrecision}
                       />{' '}
                       {unit}
@@ -497,9 +493,9 @@ function IndicatorProgressBar(props) {
               <ValueGroup
                 transform={`translate(${latestBar.x + 4} ${latestBar.y})`}
                 date={graphValues.latestYear}
-                value={formatValue(roundedValues.latest, i18n.language)}
+                value={formatValue(roundedValues.latest, locale)}
                 unit={unit}
-                locale={i18n.language}
+                locale={locale}
                 negative={
                   readableColor(
                     latestColor,
@@ -518,10 +514,7 @@ function IndicatorProgressBar(props) {
             >
               <SegmentHeader>{t('to-reduce')}</SegmentHeader>
               <SegmentValue x="0" dy="16">
-                {formatValue(
-                  roundedValues.latest - roundedValues.goal,
-                  i18n.language
-                )}{' '}
+                {formatValue(roundedValues.latest - roundedValues.goal, locale)}{' '}
                 {unit}
               </SegmentValue>
             </motion.text>
@@ -553,14 +546,14 @@ function IndicatorProgressBar(props) {
               strokeWidth="2"
             />
             <ValueGroup
-              text-anchor={goalBar.w > 120 ? 'start' : 'end'}
+              textAnchor={goalBar.w > 120 ? 'start' : 'end'}
               transform={`translate(${
                 goalBar.w > 120 ? goalBar.x + 4 : goalBar.x - 8
               } ${goalBar.y})`}
               date={graphValues.goalYear}
-              value={formatValue(roundedValues.goal, i18n.language)}
+              value={formatValue(roundedValues.goal, locale)}
               unit={unit}
-              locale={i18n.language}
+              locale={locale}
               negative={
                 readableColor(
                   startColor,

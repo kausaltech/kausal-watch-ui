@@ -14,12 +14,11 @@ import styled, { withTheme } from 'styled-components';
 import { readableColor } from 'polished';
 import cytoscape from 'cytoscape';
 import dagre from 'cytoscape-dagre';
-import { withRouter } from 'next/router';
 
-import { withTranslation } from '../../common/i18n';
 import { getIndicatorLinkProps, getActionLinkProps } from '../../common/links';
-import { Meta } from '../layout';
 import InsightFilter from './InsightFilter';
+import { useTranslations } from 'next-intl';
+import { useRouter } from 'next/navigation';
 
 cytoscape.use(dagre);
 
@@ -390,10 +389,6 @@ class CytoGraph extends React.Component {
 
     return (
       <div>
-        <Meta
-          title={`${t('indicators')}`}
-          description="Toimenpiteiden edistymistä ja kasvihuonekaasupäästöjen kehitystä seurataan mittareilla"
-        />
         <Container>
           <Row>
             <Col sm="8" lg="6">
@@ -427,4 +422,12 @@ class CytoGraph extends React.Component {
   }
 }
 
-export default withRouter(withTranslation('common')(withTheme(CytoGraph)));
+// Extend this legacy class component with translations and router hooks
+function ExtendedCytoGraph(props) {
+  const t = useTranslations();
+  const router = useRouter();
+
+  return <CytoGraph {...props} t={t} router={router} />;
+}
+
+export default withTheme(ExtendedCytoGraph);

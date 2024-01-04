@@ -26,7 +26,7 @@ const OrgTitle = styled.div`
 `;
 
 const OrgChip = React.forwardRef((props, ref) => {
-  const { image, name, size } = props;
+  const { image, name, size = 'md' } = props;
 
   const IMAGE_SIZES = {
     sm: 's100',
@@ -48,10 +48,6 @@ const OrgChip = React.forwardRef((props, ref) => {
 });
 
 OrgChip.displayName = 'OrgChip';
-
-OrgChip.defaultProps = {
-  size: 'md',
-};
 
 OrgChip.propTypes = {
   image: PropTypes.string,

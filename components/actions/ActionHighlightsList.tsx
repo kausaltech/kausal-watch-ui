@@ -10,13 +10,14 @@ import {
 } from 'common/__generated__/graphql';
 import EmbedContext from 'context/embed';
 import Button from 'components/common/Button';
-import { getActionTermContext, useTranslation } from 'common/i18n';
+import { getActionTermContext } from 'common/i18n';
 import ContentLoader from 'components/common/ContentLoader';
 import { ActionListLink } from 'common/links';
 import images, { getActionImage } from 'common/images';
 
 import ActionHighlightCard from './ActionHighlightCard';
 import Icon from '../common/Icon';
+import { useTranslations } from 'next-intl';
 
 export const GET_ACTION_LIST = gql`
   query ActionHightlightList($plan: ID!, $first: Int!, $orderBy: String!) {
@@ -102,14 +103,14 @@ export type ActionHighlightListAction = NonNullable<
 >;
 
 type ActionCardListProps = {
-  t: (arg0: string, arg1: Record<string, unknown>) => string;
   actions: ActionHighlightListAction;
   plan: PlanContextFragment;
   displayHeader?: boolean;
 };
 
 function ActionCardList(props: ActionCardListProps) {
-  const { t, actions, plan, displayHeader } = props;
+  const t = useTranslations();
+  const { actions, plan, displayHeader } = props;
   // Components which use the EmbedContext support embedding
   const embed = useContext(EmbedContext);
 
@@ -160,7 +161,7 @@ type ActionHighlightsListProps = {
 
 function ActionHighlightsList(props: ActionHighlightsListProps) {
   const { plan, count, displayHeader } = props;
-  const { t } = useTranslation();
+  const t = useTranslations();
 
   const queryParams = {
     plan: plan.identifier,
@@ -179,7 +180,6 @@ function ActionHighlightsList(props: ActionHighlightsListProps) {
           );
         return (
           <ActionCardList
-            t={t}
             actions={data.planActions}
             plan={plan}
             displayHeader={displayHeader ?? true}

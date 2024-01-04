@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Spinner } from 'reactstrap';
 
-import { withTranslation } from '../../common/i18n';
-
 const Loader = styled.div`
   padding: ${(props) => props.theme.spaces.s800}
     ${(props) => props.theme.spaces.s300};
@@ -17,6 +15,7 @@ const StyledSpinner = styled(Spinner)`
   background-color: ${(props) => props.theme.brandDark};
 `;
 
+// FIXME: Migrate to function component and add translation
 class ContentLoader extends React.Component {
   constructor(props) {
     super(props);
@@ -42,7 +41,9 @@ class ContentLoader extends React.Component {
 
   render() {
     const { displayMessage } = this.state;
-    const { t } = this.props;
+
+    // const { t } = this.props;
+    const t = (x) => x;
 
     if (!displayMessage) {
       return null;
@@ -59,8 +60,4 @@ class ContentLoader extends React.Component {
   }
 }
 
-ContentLoader.propTypes = {
-  t: PropTypes.func.isRequired,
-};
-
-export default withTranslation('common')(ContentLoader);
+export default ContentLoader;

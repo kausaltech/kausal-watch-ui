@@ -1,14 +1,14 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
 import { gql, useQuery } from '@apollo/client';
 
-import { useTranslation } from 'common/i18n';
 import ActionCard from 'components/actions/ActionCard';
 import ContentLoader from 'components/common/ContentLoader';
 import ErrorMessage from 'components/common/ErrorMessage';
-import PlanContext from 'context/plan';
+import { usePlan } from 'context/plan';
+import { useTranslations } from 'next-intl';
 
 const GET_ACTION_LIST = gql`
   query GetActionList($plan: ID!, $clientUrl: String!) {
@@ -118,8 +118,8 @@ const filterByCategory = (actions, catId, categories, categoryIsRoot) => {
 
 const CategoryActionList = (props) => {
   const { activeCategory, categories } = props;
-  const { t } = useTranslation();
-  const plan = useContext(PlanContext);
+  const t = useTranslations();
+  const plan = usePlan();
   const { loading, error, data } = useQuery(GET_ACTION_LIST, {
     variables: {
       plan: plan.identifier,

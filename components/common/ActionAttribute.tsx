@@ -1,25 +1,25 @@
 import React, { ReactElement } from 'react';
 import styled from 'styled-components';
-import { TFunction } from 'next-i18next';
-import { gql } from '@apollo/client';
-import numbro from 'numbro';
 
 import RichText from 'components/common/RichText';
 import Icon from 'components/common/Icon';
-import {
-  CategoryContent,
-  categoryFragment,
-} from 'components/actions/CategoryTags';
+import { CategoryContent } from 'components/actions/CategoryTags';
 import PopoverTip from 'components/common/PopoverTip';
 import {
   AttributesBlockAttributeFragment,
   AttributesBlockAttributeTypeFragment,
   AttributesBlockAttributeWithNestedTypeFragment,
 } from 'common/__generated__/graphql';
+import { useLocale } from 'next-intl';
+import {
+  ATTRIBUTE_FRAGMENT,
+  ATTRIBUTE_TYPE_FRAGMENT,
+  ATTRIBUTE_WITH_NESTED_TYPE_FRAGMENT,
+} from '@/lib/fragments/action-attribute.fragment';
 
-const ScaleIcon = styled(Icon)`
-  font-size: ${(props) => {
-    switch (props.size) {
+const ScaleIcon = styled(Icon)<{ $size?: 'sm' | 'md' }>`
+  font-size: ${({ $size }) => {
+    switch ($size) {
       case 'sm':
         return '.8em';
       case 'md':
@@ -43,7 +43,7 @@ const ScaleIcon = styled(Icon)`
   }
 `;
 
-const AttributeContainer = styled.div`
+const AttributeContainer = styled.div<{ $fontSize?: string }>`
   margin-bottom: ${(props) => props.theme.spaces.s200};
 
   h3 {
@@ -52,7 +52,7 @@ const AttributeContainer = styled.div`
 
   .text-content {
     text-align: left;
-    font-size: ${(props) => props.theme[props.fontSize ?? 'fontSizeSm']};
+    font-size: ${({ $fontSize, theme }) => theme[$fontSize ?? 'fontSizeSm']};
     line-height: ${(props) => props.theme.lineHeightMd};
     color: ${(props) => props.theme.graphColors.grey080};
   }
@@ -88,20 +88,22 @@ const NumericValueUnit = styled.span`
 type AttributeContentProps = {
   attribute: AttributesBlockAttributeFragment;
   attributeType: AttributesBlockAttributeTypeFragment;
-  t: TFunction;
   fontSize: string;
 };
 
 type AttributeContentNestedTypeProps = {
   attribute: AttributesBlockAttributeWithNestedTypeFragment;
   attributeType: null | undefined;
+  fontSize?: string;
 };
 
 const ActionAttribute = (
   props: AttributeContentProps | AttributeContentNestedTypeProps
 ) => {
+  const locale = useLocale();
+
   const { attribute, attributeType, fontSize } = props;
-  let type = attributeType ?? attribute.type;
+  const type = attributeType ?? attribute.type;
   let dataElement: ReactElement;
 
   switch (attribute.__typename) {
@@ -119,7 +121,7 @@ const ActionAttribute = (
                   <ScaleIcon
                     name="circleFull"
                     className={idx <= valueIndex ? 'icon-on' : 'icon-off'}
-                    size="md"
+                    $size="md"
                     key={choice.identifier}
                   />
                 )
@@ -148,9 +150,8 @@ const ActionAttribute = (
       dataElement = <RichText html={attribute.value} />;
       break;
     case 'AttributeNumericValue':
-      const formattedValue = numbro(attribute.numericValue).format({
-        thousandSeparated: true,
-      });
+      const formattedValue = attribute.numericValue.toLocaleString(locale);
+
       dataElement = (
         <div>
           <NumericValue>{formattedValue}</NumericValue>
@@ -172,7 +173,7 @@ const ActionAttribute = (
   }
   // Render horizontal layout
   return (
-    <AttributeContainer fontSize={fontSize}>
+    <AttributeContainer $fontSize={fontSize}>
       <h3>
         {type.name}
         {type.helpText && (
@@ -184,82 +185,10 @@ const ActionAttribute = (
   );
 };
 
-const attributeFragment = gql`
-  ${categoryFragment}
-  fragment AttributesBlockAttribute on AttributeInterface {
-    __typename
-    id
-    type {
-      id
-      identifier
-      name
-      unit {
-        id
-        name
-        shortName
-      }
-      format
-    }
-    ... on AttributeChoice {
-      choice {
-        id
-        name
-      }
-      text
-    }
-    ... on AttributeText {
-      value
-    }
-    ... on AttributeRichText {
-      value
-    }
-    ... on AttributeNumericValue {
-      numericValue: value
-    }
-    ... on AttributeCategoryChoice {
-      categories {
-        ...CategoryTagsCategory
-      }
-    }
-  }
-`;
-
-const attributeTypeFragment = gql`
-  fragment AttributesBlockAttributeType on AttributeType {
-    __typename
-    id
-    format
-    name
-    identifier
-    helpText
-    choiceOptions {
-      id
-      identifier
-    }
-    unit {
-      id
-      name
-    }
-    showChoiceNames
-    hasZeroOption
-  }
-`;
-
-const attributeWithNestedTypeFragment = gql`
-  fragment AttributesBlockAttributeWithNestedType on AttributeInterface {
-    ...AttributesBlockAttribute
-    type {
-      ...AttributesBlockAttributeType
-    }
-  }
-  ${attributeFragment}
-  ${attributeTypeFragment}
-`;
-
 ActionAttribute.fragments = {
-  attribute: attributeFragment,
-  attributeType: attributeTypeFragment,
-  attributeWithNestedType: attributeWithNestedTypeFragment,
+  attribute: ATTRIBUTE_FRAGMENT,
+  attributeType: ATTRIBUTE_TYPE_FRAGMENT,
+  attributeWithNestedType: ATTRIBUTE_WITH_NESTED_TYPE_FRAGMENT,
 };
 
 export default ActionAttribute;

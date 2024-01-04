@@ -17,7 +17,7 @@ console.log('> 💡 Starting server');
 const { ApolloClient, HttpLink, InMemoryCache, gql } = apollo;
 
 import * as Sentry from '@sentry/nextjs';
-import './sentry.server.config.js';
+import './_OLD_sentry.server.config.js/index.js';
 
 if (process.env.SENTRY_DSN) {
   console.log(`> ⚙️ Sentry initialized at ${process.env.SENTRY_DSN}`);
@@ -331,6 +331,8 @@ class WatchServer {
 
     this.apolloClient = this.initApollo();
     this.nextServer = await this.app.getServer();
+
+    console.log('NEXT SERVER', this.nextServer);
 
     router.get('/favicon.ico', async (ctx) => {
       ctx.throw(404, 'File not found');

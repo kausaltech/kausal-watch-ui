@@ -64,11 +64,11 @@ const ImgArea = styled.div<{ colorEffect?: string }>`
   }
 `;
 
-const ImgBg = styled.div<{ background: string; imageAlign: string }>`
+const ImgBg = styled.div<{ $background: string; $imageAlign: string }>`
   height: 9rem;
   flex: 1 1 100%;
-  background-image: url(${(props) => props.background});
-  background-position: ${(props) => props.imageAlign};
+  background-image: url(${(props) => props.$background});
+  background-position: ${(props) => props.$imageAlign};
   background-size: cover;
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
@@ -134,8 +134,8 @@ const Card = (props: CardProps) => {
       return (
         <ImgArea colorEffect={colorEffect}>
           <ImgBg
-            background={imageUrl}
-            imageAlign={imageAlign}
+            $background={imageUrl}
+            $imageAlign={imageAlign}
             data-testid="image-bg"
           />
         </ImgArea>

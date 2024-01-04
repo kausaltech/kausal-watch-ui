@@ -1,5 +1,5 @@
+import { useLocale } from 'next-intl';
 import { Link } from 'common/links';
-import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import {
   UncontrolledDropdown,
@@ -8,9 +8,11 @@ import {
   DropdownItem,
 } from 'reactstrap';
 import Icon from './Icon';
-import { useTheme } from 'common/theme';
+import { useTheme } from 'styled-components';
+import { PlanContextFragment } from '@/common/__generated__/graphql';
+import { usePlan } from '@/context/plan';
 
-const Selector = styled(UncontrolledDropdown)`
+const Selector = styled(UncontrolledDropdown)<{ $mobile: boolean }>`
   a {
     height: 100%;
     display: flex;
@@ -36,7 +38,7 @@ const Selector = styled(UncontrolledDropdown)`
 
   svg {
     fill: ${(props) =>
-      props.mobile === 'true'
+      props.$mobile
         ? props.theme.themeColors.dark
         : props.theme.brandNavColor} !important;
   }
@@ -64,16 +66,14 @@ const StyledDropdownToggle = styled(DropdownToggle)`
   }
 `;
 
-const CurrentLanguage = styled.span`
+const CurrentLanguage = styled.span<{ $mobile: boolean }>`
   display: inline-block;
   width: 1.5rem;
   margin: 0;
   text-transform: uppercase;
   font-size: 90%;
   color: ${(props) =>
-    props.mobile === 'true'
-      ? props.theme.themeColors.dark
-      : props.theme.brandNavColor};
+    props.$mobile ? props.theme.themeColors.dark : props.theme.brandNavColor};
 `;
 
 const StyledDropdownMenu = styled(DropdownMenu)`
@@ -91,43 +91,36 @@ const languageNames = {
   da: 'Dansk',
 };
 
+function getLocales(plan: PlanContextFragment) {
+  return [plan.primaryLanguage, ...(plan.otherLanguages ?? [])];
+}
+
 const LanguageSelector = (props) => {
-  const router = useRouter();
+  const currentLocale = useLocale();
   const theme = useTheme();
+  const plan = usePlan();
   const { mobile } = props;
 
-  const locales =
-    router.locales?.filter(
-      (locale) => !theme.settings.hiddenLocales?.includes(locale)
-    ) ?? [];
+  const locales = getLocales(plan).filter(
+    (locale) => !theme.settings.hiddenLocales?.includes(locale)
+  );
 
   if (locales?.length < 2) return null;
-  const handleLocaleChange = (ev) => {
-    ev.preventDefault();
-    window.location.href = ev.target.href;
-  };
   // Strip language variant (if any)
-  const languageCode = router.locale?.split('-')[0];
+  const languageCode = currentLocale?.split('-')[0];
 
   return (
-    <Selector
-      inNavbar
-      mobile={mobile.toString()}
-      className={mobile && 'd-md-none'}
-    >
+    <Selector inNavbar $mobile={mobile} className={mobile && 'd-md-none'}>
       <StyledDropdownToggle color="link">
         <Icon name="globe" width="1.25rem" height="1.25rem" />
-        <CurrentLanguage mobile={mobile.toString()}>
-          {languageCode}
-        </CurrentLanguage>
+        <CurrentLanguage $mobile={mobile}>{languageCode}</CurrentLanguage>
       </StyledDropdownToggle>
       <StyledDropdownMenu end>
         {locales.map((locale) => (
           <DropdownItem key={locale} tag="div">
-            <Link locale={locale} href="/">
-              <a onClick={handleLocaleChange}>
-                {languageNames[locale.split('-')[0]]}
-              </a>
+            {/* TODO: Ensure multiplan links are respected */}
+            <Link locale={locale} href={`/${locale}`}>
+              {languageNames[locale.split('-')[0]]}
             </Link>
           </DropdownItem>
         ))}

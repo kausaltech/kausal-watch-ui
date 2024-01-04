@@ -1,8 +1,6 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 import { Row, Col } from 'reactstrap';
-import { useTranslation } from 'common/i18n';
-import { TFunction } from 'next-i18next';
 
 import {
   AttributesBlockAttributeFragment,
@@ -12,12 +10,12 @@ import {
 import ActionAttribute from './ActionAttribute';
 
 type AttributeProps = {
-  vertical: boolean;
+  $vertical: boolean;
 };
 
 export const Attributes = styled.div<AttributeProps>`
   ${(props) =>
-    props.vertical &&
+    props.$vertical &&
     css`
       max-width: ${(props) => props.theme.breakpointSm};
     `}
@@ -59,7 +57,6 @@ export function attributeHasValue(
 type AttributeContentProps = {
   attribute: AttributesBlockAttributeFragment;
   attributeType: AttributesBlockAttributeTypeFragment;
-  t: TFunction;
 };
 
 type AttributeContentNestedTypeProps = {
@@ -88,7 +85,6 @@ function AttributesBlock(props: AttributesBlockProps) {
     types,
     vertical,
   } = props;
-  const { t } = useTranslation();
 
   let typesById: Map<string, AttributeContentProps['attributeType']> | null;
 
@@ -99,12 +95,11 @@ function AttributesBlock(props: AttributesBlockProps) {
   const attributesWithValue = attributes.filter(attributeHasValue);
 
   return (
-    <Attributes vertical={vertical ?? false}>
-      <AttributesList vertical={vertical} tag="ul">
+    <Attributes $vertical={vertical ?? false}>
+      <AttributesList tag="ul">
         {attributesWithValue.map((item: typeof attributes[0]) => {
           return (
             <AttributeItem tag="li" key={item.id} md={vertical ? 12 : 6}>
-              {/* @ts-ignore */}
               <ActionAttribute
                 key={item.id}
                 attribute={item}

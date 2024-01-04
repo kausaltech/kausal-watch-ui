@@ -6,9 +6,10 @@ import { readableColor } from 'polished';
 import { IndicatorLink } from '../../common/links';
 import Icon from '../common/Icon';
 import dayjs from '../../common/dayjs';
-import { getActionTermContext, withTranslation } from '../../common/i18n';
+import { getActionTermContext } from '../../common/i18n';
 import { beautifyValue } from '../../common/data/format';
 import { usePlan } from 'context/plan';
+import { useLocale, useTranslations } from 'next-intl';
 
 export const isEmptyFilter = (val) => val == null || val === '';
 
@@ -112,33 +113,39 @@ const IndentableTable = styled(Table)`
   }
 `;
 
-const IndentableCellContentWrapper = styled.div`
+const IndentableCellContentWrapper = styled.div<{
+  $visibleIndentation?: boolean;
+  $sectionHeader?: boolean;
+  $numeric: boolean;
+  $firstCol: number;
+  $indent: number;
+}>`
   padding: ${(props) =>
-    props.sectionHeader === true
+    props.$sectionHeader
       ? `.5rem`
-      : `0.5rem 0.5rem .5rem ${+(props.firstCol ?? 0) + 0.5}rem`};
-  text-align: ${(props) => (props.numeric === true ? 'right' : 'left')};
+      : `0.5rem 0.5rem .5rem ${+(props.$firstCol ?? 0) + 0.5}rem`};
+  text-align: ${(props) => (props.$numeric ? 'right' : 'left')};
   font-weight: ${(props) =>
-    props.sectionHeader === true
+    props.$sectionHeader
       ? props.theme.fontWeightBold
       : props.theme.fontWeightNormal};
   line-height: ${(props) => props.theme.lineHeightMd};
-  border-left: ${(props) => 24 * props.indent}px solid
+  border-left: ${(props) => 24 * props.$indent}px solid
     ${(props) =>
-      props.sectionHeader || props.visibleIndentation
+      props.$sectionHeader || props.$visibleIndentation
         ? props.theme.themeColors.light
         : props.theme.themeColors.white};
   background-color: ${(props) =>
-    props.sectionHeader === true ? props.theme.themeColors.light : 'inherit'};
+    props.$sectionHeader === true ? props.theme.themeColors.light : 'inherit'};
 `;
 
 const IndentableTableCell = (props) => (
   <td onClick={props.onClick}>
     <IndentableCellContentWrapper
-      indent={props.indent}
-      numeric={props.numeric}
-      firstCol={props.firstCol}
-      visibleIndentation={props.visibleIndentation ?? false}
+      $indent={props.indent}
+      $numeric={props.numeric}
+      $firstCol={props.firstCol}
+      $visibleIndentation={props.visibleIndentation ?? false}
     >
       {props.children}
     </IndentableCellContentWrapper>
@@ -192,10 +199,10 @@ const IndentableTableHeader = (props) => {
   return (
     <th scope="col" onClick={onClick} colSpan={colSpan}>
       <IndentableCellContentWrapper
-        indent={indent}
-        sectionHeader={sectionHeader}
-        numeric={numeric}
-        firstCol={firstCol}
+        $indent={indent}
+        $sectionHeader={sectionHeader}
+        $numeric={numeric}
+        $firstCol={firstCol}
       >
         {children}
       </IndentableCellContentWrapper>
@@ -393,16 +400,17 @@ const descendantIds = (indicator, hierarchy) => {
 };
 
 const IndicatorListFiltered = (props) => {
+  const t = useTranslations();
   const {
-    t,
     indicators,
     categoryColumnLabel,
-    i18n,
     displayMunicipality,
     hierarchy,
     displayNormalizedValues,
     shouldDisplayCategory,
   } = props;
+
+  const locale = useLocale();
 
   // used for multi-city group expanding/collapsing
   // TODO: merge with single city version
@@ -715,10 +723,7 @@ const IndicatorListFiltered = (props) => {
                           <a>
                             <Value>
                               {item.latestValue
-                                ? beautifyValue(
-                                    item.latestValue.value,
-                                    i18n.language
-                                  )
+                                ? beautifyValue(item.latestValue.value, locale)
                                 : '-'}
                             </Value>
                             {item.latestValue && (
@@ -732,7 +737,7 @@ const IndicatorListFiltered = (props) => {
                           <IndicatorLink id={item.id}>
                             <a>
                               <Value>
-                                {beautifyValue(normalizedValue, i18n.language)}
+                                {beautifyValue(normalizedValue, locale)}
                               </Value>
                               <Unit>{normalizedUnit ?? ''}</Unit>
                             </a>
@@ -753,9 +758,8 @@ const IndicatorListFiltered = (props) => {
 
 IndicatorListFiltered.propTypes = {
   categoryColumnLabel: PropTypes.string,
-  t: PropTypes.func.isRequired,
   indicators: PropTypes.arrayOf(PropTypes.object).isRequired,
   shouldDisplayCategory: PropTypes.func,
 };
 
-export default withTranslation('common')(IndicatorListFiltered);
+export default IndicatorListFiltered;

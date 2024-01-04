@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 import { Row, Col } from 'reactstrap';
-import { useTranslation } from 'common/i18n';
 import { ActionSection, SectionHeader } from 'components/actions/ActionContent';
 import ActionCard from 'components/actions/ActionCard';
+import { useTranslations } from 'next-intl';
 
 const RelatedActionList = styled(Row)`
   padding-left: 0;
@@ -14,7 +14,7 @@ const RelatedActionItem = styled(Col)`
 
 const ActionRelatedActionsBlock = (props) => {
   const { relatedActions, plan } = props;
-  const { t } = useTranslation();
+  const t = useTranslations();
 
   // Display the plan name only if there are related actions from other plans
   const hasRelatedActionsFromOtherPlans = relatedActions.some(
@@ -25,7 +25,7 @@ const ActionRelatedActionsBlock = (props) => {
     <div>
       <Row>
         <Col>
-          <SectionHeader>{t('actions:related-actions')}</SectionHeader>
+          <SectionHeader>{t('related-actions')}</SectionHeader>
           <RelatedActionList tag="ul">
             {relatedActions.map((relAction) => (
               <RelatedActionItem

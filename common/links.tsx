@@ -1,23 +1,22 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { ReactElement, PropsWithChildren } from 'react';
-import { setBasePath as setNextRouterBasePath } from 'next/dist/shared/lib/router/router';
-import { useRouter } from 'next/router';
+// import { setBasePath as setNextRouterBasePath } from 'next/dist/shared/lib/router/router';
 import Link, { LinkProps } from 'next/link';
 import PropTypes from 'prop-types';
-import getConfig from 'next/config';
 import { getCategoryString } from './categories';
 
 export function setBasePath() {
-  const { publicRuntimeConfig } = getConfig();
-  setNextRouterBasePath(publicRuntimeConfig.basePath);
+  // TODO: REPLACE THIS
+  // const { publicRuntimeConfig } = getConfig();
+  // setNextRouterBasePath(publicRuntimeConfig.basePath);
 }
 
 // Return root slug of the current path
-export function getActiveBranch() {
-  const router = useRouter();
-  const splitCurrent = router.pathname.split('/');
-  const currentPath = splitCurrent[1]; // [0] is ''
+export function getActiveBranch(pathname: string) {
+  const splitCurrent = pathname.split('/');
+  const currentPath = splitCurrent[2] ?? ''; // [0] is '', [1] is the locale
   // Resolve slug for a dynamic content page
+  // FIXME: Workaround for this?
   if (currentPath === '[...slug]') {
     return router.query.slug[0];
   }
@@ -39,24 +38,6 @@ export function getActionLinkProps(id: string, planUrl?: string) {
   return {
     href: `/actions/${id}`,
     as: undefined,
-  };
-}
-
-export function getActionListLinkProps(query) {
-  return {
-    href: {
-      pathname: '/actions',
-      query,
-    },
-  };
-}
-
-export function getSearchResultsLinkProps(query) {
-  return {
-    href: {
-      pathname: '/search',
-      query,
-    },
   };
 }
 
@@ -110,10 +91,6 @@ export function ActionLink(props) {
     />
   );
 }
-
-ActionLink.defaultProps = {
-  planUrl: undefined,
-};
 
 ActionLink.propTypes = {
   action: actionPropType.isRequired,

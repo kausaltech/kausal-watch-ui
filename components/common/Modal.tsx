@@ -1,8 +1,7 @@
 import React, { useRef, useEffect, ReactNode } from 'react';
 import styled from 'styled-components';
 import Icon from 'components/common/Icon';
-import { useTheme } from 'common/theme';
-import { useTranslation } from 'common/i18n';
+import { useTranslations } from 'next-intl';
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -58,9 +57,8 @@ interface ModalProps {
 }
 
 const Modal = ({ isOpen, onClose, header, helpText, children }: ModalProps) => {
-  const theme = useTheme();
   const modalRef = useRef<HTMLDivElement>(null);
-  const { t } = useTranslation();
+  const t = useTranslations();
 
   const closeModalOnOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (modalRef.current && !modalRef.current.contains(e.target as Node)) {

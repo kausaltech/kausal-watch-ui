@@ -1,18 +1,16 @@
-import React, { Children, useCallback } from 'react';
+'use client';
+
+import React, { useCallback } from 'react';
 import { Container, Row, Col } from 'reactstrap';
 import styled, { css } from 'styled-components';
-import { gql } from '@apollo/client';
 import { useHotkeys } from 'react-hotkeys-hook';
-import { useRouter } from 'next/router';
 
 import { getActionLinkProps } from 'common/links';
 import dayjs from 'common/dayjs';
-import { getActionTermContext, useTranslation } from 'common/i18n';
+import { getActionTermContext } from 'common/i18n';
 import { PlanContextType, usePlan } from 'context/plan';
-import { cleanActionStatus } from 'common/preprocess';
 
-import { Meta } from 'components/layout';
-import images, { getBgImageAlignment, getActionImage } from 'common/images';
+import { getBgImageAlignment, getActionImage } from 'common/images';
 import PopoverTip from 'components/common/PopoverTip';
 import IndicatorCausalVisualisation from 'components/indicators/IndicatorCausalVisualisation';
 import AttributesBlock from 'components/common/AttributesBlock';
@@ -22,7 +20,6 @@ import ActionStatus from './ActionStatus';
 import ActionImpact from './ActionImpact';
 import ActionHero from './ActionHero';
 import ActionPager from './ActionPager';
-import ActionCard from './ActionCard';
 import ActionUpdatesList from './ActionUpdatesList';
 import ActionVersionHistory from 'components/versioning/ActionVersionHistory';
 import EmissionScopeIcon from './EmissionScopeIcon';
@@ -46,316 +43,12 @@ import {
   type ActionMainContentBlocksFragmentFragment,
   type GetActionDetailsQuery,
 } from 'common/__generated__/graphql';
-import { useTheme } from 'common/theme';
+import { useTheme } from 'styled-components';
 import ActionAttribute from 'components/common/ActionAttribute';
 import { PhaseTimeline } from './PhaseTimeline';
 import StatusBadge from 'components/common/StatusBadge';
-
-const GET_ACTION_DETAILS = gql`
-  query GetActionDetails($plan: ID!, $id: ID!, $clientUrl: String!) {
-    action(plan: $plan, identifier: $id) {
-      id
-      identifier
-      name
-      officialName
-      leadParagraph
-      description
-      completion
-      image {
-        ...MultiUseImageFragment
-      }
-      color
-      statusSummary {
-        identifier
-        label
-        color
-        sentiment
-        isCompleted
-        isActive
-      }
-      links {
-        id
-        order
-        url
-        title
-      }
-      updatedAt
-      mergedActions {
-        id
-        identifier
-        name
-        officialName
-        plan {
-          id
-          viewUrl(clientUrl: $clientUrl)
-        }
-      }
-      categories {
-        ...CategoryTagsCategory
-      }
-      emissionScopes: categories(categoryType: "emission_scope") {
-        id
-        identifier
-        name
-        leadParagraph
-      }
-      contactPersons {
-        id
-        person {
-          id
-          firstName
-          lastName
-          avatarUrl(size: "150x150")
-          title
-          organization {
-            name
-          }
-        }
-      }
-      primaryOrg {
-        id
-        abbreviation
-        name
-        logo {
-          rendition(size: "128x128", crop: true) {
-            src
-          }
-        }
-      }
-      responsibleParties {
-        id
-        organization {
-          id
-          abbreviation
-          name
-          email
-        }
-        role
-        specifier
-      }
-      tasks {
-        id
-        name
-        dueAt
-        completedAt
-        comment
-        state
-      }
-      status {
-        id
-        identifier
-        name
-        color
-      }
-      manualStatusReason
-      implementationPhase {
-        id
-        identifier
-        name
-      }
-      schedule {
-        id
-        name
-        beginsAt
-        endsAt
-      }
-      scheduleContinuous
-      startDate
-      endDate
-      impact {
-        id
-        identifier
-        name
-      }
-      statusUpdates {
-        id
-      }
-      relatedIndicators {
-        id
-        indicator {
-          id
-          name
-          latestGraph {
-            id
-          }
-          latestValue {
-            id
-            date
-            value
-          }
-          actions {
-            id
-            identifier
-            name
-          }
-          plans {
-            id
-          }
-        }
-      }
-      relatedActions {
-        ...ActionCard
-      }
-      mergedWith {
-        id
-        identifier
-        plan {
-          id
-          shortName
-          versionName
-          viewUrl(clientUrl: $clientUrl)
-        }
-      }
-      supersededBy {
-        ...ActionCard
-      }
-      supersededActions {
-        ...ActionCard
-      }
-      nextAction {
-        id
-        identifier
-      }
-      previousAction {
-        id
-        identifier
-      }
-      attributes {
-        ...AttributesBlockAttribute
-      }
-      plan {
-        id
-        shortName
-        versionName
-        viewUrl(clientUrl: $clientUrl)
-        hideActionIdentifiers
-        image {
-          rendition(size: "128x128", crop: true) {
-            src
-          }
-        }
-      }
-    }
-    plan(id: $plan) {
-      actionListPage {
-        detailsMainTop {
-          ...ActionMainContentBlocksFragment
-        }
-        detailsMainBottom {
-          ...ActionMainContentBlocksFragment
-        }
-        detailsAside {
-          ...ActionAsideContentBlocksFragment
-        }
-      }
-      actionAttributeTypes {
-        ...AttributesBlockAttributeType
-      }
-    }
-  }
-  fragment ActionAsideContentBlocksFragment on ActionAsideContentBlock {
-    __typename
-    ... on ActionResponsiblePartiesBlock {
-      heading
-    }
-    ... on StreamFieldInterface {
-      id
-    }
-    ... on ActionContentAttributeTypeBlock {
-      attributeType {
-        ...AttributesBlockAttributeType
-      }
-    }
-    ... on ActionContentCategoryTypeBlock {
-      categoryType {
-        ...CategoryTagsCategoryType
-      }
-    }
-  }
-  fragment ActionMainContentBlocksFragment on ActionMainContentBlock {
-    __typename
-    ... on StreamFieldInterface {
-      id
-    }
-    ... on ActionOfficialNameBlock {
-      fieldLabel
-      caption
-    }
-    ... on ActionContentAttributeTypeBlock {
-      attributeType {
-        ...AttributesBlockAttributeType
-      }
-    }
-    ... on ActionContentCategoryTypeBlock {
-      categoryType {
-        ...CategoryTagsCategoryType
-      }
-    }
-    ... on ReportComparisonBlock {
-      ...ReportComparisonBlockActionContent
-    }
-    ... on ActionContentSectionBlock {
-      id
-      heading
-      helpText
-      layout
-      blocks {
-        ... on StreamFieldInterface {
-          id
-        }
-        ... on ActionOfficialNameBlock {
-          fieldLabel
-          caption
-        }
-        ... on ActionContentAttributeTypeBlock {
-          attributeType {
-            ...AttributesBlockAttributeType
-          }
-        }
-        ... on ActionContentCategoryTypeBlock {
-          categoryType {
-            ...CategoryTagsCategoryType
-          }
-        }
-        ... on ReportComparisonBlock {
-          ...ReportComparisonBlockActionContent
-        }
-      }
-    }
-  }
-  fragment ReportComparisonBlockActionContent on ReportComparisonBlock {
-    reportField
-    reportType {
-      name
-    }
-    reportsToCompare {
-      identifier
-      name
-      startDate
-      endDate
-      valuesForAction(actionIdentifier: $id) {
-        field {
-          __typename
-          ... on StreamFieldInterface {
-            id
-          }
-        }
-        ... on ActionAttributeReportValue {
-          attribute {
-            ...AttributesBlockAttribute
-          }
-        }
-      }
-    }
-  }
-
-  ${ActionCard.fragments.action}
-  ${images.fragments.multiUseImage}
-  ${ActionAttribute.fragments.attribute}
-  ${ActionAttribute.fragments.attributeType}
-  ${CategoryTags.fragments.category}
-  ${CategoryTags.fragments.categoryType}
-`;
+import { useTranslations } from 'next-intl';
+import { useRouter } from 'next/navigation';
 
 export type ActionContentAction = NonNullable<GetActionDetailsQuery['action']>;
 
@@ -405,9 +98,9 @@ const SolidSection = styled.div`
   margin-bottom: ${(props) => props.theme.spaces.s300};
 `;
 
-const ContentGroup = styled.div<{ vertical: boolean }>`
+const ContentGroup = styled.div<{ $vertical: boolean }>`
   ${(props) =>
-    props.vertical &&
+    props.$vertical &&
     css`
       max-width: ${(props) => props.theme.breakpointSm};
     `}
@@ -623,7 +316,7 @@ function ActionContentProgressContainer({
   action,
 }: Pick<ActionContentProps, 'action'>) {
   const plan = usePlan();
-  const { t } = useTranslation();
+  const t = useTranslations();
   const hasReason = !!action.manualStatusReason;
   const isBadgeVisible =
     action.status &&
@@ -634,16 +327,14 @@ function ActionContentProgressContainer({
     action,
     plan,
     statusName: action.mergedWith
-      ? t('actions:action-status-merged', getActionTermContext(plan))
+      ? t('action-status-merged', getActionTermContext(plan))
       : action.statusSummary.label,
   };
 
   return (
     <>
       <StyledProgressHeaderContainer>
-        <PrimaryHeaderInline>
-          {t('actions:action-progress')}
-        </PrimaryHeaderInline>
+        <PrimaryHeaderInline>{t('action-progress')}</PrimaryHeaderInline>
         {isBadgeVisible && <StatusBadge {...commonStatusBadgeProps} />}
       </StyledProgressHeaderContainer>
 
@@ -667,7 +358,7 @@ function ActionContentSectionBlock(props) {
   const { blocks, action, section, heading, helpText, layout } = props;
 
   return (
-    <ContentGroup vertical={layout !== 'grid'}>
+    <ContentGroup $vertical={layout !== 'grid'}>
       <h2>
         {heading}
         {helpText && <PopoverTip content={helpText} identifier={section.id} />}
@@ -699,7 +390,7 @@ function ActionContent(props: ActionContentProps) {
   const plan = usePlan();
   const theme = useTheme();
   const router = useRouter();
-  const { t } = useTranslation();
+  const t = useTranslations();
 
   useHotkeys(
     'ctrl+left, ctrl+right',
@@ -724,15 +415,10 @@ function ActionContent(props: ActionContentProps) {
   const actionState = 'live';
   // TODO: plug in action state from backend here. "draft" would display a banner
 
-  const actionStatus = cleanActionStatus(action, plan.actionStatuses);
   const { emissionScopes } = action;
   const actionImage = getActionImage(plan, action);
 
   const hasPhases = plan.actionImplementationPhases.length > 0;
-
-  const metaTitle = plan.hideActionIdentifiers
-    ? `${t('action', getActionTermContext(plan))}: ${action.name}`
-    : `${t('action', getActionTermContext(plan))} ${action.identifier}`;
 
   const makeComponents = useCallback(
     (section: SectionIdentifier) => {
@@ -805,11 +491,6 @@ function ActionContent(props: ActionContentProps) {
 
   return (
     <div>
-      <Meta
-        title={metaTitle}
-        shareImageUrl={actionImage?.social?.src}
-        description={`${action.name}`}
-      />
       <ActionHero
         categories={action.categories}
         previousAction={action.previousAction}
@@ -842,9 +523,7 @@ function ActionContent(props: ActionContentProps) {
               <SolidSection>
                 <Row>
                   <Col>
-                    <SectionHeader>
-                      {t('actions:action-status-updates')}
-                    </SectionHeader>
+                    <SectionHeader>{t('action-status-updates')}</SectionHeader>
                   </Col>
                 </Row>
                 <ActionUpdatesList id={action.id} />
@@ -853,12 +532,10 @@ function ActionContent(props: ActionContentProps) {
           </Col>
 
           <Col md="5" lg="4">
-            <h2 className="visually-hidden">
-              {t('actions:action-meta-header')}
-            </h2>
+            <h2 className="visually-hidden">{t('action-meta-header')}</h2>
             {action.impact && (
               <ActionSection>
-                <SideHeader>{t('actions:action-impact')}</SideHeader>
+                <SideHeader>{t('action-impact')}</SideHeader>
                 <ActionImpact
                   name={action.impact.name}
                   identifier={action.impact.identifier}
@@ -868,12 +545,10 @@ function ActionContent(props: ActionContentProps) {
             )}
             {(!hasPhases || action.completion) && (
               <ActionSection>
-                <SideHeader>
-                  {t('actions:action-completion-percentage')}
-                </SideHeader>
+                <SideHeader>{t('action-completion-percentage')}</SideHeader>
                 {(action.completion ?? 0) > 0 && (
                   <strong>
-                    {action.completion}% {t('actions:action-percent-ready')}
+                    {action.completion}% {t('action-percent-ready')}
                   </strong>
                 )}
                 <ActionStatus
@@ -886,7 +561,7 @@ function ActionContent(props: ActionContentProps) {
             {makeComponents('detailsAside')}
             {emissionScopes?.length ? (
               <ActionSection>
-                <SideHeader>{t('actions:emission-scopes')}</SideHeader>
+                <SideHeader>{t('emission-scopes')}</SideHeader>
                 {emissionScopes.map((item) => (
                   <EmissionScopeIcon
                     key={item.id}
@@ -904,7 +579,7 @@ function ActionContent(props: ActionContentProps) {
             )}
             <ActionSection>
               <LastUpdated>
-                {t('actions:action-last-updated')} {updated}
+                {t('action-last-updated')} {updated}
               </LastUpdated>
             </ActionSection>
           </Col>
@@ -923,10 +598,7 @@ function ActionContent(props: ActionContentProps) {
             <Row>
               <Col sm="12">
                 <SectionHeader>
-                  {t(
-                    'actions:action-what-effect-this-has',
-                    getActionTermContext(plan)
-                  )}
+                  {t('action-what-effect-this-has', getActionTermContext(plan))}
                 </SectionHeader>
               </Col>
             </Row>
@@ -947,6 +619,5 @@ function ActionContent(props: ActionContentProps) {
     </div>
   );
 }
-ActionContent.query = GET_ACTION_DETAILS;
 
 export default ActionContent;

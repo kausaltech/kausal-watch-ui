@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import { PlanContextType } from 'context/plan';
-import { useTheme } from 'common/theme';
+import { useTheme } from 'styled-components';
 import PlanChip from './PlanChip';
 import { useLocalizedLink } from 'common/hooks/localize-link';
 

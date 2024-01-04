@@ -1,16 +1,19 @@
+'use client';
+
 import React from 'react';
 import dynamic from 'next/dynamic';
 import { merge, uniq } from 'lodash';
 import styled from 'styled-components';
-import { useTheme } from 'common/theme';
+import { useTheme } from 'styled-components';
 import { transparentize } from 'polished';
 import { splitLines } from 'common/utils';
 import { Layout } from 'plotly.js';
+import { PlotParams } from 'react-plotly.js';
 
 const log10 = Math.log(10);
 
-const PlotContainer = styled.div<{ vizHeight: number }>`
-  height: ${(props) => props.vizHeight}px;
+const PlotContainer = styled.div<{ $vizHeight: number }>`
+  height: ${(props) => props.$vizHeight}px;
 `;
 
 const CATEGORY_XAXIS_LABEL_EXTRA_MARGIN = 200;
@@ -24,7 +27,7 @@ const createLayout = (
   hasTimeDimension,
   subplotsNeeded,
   graphCustomBackground
-) => {
+): Partial<PlotParams['layout']> => {
   const fontFamily =
     '-apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Ubuntu, roboto, noto, arial, sans-serif';
   const hasCategories = !hasTimeDimension;
@@ -294,6 +297,8 @@ interface IndicatorGraphProps {
   };
 }
 
+const Plot = dynamic(() => import('./Plot'));
+
 function IndicatorGraph(props: IndicatorGraphProps) {
   const theme = useTheme();
   const isServer = typeof window === 'undefined';
@@ -308,8 +313,6 @@ function IndicatorGraph(props: IndicatorGraphProps) {
     trendTrace,
     specification,
   } = props;
-
-  const Plot = dynamic(import('./Plot'));
 
   const plotColors = {
     trace: theme.graphColors.red070,
@@ -494,26 +497,28 @@ function IndicatorGraph(props: IndicatorGraphProps) {
     : 450 + (!hasTimeDimension ? CATEGORY_XAXIS_LABEL_EXTRA_MARGIN : 0);
 
   return (
-    <PlotContainer
-      data-element="indicator-graph-plot-container"
-      vizHeight={height}
-    >
-      <Plot
-        data={plotlyData}
-        layout={layout}
-        style={{ width: '100%', height: '100%' }}
-        useResizeHandler
-        onAfterPlot={() => {
-          const event = new Event('indicator_graph_ready');
-          document.dispatchEvent(event);
-        }}
-        config={{
-          displayModeBar: false,
-          showSendToCloud: true,
-          staticPlot: false,
-        }}
-      />
-    </PlotContainer>
+    <>
+      <PlotContainer
+        data-element="indicator-graph-plot-container"
+        $vizHeight={height}
+      >
+        <Plot
+          data={plotlyData}
+          layout={layout}
+          style={{ width: '100%', height: '100%' }}
+          useResizeHandler
+          onAfterPlot={() => {
+            const event = new Event('indicator_graph_ready');
+            document.dispatchEvent(event);
+          }}
+          config={{
+            displayModeBar: false,
+            showSendToCloud: true,
+            staticPlot: false,
+          }}
+        />
+      </PlotContainer>
+    </>
   );
 }
 

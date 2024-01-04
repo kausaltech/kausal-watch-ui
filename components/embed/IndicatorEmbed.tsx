@@ -1,6 +1,6 @@
 import ErrorBoundary from 'components/common/ErrorBoundary';
 import { getIndicatorLinkProps } from 'common/links';
-import { useTranslation } from 'common/i18n';
+
 import { gql, useQuery } from '@apollo/client';
 import { usePlan } from 'context/plan';
 import images from 'common/images';

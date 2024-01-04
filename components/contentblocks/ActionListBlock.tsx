@@ -4,12 +4,13 @@ import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
 import { gql, useQuery } from '@apollo/client';
 
-import { getActionTermContext, useTranslation } from 'common/i18n';
+import { getActionTermContext } from 'common/i18n';
 import ActionCard from 'components/actions/ActionCard';
 import ActionCardList from 'components/actions/ActionCardList';
 import ContentLoader from 'components/common/ContentLoader';
 import ErrorMessage from 'components/common/ErrorMessage';
-import PlanContext from 'context/plan';
+import PlanContext, { usePlan } from 'context/plan';
+import { useTranslations } from 'next-intl';
 
 const GET_ACTION_LIST_FOR_BLOCK = gql`
   query GetActionListForBlock($plan: ID!, $category: ID, $clientUrl: String) {
@@ -41,8 +42,9 @@ const SectionHeader = styled.h2`
 
 const ActionListBlock = (props) => {
   const { id = '', categoryId, color } = props;
-  const { t } = useTranslation();
-  const plan = useContext(PlanContext);
+  const t = useTranslations();
+
+  const plan = usePlan();
   const { loading, error, data } = useQuery(GET_ACTION_LIST_FOR_BLOCK, {
     variables: {
       plan: plan.identifier,

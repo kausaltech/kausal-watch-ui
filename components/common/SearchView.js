@@ -13,12 +13,13 @@ import {
   Alert,
 } from 'reactstrap';
 import { Link } from 'common/links';
-import { getActionTermContext, useTranslation } from 'common/i18n';
+import { getActionTermContext } from 'common/i18n';
 import TextInput from 'components/common/TextInput';
 import Button from 'components/common/Button';
 import PlanChip from 'components/plans/PlanChip';
 import { usePlan } from 'context/plan';
 import ContentLoader from './ContentLoader';
+import { useTranslations } from 'next-intl';
 
 const SEARCH_QUERY = gql`
   query SearchQuery(
@@ -180,7 +181,7 @@ const ResultExcerpt = styled.div`
 `;
 
 function SearchResultItem({ hit }) {
-  const { t } = useTranslation();
+  const t = useTranslations();
   const plan = usePlan();
   const { object, page } = hit;
   const primaryOrg = object?.primaryOrg;
@@ -219,7 +220,7 @@ function SearchResultItem({ hit }) {
         )}
         {hitTypeName && <HitType>{hitTypeName}</HitType>}
       </SearchResultMeta>
-      <Link href={hit.url} passHref>
+      <Link href={hit.url} passHref legacyBehavior>
         <a>
           <h3>{hit.title}</h3>
         </a>
@@ -240,7 +241,7 @@ const searchProps = PropTypes.shape({
 
 function SearchResults({ search }) {
   const plan = usePlan();
-  const { t } = useTranslation('common');
+  const t = useTranslations();
   const { error, loading, data } = useQuery(SEARCH_QUERY, {
     variables: {
       plan: plan.identifier,
@@ -295,7 +296,7 @@ SearchResults.propTypes = {
 function SearchView(props) {
   const { search, onSearchChange } = props;
   const [userSearch, setUserSearch] = useState(null);
-  const { t } = useTranslation('common');
+  const t = useTranslations();
 
   useEffect(() => {
     setUserSearch(search);

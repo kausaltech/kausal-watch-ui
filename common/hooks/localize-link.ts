@@ -1,6 +1,6 @@
-import { useTranslation } from 'common/i18n';
 import { stripTrailingSlash } from 'common/utils';
 import { usePlan } from 'context/plan';
+import { useLocale } from 'next-intl';
 
 /**
  * Applies the locale to the end of the link, this can't
@@ -8,12 +8,13 @@ import { usePlan } from 'context/plan';
  * to the middle of the path e.g. /<plan>/<locale>/actions/
  */
 export const useLocalizedLink = (link: string) => {
-  const { i18n } = useTranslation();
+  const locale = useLocale();
   const plan = usePlan();
 
-  if (plan.primaryLanguage === i18n.language) {
+  // TESTME
+  if (plan.primaryLanguage === locale) {
     return link;
   }
 
-  return `${stripTrailingSlash(link)}/${i18n.language}`;
+  return `${stripTrailingSlash(link)}/${locale}`;
 };

@@ -1,9 +1,9 @@
-import { useTranslation } from 'next-i18next';
 import { ActionListAction } from '../dashboard.types';
 import styled from 'styled-components';
 import StatusBadge from 'components/common/StatusBadge';
 import { getActionTermContext } from 'common/i18n';
 import { PlanContextFragment } from 'common/__generated__/graphql';
+import { useTranslations } from 'next-intl';
 
 interface Props {
   action: ActionListAction;
@@ -16,7 +16,7 @@ const StatusDisplay = styled.div`
 `;
 
 const StatusCell = ({ action, plan }: Props) => {
-  const { t } = useTranslation();
+  const t = useTranslations();
 
   if (action.statusSummary.identifier === 'UNDEFINED') {
     return null;
@@ -30,7 +30,7 @@ const StatusCell = ({ action, plan }: Props) => {
         subtle
         statusName={
           action.mergedWith
-            ? t('actions:action-status-merged', getActionTermContext(plan))
+            ? t('action-status-merged', getActionTermContext(plan))
             : action.statusSummary.label
         }
       />

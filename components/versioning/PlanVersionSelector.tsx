@@ -7,8 +7,8 @@ import {
   DropdownItem,
 } from 'reactstrap';
 import Icon from 'components/common/Icon';
-import { useTranslation } from 'common/i18n';
-import SiteContext from 'context/site';
+import { useTranslations } from 'next-intl';
+import { deploymentType } from '@/common/environment';
 
 const VersionSelect = styled.div`
   display: flex;
@@ -87,9 +87,8 @@ const StyledDropdownToggle = styled(DropdownToggle)<{ islatest?: string }>`
 
 const PlanVersionSelector = (props) => {
   const { plan } = props;
-  const { t } = useTranslation();
-  const site = useContext(SiteContext);
-  const isProduction = site.deploymentType === 'production';
+  const t = useTranslations();
+  const isProduction = deploymentType === 'production';
 
   const supersededVersions = !isProduction
     ? plan.supersededPlans
@@ -150,7 +149,7 @@ const PlanVersionSelector = (props) => {
           <Icon name="angle-down" />
         </StyledDropdownToggle>
         <DropdownMenu>
-          <DropdownItem header>{t('common:versions-list')}</DropdownItem>
+          <DropdownItem header>{t('versions-list')}</DropdownItem>
           {allVersions.reverse().map((v) => (
             <VersionDropdownItem
               href={v.viewUrl}

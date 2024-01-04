@@ -1,5 +1,5 @@
 import get from 'lodash/get';
-import { useTheme } from 'common/theme';
+import { useTheme } from 'styled-components';
 import Icon from 'components/common/Icon';
 import { usePlan } from 'context/plan';
 import styled, { css } from 'styled-components';

@@ -12,11 +12,9 @@ import {
 } from 'reactstrap';
 import debounce from 'lodash/debounce';
 import SVG from 'react-inlinesvg';
-import styled, { css, withTheme } from 'styled-components';
-import { themeProp, useTheme } from 'common/theme';
+import styled, { css, useTheme } from 'styled-components';
 import { useScrollPosition } from '@n8tb1t/use-scroll-position';
 import { transparentize } from 'polished';
-import { useTranslation } from 'common/i18n';
 import { NavigationLink, Link } from 'common/links';
 
 import type { Theme } from '@kausal/themes/types';
@@ -27,6 +25,7 @@ import LanguageSelector from './LanguageSelector';
 import NavbarSearch from './NavbarSearch';
 import { usePlan } from 'context/plan';
 import { isServer } from 'common/environment';
+import { useTranslations } from 'next-intl';
 
 const baseFixedNavStyles = css`
   @keyframes slide-in {
@@ -107,7 +106,7 @@ const Site = styled.div`
   align-items: center;
 `;
 
-const HomeLink = styled.a`
+const HomeLink = styled.a<{ $hideLogoOnMobile: boolean }>`
   display: flex;
   align-items: center;
   color: ${(props) => props.theme.brandNavColor};
@@ -122,8 +121,7 @@ const HomeLink = styled.a`
   }
 
   svg {
-    display: ${(props) =>
-      props.hideLogoOnMobile === 'true' ? 'none' : 'block'};
+    display: ${(props) => (props.$hideLogoOnMobile ? 'none' : 'block')};
     max-width: 6em;
     height: ${(props) => props.theme.spaces.s200};
     margin: ${(props) => props.theme.spaces.s050}
@@ -294,7 +292,7 @@ const NavbarToggler = styled.button`
 `;
 
 function DropdownList(props) {
-  const { parentName, items, active } = props;
+  const { parentName, items, active = false } = props;
   return (
     <StyledDropdown nav inNavbar className={active && 'active'}>
       <StyledDropdownToggle nav caret>
@@ -319,10 +317,6 @@ function DropdownList(props) {
     </StyledDropdown>
   );
 }
-
-DropdownList.defaultProps = {
-  active: false,
-};
 
 DropdownList.propTypes = {
   parentName: PropTypes.string.isRequired,
@@ -411,16 +405,16 @@ const useStickyNavigation = (isStickyEnabled: boolean = false) => {
 };
 
 function GlobalNav(props) {
-  const { t } = useTranslation();
+  const t = useTranslations();
+  const theme = useTheme();
   const plan = usePlan();
   const {
-    theme,
     siteTitle,
-    ownerName,
+    ownerName = '',
     navItems,
-    externalItems,
-    fullwidth,
-    sticky,
+    externalItems = [],
+    fullwidth = false,
+    sticky = false,
     activeBranch,
   } = props;
   const {
@@ -451,7 +445,7 @@ function GlobalNav(props) {
   const siblings = plan.allRelatedPlans.filter(
     (pl) => pl.id !== plan.parent?.id
   );
-  const hideLogoOnMobile = theme.navTitleVisible && siblings.length;
+  const hideLogoOnMobile = !!(theme.navTitleVisible && siblings.length);
 
   const rootLink = plan.parent ? plan.parent.viewUrl : '/';
 
@@ -466,8 +460,8 @@ function GlobalNav(props) {
           container={fullwidth ? 'fluid' : true}
         >
           <Site>
-            <Link href={rootLink} passHref>
-              <HomeLink hideLogoOnMobile={hideLogoOnMobile.toString()}>
+            <Link href={rootLink} passHref legacyBehavior>
+              <HomeLink $hideLogoOnMobile={hideLogoOnMobile}>
                 <OrgLogo className="org-logo" />
                 <SiteTitle>
                   {theme.navTitleVisible ? siteTitle : '\u00A0'}
@@ -590,13 +584,6 @@ function GlobalNav(props) {
   );
 }
 
-GlobalNav.defaultProps = {
-  fullwidth: false,
-  sticky: false,
-  ownerName: '',
-  externalItems: [],
-};
-
 GlobalNav.propTypes = {
   activeBranch: PropTypes.string.isRequired,
   siteTitle: PropTypes.string.isRequired,
@@ -611,7 +598,6 @@ GlobalNav.propTypes = {
       children: PropTypes.arrayOf(PropTypes.shape),
     })
   ).isRequired,
-  theme: themeProp.isRequired,
   fullwidth: PropTypes.bool,
   sticky: PropTypes.bool,
   externalItems: PropTypes.arrayOf(
@@ -622,4 +608,4 @@ GlobalNav.propTypes = {
   ),
 };
 
-export default withTheme(React.memo(GlobalNav));
+export default GlobalNav;

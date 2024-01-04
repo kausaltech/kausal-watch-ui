@@ -2,7 +2,7 @@ import React from 'react';
 import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
 import RichText from 'components/common/RichText';
-import { useTheme } from 'common/theme';
+import { useTheme } from 'styled-components';
 import { getBgImageAlignment } from 'common/images';
 import { Link } from 'common/links';
 import CategoryTreeBlock from 'components/contentblocks/CategoryTreeBlock';
@@ -77,6 +77,7 @@ const CategoryListBlock = ({ id = '', cards }: Props) => {
               style={{ transition: 'all 0.5s ease' }}
             >
               <Link
+                legacyBehavior
                 href={`/actions?${getCategoryString(
                   card.category.type.identifier
                 )}=${card.category.id}`}

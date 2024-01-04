@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { Container } from 'reactstrap';
 import styled from 'styled-components';
 import { readableColor } from 'polished';
-import PlanContext from 'context/plan';
+import PlanContext, { usePlan } from 'context/plan';
 
 import ActionHighlightsList from 'components/actions/ActionHighlightsList';
 import { CommonContentBlockProps } from 'common/blocks.types';
@@ -34,7 +34,7 @@ const ActionsSection = styled.div`
 `;
 
 const ActionHighlightsBlock = ({ id = '' }: CommonContentBlockProps) => {
-  const plan = useContext(PlanContext);
+  const plan = usePlan();
 
   return (
     <ActionsSection id={id} className="actions-section">

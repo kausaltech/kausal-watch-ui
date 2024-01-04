@@ -2,11 +2,11 @@ import React from 'react';
 import { Container, Row, Col, ColProps } from 'reactstrap';
 import { usePlan } from 'context/plan';
 import { attributeHasValue } from 'components/common/AttributesBlock';
-import { useTheme } from 'common/theme';
+import { useTheme } from 'styled-components';
 import {
   CategoryPageMainBottomBlock,
   CategoryPageMainTopBlock,
-  GetPlanPageGeneralQuery,
+  GetContentPageQuery,
 } from 'common/__generated__/graphql';
 import ActionAttribute from 'components/common/ActionAttribute';
 import CategoryListBlock from 'components/contentblocks/CategoryListBlock';
@@ -16,7 +16,7 @@ import ActionStatusGraphsBlock from 'components/contentblocks/ActionStatusGraphs
 import { ChartType } from 'components/dashboard/ActionStatusGraphs';
 
 export type CategoryPage = { __typename: 'CategoryPage' } & NonNullable<
-  GetPlanPageGeneralQuery['planPage']
+  GetContentPageQuery['planPage']
 >;
 
 type OmitUnion<T, K extends keyof any> = T extends any ? Omit<T, K> : never;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
-import { getActionTermContext, useTranslation } from 'common/i18n';
+import { getActionTermContext } from 'common/i18n';
 import { IndicatorListLink } from 'common/links';
 import OrgSelector from 'components/orgs/OrgSelector';
 import IndicatorValueSummary from 'components/indicators/IndicatorValueSummary';
@@ -9,6 +9,7 @@ import { usePlan } from 'context/plan';
 
 import { IndicatorDetailsQuery } from 'common/__generated__/graphql';
 import { readableColor } from 'polished';
+import { useTranslations } from 'next-intl';
 
 const Hero = styled.header`
   position: relative;
@@ -21,20 +22,6 @@ const Hero = styled.header`
       color: ${(props) => props.theme.brandDark};
     }
   }
-`;
-
-interface IndicatorBgImageProps {
-  bgColor?: string;
-  bgImage?: string;
-  imageAlign?: string;
-}
-
-const IndicatorBgImage = styled.div<IndicatorBgImageProps>`
-  background-size: cover;
-  background-blend-mode: multiply;
-  background-color: ${(p) => p.bgColor ?? 'unset'};
-  background-image: url(${(p) => p.bgImage ?? 'unset'});
-  background-position: ${(p) => p.imageAlign ?? 'unset'};
 `;
 
 const PrimaryOrg = styled.div`
@@ -150,7 +137,7 @@ interface IndicatorHeroProps {
 function IndicatorHero(props: IndicatorHeroProps) {
   const { indicator, orgs, goals } = props;
   // const theme = useTheme();
-  const { t } = useTranslation();
+  const t = useTranslations();
   const plan = usePlan();
 
   // FIXME: It sucks that we only use the context for the translation key 'action'
@@ -163,7 +150,7 @@ function IndicatorHero(props: IndicatorHeroProps) {
 
   return (
     <Hero>
-      <IndicatorBgImage>
+      <div>
         <OverlayContainer>
           <Container>
             <Row>
@@ -204,7 +191,7 @@ function IndicatorHero(props: IndicatorHeroProps) {
             </Row>
           </Container>
         </OverlayContainer>
-      </IndicatorBgImage>
+      </div>
     </Hero>
   );
 }

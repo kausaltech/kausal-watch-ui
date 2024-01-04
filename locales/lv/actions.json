@@ -2,7 +2,7 @@
     "action-num": "#",
     "action-not-found": "Rīcība nav atrasta",
     "actions-status": "Rīcības pēc statusa",
-    "actions-updated-help-days": "Rīcības, kas atjauninātas pēdējo {{count}} dienu laikā",
+    "actions-updated-help-days": "Rīcības, kas atjauninātas pēdējo {count} dienu laikā",
     "actions-updated": "Pēdējo reizi atjauninātas aktīvās rīcības",
     "action-task-done": "Paveikts",
     "action-status-updates": "Jaunākie atjauninājumi",

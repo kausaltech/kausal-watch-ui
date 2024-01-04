@@ -7,12 +7,13 @@ import { isEqual } from 'lodash';
 import { gql, useQuery } from '@apollo/client';
 import { Alert } from 'reactstrap';
 import { linearRegression } from 'common/math';
-import { useTranslation } from 'common/i18n';
-import { useTheme } from 'common/theme';
+
+import { useTheme } from 'styled-components';
 import { capitalizeFirstLetter } from 'common/utils';
-import PlanContext from 'context/plan';
+import PlanContext, { usePlan } from 'context/plan';
 
 import ContentLoader from '../common/ContentLoader';
+import { useLocale, useTranslations } from 'next-intl';
 
 const GET_INDICATOR_GRAPH_DATA = gql`
   query IndicatorGraphDataSmall($id: ID, $plan: ID) {
@@ -545,9 +546,13 @@ function IndicatorGraphSmall({ indicatorId }) {
     return null;
   }
 
-  const plan = useContext(PlanContext);
+  const plan = usePlan();
   const theme = useTheme();
-  const { t, i18n } = useTranslation();
+  const locale = useLocale();
+  const t = useTranslations();
+  // TESTME
+  // Legacy support for old code referencing i18n.t() rather than t() directly
+  const i18n = { t };
 
   const plotColors = {
     trace: theme.graphColors.red070,
@@ -606,7 +611,7 @@ function IndicatorGraphSmall({ indicatorId }) {
   if (!indicator)
     return <Alert color="danger">{t('indicator-not-found')}</Alert>;
 
-  const Plot = dynamic(import('./Plot'));
+  const Plot = dynamic(() => import('./Plot'));
 
   const plot = generatePlotFromValues(indicator, i18n, plotColors);
 
@@ -632,7 +637,7 @@ function IndicatorGraphSmall({ indicatorId }) {
           style={{ width: '100%', height: '180px' }}
           useResizeHandler
           config={{
-            locale: i18n.language,
+            locale,
             displayModeBar: false,
             showSendToCloud: true,
             staticPlot: false,

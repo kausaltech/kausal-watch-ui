@@ -5,56 +5,16 @@ import { gql } from '@apollo/client';
 
 import { getActionTermContext } from 'common/i18n';
 import { ActionLink } from 'common/links';
-import PlanContext from 'context/plan';
+import { usePlan } from 'context/plan';
 import { getStatusSummary } from 'common/ActionStatusSummary';
 import StatusBadge from 'components/common/StatusBadge';
 import ActionImpact from 'components/actions/ActionImpact';
-import { useTranslation } from 'next-i18next';
-
-const ACTION_ROW_FRAGMENT = gql`
-  fragment ActionsTable on Action {
-    id
-    identifier
-    name
-    color
-    status {
-      id
-      identifier
-      name
-      color
-    }
-    implementationPhase {
-      id
-      identifier
-      name
-    }
-    statusSummary {
-      identifier
-    }
-    completion
-    categories {
-      id
-      identifier
-      name
-      image {
-        rendition {
-          id
-          src
-        }
-      }
-    }
-    impact {
-      id
-      identifier
-      name
-    }
-  }
-`;
+import { useTranslations } from 'next-intl';
 
 function ActionsTable(props) {
-  const { t } = useTranslation();
+  const t = useTranslations();
   const { actions } = props;
-  const plan = useContext(PlanContext);
+  const plan = usePlan();
 
   return (
     <Table hover responsive>
@@ -108,12 +68,7 @@ function ActionsTable(props) {
 }
 
 ActionsTable.propTypes = {
-  t: PropTypes.func.isRequired,
   actions: PropTypes.arrayOf(PropTypes.object).isRequired,
-};
-
-ActionsTable.fragments = {
-  action: ACTION_ROW_FRAGMENT,
 };
 
 export default ActionsTable;

@@ -1,12 +1,11 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { useRouter } from 'next/router';
 import { Container, Row, Col, Nav, NavItem } from 'reactstrap';
 import styled from 'styled-components';
 import { readableColor } from 'polished';
 import RichText from 'components/common/RichText';
-import { useTranslation, withTranslation } from '../../common/i18n';
 import { NavigationLink } from '../../common/links';
+import { useTranslations } from 'next-intl';
+import { usePathname } from 'next/navigation';
 
 const IndicatorsJumbo = styled.div`
   background-color: ${(props) => props.theme.neutralLight};
@@ -56,8 +55,8 @@ const Tab = styled.div`
 
 interface Props {
   leadContent?: string;
-  showInsights: boolean;
-  children: React.ReactNode;
+  showInsights?: boolean;
+  children?: React.ReactNode;
 }
 
 function IndicatorsHero({
@@ -65,8 +64,8 @@ function IndicatorsHero({
   showInsights = true,
   children,
 }: Props) {
-  const { t } = useTranslation('common');
-  const router = useRouter();
+  const t = useTranslations();
+  const pathname = usePathname();
 
   return (
     <div>
@@ -80,9 +79,11 @@ function IndicatorsHero({
               </Col>
             </Row>
           )}
-          <Row>
-            <Col sm="12">{children}</Col>
-          </Row>
+          {!!children && (
+            <Row>
+              <Col sm="12">{children}</Col>
+            </Row>
+          )}
         </Container>
       </IndicatorsJumbo>
       {showInsights && (
@@ -93,7 +94,7 @@ function IndicatorsHero({
                 <NavigationLink slug="/indicators">
                   <Tab
                     className={`nav-link ${
-                      router.pathname === '/indicators' ? 'active' : ''
+                      pathname?.includes('/indicators') ? 'active' : ''
                     }`}
                   >
                     {t('indicators-as-list')}
@@ -104,7 +105,7 @@ function IndicatorsHero({
                 <NavigationLink slug="/insight">
                   <Tab
                     className={`nav-link ${
-                      router.pathname === '/insight' ? 'active' : ''
+                      pathname?.includes('/insight') ? 'active' : ''
                     }`}
                   >
                     {t('indicators-as-insight')}

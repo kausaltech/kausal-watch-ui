@@ -1,9 +1,9 @@
 import React from 'react';
 import { Row, Col } from 'reactstrap';
-import styled, { withTheme } from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import dayjs from '../../common/dayjs';
-import { withTranslation } from '../../common/i18n';
 import { beautifyValue } from '../../common/data/format';
+import { useLocale, useTranslations } from 'next-intl';
 
 const ValueSummary = styled.div`
   margin: 2em 0 0;
@@ -62,10 +62,11 @@ function determineDesirableDirection(values, goals) {
 }
 
 function IndicatorValueSummary(props) {
-  const { timeResolution, values, goals, unit, t, theme, i18n } = props;
+  const t = useTranslations();
+  const locale = useLocale();
+  const theme = useTheme();
+  const { timeResolution, values, goals, unit, i18n } = props;
   const desirableDirection = determineDesirableDirection(values, goals);
-  const pluralUnitName =
-    unit.verboseNamePlural || unit.verboseName || unit.shortName || unit.name;
   const shortUnitName = unit.shortName || unit.name;
   const diffUnitName =
     unit.name === '%' ? t('percent-point-abbreviation') : shortUnitName;
@@ -100,7 +101,7 @@ function IndicatorValueSummary(props) {
           changeColor = theme.themeColors.dark;
         } else {
           desirableChange = false;
-          changeColor = props.theme.graphColors.red070;
+          changeColor = theme.graphColors.red070;
         }
       }
       if (absChange < 0) {
@@ -109,7 +110,7 @@ function IndicatorValueSummary(props) {
         changeSymbol = '▲';
       } else changeSymbol = '—';
     }
-    const latestValueDisplay = beautifyValue(latestValue.value, i18n.language);
+    const latestValueDisplay = beautifyValue(latestValue.value, locale);
     valueDisplay = (
       <div className="mb-4">
         <ValueLabel>{t('indicator-latest-value')}</ValueLabel>
@@ -120,7 +121,7 @@ function IndicatorValueSummary(props) {
           {changeSymbol && (
             <ValueChange color={changeColor}>
               <ChangeSymbol>{changeSymbol}</ChangeSymbol>
-              <span>{beautifyValue(absChange, i18n.language)}</span>{' '}
+              <span>{beautifyValue(absChange, locale)}</span>{' '}
               <small>{diffUnitName}</small>
             </ValueChange>
           )}
@@ -134,7 +135,7 @@ function IndicatorValueSummary(props) {
 
   if (nextGoal) {
     const nextGoalDate = dayjs(nextGoal.date).format(timeFormat);
-    const nextGoalValue = beautifyValue(nextGoal.value, i18n.language);
+    const nextGoalValue = beautifyValue(nextGoal.value, locale);
     goalDisplay = (
       <div className="mb-4">
         <ValueLabel>{t('indicator-goal')}</ValueLabel>
@@ -159,7 +160,7 @@ function IndicatorValueSummary(props) {
         <ValueLabel>{t('indicator-time-to-goal')}</ValueLabel>
         <ValueDate>{timeToGoal}</ValueDate>
         <ValueDisplay>
-          {beautifyValue(difference, i18n.language)}
+          {beautifyValue(difference, locale)}
           <ValueUnit>{diffUnitName}</ValueUnit>
         </ValueDisplay>
       </div>
@@ -176,4 +177,4 @@ function IndicatorValueSummary(props) {
   );
 }
 
-export default withTranslation()(withTheme(IndicatorValueSummary));
+export default IndicatorValueSummary;

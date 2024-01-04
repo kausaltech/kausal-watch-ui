@@ -1,14 +1,15 @@
 import React, { PropsWithChildren } from 'react';
-import { gql } from '@apollo/client';
 import styled from 'styled-components';
 import { ActionListLink, StaticPageLink } from 'common/links';
 import BadgeTooltip from 'components/common/BadgeTooltip';
 import PopoverTip from 'components/common/PopoverTip';
 import { readableColor } from 'polished';
 import {
-  CategoryTagsCategoryFragment,
-  CategoryTagsCategoryTypeFragment,
+  CategoryRecursiveFragmentFragment,
+  CategoryTypeFragmentFragment,
 } from 'common/__generated__/graphql';
+import { CATEGORY_FRAGMENT } from '@/lib/fragments/category.fragment';
+import { CATEGORY_TYPE_FRAGMENT } from '@/lib/fragments/category-tags.fragment';
 
 const Categories = styled.div`
   font-size: ${(props) => props.theme.fontSizeMd};
@@ -82,8 +83,8 @@ function CategoryLink(props: PropsWithChildren<CategoryLinkProps>) {
 }
 
 type CategoryContentProps = {
-  categories: CategoryTagsCategoryFragment[];
-  categoryType: CategoryTagsCategoryTypeFragment;
+  categories: CategoryRecursiveFragmentFragment[];
+  categoryType: CategoryTypeFragmentFragment;
   noLink?: boolean;
 };
 
@@ -137,8 +138,8 @@ export const CategoryContent = (props: CategoryContentProps) => {
 };
 
 type CategoryTagsProps = {
-  categories: CategoryTagsCategoryFragment[];
-  types: CategoryTagsCategoryTypeFragment[];
+  categories: CategoryRecursiveFragmentFragment[];
+  types: CategoryTypeFragmentFragment[];
   noLink?: boolean;
 };
 
@@ -171,77 +172,9 @@ function CategoryTags(props: CategoryTagsProps) {
   return <Categories>{groupElements}</Categories>;
 }
 
-export const categoryFragment = gql`
-  fragment CategoryFieldsFragment on Category {
-    id
-    identifier
-    name
-    leadParagraph
-    color
-    iconSvgUrl
-    helpText
-    iconImage {
-      rendition(size: "400x400", crop: false) {
-        src
-      }
-    }
-    type {
-      id
-      identifier
-      hideCategoryIdentifiers
-    }
-    level {
-      id
-      name
-      namePlural
-    }
-    image {
-      ...MultiUseImageFragment
-    }
-    categoryPage {
-      title
-      urlPath
-    }
-  }
-
-  # Support parent categories up to two levels deep
-  fragment CategoriesRecursiveFragment on Category {
-    parent {
-      ...CategoryFieldsFragment
-      parent {
-        ...CategoryFieldsFragment
-        parent {
-          ...CategoryFieldsFragment
-        }
-      }
-    }
-  }
-
-  fragment CategoryTagsCategory on Category {
-    ...CategoryFieldsFragment
-    ...CategoriesRecursiveFragment
-  }
-`;
-
-export const categoryTypeFragment = gql`
-  fragment CategoryTagsCategoryType on CategoryType {
-    id
-    name
-    identifier
-    helpText
-    hideCategoryIdentifiers
-    levels {
-      id
-      order
-      name
-      namePlural
-    }
-  }
-`;
-
 CategoryTags.fragments = {
-  category: categoryFragment,
-  categoryType: categoryTypeFragment,
+  category: CATEGORY_FRAGMENT,
+  categoryType: CATEGORY_TYPE_FRAGMENT,
 };
 
 export default CategoryTags;

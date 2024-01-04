@@ -1,11 +1,11 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { transparentize } from 'polished';
 import { getPhaseData, getStatusData } from 'common/preprocess';
-import { useTheme } from 'common/theme';
+import { useTheme } from 'styled-components';
 import type { Theme } from '@kausal/themes/types';
-import PlanContext, { PlanContextType } from 'context/plan';
-import { useTranslation } from 'common/i18n';
+import { usePlan } from 'context/plan';
+
 import { getStatusSummary } from 'common/ActionStatusSummary';
 import StatusDonut from 'components/graphs/StatusDonut';
 
@@ -17,8 +17,9 @@ import {
 } from 'common/__generated__/graphql';
 import type { ActionListAction } from './ActionList';
 import BarChart from 'components/common/BarChart';
-import { TFunction } from 'next-i18next';
-import dayjs from 'dayjs';
+import { TFunction } from '@/common/i18n';
+import dayjs from '@/common/dayjs';
+import { useTranslations } from 'next-intl';
 
 const StatusDonutsWrapper = styled.div`
   width: auto;
@@ -180,8 +181,8 @@ const ActionsStatusGraphs = ({
   shownDatasets = DEFAULT_DATASETS,
 }: ActionsStatusGraphsProps) => {
   const theme = useTheme();
-  const plan = useContext(PlanContext);
-  const { t } = useTranslation(['common']);
+  const plan = usePlan();
+  const t = useTranslations();
   const showTotals = theme.settings.dashboard.showActionDonutTotals ?? true;
 
   const progressData =

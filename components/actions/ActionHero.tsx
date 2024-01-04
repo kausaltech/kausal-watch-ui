@@ -1,8 +1,8 @@
 import React from 'react';
 import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
-import { useTheme } from 'common/theme';
-import { getActionTermContext, useTranslation } from 'common/i18n';
+import { useTheme } from 'styled-components';
+import { getActionTermContext } from 'common/i18n';
 import { ActionLink, ActionListLink, OrganizationLink } from 'common/links';
 import { usePlan } from 'context/plan';
 
@@ -10,10 +10,11 @@ import Icon from 'components/common/Icon';
 import { getBreadcrumbsFromCategoryHierarchy } from 'common/categories';
 import { Category } from 'common/__generated__/graphql';
 import { Breadcrumbs } from 'components/common/Breadcrumbs';
+import { useTranslations } from 'next-intl';
 
-const Hero = styled.header<{ bgColor: string }>`
+const Hero = styled.header<{ $bgColor: string }>`
   position: relative;
-  background-color: ${(props) => props.bgColor};
+  background-color: ${(props) => props.$bgColor};
   margin-bottom: ${(props) => props.theme.spaces.s400};
   a {
     color: ${(props) => props.theme.brandDark};
@@ -25,13 +26,13 @@ const Hero = styled.header<{ bgColor: string }>`
 `;
 
 const ActionBgImage = styled.div<{
-  bgColor: string;
-  bgImage: string;
-  imageAlign: string;
+  $bgColor: string;
+  $bgImage: string;
+  $imageAlign: string;
 }>`
-  background-color: ${(props) => props.bgColor};
-  background-image: url(${(props) => props.bgImage});
-  background-position: ${(props) => props.imageAlign};
+  background-color: ${(props) => props.$bgColor};
+  background-image: url(${(props) => props.$bgImage});
+  background-position: ${(props) => props.$imageAlign};
   background-size: cover;
   background-blend-mode: multiply;
 `;
@@ -219,7 +220,7 @@ function ActionHero(props: ActionHeroProps) {
     state,
   } = props;
   const theme = useTheme();
-  const { t } = useTranslation();
+  const t = useTranslations();
   const plan = usePlan();
 
   // Theme overlay color as fallback
@@ -237,11 +238,11 @@ function ActionHero(props: ActionHeroProps) {
   }
 
   return (
-    <Hero bgColor={theme.brandDark}>
+    <Hero $bgColor={theme.brandDark}>
       <ActionBgImage
-        bgImage={imageUrl}
-        imageAlign={imageAlign}
-        bgColor={categoryColor}
+        $bgImage={imageUrl}
+        $imageAlign={imageAlign}
+        $bgColor={categoryColor}
       >
         <OverlayContainer>
           <Container>

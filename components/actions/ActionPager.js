@@ -1,11 +1,11 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { ActionLink, actionPropType } from '../../common/links';
 import Icon from '../common/Icon';
 import Button from '../common/Button';
-import { getActionTermContext, withTranslation } from '../../common/i18n';
+import { getActionTermContext } from '../../common/i18n';
 import { usePlan } from 'context/plan';
+import { useTranslations } from 'next-intl';
 
 const Pager = styled.div`
   display: flex;
@@ -30,8 +30,9 @@ const PageButton = styled(Button)`
 `;
 
 const ActionPager = (props) => {
-  const { t, nextAction, previousAction } = props;
+  const { nextAction = null, previousAction = null } = props;
   const plan = usePlan();
+  const t = useTranslations();
 
   return (
     <Pager>
@@ -66,12 +67,6 @@ const ActionPager = (props) => {
 ActionPager.propTypes = {
   previousAction: actionPropType,
   nextAction: actionPropType,
-  t: PropTypes.func.isRequired,
 };
 
-ActionPager.defaultProps = {
-  previousAction: null,
-  nextAction: null,
-};
-
-export default withTranslation('common')(ActionPager);
+export default ActionPager;

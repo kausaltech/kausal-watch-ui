@@ -1,16 +1,16 @@
-import React, { useContext } from 'react';
-import { useTranslation } from 'common/i18n';
+import React from 'react';
 import { Container, Row, Col } from 'reactstrap';
 
-import PlanContext from 'context/plan';
+import { usePlan } from 'context/plan';
 import FeedbackForm from 'components/common/FeedbackForm';
 import { CommonContentBlockProps } from 'common/blocks.types';
+import { useTranslations } from 'next-intl';
 
 const AccessibilityStatementContactFormBlock = ({
   id = '',
 }: CommonContentBlockProps) => {
-  const { t } = useTranslation(['a11y']);
-  const plan = useContext(PlanContext);
+  const t = useTranslations();
+  const plan = usePlan();
 
   return (
     <Container id={id} className="my-2 text-content">
@@ -23,9 +23,9 @@ const AccessibilityStatementContactFormBlock = ({
           <FeedbackForm
             planIdentifier={plan.identifier}
             formContext="accessibility"
-            heading={t('a11y:a11y-feedback-heading')}
-            description={t('a11y:a11y-feedback-description')}
-            prompt={t('a11y:a11y-feedback-prompt')}
+            heading={t('a11y-feedback-heading')}
+            description={t('a11y-feedback-description')}
+            prompt={t('a11y-feedback-prompt')}
           />
         </Col>
       </Row>

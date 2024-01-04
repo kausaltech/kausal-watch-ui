@@ -5,13 +5,14 @@ import { Container, Row, Col } from 'reactstrap';
 
 import ContentLoader from 'components/common/ContentLoader';
 import ErrorMessage from 'components/common/ErrorMessage';
-import PlanContext from 'context/plan';
-import { useTheme } from 'common/theme';
-import { useTranslation } from 'common/i18n';
+import PlanContext, { usePlan } from 'context/plan';
+import { useTheme } from 'styled-components';
+
 import ActionStatusGraphs, {
   ActionsStatusGraphsProps,
 } from 'components/dashboard/ActionStatusGraphs';
 import { CommonContentBlockProps } from 'common/blocks.types';
+import { useTranslations } from 'next-intl';
 
 const GET_ACTION_LIST_FOR_GRAPHS = gql`
   query GetActionListForGraphs($plan: ID!, $categoryId: ID) {
@@ -43,8 +44,8 @@ const ActionStatusGraphsBlock = ({
   columnProps,
   ...graphsProps
 }: Props) => {
-  const plan = useContext(PlanContext);
-  const { t } = useTranslation();
+  const plan = usePlan();
+  const t = useTranslations();
   const theme = useTheme();
 
   // add plan.feature.showActionUpdateStatus to backend

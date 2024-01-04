@@ -5,10 +5,10 @@ import { Query } from '@apollo/client/react/components';
 import { gql } from '@apollo/client';
 
 import { Button, Collapse } from 'reactstrap';
-import { useTranslation, withTranslation } from 'common/i18n';
 import Icon from 'components/common/Icon';
 import { usePlan } from 'context/plan';
 import { PlanFeaturesContactPersonsPublicData } from 'common/__generated__/graphql';
+import { useTranslations } from 'next-intl';
 
 const Person = styled.div`
   display: flex;
@@ -101,7 +101,8 @@ const GET_CONTACT_DETAILS = gql`
 
 function ContactDetails(props) {
   const { id } = props;
-  const { t } = useTranslation();
+  const t = useTranslations();
+
   return (
     <Query query={GET_CONTACT_DETAILS} variables={{ id }}>
       {({ loading, error, data }) => {
@@ -151,9 +152,9 @@ function ContactDetails(props) {
 }
 
 function ContactPerson(props) {
-  const { person, leader } = props;
+  const { person, leader = false } = props;
   const plan = usePlan();
-  const { t } = useTranslation();
+  const t = useTranslations();
   const [collapse, setCollapse] = useState(false);
   const isLeader = leader ? 'leader' : '';
   const fullName = `${person.firstName} ${person.lastName}`;
@@ -171,7 +172,7 @@ function ContactPerson(props) {
           alt={`${role} ${fullName}`}
         />
       </div>
-      <PersonDetails body>
+      <PersonDetails>
         <Name>{fullName}</Name>
         <PersonRole>{person.title}</PersonRole>
         {person.organization && (
@@ -198,10 +199,6 @@ function ContactPerson(props) {
   );
 }
 
-ContactPerson.defaultProps = {
-  leader: false,
-};
-
 ContactDetails.propTypes = {
   id: PropTypes.string.isRequired,
 };
@@ -220,4 +217,4 @@ ContactPerson.propTypes = {
   leader: PropTypes.bool,
 };
 
-export default withTranslation('common')(ContactPerson);
+export default ContactPerson;

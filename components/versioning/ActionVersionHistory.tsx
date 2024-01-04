@@ -1,10 +1,11 @@
 import React, { useState, useContext } from 'react';
 import styled from 'styled-components';
 import { Collapse, Button } from 'reactstrap';
-import { useTranslation } from 'common/i18n';
+
 import { ActionLink } from 'common/links';
 import Icon from 'components/common/Icon';
-import SiteContext from 'context/site';
+import { deploymentType } from '@/common/environment';
+import { useTranslations } from 'next-intl';
 
 const VersionHistory = styled.div`
   color: ${(props) => props.theme.graphColors.grey090};
@@ -51,11 +52,10 @@ const VersionHistoryListItemName = styled.span``;
 
 const ActionVersionHistory = (props: ActionVersionHistoryProps) => {
   const { action } = props;
-  const { t } = useTranslation();
+  const t = useTranslations();
   const [isOpen, setIsOpen] = useState(action.supersededBy ? true : false);
   const toggle = () => setIsOpen(!isOpen);
-  const site = useContext(SiteContext);
-  const isProduction = site.deploymentType === 'production';
+  const isProduction = deploymentType === 'production';
 
   const versions = [];
   const supersededActions = !isProduction
@@ -87,7 +87,7 @@ const ActionVersionHistory = (props: ActionVersionHistoryProps) => {
             width="1.5rem"
             height="1.5rem"
           />
-          {t('common:version-history')}
+          {t('version-history')}
           <Icon name={isOpen ? 'angle-down' : 'angle-right'} />
         </VersionHistoryTitle>
       </ToggleButton>

@@ -4,14 +4,14 @@ import Head from 'next/head';
 
 import styled from 'styled-components';
 
-import PlanContext from 'context/plan';
+import PlanContext, { usePlan } from 'context/plan';
 import { useSite } from 'context/site';
 import EmbedContext from 'context/embed';
 import ThemedGlobalStyles from 'common/ThemedGlobalStyles';
-import { useTheme } from 'common/theme';
+import { useTheme } from 'styled-components';
 import { CombinedIconSymbols } from 'components/common/Icon';
 
-import Header from './header';
+import Header from './Header';
 import Footer from './Footer';
 
 const Content = styled.main`
@@ -19,7 +19,7 @@ const Content = styled.main`
 `;
 
 function Layout({ children }) {
-  const plan = useContext(PlanContext);
+  const plan = usePlan();
   const site = useSite();
   const embed = useContext(EmbedContext);
   const theme = useTheme();
@@ -113,7 +113,7 @@ type MetaProps = {
 };
 
 export function Meta({ title, shareImageUrl, description }: MetaProps) {
-  const plan = React.useContext(PlanContext);
+  const plan = usePlan();
   const parentPlanTitle = plan.parent
     ? `${plan.parent.name}/${plan.shortName || plan.name}`
     : null;

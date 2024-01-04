@@ -1,36 +1,28 @@
-import { useContext } from 'react';
-import { ThemeContext } from 'styled-components';
 import 'styled-components';
-
 import type { Theme } from '@kausal/themes/types';
-import { makeThemePropType } from '@kausal/themes/props';
-
-export function useTheme() {
-  return useContext<Theme>(ThemeContext);
-}
 
 declare module 'styled-components' {
   export interface DefaultTheme extends Theme {}
 }
 
-// TODO: Missing css validator is throwing errors
-export const themeProp = await makeThemePropType();
+export const DEFAULT_THEME_ID = 'default';
 
-export async function loadTheme(themeIdentifier: string) {
-  let themeProps: Theme;
-
+export async function loadTheme(themeIdentifier: string): Promise<Theme> {
   try {
     const theme = await import(
-      `public/static/themes/${themeIdentifier}/theme.json`
+      `@/public/static/themes/${themeIdentifier}/theme.json`
     );
-    themeProps = theme.default;
+
+    return theme.default;
   } catch (error) {
-    console.error(`Theme with identifier ${themeIdentifier} not found`);
+    console.error(`> Theme with identifier ${themeIdentifier} not found`);
     console.error(error);
-    const theme = await import(`public/static/themes/default/theme.json`);
-    themeProps = theme.default;
+    const theme = await import(
+      `public/static/themes/${DEFAULT_THEME_ID}/theme.json`
+    );
+
+    return theme.default;
   }
-  return themeProps;
 }
 
 export function getThemeCSS(themeIdentifier: string) {

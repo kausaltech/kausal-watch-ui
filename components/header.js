@@ -1,13 +1,16 @@
-import React, { useMemo, useContext } from 'react';
-import PropTypes from 'prop-types';
-import PlanContext from 'context/plan';
-import SiteContext from 'context/site';
+'use client';
 
+import React, { useMemo } from 'react';
+import PropTypes from 'prop-types';
+import { usePathname } from 'next/navigation';
+
+import { usePlan } from 'context/plan';
 import GlobalNav from 'components/common/GlobalNav';
 import SkipToContent from 'components/common/SkipToContent';
 import ApplicationStateBanner from 'components/common/ApplicationStateBanner';
 import { getActiveBranch } from 'common/links';
-import { useTheme } from 'common/theme';
+import { useTheme } from 'styled-components';
+import { deploymentType } from '@/common/environment';
 
 const getMenuStructure = (pages, rootId, activeBranch) => {
   const menuLevelItems = [];
@@ -27,10 +30,10 @@ const getMenuStructure = (pages, rootId, activeBranch) => {
 };
 
 function Header({ siteTitle }) {
-  const plan = useContext(PlanContext);
-  const site = useContext(SiteContext);
+  const pathname = usePathname();
+  const plan = usePlan();
   const theme = useTheme();
-  const activeBranch = getActiveBranch();
+  const activeBranch = getActiveBranch(pathname);
 
   const navLinks = useMemo(() => {
     let links = [];
@@ -65,7 +68,7 @@ function Header({ siteTitle }) {
   return (
     <header style={{ position: 'relative' }}>
       <SkipToContent />
-      <ApplicationStateBanner deploymentType={site.deploymentType} />
+      <ApplicationStateBanner deploymentType={deploymentType} />
       <GlobalNav
         activeBranch={activeBranch}
         siteTitle={siteTitle}
@@ -84,4 +87,4 @@ Header.propTypes = {
   siteTitle: PropTypes.string.isRequired,
 };
 
-export default React.memo(Header);
+export default Header;

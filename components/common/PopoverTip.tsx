@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { useTranslation } from 'common/i18n';
 import { Button, Tooltip } from 'reactstrap';
+import { useTranslations } from 'next-intl';
 
 const InfoButton = styled(Button)`
   padding: 0 0.25rem 0.1rem;
@@ -29,7 +29,7 @@ type PopoverTipProps = {
 
 const PopoverTip = (props: PopoverTipProps) => {
   const { content, identifier, invert = false } = props;
-  const { t } = useTranslation();
+  const t = useTranslations();
   const id = `tt-${identifier}`;
   const [tooltipOpen, setTooltipOpen] = useState(false);
   const toggle = () => setTooltipOpen(!tooltipOpen);

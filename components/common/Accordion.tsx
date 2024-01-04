@@ -3,12 +3,12 @@ import { Collapse, UncontrolledTooltip } from 'reactstrap';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { useRouter } from 'next/router';
 import { isServer } from 'common/environment';
 
-import { useTranslation } from 'common/i18n';
 import Icon from 'components/common/Icon';
 import { replaceHashWithoutScrolling } from '../../common/links';
+import { useTranslations } from 'next-intl';
+import { usePathname } from 'next/navigation';
 
 const Header = styled.h3<{ $small?: boolean }>`
   position: relative;
@@ -89,12 +89,13 @@ const AccordionContent = styled(Collapse)`
 `;
 
 const LinkCopyButton = ({ identifier }: { identifier: string }) => {
-  const { t } = useTranslation();
-  const { asPath } = useRouter();
+  const t = useTranslations();
+  const pathname = usePathname();
   const [tooltipOpen, setTooltipOpen] = useState(false);
   const [copyText, setCopyText] = useState(() => t('copy-to-clipboard'));
 
-  const path = asPath.replace(/#.*/, '');
+  console.log('pathname', pathname);
+
   const origin =
     !isServer && window.location.origin ? window.location.origin : '';
 
@@ -121,7 +122,7 @@ const LinkCopyButton = ({ identifier }: { identifier: string }) => {
         <span>{copyText}</span>
       </UncontrolledTooltip>
       <CopyToClipboard
-        text={`${origin}${path}#q${identifier}`}
+        text={`${origin}${pathname}#q${identifier}`}
         id={`tooltip-${identifier}`}
         onCopy={onCopy}
         aria-describedby={tooltipOpen ? `tt-content-${identifier}` : undefined}
@@ -215,8 +216,6 @@ function Accordion(props) {
   const { open, children } = props;
   const [openItem, setOpenItem] = useState(open);
 
-  // const site = useContext(SiteContext);
-
   const getOpenQuestionId = () => {
     const { hash } = window.location;
     return hash && hash.length > 2 ? hash.substr(2) : undefined;
@@ -252,10 +251,6 @@ function Accordion(props) {
     </div>
   );
 }
-
-Accordion.defaultProps = {
-  open: undefined,
-};
 
 Accordion.propTypes = {
   open: PropTypes.string,

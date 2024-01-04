@@ -2,9 +2,9 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import styled from 'styled-components';
 import { Link } from 'common/links';
-import { useTranslation } from 'common/i18n';
 import Icon from 'components/common/Icon';
 import { GetCategoriesForTreeMapQuery } from 'common/__generated__/graphql';
+import { useLocale, useTranslations } from 'next-intl';
 
 const CardContent = styled(motion.div)`
   a {
@@ -37,8 +37,10 @@ type CategoryCardContentProps = {
 
 const CatecoryCardContent = (props: CategoryCardContentProps) => {
   const { category, sumValues, isRoot } = props;
-  const { i18n, t } = useTranslation();
-  const { language } = i18n;
+  const t = useTranslations();
+
+  // TESTME
+  const language = useLocale();
   const numberFormat = new Intl.NumberFormat(language, {
     maximumSignificantDigits: 3,
   });
@@ -50,7 +52,7 @@ const CatecoryCardContent = (props: CategoryCardContentProps) => {
     categoryEmissions,
     sumValues
   );
-  const ofAllLabel = t('common.of-all-emissions');
+  const ofAllLabel = t('common-of-all-emissions');
 
   return (
     <CardContent initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
@@ -63,7 +65,7 @@ const CatecoryCardContent = (props: CategoryCardContentProps) => {
         dangerouslySetInnerHTML={{ __html: textcontent }}
       />
       {category?.categoryPage?.urlPath ? (
-        <Link href={category?.categoryPage?.urlPath}>
+        <Link href={category?.categoryPage?.urlPath} legacyBehavior>
           <a>
             {t('read-more')}
             <Icon name="arrowRight" />

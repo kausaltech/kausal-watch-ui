@@ -4,9 +4,10 @@ import dynamic from 'next/dynamic';
 import dayjs from 'common/dayjs';
 import styled from 'styled-components';
 import { Badge } from 'reactstrap';
-import { useTranslation } from 'common/i18n';
-import { useTheme } from 'common/theme';
+
+import { useTheme } from 'styled-components';
 import type { PlotParams } from 'react-plotly.js';
+import { useTranslations } from 'next-intl';
 
 const StatusTitle = styled.div`
   text-align: left;
@@ -22,9 +23,12 @@ const StatusTitle = styled.div`
 
 const Plot = dynamic(() => import('./Plot'), { ssr: false });
 
-const Timeline = (props) => {
-  const { startDate: startDateRaw, endDate: endDateRaw, continuous } = props;
-  const { t } = useTranslation('common');
+const Timeline = ({
+  startDate: startDateRaw,
+  endDate: endDateRaw,
+  continuous = false,
+}) => {
+  const t = useTranslations();
   const theme = useTheme();
 
   const startDate = startDateRaw ? dayjs(startDateRaw) : undefined; // .format('L');
@@ -110,12 +114,6 @@ const Timeline = (props) => {
       </StatusTitle>
     </div>
   );
-};
-
-Timeline.defaultProps = {
-  continuous: false,
-  endDate: undefined,
-  startDate: undefined,
 };
 
 Timeline.propTypes = {

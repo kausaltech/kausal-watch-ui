@@ -1,3 +1,5 @@
+// REMINDER: Is this even used?
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled, { withTheme } from 'styled-components';

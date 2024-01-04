@@ -173,7 +173,6 @@ export function initializeApolloClient(opts) {
       httpLink,
     ]),
     cache: new InMemoryCache({
-      // https://www.apollographql.com/docs/react/data/fragments/#defining-possibletypes-manually
       possibleTypes: possibleTypes.possibleTypes,
     }).restore(initialState || {}),
   };

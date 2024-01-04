@@ -6,8 +6,8 @@ import { gql } from '@apollo/client';
 import { Row, Col, Media } from 'reactstrap';
 import RichText from 'components/common/RichText';
 import dayjs from '../../common/dayjs';
-import PlanContext from '../../context/plan';
-import { withTranslation } from '../../common/i18n';
+import PlanContext, { usePlan } from '../../context/plan';
+import { useTranslations } from 'next-intl';
 
 const ActionUpdate = styled.article`
   padding: ${(props) => props.theme.spaces.s100};
@@ -61,7 +61,7 @@ const GET_ACTION_UPDATES = gql`
 `;
 
 function ActionStatusUpdate(props) {
-  const { author, date, title, content } = props;
+  const { author = null, date, title, content } = props;
 
   const defaultAvatarUrl =
     '/static/themes/default/images/default-avatar-user.png';
@@ -93,46 +93,36 @@ function ActionStatusUpdate(props) {
   );
 }
 
-class ActionUpdatesList extends React.Component {
-  static contextType = PlanContext;
+function ActionUpdatesList() {
+  const { id } = this.props;
+  const t = useTranslations();
+  const plan = usePlan();
 
-  render() {
-    const { t, id } = this.props;
-    const plan = this.context;
+  return (
+    <Query query={GET_ACTION_UPDATES} variables={{ id, plan: plan.identifier }}>
+      {({ loading, error, data }) => {
+        if (loading) return <span>{t('loading')}</span>;
+        if (error) return <span>{error.message}</span>;
 
-    return (
-      <Query
-        query={GET_ACTION_UPDATES}
-        variables={{ id, plan: plan.identifier }}
-      >
-        {({ loading, error, data }) => {
-          if (loading) return <span>{t('loading')}</span>;
-          if (error) return <span>{error.message}</span>;
-
-          const { action } = data;
-          return (
-            <Row>
-              {action.statusUpdates.map((update) => (
-                <Col sm="12" key={update.id}>
-                  <ActionStatusUpdate
-                    author={update.author}
-                    date={update.date}
-                    title={update.title}
-                    content={update.content}
-                  />
-                </Col>
-              ))}
-            </Row>
-          );
-        }}
-      </Query>
-    );
-  }
+        const { action } = data;
+        return (
+          <Row>
+            {action.statusUpdates.map((update) => (
+              <Col sm="12" key={update.id}>
+                <ActionStatusUpdate
+                  author={update.author}
+                  date={update.date}
+                  title={update.title}
+                  content={update.content}
+                />
+              </Col>
+            ))}
+          </Row>
+        );
+      }}
+    </Query>
+  );
 }
-
-ActionStatusUpdate.defaultProps = {
-  author: null,
-};
 
 ActionStatusUpdate.propTypes = {
   author: PropTypes.shape({
@@ -150,4 +140,4 @@ ActionUpdatesList.propTypes = {
   id: PropTypes.string.isRequired,
 };
 
-export default withTranslation('common')(ActionUpdatesList);
+export default ActionUpdatesList;

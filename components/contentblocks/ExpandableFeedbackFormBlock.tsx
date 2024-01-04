@@ -1,11 +1,12 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import { useTranslation } from 'common/i18n';
+
 import { Collapse } from 'reactstrap';
 import Icon from 'components/common/Icon';
 import { usePlan } from 'context/plan';
 import FeedbackForm from 'components/common/FeedbackForm';
 import { ActionContentAction } from 'components/actions/ActionContent';
+import { useTranslations } from 'next-intl';
 
 const FeedbackFormSection = styled.div`
   padding: ${(props) =>
@@ -48,7 +49,7 @@ const ExpandableFeedbackFormBlock = ({
   heading,
   description,
 }: Props) => {
-  const { t } = useTranslation(['actions']);
+  const t = useTranslations();
   const plan = usePlan();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -60,8 +61,8 @@ const ExpandableFeedbackFormBlock = ({
       <ContactTriggerButton color="link" onClick={toggle}>
         <Icon name="commenting" width="2rem" height="2rem" />
         <div>
-          <h2>{heading || t('actions:feedback-on-action')}</h2>
-          {description || t('actions:feedback-on-action-description')}
+          <h2>{heading || t('feedback-on-action')}</h2>
+          {description || t('feedback-on-action-description')}
         </div>
         <Icon
           name={isOpen ? 'angle-down' : 'angle-right'}

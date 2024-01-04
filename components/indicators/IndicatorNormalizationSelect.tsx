@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import Switch from 'components/common/Switch';
-import { useTranslation } from 'common/i18n';
+import { useTranslations } from 'next-intl';
 
 const NormalizerChooser = styled.div`
   display: flex;
@@ -15,7 +15,7 @@ const NormalizerChooser = styled.div`
 
 const IndicatorNormalizationSelect = (props) => {
   const { handleChange, currentValue } = props;
-  const { t } = useTranslation();
+  const t = useTranslations();
 
   const callback = () => handleChange(!currentValue);
 
@@ -31,10 +31,6 @@ const IndicatorNormalizationSelect = (props) => {
 };
 
 export default IndicatorNormalizationSelect;
-
-IndicatorNormalizationSelect.defaultProps = {
-  currentValue: undefined,
-};
 
 IndicatorNormalizationSelect.propTypes = {
   handleChange: PropTypes.func.isRequired,

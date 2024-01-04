@@ -1,13 +1,13 @@
 import { gql, useMutation } from '@apollo/client';
-import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { Alert, Spinner } from 'reactstrap';
 
-import { useTranslation } from 'common/i18n';
 import Button from 'components/common/Button';
 import TextInput from 'components/common/TextInput';
+import { useTranslations } from 'next-intl';
+import { usePathname, useSearchParams } from 'next/navigation';
 
 const CREATE_USER_FEEDBACK = gql`
   mutation CreateUserFeedback($input: UserFeedbackMutationInput!) {
@@ -35,21 +35,22 @@ function makeAbsoluteUrl(url) {
 
 const FeedbackForm = ({
   planIdentifier,
-  actionId,
+  actionId = null,
   heading,
   description,
   prompt,
-  formContext,
+  formContext = null,
 }) => {
   const {
     control,
     formState: { errors },
     handleSubmit,
   } = useForm();
-  const { t } = useTranslation();
+  const t = useTranslations();
   const [sent, setSent] = useState(false);
   const onDismiss = () => setSent(false);
-  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   const [
     createUserFeedback,
@@ -63,7 +64,7 @@ const FeedbackForm = ({
       plan: planIdentifier,
       action: actionId,
       url: makeAbsoluteUrl(
-        decodeURIComponent(router.query.lastUrl || router.asPath)
+        decodeURIComponent(searchParams.get('lastUrl') || pathname)
       ),
     };
     setSent(true);
@@ -169,11 +170,6 @@ const FeedbackForm = ({
       )}
     </div>
   );
-};
-
-FeedbackForm.defaultProps = {
-  formContext: null,
-  actionId: null,
 };
 
 FeedbackForm.propTypes = {

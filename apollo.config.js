@@ -3,10 +3,11 @@ require('dotenv').config();
 module.exports = {
   client: {
     includes: [
-      'pages/**/*.{js,tsx}',
-      'components/**/*.{js,tsx}',
-      'common/**/*.{js,tsx}',
-      'context/**/*.{js,tsx}',
+      'lib/**/*.{js,ts,tsx}',
+      'pages/**/*.{js,ts,tsx}',
+      'components/**/*.{js,ts,tsx}',
+      'common/**/*.{js,ts,tsx}',
+      'context/**/*.{js,ts,tsx}',
       'e2e-tests/**/*.ts',
     ],
     service: {

@@ -1,6 +1,6 @@
+import { useTranslations } from 'next-intl';
 import React from 'react';
 import styled from 'styled-components';
-import { useTranslation } from 'common/i18n';
 
 const SkipLink = styled.a`
   position: absolute;
@@ -20,7 +20,7 @@ const SkipLink = styled.a`
 `;
 
 function SkipToContent() {
-  const { t } = useTranslation();
+  const t = useTranslations();
 
   return <SkipLink href="#main">{t('skip-to-content')}</SkipLink>;
 }
