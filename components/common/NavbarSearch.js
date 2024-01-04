@@ -422,6 +422,7 @@ function NavbarSearch(props) {
                       type="submit"
                       onClick={handleSubmit}
                       aria-label={t('search')}
+                      data-testid="nav-search-btn"
                     >
                       <Icon
                         name="search"

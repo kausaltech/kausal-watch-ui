@@ -20,14 +20,13 @@ const testPlan = (planId: string) =>
     plan = await getPlanInfo(planId);
   })
   */
-    test.beforeEach(async ({ page }) => {
+    test.beforeEach(async ({ page, ctx }) => {
+      await page.goto(ctx.baseURL);
+      await ctx.checkMeta(page);
       return;
     });
 
     test('basic layout', async ({ page, ctx }) => {
-      await page.goto(ctx.baseURL);
-      await ctx.checkMeta(page);
-
       await expect(page.locator('nav#branding-navigation-bar')).toBeVisible();
       await expect(page.locator('nav#global-navigation-bar')).toBeVisible();
       await expect(page.locator('main#main')).toBeVisible();
@@ -36,9 +35,6 @@ const testPlan = (planId: string) =>
     test('action list page', async ({ page, ctx }) => {
       const listItem = ctx.getActionListMenuItem()!;
       test.skip(!listItem, 'No action list page for plan');
-
-      await page.goto(ctx.baseURL);
-      await ctx.checkMeta(page);
 
       const nav = page.locator('nav#global-navigation-bar');
       const link = nav.getByRole('link', {
@@ -76,9 +72,6 @@ const testPlan = (planId: string) =>
       const items = ctx.getCategoryMenuItems();
       test.skip(!items, 'No category pages for plan');
 
-      await page.goto(ctx.baseURL);
-      await ctx.checkMeta(page);
-
       for (const item of items) {
         const nav = page.locator('nav#global-navigation-bar');
         const categoryTypeLink = nav.getByRole('link', {
@@ -103,9 +96,6 @@ const testPlan = (planId: string) =>
       console.log(staticPageItems);
       test.skip(!staticPageItems, 'No static pages for plan');
 
-      await page.goto(ctx.baseURL);
-      await ctx.checkMeta(page);
-
       for (const staticPageItem of staticPageItems) {
         const nav = page.locator('nav#global-navigation-bar');
 
@@ -123,9 +113,6 @@ const testPlan = (planId: string) =>
       const IndicatorListItem = ctx.getIndicatorListMenuItem()!;
       test.skip(!IndicatorListItem, 'No indicator list for plan');
 
-      await page.goto(ctx.baseURL);
-      await ctx.checkMeta(page);
-
       const nav = page.locator('nav#global-navigation-bar');
       const indicatorListLink = nav.getByRole('link', {
         name: IndicatorListItem.page.title,
@@ -137,6 +124,14 @@ const testPlan = (planId: string) =>
       /*await expect(
         page.getByRole('heading', { name: 'Mittarit' })
       ).toBeVisible();*/
+    });
+
+    test('search', async ({ page, ctx }) => {
+      const searchButton = page.getByTestId('nav-search-btn');
+      test.skip(!searchButton, 'No search button for the plan');
+
+      await searchButton.click();
+      await expect(page.getByRole('combobox')).toBeVisible();
     });
   });
 
