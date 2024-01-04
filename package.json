@@ -11,7 +11,6 @@
     "@kausal/mapboxgl-legend": "^1.7.2",
     "@kausal/plotly-custom": "^2.14.3",
     "@kausal/themes": "^0.7.8",
-    "@koa/router": "^10.1.1",
     "@n8tb1t/use-scroll-position": "^2.0.3",
     "@next/bundle-analyzer": "^12.1.6",
     "@popperjs/core": "^2.11.5",
@@ -33,8 +32,6 @@
     "fontfaceobserver": "^2.1.0",
     "framer-motion": "^6.3.3",
     "html-react-parser": "^1.4.12",
-    "koa": "^2.13.4",
-    "koa-logger": "^3.2.1",
     "lodash": "^4.17.21",
     "lru-cache": "^7.9.0",
     "mapbox-gl": "^2.11.0",
@@ -42,12 +39,9 @@
     "next": "14.0.4",
     "next-images": "^1.8.4",
     "next-intl": "^3.3.2",
-    "next-with-apollo": "^5.3.0",
     "original-url": "^1.2.3",
-    "patch-package": "^6.4.7",
     "polished": "^4.2.2",
     "popper.js": "^1.16.1",
-    "postinstall-postinstall": "^2.1.0",
     "prop-types": "^15.8.1",
     "react": "18.2.0",
     "react-bootstrap-typeahead": "^6.0.0-alpha.11",
@@ -81,7 +75,7 @@
     "build": "next build",
     "clean": "rm -rf .next",
     "start": "NODE_ENV=production node server.mjs",
-    "postinstall": "patch-package && husky install",
+    "prepare": "husky install",
     "storybook": "start-storybook -p 6006 -s ./public",
     "build-storybook": "build-storybook -s ./public",
     "deploy-storybook": "storybook-to-ghpages",
@@ -128,7 +122,6 @@
     "eslint": "^8.14.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-next": "14.0.4",
-    "eslint-loader": "^4.0.2",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-jsx-a11y": "^6.5.1",
     "eslint-plugin-react": "^7.29.4",
@@ -144,21 +137,20 @@
     "storybook-addon-next": "^1.6.2",
     "storybook-addon-styled-component-theme": "^2.0.0",
     "typescript": "^4.6.4",
-    "typewiz-webpack": "^1.2.4",
-    "yarn-upgrade-all": "^0.7.1"
+    "typewiz-webpack": "^1.2.4"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/kausaltech/kausal-watch-ui"
   },
   "engines": {
-    "node": "14.x || 15.x || 16.x || 17.x"
+    "node": "20.x"
   },
   "browserslist": [
     "> 1%",
     "last 4 versions"
   ],
-  "packageManager": "yarn@3.2.1",
+  "packageManager": "npm@10.1.0",
   "optionalDependencies": {
     "@kausal/themes-private": "^0.3.17"
   },
