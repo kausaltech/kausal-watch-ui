@@ -3,7 +3,7 @@
 import { ReactNode } from 'react';
 import { GetPlanContextQuery } from '@/common/__generated__/graphql';
 
-import Header from '@/components/Header';
+import Header from '@/components/HeaderComponent';
 import Footer from '@/components/Footer';
 import { usePlan } from '@/context/plan';
 import { StyledMain } from './StyledMain';

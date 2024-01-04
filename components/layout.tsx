@@ -11,7 +11,7 @@ import ThemedGlobalStyles from 'common/ThemedGlobalStyles';
 import { useTheme } from 'styled-components';
 import { CombinedIconSymbols } from 'components/common/Icon';
 
-import Header from './Header';
+import Header from './HeaderComponent';
 import Footer from './Footer';
 
 const Content = styled.main`
