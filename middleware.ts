@@ -106,16 +106,14 @@ export async function middleware(request: NextRequest) {
   const host = request.headers.get('host');
 
   // Get hostname of request (e.g. demo.kausal.tech, demo.localhost:3000)
-  const hostname = request.headers
-    .get('host')!
-    .replace('.localhost:3000', `.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`)
-    .replace(
-      'kausal-watch-ui.vercel.app',
-      `.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`
-    );
+  const hostname = request.headers.get('host')!.replace(
+    `.${process.env.NEXT_REPLACE_DOMAIN}`, // TODO: naming
+    `.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`
+  );
 
   console.log(`
       > Middleware
+        ${process.env.NEXT_REPLACE_DOMAIN}
         > host: ${request.headers.get('host')}
         > hostname: ${hostname}
     `);
