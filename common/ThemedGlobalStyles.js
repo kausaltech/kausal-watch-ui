@@ -155,17 +155,19 @@ const GlobalStyle = createGlobalStyle`
     }
 
     &.left {
-      display: inline-block;
+      float: left;
+      max-width: 100%;
+      height: auto;
       margin: ${(props) => props.theme.spaces.s150};
       margin-left: 0;
-      float: left;
     }
 
     &.right {
-      display: inline-block;
+      float: right;
+      max-width: 100%;
+      height: auto;
       margin: ${(props) => props.theme.spaces.s150};
       margin-right: 0;
-      float: right;
     }
   }
 
