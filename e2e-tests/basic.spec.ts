@@ -108,13 +108,35 @@ const testPlan = (planId: string) =>
 
       for (const staticPageItem of staticPageItems) {
         const nav = page.locator('nav#global-navigation-bar');
+
         const staticPageLink = nav.getByRole('link', {
           name: staticPageItem?.page.title,
           exact: true,
         });
+
         await staticPageLink.click();
         await expect(page.locator('main#main')).toBeVisible();
       }
+    });
+
+    test('indicator list page', async ({ page, ctx }) => {
+      const IndicatorListItem = ctx.getIndicatorListMenuItem()!;
+      test.skip(!IndicatorListItem, 'No indicator list for plan');
+
+      await page.goto(ctx.baseURL);
+      await ctx.checkMeta(page);
+
+      const nav = page.locator('nav#global-navigation-bar');
+      const indicatorListLink = nav.getByRole('link', {
+        name: IndicatorListItem.page.title,
+        exact: true,
+      });
+
+      await indicatorListLink.click();
+      await expect(page.locator('main#main')).toBeVisible();
+      /*await expect(
+        page.getByRole('heading', { name: 'Mittarit' })
+      ).toBeVisible();*/
     });
   });
 
