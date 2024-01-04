@@ -17,7 +17,7 @@ type Props = {
 
 export default async function ContentPage({ params }: Props) {
   const { slug, plan } = params;
-  const path = `/${slug.join('/')}`;
+  const path = `/${slug.map(decodeURIComponent).join('/')}`;
 
   const { data } = await getContentPage(plan, path);
 
