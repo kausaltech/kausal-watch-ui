@@ -94,8 +94,6 @@ const LinkCopyButton = ({ identifier }: { identifier: string }) => {
   const [tooltipOpen, setTooltipOpen] = useState(false);
   const [copyText, setCopyText] = useState(() => t('copy-to-clipboard'));
 
-  console.log('pathname', pathname);
-
   const origin =
     !isServer && window.location.origin ? window.location.origin : '';
 
