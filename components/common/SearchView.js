@@ -338,6 +338,7 @@ function SearchView(props) {
                     value={userSearch?.q}
                     onChange={handleValueChange}
                     aria-label={t('search')}
+                    data-testid="search-form"
                   />
                   <FormGroup switch>
                     <Input

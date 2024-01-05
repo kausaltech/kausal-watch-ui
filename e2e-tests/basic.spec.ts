@@ -129,9 +129,25 @@ const testPlan = (planId: string) =>
     test('search', async ({ page, ctx }) => {
       const searchButton = page.getByTestId('nav-search-btn');
       test.skip(!searchButton, 'No search button for the plan');
+      const searchInput = page.getByRole('combobox');
+      await expect(searchInput).toBeHidden();
 
       await searchButton.click();
-      await expect(page.getByRole('combobox')).toBeVisible();
+      await expect(searchInput).toBeVisible();
+
+      await searchInput.fill('test');
+      await searchInput.press('Enter');
+      await page.waitForURL('**/search?q=test');
+      await expect(page.getByTestId('search-form')).toBeVisible;
+    });
+
+    test('language selector', async ({ page, ctx }) => {
+      const languageSelector = page.getByTestId('lang-selector');
+      console.log(languageSelector);
+      test.skip(!languageSelector, 'No language selector for the plan');
+
+      await languageSelector.click();
+      await expect(page.locator('dropdown-menu')).toBeVisible();
     });
   });
 
