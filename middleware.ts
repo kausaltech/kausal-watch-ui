@@ -5,7 +5,11 @@ import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
 import possibleTypes from './common/__generated__/possible_types.json';
 import { gqlUrl } from './lib/api.utils';
 import { GET_PLANS_BY_HOSTNAME } from './lib/queries/get-plans';
-import { GetPlansByHostnameQuery } from './common/__generated__/graphql';
+import {
+  GetPlansByHostnameQuery,
+  GetPlansByHostnameQueryVariables,
+} from './common/__generated__/graphql';
+import { notFound } from 'next/navigation';
 
 const apolloClient = new ApolloClient({
   cache: new InMemoryCache({
@@ -126,7 +130,10 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL(`http://sunnydale.${host}`));
   }
 
-  const { data, error } = await apolloClient.query<GetPlansByHostnameQuery>({
+  const { data, error } = await apolloClient.query<
+    GetPlansByHostnameQuery,
+    GetPlansByHostnameQueryVariables
+  >({
     query: GET_PLANS_BY_HOSTNAME,
     variables: { hostname },
     fetchPolicy: 'no-cache',
@@ -135,8 +142,8 @@ export async function middleware(request: NextRequest) {
   console.log('> Middleware > plans', data.plansForHostname);
 
   if (error || !data.plansForHostname?.length) {
-    // Redirect to 500
-    return NextResponse.rewrite(new URL('/404', request.url));
+    // TODO: Log errors
+    return notFound();
   }
 
   const [locale, plan, rest] = stripSlashes(pathname).split('/');

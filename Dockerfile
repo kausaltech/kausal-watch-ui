@@ -19,7 +19,6 @@ ENV YARN_NPM_ALWAYS_AUTH=${YARN_NPM_ALWAYS_AUTH:-false}
 # Install dependencies first
 ENV YARN_CACHE_FOLDER /yarn-cache
 COPY yarn.lock package*.json ./
-COPY patches ./patches/
 
 RUN yarn config set nodeLinker 'node-modules'
 RUN yarn config set logFilters --json '[{"code": "YN0013", "level": "discard"}]'

@@ -12,8 +12,15 @@ const withNextIntl = require('next-intl/plugin')('./config/i18n.ts');
 const sentryAuthToken =
   secrets.SENTRY_AUTH_TOKEN || process.env.SENTRY_AUTH_TOKEN;
 
+console.log(`
+    > Kausal Watch UI
+      > Initialising app
+        > DEPLOYMENT_TYPE: ${process.env.DEPLOYMENT_TYPE}
+        > NODE_ENV: ${process.env.NODE_ENV}
+  `);
+
 function initializeThemes() {
-  console.log('> Initialising themes');
+  console.log(' > Initialising themes');
   const destPath = path.join(__dirname, 'public', 'static', 'themes');
   const {
     generateThemeSymlinks: generateThemeSymlinksPublic,
@@ -27,8 +34,6 @@ function initializeThemes() {
   } catch (error) {
     console.error(error);
   }
-
-  console.log('> Done initialising themes');
 }
 
 initializeThemes();
