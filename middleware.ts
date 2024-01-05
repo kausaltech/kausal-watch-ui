@@ -135,7 +135,7 @@ export async function middleware(request: NextRequest) {
   console.log('> Middleware > plans', data.plansForHostname);
 
   if (error || !data.plansForHostname?.length) {
-    // TODO: Redirect to 500
+    // Redirect to 500
     return NextResponse.rewrite(new URL('/404', request.url));
   }
 
