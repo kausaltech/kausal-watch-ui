@@ -141,7 +141,7 @@ export class PlanContext {
   }
 
   getCategoryMenuItems(): CategoryMenuItem[] {
-    console.log(this.plan.mainMenu?.items);
+    console.log(this.plan.mainMenu);
     function isCategoryItem(item: MainMenuItem): item is CategoryMenuItem {
       if (item?.__typename !== 'PageMenuItem') return false;
       if (item.page.__typename !== 'CategoryPage') return false;
@@ -160,7 +160,6 @@ export class PlanContext {
     }
     const items =
       (this.plan.mainMenu?.items ?? []).filter(isStaticPageItem) || [];
-    console.log(this.plan.mainMenu?.items);
     return items;
   }
 

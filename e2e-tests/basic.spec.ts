@@ -86,14 +86,11 @@ const testPlan = (planId: string) =>
         });
         await link.click();
         await expect(page.locator('main#main')).toBeVisible();
-
-        console.log(link);
       }
     });
 
     test('static pages', async ({ page, ctx }) => {
       const staticPageItems = ctx.getStaticPageMenuItem();
-      console.log(staticPageItems);
       test.skip(!staticPageItems, 'No static pages for plan');
 
       for (const staticPageItem of staticPageItems) {
@@ -143,7 +140,7 @@ const testPlan = (planId: string) =>
 
     test('language selector', async ({ page, ctx }) => {
       const languageSelector = page.getByTestId('lang-selector');
-      console.log(languageSelector);
+
       test.skip(!languageSelector, 'No language selector for the plan');
 
       await languageSelector.click();
