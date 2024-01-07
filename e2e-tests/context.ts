@@ -52,8 +52,8 @@ const GET_PLAN_INFO = gql`
         items(withDescendants: true) {
           __typename
           ... on PageMenuItem {
-            id
             page {
+              id
               title
               urlPath
               slug
@@ -78,7 +78,14 @@ const GET_PLAN_INFO = gql`
 type PlanInfo = NonNullable<PlaywrightGetPlanInfoQuery['plan']>;
 type ActionInfo = PlanInfo['actions'][0];
 
-export type MainMenuItem = NonNullable<PlanInfo['mainMenu']>['items'][0];
+export type MainMenuItem = NonNullable<PlanInfo['mainMenu']>['items'][0] & {
+  parent: {
+    id: string;
+    page: {
+      __typename: string;
+    };
+  };
+};
 export type PageMenuItem = MainMenuItem & {
   __typename: 'PageMenuItem';
 };
@@ -95,6 +102,11 @@ export type CategoryMenuItem = PageMenuItem & {
 export type CategoryTypeMenuItem = PageMenuItem & {
   page: {
     __typename: 'CategoryTypePage';
+  };
+};
+export type EmptyPageMenuItem = PageMenuItem & {
+  page: {
+    __typename: 'EmptyPage';
   };
 };
 export type StaticPageMenuItem = PageMenuItem & {
@@ -140,11 +152,19 @@ export class PlanContext {
     return item;
   }
 
-  getCategoryMenuItems(): CategoryMenuItem[] {
-    console.log(this.plan.mainMenu);
+  getCategoryMenuItems(
+    parentId: string | null | undefined
+  ): CategoryMenuItem[] {
+    this.plan.mainMenu?.items.map((item) => {
+      console.log(item);
+    });
+
+    if (!parentId) return [];
+
     function isCategoryItem(item: MainMenuItem): item is CategoryMenuItem {
       if (item?.__typename !== 'PageMenuItem') return false;
       if (item.page.__typename !== 'CategoryPage') return false;
+      if (item.parent.id !== parentId) return false;
       return true;
     }
     const items =
@@ -152,10 +172,44 @@ export class PlanContext {
     return items;
   }
 
+  getEmptyPageMenuItem(): EmptyPageMenuItem | null {
+    function isEmptyPageType(item: MainMenuItem): item is EmptyPageMenuItem {
+      if (item?.__typename !== 'PageMenuItem') return false;
+      if (item.page.__typename !== 'EmptyPage') return false;
+      return true;
+    }
+    const item =
+      (this.plan.mainMenu?.items ?? []).find(isEmptyPageType) || null;
+    return item;
+  }
+
+  getEmptyPageChildrenItems(
+    parentId: string | null | undefined
+  ): Array<CategoryMenuItem | StaticPageMenuItem> {
+    if (!parentId) return [];
+
+    function isEmptyPageChildItem(
+      item: MainMenuItem
+    ): item is CategoryMenuItem | StaticPageMenuItem {
+      if (item?.__typename !== 'PageMenuItem') return false;
+      if (item.parent?.id !== parentId) return false;
+      return (
+        item.page.__typename === 'CategoryPage' ||
+        item.page.__typename === 'StaticPage'
+      );
+    }
+
+    const items =
+      (this.plan.mainMenu?.items ?? []).filter(isEmptyPageChildItem) || [];
+    return items;
+  }
+
   getStaticPageMenuItem(): StaticPageMenuItem[] {
     function isStaticPageItem(item: MainMenuItem): item is StaticPageMenuItem {
       if (item?.__typename !== 'PageMenuItem') return false;
       if (item.page.__typename !== 'StaticPage') return false;
+      if (item.parent.page.__typename !== 'PlanRootPage') return false;
+
       return true;
     }
     const items =
