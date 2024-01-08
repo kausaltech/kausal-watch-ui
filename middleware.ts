@@ -125,7 +125,7 @@ export async function middleware(request: NextRequest) {
 
   // Rewrite root application to `sunnydale` tenant
   if (hostname === 'localhost') {
-    return NextResponse.redirect(new URL(`http://sunnydale.${hostname}`));
+    return NextResponse.redirect(new URL(`http://sunnydale.${host}`));
   }
 
   const { data, error } = await apolloClient.query<
