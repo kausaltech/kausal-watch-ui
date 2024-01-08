@@ -16,8 +16,12 @@ type Props = {
 };
 
 const StyledContainer = styled.div`
-  font-size: ${(props) => props.theme.fontSizeMd};
+  font-size: ${(props) => props.theme.fontSizeBase};
   margin-bottom: ${(props) => props.theme.spaces.s100};
+
+  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    font-size: ${(props) => props.theme.fontSizeMd};
+  }
 `;
 
 function Crumb({ crumb }: { crumb: TCrumb }) {

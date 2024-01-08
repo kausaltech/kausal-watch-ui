@@ -254,7 +254,7 @@ export default function RichText(props: RichTextProps) {
     );
 
   return (
-    <div {...rest} className={`text-content ${className || ''}`}>
+    <div {...rest} className={`text-content clearfix ${className || ''}`}>
       <StyledRichText>{parsedContent}</StyledRichText>
     </div>
   );

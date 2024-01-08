@@ -126,7 +126,7 @@ const ImageCredit = styled.span`
 const ActionHeadline = styled.h1`
   hyphens: manual;
   margin: ${(props) => props.theme.spaces.s100} 0;
-  font-size: ${(props) => props.theme.fontSizeXl};
+  font-size: ${(props) => props.theme.fontSizeLg};
   color: ${(props) => props.theme.themeColors.black} !important;
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
@@ -138,6 +138,7 @@ const ActionHeadline = styled.h1`
 const ActionNumber = styled.span`
   margin-right: ${(props) => props.theme.spaces.s100};
   white-space: nowrap;
+  display: block;
 
   &:after {
     content: '.';
