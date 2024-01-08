@@ -74,7 +74,8 @@
   "license": "AGPL-3.0-or-later",
   "main": "next.config.js",
   "scripts": {
-    "dev:next": "NODE_OPTIONS='--inspect' next dev",
+    "dev:next": "next dev",
+    "dev:next:inspect": "NODE_OPTIONS='--inspect' next dev",
     "start:next": "next start",
     "dev": "node server.mjs",
     "build": "next build",

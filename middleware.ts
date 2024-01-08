@@ -9,7 +9,6 @@ import {
   GetPlansByHostnameQuery,
   GetPlansByHostnameQueryVariables,
 } from './common/__generated__/graphql';
-import { notFound } from 'next/navigation';
 
 const apolloClient = new ApolloClient({
   cache: new InMemoryCache({
@@ -35,9 +34,11 @@ export const config = {
   ],
 };
 
-type PlanFromPlansQuery = NonNullable<
+type PlanForHostname = NonNullable<
   GetPlansByHostnameQuery['plansForHostname']
->[0] & { __typename: 'Plan' };
+>[0];
+
+type PlanFromPlansQuery = PlanForHostname & { __typename: 'Plan' };
 
 function stripSlashes(path: string) {
   return path.replace(/^\/|\/$/g, '');
@@ -67,28 +68,39 @@ function stripLocaleAndPlan(
     .join('/');
 }
 
+const isPlan = (plan: PlanForHostname) => plan?.__typename === 'Plan';
+
 function getParsedPlan(
   possiblePlans: string[],
   plans: PlanFromPlansQuery[]
 ): PlanFromPlansQuery | undefined {
-  if (plans.length === 1 && plans[0]?.__typename === 'Plan') {
+  // If only one plan exists return that
+  if (plans.length === 1 && isPlan(plans[0])) {
     return plans[0];
   }
 
-  return plans.find(
+  // Find and return the plan associated with the plan in the pathname
+  const plan = plans.find(
     (plan) =>
-      (plan?.__typename === 'Plan' &&
-        plan.domains?.find(
-          (domain) =>
-            domain?.basePath &&
-            possiblePlans.includes(stripSlashes(domain.basePath))
-        )) ??
-      plans.find(
-        (plan) =>
-          plan?.__typename === 'Plan' &&
-          plan.domains?.find((domain) => domain?.basePath === null)
-      ) ??
-      undefined
+      isPlan(plan) &&
+      plan.domains?.find(
+        (domain) =>
+          domain?.basePath &&
+          possiblePlans.includes(stripSlashes(domain.basePath))
+      )
+  );
+
+  if (plan) {
+    return plan;
+  }
+
+  // If no plan is found by path, return the default plan
+  return (
+    plans.find(
+      (plan) =>
+        isPlan(plan) &&
+        plan.domains?.find((domain) => domain?.basePath === null)
+    ) ?? undefined
   );
 }
 
@@ -108,26 +120,12 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   const host = request.headers.get('host');
-
-  // Get hostname of request (e.g. demo.kausal.tech, demo.localhost:3000)
-  const hostname = request.headers.get('host')!.replace(
-    `.${process.env.NEXT_REPLACE_DOMAIN}`, // TODO: naming
-    `.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`
-  );
-
-  console.log(`
-      > Middleware
-        ${process.env.NEXT_REPLACE_DOMAIN}
-        > host: ${request.headers.get('host')}
-        > hostname: ${hostname}
-    `);
+  const protocol = request.headers.get('x-forwarded-proto');
+  const hostname = new URL(`${protocol}://${host}`).hostname;
 
   // Rewrite root application to `sunnydale` tenant
-  if (
-    hostname === 'localhost:3000' ||
-    hostname === process.env.NEXT_PUBLIC_ROOT_DOMAIN
-  ) {
-    return NextResponse.redirect(new URL(`http://sunnydale.${host}`));
+  if (hostname === 'localhost') {
+    return NextResponse.redirect(new URL(`http://sunnydale.${hostname}`));
   }
 
   const { data, error } = await apolloClient.query<
@@ -139,11 +137,9 @@ export async function middleware(request: NextRequest) {
     fetchPolicy: 'no-cache',
   });
 
-  console.log('> Middleware > plans', data.plansForHostname);
-
   if (error || !data.plansForHostname?.length) {
     // TODO: Log errors
-    return notFound();
+    return NextResponse.rewrite(new URL('/404', request.url));
   }
 
   const [locale, plan, rest] = stripSlashes(pathname).split('/');
@@ -159,20 +155,16 @@ export async function middleware(request: NextRequest) {
 
   const parsedPlan = getParsedPlan(
     [plan, locale],
-    data.plansForHostname.filter(
-      (plan): plan is PlanFromPlansQuery => plan?.__typename === 'Plan'
+    data.plansForHostname.filter((plan): plan is PlanFromPlansQuery =>
+      isPlan(plan)
     )
   );
-
-  console.log(`    >> parsedPlan: ${parsedPlan?.id}`);
 
   if (!parsedPlan) {
     return NextResponse.rewrite(new URL('/404', request.url));
   }
 
   const parsedLocale = getParsedLocale(locale, parsedPlan);
-
-  console.log(`    >> parsedLocale: ${parsedLocale}`);
 
   const handleI18nRouting = createIntlMiddleware({
     locales: [parsedPlan.primaryLanguage, ...(parsedPlan.otherLanguages ?? [])],
