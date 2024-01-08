@@ -72,10 +72,14 @@ const GET_PLAN_INFO = gql`
         }
       }
     }
+    planIndicators(plan: $plan) {
+      id
+    }
   }
 `;
 
 type PlanInfo = NonNullable<PlaywrightGetPlanInfoQuery['plan']>;
+type PlanIndicators = NonNullable<PlaywrightGetPlanInfoQuery['planIndicators']>;
 type ActionInfo = PlanInfo['actions'][0];
 
 export type MainMenuItem = NonNullable<PlanInfo['mainMenu']>['items'][0] & {
@@ -121,11 +125,13 @@ export type IndicatorListMenuItem = PageMenuItem & {
 };
 export class PlanContext {
   plan: PlanInfo;
+  planIndicators: PlanIndicators;
   baseURL: string;
 
-  constructor(plan: PlanInfo, baseURL: string) {
+  constructor(plan: PlanInfo, baseURL: string, planIndicators: PlanIndicators) {
     this.plan = plan;
     this.baseURL = baseURL;
+    this.planIndicators = planIndicators;
   }
 
   getActionListMenuItem(): ActionListMenuItem | null {
@@ -227,6 +233,7 @@ export class PlanContext {
     }
     const item =
       (this.plan.mainMenu?.items ?? []).find(isIndicatorList) || null;
+    console.log(this);
     return item;
   }
 
@@ -256,7 +263,8 @@ export class PlanContext {
       variables: { plan: planId, locale: primaryLanguage, clientURL: baseURL },
     });
     const data = res.data!.plan!;
-    return new PlanContext(data, baseURL);
+    const planIndicators = res.data!.planIndicators!;
+    return new PlanContext(data, baseURL, planIndicators);
   }
 }
 
