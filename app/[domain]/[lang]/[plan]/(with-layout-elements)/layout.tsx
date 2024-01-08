@@ -23,6 +23,7 @@ function getTitles(plan: NonNullable<GetPlanContextQuery['plan']>) {
 }
 
 type Props = {
+  params: { domain: string };
   children: ReactNode;
 };
 
@@ -30,12 +31,23 @@ type Props = {
  * Route group to support adding a header, footer and other
  * layout elements that shouldn't be applied to embeds.
  */
-export default function Layout({ children }: Props) {
+export default function Layout({ children, params }: Props) {
   const plan = usePlan();
   const { navigationTitle, title } = getTitles(plan);
 
+  const jsonLd = `{
+    "@context" : "https://schema.org",
+    "@type" : "WebSite",
+    "name" : "${title}",
+    "url" : "${params.domain}"
+  }`;
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Header siteTitle={navigationTitle} />
       <StyledMain id="main">{children}</StyledMain>
       <Footer siteTitle={navigationTitle} />{' '}
