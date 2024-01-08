@@ -228,7 +228,6 @@ const StyledDropdownToggle = styled(DropdownToggle)`
 `;
 
 const StyledDropdown = styled(UncontrolledDropdown)`
-
   .dropdown-toggle.nav-link {
     padding-left: 0;
     padding-right: 0;
@@ -270,6 +269,12 @@ const StyledDropdown = styled(UncontrolledDropdown)`
   }
 `;
 
+const StyledDropdownMenu = styled(DropdownMenu)`
+  &.dropdown-menu[data-bs-popper] {
+    top: unset;
+  }
+`;
+
 const NavbarToggler = styled.button`
   display: inline-block;
   padding: 0;
@@ -300,7 +305,7 @@ function DropdownList(props) {
           {parentName}
         </NavHighlighter>
       </StyledDropdownToggle>
-      <DropdownMenu end>
+      <StyledDropdownMenu>
         {items &&
           items.map((child) => (
             <DropdownItem key={child.id}>
@@ -313,7 +318,7 @@ function DropdownList(props) {
               </NavLink>
             </DropdownItem>
           ))}
-      </DropdownMenu>
+      </StyledDropdownMenu>
     </StyledDropdown>
   );
 }
