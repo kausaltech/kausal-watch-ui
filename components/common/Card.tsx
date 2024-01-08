@@ -49,15 +49,15 @@ const StyledCard = styled(BSCard)`
   }
 `;
 
-const ImgArea = styled.div<{ colorEffect?: string }>`
+const ImgArea = styled.div<{ $colorEffect?: string }>`
   height: 9rem;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: ${(props) => props.colorEffect || props.theme.brandDark};
-  border-bottom: ${(props) => (props.colorEffect ? '6px' : '0')} solid
-    ${(props) => props.colorEffect};
+  background-color: ${(props) => props.$colorEffect || props.theme.brandDark};
+  border-bottom: ${(props) => (props.$colorEffect ? '6px' : '0')} solid
+    ${(props) => props.$colorEffect};
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     height: 8rem;
@@ -81,10 +81,10 @@ const SvgIcon = styled(SVG)`
   fill: white;
 `;
 
-const BitmapIcon = styled.div<{ imageSrc: string }>`
+const BitmapIcon = styled.div<{ $imageSrc: string }>`
   width: ${(props) => props.theme.spaces.s800};
   height: ${(props) => props.theme.spaces.s800};
-  background-image: url(${(props) => props.imageSrc || 'none'});
+  background-image: url(${(props) => props.$imageSrc || 'none'});
   background-size: cover;
   background-position: center center;
 `;
@@ -118,21 +118,21 @@ const Card = (props: CardProps) => {
   const ImageComponent = () => {
     if (imageType === 'svgIcon') {
       return (
-        <ImgArea colorEffect={colorEffect} data-testid="svg-icon">
+        <ImgArea $colorEffect={colorEffect} data-testid="svg-icon">
           {imageUrl && <SvgIcon src={imageUrl} />}
         </ImgArea>
       );
     }
     if (imageType === 'bitmapIcon') {
       return (
-        <ImgArea colorEffect={colorEffect} data-testid="bitmap-icon">
-          {imageUrl && <BitmapIcon imageSrc={imageUrl} />}
+        <ImgArea $colorEffect={colorEffect} data-testid="bitmap-icon">
+          {imageUrl && <BitmapIcon $imageSrc={imageUrl} />}
         </ImgArea>
       );
     }
     if (imageType === 'image' && imageUrl) {
       return (
-        <ImgArea colorEffect={colorEffect}>
+        <ImgArea $colorEffect={colorEffect}>
           <ImgBg
             $background={imageUrl}
             $imageAlign={imageAlign}
