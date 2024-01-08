@@ -232,6 +232,9 @@ export const GET_ACTION_DETAILS = gql`
       actionAttributeTypes {
         ...AttributesBlockAttributeType
       }
+      generalContent {
+        actionTerm
+      }
     }
   }
 

@@ -3720,6 +3720,8 @@ export type SiteGeneralContent = {
   ownerUrl: Scalars['String'];
   siteDescription: Scalars['String'];
   siteTitle: Scalars['String'];
+  /** A message prominently displayed in a banner at the top of every page on the public website */
+  sitewideAnnouncement?: Maybe<Scalars['String']>;
 };
 
 export enum SiteGeneralContentActionTaskTerm {
@@ -8277,7 +8279,10 @@ export type GetActionDetailsQuery = (
         & { __typename?: 'Unit' }
       ) | null }
       & { __typename: 'AttributeType' }
-    )> }
+    )>, generalContent: (
+      { actionTerm: SiteGeneralContentActionTerm }
+      & { __typename?: 'SiteGeneralContent' }
+    ) }
     & { __typename?: 'Plan' }
   ) | null }
   & { __typename?: 'Query' }

@@ -1,5 +1,6 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
+import { headers } from 'next/headers';
 import OrgContent from '@/components/orgs/OrgContent';
 import { getOrganizationDetails } from '@/lib/queries/get-organization';
 
@@ -11,16 +12,17 @@ type Props = {
   };
 };
 
-/* 
-      <Meta title={org.name} />
-/> */
-
 // TODO: Indicator 404, error and loading
 export default async function OrganizationPage({ params }: Props) {
   const { id, plan, domain } = params;
+  const headersList = headers();
+  const protocol = headersList.get('x-forwarded-proto');
 
-  // TODO: clientUrl protocol fix
-  const { data } = await getOrganizationDetails(plan, id, `https://${domain}`);
+  const { data } = await getOrganizationDetails(
+    plan,
+    id,
+    `${protocol}://${domain}`
+  );
 
   if (!data.organization || !data.plan) {
     return notFound();

@@ -188,6 +188,7 @@ export async function middleware(request: NextRequest) {
       request.url
     );
 
+    response.headers.set('x-url', request.url.toString());
     response.headers.set('x-middleware-rewrite', url.toString());
   }
 

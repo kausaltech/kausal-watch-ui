@@ -72,7 +72,6 @@ CausalNavigation.propTypes = {};
 CausalNavigation.propTypes = {
   causes: PropTypes.arrayOf(PropTypes.shape).isRequired,
   effects: PropTypes.arrayOf(PropTypes.shape).isRequired,
-  t: PropTypes.func.isRequired,
 };
 
 export default CausalNavigation;

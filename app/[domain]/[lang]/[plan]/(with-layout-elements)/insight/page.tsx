@@ -1,39 +1,20 @@
-'use client';
+import { getTranslations } from 'next-intl/server';
+import { Metadata } from 'next';
 
-import { usePlan } from '@/context/plan';
-import { useLocale } from 'next-intl';
-import VisPage from './VisPage';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { isValidIndicatorId } from '@/lib/utils/indicators';
+import { InsightPage } from './InsightPage';
 
-/*
-TODO: metadata
+type Props = {
+  params: { lang: string };
+};
 
-        <Meta
-          title={`${t('indicators')}`}
-          description="Toimenpiteiden edistymistä ja kasvihuonekaasupäästöjen kehitystä seurataan mittareilla"
-        />
-*/
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const t = await getTranslations({ locale: params.lang });
 
-export default function InsightPage() {
-  const plan = usePlan();
-  const locale = useLocale();
-  const searchParams = useSearchParams();
-  const router = useRouter();
+  return {
+    title: t('indicators'),
+  };
+}
 
-  const filterByIndicator = searchParams.get('indicator');
-
-  return (
-    <VisPage
-      planId={plan.id}
-      locale={locale}
-      router={router}
-      filters={{
-        indicator:
-          filterByIndicator && isValidIndicatorId(filterByIndicator)
-            ? parseInt(filterByIndicator)
-            : null,
-      }}
-    />
-  );
+export default function Page() {
+  return <InsightPage />;
 }

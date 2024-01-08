@@ -1,11 +1,16 @@
+import { getTranslations } from 'next-intl/server';
+
 import { GetContentPageQuery } from '@/common/__generated__/graphql';
 import { getContentPage } from '@/lib/queries/get-content-page';
-import React from 'react';
 import { AccessibilityPage } from './AccessibilityPage';
 import { Content, GeneralPlanPage } from '../[...slug]/ContentPage';
+import { Metadata } from 'next';
 
 type Props = {
-  params: { plan: string };
+  params: {
+    plan: string;
+    lang: string;
+  };
 };
 
 const isAccessibilityPageWithBody = (
@@ -15,7 +20,13 @@ const isAccessibilityPageWithBody = (
     planPage?.__typename === 'StaticPage') &&
   planPage?.body?.length;
 
-//      <Meta title={t('accessibility-statement')} />
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const t = await getTranslations({ locale: params.lang });
+
+  return {
+    title: t('accessibility-statement'),
+  };
+}
 
 export default async function ContentPage({ params }: Props) {
   const { plan } = params;

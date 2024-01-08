@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
+import { headers } from 'next/headers';
 
 import ThemeProvider from '@/lib/ThemeProvider';
 import PlanProvider from '@/lib/PlanProvider';
@@ -10,8 +11,6 @@ import '@/styles/default/main.scss';
 import SiteProvider from '@/lib/SiteProvider';
 import { getThemeCSS, loadTheme } from '@/common/theme';
 import { CombinedIconSymbols } from '@/components/common/Icon';
-import { PlanContextFragment } from '@/common/__generated__/graphql';
-import { AlternateURLs } from 'next/dist/lib/metadata/types/alternative-urls-types';
 
 export const dynamic = 'force-dynamic';
 
@@ -20,26 +19,14 @@ type Props = {
   children: ReactNode;
 };
 
-const createAlternateLangsMap = (
-  plan: PlanContextFragment,
-  currentLang: string
-): AlternateURLs['languages'] =>
-  [plan.primaryLanguage, ...(plan.otherLanguages ?? [])]
-    .filter((lang) => lang && lang !== currentLang)
-    .reduce(
-      (langs, lang) => ({
-        ...langs,
-        [lang]: `/${lang}`,
-      }),
-      {}
-    );
-
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const headersList = headers();
+  const protocol = headersList.get('x-forwarded-proto');
+  const url = new URL(headersList.get('x-url') ?? '');
   const { data } = await getPlan(
     params.domain,
     params.plan,
-    // TODO: protocol
-    `http://${params.domain}`
+    `${protocol}://${params.domain}`
   );
 
   if (!data.plan) {
@@ -48,7 +35,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const { plan } = data;
   const parentPlanTitle = plan.parent
-    ? `${plan.parent.name}/${plan.shortName || plan.name}`
+    ? `${plan.parent.name} / ${plan.shortName || plan.name}`
     : null;
   const title = parentPlanTitle || plan.generalContent.siteTitle || plan.name;
   const description = plan.generalContent.siteDescription;
@@ -66,13 +53,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title,
       description,
       images: ogImage ? [ogImage] : undefined,
-      url: `/${params.lang}`,
+      url: url.pathname,
     },
-    // TODO: protocol
-    metadataBase: new URL(`https://${params.domain}`),
+    metadataBase: new URL(url.origin),
     alternates: {
-      canonical: `/${params.lang}`,
-      languages: createAlternateLangsMap(plan, params.lang),
+      canonical: `${url.origin}${url.pathname}`,
     },
     icons: {
       icon: [
@@ -91,8 +76,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function PlanLayout({ params, children }: Props) {
   const { plan, domain } = params;
-  // TODO: Get protocol and ensure proper clientUrl
-  const { data } = await getPlan(domain, plan, `http://${domain}`);
+  const headersList = headers();
+  const protocol = headersList.get('x-forwarded-proto');
+  // TODO: Check purpose of clientUrl for API
+  const { data } = await getPlan(domain, plan, `${protocol}://${domain}`);
 
   if (!data.plan) {
     notFound();
