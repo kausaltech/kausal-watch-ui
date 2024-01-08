@@ -154,6 +154,17 @@ const testPlan = (planId: string) =>
       }
     });
 
+    test('indicator page direct', async ({ page, ctx }) => {
+      const planIndicators = ctx.getPlanIndicators();
+      test.skip(planIndicators.length == 0, 'No indicators defined in plan');
+
+      const indicatorUrl = ctx.baseURL + '/indicators/' + planIndicators[0]?.id;
+      await page.goto(indicatorUrl);
+      await ctx.checkMeta(page);
+
+      await expect(page.locator('main#main')).toBeVisible();
+    });
+
     test('search', async ({ page, ctx }) => {
       const searchButton = page.getByTestId('nav-search-btn');
       test.skip(!searchButton, 'No search button for the plan');

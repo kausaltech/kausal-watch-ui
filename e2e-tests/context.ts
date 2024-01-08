@@ -147,6 +147,7 @@ export class PlanContext {
   }
 
   getActionURL(action: ActionInfo) {
+    console.log(action.viewUrl);
     return action.viewUrl;
   }
 
