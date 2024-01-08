@@ -9838,7 +9838,7 @@ export type PlaywrightGetPlanInfoQuery = (
     ) | null }
     & { __typename?: 'Plan' }
   ) | null, planIndicators?: Array<(
-    { id: string }
+    { id: string, name: string }
     & { __typename?: 'Indicator' }
   ) | null> | null }
   & { __typename?: 'Query' }

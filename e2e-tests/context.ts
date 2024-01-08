@@ -74,6 +74,7 @@ const GET_PLAN_INFO = gql`
     }
     planIndicators(plan: $plan) {
       id
+      name
     }
   }
 `;
@@ -123,6 +124,7 @@ export type IndicatorListMenuItem = PageMenuItem & {
     __typename: 'IndicatorListPage';
   };
 };
+
 export class PlanContext {
   plan: PlanInfo;
   planIndicators: PlanIndicators;
@@ -233,8 +235,11 @@ export class PlanContext {
     }
     const item =
       (this.plan.mainMenu?.items ?? []).find(isIndicatorList) || null;
-    console.log(this);
     return item;
+  }
+
+  getPlanIndicators(): PlanIndicators {
+    return this.planIndicators;
   }
 
   async checkMeta(page: Page) {

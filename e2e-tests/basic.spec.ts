@@ -141,10 +141,17 @@ const testPlan = (planId: string) =>
       });
 
       await indicatorListLink.click();
-      await expect(page.locator('main#main')).toBeVisible();
-      /*await expect(
-        page.getByRole('heading', { name: 'Mittarit' })
-      ).toBeVisible();*/
+      const main = page.locator('main#main');
+      await expect(main).toBeVisible();
+      const planIndicators = ctx.getPlanIndicators();
+
+      for (const planIndicator of planIndicators) {
+        const indicatorLink = main.getByRole('link', {
+          name: planIndicator?.name,
+          exact: true,
+        });
+        await expect(indicatorLink).toBeVisible();
+      }
     });
 
     test('search', async ({ page, ctx }) => {
