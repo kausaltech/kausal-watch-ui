@@ -24,9 +24,10 @@ const createLayout = (
   hasTimeDimension,
   subplotsNeeded,
   graphCustomBackground
-) => {
+): Partial<Layout> => {
   const fontFamily =
-    '-apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Ubuntu, roboto, noto, arial, sans-serif';
+    '-apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, ' +
+    'helvetica neue, helvetica, Ubuntu, roboto, noto, arial, sans-serif';
   const hasCategories = !hasTimeDimension;
 
   const yaxes: NonNullable<Pick<Layout, 'yaxis'>> = {
@@ -70,6 +71,7 @@ const createLayout = (
     ? {
         xaxis: {
           automargin: true,
+          fixedrange: true,
           type: 'category',
           tickangle: subplotsNeeded ? 'auto' : 90,
           tickfont: {
@@ -81,9 +83,9 @@ const createLayout = (
     : {
         xaxis: {
           automargin: true,
+          fixedrange: true,
           showgrid: false,
           showline: false,
-          fixedrange: false,
           nticks: config?.xTicksMax,
           tickformat: timeResolution === 'YEAR' ? '%Y' : '%b %Y',
           tickmode: 'auto',
@@ -99,7 +101,7 @@ const createLayout = (
     xaxes[`xaxis${x}`] = xaxes.xaxis;
   }
 
-  const newLayout = {
+  const newLayout: Partial<Layout> = {
     title: {},
     margin: {
       t: 25,
@@ -107,7 +109,6 @@ const createLayout = (
       b: 25,
       l: 25,
       pad: 4,
-      autoexpand: true,
     },
     ...yaxes,
     ...xaxes,
@@ -119,6 +120,23 @@ const createLayout = (
     // showlegend: false,
     hoverlabel: {
       namelength: 0,
+    },
+    modebar: {
+      add: ['toImage'],
+      remove: [
+        'zoom2d',
+        'zoomIn2d',
+        'zoomOut2d',
+        'pan2d',
+        'select2d',
+        'lasso2d',
+        'autoScale2d',
+        'resetScale2d',
+        'sendDataToCloud',
+      ],
+      color: theme.graphColors.grey090,
+      bgcolor: theme.graphColors.grey010,
+      activecolor: theme.brandDark,
     },
   };
 
@@ -508,8 +526,7 @@ function IndicatorGraph(props: IndicatorGraphProps) {
           document.dispatchEvent(event);
         }}
         config={{
-          displayModeBar: false,
-          showSendToCloud: true,
+          displaylogo: false,
           staticPlot: false,
         }}
       />
