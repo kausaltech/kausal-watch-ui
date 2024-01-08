@@ -181,19 +181,9 @@ export async function middleware(request: NextRequest) {
 
   const response = handleI18nRouting(request);
 
-  // if (hasSinglePlan) {
-  //   const planId = getPlanId(data.plansForHostname![0]);
-
-  //   if (plan !== planId) {
-  //     request.nextUrl.pathname = `/${locale}/${planId}/${rest}`;
-  //     console.log(
-  //       `    >> Add plan to next pathname: ${request.nextUrl.pathname}`
-  //     );
-  //   }
-  // }
-
   const searchParams = request.nextUrl.searchParams.toString();
-  // Get the pathname of the request (e.g. /, /about, /blog/first-post)
+
+  // Get the pathname of the request (e.g. /, /about, /actions/XY1?foo=bar)
   const path = `${url.pathname}${
     searchParams.length > 0 ? `?${searchParams}` : ''
   }`;
@@ -206,13 +196,8 @@ export async function middleware(request: NextRequest) {
       request.url
     );
 
-    console.log(`    >> x-middleware-rewrite: ${url.toString()}`);
-
     response.headers.set('x-middleware-rewrite', url.toString());
   }
 
   return response;
-
-  // rewrite everything else to `/[domain]/ dynamic route
-  return NextResponse.rewrite(new URL(`/${hostname}${path}`, request.url));
 }
