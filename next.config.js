@@ -48,11 +48,12 @@ initializeThemes();
  * @type {import('next').NextConfig}
  */
 let config = {
-  // i18n, // breaks homepage :thinking:
-  // env: {
-  //   SENTRY_DSN: process.env.SENTRY_DSN,
-  //   SENTRY_TRACE_SAMPLE_RATE: process.env.SENTRY_TRACE_SAMPLE_RATE || '1.0',
-  // },
+  env: {
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+    NEXT_PUBLIC_DEPLOYMENT_TYPE: process.env.NEXT_PUBLIC_DEPLOYMENT_TYPE,
+    // SENTRY_DSN: process.env.SENTRY_DSN,
+    // SENTRY_TRACE_SAMPLE_RATE: process.env.SENTRY_TRACE_SAMPLE_RATE || '1.0',
+  },
   // sentry: {
   //   // If SENTRY_AUTH_TOKEN is not set, disable uploading source maps to Sentry
   //   disableServerWebpackPlugin: !sentryAuthToken,
