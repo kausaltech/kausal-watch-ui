@@ -10,6 +10,8 @@ import {
   GetPlansByHostnameQueryVariables,
 } from './common/__generated__/graphql';
 
+const BASIC_AUTH_ENV_VARIABLE = 'BASIC_AUTH_FOR_HOSTNAMES';
+
 const apolloClient = new ApolloClient({
   cache: new InMemoryCache({
     // https://www.apollographql.com/docs/react/data/fragments/#defining-possibletypes-manually
@@ -115,6 +117,54 @@ function getParsedLocale(possibleLocale: string, plan: PlanFromPlansQuery) {
   return plan.primaryLanguage;
 }
 
+function getAuthenticationForPlan(hostname: string):
+  | {
+      username: string;
+      password: string;
+    }
+  | undefined {
+  const authConfig = process.env[BASIC_AUTH_ENV_VARIABLE];
+
+  if (!authConfig || authConfig.trim().length === 0) {
+    return undefined;
+  }
+
+  const planAuthConfig = authConfig
+    .split(',')
+    .find((authForPlan) => authForPlan.startsWith(`${hostname}:`));
+
+  if (!planAuthConfig) {
+    return undefined;
+  }
+
+  const [authHostname, username, password] = planAuthConfig.split(':');
+
+  return { username, password };
+}
+
+function isAuthenticated(request: NextRequest, hostname: string) {
+  const authConfig = getAuthenticationForPlan(hostname);
+
+  if (!authConfig) {
+    return true;
+  }
+
+  const basicAuth = request.headers.get('authorization');
+
+  if (basicAuth) {
+    const authValue = basicAuth.split(' ')[1];
+    const [username, password] = Buffer.from(authValue, 'base64')
+      .toString('utf-8')
+      .split(':');
+
+    if (username === authConfig.username && password === authConfig.password) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 export async function middleware(request: NextRequest) {
   const url = request.nextUrl;
   const { pathname } = request.nextUrl;
@@ -126,6 +176,12 @@ export async function middleware(request: NextRequest) {
   // Rewrite root application to `sunnydale` tenant
   if (hostname === 'localhost') {
     return NextResponse.redirect(new URL(`http://sunnydale.${host}`));
+  }
+
+  if (!isAuthenticated(request, hostname)) {
+    url.pathname = '/api/auth';
+
+    return NextResponse.rewrite(url);
   }
 
   const { data, error } = await apolloClient.query<
