@@ -173,6 +173,21 @@ export async function middleware(request: NextRequest) {
   const protocol = request.headers.get('x-forwarded-proto');
   const hostname = new URL(`${protocol}://${host}`).hostname;
 
+  console.log(`
+    > Middleware
+      > ${url}
+        > protocol: ${protocol}
+        > pathname: ${pathname}
+        > hostname: ${hostname}
+      > env
+        > NODE_ENV: ${process.env.NODE_ENV}
+        > NEXT_PUBLIC_DEPLOYMENT_TYPE: ${process.env.NEXT_PUBLIC_DEPLOYMENT_TYPE}
+        > DEPLOYMENT_TYPE (legacy): ${process.env.DEPLOYMENT_TYPE}
+        > NEXT_PUBLIC_API_URL: ${process.env.NEXT_PUBLIC_API_URL}
+        > NEXT_PUBLIC_API_URL: ${process.env.NEXT_PUBLIC_API_URL}
+        > APLANS_API_BASE_URL (legacy): ${process.env.APLANS_API_BASE_URL}
+  `);
+
   // Rewrite root application to `sunnydale` tenant
   if (hostname === 'localhost') {
     return NextResponse.redirect(new URL(`http://sunnydale.${host}`));
@@ -197,16 +212,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.rewrite(new URL('/404', request.url));
   }
 
-  const [locale, plan, rest] = stripSlashes(pathname).split('/');
-
-  console.log(`
-    > Middleware
-      > ${url}
-        > pathname: ${pathname}
-        > locale: ${locale}
-        > plan: ${plan}
-        > rest: ${rest}
-  `);
+  const [locale, plan] = stripSlashes(pathname).split('/');
 
   const parsedPlan = getParsedPlan(
     [plan, locale],
