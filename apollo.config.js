@@ -1,3 +1,5 @@
+const { apiUrl } = require('./common/environment');
+
 require('dotenv').config();
 
 module.exports = {
@@ -13,9 +15,7 @@ module.exports = {
     ],
     service: {
       name: 'kausal-watch-backend',
-      url: `${
-        process.env.APLANS_API_BASE_URL || 'https://api.watch.kausal.tech/v1'
-      }/graphql/`,
+      url: `${apiUrl}/graphql/`,
     },
   },
 };

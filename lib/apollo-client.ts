@@ -6,9 +6,8 @@ import {
   from,
 } from '@apollo/client';
 import { registerApolloClient } from '@apollo/experimental-nextjs-app-support/rsc';
-import { gqlUrl } from './api.utils';
 import possibleTypes from '@/common/__generated__/possible_types.json';
-import { isLocal, isServer } from '@/common/environment';
+import { gqlUrl, isLocal, isServer } from '@/common/environment';
 
 import { headers as getHeaders } from 'next/headers';
 

@@ -17,6 +17,7 @@ console.log(`
       > Initialising app
         > DEPLOYMENT_TYPE: ${process.env.DEPLOYMENT_TYPE}
         > NODE_ENV: ${process.env.NODE_ENV}
+        > NEXT_PUBLIC_API_URL: ${process.env.NEXT_PUBLIC_API_URL}
   `);
 
 function initializeThemes() {

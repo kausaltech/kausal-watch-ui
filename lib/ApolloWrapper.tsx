@@ -1,5 +1,6 @@
 'use client';
 
+import { gqlUrl } from '@/common/environment';
 import { ApolloLink, HttpLink } from '@apollo/client';
 import {
   ApolloNextAppProvider,
@@ -7,7 +8,6 @@ import {
   NextSSRApolloClient,
   SSRMultipartLink,
 } from '@apollo/experimental-nextjs-app-support/ssr';
-import { gqlUrl } from './api.utils';
 
 function makeClient() {
   const httpLink = new HttpLink({

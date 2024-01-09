@@ -3,7 +3,7 @@ import { headers } from 'next/headers';
 import { ApolloClient, HttpLink, InMemoryCache, gql } from '@apollo/client';
 
 import possibleTypes from '@/common/__generated__/possible_types.json';
-import { gqlUrl } from '@/lib/api.utils';
+import { gqlUrl } from '@/common/environment';
 import { GET_PLANS_BY_HOSTNAME } from '@/lib/queries/get-plans';
 import {
   GetPlansByHostnameQuery,

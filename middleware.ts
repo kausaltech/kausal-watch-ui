@@ -3,12 +3,12 @@ import { NextRequest, NextResponse } from 'next/server';
 import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
 
 import possibleTypes from './common/__generated__/possible_types.json';
-import { gqlUrl } from './lib/api.utils';
 import { GET_PLANS_BY_HOSTNAME } from './lib/queries/get-plans';
 import {
   GetPlansByHostnameQuery,
   GetPlansByHostnameQueryVariables,
 } from './common/__generated__/graphql';
+import { gqlUrl } from './common/environment';
 
 const BASIC_AUTH_ENV_VARIABLE = 'BASIC_AUTH_FOR_HOSTNAMES';
 
@@ -200,12 +200,12 @@ export async function middleware(request: NextRequest) {
   const [locale, plan, rest] = stripSlashes(pathname).split('/');
 
   console.log(`
-  > Middleware
-    > ${url}
-      > pathname: ${pathname}
-      > locale: ${locale}
-      > plan: ${plan}
-      > rest: ${rest}
+    > Middleware
+      > ${url}
+        > pathname: ${pathname}
+        > locale: ${locale}
+        > plan: ${plan}
+        > rest: ${rest}
   `);
 
   const parsedPlan = getParsedPlan(
