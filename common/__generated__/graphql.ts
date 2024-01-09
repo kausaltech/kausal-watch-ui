@@ -4117,6 +4117,28 @@ export enum UserFeedbackType {
   A = 'A_'
 }
 
+export type GetSitemapQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type GetSitemapQuery = (
+  { planIndicators?: Array<(
+    { id: string }
+    & { __typename?: 'Indicator' }
+  ) | null> | null, plan?: (
+    { primaryLanguage: string, otherLanguages?: Array<string> | null, actions: Array<(
+      { identifier: string }
+      & { __typename?: 'Action' }
+    )>, pages?: Array<(
+      { urlPath: string }
+      & { __typename?: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PrivacyPolicyPage' | 'StaticPage' }
+    ) | null> | null }
+    & { __typename?: 'Plan' }
+  ) | null }
+  & { __typename?: 'Query' }
+);
+
 export type MultiUseImageFragmentFragment = (
   { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
     { id: string, width: number, height: number, src: string }

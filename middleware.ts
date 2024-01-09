@@ -17,7 +17,7 @@ const apolloClient = new ApolloClient({
   }),
   link: new HttpLink({
     uri: gqlUrl,
-    fetchOptions: { cache: 'no-store' },
+    fetchOptions: { next: { revalidate: 3600 } },
   }),
 });
 
@@ -30,7 +30,7 @@ export const config = {
      * 3. /_static (inside /public)
      * 4. all root files inside /public (e.g. /favicon.ico)
      */
-    '/((?!api/|_next/|_static/|static/|_vercel|[\\w-]+\\.\\w+).*)',
+    '/((?!api/|_next/|_static/|static/|sitemap|_vercel|[\\w-]+\\.\\w+).*)',
   ],
 };
 
@@ -134,7 +134,6 @@ export async function middleware(request: NextRequest) {
   >({
     query: GET_PLANS_BY_HOSTNAME,
     variables: { hostname },
-    fetchPolicy: 'no-cache',
   });
 
   if (error || !data.plansForHostname?.length) {

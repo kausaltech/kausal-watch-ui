@@ -3,6 +3,7 @@ require('dotenv').config();
 module.exports = {
   client: {
     includes: [
+      'app/**/*.{js,ts,tsx}',
       'lib/**/*.{js,ts,tsx}',
       'pages/**/*.{js,ts,tsx}',
       'components/**/*.{js,ts,tsx}',
