@@ -49,8 +49,8 @@ initializeThemes();
  */
 let config = {
   env: {
-    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
-    NEXT_PUBLIC_DEPLOYMENT_TYPE: process.env.NEXT_PUBLIC_DEPLOYMENT_TYPE,
+    // NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+    // NEXT_PUBLIC_DEPLOYMENT_TYPE: process.env.NEXT_PUBLIC_DEPLOYMENT_TYPE,
     // SENTRY_DSN: process.env.SENTRY_DSN,
     // SENTRY_TRACE_SAMPLE_RATE: process.env.SENTRY_TRACE_SAMPLE_RATE || '1.0',
   },
