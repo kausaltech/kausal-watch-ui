@@ -9,6 +9,11 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 });
 const withNextIntl = require('next-intl/plugin')('./config/i18n.ts');
 
+if (process.env.DOTENV_CONFIG_PATH) {
+  // Load CI environment variables defined in Ansible
+  require('dotenv').config({ path: process.env.DOTENV_CONFIG_PATH });
+}
+
 const sentryAuthToken =
   secrets.SENTRY_AUTH_TOKEN || process.env.SENTRY_AUTH_TOKEN;
 
