@@ -40,9 +40,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const title = parentPlanTitle || plan.generalContent.siteTitle || plan.name;
   const description = plan.generalContent.siteDescription;
   const ogImage = plan.image?.social?.src || plan.image?.rendition?.src;
-  const iconBase = plan.themeIdentifier
-    ? `/static/themes/${plan.themeIdentifier}/images/favicon`
-    : null;
+  const themeIdentifier = data.plan.themeIdentifier || params.plan;
+  const iconBase = `/static/themes/${themeIdentifier}/images/favicon`;
 
   return {
     title,
