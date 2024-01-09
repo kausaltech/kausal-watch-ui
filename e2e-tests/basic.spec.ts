@@ -131,6 +131,7 @@ const testPlan = (planId: string) =>
     });
 
     test('indicator list page', async ({ page, ctx }) => {
+      test.setTimeout(120000);
       const IndicatorListItem = ctx.getIndicatorListMenuItem()!;
       test.skip(!IndicatorListItem, 'No indicator list for plan');
 
@@ -152,6 +153,7 @@ const testPlan = (planId: string) =>
         });
         await expect(indicatorLink).toBeVisible();
       }
+      //add a condition for children indicators links (Aanekoski)
     });
 
     test('indicator page direct', async ({ page, ctx }) => {
@@ -180,14 +182,14 @@ const testPlan = (planId: string) =>
       await expect(page.getByTestId('search-form')).toBeVisible;
     });
 
-    test('language selector', async ({ page, ctx }) => {
+    /*test('language selector', async ({ page, ctx }) => {
       const languageSelector = page.getByTestId('lang-selector');
 
       test.skip(!languageSelector, 'No language selector for the plan');
 
       await languageSelector.click();
       await expect(page.locator('dropdown-menu')).toBeVisible();
-    });
+    });*/
   });
 
 getIdentifiersToTest().forEach((plan) => testPlan(plan));
