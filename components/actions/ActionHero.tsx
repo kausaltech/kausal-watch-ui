@@ -281,7 +281,10 @@ function ActionHero(props: ActionHeroProps) {
                       </ActionListLink>
                       <div>
                         {previousAction && (
-                          <ActionLink action={previousAction}>
+                          <ActionLink
+                            action={previousAction}
+                            data-testid="previous-action"
+                          >
                             <a>
                               <Icon
                                 name="arrowLeft"

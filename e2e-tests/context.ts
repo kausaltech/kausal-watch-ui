@@ -36,6 +36,10 @@ const GET_PLAN_INFO = gql`
       shortName
       primaryLanguage
       otherLanguages
+      parent {
+        identifier
+        name
+      }
       generalContent {
         id
         siteTitle
@@ -245,10 +249,14 @@ export class PlanContext {
 
   async checkMeta(page: Page) {
     const siteName = page.locator('head meta[property="og:site_name"]');
-    /*await expect(siteName).toHaveAttribute(
-      'content',
-      this.plan.generalContent.siteTitle
-    );*/
+    if (this.plan.parent?.name) {
+      await expect(siteName).toHaveAttribute('content', this.plan.parent?.name);
+    } else {
+      await expect(siteName).toHaveAttribute(
+        'content',
+        this.plan.generalContent.siteTitle
+      );
+    }
   }
 
   static async fromPlanId(planId: string) {

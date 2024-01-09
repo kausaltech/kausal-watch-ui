@@ -61,8 +61,8 @@ const testPlan = (planId: string) =>
       test.skip(ctx.plan.actions.length == 0, 'No actions defined in plan');
       await page.goto(ctx.getActionURL(ctx.plan.actions[0]));
       await ctx.checkMeta(page);
-
-      await expect(page.locator('.action-main-top')).toBeVisible();
+      const actionDetailsPage = page.locator('.action-main-top');
+      await expect(actionDetailsPage).toBeVisible();
     });
 
     test('category pages', async ({ page, ctx }) => {
