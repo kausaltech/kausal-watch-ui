@@ -86,7 +86,7 @@ function ApplicationStateBanner(props) {
           latestVersion={supersedingVersions[supersedingVersions.length - 1]}
         />
       )}
-      {plan.generalContent.sitewideAnnouncement != null && (
+      {plan.generalContent.sitewideAnnouncement && (
         <AnnouncementBannerWithRichTextMessage
           message={plan.generalContent.sitewideAnnouncement}
         />
