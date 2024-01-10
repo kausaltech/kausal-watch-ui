@@ -20,6 +20,9 @@ jobs:
       - name: Log env variables
         run: env
 
+      - name: Test NEXT_PUBLIC_API_URL
+        run: echo "NEXT_PUBLIC_API_URL $NEXT_PUBLIC_API_URL"
+
       - name: Building Docker base container
         run: |
           docker build \
@@ -47,6 +50,7 @@ jobs:
             --build-arg GIT_REV=${{ github.sha }} \
             --build-arg GIT_REPO=${{ github.repository }} \
             --build-arg SENTRY_AUTH_TOKEN=$SENTRY_AUTH_TOKEN \
+            --build-arg NEXT_PUBLIC_API_URL="https://testing.com/" \
             --tag ${{ env.DOCKER_IMAGE }} \
             .
 
