@@ -1,5 +1,6 @@
 import { test as base, expect } from '@playwright/test';
 import { PlanContext, getIdentifiersToTest } from './context';
+import AxeBuilder from '@axe-core/playwright';
 
 const test = base.extend<{ ctx: PlanContext }>({});
 
@@ -26,11 +27,29 @@ const testPlan = (planId: string) =>
       return;
     });
 
+    async function checkAccessibility(page) {
+      const results = await new AxeBuilder({ page }).analyze();
+      const criticalAndSeriousViolations = results.violations.filter(
+        (violation) =>
+          violation.impact === 'critical' || violation.impact === 'serious'
+      );
+
+      if (criticalAndSeriousViolations.length > 0) {
+        console.error(
+          'Critical and serious accessibility violations:',
+          criticalAndSeriousViolations
+        );
+      }
+
+      expect(criticalAndSeriousViolations).toEqual([]);
+    }
+
     test('basic layout', async ({ page, ctx }) => {
       await expect(page.locator('nav#branding-navigation-bar')).toBeVisible();
       await expect(page.locator('nav#global-navigation-bar')).toBeVisible();
       await expect(page.locator('main#main')).toBeVisible();
       await expect(page.locator('main#main')).toBeVisible();
+      await checkAccessibility(page);
     });
     test('action list page', async ({ page, ctx }) => {
       const listItem = ctx.getActionListMenuItem()!;
@@ -56,16 +75,20 @@ const testPlan = (planId: string) =>
       await expect
         .configure({ timeout: 2000 })(page.getByRole('tab').first())
         .toBeVisible();
+      await checkAccessibility(page);
     });
+
     test('action details page', async ({ page, ctx }) => {
       test.skip(ctx.plan.actions.length == 0, 'No actions defined in plan');
       await page.goto(ctx.getActionURL(ctx.plan.actions[0]));
       await ctx.checkMeta(page);
       const actionDetailsPage = page.locator('.action-main-top');
       await expect(actionDetailsPage).toBeVisible();
+      await checkAccessibility(page);
     });
 
     test('category pages', async ({ page, ctx }) => {
+      test.setTimeout(20000);
       const categoryTypeItem = ctx.getCategoryTypeMenuItem();
       test.skip(!categoryTypeItem, 'No category type for plan');
 
@@ -86,6 +109,7 @@ const testPlan = (planId: string) =>
         });
         await link.click();
         await expect(page.locator('main#main')).toBeVisible();
+        await checkAccessibility(page);
       }
     });
 
@@ -110,6 +134,7 @@ const testPlan = (planId: string) =>
         });
         await link.click();
         await expect(page.locator('main#main')).toBeVisible();
+        await checkAccessibility(page);
       }
     });
 
@@ -127,6 +152,7 @@ const testPlan = (planId: string) =>
 
         await staticPageLink.click();
         await expect(page.locator('main#main')).toBeVisible();
+        await checkAccessibility(page);
       }
     });
 
@@ -144,6 +170,8 @@ const testPlan = (planId: string) =>
       await indicatorListLink.click();
       const main = page.locator('main#main');
       await expect(main).toBeVisible();
+      await checkAccessibility(page);
+
       const planIndicators = ctx.getPlanIndicators();
 
       for (const planIndicator of planIndicators) {
@@ -165,6 +193,7 @@ const testPlan = (planId: string) =>
       await ctx.checkMeta(page);
 
       await expect(page.locator('main#main')).toBeVisible();
+      await checkAccessibility(page);
     });
 
     test('search', async ({ page, ctx }) => {
@@ -180,6 +209,7 @@ const testPlan = (planId: string) =>
       await searchInput.press('Enter');
       await page.waitForURL('**/search?q=test');
       await expect(page.getByTestId('search-form')).toBeVisible;
+      await checkAccessibility(page);
     });
 
     /*test('language selector', async ({ page, ctx }) => {
