@@ -6,6 +6,7 @@ import type {
   PlaywrightGetPlanInfoQuery,
   PlaywrightGetPlanInfoQueryVariables,
 } from 'common/__generated__/graphql';
+import AxeBuilder from '@axe-core/playwright';
 
 const API_BASE =
   process.env.APLANS_API_BASE_URL || 'https://api.watch.kausal.tech/v1';
@@ -279,6 +280,23 @@ export class PlanContext {
     const data = res.data!.plan!;
     const planIndicators = res.data!.planIndicators!;
     return new PlanContext(data, baseURL, planIndicators);
+  }
+
+  async checkAccessibility(page: Page) {
+    const results = await new AxeBuilder({ page }).analyze();
+    const criticalAndSeriousViolations = results.violations.filter(
+      (violation) =>
+        violation.impact === 'critical' || violation.impact === 'serious'
+    );
+
+    if (criticalAndSeriousViolations.length > 0) {
+      console.error(
+        'Critical and serious accessibility violations:',
+        criticalAndSeriousViolations
+      );
+    }
+
+    expect(criticalAndSeriousViolations).toEqual([]);
   }
 }
 
