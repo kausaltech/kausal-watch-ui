@@ -51,6 +51,8 @@ const StyledDropdownToggle = styled(DropdownToggle)`
   margin: 0;
   padding: 0 !important;
   text-decoration: none;
+  background: none;
+  border: none;
 
   svg.icon {
     fill: ${(props) => props.theme.themeColors.dark} !important;
@@ -111,7 +113,7 @@ const LanguageSelector = (props) => {
 
   return (
     <Selector inNavbar $mobile={mobile} className={mobile && 'd-md-none'}>
-      <StyledDropdownToggle color="link">
+      <StyledDropdownToggle color="link" data-toggle="dropdown" tag="button">
         <Icon name="globe" width="1.25rem" height="1.25rem" />
         <CurrentLanguage $mobile={mobile}>{languageCode}</CurrentLanguage>
       </StyledDropdownToggle>
