@@ -30,6 +30,22 @@ const getMenuStructure = (pages, rootId, activeBranch) => {
   return menuLevelItems.length > 0 ? menuLevelItems : null;
 };
 
+function createLocalizeMenuItem(currentLocale, primaryLocale) {
+  return function (menuItem) {
+    if (currentLocale === primaryLocale) {
+      return menuItem;
+    }
+
+    return {
+      ...menuItem,
+      page: {
+        ...menuItem.page,
+        urlPath: `/${currentLocale}${menuItem.page.urlPath}`,
+      },
+    };
+  };
+}
+
 function Header({ siteTitle }) {
   const pathname = usePathname();
   const locale = useLocale();
@@ -40,9 +56,10 @@ function Header({ siteTitle }) {
   const navLinks = useMemo(() => {
     let links = [];
 
-    const pageMenuItems = plan.mainMenu.items.filter(
-      (item) => item.__typename == 'PageMenuItem'
-    );
+    const pageMenuItems = plan.mainMenu.items
+      .filter((item) => item.__typename == 'PageMenuItem')
+      .map(createLocalizeMenuItem(locale, plan.primaryLanguage));
+
     if (pageMenuItems.length > 0) {
       // find one menu item with root as parent to access the id of the rootPage
       const rootItemIndex = pageMenuItems.findIndex(

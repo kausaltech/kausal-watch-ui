@@ -23,6 +23,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const headersList = headers();
   const protocol = headersList.get('x-forwarded-proto');
   const url = new URL(headersList.get('x-url') ?? '');
+
   const { data } = await getPlan(
     params.domain,
     params.plan,
