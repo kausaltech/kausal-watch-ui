@@ -58,7 +58,7 @@ const getLocaleMiddleware = (locale?: string) => {
 
 const gqlLink = new HttpLink({
   uri: gqlUrl,
-  fetchOptions: { cache: 'no-store' },
+  fetchOptions: { next: { revalidate: 3600 } },
 });
 
 export const { getClient } = registerApolloClient(() => {

@@ -12,7 +12,7 @@ import {
 function makeClient() {
   const httpLink = new HttpLink({
     uri: gqlUrl,
-    fetchOptions: { cache: 'no-store' },
+    fetchOptions: { next: { revalidate: 3600 } },
   });
 
   return new NextSSRApolloClient({

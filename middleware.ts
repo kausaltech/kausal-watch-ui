@@ -176,12 +176,6 @@ export async function middleware(request: NextRequest) {
         > protocol: ${protocol}
         > pathname: ${pathname}
         > hostname: ${hostname}
-      > env
-        > NODE_ENV: ${process.env.NODE_ENV}
-        > NEXT_PUBLIC_DEPLOYMENT_TYPE: ${process.env.NEXT_PUBLIC_DEPLOYMENT_TYPE}
-        > DEPLOYMENT_TYPE (legacy): ${process.env.DEPLOYMENT_TYPE}
-        > NEXT_PUBLIC_API_URL: ${process.env.NEXT_PUBLIC_API_URL}
-        > APLANS_API_BASE_URL (legacy): ${process.env.APLANS_API_BASE_URL}
   `);
 
   // Rewrite root application to `sunnydale` tenant
