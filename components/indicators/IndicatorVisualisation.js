@@ -7,7 +7,6 @@ import dayjs from 'common/dayjs';
 import styled from 'styled-components';
 import { linearRegression } from 'common/math';
 
-import { captureMessage } from 'common/sentry';
 import { capitalizeFirstLetter } from 'common/utils';
 import { usePlan } from 'context/plan';
 import ContentLoader from 'components/common/ContentLoader';
@@ -16,6 +15,7 @@ import IndicatorNormalizationSelect from 'components/indicators/IndicatorNormali
 import GraphAsTable from 'components/graphs/GraphAsTable';
 import IndicatorGraph from 'components/graphs/IndicatorGraph';
 import { useLocale, useTranslations } from 'next-intl';
+import { captureMessage } from '@sentry/nextjs';
 
 const GET_INDICATOR_GRAPH_DATA = gql`
   query IndicatorGraphData($id: ID, $plan: ID) {

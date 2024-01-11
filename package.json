@@ -15,8 +15,7 @@
     "@n8tb1t/use-scroll-position": "^2.0.3",
     "@next/bundle-analyzer": "^12.1.6",
     "@popperjs/core": "^2.11.5",
-    "@sentry/cli": "^2.0.4",
-    "@sentry/nextjs": "^7.88.0",
+    "@sentry/nextjs": "^7.93.0",
     "@tusbar/cache-control": "^0.6.1",
     "autoprefixer": "^10.4.7",
     "babel-plugin-inline-react-svg": "^2.0.1",
@@ -66,7 +65,6 @@
     "react-sizeme": "^3.0.2",
     "reactstrap": "9.2.1",
     "sass": "^1.51.0",
-    "sentry-testkit": "^3.3.7",
     "styled-components": "^6.0.0",
     "stylis": "^4.0.0",
     "webpack": "^5.72.0"
