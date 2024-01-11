@@ -9,6 +9,7 @@ import {
   GetPlansByHostnameQueryVariables,
 } from './common/__generated__/graphql';
 import { gqlUrl } from './common/environment';
+import { stripSlashes } from './lib/utils/urls';
 
 const BASIC_AUTH_ENV_VARIABLE = 'BASIC_AUTH_FOR_HOSTNAMES';
 
@@ -41,10 +42,6 @@ type PlanForHostname = NonNullable<
 >[0];
 
 type PlanFromPlansQuery = PlanForHostname & { __typename: 'Plan' };
-
-function stripSlashes(path: string) {
-  return path.replace(/^\/|\/$/g, '');
-}
 
 function stripLocaleAndPlan(
   locale: string,

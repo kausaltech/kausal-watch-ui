@@ -4,6 +4,7 @@ import React, { ReactElement, PropsWithChildren } from 'react';
 import Link, { LinkProps } from 'next/link';
 import PropTypes from 'prop-types';
 import { getCategoryString } from './categories';
+import { stripSlashes } from '@/lib/utils/urls';
 
 export function setBasePath() {
   // TODO: REPLACE THIS
@@ -12,16 +13,14 @@ export function setBasePath() {
 }
 
 // Return root slug of the current path
-export function getActiveBranch(pathname: string) {
-  const splitCurrent = pathname.split('/');
-  const currentPath = splitCurrent[2] ?? ''; // [0] is '', [1] is the locale
-  // Resolve slug for a dynamic content page
-  // FIXME: Workaround for this?
-  if (currentPath === '[...slug]') {
-    return router.query.slug[0];
-  }
-  // Ignore the hashtag if present
-  return currentPath.split('#')[0];
+export function getActiveBranch(pathname: string, locale: string) {
+  const pathSegmentsExcludingLocale = stripSlashes(pathname)
+    .split('/')
+    .filter((segment) => segment !== locale);
+
+  const currentRootPath = pathSegmentsExcludingLocale[0] ?? '';
+
+  return currentRootPath;
 }
 
 export function getIndicatorLinkProps(id) {

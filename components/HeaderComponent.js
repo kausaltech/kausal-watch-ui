@@ -3,6 +3,7 @@
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { usePathname } from 'next/navigation';
+import { useLocale } from 'next-intl';
 
 import { usePlan } from 'context/plan';
 import GlobalNav from 'components/common/GlobalNav';
@@ -31,9 +32,10 @@ const getMenuStructure = (pages, rootId, activeBranch) => {
 
 function Header({ siteTitle }) {
   const pathname = usePathname();
+  const locale = useLocale();
   const plan = usePlan();
   const theme = useTheme();
-  const activeBranch = getActiveBranch(pathname);
+  const activeBranch = getActiveBranch(pathname, locale);
 
   const navLinks = useMemo(() => {
     let links = [];
