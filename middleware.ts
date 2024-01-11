@@ -30,9 +30,9 @@ export const config = {
      * 1. /api routes
      * 2. /_next (Next.js internals)
      * 3. /_static (inside /public)
-     * 4. all root files inside /public (e.g. /favicon.ico)
+     * 4. all root files inside /public
      */
-    '/((?!api/|_next/|_static/|static/|sitemap|_vercel|[\\w-]+\\.\\w+).*)',
+    '/((?!api/|_next/|_static/|static/|[\\w-]+\\.\\w+).*)',
   ],
 };
 
@@ -229,6 +229,7 @@ export async function middleware(request: NextRequest) {
   const handleI18nRouting = createIntlMiddleware({
     locales: [parsedPlan.primaryLanguage, ...(parsedPlan.otherLanguages ?? [])],
     defaultLocale: parsedPlan.primaryLanguage,
+    localePrefix: 'as-needed',
   });
 
   const response = handleI18nRouting(request);
