@@ -102,7 +102,7 @@ const ActionVersionHistory = (props: ActionVersionHistoryProps) => {
                 {v.plan?.versionName || v.plan.shortName}
               </VersionHistoryListItemDate>
               <ActionLink action={v} planUrl={v.plan.viewUrl}>
-                <a href>
+                <a>
                   <VersionHistoryListItemName>
                     {v.plan?.hideActionIdentifiers !== true &&
                       `${v.identifier}. `}
