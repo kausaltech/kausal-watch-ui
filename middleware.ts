@@ -7,9 +7,11 @@ import { GET_PLANS_BY_HOSTNAME } from './lib/queries/get-plans';
 import {
   GetPlansByHostnameQuery,
   GetPlansByHostnameQueryVariables,
+  PublicationStatus,
 } from './common/__generated__/graphql';
 import { gqlUrl } from './common/environment';
 import { stripSlashes } from './lib/utils/urls';
+import { UNPUBLISHED_PATH } from './lib/constants/routes';
 
 const BASIC_AUTH_ENV_VARIABLE = 'BASIC_AUTH_FOR_HOSTNAMES';
 
@@ -67,7 +69,15 @@ function stripLocaleAndPlan(
     .join('/');
 }
 
-const isPlan = (plan: PlanForHostname) => plan?.__typename === 'Plan';
+const isRestrictedPlan = (plan: PlanForHostname) =>
+  plan?.__typename === 'RestrictedPlanNode';
+
+const isPlan = (plan: PlanForHostname) =>
+  plan?.__typename === 'Plan' || isRestrictedPlan(plan);
+
+const isPlanPublished = (plan: PlanFromPlansQuery) =>
+  !plan.domain?.status || // No status indicates the plan is published
+  plan.domain.status === PublicationStatus.Published;
 
 function getParsedPlan(
   possiblePlans: string[],
@@ -232,17 +242,37 @@ export async function middleware(request: NextRequest) {
     searchParams.length > 0 ? `?${searchParams}` : ''
   }`;
 
-  const strippedPath = stripLocaleAndPlan(parsedLocale, parsedPlan, path);
-
-  if (response) {
-    const url = new URL(
-      `/${hostname}/${parsedLocale}/${parsedPlan.id}/${strippedPath}`,
+  if (isRestrictedPlan(parsedPlan) || !isPlanPublished(parsedPlan)) {
+    const message = parsedPlan.domain?.statusMessage;
+    const queryParams = message
+      ? `?${new URLSearchParams({
+          message,
+        }).toString()}`
+      : '';
+    const rewrittenUrl = new URL(
+      `/${hostname}/${parsedLocale}${UNPUBLISHED_PATH}${queryParams}`,
       request.url
     );
 
-    response.headers.set('x-url', request.url.toString());
-    response.headers.set('x-middleware-rewrite', url.toString());
+    return rewriteUrl(request, response, rewrittenUrl);
   }
+
+  const strippedPath = stripLocaleAndPlan(parsedLocale, parsedPlan, path);
+  const rewrittenUrl = new URL(
+    `/${hostname}/${parsedLocale}/${parsedPlan.id}/${strippedPath}`,
+    request.url
+  );
+
+  return rewriteUrl(request, response, rewrittenUrl);
+}
+
+function rewriteUrl(
+  request: NextRequest,
+  response: NextResponse,
+  rewrittenUrl: URL
+) {
+  response.headers.set('x-url', request.url.toString());
+  response.headers.set('x-middleware-rewrite', rewrittenUrl.toString());
 
   return response;
 }

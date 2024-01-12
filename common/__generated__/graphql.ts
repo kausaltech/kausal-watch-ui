@@ -11870,13 +11870,19 @@ export type GetPlansByHostnameQueryVariables = Exact<{
 
 export type GetPlansByHostnameQuery = (
   { plansForHostname?: Array<(
-    { id: string, identifier: string, otherLanguages?: Array<string> | null, primaryLanguage: string, domains?: Array<(
+    { id: string, identifier: string, otherLanguages?: Array<string> | null, primaryLanguage: string, domain?: (
+      { status?: PublicationStatus | null, statusMessage?: string | null }
+      & { __typename?: 'PlanDomain' }
+    ) | null, domains?: Array<(
       { hostname: string, basePath?: string | null, status?: PublicationStatus | null, statusMessage?: string | null }
       & { __typename?: 'PlanDomain' }
     ) | null> | null }
     & { __typename?: 'Plan' }
   ) | (
-    { primaryLanguage: string, domains?: Array<(
+    { primaryLanguage: string, domain?: (
+      { status?: PublicationStatus | null, statusMessage?: string | null }
+      & { __typename?: 'PlanDomain' }
+    ) | null, domains?: Array<(
       { hostname: string, basePath?: string | null, status?: PublicationStatus | null, statusMessage?: string | null }
       & { __typename?: 'PlanDomain' }
     ) | null> | null }

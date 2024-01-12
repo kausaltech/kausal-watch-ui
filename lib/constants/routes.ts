@@ -2,6 +2,8 @@ export const INDICATORS_PATH = '/indicators';
 
 export const ACTIONS_PATH = '/actions';
 
+export const UNPUBLISHED_PATH = '/unpublished';
+
 export const STATIC_ROUTES = [
   '/accessibility',
   ACTIONS_PATH,
