@@ -9,7 +9,6 @@ import { IndicatorDetailsQuery } from '@/common/__generated__/graphql';
 import { usePlan } from 'context/plan';
 import { getActionTermContext } from 'common/i18n';
 import RichText from 'components/common/RichText';
-import ErrorBoundary from 'components/common/ErrorBoundary';
 import CategoryTags from 'components/actions/CategoryTags';
 import IndicatorVisualisation from 'components/indicators/IndicatorVisualisation';
 import ActionsTable from 'components/actions/ActionsTable';
@@ -94,10 +93,8 @@ function IndicatorDetails({ indicator }: Props) {
           <Row>
             <Col className="mb-5">
               <GraphContainer>
-                <ErrorBoundary>
-                  <h2>{indicator.name}</h2>
-                  <IndicatorVisualisation indicatorId={indicator.id} />
-                </ErrorBoundary>
+                <h2>{indicator.name}</h2>
+                <IndicatorVisualisation indicatorId={indicator.id} />
               </GraphContainer>
             </Col>
           </Row>
