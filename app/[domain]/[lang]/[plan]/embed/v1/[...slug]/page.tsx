@@ -10,7 +10,6 @@ import EmbedContext, { InvalidEmbedAddressError } from '@/context/embed';
 import dynamic from 'next/dynamic';
 import * as Sentry from '@sentry/nextjs';
 import { useSearchParams } from 'next/navigation';
-import { Metadata } from 'next';
 
 const postHeight = (height: number, embId: string) => {
   window.parent.postMessage({ source: embId, height }, '*');
@@ -25,10 +24,6 @@ const EmbedContainer = styled(({ embedType, ...props }) => (
 ))`
   padding: ${(props) => props.theme.spaces.s150};
 `;
-
-export const metadata: Metadata = {
-  robots: 'noindex',
-};
 
 const UnknownEmbedPlaceholder = () => {
   const theme = useTheme();
