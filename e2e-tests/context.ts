@@ -245,6 +245,7 @@ export class PlanContext {
   }
 
   getPlanIndicators(): PlanIndicators {
+    console.log(this.planIndicators);
     return this.planIndicators;
   }
 

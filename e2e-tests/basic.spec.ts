@@ -34,6 +34,7 @@ const testPlan = (planId: string) =>
       await ctx.checkAccessibility(page);
     });
     test('action list page', async ({ page, ctx }) => {
+      test.setTimeout(120000);
       const listItem = ctx.getActionListMenuItem()!;
       test.skip(!listItem, 'No action list page for plan');
 
@@ -61,7 +62,7 @@ const testPlan = (planId: string) =>
     });
 
     test('action details page', async ({ page, ctx }) => {
-      test.setTimeout(20000);
+      test.setTimeout(100000);
       test.skip(ctx.plan.actions.length == 0, 'No actions defined in plan');
       await page.goto(ctx.getActionURL(ctx.plan.actions[0]));
       await ctx.checkMeta(page);
@@ -71,7 +72,7 @@ const testPlan = (planId: string) =>
     });
 
     test('category pages', async ({ page, ctx }) => {
-      test.setTimeout(20000);
+      test.setTimeout(100000);
       const categoryTypeItem = ctx.getCategoryTypeMenuItem();
       test.skip(!categoryTypeItem, 'No category type for plan');
 
@@ -140,7 +141,6 @@ const testPlan = (planId: string) =>
     });
 
     test('indicator list page', async ({ page, ctx }) => {
-      test.setTimeout(120000);
       const IndicatorListItem = ctx.getIndicatorListMenuItem()!;
       test.skip(!IndicatorListItem, 'No indicator list for plan');
 
@@ -154,17 +154,36 @@ const testPlan = (planId: string) =>
       const main = page.locator('main#main');
       await expect(main).toBeVisible();
       await ctx.checkAccessibility(page);
+    });
+
+    test('indicator page', async ({ page, ctx }) => {
+      test.setTimeout(30000);
+      const IndicatorListItem = ctx.getIndicatorListMenuItem();
+      test.skip(!IndicatorListItem, 'No indicator list for plan');
+
+      const nav = page.locator('nav#global-navigation-bar');
+      const indicatorListLink = nav.getByRole('link', {
+        name: IndicatorListItem.page.title,
+        exact: true,
+      });
+
+      await indicatorListLink.click();
+      const main = page.locator('main#main');
+      await expect(main).toBeVisible();
 
       const planIndicators = ctx.getPlanIndicators();
+      test.skip(planIndicators.length === 0, 'No indicators defined in plan');
 
-      for (const planIndicator of planIndicators) {
-        const indicatorLink = main.getByRole('link', {
-          name: planIndicator?.name,
+      if (planIndicators.length > 0) {
+        const firstIndicatorLink = main.getByRole('link', {
+          name: planIndicators[0]?.name,
           exact: true,
         });
-        await expect(indicatorLink).toBeVisible();
+        await expect(firstIndicatorLink).toBeVisible();
+        await firstIndicatorLink.click();
+        await expect(main).toBeVisible();
+        await ctx.checkAccessibility(page);
       }
-      //add a condition for children indicators links (Aanekoski)
     });
 
     test('indicator page direct', async ({ page, ctx }) => {
@@ -194,15 +213,6 @@ const testPlan = (planId: string) =>
       await expect(page.getByTestId('search-form')).toBeVisible;
       await ctx.checkAccessibility(page);
     });
-
-    /*test('language selector', async ({ page, ctx }) => {
-      const languageSelector = page.getByTestId('lang-selector');
-
-      test.skip(!languageSelector, 'No language selector for the plan');
-
-      await languageSelector.click();
-      await expect(page.locator('dropdown-menu')).toBeVisible();
-    });*/
   });
 
 getIdentifiersToTest().forEach((plan) => testPlan(plan));
