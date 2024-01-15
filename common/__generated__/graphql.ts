@@ -11508,7 +11508,7 @@ export type GetPlanContextQuery = (
       { id: string, identifier: string }
       & { __typename?: 'CategoryType' }
     ) | null, domain?: (
-      { id: string, googleSiteVerificationTag?: string | null, matomoAnalyticsUrl?: string | null }
+      { id: string, basePath?: string | null, googleSiteVerificationTag?: string | null, matomoAnalyticsUrl?: string | null }
       & { __typename?: 'PlanDomain' }
     ) | null, image?: (
       { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
@@ -11692,7 +11692,7 @@ export type PlanContextFragment = (
     { id: string, identifier: string }
     & { __typename?: 'CategoryType' }
   ) | null, domain?: (
-    { id: string, googleSiteVerificationTag?: string | null, matomoAnalyticsUrl?: string | null }
+    { id: string, basePath?: string | null, googleSiteVerificationTag?: string | null, matomoAnalyticsUrl?: string | null }
     & { __typename?: 'PlanDomain' }
   ) | null, image?: (
     { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
@@ -11871,7 +11871,7 @@ export type GetPlansByHostnameQueryVariables = Exact<{
 export type GetPlansByHostnameQuery = (
   { plansForHostname?: Array<(
     { id: string, identifier: string, otherLanguages?: Array<string> | null, primaryLanguage: string, domain?: (
-      { status?: PublicationStatus | null, statusMessage?: string | null }
+      { hostname: string, basePath?: string | null, status?: PublicationStatus | null, statusMessage?: string | null }
       & { __typename?: 'PlanDomain' }
     ) | null, domains?: Array<(
       { hostname: string, basePath?: string | null, status?: PublicationStatus | null, statusMessage?: string | null }
@@ -11880,7 +11880,7 @@ export type GetPlansByHostnameQuery = (
     & { __typename?: 'Plan' }
   ) | (
     { primaryLanguage: string, domain?: (
-      { status?: PublicationStatus | null, statusMessage?: string | null }
+      { hostname: string, basePath?: string | null, status?: PublicationStatus | null, statusMessage?: string | null }
       & { __typename?: 'PlanDomain' }
     ) | null, domains?: Array<(
       { hostname: string, basePath?: string | null, status?: PublicationStatus | null, statusMessage?: string | null }

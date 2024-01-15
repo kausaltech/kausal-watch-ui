@@ -513,7 +513,7 @@ function GlobalNav(props) {
               {homeLink && (
                 <NavItem active={activeBranch === ''}>
                   <NavLink>
-                    <NavigationLink slug={plan.viewUrl ?? '/'}>
+                    <NavigationLink slug={plan.domain?.basePath ?? '/'}>
                       <NavHighlighter
                         className={`highlighter ${
                           activeBranch === '' ? 'active' : ''

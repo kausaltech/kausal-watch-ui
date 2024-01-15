@@ -11,7 +11,6 @@ export const useLocalizedLink = (link: string) => {
   const locale = useLocale();
   const plan = usePlan();
 
-  // TESTME
   if (plan.primaryLanguage === locale) {
     return link;
   }

@@ -36,6 +36,7 @@ const GET_PLAN_CONTEXT = gql`
     }
     domain(hostname: $hostname) {
       id
+      basePath
       googleSiteVerificationTag
       matomoAnalyticsUrl
     }
