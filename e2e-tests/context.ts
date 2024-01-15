@@ -183,6 +183,7 @@ export class PlanContext {
     }
     const items =
       (this.plan.mainMenu?.items ?? []).filter(isCategoryItem) || [];
+    console.log(items);
     return items;
   }
 
@@ -245,7 +246,6 @@ export class PlanContext {
   }
 
   getPlanIndicators(): PlanIndicators {
-    console.log(this.planIndicators);
     return this.planIndicators;
   }
 

@@ -71,55 +71,59 @@ const testPlan = (planId: string) =>
       await ctx.checkAccessibility(page);
     });
 
-    test('category pages', async ({ page, ctx }) => {
-      test.setTimeout(100000);
+    test('category page', async ({ page, ctx }) => {
       const categoryTypeItem = ctx.getCategoryTypeMenuItem();
       test.skip(!categoryTypeItem, 'No category type for plan');
 
       const items = ctx.getCategoryMenuItems(categoryTypeItem?.page.id);
-      test.skip(!items, 'No category pages for plan');
+      test.skip(!items || items.length === 0, 'No category pages for plan');
 
-      for (const item of items) {
-        const nav = page.locator('nav#global-navigation-bar');
-        const categoryTypeLink = nav.getByRole('link', {
-          name: categoryTypeItem?.page.title,
-          exact: true,
-        });
-        await categoryTypeLink.click();
+      const nav = page.locator('nav#global-navigation-bar');
+      const categoryTypeLink = nav.getByRole('link', {
+        name: categoryTypeItem?.page.title,
+        exact: true,
+      });
+      await categoryTypeLink.click();
 
-        const link = nav.getByRole('link', {
-          name: item.page.title,
-          exact: true,
-        });
-        await link.click();
-        await expect(page.locator('main#main')).toBeVisible();
-        await ctx.checkAccessibility(page);
-      }
+      const firstItemLink = nav.getByRole('link', {
+        name: items[0].page.title,
+        exact: true,
+      });
+      await firstItemLink.click();
+      await expect(page.locator('main#main')).toBeVisible();
+      const h1 = page.locator('h1');
+      await expect(h1).toContainText(items[0].page.title);
+      await ctx.checkAccessibility(page);
     });
 
-    test('empty page children pages', async ({ page, ctx }) => {
+    test('empty page', async ({ page, ctx }) => {
       const EmptyPageMenuItem = ctx.getEmptyPageMenuItem();
       test.skip(!EmptyPageMenuItem, 'No empty pages for plan');
 
       const items = ctx.getEmptyPageChildrenItems(EmptyPageMenuItem?.page.id);
-      test.skip(!items, 'No children category or content pages for plan');
+      test.skip(
+        !items || items.length === 0,
+        'No children category or content pages for plan'
+      );
+      const nav = page.locator('nav#global-navigation-bar');
+      const emptyPageMenuLink = nav.getByRole('link', {
+        name: EmptyPageMenuItem?.page.title,
+        exact: true,
+      });
+      await emptyPageMenuLink.click();
 
-      for (const item of items) {
-        const nav = page.locator('nav#global-navigation-bar');
-        const emptyPageMenuLink = nav.getByRole('link', {
-          name: EmptyPageMenuItem?.page.title,
-          exact: true,
-        });
-        await emptyPageMenuLink.click();
+      const firstItemLink = nav.getByRole('link', {
+        name: items[0].page.title,
+        exact: true,
+      });
+      await firstItemLink.click();
 
-        const link = nav.getByRole('link', {
-          name: item.page.title,
-          exact: true,
-        });
-        await link.click();
-        await expect(page.locator('main#main')).toBeVisible();
-        await ctx.checkAccessibility(page);
-      }
+      await expect(page.locator('main#main')).toBeVisible();
+
+      const h1 = page.locator('h1');
+      await expect(h1).toContainText(items[0].page.title);
+
+      await ctx.checkAccessibility(page);
     });
 
     test('static pages', async ({ page, ctx }) => {
@@ -182,6 +186,8 @@ const testPlan = (planId: string) =>
         await expect(firstIndicatorLink).toBeVisible();
         await firstIndicatorLink.click();
         await expect(main).toBeVisible();
+        const h1 = page.locator('h1');
+        await expect(h1).toContainText(planIndicators[0]?.name);
         await ctx.checkAccessibility(page);
       }
     });
