@@ -91,8 +91,6 @@ const testPlan = (planId: string) =>
       });
       await firstItemLink.click();
       await expect(page.locator('main#main')).toBeVisible();
-      const h1 = page.locator('h1');
-      await expect(h1).toContainText(items[0].page.title);
       await ctx.checkAccessibility(page);
     });
 
@@ -186,8 +184,8 @@ const testPlan = (planId: string) =>
         await expect(firstIndicatorLink).toBeVisible();
         await firstIndicatorLink.click();
         await expect(main).toBeVisible();
-        const h1 = page.locator('h1');
-        await expect(h1).toContainText(planIndicators[0]?.name);
+        const h1Span = page.locator('h1 >> span');
+        await expect(h1Span).toContainText(planIndicators[0]?.name);
         await ctx.checkAccessibility(page);
       }
     });

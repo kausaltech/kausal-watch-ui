@@ -152,7 +152,6 @@ export class PlanContext {
   }
 
   getActionURL(action: ActionInfo) {
-    console.log(action.viewUrl);
     return action.viewUrl;
   }
 
@@ -183,7 +182,6 @@ export class PlanContext {
     }
     const items =
       (this.plan.mainMenu?.items ?? []).filter(isCategoryItem) || [];
-    console.log(items);
     return items;
   }
 
