@@ -78,7 +78,6 @@ export default async function PlanLayout({ params, children }: Props) {
   const { plan, domain } = params;
   const headersList = headers();
   const protocol = headersList.get('x-forwarded-proto');
-  // TODO: Check purpose of clientUrl for API
   const { data } = await getPlan(domain, plan, `${protocol}://${domain}`);
 
   if (!data.plan) {
