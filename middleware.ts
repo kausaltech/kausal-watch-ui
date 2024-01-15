@@ -54,6 +54,12 @@ type PlanForHostname = NonNullable<
 
 type PlanFromPlansQuery = PlanForHostname & { __typename: 'Plan' };
 
+function getSearchParamsString(request: NextRequest) {
+  const searchParams = request.nextUrl.searchParams.toString();
+
+  return searchParams.length > 0 ? `?${searchParams}` : '';
+}
+
 function stripLocaleAndPlan(
   locale: string,
   plan: PlanFromPlansQuery,
@@ -244,13 +250,6 @@ export async function middleware(request: NextRequest) {
 
   const response = handleI18nRouting(request);
 
-  const searchParams = request.nextUrl.searchParams.toString();
-
-  // Get the pathname of the request (e.g. /, /about, /actions/XY1?foo=bar)
-  const path = `${url.pathname}${
-    searchParams.length > 0 ? `?${searchParams}` : ''
-  }`;
-
   if (isRestrictedPlan(parsedPlan) || !isPlanPublished(parsedPlan)) {
     const message = parsedPlan.domain?.statusMessage;
     const queryParams = message
@@ -266,9 +265,10 @@ export async function middleware(request: NextRequest) {
     return rewriteUrl(request, response, rewrittenUrl);
   }
 
-  const strippedPath = stripLocaleAndPlan(parsedLocale, parsedPlan, path);
+  const searchParams = getSearchParamsString(request);
+  const strippedPath = stripLocaleAndPlan(parsedLocale, parsedPlan, pathname);
   const rewrittenUrl = new URL(
-    `/${hostname}/${parsedLocale}/${parsedPlan.id}/${strippedPath}`,
+    `/${hostname}/${parsedLocale}/${parsedPlan.id}/${strippedPath}${searchParams}`,
     request.url
   );
 
