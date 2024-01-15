@@ -11,6 +11,7 @@ import '@/styles/default/main.scss';
 import SiteProvider from '@/lib/SiteProvider';
 import { getThemeCSS, loadTheme } from '@/common/theme';
 import { CombinedIconSymbols } from '@/components/common/Icon';
+import { MatomoAnalytics } from '@/components/MatomoAnalytics';
 
 export const dynamic = 'force-dynamic';
 
@@ -85,11 +86,16 @@ export default async function PlanLayout({ params, children }: Props) {
   }
 
   const theme = await loadTheme(data.plan.themeIdentifier || params.plan);
+  const matomoAnalyticsUrl = data.plan.domain?.matomoAnalyticsUrl ?? undefined;
 
   return (
     <>
       {theme.name && (
         <link rel="stylesheet" type="text/css" href={getThemeCSS(theme.name)} />
+      )}
+
+      {!!matomoAnalyticsUrl && (
+        <MatomoAnalytics matomoAnalyticsUrl={matomoAnalyticsUrl} />
       )}
 
       <ThemeProvider theme={theme}>
