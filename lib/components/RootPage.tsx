@@ -2,11 +2,9 @@
 
 export const dynamic = 'force-dynamic';
 
-import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
 import { useTranslations } from 'next-intl';
 
 import { GetHomePageQuery } from '@/common/__generated__/graphql';
-import { usePlan } from '@/context/plan';
 import ErrorMessage from '@/components/common/ErrorMessage';
 import ContentLoader from '@/components/common/ContentLoader';
 import StreamField from '@/components/common/StreamField';

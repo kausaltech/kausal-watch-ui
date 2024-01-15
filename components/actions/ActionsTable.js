@@ -1,7 +1,6 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Table } from 'reactstrap';
-import { gql } from '@apollo/client';
 
 import { getActionTermContext } from 'common/i18n';
 import { ActionLink } from 'common/links';

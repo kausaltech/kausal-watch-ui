@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Query } from '@apollo/client/react/components';
 import { gql } from '@apollo/client';
+import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
 
 import { Button, Collapse } from 'reactstrap';
 import Icon from 'components/common/Icon';
@@ -102,52 +102,48 @@ const GET_CONTACT_DETAILS = gql`
 function ContactDetails(props) {
   const { id } = props;
   const t = useTranslations();
+  const { loading, error, data } = useQuery(GET_CONTACT_DETAILS, {
+    variables: { id },
+  });
+
+  if (loading) return <span>{t('loading')}</span>;
+  if (error) return <span>{error.message}</span>;
+  const { person } = data;
+
+  let orgAncestors;
+
+  if (person.organization && person.organization.ancestors) {
+    orgAncestors = person.organization.ancestors
+      .filter(
+        (org) =>
+          org.classification?.name !== 'Valtuusto' &&
+          org.classification?.name !== 'Hallitus'
+      )
+      .map((org) => ({ id: org.id, name: org.name }));
+    orgAncestors.push({
+      id: person.organization.id,
+      name: person.organization.name,
+    });
+  } else {
+    orgAncestors = [];
+  }
 
   return (
-    <Query query={GET_CONTACT_DETAILS} variables={{ id }}>
-      {({ loading, error, data }) => {
-        if (loading) return <span>{t('loading')}</span>;
-        if (error) return <span>{error.message}</span>;
-        const { person } = data;
-
-        let orgAncestors;
-
-        if (person.organization && person.organization.ancestors) {
-          orgAncestors = person.organization.ancestors
-            .filter(
-              (org) =>
-                org.classification?.name !== 'Valtuusto' &&
-                org.classification?.name !== 'Hallitus'
-            )
-            .map((org) => ({ id: org.id, name: org.name }));
-          orgAncestors.push({
-            id: person.organization.id,
-            name: person.organization.name,
-          });
-        } else {
-          orgAncestors = [];
-        }
-
-        return (
-          <div className="mt-2">
-            {orgAncestors.length > 1 && (
-              <PersonOrg>
-                {orgAncestors.map((item, idx) => (
-                  <span key={item.key}>
-                    {item.name}
-                    {idx < orgAncestors.length - 1 ? ' / ' : ''}
-                  </span>
-                ))}
-              </PersonOrg>
-            )}
-            <Address>
-              {t('email')}:{' '}
-              <a href={`mailto:${person.email}`}>{person.email}</a>
-            </Address>
-          </div>
-        );
-      }}
-    </Query>
+    <div className="mt-2">
+      {orgAncestors.length > 1 && (
+        <PersonOrg>
+          {orgAncestors.map((item, idx) => (
+            <span key={item.key}>
+              {item.name}
+              {idx < orgAncestors.length - 1 ? ' / ' : ''}
+            </span>
+          ))}
+        </PersonOrg>
+      )}
+      <Address>
+        {t('email')}: <a href={`mailto:${person.email}`}>{person.email}</a>
+      </Address>
+    </div>
   );
 }
 

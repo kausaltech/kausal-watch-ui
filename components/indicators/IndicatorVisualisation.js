@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { isEqual } from 'lodash';
-import { gql, useQuery } from '@apollo/client';
+import { gql } from '@apollo/client';
+import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
 import { Alert } from 'reactstrap';
 import dayjs from 'common/dayjs';
 import styled from 'styled-components';

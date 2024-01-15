@@ -4,7 +4,8 @@ import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import dynamic from 'next/dynamic';
 import { isEqual } from 'lodash';
-import { gql, useQuery } from '@apollo/client';
+import { gql } from '@apollo/client';
+import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
 import { Alert } from 'reactstrap';
 import { linearRegression } from 'common/math';
 

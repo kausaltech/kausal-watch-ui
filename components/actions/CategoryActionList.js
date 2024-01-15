@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Container, Row, Col } from 'reactstrap';
+import { Container } from 'reactstrap';
 import styled from 'styled-components';
-import { gql, useQuery } from '@apollo/client';
+import { gql } from '@apollo/client';
+import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
 
 import ActionCard from 'components/actions/ActionCard';
 import ContentLoader from 'components/common/ContentLoader';

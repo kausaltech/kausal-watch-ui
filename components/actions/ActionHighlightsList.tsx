@@ -1,7 +1,6 @@
 /* eslint-disable max-classes-per-file */
 import React, { useContext } from 'react';
 import { gql } from '@apollo/client';
-import { Query } from '@apollo/client/react/components';
 import styled from 'styled-components';
 import { Row, Col } from 'reactstrap';
 import {
@@ -18,6 +17,7 @@ import images, { getActionImage } from 'common/images';
 import ActionHighlightCard from './ActionHighlightCard';
 import Icon from '../common/Icon';
 import { useTranslations } from 'next-intl';
+import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
 
 export const GET_ACTION_LIST = gql`
   query ActionHightlightList($plan: ID!, $first: Int!, $orderBy: String!) {
@@ -169,24 +169,19 @@ function ActionHighlightsList(props: ActionHighlightsListProps) {
     orderBy: '-updatedAt',
   };
 
-  // TODO: Convert to useQuery
+  const { data, loading, error } = useQuery(GET_ACTION_LIST, {
+    variables: queryParams,
+  });
+  if (loading) return <ContentLoader />;
+  if (error)
+    return <p>{t('error-loading-actions', getActionTermContext(plan))}</p>;
+
   return (
-    <Query query={GET_ACTION_LIST} variables={queryParams}>
-      {({ data, loading, error }) => {
-        if (loading) return <ContentLoader />;
-        if (error)
-          return (
-            <p>{t('error-loading-actions', getActionTermContext(plan))}</p>
-          );
-        return (
-          <ActionCardList
-            actions={data.planActions}
-            plan={plan}
-            displayHeader={displayHeader ?? true}
-          />
-        );
-      }}
-    </Query>
+    <ActionCardList
+      actions={data.planActions}
+      plan={plan}
+      displayHeader={displayHeader ?? true}
+    />
   );
 }
 

@@ -1,6 +1,7 @@
 /* eslint-disable max-classes-per-file */
 import React from 'react';
-import { gql, useQuery } from '@apollo/client';
+import { gql } from '@apollo/client';
+import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
 import { Row, Col } from 'reactstrap';
 import styled from 'styled-components';
 import ContentLoader from 'components/common/ContentLoader';
