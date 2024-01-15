@@ -17,6 +17,15 @@ const BASIC_AUTH_ENV_VARIABLE = 'BASIC_AUTH_FOR_HOSTNAMES';
 
 const apolloClient = new ApolloClient({
   cache: new InMemoryCache({
+    typePolicies: {
+      Plan: {
+        /**
+         * Prevent cache conflicts between multi-plan plans when visited via basePath
+         * (e.g. umbrella.city.gov/x-plan) vs a dedicated plan subdomain (e.g. x-plan.city.gov/)
+         */
+        keyFields: ['id', 'domain', ['basePath']],
+      },
+    },
     // https://www.apollographql.com/docs/react/data/fragments/#defining-possibletypes-manually
     possibleTypes: possibleTypes.possibleTypes,
   }),
