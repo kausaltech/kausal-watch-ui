@@ -19,3 +19,9 @@ export function stripSlashes(path: string, config?: StripSlashConfig) {
 
   return path.replace(/^\/|\/$/g, '');
 }
+
+/**
+ * Matches absolute URLs e.g. https://foo.com/
+ */
+export const isAbsoluteUrl = (url: string) =>
+  !!url.match(/^(?:[a-z+]+:)?\/\//i);

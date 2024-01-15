@@ -1,4 +1,26 @@
-import { stripSlashes } from '../urls';
+import { isAbsoluteUrl, stripSlashes } from '../urls';
+
+describe('isAbsoluteUrl', () => {
+  it('returns true for absolute URLs', () => {
+    const tests = [
+      'http://foo.com',
+      'HTTP://FOO.COM',
+      'https://www.kausal.tech',
+      'ftp://shabba.com/foo.txt',
+      '//cdn.kausal.tech/foo.js',
+    ];
+
+    tests.map((test) => expect(isAbsoluteUrl(test)).toBe(true));
+  });
+
+  it('returns false for relative URLs', () => {
+    const tests = ['/foo/bar/', 'foo/bar', '/foo', 'foo'];
+
+    expect(isAbsoluteUrl('/foo/bar/')).toBe(false);
+
+    // tests.map((test) => expect(isAbsoluteUrl(test)).toBe(false));
+  });
+});
 
 describe('stripSlashes', () => {
   it('strips both leading and trailing slashes by default', () => {

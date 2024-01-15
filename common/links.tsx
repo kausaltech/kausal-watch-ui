@@ -3,7 +3,7 @@ import React, { ReactElement, PropsWithChildren, ReactNode } from 'react';
 import { default as NextLink, LinkProps } from 'next/link';
 import PropTypes from 'prop-types';
 import { getCategoryString } from './categories';
-import { stripSlashes } from '@/lib/utils/urls';
+import { isAbsoluteUrl, stripSlashes } from '@/lib/utils/urls';
 import { usePlan } from '@/context/plan';
 import { PlanContextFragment } from './__generated__/graphql';
 import { ACTIONS_PATH, INDICATORS_PATH } from '@/lib/constants/routes';
@@ -15,6 +15,10 @@ function usePrependSubPlanPath(path: string) {
 }
 
 function prependSubPlanPath(plan: PlanContextFragment, path: string) {
+  if (isAbsoluteUrl(path)) {
+    return path;
+  }
+
   const basePath = plan.domain?.basePath
     ? stripSlashes(plan.domain.basePath, { trailing: true })
     : undefined;
