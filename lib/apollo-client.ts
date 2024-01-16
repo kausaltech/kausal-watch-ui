@@ -10,6 +10,7 @@ import possibleTypes from '@/common/__generated__/possible_types.json';
 import { gqlUrl, isLocal, isServer } from '@/common/environment';
 
 import { headers as getHeaders } from 'next/headers';
+import { operationEnd, operationStart } from './utils/apollo.utils';
 
 const getLocaleMiddleware = (locale?: string) => {
   return new ApolloLink((operation, forward) => {
@@ -71,6 +72,11 @@ export const { getClient } = registerApolloClient(() => {
       // https://www.apollographql.com/docs/react/data/fragments/#defining-possibletypes-manually
       possibleTypes: possibleTypes.possibleTypes,
     }),
-    link: from([getLocaleMiddleware(locale), gqlLink]),
+    link: from([
+      operationStart,
+      getLocaleMiddleware(locale),
+      operationEnd,
+      gqlLink,
+    ]),
   });
 });

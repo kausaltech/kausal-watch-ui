@@ -1,6 +1,6 @@
 import createIntlMiddleware from 'next-intl/middleware';
 import { NextRequest, NextResponse } from 'next/server';
-import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
+import { ApolloClient, HttpLink, InMemoryCache, from } from '@apollo/client';
 
 import possibleTypes from './common/__generated__/possible_types.json';
 import { GET_PLANS_BY_HOSTNAME } from './lib/queries/get-plans';
@@ -12,6 +12,7 @@ import {
 import { gqlUrl } from './common/environment';
 import { stripSlashes } from './lib/utils/urls';
 import { UNPUBLISHED_PATH } from './lib/constants/routes';
+import { operationEnd, operationStart } from './lib/utils/apollo.utils';
 
 const BASIC_AUTH_ENV_VARIABLE = 'BASIC_AUTH_FOR_HOSTNAMES';
 
@@ -29,10 +30,14 @@ const apolloClient = new ApolloClient({
     // https://www.apollographql.com/docs/react/data/fragments/#defining-possibletypes-manually
     possibleTypes: possibleTypes.possibleTypes,
   }),
-  link: new HttpLink({
-    uri: gqlUrl,
-    fetchOptions: { next: { revalidate: 3600 } },
-  }),
+  link: from([
+    operationStart,
+    operationEnd,
+    new HttpLink({
+      uri: gqlUrl,
+      fetchOptions: { next: { revalidate: 3600 } },
+    }),
+  ]),
 });
 
 export const config = {
@@ -196,11 +201,10 @@ export async function middleware(request: NextRequest) {
   const hostname = new URL(`${protocol}://${host}`).hostname;
 
   console.log(`
-    > Middleware
-      > ${url}
-        > protocol: ${protocol}
-        > pathname: ${pathname}
-        > hostname: ${hostname}
+  ⚙ Middleware ${url}
+    ↝ protocol: ${protocol}
+    ↝ pathname: ${pathname}
+    ↝ hostname: ${hostname}
   `);
 
   // Rewrite root application to `sunnydale` tenant

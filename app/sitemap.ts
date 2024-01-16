@@ -1,6 +1,12 @@
 import { MetadataRoute } from 'next';
 import { headers } from 'next/headers';
-import { ApolloClient, HttpLink, InMemoryCache, gql } from '@apollo/client';
+import {
+  ApolloClient,
+  HttpLink,
+  InMemoryCache,
+  from,
+  gql,
+} from '@apollo/client';
 
 import possibleTypes from '@/common/__generated__/possible_types.json';
 import { gqlUrl } from '@/common/environment';
@@ -16,16 +22,21 @@ import {
   INDICATORS_PATH,
   STATIC_ROUTES,
 } from '@/lib/constants/routes';
+import { operationEnd, operationStart } from '@/lib/utils/apollo.utils';
 
 const apolloClient = new ApolloClient({
   cache: new InMemoryCache({
     // https://www.apollographql.com/docs/react/data/fragments/#defining-possibletypes-manually
     possibleTypes: possibleTypes.possibleTypes,
   }),
-  link: new HttpLink({
-    uri: gqlUrl,
-    fetchOptions: { next: { revalidate: 3600 } },
-  }),
+  link: from([
+    operationStart,
+    operationEnd,
+    new HttpLink({
+      uri: gqlUrl,
+      fetchOptions: { next: { revalidate: 3600 } },
+    }),
+  ]),
 });
 
 const GET_SITEMAP_CONTENTS = gql`
