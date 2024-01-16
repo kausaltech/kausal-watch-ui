@@ -1,7 +1,5 @@
 'use client';
 
-export const dynamic = 'force-dynamic';
-
 import { useTranslations } from 'next-intl';
 
 import { GetHomePageQuery } from '@/common/__generated__/graphql';

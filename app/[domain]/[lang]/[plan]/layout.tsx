@@ -13,8 +13,6 @@ import { getThemeCSS, loadTheme } from '@/common/theme';
 import { CombinedIconSymbols } from '@/components/common/Icon';
 import { MatomoAnalytics } from '@/components/MatomoAnalytics';
 
-export const dynamic = 'force-dynamic';
-
 type Props = {
   params: { plan: string; domain: string; lang: string };
   children: ReactNode;
