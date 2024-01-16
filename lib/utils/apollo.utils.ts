@@ -3,7 +3,7 @@ import { ApolloLink } from '@apollo/client';
 export const operationStart = new ApolloLink((operation, forward) => {
   operation.setContext({ start: Date.now() });
 
-  console.log(` ⚙ Operation ${operation.operationName}...`);
+  console.log(`  ⚙ Operation ${operation.operationName}...`);
 
   return forward(operation);
 });
@@ -18,7 +18,7 @@ export const operationEnd = new ApolloLink((operation, forward) => {
 
     const time = Math.round(Date.now() - start);
 
-    console.log(` ⚙ Operation ${operation.operationName} took ${time}ms`);
+    console.log(`  ⚙ Operation ${operation.operationName} took ${time}ms`);
 
     return data;
   });

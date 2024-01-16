@@ -200,8 +200,7 @@ export async function middleware(request: NextRequest) {
   const protocol = request.headers.get('x-forwarded-proto');
   const hostname = new URL(`${protocol}://${host}`).hostname;
 
-  console.log(`
-  ⚙ Middleware ${url}
+  console.log(`  ⚙ Middleware ${url}
     ↝ protocol: ${protocol}
     ↝ pathname: ${pathname}
     ↝ hostname: ${hostname}
@@ -210,6 +209,12 @@ export async function middleware(request: NextRequest) {
   // Rewrite root application to `sunnydale` tenant
   if (hostname === 'localhost') {
     return NextResponse.redirect(new URL(`http://sunnydale.${host}`));
+  }
+
+  if (pathname === '/_health') {
+    url.pathname = '/api/health';
+
+    return NextResponse.rewrite(url);
   }
 
   if (!isAuthenticated(request, hostname)) {
