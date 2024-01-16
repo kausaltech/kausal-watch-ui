@@ -17180,7 +17180,6 @@ __metadata:
     react-intersection-observer: ^9.1.0
     react-map-gl: ^7.0.19
     react-medium-image-zoom: ^5.1.1
-    react-piwik: ^1.12.0
     react-plotly.js: ^2.5.1
     react-popper: ^2.3.0
     react-select: ^5.4.0
@@ -21187,13 +21186,6 @@ __metadata:
     react: ">=16.3.0"
     react-dom: ">=16.3.0"
   checksum: ac43b3876829081c6912f083b53016384fe1357c2c819cf80ffa961dcc650b0d504da0c87d1e6139775976d514321061f39f6b69ab128d619c6917b70cb179d6
-  languageName: node
-  linkType: hard
-
-"react-piwik@npm:^1.12.0":
-  version: 1.12.0
-  resolution: "react-piwik@npm:1.12.0"
-  checksum: 385dd1d22f049750c1e28798707095d94900d3f99478dae3b9c6d8c35d4a9525ca4a3d6113e2041fb9ab33cbe77222a7ad4bafa0ab61f5026a243682eb5116ba
   languageName: node
   linkType: hard
 
