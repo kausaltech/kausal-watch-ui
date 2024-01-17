@@ -1,5 +1,5 @@
 import { useLocale } from 'next-intl';
-import { Link } from 'common/links';
+import Link from 'next/link';
 import styled from 'styled-components';
 import {
   UncontrolledDropdown,
@@ -111,6 +111,9 @@ const LanguageSelector = (props) => {
   // Strip language variant (if any)
   const languageCode = currentLocale?.split('-')[0];
 
+  const getLocaleHref = (locale: string) =>
+    plan.domain?.basePath ? `/${locale}/${plan.domain.basePath}` : `/${locale}`;
+
   return (
     <Selector inNavbar $mobile={mobile} className={mobile && 'd-md-none'}>
       <StyledDropdownToggle color="link" data-toggle="dropdown" tag="button">
@@ -120,8 +123,7 @@ const LanguageSelector = (props) => {
       <StyledDropdownMenu end>
         {locales.map((locale) => (
           <DropdownItem key={locale} tag="div">
-            {/* TODO: Ensure multiplan links are respected */}
-            <Link locale={locale} href={`/${locale}`}>
+            <Link locale={locale} href={getLocaleHref(locale)}>
               {languageNames[locale.split('-')[0]]}
             </Link>
           </DropdownItem>
