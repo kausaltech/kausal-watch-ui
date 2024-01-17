@@ -4,12 +4,13 @@ import {
   SiteGeneralContentActionTerm,
 } from './__generated__/graphql';
 
-// TODO: New translation
 export function getActionTermContext(plan: {
   generalContent?: { actionTerm: SiteGeneralContentActionTerm };
 }) {
   const actionTerm = plan.generalContent?.actionTerm;
-  return actionTerm === 'ACTION' ? undefined : { context: actionTerm };
+  return actionTerm === 'ACTION'
+    ? { context: undefined }
+    : { context: actionTerm };
 }
 
 export function getActionTaskTermContext(plan: {
@@ -18,7 +19,9 @@ export function getActionTaskTermContext(plan: {
   };
 }) {
   const actionTaskTerm = plan.generalContent?.actionTaskTerm;
-  return actionTaskTerm === 'TASK' ? undefined : { context: actionTaskTerm };
+  return actionTaskTerm === 'TASK'
+    ? { context: undefined }
+    : { context: actionTaskTerm };
 }
 
 export type TFunction = ReturnType<typeof useTranslations>;
