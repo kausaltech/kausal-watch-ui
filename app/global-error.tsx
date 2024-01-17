@@ -20,7 +20,7 @@ export default function GlobalError({ error }: Props) {
     <html>
       <body>
         <ThemeProvider theme={defaultTheme}>
-          <ErrorPage message={error.message} />
+          <ErrorPage />
         </ThemeProvider>
       </body>
     </html>

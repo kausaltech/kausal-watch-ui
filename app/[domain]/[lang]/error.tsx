@@ -14,5 +14,5 @@ export default function Error({ error }: Props) {
     captureException(error);
   }, [error]);
 
-  return <ErrorPage message={error.message} />;
+  return <ErrorPage />;
 }

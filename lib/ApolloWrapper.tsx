@@ -8,6 +8,7 @@ import {
   NextSSRApolloClient,
   SSRMultipartLink,
 } from '@apollo/experimental-nextjs-app-support/ssr';
+import { errorLink } from './utils/apollo.utils';
 
 function makeClient() {
   const httpLink = new HttpLink({
@@ -20,12 +21,13 @@ function makeClient() {
     link:
       typeof window === 'undefined'
         ? ApolloLink.from([
+            errorLink,
             new SSRMultipartLink({
               stripDefer: true,
             }),
             httpLink,
           ])
-        : httpLink,
+        : ApolloLink.from([errorLink, httpLink]),
   });
 }
 

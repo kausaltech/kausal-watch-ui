@@ -1,4 +1,12 @@
 import { ApolloLink } from '@apollo/client';
+import { onError } from '@apollo/client/link/error';
+import { captureException } from '@sentry/nextjs';
+
+export const errorLink = onError(({ graphQLErrors }) => {
+  if (graphQLErrors) {
+    graphQLErrors.forEach((error) => captureException(error));
+  }
+});
 
 export const operationStart = new ApolloLink((operation, forward) => {
   operation.setContext({ start: Date.now() });
