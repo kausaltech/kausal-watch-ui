@@ -7,6 +7,7 @@ import { usePlan } from 'context/plan';
 import { readableColor } from 'polished';
 import { beautifyValue } from 'common/data/format';
 import { useTranslations } from 'next-intl';
+import { getIndicatorTranslation } from './IndicatorCard';
 
 const IndicatorType = styled.div`
   margin-bottom: 0.5em;
@@ -106,7 +107,7 @@ function IndicatorHighlightCard({
   const indicatorType =
     level === 'action'
       ? t('action', getActionTermContext(plan))
-      : t(`${level}-indicator`);
+      : getIndicatorTranslation(level ?? null, t);
 
   return (
     <StyledCard>

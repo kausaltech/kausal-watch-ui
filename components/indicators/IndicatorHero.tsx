@@ -10,6 +10,7 @@ import { usePlan } from 'context/plan';
 import { IndicatorDetailsQuery } from 'common/__generated__/graphql';
 import { readableColor } from 'polished';
 import { useTranslations } from 'next-intl';
+import { getIndicatorTranslation } from './IndicatorCard';
 
 const Hero = styled.header`
   position: relative;
@@ -145,7 +146,7 @@ function IndicatorHero(props: IndicatorHeroProps) {
     indicator.level === 'action'
       ? t('action', getActionTermContext(plan))
       : indicator.level != null
-      ? t(`${indicator.level}-indicator`)
+      ? getIndicatorTranslation(indicator.level, t)
       : null;
 
   return (

@@ -77,6 +77,7 @@
     "graphql-codegen": "graphql-codegen --config codegen.ts",
     "build-embed-script": "tsc --project embed",
     "watch-embed-script": "tsc --watch --project embed",
+    "typecheck": "tsc --noEmit --incremental false",
     "prettier:fix": "prettier ./ --write"
   },
   "devDependencies": {

@@ -3,7 +3,7 @@ import { Card, CardBody, CardTitle } from 'reactstrap';
 import { readableColor } from 'polished';
 import styled from 'styled-components';
 import dayjs from 'common/dayjs';
-import { getActionTermContext } from 'common/i18n';
+import { TFunction, getActionTermContext } from 'common/i18n';
 import { IndicatorLink } from 'common/links';
 import { usePlan } from 'context/plan';
 import { useLocale, useTranslations } from 'next-intl';
@@ -45,7 +45,7 @@ const StyledLink = styled.a`
   }
 `;
 
-const StyledIndicator = styled(Card)<{ $level: string }>`
+const StyledIndicator = styled(Card)<{ $level: string | null }>`
   hyphens: manual;
   line-height: ${(props) => props.theme.lineHeightSm};
   border: 0;
@@ -199,6 +199,21 @@ interface IndicatorCardProps {
   disabled?: boolean | null;
 }
 
+export function getIndicatorTranslation(level: string | null, t: TFunction) {
+  if (!level) {
+    return t('indicator');
+  }
+
+  switch (level) {
+    case 'operational':
+      return t('operational-indicator');
+    case 'strategic':
+      return t('strategic-indicator');
+    case 'tactical':
+      return t('tactical-indicator');
+  }
+}
+
 function IndicatorCard({
   level = null,
   objectid,
@@ -217,7 +232,7 @@ function IndicatorCard({
   const indicatorType =
     level === 'action'
       ? t('action', getActionTermContext(plan))
-      : t(`${level}-indicator`);
+      : getIndicatorTranslation(level, t);
 
   return (
     <CardLink level={level} indicatorId={objectid}>

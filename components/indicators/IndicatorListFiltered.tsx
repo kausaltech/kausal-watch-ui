@@ -10,6 +10,7 @@ import { getActionTermContext } from '../../common/i18n';
 import { beautifyValue } from '../../common/data/format';
 import { usePlan } from 'context/plan';
 import { useLocale, useTranslations } from 'next-intl';
+import { getIndicatorTranslation } from './IndicatorCard';
 
 export const isEmptyFilter = (val) => val == null || val === '';
 
@@ -619,7 +620,7 @@ const IndicatorListFiltered = (props) => {
                   const indicatorType =
                     item.level === 'action'
                       ? t('action', getActionTermContext(plan))
-                      : t(`${item.level}-indicator`);
+                      : getIndicatorTranslation(item.level, t);
                   let [normalizedValue, normalizedUnit] = [null, null];
                   // We currently support only one normalizer, the population indicator
                   const normalizations = item.common?.normalizations;
