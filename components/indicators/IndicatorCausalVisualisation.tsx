@@ -26,10 +26,9 @@ const Column = styled.div`
 `;
 
 const Indicator = styled.div`
-  flex: 1 1 0;
+  flex: 1 1 120px;
   position: relative;
   width: 240px;
-  min-height: 160px;
   margin: 10px 20px;
 
   .card {
