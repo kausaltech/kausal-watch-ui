@@ -5,6 +5,7 @@ import { StyledComponentsRegistry } from '@/lib/StyledComponentsRegistry';
 import { ApolloWrapper } from '@/lib/ApolloWrapper';
 import ThemeProvider from '@/lib/ThemeProvider';
 import defaultTheme from '@/public/static/themes/default/theme.json';
+import { DayjsLocaleProvider } from '@/common/dayjs';
 import '@/styles/default/main.scss';
 
 type Props = {
@@ -23,7 +24,9 @@ export default function LangLayout({ params, children }: Props) {
         <ThemeProvider theme={defaultTheme}>
           <NextIntlClientProvider locale={params.lang} messages={messages}>
             <StyledComponentsRegistry>
-              <ApolloWrapper>{children}</ApolloWrapper>
+              <DayjsLocaleProvider locale={params.lang}>
+                <ApolloWrapper>{children}</ApolloWrapper>
+              </DayjsLocaleProvider>
             </StyledComponentsRegistry>
           </NextIntlClientProvider>
         </ThemeProvider>

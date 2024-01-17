@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { Link } from 'common/links';
 import Icon from 'components/common/Icon';
 import { GetCategoriesForTreeMapQuery } from 'common/__generated__/graphql';
-import { useLocale, useTranslations } from 'next-intl';
+import { useTranslations } from 'next-intl';
 
 const CardContent = styled(motion.div)`
   a {
@@ -30,24 +30,18 @@ const formatEmissionSharePercent = (share: number, total: number) => {
 };
 
 type CategoryCardContentProps = {
-  category: GetCategoriesForTreeMapQuery['planCategories'][0];
+  category: NonNullable<GetCategoriesForTreeMapQuery['planCategories']>[0];
   isRoot: boolean;
   sumValues: number;
 };
 
-const CatecoryCardContent = (props: CategoryCardContentProps) => {
+const CategoryCardContent = (props: CategoryCardContentProps) => {
   const { category, sumValues, isRoot } = props;
   const t = useTranslations();
 
-  // TESTME
-  const language = useLocale();
-  const numberFormat = new Intl.NumberFormat(language, {
-    maximumSignificantDigits: 3,
-  });
-
   const textcontent = category?.leadParagraph;
-  const catImageSrc = category?.image?.rendition.src;
-  const categoryEmissions = category?.attributes[0]?.value;
+  const catImageSrc = category?.image?.rendition?.src;
+  const categoryEmissions = category?.attributes?.[0]?.value;
   const emissionShare = formatEmissionSharePercent(
     categoryEmissions,
     sumValues
@@ -76,4 +70,4 @@ const CatecoryCardContent = (props: CategoryCardContentProps) => {
   );
 };
 
-export default CatecoryCardContent;
+export default CategoryCardContent;

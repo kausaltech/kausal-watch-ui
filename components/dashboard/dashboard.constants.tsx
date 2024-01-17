@@ -45,14 +45,12 @@ interface Column {
 export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
   // TODO: Add tooltip?
   StatusColumnBlock: {
-    renderHeader: (t, _, label) => label || t<string>('status'),
+    renderHeader: (t, _, label) => label || t('status'),
     renderCell: (action, plan) => <StatusCell action={action} plan={plan} />,
   },
 
   IdentifierColumnBlock: {
-    renderHeader: (t, _, label) => (
-      <abbr>{label || t<string>('action-id')}</abbr>
-    ),
+    renderHeader: (t, _, label) => <abbr>{label || t('action-id')}</abbr>,
     renderCell: (action) => action.identifier,
   },
 
@@ -67,7 +65,7 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
     headerKey: 'name',
     rowHeader: true,
     renderHeader: (t, plan, label) =>
-      label || t<string>('action-name-title', getActionTermContext(plan)),
+      label || t('action-name-title', getActionTermContext(plan)),
     renderCell: (action, _, planViewUrl) => (
       <ActionLink action={action} planUrl={planViewUrl}>
         {action.name}
@@ -77,7 +75,7 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
 
   OrganizationColumnBlock: {
     headerClassName: 'logo-column',
-    renderHeader: (t, _, label) => label || t<string>('logo'),
+    renderHeader: (t, _, label) => label || t('logo'),
     renderCell: (action) => <OrganizationCell action={action} />,
     renderTooltipContent: (action) => (
       <OrganizationTooltipContent action={action} />
@@ -87,8 +85,7 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
   ImplementationPhaseColumnBlock: {
     sortable: true,
     headerKey: 'implementationPhase',
-    renderHeader: (t, _, label) =>
-      label || t<string>('action-implementation-phase'),
+    renderHeader: (t, _, label) => label || t('action-implementation-phase'),
     renderCell: (action, plan) => (
       <ImplementationPhaseCell action={action} plan={plan} />
     ),
@@ -99,7 +96,7 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
 
   TasksColumnBlock: {
     renderHeader: (t, plan, label) =>
-      label || t<string>('action-tasks', getActionTaskTermContext(plan)),
+      label || t('action-tasks', getActionTaskTermContext(plan)),
     renderCell: (action, plan) => (
       <TasksStatusCell action={action} plan={plan} />
     ),
@@ -109,8 +106,7 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
   },
 
   ResponsiblePartiesColumnBlock: {
-    renderHeader: (t, _, label) =>
-      label || t<string>('action-responsibles-short'),
+    renderHeader: (t, _, label) => label || t('action-responsibles-short'),
     renderCell: (action) => <ResponsiblePartiesCell action={action} />,
     renderTooltipContent: (action) => (
       <ResponsiblePartiesTooltipContent action={action} />
@@ -118,7 +114,7 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
   },
 
   IndicatorsColumnBlock: {
-    renderHeader: (t, _, label) => label || t<string>('indicators'),
+    renderHeader: (t, _, label) => label || t('indicators'),
     renderCell: (action) => <IndicatorsCell action={action} />,
     renderTooltipContent: (action) => (
       <IndicatorsTooltipContent action={action} />
@@ -128,7 +124,7 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
   UpdatedAtColumnBlock: {
     sortable: true,
     headerKey: 'updatedAt',
-    renderHeader: (t, _, label) => label || t<string>('action-last-updated'),
+    renderHeader: (t, _, label) => label || t('action-last-updated'),
     renderCell: (action) => <UpdatedAtCell action={action} />,
     renderTooltipContent: (action) => (
       <LastUpdatedTooltipContent action={action} />
