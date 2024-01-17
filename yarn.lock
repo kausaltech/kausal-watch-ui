@@ -178,6 +178,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@axe-core/playwright@npm:^4.8.3":
+  version: 4.8.3
+  resolution: "@axe-core/playwright@npm:4.8.3"
+  dependencies:
+    axe-core: ~4.8.3
+  peerDependencies:
+    playwright-core: ">= 1.0.0"
+  checksum: d391dfb8beae02ed8c6bfa1189e82ee7d89ae3a76da7806d08f920c225d188a2632c3c904da61c3928c694e921419e901535a7ffc580d062b82756be5fda608d
+  languageName: node
+  linkType: hard
+
 "@babel/code-frame@npm:^7.0.0, @babel/code-frame@npm:^7.10.4, @babel/code-frame@npm:^7.12.13, @babel/code-frame@npm:^7.18.6, @babel/code-frame@npm:^7.5.5, @babel/code-frame@npm:^7.8.3":
   version: 7.18.6
   resolution: "@babel/code-frame@npm:7.18.6"
@@ -8234,6 +8245,13 @@ __metadata:
   version: 4.6.0
   resolution: "axe-core@npm:4.6.0"
   checksum: ed112f76bbb2e2ab52dda623fc4baf882b2d00045a55b2cc15358e891f7f164d674be1a2fbcfd49e11d064b146c387c5c9c3c29d7d59c9de6c22c65b86eb68ac
+  languageName: node
+  linkType: hard
+
+"axe-core@npm:~4.8.3":
+  version: 4.8.3
+  resolution: "axe-core@npm:4.8.3"
+  checksum: f546c74d1f3a7bff81752457fe9e5573693a8ecce11d3c265db501a82105efe0cd29964a491dd98e5979f6f3d85db6776e5e46626c2b09ab579a3729108964fd
   languageName: node
   linkType: hard
 
@@ -17073,6 +17091,7 @@ __metadata:
   resolution: "kausal-watch-ui@workspace:."
   dependencies:
     "@apollo/client": ^3.6.2
+    "@axe-core/playwright": ^4.8.3
     "@babel/core": ^7.17.10
     "@babel/eslint-parser": ^7.17.0
     "@babel/plugin-proposal-decorators": ^7.17.9

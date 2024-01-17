@@ -6,6 +6,7 @@ import type {
   PlaywrightGetPlanInfoQuery,
   PlaywrightGetPlanInfoQueryVariables,
 } from 'common/__generated__/graphql';
+import AxeBuilder from '@axe-core/playwright';
 
 const API_BASE =
   process.env.APLANS_API_BASE_URL || 'https://api.watch.kausal.tech/v1';
@@ -36,6 +37,10 @@ const GET_PLAN_INFO = gql`
       shortName
       primaryLanguage
       otherLanguages
+      parent {
+        identifier
+        name
+      }
       generalContent {
         id
         siteTitle
@@ -49,25 +54,48 @@ const GET_PLAN_INFO = gql`
         viewUrl(clientUrl: $clientURL)
       }
       mainMenu {
-        items {
+        items(withDescendants: true) {
+          __typename
           ... on PageMenuItem {
             page {
               id
               title
-              slug
               urlPath
+              slug
             }
+            parent {
+              id
+              page {
+                __typename
+              }
+            }
+          }
+          ... on ExternalLinkMenuItem {
+            linkText
+            url
           }
         }
       }
+    }
+    planIndicators(plan: $plan) {
+      id
+      name
     }
   }
 `;
 
 type PlanInfo = NonNullable<PlaywrightGetPlanInfoQuery['plan']>;
+type PlanIndicators = NonNullable<PlaywrightGetPlanInfoQuery['planIndicators']>;
 type ActionInfo = PlanInfo['actions'][0];
 
-export type MainMenuItem = NonNullable<PlanInfo['mainMenu']>['items'][0];
+export type MainMenuItem = NonNullable<PlanInfo['mainMenu']>['items'][0] & {
+  parent: {
+    id: string;
+    page: {
+      __typename: string;
+    };
+  };
+};
 export type PageMenuItem = MainMenuItem & {
   __typename: 'PageMenuItem';
 };
@@ -76,14 +104,41 @@ export type ActionListMenuItem = PageMenuItem & {
     __typename: 'ActionListPage';
   };
 };
+export type CategoryMenuItem = PageMenuItem & {
+  page: {
+    __typename: 'CategoryPage';
+  };
+};
+export type CategoryTypeMenuItem = PageMenuItem & {
+  page: {
+    __typename: 'CategoryTypePage';
+  };
+};
+export type EmptyPageMenuItem = PageMenuItem & {
+  page: {
+    __typename: 'EmptyPage';
+  };
+};
+export type StaticPageMenuItem = PageMenuItem & {
+  page: {
+    __typename: 'StaticPage';
+  };
+};
+export type IndicatorListMenuItem = PageMenuItem & {
+  page: {
+    __typename: 'IndicatorListPage';
+  };
+};
 
 export class PlanContext {
   plan: PlanInfo;
+  planIndicators: PlanIndicators;
   baseURL: string;
 
-  constructor(plan: PlanInfo, baseURL: string) {
+  constructor(plan: PlanInfo, baseURL: string, planIndicators: PlanIndicators) {
     this.plan = plan;
     this.baseURL = baseURL;
+    this.planIndicators = planIndicators;
   }
 
   getActionListMenuItem(): ActionListMenuItem | null {
@@ -100,12 +155,108 @@ export class PlanContext {
     return action.viewUrl;
   }
 
+  getCategoryTypeMenuItem(): CategoryTypeMenuItem | null {
+    function isCategoryType(item: MainMenuItem): item is CategoryTypeMenuItem {
+      if (item?.__typename !== 'PageMenuItem') return false;
+      if (item.page.__typename !== 'CategoryTypePage') return false;
+      return true;
+    }
+    const item = (this.plan.mainMenu?.items ?? []).find(isCategoryType) || null;
+    return item;
+  }
+
+  getCategoryMenuItems(
+    parentId: string | null | undefined
+  ): CategoryMenuItem[] {
+    this.plan.mainMenu?.items.map((item) => {
+      console.log(item);
+    });
+
+    if (!parentId) return [];
+
+    function isCategoryItem(item: MainMenuItem): item is CategoryMenuItem {
+      if (item?.__typename !== 'PageMenuItem') return false;
+      if (item.page.__typename !== 'CategoryPage') return false;
+      if (item.parent.id !== parentId) return false;
+      return true;
+    }
+    const items =
+      (this.plan.mainMenu?.items ?? []).filter(isCategoryItem) || [];
+    return items;
+  }
+
+  getEmptyPageMenuItem(): EmptyPageMenuItem | null {
+    function isEmptyPageType(item: MainMenuItem): item is EmptyPageMenuItem {
+      if (item?.__typename !== 'PageMenuItem') return false;
+      if (item.page.__typename !== 'EmptyPage') return false;
+      return true;
+    }
+    const item =
+      (this.plan.mainMenu?.items ?? []).find(isEmptyPageType) || null;
+    return item;
+  }
+
+  getEmptyPageChildrenItems(
+    parentId: string | null | undefined
+  ): Array<CategoryMenuItem | StaticPageMenuItem> {
+    if (!parentId) return [];
+
+    function isEmptyPageChildItem(
+      item: MainMenuItem
+    ): item is CategoryMenuItem | StaticPageMenuItem {
+      if (item?.__typename !== 'PageMenuItem') return false;
+      if (item.parent?.id !== parentId) return false;
+      return (
+        item.page.__typename === 'CategoryPage' ||
+        item.page.__typename === 'StaticPage'
+      );
+    }
+
+    const items =
+      (this.plan.mainMenu?.items ?? []).filter(isEmptyPageChildItem) || [];
+    return items;
+  }
+
+  getStaticPageMenuItem(): StaticPageMenuItem[] {
+    function isStaticPageItem(item: MainMenuItem): item is StaticPageMenuItem {
+      if (item?.__typename !== 'PageMenuItem') return false;
+      if (item.page.__typename !== 'StaticPage') return false;
+      if (item.parent.page.__typename !== 'PlanRootPage') return false;
+
+      return true;
+    }
+    const items =
+      (this.plan.mainMenu?.items ?? []).filter(isStaticPageItem) || [];
+    return items;
+  }
+
+  getIndicatorListMenuItem(): IndicatorListMenuItem | null {
+    function isIndicatorList(
+      item: MainMenuItem
+    ): item is IndicatorListMenuItem {
+      if (item?.__typename !== 'PageMenuItem') return false;
+      if (item.page.__typename !== 'IndicatorListPage') return false;
+      return true;
+    }
+    const item =
+      (this.plan.mainMenu?.items ?? []).find(isIndicatorList) || null;
+    return item;
+  }
+
+  getPlanIndicators(): PlanIndicators {
+    return this.planIndicators;
+  }
+
   async checkMeta(page: Page) {
     const siteName = page.locator('head meta[property="og:site_name"]');
-    await expect(siteName).toHaveAttribute(
-      'content',
-      this.plan.generalContent.siteTitle
-    );
+    if (this.plan.parent?.name) {
+      await expect(siteName).toHaveAttribute('content', this.plan.parent?.name);
+    } else {
+      await expect(siteName).toHaveAttribute(
+        'content',
+        this.plan.generalContent.siteTitle
+      );
+    }
   }
 
   static async fromPlanId(planId: string) {
@@ -126,7 +277,25 @@ export class PlanContext {
       variables: { plan: planId, locale: primaryLanguage, clientURL: baseURL },
     });
     const data = res.data!.plan!;
-    return new PlanContext(data, baseURL);
+    const planIndicators = res.data!.planIndicators!;
+    return new PlanContext(data, baseURL, planIndicators);
+  }
+
+  async checkAccessibility(page: Page) {
+    const results = await new AxeBuilder({ page }).analyze();
+    const criticalAndSeriousViolations = results.violations.filter(
+      (violation) =>
+        violation.impact === 'critical' || violation.impact === 'serious'
+    );
+
+    if (criticalAndSeriousViolations.length > 0) {
+      console.error(
+        'Critical and serious accessibility violations:',
+        criticalAndSeriousViolations
+      );
+    }
+
+    expect(criticalAndSeriousViolations).toEqual([]);
   }
 }
 

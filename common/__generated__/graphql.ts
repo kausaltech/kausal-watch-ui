@@ -3720,6 +3720,8 @@ export type SiteGeneralContent = {
   ownerUrl: Scalars['String'];
   siteDescription: Scalars['String'];
   siteTitle: Scalars['String'];
+  /** A message prominently displayed in a banner at the top of every page on the public website */
+  sitewideAnnouncement?: Maybe<Scalars['String']>;
 };
 
 export enum SiteGeneralContentActionTaskTerm {
@@ -9809,7 +9811,10 @@ export type PlaywrightGetPlanInfoQueryVariables = Exact<{
 
 export type PlaywrightGetPlanInfoQuery = (
   { plan?: (
-    { id: string, identifier: string, name: string, shortName?: string | null, primaryLanguage: string, otherLanguages?: Array<string> | null, generalContent: (
+    { id: string, identifier: string, name: string, shortName?: string | null, primaryLanguage: string, otherLanguages?: Array<string> | null, parent?: (
+      { identifier: string, name: string }
+      & { __typename?: 'Plan' }
+    ) | null, generalContent: (
       { id: string, siteTitle: string, siteDescription: string }
       & { __typename?: 'SiteGeneralContent' }
     ), actionListPage?: (
@@ -9819,17 +9824,26 @@ export type PlaywrightGetPlanInfoQuery = (
       { identifier: string, viewUrl: string }
       & { __typename?: 'Action' }
     )>, mainMenu?: (
-      { items: Array<{ __typename?: 'ExternalLinkMenuItem' } | (
+      { items: Array<(
+        { linkText: string, url: string }
+        & { __typename: 'ExternalLinkMenuItem' }
+      ) | (
         { page: (
-          { id?: string | null, title: string, slug: string, urlPath: string }
+          { id?: string | null, title: string, urlPath: string, slug: string }
           & { __typename?: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PrivacyPolicyPage' | 'StaticPage' }
-        ) }
-        & { __typename?: 'PageMenuItem' }
+        ), parent?: (
+          { id: string, page: { __typename: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PrivacyPolicyPage' | 'StaticPage' } }
+          & { __typename?: 'PageMenuItem' }
+        ) | null }
+        & { __typename: 'PageMenuItem' }
       ) | null> }
       & { __typename?: 'MainMenu' }
     ) | null }
     & { __typename?: 'Plan' }
-  ) | null }
+  ) | null, planIndicators?: Array<(
+    { id: string, name: string }
+    & { __typename?: 'Indicator' }
+  ) | null> | null }
   & { __typename?: 'Query' }
 );
 
