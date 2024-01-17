@@ -109,7 +109,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     variables: { hostname: url.hostname },
   });
 
-  // TODO: Log errors to sentry
   if (plansError || !plansData.plansForHostname?.length) {
     return [];
   }

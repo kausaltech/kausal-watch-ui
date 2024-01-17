@@ -1,8 +1,11 @@
 'use client';
 
-import * as Sentry from '@sentry/nextjs';
-import Error from 'next/error';
+import { captureException } from '@sentry/nextjs';
 import { useEffect } from 'react';
+
+import defaultTheme from '@/public/static/themes/default/theme.json';
+import { ErrorPage } from '@/components/common/ErrorPage';
+import ThemeProvider from '@/lib/ThemeProvider';
 
 type Props = {
   error: Error & { digest?: string };
@@ -10,13 +13,15 @@ type Props = {
 
 export default function GlobalError({ error }: Props) {
   useEffect(() => {
-    Sentry.captureException(error);
+    captureException(error);
   }, [error]);
 
   return (
     <html>
       <body>
-        <Error />
+        <ThemeProvider theme={defaultTheme}>
+          <ErrorPage message={error.message} />
+        </ThemeProvider>
       </body>
     </html>
   );

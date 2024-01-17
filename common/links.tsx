@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-props-no-spreading */
 import React, { ReactElement, PropsWithChildren, ReactNode } from 'react';
 import { default as NextLink, LinkProps } from 'next/link';
 import PropTypes from 'prop-types';
@@ -229,6 +228,11 @@ NavigationLink.propTypes = {
   ...NextLink.propTypes,
 };
 
+/**
+ * Wraps next/link and ensures the plan basePath is prepended to the href
+ * if necessary. Note: This should *not* be used if linking to other
+ * locales, as the locale is before plan in the pathname.
+ */
 export function Link({
   href: rawHref,
   children,

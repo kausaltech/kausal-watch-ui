@@ -13,6 +13,7 @@ import { gqlUrl } from './common/environment';
 import { stripSlashes } from './lib/utils/urls';
 import { UNPUBLISHED_PATH } from './lib/constants/routes';
 import { operationEnd, operationStart } from './lib/utils/apollo.utils';
+import { captureException } from '@sentry/nextjs';
 
 const BASIC_AUTH_ENV_VARIABLE = 'BASIC_AUTH_FOR_HOSTNAMES';
 
@@ -232,7 +233,10 @@ export async function middleware(request: NextRequest) {
   });
 
   if (error || !data.plansForHostname?.length) {
-    // TODO: Log errors
+    if (error) {
+      captureException(error);
+    }
+
     return NextResponse.rewrite(new URL('/404', request.url));
   }
 

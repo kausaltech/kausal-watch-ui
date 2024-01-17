@@ -1,6 +1,7 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
 import { headers } from 'next/headers';
+import { captureException } from '@sentry/nextjs';
 import OrgContent from '@/components/orgs/OrgContent';
 import { getOrganizationDetails } from '@/lib/queries/get-organization';
 
@@ -12,19 +13,22 @@ type Props = {
   };
 };
 
-// TODO: Indicator 404, error and loading
 export default async function OrganizationPage({ params }: Props) {
   const { id, plan, domain } = params;
   const headersList = headers();
   const protocol = headersList.get('x-forwarded-proto');
 
-  const { data } = await getOrganizationDetails(
+  const { data, error } = await getOrganizationDetails(
     plan,
     id,
     `${protocol}://${domain}`
   );
 
-  if (!data.organization || !data.plan) {
+  if (error || !data.organization || !data.plan) {
+    if (error) {
+      captureException(error);
+    }
+
     return notFound();
   }
 

@@ -1,11 +1,13 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
 import { headers } from 'next/headers';
+import { captureException } from '@sentry/nextjs';
+import { getTranslations } from 'next-intl/server';
+import { Metadata, ResolvingMetadata } from 'next';
+
 import { getActionDetails } from '@/lib/queries/get-action';
 import ActionContent from '@/components/actions/ActionContent';
-import { Metadata, ResolvingMetadata } from 'next';
 import { getActionImage } from '@/common/images';
-import { getTranslations } from 'next-intl/server';
 import { getActionTermContext } from '@/common/i18n';
 
 type Props = {
@@ -57,15 +59,22 @@ export async function generateMetadata(
   };
 }
 
-// TODO: Action 404, error and loading
 export default async function ActionPage({ params }: Props) {
   const { id, plan, domain } = params;
   const headersList = headers();
   const protocol = headersList.get('x-forwarded-proto');
 
-  const { data } = await getActionDetails(plan, id, `${protocol}://${domain}`);
+  const { data, error } = await getActionDetails(
+    plan,
+    id,
+    `${protocol}://${domain}`
+  );
 
-  if (!data.action || !data.plan) {
+  if (error || !data.action || !data.plan) {
+    if (error) {
+      captureException(error);
+    }
+
     return notFound();
   }
 

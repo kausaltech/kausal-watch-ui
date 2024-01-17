@@ -1,6 +1,7 @@
 import React from 'react';
 import { Metadata, ResolvingMetadata } from 'next';
 import { notFound } from 'next/navigation';
+import { captureException } from '@sentry/nextjs';
 
 import { getIndicatorDetails } from '@/lib/queries/get-indicator';
 import IndicatorContent from '@/components/indicators/IndicatorContent';
@@ -42,7 +43,6 @@ export async function generateMetadata(
   };
 }
 
-// TODO: Indicator 404, error and loading
 export default async function IndicatorPage({ params }: Props) {
   const { id, plan } = params;
 
@@ -50,9 +50,11 @@ export default async function IndicatorPage({ params }: Props) {
     return notFound();
   }
 
-  const { data } = await getIndicatorDetails(plan, id);
+  const { data, error } = await getIndicatorDetails(plan, id);
 
-  if (!data.indicator) {
+  if (error || !data.indicator) {
+    captureException(error);
+
     return notFound();
   }
 

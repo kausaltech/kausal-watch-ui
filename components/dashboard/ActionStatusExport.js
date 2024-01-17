@@ -29,7 +29,6 @@ async function exportActions(
       key: 'name',
       width: 50,
     },
-    // TODO: i18n
     { header: t('status'), key: 'status', width: 20 },
     {
       header: t('action-implementation-phase'),
@@ -37,19 +36,16 @@ async function exportActions(
       width: 20,
     },
     { header: t('action-last-updated'), key: 'lastUpdated', width: 15 },
-    // TODO: i18n
     {
       header: t('tasks-on-time', getActionTaskTermContext(plan)),
       key: 'ontimeTasks',
       width: 10,
     },
-    // TODO: i18n
     {
       header: t('tasks-late', getActionTaskTermContext(plan)),
       key: 'lateTasks',
       width: 10,
     },
-    // TODO: i18n
     {
       header: t('tasks-completed', getActionTaskTermContext(plan)),
       key: 'completedTasks',
@@ -60,19 +56,16 @@ async function exportActions(
       key: 'tasks',
       width: 10,
     },
-    // TODO: i18n
     {
       header: t('responsible-organizations-primary'),
       key: 'primaryResponsibleOrgs',
       width: 20,
     },
-    // TODO: i18n
     {
       header: t('responsible-organizations-collaborator'),
       key: 'collaboratorResponsibleOrgs',
       width: 20,
     },
-    // TODO: i18n
     {
       header: t('responsible-organizations-other'),
       key: 'otherResponsibleOrgs',
