@@ -7,7 +7,13 @@ function Switch(props) {
   return (
     <Form>
       <FormGroup switch>
-        <Input type="switch" checked={state} onChange={onChange} id={id} />
+        <Input
+          type="switch"
+          checked={state}
+          onChange={onChange}
+          id={id}
+          role="switch"
+        />
         <Label check htmlFor={id}>
           {label}
         </Label>

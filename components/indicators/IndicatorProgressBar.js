@@ -73,6 +73,10 @@ const NormalizerChooser = styled.div`
   margin-top: ${(props) => props.theme.spaces.s200};
   padding: ${(props) =>
     `${props.theme.spaces.s050} ${props.theme.spaces.s150}`};
+
+  .form-check-input {
+    border-color: ${({ theme }) => theme.section.indicatorShowcase.color};
+  }
 `;
 
 const formatValue = (value, locale) => {
