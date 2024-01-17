@@ -67,7 +67,7 @@ export const { getClient } = registerApolloClient(() => {
   const locale = headers.get('x-next-intl-locale') ?? undefined;
 
   return new ApolloClient({
-    connectToDevTools: isLocal && !isServer,
+    connectToDevTools: false,
     cache: new InMemoryCache({
       // https://www.apollographql.com/docs/react/data/fragments/#defining-possibletypes-manually
       possibleTypes: possibleTypes.possibleTypes,
