@@ -72,7 +72,8 @@ let config = {
     styledComponents: true,
   },
   webpack(config, { webpack }) {
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env.NODE_ENV !== 'development') {
+      // Disable Apollo Client development mode
       config.plugins.push(
         new webpack.DefinePlugin({
           'globalThis.__DEV__': false,
