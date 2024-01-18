@@ -79,7 +79,8 @@ const IconImage = styled.div<{ $imageSrc?: string }>`
       props.$imageSrc ? props.theme.spaces.s600 : props.theme.spaces.s300};
   margin-right: ${(props) => props.theme.spaces.s050};
   background-color: ${(props) => props.theme.neutralLight};
-  background-image: url(${(props) => props.$imageSrc || 'none'});
+  ${(props) =>
+    !!props.$imageSrc && `background-image: url(${props.$imageSrc});`};
   background-size: cover;
   background-position: center center;
 `;
