@@ -49,6 +49,11 @@ initializeThemes();
  * @type {import('next').NextConfig}
  */
 let config = {
+  logging: {
+    fetches: {
+      fullUrl: true,
+    },
+  },
   eslint: {
     // Warning: This allows production builds to successfully complete even if
     // your project has ESLint errors.
@@ -65,6 +70,17 @@ let config = {
   compiler: {
     // Enables the styled-components SWC transform
     styledComponents: true,
+  },
+  webpack(config, { webpack }) {
+    if (process.env.NODE_ENV === 'development') {
+      config.plugins.push(
+        new webpack.DefinePlugin({
+          'globalThis.__DEV__': false,
+        })
+      );
+    }
+
+    return config;
   },
 };
 

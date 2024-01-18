@@ -201,7 +201,8 @@ export async function middleware(request: NextRequest) {
   const protocol = request.headers.get('x-forwarded-proto');
   const hostname = new URL(`${protocol}://${host}`).hostname;
 
-  console.log(`  ⚙ Middleware ${url}
+  console.log(`
+  ⚙ Middleware ${url}
     ↝ protocol: ${protocol}
     ↝ pathname: ${pathname}
     ↝ hostname: ${hostname}
