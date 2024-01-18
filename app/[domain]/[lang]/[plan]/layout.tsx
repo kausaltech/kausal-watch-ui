@@ -12,6 +12,7 @@ import SiteProvider from '@/lib/SiteProvider';
 import { getThemeCSS, loadTheme } from '@/common/theme';
 import { CombinedIconSymbols } from '@/components/common/Icon';
 import { MatomoAnalytics } from '@/components/MatomoAnalytics';
+import { getMetaTitles } from '@/lib/utils/metadata';
 
 type Props = {
   params: { plan: string; domain: string; lang: string };
@@ -42,13 +43,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const ogImage = plan.image?.social?.src || plan.image?.rendition?.src;
   const themeIdentifier = data.plan.themeIdentifier || params.plan;
   const iconBase = `/static/themes/${themeIdentifier}/images/favicon`;
+  const { title: siteName } = getMetaTitles(plan);
 
   return {
     title,
     description,
     openGraph: {
       type: 'website',
-      siteName: plan.generalContent.siteTitle || plan.name,
+      siteName,
       title,
       description,
       images: ogImage ? [ogImage] : undefined,

@@ -1,26 +1,12 @@
 'use client';
 
 import { ReactNode } from 'react';
-import { GetPlanContextQuery } from '@/common/__generated__/graphql';
 
 import Header from '@/components/HeaderComponent';
 import Footer from '@/components/Footer';
 import { usePlan } from '@/context/plan';
 import { StyledMain } from './StyledMain';
-
-function getTitles(plan: NonNullable<GetPlanContextQuery['plan']>) {
-  if (plan.parent) {
-    return {
-      title: plan.parent.name,
-      navigationTitle: plan.parent.generalContent.siteTitle || plan.parent.name,
-    };
-  }
-
-  return {
-    title: plan.generalContent.siteTitle || plan.name,
-    navigationTitle: plan.generalContent.siteTitle || plan.name,
-  };
-}
+import { getMetaTitles } from '@/lib/utils/metadata';
 
 type Props = {
   params: { domain: string };
@@ -33,7 +19,7 @@ type Props = {
  */
 export default function Layout({ children, params }: Props) {
   const plan = usePlan();
-  const { navigationTitle, title } = getTitles(plan);
+  const { navigationTitle, title } = getMetaTitles(plan);
 
   const jsonLd = `{
     "@context" : "https://schema.org",
