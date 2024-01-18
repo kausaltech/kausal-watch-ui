@@ -199,7 +199,8 @@ export async function middleware(request: NextRequest) {
 
   const host = request.headers.get('host');
   const protocol = request.headers.get('x-forwarded-proto');
-  const hostname = new URL(`${protocol}://${host}`).hostname;
+  const hostUrl = new URL(`${protocol}://${host}`);
+  const hostname = hostUrl.hostname;
 
   console.log(`
   ⚙ Middleware ${url}
@@ -276,7 +277,7 @@ export async function middleware(request: NextRequest) {
       request.url
     );
 
-    return rewriteUrl(request, response, rewrittenUrl);
+    return rewriteUrl(request, response, hostUrl, rewrittenUrl);
   }
 
   const searchParams = getSearchParamsString(request);
@@ -286,15 +287,19 @@ export async function middleware(request: NextRequest) {
     request.url
   );
 
-  return rewriteUrl(request, response, rewrittenUrl);
+  return rewriteUrl(request, response, hostUrl, rewrittenUrl);
 }
 
 function rewriteUrl(
   request: NextRequest,
   response: NextResponse,
+  hostUrl: URL,
   rewrittenUrl: URL
 ) {
-  response.headers.set('x-url', request.url.toString());
+  // The user facing URL, provided via the x-url header to be used in metadata
+  const url = new URL(request.nextUrl.pathname, hostUrl).toString();
+
+  response.headers.set('x-url', url);
   response.headers.set('x-middleware-rewrite', rewrittenUrl.toString());
 
   return response;

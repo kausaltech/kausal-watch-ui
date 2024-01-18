@@ -58,7 +58,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     },
     metadataBase: new URL(url.origin),
     alternates: {
-      canonical: `${url.origin}${url.pathname}`,
+      canonical: url.pathname,
     },
     icons: {
       icon: [
