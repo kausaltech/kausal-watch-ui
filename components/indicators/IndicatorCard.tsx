@@ -101,6 +101,7 @@ const IndicatorNumber = styled.span`
 
 const IndicatorTitle = styled(CardTitle)`
   font-weight: ${(props) => props.theme.fontWeightBold};
+  hyphens: auto;
 `;
 
 const formatTime = (date, resolution) => {
