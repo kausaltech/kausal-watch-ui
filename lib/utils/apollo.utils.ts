@@ -1,4 +1,5 @@
-import { ApolloLink } from '@apollo/client';
+import { gqlUrl } from '@/common/environment';
+import { ApolloLink, HttpLink } from '@apollo/client';
 import { onError } from '@apollo/client/link/error';
 import { captureException } from '@sentry/nextjs';
 
@@ -30,4 +31,9 @@ export const operationEnd = new ApolloLink((operation, forward) => {
 
     return data;
   });
+});
+
+export const httpLink = new HttpLink({
+  uri: gqlUrl,
+  fetchOptions: { next: { revalidate: 0 } },
 });

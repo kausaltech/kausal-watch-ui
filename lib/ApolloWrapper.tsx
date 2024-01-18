@@ -8,14 +8,9 @@ import {
   NextSSRApolloClient,
   SSRMultipartLink,
 } from '@apollo/experimental-nextjs-app-support/ssr';
-import { errorLink } from './utils/apollo.utils';
+import { errorLink, httpLink } from './utils/apollo.utils';
 
 function makeClient() {
-  const httpLink = new HttpLink({
-    uri: gqlUrl,
-    fetchOptions: { next: { revalidate: 3600 } },
-  });
-
   return new NextSSRApolloClient({
     cache: new NextSSRInMemoryCache(),
     link:

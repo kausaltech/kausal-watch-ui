@@ -9,10 +9,13 @@ import {
   GetPlansByHostnameQueryVariables,
   PublicationStatus,
 } from './common/__generated__/graphql';
-import { gqlUrl } from './common/environment';
 import { stripSlashes } from './lib/utils/urls';
 import { UNPUBLISHED_PATH } from './lib/constants/routes';
-import { operationEnd, operationStart } from './lib/utils/apollo.utils';
+import {
+  httpLink,
+  operationEnd,
+  operationStart,
+} from './lib/utils/apollo.utils';
 import { captureException } from '@sentry/nextjs';
 
 const BASIC_AUTH_ENV_VARIABLE = 'BASIC_AUTH_FOR_HOSTNAMES';
@@ -31,14 +34,7 @@ const apolloClient = new ApolloClient({
     // https://www.apollographql.com/docs/react/data/fragments/#defining-possibletypes-manually
     possibleTypes: possibleTypes.possibleTypes,
   }),
-  link: from([
-    operationStart,
-    operationEnd,
-    new HttpLink({
-      uri: gqlUrl,
-      fetchOptions: { next: { revalidate: 3600 } },
-    }),
-  ]),
+  link: from([operationStart, operationEnd, httpLink]),
 });
 
 export const config = {

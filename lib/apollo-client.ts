@@ -7,10 +7,14 @@ import {
 } from '@apollo/client';
 import { registerApolloClient } from '@apollo/experimental-nextjs-app-support/rsc';
 import possibleTypes from '@/common/__generated__/possible_types.json';
-import { gqlUrl, isLocal, isServer } from '@/common/environment';
 
 import { headers as getHeaders } from 'next/headers';
-import { errorLink, operationEnd, operationStart } from './utils/apollo.utils';
+import {
+  errorLink,
+  httpLink,
+  operationEnd,
+  operationStart,
+} from './utils/apollo.utils';
 
 const getLocaleMiddleware = (locale?: string) => {
   return new ApolloLink((operation, forward) => {
@@ -57,11 +61,6 @@ const getLocaleMiddleware = (locale?: string) => {
   });
 };
 
-const gqlLink = new HttpLink({
-  uri: gqlUrl,
-  fetchOptions: { next: { revalidate: 3600 } },
-});
-
 export const { getClient } = registerApolloClient(() => {
   const headers = getHeaders();
   const locale = headers.get('x-next-intl-locale') ?? undefined;
@@ -77,7 +76,7 @@ export const { getClient } = registerApolloClient(() => {
       errorLink,
       getLocaleMiddleware(locale),
       operationEnd,
-      gqlLink,
+      httpLink,
     ]),
   });
 });
