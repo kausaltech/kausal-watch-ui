@@ -62,6 +62,22 @@ const cleanActionStatus = (action, actionStatuses) => {
   return newStatus;
 };
 
+class DonutSector {
+  count: number;
+
+  constructor(
+    public label: string,
+    public color: string,
+    public includeInTotal: boolean
+  ) {
+    this.count = 0;
+  }
+  increment() {
+    this.count++;
+    return this;
+  }
+}
+
 /*
  Process a list of actions and return an ordered list of statuses for statistics
  */
@@ -101,8 +117,8 @@ const getStatusData = (
           : label || unknownLabelText
       );
       progress.colors.push(theme.graphColors[colors.get(identifier) ?? color]);
-      if (sentiment == Sentiment.Positive) {
-        progress.good = progress.good + statusCount;
+      if (sentiment == Sentiment.Positive || identifier == 'NOT_STARTED') {
+        progress.good += statusCount;
       }
     }
     if (identifier !== ActionStatusSummaryIdentifier.Undefined) {
@@ -121,79 +137,99 @@ const getPhaseData = (
   plan: PlanContextType,
   theme,
   t
-): Progress => {
-  const phaseData: Progress = {
-    labels: [],
-    values: [],
-    colors: [],
-    good: 0,
-    total: '',
-  };
-  let totalCount = 0;
-
+): Progress | null => {
   const phases = plan.actionImplementationPhases;
-
+  if (phases.length == 0 || actions.length == 0) {
+    return null;
+  }
   let phaseColors = phases
-    .map((p) => theme.graphColors[p.color])
-    .filter((c) => c != null);
+    .filter((p) => p.color != null)
+    .map((p) => theme.graphColors[p.color!]);
+
+  /* We assume that if a custom color has not been set for *all*
+     phases in a plan, the sparse colors will not form a coherent
+     palette usable for the full graph.  Hence we use these default
+     colors for all phases.
+   */
   if (phaseColors.length != phases.length) {
     phaseColors = [
-      theme.graphColors.grey020,
-      theme.graphColors.green030,
-      theme.graphColors.green050,
+      theme.graphColors.green090,
       theme.graphColors.green070,
-      theme.graphColors.green090,
-      theme.graphColors.green090,
-      theme.graphColors.grey010,
+      theme.graphColors.green050,
+      theme.graphColors.green030,
+      theme.graphColors.green020,
+      theme.graphColors.green010,
+      theme.graphColors.grey030,
     ];
   }
-
-  // Process actions and ignore set phase if action's status trumps it
-  const phasedActions = actions.map((action) => {
-    const { implementationPhase } = action;
-    const statusSummary = getStatusSummary(plan, action.statusSummary);
-    const base =
-      statusSummary.isActive && implementationPhase != null
-        ? implementationPhase
-        : statusSummary;
-    const phase = Object.assign({}, base);
-    if (statusSummary.isActive === false) {
-      phase.name = `No phase (${phase.name})`;
-    }
-    if (statusSummary.identifier === ActionStatusSummaryIdentifier.Completed) {
-      phase.name = statusSummary.name;
-    }
-    // TODO: better way to handle phase---summary -matching
-    phase.identifier = phase?.identifier?.toLowerCase();
-    return { phase };
-  });
-
-  phases.forEach((phase, index) => {
-    const actionCountOnPhase = phasedActions.filter(
-      (action) => action.phase?.identifier === phase.identifier.toLowerCase()
+  const donutSectorFromPhase = (phase, idx, isNotStartedPhase) => {
+    return new DonutSector(
+      phase.name,
+      isNotStartedPhase
+        ? theme.graphColors.grey020
+        : phaseColors[idx] ?? theme.graphColors.yellow020,
+      !isNotStartedPhase
     );
-
-    phaseData.labels.push(phase.name);
-    phaseData.values.push(actionCountOnPhase.length);
-    phaseData.colors.push(phaseColors[index]);
-    if (phase.identifier !== 'not_started') {
-      // TODO: make this an attribute of the phase in the backend
-      totalCount += actionCountOnPhase.length;
-    }
-  });
-
-  const unknownActions = new Set(
-    phasedActions.filter(
-      (a) =>
-        !phases.find((p) => p.identifier.toLowerCase() === a.phase?.identifier)
-    )
+  };
+  // Assumption: the first phase in order corresponds has the semantics of
+  // "not started", regardless of identifier
+  const notStartedPhase = phases[0];
+  const phaseDonutSectorsByIdentifier: Map<string, DonutSector> = new Map(
+    // Donut sectors for normal phases
+    phases
+      .slice()
+      .reverse()
+      .map((p, idx) => [
+        p.identifier,
+        donutSectorFromPhase(p, idx, p === notStartedPhase),
+      ])
   );
-  phaseData.labels.push(t('no-phase'));
-  phaseData.values.push(unknownActions.size);
-  phaseData.colors.push(theme.graphColors.grey010);
+  const inactiveActionsDonutSector: DonutSector = new DonutSector(
+    // Donut sector for inactive (cancelled, merged, etc.) actions
+    t('actions:inactive-actions'),
+    theme.graphColors.grey000,
+    false
+  );
+  inactiveActionsDonutSector;
+  const phaselessActionsDonutSector: DonutSector = new DonutSector(
+    // Donut sector for active actions without a phase
+    t('no-phase'),
+    theme.graphColors.grey010,
+    false
+  );
 
-  phaseData.total = totalCount.toString();
-  return phaseData;
+  for (const action of actions) {
+    const statusSummary = getStatusSummary(plan, action.statusSummary);
+    if (!statusSummary.isActive && !statusSummary.isCompleted) {
+      // Ignoring action phase because action is not active but not completed
+      inactiveActionsDonutSector.increment();
+      continue;
+    }
+    if (action.implementationPhase == null) {
+      phaselessActionsDonutSector.increment();
+      continue;
+    }
+    phaseDonutSectorsByIdentifier
+      .get(action.implementationPhase.identifier)
+      ?.increment();
+  }
+
+  const allSectors: DonutSector[] = [
+    ...phaseDonutSectorsByIdentifier.values(),
+    phaselessActionsDonutSector,
+    inactiveActionsDonutSector,
+  ].filter((s) => s.count > 0);
+
+  return {
+    labels: allSectors.map((s) => s.label),
+    values: allSectors.map((s) => s.count),
+    colors: allSectors.map((s) => s.color),
+    good: 0,
+    total: allSectors
+      .filter((s) => s?.includeInTotal)
+      .reduce((prev, cur) => prev + (cur?.count ?? 0), 0)
+      .toString(),
+  };
 };
 
 type StatusSummary = Plan['actionStatusSummaries'][0];
