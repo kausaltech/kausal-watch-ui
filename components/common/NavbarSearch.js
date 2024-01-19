@@ -264,8 +264,8 @@ const ResultList = (props) => {
         </ResultCount>
       </ResultsHeader>
       <HitList>
-        {results.slice(0, RESULTS_LIMIT).map((r) => (
-          <ResultItem hit={r} />
+        {results.slice(0, RESULTS_LIMIT).map((r, i) => (
+          <ResultItem key={i} hit={r} />
         ))}
       </HitList>
       <ResultsFooter>
@@ -403,7 +403,7 @@ function NavbarSearch() {
                         setSearchTerm(e.target.value, {
                           autocompleteResults: true,
                           autocompleteMinimumCharacters: 2,
-                          debounce: 200,
+                          debounce: 400,
                         })
                       }
                       onFocus={(e) => setSearchOpen(true)}

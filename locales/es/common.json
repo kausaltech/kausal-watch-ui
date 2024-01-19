@@ -125,7 +125,7 @@
     "see-all-actions": "{context, select, STRATEGY {Ver todas las estrategias} other {Ver todas las acciones}}",
     "see-all-indicators": "Ver todos los indicadores",
     "see-all-results": "Ver todos los resultados {count}",
-    "searching-for": "Búsqueda de '{term}'",
+    "searching-for": "Búsqueda de \"{term}\"",
     "search-advanced": "Búsqueda avanzada",
     "search-no-results": "No hay resultados para esta búsqueda. Pruebe a cambiar los términos de búsqueda.",
     "send": "Envíe",

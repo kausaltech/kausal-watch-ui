@@ -14,7 +14,7 @@ function usePrependSubPlanPath(path: string) {
 }
 
 function prependSubPlanPath(plan: PlanContextFragment, path: string) {
-  if (isAbsoluteUrl(path)) {
+  if (typeof path !== 'string' || isAbsoluteUrl(path)) {
     return path;
   }
 

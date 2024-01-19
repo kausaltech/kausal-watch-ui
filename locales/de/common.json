@@ -125,7 +125,7 @@
     "see-all-actions": "{context, select, STRATEGY {Alle Strategien ansehen} CASE_STUDY {Alle Fallstudien anzeigen} other {Alle Maßnahmen ansehen}}",
     "see-all-indicators": "Alle Indikatoren ansehen",
     "see-all-results": "Alle {count} Ergebnisse ansehen",
-    "searching-for": "Suche nach '{term}'",
+    "searching-for": "Suche nach \"{term}\"",
     "search-advanced": "Fortgeschrittene Suche",
     "search-no-results": "Keine Ergebnisse für diese Suche. Versuchen Sie, die Suchbegriffe zu ändern.",
     "send": "Abschicken",

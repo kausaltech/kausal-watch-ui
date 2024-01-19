@@ -112,7 +112,7 @@
     "see-all-actions": "{context, select, CASE_STUDY {Se alla handlingar} STRATEGY {Se alla strategier} other {Se alla handlingar}}",
     "see-all-indicators": "Se alla indikatorer",
     "see-all-results": "Se alla {count} resultat",
-    "searching-for": "Söker '{term}'",
+    "searching-for": "Söker \"{term}\"",
     "search-advanced": "Fler sökalternativ",
     "search-no-results": "Inga resultat",
     "send": "Skicka",

@@ -125,7 +125,7 @@
     "see-all-actions": "{context, select, STRATEGY {Se alle strategier} other {Se alle handlinger}}",
     "see-all-indicators": "Se alle indikatorer",
     "see-all-results": "Se alle {count} resultater",
-    "searching-for": "Søger efter '{term}'",
+    "searching-for": "Søger efter \"{term}\"",
     "search-advanced": "Avanceret søgning",
     "search-no-results": "Ingen resultater for denne søgning. Prøv at ændre søgetermerne.",
     "send": "Sende",

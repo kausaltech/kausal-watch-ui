@@ -574,7 +574,7 @@ function IndicatorProgressBar(props) {
               strokeWidth="2"
             />
             <ValueGroup
-              text-anchor={goalBar.w > 120 ? 'start' : 'end'}
+              textAnchor={goalBar.w > 120 ? 'start' : 'end'}
               transform={`translate(${
                 goalBar.w > 120 ? goalBar.x + 4 : goalBar.x - 8
               } ${goalBar.y})`}

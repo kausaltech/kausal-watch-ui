@@ -129,7 +129,7 @@
     "see-all-actions": "{context, select, CASE_STUDY {See all case studies} STRATEGY {See all strategies} other {See all actions}}",
     "see-all-indicators": "See all indicators",
     "see-all-results": "See all {count} results",
-    "searching-for": "Searching for '{term}'",
+    "searching-for": "Searching for \"{term}\"",
     "search-advanced": "Advanced search",
     "search-no-results": "No results for this search. Try changing the search terms.",
     "send": "Send",
