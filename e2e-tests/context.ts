@@ -1,3 +1,4 @@
+import { apiUrl } from '@/common/environment';
 import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
 import { Page, expect } from '@playwright/test';
 import type {
@@ -8,8 +9,7 @@ import type {
 } from 'common/__generated__/graphql';
 import AxeBuilder from '@axe-core/playwright';
 
-const API_BASE =
-  process.env.APLANS_API_BASE_URL || 'https://api.watch.kausal.tech/v1';
+const API_BASE = apiUrl;
 
 const apolloClient = new ApolloClient({
   cache: new InMemoryCache(),

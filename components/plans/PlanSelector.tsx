@@ -3,7 +3,7 @@ import { transparentize } from 'polished';
 import { UncontrolledDropdown, DropdownToggle, DropdownMenu } from 'reactstrap';
 import { usePlan } from 'context/plan';
 import Icon from 'components/common/Icon';
-import { useTranslation } from 'common/i18n';
+
 import PlanLink from './PlanLink';
 
 const PlanSelect = styled.div`

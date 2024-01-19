@@ -1,9 +1,8 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import styled, { useTheme } from 'styled-components';
 import { Progress } from 'reactstrap';
 import { getStatusSummary } from 'common/ActionStatusSummary';
-import { ActionStatusSummary, Plan } from './__generated__/graphql';
+import { ActionStatusSummary, Plan } from '@/common/__generated__/graphql';
 
 const Status = styled.div`
   color: ${(props) => props.theme.themeColors.black};
@@ -33,11 +32,11 @@ interface ActionStatusProps {
   plan: Plan;
   statusSummary: ActionStatusSummary;
   completion?: number;
-  text?: String;
+  text?: string;
 }
 
 function ActionStatus(props: ActionStatusProps) {
-  const { plan, statusSummary, completion, text } = props;
+  const { plan, statusSummary, completion = 0, text } = props;
   const theme = useTheme();
   const enrichedStatusSummary = getStatusSummary(plan, statusSummary);
   const statusColor = enrichedStatusSummary.color;
@@ -52,11 +51,5 @@ function ActionStatus(props: ActionStatusProps) {
     </Status>
   );
 }
-
-ActionStatus.defaultProps = {
-  identifier: 'not_started',
-  name: '',
-  completion: 0,
-};
 
 export default ActionStatus;

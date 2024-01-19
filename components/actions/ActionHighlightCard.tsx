@@ -2,8 +2,8 @@ import React, { useContext } from 'react';
 import { Card, CardBody, CardTitle, Badge } from 'reactstrap';
 import styled from 'styled-components';
 import { transparentize } from 'polished';
-import PlanContext from 'context/plan';
-import { useTheme } from 'common/theme';
+import PlanContext, { usePlan } from 'context/plan';
+import { useTheme } from 'styled-components';
 import EmbedContext from 'context/embed';
 import { cleanActionStatus } from 'common/preprocess';
 import { ActionHighlightListAction } from './ActionHighlightsList';
@@ -61,16 +61,16 @@ const StyledCardTitle = styled(CardTitle)`
   margin-bottom: 0;
 `;
 
-const ImgArea = styled.div<{ bgcolor?: string }>`
+const ImgArea = styled.div<{ $bgcolor?: string }>`
   min-height: 9rem;
   position: relative;
   background-color: ${(props) =>
-    props.bgcolor || props.theme.themeColors.light};
+    props.$bgcolor || props.theme.themeColors.light};
 `;
 
-const ImgBg = styled.div<{ background: string }>`
+const ImgBg = styled.div<{ $background: string }>`
   height: 9rem;
-  background-image: url(${(props) => props.background});
+  background-image: url(${(props) => props.$background});
   background-position: center;
   background-size: cover;
 
@@ -114,7 +114,7 @@ type ActionHighlightCardProps = {
 
 function ActionHighlightCard(props: ActionHighlightCardProps) {
   const { action, imageUrl, hideIdentifier } = props;
-  const plan = useContext(PlanContext);
+  const plan = usePlan();
   const embed = useContext(EmbedContext);
   const theme = useTheme();
   const actionStatus = cleanActionStatus(action, plan.actionStatuses);
@@ -137,8 +137,8 @@ function ActionHighlightCard(props: ActionHighlightCardProps) {
     <ActionLink action={action} prefetch={false}>
       <CardLink href target={embed.active ? '_blank' : undefined}>
         <StyledCard>
-          <ImgArea bgcolor={statusColor}>
-            {imageUrl && <ImgBg background={imageUrl} />}
+          <ImgArea $bgcolor={statusColor}>
+            {imageUrl && <ImgBg $background={imageUrl} />}
             <ImgOverlay>
               {!hideIdentifier && (
                 <ActionNumber>

@@ -1,20 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useTranslation } from 'common/i18n';
+
 import { Container, Row, Col } from 'reactstrap';
 import accessibilityStatementData from 'public/static/accessibility';
+import { useLocale, useTranslations } from 'next-intl';
 
 const AccessibilityStatementComplianceStatusBlock = ({ id = '' }) => {
-  const { t, i18n } = useTranslation(['a11y']);
+  const t = useTranslations();
+  let locale = useLocale();
 
-  let locale = i18n.language;
   if (!(locale in accessibilityStatementData)) {
     locale = 'en';
   }
   const accessibilityProblems =
     accessibilityStatementData[locale].nonAccessibleContent.nonCompliant;
   const complianceStatus = accessibilityStatementData[locale].complianceStatus;
-  const complianceStatusText = t(`a11y:${complianceStatus}-compliant`);
+  const complianceStatusText = t(`${complianceStatus}-compliant`);
 
   return (
     <Container id={id} className="my-2 text-content">
@@ -24,18 +25,18 @@ const AccessibilityStatementComplianceStatusBlock = ({ id = '' }) => {
           lg={{ size: 8, offset: 2 }}
           md={{ size: 10, offset: 1 }}
         >
-          <h2>{t('a11y:compliance-status')}</h2>
+          <h2>{t('compliance-status')}</h2>
           <p>
             {complianceStatusText}{' '}
-            <a href={t('a11y:wcag-url')}>{t('a11y:target-level')}</a>
+            <a href={t('wcag-url')}>{t('target-level')}</a>
           </p>
           {accessibilityProblems.length > 0 && (
             <>
               {' '}
-              {t('a11y:due-to')}
-              <h2>{t('a11y:non-accessible-content')}</h2>
-              <h3>{t('a11y:non-compliance-aa')}</h3>
-              <p>{t('a11y:non-compliance-below')}:</p>
+              {t('due-to')}
+              <h2>{t('non-accessible-content')}</h2>
+              <h3>{t('non-compliance-aa')}</h3>
+              <p>{t('non-compliance-below')}:</p>
               <ul>
                 {accessibilityProblems.map((problem) => (
                   <li key={problem.id}>
@@ -47,7 +48,7 @@ const AccessibilityStatementComplianceStatusBlock = ({ id = '' }) => {
                   </li>
                 ))}
               </ul>
-              <p>{t('a11y:when-fixed')}</p>
+              <p>{t('when-fixed')}</p>
             </>
           )}
         </Col>

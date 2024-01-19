@@ -1,11 +1,13 @@
 import React from 'react';
 import { Card, CardImgOverlay, CardBody, CardTitle } from 'reactstrap';
 import styled from 'styled-components';
-import { getActionTermContext, useTranslation } from 'common/i18n';
+import { getActionTermContext } from 'common/i18n';
 import { IndicatorLink } from 'common/links';
 import { usePlan } from 'context/plan';
 import { readableColor } from 'polished';
 import { beautifyValue } from 'common/data/format';
+import { useTranslations } from 'next-intl';
+import { getIndicatorTranslation } from './IndicatorCard';
 
 const IndicatorType = styled.div`
   margin-bottom: 0.5em;
@@ -98,14 +100,14 @@ function IndicatorHighlightCard({
   value,
   unit = '',
 }: IndicatorHighlightCardProps) {
-  const { t, i18n } = useTranslation();
+  const t = useTranslations();
   const plan = usePlan();
 
   // FIXME: It sucks that we only use the context for the translation key 'action'
   const indicatorType =
     level === 'action'
       ? t('action', getActionTermContext(plan))
-      : t(`${level}-indicator`);
+      : getIndicatorTranslation(level ?? null, t);
 
   return (
     <StyledCard>

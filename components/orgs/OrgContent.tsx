@@ -1,26 +1,17 @@
+'use client';
+
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import { useTranslations } from 'next-intl';
+import styled from 'styled-components';
+import { Container, Row, Col, Nav, NavItem } from 'reactstrap';
+import { useTheme } from 'styled-components';
 
 import ActionStatusTable from 'components/dashboard/ActionStatusTable';
-
-import styled from 'styled-components';
-import { gql, useQuery } from '@apollo/client';
-import { Container, Row, Col, Nav, NavItem } from 'reactstrap';
 import PlanChip from 'components/plans/PlanChip';
 import RichText from 'components/common/RichText';
-
 import { usePlan } from 'context/plan';
-import { useTheme } from 'common/theme';
-import { useTranslation } from 'common/i18n';
 import { OrganizationLink } from 'common/links';
-import ContentLoader from 'components/common/ContentLoader';
-import ErrorMessage from 'components/common/ErrorMessage';
-import { Meta } from 'components/layout';
-import {
-  OrganizationDetailsQuery,
-  OrganizationDetailsQueryVariables,
-} from 'common/__generated__/graphql';
-import { actionTableColumnFragment } from 'components/dashboard/ActionList';
+import { OrganizationDetailsQuery } from 'common/__generated__/graphql';
 
 const Tab = styled.button`
   background: ${(props) => props.theme.brandDark};
@@ -129,231 +120,19 @@ const ActionTableContainer = styled.div`
   overflow: auto;
 `;
 
-const GET_ORG_DETAILS = gql`
-  query OrganizationDetails($id: ID!, $planId: ID!, $clientUrl: String!) {
-    organization(id: $id) {
-      id
-      classification {
-        id
-        name
-        identifier
-      }
-      name
-      abbreviation
-      distinctName
-      description
-      url
-      ancestors {
-        id
-      }
-      plansWithActionResponsibilities(exceptPlan: $planId) {
-        ...OrgContentPlan
-      }
-      actionCount
-      contactPersonCount
-      parent {
-        id
-        name
-      }
-      logo(parentFallback: true) {
-        id
-        altText
-        rendition(size: "128x128", crop: false) {
-          id
-          src
-          alt
-        }
-      }
-    }
-    plan(id: $planId) {
-      ...OrgContentPlan
+type Props = {
+  org: NonNullable<OrganizationDetailsQuery['organization']>;
+  planFromOrgQuery: NonNullable<OrganizationDetailsQuery['plan']>;
+};
 
-      # Org actions table uses the custom column config from the actions list page
-      actionListPage {
-        ...ActionTableColumnFragment
-      }
-    }
-  }
-
-  fragment OrgContentPlan on Plan {
-    id
-    name
-    shortName
-    versionName
-    viewUrl(clientUrl: $clientUrl)
-    organization {
-      id
-      name
-      abbreviation
-    }
-    primaryOrgs {
-      id
-      name
-    }
-    actionImpacts {
-      id
-    }
-    actionStatusSummaries {
-      identifier
-      label
-      color
-      isCompleted
-      isActive
-      sentiment
-    }
-    image {
-      rendition(size: "128x128", crop: true) {
-        id
-        src
-        alt
-      }
-    }
-    actionImplementationPhases {
-      id
-      identifier
-      name
-      order
-    }
-    actionStatuses {
-      id
-      identifier
-      name
-      isCompleted
-    }
-    features {
-      hasActionIdentifiers
-      hasActionOfficialName
-      hasActionPrimaryOrgs
-    }
-    actions(responsibleOrganization: $id) {
-      id
-      identifier
-      name(hyphenated: true)
-      officialName
-      completion
-      updatedAt
-      scheduleContinuous
-      startDate
-      endDate
-      order
-      plan {
-        id
-        viewUrl(clientUrl: $clientUrl)
-      }
-      statusSummary {
-        identifier
-      }
-      schedule {
-        id
-      }
-      status {
-        id
-        identifier
-        name
-        color
-      }
-      implementationPhase {
-        id
-        identifier
-        name
-        order
-      }
-      impact {
-        id
-        identifier
-      }
-      categories {
-        id
-      }
-      responsibleParties {
-        id
-        organization {
-          id
-          abbreviation
-          name
-        }
-      }
-      primaryOrg {
-        id
-        abbreviation
-        name
-        logo {
-          rendition(size: "128x128", crop: true) {
-            src
-          }
-        }
-      }
-
-      tasks {
-        id
-        state
-        dueAt
-      }
-      mergedWith {
-        id
-        identifier
-        plan {
-          id
-          shortName
-          versionName
-          viewUrl(clientUrl: $clientUrl)
-        }
-      }
-      indicators {
-        id
-        goals {
-          id
-        }
-      }
-      relatedIndicators {
-        id
-        indicatesActionProgress
-        indicator {
-          id
-          goals {
-            id
-          }
-        }
-      }
-    }
-  }
-
-  ${actionTableColumnFragment}
-`;
-
-function OrgContent(props) {
-  const { id } = props;
+function OrgContent({ org, planFromOrgQuery }: Props) {
   const plan = usePlan();
-  const { t } = useTranslation(['common', 'actions']);
+  const t = useTranslations();
   const theme = useTheme();
   const [selectedPlanIndex, setSelectedPlan] = useState(0);
 
-  const { data, loading, error } = useQuery<
-    OrganizationDetailsQuery,
-    OrganizationDetailsQueryVariables
-  >(GET_ORG_DETAILS, {
-    variables: {
-      id,
-      planId: plan.identifier,
-      clientUrl: plan.viewUrl!,
-    },
-  });
-
-  if (loading) return <ContentLoader />;
-  if (error) return <ErrorMessage message={error.message} />;
-  if (!data || !data.organization || !data.plan) {
-    return (
-      <ErrorMessage
-        statusCode={404}
-        message={t('common:organization-not-found')}
-      />
-    );
-  }
-
-  const { organization: org, plan: planFromQuery } = data;
-
   // Make sure host plan is first
-  const allPlans = [planFromQuery, ...org.plansWithActionResponsibilities];
+  const allPlans = [planFromOrgQuery, ...org.plansWithActionResponsibilities];
   const selectedPlan = allPlans[selectedPlanIndex];
 
   // add plan.feature.showActionUpdateStatus to backend
@@ -361,13 +140,12 @@ function OrgContent(props) {
 
   return (
     <div className="mb-5">
-      <Meta title={org.name} />
       <OrgHeader>
         <HeaderContainer>
           <Row>
             <Col md={{ size: 6, offset: org.logo?.rendition?.src ? 2 : 0 }}>
               <SectionTitle>
-                {t('common:organizations', {
+                {t('organizations', {
                   context: plan.generalContent.organizationTerm,
                 })}
               </SectionTitle>
@@ -406,9 +184,8 @@ function OrgContent(props) {
                   <Tab
                     className={i === selectedPlanIndex ? 'active' : ''}
                     aria-selected={i === selectedPlanIndex}
-                    passHref
                     role="tab"
-                    tabIndex="0"
+                    tabIndex={0}
                     aria-controls="list-view"
                     id="list-tab"
                     onClick={() => setSelectedPlan(i)}
@@ -435,7 +212,7 @@ function OrgContent(props) {
         <Container fluid="lg">
           <ActionTableHeader>
             <h2>
-              {t('actions:org-responsible-in-actions', {
+              {t('org-responsible-in-actions', {
                 actionCount: selectedPlan.actions.length,
               })}
             </h2>
@@ -443,8 +220,8 @@ function OrgContent(props) {
           <ActionTableContainer>
             <ActionStatusTable
               columns={
-                planFromQuery.actionListPage?.__typename === 'ActionListPage'
-                  ? planFromQuery.actionListPage.dashboardColumns ?? []
+                planFromOrgQuery.actionListPage?.__typename === 'ActionListPage'
+                  ? planFromOrgQuery.actionListPage.dashboardColumns ?? []
                   : []
               }
               enableExport={false}
@@ -462,9 +239,5 @@ function OrgContent(props) {
     </div>
   );
 }
-
-OrgContent.propTypes = {
-  id: PropTypes.string.isRequired,
-};
 
 export default OrgContent;

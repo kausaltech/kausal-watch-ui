@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { usePlan } from 'context/plan';
-import { useTranslation } from 'common/i18n';
 import PlanVersionBanner from 'components/versioning/PlanVersionBanner';
 import { AnnouncementBannerWithRichTextMessage } from 'components/common/AnnouncementBanner';
+import { useTranslations } from 'next-intl';
 
 const Banner = styled.div`
   padding: 8px 16px;
@@ -40,8 +40,9 @@ const Label = styled.strong`
 `;
 
 function ApplicationStateBanner(props) {
-  const { deploymentType } = props;
-  const { t } = useTranslation();
+  const { deploymentType = 'development' } = props;
+  const t = useTranslations();
+
   let typeLabel;
   let typeMessage;
 
@@ -94,10 +95,6 @@ function ApplicationStateBanner(props) {
     </>
   );
 }
-
-ApplicationStateBanner.defaultProps = {
-  deploymentType: 'development',
-};
 
 ApplicationStateBanner.propTypes = {
   deploymentType: PropTypes.oneOf([

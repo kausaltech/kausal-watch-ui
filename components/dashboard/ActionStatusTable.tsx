@@ -1,8 +1,8 @@
 import React, { ReactNode, useState, createContext } from 'react';
 import { Table, Button } from 'reactstrap';
 import styled from 'styled-components';
+import { useTranslations } from 'next-intl';
 
-import { useTranslation } from 'common/i18n';
 import Icon from 'components/common/Icon';
 import { actionStatusOrder } from 'common/data/actions';
 import ActionTableRow from 'components/dashboard/ActionTableRow';
@@ -64,21 +64,20 @@ const ResetSorting = styled.div``;
 
 const StyledTableHeader = styled.th`
   cursor: pointer;
-  paddingright: 15;
 `;
 
-const HeaderContentWrapper = styled.div<{ selected: boolean }>`
+const HeaderContentWrapper = styled.div<{ $selected: boolean }>`
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
-  text-decoration: ${(props) => (props.selected ? 'underline' : null)};
+  text-decoration: ${(props) => (props.$selected ? 'underline' : null)};
   align-items: flex-end;
 `;
 
-const TableSortingIcon = styled(Icon)`
+const TableSortingIcon = styled(Icon)<{ $selected: boolean }>`
   width: 0.8em;
   height: 0.8em;
-  opacity: ${(props) => (props.selected ? 1 : 0.3)};
+  opacity: ${(props) => (props.$selected ? 1 : 0.3)};
 `;
 
 function isChildOrg(childOrg, parentOrg) {
@@ -141,11 +140,11 @@ const SortableTableHeader = ({
         selected ? (sort.direction === 1 ? 'ascending' : 'descending') : 'none'
       }
     >
-      <HeaderContentWrapper selected={selected}>
+      <HeaderContentWrapper $selected={selected}>
         <div>{children}</div>
         <TableSortingIcon
           name={iconName}
-          selected={selected}
+          $selected={selected}
           aria-hidden="true"
         />
       </HeaderContentWrapper>
@@ -231,7 +230,7 @@ const ActionStatusTable = (props: Props) => {
     setSort({ key, direction });
   };
 
-  const { t } = useTranslation(['common', 'actions']);
+  const t = useTranslations();
 
   /**
    * All columns except action identifier are controlled by the column configuration
@@ -257,7 +256,7 @@ const ActionStatusTable = (props: Props) => {
               color="primary"
               onClick={sortHandler(null)}
             >
-              {t('common:default-sorting')}
+              {t('default-sorting')}
             </Button>
           )}
         </ResetSorting>

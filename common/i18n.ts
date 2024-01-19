@@ -1,37 +1,27 @@
-import * as NextI18Next from 'next-i18next';
+import { useTranslations } from 'next-intl';
 import {
-  ContentSiteGeneralContentActionTermChoices,
-  ContentSiteGeneralContentActionTaskTermChoices,
+  SiteGeneralContentActionTaskTerm,
+  SiteGeneralContentActionTerm,
 } from './__generated__/graphql';
-import numbro from 'numbro';
-import numbroDe from 'numbro/dist/languages/de-DE.min.js';
-
-numbro.registerLanguage({
-  ...numbroDe,
-  languageTag: 'de',
-});
-
-const { appWithTranslation, withTranslation, Trans, useTranslation } =
-  NextI18Next;
-
-export function getI18n() {
-  return NextI18Next.i18n;
-}
 
 export function getActionTermContext(plan: {
-  generalContent?: { actionTerm: ContentSiteGeneralContentActionTermChoices };
+  generalContent?: { actionTerm: SiteGeneralContentActionTerm };
 }) {
   const actionTerm = plan.generalContent?.actionTerm;
-  return actionTerm === 'ACTION' ? undefined : { context: actionTerm };
+  return actionTerm === 'ACTION'
+    ? { context: undefined }
+    : { context: actionTerm };
 }
 
 export function getActionTaskTermContext(plan: {
   generalContent?: {
-    actionTaskTerm: ContentSiteGeneralContentActionTaskTermChoices;
+    actionTaskTerm: SiteGeneralContentActionTaskTerm;
   };
 }) {
   const actionTaskTerm = plan.generalContent?.actionTaskTerm;
-  return actionTaskTerm === 'TASK' ? undefined : { context: actionTaskTerm };
+  return actionTaskTerm === 'TASK'
+    ? { context: undefined }
+    : { context: actionTaskTerm };
 }
 
-export { appWithTranslation, withTranslation, Trans, useTranslation };
+export type TFunction = ReturnType<typeof useTranslations>;

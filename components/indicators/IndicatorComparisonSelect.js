@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import DropDown from 'components/common/DropDown';
-import { useTranslation } from 'common/i18n';
+import { useTranslations } from 'next-intl';
 
 const CompareChooser = styled.div`
   display: flex;
@@ -24,7 +24,7 @@ const CompareTo = styled.div`
 
 const IndicatorComparisonSelect = (props) => {
   const { handleChange, currentValue, options, defaultOrg } = props;
-  const { t } = useTranslation();
+  const t = useTranslations();
 
   const callback = (evt) => {
     const value = evt.target.value;
@@ -64,10 +64,6 @@ const IndicatorComparisonSelect = (props) => {
 };
 
 export default IndicatorComparisonSelect;
-
-IndicatorComparisonSelect.defaultProps = {
-  currentValue: undefined,
-};
 
 IndicatorComparisonSelect.propTypes = {
   handleChange: PropTypes.func.isRequired,

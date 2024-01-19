@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { getActionTermContext, useTranslation } from 'common/i18n';
+import { useTranslations } from 'next-intl';
 
 const OfficialText = styled.div`
   margin-bottom: ${(props) => props.theme.spaces.s300};
@@ -18,14 +18,14 @@ const OfficialText = styled.div`
 
 const ActionOfficialNameBlock = (props) => {
   const { plan, block, action } = props;
-  const { t } = useTranslation();
+  const t = useTranslations();
+
   const generalContent = plan.generalContent || {};
   const cleanOfficialText =
     action.officialName?.replace(/(?:\r\n|\r|\n)/g, '<br>') || '';
   if (!cleanOfficialText) return null;
   const caption = block.caption || generalContent.officialNameDescription;
-  const fieldLabel =
-    block.fieldLabel || t('actions:action-description-official');
+  const fieldLabel = block.fieldLabel || t('action-description-official');
 
   return (
     <OfficialText>

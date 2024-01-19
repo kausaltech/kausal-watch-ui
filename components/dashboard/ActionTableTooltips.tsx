@@ -1,11 +1,7 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
 import dayjs from 'common/dayjs';
-import {
-  getActionTaskTermContext,
-  getActionTermContext,
-  useTranslation,
-} from 'common/i18n';
+import { getActionTaskTermContext, getActionTermContext } from 'common/i18n';
 import Icon from 'components/common/Icon';
 import { ActionListAction } from './dashboard.types';
 import {
@@ -13,10 +9,11 @@ import {
   PlanContextFragment,
 } from 'common/__generated__/graphql';
 import { getTaskCounts } from './cells/TasksStatusCell';
-import { useTheme } from 'common/theme';
+import { useTheme } from 'styled-components';
 import { ActionTableContext } from './ActionStatusTable';
 import { usePlan } from 'context/plan';
 import { PhaseTimeline } from 'components/actions/PhaseTimeline';
+import { useTranslations } from 'next-intl';
 
 const TooltipTitle = styled.p`
   font-weight: ${(props) => props.theme.fontWeightBold};
@@ -71,25 +68,25 @@ interface TooltipWithPlanProps extends TooltipProps {
 }
 
 export const OrganizationTooltipContent = ({ action }: TooltipProps) => {
-  const { t } = useTranslation(['common', 'actions']);
+  const t = useTranslations();
 
   return (
     <div>
-      <TooltipTitle>{t('common:primary-organization')}</TooltipTitle>
+      <TooltipTitle>{t('primary-organization')}</TooltipTitle>
       {action.primaryOrg?.name}
     </div>
   );
 };
 
 export const TasksTooltipContent = ({ action, plan }: TooltipWithPlanProps) => {
-  const { t } = useTranslation(['common', 'actions']);
+  const t = useTranslations();
   const taskCounts = getTaskCounts(action.tasks, plan, t);
 
   if (taskCounts.total < 1)
     return (
       <div>
         <TooltipTitle>
-          {t('actions:action-no-tasks', getActionTaskTermContext(plan))}
+          {t('action-no-tasks', getActionTaskTermContext(plan))}
         </TooltipTitle>
       </div>
     );
@@ -97,29 +94,25 @@ export const TasksTooltipContent = ({ action, plan }: TooltipWithPlanProps) => {
   return (
     <TaskTooltip>
       <TooltipTitle>
-        {t('actions:action-tasks', getActionTaskTermContext(plan))}{' '}
+        {t('action-tasks', getActionTaskTermContext(plan))}{' '}
       </TooltipTitle>
       <table>
         <tbody>
           {taskCounts.completed > 0 && (
             <tr>
-              <td>
-                {t('actions:tasks-completed', getActionTaskTermContext(plan))}
-              </td>
+              <td>{t('tasks-completed', getActionTaskTermContext(plan))}</td>
               <td>{taskCounts.completed}</td>
             </tr>
           )}
           {taskCounts.late > 0 && (
             <tr>
-              <td>{t('actions:tasks-late', getActionTaskTermContext(plan))}</td>
+              <td>{t('tasks-late', getActionTaskTermContext(plan))}</td>
               <td>{taskCounts.late}</td>
             </tr>
           )}
           {taskCounts.onTime > 0 && (
             <tr>
-              <td>
-                {t('actions:tasks-on-time', getActionTaskTermContext(plan))}
-              </td>
+              <td>{t('tasks-on-time', getActionTaskTermContext(plan))}</td>
               <td>{taskCounts.onTime}</td>
             </tr>
           )}
@@ -136,7 +129,7 @@ const StyledPhaseTimelineContainer = styled.div`
 export const ImplementationPhaseTooltipContent = ({
   action,
 }: TooltipWithPlanProps) => {
-  const { t } = useTranslation(['common', 'actions']);
+  const t = useTranslations();
   const { plan } = useContext(ActionTableContext);
 
   const activePhase = action.implementationPhase;
@@ -164,7 +157,7 @@ export const ImplementationPhaseTooltipContent = ({
     return (
       <TooltipTitle>
         {` ${t(
-          'actions:action-status-merged',
+          'action-status-merged',
           getActionTermContext(plan)
         )}: ${getMergedName(merged, plan.id)}.`}
       </TooltipTitle>
@@ -181,7 +174,7 @@ export const ImplementationPhaseTooltipContent = ({
 
   return (
     <div>
-      <TooltipTitle>{t('actions:action-implementation-phase')}:</TooltipTitle>
+      <TooltipTitle>{t('action-implementation-phase')}:</TooltipTitle>
       <StyledPhaseTimelineContainer>
         {!!action.implementationPhase && (
           <PhaseTimeline
@@ -195,7 +188,7 @@ export const ImplementationPhaseTooltipContent = ({
 };
 
 export const ResponsiblePartiesTooltipContent = ({ action }: TooltipProps) => {
-  const { t } = useTranslation(['common', 'actions']);
+  const t = useTranslations();
   const theme = useTheme();
   const plan = usePlan();
   const { organizationTerm } = plan.generalContent;
@@ -206,7 +199,7 @@ export const ResponsiblePartiesTooltipContent = ({ action }: TooltipProps) => {
     return (
       <div>
         <TooltipTitle>
-          {t('common:responsible-parties', { context: organizationTerm })}
+          {t('responsible-parties', { context: organizationTerm })}
         </TooltipTitle>
       </div>
     );
@@ -214,11 +207,11 @@ export const ResponsiblePartiesTooltipContent = ({ action }: TooltipProps) => {
   return (
     <div>
       <TooltipTitle>
-        {t('common:responsible-parties', { context: organizationTerm })}
+        {t('responsible-parties', { context: organizationTerm })}
       </TooltipTitle>
       {/* TODO: Fix missing type property. hasContactPerson is added to actions higher in the component tree */}
       {parties.find((party) => party.hasContactPerson) && (
-        <strong>{t('common:with-contact-persons')}:</strong>
+        <strong>{t('with-contact-persons')}:</strong>
       )}
       <ResponsibleTooltipList>
         {parties.map((party) =>
@@ -236,7 +229,7 @@ export const ResponsiblePartiesTooltipContent = ({ action }: TooltipProps) => {
         )}
       </ResponsibleTooltipList>
       {parties.find((party) => !party.hasContactPerson) && (
-        <strong>{t('common:without-contact-person')}:</strong>
+        <strong>{t('without-contact-person')}:</strong>
       )}
       <ResponsibleTooltipList>
         {parties.map((party) =>
@@ -258,7 +251,7 @@ export const ResponsiblePartiesTooltipContent = ({ action }: TooltipProps) => {
 };
 
 export const IndicatorsTooltipContent = ({ action }: TooltipProps) => {
-  const { t } = useTranslation(['common', 'actions']);
+  const t = useTranslations();
   const theme = useTheme();
 
   const relatedIndicators = action.relatedIndicators;
@@ -268,7 +261,7 @@ export const IndicatorsTooltipContent = ({ action }: TooltipProps) => {
   );
   return (
     <div>
-      <TooltipTitle>{t('common:indicators')}</TooltipTitle>
+      <TooltipTitle>{t('indicators')}</TooltipTitle>
       <Icon
         name="tachometer"
         color={
@@ -278,8 +271,8 @@ export const IndicatorsTooltipContent = ({ action }: TooltipProps) => {
         width="1.2em"
       />
       {hasIndicators
-        ? ` ${t('common:indicators')}: ${relatedIndicators.length}`
-        : ` ${t('actions:no-defined-indicators')}`}
+        ? ` ${t('indicators')}: ${relatedIndicators.length}`
+        : ` ${t('no-defined-indicators')}`}
       <br />
       <Icon
         name="bullseye"
@@ -289,19 +282,17 @@ export const IndicatorsTooltipContent = ({ action }: TooltipProps) => {
         height="1.2em"
         width="1.2em"
       />
-      {hasGoals
-        ? ` ${t('common:has-goals')}`
-        : ` ${t('common:indicator-time-no-goals')}`}
+      {hasGoals ? ` ${t('has-goals')}` : ` ${t('indicator-time-no-goals')}`}
     </div>
   );
 };
 
 export const LastUpdatedTooltipContent = ({ action }: TooltipProps) => {
-  const { t } = useTranslation(['common', 'actions']);
+  const t = useTranslations();
 
   return (
     <div>
-      <TooltipTitle>{t('common:latest-update')}</TooltipTitle>
+      <TooltipTitle>{t('latest-update')}</TooltipTitle>
       {dayjs(action.updatedAt).format('L')}
     </div>
   );

@@ -1,10 +1,11 @@
 import styled from 'styled-components';
 import { Row, Col, Badge } from 'reactstrap';
 import { readableColor } from 'polished';
-import { getActionTermContext, useTranslation } from 'common/i18n';
+import { getActionTermContext } from 'common/i18n';
 import { usePlan } from 'context/plan';
 import type { ActionContentAction } from 'components/actions/ActionContent';
 import { ActionSection, SectionHeader } from 'components/actions/ActionContent';
+import { useTranslations } from 'next-intl';
 
 const ActionNumberBadge = styled(Badge)`
   font-size: ${(props) => props.theme.fontSizeBase};
@@ -48,7 +49,7 @@ type ActionMergedActionsBlockProps = {
 };
 
 function ActionMergedActionsBlock({ actions }: ActionMergedActionsBlockProps) {
-  const { t } = useTranslation();
+  const t = useTranslations();
   const plan = usePlan();
 
   if (!actions || !actions.length) {
@@ -65,7 +66,7 @@ function ActionMergedActionsBlock({ actions }: ActionMergedActionsBlockProps) {
       <Row>
         <Col>
           <SectionHeader>
-            {t('actions:action-merged', getActionTermContext(plan))}
+            {t('action-merged', getActionTermContext(plan))}
           </SectionHeader>
         </Col>
       </Row>

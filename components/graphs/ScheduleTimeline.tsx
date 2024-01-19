@@ -1,13 +1,14 @@
 import React from 'react';
 import dynamic from 'next/dynamic';
-import { useTranslation } from 'common/i18n';
-import { useTheme } from 'common/theme';
+
+import { useTheme } from 'styled-components';
 import type { PlotParams } from 'react-plotly.js';
+import { useTranslations } from 'next-intl';
 
 const Plot = dynamic(() => import('./Plot'), { ssr: false });
 
 const ScheduleTimeline = ({ schedules, allSchedules }) => {
-  const { t } = useTranslation('common');
+  const t = useTranslations();
   const theme = useTheme();
 
   let minDate;

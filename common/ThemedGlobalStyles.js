@@ -1,9 +1,8 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { createGlobalStyle, withTheme } from 'styled-components';
-import { themeProp } from 'common/theme';
+'use client';
 
-const GlobalStyle = createGlobalStyle`
+import { createGlobalStyle } from 'styled-components';
+
+export const GlobalStyles = createGlobalStyle`
   :root {
     scroll-behavior: auto !important;
   }
@@ -226,18 +225,3 @@ const GlobalStyle = createGlobalStyle`
     line-height: 1.25;
   }
 `;
-
-function ThemedGlobalStyles({ theme, children }) {
-  return (
-    <>
-      <GlobalStyle />
-      {children}
-    </>
-  );
-}
-ThemedGlobalStyles.propTypes = {
-  theme: themeProp.isRequired,
-  children: PropTypes.node,
-};
-
-export default withTheme(React.memo(ThemedGlobalStyles));

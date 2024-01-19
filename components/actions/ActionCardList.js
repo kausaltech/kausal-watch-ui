@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Row, Col } from 'reactstrap';
 import styled from 'styled-components';
-import { useTheme } from 'common/theme';
+import { useTheme } from 'styled-components';
 import ActionCard from './ActionCard';
-import { useTranslation } from 'common/i18n';
+import { useTranslations } from 'next-intl';
 
 const ActionsList = styled.ul`
   margin-top: ${(props) => props.theme.spaces.s400};
@@ -100,11 +100,15 @@ const groupActions = (groupBy, depth, actions, theme, t) => {
   return groups.sort((g1, g2) => g1.order - g2.order);
 };
 
-function ActionCardList(props) {
-  const { actions, groupBy, headingHierarchyDepth, includeRelatedPlans } =
-    props;
+function ActionCardList({
+  actions,
+  groupBy = 'category',
+  headingHierarchyDepth,
+  includeRelatedPlans,
+  showOtherCategory = true,
+}) {
   const theme = useTheme();
-  const { t } = useTranslation();
+  const t = useTranslations();
   const groups = groupActions(
     groupBy,
     headingHierarchyDepth,
@@ -118,7 +122,7 @@ function ActionCardList(props) {
       {groups.map((group) => (
         <ActionGroup key={group.id} tag="li">
           {(groups.length > 1 ||
-            (group.id === OTHER_GROUP_ID && props.showOtherCategory)) && (
+            (group.id === OTHER_GROUP_ID && showOtherCategory)) && (
             <Col xs="12">
               <ActionGroupHeader>
                 {group.crumb && (
@@ -165,11 +169,6 @@ function ActionCardList(props) {
     </ActionsList>
   );
 }
-
-ActionCardList.defaultProps = {
-  groupBy: 'category',
-  showOtherCategory: true,
-};
 
 ActionCardList.propTypes = {
   actions: PropTypes.arrayOf(PropTypes.object).isRequired,

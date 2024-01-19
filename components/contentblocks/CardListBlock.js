@@ -4,7 +4,7 @@ import styled, { useTheme } from 'styled-components';
 import Card from 'components/common/Card';
 
 const CardListSection = styled.div`
-  background-color: ${(props) => props.backgroundColor};
+  background-color: ${(props) => props.$backgroundColor};
   padding: ${(props) =>
     `${props.theme.spaces.s400} 0 ${props.theme.spaces.s100} 0`};
 
@@ -69,7 +69,7 @@ const CardListBlock = (props) => {
 
   // TODO : Summon a key value for cards
   return (
-    <CardListSection id={id} backgroundColor={blockStyle.backgroundColor}>
+    <CardListSection id={id} $backgroundColor={blockStyle.backgroundColor}>
       <Container>
         {heading && (
           <SectionHeader color={blockStyle.color}>{heading}</SectionHeader>

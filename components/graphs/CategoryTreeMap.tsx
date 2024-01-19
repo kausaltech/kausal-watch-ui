@@ -1,8 +1,9 @@
 import React, { useCallback } from 'react';
 import dynamic from 'next/dynamic';
 import { readableColor } from 'polished';
-import { useTranslation } from 'common/i18n';
+
 import { GetCategoriesForTreeMapQuery } from 'common/__generated__/graphql';
+import { useTranslations } from 'next-intl';
 
 function makeTrace(catsIn, i18n, unit, heading) {
   const { language } = i18n;
@@ -90,9 +91,9 @@ const CategoryTreeMap = React.memo(function CategoryTreeMap(
     return null;
   }
   const { data, onChangeSection, valueAttribute, heading } = props;
-  const { i18n } = useTranslation();
+  const i18n = useTranslations();
 
-  const Plot = dynamic(import('./Plot'));
+  const Plot = dynamic(() => import('./Plot'));
   const trace = makeTrace(data, i18n, valueAttribute.unit, heading);
 
   const layout = {

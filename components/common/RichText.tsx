@@ -4,10 +4,10 @@ import parse, { domToReact } from 'html-react-parser';
 import { Collapse } from 'reactstrap';
 import Button from 'components/common/Button';
 import 'react-medium-image-zoom/dist/styles.css';
-import { useTranslation } from 'common/i18n';
 import { usePlan } from 'context/plan';
 import styled from 'styled-components';
 import Icon from 'components/common/Icon';
+import { useTranslations } from 'next-intl';
 
 const BreakPoint = styled.div<{ fade: boolean }>`
   text-align: center;
@@ -141,7 +141,7 @@ type CollapsibleTextProps = {
 
 const CollapsibleText = (props: CollapsibleTextProps) => {
   const { parsedContent, className, ...rest } = props;
-  const { t } = useTranslation();
+  const t = useTranslations();
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
 
@@ -200,7 +200,6 @@ type RichTextProps = {
 export default function RichText(props: RichTextProps) {
   const { html, isCollapsible, className, ...rest } = props;
   const plan = usePlan();
-  // const { t } = useTranslation(); // FIXME: Unsure if we need alt/title for icons
 
   if (typeof html !== 'string') return <div />;
 

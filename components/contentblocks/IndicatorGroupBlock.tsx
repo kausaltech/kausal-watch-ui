@@ -4,11 +4,12 @@ import styled from 'styled-components';
 import { readableColor } from 'polished';
 import { IndicatorGroupBlock as TIndicatorGroupBlock } from 'common/__generated__/graphql';
 import Icon from 'components/common/Icon';
-import { useTranslation } from 'common/i18n';
+
 import { IndicatorLink, IndicatorListLink } from 'common/links';
 import IndicatorHighlightCard from 'components/indicators/IndicatorHighlightCard';
 import IndicatorVisualisation from 'components/indicators/IndicatorVisualisation';
 import Button from 'components/common/Button';
+import { useTranslations } from 'next-intl';
 
 const IndicatorGraphSection = styled.div`
   background-color: ${(props) => props.theme.neutralLight};
@@ -89,7 +90,7 @@ type Props = {
 
 // TODO: Format as list for a11y
 const IndicatorGroupBlock = ({ id = '', title, indicators }: Props) => {
-  const { t } = useTranslation();
+  const t = useTranslations();
 
   return (
     <IndicatorGraphSection id={id}>

@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useTranslation } from 'common/i18n';
 import { OrganizationLink } from 'common/links';
 import { slugify } from 'common/utils';
 import BadgeTooltip, {
@@ -8,6 +7,7 @@ import BadgeTooltip, {
 } from 'components/common/BadgeTooltip';
 import { ActionContentAction } from './ActionContent';
 import { usePlan } from 'context/plan';
+import { useTranslations } from 'next-intl';
 
 const Responsibles = styled.div`
   a {
@@ -49,7 +49,8 @@ type ResponsibleBadgeProps = {
 
 function ResponsibleBadge({ responsibleParty }: ResponsibleBadgeProps) {
   const { organization: org, role, specifier } = responsibleParty;
-  const { t } = useTranslation(['common', 'actions']);
+  const t = useTranslations();
+
   let size = 'md' as BadgeTooltipProps['size'];
   let ariaLabel;
 
@@ -101,7 +102,7 @@ type ResponsibleListProps = {
 };
 function ResponsibleList(props: ResponsibleListProps) {
   const { heading, responsibleParties } = props;
-  const { t } = useTranslation(['common', 'actions']);
+  const t = useTranslations();
   const plan = usePlan();
   const { organizationTerm } = plan.generalContent;
   /* TODO: a11y - this should probably be a list markup */

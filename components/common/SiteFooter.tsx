@@ -4,11 +4,11 @@ import { Container } from 'reactstrap';
 import { transparentize } from 'polished';
 import SVG from 'react-inlinesvg';
 import styled from 'styled-components';
-import { useTranslation } from 'common/i18n';
 import { NavigationLink, Link } from 'common/links';
 import Icon from './Icon';
 import PlanSelector from 'components/plans/PlanSelector';
-import { useTheme } from 'common/theme';
+import { useTheme } from 'styled-components';
+import { useTranslations } from 'next-intl';
 
 const StyledFooter = styled.footer`
   position: relative;
@@ -419,7 +419,7 @@ type SiteFooterProps = {
 };
 
 function SiteFooter(props: SiteFooterProps) {
-  const { t } = useTranslation();
+  const t = useTranslations();
   const theme = useTheme();
   const {
     siteTitle,
@@ -428,12 +428,12 @@ function SiteFooter(props: SiteFooterProps) {
     creativeCommonsLicense,
     copyrightText,
     navItems,
-    additionalLinks,
-    utilityLinks,
-    fundingInstruments,
+    additionalLinks = [],
+    utilityLinks = [],
+    fundingInstruments = [],
     otherLogos,
     footerStatement,
-    ownerLinks,
+    ownerLinks = [],
   } = props;
 
   const OrgLogo = () => {
@@ -474,9 +474,7 @@ function SiteFooter(props: SiteFooterProps) {
             )}
             {!theme.settings.footerLogoOnly && (
               <ServiceTitle>
-                <Link href="/">
-                  <a>{siteTitle}</a>
-                </Link>
+                <Link href="/">{siteTitle}</Link>
                 <PlanSelector />
               </ServiceTitle>
             )}
@@ -678,14 +676,6 @@ function SiteFooter(props: SiteFooterProps) {
     </StyledFooter>
   );
 }
-
-SiteFooter.defaultProps = {
-  utilityLinks: [],
-  additionalLinks: [],
-  fundingInstruments: [],
-  FooterStatement: undefined,
-  ownerLinks: [],
-};
 
 SiteFooter.propTypes = {
   siteTitle: PropTypes.string.isRequired,

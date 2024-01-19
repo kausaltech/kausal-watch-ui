@@ -6,10 +6,9 @@ import Select, {
   Theme as SelectTheme,
   ValueContainerProps,
 } from 'react-select';
-import styled from 'styled-components';
+import styled, { DefaultTheme, useTheme } from 'styled-components';
 import Highlighter from 'react-highlight-words';
 import { FormGroup, Label as BSLabel } from 'reactstrap';
-import { useTheme, Theme } from 'common/theme';
 import PopoverTip from 'components/common/PopoverTip';
 
 const Label = styled(BSLabel)`
@@ -22,7 +21,7 @@ const TooltipWrapper = styled.span`
 `;
 
 function getSelectStyles<Option extends SelectDropdownOption>(
-  theme: Theme,
+  theme: DefaultTheme,
   multi: boolean,
   size: string = ''
 ) {

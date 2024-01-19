@@ -3,7 +3,8 @@ import { concat } from 'lodash';
 import styled from 'styled-components';
 import { Container, Row, Col } from 'reactstrap';
 import ContentLoader from 'components/common/ContentLoader';
-import { gql, useQuery } from '@apollo/client';
+import { gql } from '@apollo/client';
+import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
 import CategoryTreeMap from 'components/graphs/CategoryTreeMap';
 import CategoryCardContent from 'components/common/CategoryCardContent';
 

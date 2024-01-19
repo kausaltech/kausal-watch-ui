@@ -3,9 +3,9 @@ import dayjs from 'common/dayjs';
 
 import styled from 'styled-components';
 import { Row, Col, Button, Collapse } from 'reactstrap';
-import { useTranslation } from 'common/i18n';
 import ActionAttribute from 'components/common/ActionAttribute';
 import Icon from 'components/common/Icon';
+import { useTranslations } from 'next-intl';
 
 const ReportSection = styled.div`
   margin-bottom: ${(props) => props.theme.spaces.s200};
@@ -79,7 +79,7 @@ const ReportDate = styled.span`
 
 const ReportComparisonBlock = (props) => {
   const { block, action } = props;
-  const { t } = useTranslation();
+  const t = useTranslations();
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
 

@@ -1,10 +1,9 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Container } from 'reactstrap';
 import styled from 'styled-components';
 import { transparentize } from 'polished';
 import { usePlan } from 'context/plan';
-import { useTheme } from 'common/theme';
+import { useTheme } from 'styled-components';
 import PlanChip from 'components/plans/PlanChip';
 
 const PlanListSection = styled.div`

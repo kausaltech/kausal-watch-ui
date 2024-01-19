@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { Container, UncontrolledAlert } from 'reactstrap';
 import styled from 'styled-components';
-import PlanContext from 'context/plan';
+import PlanContext, { usePlan } from 'context/plan';
 import Button from 'components/common/Button';
 import Icon from 'components/common/Icon';
 
@@ -40,7 +40,7 @@ const AttentionBox = styled(UncontrolledAlert)`
 const AttentionBannerBlock = (props) => {
   const { header, content, buttons } = props;
 
-  const plan = useContext(PlanContext);
+  const plan = usePlan();
 
   return (
     <AttentionBanner className="actions">

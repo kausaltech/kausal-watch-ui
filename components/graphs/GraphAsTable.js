@@ -4,6 +4,7 @@ import dayjs from 'common/dayjs';
 import { Table, Collapse, Button } from 'reactstrap';
 import { beautifyValue } from 'common/data/format';
 import Icon from 'components/common/Icon';
+import { useTranslations } from 'next-intl';
 
 const CollapsibleTable = styled.div`
   background-color: ${(props) => props.theme.themeColors.white};
@@ -53,18 +54,12 @@ const TriggerButton = styled(Button)`
 `;
 
 function GraphAsTable(props) {
+  const t = useTranslations();
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
 
-  const {
-    data,
-    timeResolution,
-    specification,
-    title,
-    language,
-    goalTraces,
-    t,
-  } = props;
+  const { data, timeResolution, specification, title, language, goalTraces } =
+    props;
 
   // Collect all x values from all traces and filter out duplicates
   const allRows = [];

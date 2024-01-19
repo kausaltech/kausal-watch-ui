@@ -1,13 +1,12 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Card, CardBody, CardTitle } from 'reactstrap';
 import { readableColor } from 'polished';
 import styled from 'styled-components';
-import { TFunction } from 'next-i18next';
 import dayjs from 'common/dayjs';
-import { getActionTermContext, useTranslation } from 'common/i18n';
+import { TFunction, getActionTermContext } from 'common/i18n';
 import { IndicatorLink } from 'common/links';
 import { usePlan } from 'context/plan';
+import { useLocale, useTranslations } from 'next-intl';
 
 const IndicatorValueDisplay = styled.div`
   margin-top: 1em;
@@ -46,14 +45,14 @@ const StyledLink = styled.a`
   }
 `;
 
-const Indicator = styled(Card)`
+const StyledIndicator = styled(Card)<{ $level: string | null }>`
   hyphens: manual;
   line-height: ${(props) => props.theme.lineHeightSm};
   border: 0;
   border-radius: ${(props) => props.theme.cardBorderRadius};
 
   color: ${(props) => {
-    switch (props.level) {
+    switch (props.$level) {
       case 'action':
         return readableColor(props.theme.actionColor);
       case 'operational':
@@ -68,7 +67,7 @@ const Indicator = styled(Card)`
   }};
   background-color: ${(props) => {
     if (props.disabled) return props.theme.graphColors.grey050;
-    switch (props.level) {
+    switch (props.$level) {
       case 'action':
         return props.theme.actionColor;
       case 'operational':
@@ -130,7 +129,6 @@ interface IndicatorValueProps {
   resolution: string;
   goalValue?: string | null;
   goalDate?: string | null;
-  t: TFunction;
 }
 
 function IndicatorValue({
@@ -140,8 +138,9 @@ function IndicatorValue({
   resolution,
   goalValue = null,
   goalDate = null,
-  t,
 }: IndicatorValueProps) {
+  const t = useTranslations();
+
   if (!latestValue) return null;
 
   return (
@@ -201,6 +200,21 @@ interface IndicatorCardProps {
   disabled?: boolean | null;
 }
 
+export function getIndicatorTranslation(level: string | null, t: TFunction) {
+  if (!level) {
+    return t('indicator');
+  }
+
+  switch (level) {
+    case 'operational':
+      return t('operational-indicator');
+    case 'strategic':
+      return t('strategic-indicator');
+    case 'tactical':
+      return t('tactical-indicator');
+  }
+}
+
 function IndicatorCard({
   level = null,
   objectid,
@@ -212,17 +226,18 @@ function IndicatorCard({
   disabled = false,
 }: IndicatorCardProps) {
   const plan = usePlan();
-  const { t, i18n } = useTranslation();
+  const t = useTranslations();
+  const locale = useLocale();
 
   // FIXME: It sucks that we only use the context for the translation key 'action'
   const indicatorType =
     level === 'action'
       ? t('action', getActionTermContext(plan))
-      : t(`${level}-indicator`);
+      : getIndicatorTranslation(level, t);
 
   return (
     <CardLink level={level} indicatorId={objectid}>
-      <Indicator level={level} disabled={disabled}>
+      <StyledIndicator $level={level} disabled={disabled}>
         <CardBody>
           <div>
             <IndicatorType>{indicatorType}</IndicatorType>
@@ -233,19 +248,18 @@ function IndicatorCard({
           </div>
           {latestValue && (
             <IndicatorValue
-              latestValue={latestValue.value.toLocaleString(i18n.language)}
+              latestValue={latestValue.value.toLocaleString(locale)}
               date={latestValue.date}
               unit={latestValue.unit}
               resolution={resolution}
               goalValue={
-                goalValue ? goalValue.value.toLocaleString(i18n.language) : null
+                goalValue ? goalValue.value.toLocaleString(locale) : null
               }
               goalDate={goalValue ? goalValue.date : null}
-              t={t}
             />
           )}
         </CardBody>
-      </Indicator>
+      </StyledIndicator>
     </CardLink>
   );
 }

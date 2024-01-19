@@ -1,11 +1,13 @@
+'use client';
+
 import React from 'react';
-import { useTheme } from 'common/theme';
-import { useTranslation } from 'common/i18n';
-import { useRouter } from 'next/router';
-import PlanContext from 'context/plan';
-import SiteContext from 'context/site';
+import { useTheme } from 'styled-components';
+import { usePlan } from 'context/plan';
 import ApplicationStateBanner from './common/ApplicationStateBanner';
 import SiteFooter from './common/SiteFooter';
+import { deploymentType } from '@/common/environment';
+import { useTranslations } from 'next-intl';
+import { usePathname } from 'next/navigation';
 
 const getFeedbackUrl = (currentURL) => {
   const feedbackPageUrlBase = '/feedback';
@@ -16,16 +18,18 @@ const getFeedbackUrl = (currentURL) => {
   return `${feedbackPageUrlBase}${feedbackPageQueryPart}`;
 };
 
-function Footer(props) {
-  const plan = React.useContext(PlanContext);
-  const site = React.useContext(SiteContext);
-  const router = useRouter();
+type Props = {
+  siteTitle: string;
+};
+
+function Footer({ siteTitle }: Props) {
+  const plan = usePlan();
+  const pathname = usePathname();
   const generalContent = plan.generalContent || {};
   const theme = useTheme();
-  const { siteTitle } = props;
 
   const { fundingInstruments, otherLogos, footerStatement } = theme.settings;
-  const { t } = useTranslation();
+  const t = useTranslations();
   let navLinks = [];
   let staticPages = [];
 
@@ -104,8 +108,8 @@ function Footer(props) {
       name: t('give-feedback'),
       slug: plan.externalFeedbackUrl,
     });
-  } else if (router.pathname !== '/feedback') {
-    const url = getFeedbackUrl(router.asPath);
+  } else if (pathname !== '/feedback') {
+    const url = getFeedbackUrl(pathname);
     if (url != null) {
       utilityLinks.push({ id: '2', name: t('give-feedback'), slug: url });
     }
@@ -136,7 +140,7 @@ function Footer(props) {
         footerStatement={footerStatement}
         ownerLinks={ownerLinks}
       />
-      <ApplicationStateBanner deploymentType={site.deploymentType} />
+      <ApplicationStateBanner deploymentType={deploymentType} />
     </>
   );
 }

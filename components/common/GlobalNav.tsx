@@ -12,11 +12,9 @@ import {
 } from 'reactstrap';
 import debounce from 'lodash/debounce';
 import SVG from 'react-inlinesvg';
-import styled, { css, withTheme } from 'styled-components';
-import { themeProp, useTheme } from 'common/theme';
+import styled, { css, useTheme } from 'styled-components';
 import { useScrollPosition } from '@n8tb1t/use-scroll-position';
 import { transparentize } from 'polished';
-import { useTranslation } from 'common/i18n';
 import { NavigationLink, Link } from 'common/links';
 
 import type { Theme } from '@kausal/themes/types';
@@ -27,6 +25,7 @@ import LanguageSelector from './LanguageSelector';
 import NavbarSearch from './NavbarSearch';
 import { usePlan } from 'context/plan';
 import { isServer } from 'common/environment';
+import { useTranslations } from 'next-intl';
 
 const baseFixedNavStyles = css`
   @keyframes slide-in {
@@ -107,7 +106,7 @@ const Site = styled.div`
   align-items: center;
 `;
 
-const HomeLink = styled.a`
+const HomeLink = styled.a<{ $hideLogoOnMobile: boolean }>`
   display: flex;
   align-items: center;
   color: ${(props) => props.theme.brandNavColor};
@@ -122,8 +121,7 @@ const HomeLink = styled.a`
   }
 
   svg {
-    display: ${(props) =>
-      props.hideLogoOnMobile === 'true' ? 'none' : 'block'};
+    display: ${(props) => (props.$hideLogoOnMobile ? 'none' : 'block')};
     max-width: 6em;
     height: ${(props) => props.theme.spaces.s200};
     margin: ${(props) => props.theme.spaces.s050}
@@ -230,7 +228,6 @@ const StyledDropdownToggle = styled(DropdownToggle)`
 `;
 
 const StyledDropdown = styled(UncontrolledDropdown)`
-
   .dropdown-toggle.nav-link {
     padding-left: 0;
     padding-right: 0;
@@ -272,6 +269,12 @@ const StyledDropdown = styled(UncontrolledDropdown)`
   }
 `;
 
+const StyledDropdownMenu = styled(DropdownMenu)`
+  &.dropdown-menu[data-bs-popper] {
+    top: unset;
+  }
+`;
+
 const NavbarToggler = styled.button`
   display: inline-block;
   padding: 0;
@@ -294,7 +297,7 @@ const NavbarToggler = styled.button`
 `;
 
 function DropdownList(props) {
-  const { parentName, items, active } = props;
+  const { parentName, items, active = false, onClickLink } = props;
   return (
     <StyledDropdown nav inNavbar className={active && 'active'}>
       <StyledDropdownToggle nav caret>
@@ -302,12 +305,12 @@ function DropdownList(props) {
           {parentName}
         </NavHighlighter>
       </StyledDropdownToggle>
-      <DropdownMenu end>
+      <StyledDropdownMenu>
         {items &&
           items.map((child) => (
             <DropdownItem key={child.id}>
               <NavLink>
-                <NavigationLink slug={child.urlPath}>
+                <NavigationLink slug={child.urlPath} onClick={onClickLink}>
                   <NavHighlighter className="highlighter">
                     {child.name}
                   </NavHighlighter>
@@ -315,16 +318,13 @@ function DropdownList(props) {
               </NavLink>
             </DropdownItem>
           ))}
-      </DropdownMenu>
+      </StyledDropdownMenu>
     </StyledDropdown>
   );
 }
 
-DropdownList.defaultProps = {
-  active: false,
-};
-
 DropdownList.propTypes = {
+  onClickLink: PropTypes.func.isRequired,
   parentName: PropTypes.string.isRequired,
   items: PropTypes.arrayOf(
     PropTypes.shape({
@@ -411,16 +411,16 @@ const useStickyNavigation = (isStickyEnabled: boolean = false) => {
 };
 
 function GlobalNav(props) {
-  const { t } = useTranslation();
+  const t = useTranslations();
+  const theme = useTheme();
   const plan = usePlan();
   const {
-    theme,
     siteTitle,
-    ownerName,
+    ownerName = '',
     navItems,
-    externalItems,
-    fullwidth,
-    sticky,
+    externalItems = [],
+    fullwidth = false,
+    sticky = false,
     activeBranch,
   } = props;
   const {
@@ -446,12 +446,14 @@ function GlobalNav(props) {
     return logoElement;
   };
 
+  const handleClose = () => setIsOpen(false);
+
   const homeLink = theme.settings.homeLink || false;
 
   const siblings = plan.allRelatedPlans.filter(
     (pl) => pl.id !== plan.parent?.id
   );
-  const hideLogoOnMobile = theme.navTitleVisible && siblings.length;
+  const hideLogoOnMobile = !!(theme.navTitleVisible && siblings.length);
 
   const rootLink = plan.parent ? plan.parent.viewUrl : '/';
 
@@ -466,8 +468,8 @@ function GlobalNav(props) {
           container={fullwidth ? 'fluid' : true}
         >
           <Site>
-            <Link href={rootLink} passHref>
-              <HomeLink hideLogoOnMobile={hideLogoOnMobile.toString()}>
+            <Link href={rootLink} passHref legacyBehavior>
+              <HomeLink $hideLogoOnMobile={hideLogoOnMobile}>
                 <OrgLogo className="org-logo" />
                 <SiteTitle>
                   {theme.navTitleVisible ? siteTitle : '\u00A0'}
@@ -514,7 +516,10 @@ function GlobalNav(props) {
               {homeLink && (
                 <NavItem active={activeBranch === ''}>
                   <NavLink>
-                    <NavigationLink slug={plan.viewUrl ?? '/'}>
+                    <NavigationLink
+                      slug={plan.domain?.basePath ?? '/'}
+                      onClick={handleClose}
+                    >
                       <NavHighlighter
                         className={`highlighter ${
                           activeBranch === '' ? 'active' : ''
@@ -534,6 +539,7 @@ function GlobalNav(props) {
                 navItems.map((page) =>
                   page.children ? (
                     <DropdownList
+                      onClickLink={handleClose}
                       parentName={page.name}
                       items={page.children}
                       active={page.active}
@@ -542,7 +548,10 @@ function GlobalNav(props) {
                   ) : (
                     <NavItem key={page.slug} active={page.active}>
                       <NavLink>
-                        <NavigationLink slug={page.urlPath}>
+                        <NavigationLink
+                          slug={page.urlPath}
+                          onClick={handleClose}
+                        >
                           <NavHighlighter
                             className={`highlighter ${page.active && 'active'}`}
                           >
@@ -556,7 +565,7 @@ function GlobalNav(props) {
               {plan.features.enableSearch && (
                 <NavItem className="d-md-none">
                   <NavLink>
-                    <NavigationLink slug="/search">
+                    <NavigationLink slug="/search" onClick={handleClose}>
                       <NavHighlighter>
                         <Icon name="search" className="me-2" />
                         {t('search')}
@@ -573,7 +582,7 @@ function GlobalNav(props) {
                 externalItems.map((item, index) => (
                   <NavItem key={`external${index}`}>
                     <NavLink>
-                      <NavigationLink slug={item.url}>
+                      <NavigationLink slug={item.url} onClick={handleClose}>
                         <NavHighlighter className="highlighter">
                           {item.name}
                         </NavHighlighter>
@@ -590,13 +599,6 @@ function GlobalNav(props) {
   );
 }
 
-GlobalNav.defaultProps = {
-  fullwidth: false,
-  sticky: false,
-  ownerName: '',
-  externalItems: [],
-};
-
 GlobalNav.propTypes = {
   activeBranch: PropTypes.string.isRequired,
   siteTitle: PropTypes.string.isRequired,
@@ -611,7 +613,6 @@ GlobalNav.propTypes = {
       children: PropTypes.arrayOf(PropTypes.shape),
     })
   ).isRequired,
-  theme: themeProp.isRequired,
   fullwidth: PropTypes.bool,
   sticky: PropTypes.bool,
   externalItems: PropTypes.arrayOf(
@@ -622,4 +623,4 @@ GlobalNav.propTypes = {
   ),
 };
 
-export default withTheme(React.memo(GlobalNav));
+export default GlobalNav;

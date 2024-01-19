@@ -19,15 +19,22 @@ ENV YARN_NPM_ALWAYS_AUTH=${YARN_NPM_ALWAYS_AUTH:-false}
 # Install dependencies first
 ENV YARN_CACHE_FOLDER /yarn-cache
 COPY yarn.lock package*.json ./
-COPY patches ./patches/
+
+RUN echo "YARN_NPM_REGISTRY_SERVER $YARN_NPM_REGISTRY_SERVER"
 
 RUN yarn config set nodeLinker 'node-modules'
 RUN yarn config set logFilters --json '[{"code": "YN0013", "level": "discard"}]'
+
 RUN --mount=type=cache,target=/yarn-cache yarn install --immutable
 
 COPY . .
 
 FROM base as bundle
+
+ARG NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+ARG NEXT_PUBLIC_DEPLOYMENT_TYPE
+ENV NEXT_PUBLIC_DEPLOYMENT_TYPE=$NEXT_PUBLIC_DEPLOYMENT_TYPE
 
 # For Sentry source map upload
 ARG SENTRY_PROJECT

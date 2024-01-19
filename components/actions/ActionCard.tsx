@@ -3,85 +3,17 @@ import PropTypes from 'prop-types';
 import { transparentize } from 'polished';
 import SVG from 'react-inlinesvg';
 import styled from 'styled-components';
-import { gql } from '@apollo/client';
 
 import { cleanActionStatus } from 'common/preprocess';
 import { getStatusColorForAction } from 'common/ActionStatusSummary';
 import { ActionLink } from 'common/links';
-import { useTheme } from 'common/theme';
-import { getActionTermContext, useTranslation } from 'common/i18n';
-import { usePlan, PlanContextType } from 'context/plan';
+import { useTheme } from 'styled-components';
+import { getActionTermContext } from 'common/i18n';
+import { usePlan } from 'context/plan';
 import PlanChip from 'components/plans/PlanChip';
 import { ActionCardFragment } from 'common/__generated__/graphql';
-
-const ACTION_CARD_FRAGMENT = gql`
-  fragment ActionCard on Action {
-    id
-    identifier
-    name(hyphenated: true)
-    viewUrl
-    color
-    status {
-      id
-      identifier
-      name
-      color
-    }
-    completion
-    categories {
-      id
-      identifier
-      name
-      iconSvgUrl
-      type {
-        id
-      }
-    }
-    statusSummary {
-      identifier
-    }
-    implementationPhase {
-      id
-      identifier
-      name
-    }
-    primaryOrg {
-      id
-      abbreviation
-      name
-      logo {
-        rendition(size: "128x128", crop: true) {
-          src
-        }
-      }
-    }
-    mergedWith {
-      id
-      identifier
-      plan {
-        id
-        shortName
-        versionName
-        viewUrl(clientUrl: $clientUrl)
-      }
-    }
-    plan {
-      id
-      shortName
-      versionName
-      viewUrl(clientUrl: $clientUrl)
-      hideActionIdentifiers
-      publishedAt
-      image {
-        rendition(size: "128x128", crop: true) {
-          src
-        }
-      }
-    }
-  }
-`;
-
-type ActionCardAction = ActionCardFragment;
+import { useTranslations } from 'next-intl';
+import { ACTION_CARD_FRAGMENT } from '@/lib/fragments/action-card.fragment';
 
 const StyledActionLink = styled.a`
   text-decoration: none;
@@ -166,9 +98,9 @@ const ActionNumber = styled.div`
   }
 `;
 
-const ActionStatusArea = styled.div<{ statusColor: string }>`
+const ActionStatusArea = styled.div<{ $statusColor: string }>`
   color: ${(props) => props.theme.themeColors.white};
-  background-color: ${(props) => props.statusColor};
+  background-color: ${(props) => props.$statusColor};
   min-height: ${(props) => props.theme.spaces.s400};
   line-height: ${(props) => props.theme.lineHeightSm};
 `;
@@ -187,10 +119,6 @@ const StatusName = styled.div`
   font-size: ${(props) => props.theme.fontSizeSm};
   font-family: ${(props) => props.theme.fontFamilyTiny};
   line-height: 1;
-
-  &:after {
-    content: '\\00a0';
-  }
 `;
 
 const StyledCardTitle = styled.div`
@@ -268,10 +196,10 @@ type ActionCardProps = {
   size?: string;
 };
 function ActionCard(props: ActionCardProps) {
-  const { action, showPlan, size } = props;
+  const { action, showPlan = false, size } = props;
 
   const plan = usePlan();
-  const { t } = useTranslation(['common', 'actions']);
+  const t = useTranslations();
   const theme = useTheme();
 
   let actionName = action.name;
@@ -314,7 +242,7 @@ function ActionCard(props: ActionCardProps) {
     >
       <StyledActionLink>
         <ActionCardElement>
-          <ActionStatusArea statusColor={statusColor}>
+          <ActionStatusArea $statusColor={statusColor}>
             {!theme.settings.hideIconOnActionListCards && (
               <PrimaryIcon category={primaryRootCategory} />
             )}
@@ -328,7 +256,7 @@ function ActionCard(props: ActionCardProps) {
           >
             {mergedWith ? (
               <StatusName>
-                {t('actions:action-status-merged', getActionTermContext(plan))}
+                {t('action-status-merged', getActionTermContext(plan))}
                 <span> &rarr; </span>
                 {getMergedName(mergedWith, plan.id)}
               </StatusName>
@@ -376,10 +304,6 @@ function ActionCard(props: ActionCardProps) {
     </ActionLink>
   );
 }
-
-ActionCard.defaultProps = {
-  showPlan: false,
-};
 
 ActionCard.propTypes = {
   showPlan: PropTypes.bool,

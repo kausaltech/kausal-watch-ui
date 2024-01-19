@@ -7,11 +7,11 @@ import {
   Collapse,
 } from 'reactstrap';
 import styled from 'styled-components';
-import { useTheme } from 'common/theme';
+import { useTheme } from 'styled-components';
 import dayjs from 'common/dayjs';
 import Icon from 'components/common/Icon';
 import RichText from 'components/common/RichText';
-import { useTranslation } from 'common/i18n';
+import { useTranslations } from 'next-intl';
 
 const Date = styled.span`
   font-size: ${(props) => props.theme.fontSizeSm};
@@ -117,7 +117,8 @@ function parseTimestamp(timestamp) {
 }
 
 const Task = (props) => {
-  const { task, theme, t, completed } = props;
+  const t = useTranslations();
+  const { task, theme, completed } = props;
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
 
@@ -128,7 +129,7 @@ const Task = (props) => {
           <Icon
             name="check"
             color={theme.graphColors.green050}
-            alt={t('actions:action-task-done')}
+            alt={t('action-task-done')}
           />
           <Date>{parseTimestamp(task.completedAt)}</Date>
         </TaskMeta>
@@ -137,7 +138,7 @@ const Task = (props) => {
           <Icon
             name="calendar"
             color={theme.graphColors.blue070}
-            alt={t('actions:action-task-todo')}
+            alt={t('action-task-todo')}
           />
           <Date>{parseTimestamp(task.dueAt)}</Date>
         </TaskMeta>
@@ -154,8 +155,8 @@ const Task = (props) => {
               className={isOpen ? 'open' : ''}
             >
               {isOpen
-                ? t('actions:action-task-hide-comment')
-                : t('actions:action-task-show-comment')}
+                ? t('action-task-hide-comment')
+                : t('action-task-show-comment')}
               <Icon name={isOpen ? 'angle-down' : 'angle-right'} />
             </ToggleButton>
             <Collapse isOpen={isOpen}>
@@ -173,7 +174,7 @@ const Task = (props) => {
 function TaskList(props) {
   const { tasks } = props;
   const theme = useTheme();
-  const { t } = useTranslation();
+  const t = useTranslations();
 
   const sortedTasks = [...tasks].sort((a, b) => {
     const adate = a.completedAt ? a.completedAt : a.dueAt;
@@ -185,7 +186,7 @@ function TaskList(props) {
     .filter((item) => item.completedAt === null && item.state !== 'CANCELLED')
     .map((item) => (
       <ListGroupItem key={item.id} className={`state--${item.state}`}>
-        <Task task={item} theme={theme} t={t} completed={false} />
+        <Task task={item} theme={theme} completed={false} />
       </ListGroupItem>
     ));
 
@@ -194,7 +195,7 @@ function TaskList(props) {
     .filter((item) => item.completedAt !== null && item.state !== 'CANCELLED')
     .map((item) => (
       <ListGroupItem key={item.id} className={`state--${item.state}`}>
-        <Task task={item} theme={theme} t={t} completed={true} />
+        <Task task={item} theme={theme} completed={true} />
       </ListGroupItem>
     ));
 
@@ -202,13 +203,13 @@ function TaskList(props) {
     <div>
       {undoneTasks.length > 0 && (
         <>
-          <ListGroupTitle>{t('actions:action-tasks-todo')}</ListGroupTitle>
+          <ListGroupTitle>{t('action-tasks-todo')}</ListGroupTitle>
           <ListGroup className="mb-5">{undoneTasks}</ListGroup>
         </>
       )}
       {doneTasks.length > 0 && (
         <>
-          <ListGroupTitle>{t('actions:action-tasks-done')}</ListGroupTitle>
+          <ListGroupTitle>{t('action-tasks-done')}</ListGroupTitle>
           <ListGroup className="mb-5">{doneTasks}</ListGroup>
         </>
       )}

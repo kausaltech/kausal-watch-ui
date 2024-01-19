@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 
-type SiteContextProps = {
+export type SiteContextProps = {
   deploymentType: string;
   themeIdentifier: string;
   hostname: string;

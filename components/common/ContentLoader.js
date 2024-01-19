@@ -1,9 +1,9 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+'use client';
+
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Spinner } from 'reactstrap';
-
-import { withTranslation } from '../../common/i18n';
+import { useTranslations } from 'next-intl';
 
 const Loader = styled.div`
   padding: ${(props) => props.theme.spaces.s800}
@@ -17,50 +17,29 @@ const StyledSpinner = styled(Spinner)`
   background-color: ${(props) => props.theme.brandDark};
 `;
 
-class ContentLoader extends React.Component {
-  constructor(props) {
-    super(props);
-    this.enableMessage = this.enableMessage.bind(this);
+function ContentLoader() {
+  const t = useTranslations();
+  const [isVisible, setIsVisible] = useState(false);
 
-    this.state = {
-      displayMessage: false,
-    };
-  }
-
-  componentDidMount() {
+  useEffect(() => {
     // Only display the message and spinner after 250ms has passed
-    this.timer = setTimeout(this.enableMessage, 250);
+    const timer = setTimeout(() => setIsVisible(true));
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (!isVisible) {
+    return null;
   }
 
-  componentWillUnmount() {
-    clearTimeout(this.timer);
-  }
-
-  enableMessage() {
-    this.setState({ displayMessage: true });
-  }
-
-  render() {
-    const { displayMessage } = this.state;
-    const { t } = this.props;
-
-    if (!displayMessage) {
-      return null;
-    }
-
-    return (
-      <Loader>
-        <StyledSpinner type="grow" className="mx-1" />
-        <StyledSpinner type="grow" className="mx-1" />
-        <StyledSpinner type="grow" className="mx-1" />
-        <div className="visually-hidden">{t('loading')}</div>
-      </Loader>
-    );
-  }
+  return (
+    <Loader>
+      <StyledSpinner type="grow" className="mx-1" />
+      <StyledSpinner type="grow" className="mx-1" />
+      <StyledSpinner type="grow" className="mx-1" />
+      <div className="visually-hidden">{t('loading')}</div>
+    </Loader>
+  );
 }
 
-ContentLoader.propTypes = {
-  t: PropTypes.func.isRequired,
-};
-
-export default withTranslation('common')(ContentLoader);
+export default ContentLoader;
