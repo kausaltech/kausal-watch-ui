@@ -21,8 +21,6 @@ const RecentActionsEmbed = () => {
   const query = searchParams ? Object.fromEntries(searchParams) : {};
   const { count, displayHeader } = validateQueryParameters(query);
 
-  console.log('RECENT ACTIONS EMBED ');
-
   return (
     <ActionHighlightsList
       plan={plan}
