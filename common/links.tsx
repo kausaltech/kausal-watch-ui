@@ -2,30 +2,49 @@ import React, { ReactElement, PropsWithChildren, ReactNode } from 'react';
 import { default as NextLink, LinkProps } from 'next/link';
 import PropTypes from 'prop-types';
 import { getCategoryString } from './categories';
-import { isAbsoluteUrl, stripSlashes } from '@/lib/utils/urls';
+import {
+  isAbsoluteUrl,
+  stripLocaleAndPlan,
+  stripSlashes,
+} from '@/lib/utils/urls';
 import { usePlan } from '@/context/plan';
 import { PlanContextFragment } from './__generated__/graphql';
 import { ACTIONS_PATH, INDICATORS_PATH } from '@/lib/constants/routes';
+import { useLocale } from 'next-intl';
 
-function usePrependSubPlanPath(path: string) {
+function usePrependPlanAndLocale(path: string) {
   const plan = usePlan();
+  const locale = useLocale();
 
-  return prependSubPlanPath(plan, path);
+  return prependPlanAndLocale(plan, path, locale);
 }
 
-function prependSubPlanPath(plan: PlanContextFragment, path: string) {
+export function prependPlanAndLocale(
+  plan: PlanContextFragment,
+  path: string,
+  locale: string
+) {
   if (typeof path !== 'string' || isAbsoluteUrl(path)) {
     return path;
   }
 
   const basePath = plan.domain?.basePath
-    ? stripSlashes(plan.domain.basePath, { trailing: true })
+    ? stripSlashes(plan.domain.basePath)
     : undefined;
+  const strippedPath = stripLocaleAndPlan(plan, locale, path);
+  const shouldPrependBasePath = !!basePath;
+  const shouldPrependLocale = locale !== plan.primaryLanguage;
 
-  if (basePath && !path.startsWith(`${basePath}/`)) {
-    return `${basePath}/${stripSlashes(path, {
-      leading: true,
-    })}`;
+  if (shouldPrependBasePath && shouldPrependLocale) {
+    return `/${locale}/${basePath}/${strippedPath}`;
+  }
+
+  if (shouldPrependBasePath) {
+    return `/${basePath}/${strippedPath}`;
+  }
+
+  if (shouldPrependLocale) {
+    return `/${locale}/${strippedPath}`;
   }
 
   return path;
@@ -70,7 +89,7 @@ export function IndicatorLink({
   id,
   ...other
 }: { id: string | number; children: ReactNode } & LinkProps) {
-  const href = usePrependSubPlanPath(getIndicatorLinkProps(id).href);
+  const href = usePrependPlanAndLocale(getIndicatorLinkProps(id).href);
 
   return <NextLink passHref {...other} href={href} legacyBehavior />;
 }
@@ -90,7 +109,7 @@ export function ActionLink(props) {
     ? action.mergedWith.identifier
     : action.identifier;
 
-  const actionLink = usePrependSubPlanPath(
+  const actionLink = usePrependPlanAndLocale(
     `${ACTIONS_PATH}/${targetIdentifier}`
   );
 
@@ -115,7 +134,7 @@ export function OrganizationLink(
   props: { organizationId: string; children: ReactNode } & OtherLinkProps
 ) {
   const { organizationId, ...other } = props;
-  const href = usePrependSubPlanPath(`/organizations/${organizationId}`);
+  const href = usePrependPlanAndLocale(`/organizations/${organizationId}`);
 
   return <NextLink passHref {...other} href={href} legacyBehavior />;
 }
@@ -135,7 +154,7 @@ type OtherLinkProps = Omit<LinkProps, 'href' | 'as'>;
 export function ActionListLink(
   props: PropsWithChildren<OtherLinkProps & ActionListLinkProps>
 ) {
-  const pathname = usePrependSubPlanPath(ACTIONS_PATH);
+  const pathname = usePrependPlanAndLocale(ACTIONS_PATH);
   const { href, ...linkProps } = ActionListLink.getLinkProps(props);
 
   return (
@@ -171,7 +190,7 @@ ActionListLink.getLinkProps = (
 export function IndicatorListLink(
   props: Omit<LinkProps, 'href'> & { children: ReactElement }
 ) {
-  const href = usePrependSubPlanPath(INDICATORS_PATH);
+  const href = usePrependPlanAndLocale(INDICATORS_PATH);
 
   return <NextLink href={href} passHref {...props} legacyBehavior />;
 }
@@ -193,7 +212,7 @@ export function StaticPageLink({
   page,
   ...other
 }: PropsWithChildren<OtherLinkProps & StaticPageLinkProps>) {
-  const href = usePrependSubPlanPath(slug ?? page!.urlPath);
+  const href = usePrependPlanAndLocale(slug ?? page!.urlPath);
 
   return <NextLink href={href} {...other} legacyBehavior />;
 }
@@ -205,6 +224,7 @@ export function NavigationLink({
   ...other
 }: NavigationLinkProps) {
   const plan = usePlan();
+  const locale = useLocale();
 
   if (slug?.startsWith('http')) {
     return (
@@ -214,7 +234,7 @@ export function NavigationLink({
     );
   }
 
-  const href = prependSubPlanPath(plan, slug);
+  const href = prependPlanAndLocale(plan, slug, locale);
 
   return (
     <NextLink href={href} {...other}>
@@ -233,7 +253,7 @@ export function Link({
   children,
   ...linkProps
 }: LinkProps & { children?: ReactNode; href: string }) {
-  const href = usePrependSubPlanPath(rawHref);
+  const href = usePrependPlanAndLocale(rawHref);
 
   return (
     <NextLink href={href} {...linkProps}>

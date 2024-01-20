@@ -25,3 +25,25 @@ export function stripSlashes(path: string, config?: StripSlashConfig) {
  */
 export const isAbsoluteUrl = (url: string) =>
   !!url.match(/^(?:[a-z+]+:)?\/\//i);
+
+export function stripLocaleAndPlan(
+  plan: { domain?: { basePath?: string | null } | null },
+  locale: string,
+  pathname: string
+) {
+  return stripSlashes(pathname)
+    .split('/')
+    .filter((part, i) => {
+      const isLocalePosition = i === 0;
+      const isPlanPosition = i === 0 || i === 1;
+
+      return !(
+        (part === locale && isLocalePosition) ||
+        (plan.domain &&
+          plan.domain?.basePath &&
+          stripSlashes(plan.domain.basePath) === part &&
+          isPlanPosition)
+      );
+    })
+    .join('/');
+}

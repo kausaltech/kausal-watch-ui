@@ -9,7 +9,7 @@ import {
   GetPlansByHostnameQueryVariables,
   PublicationStatus,
 } from './common/__generated__/graphql';
-import { stripSlashes } from './lib/utils/urls';
+import { stripLocaleAndPlan, stripSlashes } from './lib/utils/urls';
 import { UNPUBLISHED_PATH } from './lib/constants/routes';
 import {
   httpLink,
@@ -28,7 +28,7 @@ const apolloClient = new ApolloClient({
          * Prevent cache conflicts between multi-plan plans when visited via basePath
          * (e.g. umbrella.city.gov/x-plan) vs a dedicated plan subdomain (e.g. x-plan.city.gov/)
          */
-        keyFields: ['id', 'domain', ['basePath']],
+        keyFields: ['id', 'domain', ['hostname']],
       },
     },
     // https://www.apollographql.com/docs/react/data/fragments/#defining-possibletypes-manually
@@ -60,30 +60,6 @@ function getSearchParamsString(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams.toString();
 
   return searchParams.length > 0 ? `?${searchParams}` : '';
-}
-
-function stripLocaleAndPlan(
-  locale: string,
-  plan: PlanFromPlansQuery,
-  pathname: string
-) {
-  return stripSlashes(pathname)
-    .split('/')
-    .filter((part, i) => {
-      const isLocalePosition = i === 0;
-      const isPlanPosition = i === 0 || i === 1;
-
-      return !(
-        (part === locale && isLocalePosition) ||
-        (plan.domains?.length &&
-          plan.domains.some(
-            (domain) =>
-              domain?.basePath && stripSlashes(domain.basePath) === part
-          ) &&
-          isPlanPosition)
-      );
-    })
-    .join('/');
 }
 
 const isRestrictedPlan = (plan: PlanForHostname) =>
@@ -278,7 +254,7 @@ export async function middleware(request: NextRequest) {
   }
 
   const searchParams = getSearchParamsString(request);
-  const strippedPath = stripLocaleAndPlan(parsedLocale, parsedPlan, pathname);
+  const strippedPath = stripLocaleAndPlan(parsedPlan, parsedLocale, pathname);
   const rewrittenUrl = new URL(
     `/${hostname}/${parsedLocale}/${parsedPlan.id}/${strippedPath}${searchParams}`,
     request.url
