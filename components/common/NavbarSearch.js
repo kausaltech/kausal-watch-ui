@@ -270,14 +270,18 @@ const ResultList = (props) => {
       </HitList>
       <ResultsFooter>
         {results.length > 0 ? (
-          <Link href={`/search?q=${searchTerm}`} legacyBehavior>
+          <Link
+            prefetch={false}
+            href={`/search?q=${searchTerm}`}
+            legacyBehavior
+          >
             <a>
               {t('see-all-results', { count: results.length })}
               <Icon name="arrow-right" />
             </a>
           </Link>
         ) : (
-          <Link href={`/search`} legacyBehavior>
+          <Link prefetch={false} href={`/search`} legacyBehavior>
             <a data-testId="search-advanced">
               {t('search-advanced')} <Icon name="arrow-right" />
             </a>
