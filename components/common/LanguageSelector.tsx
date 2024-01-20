@@ -11,6 +11,7 @@ import Icon from './Icon';
 import { useTheme } from 'styled-components';
 import { PlanContextFragment } from '@/common/__generated__/graphql';
 import { usePlan } from '@/context/plan';
+import { useApolloClient } from '@apollo/client';
 
 const Selector = styled(UncontrolledDropdown)<{ $mobile: boolean }>`
   a {
@@ -101,6 +102,7 @@ const LanguageSelector = (props) => {
   const currentLocale = useLocale();
   const theme = useTheme();
   const plan = usePlan();
+  const apolloClient = useApolloClient();
   const { mobile } = props;
 
   const locales = getLocales(plan).filter(
@@ -123,7 +125,13 @@ const LanguageSelector = (props) => {
       <StyledDropdownMenu end>
         {locales.map((locale) => (
           <DropdownItem key={locale} tag="div">
-            <Link locale={locale} href={getLocaleHref(locale)}>
+            <Link
+              locale={locale}
+              href={getLocaleHref(locale)}
+              // Reset the cache so that stale locale cache isn't used. Required because the
+              // locale isn't passed to query calls as an argument.
+              onClick={() => apolloClient.clearStore()}
+            >
               {languageNames[locale.split('-')[0]]}
             </Link>
           </DropdownItem>

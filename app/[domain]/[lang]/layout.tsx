@@ -25,7 +25,9 @@ export default function LangLayout({ params, children }: Props) {
           <NextIntlClientProvider locale={params.lang} messages={messages}>
             <StyledComponentsRegistry>
               <DayjsLocaleProvider locale={params.lang}>
-                <ApolloWrapper>{children}</ApolloWrapper>
+                <ApolloWrapper initialLocale={params.lang}>
+                  {children}
+                </ApolloWrapper>
               </DayjsLocaleProvider>
             </StyledComponentsRegistry>
           </NextIntlClientProvider>

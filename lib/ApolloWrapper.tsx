@@ -11,10 +11,12 @@ import {
 
 import { errorLink, localeMiddleware, httpLink } from './utils/apollo.utils';
 import { isServer } from '@/common/environment';
-import { useEffect } from 'react';
 
-function makeClient() {
+function makeClient(initialLocale: string) {
   return new NextSSRApolloClient({
+    defaultContext: {
+      locale: initialLocale,
+    },
     cache: new NextSSRInMemoryCache(),
     link: ApolloLink.from([
       errorLink,
@@ -32,27 +34,24 @@ function makeClient() {
 }
 
 /**
- * On locale change:
- *  - Update the Apollo client context to include the current locale, which
- *    allows us to inject the "@locale" directive into queries via an Apollo link.
- *  - Reset the cache so that stale locale cache isn't used. Required because the
- *    locale isn't passed to query calls as an argument.
+ * On locale change update the Apollo client context to include the current locale, which
+ * allows us to inject the "@locale" directive into queries via an Apollo link. Required
+ * because ApolloNextAppProvider makeClient is only called on initial render.
  */
 function UpdateLocale({ children }: React.PropsWithChildren) {
   const locale = useLocale();
   const apolloClient = useApolloClient();
 
-  useEffect(() => {
-    apolloClient.defaultContext.locale = locale;
-    apolloClient.resetStore();
-  }, [locale, apolloClient]);
+  apolloClient.defaultContext.locale = locale;
 
   return children;
 }
 
-export function ApolloWrapper({ children }: React.PropsWithChildren) {
+type Props = { initialLocale: string } & React.PropsWithChildren;
+
+export function ApolloWrapper({ initialLocale, children }: Props) {
   return (
-    <ApolloNextAppProvider makeClient={makeClient}>
+    <ApolloNextAppProvider makeClient={() => makeClient(initialLocale)}>
       <UpdateLocale>{children}</UpdateLocale>
     </ApolloNextAppProvider>
   );
