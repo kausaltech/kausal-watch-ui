@@ -5,19 +5,19 @@ import styled from 'styled-components';
 import { Row, Col } from 'reactstrap';
 import {
   ActionHightlightListQuery,
+  ActionHightlightListQueryVariables,
   PlanContextFragment,
 } from 'common/__generated__/graphql';
 import EmbedContext from 'context/embed';
 import Button from 'components/common/Button';
 import { getActionTermContext } from 'common/i18n';
-import ContentLoader from 'components/common/ContentLoader';
 import { ActionListLink } from 'common/links';
 import images, { getActionImage } from 'common/images';
 
 import ActionHighlightCard from './ActionHighlightCard';
 import Icon from '../common/Icon';
 import { useTranslations } from 'next-intl';
-import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
+import { useSuspenseQuery } from '@apollo/experimental-nextjs-app-support/ssr';
 
 export const GET_ACTION_LIST = gql`
   query ActionHightlightList($plan: ID!, $first: Int!, $orderBy: String!) {
@@ -169,11 +169,14 @@ function ActionHighlightsList(props: ActionHighlightsListProps) {
     orderBy: '-updatedAt',
   };
 
-  const { data, loading, error } = useQuery(GET_ACTION_LIST, {
+  const { data, error } = useSuspenseQuery<
+    ActionHightlightListQuery,
+    ActionHightlightListQueryVariables
+  >(GET_ACTION_LIST, {
     variables: queryParams,
   });
-  if (loading) return <ContentLoader />;
-  if (error)
+
+  if (error || !data.planActions)
     return <p>{t('error-loading-actions', getActionTermContext(plan))}</p>;
 
   return (

@@ -17,9 +17,14 @@ const StyledSpinner = styled(Spinner)`
   background-color: ${(props) => props.theme.brandDark};
 `;
 
-function ContentLoader() {
+type Props = {
+  /** Support rendering server-side */
+  initiallyVisible?: boolean;
+};
+
+function ContentLoader({ initiallyVisible = false }: Props) {
   const t = useTranslations();
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(initiallyVisible);
 
   useEffect(() => {
     // Only display the message and spinner after 250ms has passed

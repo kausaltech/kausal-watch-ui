@@ -10,7 +10,6 @@ import {
   mapResponsibleParties,
   orgHasActions,
 } from 'common/organizations';
-import ContentLoader from 'components/common/ContentLoader';
 import ErrorMessage from 'components/common/ErrorMessage';
 import { usePlan } from 'context/plan';
 import { useTheme } from 'styled-components';
@@ -45,7 +44,7 @@ import {
   ACTION_TABLE_COLUMN_FRAGMENT,
   ALL_ACTION_LIST_FILTERS,
 } from '@/lib/fragments/action-list.fragment';
-import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
+import { useSuspenseQuery } from '@apollo/experimental-nextjs-app-support/ssr';
 
 // Legacy exports preserved after migrating types to dashboard.types
 export * from './dashboard.types';
@@ -622,7 +621,7 @@ function ActionListLoader(props: StatusboardProps) {
   } = props;
   const plan = usePlan();
   const t = useTranslations();
-  const { loading, error, data } = useQuery<DashboardActionListQuery>(
+  const { error, data } = useSuspenseQuery<DashboardActionListQuery>(
     GET_ACTION_LIST,
     {
       variables: {
@@ -633,8 +632,7 @@ function ActionListLoader(props: StatusboardProps) {
     }
   );
 
-  if (loading) return <ContentLoader />;
-  if (error || !data)
+  if (error || !data || !data.plan)
     return (
       <ErrorMessage
         message={t('error-loading-actions', getActionTermContext(plan))}

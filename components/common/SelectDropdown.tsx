@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Select, {
   components,
   DropdownIndicatorProps,
@@ -234,6 +234,11 @@ function SelectDropdown<
   } = props;
   const theme = useTheme();
   const styles = getSelectStyles(theme, props.isMulti === true, size);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   /* Do not wrap the tooltip icon on a new line alone */
   /* Join it with the last word of the label instead */
@@ -257,45 +262,49 @@ function SelectDropdown<
           {tooltipElement}
         </Label>
       )}
-      <Select<SelectDropdownOption, IsMulti>
-        inputId={id}
-        isMulti={isMulti}
-        components={getCustomComponents(isMulti)}
-        theme={getSelectTheme}
-        value={value}
-        styles={styles}
-        getOptionLabel={(option) => option.label}
-        getOptionValue={(option) => option.id}
-        formatOptionLabel={(option, meta) => {
-          const { context, inputValue } = meta;
-          const { indent, label } = option;
-          const highlighted = (
-            <Highlighter
-              highlightTag="b"
-              searchWords={[inputValue]}
-              textToHighlight={label}
-            />
-          );
-          if (context === 'value' || !indent) return highlighted;
-          const spans: JSX.Element[] = [];
-          for (let i = 0; i < indent; i++) {
-            spans.push(
-              <span
-                key={`span-${i}`}
-                style={{ borderLeft: '1px solid #ccc', paddingLeft: '0.5em' }}
+
+      {/* Select doesn't support SSR */}
+      {isClient && (
+        <Select<SelectDropdownOption, IsMulti>
+          inputId={id}
+          isMulti={isMulti}
+          components={getCustomComponents(isMulti)}
+          theme={getSelectTheme}
+          value={value}
+          styles={styles}
+          getOptionLabel={(option) => option.label}
+          getOptionValue={(option) => option.id}
+          formatOptionLabel={(option, meta) => {
+            const { context, inputValue } = meta;
+            const { indent, label } = option;
+            const highlighted = (
+              <Highlighter
+                highlightTag="b"
+                searchWords={[inputValue]}
+                textToHighlight={label}
               />
             );
-          }
-          return (
-            <>
-              {spans}
-              {highlighted}
-            </>
-          );
-        }}
-        onChange={onChange}
-        {...rest}
-      />
+            if (context === 'value' || !indent) return highlighted;
+            const spans: JSX.Element[] = [];
+            for (let i = 0; i < indent; i++) {
+              spans.push(
+                <span
+                  key={`span-${i}`}
+                  style={{ borderLeft: '1px solid #ccc', paddingLeft: '0.5em' }}
+                />
+              );
+            }
+            return (
+              <>
+                {spans}
+                {highlighted}
+              </>
+            );
+          }}
+          onChange={onChange}
+          {...rest}
+        />
+      )}
     </FormGroup>
   );
 }

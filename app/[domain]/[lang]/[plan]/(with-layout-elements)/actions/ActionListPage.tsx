@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import ActionList from 'components/dashboard/ActionList';
 import { Filters, FilterValue } from 'components/actions/ActionListFilters';
@@ -58,7 +58,7 @@ export function ActionListPage({ actionListPage }: Props) {
   return (
     <ActionList
       title={actionListPage.title}
-      leadContent={actionListPage.leadContent}
+      leadContent={actionListPage.leadContent ?? ''}
       defaultView={actionListPage.defaultView}
       includeRelatedPlans={!!actionListPage.includeRelatedPlans}
       headingHierarchyDepth={actionListPage.headingHierarchyDepth}
