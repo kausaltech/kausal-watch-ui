@@ -85,12 +85,15 @@ const getStatusData = (
   actions: ActionListAction[],
   actionStatusSummaries: ActionStatusSummary[],
   theme: Theme,
-  unknownLabelText: string = ''
+  unknownLabelText: string = '',
+  language: string
 ) => {
   const progress: Progress = {
     values: [],
     labels: [],
     colors: [],
+    texts: [],
+    hoverTexts: [],
     good: 0,
     total: '',
   };
@@ -117,7 +120,7 @@ const getStatusData = (
           : label || unknownLabelText
       );
       progress.colors.push(theme.graphColors[colors.get(identifier) ?? color]);
-      if (sentiment == Sentiment.Positive || identifier == 'NOT_STARTED') {
+      if (sentiment === Sentiment.Positive || identifier === 'NOT_STARTED') {
         progress.good += statusCount;
       }
     }
@@ -126,6 +129,25 @@ const getStatusData = (
     }
   });
   progress.total = `${Math.round((progress.good / totalCount) * 100)}%`;
+  const numberFormat = new Intl.NumberFormat(language, {
+    maximumSignificantDigits: 2,
+    style: 'percent',
+  });
+  for (let i = 0; i < progress.values.length; i++) {
+    const label = progress.labels[i];
+    let hoverText: string, text: string;
+    if (label === unknownLabelText) {
+      text = '';
+      hoverText = label;
+    } else {
+      const value = progress.values[i];
+      const formattedValue = numberFormat.format(value / totalCount);
+      text = formattedValue;
+      hoverText = `${label}<br>${value}<br>${formattedValue}`;
+    }
+    progress.hoverTexts.push(hoverText);
+    progress.texts.push(text);
+  }
   return progress;
 };
 
