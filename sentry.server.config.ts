@@ -7,6 +7,8 @@ import * as Sentry from '@sentry/nextjs';
 Sentry.init({
   dsn: 'https://9b7a344624774da8a5aa5752baad826b@sentry.kausal.tech/2',
 
+  ignoreErrors: ['NEXT_NOT_FOUND'],
+
   // Adjust this value in production, or use tracesSampler for greater control
   tracesSampleRate: 1,
 
