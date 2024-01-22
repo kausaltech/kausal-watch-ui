@@ -183,12 +183,21 @@ const ActionsStatusGraphs = ({
 }: ActionsStatusGraphsProps) => {
   const theme = useTheme();
   const plan = useContext(PlanContext);
-  const { t } = useTranslation(['common']);
+  const {
+    t,
+    i18n: { language },
+  } = useTranslation(['common']);
   const showTotals = theme.settings.dashboard.showActionDonutTotals ?? true;
 
   const progressData =
     shownDatasets.progress &&
-    getStatusData(actions, plan.actionStatusSummaries, theme, t('no-status'));
+    getStatusData(
+      actions,
+      plan.actionStatusSummaries,
+      theme,
+      t('no-status'),
+      language
+    );
 
   const timelinessData =
     shownDatasets.timeliness && getTimelinessData(actions, plan, theme, t);
