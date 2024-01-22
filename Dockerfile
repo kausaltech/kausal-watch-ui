@@ -20,8 +20,6 @@ ENV YARN_NPM_ALWAYS_AUTH=${YARN_NPM_ALWAYS_AUTH:-false}
 ENV YARN_CACHE_FOLDER /yarn-cache
 COPY yarn.lock package*.json ./
 
-RUN echo "YARN_NPM_REGISTRY_SERVER $YARN_NPM_REGISTRY_SERVER"
-
 RUN yarn config set nodeLinker 'node-modules'
 RUN yarn config set logFilters --json '[{"code": "YN0013", "level": "discard"}]'
 
