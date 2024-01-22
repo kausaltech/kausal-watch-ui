@@ -56,6 +56,8 @@ export type Progress = {
   values: number[];
   labels: string[];
   colors: string[];
+  texts?: string[];
+  hoverTexts?: string[];
   good: number;
   total: string;
 };
@@ -226,7 +228,12 @@ const ActionsStatusGraphs = ({
 
       {!plan.features.minimalStatuses && progressData && (
         <StatusDonut
-          data={{ values: progressData.values, labels: progressData.labels }}
+          data={{
+            values: progressData.values,
+            labels: progressData.labels,
+            texts: progressData.texts,
+            hoverTexts: progressData.hoverTexts,
+          }}
           currentValue={showTotals ? progressData.total : undefined}
           colors={progressData.colors.length > 0 ? progressData.colors : []}
           header={t('actions-status')}

@@ -133,10 +133,23 @@ const StatusDonut = (props) => {
     },
   };
 
-  const pieDataWithPercent = {
+  if (
+    data.hoverTexts != null &&
+    data.hoverTexts.length === data.values.length
+  ) {
+    pieData.hoverinfo = 'text';
+    pieData.text = data.hoverTexts;
+    pieData.hovertemplate = null;
+  }
+  const pieDataWithTextOnGraph = {
     ...pieData,
     textinfo: 'percent',
   };
+  if (data.texts != null && data.texts.length === data.values.length) {
+    pieDataWithTextOnGraph.textinfo = 'text';
+    pieDataWithTextOnGraph.text = data.texts;
+  }
+
   const pieLayoutWithLegend = {
     ...pieLayout,
     height: 350,
@@ -175,7 +188,7 @@ const StatusDonut = (props) => {
         helpText={helpText}
       >
         <Plot
-          data={[pieDataWithPercent]}
+          data={[pieDataWithTextOnGraph]}
           layout={pieLayoutWithLegend}
           config={config}
         />
