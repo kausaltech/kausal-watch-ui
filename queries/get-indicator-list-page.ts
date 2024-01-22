@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client';
-import { getClient } from '../apollo-client';
+import { getClient } from '../utils/apollo-rsc-client';
 import {
   GetPlanPageIndicatorListQuery,
   GetPlanPageIndicatorListQueryVariables,

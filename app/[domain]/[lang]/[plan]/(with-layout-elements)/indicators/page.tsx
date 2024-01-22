@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import IndicatorList from '@/components/indicators/IndicatorList';
-import { getIndicatorListPage } from '@/lib/queries/get-indicator-list-page';
+import { getIndicatorListPage } from '@/queries/get-indicator-list-page';
 
 type Props = {
   params: { plan: string; lang: string };

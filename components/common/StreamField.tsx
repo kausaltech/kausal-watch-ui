@@ -27,7 +27,7 @@ import AccessibilityStatementContactInformationBlock from 'components/contentblo
 import type { StreamFieldFragmentFragment } from 'common/__generated__/graphql';
 import CartographyVisualisationBlock from 'components/contentblocks/CartographyVisualisationBlock';
 import styled, { useTheme } from 'styled-components';
-import { STREAM_FIELD_FRAGMENT } from '@/lib/fragments/stream-field.fragment';
+import { STREAM_FIELD_FRAGMENT } from '@/fragments/stream-field.fragment';
 
 enum EmbedProvider {
   YOUTUBE = 'YouTube',

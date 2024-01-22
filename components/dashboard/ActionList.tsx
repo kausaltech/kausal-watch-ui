@@ -43,7 +43,7 @@ import { useTranslations } from 'next-intl';
 import {
   ACTION_TABLE_COLUMN_FRAGMENT,
   ALL_ACTION_LIST_FILTERS,
-} from '@/lib/fragments/action-list.fragment';
+} from '@/fragments/action-list.fragment';
 import { useSuspenseQuery } from '@apollo/experimental-nextjs-app-support/ssr';
 
 // Legacy exports preserved after migrating types to dashboard.types

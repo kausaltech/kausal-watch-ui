@@ -1,7 +1,7 @@
 import {
   getActionsListPage,
   getIncludeRelatedActions,
-} from '@/lib/queries/get-actions-list-page';
+} from '@/queries/get-actions-list-page';
 import { ActionListPage } from './ActionListPage';
 import { notFound } from 'next/navigation';
 

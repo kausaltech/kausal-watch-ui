@@ -2,14 +2,10 @@ import React, { ReactElement, PropsWithChildren, ReactNode } from 'react';
 import { default as NextLink, LinkProps } from 'next/link';
 import PropTypes from 'prop-types';
 import { getCategoryString } from './categories';
-import {
-  isAbsoluteUrl,
-  stripLocaleAndPlan,
-  stripSlashes,
-} from '@/lib/utils/urls';
+import { isAbsoluteUrl, stripLocaleAndPlan, stripSlashes } from '@/utils/urls';
 import { usePlan } from '@/context/plan';
 import { PlanContextFragment } from './__generated__/graphql';
-import { ACTIONS_PATH, INDICATORS_PATH } from '@/lib/constants/routes';
+import { ACTIONS_PATH, INDICATORS_PATH } from '@/constants/routes';
 import { useLocale } from 'next-intl';
 
 function usePrependPlanAndLocale(path: string) {

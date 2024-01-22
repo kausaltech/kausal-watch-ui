@@ -13,7 +13,7 @@ import { usePlan } from 'context/plan';
 import PlanChip from 'components/plans/PlanChip';
 import { ActionCardFragment } from 'common/__generated__/graphql';
 import { useTranslations } from 'next-intl';
-import { ACTION_CARD_FRAGMENT } from '@/lib/fragments/action-card.fragment';
+import { ACTION_CARD_FRAGMENT } from '@/fragments/action-card.fragment';
 
 const StyledActionLink = styled.a`
   text-decoration: none;

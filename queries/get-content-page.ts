@@ -8,7 +8,7 @@ import {
 import { STREAM_FIELD_FRAGMENT } from '../fragments/stream-field.fragment';
 import { ATTRIBUTE_WITH_NESTED_TYPE_FRAGMENT } from '../fragments/action-attribute.fragment';
 import { CATEGORY_FRAGMENT } from '../fragments/category.fragment';
-import { getClient } from '../apollo-client';
+import { getClient } from '../utils/apollo-rsc-client';
 
 export const getContentPage = async (plan: string, path: string) =>
   await getClient().query<GetContentPageQuery, GetContentPageQueryVariables>({

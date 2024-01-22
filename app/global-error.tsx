@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 
 import defaultTheme from '@/public/static/themes/default/theme.json';
 import { ErrorPage } from '@/components/common/ErrorPage';
-import ThemeProvider from '@/lib/ThemeProvider';
+import ThemeProvider from '@/components/providers/ThemeProvider';
 
 type Props = {
   error: Error & { digest?: string };

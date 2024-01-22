@@ -3,16 +3,15 @@ import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import { headers } from 'next/headers';
 
-import ThemeProvider from '@/lib/ThemeProvider';
-import PlanProvider from '@/lib/PlanProvider';
-import { getPlan } from '@/lib/queries/get-plan';
-import { GlobalStyles } from '@/lib/GlobalStyles';
+import ThemeProvider from '@/components/providers/ThemeProvider';
+import PlanProvider from '@/components/providers/PlanProvider';
+import { getPlan } from '@/queries/get-plan';
+import { GlobalStyles } from '@/styles/GlobalStyles';
 import '@/styles/default/main.scss';
-import SiteProvider from '@/lib/SiteProvider';
 import { getThemeCSS, loadTheme } from '@/common/theme';
 import { CombinedIconSymbols } from '@/components/common/Icon';
 import { MatomoAnalytics } from '@/components/MatomoAnalytics';
-import { getMetaTitles } from '@/lib/utils/metadata';
+import { getMetaTitles } from '@/utils/metadata';
 
 type Props = {
   params: { plan: string; domain: string; lang: string };

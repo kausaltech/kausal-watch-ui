@@ -4,7 +4,6 @@ import { useTranslations } from 'next-intl';
 
 import { GetHomePageQuery } from '@/common/__generated__/graphql';
 import ErrorMessage from '@/components/common/ErrorMessage';
-import ContentLoader from '@/components/common/ContentLoader';
 import StreamField from '@/components/common/StreamField';
 import CategoriesContext from '@/context/categories';
 
@@ -37,14 +36,6 @@ type Props = { data: GetHomePageQuery };
 
 export function RootPage({ data }: Props) {
   const t = useTranslations();
-
-  // if (error) {
-  //   return <ErrorMessage message={error.message} />;
-  // } else if (loading) {
-  //   return <ContentLoader />;
-  // } else if (!data) {
-  //   return <ErrorMessage message={t('error-occurred')} />;
-  // }
 
   const { planPage, plan: queriedPlan } = data;
 

@@ -1,9 +1,9 @@
 import { ReactNode } from 'react';
 import { NextIntlClientProvider, useMessages } from 'next-intl';
 
-import { StyledComponentsRegistry } from '@/lib/StyledComponentsRegistry';
-import { ApolloWrapper } from '@/lib/ApolloWrapper';
-import ThemeProvider from '@/lib/ThemeProvider';
+import { StyledComponentsRegistry } from '@/styles/StyledComponentsRegistry';
+import { ApolloWrapper } from '@/components/providers/ApolloWrapper';
+import ThemeProvider from '@/components/providers/ThemeProvider';
 import defaultTheme from '@/public/static/themes/default/theme.json';
 import { DayjsLocaleProvider } from '@/common/dayjs';
 import '@/styles/default/main.scss';

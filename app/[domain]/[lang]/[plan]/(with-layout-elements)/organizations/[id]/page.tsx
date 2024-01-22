@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import { headers } from 'next/headers';
 import { captureException } from '@sentry/nextjs';
 import OrgContent from '@/components/orgs/OrgContent';
-import { getOrganizationDetails } from '@/lib/queries/get-organization';
+import { getOrganizationDetails } from '@/queries/get-organization';
 
 type Props = {
   params: {

@@ -3,7 +3,7 @@ import { headers } from 'next/headers';
 import { ApolloClient, InMemoryCache, from, gql } from '@apollo/client';
 
 import possibleTypes from '@/common/__generated__/possible_types.json';
-import { GET_PLANS_BY_HOSTNAME } from '@/lib/queries/get-plans';
+import { GET_PLANS_BY_HOSTNAME } from '@/queries/get-plans';
 import {
   GetPlansByHostnameQuery,
   GetPlansByHostnameQueryVariables,
@@ -14,12 +14,8 @@ import {
   ACTIONS_PATH,
   INDICATORS_PATH,
   STATIC_ROUTES,
-} from '@/lib/constants/routes';
-import {
-  httpLink,
-  operationEnd,
-  operationStart,
-} from '@/lib/utils/apollo.utils';
+} from '@/constants/routes';
+import { httpLink, operationEnd, operationStart } from '@/utils/apollo.utils';
 
 const apolloClient = new ApolloClient({
   cache: new InMemoryCache({

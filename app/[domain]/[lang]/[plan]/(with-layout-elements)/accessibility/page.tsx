@@ -1,7 +1,7 @@
 import { getTranslations } from 'next-intl/server';
 
 import { GetContentPageQuery } from '@/common/__generated__/graphql';
-import { getContentPage } from '@/lib/queries/get-content-page';
+import { getContentPage } from '@/queries/get-content-page';
 import { AccessibilityPage } from './AccessibilityPage';
 import { Content, GeneralPlanPage } from '../[...slug]/ContentPage';
 import { Metadata } from 'next';

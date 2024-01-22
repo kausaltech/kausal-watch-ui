@@ -15,7 +15,7 @@ import {
   ATTRIBUTE_FRAGMENT,
   ATTRIBUTE_TYPE_FRAGMENT,
   ATTRIBUTE_WITH_NESTED_TYPE_FRAGMENT,
-} from '@/lib/fragments/action-attribute.fragment';
+} from '@/fragments/action-attribute.fragment';
 
 const ScaleIcon = styled(Icon)<{ $size?: 'sm' | 'md' }>`
   font-size: ${({ $size }) => {

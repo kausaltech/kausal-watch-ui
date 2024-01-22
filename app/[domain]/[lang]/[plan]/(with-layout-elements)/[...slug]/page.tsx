@@ -1,9 +1,9 @@
-import { getContentPage } from '@/lib/queries/get-content-page';
+import { getContentPage } from '@/queries/get-content-page';
 import { notFound } from 'next/navigation';
 import React from 'react';
 import { Content } from './ContentPage';
 import { Metadata, ResolvingMetadata } from 'next';
-import { getMetaDescription, getMetaImage } from '@/lib/utils/metadata';
+import { getMetaDescription, getMetaImage } from '@/utils/metadata';
 
 type Props = {
   params: { slug: string[]; plan: string };

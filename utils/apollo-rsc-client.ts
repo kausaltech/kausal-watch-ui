@@ -9,8 +9,12 @@ import {
   httpLink,
   operationEnd,
   operationStart,
-} from './utils/apollo.utils';
+} from './apollo.utils';
 
+/**
+ * Apollo client used in React Server Components (fully server-side). For client components
+ * (which are also server-side rendered) use the separate useQuery hooks provided by ApolloWrapper.
+ */
 export const { getClient } = registerApolloClient(() => {
   const headers = getHeaders();
   const locale = headers.get('x-next-intl-locale') ?? undefined;

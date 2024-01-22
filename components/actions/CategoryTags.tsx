@@ -8,8 +8,8 @@ import {
   CategoryRecursiveFragmentFragment,
   CategoryTypeFragmentFragment,
 } from 'common/__generated__/graphql';
-import { CATEGORY_FRAGMENT } from '@/lib/fragments/category.fragment';
-import { CATEGORY_TYPE_FRAGMENT } from '@/lib/fragments/category-tags.fragment';
+import { CATEGORY_FRAGMENT } from '@/fragments/category.fragment';
+import { CATEGORY_TYPE_FRAGMENT } from '@/fragments/category-tags.fragment';
 
 const Categories = styled.div`
   font-size: ${(props) => props.theme.fontSizeMd};

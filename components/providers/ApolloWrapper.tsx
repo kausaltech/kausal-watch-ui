@@ -9,7 +9,11 @@ import {
   SSRMultipartLink,
 } from '@apollo/experimental-nextjs-app-support/ssr';
 
-import { errorLink, localeMiddleware, httpLink } from './utils/apollo.utils';
+import {
+  errorLink,
+  localeMiddleware,
+  httpLink,
+} from '../../utils/apollo.utils';
 import { isServer } from '@/common/environment';
 
 function makeClient(initialLocale: string) {

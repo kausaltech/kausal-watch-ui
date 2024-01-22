@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client';
-import { getClient } from '@/lib/apollo-client';
+import { getClient } from '@/utils/apollo-rsc-client';
 
 const GET_PLAN_THEME_IDENTIFIER = gql`
   query GetPlanThemeIdentifier($identifier: ID) {

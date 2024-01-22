@@ -5,7 +5,7 @@ import { captureException } from '@sentry/nextjs';
 import { getTranslations } from 'next-intl/server';
 import { Metadata, ResolvingMetadata } from 'next';
 
-import { getActionDetails } from '@/lib/queries/get-action';
+import { getActionDetails } from '@/queries/get-action';
 import ActionContent from '@/components/actions/ActionContent';
 import { getActionImage } from '@/common/images';
 import { getActionTermContext } from '@/common/i18n';

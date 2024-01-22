@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client';
-import { getClient } from '../apollo-client';
+import { getClient } from '../utils/apollo-rsc-client';
 import { ALL_ACTION_LIST_FILTERS } from '../fragments/action-list.fragment';
 import {
   GetActionListPageIncludeRelatedQuery,

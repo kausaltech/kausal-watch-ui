@@ -3,7 +3,7 @@ import { gql } from '@apollo/client';
 import images from '@/common/images';
 import { STREAM_FIELD_FRAGMENT } from '../fragments/stream-field.fragment';
 import { GetHomePageQuery } from '@/common/__generated__/graphql';
-import { getClient } from '../apollo-client';
+import { getClient } from '../utils/apollo-rsc-client';
 
 export const GET_HOME_PAGE = gql`
   query GetHomePage($plan: ID!, $path: String!) {

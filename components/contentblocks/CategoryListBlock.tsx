@@ -10,7 +10,7 @@ import { useFallbackCategories } from 'context/categories';
 import { CommonContentBlockProps } from 'common/blocks.types';
 import { readableColor } from 'polished';
 import { Theme } from '@kausal/themes/types';
-import { CATEGORY_FRAGMENT } from '@/lib/fragments/category.fragment';
+import { CATEGORY_FRAGMENT } from '@/fragments/category.fragment';
 
 const getColor = (theme: Theme, darkFallback = theme.themeColors.black) =>
   theme.section.categoryList?.color ||

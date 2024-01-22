@@ -3,19 +3,15 @@ import { NextRequest, NextResponse } from 'next/server';
 import { ApolloClient, InMemoryCache, from } from '@apollo/client';
 
 import possibleTypes from './common/__generated__/possible_types.json';
-import { GET_PLANS_BY_HOSTNAME } from './lib/queries/get-plans';
+import { GET_PLANS_BY_HOSTNAME } from './queries/get-plans';
 import {
   GetPlansByHostnameQuery,
   GetPlansByHostnameQueryVariables,
   PublicationStatus,
 } from './common/__generated__/graphql';
-import { stripLocaleAndPlan, stripSlashes } from './lib/utils/urls';
-import { UNPUBLISHED_PATH } from './lib/constants/routes';
-import {
-  httpLink,
-  operationEnd,
-  operationStart,
-} from './lib/utils/apollo.utils';
+import { stripLocaleAndPlan, stripSlashes } from './utils/urls';
+import { UNPUBLISHED_PATH } from './constants/routes';
+import { httpLink, operationEnd, operationStart } from './utils/apollo.utils';
 import { captureException } from '@sentry/nextjs';
 
 const BASIC_AUTH_ENV_VARIABLE = 'BASIC_AUTH_FOR_HOSTNAMES';

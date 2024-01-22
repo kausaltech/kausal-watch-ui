@@ -6,7 +6,7 @@ import Header from '@/components/HeaderComponent';
 import Footer from '@/components/Footer';
 import { usePlan } from '@/context/plan';
 import { StyledMain } from './StyledMain';
-import { getMetaTitles } from '@/lib/utils/metadata';
+import { getMetaTitles } from '@/utils/metadata';
 
 type Props = {
   params: { domain: string };

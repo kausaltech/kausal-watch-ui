@@ -1,6 +1,6 @@
 'use client';
 
-import { stripSlashes } from '@/lib/utils/urls';
+import { stripSlashes } from '@/utils/urls';
 import { usePathname, useSearchParams } from 'next/navigation';
 import Script from 'next/script';
 import { useEffect } from 'react';

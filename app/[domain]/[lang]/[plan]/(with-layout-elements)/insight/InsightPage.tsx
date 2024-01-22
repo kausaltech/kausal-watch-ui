@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useLocale } from 'next-intl';
 
 import { usePlan } from '@/context/plan';
-import { isValidIndicatorId } from '@/lib/utils/indicators';
+import { isValidIndicatorId } from '@/utils/indicators';
 import VisPage from './VisPage';
 
 export function InsightPage() {

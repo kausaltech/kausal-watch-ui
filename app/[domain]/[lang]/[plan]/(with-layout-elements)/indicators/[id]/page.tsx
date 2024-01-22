@@ -3,9 +3,9 @@ import { Metadata, ResolvingMetadata } from 'next';
 import { notFound } from 'next/navigation';
 import { captureException } from '@sentry/nextjs';
 
-import { getIndicatorDetails } from '@/lib/queries/get-indicator';
+import { getIndicatorDetails } from '@/queries/get-indicator';
 import IndicatorContent from '@/components/indicators/IndicatorContent';
-import { isValidIndicatorId } from '@/lib/utils/indicators';
+import { isValidIndicatorId } from '@/utils/indicators';
 
 type Props = {
   params: {

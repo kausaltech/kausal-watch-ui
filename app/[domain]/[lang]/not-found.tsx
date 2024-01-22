@@ -5,7 +5,7 @@ import { useTranslations } from 'next-intl';
 
 import defaultTheme from '@/public/static/themes/default/theme.json';
 import { ErrorPage } from '@/components/common/ErrorPage';
-import ThemeProvider from '@/lib/ThemeProvider';
+import ThemeProvider from '@/components/providers/ThemeProvider';
 
 export default function NotFound() {
   const t = useTranslations();

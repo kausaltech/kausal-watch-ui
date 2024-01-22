@@ -12,7 +12,7 @@ import {
   GetActionDetailsQuery,
   GetActionDetailsQueryVariables,
 } from '@/common/__generated__/graphql';
-import { getClient } from '../apollo-client';
+import { getClient } from '../utils/apollo-rsc-client';
 
 export const getActionDetails = async (
   plan: string,

@@ -1,6 +1,6 @@
-import { getHomePage } from '@/lib/queries/get-home-page';
-import { RootPage } from '@/lib/components/RootPage';
+import { getHomePage } from '@/queries/get-home-page';
 import { ErrorPage } from '@/components/common/ErrorPage';
+import { RootPage } from './RootPage';
 
 type Props = {
   params: { plan: string; lang: string };

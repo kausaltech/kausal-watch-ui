@@ -5,7 +5,7 @@ import {
   IndicatorDetailsQueryVariables,
 } from '@/common/__generated__/graphql';
 import { CATEGORY_TYPE_FRAGMENT } from '../fragments/category-tags.fragment';
-import { getClient } from '../apollo-client';
+import { getClient } from '../utils/apollo-rsc-client';
 
 export const getIndicatorDetails = async (plan: string, indicatorId: string) =>
   await getClient().query<
