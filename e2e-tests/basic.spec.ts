@@ -175,7 +175,6 @@ const testPlan = (planId: string) =>
       if (isSearchButtonVisible) {
         const searchInput = page.locator('role=combobox');
         await expect(searchInput).toBeHidden();
-
         await searchButton.click();
         await expect(searchInput).toBeVisible();
 

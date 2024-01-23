@@ -281,7 +281,8 @@ export class PlanContext {
     return new PlanContext(data, baseURL, planIndicators);
   }
 
-  /*async checkAccessibility(page: Page) {
+  async checkAccessibility(page: Page) {
+    await page.waitForLoadState('networkidle');
     const results = await new AxeBuilder({ page }).analyze();
     const criticalAndSeriousViolations = results.violations.filter(
       (violation) =>
@@ -296,21 +297,6 @@ export class PlanContext {
     }
 
     expect(criticalAndSeriousViolations).toEqual([]);
-  }
-}*/
-
-  async checkAccessibility(page: Page) {
-    await page.waitForLoadState('networkidle');
-    const results = await new AxeBuilder({ page }).analyze();
-    const criticalViolations = results.violations.filter(
-      (violation) => violation.impact === 'critical'
-    );
-
-    if (criticalViolations.length > 0) {
-      console.error('Critical accessibility violations:', criticalViolations);
-    }
-
-    expect(criticalViolations).toEqual([]);
   }
 }
 
