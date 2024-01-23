@@ -268,7 +268,7 @@ export class PlanContext {
       variables: { plan: planId },
     });
     const primaryLanguage = langRes.data!.plan!.primaryLanguage;
-    const baseURL = `http://${planId}.localhost:3000`;
+    const baseURL = getPageBaseUrlToTest(planId);
     const res = await apolloClient.query<
       PlaywrightGetPlanInfoQuery,
       PlaywrightGetPlanInfoQueryVariables
@@ -317,4 +317,10 @@ export class PlanContext {
 export function getIdentifiersToTest(): string[] {
   const val = process.env.TEST_PLAN_IDENTIFIERS || '';
   return val.split(',').map((s) => s.trim());
+}
+
+export function getPageBaseUrlToTest(planId: string): string {
+  const val =
+    process.env.TEST_PAGE_BASE_URL || `http://{planId}.localhost:3000`;
+  return val.replace('{planId}', planId);
 }
