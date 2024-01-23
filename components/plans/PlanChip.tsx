@@ -31,6 +31,7 @@ const PlanAvatar = styled.img<PlanAvatarProps>`
 `;
 
 const PlanName = styled.div<{ negative?: boolean }>`
+  flex-grow: 1;
   color: ${(props) =>
     props.negative
       ? props.theme.themeColors.light
@@ -91,9 +92,13 @@ const PlanChip = React.forwardRef((props: PlanChipProps, ref) => {
 
   return (
     <Tag ref={ref} minWidth={MIN_WIDTH[size]} {...props}>
-      {planImage && (
-        <PlanAvatar src={planImage} size={IMAGE_SIZES[size]} alt="" />
-      )}
+      <PlanAvatar
+        src={
+          planImage ?? '/static/themes/default/images/default-avatar-org.png'
+        }
+        size={IMAGE_SIZES[size]}
+        alt=""
+      />
       <PlanName negative={negative}>
         <PlanTitle
           weight={size === 'sm' ? 'fontWeightNormal' : 'fontWeightBold'}
