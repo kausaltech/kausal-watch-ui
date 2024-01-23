@@ -21,12 +21,12 @@ export default function Layout({ children, params }: Props) {
   const plan = usePlan();
   const { navigationTitle, title } = getMetaTitles(plan);
 
-  const jsonLd = `{
-    "@context" : "https://schema.org",
-    "@type" : "WebSite",
-    "name" : "${title}",
-    "url" : "${params.domain}"
-  }`;
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: title,
+    url: params.domain,
+  };
 
   return (
     <>
