@@ -102,15 +102,17 @@ function getParsedPlan(
   );
 }
 
-function getParsedLocale(possibleLocale: string, plan: PlanFromPlansQuery) {
-  if (
-    plan.primaryLanguage === possibleLocale ||
-    plan.otherLanguages?.includes(possibleLocale)
-  ) {
-    return possibleLocale;
-  }
+function getParsedLocale(
+  localePossibilities: string[],
+  plan: PlanFromPlansQuery
+) {
+  const locale = localePossibilities.find(
+    (possibleLocale) =>
+      plan.primaryLanguage === possibleLocale ||
+      plan.otherLanguages?.includes(possibleLocale)
+  );
 
-  return plan.primaryLanguage;
+  return locale || plan.primaryLanguage;
 }
 
 function getAuthenticationForPlan(hostname: string):
@@ -159,6 +161,65 @@ function isAuthenticated(request: NextRequest, hostname: string) {
   }
 
   return false;
+}
+
+/**
+ * We can't be sure of the order of locale and plan ID segments in the path because:
+ * - The default locale is optional
+ * - Legacy paths followed the pattern /<plan-id>/<locale>/ but now locale is always the root segment
+ *
+ * So we test the first two path segments against plan data to get the exact locale and plan ID
+ */
+function getLocaleAndPlan(pathname: string, plans: PlanForHostname[]) {
+  // Slice the first two segments of the pathname, e.g. '/en/plan-id/foo' --> ['en', 'plan-id']
+  const possibleLocaleAndPlan = stripSlashes(pathname).split('/').slice(0, 2);
+
+  const parsedPlan = getParsedPlan(
+    possibleLocaleAndPlan,
+    plans.filter((plan): plan is PlanFromPlansQuery => isPlan(plan))
+  );
+
+  if (!parsedPlan) {
+    return { parsedPlan: undefined, parsedLocale: undefined };
+  }
+
+  const parsedLocale = getParsedLocale(possibleLocaleAndPlan, parsedPlan);
+
+  return { parsedPlan, parsedLocale };
+}
+
+/**
+ * Legacy paths followed the pattern "/<plan-id>/<locale>/", new paths always
+ * contain the locale at the root i.e. "/<locale>/<plan-id>/". Test for legacy
+ * paths so that we can support old links.
+ */
+function isLegacyPathStructure(
+  pathname: string,
+  locale: string,
+  plan: NonNullable<PlanForHostname>
+) {
+  if (!plan.domain?.basePath) {
+    return false;
+  }
+
+  return new RegExp(
+    `/${stripSlashes(plan.domain.basePath)}/${locale}(/|$)`
+  ).test(pathname);
+}
+
+function convertPathnameFromLegacy(
+  pathname: string,
+  parsedLocale: string,
+  parsedPlan: NonNullable<PlanForHostname>
+) {
+  // Get everything after the plan and locale parts of the pathname
+  const slug = stripSlashes(pathname).split('/').slice(2).join('/');
+
+  if (!parsedPlan.domain?.basePath) {
+    return `/${parsedLocale}/${slug}`;
+  }
+
+  return `/${parsedLocale}/${parsedPlan.domain?.basePath}/${slug}`;
 }
 
 export async function middleware(request: NextRequest) {
@@ -210,20 +271,24 @@ export async function middleware(request: NextRequest) {
     return NextResponse.rewrite(new URL('/404', request.url));
   }
 
-  const [locale, plan] = stripSlashes(pathname).split('/');
-
-  const parsedPlan = getParsedPlan(
-    [plan, locale],
-    data.plansForHostname.filter((plan): plan is PlanFromPlansQuery =>
-      isPlan(plan)
-    )
+  const { parsedLocale, parsedPlan } = getLocaleAndPlan(
+    pathname,
+    data.plansForHostname
   );
 
   if (!parsedPlan) {
     return NextResponse.rewrite(new URL('/404', request.url));
   }
 
-  const parsedLocale = getParsedLocale(locale, parsedPlan);
+  if (isLegacyPathStructure(pathname, parsedLocale, parsedPlan)) {
+    const newPathname = convertPathnameFromLegacy(
+      pathname,
+      parsedLocale,
+      parsedPlan
+    );
+
+    return NextResponse.redirect(new URL(newPathname, request.url));
+  }
 
   const handleI18nRouting = createIntlMiddleware({
     locales: [parsedPlan.primaryLanguage, ...(parsedPlan.otherLanguages ?? [])],
