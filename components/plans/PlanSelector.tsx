@@ -77,7 +77,13 @@ const PlanSelector = () => {
       <PlanDivider />
       <UncontrolledDropdown>
         <StyledDropdownToggle data-toggle="dropdown" tag="button">
-          <PlanAvatar src={plan.image?.small?.src} alt="" />
+          <PlanAvatar
+            src={
+              plan.image?.small?.src ??
+              '/static/themes/default/images/default-avatar-org.png'
+            }
+            alt=""
+          />
           <PlanTitle>{plan.shortName || plan.name}</PlanTitle>
           <Icon name="angle-down" />
         </StyledDropdownToggle>
