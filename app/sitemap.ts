@@ -117,8 +117,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     return [];
   }
 
-  const locale = data.plan.primaryLanguage;
-  const baseUrl = new URL(locale, url.origin).toString();
+  const baseUrl = url.origin;
 
   return [
     { url: baseUrl },
