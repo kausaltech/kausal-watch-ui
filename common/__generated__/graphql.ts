@@ -889,6 +889,7 @@ export type AdaptiveEmbedBlock = StreamFieldInterface & {
   blocks: Array<StreamFieldInterface>;
   embed?: Maybe<EmbedHtmlValue>;
   field: Scalars['String'];
+  fullWidth?: Maybe<Scalars['Boolean']>;
   id?: Maybe<Scalars['String']>;
   rawValue: Scalars['String'];
 };
@@ -7585,7 +7586,7 @@ type StreamFieldFragment_ActionListBlock_Fragment = (
 );
 
 type StreamFieldFragment_AdaptiveEmbedBlock_Fragment = (
-  { id?: string | null, blockType: string, field: string, embed?: (
+  { fullWidth?: boolean | null, id?: string | null, blockType: string, field: string, embed?: (
     { html?: string | null }
     & { __typename?: 'EmbedHTMLValue' }
   ) | null }
@@ -9942,7 +9943,7 @@ export type GetPlanPageGeneralQuery = (
       ) | null }
       & { __typename?: 'ActionListBlock' }
     ) | (
-      { id?: string | null, blockType: string, field: string, embed?: (
+      { fullWidth?: boolean | null, id?: string | null, blockType: string, field: string, embed?: (
         { html?: string | null }
         & { __typename?: 'EmbedHTMLValue' }
       ) | null }
@@ -10614,7 +10615,7 @@ export type GetPlanPageGeneralQuery = (
       ) | null }
       & { __typename?: 'ActionListBlock' }
     ) | (
-      { id?: string | null, blockType: string, field: string, embed?: (
+      { fullWidth?: boolean | null, id?: string | null, blockType: string, field: string, embed?: (
         { html?: string | null }
         & { __typename?: 'EmbedHTMLValue' }
       ) | null }
@@ -10992,7 +10993,7 @@ export type GetPlanPageGeneralQuery = (
       ) | null }
       & { __typename?: 'ActionListBlock' }
     ) | (
-      { id?: string | null, blockType: string, field: string, embed?: (
+      { fullWidth?: boolean | null, id?: string | null, blockType: string, field: string, embed?: (
         { html?: string | null }
         & { __typename?: 'EmbedHTMLValue' }
       ) | null }
@@ -11496,7 +11497,7 @@ export type GetHomePageQuery = (
       ) | null }
       & { __typename?: 'ActionListBlock' }
     ) | (
-      { id?: string | null, blockType: string, field: string, embed?: (
+      { fullWidth?: boolean | null, id?: string | null, blockType: string, field: string, embed?: (
         { html?: string | null }
         & { __typename?: 'EmbedHTMLValue' }
       ) | null }
