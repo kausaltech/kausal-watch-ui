@@ -34,6 +34,14 @@ Then add the plan identifiers you want to test to your `.env` file:
 
     TEST_PLAN_IDENTIFIERS=abcd,efgh,ijlk
 
+To point tests to the specific environment use the following environment variable in `.env` file:
+
+TEST_PAGE_BASE_URL=http://{planId}.localhost:3000
+
+or
+
+TEST_PAGE_BASE_URL=http://{planId}.watch.staging.kausal.tech
+
 Now you should be able to run the test suite. You might want to start the
 either the development or production server first. If you don't, the
 test suite will start one for you (the dev server will be started if the

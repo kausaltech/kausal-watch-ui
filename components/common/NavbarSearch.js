@@ -284,7 +284,7 @@ const ResultList = (props) => {
           </Link>
         ) : (
           <Link href={`/search`}>
-            <a>
+            <a data-testId="search-advanced">
               {t('search-advanced')} <Icon name="arrow-right" />
             </a>
           </Link>

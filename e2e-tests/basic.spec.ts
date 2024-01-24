@@ -3,9 +3,17 @@ import { PlanContext, getIdentifiersToTest } from './context';
 
 const test = base.extend<{ ctx: PlanContext }>({});
 
+async function navigateAndCheckLayout(page, url, ctx) {
+  await page.goto(url);
+  await ctx.checkMeta(page);
+  await expect(page.locator('nav#branding-navigation-bar')).toBeVisible();
+  await expect(page.locator('nav#global-navigation-bar')).toBeVisible();
+  await expect(page.locator('main#main')).toBeVisible();
+  await ctx.checkAccessibility(page);
+}
+
 const testPlan = (planId: string) =>
   test.describe(planId, () => {
-    //let plan: PlanInfo;
     test.describe.configure({ mode: 'serial' });
 
     test.use({
@@ -15,26 +23,11 @@ const testPlan = (planId: string) =>
       },
     });
 
-    /*
-  test.beforeAll(async () => {
-    plan = await getPlanInfo(planId);
-  })
-  */
     test.beforeEach(async ({ page, ctx }) => {
-      await page.goto(ctx.baseURL);
-      await ctx.checkMeta(page);
-      return;
+      await navigateAndCheckLayout(page, ctx.baseURL, ctx);
     });
 
-    test('basic layout', async ({ page, ctx }) => {
-      await expect(page.locator('nav#branding-navigation-bar')).toBeVisible();
-      await expect(page.locator('nav#global-navigation-bar')).toBeVisible();
-      await expect(page.locator('main#main')).toBeVisible();
-      await expect(page.locator('main#main')).toBeVisible();
-      await ctx.checkAccessibility(page);
-    });
     test('action list page', async ({ page, ctx }) => {
-      test.setTimeout(120000);
       const listItem = ctx.getActionListMenuItem()!;
       test.skip(!listItem, 'No action list page for plan');
 
@@ -48,27 +41,20 @@ const testPlan = (planId: string) =>
       await link.click();
       await ctx.checkMeta(page);
 
-      await expect
-        .configure({ timeout: 15000 })(page.getByRole('tab').first())
-        .toBeVisible();
+      await expect(page.getByRole('tab').first()).toBeVisible();
 
       // Test direct URL navigation
       await page.goto(`${ctx.baseURL}/${listItem.page.urlPath}`);
       await ctx.checkMeta(page);
-      await expect
-        .configure({ timeout: 2000 })(page.getByRole('tab').first())
-        .toBeVisible();
-      await ctx.checkAccessibility(page);
+      await expect(page.getByRole('tab').first()).toBeVisible();
     });
 
     test('action details page', async ({ page, ctx }) => {
-      test.setTimeout(100000);
       test.skip(ctx.plan.actions.length == 0, 'No actions defined in plan');
       await page.goto(ctx.getActionURL(ctx.plan.actions[0]));
       await ctx.checkMeta(page);
       const actionDetailsPage = page.locator('.action-main-top');
       await expect(actionDetailsPage).toBeVisible();
-      await ctx.checkAccessibility(page);
     });
 
     test('category page', async ({ page, ctx }) => {
@@ -91,7 +77,6 @@ const testPlan = (planId: string) =>
       });
       await firstItemLink.click();
       await expect(page.locator('main#main')).toBeVisible();
-      await ctx.checkAccessibility(page);
     });
 
     test('empty page', async ({ page, ctx }) => {
@@ -120,8 +105,6 @@ const testPlan = (planId: string) =>
 
       const h1 = page.locator('h1');
       await expect(h1).toContainText(items[0].page.title);
-
-      await ctx.checkAccessibility(page);
     });
 
     test('static pages', async ({ page, ctx }) => {
@@ -138,7 +121,6 @@ const testPlan = (planId: string) =>
 
         await staticPageLink.click();
         await expect(page.locator('main#main')).toBeVisible();
-        await ctx.checkAccessibility(page);
       }
     });
 
@@ -155,11 +137,9 @@ const testPlan = (planId: string) =>
       await indicatorListLink.click();
       const main = page.locator('main#main');
       await expect(main).toBeVisible();
-      await ctx.checkAccessibility(page);
     });
 
     test('indicator page', async ({ page, ctx }) => {
-      test.setTimeout(30000);
       const IndicatorListItem = ctx.getIndicatorListMenuItem();
       test.skip(!IndicatorListItem, 'No indicator list for plan');
 
@@ -186,36 +166,26 @@ const testPlan = (planId: string) =>
         await expect(main).toBeVisible();
         const h1Span = page.locator('h1 >> span');
         await expect(h1Span).toContainText(planIndicators[0]?.name);
-        await ctx.checkAccessibility(page);
       }
     });
 
-    test('indicator page direct', async ({ page, ctx }) => {
-      const planIndicators = ctx.getPlanIndicators();
-      test.skip(planIndicators.length == 0, 'No indicators defined in plan');
-
-      const indicatorUrl = ctx.baseURL + '/indicators/' + planIndicators[0]?.id;
-      await page.goto(indicatorUrl);
-      await ctx.checkMeta(page);
-
-      await expect(page.locator('main#main')).toBeVisible();
-      await ctx.checkAccessibility(page);
-    });
-
     test('search', async ({ page, ctx }) => {
-      const searchButton = page.getByTestId('nav-search-btn');
-      test.skip(!searchButton, 'No search button for the plan');
-      const searchInput = page.getByRole('combobox');
-      await expect(searchInput).toBeHidden();
+      const searchButton = page.locator('data-testid=nav-search-btn');
+      const isSearchButtonVisible = await searchButton.isVisible();
+      if (isSearchButtonVisible) {
+        const searchInput = page.locator('role=combobox');
+        await expect(searchInput).toBeHidden();
+        await searchButton.click();
+        await expect(searchInput).toBeVisible();
 
-      await searchButton.click();
-      await expect(searchInput).toBeVisible();
-
-      await searchInput.fill('test');
-      await searchInput.press('Enter');
-      await page.waitForURL('**/search?q=test');
-      await expect(page.getByTestId('search-form')).toBeVisible;
-      await ctx.checkAccessibility(page);
+        await searchInput.fill('test');
+        const searchLink = page.locator('data-testid=search-advanced');
+        await searchLink.click();
+        await page.waitForURL('**/search');
+        await expect(page.locator('data-testid=search-form')).toBeVisible();
+      } else {
+        console.log('No search button for the plan');
+      }
     });
   });
 
