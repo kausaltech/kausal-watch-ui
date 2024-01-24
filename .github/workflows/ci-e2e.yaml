@@ -39,7 +39,17 @@ jobs:
             --build-arg YARN_NPM_AUTH_IDENT=${{ secrets.NPM_AUTH_IDENT }} \
             --tag kausal-watch-ui/base \
             --target base .
-
+      - name: Building NextJS bundles
+        run: |
+          docker build \
+            --build-arg SENTRY_ORG=${{ secrets.SENTRY_ORG }} \
+            --build-arg SENTRY_URL=${{ secrets.SENTRY_URL }} \
+            --build-arg SENTRY_PROJECT=${{ secrets.SENTRY_PROJECT }} \
+            --build-arg GIT_REV=${{ github.sha }} \
+            --build-arg GIT_REPO=${{ github.repository }} \
+            --build-arg SENTRY_AUTH_TOKEN=$SENTRY_AUTH_TOKEN \
+            --tag ${{ env.DOCKER_IMAGE }} \
+            .
       - name: Running Playwright e2e tests
         run: docker run --rm --entrypoint '' kausal-watch-ui/base node_modules/.bin/playwright test
         env:
