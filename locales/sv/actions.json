@@ -84,5 +84,6 @@
     "logo": "Logotyp",
     "action-no-tasks_MILESTONE": "Inga milstolpar",
     "action-tasks_MILESTONE": "Milstolpar",
-    "action-tasks-count_MILESTONE": "milstolpar"
+    "action-tasks-count_MILESTONE": "milstolpar",
+    "inactive-actions": "Inaktiva åtgärder"
 }
