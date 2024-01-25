@@ -42,6 +42,7 @@ jobs:
           YARN_NPM_REGISTRY_SERVER: ${{ secrets.NPM_REGISTRY_SERVER }}
 
       - name: Install dependencies
+        continue-on-error: true
         run: yarn install
 
       - name: Playwright install
