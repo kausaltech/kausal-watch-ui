@@ -38,7 +38,7 @@ jobs:
           yarn config set nodeLinker 'node-modules'
 
       - name: Install dependencies
-        run: yarn install
+        run: yarn install --registry ${{ secrets.NPM_REGISTRY_SERVER }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_IDENT }}
 
