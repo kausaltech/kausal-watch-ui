@@ -34,12 +34,12 @@ jobs:
           corepack enable
           yarn set version 3.2.1
           yarn config set nodeLinker 'node-modules'
-          yarn config set npmScopes.kausal/themes-private.npmRegistryServer "$NPM_REGISTRY_SERVER"
+          yarn config set npmScopes.kausal/themes-private.npmRegistryServer "$YARN_NPM_REGISTRY_SERVER"
           yarn config set npmScopes.kausal/themes-private.npmAlwaysAuth true
           yarn config set npmScopes.kausal/themes-private.npmAuthToken $YARN_NPM_AUTH_TOKEN
         env:
           YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_IDENT }}
-          NPM_REGISTRY_SERVER: ${{ secrets.NPM_REGISTRY_SERVER }}
+          YARN_NPM_REGISTRY_SERVER: ${{ secrets.NPM_REGISTRY_SERVER }}
 
       - name: Install dependencies
         run: yarn install
