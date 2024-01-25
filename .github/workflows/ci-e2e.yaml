@@ -41,7 +41,7 @@ jobs:
             --target base .
 
       - name: Running Playwright e2e tests
-        run: docker run --rm --entrypoint '' kausal-watch-ui/base node_modules/.bin/playwright install && node_modules/.bin/playwright test
+        run: docker run --rm --entrypoint '' kausal-watch-ui/base bash -c 'node_modules/.bin/playwright install && node_modules/.bin/playwright test'
         env:
           TEST_PLAN_IDENTIFIERS: ${{ github.event.inputs.plan_identifiers }}
           TEST_PAGE_BASE_URL: ${{ github.event.inputs.frontend_base_url }}
