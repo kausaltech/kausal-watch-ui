@@ -37,6 +37,7 @@ jobs:
           yarn config set npmScopes.kausal.npmRegistryServer "$NPM_REGISTRY_SERVER"
           yarn config set npmScopes.kausal.npmAlwaysAuth true
           yarn config set npmScopes.kausal.npmAuthToken $YARN_NPM_AUTH_TOKEN
+          cat .yarnrc.yml
         env:
           YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_IDENT }}
           NPM_REGISTRY_SERVER: ${{ secrets.NPM_REGISTRY_SERVER }}
