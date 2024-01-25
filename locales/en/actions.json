@@ -62,6 +62,7 @@
   "actions-updated-help-months_one": "Actions that have been updated within the last month",
   "actions-updated-help-months_other": "Actions that have been updated within the last {{count}} months",
   "emission-scopes": "Emission scopes",
+  "inactive-actions": "Inactive actions",
   "no-defined-indicators": "No indicators defined",
   "not-being-implemented": "Not being implemented",
   "not-being-monitored": "Not monitored",
