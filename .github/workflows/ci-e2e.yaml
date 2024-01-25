@@ -36,6 +36,9 @@ jobs:
 
       - name: Install dependencies
         run: yarn install
+        env:
+          YARN_NPM_REGISTRY_SERVER: ${{ secrets.NPM_REGISTRY_SERVER }}
+          YARN_NPM_AUTH_IDENT: ${{ secrets.NPM_AUTH_IDENT }}
 
       - name: Playwright install
         run: node_modules/.bin/playwright install
