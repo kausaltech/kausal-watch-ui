@@ -28,17 +28,20 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
+          cache: 'yarn'
+          always-auth: true
+          registry-url: ${{ secrets.NPM_REGISTRY_SERVER }}
 
       - name: Install yarn
         run: |
           corepack enable
           yarn set version 3.2.1
+          yarn config set nodeLinker 'node-modules'
 
       - name: Install dependencies
         run: yarn install
         env:
-          YARN_NPM_REGISTRY_SERVER: ${{ secrets.NPM_REGISTRY_SERVER }}
-          YARN_NPM_AUTH_IDENT: ${{ secrets.NPM_AUTH_IDENT }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_IDENT }}
 
       - name: Playwright install
         run: node_modules/.bin/playwright install
