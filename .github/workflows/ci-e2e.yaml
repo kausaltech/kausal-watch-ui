@@ -16,8 +16,8 @@ on:
         default: 'https://api.watch.kausal.tech/v1'
 
 jobs:
-  build_e2e_test:
-    name: Build Docker images, run tests
+  e2e_test:
+    name: Run tests
     runs-on: ubuntu-latest
 
     steps:
@@ -29,7 +29,10 @@ jobs:
         with:
           node-version: 18
 
-      - name: Building Docker base container
+      - name: Install yarn
+        run: yarn set version 3.2.1
+
+      - name: Install dependencies
         run: yarn install
 
       - name: Playwright install
