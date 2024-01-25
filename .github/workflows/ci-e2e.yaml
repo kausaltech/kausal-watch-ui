@@ -28,8 +28,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
-          always-auth: true
-          registry-url: ${{ secrets.NPM_REGISTRY_SERVER }}
 
       - name: Install yarn
         run: |
@@ -37,10 +35,17 @@ jobs:
           yarn set version 3.2.1
           yarn config set nodeLinker 'node-modules'
 
-      - name: Install dependencies
-        run: yarn install --registry ${{ secrets.NPM_REGISTRY_SERVER }}
+      - name: Setup .yarnrc.yml
+        run: |
+          yarn config set npmRegistryServer "$NPM_REGISTRY_SERVER"
+          yarn config set npmAlwaysAuth true
+          yarn config set npmAuthToken $NPM_AUTH_TOKEN
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_IDENT }}
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_IDENT }}
+          NPM_REGISTRY_SERVER: ${{ secrets.NPM_REGISTRY_SERVER }}
+
+      - name: Install dependencies
+        run: yarn install
 
       - name: Playwright install
         run: node_modules/.bin/playwright install
