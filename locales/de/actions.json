@@ -84,5 +84,6 @@
     "action-status-merged_CASE_STUDY": "Zusammengeführt mit Fallstudie",
     "action-what-effect-this-has_CASE_STUDY": "Wie diese Fallstudie zum Ergebnis beiträgt",
     "other": "Andere",
-    "logo": "Logo"
+    "logo": "Logo",
+    "inactive-actions": "Inaktive Maßnahmen"
 }
