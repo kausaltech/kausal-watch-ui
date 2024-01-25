@@ -77,5 +77,6 @@
     "action-status-merged_CASE_STUDY": "Sammenlagt med casestudie",
     "action-what-effect-this-has_CASE_STUDY": "Hvordan dette casestudie bidrager til resultatet",
     "action-draft": "Udkast",
-    "other": "Anden"
+    "other": "Anden",
+    "inactive-actions": "Inaktive handlinger"
 }
