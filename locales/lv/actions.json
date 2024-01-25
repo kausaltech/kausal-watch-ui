@@ -84,5 +84,6 @@
     "related-actions": "Saistītās rīcības",
     "org-responsible-in-actions": "Atbildīgi {{actionCount}} rīcības",
     "action-task-show-comment": "Rādīt informāciju",
-    "action-draft": "Projekts"
+    "action-draft": "Projekts",
+    "inactive-actions": "Neaktīvas rīcības"
 }
