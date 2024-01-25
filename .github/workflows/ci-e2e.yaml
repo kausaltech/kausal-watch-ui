@@ -18,31 +18,33 @@ on:
 jobs:
   build_e2e_test:
     name: Build Docker images, run tests
-    runs-on: self-hosted
-    env:
-      DOCKER_IMAGE: docker.kausal.tech/watch-ui
-      DOCKER_BUILDKIT: 1
-      BUILDKIT_PROGRESS: plain
+    runs-on: ubuntu-latest
+
     steps:
       - name: Check out code
         uses: actions/checkout@v3
 
-      - name: Check for deployment branch
-        if: startsWith(github.ref, 'refs/heads/deployment/')
-        run: |
-          echo "DEPLOYMENT_TYPE=$(echo ${{ github.ref }} | cut -d / -f 4)" >> $GITHUB_ENV
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
 
       - name: Building Docker base container
-        run: |
-          docker build \
-            --build-arg YARN_NPM_REGISTRY_SERVER=${{ secrets.NPM_REGISTRY_SERVER }} \
-            --build-arg YARN_NPM_AUTH_IDENT=${{ secrets.NPM_AUTH_IDENT }} \
-            --tag kausal-watch-ui/base \
-            --target base .
+        run: yarn install
+
+      - name: Playwright install
+        run: node_modules/.bin/playwright install
 
       - name: Running Playwright e2e tests
-        run: docker run --rm --entrypoint '' kausal-watch-ui/base sh -c 'node_modules/.bin/playwright install && node_modules/.bin/playwright test'
+        run: node_modules/.bin/playwright test
         env:
           TEST_PLAN_IDENTIFIERS: ${{ github.event.inputs.plan_identifiers }}
           TEST_PAGE_BASE_URL: ${{ github.event.inputs.frontend_base_url }}
           APLANS_API_BASE_URL: ${{ github.event.inputs.backend_base_url }}
+
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 5
