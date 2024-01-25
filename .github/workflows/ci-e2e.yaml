@@ -30,7 +30,9 @@ jobs:
           node-version: 18
 
       - name: Install yarn
-        run: yarn set version 3.2.1
+        run: |
+          corepack enable
+          yarn set version 3.2.1
 
       - name: Install dependencies
         run: yarn install
