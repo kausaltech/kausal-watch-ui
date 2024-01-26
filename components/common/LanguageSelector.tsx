@@ -13,6 +13,22 @@ import { PlanContextFragment } from '@/common/__generated__/graphql';
 import { usePlan } from '@/context/plan';
 import { useApolloClient } from '@apollo/client';
 
+const LanguageSelectorListItem = styled.li`
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+
+  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  @media (max-width: ${(props) => props.theme.breakpointMd}) {
+    display: block;
+  }
+`;
+
 const Selector = styled(UncontrolledDropdown)<{ $mobile: boolean }>`
   a {
     height: 100%;
@@ -117,27 +133,29 @@ const LanguageSelector = (props) => {
     plan.domain?.basePath ? `/${locale}/${plan.domain.basePath}` : `/${locale}`;
 
   return (
-    <Selector inNavbar $mobile={mobile} className={mobile && 'd-md-none'}>
-      <StyledDropdownToggle color="link" data-toggle="dropdown" tag="button">
-        <Icon name="globe" width="1.25rem" height="1.25rem" />
-        <CurrentLanguage $mobile={mobile}>{languageCode}</CurrentLanguage>
-      </StyledDropdownToggle>
-      <StyledDropdownMenu end>
-        {locales.map((locale) => (
-          <DropdownItem key={locale} tag="div">
-            <Link
-              locale={locale}
-              href={getLocaleHref(locale)}
-              // Reset the cache so that stale locale cache isn't used. Required because the
-              // locale isn't passed to query calls as an argument.
-              onClick={() => apolloClient.clearStore()}
-            >
-              {languageNames[locale.split('-')[0]]}
-            </Link>
-          </DropdownItem>
-        ))}
-      </StyledDropdownMenu>
-    </Selector>
+    <LanguageSelectorListItem>
+      <Selector inNavbar $mobile={mobile} className={mobile && 'd-md-none'}>
+        <StyledDropdownToggle color="link" data-toggle="dropdown" tag="button">
+          <Icon name="globe" width="1.25rem" height="1.25rem" />
+          <CurrentLanguage $mobile={mobile}>{languageCode}</CurrentLanguage>
+        </StyledDropdownToggle>
+        <StyledDropdownMenu end>
+          {locales.map((locale) => (
+            <DropdownItem key={locale} tag="div">
+              <Link
+                locale={locale}
+                href={getLocaleHref(locale)}
+                // Reset the cache so that stale locale cache isn't used. Required because the
+                // locale isn't passed to query calls as an argument.
+                onClick={() => apolloClient.clearStore()}
+              >
+                {languageNames[locale.split('-')[0]]}
+              </Link>
+            </DropdownItem>
+          ))}
+        </StyledDropdownMenu>
+      </Selector>
+    </LanguageSelectorListItem>
   );
 };
 
