@@ -34,19 +34,13 @@ jobs:
           corepack enable
           yarn set version 3.2.1
           yarn config set nodeLinker 'node-modules'
-          yarn config set npmScopes.kausal.npmRegistryServer "$YARN_NPM_REGISTRY_SERVER"
+          yarn config set npmScopes.kausal.npmRegistryServer "${{ secrets.NPM_REGISTRY_SERVER }}"
           yarn config set npmScopes.kausal.npmAlwaysAuth true
-          yarn config set npmScopes.kausal.npmAuthIdent $YARN_NPM_AUTH_IDENT
-        env:
-          YARN_NPM_AUTH_IDENT: ${{ secrets.NPM_AUTH_IDENT }}
-          YARN_NPM_REGISTRY_SERVER: ${{ secrets.NPM_REGISTRY_SERVER }}
+          yarn config set npmScopes.kausal.npmAuthIdent ${{ secrets.NPM_AUTH_IDENT }}
 
       - name: Install dependencies
         continue-on-error: true
         run: yarn install
-        env:
-          YARN_NPM_AUTH_IDENT: ${{ secrets.NPM_AUTH_IDENT }}
-          YARN_NPM_REGISTRY_SERVER: ${{ secrets.NPM_REGISTRY_SERVER }}
 
       - name: Playwright install
         run: node_modules/.bin/playwright install
