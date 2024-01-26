@@ -270,6 +270,8 @@ const GET_PLAN_CONTEXT = gql`
     }
     actionListPage {
       includeRelatedPlans
+      actionDateFormat
+      taskDateFormat
     }
   }
   ${images.fragments.multiUseImage}

@@ -11,9 +11,11 @@ import { useTheme } from 'styled-components';
 import dayjs from 'common/dayjs';
 import Icon from 'components/common/Icon';
 import RichText from 'components/common/RichText';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
+import { usePlan } from 'context/plan';
+import { getDateFormat } from 'utils/dates.utils';
 
-const Date = styled.span`
+const StyledDate = styled.span`
   font-size: ${(props) => props.theme.fontSizeSm};
   font-family: ${(props) => props.theme.fontFamilyTiny};
   margin-left: ${(props) => props.theme.spaces.s025};
@@ -118,9 +120,17 @@ function parseTimestamp(timestamp) {
 
 const Task = (props) => {
   const t = useTranslations();
+  const locale = useLocale();
   const { task, theme, completed } = props;
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
+  const plan = usePlan();
+
+  const dateFormat = task.dateFormat || plan.actionListPage.taskDateFormat;
+  const formattedDueAt = new Date(task.dueAt).toLocaleDateString(
+    locale,
+    getDateFormat(dateFormat)
+  );
 
   return (
     <TaskWrapper>
@@ -131,7 +141,7 @@ const Task = (props) => {
             color={theme.graphColors.green050}
             alt={t('action-task-done')}
           />
-          <Date>{parseTimestamp(task.completedAt)}</Date>
+          <StyledDate>{parseTimestamp(task.completedAt)}</StyledDate>
         </TaskMeta>
       ) : (
         <TaskMeta>
@@ -140,7 +150,7 @@ const Task = (props) => {
             color={theme.graphColors.blue070}
             alt={t('action-task-todo')}
           />
-          <Date>{parseTimestamp(task.dueAt)}</Date>
+          <StyledDate>{formattedDueAt}</StyledDate>
         </TaskMeta>
       )}
       <TaskContent>
