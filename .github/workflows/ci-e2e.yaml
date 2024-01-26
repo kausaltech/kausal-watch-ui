@@ -37,11 +37,8 @@ jobs:
           yarn config set npmScopes.kausal.npmRegistryServer "$YARN_NPM_REGISTRY_SERVER"
           yarn config set npmScopes.kausal.npmAlwaysAuth true
           yarn config set npmScopes.kausal.npmAuthIdent $YARN_NPM_AUTH_IDENT
-          yarn config set npmScopes.kausal.npmAuthToken $YARN_NPM_AUTH_TOKEN
-          cat .yarnrc.yaml
         env:
           YARN_NPM_AUTH_IDENT: ${{ secrets.NPM_AUTH_IDENT }}
-          YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
           YARN_NPM_REGISTRY_SERVER: ${{ secrets.NPM_REGISTRY_SERVER }}
 
       - name: Install dependencies
@@ -49,7 +46,6 @@ jobs:
         run: yarn install
         env:
           YARN_NPM_AUTH_IDENT: ${{ secrets.NPM_AUTH_IDENT }}
-          YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
           YARN_NPM_REGISTRY_SERVER: ${{ secrets.NPM_REGISTRY_SERVER }}
 
       - name: Playwright install
