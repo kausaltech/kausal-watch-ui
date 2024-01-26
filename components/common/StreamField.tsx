@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { Container, Row, Col, ColProps } from 'reactstrap';
 import { gql } from '@apollo/client';
+import { ColumnProps } from 'reactstrap/types/lib/Col';
 import PlanContext from 'context/plan';
 import images, { getBgImageAlignment } from 'common/images';
 import RichText from 'components/common/RichText';
@@ -100,6 +101,7 @@ const STREAM_FIELD_FRAGMENT = gql`
       }
     }
     ... on AdaptiveEmbedBlock {
+      fullWidth
       embed {
         html
       }
@@ -575,19 +577,33 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
       return <CategoryTreeBlock {...block} id={id} hasSidebar={hasSidebar} />;
     }
     case 'AdaptiveEmbedBlock': {
+      const fullWidth = block.fullWidth || false;
+      const html = block.embed?.html;
+
+      function getColSize(defaultSize: ColumnProps): ColumnProps {
+        if (fullWidth) {
+          return hasSidebar ? { size: 11, offset: 1 } : { size: 12, offset: 0 };
+        }
+
+        return defaultSize;
+      }
+
       return (
         <Container id={id}>
           <Row>
             <Col
-              xl={{ size: hasSidebar ? 7 : 6, offset: hasSidebar ? 4 : 3 }}
-              lg={{ size: 8, offset: hasSidebar ? 4 : 2 }}
-              md={{ size: 10, offset: 1 }}
+              xl={getColSize({
+                size: hasSidebar ? 7 : 6,
+                offset: hasSidebar ? 4 : 3,
+              })}
+              lg={getColSize({ size: 8, offset: hasSidebar ? 4 : 2 })}
+              md={getColSize({ size: 10, offset: 1 })}
               className="my-4"
               {...columnProps}
             >
-              <ResponsiveStyles
-                dangerouslySetInnerHTML={{ __html: block.embed.html }}
-              ></ResponsiveStyles>
+              {!!html && (
+                <ResponsiveStyles dangerouslySetInnerHTML={{ __html: html }} />
+              )}
             </Col>
           </Row>
         </Container>
