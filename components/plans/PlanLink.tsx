@@ -28,9 +28,24 @@ interface Props {
   plan: PlanContextType | NonNullable<PlanContextType['allRelatedPlans'][0]>;
 }
 
+const isLocalLink = (link: string) => link.endsWith('.localhost');
+
+function appendPort(link?: string) {
+  if (typeof link !== 'string') {
+    return link;
+  }
+
+  if (isLocalLink(link)) {
+    return `${link}:3000`;
+  }
+
+  return link;
+}
+
 const PlanLink = ({ plan }: Props) => {
   const theme = useTheme();
-  const localizedPlanUrl = useLocalizedLink(plan.viewUrl ?? '');
+  const viewUrl = plan.viewUrl ?? undefined;
+  const localizedPlanUrl = useLocalizedLink(appendPort(viewUrl) ?? '');
 
   if (!plan.viewUrl) {
     return null;

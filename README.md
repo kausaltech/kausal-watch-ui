@@ -27,7 +27,7 @@ Preview the application locally on http://localhost:3000/
 #### Environment variables
 
 Define the following variables in `.env` if you need to override them for local development.
-Variables prefixed with `NEXT_` are build-time variables, which are available in client components. When using environment variables in client-side code, import them from `@/common/environment` to support fallbacks.
+Variables prefixed with `NEXT_PUBLIC_` are build-time variables, which are available in client components. When using environment variables in client-side code, import them from `@/common/environment` to support fallbacks.
 
 - `NEXT_PUBLIC_API_URL` (previously APLANS_API_BASE_URL): Configure a custom API URL, e.g. staging or a local backend.
 - `NEXT_PUBLIC_DEPLOYMENT_TYPE`: Change the deployment type, e.g. `staging` or `production`.
