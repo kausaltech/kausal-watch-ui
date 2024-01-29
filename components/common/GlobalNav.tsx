@@ -591,11 +591,16 @@ function GlobalNav(props) {
                   )
                 )}
               {plan.features.enableSearch && (
-                <NavItem className="d-md-none">
+                <NavItem className="d-md-none mb-2">
                   <NavLink>
                     <NavigationLink slug="/search" onClick={handleClose}>
-                      <NavHighlighter>
-                        <Icon name="search" className="me-2" />
+                      <NavHighlighter className="highlighter">
+                        <Icon
+                          name="search"
+                          className="me-2"
+                          width="1.75rem"
+                          height="1.75rem"
+                        />
                         {t('search')}
                       </NavHighlighter>
                     </NavigationLink>
