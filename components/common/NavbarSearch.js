@@ -1,4 +1,5 @@
-import { useState, useRef, useEffect } from 'react';
+'use client';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
 import { InputGroup } from 'reactstrap';
 import { usePopper } from 'react-popper';
@@ -11,7 +12,7 @@ import PlanChip from 'components/plans/PlanChip';
 import { usePlan } from 'context/plan';
 import { useApolloClient } from '@apollo/client';
 import { getActionTermContext } from 'common/i18n';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 
 const TextInput = styled.input`
   display: ${(props) => (props.$isOpen ? 'block' : 'hidden')};
@@ -183,6 +184,8 @@ const Arrow = styled.div`
   }
 `;
 
+const RESULTS_LIMIT = 4;
+
 function ResultItem(props) {
   const t = useTranslations();
   const plan = usePlan();
@@ -231,10 +234,9 @@ function ResultItem(props) {
 }
 
 const ResultList = (props) => {
-  const { results, searchTerm } = props;
+  const { results, searchTerm, loading } = props;
   const t = useTranslations();
   //const plan = usePlan();
-  const RESULTS_LIMIT = 4;
   const counts = [
     {
       name: 'Pages',
@@ -253,6 +255,7 @@ const ResultList = (props) => {
     },
   ];
 
+  if (loading) return <div>...</div>;
   // FIXME: can we limit the number of results earlier?
   // We could show { counts.map((count) => count.count > 0 ? `${count.name}: ${count.count} ` : '' ) }
   return (
@@ -298,11 +301,14 @@ function NavbarSearch() {
   const plan = usePlan();
   const apolloClient = useApolloClient();
   const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   if (!plan.features.enableSearch) {
     return null;
   }
 
+  // TODO: Translate a11y text
   const connector = new WatchSearchAPIConnector({ plan, apolloClient });
   return (
     <SearchProvider
@@ -312,7 +318,7 @@ function NavbarSearch() {
         hasA11yNotifications: true,
         a11yNotificationMessages: {
           searchResults: ({ start, end, totalResults, searchTerm }) =>
-            `Searching for "${searchTerm}". Showing ${start} to ${end} results out of ${totalResults}.`,
+            `Searching for "${searchTerm}". Showing first ${RESULTS_LIMIT} results out of ${totalResults}.`,
         },
       }}
     >
@@ -335,7 +341,7 @@ function NavbarSearch() {
           const [popperElement, setPopperElement] = useState(null);
           const [arrowElement, setArrowElement] = useState(null);
           const [searchOpen, setSearchOpen] = useState(false);
-          const searchElement = useRef();
+          const searchElement = useRef(null);
 
           // Clear search term if the input is hidden
           const closeSearch = () => {
@@ -343,11 +349,12 @@ function NavbarSearch() {
             setSearchTerm('');
           };
 
+          const handlePageClick = useCallback((e) => {
+            if (!searchElement.current.contains(e.target)) closeSearch();
+          }, []);
+
           // Close results modal if clicked outside search ui
           useEffect(() => {
-            const handlePageClick = (e) => {
-              if (!searchElement.current.contains(e.target)) closeSearch();
-            };
             searchOpen &&
               document.addEventListener('mousedown', handlePageClick);
             return () => {
@@ -378,10 +385,7 @@ function NavbarSearch() {
               searchInput.current.focus();
               setSearchOpen(true);
             } else if (searchInput.current.value) {
-              router.push({
-                pathname: '/search',
-                query: { q: searchTerm },
-              });
+              router.push(`/search?q=${searchTerm}`);
               closeSearch();
             } else closeSearch();
           };
@@ -389,7 +393,11 @@ function NavbarSearch() {
           return (
             <>
               <SearchControls ref={setReferenceElement}>
-                <form autoComplete="off" aria-label={t('search')}>
+                <form
+                  autoComplete="off"
+                  aria-label={t('search')}
+                  ref={searchElement}
+                >
                   <InputGroup>
                     <TextInput
                       type="search"
@@ -444,7 +452,8 @@ function NavbarSearch() {
                   <ResultList
                     results={results}
                     searchTerm={searchTerm}
-                    anchor={referenceElement}
+                    anchor={searchElement}
+                    loading={isLoading}
                   />
                 </ResultsBox>
               )}
