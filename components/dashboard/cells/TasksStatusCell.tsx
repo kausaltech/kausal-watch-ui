@@ -1,8 +1,8 @@
-import { useTranslation } from 'next-i18next';
 import styled from 'styled-components';
 import { PlanContextFragment } from 'common/__generated__/graphql';
 import { getActionTaskTermContext } from 'common/i18n';
 import { ActionListAction } from '../dashboard.types';
+import { useTranslations } from 'next-intl';
 
 interface Props {
   action: ActionListAction;
@@ -38,9 +38,9 @@ export const getTaskCounts = (
 
   const displayTasksCount =
     tasksCount === 0
-      ? t('actions:action-no-tasks', getActionTaskTermContext(plan))
+      ? t('action-no-tasks', getActionTaskTermContext(plan))
       : `${tasksCount} ${t(
-          'actions:action-tasks-count',
+          'action-tasks-count',
           getActionTaskTermContext(plan)
         )}`;
 
@@ -90,7 +90,7 @@ const VizLabel = styled.div`
 `;
 
 const TasksStatusCell = ({ action, plan }: Props) => {
-  const { t } = useTranslation(['common', 'actions']);
+  const t = useTranslations();
   const taskCounts = getTaskCounts(action.tasks, plan, t);
 
   return (

@@ -1,19 +1,22 @@
+const { apiUrl } = require('./common/environment');
+
 require('dotenv').config();
 
 module.exports = {
   client: {
     includes: [
-      'pages/**/*.{js,tsx}',
-      'components/**/*.{js,tsx}',
-      'common/**/*.{js,tsx}',
-      'context/**/*.{js,tsx}',
+      'app/**/*.{js,ts,tsx}',
+      'common/**/*.{js,ts,tsx}',
+      'components/**/*.{js,ts,tsx}',
+      'context/**/*.{js,ts,tsx}',
       'e2e-tests/**/*.ts',
+      'fragments/**/*.{js,ts,tsx}',
+      'pages/**/*.{js,ts,tsx}',
+      'queries/**/*.{js,ts,tsx}',
     ],
     service: {
       name: 'kausal-watch-backend',
-      url: `${
-        process.env.APLANS_API_BASE_URL || 'https://api.watch.kausal.tech/v1'
-      }/graphql/`,
+      url: `${apiUrl}/graphql/`,
     },
   },
 };

@@ -4118,6 +4118,28 @@ export enum UserFeedbackType {
   A = 'A_'
 }
 
+export type GetSitemapQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type GetSitemapQuery = (
+  { planIndicators?: Array<(
+    { id: string }
+    & { __typename?: 'Indicator' }
+  ) | null> | null, plan?: (
+    { primaryLanguage: string, otherLanguages?: Array<string> | null, actions: Array<(
+      { identifier: string }
+      & { __typename?: 'Action' }
+    )>, pages?: Array<(
+      { urlPath: string }
+      & { __typename?: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PrivacyPolicyPage' | 'StaticPage' }
+    ) | null> | null }
+    & { __typename?: 'Plan' }
+  ) | null }
+  & { __typename?: 'Query' }
+);
+
 export type MultiUseImageFragmentFragment = (
   { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
     { id: string, width: number, height: number, src: string }
@@ -4138,2360 +4160,48 @@ export type MultiUseImageFragmentFragment = (
   & { __typename?: 'Image' }
 );
 
-export type ActionCardFragment = (
-  { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, completion?: number | null, status?: (
-    { id: string, identifier: string, name: string, color?: string | null }
-    & { __typename?: 'ActionStatus' }
-  ) | null, categories: Array<(
-    { id: string, identifier: string, name: string, iconSvgUrl?: string | null, type: (
-      { id: string }
-      & { __typename?: 'CategoryType' }
-    ) }
-    & { __typename?: 'Category' }
-  )>, statusSummary: (
-    { identifier: ActionStatusSummaryIdentifier }
-    & { __typename?: 'ActionStatusSummary' }
-  ), implementationPhase?: (
-    { id: string, identifier: string, name: string }
-    & { __typename?: 'ActionImplementationPhase' }
-  ) | null, primaryOrg?: (
-    { id: string, abbreviation: string, name: string, logo?: (
-      { rendition?: (
-        { src: string }
-        & { __typename?: 'ImageRendition' }
-      ) | null }
-      & { __typename?: 'Image' }
-    ) | null }
-    & { __typename?: 'Organization' }
-  ) | null, mergedWith?: (
-    { id: string, identifier: string, plan: (
-      { id: string, shortName?: string | null, versionName: string, viewUrl?: string | null }
-      & { __typename?: 'Plan' }
-    ) }
-    & { __typename?: 'Action' }
-  ) | null, plan: (
-    { id: string, shortName?: string | null, versionName: string, viewUrl?: string | null, hideActionIdentifiers?: boolean | null, publishedAt?: any | null, image?: (
-      { rendition?: (
-        { src: string }
-        & { __typename?: 'ImageRendition' }
-      ) | null }
-      & { __typename?: 'Image' }
-    ) | null }
-    & { __typename?: 'Plan' }
-  ) }
-  & { __typename?: 'Action' }
-);
-
-export type GetActionDetailsQueryVariables = Exact<{
+export type GetAutocompleteResultsQueryVariables = Exact<{
   plan: Scalars['ID'];
-  id: Scalars['ID'];
-  clientUrl: Scalars['String'];
+  term: Scalars['String'];
 }>;
 
 
-export type GetActionDetailsQuery = (
-  { action?: (
-    { id: string, identifier: string, name: string, officialName?: string | null, leadParagraph: string, description?: string | null, completion?: number | null, color?: string | null, updatedAt: any, manualStatusReason?: string | null, scheduleContinuous: boolean, startDate?: any | null, endDate?: any | null, image?: (
-      { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-        { id: string, width: number, height: number, src: string }
-        & { __typename?: 'ImageRendition' }
-      ) | null, large?: (
-        { id: string, width: number, height: number, src: string }
-        & { __typename?: 'ImageRendition' }
-      ) | null, small?: (
-        { id: string, width: number, height: number, src: string }
-        & { __typename?: 'ImageRendition' }
-      ) | null, social?: (
-        { id: string, width: number, height: number, src: string }
-        & { __typename?: 'ImageRendition' }
-      ) | null, rendition?: (
-        { id: string, width: number, height: number, src: string }
-        & { __typename?: 'ImageRendition' }
-      ) | null }
-      & { __typename?: 'Image' }
-    ) | null, statusSummary: (
-      { identifier: ActionStatusSummaryIdentifier, label: string, color: string, sentiment: Sentiment, isCompleted: boolean, isActive: boolean }
-      & { __typename?: 'ActionStatusSummary' }
-    ), links: Array<(
-      { id: string, order: number, url: string, title: string }
-      & { __typename?: 'ActionLink' }
-    )>, mergedActions: Array<(
-      { id: string, identifier: string, name: string, officialName?: string | null, plan: (
-        { id: string, viewUrl?: string | null }
+export type GetAutocompleteResultsQuery = (
+  { search?: (
+    { hits?: Array<(
+      { id?: string | null, title?: string | null, url?: string | null, highlight?: string | null, plan?: (
+        { identifier: string, name: string, shortName?: string | null, image?: (
+          { rendition?: (
+            { src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null }
+          & { __typename?: 'Image' }
+        ) | null }
         & { __typename?: 'Plan' }
-      ) }
-      & { __typename?: 'Action' }
-    )>, categories: Array<(
-      { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, iconImage?: (
-        { rendition?: (
-          { src: string }
-          & { __typename?: 'ImageRendition' }
+      ) | null, object?: (
+        { identifier: string }
+        & { __typename: 'Action' }
+      ) | (
+        { id: string }
+        & { __typename: 'Indicator' }
+      ) | null, page?: (
+        { title: string }
+        & { __typename?: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PrivacyPolicyPage' | 'StaticPage' }
+      ) | (
+        { title: string, category?: (
+          { level?: (
+            { name: string }
+            & { __typename?: 'CategoryLevel' }
+          ) | null }
+          & { __typename?: 'Category' }
         ) | null }
-        & { __typename?: 'Image' }
-      ) | null, type: (
-        { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-        & { __typename?: 'CategoryType' }
-      ), level?: (
-        { id: string, name: string, namePlural?: string | null }
-        & { __typename?: 'CategoryLevel' }
-      ) | null, image?: (
-        { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null, large?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null, small?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null, social?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null, rendition?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null }
-        & { __typename?: 'Image' }
-      ) | null, categoryPage?: (
-        { title: string, urlPath: string }
         & { __typename?: 'CategoryPage' }
-      ) | null, parent?: (
-        { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-          { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-            { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, iconImage?: (
-              { rendition?: (
-                { src: string }
-                & { __typename?: 'ImageRendition' }
-              ) | null }
-              & { __typename?: 'Image' }
-            ) | null, type: (
-              { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-              & { __typename?: 'CategoryType' }
-            ), level?: (
-              { id: string, name: string, namePlural?: string | null }
-              & { __typename?: 'CategoryLevel' }
-            ) | null, image?: (
-              { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-                { id: string, width: number, height: number, src: string }
-                & { __typename?: 'ImageRendition' }
-              ) | null, large?: (
-                { id: string, width: number, height: number, src: string }
-                & { __typename?: 'ImageRendition' }
-              ) | null, small?: (
-                { id: string, width: number, height: number, src: string }
-                & { __typename?: 'ImageRendition' }
-              ) | null, social?: (
-                { id: string, width: number, height: number, src: string }
-                & { __typename?: 'ImageRendition' }
-              ) | null, rendition?: (
-                { id: string, width: number, height: number, src: string }
-                & { __typename?: 'ImageRendition' }
-              ) | null }
-              & { __typename?: 'Image' }
-            ) | null, categoryPage?: (
-              { title: string, urlPath: string }
-              & { __typename?: 'CategoryPage' }
-            ) | null }
-            & { __typename?: 'Category' }
-          ) | null, iconImage?: (
-            { rendition?: (
-              { src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null }
-            & { __typename?: 'Image' }
-          ) | null, type: (
-            { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-            & { __typename?: 'CategoryType' }
-          ), level?: (
-            { id: string, name: string, namePlural?: string | null }
-            & { __typename?: 'CategoryLevel' }
-          ) | null, image?: (
-            { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, large?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, small?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, social?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, rendition?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null }
-            & { __typename?: 'Image' }
-          ) | null, categoryPage?: (
-            { title: string, urlPath: string }
-            & { __typename?: 'CategoryPage' }
-          ) | null }
-          & { __typename?: 'Category' }
-        ) | null, iconImage?: (
-          { rendition?: (
-            { src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null }
-          & { __typename?: 'Image' }
-        ) | null, type: (
-          { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-          & { __typename?: 'CategoryType' }
-        ), level?: (
-          { id: string, name: string, namePlural?: string | null }
-          & { __typename?: 'CategoryLevel' }
-        ) | null, image?: (
-          { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null, large?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null, small?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null, social?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null, rendition?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null }
-          & { __typename?: 'Image' }
-        ) | null, categoryPage?: (
-          { title: string, urlPath: string }
-          & { __typename?: 'CategoryPage' }
-        ) | null }
-        & { __typename?: 'Category' }
       ) | null }
-      & { __typename?: 'Category' }
-    )>, emissionScopes: Array<(
-      { id: string, identifier: string, name: string, leadParagraph: string }
-      & { __typename?: 'Category' }
-    )>, contactPersons: Array<(
-      { id: string, person: (
-        { id: string, firstName: string, lastName: string, avatarUrl?: string | null, title?: string | null, organization: (
-          { name: string }
-          & { __typename?: 'Organization' }
-        ) }
-        & { __typename?: 'Person' }
-      ) }
-      & { __typename?: 'ActionContactPerson' }
-    )>, primaryOrg?: (
-      { id: string, abbreviation: string, name: string, logo?: (
-        { rendition?: (
-          { src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null }
-        & { __typename?: 'Image' }
-      ) | null }
-      & { __typename?: 'Organization' }
-    ) | null, responsibleParties: Array<(
-      { id: string, role?: ActionResponsiblePartyRole | null, specifier: string, organization: (
-        { id: string, abbreviation: string, name: string, email: string }
-        & { __typename?: 'Organization' }
-      ) }
-      & { __typename?: 'ActionResponsibleParty' }
-    )>, tasks: Array<(
-      { id: string, name: string, dueAt: any, completedAt?: any | null, comment?: string | null, state: ActionTaskState }
-      & { __typename?: 'ActionTask' }
-    )>, status?: (
-      { id: string, identifier: string, name: string, color?: string | null }
-      & { __typename?: 'ActionStatus' }
-    ) | null, implementationPhase?: (
-      { id: string, identifier: string, name: string }
-      & { __typename?: 'ActionImplementationPhase' }
-    ) | null, schedule: Array<(
-      { id: string, name: string, beginsAt: any, endsAt?: any | null }
-      & { __typename?: 'ActionSchedule' }
-    )>, impact?: (
-      { id: string, identifier: string, name: string }
-      & { __typename?: 'ActionImpact' }
-    ) | null, statusUpdates: Array<(
-      { id: string }
-      & { __typename?: 'ActionStatusUpdate' }
-    )>, relatedIndicators: Array<(
-      { id: string, indicator: (
-        { id: string, name: string, latestGraph?: (
-          { id: string }
-          & { __typename?: 'IndicatorGraph' }
-        ) | null, latestValue?: (
-          { id: string, date?: string | null, value: number }
-          & { __typename?: 'IndicatorValue' }
-        ) | null, actions?: Array<(
-          { id: string, identifier: string, name: string }
-          & { __typename?: 'Action' }
-        ) | null> | null, plans: Array<(
-          { id: string }
-          & { __typename?: 'Plan' }
-        )> }
-        & { __typename?: 'Indicator' }
-      ) }
-      & { __typename?: 'ActionIndicator' }
-    )>, relatedActions: Array<(
-      { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, completion?: number | null, status?: (
-        { id: string, identifier: string, name: string, color?: string | null }
-        & { __typename?: 'ActionStatus' }
-      ) | null, categories: Array<(
-        { id: string, identifier: string, name: string, iconSvgUrl?: string | null, type: (
-          { id: string }
-          & { __typename?: 'CategoryType' }
-        ) }
-        & { __typename?: 'Category' }
-      )>, statusSummary: (
-        { identifier: ActionStatusSummaryIdentifier }
-        & { __typename?: 'ActionStatusSummary' }
-      ), implementationPhase?: (
-        { id: string, identifier: string, name: string }
-        & { __typename?: 'ActionImplementationPhase' }
-      ) | null, primaryOrg?: (
-        { id: string, abbreviation: string, name: string, logo?: (
-          { rendition?: (
-            { src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null }
-          & { __typename?: 'Image' }
-        ) | null }
-        & { __typename?: 'Organization' }
-      ) | null, mergedWith?: (
-        { id: string, identifier: string, plan: (
-          { id: string, shortName?: string | null, versionName: string, viewUrl?: string | null }
-          & { __typename?: 'Plan' }
-        ) }
-        & { __typename?: 'Action' }
-      ) | null, plan: (
-        { id: string, shortName?: string | null, versionName: string, viewUrl?: string | null, hideActionIdentifiers?: boolean | null, publishedAt?: any | null, image?: (
-          { rendition?: (
-            { src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null }
-          & { __typename?: 'Image' }
-        ) | null }
-        & { __typename?: 'Plan' }
-      ) }
-      & { __typename?: 'Action' }
-    )>, mergedWith?: (
-      { id: string, identifier: string, plan: (
-        { id: string, shortName?: string | null, versionName: string, viewUrl?: string | null }
-        & { __typename?: 'Plan' }
-      ) }
-      & { __typename?: 'Action' }
-    ) | null, supersededBy?: (
-      { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, completion?: number | null, status?: (
-        { id: string, identifier: string, name: string, color?: string | null }
-        & { __typename?: 'ActionStatus' }
-      ) | null, categories: Array<(
-        { id: string, identifier: string, name: string, iconSvgUrl?: string | null, type: (
-          { id: string }
-          & { __typename?: 'CategoryType' }
-        ) }
-        & { __typename?: 'Category' }
-      )>, statusSummary: (
-        { identifier: ActionStatusSummaryIdentifier }
-        & { __typename?: 'ActionStatusSummary' }
-      ), implementationPhase?: (
-        { id: string, identifier: string, name: string }
-        & { __typename?: 'ActionImplementationPhase' }
-      ) | null, primaryOrg?: (
-        { id: string, abbreviation: string, name: string, logo?: (
-          { rendition?: (
-            { src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null }
-          & { __typename?: 'Image' }
-        ) | null }
-        & { __typename?: 'Organization' }
-      ) | null, mergedWith?: (
-        { id: string, identifier: string, plan: (
-          { id: string, shortName?: string | null, versionName: string, viewUrl?: string | null }
-          & { __typename?: 'Plan' }
-        ) }
-        & { __typename?: 'Action' }
-      ) | null, plan: (
-        { id: string, shortName?: string | null, versionName: string, viewUrl?: string | null, hideActionIdentifiers?: boolean | null, publishedAt?: any | null, image?: (
-          { rendition?: (
-            { src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null }
-          & { __typename?: 'Image' }
-        ) | null }
-        & { __typename?: 'Plan' }
-      ) }
-      & { __typename?: 'Action' }
-    ) | null, supersededActions: Array<(
-      { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, completion?: number | null, status?: (
-        { id: string, identifier: string, name: string, color?: string | null }
-        & { __typename?: 'ActionStatus' }
-      ) | null, categories: Array<(
-        { id: string, identifier: string, name: string, iconSvgUrl?: string | null, type: (
-          { id: string }
-          & { __typename?: 'CategoryType' }
-        ) }
-        & { __typename?: 'Category' }
-      )>, statusSummary: (
-        { identifier: ActionStatusSummaryIdentifier }
-        & { __typename?: 'ActionStatusSummary' }
-      ), implementationPhase?: (
-        { id: string, identifier: string, name: string }
-        & { __typename?: 'ActionImplementationPhase' }
-      ) | null, primaryOrg?: (
-        { id: string, abbreviation: string, name: string, logo?: (
-          { rendition?: (
-            { src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null }
-          & { __typename?: 'Image' }
-        ) | null }
-        & { __typename?: 'Organization' }
-      ) | null, mergedWith?: (
-        { id: string, identifier: string, plan: (
-          { id: string, shortName?: string | null, versionName: string, viewUrl?: string | null }
-          & { __typename?: 'Plan' }
-        ) }
-        & { __typename?: 'Action' }
-      ) | null, plan: (
-        { id: string, shortName?: string | null, versionName: string, viewUrl?: string | null, hideActionIdentifiers?: boolean | null, publishedAt?: any | null, image?: (
-          { rendition?: (
-            { src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null }
-          & { __typename?: 'Image' }
-        ) | null }
-        & { __typename?: 'Plan' }
-      ) }
-      & { __typename?: 'Action' }
-    )>, nextAction?: (
-      { id: string, identifier: string }
-      & { __typename?: 'Action' }
-    ) | null, previousAction?: (
-      { id: string, identifier: string }
-      & { __typename?: 'Action' }
-    ) | null, attributes: Array<(
-      { id: string, categories: Array<(
-        { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, iconImage?: (
-          { rendition?: (
-            { src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null }
-          & { __typename?: 'Image' }
-        ) | null, type: (
-          { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-          & { __typename?: 'CategoryType' }
-        ), level?: (
-          { id: string, name: string, namePlural?: string | null }
-          & { __typename?: 'CategoryLevel' }
-        ) | null, image?: (
-          { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null, large?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null, small?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null, social?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null, rendition?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null }
-          & { __typename?: 'Image' }
-        ) | null, categoryPage?: (
-          { title: string, urlPath: string }
-          & { __typename?: 'CategoryPage' }
-        ) | null, parent?: (
-          { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-            { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-              { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, iconImage?: (
-                { rendition?: (
-                  { src: string }
-                  & { __typename?: 'ImageRendition' }
-                ) | null }
-                & { __typename?: 'Image' }
-              ) | null, type: (
-                { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-                & { __typename?: 'CategoryType' }
-              ), level?: (
-                { id: string, name: string, namePlural?: string | null }
-                & { __typename?: 'CategoryLevel' }
-              ) | null, image?: (
-                { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-                  { id: string, width: number, height: number, src: string }
-                  & { __typename?: 'ImageRendition' }
-                ) | null, large?: (
-                  { id: string, width: number, height: number, src: string }
-                  & { __typename?: 'ImageRendition' }
-                ) | null, small?: (
-                  { id: string, width: number, height: number, src: string }
-                  & { __typename?: 'ImageRendition' }
-                ) | null, social?: (
-                  { id: string, width: number, height: number, src: string }
-                  & { __typename?: 'ImageRendition' }
-                ) | null, rendition?: (
-                  { id: string, width: number, height: number, src: string }
-                  & { __typename?: 'ImageRendition' }
-                ) | null }
-                & { __typename?: 'Image' }
-              ) | null, categoryPage?: (
-                { title: string, urlPath: string }
-                & { __typename?: 'CategoryPage' }
-              ) | null }
-              & { __typename?: 'Category' }
-            ) | null, iconImage?: (
-              { rendition?: (
-                { src: string }
-                & { __typename?: 'ImageRendition' }
-              ) | null }
-              & { __typename?: 'Image' }
-            ) | null, type: (
-              { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-              & { __typename?: 'CategoryType' }
-            ), level?: (
-              { id: string, name: string, namePlural?: string | null }
-              & { __typename?: 'CategoryLevel' }
-            ) | null, image?: (
-              { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-                { id: string, width: number, height: number, src: string }
-                & { __typename?: 'ImageRendition' }
-              ) | null, large?: (
-                { id: string, width: number, height: number, src: string }
-                & { __typename?: 'ImageRendition' }
-              ) | null, small?: (
-                { id: string, width: number, height: number, src: string }
-                & { __typename?: 'ImageRendition' }
-              ) | null, social?: (
-                { id: string, width: number, height: number, src: string }
-                & { __typename?: 'ImageRendition' }
-              ) | null, rendition?: (
-                { id: string, width: number, height: number, src: string }
-                & { __typename?: 'ImageRendition' }
-              ) | null }
-              & { __typename?: 'Image' }
-            ) | null, categoryPage?: (
-              { title: string, urlPath: string }
-              & { __typename?: 'CategoryPage' }
-            ) | null }
-            & { __typename?: 'Category' }
-          ) | null, iconImage?: (
-            { rendition?: (
-              { src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null }
-            & { __typename?: 'Image' }
-          ) | null, type: (
-            { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-            & { __typename?: 'CategoryType' }
-          ), level?: (
-            { id: string, name: string, namePlural?: string | null }
-            & { __typename?: 'CategoryLevel' }
-          ) | null, image?: (
-            { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, large?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, small?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, social?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, rendition?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null }
-            & { __typename?: 'Image' }
-          ) | null, categoryPage?: (
-            { title: string, urlPath: string }
-            & { __typename?: 'CategoryPage' }
-          ) | null }
-          & { __typename?: 'Category' }
-        ) | null }
-        & { __typename?: 'Category' }
-      )>, type: (
-        { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
-          { id: string, name: string, shortName?: string | null }
-          & { __typename?: 'Unit' }
-        ) | null }
-        & { __typename?: 'AttributeType' }
-      ) }
-      & { __typename: 'AttributeCategoryChoice' }
-    ) | (
-      { text?: string | null, id: string, choice?: (
-        { id: string, name: string }
-        & { __typename?: 'AttributeTypeChoiceOption' }
-      ) | null, type: (
-        { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
-          { id: string, name: string, shortName?: string | null }
-          & { __typename?: 'Unit' }
-        ) | null }
-        & { __typename?: 'AttributeType' }
-      ) }
-      & { __typename: 'AttributeChoice' }
-    ) | (
-      { id: string, numericValue: number, type: (
-        { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
-          { id: string, name: string, shortName?: string | null }
-          & { __typename?: 'Unit' }
-        ) | null }
-        & { __typename?: 'AttributeType' }
-      ) }
-      & { __typename: 'AttributeNumericValue' }
-    ) | (
-      { value: string, id: string, type: (
-        { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
-          { id: string, name: string, shortName?: string | null }
-          & { __typename?: 'Unit' }
-        ) | null }
-        & { __typename?: 'AttributeType' }
-      ) }
-      & { __typename: 'AttributeRichText' | 'AttributeText' }
-    )>, plan: (
-      { id: string, shortName?: string | null, versionName: string, viewUrl?: string | null, hideActionIdentifiers?: boolean | null, image?: (
-        { rendition?: (
-          { src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null }
-        & { __typename?: 'Image' }
-      ) | null }
-      & { __typename?: 'Plan' }
-    ) }
-    & { __typename?: 'Action' }
-  ) | null, plan?: (
-    { actionListPage?: (
-      { detailsMainTop?: Array<(
-        { id?: string | null }
-        & { __typename: 'ActionContactFormBlock' | 'ActionDescriptionBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionMergedActionsBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionTasksBlock' }
-      ) | (
-        { id?: string | null, attributeType: (
-          { id: string, format: AttributeTypeFormat, name: string, identifier: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
-            { id: string, identifier: string }
-            & { __typename?: 'AttributeTypeChoiceOption' }
-          )>, unit?: (
-            { id: string, name: string }
-            & { __typename?: 'Unit' }
-          ) | null }
-          & { __typename: 'AttributeType' }
-        ) }
-        & { __typename: 'ActionContentAttributeTypeBlock' }
-      ) | (
-        { id?: string | null, categoryType: (
-          { id: string, name: string, identifier: string, helpText: string, hideCategoryIdentifiers: boolean, levels: Array<(
-            { id: string, order: number, name: string, namePlural?: string | null }
-            & { __typename?: 'CategoryLevel' }
-          )> }
-          & { __typename?: 'CategoryType' }
-        ) }
-        & { __typename: 'ActionContentCategoryTypeBlock' }
-      ) | (
-        { id?: string | null, heading?: string | null, helpText?: string | null, layout?: string | null, blocks?: Array<(
-          { id?: string | null }
-          & { __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionListBlock' | 'ActionMergedActionsBlock' }
-        ) | (
-          { id?: string | null }
-          & { __typename?: 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' }
-        ) | (
-          { id?: string | null }
-          & { __typename?: 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' }
-        ) | (
-          { id?: string | null }
-          & { __typename?: 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' }
-        ) | (
-          { id?: string | null }
-          & { __typename?: 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
-        ) | (
-          { id?: string | null, attributeType: (
-            { id: string, format: AttributeTypeFormat, name: string, identifier: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
-              { id: string, identifier: string }
-              & { __typename?: 'AttributeTypeChoiceOption' }
-            )>, unit?: (
-              { id: string, name: string }
-              & { __typename?: 'Unit' }
-            ) | null }
-            & { __typename: 'AttributeType' }
-          ) }
-          & { __typename?: 'ActionContentAttributeTypeBlock' }
-        ) | (
-          { id?: string | null, categoryType: (
-            { id: string, name: string, identifier: string, helpText: string, hideCategoryIdentifiers: boolean, levels: Array<(
-              { id: string, order: number, name: string, namePlural?: string | null }
-              & { __typename?: 'CategoryLevel' }
-            )> }
-            & { __typename?: 'CategoryType' }
-          ) }
-          & { __typename?: 'ActionContentCategoryTypeBlock' }
-        ) | (
-          { id?: string | null, fieldLabel?: string | null, caption?: string | null }
-          & { __typename?: 'ActionOfficialNameBlock' }
-        ) | (
-          { id?: string | null, reportField?: string | null, reportType?: (
-            { name: string }
-            & { __typename?: 'ReportType' }
-          ) | null, reportsToCompare?: Array<(
-            { identifier: string, name: string, startDate: any, endDate: any, valuesForAction?: Array<(
-              { attribute?: (
-                { id: string, categories: Array<(
-                  { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, iconImage?: (
-                    { rendition?: (
-                      { src: string }
-                      & { __typename?: 'ImageRendition' }
-                    ) | null }
-                    & { __typename?: 'Image' }
-                  ) | null, type: (
-                    { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-                    & { __typename?: 'CategoryType' }
-                  ), level?: (
-                    { id: string, name: string, namePlural?: string | null }
-                    & { __typename?: 'CategoryLevel' }
-                  ) | null, image?: (
-                    { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-                      { id: string, width: number, height: number, src: string }
-                      & { __typename?: 'ImageRendition' }
-                    ) | null, large?: (
-                      { id: string, width: number, height: number, src: string }
-                      & { __typename?: 'ImageRendition' }
-                    ) | null, small?: (
-                      { id: string, width: number, height: number, src: string }
-                      & { __typename?: 'ImageRendition' }
-                    ) | null, social?: (
-                      { id: string, width: number, height: number, src: string }
-                      & { __typename?: 'ImageRendition' }
-                    ) | null, rendition?: (
-                      { id: string, width: number, height: number, src: string }
-                      & { __typename?: 'ImageRendition' }
-                    ) | null }
-                    & { __typename?: 'Image' }
-                  ) | null, categoryPage?: (
-                    { title: string, urlPath: string }
-                    & { __typename?: 'CategoryPage' }
-                  ) | null, parent?: (
-                    { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-                      { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-                        { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, iconImage?: (
-                          { rendition?: (
-                            { src: string }
-                            & { __typename?: 'ImageRendition' }
-                          ) | null }
-                          & { __typename?: 'Image' }
-                        ) | null, type: (
-                          { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-                          & { __typename?: 'CategoryType' }
-                        ), level?: (
-                          { id: string, name: string, namePlural?: string | null }
-                          & { __typename?: 'CategoryLevel' }
-                        ) | null, image?: (
-                          { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-                            { id: string, width: number, height: number, src: string }
-                            & { __typename?: 'ImageRendition' }
-                          ) | null, large?: (
-                            { id: string, width: number, height: number, src: string }
-                            & { __typename?: 'ImageRendition' }
-                          ) | null, small?: (
-                            { id: string, width: number, height: number, src: string }
-                            & { __typename?: 'ImageRendition' }
-                          ) | null, social?: (
-                            { id: string, width: number, height: number, src: string }
-                            & { __typename?: 'ImageRendition' }
-                          ) | null, rendition?: (
-                            { id: string, width: number, height: number, src: string }
-                            & { __typename?: 'ImageRendition' }
-                          ) | null }
-                          & { __typename?: 'Image' }
-                        ) | null, categoryPage?: (
-                          { title: string, urlPath: string }
-                          & { __typename?: 'CategoryPage' }
-                        ) | null }
-                        & { __typename?: 'Category' }
-                      ) | null, iconImage?: (
-                        { rendition?: (
-                          { src: string }
-                          & { __typename?: 'ImageRendition' }
-                        ) | null }
-                        & { __typename?: 'Image' }
-                      ) | null, type: (
-                        { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-                        & { __typename?: 'CategoryType' }
-                      ), level?: (
-                        { id: string, name: string, namePlural?: string | null }
-                        & { __typename?: 'CategoryLevel' }
-                      ) | null, image?: (
-                        { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-                          { id: string, width: number, height: number, src: string }
-                          & { __typename?: 'ImageRendition' }
-                        ) | null, large?: (
-                          { id: string, width: number, height: number, src: string }
-                          & { __typename?: 'ImageRendition' }
-                        ) | null, small?: (
-                          { id: string, width: number, height: number, src: string }
-                          & { __typename?: 'ImageRendition' }
-                        ) | null, social?: (
-                          { id: string, width: number, height: number, src: string }
-                          & { __typename?: 'ImageRendition' }
-                        ) | null, rendition?: (
-                          { id: string, width: number, height: number, src: string }
-                          & { __typename?: 'ImageRendition' }
-                        ) | null }
-                        & { __typename?: 'Image' }
-                      ) | null, categoryPage?: (
-                        { title: string, urlPath: string }
-                        & { __typename?: 'CategoryPage' }
-                      ) | null }
-                      & { __typename?: 'Category' }
-                    ) | null, iconImage?: (
-                      { rendition?: (
-                        { src: string }
-                        & { __typename?: 'ImageRendition' }
-                      ) | null }
-                      & { __typename?: 'Image' }
-                    ) | null, type: (
-                      { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-                      & { __typename?: 'CategoryType' }
-                    ), level?: (
-                      { id: string, name: string, namePlural?: string | null }
-                      & { __typename?: 'CategoryLevel' }
-                    ) | null, image?: (
-                      { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-                        { id: string, width: number, height: number, src: string }
-                        & { __typename?: 'ImageRendition' }
-                      ) | null, large?: (
-                        { id: string, width: number, height: number, src: string }
-                        & { __typename?: 'ImageRendition' }
-                      ) | null, small?: (
-                        { id: string, width: number, height: number, src: string }
-                        & { __typename?: 'ImageRendition' }
-                      ) | null, social?: (
-                        { id: string, width: number, height: number, src: string }
-                        & { __typename?: 'ImageRendition' }
-                      ) | null, rendition?: (
-                        { id: string, width: number, height: number, src: string }
-                        & { __typename?: 'ImageRendition' }
-                      ) | null }
-                      & { __typename?: 'Image' }
-                    ) | null, categoryPage?: (
-                      { title: string, urlPath: string }
-                      & { __typename?: 'CategoryPage' }
-                    ) | null }
-                    & { __typename?: 'Category' }
-                  ) | null }
-                  & { __typename?: 'Category' }
-                )>, type: (
-                  { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
-                    { id: string, name: string, shortName?: string | null }
-                    & { __typename?: 'Unit' }
-                  ) | null }
-                  & { __typename?: 'AttributeType' }
-                ) }
-                & { __typename: 'AttributeCategoryChoice' }
-              ) | (
-                { text?: string | null, id: string, choice?: (
-                  { id: string, name: string }
-                  & { __typename?: 'AttributeTypeChoiceOption' }
-                ) | null, type: (
-                  { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
-                    { id: string, name: string, shortName?: string | null }
-                    & { __typename?: 'Unit' }
-                  ) | null }
-                  & { __typename?: 'AttributeType' }
-                ) }
-                & { __typename: 'AttributeChoice' }
-              ) | (
-                { id: string, numericValue: number, type: (
-                  { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
-                    { id: string, name: string, shortName?: string | null }
-                    & { __typename?: 'Unit' }
-                  ) | null }
-                  & { __typename?: 'AttributeType' }
-                ) }
-                & { __typename: 'AttributeNumericValue' }
-              ) | (
-                { value: string, id: string, type: (
-                  { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
-                    { id: string, name: string, shortName?: string | null }
-                    & { __typename?: 'Unit' }
-                  ) | null }
-                  & { __typename?: 'AttributeType' }
-                ) }
-                & { __typename: 'AttributeRichText' | 'AttributeText' }
-              ) | null, field: (
-                { id?: string | null }
-                & { __typename: 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryReportFieldBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionStatusReportFieldBlock' }
-              ) }
-              & { __typename?: 'ActionAttributeReportValue' }
-            ) | (
-              { field: (
-                { id?: string | null }
-                & { __typename: 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryReportFieldBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionStatusReportFieldBlock' }
-              ) }
-              & { __typename?: 'ActionCategoryReportValue' | 'ActionImplementationPhaseReportValue' | 'ActionResponsiblePartyReporteportValue' | 'ActionStatusReportValue' }
-            )> | null }
-            & { __typename?: 'Report' }
-          ) | null> | null }
-          & { __typename?: 'ReportComparisonBlock' }
-        ) | null> | null }
-        & { __typename: 'ActionContentSectionBlock' }
-      ) | (
-        { id?: string | null, fieldLabel?: string | null, caption?: string | null }
-        & { __typename: 'ActionOfficialNameBlock' }
-      ) | (
-        { id?: string | null, reportField?: string | null, reportType?: (
-          { name: string }
-          & { __typename?: 'ReportType' }
-        ) | null, reportsToCompare?: Array<(
-          { identifier: string, name: string, startDate: any, endDate: any, valuesForAction?: Array<(
-            { attribute?: (
-              { id: string, categories: Array<(
-                { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, iconImage?: (
-                  { rendition?: (
-                    { src: string }
-                    & { __typename?: 'ImageRendition' }
-                  ) | null }
-                  & { __typename?: 'Image' }
-                ) | null, type: (
-                  { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-                  & { __typename?: 'CategoryType' }
-                ), level?: (
-                  { id: string, name: string, namePlural?: string | null }
-                  & { __typename?: 'CategoryLevel' }
-                ) | null, image?: (
-                  { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-                    { id: string, width: number, height: number, src: string }
-                    & { __typename?: 'ImageRendition' }
-                  ) | null, large?: (
-                    { id: string, width: number, height: number, src: string }
-                    & { __typename?: 'ImageRendition' }
-                  ) | null, small?: (
-                    { id: string, width: number, height: number, src: string }
-                    & { __typename?: 'ImageRendition' }
-                  ) | null, social?: (
-                    { id: string, width: number, height: number, src: string }
-                    & { __typename?: 'ImageRendition' }
-                  ) | null, rendition?: (
-                    { id: string, width: number, height: number, src: string }
-                    & { __typename?: 'ImageRendition' }
-                  ) | null }
-                  & { __typename?: 'Image' }
-                ) | null, categoryPage?: (
-                  { title: string, urlPath: string }
-                  & { __typename?: 'CategoryPage' }
-                ) | null, parent?: (
-                  { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-                    { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-                      { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, iconImage?: (
-                        { rendition?: (
-                          { src: string }
-                          & { __typename?: 'ImageRendition' }
-                        ) | null }
-                        & { __typename?: 'Image' }
-                      ) | null, type: (
-                        { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-                        & { __typename?: 'CategoryType' }
-                      ), level?: (
-                        { id: string, name: string, namePlural?: string | null }
-                        & { __typename?: 'CategoryLevel' }
-                      ) | null, image?: (
-                        { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-                          { id: string, width: number, height: number, src: string }
-                          & { __typename?: 'ImageRendition' }
-                        ) | null, large?: (
-                          { id: string, width: number, height: number, src: string }
-                          & { __typename?: 'ImageRendition' }
-                        ) | null, small?: (
-                          { id: string, width: number, height: number, src: string }
-                          & { __typename?: 'ImageRendition' }
-                        ) | null, social?: (
-                          { id: string, width: number, height: number, src: string }
-                          & { __typename?: 'ImageRendition' }
-                        ) | null, rendition?: (
-                          { id: string, width: number, height: number, src: string }
-                          & { __typename?: 'ImageRendition' }
-                        ) | null }
-                        & { __typename?: 'Image' }
-                      ) | null, categoryPage?: (
-                        { title: string, urlPath: string }
-                        & { __typename?: 'CategoryPage' }
-                      ) | null }
-                      & { __typename?: 'Category' }
-                    ) | null, iconImage?: (
-                      { rendition?: (
-                        { src: string }
-                        & { __typename?: 'ImageRendition' }
-                      ) | null }
-                      & { __typename?: 'Image' }
-                    ) | null, type: (
-                      { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-                      & { __typename?: 'CategoryType' }
-                    ), level?: (
-                      { id: string, name: string, namePlural?: string | null }
-                      & { __typename?: 'CategoryLevel' }
-                    ) | null, image?: (
-                      { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-                        { id: string, width: number, height: number, src: string }
-                        & { __typename?: 'ImageRendition' }
-                      ) | null, large?: (
-                        { id: string, width: number, height: number, src: string }
-                        & { __typename?: 'ImageRendition' }
-                      ) | null, small?: (
-                        { id: string, width: number, height: number, src: string }
-                        & { __typename?: 'ImageRendition' }
-                      ) | null, social?: (
-                        { id: string, width: number, height: number, src: string }
-                        & { __typename?: 'ImageRendition' }
-                      ) | null, rendition?: (
-                        { id: string, width: number, height: number, src: string }
-                        & { __typename?: 'ImageRendition' }
-                      ) | null }
-                      & { __typename?: 'Image' }
-                    ) | null, categoryPage?: (
-                      { title: string, urlPath: string }
-                      & { __typename?: 'CategoryPage' }
-                    ) | null }
-                    & { __typename?: 'Category' }
-                  ) | null, iconImage?: (
-                    { rendition?: (
-                      { src: string }
-                      & { __typename?: 'ImageRendition' }
-                    ) | null }
-                    & { __typename?: 'Image' }
-                  ) | null, type: (
-                    { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-                    & { __typename?: 'CategoryType' }
-                  ), level?: (
-                    { id: string, name: string, namePlural?: string | null }
-                    & { __typename?: 'CategoryLevel' }
-                  ) | null, image?: (
-                    { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-                      { id: string, width: number, height: number, src: string }
-                      & { __typename?: 'ImageRendition' }
-                    ) | null, large?: (
-                      { id: string, width: number, height: number, src: string }
-                      & { __typename?: 'ImageRendition' }
-                    ) | null, small?: (
-                      { id: string, width: number, height: number, src: string }
-                      & { __typename?: 'ImageRendition' }
-                    ) | null, social?: (
-                      { id: string, width: number, height: number, src: string }
-                      & { __typename?: 'ImageRendition' }
-                    ) | null, rendition?: (
-                      { id: string, width: number, height: number, src: string }
-                      & { __typename?: 'ImageRendition' }
-                    ) | null }
-                    & { __typename?: 'Image' }
-                  ) | null, categoryPage?: (
-                    { title: string, urlPath: string }
-                    & { __typename?: 'CategoryPage' }
-                  ) | null }
-                  & { __typename?: 'Category' }
-                ) | null }
-                & { __typename?: 'Category' }
-              )>, type: (
-                { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
-                  { id: string, name: string, shortName?: string | null }
-                  & { __typename?: 'Unit' }
-                ) | null }
-                & { __typename?: 'AttributeType' }
-              ) }
-              & { __typename: 'AttributeCategoryChoice' }
-            ) | (
-              { text?: string | null, id: string, choice?: (
-                { id: string, name: string }
-                & { __typename?: 'AttributeTypeChoiceOption' }
-              ) | null, type: (
-                { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
-                  { id: string, name: string, shortName?: string | null }
-                  & { __typename?: 'Unit' }
-                ) | null }
-                & { __typename?: 'AttributeType' }
-              ) }
-              & { __typename: 'AttributeChoice' }
-            ) | (
-              { id: string, numericValue: number, type: (
-                { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
-                  { id: string, name: string, shortName?: string | null }
-                  & { __typename?: 'Unit' }
-                ) | null }
-                & { __typename?: 'AttributeType' }
-              ) }
-              & { __typename: 'AttributeNumericValue' }
-            ) | (
-              { value: string, id: string, type: (
-                { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
-                  { id: string, name: string, shortName?: string | null }
-                  & { __typename?: 'Unit' }
-                ) | null }
-                & { __typename?: 'AttributeType' }
-              ) }
-              & { __typename: 'AttributeRichText' | 'AttributeText' }
-            ) | null, field: (
-              { id?: string | null }
-              & { __typename: 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryReportFieldBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionStatusReportFieldBlock' }
-            ) }
-            & { __typename?: 'ActionAttributeReportValue' }
-          ) | (
-            { field: (
-              { id?: string | null }
-              & { __typename: 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryReportFieldBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionStatusReportFieldBlock' }
-            ) }
-            & { __typename?: 'ActionCategoryReportValue' | 'ActionImplementationPhaseReportValue' | 'ActionResponsiblePartyReporteportValue' | 'ActionStatusReportValue' }
-          )> | null }
-          & { __typename?: 'Report' }
-        ) | null> | null }
-        & { __typename: 'ReportComparisonBlock' }
-      )> | null, detailsMainBottom?: Array<(
-        { id?: string | null }
-        & { __typename: 'ActionContactFormBlock' | 'ActionDescriptionBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionMergedActionsBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionTasksBlock' }
-      ) | (
-        { id?: string | null, attributeType: (
-          { id: string, format: AttributeTypeFormat, name: string, identifier: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
-            { id: string, identifier: string }
-            & { __typename?: 'AttributeTypeChoiceOption' }
-          )>, unit?: (
-            { id: string, name: string }
-            & { __typename?: 'Unit' }
-          ) | null }
-          & { __typename: 'AttributeType' }
-        ) }
-        & { __typename: 'ActionContentAttributeTypeBlock' }
-      ) | (
-        { id?: string | null, categoryType: (
-          { id: string, name: string, identifier: string, helpText: string, hideCategoryIdentifiers: boolean, levels: Array<(
-            { id: string, order: number, name: string, namePlural?: string | null }
-            & { __typename?: 'CategoryLevel' }
-          )> }
-          & { __typename?: 'CategoryType' }
-        ) }
-        & { __typename: 'ActionContentCategoryTypeBlock' }
-      ) | (
-        { id?: string | null, heading?: string | null, helpText?: string | null, layout?: string | null, blocks?: Array<(
-          { id?: string | null }
-          & { __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionListBlock' | 'ActionMergedActionsBlock' }
-        ) | (
-          { id?: string | null }
-          & { __typename?: 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' }
-        ) | (
-          { id?: string | null }
-          & { __typename?: 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' }
-        ) | (
-          { id?: string | null }
-          & { __typename?: 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' }
-        ) | (
-          { id?: string | null }
-          & { __typename?: 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
-        ) | (
-          { id?: string | null, attributeType: (
-            { id: string, format: AttributeTypeFormat, name: string, identifier: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
-              { id: string, identifier: string }
-              & { __typename?: 'AttributeTypeChoiceOption' }
-            )>, unit?: (
-              { id: string, name: string }
-              & { __typename?: 'Unit' }
-            ) | null }
-            & { __typename: 'AttributeType' }
-          ) }
-          & { __typename?: 'ActionContentAttributeTypeBlock' }
-        ) | (
-          { id?: string | null, categoryType: (
-            { id: string, name: string, identifier: string, helpText: string, hideCategoryIdentifiers: boolean, levels: Array<(
-              { id: string, order: number, name: string, namePlural?: string | null }
-              & { __typename?: 'CategoryLevel' }
-            )> }
-            & { __typename?: 'CategoryType' }
-          ) }
-          & { __typename?: 'ActionContentCategoryTypeBlock' }
-        ) | (
-          { id?: string | null, fieldLabel?: string | null, caption?: string | null }
-          & { __typename?: 'ActionOfficialNameBlock' }
-        ) | (
-          { id?: string | null, reportField?: string | null, reportType?: (
-            { name: string }
-            & { __typename?: 'ReportType' }
-          ) | null, reportsToCompare?: Array<(
-            { identifier: string, name: string, startDate: any, endDate: any, valuesForAction?: Array<(
-              { attribute?: (
-                { id: string, categories: Array<(
-                  { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, iconImage?: (
-                    { rendition?: (
-                      { src: string }
-                      & { __typename?: 'ImageRendition' }
-                    ) | null }
-                    & { __typename?: 'Image' }
-                  ) | null, type: (
-                    { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-                    & { __typename?: 'CategoryType' }
-                  ), level?: (
-                    { id: string, name: string, namePlural?: string | null }
-                    & { __typename?: 'CategoryLevel' }
-                  ) | null, image?: (
-                    { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-                      { id: string, width: number, height: number, src: string }
-                      & { __typename?: 'ImageRendition' }
-                    ) | null, large?: (
-                      { id: string, width: number, height: number, src: string }
-                      & { __typename?: 'ImageRendition' }
-                    ) | null, small?: (
-                      { id: string, width: number, height: number, src: string }
-                      & { __typename?: 'ImageRendition' }
-                    ) | null, social?: (
-                      { id: string, width: number, height: number, src: string }
-                      & { __typename?: 'ImageRendition' }
-                    ) | null, rendition?: (
-                      { id: string, width: number, height: number, src: string }
-                      & { __typename?: 'ImageRendition' }
-                    ) | null }
-                    & { __typename?: 'Image' }
-                  ) | null, categoryPage?: (
-                    { title: string, urlPath: string }
-                    & { __typename?: 'CategoryPage' }
-                  ) | null, parent?: (
-                    { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-                      { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-                        { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, iconImage?: (
-                          { rendition?: (
-                            { src: string }
-                            & { __typename?: 'ImageRendition' }
-                          ) | null }
-                          & { __typename?: 'Image' }
-                        ) | null, type: (
-                          { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-                          & { __typename?: 'CategoryType' }
-                        ), level?: (
-                          { id: string, name: string, namePlural?: string | null }
-                          & { __typename?: 'CategoryLevel' }
-                        ) | null, image?: (
-                          { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-                            { id: string, width: number, height: number, src: string }
-                            & { __typename?: 'ImageRendition' }
-                          ) | null, large?: (
-                            { id: string, width: number, height: number, src: string }
-                            & { __typename?: 'ImageRendition' }
-                          ) | null, small?: (
-                            { id: string, width: number, height: number, src: string }
-                            & { __typename?: 'ImageRendition' }
-                          ) | null, social?: (
-                            { id: string, width: number, height: number, src: string }
-                            & { __typename?: 'ImageRendition' }
-                          ) | null, rendition?: (
-                            { id: string, width: number, height: number, src: string }
-                            & { __typename?: 'ImageRendition' }
-                          ) | null }
-                          & { __typename?: 'Image' }
-                        ) | null, categoryPage?: (
-                          { title: string, urlPath: string }
-                          & { __typename?: 'CategoryPage' }
-                        ) | null }
-                        & { __typename?: 'Category' }
-                      ) | null, iconImage?: (
-                        { rendition?: (
-                          { src: string }
-                          & { __typename?: 'ImageRendition' }
-                        ) | null }
-                        & { __typename?: 'Image' }
-                      ) | null, type: (
-                        { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-                        & { __typename?: 'CategoryType' }
-                      ), level?: (
-                        { id: string, name: string, namePlural?: string | null }
-                        & { __typename?: 'CategoryLevel' }
-                      ) | null, image?: (
-                        { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-                          { id: string, width: number, height: number, src: string }
-                          & { __typename?: 'ImageRendition' }
-                        ) | null, large?: (
-                          { id: string, width: number, height: number, src: string }
-                          & { __typename?: 'ImageRendition' }
-                        ) | null, small?: (
-                          { id: string, width: number, height: number, src: string }
-                          & { __typename?: 'ImageRendition' }
-                        ) | null, social?: (
-                          { id: string, width: number, height: number, src: string }
-                          & { __typename?: 'ImageRendition' }
-                        ) | null, rendition?: (
-                          { id: string, width: number, height: number, src: string }
-                          & { __typename?: 'ImageRendition' }
-                        ) | null }
-                        & { __typename?: 'Image' }
-                      ) | null, categoryPage?: (
-                        { title: string, urlPath: string }
-                        & { __typename?: 'CategoryPage' }
-                      ) | null }
-                      & { __typename?: 'Category' }
-                    ) | null, iconImage?: (
-                      { rendition?: (
-                        { src: string }
-                        & { __typename?: 'ImageRendition' }
-                      ) | null }
-                      & { __typename?: 'Image' }
-                    ) | null, type: (
-                      { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-                      & { __typename?: 'CategoryType' }
-                    ), level?: (
-                      { id: string, name: string, namePlural?: string | null }
-                      & { __typename?: 'CategoryLevel' }
-                    ) | null, image?: (
-                      { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-                        { id: string, width: number, height: number, src: string }
-                        & { __typename?: 'ImageRendition' }
-                      ) | null, large?: (
-                        { id: string, width: number, height: number, src: string }
-                        & { __typename?: 'ImageRendition' }
-                      ) | null, small?: (
-                        { id: string, width: number, height: number, src: string }
-                        & { __typename?: 'ImageRendition' }
-                      ) | null, social?: (
-                        { id: string, width: number, height: number, src: string }
-                        & { __typename?: 'ImageRendition' }
-                      ) | null, rendition?: (
-                        { id: string, width: number, height: number, src: string }
-                        & { __typename?: 'ImageRendition' }
-                      ) | null }
-                      & { __typename?: 'Image' }
-                    ) | null, categoryPage?: (
-                      { title: string, urlPath: string }
-                      & { __typename?: 'CategoryPage' }
-                    ) | null }
-                    & { __typename?: 'Category' }
-                  ) | null }
-                  & { __typename?: 'Category' }
-                )>, type: (
-                  { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
-                    { id: string, name: string, shortName?: string | null }
-                    & { __typename?: 'Unit' }
-                  ) | null }
-                  & { __typename?: 'AttributeType' }
-                ) }
-                & { __typename: 'AttributeCategoryChoice' }
-              ) | (
-                { text?: string | null, id: string, choice?: (
-                  { id: string, name: string }
-                  & { __typename?: 'AttributeTypeChoiceOption' }
-                ) | null, type: (
-                  { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
-                    { id: string, name: string, shortName?: string | null }
-                    & { __typename?: 'Unit' }
-                  ) | null }
-                  & { __typename?: 'AttributeType' }
-                ) }
-                & { __typename: 'AttributeChoice' }
-              ) | (
-                { id: string, numericValue: number, type: (
-                  { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
-                    { id: string, name: string, shortName?: string | null }
-                    & { __typename?: 'Unit' }
-                  ) | null }
-                  & { __typename?: 'AttributeType' }
-                ) }
-                & { __typename: 'AttributeNumericValue' }
-              ) | (
-                { value: string, id: string, type: (
-                  { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
-                    { id: string, name: string, shortName?: string | null }
-                    & { __typename?: 'Unit' }
-                  ) | null }
-                  & { __typename?: 'AttributeType' }
-                ) }
-                & { __typename: 'AttributeRichText' | 'AttributeText' }
-              ) | null, field: (
-                { id?: string | null }
-                & { __typename: 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryReportFieldBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionStatusReportFieldBlock' }
-              ) }
-              & { __typename?: 'ActionAttributeReportValue' }
-            ) | (
-              { field: (
-                { id?: string | null }
-                & { __typename: 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryReportFieldBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionStatusReportFieldBlock' }
-              ) }
-              & { __typename?: 'ActionCategoryReportValue' | 'ActionImplementationPhaseReportValue' | 'ActionResponsiblePartyReporteportValue' | 'ActionStatusReportValue' }
-            )> | null }
-            & { __typename?: 'Report' }
-          ) | null> | null }
-          & { __typename?: 'ReportComparisonBlock' }
-        ) | null> | null }
-        & { __typename: 'ActionContentSectionBlock' }
-      ) | (
-        { id?: string | null, fieldLabel?: string | null, caption?: string | null }
-        & { __typename: 'ActionOfficialNameBlock' }
-      ) | (
-        { id?: string | null, reportField?: string | null, reportType?: (
-          { name: string }
-          & { __typename?: 'ReportType' }
-        ) | null, reportsToCompare?: Array<(
-          { identifier: string, name: string, startDate: any, endDate: any, valuesForAction?: Array<(
-            { attribute?: (
-              { id: string, categories: Array<(
-                { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, iconImage?: (
-                  { rendition?: (
-                    { src: string }
-                    & { __typename?: 'ImageRendition' }
-                  ) | null }
-                  & { __typename?: 'Image' }
-                ) | null, type: (
-                  { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-                  & { __typename?: 'CategoryType' }
-                ), level?: (
-                  { id: string, name: string, namePlural?: string | null }
-                  & { __typename?: 'CategoryLevel' }
-                ) | null, image?: (
-                  { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-                    { id: string, width: number, height: number, src: string }
-                    & { __typename?: 'ImageRendition' }
-                  ) | null, large?: (
-                    { id: string, width: number, height: number, src: string }
-                    & { __typename?: 'ImageRendition' }
-                  ) | null, small?: (
-                    { id: string, width: number, height: number, src: string }
-                    & { __typename?: 'ImageRendition' }
-                  ) | null, social?: (
-                    { id: string, width: number, height: number, src: string }
-                    & { __typename?: 'ImageRendition' }
-                  ) | null, rendition?: (
-                    { id: string, width: number, height: number, src: string }
-                    & { __typename?: 'ImageRendition' }
-                  ) | null }
-                  & { __typename?: 'Image' }
-                ) | null, categoryPage?: (
-                  { title: string, urlPath: string }
-                  & { __typename?: 'CategoryPage' }
-                ) | null, parent?: (
-                  { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-                    { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-                      { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, iconImage?: (
-                        { rendition?: (
-                          { src: string }
-                          & { __typename?: 'ImageRendition' }
-                        ) | null }
-                        & { __typename?: 'Image' }
-                      ) | null, type: (
-                        { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-                        & { __typename?: 'CategoryType' }
-                      ), level?: (
-                        { id: string, name: string, namePlural?: string | null }
-                        & { __typename?: 'CategoryLevel' }
-                      ) | null, image?: (
-                        { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-                          { id: string, width: number, height: number, src: string }
-                          & { __typename?: 'ImageRendition' }
-                        ) | null, large?: (
-                          { id: string, width: number, height: number, src: string }
-                          & { __typename?: 'ImageRendition' }
-                        ) | null, small?: (
-                          { id: string, width: number, height: number, src: string }
-                          & { __typename?: 'ImageRendition' }
-                        ) | null, social?: (
-                          { id: string, width: number, height: number, src: string }
-                          & { __typename?: 'ImageRendition' }
-                        ) | null, rendition?: (
-                          { id: string, width: number, height: number, src: string }
-                          & { __typename?: 'ImageRendition' }
-                        ) | null }
-                        & { __typename?: 'Image' }
-                      ) | null, categoryPage?: (
-                        { title: string, urlPath: string }
-                        & { __typename?: 'CategoryPage' }
-                      ) | null }
-                      & { __typename?: 'Category' }
-                    ) | null, iconImage?: (
-                      { rendition?: (
-                        { src: string }
-                        & { __typename?: 'ImageRendition' }
-                      ) | null }
-                      & { __typename?: 'Image' }
-                    ) | null, type: (
-                      { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-                      & { __typename?: 'CategoryType' }
-                    ), level?: (
-                      { id: string, name: string, namePlural?: string | null }
-                      & { __typename?: 'CategoryLevel' }
-                    ) | null, image?: (
-                      { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-                        { id: string, width: number, height: number, src: string }
-                        & { __typename?: 'ImageRendition' }
-                      ) | null, large?: (
-                        { id: string, width: number, height: number, src: string }
-                        & { __typename?: 'ImageRendition' }
-                      ) | null, small?: (
-                        { id: string, width: number, height: number, src: string }
-                        & { __typename?: 'ImageRendition' }
-                      ) | null, social?: (
-                        { id: string, width: number, height: number, src: string }
-                        & { __typename?: 'ImageRendition' }
-                      ) | null, rendition?: (
-                        { id: string, width: number, height: number, src: string }
-                        & { __typename?: 'ImageRendition' }
-                      ) | null }
-                      & { __typename?: 'Image' }
-                    ) | null, categoryPage?: (
-                      { title: string, urlPath: string }
-                      & { __typename?: 'CategoryPage' }
-                    ) | null }
-                    & { __typename?: 'Category' }
-                  ) | null, iconImage?: (
-                    { rendition?: (
-                      { src: string }
-                      & { __typename?: 'ImageRendition' }
-                    ) | null }
-                    & { __typename?: 'Image' }
-                  ) | null, type: (
-                    { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-                    & { __typename?: 'CategoryType' }
-                  ), level?: (
-                    { id: string, name: string, namePlural?: string | null }
-                    & { __typename?: 'CategoryLevel' }
-                  ) | null, image?: (
-                    { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-                      { id: string, width: number, height: number, src: string }
-                      & { __typename?: 'ImageRendition' }
-                    ) | null, large?: (
-                      { id: string, width: number, height: number, src: string }
-                      & { __typename?: 'ImageRendition' }
-                    ) | null, small?: (
-                      { id: string, width: number, height: number, src: string }
-                      & { __typename?: 'ImageRendition' }
-                    ) | null, social?: (
-                      { id: string, width: number, height: number, src: string }
-                      & { __typename?: 'ImageRendition' }
-                    ) | null, rendition?: (
-                      { id: string, width: number, height: number, src: string }
-                      & { __typename?: 'ImageRendition' }
-                    ) | null }
-                    & { __typename?: 'Image' }
-                  ) | null, categoryPage?: (
-                    { title: string, urlPath: string }
-                    & { __typename?: 'CategoryPage' }
-                  ) | null }
-                  & { __typename?: 'Category' }
-                ) | null }
-                & { __typename?: 'Category' }
-              )>, type: (
-                { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
-                  { id: string, name: string, shortName?: string | null }
-                  & { __typename?: 'Unit' }
-                ) | null }
-                & { __typename?: 'AttributeType' }
-              ) }
-              & { __typename: 'AttributeCategoryChoice' }
-            ) | (
-              { text?: string | null, id: string, choice?: (
-                { id: string, name: string }
-                & { __typename?: 'AttributeTypeChoiceOption' }
-              ) | null, type: (
-                { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
-                  { id: string, name: string, shortName?: string | null }
-                  & { __typename?: 'Unit' }
-                ) | null }
-                & { __typename?: 'AttributeType' }
-              ) }
-              & { __typename: 'AttributeChoice' }
-            ) | (
-              { id: string, numericValue: number, type: (
-                { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
-                  { id: string, name: string, shortName?: string | null }
-                  & { __typename?: 'Unit' }
-                ) | null }
-                & { __typename?: 'AttributeType' }
-              ) }
-              & { __typename: 'AttributeNumericValue' }
-            ) | (
-              { value: string, id: string, type: (
-                { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
-                  { id: string, name: string, shortName?: string | null }
-                  & { __typename?: 'Unit' }
-                ) | null }
-                & { __typename?: 'AttributeType' }
-              ) }
-              & { __typename: 'AttributeRichText' | 'AttributeText' }
-            ) | null, field: (
-              { id?: string | null }
-              & { __typename: 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryReportFieldBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionStatusReportFieldBlock' }
-            ) }
-            & { __typename?: 'ActionAttributeReportValue' }
-          ) | (
-            { field: (
-              { id?: string | null }
-              & { __typename: 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryReportFieldBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionStatusReportFieldBlock' }
-            ) }
-            & { __typename?: 'ActionCategoryReportValue' | 'ActionImplementationPhaseReportValue' | 'ActionResponsiblePartyReporteportValue' | 'ActionStatusReportValue' }
-          )> | null }
-          & { __typename?: 'Report' }
-        ) | null> | null }
-        & { __typename: 'ReportComparisonBlock' }
-      )> | null, detailsAside?: Array<(
-        { id?: string | null }
-        & { __typename: 'ActionContactPersonsBlock' | 'ActionScheduleBlock' }
-      ) | (
-        { id?: string | null, attributeType: (
-          { id: string, format: AttributeTypeFormat, name: string, identifier: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
-            { id: string, identifier: string }
-            & { __typename?: 'AttributeTypeChoiceOption' }
-          )>, unit?: (
-            { id: string, name: string }
-            & { __typename?: 'Unit' }
-          ) | null }
-          & { __typename: 'AttributeType' }
-        ) }
-        & { __typename: 'ActionContentAttributeTypeBlock' }
-      ) | (
-        { id?: string | null, categoryType: (
-          { id: string, name: string, identifier: string, helpText: string, hideCategoryIdentifiers: boolean, levels: Array<(
-            { id: string, order: number, name: string, namePlural?: string | null }
-            & { __typename?: 'CategoryLevel' }
-          )> }
-          & { __typename?: 'CategoryType' }
-        ) }
-        & { __typename: 'ActionContentCategoryTypeBlock' }
-      ) | (
-        { heading?: string | null, id?: string | null }
-        & { __typename: 'ActionResponsiblePartiesBlock' }
-      )> | null }
-      & { __typename?: 'ActionListPage' }
-    ) | null, actionAttributeTypes: Array<(
-      { id: string, format: AttributeTypeFormat, name: string, identifier: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
-        { id: string, identifier: string }
-        & { __typename?: 'AttributeTypeChoiceOption' }
-      )>, unit?: (
-        { id: string, name: string }
-        & { __typename?: 'Unit' }
-      ) | null }
-      & { __typename: 'AttributeType' }
-    )> }
-    & { __typename?: 'Plan' }
+      & { __typename?: 'SearchHit' }
+    ) | null> | null }
+    & { __typename?: 'SearchResults' }
   ) | null }
   & { __typename?: 'Query' }
-);
-
-type ActionAsideContentBlocksFragment_ActionContactPersonsBlock_ActionScheduleBlock_Fragment = (
-  { id?: string | null }
-  & { __typename: 'ActionContactPersonsBlock' | 'ActionScheduleBlock' }
-);
-
-type ActionAsideContentBlocksFragment_ActionContentAttributeTypeBlock_Fragment = (
-  { id?: string | null, attributeType: (
-    { id: string, format: AttributeTypeFormat, name: string, identifier: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
-      { id: string, identifier: string }
-      & { __typename?: 'AttributeTypeChoiceOption' }
-    )>, unit?: (
-      { id: string, name: string }
-      & { __typename?: 'Unit' }
-    ) | null }
-    & { __typename: 'AttributeType' }
-  ) }
-  & { __typename: 'ActionContentAttributeTypeBlock' }
-);
-
-type ActionAsideContentBlocksFragment_ActionContentCategoryTypeBlock_Fragment = (
-  { id?: string | null, categoryType: (
-    { id: string, name: string, identifier: string, helpText: string, hideCategoryIdentifiers: boolean, levels: Array<(
-      { id: string, order: number, name: string, namePlural?: string | null }
-      & { __typename?: 'CategoryLevel' }
-    )> }
-    & { __typename?: 'CategoryType' }
-  ) }
-  & { __typename: 'ActionContentCategoryTypeBlock' }
-);
-
-type ActionAsideContentBlocksFragment_ActionResponsiblePartiesBlock_Fragment = (
-  { heading?: string | null, id?: string | null }
-  & { __typename: 'ActionResponsiblePartiesBlock' }
-);
-
-export type ActionAsideContentBlocksFragmentFragment = ActionAsideContentBlocksFragment_ActionContactPersonsBlock_ActionScheduleBlock_Fragment | ActionAsideContentBlocksFragment_ActionContentAttributeTypeBlock_Fragment | ActionAsideContentBlocksFragment_ActionContentCategoryTypeBlock_Fragment | ActionAsideContentBlocksFragment_ActionResponsiblePartiesBlock_Fragment;
-
-type ActionMainContentBlocksFragment_FVKamQUfmT6JjFbafBAu3ifcqx9spC4XsfbOqsBaoA_Fragment = (
-  { id?: string | null }
-  & { __typename: 'ActionContactFormBlock' | 'ActionDescriptionBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionMergedActionsBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionTasksBlock' }
-);
-
-type ActionMainContentBlocksFragment_ActionContentAttributeTypeBlock_Fragment = (
-  { id?: string | null, attributeType: (
-    { id: string, format: AttributeTypeFormat, name: string, identifier: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
-      { id: string, identifier: string }
-      & { __typename?: 'AttributeTypeChoiceOption' }
-    )>, unit?: (
-      { id: string, name: string }
-      & { __typename?: 'Unit' }
-    ) | null }
-    & { __typename: 'AttributeType' }
-  ) }
-  & { __typename: 'ActionContentAttributeTypeBlock' }
-);
-
-type ActionMainContentBlocksFragment_ActionContentCategoryTypeBlock_Fragment = (
-  { id?: string | null, categoryType: (
-    { id: string, name: string, identifier: string, helpText: string, hideCategoryIdentifiers: boolean, levels: Array<(
-      { id: string, order: number, name: string, namePlural?: string | null }
-      & { __typename?: 'CategoryLevel' }
-    )> }
-    & { __typename?: 'CategoryType' }
-  ) }
-  & { __typename: 'ActionContentCategoryTypeBlock' }
-);
-
-type ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment = (
-  { id?: string | null, heading?: string | null, helpText?: string | null, layout?: string | null, blocks?: Array<(
-    { id?: string | null }
-    & { __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionListBlock' | 'ActionMergedActionsBlock' }
-  ) | (
-    { id?: string | null }
-    & { __typename?: 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' }
-  ) | (
-    { id?: string | null }
-    & { __typename?: 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' }
-  ) | (
-    { id?: string | null }
-    & { __typename?: 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' }
-  ) | (
-    { id?: string | null }
-    & { __typename?: 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
-  ) | (
-    { id?: string | null, attributeType: (
-      { id: string, format: AttributeTypeFormat, name: string, identifier: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
-        { id: string, identifier: string }
-        & { __typename?: 'AttributeTypeChoiceOption' }
-      )>, unit?: (
-        { id: string, name: string }
-        & { __typename?: 'Unit' }
-      ) | null }
-      & { __typename: 'AttributeType' }
-    ) }
-    & { __typename?: 'ActionContentAttributeTypeBlock' }
-  ) | (
-    { id?: string | null, categoryType: (
-      { id: string, name: string, identifier: string, helpText: string, hideCategoryIdentifiers: boolean, levels: Array<(
-        { id: string, order: number, name: string, namePlural?: string | null }
-        & { __typename?: 'CategoryLevel' }
-      )> }
-      & { __typename?: 'CategoryType' }
-    ) }
-    & { __typename?: 'ActionContentCategoryTypeBlock' }
-  ) | (
-    { id?: string | null, fieldLabel?: string | null, caption?: string | null }
-    & { __typename?: 'ActionOfficialNameBlock' }
-  ) | (
-    { id?: string | null, reportField?: string | null, reportType?: (
-      { name: string }
-      & { __typename?: 'ReportType' }
-    ) | null, reportsToCompare?: Array<(
-      { identifier: string, name: string, startDate: any, endDate: any, valuesForAction?: Array<(
-        { attribute?: (
-          { id: string, categories: Array<(
-            { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, iconImage?: (
-              { rendition?: (
-                { src: string }
-                & { __typename?: 'ImageRendition' }
-              ) | null }
-              & { __typename?: 'Image' }
-            ) | null, type: (
-              { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-              & { __typename?: 'CategoryType' }
-            ), level?: (
-              { id: string, name: string, namePlural?: string | null }
-              & { __typename?: 'CategoryLevel' }
-            ) | null, image?: (
-              { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-                { id: string, width: number, height: number, src: string }
-                & { __typename?: 'ImageRendition' }
-              ) | null, large?: (
-                { id: string, width: number, height: number, src: string }
-                & { __typename?: 'ImageRendition' }
-              ) | null, small?: (
-                { id: string, width: number, height: number, src: string }
-                & { __typename?: 'ImageRendition' }
-              ) | null, social?: (
-                { id: string, width: number, height: number, src: string }
-                & { __typename?: 'ImageRendition' }
-              ) | null, rendition?: (
-                { id: string, width: number, height: number, src: string }
-                & { __typename?: 'ImageRendition' }
-              ) | null }
-              & { __typename?: 'Image' }
-            ) | null, categoryPage?: (
-              { title: string, urlPath: string }
-              & { __typename?: 'CategoryPage' }
-            ) | null, parent?: (
-              { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-                { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-                  { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, iconImage?: (
-                    { rendition?: (
-                      { src: string }
-                      & { __typename?: 'ImageRendition' }
-                    ) | null }
-                    & { __typename?: 'Image' }
-                  ) | null, type: (
-                    { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-                    & { __typename?: 'CategoryType' }
-                  ), level?: (
-                    { id: string, name: string, namePlural?: string | null }
-                    & { __typename?: 'CategoryLevel' }
-                  ) | null, image?: (
-                    { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-                      { id: string, width: number, height: number, src: string }
-                      & { __typename?: 'ImageRendition' }
-                    ) | null, large?: (
-                      { id: string, width: number, height: number, src: string }
-                      & { __typename?: 'ImageRendition' }
-                    ) | null, small?: (
-                      { id: string, width: number, height: number, src: string }
-                      & { __typename?: 'ImageRendition' }
-                    ) | null, social?: (
-                      { id: string, width: number, height: number, src: string }
-                      & { __typename?: 'ImageRendition' }
-                    ) | null, rendition?: (
-                      { id: string, width: number, height: number, src: string }
-                      & { __typename?: 'ImageRendition' }
-                    ) | null }
-                    & { __typename?: 'Image' }
-                  ) | null, categoryPage?: (
-                    { title: string, urlPath: string }
-                    & { __typename?: 'CategoryPage' }
-                  ) | null }
-                  & { __typename?: 'Category' }
-                ) | null, iconImage?: (
-                  { rendition?: (
-                    { src: string }
-                    & { __typename?: 'ImageRendition' }
-                  ) | null }
-                  & { __typename?: 'Image' }
-                ) | null, type: (
-                  { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-                  & { __typename?: 'CategoryType' }
-                ), level?: (
-                  { id: string, name: string, namePlural?: string | null }
-                  & { __typename?: 'CategoryLevel' }
-                ) | null, image?: (
-                  { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-                    { id: string, width: number, height: number, src: string }
-                    & { __typename?: 'ImageRendition' }
-                  ) | null, large?: (
-                    { id: string, width: number, height: number, src: string }
-                    & { __typename?: 'ImageRendition' }
-                  ) | null, small?: (
-                    { id: string, width: number, height: number, src: string }
-                    & { __typename?: 'ImageRendition' }
-                  ) | null, social?: (
-                    { id: string, width: number, height: number, src: string }
-                    & { __typename?: 'ImageRendition' }
-                  ) | null, rendition?: (
-                    { id: string, width: number, height: number, src: string }
-                    & { __typename?: 'ImageRendition' }
-                  ) | null }
-                  & { __typename?: 'Image' }
-                ) | null, categoryPage?: (
-                  { title: string, urlPath: string }
-                  & { __typename?: 'CategoryPage' }
-                ) | null }
-                & { __typename?: 'Category' }
-              ) | null, iconImage?: (
-                { rendition?: (
-                  { src: string }
-                  & { __typename?: 'ImageRendition' }
-                ) | null }
-                & { __typename?: 'Image' }
-              ) | null, type: (
-                { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-                & { __typename?: 'CategoryType' }
-              ), level?: (
-                { id: string, name: string, namePlural?: string | null }
-                & { __typename?: 'CategoryLevel' }
-              ) | null, image?: (
-                { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-                  { id: string, width: number, height: number, src: string }
-                  & { __typename?: 'ImageRendition' }
-                ) | null, large?: (
-                  { id: string, width: number, height: number, src: string }
-                  & { __typename?: 'ImageRendition' }
-                ) | null, small?: (
-                  { id: string, width: number, height: number, src: string }
-                  & { __typename?: 'ImageRendition' }
-                ) | null, social?: (
-                  { id: string, width: number, height: number, src: string }
-                  & { __typename?: 'ImageRendition' }
-                ) | null, rendition?: (
-                  { id: string, width: number, height: number, src: string }
-                  & { __typename?: 'ImageRendition' }
-                ) | null }
-                & { __typename?: 'Image' }
-              ) | null, categoryPage?: (
-                { title: string, urlPath: string }
-                & { __typename?: 'CategoryPage' }
-              ) | null }
-              & { __typename?: 'Category' }
-            ) | null }
-            & { __typename?: 'Category' }
-          )>, type: (
-            { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
-              { id: string, name: string, shortName?: string | null }
-              & { __typename?: 'Unit' }
-            ) | null }
-            & { __typename?: 'AttributeType' }
-          ) }
-          & { __typename: 'AttributeCategoryChoice' }
-        ) | (
-          { text?: string | null, id: string, choice?: (
-            { id: string, name: string }
-            & { __typename?: 'AttributeTypeChoiceOption' }
-          ) | null, type: (
-            { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
-              { id: string, name: string, shortName?: string | null }
-              & { __typename?: 'Unit' }
-            ) | null }
-            & { __typename?: 'AttributeType' }
-          ) }
-          & { __typename: 'AttributeChoice' }
-        ) | (
-          { id: string, numericValue: number, type: (
-            { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
-              { id: string, name: string, shortName?: string | null }
-              & { __typename?: 'Unit' }
-            ) | null }
-            & { __typename?: 'AttributeType' }
-          ) }
-          & { __typename: 'AttributeNumericValue' }
-        ) | (
-          { value: string, id: string, type: (
-            { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
-              { id: string, name: string, shortName?: string | null }
-              & { __typename?: 'Unit' }
-            ) | null }
-            & { __typename?: 'AttributeType' }
-          ) }
-          & { __typename: 'AttributeRichText' | 'AttributeText' }
-        ) | null, field: (
-          { id?: string | null }
-          & { __typename: 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryReportFieldBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionStatusReportFieldBlock' }
-        ) }
-        & { __typename?: 'ActionAttributeReportValue' }
-      ) | (
-        { field: (
-          { id?: string | null }
-          & { __typename: 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryReportFieldBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionStatusReportFieldBlock' }
-        ) }
-        & { __typename?: 'ActionCategoryReportValue' | 'ActionImplementationPhaseReportValue' | 'ActionResponsiblePartyReporteportValue' | 'ActionStatusReportValue' }
-      )> | null }
-      & { __typename?: 'Report' }
-    ) | null> | null }
-    & { __typename?: 'ReportComparisonBlock' }
-  ) | null> | null }
-  & { __typename: 'ActionContentSectionBlock' }
-);
-
-type ActionMainContentBlocksFragment_ActionOfficialNameBlock_Fragment = (
-  { id?: string | null, fieldLabel?: string | null, caption?: string | null }
-  & { __typename: 'ActionOfficialNameBlock' }
-);
-
-type ActionMainContentBlocksFragment_ReportComparisonBlock_Fragment = (
-  { id?: string | null, reportField?: string | null, reportType?: (
-    { name: string }
-    & { __typename?: 'ReportType' }
-  ) | null, reportsToCompare?: Array<(
-    { identifier: string, name: string, startDate: any, endDate: any, valuesForAction?: Array<(
-      { attribute?: (
-        { id: string, categories: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, iconImage?: (
-            { rendition?: (
-              { src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null }
-            & { __typename?: 'Image' }
-          ) | null, type: (
-            { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-            & { __typename?: 'CategoryType' }
-          ), level?: (
-            { id: string, name: string, namePlural?: string | null }
-            & { __typename?: 'CategoryLevel' }
-          ) | null, image?: (
-            { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, large?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, small?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, social?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, rendition?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null }
-            & { __typename?: 'Image' }
-          ) | null, categoryPage?: (
-            { title: string, urlPath: string }
-            & { __typename?: 'CategoryPage' }
-          ) | null, parent?: (
-            { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-              { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-                { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, iconImage?: (
-                  { rendition?: (
-                    { src: string }
-                    & { __typename?: 'ImageRendition' }
-                  ) | null }
-                  & { __typename?: 'Image' }
-                ) | null, type: (
-                  { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-                  & { __typename?: 'CategoryType' }
-                ), level?: (
-                  { id: string, name: string, namePlural?: string | null }
-                  & { __typename?: 'CategoryLevel' }
-                ) | null, image?: (
-                  { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-                    { id: string, width: number, height: number, src: string }
-                    & { __typename?: 'ImageRendition' }
-                  ) | null, large?: (
-                    { id: string, width: number, height: number, src: string }
-                    & { __typename?: 'ImageRendition' }
-                  ) | null, small?: (
-                    { id: string, width: number, height: number, src: string }
-                    & { __typename?: 'ImageRendition' }
-                  ) | null, social?: (
-                    { id: string, width: number, height: number, src: string }
-                    & { __typename?: 'ImageRendition' }
-                  ) | null, rendition?: (
-                    { id: string, width: number, height: number, src: string }
-                    & { __typename?: 'ImageRendition' }
-                  ) | null }
-                  & { __typename?: 'Image' }
-                ) | null, categoryPage?: (
-                  { title: string, urlPath: string }
-                  & { __typename?: 'CategoryPage' }
-                ) | null }
-                & { __typename?: 'Category' }
-              ) | null, iconImage?: (
-                { rendition?: (
-                  { src: string }
-                  & { __typename?: 'ImageRendition' }
-                ) | null }
-                & { __typename?: 'Image' }
-              ) | null, type: (
-                { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-                & { __typename?: 'CategoryType' }
-              ), level?: (
-                { id: string, name: string, namePlural?: string | null }
-                & { __typename?: 'CategoryLevel' }
-              ) | null, image?: (
-                { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-                  { id: string, width: number, height: number, src: string }
-                  & { __typename?: 'ImageRendition' }
-                ) | null, large?: (
-                  { id: string, width: number, height: number, src: string }
-                  & { __typename?: 'ImageRendition' }
-                ) | null, small?: (
-                  { id: string, width: number, height: number, src: string }
-                  & { __typename?: 'ImageRendition' }
-                ) | null, social?: (
-                  { id: string, width: number, height: number, src: string }
-                  & { __typename?: 'ImageRendition' }
-                ) | null, rendition?: (
-                  { id: string, width: number, height: number, src: string }
-                  & { __typename?: 'ImageRendition' }
-                ) | null }
-                & { __typename?: 'Image' }
-              ) | null, categoryPage?: (
-                { title: string, urlPath: string }
-                & { __typename?: 'CategoryPage' }
-              ) | null }
-              & { __typename?: 'Category' }
-            ) | null, iconImage?: (
-              { rendition?: (
-                { src: string }
-                & { __typename?: 'ImageRendition' }
-              ) | null }
-              & { __typename?: 'Image' }
-            ) | null, type: (
-              { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-              & { __typename?: 'CategoryType' }
-            ), level?: (
-              { id: string, name: string, namePlural?: string | null }
-              & { __typename?: 'CategoryLevel' }
-            ) | null, image?: (
-              { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-                { id: string, width: number, height: number, src: string }
-                & { __typename?: 'ImageRendition' }
-              ) | null, large?: (
-                { id: string, width: number, height: number, src: string }
-                & { __typename?: 'ImageRendition' }
-              ) | null, small?: (
-                { id: string, width: number, height: number, src: string }
-                & { __typename?: 'ImageRendition' }
-              ) | null, social?: (
-                { id: string, width: number, height: number, src: string }
-                & { __typename?: 'ImageRendition' }
-              ) | null, rendition?: (
-                { id: string, width: number, height: number, src: string }
-                & { __typename?: 'ImageRendition' }
-              ) | null }
-              & { __typename?: 'Image' }
-            ) | null, categoryPage?: (
-              { title: string, urlPath: string }
-              & { __typename?: 'CategoryPage' }
-            ) | null }
-            & { __typename?: 'Category' }
-          ) | null }
-          & { __typename?: 'Category' }
-        )>, type: (
-          { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
-            { id: string, name: string, shortName?: string | null }
-            & { __typename?: 'Unit' }
-          ) | null }
-          & { __typename?: 'AttributeType' }
-        ) }
-        & { __typename: 'AttributeCategoryChoice' }
-      ) | (
-        { text?: string | null, id: string, choice?: (
-          { id: string, name: string }
-          & { __typename?: 'AttributeTypeChoiceOption' }
-        ) | null, type: (
-          { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
-            { id: string, name: string, shortName?: string | null }
-            & { __typename?: 'Unit' }
-          ) | null }
-          & { __typename?: 'AttributeType' }
-        ) }
-        & { __typename: 'AttributeChoice' }
-      ) | (
-        { id: string, numericValue: number, type: (
-          { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
-            { id: string, name: string, shortName?: string | null }
-            & { __typename?: 'Unit' }
-          ) | null }
-          & { __typename?: 'AttributeType' }
-        ) }
-        & { __typename: 'AttributeNumericValue' }
-      ) | (
-        { value: string, id: string, type: (
-          { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
-            { id: string, name: string, shortName?: string | null }
-            & { __typename?: 'Unit' }
-          ) | null }
-          & { __typename?: 'AttributeType' }
-        ) }
-        & { __typename: 'AttributeRichText' | 'AttributeText' }
-      ) | null, field: (
-        { id?: string | null }
-        & { __typename: 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryReportFieldBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionStatusReportFieldBlock' }
-      ) }
-      & { __typename?: 'ActionAttributeReportValue' }
-    ) | (
-      { field: (
-        { id?: string | null }
-        & { __typename: 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryReportFieldBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionStatusReportFieldBlock' }
-      ) }
-      & { __typename?: 'ActionCategoryReportValue' | 'ActionImplementationPhaseReportValue' | 'ActionResponsiblePartyReporteportValue' | 'ActionStatusReportValue' }
-    )> | null }
-    & { __typename?: 'Report' }
-  ) | null> | null }
-  & { __typename: 'ReportComparisonBlock' }
-);
-
-export type ActionMainContentBlocksFragmentFragment = ActionMainContentBlocksFragment_FVKamQUfmT6JjFbafBAu3ifcqx9spC4XsfbOqsBaoA_Fragment | ActionMainContentBlocksFragment_ActionContentAttributeTypeBlock_Fragment | ActionMainContentBlocksFragment_ActionContentCategoryTypeBlock_Fragment | ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment | ActionMainContentBlocksFragment_ActionOfficialNameBlock_Fragment | ActionMainContentBlocksFragment_ReportComparisonBlock_Fragment;
-
-export type ReportComparisonBlockActionContentFragment = (
-  { reportField?: string | null, reportType?: (
-    { name: string }
-    & { __typename?: 'ReportType' }
-  ) | null, reportsToCompare?: Array<(
-    { identifier: string, name: string, startDate: any, endDate: any, valuesForAction?: Array<(
-      { attribute?: (
-        { id: string, categories: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, iconImage?: (
-            { rendition?: (
-              { src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null }
-            & { __typename?: 'Image' }
-          ) | null, type: (
-            { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-            & { __typename?: 'CategoryType' }
-          ), level?: (
-            { id: string, name: string, namePlural?: string | null }
-            & { __typename?: 'CategoryLevel' }
-          ) | null, image?: (
-            { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, large?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, small?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, social?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, rendition?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null }
-            & { __typename?: 'Image' }
-          ) | null, categoryPage?: (
-            { title: string, urlPath: string }
-            & { __typename?: 'CategoryPage' }
-          ) | null, parent?: (
-            { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-              { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-                { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, iconImage?: (
-                  { rendition?: (
-                    { src: string }
-                    & { __typename?: 'ImageRendition' }
-                  ) | null }
-                  & { __typename?: 'Image' }
-                ) | null, type: (
-                  { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-                  & { __typename?: 'CategoryType' }
-                ), level?: (
-                  { id: string, name: string, namePlural?: string | null }
-                  & { __typename?: 'CategoryLevel' }
-                ) | null, image?: (
-                  { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-                    { id: string, width: number, height: number, src: string }
-                    & { __typename?: 'ImageRendition' }
-                  ) | null, large?: (
-                    { id: string, width: number, height: number, src: string }
-                    & { __typename?: 'ImageRendition' }
-                  ) | null, small?: (
-                    { id: string, width: number, height: number, src: string }
-                    & { __typename?: 'ImageRendition' }
-                  ) | null, social?: (
-                    { id: string, width: number, height: number, src: string }
-                    & { __typename?: 'ImageRendition' }
-                  ) | null, rendition?: (
-                    { id: string, width: number, height: number, src: string }
-                    & { __typename?: 'ImageRendition' }
-                  ) | null }
-                  & { __typename?: 'Image' }
-                ) | null, categoryPage?: (
-                  { title: string, urlPath: string }
-                  & { __typename?: 'CategoryPage' }
-                ) | null }
-                & { __typename?: 'Category' }
-              ) | null, iconImage?: (
-                { rendition?: (
-                  { src: string }
-                  & { __typename?: 'ImageRendition' }
-                ) | null }
-                & { __typename?: 'Image' }
-              ) | null, type: (
-                { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-                & { __typename?: 'CategoryType' }
-              ), level?: (
-                { id: string, name: string, namePlural?: string | null }
-                & { __typename?: 'CategoryLevel' }
-              ) | null, image?: (
-                { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-                  { id: string, width: number, height: number, src: string }
-                  & { __typename?: 'ImageRendition' }
-                ) | null, large?: (
-                  { id: string, width: number, height: number, src: string }
-                  & { __typename?: 'ImageRendition' }
-                ) | null, small?: (
-                  { id: string, width: number, height: number, src: string }
-                  & { __typename?: 'ImageRendition' }
-                ) | null, social?: (
-                  { id: string, width: number, height: number, src: string }
-                  & { __typename?: 'ImageRendition' }
-                ) | null, rendition?: (
-                  { id: string, width: number, height: number, src: string }
-                  & { __typename?: 'ImageRendition' }
-                ) | null }
-                & { __typename?: 'Image' }
-              ) | null, categoryPage?: (
-                { title: string, urlPath: string }
-                & { __typename?: 'CategoryPage' }
-              ) | null }
-              & { __typename?: 'Category' }
-            ) | null, iconImage?: (
-              { rendition?: (
-                { src: string }
-                & { __typename?: 'ImageRendition' }
-              ) | null }
-              & { __typename?: 'Image' }
-            ) | null, type: (
-              { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-              & { __typename?: 'CategoryType' }
-            ), level?: (
-              { id: string, name: string, namePlural?: string | null }
-              & { __typename?: 'CategoryLevel' }
-            ) | null, image?: (
-              { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-                { id: string, width: number, height: number, src: string }
-                & { __typename?: 'ImageRendition' }
-              ) | null, large?: (
-                { id: string, width: number, height: number, src: string }
-                & { __typename?: 'ImageRendition' }
-              ) | null, small?: (
-                { id: string, width: number, height: number, src: string }
-                & { __typename?: 'ImageRendition' }
-              ) | null, social?: (
-                { id: string, width: number, height: number, src: string }
-                & { __typename?: 'ImageRendition' }
-              ) | null, rendition?: (
-                { id: string, width: number, height: number, src: string }
-                & { __typename?: 'ImageRendition' }
-              ) | null }
-              & { __typename?: 'Image' }
-            ) | null, categoryPage?: (
-              { title: string, urlPath: string }
-              & { __typename?: 'CategoryPage' }
-            ) | null }
-            & { __typename?: 'Category' }
-          ) | null }
-          & { __typename?: 'Category' }
-        )>, type: (
-          { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
-            { id: string, name: string, shortName?: string | null }
-            & { __typename?: 'Unit' }
-          ) | null }
-          & { __typename?: 'AttributeType' }
-        ) }
-        & { __typename: 'AttributeCategoryChoice' }
-      ) | (
-        { text?: string | null, id: string, choice?: (
-          { id: string, name: string }
-          & { __typename?: 'AttributeTypeChoiceOption' }
-        ) | null, type: (
-          { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
-            { id: string, name: string, shortName?: string | null }
-            & { __typename?: 'Unit' }
-          ) | null }
-          & { __typename?: 'AttributeType' }
-        ) }
-        & { __typename: 'AttributeChoice' }
-      ) | (
-        { id: string, numericValue: number, type: (
-          { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
-            { id: string, name: string, shortName?: string | null }
-            & { __typename?: 'Unit' }
-          ) | null }
-          & { __typename?: 'AttributeType' }
-        ) }
-        & { __typename: 'AttributeNumericValue' }
-      ) | (
-        { value: string, id: string, type: (
-          { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
-            { id: string, name: string, shortName?: string | null }
-            & { __typename?: 'Unit' }
-          ) | null }
-          & { __typename?: 'AttributeType' }
-        ) }
-        & { __typename: 'AttributeRichText' | 'AttributeText' }
-      ) | null, field: (
-        { id?: string | null }
-        & { __typename: 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryReportFieldBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionStatusReportFieldBlock' }
-      ) }
-      & { __typename?: 'ActionAttributeReportValue' }
-    ) | (
-      { field: (
-        { id?: string | null }
-        & { __typename: 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryReportFieldBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionStatusReportFieldBlock' }
-      ) }
-      & { __typename?: 'ActionCategoryReportValue' | 'ActionImplementationPhaseReportValue' | 'ActionResponsiblePartyReporteportValue' | 'ActionStatusReportValue' }
-    )> | null }
-    & { __typename?: 'Report' }
-  ) | null> | null }
-  & { __typename?: 'ReportComparisonBlock' }
 );
 
 export type ActionHightlightListQueryVariables = Exact<{
@@ -6622,32 +4332,6 @@ export type ActionUpdatesQuery = (
   & { __typename?: 'Query' }
 );
 
-export type ActionsTableFragment = (
-  { id: string, identifier: string, name: string, color?: string | null, completion?: number | null, status?: (
-    { id: string, identifier: string, name: string, color?: string | null }
-    & { __typename?: 'ActionStatus' }
-  ) | null, implementationPhase?: (
-    { id: string, identifier: string, name: string }
-    & { __typename?: 'ActionImplementationPhase' }
-  ) | null, statusSummary: (
-    { identifier: ActionStatusSummaryIdentifier }
-    & { __typename?: 'ActionStatusSummary' }
-  ), categories: Array<(
-    { id: string, identifier: string, name: string, image?: (
-      { rendition?: (
-        { id: string, src: string }
-        & { __typename?: 'ImageRendition' }
-      ) | null }
-      & { __typename?: 'Image' }
-    ) | null }
-    & { __typename?: 'Category' }
-  )>, impact?: (
-    { id: string, identifier: string, name: string }
-    & { __typename?: 'ActionImpact' }
-  ) | null }
-  & { __typename?: 'Action' }
-);
-
 export type GetActionListQueryVariables = Exact<{
   plan: Scalars['ID'];
   clientUrl: Scalars['String'];
@@ -6707,311 +4391,6 @@ export type GetActionListQuery = (
   & { __typename?: 'Query' }
 );
 
-export type CategoryFieldsFragmentFragment = (
-  { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, iconImage?: (
-    { rendition?: (
-      { src: string }
-      & { __typename?: 'ImageRendition' }
-    ) | null }
-    & { __typename?: 'Image' }
-  ) | null, type: (
-    { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-    & { __typename?: 'CategoryType' }
-  ), level?: (
-    { id: string, name: string, namePlural?: string | null }
-    & { __typename?: 'CategoryLevel' }
-  ) | null, image?: (
-    { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-      { id: string, width: number, height: number, src: string }
-      & { __typename?: 'ImageRendition' }
-    ) | null, large?: (
-      { id: string, width: number, height: number, src: string }
-      & { __typename?: 'ImageRendition' }
-    ) | null, small?: (
-      { id: string, width: number, height: number, src: string }
-      & { __typename?: 'ImageRendition' }
-    ) | null, social?: (
-      { id: string, width: number, height: number, src: string }
-      & { __typename?: 'ImageRendition' }
-    ) | null, rendition?: (
-      { id: string, width: number, height: number, src: string }
-      & { __typename?: 'ImageRendition' }
-    ) | null }
-    & { __typename?: 'Image' }
-  ) | null, categoryPage?: (
-    { title: string, urlPath: string }
-    & { __typename?: 'CategoryPage' }
-  ) | null }
-  & { __typename?: 'Category' }
-);
-
-export type CategoriesRecursiveFragmentFragment = (
-  { parent?: (
-    { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-      { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-        { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, iconImage?: (
-          { rendition?: (
-            { src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null }
-          & { __typename?: 'Image' }
-        ) | null, type: (
-          { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-          & { __typename?: 'CategoryType' }
-        ), level?: (
-          { id: string, name: string, namePlural?: string | null }
-          & { __typename?: 'CategoryLevel' }
-        ) | null, image?: (
-          { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null, large?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null, small?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null, social?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null, rendition?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null }
-          & { __typename?: 'Image' }
-        ) | null, categoryPage?: (
-          { title: string, urlPath: string }
-          & { __typename?: 'CategoryPage' }
-        ) | null }
-        & { __typename?: 'Category' }
-      ) | null, iconImage?: (
-        { rendition?: (
-          { src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null }
-        & { __typename?: 'Image' }
-      ) | null, type: (
-        { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-        & { __typename?: 'CategoryType' }
-      ), level?: (
-        { id: string, name: string, namePlural?: string | null }
-        & { __typename?: 'CategoryLevel' }
-      ) | null, image?: (
-        { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null, large?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null, small?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null, social?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null, rendition?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null }
-        & { __typename?: 'Image' }
-      ) | null, categoryPage?: (
-        { title: string, urlPath: string }
-        & { __typename?: 'CategoryPage' }
-      ) | null }
-      & { __typename?: 'Category' }
-    ) | null, iconImage?: (
-      { rendition?: (
-        { src: string }
-        & { __typename?: 'ImageRendition' }
-      ) | null }
-      & { __typename?: 'Image' }
-    ) | null, type: (
-      { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-      & { __typename?: 'CategoryType' }
-    ), level?: (
-      { id: string, name: string, namePlural?: string | null }
-      & { __typename?: 'CategoryLevel' }
-    ) | null, image?: (
-      { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-        { id: string, width: number, height: number, src: string }
-        & { __typename?: 'ImageRendition' }
-      ) | null, large?: (
-        { id: string, width: number, height: number, src: string }
-        & { __typename?: 'ImageRendition' }
-      ) | null, small?: (
-        { id: string, width: number, height: number, src: string }
-        & { __typename?: 'ImageRendition' }
-      ) | null, social?: (
-        { id: string, width: number, height: number, src: string }
-        & { __typename?: 'ImageRendition' }
-      ) | null, rendition?: (
-        { id: string, width: number, height: number, src: string }
-        & { __typename?: 'ImageRendition' }
-      ) | null }
-      & { __typename?: 'Image' }
-    ) | null, categoryPage?: (
-      { title: string, urlPath: string }
-      & { __typename?: 'CategoryPage' }
-    ) | null }
-    & { __typename?: 'Category' }
-  ) | null }
-  & { __typename?: 'Category' }
-);
-
-export type CategoryTagsCategoryFragment = (
-  { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, iconImage?: (
-    { rendition?: (
-      { src: string }
-      & { __typename?: 'ImageRendition' }
-    ) | null }
-    & { __typename?: 'Image' }
-  ) | null, type: (
-    { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-    & { __typename?: 'CategoryType' }
-  ), level?: (
-    { id: string, name: string, namePlural?: string | null }
-    & { __typename?: 'CategoryLevel' }
-  ) | null, image?: (
-    { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-      { id: string, width: number, height: number, src: string }
-      & { __typename?: 'ImageRendition' }
-    ) | null, large?: (
-      { id: string, width: number, height: number, src: string }
-      & { __typename?: 'ImageRendition' }
-    ) | null, small?: (
-      { id: string, width: number, height: number, src: string }
-      & { __typename?: 'ImageRendition' }
-    ) | null, social?: (
-      { id: string, width: number, height: number, src: string }
-      & { __typename?: 'ImageRendition' }
-    ) | null, rendition?: (
-      { id: string, width: number, height: number, src: string }
-      & { __typename?: 'ImageRendition' }
-    ) | null }
-    & { __typename?: 'Image' }
-  ) | null, categoryPage?: (
-    { title: string, urlPath: string }
-    & { __typename?: 'CategoryPage' }
-  ) | null, parent?: (
-    { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-      { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-        { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, iconImage?: (
-          { rendition?: (
-            { src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null }
-          & { __typename?: 'Image' }
-        ) | null, type: (
-          { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-          & { __typename?: 'CategoryType' }
-        ), level?: (
-          { id: string, name: string, namePlural?: string | null }
-          & { __typename?: 'CategoryLevel' }
-        ) | null, image?: (
-          { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null, large?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null, small?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null, social?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null, rendition?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null }
-          & { __typename?: 'Image' }
-        ) | null, categoryPage?: (
-          { title: string, urlPath: string }
-          & { __typename?: 'CategoryPage' }
-        ) | null }
-        & { __typename?: 'Category' }
-      ) | null, iconImage?: (
-        { rendition?: (
-          { src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null }
-        & { __typename?: 'Image' }
-      ) | null, type: (
-        { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-        & { __typename?: 'CategoryType' }
-      ), level?: (
-        { id: string, name: string, namePlural?: string | null }
-        & { __typename?: 'CategoryLevel' }
-      ) | null, image?: (
-        { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null, large?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null, small?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null, social?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null, rendition?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null }
-        & { __typename?: 'Image' }
-      ) | null, categoryPage?: (
-        { title: string, urlPath: string }
-        & { __typename?: 'CategoryPage' }
-      ) | null }
-      & { __typename?: 'Category' }
-    ) | null, iconImage?: (
-      { rendition?: (
-        { src: string }
-        & { __typename?: 'ImageRendition' }
-      ) | null }
-      & { __typename?: 'Image' }
-    ) | null, type: (
-      { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-      & { __typename?: 'CategoryType' }
-    ), level?: (
-      { id: string, name: string, namePlural?: string | null }
-      & { __typename?: 'CategoryLevel' }
-    ) | null, image?: (
-      { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-        { id: string, width: number, height: number, src: string }
-        & { __typename?: 'ImageRendition' }
-      ) | null, large?: (
-        { id: string, width: number, height: number, src: string }
-        & { __typename?: 'ImageRendition' }
-      ) | null, small?: (
-        { id: string, width: number, height: number, src: string }
-        & { __typename?: 'ImageRendition' }
-      ) | null, social?: (
-        { id: string, width: number, height: number, src: string }
-        & { __typename?: 'ImageRendition' }
-      ) | null, rendition?: (
-        { id: string, width: number, height: number, src: string }
-        & { __typename?: 'ImageRendition' }
-      ) | null }
-      & { __typename?: 'Image' }
-    ) | null, categoryPage?: (
-      { title: string, urlPath: string }
-      & { __typename?: 'CategoryPage' }
-    ) | null }
-    & { __typename?: 'Category' }
-  ) | null }
-  & { __typename?: 'Category' }
-);
-
-export type CategoryTagsCategoryTypeFragment = (
-  { id: string, name: string, identifier: string, helpText: string, hideCategoryIdentifiers: boolean, levels: Array<(
-    { id: string, order: number, name: string, namePlural?: string | null }
-    & { __typename?: 'CategoryLevel' }
-  )> }
-  & { __typename?: 'CategoryType' }
-);
-
 export type ContactDetailsQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
@@ -7033,415 +4412,6 @@ export type ContactDetailsQuery = (
   ) | null }
   & { __typename?: 'Query' }
 );
-
-type AttributesBlockAttribute_AttributeCategoryChoice_Fragment = (
-  { id: string, categories: Array<(
-    { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, iconImage?: (
-      { rendition?: (
-        { src: string }
-        & { __typename?: 'ImageRendition' }
-      ) | null }
-      & { __typename?: 'Image' }
-    ) | null, type: (
-      { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-      & { __typename?: 'CategoryType' }
-    ), level?: (
-      { id: string, name: string, namePlural?: string | null }
-      & { __typename?: 'CategoryLevel' }
-    ) | null, image?: (
-      { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-        { id: string, width: number, height: number, src: string }
-        & { __typename?: 'ImageRendition' }
-      ) | null, large?: (
-        { id: string, width: number, height: number, src: string }
-        & { __typename?: 'ImageRendition' }
-      ) | null, small?: (
-        { id: string, width: number, height: number, src: string }
-        & { __typename?: 'ImageRendition' }
-      ) | null, social?: (
-        { id: string, width: number, height: number, src: string }
-        & { __typename?: 'ImageRendition' }
-      ) | null, rendition?: (
-        { id: string, width: number, height: number, src: string }
-        & { __typename?: 'ImageRendition' }
-      ) | null }
-      & { __typename?: 'Image' }
-    ) | null, categoryPage?: (
-      { title: string, urlPath: string }
-      & { __typename?: 'CategoryPage' }
-    ) | null, parent?: (
-      { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-        { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-          { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, iconImage?: (
-            { rendition?: (
-              { src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null }
-            & { __typename?: 'Image' }
-          ) | null, type: (
-            { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-            & { __typename?: 'CategoryType' }
-          ), level?: (
-            { id: string, name: string, namePlural?: string | null }
-            & { __typename?: 'CategoryLevel' }
-          ) | null, image?: (
-            { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, large?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, small?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, social?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, rendition?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null }
-            & { __typename?: 'Image' }
-          ) | null, categoryPage?: (
-            { title: string, urlPath: string }
-            & { __typename?: 'CategoryPage' }
-          ) | null }
-          & { __typename?: 'Category' }
-        ) | null, iconImage?: (
-          { rendition?: (
-            { src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null }
-          & { __typename?: 'Image' }
-        ) | null, type: (
-          { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-          & { __typename?: 'CategoryType' }
-        ), level?: (
-          { id: string, name: string, namePlural?: string | null }
-          & { __typename?: 'CategoryLevel' }
-        ) | null, image?: (
-          { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null, large?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null, small?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null, social?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null, rendition?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null }
-          & { __typename?: 'Image' }
-        ) | null, categoryPage?: (
-          { title: string, urlPath: string }
-          & { __typename?: 'CategoryPage' }
-        ) | null }
-        & { __typename?: 'Category' }
-      ) | null, iconImage?: (
-        { rendition?: (
-          { src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null }
-        & { __typename?: 'Image' }
-      ) | null, type: (
-        { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-        & { __typename?: 'CategoryType' }
-      ), level?: (
-        { id: string, name: string, namePlural?: string | null }
-        & { __typename?: 'CategoryLevel' }
-      ) | null, image?: (
-        { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null, large?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null, small?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null, social?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null, rendition?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null }
-        & { __typename?: 'Image' }
-      ) | null, categoryPage?: (
-        { title: string, urlPath: string }
-        & { __typename?: 'CategoryPage' }
-      ) | null }
-      & { __typename?: 'Category' }
-    ) | null }
-    & { __typename?: 'Category' }
-  )>, type: (
-    { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
-      { id: string, name: string, shortName?: string | null }
-      & { __typename?: 'Unit' }
-    ) | null }
-    & { __typename?: 'AttributeType' }
-  ) }
-  & { __typename: 'AttributeCategoryChoice' }
-);
-
-type AttributesBlockAttribute_AttributeChoice_Fragment = (
-  { text?: string | null, id: string, choice?: (
-    { id: string, name: string }
-    & { __typename?: 'AttributeTypeChoiceOption' }
-  ) | null, type: (
-    { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
-      { id: string, name: string, shortName?: string | null }
-      & { __typename?: 'Unit' }
-    ) | null }
-    & { __typename?: 'AttributeType' }
-  ) }
-  & { __typename: 'AttributeChoice' }
-);
-
-type AttributesBlockAttribute_AttributeNumericValue_Fragment = (
-  { id: string, numericValue: number, type: (
-    { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
-      { id: string, name: string, shortName?: string | null }
-      & { __typename?: 'Unit' }
-    ) | null }
-    & { __typename?: 'AttributeType' }
-  ) }
-  & { __typename: 'AttributeNumericValue' }
-);
-
-type AttributesBlockAttribute_AttributeRichText_AttributeText_Fragment = (
-  { value: string, id: string, type: (
-    { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
-      { id: string, name: string, shortName?: string | null }
-      & { __typename?: 'Unit' }
-    ) | null }
-    & { __typename?: 'AttributeType' }
-  ) }
-  & { __typename: 'AttributeRichText' | 'AttributeText' }
-);
-
-export type AttributesBlockAttributeFragment = AttributesBlockAttribute_AttributeCategoryChoice_Fragment | AttributesBlockAttribute_AttributeChoice_Fragment | AttributesBlockAttribute_AttributeNumericValue_Fragment | AttributesBlockAttribute_AttributeRichText_AttributeText_Fragment;
-
-export type AttributesBlockAttributeTypeFragment = (
-  { id: string, format: AttributeTypeFormat, name: string, identifier: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
-    { id: string, identifier: string }
-    & { __typename?: 'AttributeTypeChoiceOption' }
-  )>, unit?: (
-    { id: string, name: string }
-    & { __typename?: 'Unit' }
-  ) | null }
-  & { __typename: 'AttributeType' }
-);
-
-type AttributesBlockAttributeWithNestedType_AttributeCategoryChoice_Fragment = (
-  { id: string, type: (
-    { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit?: (
-      { id: string, name: string, shortName?: string | null }
-      & { __typename?: 'Unit' }
-    ) | null, choiceOptions: Array<(
-      { id: string, identifier: string }
-      & { __typename?: 'AttributeTypeChoiceOption' }
-    )> }
-    & { __typename: 'AttributeType' }
-  ), categories: Array<(
-    { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, iconImage?: (
-      { rendition?: (
-        { src: string }
-        & { __typename?: 'ImageRendition' }
-      ) | null }
-      & { __typename?: 'Image' }
-    ) | null, type: (
-      { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-      & { __typename?: 'CategoryType' }
-    ), level?: (
-      { id: string, name: string, namePlural?: string | null }
-      & { __typename?: 'CategoryLevel' }
-    ) | null, image?: (
-      { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-        { id: string, width: number, height: number, src: string }
-        & { __typename?: 'ImageRendition' }
-      ) | null, large?: (
-        { id: string, width: number, height: number, src: string }
-        & { __typename?: 'ImageRendition' }
-      ) | null, small?: (
-        { id: string, width: number, height: number, src: string }
-        & { __typename?: 'ImageRendition' }
-      ) | null, social?: (
-        { id: string, width: number, height: number, src: string }
-        & { __typename?: 'ImageRendition' }
-      ) | null, rendition?: (
-        { id: string, width: number, height: number, src: string }
-        & { __typename?: 'ImageRendition' }
-      ) | null }
-      & { __typename?: 'Image' }
-    ) | null, categoryPage?: (
-      { title: string, urlPath: string }
-      & { __typename?: 'CategoryPage' }
-    ) | null, parent?: (
-      { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-        { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-          { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, iconImage?: (
-            { rendition?: (
-              { src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null }
-            & { __typename?: 'Image' }
-          ) | null, type: (
-            { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-            & { __typename?: 'CategoryType' }
-          ), level?: (
-            { id: string, name: string, namePlural?: string | null }
-            & { __typename?: 'CategoryLevel' }
-          ) | null, image?: (
-            { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, large?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, small?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, social?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, rendition?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null }
-            & { __typename?: 'Image' }
-          ) | null, categoryPage?: (
-            { title: string, urlPath: string }
-            & { __typename?: 'CategoryPage' }
-          ) | null }
-          & { __typename?: 'Category' }
-        ) | null, iconImage?: (
-          { rendition?: (
-            { src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null }
-          & { __typename?: 'Image' }
-        ) | null, type: (
-          { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-          & { __typename?: 'CategoryType' }
-        ), level?: (
-          { id: string, name: string, namePlural?: string | null }
-          & { __typename?: 'CategoryLevel' }
-        ) | null, image?: (
-          { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null, large?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null, small?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null, social?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null, rendition?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null }
-          & { __typename?: 'Image' }
-        ) | null, categoryPage?: (
-          { title: string, urlPath: string }
-          & { __typename?: 'CategoryPage' }
-        ) | null }
-        & { __typename?: 'Category' }
-      ) | null, iconImage?: (
-        { rendition?: (
-          { src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null }
-        & { __typename?: 'Image' }
-      ) | null, type: (
-        { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-        & { __typename?: 'CategoryType' }
-      ), level?: (
-        { id: string, name: string, namePlural?: string | null }
-        & { __typename?: 'CategoryLevel' }
-      ) | null, image?: (
-        { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null, large?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null, small?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null, social?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null, rendition?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null }
-        & { __typename?: 'Image' }
-      ) | null, categoryPage?: (
-        { title: string, urlPath: string }
-        & { __typename?: 'CategoryPage' }
-      ) | null }
-      & { __typename?: 'Category' }
-    ) | null }
-    & { __typename?: 'Category' }
-  )> }
-  & { __typename: 'AttributeCategoryChoice' }
-);
-
-type AttributesBlockAttributeWithNestedType_AttributeChoice_Fragment = (
-  { text?: string | null, id: string, type: (
-    { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit?: (
-      { id: string, name: string, shortName?: string | null }
-      & { __typename?: 'Unit' }
-    ) | null, choiceOptions: Array<(
-      { id: string, identifier: string }
-      & { __typename?: 'AttributeTypeChoiceOption' }
-    )> }
-    & { __typename: 'AttributeType' }
-  ), choice?: (
-    { id: string, name: string }
-    & { __typename?: 'AttributeTypeChoiceOption' }
-  ) | null }
-  & { __typename: 'AttributeChoice' }
-);
-
-type AttributesBlockAttributeWithNestedType_AttributeNumericValue_Fragment = (
-  { id: string, numericValue: number, type: (
-    { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit?: (
-      { id: string, name: string, shortName?: string | null }
-      & { __typename?: 'Unit' }
-    ) | null, choiceOptions: Array<(
-      { id: string, identifier: string }
-      & { __typename?: 'AttributeTypeChoiceOption' }
-    )> }
-    & { __typename: 'AttributeType' }
-  ) }
-  & { __typename: 'AttributeNumericValue' }
-);
-
-type AttributesBlockAttributeWithNestedType_AttributeRichText_AttributeText_Fragment = (
-  { value: string, id: string, type: (
-    { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit?: (
-      { id: string, name: string, shortName?: string | null }
-      & { __typename?: 'Unit' }
-    ) | null, choiceOptions: Array<(
-      { id: string, identifier: string }
-      & { __typename?: 'AttributeTypeChoiceOption' }
-    )> }
-    & { __typename: 'AttributeType' }
-  ) }
-  & { __typename: 'AttributeRichText' | 'AttributeText' }
-);
-
-export type AttributesBlockAttributeWithNestedTypeFragment = AttributesBlockAttributeWithNestedType_AttributeCategoryChoice_Fragment | AttributesBlockAttributeWithNestedType_AttributeChoice_Fragment | AttributesBlockAttributeWithNestedType_AttributeNumericValue_Fragment | AttributesBlockAttributeWithNestedType_AttributeRichText_AttributeText_Fragment;
 
 export type CreateUserFeedbackMutationVariables = Exact<{
   input: UserFeedbackMutationInput;
@@ -7520,372 +4490,6 @@ export type SearchQueryQuery = (
   & { __typename?: 'Query' }
 );
 
-type StreamFieldFragment_Ize9dJArng6qjN9ZgqxnjBWpTKxclmuDcqywLaE9c_Fragment = (
-  { id?: string | null, blockType: string, field: string }
-  & { __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' }
-);
-
-type StreamFieldFragment_P4DZgRiVf47KymI0hetvY2c4nXYoAy7QJhWbSmb9Q_Fragment = (
-  { id?: string | null, blockType: string, field: string }
-  & { __typename?: 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTypeFilterBlock' | 'DateBlock' }
-);
-
-type StreamFieldFragment_K7Lj6Dl_5ZajF5uRZrNfk8JysbyjpOf9Yx86ArHA_Fragment = (
-  { id?: string | null, blockType: string, field: string }
-  & { __typename?: 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorHighlightsBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionBlock' }
-);
-
-type StreamFieldFragment_GRpXjOhhShFNq37UTrxwyvrMDxLtrF59y18indXgl3k_Fragment = (
-  { id?: string | null, blockType: string, field: string }
-  & { __typename?: 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
-);
-
-type StreamFieldFragment_AccessibilityStatementContactInformationBlock_Fragment = (
-  { id?: string | null, blockType: string, field: string, blocks: Array<(
-    { id?: string | null, field: string }
-    & { __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' }
-  ) | (
-    { id?: string | null, field: string }
-    & { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' }
-  ) | (
-    { id?: string | null, field: string }
-    & { __typename?: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' }
-  ) | (
-    { id?: string | null, field: string }
-    & { __typename?: 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' }
-  ) | (
-    { id?: string | null, field: string }
-    & { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
-  ) | (
-    { value: string, id?: string | null, field: string }
-    & { __typename?: 'CharBlock' }
-  )> }
-  & { __typename?: 'AccessibilityStatementContactInformationBlock' }
-);
-
-type StreamFieldFragment_ActionCategoryFilterCardsBlock_Fragment = (
-  { id?: string | null, blockType: string, field: string, cards?: Array<{ __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionListBlock' } | { __typename?: 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' } | { __typename?: 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' } | { __typename?: 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' } | { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
-    { heading?: string | null, lead?: string | null, category?: (
-      { id: string, type: (
-        { identifier: string }
-        & { __typename?: 'CategoryType' }
-      ) }
-      & { __typename?: 'Category' }
-    ) | null }
-    & { __typename?: 'ActionCategoryFilterCardBlock' }
-  ) | null> | null }
-  & { __typename?: 'ActionCategoryFilterCardsBlock' }
-);
-
-type StreamFieldFragment_ActionListBlock_Fragment = (
-  { id?: string | null, blockType: string, field: string, categoryFilter?: (
-    { id: string }
-    & { __typename?: 'Category' }
-  ) | null }
-  & { __typename?: 'ActionListBlock' }
-);
-
-type StreamFieldFragment_AdaptiveEmbedBlock_Fragment = (
-  { fullWidth?: boolean | null, id?: string | null, blockType: string, field: string, embed?: (
-    { html?: string | null }
-    & { __typename?: 'EmbedHTMLValue' }
-  ) | null }
-  & { __typename?: 'AdaptiveEmbedBlock' }
-);
-
-type StreamFieldFragment_CardListBlock_Fragment = (
-  { heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, cards?: Array<{ __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' } | { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' } | { __typename?: 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' } | { __typename?: 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' } | { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
-    { heading?: string | null, content?: string | null, link?: string | null, image?: (
-      { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-        { id: string, width: number, height: number, src: string }
-        & { __typename?: 'ImageRendition' }
-      ) | null, large?: (
-        { id: string, width: number, height: number, src: string }
-        & { __typename?: 'ImageRendition' }
-      ) | null, small?: (
-        { id: string, width: number, height: number, src: string }
-        & { __typename?: 'ImageRendition' }
-      ) | null, social?: (
-        { id: string, width: number, height: number, src: string }
-        & { __typename?: 'ImageRendition' }
-      ) | null, rendition?: (
-        { id: string, width: number, height: number, src: string }
-        & { __typename?: 'ImageRendition' }
-      ) | null }
-      & { __typename?: 'Image' }
-    ) | null }
-    & { __typename?: 'CardBlock' }
-  ) | null> | null }
-  & { __typename?: 'CardListBlock' }
-);
-
-type StreamFieldFragment_CartographyVisualisationBlock_Fragment = (
-  { style?: string | null, styleOverrides?: string | null, id?: string | null, blockType: string, field: string, account?: (
-    { provider: CartographyProviderCredentialsProvider, account: string, publicAccessToken: string }
-    & { __typename?: 'CartographyProviderCredentials' }
-  ) | null }
-  & { __typename?: 'CartographyVisualisationBlock' }
-);
-
-type StreamFieldFragment_CategoryListBlock_Fragment = (
-  { style?: string | null, heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, categoryType?: (
-    { id: string, hideCategoryIdentifiers: boolean, categories: Array<(
-      { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, level?: (
-        { name: string, namePlural?: string | null }
-        & { __typename?: 'CategoryLevel' }
-      ) | null, image?: (
-        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null, large?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null, small?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null, social?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null, rendition?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null }
-        & { __typename?: 'Image' }
-      ) | null, iconImage?: (
-        { rendition?: (
-          { src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null }
-        & { __typename?: 'Image' }
-      ) | null, categoryPage?: (
-        { title: string, urlPath: string, live: boolean }
-        & { __typename?: 'CategoryPage' }
-      ) | null, type: (
-        { id: string, hideCategoryIdentifiers: boolean }
-        & { __typename?: 'CategoryType' }
-      ) }
-      & { __typename?: 'Category' }
-    )> }
-    & { __typename?: 'CategoryType' }
-  ) | null, category?: (
-    { id: string, children: Array<(
-      { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, level?: (
-        { name: string, namePlural?: string | null }
-        & { __typename?: 'CategoryLevel' }
-      ) | null, image?: (
-        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null, large?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null, small?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null, social?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null, rendition?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null }
-        & { __typename?: 'Image' }
-      ) | null, iconImage?: (
-        { rendition?: (
-          { src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null }
-        & { __typename?: 'Image' }
-      ) | null, categoryPage?: (
-        { title: string, urlPath: string, live: boolean }
-        & { __typename?: 'CategoryPage' }
-      ) | null, type: (
-        { id: string, hideCategoryIdentifiers: boolean }
-        & { __typename?: 'CategoryType' }
-      ) }
-      & { __typename?: 'Category' }
-    )> }
-    & { __typename?: 'Category' }
-  ) | null }
-  & { __typename?: 'CategoryListBlock' }
-);
-
-type StreamFieldFragment_CategoryTreeMapBlock_Fragment = (
-  { heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, valueAttribute?: (
-    { identifier: string, unit?: (
-      { shortName?: string | null }
-      & { __typename?: 'Unit' }
-    ) | null }
-    & { __typename?: 'AttributeType' }
-  ) | null, categoryType?: (
-    { identifier: string }
-    & { __typename?: 'CategoryType' }
-  ) | null }
-  & { __typename?: 'CategoryTreeMapBlock' }
-);
-
-type StreamFieldFragment_CharBlock_RichTextBlock_TextBlock_Fragment = (
-  { value: string, id?: string | null, blockType: string, field: string }
-  & { __typename?: 'CharBlock' | 'RichTextBlock' | 'TextBlock' }
-);
-
-type StreamFieldFragment_ChoiceBlock_Fragment = (
-  { value: string, id?: string | null, blockType: string, field: string, choices: Array<(
-    { key: string, value: string }
-    & { __typename?: 'ChoiceOption' }
-  )> }
-  & { __typename?: 'ChoiceBlock' }
-);
-
-type StreamFieldFragment_FrontPageHeroBlock_Fragment = (
-  { layout?: string | null, heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, image?: (
-    { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-      { id: string, width: number, height: number, src: string }
-      & { __typename?: 'ImageRendition' }
-    ) | null, large?: (
-      { id: string, width: number, height: number, src: string }
-      & { __typename?: 'ImageRendition' }
-    ) | null, small?: (
-      { id: string, width: number, height: number, src: string }
-      & { __typename?: 'ImageRendition' }
-    ) | null, social?: (
-      { id: string, width: number, height: number, src: string }
-      & { __typename?: 'ImageRendition' }
-    ) | null, rendition?: (
-      { id: string, width: number, height: number, src: string }
-      & { __typename?: 'ImageRendition' }
-    ) | null }
-    & { __typename?: 'Image' }
-  ) | null }
-  & { __typename?: 'FrontPageHeroBlock' }
-);
-
-type StreamFieldFragment_IndicatorBlock_Fragment = (
-  { style?: string | null, id?: string | null, blockType: string, field: string, indicator?: (
-    { id: string }
-    & { __typename?: 'Indicator' }
-  ) | null }
-  & { __typename?: 'IndicatorBlock' }
-);
-
-type StreamFieldFragment_IndicatorGroupBlock_Fragment = (
-  { title?: string | null, id?: string | null, blockType: string, field: string, indicators?: Array<{ __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' } | { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' } | { __typename?: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' } | { __typename?: 'ImplementationPhaseColumnBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' } | { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
-    { style?: string | null, indicator?: (
-      { id: string, identifier?: string | null, name: string, description?: string | null, timeResolution: IndicatorTimeResolution, level?: string | null, unit: (
-        { id: string, name: string }
-        & { __typename?: 'Unit' }
-      ), latestValue?: (
-        { id: string, date?: string | null, value: number }
-        & { __typename?: 'IndicatorValue' }
-      ) | null, goals?: Array<(
-        { id: string, date?: string | null, value: number }
-        & { __typename?: 'IndicatorGoal' }
-      ) | null> | null }
-      & { __typename?: 'Indicator' }
-    ) | null }
-    & { __typename?: 'IndicatorBlock' }
-  ) | null> | null }
-  & { __typename?: 'IndicatorGroupBlock' }
-);
-
-type StreamFieldFragment_IndicatorShowcaseBlock_Fragment = (
-  { title?: string | null, body?: string | null, id?: string | null, blockType: string, field: string, blocks: Array<(
-    { id?: string | null }
-    & { __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' }
-  ) | (
-    { id?: string | null }
-    & { __typename: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' }
-  ) | (
-    { id?: string | null }
-    & { __typename: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' }
-  ) | (
-    { id?: string | null }
-    & { __typename: 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' }
-  ) | (
-    { id?: string | null }
-    & { __typename: 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
-  )>, indicator?: (
-    { id: string, identifier?: string | null, name: string, minValue?: number | null, maxValue?: number | null, unit: (
-      { id: string, shortName?: string | null }
-      & { __typename?: 'Unit' }
-    ), latestValue?: (
-      { id: string, date?: string | null, value: number }
-      & { __typename?: 'IndicatorValue' }
-    ) | null, values?: Array<(
-      { id: string, date?: string | null, value: number, normalizedValues?: Array<(
-        { normalizerId?: string | null, value?: number | null }
-        & { __typename?: 'NormalizedValue' }
-      ) | null> | null, categories: Array<(
-        { id: string }
-        & { __typename?: 'DimensionCategory' }
-      )> }
-      & { __typename?: 'IndicatorValue' }
-    ) | null> | null, goals?: Array<(
-      { id: string, date?: string | null, value: number, normalizedValues?: Array<(
-        { normalizerId?: string | null, value?: number | null }
-        & { __typename?: 'NormalizedValue' }
-      ) | null> | null }
-      & { __typename?: 'IndicatorGoal' }
-    ) | null> | null, common?: (
-      { id: string, normalizations?: Array<(
-        { unit?: (
-          { shortName?: string | null }
-          & { __typename?: 'Unit' }
-        ) | null, normalizer?: (
-          { name: string, id: string, identifier?: string | null }
-          & { __typename?: 'CommonIndicator' }
-        ) | null }
-        & { __typename?: 'CommonIndicatorNormalization' }
-      ) | null> | null }
-      & { __typename?: 'CommonIndicator' }
-    ) | null }
-    & { __typename?: 'Indicator' }
-  ) | null, linkButton?: (
-    { blockType: string }
-    & { __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' }
-  ) | (
-    { blockType: string }
-    & { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' }
-  ) | (
-    { blockType: string }
-    & { __typename?: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' }
-  ) | (
-    { blockType: string }
-    & { __typename?: 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' }
-  ) | (
-    { blockType: string }
-    & { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
-  ) | (
-    { text?: string | null, blockType: string, page?: (
-      { url?: string | null, urlPath: string, slug: string }
-      & { __typename?: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PrivacyPolicyPage' | 'StaticPage' }
-    ) | null }
-    & { __typename?: 'PageLinkBlock' }
-  ) | null }
-  & { __typename?: 'IndicatorShowcaseBlock' }
-);
-
-type StreamFieldFragment_LargeImageBlock_Fragment = (
-  { width?: string | null, id?: string | null, blockType: string, field: string, image?: (
-    { title: string, altText: string, width: number, height: number, renditionUncropped?: (
-      { src: string }
-      & { __typename?: 'ImageRendition' }
-    ) | null }
-    & { __typename?: 'Image' }
-  ) | null }
-  & { __typename?: 'LargeImageBlock' }
-);
-
-type StreamFieldFragment_QuestionAnswerBlock_Fragment = (
-  { heading?: string | null, id?: string | null, blockType: string, field: string, questions?: Array<{ __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' } | { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' } | { __typename?: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' } | { __typename?: 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' } | { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
-    { question?: string | null, answer?: string | null }
-    & { __typename?: 'QuestionBlock' }
-  ) | null> | null }
-  & { __typename?: 'QuestionAnswerBlock' }
-);
-
-export type StreamFieldFragmentFragment = StreamFieldFragment_Ize9dJArng6qjN9ZgqxnjBWpTKxclmuDcqywLaE9c_Fragment | StreamFieldFragment_P4DZgRiVf47KymI0hetvY2c4nXYoAy7QJhWbSmb9Q_Fragment | StreamFieldFragment_K7Lj6Dl_5ZajF5uRZrNfk8JysbyjpOf9Yx86ArHA_Fragment | StreamFieldFragment_GRpXjOhhShFNq37UTrxwyvrMDxLtrF59y18indXgl3k_Fragment | StreamFieldFragment_AccessibilityStatementContactInformationBlock_Fragment | StreamFieldFragment_ActionCategoryFilterCardsBlock_Fragment | StreamFieldFragment_ActionListBlock_Fragment | StreamFieldFragment_AdaptiveEmbedBlock_Fragment | StreamFieldFragment_CardListBlock_Fragment | StreamFieldFragment_CartographyVisualisationBlock_Fragment | StreamFieldFragment_CategoryListBlock_Fragment | StreamFieldFragment_CategoryTreeMapBlock_Fragment | StreamFieldFragment_CharBlock_RichTextBlock_TextBlock_Fragment | StreamFieldFragment_ChoiceBlock_Fragment | StreamFieldFragment_FrontPageHeroBlock_Fragment | StreamFieldFragment_IndicatorBlock_Fragment | StreamFieldFragment_IndicatorGroupBlock_Fragment | StreamFieldFragment_IndicatorShowcaseBlock_Fragment | StreamFieldFragment_LargeImageBlock_Fragment | StreamFieldFragment_QuestionAnswerBlock_Fragment;
-
 export type GetActionListForBlockQueryVariables = Exact<{
   plan: Scalars['ID'];
   category?: InputMaybe<Scalars['ID']>;
@@ -7961,44 +4565,6 @@ export type GetActionListForGraphsQuery = (
     & { __typename?: 'Action' }
   )> | null }
   & { __typename?: 'Query' }
-);
-
-export type CategoryListCategoryFragment = (
-  { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, level?: (
-    { name: string, namePlural?: string | null }
-    & { __typename?: 'CategoryLevel' }
-  ) | null, image?: (
-    { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-      { id: string, width: number, height: number, src: string }
-      & { __typename?: 'ImageRendition' }
-    ) | null, large?: (
-      { id: string, width: number, height: number, src: string }
-      & { __typename?: 'ImageRendition' }
-    ) | null, small?: (
-      { id: string, width: number, height: number, src: string }
-      & { __typename?: 'ImageRendition' }
-    ) | null, social?: (
-      { id: string, width: number, height: number, src: string }
-      & { __typename?: 'ImageRendition' }
-    ) | null, rendition?: (
-      { id: string, width: number, height: number, src: string }
-      & { __typename?: 'ImageRendition' }
-    ) | null }
-    & { __typename?: 'Image' }
-  ) | null, iconImage?: (
-    { rendition?: (
-      { src: string }
-      & { __typename?: 'ImageRendition' }
-    ) | null }
-    & { __typename?: 'Image' }
-  ) | null, categoryPage?: (
-    { title: string, urlPath: string, live: boolean }
-    & { __typename?: 'CategoryPage' }
-  ) | null, type: (
-    { id: string, hideCategoryIdentifiers: boolean }
-    & { __typename?: 'CategoryType' }
-  ) }
-  & { __typename?: 'Category' }
 );
 
 export type GetCategoryAttributeTypesQueryVariables = Exact<{
@@ -8212,14 +4778,6 @@ export type OrganizationFragmentFragment = (
     & { __typename?: 'Organization' }
   ) | null }
   & { __typename?: 'Organization' }
-);
-
-export type ActionTableColumnFragmentFragment = (
-  { dashboardColumns?: Array<(
-    { columnLabel?: string | null }
-    & { __typename: 'IdentifierColumnBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorsColumnBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'ResponsiblePartiesColumnBlock' | 'StatusColumnBlock' | 'TasksColumnBlock' | 'UpdatedAtColumnBlock' }
-  )> | null }
-  & { __typename?: 'ActionListPage' }
 );
 
 export type DashboardActionListQueryVariables = Exact<{
@@ -8477,147 +5035,6 @@ export type DashboardActionListQuery = (
   & { __typename?: 'Query' }
 );
 
-type ActionListFilter_IhjBBwez7fLS40GnTtqRZjjy0Kv1vAh93c8Pfw7sak_Fragment = (
-  { field: string, id?: string | null }
-  & { __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionListBlock' }
-);
-
-type ActionListFilter_Yd6843xP2XelxNnPKdcDbk203MDs5Q6T1Tb6rBhv7pY_Fragment = (
-  { field: string, id?: string | null }
-  & { __typename: 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' }
-);
-
-type ActionListFilter_4ScTt4ie8YitgYVvz5GlLw_357S0lTasi8Sapx3PqU_Fragment = (
-  { field: string, id?: string | null }
-  & { __typename: 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' }
-);
-
-type ActionListFilter_DA5CmOaKlFnDfcyfLmbDvczqEPiS6OLl8O5B2gztSa_Fragment = (
-  { field: string, id?: string | null }
-  & { __typename: 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' }
-);
-
-type ActionListFilter_Gi2hvv85vZlZPcrA0h1jHIoERy23S38fsyeyqhZKpts_Fragment = (
-  { field: string, id?: string | null }
-  & { __typename: 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
-);
-
-type ActionListFilter_ActionAttributeTypeFilterBlock_Fragment = (
-  { showAllLabel?: string | null, field: string, id?: string | null, attributeType: (
-    { id: string, identifier: string, format: AttributeTypeFormat, name: string, helpText: string, choiceOptions: Array<(
-      { id: string, identifier: string, name: string }
-      & { __typename?: 'AttributeTypeChoiceOption' }
-    )> }
-    & { __typename?: 'AttributeType' }
-  ) }
-  & { __typename: 'ActionAttributeTypeFilterBlock' }
-);
-
-type ActionListFilter_CategoryTypeFilterBlock_Fragment = (
-  { style?: string | null, showAllLabel?: string | null, depth?: number | null, field: string, id?: string | null, categoryType?: (
-    { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
-      { id: string, identifier: string, name: string, order: number, helpText: string, parent?: (
-        { id: string }
-        & { __typename?: 'Category' }
-      ) | null, common?: (
-        { id: string }
-        & { __typename?: 'CommonCategory' }
-      ) | null }
-      & { __typename?: 'Category' }
-    )> }
-    & { __typename?: 'CategoryType' }
-  ) | null }
-  & { __typename: 'CategoryTypeFilterBlock' }
-);
-
-export type ActionListFilterFragment = ActionListFilter_IhjBBwez7fLS40GnTtqRZjjy0Kv1vAh93c8Pfw7sak_Fragment | ActionListFilter_Yd6843xP2XelxNnPKdcDbk203MDs5Q6T1Tb6rBhv7pY_Fragment | ActionListFilter_4ScTt4ie8YitgYVvz5GlLw_357S0lTasi8Sapx3PqU_Fragment | ActionListFilter_DA5CmOaKlFnDfcyfLmbDvczqEPiS6OLl8O5B2gztSa_Fragment | ActionListFilter_Gi2hvv85vZlZPcrA0h1jHIoERy23S38fsyeyqhZKpts_Fragment | ActionListFilter_ActionAttributeTypeFilterBlock_Fragment | ActionListFilter_CategoryTypeFilterBlock_Fragment;
-
-export type ActionListPageFiltersFragment = (
-  { primaryFilters?: Array<(
-    { showAllLabel?: string | null, field: string, id?: string | null, attributeType: (
-      { id: string, identifier: string, format: AttributeTypeFormat, name: string, helpText: string, choiceOptions: Array<(
-        { id: string, identifier: string, name: string }
-        & { __typename?: 'AttributeTypeChoiceOption' }
-      )> }
-      & { __typename?: 'AttributeType' }
-    ) }
-    & { __typename: 'ActionAttributeTypeFilterBlock' }
-  ) | (
-    { field: string, id?: string | null }
-    & { __typename: 'ActionImplementationPhaseFilterBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'ResponsiblePartyFilterBlock' }
-  ) | (
-    { style?: string | null, showAllLabel?: string | null, depth?: number | null, field: string, id?: string | null, categoryType?: (
-      { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
-        { id: string, identifier: string, name: string, order: number, helpText: string, parent?: (
-          { id: string }
-          & { __typename?: 'Category' }
-        ) | null, common?: (
-          { id: string }
-          & { __typename?: 'CommonCategory' }
-        ) | null }
-        & { __typename?: 'Category' }
-      )> }
-      & { __typename?: 'CategoryType' }
-    ) | null }
-    & { __typename: 'CategoryTypeFilterBlock' }
-  )> | null, mainFilters?: Array<(
-    { showAllLabel?: string | null, field: string, id?: string | null, attributeType: (
-      { id: string, identifier: string, format: AttributeTypeFormat, name: string, helpText: string, choiceOptions: Array<(
-        { id: string, identifier: string, name: string }
-        & { __typename?: 'AttributeTypeChoiceOption' }
-      )> }
-      & { __typename?: 'AttributeType' }
-    ) }
-    & { __typename: 'ActionAttributeTypeFilterBlock' }
-  ) | (
-    { field: string, id?: string | null }
-    & { __typename: 'ActionImplementationPhaseFilterBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'ResponsiblePartyFilterBlock' }
-  ) | (
-    { style?: string | null, showAllLabel?: string | null, depth?: number | null, field: string, id?: string | null, categoryType?: (
-      { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
-        { id: string, identifier: string, name: string, order: number, helpText: string, parent?: (
-          { id: string }
-          & { __typename?: 'Category' }
-        ) | null, common?: (
-          { id: string }
-          & { __typename?: 'CommonCategory' }
-        ) | null }
-        & { __typename?: 'Category' }
-      )> }
-      & { __typename?: 'CategoryType' }
-    ) | null }
-    & { __typename: 'CategoryTypeFilterBlock' }
-  )> | null, advancedFilters?: Array<(
-    { showAllLabel?: string | null, field: string, id?: string | null, attributeType: (
-      { id: string, identifier: string, format: AttributeTypeFormat, name: string, helpText: string, choiceOptions: Array<(
-        { id: string, identifier: string, name: string }
-        & { __typename?: 'AttributeTypeChoiceOption' }
-      )> }
-      & { __typename?: 'AttributeType' }
-    ) }
-    & { __typename: 'ActionAttributeTypeFilterBlock' }
-  ) | (
-    { field: string, id?: string | null }
-    & { __typename: 'ActionImplementationPhaseFilterBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'ResponsiblePartyFilterBlock' }
-  ) | (
-    { style?: string | null, showAllLabel?: string | null, depth?: number | null, field: string, id?: string | null, categoryType?: (
-      { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
-        { id: string, identifier: string, name: string, order: number, helpText: string, parent?: (
-          { id: string }
-          & { __typename?: 'Category' }
-        ) | null, common?: (
-          { id: string }
-          & { __typename?: 'CommonCategory' }
-        ) | null }
-        & { __typename?: 'Category' }
-      )> }
-      & { __typename?: 'CategoryType' }
-    ) | null }
-    & { __typename: 'CategoryTypeFilterBlock' }
-  )> | null }
-  & { __typename?: 'ActionListPage' }
-);
-
 export type GetEmbedActionQueryVariables = Exact<{
   plan: Scalars['ID'];
   identifier: Scalars['ID'];
@@ -8721,152 +5138,6 @@ export type GetEmbedActionQuery = (
       & { __typename?: 'Category' }
     )> }
     & { __typename?: 'Action' }
-  ) | null }
-  & { __typename?: 'Query' }
-);
-
-export type IndicatorGraphDataSmallQueryVariables = Exact<{
-  id?: InputMaybe<Scalars['ID']>;
-  plan?: InputMaybe<Scalars['ID']>;
-}>;
-
-
-export type IndicatorGraphDataSmallQuery = (
-  { indicator?: (
-    { id: string, name: string, timeResolution: IndicatorTimeResolution, minValue?: number | null, maxValue?: number | null, quantity?: (
-      { id: string, name: string }
-      & { __typename?: 'Quantity' }
-    ) | null, values?: Array<(
-      { id: string, date?: string | null, value: number, categories: Array<(
-        { id: string }
-        & { __typename?: 'DimensionCategory' }
-      )> }
-      & { __typename?: 'IndicatorValue' }
-    ) | null> | null, dimensions: Array<(
-      { dimension: (
-        { id: string, name: string, categories: Array<(
-          { id: string, name: string }
-          & { __typename?: 'DimensionCategory' }
-        )> }
-        & { __typename?: 'Dimension' }
-      ) }
-      & { __typename?: 'IndicatorDimension' }
-    )>, goals?: Array<(
-      { id: string, date?: string | null, value: number, scenario?: (
-        { id: string, name: string }
-        & { __typename?: 'Scenario' }
-      ) | null }
-      & { __typename?: 'IndicatorGoal' }
-    ) | null> | null, unit: (
-      { id: string, name: string, shortName?: string | null, verboseName?: string | null, verboseNamePlural?: string | null }
-      & { __typename?: 'Unit' }
-    ) }
-    & { __typename?: 'Indicator' }
-  ) | null }
-  & { __typename?: 'Query' }
-);
-
-export type IndicatorDetailsQueryVariables = Exact<{
-  id?: InputMaybe<Scalars['ID']>;
-  plan?: InputMaybe<Scalars['ID']>;
-  identifier?: InputMaybe<Scalars['ID']>;
-}>;
-
-
-export type IndicatorDetailsQuery = (
-  { indicator?: (
-    { id: string, identifier?: string | null, name: string, level?: string | null, description?: string | null, timeResolution: IndicatorTimeResolution, organization: (
-      { id: string, name: string, abbreviation: string, classification?: (
-        { id: string, name: string }
-        & { __typename?: 'OrganizationClass' }
-      ) | null, logo?: (
-        { id: string, rendition?: (
-          { src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null }
-        & { __typename?: 'Image' }
-      ) | null }
-      & { __typename?: 'Organization' }
-    ), categories: Array<(
-      { identifier: string, name: string, id: string, type: (
-        { id: string, name: string, identifier: string, helpText: string, hideCategoryIdentifiers: boolean, levels: Array<(
-          { id: string, order: number, name: string, namePlural?: string | null }
-          & { __typename?: 'CategoryLevel' }
-        )> }
-        & { __typename?: 'CategoryType' }
-      ) }
-      & { __typename?: 'Category' }
-    )>, common?: (
-      { id: string, indicators: Array<(
-        { id: string, identifier?: string | null, organization: (
-          { id: string, name: string, abbreviation: string, classification?: (
-            { id: string, name: string }
-            & { __typename?: 'OrganizationClass' }
-          ) | null, logo?: (
-            { id: string, rendition?: (
-              { src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null }
-            & { __typename?: 'Image' }
-          ) | null }
-          & { __typename?: 'Organization' }
-        ) }
-        & { __typename?: 'Indicator' }
-      )> }
-      & { __typename?: 'CommonIndicator' }
-    ) | null, unit: (
-      { id: string, name: string, shortName?: string | null, verboseName?: string | null, verboseNamePlural?: string | null }
-      & { __typename?: 'Unit' }
-    ), latestGraph?: (
-      { id: string }
-      & { __typename?: 'IndicatorGraph' }
-    ) | null, values?: Array<(
-      { id: string, date?: string | null, value: number }
-      & { __typename?: 'IndicatorValue' }
-    ) | null> | null, goals?: Array<(
-      { id: string, date?: string | null, value: number, scenario?: (
-        { id: string }
-        & { __typename?: 'Scenario' }
-      ) | null }
-      & { __typename?: 'IndicatorGoal' }
-    ) | null> | null, actions?: Array<(
-      { id: string, identifier: string, name: string, color?: string | null, completion?: number | null, status?: (
-        { id: string, identifier: string, name: string, color?: string | null }
-        & { __typename?: 'ActionStatus' }
-      ) | null, implementationPhase?: (
-        { id: string, identifier: string, name: string }
-        & { __typename?: 'ActionImplementationPhase' }
-      ) | null, statusSummary: (
-        { identifier: ActionStatusSummaryIdentifier }
-        & { __typename?: 'ActionStatusSummary' }
-      ), categories: Array<(
-        { id: string, identifier: string, name: string, image?: (
-          { rendition?: (
-            { id: string, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null }
-          & { __typename?: 'Image' }
-        ) | null }
-        & { __typename?: 'Category' }
-      )>, impact?: (
-        { id: string, identifier: string, name: string }
-        & { __typename?: 'ActionImpact' }
-      ) | null }
-      & { __typename?: 'Action' }
-    ) | null> | null, relatedCauses: Array<(
-      { id: string, effectType: RelatedIndicatorEffectType, confidenceLevel: RelatedIndicatorConfidenceLevel, causalIndicator: (
-        { id: string, name: string, level?: string | null }
-        & { __typename?: 'Indicator' }
-      ) }
-      & { __typename?: 'RelatedIndicator' }
-    )>, relatedEffects: Array<(
-      { id: string, effectType: RelatedIndicatorEffectType, confidenceLevel: RelatedIndicatorConfidenceLevel, effectIndicator: (
-        { id: string, name: string, level?: string | null }
-        & { __typename?: 'Indicator' }
-      ) }
-      & { __typename?: 'RelatedIndicator' }
-    )> }
-    & { __typename?: 'Indicator' }
   ) | null }
   & { __typename?: 'Query' }
 );
@@ -9099,9 +5370,5783 @@ export type IndicatorGraphDataQuery = (
   & { __typename?: 'Query' }
 );
 
+export type PlaywrightGetPlanBasicsQueryVariables = Exact<{
+  plan: Scalars['ID'];
+}>;
+
+
+export type PlaywrightGetPlanBasicsQuery = (
+  { plan?: (
+    { id: string, identifier: string, primaryLanguage: string, otherLanguages?: Array<string> | null }
+    & { __typename?: 'Plan' }
+  ) | null }
+  & { __typename?: 'Query' }
+);
+
+export type PlaywrightGetPlanInfoQueryVariables = Exact<{
+  plan: Scalars['ID'];
+  locale: Scalars['String'];
+  clientURL: Scalars['String'];
+}>;
+
+
+export type PlaywrightGetPlanInfoQuery = (
+  { plan?: (
+    { id: string, identifier: string, name: string, shortName?: string | null, primaryLanguage: string, otherLanguages?: Array<string> | null, parent?: (
+      { identifier: string, name: string }
+      & { __typename?: 'Plan' }
+    ) | null, generalContent: (
+      { id: string, siteTitle: string, siteDescription: string }
+      & { __typename?: 'SiteGeneralContent' }
+    ), actionListPage?: (
+      { urlPath: string }
+      & { __typename?: 'ActionListPage' }
+    ) | null, actions: Array<(
+      { identifier: string, viewUrl: string }
+      & { __typename?: 'Action' }
+    )>, mainMenu?: (
+      { items: Array<(
+        { linkText: string, url: string }
+        & { __typename: 'ExternalLinkMenuItem' }
+      ) | (
+        { page: (
+          { id?: string | null, title: string, urlPath: string, slug: string }
+          & { __typename?: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PrivacyPolicyPage' | 'StaticPage' }
+        ), parent?: (
+          { id: string, page: { __typename: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PrivacyPolicyPage' | 'StaticPage' } }
+          & { __typename?: 'PageMenuItem' }
+        ) | null }
+        & { __typename: 'PageMenuItem' }
+      ) | null> }
+      & { __typename?: 'MainMenu' }
+    ) | null }
+    & { __typename?: 'Plan' }
+  ) | null, planIndicators?: Array<(
+    { id: string, name: string }
+    & { __typename?: 'Indicator' }
+  ) | null> | null }
+  & { __typename?: 'Query' }
+);
+
+type AttributesBlockAttribute_AttributeCategoryChoice_Fragment = (
+  { id: string, categories: Array<(
+    { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+      { id: string, name: string, namePlural?: string | null }
+      & { __typename?: 'CategoryLevel' }
+    ) | null, image?: (
+      { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null, large?: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null, small?: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null, social?: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null, rendition?: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null }
+      & { __typename?: 'Image' }
+    ) | null, iconImage?: (
+      { rendition?: (
+        { src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null }
+      & { __typename?: 'Image' }
+    ) | null, categoryPage?: (
+      { id?: string | null, title: string, urlPath: string, live: boolean }
+      & { __typename?: 'CategoryPage' }
+    ) | null, type: (
+      { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+      & { __typename?: 'CategoryType' }
+    ), parent?: (
+      { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+        { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+            { id: string, name: string, namePlural?: string | null }
+            & { __typename?: 'CategoryLevel' }
+          ) | null, image?: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, large?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, small?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, social?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, rendition?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, iconImage?: (
+            { rendition?: (
+              { src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, categoryPage?: (
+            { id?: string | null, title: string, urlPath: string, live: boolean }
+            & { __typename?: 'CategoryPage' }
+          ) | null, type: (
+            { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+            & { __typename?: 'CategoryType' }
+          ) }
+          & { __typename?: 'Category' }
+        ) | null, level?: (
+          { id: string, name: string, namePlural?: string | null }
+          & { __typename?: 'CategoryLevel' }
+        ) | null, image?: (
+          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, large?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, small?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, social?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, rendition?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null }
+          & { __typename?: 'Image' }
+        ) | null, iconImage?: (
+          { rendition?: (
+            { src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null }
+          & { __typename?: 'Image' }
+        ) | null, categoryPage?: (
+          { id?: string | null, title: string, urlPath: string, live: boolean }
+          & { __typename?: 'CategoryPage' }
+        ) | null, type: (
+          { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+          & { __typename?: 'CategoryType' }
+        ) }
+        & { __typename?: 'Category' }
+      ) | null, level?: (
+        { id: string, name: string, namePlural?: string | null }
+        & { __typename?: 'CategoryLevel' }
+      ) | null, image?: (
+        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, large?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, small?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, social?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, rendition?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null }
+        & { __typename?: 'Image' }
+      ) | null, iconImage?: (
+        { rendition?: (
+          { src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null }
+        & { __typename?: 'Image' }
+      ) | null, categoryPage?: (
+        { id?: string | null, title: string, urlPath: string, live: boolean }
+        & { __typename?: 'CategoryPage' }
+      ) | null, type: (
+        { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+        & { __typename?: 'CategoryType' }
+      ) }
+      & { __typename?: 'Category' }
+    ) | null }
+    & { __typename?: 'Category' }
+  )>, type: (
+    { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
+      { id: string, name: string, shortName?: string | null }
+      & { __typename?: 'Unit' }
+    ) | null }
+    & { __typename?: 'AttributeType' }
+  ) }
+  & { __typename: 'AttributeCategoryChoice' }
+);
+
+type AttributesBlockAttribute_AttributeChoice_Fragment = (
+  { text?: string | null, id: string, choice?: (
+    { id: string, name: string }
+    & { __typename?: 'AttributeTypeChoiceOption' }
+  ) | null, type: (
+    { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
+      { id: string, name: string, shortName?: string | null }
+      & { __typename?: 'Unit' }
+    ) | null }
+    & { __typename?: 'AttributeType' }
+  ) }
+  & { __typename: 'AttributeChoice' }
+);
+
+type AttributesBlockAttribute_AttributeNumericValue_Fragment = (
+  { id: string, numericValue: number, type: (
+    { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
+      { id: string, name: string, shortName?: string | null }
+      & { __typename?: 'Unit' }
+    ) | null }
+    & { __typename?: 'AttributeType' }
+  ) }
+  & { __typename: 'AttributeNumericValue' }
+);
+
+type AttributesBlockAttribute_AttributeRichText_AttributeText_Fragment = (
+  { value: string, id: string, type: (
+    { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
+      { id: string, name: string, shortName?: string | null }
+      & { __typename?: 'Unit' }
+    ) | null }
+    & { __typename?: 'AttributeType' }
+  ) }
+  & { __typename: 'AttributeRichText' | 'AttributeText' }
+);
+
+export type AttributesBlockAttributeFragment = AttributesBlockAttribute_AttributeCategoryChoice_Fragment | AttributesBlockAttribute_AttributeChoice_Fragment | AttributesBlockAttribute_AttributeNumericValue_Fragment | AttributesBlockAttribute_AttributeRichText_AttributeText_Fragment;
+
+export type AttributesBlockAttributeTypeFragment = (
+  { id: string, format: AttributeTypeFormat, name: string, identifier: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
+    { id: string, identifier: string }
+    & { __typename?: 'AttributeTypeChoiceOption' }
+  )>, unit?: (
+    { id: string, name: string }
+    & { __typename?: 'Unit' }
+  ) | null }
+  & { __typename: 'AttributeType' }
+);
+
+type AttributesBlockAttributeWithNestedType_AttributeCategoryChoice_Fragment = (
+  { id: string, type: (
+    { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit?: (
+      { id: string, name: string, shortName?: string | null }
+      & { __typename?: 'Unit' }
+    ) | null, choiceOptions: Array<(
+      { id: string, identifier: string }
+      & { __typename?: 'AttributeTypeChoiceOption' }
+    )> }
+    & { __typename: 'AttributeType' }
+  ), categories: Array<(
+    { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+      { id: string, name: string, namePlural?: string | null }
+      & { __typename?: 'CategoryLevel' }
+    ) | null, image?: (
+      { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null, large?: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null, small?: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null, social?: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null, rendition?: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null }
+      & { __typename?: 'Image' }
+    ) | null, iconImage?: (
+      { rendition?: (
+        { src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null }
+      & { __typename?: 'Image' }
+    ) | null, categoryPage?: (
+      { id?: string | null, title: string, urlPath: string, live: boolean }
+      & { __typename?: 'CategoryPage' }
+    ) | null, type: (
+      { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+      & { __typename?: 'CategoryType' }
+    ), parent?: (
+      { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+        { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+            { id: string, name: string, namePlural?: string | null }
+            & { __typename?: 'CategoryLevel' }
+          ) | null, image?: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, large?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, small?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, social?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, rendition?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, iconImage?: (
+            { rendition?: (
+              { src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, categoryPage?: (
+            { id?: string | null, title: string, urlPath: string, live: boolean }
+            & { __typename?: 'CategoryPage' }
+          ) | null, type: (
+            { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+            & { __typename?: 'CategoryType' }
+          ) }
+          & { __typename?: 'Category' }
+        ) | null, level?: (
+          { id: string, name: string, namePlural?: string | null }
+          & { __typename?: 'CategoryLevel' }
+        ) | null, image?: (
+          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, large?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, small?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, social?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, rendition?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null }
+          & { __typename?: 'Image' }
+        ) | null, iconImage?: (
+          { rendition?: (
+            { src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null }
+          & { __typename?: 'Image' }
+        ) | null, categoryPage?: (
+          { id?: string | null, title: string, urlPath: string, live: boolean }
+          & { __typename?: 'CategoryPage' }
+        ) | null, type: (
+          { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+          & { __typename?: 'CategoryType' }
+        ) }
+        & { __typename?: 'Category' }
+      ) | null, level?: (
+        { id: string, name: string, namePlural?: string | null }
+        & { __typename?: 'CategoryLevel' }
+      ) | null, image?: (
+        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, large?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, small?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, social?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, rendition?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null }
+        & { __typename?: 'Image' }
+      ) | null, iconImage?: (
+        { rendition?: (
+          { src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null }
+        & { __typename?: 'Image' }
+      ) | null, categoryPage?: (
+        { id?: string | null, title: string, urlPath: string, live: boolean }
+        & { __typename?: 'CategoryPage' }
+      ) | null, type: (
+        { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+        & { __typename?: 'CategoryType' }
+      ) }
+      & { __typename?: 'Category' }
+    ) | null }
+    & { __typename?: 'Category' }
+  )> }
+  & { __typename: 'AttributeCategoryChoice' }
+);
+
+type AttributesBlockAttributeWithNestedType_AttributeChoice_Fragment = (
+  { text?: string | null, id: string, type: (
+    { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit?: (
+      { id: string, name: string, shortName?: string | null }
+      & { __typename?: 'Unit' }
+    ) | null, choiceOptions: Array<(
+      { id: string, identifier: string }
+      & { __typename?: 'AttributeTypeChoiceOption' }
+    )> }
+    & { __typename: 'AttributeType' }
+  ), choice?: (
+    { id: string, name: string }
+    & { __typename?: 'AttributeTypeChoiceOption' }
+  ) | null }
+  & { __typename: 'AttributeChoice' }
+);
+
+type AttributesBlockAttributeWithNestedType_AttributeNumericValue_Fragment = (
+  { id: string, numericValue: number, type: (
+    { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit?: (
+      { id: string, name: string, shortName?: string | null }
+      & { __typename?: 'Unit' }
+    ) | null, choiceOptions: Array<(
+      { id: string, identifier: string }
+      & { __typename?: 'AttributeTypeChoiceOption' }
+    )> }
+    & { __typename: 'AttributeType' }
+  ) }
+  & { __typename: 'AttributeNumericValue' }
+);
+
+type AttributesBlockAttributeWithNestedType_AttributeRichText_AttributeText_Fragment = (
+  { value: string, id: string, type: (
+    { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit?: (
+      { id: string, name: string, shortName?: string | null }
+      & { __typename?: 'Unit' }
+    ) | null, choiceOptions: Array<(
+      { id: string, identifier: string }
+      & { __typename?: 'AttributeTypeChoiceOption' }
+    )> }
+    & { __typename: 'AttributeType' }
+  ) }
+  & { __typename: 'AttributeRichText' | 'AttributeText' }
+);
+
+export type AttributesBlockAttributeWithNestedTypeFragment = AttributesBlockAttributeWithNestedType_AttributeCategoryChoice_Fragment | AttributesBlockAttributeWithNestedType_AttributeChoice_Fragment | AttributesBlockAttributeWithNestedType_AttributeNumericValue_Fragment | AttributesBlockAttributeWithNestedType_AttributeRichText_AttributeText_Fragment;
+
+export type ActionCardFragment = (
+  { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, completion?: number | null, status?: (
+    { id: string, identifier: string, name: string, color?: string | null }
+    & { __typename?: 'ActionStatus' }
+  ) | null, categories: Array<(
+    { id: string, identifier: string, name: string, iconSvgUrl?: string | null, type: (
+      { id: string }
+      & { __typename?: 'CategoryType' }
+    ) }
+    & { __typename?: 'Category' }
+  )>, statusSummary: (
+    { identifier: ActionStatusSummaryIdentifier }
+    & { __typename?: 'ActionStatusSummary' }
+  ), implementationPhase?: (
+    { id: string, identifier: string, name: string }
+    & { __typename?: 'ActionImplementationPhase' }
+  ) | null, primaryOrg?: (
+    { id: string, abbreviation: string, name: string, logo?: (
+      { rendition?: (
+        { src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null }
+      & { __typename?: 'Image' }
+    ) | null }
+    & { __typename?: 'Organization' }
+  ) | null, mergedWith?: (
+    { id: string, identifier: string, plan: (
+      { id: string, shortName?: string | null, versionName: string, viewUrl?: string | null }
+      & { __typename?: 'Plan' }
+    ) }
+    & { __typename?: 'Action' }
+  ) | null, plan: (
+    { id: string, shortName?: string | null, versionName: string, viewUrl?: string | null, hideActionIdentifiers?: boolean | null, publishedAt?: any | null, image?: (
+      { rendition?: (
+        { src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null }
+      & { __typename?: 'Image' }
+    ) | null }
+    & { __typename?: 'Plan' }
+  ) }
+  & { __typename?: 'Action' }
+);
+
+type ActionListFilter_IhjBBwez7fLS40GnTtqRZjjy0Kv1vAh93c8Pfw7sak_Fragment = (
+  { field: string, id?: string | null }
+  & { __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionListBlock' }
+);
+
+type ActionListFilter_Yd6843xP2XelxNnPKdcDbk203MDs5Q6T1Tb6rBhv7pY_Fragment = (
+  { field: string, id?: string | null }
+  & { __typename: 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' }
+);
+
+type ActionListFilter_4ScTt4ie8YitgYVvz5GlLw_357S0lTasi8Sapx3PqU_Fragment = (
+  { field: string, id?: string | null }
+  & { __typename: 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' }
+);
+
+type ActionListFilter_DA5CmOaKlFnDfcyfLmbDvczqEPiS6OLl8O5B2gztSa_Fragment = (
+  { field: string, id?: string | null }
+  & { __typename: 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' }
+);
+
+type ActionListFilter_Gi2hvv85vZlZPcrA0h1jHIoERy23S38fsyeyqhZKpts_Fragment = (
+  { field: string, id?: string | null }
+  & { __typename: 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
+);
+
+type ActionListFilter_ActionAttributeTypeFilterBlock_Fragment = (
+  { showAllLabel?: string | null, field: string, id?: string | null, attributeType: (
+    { id: string, identifier: string, format: AttributeTypeFormat, name: string, helpText: string, choiceOptions: Array<(
+      { id: string, identifier: string, name: string }
+      & { __typename?: 'AttributeTypeChoiceOption' }
+    )> }
+    & { __typename?: 'AttributeType' }
+  ) }
+  & { __typename: 'ActionAttributeTypeFilterBlock' }
+);
+
+type ActionListFilter_CategoryTypeFilterBlock_Fragment = (
+  { style?: string | null, showAllLabel?: string | null, depth?: number | null, field: string, id?: string | null, categoryType?: (
+    { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
+      { id: string, identifier: string, name: string, order: number, helpText: string, parent?: (
+        { id: string }
+        & { __typename?: 'Category' }
+      ) | null, common?: (
+        { id: string }
+        & { __typename?: 'CommonCategory' }
+      ) | null }
+      & { __typename?: 'Category' }
+    )> }
+    & { __typename?: 'CategoryType' }
+  ) | null }
+  & { __typename: 'CategoryTypeFilterBlock' }
+);
+
+export type ActionListFilterFragment = ActionListFilter_IhjBBwez7fLS40GnTtqRZjjy0Kv1vAh93c8Pfw7sak_Fragment | ActionListFilter_Yd6843xP2XelxNnPKdcDbk203MDs5Q6T1Tb6rBhv7pY_Fragment | ActionListFilter_4ScTt4ie8YitgYVvz5GlLw_357S0lTasi8Sapx3PqU_Fragment | ActionListFilter_DA5CmOaKlFnDfcyfLmbDvczqEPiS6OLl8O5B2gztSa_Fragment | ActionListFilter_Gi2hvv85vZlZPcrA0h1jHIoERy23S38fsyeyqhZKpts_Fragment | ActionListFilter_ActionAttributeTypeFilterBlock_Fragment | ActionListFilter_CategoryTypeFilterBlock_Fragment;
+
+export type ActionListPageFiltersFragment = (
+  { primaryFilters?: Array<(
+    { showAllLabel?: string | null, field: string, id?: string | null, attributeType: (
+      { id: string, identifier: string, format: AttributeTypeFormat, name: string, helpText: string, choiceOptions: Array<(
+        { id: string, identifier: string, name: string }
+        & { __typename?: 'AttributeTypeChoiceOption' }
+      )> }
+      & { __typename?: 'AttributeType' }
+    ) }
+    & { __typename: 'ActionAttributeTypeFilterBlock' }
+  ) | (
+    { field: string, id?: string | null }
+    & { __typename: 'ActionImplementationPhaseFilterBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'ResponsiblePartyFilterBlock' }
+  ) | (
+    { style?: string | null, showAllLabel?: string | null, depth?: number | null, field: string, id?: string | null, categoryType?: (
+      { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
+        { id: string, identifier: string, name: string, order: number, helpText: string, parent?: (
+          { id: string }
+          & { __typename?: 'Category' }
+        ) | null, common?: (
+          { id: string }
+          & { __typename?: 'CommonCategory' }
+        ) | null }
+        & { __typename?: 'Category' }
+      )> }
+      & { __typename?: 'CategoryType' }
+    ) | null }
+    & { __typename: 'CategoryTypeFilterBlock' }
+  )> | null, mainFilters?: Array<(
+    { showAllLabel?: string | null, field: string, id?: string | null, attributeType: (
+      { id: string, identifier: string, format: AttributeTypeFormat, name: string, helpText: string, choiceOptions: Array<(
+        { id: string, identifier: string, name: string }
+        & { __typename?: 'AttributeTypeChoiceOption' }
+      )> }
+      & { __typename?: 'AttributeType' }
+    ) }
+    & { __typename: 'ActionAttributeTypeFilterBlock' }
+  ) | (
+    { field: string, id?: string | null }
+    & { __typename: 'ActionImplementationPhaseFilterBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'ResponsiblePartyFilterBlock' }
+  ) | (
+    { style?: string | null, showAllLabel?: string | null, depth?: number | null, field: string, id?: string | null, categoryType?: (
+      { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
+        { id: string, identifier: string, name: string, order: number, helpText: string, parent?: (
+          { id: string }
+          & { __typename?: 'Category' }
+        ) | null, common?: (
+          { id: string }
+          & { __typename?: 'CommonCategory' }
+        ) | null }
+        & { __typename?: 'Category' }
+      )> }
+      & { __typename?: 'CategoryType' }
+    ) | null }
+    & { __typename: 'CategoryTypeFilterBlock' }
+  )> | null, advancedFilters?: Array<(
+    { showAllLabel?: string | null, field: string, id?: string | null, attributeType: (
+      { id: string, identifier: string, format: AttributeTypeFormat, name: string, helpText: string, choiceOptions: Array<(
+        { id: string, identifier: string, name: string }
+        & { __typename?: 'AttributeTypeChoiceOption' }
+      )> }
+      & { __typename?: 'AttributeType' }
+    ) }
+    & { __typename: 'ActionAttributeTypeFilterBlock' }
+  ) | (
+    { field: string, id?: string | null }
+    & { __typename: 'ActionImplementationPhaseFilterBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'ResponsiblePartyFilterBlock' }
+  ) | (
+    { style?: string | null, showAllLabel?: string | null, depth?: number | null, field: string, id?: string | null, categoryType?: (
+      { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
+        { id: string, identifier: string, name: string, order: number, helpText: string, parent?: (
+          { id: string }
+          & { __typename?: 'Category' }
+        ) | null, common?: (
+          { id: string }
+          & { __typename?: 'CommonCategory' }
+        ) | null }
+        & { __typename?: 'Category' }
+      )> }
+      & { __typename?: 'CategoryType' }
+    ) | null }
+    & { __typename: 'CategoryTypeFilterBlock' }
+  )> | null }
+  & { __typename?: 'ActionListPage' }
+);
+
+export type ActionTableColumnFragmentFragment = (
+  { dashboardColumns?: Array<(
+    { columnLabel?: string | null }
+    & { __typename: 'IdentifierColumnBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorsColumnBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'ResponsiblePartiesColumnBlock' | 'StatusColumnBlock' | 'TasksColumnBlock' | 'UpdatedAtColumnBlock' }
+  )> | null }
+  & { __typename?: 'ActionListPage' }
+);
+
+export type CategoryTypeFragmentFragment = (
+  { id: string, name: string, identifier: string, helpText: string, hideCategoryIdentifiers: boolean, levels: Array<(
+    { id: string, order: number, name: string, namePlural?: string | null }
+    & { __typename?: 'CategoryLevel' }
+  )> }
+  & { __typename?: 'CategoryType' }
+);
+
+export type CategoryFragmentFragment = (
+  { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+    { id: string, name: string, namePlural?: string | null }
+    & { __typename?: 'CategoryLevel' }
+  ) | null, image?: (
+    { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+      { id: string, width: number, height: number, src: string }
+      & { __typename?: 'ImageRendition' }
+    ) | null, large?: (
+      { id: string, width: number, height: number, src: string }
+      & { __typename?: 'ImageRendition' }
+    ) | null, small?: (
+      { id: string, width: number, height: number, src: string }
+      & { __typename?: 'ImageRendition' }
+    ) | null, social?: (
+      { id: string, width: number, height: number, src: string }
+      & { __typename?: 'ImageRendition' }
+    ) | null, rendition?: (
+      { id: string, width: number, height: number, src: string }
+      & { __typename?: 'ImageRendition' }
+    ) | null }
+    & { __typename?: 'Image' }
+  ) | null, iconImage?: (
+    { rendition?: (
+      { src: string }
+      & { __typename?: 'ImageRendition' }
+    ) | null }
+    & { __typename?: 'Image' }
+  ) | null, categoryPage?: (
+    { id?: string | null, title: string, urlPath: string, live: boolean }
+    & { __typename?: 'CategoryPage' }
+  ) | null, type: (
+    { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+    & { __typename?: 'CategoryType' }
+  ) }
+  & { __typename?: 'Category' }
+);
+
+export type CategoryWithParentsFragmentFragment = (
+  { parent?: (
+    { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+      { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+        { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+          { id: string, name: string, namePlural?: string | null }
+          & { __typename?: 'CategoryLevel' }
+        ) | null, image?: (
+          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, large?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, small?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, social?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, rendition?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null }
+          & { __typename?: 'Image' }
+        ) | null, iconImage?: (
+          { rendition?: (
+            { src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null }
+          & { __typename?: 'Image' }
+        ) | null, categoryPage?: (
+          { id?: string | null, title: string, urlPath: string, live: boolean }
+          & { __typename?: 'CategoryPage' }
+        ) | null, type: (
+          { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+          & { __typename?: 'CategoryType' }
+        ) }
+        & { __typename?: 'Category' }
+      ) | null, level?: (
+        { id: string, name: string, namePlural?: string | null }
+        & { __typename?: 'CategoryLevel' }
+      ) | null, image?: (
+        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, large?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, small?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, social?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, rendition?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null }
+        & { __typename?: 'Image' }
+      ) | null, iconImage?: (
+        { rendition?: (
+          { src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null }
+        & { __typename?: 'Image' }
+      ) | null, categoryPage?: (
+        { id?: string | null, title: string, urlPath: string, live: boolean }
+        & { __typename?: 'CategoryPage' }
+      ) | null, type: (
+        { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+        & { __typename?: 'CategoryType' }
+      ) }
+      & { __typename?: 'Category' }
+    ) | null, level?: (
+      { id: string, name: string, namePlural?: string | null }
+      & { __typename?: 'CategoryLevel' }
+    ) | null, image?: (
+      { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null, large?: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null, small?: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null, social?: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null, rendition?: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null }
+      & { __typename?: 'Image' }
+    ) | null, iconImage?: (
+      { rendition?: (
+        { src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null }
+      & { __typename?: 'Image' }
+    ) | null, categoryPage?: (
+      { id?: string | null, title: string, urlPath: string, live: boolean }
+      & { __typename?: 'CategoryPage' }
+    ) | null, type: (
+      { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+      & { __typename?: 'CategoryType' }
+    ) }
+    & { __typename?: 'Category' }
+  ) | null }
+  & { __typename?: 'Category' }
+);
+
+export type CategoryRecursiveFragmentFragment = (
+  { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+    { id: string, name: string, namePlural?: string | null }
+    & { __typename?: 'CategoryLevel' }
+  ) | null, image?: (
+    { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+      { id: string, width: number, height: number, src: string }
+      & { __typename?: 'ImageRendition' }
+    ) | null, large?: (
+      { id: string, width: number, height: number, src: string }
+      & { __typename?: 'ImageRendition' }
+    ) | null, small?: (
+      { id: string, width: number, height: number, src: string }
+      & { __typename?: 'ImageRendition' }
+    ) | null, social?: (
+      { id: string, width: number, height: number, src: string }
+      & { __typename?: 'ImageRendition' }
+    ) | null, rendition?: (
+      { id: string, width: number, height: number, src: string }
+      & { __typename?: 'ImageRendition' }
+    ) | null }
+    & { __typename?: 'Image' }
+  ) | null, iconImage?: (
+    { rendition?: (
+      { src: string }
+      & { __typename?: 'ImageRendition' }
+    ) | null }
+    & { __typename?: 'Image' }
+  ) | null, categoryPage?: (
+    { id?: string | null, title: string, urlPath: string, live: boolean }
+    & { __typename?: 'CategoryPage' }
+  ) | null, type: (
+    { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+    & { __typename?: 'CategoryType' }
+  ), parent?: (
+    { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+      { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+        { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+          { id: string, name: string, namePlural?: string | null }
+          & { __typename?: 'CategoryLevel' }
+        ) | null, image?: (
+          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, large?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, small?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, social?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, rendition?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null }
+          & { __typename?: 'Image' }
+        ) | null, iconImage?: (
+          { rendition?: (
+            { src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null }
+          & { __typename?: 'Image' }
+        ) | null, categoryPage?: (
+          { id?: string | null, title: string, urlPath: string, live: boolean }
+          & { __typename?: 'CategoryPage' }
+        ) | null, type: (
+          { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+          & { __typename?: 'CategoryType' }
+        ) }
+        & { __typename?: 'Category' }
+      ) | null, level?: (
+        { id: string, name: string, namePlural?: string | null }
+        & { __typename?: 'CategoryLevel' }
+      ) | null, image?: (
+        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, large?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, small?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, social?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, rendition?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null }
+        & { __typename?: 'Image' }
+      ) | null, iconImage?: (
+        { rendition?: (
+          { src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null }
+        & { __typename?: 'Image' }
+      ) | null, categoryPage?: (
+        { id?: string | null, title: string, urlPath: string, live: boolean }
+        & { __typename?: 'CategoryPage' }
+      ) | null, type: (
+        { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+        & { __typename?: 'CategoryType' }
+      ) }
+      & { __typename?: 'Category' }
+    ) | null, level?: (
+      { id: string, name: string, namePlural?: string | null }
+      & { __typename?: 'CategoryLevel' }
+    ) | null, image?: (
+      { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null, large?: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null, small?: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null, social?: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null, rendition?: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null }
+      & { __typename?: 'Image' }
+    ) | null, iconImage?: (
+      { rendition?: (
+        { src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null }
+      & { __typename?: 'Image' }
+    ) | null, categoryPage?: (
+      { id?: string | null, title: string, urlPath: string, live: boolean }
+      & { __typename?: 'CategoryPage' }
+    ) | null, type: (
+      { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+      & { __typename?: 'CategoryType' }
+    ) }
+    & { __typename?: 'Category' }
+  ) | null }
+  & { __typename?: 'Category' }
+);
+
+type StreamFieldFragment_Ize9dJArng6qjN9ZgqxnjBWpTKxclmuDcqywLaE9c_Fragment = (
+  { id?: string | null, blockType: string, field: string }
+  & { __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' }
+);
+
+type StreamFieldFragment_P4DZgRiVf47KymI0hetvY2c4nXYoAy7QJhWbSmb9Q_Fragment = (
+  { id?: string | null, blockType: string, field: string }
+  & { __typename?: 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTypeFilterBlock' | 'DateBlock' }
+);
+
+type StreamFieldFragment_K7Lj6Dl_5ZajF5uRZrNfk8JysbyjpOf9Yx86ArHA_Fragment = (
+  { id?: string | null, blockType: string, field: string }
+  & { __typename?: 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorHighlightsBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionBlock' }
+);
+
+type StreamFieldFragment_GRpXjOhhShFNq37UTrxwyvrMDxLtrF59y18indXgl3k_Fragment = (
+  { id?: string | null, blockType: string, field: string }
+  & { __typename?: 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
+);
+
+type StreamFieldFragment_AccessibilityStatementContactInformationBlock_Fragment = (
+  { id?: string | null, blockType: string, field: string, blocks: Array<(
+    { id?: string | null, field: string }
+    & { __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' }
+  ) | (
+    { id?: string | null, field: string }
+    & { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' }
+  ) | (
+    { id?: string | null, field: string }
+    & { __typename?: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' }
+  ) | (
+    { id?: string | null, field: string }
+    & { __typename?: 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' }
+  ) | (
+    { id?: string | null, field: string }
+    & { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
+  ) | (
+    { value: string, id?: string | null, field: string }
+    & { __typename?: 'CharBlock' }
+  )> }
+  & { __typename?: 'AccessibilityStatementContactInformationBlock' }
+);
+
+type StreamFieldFragment_ActionCategoryFilterCardsBlock_Fragment = (
+  { id?: string | null, blockType: string, field: string, cards?: Array<{ __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionListBlock' } | { __typename?: 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' } | { __typename?: 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' } | { __typename?: 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' } | { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
+    { heading?: string | null, lead?: string | null, category?: (
+      { id: string, type: (
+        { identifier: string }
+        & { __typename?: 'CategoryType' }
+      ) }
+      & { __typename?: 'Category' }
+    ) | null }
+    & { __typename?: 'ActionCategoryFilterCardBlock' }
+  ) | null> | null }
+  & { __typename?: 'ActionCategoryFilterCardsBlock' }
+);
+
+type StreamFieldFragment_ActionListBlock_Fragment = (
+  { id?: string | null, blockType: string, field: string, categoryFilter?: (
+    { id: string }
+    & { __typename?: 'Category' }
+  ) | null }
+  & { __typename?: 'ActionListBlock' }
+);
+
+type StreamFieldFragment_AdaptiveEmbedBlock_Fragment = (
+  { fullWidth?: boolean | null, id?: string | null, blockType: string, field: string, embed?: (
+    { html?: string | null }
+    & { __typename?: 'EmbedHTMLValue' }
+  ) | null }
+  & { __typename?: 'AdaptiveEmbedBlock' }
+);
+
+type StreamFieldFragment_CardListBlock_Fragment = (
+  { heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, cards?: Array<{ __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' } | { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' } | { __typename?: 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' } | { __typename?: 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' } | { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
+    { heading?: string | null, content?: string | null, link?: string | null, image?: (
+      { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null, large?: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null, small?: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null, social?: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null, rendition?: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null }
+      & { __typename?: 'Image' }
+    ) | null }
+    & { __typename?: 'CardBlock' }
+  ) | null> | null }
+  & { __typename?: 'CardListBlock' }
+);
+
+type StreamFieldFragment_CartographyVisualisationBlock_Fragment = (
+  { style?: string | null, styleOverrides?: string | null, id?: string | null, blockType: string, field: string, account?: (
+    { provider: CartographyProviderCredentialsProvider, account: string, publicAccessToken: string }
+    & { __typename?: 'CartographyProviderCredentials' }
+  ) | null }
+  & { __typename?: 'CartographyVisualisationBlock' }
+);
+
+type StreamFieldFragment_CategoryListBlock_Fragment = (
+  { style?: string | null, heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, categoryType?: (
+    { id: string, hideCategoryIdentifiers: boolean, categories: Array<(
+      { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+        { id: string, name: string, namePlural?: string | null }
+        & { __typename?: 'CategoryLevel' }
+      ) | null, image?: (
+        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, large?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, small?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, social?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, rendition?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null }
+        & { __typename?: 'Image' }
+      ) | null, iconImage?: (
+        { rendition?: (
+          { src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null }
+        & { __typename?: 'Image' }
+      ) | null, categoryPage?: (
+        { id?: string | null, title: string, urlPath: string, live: boolean }
+        & { __typename?: 'CategoryPage' }
+      ) | null, type: (
+        { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+        & { __typename?: 'CategoryType' }
+      ) }
+      & { __typename?: 'Category' }
+    )> }
+    & { __typename?: 'CategoryType' }
+  ) | null, category?: (
+    { id: string, children: Array<(
+      { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+        { id: string, name: string, namePlural?: string | null }
+        & { __typename?: 'CategoryLevel' }
+      ) | null, image?: (
+        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, large?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, small?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, social?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, rendition?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null }
+        & { __typename?: 'Image' }
+      ) | null, iconImage?: (
+        { rendition?: (
+          { src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null }
+        & { __typename?: 'Image' }
+      ) | null, categoryPage?: (
+        { id?: string | null, title: string, urlPath: string, live: boolean }
+        & { __typename?: 'CategoryPage' }
+      ) | null, type: (
+        { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+        & { __typename?: 'CategoryType' }
+      ) }
+      & { __typename?: 'Category' }
+    )> }
+    & { __typename?: 'Category' }
+  ) | null }
+  & { __typename?: 'CategoryListBlock' }
+);
+
+type StreamFieldFragment_CategoryTreeMapBlock_Fragment = (
+  { heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, valueAttribute?: (
+    { identifier: string, unit?: (
+      { shortName?: string | null }
+      & { __typename?: 'Unit' }
+    ) | null }
+    & { __typename?: 'AttributeType' }
+  ) | null, categoryType?: (
+    { identifier: string }
+    & { __typename?: 'CategoryType' }
+  ) | null }
+  & { __typename?: 'CategoryTreeMapBlock' }
+);
+
+type StreamFieldFragment_CharBlock_RichTextBlock_TextBlock_Fragment = (
+  { value: string, id?: string | null, blockType: string, field: string }
+  & { __typename?: 'CharBlock' | 'RichTextBlock' | 'TextBlock' }
+);
+
+type StreamFieldFragment_ChoiceBlock_Fragment = (
+  { value: string, id?: string | null, blockType: string, field: string, choices: Array<(
+    { key: string, value: string }
+    & { __typename?: 'ChoiceOption' }
+  )> }
+  & { __typename?: 'ChoiceBlock' }
+);
+
+type StreamFieldFragment_FrontPageHeroBlock_Fragment = (
+  { layout?: string | null, heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, image?: (
+    { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+      { id: string, width: number, height: number, src: string }
+      & { __typename?: 'ImageRendition' }
+    ) | null, large?: (
+      { id: string, width: number, height: number, src: string }
+      & { __typename?: 'ImageRendition' }
+    ) | null, small?: (
+      { id: string, width: number, height: number, src: string }
+      & { __typename?: 'ImageRendition' }
+    ) | null, social?: (
+      { id: string, width: number, height: number, src: string }
+      & { __typename?: 'ImageRendition' }
+    ) | null, rendition?: (
+      { id: string, width: number, height: number, src: string }
+      & { __typename?: 'ImageRendition' }
+    ) | null }
+    & { __typename?: 'Image' }
+  ) | null }
+  & { __typename?: 'FrontPageHeroBlock' }
+);
+
+type StreamFieldFragment_IndicatorBlock_Fragment = (
+  { style?: string | null, id?: string | null, blockType: string, field: string, indicator?: (
+    { id: string }
+    & { __typename?: 'Indicator' }
+  ) | null }
+  & { __typename?: 'IndicatorBlock' }
+);
+
+type StreamFieldFragment_IndicatorGroupBlock_Fragment = (
+  { title?: string | null, id?: string | null, blockType: string, field: string, indicators?: Array<{ __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' } | { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' } | { __typename?: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' } | { __typename?: 'ImplementationPhaseColumnBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' } | { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
+    { style?: string | null, indicator?: (
+      { id: string, identifier?: string | null, name: string, description?: string | null, timeResolution: IndicatorTimeResolution, level?: string | null, unit: (
+        { id: string, name: string }
+        & { __typename?: 'Unit' }
+      ), latestValue?: (
+        { id: string, date?: string | null, value: number }
+        & { __typename?: 'IndicatorValue' }
+      ) | null, goals?: Array<(
+        { id: string, date?: string | null, value: number }
+        & { __typename?: 'IndicatorGoal' }
+      ) | null> | null }
+      & { __typename?: 'Indicator' }
+    ) | null }
+    & { __typename?: 'IndicatorBlock' }
+  ) | null> | null }
+  & { __typename?: 'IndicatorGroupBlock' }
+);
+
+type StreamFieldFragment_IndicatorShowcaseBlock_Fragment = (
+  { title?: string | null, body?: string | null, id?: string | null, blockType: string, field: string, blocks: Array<(
+    { id?: string | null }
+    & { __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' }
+  ) | (
+    { id?: string | null }
+    & { __typename: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' }
+  ) | (
+    { id?: string | null }
+    & { __typename: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' }
+  ) | (
+    { id?: string | null }
+    & { __typename: 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' }
+  ) | (
+    { id?: string | null }
+    & { __typename: 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
+  )>, indicator?: (
+    { id: string, identifier?: string | null, name: string, minValue?: number | null, maxValue?: number | null, unit: (
+      { id: string, shortName?: string | null }
+      & { __typename?: 'Unit' }
+    ), latestValue?: (
+      { id: string, date?: string | null, value: number }
+      & { __typename?: 'IndicatorValue' }
+    ) | null, values?: Array<(
+      { id: string, date?: string | null, value: number, normalizedValues?: Array<(
+        { normalizerId?: string | null, value?: number | null }
+        & { __typename?: 'NormalizedValue' }
+      ) | null> | null, categories: Array<(
+        { id: string }
+        & { __typename?: 'DimensionCategory' }
+      )> }
+      & { __typename?: 'IndicatorValue' }
+    ) | null> | null, goals?: Array<(
+      { id: string, date?: string | null, value: number, normalizedValues?: Array<(
+        { normalizerId?: string | null, value?: number | null }
+        & { __typename?: 'NormalizedValue' }
+      ) | null> | null }
+      & { __typename?: 'IndicatorGoal' }
+    ) | null> | null, common?: (
+      { id: string, normalizations?: Array<(
+        { unit?: (
+          { shortName?: string | null }
+          & { __typename?: 'Unit' }
+        ) | null, normalizer?: (
+          { name: string, id: string, identifier?: string | null }
+          & { __typename?: 'CommonIndicator' }
+        ) | null }
+        & { __typename?: 'CommonIndicatorNormalization' }
+      ) | null> | null }
+      & { __typename?: 'CommonIndicator' }
+    ) | null }
+    & { __typename?: 'Indicator' }
+  ) | null, linkButton?: (
+    { blockType: string }
+    & { __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' }
+  ) | (
+    { blockType: string }
+    & { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' }
+  ) | (
+    { blockType: string }
+    & { __typename?: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' }
+  ) | (
+    { blockType: string }
+    & { __typename?: 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' }
+  ) | (
+    { blockType: string }
+    & { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
+  ) | (
+    { text?: string | null, blockType: string, page?: (
+      { url?: string | null, urlPath: string, slug: string }
+      & { __typename?: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PrivacyPolicyPage' | 'StaticPage' }
+    ) | null }
+    & { __typename?: 'PageLinkBlock' }
+  ) | null }
+  & { __typename?: 'IndicatorShowcaseBlock' }
+);
+
+type StreamFieldFragment_LargeImageBlock_Fragment = (
+  { width?: string | null, id?: string | null, blockType: string, field: string, image?: (
+    { title: string, altText: string, width: number, height: number, renditionUncropped?: (
+      { src: string }
+      & { __typename?: 'ImageRendition' }
+    ) | null }
+    & { __typename?: 'Image' }
+  ) | null }
+  & { __typename?: 'LargeImageBlock' }
+);
+
+type StreamFieldFragment_QuestionAnswerBlock_Fragment = (
+  { heading?: string | null, id?: string | null, blockType: string, field: string, questions?: Array<{ __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' } | { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' } | { __typename?: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' } | { __typename?: 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' } | { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
+    { question?: string | null, answer?: string | null }
+    & { __typename?: 'QuestionBlock' }
+  ) | null> | null }
+  & { __typename?: 'QuestionAnswerBlock' }
+);
+
+export type StreamFieldFragmentFragment = StreamFieldFragment_Ize9dJArng6qjN9ZgqxnjBWpTKxclmuDcqywLaE9c_Fragment | StreamFieldFragment_P4DZgRiVf47KymI0hetvY2c4nXYoAy7QJhWbSmb9Q_Fragment | StreamFieldFragment_K7Lj6Dl_5ZajF5uRZrNfk8JysbyjpOf9Yx86ArHA_Fragment | StreamFieldFragment_GRpXjOhhShFNq37UTrxwyvrMDxLtrF59y18indXgl3k_Fragment | StreamFieldFragment_AccessibilityStatementContactInformationBlock_Fragment | StreamFieldFragment_ActionCategoryFilterCardsBlock_Fragment | StreamFieldFragment_ActionListBlock_Fragment | StreamFieldFragment_AdaptiveEmbedBlock_Fragment | StreamFieldFragment_CardListBlock_Fragment | StreamFieldFragment_CartographyVisualisationBlock_Fragment | StreamFieldFragment_CategoryListBlock_Fragment | StreamFieldFragment_CategoryTreeMapBlock_Fragment | StreamFieldFragment_CharBlock_RichTextBlock_TextBlock_Fragment | StreamFieldFragment_ChoiceBlock_Fragment | StreamFieldFragment_FrontPageHeroBlock_Fragment | StreamFieldFragment_IndicatorBlock_Fragment | StreamFieldFragment_IndicatorGroupBlock_Fragment | StreamFieldFragment_IndicatorShowcaseBlock_Fragment | StreamFieldFragment_LargeImageBlock_Fragment | StreamFieldFragment_QuestionAnswerBlock_Fragment;
+
+export type GetActionDetailsQueryVariables = Exact<{
+  plan: Scalars['ID'];
+  id: Scalars['ID'];
+  clientUrl: Scalars['String'];
+}>;
+
+
+export type GetActionDetailsQuery = (
+  { action?: (
+    { id: string, identifier: string, name: string, officialName?: string | null, leadParagraph: string, description?: string | null, completion?: number | null, color?: string | null, updatedAt: any, manualStatusReason?: string | null, scheduleContinuous: boolean, startDate?: any | null, endDate?: any | null, image?: (
+      { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null, large?: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null, small?: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null, social?: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null, rendition?: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null }
+      & { __typename?: 'Image' }
+    ) | null, statusSummary: (
+      { identifier: ActionStatusSummaryIdentifier, label: string, color: string, sentiment: Sentiment, isCompleted: boolean, isActive: boolean }
+      & { __typename?: 'ActionStatusSummary' }
+    ), links: Array<(
+      { id: string, order: number, url: string, title: string }
+      & { __typename?: 'ActionLink' }
+    )>, mergedActions: Array<(
+      { id: string, identifier: string, name: string, officialName?: string | null, plan: (
+        { id: string, viewUrl?: string | null }
+        & { __typename?: 'Plan' }
+      ) }
+      & { __typename?: 'Action' }
+    )>, categories: Array<(
+      { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+        { id: string, name: string, namePlural?: string | null }
+        & { __typename?: 'CategoryLevel' }
+      ) | null, image?: (
+        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, large?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, small?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, social?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, rendition?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null }
+        & { __typename?: 'Image' }
+      ) | null, iconImage?: (
+        { rendition?: (
+          { src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null }
+        & { __typename?: 'Image' }
+      ) | null, categoryPage?: (
+        { id?: string | null, title: string, urlPath: string, live: boolean }
+        & { __typename?: 'CategoryPage' }
+      ) | null, type: (
+        { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+        & { __typename?: 'CategoryType' }
+      ), parent?: (
+        { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+              { id: string, name: string, namePlural?: string | null }
+              & { __typename?: 'CategoryLevel' }
+            ) | null, image?: (
+              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, large?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, small?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, social?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, rendition?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null }
+              & { __typename?: 'Image' }
+            ) | null, iconImage?: (
+              { rendition?: (
+                { src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null }
+              & { __typename?: 'Image' }
+            ) | null, categoryPage?: (
+              { id?: string | null, title: string, urlPath: string, live: boolean }
+              & { __typename?: 'CategoryPage' }
+            ) | null, type: (
+              { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+              & { __typename?: 'CategoryType' }
+            ) }
+            & { __typename?: 'Category' }
+          ) | null, level?: (
+            { id: string, name: string, namePlural?: string | null }
+            & { __typename?: 'CategoryLevel' }
+          ) | null, image?: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, large?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, small?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, social?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, rendition?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, iconImage?: (
+            { rendition?: (
+              { src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, categoryPage?: (
+            { id?: string | null, title: string, urlPath: string, live: boolean }
+            & { __typename?: 'CategoryPage' }
+          ) | null, type: (
+            { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+            & { __typename?: 'CategoryType' }
+          ) }
+          & { __typename?: 'Category' }
+        ) | null, level?: (
+          { id: string, name: string, namePlural?: string | null }
+          & { __typename?: 'CategoryLevel' }
+        ) | null, image?: (
+          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, large?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, small?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, social?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, rendition?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null }
+          & { __typename?: 'Image' }
+        ) | null, iconImage?: (
+          { rendition?: (
+            { src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null }
+          & { __typename?: 'Image' }
+        ) | null, categoryPage?: (
+          { id?: string | null, title: string, urlPath: string, live: boolean }
+          & { __typename?: 'CategoryPage' }
+        ) | null, type: (
+          { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+          & { __typename?: 'CategoryType' }
+        ) }
+        & { __typename?: 'Category' }
+      ) | null }
+      & { __typename?: 'Category' }
+    )>, emissionScopes: Array<(
+      { id: string, identifier: string, name: string, leadParagraph: string }
+      & { __typename?: 'Category' }
+    )>, contactPersons: Array<(
+      { id: string, person: (
+        { id: string, firstName: string, lastName: string, avatarUrl?: string | null, title?: string | null, organization: (
+          { name: string }
+          & { __typename?: 'Organization' }
+        ) }
+        & { __typename?: 'Person' }
+      ) }
+      & { __typename?: 'ActionContactPerson' }
+    )>, primaryOrg?: (
+      { id: string, abbreviation: string, name: string, logo?: (
+        { rendition?: (
+          { src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null }
+        & { __typename?: 'Image' }
+      ) | null }
+      & { __typename?: 'Organization' }
+    ) | null, responsibleParties: Array<(
+      { id: string, role?: ActionResponsiblePartyRole | null, specifier: string, organization: (
+        { id: string, abbreviation: string, name: string, email: string }
+        & { __typename?: 'Organization' }
+      ) }
+      & { __typename?: 'ActionResponsibleParty' }
+    )>, tasks: Array<(
+      { id: string, name: string, dueAt: any, completedAt?: any | null, comment?: string | null, state: ActionTaskState }
+      & { __typename?: 'ActionTask' }
+    )>, status?: (
+      { id: string, identifier: string, name: string, color?: string | null }
+      & { __typename?: 'ActionStatus' }
+    ) | null, implementationPhase?: (
+      { id: string, identifier: string, name: string }
+      & { __typename?: 'ActionImplementationPhase' }
+    ) | null, schedule: Array<(
+      { id: string, name: string, beginsAt: any, endsAt?: any | null }
+      & { __typename?: 'ActionSchedule' }
+    )>, impact?: (
+      { id: string, identifier: string, name: string }
+      & { __typename?: 'ActionImpact' }
+    ) | null, statusUpdates: Array<(
+      { id: string }
+      & { __typename?: 'ActionStatusUpdate' }
+    )>, relatedIndicators: Array<(
+      { id: string, indicator: (
+        { id: string, name: string, latestGraph?: (
+          { id: string }
+          & { __typename?: 'IndicatorGraph' }
+        ) | null, latestValue?: (
+          { id: string, date?: string | null, value: number }
+          & { __typename?: 'IndicatorValue' }
+        ) | null, actions?: Array<(
+          { id: string, identifier: string, name: string }
+          & { __typename?: 'Action' }
+        ) | null> | null, plans: Array<(
+          { id: string }
+          & { __typename?: 'Plan' }
+        )> }
+        & { __typename?: 'Indicator' }
+      ) }
+      & { __typename?: 'ActionIndicator' }
+    )>, relatedActions: Array<(
+      { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, completion?: number | null, status?: (
+        { id: string, identifier: string, name: string, color?: string | null }
+        & { __typename?: 'ActionStatus' }
+      ) | null, categories: Array<(
+        { id: string, identifier: string, name: string, iconSvgUrl?: string | null, type: (
+          { id: string }
+          & { __typename?: 'CategoryType' }
+        ) }
+        & { __typename?: 'Category' }
+      )>, statusSummary: (
+        { identifier: ActionStatusSummaryIdentifier }
+        & { __typename?: 'ActionStatusSummary' }
+      ), implementationPhase?: (
+        { id: string, identifier: string, name: string }
+        & { __typename?: 'ActionImplementationPhase' }
+      ) | null, primaryOrg?: (
+        { id: string, abbreviation: string, name: string, logo?: (
+          { rendition?: (
+            { src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null }
+          & { __typename?: 'Image' }
+        ) | null }
+        & { __typename?: 'Organization' }
+      ) | null, mergedWith?: (
+        { id: string, identifier: string, plan: (
+          { id: string, shortName?: string | null, versionName: string, viewUrl?: string | null }
+          & { __typename?: 'Plan' }
+        ) }
+        & { __typename?: 'Action' }
+      ) | null, plan: (
+        { id: string, shortName?: string | null, versionName: string, viewUrl?: string | null, hideActionIdentifiers?: boolean | null, publishedAt?: any | null, image?: (
+          { rendition?: (
+            { src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null }
+          & { __typename?: 'Image' }
+        ) | null }
+        & { __typename?: 'Plan' }
+      ) }
+      & { __typename?: 'Action' }
+    )>, mergedWith?: (
+      { id: string, identifier: string, plan: (
+        { id: string, shortName?: string | null, versionName: string, viewUrl?: string | null }
+        & { __typename?: 'Plan' }
+      ) }
+      & { __typename?: 'Action' }
+    ) | null, supersededBy?: (
+      { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, completion?: number | null, status?: (
+        { id: string, identifier: string, name: string, color?: string | null }
+        & { __typename?: 'ActionStatus' }
+      ) | null, categories: Array<(
+        { id: string, identifier: string, name: string, iconSvgUrl?: string | null, type: (
+          { id: string }
+          & { __typename?: 'CategoryType' }
+        ) }
+        & { __typename?: 'Category' }
+      )>, statusSummary: (
+        { identifier: ActionStatusSummaryIdentifier }
+        & { __typename?: 'ActionStatusSummary' }
+      ), implementationPhase?: (
+        { id: string, identifier: string, name: string }
+        & { __typename?: 'ActionImplementationPhase' }
+      ) | null, primaryOrg?: (
+        { id: string, abbreviation: string, name: string, logo?: (
+          { rendition?: (
+            { src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null }
+          & { __typename?: 'Image' }
+        ) | null }
+        & { __typename?: 'Organization' }
+      ) | null, mergedWith?: (
+        { id: string, identifier: string, plan: (
+          { id: string, shortName?: string | null, versionName: string, viewUrl?: string | null }
+          & { __typename?: 'Plan' }
+        ) }
+        & { __typename?: 'Action' }
+      ) | null, plan: (
+        { id: string, shortName?: string | null, versionName: string, viewUrl?: string | null, hideActionIdentifiers?: boolean | null, publishedAt?: any | null, image?: (
+          { rendition?: (
+            { src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null }
+          & { __typename?: 'Image' }
+        ) | null }
+        & { __typename?: 'Plan' }
+      ) }
+      & { __typename?: 'Action' }
+    ) | null, supersededActions: Array<(
+      { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, completion?: number | null, status?: (
+        { id: string, identifier: string, name: string, color?: string | null }
+        & { __typename?: 'ActionStatus' }
+      ) | null, categories: Array<(
+        { id: string, identifier: string, name: string, iconSvgUrl?: string | null, type: (
+          { id: string }
+          & { __typename?: 'CategoryType' }
+        ) }
+        & { __typename?: 'Category' }
+      )>, statusSummary: (
+        { identifier: ActionStatusSummaryIdentifier }
+        & { __typename?: 'ActionStatusSummary' }
+      ), implementationPhase?: (
+        { id: string, identifier: string, name: string }
+        & { __typename?: 'ActionImplementationPhase' }
+      ) | null, primaryOrg?: (
+        { id: string, abbreviation: string, name: string, logo?: (
+          { rendition?: (
+            { src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null }
+          & { __typename?: 'Image' }
+        ) | null }
+        & { __typename?: 'Organization' }
+      ) | null, mergedWith?: (
+        { id: string, identifier: string, plan: (
+          { id: string, shortName?: string | null, versionName: string, viewUrl?: string | null }
+          & { __typename?: 'Plan' }
+        ) }
+        & { __typename?: 'Action' }
+      ) | null, plan: (
+        { id: string, shortName?: string | null, versionName: string, viewUrl?: string | null, hideActionIdentifiers?: boolean | null, publishedAt?: any | null, image?: (
+          { rendition?: (
+            { src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null }
+          & { __typename?: 'Image' }
+        ) | null }
+        & { __typename?: 'Plan' }
+      ) }
+      & { __typename?: 'Action' }
+    )>, nextAction?: (
+      { id: string, identifier: string }
+      & { __typename?: 'Action' }
+    ) | null, previousAction?: (
+      { id: string, identifier: string }
+      & { __typename?: 'Action' }
+    ) | null, attributes: Array<(
+      { id: string, categories: Array<(
+        { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+          { id: string, name: string, namePlural?: string | null }
+          & { __typename?: 'CategoryLevel' }
+        ) | null, image?: (
+          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, large?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, small?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, social?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, rendition?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null }
+          & { __typename?: 'Image' }
+        ) | null, iconImage?: (
+          { rendition?: (
+            { src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null }
+          & { __typename?: 'Image' }
+        ) | null, categoryPage?: (
+          { id?: string | null, title: string, urlPath: string, live: boolean }
+          & { __typename?: 'CategoryPage' }
+        ) | null, type: (
+          { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+          & { __typename?: 'CategoryType' }
+        ), parent?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+              { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+                { id: string, name: string, namePlural?: string | null }
+                & { __typename?: 'CategoryLevel' }
+              ) | null, image?: (
+                { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null, large?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null, small?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null, social?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null, rendition?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null }
+                & { __typename?: 'Image' }
+              ) | null, iconImage?: (
+                { rendition?: (
+                  { src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null }
+                & { __typename?: 'Image' }
+              ) | null, categoryPage?: (
+                { id?: string | null, title: string, urlPath: string, live: boolean }
+                & { __typename?: 'CategoryPage' }
+              ) | null, type: (
+                { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+                & { __typename?: 'CategoryType' }
+              ) }
+              & { __typename?: 'Category' }
+            ) | null, level?: (
+              { id: string, name: string, namePlural?: string | null }
+              & { __typename?: 'CategoryLevel' }
+            ) | null, image?: (
+              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, large?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, small?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, social?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, rendition?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null }
+              & { __typename?: 'Image' }
+            ) | null, iconImage?: (
+              { rendition?: (
+                { src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null }
+              & { __typename?: 'Image' }
+            ) | null, categoryPage?: (
+              { id?: string | null, title: string, urlPath: string, live: boolean }
+              & { __typename?: 'CategoryPage' }
+            ) | null, type: (
+              { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+              & { __typename?: 'CategoryType' }
+            ) }
+            & { __typename?: 'Category' }
+          ) | null, level?: (
+            { id: string, name: string, namePlural?: string | null }
+            & { __typename?: 'CategoryLevel' }
+          ) | null, image?: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, large?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, small?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, social?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, rendition?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, iconImage?: (
+            { rendition?: (
+              { src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, categoryPage?: (
+            { id?: string | null, title: string, urlPath: string, live: boolean }
+            & { __typename?: 'CategoryPage' }
+          ) | null, type: (
+            { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+            & { __typename?: 'CategoryType' }
+          ) }
+          & { __typename?: 'Category' }
+        ) | null }
+        & { __typename?: 'Category' }
+      )>, type: (
+        { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
+          { id: string, name: string, shortName?: string | null }
+          & { __typename?: 'Unit' }
+        ) | null }
+        & { __typename?: 'AttributeType' }
+      ) }
+      & { __typename: 'AttributeCategoryChoice' }
+    ) | (
+      { text?: string | null, id: string, choice?: (
+        { id: string, name: string }
+        & { __typename?: 'AttributeTypeChoiceOption' }
+      ) | null, type: (
+        { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
+          { id: string, name: string, shortName?: string | null }
+          & { __typename?: 'Unit' }
+        ) | null }
+        & { __typename?: 'AttributeType' }
+      ) }
+      & { __typename: 'AttributeChoice' }
+    ) | (
+      { id: string, numericValue: number, type: (
+        { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
+          { id: string, name: string, shortName?: string | null }
+          & { __typename?: 'Unit' }
+        ) | null }
+        & { __typename?: 'AttributeType' }
+      ) }
+      & { __typename: 'AttributeNumericValue' }
+    ) | (
+      { value: string, id: string, type: (
+        { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
+          { id: string, name: string, shortName?: string | null }
+          & { __typename?: 'Unit' }
+        ) | null }
+        & { __typename?: 'AttributeType' }
+      ) }
+      & { __typename: 'AttributeRichText' | 'AttributeText' }
+    )>, plan: (
+      { id: string, shortName?: string | null, versionName: string, viewUrl?: string | null, hideActionIdentifiers?: boolean | null, image?: (
+        { rendition?: (
+          { src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null }
+        & { __typename?: 'Image' }
+      ) | null }
+      & { __typename?: 'Plan' }
+    ) }
+    & { __typename?: 'Action' }
+  ) | null, plan?: (
+    { actionListPage?: (
+      { detailsMainTop?: Array<(
+        { id?: string | null }
+        & { __typename: 'ActionContactFormBlock' | 'ActionDescriptionBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionMergedActionsBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionTasksBlock' }
+      ) | (
+        { id?: string | null, attributeType: (
+          { id: string, format: AttributeTypeFormat, name: string, identifier: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
+            { id: string, identifier: string }
+            & { __typename?: 'AttributeTypeChoiceOption' }
+          )>, unit?: (
+            { id: string, name: string }
+            & { __typename?: 'Unit' }
+          ) | null }
+          & { __typename: 'AttributeType' }
+        ) }
+        & { __typename: 'ActionContentAttributeTypeBlock' }
+      ) | (
+        { id?: string | null, categoryType: (
+          { id: string, name: string, identifier: string, helpText: string, hideCategoryIdentifiers: boolean, levels: Array<(
+            { id: string, order: number, name: string, namePlural?: string | null }
+            & { __typename?: 'CategoryLevel' }
+          )> }
+          & { __typename?: 'CategoryType' }
+        ) }
+        & { __typename: 'ActionContentCategoryTypeBlock' }
+      ) | (
+        { id?: string | null, heading?: string | null, helpText?: string | null, layout?: string | null, blocks?: Array<(
+          { id?: string | null }
+          & { __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionListBlock' | 'ActionMergedActionsBlock' }
+        ) | (
+          { id?: string | null }
+          & { __typename?: 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' }
+        ) | (
+          { id?: string | null }
+          & { __typename?: 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' }
+        ) | (
+          { id?: string | null }
+          & { __typename?: 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' }
+        ) | (
+          { id?: string | null }
+          & { __typename?: 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
+        ) | (
+          { id?: string | null, attributeType: (
+            { id: string, format: AttributeTypeFormat, name: string, identifier: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
+              { id: string, identifier: string }
+              & { __typename?: 'AttributeTypeChoiceOption' }
+            )>, unit?: (
+              { id: string, name: string }
+              & { __typename?: 'Unit' }
+            ) | null }
+            & { __typename: 'AttributeType' }
+          ) }
+          & { __typename?: 'ActionContentAttributeTypeBlock' }
+        ) | (
+          { id?: string | null, categoryType: (
+            { id: string, name: string, identifier: string, helpText: string, hideCategoryIdentifiers: boolean, levels: Array<(
+              { id: string, order: number, name: string, namePlural?: string | null }
+              & { __typename?: 'CategoryLevel' }
+            )> }
+            & { __typename?: 'CategoryType' }
+          ) }
+          & { __typename?: 'ActionContentCategoryTypeBlock' }
+        ) | (
+          { id?: string | null, fieldLabel?: string | null, caption?: string | null }
+          & { __typename?: 'ActionOfficialNameBlock' }
+        ) | (
+          { id?: string | null, reportField?: string | null, reportType?: (
+            { name: string }
+            & { __typename?: 'ReportType' }
+          ) | null, reportsToCompare?: Array<(
+            { identifier: string, name: string, startDate: any, endDate: any, valuesForAction?: Array<(
+              { attribute?: (
+                { id: string, categories: Array<(
+                  { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+                    { id: string, name: string, namePlural?: string | null }
+                    & { __typename?: 'CategoryLevel' }
+                  ) | null, image?: (
+                    { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                      { id: string, width: number, height: number, src: string }
+                      & { __typename?: 'ImageRendition' }
+                    ) | null, large?: (
+                      { id: string, width: number, height: number, src: string }
+                      & { __typename?: 'ImageRendition' }
+                    ) | null, small?: (
+                      { id: string, width: number, height: number, src: string }
+                      & { __typename?: 'ImageRendition' }
+                    ) | null, social?: (
+                      { id: string, width: number, height: number, src: string }
+                      & { __typename?: 'ImageRendition' }
+                    ) | null, rendition?: (
+                      { id: string, width: number, height: number, src: string }
+                      & { __typename?: 'ImageRendition' }
+                    ) | null }
+                    & { __typename?: 'Image' }
+                  ) | null, iconImage?: (
+                    { rendition?: (
+                      { src: string }
+                      & { __typename?: 'ImageRendition' }
+                    ) | null }
+                    & { __typename?: 'Image' }
+                  ) | null, categoryPage?: (
+                    { id?: string | null, title: string, urlPath: string, live: boolean }
+                    & { __typename?: 'CategoryPage' }
+                  ) | null, type: (
+                    { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+                    & { __typename?: 'CategoryType' }
+                  ), parent?: (
+                    { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+                      { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+                        { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+                          { id: string, name: string, namePlural?: string | null }
+                          & { __typename?: 'CategoryLevel' }
+                        ) | null, image?: (
+                          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                            { id: string, width: number, height: number, src: string }
+                            & { __typename?: 'ImageRendition' }
+                          ) | null, large?: (
+                            { id: string, width: number, height: number, src: string }
+                            & { __typename?: 'ImageRendition' }
+                          ) | null, small?: (
+                            { id: string, width: number, height: number, src: string }
+                            & { __typename?: 'ImageRendition' }
+                          ) | null, social?: (
+                            { id: string, width: number, height: number, src: string }
+                            & { __typename?: 'ImageRendition' }
+                          ) | null, rendition?: (
+                            { id: string, width: number, height: number, src: string }
+                            & { __typename?: 'ImageRendition' }
+                          ) | null }
+                          & { __typename?: 'Image' }
+                        ) | null, iconImage?: (
+                          { rendition?: (
+                            { src: string }
+                            & { __typename?: 'ImageRendition' }
+                          ) | null }
+                          & { __typename?: 'Image' }
+                        ) | null, categoryPage?: (
+                          { id?: string | null, title: string, urlPath: string, live: boolean }
+                          & { __typename?: 'CategoryPage' }
+                        ) | null, type: (
+                          { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+                          & { __typename?: 'CategoryType' }
+                        ) }
+                        & { __typename?: 'Category' }
+                      ) | null, level?: (
+                        { id: string, name: string, namePlural?: string | null }
+                        & { __typename?: 'CategoryLevel' }
+                      ) | null, image?: (
+                        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                          { id: string, width: number, height: number, src: string }
+                          & { __typename?: 'ImageRendition' }
+                        ) | null, large?: (
+                          { id: string, width: number, height: number, src: string }
+                          & { __typename?: 'ImageRendition' }
+                        ) | null, small?: (
+                          { id: string, width: number, height: number, src: string }
+                          & { __typename?: 'ImageRendition' }
+                        ) | null, social?: (
+                          { id: string, width: number, height: number, src: string }
+                          & { __typename?: 'ImageRendition' }
+                        ) | null, rendition?: (
+                          { id: string, width: number, height: number, src: string }
+                          & { __typename?: 'ImageRendition' }
+                        ) | null }
+                        & { __typename?: 'Image' }
+                      ) | null, iconImage?: (
+                        { rendition?: (
+                          { src: string }
+                          & { __typename?: 'ImageRendition' }
+                        ) | null }
+                        & { __typename?: 'Image' }
+                      ) | null, categoryPage?: (
+                        { id?: string | null, title: string, urlPath: string, live: boolean }
+                        & { __typename?: 'CategoryPage' }
+                      ) | null, type: (
+                        { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+                        & { __typename?: 'CategoryType' }
+                      ) }
+                      & { __typename?: 'Category' }
+                    ) | null, level?: (
+                      { id: string, name: string, namePlural?: string | null }
+                      & { __typename?: 'CategoryLevel' }
+                    ) | null, image?: (
+                      { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                        { id: string, width: number, height: number, src: string }
+                        & { __typename?: 'ImageRendition' }
+                      ) | null, large?: (
+                        { id: string, width: number, height: number, src: string }
+                        & { __typename?: 'ImageRendition' }
+                      ) | null, small?: (
+                        { id: string, width: number, height: number, src: string }
+                        & { __typename?: 'ImageRendition' }
+                      ) | null, social?: (
+                        { id: string, width: number, height: number, src: string }
+                        & { __typename?: 'ImageRendition' }
+                      ) | null, rendition?: (
+                        { id: string, width: number, height: number, src: string }
+                        & { __typename?: 'ImageRendition' }
+                      ) | null }
+                      & { __typename?: 'Image' }
+                    ) | null, iconImage?: (
+                      { rendition?: (
+                        { src: string }
+                        & { __typename?: 'ImageRendition' }
+                      ) | null }
+                      & { __typename?: 'Image' }
+                    ) | null, categoryPage?: (
+                      { id?: string | null, title: string, urlPath: string, live: boolean }
+                      & { __typename?: 'CategoryPage' }
+                    ) | null, type: (
+                      { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+                      & { __typename?: 'CategoryType' }
+                    ) }
+                    & { __typename?: 'Category' }
+                  ) | null }
+                  & { __typename?: 'Category' }
+                )>, type: (
+                  { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
+                    { id: string, name: string, shortName?: string | null }
+                    & { __typename?: 'Unit' }
+                  ) | null }
+                  & { __typename?: 'AttributeType' }
+                ) }
+                & { __typename: 'AttributeCategoryChoice' }
+              ) | (
+                { text?: string | null, id: string, choice?: (
+                  { id: string, name: string }
+                  & { __typename?: 'AttributeTypeChoiceOption' }
+                ) | null, type: (
+                  { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
+                    { id: string, name: string, shortName?: string | null }
+                    & { __typename?: 'Unit' }
+                  ) | null }
+                  & { __typename?: 'AttributeType' }
+                ) }
+                & { __typename: 'AttributeChoice' }
+              ) | (
+                { id: string, numericValue: number, type: (
+                  { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
+                    { id: string, name: string, shortName?: string | null }
+                    & { __typename?: 'Unit' }
+                  ) | null }
+                  & { __typename?: 'AttributeType' }
+                ) }
+                & { __typename: 'AttributeNumericValue' }
+              ) | (
+                { value: string, id: string, type: (
+                  { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
+                    { id: string, name: string, shortName?: string | null }
+                    & { __typename?: 'Unit' }
+                  ) | null }
+                  & { __typename?: 'AttributeType' }
+                ) }
+                & { __typename: 'AttributeRichText' | 'AttributeText' }
+              ) | null, field: (
+                { id?: string | null }
+                & { __typename: 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryReportFieldBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionStatusReportFieldBlock' }
+              ) }
+              & { __typename?: 'ActionAttributeReportValue' }
+            ) | (
+              { field: (
+                { id?: string | null }
+                & { __typename: 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryReportFieldBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionStatusReportFieldBlock' }
+              ) }
+              & { __typename?: 'ActionCategoryReportValue' | 'ActionImplementationPhaseReportValue' | 'ActionResponsiblePartyReporteportValue' | 'ActionStatusReportValue' }
+            )> | null }
+            & { __typename?: 'Report' }
+          ) | null> | null }
+          & { __typename?: 'ReportComparisonBlock' }
+        ) | null> | null }
+        & { __typename: 'ActionContentSectionBlock' }
+      ) | (
+        { id?: string | null, fieldLabel?: string | null, caption?: string | null }
+        & { __typename: 'ActionOfficialNameBlock' }
+      ) | (
+        { id?: string | null, reportField?: string | null, reportType?: (
+          { name: string }
+          & { __typename?: 'ReportType' }
+        ) | null, reportsToCompare?: Array<(
+          { identifier: string, name: string, startDate: any, endDate: any, valuesForAction?: Array<(
+            { attribute?: (
+              { id: string, categories: Array<(
+                { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+                  { id: string, name: string, namePlural?: string | null }
+                  & { __typename?: 'CategoryLevel' }
+                ) | null, image?: (
+                  { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename?: 'ImageRendition' }
+                  ) | null, large?: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename?: 'ImageRendition' }
+                  ) | null, small?: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename?: 'ImageRendition' }
+                  ) | null, social?: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename?: 'ImageRendition' }
+                  ) | null, rendition?: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename?: 'ImageRendition' }
+                  ) | null }
+                  & { __typename?: 'Image' }
+                ) | null, iconImage?: (
+                  { rendition?: (
+                    { src: string }
+                    & { __typename?: 'ImageRendition' }
+                  ) | null }
+                  & { __typename?: 'Image' }
+                ) | null, categoryPage?: (
+                  { id?: string | null, title: string, urlPath: string, live: boolean }
+                  & { __typename?: 'CategoryPage' }
+                ) | null, type: (
+                  { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+                  & { __typename?: 'CategoryType' }
+                ), parent?: (
+                  { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+                    { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+                      { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+                        { id: string, name: string, namePlural?: string | null }
+                        & { __typename?: 'CategoryLevel' }
+                      ) | null, image?: (
+                        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                          { id: string, width: number, height: number, src: string }
+                          & { __typename?: 'ImageRendition' }
+                        ) | null, large?: (
+                          { id: string, width: number, height: number, src: string }
+                          & { __typename?: 'ImageRendition' }
+                        ) | null, small?: (
+                          { id: string, width: number, height: number, src: string }
+                          & { __typename?: 'ImageRendition' }
+                        ) | null, social?: (
+                          { id: string, width: number, height: number, src: string }
+                          & { __typename?: 'ImageRendition' }
+                        ) | null, rendition?: (
+                          { id: string, width: number, height: number, src: string }
+                          & { __typename?: 'ImageRendition' }
+                        ) | null }
+                        & { __typename?: 'Image' }
+                      ) | null, iconImage?: (
+                        { rendition?: (
+                          { src: string }
+                          & { __typename?: 'ImageRendition' }
+                        ) | null }
+                        & { __typename?: 'Image' }
+                      ) | null, categoryPage?: (
+                        { id?: string | null, title: string, urlPath: string, live: boolean }
+                        & { __typename?: 'CategoryPage' }
+                      ) | null, type: (
+                        { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+                        & { __typename?: 'CategoryType' }
+                      ) }
+                      & { __typename?: 'Category' }
+                    ) | null, level?: (
+                      { id: string, name: string, namePlural?: string | null }
+                      & { __typename?: 'CategoryLevel' }
+                    ) | null, image?: (
+                      { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                        { id: string, width: number, height: number, src: string }
+                        & { __typename?: 'ImageRendition' }
+                      ) | null, large?: (
+                        { id: string, width: number, height: number, src: string }
+                        & { __typename?: 'ImageRendition' }
+                      ) | null, small?: (
+                        { id: string, width: number, height: number, src: string }
+                        & { __typename?: 'ImageRendition' }
+                      ) | null, social?: (
+                        { id: string, width: number, height: number, src: string }
+                        & { __typename?: 'ImageRendition' }
+                      ) | null, rendition?: (
+                        { id: string, width: number, height: number, src: string }
+                        & { __typename?: 'ImageRendition' }
+                      ) | null }
+                      & { __typename?: 'Image' }
+                    ) | null, iconImage?: (
+                      { rendition?: (
+                        { src: string }
+                        & { __typename?: 'ImageRendition' }
+                      ) | null }
+                      & { __typename?: 'Image' }
+                    ) | null, categoryPage?: (
+                      { id?: string | null, title: string, urlPath: string, live: boolean }
+                      & { __typename?: 'CategoryPage' }
+                    ) | null, type: (
+                      { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+                      & { __typename?: 'CategoryType' }
+                    ) }
+                    & { __typename?: 'Category' }
+                  ) | null, level?: (
+                    { id: string, name: string, namePlural?: string | null }
+                    & { __typename?: 'CategoryLevel' }
+                  ) | null, image?: (
+                    { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                      { id: string, width: number, height: number, src: string }
+                      & { __typename?: 'ImageRendition' }
+                    ) | null, large?: (
+                      { id: string, width: number, height: number, src: string }
+                      & { __typename?: 'ImageRendition' }
+                    ) | null, small?: (
+                      { id: string, width: number, height: number, src: string }
+                      & { __typename?: 'ImageRendition' }
+                    ) | null, social?: (
+                      { id: string, width: number, height: number, src: string }
+                      & { __typename?: 'ImageRendition' }
+                    ) | null, rendition?: (
+                      { id: string, width: number, height: number, src: string }
+                      & { __typename?: 'ImageRendition' }
+                    ) | null }
+                    & { __typename?: 'Image' }
+                  ) | null, iconImage?: (
+                    { rendition?: (
+                      { src: string }
+                      & { __typename?: 'ImageRendition' }
+                    ) | null }
+                    & { __typename?: 'Image' }
+                  ) | null, categoryPage?: (
+                    { id?: string | null, title: string, urlPath: string, live: boolean }
+                    & { __typename?: 'CategoryPage' }
+                  ) | null, type: (
+                    { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+                    & { __typename?: 'CategoryType' }
+                  ) }
+                  & { __typename?: 'Category' }
+                ) | null }
+                & { __typename?: 'Category' }
+              )>, type: (
+                { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
+                  { id: string, name: string, shortName?: string | null }
+                  & { __typename?: 'Unit' }
+                ) | null }
+                & { __typename?: 'AttributeType' }
+              ) }
+              & { __typename: 'AttributeCategoryChoice' }
+            ) | (
+              { text?: string | null, id: string, choice?: (
+                { id: string, name: string }
+                & { __typename?: 'AttributeTypeChoiceOption' }
+              ) | null, type: (
+                { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
+                  { id: string, name: string, shortName?: string | null }
+                  & { __typename?: 'Unit' }
+                ) | null }
+                & { __typename?: 'AttributeType' }
+              ) }
+              & { __typename: 'AttributeChoice' }
+            ) | (
+              { id: string, numericValue: number, type: (
+                { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
+                  { id: string, name: string, shortName?: string | null }
+                  & { __typename?: 'Unit' }
+                ) | null }
+                & { __typename?: 'AttributeType' }
+              ) }
+              & { __typename: 'AttributeNumericValue' }
+            ) | (
+              { value: string, id: string, type: (
+                { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
+                  { id: string, name: string, shortName?: string | null }
+                  & { __typename?: 'Unit' }
+                ) | null }
+                & { __typename?: 'AttributeType' }
+              ) }
+              & { __typename: 'AttributeRichText' | 'AttributeText' }
+            ) | null, field: (
+              { id?: string | null }
+              & { __typename: 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryReportFieldBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionStatusReportFieldBlock' }
+            ) }
+            & { __typename?: 'ActionAttributeReportValue' }
+          ) | (
+            { field: (
+              { id?: string | null }
+              & { __typename: 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryReportFieldBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionStatusReportFieldBlock' }
+            ) }
+            & { __typename?: 'ActionCategoryReportValue' | 'ActionImplementationPhaseReportValue' | 'ActionResponsiblePartyReporteportValue' | 'ActionStatusReportValue' }
+          )> | null }
+          & { __typename?: 'Report' }
+        ) | null> | null }
+        & { __typename: 'ReportComparisonBlock' }
+      )> | null, detailsMainBottom?: Array<(
+        { id?: string | null }
+        & { __typename: 'ActionContactFormBlock' | 'ActionDescriptionBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionMergedActionsBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionTasksBlock' }
+      ) | (
+        { id?: string | null, attributeType: (
+          { id: string, format: AttributeTypeFormat, name: string, identifier: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
+            { id: string, identifier: string }
+            & { __typename?: 'AttributeTypeChoiceOption' }
+          )>, unit?: (
+            { id: string, name: string }
+            & { __typename?: 'Unit' }
+          ) | null }
+          & { __typename: 'AttributeType' }
+        ) }
+        & { __typename: 'ActionContentAttributeTypeBlock' }
+      ) | (
+        { id?: string | null, categoryType: (
+          { id: string, name: string, identifier: string, helpText: string, hideCategoryIdentifiers: boolean, levels: Array<(
+            { id: string, order: number, name: string, namePlural?: string | null }
+            & { __typename?: 'CategoryLevel' }
+          )> }
+          & { __typename?: 'CategoryType' }
+        ) }
+        & { __typename: 'ActionContentCategoryTypeBlock' }
+      ) | (
+        { id?: string | null, heading?: string | null, helpText?: string | null, layout?: string | null, blocks?: Array<(
+          { id?: string | null }
+          & { __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionListBlock' | 'ActionMergedActionsBlock' }
+        ) | (
+          { id?: string | null }
+          & { __typename?: 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' }
+        ) | (
+          { id?: string | null }
+          & { __typename?: 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' }
+        ) | (
+          { id?: string | null }
+          & { __typename?: 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' }
+        ) | (
+          { id?: string | null }
+          & { __typename?: 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
+        ) | (
+          { id?: string | null, attributeType: (
+            { id: string, format: AttributeTypeFormat, name: string, identifier: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
+              { id: string, identifier: string }
+              & { __typename?: 'AttributeTypeChoiceOption' }
+            )>, unit?: (
+              { id: string, name: string }
+              & { __typename?: 'Unit' }
+            ) | null }
+            & { __typename: 'AttributeType' }
+          ) }
+          & { __typename?: 'ActionContentAttributeTypeBlock' }
+        ) | (
+          { id?: string | null, categoryType: (
+            { id: string, name: string, identifier: string, helpText: string, hideCategoryIdentifiers: boolean, levels: Array<(
+              { id: string, order: number, name: string, namePlural?: string | null }
+              & { __typename?: 'CategoryLevel' }
+            )> }
+            & { __typename?: 'CategoryType' }
+          ) }
+          & { __typename?: 'ActionContentCategoryTypeBlock' }
+        ) | (
+          { id?: string | null, fieldLabel?: string | null, caption?: string | null }
+          & { __typename?: 'ActionOfficialNameBlock' }
+        ) | (
+          { id?: string | null, reportField?: string | null, reportType?: (
+            { name: string }
+            & { __typename?: 'ReportType' }
+          ) | null, reportsToCompare?: Array<(
+            { identifier: string, name: string, startDate: any, endDate: any, valuesForAction?: Array<(
+              { attribute?: (
+                { id: string, categories: Array<(
+                  { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+                    { id: string, name: string, namePlural?: string | null }
+                    & { __typename?: 'CategoryLevel' }
+                  ) | null, image?: (
+                    { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                      { id: string, width: number, height: number, src: string }
+                      & { __typename?: 'ImageRendition' }
+                    ) | null, large?: (
+                      { id: string, width: number, height: number, src: string }
+                      & { __typename?: 'ImageRendition' }
+                    ) | null, small?: (
+                      { id: string, width: number, height: number, src: string }
+                      & { __typename?: 'ImageRendition' }
+                    ) | null, social?: (
+                      { id: string, width: number, height: number, src: string }
+                      & { __typename?: 'ImageRendition' }
+                    ) | null, rendition?: (
+                      { id: string, width: number, height: number, src: string }
+                      & { __typename?: 'ImageRendition' }
+                    ) | null }
+                    & { __typename?: 'Image' }
+                  ) | null, iconImage?: (
+                    { rendition?: (
+                      { src: string }
+                      & { __typename?: 'ImageRendition' }
+                    ) | null }
+                    & { __typename?: 'Image' }
+                  ) | null, categoryPage?: (
+                    { id?: string | null, title: string, urlPath: string, live: boolean }
+                    & { __typename?: 'CategoryPage' }
+                  ) | null, type: (
+                    { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+                    & { __typename?: 'CategoryType' }
+                  ), parent?: (
+                    { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+                      { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+                        { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+                          { id: string, name: string, namePlural?: string | null }
+                          & { __typename?: 'CategoryLevel' }
+                        ) | null, image?: (
+                          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                            { id: string, width: number, height: number, src: string }
+                            & { __typename?: 'ImageRendition' }
+                          ) | null, large?: (
+                            { id: string, width: number, height: number, src: string }
+                            & { __typename?: 'ImageRendition' }
+                          ) | null, small?: (
+                            { id: string, width: number, height: number, src: string }
+                            & { __typename?: 'ImageRendition' }
+                          ) | null, social?: (
+                            { id: string, width: number, height: number, src: string }
+                            & { __typename?: 'ImageRendition' }
+                          ) | null, rendition?: (
+                            { id: string, width: number, height: number, src: string }
+                            & { __typename?: 'ImageRendition' }
+                          ) | null }
+                          & { __typename?: 'Image' }
+                        ) | null, iconImage?: (
+                          { rendition?: (
+                            { src: string }
+                            & { __typename?: 'ImageRendition' }
+                          ) | null }
+                          & { __typename?: 'Image' }
+                        ) | null, categoryPage?: (
+                          { id?: string | null, title: string, urlPath: string, live: boolean }
+                          & { __typename?: 'CategoryPage' }
+                        ) | null, type: (
+                          { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+                          & { __typename?: 'CategoryType' }
+                        ) }
+                        & { __typename?: 'Category' }
+                      ) | null, level?: (
+                        { id: string, name: string, namePlural?: string | null }
+                        & { __typename?: 'CategoryLevel' }
+                      ) | null, image?: (
+                        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                          { id: string, width: number, height: number, src: string }
+                          & { __typename?: 'ImageRendition' }
+                        ) | null, large?: (
+                          { id: string, width: number, height: number, src: string }
+                          & { __typename?: 'ImageRendition' }
+                        ) | null, small?: (
+                          { id: string, width: number, height: number, src: string }
+                          & { __typename?: 'ImageRendition' }
+                        ) | null, social?: (
+                          { id: string, width: number, height: number, src: string }
+                          & { __typename?: 'ImageRendition' }
+                        ) | null, rendition?: (
+                          { id: string, width: number, height: number, src: string }
+                          & { __typename?: 'ImageRendition' }
+                        ) | null }
+                        & { __typename?: 'Image' }
+                      ) | null, iconImage?: (
+                        { rendition?: (
+                          { src: string }
+                          & { __typename?: 'ImageRendition' }
+                        ) | null }
+                        & { __typename?: 'Image' }
+                      ) | null, categoryPage?: (
+                        { id?: string | null, title: string, urlPath: string, live: boolean }
+                        & { __typename?: 'CategoryPage' }
+                      ) | null, type: (
+                        { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+                        & { __typename?: 'CategoryType' }
+                      ) }
+                      & { __typename?: 'Category' }
+                    ) | null, level?: (
+                      { id: string, name: string, namePlural?: string | null }
+                      & { __typename?: 'CategoryLevel' }
+                    ) | null, image?: (
+                      { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                        { id: string, width: number, height: number, src: string }
+                        & { __typename?: 'ImageRendition' }
+                      ) | null, large?: (
+                        { id: string, width: number, height: number, src: string }
+                        & { __typename?: 'ImageRendition' }
+                      ) | null, small?: (
+                        { id: string, width: number, height: number, src: string }
+                        & { __typename?: 'ImageRendition' }
+                      ) | null, social?: (
+                        { id: string, width: number, height: number, src: string }
+                        & { __typename?: 'ImageRendition' }
+                      ) | null, rendition?: (
+                        { id: string, width: number, height: number, src: string }
+                        & { __typename?: 'ImageRendition' }
+                      ) | null }
+                      & { __typename?: 'Image' }
+                    ) | null, iconImage?: (
+                      { rendition?: (
+                        { src: string }
+                        & { __typename?: 'ImageRendition' }
+                      ) | null }
+                      & { __typename?: 'Image' }
+                    ) | null, categoryPage?: (
+                      { id?: string | null, title: string, urlPath: string, live: boolean }
+                      & { __typename?: 'CategoryPage' }
+                    ) | null, type: (
+                      { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+                      & { __typename?: 'CategoryType' }
+                    ) }
+                    & { __typename?: 'Category' }
+                  ) | null }
+                  & { __typename?: 'Category' }
+                )>, type: (
+                  { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
+                    { id: string, name: string, shortName?: string | null }
+                    & { __typename?: 'Unit' }
+                  ) | null }
+                  & { __typename?: 'AttributeType' }
+                ) }
+                & { __typename: 'AttributeCategoryChoice' }
+              ) | (
+                { text?: string | null, id: string, choice?: (
+                  { id: string, name: string }
+                  & { __typename?: 'AttributeTypeChoiceOption' }
+                ) | null, type: (
+                  { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
+                    { id: string, name: string, shortName?: string | null }
+                    & { __typename?: 'Unit' }
+                  ) | null }
+                  & { __typename?: 'AttributeType' }
+                ) }
+                & { __typename: 'AttributeChoice' }
+              ) | (
+                { id: string, numericValue: number, type: (
+                  { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
+                    { id: string, name: string, shortName?: string | null }
+                    & { __typename?: 'Unit' }
+                  ) | null }
+                  & { __typename?: 'AttributeType' }
+                ) }
+                & { __typename: 'AttributeNumericValue' }
+              ) | (
+                { value: string, id: string, type: (
+                  { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
+                    { id: string, name: string, shortName?: string | null }
+                    & { __typename?: 'Unit' }
+                  ) | null }
+                  & { __typename?: 'AttributeType' }
+                ) }
+                & { __typename: 'AttributeRichText' | 'AttributeText' }
+              ) | null, field: (
+                { id?: string | null }
+                & { __typename: 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryReportFieldBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionStatusReportFieldBlock' }
+              ) }
+              & { __typename?: 'ActionAttributeReportValue' }
+            ) | (
+              { field: (
+                { id?: string | null }
+                & { __typename: 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryReportFieldBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionStatusReportFieldBlock' }
+              ) }
+              & { __typename?: 'ActionCategoryReportValue' | 'ActionImplementationPhaseReportValue' | 'ActionResponsiblePartyReporteportValue' | 'ActionStatusReportValue' }
+            )> | null }
+            & { __typename?: 'Report' }
+          ) | null> | null }
+          & { __typename?: 'ReportComparisonBlock' }
+        ) | null> | null }
+        & { __typename: 'ActionContentSectionBlock' }
+      ) | (
+        { id?: string | null, fieldLabel?: string | null, caption?: string | null }
+        & { __typename: 'ActionOfficialNameBlock' }
+      ) | (
+        { id?: string | null, reportField?: string | null, reportType?: (
+          { name: string }
+          & { __typename?: 'ReportType' }
+        ) | null, reportsToCompare?: Array<(
+          { identifier: string, name: string, startDate: any, endDate: any, valuesForAction?: Array<(
+            { attribute?: (
+              { id: string, categories: Array<(
+                { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+                  { id: string, name: string, namePlural?: string | null }
+                  & { __typename?: 'CategoryLevel' }
+                ) | null, image?: (
+                  { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename?: 'ImageRendition' }
+                  ) | null, large?: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename?: 'ImageRendition' }
+                  ) | null, small?: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename?: 'ImageRendition' }
+                  ) | null, social?: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename?: 'ImageRendition' }
+                  ) | null, rendition?: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename?: 'ImageRendition' }
+                  ) | null }
+                  & { __typename?: 'Image' }
+                ) | null, iconImage?: (
+                  { rendition?: (
+                    { src: string }
+                    & { __typename?: 'ImageRendition' }
+                  ) | null }
+                  & { __typename?: 'Image' }
+                ) | null, categoryPage?: (
+                  { id?: string | null, title: string, urlPath: string, live: boolean }
+                  & { __typename?: 'CategoryPage' }
+                ) | null, type: (
+                  { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+                  & { __typename?: 'CategoryType' }
+                ), parent?: (
+                  { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+                    { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+                      { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+                        { id: string, name: string, namePlural?: string | null }
+                        & { __typename?: 'CategoryLevel' }
+                      ) | null, image?: (
+                        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                          { id: string, width: number, height: number, src: string }
+                          & { __typename?: 'ImageRendition' }
+                        ) | null, large?: (
+                          { id: string, width: number, height: number, src: string }
+                          & { __typename?: 'ImageRendition' }
+                        ) | null, small?: (
+                          { id: string, width: number, height: number, src: string }
+                          & { __typename?: 'ImageRendition' }
+                        ) | null, social?: (
+                          { id: string, width: number, height: number, src: string }
+                          & { __typename?: 'ImageRendition' }
+                        ) | null, rendition?: (
+                          { id: string, width: number, height: number, src: string }
+                          & { __typename?: 'ImageRendition' }
+                        ) | null }
+                        & { __typename?: 'Image' }
+                      ) | null, iconImage?: (
+                        { rendition?: (
+                          { src: string }
+                          & { __typename?: 'ImageRendition' }
+                        ) | null }
+                        & { __typename?: 'Image' }
+                      ) | null, categoryPage?: (
+                        { id?: string | null, title: string, urlPath: string, live: boolean }
+                        & { __typename?: 'CategoryPage' }
+                      ) | null, type: (
+                        { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+                        & { __typename?: 'CategoryType' }
+                      ) }
+                      & { __typename?: 'Category' }
+                    ) | null, level?: (
+                      { id: string, name: string, namePlural?: string | null }
+                      & { __typename?: 'CategoryLevel' }
+                    ) | null, image?: (
+                      { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                        { id: string, width: number, height: number, src: string }
+                        & { __typename?: 'ImageRendition' }
+                      ) | null, large?: (
+                        { id: string, width: number, height: number, src: string }
+                        & { __typename?: 'ImageRendition' }
+                      ) | null, small?: (
+                        { id: string, width: number, height: number, src: string }
+                        & { __typename?: 'ImageRendition' }
+                      ) | null, social?: (
+                        { id: string, width: number, height: number, src: string }
+                        & { __typename?: 'ImageRendition' }
+                      ) | null, rendition?: (
+                        { id: string, width: number, height: number, src: string }
+                        & { __typename?: 'ImageRendition' }
+                      ) | null }
+                      & { __typename?: 'Image' }
+                    ) | null, iconImage?: (
+                      { rendition?: (
+                        { src: string }
+                        & { __typename?: 'ImageRendition' }
+                      ) | null }
+                      & { __typename?: 'Image' }
+                    ) | null, categoryPage?: (
+                      { id?: string | null, title: string, urlPath: string, live: boolean }
+                      & { __typename?: 'CategoryPage' }
+                    ) | null, type: (
+                      { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+                      & { __typename?: 'CategoryType' }
+                    ) }
+                    & { __typename?: 'Category' }
+                  ) | null, level?: (
+                    { id: string, name: string, namePlural?: string | null }
+                    & { __typename?: 'CategoryLevel' }
+                  ) | null, image?: (
+                    { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                      { id: string, width: number, height: number, src: string }
+                      & { __typename?: 'ImageRendition' }
+                    ) | null, large?: (
+                      { id: string, width: number, height: number, src: string }
+                      & { __typename?: 'ImageRendition' }
+                    ) | null, small?: (
+                      { id: string, width: number, height: number, src: string }
+                      & { __typename?: 'ImageRendition' }
+                    ) | null, social?: (
+                      { id: string, width: number, height: number, src: string }
+                      & { __typename?: 'ImageRendition' }
+                    ) | null, rendition?: (
+                      { id: string, width: number, height: number, src: string }
+                      & { __typename?: 'ImageRendition' }
+                    ) | null }
+                    & { __typename?: 'Image' }
+                  ) | null, iconImage?: (
+                    { rendition?: (
+                      { src: string }
+                      & { __typename?: 'ImageRendition' }
+                    ) | null }
+                    & { __typename?: 'Image' }
+                  ) | null, categoryPage?: (
+                    { id?: string | null, title: string, urlPath: string, live: boolean }
+                    & { __typename?: 'CategoryPage' }
+                  ) | null, type: (
+                    { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+                    & { __typename?: 'CategoryType' }
+                  ) }
+                  & { __typename?: 'Category' }
+                ) | null }
+                & { __typename?: 'Category' }
+              )>, type: (
+                { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
+                  { id: string, name: string, shortName?: string | null }
+                  & { __typename?: 'Unit' }
+                ) | null }
+                & { __typename?: 'AttributeType' }
+              ) }
+              & { __typename: 'AttributeCategoryChoice' }
+            ) | (
+              { text?: string | null, id: string, choice?: (
+                { id: string, name: string }
+                & { __typename?: 'AttributeTypeChoiceOption' }
+              ) | null, type: (
+                { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
+                  { id: string, name: string, shortName?: string | null }
+                  & { __typename?: 'Unit' }
+                ) | null }
+                & { __typename?: 'AttributeType' }
+              ) }
+              & { __typename: 'AttributeChoice' }
+            ) | (
+              { id: string, numericValue: number, type: (
+                { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
+                  { id: string, name: string, shortName?: string | null }
+                  & { __typename?: 'Unit' }
+                ) | null }
+                & { __typename?: 'AttributeType' }
+              ) }
+              & { __typename: 'AttributeNumericValue' }
+            ) | (
+              { value: string, id: string, type: (
+                { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
+                  { id: string, name: string, shortName?: string | null }
+                  & { __typename?: 'Unit' }
+                ) | null }
+                & { __typename?: 'AttributeType' }
+              ) }
+              & { __typename: 'AttributeRichText' | 'AttributeText' }
+            ) | null, field: (
+              { id?: string | null }
+              & { __typename: 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryReportFieldBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionStatusReportFieldBlock' }
+            ) }
+            & { __typename?: 'ActionAttributeReportValue' }
+          ) | (
+            { field: (
+              { id?: string | null }
+              & { __typename: 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryReportFieldBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionStatusReportFieldBlock' }
+            ) }
+            & { __typename?: 'ActionCategoryReportValue' | 'ActionImplementationPhaseReportValue' | 'ActionResponsiblePartyReporteportValue' | 'ActionStatusReportValue' }
+          )> | null }
+          & { __typename?: 'Report' }
+        ) | null> | null }
+        & { __typename: 'ReportComparisonBlock' }
+      )> | null, detailsAside?: Array<(
+        { id?: string | null }
+        & { __typename: 'ActionContactPersonsBlock' | 'ActionScheduleBlock' }
+      ) | (
+        { id?: string | null, attributeType: (
+          { id: string, format: AttributeTypeFormat, name: string, identifier: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
+            { id: string, identifier: string }
+            & { __typename?: 'AttributeTypeChoiceOption' }
+          )>, unit?: (
+            { id: string, name: string }
+            & { __typename?: 'Unit' }
+          ) | null }
+          & { __typename: 'AttributeType' }
+        ) }
+        & { __typename: 'ActionContentAttributeTypeBlock' }
+      ) | (
+        { id?: string | null, categoryType: (
+          { id: string, name: string, identifier: string, helpText: string, hideCategoryIdentifiers: boolean, levels: Array<(
+            { id: string, order: number, name: string, namePlural?: string | null }
+            & { __typename?: 'CategoryLevel' }
+          )> }
+          & { __typename?: 'CategoryType' }
+        ) }
+        & { __typename: 'ActionContentCategoryTypeBlock' }
+      ) | (
+        { heading?: string | null, id?: string | null }
+        & { __typename: 'ActionResponsiblePartiesBlock' }
+      )> | null }
+      & { __typename?: 'ActionListPage' }
+    ) | null, actionAttributeTypes: Array<(
+      { id: string, format: AttributeTypeFormat, name: string, identifier: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
+        { id: string, identifier: string }
+        & { __typename?: 'AttributeTypeChoiceOption' }
+      )>, unit?: (
+        { id: string, name: string }
+        & { __typename?: 'Unit' }
+      ) | null }
+      & { __typename: 'AttributeType' }
+    )>, generalContent: (
+      { actionTerm: SiteGeneralContentActionTerm }
+      & { __typename?: 'SiteGeneralContent' }
+    ) }
+    & { __typename?: 'Plan' }
+  ) | null }
+  & { __typename?: 'Query' }
+);
+
+type ActionAsideContentBlocksFragment_ActionContactPersonsBlock_ActionScheduleBlock_Fragment = (
+  { id?: string | null }
+  & { __typename: 'ActionContactPersonsBlock' | 'ActionScheduleBlock' }
+);
+
+type ActionAsideContentBlocksFragment_ActionContentAttributeTypeBlock_Fragment = (
+  { id?: string | null, attributeType: (
+    { id: string, format: AttributeTypeFormat, name: string, identifier: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
+      { id: string, identifier: string }
+      & { __typename?: 'AttributeTypeChoiceOption' }
+    )>, unit?: (
+      { id: string, name: string }
+      & { __typename?: 'Unit' }
+    ) | null }
+    & { __typename: 'AttributeType' }
+  ) }
+  & { __typename: 'ActionContentAttributeTypeBlock' }
+);
+
+type ActionAsideContentBlocksFragment_ActionContentCategoryTypeBlock_Fragment = (
+  { id?: string | null, categoryType: (
+    { id: string, name: string, identifier: string, helpText: string, hideCategoryIdentifiers: boolean, levels: Array<(
+      { id: string, order: number, name: string, namePlural?: string | null }
+      & { __typename?: 'CategoryLevel' }
+    )> }
+    & { __typename?: 'CategoryType' }
+  ) }
+  & { __typename: 'ActionContentCategoryTypeBlock' }
+);
+
+type ActionAsideContentBlocksFragment_ActionResponsiblePartiesBlock_Fragment = (
+  { heading?: string | null, id?: string | null }
+  & { __typename: 'ActionResponsiblePartiesBlock' }
+);
+
+export type ActionAsideContentBlocksFragmentFragment = ActionAsideContentBlocksFragment_ActionContactPersonsBlock_ActionScheduleBlock_Fragment | ActionAsideContentBlocksFragment_ActionContentAttributeTypeBlock_Fragment | ActionAsideContentBlocksFragment_ActionContentCategoryTypeBlock_Fragment | ActionAsideContentBlocksFragment_ActionResponsiblePartiesBlock_Fragment;
+
+type ActionMainContentBlocksFragment_FVKamQUfmT6JjFbafBAu3ifcqx9spC4XsfbOqsBaoA_Fragment = (
+  { id?: string | null }
+  & { __typename: 'ActionContactFormBlock' | 'ActionDescriptionBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionMergedActionsBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionTasksBlock' }
+);
+
+type ActionMainContentBlocksFragment_ActionContentAttributeTypeBlock_Fragment = (
+  { id?: string | null, attributeType: (
+    { id: string, format: AttributeTypeFormat, name: string, identifier: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
+      { id: string, identifier: string }
+      & { __typename?: 'AttributeTypeChoiceOption' }
+    )>, unit?: (
+      { id: string, name: string }
+      & { __typename?: 'Unit' }
+    ) | null }
+    & { __typename: 'AttributeType' }
+  ) }
+  & { __typename: 'ActionContentAttributeTypeBlock' }
+);
+
+type ActionMainContentBlocksFragment_ActionContentCategoryTypeBlock_Fragment = (
+  { id?: string | null, categoryType: (
+    { id: string, name: string, identifier: string, helpText: string, hideCategoryIdentifiers: boolean, levels: Array<(
+      { id: string, order: number, name: string, namePlural?: string | null }
+      & { __typename?: 'CategoryLevel' }
+    )> }
+    & { __typename?: 'CategoryType' }
+  ) }
+  & { __typename: 'ActionContentCategoryTypeBlock' }
+);
+
+type ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment = (
+  { id?: string | null, heading?: string | null, helpText?: string | null, layout?: string | null, blocks?: Array<(
+    { id?: string | null }
+    & { __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionListBlock' | 'ActionMergedActionsBlock' }
+  ) | (
+    { id?: string | null }
+    & { __typename?: 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' }
+  ) | (
+    { id?: string | null }
+    & { __typename?: 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' }
+  ) | (
+    { id?: string | null }
+    & { __typename?: 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' }
+  ) | (
+    { id?: string | null }
+    & { __typename?: 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
+  ) | (
+    { id?: string | null, attributeType: (
+      { id: string, format: AttributeTypeFormat, name: string, identifier: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
+        { id: string, identifier: string }
+        & { __typename?: 'AttributeTypeChoiceOption' }
+      )>, unit?: (
+        { id: string, name: string }
+        & { __typename?: 'Unit' }
+      ) | null }
+      & { __typename: 'AttributeType' }
+    ) }
+    & { __typename?: 'ActionContentAttributeTypeBlock' }
+  ) | (
+    { id?: string | null, categoryType: (
+      { id: string, name: string, identifier: string, helpText: string, hideCategoryIdentifiers: boolean, levels: Array<(
+        { id: string, order: number, name: string, namePlural?: string | null }
+        & { __typename?: 'CategoryLevel' }
+      )> }
+      & { __typename?: 'CategoryType' }
+    ) }
+    & { __typename?: 'ActionContentCategoryTypeBlock' }
+  ) | (
+    { id?: string | null, fieldLabel?: string | null, caption?: string | null }
+    & { __typename?: 'ActionOfficialNameBlock' }
+  ) | (
+    { id?: string | null, reportField?: string | null, reportType?: (
+      { name: string }
+      & { __typename?: 'ReportType' }
+    ) | null, reportsToCompare?: Array<(
+      { identifier: string, name: string, startDate: any, endDate: any, valuesForAction?: Array<(
+        { attribute?: (
+          { id: string, categories: Array<(
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+              { id: string, name: string, namePlural?: string | null }
+              & { __typename?: 'CategoryLevel' }
+            ) | null, image?: (
+              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, large?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, small?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, social?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, rendition?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null }
+              & { __typename?: 'Image' }
+            ) | null, iconImage?: (
+              { rendition?: (
+                { src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null }
+              & { __typename?: 'Image' }
+            ) | null, categoryPage?: (
+              { id?: string | null, title: string, urlPath: string, live: boolean }
+              & { __typename?: 'CategoryPage' }
+            ) | null, type: (
+              { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+              & { __typename?: 'CategoryType' }
+            ), parent?: (
+              { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+                { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+                  { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+                    { id: string, name: string, namePlural?: string | null }
+                    & { __typename?: 'CategoryLevel' }
+                  ) | null, image?: (
+                    { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                      { id: string, width: number, height: number, src: string }
+                      & { __typename?: 'ImageRendition' }
+                    ) | null, large?: (
+                      { id: string, width: number, height: number, src: string }
+                      & { __typename?: 'ImageRendition' }
+                    ) | null, small?: (
+                      { id: string, width: number, height: number, src: string }
+                      & { __typename?: 'ImageRendition' }
+                    ) | null, social?: (
+                      { id: string, width: number, height: number, src: string }
+                      & { __typename?: 'ImageRendition' }
+                    ) | null, rendition?: (
+                      { id: string, width: number, height: number, src: string }
+                      & { __typename?: 'ImageRendition' }
+                    ) | null }
+                    & { __typename?: 'Image' }
+                  ) | null, iconImage?: (
+                    { rendition?: (
+                      { src: string }
+                      & { __typename?: 'ImageRendition' }
+                    ) | null }
+                    & { __typename?: 'Image' }
+                  ) | null, categoryPage?: (
+                    { id?: string | null, title: string, urlPath: string, live: boolean }
+                    & { __typename?: 'CategoryPage' }
+                  ) | null, type: (
+                    { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+                    & { __typename?: 'CategoryType' }
+                  ) }
+                  & { __typename?: 'Category' }
+                ) | null, level?: (
+                  { id: string, name: string, namePlural?: string | null }
+                  & { __typename?: 'CategoryLevel' }
+                ) | null, image?: (
+                  { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename?: 'ImageRendition' }
+                  ) | null, large?: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename?: 'ImageRendition' }
+                  ) | null, small?: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename?: 'ImageRendition' }
+                  ) | null, social?: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename?: 'ImageRendition' }
+                  ) | null, rendition?: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename?: 'ImageRendition' }
+                  ) | null }
+                  & { __typename?: 'Image' }
+                ) | null, iconImage?: (
+                  { rendition?: (
+                    { src: string }
+                    & { __typename?: 'ImageRendition' }
+                  ) | null }
+                  & { __typename?: 'Image' }
+                ) | null, categoryPage?: (
+                  { id?: string | null, title: string, urlPath: string, live: boolean }
+                  & { __typename?: 'CategoryPage' }
+                ) | null, type: (
+                  { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+                  & { __typename?: 'CategoryType' }
+                ) }
+                & { __typename?: 'Category' }
+              ) | null, level?: (
+                { id: string, name: string, namePlural?: string | null }
+                & { __typename?: 'CategoryLevel' }
+              ) | null, image?: (
+                { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null, large?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null, small?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null, social?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null, rendition?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null }
+                & { __typename?: 'Image' }
+              ) | null, iconImage?: (
+                { rendition?: (
+                  { src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null }
+                & { __typename?: 'Image' }
+              ) | null, categoryPage?: (
+                { id?: string | null, title: string, urlPath: string, live: boolean }
+                & { __typename?: 'CategoryPage' }
+              ) | null, type: (
+                { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+                & { __typename?: 'CategoryType' }
+              ) }
+              & { __typename?: 'Category' }
+            ) | null }
+            & { __typename?: 'Category' }
+          )>, type: (
+            { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
+              { id: string, name: string, shortName?: string | null }
+              & { __typename?: 'Unit' }
+            ) | null }
+            & { __typename?: 'AttributeType' }
+          ) }
+          & { __typename: 'AttributeCategoryChoice' }
+        ) | (
+          { text?: string | null, id: string, choice?: (
+            { id: string, name: string }
+            & { __typename?: 'AttributeTypeChoiceOption' }
+          ) | null, type: (
+            { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
+              { id: string, name: string, shortName?: string | null }
+              & { __typename?: 'Unit' }
+            ) | null }
+            & { __typename?: 'AttributeType' }
+          ) }
+          & { __typename: 'AttributeChoice' }
+        ) | (
+          { id: string, numericValue: number, type: (
+            { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
+              { id: string, name: string, shortName?: string | null }
+              & { __typename?: 'Unit' }
+            ) | null }
+            & { __typename?: 'AttributeType' }
+          ) }
+          & { __typename: 'AttributeNumericValue' }
+        ) | (
+          { value: string, id: string, type: (
+            { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
+              { id: string, name: string, shortName?: string | null }
+              & { __typename?: 'Unit' }
+            ) | null }
+            & { __typename?: 'AttributeType' }
+          ) }
+          & { __typename: 'AttributeRichText' | 'AttributeText' }
+        ) | null, field: (
+          { id?: string | null }
+          & { __typename: 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryReportFieldBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionStatusReportFieldBlock' }
+        ) }
+        & { __typename?: 'ActionAttributeReportValue' }
+      ) | (
+        { field: (
+          { id?: string | null }
+          & { __typename: 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryReportFieldBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionStatusReportFieldBlock' }
+        ) }
+        & { __typename?: 'ActionCategoryReportValue' | 'ActionImplementationPhaseReportValue' | 'ActionResponsiblePartyReporteportValue' | 'ActionStatusReportValue' }
+      )> | null }
+      & { __typename?: 'Report' }
+    ) | null> | null }
+    & { __typename?: 'ReportComparisonBlock' }
+  ) | null> | null }
+  & { __typename: 'ActionContentSectionBlock' }
+);
+
+type ActionMainContentBlocksFragment_ActionOfficialNameBlock_Fragment = (
+  { id?: string | null, fieldLabel?: string | null, caption?: string | null }
+  & { __typename: 'ActionOfficialNameBlock' }
+);
+
+type ActionMainContentBlocksFragment_ReportComparisonBlock_Fragment = (
+  { id?: string | null, reportField?: string | null, reportType?: (
+    { name: string }
+    & { __typename?: 'ReportType' }
+  ) | null, reportsToCompare?: Array<(
+    { identifier: string, name: string, startDate: any, endDate: any, valuesForAction?: Array<(
+      { attribute?: (
+        { id: string, categories: Array<(
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+            { id: string, name: string, namePlural?: string | null }
+            & { __typename?: 'CategoryLevel' }
+          ) | null, image?: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, large?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, small?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, social?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, rendition?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, iconImage?: (
+            { rendition?: (
+              { src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, categoryPage?: (
+            { id?: string | null, title: string, urlPath: string, live: boolean }
+            & { __typename?: 'CategoryPage' }
+          ) | null, type: (
+            { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+            & { __typename?: 'CategoryType' }
+          ), parent?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+              { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+                { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+                  { id: string, name: string, namePlural?: string | null }
+                  & { __typename?: 'CategoryLevel' }
+                ) | null, image?: (
+                  { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename?: 'ImageRendition' }
+                  ) | null, large?: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename?: 'ImageRendition' }
+                  ) | null, small?: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename?: 'ImageRendition' }
+                  ) | null, social?: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename?: 'ImageRendition' }
+                  ) | null, rendition?: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename?: 'ImageRendition' }
+                  ) | null }
+                  & { __typename?: 'Image' }
+                ) | null, iconImage?: (
+                  { rendition?: (
+                    { src: string }
+                    & { __typename?: 'ImageRendition' }
+                  ) | null }
+                  & { __typename?: 'Image' }
+                ) | null, categoryPage?: (
+                  { id?: string | null, title: string, urlPath: string, live: boolean }
+                  & { __typename?: 'CategoryPage' }
+                ) | null, type: (
+                  { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+                  & { __typename?: 'CategoryType' }
+                ) }
+                & { __typename?: 'Category' }
+              ) | null, level?: (
+                { id: string, name: string, namePlural?: string | null }
+                & { __typename?: 'CategoryLevel' }
+              ) | null, image?: (
+                { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null, large?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null, small?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null, social?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null, rendition?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null }
+                & { __typename?: 'Image' }
+              ) | null, iconImage?: (
+                { rendition?: (
+                  { src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null }
+                & { __typename?: 'Image' }
+              ) | null, categoryPage?: (
+                { id?: string | null, title: string, urlPath: string, live: boolean }
+                & { __typename?: 'CategoryPage' }
+              ) | null, type: (
+                { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+                & { __typename?: 'CategoryType' }
+              ) }
+              & { __typename?: 'Category' }
+            ) | null, level?: (
+              { id: string, name: string, namePlural?: string | null }
+              & { __typename?: 'CategoryLevel' }
+            ) | null, image?: (
+              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, large?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, small?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, social?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, rendition?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null }
+              & { __typename?: 'Image' }
+            ) | null, iconImage?: (
+              { rendition?: (
+                { src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null }
+              & { __typename?: 'Image' }
+            ) | null, categoryPage?: (
+              { id?: string | null, title: string, urlPath: string, live: boolean }
+              & { __typename?: 'CategoryPage' }
+            ) | null, type: (
+              { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+              & { __typename?: 'CategoryType' }
+            ) }
+            & { __typename?: 'Category' }
+          ) | null }
+          & { __typename?: 'Category' }
+        )>, type: (
+          { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
+            { id: string, name: string, shortName?: string | null }
+            & { __typename?: 'Unit' }
+          ) | null }
+          & { __typename?: 'AttributeType' }
+        ) }
+        & { __typename: 'AttributeCategoryChoice' }
+      ) | (
+        { text?: string | null, id: string, choice?: (
+          { id: string, name: string }
+          & { __typename?: 'AttributeTypeChoiceOption' }
+        ) | null, type: (
+          { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
+            { id: string, name: string, shortName?: string | null }
+            & { __typename?: 'Unit' }
+          ) | null }
+          & { __typename?: 'AttributeType' }
+        ) }
+        & { __typename: 'AttributeChoice' }
+      ) | (
+        { id: string, numericValue: number, type: (
+          { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
+            { id: string, name: string, shortName?: string | null }
+            & { __typename?: 'Unit' }
+          ) | null }
+          & { __typename?: 'AttributeType' }
+        ) }
+        & { __typename: 'AttributeNumericValue' }
+      ) | (
+        { value: string, id: string, type: (
+          { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
+            { id: string, name: string, shortName?: string | null }
+            & { __typename?: 'Unit' }
+          ) | null }
+          & { __typename?: 'AttributeType' }
+        ) }
+        & { __typename: 'AttributeRichText' | 'AttributeText' }
+      ) | null, field: (
+        { id?: string | null }
+        & { __typename: 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryReportFieldBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionStatusReportFieldBlock' }
+      ) }
+      & { __typename?: 'ActionAttributeReportValue' }
+    ) | (
+      { field: (
+        { id?: string | null }
+        & { __typename: 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryReportFieldBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionStatusReportFieldBlock' }
+      ) }
+      & { __typename?: 'ActionCategoryReportValue' | 'ActionImplementationPhaseReportValue' | 'ActionResponsiblePartyReporteportValue' | 'ActionStatusReportValue' }
+    )> | null }
+    & { __typename?: 'Report' }
+  ) | null> | null }
+  & { __typename: 'ReportComparisonBlock' }
+);
+
+export type ActionMainContentBlocksFragmentFragment = ActionMainContentBlocksFragment_FVKamQUfmT6JjFbafBAu3ifcqx9spC4XsfbOqsBaoA_Fragment | ActionMainContentBlocksFragment_ActionContentAttributeTypeBlock_Fragment | ActionMainContentBlocksFragment_ActionContentCategoryTypeBlock_Fragment | ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment | ActionMainContentBlocksFragment_ActionOfficialNameBlock_Fragment | ActionMainContentBlocksFragment_ReportComparisonBlock_Fragment;
+
+export type ReportComparisonBlockActionContentFragment = (
+  { reportField?: string | null, reportType?: (
+    { name: string }
+    & { __typename?: 'ReportType' }
+  ) | null, reportsToCompare?: Array<(
+    { identifier: string, name: string, startDate: any, endDate: any, valuesForAction?: Array<(
+      { attribute?: (
+        { id: string, categories: Array<(
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+            { id: string, name: string, namePlural?: string | null }
+            & { __typename?: 'CategoryLevel' }
+          ) | null, image?: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, large?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, small?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, social?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, rendition?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, iconImage?: (
+            { rendition?: (
+              { src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, categoryPage?: (
+            { id?: string | null, title: string, urlPath: string, live: boolean }
+            & { __typename?: 'CategoryPage' }
+          ) | null, type: (
+            { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+            & { __typename?: 'CategoryType' }
+          ), parent?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+              { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+                { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+                  { id: string, name: string, namePlural?: string | null }
+                  & { __typename?: 'CategoryLevel' }
+                ) | null, image?: (
+                  { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename?: 'ImageRendition' }
+                  ) | null, large?: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename?: 'ImageRendition' }
+                  ) | null, small?: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename?: 'ImageRendition' }
+                  ) | null, social?: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename?: 'ImageRendition' }
+                  ) | null, rendition?: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename?: 'ImageRendition' }
+                  ) | null }
+                  & { __typename?: 'Image' }
+                ) | null, iconImage?: (
+                  { rendition?: (
+                    { src: string }
+                    & { __typename?: 'ImageRendition' }
+                  ) | null }
+                  & { __typename?: 'Image' }
+                ) | null, categoryPage?: (
+                  { id?: string | null, title: string, urlPath: string, live: boolean }
+                  & { __typename?: 'CategoryPage' }
+                ) | null, type: (
+                  { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+                  & { __typename?: 'CategoryType' }
+                ) }
+                & { __typename?: 'Category' }
+              ) | null, level?: (
+                { id: string, name: string, namePlural?: string | null }
+                & { __typename?: 'CategoryLevel' }
+              ) | null, image?: (
+                { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null, large?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null, small?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null, social?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null, rendition?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null }
+                & { __typename?: 'Image' }
+              ) | null, iconImage?: (
+                { rendition?: (
+                  { src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null }
+                & { __typename?: 'Image' }
+              ) | null, categoryPage?: (
+                { id?: string | null, title: string, urlPath: string, live: boolean }
+                & { __typename?: 'CategoryPage' }
+              ) | null, type: (
+                { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+                & { __typename?: 'CategoryType' }
+              ) }
+              & { __typename?: 'Category' }
+            ) | null, level?: (
+              { id: string, name: string, namePlural?: string | null }
+              & { __typename?: 'CategoryLevel' }
+            ) | null, image?: (
+              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, large?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, small?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, social?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, rendition?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null }
+              & { __typename?: 'Image' }
+            ) | null, iconImage?: (
+              { rendition?: (
+                { src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null }
+              & { __typename?: 'Image' }
+            ) | null, categoryPage?: (
+              { id?: string | null, title: string, urlPath: string, live: boolean }
+              & { __typename?: 'CategoryPage' }
+            ) | null, type: (
+              { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+              & { __typename?: 'CategoryType' }
+            ) }
+            & { __typename?: 'Category' }
+          ) | null }
+          & { __typename?: 'Category' }
+        )>, type: (
+          { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
+            { id: string, name: string, shortName?: string | null }
+            & { __typename?: 'Unit' }
+          ) | null }
+          & { __typename?: 'AttributeType' }
+        ) }
+        & { __typename: 'AttributeCategoryChoice' }
+      ) | (
+        { text?: string | null, id: string, choice?: (
+          { id: string, name: string }
+          & { __typename?: 'AttributeTypeChoiceOption' }
+        ) | null, type: (
+          { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
+            { id: string, name: string, shortName?: string | null }
+            & { __typename?: 'Unit' }
+          ) | null }
+          & { __typename?: 'AttributeType' }
+        ) }
+        & { __typename: 'AttributeChoice' }
+      ) | (
+        { id: string, numericValue: number, type: (
+          { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
+            { id: string, name: string, shortName?: string | null }
+            & { __typename?: 'Unit' }
+          ) | null }
+          & { __typename?: 'AttributeType' }
+        ) }
+        & { __typename: 'AttributeNumericValue' }
+      ) | (
+        { value: string, id: string, type: (
+          { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
+            { id: string, name: string, shortName?: string | null }
+            & { __typename?: 'Unit' }
+          ) | null }
+          & { __typename?: 'AttributeType' }
+        ) }
+        & { __typename: 'AttributeRichText' | 'AttributeText' }
+      ) | null, field: (
+        { id?: string | null }
+        & { __typename: 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryReportFieldBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionStatusReportFieldBlock' }
+      ) }
+      & { __typename?: 'ActionAttributeReportValue' }
+    ) | (
+      { field: (
+        { id?: string | null }
+        & { __typename: 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryReportFieldBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionStatusReportFieldBlock' }
+      ) }
+      & { __typename?: 'ActionCategoryReportValue' | 'ActionImplementationPhaseReportValue' | 'ActionResponsiblePartyReporteportValue' | 'ActionStatusReportValue' }
+    )> | null }
+    & { __typename?: 'Report' }
+  ) | null> | null }
+  & { __typename?: 'ReportComparisonBlock' }
+);
+
+export type GetActionListPageIncludeRelatedQueryVariables = Exact<{
+  plan: Scalars['ID'];
+}>;
+
+
+export type GetActionListPageIncludeRelatedQuery = (
+  { plan?: (
+    { actionListPage?: (
+      { includeRelatedPlans?: boolean | null }
+      & { __typename?: 'ActionListPage' }
+    ) | null }
+    & { __typename?: 'Plan' }
+  ) | null }
+  & { __typename?: 'Query' }
+);
+
+export type GetActionListPageQueryVariables = Exact<{
+  plan: Scalars['ID'];
+  singlePlan: Scalars['Boolean'];
+}>;
+
+
+export type GetActionListPageQuery = (
+  { plan?: (
+    { actionListPage?: (
+      { leadContent?: string | null, defaultView: ActionListPageView, headingHierarchyDepth: number, includeRelatedPlans?: boolean | null, id?: string | null, slug: string, title: string, lastPublishedAt?: any | null, primaryFilters?: Array<(
+        { showAllLabel?: string | null, field: string, id?: string | null, attributeType: (
+          { id: string, identifier: string, format: AttributeTypeFormat, name: string, helpText: string, choiceOptions: Array<(
+            { id: string, identifier: string, name: string }
+            & { __typename?: 'AttributeTypeChoiceOption' }
+          )> }
+          & { __typename?: 'AttributeType' }
+        ) }
+        & { __typename: 'ActionAttributeTypeFilterBlock' }
+      ) | (
+        { field: string, id?: string | null }
+        & { __typename: 'ActionImplementationPhaseFilterBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'ResponsiblePartyFilterBlock' }
+      ) | (
+        { style?: string | null, showAllLabel?: string | null, depth?: number | null, field: string, id?: string | null, categoryType?: (
+          { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
+            { id: string, identifier: string, name: string, order: number, helpText: string, parent?: (
+              { id: string }
+              & { __typename?: 'Category' }
+            ) | null, common?: (
+              { id: string }
+              & { __typename?: 'CommonCategory' }
+            ) | null }
+            & { __typename?: 'Category' }
+          )> }
+          & { __typename?: 'CategoryType' }
+        ) | null }
+        & { __typename: 'CategoryTypeFilterBlock' }
+      )> | null, mainFilters?: Array<(
+        { showAllLabel?: string | null, field: string, id?: string | null, attributeType: (
+          { id: string, identifier: string, format: AttributeTypeFormat, name: string, helpText: string, choiceOptions: Array<(
+            { id: string, identifier: string, name: string }
+            & { __typename?: 'AttributeTypeChoiceOption' }
+          )> }
+          & { __typename?: 'AttributeType' }
+        ) }
+        & { __typename: 'ActionAttributeTypeFilterBlock' }
+      ) | (
+        { field: string, id?: string | null }
+        & { __typename: 'ActionImplementationPhaseFilterBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'ResponsiblePartyFilterBlock' }
+      ) | (
+        { style?: string | null, showAllLabel?: string | null, depth?: number | null, field: string, id?: string | null, categoryType?: (
+          { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
+            { id: string, identifier: string, name: string, order: number, helpText: string, parent?: (
+              { id: string }
+              & { __typename?: 'Category' }
+            ) | null, common?: (
+              { id: string }
+              & { __typename?: 'CommonCategory' }
+            ) | null }
+            & { __typename?: 'Category' }
+          )> }
+          & { __typename?: 'CategoryType' }
+        ) | null }
+        & { __typename: 'CategoryTypeFilterBlock' }
+      )> | null, advancedFilters?: Array<(
+        { showAllLabel?: string | null, field: string, id?: string | null, attributeType: (
+          { id: string, identifier: string, format: AttributeTypeFormat, name: string, helpText: string, choiceOptions: Array<(
+            { id: string, identifier: string, name: string }
+            & { __typename?: 'AttributeTypeChoiceOption' }
+          )> }
+          & { __typename?: 'AttributeType' }
+        ) }
+        & { __typename: 'ActionAttributeTypeFilterBlock' }
+      ) | (
+        { field: string, id?: string | null }
+        & { __typename: 'ActionImplementationPhaseFilterBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'ResponsiblePartyFilterBlock' }
+      ) | (
+        { style?: string | null, showAllLabel?: string | null, depth?: number | null, field: string, id?: string | null, categoryType?: (
+          { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
+            { id: string, identifier: string, name: string, order: number, helpText: string, parent?: (
+              { id: string }
+              & { __typename?: 'Category' }
+            ) | null, common?: (
+              { id: string }
+              & { __typename?: 'CommonCategory' }
+            ) | null }
+            & { __typename?: 'Category' }
+          )> }
+          & { __typename?: 'CategoryType' }
+        ) | null }
+        & { __typename: 'CategoryTypeFilterBlock' }
+      )> | null }
+      & { __typename: 'ActionListPage' }
+    ) | null }
+    & { __typename?: 'Plan' }
+  ) | null }
+  & { __typename?: 'Query' }
+);
+
+export type TemplatedCategoryPageFragmentFragment = (
+  { layout?: (
+    { iconSize?: string | null, layoutMainTop?: Array<(
+      { attributeType: (
+        { identifier: string }
+        & { __typename?: 'AttributeType' }
+      ) }
+      & { __typename: 'CategoryPageAttributeTypeBlock' }
+    ) | (
+      { blocks: Array<{ __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' } | { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' } | { __typename?: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' } | { __typename?: 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' } | { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
+        { value: string }
+        & { __typename?: 'ChoiceBlock' }
+      )> }
+      & { __typename: 'CategoryPageProgressBlock' }
+    )> | null, layoutMainBottom?: Array<(
+      { attributeType: (
+        { identifier: string }
+        & { __typename?: 'AttributeType' }
+      ) }
+      & { __typename: 'CategoryPageAttributeTypeBlock' }
+    ) | { __typename: 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' } | (
+      { heading?: string | null, description?: string | null }
+      & { __typename: 'CategoryPageContactFormBlock' }
+    )> | null, layoutAside?: Array<(
+      { attributeType: (
+        { identifier: string }
+        & { __typename?: 'AttributeType' }
+      ) }
+      & { __typename: 'CategoryPageAttributeTypeBlock' }
+    )> | null }
+    & { __typename: 'CategoryTypePageLevelLayout' }
+  ) | null }
+  & { __typename?: 'CategoryPage' }
+);
+
+export type GetContentPageQueryVariables = Exact<{
+  plan: Scalars['ID'];
+  path: Scalars['String'];
+}>;
+
+
+export type GetContentPageQuery = (
+  { planPage?: (
+    { id?: string | null, slug: string, title: string, lastPublishedAt?: any | null, body?: Array<(
+      { id?: string | null, blockType: string, field: string }
+      & { __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' }
+    ) | (
+      { id?: string | null, blockType: string, field: string }
+      & { __typename?: 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTypeFilterBlock' | 'DateBlock' }
+    ) | (
+      { id?: string | null, blockType: string, field: string }
+      & { __typename?: 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorHighlightsBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionBlock' }
+    ) | (
+      { id?: string | null, blockType: string, field: string }
+      & { __typename?: 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
+    ) | (
+      { id?: string | null, blockType: string, field: string, blocks: Array<(
+        { id?: string | null, field: string }
+        & { __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' }
+      ) | (
+        { id?: string | null, field: string }
+        & { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' }
+      ) | (
+        { id?: string | null, field: string }
+        & { __typename?: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' }
+      ) | (
+        { id?: string | null, field: string }
+        & { __typename?: 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' }
+      ) | (
+        { id?: string | null, field: string }
+        & { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
+      ) | (
+        { value: string, id?: string | null, field: string }
+        & { __typename?: 'CharBlock' }
+      )> }
+      & { __typename?: 'AccessibilityStatementContactInformationBlock' }
+    ) | (
+      { id?: string | null, blockType: string, field: string, cards?: Array<{ __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionListBlock' } | { __typename?: 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' } | { __typename?: 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' } | { __typename?: 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' } | { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
+        { heading?: string | null, lead?: string | null, category?: (
+          { id: string, type: (
+            { identifier: string }
+            & { __typename?: 'CategoryType' }
+          ) }
+          & { __typename?: 'Category' }
+        ) | null }
+        & { __typename?: 'ActionCategoryFilterCardBlock' }
+      ) | null> | null }
+      & { __typename?: 'ActionCategoryFilterCardsBlock' }
+    ) | (
+      { id?: string | null, blockType: string, field: string, categoryFilter?: (
+        { id: string }
+        & { __typename?: 'Category' }
+      ) | null }
+      & { __typename?: 'ActionListBlock' }
+    ) | (
+      { fullWidth?: boolean | null, id?: string | null, blockType: string, field: string, embed?: (
+        { html?: string | null }
+        & { __typename?: 'EmbedHTMLValue' }
+      ) | null }
+      & { __typename?: 'AdaptiveEmbedBlock' }
+    ) | (
+      { heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, cards?: Array<{ __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' } | { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' } | { __typename?: 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' } | { __typename?: 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' } | { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
+        { heading?: string | null, content?: string | null, link?: string | null, image?: (
+          { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, large?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, small?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, social?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, rendition?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null }
+          & { __typename?: 'Image' }
+        ) | null }
+        & { __typename?: 'CardBlock' }
+      ) | null> | null }
+      & { __typename?: 'CardListBlock' }
+    ) | (
+      { style?: string | null, styleOverrides?: string | null, id?: string | null, blockType: string, field: string, account?: (
+        { provider: CartographyProviderCredentialsProvider, account: string, publicAccessToken: string }
+        & { __typename?: 'CartographyProviderCredentials' }
+      ) | null }
+      & { __typename?: 'CartographyVisualisationBlock' }
+    ) | (
+      { style?: string | null, heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, categoryType?: (
+        { id: string, hideCategoryIdentifiers: boolean, categories: Array<(
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+            { id: string, name: string, namePlural?: string | null }
+            & { __typename?: 'CategoryLevel' }
+          ) | null, image?: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, large?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, small?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, social?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, rendition?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, iconImage?: (
+            { rendition?: (
+              { src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, categoryPage?: (
+            { id?: string | null, title: string, urlPath: string, live: boolean }
+            & { __typename?: 'CategoryPage' }
+          ) | null, type: (
+            { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+            & { __typename?: 'CategoryType' }
+          ) }
+          & { __typename?: 'Category' }
+        )> }
+        & { __typename?: 'CategoryType' }
+      ) | null, category?: (
+        { id: string, children: Array<(
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+            { id: string, name: string, namePlural?: string | null }
+            & { __typename?: 'CategoryLevel' }
+          ) | null, image?: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, large?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, small?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, social?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, rendition?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, iconImage?: (
+            { rendition?: (
+              { src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, categoryPage?: (
+            { id?: string | null, title: string, urlPath: string, live: boolean }
+            & { __typename?: 'CategoryPage' }
+          ) | null, type: (
+            { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+            & { __typename?: 'CategoryType' }
+          ) }
+          & { __typename?: 'Category' }
+        )> }
+        & { __typename?: 'Category' }
+      ) | null }
+      & { __typename?: 'CategoryListBlock' }
+    ) | (
+      { heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, valueAttribute?: (
+        { identifier: string, unit?: (
+          { shortName?: string | null }
+          & { __typename?: 'Unit' }
+        ) | null }
+        & { __typename?: 'AttributeType' }
+      ) | null, categoryType?: (
+        { identifier: string }
+        & { __typename?: 'CategoryType' }
+      ) | null }
+      & { __typename?: 'CategoryTreeMapBlock' }
+    ) | (
+      { value: string, id?: string | null, blockType: string, field: string }
+      & { __typename?: 'CharBlock' | 'RichTextBlock' | 'TextBlock' }
+    ) | (
+      { value: string, id?: string | null, blockType: string, field: string, choices: Array<(
+        { key: string, value: string }
+        & { __typename?: 'ChoiceOption' }
+      )> }
+      & { __typename?: 'ChoiceBlock' }
+    ) | (
+      { layout?: string | null, heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, image?: (
+        { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, large?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, small?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, social?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, rendition?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null }
+        & { __typename?: 'Image' }
+      ) | null }
+      & { __typename?: 'FrontPageHeroBlock' }
+    ) | (
+      { style?: string | null, id?: string | null, blockType: string, field: string, indicator?: (
+        { id: string }
+        & { __typename?: 'Indicator' }
+      ) | null }
+      & { __typename?: 'IndicatorBlock' }
+    ) | (
+      { title?: string | null, id?: string | null, blockType: string, field: string, indicators?: Array<{ __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' } | { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' } | { __typename?: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' } | { __typename?: 'ImplementationPhaseColumnBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' } | { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
+        { style?: string | null, indicator?: (
+          { id: string, identifier?: string | null, name: string, description?: string | null, timeResolution: IndicatorTimeResolution, level?: string | null, unit: (
+            { id: string, name: string }
+            & { __typename?: 'Unit' }
+          ), latestValue?: (
+            { id: string, date?: string | null, value: number }
+            & { __typename?: 'IndicatorValue' }
+          ) | null, goals?: Array<(
+            { id: string, date?: string | null, value: number }
+            & { __typename?: 'IndicatorGoal' }
+          ) | null> | null }
+          & { __typename?: 'Indicator' }
+        ) | null }
+        & { __typename?: 'IndicatorBlock' }
+      ) | null> | null }
+      & { __typename?: 'IndicatorGroupBlock' }
+    ) | (
+      { title?: string | null, body?: string | null, id?: string | null, blockType: string, field: string, blocks: Array<(
+        { id?: string | null }
+        & { __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' }
+      ) | (
+        { id?: string | null }
+        & { __typename: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' }
+      ) | (
+        { id?: string | null }
+        & { __typename: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' }
+      ) | (
+        { id?: string | null }
+        & { __typename: 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' }
+      ) | (
+        { id?: string | null }
+        & { __typename: 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
+      )>, indicator?: (
+        { id: string, identifier?: string | null, name: string, minValue?: number | null, maxValue?: number | null, unit: (
+          { id: string, shortName?: string | null }
+          & { __typename?: 'Unit' }
+        ), latestValue?: (
+          { id: string, date?: string | null, value: number }
+          & { __typename?: 'IndicatorValue' }
+        ) | null, values?: Array<(
+          { id: string, date?: string | null, value: number, normalizedValues?: Array<(
+            { normalizerId?: string | null, value?: number | null }
+            & { __typename?: 'NormalizedValue' }
+          ) | null> | null, categories: Array<(
+            { id: string }
+            & { __typename?: 'DimensionCategory' }
+          )> }
+          & { __typename?: 'IndicatorValue' }
+        ) | null> | null, goals?: Array<(
+          { id: string, date?: string | null, value: number, normalizedValues?: Array<(
+            { normalizerId?: string | null, value?: number | null }
+            & { __typename?: 'NormalizedValue' }
+          ) | null> | null }
+          & { __typename?: 'IndicatorGoal' }
+        ) | null> | null, common?: (
+          { id: string, normalizations?: Array<(
+            { unit?: (
+              { shortName?: string | null }
+              & { __typename?: 'Unit' }
+            ) | null, normalizer?: (
+              { name: string, id: string, identifier?: string | null }
+              & { __typename?: 'CommonIndicator' }
+            ) | null }
+            & { __typename?: 'CommonIndicatorNormalization' }
+          ) | null> | null }
+          & { __typename?: 'CommonIndicator' }
+        ) | null }
+        & { __typename?: 'Indicator' }
+      ) | null, linkButton?: (
+        { blockType: string }
+        & { __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' }
+      ) | (
+        { blockType: string }
+        & { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' }
+      ) | (
+        { blockType: string }
+        & { __typename?: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' }
+      ) | (
+        { blockType: string }
+        & { __typename?: 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' }
+      ) | (
+        { blockType: string }
+        & { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
+      ) | (
+        { text?: string | null, blockType: string, page?: (
+          { url?: string | null, urlPath: string, slug: string }
+          & { __typename?: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PrivacyPolicyPage' | 'StaticPage' }
+        ) | null }
+        & { __typename?: 'PageLinkBlock' }
+      ) | null }
+      & { __typename?: 'IndicatorShowcaseBlock' }
+    ) | (
+      { width?: string | null, id?: string | null, blockType: string, field: string, image?: (
+        { title: string, altText: string, width: number, height: number, renditionUncropped?: (
+          { src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null }
+        & { __typename?: 'Image' }
+      ) | null }
+      & { __typename?: 'LargeImageBlock' }
+    ) | (
+      { heading?: string | null, id?: string | null, blockType: string, field: string, questions?: Array<{ __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' } | { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' } | { __typename?: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' } | { __typename?: 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' } | { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
+        { question?: string | null, answer?: string | null }
+        & { __typename?: 'QuestionBlock' }
+      ) | null> | null }
+      & { __typename?: 'QuestionAnswerBlock' }
+    ) | null> | null }
+    & { __typename: 'AccessibilityStatementPage' }
+  ) | (
+    { id?: string | null, slug: string, title: string, lastPublishedAt?: any | null }
+    & { __typename: 'ActionListPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' }
+  ) | (
+    { id?: string | null, slug: string, title: string, lastPublishedAt?: any | null, category?: (
+      { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, categoryPage?: (
+        { urlPath: string }
+        & { __typename?: 'CategoryPage' }
+      ) | null, level?: (
+        { name: string, namePlural?: string | null }
+        & { __typename?: 'CategoryLevel' }
+      ) | null, type: (
+        { id: string, hideCategoryIdentifiers: boolean }
+        & { __typename?: 'CategoryType' }
+      ), image?: (
+        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, large?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, small?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, social?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, rendition?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null }
+        & { __typename?: 'Image' }
+      ) | null, indicators: Array<(
+        { id: string }
+        & { __typename?: 'Indicator' }
+      )>, iconImage?: (
+        { rendition?: (
+          { src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null }
+        & { __typename?: 'Image' }
+      ) | null, children: Array<(
+        { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+          { id: string, name: string, namePlural?: string | null }
+          & { __typename?: 'CategoryLevel' }
+        ) | null, image?: (
+          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, large?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, small?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, social?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, rendition?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null }
+          & { __typename?: 'Image' }
+        ) | null, iconImage?: (
+          { rendition?: (
+            { src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null }
+          & { __typename?: 'Image' }
+        ) | null, categoryPage?: (
+          { id?: string | null, title: string, urlPath: string, live: boolean }
+          & { __typename?: 'CategoryPage' }
+        ) | null, type: (
+          { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+          & { __typename?: 'CategoryType' }
+        ) }
+        & { __typename?: 'Category' }
+      )>, parent?: (
+        { id: string, identifier: string, name: string, color?: string | null, iconSvgUrl?: string | null, level?: (
+          { name: string, namePlural?: string | null }
+          & { __typename?: 'CategoryLevel' }
+        ) | null, image?: (
+          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, large?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, small?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, social?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, rendition?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null }
+          & { __typename?: 'Image' }
+        ) | null, iconImage?: (
+          { rendition?: (
+            { src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null }
+          & { __typename?: 'Image' }
+        ) | null, categoryPage?: (
+          { title: string, urlPath: string }
+          & { __typename?: 'CategoryPage' }
+        ) | null, type: (
+          { id: string, hideCategoryIdentifiers: boolean }
+          & { __typename?: 'CategoryType' }
+        ), parent?: (
+          { identifier: string, name: string, categoryPage?: (
+            { urlPath: string }
+            & { __typename?: 'CategoryPage' }
+          ) | null, type: (
+            { id: string, hideCategoryIdentifiers: boolean }
+            & { __typename?: 'CategoryType' }
+          ), parent?: (
+            { identifier: string, name: string, parent?: (
+              { identifier: string, name: string, categoryPage?: (
+                { urlPath: string }
+                & { __typename?: 'CategoryPage' }
+              ) | null, type: (
+                { id: string, hideCategoryIdentifiers: boolean }
+                & { __typename?: 'CategoryType' }
+              ), parent?: (
+                { identifier: string, name: string, categoryPage?: (
+                  { urlPath: string }
+                  & { __typename?: 'CategoryPage' }
+                ) | null, type: (
+                  { id: string, hideCategoryIdentifiers: boolean }
+                  & { __typename?: 'CategoryType' }
+                ) }
+                & { __typename?: 'Category' }
+              ) | null }
+              & { __typename?: 'Category' }
+            ) | null, categoryPage?: (
+              { urlPath: string }
+              & { __typename?: 'CategoryPage' }
+            ) | null, type: (
+              { id: string, hideCategoryIdentifiers: boolean }
+              & { __typename?: 'CategoryType' }
+            ) }
+            & { __typename?: 'Category' }
+          ) | null }
+          & { __typename?: 'Category' }
+        ) | null }
+        & { __typename?: 'Category' }
+      ) | null, attributes?: Array<(
+        { id: string, type: (
+          { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit?: (
+            { id: string, name: string, shortName?: string | null }
+            & { __typename?: 'Unit' }
+          ) | null, choiceOptions: Array<(
+            { id: string, identifier: string }
+            & { __typename?: 'AttributeTypeChoiceOption' }
+          )> }
+          & { __typename: 'AttributeType' }
+        ), categories: Array<(
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+            { id: string, name: string, namePlural?: string | null }
+            & { __typename?: 'CategoryLevel' }
+          ) | null, image?: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, large?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, small?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, social?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, rendition?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, iconImage?: (
+            { rendition?: (
+              { src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, categoryPage?: (
+            { id?: string | null, title: string, urlPath: string, live: boolean }
+            & { __typename?: 'CategoryPage' }
+          ) | null, type: (
+            { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+            & { __typename?: 'CategoryType' }
+          ), parent?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+              { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+                { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+                  { id: string, name: string, namePlural?: string | null }
+                  & { __typename?: 'CategoryLevel' }
+                ) | null, image?: (
+                  { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename?: 'ImageRendition' }
+                  ) | null, large?: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename?: 'ImageRendition' }
+                  ) | null, small?: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename?: 'ImageRendition' }
+                  ) | null, social?: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename?: 'ImageRendition' }
+                  ) | null, rendition?: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename?: 'ImageRendition' }
+                  ) | null }
+                  & { __typename?: 'Image' }
+                ) | null, iconImage?: (
+                  { rendition?: (
+                    { src: string }
+                    & { __typename?: 'ImageRendition' }
+                  ) | null }
+                  & { __typename?: 'Image' }
+                ) | null, categoryPage?: (
+                  { id?: string | null, title: string, urlPath: string, live: boolean }
+                  & { __typename?: 'CategoryPage' }
+                ) | null, type: (
+                  { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+                  & { __typename?: 'CategoryType' }
+                ) }
+                & { __typename?: 'Category' }
+              ) | null, level?: (
+                { id: string, name: string, namePlural?: string | null }
+                & { __typename?: 'CategoryLevel' }
+              ) | null, image?: (
+                { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null, large?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null, small?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null, social?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null, rendition?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null }
+                & { __typename?: 'Image' }
+              ) | null, iconImage?: (
+                { rendition?: (
+                  { src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null }
+                & { __typename?: 'Image' }
+              ) | null, categoryPage?: (
+                { id?: string | null, title: string, urlPath: string, live: boolean }
+                & { __typename?: 'CategoryPage' }
+              ) | null, type: (
+                { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+                & { __typename?: 'CategoryType' }
+              ) }
+              & { __typename?: 'Category' }
+            ) | null, level?: (
+              { id: string, name: string, namePlural?: string | null }
+              & { __typename?: 'CategoryLevel' }
+            ) | null, image?: (
+              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, large?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, small?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, social?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, rendition?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null }
+              & { __typename?: 'Image' }
+            ) | null, iconImage?: (
+              { rendition?: (
+                { src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null }
+              & { __typename?: 'Image' }
+            ) | null, categoryPage?: (
+              { id?: string | null, title: string, urlPath: string, live: boolean }
+              & { __typename?: 'CategoryPage' }
+            ) | null, type: (
+              { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+              & { __typename?: 'CategoryType' }
+            ) }
+            & { __typename?: 'Category' }
+          ) | null }
+          & { __typename?: 'Category' }
+        )> }
+        & { __typename: 'AttributeCategoryChoice' }
+      ) | (
+        { text?: string | null, id: string, type: (
+          { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit?: (
+            { id: string, name: string, shortName?: string | null }
+            & { __typename?: 'Unit' }
+          ) | null, choiceOptions: Array<(
+            { id: string, identifier: string }
+            & { __typename?: 'AttributeTypeChoiceOption' }
+          )> }
+          & { __typename: 'AttributeType' }
+        ), choice?: (
+          { id: string, name: string }
+          & { __typename?: 'AttributeTypeChoiceOption' }
+        ) | null }
+        & { __typename: 'AttributeChoice' }
+      ) | (
+        { id: string, numericValue: number, type: (
+          { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit?: (
+            { id: string, name: string, shortName?: string | null }
+            & { __typename?: 'Unit' }
+          ) | null, choiceOptions: Array<(
+            { id: string, identifier: string }
+            & { __typename?: 'AttributeTypeChoiceOption' }
+          )> }
+          & { __typename: 'AttributeType' }
+        ) }
+        & { __typename: 'AttributeNumericValue' }
+      ) | (
+        { value: string, id: string, type: (
+          { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit?: (
+            { id: string, name: string, shortName?: string | null }
+            & { __typename?: 'Unit' }
+          ) | null, choiceOptions: Array<(
+            { id: string, identifier: string }
+            & { __typename?: 'AttributeTypeChoiceOption' }
+          )> }
+          & { __typename: 'AttributeType' }
+        ) }
+        & { __typename: 'AttributeRichText' | 'AttributeText' }
+      )> | null }
+      & { __typename?: 'Category' }
+    ) | null, body?: Array<(
+      { id?: string | null, blockType: string, field: string }
+      & { __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' }
+    ) | (
+      { id?: string | null, blockType: string, field: string }
+      & { __typename?: 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTypeFilterBlock' | 'DateBlock' }
+    ) | (
+      { id?: string | null, blockType: string, field: string }
+      & { __typename?: 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorHighlightsBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionBlock' }
+    ) | (
+      { id?: string | null, blockType: string, field: string }
+      & { __typename?: 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
+    ) | (
+      { id?: string | null, blockType: string, field: string, blocks: Array<(
+        { id?: string | null, field: string }
+        & { __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' }
+      ) | (
+        { id?: string | null, field: string }
+        & { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' }
+      ) | (
+        { id?: string | null, field: string }
+        & { __typename?: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' }
+      ) | (
+        { id?: string | null, field: string }
+        & { __typename?: 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' }
+      ) | (
+        { id?: string | null, field: string }
+        & { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
+      ) | (
+        { value: string, id?: string | null, field: string }
+        & { __typename?: 'CharBlock' }
+      )> }
+      & { __typename?: 'AccessibilityStatementContactInformationBlock' }
+    ) | (
+      { id?: string | null, blockType: string, field: string, cards?: Array<{ __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionListBlock' } | { __typename?: 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' } | { __typename?: 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' } | { __typename?: 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' } | { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
+        { heading?: string | null, lead?: string | null, category?: (
+          { id: string, type: (
+            { identifier: string }
+            & { __typename?: 'CategoryType' }
+          ) }
+          & { __typename?: 'Category' }
+        ) | null }
+        & { __typename?: 'ActionCategoryFilterCardBlock' }
+      ) | null> | null }
+      & { __typename?: 'ActionCategoryFilterCardsBlock' }
+    ) | (
+      { id?: string | null, blockType: string, field: string, categoryFilter?: (
+        { id: string }
+        & { __typename?: 'Category' }
+      ) | null }
+      & { __typename?: 'ActionListBlock' }
+    ) | (
+      { fullWidth?: boolean | null, id?: string | null, blockType: string, field: string, embed?: (
+        { html?: string | null }
+        & { __typename?: 'EmbedHTMLValue' }
+      ) | null }
+      & { __typename?: 'AdaptiveEmbedBlock' }
+    ) | (
+      { heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, cards?: Array<{ __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' } | { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' } | { __typename?: 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' } | { __typename?: 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' } | { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
+        { heading?: string | null, content?: string | null, link?: string | null, image?: (
+          { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, large?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, small?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, social?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, rendition?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null }
+          & { __typename?: 'Image' }
+        ) | null }
+        & { __typename?: 'CardBlock' }
+      ) | null> | null }
+      & { __typename?: 'CardListBlock' }
+    ) | (
+      { style?: string | null, styleOverrides?: string | null, id?: string | null, blockType: string, field: string, account?: (
+        { provider: CartographyProviderCredentialsProvider, account: string, publicAccessToken: string }
+        & { __typename?: 'CartographyProviderCredentials' }
+      ) | null }
+      & { __typename?: 'CartographyVisualisationBlock' }
+    ) | (
+      { style?: string | null, heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, categoryType?: (
+        { id: string, hideCategoryIdentifiers: boolean, categories: Array<(
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+            { id: string, name: string, namePlural?: string | null }
+            & { __typename?: 'CategoryLevel' }
+          ) | null, image?: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, large?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, small?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, social?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, rendition?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, iconImage?: (
+            { rendition?: (
+              { src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, categoryPage?: (
+            { id?: string | null, title: string, urlPath: string, live: boolean }
+            & { __typename?: 'CategoryPage' }
+          ) | null, type: (
+            { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+            & { __typename?: 'CategoryType' }
+          ) }
+          & { __typename?: 'Category' }
+        )> }
+        & { __typename?: 'CategoryType' }
+      ) | null, category?: (
+        { id: string, children: Array<(
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+            { id: string, name: string, namePlural?: string | null }
+            & { __typename?: 'CategoryLevel' }
+          ) | null, image?: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, large?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, small?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, social?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, rendition?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, iconImage?: (
+            { rendition?: (
+              { src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, categoryPage?: (
+            { id?: string | null, title: string, urlPath: string, live: boolean }
+            & { __typename?: 'CategoryPage' }
+          ) | null, type: (
+            { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+            & { __typename?: 'CategoryType' }
+          ) }
+          & { __typename?: 'Category' }
+        )> }
+        & { __typename?: 'Category' }
+      ) | null }
+      & { __typename?: 'CategoryListBlock' }
+    ) | (
+      { heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, valueAttribute?: (
+        { identifier: string, unit?: (
+          { shortName?: string | null }
+          & { __typename?: 'Unit' }
+        ) | null }
+        & { __typename?: 'AttributeType' }
+      ) | null, categoryType?: (
+        { identifier: string }
+        & { __typename?: 'CategoryType' }
+      ) | null }
+      & { __typename?: 'CategoryTreeMapBlock' }
+    ) | (
+      { value: string, id?: string | null, blockType: string, field: string }
+      & { __typename?: 'CharBlock' | 'RichTextBlock' | 'TextBlock' }
+    ) | (
+      { value: string, id?: string | null, blockType: string, field: string, choices: Array<(
+        { key: string, value: string }
+        & { __typename?: 'ChoiceOption' }
+      )> }
+      & { __typename?: 'ChoiceBlock' }
+    ) | (
+      { layout?: string | null, heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, image?: (
+        { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, large?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, small?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, social?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, rendition?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null }
+        & { __typename?: 'Image' }
+      ) | null }
+      & { __typename?: 'FrontPageHeroBlock' }
+    ) | (
+      { style?: string | null, id?: string | null, blockType: string, field: string, indicator?: (
+        { id: string }
+        & { __typename?: 'Indicator' }
+      ) | null }
+      & { __typename?: 'IndicatorBlock' }
+    ) | (
+      { title?: string | null, id?: string | null, blockType: string, field: string, indicators?: Array<{ __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' } | { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' } | { __typename?: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' } | { __typename?: 'ImplementationPhaseColumnBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' } | { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
+        { style?: string | null, indicator?: (
+          { id: string, identifier?: string | null, name: string, description?: string | null, timeResolution: IndicatorTimeResolution, level?: string | null, unit: (
+            { id: string, name: string }
+            & { __typename?: 'Unit' }
+          ), latestValue?: (
+            { id: string, date?: string | null, value: number }
+            & { __typename?: 'IndicatorValue' }
+          ) | null, goals?: Array<(
+            { id: string, date?: string | null, value: number }
+            & { __typename?: 'IndicatorGoal' }
+          ) | null> | null }
+          & { __typename?: 'Indicator' }
+        ) | null }
+        & { __typename?: 'IndicatorBlock' }
+      ) | null> | null }
+      & { __typename?: 'IndicatorGroupBlock' }
+    ) | (
+      { title?: string | null, body?: string | null, id?: string | null, blockType: string, field: string, blocks: Array<(
+        { id?: string | null }
+        & { __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' }
+      ) | (
+        { id?: string | null }
+        & { __typename: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' }
+      ) | (
+        { id?: string | null }
+        & { __typename: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' }
+      ) | (
+        { id?: string | null }
+        & { __typename: 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' }
+      ) | (
+        { id?: string | null }
+        & { __typename: 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
+      )>, indicator?: (
+        { id: string, identifier?: string | null, name: string, minValue?: number | null, maxValue?: number | null, unit: (
+          { id: string, shortName?: string | null }
+          & { __typename?: 'Unit' }
+        ), latestValue?: (
+          { id: string, date?: string | null, value: number }
+          & { __typename?: 'IndicatorValue' }
+        ) | null, values?: Array<(
+          { id: string, date?: string | null, value: number, normalizedValues?: Array<(
+            { normalizerId?: string | null, value?: number | null }
+            & { __typename?: 'NormalizedValue' }
+          ) | null> | null, categories: Array<(
+            { id: string }
+            & { __typename?: 'DimensionCategory' }
+          )> }
+          & { __typename?: 'IndicatorValue' }
+        ) | null> | null, goals?: Array<(
+          { id: string, date?: string | null, value: number, normalizedValues?: Array<(
+            { normalizerId?: string | null, value?: number | null }
+            & { __typename?: 'NormalizedValue' }
+          ) | null> | null }
+          & { __typename?: 'IndicatorGoal' }
+        ) | null> | null, common?: (
+          { id: string, normalizations?: Array<(
+            { unit?: (
+              { shortName?: string | null }
+              & { __typename?: 'Unit' }
+            ) | null, normalizer?: (
+              { name: string, id: string, identifier?: string | null }
+              & { __typename?: 'CommonIndicator' }
+            ) | null }
+            & { __typename?: 'CommonIndicatorNormalization' }
+          ) | null> | null }
+          & { __typename?: 'CommonIndicator' }
+        ) | null }
+        & { __typename?: 'Indicator' }
+      ) | null, linkButton?: (
+        { blockType: string }
+        & { __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' }
+      ) | (
+        { blockType: string }
+        & { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' }
+      ) | (
+        { blockType: string }
+        & { __typename?: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' }
+      ) | (
+        { blockType: string }
+        & { __typename?: 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' }
+      ) | (
+        { blockType: string }
+        & { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
+      ) | (
+        { text?: string | null, blockType: string, page?: (
+          { url?: string | null, urlPath: string, slug: string }
+          & { __typename?: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PrivacyPolicyPage' | 'StaticPage' }
+        ) | null }
+        & { __typename?: 'PageLinkBlock' }
+      ) | null }
+      & { __typename?: 'IndicatorShowcaseBlock' }
+    ) | (
+      { width?: string | null, id?: string | null, blockType: string, field: string, image?: (
+        { title: string, altText: string, width: number, height: number, renditionUncropped?: (
+          { src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null }
+        & { __typename?: 'Image' }
+      ) | null }
+      & { __typename?: 'LargeImageBlock' }
+    ) | (
+      { heading?: string | null, id?: string | null, blockType: string, field: string, questions?: Array<{ __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' } | { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' } | { __typename?: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' } | { __typename?: 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' } | { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
+        { question?: string | null, answer?: string | null }
+        & { __typename?: 'QuestionBlock' }
+      ) | null> | null }
+      & { __typename?: 'QuestionAnswerBlock' }
+    ) | null> | null, layout?: (
+      { iconSize?: string | null, layoutMainTop?: Array<(
+        { attributeType: (
+          { identifier: string }
+          & { __typename?: 'AttributeType' }
+        ) }
+        & { __typename: 'CategoryPageAttributeTypeBlock' }
+      ) | (
+        { blocks: Array<{ __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' } | { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' } | { __typename?: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' } | { __typename?: 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' } | { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
+          { value: string }
+          & { __typename?: 'ChoiceBlock' }
+        )> }
+        & { __typename: 'CategoryPageProgressBlock' }
+      )> | null, layoutMainBottom?: Array<(
+        { attributeType: (
+          { identifier: string }
+          & { __typename?: 'AttributeType' }
+        ) }
+        & { __typename: 'CategoryPageAttributeTypeBlock' }
+      ) | { __typename: 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' } | (
+        { heading?: string | null, description?: string | null }
+        & { __typename: 'CategoryPageContactFormBlock' }
+      )> | null, layoutAside?: Array<(
+        { attributeType: (
+          { identifier: string }
+          & { __typename?: 'AttributeType' }
+        ) }
+        & { __typename: 'CategoryPageAttributeTypeBlock' }
+      )> | null }
+      & { __typename: 'CategoryTypePageLevelLayout' }
+    ) | null }
+    & { __typename: 'CategoryPage' }
+  ) | (
+    { leadContent?: string | null, id?: string | null, slug: string, title: string, lastPublishedAt?: any | null }
+    & { __typename: 'PrivacyPolicyPage' }
+  ) | (
+    { leadParagraph?: string | null, id?: string | null, slug: string, title: string, lastPublishedAt?: any | null, headerImage?: (
+      { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null, large?: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null, small?: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null, social?: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null, rendition?: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null }
+      & { __typename?: 'Image' }
+    ) | null, body?: Array<(
+      { id?: string | null, blockType: string, field: string }
+      & { __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' }
+    ) | (
+      { id?: string | null, blockType: string, field: string }
+      & { __typename?: 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTypeFilterBlock' | 'DateBlock' }
+    ) | (
+      { id?: string | null, blockType: string, field: string }
+      & { __typename?: 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorHighlightsBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionBlock' }
+    ) | (
+      { id?: string | null, blockType: string, field: string }
+      & { __typename?: 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
+    ) | (
+      { id?: string | null, blockType: string, field: string, blocks: Array<(
+        { id?: string | null, field: string }
+        & { __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' }
+      ) | (
+        { id?: string | null, field: string }
+        & { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' }
+      ) | (
+        { id?: string | null, field: string }
+        & { __typename?: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' }
+      ) | (
+        { id?: string | null, field: string }
+        & { __typename?: 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' }
+      ) | (
+        { id?: string | null, field: string }
+        & { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
+      ) | (
+        { value: string, id?: string | null, field: string }
+        & { __typename?: 'CharBlock' }
+      )> }
+      & { __typename?: 'AccessibilityStatementContactInformationBlock' }
+    ) | (
+      { id?: string | null, blockType: string, field: string, cards?: Array<{ __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionListBlock' } | { __typename?: 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' } | { __typename?: 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' } | { __typename?: 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' } | { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
+        { heading?: string | null, lead?: string | null, category?: (
+          { id: string, type: (
+            { identifier: string }
+            & { __typename?: 'CategoryType' }
+          ) }
+          & { __typename?: 'Category' }
+        ) | null }
+        & { __typename?: 'ActionCategoryFilterCardBlock' }
+      ) | null> | null }
+      & { __typename?: 'ActionCategoryFilterCardsBlock' }
+    ) | (
+      { id?: string | null, blockType: string, field: string, categoryFilter?: (
+        { id: string }
+        & { __typename?: 'Category' }
+      ) | null }
+      & { __typename?: 'ActionListBlock' }
+    ) | (
+      { fullWidth?: boolean | null, id?: string | null, blockType: string, field: string, embed?: (
+        { html?: string | null }
+        & { __typename?: 'EmbedHTMLValue' }
+      ) | null }
+      & { __typename?: 'AdaptiveEmbedBlock' }
+    ) | (
+      { heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, cards?: Array<{ __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' } | { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' } | { __typename?: 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' } | { __typename?: 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' } | { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
+        { heading?: string | null, content?: string | null, link?: string | null, image?: (
+          { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, large?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, small?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, social?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, rendition?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null }
+          & { __typename?: 'Image' }
+        ) | null }
+        & { __typename?: 'CardBlock' }
+      ) | null> | null }
+      & { __typename?: 'CardListBlock' }
+    ) | (
+      { style?: string | null, styleOverrides?: string | null, id?: string | null, blockType: string, field: string, account?: (
+        { provider: CartographyProviderCredentialsProvider, account: string, publicAccessToken: string }
+        & { __typename?: 'CartographyProviderCredentials' }
+      ) | null }
+      & { __typename?: 'CartographyVisualisationBlock' }
+    ) | (
+      { style?: string | null, heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, categoryType?: (
+        { id: string, hideCategoryIdentifiers: boolean, categories: Array<(
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+            { id: string, name: string, namePlural?: string | null }
+            & { __typename?: 'CategoryLevel' }
+          ) | null, image?: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, large?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, small?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, social?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, rendition?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, iconImage?: (
+            { rendition?: (
+              { src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, categoryPage?: (
+            { id?: string | null, title: string, urlPath: string, live: boolean }
+            & { __typename?: 'CategoryPage' }
+          ) | null, type: (
+            { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+            & { __typename?: 'CategoryType' }
+          ) }
+          & { __typename?: 'Category' }
+        )> }
+        & { __typename?: 'CategoryType' }
+      ) | null, category?: (
+        { id: string, children: Array<(
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+            { id: string, name: string, namePlural?: string | null }
+            & { __typename?: 'CategoryLevel' }
+          ) | null, image?: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, large?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, small?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, social?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, rendition?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, iconImage?: (
+            { rendition?: (
+              { src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, categoryPage?: (
+            { id?: string | null, title: string, urlPath: string, live: boolean }
+            & { __typename?: 'CategoryPage' }
+          ) | null, type: (
+            { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+            & { __typename?: 'CategoryType' }
+          ) }
+          & { __typename?: 'Category' }
+        )> }
+        & { __typename?: 'Category' }
+      ) | null }
+      & { __typename?: 'CategoryListBlock' }
+    ) | (
+      { heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, valueAttribute?: (
+        { identifier: string, unit?: (
+          { shortName?: string | null }
+          & { __typename?: 'Unit' }
+        ) | null }
+        & { __typename?: 'AttributeType' }
+      ) | null, categoryType?: (
+        { identifier: string }
+        & { __typename?: 'CategoryType' }
+      ) | null }
+      & { __typename?: 'CategoryTreeMapBlock' }
+    ) | (
+      { value: string, id?: string | null, blockType: string, field: string }
+      & { __typename?: 'CharBlock' | 'RichTextBlock' | 'TextBlock' }
+    ) | (
+      { value: string, id?: string | null, blockType: string, field: string, choices: Array<(
+        { key: string, value: string }
+        & { __typename?: 'ChoiceOption' }
+      )> }
+      & { __typename?: 'ChoiceBlock' }
+    ) | (
+      { layout?: string | null, heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, image?: (
+        { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, large?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, small?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, social?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, rendition?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null }
+        & { __typename?: 'Image' }
+      ) | null }
+      & { __typename?: 'FrontPageHeroBlock' }
+    ) | (
+      { style?: string | null, id?: string | null, blockType: string, field: string, indicator?: (
+        { id: string }
+        & { __typename?: 'Indicator' }
+      ) | null }
+      & { __typename?: 'IndicatorBlock' }
+    ) | (
+      { title?: string | null, id?: string | null, blockType: string, field: string, indicators?: Array<{ __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' } | { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' } | { __typename?: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' } | { __typename?: 'ImplementationPhaseColumnBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' } | { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
+        { style?: string | null, indicator?: (
+          { id: string, identifier?: string | null, name: string, description?: string | null, timeResolution: IndicatorTimeResolution, level?: string | null, unit: (
+            { id: string, name: string }
+            & { __typename?: 'Unit' }
+          ), latestValue?: (
+            { id: string, date?: string | null, value: number }
+            & { __typename?: 'IndicatorValue' }
+          ) | null, goals?: Array<(
+            { id: string, date?: string | null, value: number }
+            & { __typename?: 'IndicatorGoal' }
+          ) | null> | null }
+          & { __typename?: 'Indicator' }
+        ) | null }
+        & { __typename?: 'IndicatorBlock' }
+      ) | null> | null }
+      & { __typename?: 'IndicatorGroupBlock' }
+    ) | (
+      { title?: string | null, body?: string | null, id?: string | null, blockType: string, field: string, blocks: Array<(
+        { id?: string | null }
+        & { __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' }
+      ) | (
+        { id?: string | null }
+        & { __typename: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' }
+      ) | (
+        { id?: string | null }
+        & { __typename: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' }
+      ) | (
+        { id?: string | null }
+        & { __typename: 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' }
+      ) | (
+        { id?: string | null }
+        & { __typename: 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
+      )>, indicator?: (
+        { id: string, identifier?: string | null, name: string, minValue?: number | null, maxValue?: number | null, unit: (
+          { id: string, shortName?: string | null }
+          & { __typename?: 'Unit' }
+        ), latestValue?: (
+          { id: string, date?: string | null, value: number }
+          & { __typename?: 'IndicatorValue' }
+        ) | null, values?: Array<(
+          { id: string, date?: string | null, value: number, normalizedValues?: Array<(
+            { normalizerId?: string | null, value?: number | null }
+            & { __typename?: 'NormalizedValue' }
+          ) | null> | null, categories: Array<(
+            { id: string }
+            & { __typename?: 'DimensionCategory' }
+          )> }
+          & { __typename?: 'IndicatorValue' }
+        ) | null> | null, goals?: Array<(
+          { id: string, date?: string | null, value: number, normalizedValues?: Array<(
+            { normalizerId?: string | null, value?: number | null }
+            & { __typename?: 'NormalizedValue' }
+          ) | null> | null }
+          & { __typename?: 'IndicatorGoal' }
+        ) | null> | null, common?: (
+          { id: string, normalizations?: Array<(
+            { unit?: (
+              { shortName?: string | null }
+              & { __typename?: 'Unit' }
+            ) | null, normalizer?: (
+              { name: string, id: string, identifier?: string | null }
+              & { __typename?: 'CommonIndicator' }
+            ) | null }
+            & { __typename?: 'CommonIndicatorNormalization' }
+          ) | null> | null }
+          & { __typename?: 'CommonIndicator' }
+        ) | null }
+        & { __typename?: 'Indicator' }
+      ) | null, linkButton?: (
+        { blockType: string }
+        & { __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' }
+      ) | (
+        { blockType: string }
+        & { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' }
+      ) | (
+        { blockType: string }
+        & { __typename?: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' }
+      ) | (
+        { blockType: string }
+        & { __typename?: 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' }
+      ) | (
+        { blockType: string }
+        & { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
+      ) | (
+        { text?: string | null, blockType: string, page?: (
+          { url?: string | null, urlPath: string, slug: string }
+          & { __typename?: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PrivacyPolicyPage' | 'StaticPage' }
+        ) | null }
+        & { __typename?: 'PageLinkBlock' }
+      ) | null }
+      & { __typename?: 'IndicatorShowcaseBlock' }
+    ) | (
+      { width?: string | null, id?: string | null, blockType: string, field: string, image?: (
+        { title: string, altText: string, width: number, height: number, renditionUncropped?: (
+          { src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null }
+        & { __typename?: 'Image' }
+      ) | null }
+      & { __typename?: 'LargeImageBlock' }
+    ) | (
+      { heading?: string | null, id?: string | null, blockType: string, field: string, questions?: Array<{ __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' } | { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' } | { __typename?: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' } | { __typename?: 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' } | { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
+        { question?: string | null, answer?: string | null }
+        & { __typename?: 'QuestionBlock' }
+      ) | null> | null }
+      & { __typename?: 'QuestionAnswerBlock' }
+    ) | null> | null, siblings: Array<(
+      { id?: string | null, title: string, slug: string, live: boolean, urlPath: string }
+      & { __typename?: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PrivacyPolicyPage' | 'StaticPage' }
+    )>, parent?: (
+      { id?: string | null, title: string, slug: string, urlPath: string, children: Array<(
+        { id?: string | null, title: string, slug: string, live: boolean, urlPath: string }
+        & { __typename?: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PrivacyPolicyPage' | 'StaticPage' }
+      )> }
+      & { __typename?: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PrivacyPolicyPage' }
+    ) | (
+      { childrenUseSecondaryNavigation?: boolean | null, id?: string | null, title: string, slug: string, urlPath: string, children: Array<(
+        { id?: string | null, title: string, slug: string, live: boolean, urlPath: string }
+        & { __typename?: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PrivacyPolicyPage' | 'StaticPage' }
+      )> }
+      & { __typename?: 'EmptyPage' | 'StaticPage' }
+    ) | null }
+    & { __typename: 'StaticPage' }
+  ) | null }
+  & { __typename?: 'Query' }
+);
+
+export type CategoryParentFragmentFragment = (
+  { parent?: (
+    { identifier: string, name: string, categoryPage?: (
+      { urlPath: string }
+      & { __typename?: 'CategoryPage' }
+    ) | null, type: (
+      { id: string, hideCategoryIdentifiers: boolean }
+      & { __typename?: 'CategoryType' }
+    ) }
+    & { __typename?: 'Category' }
+  ) | null }
+  & { __typename?: 'Category' }
+);
+
+export type RecursiveCategoryParentFragmentFragment = (
+  { parent?: (
+    { parent?: (
+      { identifier: string, name: string, parent?: (
+        { identifier: string, name: string, categoryPage?: (
+          { urlPath: string }
+          & { __typename?: 'CategoryPage' }
+        ) | null, type: (
+          { id: string, hideCategoryIdentifiers: boolean }
+          & { __typename?: 'CategoryType' }
+        ), parent?: (
+          { identifier: string, name: string, categoryPage?: (
+            { urlPath: string }
+            & { __typename?: 'CategoryPage' }
+          ) | null, type: (
+            { id: string, hideCategoryIdentifiers: boolean }
+            & { __typename?: 'CategoryType' }
+          ) }
+          & { __typename?: 'Category' }
+        ) | null }
+        & { __typename?: 'Category' }
+      ) | null, categoryPage?: (
+        { urlPath: string }
+        & { __typename?: 'CategoryPage' }
+      ) | null, type: (
+        { id: string, hideCategoryIdentifiers: boolean }
+        & { __typename?: 'CategoryType' }
+      ) }
+      & { __typename?: 'Category' }
+    ) | null }
+    & { __typename?: 'Category' }
+  ) | null }
+  & { __typename?: 'Category' }
+);
+
+export type GetHomePageQueryVariables = Exact<{
+  plan: Scalars['ID'];
+  path: Scalars['String'];
+}>;
+
+
+export type GetHomePageQuery = (
+  { planPage?: (
+    { id?: string | null, slug: string, lastPublishedAt?: any | null }
+    & { __typename: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PrivacyPolicyPage' | 'StaticPage' }
+  ) | (
+    { id?: string | null, slug: string, lastPublishedAt?: any | null, body?: Array<(
+      { id?: string | null, blockType: string, field: string }
+      & { __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' }
+    ) | (
+      { id?: string | null, blockType: string, field: string }
+      & { __typename?: 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTypeFilterBlock' | 'DateBlock' }
+    ) | (
+      { id?: string | null, blockType: string, field: string }
+      & { __typename?: 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorHighlightsBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionBlock' }
+    ) | (
+      { id?: string | null, blockType: string, field: string }
+      & { __typename?: 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
+    ) | (
+      { id?: string | null, blockType: string, field: string, blocks: Array<(
+        { id?: string | null, field: string }
+        & { __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' }
+      ) | (
+        { id?: string | null, field: string }
+        & { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' }
+      ) | (
+        { id?: string | null, field: string }
+        & { __typename?: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' }
+      ) | (
+        { id?: string | null, field: string }
+        & { __typename?: 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' }
+      ) | (
+        { id?: string | null, field: string }
+        & { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
+      ) | (
+        { value: string, id?: string | null, field: string }
+        & { __typename?: 'CharBlock' }
+      )> }
+      & { __typename?: 'AccessibilityStatementContactInformationBlock' }
+    ) | (
+      { id?: string | null, blockType: string, field: string, cards?: Array<{ __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionListBlock' } | { __typename?: 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' } | { __typename?: 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' } | { __typename?: 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' } | { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
+        { heading?: string | null, lead?: string | null, category?: (
+          { id: string, type: (
+            { identifier: string }
+            & { __typename?: 'CategoryType' }
+          ) }
+          & { __typename?: 'Category' }
+        ) | null }
+        & { __typename?: 'ActionCategoryFilterCardBlock' }
+      ) | null> | null }
+      & { __typename?: 'ActionCategoryFilterCardsBlock' }
+    ) | (
+      { id?: string | null, blockType: string, field: string, categoryFilter?: (
+        { id: string }
+        & { __typename?: 'Category' }
+      ) | null }
+      & { __typename?: 'ActionListBlock' }
+    ) | (
+      { id?: string | null, fullWidth?: boolean | null, blockType: string, field: string, embed?: (
+        { html?: string | null }
+        & { __typename?: 'EmbedHTMLValue' }
+      ) | null }
+      & { __typename?: 'AdaptiveEmbedBlock' }
+    ) | (
+      { id?: string | null, heading?: string | null, lead?: string | null, blockType: string, field: string, cards?: Array<{ __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' } | { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' } | { __typename?: 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' } | { __typename?: 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' } | { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
+        { heading?: string | null, content?: string | null, link?: string | null, image?: (
+          { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, large?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, small?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, social?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, rendition?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null }
+          & { __typename?: 'Image' }
+        ) | null }
+        & { __typename?: 'CardBlock' }
+      ) | null> | null }
+      & { __typename?: 'CardListBlock' }
+    ) | (
+      { id?: string | null, style?: string | null, styleOverrides?: string | null, blockType: string, field: string, account?: (
+        { provider: CartographyProviderCredentialsProvider, account: string, publicAccessToken: string }
+        & { __typename?: 'CartographyProviderCredentials' }
+      ) | null }
+      & { __typename?: 'CartographyVisualisationBlock' }
+    ) | (
+      { id?: string | null, style?: string | null, heading?: string | null, lead?: string | null, blockType: string, field: string, categoryType?: (
+        { id: string, hideCategoryIdentifiers: boolean, categories: Array<(
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+            { id: string, name: string, namePlural?: string | null }
+            & { __typename?: 'CategoryLevel' }
+          ) | null, image?: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, large?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, small?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, social?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, rendition?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, iconImage?: (
+            { rendition?: (
+              { src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, categoryPage?: (
+            { id?: string | null, title: string, urlPath: string, live: boolean }
+            & { __typename?: 'CategoryPage' }
+          ) | null, type: (
+            { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+            & { __typename?: 'CategoryType' }
+          ) }
+          & { __typename?: 'Category' }
+        )> }
+        & { __typename?: 'CategoryType' }
+      ) | null, category?: (
+        { id: string, children: Array<(
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+            { id: string, name: string, namePlural?: string | null }
+            & { __typename?: 'CategoryLevel' }
+          ) | null, image?: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, large?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, small?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, social?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, rendition?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, iconImage?: (
+            { rendition?: (
+              { src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, categoryPage?: (
+            { id?: string | null, title: string, urlPath: string, live: boolean }
+            & { __typename?: 'CategoryPage' }
+          ) | null, type: (
+            { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+            & { __typename?: 'CategoryType' }
+          ) }
+          & { __typename?: 'Category' }
+        )> }
+        & { __typename?: 'Category' }
+      ) | null }
+      & { __typename?: 'CategoryListBlock' }
+    ) | (
+      { id?: string | null, heading?: string | null, lead?: string | null, blockType: string, field: string, valueAttribute?: (
+        { identifier: string, unit?: (
+          { shortName?: string | null }
+          & { __typename?: 'Unit' }
+        ) | null }
+        & { __typename?: 'AttributeType' }
+      ) | null, categoryType?: (
+        { identifier: string }
+        & { __typename?: 'CategoryType' }
+      ) | null }
+      & { __typename?: 'CategoryTreeMapBlock' }
+    ) | (
+      { id?: string | null, value: string, blockType: string, field: string }
+      & { __typename?: 'CharBlock' | 'RichTextBlock' | 'TextBlock' }
+    ) | (
+      { id?: string | null, value: string, blockType: string, field: string, choices: Array<(
+        { key: string, value: string }
+        & { __typename?: 'ChoiceOption' }
+      )> }
+      & { __typename?: 'ChoiceBlock' }
+    ) | (
+      { id?: string | null, layout?: string | null, heading?: string | null, lead?: string | null, blockType: string, field: string, image?: (
+        { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, large?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, small?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, social?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, rendition?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null }
+        & { __typename?: 'Image' }
+      ) | null }
+      & { __typename?: 'FrontPageHeroBlock' }
+    ) | (
+      { id?: string | null, style?: string | null, blockType: string, field: string, indicator?: (
+        { id: string }
+        & { __typename?: 'Indicator' }
+      ) | null }
+      & { __typename?: 'IndicatorBlock' }
+    ) | (
+      { id?: string | null, title?: string | null, blockType: string, field: string, indicators?: Array<{ __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' } | { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' } | { __typename?: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' } | { __typename?: 'ImplementationPhaseColumnBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' } | { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
+        { style?: string | null, indicator?: (
+          { id: string, identifier?: string | null, name: string, description?: string | null, timeResolution: IndicatorTimeResolution, level?: string | null, unit: (
+            { id: string, name: string }
+            & { __typename?: 'Unit' }
+          ), latestValue?: (
+            { id: string, date?: string | null, value: number }
+            & { __typename?: 'IndicatorValue' }
+          ) | null, goals?: Array<(
+            { id: string, date?: string | null, value: number }
+            & { __typename?: 'IndicatorGoal' }
+          ) | null> | null }
+          & { __typename?: 'Indicator' }
+        ) | null }
+        & { __typename?: 'IndicatorBlock' }
+      ) | null> | null }
+      & { __typename?: 'IndicatorGroupBlock' }
+    ) | (
+      { id?: string | null, title?: string | null, body?: string | null, blockType: string, field: string, blocks: Array<(
+        { id?: string | null }
+        & { __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' }
+      ) | (
+        { id?: string | null }
+        & { __typename: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' }
+      ) | (
+        { id?: string | null }
+        & { __typename: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' }
+      ) | (
+        { id?: string | null }
+        & { __typename: 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' }
+      ) | (
+        { id?: string | null }
+        & { __typename: 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
+      )>, indicator?: (
+        { id: string, identifier?: string | null, name: string, minValue?: number | null, maxValue?: number | null, unit: (
+          { id: string, shortName?: string | null }
+          & { __typename?: 'Unit' }
+        ), latestValue?: (
+          { id: string, date?: string | null, value: number }
+          & { __typename?: 'IndicatorValue' }
+        ) | null, values?: Array<(
+          { id: string, date?: string | null, value: number, normalizedValues?: Array<(
+            { normalizerId?: string | null, value?: number | null }
+            & { __typename?: 'NormalizedValue' }
+          ) | null> | null, categories: Array<(
+            { id: string }
+            & { __typename?: 'DimensionCategory' }
+          )> }
+          & { __typename?: 'IndicatorValue' }
+        ) | null> | null, goals?: Array<(
+          { id: string, date?: string | null, value: number, normalizedValues?: Array<(
+            { normalizerId?: string | null, value?: number | null }
+            & { __typename?: 'NormalizedValue' }
+          ) | null> | null }
+          & { __typename?: 'IndicatorGoal' }
+        ) | null> | null, common?: (
+          { id: string, normalizations?: Array<(
+            { unit?: (
+              { shortName?: string | null }
+              & { __typename?: 'Unit' }
+            ) | null, normalizer?: (
+              { name: string, id: string, identifier?: string | null }
+              & { __typename?: 'CommonIndicator' }
+            ) | null }
+            & { __typename?: 'CommonIndicatorNormalization' }
+          ) | null> | null }
+          & { __typename?: 'CommonIndicator' }
+        ) | null }
+        & { __typename?: 'Indicator' }
+      ) | null, linkButton?: (
+        { blockType: string }
+        & { __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' }
+      ) | (
+        { blockType: string }
+        & { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' }
+      ) | (
+        { blockType: string }
+        & { __typename?: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' }
+      ) | (
+        { blockType: string }
+        & { __typename?: 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' }
+      ) | (
+        { blockType: string }
+        & { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
+      ) | (
+        { text?: string | null, blockType: string, page?: (
+          { url?: string | null, urlPath: string, slug: string }
+          & { __typename?: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PrivacyPolicyPage' | 'StaticPage' }
+        ) | null }
+        & { __typename?: 'PageLinkBlock' }
+      ) | null }
+      & { __typename?: 'IndicatorShowcaseBlock' }
+    ) | (
+      { id?: string | null, width?: string | null, blockType: string, field: string, image?: (
+        { title: string, altText: string, width: number, height: number, renditionUncropped?: (
+          { src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null }
+        & { __typename?: 'Image' }
+      ) | null }
+      & { __typename?: 'LargeImageBlock' }
+    ) | (
+      { id?: string | null, heading?: string | null, blockType: string, field: string, questions?: Array<{ __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' } | { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' } | { __typename?: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' } | { __typename?: 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' } | { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
+        { question?: string | null, answer?: string | null }
+        & { __typename?: 'QuestionBlock' }
+      ) | null> | null }
+      & { __typename?: 'QuestionAnswerBlock' }
+    ) | null> | null }
+    & { __typename: 'PlanRootPage' }
+  ) | null, plan?: (
+    { id: string, primaryActionClassification?: (
+      { categories: Array<(
+        { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, image?: (
+          { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, large?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, small?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, social?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, rendition?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null }
+          & { __typename?: 'Image' }
+        ) | null, categoryPage?: (
+          { live: boolean, id?: string | null, title: string, urlPath: string }
+          & { __typename?: 'CategoryPage' }
+        ) | null, level?: (
+          { name: string, namePlural?: string | null }
+          & { __typename?: 'CategoryLevel' }
+        ) | null, parent?: (
+          { id: string }
+          & { __typename?: 'Category' }
+        ) | null, type: (
+          { id: string, hideCategoryIdentifiers: boolean }
+          & { __typename?: 'CategoryType' }
+        ) }
+        & { __typename?: 'Category' }
+      )> }
+      & { __typename?: 'CategoryType' }
+    ) | null }
+    & { __typename?: 'Plan' }
+  ) | null }
+  & { __typename?: 'Query' }
+);
+
+export type GetPlanPageIndicatorListQueryVariables = Exact<{
+  plan: Scalars['ID'];
+  path: Scalars['String'];
+}>;
+
+
+export type GetPlanPageIndicatorListQuery = (
+  { planPage?: (
+    { id?: string | null, slug: string, title: string, lastPublishedAt?: any | null }
+    & { __typename: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'Page' | 'PlanRootPage' | 'PrivacyPolicyPage' | 'StaticPage' }
+  ) | (
+    { leadContent?: string | null, displayInsights?: boolean | null, id?: string | null, slug: string, title: string, lastPublishedAt?: any | null }
+    & { __typename: 'IndicatorListPage' }
+  ) | null }
+  & { __typename?: 'Query' }
+);
+
+export type IndicatorDetailsQueryVariables = Exact<{
+  id?: InputMaybe<Scalars['ID']>;
+  plan?: InputMaybe<Scalars['ID']>;
+}>;
+
+
+export type IndicatorDetailsQuery = (
+  { indicator?: (
+    { id: string, identifier?: string | null, name: string, level?: string | null, description?: string | null, timeResolution: IndicatorTimeResolution, organization: (
+      { id: string, name: string, abbreviation: string, classification?: (
+        { id: string, name: string }
+        & { __typename?: 'OrganizationClass' }
+      ) | null, logo?: (
+        { id: string, rendition?: (
+          { src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null }
+        & { __typename?: 'Image' }
+      ) | null }
+      & { __typename?: 'Organization' }
+    ), categories: Array<(
+      { identifier: string, name: string, id: string, type: (
+        { id: string, name: string, identifier: string, helpText: string, hideCategoryIdentifiers: boolean, levels: Array<(
+          { id: string, order: number, name: string, namePlural?: string | null }
+          & { __typename?: 'CategoryLevel' }
+        )> }
+        & { __typename?: 'CategoryType' }
+      ) }
+      & { __typename?: 'Category' }
+    )>, common?: (
+      { id: string, indicators: Array<(
+        { id: string, identifier?: string | null, organization: (
+          { id: string, name: string, abbreviation: string, classification?: (
+            { id: string, name: string }
+            & { __typename?: 'OrganizationClass' }
+          ) | null, logo?: (
+            { id: string, rendition?: (
+              { src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null }
+          & { __typename?: 'Organization' }
+        ) }
+        & { __typename?: 'Indicator' }
+      )> }
+      & { __typename?: 'CommonIndicator' }
+    ) | null, unit: (
+      { id: string, name: string, shortName?: string | null, verboseName?: string | null, verboseNamePlural?: string | null }
+      & { __typename?: 'Unit' }
+    ), latestGraph?: (
+      { id: string }
+      & { __typename?: 'IndicatorGraph' }
+    ) | null, values?: Array<(
+      { id: string, date?: string | null, value: number }
+      & { __typename?: 'IndicatorValue' }
+    ) | null> | null, goals?: Array<(
+      { id: string, date?: string | null, value: number, scenario?: (
+        { id: string }
+        & { __typename?: 'Scenario' }
+      ) | null }
+      & { __typename?: 'IndicatorGoal' }
+    ) | null> | null, actions?: Array<(
+      { id: string, identifier: string, name: string, color?: string | null, completion?: number | null, status?: (
+        { id: string, identifier: string, name: string, color?: string | null }
+        & { __typename?: 'ActionStatus' }
+      ) | null, implementationPhase?: (
+        { id: string, identifier: string, name: string }
+        & { __typename?: 'ActionImplementationPhase' }
+      ) | null, statusSummary: (
+        { identifier: ActionStatusSummaryIdentifier }
+        & { __typename?: 'ActionStatusSummary' }
+      ), categories: Array<(
+        { id: string, identifier: string, name: string, image?: (
+          { rendition?: (
+            { id: string, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null }
+          & { __typename?: 'Image' }
+        ) | null }
+        & { __typename?: 'Category' }
+      )>, impact?: (
+        { id: string, identifier: string, name: string }
+        & { __typename?: 'ActionImpact' }
+      ) | null }
+      & { __typename?: 'Action' }
+    ) | null> | null, relatedCauses: Array<(
+      { id: string, effectType: RelatedIndicatorEffectType, confidenceLevel: RelatedIndicatorConfidenceLevel, causalIndicator: (
+        { id: string, name: string, level?: string | null }
+        & { __typename?: 'Indicator' }
+      ) }
+      & { __typename?: 'RelatedIndicator' }
+    )>, relatedEffects: Array<(
+      { id: string, effectType: RelatedIndicatorEffectType, confidenceLevel: RelatedIndicatorConfidenceLevel, effectIndicator: (
+        { id: string, name: string, level?: string | null }
+        & { __typename?: 'Indicator' }
+      ) }
+      & { __typename?: 'RelatedIndicator' }
+    )> }
+    & { __typename?: 'Indicator' }
+  ) | null }
+  & { __typename?: 'Query' }
+);
+
+export type ActionsTableRowFragmentFragment = (
+  { id: string, identifier: string, name: string, color?: string | null, completion?: number | null, status?: (
+    { id: string, identifier: string, name: string, color?: string | null }
+    & { __typename?: 'ActionStatus' }
+  ) | null, implementationPhase?: (
+    { id: string, identifier: string, name: string }
+    & { __typename?: 'ActionImplementationPhase' }
+  ) | null, statusSummary: (
+    { identifier: ActionStatusSummaryIdentifier }
+    & { __typename?: 'ActionStatusSummary' }
+  ), categories: Array<(
+    { id: string, identifier: string, name: string, image?: (
+      { rendition?: (
+        { id: string, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null }
+      & { __typename?: 'Image' }
+    ) | null }
+    & { __typename?: 'Category' }
+  )>, impact?: (
+    { id: string, identifier: string, name: string }
+    & { __typename?: 'ActionImpact' }
+  ) | null }
+  & { __typename?: 'Action' }
+);
+
 export type OrganizationDetailsQueryVariables = Exact<{
   id: Scalars['ID'];
-  planId: Scalars['ID'];
+  plan: Scalars['ID'];
   clientUrl: Scalars['String'];
 }>;
 
@@ -9435,7 +11480,7 @@ export type GetPlanContextQuery = (
       { id: string, identifier: string }
       & { __typename?: 'CategoryType' }
     ) | null, domain?: (
-      { id: string, googleSiteVerificationTag?: string | null, matomoAnalyticsUrl?: string | null }
+      { id: string, basePath?: string | null, googleSiteVerificationTag?: string | null, matomoAnalyticsUrl?: string | null }
       & { __typename?: 'PlanDomain' }
     ) | null, image?: (
       { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
@@ -9480,7 +11525,7 @@ export type GetPlanContextQuery = (
       { id: string }
       & { __typename?: 'Organization' }
     ) | null>, generalContent: (
-      { id: string, siteTitle: string, siteDescription: string, officialNameDescription: string, copyrightText: string, creativeCommonsLicense: string, ownerUrl: string, ownerName: string, actionTerm: SiteGeneralContentActionTerm, actionTaskTerm: SiteGeneralContentActionTaskTerm, organizationTerm: SiteGeneralContentOrganizationTerm }
+      { id: string, siteTitle: string, siteDescription: string, officialNameDescription: string, copyrightText: string, creativeCommonsLicense: string, ownerUrl: string, ownerName: string, actionTerm: SiteGeneralContentActionTerm, actionTaskTerm: SiteGeneralContentActionTaskTerm, organizationTerm: SiteGeneralContentOrganizationTerm, sitewideAnnouncement?: string | null }
       & { __typename?: 'SiteGeneralContent' }
     ), mainMenu?: (
       { items: Array<(
@@ -9619,7 +11664,7 @@ export type PlanContextFragment = (
     { id: string, identifier: string }
     & { __typename?: 'CategoryType' }
   ) | null, domain?: (
-    { id: string, googleSiteVerificationTag?: string | null, matomoAnalyticsUrl?: string | null }
+    { id: string, basePath?: string | null, googleSiteVerificationTag?: string | null, matomoAnalyticsUrl?: string | null }
     & { __typename?: 'PlanDomain' }
   ) | null, image?: (
     { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
@@ -9664,7 +11709,7 @@ export type PlanContextFragment = (
     { id: string }
     & { __typename?: 'Organization' }
   ) | null>, generalContent: (
-    { id: string, siteTitle: string, siteDescription: string, officialNameDescription: string, copyrightText: string, creativeCommonsLicense: string, ownerUrl: string, ownerName: string, actionTerm: SiteGeneralContentActionTerm, actionTaskTerm: SiteGeneralContentActionTaskTerm, organizationTerm: SiteGeneralContentOrganizationTerm }
+    { id: string, siteTitle: string, siteDescription: string, officialNameDescription: string, copyrightText: string, creativeCommonsLicense: string, ownerUrl: string, ownerName: string, actionTerm: SiteGeneralContentActionTerm, actionTaskTerm: SiteGeneralContentActionTaskTerm, organizationTerm: SiteGeneralContentOrganizationTerm, sitewideAnnouncement?: string | null }
     & { __typename?: 'SiteGeneralContent' }
   ), mainMenu?: (
     { items: Array<(
@@ -9790,2068 +11835,43 @@ export type PlanContextFragment = (
   & { __typename?: 'Plan' }
 );
 
-export type PlaywrightGetPlanBasicsQueryVariables = Exact<{
-  plan: Scalars['ID'];
+export type GetPlansByHostnameQueryVariables = Exact<{
+  hostname?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type PlaywrightGetPlanBasicsQuery = (
-  { plan?: (
-    { id: string, identifier: string, primaryLanguage: string, otherLanguages?: Array<string> | null }
+export type GetPlansByHostnameQuery = (
+  { plansForHostname?: Array<(
+    { id: string, identifier: string, otherLanguages?: Array<string> | null, primaryLanguage: string, domain?: (
+      { hostname: string, basePath?: string | null, status?: PublicationStatus | null, statusMessage?: string | null }
+      & { __typename?: 'PlanDomain' }
+    ) | null, domains?: Array<(
+      { hostname: string, basePath?: string | null, status?: PublicationStatus | null, statusMessage?: string | null }
+      & { __typename?: 'PlanDomain' }
+    ) | null> | null }
     & { __typename?: 'Plan' }
-  ) | null }
-  & { __typename?: 'Query' }
-);
-
-export type PlaywrightGetPlanInfoQueryVariables = Exact<{
-  plan: Scalars['ID'];
-  locale: Scalars['String'];
-  clientURL: Scalars['String'];
-}>;
-
-
-export type PlaywrightGetPlanInfoQuery = (
-  { plan?: (
-    { id: string, identifier: string, name: string, shortName?: string | null, primaryLanguage: string, otherLanguages?: Array<string> | null, parent?: (
-      { identifier: string, name: string }
-      & { __typename?: 'Plan' }
-    ) | null, generalContent: (
-      { id: string, siteTitle: string, siteDescription: string }
-      & { __typename?: 'SiteGeneralContent' }
-    ), actionListPage?: (
-      { urlPath: string }
-      & { __typename?: 'ActionListPage' }
-    ) | null, actions: Array<(
-      { identifier: string, viewUrl: string }
-      & { __typename?: 'Action' }
-    )>, mainMenu?: (
-      { items: Array<(
-        { linkText: string, url: string }
-        & { __typename: 'ExternalLinkMenuItem' }
-      ) | (
-        { page: (
-          { id?: string | null, title: string, urlPath: string, slug: string }
-          & { __typename?: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PrivacyPolicyPage' | 'StaticPage' }
-        ), parent?: (
-          { id: string, page: { __typename: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PrivacyPolicyPage' | 'StaticPage' } }
-          & { __typename?: 'PageMenuItem' }
-        ) | null }
-        & { __typename: 'PageMenuItem' }
-      ) | null> }
-      & { __typename?: 'MainMenu' }
-    ) | null }
-    & { __typename?: 'Plan' }
-  ) | null, planIndicators?: Array<(
-    { id: string, name: string }
-    & { __typename?: 'Indicator' }
+  ) | (
+    { primaryLanguage: string, domain?: (
+      { hostname: string, basePath?: string | null, status?: PublicationStatus | null, statusMessage?: string | null }
+      & { __typename?: 'PlanDomain' }
+    ) | null, domains?: Array<(
+      { hostname: string, basePath?: string | null, status?: PublicationStatus | null, statusMessage?: string | null }
+      & { __typename?: 'PlanDomain' }
+    ) | null> | null }
+    & { __typename?: 'RestrictedPlanNode' }
   ) | null> | null }
   & { __typename?: 'Query' }
 );
 
-export type TemplatedCategoryPageFragmentFragment = (
-  { layout?: (
-    { iconSize?: string | null, layoutMainTop?: Array<(
-      { attributeType: (
-        { identifier: string }
-        & { __typename?: 'AttributeType' }
-      ) }
-      & { __typename: 'CategoryPageAttributeTypeBlock' }
-    ) | (
-      { blocks: Array<{ __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' } | { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' } | { __typename?: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' } | { __typename?: 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' } | { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
-        { value: string }
-        & { __typename?: 'ChoiceBlock' }
-      )> }
-      & { __typename: 'CategoryPageProgressBlock' }
-    )> | null, layoutMainBottom?: Array<(
-      { attributeType: (
-        { identifier: string }
-        & { __typename?: 'AttributeType' }
-      ) }
-      & { __typename: 'CategoryPageAttributeTypeBlock' }
-    ) | { __typename: 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' } | (
-      { heading?: string | null, description?: string | null }
-      & { __typename: 'CategoryPageContactFormBlock' }
-    )> | null, layoutAside?: Array<(
-      { attributeType: (
-        { identifier: string }
-        & { __typename?: 'AttributeType' }
-      ) }
-      & { __typename: 'CategoryPageAttributeTypeBlock' }
-    )> | null }
-    & { __typename: 'CategoryTypePageLevelLayout' }
-  ) | null }
-  & { __typename?: 'CategoryPage' }
-);
-
-export type GetPlanPageGeneralQueryVariables = Exact<{
-  plan: Scalars['ID'];
-  path: Scalars['String'];
+export type GetPlanThemeIdentifierQueryVariables = Exact<{
+  identifier?: InputMaybe<Scalars['ID']>;
 }>;
 
 
-export type GetPlanPageGeneralQuery = (
-  { planPage?: (
-    { id?: string | null, slug: string, title: string, lastPublishedAt?: any | null, body?: Array<(
-      { id?: string | null, blockType: string, field: string }
-      & { __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' }
-    ) | (
-      { id?: string | null, blockType: string, field: string }
-      & { __typename?: 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTypeFilterBlock' | 'DateBlock' }
-    ) | (
-      { id?: string | null, blockType: string, field: string }
-      & { __typename?: 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorHighlightsBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionBlock' }
-    ) | (
-      { id?: string | null, blockType: string, field: string }
-      & { __typename?: 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
-    ) | (
-      { id?: string | null, blockType: string, field: string, blocks: Array<(
-        { id?: string | null, field: string }
-        & { __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' }
-      ) | (
-        { id?: string | null, field: string }
-        & { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' }
-      ) | (
-        { id?: string | null, field: string }
-        & { __typename?: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' }
-      ) | (
-        { id?: string | null, field: string }
-        & { __typename?: 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' }
-      ) | (
-        { id?: string | null, field: string }
-        & { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
-      ) | (
-        { value: string, id?: string | null, field: string }
-        & { __typename?: 'CharBlock' }
-      )> }
-      & { __typename?: 'AccessibilityStatementContactInformationBlock' }
-    ) | (
-      { id?: string | null, blockType: string, field: string, cards?: Array<{ __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionListBlock' } | { __typename?: 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' } | { __typename?: 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' } | { __typename?: 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' } | { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
-        { heading?: string | null, lead?: string | null, category?: (
-          { id: string, type: (
-            { identifier: string }
-            & { __typename?: 'CategoryType' }
-          ) }
-          & { __typename?: 'Category' }
-        ) | null }
-        & { __typename?: 'ActionCategoryFilterCardBlock' }
-      ) | null> | null }
-      & { __typename?: 'ActionCategoryFilterCardsBlock' }
-    ) | (
-      { id?: string | null, blockType: string, field: string, categoryFilter?: (
-        { id: string }
-        & { __typename?: 'Category' }
-      ) | null }
-      & { __typename?: 'ActionListBlock' }
-    ) | (
-      { fullWidth?: boolean | null, id?: string | null, blockType: string, field: string, embed?: (
-        { html?: string | null }
-        & { __typename?: 'EmbedHTMLValue' }
-      ) | null }
-      & { __typename?: 'AdaptiveEmbedBlock' }
-    ) | (
-      { heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, cards?: Array<{ __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' } | { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' } | { __typename?: 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' } | { __typename?: 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' } | { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
-        { heading?: string | null, content?: string | null, link?: string | null, image?: (
-          { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null, large?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null, small?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null, social?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null, rendition?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null }
-          & { __typename?: 'Image' }
-        ) | null }
-        & { __typename?: 'CardBlock' }
-      ) | null> | null }
-      & { __typename?: 'CardListBlock' }
-    ) | (
-      { style?: string | null, styleOverrides?: string | null, id?: string | null, blockType: string, field: string, account?: (
-        { provider: CartographyProviderCredentialsProvider, account: string, publicAccessToken: string }
-        & { __typename?: 'CartographyProviderCredentials' }
-      ) | null }
-      & { __typename?: 'CartographyVisualisationBlock' }
-    ) | (
-      { style?: string | null, heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, categoryType?: (
-        { id: string, hideCategoryIdentifiers: boolean, categories: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, level?: (
-            { name: string, namePlural?: string | null }
-            & { __typename?: 'CategoryLevel' }
-          ) | null, image?: (
-            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, large?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, small?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, social?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, rendition?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null }
-            & { __typename?: 'Image' }
-          ) | null, iconImage?: (
-            { rendition?: (
-              { src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null }
-            & { __typename?: 'Image' }
-          ) | null, categoryPage?: (
-            { title: string, urlPath: string, live: boolean }
-            & { __typename?: 'CategoryPage' }
-          ) | null, type: (
-            { id: string, hideCategoryIdentifiers: boolean }
-            & { __typename?: 'CategoryType' }
-          ) }
-          & { __typename?: 'Category' }
-        )> }
-        & { __typename?: 'CategoryType' }
-      ) | null, category?: (
-        { id: string, children: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, level?: (
-            { name: string, namePlural?: string | null }
-            & { __typename?: 'CategoryLevel' }
-          ) | null, image?: (
-            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, large?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, small?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, social?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, rendition?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null }
-            & { __typename?: 'Image' }
-          ) | null, iconImage?: (
-            { rendition?: (
-              { src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null }
-            & { __typename?: 'Image' }
-          ) | null, categoryPage?: (
-            { title: string, urlPath: string, live: boolean }
-            & { __typename?: 'CategoryPage' }
-          ) | null, type: (
-            { id: string, hideCategoryIdentifiers: boolean }
-            & { __typename?: 'CategoryType' }
-          ) }
-          & { __typename?: 'Category' }
-        )> }
-        & { __typename?: 'Category' }
-      ) | null }
-      & { __typename?: 'CategoryListBlock' }
-    ) | (
-      { heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, valueAttribute?: (
-        { identifier: string, unit?: (
-          { shortName?: string | null }
-          & { __typename?: 'Unit' }
-        ) | null }
-        & { __typename?: 'AttributeType' }
-      ) | null, categoryType?: (
-        { identifier: string }
-        & { __typename?: 'CategoryType' }
-      ) | null }
-      & { __typename?: 'CategoryTreeMapBlock' }
-    ) | (
-      { value: string, id?: string | null, blockType: string, field: string }
-      & { __typename?: 'CharBlock' | 'RichTextBlock' | 'TextBlock' }
-    ) | (
-      { value: string, id?: string | null, blockType: string, field: string, choices: Array<(
-        { key: string, value: string }
-        & { __typename?: 'ChoiceOption' }
-      )> }
-      & { __typename?: 'ChoiceBlock' }
-    ) | (
-      { layout?: string | null, heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, image?: (
-        { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null, large?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null, small?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null, social?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null, rendition?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null }
-        & { __typename?: 'Image' }
-      ) | null }
-      & { __typename?: 'FrontPageHeroBlock' }
-    ) | (
-      { style?: string | null, id?: string | null, blockType: string, field: string, indicator?: (
-        { id: string }
-        & { __typename?: 'Indicator' }
-      ) | null }
-      & { __typename?: 'IndicatorBlock' }
-    ) | (
-      { title?: string | null, id?: string | null, blockType: string, field: string, indicators?: Array<{ __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' } | { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' } | { __typename?: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' } | { __typename?: 'ImplementationPhaseColumnBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' } | { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
-        { style?: string | null, indicator?: (
-          { id: string, identifier?: string | null, name: string, description?: string | null, timeResolution: IndicatorTimeResolution, level?: string | null, unit: (
-            { id: string, name: string }
-            & { __typename?: 'Unit' }
-          ), latestValue?: (
-            { id: string, date?: string | null, value: number }
-            & { __typename?: 'IndicatorValue' }
-          ) | null, goals?: Array<(
-            { id: string, date?: string | null, value: number }
-            & { __typename?: 'IndicatorGoal' }
-          ) | null> | null }
-          & { __typename?: 'Indicator' }
-        ) | null }
-        & { __typename?: 'IndicatorBlock' }
-      ) | null> | null }
-      & { __typename?: 'IndicatorGroupBlock' }
-    ) | (
-      { title?: string | null, body?: string | null, id?: string | null, blockType: string, field: string, blocks: Array<(
-        { id?: string | null }
-        & { __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' }
-      ) | (
-        { id?: string | null }
-        & { __typename: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' }
-      ) | (
-        { id?: string | null }
-        & { __typename: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' }
-      ) | (
-        { id?: string | null }
-        & { __typename: 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' }
-      ) | (
-        { id?: string | null }
-        & { __typename: 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
-      )>, indicator?: (
-        { id: string, identifier?: string | null, name: string, minValue?: number | null, maxValue?: number | null, unit: (
-          { id: string, shortName?: string | null }
-          & { __typename?: 'Unit' }
-        ), latestValue?: (
-          { id: string, date?: string | null, value: number }
-          & { __typename?: 'IndicatorValue' }
-        ) | null, values?: Array<(
-          { id: string, date?: string | null, value: number, normalizedValues?: Array<(
-            { normalizerId?: string | null, value?: number | null }
-            & { __typename?: 'NormalizedValue' }
-          ) | null> | null, categories: Array<(
-            { id: string }
-            & { __typename?: 'DimensionCategory' }
-          )> }
-          & { __typename?: 'IndicatorValue' }
-        ) | null> | null, goals?: Array<(
-          { id: string, date?: string | null, value: number, normalizedValues?: Array<(
-            { normalizerId?: string | null, value?: number | null }
-            & { __typename?: 'NormalizedValue' }
-          ) | null> | null }
-          & { __typename?: 'IndicatorGoal' }
-        ) | null> | null, common?: (
-          { id: string, normalizations?: Array<(
-            { unit?: (
-              { shortName?: string | null }
-              & { __typename?: 'Unit' }
-            ) | null, normalizer?: (
-              { name: string, id: string, identifier?: string | null }
-              & { __typename?: 'CommonIndicator' }
-            ) | null }
-            & { __typename?: 'CommonIndicatorNormalization' }
-          ) | null> | null }
-          & { __typename?: 'CommonIndicator' }
-        ) | null }
-        & { __typename?: 'Indicator' }
-      ) | null, linkButton?: (
-        { blockType: string }
-        & { __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' }
-      ) | (
-        { blockType: string }
-        & { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' }
-      ) | (
-        { blockType: string }
-        & { __typename?: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' }
-      ) | (
-        { blockType: string }
-        & { __typename?: 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' }
-      ) | (
-        { blockType: string }
-        & { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
-      ) | (
-        { text?: string | null, blockType: string, page?: (
-          { url?: string | null, urlPath: string, slug: string }
-          & { __typename?: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PrivacyPolicyPage' | 'StaticPage' }
-        ) | null }
-        & { __typename?: 'PageLinkBlock' }
-      ) | null }
-      & { __typename?: 'IndicatorShowcaseBlock' }
-    ) | (
-      { width?: string | null, id?: string | null, blockType: string, field: string, image?: (
-        { title: string, altText: string, width: number, height: number, renditionUncropped?: (
-          { src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null }
-        & { __typename?: 'Image' }
-      ) | null }
-      & { __typename?: 'LargeImageBlock' }
-    ) | (
-      { heading?: string | null, id?: string | null, blockType: string, field: string, questions?: Array<{ __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' } | { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' } | { __typename?: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' } | { __typename?: 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' } | { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
-        { question?: string | null, answer?: string | null }
-        & { __typename?: 'QuestionBlock' }
-      ) | null> | null }
-      & { __typename?: 'QuestionAnswerBlock' }
-    ) | null> | null }
-    & { __typename: 'AccessibilityStatementPage' }
-  ) | (
-    { id?: string | null, slug: string, title: string, lastPublishedAt?: any | null }
-    & { __typename: 'ActionListPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' }
-  ) | (
-    { id?: string | null, slug: string, title: string, lastPublishedAt?: any | null, category?: (
-      { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, categoryPage?: (
-        { urlPath: string }
-        & { __typename?: 'CategoryPage' }
-      ) | null, level?: (
-        { name: string, namePlural?: string | null }
-        & { __typename?: 'CategoryLevel' }
-      ) | null, type: (
-        { id: string, hideCategoryIdentifiers: boolean }
-        & { __typename?: 'CategoryType' }
-      ), image?: (
-        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null, large?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null, small?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null, social?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null, rendition?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null }
-        & { __typename?: 'Image' }
-      ) | null, indicators: Array<(
-        { id: string }
-        & { __typename?: 'Indicator' }
-      )>, iconImage?: (
-        { rendition?: (
-          { src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null }
-        & { __typename?: 'Image' }
-      ) | null, children: Array<(
-        { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, level?: (
-          { name: string, namePlural?: string | null }
-          & { __typename?: 'CategoryLevel' }
-        ) | null, image?: (
-          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null, large?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null, small?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null, social?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null, rendition?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null }
-          & { __typename?: 'Image' }
-        ) | null, iconImage?: (
-          { rendition?: (
-            { src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null }
-          & { __typename?: 'Image' }
-        ) | null, categoryPage?: (
-          { title: string, urlPath: string, live: boolean }
-          & { __typename?: 'CategoryPage' }
-        ) | null, type: (
-          { id: string, hideCategoryIdentifiers: boolean }
-          & { __typename?: 'CategoryType' }
-        ) }
-        & { __typename?: 'Category' }
-      )>, parent?: (
-        { id: string, identifier: string, name: string, color?: string | null, iconSvgUrl?: string | null, level?: (
-          { name: string, namePlural?: string | null }
-          & { __typename?: 'CategoryLevel' }
-        ) | null, image?: (
-          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null, large?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null, small?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null, social?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null, rendition?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null }
-          & { __typename?: 'Image' }
-        ) | null, iconImage?: (
-          { rendition?: (
-            { src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null }
-          & { __typename?: 'Image' }
-        ) | null, categoryPage?: (
-          { title: string, urlPath: string }
-          & { __typename?: 'CategoryPage' }
-        ) | null, type: (
-          { id: string, hideCategoryIdentifiers: boolean }
-          & { __typename?: 'CategoryType' }
-        ), parent?: (
-          { identifier: string, name: string, categoryPage?: (
-            { urlPath: string }
-            & { __typename?: 'CategoryPage' }
-          ) | null, type: (
-            { id: string, hideCategoryIdentifiers: boolean }
-            & { __typename?: 'CategoryType' }
-          ), parent?: (
-            { identifier: string, name: string, parent?: (
-              { identifier: string, name: string, categoryPage?: (
-                { urlPath: string }
-                & { __typename?: 'CategoryPage' }
-              ) | null, type: (
-                { id: string, hideCategoryIdentifiers: boolean }
-                & { __typename?: 'CategoryType' }
-              ), parent?: (
-                { identifier: string, name: string, categoryPage?: (
-                  { urlPath: string }
-                  & { __typename?: 'CategoryPage' }
-                ) | null, type: (
-                  { id: string, hideCategoryIdentifiers: boolean }
-                  & { __typename?: 'CategoryType' }
-                ) }
-                & { __typename?: 'Category' }
-              ) | null }
-              & { __typename?: 'Category' }
-            ) | null, categoryPage?: (
-              { urlPath: string }
-              & { __typename?: 'CategoryPage' }
-            ) | null, type: (
-              { id: string, hideCategoryIdentifiers: boolean }
-              & { __typename?: 'CategoryType' }
-            ) }
-            & { __typename?: 'Category' }
-          ) | null }
-          & { __typename?: 'Category' }
-        ) | null }
-        & { __typename?: 'Category' }
-      ) | null, attributes?: Array<(
-        { id: string, type: (
-          { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit?: (
-            { id: string, name: string, shortName?: string | null }
-            & { __typename?: 'Unit' }
-          ) | null, choiceOptions: Array<(
-            { id: string, identifier: string }
-            & { __typename?: 'AttributeTypeChoiceOption' }
-          )> }
-          & { __typename: 'AttributeType' }
-        ), categories: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, iconImage?: (
-            { rendition?: (
-              { src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null }
-            & { __typename?: 'Image' }
-          ) | null, type: (
-            { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-            & { __typename?: 'CategoryType' }
-          ), level?: (
-            { id: string, name: string, namePlural?: string | null }
-            & { __typename?: 'CategoryLevel' }
-          ) | null, image?: (
-            { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, large?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, small?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, social?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, rendition?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null }
-            & { __typename?: 'Image' }
-          ) | null, categoryPage?: (
-            { title: string, urlPath: string }
-            & { __typename?: 'CategoryPage' }
-          ) | null, parent?: (
-            { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-              { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-                { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, iconImage?: (
-                  { rendition?: (
-                    { src: string }
-                    & { __typename?: 'ImageRendition' }
-                  ) | null }
-                  & { __typename?: 'Image' }
-                ) | null, type: (
-                  { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-                  & { __typename?: 'CategoryType' }
-                ), level?: (
-                  { id: string, name: string, namePlural?: string | null }
-                  & { __typename?: 'CategoryLevel' }
-                ) | null, image?: (
-                  { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-                    { id: string, width: number, height: number, src: string }
-                    & { __typename?: 'ImageRendition' }
-                  ) | null, large?: (
-                    { id: string, width: number, height: number, src: string }
-                    & { __typename?: 'ImageRendition' }
-                  ) | null, small?: (
-                    { id: string, width: number, height: number, src: string }
-                    & { __typename?: 'ImageRendition' }
-                  ) | null, social?: (
-                    { id: string, width: number, height: number, src: string }
-                    & { __typename?: 'ImageRendition' }
-                  ) | null, rendition?: (
-                    { id: string, width: number, height: number, src: string }
-                    & { __typename?: 'ImageRendition' }
-                  ) | null }
-                  & { __typename?: 'Image' }
-                ) | null, categoryPage?: (
-                  { title: string, urlPath: string }
-                  & { __typename?: 'CategoryPage' }
-                ) | null }
-                & { __typename?: 'Category' }
-              ) | null, iconImage?: (
-                { rendition?: (
-                  { src: string }
-                  & { __typename?: 'ImageRendition' }
-                ) | null }
-                & { __typename?: 'Image' }
-              ) | null, type: (
-                { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-                & { __typename?: 'CategoryType' }
-              ), level?: (
-                { id: string, name: string, namePlural?: string | null }
-                & { __typename?: 'CategoryLevel' }
-              ) | null, image?: (
-                { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-                  { id: string, width: number, height: number, src: string }
-                  & { __typename?: 'ImageRendition' }
-                ) | null, large?: (
-                  { id: string, width: number, height: number, src: string }
-                  & { __typename?: 'ImageRendition' }
-                ) | null, small?: (
-                  { id: string, width: number, height: number, src: string }
-                  & { __typename?: 'ImageRendition' }
-                ) | null, social?: (
-                  { id: string, width: number, height: number, src: string }
-                  & { __typename?: 'ImageRendition' }
-                ) | null, rendition?: (
-                  { id: string, width: number, height: number, src: string }
-                  & { __typename?: 'ImageRendition' }
-                ) | null }
-                & { __typename?: 'Image' }
-              ) | null, categoryPage?: (
-                { title: string, urlPath: string }
-                & { __typename?: 'CategoryPage' }
-              ) | null }
-              & { __typename?: 'Category' }
-            ) | null, iconImage?: (
-              { rendition?: (
-                { src: string }
-                & { __typename?: 'ImageRendition' }
-              ) | null }
-              & { __typename?: 'Image' }
-            ) | null, type: (
-              { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-              & { __typename?: 'CategoryType' }
-            ), level?: (
-              { id: string, name: string, namePlural?: string | null }
-              & { __typename?: 'CategoryLevel' }
-            ) | null, image?: (
-              { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-                { id: string, width: number, height: number, src: string }
-                & { __typename?: 'ImageRendition' }
-              ) | null, large?: (
-                { id: string, width: number, height: number, src: string }
-                & { __typename?: 'ImageRendition' }
-              ) | null, small?: (
-                { id: string, width: number, height: number, src: string }
-                & { __typename?: 'ImageRendition' }
-              ) | null, social?: (
-                { id: string, width: number, height: number, src: string }
-                & { __typename?: 'ImageRendition' }
-              ) | null, rendition?: (
-                { id: string, width: number, height: number, src: string }
-                & { __typename?: 'ImageRendition' }
-              ) | null }
-              & { __typename?: 'Image' }
-            ) | null, categoryPage?: (
-              { title: string, urlPath: string }
-              & { __typename?: 'CategoryPage' }
-            ) | null }
-            & { __typename?: 'Category' }
-          ) | null }
-          & { __typename?: 'Category' }
-        )> }
-        & { __typename: 'AttributeCategoryChoice' }
-      ) | (
-        { text?: string | null, id: string, type: (
-          { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit?: (
-            { id: string, name: string, shortName?: string | null }
-            & { __typename?: 'Unit' }
-          ) | null, choiceOptions: Array<(
-            { id: string, identifier: string }
-            & { __typename?: 'AttributeTypeChoiceOption' }
-          )> }
-          & { __typename: 'AttributeType' }
-        ), choice?: (
-          { id: string, name: string }
-          & { __typename?: 'AttributeTypeChoiceOption' }
-        ) | null }
-        & { __typename: 'AttributeChoice' }
-      ) | (
-        { id: string, numericValue: number, type: (
-          { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit?: (
-            { id: string, name: string, shortName?: string | null }
-            & { __typename?: 'Unit' }
-          ) | null, choiceOptions: Array<(
-            { id: string, identifier: string }
-            & { __typename?: 'AttributeTypeChoiceOption' }
-          )> }
-          & { __typename: 'AttributeType' }
-        ) }
-        & { __typename: 'AttributeNumericValue' }
-      ) | (
-        { value: string, id: string, type: (
-          { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit?: (
-            { id: string, name: string, shortName?: string | null }
-            & { __typename?: 'Unit' }
-          ) | null, choiceOptions: Array<(
-            { id: string, identifier: string }
-            & { __typename?: 'AttributeTypeChoiceOption' }
-          )> }
-          & { __typename: 'AttributeType' }
-        ) }
-        & { __typename: 'AttributeRichText' | 'AttributeText' }
-      )> | null }
-      & { __typename?: 'Category' }
-    ) | null, body?: Array<(
-      { id?: string | null, blockType: string, field: string }
-      & { __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' }
-    ) | (
-      { id?: string | null, blockType: string, field: string }
-      & { __typename?: 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTypeFilterBlock' | 'DateBlock' }
-    ) | (
-      { id?: string | null, blockType: string, field: string }
-      & { __typename?: 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorHighlightsBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionBlock' }
-    ) | (
-      { id?: string | null, blockType: string, field: string }
-      & { __typename?: 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
-    ) | (
-      { id?: string | null, blockType: string, field: string, blocks: Array<(
-        { id?: string | null, field: string }
-        & { __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' }
-      ) | (
-        { id?: string | null, field: string }
-        & { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' }
-      ) | (
-        { id?: string | null, field: string }
-        & { __typename?: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' }
-      ) | (
-        { id?: string | null, field: string }
-        & { __typename?: 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' }
-      ) | (
-        { id?: string | null, field: string }
-        & { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
-      ) | (
-        { value: string, id?: string | null, field: string }
-        & { __typename?: 'CharBlock' }
-      )> }
-      & { __typename?: 'AccessibilityStatementContactInformationBlock' }
-    ) | (
-      { id?: string | null, blockType: string, field: string, cards?: Array<{ __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionListBlock' } | { __typename?: 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' } | { __typename?: 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' } | { __typename?: 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' } | { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
-        { heading?: string | null, lead?: string | null, category?: (
-          { id: string, type: (
-            { identifier: string }
-            & { __typename?: 'CategoryType' }
-          ) }
-          & { __typename?: 'Category' }
-        ) | null }
-        & { __typename?: 'ActionCategoryFilterCardBlock' }
-      ) | null> | null }
-      & { __typename?: 'ActionCategoryFilterCardsBlock' }
-    ) | (
-      { id?: string | null, blockType: string, field: string, categoryFilter?: (
-        { id: string }
-        & { __typename?: 'Category' }
-      ) | null }
-      & { __typename?: 'ActionListBlock' }
-    ) | (
-      { fullWidth?: boolean | null, id?: string | null, blockType: string, field: string, embed?: (
-        { html?: string | null }
-        & { __typename?: 'EmbedHTMLValue' }
-      ) | null }
-      & { __typename?: 'AdaptiveEmbedBlock' }
-    ) | (
-      { heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, cards?: Array<{ __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' } | { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' } | { __typename?: 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' } | { __typename?: 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' } | { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
-        { heading?: string | null, content?: string | null, link?: string | null, image?: (
-          { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null, large?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null, small?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null, social?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null, rendition?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null }
-          & { __typename?: 'Image' }
-        ) | null }
-        & { __typename?: 'CardBlock' }
-      ) | null> | null }
-      & { __typename?: 'CardListBlock' }
-    ) | (
-      { style?: string | null, styleOverrides?: string | null, id?: string | null, blockType: string, field: string, account?: (
-        { provider: CartographyProviderCredentialsProvider, account: string, publicAccessToken: string }
-        & { __typename?: 'CartographyProviderCredentials' }
-      ) | null }
-      & { __typename?: 'CartographyVisualisationBlock' }
-    ) | (
-      { style?: string | null, heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, categoryType?: (
-        { id: string, hideCategoryIdentifiers: boolean, categories: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, level?: (
-            { name: string, namePlural?: string | null }
-            & { __typename?: 'CategoryLevel' }
-          ) | null, image?: (
-            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, large?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, small?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, social?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, rendition?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null }
-            & { __typename?: 'Image' }
-          ) | null, iconImage?: (
-            { rendition?: (
-              { src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null }
-            & { __typename?: 'Image' }
-          ) | null, categoryPage?: (
-            { title: string, urlPath: string, live: boolean }
-            & { __typename?: 'CategoryPage' }
-          ) | null, type: (
-            { id: string, hideCategoryIdentifiers: boolean }
-            & { __typename?: 'CategoryType' }
-          ) }
-          & { __typename?: 'Category' }
-        )> }
-        & { __typename?: 'CategoryType' }
-      ) | null, category?: (
-        { id: string, children: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, level?: (
-            { name: string, namePlural?: string | null }
-            & { __typename?: 'CategoryLevel' }
-          ) | null, image?: (
-            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, large?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, small?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, social?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, rendition?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null }
-            & { __typename?: 'Image' }
-          ) | null, iconImage?: (
-            { rendition?: (
-              { src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null }
-            & { __typename?: 'Image' }
-          ) | null, categoryPage?: (
-            { title: string, urlPath: string, live: boolean }
-            & { __typename?: 'CategoryPage' }
-          ) | null, type: (
-            { id: string, hideCategoryIdentifiers: boolean }
-            & { __typename?: 'CategoryType' }
-          ) }
-          & { __typename?: 'Category' }
-        )> }
-        & { __typename?: 'Category' }
-      ) | null }
-      & { __typename?: 'CategoryListBlock' }
-    ) | (
-      { heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, valueAttribute?: (
-        { identifier: string, unit?: (
-          { shortName?: string | null }
-          & { __typename?: 'Unit' }
-        ) | null }
-        & { __typename?: 'AttributeType' }
-      ) | null, categoryType?: (
-        { identifier: string }
-        & { __typename?: 'CategoryType' }
-      ) | null }
-      & { __typename?: 'CategoryTreeMapBlock' }
-    ) | (
-      { value: string, id?: string | null, blockType: string, field: string }
-      & { __typename?: 'CharBlock' | 'RichTextBlock' | 'TextBlock' }
-    ) | (
-      { value: string, id?: string | null, blockType: string, field: string, choices: Array<(
-        { key: string, value: string }
-        & { __typename?: 'ChoiceOption' }
-      )> }
-      & { __typename?: 'ChoiceBlock' }
-    ) | (
-      { layout?: string | null, heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, image?: (
-        { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null, large?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null, small?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null, social?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null, rendition?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null }
-        & { __typename?: 'Image' }
-      ) | null }
-      & { __typename?: 'FrontPageHeroBlock' }
-    ) | (
-      { style?: string | null, id?: string | null, blockType: string, field: string, indicator?: (
-        { id: string }
-        & { __typename?: 'Indicator' }
-      ) | null }
-      & { __typename?: 'IndicatorBlock' }
-    ) | (
-      { title?: string | null, id?: string | null, blockType: string, field: string, indicators?: Array<{ __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' } | { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' } | { __typename?: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' } | { __typename?: 'ImplementationPhaseColumnBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' } | { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
-        { style?: string | null, indicator?: (
-          { id: string, identifier?: string | null, name: string, description?: string | null, timeResolution: IndicatorTimeResolution, level?: string | null, unit: (
-            { id: string, name: string }
-            & { __typename?: 'Unit' }
-          ), latestValue?: (
-            { id: string, date?: string | null, value: number }
-            & { __typename?: 'IndicatorValue' }
-          ) | null, goals?: Array<(
-            { id: string, date?: string | null, value: number }
-            & { __typename?: 'IndicatorGoal' }
-          ) | null> | null }
-          & { __typename?: 'Indicator' }
-        ) | null }
-        & { __typename?: 'IndicatorBlock' }
-      ) | null> | null }
-      & { __typename?: 'IndicatorGroupBlock' }
-    ) | (
-      { title?: string | null, body?: string | null, id?: string | null, blockType: string, field: string, blocks: Array<(
-        { id?: string | null }
-        & { __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' }
-      ) | (
-        { id?: string | null }
-        & { __typename: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' }
-      ) | (
-        { id?: string | null }
-        & { __typename: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' }
-      ) | (
-        { id?: string | null }
-        & { __typename: 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' }
-      ) | (
-        { id?: string | null }
-        & { __typename: 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
-      )>, indicator?: (
-        { id: string, identifier?: string | null, name: string, minValue?: number | null, maxValue?: number | null, unit: (
-          { id: string, shortName?: string | null }
-          & { __typename?: 'Unit' }
-        ), latestValue?: (
-          { id: string, date?: string | null, value: number }
-          & { __typename?: 'IndicatorValue' }
-        ) | null, values?: Array<(
-          { id: string, date?: string | null, value: number, normalizedValues?: Array<(
-            { normalizerId?: string | null, value?: number | null }
-            & { __typename?: 'NormalizedValue' }
-          ) | null> | null, categories: Array<(
-            { id: string }
-            & { __typename?: 'DimensionCategory' }
-          )> }
-          & { __typename?: 'IndicatorValue' }
-        ) | null> | null, goals?: Array<(
-          { id: string, date?: string | null, value: number, normalizedValues?: Array<(
-            { normalizerId?: string | null, value?: number | null }
-            & { __typename?: 'NormalizedValue' }
-          ) | null> | null }
-          & { __typename?: 'IndicatorGoal' }
-        ) | null> | null, common?: (
-          { id: string, normalizations?: Array<(
-            { unit?: (
-              { shortName?: string | null }
-              & { __typename?: 'Unit' }
-            ) | null, normalizer?: (
-              { name: string, id: string, identifier?: string | null }
-              & { __typename?: 'CommonIndicator' }
-            ) | null }
-            & { __typename?: 'CommonIndicatorNormalization' }
-          ) | null> | null }
-          & { __typename?: 'CommonIndicator' }
-        ) | null }
-        & { __typename?: 'Indicator' }
-      ) | null, linkButton?: (
-        { blockType: string }
-        & { __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' }
-      ) | (
-        { blockType: string }
-        & { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' }
-      ) | (
-        { blockType: string }
-        & { __typename?: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' }
-      ) | (
-        { blockType: string }
-        & { __typename?: 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' }
-      ) | (
-        { blockType: string }
-        & { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
-      ) | (
-        { text?: string | null, blockType: string, page?: (
-          { url?: string | null, urlPath: string, slug: string }
-          & { __typename?: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PrivacyPolicyPage' | 'StaticPage' }
-        ) | null }
-        & { __typename?: 'PageLinkBlock' }
-      ) | null }
-      & { __typename?: 'IndicatorShowcaseBlock' }
-    ) | (
-      { width?: string | null, id?: string | null, blockType: string, field: string, image?: (
-        { title: string, altText: string, width: number, height: number, renditionUncropped?: (
-          { src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null }
-        & { __typename?: 'Image' }
-      ) | null }
-      & { __typename?: 'LargeImageBlock' }
-    ) | (
-      { heading?: string | null, id?: string | null, blockType: string, field: string, questions?: Array<{ __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' } | { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' } | { __typename?: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' } | { __typename?: 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' } | { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
-        { question?: string | null, answer?: string | null }
-        & { __typename?: 'QuestionBlock' }
-      ) | null> | null }
-      & { __typename?: 'QuestionAnswerBlock' }
-    ) | null> | null, layout?: (
-      { iconSize?: string | null, layoutMainTop?: Array<(
-        { attributeType: (
-          { identifier: string }
-          & { __typename?: 'AttributeType' }
-        ) }
-        & { __typename: 'CategoryPageAttributeTypeBlock' }
-      ) | (
-        { blocks: Array<{ __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' } | { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' } | { __typename?: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' } | { __typename?: 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' } | { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
-          { value: string }
-          & { __typename?: 'ChoiceBlock' }
-        )> }
-        & { __typename: 'CategoryPageProgressBlock' }
-      )> | null, layoutMainBottom?: Array<(
-        { attributeType: (
-          { identifier: string }
-          & { __typename?: 'AttributeType' }
-        ) }
-        & { __typename: 'CategoryPageAttributeTypeBlock' }
-      ) | { __typename: 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' } | (
-        { heading?: string | null, description?: string | null }
-        & { __typename: 'CategoryPageContactFormBlock' }
-      )> | null, layoutAside?: Array<(
-        { attributeType: (
-          { identifier: string }
-          & { __typename?: 'AttributeType' }
-        ) }
-        & { __typename: 'CategoryPageAttributeTypeBlock' }
-      )> | null }
-      & { __typename: 'CategoryTypePageLevelLayout' }
-    ) | null }
-    & { __typename: 'CategoryPage' }
-  ) | (
-    { leadContent?: string | null, id?: string | null, slug: string, title: string, lastPublishedAt?: any | null }
-    & { __typename: 'PrivacyPolicyPage' }
-  ) | (
-    { leadParagraph?: string | null, id?: string | null, slug: string, title: string, lastPublishedAt?: any | null, headerImage?: (
-      { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-        { id: string, width: number, height: number, src: string }
-        & { __typename?: 'ImageRendition' }
-      ) | null, large?: (
-        { id: string, width: number, height: number, src: string }
-        & { __typename?: 'ImageRendition' }
-      ) | null, small?: (
-        { id: string, width: number, height: number, src: string }
-        & { __typename?: 'ImageRendition' }
-      ) | null, social?: (
-        { id: string, width: number, height: number, src: string }
-        & { __typename?: 'ImageRendition' }
-      ) | null, rendition?: (
-        { id: string, width: number, height: number, src: string }
-        & { __typename?: 'ImageRendition' }
-      ) | null }
-      & { __typename?: 'Image' }
-    ) | null, body?: Array<(
-      { id?: string | null, blockType: string, field: string }
-      & { __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' }
-    ) | (
-      { id?: string | null, blockType: string, field: string }
-      & { __typename?: 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTypeFilterBlock' | 'DateBlock' }
-    ) | (
-      { id?: string | null, blockType: string, field: string }
-      & { __typename?: 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorHighlightsBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionBlock' }
-    ) | (
-      { id?: string | null, blockType: string, field: string }
-      & { __typename?: 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
-    ) | (
-      { id?: string | null, blockType: string, field: string, blocks: Array<(
-        { id?: string | null, field: string }
-        & { __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' }
-      ) | (
-        { id?: string | null, field: string }
-        & { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' }
-      ) | (
-        { id?: string | null, field: string }
-        & { __typename?: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' }
-      ) | (
-        { id?: string | null, field: string }
-        & { __typename?: 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' }
-      ) | (
-        { id?: string | null, field: string }
-        & { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
-      ) | (
-        { value: string, id?: string | null, field: string }
-        & { __typename?: 'CharBlock' }
-      )> }
-      & { __typename?: 'AccessibilityStatementContactInformationBlock' }
-    ) | (
-      { id?: string | null, blockType: string, field: string, cards?: Array<{ __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionListBlock' } | { __typename?: 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' } | { __typename?: 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' } | { __typename?: 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' } | { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
-        { heading?: string | null, lead?: string | null, category?: (
-          { id: string, type: (
-            { identifier: string }
-            & { __typename?: 'CategoryType' }
-          ) }
-          & { __typename?: 'Category' }
-        ) | null }
-        & { __typename?: 'ActionCategoryFilterCardBlock' }
-      ) | null> | null }
-      & { __typename?: 'ActionCategoryFilterCardsBlock' }
-    ) | (
-      { id?: string | null, blockType: string, field: string, categoryFilter?: (
-        { id: string }
-        & { __typename?: 'Category' }
-      ) | null }
-      & { __typename?: 'ActionListBlock' }
-    ) | (
-      { fullWidth?: boolean | null, id?: string | null, blockType: string, field: string, embed?: (
-        { html?: string | null }
-        & { __typename?: 'EmbedHTMLValue' }
-      ) | null }
-      & { __typename?: 'AdaptiveEmbedBlock' }
-    ) | (
-      { heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, cards?: Array<{ __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' } | { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' } | { __typename?: 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' } | { __typename?: 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' } | { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
-        { heading?: string | null, content?: string | null, link?: string | null, image?: (
-          { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null, large?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null, small?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null, social?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null, rendition?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null }
-          & { __typename?: 'Image' }
-        ) | null }
-        & { __typename?: 'CardBlock' }
-      ) | null> | null }
-      & { __typename?: 'CardListBlock' }
-    ) | (
-      { style?: string | null, styleOverrides?: string | null, id?: string | null, blockType: string, field: string, account?: (
-        { provider: CartographyProviderCredentialsProvider, account: string, publicAccessToken: string }
-        & { __typename?: 'CartographyProviderCredentials' }
-      ) | null }
-      & { __typename?: 'CartographyVisualisationBlock' }
-    ) | (
-      { style?: string | null, heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, categoryType?: (
-        { id: string, hideCategoryIdentifiers: boolean, categories: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, level?: (
-            { name: string, namePlural?: string | null }
-            & { __typename?: 'CategoryLevel' }
-          ) | null, image?: (
-            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, large?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, small?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, social?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, rendition?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null }
-            & { __typename?: 'Image' }
-          ) | null, iconImage?: (
-            { rendition?: (
-              { src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null }
-            & { __typename?: 'Image' }
-          ) | null, categoryPage?: (
-            { title: string, urlPath: string, live: boolean }
-            & { __typename?: 'CategoryPage' }
-          ) | null, type: (
-            { id: string, hideCategoryIdentifiers: boolean }
-            & { __typename?: 'CategoryType' }
-          ) }
-          & { __typename?: 'Category' }
-        )> }
-        & { __typename?: 'CategoryType' }
-      ) | null, category?: (
-        { id: string, children: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, level?: (
-            { name: string, namePlural?: string | null }
-            & { __typename?: 'CategoryLevel' }
-          ) | null, image?: (
-            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, large?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, small?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, social?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, rendition?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null }
-            & { __typename?: 'Image' }
-          ) | null, iconImage?: (
-            { rendition?: (
-              { src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null }
-            & { __typename?: 'Image' }
-          ) | null, categoryPage?: (
-            { title: string, urlPath: string, live: boolean }
-            & { __typename?: 'CategoryPage' }
-          ) | null, type: (
-            { id: string, hideCategoryIdentifiers: boolean }
-            & { __typename?: 'CategoryType' }
-          ) }
-          & { __typename?: 'Category' }
-        )> }
-        & { __typename?: 'Category' }
-      ) | null }
-      & { __typename?: 'CategoryListBlock' }
-    ) | (
-      { heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, valueAttribute?: (
-        { identifier: string, unit?: (
-          { shortName?: string | null }
-          & { __typename?: 'Unit' }
-        ) | null }
-        & { __typename?: 'AttributeType' }
-      ) | null, categoryType?: (
-        { identifier: string }
-        & { __typename?: 'CategoryType' }
-      ) | null }
-      & { __typename?: 'CategoryTreeMapBlock' }
-    ) | (
-      { value: string, id?: string | null, blockType: string, field: string }
-      & { __typename?: 'CharBlock' | 'RichTextBlock' | 'TextBlock' }
-    ) | (
-      { value: string, id?: string | null, blockType: string, field: string, choices: Array<(
-        { key: string, value: string }
-        & { __typename?: 'ChoiceOption' }
-      )> }
-      & { __typename?: 'ChoiceBlock' }
-    ) | (
-      { layout?: string | null, heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, image?: (
-        { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null, large?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null, small?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null, social?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null, rendition?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null }
-        & { __typename?: 'Image' }
-      ) | null }
-      & { __typename?: 'FrontPageHeroBlock' }
-    ) | (
-      { style?: string | null, id?: string | null, blockType: string, field: string, indicator?: (
-        { id: string }
-        & { __typename?: 'Indicator' }
-      ) | null }
-      & { __typename?: 'IndicatorBlock' }
-    ) | (
-      { title?: string | null, id?: string | null, blockType: string, field: string, indicators?: Array<{ __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' } | { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' } | { __typename?: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' } | { __typename?: 'ImplementationPhaseColumnBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' } | { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
-        { style?: string | null, indicator?: (
-          { id: string, identifier?: string | null, name: string, description?: string | null, timeResolution: IndicatorTimeResolution, level?: string | null, unit: (
-            { id: string, name: string }
-            & { __typename?: 'Unit' }
-          ), latestValue?: (
-            { id: string, date?: string | null, value: number }
-            & { __typename?: 'IndicatorValue' }
-          ) | null, goals?: Array<(
-            { id: string, date?: string | null, value: number }
-            & { __typename?: 'IndicatorGoal' }
-          ) | null> | null }
-          & { __typename?: 'Indicator' }
-        ) | null }
-        & { __typename?: 'IndicatorBlock' }
-      ) | null> | null }
-      & { __typename?: 'IndicatorGroupBlock' }
-    ) | (
-      { title?: string | null, body?: string | null, id?: string | null, blockType: string, field: string, blocks: Array<(
-        { id?: string | null }
-        & { __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' }
-      ) | (
-        { id?: string | null }
-        & { __typename: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' }
-      ) | (
-        { id?: string | null }
-        & { __typename: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' }
-      ) | (
-        { id?: string | null }
-        & { __typename: 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' }
-      ) | (
-        { id?: string | null }
-        & { __typename: 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
-      )>, indicator?: (
-        { id: string, identifier?: string | null, name: string, minValue?: number | null, maxValue?: number | null, unit: (
-          { id: string, shortName?: string | null }
-          & { __typename?: 'Unit' }
-        ), latestValue?: (
-          { id: string, date?: string | null, value: number }
-          & { __typename?: 'IndicatorValue' }
-        ) | null, values?: Array<(
-          { id: string, date?: string | null, value: number, normalizedValues?: Array<(
-            { normalizerId?: string | null, value?: number | null }
-            & { __typename?: 'NormalizedValue' }
-          ) | null> | null, categories: Array<(
-            { id: string }
-            & { __typename?: 'DimensionCategory' }
-          )> }
-          & { __typename?: 'IndicatorValue' }
-        ) | null> | null, goals?: Array<(
-          { id: string, date?: string | null, value: number, normalizedValues?: Array<(
-            { normalizerId?: string | null, value?: number | null }
-            & { __typename?: 'NormalizedValue' }
-          ) | null> | null }
-          & { __typename?: 'IndicatorGoal' }
-        ) | null> | null, common?: (
-          { id: string, normalizations?: Array<(
-            { unit?: (
-              { shortName?: string | null }
-              & { __typename?: 'Unit' }
-            ) | null, normalizer?: (
-              { name: string, id: string, identifier?: string | null }
-              & { __typename?: 'CommonIndicator' }
-            ) | null }
-            & { __typename?: 'CommonIndicatorNormalization' }
-          ) | null> | null }
-          & { __typename?: 'CommonIndicator' }
-        ) | null }
-        & { __typename?: 'Indicator' }
-      ) | null, linkButton?: (
-        { blockType: string }
-        & { __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' }
-      ) | (
-        { blockType: string }
-        & { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' }
-      ) | (
-        { blockType: string }
-        & { __typename?: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' }
-      ) | (
-        { blockType: string }
-        & { __typename?: 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' }
-      ) | (
-        { blockType: string }
-        & { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
-      ) | (
-        { text?: string | null, blockType: string, page?: (
-          { url?: string | null, urlPath: string, slug: string }
-          & { __typename?: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PrivacyPolicyPage' | 'StaticPage' }
-        ) | null }
-        & { __typename?: 'PageLinkBlock' }
-      ) | null }
-      & { __typename?: 'IndicatorShowcaseBlock' }
-    ) | (
-      { width?: string | null, id?: string | null, blockType: string, field: string, image?: (
-        { title: string, altText: string, width: number, height: number, renditionUncropped?: (
-          { src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null }
-        & { __typename?: 'Image' }
-      ) | null }
-      & { __typename?: 'LargeImageBlock' }
-    ) | (
-      { heading?: string | null, id?: string | null, blockType: string, field: string, questions?: Array<{ __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' } | { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' } | { __typename?: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' } | { __typename?: 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' } | { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
-        { question?: string | null, answer?: string | null }
-        & { __typename?: 'QuestionBlock' }
-      ) | null> | null }
-      & { __typename?: 'QuestionAnswerBlock' }
-    ) | null> | null, siblings: Array<(
-      { id?: string | null, title: string, slug: string, live: boolean, urlPath: string }
-      & { __typename?: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PrivacyPolicyPage' | 'StaticPage' }
-    )>, parent?: (
-      { id?: string | null, title: string, slug: string, urlPath: string, children: Array<(
-        { id?: string | null, title: string, slug: string, live: boolean, urlPath: string }
-        & { __typename?: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PrivacyPolicyPage' | 'StaticPage' }
-      )> }
-      & { __typename?: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PrivacyPolicyPage' }
-    ) | (
-      { childrenUseSecondaryNavigation?: boolean | null, id?: string | null, title: string, slug: string, urlPath: string, children: Array<(
-        { id?: string | null, title: string, slug: string, live: boolean, urlPath: string }
-        & { __typename?: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PrivacyPolicyPage' | 'StaticPage' }
-      )> }
-      & { __typename?: 'EmptyPage' | 'StaticPage' }
-    ) | null }
-    & { __typename: 'StaticPage' }
-  ) | null }
-  & { __typename?: 'Query' }
-);
-
-export type CategoryParentFragmentFragment = (
-  { parent?: (
-    { identifier: string, name: string, categoryPage?: (
-      { urlPath: string }
-      & { __typename?: 'CategoryPage' }
-    ) | null, type: (
-      { id: string, hideCategoryIdentifiers: boolean }
-      & { __typename?: 'CategoryType' }
-    ) }
-    & { __typename?: 'Category' }
-  ) | null }
-  & { __typename?: 'Category' }
-);
-
-export type RecursiveCategoryParentFragmentFragment = (
-  { parent?: (
-    { parent?: (
-      { identifier: string, name: string, parent?: (
-        { identifier: string, name: string, categoryPage?: (
-          { urlPath: string }
-          & { __typename?: 'CategoryPage' }
-        ) | null, type: (
-          { id: string, hideCategoryIdentifiers: boolean }
-          & { __typename?: 'CategoryType' }
-        ), parent?: (
-          { identifier: string, name: string, categoryPage?: (
-            { urlPath: string }
-            & { __typename?: 'CategoryPage' }
-          ) | null, type: (
-            { id: string, hideCategoryIdentifiers: boolean }
-            & { __typename?: 'CategoryType' }
-          ) }
-          & { __typename?: 'Category' }
-        ) | null }
-        & { __typename?: 'Category' }
-      ) | null, categoryPage?: (
-        { urlPath: string }
-        & { __typename?: 'CategoryPage' }
-      ) | null, type: (
-        { id: string, hideCategoryIdentifiers: boolean }
-        & { __typename?: 'CategoryType' }
-      ) }
-      & { __typename?: 'Category' }
-    ) | null }
-    & { __typename?: 'Category' }
-  ) | null }
-  & { __typename?: 'Category' }
-);
-
-export type GetActionListPageQueryVariables = Exact<{
-  plan: Scalars['ID'];
-  path: Scalars['String'];
-  singlePlan: Scalars['Boolean'];
-}>;
-
-
-export type GetActionListPageQuery = (
-  { planPage?: (
-    { id?: string | null, slug: string, title: string, lastPublishedAt?: any | null }
-    & { __typename: 'AccessibilityStatementPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PrivacyPolicyPage' | 'StaticPage' }
-  ) | (
-    { leadContent?: string | null, defaultView: ActionListPageView, headingHierarchyDepth: number, id?: string | null, slug: string, title: string, lastPublishedAt?: any | null, primaryFilters?: Array<(
-      { showAllLabel?: string | null, field: string, id?: string | null, attributeType: (
-        { id: string, identifier: string, format: AttributeTypeFormat, name: string, helpText: string, choiceOptions: Array<(
-          { id: string, identifier: string, name: string }
-          & { __typename?: 'AttributeTypeChoiceOption' }
-        )> }
-        & { __typename?: 'AttributeType' }
-      ) }
-      & { __typename: 'ActionAttributeTypeFilterBlock' }
-    ) | (
-      { field: string, id?: string | null }
-      & { __typename: 'ActionImplementationPhaseFilterBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'ResponsiblePartyFilterBlock' }
-    ) | (
-      { style?: string | null, showAllLabel?: string | null, depth?: number | null, field: string, id?: string | null, categoryType?: (
-        { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
-          { id: string, identifier: string, name: string, order: number, helpText: string, parent?: (
-            { id: string }
-            & { __typename?: 'Category' }
-          ) | null, common?: (
-            { id: string }
-            & { __typename?: 'CommonCategory' }
-          ) | null }
-          & { __typename?: 'Category' }
-        )> }
-        & { __typename?: 'CategoryType' }
-      ) | null }
-      & { __typename: 'CategoryTypeFilterBlock' }
-    )> | null, mainFilters?: Array<(
-      { showAllLabel?: string | null, field: string, id?: string | null, attributeType: (
-        { id: string, identifier: string, format: AttributeTypeFormat, name: string, helpText: string, choiceOptions: Array<(
-          { id: string, identifier: string, name: string }
-          & { __typename?: 'AttributeTypeChoiceOption' }
-        )> }
-        & { __typename?: 'AttributeType' }
-      ) }
-      & { __typename: 'ActionAttributeTypeFilterBlock' }
-    ) | (
-      { field: string, id?: string | null }
-      & { __typename: 'ActionImplementationPhaseFilterBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'ResponsiblePartyFilterBlock' }
-    ) | (
-      { style?: string | null, showAllLabel?: string | null, depth?: number | null, field: string, id?: string | null, categoryType?: (
-        { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
-          { id: string, identifier: string, name: string, order: number, helpText: string, parent?: (
-            { id: string }
-            & { __typename?: 'Category' }
-          ) | null, common?: (
-            { id: string }
-            & { __typename?: 'CommonCategory' }
-          ) | null }
-          & { __typename?: 'Category' }
-        )> }
-        & { __typename?: 'CategoryType' }
-      ) | null }
-      & { __typename: 'CategoryTypeFilterBlock' }
-    )> | null, advancedFilters?: Array<(
-      { showAllLabel?: string | null, field: string, id?: string | null, attributeType: (
-        { id: string, identifier: string, format: AttributeTypeFormat, name: string, helpText: string, choiceOptions: Array<(
-          { id: string, identifier: string, name: string }
-          & { __typename?: 'AttributeTypeChoiceOption' }
-        )> }
-        & { __typename?: 'AttributeType' }
-      ) }
-      & { __typename: 'ActionAttributeTypeFilterBlock' }
-    ) | (
-      { field: string, id?: string | null }
-      & { __typename: 'ActionImplementationPhaseFilterBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'ResponsiblePartyFilterBlock' }
-    ) | (
-      { style?: string | null, showAllLabel?: string | null, depth?: number | null, field: string, id?: string | null, categoryType?: (
-        { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
-          { id: string, identifier: string, name: string, order: number, helpText: string, parent?: (
-            { id: string }
-            & { __typename?: 'Category' }
-          ) | null, common?: (
-            { id: string }
-            & { __typename?: 'CommonCategory' }
-          ) | null }
-          & { __typename?: 'Category' }
-        )> }
-        & { __typename?: 'CategoryType' }
-      ) | null }
-      & { __typename: 'CategoryTypeFilterBlock' }
-    )> | null }
-    & { __typename: 'ActionListPage' }
-  ) | null }
-  & { __typename?: 'Query' }
-);
-
-export type GetHomePageQueryVariables = Exact<{
-  plan: Scalars['ID'];
-  path: Scalars['String'];
-}>;
-
-
-export type GetHomePageQuery = (
-  { planPage?: (
-    { id?: string | null, slug: string, lastPublishedAt?: any | null }
-    & { __typename: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PrivacyPolicyPage' | 'StaticPage' }
-  ) | (
-    { id?: string | null, slug: string, lastPublishedAt?: any | null, body?: Array<(
-      { id?: string | null, blockType: string, field: string }
-      & { __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' }
-    ) | (
-      { id?: string | null, blockType: string, field: string }
-      & { __typename?: 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTypeFilterBlock' | 'DateBlock' }
-    ) | (
-      { id?: string | null, blockType: string, field: string }
-      & { __typename?: 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorHighlightsBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionBlock' }
-    ) | (
-      { id?: string | null, blockType: string, field: string }
-      & { __typename?: 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
-    ) | (
-      { id?: string | null, blockType: string, field: string, blocks: Array<(
-        { id?: string | null, field: string }
-        & { __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' }
-      ) | (
-        { id?: string | null, field: string }
-        & { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' }
-      ) | (
-        { id?: string | null, field: string }
-        & { __typename?: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' }
-      ) | (
-        { id?: string | null, field: string }
-        & { __typename?: 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' }
-      ) | (
-        { id?: string | null, field: string }
-        & { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
-      ) | (
-        { value: string, id?: string | null, field: string }
-        & { __typename?: 'CharBlock' }
-      )> }
-      & { __typename?: 'AccessibilityStatementContactInformationBlock' }
-    ) | (
-      { id?: string | null, blockType: string, field: string, cards?: Array<{ __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionListBlock' } | { __typename?: 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' } | { __typename?: 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' } | { __typename?: 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' } | { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
-        { heading?: string | null, lead?: string | null, category?: (
-          { id: string, type: (
-            { identifier: string }
-            & { __typename?: 'CategoryType' }
-          ) }
-          & { __typename?: 'Category' }
-        ) | null }
-        & { __typename?: 'ActionCategoryFilterCardBlock' }
-      ) | null> | null }
-      & { __typename?: 'ActionCategoryFilterCardsBlock' }
-    ) | (
-      { id?: string | null, blockType: string, field: string, categoryFilter?: (
-        { id: string }
-        & { __typename?: 'Category' }
-      ) | null }
-      & { __typename?: 'ActionListBlock' }
-    ) | (
-      { fullWidth?: boolean | null, id?: string | null, blockType: string, field: string, embed?: (
-        { html?: string | null }
-        & { __typename?: 'EmbedHTMLValue' }
-      ) | null }
-      & { __typename?: 'AdaptiveEmbedBlock' }
-    ) | (
-      { heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, cards?: Array<{ __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' } | { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' } | { __typename?: 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' } | { __typename?: 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' } | { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
-        { heading?: string | null, content?: string | null, link?: string | null, image?: (
-          { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null, large?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null, small?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null, social?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null, rendition?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null }
-          & { __typename?: 'Image' }
-        ) | null }
-        & { __typename?: 'CardBlock' }
-      ) | null> | null }
-      & { __typename?: 'CardListBlock' }
-    ) | (
-      { style?: string | null, styleOverrides?: string | null, id?: string | null, blockType: string, field: string, account?: (
-        { provider: CartographyProviderCredentialsProvider, account: string, publicAccessToken: string }
-        & { __typename?: 'CartographyProviderCredentials' }
-      ) | null }
-      & { __typename?: 'CartographyVisualisationBlock' }
-    ) | (
-      { style?: string | null, heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, categoryType?: (
-        { id: string, hideCategoryIdentifiers: boolean, categories: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, level?: (
-            { name: string, namePlural?: string | null }
-            & { __typename?: 'CategoryLevel' }
-          ) | null, image?: (
-            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, large?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, small?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, social?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, rendition?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null }
-            & { __typename?: 'Image' }
-          ) | null, iconImage?: (
-            { rendition?: (
-              { src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null }
-            & { __typename?: 'Image' }
-          ) | null, categoryPage?: (
-            { title: string, urlPath: string, live: boolean }
-            & { __typename?: 'CategoryPage' }
-          ) | null, type: (
-            { id: string, hideCategoryIdentifiers: boolean }
-            & { __typename?: 'CategoryType' }
-          ) }
-          & { __typename?: 'Category' }
-        )> }
-        & { __typename?: 'CategoryType' }
-      ) | null, category?: (
-        { id: string, children: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, color?: string | null, iconSvgUrl?: string | null, level?: (
-            { name: string, namePlural?: string | null }
-            & { __typename?: 'CategoryLevel' }
-          ) | null, image?: (
-            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, large?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, small?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, social?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null, rendition?: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null }
-            & { __typename?: 'Image' }
-          ) | null, iconImage?: (
-            { rendition?: (
-              { src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null }
-            & { __typename?: 'Image' }
-          ) | null, categoryPage?: (
-            { title: string, urlPath: string, live: boolean }
-            & { __typename?: 'CategoryPage' }
-          ) | null, type: (
-            { id: string, hideCategoryIdentifiers: boolean }
-            & { __typename?: 'CategoryType' }
-          ) }
-          & { __typename?: 'Category' }
-        )> }
-        & { __typename?: 'Category' }
-      ) | null }
-      & { __typename?: 'CategoryListBlock' }
-    ) | (
-      { heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, valueAttribute?: (
-        { identifier: string, unit?: (
-          { shortName?: string | null }
-          & { __typename?: 'Unit' }
-        ) | null }
-        & { __typename?: 'AttributeType' }
-      ) | null, categoryType?: (
-        { identifier: string }
-        & { __typename?: 'CategoryType' }
-      ) | null }
-      & { __typename?: 'CategoryTreeMapBlock' }
-    ) | (
-      { value: string, id?: string | null, blockType: string, field: string }
-      & { __typename?: 'CharBlock' | 'RichTextBlock' | 'TextBlock' }
-    ) | (
-      { value: string, id?: string | null, blockType: string, field: string, choices: Array<(
-        { key: string, value: string }
-        & { __typename?: 'ChoiceOption' }
-      )> }
-      & { __typename?: 'ChoiceBlock' }
-    ) | (
-      { layout?: string | null, heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, image?: (
-        { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null, large?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null, small?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null, social?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null, rendition?: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null }
-        & { __typename?: 'Image' }
-      ) | null }
-      & { __typename?: 'FrontPageHeroBlock' }
-    ) | (
-      { style?: string | null, id?: string | null, blockType: string, field: string, indicator?: (
-        { id: string }
-        & { __typename?: 'Indicator' }
-      ) | null }
-      & { __typename?: 'IndicatorBlock' }
-    ) | (
-      { title?: string | null, id?: string | null, blockType: string, field: string, indicators?: Array<{ __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' } | { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' } | { __typename?: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' } | { __typename?: 'ImplementationPhaseColumnBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' } | { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
-        { style?: string | null, indicator?: (
-          { id: string, identifier?: string | null, name: string, description?: string | null, timeResolution: IndicatorTimeResolution, level?: string | null, unit: (
-            { id: string, name: string }
-            & { __typename?: 'Unit' }
-          ), latestValue?: (
-            { id: string, date?: string | null, value: number }
-            & { __typename?: 'IndicatorValue' }
-          ) | null, goals?: Array<(
-            { id: string, date?: string | null, value: number }
-            & { __typename?: 'IndicatorGoal' }
-          ) | null> | null }
-          & { __typename?: 'Indicator' }
-        ) | null }
-        & { __typename?: 'IndicatorBlock' }
-      ) | null> | null }
-      & { __typename?: 'IndicatorGroupBlock' }
-    ) | (
-      { title?: string | null, body?: string | null, id?: string | null, blockType: string, field: string, blocks: Array<(
-        { id?: string | null }
-        & { __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' }
-      ) | (
-        { id?: string | null }
-        & { __typename: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' }
-      ) | (
-        { id?: string | null }
-        & { __typename: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' }
-      ) | (
-        { id?: string | null }
-        & { __typename: 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' }
-      ) | (
-        { id?: string | null }
-        & { __typename: 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
-      )>, indicator?: (
-        { id: string, identifier?: string | null, name: string, minValue?: number | null, maxValue?: number | null, unit: (
-          { id: string, shortName?: string | null }
-          & { __typename?: 'Unit' }
-        ), latestValue?: (
-          { id: string, date?: string | null, value: number }
-          & { __typename?: 'IndicatorValue' }
-        ) | null, values?: Array<(
-          { id: string, date?: string | null, value: number, normalizedValues?: Array<(
-            { normalizerId?: string | null, value?: number | null }
-            & { __typename?: 'NormalizedValue' }
-          ) | null> | null, categories: Array<(
-            { id: string }
-            & { __typename?: 'DimensionCategory' }
-          )> }
-          & { __typename?: 'IndicatorValue' }
-        ) | null> | null, goals?: Array<(
-          { id: string, date?: string | null, value: number, normalizedValues?: Array<(
-            { normalizerId?: string | null, value?: number | null }
-            & { __typename?: 'NormalizedValue' }
-          ) | null> | null }
-          & { __typename?: 'IndicatorGoal' }
-        ) | null> | null, common?: (
-          { id: string, normalizations?: Array<(
-            { unit?: (
-              { shortName?: string | null }
-              & { __typename?: 'Unit' }
-            ) | null, normalizer?: (
-              { name: string, id: string, identifier?: string | null }
-              & { __typename?: 'CommonIndicator' }
-            ) | null }
-            & { __typename?: 'CommonIndicatorNormalization' }
-          ) | null> | null }
-          & { __typename?: 'CommonIndicator' }
-        ) | null }
-        & { __typename?: 'Indicator' }
-      ) | null, linkButton?: (
-        { blockType: string }
-        & { __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' }
-      ) | (
-        { blockType: string }
-        & { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' }
-      ) | (
-        { blockType: string }
-        & { __typename?: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' }
-      ) | (
-        { blockType: string }
-        & { __typename?: 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' }
-      ) | (
-        { blockType: string }
-        & { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
-      ) | (
-        { text?: string | null, blockType: string, page?: (
-          { url?: string | null, urlPath: string, slug: string }
-          & { __typename?: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PrivacyPolicyPage' | 'StaticPage' }
-        ) | null }
-        & { __typename?: 'PageLinkBlock' }
-      ) | null }
-      & { __typename?: 'IndicatorShowcaseBlock' }
-    ) | (
-      { width?: string | null, id?: string | null, blockType: string, field: string, image?: (
-        { title: string, altText: string, width: number, height: number, renditionUncropped?: (
-          { src: string }
-          & { __typename?: 'ImageRendition' }
-        ) | null }
-        & { __typename?: 'Image' }
-      ) | null }
-      & { __typename?: 'LargeImageBlock' }
-    ) | (
-      { heading?: string | null, id?: string | null, blockType: string, field: string, questions?: Array<{ __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' } | { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' } | { __typename?: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' } | { __typename?: 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' } | { __typename?: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
-        { question?: string | null, answer?: string | null }
-        & { __typename?: 'QuestionBlock' }
-      ) | null> | null }
-      & { __typename?: 'QuestionAnswerBlock' }
-    ) | null> | null }
-    & { __typename: 'PlanRootPage' }
-  ) | null, plan?: (
-    { id: string, primaryActionClassification?: (
-      { categories: Array<(
-        { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, image?: (
-          { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null, large?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null, small?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null, social?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null, rendition?: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null }
-          & { __typename?: 'Image' }
-        ) | null, categoryPage?: (
-          { live: boolean, id?: string | null, title: string, urlPath: string }
-          & { __typename?: 'CategoryPage' }
-        ) | null, level?: (
-          { name: string, namePlural?: string | null }
-          & { __typename?: 'CategoryLevel' }
-        ) | null, parent?: (
-          { id: string }
-          & { __typename?: 'Category' }
-        ) | null, type: (
-          { id: string, hideCategoryIdentifiers: boolean }
-          & { __typename?: 'CategoryType' }
-        ) }
-        & { __typename?: 'Category' }
-      )> }
-      & { __typename?: 'CategoryType' }
-    ) | null }
-    & { __typename?: 'Plan' }
-  ) | null }
-  & { __typename?: 'Query' }
-);
-
-export type GetPlanPageIndicatorListQueryVariables = Exact<{
-  plan: Scalars['ID'];
-  path: Scalars['String'];
-}>;
-
-
-export type GetPlanPageIndicatorListQuery = (
-  { planPage?: (
-    { id?: string | null, slug: string, title: string, lastPublishedAt?: any | null }
-    & { __typename: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'Page' | 'PlanRootPage' | 'PrivacyPolicyPage' | 'StaticPage' }
-  ) | (
-    { leadContent?: string | null, displayInsights?: boolean | null, id?: string | null, slug: string, title: string, lastPublishedAt?: any | null }
-    & { __typename: 'IndicatorListPage' }
-  ) | null }
-  & { __typename?: 'Query' }
-);
-
-export type PlanSiteQueryVariables = Exact<{
-  identifier: Scalars['ID'];
-}>;
-
-
-export type PlanSiteQuery = (
+export type GetPlanThemeIdentifierQuery = (
   { plan?: (
-    { pages?: Array<(
-      { urlPath: string }
-      & { __typename?: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PrivacyPolicyPage' | 'StaticPage' }
-    ) | null> | null, actions: Array<(
-      { identifier: string }
-      & { __typename?: 'Action' }
-    )>, impactGroups: Array<(
-      { identifier: string }
-      & { __typename?: 'ImpactGroup' }
-    ) | null> }
+    { themeIdentifier?: string | null }
     & { __typename?: 'Plan' }
-  ) | null, planIndicators?: Array<(
-    { id: string }
-    & { __typename?: 'Indicator' }
-  ) | null> | null }
+  ) | null }
   & { __typename?: 'Query' }
 );

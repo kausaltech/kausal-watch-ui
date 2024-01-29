@@ -12,9 +12,9 @@ import { readableColor, shade } from 'polished';
 import IndicatorVisualisation from 'components/indicators/IndicatorVisualisation';
 import { ActionLink, IndicatorLink } from 'common/links';
 import Icon from 'components/common/Icon';
-import PlanContext from 'context/plan';
-import { useTranslation } from 'common/i18n';
+import PlanContext, { usePlan } from 'context/plan';
 import { SectionHeader } from 'components/actions/ActionContent';
+import { useTranslations } from 'next-intl';
 
 const IndicatorsSection = styled.div`
   margin-bottom: ${(props) => props.theme.spaces.s400};
@@ -71,9 +71,10 @@ const IndicatorActionListItem = styled.li`
 `;
 
 function ActionIndicator(props) {
-  const { t, relatedIndicator, actionId } = props;
+  const t = useTranslations();
+  const { relatedIndicator, actionId } = props;
   const { indicator } = relatedIndicator;
-  const plan = useContext(PlanContext);
+  const plan = usePlan();
   const actions = indicator.actions.filter((action) => action.id !== actionId);
 
   return (
@@ -123,7 +124,7 @@ const ActionRelatedIndicatorsBlock = (
   props: ActionRelatedIndicatorsBlockProps
 ) => {
   const { indicators, actionId } = props;
-  const { t } = useTranslation();
+  const t = useTranslations();
 
   // FIXME: Assume indicator not connected to any plan are "draft" until we have API solution for this
   const filteredIndicators = indicators.filter(
@@ -146,7 +147,6 @@ const ActionRelatedIndicatorsBlock = (
           <IndicatorsSection>
             {filteredIndicators.map((relatedIndicator) => (
               <ActionIndicator
-                t={t}
                 key={relatedIndicator.indicator.id}
                 actionId={actionId}
                 relatedIndicator={relatedIndicator}

@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Query } from '@apollo/client/react/components';
 import { gql } from '@apollo/client';
+import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
 
 import { Button, Collapse } from 'reactstrap';
-import { useTranslation, withTranslation } from 'common/i18n';
 import Icon from 'components/common/Icon';
 import { usePlan } from 'context/plan';
 import { PlanFeaturesContactPersonsPublicData } from 'common/__generated__/graphql';
+import { useTranslations } from 'next-intl';
 
 const Person = styled.div`
   display: flex;
@@ -101,59 +101,56 @@ const GET_CONTACT_DETAILS = gql`
 
 function ContactDetails(props) {
   const { id } = props;
-  const { t } = useTranslation();
+  const t = useTranslations();
+  const { loading, error, data } = useQuery(GET_CONTACT_DETAILS, {
+    variables: { id },
+  });
+
+  if (loading) return <span>{t('loading')}</span>;
+  if (error) return <span>{error.message}</span>;
+  const { person } = data;
+
+  let orgAncestors;
+
+  if (person.organization && person.organization.ancestors) {
+    orgAncestors = person.organization.ancestors
+      .filter(
+        (org) =>
+          org.classification?.name !== 'Valtuusto' &&
+          org.classification?.name !== 'Hallitus'
+      )
+      .map((org) => ({ id: org.id, name: org.name }));
+    orgAncestors.push({
+      id: person.organization.id,
+      name: person.organization.name,
+    });
+  } else {
+    orgAncestors = [];
+  }
+
   return (
-    <Query query={GET_CONTACT_DETAILS} variables={{ id }}>
-      {({ loading, error, data }) => {
-        if (loading) return <span>{t('loading')}</span>;
-        if (error) return <span>{error.message}</span>;
-        const { person } = data;
-
-        let orgAncestors;
-
-        if (person.organization && person.organization.ancestors) {
-          orgAncestors = person.organization.ancestors
-            .filter(
-              (org) =>
-                org.classification?.name !== 'Valtuusto' &&
-                org.classification?.name !== 'Hallitus'
-            )
-            .map((org) => ({ id: org.id, name: org.name }));
-          orgAncestors.push({
-            id: person.organization.id,
-            name: person.organization.name,
-          });
-        } else {
-          orgAncestors = [];
-        }
-
-        return (
-          <div className="mt-2">
-            {orgAncestors.length > 1 && (
-              <PersonOrg>
-                {orgAncestors.map((item, idx) => (
-                  <span key={item.key}>
-                    {item.name}
-                    {idx < orgAncestors.length - 1 ? ' / ' : ''}
-                  </span>
-                ))}
-              </PersonOrg>
-            )}
-            <Address>
-              {t('email')}:{' '}
-              <a href={`mailto:${person.email}`}>{person.email}</a>
-            </Address>
-          </div>
-        );
-      }}
-    </Query>
+    <div className="mt-2">
+      {orgAncestors.length > 1 && (
+        <PersonOrg>
+          {orgAncestors.map((item, idx) => (
+            <span key={item.key}>
+              {item.name}
+              {idx < orgAncestors.length - 1 ? ' / ' : ''}
+            </span>
+          ))}
+        </PersonOrg>
+      )}
+      <Address>
+        {t('email')}: <a href={`mailto:${person.email}`}>{person.email}</a>
+      </Address>
+    </div>
   );
 }
 
 function ContactPerson(props) {
-  const { person, leader } = props;
+  const { person, leader = false } = props;
   const plan = usePlan();
-  const { t } = useTranslation();
+  const t = useTranslations();
   const [collapse, setCollapse] = useState(false);
   const isLeader = leader ? 'leader' : '';
   const fullName = `${person.firstName} ${person.lastName}`;
@@ -171,7 +168,7 @@ function ContactPerson(props) {
           alt={`${role} ${fullName}`}
         />
       </div>
-      <PersonDetails body>
+      <PersonDetails>
         <Name>{fullName}</Name>
         <PersonRole>{person.title}</PersonRole>
         {person.organization && (
@@ -198,10 +195,6 @@ function ContactPerson(props) {
   );
 }
 
-ContactPerson.defaultProps = {
-  leader: false,
-};
-
 ContactDetails.propTypes = {
   id: PropTypes.string.isRequired,
 };
@@ -220,4 +213,4 @@ ContactPerson.propTypes = {
   leader: PropTypes.bool,
 };
 
-export default withTranslation('common')(ContactPerson);
+export default ContactPerson;

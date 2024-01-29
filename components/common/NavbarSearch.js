@@ -1,34 +1,28 @@
 import { useState, useRef, useEffect } from 'react';
-import { useRouter } from 'next/router';
-import { InputGroup, Popover, PopoverBody } from 'reactstrap';
+import { useTranslations } from 'next-intl';
+import { InputGroup } from 'reactstrap';
 import { usePopper } from 'react-popper';
 import styled from 'styled-components';
-import { transparentize } from 'polished';
-import {
-  SearchProvider,
-  WithSearch,
-  SearchBox,
-  Results,
-} from '@elastic/react-search-ui';
+import { SearchProvider, WithSearch } from '@elastic/react-search-ui';
 import { Link } from 'common/links';
-import { useTheme } from 'common/theme';
 import WatchSearchAPIConnector from 'common/search';
 import Icon from 'components/common/Icon';
 import PlanChip from 'components/plans/PlanChip';
 import { usePlan } from 'context/plan';
 import { useApolloClient } from '@apollo/client';
-import { getActionTermContext, useTranslation } from 'common/i18n';
+import { getActionTermContext } from 'common/i18n';
+import { useRouter } from 'next/navigation';
 
 const TextInput = styled.input`
-  display: ${(props) => (props.isOpen === 'true' ? 'block' : 'hidden')};
-  width: ${(props) => (props.isOpen === 'true' ? 'auto' : '0')};
+  display: ${(props) => (props.$isOpen ? 'block' : 'hidden')};
+  width: ${(props) => (props.$isOpen ? 'auto' : '0')};
   height: calc(
     ${(props) => props.theme.inputLineHeight}em +
       ${(props) => props.theme.inputPaddingY} +
       ${(props) => props.theme.inputPaddingY}
   );
   padding: ${(props) =>
-    props.isOpen === 'true'
+    props.$isOpen
       ? `${props.theme.inputPaddingY} ${props.theme.inputPaddingY}`
       : '0'};
   color: ${(props) => props.theme.themeColors.black};
@@ -52,13 +46,13 @@ const SearchButton = styled.button`
   );
   padding: 0 0.5rem;
   background-color: ${(props) =>
-    props.isActive === 'true'
+    props.$isActive
       ? props.theme.brandNavColor
       : props.theme.brandNavBackground};
   border: 0;
   border-bottom: 3px solid;
   border-bottom-color: ${(props) =>
-    props.isActive === 'true'
+    props.$isActive
       ? props.theme.brandNavColor
       : props.theme.brandNavBackground};
   border-radius: 0;
@@ -68,7 +62,7 @@ const SearchButton = styled.button`
   }
   .icon {
     fill: ${(props) =>
-      props.isActive === 'true'
+      props.$isActive
         ? props.theme.brandNavBackground
         : props.theme.brandNavColor} !important;
   }
@@ -190,7 +184,7 @@ const Arrow = styled.div`
 `;
 
 function ResultItem(props) {
-  const { t } = useTranslation();
+  const t = useTranslations();
   const plan = usePlan();
   const { hit } = props;
   const itemImage = hit.plan.image?.rendition?.src;
@@ -238,7 +232,7 @@ function ResultItem(props) {
 
 const ResultList = (props) => {
   const { results, searchTerm } = props;
-  const { t } = useTranslation();
+  const t = useTranslations();
   //const plan = usePlan();
   const RESULTS_LIMIT = 4;
   const counts = [
@@ -270,20 +264,24 @@ const ResultList = (props) => {
         </ResultCount>
       </ResultsHeader>
       <HitList>
-        {results.slice(0, RESULTS_LIMIT).map((r) => (
-          <ResultItem hit={r} />
+        {results.slice(0, RESULTS_LIMIT).map((r, i) => (
+          <ResultItem key={i} hit={r} />
         ))}
       </HitList>
       <ResultsFooter>
         {results.length > 0 ? (
-          <Link href={`/search?q=${searchTerm}`}>
+          <Link
+            prefetch={false}
+            href={`/search?q=${searchTerm}`}
+            legacyBehavior
+          >
             <a>
               {t('see-all-results', { count: results.length })}
               <Icon name="arrow-right" />
             </a>
           </Link>
         ) : (
-          <Link href={`/search`}>
+          <Link prefetch={false} href={`/search`} legacyBehavior>
             <a data-testId="search-advanced">
               {t('search-advanced')} <Icon name="arrow-right" />
             </a>
@@ -294,11 +292,10 @@ const ResultList = (props) => {
   );
 };
 
-function NavbarSearch(props) {
-  const theme = useTheme(null);
+function NavbarSearch() {
   const searchInput = useRef();
+  const t = useTranslations();
   const plan = usePlan();
-  const { t } = useTranslation();
   const apolloClient = useApolloClient();
   const router = useRouter();
 
@@ -398,7 +395,7 @@ function NavbarSearch(props) {
                       type="search"
                       id="q"
                       name="q"
-                      autocomplete="off"
+                      autoComplete="off"
                       aria-autocomplete="list"
                       placeholder={t('search')}
                       aria-label={t('search')}
@@ -410,15 +407,15 @@ function NavbarSearch(props) {
                         setSearchTerm(e.target.value, {
                           autocompleteResults: true,
                           autocompleteMinimumCharacters: 2,
-                          debounce: 200,
+                          debounce: 400,
                         })
                       }
                       onFocus={(e) => setSearchOpen(true)}
                       ref={searchInput}
-                      isOpen={searchOpen.toString()}
+                      $isOpen={searchOpen}
                     />
                     <SearchButton
-                      isActive={searchOpen.toString()}
+                      $isActive={searchOpen}
                       type="submit"
                       onClick={handleSubmit}
                       aria-label={t('search')}

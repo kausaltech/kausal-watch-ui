@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { Container } from 'reactstrap';
 import styled from 'styled-components';
-import PlanContext from 'context/plan';
+import PlanContext, { usePlan } from 'context/plan';
 
 import IndicatorHighlightsList from 'components/indicators/IndicatorHighlightsList';
 import { CommonContentBlockProps } from 'common/blocks.types';
@@ -18,7 +18,7 @@ const IndicatorsSection = styled.div`
 `;
 
 const IndicatorHighlightsBlock = ({ id = '' }: CommonContentBlockProps) => {
-  const plan = useContext(PlanContext);
+  const plan = usePlan();
 
   return (
     <IndicatorsSection id={id} className="indicators-section">

@@ -7,44 +7,10 @@ import { Link } from 'common/links';
 import Card from 'components/common/Card';
 import { MultiUseImageFragmentFragment } from 'common/__generated__/graphql';
 import { useFallbackCategories } from 'context/categories';
-import { gql } from '@apollo/client';
 import { CommonContentBlockProps } from 'common/blocks.types';
 import { readableColor } from 'polished';
 import { Theme } from '@kausal/themes/types';
-
-const CATEGORY_FRAGMENT = gql`
-  fragment CategoryListCategory on Category {
-    id
-    identifier
-    name
-    leadParagraph
-    order
-    level {
-      name
-      namePlural
-    }
-    image {
-      id
-      ...MultiUseImageFragment
-    }
-    color
-    iconSvgUrl
-    iconImage {
-      rendition(size: "400x400", crop: false) {
-        src
-      }
-    }
-    categoryPage {
-      title
-      urlPath
-      live
-    }
-    type {
-      id
-      hideCategoryIdentifiers
-    }
-  }
-`;
+import { CATEGORY_FRAGMENT } from '@/fragments/category.fragment';
 
 const getColor = (theme: Theme, darkFallback = theme.themeColors.black) =>
   theme.section.categoryList?.color ||
@@ -219,7 +185,7 @@ const CategoryListBlock = (props: CategoryListBlockProps) => {
                     key={cat.id}
                     className="mb-5 d-flex align-items-stretch"
                   >
-                    <Link href={cat.categoryPage.urlPath}>
+                    <Link href={cat.categoryPage.urlPath} legacyBehavior>
                       <a className="card-wrapper">
                         <Card
                           imageUrl={getCardImage(cat).src}

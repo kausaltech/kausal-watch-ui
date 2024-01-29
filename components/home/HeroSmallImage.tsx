@@ -1,8 +1,9 @@
-import { useTheme } from 'common/theme';
+import { useTheme } from 'styled-components';
 import { Col, Container } from 'reactstrap';
 import styled from 'styled-components';
-import { useTranslation } from 'common/i18n';
+
 import RichText from 'components/common/RichText';
+import { useTranslations } from 'next-intl';
 
 const Hero = styled.div`
   width: 100%;
@@ -96,7 +97,7 @@ interface HeroSmallImageProps {
 const HeroSmallImage = (props: HeroSmallImageProps) => {
   const { id = '', bgImage, title, lead, altText = '', imageCredit } = props;
 
-  const { t } = useTranslation();
+  const t = useTranslations();
   const theme = useTheme();
 
   const showContentBox = title || lead;

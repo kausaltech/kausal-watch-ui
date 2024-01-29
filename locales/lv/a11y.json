@@ -25,7 +25,7 @@
     "enforcement-body-url": "https://www.saavutettavuusvaatimukset.fi",
     "enforcement-body-email": "saavutettavuus@avi.fi",
     "enforcement-body-tel": "Tālrunis 0295 016 000",
-    "responsible-for-maintenance": "Šo pakalpojumu publicē {{responsibleBody}}.",
+    "responsible-for-maintenance": "Šo pakalpojumu publicē {responsibleBody}.",
     "non-compliance-below": "Turpmāk minētais saturs nav pieejams šādu iemeslu dēļ",
     "accessibility-statement": "Paziņojums par pieejamību",
     "commitment": "ir apņēmusies nodrošināt šā tiešsaistes pakalpojuma pieejamību saskaņā ar",

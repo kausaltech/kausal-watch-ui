@@ -1,13 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useTranslation } from 'common/i18n';
+
 import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
+import { useTranslations } from 'next-intl';
 
 const HeaderImage = styled.div`
   background-image: url(${(props) => props.image});
   background-size: cover;
-  background-position: ${(props) => props.theme.imageAlign};
+  background-position: ${(props) => props.theme.$imageAlign};
   color: ${(props) => props.theme.themeColors.white};
   height: calc(4 * ${(props) => props.theme.spaces.s400});
   background-color: ${(props) => props.theme.brandDark};
@@ -52,16 +53,23 @@ const ImageCredit = styled.span`
 `;
 
 const ContentPageHeaderBlock = (props) => {
-  const { title, lead, headerImage, imageAlign, altText, imageCredit } = props;
+  const {
+    title,
+    lead = null,
+    headerImage = null,
+    imageAlign = 'center',
+    altText,
+    imageCredit,
+  } = props;
 
-  const { t } = useTranslation();
+  const t = useTranslations();
 
   return (
     <>
       {/* TODO: animate image entry? */}
       <HeaderBg>
         {headerImage && (
-          <HeaderImage image={headerImage} imageAlign={imageAlign} />
+          <HeaderImage image={headerImage} $imageAlign={imageAlign} />
         )}
         {altText && (
           <span className="sr-only" role="img" aria-label={altText} />
@@ -84,12 +92,6 @@ const ContentPageHeaderBlock = (props) => {
       </HeaderBg>
     </>
   );
-};
-
-ContentPageHeaderBlock.defaultProps = {
-  lead: null,
-  headerImage: null,
-  imageAlign: 'center',
 };
 
 ContentPageHeaderBlock.propTypes = {

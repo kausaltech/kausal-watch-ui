@@ -1,8 +1,8 @@
-import { getActionTermContext, useTranslation } from 'common/i18n';
+import { useTranslations } from 'next-intl';
 
 const ActionLinksBlock = (props) => {
   const { links } = props;
-  const { t } = useTranslation();
+  const t = useTranslations();
 
   return (
     <>

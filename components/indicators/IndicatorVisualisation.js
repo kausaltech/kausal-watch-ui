@@ -1,20 +1,22 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { isEqual, capitalize } from 'lodash';
-import { gql, useQuery } from '@apollo/client';
+import { isEqual } from 'lodash';
+import { gql } from '@apollo/client';
+import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
 import { Alert } from 'reactstrap';
 import dayjs from 'common/dayjs';
 import styled from 'styled-components';
 import { linearRegression } from 'common/math';
-import { useTranslation } from 'common/i18n';
-import { captureMessage } from 'common/sentry';
+
 import { capitalizeFirstLetter } from 'common/utils';
-import PlanContext from 'context/plan';
+import { usePlan } from 'context/plan';
 import ContentLoader from 'components/common/ContentLoader';
 import IndicatorComparisonSelect from 'components/indicators/IndicatorComparisonSelect';
 import IndicatorNormalizationSelect from 'components/indicators/IndicatorNormalizationSelect';
 import GraphAsTable from 'components/graphs/GraphAsTable';
 import IndicatorGraph from 'components/graphs/IndicatorGraph';
+import { useLocale, useTranslations } from 'next-intl';
+import { captureMessage } from '@sentry/nextjs';
 
 const GET_INDICATOR_GRAPH_DATA = gql`
   query IndicatorGraphData($id: ID, $plan: ID) {
@@ -181,8 +183,7 @@ function generateCube(dimensions, values, path) {
 function generateCubeFromValues(
   indicator,
   indicatorGraphSpecification,
-  combinedValues,
-  i18n
+  combinedValues
 ) {
   const traces = [];
   const values = [...combinedValues]
@@ -557,14 +558,21 @@ function normalizeValuesByNormalizer(values, normalizerId) {
 
 const isServer = typeof window === 'undefined';
 function IndicatorVisualisation({ indicatorId, indicatorLink }) {
+  // FIXME: Hooks cannot be called conditionally, we shouldn't return early here
   if (isServer) {
     return null;
   }
 
-  const plan = useContext(PlanContext);
+  const plan = usePlan();
   const enableIndicatorComparison =
     plan.features.enableIndicatorComparison === true;
-  const { t, i18n } = useTranslation();
+  const t = useTranslations();
+  const locale = useLocale();
+  // Legacy support for old code referencing i18n from next-i18next
+  const i18n = {
+    t,
+    language: locale,
+  };
   const [compareTo, setCompareTo] = useState(undefined);
   const [preferNormalizeByPopulation, setPreferNormalizeByPopulation] =
     useState(NORMALIZE_DEFAULT);
@@ -660,8 +668,7 @@ function IndicatorVisualisation({ indicatorId, indicatorLink }) {
   const cube = generateCubeFromValues(
     indicator,
     indicatorGraphSpecification,
-    combinedValues,
-    i18n
+    combinedValues
   );
   indicatorGraphSpecification.cube = cube;
   const hasTimeDimension =
@@ -762,15 +769,10 @@ function IndicatorVisualisation({ indicatorId, indicatorLink }) {
         goalTraces={goalTraces}
         title={plotTitle}
         language={i18n.language}
-        t={t}
       />
     </div>
   );
 }
-
-IndicatorVisualisation.defaultProps = {
-  indicatorLink: undefined,
-};
 
 IndicatorVisualisation.propTypes = {
   indicatorId: PropTypes.string.isRequired,

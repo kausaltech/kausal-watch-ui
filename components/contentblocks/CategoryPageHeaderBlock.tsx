@@ -1,12 +1,14 @@
 import React, { useContext } from 'react';
-import { gql, useQuery } from '@apollo/client';
+import { gql } from '@apollo/client';
+import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
+
 import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
 import { Theme } from '@kausal/themes/types';
 import PlanContext, { usePlan } from 'context/plan';
-import { useTranslation } from 'common/i18n';
+
 import AttributesBlock, { Attributes } from 'components/common/AttributesBlock';
-import { useTheme } from 'common/theme';
+import { useTheme } from 'styled-components';
 import {
   CategoryPageMainTopBlock,
   CategoryTypePageLevelLayout,
@@ -19,6 +21,7 @@ import { ChartType } from 'components/dashboard/ActionStatusGraphs';
 import ActionStatusGraphsBlock from './ActionStatusGraphsBlock';
 import { Breadcrumbs } from 'components/common/Breadcrumbs';
 import { getBreadcrumbsFromCategoryHierarchy } from 'common/categories';
+import { useTranslations } from 'next-intl';
 
 export const GET_CATEGORY_ATTRIBUTE_TYPES = gql`
   query GetCategoryAttributeTypes($plan: ID!) {
@@ -289,9 +292,9 @@ function CategoryPageHeaderBlock({
   level,
   layout,
 }: Props) {
-  const plan = useContext(PlanContext);
+  const plan = usePlan();
   const theme = useTheme();
-  const { t } = useTranslation();
+  const t = useTranslations();
 
   const showIdentifiers =
     !plan.primaryActionClassification?.hideCategoryIdentifiers;

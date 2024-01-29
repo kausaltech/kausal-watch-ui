@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useTranslation } from 'common/i18n';
+import { useTranslations } from 'next-intl';
 import Icon from 'components/common/Icon';
 import AnnouncementBanner from 'components/common/AnnouncementBanner';
 
@@ -31,7 +31,7 @@ const LinkToLatestVersion = styled.div`
 
 const PlanVersionBanner = (props) => {
   const { latestVersion, currentVersion } = props;
-  const { t } = useTranslation();
+  const t = useTranslations();
 
   return (
     <AnnouncementBanner>
@@ -43,7 +43,7 @@ const PlanVersionBanner = (props) => {
           height="2.25rem"
         />
         <VersionName>
-          {t('common:version-this-is-old')}
+          {t('version-this-is-old')}
           <br />
           <CurrentVersionName>
             {currentVersion?.versionName || currentVersion?.shortName}
@@ -52,7 +52,7 @@ const PlanVersionBanner = (props) => {
       </VersionNote>
       <LinkToLatestVersion>
         <a href={latestVersion?.viewUrl} className="ms-2">
-          {t('common:version-switch-to-active')}
+          {t('version-switch-to-active')}
           <br />
           <LatestVersionName>
             {latestVersion?.versionName || latestVersion?.shortName}

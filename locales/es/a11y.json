@@ -33,7 +33,7 @@
   "enforcement-body-url": "https://www.saavutettavuusvaatimukset.fi",
   "enforcement-body-email": "saavutettavuus@avi.fi",
   "enforcement-body-tel": "Teléfono 0295 016 000",
-  "responsible-for-maintenance": "Este servicio es publicado por {{responsibleBody}}.",
+  "responsible-for-maintenance": "Este servicio es publicado por {responsibleBody}.",
   "a11y-feedback-heading": "Comentarios sobre accesibilidad",
   "a11y-feedback-description": "Trabajamos constantemente para mejorar la experiencia de accesibilidad en este servicio. ¿Ha observado algo que podamos mejorar en materia de accesibilidad?",
   "a11y-feedback-prompt": "Por favor, háganoslo saber rellenando y enviando este formulario. Le responderemos en un plazo de 14 días."

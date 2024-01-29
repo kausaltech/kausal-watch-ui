@@ -1,6 +1,5 @@
 import { useContext, createContext } from 'react';
 import getConfig from 'next/config';
-import GET_PLAN_CONTEXT from './queries/plan';
 import type { PlanContextFragment } from 'common/__generated__/graphql';
 
 export type PlanContextType = PlanContextFragment;
@@ -27,6 +26,5 @@ export function customizePlan(plan: PlanContextType): PlanContextType {
 // @ts-ignore as context will be populated when it is used
 const PlanContext = createContext<PlanContextType>({});
 
-export { GET_PLAN_CONTEXT };
 export const usePlan = () => useContext(PlanContext);
 export default PlanContext;

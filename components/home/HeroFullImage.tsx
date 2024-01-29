@@ -1,9 +1,9 @@
-import { useTheme } from 'common/theme';
+import { useTheme } from 'styled-components';
 import { Container } from 'reactstrap';
 import styled from 'styled-components';
-import { useTranslation } from 'common/i18n';
 import RichText from 'components/common/RichText';
 import { Theme } from '@kausal/themes/types';
+import { useTranslations } from 'next-intl';
 
 /**
  * Pulls the specified hero height from the theme if defined
@@ -32,11 +32,11 @@ const Hero = styled.div`
   }
 `;
 
-const HeroImage = styled.div<{ image: string; imageAlign: string }>`
+const HeroImage = styled.div<{ $image: string; $imageAlign: string }>`
   min-height: 14rem;
   background-size: cover;
-  background-position: ${(props) => props.imageAlign};
-  background-image: url(${(props) => props.image});
+  background-position: ${(props) => props.$imageAlign};
+  background-image: url(${(props) => props.$image});
   background-repeat: no-repeat;
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
@@ -53,7 +53,7 @@ const HeroContent = styled.div`
   align-items: center;
 `;
 
-const MainCard = styled.div<{ alignment: string; color: string }>`
+const MainCard = styled.div<{ $alignment: string; $color: string }>`
   position: relative;
   max-width: ${(props) => props.theme.breakpointSm};
   margin: -2rem auto 0;
@@ -61,11 +61,11 @@ const MainCard = styled.div<{ alignment: string; color: string }>`
     `${props.theme.spaces.s200} ${props.theme.spaces.s200} ${props.theme.spaces.s100}`};
   border-radius: ${(props) => props.theme.cardBorderRadius};
   background-color: ${(props) =>
-    props.color === 'dark'
+    props.$color === 'dark'
       ? props.theme.brandDark
       : props.theme.themeColors.white};
   color: ${(props) =>
-    props.color === 'dark'
+    props.$color === 'dark'
       ? props.theme.themeColors.white
       : props.theme.neutralDark};
   box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.1);
@@ -81,14 +81,14 @@ const MainCard = styled.div<{ alignment: string; color: string }>`
   h3,
   h4 {
     color: ${(props) =>
-      props.color === 'dark'
+      props.$color === 'dark'
         ? props.theme.themeColors.white
         : props.theme.headingsColor};
   }
 
   a {
     color: ${(props) =>
-      props.color === 'dark'
+      props.$color === 'dark'
         ? props.theme.themeColors.white
         : props.theme.neutralDark};
 
@@ -106,7 +106,7 @@ const MainCard = styled.div<{ alignment: string; color: string }>`
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     margin: 3rem
       ${(props) => {
-        switch (props.alignment) {
+        switch (props.$alignment) {
           case 'left':
             return '0 2rem 0';
           case 'right':
@@ -164,7 +164,7 @@ const HeroFullImage = (props: HeroFullImageProps) => {
     imageCredit,
   } = props;
 
-  const { t } = useTranslation();
+  const t = useTranslations();
   const theme = useTheme();
 
   const contentAlignment = theme.settings?.frontHero?.cardPlacement
@@ -179,7 +179,7 @@ const HeroFullImage = (props: HeroFullImageProps) => {
 
   return (
     <Hero id={id}>
-      <HeroImage image={bgImage} imageAlign={imageAlign} />
+      <HeroImage $image={bgImage} $imageAlign={imageAlign} />
       {altText && <span className="sr-only" role="img" aria-label={altText} />}
       {imageCredit && (
         <ImageCredit>{`${t('image-credit')}: ${imageCredit}`}</ImageCredit>
@@ -187,7 +187,7 @@ const HeroFullImage = (props: HeroFullImageProps) => {
       {showContentBox && (
         <Container>
           <HeroContent>
-            <MainCard alignment={contentAlignment} color={contentColor}>
+            <MainCard $alignment={contentAlignment} $color={contentColor}>
               <h1>{title}</h1>
               <RichText html={lead} className="lead-content" />
             </MainCard>

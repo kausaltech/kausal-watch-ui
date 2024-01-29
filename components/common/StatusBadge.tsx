@@ -1,7 +1,7 @@
 import React from 'react';
 import { setLightness } from 'polished';
 import styled from 'styled-components';
-import { useTheme } from 'common/theme';
+import { useTheme } from 'styled-components';
 import type { PlanContextType } from 'context/plan';
 
 import {

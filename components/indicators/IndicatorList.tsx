@@ -1,15 +1,16 @@
+'use client';
+
 import React, { useState } from 'react';
-import { gql, useQuery } from '@apollo/client';
+
+import { gql } from '@apollo/client';
 import { Container } from 'reactstrap';
-import omitBy from 'lodash/omitBy';
 
 import ContentLoader from 'components/common/ContentLoader';
 import { usePlan } from '../../context/plan';
-import { Meta } from '../layout';
 import ErrorMessage from 'components/common/ErrorMessage';
 
 import IndicatorsHero from './IndicatorsHero';
-import IndicatorListFiltered, { isEmptyFilter } from './IndicatorListFiltered';
+import IndicatorListFiltered from './IndicatorListFiltered';
 import ActionListFilters, {
   ActionListFilterSection,
   FilterValue,
@@ -20,10 +21,12 @@ import {
   IndicatorListPage,
   IndicatorListQuery,
 } from 'common/__generated__/graphql';
-import { useTranslation } from 'next-i18next';
-import { useRouter } from 'next/router';
 import { getCategoryString } from 'common/categories';
 import { processCommonIndicatorHierarchy } from './process-indicators';
+import { useTranslations } from 'next-intl';
+import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
+import { ReadonlyURLSearchParams, useSearchParams } from 'next/navigation';
+import { useUpdateSearchParams } from '@/common/hooks/update-search-params';
 
 const createFilterUnusedCategories =
   (indicators: Indicator[]) => (category: Category) =>
@@ -172,7 +175,7 @@ const GET_INDICATOR_LIST = gql`
 `;
 
 interface Filters {
-  name: string;
+  name?: string;
   [category: string]: FilterValue;
 }
 
@@ -209,15 +212,15 @@ const getFirstUsableCategoryType = (categoryTypes, indicators) =>
   );
 
 interface Props {
-  title: string;
   leadContent: IndicatorListPage['leadContent'];
   displayInsights: IndicatorListPage['displayInsights'];
 }
 
-const IndicatorList = ({ title, leadContent, displayInsights }: Props) => {
+const IndicatorList = ({ leadContent, displayInsights }: Props) => {
   const plan = usePlan();
-  const { t } = useTranslation('common');
-  const router = useRouter();
+  const t = useTranslations();
+  const searchParams = useSearchParams();
+  const updateSearchParams = useUpdateSearchParams();
   const { loading, error, data } = useQuery<IndicatorListQuery>(
     GET_INDICATOR_LIST,
     {
@@ -225,17 +228,19 @@ const IndicatorList = ({ title, leadContent, displayInsights }: Props) => {
     }
   );
 
-  const [filters, setFilters] = useState<Filters>(router.query);
+  const getObjectFromSearchParams = (
+    searchParams: ReadonlyURLSearchParams | null
+  ) => (searchParams ? Object.fromEntries(searchParams) : {});
+
+  const [filters, setFilters] = useState<Filters>(() =>
+    getObjectFromSearchParams(searchParams)
+  );
 
   const handleFilterChange = (id: string, val: FilterValue) => {
     setFilters((state) => {
       const newFilters = { ...state, [id]: val };
 
-      router.replace(
-        { query: omitBy({ ...router.query, ...newFilters }, isEmptyFilter) },
-        undefined,
-        { scroll: false }
-      );
+      updateSearchParams(newFilters);
 
       return newFilters;
     });
@@ -316,7 +321,6 @@ const IndicatorList = ({ title, leadContent, displayInsights }: Props) => {
 
   return (
     <>
-      <Meta title={title} />
       <IndicatorsHero
         leadContent={leadContent || undefined}
         showInsights={showInsights}

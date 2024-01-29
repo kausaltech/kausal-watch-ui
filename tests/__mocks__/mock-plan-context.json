@@ -1,0 +1,846 @@
+{
+  "id": "sunnydale",
+  "identifier": "sunnydale",
+  "name": "Sunnydale Climate Action Plan",
+  "shortName": "Climate",
+  "versionName": "",
+  "themeIdentifier": "default",
+  "primaryLanguage": "en",
+  "otherLanguages": ["de", "fi"],
+  "hideActionIdentifiers": false,
+  "publishedAt": "2023-01-12T20:31:54.248974+00:00",
+  "viewUrl": "http://sunnydale.localhost",
+  "primaryActionClassification": {
+    "id": "22",
+    "identifier": "action",
+    "hideCategoryIdentifiers": false,
+    "common": null,
+    "__typename": "CategoryType"
+  },
+  "secondaryActionClassification": null,
+  "domain": null,
+  "image": {
+    "title": "Sunnydale(Dinant, Belgium): Alex Vasey (Unsplash)",
+    "altText": "",
+    "imageCredit": "Unsplash",
+    "width": 3264,
+    "height": 2176,
+    "focalPointX": null,
+    "focalPointY": null,
+    "full": {
+      "id": "23916",
+      "width": 1600,
+      "height": 1066,
+      "src": "https://watch-media.staging.kausal.tech/images/alex-vasey-3lxrM5yvkcI-unsplash.max-1600x1600_SBr2eZn.jpg",
+      "__typename": "ImageRendition"
+    },
+    "large": {
+      "id": "23918",
+      "width": 1600,
+      "height": 600,
+      "src": "https://watch-media.staging.kausal.tech/images/alex-vasey-3lxrM5yvkcI-unspla.2e16d0ba.fill-1600x600-c50_Zjzy8M4.jpg",
+      "__typename": "ImageRendition"
+    },
+    "small": {
+      "id": "23919",
+      "width": 600,
+      "height": 300,
+      "src": "https://watch-media.staging.kausal.tech/images/alex-vasey-3lxrM5yvkcI-unsplas.2e16d0ba.fill-600x300-c50_O3AxrY7.jpg",
+      "__typename": "ImageRendition"
+    },
+    "social": {
+      "id": "23920",
+      "width": 1200,
+      "height": 627,
+      "src": "https://watch-media.staging.kausal.tech/images/alex-vasey-3lxrM5yvkcI-unspla.2e16d0ba.fill-1200x627-c50_UdSwhiO.jpg",
+      "__typename": "ImageRendition"
+    },
+    "rendition": {
+      "id": "23921",
+      "width": 300,
+      "height": 200,
+      "src": "https://watch-media.staging.kausal.tech/images/alex-vasey-3lxrM5yvkcI-unsplas.2e16d0ba.fill-300x200-c50_YtaO6UZ.jpg",
+      "__typename": "ImageRendition"
+    },
+    "__typename": "Image"
+  },
+  "serveFileBaseUrl": "https://watch-api.staging.kausal.tech",
+  "actionSchedules": [],
+  "actionImplementationPhases": [
+    {
+      "id": "14",
+      "identifier": "not_started",
+      "name": "Not started",
+      "order": 0,
+      "color": null,
+      "__typename": "ActionImplementationPhase"
+    },
+    {
+      "id": "15",
+      "identifier": "planning",
+      "name": "Planning",
+      "order": 1,
+      "color": null,
+      "__typename": "ActionImplementationPhase"
+    },
+    {
+      "id": "16",
+      "identifier": "implementation",
+      "name": "Implementation",
+      "order": 2,
+      "color": null,
+      "__typename": "ActionImplementationPhase"
+    },
+    {
+      "id": "17",
+      "identifier": "completed",
+      "name": "Completed",
+      "order": 3,
+      "color": null,
+      "__typename": "ActionImplementationPhase"
+    }
+  ],
+  "actionImpacts": [
+    {
+      "id": "35",
+      "identifier": "0",
+      "name": "Not assessed",
+      "order": 0,
+      "__typename": "ActionImpact"
+    },
+    {
+      "id": "34",
+      "identifier": "1",
+      "name": "Small",
+      "order": 1,
+      "__typename": "ActionImpact"
+    },
+    {
+      "id": "33",
+      "identifier": "2",
+      "name": "Medium",
+      "order": 2,
+      "__typename": "ActionImpact"
+    },
+    {
+      "id": "32",
+      "identifier": "3",
+      "name": "Large",
+      "order": 3,
+      "__typename": "ActionImpact"
+    },
+    {
+      "id": "31",
+      "identifier": "4",
+      "name": "Extra large",
+      "order": 4,
+      "__typename": "ActionImpact"
+    }
+  ],
+  "actionStatuses": [
+    {
+      "id": "68",
+      "identifier": "completed",
+      "name": "Completed",
+      "isCompleted": true,
+      "__typename": "ActionStatus"
+    },
+    {
+      "id": "66",
+      "identifier": "on_time",
+      "name": "On time",
+      "isCompleted": false,
+      "__typename": "ActionStatus"
+    },
+    {
+      "id": "67",
+      "identifier": "late",
+      "name": "Late",
+      "isCompleted": false,
+      "__typename": "ActionStatus"
+    }
+  ],
+  "actionStatusSummaries": [
+    {
+      "identifier": "COMPLETED",
+      "label": "Completed",
+      "color": "green090",
+      "isCompleted": true,
+      "isActive": false,
+      "sentiment": "POSITIVE",
+      "__typename": "ActionStatusSummary"
+    },
+    {
+      "identifier": "ON_TIME",
+      "label": "On time",
+      "color": "green050",
+      "isCompleted": false,
+      "isActive": true,
+      "sentiment": "POSITIVE",
+      "__typename": "ActionStatusSummary"
+    },
+    {
+      "identifier": "IN_PROGRESS",
+      "label": "In progress",
+      "color": "green050",
+      "isCompleted": false,
+      "isActive": true,
+      "sentiment": "POSITIVE",
+      "__typename": "ActionStatusSummary"
+    },
+    {
+      "identifier": "NOT_STARTED",
+      "label": "Not started",
+      "color": "green010",
+      "isCompleted": false,
+      "isActive": true,
+      "sentiment": "NEUTRAL",
+      "__typename": "ActionStatusSummary"
+    },
+    {
+      "identifier": "LATE",
+      "label": "Late",
+      "color": "yellow050",
+      "isCompleted": false,
+      "isActive": true,
+      "sentiment": "NEGATIVE",
+      "__typename": "ActionStatusSummary"
+    },
+    {
+      "identifier": "CANCELLED",
+      "label": "Cancelled",
+      "color": "grey030",
+      "isCompleted": false,
+      "isActive": false,
+      "sentiment": "NEUTRAL",
+      "__typename": "ActionStatusSummary"
+    },
+    {
+      "identifier": "OUT_OF_SCOPE",
+      "label": "Out of scope",
+      "color": "grey030",
+      "isCompleted": false,
+      "isActive": false,
+      "sentiment": "NEUTRAL",
+      "__typename": "ActionStatusSummary"
+    },
+    {
+      "identifier": "MERGED",
+      "label": "Merged",
+      "color": "grey030",
+      "isCompleted": true,
+      "isActive": false,
+      "sentiment": "NEUTRAL",
+      "__typename": "ActionStatusSummary"
+    },
+    {
+      "identifier": "POSTPONED",
+      "label": "Postponed",
+      "color": "blue030",
+      "isCompleted": false,
+      "isActive": false,
+      "sentiment": "NEUTRAL",
+      "__typename": "ActionStatusSummary"
+    },
+    {
+      "identifier": "UNDEFINED",
+      "label": "Unknown",
+      "color": "grey010",
+      "isCompleted": false,
+      "isActive": true,
+      "sentiment": "NEUTRAL",
+      "__typename": "ActionStatusSummary"
+    }
+  ],
+  "actionTimelinessClasses": [
+    {
+      "identifier": "OPTIMAL",
+      "label": "Under 30 days",
+      "color": "green070",
+      "sentiment": "POSITIVE",
+      "comparison": "LTE",
+      "days": 30,
+      "__typename": "ActionTimeliness"
+    },
+    {
+      "identifier": "ACCEPTABLE",
+      "label": "Under 60 days",
+      "color": "green030",
+      "sentiment": "NEUTRAL",
+      "comparison": "LTE",
+      "days": 60,
+      "__typename": "ActionTimeliness"
+    },
+    {
+      "identifier": "LATE",
+      "label": "Over 60 days",
+      "color": "yellow050",
+      "sentiment": "NEGATIVE",
+      "comparison": "GT",
+      "days": 60,
+      "__typename": "ActionTimeliness"
+    },
+    {
+      "identifier": "STALE",
+      "label": "Over 180 days",
+      "color": "red050",
+      "sentiment": "NEGATIVE",
+      "comparison": "GT",
+      "days": 180,
+      "__typename": "ActionTimeliness"
+    }
+  ],
+  "impactGroups": [],
+  "primaryOrgs": [],
+  "generalContent": {
+    "id": "10",
+    "siteTitle": "Sunnydale Climate Action Plan",
+    "siteDescription": "We are committed to become carbon neutral by 2030. Here you find information on our current climate actions and how they help us to reach our goal.",
+    "officialNameDescription": "As approved by council",
+    "copyrightText": "2021 Kausal Ltd",
+    "creativeCommonsLicense": "CC BY 4.0 (except photography)",
+    "ownerUrl": "https://kausal.tech",
+    "ownerName": "Kausal Ltd",
+    "actionTerm": "ACTION",
+    "actionTaskTerm": "TASK",
+    "organizationTerm": "ORGANIZATION",
+    "sitewideAnnouncement": null,
+    "__typename": "SiteGeneralContent"
+  },
+  "mainMenu": {
+    "items": [
+      {
+        "__typename": "PageMenuItem",
+        "id": "783",
+        "page": {
+          "title": "Themes",
+          "urlPath": "/themes",
+          "slug": "themes",
+          "__typename": "EmptyPage"
+        },
+        "parent": {
+          "id": "21",
+          "page": { "__typename": "PlanRootPage" },
+          "__typename": "PageMenuItem"
+        }
+      },
+      {
+        "__typename": "PageMenuItem",
+        "id": "784",
+        "page": {
+          "title": "Urban planning for a resilient city",
+          "urlPath": "/themes/urban-planning-for-a-climate-smart-city",
+          "slug": "urban-planning-for-a-climate-smart-city",
+          "__typename": "CategoryPage"
+        },
+        "parent": {
+          "id": "783",
+          "page": { "__typename": "EmptyPage" },
+          "__typename": "PageMenuItem"
+        }
+      },
+      {
+        "__typename": "PageMenuItem",
+        "id": "785",
+        "page": {
+          "title": "Carbon-neutral energy production",
+          "urlPath": "/themes/carbon-neutral-energy-production",
+          "slug": "carbon-neutral-energy-production",
+          "__typename": "CategoryPage"
+        },
+        "parent": {
+          "id": "783",
+          "page": { "__typename": "EmptyPage" },
+          "__typename": "PageMenuItem"
+        }
+      },
+      {
+        "__typename": "PageMenuItem",
+        "id": "786",
+        "page": {
+          "title": "Energy-efficient buildings",
+          "urlPath": "/themes/3-energy-efficient-buildings",
+          "slug": "energy-efficient-buildings",
+          "__typename": "CategoryPage"
+        },
+        "parent": {
+          "id": "783",
+          "page": { "__typename": "EmptyPage" },
+          "__typename": "PageMenuItem"
+        }
+      },
+      {
+        "__typename": "PageMenuItem",
+        "id": "787",
+        "page": {
+          "title": "Sustainable transportation",
+          "urlPath": "/themes/sustainable-transportation",
+          "slug": "sustainable-transportation",
+          "__typename": "CategoryPage"
+        },
+        "parent": {
+          "id": "783",
+          "page": { "__typename": "EmptyPage" },
+          "__typename": "PageMenuItem"
+        }
+      },
+      {
+        "__typename": "PageMenuItem",
+        "id": "790",
+        "page": {
+          "title": "Sharing and circular economy",
+          "urlPath": "/themes/5-sharing-and-circular-economy",
+          "slug": "sharing-and-circular-economy",
+          "__typename": "CategoryPage"
+        },
+        "parent": {
+          "id": "783",
+          "page": { "__typename": "EmptyPage" },
+          "__typename": "PageMenuItem"
+        }
+      },
+      {
+        "__typename": "PageMenuItem",
+        "id": "789",
+        "page": {
+          "title": "Climate-smart citizens and businesses",
+          "urlPath": "/themes/6-climate-smart-citizens-and-businesses",
+          "slug": "climate-smart-citizens-and-businesses",
+          "__typename": "CategoryPage"
+        },
+        "parent": {
+          "id": "783",
+          "page": { "__typename": "EmptyPage" },
+          "__typename": "PageMenuItem"
+        }
+      },
+      {
+        "__typename": "PageMenuItem",
+        "id": "88",
+        "page": {
+          "title": "Actions",
+          "urlPath": "/actions",
+          "slug": "actions",
+          "__typename": "ActionListPage"
+        },
+        "parent": {
+          "id": "21",
+          "page": { "__typename": "PlanRootPage" },
+          "__typename": "PageMenuItem"
+        }
+      },
+      {
+        "__typename": "PageMenuItem",
+        "id": "89",
+        "page": {
+          "title": "Indicators",
+          "urlPath": "/indicators",
+          "slug": "indicators",
+          "__typename": "IndicatorListPage"
+        },
+        "parent": {
+          "id": "21",
+          "page": { "__typename": "PlanRootPage" },
+          "__typename": "PageMenuItem"
+        }
+      },
+      {
+        "__typename": "PageMenuItem",
+        "id": "80",
+        "page": {
+          "title": "Carbon Neutral Sunnydale 2030",
+          "urlPath": "/about-us",
+          "slug": "about-us",
+          "__typename": "StaticPage"
+        },
+        "parent": {
+          "id": "21",
+          "page": { "__typename": "PlanRootPage" },
+          "__typename": "PageMenuItem"
+        }
+      },
+      {
+        "__typename": "PageMenuItem",
+        "id": "2641",
+        "page": {
+          "title": "Indicator type",
+          "urlPath": "/indicator-type",
+          "slug": "indicator-type",
+          "__typename": "CategoryTypePage"
+        },
+        "parent": {
+          "id": "21",
+          "page": { "__typename": "PlanRootPage" },
+          "__typename": "PageMenuItem"
+        }
+      },
+      {
+        "__typename": "PageMenuItem",
+        "id": "2643",
+        "page": {
+          "title": "Input indicator",
+          "urlPath": "/indicator-type/input-indicator",
+          "slug": "input-indicator",
+          "__typename": "CategoryPage"
+        },
+        "parent": {
+          "id": "2641",
+          "page": { "__typename": "CategoryTypePage" },
+          "__typename": "PageMenuItem"
+        }
+      },
+      {
+        "__typename": "PageMenuItem",
+        "id": "2645",
+        "page": {
+          "title": "Process indicator",
+          "urlPath": "/indicator-type/process-indicator",
+          "slug": "process-indicator",
+          "__typename": "CategoryPage"
+        },
+        "parent": {
+          "id": "2641",
+          "page": { "__typename": "CategoryTypePage" },
+          "__typename": "PageMenuItem"
+        }
+      },
+      {
+        "__typename": "PageMenuItem",
+        "id": "2647",
+        "page": {
+          "title": "Output indicator",
+          "urlPath": "/indicator-type/output-indicator",
+          "slug": "output-indicator",
+          "__typename": "CategoryPage"
+        },
+        "parent": {
+          "id": "2641",
+          "page": { "__typename": "CategoryTypePage" },
+          "__typename": "PageMenuItem"
+        }
+      },
+      {
+        "__typename": "PageMenuItem",
+        "id": "2649",
+        "page": {
+          "title": "Outcome indicator",
+          "urlPath": "/indicator-type/outcome-indicator",
+          "slug": "outcome-indicator",
+          "__typename": "CategoryPage"
+        },
+        "parent": {
+          "id": "2641",
+          "page": { "__typename": "CategoryTypePage" },
+          "__typename": "PageMenuItem"
+        }
+      },
+      {
+        "__typename": "PageMenuItem",
+        "id": "2651",
+        "page": {
+          "title": "Impact indicator",
+          "urlPath": "/indicator-type/impact-indicator",
+          "slug": "impact-indicator",
+          "__typename": "CategoryPage"
+        },
+        "parent": {
+          "id": "2641",
+          "page": { "__typename": "CategoryTypePage" },
+          "__typename": "PageMenuItem"
+        }
+      },
+      {
+        "__typename": "PageMenuItem",
+        "id": "2653",
+        "page": {
+          "title": "Strategic indicator",
+          "urlPath": "/indicator-type/strategic-indicator",
+          "slug": "strategic-indicator",
+          "__typename": "CategoryPage"
+        },
+        "parent": {
+          "id": "2641",
+          "page": { "__typename": "CategoryTypePage" },
+          "__typename": "PageMenuItem"
+        }
+      },
+      {
+        "__typename": "PageMenuItem",
+        "id": "2655",
+        "page": {
+          "title": "Other indicator",
+          "urlPath": "/indicator-type/other-indicator",
+          "slug": "other-indicator",
+          "__typename": "CategoryPage"
+        },
+        "parent": {
+          "id": "2641",
+          "page": { "__typename": "CategoryTypePage" },
+          "__typename": "PageMenuItem"
+        }
+      },
+      {
+        "__typename": "ExternalLinkMenuItem",
+        "linkText": "Sunnydale Scenario Tool",
+        "url": "https://sunnydale.paths.kausal.tech/en/"
+      }
+    ],
+    "__typename": "MainMenu"
+  },
+  "footer": {
+    "items": [
+      {
+        "id": "783",
+        "page": {
+          "title": "Themes",
+          "urlPath": "/themes",
+          "slug": "themes",
+          "__typename": "EmptyPage"
+        },
+        "parent": {
+          "id": "21",
+          "page": { "__typename": "PlanRootPage" },
+          "__typename": "PageMenuItem"
+        },
+        "children": [
+          {
+            "__typename": "PageMenuItem",
+            "id": "786",
+            "page": {
+              "title": "Energy-efficient buildings",
+              "urlPath": "/themes/3-energy-efficient-buildings",
+              "slug": "energy-efficient-buildings",
+              "__typename": "CategoryPage"
+            }
+          }
+        ],
+        "__typename": "PageMenuItem"
+      },
+      {
+        "id": "88",
+        "page": {
+          "title": "Actions",
+          "urlPath": "/actions",
+          "slug": "actions",
+          "__typename": "ActionListPage"
+        },
+        "parent": {
+          "id": "21",
+          "page": { "__typename": "PlanRootPage" },
+          "__typename": "PageMenuItem"
+        },
+        "children": [],
+        "__typename": "PageMenuItem"
+      },
+      {
+        "id": "89",
+        "page": {
+          "title": "Indicators",
+          "urlPath": "/indicators",
+          "slug": "indicators",
+          "__typename": "IndicatorListPage"
+        },
+        "parent": {
+          "id": "21",
+          "page": { "__typename": "PlanRootPage" },
+          "__typename": "PageMenuItem"
+        },
+        "children": [],
+        "__typename": "PageMenuItem"
+      },
+      {
+        "id": "80",
+        "page": {
+          "title": "Carbon Neutral Sunnydale 2030",
+          "urlPath": "/about-us",
+          "slug": "about-us",
+          "__typename": "StaticPage"
+        },
+        "parent": {
+          "id": "21",
+          "page": { "__typename": "PlanRootPage" },
+          "__typename": "PageMenuItem"
+        },
+        "children": [],
+        "__typename": "PageMenuItem"
+      },
+      {
+        "id": "2641",
+        "page": {
+          "title": "Indicator type",
+          "urlPath": "/indicator-type",
+          "slug": "indicator-type",
+          "__typename": "CategoryTypePage"
+        },
+        "parent": {
+          "id": "21",
+          "page": { "__typename": "PlanRootPage" },
+          "__typename": "PageMenuItem"
+        },
+        "children": [
+          {
+            "__typename": "PageMenuItem",
+            "id": "2643",
+            "page": {
+              "title": "Input indicator",
+              "urlPath": "/indicator-type/input-indicator",
+              "slug": "input-indicator",
+              "__typename": "CategoryPage"
+            }
+          },
+          {
+            "__typename": "PageMenuItem",
+            "id": "2645",
+            "page": {
+              "title": "Process indicator",
+              "urlPath": "/indicator-type/process-indicator",
+              "slug": "process-indicator",
+              "__typename": "CategoryPage"
+            }
+          },
+          {
+            "__typename": "PageMenuItem",
+            "id": "2647",
+            "page": {
+              "title": "Output indicator",
+              "urlPath": "/indicator-type/output-indicator",
+              "slug": "output-indicator",
+              "__typename": "CategoryPage"
+            }
+          },
+          {
+            "__typename": "PageMenuItem",
+            "id": "2649",
+            "page": {
+              "title": "Outcome indicator",
+              "urlPath": "/indicator-type/outcome-indicator",
+              "slug": "outcome-indicator",
+              "__typename": "CategoryPage"
+            }
+          },
+          {
+            "__typename": "PageMenuItem",
+            "id": "2651",
+            "page": {
+              "title": "Impact indicator",
+              "urlPath": "/indicator-type/impact-indicator",
+              "slug": "impact-indicator",
+              "__typename": "CategoryPage"
+            }
+          },
+          {
+            "__typename": "PageMenuItem",
+            "id": "2653",
+            "page": {
+              "title": "Strategic indicator",
+              "urlPath": "/indicator-type/strategic-indicator",
+              "slug": "strategic-indicator",
+              "__typename": "CategoryPage"
+            }
+          },
+          {
+            "__typename": "PageMenuItem",
+            "id": "2655",
+            "page": {
+              "title": "Other indicator",
+              "urlPath": "/indicator-type/other-indicator",
+              "slug": "other-indicator",
+              "__typename": "CategoryPage"
+            }
+          }
+        ],
+        "__typename": "PageMenuItem"
+      }
+    ],
+    "__typename": "Footer"
+  },
+  "adminUrl": "http://localhost:8000",
+  "accessibilityStatementUrl": null,
+  "externalFeedbackUrl": null,
+  "features": {
+    "contactPersonsPublicData": "ALL",
+    "enableSearch": true,
+    "hasActionIdentifiers": true,
+    "hasActionOfficialName": true,
+    "hasActionLeadParagraph": false,
+    "hasActionPrimaryOrgs": false,
+    "showAdminLink": true,
+    "enableIndicatorComparison": true,
+    "minimalStatuses": false,
+    "__typename": "PlanFeatures"
+  },
+  "allRelatedPlans": [
+    {
+      "id": "sunnydale-bidi",
+      "identifier": "sunnydale-bidi",
+      "name": "Sunnydale Biodiversity Action Plan",
+      "shortName": "Biodiversity",
+      "image": {
+        "rendition": {
+          "src": "https://watch-media.staging.kausal.tech/images/pexels-manoj-poosam-7199929.2e16d0ba.fill-128x128-c50_mKwvcnm.jpg",
+          "__typename": "ImageRendition"
+        },
+        "__typename": "Image"
+      },
+      "organization": {
+        "name": "City of Sunnydale",
+        "__typename": "Organization"
+      },
+      "viewUrl": "http://sunnydale-bidi.localhost",
+      "__typename": "Plan"
+    },
+    {
+      "id": "sunnydale-umbrella",
+      "identifier": "sunnydale-umbrella",
+      "name": "Sunnydale Sustainability",
+      "shortName": "Plans",
+      "image": {
+        "rendition": {
+          "src": "https://watch-media.staging.kausal.tech/images/pexels-pixabay-414807.2e16d0ba.fill-128x128-c50_p8BsQd1.jpg",
+          "__typename": "ImageRendition"
+        },
+        "__typename": "Image"
+      },
+      "organization": {
+        "name": "City of Sunnydale",
+        "__typename": "Organization"
+      },
+      "viewUrl": "http://sunnydale-umbrella.localhost",
+      "__typename": "Plan"
+    }
+  ],
+  "supersededBy": null,
+  "supersededPlans": [],
+  "supersedingPlans": [],
+  "children": [],
+  "parent": {
+    "id": "sunnydale-umbrella",
+    "identifier": "sunnydale-umbrella",
+    "name": "Sunnydale Sustainability",
+    "shortName": "Plans",
+    "generalContent": {
+      "id": "33",
+      "siteTitle": "Sunnydale Sustainability",
+      "__typename": "SiteGeneralContent"
+    },
+    "image": {
+      "rendition": {
+        "src": "https://watch-media.staging.kausal.tech/images/pexels-pixabay-414807.2e16d0ba.fill-128x128-c50_p8BsQd1.jpg",
+        "__typename": "ImageRendition"
+      },
+      "__typename": "Image"
+    },
+    "organization": {
+      "name": "City of Sunnydale",
+      "__typename": "Organization"
+    },
+    "viewUrl": "http://sunnydale-umbrella.localhost",
+    "__typename": "Plan"
+  },
+  "additionalLinks": { "items": [], "__typename": "AdditionalLinks" },
+  "actionListPage": {
+    "includeRelatedPlans": false,
+    "__typename": "ActionListPage"
+  },
+  "__typename": "Plan"
+}

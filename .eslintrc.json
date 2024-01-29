@@ -1,25 +1,13 @@
 {
-  "extends": ["next/core-web-vitals", "plugin:@typescript-eslint/recommended"],
+  "extends": [
+    "next/core-web-vitals",
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
   "parser": "@typescript-eslint/parser",
   "plugins": ["@typescript-eslint"],
   "root": true,
   "rules": {
-    "max-len": [1, 120, 2, { "ignoreComments": true }],
-    "curly": ["off"],
-    "object-curly-newline": ["off"],
-    "react/prop-types": [2],
-    "react/jsx-props-no-spreading": ["off"],
-    "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
-    "import/extensions": [
-      "warn",
-      {
-        ".js": "never",
-        ".mjs": "never",
-        ".jsx": "never",
-        ".ts": "never",
-        ".tsx": "never"
-      }
-    ],
     "no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": "warn"
   }

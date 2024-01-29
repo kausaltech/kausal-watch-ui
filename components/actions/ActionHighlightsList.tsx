@@ -1,22 +1,23 @@
 /* eslint-disable max-classes-per-file */
 import React, { useContext } from 'react';
 import { gql } from '@apollo/client';
-import { Query } from '@apollo/client/react/components';
 import styled from 'styled-components';
 import { Row, Col } from 'reactstrap';
 import {
   ActionHightlightListQuery,
+  ActionHightlightListQueryVariables,
   PlanContextFragment,
 } from 'common/__generated__/graphql';
 import EmbedContext from 'context/embed';
 import Button from 'components/common/Button';
-import { getActionTermContext, useTranslation } from 'common/i18n';
-import ContentLoader from 'components/common/ContentLoader';
+import { getActionTermContext } from 'common/i18n';
 import { ActionListLink } from 'common/links';
 import images, { getActionImage } from 'common/images';
 
 import ActionHighlightCard from './ActionHighlightCard';
 import Icon from '../common/Icon';
+import { useTranslations } from 'next-intl';
+import { useSuspenseQuery } from '@apollo/experimental-nextjs-app-support/ssr';
 
 export const GET_ACTION_LIST = gql`
   query ActionHightlightList($plan: ID!, $first: Int!, $orderBy: String!) {
@@ -102,14 +103,14 @@ export type ActionHighlightListAction = NonNullable<
 >;
 
 type ActionCardListProps = {
-  t: (arg0: string, arg1: Record<string, unknown>) => string;
   actions: ActionHighlightListAction;
   plan: PlanContextFragment;
   displayHeader?: boolean;
 };
 
 function ActionCardList(props: ActionCardListProps) {
-  const { t, actions, plan, displayHeader } = props;
+  const t = useTranslations();
+  const { actions, plan, displayHeader } = props;
   // Components which use the EmbedContext support embedding
   const embed = useContext(EmbedContext);
 
@@ -160,7 +161,7 @@ type ActionHighlightsListProps = {
 
 function ActionHighlightsList(props: ActionHighlightsListProps) {
   const { plan, count, displayHeader } = props;
-  const { t } = useTranslation();
+  const t = useTranslations();
 
   const queryParams = {
     plan: plan.identifier,
@@ -168,25 +169,22 @@ function ActionHighlightsList(props: ActionHighlightsListProps) {
     orderBy: '-updatedAt',
   };
 
-  // TODO: Convert to useQuery
+  const { data, error } = useSuspenseQuery<
+    ActionHightlightListQuery,
+    ActionHightlightListQueryVariables
+  >(GET_ACTION_LIST, {
+    variables: queryParams,
+  });
+
+  if (error || !data.planActions)
+    return <p>{t('error-loading-actions', getActionTermContext(plan))}</p>;
+
   return (
-    <Query query={GET_ACTION_LIST} variables={queryParams}>
-      {({ data, loading, error }) => {
-        if (loading) return <ContentLoader />;
-        if (error)
-          return (
-            <p>{t('error-loading-actions', getActionTermContext(plan))}</p>
-          );
-        return (
-          <ActionCardList
-            t={t}
-            actions={data.planActions}
-            plan={plan}
-            displayHeader={displayHeader ?? true}
-          />
-        );
-      }}
-    </Query>
+    <ActionCardList
+      actions={data.planActions}
+      plan={plan}
+      displayHeader={displayHeader ?? true}
+    />
   );
 }
 

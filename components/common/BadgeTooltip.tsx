@@ -69,17 +69,18 @@ const IconBadge = styled.div<{ color: string; isLink: boolean }>`
   }
 `;
 
-const IconImage = styled.div<{ imageSrc?: string }>`
+const IconImage = styled.div<{ $imageSrc?: string }>`
   display: block;
   text-align: center;
   height: ${(props) =>
-    props.imageSrc ? props.theme.spaces.s600 : props.theme.spaces.s300};
+    props.$imageSrc ? props.theme.spaces.s600 : props.theme.spaces.s300};
   flex: 0 0
     ${(props) =>
-      props.imageSrc ? props.theme.spaces.s600 : props.theme.spaces.s300};
+      props.$imageSrc ? props.theme.spaces.s600 : props.theme.spaces.s300};
   margin-right: ${(props) => props.theme.spaces.s050};
   background-color: ${(props) => props.theme.neutralLight};
-  background-image: url(${(props) => props.imageSrc || 'none'});
+  ${(props) =>
+    !!props.$imageSrc && `background-image: url(${props.$imageSrc});`};
   background-size: cover;
   background-position: center center;
 `;
@@ -143,7 +144,7 @@ const BadgeContent = (props: BadgeContentProps) => {
           <IconSvg src={iconSvg} preserveAspectRatio="xMinYMid meet" />
         </IconImage>
       ) : (
-        <IconImage imageSrc={iconImage} />
+        <IconImage $imageSrc={iconImage} />
       )}
       <IconName>{renderContent}</IconName>
     </IconBadge>

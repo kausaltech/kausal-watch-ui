@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
 import styled from 'styled-components';
-import { useTheme } from 'common/theme';
-import { useTranslation } from 'common/i18n';
+import { useTheme } from 'styled-components';
+
 import Card from 'components/common/Card';
 import ContentLoader from 'components/common/ContentLoader';
 import Modal from 'components/common/Modal';
 import Icon from 'components/common/Icon';
+import { useTranslations } from 'next-intl';
 
 const GraphCard = styled.div`
   display: flex;
@@ -70,7 +71,7 @@ const Plot = dynamic(() => import('./Plot'), {
 const StatusDonut = (props) => {
   const { data, currentValue, colors, header, helpText } = props;
   const theme = useTheme();
-  const { t } = useTranslation();
+  const t = useTranslations();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);

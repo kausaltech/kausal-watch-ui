@@ -1,7 +1,9 @@
-import { useTranslation } from 'next-i18next';
+'use client';
+
 import Plotly from '@kausal/plotly-custom/dist/plotly-custom';
 import { PlotParams } from 'react-plotly.js';
 import createPlotlyComponent from 'react-plotly.js/factory';
+import { useLocale } from 'next-intl';
 
 window.Plotly = Plotly; // this is needed for the locale setting to work
 require('@kausal/plotly-custom/dist/plotly-locale-fi');
@@ -28,8 +30,8 @@ const getSeparators = (locale: string) => {
 
 export default function Plot(props: PlotParams) {
   const { data, layout, config } = props;
-  const { i18n } = useTranslation();
-  const locale = i18n.language;
+  const locale = useLocale();
+
   const separators = getSeparators(locale);
   const ret = Plotly.validate(data, layout, config);
 
@@ -43,5 +45,6 @@ export default function Plot(props: PlotParams) {
     config: { ...props.config, locale },
     layout: { ...layout, separators },
   };
+
   return <PlotlyPlot {...props} />;
 }

@@ -1,13 +1,12 @@
 import React from 'react';
-import PropTypes, { string } from 'prop-types';
 import { transparentize } from 'polished';
 import styled from 'styled-components';
 import { Theme } from '@kausal/themes/types';
 
-const Tag = styled.div<{ minWidth: string }>`
+const Tag = styled.div<{ $minWidth: string }>`
   display: flex;
   align-items: center;
-  min-width: ${(props) => props.minWidth};
+  min-width: ${(props) => props.$minWidth};
   max-width: 600px;
   border-radius: 4px;
 `;
@@ -30,30 +29,30 @@ const PlanAvatar = styled.img<PlanAvatarProps>`
     ${(props) => transparentize(0.8, props.theme.themeColors.black)};
 `;
 
-const PlanName = styled.div<{ negative?: boolean }>`
+const PlanName = styled.div<{ $negative?: boolean }>`
   flex-grow: 1;
   color: ${(props) =>
-    props.negative
+    props.$negative
       ? props.theme.themeColors.light
       : props.theme.themeColors.dark};
   line-height: 1.2;
 `;
 
 const PlanTitle = styled.div<{
-  size: string;
-  weight: 'fontWeightNormal' | 'fontWeightBold';
+  $size: string;
+  $weight: 'fontWeightNormal' | 'fontWeightBold';
 }>`
-  font-size: ${(props) => props.theme[props.size]};
-  font-weight: ${(props) => props.theme[props.weight]};
+  font-size: ${(props) => props.theme[props.$size]};
+  font-weight: ${(props) => props.theme[props.$weight]};
   line-height: 1.2;
 `;
 
-const PlanOrg = styled.div<{ negative?: boolean }>`
+const PlanOrg = styled.div<{ $negative?: boolean }>`
   font-size: 75%;
   font-weight: ${(props) => props.theme.fontWeightNormal};
   font-family: ${(props) => props.theme.fontFamilyTiny};
   color: ${(props) =>
-    props.negative
+    props.$negative
       ? props.theme.graphColors.grey030
       : props.theme.graphColors.grey070};
 `;
@@ -87,36 +86,39 @@ const MIN_WIDTH = {
   lg: '240px',
 };
 
-const PlanChip = React.forwardRef((props: PlanChipProps, ref) => {
-  const { planImage, planShortName, organization, size, negative } = props;
+const PlanChip = React.forwardRef<HTMLDivElement, PlanChipProps>(
+  (props, ref) => {
+    const {
+      planImage,
+      planShortName,
+      organization,
+      size = 'md',
+      negative = false,
+    } = props;
 
-  return (
-    <Tag ref={ref} minWidth={MIN_WIDTH[size]} {...props}>
-      <PlanAvatar
-        src={
-          planImage ?? '/static/themes/default/images/default-avatar-org.png'
-        }
-        size={IMAGE_SIZES[size]}
-        alt=""
-      />
-      <PlanName negative={negative}>
-        <PlanTitle
-          weight={size === 'sm' ? 'fontWeightNormal' : 'fontWeightBold'}
-          size={FONT_SIZES[size]}
-        >
-          {planShortName}
-        </PlanTitle>
-        <PlanOrg negative={negative}>{organization}</PlanOrg>
-      </PlanName>
-    </Tag>
-  );
-});
+    return (
+      <Tag ref={ref} $minWidth={MIN_WIDTH[size]} {...props}>
+        <PlanAvatar
+          src={
+            planImage ?? '/static/themes/default/images/default-avatar-org.png'
+          }
+          size={IMAGE_SIZES[size]}
+          alt=""
+        />
+        <PlanName negative={negative}>
+          <PlanTitle
+            $weight={size === 'sm' ? 'fontWeightNormal' : 'fontWeightBold'}
+            $size={FONT_SIZES[size]}
+          >
+            {planShortName}
+          </PlanTitle>
+          <PlanOrg $negative={negative}>{organization}</PlanOrg>
+        </PlanName>
+      </Tag>
+    );
+  }
+);
 
 PlanChip.displayName = 'PlanChip';
-
-PlanChip.defaultProps = {
-  size: 'md',
-  negative: false,
-};
 
 export default PlanChip;

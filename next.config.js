@@ -1,22 +1,38 @@
 /* eslint-disable no-restricted-syntax */
-const webpack = require('webpack');
 const { secrets } = require('docker-secret');
-const { withSentryConfig } = require('@sentry/nextjs');
-const { i18n, SUPPORTED_LANGUAGES } = require('./next-i18next.config');
+
 const path = require('path');
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 });
+const withNextIntl = require('next-intl/plugin')('./config/i18n.ts');
+
+if (process.env.DOTENV_CONFIG_PATH) {
+  // Load CI environment variables defined in Ansible
+  require('dotenv').config({ path: process.env.DOTENV_CONFIG_PATH });
+}
 
 const sentryAuthToken =
   secrets.SENTRY_AUTH_TOKEN || process.env.SENTRY_AUTH_TOKEN;
 
+console.log(`
+    > Kausal Watch UI
+      > Initialising app
+        > DEPLOYMENT_TYPE: ${process.env.DEPLOYMENT_TYPE}
+        > NODE_ENV: ${process.env.NODE_ENV}
+        > NEXT_PUBLIC_API_URL: ${process.env.NEXT_PUBLIC_API_URL}
+  `);
+
 function initializeThemes() {
+  console.log(' > Initialising themes');
+
   const destPath = path.join(__dirname, 'public', 'static', 'themes');
   const {
     generateThemeSymlinks: generateThemeSymlinksPublic,
   } = require('@kausal/themes/setup.cjs');
+
   generateThemeSymlinksPublic(destPath, { verbose: false });
+
   try {
     const {
       generateThemeSymlinks: generateThemeSymlinksPrivate,
@@ -29,16 +45,14 @@ function initializeThemes() {
 
 initializeThemes();
 
+/**
+ * @type {import('next').NextConfig}
+ */
 let config = {
-  i18n,
-  env: {
-    SENTRY_DSN: process.env.SENTRY_DSN,
-    SENTRY_TRACE_SAMPLE_RATE: process.env.SENTRY_TRACE_SAMPLE_RATE || '1.0',
-  },
-  sentry: {
-    // If SENTRY_AUTH_TOKEN is not set, disable uploading source maps to Sentry
-    disableServerWebpackPlugin: !sentryAuthToken,
-    disableClientWebpackPlugin: !sentryAuthToken,
+  logging: {
+    fetches: {
+      fullUrl: true,
+    },
   },
   eslint: {
     // Warning: This allows production builds to successfully complete even if
@@ -57,70 +71,63 @@ let config = {
     // Enables the styled-components SWC transform
     styledComponents: true,
   },
-  swcMinify: true,
-  experimental: {
-    modularizeImports: {
-      lodash: {
-        transform: 'lodash/{{member}}',
-      },
-    },
-  },
-  async rewrites() {
-    const rewrites = [
-      { source: '/favicon.ico', destination: '/public/static/favicon.ico' },
-    ];
-    return rewrites;
-  },
-  publicRuntimeConfig: {
-    // Will be available on both server and client
-    aplansApiBaseURL:
-      process.env.APLANS_API_BASE_URL || 'https://api.watch.kausal.tech/v1',
-    // the default value for PLAN_IDENTIFIER is set below in webpack config
-    defaultPlanIdentifier: process.env.PLAN_IDENTIFIER,
-    defaultThemeIdentifier: process.env.THEME_IDENTIFIER,
-    deploymentType: process.env.DEPLOYMENT_TYPE || 'development',
-    matomoURL: process.env.MATOMO_URL,
-    matomoSiteId: process.env.MATOMO_SITE_ID,
-    sentryDsn: process.env.SENTRY_DSN,
-    supportedLanguages: SUPPORTED_LANGUAGES,
-    forceFeatures: process.env.FORCE_FEATURES?.split(','),
-  },
-  /* eslint no-param-reassign: ["error", { "props": true, "ignorePropertyModificationsFor": ["cfg"] }] */
-  webpack(cfg, options) {
-    const { isServer, buildId, dev } = options;
-
-    if (!isServer) {
-      cfg.resolve.alias['@sentry/node'] = '@sentry/browser';
-      cfg.resolve.alias['next-i18next/serverSideTranslations'] = false;
-      cfg.resolve.alias['./next-i18next.config'] = false;
-      cfg.resolve.symlinks = true;
+  webpack(config, { webpack }) {
+    if (process.env.NODE_ENV !== 'development') {
+      // Disable Apollo Client development mode
+      config.plugins.push(
+        new webpack.DefinePlugin({
+          'globalThis.__DEV__': false,
+        })
+      );
     }
-    cfg.plugins.push(
-      new webpack.EnvironmentPlugin({
-        PLAN_IDENTIFIER: '',
-        THEME_IDENTIFIER: '',
-        DISABLE_THEME_CACHE: '',
-        MATOMO_URL: '',
-        MATOMO_SITE_ID: '',
-        SYNC_THEME: '',
-        FORCE_SENTRY_SEND: '',
-      })
-    );
-    cfg.plugins.push(
-      new webpack.DefinePlugin({
-        __SENTRY_DEBUG__: false,
-      })
-    );
-    cfg.experiments = { ...cfg.experiments, topLevelAwait: true };
 
-    return cfg;
+    return config;
   },
 };
 
-const sentryWebpackOpts = {
-  authToken: sentryAuthToken,
-};
+module.exports = withNextIntl(config);
 
-config = withSentryConfig(withBundleAnalyzer(config), sentryWebpackOpts);
+if (sentryAuthToken) {
+  const { withSentryConfig } = require('@sentry/nextjs');
 
-module.exports = config;
+  // Injected content via Sentry wizard below
+  module.exports = withSentryConfig(
+    module.exports,
+    {
+      // For all available options, see:
+      // https://github.com/getsentry/sentry-webpack-plugin#options
+      authToken: sentryAuthToken,
+
+      // Suppresses source map uploading logs during build
+      silent: true,
+      org: 'kausal',
+      project: 'watch-ui',
+      url: 'https://sentry.kausal.tech/',
+    },
+    {
+      // For all available options, see:
+      // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
+
+      // Upload a larger set of source maps for prettier stack traces (increases build time)
+      widenClientFileUpload: true,
+
+      // Transpiles SDK to be compatible with IE11 (increases bundle size)
+      transpileClientSDK: true,
+
+      // Routes browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers (increases server load)
+      tunnelRoute: '/monitoring',
+
+      // Hides source maps from generated client bundles
+      hideSourceMaps: true,
+
+      // Automatically tree-shake Sentry logger statements to reduce bundle size
+      disableLogger: true,
+
+      // Enables automatic instrumentation of Vercel Cron Monitors.
+      // See the following for more information:
+      // https://docs.sentry.io/product/crons/
+      // https://vercel.com/docs/cron-jobs
+      automaticVercelMonitors: true,
+    }
+  );
+}

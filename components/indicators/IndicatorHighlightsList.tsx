@@ -1,15 +1,16 @@
 /* eslint-disable max-classes-per-file */
 import React from 'react';
-import { gql, useQuery } from '@apollo/client';
+import { gql } from '@apollo/client';
+import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
 import { Row, Col } from 'reactstrap';
 import styled from 'styled-components';
-import { withTranslation } from 'common/i18n';
 import ContentLoader from 'components/common/ContentLoader';
 import { IndicatorListLink } from 'common/links';
 import type { IndicatorHightlightListQuery } from 'common/__generated__/graphql';
 import IndicatorHighlightCard from './IndicatorHighlightCard';
 import Icon from 'components/common/Icon';
 import Button from 'components/common/Button';
+import { useTranslations } from 'next-intl';
 
 export const GET_INDICATOR_HIGHLIGHTS = gql`
   query IndicatorHightlightList($plan: ID!, $first: Int!, $orderBy: String!) {
@@ -58,12 +59,12 @@ export type IndicatorHighlightListIndicator = NonNullable<
 >;
 
 type IndicatorCardListProps = {
-  t: (arg0: string) => string;
   indicators: IndicatorHighlightListIndicator | null | undefined;
 };
 
 function IndicatorCardList(props: IndicatorCardListProps) {
-  const { t, indicators } = props;
+  const t = useTranslations();
+  const { indicators } = props;
 
   return (
     <Row>
@@ -103,12 +104,12 @@ function IndicatorCardList(props: IndicatorCardListProps) {
 }
 
 type IndicatorHighlightsListProps = {
-  t: (arg0: string) => string;
   planIdentifier: string;
 };
 
 function IndicatorHighlightsList(props: IndicatorHighlightsListProps) {
-  const { t, planIdentifier } = props;
+  const t = useTranslations();
+  const { planIdentifier } = props;
   const queryParams = {
     plan: planIdentifier,
     first: 6,
@@ -124,7 +125,7 @@ function IndicatorHighlightsList(props: IndicatorHighlightsListProps) {
 
   if (loading) return <ContentLoader />;
   if (error) return <p>{t('error-loading-indicators')}</p>;
-  return <IndicatorCardList t={t} indicators={data?.planIndicators} />;
+  return <IndicatorCardList indicators={data?.planIndicators} />;
 }
 
-export default withTranslation('common')(IndicatorHighlightsList);
+export default IndicatorHighlightsList;

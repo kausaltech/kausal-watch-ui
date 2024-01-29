@@ -6,7 +6,7 @@ import Icon from '../common/Icon';
 
 const ImpactIcon = styled(Icon)`
   font-size: ${(props) => {
-    switch (props.size) {
+    switch (props.$size) {
       case 'sm':
         return '.8em';
       case 'md':
@@ -29,9 +29,7 @@ const ImpactIcon = styled(Icon)`
   }
 `;
 
-function ActionImpact(props) {
-  const { identifier, name, max, size } = props;
-
+function ActionImpact({ identifier, name, max = 4, size = 'md' }) {
   const bullets = [];
   const num = Number(identifier);
 
@@ -52,7 +50,7 @@ function ActionImpact(props) {
             key={item.key}
             name="exclamationCircle"
             className="icon-bad"
-            size={size}
+            $size={size}
           />
         );
       case 'off':
@@ -61,7 +59,7 @@ function ActionImpact(props) {
             key={item.key}
             name="circleFull"
             className="icon-off"
-            size={size}
+            $size={size}
           />
         );
       case 'on':
@@ -70,7 +68,7 @@ function ActionImpact(props) {
             key={item.key}
             name="circleFull"
             className="icon-on"
-            size={size}
+            $size={size}
           />
         );
       default:
@@ -87,11 +85,6 @@ function ActionImpact(props) {
     </div>
   );
 }
-
-ActionImpact.defaultProps = {
-  max: 4,
-  size: 'md',
-};
 
 ActionImpact.propTypes = {
   identifier: PropTypes.string.isRequired,

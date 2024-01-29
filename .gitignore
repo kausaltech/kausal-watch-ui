@@ -24,3 +24,6 @@ yarn-error.log
 /playwright-report/
 /playwright/.cache/
 /e2e-tests/*-snapshots/
+
+# Sentry Config File
+.sentryclirc

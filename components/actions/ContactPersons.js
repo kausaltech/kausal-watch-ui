@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { withTranslation } from '../../common/i18n';
 
 import ContactPerson from './ContactPerson';
+import { useTranslations } from 'next-intl';
 
 const SectionHeader = styled.h3`
   font-size: ${(props) => props.theme.fontSizeBase};
@@ -21,7 +21,9 @@ const Note = styled.div`
 `;
 
 function ContactPersons(props) {
-  const { t, persons } = props;
+  const { persons } = props;
+  const t = useTranslations();
+
   return (
     <>
       <SectionHeader>{t('contact-persons')}</SectionHeader>
@@ -39,6 +41,7 @@ function ContactPersons(props) {
     </>
   );
 }
+
 ContactPersons.propTypes = {
   persons: PropTypes.arrayOf(
     PropTypes.shape({
@@ -51,7 +54,6 @@ ContactPersons.propTypes = {
       }),
     })
   ).isRequired,
-  t: PropTypes.func.isRequired,
 };
 
-export default withTranslation('common')(ContactPersons);
+export default ContactPersons;
