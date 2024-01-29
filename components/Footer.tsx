@@ -62,8 +62,7 @@ function Footer({ siteTitle }: Props) {
     navLinks = navLinks.concat(staticPages);
   }
 
-  console.log(plan.additionalLinks);
-  // TODO:
+  // TODO: Remove this when we have a proper way to add custom links
   const additionalLinks = theme.settings?.customAdditionalLinks || [];
   const hasCustomAccessibilityPage = additionalLinks?.find(
     (link) => link.id === 'accessibility'

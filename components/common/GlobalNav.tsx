@@ -296,25 +296,11 @@ const NavbarToggler = styled.button`
   }
 `;
 
-const AccessibilityFeatures = () => {
-  const { t } = useTranslation();
-  const toolbarItems = [
-    {
-      id: 'simple-language',
-      name: 'Simple language',
-      icon: 'simple-language',
-      slug: '/barrierefreiheit/leichte-sprache',
-    },
-    {
-      id: 'sign-language',
-      name: 'Sign language',
-      icon: 'sign-language',
-      slug: '/barrierefreiheit/gebardensprache',
-    },
-  ];
+const CustomToolbar = (props) => {
+  const { items } = props;
   return (
     <>
-      {toolbarItems.map((item) => (
+      {items.map((item) => (
         <NavItem key={item.id}>
           <NavLink>
             <NavigationLink slug={item.slug}>
@@ -460,6 +446,7 @@ function GlobalNav(props) {
     fullwidth = false,
     sticky = false,
     activeBranch,
+    customToolbarItems,
   } = props;
   const {
     isOpen,
@@ -518,7 +505,9 @@ function GlobalNav(props) {
           </Site>
 
           <Nav navbar className="ml-auto d-none d-md-flex">
-            <AccessibilityFeatures />
+            {customToolbarItems.length > 0 && (
+              <CustomToolbar items={customToolbarItems} />
+            )}
             <NavbarSearch />
             <LanguageSelector mobile={false} />
           </Nav>

@@ -96,6 +96,7 @@ function Header({ siteTitle }) {
         }
         navItems={navLinks}
         externalItems={externalLinks}
+        customToolbarItems={theme.settings.customNavbarTools || []}
         sticky={theme.settings.stickyNavigation}
       />
     </header>
