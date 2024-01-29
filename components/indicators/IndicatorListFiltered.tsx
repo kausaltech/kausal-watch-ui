@@ -465,7 +465,7 @@ const IndicatorListFiltered = (props) => {
       <IndicatorName>
         {collapsible && (
           <ExpandButton
-            aria-label={t(expanded ? 'collapse-row' : 'expand-row')}
+            aria-label={expanded ? t('collapse-row') : t('expand-row')}
             onClick={() => toggleVisibility(item)}
           >
             <ExpandIcon

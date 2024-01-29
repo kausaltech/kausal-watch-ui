@@ -1,9 +1,19 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import { Container, Row, Col } from 'reactstrap';
 import accessibilityStatementData from 'public/static/accessibility';
 import { useLocale, useTranslations } from 'next-intl';
+
+function getComplianceStatusText(t, complianceStatus) {
+  switch (complianceStatus) {
+    case 'partial':
+      return t('partial-compliant');
+    case 'full':
+      return t('full-compliant');
+    case 'not':
+      return t('not-compliant');
+  }
+}
 
 const AccessibilityStatementComplianceStatusBlock = ({ id = '' }) => {
   const t = useTranslations();
@@ -15,7 +25,7 @@ const AccessibilityStatementComplianceStatusBlock = ({ id = '' }) => {
   const accessibilityProblems =
     accessibilityStatementData[locale].nonAccessibleContent.nonCompliant;
   const complianceStatus = accessibilityStatementData[locale].complianceStatus;
-  const complianceStatusText = t(`${complianceStatus}-compliant`);
+  const complianceStatusText = getComplianceStatusText(t, complianceStatus);
 
   return (
     <Container id={id} className="my-2 text-content">

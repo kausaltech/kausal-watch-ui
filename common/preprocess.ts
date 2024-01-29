@@ -11,6 +11,7 @@ import { getStatusSummary } from '../common/ActionStatusSummary';
 import type { Theme } from '@kausal/themes/types';
 import type { Progress } from '../components/dashboard/ActionStatusGraphs';
 import type { PlanContextType } from '../context/plan';
+import { TFunction } from './i18n';
 
 // Clean up actionStatus so UI can handle edge cases
 const cleanActionStatus = (action, actionStatuses) => {
@@ -158,7 +159,7 @@ const getPhaseData = (
   actions: ActionListAction[],
   plan: PlanContextType,
   theme,
-  t
+  t: TFunction
 ): Progress | null => {
   const phases = plan.actionImplementationPhases;
   if (phases.length == 0 || actions.length == 0) {
@@ -208,7 +209,7 @@ const getPhaseData = (
   );
   const inactiveActionsDonutSector: DonutSector = new DonutSector(
     // Donut sector for inactive (cancelled, merged, etc.) actions
-    t('actions:inactive-actions'),
+    t('inactive-actions'),
     theme.graphColors.grey000,
     false
   );
