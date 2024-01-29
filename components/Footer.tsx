@@ -62,7 +62,12 @@ function Footer({ siteTitle }: Props) {
     navLinks = navLinks.concat(staticPages);
   }
 
-  const additionalLinks = [];
+  console.log(plan.additionalLinks);
+  // TODO:
+  const additionalLinks = theme.settings?.customAdditionalLinks || [];
+  const hasCustomAccessibilityPage = additionalLinks?.find(
+    (link) => link.id === 'accessibility'
+  );
 
   plan.additionalLinks.items?.map((link) =>
     additionalLinks.push({
@@ -72,7 +77,7 @@ function Footer({ siteTitle }: Props) {
     })
   );
 
-  const ownerLinks = theme.settings?.footerAdditionalLinks;
+  const ownerLinks = theme.settings?.footerOwnerLinks;
 
   // If there is no custom a11y page set, or if there is no external a11y statement link
   // use the standard a11y statement
@@ -87,7 +92,7 @@ function Footer({ siteTitle }: Props) {
         name: t('accessibility'),
         slug: plan.accessibilityStatementUrl,
       });
-    } else {
+    } else if (!hasCustomAccessibilityPage) {
       additionalLinks.push({
         id: '1',
         name: t('accessibility'),

@@ -387,7 +387,7 @@ function NavbarSearch() {
           };
 
           return (
-            <li ref={searchElement} className="nav-item">
+            <>
               <SearchControls ref={setReferenceElement}>
                 <form autoComplete="off" aria-label={t('search')}>
                   <InputGroup>
@@ -423,8 +423,8 @@ function NavbarSearch() {
                     >
                       <Icon
                         name="search"
-                        width="1.25rem"
-                        height="1.25rem"
+                        width="1.75rem"
+                        height="1.75rem"
                         aria-hidden="true"
                         focusable="false"
                       />
@@ -448,7 +448,7 @@ function NavbarSearch() {
                   />
                 </ResultsBox>
               )}
-            </li>
+            </>
           );
         }}
       </WithSearch>

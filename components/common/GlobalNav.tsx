@@ -296,6 +296,44 @@ const NavbarToggler = styled.button`
   }
 `;
 
+const AccessibilityFeatures = () => {
+  const { t } = useTranslation();
+  const toolbarItems = [
+    {
+      id: 'simple-language',
+      name: 'Simple language',
+      icon: 'simple-language',
+      slug: '/barrierefreiheit/leichte-sprache',
+    },
+    {
+      id: 'sign-language',
+      name: 'Sign language',
+      icon: 'sign-language',
+      slug: '/barrierefreiheit/gebardensprache',
+    },
+  ];
+  return (
+    <>
+      {toolbarItems.map((item) => (
+        <NavItem key={item.id}>
+          <NavLink>
+            <NavigationLink slug={item.slug}>
+              <NavHighlighter className="highlighter">
+                <Icon
+                  name={item.icon}
+                  height="1.75rem"
+                  width="1.75rem"
+                  alt={item.name}
+                />
+              </NavHighlighter>
+            </NavigationLink>
+          </NavLink>
+        </NavItem>
+      ))}
+    </>
+  );
+};
+
 function DropdownList(props) {
   const { parentName, items, active = false, onClickLink } = props;
   return (
@@ -480,6 +518,7 @@ function GlobalNav(props) {
           </Site>
 
           <Nav navbar className="ml-auto d-none d-md-flex">
+            <AccessibilityFeatures />
             <NavbarSearch />
             <LanguageSelector mobile={false} />
           </Nav>

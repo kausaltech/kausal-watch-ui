@@ -436,6 +436,7 @@ function SiteFooter(props: SiteFooterProps) {
     ownerLinks = [],
   } = props;
 
+  console.log('SiteFooter', props);
   const OrgLogo = () => {
     return (
       <SVG

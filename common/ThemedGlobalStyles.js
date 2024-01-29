@@ -224,4 +224,9 @@ export const GlobalStyles = createGlobalStyle`
   .tooltip {
     line-height: 1.25;
   }
+
+  // TODO: Temporary front-end fix to increase font-size for simple language
+  .custom-leichte-sprache .text-content{
+    font-size: 125%;
+  }
 `;
