@@ -105,7 +105,7 @@ const PlanChip = React.forwardRef<HTMLDivElement, PlanChipProps>(
           size={IMAGE_SIZES[size]}
           alt=""
         />
-        <PlanName negative={negative}>
+        <PlanName $negative={negative}>
           <PlanTitle
             $weight={size === 'sm' ? 'fontWeightNormal' : 'fontWeightBold'}
             $size={FONT_SIZES[size]}
