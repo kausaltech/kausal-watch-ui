@@ -34,7 +34,7 @@
     "actions-status-help": "Anteil der Maßnahmen, die im Zeitplan liegen",
     "actions-updated": "Aktive Maßnahmen zuletzt aktualisiert",
     "actions-updated-help-days": "Anteil der Maßnahmen, die innerhalb von {count} Tagen aktualisiert wurden",
-    "actions-updated-help-months": "Anteil der Maßnahmen, die innerhalb {count, plural, =1 {des letzten Monats aktualisiert} other {von # Monate}} aktualisiert wurden",
+    "actions-updated-help-months": "Anteil der Maßnahmen, die innerhalb {count, plural, =1 {des letzten Monats} other {von # Monaten}} aktualisiert wurden",
     "emission-scopes": "Emissionsbereiche",
     "no-defined-indicators": "Keine Indikatoren definiert",
     "status": "Status",
