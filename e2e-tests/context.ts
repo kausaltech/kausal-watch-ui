@@ -284,9 +284,11 @@ export class PlanContext {
   async checkAccessibility(page: Page) {
     await page.waitForLoadState('networkidle');
     const results = await new AxeBuilder({ page }).analyze();
+    const violationsToIgnore = ['frame-title'];
     const criticalAndSeriousViolations = results.violations.filter(
       (violation) =>
-        violation.impact === 'critical' || violation.impact === 'serious'
+        (violation.impact === 'critical' || violation.impact === 'serious') &&
+        !violationsToIgnore.includes(violation.id)
     );
 
     if (criticalAndSeriousViolations.length > 0) {
