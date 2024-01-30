@@ -153,7 +153,7 @@ describe('getPhaseData', () => {
         'In progress',
         'Not started',
         'no-phase',
-        'actions:inactive-actions',
+        'inactive-actions',
       ],
       values: [5, 2, 1, 1, 8],
       colors: [undefined, undefined, undefined, undefined, undefined],

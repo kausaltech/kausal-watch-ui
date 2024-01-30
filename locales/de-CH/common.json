@@ -2,7 +2,6 @@
     "action": "Massnahme",
     "actions": "Massnahmen",
     "close": "Schliessen",
-    "dashboard-segment-description": "Anteil der Massnahmen am Minderungspotential",
     "error-loading-actions": "Fehler beim Laden der Massnahmenliste",
     "filter-result-actions": "Massnahmen",
     "nav-menu-close": "Menü schliessen",
