@@ -118,6 +118,7 @@ export const GET_ACTION_DETAILS = gql`
         id
         name
         dueAt
+        dateFormat
         completedAt
         comment
         state
@@ -143,6 +144,7 @@ export const GET_ACTION_DETAILS = gql`
       scheduleContinuous
       startDate
       endDate
+      dateFormat
       impact {
         id
         identifier
@@ -219,6 +221,8 @@ export const GET_ACTION_DETAILS = gql`
     }
     plan(id: $plan) {
       actionListPage {
+        actionDateFormat
+        taskDateFormat
         detailsMainTop {
           ...ActionMainContentBlocksFragment
         }

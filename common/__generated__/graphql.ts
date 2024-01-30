@@ -155,6 +155,7 @@ export type AccessibilityStatementPreparationInformationBlock = StreamFieldInter
 /** One action/measure tracked in an action plan. */
 export type Action = {
   __typename?: 'Action';
+  actionDateFormat?: Maybe<DateFormatOptions>;
   adminButtons: Array<AdminButton>;
   attributes: Array<AttributeInterface>;
   categories: Array<Category>;
@@ -162,6 +163,8 @@ export type Action = {
   /** The completion percentage for this action */
   completion?: Maybe<Scalars['Int']>;
   contactPersons: Array<ActionContactPerson>;
+  /** Format of action start and end dates shown in the public UI.             The default for all actions can be specified on the actions page. */
+  dateFormat?: Maybe<ActionDateFormat>;
   /** What does this action involve in more detail? */
   description?: Maybe<Scalars['String']>;
   editUrl?: Maybe<Scalars['String']>;
@@ -209,6 +212,7 @@ export type Action = {
   supersededActions: Array<Action>;
   /** Set if this action is superseded by another action */
   supersededBy?: Maybe<Action>;
+  taskDateFormat?: Maybe<DateFormatOptions>;
   tasks: Array<ActionTask>;
   timeliness: ActionTimeliness;
   updatedAt: Scalars['DateTime'];
@@ -370,6 +374,15 @@ export type ActionContentSectionBlock = StreamFieldInterface & {
 
 export type ActionDashboardColumnBlock = IdentifierColumnBlock | ImpactColumnBlock | ImplementationPhaseColumnBlock | IndicatorsColumnBlock | NameColumnBlock | OrganizationColumnBlock | ResponsiblePartiesColumnBlock | StatusColumnBlock | TasksColumnBlock | UpdatedAtColumnBlock;
 
+export enum ActionDateFormat {
+  /** Day, month and year (31.12.2020) */
+  Full = 'FULL',
+  /** Month and year (12.2020) */
+  MonthYear = 'MONTH_YEAR',
+  /** Year (2020) */
+  Year = 'YEAR'
+}
+
 export type ActionDescriptionBlock = StreamFieldInterface & {
   __typename?: 'ActionDescriptionBlock';
   blockType: Scalars['String'];
@@ -493,6 +506,7 @@ export type ActionListFilterBlock = ActionAttributeTypeFilterBlock | ActionImple
 
 export type ActionListPage = PageInterface & {
   __typename?: 'ActionListPage';
+  actionDateFormat?: Maybe<Scalars['String']>;
   advancedFilters?: Maybe<Array<ActionListFilterBlock>>;
   aliasOf?: Maybe<Page>;
   ancestors: Array<PageInterface>;
@@ -538,6 +552,7 @@ export type ActionListPage = PageInterface & {
   showInMenus: Scalars['Boolean'];
   siblings: Array<PageInterface>;
   slug: Scalars['String'];
+  taskDateFormat?: Maybe<Scalars['String']>;
   title: Scalars['String'];
   translationKey: Scalars['UUID'];
   url?: Maybe<Scalars['String']>;
@@ -822,6 +837,8 @@ export type ActionTask = {
   /** The date when the task was completed */
   completedAt?: Maybe<Scalars['Date']>;
   createdAt: Scalars['DateTime'];
+  /** Format of action task due dates shown in the public UI.             The default for all actions can be specified on the actions page. */
+  dateFormat?: Maybe<ActionTaskDateFormat>;
   /** The date by which the task should be completed (deadline) */
   dueAt: Scalars['Date'];
   i18n?: Maybe<Scalars['JSONString']>;
@@ -844,6 +861,15 @@ export type ActionTask = {
   nameSv: Scalars['String'];
   state: ActionTaskState;
 };
+
+export enum ActionTaskDateFormat {
+  /** Day, month and year (31.12.2020) */
+  Full = 'FULL',
+  /** Month and year (12.2020) */
+  MonthYear = 'MONTH_YEAR',
+  /** Year (2020) */
+  Year = 'YEAR'
+}
 
 export enum ActionTaskState {
   /** cancelled */
@@ -1688,6 +1714,12 @@ export type DateBlock = StreamFieldInterface & {
 export type DateBlockValueArgs = {
   format?: InputMaybe<Scalars['String']>;
 };
+
+export enum DateFormatOptions {
+  Full = 'FULL',
+  MonthYear = 'MONTH_YEAR',
+  Year = 'YEAR'
+}
 
 export type DateTimeBlock = StreamFieldInterface & {
   __typename?: 'DateTimeBlock';
@@ -6710,7 +6742,7 @@ export type GetActionDetailsQueryVariables = Exact<{
 
 export type GetActionDetailsQuery = (
   { action?: (
-    { id: string, identifier: string, name: string, officialName?: string | null, leadParagraph: string, description?: string | null, completion?: number | null, color?: string | null, updatedAt: any, manualStatusReason?: string | null, scheduleContinuous: boolean, startDate?: any | null, endDate?: any | null, image?: (
+    { id: string, identifier: string, name: string, officialName?: string | null, leadParagraph: string, description?: string | null, completion?: number | null, color?: string | null, updatedAt: any, manualStatusReason?: string | null, scheduleContinuous: boolean, startDate?: any | null, endDate?: any | null, dateFormat?: ActionDateFormat | null, image?: (
       { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
         { id: string, width: number, height: number, src: string }
         & { __typename?: 'ImageRendition' }
@@ -6912,7 +6944,7 @@ export type GetActionDetailsQuery = (
       ) }
       & { __typename?: 'ActionResponsibleParty' }
     )>, tasks: Array<(
-      { id: string, name: string, dueAt: any, completedAt?: any | null, comment?: string | null, state: ActionTaskState }
+      { id: string, name: string, dueAt: any, dateFormat?: ActionTaskDateFormat | null, completedAt?: any | null, comment?: string | null, state: ActionTaskState }
       & { __typename?: 'ActionTask' }
     )>, status?: (
       { id: string, identifier: string, name: string, color?: string | null }
@@ -7281,7 +7313,7 @@ export type GetActionDetailsQuery = (
     & { __typename?: 'Action' }
   ) | null, plan?: (
     { actionListPage?: (
-      { detailsMainTop?: Array<(
+      { actionDateFormat?: string | null, taskDateFormat?: string | null, detailsMainTop?: Array<(
         { id?: string | null }
         & { __typename: 'ActionContactFormBlock' | 'ActionDescriptionBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionMergedActionsBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionTasksBlock' }
       ) | (
@@ -11645,7 +11677,7 @@ export type GetPlanContextQuery = (
       ) | null> }
       & { __typename?: 'AdditionalLinks' }
     ) | null, actionListPage?: (
-      { includeRelatedPlans?: boolean | null }
+      { includeRelatedPlans?: boolean | null, actionDateFormat?: string | null, taskDateFormat?: string | null }
       & { __typename?: 'ActionListPage' }
     ) | null }
     & { __typename?: 'Plan' }
@@ -11829,7 +11861,7 @@ export type PlanContextFragment = (
     ) | null> }
     & { __typename?: 'AdditionalLinks' }
   ) | null, actionListPage?: (
-    { includeRelatedPlans?: boolean | null }
+    { includeRelatedPlans?: boolean | null, actionDateFormat?: string | null, taskDateFormat?: string | null }
     & { __typename?: 'ActionListPage' }
   ) | null }
   & { __typename?: 'Plan' }
