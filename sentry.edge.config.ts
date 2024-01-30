@@ -4,8 +4,11 @@
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
 import * as Sentry from '@sentry/nextjs';
+import { deploymentType } from './common/environment';
 
 Sentry.init({
+  environment: deploymentType,
+
   dsn: 'https://9b7a344624774da8a5aa5752baad826b@sentry.kausal.tech/2',
 
   // Adjust this value in production, or use tracesSampler for greater control

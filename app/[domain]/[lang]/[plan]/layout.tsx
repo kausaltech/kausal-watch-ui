@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import { headers } from 'next/headers';
+import { captureException } from '@sentry/nextjs';
 
 import ThemeProvider from '@/components/providers/ThemeProvider';
 import PlanProvider from '@/components/providers/PlanProvider';
@@ -20,13 +21,19 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const headersList = headers();
   const protocol = headersList.get('x-forwarded-proto');
-  const url = new URL(headersList.get('x-url') ?? '');
+  const urlHeader = headersList.get('x-url'); // The full user facing URL with path
+  const origin = `${protocol}://${params.domain}`;
+  const url = new URL(urlHeader || origin);
 
-  const { data } = await getPlan(
-    params.domain,
-    params.plan,
-    `${protocol}://${params.domain}`
-  );
+  if (!urlHeader) {
+    captureException(
+      new Error(
+        `Missing x-url header for ${params.domain}. This may cause issues with metadata. x-url value: ${urlHeader}`
+      )
+    );
+  }
+
+  const { data } = await getPlan(params.domain, params.plan, origin);
 
   if (!data.plan) {
     return {};
@@ -54,7 +61,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       images: ogImage ? [ogImage] : undefined,
       url: url.pathname,
     },
-    metadataBase: new URL(url.origin),
+    metadataBase: new URL(origin),
     alternates: {
       canonical: url.pathname,
     },
