@@ -14,6 +14,15 @@ import { useApolloClient } from '@apollo/client';
 import { getActionTermContext } from 'common/i18n';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 
+const NavBarSearchListItem = styled.li`
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
 const TextInput = styled.input`
   display: ${(props) => (props.$isOpen ? 'block' : 'hidden')};
   width: ${(props) => (props.$isOpen ? 'auto' : '0')};
@@ -391,13 +400,9 @@ function NavbarSearch() {
           };
 
           return (
-            <>
+            <NavBarSearchListItem className="nav-item" ref={searchElement}>
               <SearchControls ref={setReferenceElement}>
-                <form
-                  autoComplete="off"
-                  aria-label={t('search')}
-                  ref={searchElement}
-                >
+                <form autoComplete="off" aria-label={t('search')}>
                   <InputGroup>
                     <TextInput
                       type="search"
@@ -457,7 +462,7 @@ function NavbarSearch() {
                   />
                 </ResultsBox>
               )}
-            </>
+            </NavBarSearchListItem>
           );
         }}
       </WithSearch>
