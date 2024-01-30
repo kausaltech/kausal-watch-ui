@@ -296,13 +296,18 @@ const NavbarToggler = styled.button`
   }
 `;
 
-const CustomToolbar = (props) => {
-  const { items, mobile } = props;
+type CustomToolbarProps = {
+  items: { slug: string; name: string; id: string; icon: string }[];
+  mobile?: boolean;
+};
+
+const CustomToolbar = (props: CustomToolbarProps) => {
+  const { items, mobile = false } = props;
 
   return (
     <>
       {items.map((item) => (
-        <NavItem key={item.id} className={mobile && 'd-md-none'}>
+        <NavItem key={item.id} className={mobile ? 'd-md-none' : ''}>
           <NavLink>
             <NavigationLink slug={item.slug}>
               <NavHighlighter className="highlighter">
@@ -609,9 +614,9 @@ function GlobalNav(props) {
                   </NavLink>
                 </NavItem>
               )}
-              <LanguageSelector mobile="true" />
+              <LanguageSelector mobile />
               {customToolbarItems.length > 0 && (
-                <CustomToolbar items={customToolbarItems} mobile="true" />
+                <CustomToolbar items={customToolbarItems} mobile />
               )}
             </Nav>
             <Nav navbar>

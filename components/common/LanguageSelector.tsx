@@ -22,6 +22,7 @@ const LanguageSelectorListItem = styled.li`
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-left: ${(props) => props.theme.spaces.s050};
   }
 
   @media (max-width: ${(props) => props.theme.breakpointMd}) {
@@ -134,12 +135,16 @@ function getLocales(plan: PlanContextFragment) {
   return [plan.primaryLanguage, ...(plan.otherLanguages ?? [])];
 }
 
-const LanguageSelector = (props) => {
+type LanguageSelectorProps = {
+  mobile?: boolean;
+};
+
+const LanguageSelector = (props: LanguageSelectorProps) => {
   const currentLocale = useLocale();
   const theme = useTheme();
   const plan = usePlan();
   const apolloClient = useApolloClient();
-  const { mobile } = props;
+  const { mobile = false } = props;
 
   const locales = getLocales(plan).filter(
     (locale) => !theme.settings.hiddenLocales?.includes(locale)
