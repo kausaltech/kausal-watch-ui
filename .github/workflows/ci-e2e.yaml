@@ -1,4 +1,4 @@
-name: CI-e2e-tests
+name: E2e-tests
 on:
   workflow_dispatch:
     inputs:
@@ -19,7 +19,6 @@ jobs:
   e2e_test:
     name: Run tests
     runs-on: ubuntu-latest
-
     steps:
       - name: Check out code
         uses: actions/checkout@v3
@@ -47,11 +46,46 @@ jobs:
           yarn config set npmScopes.kausal.npmAuthIdent ${{ secrets.NPM_AUTH_IDENT }}
 
       - name: Install dependencies
-        continue-on-error: true
         run: yarn install
 
       - name: Playwright install
         run: node_modules/.bin/playwright install
+
+      - name: Install WebKit dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+          libwoff2dec1 \
+          libvpx7 \
+          libevent-2.1-7 \
+          libopus0 \
+          libharfbuzz-icu0 \
+          libgstallocators-1.0-0 \
+          libgstapp-1.0-0 \
+          libgstpbutils-1.0-0 \
+          libgstaudio-1.0-0 \
+          libgsttag-1.0-0 \
+          libgstvideo-1.0-0 \
+          libgstgl-1.0-0 \
+          libgstcodecparsers-1.0-0 \
+          libgstfft-1.0-0 \
+          libhyphen0 \
+          libmanette-0.2-0 \
+          libflite1 \
+          libfliteusenglish1 \
+          libflitecmugraphemelang1 \
+          libflitecmugraphemelex1 \
+          libflitecmuindiclang1 \
+          libflitecmuindiclex1 \
+          libflitecmulex1 \
+          libflitecmutimeawb1 \
+          libflitecmuusawb1 \
+          libflitecmuuskal161 \
+          libflitecmuuskal1 \
+          libflitecmuusrms1 \
+          libflitecmuusslt1 \
+          libgles2 \
+          libx264-dev
 
       - name: Running Playwright e2e tests
         run: node_modules/.bin/playwright test
