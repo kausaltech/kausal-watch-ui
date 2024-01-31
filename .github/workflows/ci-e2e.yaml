@@ -49,42 +49,7 @@ jobs:
         run: yarn install
 
       - name: Playwright install
-        run: node_modules/.bin/playwright install
-
-      - name: Install WebKit dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libwoff2dec.so.1.0.2 || true
-          sudo apt-get install -y libvpx.so.7 || true
-          sudo apt-get install -y libevent-2.1.so.7 || true
-          sudo apt-get install -y libopus.so.0 || true
-          sudo apt-get install -y libharfbuzz-icu.so.0 || true
-          sudo apt-get install -y libgstallocators-1.0.so.0 || true
-          sudo apt-get install -y libgstapp-1.0.so.0 || true
-          sudo apt-get install -y libgstpbutils-1.0.so.0 || true
-          sudo apt-get install -y libgstaudio-1.0.so.0 || true
-          sudo apt-get install -y libgsttag-1.0.so.0 || true
-          sudo apt-get install -y libgstvideo-1.0.so.0 || true
-          sudo apt-get install -y libgstgl-1.0.so.0 || true
-          sudo apt-get install -y libgstcodecparsers-1.0.so.0 || true
-          sudo apt-get install -y libgstfft-1.0.so.0 || true
-          sudo apt-get install -y libhyphen.so.0 || true
-          sudo apt-get install -y libmanette-0.2.so.0 || true
-          sudo apt-get install -y libflite.so.1 || true
-          sudo apt-get install -y libflite_usenglish.so.1 || true
-          sudo apt-get install -y libflite_cmu_grapheme_lang.so.1 || true
-          sudo apt-get install -y libflite_cmu_grapheme_lex.so.1 || true
-          sudo apt-get install -y libflite_cmu_indic_lang.so.1 || true
-          sudo apt-get install -y libflite_cmu_indic_lex.so.1 || true
-          sudo apt-get install -y libflite_cmulex.so.1 || true
-          sudo apt-get install -y libflite_cmu_time_awb.so.1 || true
-          sudo apt-get install -y libflite_cmu_us_awb.so.1 || true
-          sudo apt-get install -y libflite_cmu_us_kal16.so.1 || true
-          sudo apt-get install -y libflite_cmu_us_kal.so.1 || true
-          sudo apt-get install -y libflite_cmu_us_rms.so.1 || true
-          sudo apt-get install -y libflite_cmu_us_slt.so.1 || true
-          sudo apt-get install -y libGLESv2.so.2 || true
-          sudo apt-get install -y libx264.so || true
+        run: node_modules/.bin/playwright install --with-deps
 
       - name: Running Playwright e2e tests
         run: node_modules/.bin/playwright test
