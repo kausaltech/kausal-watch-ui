@@ -5,14 +5,14 @@ import { InputGroup } from 'reactstrap';
 import { usePopper } from 'react-popper';
 import styled from 'styled-components';
 import { SearchProvider, WithSearch } from '@elastic/react-search-ui';
-import { Link } from 'common/links';
+import { Link, usePrependPlanAndLocale } from 'common/links';
 import WatchSearchAPIConnector from 'common/search';
 import Icon from 'components/common/Icon';
 import PlanChip from 'components/plans/PlanChip';
 import { usePlan } from 'context/plan';
 import { useApolloClient } from '@apollo/client';
 import { getActionTermContext } from 'common/i18n';
-import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 const NavBarSearchListItem = styled.li`
   list-style-type: none;
@@ -310,8 +310,7 @@ function NavbarSearch() {
   const plan = usePlan();
   const apolloClient = useApolloClient();
   const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
+  const searchPath = usePrependPlanAndLocale('/search?q=');
 
   if (!plan.features.enableSearch) {
     return null;
@@ -394,7 +393,8 @@ function NavbarSearch() {
               searchInput.current.focus();
               setSearchOpen(true);
             } else if (searchInput.current.value) {
-              router.push(`/search?q=${searchTerm}`);
+              const href = `${searchPath}${searchTerm}`;
+              router.push(href);
               closeSearch();
             } else closeSearch();
           };
