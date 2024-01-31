@@ -5,7 +5,7 @@
   "author": "Tero Tikkanen <tero.tikkanen@kausal.tech>",
   "dependencies": {
     "@apollo/client": "3.9.0-rc.1",
-    "@apollo/experimental-nextjs-app-support": "^0.5.2",
+    "@apollo/experimental-nextjs-app-support": "0.7.0",
     "@elastic/react-search-ui": "^1.11.2",
     "@kausal/mapboxgl-legend": "^1.7.2",
     "@kausal/plotly-custom": "^2.14.3",
