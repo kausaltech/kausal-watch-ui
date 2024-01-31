@@ -343,6 +343,14 @@ type ActionListFilterBadgesProps = {
   onReset: (id: string, value: SingleFilterValue) => void;
 };
 
+type Badge = {
+  key: string;
+  id: string;
+  value: SingleFilterValue;
+  label: string;
+  onReset: () => void;
+};
+
 function ActionListFilterBadges({
   plan,
   allFilters,
@@ -355,7 +363,10 @@ function ActionListFilterBadges({
 
   const enabled = allFilters.filter((item) => activeFilters[item.id]);
 
-  const createBadge = (item: ActionListFilter, value: SingleFilterValue) => {
+  function createBadge(
+    item: ActionListFilter,
+    value: SingleFilterValue
+  ): Badge | null {
     let label: string;
     if (item.id === 'name') {
       label = value ?? '';
@@ -369,6 +380,11 @@ function ActionListFilterBadges({
         ) as ActionListFilterOption;
         if (activeOption !== undefined) break;
       }
+
+      if (!activeOption) {
+        return null;
+      }
+
       label = activeOption.label;
     } else {
       return null;
@@ -382,7 +398,8 @@ function ActionListFilterBadges({
         onReset(item.id, value);
       },
     };
-  };
+  }
+
   const seenFilterKeyValues = new Set();
   const badgesToCreate = enabled.filter((item: ActionListFilter) => {
     const uniqueKey = `${item.id}-${activeFilters[item.id]}`;
@@ -398,7 +415,7 @@ function ActionListFilterBadges({
       );
     })
     .flat()
-    .filter((item) => item != null);
+    .filter((item): item is Badge => item != null);
 
   return (
     <FiltersList aria-live="assertive">
