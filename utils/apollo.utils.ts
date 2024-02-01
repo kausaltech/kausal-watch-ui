@@ -15,7 +15,13 @@ declare module '@apollo/client' {
 
 export const errorLink = onError(({ graphQLErrors }) => {
   if (graphQLErrors) {
-    graphQLErrors.forEach((error) => captureException(error));
+    graphQLErrors.forEach((error) =>
+      captureException(error, {
+        extra: {
+          ...error,
+        },
+      })
+    );
   }
 });
 

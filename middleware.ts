@@ -96,7 +96,7 @@ export async function middleware(request: NextRequest) {
 
   if (error || !data.plansForHostname?.length) {
     if (error) {
-      captureException(error);
+      captureException(error, { extra: { hostname } });
     }
 
     return NextResponse.rewrite(new URL('/404', request.url));

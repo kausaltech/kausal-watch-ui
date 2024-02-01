@@ -44,7 +44,7 @@ export async function generateMetadata(
 }
 
 export default async function IndicatorPage({ params }: Props) {
-  const { id, plan } = params;
+  const { id, plan, domain } = params;
 
   if (!isValidIndicatorId(id)) {
     return notFound();
@@ -53,7 +53,7 @@ export default async function IndicatorPage({ params }: Props) {
   const { data, error } = await getIndicatorDetails(plan, id);
 
   if (error || !data.indicator) {
-    captureException(error);
+    captureException(error, { extra: { id, plan, domain } });
 
     return notFound();
   }
