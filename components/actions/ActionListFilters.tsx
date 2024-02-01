@@ -632,10 +632,12 @@ class CategoryFilter extends DefaultFilter<FilterValue> {
   filterByCommonCategory: boolean;
   catById: Map<string, FilterCategory>;
   hasMultipleValues: boolean;
+  private actionTermContext?: { context: string };
 
   constructor(
     config: ActionListCategoryTypeFilterBlock,
-    filterByCommonCategory: boolean
+    filterByCommonCategory: boolean,
+    plan: PlanContextType
   ) {
     super();
     this.ct = config.categoryType!;
@@ -644,6 +646,7 @@ class CategoryFilter extends DefaultFilter<FilterValue> {
     this.hasMultipleValues =
       this.ct!.selectionType === CategoryTypeSelectWidget.Multiple;
     this.filterByCommonCategory = filterByCommonCategory;
+    this.actionTermContext = getActionTermContext(plan);
     //@ts-ignore
     const style = config.style === 'dropdown' ? 'dropdown' : 'buttons';
     this.style = style;
@@ -696,7 +699,7 @@ class CategoryFilter extends DefaultFilter<FilterValue> {
     if (this.style === 'dropdown') {
       return super.render(value, onChange, t, this.hasMultipleValues);
     }
-    const seeAll: string = t('see-all-actions');
+    const seeAll: string = t('see-all-actions', this.actionTermContext || {});
     return (
       <Col sm={12} md={12} lg={12} key={this.id}>
         <MainCategory>
@@ -1040,7 +1043,7 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
           filters.push(new ResponsiblePartyFilter(orgs, plan));
           break;
         case 'CategoryTypeFilterBlock':
-          filters.push(new CategoryFilter(block, filterByCommonCategory));
+          filters.push(new CategoryFilter(block, filterByCommonCategory, plan));
           break;
         case 'ActionAttributeTypeFilterBlock':
           const allowedFormats = [
