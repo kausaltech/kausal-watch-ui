@@ -296,6 +296,37 @@ const NavbarToggler = styled.button`
   }
 `;
 
+type CustomToolbarProps = {
+  items: { slug: string; name: string; id: string; icon: string }[];
+  mobile?: boolean;
+};
+
+const CustomToolbar = (props: CustomToolbarProps) => {
+  const { items, mobile = false } = props;
+
+  return (
+    <>
+      {items.map((item) => (
+        <NavItem key={item.id} className={mobile ? 'd-md-none' : ''}>
+          <NavLink>
+            <NavigationLink slug={item.slug}>
+              <NavHighlighter className="highlighter">
+                <Icon
+                  name={item.icon}
+                  height="1.75rem"
+                  width="1.75rem"
+                  alt={item.name}
+                />
+                {mobile ? <span className="ms-2">{item.name}</span> : ''}
+              </NavHighlighter>
+            </NavigationLink>
+          </NavLink>
+        </NavItem>
+      ))}
+    </>
+  );
+};
+
 function DropdownList(props) {
   const { parentName, items, active = false, onClickLink } = props;
   return (
@@ -422,6 +453,7 @@ function GlobalNav(props) {
     fullwidth = false,
     sticky = false,
     activeBranch,
+    customToolbarItems,
   } = props;
   const {
     isOpen,
@@ -480,6 +512,9 @@ function GlobalNav(props) {
           </Site>
 
           <Nav navbar className="ml-auto d-none d-md-flex">
+            {customToolbarItems.length > 0 && (
+              <CustomToolbar items={customToolbarItems} />
+            )}
             <NavbarSearch />
             <LanguageSelector mobile={false} />
           </Nav>
@@ -563,18 +598,26 @@ function GlobalNav(props) {
                   )
                 )}
               {plan.features.enableSearch && (
-                <NavItem className="d-md-none">
+                <NavItem className="d-md-none mb-2">
                   <NavLink>
                     <NavigationLink slug="/search" onClick={handleClose}>
-                      <NavHighlighter>
-                        <Icon name="search" className="me-2" />
+                      <NavHighlighter className="highlighter">
+                        <Icon
+                          name="search"
+                          className="me-2"
+                          width="1.75rem"
+                          height="1.75rem"
+                        />
                         {t('search')}
                       </NavHighlighter>
                     </NavigationLink>
                   </NavLink>
                 </NavItem>
               )}
-              <LanguageSelector mobile="true" />
+              <LanguageSelector mobile />
+              {customToolbarItems.length > 0 && (
+                <CustomToolbar items={customToolbarItems} mobile />
+              )}
             </Nav>
             <Nav navbar>
               <PlanVersionSelector plan={plan} />

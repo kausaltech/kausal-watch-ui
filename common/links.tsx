@@ -8,7 +8,7 @@ import { PlanContextFragment } from './__generated__/graphql';
 import { ACTIONS_PATH, INDICATORS_PATH } from '@/constants/routes';
 import { useLocale } from 'next-intl';
 
-function usePrependPlanAndLocale(path: string) {
+export function usePrependPlanAndLocale(path: string) {
   const plan = usePlan();
   const locale = useLocale();
 

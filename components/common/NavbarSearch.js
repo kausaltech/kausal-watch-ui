@@ -1,10 +1,11 @@
-import { useState, useRef, useEffect } from 'react';
+'use client';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
 import { InputGroup } from 'reactstrap';
 import { usePopper } from 'react-popper';
 import styled from 'styled-components';
 import { SearchProvider, WithSearch } from '@elastic/react-search-ui';
-import { Link } from 'common/links';
+import { Link, usePrependPlanAndLocale } from 'common/links';
 import WatchSearchAPIConnector from 'common/search';
 import Icon from 'components/common/Icon';
 import PlanChip from 'components/plans/PlanChip';
@@ -12,6 +13,15 @@ import { usePlan } from 'context/plan';
 import { useApolloClient } from '@apollo/client';
 import { getActionTermContext } from 'common/i18n';
 import { useRouter } from 'next/navigation';
+
+const NavBarSearchListItem = styled.li`
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
 
 const TextInput = styled.input`
   display: ${(props) => (props.$isOpen ? 'block' : 'hidden')};
@@ -183,6 +193,8 @@ const Arrow = styled.div`
   }
 `;
 
+const RESULTS_LIMIT = 4;
+
 function ResultItem(props) {
   const t = useTranslations();
   const plan = usePlan();
@@ -231,10 +243,9 @@ function ResultItem(props) {
 }
 
 const ResultList = (props) => {
-  const { results, searchTerm } = props;
+  const { results, searchTerm, loading } = props;
   const t = useTranslations();
   //const plan = usePlan();
-  const RESULTS_LIMIT = 4;
   const counts = [
     {
       name: 'Pages',
@@ -253,6 +264,7 @@ const ResultList = (props) => {
     },
   ];
 
+  if (loading) return <div>...</div>;
   // FIXME: can we limit the number of results earlier?
   // We could show { counts.map((count) => count.count > 0 ? `${count.name}: ${count.count} ` : '' ) }
   return (
@@ -298,11 +310,13 @@ function NavbarSearch() {
   const plan = usePlan();
   const apolloClient = useApolloClient();
   const router = useRouter();
+  const searchPath = usePrependPlanAndLocale('/search?q=');
 
   if (!plan.features.enableSearch) {
     return null;
   }
 
+  // TODO: Translate a11y text
   const connector = new WatchSearchAPIConnector({ plan, apolloClient });
   return (
     <SearchProvider
@@ -312,7 +326,7 @@ function NavbarSearch() {
         hasA11yNotifications: true,
         a11yNotificationMessages: {
           searchResults: ({ start, end, totalResults, searchTerm }) =>
-            `Searching for "${searchTerm}". Showing ${start} to ${end} results out of ${totalResults}.`,
+            `Searching for "${searchTerm}". Showing first ${RESULTS_LIMIT} results out of ${totalResults}.`,
         },
       }}
     >
@@ -335,7 +349,7 @@ function NavbarSearch() {
           const [popperElement, setPopperElement] = useState(null);
           const [arrowElement, setArrowElement] = useState(null);
           const [searchOpen, setSearchOpen] = useState(false);
-          const searchElement = useRef();
+          const searchElement = useRef(null);
 
           // Clear search term if the input is hidden
           const closeSearch = () => {
@@ -343,11 +357,12 @@ function NavbarSearch() {
             setSearchTerm('');
           };
 
+          const handlePageClick = useCallback((e) => {
+            if (!searchElement.current.contains(e.target)) closeSearch();
+          }, []);
+
           // Close results modal if clicked outside search ui
           useEffect(() => {
-            const handlePageClick = (e) => {
-              if (!searchElement.current.contains(e.target)) closeSearch();
-            };
             searchOpen &&
               document.addEventListener('mousedown', handlePageClick);
             return () => {
@@ -378,16 +393,14 @@ function NavbarSearch() {
               searchInput.current.focus();
               setSearchOpen(true);
             } else if (searchInput.current.value) {
-              router.push({
-                pathname: '/search',
-                query: { q: searchTerm },
-              });
+              const href = `${searchPath}${searchTerm}`;
+              router.push(href);
               closeSearch();
             } else closeSearch();
           };
 
           return (
-            <li ref={searchElement} className="nav-item">
+            <NavBarSearchListItem className="nav-item" ref={searchElement}>
               <SearchControls ref={setReferenceElement}>
                 <form autoComplete="off" aria-label={t('search')}>
                   <InputGroup>
@@ -423,8 +436,8 @@ function NavbarSearch() {
                     >
                       <Icon
                         name="search"
-                        width="1.25rem"
-                        height="1.25rem"
+                        width="1.75rem"
+                        height="1.75rem"
                         aria-hidden="true"
                         focusable="false"
                       />
@@ -444,11 +457,12 @@ function NavbarSearch() {
                   <ResultList
                     results={results}
                     searchTerm={searchTerm}
-                    anchor={referenceElement}
+                    anchor={searchElement}
+                    loading={isLoading}
                   />
                 </ResultsBox>
               )}
-            </li>
+            </NavBarSearchListItem>
           );
         }}
       </WithSearch>

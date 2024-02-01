@@ -398,7 +398,7 @@ function StreamField(props: StreamFieldProps) {
   const { page, blocks, color, hasSidebar = false, columnProps } = props;
 
   return (
-    <>
+    <div className={`custom-${page.slug}`}>
       {blocks.map((block, index) => (
         <StreamFieldBlock
           id={`section-${index + 1}`}
@@ -410,7 +410,7 @@ function StreamField(props: StreamFieldProps) {
           columnProps={columnProps}
         />
       ))}
-    </>
+    </div>
   );
 }
 
