@@ -264,7 +264,6 @@ const ResultList = (props) => {
     },
   ];
 
-  if (loading) return <div>...</div>;
   // FIXME: can we limit the number of results earlier?
   // We could show { counts.map((count) => count.count > 0 ? `${count.name}: ${count.count} ` : '' ) }
   return (
@@ -272,14 +271,17 @@ const ResultList = (props) => {
       <ResultsHeader>
         {t('searching-for', { term: searchTerm })}
         <ResultCount>
-          {results.length > 0 ? '' : t('search-no-results')}
+          {loading && <p>{t('loading')}...</p>}
+          {!loading && results.length === 0 && t('search-no-results')}
         </ResultCount>
       </ResultsHeader>
-      <HitList>
-        {results.slice(0, RESULTS_LIMIT).map((r, i) => (
-          <ResultItem key={i} hit={r} />
-        ))}
-      </HitList>
+      {!loading && (
+        <HitList>
+          {results.slice(0, RESULTS_LIMIT).map((r, i) => (
+            <ResultItem key={i} hit={r} />
+          ))}
+        </HitList>
+      )}
       <ResultsFooter>
         {results.length > 0 ? (
           <Link
@@ -305,12 +307,8 @@ const ResultList = (props) => {
 };
 
 function NavbarSearch() {
-  const searchInput = useRef();
-  const t = useTranslations();
   const plan = usePlan();
   const apolloClient = useApolloClient();
-  const router = useRouter();
-  const searchPath = usePrependPlanAndLocale('/search?q=');
 
   if (!plan.features.enableSearch) {
     return null;
@@ -325,7 +323,7 @@ function NavbarSearch() {
         debug: false,
         hasA11yNotifications: true,
         a11yNotificationMessages: {
-          searchResults: ({ start, end, totalResults, searchTerm }) =>
+          searchResults: ({ totalResults, searchTerm }) =>
             `Searching for "${searchTerm}". Showing first ${RESULTS_LIMIT} results out of ${totalResults}.`,
         },
       }}
@@ -344,129 +342,146 @@ function NavbarSearch() {
         })}
       >
         {(context) => {
-          const { isLoading, searchTerm, setSearchTerm, results } = context;
-          const [referenceElement, setReferenceElement] = useState(null);
-          const [popperElement, setPopperElement] = useState(null);
-          const [arrowElement, setArrowElement] = useState(null);
-          const [searchOpen, setSearchOpen] = useState(false);
-          const searchElement = useRef(null);
-
-          // Clear search term if the input is hidden
-          const closeSearch = () => {
-            setSearchOpen(false);
-            setSearchTerm('');
-          };
-
-          const handlePageClick = useCallback((e) => {
-            if (!searchElement.current.contains(e.target)) closeSearch();
-          }, []);
-
-          // Close results modal if clicked outside search ui
-          useEffect(() => {
-            searchOpen &&
-              document.addEventListener('mousedown', handlePageClick);
-            return () => {
-              document.removeEventListener('mousedown', handlePageClick);
-            };
-          }, [searchOpen]);
-
-          // Use popper to place and size search modal
-          const { styles, attributes, update } = usePopper(
-            referenceElement,
-            popperElement,
-            {
-              modifiers: [
-                { name: 'arrow', options: { element: arrowElement } },
-                {
-                  name: 'offset',
-                  options: {
-                    offset: [0, 10],
-                  },
-                },
-              ],
-            }
-          );
-
-          const handleSubmit = (event) => {
-            event.preventDefault();
-            if (!searchOpen) {
-              searchInput.current.focus();
-              setSearchOpen(true);
-            } else if (searchInput.current.value) {
-              const href = `${searchPath}${searchTerm}`;
-              router.push(href);
-              closeSearch();
-            } else closeSearch();
-          };
-
           return (
-            <NavBarSearchListItem className="nav-item" ref={searchElement}>
-              <SearchControls ref={setReferenceElement}>
-                <form autoComplete="off" aria-label={t('search')}>
-                  <InputGroup>
-                    <TextInput
-                      type="search"
-                      id="q"
-                      name="q"
-                      autoComplete="off"
-                      aria-autocomplete="list"
-                      placeholder={t('search')}
-                      aria-label={t('search')}
-                      role="combobox"
-                      aria-expanded={searchTerm.length > 1}
-                      aria-haspopup="listbox"
-                      value={searchTerm}
-                      onChange={(e) =>
-                        setSearchTerm(e.target.value, {
-                          autocompleteResults: true,
-                          autocompleteMinimumCharacters: 2,
-                          debounce: 400,
-                        })
-                      }
-                      onFocus={(e) => setSearchOpen(true)}
-                      ref={searchInput}
-                      $isOpen={searchOpen}
-                    />
-                    <SearchButton
-                      $isActive={searchOpen}
-                      type="submit"
-                      onClick={handleSubmit}
-                      aria-label={t('search')}
-                      data-testid="nav-search-btn"
-                    >
-                      <Icon
-                        name="search"
-                        width="1.75rem"
-                        height="1.75rem"
-                        aria-hidden="true"
-                        focusable="false"
-                      />
-                    </SearchButton>
-                  </InputGroup>
-                </form>
-              </SearchControls>
-              {/* TODO: is there a way to control results visibility better? */}
-              {/* TODO: display loading state but currently isLoading does not update itself */}
-              {searchTerm.length > 1 && searchOpen && (
-                <ResultsBox
-                  ref={setPopperElement}
-                  style={styles.popper}
-                  {...attributes.popper}
-                >
-                  <Arrow ref={setArrowElement} style={styles.arrow} />
-                  <ResultList
-                    results={results}
-                    searchTerm={searchTerm}
-                    anchor={searchElement}
-                    loading={isLoading}
-                  />
-                </ResultsBox>
-              )}
-            </NavBarSearchListItem>
+            <Search
+              isLoading={context.isLoading}
+              searchTerm={context.searchTerm}
+              setSearchTerm={context.setSearchTerm}
+              results={context.results}
+            />
           );
         }}
       </WithSearch>
     </SearchProvider>
+  );
+}
+
+function Search({ isLoading, searchTerm, setSearchTerm, results }) {
+  const searchInput = useRef();
+  const t = useTranslations();
+  const router = useRouter();
+  const searchPath = usePrependPlanAndLocale('/search?q=');
+
+  const [referenceElement, setReferenceElement] = useState(null);
+  const [popperElement, setPopperElement] = useState(null);
+  const [arrowElement, setArrowElement] = useState(null);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const searchElement = useRef(null);
+
+  // Clear search term if the input is hidden
+  const closeSearch = () => {
+    setSearchOpen(false);
+    setSearchTerm('');
+  };
+
+  // Close results modal if clicked outside search ui
+  useEffect(() => {
+    const handlePageClick = (e) => {
+      if (!searchElement.current.contains(e.target)) {
+        setSearchOpen(false);
+        setSearchTerm('');
+      }
+    };
+
+    if (searchOpen) {
+      document.addEventListener('mousedown', handlePageClick);
+
+      return () => {
+        document.removeEventListener('mousedown', handlePageClick);
+      };
+    }
+  }, [searchOpen, setSearchTerm]);
+
+  // Use popper to place and size search modal
+  const { styles, attributes } = usePopper(referenceElement, popperElement, {
+    modifiers: [
+      { name: 'arrow', options: { element: arrowElement } },
+      {
+        name: 'offset',
+        options: {
+          offset: [0, 10],
+        },
+      },
+    ],
+  });
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (!searchOpen) {
+      searchInput.current.focus();
+      setSearchOpen(true);
+    } else if (searchInput.current.value) {
+      const href = `${searchPath}${searchTerm}`;
+      router.push(href);
+      closeSearch();
+    } else closeSearch();
+  };
+
+  return (
+    <NavBarSearchListItem className="nav-item" ref={searchElement}>
+      <SearchControls ref={setReferenceElement}>
+        <form autoComplete="off" aria-label={t('search')}>
+          <InputGroup>
+            <TextInput
+              type="search"
+              id="q"
+              name="q"
+              autoComplete="off"
+              aria-autocomplete="list"
+              placeholder={t('search')}
+              aria-label={t('search')}
+              role="combobox"
+              aria-expanded={searchTerm.length > 1}
+              aria-haspopup="listbox"
+              value={searchTerm}
+              onChange={(e) =>
+                setSearchTerm(e.target.value, {
+                  refresh: true,
+                  autocompleteResults: true,
+                  autocompleteMinimumCharacters: 2,
+                  debounce: 400,
+                })
+              }
+              onFocus={(e) => setSearchOpen(true)}
+              ref={searchInput}
+              $isOpen={searchOpen}
+            />
+            <SearchButton
+              $isActive={searchOpen}
+              type="submit"
+              onClick={handleSubmit}
+              aria-label={t('search')}
+              data-testid="nav-search-btn"
+            >
+              <Icon
+                name="search"
+                width="1.75rem"
+                height="1.75rem"
+                aria-hidden="true"
+                focusable="false"
+              />
+            </SearchButton>
+          </InputGroup>
+        </form>
+      </SearchControls>
+      {/* TODO: is there a way to control results visibility better? */}
+      {/* TODO: display loading state but currently isLoading does not update itself */}
+      {searchTerm.length > 1 && searchOpen && (
+        <ResultsBox
+          ref={setPopperElement}
+          style={styles.popper}
+          {...attributes.popper}
+        >
+          <Arrow ref={setArrowElement} style={styles.arrow} />
+          <ResultList
+            results={results}
+            searchTerm={searchTerm}
+            anchor={searchElement}
+            loading={isLoading}
+          />
+        </ResultsBox>
+      )}
+    </NavBarSearchListItem>
   );
 }
 
