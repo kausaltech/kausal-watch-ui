@@ -9,8 +9,6 @@ import { getActionDetails } from '@/queries/get-action';
 import ActionContent from '@/components/actions/ActionContent';
 import { getActionImage } from '@/common/images';
 import { getActionTermContext } from '@/common/i18n';
-import { getMetaTitles } from '@/utils/metadata';
-import { getPlan } from '@/queries/get-plan';
 
 type Props = {
   params: {
@@ -36,7 +34,6 @@ export async function generateMetadata(
   if (!data.action) {
     return {};
   }
-  const origin = `${protocol}://${params.domain}`;
   const resolvedParent = await parent;
   const image = getActionImage(plan, data.action);
   const actionTerm = t(
@@ -49,14 +46,6 @@ export async function generateMetadata(
       : data.action.identifier
   }`;
 
-  const response = await getPlan(params.domain, params.plan, origin);
-
-  if (!response.data.plan) {
-    return {};
-  }
-
-  const { title: siteName } = getMetaTitles(response.data.plan);
-
   return {
     title: `${title} | ${resolvedParent.title?.absolute}`,
     description: data.action.name,
@@ -65,7 +54,7 @@ export async function generateMetadata(
       description: data.action.name,
       images: image?.social?.src ? [image.social.src] : undefined,
       url: resolvedParent.openGraph?.url ?? undefined,
-      siteName,
+      siteName: resolvedParent.openGraph?.siteName ?? undefined,
     },
   };
 }
