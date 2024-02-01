@@ -328,20 +328,14 @@ const FooterStatement = styled.div`
   }
 `;
 
-const FundingInstruments = styled.div`
+const FundingInstruments = styled.div<{ $wrap?: boolean }>`
   width: 100%;
   flex: 1 0 auto;
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-end;
+  justify-content: ${(props) => (props.$wrap ? 'center' : 'flex-end')};
   padding: 0;
   margin-bottom: ${(props) => props.theme.spaces.s200};
-
-  @media (max-width: ${(props) => props.theme.breakpointMd}) {
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-  }
 `;
 
 const FundingHeader = styled.div`
@@ -353,16 +347,11 @@ const FundingHeader = styled.div`
   }
 `;
 
-const FundingInstrumentContainer = styled.div`
-  height: calc(2 * ${(props) => props.theme.spaces.s600});
-  width: calc(2 * ${(props) => props.theme.spaces.s800});
+const FundingInstrumentContainer = styled.div<{ $small?: boolean }>`
+  height: ${(props) => (props.$small ? '10rem' : '12rem')};
+  width: ${(props) => (props.$small ? '10rem' : '12rem')};
   margin-left: ${(props) => props.theme.spaces.s300};
   text-align: right;
-
-  &.small {
-    height: calc(2 * ${(props) => props.theme.spaces.s400});
-    width: calc(2 * ${(props) => props.theme.spaces.s400});
-  }
 
   svg {
     height: 100%;
@@ -642,12 +631,13 @@ function SiteFooter(props: SiteFooterProps) {
                 ))}
               </FundingInstruments>
             )}
+            {/* If we have more than 4 otherLogos render them smaller  */}
             {otherLogos?.length > 0 && (
-              <FundingInstruments>
+              <FundingInstruments $wrap={otherLogos.length > 4}>
                 {otherLogos.map((logo) => (
                   <FundingInstrumentContainer
                     key={logo.id}
-                    className={otherLogos.length > 3 ? 'small' : ''}
+                    $small={otherLogos.length > 4}
                   >
                     <a
                       href={logo.link ? logo.link : '#'}
