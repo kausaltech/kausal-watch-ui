@@ -6,6 +6,7 @@ import { captureException } from '@sentry/nextjs';
 import { getIndicatorDetails } from '@/queries/get-indicator';
 import IndicatorContent from '@/components/indicators/IndicatorContent';
 import { isValidIndicatorId } from '@/utils/indicators';
+import { tryRequest } from '@/utils/api.utils';
 
 type Props = {
   params: {
@@ -25,9 +26,9 @@ export async function generateMetadata(
     return notFound();
   }
 
-  const { data } = await getIndicatorDetails(plan, id);
+  const { data } = await tryRequest(getIndicatorDetails(plan, id));
 
-  if (!data.indicator) {
+  if (!data?.indicator) {
     return {};
   }
 
@@ -50,9 +51,9 @@ export default async function IndicatorPage({ params }: Props) {
     return notFound();
   }
 
-  const { data, error } = await getIndicatorDetails(plan, id);
+  const { data, error } = await tryRequest(getIndicatorDetails(plan, id));
 
-  if (error || !data.indicator) {
+  if (error || !data?.indicator) {
     captureException(error, { extra: { id, plan, domain } });
 
     return notFound();

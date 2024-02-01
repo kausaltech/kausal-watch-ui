@@ -1,9 +1,4 @@
-import {
-  ApolloClient,
-  ApolloQueryResult,
-  InMemoryCache,
-  from,
-} from '@apollo/client';
+import { ApolloClient, InMemoryCache, from } from '@apollo/client';
 import { registerApolloClient } from '@apollo/experimental-nextjs-app-support/rsc';
 import possibleTypes from '@/common/__generated__/possible_types.json';
 
@@ -15,26 +10,6 @@ import {
   operationEnd,
   operationStart,
 } from './apollo.utils';
-
-type FailedRequest = {
-  error: any;
-  data: undefined;
-};
-
-/**
- * Simple wrapper to wrap queries in a try/catch block
- */
-export async function tryRequest<T>(
-  request: Promise<ApolloQueryResult<T>>
-): Promise<ApolloQueryResult<T> | FailedRequest> {
-  try {
-    const response = await request;
-
-    return response;
-  } catch (error) {
-    return { error, data: undefined };
-  }
-}
 
 /**
  * Apollo client used in React Server Components (fully server-side). For client components

@@ -16,6 +16,7 @@ import {
   STATIC_ROUTES,
 } from '@/constants/routes';
 import { httpLink, operationEnd, operationStart } from '@/utils/apollo.utils';
+import { tryRequest } from '@/utils/api.utils';
 
 const apolloClient = new ApolloClient({
   cache: new InMemoryCache({
@@ -87,15 +88,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const protocol = headersList.get('x-forwarded-proto');
   const url = new URL(`${protocol}://${host}`);
 
-  const { data: plansData, error: plansError } = await apolloClient.query<
-    GetPlansByHostnameQuery,
-    GetPlansByHostnameQueryVariables
-  >({
-    query: GET_PLANS_BY_HOSTNAME,
-    variables: { hostname: url.hostname },
-  });
+  const { data: plansData, error: plansError } = await tryRequest(
+    apolloClient.query<
+      GetPlansByHostnameQuery,
+      GetPlansByHostnameQueryVariables
+    >({
+      query: GET_PLANS_BY_HOSTNAME,
+      variables: { hostname: url.hostname },
+    })
+  );
 
-  if (plansError || !plansData.plansForHostname?.length) {
+  if (plansError || !plansData?.plansForHostname?.length) {
     return [];
   }
 
@@ -105,15 +108,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     return [];
   }
 
-  const { data, error } = await apolloClient.query<
-    GetSitemapQuery,
-    GetSitemapQueryVariables
-  >({
-    query: GET_SITEMAP_CONTENTS,
-    variables: { id: planId },
-  });
+  const { data, error } = await tryRequest(
+    apolloClient.query<GetSitemapQuery, GetSitemapQueryVariables>({
+      query: GET_SITEMAP_CONTENTS,
+      variables: { id: planId },
+    })
+  );
 
-  if (error || !data.plan) {
+  if (error || !data?.plan) {
     return [];
   }
 

@@ -16,15 +16,17 @@ const sentryAuthToken =
   secrets.SENTRY_AUTH_TOKEN || process.env.SENTRY_AUTH_TOKEN;
 
 console.log(`
-    > Kausal Watch UI
-      > Initialising app
-        > NODE_ENV: ${process.env.NODE_ENV}
-        > NEXT_PUBLIC_DEPLOYMENT_TYPE: ${process.env.NEXT_PUBLIC_DEPLOYMENT_TYPE}
-        > NEXT_PUBLIC_API_URL: ${process.env.NEXT_PUBLIC_API_URL}
+  ⚙ Kausal Watch UI
+    ↝ Initialising app
+      ↝ NODE_ENV: ${process.env.NODE_ENV}
+      ↝ NEXT_PUBLIC_DEPLOYMENT_TYPE: ${process.env.NEXT_PUBLIC_DEPLOYMENT_TYPE}
+      ↝ NEXT_PUBLIC_API_URL: ${process.env.NEXT_PUBLIC_API_URL}
   `);
 
 function initializeThemes() {
-  console.log(' > Initialising themes');
+  console.log(`
+      ↝ Initialising themes
+  `);
 
   const destPath = path.join(__dirname, 'public', 'static', 'themes');
   const {

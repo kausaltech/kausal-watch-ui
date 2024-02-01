@@ -12,6 +12,7 @@ import { getThemeCSS, loadTheme } from '@/common/theme';
 import { CombinedIconSymbols } from '@/components/common/Icon';
 import { MatomoAnalytics } from '@/components/MatomoAnalytics';
 import { getMetaTitles } from '@/utils/metadata';
+import { tryRequest } from '@/utils/api.utils';
 
 type Props = {
   params: { plan: string; domain: string; lang: string };
@@ -33,9 +34,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     );
   }
 
-  const { data } = await getPlan(params.domain, params.plan, origin);
+  const { data } = await tryRequest(
+    getPlan(params.domain, params.plan, origin)
+  );
 
-  if (!data.plan) {
+  if (!data?.plan) {
     return {};
   }
 
@@ -84,9 +87,11 @@ export default async function PlanLayout({ params, children }: Props) {
   const { plan, domain } = params;
   const headersList = headers();
   const protocol = headersList.get('x-forwarded-proto');
-  const { data } = await getPlan(domain, plan, `${protocol}://${domain}`);
+  const { data } = await tryRequest(
+    getPlan(domain, plan, `${protocol}://${domain}`)
+  );
 
-  if (!data.plan) {
+  if (!data?.plan) {
     notFound();
   }
 
