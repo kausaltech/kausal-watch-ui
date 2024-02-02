@@ -168,10 +168,6 @@ export class PlanContext {
   getCategoryMenuItems(
     parentId: string | null | undefined
   ): CategoryMenuItem[] {
-    this.plan.mainMenu?.items.map((item) => {
-      console.log(item);
-    });
-
     if (!parentId) return [];
 
     function isCategoryItem(item: MainMenuItem): item is CategoryMenuItem {
