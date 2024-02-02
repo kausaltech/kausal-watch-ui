@@ -34,7 +34,6 @@ export async function generateMetadata(
   if (!data.action) {
     return {};
   }
-
   const resolvedParent = await parent;
   const image = getActionImage(plan, data.action);
   const actionTerm = t(
@@ -55,6 +54,7 @@ export async function generateMetadata(
       description: data.action.name,
       images: image?.social?.src ? [image.social.src] : undefined,
       url: resolvedParent.openGraph?.url ?? undefined,
+      siteName: resolvedParent.openGraph?.siteName ?? undefined,
     },
   };
 }
@@ -77,6 +77,5 @@ export default async function ActionPage({ params }: Props) {
 
     return notFound();
   }
-
   return <ActionContent action={data.action} extraPlanData={data.plan} />;
 }
