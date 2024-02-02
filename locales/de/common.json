@@ -164,5 +164,9 @@
     "filter-status-help": "Zeige Maßnahmen mit ausgewähltem Status",
     "select-sector-for-actions": "Wählen Sie einen Emissionssektor aus, um zugehörige Maßnahmen anzuzeigen",
     "no-phase": "Keine Phase",
-    "no-status": "Kein Status"
+    "no-status": "Kein Status",
+    "number-of-search-results": "{count, plural, =1 {ein Treffer} other {# Treffer}} für die Suche",
+    "error": "Fehler",
+    "collapse-row": "Zeile zusammenklappen",
+    "expand-row": "Zeile erweitern"
 }
