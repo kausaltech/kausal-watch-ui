@@ -17,3 +17,6 @@ export const apiUrl =
   process.env.NEXT_PUBLIC_API_URL || 'https://api.watch.kausal.tech/v1';
 
 export const gqlUrl = `${apiUrl}/graphql/`;
+
+export const sentryDsn =
+  process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN;
