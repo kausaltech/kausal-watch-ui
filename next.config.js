@@ -12,6 +12,8 @@ if (process.env.DOTENV_CONFIG_PATH) {
   require('dotenv').config({ path: process.env.DOTENV_CONFIG_PATH });
 }
 
+const sentryDsn = process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN;
+
 const sentryAuthToken =
   secrets.SENTRY_AUTH_TOKEN || process.env.SENTRY_AUTH_TOKEN;
 
@@ -89,8 +91,14 @@ let config = {
 
 module.exports = withNextIntl(config);
 
-if (sentryAuthToken) {
+console.log(' >>>> sentryDsn', sentryDsn);
+
+if (sentryAuthToken && sentryDsn) {
   const { withSentryConfig } = require('@sentry/nextjs');
+
+  console.log(`
+      ↝ Initialising Sentry
+  `);
 
   // Injected content via Sentry wizard below
   module.exports = withSentryConfig(
