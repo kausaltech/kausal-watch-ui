@@ -14,6 +14,10 @@ import { useApolloClient } from '@apollo/client';
 import { getActionTermContext } from 'common/i18n';
 import { useRouter } from 'next/navigation';
 
+const StyledInputGroup = styled(InputGroup)`
+  flex-wrap: nowrap;
+`;
+
 const NavBarSearchListItem = styled.li`
   list-style-type: none;
   margin: 0;
@@ -421,7 +425,7 @@ function Search({ isLoading, searchTerm, setSearchTerm, results }) {
     <NavBarSearchListItem className="nav-item" ref={searchElement}>
       <SearchControls ref={setReferenceElement}>
         <form autoComplete="off" aria-label={t('search')}>
-          <InputGroup>
+          <StyledInputGroup>
             <TextInput
               type="search"
               id="q"
@@ -458,7 +462,7 @@ function Search({ isLoading, searchTerm, setSearchTerm, results }) {
                 focusable="false"
               />
             </SearchButton>
-          </InputGroup>
+          </StyledInputGroup>
         </form>
       </SearchControls>
       {/* TODO: is there a way to control results visibility better? */}
