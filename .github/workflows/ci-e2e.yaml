@@ -1,4 +1,4 @@
-name: CI-e2e-tests
+name: E2e-tests
 on:
   workflow_dispatch:
     inputs:
@@ -19,7 +19,6 @@ jobs:
   e2e_test:
     name: Run tests
     runs-on: ubuntu-latest
-
     steps:
       - name: Check out code
         uses: actions/checkout@v3
@@ -28,6 +27,14 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
+
+      - name: Cache node modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/ms-playwright
+            node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/yarn.lock') }}
 
       - name: Install yarn
         run: |
@@ -39,11 +46,10 @@ jobs:
           yarn config set npmScopes.kausal.npmAuthIdent ${{ secrets.NPM_AUTH_IDENT }}
 
       - name: Install dependencies
-        continue-on-error: true
         run: yarn install
 
       - name: Playwright install
-        run: node_modules/.bin/playwright install
+        run: node_modules/.bin/playwright install --with-deps
 
       - name: Running Playwright e2e tests
         run: node_modules/.bin/playwright test
