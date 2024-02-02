@@ -3,12 +3,12 @@
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
 import * as Sentry from '@sentry/nextjs';
-import { deploymentType, sentryDsn } from './common/environment';
+import { deploymentType } from './common/environment';
 
 Sentry.init({
   environment: deploymentType,
 
-  dsn: sentryDsn,
+  dsn: 'https://9b7a344624774da8a5aa5752baad826b@sentry.kausal.tech/2',
 
   ignoreErrors: ['NEXT_NOT_FOUND'],
 
@@ -27,9 +27,8 @@ Sentry.init({
   // You can remove this option if you're not planning to use the Sentry Session Replay feature:
   integrations: [
     new Sentry.Replay({
-      maskAllInputs: false,
-      maskAllText: false,
-      blockAllMedia: false,
+      // Additional Replay configuration goes in here, for example:
+      blockAllMedia: true,
     }),
   ],
 });
