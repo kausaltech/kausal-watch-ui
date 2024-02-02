@@ -3,6 +3,7 @@ import { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import IndicatorList from '@/components/indicators/IndicatorList';
 import { getIndicatorListPage } from '@/queries/get-indicator-list-page';
+import { tryRequest } from '@/utils/api.utils';
 
 type Props = {
   params: { plan: string; lang: string };
@@ -17,9 +18,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function ActionsPage({ params }: Props) {
-  const { data } = await getIndicatorListPage(params.plan);
+  const { data } = await tryRequest(getIndicatorListPage(params.plan));
 
-  if (data.planPage?.__typename !== 'IndicatorListPage') {
+  if (data?.planPage?.__typename !== 'IndicatorListPage') {
     return notFound();
   }
 

@@ -9,6 +9,7 @@ import { getActionDetails } from '@/queries/get-action';
 import ActionContent from '@/components/actions/ActionContent';
 import { getActionImage } from '@/common/images';
 import { getActionTermContext } from '@/common/i18n';
+import { tryRequest } from '@/utils/api.utils';
 
 type Props = {
   params: {
@@ -29,9 +30,11 @@ export async function generateMetadata(
   const headersList = headers();
   const protocol = headersList.get('x-forwarded-proto');
 
-  const { data } = await getActionDetails(plan, id, `${protocol}://${domain}`);
+  const { data } = await tryRequest(
+    getActionDetails(plan, id, `${protocol}://${domain}`)
+  );
 
-  if (!data.action) {
+  if (!data?.action) {
     return {};
   }
   const resolvedParent = await parent;
@@ -64,13 +67,11 @@ export default async function ActionPage({ params }: Props) {
   const headersList = headers();
   const protocol = headersList.get('x-forwarded-proto');
 
-  const { data, error } = await getActionDetails(
-    plan,
-    id,
-    `${protocol}://${domain}`
+  const { data, error } = await tryRequest(
+    getActionDetails(plan, id, `${protocol}://${domain}`)
   );
 
-  if (error || !data.action || !data.plan) {
+  if (error || !data?.action || !data.plan) {
     if (error) {
       captureException(error);
     }

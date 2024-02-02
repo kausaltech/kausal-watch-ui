@@ -4,7 +4,7 @@ import { headers } from 'next/headers';
 import OrgContent from '@/components/orgs/OrgContent';
 import { getOrganizationDetails } from '@/queries/get-organization';
 import { OrganizationDetailsQuery } from '@/common/__generated__/graphql';
-import { tryRequest } from '@/utils/apollo-rsc-client';
+import { tryRequest } from '@/utils/api.utils';
 
 type Props = {
   params: {

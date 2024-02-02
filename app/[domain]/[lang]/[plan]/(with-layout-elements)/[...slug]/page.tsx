@@ -4,6 +4,7 @@ import React from 'react';
 import { Content } from './ContentPage';
 import { Metadata, ResolvingMetadata } from 'next';
 import { getMetaDescription, getMetaImage } from '@/utils/metadata';
+import { tryRequest } from '@/utils/api.utils';
 
 type Props = {
   params: { slug: string[]; plan: string };
@@ -19,9 +20,9 @@ export async function generateMetadata(
   const { slug, plan } = params;
   const path = getPath(slug);
 
-  const { data } = await getContentPage(plan, path);
+  const { data } = await tryRequest(getContentPage(plan, path));
 
-  if (!data.planPage) {
+  if (!data?.planPage) {
     return {};
   }
 
@@ -43,9 +44,9 @@ export default async function ContentPage({ params }: Props) {
   const { slug, plan } = params;
   const path = getPath(slug);
 
-  const { data } = await getContentPage(plan, path);
+  const { data } = await tryRequest(getContentPage(plan, path));
 
-  if (!data.planPage) {
+  if (!data?.planPage) {
     return notFound();
   }
 

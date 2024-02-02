@@ -22,6 +22,7 @@ import {
   isRestrictedPlan,
   rewriteUrl,
 } from './utils/middleware.utils';
+import { tryRequest } from './utils/api.utils';
 
 const apolloClient = new ApolloClient({
   cache: new InMemoryCache({
@@ -86,17 +87,19 @@ export async function middleware(request: NextRequest) {
     return NextResponse.rewrite(url);
   }
 
-  const { data, error } = await apolloClient.query<
-    GetPlansByHostnameQuery,
-    GetPlansByHostnameQueryVariables
-  >({
-    query: GET_PLANS_BY_HOSTNAME,
-    variables: { hostname },
-  });
+  const { data, error } = await tryRequest(
+    apolloClient.query<
+      GetPlansByHostnameQuery,
+      GetPlansByHostnameQueryVariables
+    >({
+      query: GET_PLANS_BY_HOSTNAME,
+      variables: { hostname },
+    })
+  );
 
-  if (error || !data.plansForHostname?.length) {
+  if (error || !data?.plansForHostname?.length) {
     if (error) {
-      captureException(error, { extra: { hostname } });
+      captureException(error, { extra: { hostname, ...error } });
     }
 
     return NextResponse.rewrite(new URL('/404', request.url));
