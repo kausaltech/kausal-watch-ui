@@ -436,9 +436,6 @@ function Search({ isLoading, searchTerm, setSearchTerm, results }) {
               value={searchTerm}
               onChange={(e) =>
                 setSearchTerm(e.target.value, {
-                  refresh: true,
-                  autocompleteResults: true,
-                  autocompleteMinimumCharacters: 2,
                   debounce: 400,
                 })
               }
