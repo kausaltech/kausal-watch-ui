@@ -97,7 +97,7 @@ const PlanChip = React.forwardRef<HTMLDivElement, PlanChipProps>(
     } = props;
 
     return (
-      <Tag ref={ref} $minWidth={MIN_WIDTH[size]} {...props}>
+      <Tag ref={ref} $minWidth={MIN_WIDTH[size]}>
         <PlanAvatar
           src={
             planImage ?? '/static/themes/default/images/default-avatar-org.png'
