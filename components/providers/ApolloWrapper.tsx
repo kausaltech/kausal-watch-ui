@@ -12,12 +12,12 @@ import {
 import {
   errorLink,
   localeMiddleware,
-  httpLink,
+  getHttpLink,
   headersMiddleware,
 } from '../../utils/apollo.utils';
 import { isServer } from '@/common/environment';
 
-function makeClient(initialLocale: string) {
+function makeClient(initialLocale: string, origin?: string) {
   return new NextSSRApolloClient({
     defaultContext: {
       locale: initialLocale,
@@ -34,7 +34,7 @@ function makeClient(initialLocale: string) {
             }),
           ]
         : []),
-      httpLink,
+      getHttpLink(origin),
     ]),
   });
 }
@@ -53,11 +53,14 @@ function UpdateLocale({ children }: React.PropsWithChildren) {
   return children;
 }
 
-type Props = { initialLocale: string } & React.PropsWithChildren;
+type Props = {
+  origin?: string;
+  initialLocale: string;
+} & React.PropsWithChildren;
 
-export function ApolloWrapper({ initialLocale, children }: Props) {
+export function ApolloWrapper({ origin, initialLocale, children }: Props) {
   return (
-    <ApolloNextAppProvider makeClient={() => makeClient(initialLocale)}>
+    <ApolloNextAppProvider makeClient={() => makeClient(initialLocale, origin)}>
       <UpdateLocale>{children}</UpdateLocale>
     </ApolloNextAppProvider>
   );

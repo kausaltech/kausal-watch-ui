@@ -1,5 +1,6 @@
 import { ReactNode } from 'react';
 import { NextIntlClientProvider, useMessages } from 'next-intl';
+import { headers } from 'next/headers';
 
 import { StyledComponentsRegistry } from '@/styles/StyledComponentsRegistry';
 import { ApolloWrapper } from '@/components/providers/ApolloWrapper';
@@ -15,6 +16,10 @@ type Props = {
 
 export default function LangLayout({ params, children }: Props) {
   const messages = useMessages();
+  const headersList = headers();
+  const host = headersList.get('host');
+  const protocol = headersList.get('x-forwarded-proto');
+  const origin = host && protocol ? `${protocol}://${host}` : undefined;
 
   return (
     <html lang={params.lang}>
@@ -25,7 +30,7 @@ export default function LangLayout({ params, children }: Props) {
           <NextIntlClientProvider locale={params.lang} messages={messages}>
             <StyledComponentsRegistry>
               <DayjsLocaleProvider locale={params.lang}>
-                <ApolloWrapper initialLocale={params.lang}>
+                <ApolloWrapper origin={origin} initialLocale={params.lang}>
                   {children}
                 </ApolloWrapper>
               </DayjsLocaleProvider>

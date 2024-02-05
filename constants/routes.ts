@@ -13,3 +13,5 @@ export const STATIC_ROUTES = [
   '/organizations',
   '/search',
 ];
+
+export const API_PROXY_PATH = '/api/graphql';
