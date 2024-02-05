@@ -5,7 +5,7 @@ on:
       plan_identifiers:
         description: 'Comma separated list of plan identifiers'
         required: true
-        default: 'sunnydale'
+        default: ' akaa-ilmasto, boroondara-cap, bremen-klima, carmel-cap, denmark-sap, durham-ca-cap, espoo-ilmasto, fi-covid, fl-hollywood-sap, greentransition, hame-ilmasto, helsinki-kierto, helsinki-kierto-2023, helsinki-lumo, holbaek-cap, indigoshire-erp, kingston-cap, klima-potsdam, klima-winterthur, konstanz-klima, lahti-ilmasto, leichlingen, leichlingen-klima, leichlingen-mobilitaet, liiku, longmont-bbe, longmont-carr, longmont-envision, longmont-indicators, longmont-sca, longmont-transportation, lpr-ilmasto, lpr-kestavyys, lpr-kierto, palkane-ilmasto, pirkkala-ilmasto, riga-secap, san-diego-cap, saskatoon-lec, sca-cli, stevenage-cap, stpaul-carp, sunnydale, sunnydale-sap, surrey-ccas, tampere-ilmasto, tampere-lumo, urjala-ilmasto, valkeakoski-ilmasto, viitasaari-ilmasto, waterloo-twr'
       frontend_base_url:
         description: 'Base url for environment to run tests against'
         required: true
