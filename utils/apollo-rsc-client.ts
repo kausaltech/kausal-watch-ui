@@ -6,9 +6,9 @@ import { headers as getHeaders } from 'next/headers';
 import {
   errorLink,
   localeMiddleware,
-  httpLink,
   operationEnd,
   operationStart,
+  getHttpLink,
   headersMiddleware,
 } from './apollo.utils';
 
@@ -19,6 +19,9 @@ import {
 export const { getClient } = registerApolloClient(() => {
   const headers = getHeaders();
   const locale = headers.get('x-next-intl-locale') ?? undefined;
+  const host = headers.get('host');
+  const protocol = headers.get('x-forwarded-proto');
+  const origin = host && protocol ? `${protocol}://${host}` : undefined;
   const plan = headers.get('x-plan-identifier') ?? undefined;
   const domain = headers.get('x-plan-domain') ?? undefined;
 
@@ -39,7 +42,7 @@ export const { getClient } = registerApolloClient(() => {
       localeMiddleware,
       headersMiddleware,
       operationEnd,
-      httpLink,
+      getHttpLink(origin),
     ]),
   });
 });
