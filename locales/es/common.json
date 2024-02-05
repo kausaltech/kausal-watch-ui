@@ -133,7 +133,7 @@
     "indicator-compare-source": "Mostrando",
     "indicator-compare-to": "Comparar con",
     "indicator-normalize-per-capita": "Mostrar per cápita",
-    "indicator-progress-bar": "En el año {startYear} {nombre} fue {valorinicial}. El último valor observado en {latestYear} fue {latestValue}. El objetivo para el año {goalYear} es {goalValue}. Desde {startYear} la reducción es {reduced}. {toBeReduced} aún debe reducirse antes del año {goalYear}.",
+    "indicator-progress-bar": "En el año {startYear} {name} fue {startValue}. El último valor observado en {latestYear} fue {latestValue}. El objetivo para el año {goalYear} es {goalValue}. Desde {startYear} la reducción es {reduced}. {toBeReduced} aún debe reducirse antes del año {goalYear}.",
     "nav-actions-pager": "Localizador de acciones",
     "form-action-filters": "Filtros de la lista de acciones",
     "nav-tools": "Herramientas",
