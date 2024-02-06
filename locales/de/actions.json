@@ -7,7 +7,7 @@
     "action-identifier": "Kennung",
     "action-impact": "Auswirkung",
     "action-implementation-phase": "Implementierungsphase",
-    "action-last-updated": "Informationen aktualisiert am",
+    "action-last-updated": "Letzte Aktualisierung",
     "action-merged": "{context, select, STRATEGY {Zusammengeführte Strategien} CASE_STUDY {Zusammengeführte Fallstudien} other {Zusammengeführte Maßnahmen}}",
     "action-meta-header": "Zusammenfassung und Kontakte",
     "action-name-title": "{context, select, STRATEGY {Titel der Strategie} CASE_STUDY {Titel der Fallstudie} other {Titel der Maßnahme}}",
