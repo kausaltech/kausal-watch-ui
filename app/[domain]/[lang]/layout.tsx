@@ -8,6 +8,7 @@ import ThemeProvider from '@/components/providers/ThemeProvider';
 import defaultTheme from '@/public/static/themes/default/theme.json';
 import { DayjsLocaleProvider } from '@/common/dayjs';
 import '@/styles/default/main.scss';
+import { AuthProvider } from '@/components/providers/AuthProvider';
 
 type Props = {
   params: { lang: string };
@@ -31,7 +32,7 @@ export default function LangLayout({ params, children }: Props) {
             <StyledComponentsRegistry>
               <DayjsLocaleProvider locale={params.lang}>
                 <ApolloWrapper origin={origin} initialLocale={params.lang}>
-                  {children}
+                  <AuthProvider>{children}</AuthProvider>
                 </ApolloWrapper>
               </DayjsLocaleProvider>
             </StyledComponentsRegistry>

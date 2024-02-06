@@ -1,5 +1,7 @@
 import { headers } from 'next/headers';
+import { NextAuthRequest } from 'next-auth/lib';
 import { gqlUrl } from '@/common/environment';
+import { auth } from '@/config/auth';
 
 export const dynamic = 'force-dynamic';
 
@@ -7,7 +9,9 @@ export const dynamic = 'force-dynamic';
  * Simple proxy which handles our GraphQL requests
  * to prevent CORS issues and attach auth headers.
  */
-export async function POST(request: Request) {
+export const POST = auth(async (request: NextAuthRequest) => {
+  // TODO: Get session
+  console.log('Route Handler AUTH', request.auth);
   const headersList = headers();
   const requestData = await request.json();
 
@@ -57,4 +61,4 @@ export async function POST(request: Request) {
       { status: 500, headers: responseHeaders }
     );
   }
-}
+});
