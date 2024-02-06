@@ -7,6 +7,7 @@ import Footer from '@/components/Footer';
 import { usePlan } from '@/context/plan';
 import { StyledMain } from './StyledMain';
 import { getMetaTitles } from '@/utils/metadata';
+import { useSession } from 'next-auth/react';
 
 type Props = {
   params: { domain: string };
@@ -20,6 +21,9 @@ type Props = {
 export default function Layout({ children, params }: Props) {
   const plan = usePlan();
   const { navigationTitle, title } = getMetaTitles(plan);
+  const session = useSession();
+
+  console.log('SESSION', session);
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -36,7 +40,7 @@ export default function Layout({ children, params }: Props) {
       />
       <Header siteTitle={navigationTitle} />
       <StyledMain id="main">{children}</StyledMain>
-      <Footer siteTitle={navigationTitle} />{' '}
+      <Footer siteTitle={navigationTitle} />
     </>
   );
 }

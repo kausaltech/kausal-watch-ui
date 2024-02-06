@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Container } from 'reactstrap';
+import { Container, Spinner } from 'reactstrap';
 import { transparentize } from 'polished';
 import SVG from 'react-inlinesvg';
 import styled from 'styled-components';
@@ -9,6 +9,25 @@ import Icon from './Icon';
 import PlanSelector from 'components/plans/PlanSelector';
 import { useTheme } from 'styled-components';
 import { useTranslations } from 'next-intl';
+import { usePlan } from '@/context/plan';
+import { signIn, signOut, useSession } from 'next-auth/react';
+import Button from './Button';
+
+const StyledButton = styled(Button)`
+  &.btn-link {
+    padding: 0;
+    background: transparent;
+    color: ${({ theme }) => theme.footerColor};
+    text-decoration: none;
+    line-height: unset;
+
+    &:hover {
+      background: transparent;
+      color: ${({ theme }) => theme.footerColor};
+      text-decoration: underline;
+    }
+  }
+`;
 
 const StyledFooter = styled.footer`
   position: relative;
@@ -364,6 +383,13 @@ const FundingInstrumentContainer = styled.div<{ $small?: boolean }>`
   }
 `;
 
+export type UtilityLink = {
+  id: string;
+  name: string;
+  slug: string;
+  icon?: string;
+};
+
 type SiteFooterProps = {
   siteTitle: string;
   ownerUrl: string;
@@ -382,12 +408,7 @@ type SiteFooterProps = {
       slug: string;
     }[];
   }[];
-  utilityLinks: {
-    id: string;
-    name: string;
-    slug: string;
-    icon: string;
-  }[];
+  utilityLinks: UtilityLink[];
   additionalLinks: {
     id: string;
     name: string;
@@ -410,6 +431,8 @@ type SiteFooterProps = {
 function SiteFooter(props: SiteFooterProps) {
   const t = useTranslations();
   const theme = useTheme();
+  const plan = usePlan();
+  const session = useSession();
   const {
     siteTitle,
     ownerUrl,
@@ -424,6 +447,13 @@ function SiteFooter(props: SiteFooterProps) {
     footerStatement,
     ownerLinks = [],
   } = props;
+
+  // TODO: Add this to the backend
+  const showUiLogin = plan.enableUiLogin || true;
+  const isAuthLoading = session.status === 'loading';
+  const isAuthenticated = session.status === 'authenticated';
+
+  console.log('isAuthLoading', isAuthLoading, session.status);
 
   const OrgLogo = () => {
     return (
@@ -570,6 +600,29 @@ function SiteFooter(props: SiteFooterProps) {
                   </NavigationLink>
                 </UtilityItem>
               ))}
+            {showUiLogin && (
+              <UtilityItem>
+                <StyledButton
+                  disabled={isAuthLoading}
+                  color="link"
+                  onClick={() =>
+                    isAuthenticated ? signOut() : signIn('github')
+                  }
+                >
+                  {isAuthLoading ? (
+                    <Spinner size="sm" color="light" />
+                  ) : (
+                    <Icon
+                      name="lock"
+                      color={theme.footerColor}
+                      aria-hidden="true"
+                      className="me-1"
+                    />
+                  )}
+                  {isAuthenticated ? t('ui-sign-out') : t('ui-sign-in')}
+                </StyledButton>
+              </UtilityItem>
+            )}
             <UtilityItem>
               <TopButton type="button" onClick={scrollToTop}>
                 {t('back-to-top')}{' '}
