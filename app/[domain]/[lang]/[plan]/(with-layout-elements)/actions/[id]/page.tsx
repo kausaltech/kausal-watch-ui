@@ -27,11 +27,12 @@ export async function generateMetadata(
   const t = await getTranslations({ locale: params.lang });
 
   const { id, plan, domain } = params;
+  const decodedId = decodeURIComponent(id);
   const headersList = headers();
   const protocol = headersList.get('x-forwarded-proto');
 
   const { data } = await tryRequest(
-    getActionDetails(plan, id, `${protocol}://${domain}`)
+    getActionDetails(plan, decodedId, `${protocol}://${domain}`)
   );
 
   if (!data?.action) {
@@ -66,9 +67,10 @@ export default async function ActionPage({ params }: Props) {
   const { id, plan, domain } = params;
   const headersList = headers();
   const protocol = headersList.get('x-forwarded-proto');
+  const decodedId = decodeURIComponent(id);
 
   const { data, error } = await tryRequest(
-    getActionDetails(plan, id, `${protocol}://${domain}`)
+    getActionDetails(plan, decodedId, `${protocol}://${domain}`)
   );
 
   if (error || !data?.action || !data.plan) {
