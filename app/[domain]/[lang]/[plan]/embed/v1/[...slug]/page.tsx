@@ -77,7 +77,7 @@ type Props = {
 };
 
 const EmbeddablePage = ({ params }: Props) => {
-  const { slug } = params;
+  const slug = params.slug.map(decodeURIComponent);
   const wrapperElement = useRef<HTMLDivElement>(null);
   const query = useSearchParams();
   const queryEmbId = query.get('embId');
