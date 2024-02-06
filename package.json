@@ -140,7 +140,7 @@
   ],
   "packageManager": "yarn@3.2.1",
   "optionalDependencies": {
-    "@kausal/themes-private": "^0.4.0"
+    "@kausal/themes-private": "^0.4.1"
   },
   "lint-staged": {
     "*.{tsx,ts,js,css,scss,md,json}": "prettier --write"
