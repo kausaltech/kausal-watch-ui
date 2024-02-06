@@ -1,6 +1,5 @@
 import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
-import { PlanType } from 'context/plan';
-import { title } from 'process';
+import { PlanContextFragment } from './__generated__/graphql';
 
 const GET_AUTOCOMPLETE_RESULTS = gql`
   query GetAutocompleteResults($plan: ID!, $term: String!) {
@@ -46,7 +45,7 @@ const GET_AUTOCOMPLETE_RESULTS = gql`
 
 class WatchSearchAPIConnector {
   apolloClient: ApolloClient<InMemoryCache>;
-  plan: PlanType;
+  plan: PlanContextFragment;
 
   constructor({ apolloClient, plan }) {
     this.apolloClient = apolloClient;
@@ -54,12 +53,6 @@ class WatchSearchAPIConnector {
   }
 
   async onSearch(opts, queryConfig) {
-    // Not implemented, stub here just to silence the warning about
-    // unimplemented method.
-    return { results: [] };
-  }
-
-  async onAutocomplete(opts, queryConfig) {
     const { searchTerm } = opts;
     const res = await this.apolloClient.query({
       query: GET_AUTOCOMPLETE_RESULTS,
