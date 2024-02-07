@@ -19,7 +19,7 @@ export default async function ActionsPage({ params }: Props) {
   const { data } = await tryRequest(
     getActionsListPage(
       plan,
-      pageSettingsData.plan?.actionListPage?.includeRelatedPlans ?? false
+      pageSettingsData?.plan?.actionListPage?.includeRelatedPlans ?? false
     )
   );
 
