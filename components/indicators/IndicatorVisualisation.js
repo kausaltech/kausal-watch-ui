@@ -336,10 +336,10 @@ const generateGoalTraces = (indicator, planScenarios, i18n) => {
     if (!traceScenarios.has(scenarioId)) {
       const scenario = {
         goals: [],
-        config: planScenarios.find((sc) => sc.id === scenarioId),
+        config: planScenarios?.find((sc) => sc.id === scenarioId) ?? {},
       };
 
-      if (scenarioId) {
+      if (scenarioId && scenario.config?.name) {
         scenario.name = scenario.config.name;
       } else {
         scenario.name = i18n.t('goal');
