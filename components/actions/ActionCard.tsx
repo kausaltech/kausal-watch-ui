@@ -14,6 +14,7 @@ import PlanChip from 'components/plans/PlanChip';
 import { ActionCardFragment } from 'common/__generated__/graphql';
 import { useTranslations } from 'next-intl';
 import { ACTION_CARD_FRAGMENT } from '@/fragments/action-card.fragment';
+import { captureException } from '@sentry/nextjs';
 
 const StyledActionLink = styled.a`
   text-decoration: none;
@@ -201,6 +202,18 @@ function ActionCard(props: ActionCardProps) {
   const plan = usePlan();
   const t = useTranslations();
   const theme = useTheme();
+
+  if (!action || !action.name) {
+    /**
+     * action should always be defined but reading action.name.length has been
+     * throwing errors in Sentry. Check for an action to avoid uncaught errors.
+     */
+    captureException('Required prop `action` missing from ActionCard', {
+      extra: { action, plan: plan.identifier },
+    });
+
+    return null;
+  }
 
   let actionName = action.name;
 
