@@ -3,7 +3,7 @@
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
 import * as Sentry from '@sentry/nextjs';
-import { deploymentType } from './common/environment';
+import { deploymentType, gqlUrl } from './common/environment';
 
 Sentry.init({
   environment: deploymentType,
@@ -27,8 +27,10 @@ Sentry.init({
   // You can remove this option if you're not planning to use the Sentry Session Replay feature:
   integrations: [
     new Sentry.Replay({
+      maskAllText: false,
       // Additional Replay configuration goes in here, for example:
-      blockAllMedia: true,
+      blockAllMedia: false,
+      networkDetailAllowUrls: [gqlUrl],
     }),
   ],
 });
