@@ -3,7 +3,7 @@
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
 import * as Sentry from '@sentry/nextjs';
-import { deploymentType } from './common/environment';
+import { deploymentType, gqlUrl } from './common/environment';
 
 Sentry.init({
   environment: deploymentType,
@@ -30,7 +30,7 @@ Sentry.init({
       maskAllText: false,
       // Additional Replay configuration goes in here, for example:
       blockAllMedia: false,
-      networkDetailAllowUrls: ['https://api.watch.kausal.tech/v1/graphql/'],
+      networkDetailAllowUrls: [gqlUrl],
     }),
   ],
 });
