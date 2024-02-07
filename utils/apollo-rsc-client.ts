@@ -9,6 +9,7 @@ import {
   httpLink,
   operationEnd,
   operationStart,
+  headersMiddleware,
 } from './apollo.utils';
 
 /**
@@ -18,10 +19,14 @@ import {
 export const { getClient } = registerApolloClient(() => {
   const headers = getHeaders();
   const locale = headers.get('x-next-intl-locale') ?? undefined;
+  const plan = headers.get('x-plan-identifier') ?? undefined;
+  const domain = headers.get('x-plan-domain') ?? undefined;
 
   return new ApolloClient({
     defaultContext: {
       locale,
+      planDomain: domain,
+      planIdentifier: plan,
     },
     connectToDevTools: false,
     cache: new InMemoryCache({
@@ -32,6 +37,7 @@ export const { getClient } = registerApolloClient(() => {
       operationStart,
       errorLink,
       localeMiddleware,
+      headersMiddleware,
       operationEnd,
       httpLink,
     ]),

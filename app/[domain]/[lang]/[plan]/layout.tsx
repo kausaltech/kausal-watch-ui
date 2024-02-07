@@ -13,6 +13,7 @@ import { CombinedIconSymbols } from '@/components/common/Icon';
 import { MatomoAnalytics } from '@/components/MatomoAnalytics';
 import { getMetaTitles } from '@/utils/metadata';
 import { tryRequest } from '@/utils/api.utils';
+import { UpdateApolloContext } from './UpdateApolloContext';
 
 type Props = {
   params: { plan: string; domain: string; lang: string };
@@ -111,6 +112,7 @@ export default async function PlanLayout({ params, children }: Props) {
       <ThemeProvider theme={theme}>
         <GlobalStyles />
         <PlanProvider plan={data.plan}>
+          <UpdateApolloContext domain={domain} />
           <CombinedIconSymbols />
           {children}
         </PlanProvider>

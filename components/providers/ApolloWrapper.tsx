@@ -13,6 +13,7 @@ import {
   errorLink,
   localeMiddleware,
   httpLink,
+  headersMiddleware,
 } from '../../utils/apollo.utils';
 import { isServer } from '@/common/environment';
 
@@ -25,6 +26,7 @@ function makeClient(initialLocale: string) {
     link: ApolloLink.from([
       errorLink,
       localeMiddleware,
+      headersMiddleware,
       ...(isServer
         ? [
             new SSRMultipartLink({

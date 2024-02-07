@@ -10,6 +10,9 @@ import { captureException } from '@sentry/nextjs';
 declare module '@apollo/client' {
   export interface DefaultContext {
     locale?: string;
+    planIdentifier?: string;
+    planDomain?: string;
+    start?: number;
   }
 }
 
@@ -55,6 +58,22 @@ export const operationEnd = new ApolloLink((operation, forward) => {
 export const httpLink = new HttpLink({
   uri: gqlUrl,
   fetchOptions: { next: { revalidate: 0 } },
+});
+
+export const headersMiddleware = new ApolloLink((operation, forward) => {
+  const context = operation.getContext();
+
+  operation.setContext(({ headers = {} }) => {
+    return {
+      headers: {
+        ...headers,
+        'x-cache-plan-domain': context.planDomain,
+        'x-cache-plan-identifier': context.planIdentifier,
+      },
+    };
+  });
+
+  return forward(operation);
 });
 
 /**
