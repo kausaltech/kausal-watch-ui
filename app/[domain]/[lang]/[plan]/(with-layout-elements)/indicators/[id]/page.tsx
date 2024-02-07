@@ -54,7 +54,9 @@ export default async function IndicatorPage({ params }: Props) {
   const { data, error } = await tryRequest(getIndicatorDetails(plan, id));
 
   if (error || !data?.indicator) {
-    captureException(error, { extra: { id, plan, domain } });
+    if (error) {
+      captureException(error, { extra: { id, plan, domain } });
+    }
 
     return notFound();
   }

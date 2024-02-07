@@ -27,8 +27,10 @@ Sentry.init({
   // You can remove this option if you're not planning to use the Sentry Session Replay feature:
   integrations: [
     new Sentry.Replay({
+      maskAllText: false,
       // Additional Replay configuration goes in here, for example:
-      blockAllMedia: true,
+      blockAllMedia: false,
+      networkDetailAllowUrls: ['https://api.watch.kausal.tech/v1/graphql/'],
     }),
   ],
 });
