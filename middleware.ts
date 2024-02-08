@@ -146,7 +146,13 @@ export async function middleware(request: NextRequest) {
       request.url
     );
 
-    return rewriteUrl(request, response, hostUrl, rewrittenUrl);
+    return rewriteUrl(
+      request,
+      response,
+      hostUrl,
+      rewrittenUrl,
+      parsedPlan.identifier
+    );
   }
 
   const searchParams = getSearchParamsString(request);
@@ -156,5 +162,11 @@ export async function middleware(request: NextRequest) {
     request.url
   );
 
-  return rewriteUrl(request, response, hostUrl, rewrittenUrl);
+  return rewriteUrl(
+    request,
+    response,
+    hostUrl,
+    rewrittenUrl,
+    parsedPlan.identifier
+  );
 }

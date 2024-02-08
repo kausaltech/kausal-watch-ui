@@ -187,13 +187,21 @@ export function rewriteUrl(
   request: NextRequest,
   response: NextResponse,
   hostUrl: URL,
-  rewrittenUrl: URL
+  rewrittenUrl: URL,
+  plan: string
 ) {
   // The user facing URL, provided via the x-url header to be used in metadata
   const url = new URL(request.nextUrl.pathname, hostUrl).toString();
 
   response.headers.set('x-url', url);
   response.headers.set('x-middleware-rewrite', rewrittenUrl.toString());
+
+  /**
+   * Support reading plan details from headers while creating the RSC Apollo client. This
+   * allows us to add cache headers to GraphQL requests from RSC queries.
+   */
+  response.headers.set('x-plan-domain', hostUrl.hostname);
+  response.headers.set('x-plan-identifier', plan);
 
   return response;
 }
