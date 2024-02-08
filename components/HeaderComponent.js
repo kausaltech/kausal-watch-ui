@@ -7,6 +7,7 @@ import { useLocale } from 'next-intl';
 
 import { usePlan } from 'context/plan';
 import GlobalNav from 'components/common/GlobalNav';
+import TopToolBar from './common/TopToolBar';
 import SkipToContent from 'components/common/SkipToContent';
 import ApplicationStateBanner from 'components/common/ApplicationStateBanner';
 import { getActiveBranch } from 'common/links';
@@ -88,6 +89,7 @@ function Header({ siteTitle }) {
     <header style={{ position: 'relative' }}>
       <SkipToContent />
       <ApplicationStateBanner deploymentType={deploymentType} />
+      <TopToolBar />
       <GlobalNav
         activeBranch={activeBranch}
         siteTitle={siteTitle}
