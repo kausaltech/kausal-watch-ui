@@ -134,10 +134,6 @@
   "engines": {
     "node": "20.x"
   },
-  "browserslist": [
-    "> 1%",
-    "last 4 versions"
-  ],
   "packageManager": "yarn@3.2.1",
   "optionalDependencies": {
     "@kausal/themes-private": "^0.4.2"
