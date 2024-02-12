@@ -8,6 +8,7 @@ import {
 } from 'reactstrap';
 import styled from 'styled-components';
 import Icon from '@/components/common/Icon';
+import { useTranslations } from 'next-intl';
 
 const ToolbarContainer = styled(Container)`
   display: flex;
@@ -70,6 +71,7 @@ export const TopToolBar = () => {
   const versionsToggle = () =>
     setVersionsDropdownOpen((prevState) => !prevState);
   const userToggle = () => setUserDropdownOpen((prevState) => !prevState);
+  const t = useTranslations();
 
   return (
     <ToolbarContainer fluid>
@@ -80,10 +82,10 @@ export const TopToolBar = () => {
             className="icon"
             aria-label="actions-versions"
           />
-          Draft
+          {t('draft')}
         </StyledDropdownToggle>
         <StyledDropdownMenu>
-          <DropdownHeader>Action versions</DropdownHeader>
+          <DropdownHeader>{t('action-versions')}</DropdownHeader>
           <DropdownItem>
             <DropdownItemText>
               <StyledIcon
@@ -91,7 +93,7 @@ export const TopToolBar = () => {
                 className="icon"
                 aria-label="draft-action"
               />
-              Draft
+              {t('draft')}
             </DropdownItemText>
           </DropdownItem>
           <DropdownItem>
@@ -101,7 +103,7 @@ export const TopToolBar = () => {
                 className="icon"
                 aria-label="published-action"
               />
-              Published
+              {t('published')}
             </DropdownItemText>
           </DropdownItem>
         </StyledDropdownMenu>
@@ -123,7 +125,7 @@ export const TopToolBar = () => {
               className="icon"
               aria-label="link-to-the-admin-site"
             />
-            Go to the Admin site
+            {t('go-to-admin-site')}
           </DropdownItem>
           <DropdownItem>
             <StyledIcon
@@ -131,7 +133,7 @@ export const TopToolBar = () => {
               className="icon"
               aria-label="sign-out"
             />
-            Sign out
+            {t('sign-out')}
           </DropdownItem>
         </DropdownMenu>
       </StyledDropdown>
