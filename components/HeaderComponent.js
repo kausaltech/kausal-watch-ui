@@ -5,8 +5,8 @@ import PropTypes from 'prop-types';
 import { usePathname } from 'next/navigation';
 import { useLocale } from 'next-intl';
 import { useSession } from 'next-auth/react';
-
 import { usePlan } from 'context/plan';
+
 import GlobalNav from 'components/common/GlobalNav';
 import TopToolBar from './common/TopToolBar';
 import SkipToContent from 'components/common/SkipToContent';
