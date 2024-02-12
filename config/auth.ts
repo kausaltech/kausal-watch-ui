@@ -1,7 +1,12 @@
-import { isLocal } from '@/common/environment';
 import NextAuth from 'next-auth';
-import GitHub from 'next-auth/providers/github';
+import type { OIDCConfig } from '@auth/core/providers';
 import { headers } from 'next/headers';
+
+type Profile = {
+  name: string;
+  given_name: string;
+  family_name: string;
+};
 
 export const {
   handlers: { GET, POST },
@@ -10,7 +15,7 @@ export const {
   const headersList = headers();
   const protocol = headersList.get('x-forwarded-proto');
   const host = headersList.get('host');
-  const url = protocol && host ? `${protocol}://${host}` : null;
+  const url = protocol && host ? `${protocol}://${host}/api/auth` : null;
 
   if (!url) {
     console.error('Invalid request url');
@@ -19,18 +24,22 @@ export const {
 
   return {
     providers: [
-      GitHub({ redirectProxyUrl: url }),
       {
         id: 'watch-oidc-provider',
         name: 'Kausal Watch Provider',
         type: 'oidc',
-        issuer: 'https://my.oidc-provider.com',
-        redirectProxyUrl: url,
+
+        issuer: process.env.AUTH_ISSUER,
         clientId: process.env.CLIENT_ID,
         clientSecret: process.env.CLIENT_SECRET,
-      },
+        profile(profile) {
+          return { name: profile.name };
+        },
+        wellKnown: `${process.env.AUTH_ISSUER}/.well-known/openid-configuration`,
+      } satisfies OIDCConfig<Profile>,
     ],
     secret: process.env.AUTH_SECRET,
-    trustHost: isLocal,
+    redirectProxyUrl: url,
+    trustHost: true,
   };
 });
