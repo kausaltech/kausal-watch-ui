@@ -9,6 +9,7 @@ import {
 import styled from 'styled-components';
 import Icon from '@/components/common/Icon';
 import { useTranslations } from 'next-intl';
+import { usePlan } from 'context/plan';
 
 const ToolbarContainer = styled(Container)`
   display: flex;
@@ -72,6 +73,8 @@ export const TopToolBar = () => {
     setVersionsDropdownOpen((prevState) => !prevState);
   const userToggle = () => setUserDropdownOpen((prevState) => !prevState);
   const t = useTranslations();
+  const plan = usePlan();
+  console.log(plan);
 
   return (
     <ToolbarContainer fluid>
@@ -114,19 +117,21 @@ export const TopToolBar = () => {
           Wilhelm Viever
         </StyledDropdownToggle>
         <DropdownMenu right>
-          <DropdownItem
-            as="a"
-            href="https://admin.watch.kausal.tech/admin"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <StyledIcon
-              name="link"
-              className="icon"
-              aria-label="link-to-the-admin-site"
-            />
-            {t('go-to-admin-site')}
-          </DropdownItem>
+          {plan.adminUrl && (
+            <DropdownItem
+              as="a"
+              href={plan.adminUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <StyledIcon
+                name="lock"
+                className="icon"
+                aria-label="link-to-the-admin-site"
+              />
+              {t('admin-login')}
+            </DropdownItem>
+          )}
           <DropdownItem>
             <StyledIcon
               name="arrowRight"
