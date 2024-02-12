@@ -9,6 +9,7 @@ import { deploymentType } from '@/common/environment';
 import { useTranslations } from 'next-intl';
 import { usePathname } from 'next/navigation';
 import { PlanContextFragment } from '@/common/__generated__/graphql';
+import { getMetaTitles } from '@/utils/metadata';
 
 type NavItem = NonNullable<PlanContextFragment['footer']>['items'][0];
 
@@ -35,16 +36,13 @@ function getNavChildren(navItem: NavItem) {
     }));
 }
 
-type Props = {
-  siteTitle: string;
-};
-
-function Footer({ siteTitle }: Props) {
+function Footer() {
   const plan = usePlan();
   const pathname = usePathname();
   const generalContent = plan.generalContent || {};
   const theme = useTheme();
 
+  const { navigationTitle: siteTitle } = getMetaTitles(plan);
   const { fundingInstruments, otherLogos, footerStatement } = theme.settings;
   const t = useTranslations();
 

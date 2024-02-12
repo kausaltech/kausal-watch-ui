@@ -453,8 +453,6 @@ function SiteFooter(props: SiteFooterProps) {
   const isAuthLoading = session.status === 'loading';
   const isAuthenticated = session.status === 'authenticated';
 
-  console.log('isAuthLoading', isAuthLoading, session.status);
-
   const OrgLogo = () => {
     return (
       <SVG
@@ -606,7 +604,7 @@ function SiteFooter(props: SiteFooterProps) {
                   disabled={isAuthLoading}
                   color="link"
                   onClick={() =>
-                    isAuthenticated ? signOut() : signIn('github')
+                    isAuthenticated ? signOut() : signIn('watch-oidc-provider')
                   }
                 >
                   {isAuthLoading ? (

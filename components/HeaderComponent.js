@@ -12,6 +12,7 @@ import ApplicationStateBanner from 'components/common/ApplicationStateBanner';
 import { getActiveBranch } from 'common/links';
 import { useTheme } from 'styled-components';
 import { deploymentType } from '@/common/environment';
+import { getMetaTitles } from '@/utils/metadata';
 
 const getMenuStructure = (pages, rootId, activeBranch) => {
   const menuLevelItems = [];
@@ -46,12 +47,13 @@ function createLocalizeMenuItem(currentLocale, primaryLocale) {
   };
 }
 
-function Header({ siteTitle }) {
+function Header() {
   const pathname = usePathname();
   const locale = useLocale();
   const plan = usePlan();
   const theme = useTheme();
   const activeBranch = getActiveBranch(pathname, locale);
+  const { navigationTitle: siteTitle } = getMetaTitles(plan);
 
   const navLinks = useMemo(() => {
     let links = [];
@@ -102,9 +104,5 @@ function Header({ siteTitle }) {
     </header>
   );
 }
-
-Header.propTypes = {
-  siteTitle: PropTypes.string.isRequired,
-};
 
 export default Header;

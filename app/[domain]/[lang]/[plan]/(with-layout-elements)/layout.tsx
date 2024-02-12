@@ -1,13 +1,9 @@
-'use client';
-
 import { ReactNode } from 'react';
 
 import Header from '@/components/HeaderComponent';
 import Footer from '@/components/Footer';
-import { usePlan } from '@/context/plan';
 import { StyledMain } from './StyledMain';
-import { getMetaTitles } from '@/utils/metadata';
-import { useSession } from 'next-auth/react';
+import { JsonLd } from './JsonLd';
 
 type Props = {
   params: { domain: string };
@@ -19,28 +15,12 @@ type Props = {
  * layout elements that shouldn't be applied to embeds.
  */
 export default function Layout({ children, params }: Props) {
-  const plan = usePlan();
-  const { navigationTitle, title } = getMetaTitles(plan);
-  const session = useSession();
-
-  console.log('SESSION', session);
-
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'WebSite',
-    name: title,
-    url: params.domain,
-  };
-
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-      <Header siteTitle={navigationTitle} />
+      <JsonLd domain={params.domain} />
+      <Header />
       <StyledMain id="main">{children}</StyledMain>
-      <Footer siteTitle={navigationTitle} />
+      <Footer />
     </>
   );
 }

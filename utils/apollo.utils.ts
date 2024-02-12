@@ -66,6 +66,7 @@ export const operationEnd = new ApolloLink((operation, forward) => {
 export const getHttpLink = (proxyOrigin?: string) =>
   new HttpLink({
     uri: proxyOrigin ? `${proxyOrigin}${API_PROXY_PATH}` : gqlUrl,
+    credentials: 'same-origin',
     fetchOptions: {
       mode: 'same-origin',
       next: { revalidate: 0 },

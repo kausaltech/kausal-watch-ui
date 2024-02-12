@@ -11,7 +11,7 @@ export const dynamic = 'force-dynamic';
  */
 export const POST = auth(async (request: NextAuthRequest) => {
   // TODO: Get session
-  console.log('Route Handler AUTH', request.auth);
+
   const headersList = headers();
   const requestData = await request.json();
 
