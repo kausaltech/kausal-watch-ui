@@ -170,5 +170,10 @@
     "collapse-row": "Collapse row",
     "expand-row": "Expand row",
     "ui-sign-in": "Sign in",
-    "ui-sign-out": "Sign out"
+    "ui-sign-out": "Sign out",
+    "draft": "Draft",
+    "action-versions": "Action versions",
+    "published": "Published",
+    "go-to-admin-site": "Go to the Admin site",
+    "sign-out": "Sign out"
 }

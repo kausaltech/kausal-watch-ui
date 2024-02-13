@@ -4,9 +4,11 @@ import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { usePathname } from 'next/navigation';
 import { useLocale } from 'next-intl';
-
+import { useSession } from 'next-auth/react';
 import { usePlan } from 'context/plan';
+
 import GlobalNav from 'components/common/GlobalNav';
+import TopToolBar from './common/TopToolBar';
 import SkipToContent from 'components/common/SkipToContent';
 import ApplicationStateBanner from 'components/common/ApplicationStateBanner';
 import { getActiveBranch } from 'common/links';
@@ -53,6 +55,8 @@ function Header() {
   const plan = usePlan();
   const theme = useTheme();
   const activeBranch = getActiveBranch(pathname, locale);
+  const { status } = useSession();
+  const isAuthenticated = status === 'authenticated';
   const { navigationTitle: siteTitle } = getMetaTitles(plan);
 
   const navLinks = useMemo(() => {
@@ -90,6 +94,7 @@ function Header() {
     <header style={{ position: 'relative' }}>
       <SkipToContent />
       <ApplicationStateBanner deploymentType={deploymentType} />
+      {isAuthenticated && <TopToolBar />}
       <GlobalNav
         activeBranch={activeBranch}
         siteTitle={siteTitle}
