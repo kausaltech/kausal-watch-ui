@@ -129,6 +129,7 @@ const languageNames = {
   sv: 'Svenska',
   es: 'Español',
   da: 'Dansk',
+  lv: 'Latviešu',
 };
 
 function getLocales(plan: PlanContextFragment) {
