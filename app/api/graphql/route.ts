@@ -10,8 +10,6 @@ export const dynamic = 'force-dynamic';
  * to prevent CORS issues and attach auth headers.
  */
 export const POST = auth(async (request: NextAuthRequest) => {
-  // TODO: Get session
-
   const headersList = headers();
   const requestData = await request.json();
 
@@ -19,6 +17,8 @@ export const POST = auth(async (request: NextAuthRequest) => {
     method: 'POST',
     headers: {
       'User-Agent': headersList.get('user-agent') ?? '',
+      'x-plan-domain': headersList.get('x-plan-domain') ?? '',
+      'x-plan-identifier': headersList.get('x-plan-identifier') ?? '',
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(requestData),

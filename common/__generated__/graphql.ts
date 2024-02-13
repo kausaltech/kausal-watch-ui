@@ -6737,6 +6737,7 @@ export type GetActionDetailsQueryVariables = Exact<{
   plan: Scalars['ID'];
   id: Scalars['ID'];
   clientUrl: Scalars['String'];
+  workflow?: InputMaybe<Scalars['String']>;
 }>;
 
 
@@ -11593,7 +11594,7 @@ export type GetPlanContextQuery = (
       ) | null> }
       & { __typename?: 'Footer' }
     ) | null, features: (
-      { contactPersonsPublicData: PlanFeaturesContactPersonsPublicData, enableSearch: boolean, hasActionIdentifiers: boolean, hasActionOfficialName: boolean, hasActionLeadParagraph: boolean, hasActionPrimaryOrgs: boolean, showAdminLink: boolean, enableIndicatorComparison: boolean, minimalStatuses: boolean }
+      { hasActionContactPersonRoles: boolean, contactPersonsPublicData: PlanFeaturesContactPersonsPublicData, enableSearch: boolean, hasActionIdentifiers: boolean, hasActionOfficialName: boolean, hasActionLeadParagraph: boolean, hasActionPrimaryOrgs: boolean, showAdminLink: boolean, enableIndicatorComparison: boolean, minimalStatuses: boolean }
       & { __typename?: 'PlanFeatures' }
     ), allRelatedPlans: Array<(
       { id: string, identifier: string, name: string, shortName?: string | null, viewUrl?: string | null, image?: (
@@ -11777,7 +11778,7 @@ export type PlanContextFragment = (
     ) | null> }
     & { __typename?: 'Footer' }
   ) | null, features: (
-    { contactPersonsPublicData: PlanFeaturesContactPersonsPublicData, enableSearch: boolean, hasActionIdentifiers: boolean, hasActionOfficialName: boolean, hasActionLeadParagraph: boolean, hasActionPrimaryOrgs: boolean, showAdminLink: boolean, enableIndicatorComparison: boolean, minimalStatuses: boolean }
+    { hasActionContactPersonRoles: boolean, contactPersonsPublicData: PlanFeaturesContactPersonsPublicData, enableSearch: boolean, hasActionIdentifiers: boolean, hasActionOfficialName: boolean, hasActionLeadParagraph: boolean, hasActionPrimaryOrgs: boolean, showAdminLink: boolean, enableIndicatorComparison: boolean, minimalStatuses: boolean }
     & { __typename?: 'PlanFeatures' }
   ), allRelatedPlans: Array<(
     { id: string, identifier: string, name: string, shortName?: string | null, viewUrl?: string | null, image?: (
@@ -11892,18 +11893,5 @@ export type GetPlansByHostnameQuery = (
     ) | null> | null }
     & { __typename?: 'RestrictedPlanNode' }
   ) | null> | null }
-  & { __typename?: 'Query' }
-);
-
-export type GetPlanThemeIdentifierQueryVariables = Exact<{
-  identifier?: InputMaybe<Scalars['ID']>;
-}>;
-
-
-export type GetPlanThemeIdentifierQuery = (
-  { plan?: (
-    { themeIdentifier?: string | null }
-    & { __typename?: 'Plan' }
-  ) | null }
   & { __typename?: 'Query' }
 );

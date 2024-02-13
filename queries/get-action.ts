@@ -17,7 +17,8 @@ import { getClient } from '../utils/apollo-rsc-client';
 export const getActionDetails = async (
   plan: string,
   id: string,
-  clientUrl: string
+  clientUrl: string,
+  workflow?: string
 ) =>
   await getClient().query<
     GetActionDetailsQuery,
@@ -28,12 +29,18 @@ export const getActionDetails = async (
       plan,
       clientUrl,
       id,
+      workflow,
     },
     fetchPolicy: 'no-cache',
   });
 
-export const GET_ACTION_DETAILS = gql`
-  query GetActionDetails($plan: ID!, $id: ID!, $clientUrl: String!) {
+const GET_ACTION_DETAILS = gql`
+  query GetActionDetails(
+    $plan: ID!
+    $id: ID!
+    $clientUrl: String!
+    $workflow: WorkflowState
+  ) @workflow(state: $workflow) {
     action(plan: $plan, identifier: $id) {
       id
       identifier
