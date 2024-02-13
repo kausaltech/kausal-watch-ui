@@ -78,7 +78,7 @@ const StyledDropdownToggle = styled(DropdownToggle)`
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     align-self: center;
-    margin: 0;
+    margin: 0 ${(props) => props.theme.spaces.s200} 0 0;
 
     svg.icon {
       fill: ${(props) => props.theme.brandNavColor} !important;
