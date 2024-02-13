@@ -28,10 +28,9 @@ export const {
         id: 'watch-oidc-provider',
         name: 'Kausal Watch Provider',
         type: 'oidc',
-
         issuer: process.env.AUTH_ISSUER,
-        clientId: process.env.CLIENT_ID,
-        clientSecret: process.env.CLIENT_SECRET,
+        clientId: process.env.AUTH_CLIENT_ID,
+        clientSecret: process.env.AUTH_CLIENT_SECRET,
         profile(profile) {
           return { name: profile.name };
         },
