@@ -15,7 +15,7 @@ import { getMetaTitles } from '@/utils/metadata';
 import { tryRequest } from '@/utils/api.utils';
 import { UpdateApolloContext } from './UpdateApolloContext';
 import { SELECTED_WORKFLOW_COOKIE_KEY } from '@/constants/workflow';
-import { WorkflowProvider, Workflow } from '@/context/workflow-selector';
+import { WorkflowProvider } from '@/context/workflow-selector';
 
 type Props = {
   params: { plan: string; domain: string; lang: string };
@@ -117,7 +117,7 @@ export default async function PlanLayout({ params, children }: Props) {
         <GlobalStyles />
         <PlanProvider plan={data.plan}>
           <WorkflowProvider
-            initialWorkflow={selectedWorkflow?.value as Workflow | undefined}
+            initialWorkflow={selectedWorkflow?.value as string | undefined}
           >
             <UpdateApolloContext domain={domain} />
             <CombinedIconSymbols />

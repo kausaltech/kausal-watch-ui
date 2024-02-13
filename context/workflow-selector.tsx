@@ -7,10 +7,8 @@ import {
 } from '@/constants/workflow';
 import { useContext, createContext } from 'react';
 
-export type Workflow = 'DRAFT' | 'APPROVED' | 'PUBLISHED';
-
 interface WorkflowSelectorValue {
-  workflow: Workflow | null;
+  workflow: string | null;
   setWorkflow: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
@@ -19,14 +17,14 @@ const WorkflowSelectorContext = createContext<
 >(undefined);
 
 type Props = {
-  initialWorkflow?: Workflow;
+  initialWorkflow?: string;
 } & React.PropsWithChildren;
 
 export function WorkflowProvider({
   children,
   initialWorkflow = WORKFLOW_DEFAULT,
 }: Props) {
-  const [workflow, setWorkflow] = useCookie<Workflow>(
+  const [workflow, setWorkflow] = useCookie<string>(
     SELECTED_WORKFLOW_COOKIE_KEY,
     initialWorkflow
   );

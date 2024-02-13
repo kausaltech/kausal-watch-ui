@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Container,
   Dropdown,
@@ -11,6 +11,10 @@ import Icon from '@/components/common/Icon';
 import { useTranslations } from 'next-intl';
 import { usePlan } from 'context/plan';
 import { signOut, useSession } from 'next-auth/react';
+import { useWorkflowSelector } from '@/context/workflow-selector';
+import { useRouter } from 'next/navigation';
+import { gql, useSuspenseQuery } from '@apollo/client';
+import { GetWorkflowsQuery } from '@/common/__generated__/graphql';
 
 const ToolbarContainer = styled(Container)`
   display: flex;
@@ -76,6 +80,40 @@ export const TopToolBar = () => {
   const userToggle = () => setUserDropdownOpen((prevState) => !prevState);
   const t = useTranslations();
   const plan = usePlan();
+  const { workflow: selectedWorkflowId, setWorkflow } = useWorkflowSelector();
+  const router = useRouter();
+
+  const { data: workflowsData } = useSuspenseQuery<GetWorkflowsQuery>(gql`
+    query GetWorkflows {
+      __type(name: "WorkflowState") {
+        name
+        description
+        enumValues {
+          name
+          description
+        }
+      }
+    }
+  `);
+
+  const workflows = workflowsData.__type?.enumValues;
+
+  const selectedWorkflow = workflows?.find(
+    (workflow) => workflow.name === selectedWorkflowId
+  );
+
+  useEffect(() => {
+    // If the selected workflow wasn't found from the available options
+    // the user may have an invalid option stored so we reset it.
+    if (workflows?.length && !selectedWorkflow) {
+      setWorkflow(workflows[0].name);
+    }
+  }, [workflows, selectedWorkflow, setWorkflow]);
+
+  function handleSelectWorkflow(workflow: string) {
+    setWorkflow(workflow);
+    router.refresh();
+  }
 
   if (session.status !== 'authenticated') {
     return null;
@@ -83,39 +121,36 @@ export const TopToolBar = () => {
 
   return (
     <ToolbarContainer fluid>
-      <StyledDropdown isOpen={versionsDropdownOpen} toggle={versionsToggle}>
-        <StyledDropdownToggle caret aria-label="action-versions">
-          <StyledIcon
-            name="pencil"
-            className="icon"
-            aria-label="actions-versions"
-          />
-          {t('draft')}
-        </StyledDropdownToggle>
-        <StyledDropdownMenu>
-          <DropdownHeader>{t('action-versions')}</DropdownHeader>
-          <DropdownItem>
-            <DropdownItemText>
-              <StyledIcon
-                name="file"
-                className="icon"
-                aria-label="draft-action"
-              />
-              {t('draft')}
-            </DropdownItemText>
-          </DropdownItem>
-          <DropdownItem>
-            <DropdownItemText>
-              <StyledIcon
-                name="file"
-                className="icon"
-                aria-label="published-action"
-              />
-              {t('published')}
-            </DropdownItemText>
-          </DropdownItem>
-        </StyledDropdownMenu>
-      </StyledDropdown>
+      {selectedWorkflow && !!workflows?.length && (
+        <StyledDropdown isOpen={versionsDropdownOpen} toggle={versionsToggle}>
+          <StyledDropdownToggle caret aria-label="action-versions">
+            <StyledIcon
+              name="pencil"
+              className="icon"
+              aria-label="actions-versions"
+            />
+            {selectedWorkflow.description}
+          </StyledDropdownToggle>
+          <StyledDropdownMenu>
+            <DropdownHeader>{t('action-versions')}</DropdownHeader>
+            {workflows.map((workflow) => (
+              <DropdownItem
+                key={workflow.name}
+                onClick={() => handleSelectWorkflow(workflow.name)}
+              >
+                <DropdownItemText>
+                  <StyledIcon
+                    name="file"
+                    className="icon"
+                    aria-label={workflow.description ?? workflow.name}
+                  />
+                  {workflow.description}
+                </DropdownItemText>
+              </DropdownItem>
+            ))}
+          </StyledDropdownMenu>
+        </StyledDropdown>
+      )}
       <StyledDropdown isOpen={userDropdownOpen} toggle={userToggle}>
         <StyledDropdownToggle caret aria-label="user-name-icon">
           <StyledIcon name="user" className="icon" aria-label="user-icon" />
