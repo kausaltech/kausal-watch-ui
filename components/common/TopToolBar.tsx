@@ -10,6 +10,7 @@ import styled from 'styled-components';
 import Icon from '@/components/common/Icon';
 import { useTranslations } from 'next-intl';
 import { usePlan } from 'context/plan';
+import { signOut, useSession } from 'next-auth/react';
 
 const ToolbarContainer = styled(Container)`
   display: flex;
@@ -67,6 +68,7 @@ const DropdownItemText = styled.div`
 `;
 
 export const TopToolBar = () => {
+  const session = useSession();
   const [versionsDropdownOpen, setVersionsDropdownOpen] = React.useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = React.useState(false);
   const versionsToggle = () =>
@@ -74,7 +76,10 @@ export const TopToolBar = () => {
   const userToggle = () => setUserDropdownOpen((prevState) => !prevState);
   const t = useTranslations();
   const plan = usePlan();
-  console.log(plan);
+
+  if (session.status !== 'authenticated') {
+    return null;
+  }
 
   return (
     <ToolbarContainer fluid>
@@ -114,9 +119,9 @@ export const TopToolBar = () => {
       <StyledDropdown isOpen={userDropdownOpen} toggle={userToggle}>
         <StyledDropdownToggle caret aria-label="user-name-icon">
           <StyledIcon name="user" className="icon" aria-label="user-icon" />
-          Wilhelm Viever
+          {session.data.user?.name}
         </StyledDropdownToggle>
-        <DropdownMenu right>
+        <DropdownMenu end>
           {plan.adminUrl && (
             <DropdownItem
               as="a"
@@ -132,7 +137,7 @@ export const TopToolBar = () => {
               {t('admin-login')}
             </DropdownItem>
           )}
-          <DropdownItem>
+          <DropdownItem onClick={() => signOut()}>
             <StyledIcon
               name="arrowRight"
               className="icon"

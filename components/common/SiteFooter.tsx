@@ -15,6 +15,7 @@ import Button from './Button';
 
 const StyledButton = styled(Button)`
   &.btn-link {
+    font-size: inherit;
     padding: 0;
     background: transparent;
     color: ${({ theme }) => theme.footerColor};
@@ -448,8 +449,8 @@ function SiteFooter(props: SiteFooterProps) {
     ownerLinks = [],
   } = props;
 
-  // TODO: Add this to the backend
-  const showUiLogin = plan.enableUiLogin || true;
+  // TODO: This is a temporary feature flag which will be replaced by a dedicated one on the backend
+  const showUiLogin = plan.features.hasActionContactPersonRoles;
   const isAuthLoading = session.status === 'loading';
   const isAuthenticated = session.status === 'authenticated';
 

@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useMemo } from 'react';
-import PropTypes from 'prop-types';
 import { usePathname } from 'next/navigation';
 import { useLocale } from 'next-intl';
 import { useSession } from 'next-auth/react';

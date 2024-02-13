@@ -1,6 +1,6 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
-import { headers } from 'next/headers';
+import { cookies, headers } from 'next/headers';
 import { captureException } from '@sentry/nextjs';
 import { getTranslations } from 'next-intl/server';
 import { Metadata, ResolvingMetadata } from 'next';
@@ -10,6 +10,7 @@ import ActionContent from '@/components/actions/ActionContent';
 import { getActionImage } from '@/common/images';
 import { getActionTermContext } from '@/common/i18n';
 import { tryRequest } from '@/utils/api.utils';
+import { SELECTED_WORKFLOW_COOKIE_KEY } from '@/constants/workflow';
 
 type Props = {
   params: {
@@ -29,10 +30,17 @@ export async function generateMetadata(
   const { id, plan, domain } = params;
   const decodedId = decodeURIComponent(id);
   const headersList = headers();
+  const cookiesList = cookies();
   const protocol = headersList.get('x-forwarded-proto');
+  const workflow = cookiesList.get(SELECTED_WORKFLOW_COOKIE_KEY);
 
   const { data } = await tryRequest(
-    getActionDetails(plan, decodedId, `${protocol}://${domain}`)
+    getActionDetails(
+      plan,
+      decodedId,
+      `${protocol}://${domain}`,
+      workflow?.value
+    )
   );
 
   if (!data?.action) {
@@ -66,11 +74,18 @@ export async function generateMetadata(
 export default async function ActionPage({ params }: Props) {
   const { id, plan, domain } = params;
   const headersList = headers();
+  const cookiesList = cookies();
   const protocol = headersList.get('x-forwarded-proto');
+  const workflow = cookiesList.get(SELECTED_WORKFLOW_COOKIE_KEY);
   const decodedId = decodeURIComponent(id);
 
   const { data, error } = await tryRequest(
-    getActionDetails(plan, decodedId, `${protocol}://${domain}`)
+    getActionDetails(
+      plan,
+      decodedId,
+      `${protocol}://${domain}`,
+      workflow?.value
+    )
   );
 
   if (error || !data?.action || !data.plan) {
@@ -80,5 +95,6 @@ export default async function ActionPage({ params }: Props) {
 
     return notFound();
   }
+
   return <ActionContent action={data.action} extraPlanData={data.plan} />;
 }

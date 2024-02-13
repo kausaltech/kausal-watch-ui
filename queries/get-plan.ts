@@ -159,6 +159,7 @@ const GET_PLAN_CONTEXT = gql`
     accessibilityStatementUrl
     externalFeedbackUrl
     features {
+      hasActionContactPersonRoles
       contactPersonsPublicData
       enableSearch
       hasActionIdentifiers
