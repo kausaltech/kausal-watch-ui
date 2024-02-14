@@ -22,7 +22,7 @@ const ToolbarContainer = styled(Container)`
   margin: 0 auto;
   padding: ${(props) => props.theme.spaces.s100};
   background-color: ${(props) => props.theme.themeColors.black};
-  font-family: 'Inter, system-ui, sans-serif';
+  font-family: Inter, system-ui, sans-serif;
 `;
 
 const StyledDropdown = styled(Dropdown)`
@@ -58,7 +58,7 @@ const StyledDropdownMenu = styled(DropdownMenu)`
   color: ${(props) => props.theme.headingsColor};
   font-weight: ${(props) => props.theme.headingsFontWeight};
   font-size: ${(props) => props.theme.fontSizeSm};
-  font-family: 'Inter, system-ui, sans-serif';
+  font-family: Inter, system-ui, sans-serif;
 `;
 
 const DropdownHeader = styled.h6`
