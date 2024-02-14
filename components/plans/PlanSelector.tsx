@@ -68,8 +68,9 @@ const PlanSelector = () => {
   if (!allRelatedPlans.length) return null;
 
   const selectablePlans = [
-    { ...plan, viewUrl: '/' },
-    ...plan.allRelatedPlans.filter((pl) => pl?.id !== plan.parent?.id),
+    ...plan.allRelatedPlans.filter(
+      (pl) => pl?.id !== plan.id && pl?.id !== plan.parent?.id
+    ),
   ];
 
   return (
