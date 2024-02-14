@@ -85,10 +85,10 @@ export const operationEnd = new ApolloLink((operation, forward) => {
 
 /**
  * We use a simple proxy to pass authentication headers to the GraphQL
- * API and to and avoid and CORS issues. The HttpLink uri must be
- * an absolute URL, so to support cases where we don't have access to
- * the incoming request's host (e.g. in the middleware Apollo Client),
- * we fall back to interacting with the backend GraphQL API directly.
+ * API and to avoid CORS issues. The HttpLink uri must be an absolute URL,
+ * so to support cases where we don't have access to the incoming request's
+ * host (e.g. in the middleware Apollo Client), we fall back to interacting
+ * with the backend GraphQL API directly.
  */
 export const getHttpLink = (proxyOrigin?: string) =>
   new HttpLink({

@@ -178,7 +178,7 @@ export const TopToolBar = () => {
               className="icon"
               aria-label="sign-out"
             />
-            {t('sign-out')}
+            {t('ui-sign-out')}
           </DropdownItem>
         </DropdownMenu>
       </StyledDropdown>
