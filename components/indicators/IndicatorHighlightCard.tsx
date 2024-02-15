@@ -117,7 +117,7 @@ function IndicatorHighlightCard({
           <CardImgOverlay>
             <IndicatorValue level={level} className="action-number">
               {typeof value === 'number' ? beautifyValue(value) : '-'}
-              <IndicatorUnit>{unit}</IndicatorUnit>
+              <IndicatorUnit>{unit === 'no unit' ? '' : unit}</IndicatorUnit>
             </IndicatorValue>
           </CardImgOverlay>
         </a>
