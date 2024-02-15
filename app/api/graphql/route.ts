@@ -12,6 +12,7 @@ export const dynamic = 'force-dynamic';
 export const POST = auth(async (request: NextAuthRequest) => {
   const headersList = headers();
   const requestData = await request.json();
+  const token = request.auth?.idToken;
 
   const response = await fetch(gqlUrl, {
     method: 'POST',
@@ -20,6 +21,7 @@ export const POST = auth(async (request: NextAuthRequest) => {
       'x-plan-domain': headersList.get('x-plan-domain') ?? '',
       'x-plan-identifier': headersList.get('x-plan-identifier') ?? '',
       'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
     },
     body: JSON.stringify(requestData),
     next: { revalidate: 0 },

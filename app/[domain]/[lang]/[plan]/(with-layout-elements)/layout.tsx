@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 
-import Header from '@/components/HeaderComponent';
+import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { StyledMain } from './StyledMain';
 import { JsonLd } from './JsonLd';

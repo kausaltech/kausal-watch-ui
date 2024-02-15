@@ -23,6 +23,24 @@ export const {
   }
 
   return {
+    callbacks: {
+      jwt({ token, account }) {
+        // Persist the OAuth id_token
+        if (account?.id_token) {
+          token.idToken = account.id_token;
+        }
+
+        return token;
+      },
+      session({ session, ...params }) {
+        // Include the OAuth id_token in the session
+        if ('token' in params && typeof params.token.idToken === 'string') {
+          session.idToken = params.token.idToken;
+        }
+
+        return session;
+      },
+    },
     providers: [
       {
         id: 'watch-oidc-provider',

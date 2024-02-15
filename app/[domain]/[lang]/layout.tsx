@@ -9,11 +9,18 @@ import defaultTheme from '@/public/static/themes/default/theme.json';
 import { DayjsLocaleProvider } from '@/common/dayjs';
 import '@/styles/default/main.scss';
 import { AuthProvider } from '@/components/providers/AuthProvider';
+import { auth } from '@/config/auth';
 
 type Props = {
   params: { lang: string };
   children: ReactNode;
 };
+
+async function AsyncAuthProvider({ children }) {
+  const session = await auth();
+
+  return <AuthProvider session={session}>{children}</AuthProvider>;
+}
 
 export default function LangLayout({ params, children }: Props) {
   const messages = useMessages();
@@ -31,8 +38,12 @@ export default function LangLayout({ params, children }: Props) {
           <NextIntlClientProvider locale={params.lang} messages={messages}>
             <StyledComponentsRegistry>
               <DayjsLocaleProvider locale={params.lang}>
-                <ApolloWrapper origin={origin} initialLocale={params.lang}>
-                  <AuthProvider>{children}</AuthProvider>
+                <ApolloWrapper
+                  origin={origin}
+                  initialLocale={params.lang}
+                  cookie={headersList.get('cookie') ?? undefined}
+                >
+                  <AsyncAuthProvider>{children}</AsyncAuthProvider>
                 </ApolloWrapper>
               </DayjsLocaleProvider>
             </StyledComponentsRegistry>
