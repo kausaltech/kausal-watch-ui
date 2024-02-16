@@ -1,5 +1,5 @@
 import { ApolloLink, HttpLink, Operation } from '@apollo/client';
-import { gqlUrl, isLocal } from '@/common/environment';
+import { gqlUrl, isLocal, isServer } from '@/common/environment';
 import { API_PROXY_PATH } from '@/constants/routes';
 import { onError } from '@apollo/client/link/error';
 import { captureException } from '@sentry/nextjs';
@@ -13,6 +13,7 @@ declare module '@apollo/client' {
     locale?: string;
     planIdentifier?: string;
     planDomain?: string;
+    sessionToken?: string;
     start?: number;
   }
 }
@@ -90,9 +91,9 @@ export const operationEnd = new ApolloLink((operation, forward) => {
  * host (e.g. in the middleware Apollo Client), we fall back to interacting
  * with the backend GraphQL API directly.
  */
-export const getHttpLink = (proxyOrigin?: string) =>
+export const getHttpLink = () =>
   new HttpLink({
-    uri: proxyOrigin ? `${proxyOrigin}${API_PROXY_PATH}` : gqlUrl,
+    uri: !isServer ? API_PROXY_PATH : gqlUrl,
     credentials: 'same-origin',
     fetchOptions: {
       mode: 'same-origin',

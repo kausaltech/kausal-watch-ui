@@ -1,7 +1,6 @@
 import { headers } from 'next/headers';
 import { NextAuthRequest } from 'next-auth/lib';
 import { gqlUrl } from '@/common/environment';
-import { auth } from '@/config/auth';
 
 export const dynamic = 'force-dynamic';
 
@@ -9,10 +8,9 @@ export const dynamic = 'force-dynamic';
  * Simple proxy which handles our GraphQL requests
  * to prevent CORS issues and attach auth headers.
  */
-export const POST = auth(async (request: NextAuthRequest) => {
+export const POST = async (request: NextAuthRequest) => {
   const headersList = headers();
   const requestData = await request.json();
-  const token = request.auth?.idToken;
 
   const response = await fetch(gqlUrl, {
     method: 'POST',
@@ -20,8 +18,8 @@ export const POST = auth(async (request: NextAuthRequest) => {
       'User-Agent': headersList.get('user-agent') ?? '',
       'x-plan-domain': headersList.get('x-plan-domain') ?? '',
       'x-plan-identifier': headersList.get('x-plan-identifier') ?? '',
+      Authorization: headersList.get('Authorization') ?? '',
       'Content-Type': 'application/json',
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
     },
     body: JSON.stringify(requestData),
     next: { revalidate: 0 },
@@ -63,4 +61,4 @@ export const POST = auth(async (request: NextAuthRequest) => {
       { status: 500, headers: responseHeaders }
     );
   }
-});
+};
