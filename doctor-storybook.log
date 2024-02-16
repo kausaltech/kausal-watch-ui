@@ -1,0 +1,55 @@
+🩺 checking the health of your Storybook..
+
+╭ Diagnostics ───────────────────────────────────────────────────────────────────────────────────────╮
+│                                                                                                    │
+│   Critical: The following dependencies are duplicated and WILL cause unexpected behavior:          │
+│   @storybook/core-common:                                                                          │
+│   6.5.16, 7.6.16                                                                                   │
+│                                                                                                    │
+│   @storybook/core-events:                                                                          │
+│   6.5.16, 7.6.16                                                                                   │
+│                                                                                                    │
+│   @storybook/core-server:                                                                          │
+│   6.5.16, 7.6.16                                                                                   │
+│                                                                                                    │
+│                                                                                                    │
+│   Attention: The following dependencies are duplicated which might cause unexpected behavior:      │
+│   @storybook/addon-actions:                                                                        │
+│   6.5.16, 7.6.16                                                                                   │
+│                                                                                                    │
+│   @storybook/builder-webpack5:                                                                     │
+│   6.5.16, 7.6.16                                                                                   │
+│                                                                                                    │
+│   @storybook/channels:                                                                             │
+│   6.5.16, 7.6.16                                                                                   │
+│                                                                                                    │
+│   @storybook/csf-tools:                                                                            │
+│   6.5.16, 7.6.16                                                                                   │
+│                                                                                                    │
+│   @storybook/docs-tools:                                                                           │
+│   6.5.16, 7.6.16                                                                                   │
+│                                                                                                    │
+│   @storybook/node-logger:                                                                          │
+│   6.5.16, 7.6.16                                                                                   │
+│                                                                                                    │
+│   @storybook/react-docgen-typescript-plugin:                                                       │
+│   1.0.2-canary.6.9d540b91e815f8fc2f8829189deb00553559ff63.0, 1.0.6--canary.9.0c3f3b7.0             │
+│                                                                                                    │
+│   @storybook/react:                                                                                │
+│   6.5.16, 7.6.16                                                                                   │
+│                                                                                                    │
+│   @storybook/telemetry:                                                                            │
+│   6.5.16, 7.6.16                                                                                   │
+│                                                                                                    │
+│                                                                                                    │
+│   You can find more information for a given dependency by running yarn why <package-name>          │
+│                                                                                                    │
+│                                                                                                    │
+│   Please try de-duplicating these dependencies by running yarn dedupe                              │
+│                                                                                                    │
+│   -------                                                                                          │
+│                                                                                                    │
+│   You can find the full logs in /Users/tero/Projects/Kausal/kausal-watch-ui/doctor-storybook.log   │
+│                                                                                                    │
+╰────────────────────────────────────────────────────────────────────────────────────────────────────╯
+
