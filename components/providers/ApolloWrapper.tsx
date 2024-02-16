@@ -16,38 +16,31 @@ import {
   headersMiddleware,
 } from '../../utils/apollo.utils';
 import { isServer } from '@/common/environment';
+import { setContext } from '@apollo/client/link/context';
+import { useSession } from 'next-auth/react';
 
-/**
- * Ensure auth cookies are passed to requests when rendering client components on the
- * server. This ensures authorisation works on first render.
- */
-function cookieMiddleware(cookie) {
-  return new ApolloLink((operation, forward) => {
-    if (isServer && cookie) {
-      operation.setContext(({ headers = {} }) => {
-        return {
-          headers: {
-            ...headers,
-            cookie,
-          },
-        };
-      });
-    }
+const authMiddleware = setContext(
+  (_, { sessionToken, headers: initialHeaders = {} }) => {
+    return {
+      headers: {
+        ...initialHeaders,
+        ...(sessionToken ? { Authorization: `Bearer ${sessionToken}` } : {}),
+      },
+    };
+  }
+);
 
-    return forward(operation);
-  });
-}
-
-function makeClient(initialLocale: string, origin?: string, cookie?: string) {
+function makeClient(initialLocale: string, sessionToken?: string) {
   return new NextSSRApolloClient({
     defaultContext: {
       locale: initialLocale,
+      sessionToken,
     },
     cache: new NextSSRInMemoryCache(),
     link: ApolloLink.from([
       errorLink,
       localeMiddleware,
-      cookieMiddleware(cookie),
+      authMiddleware,
       headersMiddleware,
       ...(isServer
         ? [
@@ -56,7 +49,7 @@ function makeClient(initialLocale: string, origin?: string, cookie?: string) {
             }),
           ]
         : []),
-      getHttpLink(origin),
+      getHttpLink(),
     ]),
   });
 }
@@ -76,25 +69,16 @@ function UpdateLocale({ children }: React.PropsWithChildren) {
 }
 
 type Props = {
-  origin?: string;
   initialLocale: string;
-  /**
-   * Visitor's cookies must be passed from a Server Component on initialisation
-   * to support authentication on the first server render of client components
-   */
-  cookie?: string;
 } & React.PropsWithChildren;
 
-export function ApolloWrapper({
-  origin,
-  initialLocale,
-  children,
-  cookie,
-}: Props) {
+export function ApolloWrapper({ initialLocale, children }: Props) {
+  const session = useSession();
+  const token =
+    session.status === 'authenticated' ? session.data.idToken : undefined;
+
   return (
-    <ApolloNextAppProvider
-      makeClient={() => makeClient(initialLocale, origin, cookie)}
-    >
+    <ApolloNextAppProvider makeClient={() => makeClient(initialLocale, token)}>
       <UpdateLocale>{children}</UpdateLocale>
     </ApolloNextAppProvider>
   );
