@@ -14,6 +14,7 @@
     "@next/bundle-analyzer": "^12.1.6",
     "@popperjs/core": "^2.11.5",
     "@sentry/nextjs": "^7.93.0",
+    "@storybook/addon-themes": "^7.6.16",
     "babel-plugin-inline-react-svg": "^2.0.1",
     "bootstrap": "5.2.3",
     "csstype": "^3.1.1",
@@ -123,6 +124,7 @@
     "react-color": "^2.19.3",
     "regenerator-runtime": "^0.13.9",
     "storybook": "^7.6.16",
+    "tsconfig-paths-webpack-plugin": "^4.1.0",
     "typescript": "^4.6.4",
     "yarn-upgrade-all": "^0.7.1"
   },

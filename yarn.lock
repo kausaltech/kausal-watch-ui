@@ -5597,6 +5597,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@storybook/addon-themes@npm:^7.6.16":
+  version: 7.6.16
+  resolution: "@storybook/addon-themes@npm:7.6.16"
+  dependencies:
+    ts-dedent: ^2.0.0
+  checksum: 8e2d95be22812229ff67eb037194be4d41dec074140ccc76b83c79a5e417ed22a9fd37d50c23f262d610bf65c12711dfc8e5369720076f1e9369a35f88334064
+  languageName: node
+  linkType: hard
+
 "@storybook/addon-toolbars@npm:7.6.16":
   version: 7.6.16
   resolution: "@storybook/addon-toolbars@npm:7.6.16"
@@ -16818,6 +16827,7 @@ __metadata:
     "@storybook/addon-interactions": ^7.6.16
     "@storybook/addon-links": ^7.6.16
     "@storybook/addon-onboarding": ^1.0.11
+    "@storybook/addon-themes": ^7.6.16
     "@storybook/blocks": ^7.6.16
     "@storybook/nextjs": ^7.6.16
     "@storybook/react": ^7.6.16
@@ -16891,6 +16901,7 @@ __metadata:
     storybook: ^7.6.16
     styled-components: ^6.0.0
     stylis: ^4.0.0
+    tsconfig-paths-webpack-plugin: ^4.1.0
     typescript: ^4.6.4
     yarn-upgrade-all: ^0.7.1
   dependenciesMeta:
@@ -23222,7 +23233,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tsconfig-paths-webpack-plugin@npm:^4.0.1":
+"tsconfig-paths-webpack-plugin@npm:^4.0.1, tsconfig-paths-webpack-plugin@npm:^4.1.0":
   version: 4.1.0
   resolution: "tsconfig-paths-webpack-plugin@npm:4.1.0"
   dependencies:
