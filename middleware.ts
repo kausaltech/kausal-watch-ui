@@ -102,6 +102,10 @@ export async function middleware(request: NextRequest) {
       captureException(error, { extra: { hostname, ...error } });
     }
 
+    console.log('No plansForHostname', data);
+    console.log('error', error);
+    console.log('hostname', hostname);
+    console.log('apolloClient', apolloClient.link);
     return NextResponse.rewrite(new URL('/404', request.url));
   }
 
@@ -111,6 +115,7 @@ export async function middleware(request: NextRequest) {
   );
 
   if (!parsedPlan) {
+    console.log('No parsedPlan', data);
     return NextResponse.rewrite(new URL('/404', request.url));
   }
 
