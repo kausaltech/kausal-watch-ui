@@ -149,11 +149,7 @@ function ActionContentBlock(props: ActionContentBlockProps) {
       return <ActionDescriptionBlock content={action.description} />;
     case 'ActionLeadParagraphBlock':
       if (!action.leadParagraph) return null;
-      return (
-        <RestrictedBlockWrapper isRestricted={true} isHidden={false}>
-          <ActionLeadParagraphBlock content={action.leadParagraph} />
-        </RestrictedBlockWrapper>
-      );
+      return <ActionLeadParagraphBlock content={action.leadParagraph} />;
     case 'ActionOfficialNameBlock':
       return (
         <ActionOfficialNameBlock plan={plan} block={block} action={action} />
@@ -192,12 +188,10 @@ function ActionContentBlock(props: ActionContentBlockProps) {
     case 'ActionResponsiblePartiesBlock':
       if (!action.responsibleParties.length) return null;
       return (
-        <RestrictedBlockWrapper isRestricted={true} isHidden={false}>
-          <ActionResponsiblePartiesBlock
-            block={block}
-            responsibleParties={action.responsibleParties}
-          />
-        </RestrictedBlockWrapper>
+        <ActionResponsiblePartiesBlock
+          block={block}
+          responsibleParties={action.responsibleParties}
+        />
       );
     case 'ActionScheduleBlock':
       return <ActionScheduleBlock action={action} plan={plan} />;
@@ -372,12 +366,17 @@ function ActionContentSectionBlock(props) {
       <Row>
         {blocks.map((block) => (
           <Col md={layout === 'grid' ? 4 : 12} key={block.id} className="mb-3">
-            <ActionContentBlock
-              key={block.id}
-              block={block}
-              action={action}
-              section={section}
-            />
+            <RestrictedBlockWrapper
+              isRestricted={block.meta.restricted}
+              isHidden={block.meta.hidden}
+            >
+              <ActionContentBlock
+                key={block.id}
+                block={block}
+                action={action}
+                section={section}
+              />
+            </RestrictedBlockWrapper>
           </Col>
         ))}
       </Row>
@@ -483,7 +482,16 @@ function ActionContent(props: ActionContentProps) {
           groupedBlocks.push(block);
         } else {
           allSections.push(
-            <ActionContentBlock key={block.id} block={block} {...staticProps} />
+            <RestrictedBlockWrapper
+              isRestricted={block.meta.restricted}
+              isHidden={block.meta.hidden}
+            >
+              <ActionContentBlock
+                key={block.id}
+                block={block}
+                {...staticProps}
+              />
+            </RestrictedBlockWrapper>
           );
         }
       }

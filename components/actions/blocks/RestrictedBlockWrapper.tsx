@@ -30,7 +30,7 @@ function RestrictedBlockWrapper(props: RestrictedBlockWrapperProps) {
     <>
       {isRestricted ? (
         <WrapperContainer>
-          <WrapperIcon name="lock" />
+          <WrapperIcon name="hidden" />
           {children}
         </WrapperContainer>
       ) : (
