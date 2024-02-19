@@ -49,6 +49,7 @@ import { PhaseTimeline } from './PhaseTimeline';
 import StatusBadge from 'components/common/StatusBadge';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
+import RestrictedBlockWrapper from './blocks/RestrictedBlockWrapper';
 
 export type ActionContentAction = NonNullable<GetActionDetailsQuery['action']>;
 
@@ -148,7 +149,11 @@ function ActionContentBlock(props: ActionContentBlockProps) {
       return <ActionDescriptionBlock content={action.description} />;
     case 'ActionLeadParagraphBlock':
       if (!action.leadParagraph) return null;
-      return <ActionLeadParagraphBlock content={action.leadParagraph} />;
+      return (
+        <RestrictedBlockWrapper isRestricted={true} isHidden={false}>
+          <ActionLeadParagraphBlock content={action.leadParagraph} />
+        </RestrictedBlockWrapper>
+      );
     case 'ActionOfficialNameBlock':
       return (
         <ActionOfficialNameBlock plan={plan} block={block} action={action} />
@@ -187,10 +192,12 @@ function ActionContentBlock(props: ActionContentBlockProps) {
     case 'ActionResponsiblePartiesBlock':
       if (!action.responsibleParties.length) return null;
       return (
-        <ActionResponsiblePartiesBlock
-          block={block}
-          responsibleParties={action.responsibleParties}
-        />
+        <RestrictedBlockWrapper isRestricted={true} isHidden={false}>
+          <ActionResponsiblePartiesBlock
+            block={block}
+            responsibleParties={action.responsibleParties}
+          />
+        </RestrictedBlockWrapper>
       );
     case 'ActionScheduleBlock':
       return <ActionScheduleBlock action={action} plan={plan} />;
@@ -237,7 +244,6 @@ function ActionContentBlock(props: ActionContentBlockProps) {
       console.error('Unknown action content block', block.__typename);
       return null;
   }
-  return null;
 }
 
 type ActionContentBlockGroupProps = Omit<ActionContentBlockProps, 'block'> & {
@@ -377,8 +383,6 @@ function ActionContentSectionBlock(props) {
       </Row>
     </ContentGroup>
   );
-  // console.error("Unsupported content block group", blockType);
-  return null;
 }
 
 type ActionContentProps = {
