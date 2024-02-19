@@ -1,8 +1,9 @@
-import { ApolloClient, InMemoryCache, from } from '@apollo/client';
+import { ApolloClient, ApolloLink, InMemoryCache, from } from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
 import { registerApolloClient } from '@apollo/experimental-nextjs-app-support/rsc';
 import possibleTypes from '@/common/__generated__/possible_types.json';
 
-import { cookies, headers as getHeaders } from 'next/headers';
+import { cookies, headers as getHeaders, headers } from 'next/headers';
 import {
   errorLink,
   localeMiddleware,
@@ -12,6 +13,31 @@ import {
   headersMiddleware,
 } from './apollo.utils';
 import { SELECTED_WORKFLOW_COOKIE_KEY } from '@/constants/workflow';
+import { auth } from '@/config/auth';
+
+/**
+ * Pass cookies from the request to queries to support authentication
+ * within the GraphQL Route Handler.
+ */
+const cookieMiddleware = new ApolloLink((operation, forward) => {
+  operation.setContext(({ headers: initialHeaders = {} }) => ({
+    headers: { ...initialHeaders, cookie: headers().get('cookie') ?? '' },
+  }));
+
+  return forward(operation);
+});
+
+const authMiddleware = setContext(
+  async (_, { headers: initialHeaders = {} }) => {
+    const session = await auth();
+    const token = session?.idToken;
+
+    return {
+      ...initialHeaders,
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    };
+  }
+);
 
 /**
  * Apollo client used in React Server Components (fully server-side). For client components
@@ -44,9 +70,11 @@ export const { getClient } = registerApolloClient(() => {
       operationStart,
       errorLink,
       localeMiddleware,
+      authMiddleware,
+      cookieMiddleware,
       headersMiddleware,
       operationEnd,
-      getHttpLink(origin),
+      getHttpLink(),
     ]),
   });
 });
