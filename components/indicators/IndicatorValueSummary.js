@@ -65,9 +65,12 @@ function IndicatorValueSummary(props) {
   const t = useTranslations();
   const locale = useLocale();
   const theme = useTheme();
-  const { timeResolution, values, goals, unit, i18n } = props;
+  const { timeResolution, values, goals, unit } = props;
   const desirableDirection = determineDesirableDirection(values, goals);
-  const shortUnitName = unit.shortName || unit.name;
+  const shortUnitName =
+    (unit.shortName || unit.name) === 'no unit'
+      ? ''
+      : unit.shortName || unit.name;
   const diffUnitName =
     unit.name === '%' ? t('percent-point-abbreviation') : shortUnitName;
   const now = dayjs();
