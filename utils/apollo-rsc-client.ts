@@ -47,9 +47,6 @@ export const { getClient } = registerApolloClient(() => {
   const headers = getHeaders();
   const cookiesList = cookies();
   const locale = headers.get('x-next-intl-locale') ?? undefined;
-  const host = headers.get('host');
-  const protocol = headers.get('x-forwarded-proto');
-  const origin = host && protocol ? `${protocol}://${host}` : undefined;
   const plan = headers.get('x-plan-identifier') ?? undefined;
   const domain = headers.get('x-plan-domain') ?? undefined;
   const versionCookie = cookiesList.get(SELECTED_WORKFLOW_COOKIE_KEY);
