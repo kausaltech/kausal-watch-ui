@@ -1,5 +1,5 @@
-import { gqlUrl } from '@/common/environment';
-import { ApolloLink, HttpLink } from '@apollo/client';
+import { ApolloLink, HttpLink, Operation } from '@apollo/client';
+import { gqlUrl, isLocal } from '@/common/environment';
 import { onError } from '@apollo/client/link/error';
 import { captureException } from '@sentry/nextjs';
 
@@ -16,20 +16,47 @@ declare module '@apollo/client' {
   }
 }
 
-export const errorLink = onError(({ graphQLErrors, operation }) => {
-  if (graphQLErrors) {
-    graphQLErrors.forEach((error) =>
-      captureException(error.message, {
-        extra: {
-          errorPath: error.path,
-          query: operation.query,
-          operationName: operation.operationName,
-          variables: JSON.stringify(operation.variables, null, 2),
-        },
-      })
+function logError(
+  operation: Operation,
+  message: string,
+  error: unknown,
+  sentryExtras: { [key: string]: unknown }
+) {
+  if (isLocal) {
+    console.error(
+      `An error occurred while querying ${operation.operationName}: ${message}`,
+      error
     );
   }
-});
+
+  captureException(message, {
+    extra: {
+      query: operation.query,
+      operationName: operation.operationName,
+      variables: JSON.stringify(operation.variables, null, 2),
+      ...sentryExtras,
+    },
+  });
+}
+
+export const errorLink = onError(
+  ({ networkError, graphQLErrors, operation }) => {
+    if (networkError) {
+      logError(operation, networkError.message, networkError, {
+        cause: networkError.cause,
+        name: networkError.name,
+      });
+    }
+
+    if (graphQLErrors) {
+      graphQLErrors.forEach((error) => {
+        logError(operation, error.message, error, {
+          errorPath: error.path,
+        });
+      });
+    }
+  }
+);
 
 export const operationStart = new ApolloLink((operation, forward) => {
   operation.setContext({ start: Date.now() });
