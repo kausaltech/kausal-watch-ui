@@ -15,26 +15,16 @@ import {
 import { SELECTED_WORKFLOW_COOKIE_KEY } from '@/constants/workflow';
 import { auth } from '@/config/auth';
 
-/**
- * Pass cookies from the request to queries to support authentication
- * within the GraphQL Route Handler.
- */
-const cookieMiddleware = new ApolloLink((operation, forward) => {
-  operation.setContext(({ headers: initialHeaders = {} }) => ({
-    headers: { ...initialHeaders, cookie: headers().get('cookie') ?? '' },
-  }));
-
-  return forward(operation);
-});
-
 const authMiddleware = setContext(
   async (_, { headers: initialHeaders = {} }) => {
     const session = await auth();
     const token = session?.idToken;
 
     return {
-      ...initialHeaders,
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      headers: {
+        ...initialHeaders,
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
     };
   }
 );
@@ -68,7 +58,6 @@ export const { getClient } = registerApolloClient(() => {
       errorLink,
       localeMiddleware,
       authMiddleware,
-      cookieMiddleware,
       headersMiddleware,
       operationEnd,
       getHttpLink(),
