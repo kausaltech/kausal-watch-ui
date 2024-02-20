@@ -10,11 +10,12 @@ import styled from 'styled-components';
 import Icon from '@/components/common/Icon';
 import { useTranslations } from 'next-intl';
 import { usePlan } from 'context/plan';
-import { signOut, useSession } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import { useWorkflowSelector } from '@/context/workflow-selector';
 import { useRouter } from 'next/navigation';
 import { gql, useSuspenseQuery } from '@apollo/client';
 import { GetWorkflowsQuery } from '@/common/__generated__/graphql';
+import { useHandleSignOut } from '@/utils/auth.utils';
 
 const ToolbarContainer = styled(Container)`
   display: flex;
@@ -82,6 +83,7 @@ export const TopToolBar = () => {
   const plan = usePlan();
   const { workflow: selectedWorkflowId, setWorkflow } = useWorkflowSelector();
   const router = useRouter();
+  const handleSignOut = useHandleSignOut();
 
   const { data: workflowsData } = useSuspenseQuery<GetWorkflowsQuery>(gql`
     query GetWorkflows {
@@ -172,7 +174,7 @@ export const TopToolBar = () => {
               {t('admin-login')}
             </DropdownItem>
           )}
-          <DropdownItem onClick={() => signOut()}>
+          <DropdownItem onClick={() => handleSignOut()}>
             <StyledIcon
               name="arrowRight"
               className="icon"

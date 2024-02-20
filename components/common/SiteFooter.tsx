@@ -10,8 +10,9 @@ import PlanSelector from 'components/plans/PlanSelector';
 import { useTheme } from 'styled-components';
 import { useTranslations } from 'next-intl';
 import { usePlan } from '@/context/plan';
-import { signIn, signOut, useSession } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 import Button from './Button';
+import { useHandleSignOut } from '@/utils/auth.utils';
 
 const StyledButton = styled(Button)`
   &.btn-link {
@@ -434,6 +435,7 @@ function SiteFooter(props: SiteFooterProps) {
   const theme = useTheme();
   const plan = usePlan();
   const session = useSession();
+  const handleSignOut = useHandleSignOut();
   const {
     siteTitle,
     ownerUrl,
@@ -605,7 +607,9 @@ function SiteFooter(props: SiteFooterProps) {
                   disabled={isAuthLoading}
                   color="link"
                   onClick={() =>
-                    isAuthenticated ? signOut() : signIn('watch-oidc-provider')
+                    isAuthenticated
+                      ? handleSignOut()
+                      : signIn('watch-oidc-provider')
                   }
                 >
                   {isAuthLoading ? (
