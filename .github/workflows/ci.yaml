@@ -51,6 +51,7 @@ jobs:
             --build-arg GIT_REPO=${{ github.repository }} \
             --build-arg SENTRY_AUTH_TOKEN=$SENTRY_AUTH_TOKEN \
             --build-arg NEXT_PUBLIC_API_URL=${{ vars.NEXT_PUBLIC_API_URL }} \
+            --build-arg NEXT_PUBLIC_AUTH_ISSUER=${{ vars.NEXT_PUBLIC_AUTH_ISSUER }} \
             --build-arg NEXT_PUBLIC_DEPLOYMENT_TYPE=${{ env.DEPLOYMENT_TYPE }} \
             --tag ${{ env.DOCKER_IMAGE }} \
             .

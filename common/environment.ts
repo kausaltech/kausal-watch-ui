@@ -17,3 +17,5 @@ export const apiUrl =
   process.env.NEXT_PUBLIC_API_URL || 'https://api.watch.kausal.tech/v1';
 
 export const gqlUrl = `${apiUrl}/graphql/`;
+
+export const authIssuer = process.env.NEXT_PUBLIC_AUTH_ISSUER;
