@@ -155,7 +155,6 @@ export type AccessibilityStatementPreparationInformationBlock = StreamFieldInter
 /** One action/measure tracked in an action plan. */
 export type Action = {
   __typename?: 'Action';
-  actionDateFormat?: Maybe<DateFormatOptions>;
   adminButtons: Array<AdminButton>;
   attributes: Array<AttributeInterface>;
   categories: Array<Category>;
@@ -212,7 +211,6 @@ export type Action = {
   supersededActions: Array<Action>;
   /** Set if this action is superseded by another action */
   supersededBy?: Maybe<Action>;
-  taskDateFormat?: Maybe<DateFormatOptions>;
   tasks: Array<ActionTask>;
   timeliness: ActionTimeliness;
   updatedAt: Scalars['DateTime'];
@@ -331,32 +329,35 @@ export type ActionContactPerson = {
   primaryContact: Scalars['Boolean'];
 };
 
-export type ActionContactPersonsBlock = StreamFieldInterface & {
+export type ActionContactPersonsBlock = FieldBlockMetaInterface & StreamFieldInterface & {
   __typename?: 'ActionContactPersonsBlock';
   blockType: Scalars['String'];
   field: Scalars['String'];
   id?: Maybe<Scalars['String']>;
+  meta?: Maybe<FieldBlockMetaData>;
   rawValue: Scalars['String'];
   value: Scalars['String'];
 };
 
-export type ActionContentAttributeTypeBlock = StreamFieldInterface & {
+export type ActionContentAttributeTypeBlock = FieldBlockMetaInterface & StreamFieldInterface & {
   __typename?: 'ActionContentAttributeTypeBlock';
   attributeType: AttributeType;
   blockType: Scalars['String'];
   blocks: Array<StreamFieldInterface>;
   field: Scalars['String'];
   id?: Maybe<Scalars['String']>;
+  meta?: Maybe<FieldBlockMetaData>;
   rawValue: Scalars['String'];
 };
 
-export type ActionContentCategoryTypeBlock = StreamFieldInterface & {
+export type ActionContentCategoryTypeBlock = FieldBlockMetaInterface & StreamFieldInterface & {
   __typename?: 'ActionContentCategoryTypeBlock';
   blockType: Scalars['String'];
   blocks: Array<StreamFieldInterface>;
   categoryType: CategoryType;
   field: Scalars['String'];
   id?: Maybe<Scalars['String']>;
+  meta?: Maybe<FieldBlockMetaData>;
   rawValue: Scalars['String'];
 };
 
@@ -383,11 +384,12 @@ export enum ActionDateFormat {
   Year = 'YEAR'
 }
 
-export type ActionDescriptionBlock = StreamFieldInterface & {
+export type ActionDescriptionBlock = FieldBlockMetaInterface & StreamFieldInterface & {
   __typename?: 'ActionDescriptionBlock';
   blockType: Scalars['String'];
   field: Scalars['String'];
   id?: Maybe<Scalars['String']>;
+  meta?: Maybe<FieldBlockMetaData>;
   rawValue: Scalars['String'];
   value: Scalars['String'];
 };
@@ -464,11 +466,12 @@ export enum ActionIndicatorEffectType {
   Increases = 'INCREASES'
 }
 
-export type ActionLeadParagraphBlock = StreamFieldInterface & {
+export type ActionLeadParagraphBlock = FieldBlockMetaInterface & StreamFieldInterface & {
   __typename?: 'ActionLeadParagraphBlock';
   blockType: Scalars['String'];
   field: Scalars['String'];
   id?: Maybe<Scalars['String']>;
+  meta?: Maybe<FieldBlockMetaData>;
   rawValue: Scalars['String'];
   value: Scalars['String'];
 };
@@ -483,11 +486,12 @@ export type ActionLink = {
   url: Scalars['String'];
 };
 
-export type ActionLinksBlock = StreamFieldInterface & {
+export type ActionLinksBlock = FieldBlockMetaInterface & StreamFieldInterface & {
   __typename?: 'ActionLinksBlock';
   blockType: Scalars['String'];
   field: Scalars['String'];
   id?: Maybe<Scalars['String']>;
+  meta?: Maybe<FieldBlockMetaData>;
   rawValue: Scalars['String'];
   value: Scalars['String'];
 };
@@ -622,16 +626,17 @@ export type ActionMainContentBlock = ActionContactFormBlock | ActionContentAttri
 
 export type ActionMainContentSectionElementBlock = ActionContentAttributeTypeBlock | ActionContentCategoryTypeBlock;
 
-export type ActionMergedActionsBlock = StreamFieldInterface & {
+export type ActionMergedActionsBlock = FieldBlockMetaInterface & StreamFieldInterface & {
   __typename?: 'ActionMergedActionsBlock';
   blockType: Scalars['String'];
   field: Scalars['String'];
   id?: Maybe<Scalars['String']>;
+  meta?: Maybe<FieldBlockMetaData>;
   rawValue: Scalars['String'];
   value: Scalars['String'];
 };
 
-export type ActionOfficialNameBlock = StreamFieldInterface & {
+export type ActionOfficialNameBlock = FieldBlockMetaInterface & StreamFieldInterface & {
   __typename?: 'ActionOfficialNameBlock';
   blockType: Scalars['String'];
   blocks: Array<StreamFieldInterface>;
@@ -639,34 +644,38 @@ export type ActionOfficialNameBlock = StreamFieldInterface & {
   field: Scalars['String'];
   fieldLabel?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['String']>;
+  meta?: Maybe<FieldBlockMetaData>;
   rawValue: Scalars['String'];
 };
 
-export type ActionRelatedActionsBlock = StreamFieldInterface & {
+export type ActionRelatedActionsBlock = FieldBlockMetaInterface & StreamFieldInterface & {
   __typename?: 'ActionRelatedActionsBlock';
   blockType: Scalars['String'];
   field: Scalars['String'];
   id?: Maybe<Scalars['String']>;
+  meta?: Maybe<FieldBlockMetaData>;
   rawValue: Scalars['String'];
   value: Scalars['String'];
 };
 
-export type ActionRelatedIndicatorsBlock = StreamFieldInterface & {
+export type ActionRelatedIndicatorsBlock = FieldBlockMetaInterface & StreamFieldInterface & {
   __typename?: 'ActionRelatedIndicatorsBlock';
   blockType: Scalars['String'];
   field: Scalars['String'];
   id?: Maybe<Scalars['String']>;
+  meta?: Maybe<FieldBlockMetaData>;
   rawValue: Scalars['String'];
   value: Scalars['String'];
 };
 
-export type ActionResponsiblePartiesBlock = StreamFieldInterface & {
+export type ActionResponsiblePartiesBlock = FieldBlockMetaInterface & StreamFieldInterface & {
   __typename?: 'ActionResponsiblePartiesBlock';
   blockType: Scalars['String'];
   blocks: Array<StreamFieldInterface>;
   field: Scalars['String'];
   heading?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['String']>;
+  meta?: Maybe<FieldBlockMetaData>;
   rawValue: Scalars['String'];
 };
 
@@ -715,11 +724,12 @@ export type ActionSchedule = {
   plan: Plan;
 };
 
-export type ActionScheduleBlock = StreamFieldInterface & {
+export type ActionScheduleBlock = FieldBlockMetaInterface & StreamFieldInterface & {
   __typename?: 'ActionScheduleBlock';
   blockType: Scalars['String'];
   field: Scalars['String'];
   id?: Maybe<Scalars['String']>;
+  meta?: Maybe<FieldBlockMetaData>;
   rawValue: Scalars['String'];
   value: Scalars['String'];
 };
@@ -882,11 +892,12 @@ export enum ActionTaskState {
   NotStarted = 'NOT_STARTED'
 }
 
-export type ActionTasksBlock = StreamFieldInterface & {
+export type ActionTasksBlock = FieldBlockMetaInterface & StreamFieldInterface & {
   __typename?: 'ActionTasksBlock';
   blockType: Scalars['String'];
   field: Scalars['String'];
   id?: Maybe<Scalars['String']>;
+  meta?: Maybe<FieldBlockMetaData>;
   rawValue: Scalars['String'];
   value: Scalars['String'];
 };
@@ -1715,12 +1726,6 @@ export type DateBlockValueArgs = {
   format?: InputMaybe<Scalars['String']>;
 };
 
-export enum DateFormatOptions {
-  Full = 'FULL',
-  MonthYear = 'MONTH_YEAR',
-  Year = 'YEAR'
-}
-
 export type DateTimeBlock = StreamFieldInterface & {
   __typename?: 'DateTimeBlock';
   blockType: Scalars['String'];
@@ -1915,6 +1920,16 @@ export type ExternalLinkMenuItem = {
   __typename?: 'ExternalLinkMenuItem';
   linkText: Scalars['String'];
   url: Scalars['String'];
+};
+
+export type FieldBlockMetaData = {
+  __typename?: 'FieldBlockMetaData';
+  hidden?: Maybe<Scalars['Boolean']>;
+  restricted?: Maybe<Scalars['Boolean']>;
+};
+
+export type FieldBlockMetaInterface = {
+  meta?: Maybe<FieldBlockMetaData>;
 };
 
 export type FloatBlock = StreamFieldInterface & {
@@ -3096,6 +3111,8 @@ export type PlanFeatures = {
   __typename?: 'PlanFeatures';
   /** Should custom images for individual actions be allowed */
   allowImagesForActions: Scalars['Boolean'];
+  /** Should users be able to have authenticated sessions in the public UI? */
+  allowPublicSiteLogin: Scalars['Boolean'];
   /** Choose which information about contact persons is visible in the public UI */
   contactPersonsPublicData: PlanFeaturesContactPersonsPublicData;
   /** Set to enable comparing indicators between organizations */
@@ -4148,6 +4165,15 @@ export enum UserFeedbackType {
   Action = 'ACTION',
   /** General */
   A = 'A_'
+}
+
+export enum WorkflowState {
+  /** Approved */
+  Approved = 'APPROVED',
+  /** Draft */
+  Draft = 'DRAFT',
+  /** Published */
+  Published = 'PUBLISHED'
 }
 
 /** One possible value for a given Enum. Enum values are unique values, not a placeholder for a string or numeric value. However an Enum value is returned in a JSON response as a string. */
@@ -6858,7 +6884,7 @@ export type GetActionDetailsQueryVariables = Exact<{
   plan: Scalars['ID'];
   id: Scalars['ID'];
   clientUrl: Scalars['String'];
-  workflow?: InputMaybe<Scalars['String']>;
+  workflow?: InputMaybe<WorkflowState>;
 }>;
 
 
@@ -7437,9 +7463,12 @@ export type GetActionDetailsQuery = (
     { actionListPage?: (
       { actionDateFormat?: string | null, taskDateFormat?: string | null, detailsMainTop?: Array<(
         { id?: string | null }
-        & { __typename: 'ActionContactFormBlock' | 'ActionDescriptionBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionMergedActionsBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionTasksBlock' }
+        & { __typename: 'ActionContactFormBlock' }
       ) | (
-        { id?: string | null, attributeType: (
+        { id?: string | null, meta?: (
+          { restricted?: boolean | null, hidden?: boolean | null }
+          & { __typename?: 'FieldBlockMetaData' }
+        ) | null, attributeType: (
           { id: string, format: AttributeTypeFormat, name: string, identifier: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
             { id: string, identifier: string }
             & { __typename?: 'AttributeTypeChoiceOption' }
@@ -7451,7 +7480,10 @@ export type GetActionDetailsQuery = (
         ) }
         & { __typename: 'ActionContentAttributeTypeBlock' }
       ) | (
-        { id?: string | null, categoryType: (
+        { id?: string | null, meta?: (
+          { restricted?: boolean | null, hidden?: boolean | null }
+          & { __typename?: 'FieldBlockMetaData' }
+        ) | null, categoryType: (
           { id: string, name: string, identifier: string, helpText: string, hideCategoryIdentifiers: boolean, levels: Array<(
             { id: string, order: number, name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
@@ -7706,7 +7738,16 @@ export type GetActionDetailsQuery = (
         ) | null> | null }
         & { __typename: 'ActionContentSectionBlock' }
       ) | (
-        { id?: string | null, fieldLabel?: string | null, caption?: string | null }
+        { id?: string | null, meta?: (
+          { restricted?: boolean | null, hidden?: boolean | null }
+          & { __typename?: 'FieldBlockMetaData' }
+        ) | null }
+        & { __typename: 'ActionDescriptionBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionMergedActionsBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionTasksBlock' }
+      ) | (
+        { id?: string | null, fieldLabel?: string | null, caption?: string | null, meta?: (
+          { restricted?: boolean | null, hidden?: boolean | null }
+          & { __typename?: 'FieldBlockMetaData' }
+        ) | null }
         & { __typename: 'ActionOfficialNameBlock' }
       ) | (
         { id?: string | null, reportField?: string | null, reportType?: (
@@ -7914,9 +7955,12 @@ export type GetActionDetailsQuery = (
         & { __typename: 'ReportComparisonBlock' }
       )> | null, detailsMainBottom?: Array<(
         { id?: string | null }
-        & { __typename: 'ActionContactFormBlock' | 'ActionDescriptionBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionMergedActionsBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionTasksBlock' }
+        & { __typename: 'ActionContactFormBlock' }
       ) | (
-        { id?: string | null, attributeType: (
+        { id?: string | null, meta?: (
+          { restricted?: boolean | null, hidden?: boolean | null }
+          & { __typename?: 'FieldBlockMetaData' }
+        ) | null, attributeType: (
           { id: string, format: AttributeTypeFormat, name: string, identifier: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
             { id: string, identifier: string }
             & { __typename?: 'AttributeTypeChoiceOption' }
@@ -7928,7 +7972,10 @@ export type GetActionDetailsQuery = (
         ) }
         & { __typename: 'ActionContentAttributeTypeBlock' }
       ) | (
-        { id?: string | null, categoryType: (
+        { id?: string | null, meta?: (
+          { restricted?: boolean | null, hidden?: boolean | null }
+          & { __typename?: 'FieldBlockMetaData' }
+        ) | null, categoryType: (
           { id: string, name: string, identifier: string, helpText: string, hideCategoryIdentifiers: boolean, levels: Array<(
             { id: string, order: number, name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
@@ -8183,7 +8230,16 @@ export type GetActionDetailsQuery = (
         ) | null> | null }
         & { __typename: 'ActionContentSectionBlock' }
       ) | (
-        { id?: string | null, fieldLabel?: string | null, caption?: string | null }
+        { id?: string | null, meta?: (
+          { restricted?: boolean | null, hidden?: boolean | null }
+          & { __typename?: 'FieldBlockMetaData' }
+        ) | null }
+        & { __typename: 'ActionDescriptionBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionMergedActionsBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionTasksBlock' }
+      ) | (
+        { id?: string | null, fieldLabel?: string | null, caption?: string | null, meta?: (
+          { restricted?: boolean | null, hidden?: boolean | null }
+          & { __typename?: 'FieldBlockMetaData' }
+        ) | null }
         & { __typename: 'ActionOfficialNameBlock' }
       ) | (
         { id?: string | null, reportField?: string | null, reportType?: (
@@ -8390,10 +8446,16 @@ export type GetActionDetailsQuery = (
         ) | null> | null }
         & { __typename: 'ReportComparisonBlock' }
       )> | null, detailsAside?: Array<(
-        { id?: string | null }
+        { id?: string | null, meta?: (
+          { restricted?: boolean | null, hidden?: boolean | null }
+          & { __typename?: 'FieldBlockMetaData' }
+        ) | null }
         & { __typename: 'ActionContactPersonsBlock' | 'ActionScheduleBlock' }
       ) | (
-        { id?: string | null, attributeType: (
+        { id?: string | null, meta?: (
+          { restricted?: boolean | null, hidden?: boolean | null }
+          & { __typename?: 'FieldBlockMetaData' }
+        ) | null, attributeType: (
           { id: string, format: AttributeTypeFormat, name: string, identifier: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
             { id: string, identifier: string }
             & { __typename?: 'AttributeTypeChoiceOption' }
@@ -8405,7 +8467,10 @@ export type GetActionDetailsQuery = (
         ) }
         & { __typename: 'ActionContentAttributeTypeBlock' }
       ) | (
-        { id?: string | null, categoryType: (
+        { id?: string | null, meta?: (
+          { restricted?: boolean | null, hidden?: boolean | null }
+          & { __typename?: 'FieldBlockMetaData' }
+        ) | null, categoryType: (
           { id: string, name: string, identifier: string, helpText: string, hideCategoryIdentifiers: boolean, levels: Array<(
             { id: string, order: number, name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
@@ -8414,7 +8479,10 @@ export type GetActionDetailsQuery = (
         ) }
         & { __typename: 'ActionContentCategoryTypeBlock' }
       ) | (
-        { heading?: string | null, id?: string | null }
+        { heading?: string | null, id?: string | null, meta?: (
+          { restricted?: boolean | null, hidden?: boolean | null }
+          & { __typename?: 'FieldBlockMetaData' }
+        ) | null }
         & { __typename: 'ActionResponsiblePartiesBlock' }
       )> | null }
       & { __typename?: 'ActionListPage' }
@@ -8437,12 +8505,18 @@ export type GetActionDetailsQuery = (
 );
 
 type ActionAsideContentBlocksFragment_ActionContactPersonsBlock_ActionScheduleBlock_Fragment = (
-  { id?: string | null }
+  { id?: string | null, meta?: (
+    { restricted?: boolean | null, hidden?: boolean | null }
+    & { __typename?: 'FieldBlockMetaData' }
+  ) | null }
   & { __typename: 'ActionContactPersonsBlock' | 'ActionScheduleBlock' }
 );
 
 type ActionAsideContentBlocksFragment_ActionContentAttributeTypeBlock_Fragment = (
-  { id?: string | null, attributeType: (
+  { id?: string | null, meta?: (
+    { restricted?: boolean | null, hidden?: boolean | null }
+    & { __typename?: 'FieldBlockMetaData' }
+  ) | null, attributeType: (
     { id: string, format: AttributeTypeFormat, name: string, identifier: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
       { id: string, identifier: string }
       & { __typename?: 'AttributeTypeChoiceOption' }
@@ -8456,7 +8530,10 @@ type ActionAsideContentBlocksFragment_ActionContentAttributeTypeBlock_Fragment =
 );
 
 type ActionAsideContentBlocksFragment_ActionContentCategoryTypeBlock_Fragment = (
-  { id?: string | null, categoryType: (
+  { id?: string | null, meta?: (
+    { restricted?: boolean | null, hidden?: boolean | null }
+    & { __typename?: 'FieldBlockMetaData' }
+  ) | null, categoryType: (
     { id: string, name: string, identifier: string, helpText: string, hideCategoryIdentifiers: boolean, levels: Array<(
       { id: string, order: number, name: string, namePlural?: string | null }
       & { __typename?: 'CategoryLevel' }
@@ -8467,19 +8544,25 @@ type ActionAsideContentBlocksFragment_ActionContentCategoryTypeBlock_Fragment = 
 );
 
 type ActionAsideContentBlocksFragment_ActionResponsiblePartiesBlock_Fragment = (
-  { heading?: string | null, id?: string | null }
+  { heading?: string | null, id?: string | null, meta?: (
+    { restricted?: boolean | null, hidden?: boolean | null }
+    & { __typename?: 'FieldBlockMetaData' }
+  ) | null }
   & { __typename: 'ActionResponsiblePartiesBlock' }
 );
 
 export type ActionAsideContentBlocksFragmentFragment = ActionAsideContentBlocksFragment_ActionContactPersonsBlock_ActionScheduleBlock_Fragment | ActionAsideContentBlocksFragment_ActionContentAttributeTypeBlock_Fragment | ActionAsideContentBlocksFragment_ActionContentCategoryTypeBlock_Fragment | ActionAsideContentBlocksFragment_ActionResponsiblePartiesBlock_Fragment;
 
-type ActionMainContentBlocksFragment_FVKamQUfmT6JjFbafBAu3ifcqx9spC4XsfbOqsBaoA_Fragment = (
+type ActionMainContentBlocksFragment_ActionContactFormBlock_Fragment = (
   { id?: string | null }
-  & { __typename: 'ActionContactFormBlock' | 'ActionDescriptionBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionMergedActionsBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionTasksBlock' }
+  & { __typename: 'ActionContactFormBlock' }
 );
 
 type ActionMainContentBlocksFragment_ActionContentAttributeTypeBlock_Fragment = (
-  { id?: string | null, attributeType: (
+  { id?: string | null, meta?: (
+    { restricted?: boolean | null, hidden?: boolean | null }
+    & { __typename?: 'FieldBlockMetaData' }
+  ) | null, attributeType: (
     { id: string, format: AttributeTypeFormat, name: string, identifier: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
       { id: string, identifier: string }
       & { __typename?: 'AttributeTypeChoiceOption' }
@@ -8493,7 +8576,10 @@ type ActionMainContentBlocksFragment_ActionContentAttributeTypeBlock_Fragment = 
 );
 
 type ActionMainContentBlocksFragment_ActionContentCategoryTypeBlock_Fragment = (
-  { id?: string | null, categoryType: (
+  { id?: string | null, meta?: (
+    { restricted?: boolean | null, hidden?: boolean | null }
+    & { __typename?: 'FieldBlockMetaData' }
+  ) | null, categoryType: (
     { id: string, name: string, identifier: string, helpText: string, hideCategoryIdentifiers: boolean, levels: Array<(
       { id: string, order: number, name: string, namePlural?: string | null }
       & { __typename?: 'CategoryLevel' }
@@ -8751,8 +8837,19 @@ type ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment = (
   & { __typename: 'ActionContentSectionBlock' }
 );
 
+type ActionMainContentBlocksFragment_6BcBJmD8IFwBu5Wuh9zsZjz_45yKhLxTzz6qM1g7V4_Fragment = (
+  { id?: string | null, meta?: (
+    { restricted?: boolean | null, hidden?: boolean | null }
+    & { __typename?: 'FieldBlockMetaData' }
+  ) | null }
+  & { __typename: 'ActionDescriptionBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionMergedActionsBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionTasksBlock' }
+);
+
 type ActionMainContentBlocksFragment_ActionOfficialNameBlock_Fragment = (
-  { id?: string | null, fieldLabel?: string | null, caption?: string | null }
+  { id?: string | null, fieldLabel?: string | null, caption?: string | null, meta?: (
+    { restricted?: boolean | null, hidden?: boolean | null }
+    & { __typename?: 'FieldBlockMetaData' }
+  ) | null }
   & { __typename: 'ActionOfficialNameBlock' }
 );
 
@@ -8962,7 +9059,7 @@ type ActionMainContentBlocksFragment_ReportComparisonBlock_Fragment = (
   & { __typename: 'ReportComparisonBlock' }
 );
 
-export type ActionMainContentBlocksFragmentFragment = ActionMainContentBlocksFragment_FVKamQUfmT6JjFbafBAu3ifcqx9spC4XsfbOqsBaoA_Fragment | ActionMainContentBlocksFragment_ActionContentAttributeTypeBlock_Fragment | ActionMainContentBlocksFragment_ActionContentCategoryTypeBlock_Fragment | ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment | ActionMainContentBlocksFragment_ActionOfficialNameBlock_Fragment | ActionMainContentBlocksFragment_ReportComparisonBlock_Fragment;
+export type ActionMainContentBlocksFragmentFragment = ActionMainContentBlocksFragment_ActionContactFormBlock_Fragment | ActionMainContentBlocksFragment_ActionContentAttributeTypeBlock_Fragment | ActionMainContentBlocksFragment_ActionContentCategoryTypeBlock_Fragment | ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment | ActionMainContentBlocksFragment_6BcBJmD8IFwBu5Wuh9zsZjz_45yKhLxTzz6qM1g7V4_Fragment | ActionMainContentBlocksFragment_ActionOfficialNameBlock_Fragment | ActionMainContentBlocksFragment_ReportComparisonBlock_Fragment;
 
 export type ReportComparisonBlockActionContentFragment = (
   { reportField?: string | null, reportType?: (
@@ -11715,7 +11812,7 @@ export type GetPlanContextQuery = (
       ) | null> }
       & { __typename?: 'Footer' }
     ) | null, features: (
-      { hasActionContactPersonRoles: boolean, contactPersonsPublicData: PlanFeaturesContactPersonsPublicData, enableSearch: boolean, hasActionIdentifiers: boolean, hasActionOfficialName: boolean, hasActionLeadParagraph: boolean, hasActionPrimaryOrgs: boolean, showAdminLink: boolean, enableIndicatorComparison: boolean, minimalStatuses: boolean }
+      { allowPublicSiteLogin: boolean, hasActionContactPersonRoles: boolean, contactPersonsPublicData: PlanFeaturesContactPersonsPublicData, enableSearch: boolean, hasActionIdentifiers: boolean, hasActionOfficialName: boolean, hasActionLeadParagraph: boolean, hasActionPrimaryOrgs: boolean, showAdminLink: boolean, enableIndicatorComparison: boolean, minimalStatuses: boolean }
       & { __typename?: 'PlanFeatures' }
     ), allRelatedPlans: Array<(
       { id: string, identifier: string, name: string, shortName?: string | null, viewUrl?: string | null, image?: (
@@ -11899,7 +11996,7 @@ export type PlanContextFragment = (
     ) | null> }
     & { __typename?: 'Footer' }
   ) | null, features: (
-    { hasActionContactPersonRoles: boolean, contactPersonsPublicData: PlanFeaturesContactPersonsPublicData, enableSearch: boolean, hasActionIdentifiers: boolean, hasActionOfficialName: boolean, hasActionLeadParagraph: boolean, hasActionPrimaryOrgs: boolean, showAdminLink: boolean, enableIndicatorComparison: boolean, minimalStatuses: boolean }
+    { allowPublicSiteLogin: boolean, hasActionContactPersonRoles: boolean, contactPersonsPublicData: PlanFeaturesContactPersonsPublicData, enableSearch: boolean, hasActionIdentifiers: boolean, hasActionOfficialName: boolean, hasActionLeadParagraph: boolean, hasActionPrimaryOrgs: boolean, showAdminLink: boolean, enableIndicatorComparison: boolean, minimalStatuses: boolean }
     & { __typename?: 'PlanFeatures' }
   ), allRelatedPlans: Array<(
     { id: string, identifier: string, name: string, shortName?: string | null, viewUrl?: string | null, image?: (

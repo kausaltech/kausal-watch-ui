@@ -451,8 +451,7 @@ function SiteFooter(props: SiteFooterProps) {
     ownerLinks = [],
   } = props;
 
-  // TODO: This is a temporary feature flag which will be replaced by a dedicated one on the backend
-  const showUiLogin = plan.features.hasActionContactPersonRoles;
+  const showUiLogin = plan.features.allowPublicSiteLogin;
   const isAuthLoading = session.status === 'loading';
   const isAuthenticated = session.status === 'authenticated';
 

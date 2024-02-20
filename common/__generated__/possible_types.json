@@ -80,6 +80,21 @@
       "TasksColumnBlock",
       "UpdatedAtColumnBlock"
     ],
+    "FieldBlockMetaInterface": [
+      "ActionContactPersonsBlock",
+      "ActionContentAttributeTypeBlock",
+      "ActionContentCategoryTypeBlock",
+      "ActionDescriptionBlock",
+      "ActionLeadParagraphBlock",
+      "ActionLinksBlock",
+      "ActionMergedActionsBlock",
+      "ActionOfficialNameBlock",
+      "ActionRelatedActionsBlock",
+      "ActionRelatedIndicatorsBlock",
+      "ActionResponsiblePartiesBlock",
+      "ActionScheduleBlock",
+      "ActionTasksBlock"
+    ],
     "MenuItem": [
       "ExternalLinkMenuItem",
       "PageMenuItem"

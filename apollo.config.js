@@ -1,6 +1,6 @@
-const { apiUrl } = require('./common/environment');
-
 require('dotenv').config();
+
+const { apiUrl } = require('./common/environment');
 
 module.exports = {
   client: {
