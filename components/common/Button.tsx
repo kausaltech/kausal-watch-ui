@@ -1,15 +1,14 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { shade, transparentize } from 'polished';
-import { Button as BSButton, ButtonProps } from 'reactstrap';
+import { Button as BSButton } from 'reactstrap';
 
 const StyledButton = styled(BSButton)`
-  padding: ${(props) => props.theme.inputBtnPaddingY}
-    ${(props) => props.theme.inputBtnPaddingX};
-  border-radius: ${(props) => props.theme.btnBorderRadius};
-  border-width: ${(props) => props.theme.btnBorderWidth};
-  font-weight: ${(props) => props.theme.fontWeightBold};
+  padding: ${({ theme }) =>
+    `${theme.inputBtnPaddingY} ${theme.inputBtnPaddingX}`};
+  border-radius: ${({ theme }) => theme.btnBorderRadius};
+  border-width: ${({ theme }) => theme.btnBorderWidth};
+  font-weight: ${({ theme }) => theme.fontWeightBold};
   text-decoration: none;
 
   &:hover {
@@ -146,6 +145,47 @@ const StyledButton = styled(BSButton)`
     }
   }
 `;
+
+interface ButtonProps {
+  /**
+   * Is this a ghost button?
+   */
+  outline?: boolean;
+  /**
+   * Is this a ghost button?
+   */
+  active?: boolean;
+  /**
+   * Is this a ghost button?
+   */
+  close?: boolean;
+  /**
+   * Is this a ghost button?
+   */
+  block?: boolean;
+  /**
+   * What background color to use
+   */
+  color?:
+    | 'primary'
+    | 'secondary'
+    | 'success'
+    | 'danger'
+    | 'warning'
+    | 'info'
+    | 'light'
+    | 'dark'
+    | 'link';
+  /**
+   * How large should the button be?
+   */
+  size?: 'sm' | 'lg';
+  /**
+   * Optional click handler
+   */
+  onClick?: () => void;
+  children: React.ReactNode;
+}
 
 const Button = React.forwardRef<typeof StyledButton, ButtonProps>(
   (props, ref) => {
