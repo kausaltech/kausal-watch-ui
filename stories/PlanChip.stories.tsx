@@ -46,6 +46,8 @@ export const Negative: Story = {
   },
   args: {
     negative: true,
+    planImage: 'https://picsum.photos/200/300',
+    size: 'lg',
   },
   decorators: [ThemeableBackgrounds],
 };
