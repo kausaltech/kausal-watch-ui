@@ -259,6 +259,7 @@ function ActionContentBlockGroup(props: ActionContentBlockGroupProps) {
     const types = new Map(
       blocks.map((block) => {
         const { attributeType } = block as ActionContentAttributeTypeBlock;
+        attributeType.meta = block.meta;
         return [attributeType!.id, attributeType!];
       })
     );
@@ -476,6 +477,7 @@ function ActionContent(props: ActionContentProps) {
         ) {
           emitGroupedBlocks();
         }
+
         // some blocks get special treatment so that they can be grouped together
         if (automaticallyGroupedBlockTypes.includes(block.__typename)) {
           previousSectionBlock = block;
