@@ -1,6 +1,27 @@
 import type { StorybookConfig } from '@storybook/nextjs';
 
-const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+const fs = require('fs');
+const path = require('path');
+
+// Load all the directories in the themes directory
+function loadDirectoryNames(directoryPath) {
+  return fs.readdirSync(directoryPath).filter((file) => {
+    return fs.statSync(path.join(directoryPath, file)).isDirectory();
+  });
+}
+
+const themesDirectory = path.join(__dirname, '../public/static/themes');
+const themesList = loadDirectoryNames(themesDirectory);
+
+// Populate available theme data
+const themes = {};
+themesList.forEach((themeName) => {
+  const themePath = path.join(themesDirectory, themeName, 'theme.json');
+  const data = fs.readFileSync(themePath);
+  themes[themeName] = JSON.parse(data);
+});
+
+console.log('Loaded themes data', Object.keys(themes));
 
 const config: StorybookConfig = {
   stories: [
@@ -16,18 +37,23 @@ const config: StorybookConfig = {
   ],
   framework: {
     name: '@storybook/nextjs',
-    options: {},
+    options: {
+      builder: {
+        useSWC: true, // Enables SWC support
+      },
+    },
   },
+  logLevel: 'info',
   staticDirs: ['../public'],
   docs: {
     autodocs: 'tag',
   },
+  env: (config) => ({
+    ...config,
+    THEMES: JSON.stringify(themes),
+  }),
   async webpackFinal(config) {
-    config.resolve.plugins = [
-      new TsconfigPathsPlugin({
-        configFile: 'tsconfig.json',
-      }),
-    ];
+    config.resolve.alias['@'] = path.resolve(__dirname, '../');
     return config;
   },
 };
