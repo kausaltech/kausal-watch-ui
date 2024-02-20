@@ -34,6 +34,7 @@ const AVAILABLE_ICONS = [
   'exclamation-circle.svg',
   'globe.svg',
   'heart.svg',
+  'hidden.svg',
   'home.svg',
   'link.svg',
   'lock.svg',

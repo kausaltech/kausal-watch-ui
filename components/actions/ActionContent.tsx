@@ -49,6 +49,7 @@ import { PhaseTimeline } from './PhaseTimeline';
 import StatusBadge from 'components/common/StatusBadge';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
+import RestrictedBlockWrapper from './blocks/RestrictedBlockWrapper';
 
 export type ActionContentAction = NonNullable<GetActionDetailsQuery['action']>;
 
@@ -237,7 +238,6 @@ function ActionContentBlock(props: ActionContentBlockProps) {
       console.error('Unknown action content block', block.__typename);
       return null;
   }
-  return null;
 }
 
 type ActionContentBlockGroupProps = Omit<ActionContentBlockProps, 'block'> & {
@@ -366,19 +366,23 @@ function ActionContentSectionBlock(props) {
       <Row>
         {blocks.map((block) => (
           <Col md={layout === 'grid' ? 4 : 12} key={block.id} className="mb-3">
-            <ActionContentBlock
+            <RestrictedBlockWrapper
               key={block.id}
-              block={block}
-              action={action}
-              section={section}
-            />
+              isRestricted={block.meta.restricted}
+              isHidden={block.meta.hidden}
+            >
+              <ActionContentBlock
+                key={block.id}
+                block={block}
+                action={action}
+                section={section}
+              />
+            </RestrictedBlockWrapper>
           </Col>
         ))}
       </Row>
     </ContentGroup>
   );
-  // console.error("Unsupported content block group", blockType);
-  return null;
 }
 
 type ActionContentProps = {
@@ -479,7 +483,17 @@ function ActionContent(props: ActionContentProps) {
           groupedBlocks.push(block);
         } else {
           allSections.push(
-            <ActionContentBlock key={block.id} block={block} {...staticProps} />
+            <RestrictedBlockWrapper
+              key={block.id}
+              isRestricted={block.meta.restricted}
+              isHidden={block.meta.hidden}
+            >
+              <ActionContentBlock
+                key={block.id}
+                block={block}
+                {...staticProps}
+              />
+            </RestrictedBlockWrapper>
           );
         }
       }

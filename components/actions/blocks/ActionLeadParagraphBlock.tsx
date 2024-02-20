@@ -8,6 +8,7 @@ const LeadParagraph = styled.div`
 
 const ActionLeadParagraphBlock = (props) => {
   const { content } = props;
+
   return (
     <ActionSection className="text-content">
       <LeadParagraph>

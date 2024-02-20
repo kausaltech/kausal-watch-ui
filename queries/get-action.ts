@@ -243,6 +243,12 @@ export const GET_ACTION_DETAILS = gql`
   }
 
   fragment ActionAsideContentBlocksFragment on ActionAsideContentBlock {
+    ... on FieldBlockMetaInterface {
+      meta {
+        restricted
+        hidden
+      }
+    }
     __typename
     ... on ActionResponsiblePartiesBlock {
       heading
@@ -263,6 +269,12 @@ export const GET_ACTION_DETAILS = gql`
   }
 
   fragment ActionMainContentBlocksFragment on ActionMainContentBlock {
+    ... on FieldBlockMetaInterface {
+      meta {
+        restricted
+        hidden
+      }
+    }
     __typename
     ... on StreamFieldInterface {
       id
