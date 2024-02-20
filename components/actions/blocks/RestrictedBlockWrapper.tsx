@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import Icon from 'components/common/Icon';
 
 const WrapperContainer = styled.div`
-  background-color: #fde6e6;
+  background-color: ${(props) => props.theme.graphColors.red010};
   position: relative;
   padding: 10px;
   margin-bottom: 15px;
@@ -22,8 +22,11 @@ type RestrictedBlockWrapperProps = {
   children: ReactNode;
 };
 
-function RestrictedBlockWrapper(props: RestrictedBlockWrapperProps) {
-  const { isRestricted, isHidden, children } = props;
+function RestrictedBlockWrapper({
+  isRestricted,
+  isHidden,
+  children,
+}: RestrictedBlockWrapperProps) {
   if (isHidden) return;
 
   return (

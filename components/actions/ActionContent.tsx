@@ -367,6 +367,7 @@ function ActionContentSectionBlock(props) {
         {blocks.map((block) => (
           <Col md={layout === 'grid' ? 4 : 12} key={block.id} className="mb-3">
             <RestrictedBlockWrapper
+              key={block.id}
               isRestricted={block.meta.restricted}
               isHidden={block.meta.hidden}
             >
@@ -483,6 +484,7 @@ function ActionContent(props: ActionContentProps) {
         } else {
           allSections.push(
             <RestrictedBlockWrapper
+              key={block.id}
               isRestricted={block.meta.restricted}
               isHidden={block.meta.hidden}
             >
