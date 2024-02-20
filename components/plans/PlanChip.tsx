@@ -57,13 +57,28 @@ const PlanOrg = styled.div<{ $negative?: boolean }>`
       : props.theme.graphColors.grey070};
 `;
 
-type PlanChipProps = {
+interface PlanChipProps {
+  /**
+   * Path to plan image
+   */
   planImage?: string;
+  /**
+   * Short name of the plan
+   */
   planShortName: string;
+  /**
+   * Organization name
+   */
   organization: string;
+  /**
+   * Chip size
+   */
   size: 'xs' | 'sm' | 'md' | 'lg';
+  /**
+   * Is this a negative variant?
+   */
   negative?: boolean;
-};
+}
 
 const IMAGE_SIZES = {
   xs: 's100',

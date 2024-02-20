@@ -1,9 +1,6 @@
 import type { Preview } from '@storybook/react';
-import { withThemeFromJSXProvider } from '@storybook/addon-themes';
-import { ThemeProvider } from 'styled-components';
-import { GlobalStyles } from '../styles/GlobalStyles';
+import { withKausalThemes } from './withKausalThemes.decorator';
 import '@/styles/default/main.scss';
-
 const themes = process.env.THEMES ? JSON.parse(process.env.THEMES) : [];
 
 const preview: Preview = {
@@ -17,11 +14,9 @@ const preview: Preview = {
     },
   },
   decorators: [
-    withThemeFromJSXProvider({
+    withKausalThemes({
       themes: themes,
       defaultTheme: 'default',
-      Provider: ThemeProvider,
-      GlobalStyles: GlobalStyles,
     }),
   ],
 };
