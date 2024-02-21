@@ -13,6 +13,7 @@ import { UNPUBLISHED_PATH } from './constants/routes';
 import { httpLink, operationEnd, operationStart } from './utils/apollo.utils';
 import { captureException } from '@sentry/nextjs';
 import {
+  convertPathnameFromInvalidLocaleCasing,
   convertPathnameFromLegacy,
   getLocaleAndPlan,
   getSearchParamsString,
@@ -105,7 +106,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.rewrite(new URL('/404', request.url));
   }
 
-  const { parsedLocale, parsedPlan } = getLocaleAndPlan(
+  const { parsedLocale, parsedPlan, isLocaleCaseInvalid } = getLocaleAndPlan(
     pathname,
     data.plansForHostname
   );
@@ -119,6 +120,15 @@ export async function middleware(request: NextRequest) {
       pathname,
       parsedLocale,
       parsedPlan
+    );
+
+    return NextResponse.redirect(new URL(newPathname, request.url));
+  }
+
+  if (isLocaleCaseInvalid) {
+    const newPathname = convertPathnameFromInvalidLocaleCasing(
+      pathname,
+      parsedLocale
     );
 
     return NextResponse.redirect(new URL(newPathname, request.url));
