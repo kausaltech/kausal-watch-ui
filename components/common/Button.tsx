@@ -148,19 +148,19 @@ const StyledButton = styled(BSButton)`
 
 interface ButtonProps {
   /**
-   * Is this a ghost button?
+   * Button rendered as outline
    */
   outline?: boolean;
   /**
-   * Is this a ghost button?
+   * Button active state
    */
   active?: boolean;
   /**
-   * Is this a ghost button?
+   * Render as close button
    */
   close?: boolean;
   /**
-   * Is this a ghost button?
+   * Render as block button
    */
   block?: boolean;
   /**
