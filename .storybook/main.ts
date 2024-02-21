@@ -17,8 +17,12 @@ const themesList = loadDirectoryNames(themesDirectory);
 const themes = {};
 themesList.forEach((themeName) => {
   const themePath = path.join(themesDirectory, themeName, 'theme.json');
-  const data = fs.readFileSync(themePath);
-  themes[themeName] = JSON.parse(data);
+  try {
+    const data = fs.readFileSync(themePath);
+    themes[themeName] = JSON.parse(data);
+  } catch (err) {
+    console.error(`Error reading theme data for ${themeName}`, err);
+  }
 });
 
 console.log('Loaded themes data', Object.keys(themes));
