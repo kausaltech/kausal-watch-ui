@@ -142,30 +142,45 @@ const testPlan = (planId: string) =>
     test('indicator page', async ({ page, ctx }) => {
       const IndicatorListItem = ctx.getIndicatorListMenuItem();
       test.skip(!IndicatorListItem, 'No indicator list for plan');
-
       const nav = page.locator('nav#global-navigation-bar');
-      const indicatorListLink = nav.getByRole('link', {
-        name: IndicatorListItem.page.title,
-        exact: true,
-      });
-
-      await indicatorListLink.click();
+      await nav
+        .getByRole('link', { name: IndicatorListItem.page.title, exact: true })
+        .click();
       const main = page.locator('main#main');
       await expect(main).toBeVisible();
-
       const planIndicators = ctx.getPlanIndicators();
       test.skip(planIndicators.length === 0, 'No indicators defined in plan');
 
-      if (planIndicators.length > 0) {
-        const firstIndicatorLink = main.getByRole('link', {
-          name: planIndicators[0]?.name,
-          exact: true,
+      const indicatorName = planIndicators[0]?.name;
+      await page.waitForSelector(`text=${indicatorName}`, { state: 'visible' });
+      const buttonSelector = `role=button[name="${indicatorName}"]`;
+      const indicatorSectionBtn = main.locator(buttonSelector);
+
+      const count = await indicatorSectionBtn.count();
+
+      if (count > 0) {
+        await indicatorSectionBtn.click();
+        const controlsAttributeValue = await indicatorSectionBtn.getAttribute(
+          'aria-controls'
+        );
+        const controlledSection = main.locator(`#${controlsAttributeValue}`);
+        const indicatorLink = controlledSection.locator('a').first();
+
+        await indicatorLink.waitFor();
+        await indicatorLink.click();
+
+        await expect(main).toBeVisible();
+        const h1Span = page.locator('h1 >> span');
+        await expect(h1Span).toContainText(indicatorName);
+      } else {
+        const firstIndicatorLink = main.locator(`a`, {
+          hasText: indicatorName,
         });
-        await expect(firstIndicatorLink).toBeVisible();
+        await firstIndicatorLink.waitFor();
         await firstIndicatorLink.click();
         await expect(main).toBeVisible();
         const h1Span = page.locator('h1 >> span');
-        await expect(h1Span).toContainText(planIndicators[0]?.name);
+        await expect(h1Span).toContainText(indicatorName);
       }
     });
 
