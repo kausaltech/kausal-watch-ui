@@ -1,3 +1,5 @@
+import { getPublicEnvVariables } from '../utils/environment.utils';
+
 type DeploymentType =
   | 'production'
   | 'staging'
@@ -7,15 +9,16 @@ type DeploymentType =
 
 export const isServer = typeof window === 'undefined';
 
+export const publicEnvVars = getPublicEnvVariables();
+
 export const deploymentType: DeploymentType =
-  (process.env.NEXT_PUBLIC_DEPLOYMENT_TYPE as DeploymentType | undefined) ||
+  (publicEnvVars.KAUSAL_PUBLIC_DEPLOYMENT_TYPE as DeploymentType | undefined) ||
   'development';
 
 export const isLocal = process.env.NODE_ENV === 'development';
 
-export const apiUrl =
-  process.env.NEXT_PUBLIC_API_URL || 'https://api.watch.kausal.tech/v1';
+export const apiUrl = publicEnvVars.KAUSAL_PUBLIC_API_URL;
 
 export const gqlUrl = `${apiUrl}/graphql/`;
 
-export const authIssuer = process.env.NEXT_PUBLIC_AUTH_ISSUER;
+export const authIssuer = publicEnvVars.KAUSAL_PUBLIC_AUTH_ISSUER;
