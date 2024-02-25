@@ -94,14 +94,23 @@ export const TopToolBar = () => {
   const router = useRouter();
   const handleSignOut = useHandleSignOut();
 
-  const { data: workflowsData } = useSuspenseQuery<GetWorkflowsQuery>(gql`
-    query GetWorkflows {
-      workflowStates {
+  const GET_WORKFLOW_STATES = gql`
+    query GetWorkflows($plan: ID!) {
+      workflowStates(plan: $plan) {
         id
         description
       }
     }
-  `);
+  `;
+
+  const { data: workflowsData } = useSuspenseQuery<GetWorkflowsQuery>(
+    GET_WORKFLOW_STATES,
+    {
+      variables: {
+        plan: plan.identifier,
+      },
+    }
+  );
 
   const workflows = workflowsData.workflowStates?.filter(
     (workflow): workflow is StrictWorkflowStateDescription =>
