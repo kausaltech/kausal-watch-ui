@@ -487,8 +487,8 @@ function ActionContent(props: ActionContentProps) {
           allSections.push(
             <RestrictedBlockWrapper
               key={block.id}
-              isRestricted={block.meta.restricted}
-              isHidden={block.meta.hidden}
+              isRestricted={block.meta?.restricted}
+              isHidden={block.meta?.hidden}
             >
               <ActionContentBlock
                 key={block.id}
