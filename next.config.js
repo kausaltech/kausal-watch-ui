@@ -1,11 +1,8 @@
-/* eslint-disable no-restricted-syntax */
+/* eslint-disable @typescript-eslint/no-var-requires */
+
 const { secrets } = require('docker-secret');
 
 const path = require('path');
-const { getPublicEnvVariables } = require('./utils/environment.utils');
-const withBundleAnalyzer = require('@next/bundle-analyzer')({
-  enabled: process.env.ANALYZE === 'true',
-});
 const withNextIntl = require('next-intl/plugin')('./config/i18n.ts');
 
 if (process.env.DOTENV_CONFIG_PATH) {
@@ -16,14 +13,12 @@ if (process.env.DOTENV_CONFIG_PATH) {
 const sentryAuthToken =
   secrets.SENTRY_AUTH_TOKEN || process.env.SENTRY_AUTH_TOKEN;
 
-const publicEnv = getPublicEnvVariables();
-
 console.log(`
   ⚙ Kausal Watch UI
     ↝ Initialising app
       ↝ NODE_ENV: ${process.env.NODE_ENV}
-      ↝ KAUSAL_PUBLIC_DEPLOYMENT_TYPE: ${publicEnv.KAUSAL_PUBLIC_DEPLOYMENT_TYPE}
-      ↝ KAUSAL_PUBLIC_API_URL: ${publicEnv.KAUSAL_PUBLIC_API_URL}
+      ↝ KAUSAL_PUBLIC_DEPLOYMENT_TYPE: ${process.env.KAUSAL_PUBLIC_DEPLOYMENT_TYPE}
+      ↝ KAUSAL_PUBLIC_API_URL: ${process.env.KAUSAL_PUBLIC_API_URL}
   `);
 
 function initializeThemes() {
