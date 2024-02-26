@@ -168,5 +168,8 @@
     "number-of-search-results": "{count, plural, =1 {ein Treffer} other {# Treffer}} für die Suche",
     "error": "Fehler",
     "collapse-row": "Zeile zusammenklappen",
-    "expand-row": "Zeile erweitern"
+    "expand-row": "Zeile erweitern",
+    "ui-sign-in": "Anmelden",
+    "ui-sign-out": "Abmelden",
+    "action-versions": "Maßnahmen-Versionen"
 }

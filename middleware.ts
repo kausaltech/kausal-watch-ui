@@ -10,7 +10,11 @@ import {
 } from './common/__generated__/graphql';
 import { stripLocaleAndPlan } from './utils/urls';
 import { UNPUBLISHED_PATH } from './constants/routes';
-import { httpLink, operationEnd, operationStart } from './utils/apollo.utils';
+import {
+  getHttpLink,
+  operationEnd,
+  operationStart,
+} from './utils/apollo.utils';
 import { captureException } from '@sentry/nextjs';
 import {
   convertPathnameFromInvalidLocaleCasing,
@@ -39,7 +43,7 @@ const apolloClient = new ApolloClient({
     // https://www.apollographql.com/docs/react/data/fragments/#defining-possibletypes-manually
     possibleTypes: possibleTypes.possibleTypes,
   }),
-  link: from([operationStart, operationEnd, httpLink]),
+  link: from([operationStart, operationEnd, getHttpLink()]),
 });
 
 export const config = {

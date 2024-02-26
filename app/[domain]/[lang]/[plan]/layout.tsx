@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
-import { headers } from 'next/headers';
+import { cookies, headers } from 'next/headers';
 import { captureException } from '@sentry/nextjs';
 
 import ThemeProvider from '@/components/providers/ThemeProvider';
@@ -14,6 +14,8 @@ import { MatomoAnalytics } from '@/components/MatomoAnalytics';
 import { getMetaTitles } from '@/utils/metadata';
 import { tryRequest } from '@/utils/api.utils';
 import { UpdateApolloContext } from './UpdateApolloContext';
+import { SELECTED_WORKFLOW_COOKIE_KEY } from '@/constants/workflow';
+import { WorkflowProvider } from '@/context/workflow-selector';
 
 type Props = {
   params: { plan: string; domain: string; lang: string };
@@ -87,6 +89,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function PlanLayout({ params, children }: Props) {
   const { plan, domain } = params;
   const headersList = headers();
+  const cookieStore = cookies();
   const protocol = headersList.get('x-forwarded-proto');
   const { data } = await tryRequest(
     getPlan(domain, plan, `${protocol}://${domain}`)
@@ -98,6 +101,7 @@ export default async function PlanLayout({ params, children }: Props) {
 
   const theme = await loadTheme(data.plan.themeIdentifier || params.plan);
   const matomoAnalyticsUrl = data.plan.domain?.matomoAnalyticsUrl ?? undefined;
+  const selectedWorkflow = cookieStore.get(SELECTED_WORKFLOW_COOKIE_KEY);
 
   return (
     <>
@@ -112,9 +116,13 @@ export default async function PlanLayout({ params, children }: Props) {
       <ThemeProvider theme={theme}>
         <GlobalStyles />
         <PlanProvider plan={data.plan}>
-          <UpdateApolloContext domain={domain} />
-          <CombinedIconSymbols />
-          {children}
+          <WorkflowProvider
+            initialWorkflow={selectedWorkflow?.value as string | undefined}
+          >
+            <UpdateApolloContext domain={domain} />
+            <CombinedIconSymbols />
+            {children}
+          </WorkflowProvider>
         </PlanProvider>
       </ThemeProvider>
     </>

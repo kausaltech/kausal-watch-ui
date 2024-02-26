@@ -4,10 +4,14 @@ import React from 'react';
 import { useTheme } from 'styled-components';
 import { usePlan } from 'context/plan';
 import ApplicationStateBanner from './common/ApplicationStateBanner';
-import SiteFooter from './common/SiteFooter';
+import SiteFooter, { UtilityLink } from './common/SiteFooter';
 import { deploymentType } from '@/common/environment';
 import { useTranslations } from 'next-intl';
 import { usePathname } from 'next/navigation';
+import { PlanContextFragment } from '@/common/__generated__/graphql';
+import { getMetaTitles } from '@/utils/metadata';
+
+type NavItem = NonNullable<PlanContextFragment['footer']>['items'][0];
 
 const getFeedbackUrl = (currentURL) => {
   const feedbackPageUrlBase = '/feedback';
@@ -18,49 +22,47 @@ const getFeedbackUrl = (currentURL) => {
   return `${feedbackPageUrlBase}${feedbackPageQueryPart}`;
 };
 
-type Props = {
-  siteTitle: string;
-};
+function getNavChildren(navItem: NavItem) {
+  if (!navItem || !('children' in navItem)) {
+    return [];
+  }
 
-function Footer({ siteTitle }: Props) {
+  return (navItem.children || [])
+    .filter((child): child is NonNullable<typeof child> => !!child)
+    .map((child) => ({
+      id: child.id,
+      name: child.page.title,
+      slug: child.page.urlPath,
+    }));
+}
+
+function Footer() {
   const plan = usePlan();
   const pathname = usePathname();
   const generalContent = plan.generalContent || {};
   const theme = useTheme();
 
+  const { navigationTitle: siteTitle } = getMetaTitles(plan);
   const { fundingInstruments, otherLogos, footerStatement } = theme.settings;
   const t = useTranslations();
-  let navLinks = [];
-  let staticPages = [];
 
-  plan.footer.items?.forEach((navItem) => {
-    const children = navItem.children.length > 0 ? [] : null;
-    if (children) {
-      navItem.children.forEach((child) => {
-        children.push({
-          id: child.id,
-          name: child.page.title,
-          slug: child.page.urlPath,
-        });
-      });
-    }
-    navLinks.push({
-      id: navItem.id,
-      name: navItem.page.title,
-      slug: navItem.children.length > 0 ? undefined : navItem.page.urlPath,
-      children,
+  const navLinks = (plan.footer?.items || [])
+    .filter((navItem): navItem is NonNullable<typeof navItem> => !!navItem)
+    .map((navItem) => {
+      if (!navItem || !('id' in navItem)) {
+        return null;
+      }
+
+      return {
+        id: navItem.id,
+        name: navItem.page.title,
+        slug:
+          'children' in navItem && (navItem.children || []).length > 0
+            ? undefined
+            : navItem.page.urlPath,
+        children: getNavChildren(navItem),
+      };
     });
-  });
-
-  if (plan.staticPages) {
-    const topMenuPages = plan.staticPages.filter((page) => page.footer);
-    staticPages = topMenuPages.map((page, index) => ({
-      id: `s${index}`,
-      name: page.name,
-      slug: page.slug,
-    }));
-    navLinks = navLinks.concat(staticPages);
-  }
 
   // TODO: Remove this when we have a proper way to add custom links
   const additionalLinks = theme.settings?.customAdditionalLinks || [];
@@ -68,7 +70,7 @@ function Footer({ siteTitle }: Props) {
     (link) => link.id === 'accessibility'
   );
 
-  plan.additionalLinks.items?.map((link) =>
+  plan.additionalLinks?.items?.map((link) =>
     additionalLinks.push({
       id: link.id,
       name: link.page.title,
@@ -100,7 +102,7 @@ function Footer({ siteTitle }: Props) {
     }
   }
 
-  const utilityLinks = [];
+  const utilityLinks: UtilityLink[] = [];
 
   if (plan.contactLink) {
     utilityLinks.push({ id: '1', name: t('contact'), slug: plan.contactLink });

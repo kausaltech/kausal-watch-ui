@@ -12,20 +12,35 @@ import {
 import {
   errorLink,
   localeMiddleware,
-  httpLink,
+  getHttpLink,
   headersMiddleware,
 } from '../../utils/apollo.utils';
 import { isServer } from '@/common/environment';
+import { setContext } from '@apollo/client/link/context';
+import { useSession } from 'next-auth/react';
 
-function makeClient(initialLocale: string) {
+const authMiddleware = setContext(
+  (_, { sessionToken, headers: initialHeaders = {} }) => {
+    return {
+      headers: {
+        ...initialHeaders,
+        ...(sessionToken ? { Authorization: `Bearer ${sessionToken}` } : {}),
+      },
+    };
+  }
+);
+
+function makeClient(initialLocale: string, sessionToken?: string) {
   return new NextSSRApolloClient({
     defaultContext: {
       locale: initialLocale,
+      sessionToken,
     },
     cache: new NextSSRInMemoryCache(),
     link: ApolloLink.from([
       errorLink,
       localeMiddleware,
+      authMiddleware,
       headersMiddleware,
       ...(isServer
         ? [
@@ -34,7 +49,7 @@ function makeClient(initialLocale: string) {
             }),
           ]
         : []),
-      httpLink,
+      getHttpLink(),
     ]),
   });
 }
@@ -53,11 +68,17 @@ function UpdateLocale({ children }: React.PropsWithChildren) {
   return children;
 }
 
-type Props = { initialLocale: string } & React.PropsWithChildren;
+type Props = {
+  initialLocale: string;
+} & React.PropsWithChildren;
 
 export function ApolloWrapper({ initialLocale, children }: Props) {
+  const session = useSession();
+  const token =
+    session.status === 'authenticated' ? session.data.idToken : undefined;
+
   return (
-    <ApolloNextAppProvider makeClient={() => makeClient(initialLocale)}>
+    <ApolloNextAppProvider makeClient={() => makeClient(initialLocale, token)}>
       <UpdateLocale>{children}</UpdateLocale>
     </ApolloNextAppProvider>
   );

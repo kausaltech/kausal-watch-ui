@@ -1,5 +1,6 @@
 import { ApolloLink, HttpLink, Operation } from '@apollo/client';
-import { gqlUrl, isLocal } from '@/common/environment';
+import { gqlUrl, isLocal, isServer } from '@/common/environment';
+import { API_PROXY_PATH } from '@/constants/routes';
 import { onError } from '@apollo/client/link/error';
 import { captureException } from '@sentry/nextjs';
 
@@ -12,6 +13,7 @@ declare module '@apollo/client' {
     locale?: string;
     planIdentifier?: string;
     planDomain?: string;
+    sessionToken?: string;
     start?: number;
   }
 }
@@ -82,10 +84,22 @@ export const operationEnd = new ApolloLink((operation, forward) => {
   });
 });
 
-export const httpLink = new HttpLink({
-  uri: gqlUrl,
-  fetchOptions: { next: { revalidate: 0 } },
-});
+/**
+ * We use a simple proxy to pass authentication headers to the GraphQL
+ * API and to avoid CORS issues. The HttpLink uri must be an absolute URL,
+ * so to support cases where we don't have access to the incoming request's
+ * host (e.g. in the middleware Apollo Client), we fall back to interacting
+ * with the backend GraphQL API directly.
+ */
+export const getHttpLink = () =>
+  new HttpLink({
+    uri: !isServer ? API_PROXY_PATH : gqlUrl,
+    credentials: 'same-origin',
+    fetchOptions: {
+      mode: 'same-origin',
+      next: { revalidate: 0 },
+    },
+  });
 
 export const headersMiddleware = new ApolloLink((operation, forward) => {
   const context = operation.getContext();

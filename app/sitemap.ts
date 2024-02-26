@@ -15,7 +15,11 @@ import {
   INDICATORS_PATH,
   STATIC_ROUTES,
 } from '@/constants/routes';
-import { httpLink, operationEnd, operationStart } from '@/utils/apollo.utils';
+import {
+  getHttpLink,
+  operationEnd,
+  operationStart,
+} from '@/utils/apollo.utils';
 import { tryRequest } from '@/utils/api.utils';
 
 const apolloClient = new ApolloClient({
@@ -23,7 +27,7 @@ const apolloClient = new ApolloClient({
     // https://www.apollographql.com/docs/react/data/fragments/#defining-possibletypes-manually
     possibleTypes: possibleTypes.possibleTypes,
   }),
-  link: from([operationStart, operationEnd, httpLink]),
+  link: from([operationStart, operationEnd, getHttpLink()]),
 });
 
 const GET_SITEMAP_CONTENTS = gql`

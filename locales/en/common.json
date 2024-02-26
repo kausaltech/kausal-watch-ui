@@ -168,5 +168,8 @@
     "no-phase": "No phase set",
     "no-status": "No status set",
     "collapse-row": "Collapse row",
-    "expand-row": "Expand row"
+    "expand-row": "Expand row",
+    "ui-sign-in": "Sign in",
+    "ui-sign-out": "Sign out",
+    "action-versions": "Action versions"
 }

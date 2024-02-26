@@ -8,6 +8,7 @@ import {
   AttributesBlockAttributeWithNestedTypeFragment,
 } from 'common/__generated__/graphql';
 import ActionAttribute from './ActionAttribute';
+import RestrictedBlockWrapper from '../actions/blocks/RestrictedBlockWrapper';
 
 type AttributeProps = {
   $vertical: boolean;
@@ -99,13 +100,21 @@ function AttributesBlock(props: AttributesBlockProps) {
       <AttributesList tag="ul">
         {attributesWithValue.map((item: (typeof attributes)[0]) => {
           return (
-            <AttributeItem tag="li" key={item.id} md={vertical ? 12 : 6}>
-              <ActionAttribute
-                key={item.id}
-                attribute={item}
-                attributeType={typesById && typesById.get(item.type.id)}
-              />
-            </AttributeItem>
+            <RestrictedBlockWrapper
+              key={item.id}
+              isRestricted={
+                typesById && typesById.get(item.type.id).meta.restricted
+              }
+              isHidden={typesById && typesById.get(item.type.id).meta.hidden}
+            >
+              <AttributeItem tag="li" key={item.id} md={vertical ? 12 : 6}>
+                <ActionAttribute
+                  key={item.id}
+                  attribute={item}
+                  attributeType={typesById && typesById.get(item.type.id)}
+                />
+              </AttributeItem>
+            </RestrictedBlockWrapper>
           );
         })}
       </AttributesList>

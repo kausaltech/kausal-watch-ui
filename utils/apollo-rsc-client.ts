@@ -1,16 +1,33 @@
-import { ApolloClient, InMemoryCache, from } from '@apollo/client';
+import { ApolloClient, ApolloLink, InMemoryCache, from } from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
 import { registerApolloClient } from '@apollo/experimental-nextjs-app-support/rsc';
 import possibleTypes from '@/common/__generated__/possible_types.json';
 
-import { headers as getHeaders } from 'next/headers';
+import { cookies, headers as getHeaders, headers } from 'next/headers';
 import {
   errorLink,
   localeMiddleware,
-  httpLink,
   operationEnd,
   operationStart,
+  getHttpLink,
   headersMiddleware,
 } from './apollo.utils';
+import { SELECTED_WORKFLOW_COOKIE_KEY } from '@/constants/workflow';
+import { auth } from '@/config/auth';
+
+const authMiddleware = setContext(
+  async (_, { headers: initialHeaders = {} }) => {
+    const session = await auth();
+    const token = session?.idToken;
+
+    return {
+      headers: {
+        ...initialHeaders,
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+    };
+  }
+);
 
 /**
  * Apollo client used in React Server Components (fully server-side). For client components
@@ -18,15 +35,18 @@ import {
  */
 export const { getClient } = registerApolloClient(() => {
   const headers = getHeaders();
+  const cookiesList = cookies();
   const locale = headers.get('x-next-intl-locale') ?? undefined;
   const plan = headers.get('x-plan-identifier') ?? undefined;
   const domain = headers.get('x-plan-domain') ?? undefined;
+  const versionCookie = cookiesList.get(SELECTED_WORKFLOW_COOKIE_KEY);
 
   return new ApolloClient({
     defaultContext: {
       locale,
       planDomain: domain,
       planIdentifier: plan,
+      selectedWorkflow: versionCookie?.value,
     },
     connectToDevTools: false,
     cache: new InMemoryCache({
@@ -37,9 +57,10 @@ export const { getClient } = registerApolloClient(() => {
       operationStart,
       errorLink,
       localeMiddleware,
+      authMiddleware,
       headersMiddleware,
       operationEnd,
-      httpLink,
+      getHttpLink(),
     ]),
   });
 });
