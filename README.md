@@ -72,6 +72,10 @@ run the following commands:
     npm run custom-bundle -- --traces ${TRACES}
     npm publish --access public
 
+#### Debugging
+
+Debug server side GraphQL queries by setting the `LOG_GRAPHQL_QUERIES=true` environment variable. This will log all outgoing queries and variables in your dev server console.
+
 ## Building and deploying in production
 
 To run the app in production mode:
