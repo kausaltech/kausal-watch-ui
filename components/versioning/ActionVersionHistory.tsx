@@ -6,6 +6,7 @@ import { ActionLink } from 'common/links';
 import Icon from 'components/common/Icon';
 import { deploymentType } from '@/common/environment';
 import { useTranslations } from 'next-intl';
+import { ActionContentAction } from '../actions/ActionContent';
 
 const VersionHistory = styled.div`
   color: ${(props) => props.theme.graphColors.grey090};
@@ -35,12 +36,12 @@ const VersionHistoryList = styled.ul`
   padding: 0;
 `;
 
-const VersionHistoryListItem = styled.li`
+const StyledVersionHistoryListItem = styled.li<{ $active: boolean }>`
   margin-left: 0.5rem;
   padding: 1rem;
   border-left: 2px solid ${(props) => props.theme.graphColors.grey090};
-  background-color: ${(props) =>
-    props.active ? props.theme.graphColors.blue010 : 'none'};
+  background-color: ${({ $active, theme }) =>
+    $active ? theme.graphColors.blue010 : 'none'};
 `;
 
 const VersionHistoryListItemDate = styled.div`
@@ -50,14 +51,22 @@ const VersionHistoryListItemDate = styled.div`
 
 const VersionHistoryListItemName = styled.span``;
 
-const ActionVersionHistory = (props: ActionVersionHistoryProps) => {
-  const { action } = props;
+type Props = {
+  action: ActionContentAction;
+};
+
+type ActionVersions = (
+  | ActionContentAction
+  | ActionContentAction['supersededActions'][0]
+)[];
+
+const ActionVersionHistory = ({ action }: Props) => {
   const t = useTranslations();
   const [isOpen, setIsOpen] = useState(action.supersededBy ? true : false);
   const toggle = () => setIsOpen(!isOpen);
   const isProduction = deploymentType === 'production';
 
-  const versions = [];
+  const versions: ActionVersions = [];
   const supersededActions = !isProduction
     ? action?.supersededActions || []
     : action?.supersededActions.filter((a) => a.plan.publishedAt);
@@ -94,24 +103,29 @@ const ActionVersionHistory = (props: ActionVersionHistoryProps) => {
       <Collapse isOpen={isOpen}>
         <VersionHistoryList>
           {versions.reverse().map((v) => (
-            <VersionHistoryListItem
+            <StyledVersionHistoryListItem
               key={v.identifier}
-              active={v.identifier === action.identifier}
+              $active={v.identifier === action.identifier}
             >
               <VersionHistoryListItemDate>
                 {v.plan?.versionName || v.plan.shortName}
               </VersionHistoryListItemDate>
-              <ActionLink action={v} planUrl={v.plan.viewUrl}>
+              <ActionLink
+                action={v}
+                crossPlan={
+                  'viewUrl' in v && action?.plan && action.plan.id !== v.plan.id
+                }
+                viewUrl={'viewUrl' in v ? v.viewUrl : undefined}
+              >
                 <a>
                   <VersionHistoryListItemName>
                     {v.plan?.hideActionIdentifiers !== true &&
                       `${v.identifier}. `}
-                    {v.name}
-                    {v.viewUrl}
+                    {v.name} {'viewUrl' in v ? v.viewUrl : null}
                   </VersionHistoryListItemName>
                 </a>
               </ActionLink>
-            </VersionHistoryListItem>
+            </StyledVersionHistoryListItem>
           ))}
         </VersionHistoryList>
       </Collapse>
