@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { ActionLink, actionPropType } from '../../common/links';
+import { ActionLink, ActionLinkProps } from '../../common/links';
 import Icon from '../common/Icon';
 import Button from '../common/Button';
 import { getActionTermContext } from '../../common/i18n';
@@ -29,8 +29,12 @@ const PageButton = styled(Button)`
   }
 `;
 
-const ActionPager = (props) => {
-  const { nextAction = null, previousAction = null } = props;
+type Props = {
+  previousAction: ActionLinkProps['action'] | null;
+  nextAction: ActionLinkProps['action'] | null;
+};
+
+const ActionPager = ({ nextAction = null, previousAction = null }: Props) => {
   const plan = usePlan();
   const t = useTranslations();
 
@@ -62,11 +66,6 @@ const ActionPager = (props) => {
       </Next>
     </Pager>
   );
-};
-
-ActionPager.propTypes = {
-  previousAction: actionPropType,
-  nextAction: actionPropType,
 };
 
 export default ActionPager;

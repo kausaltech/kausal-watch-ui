@@ -11,7 +11,7 @@ type PlanForHostname = NonNullable<
   GetPlansByHostnameQuery['plansForHostname']
 >[0];
 
-type PlanFromPlansQuery = PlanForHostname & { __typename: 'Plan' };
+export type PlanFromPlansQuery = PlanForHostname & { __typename: 'Plan' };
 
 export function getSearchParamsString(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams.toString();
@@ -63,17 +63,25 @@ export function getParsedPlan(
   );
 }
 
-function getParsedLocale(
+export function getParsedLocale(
   localePossibilities: string[],
   plan: PlanFromPlansQuery
 ) {
-  const locale = localePossibilities.find(
-    (possibleLocale) =>
-      plan.primaryLanguage === possibleLocale ||
-      plan.otherLanguages?.includes(possibleLocale)
+  const locale = [plan.primaryLanguage, ...(plan.otherLanguages ?? [])].find(
+    (locale) =>
+      localePossibilities
+        .map((possibleLocale) => possibleLocale.toLowerCase())
+        .includes(locale.toLowerCase())
   );
 
-  return locale || plan.primaryLanguage;
+  const isCaseInvalid =
+    !!locale &&
+    !localePossibilities.includes(locale) &&
+    localePossibilities
+      .map((locale) => locale.toLowerCase())
+      .includes(locale.toLowerCase());
+
+  return { parsedLocale: locale || plan.primaryLanguage, isCaseInvalid };
 }
 
 function getAuthenticationForPlan(hostname: string):
@@ -144,9 +152,12 @@ export function getLocaleAndPlan(pathname: string, plans: PlanForHostname[]) {
     return { parsedPlan: undefined, parsedLocale: undefined };
   }
 
-  const parsedLocale = getParsedLocale(possibleLocaleAndPlan, parsedPlan);
+  const { parsedLocale, isCaseInvalid } = getParsedLocale(
+    possibleLocaleAndPlan,
+    parsedPlan
+  );
 
-  return { parsedPlan, parsedLocale };
+  return { parsedPlan, parsedLocale, isLocaleCaseInvalid: isCaseInvalid };
 }
 
 /**
@@ -164,7 +175,8 @@ export function isLegacyPathStructure(
   }
 
   return new RegExp(
-    `/${stripSlashes(plan.domain.basePath)}/${locale}(/|$)`
+    `/${stripSlashes(plan.domain.basePath)}/${locale}(/|$)`,
+    'i'
   ).test(pathname);
 }
 
@@ -181,6 +193,23 @@ export function convertPathnameFromLegacy(
   }
 
   return `/${parsedLocale}/${parsedPlan.domain?.basePath}/${slug}`;
+}
+
+export function convertPathnameFromInvalidLocaleCasing(
+  pathname: string,
+  locale: string
+) {
+  return (
+    pathname
+      .split('/')
+      // Replace incorrect locale casing with the correctly cased locale
+      .map((path, i) =>
+        (i === 0 || i === 1) && path.toLowerCase() === locale.toLowerCase()
+          ? locale
+          : path
+      )
+      .join('/')
+  );
 }
 
 export function rewriteUrl(

@@ -103,9 +103,13 @@ function AttributesBlock(props: AttributesBlockProps) {
             <RestrictedBlockWrapper
               key={item.id}
               isRestricted={
-                typesById && typesById.get(item.type.id).meta.restricted
+                (typesById && typesById.get(item.type.id)?.meta?.restricted) ??
+                false
               }
-              isHidden={typesById && typesById.get(item.type.id).meta.hidden}
+              isHidden={
+                (typesById && typesById.get(item.type.id)?.meta?.hidden) ??
+                false
+              }
             >
               <AttributeItem tag="li" key={item.id} md={vertical ? 12 : 6}>
                 <ActionAttribute

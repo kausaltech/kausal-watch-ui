@@ -14,8 +14,17 @@ import { useSession } from 'next-auth/react';
 import { useWorkflowSelector } from '@/context/workflow-selector';
 import { useRouter } from 'next/navigation';
 import { gql, useSuspenseQuery } from '@apollo/client';
-import { GetWorkflowsQuery } from '@/common/__generated__/graphql';
+import {
+  GetWorkflowsQuery,
+  WorkflowState,
+  WorkflowStateDescription,
+} from '@/common/__generated__/graphql';
 import { useHandleSignOut } from '@/utils/auth.utils';
+
+type StrictWorkflowStateDescription = {
+  id: NonNullable<WorkflowStateDescription['id']>;
+  description: NonNullable<WorkflowStateDescription['description']>;
+};
 
 const ToolbarContainer = styled(Container)`
   display: flex;
@@ -85,30 +94,38 @@ export const TopToolBar = () => {
   const router = useRouter();
   const handleSignOut = useHandleSignOut();
 
-  const { data: workflowsData } = useSuspenseQuery<GetWorkflowsQuery>(gql`
-    query GetWorkflows {
-      __type(name: "WorkflowState") {
-        name
+  const GET_WORKFLOW_STATES = gql`
+    query GetWorkflows($plan: ID!) {
+      workflowStates(plan: $plan) {
+        id
         description
-        enumValues {
-          name
-          description
-        }
       }
     }
-  `);
+  `;
 
-  const workflows = workflowsData.__type?.enumValues;
+  const { data: workflowsData } = useSuspenseQuery<GetWorkflowsQuery>(
+    GET_WORKFLOW_STATES,
+    {
+      variables: {
+        plan: plan.identifier,
+      },
+    }
+  );
+
+  const workflows = workflowsData.workflowStates?.filter(
+    (workflow): workflow is StrictWorkflowStateDescription =>
+      !!(workflow?.id && workflow?.description)
+  );
 
   const selectedWorkflow = workflows?.find(
-    (workflow) => workflow.name === selectedWorkflowId
+    (workflow) => workflow?.id === selectedWorkflowId
   );
 
   useEffect(() => {
     // If the selected workflow wasn't found from the available options
     // the user may have an invalid option stored so we reset it.
     if (workflows?.length && !selectedWorkflow) {
-      setWorkflow(workflows[0].name);
+      setWorkflow(workflows[0]?.id ?? WorkflowState.Published);
     }
   }, [workflows, selectedWorkflow, setWorkflow]);
 
@@ -137,14 +154,14 @@ export const TopToolBar = () => {
             <DropdownHeader>{t('action-versions')}</DropdownHeader>
             {workflows.map((workflow) => (
               <DropdownItem
-                key={workflow.name}
-                onClick={() => handleSelectWorkflow(workflow.name)}
+                key={workflow.id}
+                onClick={() => handleSelectWorkflow(workflow.id)}
               >
                 <DropdownItemText>
                   <StyledIcon
                     name="file"
                     className="icon"
-                    aria-label={workflow.description ?? workflow.name}
+                    aria-label={workflow.description}
                   />
                   {workflow.description}
                 </DropdownItemText>

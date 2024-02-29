@@ -22,3 +22,6 @@ export const apiUrl = publicEnvVars.KAUSAL_PUBLIC_API_URL;
 export const gqlUrl = `${apiUrl}/graphql/`;
 
 export const authIssuer = publicEnvVars.KAUSAL_PUBLIC_AUTH_ISSUER;
+
+export const logGraphqlQueries =
+  isServer && process.env.LOG_GRAPHQL_QUERIES === 'true';

@@ -1,6 +1,5 @@
 import React, { ReactElement, PropsWithChildren, ReactNode } from 'react';
 import { default as NextLink, LinkProps } from 'next/link';
-import PropTypes from 'prop-types';
 import { getCategoryString } from './categories';
 import { isAbsoluteUrl, stripLocaleAndPlan, stripSlashes } from '@/utils/urls';
 import { usePlan } from '@/context/plan';
@@ -90,15 +89,27 @@ export function IndicatorLink({
   return <NextLink passHref {...other} href={href} legacyBehavior />;
 }
 
-export const actionPropType = PropTypes.shape({
-  identifier: PropTypes.string.isRequired,
-  mergedWith: PropTypes.shape({
-    identifier: PropTypes.string.isRequired,
-  }),
-});
+export type ActionLinkProps = {
+  action: {
+    identifier: string;
+    mergedWith?: {
+      identifier: string;
+    } | null;
+  };
+  planUrl?: string;
+  viewUrl?: string;
+  crossPlan?: boolean;
+  children: React.ReactElement;
+};
 
-export function ActionLink(props) {
-  const { action, planUrl, viewUrl, crossPlan, ...other } = props;
+export function ActionLink({
+  action,
+  planUrl,
+  viewUrl,
+  crossPlan,
+  children,
+  ...other
+}: ActionLinkProps) {
   // If this action is merged with another, replace all links with
   // a link to the master action.
   const targetIdentifier = action.mergedWith
@@ -109,22 +120,20 @@ export function ActionLink(props) {
     `${ACTIONS_PATH}/${targetIdentifier}`
   );
 
-  if (crossPlan) {
+  if (crossPlan && viewUrl) {
     // nextjs NextLink doesn't properly handle links across plans in some cases,
     // specifically when we are in a plan without basepath and the link is to
     // a plan in the same hostname but with a basepath.
-    return React.cloneElement(React.Children.only(other.children), {
+    return React.cloneElement(React.Children.only(children), {
       href: viewUrl,
     });
   }
-  return <NextLink passHref {...other} href={actionLink} legacyBehavior />;
+  return (
+    <NextLink passHref {...other} href={actionLink} legacyBehavior>
+      {children}
+    </NextLink>
+  );
 }
-
-ActionLink.propTypes = {
-  action: actionPropType.isRequired,
-  planUrl: PropTypes.string,
-  children: PropTypes.node.isRequired,
-};
 
 export function OrganizationLink(
   props: { organizationId: string; children: ReactNode } & OtherLinkProps

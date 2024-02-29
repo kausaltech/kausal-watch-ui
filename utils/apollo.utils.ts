@@ -1,5 +1,10 @@
 import { ApolloLink, HttpLink, Operation } from '@apollo/client';
-import { gqlUrl, isLocal, isServer } from '@/common/environment';
+import {
+  gqlUrl,
+  isLocal,
+  isServer,
+  logGraphqlQueries,
+} from '@/common/environment';
 import { API_PROXY_PATH } from '@/constants/routes';
 import { onError } from '@apollo/client/link/error';
 import { captureException } from '@sentry/nextjs';
@@ -85,6 +90,30 @@ export const operationEnd = new ApolloLink((operation, forward) => {
 });
 
 /**
+ * Log the outgoing GraphQL queries and variables server-side. Useful for debugging
+ * purposes and enabled by setting the LOG_GRAPHQL_QUERIES env variable.
+ */
+function fetchWithLogging(
+  input: RequestInfo,
+  init: RequestInit = {}
+): Promise<Response> {
+  const body =
+    typeof init.body === 'string' ? JSON.parse(init.body) : init.body;
+
+  if (body) {
+    console.log(
+      `📡 ${new Date().toISOString().slice(-13)} 📡 Sending query ${
+        body.operationName
+      } with variables:\n${JSON.stringify(body.variables, null, 2)}\n\n${
+        body.query
+      }\n🎬 End of query ${body.operationName}\n`
+    );
+  }
+
+  return fetch(input, init);
+}
+
+/**
  * We use a simple proxy to pass authentication headers to the GraphQL
  * API and to avoid CORS issues. The HttpLink uri must be an absolute URL,
  * so to support cases where we don't have access to the incoming request's
@@ -99,6 +128,7 @@ export const getHttpLink = () =>
       mode: 'same-origin',
       next: { revalidate: 0 },
     },
+    fetch: logGraphqlQueries ? fetchWithLogging : undefined,
   });
 
 export const headersMiddleware = new ApolloLink((operation, forward) => {
