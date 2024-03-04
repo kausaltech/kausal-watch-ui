@@ -3512,6 +3512,11 @@ export type QuerySearchArgs = {
   query?: InputMaybe<Scalars['String']>;
 };
 
+
+export type QueryWorkflowStatesArgs = {
+  plan: Scalars['ID'];
+};
+
 export type QuestionAnswerBlock = StreamFieldInterface & {
   __typename?: 'QuestionAnswerBlock';
   blockType: Scalars['String'];
@@ -4181,7 +4186,7 @@ export enum WorkflowState {
 export type WorkflowStateDescription = {
   __typename?: 'WorkflowStateDescription';
   description?: Maybe<Scalars['String']>;
-  id?: Maybe<WorkflowState>;
+  id?: Maybe<Scalars['String']>;
 };
 
 export type GetSitemapQueryVariables = Exact<{
@@ -4556,12 +4561,14 @@ export type SearchQueryQuery = (
   & { __typename?: 'Query' }
 );
 
-export type GetWorkflowsQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetWorkflowsQueryVariables = Exact<{
+  plan: Scalars['ID'];
+}>;
 
 
 export type GetWorkflowsQuery = (
   { workflowStates?: Array<(
-    { id?: WorkflowState | null, description?: string | null }
+    { id?: string | null, description?: string | null }
     & { __typename?: 'WorkflowStateDescription' }
   ) | null> | null }
   & { __typename?: 'Query' }
@@ -9172,7 +9179,7 @@ export type GetActionListPageIncludeRelatedQuery = (
 
 export type GetActionListPageQueryVariables = Exact<{
   plan: Scalars['ID'];
-  singlePlan: Scalars['Boolean'];
+  onlyWithActions: Scalars['Boolean'];
 }>;
 
 

@@ -16,11 +16,20 @@ export default async function ActionsPage({ params }: Props) {
   const { data: pageSettingsData } = await tryRequest(
     getIncludeRelatedActions(plan)
   );
+
+  /**
+   * TODO:  The backend returns no categories for a CategoryTypeFilterBlock for multi-plans.
+   *        Here we set onlyWithActions to false if the includeRelatedPlans setting is active to ensure
+   *        categories are displayed. This can be removed once the backend is updated to return
+   *        multi-plan categories when onlyWithActions is true.
+   */
+  const excludeFilterCategoriesWithoutActions = pageSettingsData?.plan
+    ?.actionListPage?.includeRelatedPlans
+    ? false
+    : true;
+
   const { data } = await tryRequest(
-    getActionsListPage(
-      plan,
-      pageSettingsData?.plan?.actionListPage?.includeRelatedPlans ?? false
-    )
+    getActionsListPage(plan, excludeFilterCategoriesWithoutActions)
   );
 
   if (data?.plan?.actionListPage?.__typename !== 'ActionListPage') {
