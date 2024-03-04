@@ -29,7 +29,7 @@ export const getIncludeRelatedActions = async (plan: string) =>
   });
 
 const GET_ACTIONS_LIST_PAGE = gql`
-  query GetActionListPage($plan: ID!, $singlePlan: Boolean!) {
+  query GetActionListPage($plan: ID!, $onlyWithActions: Boolean!) {
     plan(id: $plan) {
       actionListPage {
         __typename
@@ -50,7 +50,10 @@ const GET_ACTIONS_LIST_PAGE = gql`
   ${ALL_ACTION_LIST_FILTERS}
 `;
 
-export const getActionsListPage = async (plan: string, isSinglePlan: boolean) =>
+export const getActionsListPage = async (
+  plan: string,
+  excludeCategoriesWithoutActions: boolean
+) =>
   await getClient().query<
     GetActionListPageQuery,
     GetActionListPageQueryVariables
@@ -58,7 +61,7 @@ export const getActionsListPage = async (plan: string, isSinglePlan: boolean) =>
     query: GET_ACTIONS_LIST_PAGE,
     variables: {
       plan,
-      singlePlan: isSinglePlan,
+      onlyWithActions: excludeCategoriesWithoutActions,
     },
     fetchPolicy: 'no-cache',
   });

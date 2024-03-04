@@ -16,7 +16,7 @@ const ACTION_LIST_FILTER = gql`
         hideCategoryIdentifiers
         selectionType
         helpText
-        categories(onlyWithActions: $singlePlan) {
+        categories(onlyWithActions: $onlyWithActions) {
           id
           identifier
           name
