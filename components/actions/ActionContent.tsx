@@ -166,6 +166,8 @@ function ActionContentBlock(props: ActionContentBlockProps) {
       return (
         <ActionRelatedActionsBlock
           plan={plan}
+          heading={block.fieldLabel}
+          helpText={block.fieldHelpText}
           relatedActions={action.relatedActions}
         />
       );

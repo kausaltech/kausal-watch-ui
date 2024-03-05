@@ -333,11 +333,13 @@ export type ActionContactPerson = {
 export type ActionContactPersonsBlock = FieldBlockMetaInterface & StreamFieldInterface & {
   __typename?: 'ActionContactPersonsBlock';
   blockType: Scalars['String'];
+  blocks: Array<StreamFieldInterface>;
   field: Scalars['String'];
+  fieldHelpText?: Maybe<Scalars['String']>;
+  fieldLabel?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['String']>;
   meta?: Maybe<FieldBlockMetaData>;
   rawValue: Scalars['String'];
-  value: Scalars['String'];
 };
 
 export type ActionContentAttributeTypeBlock = FieldBlockMetaInterface & StreamFieldInterface & {
@@ -388,11 +390,13 @@ export enum ActionDateFormat {
 export type ActionDescriptionBlock = FieldBlockMetaInterface & StreamFieldInterface & {
   __typename?: 'ActionDescriptionBlock';
   blockType: Scalars['String'];
+  blocks: Array<StreamFieldInterface>;
   field: Scalars['String'];
+  fieldHelpText?: Maybe<Scalars['String']>;
+  fieldLabel?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['String']>;
   meta?: Maybe<FieldBlockMetaData>;
   rawValue: Scalars['String'];
-  value: Scalars['String'];
 };
 
 export type ActionHighlightsBlock = StreamFieldInterface & {
@@ -470,11 +474,13 @@ export enum ActionIndicatorEffectType {
 export type ActionLeadParagraphBlock = FieldBlockMetaInterface & StreamFieldInterface & {
   __typename?: 'ActionLeadParagraphBlock';
   blockType: Scalars['String'];
+  blocks: Array<StreamFieldInterface>;
   field: Scalars['String'];
+  fieldHelpText?: Maybe<Scalars['String']>;
+  fieldLabel?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['String']>;
   meta?: Maybe<FieldBlockMetaData>;
   rawValue: Scalars['String'];
-  value: Scalars['String'];
 };
 
 /** A link related to an action. */
@@ -490,11 +496,13 @@ export type ActionLink = {
 export type ActionLinksBlock = FieldBlockMetaInterface & StreamFieldInterface & {
   __typename?: 'ActionLinksBlock';
   blockType: Scalars['String'];
+  blocks: Array<StreamFieldInterface>;
   field: Scalars['String'];
+  fieldHelpText?: Maybe<Scalars['String']>;
+  fieldLabel?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['String']>;
   meta?: Maybe<FieldBlockMetaData>;
   rawValue: Scalars['String'];
-  value: Scalars['String'];
 };
 
 export type ActionListBlock = StreamFieldInterface & {
@@ -630,11 +638,13 @@ export type ActionMainContentSectionElementBlock = ActionContentAttributeTypeBlo
 export type ActionMergedActionsBlock = FieldBlockMetaInterface & StreamFieldInterface & {
   __typename?: 'ActionMergedActionsBlock';
   blockType: Scalars['String'];
+  blocks: Array<StreamFieldInterface>;
   field: Scalars['String'];
+  fieldHelpText?: Maybe<Scalars['String']>;
+  fieldLabel?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['String']>;
   meta?: Maybe<FieldBlockMetaData>;
   rawValue: Scalars['String'];
-  value: Scalars['String'];
 };
 
 export type ActionOfficialNameBlock = FieldBlockMetaInterface & StreamFieldInterface & {
@@ -652,21 +662,25 @@ export type ActionOfficialNameBlock = FieldBlockMetaInterface & StreamFieldInter
 export type ActionRelatedActionsBlock = FieldBlockMetaInterface & StreamFieldInterface & {
   __typename?: 'ActionRelatedActionsBlock';
   blockType: Scalars['String'];
+  blocks: Array<StreamFieldInterface>;
   field: Scalars['String'];
+  fieldHelpText?: Maybe<Scalars['String']>;
+  fieldLabel?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['String']>;
   meta?: Maybe<FieldBlockMetaData>;
   rawValue: Scalars['String'];
-  value: Scalars['String'];
 };
 
 export type ActionRelatedIndicatorsBlock = FieldBlockMetaInterface & StreamFieldInterface & {
   __typename?: 'ActionRelatedIndicatorsBlock';
   blockType: Scalars['String'];
+  blocks: Array<StreamFieldInterface>;
   field: Scalars['String'];
+  fieldHelpText?: Maybe<Scalars['String']>;
+  fieldLabel?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['String']>;
   meta?: Maybe<FieldBlockMetaData>;
   rawValue: Scalars['String'];
-  value: Scalars['String'];
 };
 
 export type ActionResponsiblePartiesBlock = FieldBlockMetaInterface & StreamFieldInterface & {
@@ -728,11 +742,13 @@ export type ActionSchedule = {
 export type ActionScheduleBlock = FieldBlockMetaInterface & StreamFieldInterface & {
   __typename?: 'ActionScheduleBlock';
   blockType: Scalars['String'];
+  blocks: Array<StreamFieldInterface>;
   field: Scalars['String'];
+  fieldHelpText?: Maybe<Scalars['String']>;
+  fieldLabel?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['String']>;
   meta?: Maybe<FieldBlockMetaData>;
   rawValue: Scalars['String'];
-  value: Scalars['String'];
 };
 
 export type ActionScheduleFilterBlock = StreamFieldInterface & {
@@ -896,11 +912,13 @@ export enum ActionTaskState {
 export type ActionTasksBlock = FieldBlockMetaInterface & StreamFieldInterface & {
   __typename?: 'ActionTasksBlock';
   blockType: Scalars['String'];
+  blocks: Array<StreamFieldInterface>;
   field: Scalars['String'];
+  fieldHelpText?: Maybe<Scalars['String']>;
+  fieldLabel?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['String']>;
   meta?: Maybe<FieldBlockMetaData>;
   rawValue: Scalars['String'];
-  value: Scalars['String'];
 };
 
 export type ActionTimeliness = {
@@ -7371,7 +7389,7 @@ export type GetActionDetailsQuery = (
           { restricted?: boolean | null, hidden?: boolean | null }
           & { __typename?: 'FieldBlockMetaData' }
         ) | null }
-        & { __typename: 'ActionContactFormBlock' | 'ActionDescriptionBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionMergedActionsBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionTasksBlock' }
+        & { __typename: 'ActionContactFormBlock' | 'ActionDescriptionBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionMergedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionTasksBlock' }
       ) | (
         { id?: string | null, meta?: (
           { restricted?: boolean | null, hidden?: boolean | null }
@@ -7405,16 +7423,16 @@ export type GetActionDetailsQuery = (
           & { __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionListBlock' | 'ActionMergedActionsBlock' }
         ) | (
           { id?: string | null }
-          & { __typename?: 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' }
+          & { __typename?: 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' }
         ) | (
           { id?: string | null }
-          & { __typename?: 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' }
+          & { __typename?: 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' }
         ) | (
           { id?: string | null }
-          & { __typename?: 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' }
+          & { __typename?: 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' }
         ) | (
           { id?: string | null }
-          & { __typename?: 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
+          & { __typename?: 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
         ) | (
           { id?: string | null, attributeType: (
             { id: string, format: AttributeTypeFormat, name: string, identifier: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
@@ -7439,6 +7457,9 @@ export type GetActionDetailsQuery = (
         ) | (
           { id?: string | null, fieldLabel?: string | null, caption?: string | null }
           & { __typename?: 'ActionOfficialNameBlock' }
+        ) | (
+          { id?: string | null, fieldLabel?: string | null, fieldHelpText?: string | null }
+          & { __typename?: 'ActionRelatedActionsBlock' }
         ) | (
           { id?: string | null, reportField?: string | null, reportType?: (
             { name: string }
@@ -7651,6 +7672,12 @@ export type GetActionDetailsQuery = (
           & { __typename?: 'FieldBlockMetaData' }
         ) | null }
         & { __typename: 'ActionOfficialNameBlock' }
+      ) | (
+        { id?: string | null, fieldLabel?: string | null, fieldHelpText?: string | null, meta?: (
+          { restricted?: boolean | null, hidden?: boolean | null }
+          & { __typename?: 'FieldBlockMetaData' }
+        ) | null }
+        & { __typename: 'ActionRelatedActionsBlock' }
       ) | (
         { id?: string | null, reportField?: string | null, reportType?: (
           { name: string }
@@ -7860,7 +7887,7 @@ export type GetActionDetailsQuery = (
           { restricted?: boolean | null, hidden?: boolean | null }
           & { __typename?: 'FieldBlockMetaData' }
         ) | null }
-        & { __typename: 'ActionContactFormBlock' | 'ActionDescriptionBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionMergedActionsBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionTasksBlock' }
+        & { __typename: 'ActionContactFormBlock' | 'ActionDescriptionBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionMergedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionTasksBlock' }
       ) | (
         { id?: string | null, meta?: (
           { restricted?: boolean | null, hidden?: boolean | null }
@@ -7894,16 +7921,16 @@ export type GetActionDetailsQuery = (
           & { __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionListBlock' | 'ActionMergedActionsBlock' }
         ) | (
           { id?: string | null }
-          & { __typename?: 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' }
+          & { __typename?: 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' }
         ) | (
           { id?: string | null }
-          & { __typename?: 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' }
+          & { __typename?: 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' }
         ) | (
           { id?: string | null }
-          & { __typename?: 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' }
+          & { __typename?: 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' }
         ) | (
           { id?: string | null }
-          & { __typename?: 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
+          & { __typename?: 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
         ) | (
           { id?: string | null, attributeType: (
             { id: string, format: AttributeTypeFormat, name: string, identifier: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
@@ -7928,6 +7955,9 @@ export type GetActionDetailsQuery = (
         ) | (
           { id?: string | null, fieldLabel?: string | null, caption?: string | null }
           & { __typename?: 'ActionOfficialNameBlock' }
+        ) | (
+          { id?: string | null, fieldLabel?: string | null, fieldHelpText?: string | null }
+          & { __typename?: 'ActionRelatedActionsBlock' }
         ) | (
           { id?: string | null, reportField?: string | null, reportType?: (
             { name: string }
@@ -8140,6 +8170,12 @@ export type GetActionDetailsQuery = (
           & { __typename?: 'FieldBlockMetaData' }
         ) | null }
         & { __typename: 'ActionOfficialNameBlock' }
+      ) | (
+        { id?: string | null, fieldLabel?: string | null, fieldHelpText?: string | null, meta?: (
+          { restricted?: boolean | null, hidden?: boolean | null }
+          & { __typename?: 'FieldBlockMetaData' }
+        ) | null }
+        & { __typename: 'ActionRelatedActionsBlock' }
       ) | (
         { id?: string | null, reportField?: string | null, reportType?: (
           { name: string }
@@ -8452,12 +8488,12 @@ type ActionAsideContentBlocksFragment_ActionResponsiblePartiesBlock_Fragment = (
 
 export type ActionAsideContentBlocksFragmentFragment = ActionAsideContentBlocksFragment_ActionContactPersonsBlock_ActionScheduleBlock_Fragment | ActionAsideContentBlocksFragment_ActionContentAttributeTypeBlock_Fragment | ActionAsideContentBlocksFragment_ActionContentCategoryTypeBlock_Fragment | ActionAsideContentBlocksFragment_ActionResponsiblePartiesBlock_Fragment;
 
-type ActionMainContentBlocksFragment_FVKamQUfmT6JjFbafBAu3ifcqx9spC4XsfbOqsBaoA_Fragment = (
+type ActionMainContentBlocksFragment_60920DqMhKMmAyaAImyPh5hRBnjMu8ul9clD1Z4hPw0_Fragment = (
   { id?: string | null, meta?: (
     { restricted?: boolean | null, hidden?: boolean | null }
     & { __typename?: 'FieldBlockMetaData' }
   ) | null }
-  & { __typename: 'ActionContactFormBlock' | 'ActionDescriptionBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionMergedActionsBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionTasksBlock' }
+  & { __typename: 'ActionContactFormBlock' | 'ActionDescriptionBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionMergedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionTasksBlock' }
 );
 
 type ActionMainContentBlocksFragment_ActionContentAttributeTypeBlock_Fragment = (
@@ -8497,16 +8533,16 @@ type ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment = (
     & { __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentSectionBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionListBlock' | 'ActionMergedActionsBlock' }
   ) | (
     { id?: string | null }
-    & { __typename?: 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' }
+    & { __typename?: 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' }
   ) | (
     { id?: string | null }
-    & { __typename?: 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' }
+    & { __typename?: 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' }
   ) | (
     { id?: string | null }
-    & { __typename?: 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' }
+    & { __typename?: 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' }
   ) | (
     { id?: string | null }
-    & { __typename?: 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
+    & { __typename?: 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
   ) | (
     { id?: string | null, attributeType: (
       { id: string, format: AttributeTypeFormat, name: string, identifier: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
@@ -8531,6 +8567,9 @@ type ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment = (
   ) | (
     { id?: string | null, fieldLabel?: string | null, caption?: string | null }
     & { __typename?: 'ActionOfficialNameBlock' }
+  ) | (
+    { id?: string | null, fieldLabel?: string | null, fieldHelpText?: string | null }
+    & { __typename?: 'ActionRelatedActionsBlock' }
   ) | (
     { id?: string | null, reportField?: string | null, reportType?: (
       { name: string }
@@ -8747,6 +8786,14 @@ type ActionMainContentBlocksFragment_ActionOfficialNameBlock_Fragment = (
   & { __typename: 'ActionOfficialNameBlock' }
 );
 
+type ActionMainContentBlocksFragment_ActionRelatedActionsBlock_Fragment = (
+  { id?: string | null, fieldLabel?: string | null, fieldHelpText?: string | null, meta?: (
+    { restricted?: boolean | null, hidden?: boolean | null }
+    & { __typename?: 'FieldBlockMetaData' }
+  ) | null }
+  & { __typename: 'ActionRelatedActionsBlock' }
+);
+
 type ActionMainContentBlocksFragment_ReportComparisonBlock_Fragment = (
   { id?: string | null, reportField?: string | null, reportType?: (
     { name: string }
@@ -8953,7 +9000,7 @@ type ActionMainContentBlocksFragment_ReportComparisonBlock_Fragment = (
   & { __typename: 'ReportComparisonBlock' }
 );
 
-export type ActionMainContentBlocksFragmentFragment = ActionMainContentBlocksFragment_FVKamQUfmT6JjFbafBAu3ifcqx9spC4XsfbOqsBaoA_Fragment | ActionMainContentBlocksFragment_ActionContentAttributeTypeBlock_Fragment | ActionMainContentBlocksFragment_ActionContentCategoryTypeBlock_Fragment | ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment | ActionMainContentBlocksFragment_ActionOfficialNameBlock_Fragment | ActionMainContentBlocksFragment_ReportComparisonBlock_Fragment;
+export type ActionMainContentBlocksFragmentFragment = ActionMainContentBlocksFragment_60920DqMhKMmAyaAImyPh5hRBnjMu8ul9clD1Z4hPw0_Fragment | ActionMainContentBlocksFragment_ActionContentAttributeTypeBlock_Fragment | ActionMainContentBlocksFragment_ActionContentCategoryTypeBlock_Fragment | ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment | ActionMainContentBlocksFragment_ActionOfficialNameBlock_Fragment | ActionMainContentBlocksFragment_ActionRelatedActionsBlock_Fragment | ActionMainContentBlocksFragment_ReportComparisonBlock_Fragment;
 
 export type ReportComparisonBlockActionContentFragment = (
   { reportField?: string | null, reportType?: (

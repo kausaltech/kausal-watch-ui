@@ -290,6 +290,10 @@ const GET_ACTION_DETAILS = gql`
       fieldLabel
       caption
     }
+    ... on ActionRelatedActionsBlock {
+      fieldLabel
+      fieldHelpText
+    }
     ... on ActionContentAttributeTypeBlock {
       attributeType {
         ...AttributesBlockAttributeType
@@ -315,6 +319,10 @@ const GET_ACTION_DETAILS = gql`
         ... on ActionOfficialNameBlock {
           fieldLabel
           caption
+        }
+        ... on ActionRelatedActionsBlock {
+          fieldLabel
+          fieldHelpText
         }
         ... on ActionContentAttributeTypeBlock {
           attributeType {
