@@ -511,14 +511,13 @@ function ActionContent(props: ActionContentProps) {
         categories={action.categories}
         previousAction={action.previousAction}
         nextAction={action.nextAction}
-        identifier={action.identifier}
+        identifier={plan.hideActionIdentifiers ? undefined : action.identifier}
         name={action.name}
         imageUrl={actionImage?.large.src}
         imageCredit={actionImage?.imageCredit}
         imageTitle={actionImage?.title}
         altText={actionImage?.altText}
         imageAlign={getBgImageAlignment(actionImage)}
-        hideActionIdentifiers={plan.hideActionIdentifiers}
         primaryOrg={action.primaryOrg}
         state={actionState}
       />

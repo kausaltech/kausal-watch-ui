@@ -11,7 +11,15 @@ function loadDirectoryNames(directoryPath) {
 }
 
 const themesDirectory = path.join(__dirname, '../public/static/themes');
-const themesList = loadDirectoryNames(themesDirectory);
+const themesList = ['default'];
+try {
+  themesList.push(...loadDirectoryNames(themesDirectory));
+} catch (err) {
+  console.error(
+    '⚠️ Error reading themes directory, please try clearing the broken symlinks from /public/static/themes',
+    err
+  );
+}
 
 // Populate available theme data
 const themes = {};
@@ -21,7 +29,7 @@ themesList.forEach((themeName) => {
     const data = fs.readFileSync(themePath);
     themes[themeName] = JSON.parse(data);
   } catch (err) {
-    console.error(`Error reading theme data for ${themeName}`, err);
+    console.error(`⚠️ Error reading theme data for ${themeName}`, err);
   }
 });
 
