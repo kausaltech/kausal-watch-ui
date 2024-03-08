@@ -1,12 +1,12 @@
 import styled from 'styled-components';
-import { Action } from '@/common/__generated__/graphql';
+import { ActionCardFragment } from '@/common/__generated__/graphql';
 import { ActionDependenciesGroup } from './ActionDependenciesGroup';
 import Icon from '@/components/common/Icon';
 
 type ActionGroup = {
   id: string;
   title: string;
-  actions: Action[];
+  actions: ActionCardFragment[];
 };
 
 type Props = {
@@ -21,7 +21,10 @@ const StyledWrapper = styled.div`
   color: ${({ theme }) => theme.graphColors.grey020};
 `;
 
-function isActionGroupActive(actions: Action[], activeActionId?: string) {
+function isActionGroupActive(
+  actions: ActionCardFragment[],
+  activeActionId?: string
+) {
   return actions.length === 1 && actions[0].id === activeActionId;
 }
 

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { transparentize } from 'polished';
 import SVG from 'react-inlinesvg';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 import { cleanActionStatus } from 'common/preprocess';
 import { getStatusColorForAction } from 'common/ActionStatusSummary';
@@ -11,7 +11,10 @@ import { useTheme } from 'styled-components';
 import { getActionTermContext } from 'common/i18n';
 import { usePlan } from 'context/plan';
 import PlanChip from 'components/plans/PlanChip';
-import { ActionCardFragment } from 'common/__generated__/graphql';
+import {
+  ActionCardFragment,
+  PlanContextFragment,
+} from 'common/__generated__/graphql';
 import { useTranslations } from 'next-intl';
 import { ACTION_CARD_FRAGMENT } from '@/fragments/action-card.fragment';
 import { captureException } from '@sentry/nextjs';
@@ -61,21 +64,36 @@ const SecondaryIconsContainer = styled.div`
     ${(props) => props.theme.spaces.s050};
 `;
 
-const ActionCardElement = styled.div`
+const ActionCardElement = styled.div<{
+  $isLink: boolean;
+  $isHighlighted: boolean;
+}>`
   position: relative;
   width: 100%;
   background: ${(props) => props.theme.themeColors.white};
   border-width: ${(props) => props.theme.cardBorderWidth};
   border-radius: ${(props) => props.theme.cardBorderRadius};
   overflow: hidden;
-  box-shadow: 2px 2px 8px
-    ${(props) => transparentize(0.9, props.theme.themeColors.dark)};
+  box-shadow: ${({ $isLink, theme }) =>
+    $isLink
+      ? `2px 2px 8px ${transparentize(0.9, theme.themeColors.dark)}`
+      : 'none'};
   transition: all 0.5s ease;
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 4px 4px 8px
-      ${(props) => transparentize(0.8, props.theme.themeColors.dark)};
-  }
+
+  ${({ $isLink, theme }) =>
+    $isLink &&
+    css`
+      &:hover {
+        transform: translateY(-5px);
+        box-shadow: 4px 4px 8px ${transparentize(0.8, theme.themeColors.dark)};
+      }
+    `}
+
+  ${({ $isHighlighted, theme }) =>
+    $isHighlighted &&
+    css`
+      border: 3px solid ${theme.brandDark};
+    `}
 `;
 
 const ActionPlan = styled.div`
@@ -99,10 +117,11 @@ const ActionNumber = styled.div`
   }
 `;
 
-const ActionStatusArea = styled.div<{ $statusColor: string }>`
+const ActionStatusArea = styled.div<{ $statusColor: string; $isMini: boolean }>`
   color: ${(props) => props.theme.themeColors.white};
   background-color: ${(props) => props.$statusColor};
-  min-height: ${(props) => props.theme.spaces.s400};
+  min-height: ${({ theme, $isMini }) =>
+    $isMini ? theme.spaces.s050 : theme.spaces.s400};
   line-height: ${(props) => props.theme.lineHeightSm};
 `;
 
@@ -193,12 +212,18 @@ const SecondaryIcons = (props) => {
 
 type ActionCardProps = {
   action: ActionCardFragment;
-  showPlan: boolean;
-  size?: string;
+  showPlan?: boolean;
+  variant?: 'primary' | 'mini';
+  isLink?: boolean;
+  isHighlighted?: boolean;
 };
-function ActionCard(props: ActionCardProps) {
-  const { action, showPlan = false, size } = props;
-
+function ActionCard({
+  action,
+  showPlan = false,
+  variant = 'primary',
+  isLink = true,
+  isHighlighted = false,
+}: ActionCardProps) {
   const plan = usePlan();
   const t = useTranslations();
   const theme = useTheme();
@@ -245,7 +270,96 @@ function ActionCard(props: ActionCardProps) {
   const primaryRootCategory = action.primaryCategories
     ? action.primaryCategories[0]
     : null;
+
+  function getidentifierPosition(
+    showPlan: boolean,
+    variant: ActionCardProps['variant'],
+    plan: PlanContextFragment
+  ) {
+    if (plan.hideActionIdentifiers) {
+      return 'HIDDEN';
+    }
+
+    if (showPlan || variant === 'mini') {
+      return 'WITH_NAME';
+    }
+
+    return 'IN_HERO';
+  }
+
+  const identifierPosition = getidentifierPosition(showPlan, variant, plan);
   const statusColor = getStatusColorForAction(action, plan, theme);
+
+  const actionCard = (
+    <ActionCardElement $isLink={isLink} $isHighlighted={isHighlighted}>
+      <ActionStatusArea $statusColor={statusColor} $isMini={variant === 'mini'}>
+        {!theme.settings.hideIconOnActionListCards && variant !== 'mini' && (
+          <PrimaryIcon category={primaryRootCategory} />
+        )}
+        {identifierPosition === 'IN_HERO' && (
+          <ActionNumber>{action.identifier}</ActionNumber>
+        )}
+      </ActionStatusArea>
+
+      <StyledActionPhase
+        $statusColor={statusColor}
+        $hasStatus={mergedWith !== null || statusText !== null}
+      >
+        {mergedWith ? (
+          <StatusName>
+            {t('action-status-merged', getActionTermContext(plan))}
+            <span> &rarr; </span>
+            {getMergedName(mergedWith, plan.id)}
+          </StatusName>
+        ) : (
+          <StatusName>{statusText}</StatusName>
+        )}
+      </StyledActionPhase>
+
+      {primaryOrg && variant !== 'mini' && (
+        <ActionOrg>
+          <ActionOrgAvatar>
+            <OrgLogo
+              src={
+                primaryOrg?.logo?.rendition?.src ||
+                '/static/themes/default/images/default-avatar-org.png'
+              }
+              alt=""
+            />
+          </ActionOrgAvatar>
+          <ActionOrgName>
+            {primaryOrg.abbreviation || primaryOrg.name}
+          </ActionOrgName>
+        </ActionOrg>
+      )}
+      {showPlan && variant !== 'mini' && (
+        <ActionPlan>
+          <PlanChip
+            planImage={action.plan.image?.rendition?.src}
+            planShortName={action.plan.shortName || action.plan.name}
+            size="xs"
+          />
+        </ActionPlan>
+      )}
+      <StyledCardTitle className="card-title">
+        {identifierPosition === 'WITH_NAME' && (
+          <strong>{action.identifier}. </strong>
+        )}
+        {actionName}
+      </StyledCardTitle>
+      {plan.secondaryActionClassification && (
+        <SecondaryIcons
+          actionCategories={action.categories}
+          secondaryClassificationId={plan.secondaryActionClassification.id}
+        />
+      )}
+    </ActionCardElement>
+  );
+
+  if (!isLink) {
+    return actionCard;
+  }
+
   return (
     <ActionLink
       action={action}
@@ -253,67 +367,7 @@ function ActionCard(props: ActionCardProps) {
       planUrl={getPlanUrl(mergedWith, action.plan, plan.id)}
       crossPlan={action?.plan && action.plan.id !== plan.id}
     >
-      <StyledActionLink>
-        <ActionCardElement>
-          <ActionStatusArea $statusColor={statusColor}>
-            {!theme.settings.hideIconOnActionListCards && (
-              <PrimaryIcon category={primaryRootCategory} />
-            )}
-            {!plan.hideActionIdentifiers && !showPlan && (
-              <ActionNumber>{action.identifier}</ActionNumber>
-            )}
-          </ActionStatusArea>
-          <StyledActionPhase
-            $statusColor={statusColor}
-            $hasStatus={mergedWith !== null || statusText !== null}
-          >
-            {mergedWith ? (
-              <StatusName>
-                {t('action-status-merged', getActionTermContext(plan))}
-                <span> &rarr; </span>
-                {getMergedName(mergedWith, plan.id)}
-              </StatusName>
-            ) : (
-              <StatusName>{statusText}</StatusName>
-            )}
-          </StyledActionPhase>
-          {primaryOrg && (
-            <ActionOrg>
-              <ActionOrgAvatar>
-                <OrgLogo
-                  src={
-                    primaryOrg?.logo?.rendition?.src ||
-                    '/static/themes/default/images/default-avatar-org.png'
-                  }
-                  alt=""
-                />
-              </ActionOrgAvatar>
-              <ActionOrgName>
-                {primaryOrg.abbreviation || primaryOrg.name}
-              </ActionOrgName>
-            </ActionOrg>
-          )}
-          {showPlan && (
-            <ActionPlan>
-              <PlanChip
-                planImage={action.plan.image?.rendition?.src}
-                planShortName={action.plan.shortName || action.plan.name}
-                size="xs"
-              />
-            </ActionPlan>
-          )}
-          <StyledCardTitle className="card-title">
-            {showPlan && <strong>{action.identifier}. </strong>}
-            {actionName}
-          </StyledCardTitle>
-          {plan.secondaryActionClassification && (
-            <SecondaryIcons
-              actionCategories={action.categories}
-              secondaryClassificationId={plan.secondaryActionClassification.id}
-            />
-          )}
-        </ActionCardElement>
-      </StyledActionLink>
+      <StyledActionLink>{actionCard}</StyledActionLink>
     </ActionLink>
   );
 }
