@@ -1,5 +1,7 @@
+import React from 'react';
 import { DecoratorHelpers } from '@storybook/addon-themes';
 import { ThemeProvider } from 'styled-components';
+import { CombinedIconSymbols } from '../components/common/Icon';
 import { GlobalStyles } from '../styles/GlobalStyles';
 
 const { initializeThemeState, pluckThemeFromContext, useThemeParameters } =
@@ -25,6 +27,7 @@ export const withKausalThemes = ({ themes, defaultTheme }) => {
         />
         <ThemeProvider theme={themes[selected]}>
           <GlobalStyles />
+          <CombinedIconSymbols />
           {story(context)}
         </ThemeProvider>
       </>
