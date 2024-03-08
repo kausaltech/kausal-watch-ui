@@ -19,11 +19,18 @@ export const withKausalThemes = ({ themes, defaultTheme }) => {
     Object.assign(context.args, { activeTheme: themes[selected] });
 
     return (
-      <ThemeProvider theme={themes[selected]}>
-        <GlobalStyles />
-        <CombinedIconSymbols />
-        {story(context)}
-      </ThemeProvider>
+      <>
+        <link
+          rel="stylesheet"
+          type="text/css"
+          href={`/static/themes/${themes[selected].name}/main.css`}
+        />
+        <ThemeProvider theme={themes[selected]}>
+          <GlobalStyles />
+          <CombinedIconSymbols />
+          {story(context)}
+        </ThemeProvider>
+      </>
     );
   };
 };

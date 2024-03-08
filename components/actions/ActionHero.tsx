@@ -118,7 +118,7 @@ const ImageCredit = styled.span`
   font-size: ${(props) => props.theme.fontSizeSm};
   font-family: ${(props) => props.theme.fontFamilyTiny};
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  @media (min-width: ${(props) => props.theme.breakpointLg}) {
     top: inherit;
     bottom: 0;
   }
@@ -126,24 +126,36 @@ const ImageCredit = styled.span`
 
 const ActionHeadline = styled.h1`
   hyphens: manual;
+  display: flex;
+  flex-wrap: wrap;
   margin: ${(props) => props.theme.spaces.s100} 0;
   font-size: ${(props) => props.theme.fontSizeLg};
-  color: ${(props) => props.theme.themeColors.black} !important;
+  color: ${(props) => props.theme.textColor.primary} !important;
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
-    display: flex;
     font-size: ${(props) => props.theme.fontSizeXl};
   }
 `;
 
 const ActionNumber = styled.span`
-  margin-right: ${(props) => props.theme.spaces.s100};
-  white-space: nowrap;
   display: block;
+  flex-basis: auto;
+  flex-grow: 1;
+  flex-shrink: 1;
+  margin-right: ${(props) => props.theme.spaces.s050};
+  white-space: nowrap;
 
   &:after {
     content: '.';
   }
+`;
+
+const ActionName = styled.span`
+  display: block;
+  flex-basis: 75%; // Wrap on separate line if ActionNumber takes over 25% of the space
+  flex-grow: 3;
+  flex-shrink: 0;
+  max-width: 100%;
 `;
 
 /**
@@ -192,7 +204,7 @@ type ActionHeroProps = {
   categories: [];
   previousAction: any; //TODO: type these
   nextAction: any;
-  identifier: string;
+  identifier?: string;
   name: string;
   imageUrl: string;
   imageAlign: string;
@@ -216,7 +228,6 @@ function ActionHero(props: ActionHeroProps) {
     altText,
     imageCredit,
     imageTitle,
-    hideActionIdentifiers = true,
     primaryOrg,
     state,
   } = props;
@@ -310,10 +321,8 @@ function ActionHero(props: ActionHeroProps) {
                     </ActionsNav>
                     <ActionCategories categories={categories} />
                     <ActionHeadline>
-                      {!hideActionIdentifiers && (
-                        <ActionNumber>{identifier}</ActionNumber>
-                      )}
-                      <span>{name}</span>
+                      {identifier && <ActionNumber>{identifier}</ActionNumber>}
+                      <ActionName>{name}</ActionName>
                     </ActionHeadline>
                   </CardContent>
                 </HeroCardBg>

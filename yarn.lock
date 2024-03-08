@@ -10011,6 +10011,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"chromatic@npm:^11.0.1":
+  version: 11.0.1
+  resolution: "chromatic@npm:11.0.1"
+  peerDependencies:
+    "@chromatic-com/cypress": ^0.5.2 || ^1.0.0
+    "@chromatic-com/playwright": ^0.5.2 || ^1.0.0
+  peerDependenciesMeta:
+    "@chromatic-com/cypress":
+      optional: true
+    "@chromatic-com/playwright":
+      optional: true
+  bin:
+    chroma: dist/bin.js
+    chromatic: dist/bin.js
+    chromatic-cli: dist/bin.js
+  checksum: 1b0b0fddb1081dec060c5097b7b5ba47e0cd1ce544231977262bec96e3f25a7d39da3287e77498d601d701da9db23951e1e8c7e451204dd17bbb97acf3fea2d3
+  languageName: node
+  linkType: hard
+
 "chrome-trace-event@npm:^1.0.2":
   version: 1.0.3
   resolution: "chrome-trace-event@npm:1.0.3"
@@ -16910,6 +16929,7 @@ __metadata:
     babel-plugin-inline-react-svg: ^2.0.1
     babel-plugin-styled-components: ^2.0.7
     bootstrap: 5.2.3
+    chromatic: ^11.0.1
     css-tree: ^2.1.0
     csstype: ^3.1.1
     cytoscape: ^3.21.1

@@ -9,6 +9,8 @@ yarn-error.log
 # Build directory
 /.next
 /next-env.d.ts
+/storybook-static
+build-storybook.log
 
 /.vscode
 .DS_Store
