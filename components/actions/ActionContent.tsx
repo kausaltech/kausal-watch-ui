@@ -50,6 +50,7 @@ import StatusBadge from 'components/common/StatusBadge';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import RestrictedBlockWrapper from './blocks/RestrictedBlockWrapper';
+import { ACTION_CONTENT_MAIN_BOTTOM } from '@/constants/containers';
 
 export type ActionContentAction = NonNullable<GetActionDetailsQuery['action']>;
 
@@ -116,6 +117,11 @@ const ContentGroup = styled.div<{ $vertical: boolean }>`
     font-size: ${(props) => props.theme.fontSizeLg};
     margin-bottom: ${(props) => props.theme.spaces.s200};
   }
+`;
+
+const StyledMainBottomCol = styled(Col)`
+  container-type: inline-size;
+  container-name: ${ACTION_CONTENT_MAIN_BOTTOM};
 `;
 
 function getMaxImpact(plan: PlanContextType) {
@@ -602,9 +608,9 @@ function ActionContent(props: ActionContentProps) {
       </Container>
       <Container>
         <Row>
-          <Col md="7" lg="8">
+          <StyledMainBottomCol md="7" lg="8">
             {makeComponents('detailsMainBottom')}
-          </Col>
+          </StyledMainBottomCol>
         </Row>
       </Container>
       {action?.relatedIndicators.length > 0 && (

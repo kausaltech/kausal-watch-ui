@@ -1,17 +1,15 @@
 import styled from 'styled-components';
-import { Action } from '@/common/__generated__/graphql';
-import { ActionDependenciesActionCard } from './ActionDependenciesActionCard';
+import { ActionCardFragment } from '@/common/__generated__/graphql';
+import ActionCard from '../../ActionCard';
 
 const StyledActionGroup = styled.div<{ $isHighlighted: boolean }>`
-  border: 2px solid
-    ${({ theme, $isHighlighted }) =>
-      $isHighlighted ? theme.graphColors.blue030 : 'currentColor'};
+  border: 2px solid currentColor;
   border-radius: ${({ theme }) => theme.cardBorderRadius};
   padding: ${({ theme }) => theme.spaces.s050};
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.spaces.s050};
+  gap: ${({ theme }) => theme.spaces.s100};
 `;
 
 const StyledGroupTitle = styled.h4`
@@ -25,7 +23,7 @@ const StyledGroupTitle = styled.h4`
 type Props = {
   title: string;
   isHighlighted?: boolean;
-  actions: Action[];
+  actions: ActionCardFragment[];
 };
 
 export function ActionDependenciesGroup({
@@ -38,13 +36,12 @@ export function ActionDependenciesGroup({
       <StyledGroupTitle>{title}</StyledGroupTitle>
 
       {actions.map((action) => (
-        <ActionDependenciesActionCard
+        <ActionCard
           key={action.id}
-          title={action.name}
-          status={{
-            label: action.status?.name,
-            identifier: action.status?.identifier,
-          }}
+          action={action}
+          variant="mini"
+          isLink={!isHighlighted}
+          isHighlighted={isHighlighted}
         />
       ))}
     </StyledActionGroup>
