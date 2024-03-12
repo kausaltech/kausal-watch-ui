@@ -7,52 +7,52 @@ import { useTheme } from 'styled-components';
 const camelToKebabCase = (s) =>
   s.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2').toLowerCase();
 
-const AVAILABLE_ICONS = [
-  'angle-down.svg',
-  'angle-left.svg',
-  'angle-right.svg',
-  'angle-up.svg',
-  'arrow-down.svg',
-  'arrow-left.svg',
-  'arrow-right.svg',
-  'arrow-up-down.svg',
-  'arrow-up-right-from-square.svg',
-  'arrow-up.svg',
-  'bars.svg',
-  'bullseye.svg',
-  'calendar.svg',
-  'chart-line.svg',
-  'check.svg',
-  'caret-down.svg',
-  'caret-left.svg',
-  'caret-right.svg',
-  'caret-up.svg',
-  'circle-full.svg',
-  'circle-outline.svg',
-  'commenting.svg',
-  'dot-circle.svg',
-  'exclamation-circle.svg',
-  'globe.svg',
-  'heart.svg',
-  'hidden.svg',
-  'home.svg',
-  'link.svg',
-  'lock.svg',
-  'pencil.svg',
-  'scope-global.svg',
-  'scope-local.svg',
-  'search.svg',
-  'sort-down.svg',
-  'sort-up.svg',
-  'sort.svg',
-  'sync.svg',
-  'tachometer.svg',
-  'times.svg',
-  'user.svg',
-];
+type AvailableIcons =
+  | 'action-dependency'
+  | 'angle-down'
+  | 'angle-left'
+  | 'angle-right'
+  | 'angle-up'
+  | 'arrow-down'
+  | 'arrow-left'
+  | 'arrow-right'
+  | 'arrow-up-down'
+  | 'arrow-up-right-from-square'
+  | 'arrow-up'
+  | 'bars'
+  | 'bullseye'
+  | 'calendar'
+  | 'chart-line'
+  | 'check'
+  | 'caret-down'
+  | 'caret-left'
+  | 'caret-right'
+  | 'caret-up'
+  | 'circle-full'
+  | 'circle-outline'
+  | 'commenting'
+  | 'dot-circle'
+  | 'exclamation-circle'
+  | 'globe'
+  | 'heart'
+  | 'hidden'
+  | 'home'
+  | 'link'
+  | 'lock'
+  | 'pencil'
+  | 'scope-global'
+  | 'scope-local'
+  | 'search'
+  | 'sort-down'
+  | 'sort-up'
+  | 'sort'
+  | 'sync'
+  | 'tachometer'
+  | 'times'
+  | 'user';
 
 type Props = {
-  name?: string;
+  name?: AvailableIcons;
   color?: string;
   width?: string;
   height?: string;
@@ -61,7 +61,7 @@ type Props = {
 } & React.SVGProps<SVGUseElement>;
 
 const Icon = ({
-  name = 'circleOutline',
+  name = 'circle-outline',
   color = 'inherit',
   width = '1em',
   height = '1em',
