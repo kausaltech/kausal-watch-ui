@@ -1,5 +1,4 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { useState } from 'react';
 import { transparentize } from 'polished';
 import SVG from 'react-inlinesvg';
 import styled, { css } from 'styled-components';
@@ -18,6 +17,10 @@ import {
 import { useTranslations } from 'next-intl';
 import { ACTION_CARD_FRAGMENT } from '@/fragments/action-card.fragment';
 import { captureException } from '@sentry/nextjs';
+import Icon from '../common/Icon';
+import { Tooltip } from 'reactstrap';
+import { ActionDependenciesBlock } from './blocks/action-dependencies/ActionDependenciesBlock';
+import { MOCK_ACTIONS } from '@/stories/mocks/actions.mocks';
 
 const StyledActionLink = styled.a`
   text-decoration: none;
@@ -141,12 +144,14 @@ const StatusName = styled.div`
   line-height: 1;
 `;
 
-const StyledCardTitle = styled.div`
-  min-height: calc(1.5rem + 1.2em * 3);
+const StyledCardTitle = styled.div<{ $isSmall: boolean }>`
+  min-height: ${({ $isSmall }) =>
+    $isSmall ? '0' : 'calc(1.5rem + 1.2em * 3)'};
   margin-bottom: 0;
   padding: ${(props) => props.theme.spaces.s050};
   color: ${(props) => props.theme.themeColors.black};
-  font-size: ${(props) => props.theme.fontSizeBase};
+  font-size: ${({ theme, $isSmall }) =>
+    $isSmall ? theme.fontSizeSm : theme.fontSizeBase};
   line-height: ${(props) => props.theme.lineHeightMd};
   text-align: left;
   word-break: break-word;
@@ -175,6 +180,27 @@ const OrgLogo = styled.img`
   display: block;
   width: ${(props) => props.theme.spaces.s150};
   height: ${(props) => props.theme.spaces.s150};
+`;
+
+const StyledTooltip = styled(Tooltip)`
+  display: block;
+
+  .tooltip {
+    --bs-tooltip-bg: ${({ theme }) => theme.cardBackground.secondary};
+    --bs-tooltip-opacity: 0.98;
+  }
+
+  .tooltip-inner {
+    max-width: 300px;
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2);
+  }
+`;
+
+const StyledActionDependencyIconWrapper = styled.span`
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: ${(props) => props.theme.spaces.s100};
 `;
 
 const PrimaryIcon = (props) => {
@@ -210,23 +236,32 @@ const SecondaryIcons = (props) => {
   );
 };
 
+const getDependencyTooltipId = (actionId: string) =>
+  `dependency-tooltip-${actionId}`;
+
 type ActionCardProps = {
   action: ActionCardFragment;
   showPlan?: boolean;
-  variant?: 'primary' | 'mini';
+  variant?: 'primary' | 'mini' | 'text-only';
   isLink?: boolean;
   isHighlighted?: boolean;
+  showActionDependencies?: boolean;
 };
+
 function ActionCard({
   action,
   showPlan = false,
   variant = 'primary',
   isLink = true,
   isHighlighted = false,
+  showActionDependencies = false,
 }: ActionCardProps) {
   const plan = usePlan();
   const t = useTranslations();
   const theme = useTheme();
+  const [tooltipOpen, setTooltipOpen] = useState(false);
+
+  const toggle = () => setTooltipOpen(!tooltipOpen);
 
   if (!action || !action.name) {
     /**
@@ -280,7 +315,7 @@ function ActionCard({
       return 'HIDDEN';
     }
 
-    if (showPlan || variant === 'mini') {
+    if (showPlan || variant === 'mini' || variant === 'text-only') {
       return 'WITH_NAME';
     }
 
@@ -290,33 +325,59 @@ function ActionCard({
   const identifierPosition = getidentifierPosition(showPlan, variant, plan);
   const statusColor = getStatusColorForAction(action, plan, theme);
 
+  // TODO: Replace this when the backend is ready
+  const actionDependencyGroups = [
+    {
+      id: '1',
+      title: 'Discovery',
+      actions: MOCK_ACTIONS.slice(7, 12),
+    },
+    {
+      id: '2',
+      title: 'Implementation',
+      actions: [action],
+    },
+    {
+      id: '3',
+      title: 'Follow up',
+      actions: MOCK_ACTIONS.slice(MOCK_ACTIONS.length - 2),
+    },
+  ];
+
   const actionCard = (
     <ActionCardElement $isLink={isLink} $isHighlighted={isHighlighted}>
-      <ActionStatusArea $statusColor={statusColor} $isMini={variant === 'mini'}>
-        {!theme.settings.hideIconOnActionListCards && variant !== 'mini' && (
-          <PrimaryIcon category={primaryRootCategory} />
-        )}
-        {identifierPosition === 'IN_HERO' && (
-          <ActionNumber>{action.identifier}</ActionNumber>
-        )}
-      </ActionStatusArea>
+      {variant !== 'text-only' && (
+        <>
+          <ActionStatusArea
+            $statusColor={statusColor}
+            $isMini={variant === 'mini'}
+          >
+            {!theme.settings.hideIconOnActionListCards &&
+              variant !== 'mini' && (
+                <PrimaryIcon category={primaryRootCategory} />
+              )}
+            {identifierPosition === 'IN_HERO' && (
+              <ActionNumber>{action.identifier}</ActionNumber>
+            )}
+          </ActionStatusArea>
+          <StyledActionPhase
+            $statusColor={statusColor}
+            $hasStatus={mergedWith !== null || statusText !== null}
+          >
+            {mergedWith ? (
+              <StatusName>
+                {t('action-status-merged', getActionTermContext(plan))}
+                <span> &rarr; </span>
+                {getMergedName(mergedWith, plan.id)}
+              </StatusName>
+            ) : (
+              <StatusName>{statusText}</StatusName>
+            )}
+          </StyledActionPhase>
+        </>
+      )}
 
-      <StyledActionPhase
-        $statusColor={statusColor}
-        $hasStatus={mergedWith !== null || statusText !== null}
-      >
-        {mergedWith ? (
-          <StatusName>
-            {t('action-status-merged', getActionTermContext(plan))}
-            <span> &rarr; </span>
-            {getMergedName(mergedWith, plan.id)}
-          </StatusName>
-        ) : (
-          <StatusName>{statusText}</StatusName>
-        )}
-      </StyledActionPhase>
-
-      {primaryOrg && variant !== 'mini' && (
+      {primaryOrg && variant === 'primary' && (
         <ActionOrg>
           <ActionOrgAvatar>
             <OrgLogo
@@ -332,7 +393,8 @@ function ActionCard({
           </ActionOrgName>
         </ActionOrg>
       )}
-      {showPlan && variant !== 'mini' && (
+
+      {showPlan && variant === 'primary' && (
         <ActionPlan>
           <PlanChip
             planImage={action.plan.image?.rendition?.src}
@@ -341,7 +403,11 @@ function ActionCard({
           />
         </ActionPlan>
       )}
-      <StyledCardTitle className="card-title">
+
+      <StyledCardTitle
+        className="card-title"
+        $isSmall={variant === 'text-only'}
+      >
         {identifierPosition === 'WITH_NAME' && (
           <strong>{action.identifier}. </strong>
         )}
@@ -352,6 +418,32 @@ function ActionCard({
           actionCategories={action.categories}
           secondaryClassificationId={plan.secondaryActionClassification.id}
         />
+      )}
+
+      {variant === 'primary' && showActionDependencies && (
+        <>
+          <StyledActionDependencyIconWrapper
+            id={getDependencyTooltipId(action.id)}
+          >
+            <Icon name="action-dependency" width="24px" height="24px" />
+          </StyledActionDependencyIconWrapper>
+          <StyledTooltip
+            target={getDependencyTooltipId(action.id)}
+            role="tooltip"
+            autohide={false}
+            placement="top"
+            id={`tt-content-${getDependencyTooltipId(action.id)}`}
+            isOpen={tooltipOpen}
+            toggle={toggle}
+          >
+            <ActionDependenciesBlock
+              size="small"
+              activeActionId={action.id}
+              actionGroups={actionDependencyGroups}
+              showTitle
+            />
+          </StyledTooltip>
+        </>
       )}
     </ActionCardElement>
   );
@@ -371,27 +463,6 @@ function ActionCard({
     </ActionLink>
   );
 }
-
-ActionCard.propTypes = {
-  showPlan: PropTypes.bool,
-  action: PropTypes.shape({
-    identifier: PropTypes.string,
-    name: PropTypes.string,
-    completion: PropTypes.number,
-    iconSvgUrl: PropTypes.string,
-    primaryRoot: PropTypes.object,
-    status: PropTypes.shape({
-      identifier: PropTypes.string,
-      name: PropTypes.string,
-    }),
-    mergedWith: PropTypes.object,
-    implementationPhase: PropTypes.shape({
-      id: PropTypes.string,
-      identifier: PropTypes.string,
-      name: PropTypes.string,
-    }),
-  }).isRequired,
-};
 
 ActionCard.fragments = {
   action: ACTION_CARD_FRAGMENT,
