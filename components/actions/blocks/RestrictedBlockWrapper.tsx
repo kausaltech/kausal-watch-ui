@@ -2,9 +2,11 @@ import React from 'react';
 import { ReactNode } from 'react';
 import styled from 'styled-components';
 import Icon from 'components/common/Icon';
+import { transparentize } from 'polished';
 
 const WrapperContainer = styled.div`
-  background-color: ${(props) => props.theme.graphColors.red010};
+  background-color: ${({ theme }) =>
+    transparentize(0.5, theme.graphColors.red010)};
   position: relative;
   padding: 10px;
   margin-bottom: 15px;
