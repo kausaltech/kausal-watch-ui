@@ -54,7 +54,7 @@ const QuestionAnswerBlock = ({
         md: { size: 10, offset: 1 },
       }
     : {
-        xl: { size: 7, offset: hasSidebar ? 4 : 2 },
+        xl: { size: 8, offset: hasSidebar ? 4 : 2 },
         lg: { size: 8, offset: hasSidebar ? 4 : 2 },
         md: { size: 10, offset: 1 },
       };
