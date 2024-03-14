@@ -27,6 +27,9 @@ const MOCK_PROPS: Story['args'] = {
 const meta = {
   title: 'Actions/ActionDependenciesBlock',
   component: ActionDependenciesBlock,
+  parameters: {
+    layout: 'centered',
+  },
   tags: ['autodocs'],
   argTypes: {},
 } satisfies Meta<typeof ActionDependenciesBlock>;
@@ -37,4 +40,8 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: MOCK_PROPS,
+};
+
+export const Small: Story = {
+  args: { ...MOCK_PROPS, size: 'small' },
 };
