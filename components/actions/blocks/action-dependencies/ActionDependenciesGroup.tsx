@@ -6,7 +6,7 @@ import { usePlan } from '@/context/plan';
 import { getActionTermContext } from '@/common/i18n';
 
 const StyledActionGroup = styled.div<{ $isSmall: boolean }>`
-  border: 2px solid currentColor;
+  background-color: ${({ theme }) => theme.cardBackground.secondary};
   border-radius: ${({ theme }) => theme.cardBorderRadius};
   padding: ${({ theme }) => theme.spaces.s050};
   flex: 1;
