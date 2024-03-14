@@ -186,7 +186,7 @@ const StyledTooltip = styled(Tooltip)`
   display: block;
 
   .tooltip {
-    --bs-tooltip-bg: ${({ theme }) => theme.cardBackground.secondary};
+    --bs-tooltip-bg: ${({ theme }) => theme.cardBackground.primary};
     --bs-tooltip-opacity: 0.98;
   }
 
@@ -198,6 +198,7 @@ const StyledTooltip = styled(Tooltip)`
 
 const StyledActionDependencyIconWrapper = styled.span`
   position: absolute;
+  color: ${({ theme }) => theme.textColor.primary};
   top: 0;
   right: 0;
   margin: ${(props) => props.theme.spaces.s100};
