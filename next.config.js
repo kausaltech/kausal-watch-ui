@@ -1,10 +1,8 @@
-/* eslint-disable no-restricted-syntax */
+/* eslint-disable @typescript-eslint/no-var-requires */
+
 const { secrets } = require('docker-secret');
 
 const path = require('path');
-const withBundleAnalyzer = require('@next/bundle-analyzer')({
-  enabled: process.env.ANALYZE === 'true',
-});
 const withNextIntl = require('next-intl/plugin')('./config/i18n.ts');
 
 if (process.env.DOTENV_CONFIG_PATH) {
@@ -19,8 +17,8 @@ console.log(`
   ⚙ Kausal Watch UI
     ↝ Initialising app
       ↝ NODE_ENV: ${process.env.NODE_ENV}
-      ↝ NEXT_PUBLIC_DEPLOYMENT_TYPE: ${process.env.NEXT_PUBLIC_DEPLOYMENT_TYPE}
-      ↝ NEXT_PUBLIC_API_URL: ${process.env.NEXT_PUBLIC_API_URL}
+      ↝ KAUSAL_PUBLIC_DEPLOYMENT_TYPE: ${process.env.KAUSAL_PUBLIC_DEPLOYMENT_TYPE}
+      ↝ KAUSAL_PUBLIC_API_URL: ${process.env.KAUSAL_PUBLIC_API_URL}
   `);
 
 function initializeThemes() {

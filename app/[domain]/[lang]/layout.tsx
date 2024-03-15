@@ -9,6 +9,7 @@ import { DayjsLocaleProvider } from '@/common/dayjs';
 import '@/styles/default/main.scss';
 import { AuthProvider } from '@/components/providers/AuthProvider';
 import { auth } from '@/config/auth';
+import { envMetadata } from '@/utils/environment.utils';
 
 type Props = {
   params: { lang: string };
@@ -20,6 +21,8 @@ async function AsyncAuthProvider({ children }) {
 
   return <AuthProvider session={session}>{children}</AuthProvider>;
 }
+
+export const metadata = envMetadata;
 
 export default function LangLayout({ params, children }: Props) {
   const messages = useMessages();
