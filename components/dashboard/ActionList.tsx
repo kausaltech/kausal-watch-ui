@@ -552,14 +552,16 @@ const ActionList = (props: ActionListProps) => {
         >
           {displayDashboard && filteredActions.length > 0 ? (
             <>
-              <ActionStatusGraphs
-                actions={filteredActions}
-                shownDatasets={{
-                  phase: true,
-                  progress: true,
-                  timeliness: showUpdateStatus,
-                }}
-              />
+              {theme.settings.dashboard.showPieCharts !== false && (
+                <ActionStatusGraphs
+                  actions={filteredActions}
+                  shownDatasets={{
+                    phase: true,
+                    progress: true,
+                    timeliness: showUpdateStatus,
+                  }}
+                />
+              )}
               <ActionStatusTable
                 actions={filteredActions}
                 orgs={orgs}
