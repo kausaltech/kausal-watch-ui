@@ -415,6 +415,9 @@ type SiteFooterProps = {
     id: string;
     name: string;
     slug: string;
+    url: string;
+    crossPlanLink: boolean;
+    viewUrl: string;
   }[];
   fundingInstruments: {
     id: string;
@@ -470,6 +473,23 @@ function SiteFooter(props: SiteFooterProps) {
     e.preventDefault();
     window.scrollTo(0, 0);
   }
+
+  const isLocalLink = (link: string) => link.endsWith('.localhost');
+
+  function appendPort(link?: string) {
+    if (typeof link !== 'string') {
+      return link;
+    }
+
+    if (isLocalLink(link)) {
+      return `${link}:3000`;
+    }
+
+    return link;
+  }
+
+  const absoluteLink = (link: string, slug: string) =>
+    `${appendPort(link)}${slug}`;
 
   return (
     <StyledFooter className="site-footer">
@@ -653,11 +673,27 @@ function SiteFooter(props: SiteFooterProps) {
           </BaseColumn>
           <BaseColumn>
             {additionalLinks &&
-              additionalLinks.map((page) => (
-                <BaseLink key={page.slug}>
-                  <NavigationLink slug={page.slug}>{page.name}</NavigationLink>
-                </BaseLink>
-              ))}
+              additionalLinks.map((page) => {
+                if (page.crossPlanLink) {
+                  return (
+                    <BaseLink key={page.slug}>
+                      <NavigationLink
+                        slug={absoluteLink(page.viewUrl, page.slug)}
+                      >
+                        {page.name}
+                      </NavigationLink>
+                    </BaseLink>
+                  );
+                } else {
+                  return (
+                    <BaseLink key={page.slug}>
+                      <NavigationLink slug={page.slug}>
+                        {page.name}
+                      </NavigationLink>
+                    </BaseLink>
+                  );
+                }
+              })}
             <BaseLink>
               {t('published-on')}{' '}
               <a href="https://kausal.tech" target="_blank" rel="noreferrer">

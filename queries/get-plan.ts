@@ -253,8 +253,11 @@ const GET_PLAN_CONTEXT = gql`
         items {
           ... on PageMenuItem {
             id
+            crossPlanLink
+            viewUrl
             page {
               title
+              url
               urlPath
               slug
               ... on AccessibilityStatementPage {

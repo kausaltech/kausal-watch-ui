@@ -75,6 +75,9 @@ function Footer() {
       id: link.id,
       name: link.page.title,
       slug: link.page.urlPath,
+      url: link.page.url,
+      crossPlanLink: link.crossPlanLink,
+      viewUrl: link.viewUrl,
     })
   );
 
