@@ -119,7 +119,38 @@ const ContentGroup = styled.div<{ $vertical: boolean }>`
   }
 `;
 
-const StyledMainBottomCol = styled(Col)`
+const StyledContentGrid = styled(Container)`
+  display: grid;
+  grid-gap: var(--bs-gutter-x);
+  grid-template-areas:
+    'top'
+    'aside'
+    'bottom';
+  align-items: start;
+
+  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    grid-template-columns: 7fr 5fr;
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+      'top aside'
+      'bottom aside';
+  }
+
+  @media (min-width: ${(props) => props.theme.breakpointLg}) {
+    grid-template-columns: 8fr 4fr;
+  }
+`;
+
+const StyledMainTop = styled.div`
+  grid-area: top;
+`;
+
+const StyledAside = styled.div`
+  grid-area: aside;
+`;
+
+const StyledMainBottom = styled(Col)`
+  grid-area: bottom;
   container-type: inline-size;
   container-name: ${ACTION_CONTENT_MAIN_BOTTOM};
 `;
@@ -527,92 +558,92 @@ function ActionContent(props: ActionContentProps) {
         primaryOrg={action.primaryOrg}
         state={actionState}
       />
-      <Container>
-        <Row>
-          <Col md="7" lg="8">
-            {hasPhases && (
-              <ActionSection>
-                <ActionContentProgressContainer action={action} />
-              </ActionSection>
-            )}
-
-            <div className="action-main-top">
-              {makeComponents('detailsMainTop')}
-            </div>
-
-            {action.statusUpdates.length > 0 && (
-              <SolidSection>
-                <Row>
-                  <Col>
-                    <SectionHeader>{t('action-status-updates')}</SectionHeader>
-                  </Col>
-                </Row>
-                <ActionUpdatesList id={action.id} />
-              </SolidSection>
-            )}
-          </Col>
-
-          <Col md="5" lg="4">
-            <h2 className="visually-hidden">{t('action-meta-header')}</h2>
-            {action.impact && (
-              <ActionSection>
-                <SideHeader>{t('action-impact')}</SideHeader>
-                <ActionImpact
-                  name={action.impact.name}
-                  identifier={action.impact.identifier}
-                  max={getMaxImpact(plan)}
-                />
-              </ActionSection>
-            )}
-            {(!hasPhases || action.completion) && (
-              <ActionSection>
-                <SideHeader>{t('action-completion-percentage')}</SideHeader>
-                {(action.completion ?? 0) > 0 && (
-                  <strong>
-                    {action.completion}% {t('action-percent-ready')}
-                  </strong>
-                )}
-                <ActionStatus
-                  plan={plan}
-                  statusSummary={action.statusSummary}
-                  completion={action.completion}
-                />
-              </ActionSection>
-            )}
-            {makeComponents('detailsAside')}
-            {emissionScopes?.length ? (
-              <ActionSection>
-                <SideHeader>{t('emission-scopes')}</SideHeader>
-                {emissionScopes.map((item) => (
-                  <EmissionScopeIcon
-                    key={item.id}
-                    category={item}
-                    color={theme.brandDark}
-                    size="2em"
-                  />
-                ))}
-              </ActionSection>
-            ) : null}
-            {(action.supersededBy || action.supersededActions.length > 0) && (
-              <ActionSection>
-                <ActionVersionHistory action={action} />
-              </ActionSection>
-            )}
+      <StyledContentGrid>
+        <StyledMainTop>
+          {hasPhases && (
             <ActionSection>
-              <LastUpdated>
-                {t('action-last-updated')} {updated}
-              </LastUpdated>
+              <ActionContentProgressContainer action={action} />
             </ActionSection>
-          </Col>
-        </Row>
-      </Container>
-      <Container>
-        <Row>
-          <StyledMainBottomCol md="7" lg="8">
-            {makeComponents('detailsMainBottom')}
-          </StyledMainBottomCol>
-        </Row>
-      </Container>
+          )}
+
+          <div className="action-main-top">
+            {makeComponents('detailsMainTop')}
+          </div>
+
+          {action.statusUpdates.length > 0 && (
+            <SolidSection>
+              <Row>
+                <Col>
+                  <SectionHeader>{t('action-status-updates')}</SectionHeader>
+                </Col>
+              </Row>
+              <ActionUpdatesList id={action.id} />
+            </SolidSection>
+          )}
+        </StyledMainTop>
+
+        <StyledMainBottom>
+          {makeComponents('detailsMainBottom')}
+        </StyledMainBottom>
+
+        <StyledAside>
+          <h2 className="visually-hidden">{t('action-meta-header')}</h2>
+
+          {action.impact && (
+            <ActionSection>
+              <SideHeader>{t('action-impact')}</SideHeader>
+              <ActionImpact
+                name={action.impact.name}
+                identifier={action.impact.identifier}
+                max={getMaxImpact(plan)}
+              />
+            </ActionSection>
+          )}
+
+          {(!hasPhases || action.completion) && (
+            <ActionSection>
+              <SideHeader>{t('action-completion-percentage')}</SideHeader>
+              {(action.completion ?? 0) > 0 && (
+                <strong>
+                  {action.completion}% {t('action-percent-ready')}
+                </strong>
+              )}
+              <ActionStatus
+                plan={plan}
+                statusSummary={action.statusSummary}
+                completion={action.completion}
+              />
+            </ActionSection>
+          )}
+
+          {makeComponents('detailsAside')}
+
+          {emissionScopes?.length ? (
+            <ActionSection>
+              <SideHeader>{t('emission-scopes')}</SideHeader>
+              {emissionScopes.map((item) => (
+                <EmissionScopeIcon
+                  key={item.id}
+                  category={item}
+                  color={theme.brandDark}
+                  size="2em"
+                />
+              ))}
+            </ActionSection>
+          ) : null}
+          {(action.supersededBy || action.supersededActions.length > 0) && (
+            <ActionSection>
+              <ActionVersionHistory action={action} />
+            </ActionSection>
+          )}
+          <ActionSection>
+            <LastUpdated>
+              {t('action-last-updated')} {updated}
+            </LastUpdated>
+          </ActionSection>
+        </StyledAside>
+      </StyledContentGrid>
+
       {action?.relatedIndicators.length > 0 && (
         <div>
           <Container>

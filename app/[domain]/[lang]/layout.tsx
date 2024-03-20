@@ -9,6 +9,7 @@ import { DayjsLocaleProvider } from '@/common/dayjs';
 import '@/styles/default/main.scss';
 import { AuthProvider } from '@/components/providers/AuthProvider';
 import { auth } from '@/config/auth';
+import Script from 'next/script';
 
 type Props = {
   params: { lang: string };
@@ -27,6 +28,10 @@ export default function LangLayout({ params, children }: Props) {
   return (
     <html lang={params.lang}>
       <body>
+        <Script id="global-this-polyfill">
+          {/* https://github.com/vercel/next.js/discussions/58818 */}
+          {`!function(t){function e(){var e=this||self;e.globalThis=e,delete t.prototype._T_}"object"!=typeof globalThis&&(this?e():(t.defineProperty(t.prototype,"_T_",{configurable:!0,get:e}),_T_))}(Object);`}
+        </Script>
         {/* Initially provide the default theme since the plan theme identifier is loaded asynchronously.
             This prevents errors in root components such as loaders that require a theme */}
         <ThemeProvider theme={defaultTheme}>
