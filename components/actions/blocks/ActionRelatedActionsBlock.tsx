@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { Row, Col } from 'reactstrap';
 import { ActionSection, SectionHeader } from 'components/actions/ActionContent';
+import PopoverTip from 'components/common/PopoverTip';
 import ActionCard from 'components/actions/ActionCard';
 import { useTranslations } from 'next-intl';
 
@@ -13,19 +14,26 @@ const RelatedActionItem = styled(Col)`
 `;
 
 const ActionRelatedActionsBlock = (props) => {
-  const { relatedActions, plan } = props;
+  const { relatedActions, plan, heading, helpText } = props;
   const t = useTranslations();
 
   // Display the plan name only if there are related actions from other plans
   const hasRelatedActionsFromOtherPlans = relatedActions.some(
     (relAction) => relAction.plan.id !== plan.id
   );
-
   return (
     <div>
       <Row>
         <Col>
-          <SectionHeader>{t('related-actions')}</SectionHeader>
+          <SectionHeader>
+            {heading || t('related-actions')}
+            {helpText && (
+              <PopoverTip
+                identifier="related-actions-help"
+                content={helpText}
+              />
+            )}
+          </SectionHeader>
           <RelatedActionList tag="ul">
             {relatedActions.map((relAction) => (
               <RelatedActionItem
