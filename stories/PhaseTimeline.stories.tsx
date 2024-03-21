@@ -28,6 +28,13 @@ export const Default: Story = {
   },
 };
 
+export const NotContinousComplete: Story = {
+  args: {
+    activePhase: MOCK_ACTIONS[24].implementationPhase,
+    isContinuous: false,
+  },
+};
+
 export const ContinousComplete: Story = {
   args: {
     activePhase: MOCK_ACTIONS[24].implementationPhase,
