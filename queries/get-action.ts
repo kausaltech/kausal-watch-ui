@@ -42,6 +42,7 @@ const GET_ACTION_DETAILS = gql`
     $workflow: WorkflowState
   ) @workflow(state: $workflow) {
     action(plan: $plan, identifier: $id) {
+      ...ActionDependencies
       id
       identifier
       name
@@ -249,6 +250,29 @@ const GET_ACTION_DETAILS = gql`
     }
   }
 
+  fragment ActionDependencies on Action {
+    dependencyRole {
+      id
+      name
+    }
+    allDependencyRelationships {
+      preceding {
+        ...ActionDependencyCard
+      }
+      dependent {
+        ...ActionDependencyCard
+      }
+    }
+  }
+
+  fragment ActionDependencyCard on Action {
+    ...ActionCard
+    dependencyRole {
+      id
+      name
+    }
+  }
+
   fragment ActionAsideContentBlocksFragment on ActionAsideContentBlock {
     ... on FieldBlockMetaInterface {
       meta {
@@ -285,6 +309,10 @@ const GET_ACTION_DETAILS = gql`
     __typename
     ... on StreamFieldInterface {
       id
+    }
+    ... on ActionDependenciesBlock {
+      fieldLabel
+      fieldHelpText
     }
     ... on ActionOfficialNameBlock {
       fieldLabel

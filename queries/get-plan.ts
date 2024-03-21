@@ -57,6 +57,10 @@ const GET_PLAN_CONTEXT = gql`
       order
       color
     }
+    actionDependencyRoles {
+      id
+      name
+    }
     actionImpacts {
       id
       identifier
