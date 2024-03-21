@@ -257,19 +257,11 @@ const GET_ACTION_DETAILS = gql`
     }
     allDependencyRelationships {
       preceding {
-        ...ActionDependencyCard
+        ...ActionCard
       }
       dependent {
-        ...ActionDependencyCard
+        ...ActionCard
       }
-    }
-  }
-
-  fragment ActionDependencyCard on Action {
-    ...ActionCard
-    dependencyRole {
-      id
-      name
     }
   }
 

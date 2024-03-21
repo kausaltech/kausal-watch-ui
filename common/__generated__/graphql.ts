@@ -4478,6 +4478,9 @@ export type GetActionListQuery = (
     ) | null, status?: (
       { id: string, identifier: string, name: string, color?: string | null }
       & { __typename?: 'ActionStatus' }
+    ) | null, dependencyRole?: (
+      { id: string, name: string }
+      & { __typename?: 'ActionDependencyRole' }
     ) | null, categories: Array<(
       { id: string, identifier: string, name: string, iconSvgUrl?: string | null, type: (
         { id: string }
@@ -4644,6 +4647,9 @@ export type GetActionListForBlockQuery = (
     { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, completion?: number | null, status?: (
       { id: string, identifier: string, name: string, color?: string | null }
       & { __typename?: 'ActionStatus' }
+    ) | null, dependencyRole?: (
+      { id: string, name: string }
+      & { __typename?: 'ActionDependencyRole' }
     ) | null, categories: Array<(
       { id: string, identifier: string, name: string, iconSvgUrl?: string | null, type: (
         { id: string }
@@ -4811,7 +4817,19 @@ export type PlanFragmentFragment = (
 );
 
 export type ActionFragmentFragment = (
-  { id: string, identifier: string, name: string, viewUrl?: string, color?: string | null, manualStatusReason?: string | null, completion?: number | null, officialName?: string | null, updatedAt: any, scheduleContinuous: boolean, startDate?: any | null, endDate?: any | null, order: number, status?: (
+  { id: string, identifier: string, name: string, viewUrl?: string, color?: string | null, manualStatusReason?: string | null, completion?: number | null, officialName?: string | null, updatedAt: any, scheduleContinuous: boolean, startDate?: any | null, endDate?: any | null, order: number, dependencyRole?: (
+    { id: string, name: string }
+    & { __typename?: 'ActionDependencyRole' }
+  ) | null, allDependencyRelationships: Array<(
+    { preceding: (
+      { id: string }
+      & { __typename?: 'Action' }
+    ), dependent: (
+      { id: string }
+      & { __typename?: 'Action' }
+    ) }
+    & { __typename?: 'ActionDependencyRelationship' }
+  )>, status?: (
     { id: string, identifier: string, name: string, color?: string | null }
     & { __typename?: 'ActionStatus' }
   ) | null, categories: Array<(
@@ -4961,7 +4979,19 @@ export type DashboardActionListQuery = (
     ) | null> }
     & { __typename?: 'Plan' }
   ) | null, planActions?: Array<(
-    { id: string, identifier: string, name: string, viewUrl?: string, color?: string | null, manualStatusReason?: string | null, completion?: number | null, officialName?: string | null, updatedAt: any, scheduleContinuous: boolean, startDate?: any | null, endDate?: any | null, order: number, status?: (
+    { id: string, identifier: string, name: string, viewUrl?: string, color?: string | null, manualStatusReason?: string | null, completion?: number | null, officialName?: string | null, updatedAt: any, scheduleContinuous: boolean, startDate?: any | null, endDate?: any | null, order: number, dependencyRole?: (
+      { id: string, name: string }
+      & { __typename?: 'ActionDependencyRole' }
+    ) | null, allDependencyRelationships: Array<(
+      { preceding: (
+        { id: string }
+        & { __typename?: 'Action' }
+      ), dependent: (
+        { id: string }
+        & { __typename?: 'Action' }
+      ) }
+      & { __typename?: 'ActionDependencyRelationship' }
+    )>, status?: (
       { id: string, identifier: string, name: string, color?: string | null }
       & { __typename?: 'ActionStatus' }
     ) | null, categories: Array<(
@@ -5060,7 +5090,19 @@ export type DashboardActionListQuery = (
     )> }
     & { __typename?: 'Action' }
   )> | null, relatedPlanActions?: Array<(
-    { id: string, identifier: string, name: string, viewUrl?: string, color?: string | null, manualStatusReason?: string | null, completion?: number | null, officialName?: string | null, updatedAt: any, scheduleContinuous: boolean, startDate?: any | null, endDate?: any | null, order: number, status?: (
+    { id: string, identifier: string, name: string, viewUrl?: string, color?: string | null, manualStatusReason?: string | null, completion?: number | null, officialName?: string | null, updatedAt: any, scheduleContinuous: boolean, startDate?: any | null, endDate?: any | null, order: number, dependencyRole?: (
+      { id: string, name: string }
+      & { __typename?: 'ActionDependencyRole' }
+    ) | null, allDependencyRelationships: Array<(
+      { preceding: (
+        { id: string }
+        & { __typename?: 'Action' }
+      ), dependent: (
+        { id: string }
+        & { __typename?: 'Action' }
+      ) }
+      & { __typename?: 'ActionDependencyRelationship' }
+    )>, status?: (
       { id: string, identifier: string, name: string, color?: string | null }
       & { __typename?: 'ActionStatus' }
     ) | null, categories: Array<(
@@ -5983,6 +6025,9 @@ export type ActionCardFragment = (
   { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, completion?: number | null, status?: (
     { id: string, identifier: string, name: string, color?: string | null }
     & { __typename?: 'ActionStatus' }
+  ) | null, dependencyRole?: (
+    { id: string, name: string }
+    & { __typename?: 'ActionDependencyRole' }
   ) | null, categories: Array<(
     { id: string, identifier: string, name: string, iconSvgUrl?: string | null, type: (
       { id: string }
@@ -7094,6 +7139,9 @@ export type GetActionDetailsQuery = (
       { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, completion?: number | null, status?: (
         { id: string, identifier: string, name: string, color?: string | null }
         & { __typename?: 'ActionStatus' }
+      ) | null, dependencyRole?: (
+        { id: string, name: string }
+        & { __typename?: 'ActionDependencyRole' }
       ) | null, categories: Array<(
         { id: string, identifier: string, name: string, iconSvgUrl?: string | null, type: (
           { id: string }
@@ -7142,6 +7190,9 @@ export type GetActionDetailsQuery = (
       { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, completion?: number | null, status?: (
         { id: string, identifier: string, name: string, color?: string | null }
         & { __typename?: 'ActionStatus' }
+      ) | null, dependencyRole?: (
+        { id: string, name: string }
+        & { __typename?: 'ActionDependencyRole' }
       ) | null, categories: Array<(
         { id: string, identifier: string, name: string, iconSvgUrl?: string | null, type: (
           { id: string }
@@ -7184,6 +7235,9 @@ export type GetActionDetailsQuery = (
       { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, completion?: number | null, status?: (
         { id: string, identifier: string, name: string, color?: string | null }
         & { __typename?: 'ActionStatus' }
+      ) | null, dependencyRole?: (
+        { id: string, name: string }
+        & { __typename?: 'ActionDependencyRole' }
       ) | null, categories: Array<(
         { id: string, identifier: string, name: string, iconSvgUrl?: string | null, type: (
           { id: string }
@@ -7425,12 +7479,12 @@ export type GetActionDetailsQuery = (
       & { __typename?: 'ActionDependencyRole' }
     ) | null, allDependencyRelationships: Array<(
       { preceding: (
-        { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, completion?: number | null, dependencyRole?: (
-          { id: string, name: string }
-          & { __typename?: 'ActionDependencyRole' }
-        ) | null, status?: (
+        { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, completion?: number | null, status?: (
           { id: string, identifier: string, name: string, color?: string | null }
           & { __typename?: 'ActionStatus' }
+        ) | null, dependencyRole?: (
+          { id: string, name: string }
+          & { __typename?: 'ActionDependencyRole' }
         ) | null, categories: Array<(
           { id: string, identifier: string, name: string, iconSvgUrl?: string | null, type: (
             { id: string }
@@ -7470,12 +7524,12 @@ export type GetActionDetailsQuery = (
         ) }
         & { __typename?: 'Action' }
       ), dependent: (
-        { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, completion?: number | null, dependencyRole?: (
-          { id: string, name: string }
-          & { __typename?: 'ActionDependencyRole' }
-        ) | null, status?: (
+        { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, completion?: number | null, status?: (
           { id: string, identifier: string, name: string, color?: string | null }
           & { __typename?: 'ActionStatus' }
+        ) | null, dependencyRole?: (
+          { id: string, name: string }
+          & { __typename?: 'ActionDependencyRole' }
         ) | null, categories: Array<(
           { id: string, identifier: string, name: string, iconSvgUrl?: string | null, type: (
             { id: string }
@@ -8581,12 +8635,12 @@ export type ActionDependenciesFragment = (
     & { __typename?: 'ActionDependencyRole' }
   ) | null, allDependencyRelationships: Array<(
     { preceding: (
-      { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, completion?: number | null, dependencyRole?: (
-        { id: string, name: string }
-        & { __typename?: 'ActionDependencyRole' }
-      ) | null, status?: (
+      { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, completion?: number | null, status?: (
         { id: string, identifier: string, name: string, color?: string | null }
         & { __typename?: 'ActionStatus' }
+      ) | null, dependencyRole?: (
+        { id: string, name: string }
+        & { __typename?: 'ActionDependencyRole' }
       ) | null, categories: Array<(
         { id: string, identifier: string, name: string, iconSvgUrl?: string | null, type: (
           { id: string }
@@ -8626,12 +8680,12 @@ export type ActionDependenciesFragment = (
       ) }
       & { __typename?: 'Action' }
     ), dependent: (
-      { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, completion?: number | null, dependencyRole?: (
-        { id: string, name: string }
-        & { __typename?: 'ActionDependencyRole' }
-      ) | null, status?: (
+      { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, completion?: number | null, status?: (
         { id: string, identifier: string, name: string, color?: string | null }
         & { __typename?: 'ActionStatus' }
+      ) | null, dependencyRole?: (
+        { id: string, name: string }
+        & { __typename?: 'ActionDependencyRole' }
       ) | null, categories: Array<(
         { id: string, identifier: string, name: string, iconSvgUrl?: string | null, type: (
           { id: string }
@@ -8673,53 +8727,6 @@ export type ActionDependenciesFragment = (
     ) }
     & { __typename?: 'ActionDependencyRelationship' }
   )> }
-  & { __typename?: 'Action' }
-);
-
-export type ActionDependencyCardFragment = (
-  { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, completion?: number | null, dependencyRole?: (
-    { id: string, name: string }
-    & { __typename?: 'ActionDependencyRole' }
-  ) | null, status?: (
-    { id: string, identifier: string, name: string, color?: string | null }
-    & { __typename?: 'ActionStatus' }
-  ) | null, categories: Array<(
-    { id: string, identifier: string, name: string, iconSvgUrl?: string | null, type: (
-      { id: string }
-      & { __typename?: 'CategoryType' }
-    ) }
-    & { __typename?: 'Category' }
-  )>, statusSummary: (
-    { identifier: ActionStatusSummaryIdentifier }
-    & { __typename?: 'ActionStatusSummary' }
-  ), implementationPhase?: (
-    { id: string, identifier: string, name: string }
-    & { __typename?: 'ActionImplementationPhase' }
-  ) | null, primaryOrg?: (
-    { id: string, abbreviation: string, name: string, logo?: (
-      { rendition?: (
-        { src: string }
-        & { __typename?: 'ImageRendition' }
-      ) | null }
-      & { __typename?: 'Image' }
-    ) | null }
-    & { __typename?: 'Organization' }
-  ) | null, mergedWith?: (
-    { id: string, identifier: string, plan: (
-      { id: string, shortName?: string | null, versionName: string, viewUrl?: string | null }
-      & { __typename?: 'Plan' }
-    ) }
-    & { __typename?: 'Action' }
-  ) | null, plan: (
-    { id: string, shortName?: string | null, versionName: string, viewUrl?: string | null, hideActionIdentifiers?: boolean | null, publishedAt?: any | null, image?: (
-      { rendition?: (
-        { src: string }
-        & { __typename?: 'ImageRendition' }
-      ) | null }
-      & { __typename?: 'Image' }
-    ) | null }
-    & { __typename?: 'Plan' }
-  ) }
   & { __typename?: 'Action' }
 );
 

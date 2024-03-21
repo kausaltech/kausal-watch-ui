@@ -186,6 +186,18 @@ const actionFragment = gql`
     viewUrl @include(if: $relatedPlanActions)
     color
     manualStatusReason
+    dependencyRole {
+      id
+      name
+    }
+    allDependencyRelationships {
+      preceding {
+        id
+      }
+      dependent {
+        id
+      }
+    }
     status {
       id
       identifier
@@ -452,10 +464,35 @@ const ActionList = (props: ActionListProps) => {
     [onFilterChange]
   );
 
+  /**
+   * Map over all action dependency relationships and add the action object to
+   * the relationship. Required because we only query the id of an action in a relationship.
+   */
+  const actionsWithDependencies = actions?.map((action) =>
+    !!action.dependencyRole && !!action.allDependencyRelationships?.length
+      ? {
+          ...action,
+          allDependencyRelationships: action.allDependencyRelationships.map(
+            (relationship) => ({
+              ...relationship,
+              preceding:
+                actions.find(
+                  (action) => action.id === relationship.preceding.id
+                ) ?? null,
+              dependent:
+                actions.find(
+                  (action) => action.id === relationship.dependent.id
+                ) ?? null,
+            })
+          ),
+        }
+      : action
+  );
+
   const actionsWithRps = mapResponsibleParties<
     ActionListAction,
     ActionListOrganization
-  >(actions, orgs);
+  >(actionsWithDependencies, orgs);
   const mappedActions: ActionListAction[] = mapActionCategories<
     ActionListCategoryType,
     ActionListCategory,

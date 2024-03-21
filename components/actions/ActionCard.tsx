@@ -186,7 +186,7 @@ const StyledTooltip = styled(Tooltip)`
   display: block;
 
   .tooltip {
-    --bs-tooltip-bg: ${({ theme }) => theme.cardBackground.primary};
+    --bs-tooltip-bg: #fff;
     --bs-tooltip-opacity: 0.98;
   }
 

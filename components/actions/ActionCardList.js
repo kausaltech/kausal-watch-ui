@@ -159,6 +159,10 @@ function ActionCardList({
                     action={item}
                     showPlan={includeRelatedPlans}
                     size="xs"
+                    showActionDependencies={
+                      !!item.dependencyRole?.id &&
+                      !!item.allDependencyRelationships?.length
+                    }
                   />
                 </Col>
               ))}
