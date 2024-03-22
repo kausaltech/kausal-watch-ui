@@ -31,7 +31,7 @@
   "actions-phases": "Actions by phases",
   "actions-phases-help": "Ongoing and completed actions",
   "actions-status": "Actions by status",
-  "actions-status-help": "Actions that are on schedule",
+  "actions-status-help": "Actions proceeding as planned",
   "actions-updated": "Active actions last updated",
   "actions-updated-help-days": "Actions that have been updated within the last {count} days",
   "actions-updated-help-months": "Actions that have been updated within the last {count, plural, =1 {month} other {# months}}",
