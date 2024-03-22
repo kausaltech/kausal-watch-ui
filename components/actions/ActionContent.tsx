@@ -51,6 +51,10 @@ import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import RestrictedBlockWrapper from './blocks/RestrictedBlockWrapper';
 import { ACTION_CONTENT_MAIN_BOTTOM } from '@/constants/containers';
+import {
+  ActionDependenciesBlock,
+  mapActionToDependencyGroups,
+} from './blocks/action-dependencies/ActionDependenciesBlock';
 
 export type ActionContentAction = NonNullable<GetActionDetailsQuery['action']>;
 
@@ -181,6 +185,26 @@ function ActionContentBlock(props: ActionContentBlockProps) {
   const plan = usePlan();
 
   switch (block.__typename) {
+    case 'ActionDependenciesBlock':
+      if (
+        !action.dependencyRole ||
+        !action.allDependencyRelationships?.length
+      ) {
+        return null;
+      }
+
+      return (
+        <ActionDependenciesBlock
+          activeActionId={action.id}
+          title={block.fieldLabel || undefined}
+          helpText={block.fieldHelpText || undefined}
+          actionGroups={mapActionToDependencyGroups(
+            action,
+            plan.actionDependencyRoles
+          )}
+          showTitle
+        />
+      );
     case 'ActionDescriptionBlock':
       if (!action.description) return null;
       return <ActionDescriptionBlock content={action.description} />;
@@ -429,6 +453,7 @@ type ActionContentProps = {
   action: ActionContentAction;
   extraPlanData: NonNullable<GetActionDetailsQuery['plan']>;
 };
+
 function ActionContent(props: ActionContentProps) {
   const { action, extraPlanData } = props;
   const plan = usePlan();

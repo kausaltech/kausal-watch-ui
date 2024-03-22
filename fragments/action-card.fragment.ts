@@ -13,6 +13,10 @@ export const ACTION_CARD_FRAGMENT = gql`
       name
       color
     }
+    dependencyRole {
+      id
+      name
+    }
     completion
     categories {
       id
