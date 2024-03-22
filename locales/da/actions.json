@@ -31,7 +31,7 @@
     "actions-phases": "Handlinger efter faser",
     "actions-phases-help": "Igangværende og afsluttede handlinger",
     "actions-status": "Handlinger efter status",
-    "actions-status-help": "Handlinger, der følger tidsplanen",
+    "actions-status-help": "Handlinger, der forløber som planlagt",
     "actions-updated": "Aktive handlinger sidst opdateret",
     "actions-updated-help-days": "Handlinger, der er blevet opdateret inden for {count} dage",
     "actions-updated-help-months": "Handlinger, der er blevet opdateret inden for {count, plural, =1 {den sidste måned} other {de sidste # måneder}}",
