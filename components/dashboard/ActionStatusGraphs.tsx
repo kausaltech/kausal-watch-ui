@@ -185,18 +185,11 @@ const ActionsStatusGraphs = ({
   const theme = useTheme();
   const plan = usePlan();
   const t = useTranslations();
-  const language = useLocale();
   const showTotals = theme.settings.dashboard.showActionDonutTotals ?? true;
 
   const progressData =
     shownDatasets.progress &&
-    getStatusData(
-      actions,
-      plan.actionStatusSummaries,
-      theme,
-      t('no-status'),
-      language
-    );
+    getStatusData(actions, plan.actionStatusSummaries, theme, t('no-status'));
 
   const timelinessData =
     shownDatasets.timeliness && getTimelinessData(actions, plan, theme, t);
