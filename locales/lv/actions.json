@@ -16,7 +16,7 @@
     "action-merged": "{context, select, CASE_STUDY {Apvienotie gadījumu pētījumi} STRATEGY {Apvienotās stratēģijas} other {Apvienotie rīcības}}",
     "action-name-title": "{context, select, CASE_STUDY {Gadījuma pētījuma nosaukums} STRATEGY {Stratēģijas nosaukums} other {Rīcības nosaukums}}",
     "actions-phases": "Rīcības pa posmiem",
-    "actions-status-help": "Rīcības, kas tiek veiktas saskaņā ar grafiku",
+    "actions-status-help": "Rīcības, kas notiek atbilstoši plānam",
     "action-what-effect-this-has": "{context, select, CASE_STUDY {Kā šis gadījuma pētījums veicina rezultātu} STRATEGY {Kā šī stratēģija veicina rezultātu sasniegšanu} other {Kā šī rīcība sekmē rezultātu}}",
     "other": "Cits",
     "emission-scopes": "Emisijas tvērums",
