@@ -118,7 +118,7 @@ const StatusDonut = (props) => {
     width: 175,
     showlegend: false,
     paper_bgcolor: 'rgba(0,0,0,0)',
-    margin: { t: 0, b: 0, l: 0, r: 0 },
+    margin: { t: 0, b: 20, l: 0, r: 0 },
   };
   const config = {
     displaylogo: false,
