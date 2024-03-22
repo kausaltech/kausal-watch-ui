@@ -31,7 +31,7 @@
     "actions-phases": "Maßnahmen nach Phasen",
     "actions-phases-help": "Anzahl der laufenden und abgeschlossenen Maßnahmen",
     "actions-status": "Maßnahmen nach Status",
-    "actions-status-help": "Anteil der Maßnahmen, die im Zeitplan liegen",
+    "actions-status-help": "Maßnahmen, die wie geplant voranschreiten",
     "actions-updated": "Aktive Maßnahmen zuletzt aktualisiert",
     "actions-updated-help-days": "Anteil der Maßnahmen, die innerhalb von {count} Tagen aktualisiert wurden",
     "actions-updated-help-months": "Anteil der Maßnahmen, die innerhalb {count, plural, =1 {des letzten Monats} other {von # Monaten}} aktualisiert wurden",
