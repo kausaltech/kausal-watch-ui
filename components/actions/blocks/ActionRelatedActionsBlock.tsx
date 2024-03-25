@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { Row, Col } from 'reactstrap';
-import { ActionSection, SectionHeader } from 'components/actions/ActionContent';
+import { SectionHeader } from 'components/actions/ActionContent';
 import PopoverTip from 'components/common/PopoverTip';
 import ActionCard from 'components/actions/ActionCard';
 import { useTranslations } from 'next-intl';
