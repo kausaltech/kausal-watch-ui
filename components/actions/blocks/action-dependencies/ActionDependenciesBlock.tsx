@@ -13,6 +13,7 @@ import { useTranslations } from 'next-intl';
 import { getActionTermContext } from '@/common/i18n';
 import { usePlan } from '@/context/plan';
 import PopoverTip from '@/components/common/PopoverTip';
+import { SectionHeader } from '../../ActionContent';
 
 type ActionGroup = {
   id: string;
@@ -65,10 +66,6 @@ const StyledWrapper = styled.div<{ $isVertical: boolean; $isSmall: boolean }>`
             }
           }
         `}
-`;
-
-const StyledTitle = styled.h4`
-  font-size: ${({ theme }) => theme.fontSizeBase};
 `;
 
 function isActionGroupActive(
@@ -143,7 +140,7 @@ export function ActionDependenciesBlock({
   return (
     <div>
       {showTitle && (
-        <StyledTitle>
+        <SectionHeader>
           {title || t('action-dependencies', getActionTermContext(plan))}
           {helpText && (
             <PopoverTip
@@ -151,9 +148,13 @@ export function ActionDependenciesBlock({
               identifier="action-dependencies-help"
             />
           )}
-        </StyledTitle>
+        </SectionHeader>
       )}
-      <StyledWrapper $isVertical={size === 'small'} $isSmall={size === 'small'}>
+      <StyledWrapper
+        className="mb-5"
+        $isVertical={size === 'small'}
+        $isSmall={size === 'small'}
+      >
         {actionGroups.map((actionGroup, i) => (
           <React.Fragment key={actionGroup.id}>
             <ActionDependenciesGroup
