@@ -17,30 +17,12 @@ import {
   ATTRIBUTE_WITH_NESTED_TYPE_FRAGMENT,
 } from '@/fragments/action-attribute.fragment';
 
-const ScaleIcon = styled(Icon)<{ $size?: 'sm' | 'md' }>`
-  font-size: ${({ $size }) => {
-    switch ($size) {
-      case 'sm':
-        return '.8em';
-      case 'md':
-        return '1.5em';
-      default:
-        return '1.5em';
-    }
-  }};
-
-  &.icon-on {
-    fill: ${({ theme }) =>
-      theme.actionAttributeColor ?? theme.brandDark} !important;
-  }
-
-  &.icon-off {
-    fill: ${(props) => props.theme.themeColors.light} !important;
-  }
-
-  &.icon-bad {
-    fill: ${(props) => props.theme.graphColors.red070} !important;
-  }
+const ScaleIcon = styled(Icon)<{ $active?: 'sm' | 'md' }>`
+  font-size: 1.5rem;
+  fill: ${({ theme, $active }) =>
+    $active
+      ? theme.actionAttributeColor ?? theme.brandDark
+      : theme.themeColors.light} !important;
 `;
 
 const AttributeContainer = styled.div<{ $fontSize?: string }>`
@@ -119,9 +101,8 @@ const ActionAttribute = (
               (choice, idx) =>
                 (idx > 0 || !type.hasZeroOption) && (
                   <ScaleIcon
+                    $active={idx <= valueIndex}
                     name="circleFull"
-                    className={idx <= valueIndex ? 'icon-on' : 'icon-off'}
-                    $size="md"
                     key={choice.identifier}
                   />
                 )
