@@ -69,7 +69,34 @@ export const ACTION_TABLE_COLUMN_FRAGMENT = gql`
   fragment ActionTableColumnFragment on ActionListPage {
     dashboardColumns {
       __typename
-      ... on DashboardColumnInterface {
+      ... on IdentifierColumnBlock {
+        columnLabel
+      }
+      ... on NameColumnBlock {
+        columnLabel
+      }
+      ... on ImplementationPhaseColumnBlock {
+        columnLabel
+      }
+      ... on StatusColumnBlock {
+        columnLabel
+      }
+      ... on TasksColumnBlock {
+        columnLabel
+      }
+      ... on ResponsiblePartiesColumnBlock {
+        columnLabel
+      }
+      ... on IndicatorsColumnBlock {
+        columnLabel
+      }
+      ... on UpdatedAtColumnBlock {
+        columnLabel
+      }
+      ... on OrganizationColumnBlock {
+        columnLabel
+      }
+      ... on ImpactColumnBlock {
         columnLabel
       }
     }
