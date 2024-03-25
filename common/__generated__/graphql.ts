@@ -65,6 +65,7 @@ export type AccessibilityStatementPage = PageInterface & {
   lastPublishedAt?: Maybe<Scalars['DateTime']>;
   latestRevisionCreatedAt?: Maybe<Scalars['DateTime']>;
   leadContent?: Maybe<Scalars['String']>;
+  linkInAllChildPlans?: Maybe<Scalars['Boolean']>;
   live: Scalars['Boolean'];
   locked?: Maybe<Scalars['Boolean']>;
   lockedAt?: Maybe<Scalars['DateTime']>;
@@ -582,6 +583,7 @@ export type ActionListPage = PageInterface & {
   lastPublishedAt?: Maybe<Scalars['DateTime']>;
   latestRevisionCreatedAt?: Maybe<Scalars['DateTime']>;
   leadContent?: Maybe<Scalars['String']>;
+  linkInAllChildPlans?: Maybe<Scalars['Boolean']>;
   live: Scalars['Boolean'];
   locked?: Maybe<Scalars['Boolean']>;
   lockedAt?: Maybe<Scalars['DateTime']>;
@@ -1328,6 +1330,7 @@ export type CategoryPage = PageInterface & {
   lastPublishedAt?: Maybe<Scalars['DateTime']>;
   latestRevisionCreatedAt?: Maybe<Scalars['DateTime']>;
   layout?: Maybe<CategoryTypePageLevelLayout>;
+  linkInAllChildPlans?: Maybe<Scalars['Boolean']>;
   live: Scalars['Boolean'];
   locked?: Maybe<Scalars['Boolean']>;
   lockedAt?: Maybe<Scalars['DateTime']>;
@@ -1548,6 +1551,7 @@ export type CategoryTypePage = PageInterface & {
   lastPublishedAt?: Maybe<Scalars['DateTime']>;
   latestRevisionCreatedAt?: Maybe<Scalars['DateTime']>;
   leadParagraph?: Maybe<Scalars['String']>;
+  linkInAllChildPlans?: Maybe<Scalars['Boolean']>;
   live: Scalars['Boolean'];
   locked?: Maybe<Scalars['Boolean']>;
   lockedAt?: Maybe<Scalars['DateTime']>;
@@ -1888,6 +1892,7 @@ export type EmptyPage = PageInterface & {
   id?: Maybe<Scalars['ID']>;
   lastPublishedAt?: Maybe<Scalars['DateTime']>;
   latestRevisionCreatedAt?: Maybe<Scalars['DateTime']>;
+  linkInAllChildPlans?: Maybe<Scalars['Boolean']>;
   live: Scalars['Boolean'];
   locked?: Maybe<Scalars['Boolean']>;
   lockedAt?: Maybe<Scalars['DateTime']>;
@@ -2118,6 +2123,7 @@ export type ImpactGroupPage = PageInterface & {
   lastPublishedAt?: Maybe<Scalars['DateTime']>;
   latestRevisionCreatedAt?: Maybe<Scalars['DateTime']>;
   leadContent?: Maybe<Scalars['String']>;
+  linkInAllChildPlans?: Maybe<Scalars['Boolean']>;
   live: Scalars['Boolean'];
   locked?: Maybe<Scalars['Boolean']>;
   lockedAt?: Maybe<Scalars['DateTime']>;
@@ -2366,6 +2372,7 @@ export type IndicatorListPage = PageInterface & {
   lastPublishedAt?: Maybe<Scalars['DateTime']>;
   latestRevisionCreatedAt?: Maybe<Scalars['DateTime']>;
   leadContent?: Maybe<Scalars['String']>;
+  linkInAllChildPlans?: Maybe<Scalars['Boolean']>;
   live: Scalars['Boolean'];
   locked?: Maybe<Scalars['Boolean']>;
   lockedAt?: Maybe<Scalars['DateTime']>;
@@ -2957,9 +2964,16 @@ export type PageLinkBlock = StreamFieldInterface & {
 export type PageMenuItem = {
   __typename?: 'PageMenuItem';
   children?: Maybe<Array<Maybe<PageMenuItem>>>;
+  crossPlanLink?: Maybe<Scalars['Boolean']>;
   id: Scalars['ID'];
   page: PageInterface;
   parent?: Maybe<PageMenuItem>;
+  viewUrl?: Maybe<Scalars['String']>;
+};
+
+
+export type PageMenuItemViewUrlArgs = {
+  clientUrl?: InputMaybe<Scalars['String']>;
 };
 
 export type Person = {
@@ -3254,6 +3268,7 @@ export type PlanRootPage = PageInterface & {
   id?: Maybe<Scalars['ID']>;
   lastPublishedAt?: Maybe<Scalars['DateTime']>;
   latestRevisionCreatedAt?: Maybe<Scalars['DateTime']>;
+  linkInAllChildPlans?: Maybe<Scalars['Boolean']>;
   live: Scalars['Boolean'];
   locked?: Maybe<Scalars['Boolean']>;
   lockedAt?: Maybe<Scalars['DateTime']>;
@@ -3360,6 +3375,7 @@ export type PrivacyPolicyPage = PageInterface & {
   lastPublishedAt?: Maybe<Scalars['DateTime']>;
   latestRevisionCreatedAt?: Maybe<Scalars['DateTime']>;
   leadContent?: Maybe<Scalars['String']>;
+  linkInAllChildPlans?: Maybe<Scalars['Boolean']>;
   live: Scalars['Boolean'];
   locked?: Maybe<Scalars['Boolean']>;
   lockedAt?: Maybe<Scalars['DateTime']>;
@@ -3927,6 +3943,7 @@ export type StaticPage = PageInterface & {
   lastPublishedAt?: Maybe<Scalars['DateTime']>;
   latestRevisionCreatedAt?: Maybe<Scalars['DateTime']>;
   leadParagraph?: Maybe<Scalars['String']>;
+  linkInAllChildPlans?: Maybe<Scalars['Boolean']>;
   live: Scalars['Boolean'];
   locked?: Maybe<Scalars['Boolean']>;
   lockedAt?: Maybe<Scalars['DateTime']>;
@@ -4481,7 +4498,16 @@ export type GetActionListQuery = (
     ) | null, dependencyRole?: (
       { id: string, name: string }
       & { __typename?: 'ActionDependencyRole' }
-    ) | null, categories: Array<(
+    ) | null, allDependencyRelationships: Array<(
+      { preceding: (
+        { id: string }
+        & { __typename?: 'Action' }
+      ), dependent: (
+        { id: string }
+        & { __typename?: 'Action' }
+      ) }
+      & { __typename?: 'ActionDependencyRelationship' }
+    )>, categories: Array<(
       { id: string, identifier: string, name: string, iconSvgUrl?: string | null, type: (
         { id: string }
         & { __typename?: 'CategoryType' }
@@ -4650,7 +4676,16 @@ export type GetActionListForBlockQuery = (
     ) | null, dependencyRole?: (
       { id: string, name: string }
       & { __typename?: 'ActionDependencyRole' }
-    ) | null, categories: Array<(
+    ) | null, allDependencyRelationships: Array<(
+      { preceding: (
+        { id: string }
+        & { __typename?: 'Action' }
+      ), dependent: (
+        { id: string }
+        & { __typename?: 'Action' }
+      ) }
+      & { __typename?: 'ActionDependencyRelationship' }
+    )>, categories: Array<(
       { id: string, identifier: string, name: string, iconSvgUrl?: string | null, type: (
         { id: string }
         & { __typename?: 'CategoryType' }
@@ -6028,7 +6063,16 @@ export type ActionCardFragment = (
   ) | null, dependencyRole?: (
     { id: string, name: string }
     & { __typename?: 'ActionDependencyRole' }
-  ) | null, categories: Array<(
+  ) | null, allDependencyRelationships: Array<(
+    { preceding: (
+      { id: string }
+      & { __typename?: 'Action' }
+    ), dependent: (
+      { id: string }
+      & { __typename?: 'Action' }
+    ) }
+    & { __typename?: 'ActionDependencyRelationship' }
+  )>, categories: Array<(
     { id: string, identifier: string, name: string, iconSvgUrl?: string | null, type: (
       { id: string }
       & { __typename?: 'CategoryType' }
@@ -7142,7 +7186,16 @@ export type GetActionDetailsQuery = (
       ) | null, dependencyRole?: (
         { id: string, name: string }
         & { __typename?: 'ActionDependencyRole' }
-      ) | null, categories: Array<(
+      ) | null, allDependencyRelationships: Array<(
+        { preceding: (
+          { id: string }
+          & { __typename?: 'Action' }
+        ), dependent: (
+          { id: string }
+          & { __typename?: 'Action' }
+        ) }
+        & { __typename?: 'ActionDependencyRelationship' }
+      )>, categories: Array<(
         { id: string, identifier: string, name: string, iconSvgUrl?: string | null, type: (
           { id: string }
           & { __typename?: 'CategoryType' }
@@ -7193,7 +7246,16 @@ export type GetActionDetailsQuery = (
       ) | null, dependencyRole?: (
         { id: string, name: string }
         & { __typename?: 'ActionDependencyRole' }
-      ) | null, categories: Array<(
+      ) | null, allDependencyRelationships: Array<(
+        { preceding: (
+          { id: string }
+          & { __typename?: 'Action' }
+        ), dependent: (
+          { id: string }
+          & { __typename?: 'Action' }
+        ) }
+        & { __typename?: 'ActionDependencyRelationship' }
+      )>, categories: Array<(
         { id: string, identifier: string, name: string, iconSvgUrl?: string | null, type: (
           { id: string }
           & { __typename?: 'CategoryType' }
@@ -7238,7 +7300,16 @@ export type GetActionDetailsQuery = (
       ) | null, dependencyRole?: (
         { id: string, name: string }
         & { __typename?: 'ActionDependencyRole' }
-      ) | null, categories: Array<(
+      ) | null, allDependencyRelationships: Array<(
+        { preceding: (
+          { id: string }
+          & { __typename?: 'Action' }
+        ), dependent: (
+          { id: string }
+          & { __typename?: 'Action' }
+        ) }
+        & { __typename?: 'ActionDependencyRelationship' }
+      )>, categories: Array<(
         { id: string, identifier: string, name: string, iconSvgUrl?: string | null, type: (
           { id: string }
           & { __typename?: 'CategoryType' }
@@ -7485,7 +7556,16 @@ export type GetActionDetailsQuery = (
         ) | null, dependencyRole?: (
           { id: string, name: string }
           & { __typename?: 'ActionDependencyRole' }
-        ) | null, categories: Array<(
+        ) | null, allDependencyRelationships: Array<(
+          { preceding: (
+            { id: string }
+            & { __typename?: 'Action' }
+          ), dependent: (
+            { id: string }
+            & { __typename?: 'Action' }
+          ) }
+          & { __typename?: 'ActionDependencyRelationship' }
+        )>, categories: Array<(
           { id: string, identifier: string, name: string, iconSvgUrl?: string | null, type: (
             { id: string }
             & { __typename?: 'CategoryType' }
@@ -7530,7 +7610,16 @@ export type GetActionDetailsQuery = (
         ) | null, dependencyRole?: (
           { id: string, name: string }
           & { __typename?: 'ActionDependencyRole' }
-        ) | null, categories: Array<(
+        ) | null, allDependencyRelationships: Array<(
+          { preceding: (
+            { id: string }
+            & { __typename?: 'Action' }
+          ), dependent: (
+            { id: string }
+            & { __typename?: 'Action' }
+          ) }
+          & { __typename?: 'ActionDependencyRelationship' }
+        )>, categories: Array<(
           { id: string, identifier: string, name: string, iconSvgUrl?: string | null, type: (
             { id: string }
             & { __typename?: 'CategoryType' }
@@ -8641,7 +8730,16 @@ export type ActionDependenciesFragment = (
       ) | null, dependencyRole?: (
         { id: string, name: string }
         & { __typename?: 'ActionDependencyRole' }
-      ) | null, categories: Array<(
+      ) | null, allDependencyRelationships: Array<(
+        { preceding: (
+          { id: string }
+          & { __typename?: 'Action' }
+        ), dependent: (
+          { id: string }
+          & { __typename?: 'Action' }
+        ) }
+        & { __typename?: 'ActionDependencyRelationship' }
+      )>, categories: Array<(
         { id: string, identifier: string, name: string, iconSvgUrl?: string | null, type: (
           { id: string }
           & { __typename?: 'CategoryType' }
@@ -8686,7 +8784,16 @@ export type ActionDependenciesFragment = (
       ) | null, dependencyRole?: (
         { id: string, name: string }
         & { __typename?: 'ActionDependencyRole' }
-      ) | null, categories: Array<(
+      ) | null, allDependencyRelationships: Array<(
+        { preceding: (
+          { id: string }
+          & { __typename?: 'Action' }
+        ), dependent: (
+          { id: string }
+          & { __typename?: 'Action' }
+        ) }
+        & { __typename?: 'ActionDependencyRelationship' }
+      )>, categories: Array<(
         { id: string, identifier: string, name: string, iconSvgUrl?: string | null, type: (
           { id: string }
           & { __typename?: 'CategoryType' }
@@ -12099,8 +12206,8 @@ export type GetPlanContextQuery = (
       & { __typename?: 'Plan' }
     ) | null, additionalLinks?: (
       { items: Array<{ __typename?: 'ExternalLinkMenuItem' } | (
-        { id: string, page: (
-          { title: string, urlPath: string, slug: string, body?: Array<{ __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' } | { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' } | { __typename?: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' } | { __typename?: 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' } | { __typename?: 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
+        { id: string, crossPlanLink?: boolean | null, viewUrl?: string | null, page: (
+          { title: string, url?: string | null, urlPath: string, slug: string, body?: Array<{ __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' } | { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' } | { __typename?: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' } | { __typename?: 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' } | { __typename?: 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
             { blocks: Array<(
               { field: string }
               & { __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' }
@@ -12124,7 +12231,7 @@ export type GetPlanContextQuery = (
           ) | null> | null }
           & { __typename?: 'AccessibilityStatementPage' }
         ) | (
-          { title: string, urlPath: string, slug: string }
+          { title: string, url?: string | null, urlPath: string, slug: string }
           & { __typename?: 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PrivacyPolicyPage' | 'StaticPage' }
         ) }
         & { __typename?: 'PageMenuItem' }
@@ -12286,8 +12393,8 @@ export type PlanContextFragment = (
     & { __typename?: 'Plan' }
   ) | null, additionalLinks?: (
     { items: Array<{ __typename?: 'ExternalLinkMenuItem' } | (
-      { id: string, page: (
-        { title: string, urlPath: string, slug: string, body?: Array<{ __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' } | { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' } | { __typename?: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' } | { __typename?: 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' } | { __typename?: 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
+      { id: string, crossPlanLink?: boolean | null, viewUrl?: string | null, page: (
+        { title: string, url?: string | null, urlPath: string, slug: string, body?: Array<{ __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' } | { __typename?: 'ActionListBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' } | { __typename?: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeFilterBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageChooserBlock' | 'ImpactColumnBlock' } | { __typename?: 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' } | { __typename?: 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
           { blocks: Array<(
             { field: string }
             & { __typename?: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' }
@@ -12311,7 +12418,7 @@ export type PlanContextFragment = (
         ) | null> | null }
         & { __typename?: 'AccessibilityStatementPage' }
       ) | (
-        { title: string, urlPath: string, slug: string }
+        { title: string, url?: string | null, urlPath: string, slug: string }
         & { __typename?: 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PrivacyPolicyPage' | 'StaticPage' }
       ) }
       & { __typename?: 'PageMenuItem' }
