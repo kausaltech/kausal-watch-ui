@@ -2,7 +2,7 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 import { filter, groupBy, map, sortBy, uniqBy } from 'lodash';
 import {
-  ActionDependencyCardFragment,
+  ActionCardFragment,
   GetActionDetailsQuery,
   GetPlanContextQuery,
 } from '@/common/__generated__/graphql';
@@ -17,7 +17,7 @@ import PopoverTip from '@/components/common/PopoverTip';
 type ActionGroup = {
   id: string;
   title: string;
-  actions: ActionDependencyCardFragment[];
+  actions: ActionCardFragment[];
 };
 
 type Props = {
@@ -72,7 +72,7 @@ const StyledTitle = styled.h4`
 `;
 
 function isActionGroupActive(
-  actions: ActionDependencyCardFragment[],
+  actions: ActionCardFragment[],
   activeActionId?: string
 ) {
   return actions.length === 1 && actions[0].id === activeActionId;
@@ -81,7 +81,7 @@ function isActionGroupActive(
 type Action = NonNullable<GetActionDetailsQuery['action']>;
 
 export function mapActionToDependencyGroups(
-  action: Action,
+  action: Action | ActionCardFragment,
   actionDependencyRoles: NonNullable<
     GetPlanContextQuery['plan']
   >['actionDependencyRoles']

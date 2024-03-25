@@ -17,6 +17,14 @@ export const ACTION_CARD_FRAGMENT = gql`
       id
       name
     }
+    allDependencyRelationships {
+      preceding {
+        id
+      }
+      dependent {
+        id
+      }
+    }
     completion
     categories {
       id

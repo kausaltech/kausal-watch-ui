@@ -19,8 +19,10 @@ import { ACTION_CARD_FRAGMENT } from '@/fragments/action-card.fragment';
 import { captureException } from '@sentry/nextjs';
 import Icon from '../common/Icon';
 import { Tooltip } from 'reactstrap';
-import { ActionDependenciesBlock } from './blocks/action-dependencies/ActionDependenciesBlock';
-import { MOCK_ACTIONS } from '@/stories/mocks/actions.mocks';
+import {
+  ActionDependenciesBlock,
+  mapActionToDependencyGroups,
+} from './blocks/action-dependencies/ActionDependenciesBlock';
 
 const StyledActionLink = styled.a`
   text-decoration: none;
@@ -326,25 +328,6 @@ function ActionCard({
   const identifierPosition = getidentifierPosition(showPlan, variant, plan);
   const statusColor = getStatusColorForAction(action, plan, theme);
 
-  // TODO: Replace this when the backend is ready
-  const actionDependencyGroups = [
-    {
-      id: '1',
-      title: 'Discovery',
-      actions: MOCK_ACTIONS.slice(7, 12),
-    },
-    {
-      id: '2',
-      title: 'Implementation',
-      actions: [action],
-    },
-    {
-      id: '3',
-      title: 'Follow up',
-      actions: MOCK_ACTIONS.slice(MOCK_ACTIONS.length - 2),
-    },
-  ];
-
   const actionCard = (
     <ActionCardElement $isLink={isLink} $isHighlighted={isHighlighted}>
       {variant !== 'text-only' && (
@@ -440,7 +423,10 @@ function ActionCard({
             <ActionDependenciesBlock
               size="small"
               activeActionId={action.id}
-              actionGroups={actionDependencyGroups}
+              actionGroups={mapActionToDependencyGroups(
+                action,
+                plan.actionDependencyRoles
+              )}
               showTitle
             />
           </StyledTooltip>
