@@ -153,7 +153,7 @@ const ToggleButton = styled(RButton)`
   }
 
   &.open {
-    color: ${(props) => props.theme.graphColors.grey050};
+    color: ${(props) => props.theme.textColor.tertiary};
   }
 `;
 

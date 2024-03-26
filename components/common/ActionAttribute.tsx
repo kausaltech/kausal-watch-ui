@@ -36,7 +36,7 @@ const AttributeContainer = styled.div<{ $fontSize?: string }>`
     text-align: left;
     font-size: ${({ $fontSize, theme }) => theme[$fontSize ?? 'fontSizeSm']};
     line-height: ${(props) => props.theme.lineHeightMd};
-    color: ${(props) => props.theme.graphColors.grey080};
+    color: ${(props) => props.theme.textColor.secondary};
   }
   .text-content > *:last-child {
     margin-bottom: 0;

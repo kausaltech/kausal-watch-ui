@@ -51,11 +51,6 @@ const CardHeader = styled.h3`
   font-size: ${(props) => props.theme.fontSizeMd};
   line-height: ${(props) => props.theme.lineHeightMd};
 `;
-
-const Identifier = styled.span`
-  color: ${(props) => props.theme.graphColors.grey050};
-`;
-
 interface Props extends CommonContentBlockProps {
   cards: unknown; // TODO: Type this prop
 }

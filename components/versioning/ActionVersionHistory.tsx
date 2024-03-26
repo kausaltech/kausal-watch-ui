@@ -9,7 +9,7 @@ import { useTranslations } from 'next-intl';
 import { ActionContentAction } from '../actions/ActionContent';
 
 const VersionHistory = styled.div`
-  color: ${(props) => props.theme.graphColors.grey090};
+  color: ${(props) => props.theme.textColor.secondary};
 `;
 
 const VersionHistoryTitle = styled.h2`
