@@ -1,6 +1,7 @@
 import React from 'react';
 import { Container, Row, Col } from 'reactstrap';
 import styled, { useTheme } from 'styled-components';
+import { readableColor } from 'polished';
 import Card from 'components/common/Card';
 
 const CardListSection = styled.div`
@@ -60,7 +61,11 @@ const CardListBlock = (props) => {
   switch (style) {
     case 'negative':
       blockStyle.backgroundColor = theme.brandDark;
-      blockStyle.color = theme.themeColors.white;
+      blockStyle.color = readableColor(
+        theme.brandDark,
+        theme.themeColors.black,
+        theme.themeColors.white
+      );
       blockStyle.cardBackgroundColor = theme.brandDark;
       blockStyle.cardStyle = 'negative';
       blockStyle.cardOutline = true;

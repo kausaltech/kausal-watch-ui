@@ -17,10 +17,10 @@ const Hero = styled.header<{ $bgColor: string }>`
   background-color: ${(props) => props.$bgColor};
   margin-bottom: ${(props) => props.theme.spaces.s400};
   a {
-    color: ${(props) => props.theme.brandDark};
+    color: ${(props) => props.theme.linkColor};
 
     &:hover {
-      color: ${(props) => props.theme.brandDark};
+      color: ${(props) => props.theme.linkColor};
     }
   }
 `;
@@ -99,7 +99,7 @@ const ActionsNav = styled.nav`
 `;
 
 const NavDivider = styled.span`
-  color: ${(props) => props.theme.brandDark};
+  color: ${(props) => props.theme.linkColor};
   &::after {
     content: ' | ';
   }
@@ -297,7 +297,7 @@ function ActionHero(props: ActionHeroProps) {
                             <a>
                               <Icon
                                 name="arrowLeft"
-                                color={theme.brandDark}
+                                color={theme.linkColor}
                                 aria-hidden="true"
                               />{' '}
                               {t('previous')}
@@ -311,7 +311,7 @@ function ActionHero(props: ActionHeroProps) {
                               {t('next')}
                               <Icon
                                 name="arrowRight"
-                                color={theme.brandDark}
+                                color={theme.linkColor}
                                 aria-hidden="true"
                               />
                             </a>

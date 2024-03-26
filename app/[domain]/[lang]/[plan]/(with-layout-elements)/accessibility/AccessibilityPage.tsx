@@ -4,6 +4,7 @@ import React from 'react';
 import { Container, Row, Col } from 'reactstrap';
 import { useTranslations } from 'next-intl';
 import styled from 'styled-components';
+import { readableColor } from 'polished';
 
 import { usePlan } from 'context/plan';
 import AccessibilityStatementComplianceStatusBlock from 'components/contentblocks/AccessibilityStatementComplianceStatusBlock';
@@ -19,11 +20,22 @@ const HeaderBg = styled.div`
 const ContentHeader = styled.header`
   padding: ${(props) => props.theme.spaces.s400} 0
     ${(props) => props.theme.spaces.s200};
+  color: ${(props) =>
+    readableColor(
+      props.theme.brandDark,
+      props.theme.themeColors.black,
+      props.theme.themeColors.white
+    )};
 
   h1 {
     margin-bottom: ${(props) => props.theme.spaces.s150};
     font-size: ${(props) => props.theme.fontSizeXxl};
-    color: ${(props) => props.theme.themeColors.white} !important;
+    color: ${(props) =>
+      readableColor(
+        props.theme.brandDark,
+        props.theme.themeColors.black,
+        props.theme.themeColors.white
+      )} !important;
   }
 `;
 
