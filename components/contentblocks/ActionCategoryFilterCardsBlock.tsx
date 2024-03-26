@@ -1,11 +1,9 @@
 import React from 'react';
 import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
-import RichText from 'components/common/RichText';
+import { readableColor } from 'polished';
 import { useTheme } from 'styled-components';
-import { getBgImageAlignment } from 'common/images';
 import { Link } from 'common/links';
-import CategoryTreeBlock from 'components/contentblocks/CategoryTreeBlock';
 import Card from 'components/common/Card';
 import { CommonContentBlockProps } from 'common/blocks.types';
 import { getCategoryString } from 'common/categories';
@@ -47,9 +45,14 @@ const CardLead = styled.p`
 `;
 
 const CardHeader = styled.h3`
-  color: ${(props) => props.theme.themeColors.white};
+  color: ${(props) =>
+    readableColor(
+      props.theme.brandDark,
+      props.theme.themeColors.black,
+      props.theme.themeColors.white
+    )};
   font-size: ${(props) => props.theme.fontSizeMd};
-  line-height: ${(props) => props.theme.lineHeightMd};
+  line-height: ${(props) => props.theme.lineHeightSm};
 `;
 interface Props extends CommonContentBlockProps {
   cards: unknown; // TODO: Type this prop
@@ -78,7 +81,14 @@ const CategoryListBlock = ({ id = '', cards }: Props) => {
                 )}=${card.category.id}`}
               >
                 <a className="card-wrapper">
-                  <Card customColor={theme.brandDark}>
+                  <Card
+                    customBackgroundColor={theme.brandDark}
+                    customColor={readableColor(
+                      theme.brandDark,
+                      theme.themeColors.black,
+                      theme.themeColors.white
+                    )}
+                  >
                     <div>
                       <CardHeader className="card-title">
                         {card.heading}

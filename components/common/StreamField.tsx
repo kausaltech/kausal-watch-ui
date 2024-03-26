@@ -279,13 +279,7 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
     case 'CardListBlock': {
       const { cards, lead, heading } = block;
       return (
-        <CardListBlock
-          id={id}
-          cards={cards}
-          lead={lead}
-          heading={heading}
-          style="negative"
-        />
+        <CardListBlock id={id} cards={cards} lead={lead} heading={heading} />
       );
     }
     case 'ActionHighlightsBlock': {

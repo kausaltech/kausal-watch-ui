@@ -5,7 +5,7 @@ import { readableColor } from 'polished';
 import Card from 'components/common/Card';
 
 const CardListSection = styled.div`
-  background-color: ${(props) => props.$backgroundColor};
+  background-color: ${(props) => props.theme.brandDark};
   padding: ${(props) =>
     `${props.theme.spaces.s400} 0 ${props.theme.spaces.s100} 0`};
 
@@ -31,55 +31,47 @@ const CardListSection = styled.div`
 
 const SectionHeader = styled.h2`
   text-align: center;
-  color: ${(props) => props.color};
+  color: ${(props) =>
+    readableColor(
+      props.theme.brandDark,
+      props.theme.themeColors.black,
+      props.theme.themeColors.white
+    )} !important;
   margin-bottom: ${(props) => props.theme.spaces.s100};
 `;
 
 const Content = styled.p`
   text-align: center;
-  color: ${(props) => props.color};
+  color: ${(props) =>
+    readableColor(
+      props.theme.brandDark,
+      props.theme.themeColors.black,
+      props.theme.themeColors.white
+    )};
   font-size: ${(props) => props.theme.fontSizeMd};
   margin-bottom: ${(props) => props.theme.spaces.s300};
 `;
 
 const CardHeader = styled.h3`
-  color: ${(props) => props.theme.themeColors.black};
+  color: ${(props) =>
+    readableColor(
+      props.theme.brandDark,
+      props.theme.themeColors.black,
+      props.theme.themeColors.white
+    )};
   font-size: ${(props) => props.theme.fontSizeMd};
   line-height: ${(props) => props.theme.lineHeightSm};
 `;
 
 const CardListBlock = (props) => {
-  const { id = '', heading, lead, cards, style } = props;
+  const { id = '', heading, lead, cards } = props;
   const theme = useTheme();
-
-  const blockStyle = {
-    backgroundColor: theme.themeColors.white,
-    cardStyle: 'negative',
-    cardOutline: false,
-  };
-
-  switch (style) {
-    case 'negative':
-      blockStyle.backgroundColor = theme.brandDark;
-      blockStyle.color = readableColor(
-        theme.brandDark,
-        theme.themeColors.black,
-        theme.themeColors.white
-      );
-      blockStyle.cardBackgroundColor = theme.brandDark;
-      blockStyle.cardStyle = 'negative';
-      blockStyle.cardOutline = true;
-      break;
-  }
-
   // TODO : Summon a key value for cards
   return (
-    <CardListSection id={id} $backgroundColor={blockStyle.backgroundColor}>
+    <CardListSection id={id}>
       <Container>
-        {heading && (
-          <SectionHeader color={blockStyle.color}>{heading}</SectionHeader>
-        )}
-        <Content color={blockStyle.color}>{lead}</Content>
+        {heading && <SectionHeader>{heading}</SectionHeader>}
+        <Content>{lead}</Content>
         <Row tag="ul" className="justify-content-center">
           {cards?.map((card, inx) => (
             <Col
@@ -94,9 +86,13 @@ const CardListBlock = (props) => {
                 <Card
                   imageUrl={card.image && card.image.rendition.src}
                   imageAlign="center"
-                  customColor={blockStyle.cardBackgroundColor}
-                  negative
-                  outline={blockStyle.cardOutline}
+                  customBackgroundColor={theme.brandDark}
+                  customColor={readableColor(
+                    theme.brandDark,
+                    theme.themeColors.black,
+                    theme.themeColors.white
+                  )}
+                  outline
                 >
                   <div>
                     <CardHeader className="card-title">
