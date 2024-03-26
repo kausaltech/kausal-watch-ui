@@ -12,6 +12,18 @@ const TextContrastOutput = styled.div<{
   background-color: ${({ $background }) => $background || 'white'};
 `;
 
+const Badge = styled.span<{ $bad?: boolean }>`
+  color: white;
+  background-color: ${(props) =>
+    props.$bad
+      ? props.theme.graphColors.red070
+      : props.theme.graphColors.green070};
+  font-size: 0.8rem;
+  font-weight: bold;
+  padding: 0.25rem;
+  border-radius: 0.25rem;
+`;
+
 const TestedItems = styled.div`
   flex: 1;
 `;
@@ -22,7 +34,7 @@ const Result = styled.div`
 `;
 
 const TextContrast = (props) => {
-  const { foreground, background } = props;
+  const { foreground, background, largeOnly = false } = props;
   const theme = useTheme();
 
   const foregroundColor = foreground.split('.').reduce((a, b) => a[b], theme);
@@ -34,7 +46,15 @@ const TextContrast = (props) => {
   );
 
   const DisplayContrastScore = () => {
-    return <span>{contrastScore.AA ? 'OK' : 'Fail 👺'} </span>;
+    const meetsGuidelines = largeOnly
+      ? contrastScore.AALarge
+      : contrastScore.AA;
+    return (
+      <span>
+        {largeOnly ? <small>(Large)</small> : ''}
+        {meetsGuidelines ? <Badge>OK</Badge> : <Badge $bad>Fail</Badge>}
+      </span>
+    );
   };
 
   return (
@@ -70,6 +90,10 @@ const ThemeAccessibilityTest = () => {
         background="cardBackground.primary"
       />
       <TextContrast
+        foreground="textColor.secondary"
+        background="cardBackground.secondary"
+      />
+      <TextContrast
         foreground="textColor.tertiary"
         background="cardBackground.primary"
       />
@@ -96,11 +120,16 @@ const ThemeAccessibilityTest = () => {
       <TextContrast
         foreground="brandNavColor"
         background="brandNavBackground"
+        largeOnly="true"
       />
-      <TextContrast foreground="neutralDark" background="themeColors.white" />
       <TextContrast
         foreground="textColor.primary"
         background="cardBackground.secondary"
+      />
+      <TextContrast foreground="linkColor" background="themeColors.white" />
+      <TextContrast
+        foreground="linkColor"
+        background="cardBackground.primary"
       />
       {/* SearchSection neutralLight bg with readable color text*/}
       <TextContrast
