@@ -1,6 +1,6 @@
 import { useTheme } from 'styled-components';
 import styled from 'styled-components';
-import { meetsContrastGuidelines } from 'polished';
+import { meetsContrastGuidelines, readableColor } from 'polished';
 
 const TextContrastOutput = styled.div<{
   $foreground: string;
@@ -37,8 +37,31 @@ const TextContrast = (props) => {
   const { foreground, background, largeOnly = false } = props;
   const theme = useTheme();
 
-  const foregroundColor = foreground.split('.').reduce((a, b) => a[b], theme);
-  const backgroundColor = background.split('.').reduce((a, b) => a[b], theme);
+  const foregroundFromTheme =
+    foreground !== 'readable'
+      ? foreground.split('.').reduce((a, b) => a[b], theme)
+      : '#FFFFFF';
+  const backgroundFromTheme =
+    background !== 'readable'
+      ? background.split('.').reduce((a, b) => a[b], theme)
+      : '#FFFFFF';
+
+  const foregroundColor =
+    foreground !== 'readable'
+      ? foregroundFromTheme
+      : readableColor(
+          backgroundFromTheme,
+          theme.themeColors.black,
+          theme.themeColors.white
+        );
+  const backgroundColor =
+    background !== 'readable'
+      ? backgroundFromTheme
+      : readableColor(
+          foregroundFromTheme,
+          theme.themeColors.black,
+          theme.themeColors.white
+        );
 
   const contrastScore = meetsContrastGuidelines(
     foregroundColor,
@@ -76,7 +99,8 @@ const ThemeAccessibilityTest = () => {
   //const theme = useTheme();
   return (
     <div>
-      <TextContrast foreground="brandDark" background="themeColors.white" />
+      <TextContrast foreground="brandDark" background="readable" />
+      <TextContrast foreground="readable" background="brandDark" />
       <TextContrast
         foreground="textColor.primary"
         background="cardBackground.primary"
@@ -97,11 +121,9 @@ const ThemeAccessibilityTest = () => {
         foreground="textColor.tertiary"
         background="cardBackground.primary"
       />
-      <TextContrast foreground="themeColors.white" background="brandDark" />
       <TextContrast foreground="headingsColor" background="themeColors.white" />
       {/* image credit with transclusent bg */}
       <TextContrast foreground="neutralDark" background="themeColors.white" />
-      <TextContrast foreground="themeColors.light" background="brandDark" />
       {/* ToggleButton with readableColor function */}
       <TextContrast
         foreground="themeColors.black"
