@@ -29,3 +29,5 @@ build-storybook.log
 
 # Sentry Config File
 .sentryclirc
+
+*storybook.log

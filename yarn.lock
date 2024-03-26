@@ -1937,6 +1937,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@chromatic-com/storybook@npm:^1.2.25":
+  version: 1.2.25
+  resolution: "@chromatic-com/storybook@npm:1.2.25"
+  dependencies:
+    chromatic: ^11.0.0
+    filesize: ^10.0.12
+    jsonfile: ^6.1.0
+    react-confetti: ^6.1.0
+    strip-ansi: ^7.1.0
+  checksum: 7d747023f7d6d45a6b93edf3cddb06822b63a8b7b4cec683bb0508640c02a97a11773d9bb3decd6b1a9f06a4a7d187c8446d99c99529842e76d4ae69bf5020c0
+  languageName: node
+  linkType: hard
+
 "@colors/colors@npm:1.5.0":
   version: 1.5.0
   resolution: "@colors/colors@npm:1.5.0"
@@ -10011,6 +10024,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"chromatic@npm:^11.0.0":
+  version: 11.2.0
+  resolution: "chromatic@npm:11.2.0"
+  peerDependencies:
+    "@chromatic-com/cypress": ^0.*.* || ^1.0.0
+    "@chromatic-com/playwright": ^0.*.* || ^1.0.0
+  peerDependenciesMeta:
+    "@chromatic-com/cypress":
+      optional: true
+    "@chromatic-com/playwright":
+      optional: true
+  bin:
+    chroma: dist/bin.js
+    chromatic: dist/bin.js
+    chromatic-cli: dist/bin.js
+  checksum: 3747fbc8c297e75c59dda0226282cff052bcb91f9874676b7e468e94643f956fc4b437450ecfb1812176d3c483b51ceb47d88249fd1f7c09cfb21cd76065716d
+  languageName: node
+  linkType: hard
+
 "chromatic@npm:^11.0.1":
   version: 11.0.1
   resolution: "chromatic@npm:11.0.1"
@@ -13323,6 +13355,13 @@ __metadata:
   dependencies:
     minimatch: ^5.0.1
   checksum: a303573b0821e17f2d5e9783688ab6fbfce5d52aaac842790ae85e704a6f5e4e3538660a63183d6453834dedf1e0f19a9dadcebfa3e926c72397694ea11f5160
+  languageName: node
+  linkType: hard
+
+"filesize@npm:^10.0.12":
+  version: 10.1.1
+  resolution: "filesize@npm:10.1.1"
+  checksum: 8a3b5773c507bd566b9c0872a55a7564c68df3f74b6a3af1ada9dcc51128a03754ba19a75c36a292ab38f2c5fcb4293b5a1b2fe09b17d460696f175fc6dbccfd
   languageName: node
   linkType: hard
 
@@ -16835,7 +16874,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jsonfile@npm:^6.0.1":
+"jsonfile@npm:^6.0.1, jsonfile@npm:^6.1.0":
   version: 6.1.0
   resolution: "jsonfile@npm:6.1.0"
   dependencies:
@@ -16888,6 +16927,7 @@ __metadata:
     "@axe-core/playwright": ^4.8.3
     "@babel/core": ^7.17.10
     "@babel/plugin-proposal-decorators": ^7.17.9
+    "@chromatic-com/storybook": ^1.2.25
     "@elastic/react-search-ui": ^1.11.2
     "@graphql-codegen/cli": ^3.3.0
     "@graphql-codegen/fragment-matcher": ^4.0.1
@@ -22530,7 +22570,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"strip-ansi@npm:^7.0.1":
+"strip-ansi@npm:^7.0.1, strip-ansi@npm:^7.1.0":
   version: 7.1.0
   resolution: "strip-ansi@npm:7.1.0"
   dependencies:
