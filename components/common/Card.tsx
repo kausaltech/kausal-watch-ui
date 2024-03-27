@@ -13,9 +13,7 @@ const StyledCard = styled(BSCard)<{
   border-width: ${(props) => props.theme.cardBorderWidth};
   border-radius: ${(props) => props.theme.cardBorderRadius};
   background-color: ${(props) =>
-    props.$customBackgroundColor
-      ? props.$customBackgroundColor
-      : props.theme.themeColors.white};
+    props.$customBackgroundColor || props.theme.themeColors.white};
   color: ${(props) =>
     props.$customColor ? props.$customColor : props.theme.themeColors.black};
   box-shadow: 2px 2px 8px
@@ -156,7 +154,7 @@ const Card = (props: CardProps) => {
 
   return (
     <StyledCard
-      className={`${outline && 'outline'}`}
+      className={outline && 'outline'}
       $customColor={customColor}
       $customBackgroundColor={customBackgroundColor}
       data-testid="card"

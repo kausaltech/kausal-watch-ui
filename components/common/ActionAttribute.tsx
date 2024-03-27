@@ -17,7 +17,7 @@ import {
   ATTRIBUTE_WITH_NESTED_TYPE_FRAGMENT,
 } from '@/fragments/action-attribute.fragment';
 
-const ScaleIcon = styled(Icon)<{ $active?: 'sm' | 'md' }>`
+const ScaleIcon = styled(Icon)<{ $active?: boolean }>`
   font-size: 1.5rem;
   fill: ${({ theme, $active }) =>
     $active
