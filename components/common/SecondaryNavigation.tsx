@@ -35,7 +35,7 @@ const NavItem = styled.li<{ $isActive: boolean }>`
 
   a {
     color: ${(props) =>
-      props.$isActive ? props.theme.brandDark : props.theme.themeColors.black};
+      props.$isActive ? props.theme.linkColor : props.theme.themeColors.black};
     border-bottom: 3px solid
       ${(props) => (props.$isActive ? props.theme.brandDark : 'transparent')};
     font-weight: ${(props) => (props.$isActive ? 'bold' : 'normal')};
@@ -43,7 +43,7 @@ const NavItem = styled.li<{ $isActive: boolean }>`
     &:hover {
       color: ${(props) =>
         props.$isActive
-          ? props.theme.brandDark
+          ? props.theme.linkColor
           : props.theme.themeColors.black};
       text-decoration: none;
       border-bottom: 3px solid ${(props) => props.theme.brandDark};

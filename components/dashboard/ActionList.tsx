@@ -98,7 +98,12 @@ const IndicatorsTabs = styled.div`
 
 const Tab = styled.button`
   background: ${(props) => props.theme.brandDark};
-  color: ${(props) => props.theme.themeColors.white};
+  color: ${(props) =>
+    readableColor(
+      props.theme.brandDark,
+      props.theme.themeColors.black,
+      props.theme.themeColors.white
+    )};
   display: inline-block;
   border: none;
   margin: 0;
@@ -110,10 +115,15 @@ const Tab = styled.button`
 
   &:hover,
   &:focus {
-    color: ${(props) => props.theme.brandLight};
+    color: ${(props) =>
+      readableColor(
+        props.theme.brandDark,
+        props.theme.themeColors.dark,
+        props.theme.themeColors.light
+      )};
   }
   &.active {
-    color: ${(props) => props.theme.brandDark};
+    color: ${(props) => props.theme.linkColor};
     background: ${(props) => props.theme.themeColors.white};
     &:hover {
       color: ${(props) => props.theme.themeColors.black};

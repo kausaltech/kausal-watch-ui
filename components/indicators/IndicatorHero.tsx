@@ -17,10 +17,10 @@ const Hero = styled.header`
   background-color: ${(props) => props.theme.brandDark};
   margin-bottom: ${(props) => props.theme.spaces.s400};
   a {
-    color: ${(props) => props.theme.brandDark};
+    color: ${(props) => props.theme.linkColor};
 
     &:hover {
-      color: ${(props) => props.theme.brandDark};
+      color: ${(props) => props.theme.linkColor};
     }
   }
 `;

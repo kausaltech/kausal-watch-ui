@@ -56,7 +56,19 @@ describe('Card Component', () => {
     expect(icon).toBeInTheDocument();
   });
 
-  it('uses customcolor when provided', () => {
+  it('uses customBackgroundColor when provided', () => {
+    const customColorValue = 'rgb(212, 235, 255)';
+    render(
+      <Card customBackgroundColor={customColorValue}>
+        <div>Test Content</div>
+      </Card>
+    );
+
+    const card = screen.getByTestId('card');
+    expect(card).toHaveStyle(`background-color: ${customColorValue}`);
+  });
+
+  it('uses customColor when provided', () => {
     const customColorValue = 'rgb(212, 235, 255)';
     render(
       <Card customColor={customColorValue}>
@@ -65,7 +77,7 @@ describe('Card Component', () => {
     );
 
     const card = screen.getByTestId('card');
-    expect(card).toHaveStyle(`background-color: ${customColorValue}`);
+    expect(card).toHaveStyle(`color: ${customColorValue}`);
   });
 
   it('use default theme color when customcolor is not provided', () => {

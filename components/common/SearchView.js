@@ -160,7 +160,6 @@ const StyledSearchResultItem = styled.li`
     text-decoration: underline;
 
     &:hover {
-      color: ${(props) => props.theme.linkHoverColor};
       text-decoration: none !important;
     }
   }

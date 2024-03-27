@@ -13,14 +13,14 @@ const CollapsibleTable = styled.div`
 
 const Trigger = styled.div`
   padding-bottom: ${(props) => props.theme.spaces.s050};
-  background-color: ${(props) => props.theme.graphColors.grey005};
+  background-color: ${(props) => props.theme.cardBackground.primary};
   text-align: center;
 `;
 
 const TableContainer = styled.div`
   padding: ${(props) =>
     `${props.theme.spaces.s200} ${props.theme.spaces.s050} ${props.theme.spaces.s100}`};
-  background-color: ${(props) => props.theme.graphColors.grey005};
+  background-color: ${(props) => props.theme.cardBackground.primary};
 
   table {
     font-family: ${(props) => props.theme.fontFamilyContent};

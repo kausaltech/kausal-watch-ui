@@ -14,7 +14,7 @@ import { useLocale, useTranslations } from 'next-intl';
 const BarBase = styled.rect``;
 
 const DateText = styled.tspan`
-  fill: ${(props) => props.theme.themeColors.white};
+  fill: ${(props) => props.theme.section.indicatorShowcase.color};
   font-family: '${(props) => props.theme.fontFamily}';
   font-size: 14px;
 `;
@@ -26,7 +26,7 @@ const ValueText = styled.tspan`
   font-weight: 700;
 
   &.negative {
-    fill: ${(props) => props.theme.themeColors.white};
+    fill: ${(props) => props.theme.section.indicatorShowcase.color};
   }
 `;
 
@@ -36,19 +36,19 @@ const UnitText = styled.tspan`
   font-size: 14px;
 
   &.negative {
-    fill: ${(props) => props.theme.themeColors.white};
+    fill: ${(props) => props.theme.section.indicatorShowcase.color};
   }
 `;
 
 const SegmentHeader = styled.tspan`
-  fill: ${(props) => props.theme.themeColors.white};
+  fill: ${(props) => props.theme.section.indicatorShowcase.color};
   font-family: '${(props) => props.theme.fontFamily}';
   font-size: 14px;
   font-weight: bold;
 `;
 
 const SegmentValue = styled.tspan`
-  fill: ${(props) => props.theme.themeColors.white};
+  fill: ${(props) => props.theme.section.indicatorShowcase.color};
   font-family: '${(props) => props.theme.fontFamily}';
   font-size: 14px;
 `;

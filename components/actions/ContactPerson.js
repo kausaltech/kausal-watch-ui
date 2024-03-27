@@ -32,7 +32,7 @@ const PersonDetails = styled.div`
 
   .btn-link,
   .btn-link:hover {
-    color: ${(props) => props.theme.brandDark};
+    color: ${(props) => props.theme.linkColor};
   }
 `;
 

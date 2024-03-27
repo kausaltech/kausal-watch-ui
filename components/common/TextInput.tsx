@@ -28,7 +28,7 @@ const Input = styled(BSInput)`
   border-color: ${(props) => props.theme.themeColors.dark};
 
   ::placeholder {
-    color: ${(props) => props.theme.graphColors.grey070};
+    color: ${(props) => props.theme.textColor.tertiary};
   }
 `;
 

@@ -35,7 +35,7 @@ const PlanList = styled.div`
       ${(props) => props.theme.spaces.s100} 0;
 
     &:hover {
-      background-color: ${(props) => props.theme.graphColors.grey070};
+      color: ${(props) => props.theme.textColor.tertiary};
       text-decoration: none;
     }
   }

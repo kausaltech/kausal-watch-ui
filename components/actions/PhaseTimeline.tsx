@@ -151,7 +151,7 @@ const PHASE_CONFIG: {
   todo: {
     icon: 'circle-outline',
     colorKey: 'graphColors.grey040',
-    textColorKey: 'textColor.tertiary',
+    textColorKey: 'textColor.secondary',
   },
 };
 

@@ -1,6 +1,7 @@
 import { useTheme } from 'styled-components';
 import { Container } from 'reactstrap';
 import styled from 'styled-components';
+import { readableColor } from 'polished';
 import RichText from 'components/common/RichText';
 import { Theme } from '@kausal/themes/types';
 import { useTranslations } from 'next-intl';
@@ -66,7 +67,11 @@ const MainCard = styled.div<{ $alignment: string; $color: string }>`
       : props.theme.themeColors.white};
   color: ${(props) =>
     props.$color === 'dark'
-      ? props.theme.themeColors.white
+      ? readableColor(
+          props.theme.brandDark,
+          props.theme.themeColors.black,
+          props.theme.themeColors.white
+        )
       : props.theme.neutralDark};
   box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.1);
   z-index: 100;
@@ -82,14 +87,22 @@ const MainCard = styled.div<{ $alignment: string; $color: string }>`
   h4 {
     color: ${(props) =>
       props.$color === 'dark'
-        ? props.theme.themeColors.white
-        : props.theme.headingsColor};
+        ? readableColor(
+            props.theme.brandDark,
+            props.theme.themeColors.black,
+            props.theme.themeColors.white
+          )
+        : props.theme.neutralDark};
   }
 
   a {
     color: ${(props) =>
       props.$color === 'dark'
-        ? props.theme.themeColors.white
+        ? readableColor(
+            props.theme.brandDark,
+            props.theme.themeColors.black,
+            props.theme.themeColors.white
+          )
         : props.theme.neutralDark};
 
     &:hover {

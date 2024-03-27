@@ -3,14 +3,19 @@ import { Card as BSCard, CardBody } from 'reactstrap';
 import styled from 'styled-components';
 import { transparentize } from 'polished';
 
-const StyledCard = styled(BSCard)`
+const StyledCard = styled(BSCard)<{
+  $customColor?: string;
+  $customBackgroundColor?: string;
+}>`
   width: 100%;
   transition: all 0.5s ease;
   overflow: hidden;
   border-width: ${(props) => props.theme.cardBorderWidth};
   border-radius: ${(props) => props.theme.cardBorderRadius};
   background-color: ${(props) =>
-    props.customcolor ? props.customcolor : props.theme.themeColors.white};
+    props.$customBackgroundColor || props.theme.themeColors.white};
+  color: ${(props) =>
+    props.$customColor ? props.$customColor : props.theme.themeColors.black};
   box-shadow: 2px 2px 8px
     ${(props) => transparentize(0.9, props.theme.themeColors.dark)};
 
@@ -18,7 +23,8 @@ const StyledCard = styled(BSCard)`
   }
 
   &.outline {
-    border-color: ${(props) => props.theme.themeColors.white};
+    border-color: ${(props) =>
+      props.$customColor ? props.$customColor : props.theme.themeColors.white};
     border-width: 1px;
   }
 
@@ -33,6 +39,7 @@ const StyledCard = styled(BSCard)`
       ${(props) => transparentize(0.8, props.theme.themeColors.dark)};
   }
 
+  /* Deprecated */
   &.negative {
     color: ${(props) => props.theme.themeColors.white};
     background-color: ${(props) =>
@@ -96,6 +103,7 @@ interface CardProps {
   colorEffect?: string;
   negative?: boolean;
   customColor?: string;
+  customBackgroundColor?: string;
   children: React.ReactNode;
   outline?: boolean;
 }
@@ -106,7 +114,7 @@ const Card = (props: CardProps) => {
     colorEffect,
     imageAlign = 'center center',
     imageType = 'image',
-    negative,
+    customBackgroundColor,
     customColor,
     children,
     outline,
@@ -146,8 +154,9 @@ const Card = (props: CardProps) => {
 
   return (
     <StyledCard
-      className={`${negative && 'negative'} ${outline && 'outline'}`}
-      customcolor={customColor}
+      className={outline && 'outline'}
+      $customColor={customColor}
+      $customBackgroundColor={customBackgroundColor}
       data-testid="card"
     >
       <ImageComponent />

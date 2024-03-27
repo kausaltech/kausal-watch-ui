@@ -71,7 +71,7 @@ const QuestionTrigger = styled.button`
   margin: 0 0 1em;
   text-align: left;
   font-size: inherit;
-  color: ${(props) => props.theme.brandDark};
+  color: ${(props) => props.theme.linkColor};
   font-weight: ${(props) => props.theme.fontWeightBold};
   line-height: ${(props) => props.theme.lineHeightMd};
   hyphens: manual;

@@ -137,8 +137,8 @@ const createLayout = (
         'resetScale2d',
         'sendDataToCloud',
       ],
-      color: theme.graphColors.grey090,
-      bgcolor: theme.graphColors.grey010,
+      color: theme.textColor.secondary,
+      bgcolor: theme.cardBackground.primary,
       activecolor: theme.brandDark,
     },
   };

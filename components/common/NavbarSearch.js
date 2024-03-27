@@ -95,7 +95,7 @@ const ResultsBox = styled.div`
 
 const ResultsHeader = styled.div`
   padding-bottom: ${(props) => props.theme.spaces.s025};
-  color: ${(props) => props.theme.graphColors.grey070};
+  color: ${(props) => props.theme.textColor.tertiary};
   font-size: ${(props) => props.theme.fontSizeBase};
 `;
 
@@ -164,7 +164,7 @@ const HitHeader = styled.div`
 
 const HitHighlight = styled.div`
   margin: 0 0 ${(props) => props.theme.spaces.s050} 0;
-  color: ${(props) => props.theme.graphColors.grey050};
+  color: ${(props) => props.theme.textColor.tertiary};
   font-size: ${(props) => props.theme.fontSizeSm};
   font-family: ${(props) => props.theme.fontFamilyTiny};
   line-height: 1;

@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { shade, transparentize } from 'polished';
+import { shade, transparentize, readableColor } from 'polished';
 import { Button as BSButton } from 'reactstrap';
 
 const StyledButton = styled(BSButton)`
@@ -26,6 +26,12 @@ const StyledButton = styled(BSButton)`
   &.btn-primary {
     background-color: ${(props) => props.theme.brandDark};
     border-color: ${(props) => props.theme.brandDark};
+    color: ${(props) =>
+      readableColor(
+        props.theme.brandDark,
+        props.theme.themeColors.black,
+        props.theme.themeColors.white
+      )};
 
     &:hover {
       background-color: ${(props) => shade(0.05, props.theme.brandDark)};
@@ -54,21 +60,21 @@ const StyledButton = styled(BSButton)`
   }
 
   &.btn-outline-primary {
-    color: ${(props) => props.theme.brandDark} !important;
-    border-color: ${(props) => props.theme.brandDark} !important;
+    color: ${(props) => props.theme.linkColor} !important;
+    border-color: ${(props) => props.theme.linkColor} !important;
 
     svg {
-      fill: ${(props) => props.theme.brandDark} !important;
+      fill: ${(props) => props.theme.linkColor} !important;
     }
 
     &:hover {
       background-color: ${(props) =>
-        transparentize(0.9, props.theme.brandDark)};
+        transparentize(0.9, props.theme.linkColor)};
     }
 
     &:not(:disabled):not(.disabled):active {
       background-color: ${(props) =>
-        transparentize(0.8, props.theme.brandDark)};
+        transparentize(0.8, props.theme.linkColor)};
     }
   }
 
@@ -130,18 +136,18 @@ const StyledButton = styled(BSButton)`
   }
 
   &.btn-link {
-    color: ${(props) => props.theme.brandDark};
+    color: ${(props) => props.theme.linkColor};
     text-decoration: underline;
 
     &:hover {
       text-decoration: none;
       background-color: ${(props) =>
-        transparentize(0.9, props.theme.brandDark)};
+        transparentize(0.9, props.theme.linkColor)};
     }
 
     &:not(:disabled):not(.disabled):active {
       background-color: ${(props) =>
-        transparentize(0.8, props.theme.brandDark)};
+        transparentize(0.8, props.theme.linkColor)};
     }
   }
 `;

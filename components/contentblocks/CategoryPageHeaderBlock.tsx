@@ -98,7 +98,7 @@ const CategoryHeaderImage = styled.div<{
 `;
 
 const Identifier = styled.span`
-  color: ${(props) => props.theme.graphColors.grey050};
+  color: ${(props) => props.theme.textColor.tertiary};
 `;
 
 const ImageCredit = styled.span`
@@ -188,7 +188,7 @@ const CategoryIconImage = styled.img<{ size?: IconSize }>`
 `;
 
 const CategoryLevelName = styled.div`
-  color: ${(props) => props.theme.graphColors.grey070};
+  color: ${(props) => props.theme.textColor.tertiary};
   margin-bottom: ${(props) => props.theme.spaces.s100};
 `;
 
