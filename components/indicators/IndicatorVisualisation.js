@@ -17,6 +17,7 @@ import GraphAsTable from 'components/graphs/GraphAsTable';
 import IndicatorGraph from 'components/graphs/IndicatorGraph';
 import { useLocale, useTranslations } from 'next-intl';
 import { captureMessage } from '@sentry/nextjs';
+import RichText from 'components/common/RichText';
 
 const GET_INDICATOR_GRAPH_DATA = gql`
   query IndicatorGraphData($id: ID, $plan: ID) {
@@ -31,6 +32,7 @@ const GET_INDICATOR_GRAPH_DATA = gql`
       id
       name
       timeResolution
+      reference
       minValue
       maxValue
       organization {
@@ -770,6 +772,14 @@ function IndicatorVisualisation({ indicatorId, indicatorLink }) {
         title={plotTitle}
         language={i18n.language}
       />
+      {indicator.reference && (
+        <div style={{ display: 'flex' }}>
+          <span style={{ marginRight: '0.5em' }}>
+            {capitalizeFirstLetter(t('reference'))}:
+          </span>
+          <RichText html={indicator.reference} />
+        </div>
+      )}
     </div>
   );
 }
