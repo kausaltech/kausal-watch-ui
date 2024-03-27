@@ -46,6 +46,27 @@ function getMatomoConfig(matomoAnalyticsUrl?: string) {
   return null;
 }
 
+export function trackSearch(
+  query: string,
+  isSearchingOtherPlans: boolean,
+  results: number
+) {
+  if (!window._paq) {
+    return;
+  }
+
+  // https://developer.matomo.org/guides/tracking-javascript-guide#internal-search-tracking
+  window._paq.push([
+    'trackSiteSearch',
+    // Search keyword searched for
+    query,
+    // Search category selected in your search engine. If you do not need this, set to false
+    isSearchingOtherPlans ? 'Other plans' : false,
+    // Number of results in the Search results page. Zero indicates a 'No Result Search Keyword'. Set to false if you don't know
+    results,
+  ]);
+}
+
 export function MatomoAnalytics({ matomoAnalyticsUrl }: Props) {
   const pathname = usePathname();
   const searchParams = useSearchParams().toString();
