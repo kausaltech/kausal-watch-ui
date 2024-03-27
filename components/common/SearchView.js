@@ -21,6 +21,7 @@ import PlanChip from 'components/plans/PlanChip';
 import { usePlan } from 'context/plan';
 import ContentLoader from './ContentLoader';
 import { useTranslations } from 'next-intl';
+import { trackSearch } from '../MatomoAnalytics';
 
 const SEARCH_QUERY = gql`
   query SearchQuery(
@@ -251,6 +252,17 @@ function SearchResults({ search }) {
       clientUrl: plan.viewUrl,
     },
   });
+
+  useEffect(() => {
+    if (search.q && data?.search?.hits) {
+      trackSearch(
+        search.q,
+        search.onlyOtherPlans,
+        data.search.hits.length || 0
+      );
+    }
+  }, [search, data]);
+
   if (error) {
     return (
       <ResultsHeader>
