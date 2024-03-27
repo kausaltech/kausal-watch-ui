@@ -137,24 +137,16 @@ const CategoryListBlock = (props: CategoryListBlockProps) => {
     If category has own image use that
   */
   type CardImageType = (category: CategoryListBlockCategory) => {
-    type: 'image' | 'svgIcon' | 'bitmapIcon';
+    type: 'image' | 'icon';
     src: string | undefined;
     alignment: string;
   };
 
   const getCardImage: CardImageType = (category) => {
     const categryImageSrc = category.image?.small?.src;
-
-    if (!categryImageSrc && category.iconSvgUrl) {
-      return {
-        type: 'svgIcon',
-        src: category.iconSvgUrl,
-        alignment: 'center',
-      };
-    }
     if (!categryImageSrc && category.iconImage) {
       return {
-        type: 'bitmapIcon',
+        type: 'icon',
         src: category.iconImage?.rendition?.src,
         alignment: 'center',
       };
