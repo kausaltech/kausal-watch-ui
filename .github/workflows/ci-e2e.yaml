@@ -14,8 +14,8 @@ on:
         description: 'Base url for backend API'
         required: true
         default: 'https://api.watch.kausal.tech/v1'
-      schedule:
-        - cron: '0 22 * * *' # 22:00 UTC, 01:00 EEST
+  schedule:
+    - cron: '0 22 * * 1-5' # 22:00 UTC, 01:00 EEST
 
 jobs:
   e2e_test:
