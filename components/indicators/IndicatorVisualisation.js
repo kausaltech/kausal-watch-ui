@@ -31,6 +31,7 @@ const GET_INDICATOR_GRAPH_DATA = gql`
       id
       name
       timeResolution
+      reference
       minValue
       maxValue
       organization {
@@ -770,6 +771,11 @@ function IndicatorVisualisation({ indicatorId, indicatorLink }) {
         title={plotTitle}
         language={i18n.language}
       />
+      {indicator.reference && (
+        <p>
+          {capitalizeFirstLetter(t('reference'))}: {indicator.reference}
+        </p>
+      )}
     </div>
   );
 }
