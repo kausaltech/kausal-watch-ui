@@ -28,22 +28,8 @@ describe('Card Component', () => {
     expect(image).toBeInTheDocument();
   });
 
-  it('renders with a svg icon when imageType === svgIcon', () => {
-    const imageType = 'svgIcon';
-    const imageUrl = 'image.svg';
-
-    render(
-      <Card imageUrl={imageUrl} imageType={imageType}>
-        <div>Test Content</div>
-      </Card>
-    );
-
-    const icon = screen.getByTestId('svg-icon');
-    expect(icon).toBeInTheDocument();
-  });
-
   it('renders with a bitmap icon when imageType === bitmapIcon', () => {
-    const imageType = 'bitmapIcon';
+    const imageType = 'icon';
     const imageUrl = 'image.png';
 
     render(
@@ -52,7 +38,7 @@ describe('Card Component', () => {
       </Card>
     );
 
-    const icon = screen.getByTestId('bitmap-icon');
+    const icon = screen.getByTestId('card-icon');
     expect(icon).toBeInTheDocument();
   });
 
