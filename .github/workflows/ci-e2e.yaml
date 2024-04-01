@@ -5,7 +5,7 @@ on:
       plan_identifiers:
         description: 'Comma separated list of plan identifiers'
         required: true
-        default: ' akaa-ilmasto, boroondara-cap, bremen-klima, carmel-cap, denmark-sap, durham-ca-cap, espoo-ilmasto, fi-covid, fl-hollywood-sap, greentransition, hame-ilmasto, helsinki-kierto, helsinki-kierto-2023, helsinki-lumo, holbaek-cap, indigoshire-erp, kingston-cap, klima-potsdam, klima-winterthur, konstanz-klima, lahti-ilmasto, leichlingen, leichlingen-klima, leichlingen-mobilitaet, liiku, longmont-bbe, longmont-carr, longmont-envision, longmont-indicators, longmont-sca, longmont-transportation, lpr-ilmasto, lpr-kestavyys, lpr-kierto, palkane-ilmasto, pirkkala-ilmasto, riga-secap, san-diego-cap, saskatoon-lec, sca-cli, stevenage-cap, stpaul-carp, sunnydale, surrey-ccas, tampere-ilmasto, tampere-lumo, urjala-ilmasto, valkeakoski-ilmasto, viitasaari-ilmasto, waterloo-twr'
+        default: ${{ secrets.TEST_PLAN_IDENTIFIERS }}
       frontend_base_url:
         description: 'Base url for environment to run tests against'
         required: true
@@ -56,9 +56,9 @@ jobs:
       - name: Running Playwright e2e tests
         run: node_modules/.bin/playwright test
         env:
-          TEST_PLAN_IDENTIFIERS: ${{ github.event.inputs.plan_identifiers }}
-          TEST_PAGE_BASE_URL: ${{ github.event.inputs.frontend_base_url }}
-          APLANS_API_BASE_URL: ${{ github.event.inputs.backend_base_url }}
+          TEST_PLAN_IDENTIFIERS: ${{ secrets.TEST_PLAN_IDENTIFIERS }}
+          TEST_PAGE_BASE_URL: ${{ github.event.inputs.frontend_base_url || 'http://{planId}.watch.staging.kausal.tech'}}
+          APLANS_API_BASE_URL: ${{ github.event.inputs.backend_base_url || 'https://api.watch.kausal.tech/v1'}}
 
       - uses: actions/upload-artifact@v3
         if: always()
