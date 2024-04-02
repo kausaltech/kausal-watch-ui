@@ -3,8 +3,7 @@ import dayjs from 'common/dayjs';
 import styled from 'styled-components';
 import { Badge } from 'reactstrap';
 import { useLocale, useTranslations } from 'next-intl';
-import { useTheme } from 'styled-components';
-import type { PlotParams } from 'react-plotly.js';
+import { readableColor } from 'polished';
 import { Dayjs } from 'dayjs';
 
 const StatusTitle = styled.div`
@@ -15,7 +14,12 @@ const StatusTitle = styled.div`
     /* Awkwardly match category badges size */
     font-size: calc(1.25rem * 0.75);
     background-color: ${(props) => props.theme.brandDark} !important;
-    color: ${(props) => props.theme.themeColors.white};
+    color: ${(props) =>
+      readableColor(
+        props.theme.brandDark,
+        props.theme.themeColors.black,
+        props.theme.themeColors.white
+      )};
   }
 `;
 

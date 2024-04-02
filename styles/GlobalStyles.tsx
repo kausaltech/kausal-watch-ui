@@ -20,12 +20,12 @@ export const GlobalStyles = createGlobalStyle`
   }
 
   a {
-    color: ${(props) => props.theme.brandDark};
+    color: ${(props) => props.theme.linkColor};
     text-decoration: none;
     background-color: transparent;
 
     &:hover {
-      color: ${(props) => props.theme.brandDark};
+      color: ${(props) => props.theme.linkColor};
       text-decoration: underline;
     }
   }

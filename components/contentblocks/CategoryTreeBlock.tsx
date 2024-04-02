@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { concat } from 'lodash';
 import styled from 'styled-components';
+import { readableColor } from 'polished';
 import { Container, Row, Col } from 'reactstrap';
 import ContentLoader from 'components/common/ContentLoader';
 import { gql } from '@apollo/client';
@@ -21,6 +22,12 @@ const CategoryListSection = styled.div`
 
   h2 {
     text-align: center;
+    color: ${(props) =>
+      readableColor(
+        props.theme.neutralLight,
+        props.theme.themeColors.black,
+        props.theme.themeColors.white
+      )};
   }
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {

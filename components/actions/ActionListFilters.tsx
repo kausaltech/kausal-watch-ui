@@ -113,7 +113,12 @@ const StyledBadge = styled(Badge)`
   margin-right: ${(props) => props.theme.spaces.s050};
   padding-left: 0;
   background-color: ${(props) => props.theme.brandDark} !important;
-  color: ${(props) => props.theme.themeColors.light};
+  color: ${(props) =>
+    readableColor(
+      props.theme.brandDark,
+      props.theme.themeColors.black,
+      props.theme.themeColors.white
+    )};
   line-height: 1.25;
   text-align: left;
 
@@ -148,7 +153,7 @@ const ToggleButton = styled(RButton)`
   }
 
   &.open {
-    color: ${(props) => props.theme.graphColors.grey050};
+    color: ${(props) => props.theme.textColor.tertiary};
   }
 `;
 

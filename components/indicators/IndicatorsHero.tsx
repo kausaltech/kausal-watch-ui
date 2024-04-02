@@ -16,6 +16,14 @@ const IndicatorsJumbo = styled.div`
       props.theme.themeColors.black,
       props.theme.themeColors.white
     )};
+  a {
+    color: ${(props) =>
+      readableColor(
+        props.theme.neutralLight,
+        props.theme.themeColors.black,
+        props.theme.themeColors.white
+      )};
+  }
 
   h1 {
     font-size: ${(props) => props.theme.fontSizeXl};
@@ -40,12 +48,22 @@ const IndicatorsTabs = styled.div`
 
 const Tab = styled.div`
   background: ${(props) => props.theme.brandDark};
-  color: ${(props) => props.theme.themeColors.white};
+  color: ${(props) =>
+    readableColor(
+      props.theme.brandDark,
+      props.theme.themeColors.black,
+      props.theme.themeColors.white
+    )};
   &:hover {
-    color: ${(props) => props.theme.brandLight};
+    color: ${(props) =>
+      readableColor(
+        props.theme.brandDark,
+        props.theme.themeColors.dark,
+        props.theme.themeColors.light
+      )};
   }
   &.active {
-    color: ${(props) => props.theme.brandDark};
+    color: ${(props) => props.theme.linkColor};
     background: ${(props) => props.theme.themeColors.white};
     &:hover {
       color: ${(props) => props.theme.themeColors.black};

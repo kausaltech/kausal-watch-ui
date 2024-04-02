@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
+import { readableColor } from 'polished';
 import { useTranslations } from 'next-intl';
 
 const HeaderImage = styled.div`
@@ -16,7 +17,12 @@ const HeaderImage = styled.div`
 
 const HeaderBg = styled.div`
   background-color: ${(props) => props.theme.brandDark};
-  color: ${(props) => props.theme.themeColors.white};
+  color: ${(props) =>
+    readableColor(
+      props.theme.brandDark,
+      props.theme.themeColors.black,
+      props.theme.themeColors.white
+    )};
   position: relative;
 `;
 
@@ -28,7 +34,12 @@ const ContentHeader = styled.header`
   h1 {
     margin-bottom: ${(props) => props.theme.spaces.s150};
     font-size: ${(props) => props.theme.fontSizeXxl};
-    color: ${(props) => props.theme.themeColors.white} !important;
+    color: ${(props) =>
+      readableColor(
+        props.theme.brandDark,
+        props.theme.themeColors.black,
+        props.theme.themeColors.white
+      )} !important;
   }
 
   .lead {

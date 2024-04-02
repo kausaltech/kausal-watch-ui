@@ -18,7 +18,7 @@ const ActionGroupHeader = styled.h2`
 
   .category-identifier,
   .category-crumb {
-    color: ${(props) => props.theme.graphColors.grey060};
+    color: ${(props) => props.theme.textColor.tertiary};
   }
 
   .category-crumb {
