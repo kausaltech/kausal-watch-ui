@@ -64,8 +64,9 @@ jobs:
           echo "APLANS_API_BASE_URL=${{ github.event.inputs.backend_base_url || 'https://api.watch.kausal.tech/v1' }}" >> $GITHUB_ENV
 
       - name: Running Playwright e2e tests
-        run: node_modules/.bin/playwright test --plan-identifiers="${{ env.TEST_PLAN_IDENTIFIERS }}"
+        run: node_modules/.bin/playwright test
         env:
+          TEST_PLAN_IDENTIFIERS: ${{ env.TEST_PLAN_IDENTIFIERS }}
           TEST_PAGE_BASE_URL: ${{ env.FRONTEND_BASE_URL }}
           APLANS_API_BASE_URL: ${{ env.APLANS_API_BASE_URL }}
 
