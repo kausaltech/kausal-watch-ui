@@ -13,7 +13,9 @@ export const processCommonIndicatorHierarchy = (planIndicators) => {
   const makeLinks = (commonIndicator) => ({
     id: commonIndicator.id,
     isRoot:
-      commonIndicator.relatedEffects.filter((e) => e.effectType === 'PART_OF')
+      commonIndicator.relatedEffects
+        .filter((e) => e.effectType === 'PART_OF')
+        .filter((e) => uniqueCommonIndicators[e.effectIndicator.id] != null)
         .length === 0,
     children: commonIndicator.relatedCauses
       .filter((e) => e.effectType === 'PART_OF')
