@@ -5,7 +5,7 @@ on:
       plan_identifiers:
         description: 'Comma separated list of plan identifiers'
         required: true
-        default: ${{ secrets.TEST_PLAN_IDENTIFIERS }}
+        default: 'sunnydale'
       frontend_base_url:
         description: 'Base url for environment to run tests against'
         required: true
@@ -52,6 +52,17 @@ jobs:
 
       - name: Playwright install
         run: node_modules/.bin/playwright install --with-deps
+
+      - name: Set dynamic environment variables
+        run: |
+          if [[ "${{ github.event_name }}" == "schedule" ]]; then
+            echo "PLAN_IDENTIFIERS=${{ secrets.TEST_PLAN_IDENTIFIERS }}" >> $GITHUB_ENV
+            echo "FRONTEND_BASE_URL=http://{plan_id}.watch.staging.kausal.tech" >> $GITHUB_ENV
+          else
+            echo "PLAN_IDENTIFIERS=${{ github.event.inputs.plan_identifiers }}" >> $GITHUB_ENV
+            echo "FRONTEND_BASE_URL=${{ github.event.inputs.frontend_base_url }}" >> $GITHUB_ENV
+          fi
+          echo "APLANS_API_BASE_URL=${{ github.event.inputs.backend_base_url || 'https://api.watch.kausal.tech/v1' }}" >> $GITHUB_ENV
 
       - name: Running Playwright e2e tests
         run: node_modules/.bin/playwright test
