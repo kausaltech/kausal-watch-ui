@@ -277,24 +277,6 @@ export class PlanContext {
     return new PlanContext(data, baseURL, planIndicators);
   }
 
-  async checkAccessibility(page) {
-    await page.waitForLoadState('networkidle');
-    const results = await new AxeBuilder({ page }).analyze();
-    const violationsToIgnore = ['frame-title'];
-
-    const criticalViolations = results.violations.filter(
-      (violation) =>
-        violation.impact === 'critical' &&
-        !violationsToIgnore.includes(violation.id)
-    );
-
-    if (criticalViolations.length > 0) {
-      console.error('Critical accessibility violations:', criticalViolations);
-    }
-    expect(criticalViolations).toEqual([]);
-  }
-
-  /* Checking for serious and critical violations
   async checkAccessibility(page: Page) {
     await page.waitForLoadState('networkidle');
     const results = await new AxeBuilder({ page }).analyze();
@@ -311,9 +293,8 @@ export class PlanContext {
         criticalAndSeriousViolations
       );
     }
-
     expect(criticalAndSeriousViolations).toEqual([]);
-  }*/
+  }
 }
 
 export function getIdentifiersToTest(): string[] {
