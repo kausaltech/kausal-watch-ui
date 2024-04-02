@@ -53,23 +53,21 @@ jobs:
       - name: Playwright install
         run: node_modules/.bin/playwright install --with-deps
 
-      - name: Set dynamic environment variables
+      - name: Set TEST_PLAN_IDENTIFIERS for each job
         run: |
-          if [[ "${{ github.event_name }}" == "schedule" ]]; then
-            echo "PLAN_IDENTIFIERS=${{ secrets.TEST_PLAN_IDENTIFIERS }}" >> $GITHUB_ENV
-            echo "FRONTEND_BASE_URL=http://{plan_id}.watch.staging.kausal.tech" >> $GITHUB_ENV
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "TEST_PLAN_IDENTIFIERS=${{ github.event.inputs.plan_identifiers || 'sunnydale' }}" >> $GITHUB_ENV
           else
-            echo "PLAN_IDENTIFIERS=${{ github.event.inputs.plan_identifiers }}" >> $GITHUB_ENV
-            echo "FRONTEND_BASE_URL=${{ github.event.inputs.frontend_base_url }}" >> $GITHUB_ENV
+            echo "TEST_PLAN_IDENTIFIERS=${{ secrets.TEST_PLAN_IDENTIFIERS }}" >> $GITHUB_ENV
           fi
+          echo "FRONTEND_BASE_URL=${{ github.event.inputs.frontend_base_url || 'http://sunnydale.watch.staging.kausal.tech' }}" >> $GITHUB_ENV
           echo "APLANS_API_BASE_URL=${{ github.event.inputs.backend_base_url || 'https://api.watch.kausal.tech/v1' }}" >> $GITHUB_ENV
 
       - name: Running Playwright e2e tests
-        run: node_modules/.bin/playwright test
+        run: node_modules/.bin/playwright test --plan-identifiers="${{ env.TEST_PLAN_IDENTIFIERS }}"
         env:
-          TEST_PLAN_IDENTIFIERS: ${{ secrets.TEST_PLAN_IDENTIFIERS }}
-          TEST_PAGE_BASE_URL: ${{ github.event.inputs.frontend_base_url || 'http://{planId}.watch.staging.kausal.tech'}}
-          APLANS_API_BASE_URL: ${{ github.event.inputs.backend_base_url || 'https://api.watch.kausal.tech/v1'}}
+          TEST_PAGE_BASE_URL: ${{ env.FRONTEND_BASE_URL }}
+          APLANS_API_BASE_URL: ${{ env.APLANS_API_BASE_URL }}
 
       - uses: actions/upload-artifact@v3
         if: always()
