@@ -28,13 +28,13 @@ const DropdownItem = styled.div`
   .search-found {
     padding: 0;
     background-color: transparent;
-    border-bottom: 2px solid ${({ theme }) => theme.graphColors.green030};
+    font-weight: ${(props) => props.theme.fontWeightBold};
   }
 `;
 
 const DropdownIndent = styled.div`
-  border-left: 1px solid ${({ theme }) => theme.themeColors.light};
-  margin: 0 0.25rem 0 0;
+  border-left: 2px solid ${({ theme }) => theme.graphColors.grey030};
+  margin: 0 0.75rem 0 0;
 `;
 
 const DropdownLabel = styled.div<{ $primary: boolean }>`
@@ -101,7 +101,6 @@ function getSelectStyles<Option extends SelectDropdownOption>(
     }),
     option: (provided, state) => {
       const { isSelected, isFocused, data } = state;
-      const { indent } = data;
       const ret = {
         ...provided,
         color: isSelected
@@ -112,8 +111,8 @@ function getSelectStyles<Option extends SelectDropdownOption>(
         backgroundColor: isSelected
           ? theme.graphColors.grey080
           : isFocused
-          ? theme.graphColors.grey020
-          : theme.themeColors.white,
+          ? theme.graphColors.grey010
+          : theme.inputBg,
         margin: 0,
         padding: 0,
       };
@@ -217,15 +216,10 @@ const MultiValue = (props: MultiValueProps) => {
 const Option = (props: OptionProps) => {
   const { data, children, options } = props;
   const { indent } = data;
-  const isHierarchical = options.find((o) => o?.indent > 0);
+  const isHierarchical: boolean = options.some((o) => o?.indent > 0);
   const indents: JSX.Element[] = [];
   for (let i = 0; i < indent; i++) {
-    indents.push(
-      <DropdownIndent
-        key={`span-${i}`}
-        style={{ borderLeft: '1px solid #ccc', paddingLeft: '0.5em' }}
-      />
-    );
+    indents.push(<DropdownIndent key={`indent-${i}`} />);
   }
   return (
     <components.Option {...props}>
