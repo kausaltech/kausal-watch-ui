@@ -162,5 +162,6 @@
     "open": "åben",
     "select-sector-for-actions": "Vælg en emissionssektor for at se relaterede handlinger",
     "no-phase": "Ingen fase",
-    "no-status": "Ingen status"
+    "no-status": "Ingen status",
+    "content-could-not-be-displayed": "Vi kan i øjeblikket ikke vise dette indhold. Prøv venligst at genindlæse siden. En rapport er blevet sendt til vores team for at undersøge problemet."
 }

@@ -165,5 +165,6 @@
     "no-phase": "Ingen fas",
     "filter-all-statuses": "Alla statusar",
     "filter-status": "Status",
-    "filter-status-help": "Visa åtgärder med vald status"
+    "filter-status-help": "Visa åtgärder med vald status",
+    "content-could-not-be-displayed": "Vi kan inte visa detta innehåll för tillfället. Försök att uppdatera sidan. En rapport har skickats till vårt team för att undersöka problemet."
 }

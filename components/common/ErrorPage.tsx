@@ -8,13 +8,13 @@ import { Card, CardBody, Container, Row, Col } from 'reactstrap';
 import Button from '@/components/common/Button';
 import Link from 'next/link';
 
-const ErrorBackground = styled.div`
+const ErrorBackground = styled.div<{ isFullPage?: boolean }>`
   background-color: ${(props) => props.theme.brandDark};
-  min-height: 800px;
+  min-height: ${({ isFullPage }) => (isFullPage ? '800px' : undefined)};
+  padding: 5rem 0;
 `;
 
 const StyledCard = styled(Card)`
-  margin-top: 5rem;
   text-align: center;
   width: 100%;
   transition: all 0.5s ease;
@@ -23,10 +23,6 @@ const StyledCard = styled(Card)`
   border-radius: ${(props) => props.theme.cardBorderRadius};
   background-color: ${(props) => props.theme.themeColors.white};
 
-  h2 {
-    margin-bottom: 2rem;
-  }
-
   svg {
     width: 4rem;
     margin-bottom: 2rem;
@@ -34,7 +30,21 @@ const StyledCard = styled(Card)`
   }
 `;
 
-export function ErrorPage({ message }: { message?: string }) {
+const StyledTitle = styled.h1`
+  margin-bottom: 1rem;
+`;
+
+const StyledSubtitle = styled.h4`
+  font-weight: ${({ theme }) => theme.fontWeightBase};
+  color: ${({ theme }) => theme.textColor.secondary};
+`;
+
+type Props = {
+  message?: string;
+  type?: 'page' | 'block';
+};
+
+export function ErrorPage({ message, type = 'page' }: Props) {
   const t = useTranslations();
 
   const errorIcon = (
@@ -47,19 +57,31 @@ export function ErrorPage({ message }: { message?: string }) {
   );
 
   return (
-    <ErrorBackground className="mb-5">
+    <ErrorBackground isFullPage={type === 'page'}>
       <Container>
         <Row>
           <Col md={{ size: 6, offset: 3 }}>
             <StyledCard>
               <CardBody>
                 {errorIcon}
-                <h1>{message || t('error-occurred')}</h1>
-                <Link href="/">
-                  <Button outline color="dark" size="sm">
-                    {t('return-to-front')}
-                  </Button>
-                </Link>
+
+                <StyledTitle as={type === 'page' ? 'h1' : 'h2'}>
+                  {message || t('error-occurred')}
+                </StyledTitle>
+
+                {type === 'page' && (
+                  <Link href="/">
+                    <Button outline color="dark" size="sm">
+                      {t('return-to-front')}
+                    </Button>
+                  </Link>
+                )}
+
+                {type === 'block' && (
+                  <StyledSubtitle>
+                    {t('content-could-not-be-displayed')}
+                  </StyledSubtitle>
+                )}
               </CardBody>
             </StyledCard>
           </Col>
