@@ -5,6 +5,7 @@ import Select, {
   MultiValueProps,
   Theme as SelectTheme,
   ValueContainerProps,
+  OptionProps,
 } from 'react-select';
 import styled, { DefaultTheme, useTheme } from 'styled-components';
 import Highlighter from 'react-highlight-words';
@@ -18,6 +19,29 @@ const Label = styled(BSLabel)`
 
 const TooltipWrapper = styled.span`
   white-space: nowrap; // Prevents the tooltip from wrapping
+`;
+
+const DropdownItem = styled.div`
+  display: flex;
+  margin-left: 0.5rem;
+
+  .search-found {
+    padding: 0;
+    background-color: transparent;
+    border-bottom: 2px solid ${({ theme }) => theme.graphColors.green030};
+  }
+`;
+
+const DropdownIndent = styled.div`
+  border-left: 1px solid ${({ theme }) => theme.themeColors.light};
+  margin: 0 0.25rem 0 0;
+`;
+
+const DropdownLabel = styled.div<{ $primary: boolean }>`
+  margin: 0.75rem 0;
+  font-size: ${({ $primary, theme }) =>
+    $primary ? theme.fontSizeMd : theme.fontSizeBase};
+  line-height: ${(props) => props.theme.lineHeightSm};
 `;
 
 function getSelectStyles<Option extends SelectDropdownOption>(
@@ -89,9 +113,9 @@ function getSelectStyles<Option extends SelectDropdownOption>(
           ? theme.graphColors.grey080
           : isFocused
           ? theme.graphColors.grey020
-          : theme.graphColors.white,
+          : theme.themeColors.white,
         margin: 0,
-        //marginLeft: `${indent ?? 0}rem`,
+        padding: 0,
       };
       return ret;
     },
@@ -190,9 +214,34 @@ const MultiValue = (props: MultiValueProps) => {
   );
 };
 
+const Option = (props: OptionProps) => {
+  const { data, children, options } = props;
+  const { indent } = data;
+  const isHierarchical = options.find((o) => o?.indent > 0);
+  const indents: JSX.Element[] = [];
+  for (let i = 0; i < indent; i++) {
+    indents.push(
+      <DropdownIndent
+        key={`span-${i}`}
+        style={{ borderLeft: '1px solid #ccc', paddingLeft: '0.5em' }}
+      />
+    );
+  }
+  return (
+    <components.Option {...props}>
+      <DropdownItem>
+        {indents}
+        <DropdownLabel $primary={isHierarchical && indent == 0}>
+          {children}
+        </DropdownLabel>
+      </DropdownItem>
+    </components.Option>
+  );
+};
+
 const getCustomComponents = (isMulti: boolean) =>
   Object.assign(
-    { DropdownIndicator, IndicatorSeparator },
+    { DropdownIndicator, IndicatorSeparator, Option },
     isMulti ? { ValueContainer, MultiValue } : {}
   );
 
@@ -275,30 +324,15 @@ function SelectDropdown<
           getOptionLabel={(option) => option.label}
           getOptionValue={(option) => option.id}
           formatOptionLabel={(option, meta) => {
-            const { context, inputValue } = meta;
-            const { indent, label } = option;
-            const highlighted = (
+            const { inputValue } = meta;
+            const { label } = option;
+
+            return (
               <Highlighter
-                highlightTag="b"
+                highlightClassName="search-found"
                 searchWords={[inputValue]}
                 textToHighlight={label}
               />
-            );
-            if (context === 'value' || !indent) return highlighted;
-            const spans: JSX.Element[] = [];
-            for (let i = 0; i < indent; i++) {
-              spans.push(
-                <span
-                  key={`span-${i}`}
-                  style={{ borderLeft: '1px solid #ccc', paddingLeft: '0.5em' }}
-                />
-              );
-            }
-            return (
-              <>
-                {spans}
-                {highlighted}
-              </>
             );
           }}
           onChange={onChange}
