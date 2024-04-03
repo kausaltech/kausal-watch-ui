@@ -303,7 +303,9 @@ export function getIdentifiersToTest(): string[] {
 }
 
 export function getPageBaseUrlToTest(planId: string): string {
-  const val =
-    process.env.TEST_PAGE_BASE_URL || `http://{planId}.localhost:3000`;
-  return val.replace('{planId}', planId);
+  let baseUrl =
+    process.env.TEST_PAGE_BASE_URL ||
+    `http://{planId}.watch.staging.kausal.tech`;
+  baseUrl = baseUrl.replace('{planId}', planId);
+  return baseUrl;
 }

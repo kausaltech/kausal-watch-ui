@@ -5,7 +5,7 @@ on:
       plan_identifiers:
         description: 'Comma separated list of plan identifiers'
         required: true
-        default: ' akaa-ilmasto, boroondara-cap, bremen-klima, carmel-cap, denmark-sap, durham-ca-cap, espoo-ilmasto, fi-covid, fl-hollywood-sap, greentransition, hame-ilmasto, helsinki-kierto, helsinki-kierto-2023, helsinki-lumo, holbaek-cap, indigoshire-erp, kingston-cap, klima-potsdam, klima-winterthur, konstanz-klima, lahti-ilmasto, leichlingen, leichlingen-klima, leichlingen-mobilitaet, liiku, longmont-bbe, longmont-carr, longmont-envision, longmont-indicators, longmont-sca, longmont-transportation, lpr-ilmasto, lpr-kestavyys, lpr-kierto, palkane-ilmasto, pirkkala-ilmasto, riga-secap, san-diego-cap, saskatoon-lec, sca-cli, stevenage-cap, stpaul-carp, sunnydale, surrey-ccas, tampere-ilmasto, tampere-lumo, urjala-ilmasto, valkeakoski-ilmasto, viitasaari-ilmasto, waterloo-twr'
+        default: 'sunnydale'
       frontend_base_url:
         description: 'Base url for environment to run tests against'
         required: true
@@ -15,7 +15,7 @@ on:
         required: true
         default: 'https://api.watch.kausal.tech/v1'
   schedule:
-    - cron: '0 22 * * 1-5' # 22:00 UTC, 01:00 EEST
+    - cron: '0 21 * * 1-5' # 21:00 UTC, 00:00 EEST
 
 jobs:
   e2e_test:
@@ -53,12 +53,22 @@ jobs:
       - name: Playwright install
         run: node_modules/.bin/playwright install --with-deps
 
+      - name: Set TEST_PLAN_IDENTIFIERS for each job
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "TEST_PLAN_IDENTIFIERS=${{ github.event.inputs.plan_identifiers || 'sunnydale' }}" >> $GITHUB_ENV
+          else
+            echo "TEST_PLAN_IDENTIFIERS=${{ secrets.TEST_PLAN_IDENTIFIERS }}" >> $GITHUB_ENV
+          fi
+          echo "FRONTEND_BASE_URL=${{ github.event.inputs.frontend_base_url || 'http://sunnydale.watch.staging.kausal.tech' }}" >> $GITHUB_ENV
+          echo "APLANS_API_BASE_URL=${{ github.event.inputs.backend_base_url || 'https://api.watch.kausal.tech/v1' }}" >> $GITHUB_ENV
+
       - name: Running Playwright e2e tests
         run: node_modules/.bin/playwright test
         env:
-          TEST_PLAN_IDENTIFIERS: ${{ github.event.inputs.plan_identifiers }}
-          TEST_PAGE_BASE_URL: ${{ github.event.inputs.frontend_base_url }}
-          APLANS_API_BASE_URL: ${{ github.event.inputs.backend_base_url }}
+          TEST_PLAN_IDENTIFIERS: ${{ env.TEST_PLAN_IDENTIFIERS }}
+          TEST_PAGE_BASE_URL: ${{ env.FRONTEND_BASE_URL }}
+          APLANS_API_BASE_URL: ${{ env.APLANS_API_BASE_URL }}
 
       - uses: actions/upload-artifact@v3
         if: always()
