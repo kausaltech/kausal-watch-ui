@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import RichText from 'components/common/RichText';
 import IndicatorProgressBar from 'components/indicators/IndicatorProgressBar';
 import IndicatorVisualisation from 'components/indicators/IndicatorVisualisation';
+import { normalize } from 'path';
 
 const IndicatorShowcase = styled.div`
   padding: ${(props) => props.theme.spaces.s400} 0;
@@ -28,6 +29,22 @@ const IndicatorShowcase = styled.div`
   }
 `;
 
+const getNormalizedValue = (indicatorValue, populationNormalizer) => {
+  if (populationNormalizer && indicatorValue.normalizedValues.length > 0) {
+    const normalized = indicatorValue.normalizedValues.find(
+      (normed) => normed.normalizerId === populationNormalizer.normalizer.id
+    );
+    return normalized?.value;
+  } else {
+    return undefined;
+  }
+};
+
+const processIndicator = (indicator) => {
+  const canNormalize =
+    getNormalizedValue(firstValue) && getNormalizedValue(lastValue);
+};
+
 const IndicatorShowcaseBlock = (props) => {
   const { id = '', indicator, title, body } = props;
   // Animation hook:  trigger when visible on screen
@@ -35,8 +52,32 @@ const IndicatorShowcaseBlock = (props) => {
     triggerOnce: true,
   });
 
-  const indicatorHasGoal = indicator.goals.length > 0;
+  const lastGoal = indicator.goals[indicator.goals.length - 1];
+  const firstValue = indicator.values[0];
+  const lastValue = indicator.values[indicator.values.length - 1];
 
+  const indicatorHasGoal = indicator.goals.length > 0;
+  const populationNormalizer = indicator.common?.normalizations.find(
+    (normalization) => normalization.normalizer.identifier === 'population'
+  );
+
+  const baseValue = {
+    date: firstValue.date,
+    value: firstValue.value,
+    normalizedValue: 0,
+  };
+
+  const latestValue = {
+    date: lastValue.date,
+    value: lastValue.value,
+    normalizedValue: 0,
+  };
+
+  const goalValue = {
+    date: lastGoal.date,
+    value: lastGoal.value,
+    normalizedValue: 0,
+  };
   return (
     <IndicatorShowcase id={id}>
       <Container>
@@ -45,7 +86,15 @@ const IndicatorShowcaseBlock = (props) => {
             <h2>{title}</h2>
             <RichText html={body} className="mb-5" />
             {indicatorHasGoal ? (
-              <IndicatorProgressBar indicator={indicator} animate={inView} />
+              <IndicatorProgressBar
+                baseValue
+                latestValue
+                goalValue
+                normalize
+                unit
+                indicator={indicator}
+                animate={inView}
+              />
             ) : (
               <>
                 <h2>{indicator.name}</h2>

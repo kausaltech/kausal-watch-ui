@@ -1,6 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { useEffect, useRef, useState } from 'react';
 import styled, { useTheme } from 'styled-components';
 import { readableColor } from 'polished';
 import { motion, useAnimation, animate } from 'framer-motion';
@@ -97,8 +96,16 @@ const findPrecision = (comparableValues) => {
   return 4;
 };
 
-const ValueGroup = ({ date = '', value, unit, negative, ...rest }) => {
+interface ValueGroup extends SVGTextElement {
+  value: string;
+  unit: string;
+  negative: boolean;
+}
+
+const ValueGroup = (props: ValueGroup) => {
+  const { value, unit, negative, ...rest } = props;
   return (
+    //@ts-expect-error style attribute complex to check
     <text {...rest}>
       <ValueText x="0" dy="16" className={negative ? 'negative' : ''}>
         {value}
@@ -106,12 +113,6 @@ const ValueGroup = ({ date = '', value, unit, negative, ...rest }) => {
       <UnitText className={negative ? 'negative' : ''}> {unit}</UnitText>
     </text>
   );
-};
-
-ValueGroup.propTypes = {
-  date: PropTypes.string,
-  value: PropTypes.string.isRequired,
-  unit: PropTypes.string.isRequired,
 };
 
 function Counter({ from, to, duration, locale, precision }) {
@@ -156,33 +157,32 @@ function useChartWidth() {
   return width;
 }
 
-function IndicatorProgressBar(props) {
+type IndicatorType = {
+  id: string;
+  name: string;
+  unit: {
+    shortName: string;
+  };
+  values: Array<{
+    date: string;
+    value: number;
+  }>;
+  goals: Array<{
+    date: string;
+    value: number;
+  }>;
+};
+
+type IndicatorProgressBarProps = {
+  indicator: IndicatorType;
+  animate: boolean;
+};
+
+function IndicatorProgressBar(props: IndicatorProgressBarProps) {
   const { indicator, animate } = props;
 
   const width = useChartWidth();
   const [isNormalized, setIsNormalized] = useState(false);
-
-  const populationNormalizer = indicator.common?.normalizations.find(
-    (normalization) => normalization.normalizer.identifier === 'population'
-  );
-
-  const getNormalizedValue = (indicatorValue) => {
-    if (populationNormalizer && indicatorValue.normalizedValues.length > 0) {
-      const normalized = indicatorValue.normalizedValues.find(
-        (normed) => normed.normalizerId === populationNormalizer.normalizer.id
-      );
-      return normalized?.value;
-    } else {
-      return undefined;
-    }
-  };
-
-  const lastGoal = indicator.goals[indicator.goals.length - 1];
-  const firstValue = indicator.values[0];
-  const lastValue = indicator.values[indicator.values.length - 1];
-
-  const canNormalize =
-    getNormalizedValue(firstValue) && getNormalizedValue(lastValue);
 
   useEffect(() => {
     if (canNormalize) {
@@ -641,28 +641,5 @@ function IndicatorProgressBar(props) {
     </div>
   );
 }
-
-IndicatorProgressBar.propTypes = {
-  indicator: PropTypes.shape({
-    id: PropTypes.string,
-    name: PropTypes.string,
-    unit: PropTypes.shape({
-      shortName: PropTypes.string,
-    }),
-    values: PropTypes.arrayOf(
-      PropTypes.shape({
-        date: PropTypes.string,
-        value: PropTypes.number,
-      })
-    ),
-    goals: PropTypes.arrayOf(
-      PropTypes.shape({
-        date: PropTypes.string,
-        value: PropTypes.number,
-      })
-    ),
-  }),
-  animate: PropTypes.bool,
-};
 
 export default IndicatorProgressBar;
