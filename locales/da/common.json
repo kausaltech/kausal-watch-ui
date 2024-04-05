@@ -99,6 +99,7 @@
     "recently-updated-actions": "{context, select, STRATEGY {Nyligt opdaterede strategier} other {Nyligt opdaterede handlinger}}",
     "recently-updated-indicators": "Nyligt opdaterede indikatorer",
     "reduced": "Reduceret",
+    "reference": "Henvisning",
     "remove-filter": "Fjern filteret",
     "required-field": "Påkrævet område",
     "responsible-parties": "Ansvarlige organisationer",

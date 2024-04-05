@@ -89,6 +89,7 @@
     "recently-updated-actions": "{context, select, CASE_STUDY {Nyligen uppdaterade handlingar} STRATEGY {Nyligen uppdaterade strategier} other {Nyligen uppdaterade handlingar}}",
     "recently-updated-indicators": "Nyligen uppdaterade indikatorer",
     "reduced": "Minskad",
+    "reference": "Hänvisning",
     "remove-filter": "Ta bort filtret",
     "required-field": "Obligatorisk",
     "responsible-parties": "{context, select, DIVISION {Ansvariga divisioner} other {Ansvariga organisationer}}",

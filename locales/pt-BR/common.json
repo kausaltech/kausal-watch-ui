@@ -104,6 +104,7 @@
     "recently-updated-actions": "{context, select, CASE_STUDY {Estudos de caso atualizados recentemente} STRATEGY {Estratégias atualizadas recentemente} other {Ações atualizadas recentemente}}",
     "recently-updated-indicators": "Indicadores atualizados recentemente",
     "reduced": "Reduzido",
+    "reference": "Referência",
     "remove-filter": "Remover filtro",
     "required-field": "Campo obrigatório",
     "responsible-parties": "{context, select, DIVISION {Divisões responsáveis} outras {Organizações responsáveis}}",

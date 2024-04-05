@@ -99,6 +99,7 @@
     "recently-updated-actions": "{context, select, STRATEGY {Estrategias actualizadas recientemente} other {Acciones actualizadas recientemente}}",
     "recently-updated-indicators": "Indicadores actualizados recientemente",
     "reduced": "Reducido",
+    "reference": "Referencia",
     "remove-filter": "Eliminar filtro",
     "required-field": "Campo obligatorio",
     "responsible-parties": "Organizaciones responsables",

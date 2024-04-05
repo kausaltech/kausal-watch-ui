@@ -103,6 +103,7 @@
     "recently-updated-actions": "{context, select, CASE_STUDY {Recently updated case studies} STRATEGY {Recently updated strategies} other {Recently updated actions}}",
     "recently-updated-indicators": "Recently updated indicators",
     "reduced": "Reduced",
+    "reference": "Reference",
     "remove-filter": "Remove filter",
     "required-field": "Required field",
     "responsible-parties": "{context, select, DIVISION {Responsible divisions} other {Responsible organizations}}",

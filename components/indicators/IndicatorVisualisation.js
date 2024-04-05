@@ -774,9 +774,7 @@ function IndicatorVisualisation({ indicatorId, indicatorLink }) {
       />
       {indicator.reference && (
         <div style={{ display: 'flex' }}>
-          <span style={{ marginRight: '0.5em' }}>
-            {capitalizeFirstLetter(t('reference'))}:
-          </span>
+          <span style={{ marginRight: '0.5em' }}>{t('reference')}:</span>
           <RichText html={indicator.reference} />
         </div>
       )}
