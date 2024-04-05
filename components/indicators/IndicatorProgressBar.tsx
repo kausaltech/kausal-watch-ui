@@ -173,66 +173,95 @@ type IndicatorType = {
   }>;
 };
 
-type IndicatorProgressBarProps = {
-  indicator: IndicatorType;
+interface IndicatorProgressBarProps {
+  indicatorId;
+  normalize: boolean;
+  baseValue: {
+    value: number;
+    normalizedValue?: number;
+    date: string;
+  };
+  lastValue: {
+    value: number;
+    normalizedValue?: number;
+    date: string;
+  };
+  goalValue: {
+    value: number;
+    normalizedValue?: number;
+    date: string;
+  };
+  unit: {
+    name: string;
+    normalizedName?: string;
+  };
   animate: boolean;
-};
+}
 
 function IndicatorProgressBar(props: IndicatorProgressBarProps) {
-  const { indicator, animate } = props;
+  const {
+    indicatorId,
+    normalize,
+    baseValue,
+    lastValue,
+    goalValue,
+    unit,
+    animate,
+  } = props;
 
   const width = useChartWidth();
   const [isNormalized, setIsNormalized] = useState(false);
 
   useEffect(() => {
-    if (canNormalize) {
+    if (normalize) {
       setIsNormalized(false);
     }
-  }, [canNormalize]);
+  }, [normalize]);
 
   // The bar is built for showing reduction goals
   // we swap the goal and start values if the goal is to increase
   // TODO: enable the viz to handle goals to increase
-  const indicatorId = indicator.id;
-  const startDate = firstValue.date;
+  const startDate = baseValue.date;
   const startValue =
-    lastGoal.value < firstValue.value
+    goalValue.value < baseValue.value
       ? isNormalized
-        ? getNormalizedValue(firstValue)
-        : firstValue.value
+        ? baseValue.normalizedValue
+        : baseValue.value
       : isNormalized
-      ? getNormalizedValue(lastGoal)
-      : lastGoal.value;
+      ? goalValue.normalizedValue
+      : goalValue.value;
 
   const latestDate = lastValue.date;
   const latestValue = isNormalized
-    ? getNormalizedValue(lastValue)
+    ? lastValue.normalizedValue
     : lastValue.value;
 
-  const goalDate = lastGoal.date;
-  const goalValue =
-    lastGoal.value < firstValue.value
+  const goalDate = goalValue.date;
+  const goalDisplayValue =
+    goalValue.value < baseValue.value
       ? isNormalized
-        ? getNormalizedValue(lastGoal)
-        : lastGoal.value
+        ? goalValue.normalizedValue
+        : goalValue.value
       : isNormalized
-      ? getNormalizedValue(firstValue)
-      : firstValue.value;
+      ? baseValue.normalizedValue
+      : baseValue.value;
 
-  const minPrecision = findPrecision([startValue, latestValue, goalValue]);
+  const minPrecision = findPrecision([
+    startValue,
+    latestValue,
+    goalDisplayValue,
+  ]);
 
   const roundedValues = {
     start: startValue.toPrecision(minPrecision),
     latest: latestValue.toPrecision(minPrecision),
-    goal: goalValue
-      ? goalValue.toPrecision(isNormalized ? minPrecision : 4)
+    goal: goalDisplayValue
+      ? goalDisplayValue.toPrecision(isNormalized ? minPrecision : 4)
       : undefined,
   };
 
-  const unit = isNormalized
-    ? populationNormalizer.unit.shortName
-    : indicator.unit.shortName;
-  const note = indicator.name;
+  const displayUnit = isNormalized ? unit.normalizedName : unit.name;
+  const note = 'indicatorname here';
 
   const theme = useTheme();
   const t = useTranslations();
@@ -369,11 +398,11 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
     startYear: dayjs(startDate).format('YYYY'),
     latestYear: dayjs(latestDate).format('YYYY'),
     goalYear: dayjs(goalDate).format('YYYY'),
-    startValue: `${roundedValues.start} ${unit}`,
-    latestValue: `${roundedValues.latest} ${unit}`,
-    goalValue: `${roundedValues.goal} ${unit}`,
-    reduced: `${reductionCounterTo.toFixed(1)} ${unit}`,
-    toBeReduced: `${roundedValues.latest - roundedValues.goal} ${unit}`,
+    startValue: `${roundedValues.start} ${displayUnit}`,
+    latestValue: `${roundedValues.latest} ${displayUnit}`,
+    goalValue: `${roundedValues.goal} ${displayUnit}`,
+    reduced: `${reductionCounterTo.toFixed(1)} ${displayUnit}`,
+    toBeReduced: `${roundedValues.latest - roundedValues.goal} ${displayUnit}`,
   };
   /*
     On the year {{startYear}} {{name}} was {{startValue}}.
@@ -385,7 +414,7 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
 
   return (
     <div>
-      {canNormalize && (
+      {normalize && (
         <NormalizerChooser>
           <Switch
             label={t('indicator-normalize-per-capita')}
@@ -456,7 +485,7 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
                   transform={`translate(${startBar.x + 4} 0)`}
                   date={graphValues.startYear}
                   value={formatValue(roundedValues.start, locale)}
-                  unit={unit}
+                  unit={displayUnit}
                   locale={locale}
                   negative={
                     readableColor(
@@ -482,7 +511,7 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
                         locale={locale}
                         precision={minPrecision}
                       />{' '}
-                      {unit}
+                      {displayUnit}
                     </SegmentValue>
                   </text>
                 )}
@@ -520,7 +549,7 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
                 transform={`translate(${latestBar.x + 4} ${latestBar.y})`}
                 date={graphValues.latestYear}
                 value={formatValue(roundedValues.latest, locale)}
-                unit={unit}
+                unit={displayUnit}
                 locale={locale}
                 negative={
                   readableColor(
@@ -541,7 +570,7 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
               <SegmentHeader>{t('to-reduce')}</SegmentHeader>
               <SegmentValue x="0" dy="16">
                 {formatValue(roundedValues.latest - roundedValues.goal, locale)}{' '}
-                {unit}
+                {displayUnit}
               </SegmentValue>
             </motion.text>
             {/* Goal bar */}
@@ -580,7 +609,7 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
               } ${goalBar.y})`}
               date={graphValues.goalYear}
               value={formatValue(roundedValues.goal, locale)}
-              unit={unit}
+              unit={displayUnit}
               locale={locale}
               negative={
                 readableColor(

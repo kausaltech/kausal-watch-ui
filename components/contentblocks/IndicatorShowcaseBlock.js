@@ -78,6 +78,13 @@ const IndicatorShowcaseBlock = (props) => {
     value: lastGoal.value,
     normalizedValue: 0,
   };
+
+  // populationNormalizer.unit.shortName
+
+  const unit = {
+    name: indicator.unit.shortName || '',
+    normalizedName: '',
+  };
   return (
     <IndicatorShowcase id={id}>
       <Container>
@@ -87,11 +94,12 @@ const IndicatorShowcaseBlock = (props) => {
             <RichText html={body} className="mb-5" />
             {indicatorHasGoal ? (
               <IndicatorProgressBar
-                baseValue
-                latestValue
-                goalValue
-                normalize
-                unit
+                indicatorId={id}
+                baseValue={baseValue}
+                lastValue={latestValue}
+                goalValue={goalValue}
+                normalize={false}
+                unit={unit}
                 indicator={indicator}
                 animate={inView}
               />
