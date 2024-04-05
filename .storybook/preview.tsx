@@ -9,7 +9,7 @@ import PlanProvider from '../components/providers/PlanProvider';
 import { MOCK_PLAN } from '../stories/mocks/plan.mocks';
 import '@/styles/default/main.scss';
 
-const themes = process.env.THEMES ? JSON.parse(process.env.THEMES) : [];
+export const themes = process.env.THEMES ? JSON.parse(process.env.THEMES) : [];
 const messages = { ...a11yMessages, ...actionsMessages, ...commonMessages };
 
 const preview: Preview = {
