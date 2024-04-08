@@ -21,6 +21,13 @@ jobs:
   e2e_test:
     name: Run tests
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # Dynamically set the plan_identifier based on the type of tests.
+        # If it's schedule use list of id from the secret.
+        # If manual tests use the plan id from the input or sunnydale by default
+        plan_identifier: ${{ fromJson(github.event_name == 'schedule' ? secrets.TEST_PLAN_IDENTIFIERS : '["' + (github.event.inputs.plan_identifiers || 'sunnydale') + '"]') }}
     steps:
       - name: Check out code
         uses: actions/checkout@v3
@@ -47,21 +54,21 @@ jobs:
           yarn config set npmScopes.kausal.npmAlwaysAuth true
           yarn config set npmScopes.kausal.npmAuthIdent ${{ secrets.NPM_AUTH_IDENT }}
 
+      - name: Set environment variables
+        run: |
+          if [ "${{ github.event_name }}" == 'schedule' ]; then
+            echo "FRONTEND_BASE_URL=http://${{ matrix.plan_identifier }}.watch.staging.kausal.tech" >> $GITHUB_ENV
+          else
+            echo "FRONTEND_BASE_URL=${{ github.event.inputs.frontend_base_url }}" >> $GITHUB_ENV
+          fi
+          echo "TEST_PLAN_IDENTIFIERS=${{ matrix.plan_identifier }}" >> $GITHUB_ENV
+          echo "APLANS_API_BASE_URL=https://api.watch.kausal.tech/v1" >> $GITHUB_ENV
+
       - name: Install dependencies
         run: yarn install
 
       - name: Playwright install
         run: node_modules/.bin/playwright install --with-deps
-
-      - name: Set TEST_PLAN_IDENTIFIERS for each job
-        run: |
-          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-            echo "TEST_PLAN_IDENTIFIERS=${{ github.event.inputs.plan_identifiers || 'sunnydale' }}" >> $GITHUB_ENV
-          else
-            echo "TEST_PLAN_IDENTIFIERS=${{ secrets.TEST_PLAN_IDENTIFIERS }}" >> $GITHUB_ENV
-          fi
-          echo "FRONTEND_BASE_URL=${{ github.event.inputs.frontend_base_url || 'http://sunnydale.watch.staging.kausal.tech' }}" >> $GITHUB_ENV
-          echo "APLANS_API_BASE_URL=${{ github.event.inputs.backend_base_url || 'https://api.watch.kausal.tech/v1' }}" >> $GITHUB_ENV
 
       - name: Running Playwright e2e tests
         run: node_modules/.bin/playwright test
