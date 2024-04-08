@@ -99,6 +99,7 @@
     "recently-updated-actions": "{context, select, STRATEGY {Viimeksi muokatut strategiat} other {Viimeksi muokatut toimenpiteet}}",
     "recently-updated-indicators": "Viimeksi muokatut mittarit",
     "reduced": "Vähennetty",
+    "reference": "Viite",
     "remove-filter": "Poista rajaus",
     "required-field": "Pakollinen tieto",
     "responsible-parties": "Vastuuorganisaatiot",
