@@ -159,5 +159,6 @@
     "definition": "Selite",
     "select-sector-for-actions": "Valitse päästösektori nähdäksesi siihen liittyvät toimenpiteet",
     "no-phase": "Ei vaihetta",
-    "no-status": "Ei tilaa"
+    "no-status": "Ei tilaa",
+    "content-could-not-be-displayed": "Emme voi näyttää tätä sisältöä tällä hetkellä. Yritä päivittää sivu. Raportti on lähetetty tiimillemme ongelman selvittämiseksi."
 }
