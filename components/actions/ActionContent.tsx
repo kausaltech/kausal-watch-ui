@@ -432,8 +432,8 @@ function ActionContentSectionBlock(props) {
           <Col md={layout === 'grid' ? 4 : 12} key={block.id} className="mb-3">
             <RestrictedBlockWrapper
               key={block.id}
-              isRestricted={block.meta.restricted}
-              isHidden={block.meta.hidden}
+              isRestricted={block.meta?.restricted}
+              isHidden={block.meta?.hidden}
             >
               <ActionContentBlock
                 key={block.id}
