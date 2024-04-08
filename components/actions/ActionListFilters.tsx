@@ -858,6 +858,42 @@ class ActionNameFilter implements ActionListFilter<string | undefined> {
   }
 }
 
+class ContinuousActionFilter implements ActionListFilter<string | undefined> {
+  constructor(id, label) {
+    this.id = id;
+    this.label = label;
+  }
+  getLabel(t: TFunction) {
+    return 'Show only continuous';
+  }
+  getShowAllLabel(t: TFunction) {
+    return t('filter-text-default');
+  }
+  getHelpText() {
+    return undefined;
+  }
+  filterAction(value: FilterValue, action: ActionListAction) {
+    return action?.scheduleContinuous === !!value;
+  }
+  render(
+    value: string | undefined,
+    onChange: FilterChangeCallback<string | undefined>,
+    t: TFunction
+  ) {
+    return (
+      <div>
+        <input
+          type="checkbox"
+          id={this.id}
+          checked={value || false} // Assuming the filterState tracks whether checked as true/false
+          onChange={(e) => onChange(this.id, e.target.checked)}
+        />
+        <label htmlFor={this.id}>{this.label}</label>
+      </div>
+    );
+  }
+}
+
 export type ActionListFilterSection = {
   id: string;
   hidden?: boolean;
@@ -1149,6 +1185,11 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
               act.plan.id === val,
           };
           filters.push(new GenericSelectFilter(planOpts));
+          break;
+        case 'ContinuousActionFilterBlock':
+          filters.push(
+            new ContinuousActionFilter('continuous', t('continuous-action'))
+          );
           break;
       }
     });
