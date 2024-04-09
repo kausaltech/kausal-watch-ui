@@ -1,20 +1,26 @@
-name: Scheduled E2E Tests
-
+name: E2e-tests
 on:
-  push:
-    branches:
-      - '**'
-  pull_request:
-    branches:
-      - '**'
+  workflow_dispatch:
+    inputs:
+      plan_identifiers:
+        description: 'Comma separated list of plan identifiers'
+        required: true
+        default: 'sunnydale'
+      frontend_base_url:
+        description: 'Base url for environment to run tests against'
+        required: true
+        default: 'http://{planId}.watch.staging.kausal.tech'
+      backend_base_url:
+        description: 'Base url for backend API'
+        required: true
+        default: 'https://api.watch.kausal.tech/v1'
   schedule:
-    - cron: '0 10 * * *'
+    - cron: '0 21 * * 1-5' # 21:00 UTC, 00:00 EEST
 
 jobs:
-  run_e2e_tests:
-    name: Run E2E Tests
+  e2e_test:
+    name: Run tests
     runs-on: ubuntu-latest
-
     steps:
       - name: Check out code
         uses: actions/checkout@v3
@@ -32,27 +38,37 @@ jobs:
             node_modules
           key: ${{ runner.os }}-node-modules-${{ hashFiles('**/yarn.lock') }}
 
-      - name: Install yarn and dependencies
+      - name: Install yarn
         run: |
           corepack enable
           yarn set version 3.2.1
-          yarn install
+          yarn config set nodeLinker 'node-modules'
+          yarn config set npmScopes.kausal.npmRegistryServer "${{ secrets.NPM_REGISTRY_SERVER }}"
+          yarn config set npmScopes.kausal.npmAlwaysAuth true
+          yarn config set npmScopes.kausal.npmAuthIdent ${{ secrets.NPM_AUTH_IDENT }}
+
+      - name: Install dependencies
+        run: yarn install
 
       - name: Playwright install
         run: node_modules/.bin/playwright install --with-deps
 
-      - name: Run tests for all plans
-        env:
-          TEST_PLAN_IDENTIFIERS: ${{ secrets.TEST_PLAN_IDENTIFIERS }}
-          APLANS_API_BASE_URL: 'https://api.watch.kausal.tech/v1'
+      - name: Set TEST_PLAN_IDENTIFIERS for each job
         run: |
-          IFS=',' read -ra PLAN_IDS <<< "${TEST_PLAN_IDENTIFIERS}"
-          for PLAN_ID in "${PLAN_IDS[@]}"
-          do
-            TEST_PAGE_BASE_URL="http://$PLAN_ID.watch.staging.kausal.tech"
-            echo "Running tests for plan $PLAN_ID with base URL $TEST_PAGE_BASE_URL"
-            TEST_PAGE_BASE_URL=$TEST_PAGE_BASE_URL node_modules/.bin/playwright test
-          done
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "TEST_PLAN_IDENTIFIERS=${{ github.event.inputs.plan_identifiers || 'sunnydale' }}" >> $GITHUB_ENV
+          else
+            echo "TEST_PLAN_IDENTIFIERS=${{ secrets.TEST_PLAN_IDENTIFIERS }}" >> $GITHUB_ENV
+          fi
+          echo "FRONTEND_BASE_URL=${{ github.event.inputs.frontend_base_url || 'http://sunnydale.watch.staging.kausal.tech' }}" >> $GITHUB_ENV
+          echo "APLANS_API_BASE_URL=${{ github.event.inputs.backend_base_url || 'https://api.watch.kausal.tech/v1' }}" >> $GITHUB_ENV
+
+      - name: Running Playwright e2e tests
+        run: node_modules/.bin/playwright test
+        env:
+          TEST_PLAN_IDENTIFIERS: ${{ env.TEST_PLAN_IDENTIFIERS }}
+          TEST_PAGE_BASE_URL: ${{ env.FRONTEND_BASE_URL }}
+          APLANS_API_BASE_URL: ${{ env.APLANS_API_BASE_URL }}
 
       - uses: actions/upload-artifact@v3
         if: always()
