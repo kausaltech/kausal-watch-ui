@@ -56,12 +56,19 @@ jobs:
       - name: Set TEST_PLAN_IDENTIFIERS for each job
         run: |
           if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-            echo "TEST_PLAN_IDENTIFIERS=${{ github.event.inputs.plan_identifiers || 'sunnydale' }}" >> $GITHUB_ENV
+            TEST_PLAN_IDENTIFIERS=${{ github.event.inputs.plan_identifiers }}
+            TEST_PAGE_BASE_URL=${{ github.event.inputs.frontend_base_url }}
           else
-            echo "TEST_PLAN_IDENTIFIERS=${{ secrets.TEST_PLAN_IDENTIFIERS }}" >> $GITHUB_ENV
+            TEST_PLAN_IDENTIFIERS=${{ secrets.TEST_PLAN_IDENTIFIERS }}
+            IFS=',' read -ra PLAN_IDS <<< "$TEST_PLAN_IDENTIFIERS"
+            for PLAN_ID in "${PLAN_IDS[@]}"
+            do
+              TEST_PAGE_BASE_URL="http://${PLAN_ID}.watch.staging.kausal.tech"
+              echo "Running tests for plan $PLAN_ID with base URL $TEST_PAGE_BASE_URL"
+              APLANS_API_BASE_URL=${{ github.event.inputs.backend_base_url || 'https://api.watch.kausal.tech/v1' }}
+              node_modules/.bin/playwright test --config playwright.config.ts
+            done
           fi
-          echo "FRONTEND_BASE_URL=${{ github.event.inputs.frontend_base_url || 'http://sunnydale.watch.staging.kausal.tech' }}" >> $GITHUB_ENV
-          echo "APLANS_API_BASE_URL=${{ github.event.inputs.backend_base_url || 'https://api.watch.kausal.tech/v1' }}" >> $GITHUB_ENV
 
       - name: Running Playwright e2e tests
         run: node_modules/.bin/playwright test
