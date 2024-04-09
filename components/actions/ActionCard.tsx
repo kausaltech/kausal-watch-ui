@@ -325,6 +325,10 @@ function ActionCard({
     return 'IN_HERO';
   }
 
+  const actionDependencyGroups = showActionDependencies
+    ? mapActionToDependencyGroups(action, plan.actionDependencyRoles)
+    : [];
+
   const identifierPosition = getidentifierPosition(showPlan, variant, plan);
   const statusColor = getStatusColorForAction(action, plan, theme);
 
@@ -404,34 +408,33 @@ function ActionCard({
         />
       )}
 
-      {variant === 'primary' && showActionDependencies && (
-        <>
-          <StyledActionDependencyIconWrapper
-            id={getDependencyTooltipId(action.id)}
-          >
-            <Icon name="action-dependency" width="24px" height="24px" />
-          </StyledActionDependencyIconWrapper>
-          <StyledTooltip
-            target={getDependencyTooltipId(action.id)}
-            role="tooltip"
-            autohide={false}
-            placement="top"
-            id={`tt-content-${getDependencyTooltipId(action.id)}`}
-            isOpen={tooltipOpen}
-            toggle={toggle}
-          >
-            <ActionDependenciesBlock
-              size="small"
-              activeActionId={action.id}
-              actionGroups={mapActionToDependencyGroups(
-                action,
-                plan.actionDependencyRoles
-              )}
-              showTitle
-            />
-          </StyledTooltip>
-        </>
-      )}
+      {variant === 'primary' &&
+        showActionDependencies &&
+        !!actionDependencyGroups.length && (
+          <>
+            <StyledActionDependencyIconWrapper
+              id={getDependencyTooltipId(action.id)}
+            >
+              <Icon name="action-dependency" width="24px" height="24px" />
+            </StyledActionDependencyIconWrapper>
+            <StyledTooltip
+              target={getDependencyTooltipId(action.id)}
+              role="tooltip"
+              autohide={false}
+              placement="top"
+              id={`tt-content-${getDependencyTooltipId(action.id)}`}
+              isOpen={tooltipOpen}
+              toggle={toggle}
+            >
+              <ActionDependenciesBlock
+                size="small"
+                activeActionId={action.id}
+                actionGroups={actionDependencyGroups}
+                showTitle
+              />
+            </StyledTooltip>
+          </>
+        )}
     </ActionCardElement>
   );
 
