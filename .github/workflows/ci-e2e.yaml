@@ -56,17 +56,16 @@ jobs:
       - name: Set TEST_PLAN_IDENTIFIERS for each job
         run: |
           if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-            TEST_PLAN_IDENTIFIERS=${{ github.event.inputs.plan_identifiers }}
-            TEST_PAGE_BASE_URL=${{ github.event.inputs.frontend_base_url }}
+            echo "TEST_PLAN_IDENTIFIERS=${{ github.event.inputs.plan_identifiers }}" >> $GITHUB_ENV
+            echo "FRONTEND_BASE_URL=${{ github.event.inputs.frontend_base_url }}" >> $GITHUB_ENV
           else
-            TEST_PLAN_IDENTIFIERS=${{ secrets.TEST_PLAN_IDENTIFIERS }}
+            echo "TEST_PLAN_IDENTIFIERS=${{ secrets.TEST_PLAN_IDENTIFIERS }}" >> $GITHUB_ENV
             IFS=',' read -ra PLAN_IDS <<< "$TEST_PLAN_IDENTIFIERS"
             for PLAN_ID in "${PLAN_IDS[@]}"
             do
-              TEST_PAGE_BASE_URL="http://${PLAN_ID}.watch.staging.kausal.tech"
-              echo "Running tests for plan $PLAN_ID with base URL $TEST_PAGE_BASE_URL"
-              APLANS_API_BASE_URL=${{ github.event.inputs.backend_base_url || 'https://api.watch.kausal.tech/v1' }}
-              node_modules/.bin/playwright test --config playwright.config.ts
+              FRONTEND_BASE_URL="http://${PLAN_ID}.watch.staging.kausal.tech"
+              echo "Running tests for plan $PLAN_ID with FRONTEND_BASE_URL=$FRONTEND_BASE_URL"
+              echo "APLANS_API_BASE_URL=https://api.watch.kausal.tech/v1" >> $GITHUB_ENV
             done
           fi
 
