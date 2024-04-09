@@ -7,6 +7,7 @@ import { ActionContentAction } from './ActionContent';
 import { Theme } from '@kausal/themes/types';
 import { RefObject, useEffect, useRef, useState } from 'react';
 import { debounce } from 'lodash';
+import { useTranslations } from 'next-intl';
 
 // Used to determine the style of icon visualizing a phase, not to be confused with phase identifiers
 type PhaseType = 'done' | 'current' | 'todo';
@@ -291,8 +292,8 @@ export function PhaseTimeline({
 }: PhaseTimelineProps) {
   const ref = useRef<HTMLUListElement>(null);
   const plan = usePlan();
-  console.log(plan, activePhase, layout, ref);
   const theme = useTheme();
+  const t = useTranslations();
   const phases = plan.actionImplementationPhases;
   const overriddenLayout = useOverrideLayout(layout, phases.length, ref);
   const isVertical = overriddenLayout === 'vertical';
@@ -312,7 +313,7 @@ export function PhaseTimeline({
               : undefined;
           const phaseName =
             isContinuous && phase.identifier === 'completed'
-              ? 'Continuous'
+              ? t('action-continuous')
               : phase.name;
 
           return (
