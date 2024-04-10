@@ -499,11 +499,7 @@ function SiteFooter(props: SiteFooterProps) {
             {theme.themeLogoWhiteUrl !== '' && (
               <Logo>
                 {theme?.footerLogoLink ? (
-                  <a
-                    href={theme.footerLogoLink}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
+                  <a href={theme.footerLogoLink}>
                     <OrgLogo aria-hidden="true" className="footer-org-logo" />
                   </a>
                 ) : (
