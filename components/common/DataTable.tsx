@@ -33,10 +33,6 @@ const StyledTable = styled(Table)`
   td {
     border-bottom: none;
   }
-  .subheader td {
-    font-size: ${(props) => props.theme.fontSizeBase};
-    font-weight: ${(props) => props.theme.fontWeightBold};
-  }
 `;
 
 const DataTable: React.FC<DataTableProps> = ({ title, headers, data }) => {
