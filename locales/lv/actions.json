@@ -29,6 +29,7 @@
     "action-progress": "Progress",
     "responsible-organizations-other": "Citi atbildīgie",
     "action-continuous": "Notiek",
+    "actions-show-continuous": "Rādīt tikai notiekošās rīcības",
     "action-description-official": "Oficiālais apraksts",
     "action-status-merged": "{context, select, CASE_STUDY {Apvienots ar gadījumu izpēti} STRATEGY {Apvienots ar stratēģiju} other {Apvienots ar rīcību}}",
     "action-task-todo": "Todo",

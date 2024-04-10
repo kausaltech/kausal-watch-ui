@@ -1,6 +1,7 @@
 {
   "action-completion-percentage": "Completion",
-  "action-continuous": "Ongoing",
+  "action-continuous": "Continuous",
+  "actions-show-continuous": "Show only continuous actions",
   "action-description": "Description",
   "action-description-official": "Official description",
   "action-id": "ID",

@@ -3,6 +3,7 @@
     "action-id": "Id",
     "action-identifier": "Tunniste",
     "action-continuous": "Jatkuva",
+    "actions-show-continuous": "Näytä vain jatkuvat toimenpiteet",
     "action-description": "Kuvaus",
     "action-description-official": "Virallinen kuvaus",
     "action-what-effect-this-has": "{context, select, STRATEGY {Miten tämä strategia vaikuttaa tavoitteeseen?} other {Miten tämä toimenpide vaikuttaa tavoitteeseen?}}",
