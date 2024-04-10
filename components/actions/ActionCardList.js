@@ -58,6 +58,7 @@ const groupActions = (groupBy, depth, actions, theme, t) => {
     }
     if (groupBy === 'primaryOrg') cat = action.primaryOrg;
     if (groupBy === 'none') cat = false;
+    if (groupBy === 'plan') cat = action.plan;
 
     let group;
 
@@ -76,7 +77,8 @@ const groupActions = (groupBy, depth, actions, theme, t) => {
             ? cat.identifier
             : ''
         }`,
-        name: cat.name,
+        // if cat=plan prefer shortName
+        name: cat?.shortName || cat.name,
         identifier: cat.identifier || cat.name,
         order: cat.order,
         elements: [],
