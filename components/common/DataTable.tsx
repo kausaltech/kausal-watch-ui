@@ -1,35 +1,49 @@
-import React from 'react';
 import styled from 'styled-components';
 import { Table } from 'reactstrap';
 
 export interface DataTableProps {
   title: string;
   headers: string[];
-  data: any[][];
+  data: string[][];
 }
 
 const TableContainer = styled.div`
-  background-color: #fff;
-  padding: 20px;
-  margin-top: 20px;
-  border-radius: 8px;
+  max-width: ${(props) => props.theme.breakpointSm};
+  background-color: ${({ theme }) => theme.themeColors.white};
+  margin: ${(props) => props.theme.spaces.s100} auto;
+  margin-bottom: ${(props) => props.theme.spaces.s600};
+  padding: ${(props) => props.theme.spaces.s200} 0 0;
+  border-collapse: collapse;
 `;
 
 const StyledTable = styled(Table)`
   margin: 0 auto;
-  background-color: #f9f9f9;
 
   th,
   td {
+    padding: 8px;
     text-align: left;
+    vertical-align: top;
+  }
+
+  th {
+    border-bottom: 1px solid ${(props) => props.theme.graphColors.grey040};
+    color: ${(props) => props.theme.headingsColor};
+  }
+  td {
+    border-bottom: none;
+  }
+  .subheader td {
+    font-size: ${(props) => props.theme.fontSizeBase};
+    font-weight: ${(props) => props.theme.fontWeightBold};
   }
 `;
 
 const DataTable: React.FC<DataTableProps> = ({ title, headers, data }) => {
   return (
     <TableContainer>
-      {title && <h2>{title}</h2>}
-      <StyledTable bordered>
+      {title && <h3>{title}</h3>}
+      <StyledTable>
         <thead>
           <tr>
             {headers.map((header, index) => (
