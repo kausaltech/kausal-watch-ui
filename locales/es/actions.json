@@ -1,6 +1,7 @@
 {
     "action-completion-percentage": "Finalización",
     "action-continuous": "En curso",
+    "actions-show-continuous": "Mostrar solo acciones en curso",
     "action-description": "Descripción",
     "action-description-official": "Descripción oficial",
     "action-id": "ID",

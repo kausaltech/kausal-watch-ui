@@ -1,6 +1,7 @@
 {
     "action-completion-percentage": "Færdiggørelse",
     "action-continuous": "Igangværende",
+    "actions-show-continuous": "Vis kun igangværende handlinger",
     "action-description": "Beskrivelse",
     "action-description-official": "Officiel beskrivelse",
     "action-id": "ID",

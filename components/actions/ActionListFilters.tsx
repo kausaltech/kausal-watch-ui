@@ -1,5 +1,5 @@
 import React, { createRef, Ref, useCallback, useMemo, useState } from 'react';
-import { Row, Col, Badge, CloseButton } from 'reactstrap';
+import { Row, Col, Badge, CloseButton, FormGroup, Input } from 'reactstrap';
 import { debounce } from 'lodash';
 import styled from 'styled-components';
 import { readableColor } from 'polished';
@@ -375,7 +375,7 @@ function ActionListFilterBadges({
     let label: string;
     if (item.id === 'name') {
       label = value ?? '';
-    }
+    } else label = item.getLabel(t);
     if (item.options) {
       const matchingFilters = enabled.filter((i) => i.id === item.id);
       let activeOption: any = undefined;
@@ -391,7 +391,8 @@ function ActionListFilterBadges({
       }
 
       label = activeOption.label;
-    } else {
+      // Handle boolean type filters
+    } else if (typeof value !== 'boolean') {
       return null;
     }
     return {
@@ -421,7 +422,6 @@ function ActionListFilterBadges({
     })
     .flat()
     .filter((item): item is Badge => item != null);
-
   return (
     <FiltersList aria-live="assertive">
       <span className="count">
@@ -858,6 +858,49 @@ class ActionNameFilter implements ActionListFilter<string | undefined> {
   }
 }
 
+class ContinuousActionFilter implements ActionListFilter<string | undefined> {
+  id = 'continuous';
+  sm = undefined;
+  md = 6;
+  lg = 4;
+  constructor(id, label) {
+    this.id = id;
+    this.label = label;
+  }
+  getLabel(t: TFunction) {
+    return t('actions-show-continuous');
+  }
+  getShowAllLabel(t: TFunction) {
+    return t('filter-text-default');
+  }
+  getHelpText() {
+    return undefined;
+  }
+  filterAction(value: FilterValue, action: ActionListAction) {
+    return action?.scheduleContinuous === !!value;
+  }
+  render(
+    value: string | undefined,
+    onChange: FilterChangeCallback<string | undefined>,
+    t: TFunction
+  ) {
+    return (
+      <FilterColumn sm={this.sm} md={this.md} lg={this.lg} key={this.id}>
+        <FormGroup switch className="mb-4">
+          <Input
+            type="switch"
+            role="switch"
+            id={this.id}
+            checked={value || false} // Assuming the filterState tracks whether checked as true/false
+            onChange={(e) => onChange(this.id, e.target.checked)}
+          />
+          <label htmlFor={this.id}>{this.label}</label>
+        </FormGroup>
+      </FilterColumn>
+    );
+  }
+}
+
 export type ActionListFilterSection = {
   id: string;
   hidden?: boolean;
@@ -1149,6 +1192,14 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
               act.plan.id === val,
           };
           filters.push(new GenericSelectFilter(planOpts));
+          break;
+        case 'ContinuousActionFilterBlock':
+          filters.push(
+            new ContinuousActionFilter(
+              'continuous',
+              t('actions-show-continuous')
+            )
+          );
           break;
       }
     });

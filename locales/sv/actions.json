@@ -1,6 +1,7 @@
 {
     "action-completion-percentage": "Komplettering",
     "action-continuous": "Ständig",
+    "actions-show-continuous": "Visa endast ständiga åtgärder",
     "action-description": "Beskrivning",
     "action-description-official": "Officiell beskrivning",
     "action-id": "Id",
