@@ -14,6 +14,7 @@ import {
 } from './apollo.utils';
 import { SELECTED_WORKFLOW_COOKIE_KEY } from '@/constants/workflow';
 import { auth } from '@/config/auth';
+import { wildcardDomains } from '@/common/environment';
 
 const authMiddleware = setContext(
   async (_, { headers: initialHeaders = {} }) => {
@@ -46,6 +47,7 @@ export const { getClient } = registerApolloClient(() => {
       locale,
       planDomain: domain,
       planIdentifier: plan,
+      wildcardDomains,
       selectedWorkflow: versionCookie?.value,
     },
     connectToDevTools: false,

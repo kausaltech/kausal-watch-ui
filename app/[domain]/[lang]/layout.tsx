@@ -10,6 +10,7 @@ import '@/styles/default/main.scss';
 import { AuthProvider } from '@/components/providers/AuthProvider';
 import { auth } from '@/config/auth';
 import Script from 'next/script';
+import { wildcardDomains } from '@/common/environment';
 
 type Props = {
   params: { lang: string };
@@ -39,7 +40,10 @@ export default function LangLayout({ params, children }: Props) {
             <StyledComponentsRegistry>
               <DayjsLocaleProvider locale={params.lang}>
                 <AsyncAuthProvider>
-                  <ApolloWrapper initialLocale={params.lang}>
+                  <ApolloWrapper
+                    initialLocale={params.lang}
+                    wildcardDomains={wildcardDomains}
+                  >
                     {children}
                   </ApolloWrapper>
                 </AsyncAuthProvider>

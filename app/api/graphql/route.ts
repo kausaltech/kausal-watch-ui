@@ -11,16 +11,27 @@ export const dynamic = 'force-dynamic';
 export const POST = async (request: NextAuthRequest) => {
   const headersList = headers();
   const requestData = await request.json();
+  const copyHeaders = [
+    'user-agent',
+    'x-plan-domain',
+    'x-plan-identifier',
+    'x-wildcard-domains',
+    'authorization',
+  ];
+
+  const fetchHeaders = {
+    'Content-Type': 'application/json',
+  };
+  copyHeaders.forEach((hdr) => {
+    const val = headersList.get(hdr);
+    if (val) {
+      fetchHeaders[hdr] = val;
+    }
+  });
 
   const response = await fetch(gqlUrl, {
     method: 'POST',
-    headers: {
-      'User-Agent': headersList.get('user-agent') ?? '',
-      'x-plan-domain': headersList.get('x-plan-domain') ?? '',
-      'x-plan-identifier': headersList.get('x-plan-identifier') ?? '',
-      Authorization: headersList.get('Authorization') ?? '',
-      'Content-Type': 'application/json',
-    },
+    headers: fetchHeaders,
     body: JSON.stringify(requestData),
     next: { revalidate: 0 },
   });
