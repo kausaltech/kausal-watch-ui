@@ -180,6 +180,7 @@ export const ImplementationPhaseTooltipContent = ({
           <PhaseTimeline
             layout="vertical"
             activePhase={action.implementationPhase}
+            isContinuous={action.scheduleContinuous}
           />
         )}
       </StyledPhaseTimelineContainer>

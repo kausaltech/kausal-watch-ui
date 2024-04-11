@@ -14,6 +14,7 @@ export const MOCK_ACTIONS: ActionCardFragment[] = [
       color: 'green050',
     },
     completion: 66,
+    scheduleContinuous: true,
     categories: [
       {
         id: '1416',
@@ -71,6 +72,7 @@ export const MOCK_ACTIONS: ActionCardFragment[] = [
       color: 'yellow050',
     },
     completion: null,
+    scheduleContinuous: true,
     categories: [
       {
         id: '4293',
@@ -146,6 +148,7 @@ export const MOCK_ACTIONS: ActionCardFragment[] = [
       color: 'green050',
     },
     completion: null,
+    scheduleContinuous: false,
     categories: [
       {
         id: '261',
@@ -194,6 +197,7 @@ export const MOCK_ACTIONS: ActionCardFragment[] = [
       color: 'green050',
     },
     completion: null,
+    scheduleContinuous: false,
     categories: [
       {
         id: '1416',
@@ -251,6 +255,7 @@ export const MOCK_ACTIONS: ActionCardFragment[] = [
       color: 'green050',
     },
     completion: 61,
+    scheduleContinuous: true,
     categories: [
       {
         id: '1412',
@@ -317,6 +322,7 @@ export const MOCK_ACTIONS: ActionCardFragment[] = [
       color: 'green050',
     },
     completion: null,
+    scheduleContinuous: true,
     categories: [
       {
         id: '1412',
@@ -383,6 +389,7 @@ export const MOCK_ACTIONS: ActionCardFragment[] = [
       color: 'yellow050',
     },
     completion: null,
+    scheduleContinuous: true,
     categories: [
       {
         id: '1412',
@@ -440,6 +447,7 @@ export const MOCK_ACTIONS: ActionCardFragment[] = [
       color: 'yellow050',
     },
     completion: null,
+    scheduleContinuous: true,
     categories: [
       {
         id: '1412',
@@ -497,6 +505,7 @@ export const MOCK_ACTIONS: ActionCardFragment[] = [
       color: 'green050',
     },
     completion: null,
+    scheduleContinuous: false,
     categories: [
       {
         id: '1412',
@@ -563,6 +572,7 @@ export const MOCK_ACTIONS: ActionCardFragment[] = [
       color: 'green050',
     },
     completion: null,
+    scheduleContinuous: false,
     categories: [
       {
         id: '1412',
@@ -620,6 +630,7 @@ export const MOCK_ACTIONS: ActionCardFragment[] = [
       color: 'green050',
     },
     completion: null,
+    scheduleContinuous: false,
     categories: [
       {
         id: '1416',
@@ -677,6 +688,7 @@ export const MOCK_ACTIONS: ActionCardFragment[] = [
       color: 'green050',
     },
     completion: null,
+    scheduleContinuous: false,
     categories: [
       {
         id: '1416',
@@ -734,6 +746,7 @@ export const MOCK_ACTIONS: ActionCardFragment[] = [
       color: 'green050',
     },
     completion: null,
+    scheduleContinuous: true,
     categories: [
       {
         id: '1412',
@@ -791,6 +804,7 @@ export const MOCK_ACTIONS: ActionCardFragment[] = [
       color: 'green050',
     },
     completion: null,
+    scheduleContinuous: false,
     categories: [
       {
         id: '1412',
@@ -866,6 +880,7 @@ export const MOCK_ACTIONS: ActionCardFragment[] = [
       color: 'yellow050',
     },
     completion: null,
+    scheduleContinuous: false,
     categories: [
       {
         id: '1414',
@@ -923,6 +938,7 @@ export const MOCK_ACTIONS: ActionCardFragment[] = [
       color: 'yellow050',
     },
     completion: null,
+    scheduleContinuous: false,
     categories: [
       {
         id: '1416',
@@ -980,6 +996,7 @@ export const MOCK_ACTIONS: ActionCardFragment[] = [
       color: 'yellow050',
     },
     completion: 12,
+    scheduleContinuous: false,
     categories: [
       {
         id: '264',
@@ -1028,6 +1045,7 @@ export const MOCK_ACTIONS: ActionCardFragment[] = [
       color: 'yellow050',
     },
     completion: null,
+    scheduleContinuous: true,
     categories: [
       {
         id: '1418',
@@ -1085,6 +1103,7 @@ export const MOCK_ACTIONS: ActionCardFragment[] = [
       color: 'green050',
     },
     completion: null,
+    scheduleContinuous: false,
     categories: [
       {
         id: '267',
@@ -1133,6 +1152,7 @@ export const MOCK_ACTIONS: ActionCardFragment[] = [
       color: 'green050',
     },
     completion: null,
+    scheduleContinuous: false,
     categories: [
       {
         id: '1409',
@@ -1190,6 +1210,7 @@ export const MOCK_ACTIONS: ActionCardFragment[] = [
       color: 'green050',
     },
     completion: null,
+    scheduleContinuous: false,
     categories: [
       {
         id: '1418',
@@ -1256,6 +1277,7 @@ export const MOCK_ACTIONS: ActionCardFragment[] = [
       color: 'green050',
     },
     completion: null,
+    scheduleContinuous: false,
     categories: [
       {
         id: '3041',
@@ -1313,6 +1335,7 @@ export const MOCK_ACTIONS: ActionCardFragment[] = [
       color: 'green050',
     },
     completion: null,
+    scheduleContinuous: false,
     categories: [
       {
         id: '4293',
@@ -1370,6 +1393,7 @@ export const MOCK_ACTIONS: ActionCardFragment[] = [
       color: 'green050',
     },
     completion: null,
+    scheduleContinuous: true,
     categories: [
       {
         id: '1417',
@@ -1427,6 +1451,7 @@ export const MOCK_ACTIONS: ActionCardFragment[] = [
       color: 'green050',
     },
     completion: null,
+    scheduleContinuous: false,
     categories: [
       {
         id: '1414',
@@ -1484,6 +1509,7 @@ export const MOCK_ACTIONS: ActionCardFragment[] = [
       color: 'green050',
     },
     completion: null,
+    scheduleContinuous: false,
     categories: [
       {
         id: '3041',
@@ -1541,6 +1567,7 @@ export const MOCK_ACTIONS: ActionCardFragment[] = [
       color: 'green050',
     },
     completion: null,
+    scheduleContinuous: false,
     categories: [
       {
         id: '3041',
@@ -1598,6 +1625,7 @@ export const MOCK_ACTIONS: ActionCardFragment[] = [
       color: 'yellow050',
     },
     completion: null,
+    scheduleContinuous: true,
     categories: [
       {
         id: '1361',
@@ -1631,9 +1659,9 @@ export const MOCK_ACTIONS: ActionCardFragment[] = [
       identifier: 'LATE',
     },
     implementationPhase: {
-      id: '16',
-      identifier: 'implementation',
-      name: 'Implementation',
+      id: '17',
+      identifier: 'completed',
+      name: 'Completed',
     },
     primaryOrg: null,
     mergedWith: null,
@@ -1664,6 +1692,7 @@ export const MOCK_ACTIONS: ActionCardFragment[] = [
       color: 'green050',
     },
     completion: null,
+    scheduleContinuous: false,
     categories: [
       {
         id: '3041',

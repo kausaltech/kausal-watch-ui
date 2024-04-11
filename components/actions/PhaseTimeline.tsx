@@ -7,6 +7,7 @@ import { ActionContentAction } from './ActionContent';
 import { Theme } from '@kausal/themes/types';
 import { RefObject, useEffect, useRef, useState } from 'react';
 import { debounce } from 'lodash';
+import { useTranslations } from 'next-intl';
 
 // Used to determine the style of icon visualizing a phase, not to be confused with phase identifiers
 type PhaseType = 'done' | 'current' | 'todo';
@@ -14,6 +15,7 @@ type PhaseType = 'done' | 'current' | 'todo';
 type PhaseTimelineProps = {
   activePhase: NonNullable<ActionContentAction['implementationPhase']>;
   layout?: 'vertical' | 'horizontal' | 'mini';
+  isContinuous?: boolean;
 };
 
 type PhaseIndicatorProps = {
@@ -24,6 +26,7 @@ type PhaseIndicatorProps = {
   color: string;
   nextColor?: string;
   layout: PhaseTimelineProps['layout'];
+  isContinuous?: boolean;
 };
 
 const verticalContainerStyles = css`
@@ -155,9 +158,22 @@ const PHASE_CONFIG: {
   },
 };
 
-function getIconFromType(type: PhaseType, phaseIdentifier: string) {
+function getIconFromType(
+  type: PhaseType,
+  phaseIdentifier: string,
+  isContinuous: boolean = false
+) {
   const isCurrent = type === 'current';
   const isCompleted = phaseIdentifier === 'completed';
+
+  if (isContinuous) {
+    if (isCurrent && isCompleted) {
+      return 'caret-right';
+    }
+    if (isCompleted) {
+      return 'angle-right';
+    }
+  }
 
   if (isCurrent && isCompleted) {
     return 'check-circle';
@@ -196,6 +212,7 @@ function PhaseIndicator({
   color,
   nextColor,
   layout,
+  isContinuous = false,
 }: PhaseIndicatorProps) {
   const isVertical = layout === 'vertical';
   const iconSize = layout === 'mini' ? '16px' : '20px';
@@ -206,7 +223,7 @@ function PhaseIndicator({
         <StyledPhaseLine $hidden={index === 0} $color={color} />
       )}
       <Icon
-        name={getIconFromType(type, phaseIdentifier)}
+        name={getIconFromType(type, phaseIdentifier, isContinuous)}
         color={color}
         width={iconSize}
         height={iconSize}
@@ -271,10 +288,12 @@ function useOverrideLayout<T extends HTMLElement>(
 export function PhaseTimeline({
   activePhase,
   layout = 'horizontal',
+  isContinuous = false,
 }: PhaseTimelineProps) {
   const ref = useRef<HTMLUListElement>(null);
   const plan = usePlan();
   const theme = useTheme();
+  const t = useTranslations();
   const phases = plan.actionImplementationPhases;
   const overriddenLayout = useOverrideLayout(layout, phases.length, ref);
   const isVertical = overriddenLayout === 'vertical';
@@ -292,10 +311,15 @@ export function PhaseTimeline({
             index + 1 < phases.length
               ? getPhaseType(index + 1, activePhaseIndex)
               : undefined;
+          const phaseName =
+            isContinuous && phase.identifier === 'completed'
+              ? t('action-continuous')
+              : phase.name;
 
           return (
             <StyledPhase key={phase.id} $isVertical={isVertical}>
               <PhaseIndicator
+                isContinuous={isContinuous}
                 phaseIdentifier={phase.identifier}
                 layout={overriddenLayout}
                 index={index}
@@ -315,7 +339,7 @@ export function PhaseTimeline({
                   $type={phaseType}
                   $color={getColorFromType(phaseType, theme, 'textColorKey')}
                 >
-                  {phase.name}
+                  {phaseName}
                 </StyledPhaseName>
               )}
             </StyledPhase>

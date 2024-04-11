@@ -25,7 +25,11 @@ const ImplementationPhaseCell = ({ action }: Props) => {
   return (
     <StatusDisplay>
       {!!action.implementationPhase && (
-        <PhaseTimeline layout="mini" activePhase={action.implementationPhase} />
+        <PhaseTimeline
+          layout="mini"
+          activePhase={action.implementationPhase}
+          isContinuous={action.scheduleContinuous}
+        />
       )}
     </StatusDisplay>
   );
