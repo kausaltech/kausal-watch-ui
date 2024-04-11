@@ -28,6 +28,8 @@ import type { StreamFieldFragmentFragment } from 'common/__generated__/graphql';
 import CartographyVisualisationBlock from 'components/contentblocks/CartographyVisualisationBlock';
 import styled, { useTheme } from 'styled-components';
 import { STREAM_FIELD_FRAGMENT } from '@/fragments/stream-field.fragment';
+import { ErrorBoundary } from './ErrorBoundary';
+import { ErrorPage } from './ErrorPage';
 
 enum EmbedProvider {
   YOUTUBE = 'YouTube',
@@ -394,15 +396,23 @@ function StreamField(props: StreamFieldProps) {
   return (
     <div className={`custom-${page.slug}`}>
       {blocks.map((block, index) => (
-        <StreamFieldBlock
-          id={`section-${index + 1}`}
-          block={block}
-          page={page}
+        <ErrorBoundary
           key={block.id}
-          color={color}
-          hasSidebar={hasSidebar}
-          columnProps={columnProps}
-        />
+          fallback={<ErrorPage type="block" />}
+          errorExtras={{
+            type: 'StreamFieldBlock',
+            block: JSON.stringify(block),
+          }}
+        >
+          <StreamFieldBlock
+            id={`section-${index + 1}`}
+            block={block}
+            page={page}
+            color={color}
+            hasSidebar={hasSidebar}
+            columnProps={columnProps}
+          />
+        </ErrorBoundary>
       ))}
     </div>
   );

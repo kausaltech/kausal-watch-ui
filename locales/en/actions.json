@@ -30,7 +30,7 @@
   "action-timeline-between": "Timeframe between",
   "action-what-effect-this-has": "{context, select, CASE_STUDY {How this case study contributes to the outcome} STRATEGY {How this strategy contributes to the outcome} other {How this action contributes to the outcome}}",
   "actions-phases": "Actions by phases",
-  "actions-phases-help": "Ongoing and completed actions",
+  "actions-phases-help": "Continuous and completed actions",
   "actions-status": "Actions by status",
   "actions-status-help": "Actions proceeding as planned",
   "actions-updated": "Active actions last updated",

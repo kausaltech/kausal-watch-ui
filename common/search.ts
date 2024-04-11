@@ -1,5 +1,6 @@
 import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
 import { PlanContextFragment } from './__generated__/graphql';
+import { trackSearch } from '@/components/MatomoAnalytics';
 
 const GET_AUTOCOMPLETE_RESULTS = gql`
   query GetAutocompleteResults($plan: ID!, $term: String!) {
@@ -62,6 +63,9 @@ class WatchSearchAPIConnector {
       },
     });
     const hits = res?.data?.search?.hits;
+
+    trackSearch(searchTerm, false, hits?.length ?? 0);
+
     if (!hits) return [];
     const results = hits.map((hit) => {
       return {

@@ -172,5 +172,6 @@
     "expand-row": "Zeile erweitern",
     "ui-sign-in": "Anmelden",
     "ui-sign-out": "Abmelden",
-    "action-versions": "Maßnahmen-Versionen"
+    "action-versions": "Maßnahmen-Versionen",
+    "content-could-not-be-displayed": "Wir können diesen Inhalt im Moment nicht anzeigen. Bitte versuchen Sie, die Seite neu zu laden. Ein Bericht wurde an unser Team gesendet, um das Problem zu untersuchen."
 }
