@@ -18,6 +18,7 @@ declare module '@apollo/client' {
     locale?: string;
     planIdentifier?: string;
     planDomain?: string;
+    wildcardDomains?: string[];
     sessionToken?: string;
     start?: number;
   }
@@ -140,6 +141,7 @@ export const headersMiddleware = new ApolloLink((operation, forward) => {
         ...headers,
         'x-cache-plan-domain': context.planDomain,
         'x-cache-plan-identifier': context.planIdentifier,
+        'x-wildcard-domains': context.wildcardDomains,
       },
     };
   });

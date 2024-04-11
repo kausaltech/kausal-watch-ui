@@ -28,6 +28,21 @@ import {
   rewriteUrl,
 } from './utils/middleware.utils';
 import { tryRequest } from './utils/api.utils';
+import { setContext } from '@apollo/client/link/context';
+import { wildcardDomains } from './common/environment';
+
+console.log(`Wildcard domains: ${wildcardDomains.join(', ')}`);
+
+const httpHeadersMiddleware = setContext(
+  async (_, { headers: initialHeaders = {} }) => {
+    const headers = {
+      ...initialHeaders,
+    };
+    if (wildcardDomains.length) {
+      headers['x-wildcard-domains'] = wildcardDomains.join(',');
+    }
+  }
+);
 
 const apolloClient = new ApolloClient({
   cache: new InMemoryCache({
@@ -43,7 +58,12 @@ const apolloClient = new ApolloClient({
     // https://www.apollographql.com/docs/react/data/fragments/#defining-possibletypes-manually
     possibleTypes: possibleTypes.possibleTypes,
   }),
-  link: from([operationStart, operationEnd, getHttpLink()]),
+  link: from([
+    operationStart,
+    operationEnd,
+    httpHeadersMiddleware,
+    getHttpLink(),
+  ]),
 });
 
 export const config = {
@@ -125,7 +145,6 @@ export async function middleware(request: NextRequest) {
       variables: { hostname },
     })
   );
-
   if (error || !data?.plansForHostname?.length) {
     if (error) {
       captureException(error, { extra: { hostname, ...error } });

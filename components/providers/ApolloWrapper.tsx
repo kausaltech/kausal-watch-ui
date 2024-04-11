@@ -30,11 +30,16 @@ const authMiddleware = setContext(
   }
 );
 
-function makeClient(initialLocale: string, sessionToken?: string) {
+function makeClient(
+  initialLocale: string,
+  sessionToken?: string,
+  wildcardDomains?: string[]
+) {
   return new NextSSRApolloClient({
     defaultContext: {
       locale: initialLocale,
       sessionToken,
+      wildcardDomains,
     },
     cache: new NextSSRInMemoryCache(),
     link: ApolloLink.from([
@@ -70,15 +75,22 @@ function UpdateLocale({ children }: React.PropsWithChildren) {
 
 type Props = {
   initialLocale: string;
+  wildcardDomains: string[];
 } & React.PropsWithChildren;
 
-export function ApolloWrapper({ initialLocale, children }: Props) {
+export function ApolloWrapper({
+  initialLocale,
+  wildcardDomains,
+  children,
+}: Props) {
   const session = useSession();
   const token =
     session.status === 'authenticated' ? session.data.idToken : undefined;
 
   return (
-    <ApolloNextAppProvider makeClient={() => makeClient(initialLocale, token)}>
+    <ApolloNextAppProvider
+      makeClient={() => makeClient(initialLocale, token, wildcardDomains)}
+    >
       <UpdateLocale>{children}</UpdateLocale>
     </ApolloNextAppProvider>
   );
