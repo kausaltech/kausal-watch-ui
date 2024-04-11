@@ -33,6 +33,9 @@ const StyledTable = styled(Table)`
   td {
     border-bottom: none;
   }
+  .bold {
+    font-weight: ${(props) => props.theme.fontWeightBold};
+  }
 `;
 
 const DataTable: React.FC<DataTableProps> = ({ title, headers, data }) => {
@@ -49,9 +52,21 @@ const DataTable: React.FC<DataTableProps> = ({ title, headers, data }) => {
         </thead>
         <tbody>
           {data.map((row, rowIndex) => (
-            <tr key={rowIndex}>
+            <tr
+              key={rowIndex}
+              className={rowIndex === data.length - 1 ? 'bold' : ''}
+            >
               {row.map((cell, cellIndex) => (
-                <td key={cellIndex}>{cell}</td>
+                <td
+                  key={cellIndex}
+                  className={
+                    cellIndex === 0 && row.slice(1).every((cell) => !cell)
+                      ? 'bold'
+                      : ''
+                  }
+                >
+                  {cell}
+                </td>
               ))}
             </tr>
           ))}
