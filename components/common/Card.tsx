@@ -1,4 +1,3 @@
-import SVG from 'react-inlinesvg';
 import { Card as BSCard, CardBody } from 'reactstrap';
 import styled from 'styled-components';
 import { transparentize } from 'polished';
@@ -82,24 +81,17 @@ const ImgBg = styled.div<{ $background: string; $imageAlign: string }>`
     height: 8rem;
   }
 `;
-
-const SvgIcon = styled(SVG)`
-  width: ${(props) => props.theme.spaces.s800};
-  fill: white;
-`;
-
-const BitmapIcon = styled.div<{ $imageSrc: string }>`
+const CategoryIcon = styled.div<{ $imageSrc: string }>`
   width: ${(props) => props.theme.spaces.s800};
   height: ${(props) => props.theme.spaces.s800};
   background-image: url(${(props) => props.$imageSrc || 'none'});
   background-size: cover;
   background-position: center center;
 `;
-
 interface CardProps {
   imageUrl?: string;
   imageAlign?: string;
-  imageType?: 'svgIcon' | 'bitmapIcon' | 'image';
+  imageType?: 'icon' | 'image';
   colorEffect?: string;
   negative?: boolean;
   customColor?: string;
@@ -121,20 +113,13 @@ const Card = (props: CardProps) => {
   } = props;
 
   /*
-    Support svgIcon, bitmapIcon, image as cards main image
+    Support icon or image as cards main image
   */
   const ImageComponent = () => {
-    if (imageType === 'svgIcon') {
+    if (imageType === 'icon') {
       return (
-        <ImgArea $colorEffect={colorEffect} data-testid="svg-icon">
-          {imageUrl && <SvgIcon src={imageUrl} />}
-        </ImgArea>
-      );
-    }
-    if (imageType === 'bitmapIcon') {
-      return (
-        <ImgArea $colorEffect={colorEffect} data-testid="bitmap-icon">
-          {imageUrl && <BitmapIcon $imageSrc={imageUrl} />}
+        <ImgArea $colorEffect={colorEffect} data-testid="card-icon">
+          {imageUrl && <CategoryIcon $imageSrc={imageUrl} />}
         </ImgArea>
       );
     }
