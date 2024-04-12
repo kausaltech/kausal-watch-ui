@@ -489,6 +489,7 @@ function ActionContent(props: ActionContentProps) {
 
   const hasPhases = plan.actionImplementationPhases.length > 0;
 
+  // TODO: Inject a new mock block ActionBudgetBlock here
   const makeComponents = useCallback(
     (section: SectionIdentifier) => {
       const blocks = actionListPage[section];
