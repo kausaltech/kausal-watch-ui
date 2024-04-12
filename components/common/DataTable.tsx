@@ -2,9 +2,17 @@ import styled from 'styled-components';
 import { Table } from 'reactstrap';
 
 export interface DataTableProps {
-  title: string;
-  headers: string[];
-  data: string[][];
+  title: 'Budjetti';
+  headers: ['EUR', '2025', '2026', '2027'];
+  data: [
+    ['Investinnit', '', '', ''],
+    ['Tulot ja säästöt', '-', '-', '-'],
+    ['Menot', '1530000', '1530000', '1530000'],
+    ['Käyttötalous', '', '', ''],
+    ['Tulot', '-', '-', '-'],
+    ['Menot', '123000', '123000', '123000'],
+    ['Yhteensä', '1646000', '1646000', '1646000']
+  ];
 }
 
 const TableContainer = styled.div`
@@ -38,7 +46,18 @@ const StyledTable = styled(Table)`
   }
 `;
 
-const DataTable: React.FC<DataTableProps> = ({ title, headers, data }) => {
+const DataTable: React.FC = () => {
+  const title = 'Budjetti';
+  const headers = ['EUR', '2025', '2026', '2027'];
+  const data = [
+    ['Investinnit', '', '', ''],
+    ['Tulot ja säästöt', '-', '-', '-'],
+    ['Menot', '1530000', '1530000', '1530000'],
+    ['Käyttötalous', '', '', ''],
+    ['Tulot', '-', '-', '-'],
+    ['Menot', '123000', '123000', '123000'],
+    ['Yhteensä', '1646000', '1646000', '1646000'],
+  ];
   return (
     <TableContainer>
       {title && <h3>{title}</h3>}
