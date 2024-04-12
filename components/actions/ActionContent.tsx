@@ -515,6 +515,7 @@ function ActionContent(props: ActionContentProps) {
     action?.relatedIndicators.length > 0 &&
     detailsCombined?.some(isIndicatorCausalChainBlock);
 
+  // TODO: Inject a new mock block ActionBudgetBlock here
   const makeComponents = useCallback(
     (section: SectionIdentifier) => {
       const blocks = actionListPage[section];
