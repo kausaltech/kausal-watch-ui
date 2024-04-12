@@ -487,7 +487,8 @@ function GlobalNav(props) {
   );
   const hideLogoOnMobile = !!(theme.navTitleVisible && siblings.length);
 
-  const rootLink = plan.parent ? plan.parent.viewUrl : '/';
+  const rootLink =
+    theme?.footerLogoLink || (plan.parent ? plan.parent?.viewUrl : '/');
 
   return (
     <div>
