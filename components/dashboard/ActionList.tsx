@@ -247,6 +247,7 @@ const actionFragment = gql`
     plan @include(if: $relatedPlanActions) {
       id
       shortName
+      name
       versionName
       viewUrl
       hideActionIdentifiers
@@ -448,7 +449,7 @@ const ActionList = (props: ActionListProps) => {
     );
   }, [categoryTypes]);
   const primaryActionClassification = includeRelatedPlans
-    ? plan.primaryActionClassification.common
+    ? plan.primaryActionClassification?.common
     : plan.primaryActionClassification;
 
   const primaryCatType = cts.find(
@@ -528,6 +529,9 @@ const ActionList = (props: ActionListProps) => {
   ) {
     groupBy = 'primaryOrg';
   }
+  // for umbrella plans group by plan if no common category exists
+  if (includeRelatedPlans && !plan.primaryActionClassification?.common)
+    groupBy = 'plan';
 
   // add plan.feature.showActionUpdateStatus to backend
   const showUpdateStatus =
