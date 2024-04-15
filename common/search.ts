@@ -3,12 +3,12 @@ import { PlanContextFragment } from './__generated__/graphql';
 import { trackSearch } from '@/components/MatomoAnalytics';
 
 const GET_AUTOCOMPLETE_RESULTS = gql`
-  query GetAutocompleteResults($plan: ID!, $term: String!) {
+  query GetAutocompleteResults($plan: ID!, $term: String!, $clientUrl: String) {
     search(plan: $plan, autocomplete: $term, includeRelatedPlans: true) {
       hits {
         id
         title
-        url
+        url(clientUrl: $clientUrl)
         highlight
         plan {
           identifier
@@ -60,6 +60,7 @@ class WatchSearchAPIConnector {
       variables: {
         plan: this.plan.identifier,
         term: searchTerm,
+        clientUrl: this.plan.viewUrl,
       },
     });
     const hits = res?.data?.search?.hits;
