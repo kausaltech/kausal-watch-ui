@@ -5,7 +5,7 @@ export interface DataTableProps {
   title: 'Budjetti';
   headers: ['EUR', '2025', '2026', '2027'];
   data: [
-    ['Investinnit', '', '', ''],
+    ['Investoinnit', '', '', ''],
     ['Tulot ja säästöt', '-', '-', '-'],
     ['Menot', '1530000', '1530000', '1530000'],
     ['Käyttötalous', '', '', ''],
@@ -50,7 +50,7 @@ const DataTable: React.FC = () => {
   const title = 'Budjetti';
   const headers = ['EUR', '2025', '2026', '2027'];
   const data = [
-    ['Investinnit', '', '', ''],
+    ['Investoinnit', '', '', ''],
     ['Tulot ja säästöt', '-', '-', '-'],
     ['Menot', '1530000', '1530000', '1530000'],
     ['Käyttötalous', '', '', ''],

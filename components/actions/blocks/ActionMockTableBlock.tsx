@@ -1,11 +1,18 @@
 import DataTable from '@/components/common/DataTable';
+import styled from 'styled-components';
+
+const ActionContentContainer = styled.div`
+  > div {
+    margin-left: 0 !important;
+  }
+`;
 
 const ActionLinksBlock = () => {
   const mockBudget = {
     title: 'Budjetti',
     headers: ['EUR', '2025', '2026', '2027'],
     data: [
-      ['Investinnit', '', '', ''],
+      ['Investoinnit', '', '', ''],
       ['Tulot ja säästöt', '-', '-', '-'],
       ['Menot', '1530000', '1530000', '1530000'],
       ['Käyttötalous', '', '', ''],
@@ -16,14 +23,13 @@ const ActionLinksBlock = () => {
   };
 
   return (
-    <>
-      <h3>Budjetti</h3>
+    <ActionContentContainer>
       <DataTable
         title={mockBudget.title}
         headers={mockBudget.headers}
         data={mockBudget.data}
       />
-    </>
+    </ActionContentContainer>
   );
 };
 

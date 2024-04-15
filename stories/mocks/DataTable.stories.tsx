@@ -18,7 +18,7 @@ export const Default = {
     title: 'Budjetti',
     headers: ['EUR', '2025', '2026', '2027'],
     data: [
-      ['Investinnit', '', '', ''],
+      ['Investoinnit', '', '', ''],
       ['Tulot ja säästöt', '-', '-', '-'],
       ['Menot', '1530000', '1530000', '1530000'],
       ['Käyttötalous', '', '', ''],
