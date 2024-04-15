@@ -15,7 +15,7 @@ React UI for browsing and visualizing action plans. Built using [Next.js](https:
 
 #### Getting Started
 
-Clone the repository, install dependencies and run the development server locally:
+Clone the repository, install the dependencies and run the development server locally:
 
     yarn set version 3.2.1
     yarn config set nodeLinker 'node-modules'
