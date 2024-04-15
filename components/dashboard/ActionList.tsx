@@ -45,6 +45,7 @@ import {
   ALL_ACTION_LIST_FILTERS,
 } from '@/fragments/action-list.fragment';
 import { useSuspenseQuery } from '@apollo/experimental-nextjs-app-support/ssr';
+import { mapActionsToExpandDependencies } from '@/utils/actions.utils';
 
 // Legacy exports preserved after migrating types to dashboard.types
 export * from './dashboard.types';
@@ -475,30 +476,8 @@ const ActionList = (props: ActionListProps) => {
     [onFilterChange]
   );
 
-  /**
-   * Map over all action dependency relationships and add the action object to
-   * the relationship. Required because we only query the id of an action in a relationship.
-   */
-  const actionsWithDependencies = actions?.map((action) =>
-    !!action.dependencyRole && !!action.allDependencyRelationships?.length
-      ? {
-          ...action,
-          allDependencyRelationships: action.allDependencyRelationships.map(
-            (relationship) => ({
-              ...relationship,
-              preceding:
-                actions.find(
-                  (action) => action.id === relationship.preceding.id
-                ) ?? null,
-              dependent:
-                actions.find(
-                  (action) => action.id === relationship.dependent.id
-                ) ?? null,
-            })
-          ),
-        }
-      : action
-  );
+  const actionsWithDependencies =
+    actions?.map(mapActionsToExpandDependencies) ?? [];
 
   const actionsWithRps = mapResponsibleParties<
     ActionListAction,

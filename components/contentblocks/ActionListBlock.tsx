@@ -12,6 +12,7 @@ import ContentLoader from 'components/common/ContentLoader';
 import ErrorMessage from 'components/common/ErrorMessage';
 import PlanContext, { usePlan } from 'context/plan';
 import { useTranslations } from 'next-intl';
+import { mapActionsToExpandDependencies } from '@/utils/actions.utils';
 
 const GET_ACTION_LIST_FOR_BLOCK = gql`
   query GetActionListForBlock($plan: ID!, $category: ID, $clientUrl: String) {
@@ -62,13 +63,16 @@ const ActionListBlock = (props) => {
   }
   const groupBy = plan.primaryOrgs.length > 0 ? 'primaryOrg' : 'none';
 
+  const actionsWithDependencies =
+    planActions?.map(mapActionsToExpandDependencies) ?? [];
+
   const heading = t('actions', getActionTermContext(plan));
   return (
     <ActionListSection id={id}>
       <Container>
         {heading && <SectionHeader>{heading}</SectionHeader>}
         <ActionCardList
-          actions={planActions}
+          actions={actionsWithDependencies}
           groupBy={groupBy}
           showOtherCategory={false}
         />
