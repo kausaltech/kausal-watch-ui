@@ -100,7 +100,7 @@ const GET_CONTACT_DETAILS = gql`
 `;
 
 function ContactDetails(props) {
-  const { id } = props;
+  const { id, plan } = props;
   const t = useTranslations();
   const { loading, error, data } = useQuery(GET_CONTACT_DETAILS, {
     variables: { id },
@@ -130,16 +130,17 @@ function ContactDetails(props) {
 
   return (
     <div className="mt-2">
-      {orgAncestors.length > 1 && (
-        <PersonOrg>
-          {orgAncestors.map((item, idx) => (
-            <span key={item.key}>
-              {item.name}
-              {idx < orgAncestors.length - 1 ? ' / ' : ''}
-            </span>
-          ))}
-        </PersonOrg>
-      )}
+      {plan.features.contactPersonsShowOrganizationAncestors &&
+        orgAncestors.length > 1 && (
+          <PersonOrg>
+            {orgAncestors.map((item, idx) => (
+              <span key={item.key}>
+                {item.name}
+                {idx < orgAncestors.length - 1 ? ' / ' : ''}
+              </span>
+            ))}
+          </PersonOrg>
+        )}
       <Address>
         {t('email')}: <a href={`mailto:${person.email}`}>{person.email}</a>
       </Address>
@@ -188,7 +189,7 @@ function ContactPerson(props) {
           </CollapseButton>
         )}
         <Collapse isOpen={collapse} id={`contact-${person.id}`}>
-          {collapse && <ContactDetails id={person.id} />}
+          {collapse && <ContactDetails id={person.id} plan={plan} />}
         </Collapse>
       </PersonDetails>
     </Person>
