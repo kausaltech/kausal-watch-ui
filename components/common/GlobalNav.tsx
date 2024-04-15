@@ -106,7 +106,7 @@ const Site = styled.div`
   align-items: center;
 `;
 
-const HomeLink = styled.a<{ $hideLogoOnMobile: boolean }>`
+const HomeLink = styled.a<{ $hideLogoOnMobile?: boolean }>`
   display: flex;
   align-items: center;
   color: ${(props) => props.theme.brandNavColor};
@@ -121,7 +121,7 @@ const HomeLink = styled.a<{ $hideLogoOnMobile: boolean }>`
   }
 
   svg {
-    display: ${(props) => (props.$hideLogoOnMobile ? 'none' : 'block')};
+    display: ${(props) => (!props.$hideLogoOnMobile ? 'block' : 'none')};
     max-width: 6em;
     height: ${(props) => props.theme.spaces.s200};
     margin: ${(props) => props.theme.spaces.s050}
@@ -487,8 +487,8 @@ function GlobalNav(props) {
   );
   const hideLogoOnMobile = !!(theme.navTitleVisible && siblings.length);
 
-  const rootLink =
-    theme?.footerLogoLink || (plan.parent ? plan.parent?.viewUrl : '/');
+  const rootLink = plan.parent ? plan.parent?.viewUrl : '/';
+  const logoLink = theme?.footerLogoLink || rootLink;
 
   return (
     <div>
@@ -501,9 +501,13 @@ function GlobalNav(props) {
           container={fullwidth ? 'fluid' : true}
         >
           <Site>
-            <Link href={rootLink} passHref legacyBehavior>
+            <Link href={logoLink} passHref legacyBehavior>
               <HomeLink $hideLogoOnMobile={hideLogoOnMobile}>
                 <OrgLogo className="org-logo" />
+              </HomeLink>
+            </Link>
+            <Link href={rootLink} passHref legacyBehavior>
+              <HomeLink>
                 <SiteTitle>
                   {theme.navTitleVisible ? siteTitle : '\u00A0'}
                 </SiteTitle>
