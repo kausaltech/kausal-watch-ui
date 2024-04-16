@@ -111,16 +111,18 @@ function Footer() {
     utilityLinks.push({ id: '1', name: t('contact'), slug: plan.contactLink });
   }
 
-  if (plan.externalFeedbackUrl) {
-    utilityLinks.push({
-      id: '2',
-      name: t('give-feedback'),
-      slug: plan.externalFeedbackUrl,
-    });
-  } else if (pathname !== '/feedback') {
-    const url = getFeedbackUrl(pathname);
-    if (url != null) {
-      utilityLinks.push({ id: '2', name: t('give-feedback'), slug: url });
+  if (theme.showFeedbackLink !== false) {
+    if (plan.externalFeedbackUrl) {
+      utilityLinks.push({
+        id: '2',
+        name: t('give-feedback'),
+        slug: plan.externalFeedbackUrl,
+      });
+    } else if (pathname !== '/feedback') {
+      const url = getFeedbackUrl(pathname);
+      if (url != null) {
+        utilityLinks.push({ id: '2', name: t('give-feedback'), slug: url });
+      }
     }
   }
 
