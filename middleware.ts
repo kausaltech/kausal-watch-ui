@@ -86,6 +86,14 @@ export async function middleware(request: NextRequest) {
     return NextResponse.rewrite(url);
   }
 
+  if (pathname === '/_invalidate-middleware-cache') {
+    await apolloClient.clearStore();
+
+    return NextResponse.json({
+      message: 'Middleware cache cleared',
+    });
+  }
+
   if (!isAuthenticated(request, hostname)) {
     url.pathname = '/api/auth';
 
