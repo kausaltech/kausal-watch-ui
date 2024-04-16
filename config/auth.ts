@@ -17,8 +17,10 @@ export const {
   const host = headersList.get('host');
   const url = protocol && host ? `${protocol}://${host}/api/auth` : null;
 
-  if (!url) {
-    console.error('Invalid request url');
+  if (!url || !process.env.AUTH_ISSUER) {
+    if (!url) {
+      console.error('Invalid request url');
+    }
     return { providers: [] };
   }
 

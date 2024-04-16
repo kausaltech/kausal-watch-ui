@@ -135,7 +135,7 @@ export const TopToolBar = () => {
     }
   }, [session, handleSignOut]);
 
-  if (session.status !== 'authenticated') {
+  if (session.status !== 'authenticated' || !session.data.user) {
     return null;
   }
 
