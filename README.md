@@ -22,7 +22,7 @@ Clone the repository, install the dependencies and run the development server lo
     yarn install
     yarn dev
 
-Preview the application locally on http://localhost:3000/
+Preview the application locally at http://localhost:3000/
 
 #### Environment variables
 
