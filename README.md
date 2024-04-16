@@ -50,8 +50,8 @@ or
 
 TEST_PAGE_BASE_URL=http://{planId}.watch.staging.kausal.tech
 
-Now you should be able to run the test suite. You might want to start the
-either the development or production server first. If you don't, the
+Now you should be able to run the test suite. You might want to start
+either the development or the production server first. If you don't, the
 test suite will start one for you (the dev server will be started if the
 `TEST_DEVSERVER` env variable is set). You should be able to run the test
 suite like this:
