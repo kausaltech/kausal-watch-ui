@@ -306,6 +306,9 @@ const GET_ACTION_DETAILS = gql`
       fieldLabel
       fieldHelpText
     }
+    ... on ActionDescriptionBlock {
+      fieldLabel
+    }
     ... on ActionOfficialNameBlock {
       fieldLabel
       caption
