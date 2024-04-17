@@ -207,7 +207,12 @@ function ActionContentBlock(props: ActionContentBlockProps) {
       );
     case 'ActionDescriptionBlock':
       if (!action.description) return null;
-      return <ActionDescriptionBlock content={action.description} />;
+      return (
+        <ActionDescriptionBlock
+          content={action.description}
+          fieldLabel={block.fieldLabel}
+        />
+      );
     case 'ActionLeadParagraphBlock':
       if (!action.leadParagraph) return null;
       return <ActionLeadParagraphBlock content={action.leadParagraph} />;
