@@ -74,6 +74,9 @@ async function exportActions(
   ];
   actions.forEach((act) => {
     const status = cleanActionStatus(act, actionStatuses);
+    // Remove any soft hyphens in action name (due to `hyphenated: true` when querying the name) as Excel renders
+    // visible hyphens instead.
+    const actionName = act.name?.replaceAll('­', '');
     let activePhaseName = act.implementationPhase?.name;
     if (status != null) {
       // FIXME: Duplicated logic from ActionPhase.js
@@ -125,7 +128,7 @@ async function exportActions(
 
     worksheet.addRow([
       act.identifier,
-      act.name,
+      actionName,
       status?.name,
       activePhaseName,
       new Date(act.updatedAt),
