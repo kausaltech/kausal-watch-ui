@@ -59,6 +59,20 @@ export const config = {
   ],
 };
 
+const clearCacheIfTimedOut = (function handleCacheTTL() {
+  let timeCached: number | null = null;
+  const THIRTY_MINS = 30 * 60 * 1000;
+
+  return () => {
+    if (!timeCached) {
+      timeCached = Date.now();
+    } else if (Date.now() - timeCached > THIRTY_MINS) {
+      timeCached = Date.now();
+      apolloClient.clearStore();
+    }
+  };
+})();
+
 export async function middleware(request: NextRequest) {
   const url = request.nextUrl;
   const { pathname } = request.nextUrl;
@@ -99,6 +113,8 @@ export async function middleware(request: NextRequest) {
 
     return NextResponse.rewrite(url);
   }
+
+  clearCacheIfTimedOut();
 
   const { data, error } = await tryRequest(
     apolloClient.query<
