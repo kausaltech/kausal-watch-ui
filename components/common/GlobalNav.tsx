@@ -26,6 +26,7 @@ import NavbarSearch from './NavbarSearch';
 import { usePlan } from 'context/plan';
 import { isServer } from 'common/environment';
 import { useTranslations } from 'next-intl';
+import { useLocale } from 'next-intl';
 
 const baseFixedNavStyles = css`
   @keyframes slide-in {
@@ -487,7 +488,17 @@ function GlobalNav(props) {
   );
   const hideLogoOnMobile = !!(theme.navTitleVisible && siblings.length);
 
-  const rootLink = plan.parent ? plan.parent?.viewUrl : '/';
+  const locale = useLocale();
+  let rootLink = '/';
+
+  if (plan.parent && plan.parent?.viewUrl) {
+    rootLink = plan.parent?.viewUrl;
+    const shouldAppendLocale = locale !== plan.primaryLanguage;
+    if (shouldAppendLocale) {
+      rootLink = `${plan.parent?.viewUrl}/${locale}/`;
+    }
+  }
+
   const logoLink = theme?.footerLogoLink || rootLink;
 
   return (
