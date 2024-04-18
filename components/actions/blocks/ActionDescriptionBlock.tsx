@@ -8,12 +8,17 @@ const ActionDescriptionBlock = (props) => {
   const t = useTranslations();
   const theme = useTheme();
 
-  const headerClass =
-    fieldLabel != null && fieldLabel.length > 0 ? '' : 'visually-hidden';
+  let headerClass = '';
+  let headerText = fieldLabel;
+
+  if (fieldLabel == null || fieldLabel.length === 0) {
+    headerClass = 'visually-hidden';
+    headerText = t('action-description');
+  }
 
   return (
     <ActionSection className="text-content">
-      <h2 className={headerClass}>{fieldLabel}</h2>
+      <h2 className={headerClass}>{headerText}</h2>
       <RichText html={content} />
     </ActionSection>
   );
