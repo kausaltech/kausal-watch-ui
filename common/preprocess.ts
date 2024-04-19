@@ -150,6 +150,7 @@ const getPhaseData = (
      palette usable for the full graph.  Hence we use these default
      colors for all phases.
    */
+  phaseColors.reverse();
   if (phaseColors.length != phases.length) {
     phaseColors = [
       theme.graphColors.green090,
@@ -196,6 +197,12 @@ const getPhaseData = (
     theme.graphColors.grey010,
     false
   );
+  const continuousActionsDonutSector: DonutSector = new DonutSector(
+    // Donut sector for completed actions with scheduleContinuous = Continuous phase actions
+    t('action-continuous'),
+    theme.graphColors.grey090,
+    true
+  );
 
   for (const action of actions) {
     const statusSummary = getStatusSummary(plan, action.statusSummary);
@@ -208,12 +215,19 @@ const getPhaseData = (
       phaselessActionsDonutSector.increment();
       continue;
     }
-    phaseDonutSectorsByIdentifier
-      .get(action.implementationPhase.identifier)
-      ?.increment();
+    if (
+      action.scheduleContinuous === true &&
+      action.implementationPhase.identifier === 'completed'
+    )
+      continuousActionsDonutSector.increment();
+    else
+      phaseDonutSectorsByIdentifier
+        .get(action.implementationPhase.identifier)
+        ?.increment();
   }
 
   const allSectors: DonutSector[] = [
+    continuousActionsDonutSector,
     ...phaseDonutSectorsByIdentifier.values(),
     phaselessActionsDonutSector,
     inactiveActionsDonutSector,
