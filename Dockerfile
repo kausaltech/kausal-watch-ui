@@ -19,14 +19,15 @@ RUN \
   if [ ! -z "${NPM_REGISTRY_SERVER}" ] ; then \
     echo "@kausal:registry=${NPM_REGISTRY_SERVER}" >> $HOME/.npmrc ; \
     echo "$(echo ${NPM_REGISTRY_SERVER} | sed -e 's/https://')/"':_authToken=${NPM_TOKEN}' >> $HOME/.npmrc ; \
+    echo "Using custom registry at: ${NPM_REGISTRY_SERVER}" ; \
   fi
 
 
-#RUN --mount=type=secret,id=NPM_TOKEN --mount=type=cache,target=/npm-cache \
-#  cat $HOME/.npmrc && NPM_TOKEN=$(cat /run/secrets/NPM_TOKEN) npm whoami --registry https://npm.kausal.tech
+ARG NPM_TOKEN
 
 RUN --mount=type=secret,id=NPM_TOKEN --mount=type=cache,target=/npm-cache \
-  NPM_TOKEN=$(cat /run/secrets/NPM_TOKEN) npm ci
+  NPM_TOKEN=$( ([ -f /run/secrets/NPM_TOKEN ] && cat /run/secrets/NPM_TOKEN) || echo -n "${NPM_TOKEN}") \
+    npm ci
 
 #
 # Build NextJS bundles
@@ -50,13 +51,14 @@ ARG GIT_REPO
 ARG GIT_REV
 
 # Remove the NextJS build cache if packages change
-RUN --mount=type=cache,target=/app/.next/cache docker/manage-nextjs-cache.sh check
+RUN --mount=type=cache,target=/app/.next/cache \
+  docker/manage-nextjs-cache.sh check
 
 RUN --mount=type=secret,id=SENTRY_AUTH_TOKEN --mount=type=cache,target=/app/.next/cache \
-    npm run build && docker/manage-nextjs-cache.sh save
+  npm run build && docker/manage-nextjs-cache.sh save
 
 RUN --mount=type=secret,id=SENTRY_AUTH_TOKEN \
-    docker/sentry-set-release-commits.sh
+  docker/sentry-set-release-commits.sh
 
 FROM node:20-alpine as runner
 WORKDIR /app
