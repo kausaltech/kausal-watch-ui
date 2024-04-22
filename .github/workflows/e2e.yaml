@@ -1,0 +1,58 @@
+name: End-to-end tests
+on:
+  workflow_call:
+    inputs:
+      plan_identifiers:
+        description: 'Comma separated list of plan identifiers'
+        required: true
+        type: string
+        default: 'sunnydale'
+      frontend_base_url:
+        description: 'Base url for environment to run tests against'
+        required: true
+        type: string
+        default: 'http://{planId}.watch.staging.kausal.tech'
+      backend_base_url:
+        description: 'Base url for backend API'
+        required: true
+        type: string
+        default: 'https://api.watch.kausal.tech/v1'
+
+  #schedule:
+  #  - cron: '0 21 * * 1-5' # 21:00 UTC, 00:00 EEST
+
+jobs:
+  e2e_test:
+    name: Run tests
+    runs-on: self-hosted
+    container:
+      image: mcr.microsoft.com/playwright:v1.43.1
+    env:
+      TEST_PLAN_IDENTIFIERS: ${{ inputs.plan_identifiers }}
+      FRONTEND_BASE_URL: ${{ inputs.frontend_base_url }}
+      NEXT_PUBLIC_API_URL: ${{ inputs.backend_base_url }}
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Sleep
+        run: sleep 180
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: ./e2e-tests
+
+      - name: Playwright install
+        run: node_modules/.bin/playwright install --with-deps
+        working-directory: ./e2e-tests
+
+      - name: Running Playwright e2e tests
+        run: node_modules/.bin/playwright test
+        working-directory: ./e2e-tests
+
+      #- uses: actions/upload-artifact@v3
+      #  if: always()
+      #  with:
+      #    name: playwright-report
+      #    path: playwright-report/
+      #    retention-days: 5

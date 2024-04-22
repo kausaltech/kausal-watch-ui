@@ -1,10 +1,27 @@
-import { test as base, expect } from '@playwright/test';
-import { PlanContext, getIdentifiersToTest } from './context';
+import { Page, test as base, expect } from '@playwright/test';
+
+import {
+  PlanContext,
+  displayConfiguration,
+  getIdentifiersToTest,
+} from '../context';
 
 const test = base.extend<{ ctx: PlanContext }>({});
 
-async function navigateAndCheckLayout(page, url, ctx) {
-  await page.goto(url);
+async function navigateAndCheckLayout(
+  page: Page,
+  url: string,
+  ctx: PlanContext
+) {
+  try {
+    await page.goto(url);
+  } catch (error) {
+    if (error.toString().includes('ERR_NETWORK_CHANGED')) {
+      await page.goto(url);
+    } else {
+      throw error;
+    }
+  }
   await ctx.checkMeta(page);
   await expect(page.locator('nav#branding-navigation-bar')).toBeVisible();
   await expect(page.locator('nav#global-navigation-bar')).toBeVisible();
@@ -204,4 +221,5 @@ const testPlan = (planId: string) =>
     });
   });
 
+displayConfiguration();
 getIdentifiersToTest().forEach((plan) => testPlan(plan));

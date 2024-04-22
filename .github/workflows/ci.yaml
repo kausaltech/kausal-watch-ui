@@ -9,3 +9,15 @@ jobs:
       docker_image_name: watch-ui
       docker_registry: ${{ vars.DOCKER_REGISTRY }}
     secrets: inherit
+
+  test:
+    needs: [build]
+    uses: ./.github/workflows/e2e-image.yaml
+    with:
+      image: ${{ needs.build.outputs.image }}:${{ needs.build.outputs.image_tag }}
+      plan_identifiers: sunnydale
+      backend_base_url: https://api.watch.kausal.tech/v1
+      build_id: ${{ needs.build.outputs.build_id }}
+      s3_endpoint: s3.kausal.tech
+      s3_bucket: watch-ui-build
+    secrets: inherit

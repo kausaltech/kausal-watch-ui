@@ -1,6 +1,7 @@
 # Project dependencies
 .cache
 /node_modules/
+/e2e-tests/node_modules/
 yarn-error.log
 /.yarn/
 /.yarnrc.yml

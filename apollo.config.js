@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-const { apiUrl } = require('./common/environment');
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
 module.exports = {
   client: {
@@ -9,7 +9,6 @@ module.exports = {
       'common/**/*.{js,ts,tsx}',
       'components/**/*.{js,ts,tsx}',
       'context/**/*.{js,ts,tsx}',
-      'e2e-tests/**/*.ts',
       'fragments/**/*.{js,ts,tsx}',
       'pages/**/*.{js,ts,tsx}',
       'queries/**/*.{js,ts,tsx}',

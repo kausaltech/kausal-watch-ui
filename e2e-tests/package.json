@@ -1,0 +1,19 @@
+{
+  "name": "watch-ui-e2e-tests",
+  "version": "0.1.0",
+  "description": "End-to-end tests for Kausal Watch UI",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "AGPL-3.0-or-later",
+  "dependencies": {
+    "@apollo/client": "^3.9.11",
+    "@axe-core/playwright": "^4.9.0",
+    "@playwright/test": "^1.43.1",
+    "dotenv": "^16.4.5",
+    "playwright": "^1.43.1",
+    "react": "^18.2.0"
+  }
+}
