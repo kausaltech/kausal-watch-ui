@@ -117,6 +117,7 @@ interface SortableTableHeaderProps {
   headerKey: Sort['key'];
   onClick: React.MouseEventHandler;
   sort: Sort;
+  className?: string;
 }
 
 const SortableTableHeader = ({
@@ -124,6 +125,7 @@ const SortableTableHeader = ({
   headerKey,
   sort,
   onClick,
+  className,
 }: SortableTableHeaderProps) => {
   const selected = sort.key == headerKey;
   const iconName = selected
@@ -139,6 +141,7 @@ const SortableTableHeader = ({
       aria-sort={
         selected ? (sort.direction === 1 ? 'ascending' : 'descending') : 'none'
       }
+      className={className}
     >
       <HeaderContentWrapper $selected={selected}>
         <div>{children}</div>
@@ -275,20 +278,24 @@ const ActionStatusTable = (props: Props) => {
 
                 if (columnConfig.sortable && columnConfig.headerKey) {
                   return (
-                    <th key={i} className={columnConfig.headerClassName}>
-                      <SortableTableHeader
-                        sort={sort}
-                        headerKey={columnConfig.headerKey}
-                        onClick={sortHandler(columnConfig.headerKey)}
-                      >
-                        {columnConfig.renderHeader(t, plan, column.columnLabel)}
-                      </SortableTableHeader>
-                    </th>
+                    <SortableTableHeader
+                      key={i}
+                      sort={sort}
+                      headerKey={columnConfig.headerKey}
+                      onClick={sortHandler(columnConfig.headerKey)}
+                      className={columnConfig.headerClassName}
+                    >
+                      {columnConfig.renderHeader(t, plan, column.columnLabel)}
+                    </SortableTableHeader>
                   );
                 }
 
                 return (
-                  <th key={i} className={columnConfig.headerClassName}>
+                  <th
+                    key={i}
+                    scope="col"
+                    className={columnConfig.headerClassName}
+                  >
                     {columnConfig.renderHeader(t, plan, column.columnLabel)}
                   </th>
                 );
