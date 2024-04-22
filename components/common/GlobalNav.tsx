@@ -25,7 +25,18 @@ import LanguageSelector from './LanguageSelector';
 import NavbarSearch from './NavbarSearch';
 import { usePlan } from 'context/plan';
 import { isServer } from 'common/environment';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
+
+const getRootLink = (plan, locale, primaryLanguage) => {
+  if (plan.parent && plan.parent.viewUrl) {
+    const shouldAppendLocale = locale !== primaryLanguage;
+    if (shouldAppendLocale) {
+      return `${plan.parent.viewUrl}/${locale}/`;
+    }
+    return plan.parent.viewUrl;
+  }
+  return '/';
+};
 
 const baseFixedNavStyles = css`
   @keyframes slide-in {
@@ -444,7 +455,9 @@ const useStickyNavigation = (isStickyEnabled: boolean = false) => {
 function GlobalNav(props) {
   const t = useTranslations();
   const theme = useTheme();
+  const locale = useLocale();
   const plan = usePlan();
+  const rootLink = getRootLink(plan, locale, plan.primaryLanguage);
   const {
     siteTitle,
     ownerName = '',
@@ -487,7 +500,6 @@ function GlobalNav(props) {
   );
   const hideLogoOnMobile = !!(theme.navTitleVisible && siblings.length);
 
-  const rootLink = plan.parent ? plan.parent?.viewUrl : '/';
   const logoLink = theme?.footerLogoLink || rootLink;
 
   return (
