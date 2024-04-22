@@ -36,13 +36,13 @@ const PersonDetails = styled.div`
   }
 `;
 
-const Name = styled.p`
+const Name = styled.div`
   line-height: ${(props) => props.theme.lineHeightSm};
   margin-bottom: 0.5em;
   font-weight: ${(props) => props.theme.fontWeightBold};
 `;
 
-const PersonRole = styled.p`
+const PersonRole = styled.div`
   margin-bottom: 0.5em;
   color: ${(props) => props.theme.themeColors.dark};
   font-size: ${(props) => props.theme.fontSizeSm};
@@ -51,7 +51,7 @@ const PersonRole = styled.p`
   line-height: ${(props) => props.theme.lineHeightSm};
 `;
 
-const PersonOrg = styled.p`
+const PersonOrg = styled.div`
   margin-bottom: 1em;
   color: ${(props) => props.theme.themeColors.dark};
   font-size: ${(props) => props.theme.fontSizeSm};

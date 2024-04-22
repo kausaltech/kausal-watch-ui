@@ -68,7 +68,7 @@ const StyledPhaseIndicatorContainer = styled.div<{ $isVertical: boolean }>`
     $isVertical ? verticalIndicatorStyles : horizontalIndicatorStyles}
 `;
 
-const StyledMiniPhaseName = styled.p`
+const StyledMiniPhaseName = styled.div`
   font-size: ${({ theme }) => theme.fontSizeSm};
   line-height: ${({ theme }) => theme.lineHeightSm};
   font-family: ${({ theme }) => theme.fontFamilyTiny};
