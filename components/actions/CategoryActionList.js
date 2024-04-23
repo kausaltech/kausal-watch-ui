@@ -10,6 +10,7 @@ import ContentLoader from 'components/common/ContentLoader';
 import ErrorMessage from 'components/common/ErrorMessage';
 import { usePlan } from 'context/plan';
 import { useTranslations } from 'next-intl';
+import { getActionTermContext } from '@/common/i18n';
 
 const GET_ACTION_LIST = gql`
   query GetActionList($plan: ID!, $clientUrl: String!) {
@@ -150,7 +151,7 @@ const CategoryActionList = (props) => {
       </EmptyActionListHeader>
     );
   }
-  const heading = t('filter-result-actions');
+  const heading = t('filter-result-actions', getActionTermContext(plan));
 
   // const MotionCard = motion(ActionCard);
   return (
