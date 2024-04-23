@@ -160,5 +160,17 @@
     "select-sector-for-actions": "Valitse päästösektori nähdäksesi siihen liittyvät toimenpiteet",
     "no-phase": "Ei vaihetta",
     "no-status": "Ei tilaa",
-    "content-could-not-be-displayed": "Emme voi näyttää tätä sisältöä tällä hetkellä. Yritä päivittää sivu. Raportti on lähetetty tiimillemme ongelman selvittämiseksi."
+    "content-could-not-be-displayed": "Emme voi näyttää tätä sisältöä tällä hetkellä. Yritä päivittää sivu. Raportti on lähetetty tiimillemme ongelman selvittämiseksi.",
+    "filter-primary-organization-help": "{context, select, DIVISION {Näytä valitun toimialan toimet} other {Näytä valitun kunnan toimet}}",
+    "filter-all-statuses": "Kaikki tilat",
+    "filter-status": "Tila",
+    "no-reports": "Raportteja ei ole saatavilla.",
+    "no-action-data-for-report": "Raportissa ei ole tätä toimenpidettä koskevia tietoja.",
+    "filter-status-help": "Näytä valitun tilan mukaiset toimenpiteet",
+    "collapse-row": "Sulje rivi",
+    "expand-row": "Laajenna rivi",
+    "ui-sign-in": "Kirjaudu sisään",
+    "ui-sign-out": "Kirjaudu ulos",
+    "action-versions": "Toimenpideversiot",
+    "open": "avoin"
 }
