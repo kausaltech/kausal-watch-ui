@@ -120,7 +120,7 @@
     "actions-filter-by": "Filtrera",
     "report": "Bericht",
     "navigation-home": "Start",
-    "graph-showTable": " Visa datatabell",
+    "graph-showTable": "Visa datatabell",
     "graph-hideTable": "Dölj datatabell",
     "definition": "Definition",
     "default-sorting": "Standard sortering",
@@ -167,5 +167,10 @@
     "filter-all-statuses": "Alla statusar",
     "filter-status": "Status",
     "filter-status-help": "Visa åtgärder med vald status",
-    "content-could-not-be-displayed": "Vi kan inte visa detta innehåll för tillfället. Försök att uppdatera sidan. En rapport har skickats till vårt team för att undersöka problemet."
+    "content-could-not-be-displayed": "Vi kan inte visa detta innehåll för tillfället. Försök att uppdatera sidan. En rapport har skickats till vårt team för att undersöka problemet.",
+    "ui-sign-in": "Logga in",
+    "ui-sign-out": "Logga ut",
+    "action-versions": "Åtgärdsversioner",
+    "collapse-row": "Kollapsa rad",
+    "expand-row": "Utvidga rad"
 }
