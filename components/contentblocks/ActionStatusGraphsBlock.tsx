@@ -19,6 +19,7 @@ const GET_ACTION_LIST_FOR_GRAPHS = gql`
   query GetActionListForGraphs($plan: ID!, $categoryId: ID) {
     planActions(plan: $plan, category: $categoryId) {
       color
+      scheduleContinuous
       statusSummary {
         identifier
       }
@@ -39,12 +40,8 @@ interface Props
   categoryId?: string;
 }
 
-const ActionStatusGraphsBlock = ({
-  id = '',
-  categoryId,
-  columnProps,
-  ...graphsProps
-}: Props) => {
+const ActionStatusGraphsBlock = (props: Props) => {
+  const { id = '', categoryId, columnProps, ...graphsProps } = props;
   const plan = usePlan();
   const t = useTranslations();
   const theme = useTheme();
