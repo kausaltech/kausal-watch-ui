@@ -5,6 +5,7 @@ const FALLBACKS = {
   'en-GB': 'en',
   'de-CH': 'de',
   'es-US': 'es',
+  'sv-FI': 'sv',
   default: 'en',
 };
 

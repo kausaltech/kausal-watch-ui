@@ -4,6 +4,7 @@ import dayjs from 'dayjs';
 
 import 'dayjs/locale/fi';
 import 'dayjs/locale/sv';
+import 'dayjs/locale/sv-fi';
 import 'dayjs/locale/en-gb';
 import 'dayjs/locale/en-au';
 import 'dayjs/locale/de';
