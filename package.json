@@ -4,7 +4,7 @@
   "version": "2.4.2",
   "author": "Tero Tikkanen <tero.tikkanen@kausal.tech>",
   "dependencies": {
-    "@apollo/client": "3.9.0-rc.1",
+    "@apollo/client": "3.9.11",
     "@apollo/experimental-nextjs-app-support": "0.7.0",
     "@elastic/react-search-ui": "^1.11.2",
     "@kausal/mapboxgl-legend": "^1.7.2",
