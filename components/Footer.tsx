@@ -117,7 +117,10 @@ function Footer() {
       name: t('give-feedback'),
       slug: plan.externalFeedbackUrl,
     });
-  } else if (pathname !== '/feedback' && theme.showFeedbackLink !== false) {
+  } else if (
+    pathname !== '/feedback' &&
+    theme.settings.showFeedbackLink !== false
+  ) {
     const url = getFeedbackUrl(pathname);
     if (url != null) {
       utilityLinks.push({ id: '2', name: t('give-feedback'), slug: url });
