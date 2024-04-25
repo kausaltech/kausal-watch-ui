@@ -24,7 +24,7 @@ Clone the repository, install the dependencies and run the development server lo
 
 Preview the application locally at http://localhost:3000/
 
-#### Environment variables
+#### Environment Variables
 
 Define the following variables in `.env` if you need to override them for local development.
 Variables prefixed with `NEXT_PUBLIC_` are build-time variables, which are available in client components.
@@ -33,7 +33,7 @@ When using environment variables in client-side code, import them from `@/common
 - `NEXT_PUBLIC_API_URL` (previously APLANS_API_BASE_URL): Configure a custom API URL, e.g. staging or a local backend.
 - `NEXT_PUBLIC_DEPLOYMENT_TYPE`: Change the deployment type, e.g. `staging` or `production`.
 
-#### End-to-end testing
+#### End-to-end Testing
 
 Before the first run, ensure the browsers Playwright needs are installed:
 
