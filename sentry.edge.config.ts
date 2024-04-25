@@ -12,7 +12,7 @@ Sentry.init({
   dsn: 'https://9b7a344624774da8a5aa5752baad826b@sentry.kausal.tech/2',
 
   // Adjust this value in production, or use tracesSampler for greater control
-  tracesSampleRate: 1,
+  tracesSampleRate: 0.1,
 
   // Setting this option to true will print useful information to the console while you're setting up Sentry.
   debug: false,
