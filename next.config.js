@@ -100,6 +100,10 @@ let config = {
   },
 };
 
+if (process.env.NEXTJS_STANDALONE_BUILD === '1') {
+  config.output = 'standalone';
+}
+
 module.exports = withNextIntl(config);
 
 if (sentryAuthToken) {
@@ -114,7 +118,7 @@ if (sentryAuthToken) {
       authToken: sentryAuthToken,
 
       // Suppresses source map uploading logs during build
-      silent: true,
+      silent: false,
       org: 'kausal',
       project: 'watch-ui',
       url: 'https://sentry.kausal.tech/',
@@ -127,13 +131,13 @@ if (sentryAuthToken) {
       widenClientFileUpload: true,
 
       // Transpiles SDK to be compatible with IE11 (increases bundle size)
-      transpileClientSDK: true,
+      transpileClientSDK: false,
 
       // Routes browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers (increases server load)
       tunnelRoute: '/monitoring',
 
       // Hides source maps from generated client bundles
-      hideSourceMaps: true,
+      hideSourceMaps: false,
 
       // Automatically tree-shake Sentry logger statements to reduce bundle size
       disableLogger: true,
@@ -142,7 +146,11 @@ if (sentryAuthToken) {
       // See the following for more information:
       // https://docs.sentry.io/product/crons/
       // https://vercel.com/docs/cron-jobs
-      automaticVercelMonitors: true,
+      automaticVercelMonitors: false,
     }
   );
+}
+
+if (process.env.ANALYZE === 'true') {
+  module.exports = withBundleAnalyzer(module.exports);
 }
