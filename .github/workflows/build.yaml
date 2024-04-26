@@ -130,6 +130,7 @@ jobs:
             BUILD_ID=${{ steps.build_meta.outputs.build_id }}
             GIT_REPO=${{ github.repository }}
             GIT_REV=${{ github.sha }}
+            GIT_REPO_URL=${{ env.GIT_REPO_URL }}
             NPM_REGISTRY_SERVER=${{ vars.NPM_REGISTRY_SERVER }}
           secrets: |
             SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}

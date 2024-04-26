@@ -84,19 +84,15 @@ USER nextjs
 
 ARG GIT_REPO_URL
 LABEL org.opencontainers.image.url="${GIT_REPO_URL}"
+LABEL org.opencontainers.image.source="${GIT_REPO_URL}"
 ARG BUILD_TIMESTAMP
 LABEL org.opencontainers.image.created="${BUILD_TIMESTAMP}"
 LABEL org.opencontainers.image.description="Kausal Watch UI"
+LABEL org.opencontainers.image.revision="${GIT_REV}"
+LABEL org.opencontainers.image.version="${BUILD_ID}"
 
-ARG NEXTJS_BUILD_ID
+ARG BUILD_ID
 LABEL nextjs_build_id="${NEXTJS_BUILD_ID}"
-
-#ARG NEXT_PUBLIC_API_URL
-#ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
-#ARG NEXT_PUBLIC_AUTH_ISSUER
-#ENV NEXT_PUBLIC_AUTH_ISSUER=$AUTH_ISSUER
-#ARG NEXT_PUBLIC_DEPLOYMENT_TYPE
-#ENV NEXT_PUBLIC_DEPLOYMENT_TYPE=$NEXT_PUBLIC_DEPLOYMENT_TYPE
 
 COPY ./docker/entrypoint.sh /entrypoint.sh
 EXPOSE 3000
