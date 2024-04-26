@@ -39,6 +39,11 @@ on:
       AWS_SECRET_ACCESS_KEY:
         required: false
 
+    outputs:
+      test_report_url:
+        description: 'URL to e2e test report'
+        value: ${{ jobs.e2e_test.outputs.test_report_url }}
+
 jobs:
   e2e_test:
     name: Run tests
@@ -60,7 +65,8 @@ jobs:
           AUTH_SECRET: abcd
           AUTH_TRUST_HOST: true
           HOSTNAME: 0.0.0.0
-  
+    outputs:
+      test_report_url: ${{ steps.upload.outputs.test_report_url }}
     steps:
       - name: Check out code
         uses: actions/checkout@v4
@@ -90,8 +96,12 @@ jobs:
           DEBIAN_FRONTEND: noninteractive
 
       - name: Upload test report to S3
+        id: upload
         run: |
           s3cmd --host ${{ inputs.s3_endpoint }} --host-bucket ${{ inputs.s3_endpoint }} put --recursive playwright-report s3://${{ inputs.s3_bucket }}/${{ inputs.build_id }}/
+          export TEST_REPORT_URL="https://${{ inputs.s3_endpoint }}/${{ inputs.s3_bucket }}/playwright-report/index.html"
+          echo "test_report_url=${TEST_REPORT_URL}" >> $GITHUB_OUTPUT
+          echo "✅ End-to-end tests succeeded. 🔗 [Test report](${TEST_REPORT_URL})" >> $GITHUB_STEP_SUMMARY
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
