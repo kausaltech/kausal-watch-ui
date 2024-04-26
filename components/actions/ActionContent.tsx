@@ -397,7 +397,7 @@ function ActionContentProgressContainer({
     plan,
     statusName: action.mergedWith
       ? t('action-status-merged', getActionTermContext(plan))
-      : action.status.name,
+      : action.status?.name,
   };
 
   return (
