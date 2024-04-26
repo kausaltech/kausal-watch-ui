@@ -18,7 +18,7 @@ const StatusDisplay = styled.div`
 const StatusCell = ({ action, plan }: Props) => {
   const t = useTranslations();
 
-  if (action.statusSummary.identifier === 'UNDEFINED') {
+  if (action.status == null) {
     return null;
   }
 
@@ -31,7 +31,7 @@ const StatusCell = ({ action, plan }: Props) => {
         statusName={
           action.mergedWith
             ? t('action-status-merged', getActionTermContext(plan))
-            : action.statusSummary.label
+            : action.status.name
         }
       />
     </StatusDisplay>
