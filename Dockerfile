@@ -82,17 +82,17 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 USER nextjs
 
-ARG GIT_REPO_URL
-LABEL org.opencontainers.image.url="${GIT_REPO_URL}"
-LABEL org.opencontainers.image.source="${GIT_REPO_URL}"
-ARG BUILD_TIMESTAMP
-LABEL org.opencontainers.image.created="${BUILD_TIMESTAMP}"
-LABEL org.opencontainers.image.description="Kausal Watch UI"
-LABEL org.opencontainers.image.revision="${GIT_REV}"
-LABEL org.opencontainers.image.version="${BUILD_ID}"
+#ARG GIT_REPO_URL
+#LABEL org.opencontainers.image.url="${GIT_REPO_URL}"
+#LABEL org.opencontainers.image.source="${GIT_REPO_URL}"
+#ARG BUILD_TIMESTAMP
+#LABEL org.opencontainers.image.created="${BUILD_TIMESTAMP}"
+#LABEL org.opencontainers.image.description="Kausal Watch UI"
+#LABEL org.opencontainers.image.revision="${GIT_REV}"
+#LABEL org.opencontainers.image.version="${BUILD_ID}"
 
 ARG BUILD_ID
-LABEL nextjs_build_id="${NEXTJS_BUILD_ID}"
+LABEL nextjs_build_id="${BUILD_ID}"
 
 COPY ./docker/entrypoint.sh /entrypoint.sh
 EXPOSE 3000
