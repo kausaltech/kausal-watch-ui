@@ -102,12 +102,7 @@ export async function middleware(request: NextRequest) {
   const hostUrl = new URL(`${protocol}://${host}`);
   const hostname = hostUrl.hostname;
 
-  console.log(`
-  ⚙ Middleware ${url}
-    ↝ protocol: ${protocol}
-    ↝ pathname: ${pathname}
-    ↝ hostname: ${hostname}
-  `);
+  console.log(`${request.method} ${protocol}://${hostname}${pathname}`);
 
   // Redirect the root application locally to `sunnydale` tenant
   if (hostname === 'localhost') {
@@ -148,6 +143,9 @@ export async function middleware(request: NextRequest) {
   if (error || !data?.plansForHostname?.length) {
     if (error) {
       captureException(error, { extra: { hostname, ...error } });
+      console.error(error);
+    } else {
+      console.warn(`No plans found for hostname: ${hostname}`);
     }
 
     return NextResponse.rewrite(new URL('/404', request.url));
