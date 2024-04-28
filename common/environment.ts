@@ -30,3 +30,5 @@ export const authIssuer = process.env.NEXT_PUBLIC_AUTH_ISSUER;
 
 export const logGraphqlQueries =
   isServer && process.env.LOG_GRAPHQL_QUERIES === 'true';
+
+console.log(`Backend API URL: ${gqlUrl}`);
