@@ -1,4 +1,4 @@
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import Link from 'next/link';
 import styled from 'styled-components';
 import {
@@ -143,6 +143,7 @@ type LanguageSelectorProps = {
 const LanguageSelector = (props: LanguageSelectorProps) => {
   const currentLocale = useLocale();
   const theme = useTheme();
+  const t = useTranslations();
   const plan = usePlan();
   const apolloClient = useApolloClient();
   const { mobile = false } = props;
@@ -161,7 +162,12 @@ const LanguageSelector = (props: LanguageSelectorProps) => {
   return (
     <LanguageSelectorListItem>
       <Selector inNavbar $mobile={mobile} className={mobile && 'd-md-none'}>
-        <StyledDropdownToggle color="link" data-toggle="dropdown" tag="button">
+        <StyledDropdownToggle
+          color="link"
+          data-toggle="dropdown"
+          tag="button"
+          aria-label={t('select-language')}
+        >
           <Icon name="globe" width="1.75rem" height="1.75rem" />
           <CurrentLanguage $mobile={mobile}>{languageCode}</CurrentLanguage>
         </StyledDropdownToggle>

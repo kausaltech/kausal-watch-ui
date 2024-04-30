@@ -54,5 +54,6 @@
     "action-draft": "Entwurf",
     "other": "Andere",
     "logo": "Logo",
-    "inactive-actions": "Inaktive Maßnahmen"
+    "inactive-actions": "Inaktive Maßnahmen",
+    "select-language": "Sprache auswählen"
 }
