@@ -442,12 +442,16 @@ function ActionCard({
     return actionCard;
   }
 
+  const fromOtherPlan = action.plan.id !== plan.id;
+  const mergedWithActionFromOtherPlan =
+    mergedWith != null && mergedWith.plan.id !== plan.id;
+
   return (
     <ActionLink
       action={action}
-      viewUrl={action.viewUrl}
+      viewUrl={action.mergedWith?.viewUrl ?? action.viewUrl}
       planUrl={getPlanUrl(mergedWith, action.plan, plan.id)}
-      crossPlan={action?.plan && action.plan.id !== plan.id}
+      crossPlan={fromOtherPlan || mergedWithActionFromOtherPlan}
     >
       <StyledActionLink>{actionCard}</StyledActionLink>
     </ActionLink>

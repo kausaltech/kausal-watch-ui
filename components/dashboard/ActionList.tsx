@@ -317,6 +317,7 @@ const actionFragment = gql`
     mergedWith {
       id
       identifier
+      viewUrl
       plan {
         id
         shortName
