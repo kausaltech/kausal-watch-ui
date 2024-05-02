@@ -173,5 +173,6 @@
     "ui-sign-in": "Sign in",
     "ui-sign-out": "Sign out",
     "action-versions": "Action versions",
-    "content-could-not-be-displayed": "We're unable to display this content at the moment. Please try refreshing the page. A report has been sent to our team to investigate the issue."
+    "content-could-not-be-displayed": "We're unable to display this content at the moment. Please try refreshing the page. A report has been sent to our team to investigate the issue.",
+    "select-language": "Select language"
 }
