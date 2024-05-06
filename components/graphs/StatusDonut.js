@@ -83,8 +83,6 @@ const StatusDonut = (props) => {
   const pieData = {
     values: [...data.values],
     labels: [...data.labels],
-    domain: { column: 0 },
-    hoverinfo: 'label+value+percent',
     hovertemplate: '%{label}<br>%{value}<br>%{percent:.0%}<extra></extra>',
     hole: 0.5,
     type: 'pie',
@@ -94,7 +92,6 @@ const StatusDonut = (props) => {
     marker: {
       colors: [...colors],
     },
-    autoMargin: true,
   };
   const pieLayout = {
     font: {
