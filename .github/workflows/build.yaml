@@ -55,20 +55,19 @@ on:
 env:
   IMAGE_NAME: ${{ inputs.docker_image_name }}
   IMAGE_FULL_PATH: ${{ inputs.docker_registry }}/${{ inputs.docker_image_name }}
-  # VAULT_KEY: ${{ vars.VAULT_ENV }}/data/github-actions/project/${{ inputs.docker_image_name }}
   GIT_REPO_URL: ${{ github.server_url }}/${{ github.repository }}
-  BUILD_ID: # set through a step
-  BUILD_TIMESTAMP: # set through a step
-  # These come from environment/secrets
-  DOCKER_USERNAME:
-  DOCKER_PASSWORD:
 
 jobs:
   build:
     name: Build
     runs-on: self-hosted
+    permissions:
+      id-token: write
+      packages: write
+      attestations: write
+      contents: read
     container:
-      image: ghcr.io/actions/actions-runner:latest
+      image: harbor.kausal.dev/library/ubuntu:latest
 
     concurrency:
       group: ${{ inputs.docker_registry }}/${{ inputs.docker_image_name }}
@@ -104,7 +103,7 @@ jobs:
           images: ${{ inputs.docker_registry }}/${{ inputs.docker_image_name }}
           tags: |
             type=raw,value=${{steps.build_meta.outputs.git_image_tag}}
-            type=raw,value=${{steps.build_meta.outputs.build_id}}
+            type=raw,value=build-${{steps.build_meta.outputs.build_id}}
             type=ref,event=pr
             type=raw,value=latest,enable={{is_default_branch}}
             type=raw,value={{branch}}-latest,enable=${{steps.deployment.conclusion != 'skipped'}}
@@ -122,7 +121,7 @@ jobs:
           driver: remote
           driver-opts:
           endpoint: tcp://buildkitd:1234
-          install: true
+          install: false
           cleanup: true
 
       - name: Check if an image for this git head already exists
@@ -170,3 +169,25 @@ jobs:
           cache-to: type=registry,ref=${{ inputs.docker_registry }}/${{ inputs.docker_build_cache_image_name }}:cache,mode=max,image-manifest=true
         env:
           BUILDX_GIT_LABELS: full
+
+      - name: Attest image
+        uses: actions/attest-build-provenance@v1
+        with:
+          subject-name: ${{ inputs.docker_registry }}/${{ inputs.docker_image_name }}
+          subject-digest: ${{ steps.build_push.outputs.digest }}
+          push-to-registry: true
+  
+      - name: Sign the images with GitHub OIDC Token
+        env:
+          DIGEST: ${{ steps.build_push.outputs.digest }}
+          TAGS: ${{ steps.docker_meta.outputs.tags }}
+        run: |
+          images=""
+          for tag in ${TAGS}; do
+            tag_digest="${tag}@${DIGEST}"
+            echo $tag_digest
+            images+="${tag_digest} "
+          done
+          cosign sign --yes ${images}
+        shell: bash
+  
