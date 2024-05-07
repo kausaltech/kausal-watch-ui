@@ -220,7 +220,6 @@ function TaskList(props) {
           <ListGroup className="mb-5">{inProgressTasks}</ListGroup>
         </>
       )}
-
       {completedTasks.length > 0 && (
         <>
           <ListGroupTitle>{t('action-tasks-done')}</ListGroupTitle>

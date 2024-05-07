@@ -25,6 +25,7 @@
     "action-tasks": "{context, select, MILESTONE {Meilensteine} other {Aufgaben}}",
     "action-tasks-count": "{context, select, MILESTONE {Meilensteine} other {Aufgaben}}",
     "action-tasks-done": "Was wurde gemacht?",
+    "action-tasks-doing": "Was passiert gerade?",
     "action-tasks-todo": "Was bleibt zu tun?",
     "action-timeline": "Zeitleiste",
     "action-timeline-between": "Zeitraum zwischen",
