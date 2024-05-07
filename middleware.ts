@@ -41,6 +41,9 @@ const httpHeadersMiddleware = setContext(
     if (wildcardDomains.length) {
       headers['x-wildcard-domains'] = wildcardDomains.join(',');
     }
+    return {
+      headers,
+    };
   }
 );
 
