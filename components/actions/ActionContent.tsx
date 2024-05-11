@@ -580,6 +580,8 @@ function ActionContent(props: ActionContentProps) {
   return (
     <div>
       <ActionHero
+        matchingVersion={action.workflowStatus?.matchingVersion ?? null}
+        updatedAt={action.updatedAt}
         categories={action.categories}
         previousAction={action.previousAction}
         nextAction={action.nextAction}
