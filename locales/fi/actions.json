@@ -53,5 +53,6 @@
     "feedback-on-action-description": "Tästä voit lähettää palautetta tai kommentin koskien tätä toimenpidettä",
     "action-draft": "Luonnos",
     "other": "Muut",
-    "inactive-actions": "Epäaktiiviset toimenpiteet"
+    "inactive-actions": "Epäaktiiviset toimenpiteet",
+    "no-action-version-available": "{versionType}-versiota ei ole saatavilla"
 }

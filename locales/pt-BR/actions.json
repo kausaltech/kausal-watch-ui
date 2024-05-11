@@ -56,5 +56,6 @@
     "feedback-on-action": "Dê feedback sobre essa ação",
     "feedback-on-action-description": "Você pode deixar um comentário ou feedback sobre essa ação",
     "action-draft": "Rascunho",
-    "logo": "Logotipo"
+    "logo": "Logotipo",
+    "no-action-version-available": "Nenhuma versão {versionType} disponível"
 }
