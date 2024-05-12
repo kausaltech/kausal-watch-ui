@@ -54,5 +54,6 @@
     "action-draft": "Förslag",
     "other": "Annat",
     "logo": "Logotyp",
-    "inactive-actions": "Inaktiva åtgärder"
+    "inactive-actions": "Inaktiva åtgärder",
+    "no-action-version-available": "Ingen {versionType}-version tillgänglig"
 }

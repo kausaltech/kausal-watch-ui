@@ -53,5 +53,6 @@
     "feedback-on-action-description": "Du kan efterlade en kommentar eller feedback på denne handling",
     "action-draft": "Udkast",
     "other": "Anden",
-    "inactive-actions": "Inaktive handlinger"
+    "inactive-actions": "Inaktive handlinger",
+    "no-action-version-available": "Ingen {versionType}-version tilgængelig"
 }

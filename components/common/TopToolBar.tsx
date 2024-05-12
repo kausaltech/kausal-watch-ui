@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import {
   Container,
   Dropdown,
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
+  Spinner,
 } from 'reactstrap';
 import styled from 'styled-components';
 import Icon from '@/components/common/Icon';
@@ -13,7 +14,7 @@ import { usePlan } from 'context/plan';
 import { useSession } from 'next-auth/react';
 import { useWorkflowSelector } from '@/context/workflow-selector';
 import { useRouter } from 'next/navigation';
-import { gql, useSuspenseQuery } from '@apollo/client';
+import { gql, useSuspenseQuery, useApolloClient } from '@apollo/client';
 import {
   GetWorkflowsQuery,
   WorkflowState,
@@ -90,29 +91,17 @@ export const TopToolBar = () => {
   const userToggle = () => setUserDropdownOpen((prevState) => !prevState);
   const t = useTranslations();
   const plan = usePlan();
-  const { workflow: selectedWorkflowId, setWorkflow } = useWorkflowSelector();
+  const {
+    workflow: selectedWorkflowId,
+    setWorkflow,
+    workflowStates,
+    loading,
+    setLoading,
+  } = useWorkflowSelector();
   const router = useRouter();
   const handleSignOut = useHandleSignOut();
 
-  const GET_WORKFLOW_STATES = gql`
-    query GetWorkflows($plan: ID!) {
-      workflowStates(plan: $plan) {
-        id
-        description
-      }
-    }
-  `;
-
-  const { data: workflowsData } = useSuspenseQuery<GetWorkflowsQuery>(
-    GET_WORKFLOW_STATES,
-    {
-      variables: {
-        plan: plan.identifier,
-      },
-    }
-  );
-
-  const workflows = workflowsData.workflowStates?.filter(
+  const workflows = workflowStates?.filter(
     (workflow): workflow is StrictWorkflowStateDescription =>
       !!(workflow?.id && workflow?.description)
   );
@@ -129,10 +118,17 @@ export const TopToolBar = () => {
     }
   }, [workflows, selectedWorkflow, setWorkflow]);
 
-  function handleSelectWorkflow(workflow: string) {
-    setWorkflow(workflow);
-    router.refresh();
-  }
+  const apolloClient = useApolloClient();
+
+  const handleSelectWorkflow = useCallback(
+    (workflow: string) => {
+      apolloClient.clearStore();
+      setWorkflow(workflow);
+      router.refresh();
+      setLoading(true);
+    },
+    [apolloClient, router, setWorkflow, setLoading]
+  );
 
   if (session.status !== 'authenticated') {
     return null;
@@ -142,12 +138,19 @@ export const TopToolBar = () => {
     <ToolbarContainer fluid>
       {selectedWorkflow && !!workflows?.length && (
         <StyledDropdown isOpen={versionsDropdownOpen} toggle={versionsToggle}>
-          <StyledDropdownToggle caret aria-label="action-versions">
-            <StyledIcon
-              name="pencil"
-              className="icon"
-              aria-label="actions-versions"
-            />
+          <StyledDropdownToggle
+            disabled={loading}
+            caret
+            aria-label="action-versions"
+          >
+            {loading && <Spinner size="sm" className="me-3" />}
+            {!loading && (
+              <StyledIcon
+                name="pencil"
+                className="icon"
+                aria-label="actions-versions"
+              />
+            )}
             {selectedWorkflow.description}
           </StyledDropdownToggle>
           <StyledDropdownMenu>

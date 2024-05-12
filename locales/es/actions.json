@@ -53,5 +53,6 @@
     "feedback-on-action-description": "Puede dejar un comentario o una opinión sobre esta acción",
     "action-draft": "Borrador",
     "other": "Otro",
-    "inactive-actions": "Acciones inactivas"
+    "inactive-actions": "Acciones inactivas",
+    "no-action-version-available": "No hay versión {versionType} disponible"
 }

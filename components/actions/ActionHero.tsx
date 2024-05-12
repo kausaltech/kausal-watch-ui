@@ -2,6 +2,7 @@ import React from 'react';
 import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
 import { useTheme } from 'styled-components';
+import { useSession } from 'next-auth/react';
 import { getActionTermContext } from 'common/i18n';
 import { ActionLink, ActionListLink, OrganizationLink } from 'common/links';
 import { usePlan } from 'context/plan';
@@ -11,6 +12,7 @@ import { getBreadcrumbsFromCategoryHierarchy } from 'common/categories';
 import { Category } from 'common/__generated__/graphql';
 import { Breadcrumbs } from 'components/common/Breadcrumbs';
 import { useTranslations } from 'next-intl';
+import ActionLogBanner from './ActionLogBanner';
 
 const Hero = styled.header<{ $bgColor: string }>`
   position: relative;
@@ -55,18 +57,6 @@ const HeroCardBg = styled.div`
   background-color: ${(props) => props.theme.themeColors.white};
   border-radius: ${(props) => props.theme.cardBorderRadius};
   box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.1);
-`;
-
-const DraftBanner = styled.div`
-  padding: ${(props) => props.theme.spaces.s150};
-  background-color: ${(props) => props.theme.graphColors.yellow010};
-  border-radius: ${(props) =>
-    `${props.theme.cardBorderRadius} ${props.theme.cardBorderRadius} 0 0`};
-
-  p {
-    margin-bottom: 0;
-    font-weight: ${(props) => props.theme.fontWeightBold};
-  }
 `;
 
 const CardContent = styled.div`
@@ -214,10 +204,15 @@ type ActionHeroProps = {
   hideActionIdentifiers?: boolean;
   primaryOrg: any;
   state: string;
+  actionID: string;
+  matchingVersion: any;
+  updatedAt: string;
 };
 
 function ActionHero(props: ActionHeroProps) {
   const {
+    matchingVersion,
+    updatedAt,
     categories,
     previousAction,
     nextAction,
@@ -234,6 +229,8 @@ function ActionHero(props: ActionHeroProps) {
   const theme = useTheme();
   const t = useTranslations();
   const plan = usePlan();
+  const { status } = useSession();
+  const isAuthenticated = status === 'authenticated';
 
   // Theme overlay color as fallback
   let categoryColor = theme.imageOverlay;
@@ -261,10 +258,11 @@ function ActionHero(props: ActionHeroProps) {
             <Row>
               <Col lg={8}>
                 <HeroCardBg>
-                  {state === 'draft' && (
-                    <DraftBanner>
-                      <p role="status">{t('action-draft')}</p>
-                    </DraftBanner>
+                  {isAuthenticated && (
+                    <ActionLogBanner
+                      matchingVersion={matchingVersion}
+                      updatedAt={updatedAt}
+                    />
                   )}
                   <CardContent>
                     {primaryOrg && (

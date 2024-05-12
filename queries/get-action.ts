@@ -48,6 +48,12 @@ const GET_ACTION_DETAILS = gql`
       name
       officialName
       leadParagraph
+      workflowStatus {
+        matchingVersion {
+          id
+          description
+        }
+      }
       description
       completion
       image {

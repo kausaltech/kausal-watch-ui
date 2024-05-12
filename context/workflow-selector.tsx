@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { useCookie } from '@/common/hooks/use-cookie';
 import {
   SELECTED_WORKFLOW_COOKIE_KEY,
@@ -10,6 +11,9 @@ import { useContext, createContext } from 'react';
 interface WorkflowSelectorValue {
   workflow: string | null;
   setWorkflow: React.Dispatch<React.SetStateAction<string | null>>;
+  workflowStates: any; //  TODO
+  loading: boolean;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const WorkflowSelectorContext = createContext<
@@ -18,19 +22,24 @@ const WorkflowSelectorContext = createContext<
 
 type Props = {
   initialWorkflow?: string;
+  workflowStates: any; // TODO
 } & React.PropsWithChildren;
 
 export function WorkflowProvider({
   children,
   initialWorkflow = WORKFLOW_DEFAULT,
+  workflowStates,
 }: Props) {
   const [workflow, setWorkflow] = useCookie<string>(
     SELECTED_WORKFLOW_COOKIE_KEY,
     initialWorkflow
   );
+  const [loading, setLoading] = useState(false);
 
   return (
-    <WorkflowSelectorContext.Provider value={{ workflow, setWorkflow }}>
+    <WorkflowSelectorContext.Provider
+      value={{ workflow, setWorkflow, workflowStates, loading, setLoading }}
+    >
       {children}
     </WorkflowSelectorContext.Provider>
   );

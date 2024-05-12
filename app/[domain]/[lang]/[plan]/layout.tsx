@@ -118,6 +118,7 @@ export default async function PlanLayout({ params, children }: Props) {
         <PlanProvider plan={data.plan}>
           <WorkflowProvider
             initialWorkflow={selectedWorkflow?.value as string | undefined}
+            workflowStates={data.workflowStates}
           >
             <UpdateApolloContext domain={domain} />
             <CombinedIconSymbols />
