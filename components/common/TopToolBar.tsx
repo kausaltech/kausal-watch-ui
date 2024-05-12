@@ -90,29 +90,17 @@ export const TopToolBar = () => {
   const userToggle = () => setUserDropdownOpen((prevState) => !prevState);
   const t = useTranslations();
   const plan = usePlan();
-  const { workflow: selectedWorkflowId, setWorkflow } = useWorkflowSelector();
+  const {
+    workflow: selectedWorkflowId,
+    setWorkflow,
+    workflowStates,
+    loading,
+    setLoading,
+  } = useWorkflowSelector();
   const router = useRouter();
   const handleSignOut = useHandleSignOut();
 
-  const GET_WORKFLOW_STATES = gql`
-    query GetWorkflows($plan: ID!) {
-      workflowStates(plan: $plan) {
-        id
-        description
-      }
-    }
-  `;
-
-  const { data: workflowsData } = useSuspenseQuery<GetWorkflowsQuery>(
-    GET_WORKFLOW_STATES,
-    {
-      variables: {
-        plan: plan.identifier,
-      },
-    }
-  );
-
-  const workflows = workflowsData.workflowStates?.filter(
+  const workflows = workflowStates?.filter(
     (workflow): workflow is StrictWorkflowStateDescription =>
       !!(workflow?.id && workflow?.description)
   );
@@ -130,6 +118,7 @@ export const TopToolBar = () => {
   }, [workflows, selectedWorkflow, setWorkflow]);
 
   function handleSelectWorkflow(workflow: string) {
+    setLoading(true);
     setWorkflow(workflow);
     router.refresh();
   }
@@ -142,7 +131,11 @@ export const TopToolBar = () => {
     <ToolbarContainer fluid>
       {selectedWorkflow && !!workflows?.length && (
         <StyledDropdown isOpen={versionsDropdownOpen} toggle={versionsToggle}>
-          <StyledDropdownToggle caret aria-label="action-versions">
+          <StyledDropdownToggle
+            disabled={loading}
+            caret
+            aria-label="action-versions"
+          >
             <StyledIcon
               name="pencil"
               className="icon"

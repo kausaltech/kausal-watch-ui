@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Container, Row, Col } from 'reactstrap';
 import styled, { css } from 'styled-components';
 import { useHotkeys } from 'react-hotkeys-hook';
@@ -55,6 +55,8 @@ import {
   ActionDependenciesBlock,
   mapActionToDependencyGroups,
 } from './blocks/action-dependencies/ActionDependenciesBlock';
+
+import { useWorkflowSelector } from '@/context/workflow-selector';
 
 export type ActionContentAction = NonNullable<GetActionDetailsQuery['action']>;
 
@@ -468,6 +470,11 @@ function ActionContent(props: ActionContentProps) {
   const theme = useTheme();
   const router = useRouter();
   const t = useTranslations();
+  const { setLoading } = useWorkflowSelector();
+
+  useEffect(() => {
+    setLoading(false);
+  }, [action]);
 
   useHotkeys(
     'ctrl+left, ctrl+right',

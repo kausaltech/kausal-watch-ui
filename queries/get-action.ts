@@ -50,6 +50,7 @@ const GET_ACTION_DETAILS = gql`
       leadParagraph
       workflowStatus {
         matchingVersion {
+          id
           description
         }
       }

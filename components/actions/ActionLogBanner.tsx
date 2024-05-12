@@ -1,5 +1,8 @@
+import { Spinner } from 'reactstrap';
 import styled from 'styled-components';
 import dayjs from 'common/dayjs';
+import { useTranslations } from 'next-intl';
+import { useWorkflowSelector } from '@/context/workflow-selector';
 
 const DraftBanner = styled.div`
   padding: ${(props) => props.theme.spaces.s150};
@@ -29,12 +32,31 @@ const DraftBannerDate = styled.div`
 `;
 
 const ActionLogBanner = (props) => {
+  const t = useTranslations();
   const { matchingVersion, updatedAt } = props;
+  const {
+    workflow: selectedWorkflowID,
+    workflowStates,
+    loading,
+  } = useWorkflowSelector();
+  let info: string | null = null;
+  const selectedWorkflow = workflowStates.find(
+    (state) => state.id === selectedWorkflowID
+  );
+  if (loading) {
+    info = `${selectedWorkflow.description}: ${t('loading')}`;
+  } else if (selectedWorkflowID !== matchingVersion.id) {
+    info = t('no-action-version-available', {
+      versionType: selectedWorkflow.description,
+    });
+  }
+
   return (
     <DraftBanner>
       <DraftBannerTitle>
+        {loading && <Spinner size="sm" className="me-3" />}
         {matchingVersion.description}
-        <DraftBannerInfo></DraftBannerInfo>
+        <DraftBannerInfo>{info && ` (${info})`} </DraftBannerInfo>
       </DraftBannerTitle>
       <DraftBannerDate>{dayjs(updatedAt).format('l')}</DraftBannerDate>
     </DraftBanner>

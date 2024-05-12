@@ -8,6 +8,10 @@ const GET_PLAN_CONTEXT = gql`
     plan(id: $identifier) {
       ...PlanContext
     }
+    workflowStates(plan: $identifier) {
+      id
+      description
+    }
   }
 
   fragment PlanContext on Plan {
