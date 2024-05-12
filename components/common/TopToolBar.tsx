@@ -5,6 +5,7 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
+  Spinner,
 } from 'reactstrap';
 import styled from 'styled-components';
 import Icon from '@/components/common/Icon';
@@ -136,11 +137,14 @@ export const TopToolBar = () => {
             caret
             aria-label="action-versions"
           >
-            <StyledIcon
-              name="pencil"
-              className="icon"
-              aria-label="actions-versions"
-            />
+            {loading && <Spinner size="sm" className="me-3" />}
+            {!loading && (
+              <StyledIcon
+                name="pencil"
+                className="icon"
+                aria-label="actions-versions"
+              />
+            )}
             {selectedWorkflow.description}
           </StyledDropdownToggle>
           <StyledDropdownMenu>
