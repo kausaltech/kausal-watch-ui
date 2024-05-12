@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
@@ -13,9 +13,15 @@ import ErrorMessage from 'components/common/ErrorMessage';
 import PlanContext, { usePlan } from 'context/plan';
 import { useTranslations } from 'next-intl';
 import { mapActionsToExpandDependencies } from '@/utils/actions.utils';
+import { useWorkflowSelector } from '@/context/workflow-selector';
 
 const GET_ACTION_LIST_FOR_BLOCK = gql`
-  query GetActionListForBlock($plan: ID!, $category: ID, $clientUrl: String) {
+  query GetActionListForBlock(
+    $plan: ID!
+    $category: ID
+    $clientUrl: String
+    $workflow: WorkflowState
+  ) @workflow(state: $workflow) {
     planActions(plan: $plan, category: $category) {
       ...ActionCard
     }
@@ -47,13 +53,18 @@ const ActionListBlock = (props) => {
   const t = useTranslations();
 
   const plan = usePlan();
+  const { workflow, setLoading } = useWorkflowSelector();
   const { loading, error, data } = useQuery(GET_ACTION_LIST_FOR_BLOCK, {
     variables: {
       plan: plan.identifier,
       category: categoryId,
       clientUrl: plan.viewUrl,
+      workflow,
     },
   });
+  useEffect(() => {
+    if (!loading) setLoading(false);
+  }, [loading]);
   if (loading) return <ContentLoader />;
   if (error) return <ErrorMessage message={error.message} />;
 

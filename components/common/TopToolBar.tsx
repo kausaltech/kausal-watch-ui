@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import {
   Container,
   Dropdown,
@@ -14,7 +14,7 @@ import { usePlan } from 'context/plan';
 import { useSession } from 'next-auth/react';
 import { useWorkflowSelector } from '@/context/workflow-selector';
 import { useRouter } from 'next/navigation';
-import { gql, useSuspenseQuery } from '@apollo/client';
+import { gql, useSuspenseQuery, useApolloClient } from '@apollo/client';
 import {
   GetWorkflowsQuery,
   WorkflowState,
@@ -118,11 +118,17 @@ export const TopToolBar = () => {
     }
   }, [workflows, selectedWorkflow, setWorkflow]);
 
-  function handleSelectWorkflow(workflow: string) {
-    setLoading(true);
-    setWorkflow(workflow);
-    router.refresh();
-  }
+  const apolloClient = useApolloClient();
+
+  const handleSelectWorkflow = useCallback(
+    (workflow: string) => {
+      apolloClient.clearStore();
+      setWorkflow(workflow);
+      router.refresh();
+      setLoading(true);
+    },
+    [apolloClient, router, setWorkflow, setLoading]
+  );
 
   if (session.status !== 'authenticated') {
     return null;
