@@ -13,7 +13,7 @@ const meta = {
   },
   decorators: [
     (Story, context) => {
-      const themeId = context.globals.theme;
+      const themeId = context.globals.theme || 'default';
       const theme = themes[themeId];
       return (
         <div

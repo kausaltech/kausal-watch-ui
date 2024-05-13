@@ -2,7 +2,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styled, { useTheme } from 'styled-components';
 import { readableColor } from 'polished';
-import { motion, useAnimation, animate } from 'framer-motion';
+import {
+  motion,
+  useAnimation,
+  animate,
+  useInView,
+  useAnimate,
+} from 'framer-motion';
 
 import dayjs from 'common/dayjs';
 import { IndicatorLink } from 'common/links';
@@ -199,17 +205,14 @@ interface IndicatorProgressBarProps {
 }
 
 function IndicatorProgressBar(props: IndicatorProgressBarProps) {
-  const {
-    indicatorId,
-    normalize,
-    baseValue,
-    lastValue,
-    goalValue,
-    unit,
-    animate,
-  } = props;
+  const { indicatorId, normalize, baseValue, lastValue, goalValue, unit } =
+    props;
 
   const width = useChartWidth();
+  const ref = useRef(null);
+  const [scope, animate] = useAnimate();
+  const isInView = useInView(scope, { once: true });
+  //const isInView = useInView(ref, { once: true });
   const [isNormalized, setIsNormalized] = useState(false);
 
   useEffect(() => {
@@ -222,7 +225,7 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
   // we swap the goal and start values if the goal is to increase
   // TODO: enable the viz to handle goals to increase
   const startDate = baseValue.date;
-  const startValue =
+  const startValue: number =
     goalValue.value < baseValue.value
       ? isNormalized
         ? baseValue.normalizedValue
@@ -253,8 +256,8 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
   ]);
 
   const roundedValues = {
-    start: startValue.toPrecision(minPrecision),
-    latest: latestValue.toPrecision(minPrecision),
+    start: Number(startValue?.toPrecision(minPrecision)),
+    latest: Number(latestValue?.toPrecision(minPrecision)),
     goal: goalDisplayValue
       ? goalDisplayValue.toPrecision(isNormalized ? minPrecision : 4)
       : undefined,
@@ -317,6 +320,7 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
   const reductionCounterTo = roundedValues.start - roundedValues.latest;
   const reductionCounterDuration = showReduction ? 3 : 0;
 
+  /*
   useEffect(() => {
     latestBarControls.set({
       x: 0,
@@ -340,8 +344,10 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
       opacity: 0,
     });
   });
+*/
 
   useEffect(() => {
+    /*
     const sequenceOn = async () => {
       await Promise.all([
         latestBarControls.start({
@@ -373,26 +379,38 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
         transition: { duration: 1 },
       });
     };
-
-    if (animate) {
-      sequenceOn();
+    */
+    const sequence = [
+      [
+        '.start-bar',
+        {
+          attrX: bars.w - roundedValues.start * scale,
+          width: roundedValues.start * scale,
+        },
+      ],
+      [
+        '.latest-bar',
+        {
+          attrX: 12,
+          width: latestBar.w,
+        },
+        { duration: reductionCounterDuration },
+      ],
+    ];
+    if (isInView) {
+      console.log('ANIMATING');
+      animate(sequence);
     }
-  }, [
-    animate,
-    bars.w,
-    completedBarControls,
-    isNormalized,
-    latestBar.x,
-    latestBarControls,
-    latestSegmentControls,
-    latestSegmentTickControls,
-    latestValueControls,
-    reducedSegmentControls,
-    reductionCounterDuration,
-    roundedValues.latest,
-    scale,
-  ]);
+  }, [isInView]);
 
+  /*
+        ['.completed-line'],
+      { x1: 0, x2: latestBar.x - 14 },
+      ['.latest-bar', {}],
+      ['.latest-line', {}],
+      ['.latest-content', {}],
+      ['.latest-text', {}],
+  */
   const graphValues = {
     name: note,
     startYear: dayjs(startDate).format('YYYY'),
@@ -425,8 +443,7 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
         </NormalizerChooser>
       )}
       <IndicatorLink id={indicatorId}>
-        <LinkedIndicator>
-          <span>{animate}</span>
+        <LinkedIndicator ref={scope}>
           <svg viewBox={`0 0 ${canvas.w} ${canvas.h}`}>
             <title>{t('indicator-progress-bar', graphValues)}</title>
             <defs>
@@ -456,16 +473,16 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
             {/* completed bar */}
             {hasStartValue && (
               <>
-                <motion.rect
-                  initial={{ width: 0 }}
-                  animate={{ width: startBar.w }}
-                  x={startBar.x}
+                <rect
+                  className="start-bar"
+                  width={bars.w}
                   y={startBar.y}
+                  x={0}
                   height={barHeight - barMargin}
                   fill={startColor}
                 />
-                <motion.line
-                  animate={reducedSegmentControls}
+                <line
+                  className="completed-line"
                   y1={segmentsY}
                   y2={segmentsY}
                   stroke={startColor}
@@ -518,15 +535,17 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
               </>
             )}
             {/* pending from goal bar */}
-            <motion.rect
-              animate={latestBarControls}
+            <rect
+              className="latest-bar"
               y={latestBar.y}
+              x="0"
+              width={bars.w}
               height={barHeight - barMargin}
               fill={latestColor}
             />
             {goalValue && (
-              <motion.line
-                animate={hasStartValue && latestSegmentControls}
+              <line
+                className="latest-line"
                 y1={segmentsY}
                 x2={goalBar.x - 14}
                 y2={segmentsY}
@@ -535,7 +554,7 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
                 markerEnd="url(#toBeReducedArrow)"
               />
             )}
-            <motion.g animate={hasStartValue && latestValueControls}>
+            <g className="latest-content">
               <line
                 x1={latestBar.x + 1}
                 x2={latestBar.x + 1}
@@ -559,9 +578,9 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
                   ) === theme.themeColors.white
                 }
               />
-            </motion.g>
-            <motion.text
-              animate={hasStartValue && completedBarControls}
+            </g>
+            <text
+              className="latest-text"
               transform={`translate(${bars.w - (latestBar.w + goalBar.w) / 2} ${
                 segmentsY + barMargin * 3
               })`}
@@ -572,7 +591,7 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
                 {formatValue(roundedValues.latest - roundedValues.goal, locale)}{' '}
                 {displayUnit}
               </SegmentValue>
-            </motion.text>
+            </text>
             {/* Goal bar */}
             {goalValue && (
               <BarBase
