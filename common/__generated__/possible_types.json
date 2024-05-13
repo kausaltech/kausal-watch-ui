@@ -44,6 +44,7 @@
       "ActionRelatedActionsBlock",
       "ActionRelatedIndicatorsBlock",
       "ActionTasksBlock",
+      "IndicatorCausalChainBlock",
       "ReportComparisonBlock"
     ],
     "ActionMainContentSectionElementBlock": [
@@ -98,7 +99,8 @@
       "ActionRelatedIndicatorsBlock",
       "ActionResponsiblePartiesBlock",
       "ActionScheduleBlock",
-      "ActionTasksBlock"
+      "ActionTasksBlock",
+      "IndicatorCausalChainBlock"
     ],
     "MenuItem": [
       "ExternalLinkMenuItem",
@@ -210,6 +212,7 @@
       "ImpactColumnBlock",
       "ImplementationPhaseColumnBlock",
       "IndicatorBlock",
+      "IndicatorCausalChainBlock",
       "IndicatorGroupBlock",
       "IndicatorHighlightsBlock",
       "IndicatorShowcaseBlock",

@@ -504,6 +504,14 @@ function ActionContent(props: ActionContentProps) {
 
   const hasPhases = plan.actionImplementationPhases.length > 0;
 
+  // Full width IndicatorCausalChainBlock can only be rendered in the bottom of the page
+  // so we do not use it in streamfield layout
+  const showIndicatorCausalChainBlock =
+    action?.relatedIndicators.length > 0 &&
+    actionListPage['detailsMainBottom']?.some(
+      (block) => block.__typename === 'IndicatorCausalChainBlock'
+    );
+
   const makeComponents = useCallback(
     (section: SectionIdentifier) => {
       const blocks = actionListPage[section];
@@ -688,7 +696,7 @@ function ActionContent(props: ActionContentProps) {
         </StyledAside>
       </StyledContentGrid>
 
-      {action?.relatedIndicators.length > 0 && (
+      {showIndicatorCausalChainBlock && (
         <div>
           <Container>
             <Row>
