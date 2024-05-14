@@ -192,35 +192,38 @@ function TaskList(props) {
     return dayjs(adate).diff(dayjs(bdate));
   });
 
-  const undoneTasks = sortedTasks
-    .filter((item) => item.completedAt === null && item.state !== 'CANCELLED')
-    .map((item) => (
-      <ListGroupItem key={item.id} className={`state--${item.state}`}>
-        <Task task={item} theme={theme} completed={false} />
-      </ListGroupItem>
-    ));
+  function filterTasks(state, completed) {
+    return sortedTasks
+      .filter((item) => item.state === state)
+      .map((item) => (
+        <ListGroupItem key={item.id} className={`state--${item.state}`}>
+          <Task task={item} theme={theme} completed={completed} />
+        </ListGroupItem>
+      ));
+  }
 
-  const doneTasks = sortedTasks
-    .reverse()
-    .filter((item) => item.completedAt !== null && item.state !== 'CANCELLED')
-    .map((item) => (
-      <ListGroupItem key={item.id} className={`state--${item.state}`}>
-        <Task task={item} theme={theme} completed={true} />
-      </ListGroupItem>
-    ));
+  const notStartedTasks = filterTasks('NOT_STARTED', false);
+  const inProgressTasks = filterTasks('IN_PROGRESS', false);
+  const completedTasks = filterTasks('COMPLETED', true).reverse();
 
   return (
     <div>
-      {undoneTasks.length > 0 && (
+      {notStartedTasks.length > 0 && (
         <>
           <ListGroupTitle>{t('action-tasks-todo')}</ListGroupTitle>
-          <ListGroup className="mb-5">{undoneTasks}</ListGroup>
+          <ListGroup className="mb-5">{notStartedTasks}</ListGroup>
         </>
       )}
-      {doneTasks.length > 0 && (
+      {inProgressTasks.length > 0 && (
+        <>
+          <ListGroupTitle>{t('action-tasks-doing')}</ListGroupTitle>
+          <ListGroup className="mb-5">{inProgressTasks}</ListGroup>
+        </>
+      )}
+      {completedTasks.length > 0 && (
         <>
           <ListGroupTitle>{t('action-tasks-done')}</ListGroupTitle>
-          <ListGroup className="mb-5">{doneTasks}</ListGroup>
+          <ListGroup className="mb-5">{completedTasks}</ListGroup>
         </>
       )}
     </div>

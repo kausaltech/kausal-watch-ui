@@ -25,6 +25,7 @@
     "action-tasks": "{context, select, MILESTONE {Milstolpar} other {Uppgifter}}",
     "action-tasks-count": "{context, select, MILESTONE {milstolpar} other {uppgifter}}",
     "action-tasks-done": "Vad har gjorts?",
+    "action-tasks-doing": "Vad gör vi?",
     "action-tasks-todo": "Vad återstår att göra?",
     "action-timeline": "Tidslinje",
     "action-timeline-between": "Tidsram mellan",

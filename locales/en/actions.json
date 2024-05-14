@@ -25,6 +25,7 @@
   "action-tasks": "{context, select, MILESTONE {Milestones} other {Tasks}}",
   "action-tasks-count": "{context, select, MILESTONE {milestones} other {tasks}}",
   "action-tasks-done": "What has been done?",
+  "action-tasks-doing": "What are we doing?",
   "action-tasks-todo": "What's left to do?",
   "action-timeline": "Timeline",
   "action-timeline-between": "Timeframe between",
