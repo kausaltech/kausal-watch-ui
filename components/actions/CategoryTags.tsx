@@ -30,6 +30,9 @@ const CategoryList = styled.ul`
 
 const CategoryListItem = styled.li`
   margin-bottom: ${(props) => props.theme.spaces.s100};
+  margin-right: ${(props) => props.theme.spaces.s100};
+  width: 300px;
+  display: inline-block;
 
   a {
     display: block;

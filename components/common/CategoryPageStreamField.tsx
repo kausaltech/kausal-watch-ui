@@ -81,6 +81,8 @@ export const checkAttributeHasValueByType = (
   return attribute && attributeHasValue(attribute);
 };
 
+const WIDE_COLUMN_ATTRIBUTES = ['AttributeRichText', 'AttributeCategoryChoice'];
+
 export const CategoryPageStreamField = ({
   block,
   page,
@@ -101,11 +103,18 @@ export const CategoryPageStreamField = ({
         page
       );
 
+      console.log('TYPE', attribute);
+      const headerAttributeWidth = WIDE_COLUMN_ATTRIBUTES.includes(
+        attribute.__typename
+      )
+        ? 12
+        : 6;
+
       if (attribute && attributeHasValue(attribute)) {
         return (
           <Wrapper withContainer={withContainer}>
             <Col
-              {...(withContainer ? columnProps : { md: 6 })}
+              {...(withContainer ? columnProps : { md: headerAttributeWidth })}
               {...customColumnProps}
             >
               <ActionAttribute
