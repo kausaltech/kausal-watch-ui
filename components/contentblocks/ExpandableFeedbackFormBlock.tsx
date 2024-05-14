@@ -12,6 +12,7 @@ const FeedbackFormSection = styled.div`
   padding: ${(props) =>
     props.size === 'sm' ? props.theme.spaces.s050 : props.theme.spaces.s100};
   background-color: ${(props) => props.theme.graphColors.blue010};
+  margin-bottom: ${(props) => props.theme.spaces.s400};
 
   h2 {
     font-size: ${(props) =>
