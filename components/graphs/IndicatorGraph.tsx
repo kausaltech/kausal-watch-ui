@@ -395,11 +395,7 @@ function IndicatorGraph(props: IndicatorGraphProps) {
     styleCount = comparisonAxis[0][1] + 1;
     isComparison = true;
   } else if (!hasTimeDimension && !subplotsNeeded) {
-    if (categoryCount > 1) {
-      styleCount = specification.dimensions[0].categories.length;
-    } else {
-      styleCount = 1;
-    }
+    styleCount = specification.dimensions[0].categories.length;
   }
   if (!hasTimeDimension) {
     // For bar graphs, the red color looks too heavy.
