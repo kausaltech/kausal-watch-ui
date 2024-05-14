@@ -506,11 +506,14 @@ function ActionContent(props: ActionContentProps) {
 
   // Full width IndicatorCausalChainBlock can only be rendered in the bottom of the page
   // so we do not use it in streamfield layout
+  const isIndicatorCausalChainBlock = (block) =>
+    block.__typename === 'IndicatorCausalChainBlock';
+  const detailsCombined = (actionListPage['detailsMainTop'] ?? []).concat(
+    actionListPage['detailsMainBottom'] ?? []
+  );
   const showIndicatorCausalChainBlock =
     action?.relatedIndicators.length > 0 &&
-    actionListPage['detailsMainBottom']?.some(
-      (block) => block.__typename === 'IndicatorCausalChainBlock'
-    );
+    detailsCombined?.some(isIndicatorCausalChainBlock);
 
   const makeComponents = useCallback(
     (section: SectionIdentifier) => {
