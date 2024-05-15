@@ -29,7 +29,10 @@ const IndicatorShowcase = styled.div`
   }
 `;
 
-const getNormalizedValue = (indicatorValue, populationNormalizer) => {
+const getNormalizedValue = (indicatorValue, indicator) => {
+  const populationNormalizer = indicator.common?.normalizations.find(
+    (normalization) => normalization.normalizer.identifier === 'population'
+  );
   if (populationNormalizer && indicatorValue.normalizedValues.length > 0) {
     const normalized = indicatorValue.normalizedValues.find(
       (normed) => normed.normalizerId === populationNormalizer.normalizer.id
@@ -40,51 +43,55 @@ const getNormalizedValue = (indicatorValue, populationNormalizer) => {
   }
 };
 
-const processIndicator = (indicator) => {
-  const canNormalize =
-    getNormalizedValue(firstValue) && getNormalizedValue(lastValue);
+const getNormalizedUnit = (indicator) => {
+  const populationNormalizer = indicator.common?.normalizations.find(
+    (normalization) => normalization.normalizer.identifier === 'population'
+  );
+  if (populationNormalizer) {
+    return (
+      populationNormalizer.unit.shortName || populationNormalizer.unit.name
+    );
+  } else {
+    return '';
+  }
 };
 
 const IndicatorShowcaseBlock = (props) => {
   const { id = '', indicator, title, body } = props;
-  // Animation hook:  trigger when visible on screen
-  const { ref, inView, entry } = useInView({
-    triggerOnce: true,
-  });
 
   const lastGoal = indicator.goals[indicator.goals.length - 1];
   const firstValue = indicator.values[0];
   const lastValue = indicator.values[indicator.values.length - 1];
 
   const indicatorHasGoal = indicator.goals.length > 0;
-  const populationNormalizer = indicator.common?.normalizations.find(
-    (normalization) => normalization.normalizer.identifier === 'population'
-  );
+
+  const canNormalize =
+    getNormalizedValue(firstValue, indicator) &&
+    getNormalizedValue(lastValue, indicator);
 
   const baseValue = {
     date: firstValue.date,
     value: firstValue.value,
-    normalizedValue: 0,
+    normalizedValue: getNormalizedValue(firstValue, indicator),
   };
 
   const latestValue = {
     date: lastValue.date,
     value: lastValue.value,
-    normalizedValue: 0,
+    normalizedValue: getNormalizedValue(lastValue, indicator),
   };
 
   const goalValue = {
     date: lastGoal.date,
     value: lastGoal.value,
-    normalizedValue: 0,
+    normalizedValue: getNormalizedValue(lastGoal, indicator),
   };
-
-  // populationNormalizer.unit.shortName
 
   const unit = {
-    name: indicator.unit.shortName || '',
-    normalizedName: '',
+    name: indicator.unit.shortName || indicator.unit.name || '',
+    normalizedName: getNormalizedUnit(indicator),
   };
+
   return (
     <IndicatorShowcase id={id}>
       <Container>
@@ -94,14 +101,14 @@ const IndicatorShowcaseBlock = (props) => {
             <RichText html={body} className="mb-5" />
             {indicatorHasGoal ? (
               <IndicatorProgressBar
-                indicatorId={id}
+                indicatorId={indicator.id}
+                note={indicator.name}
                 baseValue={baseValue}
                 lastValue={latestValue}
                 goalValue={goalValue}
-                normalize={false}
+                normalize={canNormalize}
                 unit={unit}
                 indicator={indicator}
-                animate={inView}
               />
             ) : (
               <>
@@ -109,7 +116,6 @@ const IndicatorShowcaseBlock = (props) => {
                 <IndicatorVisualisation indicatorId={indicator.id} />
               </>
             )}
-            <span ref={ref} />
           </Col>
         </Row>
       </Container>
