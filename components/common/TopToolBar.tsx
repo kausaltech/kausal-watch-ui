@@ -14,9 +14,8 @@ import { usePlan } from 'context/plan';
 import { useSession } from 'next-auth/react';
 import { useWorkflowSelector } from '@/context/workflow-selector';
 import { useRouter } from 'next/navigation';
-import { gql, useSuspenseQuery, useApolloClient } from '@apollo/client';
+import { useApolloClient } from '@apollo/client';
 import {
-  GetWorkflowsQuery,
   WorkflowState,
   WorkflowStateDescription,
 } from '@/common/__generated__/graphql';
@@ -129,6 +128,12 @@ export const TopToolBar = () => {
     },
     [apolloClient, router, setWorkflow, setLoading]
   );
+
+  useEffect(() => {
+    if (session.status === 'authenticated' && !session.data.idToken) {
+      handleSignOut();
+    }
+  }, [session, handleSignOut]);
 
   if (session.status !== 'authenticated') {
     return null;
