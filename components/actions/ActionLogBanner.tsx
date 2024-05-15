@@ -45,7 +45,7 @@ const ActionLogBanner = (props) => {
   );
   if (loading) {
     info = `${selectedWorkflow.description}: ${t('loading')}`;
-  } else if (selectedWorkflowID !== matchingVersion.id) {
+  } else if (selectedWorkflowID !== matchingVersion?.id) {
     info = t('no-action-version-available', {
       versionType: selectedWorkflow.description,
     });
@@ -55,7 +55,7 @@ const ActionLogBanner = (props) => {
     <DraftBanner>
       <DraftBannerTitle>
         {loading && <Spinner size="sm" className="me-3" />}
-        {matchingVersion.description}
+        {matchingVersion?.description}
         <DraftBannerInfo>{info && ` (${info})`} </DraftBannerInfo>
       </DraftBannerTitle>
       <DraftBannerDate>{dayjs(updatedAt).format('l')}</DraftBannerDate>
