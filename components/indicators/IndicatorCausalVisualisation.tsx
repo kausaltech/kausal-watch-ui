@@ -156,7 +156,7 @@ const setColumns = (nodes, index, column) => {
     return columned;
   }
   columned[index].column = column;
-  if (columned[index].indicator_level !== 'strategic') {
+  if (columned[index].from.length !== 0) {
     columned[index].from.forEach((edge) => {
       const nodeIndex = columned.findIndex((item) => item.id === edge.to);
       setColumns(columned, nodeIndex, column + 1);
@@ -299,7 +299,6 @@ function IndicatorCausalVisualisation({
   const [error, setError] = useState(null);
   const [data, setData] = useState('');
 
-  const baseUrl = '';
   useEffect(() => {
     // React advises to declare the async function directly inside useEffect
     async function fetchData() {
