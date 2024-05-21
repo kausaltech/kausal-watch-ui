@@ -55,5 +55,8 @@
     "action-draft": "Luonnos",
     "other": "Muut",
     "inactive-actions": "Epäaktiiviset toimenpiteet",
-    "no-action-version-available": "{versionType}-versiota ei ole saatavilla"
+    "no-action-version-available": "{versionType}-versiota ei ole saatavilla",
+    "n-more-actions": "Plus {count} muut {context, select, CASE_STUDY {{count, plural, =1 {case study} other {case studies}}} STRATEGIA {{count, plural, =1 {strategy} other {strategies}}} muut {{count, plural, =1 {action} other {actions}}}}",
+    "action-dependencies": "{context, select, CASE_STUDY {Tapaustutkimuksen riippuvuudet} STRATEGIA {Strategian riippuvuudet} muut {Toimen riippuvuudet}}",
+    "logo": "Logo"
 }
