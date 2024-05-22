@@ -1,20 +1,26 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useEffect, useRef, useState } from 'react';
+
 import styled, { useTheme } from 'styled-components';
 import { readableColor } from 'polished';
-import {
-  motion,
-  useAnimation,
-  animate,
-  useInView,
-  useAnimate,
-} from 'framer-motion';
+import { motion, animate, useInView, useAnimate } from 'framer-motion';
 
 import dayjs from 'common/dayjs';
 import { IndicatorLink } from 'common/links';
 import Switch from 'components/common/Switch';
 import { useWindowSize } from 'common/hooks/use-window-size';
 import { useLocale, useTranslations } from 'next-intl';
+
+const ProgressBarWrapper = styled.div`
+  a {
+    color: ${({ theme }) => theme.section.indicatorShowcase.color};
+    text-decoration: underline;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+`;
 
 const BarBase = styled.rect``;
 
@@ -201,7 +207,7 @@ interface IndicatorProgressBarProps {
     name: string;
     normalizedName?: string;
   };
-  animate: boolean;
+  note?: string;
 }
 
 function IndicatorProgressBar(props: IndicatorProgressBarProps) {
@@ -315,10 +321,27 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
 
   const reductionCounterFrom = 0;
   const reductionCounterTo = roundedValues.start - roundedValues.latest;
-  const reductionCounterDuration = showReduction ? 3 : 0;
+  // Animation length relative to animated bar length
+  const reductionCounterDuration = showReduction
+    ? 10 * (latestBar.x / bars.w)
+    : 0;
 
   useEffect(() => {
     const sequence = [
+      [
+        '.latest-text',
+        {
+          opacity: 0,
+        },
+        { duration: 0 },
+      ],
+      [
+        '.latest-content > text',
+        {
+          opacity: 0,
+        },
+        { duration: 0 },
+      ],
       [
         '.start-bar',
         {
@@ -330,7 +353,8 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
       [
         '.completed-line',
         {
-          x2: latestBar.x - 14,
+          x1: latestBar.x > 14 ? 0 : latestBar.x - 14,
+          x2: latestBar.x - 13,
         },
         { at: 0, duration: reductionCounterDuration },
       ],
@@ -367,6 +391,14 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
       [
         '.latest-text',
         {
+          translateX: spaceTextBlock(bars.w - latestBar.w, ['.reduced-text']),
+          translateY: segmentsY + barMargin * 3,
+        },
+        { duration: 0 },
+      ],
+      [
+        '.latest-text',
+        {
           opacity: 1,
         },
         { duration: 1 },
@@ -375,7 +407,7 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
     if (isInView) {
       animate(sequence);
     }
-  }, [isInView]);
+  }, [isInView, isNormalized]);
 
   const graphValues = {
     name: note,
@@ -398,16 +430,18 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
 
   const spaceTextBlock = (intendedX, elementsToCheck) => {
     const isServer = typeof window === 'undefined';
+    const margin = 12;
     if (isServer) return intendedX;
     const widthOfBlockingElements = elementsToCheck
       .map((el) => document.querySelector(el)?.getBBox().width)
       .reduce((a, b) => a + b, 0);
-    if (intendedX < widthOfBlockingElements) return widthOfBlockingElements;
+    if (intendedX < widthOfBlockingElements)
+      return widthOfBlockingElements + margin * elementsToCheck.length;
     else return intendedX;
   };
 
   return (
-    <div>
+    <ProgressBarWrapper>
       {normalize && (
         <NormalizerChooser>
           <Switch
@@ -461,7 +495,8 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
                   className="completed-line"
                   y1={segmentsY}
                   y2={segmentsY}
-                  x2={0}
+                  x1={-15}
+                  x2={-14}
                   stroke={startColor}
                   strokeWidth="2"
                   markerEnd="url(#reducedArrow)"
@@ -557,11 +592,10 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
                 }
               />
             </g>
-            <text
+            <motion.text
               className="latest-text"
-              transform={`translate(${spaceTextBlock(bars.w - latestBar.w, [
-                '.reduced-text',
-              ])} ${segmentsY + barMargin * 3})`}
+              translateX={bars.w - latestBar.w}
+              translateY={segmentsY + barMargin * 3}
               textAnchor="left"
               opacity={0}
             >
@@ -570,7 +604,7 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
                 {formatValue(roundedValues.latest - roundedValues.goal, locale)}{' '}
                 {displayUnit}
               </SegmentValue>
-            </text>
+            </motion.text>
             {/* Goal bar */}
             {goalValue && (
               <BarBase
@@ -666,7 +700,7 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
           <SourceLink className="text-end mt-3">{note}</SourceLink>
         </LinkedIndicator>
       </IndicatorLink>
-    </div>
+    </ProgressBarWrapper>
   );
 }
 

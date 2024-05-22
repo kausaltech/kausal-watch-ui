@@ -20,6 +20,8 @@ const meta = {
           style={{
             padding: '3em',
             backgroundColor: theme.section.indicatorShowcase.background,
+            color: theme.section.indicatorShowcase.color,
+            textAlign: 'center',
           }}
         >
           <Story />
@@ -51,15 +53,59 @@ const meta = {
       name: '%',
       normalizedName: '%',
     },
-    animate: false,
+    note: 'Indicator name',
   },
 } satisfies Meta<typeof IndicatorProgressBar>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Operational: Story = {
+export const Normalized: Story = {
   args: {
-    animate: true,
+    normalize: true,
+    baseValue: {
+      date: '2021',
+      value: 1263,
+      normalizedValue: 14,
+    },
+    lastValue: {
+      date: '2020',
+      value: 1120,
+      normalizedValue: 11,
+    },
+    goalValue: {
+      date: '2035',
+      value: 625,
+      normalizedValue: 2,
+    },
+    unit: {
+      name: 'CO₂',
+      normalizedName: 'CO₂/pp',
+    },
+  },
+};
+
+export const SmallValues: Story = {
+  args: {
+    normalize: false,
+    baseValue: {
+      date: '1245',
+      value: 130,
+      normalizedValue: undefined,
+    },
+    lastValue: {
+      date: '1520',
+      value: 125,
+      normalizedValue: undefined,
+    },
+    goalValue: {
+      date: '1734',
+      value: 1,
+      normalizedValue: undefined,
+    },
+    unit: {
+      name: 'dragons',
+      normalizedName: 'dragons',
+    },
   },
 };
