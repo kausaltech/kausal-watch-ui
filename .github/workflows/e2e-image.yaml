@@ -76,7 +76,7 @@ jobs:
         working-directory: ./e2e-tests
 
       - name: Playwright install
-        run: node_modules/.bin/playwright install --with-deps
+        run: node_modules/.bin/playwright install
         working-directory: ./e2e-tests
 
       - name: Running Playwright e2e tests
