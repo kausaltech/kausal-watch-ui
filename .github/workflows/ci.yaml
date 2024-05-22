@@ -3,7 +3,9 @@ on: push
 
 jobs:
   build:
-    uses: ./.github/workflows/build.yaml
+    uses: kausaldev/github-actions/.github/workflows/build-nextjs.yaml@main
+    with:
+      project_id: watch-ui
     secrets: inherit
 
   test:
@@ -17,3 +19,14 @@ jobs:
       s3_endpoint: ${{ vars.BUILD_S3_ENDPOINT }}
       s3_bucket: ${{ vars.BUILD_S3_BUCKET }}
     secrets: inherit
+
+  deploy:
+    needs: [build]
+    uses: kausaldev/github-actions/.github/workflows/deploy.yaml@main
+    secrets: inherit
+    if: needs.build.outputs.deployment_env
+    with:
+      docker_image_repo: ${{ needs.build.outputs.image }}
+      docker_image_tag: ${{ needs.build.outputs.image_tag }}
+      project_id: watch-ui
+      deployment_env: ${{ needs.build.outputs.deployment_env }}

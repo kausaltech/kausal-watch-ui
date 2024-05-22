@@ -49,6 +49,9 @@ ARG SENTRY_ORG
 ARG SENTRY_AUTH_TOKEN
 ARG GIT_REPO
 ARG GIT_REV
+ARG NEXTJS_ASSET_PREFIX
+ENV NEXTJS_ASSET_PREFIX=${NEXTJS_ASSET_PREFIX}}
+ENV NEXTJS_STANDALONE_BUILD=0
 
 # Remove the NextJS build cache if packages change
 RUN --mount=type=cache,target=/app/.next/cache \
@@ -56,9 +59,6 @@ RUN --mount=type=cache,target=/app/.next/cache \
 
 RUN --mount=type=secret,id=SENTRY_AUTH_TOKEN --mount=type=cache,target=/app/.next/cache \
   npm run build && docker/manage-nextjs-cache.sh save
-
-RUN --mount=type=secret,id=SENTRY_AUTH_TOKEN \
-  docker/sentry-set-release-commits.sh
 
 FROM node:20-alpine as runner
 WORKDIR /app
@@ -68,30 +68,24 @@ ENV NODE_ENV production
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# Copy public assets
-COPY --from=builder /app/public ./public
+# FIXME: disable this when we start using standalone builds
+COPY --from=builder --chown=nextjs:nodejs /app ./
 
-# Set the correct permission for prerender cache
-RUN mkdir .next
-RUN chown nextjs:nodejs .next
+# FIXME: enable below when we start using standalone builds
+# # Copy public assets
+# COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 
-# Automatically leverage output traces to reduce image size
-# https://nextjs.org/docs/advanced-features/output-file-tracing
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+# # Set the correct permission for prerender cache
+# RUN mkdir .next && chown nextjs:nodejs .next
 
-USER nextjs
-
-#ARG GIT_REPO_URL
-#LABEL org.opencontainers.image.url="${GIT_REPO_URL}"
-#LABEL org.opencontainers.image.source="${GIT_REPO_URL}"
-#ARG BUILD_TIMESTAMP
-#LABEL org.opencontainers.image.created="${BUILD_TIMESTAMP}"
-#LABEL org.opencontainers.image.description="Kausal Watch UI"
-#LABEL org.opencontainers.image.revision="${GIT_REV}"
-#LABEL org.opencontainers.image.version="${BUILD_ID}"
+# # Automatically leverage output traces to reduce image size
+# # https://nextjs.org/docs/advanced-features/output-file-tracing
+# COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+# COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 ARG BUILD_ID
+ARG SENTRY_RELEASE
+ENV SENTRY_RELEASE=${SENTRY_RELEASE} BUILD_ID=${BUILD_ID}
 LABEL nextjs_build_id="${BUILD_ID}"
 
 COPY ./docker/entrypoint.sh /entrypoint.sh

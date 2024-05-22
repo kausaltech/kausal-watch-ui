@@ -49,6 +49,8 @@ function initializeThemes() {
 
 initializeThemes();
 
+const standaloneBuild = process.env.NEXTJS_STANDALONE_BUILD === '1';
+
 /**
  * @type {import('next').NextConfig}
  */
@@ -58,7 +60,8 @@ let config = {
       fullUrl: true,
     },
   },
-  output: 'standalone',
+  output: standaloneBuild ? 'standalone' : undefined,
+  assetPrefix: process.env.NEXTJS_ASSET_PREFIX || undefined,
   eslint: {
     // Warning: This allows production builds to successfully complete even if
     // your project has ESLint errors.
@@ -77,9 +80,11 @@ let config = {
     styledComponents: true,
   },
   experimental: {
-    outputFileTracingIncludes: {
-      '/': ['./node_modules/@kausal/themes*/**'],
-    },
+    outputFileTracingIncludes: standaloneBuild
+      ? {
+          '/': ['./node_modules/@kausal/themes*/**'],
+        }
+      : undefined,
   },
   generateBuildId: async () => {
     if (process.env.NEXTJS_BUILD_ID) return process.env.NEXTJS_BUILD_ID;
@@ -99,10 +104,6 @@ let config = {
     return config;
   },
 };
-
-if (process.env.NEXTJS_STANDALONE_BUILD === '1') {
-  config.output = 'standalone';
-}
 
 module.exports = withNextIntl(config);
 
@@ -134,7 +135,8 @@ if (sentryAuthToken) {
       transpileClientSDK: false,
 
       // Routes browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers (increases server load)
-      tunnelRoute: '/monitoring',
+      // N.B. tunnelRoute is not supported in self-hosted Sentry setups.
+      tunnelRoute: undefined,
 
       // Hides source maps from generated client bundles
       hideSourceMaps: false,
@@ -142,10 +144,6 @@ if (sentryAuthToken) {
       // Automatically tree-shake Sentry logger statements to reduce bundle size
       disableLogger: true,
 
-      // Enables automatic instrumentation of Vercel Cron Monitors.
-      // See the following for more information:
-      // https://docs.sentry.io/product/crons/
-      // https://vercel.com/docs/cron-jobs
       automaticVercelMonitors: false,
     }
   );

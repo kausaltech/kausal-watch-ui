@@ -1,3 +1,8 @@
 #!/bin/sh
 
-exec node server.js
+if [ "$NEXTJS_STANDALONE_BUILD" -eq "1" ] ; then
+  exec node server.js
+else
+  exec npm start
+fi
+

@@ -5,3 +5,4 @@ node_modules
 /.env*
 /.github/
 /e2e-tests/
+/.git/
