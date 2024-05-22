@@ -336,6 +336,13 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
         { duration: 0 },
       ],
       [
+        '.latest-bar',
+        {
+          opacity: 1,
+        },
+        { duration: 0 },
+      ],
+      [
         '.latest-content > text',
         {
           opacity: 0,
@@ -552,6 +559,7 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
               attrX="0"
               width={bars.w}
               height={barHeight - barMargin}
+              opacity={0}
               fill={latestColor}
             />
             {goalValue && (

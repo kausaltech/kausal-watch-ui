@@ -1,6 +1,7 @@
 import React from 'react';
 import type { Preview } from '@storybook/react';
 import { NextIntlClientProvider } from 'next-intl';
+import { SessionProvider, SessionProviderProps } from 'next-auth/react';
 import commonMessages from '@/locales/en/common.json';
 import a11yMessages from '@/locales/en/a11y.json';
 import actionsMessages from '@/locales/en/actions.json';
@@ -28,11 +29,13 @@ const preview: Preview = {
       defaultTheme: 'default',
     }),
     (Story) => (
-      <NextIntlClientProvider locale={'en'} messages={messages}>
-        <PlanProvider plan={MOCK_PLAN}>
-          <Story />
-        </PlanProvider>
-      </NextIntlClientProvider>
+      <SessionProvider>
+        <NextIntlClientProvider locale={'en'} messages={messages}>
+          <PlanProvider plan={MOCK_PLAN}>
+            <Story />
+          </PlanProvider>
+        </NextIntlClientProvider>
+      </SessionProvider>
     ),
   ],
 };
