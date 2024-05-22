@@ -27,7 +27,7 @@ ARG NPM_TOKEN
 
 RUN --mount=type=secret,id=NPM_TOKEN --mount=type=cache,target=/npm-cache \
   NPM_TOKEN=$( ([ -f /run/secrets/NPM_TOKEN ] && cat /run/secrets/NPM_TOKEN) || echo -n "${NPM_TOKEN}") \
-    npm ci -d
+    npm ci
 
 #
 # NextJS base
@@ -62,6 +62,8 @@ ARG SENTRY_ORG
 ARG SENTRY_AUTH_TOKEN
 ARG GIT_REPO
 ARG GIT_REV
+ARG BUILD_ID
+ARG SENTRY_RELEASE=${SENTRY_PROJECT}@${BUILD_ID}
 
 # Remove the NextJS build cache if packages change
 RUN --mount=type=cache,target=/app/.next/cache \
@@ -72,6 +74,8 @@ RUN --mount=type=secret,id=SENTRY_AUTH_TOKEN --mount=type=cache,target=/app/.nex
   SENTRY_PROJECT=${SENTRY_PROJECT} \
   SENTRY_URL=${SENTRY_URL} \
   SENTRY_ORG=${SENTRY_ORG} \
+  SENTRY_RELEASE=${SENTRY_RELEASE} \
+  NEXTJS_BUILD_ID=${BUILD_ID} \
   npm run build && docker/manage-nextjs-cache.sh save
 
 
@@ -90,7 +94,7 @@ RUN --mount=type=secret,id=SENTRY_AUTH_TOKEN --mount=type=cache,target=/app/.nex
 
 ARG BUILD_ID
 ARG SENTRY_PROJECT
-ARG SENTRY_RELEASE=${SENTRY_PROJECT}@${BUILD_ID}
+ARG SENTRY_RELEASE
 ENV SENTRY_RELEASE=${SENTRY_RELEASE} BUILD_ID=${BUILD_ID}
 LABEL nextjs_build_id="${BUILD_ID}"
 
