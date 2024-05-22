@@ -145,13 +145,15 @@ const ActionRelatedIndicatorsBlock = (
       <Row>
         <Col sm="12">
           <IndicatorsSection>
-            {filteredIndicators.map((relatedIndicator) => (
-              <ActionIndicator
-                key={relatedIndicator.indicator.id}
-                actionId={actionId}
-                relatedIndicator={relatedIndicator}
-              />
-            ))}
+            {filteredIndicators
+              .sort((a, b) => a.indicator.name.localeCompare(b.indicator.name))
+              .map((relatedIndicator) => (
+                <ActionIndicator
+                  key={relatedIndicator.indicator.id}
+                  actionId={actionId}
+                  relatedIndicator={relatedIndicator}
+                />
+              ))}
           </IndicatorsSection>
         </Col>
       </Row>
