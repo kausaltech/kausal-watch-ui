@@ -325,22 +325,8 @@ const actionFragment = gql`
         viewUrl
       }
     }
-    indicators {
-      id
-      goals {
-        id
-      }
-    }
-    relatedIndicators {
-      id
-      indicatesActionProgress
-      indicator {
-        id
-        goals {
-          id
-        }
-      }
-    }
+    indicatorsCount
+    hasIndicatorsWithGoals
   }
 `;
 
