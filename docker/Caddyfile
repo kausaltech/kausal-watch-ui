@@ -1,0 +1,55 @@
+{
+	admin off
+	http_port {$CADDY_PORT}
+	auto_https off
+	servers {
+		protocols h1 h2c
+		trusted_proxies static private_ranges
+		client_ip_headers X-Forwarded-For X-Real-IP
+		metrics
+	}
+	log {
+		format json
+		output stdout
+		exclude admin tls
+	}
+	persist_config off
+}
+
+http://:{$CADDY_PORT}
+
+log {
+	format json
+	output stdout
+}
+
+encode zstd gzip
+header Access-Control-Allow-Origin *
+header Access-Control-Allow-Headers *
+header Access-Control-Allow-Methods "GET, HEAD"
+
+route /metrics {
+	@denied not remote_ip private_ranges
+	abort @denied
+
+	metrics /metrics
+}
+
+route /_next/static/* {
+	uri strip_prefix /_next/static
+	root * /app/.next/static
+	header Cache-Control public,max-age=31536000,immutable
+	file_server
+}
+
+route /static/* {
+	uri strip_prefix /static
+	root * /app/public/static
+	header Cache-Control public,max-age=7200,must-revalidate
+	file_server
+}
+
+reverse_proxy localhost:{$NEXTJS_PORT} {
+	# Disable buffering
+	flush_interval -1
+}

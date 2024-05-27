@@ -1,8 +1,9 @@
 node_modules
-.next
+/.next/
 .yarn
 .pnp.*
 /.env*
 /.github/
 /e2e-tests/
-/.git/
+/Attic/
+/public/static/themes/

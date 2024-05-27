@@ -12,6 +12,8 @@ if (process.env.DOTENV_CONFIG_PATH) {
   require('dotenv').config({ path: process.env.DOTENV_CONFIG_PATH });
 }
 
+const isProd = process.env.NODE_ENV === 'production';
+
 const sentryAuthToken =
   secrets.SENTRY_AUTH_TOKEN || process.env.SENTRY_AUTH_TOKEN;
 
@@ -50,6 +52,10 @@ function initializeThemes() {
 initializeThemes();
 
 const standaloneBuild = process.env.NEXTJS_STANDALONE_BUILD === '1';
+// NextJS doesn't support runtime asset prefix, so we'll need to replace the
+// placeholder with the actual CDN URL when the server starts. (See start-server.sh)
+
+const prodAssetPrefix = process.env.NEXTJS_ASSET_PREFIX;
 
 /**
  * @type {import('next').NextConfig}
@@ -61,7 +67,7 @@ let config = {
     },
   },
   output: standaloneBuild ? 'standalone' : undefined,
-  assetPrefix: process.env.NEXTJS_ASSET_PREFIX || undefined,
+  assetPrefix: isProd ? prodAssetPrefix : undefined,
   eslint: {
     // Warning: This allows production builds to successfully complete even if
     // your project has ESLint errors.
@@ -80,6 +86,8 @@ let config = {
     styledComponents: true,
   },
   experimental: {
+    instrumentationHook: true,
+    serverComponentsExternalPackages: ['@opentelemetry/instrumentation'],
     outputFileTracingIncludes: standaloneBuild
       ? {
           '/': ['./node_modules/@kausal/themes*/**'],
