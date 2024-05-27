@@ -1,4 +1,4 @@
-/* eslint-disable no-restricted-syntax */
+/* eslint-disable no-restricted-syntax, @typescript-eslint/no-var-requires */
 const { secrets } = require('docker-secret');
 
 const path = require('path');
@@ -58,6 +58,7 @@ let config = {
       fullUrl: true,
     },
   },
+  output: 'standalone',
   eslint: {
     // Warning: This allows production builds to successfully complete even if
     // your project has ESLint errors.
@@ -74,6 +75,16 @@ let config = {
   compiler: {
     // Enables the styled-components SWC transform
     styledComponents: true,
+  },
+  experimental: {
+    outputFileTracingIncludes: {
+      '/': ['./node_modules/@kausal/themes*/**'],
+    },
+  },
+  generateBuildId: async () => {
+    if (process.env.NEXTJS_BUILD_ID) return process.env.NEXTJS_BUILD_ID;
+    // If a fixed Build ID was not provided, fall back to the default implementation.
+    return null;
   },
   webpack(config, { webpack }) {
     if (process.env.NODE_ENV !== 'development') {

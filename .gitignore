@@ -17,7 +17,7 @@ build-storybook.log
 *~
 *.swp
 
-/.env
+/.env*
 /Attic/
 /.envrc
 /public/static/themes/

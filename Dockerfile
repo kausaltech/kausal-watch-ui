@@ -1,40 +1,45 @@
 #syntax=docker/dockerfile:1.2
 
-FROM node:20-alpine as base
+#
+# Install dependencies
+#
+FROM node:20-alpine as deps
 
-RUN mkdir -p /app
 WORKDIR /app
 
-# Python is required for node-gyp, which will be built with `yarn install`
-RUN apk --no-cache add g++ make python3 git
+#RUN apk --no-cache add git
+RUN corepack enable npm
 
-RUN corepack enable
+ARG NPM_REGISTRY_SERVER
 
-ARG YARN_NPM_REGISTRY_SERVER
-ARG YARN_NPM_AUTH_IDENT
+ENV NPM_CONFIG_CACHE /npm-cache
+COPY package*.json ./
 
-ENV YARN_NPM_ALWAYS_AUTH=${YARN_NPM_AUTH_IDENT:+true}
-ENV YARN_NPM_ALWAYS_AUTH=${YARN_NPM_ALWAYS_AUTH:-false}
+RUN \
+  if [ ! -z "${NPM_REGISTRY_SERVER}" ] ; then \
+    echo "@kausal:registry=${NPM_REGISTRY_SERVER}" >> $HOME/.npmrc ; \
+    echo "$(echo ${NPM_REGISTRY_SERVER} | sed -e 's/https://')/"':_authToken=${NPM_TOKEN}' >> $HOME/.npmrc ; \
+  fi
 
-# Install dependencies first
-ENV YARN_CACHE_FOLDER /yarn-cache
-COPY yarn.lock package*.json ./
 
-RUN yarn config set nodeLinker 'node-modules'
-RUN yarn config set logFilters --json '[{"code": "YN0013", "level": "discard"}]'
+#RUN --mount=type=secret,id=NPM_TOKEN --mount=type=cache,target=/npm-cache \
+#  cat $HOME/.npmrc && NPM_TOKEN=$(cat /run/secrets/NPM_TOKEN) npm whoami --registry https://npm.kausal.tech
 
-RUN --mount=type=cache,target=/yarn-cache yarn install --immutable
+RUN --mount=type=secret,id=NPM_TOKEN --mount=type=cache,target=/npm-cache \
+  NPM_TOKEN=$(cat /run/secrets/NPM_TOKEN) npm ci
 
+#
+# Build NextJS bundles
+#
+FROM node:20-alpine as builder
+
+ENV NODE_ENV production
+WORKDIR /app
+
+COPY --from=deps /app/node_modules ./node_modules
+
+# Copy the rest of the files
 COPY . .
-
-FROM base as bundle
-
-ARG NEXT_PUBLIC_API_URL
-ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
-ARG NEXT_PUBLIC_AUTH_ISSUER
-ENV NEXT_PUBLIC_AUTH_ISSUER=$NEXT_PUBLIC_AUTH_ISSUER
-ARG NEXT_PUBLIC_DEPLOYMENT_TYPE
-ENV NEXT_PUBLIC_DEPLOYMENT_TYPE=$NEXT_PUBLIC_DEPLOYMENT_TYPE
 
 # For Sentry source map upload
 ARG SENTRY_PROJECT
@@ -44,11 +49,52 @@ ARG SENTRY_AUTH_TOKEN
 ARG GIT_REPO
 ARG GIT_REV
 
-RUN --mount=type=secret,id=SENTRY_AUTH_TOKEN \
-    yarn build
+# Remove the NextJS build cache if packages change
+RUN --mount=type=cache,target=/app/.next/cache docker/manage-nextjs-cache.sh check
+
+RUN --mount=type=secret,id=SENTRY_AUTH_TOKEN --mount=type=cache,target=/app/.next/cache \
+    npm run build && docker/manage-nextjs-cache.sh save
 
 RUN --mount=type=secret,id=SENTRY_AUTH_TOKEN \
     docker/sentry-set-release-commits.sh
+
+FROM node:20-alpine as runner
+WORKDIR /app
+ENV NODE_ENV production
+
+# Add nextjs user
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
+# Copy public assets
+COPY --from=builder /app/public ./public
+
+# Set the correct permission for prerender cache
+RUN mkdir .next
+RUN chown nextjs:nodejs .next
+
+# Automatically leverage output traces to reduce image size
+# https://nextjs.org/docs/advanced-features/output-file-tracing
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+USER nextjs
+
+ARG GIT_REPO_URL
+LABEL org.opencontainers.image.url="${GIT_REPO_URL}"
+ARG BUILD_TIMESTAMP
+LABEL org.opencontainers.image.created="${BUILD_TIMESTAMP}"
+LABEL org.opencontainers.image.description="Kausal Watch UI"
+
+ARG NEXTJS_BUILD_ID
+LABEL nextjs_build_id="${NEXTJS_BUILD_ID}"
+
+#ARG NEXT_PUBLIC_API_URL
+#ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+#ARG NEXT_PUBLIC_AUTH_ISSUER
+#ENV NEXT_PUBLIC_AUTH_ISSUER=$AUTH_ISSUER
+#ARG NEXT_PUBLIC_DEPLOYMENT_TYPE
+#ENV NEXT_PUBLIC_DEPLOYMENT_TYPE=$NEXT_PUBLIC_DEPLOYMENT_TYPE
 
 COPY ./docker/entrypoint.sh /entrypoint.sh
 EXPOSE 3000

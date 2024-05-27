@@ -34,6 +34,11 @@ When using environment variables in client-side code, import them from `@/common
 - `NEXT_PUBLIC_DEPLOYMENT_TYPE`: Change the deployment type, e.g. `staging` or `production`.
 - `NEXT_PUBLIC_WILDCARD_DOMAINS`: List of domains that should be interpreted in form `plan-id.domain`.
 
+For production, you must additionally set the following variables:
+
+- `AUTH_SECRET`: Randomly generated secret string
+- `AUTH_TRUST_HOST`: Set to `true`. Ensure that the reverse proxy sets `X-Forwarded-Host` securely.
+
 #### End-to-end Testing
 
 Before the first run, ensure the browsers Playwright needs are installed:

@@ -14,7 +14,6 @@
     "@next/bundle-analyzer": "^12.1.6",
     "@popperjs/core": "^2.11.5",
     "@sentry/nextjs": "^7.93.0",
-    "@storybook/addon-themes": "^7.6.16",
     "@types/js-cookie": "3.0.6",
     "babel-plugin-inline-react-svg": "^2.0.1",
     "bootstrap": "5.2.3",
@@ -99,6 +98,7 @@
     "@storybook/addon-interactions": "^7.6.16",
     "@storybook/addon-links": "^7.6.16",
     "@storybook/addon-onboarding": "^1.0.11",
+    "@storybook/addon-themes": "^7.6.16",
     "@storybook/blocks": "^7.6.16",
     "@storybook/nextjs": "^7.6.16",
     "@storybook/react": "^7.6.16",
@@ -112,7 +112,6 @@
     "@types/react-plotly.js": "^2.5.0",
     "@typescript-eslint/eslint-plugin": "^6.18.1",
     "@typescript-eslint/parser": "^6.18.1",
-    "apollo": "^2.33.10",
     "babel-jest": "^28.0.3",
     "babel-loader": "^8.2.5",
     "babel-plugin-styled-components": "^2.0.7",
@@ -141,7 +140,7 @@
   "engines": {
     "node": "20.x"
   },
-  "packageManager": "yarn@3.2.1",
+  "packageManager": "npm@10.5.1",
   "optionalDependencies": {
     "@kausal/themes-private": "^0.4.14"
   },

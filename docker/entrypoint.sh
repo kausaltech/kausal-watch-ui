@@ -1,3 +1,3 @@
 #!/bin/sh
 
-yarn start
+exec node server.js
