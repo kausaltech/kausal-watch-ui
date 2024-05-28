@@ -81,7 +81,7 @@ FROM nextjs_base AS final
 # Add nextjs user
 RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 nextjs
 
-RUN apk update && apk add --no-cache caddy supervisor && rm -rf /var/cache/apk
+RUN apk update && apk add --no-cache caddy multirun && rm -rf /var/cache/apk
 #RUN --mount=type=cache,target=/npm-cache \
 #  npm install -g pm2
 
@@ -119,7 +119,8 @@ ENV \
   SENTRY_RELEASE=${SENTRY_RELEASE} \
   BUILD_ID=${BUILD_ID} \
   NEXTJS_ASSET_PREFIX_PLACEHOLDER=${NEXTJS_ASSET_PREFIX_PLACEHOLDER} \
-  SENTRY_PROJECT=${SENTRY_PROJECT}
+  SENTRY_PROJECT=${SENTRY_PROJECT} \
+  APP_ROOT=/app
 
 ARG NEXTJS_PORT=3000
 ARG CADDY_PORT=3001

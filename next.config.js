@@ -17,16 +17,6 @@ const isProd = process.env.NODE_ENV === 'production';
 const sentryAuthToken =
   secrets.SENTRY_AUTH_TOKEN || process.env.SENTRY_AUTH_TOKEN;
 
-console.log(`
-  ⚙ Kausal Watch UI
-    ↝ Initialising app
-      ↝ NODE_ENV: ${process.env.NODE_ENV}
-      ↝ NEXT_PUBLIC_DEPLOYMENT_TYPE: ${process.env.NEXT_PUBLIC_DEPLOYMENT_TYPE}
-      ↝ NEXT_PUBLIC_API_URL: ${process.env.NEXT_PUBLIC_API_URL}
-      ↝ NEXT_PUBLIC_WILDCARD_DOMAINS: ${process.env.NEXT_PUBLIC_WILDCARD_DOMAINS}
-      ↝ AUTH_ISSUER: ${process.env.AUTH_ISSUER}
-  `);
-
 function initializeThemes() {
   console.log(`
       ↝ Initialising themes

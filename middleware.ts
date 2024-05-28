@@ -30,8 +30,17 @@ import {
 import { tryRequest } from './utils/api.utils';
 import { setContext } from '@apollo/client/link/context';
 import { wildcardDomains } from './common/environment';
+import { loadErrorMessages, loadDevMessages } from '@apollo/client/dev';
+import { getLogger } from './common/log';
 
-console.log(`Wildcard domains: ${wildcardDomains.join(', ')}`);
+if (process.env.NODE_ENV !== 'production') {
+  loadDevMessages();
+  loadErrorMessages();
+}
+
+const logger = getLogger('middleware');
+
+logger.info(`Wildcard domains: ${wildcardDomains.join(', ')}`);
 
 const httpHeadersMiddleware = setContext(
   async (_, { headers: initialHeaders = {} }) => {
@@ -55,7 +64,10 @@ const apolloClient = new ApolloClient({
          * Prevent cache conflicts between multi-plan plans when visited via basePath
          * (e.g. umbrella.city.gov/x-plan) vs a dedicated plan subdomain (e.g. x-plan.city.gov/)
          */
-        keyFields: ['id', 'domain', ['hostname']],
+        keyFields: ['id'],
+      },
+      PlanDomain: {
+        keyFields: ['hostname', 'basePath'],
       },
     },
     // https://www.apollographql.com/docs/react/data/fragments/#defining-possibletypes-manually
@@ -92,6 +104,7 @@ const clearCacheIfTimedOut = (function handleCacheTTL() {
     } else if (Date.now() - timeCached > THIRTY_MINS) {
       timeCached = Date.now();
       apolloClient.clearStore();
+      logger.info('Clearing Apollo cache');
     }
   };
 })();
@@ -104,8 +117,12 @@ export async function middleware(request: NextRequest) {
   const protocol = request.headers.get('x-forwarded-proto');
   const hostUrl = new URL(`${protocol}://${host}`);
   const hostname = hostUrl.hostname;
+  const nextUrl = request.nextUrl;
 
-  console.log(`${request.method} ${protocol}://${hostname}${pathname}`);
+  logger.info(
+    { method: request.method, path: nextUrl.pathname, host },
+    'middleware request'
+  );
 
   // Redirect the root application locally to `sunnydale` tenant
   if (hostname === 'localhost') {
@@ -141,14 +158,21 @@ export async function middleware(request: NextRequest) {
     >({
       query: GET_PLANS_BY_HOSTNAME,
       variables: { hostname },
+      fetchPolicy: 'cache-first',
     })
   );
   if (error || !data?.plansForHostname?.length) {
     if (error) {
       captureException(error, { extra: { hostname, ...error } });
-      console.error(error);
+      logger.error(
+        { error: error.toString(), hostname },
+        'Unable to get plans for hostname'
+      );
     } else {
-      console.warn(`No plans found for hostname: ${hostname}`);
+      logger.warn(
+        { hostname, 'wildcard-domains': wildcardDomains },
+        'No plans found for hostname'
+      );
     }
 
     return NextResponse.rewrite(new URL('/404', request.url));

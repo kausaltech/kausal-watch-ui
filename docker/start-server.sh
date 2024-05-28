@@ -2,7 +2,9 @@
 
 set -e
 
-cd /app
+if [ ! -z "$APP_ROOT" ] ; then
+  cd $APP_ROOT
+fi
 
 function replace_asset_prefix() {
   if [ -z "$NEXTJS_ASSET_PREFIX_PLACEHOLDER" ] ; then
@@ -29,18 +31,22 @@ function replace_asset_prefix() {
 replace_asset_prefix
 
 export PORT=${NEXTJS_PORT}
-export HOST=0.0.0.0
+export HOSTNAME=0.0.0.0
+
+if [ "$NEXTJS_STANDALONE_BUILD" == "1" ] ; then
+  NODE_CMD="node server.js"
+else
+  NODE_CMD="/app/node_modules/.bin/next start"
+fi
+
+CADDY_CMD="/usr/sbin/caddy run -c /etc/caddy/Caddyfile"
 
 if [ -z "$1" ] ; then
-  exec supervisord -c /etc/supervisord.conf
+  exec multirun "$NODE_CMD" "$CADDY_CMD"
 elif [ "$1" == "caddy" ]; then
-  exec /usr/sbin/caddy run -c /etc/caddy/Caddyfile
+  exec $CADDY_CMD
 elif [ "$1" == "nextjs" ]; then
-  if [ "$NEXTJS_STANDALONE_BUILD" -eq "1" ] ; then
-    exec node server.js
-  else
-    exec /app/node_modules/.bin/next start
-  fi
+  exec $NODE_CMD
 else
   echo "Invalid command: $1"
   exit 1

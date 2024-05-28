@@ -9,8 +9,10 @@
 		metrics
 	}
 	log {
-		format json
-		output stdout
+		format json {
+			time_format iso8601
+		}
+		output stderr
 		exclude admin tls
 	}
 	persist_config off

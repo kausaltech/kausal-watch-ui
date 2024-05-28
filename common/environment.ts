@@ -5,6 +5,18 @@ type DeploymentType =
   | 'testing'
   | 'wip';
 
+type RuntimeConfig = {
+  isServer: boolean;
+  deploymentType: DeploymentType;
+  isLocal: boolean;
+  apiUrl: string;
+  gqlUrl: string;
+  wildcardDomains: string[];
+  authIssuer?: string;
+  logGraphqlQueries: boolean;
+  runtimeEnv: 'nodejs' | 'edge';
+};
+
 export const isServer = typeof window === 'undefined';
 
 export const deploymentType: DeploymentType =
@@ -21,8 +33,8 @@ export const wildcardDomains = process.env.NEXT_PUBLIC_WILDCARD_DOMAINS
       s.toLowerCase()
     )
   : isLocal
-    ? ['localhost']
-    : [];
+  ? ['localhost']
+  : [];
 
 export const gqlUrl = `${apiUrl}/graphql/`;
 
@@ -30,3 +42,18 @@ export const authIssuer = process.env.NEXT_PUBLIC_AUTH_ISSUER;
 
 export const logGraphqlQueries =
   isServer && process.env.LOG_GRAPHQL_QUERIES === 'true';
+
+export function getRuntimeConfig() {
+  const config: RuntimeConfig = {
+    isServer,
+    deploymentType,
+    isLocal,
+    apiUrl,
+    gqlUrl,
+    wildcardDomains,
+    authIssuer,
+    logGraphqlQueries,
+    runtimeEnv: process.env.NEXT_RUNTIME as RuntimeConfig['runtimeEnv'],
+  };
+  return config;
+}

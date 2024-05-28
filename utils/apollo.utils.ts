@@ -8,6 +8,9 @@ import {
 import { API_PROXY_PATH } from '@/constants/routes';
 import { onError } from '@apollo/client/link/error';
 import { captureException } from '@sentry/nextjs';
+import { getLogger } from '@/common/log';
+
+const logger = getLogger('graphql');
 
 /**
  * The current locale is passed to Apollo links as context,
@@ -30,13 +33,13 @@ function logError(
   error: unknown,
   sentryExtras: { [key: string]: unknown }
 ) {
-  if (isLocal) {
-    console.error(
-      `An error occurred while querying ${operation.operationName}: ${message}`,
-      error
-    );
-  }
-
+  const logContext = {
+    operation: operation.operationName,
+  };
+  logger.error(
+    { logContext, error },
+    `An error occurred while querying: ${message}`
+  );
   captureException(message, {
     extra: {
       query: operation.query,
@@ -68,24 +71,21 @@ export const errorLink = onError(
 
 export const operationStart = new ApolloLink((operation, forward) => {
   operation.setContext({ start: Date.now() });
-
-  console.log(`  ⚙ Operation ${operation.operationName}...`);
-
+  logger.info({ operation: operation.operationName }, 'Querying');
   return forward(operation);
 });
 
 export const operationEnd = new ApolloLink((operation, forward) => {
   return forward(operation).map((data) => {
     const start = operation.getContext().start;
-
     if (!start) {
       return data;
     }
-
     const time = Math.round(Date.now() - start);
-
-    console.log(`  ⚙ Operation ${operation.operationName} took ${time}ms`);
-
+    logger.info(
+      { operation: operation.operationName, duration: time / 1000 },
+      `Operation took ${time}ms`
+    );
     return data;
   });
 });
