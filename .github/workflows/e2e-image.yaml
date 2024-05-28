@@ -93,14 +93,11 @@ jobs:
       #     path: e2e-tests/playwright-report/
       #     retention-days: 5
 
-      - name: Install S3 CLI
-        run: apt update && apt install --no-install-recommends -y s3cmd
-        env:
-          DEBIAN_FRONTEND: noninteractive
-
       - name: Upload test report to S3
         id: upload
+        if: always()
         run: |
+          apt update && apt install --no-install-recommends -y s3cmd
           s3cmd --host ${{ inputs.s3_endpoint }} --host-bucket ${{ inputs.s3_endpoint }} put --recursive playwright-report s3://${{ inputs.s3_bucket }}/${{ inputs.build_id }}/
           export TEST_REPORT_URL="https://${{ inputs.s3_endpoint }}/${{ inputs.s3_bucket }}/${{ inputs.build_id }}/playwright-report/index.html"
           echo "test_report_url=${TEST_REPORT_URL}" >> $GITHUB_OUTPUT
@@ -108,4 +105,5 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          DEBIAN_FRONTEND: noninteractive
         working-directory: ./e2e-tests
