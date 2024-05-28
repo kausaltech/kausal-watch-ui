@@ -37,6 +37,11 @@ route /metrics {
 	metrics /metrics
 }
 
+route /_caddyhealth {
+	skip_log
+	respond "OK" 200
+}
+
 route /_next/static/* {
 	uri strip_prefix /_next/static
 	root * /app/.next/static

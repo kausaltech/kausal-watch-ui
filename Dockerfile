@@ -53,7 +53,7 @@ FROM nextjs_base AS builder
 COPY --from=deps /app/node_modules ./node_modules
 
 # Copy the rest of the files
-COPY --exclude=docker . .
+COPY --exclude=docker --exclude=Dockerfile . .
 
 # For Sentry source map upload
 ARG SENTRY_PROJECT
@@ -79,7 +79,7 @@ RUN --mount=type=secret,id=SENTRY_AUTH_TOKEN --mount=type=cache,target=/app/.nex
 FROM nextjs_base AS final
 
 # Add nextjs user
-RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 nextjs
+RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 nextjs && chown nextjs:nodejs /app
 
 RUN apk update && apk add --no-cache caddy multirun && rm -rf /var/cache/apk
 #RUN --mount=type=cache,target=/npm-cache \
