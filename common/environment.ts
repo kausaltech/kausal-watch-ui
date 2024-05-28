@@ -1,3 +1,5 @@
+import { env } from 'next-runtime-env';
+
 type DeploymentType =
   | 'production'
   | 'staging'
@@ -20,25 +22,26 @@ type RuntimeConfig = {
 export const isServer = typeof window === 'undefined';
 
 export const deploymentType: DeploymentType =
-  (process.env.NEXT_PUBLIC_DEPLOYMENT_TYPE as DeploymentType | undefined) ||
+  (env('NEXT_PUBLIC_DEPLOYMENT_TYPE') as DeploymentType | undefined) ||
   'development';
 
 export const isLocal = process.env.NODE_ENV === 'development';
 
 export const apiUrl =
-  process.env.NEXT_PUBLIC_API_URL || 'https://api.watch.kausal.tech/v1';
+  env('NEXT_PUBLIC_API_URL') || 'https://api.watch.kausal.tech/v1';
 
-export const wildcardDomains = process.env.NEXT_PUBLIC_WILDCARD_DOMAINS
-  ? process.env.NEXT_PUBLIC_WILDCARD_DOMAINS.split(',').map((s) =>
-      s.toLowerCase()
-    )
+const WILDCARD_DOMAINS = env('NEXT_PUBLIC_WILDCARD_DOMAINS');
+export const wildcardDomains = WILDCARD_DOMAINS
+  ? WILDCARD_DOMAINS.split(',').map((s) => s.toLowerCase())
   : isLocal
   ? ['localhost']
   : [];
 
 export const gqlUrl = `${apiUrl}/graphql/`;
 
-export const authIssuer = process.env.NEXT_PUBLIC_AUTH_ISSUER;
+export const authIssuer = env('NEXT_PUBLIC_AUTH_ISSUER');
+
+export const sentryDsn = env('NEXT_PUBLIC_SENTRY_DSN');
 
 export const logGraphqlQueries =
   isServer && process.env.LOG_GRAPHQL_QUERIES === 'true';

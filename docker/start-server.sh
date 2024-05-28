@@ -6,6 +6,10 @@ if [ ! -z "$APP_ROOT" ] ; then
   cd $APP_ROOT
 fi
 
+if [ -z "$NEXT_PUBLIC_SENTRY_DSN" ]; then
+  export NEXT_PUBLIC_SENTRY_DSN="$SENTRY_DSN"
+fi
+
 function replace_asset_prefix() {
   if [ -z "$NEXTJS_ASSET_PREFIX_PLACEHOLDER" ] ; then
     return

@@ -11,6 +11,7 @@ import { AuthProvider } from '@/components/providers/AuthProvider';
 import { auth } from '@/config/auth';
 import Script from 'next/script';
 import { wildcardDomains } from '@/common/environment';
+import { PublicEnvScript } from 'next-runtime-env';
 
 type Props = {
   params: { lang: string };
@@ -28,6 +29,9 @@ export default function LangLayout({ params, children }: Props) {
 
   return (
     <html lang={params.lang}>
+      <head>
+        <PublicEnvScript />
+      </head>
       <body>
         <Script id="global-this-polyfill" strategy="beforeInteractive">
           {/* https://github.com/vercel/next.js/discussions/58818 */}
