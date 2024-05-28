@@ -119,6 +119,12 @@ export async function middleware(request: NextRequest) {
   const hostname = hostUrl.hostname;
   const nextUrl = request.nextUrl;
 
+  if (pathname === '/_health') {
+    url.pathname = '/api/health';
+
+    return NextResponse.rewrite(url);
+  }
+
   logger.info(
     { method: request.method, path: nextUrl.pathname, host },
     'middleware request'
@@ -127,12 +133,6 @@ export async function middleware(request: NextRequest) {
   // Redirect the root application locally to `sunnydale` tenant
   if (hostname === 'localhost') {
     return NextResponse.redirect(new URL(`http://sunnydale.${host}`));
-  }
-
-  if (pathname === '/_health') {
-    url.pathname = '/api/health';
-
-    return NextResponse.rewrite(url);
   }
 
   if (pathname === '/_invalidate-middleware-cache') {
