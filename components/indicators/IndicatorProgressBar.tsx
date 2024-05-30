@@ -705,7 +705,9 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
               </text>
             )}
           </svg>
-          <SourceLink className="text-end mt-3">{note}</SourceLink>
+          <SourceLink role="button" className="text-end mt-3">
+            {note}
+          </SourceLink>
         </LinkedIndicator>
       </IndicatorLink>
     </ProgressBarWrapper>

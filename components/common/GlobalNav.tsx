@@ -342,7 +342,7 @@ function DropdownList(props) {
   const { parentName, items, active = false, onClickLink } = props;
   return (
     <StyledDropdown nav inNavbar className={active && 'active'}>
-      <StyledDropdownToggle nav caret>
+      <StyledDropdownToggle nav caret role="button">
         <NavHighlighter className={`highlighter ${active && 'active'}`}>
           {parentName}
         </NavHighlighter>
