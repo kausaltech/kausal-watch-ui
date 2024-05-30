@@ -129,7 +129,13 @@ export function ActionLink({
     });
   }
   return (
-    <NextLink passHref {...other} href={actionLink} legacyBehavior>
+    <NextLink
+      passHref
+      {...other}
+      href={actionLink}
+      legacyBehavior
+      prefetch={false}
+    >
       {children}
     </NextLink>
   );
