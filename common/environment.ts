@@ -1,4 +1,4 @@
-import { env } from 'next-runtime-env';
+import { env } from 'next-runtime-env/build/script/env';
 
 type DeploymentType =
   | 'production'
