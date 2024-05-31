@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useInView } from 'react-intersection-observer';
 import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
 import RichText from 'components/common/RichText';
@@ -28,14 +27,68 @@ const IndicatorShowcase = styled.div`
   }
 `;
 
+const getNormalizedValue = (indicatorValue, indicator) => {
+  const populationNormalizer = indicator.common?.normalizations.find(
+    (normalization) => normalization.normalizer.identifier === 'population'
+  );
+  if (populationNormalizer && indicatorValue.normalizedValues.length > 0) {
+    const normalized = indicatorValue.normalizedValues.find(
+      (normed) => normed.normalizerId === populationNormalizer.normalizer.id
+    );
+    return normalized?.value;
+  } else {
+    return undefined;
+  }
+};
+
+const getNormalizedUnit = (indicator) => {
+  const populationNormalizer = indicator.common?.normalizations.find(
+    (normalization) => normalization.normalizer.identifier === 'population'
+  );
+  if (populationNormalizer) {
+    return (
+      populationNormalizer.unit.shortName || populationNormalizer.unit.name
+    );
+  } else {
+    return '';
+  }
+};
+
 const IndicatorShowcaseBlock = (props) => {
   const { id = '', indicator, title, body } = props;
-  // Animation hook:  trigger when visible on screen
-  const { ref, inView, entry } = useInView({
-    triggerOnce: true,
-  });
+
+  const lastGoal = indicator.goals[indicator.goals.length - 1];
+  const firstValue = indicator.values[0];
+  const lastValue = indicator.values[indicator.values.length - 1];
 
   const indicatorHasGoal = indicator.goals.length > 0;
+
+  const canNormalize =
+    getNormalizedValue(firstValue, indicator) &&
+    getNormalizedValue(lastValue, indicator);
+
+  const baseValue = {
+    date: firstValue.date,
+    value: firstValue.value,
+    normalizedValue: getNormalizedValue(firstValue, indicator),
+  };
+
+  const latestValue = {
+    date: lastValue.date,
+    value: lastValue.value,
+    normalizedValue: getNormalizedValue(lastValue, indicator),
+  };
+
+  const goalValue = {
+    date: lastGoal.date,
+    value: lastGoal.value,
+    normalizedValue: getNormalizedValue(lastGoal, indicator),
+  };
+
+  const unit = {
+    name: indicator.unit.shortName || indicator.unit.name || '',
+    normalizedName: getNormalizedUnit(indicator),
+  };
 
   return (
     <IndicatorShowcase id={id}>
@@ -45,14 +98,22 @@ const IndicatorShowcaseBlock = (props) => {
             <h2>{title}</h2>
             <RichText html={body} className="mb-5" />
             {indicatorHasGoal ? (
-              <IndicatorProgressBar indicator={indicator} animate={inView} />
+              <IndicatorProgressBar
+                indicatorId={indicator.id}
+                note={indicator.name}
+                baseValue={baseValue}
+                lastValue={latestValue}
+                goalValue={goalValue}
+                normalize={canNormalize}
+                unit={unit}
+                indicator={indicator}
+              />
             ) : (
               <>
                 <h2>{indicator.name}</h2>
                 <IndicatorVisualisation indicatorId={indicator.id} />
               </>
             )}
-            <span ref={ref} />
           </Col>
         </Row>
       </Container>
