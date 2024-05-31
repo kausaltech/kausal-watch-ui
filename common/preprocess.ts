@@ -200,7 +200,7 @@ const getPhaseData = (
   const continuousActionsDonutSector: DonutSector = new DonutSector(
     // Donut sector for completed actions with scheduleContinuous = Continuous phase actions
     t('action-continuous'),
-    theme.graphColors.grey090,
+    theme.actionContinuousColor,
     true
   );
 

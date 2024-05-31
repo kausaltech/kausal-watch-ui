@@ -282,7 +282,8 @@ function ActionCard({
 
   if (actionName.length > 120) actionName = `${action.name.substring(0, 120)}…`;
 
-  const { mergedWith, implementationPhase, primaryOrg } = action;
+  const { mergedWith, implementationPhase, primaryOrg, scheduleContinuous } =
+    action;
   const status = cleanActionStatus(action, plan.actionStatuses);
   let statusText = status.name || null;
 
@@ -290,8 +291,11 @@ function ActionCard({
   if (implementationPhase) {
     statusText = implementationPhase.name;
     if (status.name) statusText = `${statusText} (${status.name})`;
-    // Let's assume if status is completed the phase is irrelevant
-    if (status.identifier === 'completed') statusText = status.name;
+    // Let's assume if status is completed or continuous the phase is irrelevant
+    if (status.identifier === 'completed') {
+      if (scheduleContinuous) statusText = t('action-continuous');
+      else statusText = status.name;
+    }
   }
   const getPlanUrl = (mergedWith, actionPlan, planId) => {
     if (mergedWith && mergedWith?.plan.id !== planId)

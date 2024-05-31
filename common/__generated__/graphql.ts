@@ -4517,7 +4517,7 @@ export type GetActionListQueryVariables = Exact<{
 
 export type GetActionListQuery = (
   { planActions?: Array<(
-    { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, completion?: number | null, image?: (
+    { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, scheduleContinuous: boolean, completion?: number | null, image?: (
       { id: string, rendition?: (
         { id: string, width: number, height: number, src: string, alt: string }
         & { __typename?: 'ImageRendition' }
@@ -4689,7 +4689,7 @@ export type GetActionListForBlockQueryVariables = Exact<{
 
 export type GetActionListForBlockQuery = (
   { planActions?: Array<(
-    { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, completion?: number | null, status?: (
+    { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, scheduleContinuous: boolean, completion?: number | null, status?: (
       { id: string, identifier: string, name: string, color?: string | null }
       & { __typename?: 'ActionStatus' }
     ) | null, dependencyRole?: (
@@ -6077,7 +6077,7 @@ type AttributesBlockAttributeWithNestedType_AttributeRichText_AttributeText_Frag
 export type AttributesBlockAttributeWithNestedTypeFragment = AttributesBlockAttributeWithNestedType_AttributeCategoryChoice_Fragment | AttributesBlockAttributeWithNestedType_AttributeChoice_Fragment | AttributesBlockAttributeWithNestedType_AttributeNumericValue_Fragment | AttributesBlockAttributeWithNestedType_AttributeRichText_AttributeText_Fragment;
 
 export type ActionCardFragment = (
-  { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, completion?: number | null, status?: (
+  { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, scheduleContinuous: boolean, completion?: number | null, status?: (
     { id: string, identifier: string, name: string, color?: string | null }
     & { __typename?: 'ActionStatus' }
   ) | null, dependencyRole?: (
@@ -7225,7 +7225,7 @@ export type GetActionDetailsQuery = (
       ) }
       & { __typename?: 'ActionIndicator' }
     )>, relatedActions: Array<(
-      { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, completion?: number | null, status?: (
+      { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, scheduleContinuous: boolean, completion?: number | null, status?: (
         { id: string, identifier: string, name: string, color?: string | null }
         & { __typename?: 'ActionStatus' }
       ) | null, dependencyRole?: (
@@ -7285,7 +7285,7 @@ export type GetActionDetailsQuery = (
       ) }
       & { __typename?: 'Action' }
     ) | null, supersededBy?: (
-      { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, completion?: number | null, status?: (
+      { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, scheduleContinuous: boolean, completion?: number | null, status?: (
         { id: string, identifier: string, name: string, color?: string | null }
         & { __typename?: 'ActionStatus' }
       ) | null, dependencyRole?: (
@@ -7339,7 +7339,7 @@ export type GetActionDetailsQuery = (
       ) }
       & { __typename?: 'Action' }
     ) | null, supersededActions: Array<(
-      { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, completion?: number | null, status?: (
+      { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, scheduleContinuous: boolean, completion?: number | null, status?: (
         { id: string, identifier: string, name: string, color?: string | null }
         & { __typename?: 'ActionStatus' }
       ) | null, dependencyRole?: (
@@ -7595,7 +7595,7 @@ export type GetActionDetailsQuery = (
       & { __typename?: 'ActionDependencyRole' }
     ) | null, allDependencyRelationships: Array<(
       { preceding: (
-        { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, completion?: number | null, status?: (
+        { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, scheduleContinuous: boolean, completion?: number | null, status?: (
           { id: string, identifier: string, name: string, color?: string | null }
           & { __typename?: 'ActionStatus' }
         ) | null, dependencyRole?: (
@@ -7649,7 +7649,7 @@ export type GetActionDetailsQuery = (
         ) }
         & { __typename?: 'Action' }
       ), dependent: (
-        { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, completion?: number | null, status?: (
+        { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, scheduleContinuous: boolean, completion?: number | null, status?: (
           { id: string, identifier: string, name: string, color?: string | null }
           & { __typename?: 'ActionStatus' }
         ) | null, dependencyRole?: (
@@ -8781,7 +8781,7 @@ export type ActionDependenciesFragment = (
     & { __typename?: 'ActionDependencyRole' }
   ) | null, allDependencyRelationships: Array<(
     { preceding: (
-      { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, completion?: number | null, status?: (
+      { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, scheduleContinuous: boolean, completion?: number | null, status?: (
         { id: string, identifier: string, name: string, color?: string | null }
         & { __typename?: 'ActionStatus' }
       ) | null, dependencyRole?: (
@@ -8835,7 +8835,7 @@ export type ActionDependenciesFragment = (
       ) }
       & { __typename?: 'Action' }
     ), dependent: (
-      { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, completion?: number | null, status?: (
+      { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, scheduleContinuous: boolean, completion?: number | null, status?: (
         { id: string, identifier: string, name: string, color?: string | null }
         & { __typename?: 'ActionStatus' }
       ) | null, dependencyRole?: (
