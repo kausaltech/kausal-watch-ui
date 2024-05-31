@@ -176,6 +176,7 @@ export type Action = {
   editUrl?: Maybe<Scalars['String']>;
   /** The date when implementation of this action ends */
   endDate?: Maybe<Scalars['Date']>;
+  hasIndicatorsWithGoals?: Maybe<Scalars['Boolean']>;
   id: Scalars['ID'];
   /** The identifier for this action (e.g. number) */
   identifier: Scalars['String'];
@@ -185,6 +186,7 @@ export type Action = {
   impactGroups: Array<ImpactGroupAction>;
   implementationPhase?: Maybe<ActionImplementationPhase>;
   indicators: Array<Indicator>;
+  indicatorsCount?: Maybe<Scalars['Int']>;
   leadParagraph: Scalars['String'];
   links: Array<ActionLink>;
   /** Describe the reason why this action has has this status */
@@ -3018,6 +3020,7 @@ export type Plan = PlanInterface & {
   features: PlanFeatures;
   footer?: Maybe<Footer>;
   generalContent: SiteGeneralContent;
+  hasIndicatorRelationships?: Maybe<Scalars['Boolean']>;
   hideActionIdentifiers?: Maybe<Scalars['Boolean']>;
   hideActionLeadParagraph?: Maybe<Scalars['Boolean']>;
   hideActionOfficialName?: Maybe<Scalars['Boolean']>;
@@ -4871,7 +4874,7 @@ export type PlanFragmentFragment = (
 );
 
 export type ActionFragmentFragment = (
-  { id: string, identifier: string, name: string, viewUrl?: string, color?: string | null, manualStatusReason?: string | null, completion?: number | null, officialName?: string | null, updatedAt: any, scheduleContinuous: boolean, startDate?: any | null, endDate?: any | null, order: number, dependencyRole?: (
+  { id: string, identifier: string, name: string, viewUrl?: string, color?: string | null, manualStatusReason?: string | null, completion?: number | null, officialName?: string | null, updatedAt: any, scheduleContinuous: boolean, startDate?: any | null, endDate?: any | null, order: number, indicatorsCount?: number | null, hasIndicatorsWithGoals?: boolean | null, dependencyRole?: (
     { id: string, name: string }
     & { __typename?: 'ActionDependencyRole' }
   ) | null, allDependencyRelationships: Array<(
@@ -4964,22 +4967,7 @@ export type ActionFragmentFragment = (
       & { __typename?: 'Plan' }
     ) }
     & { __typename?: 'Action' }
-  ) | null, indicators: Array<(
-    { id: string, goals?: Array<(
-      { id: string }
-      & { __typename?: 'IndicatorGoal' }
-    ) | null> | null }
-    & { __typename?: 'Indicator' }
-  )>, relatedIndicators: Array<(
-    { id: string, indicatesActionProgress: boolean, indicator: (
-      { id: string, goals?: Array<(
-        { id: string }
-        & { __typename?: 'IndicatorGoal' }
-      ) | null> | null }
-      & { __typename?: 'Indicator' }
-    ) }
-    & { __typename?: 'ActionIndicator' }
-  )> }
+  ) | null }
   & { __typename?: 'Action' }
 );
 
@@ -5034,7 +5022,7 @@ export type DashboardActionListQuery = (
     ) | null> }
     & { __typename?: 'Plan' }
   ) | null, planActions?: Array<(
-    { id: string, identifier: string, name: string, viewUrl?: string, color?: string | null, manualStatusReason?: string | null, completion?: number | null, officialName?: string | null, updatedAt: any, scheduleContinuous: boolean, startDate?: any | null, endDate?: any | null, order: number, dependencyRole?: (
+    { id: string, identifier: string, name: string, viewUrl?: string, color?: string | null, manualStatusReason?: string | null, completion?: number | null, officialName?: string | null, updatedAt: any, scheduleContinuous: boolean, startDate?: any | null, endDate?: any | null, order: number, indicatorsCount?: number | null, hasIndicatorsWithGoals?: boolean | null, dependencyRole?: (
       { id: string, name: string }
       & { __typename?: 'ActionDependencyRole' }
     ) | null, allDependencyRelationships: Array<(
@@ -5127,25 +5115,10 @@ export type DashboardActionListQuery = (
         & { __typename?: 'Plan' }
       ) }
       & { __typename?: 'Action' }
-    ) | null, indicators: Array<(
-      { id: string, goals?: Array<(
-        { id: string }
-        & { __typename?: 'IndicatorGoal' }
-      ) | null> | null }
-      & { __typename?: 'Indicator' }
-    )>, relatedIndicators: Array<(
-      { id: string, indicatesActionProgress: boolean, indicator: (
-        { id: string, goals?: Array<(
-          { id: string }
-          & { __typename?: 'IndicatorGoal' }
-        ) | null> | null }
-        & { __typename?: 'Indicator' }
-      ) }
-      & { __typename?: 'ActionIndicator' }
-    )> }
+    ) | null }
     & { __typename?: 'Action' }
   )> | null, relatedPlanActions?: Array<(
-    { id: string, identifier: string, name: string, viewUrl?: string, color?: string | null, manualStatusReason?: string | null, completion?: number | null, officialName?: string | null, updatedAt: any, scheduleContinuous: boolean, startDate?: any | null, endDate?: any | null, order: number, dependencyRole?: (
+    { id: string, identifier: string, name: string, viewUrl?: string, color?: string | null, manualStatusReason?: string | null, completion?: number | null, officialName?: string | null, updatedAt: any, scheduleContinuous: boolean, startDate?: any | null, endDate?: any | null, order: number, indicatorsCount?: number | null, hasIndicatorsWithGoals?: boolean | null, dependencyRole?: (
       { id: string, name: string }
       & { __typename?: 'ActionDependencyRole' }
     ) | null, allDependencyRelationships: Array<(
@@ -5238,22 +5211,7 @@ export type DashboardActionListQuery = (
         & { __typename?: 'Plan' }
       ) }
       & { __typename?: 'Action' }
-    ) | null, indicators: Array<(
-      { id: string, goals?: Array<(
-        { id: string }
-        & { __typename?: 'IndicatorGoal' }
-      ) | null> | null }
-      & { __typename?: 'Indicator' }
-    )>, relatedIndicators: Array<(
-      { id: string, indicatesActionProgress: boolean, indicator: (
-        { id: string, goals?: Array<(
-          { id: string }
-          & { __typename?: 'IndicatorGoal' }
-        ) | null> | null }
-        & { __typename?: 'Indicator' }
-      ) }
-      & { __typename?: 'ActionIndicator' }
-    )> }
+    ) | null }
     & { __typename?: 'Action' }
   )> | null, planPage?: { __typename: 'AccessibilityStatementPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PrivacyPolicyPage' | 'StaticPage' } | (
     { dashboardColumns?: Array<(
@@ -5409,7 +5367,7 @@ export type IndicatorListQueryVariables = Exact<{
 
 export type IndicatorListQuery = (
   { plan?: (
-    { id: string, features: (
+    { id: string, hasIndicatorRelationships?: boolean | null, features: (
       { hasActionPrimaryOrgs: boolean }
       & { __typename?: 'PlanFeatures' }
     ), indicatorLevels: Array<(
@@ -5466,16 +5424,7 @@ export type IndicatorListQuery = (
     )> }
     & { __typename?: 'Plan' }
   ) | null, planIndicators?: Array<(
-    { id: string, relatedCauses: Array<(
-      { id: string, effectType: RelatedIndicatorEffectType, causalIndicator: (
-        { id: string }
-        & { __typename?: 'Indicator' }
-      ), effectIndicator: (
-        { id: string }
-        & { __typename?: 'Indicator' }
-      ) }
-      & { __typename?: 'RelatedIndicator' }
-    )>, common?: (
+    { id: string, common?: (
       { id: string, name: string, indicators: Array<(
         { id: string, organization: (
           { name: string }

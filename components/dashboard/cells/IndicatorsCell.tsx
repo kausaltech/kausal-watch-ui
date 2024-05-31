@@ -13,10 +13,9 @@ const IndicatorsDisplay = styled.div`
 
 const IndicatorsCell = ({ action }: Props) => {
   const theme = useTheme();
-  const hasIndicators = action.relatedIndicators.length > 0;
-  const hasGoals = action.relatedIndicators.some(
-    (relatedIndicator) => !!relatedIndicator.indicator.goals?.length
-  );
+  const hasIndicators =
+    action.indicatorsCount != null && action.indicatorsCount > 0;
+  const hasGoals = action.hasIndicatorsWithGoals === true;
 
   return (
     <IndicatorsDisplay>
