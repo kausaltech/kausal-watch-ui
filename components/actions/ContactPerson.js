@@ -25,6 +25,10 @@ const Person = styled.div`
       border: 4px solid ${(props) => props.theme.brandDark};
     }
   }
+
+  &.leader-no-avatar {
+    border-left: 5px solid ${(props) => props.theme.brandDark};
+  }
 `;
 
 const PersonDetails = styled.div`
@@ -154,21 +158,28 @@ function ContactPerson(props) {
   const t = useTranslations();
   const [collapse, setCollapse] = useState(false);
   const isLeader = leader ? 'leader' : '';
+  const isLeaderNoAvatar =
+    leader && !plan.features.contactPersonsShowPicture
+      ? 'leader-no-avatar'
+      : '';
   const fullName = `${person.firstName} ${person.lastName}`;
   const role = isLeader ? t('contact-person-main') : '';
-
   return (
-    <Person className={isLeader}>
-      <div>
-        <Avatar
-          src={
-            person.avatarUrl ||
-            '/static/themes/default/images/default-avatar-user.png'
-          }
-          className={`rounded-circle ${isLeader}`}
-          alt={`${role} ${fullName}`}
-        />
-      </div>
+    <Person className={`${isLeader} ${isLeaderNoAvatar}`}>
+      {plan.features.contactPersonsShowPicture ? (
+        <div>
+          <Avatar
+            src={
+              person.avatarUrl ||
+              '/static/themes/default/images/default-avatar-user.png'
+            }
+            className={`rounded-circle ${isLeader}`}
+            alt={`${role} ${fullName}`}
+          />
+        </div>
+      ) : (
+        <span className="visually-hidden">{`${role} ${fullName}`}</span>
+      )}
       <PersonDetails>
         <Name>{fullName}</Name>
         <PersonRole>{person.title}</PersonRole>

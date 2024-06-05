@@ -170,6 +170,7 @@ const GET_PLAN_CONTEXT = gql`
       allowPublicSiteLogin
       hasActionContactPersonRoles
       contactPersonsPublicData
+      contactPersonsShowPicture
       contactPersonsShowOrganizationAncestors
       enableSearch
       hasActionIdentifiers
