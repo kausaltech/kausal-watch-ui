@@ -99,6 +99,7 @@ interface CardProps {
   customBackgroundColor?: string;
   children: React.ReactNode;
   outline?: boolean;
+  altText?: string;
 }
 
 const Card = (props: CardProps) => {
@@ -107,6 +108,7 @@ const Card = (props: CardProps) => {
     colorEffect,
     imageAlign = 'center center',
     imageType = 'image',
+    altText,
     customBackgroundColor,
     customColor,
     children,
@@ -133,7 +135,7 @@ const Card = (props: CardProps) => {
             $imageAlign={imageAlign}
             data-testid="image-bg"
             role="img"
-            aria-label={t('image-credit')}
+            aria-label={altText ? altText : t('image-credit')}
           />
         </ImgArea>
       );
