@@ -1,34 +1,45 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
+
 import { gql } from '@apollo/client';
 import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
 
 import { Button, Collapse } from 'reactstrap';
 import Icon from 'components/common/Icon';
 import { usePlan } from 'context/plan';
-import { PlanFeaturesContactPersonsPublicData } from 'common/__generated__/graphql';
+import {
+  PlanContextFragment,
+  PlanFeaturesContactPersonsPublicData,
+} from 'common/__generated__/graphql';
 import { useTranslations } from 'next-intl';
 
-const Person = styled.div`
+const Person = styled.div<{
+  $isLeader: boolean;
+  $withoutAvatar: boolean;
+}>`
   display: flex;
   margin-top: 1em;
   padding-bottom: 1em;
   border-bottom: 2px solid ${(props) => props.theme.themeColors.light};
-
   img {
     border: 2px solid ${(props) => props.theme.themeColors.light};
   }
 
-  &.leader {
-    img {
-      border: 4px solid ${(props) => props.theme.brandDark};
-    }
-  }
+  ${(props) =>
+    props.$isLeader &&
+    css`
+      img {
+        border: 4px solid ${(props) => props.theme.brandDark};
+      }
+    `}
 
-  &.leader-no-avatar {
-    border-left: 5px solid ${(props) => props.theme.brandDark};
-  }
+  ${(props) =>
+    props.$withoutAvatar &&
+    props.$isLeader &&
+    css`
+      border-left: 5px solid ${(props) => props.theme.brandDark};
+    `}
 `;
 
 const PersonDetails = styled.div`
@@ -103,8 +114,12 @@ const GET_CONTACT_DETAILS = gql`
   }
 `;
 
-function ContactDetails(props) {
-  const { id, plan } = props;
+interface ContactDetailsProps {
+  id: string;
+  plan: PlanContextFragment;
+}
+
+function ContactDetails({ id, plan }: ContactDetailsProps) {
   const t = useTranslations();
   const { loading, error, data } = useQuery(GET_CONTACT_DETAILS, {
     variables: { id },
@@ -138,7 +153,7 @@ function ContactDetails(props) {
         orgAncestors.length > 1 && (
           <PersonOrg>
             {orgAncestors.map((item, idx) => (
-              <span key={item.key}>
+              <span key={item.id}>
                 {item.name}
                 {idx < orgAncestors.length - 1 ? ' / ' : ''}
               </span>
@@ -152,20 +167,30 @@ function ContactDetails(props) {
   );
 }
 
-function ContactPerson(props) {
-  const { person, leader = false } = props;
+interface ContactPersonProps {
+  person: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    avatarUrl?: string;
+    title: string;
+    organization?: {
+      name: string;
+    };
+  };
+  leader?: boolean;
+}
+
+function ContactPerson({ person, leader = false }: ContactPersonProps) {
   const plan = usePlan();
   const t = useTranslations();
   const [collapse, setCollapse] = useState(false);
-  const isLeader = leader ? 'leader' : '';
-  const isLeaderNoAvatar =
-    leader && !plan.features.contactPersonsShowPicture
-      ? 'leader-no-avatar'
-      : '';
   const fullName = `${person.firstName} ${person.lastName}`;
-  const role = isLeader ? t('contact-person-main') : '';
+  const role = leader ? t('contact-person-main') : '';
+  const withoutAvatar = !plan.features.contactPersonsShowPicture;
+
   return (
-    <Person className={`${isLeader} ${isLeaderNoAvatar}`}>
+    <Person $isLeader={leader} $withoutAvatar={withoutAvatar}>
       {plan.features.contactPersonsShowPicture ? (
         <div>
           <Avatar
@@ -173,7 +198,7 @@ function ContactPerson(props) {
               person.avatarUrl ||
               '/static/themes/default/images/default-avatar-user.png'
             }
-            className={`rounded-circle ${isLeader}`}
+            className="rounded-circle"
             alt={`${role} ${fullName}`}
           />
         </div>
