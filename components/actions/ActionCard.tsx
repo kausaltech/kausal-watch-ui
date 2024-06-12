@@ -419,7 +419,12 @@ function ActionCard({
             <StyledActionDependencyIconWrapper
               id={getDependencyTooltipId(action.id)}
             >
-              <Icon name="action-dependency" width="24px" height="24px" />
+              <Icon
+                name="action-dependency"
+                width="24px"
+                height="24px"
+                role="presentation"
+              />
             </StyledActionDependencyIconWrapper>
             <StyledTooltip
               target={getDependencyTooltipId(action.id)}

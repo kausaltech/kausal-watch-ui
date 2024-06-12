@@ -1,6 +1,7 @@
 import { Card as BSCard, CardBody } from 'reactstrap';
 import styled from 'styled-components';
 import { transparentize } from 'polished';
+import { useTranslations } from 'next-intl';
 
 const StyledCard = styled(BSCard)<{
   $customColor?: string;
@@ -98,6 +99,7 @@ interface CardProps {
   customBackgroundColor?: string;
   children: React.ReactNode;
   outline?: boolean;
+  altText?: string;
 }
 
 const Card = (props: CardProps) => {
@@ -106,11 +108,13 @@ const Card = (props: CardProps) => {
     colorEffect,
     imageAlign = 'center center',
     imageType = 'image',
+    altText,
     customBackgroundColor,
     customColor,
     children,
     outline,
   } = props;
+  const t = useTranslations();
 
   /*
     Support icon or image as cards main image
@@ -130,6 +134,8 @@ const Card = (props: CardProps) => {
             $background={imageUrl}
             $imageAlign={imageAlign}
             data-testid="image-bg"
+            role="img"
+            aria-label={altText ? altText : t('image-credit')}
           />
         </ImgArea>
       );
