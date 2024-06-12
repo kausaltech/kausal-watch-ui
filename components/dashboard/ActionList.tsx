@@ -443,7 +443,7 @@ const ActionList = (props: ActionListProps) => {
     : plan.primaryActionClassification;
 
   const primaryCatType = cts.find(
-    (ct) => ct.id == primaryActionClassification.id
+    (ct) => ct.id == primaryActionClassification?.id
   );
 
   const filterSections: ActionListFilterSection[] = useMemo(() => {
