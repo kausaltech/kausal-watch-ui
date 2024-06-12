@@ -493,6 +493,7 @@ const ActionList = (props: ActionListProps) => {
   let groupBy = 'category';
   if (
     plan.features.hasActionPrimaryOrgs &&
+    primaryCatType?.identifier &&
     `${getCategoryString(primaryCatType.identifier)}` in activeFilters
   ) {
     groupBy = 'primaryOrg';
