@@ -42,6 +42,7 @@
     "popper.js": "^1.16.1",
     "postinstall-postinstall": "^2.1.0",
     "prop-types": "^15.8.1",
+    "proper-lockfile": "^4.1.2",
     "react": "18.2.0",
     "react-bootstrap-typeahead": "^6.0.0-alpha.11",
     "react-copy-to-clipboard": "^5.1.0",
@@ -143,7 +144,7 @@
   },
   "packageManager": "yarn@3.2.1",
   "optionalDependencies": {
-    "@kausal/themes-private": "^0.4.17"
+    "@kausal/themes-private": "0.5.7"
   },
   "lint-staged": {
     "*.{tsx,ts,js,css,scss,md,json}": "prettier --write"

@@ -3612,10 +3612,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@kausal/themes-private@npm:^0.4.17":
-  version: 0.4.17
-  resolution: "@kausal/themes-private@npm:0.4.17"
-  checksum: 282d8b2136b93b9df26ed255397afccd24d7c46110057b91cca10a57cc930432a71a4ad1ea53ebd5430444c8fc9b3d8b9ced2e5f531d58502d7a8c360be8b7e9
+"@kausal/themes-private@npm:0.5.7":
+  version: 0.5.7
+  resolution: "@kausal/themes-private@npm:0.5.7"
+  checksum: 6674ceb92a9ba56f07ab1e50795a6f8e163c4aeb1929af4dc5f4484f01e9503e4c3565560d559c4f660f01d4e373ac54380105372822ee3e9085905b1005f800
   languageName: node
   linkType: hard
 
@@ -16809,7 +16809,7 @@ __metadata:
     "@kausal/mapboxgl-legend": ^1.7.2
     "@kausal/plotly-custom": ^2.14.3
     "@kausal/themes": ^0.7.15
-    "@kausal/themes-private": ^0.4.17
+    "@kausal/themes-private": 0.5.7
     "@n8tb1t/use-scroll-position": ^2.0.3
     "@next/bundle-analyzer": ^12.1.6
     "@playwright/test": ^1.39.0
@@ -16875,6 +16875,7 @@ __metadata:
     postinstall-postinstall: ^2.1.0
     prettier: ^2.6.2
     prop-types: ^15.8.1
+    proper-lockfile: ^4.1.2
     react: 18.2.0
     react-bootstrap-typeahead: ^6.0.0-alpha.11
     react-color: ^2.19.3
@@ -19843,6 +19844,17 @@ __metadata:
     object-assign: ^4.1.1
     react-is: ^16.13.1
   checksum: c056d3f1c057cb7ff8344c645450e14f088a915d078dcda795041765047fa080d38e5d626560ccaac94a4e16e3aa15f3557c1a9a8d1174530955e992c675e459
+  languageName: node
+  linkType: hard
+
+"proper-lockfile@npm:^4.1.2":
+  version: 4.1.2
+  resolution: "proper-lockfile@npm:4.1.2"
+  dependencies:
+    graceful-fs: ^4.2.4
+    retry: ^0.12.0
+    signal-exit: ^3.0.2
+  checksum: 00078ee6a61c216a56a6140c7d2a98c6c733b3678503002dc073ab8beca5d50ca271de4c85fca13b9b8ee2ff546c36674d1850509b84a04a5d0363bcb8638939
   languageName: node
   linkType: hard
 

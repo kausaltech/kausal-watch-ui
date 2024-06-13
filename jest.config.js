@@ -16,6 +16,7 @@ const customJestConfig = {
     '^@/pages/(.*)$': '<rootDir>/pages/$1',
     '^common/(.*)$': '<rootDir>/common/$1',
     '^context/(.*)$': '<rootDir>/context/$1',
+    '^@/public/static/themes/(.*)$': '<rootDir>/public/static/themes/$1',
   },
   testEnvironment: 'jest-environment-jsdom',
   testMatch: ['**/tests/**/*.test.[jt]s', '**/__tests__/**/*.test.[jt]s'],

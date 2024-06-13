@@ -18,6 +18,7 @@ import { transparentize } from 'polished';
 import { NavigationLink, Link } from 'common/links';
 
 import type { Theme } from '@kausal/themes/types';
+import { getThemeStaticURL } from '@/common/theme';
 import Icon from './Icon';
 import PlanSelector from 'components/plans/PlanSelector';
 import PlanVersionSelector from 'components/versioning/PlanVersionSelector';
@@ -481,7 +482,7 @@ function GlobalNav(props) {
   const OrgLogo = () => {
     const logoElement = theme.navLogoVisible ? (
       <SVG
-        src={theme.themeLogoUrl}
+        src={getThemeStaticURL(theme.themeLogoUrl)}
         title={`${ownerName}, ${siteTitle} ${t('front-page')}`}
         preserveAspectRatio="xMinYMid meet"
       />
