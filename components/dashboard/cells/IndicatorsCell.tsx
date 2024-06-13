@@ -19,16 +19,14 @@ const IndicatorsCell = ({ action }: Props) => {
 
   return (
     <IndicatorsDisplay>
-      <Icon
-        name="tachometer"
+      <Icon.Tachometer
         color={
           hasIndicators ? theme.graphColors.green070 : theme.graphColors.grey030
         }
         height="1.2em"
         width="1.2em"
       />
-      <Icon
-        name="bullseye"
+      <Icon.Bullseye
         color={
           hasGoals ? theme.graphColors.green070 : theme.graphColors.grey030
         }

@@ -95,7 +95,7 @@ function IndicatorCardList(props: IndicatorCardListProps) {
       <Col xs="12" className="mt-5 mb-3">
         <IndicatorListLink>
           <Button color="primary" tag="a">
-            {t('see-all-indicators')} <Icon name="arrowRight" />
+            {t('see-all-indicators')} <Icon.ArrowRight />
           </Button>
         </IndicatorListLink>
       </Col>

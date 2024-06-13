@@ -523,8 +523,7 @@ function SiteFooter(props: SiteFooterProps) {
                     <NavigationLink slug={page.slug} className="parent-item">
                       <>
                         {theme?.navLinkIcons && (
-                          <Icon
-                            name="angleRight"
+                          <Icon.AngleRight
                             color={theme.footerColor}
                             aria-hidden="true"
                             className="me-1"
@@ -543,8 +542,7 @@ function SiteFooter(props: SiteFooterProps) {
                             <NavigationLink slug={childPage.slug}>
                               <>
                                 {theme?.navLinkIcons && (
-                                  <Icon
-                                    name="angleRight"
+                                  <Icon.AngleRight
                                     color={theme.footerColor}
                                     aria-hidden="true"
                                     className="me-1"
@@ -569,8 +567,7 @@ function SiteFooter(props: SiteFooterProps) {
                 {ownerUrl ? (
                   <a href={ownerUrl} target="_blank" rel="noreferrer">
                     {theme?.navLinkIcons && (
-                      <Icon
-                        name="angleRight"
+                      <Icon.AngleRight
                         color={theme.footerColor}
                         aria-hidden="true"
                         className="me-1"
@@ -588,8 +585,7 @@ function SiteFooter(props: SiteFooterProps) {
                 <UtilityItem key={page.id}>
                   <NavigationLink slug={page.url}>
                     {theme?.navLinkIcons && (
-                      <Icon
-                        name="angleRight"
+                      <Icon.AngleRight
                         color={theme.footerColor}
                         aria-hidden="true"
                         className="me-1"
@@ -631,8 +627,7 @@ function SiteFooter(props: SiteFooterProps) {
                   {isAuthLoading ? (
                     <Spinner size="sm" color="light" />
                   ) : (
-                    <Icon
-                      name="lock"
+                    <Icon.Lock
                       color={theme.footerColor}
                       aria-hidden="true"
                       className="me-1"
@@ -645,8 +640,7 @@ function SiteFooter(props: SiteFooterProps) {
             <UtilityItem>
               <TopButton type="button" onClick={scrollToTop}>
                 {t('back-to-top')}{' '}
-                <Icon
-                  name="arrowUp"
+                <Icon.ArrowUp
                   color={theme.footerColor}
                   aria-hidden="true"
                   width="1.25em"

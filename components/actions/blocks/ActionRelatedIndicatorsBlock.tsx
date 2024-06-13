@@ -84,7 +84,7 @@ function ActionIndicator(props) {
           <a>
             <h3>
               {indicator.name}
-              <Icon name="arrowRight" color="" />
+              <Icon.ArrowRight color="" />
             </h3>
           </a>
         </IndicatorLink>

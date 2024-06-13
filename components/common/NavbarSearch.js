@@ -295,13 +295,13 @@ const ResultList = (props) => {
           >
             <a>
               {t('see-all-results', { count: results.length })}
-              <Icon name="arrow-right" />
+              <Icon.ArrowRight />
             </a>
           </Link>
         ) : (
           <Link prefetch={false} href={`/search`} legacyBehavior>
             <a data-testId="search-advanced">
-              {t('search-advanced')} <Icon name="arrow-right" />
+              {t('search-advanced')} <Icon.ArrowRight />
             </a>
           </Link>
         )}
@@ -454,8 +454,7 @@ function Search({ isLoading, searchTerm, setSearchTerm, results }) {
               aria-label={t('search')}
               data-testid="nav-search-btn"
             >
-              <Icon
-                name="search"
+              <Icon.Search
                 width="1.75rem"
                 height="1.75rem"
                 aria-hidden="true"

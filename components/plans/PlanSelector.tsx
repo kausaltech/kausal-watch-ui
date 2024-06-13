@@ -86,7 +86,7 @@ const PlanSelector = () => {
             alt=""
           />
           <PlanTitle>{plan.shortName || plan.name}</PlanTitle>
-          <Icon name="angle-down" />
+          <Icon.AngleDown />
         </StyledDropdownToggle>
         <DropdownMenu>
           {selectablePlans.map(

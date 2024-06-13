@@ -261,8 +261,7 @@ export const IndicatorsTooltipContent = ({ action }: TooltipProps) => {
   return (
     <div>
       <TooltipTitle>{t('indicators')}</TooltipTitle>
-      <Icon
-        name="tachometer"
+      <Icon.Tachometer
         color={
           hasIndicators ? theme.graphColors.green070 : theme.graphColors.grey030
         }
@@ -273,8 +272,7 @@ export const IndicatorsTooltipContent = ({ action }: TooltipProps) => {
         ? ` ${t('indicators')}: ${action.indicatorsCount}`
         : ` ${t('no-defined-indicators')}`}
       <br />
-      <Icon
-        name="bullseye"
+      <Icon.Bullseye
         color={
           hasGoals ? theme.graphColors.green070 : theme.graphColors.grey030
         }

@@ -162,7 +162,7 @@ const LanguageSelector = (props: LanguageSelectorProps) => {
     <LanguageSelectorListItem>
       <Selector inNavbar $mobile={mobile} className={mobile && 'd-md-none'}>
         <StyledDropdownToggle color="link" data-toggle="dropdown" tag="button">
-          <Icon name="globe" width="1.75rem" height="1.75rem" />
+          <Icon.Globe width="1.75rem" height="1.75rem" />
           <CurrentLanguage $mobile={mobile}>{languageCode}</CurrentLanguage>
         </StyledDropdownToggle>
         <StyledDropdownMenu end>

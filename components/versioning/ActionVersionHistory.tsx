@@ -90,12 +90,7 @@ const ActionVersionHistory = ({ action }: Props) => {
         className={isOpen ? 'open' : ''}
       >
         <VersionHistoryTitle>
-          <Icon
-            name="version"
-            className="me-2"
-            width="1.5rem"
-            height="1.5rem"
-          />
+          <Icon.Version className="me-2" width="1.5rem" height="1.5rem" />
           {t('version-history')}
           <Icon name={isOpen ? 'angle-down' : 'angle-right'} />
         </VersionHistoryTitle>

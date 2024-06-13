@@ -62,7 +62,7 @@ const CategoryCardContent = (props: CategoryCardContentProps) => {
         <Link href={category?.categoryPage?.urlPath} legacyBehavior>
           <a>
             {t('read-more')}
-            <Icon name="arrowRight" />
+            <Icon.ArrowRight />
           </a>
         </Link>
       ) : null}

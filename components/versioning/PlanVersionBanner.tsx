@@ -36,12 +36,7 @@ const PlanVersionBanner = (props) => {
   return (
     <AnnouncementBanner>
       <VersionNote>
-        <Icon
-          name="version"
-          className="me-2"
-          width="2.25rem"
-          height="2.25rem"
-        />
+        <Icon.Version className="me-2" width="2.25rem" height="2.25rem" />
         <VersionName>
           {t('version-this-is-old')}
           <br />
@@ -58,12 +53,7 @@ const PlanVersionBanner = (props) => {
             {latestVersion?.versionName || latestVersion?.shortName}
           </LatestVersionName>
         </a>
-        <Icon
-          name="arrow-right"
-          className="ms-2"
-          width="2.25rem"
-          height="2.25rem"
-        />
+        <Icon.ArrowRight className="ms-2" width="2.25rem" height="2.25rem" />
       </LinkToLatestVersion>
     </AnnouncementBanner>
   );

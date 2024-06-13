@@ -60,7 +60,7 @@ const ExpandableFeedbackFormBlock = ({
   return (
     <FeedbackFormSection size={size}>
       <ContactTriggerButton color="link" onClick={toggle}>
-        <Icon name="commenting" width="2rem" height="2rem" />
+        <Icon.Commenting width="2rem" height="2rem" />
         <div>
           <h2>{heading || t('feedback-on-action')}</h2>
           {description || t('feedback-on-action-description')}
