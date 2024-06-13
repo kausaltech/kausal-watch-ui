@@ -25,6 +25,6 @@ export async function loadTheme(themeIdentifier: string): Promise<Theme> {
   }
 }
 
-export function getThemeCSS(themeIdentifier: string) {
-  return `/static/themes/${themeIdentifier}/main.css`;
+export function getThemeStaticURL(path: string) {
+  return `/static/themes/${path}`;
 }

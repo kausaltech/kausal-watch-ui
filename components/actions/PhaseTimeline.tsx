@@ -139,7 +139,11 @@ const StyledPhaseLine = styled.div<{
 `;
 
 const PHASE_CONFIG: {
-  [key in PhaseType]: { icon: string; colorKey: string; textColorKey: string };
+  [key in PhaseType]: {
+    icon: 'circle-full' | 'circle-half' | 'circle-outline';
+    colorKey: string;
+    textColorKey: string;
+  };
 } = {
   done: {
     icon: 'circle-full',
@@ -174,7 +178,6 @@ function getIconFromType(
       return 'angle-right';
     }
   }
-
   if (isCurrent && isCompleted) {
     return 'check-circle';
   }

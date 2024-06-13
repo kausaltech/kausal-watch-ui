@@ -13,6 +13,7 @@ import { usePlan } from '@/context/plan';
 import { signIn, useSession } from 'next-auth/react';
 import Button from './Button';
 import { useHandleSignOut } from '@/utils/auth.utils';
+import { getThemeStaticURL } from '@/common/theme';
 
 const StyledButton = styled(Button)`
   &.btn-link {
@@ -461,7 +462,7 @@ function SiteFooter(props: SiteFooterProps) {
   const OrgLogo = () => {
     return (
       <SVG
-        src={theme.themeLogoWhiteUrl}
+        src={getThemeStaticURL(theme.themeLogoWhiteUrl)}
         preserveAspectRatio="xMinYMid meet"
         title={`${ownerName}, ${siteTitle} ${t('front-page')}`}
         style={{ display: 'block' }}
@@ -709,7 +710,7 @@ function SiteFooter(props: SiteFooterProps) {
                   <FundingInstrumentContainer key={funder.id}>
                     <a href={funder.link} target="_blank" rel="noreferrer">
                       <SVG
-                        src={funder.logo}
+                        src={getThemeStaticURL(funder.logo)}
                         preserveAspectRatio="xMidYMid meet"
                         title={funder.name}
                       />
