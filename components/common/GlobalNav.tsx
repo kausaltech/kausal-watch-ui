@@ -544,9 +544,9 @@ function GlobalNav(props) {
             type="button"
           >
             {isOpen ? (
-              <Icon name="times" color={theme.brandNavColor} />
+              <Icon.Times color={theme.brandNavColor} />
             ) : (
-              <Icon name="bars" color={theme.brandNavColor} />
+              <Icon.Bars color={theme.brandNavColor} />
             )}
           </NavbarToggler>
         </TopNav>
@@ -579,7 +579,7 @@ function GlobalNav(props) {
                         }`}
                       >
                         {homeLink === 'icon' ? (
-                          <Icon name="home" width="1.5rem" height="1.5rem" />
+                          <Icon.Home width="1.5rem" height="1.5rem" />
                         ) : (
                           <span>{t('navigation-home')}</span>
                         )}
@@ -620,8 +620,7 @@ function GlobalNav(props) {
                   <NavLink>
                     <NavigationLink slug="/search" onClick={handleClose}>
                       <NavHighlighter className="highlighter">
-                        <Icon
-                          name="search"
+                        <Icon.Search
                           className="me-2"
                           width="1.75rem"
                           height="1.75rem"

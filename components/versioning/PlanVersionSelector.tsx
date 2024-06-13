@@ -146,7 +146,7 @@ const PlanVersionSelector = (props) => {
             height="1.25rem"
           />
           {activeVersion.versionName}
-          <Icon name="angle-down" />
+          <Icon.AngleDown />
         </StyledDropdownToggle>
         <DropdownMenu>
           <DropdownItem header>{t('versions-list')}</DropdownItem>

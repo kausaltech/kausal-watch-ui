@@ -91,7 +91,7 @@ const Modal = ({ isOpen, onClose, header, helpText, children }: ModalProps) => {
               aria-label={t('close')}
               onClick={() => onClose()}
             >
-              <Icon name="times" />
+              <Icon.Times />
             </CloseButton>
             {children}
           </ModalBody>

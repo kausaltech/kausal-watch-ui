@@ -144,7 +144,7 @@ function ActionCardList(props: ActionCardListProps) {
           <ActionListLink>
             <Button color="primary" tag="a">
               {t('see-all-actions', getActionTermContext(plan) || {})}{' '}
-              <Icon name="arrowRight" />
+              <Icon.ArrowRight />
             </Button>
           </ActionListLink>
         </Col>

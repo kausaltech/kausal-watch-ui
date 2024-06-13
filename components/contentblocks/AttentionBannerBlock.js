@@ -51,7 +51,7 @@ const AttentionBannerBlock = (props) => {
           {buttons.map((button) => (
             <Button key={button.id} href={button.url} color="primary" outline>
               {button.label}
-              <Icon name="arrowRight" color="" />
+              <Icon.ArrowRight color="" />
             </Button>
           ))}
         </AttentionBox>
