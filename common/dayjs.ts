@@ -2,13 +2,14 @@
 
 import dayjs from 'dayjs';
 
+import 'dayjs/locale/de';
+import 'dayjs/locale/el';
+import 'dayjs/locale/en-au';
+import 'dayjs/locale/en-gb';
+import 'dayjs/locale/es';
 import 'dayjs/locale/fi';
 import 'dayjs/locale/sv';
 import 'dayjs/locale/sv-fi';
-import 'dayjs/locale/en-gb';
-import 'dayjs/locale/en-au';
-import 'dayjs/locale/de';
-import 'dayjs/locale/es';
 
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
