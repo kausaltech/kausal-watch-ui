@@ -285,7 +285,11 @@ const ActionStatusTable = (props: Props) => {
                       onClick={sortHandler(columnConfig.headerKey)}
                       className={columnConfig.headerClassName}
                     >
-                      {columnConfig.renderHeader(t, plan, column.columnLabel)}
+                      {columnConfig.renderHeader(
+                        t,
+                        plan,
+                        column.columnLabel || column?.attributeType?.name
+                      )}
                     </SortableTableHeader>
                   );
                 }
@@ -296,7 +300,11 @@ const ActionStatusTable = (props: Props) => {
                     scope="col"
                     className={columnConfig.headerClassName}
                   >
-                    {columnConfig.renderHeader(t, plan, column.columnLabel)}
+                    {columnConfig.renderHeader(
+                      t,
+                      plan,
+                      column.columnLabel || column?.attributeType?.name
+                    )}
                   </th>
                 );
               })}

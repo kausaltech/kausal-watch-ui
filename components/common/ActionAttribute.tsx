@@ -71,12 +71,14 @@ type AttributeContentProps = {
   attribute: AttributesBlockAttributeFragment;
   attributeType: AttributesBlockAttributeTypeFragment;
   fontSize: string;
+  notitle?: boolean;
 };
 
 type AttributeContentNestedTypeProps = {
   attribute: AttributesBlockAttributeWithNestedTypeFragment;
   attributeType: null | undefined;
   fontSize?: string;
+  notitle?: boolean;
 };
 
 const ActionAttribute = (
@@ -84,7 +86,7 @@ const ActionAttribute = (
 ) => {
   const locale = useLocale();
 
-  const { attribute, attributeType, fontSize } = props;
+  const { attribute, attributeType, fontSize, notitle = false } = props;
   const type = attributeType ?? attribute.type;
   let dataElement: ReactElement;
 
@@ -131,7 +133,7 @@ const ActionAttribute = (
       dataElement = <RichText html={attribute.value} />;
       break;
     case 'AttributeNumericValue':
-      const formattedValue = attribute.numericValue.toLocaleString(locale);
+      const formattedValue = attribute.numericValue?.toLocaleString(locale);
 
       dataElement = (
         <div>
@@ -155,12 +157,14 @@ const ActionAttribute = (
   // Render horizontal layout
   return (
     <AttributeContainer $fontSize={fontSize}>
-      <h3>
-        {type.name}
-        {type.helpText && (
-          <PopoverTip content={type.helpText} identifier={type.id} />
-        )}
-      </h3>
+      {!notitle && (
+        <h3>
+          {type.name}
+          {type.helpText && (
+            <PopoverTip content={type.helpText} identifier={type.id} />
+          )}
+        </h3>
+      )}
       {dataElement}
     </AttributeContainer>
   );

@@ -1,4 +1,5 @@
 import { gql } from '@apollo/client';
+import { ATTRIBUTE_TYPE_FRAGMENT } from '../fragments/action-attribute.fragment';
 
 const ACTION_LIST_FILTER = gql`
   fragment ActionListFilter on StreamFieldInterface {
@@ -102,6 +103,15 @@ export const ACTION_TABLE_COLUMN_FRAGMENT = gql`
       ... on ImpactColumnBlock {
         columnLabel
       }
+      ... on FieldColumnBlock {
+        columnLabel
+        field
+        __typename
+        attributeType {
+          ...AttributesBlockAttributeType
+        }
+      }
     }
   }
+  ${ATTRIBUTE_TYPE_FRAGMENT}
 `;
