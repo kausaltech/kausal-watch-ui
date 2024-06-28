@@ -275,12 +275,30 @@ const actionFragment = gql`
       id
       type {
         id
+        identifier
+        name
+        unit {
+          id
+          name
+          shortName
+        }
+        format
       }
       ... on AttributeChoice {
         choice {
           id
           name
         }
+        text
+      }
+      ... on AttributeText {
+        value
+      }
+      ... on AttributeRichText {
+        value
+      }
+      ... on AttributeNumericValue {
+        numericValue: value
       }
     }
     responsibleParties {
