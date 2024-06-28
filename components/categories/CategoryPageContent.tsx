@@ -7,6 +7,7 @@ import { GetContentPageQuery } from 'common/__generated__/graphql';
 import CategoryPageStreamField, {
   checkAttributeHasValueByType,
 } from 'components/common/CategoryPageStreamField';
+import DataTable from '../common/DataTable';
 
 type GeneralPlanPage = NonNullable<GetContentPageQuery['planPage']>;
 
@@ -110,6 +111,7 @@ const CategoryPageContent = ({
               />
             )}
       </MainContent>
+      <DataTable />
 
       {hasAside && (
         <AsideContent>

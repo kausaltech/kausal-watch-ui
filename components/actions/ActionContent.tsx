@@ -36,6 +36,7 @@ import ActionContactPersonsBlock from 'components/actions/blocks/ActionContactPe
 import ActionResponsiblePartiesBlock from 'components/actions/blocks/ActionResponsiblePartiesBlock';
 import ActionScheduleBlock from 'components/actions/blocks/ActionScheduleBlock';
 import ReportComparisonBlock from 'components/actions/blocks/ReportComparisonBlock';
+import ActionMockTableBlock from 'components/actions/blocks/ActionMockTableBlock';
 
 import {
   ActionStatusSummaryIdentifier,
@@ -304,6 +305,10 @@ function ActionContentBlock(props: ActionContentBlockProps) {
       return (
         <ReportComparisonBlock plan={plan} block={block} action={action} />
       );
+    // <DEMO>
+    case 'ActionMockTableBlock':
+      return <ActionMockTableBlock />;
+    // </DEMO>
     default:
       console.error('Unknown action content block', block.__typename);
       return null;
@@ -520,6 +525,24 @@ function ActionContent(props: ActionContentProps) {
       const blocks = actionListPage[section];
       if (!blocks) return null;
 
+      // <DEMO>: Inject ActionMockTableBlock into the action list page.
+      const mockBudgetBlock = {
+        meta: {
+          restricted: false,
+          hidden: false,
+          __typename: 'FieldBlockMetaData',
+        },
+        __typename: 'ActionMockTableBlock',
+        id: 'mock',
+      };
+
+      if (
+        section === 'detailsMainTop' &&
+        !blocks.some((block) => block.id == 'mock')
+      )
+        blocks.push(mockBudgetBlock);
+
+      // </DEMO>
       const allSections: JSX.Element[] = [];
       let previousSectionBlock: undefined | (typeof blocks)[0];
       let groupedBlocks: typeof blocks = [];
