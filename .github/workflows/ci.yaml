@@ -3,10 +3,15 @@ on: push
 
 jobs:
   build:
-    uses: kausaldev/github-actions/.github/workflows/build-nextjs.yaml@main
+    uses: kausaltech/github-actions/.github/workflows/build.yaml@main
     with:
       project_id: watch-ui
-    secrets: inherit
+      project_type: nextjs
+    secrets:
+      SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
   test:
     needs: [build]
@@ -22,11 +27,12 @@ jobs:
 
   deploy:
     needs: [build]
-    uses: kausaldev/github-actions/.github/workflows/deploy.yaml@main
+    uses: kausaltech/github-actions/.github/workflows/deploy.yaml@main
     secrets: inherit
     if: needs.build.outputs.deployment_env
     with:
       docker_image_repo: ${{ needs.build.outputs.image }}
       docker_image_tag: ${{ needs.build.outputs.image_tag }}
       project_id: watch-ui
+      build_id: ${{ needs.build.outputs.build_id }}
       deployment_env: ${{ needs.build.outputs.deployment_env }}

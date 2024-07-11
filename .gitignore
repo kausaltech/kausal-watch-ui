@@ -21,12 +21,13 @@ build-storybook.log
 /.env*
 /Attic/
 /.envrc
-/public/static/themes/
+/public/static/themes
 /.rgignore
 /test-results/
 /playwright-report/
 /playwright/.cache/
 /e2e-tests/*-snapshots/
+/.npm-token
 
 # Sentry Config File
 .sentryclirc

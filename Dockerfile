@@ -21,6 +21,9 @@ RUN \
 
 
 ARG NPM_TOKEN
+ENV NPM_TOKEN=${NPM_TOKEN}
+
+RUN --mount=type=secret,id=NPM_TOKEN
 
 RUN --mount=type=secret,id=NPM_TOKEN --mount=type=cache,target=/npm-cache \
   NPM_TOKEN=$( ([ -f /run/secrets/NPM_TOKEN ] && cat /run/secrets/NPM_TOKEN) || echo -n "${NPM_TOKEN}") \
@@ -39,7 +42,7 @@ ARG NEXTJS_ASSET_PREFIX_PLACEHOLDER=__KAUSAL_ASSET_PREFIX_PLACEHOLDER__
 ENV NEXTJS_ASSET_PREFIX_PLACEHOLDER=${NEXTJS_ASSET_PREFIX_PLACEHOLDER}
 
 ARG BUILD_ID
-ARG SENTRY_PROJECT=watch-ui
+ARG SENTRY_PROJECT
 ARG SENTRY_RELEASE=${SENTRY_PROJECT}@${BUILD_ID}
 ENV BUILD_ID=${BUILD_ID} SENTRY_RELEASE=${SENTRY_RELEASE}
 
@@ -82,35 +85,21 @@ FROM nextjs_base AS final
 RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 nextjs && chown nextjs:nodejs /app
 
 RUN apk update && apk add --no-cache caddy multirun && rm -rf /var/cache/apk
-#RUN --mount=type=cache,target=/npm-cache \
-#  npm install -g pm2
 
 # For non-standalone builds
-#COPY --chown=nextjs:nodejs --from=deps /app/node_modules ./node_modules
-#COPY --chown=nextjs:nodejs --from=builder /app/.next ./.next
-#COPY --exclude=docker --chown=nextjs:nodejs . .
-#COPY --from=builder --chown=nextjs:nodejs /app/ /app/
+# COPY --chown=nextjs:nodejs --from=deps /app/node_modules ./node_modules
+# COPY --chown=nextjs:nodejs --from=builder /app/.next ./.next
+# COPY --chown=nextjs:nodejs --from=builder /app/dist ./dist
+# COPY --exclude=docker --exclude=Dockerfile --chown=nextjs:nodejs . .
+# COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 
 # For standalone builds
 COPY --chown=nextjs:nodejs --from=builder /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 
-#COPY ./docker/entrypoint.sh /entrypoint.sh
 COPY ./docker/start-server.sh /entrypoint.sh
 COPY ./docker/Caddyfile /etc/caddy/
-COPY ./docker/supervisord.conf /etc/
-
-# FIXME: enable below when we start using standalone builds
-# # Copy public assets
-# COPY --from=builder --chown=nextjs:nodejs /app/public ./public
-
-# # Set the correct permission for prerender cache
-# RUN mkdir .next && chown nextjs:nodejs .next
-
-# # Automatically leverage output traces to reduce image size
-# # https://nextjs.org/docs/advanced-features/output-file-tracing
-# COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 
 ARG BUILD_ID
 ARG SENTRY_RELEASE
