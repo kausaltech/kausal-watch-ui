@@ -1,15 +1,26 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { useEffect, useRef, useState } from 'react';
+
 import styled, { useTheme } from 'styled-components';
 import { readableColor } from 'polished';
-import { motion, useAnimation, animate } from 'framer-motion';
+import { motion, animate, useInView, useAnimate } from 'framer-motion';
 
 import dayjs from 'common/dayjs';
 import { IndicatorLink } from 'common/links';
 import Switch from 'components/common/Switch';
 import { useWindowSize } from 'common/hooks/use-window-size';
 import { useLocale, useTranslations } from 'next-intl';
+
+const ProgressBarWrapper = styled.div`
+  a {
+    color: ${({ theme }) => theme.section.indicatorShowcase.color};
+    text-decoration: underline;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+`;
 
 const BarBase = styled.rect``;
 
@@ -97,8 +108,16 @@ const findPrecision = (comparableValues) => {
   return 4;
 };
 
-const ValueGroup = ({ date = '', value, unit, negative, ...rest }) => {
+interface ValueGroup extends SVGTextElement {
+  value: string;
+  unit: string;
+  negative: boolean;
+}
+
+const ValueGroup = (props: ValueGroup) => {
+  const { value, unit, negative, ...rest } = props;
   return (
+    //@ts-expect-error style attribute complex to check
     <text {...rest}>
       <ValueText x="0" dy="16" className={negative ? 'negative' : ''}>
         {value}
@@ -106,12 +125,6 @@ const ValueGroup = ({ date = '', value, unit, negative, ...rest }) => {
       <UnitText className={negative ? 'negative' : ''}> {unit}</UnitText>
     </text>
   );
-};
-
-ValueGroup.propTypes = {
-  date: PropTypes.string,
-  value: PropTypes.string.isRequired,
-  unit: PropTypes.string.isRequired,
 };
 
 function Counter({ from, to, duration, locale, precision }) {
@@ -156,93 +169,116 @@ function useChartWidth() {
   return width;
 }
 
-function IndicatorProgressBar(props) {
-  const { indicator, animate } = props;
+type IndicatorType = {
+  id: string;
+  name: string;
+  unit: {
+    shortName: string;
+  };
+  values: Array<{
+    date: string;
+    value: number;
+  }>;
+  goals: Array<{
+    date: string;
+    value: number;
+  }>;
+};
+
+interface IndicatorProgressBarProps {
+  indicatorId;
+  normalize: boolean;
+  baseValue: {
+    value: number;
+    normalizedValue?: number;
+    date: string;
+  };
+  lastValue: {
+    value: number;
+    normalizedValue?: number;
+    date: string;
+  };
+  goalValue: {
+    value: number;
+    normalizedValue?: number;
+    date: string;
+  };
+  unit: {
+    name: string;
+    normalizedName?: string;
+  };
+  note?: string;
+}
+
+function IndicatorProgressBar(props: IndicatorProgressBarProps) {
+  const {
+    indicatorId,
+    normalize,
+    baseValue,
+    lastValue,
+    goalValue,
+    unit,
+    note,
+  } = props;
 
   const width = useChartWidth();
+  const [scope, animate] = useAnimate();
+  const isInView = useInView(scope, { once: true });
   const [isNormalized, setIsNormalized] = useState(false);
 
-  const populationNormalizer = indicator.common?.normalizations.find(
-    (normalization) => normalization.normalizer.identifier === 'population'
-  );
-
-  const getNormalizedValue = (indicatorValue) => {
-    if (populationNormalizer && indicatorValue.normalizedValues.length > 0) {
-      const normalized = indicatorValue.normalizedValues.find(
-        (normed) => normed.normalizerId === populationNormalizer.normalizer.id
-      );
-      return normalized?.value;
-    } else {
-      return undefined;
-    }
-  };
-
-  const lastGoal = indicator.goals[indicator.goals.length - 1];
-  const firstValue = indicator.values[0];
-  const lastValue = indicator.values[indicator.values.length - 1];
-
-  const canNormalize =
-    getNormalizedValue(firstValue) && getNormalizedValue(lastValue);
-
   useEffect(() => {
-    if (canNormalize) {
+    if (normalize) {
       setIsNormalized(false);
     }
-  }, [canNormalize]);
+  }, [normalize]);
 
   // The bar is built for showing reduction goals
   // we swap the goal and start values if the goal is to increase
   // TODO: enable the viz to handle goals to increase
-  const indicatorId = indicator.id;
-  const startDate = firstValue.date;
-  const startValue =
-    lastGoal.value < firstValue.value
+  const startDate = baseValue.date;
+  const startValue: number =
+    goalValue.value < baseValue.value
       ? isNormalized
-        ? getNormalizedValue(firstValue)
-        : firstValue.value
+        ? baseValue.normalizedValue
+        : baseValue.value
       : isNormalized
-      ? getNormalizedValue(lastGoal)
-      : lastGoal.value;
+      ? goalValue.normalizedValue
+      : goalValue.value;
 
   const latestDate = lastValue.date;
   const latestValue = isNormalized
-    ? getNormalizedValue(lastValue)
+    ? lastValue.normalizedValue
     : lastValue.value;
 
-  const goalDate = lastGoal.date;
-  const goalValue =
-    lastGoal.value < firstValue.value
+  const goalDate = goalValue.date;
+  const goalDisplayValue =
+    goalValue.value < baseValue.value
       ? isNormalized
-        ? getNormalizedValue(lastGoal)
-        : lastGoal.value
+        ? goalValue.normalizedValue
+        : goalValue.value
       : isNormalized
-      ? getNormalizedValue(firstValue)
-      : firstValue.value;
+      ? baseValue.normalizedValue
+      : baseValue.value;
 
-  const minPrecision = findPrecision([startValue, latestValue, goalValue]);
+  const minPrecision = findPrecision([
+    startValue,
+    latestValue,
+    goalDisplayValue,
+  ]);
 
   const roundedValues = {
-    start: startValue.toPrecision(minPrecision),
-    latest: latestValue.toPrecision(minPrecision),
-    goal: goalValue
-      ? goalValue.toPrecision(isNormalized ? minPrecision : 4)
+    start: Number(startValue?.toPrecision(minPrecision)),
+    latest: Number(latestValue?.toPrecision(minPrecision)),
+    goal: goalDisplayValue
+      ? goalDisplayValue.toPrecision(isNormalized ? minPrecision : 4)
       : undefined,
   };
 
-  const unit = isNormalized
-    ? populationNormalizer.unit.shortName
-    : indicator.unit.shortName;
-  const note = indicator.name;
+  const displayUnit = isNormalized ? unit.normalizedName : unit.name;
 
   const theme = useTheme();
   const t = useTranslations();
   const locale = useLocale();
-  const latestBarControls = useAnimation();
-  const reducedSegmentControls = useAnimation();
-  const completedBarControls = useAnimation();
-  const latestValueControls = useAnimation();
-  const latestSegmentControls = useAnimation();
-  const latestSegmentTickControls = useAnimation();
 
   const barHeight = 30;
   const barMargin = 8;
@@ -261,9 +297,8 @@ function IndicatorProgressBar(props) {
   };
   //const hasStartValue = Math.abs(startValue - latestValue)/latestValue > 0.01;
   const hasStartValue = true;
-  const showReduction = latestValue / roundedValues.start < 0.9; // show reduction if change is more than 20%
+  const showReduction = true; // show reduction if change is more than 20%
 
-  // const animatedLatestValue = useSpring({ latest: latestValue, from: { latest: startValue } });
   // For simplicity, currently only supports indicators
   // where the goal is towards reduction of a value
   // TODO: catch possible edge cases
@@ -286,94 +321,111 @@ function IndicatorProgressBar(props) {
 
   const reductionCounterFrom = 0;
   const reductionCounterTo = roundedValues.start - roundedValues.latest;
-  const reductionCounterDuration = showReduction ? 3 : 0;
+  // Animation length relative to animated bar length
+  const reductionCounterDuration = showReduction
+    ? 10 * (latestBar.x / bars.w)
+    : 0;
 
   useEffect(() => {
-    latestBarControls.set({
-      x: 0,
-      width: bars.w,
-    });
-    reducedSegmentControls.set({
-      x1: 0,
-      x2: 0,
-    });
-    latestSegmentTickControls.set({
-      x1: 0,
-      x2: 0,
-    });
-    latestSegmentControls.set({
-      x1: 14,
-    });
-    latestValueControls.set({
-      opacity: 0,
-    });
-    completedBarControls.set({
-      opacity: 0,
-    });
-  });
-
-  useEffect(() => {
-    const sequenceOn = async () => {
-      await Promise.all([
-        latestBarControls.start({
-          x: bars.w - roundedValues.latest * scale,
-          width: roundedValues.latest * scale,
-          transition: { duration: reductionCounterDuration },
-        }),
-        reducedSegmentControls.start({
-          x1: 0,
-          x2: latestBar.x - 14,
-          transition: { duration: reductionCounterDuration },
-        }),
-        latestSegmentTickControls.start({
+    const sequence = [
+      [
+        '.latest-text',
+        {
+          opacity: 0,
+        },
+        { duration: 0 },
+      ],
+      [
+        '.latest-bar',
+        {
+          opacity: 1,
+        },
+        { duration: 0 },
+      ],
+      [
+        '.latest-content > text',
+        {
+          opacity: 0,
+        },
+        { duration: 0 },
+      ],
+      [
+        '.start-bar',
+        {
+          attrX: bars.w - roundedValues.start * scale,
+          width: roundedValues.start * scale,
+        },
+        { duration: reductionCounterDuration },
+      ],
+      [
+        '.completed-line',
+        {
+          x1: latestBar.x > 14 ? 0 : latestBar.x - 14,
+          x2: latestBar.x - 13,
+        },
+        { at: 0, duration: reductionCounterDuration },
+      ],
+      [
+        '.latest-bar',
+        {
+          attrX: bars.w - roundedValues.latest * scale,
+          width: latestBar.w,
+        },
+        { at: 0, duration: reductionCounterDuration },
+      ],
+      [
+        '.latest-line',
+        {
+          x1: latestBar.x + 1,
+        },
+        { at: 0, duration: reductionCounterDuration },
+      ],
+      [
+        '.latest-content > line',
+        {
           x1: latestBar.x + 1,
           x2: latestBar.x + 1,
-          transition: { duration: reductionCounterDuration },
-        }),
-        latestSegmentControls.start({
-          x1: latestBar.x + 1,
-          transition: { duration: reductionCounterDuration },
-        }),
-      ]);
-      await latestValueControls.start({
-        opacity: 1,
-        transition: { duration: 1 },
-      });
-      await completedBarControls.start({
-        opacity: 1,
-        transition: { duration: 1 },
-      });
-    };
-
-    if (animate) {
-      sequenceOn();
+        },
+        { at: 0, duration: reductionCounterDuration },
+      ],
+      [
+        '.latest-content > text',
+        {
+          opacity: 1,
+        },
+        { duration: 1 },
+      ],
+      [
+        '.latest-text',
+        {
+          translateX: spaceTextBlock(bars.w - latestBar.w, ['.reduced-text']),
+          translateY: segmentsY + barMargin * 3,
+        },
+        { duration: 0 },
+      ],
+      [
+        '.latest-text',
+        {
+          opacity: 1,
+        },
+        { duration: 1 },
+      ],
+    ];
+    if (isInView) {
+      animate(sequence);
     }
-  }, [
-    animate,
-    bars.w,
-    completedBarControls,
-    isNormalized,
-    latestBar.x,
-    latestBarControls,
-    latestSegmentControls,
-    latestSegmentTickControls,
-    latestValueControls,
-    reducedSegmentControls,
-    reductionCounterDuration,
-    roundedValues.latest,
-    scale,
-  ]);
+  }, [isInView, isNormalized]);
 
   const graphValues = {
     name: note,
     startYear: dayjs(startDate).format('YYYY'),
     latestYear: dayjs(latestDate).format('YYYY'),
     goalYear: dayjs(goalDate).format('YYYY'),
-    startValue: `${roundedValues.start} ${unit}`,
-    latestValue: `${roundedValues.latest} ${unit}`,
-    goalValue: `${roundedValues.goal} ${unit}`,
-    reduced: `${reductionCounterTo.toFixed(1)} ${unit}`,
-    toBeReduced: `${roundedValues.latest - roundedValues.goal} ${unit}`,
+    startValue: `${roundedValues.start} ${displayUnit}`,
+    latestValue: `${roundedValues.latest} ${displayUnit}`,
+    goalValue: `${roundedValues.goal} ${displayUnit}`,
+    reduced: `${reductionCounterTo.toFixed(1)} ${displayUnit}`,
+    toBeReduced: `${roundedValues.latest - roundedValues.goal} ${displayUnit}`,
   };
   /*
     On the year {{startYear}} {{name}} was {{startValue}}.
@@ -383,9 +435,21 @@ function IndicatorProgressBar(props) {
     {{toBeReduced}} still needs to be reduced before the year {{goalYear}}.;
   */
 
+  const spaceTextBlock = (intendedX, elementsToCheck) => {
+    const isServer = typeof window === 'undefined';
+    const margin = 12;
+    if (isServer) return intendedX;
+    const widthOfBlockingElements = elementsToCheck
+      .map((el) => document.querySelector(el)?.getBBox().width)
+      .reduce((a, b) => a + b, 0);
+    if (intendedX < widthOfBlockingElements)
+      return widthOfBlockingElements + margin * elementsToCheck.length;
+    else return intendedX;
+  };
+
   return (
-    <div>
-      {canNormalize && (
+    <ProgressBarWrapper>
+      {normalize && (
         <NormalizerChooser>
           <Switch
             label={t('indicator-normalize-per-capita')}
@@ -396,8 +460,7 @@ function IndicatorProgressBar(props) {
         </NormalizerChooser>
       )}
       <IndicatorLink id={indicatorId}>
-        <LinkedIndicator>
-          <span>{animate}</span>
+        <LinkedIndicator ref={scope}>
           <svg viewBox={`0 0 ${canvas.w} ${canvas.h}`}>
             <title>{t('indicator-progress-bar', graphValues)}</title>
             <defs>
@@ -428,17 +491,19 @@ function IndicatorProgressBar(props) {
             {hasStartValue && (
               <>
                 <motion.rect
-                  initial={{ width: 0 }}
-                  animate={{ width: startBar.w }}
-                  x={startBar.x}
+                  className="start-bar"
+                  width={bars.w}
                   y={startBar.y}
+                  attrX={0}
                   height={barHeight - barMargin}
                   fill={startColor}
                 />
-                <motion.line
-                  animate={reducedSegmentControls}
+                <line
+                  className="completed-line"
                   y1={segmentsY}
                   y2={segmentsY}
+                  x1={-15}
+                  x2={-14}
                   stroke={startColor}
                   strokeWidth="2"
                   markerEnd="url(#reducedArrow)"
@@ -456,7 +521,7 @@ function IndicatorProgressBar(props) {
                   transform={`translate(${startBar.x + 4} 0)`}
                   date={graphValues.startYear}
                   value={formatValue(roundedValues.start, locale)}
-                  unit={unit}
+                  unit={displayUnit}
                   locale={locale}
                   negative={
                     readableColor(
@@ -468,10 +533,9 @@ function IndicatorProgressBar(props) {
                 />
                 {showReduction && (
                   <text
-                    transform={`translate(${(bars.w - latestBar.w) / 2} ${
-                      segmentsY + barMargin * 3
-                    })`}
-                    textAnchor="middle"
+                    className="reduced-text"
+                    transform={`translate(0 ${segmentsY + barMargin * 3})`}
+                    textAnchor="left"
                   >
                     <SegmentHeader>{t('reduced')}</SegmentHeader>
                     <SegmentValue x="0" dy="16">
@@ -482,7 +546,7 @@ function IndicatorProgressBar(props) {
                         locale={locale}
                         precision={minPrecision}
                       />{' '}
-                      {unit}
+                      {displayUnit}
                     </SegmentValue>
                   </text>
                 )}
@@ -490,15 +554,19 @@ function IndicatorProgressBar(props) {
             )}
             {/* pending from goal bar */}
             <motion.rect
-              animate={latestBarControls}
+              className="latest-bar"
               y={latestBar.y}
+              attrX="0"
+              width={bars.w}
               height={barHeight - barMargin}
+              opacity={0}
               fill={latestColor}
             />
             {goalValue && (
-              <motion.line
-                animate={hasStartValue && latestSegmentControls}
+              <line
+                className="latest-line"
                 y1={segmentsY}
+                x1={0}
                 x2={goalBar.x - 14}
                 y2={segmentsY}
                 stroke={latestColor}
@@ -506,10 +574,10 @@ function IndicatorProgressBar(props) {
                 markerEnd="url(#toBeReducedArrow)"
               />
             )}
-            <motion.g animate={hasStartValue && latestValueControls}>
+            <g className="latest-content">
               <line
-                x1={latestBar.x + 1}
-                x2={latestBar.x + 1}
+                x1={0}
+                x2={0}
                 y1={latestBar.y}
                 y2={segmentsY}
                 stroke={latestColor}
@@ -518,9 +586,10 @@ function IndicatorProgressBar(props) {
               />
               <ValueGroup
                 transform={`translate(${latestBar.x + 4} ${latestBar.y})`}
+                opacity={0}
                 date={graphValues.latestYear}
                 value={formatValue(roundedValues.latest, locale)}
-                unit={unit}
+                unit={displayUnit}
                 locale={locale}
                 negative={
                   readableColor(
@@ -530,18 +599,18 @@ function IndicatorProgressBar(props) {
                   ) === theme.themeColors.white
                 }
               />
-            </motion.g>
+            </g>
             <motion.text
-              animate={hasStartValue && completedBarControls}
-              transform={`translate(${bars.w - (latestBar.w + goalBar.w) / 2} ${
-                segmentsY + barMargin * 3
-              })`}
-              textAnchor="middle"
+              className="latest-text"
+              translateX={bars.w - latestBar.w}
+              translateY={segmentsY + barMargin * 3}
+              textAnchor="left"
+              opacity={0}
             >
               <SegmentHeader>{t('to-reduce')}</SegmentHeader>
               <SegmentValue x="0" dy="16">
                 {formatValue(roundedValues.latest - roundedValues.goal, locale)}{' '}
-                {unit}
+                {displayUnit}
               </SegmentValue>
             </motion.text>
             {/* Goal bar */}
@@ -580,7 +649,7 @@ function IndicatorProgressBar(props) {
               } ${goalBar.y})`}
               date={graphValues.goalYear}
               value={formatValue(roundedValues.goal, locale)}
-              unit={unit}
+              unit={displayUnit}
               locale={locale}
               negative={
                 readableColor(
@@ -591,10 +660,11 @@ function IndicatorProgressBar(props) {
               }
             />
             <text
-              transform={`translate(${goalBar.x + goalBar.w / 2} ${
-                segmentsY + barMargin * 3
-              })`}
-              textAnchor="middle"
+              transform={`translate(${spaceTextBlock(goalBar.x, [
+                '.reduced-text',
+                '.latest-text',
+              ])} ${segmentsY + barMargin * 3})`}
+              textAnchor="left"
             >
               <SegmentHeader>{t('bar-goal')}</SegmentHeader>
               <SegmentValue></SegmentValue>
@@ -635,34 +705,13 @@ function IndicatorProgressBar(props) {
               </text>
             )}
           </svg>
-          <SourceLink className="text-end mt-3">{note}</SourceLink>
+          <SourceLink role="button" tabindex="0" className="text-end mt-3">
+            {note}
+          </SourceLink>
         </LinkedIndicator>
       </IndicatorLink>
-    </div>
+    </ProgressBarWrapper>
   );
 }
-
-IndicatorProgressBar.propTypes = {
-  indicator: PropTypes.shape({
-    id: PropTypes.string,
-    name: PropTypes.string,
-    unit: PropTypes.shape({
-      shortName: PropTypes.string,
-    }),
-    values: PropTypes.arrayOf(
-      PropTypes.shape({
-        date: PropTypes.string,
-        value: PropTypes.number,
-      })
-    ),
-    goals: PropTypes.arrayOf(
-      PropTypes.shape({
-        date: PropTypes.string,
-        value: PropTypes.number,
-      })
-    ),
-  }),
-  animate: PropTypes.bool,
-};
 
 export default IndicatorProgressBar;

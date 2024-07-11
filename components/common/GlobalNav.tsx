@@ -18,6 +18,7 @@ import { transparentize } from 'polished';
 import { NavigationLink, Link } from 'common/links';
 
 import type { Theme } from '@kausal/themes/types';
+import { getThemeStaticURL } from '@/common/theme';
 import Icon from './Icon';
 import PlanSelector from 'components/plans/PlanSelector';
 import PlanVersionSelector from 'components/versioning/PlanVersionSelector';
@@ -342,7 +343,7 @@ function DropdownList(props) {
   const { parentName, items, active = false, onClickLink } = props;
   return (
     <StyledDropdown nav inNavbar className={active && 'active'}>
-      <StyledDropdownToggle nav caret>
+      <StyledDropdownToggle nav caret role="button">
         <NavHighlighter className={`highlighter ${active && 'active'}`}>
           {parentName}
         </NavHighlighter>
@@ -481,7 +482,7 @@ function GlobalNav(props) {
   const OrgLogo = () => {
     const logoElement = theme.navLogoVisible ? (
       <SVG
-        src={theme.themeLogoUrl}
+        src={getThemeStaticURL(theme.themeLogoUrl)}
         title={`${ownerName}, ${siteTitle} ${t('front-page')}`}
         preserveAspectRatio="xMinYMid meet"
       />
@@ -543,9 +544,9 @@ function GlobalNav(props) {
             type="button"
           >
             {isOpen ? (
-              <Icon name="times" color={theme.brandNavColor} />
+              <Icon.Times color={theme.brandNavColor} />
             ) : (
-              <Icon name="bars" color={theme.brandNavColor} />
+              <Icon.Bars color={theme.brandNavColor} />
             )}
           </NavbarToggler>
         </TopNav>
@@ -578,7 +579,7 @@ function GlobalNav(props) {
                         }`}
                       >
                         {homeLink === 'icon' ? (
-                          <Icon name="home" width="1.5rem" height="1.5rem" />
+                          <Icon.Home width="1.5rem" height="1.5rem" />
                         ) : (
                           <span>{t('navigation-home')}</span>
                         )}
@@ -619,8 +620,7 @@ function GlobalNav(props) {
                   <NavLink>
                     <NavigationLink slug="/search" onClick={handleClose}>
                       <NavHighlighter className="highlighter">
-                        <Icon
-                          name="search"
+                        <Icon.Search
                           className="me-2"
                           width="1.75rem"
                           height="1.75rem"

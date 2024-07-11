@@ -325,22 +325,8 @@ const actionFragment = gql`
         viewUrl
       }
     }
-    indicators {
-      id
-      goals {
-        id
-      }
-    }
-    relatedIndicators {
-      id
-      indicatesActionProgress
-      indicator {
-        id
-        goals {
-          id
-        }
-      }
-    }
+    indicatorsCount
+    hasIndicatorsWithGoals
   }
 `;
 
@@ -457,7 +443,7 @@ const ActionList = (props: ActionListProps) => {
     : plan.primaryActionClassification;
 
   const primaryCatType = cts.find(
-    (ct) => ct.id == primaryActionClassification.id
+    (ct) => ct.id == primaryActionClassification?.id
   );
 
   const filterSections: ActionListFilterSection[] = useMemo(() => {
@@ -507,6 +493,7 @@ const ActionList = (props: ActionListProps) => {
   let groupBy = 'category';
   if (
     plan.features.hasActionPrimaryOrgs &&
+    primaryCatType?.identifier &&
     `${getCategoryString(primaryCatType.identifier)}` in activeFilters
   ) {
     groupBy = 'primaryOrg';

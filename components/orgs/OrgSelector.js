@@ -70,7 +70,7 @@ const OrgSelector = (props) => {
         <StyledDropdownToggle data-toggle="dropdown" tag="button">
           <OrgAvatar src={activeOrg.image} alt="" />
           <OrgTitle>{activeOrg.shortName}</OrgTitle>
-          <Icon name="angle-down" />
+          <Icon.AngleDown />
         </StyledDropdownToggle>
         <DropdownMenu role="menu">
           <DropdownContent>

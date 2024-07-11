@@ -184,6 +184,7 @@ const CategoryListBlock = (props: CategoryListBlockProps) => {
                           imageAlign={getCardImage(cat).alignment}
                           imageType={getCardImage(cat).type}
                           colorEffect={cat.color ?? undefined}
+                          altText={cat.image?.altText}
                         >
                           <div>
                             <CardHeader className="card-title">

@@ -391,11 +391,24 @@ function IndicatorGraph(props: IndicatorGraphProps) {
   const categoryCount =
     specification.axes.length > 0 ? specification.axes[0][1] : 0;
   let styleCount = null;
+  const xAxisIsUsedForCategories =
+    specification.axes[0] != null &&
+    specification.axes[0][0] === 'categories' &&
+    specification.dimensions[0] != null;
   if (comparisonAxis.length > 0) {
     styleCount = comparisonAxis[0][1] + 1;
     isComparison = true;
   } else if (!hasTimeDimension && !subplotsNeeded) {
-    styleCount = specification.dimensions[0].categories.length;
+    if (categoryCount > 1 || xAxisIsUsedForCategories) {
+      /* We want to use colors (styles) for categories, either because
+       * that's the only available visual distinguishing mark for
+       * categories (categoryCount > 1), or in addition to using the x
+       * axis for categories, for added visual effect
+       */
+      styleCount = specification.dimensions[0]?.categories?.length ?? 1;
+    } else {
+      styleCount = 1;
+    }
   }
   if (!hasTimeDimension) {
     // For bar graphs, the red color looks too heavy.

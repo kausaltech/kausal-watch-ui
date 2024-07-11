@@ -176,6 +176,7 @@ export type Action = {
   editUrl?: Maybe<Scalars['String']>;
   /** The date when implementation of this action ends */
   endDate?: Maybe<Scalars['Date']>;
+  hasIndicatorsWithGoals?: Maybe<Scalars['Boolean']>;
   id: Scalars['ID'];
   /** The identifier for this action (e.g. number) */
   identifier: Scalars['String'];
@@ -185,6 +186,7 @@ export type Action = {
   impactGroups: Array<ImpactGroupAction>;
   implementationPhase?: Maybe<ActionImplementationPhase>;
   indicators: Array<Indicator>;
+  indicatorsCount?: Maybe<Scalars['Int']>;
   leadParagraph: Scalars['String'];
   links: Array<ActionLink>;
   /** Describe the reason why this action has has this status */
@@ -3018,6 +3020,7 @@ export type Plan = PlanInterface & {
   features: PlanFeatures;
   footer?: Maybe<Footer>;
   generalContent: SiteGeneralContent;
+  hasIndicatorRelationships?: Maybe<Scalars['Boolean']>;
   hideActionIdentifiers?: Maybe<Scalars['Boolean']>;
   hideActionLeadParagraph?: Maybe<Scalars['Boolean']>;
   hideActionOfficialName?: Maybe<Scalars['Boolean']>;
@@ -3181,6 +3184,8 @@ export type PlanFeatures = {
   contactPersonsPublicData: PlanFeaturesContactPersonsPublicData;
   /** When displaying a contact person's contact details, should the contact person's organization be displayed along with all its ancestors? */
   contactPersonsShowOrganizationAncestors: Scalars['Boolean'];
+  /** Should profile pictures be shown for contact persons in the public UI? */
+  contactPersonsShowPicture: Scalars['Boolean'];
   /** Set to enable comparing indicators between organizations */
   enableIndicatorComparison: Scalars['Boolean'];
   enableModerationWorkflow?: Maybe<Scalars['Boolean']>;
@@ -4517,7 +4522,7 @@ export type GetActionListQueryVariables = Exact<{
 
 export type GetActionListQuery = (
   { planActions?: Array<(
-    { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, completion?: number | null, image?: (
+    { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, scheduleContinuous: boolean, completion?: number | null, image?: (
       { id: string, rendition?: (
         { id: string, width: number, height: number, src: string, alt: string }
         & { __typename?: 'ImageRendition' }
@@ -4689,7 +4694,7 @@ export type GetActionListForBlockQueryVariables = Exact<{
 
 export type GetActionListForBlockQuery = (
   { planActions?: Array<(
-    { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, completion?: number | null, status?: (
+    { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, scheduleContinuous: boolean, completion?: number | null, status?: (
       { id: string, identifier: string, name: string, color?: string | null }
       & { __typename?: 'ActionStatus' }
     ) | null, dependencyRole?: (
@@ -4871,7 +4876,7 @@ export type PlanFragmentFragment = (
 );
 
 export type ActionFragmentFragment = (
-  { id: string, identifier: string, name: string, viewUrl?: string, color?: string | null, manualStatusReason?: string | null, completion?: number | null, officialName?: string | null, updatedAt: any, scheduleContinuous: boolean, startDate?: any | null, endDate?: any | null, order: number, dependencyRole?: (
+  { id: string, identifier: string, name: string, viewUrl?: string, color?: string | null, manualStatusReason?: string | null, completion?: number | null, officialName?: string | null, updatedAt: any, scheduleContinuous: boolean, startDate?: any | null, endDate?: any | null, order: number, indicatorsCount?: number | null, hasIndicatorsWithGoals?: boolean | null, dependencyRole?: (
     { id: string, name: string }
     & { __typename?: 'ActionDependencyRole' }
   ) | null, allDependencyRelationships: Array<(
@@ -4964,22 +4969,7 @@ export type ActionFragmentFragment = (
       & { __typename?: 'Plan' }
     ) }
     & { __typename?: 'Action' }
-  ) | null, indicators: Array<(
-    { id: string, goals?: Array<(
-      { id: string }
-      & { __typename?: 'IndicatorGoal' }
-    ) | null> | null }
-    & { __typename?: 'Indicator' }
-  )>, relatedIndicators: Array<(
-    { id: string, indicatesActionProgress: boolean, indicator: (
-      { id: string, goals?: Array<(
-        { id: string }
-        & { __typename?: 'IndicatorGoal' }
-      ) | null> | null }
-      & { __typename?: 'Indicator' }
-    ) }
-    & { __typename?: 'ActionIndicator' }
-  )> }
+  ) | null }
   & { __typename?: 'Action' }
 );
 
@@ -5034,7 +5024,7 @@ export type DashboardActionListQuery = (
     ) | null> }
     & { __typename?: 'Plan' }
   ) | null, planActions?: Array<(
-    { id: string, identifier: string, name: string, viewUrl?: string, color?: string | null, manualStatusReason?: string | null, completion?: number | null, officialName?: string | null, updatedAt: any, scheduleContinuous: boolean, startDate?: any | null, endDate?: any | null, order: number, dependencyRole?: (
+    { id: string, identifier: string, name: string, viewUrl?: string, color?: string | null, manualStatusReason?: string | null, completion?: number | null, officialName?: string | null, updatedAt: any, scheduleContinuous: boolean, startDate?: any | null, endDate?: any | null, order: number, indicatorsCount?: number | null, hasIndicatorsWithGoals?: boolean | null, dependencyRole?: (
       { id: string, name: string }
       & { __typename?: 'ActionDependencyRole' }
     ) | null, allDependencyRelationships: Array<(
@@ -5127,25 +5117,10 @@ export type DashboardActionListQuery = (
         & { __typename?: 'Plan' }
       ) }
       & { __typename?: 'Action' }
-    ) | null, indicators: Array<(
-      { id: string, goals?: Array<(
-        { id: string }
-        & { __typename?: 'IndicatorGoal' }
-      ) | null> | null }
-      & { __typename?: 'Indicator' }
-    )>, relatedIndicators: Array<(
-      { id: string, indicatesActionProgress: boolean, indicator: (
-        { id: string, goals?: Array<(
-          { id: string }
-          & { __typename?: 'IndicatorGoal' }
-        ) | null> | null }
-        & { __typename?: 'Indicator' }
-      ) }
-      & { __typename?: 'ActionIndicator' }
-    )> }
+    ) | null }
     & { __typename?: 'Action' }
   )> | null, relatedPlanActions?: Array<(
-    { id: string, identifier: string, name: string, viewUrl?: string, color?: string | null, manualStatusReason?: string | null, completion?: number | null, officialName?: string | null, updatedAt: any, scheduleContinuous: boolean, startDate?: any | null, endDate?: any | null, order: number, dependencyRole?: (
+    { id: string, identifier: string, name: string, viewUrl?: string, color?: string | null, manualStatusReason?: string | null, completion?: number | null, officialName?: string | null, updatedAt: any, scheduleContinuous: boolean, startDate?: any | null, endDate?: any | null, order: number, indicatorsCount?: number | null, hasIndicatorsWithGoals?: boolean | null, dependencyRole?: (
       { id: string, name: string }
       & { __typename?: 'ActionDependencyRole' }
     ) | null, allDependencyRelationships: Array<(
@@ -5238,22 +5213,7 @@ export type DashboardActionListQuery = (
         & { __typename?: 'Plan' }
       ) }
       & { __typename?: 'Action' }
-    ) | null, indicators: Array<(
-      { id: string, goals?: Array<(
-        { id: string }
-        & { __typename?: 'IndicatorGoal' }
-      ) | null> | null }
-      & { __typename?: 'Indicator' }
-    )>, relatedIndicators: Array<(
-      { id: string, indicatesActionProgress: boolean, indicator: (
-        { id: string, goals?: Array<(
-          { id: string }
-          & { __typename?: 'IndicatorGoal' }
-        ) | null> | null }
-        & { __typename?: 'Indicator' }
-      ) }
-      & { __typename?: 'ActionIndicator' }
-    )> }
+    ) | null }
     & { __typename?: 'Action' }
   )> | null, planPage?: { __typename: 'AccessibilityStatementPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PrivacyPolicyPage' | 'StaticPage' } | (
     { dashboardColumns?: Array<(
@@ -5409,7 +5369,7 @@ export type IndicatorListQueryVariables = Exact<{
 
 export type IndicatorListQuery = (
   { plan?: (
-    { id: string, features: (
+    { id: string, hasIndicatorRelationships?: boolean | null, features: (
       { hasActionPrimaryOrgs: boolean }
       & { __typename?: 'PlanFeatures' }
     ), indicatorLevels: Array<(
@@ -5466,16 +5426,7 @@ export type IndicatorListQuery = (
     )> }
     & { __typename?: 'Plan' }
   ) | null, planIndicators?: Array<(
-    { id: string, relatedCauses: Array<(
-      { id: string, effectType: RelatedIndicatorEffectType, causalIndicator: (
-        { id: string }
-        & { __typename?: 'Indicator' }
-      ), effectIndicator: (
-        { id: string }
-        & { __typename?: 'Indicator' }
-      ) }
-      & { __typename?: 'RelatedIndicator' }
-    )>, common?: (
+    { id: string, common?: (
       { id: string, name: string, indicators: Array<(
         { id: string, organization: (
           { name: string }
@@ -6077,7 +6028,7 @@ type AttributesBlockAttributeWithNestedType_AttributeRichText_AttributeText_Frag
 export type AttributesBlockAttributeWithNestedTypeFragment = AttributesBlockAttributeWithNestedType_AttributeCategoryChoice_Fragment | AttributesBlockAttributeWithNestedType_AttributeChoice_Fragment | AttributesBlockAttributeWithNestedType_AttributeNumericValue_Fragment | AttributesBlockAttributeWithNestedType_AttributeRichText_AttributeText_Fragment;
 
 export type ActionCardFragment = (
-  { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, completion?: number | null, status?: (
+  { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, scheduleContinuous: boolean, completion?: number | null, status?: (
     { id: string, identifier: string, name: string, color?: string | null }
     & { __typename?: 'ActionStatus' }
   ) | null, dependencyRole?: (
@@ -7225,7 +7176,7 @@ export type GetActionDetailsQuery = (
       ) }
       & { __typename?: 'ActionIndicator' }
     )>, relatedActions: Array<(
-      { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, completion?: number | null, status?: (
+      { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, scheduleContinuous: boolean, completion?: number | null, status?: (
         { id: string, identifier: string, name: string, color?: string | null }
         & { __typename?: 'ActionStatus' }
       ) | null, dependencyRole?: (
@@ -7285,7 +7236,7 @@ export type GetActionDetailsQuery = (
       ) }
       & { __typename?: 'Action' }
     ) | null, supersededBy?: (
-      { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, completion?: number | null, status?: (
+      { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, scheduleContinuous: boolean, completion?: number | null, status?: (
         { id: string, identifier: string, name: string, color?: string | null }
         & { __typename?: 'ActionStatus' }
       ) | null, dependencyRole?: (
@@ -7339,7 +7290,7 @@ export type GetActionDetailsQuery = (
       ) }
       & { __typename?: 'Action' }
     ) | null, supersededActions: Array<(
-      { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, completion?: number | null, status?: (
+      { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, scheduleContinuous: boolean, completion?: number | null, status?: (
         { id: string, identifier: string, name: string, color?: string | null }
         & { __typename?: 'ActionStatus' }
       ) | null, dependencyRole?: (
@@ -7595,7 +7546,7 @@ export type GetActionDetailsQuery = (
       & { __typename?: 'ActionDependencyRole' }
     ) | null, allDependencyRelationships: Array<(
       { preceding: (
-        { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, completion?: number | null, status?: (
+        { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, scheduleContinuous: boolean, completion?: number | null, status?: (
           { id: string, identifier: string, name: string, color?: string | null }
           & { __typename?: 'ActionStatus' }
         ) | null, dependencyRole?: (
@@ -7649,7 +7600,7 @@ export type GetActionDetailsQuery = (
         ) }
         & { __typename?: 'Action' }
       ), dependent: (
-        { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, completion?: number | null, status?: (
+        { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, scheduleContinuous: boolean, completion?: number | null, status?: (
           { id: string, identifier: string, name: string, color?: string | null }
           & { __typename?: 'ActionStatus' }
         ) | null, dependencyRole?: (
@@ -8781,7 +8732,7 @@ export type ActionDependenciesFragment = (
     & { __typename?: 'ActionDependencyRole' }
   ) | null, allDependencyRelationships: Array<(
     { preceding: (
-      { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, completion?: number | null, status?: (
+      { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, scheduleContinuous: boolean, completion?: number | null, status?: (
         { id: string, identifier: string, name: string, color?: string | null }
         & { __typename?: 'ActionStatus' }
       ) | null, dependencyRole?: (
@@ -8835,7 +8786,7 @@ export type ActionDependenciesFragment = (
       ) }
       & { __typename?: 'Action' }
     ), dependent: (
-      { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, completion?: number | null, status?: (
+      { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, scheduleContinuous: boolean, completion?: number | null, status?: (
         { id: string, identifier: string, name: string, color?: string | null }
         & { __typename?: 'ActionStatus' }
       ) | null, dependencyRole?: (
@@ -12240,7 +12191,7 @@ export type GetPlanContextQuery = (
       ) | null> }
       & { __typename?: 'Footer' }
     ) | null, features: (
-      { allowPublicSiteLogin: boolean, hasActionContactPersonRoles: boolean, contactPersonsPublicData: PlanFeaturesContactPersonsPublicData, contactPersonsShowOrganizationAncestors: boolean, enableSearch: boolean, hasActionIdentifiers: boolean, hasActionOfficialName: boolean, hasActionLeadParagraph: boolean, hasActionPrimaryOrgs: boolean, showAdminLink: boolean, enableIndicatorComparison: boolean, minimalStatuses: boolean }
+      { allowPublicSiteLogin: boolean, hasActionContactPersonRoles: boolean, contactPersonsPublicData: PlanFeaturesContactPersonsPublicData, contactPersonsShowPicture: boolean, contactPersonsShowOrganizationAncestors: boolean, enableSearch: boolean, hasActionIdentifiers: boolean, hasActionOfficialName: boolean, hasActionLeadParagraph: boolean, hasActionPrimaryOrgs: boolean, showAdminLink: boolean, enableIndicatorComparison: boolean, minimalStatuses: boolean }
       & { __typename?: 'PlanFeatures' }
     ), allRelatedPlans: Array<(
       { id: string, identifier: string, name: string, shortName?: string | null, viewUrl?: string | null, image?: (
@@ -12430,7 +12381,7 @@ export type PlanContextFragment = (
     ) | null> }
     & { __typename?: 'Footer' }
   ) | null, features: (
-    { allowPublicSiteLogin: boolean, hasActionContactPersonRoles: boolean, contactPersonsPublicData: PlanFeaturesContactPersonsPublicData, contactPersonsShowOrganizationAncestors: boolean, enableSearch: boolean, hasActionIdentifiers: boolean, hasActionOfficialName: boolean, hasActionLeadParagraph: boolean, hasActionPrimaryOrgs: boolean, showAdminLink: boolean, enableIndicatorComparison: boolean, minimalStatuses: boolean }
+    { allowPublicSiteLogin: boolean, hasActionContactPersonRoles: boolean, contactPersonsPublicData: PlanFeaturesContactPersonsPublicData, contactPersonsShowPicture: boolean, contactPersonsShowOrganizationAncestors: boolean, enableSearch: boolean, hasActionIdentifiers: boolean, hasActionOfficialName: boolean, hasActionLeadParagraph: boolean, hasActionPrimaryOrgs: boolean, showAdminLink: boolean, enableIndicatorComparison: boolean, minimalStatuses: boolean }
     & { __typename?: 'PlanFeatures' }
   ), allRelatedPlans: Array<(
     { id: string, identifier: string, name: string, shortName?: string | null, viewUrl?: string | null, image?: (

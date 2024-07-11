@@ -158,7 +158,7 @@ function ActionHighlightCard(props: ActionHighlightCardProps) {
           <CardBody>
             {actionStatus && actionStatus.identifier === 'completed' && (
               <ReadyBadge pill>
-                <Icon name="check" color="#ffffff" width="2em" height="2em" />
+                <Icon.Check color="#ffffff" width="2em" height="2em" />
               </ReadyBadge>
             )}
             <StyledCardTitle tag="h3" className="card-title">

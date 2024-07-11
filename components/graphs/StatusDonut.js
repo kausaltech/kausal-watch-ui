@@ -170,7 +170,7 @@ const StatusDonut = (props) => {
         <HelpText>{helpText}</HelpText>
         <PlotWrapper>
           <OpenModalButton onClick={openModal} aria-label={t('open')}>
-            <Icon name="arrowUpRightFromSquare" />
+            <Icon.ArrowUpRightFromSquare />
           </OpenModalButton>
           <Plot
             data={[pieData]}

@@ -136,8 +136,7 @@ const Task = (props) => {
     <TaskWrapper>
       {completed ? (
         <TaskMeta>
-          <Icon
-            name="check"
+          <Icon.Check
             color={theme.graphColors.green050}
             alt={t('action-task-done')}
           />
@@ -145,8 +144,7 @@ const Task = (props) => {
         </TaskMeta>
       ) : (
         <TaskMeta>
-          <Icon
-            name="calendar"
+          <Icon.Calendar
             color={theme.graphColors.blue070}
             alt={t('action-task-todo')}
           />

@@ -1,5 +1,7 @@
 /* eslint-disable no-restricted-syntax, @typescript-eslint/no-var-requires */
 const { secrets } = require('docker-secret');
+const { mkdir } = require('node:fs/promises');
+const lockfile = require('proper-lockfile');
 
 const path = require('path');
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
@@ -17,25 +19,34 @@ const isProd = process.env.NODE_ENV === 'production';
 const sentryAuthToken =
   secrets.SENTRY_AUTH_TOKEN || process.env.SENTRY_AUTH_TOKEN;
 
-function initializeThemes() {
-  console.log(`
-      ↝ Initialising themes
-  `);
-
-  const destPath = path.join(__dirname, 'public', 'static', 'themes');
-  const {
-    generateThemeSymlinks: generateThemeSymlinksPublic,
-  } = require('@kausal/themes/setup.cjs');
-
-  generateThemeSymlinksPublic(destPath, { verbose: false });
-
+async function initializeThemes() {
+  const staticPath = path.join(__dirname, 'public', 'static');
+  await mkdir(staticPath, { recursive: true });
+  const releaseThemeLock = await lockfile.lock('public/static');
   try {
-    const {
-      generateThemeSymlinks: generateThemeSymlinksPrivate,
-    } = require('@kausal/themes-private/setup.cjs');
-    generateThemeSymlinksPrivate(destPath, { verbose: false });
-  } catch (error) {
-    console.error(error);
+    const destPath = path.join(__dirname, 'public', 'static', 'themes');
+    let themesLinked = false;
+    try {
+      const {
+        generateThemeSymlinks: generateThemeSymlinksPrivate,
+      } = require('@kausal/themes-private/setup.cjs');
+      generateThemeSymlinksPrivate(destPath, { verbose: false });
+      themesLinked = true;
+    } catch (error) {
+      if (error.code !== 'MODULE_NOT_FOUND') {
+        console.error(error);
+        throw error;
+      }
+    }
+    if (!themesLinked) {
+      console.log('Private themes not found; using public themes');
+      const {
+        generateThemeSymlinks: generateThemeSymlinksPublic,
+      } = require('@kausal/themes/setup.cjs');
+      generateThemeSymlinksPublic(destPath, { verbose: false });
+    }
+  } finally {
+    await releaseThemeLock();
   }
 }
 

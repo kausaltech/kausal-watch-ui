@@ -45,7 +45,7 @@ const ActionPager = ({ nextAction = null, previousAction = null }: Props) => {
           <ActionLink action={previousAction}>
             <a>
               <PageButton color="primary" outline>
-                <Icon name="arrowLeft" />
+                <Icon.ArrowLeft />
                 {t('action-previous', getActionTermContext(plan))}
               </PageButton>
             </a>
@@ -58,7 +58,7 @@ const ActionPager = ({ nextAction = null, previousAction = null }: Props) => {
             <a>
               <PageButton color="primary" outline>
                 {t('action-next', getActionTermContext(plan))}
-                <Icon name="arrowRight" />
+                <Icon.ArrowRight />
               </PageButton>
             </a>
           </ActionLink>

@@ -131,7 +131,7 @@ const LinkCopyButton = ({ identifier }: { identifier: string }) => {
           aria-label={t('copy-to-clipboard')}
           className="copy-link"
         >
-          <Icon name="link" />
+          <Icon.Link />
         </CopyLink>
       </CopyToClipboard>
     </>

@@ -8,8 +8,8 @@ import ThemeProvider from '@/components/providers/ThemeProvider';
 import PlanProvider from '@/components/providers/PlanProvider';
 import { getPlan } from '@/queries/get-plan';
 import { GlobalStyles } from '@/styles/GlobalStyles';
-import { getThemeCSS, loadTheme } from '@/common/theme';
-import { CombinedIconSymbols } from '@/components/common/Icon';
+import { getThemeStaticURL, loadTheme } from '@/common/theme';
+import { SharedIcons } from '@/components/common/Icon';
 import { MatomoAnalytics } from '@/components/MatomoAnalytics';
 import { getMetaTitles } from '@/utils/metadata';
 import { tryRequest } from '@/utils/api.utils';
@@ -36,7 +36,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       )
     );
   }
-
   const { data } = await tryRequest(
     getPlan(params.domain, params.plan, origin)
   );
@@ -52,9 +51,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const title = parentPlanTitle || plan.generalContent.siteTitle || plan.name;
   const description = plan.generalContent.siteDescription;
   const ogImage = plan.image?.social?.src || plan.image?.rendition?.src;
-  const themeIdentifier = data.plan.themeIdentifier || params.plan;
-  const iconBase = `/static/themes/${themeIdentifier}/images/favicon`;
   const { title: siteName } = getMetaTitles(plan);
+  const theme = await loadTheme(data.plan.themeIdentifier || params.plan);
 
   return {
     title,
@@ -73,10 +71,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     },
     icons: {
       icon: [
-        { type: 'image/svg+xml', url: `${iconBase}/icon.svg` },
-        { type: 'image/x-icon', url: `${iconBase}/favicon.ico` },
+        {
+          type: 'image/svg+xml',
+          url: getThemeStaticURL(theme?.favicons?.svg),
+        },
+        {
+          type: 'image/x-icon',
+          url: getThemeStaticURL(theme?.favicons?.ico),
+        },
       ],
-      apple: `${iconBase}/apple.png`,
+      apple: getThemeStaticURL(theme?.favicons?.apple),
     },
     other: plan.domain?.googleSiteVerificationTag
       ? {
@@ -106,7 +110,11 @@ export default async function PlanLayout({ params, children }: Props) {
   return (
     <>
       {theme.name && (
-        <link rel="stylesheet" type="text/css" href={getThemeCSS(theme.name)} />
+        <link
+          rel="stylesheet"
+          type="text/css"
+          href={getThemeStaticURL(theme.mainCssFile)}
+        />
       )}
 
       {!!matomoAnalyticsUrl && (
@@ -115,13 +123,13 @@ export default async function PlanLayout({ params, children }: Props) {
 
       <ThemeProvider theme={theme}>
         <GlobalStyles />
+        <SharedIcons />
         <PlanProvider plan={data.plan}>
           <WorkflowProvider
             initialWorkflow={selectedWorkflow?.value as string | undefined}
             workflowStates={data.workflowStates}
           >
             <UpdateApolloContext domain={domain} />
-            <CombinedIconSymbols />
             {children}
           </WorkflowProvider>
         </PlanProvider>

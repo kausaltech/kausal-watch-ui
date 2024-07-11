@@ -255,16 +255,13 @@ export const IndicatorsTooltipContent = ({ action }: TooltipProps) => {
   const t = useTranslations();
   const theme = useTheme();
 
-  const relatedIndicators = action.relatedIndicators;
-  const hasIndicators = relatedIndicators.length > 0;
-  const hasGoals = relatedIndicators.find(
-    (ri) => ri.indicator.goals?.length ?? 0 > 0
-  );
+  const hasIndicators =
+    action.indicatorsCount != null && action.indicatorsCount > 0;
+  const hasGoals = action.hasIndicatorsWithGoals;
   return (
     <div>
       <TooltipTitle>{t('indicators')}</TooltipTitle>
-      <Icon
-        name="tachometer"
+      <Icon.Tachometer
         color={
           hasIndicators ? theme.graphColors.green070 : theme.graphColors.grey030
         }
@@ -272,11 +269,10 @@ export const IndicatorsTooltipContent = ({ action }: TooltipProps) => {
         width="1.2em"
       />
       {hasIndicators
-        ? ` ${t('indicators')}: ${relatedIndicators.length}`
+        ? ` ${t('indicators')}: ${action.indicatorsCount}`
         : ` ${t('no-defined-indicators')}`}
       <br />
-      <Icon
-        name="bullseye"
+      <Icon.Bullseye
         color={
           hasGoals ? theme.graphColors.green070 : theme.graphColors.grey030
         }

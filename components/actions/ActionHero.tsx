@@ -293,8 +293,7 @@ function ActionHero(props: ActionHeroProps) {
                         {previousAction && (
                           <ActionLink action={previousAction}>
                             <a>
-                              <Icon
-                                name="arrowLeft"
+                              <Icon.ArrowLeft
                                 color={theme.linkColor}
                                 aria-hidden="true"
                               />{' '}
@@ -307,8 +306,7 @@ function ActionHero(props: ActionHeroProps) {
                           <ActionLink action={nextAction}>
                             <a>
                               {t('next')}
-                              <Icon
-                                name="arrowRight"
+                              <Icon.ArrowRight
                                 color={theme.linkColor}
                                 aria-hidden="true"
                               />

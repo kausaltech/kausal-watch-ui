@@ -55,7 +55,7 @@ const IndicatorItem = (props) => {
             <a>
               <h3>
                 {indicator.name}
-                <Icon name="arrowRight" color="" />
+                <Icon.ArrowRight color="" />
               </h3>
             </a>
           </IndicatorLink>
@@ -109,7 +109,7 @@ const IndicatorGroupBlock = ({ id = '', title, indicators }: Props) => {
           <StyledColCentered>
             <IndicatorListLink>
               <Button color="primary" tag="a">
-                {t('see-all-indicators')} <Icon name="arrowRight" />
+                {t('see-all-indicators')} <Icon.ArrowRight />
               </Button>
             </IndicatorListLink>
           </StyledColCentered>

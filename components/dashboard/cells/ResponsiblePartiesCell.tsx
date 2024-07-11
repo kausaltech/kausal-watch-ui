@@ -27,9 +27,8 @@ const ResponsiblePartiesCell = ({ action }: Props) => {
       {Array(hasContactCount)
         .fill(null)
         .map((_, i) => (
-          <Icon
+          <Icon.DotCircle
             key={i}
-            name="dot-circle"
             color={theme.actionOnTimeColor}
             width=".8em"
             height=".8em"
@@ -39,8 +38,7 @@ const ResponsiblePartiesCell = ({ action }: Props) => {
       {Array(noContactCount)
         .fill(null)
         .map((_, i) => (
-          <Icon
-            name="circle-outline"
+          <Icon.CircleOutline
             color={theme.actionOnTimeColor}
             key={i}
             width=".8em"

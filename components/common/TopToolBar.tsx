@@ -9,6 +9,7 @@ import {
 } from 'reactstrap';
 import styled from 'styled-components';
 import Icon from '@/components/common/Icon';
+import { usePathname, useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { usePlan } from 'context/plan';
 import { useSession } from 'next-auth/react';
@@ -20,6 +21,7 @@ import {
   WorkflowStateDescription,
 } from '@/common/__generated__/graphql';
 import { useHandleSignOut } from '@/utils/auth.utils';
+import { hasSessionExpired } from '@/utils/session.utils';
 
 type StrictWorkflowStateDescription = {
   id: NonNullable<WorkflowStateDescription['id']>;
@@ -83,6 +85,8 @@ const DropdownItemText = styled.div`
 
 export const TopToolBar = () => {
   const session = useSession();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const [versionsDropdownOpen, setVersionsDropdownOpen] = React.useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = React.useState(false);
   const versionsToggle = () =>
@@ -133,7 +137,10 @@ export const TopToolBar = () => {
     if (session.status === 'authenticated' && !session.data.idToken) {
       handleSignOut();
     }
-  }, [session, handleSignOut]);
+    if (session?.data != null && hasSessionExpired(session.data)) {
+      handleSignOut();
+    }
+  }, [session, handleSignOut, pathname, searchParams]);
 
   if (session.status !== 'authenticated' || !session.data.user) {
     return null;
