@@ -9,11 +9,35 @@
   "author": "",
   "license": "AGPL-3.0-or-later",
   "dependencies": {
-    "@apollo/client": "^3.9.11",
-    "@axe-core/playwright": "^4.9.0",
-    "@playwright/test": "^1.43.1",
+    "@apollo/client": "^3.10.4",
+    "@axe-core/playwright": "^4.9.1",
+    "@playwright/test": "^1.44.1",
     "dotenv": "^16.4.5",
-    "playwright": "^1.43.1",
-    "react": "^18.2.0"
+    "playwright": "^1.44.1",
+    "react": "^18.3.1"
+  },
+  "importSorter": {
+    "maxLineLength": 100,
+    "emptyLinesAfterAllImports": 1,
+    "wrappingStyle": {
+      "maxBindingNamesPerLine": 100,
+      "maxDefaultAndBindingNamesPerLine": 100,
+      "maxExportNamesPerLine": 0,
+      "maxNamesPerWrappedLine": 1,
+      "ignoreComments": true
+    },
+    "nodeProtocol": "always",
+    "groupRules": [
+      "^node:",
+      [
+        "^react(-dom)?$",
+        "^next/"
+      ],
+      {},
+      [
+        "^@/",
+        "^[.]"
+      ]
+    ]
   }
 }
