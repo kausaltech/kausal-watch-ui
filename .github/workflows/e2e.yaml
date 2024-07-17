@@ -2,9 +2,9 @@ name: End-to-end tests
 on:
   workflow_call:
     inputs:
-      plan_identifiers:
-        description: 'Comma separated list of plan identifiers'
-        required: true
+      instance_identifiers:
+        description: 'Comma separated list of instance identifiers'
+        required: false
         type: string
         default: 'sunnydale'
       frontend_base_url:
@@ -28,7 +28,7 @@ jobs:
     container:
       image: mcr.microsoft.com/playwright:v1.43.1
     env:
-      TEST_PLAN_IDENTIFIERS: ${{ inputs.plan_identifiers }}
+      TEST_INSTANCE_IDENTIFIERS: ${{ inputs.instance_identifiers }}
       FRONTEND_BASE_URL: ${{ inputs.frontend_base_url }}
       NEXT_PUBLIC_API_URL: ${{ inputs.backend_base_url }}
     steps:

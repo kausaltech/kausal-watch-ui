@@ -298,7 +298,7 @@ export class PlanContext {
 }
 
 export function getIdentifiersToTest(): string[] {
-  const val = process.env.TEST_PLAN_IDENTIFIERS || 'sunnydale';
+  const val = process.env.TEST_INSTANCE_IDENTIFIERS || 'sunnydale';
 
   return val
     .split(',')

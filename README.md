@@ -47,7 +47,7 @@ Before the first run, ensure the browsers Playwright needs are installed:
 
 Then add the plan identifiers you want to test to your `.env` file:
 
-    TEST_PLAN_IDENTIFIERS=abcd,efgh,ijlk
+    TEST_INSTANCE_IDENTIFIERS=abcd,efgh,ijlk
 
 To point tests to the specific environment use the following environment variable in `.env` file:
 

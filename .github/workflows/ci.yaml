@@ -18,7 +18,7 @@ jobs:
     uses: ./.github/workflows/e2e-image.yaml
     with:
       image: ${{ needs.build.outputs.image }}:${{ needs.build.outputs.image_tag }}
-      plan_identifiers: sunnydale
+      instance_identifiers: sunnydale
       backend_base_url: https://api.watch.kausal.tech/v1
       build_id: ${{ needs.build.outputs.build_id }}
       s3_endpoint: ${{ vars.BUILD_S3_ENDPOINT }}
