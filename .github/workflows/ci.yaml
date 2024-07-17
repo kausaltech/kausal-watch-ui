@@ -28,7 +28,8 @@ jobs:
   deploy:
     needs: [build]
     uses: kausaltech/github-actions/.github/workflows/deploy.yaml@main
-    secrets: inherit
+    secrets:
+      gitops_pat: ${{ secrets.GHA_GITOPS_PAT }}
     if: needs.build.outputs.deployment_env
     with:
       docker_image_repo: ${{ needs.build.outputs.image }}
