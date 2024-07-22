@@ -84,10 +84,15 @@ const BotNav = styled(Navbar)<{ $offsetTop?: number; $expanded: boolean }>`
 
   .container {
     flex-wrap: nowrap;
+    overflow-x: auto;
   }
 
   .navbar-nav {
     padding: ${(props) => props.theme.spaces.s150} 0;
+  }
+
+  .navbar-collapse {
+    align-items: stretch;
   }
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
@@ -174,8 +179,10 @@ const EmptyLogo = styled.div`
 `;
 
 const NavLink = styled.div`
+  height: 100%;
   a {
-    display: block;
+    height: 100%;
+    display: flex;
     margin: 0 0 ${(props) => props.theme.spaces.s050}
       ${(props) => props.theme.spaces.s100};
     color: ${(props) => props.theme.neutralDark};
@@ -197,11 +204,13 @@ const NavLink = styled.div`
 `;
 
 const NavHighlighter = styled.span`
+  align-self: flex-end;
   display: inline-block;
   padding: ${(props) => props.theme.spaces.s050} 0
     calc(${(props) => props.theme.spaces.s050} - 5px);
   border-bottom: 5px solid transparent;
   transition: border 200ms;
+  line-height: 1;
 
   &.active {
     border-bottom: 5px solid ${(props) => props.theme.brandDark};
@@ -218,7 +227,8 @@ const NavHighlighter = styled.span`
 `;
 
 const StyledDropdownToggle = styled(DropdownToggle)`
-  display: block;
+  height: 100%;
+  display: flex;
   padding: 0;
   margin: 0 0 ${(props) => props.theme.spaces.s100}
     ${(props) => props.theme.spaces.s100};
@@ -243,6 +253,12 @@ const StyledDropdown = styled(UncontrolledDropdown)`
   .dropdown-toggle.nav-link {
     padding-left: 0;
     padding-right: 0;
+    white-space: normal;
+
+    &::after {
+      align-self: flex-end;
+      padding-bottom: ${(props) => props.theme.spaces.s200};
+    }
   }
 
   .dropdown-menu {
@@ -636,7 +652,7 @@ function GlobalNav(props) {
                 <CustomToolbar items={customToolbarItems} mobile />
               )}
             </Nav>
-            <Nav navbar>
+            <Nav navbar className="ms-5">
               <PlanVersionSelector plan={plan} />
               {externalItems.length > 0 &&
                 externalItems.map((item, index) => (
