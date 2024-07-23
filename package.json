@@ -24,6 +24,7 @@
     "dayjs": "^1.11.1",
     "docker-secret": "^1.2.4",
     "dotenv": "^16.0.0",
+    "escape-string-regexp": "^5.0.0",
     "exceljs": "^4.3.0",
     "express-robots-txt": "^1.0.0",
     "file-saver": "^2.0.5",

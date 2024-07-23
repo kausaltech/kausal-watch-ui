@@ -1,4 +1,5 @@
 import React, { createRef, Ref, useCallback, useMemo, useState } from 'react';
+import escapeStringRegexp from 'escape-string-regexp';
 import { Row, Col, Badge, CloseButton, FormGroup, Input } from 'reactstrap';
 import { debounce } from 'lodash';
 import styled from 'styled-components';
@@ -816,7 +817,7 @@ class ActionNameFilter implements ActionListFilter<string | undefined> {
   }
 
   filterAction(value: string, action: ActionListAction) {
-    const searchStr = value.toLowerCase();
+    const searchStr = escapeStringRegexp(value.toLowerCase());
     if (this.hasActionIdentifiers) {
       if (action.identifier.toLowerCase().startsWith(searchStr)) return true;
     }
