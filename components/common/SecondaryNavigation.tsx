@@ -10,6 +10,7 @@ const NavigationContainer = styled(Container)`
     margin-right: auto;
     left: 0;
     right: 0;
+    pointer-events: none;
   }
 `;
 
@@ -17,6 +18,7 @@ const NavigationCard = styled.div`
   padding: ${(props) => props.theme.spaces.s100};
   margin: ${(props) => props.theme.spaces.s200} 0;
   background-color: #f2f2f2;
+  pointer-events: all;
 
   h3 {
     font-size: ${(props) => props.theme.fontSizeMd};
