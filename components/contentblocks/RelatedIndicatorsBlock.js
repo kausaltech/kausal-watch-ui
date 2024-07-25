@@ -37,7 +37,7 @@ const IndicatorItem = (props) => {
           <Link href={`/indicators/${indicator}`} legacyBehavior>
             <a>
               {t('read-more')}
-              <Icon name="arrowRight" />
+              <Icon.ArrowRight />
             </a>
           </Link>
         </div>

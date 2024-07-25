@@ -282,7 +282,8 @@ function ActionCard({
 
   if (actionName.length > 120) actionName = `${action.name.substring(0, 120)}…`;
 
-  const { mergedWith, implementationPhase, primaryOrg } = action;
+  const { mergedWith, implementationPhase, primaryOrg, scheduleContinuous } =
+    action;
   const status = cleanActionStatus(action, plan.actionStatuses);
   let statusText = status.name || null;
 
@@ -290,8 +291,11 @@ function ActionCard({
   if (implementationPhase) {
     statusText = implementationPhase.name;
     if (status.name) statusText = `${statusText} (${status.name})`;
-    // Let's assume if status is completed the phase is irrelevant
-    if (status.identifier === 'completed') statusText = status.name;
+    // Let's assume if status is completed or continuous the phase is irrelevant
+    if (status.identifier === 'completed') {
+      if (scheduleContinuous) statusText = t('action-continuous');
+      else statusText = status.name;
+    }
   }
   const getPlanUrl = (mergedWith, actionPlan, planId) => {
     if (mergedWith && mergedWith?.plan.id !== planId)
@@ -415,7 +419,11 @@ function ActionCard({
             <StyledActionDependencyIconWrapper
               id={getDependencyTooltipId(action.id)}
             >
-              <Icon name="action-dependency" width="24px" height="24px" />
+              <Icon.ActionDependency
+                width="24px"
+                height="24px"
+                role="presentation"
+              />
             </StyledActionDependencyIconWrapper>
             <StyledTooltip
               target={getDependencyTooltipId(action.id)}
@@ -442,12 +450,16 @@ function ActionCard({
     return actionCard;
   }
 
+  const fromOtherPlan = action.plan.id !== plan.id;
+  const mergedWithActionFromOtherPlan =
+    mergedWith != null && mergedWith.plan.id !== plan.id;
+
   return (
     <ActionLink
       action={action}
-      viewUrl={action.viewUrl}
+      viewUrl={action.mergedWith?.viewUrl ?? action.viewUrl}
       planUrl={getPlanUrl(mergedWith, action.plan, plan.id)}
-      crossPlan={action?.plan && action.plan.id !== plan.id}
+      crossPlan={fromOtherPlan || mergedWithActionFromOtherPlan}
     >
       <StyledActionLink>{actionCard}</StyledActionLink>
     </ActionLink>

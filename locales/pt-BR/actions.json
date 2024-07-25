@@ -30,6 +30,7 @@
     "action-tasks": "{context, select, MILESTONE {Milestones} other {Tasks}}",
     "action-tasks-count": "{context, select, MILESTONE {milestones} other {tasks}}",
     "action-tasks-done": "O que foi feito?",
+    "action-tasks-doing": "O que estamos fazendo?",
     "action-tasks-todo": "O que falta fazer?",
     "action-timeline": "Linha do tempo",
     "action-what-effect-this-has": "{context, select, CASE_STUDY {Como este estudo de caso contribui para o resultado} STRATEGY {Como essa estratégia contribui para o resultado} other {Como essa ação contribui para o resultado}}",
@@ -56,5 +57,6 @@
     "feedback-on-action": "Dê feedback sobre essa ação",
     "feedback-on-action-description": "Você pode deixar um comentário ou feedback sobre essa ação",
     "action-draft": "Rascunho",
-    "logo": "Logotipo"
+    "logo": "Logotipo",
+    "no-action-version-available": "Nenhuma versão {versionType} disponível"
 }

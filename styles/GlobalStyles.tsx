@@ -146,10 +146,10 @@ export const GlobalStyles = createGlobalStyle`
 
   .richtext-image {
     margin: ${(props) => props.theme.spaces.s300} auto;
+    max-width: 100%;
 
     &.full-width {
       display: block;
-      max-width: 100%;
       height: auto;
     }
 

@@ -25,6 +25,7 @@
       "ActionScheduleFilterBlock",
       "ActionStatusFilterBlock",
       "CategoryTypeFilterBlock",
+      "ContinuousActionFilterBlock",
       "PlanFilterBlock",
       "PrimaryOrganizationFilterBlock",
       "ResponsiblePartyFilterBlock"
@@ -43,6 +44,7 @@
       "ActionRelatedActionsBlock",
       "ActionRelatedIndicatorsBlock",
       "ActionTasksBlock",
+      "IndicatorCausalChainBlock",
       "ReportComparisonBlock"
     ],
     "ActionMainContentSectionElementBlock": [
@@ -90,13 +92,15 @@
       "ActionDescriptionBlock",
       "ActionLeadParagraphBlock",
       "ActionLinksBlock",
+      "ActionManualStatusReasonBlock",
       "ActionMergedActionsBlock",
       "ActionOfficialNameBlock",
       "ActionRelatedActionsBlock",
       "ActionRelatedIndicatorsBlock",
       "ActionResponsiblePartiesBlock",
       "ActionScheduleBlock",
-      "ActionTasksBlock"
+      "ActionTasksBlock",
+      "IndicatorCausalChainBlock"
     ],
     "MenuItem": [
       "ExternalLinkMenuItem",
@@ -122,16 +126,21 @@
     "ReportFieldBlock": [
       "ActionAttributeTypeReportFieldBlock",
       "ActionCategoryReportFieldBlock",
+      "ActionDescriptionBlock",
       "ActionImplementationPhaseReportFieldBlock",
+      "ActionManualStatusReasonBlock",
       "ActionResponsiblePartyReportFieldBlock",
-      "ActionStatusReportFieldBlock"
+      "ActionStatusReportFieldBlock",
+      "ActionTasksBlock"
     ],
     "ReportValueInterface": [
       "ActionAttributeReportValue",
       "ActionCategoryReportValue",
       "ActionImplementationPhaseReportValue",
-      "ActionResponsiblePartyReporteportValue",
-      "ActionStatusReportValue"
+      "ActionResponsiblePartyReportValue",
+      "ActionSimpleFieldReportValue",
+      "ActionStatusReportValue",
+      "ActionTasksReportValue"
     ],
     "SearchHitObject": [
       "Action",
@@ -160,6 +169,7 @@
       "ActionLeadParagraphBlock",
       "ActionLinksBlock",
       "ActionListBlock",
+      "ActionManualStatusReasonBlock",
       "ActionMergedActionsBlock",
       "ActionOfficialNameBlock",
       "ActionRelatedActionsBlock",
@@ -188,6 +198,7 @@
       "CategoryTypeFilterBlock",
       "CharBlock",
       "ChoiceBlock",
+      "ContinuousActionFilterBlock",
       "DateBlock",
       "DateTimeBlock",
       "DecimalBlock",
@@ -201,6 +212,7 @@
       "ImpactColumnBlock",
       "ImplementationPhaseColumnBlock",
       "IndicatorBlock",
+      "IndicatorCausalChainBlock",
       "IndicatorGroupBlock",
       "IndicatorHighlightsBlock",
       "IndicatorShowcaseBlock",

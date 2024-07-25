@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import { signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { authIssuer } from '@/common/environment';
@@ -5,7 +6,7 @@ import { authIssuer } from '@/common/environment';
 export function useHandleSignOut() {
   const router = useRouter();
 
-  return () => {
+  return useCallback(() => {
     signOut({ redirect: false });
 
     /**
@@ -13,5 +14,5 @@ export function useHandleSignOut() {
      * The user will be redirected back to the `next` query parameter.
      */
     router.push(`${authIssuer}/logout?next=${encodeURI(window.location.href)}`);
-  };
+  }, [router]);
 }

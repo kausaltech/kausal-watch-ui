@@ -12,6 +12,7 @@ const FeedbackFormSection = styled.div`
   padding: ${(props) =>
     props.size === 'sm' ? props.theme.spaces.s050 : props.theme.spaces.s100};
   background-color: ${(props) => props.theme.graphColors.blue010};
+  margin-bottom: ${(props) => props.theme.spaces.s400};
 
   h2 {
     font-size: ${(props) =>
@@ -59,7 +60,7 @@ const ExpandableFeedbackFormBlock = ({
   return (
     <FeedbackFormSection size={size}>
       <ContactTriggerButton color="link" onClick={toggle}>
-        <Icon name="commenting" width="2rem" height="2rem" />
+        <Icon.Commenting width="2rem" height="2rem" />
         <div>
           <h2>{heading || t('feedback-on-action')}</h2>
           {description || t('feedback-on-action-description')}

@@ -7,6 +7,7 @@ export const ACTION_CARD_FRAGMENT = gql`
     name(hyphenated: true)
     viewUrl
     color
+    scheduleContinuous
     status {
       id
       identifier

@@ -232,7 +232,7 @@ export default function RichText(props: RichTextProps) {
         // Assumed external link, open in new tab
         return (
           <a target="_blank" href={attribs.href} rel="noreferrer">
-            <Icon name="arrow-up-right-from-square" />
+            <Icon.ArrowUpRightFromSquare />
             {domToReact(children, options)}
           </a>
         );

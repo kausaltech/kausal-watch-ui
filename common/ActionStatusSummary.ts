@@ -50,6 +50,7 @@ export interface ActionWithStatusSummary {
     label?: string;
   };
   color?: string | null;
+  scheduleContinuous: boolean;
 }
 
 const DEFAULT_COLOR = 'grey050';
@@ -59,7 +60,12 @@ export const getStatusColorForAction = (
   plan: PlanContextType,
   theme: Theme
 ) => {
-  const { color, statusSummary } = action;
+  const { color, statusSummary, scheduleContinuous } = action;
+
+  // Override for continuous actions. TODO: move logic to backend
+  if (scheduleContinuous && statusSummary?.identifier == 'COMPLETED')
+    return theme.actionContinuousColor;
+
   if (color != null) {
     return getThemeColor(color, theme);
   }

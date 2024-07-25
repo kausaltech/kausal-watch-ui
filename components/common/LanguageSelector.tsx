@@ -123,13 +123,14 @@ const ActiveLanguage = styled.span`
 // For now, we only show language names without variants (e.g., "English" instead of "English (Australia)" as it's
 // arguably unlikely that a site uses two variants of the same base language.
 const languageNames = {
-  fi: 'Suomi',
-  en: 'English',
-  de: 'Deutsch',
-  sv: 'Svenska',
-  es: 'Español',
   da: 'Dansk',
+  de: 'Deutsch',
+  el: 'Ελληνικά',
+  en: 'English',
+  es: 'Español',
+  fi: 'Suomi',
   lv: 'Latviešu',
+  sv: 'Svenska',
 };
 
 function getLocales(plan: PlanContextFragment) {
@@ -168,7 +169,7 @@ const LanguageSelector = (props: LanguageSelectorProps) => {
           tag="button"
           aria-label={t('select-language')}
         >
-          <Icon name="globe" width="1.75rem" height="1.75rem" />
+          <Icon.Globe width="1.75rem" height="1.75rem" />
           <CurrentLanguage $mobile={mobile}>{languageCode}</CurrentLanguage>
         </StyledDropdownToggle>
         <StyledDropdownMenu end>

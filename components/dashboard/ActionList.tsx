@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { gql } from '@apollo/client';
 import { Container, Row, Col, Alert } from 'reactstrap';
@@ -46,6 +46,7 @@ import {
 } from '@/fragments/action-list.fragment';
 import { useSuspenseQuery } from '@apollo/experimental-nextjs-app-support/ssr';
 import { mapActionsToExpandDependencies } from '@/utils/actions.utils';
+import { useWorkflowSelector } from '@/context/workflow-selector';
 
 // Legacy exports preserved after migrating types to dashboard.types
 export * from './dashboard.types';
@@ -317,28 +318,15 @@ const actionFragment = gql`
     mergedWith {
       id
       identifier
+      viewUrl
       plan {
         id
         shortName
         viewUrl
       }
     }
-    indicators {
-      id
-      goals {
-        id
-      }
-    }
-    relatedIndicators {
-      id
-      indicatesActionProgress
-      indicator {
-        id
-        goals {
-          id
-        }
-      }
-    }
+    indicatorsCount
+    hasIndicatorsWithGoals
   }
 `;
 
@@ -363,7 +351,8 @@ export const GET_ACTION_LIST = gql`
     $plan: ID!
     $relatedPlanActions: Boolean!
     $path: String!
-  ) {
+    $workflow: WorkflowState
+  ) @workflow(state: $workflow) {
     plan(id: $plan) {
       ...PlanFragment
     }
@@ -454,7 +443,7 @@ const ActionList = (props: ActionListProps) => {
     : plan.primaryActionClassification;
 
   const primaryCatType = cts.find(
-    (ct) => ct.id == primaryActionClassification.id
+    (ct) => ct.id == primaryActionClassification?.id
   );
 
   const filterSections: ActionListFilterSection[] = useMemo(() => {
@@ -504,6 +493,7 @@ const ActionList = (props: ActionListProps) => {
   let groupBy = 'category';
   if (
     plan.features.hasActionPrimaryOrgs &&
+    primaryCatType?.identifier &&
     `${getCategoryString(primaryCatType.identifier)}` in activeFilters
   ) {
     groupBy = 'primaryOrg';
@@ -653,6 +643,8 @@ function ActionListLoader(props: StatusboardProps) {
   } = props;
   const plan = usePlan();
   const t = useTranslations();
+  const { workflow, setLoading } = useWorkflowSelector();
+  useEffect(() => setLoading(false));
   const { error, data } = useSuspenseQuery<DashboardActionListQuery>(
     GET_ACTION_LIST,
     {
@@ -660,6 +652,7 @@ function ActionListLoader(props: StatusboardProps) {
         plan: plan.identifier,
         relatedPlanActions: includeRelatedPlans,
         path: '/actions',
+        workflow,
       },
     }
   );

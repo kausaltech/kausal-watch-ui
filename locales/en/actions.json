@@ -25,12 +25,13 @@
   "action-tasks": "{context, select, MILESTONE {Milestones} other {Tasks}}",
   "action-tasks-count": "{context, select, MILESTONE {milestones} other {tasks}}",
   "action-tasks-done": "What has been done?",
+  "action-tasks-doing": "What are we doing?",
   "action-tasks-todo": "What's left to do?",
   "action-timeline": "Timeline",
   "action-timeline-between": "Timeframe between",
   "action-what-effect-this-has": "{context, select, CASE_STUDY {How this case study contributes to the outcome} STRATEGY {How this strategy contributes to the outcome} other {How this action contributes to the outcome}}",
   "actions-phases": "Actions by phases",
-  "actions-phases-help": "Continuous and completed actions",
+  "actions-phases-help": "Ongoing and completed actions",
   "actions-status": "Actions by status",
   "actions-status-help": "Actions proceeding as planned",
   "actions-updated": "Active actions last updated",
@@ -56,5 +57,6 @@
   "logo": "Logo",
   "other": "Other",
   "n-more-actions": "Plus {count} other {context, select, CASE_STUDY {{count, plural, =1 {case study} other {case studies}}} STRATEGY {{count, plural, =1 {strategy} other {strategies}}} other {{count, plural, =1 {action} other {actions}}}}",
-  "action-dependencies": "{context, select, CASE_STUDY {Case study dependencies} STRATEGY {Strategy dependencies} other {Action dependencies}}"
+  "action-dependencies": "{context, select, CASE_STUDY {Case study dependencies} STRATEGY {Strategy dependencies} other {Action dependencies}}",
+  "no-action-version-available": "No --{versionType}--- version available"
 }

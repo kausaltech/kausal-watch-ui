@@ -132,19 +132,10 @@ const GET_INDICATOR_LIST = gql`
           }
         }
       }
+      hasIndicatorRelationships
     }
     planIndicators(plan: $plan) {
       id
-      relatedCauses {
-        id
-        causalIndicator {
-          id
-        }
-        effectIndicator {
-          id
-        }
-        effectType
-      }
       common {
         id
         name
@@ -247,17 +238,9 @@ const IndicatorList = ({ leadContent, displayInsights }: Props) => {
   };
 
   const hasInsights = (data) => {
-    const { planIndicators } = data;
+    const { plan } = data;
     // Check if any of the indicators has causality link
-    return (
-      planIndicators.find((indicator) => {
-        return (
-          indicator.relatedCauses?.find(
-            (effect) => effect.effectType !== 'PART_OF'
-          ) !== undefined
-        );
-      }) !== undefined
-    );
+    return plan.hasIndicatorRelationships === true;
   };
 
   const getIndicatorListProps = (data) => {

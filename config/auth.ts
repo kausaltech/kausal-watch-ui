@@ -24,20 +24,24 @@ export const {
 
   return {
     callbacks: {
-      jwt({ token, account }) {
+      jwt({ token, account, profile }) {
         // Persist the OAuth id_token
         if (account?.id_token) {
           token.idToken = account.id_token;
+          if (typeof profile?.exp == 'number') {
+            token.expires = new Date(profile.exp * 1000).toISOString();
+          }
         }
-
         return token;
       },
       session({ session, ...params }) {
         // Include the OAuth id_token in the session
         if ('token' in params && typeof params.token.idToken === 'string') {
           session.idToken = params.token.idToken;
+          if (params.token.expires != null) {
+            session.expires = params.token.expires;
+          }
         }
-
         return session;
       },
     },

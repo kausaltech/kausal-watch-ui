@@ -48,6 +48,12 @@ const GET_ACTION_DETAILS = gql`
       name
       officialName
       leadParagraph
+      workflowStatus {
+        matchingVersion {
+          id
+          description
+        }
+      }
       description
       completion
       image {
@@ -306,8 +312,12 @@ const GET_ACTION_DETAILS = gql`
       fieldLabel
       fieldHelpText
     }
-    ... on ActionDescriptionBlock {
-      fieldLabel
+    ... on IndicatorCausalChainBlock {
+      id
+      field
+    }
+    ... on StreamFieldInterface {
+      id
     }
     ... on ActionOfficialNameBlock {
       fieldLabel

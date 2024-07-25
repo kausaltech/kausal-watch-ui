@@ -28,7 +28,7 @@ export default function LangLayout({ params, children }: Props) {
   return (
     <html lang={params.lang}>
       <body>
-        <Script id="global-this-polyfill">
+        <Script id="global-this-polyfill" strategy="beforeInteractive">
           {/* https://github.com/vercel/next.js/discussions/58818 */}
           {`!function(t){function e(){var e=this||self;e.globalThis=e,delete t.prototype._T_}"object"!=typeof globalThis&&(this?e():(t.defineProperty(t.prototype,"_T_",{configurable:!0,get:e}),_T_))}(Object);`}
         </Script>

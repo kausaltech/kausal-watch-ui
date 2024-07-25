@@ -172,5 +172,6 @@
     "ui-sign-in": "Kirjaudu sisään",
     "ui-sign-out": "Kirjaudu ulos",
     "action-versions": "Toimenpideversiot",
-    "open": "avoin"
+    "open": "avoin",
+    "error": "Virhe"
 }

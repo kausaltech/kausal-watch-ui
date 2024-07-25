@@ -141,6 +141,7 @@ export const STREAM_FIELD_FRAGMENT = gql`
         unit {
           id
           shortName
+          name
         }
         minValue
         maxValue
@@ -175,6 +176,7 @@ export const STREAM_FIELD_FRAGMENT = gql`
           normalizations {
             unit {
               shortName
+              name
             }
             normalizer {
               name

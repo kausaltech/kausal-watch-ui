@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Container, Row, Col } from 'reactstrap';
 import styled, { css } from 'styled-components';
 import { useHotkeys } from 'react-hotkeys-hook';
@@ -55,6 +55,8 @@ import {
   ActionDependenciesBlock,
   mapActionToDependencyGroups,
 } from './blocks/action-dependencies/ActionDependenciesBlock';
+
+import { useWorkflowSelector } from '@/context/workflow-selector';
 
 export type ActionContentAction = NonNullable<GetActionDetailsQuery['action']>;
 
@@ -468,6 +470,11 @@ function ActionContent(props: ActionContentProps) {
   const theme = useTheme();
   const router = useRouter();
   const t = useTranslations();
+  const { setLoading } = useWorkflowSelector();
+
+  useEffect(() => {
+    setLoading(false);
+  }, [action]);
 
   useHotkeys(
     'ctrl+left, ctrl+right',
@@ -496,6 +503,17 @@ function ActionContent(props: ActionContentProps) {
   const actionImage = getActionImage(plan, action);
 
   const hasPhases = plan.actionImplementationPhases.length > 0;
+
+  // Full width IndicatorCausalChainBlock can only be rendered in the bottom of the page
+  // so we do not use it in streamfield layout
+  const isIndicatorCausalChainBlock = (block) =>
+    block.__typename === 'IndicatorCausalChainBlock';
+  const detailsCombined = (actionListPage['detailsMainTop'] ?? []).concat(
+    actionListPage['detailsMainBottom'] ?? []
+  );
+  const showIndicatorCausalChainBlock =
+    action?.relatedIndicators.length > 0 &&
+    detailsCombined?.some(isIndicatorCausalChainBlock);
 
   const makeComponents = useCallback(
     (section: SectionIdentifier) => {
@@ -580,6 +598,8 @@ function ActionContent(props: ActionContentProps) {
   return (
     <div>
       <ActionHero
+        matchingVersion={action.workflowStatus?.matchingVersion ?? null}
+        updatedAt={action.updatedAt}
         categories={action.categories}
         previousAction={action.previousAction}
         nextAction={action.nextAction}
@@ -679,7 +699,7 @@ function ActionContent(props: ActionContentProps) {
         </StyledAside>
       </StyledContentGrid>
 
-      {action?.relatedIndicators.length > 0 && (
+      {showIndicatorCausalChainBlock && (
         <div>
           <Container>
             <Row>

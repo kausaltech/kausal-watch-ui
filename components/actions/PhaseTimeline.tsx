@@ -139,7 +139,11 @@ const StyledPhaseLine = styled.div<{
 `;
 
 const PHASE_CONFIG: {
-  [key in PhaseType]: { icon: string; colorKey: string; textColorKey: string };
+  [key in PhaseType]: {
+    icon: 'circle-full' | 'circle-half' | 'circle-outline';
+    colorKey: string;
+    textColorKey: string;
+  };
 } = {
   done: {
     icon: 'circle-full',
@@ -174,7 +178,6 @@ function getIconFromType(
       return 'angle-right';
     }
   }
-
   if (isCurrent && isCompleted) {
     return 'check-circle';
   }
@@ -301,7 +304,11 @@ export function PhaseTimeline({
   const activePhaseIndex = phases.findIndex(
     (phase) => phase.identifier === activePhase.identifier
   );
-
+  // Coompleted tasks that are continuous are "continuous"
+  const activePhaseName =
+    activePhase.identifier === 'completed' && isContinuous
+      ? t('action-continuous')
+      : activePhase.name;
   return (
     <>
       <StyledContainer ref={ref} $isVertical={isVertical} $isMini={isMini}>
@@ -347,7 +354,7 @@ export function PhaseTimeline({
         })}
       </StyledContainer>
 
-      {isMini && <StyledMiniPhaseName>{activePhase.name}</StyledMiniPhaseName>}
+      {isMini && <StyledMiniPhaseName>{activePhaseName}</StyledMiniPhaseName>}
     </>
   );
 }

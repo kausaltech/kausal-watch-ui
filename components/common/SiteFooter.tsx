@@ -13,6 +13,7 @@ import { usePlan } from '@/context/plan';
 import { signIn, useSession } from 'next-auth/react';
 import Button from './Button';
 import { useHandleSignOut } from '@/utils/auth.utils';
+import { getThemeStaticURL } from '@/common/theme';
 
 const StyledButton = styled(Button)`
   &.btn-link {
@@ -461,7 +462,7 @@ function SiteFooter(props: SiteFooterProps) {
   const OrgLogo = () => {
     return (
       <SVG
-        src={theme.themeLogoWhiteUrl}
+        src={getThemeStaticURL(theme.themeLogoWhiteUrl)}
         preserveAspectRatio="xMinYMid meet"
         title={`${ownerName}, ${siteTitle} ${t('front-page')}`}
         style={{ display: 'block' }}
@@ -522,8 +523,7 @@ function SiteFooter(props: SiteFooterProps) {
                     <NavigationLink slug={page.slug} className="parent-item">
                       <>
                         {theme?.navLinkIcons && (
-                          <Icon
-                            name="angleRight"
+                          <Icon.AngleRight
                             color={theme.footerColor}
                             aria-hidden="true"
                             className="me-1"
@@ -542,8 +542,7 @@ function SiteFooter(props: SiteFooterProps) {
                             <NavigationLink slug={childPage.slug}>
                               <>
                                 {theme?.navLinkIcons && (
-                                  <Icon
-                                    name="angleRight"
+                                  <Icon.AngleRight
                                     color={theme.footerColor}
                                     aria-hidden="true"
                                     className="me-1"
@@ -568,8 +567,7 @@ function SiteFooter(props: SiteFooterProps) {
                 {ownerUrl ? (
                   <a href={ownerUrl} target="_blank" rel="noreferrer">
                     {theme?.navLinkIcons && (
-                      <Icon
-                        name="angleRight"
+                      <Icon.AngleRight
                         color={theme.footerColor}
                         aria-hidden="true"
                         className="me-1"
@@ -587,8 +585,7 @@ function SiteFooter(props: SiteFooterProps) {
                 <UtilityItem key={page.id}>
                   <NavigationLink slug={page.url}>
                     {theme?.navLinkIcons && (
-                      <Icon
-                        name="angleRight"
+                      <Icon.AngleRight
                         color={theme.footerColor}
                         aria-hidden="true"
                         className="me-1"
@@ -630,8 +627,7 @@ function SiteFooter(props: SiteFooterProps) {
                   {isAuthLoading ? (
                     <Spinner size="sm" color="light" />
                   ) : (
-                    <Icon
-                      name="lock"
+                    <Icon.Lock
                       color={theme.footerColor}
                       aria-hidden="true"
                       className="me-1"
@@ -644,8 +640,7 @@ function SiteFooter(props: SiteFooterProps) {
             <UtilityItem>
               <TopButton type="button" onClick={scrollToTop}>
                 {t('back-to-top')}{' '}
-                <Icon
-                  name="arrowUp"
+                <Icon.ArrowUp
                   color={theme.footerColor}
                   aria-hidden="true"
                   width="1.25em"
@@ -709,7 +704,7 @@ function SiteFooter(props: SiteFooterProps) {
                   <FundingInstrumentContainer key={funder.id}>
                     <a href={funder.link} target="_blank" rel="noreferrer">
                       <SVG
-                        src={funder.logo}
+                        src={getThemeStaticURL(funder.logo)}
                         preserveAspectRatio="xMidYMid meet"
                         title={funder.name}
                       />
