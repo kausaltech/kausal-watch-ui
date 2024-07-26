@@ -10,6 +10,7 @@ import {
   OrganizationTooltipContent,
   ResponsiblePartiesTooltipContent,
   TasksTooltipContent,
+  ActionAttributeTooltipContent,
 } from './ActionTableTooltips';
 import StatusCell from './cells/StatusCell';
 import ImplementationPhaseCell from './cells/ImplementationPhaseCell';
@@ -27,7 +28,8 @@ interface Column {
   rowHeader?: boolean;
   renderTooltipContent?: (
     action: ActionListAction,
-    plan: PlanContextFragment
+    plan: PlanContextFragment,
+    attribute?: unknown // TODO: tighter type
   ) => ReactNode;
   headerClassName?: string;
   cellClassName?: string;
@@ -40,7 +42,7 @@ interface Column {
     action: ActionListAction,
     plan: PlanContextFragment,
     planViewUrl?: string | null,
-    attribute?: any // TODO: tighter type
+    attribute?: unknown // TODO: tighter type
   ) => ReactNode;
 }
 
@@ -135,7 +137,6 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
   FieldColumnBlock: {
     renderHeader: (t, _, label) => label,
     renderCell: (action, _, __, attributeType) => {
-      //console.log('field column', action, attributeType);
       const attributeContent = action.attributes.find(
         (a) => a.type.id === attributeType.id
       );
@@ -144,8 +145,20 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
         <ActionAttribute
           attribute={attributeContent}
           attributeType={attributeType}
-          notitle
+          minified
         /> // TODO: Render attribute content
+      );
+    },
+    renderTooltipContent: (action, _, attributeType) => {
+      const attributeContent = action.attributes.find(
+        (a) => a?.type.id === attributeType?.id
+      );
+      if (!attributeContent) return null;
+      return (
+        <ActionAttributeTooltipContent
+          attribute={attributeContent}
+          attributeType={attributeType}
+        /> // TODO: Render attribute tooltip
       );
     },
   },

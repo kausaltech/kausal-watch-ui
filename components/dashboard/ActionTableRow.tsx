@@ -128,9 +128,12 @@ const ActionTableRow = ({ columns, action, plan, planViewUrl }: Props) => {
         const className = `${cellClassName} ${
           hasTooltip ? 'has-tooltip' : ''
         } ${rowHeader ? 'row-title' : ''}`;
-        const tooltip = hasTooltip && (
+        const tooltipContent =
+          hasTooltip &&
+          renderTooltipContent(action, plan, column?.attributeType);
+        const tooltip = tooltipContent && (
           <UncontrolledTooltip container={rowEl ?? undefined} target={id}>
-            {renderTooltipContent(action, plan)}
+            {tooltipContent}
           </UncontrolledTooltip>
         );
 

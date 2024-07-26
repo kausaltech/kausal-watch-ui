@@ -13,6 +13,7 @@ import { useTheme } from 'styled-components';
 import { ActionTableContext } from './ActionStatusTable';
 import { usePlan } from 'context/plan';
 import { PhaseTimeline } from 'components/actions/PhaseTimeline';
+import ActionAttribute from 'components/common/ActionAttribute';
 import { useTranslations } from 'next-intl';
 
 const TooltipTitle = styled.p`
@@ -61,6 +62,8 @@ const Divider = styled.div`
 
 interface TooltipProps {
   action: ActionListAction;
+  attribute?: unknown;
+  attributeType?: unknown;
 }
 
 interface TooltipWithPlanProps extends TooltipProps {
@@ -293,4 +296,29 @@ export const LastUpdatedTooltipContent = ({ action }: TooltipProps) => {
       {dayjs(action.updatedAt).format('L')}
     </div>
   );
+};
+
+export const ActionAttributeTooltipContent = ({
+  attribute,
+  attributeType,
+}: TooltipProps) => {
+  switch (attribute.__typename) {
+    case 'AttributeChoice':
+    case 'AttributeText':
+    case 'AttributeRichText':
+      return (
+        <ActionAttribute
+          attribute={attribute}
+          attributeType={attributeType}
+          showTitle={false}
+        />
+      );
+      break;
+    case 'AttributeCategoryChoice':
+    case 'AttributeNumericValue':
+      return null;
+      break;
+    default:
+      return null;
+  }
 };

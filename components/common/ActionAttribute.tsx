@@ -28,6 +28,10 @@ const ScaleIcon = styled(Icon)<{ $active?: boolean }>`
 const AttributeContainer = styled.div<{ $fontSize?: string }>`
   margin-bottom: ${(props) => props.theme.spaces.s200};
 
+  &.minified {
+    margin-bottom: 0;
+  }
+
   h3 {
     font-size: ${(props) => props.theme.fontSizeBase};
   }
@@ -64,21 +68,24 @@ const NumericValue = styled.span`
 `;
 
 const NumericValueUnit = styled.span`
+  white-space: nowrap;
   font-size: ${(props) => props.theme.fontSizeSm};
 `;
 
 type AttributeContentProps = {
   attribute: AttributesBlockAttributeFragment;
   attributeType: AttributesBlockAttributeTypeFragment;
-  fontSize: string;
-  notitle?: boolean;
+  fontSize?: string;
+  minified?: boolean;
+  showTitle?: boolean;
 };
 
 type AttributeContentNestedTypeProps = {
   attribute: AttributesBlockAttributeWithNestedTypeFragment;
   attributeType: null | undefined;
   fontSize?: string;
-  notitle?: boolean;
+  minified?: boolean;
+  showTitle?: boolean;
 };
 
 const ActionAttribute = (
@@ -86,7 +93,13 @@ const ActionAttribute = (
 ) => {
   const locale = useLocale();
 
-  const { attribute, attributeType, fontSize, notitle = false } = props;
+  const {
+    attribute,
+    attributeType,
+    fontSize,
+    minified = false,
+    showTitle = true,
+  } = props;
   const type = attributeType ?? attribute.type;
   let dataElement: ReactElement;
 
@@ -99,6 +112,7 @@ const ActionAttribute = (
       dataElement = (
         <div>
           {type.format === 'ORDERED_CHOICE' &&
+            !minified &&
             type.choiceOptions.map(
               (choice, idx) =>
                 (idx > 0 || !type.hasZeroOption) && (
@@ -121,23 +135,35 @@ const ActionAttribute = (
               {attribute.choice?.name}
             </AttributeChoiceLabel>
           )}
-          {attribute.text ? <RichText html={attribute.text} /> : null}
+          {attribute.text && !minified ? (
+            <RichText html={attribute.text} />
+          ) : null}
         </div>
       );
       break;
     case 'AttributeText':
-      // FIXME: attribute.value is not HTML
-      dataElement = <RichText html={attribute.value} />;
+      // const MINIFIED_LENGTH = 45;
+      if (minified) {
+        dataElement = (
+          <div className="text-content clearfix">
+            {attribute.value.slice(0, 30)}
+            {attribute.value.length > 30 && <>&#8230;</>}
+          </div>
+        );
+      } else
+        dataElement = (
+          <div className="text-content clearfix">{attribute.value}</div>
+        );
       break;
     case 'AttributeRichText':
       dataElement = <RichText html={attribute.value} />;
       break;
     case 'AttributeNumericValue':
-      const formattedValue = attribute.numericValue?.toLocaleString(locale);
-
       dataElement = (
-        <div>
-          <NumericValue>{formattedValue}</NumericValue>
+        <div className={minified ? 'text-end' : undefined}>
+          <NumericValue>
+            {attribute.numericValue?.toLocaleString(locale)}
+          </NumericValue>
           <NumericValueUnit>{type.unit?.name}</NumericValueUnit>
         </div>
       );
@@ -156,8 +182,11 @@ const ActionAttribute = (
   }
   // Render horizontal layout
   return (
-    <AttributeContainer $fontSize={fontSize}>
-      {!notitle && (
+    <AttributeContainer
+      $fontSize={fontSize}
+      className={minified || !showTitle ? 'minified' : undefined}
+    >
+      {!minified && showTitle && (
         <h3>
           {type.name}
           {type.helpText && (
