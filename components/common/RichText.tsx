@@ -139,17 +139,14 @@ type CollapsibleTextProps = {
   className?: string;
 };
 
-const CollapsibleText = (props: CollapsibleTextProps) => {
-  const { parsedContent, className, ...rest } = props;
-  const t = useTranslations();
-  const [isOpen, setIsOpen] = useState(false);
-  const toggle = () => setIsOpen(!isOpen);
-
-  const BREAK_POINT = 400; // characters at least visible
+const splitText = (
+  parsedContent: string | JSX.Element | JSX.Element[],
+  breakPoint: number
+) => {
   // Make sure we do not break inside html elements, only break after <p> tags
   const intro: ReactElement[] = [];
   const restOfContent: ReactElement[] = [];
-  let previousNodeType: string | React.JSXElementConstructor<any> = '';
+  let previousNodeType: string | React.JSXElementConstructor<undefined> = '';
   let introLength = 0;
 
   Array.isArray(parsedContent) &&
@@ -159,7 +156,7 @@ const CollapsibleText = (props: CollapsibleTextProps) => {
         introLength += node.props?.children?.length ?? 0;
       }
       if (indx > 0 && restOfContent.length === 0) {
-        if (previousNodeType === 'p' && introLength > BREAK_POINT)
+        if (previousNodeType === 'p' && introLength > breakPoint)
           restOfContent.push(node);
         else {
           intro.push(node);
@@ -168,6 +165,24 @@ const CollapsibleText = (props: CollapsibleTextProps) => {
       } else if (restOfContent.length > 0) restOfContent.push(node);
       previousNodeType = node.type;
     });
+
+  return {
+    intro,
+    restOfContent,
+    hasMoreContent: restOfContent.length > 0,
+  };
+};
+
+const CollapsibleText = (props: CollapsibleTextProps) => {
+  const { parsedContent, className, ...rest } = props;
+  const t = useTranslations();
+  const [isOpen, setIsOpen] = useState(false);
+  const toggle = () => setIsOpen(!isOpen);
+
+  const BREAK_POINT = 400; // characters at least visible
+  // Make sure we do not break inside html elements, only break after <p> tags
+
+  const { intro, restOfContent } = splitText(parsedContent, BREAK_POINT);
 
   return (
     <div {...rest} className={`text-content ${className || ''}`}>
@@ -195,10 +210,11 @@ type RichTextProps = {
   html: string;
   className?: string;
   isCollapsible?: boolean;
+  maxLength?: number;
 };
 
 export default function RichText(props: RichTextProps) {
-  const { html, isCollapsible, className, ...rest } = props;
+  const { html, isCollapsible, className, maxLength, ...rest } = props;
   const plan = usePlan();
 
   if (typeof html !== 'string') return <div />;
@@ -247,6 +263,14 @@ export default function RichText(props: RichTextProps) {
 
   const parsedContent = parse(html, options);
 
+  if (maxLength) {
+    const { intro } = splitText(parsedContent, maxLength);
+    return (
+      <div {...rest} className={`text-content clearfix ${className || ''}`}>
+        <StyledRichText>{intro}</StyledRichText>
+      </div>
+    );
+  }
   if (isCollapsible)
     return (
       <CollapsibleText parsedContent={parsedContent} className={className} />
