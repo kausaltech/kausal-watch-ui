@@ -727,7 +727,7 @@ function SiteFooter(props: SiteFooterProps) {
                       rel={logo.link ? 'noreferrer' : ''}
                     >
                       <SVG
-                        src={logo.logo}
+                        src={getThemeStaticURL(logo.logo)}
                         preserveAspectRatio="xMidYMid meet"
                         title={logo.name}
                         style={{ display: 'block' }}

@@ -102,7 +102,7 @@ const ActionAttribute = (
                 (idx > 0 || !type.hasZeroOption) && (
                   <ScaleIcon
                     $active={idx <= valueIndex}
-                    name="circleFull"
+                    name="circle-full"
                     key={choice.identifier}
                   />
                 )
