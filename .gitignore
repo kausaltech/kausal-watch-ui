@@ -21,6 +21,7 @@ build-storybook.log
 /Attic/
 /.envrc
 /public/static/themes/
+/public/static/themes
 /.rgignore
 /test-results/
 /playwright-report/
