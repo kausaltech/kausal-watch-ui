@@ -10,6 +10,7 @@ import { useTranslations } from 'next-intl';
 import { usePathname } from 'next/navigation';
 import { PlanContextFragment } from '@/common/__generated__/graphql';
 import { getMetaTitles } from '@/utils/metadata';
+import MonsidoAccessibility from '@/components/MonsidoAccessibility';
 
 type NavItem = NonNullable<PlanContextFragment['footer']>['items'][0];
 
@@ -136,6 +137,8 @@ function Footer() {
     });
   }
 
+  const monsidoToken = theme.settings?.monsidoToken;
+
   return (
     <>
       <SiteFooter
@@ -153,6 +156,7 @@ function Footer() {
         ownerLinks={ownerLinks}
       />
       <ApplicationStateBanner deploymentType={deploymentType} />
+      {monsidoToken && <MonsidoAccessibility token={monsidoToken} />}
     </>
   );
 }
