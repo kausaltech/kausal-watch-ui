@@ -56,6 +56,6 @@
     "other": "Andere",
     "logo": "Logo",
     "inactive-actions": "Inaktive Maßnahmen",
-    "select-language": "Sprache auswählen"
+    "select-language": "Sprache auswählen",
     "no-action-version-available": "Keine {versionType}-Version verfügbar"
 }
