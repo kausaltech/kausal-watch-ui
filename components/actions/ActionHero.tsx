@@ -13,6 +13,7 @@ import { Category } from 'common/__generated__/graphql';
 import { Breadcrumbs } from 'components/common/Breadcrumbs';
 import { useTranslations } from 'next-intl';
 import ActionLogBanner from './ActionLogBanner';
+import { getThemeStaticURL } from '@/common/theme';
 
 const Hero = styled.header<{ $bgColor: string }>`
   position: relative;
@@ -270,7 +271,7 @@ function ActionHero(props: ActionHeroProps) {
                         <OrgLogo
                           src={
                             primaryOrg.logo?.rendition?.src ||
-                            '/static/themes/default/images/default-avatar-org.png'
+                            getThemeStaticURL(theme.defaultAvatarOrgImage)
                           }
                           alt=""
                         />

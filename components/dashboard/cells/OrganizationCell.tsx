@@ -1,5 +1,6 @@
 import { ActionListAction } from '../dashboard.types';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
+import { getThemeStaticURL } from '@/common/theme';
 
 interface Props {
   action: ActionListAction;
@@ -15,12 +16,13 @@ const OrganizationCell = ({ action }: Props) => {
   if (!action.primaryOrg) {
     return null;
   }
+  const theme = useTheme();
 
   return (
     <OrgLogo
       src={
         action.primaryOrg.logo?.rendition?.src ??
-        '/static/themes/default/images/default-avatar-org.png'
+        getThemeStaticURL(theme.defaultAvatarOrgImage)
       }
       alt={action.primaryOrg.name}
       id={`L${action.primaryOrg.id}`}
