@@ -224,8 +224,9 @@ export default function RichText(props: RichTextProps) {
         }
         // Internal link
         if (
-          cutHttp(attribs.href.split('.')[0]) === currentDomain ||
-          attribs.href.startsWith('#')
+          attribs.href &&
+          (cutHttp(attribs.href.split('.')[0]) === currentDomain ||
+            attribs.href.startsWith('#'))
         ) {
           return <a href={attribs.href}>{domToReact(children, options)}</a>;
         }
