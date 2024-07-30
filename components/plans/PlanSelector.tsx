@@ -1,8 +1,9 @@
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import { transparentize } from 'polished';
 import { UncontrolledDropdown, DropdownToggle, DropdownMenu } from 'reactstrap';
 import { usePlan } from 'context/plan';
 import Icon from 'components/common/Icon';
+import { getThemeStaticURL } from '@/common/theme';
 
 import PlanLink from './PlanLink';
 
@@ -66,6 +67,7 @@ const PlanSelector = () => {
   const plan = usePlan();
   const { allRelatedPlans } = plan;
   if (!allRelatedPlans.length) return null;
+  const theme = useTheme();
 
   const selectablePlans = [
     ...plan.allRelatedPlans.filter(
@@ -81,7 +83,7 @@ const PlanSelector = () => {
           <PlanAvatar
             src={
               plan.image?.small?.src ??
-              '/static/themes/default/images/default-avatar-org.png'
+              getThemeStaticURL(theme.defaultAvatarOrgImage)
             }
             alt=""
           />

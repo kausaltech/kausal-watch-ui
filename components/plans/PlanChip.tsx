@@ -1,7 +1,8 @@
 import React from 'react';
 import { transparentize } from 'polished';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import { Theme } from '@kausal/themes/types';
+import { getThemeStaticURL } from '@/common/theme';
 
 const Tag = styled.div<{ $minWidth: string }>`
   display: flex;
@@ -110,13 +111,12 @@ const PlanChip = React.forwardRef<HTMLDivElement, PlanChipProps>(
       size = 'md',
       negative = false,
     } = props;
+    const theme = useTheme();
 
     return (
       <Tag ref={ref} $minWidth={MIN_WIDTH[size]}>
         <PlanAvatar
-          src={
-            planImage ?? '/static/themes/default/images/default-avatar-org.png'
-          }
+          src={planImage ?? getThemeStaticURL(theme.defaultAvatarOrgImage)}
           size={IMAGE_SIZES[size]}
           alt=""
         />

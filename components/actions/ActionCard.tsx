@@ -8,6 +8,7 @@ import { getStatusColorForAction } from 'common/ActionStatusSummary';
 import { ActionLink } from 'common/links';
 import { useTheme } from 'styled-components';
 import { getActionTermContext } from 'common/i18n';
+import { getThemeStaticURL } from '@/common/theme';
 import { usePlan } from 'context/plan';
 import PlanChip from 'components/plans/PlanChip';
 import {
@@ -375,7 +376,7 @@ function ActionCard({
             <OrgLogo
               src={
                 primaryOrg?.logo?.rendition?.src ||
-                '/static/themes/default/images/default-avatar-org.png'
+                getThemeStaticURL(theme.defaultAvatarOrgImage)
               }
               alt=""
             />

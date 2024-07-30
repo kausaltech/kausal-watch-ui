@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import styled, { css } from 'styled-components';
+import styled, { css, useTheme } from 'styled-components';
 
 import { gql } from '@apollo/client';
 import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
@@ -13,6 +13,7 @@ import {
   PlanFeaturesContactPersonsPublicData,
 } from 'common/__generated__/graphql';
 import { useTranslations } from 'next-intl';
+import { getThemeStaticURL } from '@/common/theme';
 
 const Person = styled.div<{
   $isLeader: boolean;
@@ -188,6 +189,7 @@ function ContactPerson({ person, leader = false }: ContactPersonProps) {
   const fullName = `${person.firstName} ${person.lastName}`;
   const role = leader ? t('contact-person-main') : '';
   const withoutAvatar = !plan.features.contactPersonsShowPicture;
+  const theme = useTheme();
 
   return (
     <Person $isLeader={leader} $withoutAvatar={withoutAvatar}>
@@ -196,7 +198,7 @@ function ContactPerson({ person, leader = false }: ContactPersonProps) {
           <Avatar
             src={
               person.avatarUrl ||
-              '/static/themes/default/images/default-avatar-user.png'
+              getThemeStaticURL(theme.defaultAvatarUserImage)
             }
             className="rounded-circle"
             alt={`${role} ${fullName}`}

@@ -8,6 +8,7 @@ import dayjs from '../../common/dayjs';
 import { usePlan } from '../../context/plan';
 import { useTranslations } from 'next-intl';
 import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
+import { getThemeStaticURL } from '@/common/theme';
 
 const ActionUpdate = styled.article`
   padding: ${(props) => props.theme.spaces.s100};
@@ -63,8 +64,7 @@ const GET_ACTION_UPDATES = gql`
 function ActionStatusUpdate(props) {
   const { author = null, date, title, content } = props;
 
-  const defaultAvatarUrl =
-    '/static/themes/default/images/default-avatar-user.png';
+  const defaultAvatarUrl = getThemeStaticURL(theme.defaultAvatarOrgImage);
 
   return (
     <ActionUpdate>
