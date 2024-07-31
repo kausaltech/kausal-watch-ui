@@ -75,9 +75,24 @@ const PersonOrg = styled.div`
   line-height: ${(props) => props.theme.lineHeightSm};
 `;
 
-const Avatar = styled.img`
+const Avatar = styled.div<{
+  src?: string;
+  hasAvatar: boolean;
+  $isLeader: boolean;
+}>`
   width: 5em;
   height: 5em;
+  border-radius: 50%;
+  background-color: ${(props) =>
+    !props.hasAvatar ? props.theme.themeColors.light : 'transparent'};
+  background-size: cover;
+  background-position: center;
+  background-image: ${(props) =>
+    !props.hasAvatar ? 'none' : `url(${props.src})`};
+  border: ${(props) =>
+    props.$isLeader
+      ? `4px solid ${props.theme.brandDark}`
+      : `2px solid ${props.theme.themeColors.light}`};
 `;
 
 const Address = styled.address`
@@ -189,21 +204,19 @@ function ContactPerson({ person, leader = false }: ContactPersonProps) {
   const fullName = `${person.firstName} ${person.lastName}`;
   const role = leader ? t('contact-person-main') : '';
   const withoutAvatar = !plan.features.contactPersonsShowPicture;
-  const theme = useTheme();
+  const hasAvatar = Boolean(person.avatarUrl);
 
   return (
     <Person $isLeader={leader} $withoutAvatar={withoutAvatar}>
       {plan.features.contactPersonsShowPicture ? (
-        <div>
+        <>
           <Avatar
-            src={
-              person.avatarUrl ||
-              getThemeStaticURL(theme.defaultAvatarUserImage)
-            }
-            className="rounded-circle"
-            alt={`${role} ${fullName}`}
+            src={person.avatarUrl || ''}
+            hasAvatar={hasAvatar}
+            $isLeader={leader}
+            aria-label={`${role} ${fullName}`}
           />
-        </div>
+        </>
       ) : (
         <span className="visually-hidden">{`${role} ${fullName}`}</span>
       )}
