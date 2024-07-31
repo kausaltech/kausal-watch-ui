@@ -88,7 +88,8 @@ const FiltersList = styled.div`
 const FiltersHeader = styled.h2`
   margin-bottom: ${(props) => props.theme.spaces.s100};
   font-size: ${(props) => props.theme.fontSizeMd};
-  font-family: ${(props) => props.theme.fontFamily};
+  font-family: ${(props) =>
+    `${props.theme.fontFamily}, ${props.theme.fontFamilyFallback}`};
   font-weight: ${(props) => props.theme.fontWeightBold};
   color: ${(props) =>
     readableColor(

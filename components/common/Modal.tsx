@@ -44,7 +44,8 @@ const ModalSubHeader = styled.p`
   margin-bottom: ${(props) => props.theme.spaces.s200};
   text-align: center;
   font-size: ${(props) => props.theme.fontSizeSm};
-  font-family: ${(props) => props.theme.fontFamilyTiny};
+  font-family: ${(props) =>
+    `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`};
   line-height: ${(props) => props.theme.lineHeightMd};
 `;
 

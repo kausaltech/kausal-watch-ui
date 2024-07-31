@@ -81,11 +81,12 @@ const ActionsNav = styled.nav`
   justify-content: space-between;
   margin-bottom: ${(props) => props.theme.spaces.s100};
   font-size: ${(props) => props.theme.fontSizeSm};
-  font-family: ${(props) => props.theme.fontFamilyTiny};
-
+  font-family: ${(props) =>
+    `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`};
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     font-size: ${(props) => props.theme.fontSizeBase};
-    font-family: ${(props) => props.theme.fontFamily};
+    font-family: ${(props) =>
+      `${props.theme.fontFamily}, ${props.theme.fontFamilyFallback}`};
   }
 `;
 
@@ -107,9 +108,9 @@ const ImageCredit = styled.span`
   padding: 0.25rem 0.5rem;
   background-color: rgba(255, 255, 255, 0.66);
   font-size: ${(props) => props.theme.fontSizeSm};
-  font-family: ${(props) => props.theme.fontFamilyTiny};
-
-  @media (min-width: ${(props) => props.theme.breakpointLg}) {
+  font-family: ${(props) =>
+      `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`}
+    @media (min-width: ${(props) => props.theme.breakpointLg}) {
     top: inherit;
     bottom: 0;
   }

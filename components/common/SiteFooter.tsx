@@ -236,7 +236,8 @@ const TopButton = styled.button`
   background: none;
   border: none;
   padding: 0;
-  font-family: ${(props) => props.theme.fontFamily};
+  font-family: ${(props) =>
+    `${props.theme.fontFamily}, ${props.theme.fontFamilyFallback}`};
   font-weight: ${(props) => props.theme.fontWeightBold};
   cursor: pointer;
   color: ${(props) => props.theme.footerColor};

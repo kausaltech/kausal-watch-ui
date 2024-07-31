@@ -29,8 +29,8 @@ const HeaderBg = styled.div`
 const ContentHeader = styled.header`
   padding: ${(props) => props.theme.spaces.s400} 0
     ${(props) => props.theme.spaces.s200};
-  font-family: ${(props) => props.theme.fontFamilyContent};
-
+  font-family: ${(props) =>
+    `${props.theme.fontFamilyContent}, ${props.theme.fontFamilyFallback}`};
   h1 {
     margin-bottom: ${(props) => props.theme.spaces.s150};
     font-size: ${(props) => props.theme.fontSizeXxl};
@@ -55,9 +55,9 @@ const ImageCredit = styled.span`
   background-color: rgba(255, 255, 255, 0.66);
   color: #000000;
   font-size: ${(props) => props.theme.fontSizeSm};
-  font-family: ${(props) => props.theme.fontFamilyTiny};
-
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  font-family: ${(props) =>
+      `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`}
+    @media (min-width: ${(props) => props.theme.breakpointMd}) {
     top: inherit;
     bottom: 0;
   }
