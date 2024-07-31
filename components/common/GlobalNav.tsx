@@ -581,7 +581,7 @@ function GlobalNav(props) {
                 </SiteTitle>
               </HomeLink>
             </Link>
-            <PlanSelector />
+            <PlanSelector color={theme.brandNavColor} />
           </Site>
 
           <Nav navbar className="ml-auto d-none d-md-flex">

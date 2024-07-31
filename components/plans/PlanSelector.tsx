@@ -1,4 +1,5 @@
 import styled, { useTheme } from 'styled-components';
+import { CSSProperties } from 'react';
 import { transparentize } from 'polished';
 import { UncontrolledDropdown, DropdownToggle, DropdownMenu } from 'reactstrap';
 import { usePlan } from 'context/plan';
@@ -12,11 +13,11 @@ const PlanSelect = styled.div`
   align-items: center;
 `;
 
-const PlanDivider = styled.div`
+const PlanDivider = styled.div<{ $color: CSSProperties['color'] }>`
   &:before {
     content: '/';
     margin: 0 0.25rem 0 0.5rem;
-    color: ${(props) => props.theme.brandNavColor};
+    color: ${(props) => props.$color};
   }
 `;
 
@@ -34,7 +35,9 @@ const PlanTitle = styled.div`
   font-size: ${(props) => props.theme.fontSizeSm};
 `;
 
-const StyledDropdownToggle = styled(DropdownToggle)`
+const StyledDropdownToggle = styled(DropdownToggle)<{
+  $color: CSSProperties['color'];
+}>`
   display: flex;
   align-items: center;
   padding: 0.25rem;
@@ -43,7 +46,7 @@ const StyledDropdownToggle = styled(DropdownToggle)`
   border: 1px solid transparent;
   border-radius: 1.75rem;
   font-size: 1rem;
-  color: ${(props) => props.theme.brandNavColor};
+  color: ${(props) => props.$color};
   font: inherit;
   cursor: pointer;
   outline: inherit;
@@ -59,15 +62,21 @@ const StyledDropdownToggle = styled(DropdownToggle)`
   }
 
   svg {
-    fill: ${(props) => props.theme.brandNavColor} !important;
+    fill: ${(props) => props.$color} !important;
   }
 `;
 
-const PlanSelector = () => {
+interface PlanSelectorProps {
+  color: CSSProperties['color'];
+}
+
+const PlanSelector = (props: PlanSelectorProps) => {
+  const { color } = props;
   const plan = usePlan();
   const { allRelatedPlans } = plan;
-  if (!allRelatedPlans.length) return null;
   const theme = useTheme();
+
+  if (!allRelatedPlans.length) return null;
 
   const selectablePlans = [
     ...plan.allRelatedPlans.filter(
@@ -77,9 +86,13 @@ const PlanSelector = () => {
 
   return (
     <PlanSelect>
-      <PlanDivider />
+      <PlanDivider $color={color} />
       <UncontrolledDropdown>
-        <StyledDropdownToggle data-toggle="dropdown" tag="button">
+        <StyledDropdownToggle
+          data-toggle="dropdown"
+          tag="button"
+          $color={color}
+        >
           <PlanAvatar
             src={
               plan.image?.small?.src ??

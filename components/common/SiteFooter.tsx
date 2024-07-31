@@ -512,7 +512,7 @@ function SiteFooter(props: SiteFooterProps) {
             {!theme.settings.footerLogoOnly && (
               <ServiceTitle>
                 <Link href="/">{siteTitle}</Link>
-                <PlanSelector />
+                <PlanSelector color={theme.footerColor} />
               </ServiceTitle>
             )}
           </Branding>
