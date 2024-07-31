@@ -51,7 +51,8 @@ const PlanTitle = styled.div<{
 const PlanOrg = styled.div<{ $negative?: boolean }>`
   font-size: 75%;
   font-weight: ${(props) => props.theme.fontWeightNormal};
-  font-family: ${(props) => props.theme.fontFamilyTiny};
+  font-family: ${(props) =>
+    `${props.theme.fontFamilyContent}, ${props.theme.fontFamilyFallback}`};
   color: ${(props) =>
     props.$negative
       ? props.theme.graphColors.grey030

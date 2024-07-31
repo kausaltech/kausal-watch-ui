@@ -76,7 +76,8 @@ const TaskStatusViz = styled.div`
 
 const VizLabel = styled.div`
   font-size: ${(props) => props.theme.fontSizeSm};
-  font-family: ${(props) => props.theme.fontFamilyTiny};
+  font-family: ${(props) =>
+    `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`};
   line-height: ${(props) => props.theme.lineHeightMd};
   hyphens: manual;
 

@@ -236,7 +236,8 @@ const TopButton = styled.button`
   background: none;
   border: none;
   padding: 0;
-  font-family: ${(props) => props.theme.fontFamily};
+  font-family: ${(props) =>
+    `${props.theme.fontFamily}, ${props.theme.fontFamilyFallback}`};
   font-weight: ${(props) => props.theme.fontWeightBold};
   cursor: pointer;
   color: ${(props) => props.theme.footerColor};
@@ -511,7 +512,7 @@ function SiteFooter(props: SiteFooterProps) {
             {!theme.settings.footerLogoOnly && (
               <ServiceTitle>
                 <Link href="/">{siteTitle}</Link>
-                <PlanSelector />
+                <PlanSelector color={theme.footerColor} />
               </ServiceTitle>
             )}
           </Branding>

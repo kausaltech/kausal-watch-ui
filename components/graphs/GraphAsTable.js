@@ -23,7 +23,8 @@ const TableContainer = styled.div`
   background-color: ${(props) => props.theme.cardBackground.primary};
 
   table {
-    font-family: ${(props) => props.theme.fontFamilyContent};
+    font-family: ${(props) =>
+      `${props.theme.fontFamilyContent}, ${props.theme.fontFamilyFallback}`};
     font-size: ${(props) => props.theme.fontSizeSm};
     line-height: 1.25;
     background-color: ${(props) => props.theme.themeColors.white};

@@ -113,7 +113,8 @@ const MainCard = styled.div<{ $alignment: string; $color: string }>`
   .lead-content {
     font-size: ${(props) => props.theme.fontSizeBase};
     line-height: ${(props) => props.theme.lineHeightMd};
-    font-family: ${(props) => props.theme.fontFamilyContent};
+    font-family: ${(props) =>
+      `${props.theme.fontFamilyContent}, ${props.theme.fontFamilyFallback}`};
   }
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
@@ -148,9 +149,9 @@ const ImageCredit = styled.span`
   padding: 0.25rem 0.5rem;
   background-color: rgba(255, 255, 255, 0.66);
   font-size: ${(props) => props.theme.fontSizeSm};
-  font-family: ${(props) => props.theme.fontFamilyTiny};
-
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  font-family: ${(props) =>
+      `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`}
+    @media (min-width: ${(props) => props.theme.breakpointMd}) {
     top: inherit;
     bottom: 0;
   }

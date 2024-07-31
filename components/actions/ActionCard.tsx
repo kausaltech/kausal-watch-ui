@@ -143,7 +143,8 @@ const StyledActionPhase = styled.div<{
 const StatusName = styled.div`
   padding: ${(props) => props.theme.spaces.s050};
   font-size: ${(props) => props.theme.fontSizeSm};
-  font-family: ${(props) => props.theme.fontFamilyTiny};
+  font-family: ${(props) =>
+    `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`};
   line-height: 1;
 `;
 
@@ -174,7 +175,8 @@ const ActionOrgAvatar = styled.div`
 
 const ActionOrgName = styled.div`
   font-size: ${(props) => props.theme.fontSizeSm};
-  font-family: ${(props) => props.theme.fontFamilyTiny};
+  font-family: ${(props) =>
+    `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`}
   color: ${(props) => props.theme.themeColors.dark};
   line-height: 1;
 `;

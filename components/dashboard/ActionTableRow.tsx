@@ -7,9 +7,9 @@ import { ActionListAction, ColumnConfig } from './dashboard.types';
 import { COLUMN_CONFIG } from './dashboard.constants';
 
 const StyledRow = styled.tr`
-  font-family: ${(props) => props.theme.fontFamilyContent};
-
-  &.merged {
+  font-family: ${(props) =>
+    `${props.theme.fontFamilyContent}, ${props.theme.fontFamilyFallback}`};
+    &.merged {
     opacity: 0.25;
   }
 
@@ -77,7 +77,8 @@ const StyledRow = styled.tr`
     padding: ${(props) => props.theme.spaces.s050}
       ${(props) => props.theme.spaces.s100};
     font-size: ${(props) => props.theme.fontSizeSm};
-    font-family: ${(props) => props.theme.fontFamilyTiny};
+    font-family: ${(props) =>
+      `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`}
     border-radius: 4px;
     box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px,
       rgba(0, 0, 0, 0.22) 0px 10px 10px;
@@ -85,7 +86,8 @@ const StyledRow = styled.tr`
     h5 {
       font-weight: ${(props) => props.theme.fontWeightBold};
       font-size: ${(props) => props.theme.fontSizeSm};
-      font-family: ${(props) => props.theme.fontFamilyTiny};
+      font-family: ${(props) =>
+        `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`}
       color: ${(props) => props.theme.themeColors.black};
     }
   }

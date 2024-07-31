@@ -21,7 +21,8 @@ const OrgName = styled.div`
 
 const OrgTitle = styled.div`
   font-size: ${(props) => props.theme.fontSizeSm};
-  font-family: ${(props) => props.theme.fontFamilyTiny};
+  font-family: ${(props) =>
+    `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`};
   font-weight: ${(props) => props.theme[props.weight]};
 `;
 

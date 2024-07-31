@@ -126,7 +126,8 @@ const BotNav = styled(Navbar)<{ $offsetTop?: number; $expanded: boolean }>`
 
 const SiteTitle = styled.div`
   font-size: ${(props) => props.theme.fontSizeBase};
-  font-family: ${(props) => props.theme.brandNavFontFamily};
+  font-family: ${(props) =>
+    `${props.theme.brandNavFontFamily}, ${props.theme.fontFamilyFallback}`};
   line-height: 1;
   padding: ${(props) => props.theme.spaces.s150} 0
     ${(props) => props.theme.spaces.s150};
@@ -580,7 +581,7 @@ function GlobalNav(props) {
                 </SiteTitle>
               </HomeLink>
             </Link>
-            <PlanSelector />
+            <PlanSelector color={theme.brandNavColor} />
           </Site>
 
           <Nav navbar className="ml-auto d-none d-md-flex">

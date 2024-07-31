@@ -101,7 +101,8 @@ const ResultsHeader = styled.div`
 
 const ResultCount = styled.div`
   font-size: ${(props) => props.theme.fontSizeSm};
-  font-family: ${(props) => props.theme.fontFamilyTiny};
+  font-family: ${(props) =>
+    `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`};
 `;
 
 const ResultsFooter = styled.div`
@@ -166,7 +167,8 @@ const HitHighlight = styled.div`
   margin: 0 0 ${(props) => props.theme.spaces.s050} 0;
   color: ${(props) => props.theme.textColor.tertiary};
   font-size: ${(props) => props.theme.fontSizeSm};
-  font-family: ${(props) => props.theme.fontFamilyTiny};
+  font-family: ${(props) =>
+    `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`}
   line-height: 1;
 `;
 

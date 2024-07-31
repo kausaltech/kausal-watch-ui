@@ -10,7 +10,8 @@ interface Props {
 const Wrapper = styled.div`
   display: inline-block;
   font-size: ${(props) => props.theme.fontSizeSm};
-  font-family: ${(props) => props.theme.fontFamilyTiny};
+  font-family: ${(props) =>
+    `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`};
   white-space: nowrap;
   cursor: default;
   padding: ${(props) => props.theme.spaces.s050};

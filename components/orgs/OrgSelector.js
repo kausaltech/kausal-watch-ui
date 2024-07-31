@@ -19,7 +19,8 @@ const OrgAvatar = styled.img`
 const OrgTitle = styled.div`
   margin: 0 0.5rem 0 1rem;
   font-size: ${(props) => props.theme.fontSizeSm};
-  font-family: ${(props) => props.theme.fontFamilyTiny};
+  font-family: ${(props) =>
+    `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`};
   font-weight: ${(props) => props.theme[props.weight]};
 `;
 

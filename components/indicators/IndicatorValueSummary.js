@@ -46,7 +46,8 @@ const ValueChange = styled.div`
 const ChangeSymbol = styled.span`
   margin-right: 0.5em;
   font-size: ${(props) => props.theme.fontSizeSm};
-  font-family: ${(props) => props.theme.fontFamilyTiny};
+  font-family: ${(props) =>
+    `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`};
 `;
 
 function determineDesirableDirection(values, goals) {

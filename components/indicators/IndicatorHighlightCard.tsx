@@ -13,7 +13,8 @@ const IndicatorType = styled.div`
   margin-bottom: 0.5em;
   text-align: left;
   font-size: ${(props) => props.theme.fontSizeSm};
-  font-family: ${(props) => props.theme.fontFamilyTiny};
+  font-family: ${(props) =>
+    `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`};
   color: ${(props) => props.theme.neutralDark};
 `;
 
