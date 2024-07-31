@@ -4360,6 +4360,7 @@ export type UpdatedAtColumnBlock = DashboardColumnInterface & StreamFieldInterfa
 
 export type UserFeedbackMutationInput = {
   action?: InputMaybe<Scalars['ID']>;
+  category?: InputMaybe<Scalars['ID']>;
   clientMutationId?: InputMaybe<Scalars['String']>;
   comment: Scalars['String'];
   email?: InputMaybe<Scalars['String']>;

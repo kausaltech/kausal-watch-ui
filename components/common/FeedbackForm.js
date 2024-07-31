@@ -36,6 +36,7 @@ function makeAbsoluteUrl(url) {
 const FeedbackForm = ({
   planIdentifier,
   actionId = null,
+  categoryId = null,
   heading,
   description,
   prompt,
@@ -63,6 +64,7 @@ const FeedbackForm = ({
       type: formContext,
       plan: planIdentifier,
       action: actionId,
+      category: categoryId,
       url: makeAbsoluteUrl(
         decodeURIComponent(searchParams.get('lastUrl') || pathname)
       ),
@@ -175,6 +177,7 @@ const FeedbackForm = ({
 FeedbackForm.propTypes = {
   planIdentifier: PropTypes.string.isRequired,
   actionId: PropTypes.string,
+  categoryId: PropTypes.string,
   heading: PropTypes.string,
   description: PropTypes.string,
   prompt: PropTypes.string,
