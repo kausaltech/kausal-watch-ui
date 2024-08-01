@@ -8,6 +8,7 @@
       "ActionScheduleBlock"
     ],
     "ActionDashboardColumnBlock": [
+      "FieldColumnBlock",
       "IdentifierColumnBlock",
       "ImpactColumnBlock",
       "ImplementationPhaseColumnBlock",
@@ -72,6 +73,7 @@
       "CategoryPageProgressBlock"
     ],
     "DashboardColumnInterface": [
+      "FieldColumnBlock",
       "IdentifierColumnBlock",
       "ImpactColumnBlock",
       "ImplementationPhaseColumnBlock",
@@ -82,6 +84,18 @@
       "StatusColumnBlock",
       "TasksColumnBlock",
       "UpdatedAtColumnBlock"
+    ],
+    "DatasetSchemaScopeTypeNode": [
+      "CategoryType",
+      "Plan"
+    ],
+    "DatasetScopeTypeNode": [
+      "Action",
+      "Category"
+    ],
+    "DimensionScopeTypeNode": [
+      "CategoryType",
+      "Plan"
     ],
     "FieldBlockMetaInterface": [
       "ActionContactFormBlock",
@@ -205,6 +219,7 @@
       "DocumentChooserBlock",
       "EmailBlock",
       "EmbedBlock",
+      "FieldColumnBlock",
       "FloatBlock",
       "FrontPageHeroBlock",
       "IdentifierColumnBlock",
