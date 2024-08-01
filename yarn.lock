@@ -3555,20 +3555,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@kausal/plotly-custom@npm:^2.14.3":
-  version: 2.14.3
-  resolution: "@kausal/plotly-custom@npm:2.14.3"
+"@kausal/plotly-custom@npm:^2.32.0":
+  version: 2.32.0
+  resolution: "@kausal/plotly-custom@npm:2.32.0"
   dependencies:
-    "@plotly/d3": 3.8.0
+    "@plotly/d3": 3.8.1
     "@plotly/d3-sankey": 0.7.2
     "@plotly/d3-sankey-circular": 0.33.1
+    "@plotly/mapbox-gl": 1.13.4
     "@turf/area": ^6.4.0
     "@turf/bbox": ^6.4.0
     "@turf/centroid": ^6.0.2
+    base64-arraybuffer: ^1.0.2
     canvas-fit: ^1.5.0
     color-alpha: 1.0.4
     color-normalize: 1.5.0
-    color-parse: 1.3.8
+    color-parse: 2.0.0
     color-rgba: 2.1.1
     country-regex: ^1.1.0
     d3-force: ^1.2.1
@@ -3576,17 +3578,15 @@ __metadata:
     d3-geo: ^1.12.1
     d3-geo-projection: ^2.9.0
     d3-hierarchy: ^1.1.9
-    d3-interpolate: ^1.4.0
+    d3-interpolate: ^3.0.1
     d3-time: ^1.1.0
     d3-time-format: ^2.2.3
     fast-isnumeric: ^1.1.4
     gl-mat4: ^1.2.0
-    gl-text: ^1.3.1
-    glslify: ^7.1.1
+    gl-text: ^1.4.0
     has-hover: ^1.0.1
     has-passive-events: ^1.0.0
-    is-mobile: ^2.2.2
-    mapbox-gl: 1.10.1
+    is-mobile: ^4.0.0
     mouse-change: ^1.4.0
     mouse-event-offset: ^3.0.2
     mouse-wheel: ^1.2.0
@@ -3597,8 +3597,8 @@ __metadata:
     probe-image-size: ^7.2.3
     regl: "npm:@plotly/regl@^2.1.2"
     regl-error2d: ^2.0.12
-    regl-line2d: ^3.1.2
-    regl-scatter2d: ^3.2.8
+    regl-line2d: ^3.1.3
+    regl-scatter2d: ^3.3.1
     regl-splom: ^1.0.14
     strongly-connected-components: ^1.0.1
     superscript-text: ^1.0.0
@@ -3608,7 +3608,7 @@ __metadata:
     topojson-client: ^3.1.0
     webgl-context: ^2.2.0
     world-calendars: ^1.0.3
-  checksum: f9c7912b03231e756956c844ffd308f380b72fe627a6d53c4b0c4b4db88138e977d41347b5ed9e8d21677c1aeccb05a2bcd2ff6280ada0c4d8a7995fa40b2d8e
+  checksum: d325333e1ee1a691d75f701dda0b52aa41db5f4fd7a47b00a2c61b5bd158ffc4d98f6d04565c7dbef1c227100cf366490dc0abe6d018c66fcfddf09835f3f61f
   languageName: node
   linkType: hard
 
@@ -3626,7 +3626,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mapbox/geojson-rewind@npm:^0.5.0, @mapbox/geojson-rewind@npm:^0.5.2":
+"@mapbox/geojson-rewind@npm:^0.5.2":
   version: 0.5.2
   resolution: "@mapbox/geojson-rewind@npm:0.5.2"
   dependencies:
@@ -4372,10 +4372,40 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@plotly/d3@npm:3.8.0":
-  version: 3.8.0
-  resolution: "@plotly/d3@npm:3.8.0"
-  checksum: 81f22291ea445d24476646afbd32d950b9ebded92936f7ee69aeab81c0bc3671a23d6b8a9cec68cb9ccce81792733da0de629884dcb71f94ff7c305bb449d765
+"@plotly/d3@npm:3.8.1":
+  version: 3.8.1
+  resolution: "@plotly/d3@npm:3.8.1"
+  checksum: 917e686b7cb02fd8fb16d29b477fb2736352e2fe79a6d37281da2c9cc607e5a62298cb43d41adc175209a29d6b375dbdcb02c5bee3a404ec8e343519c25268de
+  languageName: node
+  linkType: hard
+
+"@plotly/mapbox-gl@npm:1.13.4":
+  version: 1.13.4
+  resolution: "@plotly/mapbox-gl@npm:1.13.4"
+  dependencies:
+    "@mapbox/geojson-rewind": ^0.5.2
+    "@mapbox/geojson-types": ^1.0.2
+    "@mapbox/jsonlint-lines-primitives": ^2.0.2
+    "@mapbox/mapbox-gl-supported": ^1.5.0
+    "@mapbox/point-geometry": ^0.1.0
+    "@mapbox/tiny-sdf": ^1.1.1
+    "@mapbox/unitbezier": ^0.0.0
+    "@mapbox/vector-tile": ^1.3.1
+    "@mapbox/whoots-js": ^3.1.0
+    csscolorparser: ~1.0.3
+    earcut: ^2.2.2
+    geojson-vt: ^3.2.1
+    gl-matrix: ^3.2.1
+    grid-index: ^1.1.0
+    murmurhash-js: ^1.0.0
+    pbf: ^3.2.1
+    potpack: ^1.0.1
+    quickselect: ^2.0.0
+    rw: ^1.3.3
+    supercluster: ^7.1.0
+    tinyqueue: ^2.0.3
+    vt-pbf: ^3.1.1
+  checksum: d1bd4b16abf6773ed65abadead1496445df2d12a652616ea6c4ff481b580089c2d733888394bf2508ab5367b1903f06d306769124c9f18eb55e516b2b2a66c8b
   languageName: node
   linkType: hard
 
@@ -6695,13 +6725,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/d3@npm:^3":
-  version: 3.5.53
-  resolution: "@types/d3@npm:3.5.53"
-  checksum: 69ff5951f4dcd2b9106dc4dc18e450f43493402bd6c08e98cfbf73dbb87ece7abc3fbc7c66aed46b410447c836a1227cf5d087d6be957cbaec9870762eaf4ba3
-  languageName: node
-  linkType: hard
-
 "@types/detect-port@npm:^1.3.0":
   version: 1.3.5
   resolution: "@types/detect-port@npm:1.3.5"
@@ -7034,12 +7057,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/plotly.js@npm:^1.54.20":
-  version: 1.54.22
-  resolution: "@types/plotly.js@npm:1.54.22"
-  dependencies:
-    "@types/d3": ^3
-  checksum: 77da7ef3620731f29546bd586dbdcc306a092215264de8817e087a6b445e0fcc4dde05a11910465665e0de32084073230b57951baa78f31fdcf7afc00d2c3184
+"@types/plotly.js@npm:^2.33.3":
+  version: 2.33.3
+  resolution: "@types/plotly.js@npm:2.33.3"
+  checksum: 6d7491c067000c48f68f5a6c9ae1f396073cd7a089c053f4ffb49544b3713784f3d823f4d51f130b9d7b2c5b3df3b099475d0f276388defe00d6e7e404a26648
   languageName: node
   linkType: hard
 
@@ -7087,7 +7108,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-plotly.js@npm:^2.5.0":
+"@types/react-plotly.js@npm:^2.6.3":
   version: 2.6.3
   resolution: "@types/react-plotly.js@npm:2.6.3"
   dependencies:
@@ -9140,6 +9161,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"base64-arraybuffer@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "base64-arraybuffer@npm:1.0.2"
+  checksum: 15e6400d2d028bf18be4ed97702b11418f8f8779fb8c743251c863b726638d52f69571d4cc1843224da7838abef0949c670bde46936663c45ad078e89fee5c62
+  languageName: node
+  linkType: hard
+
 "base64-js@npm:^1.3.1":
   version: 1.5.1
   resolution: "base64-js@npm:1.5.1"
@@ -10304,14 +10332,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"color-parse@npm:1.3.8":
-  version: 1.3.8
-  resolution: "color-parse@npm:1.3.8"
+"color-parse@npm:2.0.0":
+  version: 2.0.0
+  resolution: "color-parse@npm:2.0.0"
   dependencies:
     color-name: ^1.0.0
-    defined: ^1.0.0
-    is-plain-obj: ^1.1.0
-  checksum: 181ede6955bcc4b7cdc2d53844ffffcd67532070a77089fa4d070b5ff2b0a9252beca5a3a4ddae3588e3623353f43ab5aa3f9ef8598113f2e62c72de5bd47017
+  checksum: f08abfba0032412fbded1a0d406243dec3c84b59ef60ca99069a868e8d6dc9b757446ce4df6333ad21fde806525d868edefdb14f0bee64c435fc643f2405b160
   languageName: node
   linkType: hard
 
@@ -11073,10 +11099,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"d3-color@npm:1":
-  version: 1.4.1
-  resolution: "d3-color@npm:1.4.1"
-  checksum: a214b61458b5fcb7ad1a84faed0e02918037bab6be37f2d437bf0e2915cbd854d89fbf93754f17b0781c89e39d46704633d05a2bfae77e6209f0f4b140f9894b
+"d3-color@npm:1 - 3":
+  version: 3.1.0
+  resolution: "d3-color@npm:3.1.0"
+  checksum: 4931fbfda5d7c4b5cfa283a13c91a954f86e3b69d75ce588d06cde6c3628cebfc3af2069ccf225e982e8987c612aa7948b3932163ce15eb3c11cd7c003f3ee3b
   languageName: node
   linkType: hard
 
@@ -11140,12 +11166,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"d3-interpolate@npm:^1.4.0":
-  version: 1.4.0
-  resolution: "d3-interpolate@npm:1.4.0"
+"d3-interpolate@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "d3-interpolate@npm:3.0.1"
   dependencies:
-    d3-color: 1
-  checksum: d98988bd1e2f59d01f100d0a19315ad8f82ef022aa09a65aff76f747a44f9b52f2d64c6578b8f47e01f2b14a8f0ef88f5460d11173c0dd2d58238c217ac0ec03
+    d3-color: 1 - 3
+  checksum: a42ba314e295e95e5365eff0f604834e67e4a3b3c7102458781c477bd67e9b24b6bb9d8e41ff5521050a3f2c7c0c4bbbb6e187fd586daa3980943095b267e78b
   languageName: node
   linkType: hard
 
@@ -13914,9 +13940,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"gl-text@npm:^1.3.1":
-  version: 1.3.1
-  resolution: "gl-text@npm:1.3.1"
+"gl-text@npm:^1.4.0":
+  version: 1.4.0
+  resolution: "gl-text@npm:1.4.0"
   dependencies:
     bit-twiddle: ^1.0.2
     color-normalize: ^1.5.0
@@ -13935,7 +13961,7 @@ __metadata:
     regl: ^2.0.0
     to-px: ^1.0.1
     typedarray-pool: ^1.1.0
-  checksum: fb78872ba09eee6bfc5a2b96074a037428b739cc91d6bb6db933bfe5a75e2fc52244fa7d779f9b25c42231b0765ba24eaf75dd7f63122f4a981fed448bc556be
+  checksum: d728b89481dca5e7edc5993dcf0f3894eac362c704d489583da096d08d18a844fe9195fd094e97a9bc545f8ef0dac8037d8c8f7d46e7cf6faebcdf3f746d442f
   languageName: node
   linkType: hard
 
@@ -14247,7 +14273,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"glslify@npm:^7.0.0, glslify@npm:^7.1.1":
+"glslify@npm:^7.0.0":
   version: 7.1.1
   resolution: "glslify@npm:7.1.1"
   dependencies:
@@ -15439,10 +15465,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"is-mobile@npm:^2.2.2":
-  version: 2.2.2
-  resolution: "is-mobile@npm:2.2.2"
-  checksum: dcc428c9fb2af40eca896cb83d7d61e89d9750767aa5a18c757e5c331ad81dc0e229a859b74824e7fdf0add4f8c4884bd59ef0016450bdcddc60ee3a76e95de3
+"is-mobile@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "is-mobile@npm:4.0.0"
+  checksum: 1c4f32ab030ac6c203d63b547ef23933eacfebe81fd9d800c86739d5a73afad7983aea4c5e832c3d9c0a63d1e68cd318637490e6406bdda1cbadc8f701d5d557
   languageName: node
   linkType: hard
 
@@ -16814,7 +16840,7 @@ __metadata:
     "@graphql-codegen/typescript-operations": ^3.0.3
     "@graphql-codegen/typescript-react-apollo": ^3.3.7
     "@kausal/mapboxgl-legend": ^1.7.2
-    "@kausal/plotly-custom": ^2.14.3
+    "@kausal/plotly-custom": ^2.32.0
     "@kausal/themes": ^0.8.2
     "@kausal/themes-private": ^0.5.10
     "@n8tb1t/use-scroll-position": ^2.0.3
@@ -16836,9 +16862,9 @@ __metadata:
     "@testing-library/react": ^13.1.1
     "@types/js-cookie": 3.0.6
     "@types/node": ^17.0.31
-    "@types/plotly.js": ^1.54.20
+    "@types/plotly.js": ^2.33.3
     "@types/react": ^18.0.8
-    "@types/react-plotly.js": ^2.5.0
+    "@types/react-plotly.js": ^2.6.3
     "@typescript-eslint/eslint-plugin": ^6.18.1
     "@typescript-eslint/parser": ^6.18.1
     apollo: ^2.33.10
@@ -16878,6 +16904,7 @@ __metadata:
     next-auth: beta
     next-images: ^1.8.4
     next-intl: ^3.3.2
+    plotly.js-locales: ^2.34.0
     polished: ^4.2.2
     popper.js: ^1.16.1
     postinstall-postinstall: ^2.1.0
@@ -16891,12 +16918,12 @@ __metadata:
     react-dom: 18.2.0
     react-highlight-words: ^0.18.0
     react-hook-form: ^7.30.0
-    react-hotkeys-hook: ^3.4.4
+    react-hotkeys-hook: ^3.4.7
     react-inlinesvg: ^3.0.0
     react-intersection-observer: ^9.1.0
     react-map-gl: ^7.0.19
     react-medium-image-zoom: ^5.1.1
-    react-plotly.js: ^2.5.1
+    react-plotly.js: ^2.6.0
     react-popper: ^2.3.0
     react-select: ^5.4.0
     react-sizeme: ^3.0.2
@@ -17645,37 +17672,6 @@ __metadata:
   version: 1.5.0
   resolution: "map-or-similar@npm:1.5.0"
   checksum: f65c0d420e272d0fce4e24db35f6a08109218480bca1d61eaa442cbe6cf46270b840218d3b5e94e4bfcc2595f1d0a1fa5885df750b52aac9ab1d437b29dcce38
-  languageName: node
-  linkType: hard
-
-"mapbox-gl@npm:1.10.1":
-  version: 1.10.1
-  resolution: "mapbox-gl@npm:1.10.1"
-  dependencies:
-    "@mapbox/geojson-rewind": ^0.5.0
-    "@mapbox/geojson-types": ^1.0.2
-    "@mapbox/jsonlint-lines-primitives": ^2.0.2
-    "@mapbox/mapbox-gl-supported": ^1.5.0
-    "@mapbox/point-geometry": ^0.1.0
-    "@mapbox/tiny-sdf": ^1.1.1
-    "@mapbox/unitbezier": ^0.0.0
-    "@mapbox/vector-tile": ^1.3.1
-    "@mapbox/whoots-js": ^3.1.0
-    csscolorparser: ~1.0.3
-    earcut: ^2.2.2
-    geojson-vt: ^3.2.1
-    gl-matrix: ^3.2.1
-    grid-index: ^1.1.0
-    minimist: ^1.2.5
-    murmurhash-js: ^1.0.0
-    pbf: ^3.2.1
-    potpack: ^1.0.1
-    quickselect: ^2.0.0
-    rw: ^1.3.3
-    supercluster: ^7.0.0
-    tinyqueue: ^2.0.3
-    vt-pbf: ^3.1.1
-  checksum: 94e285367f631c29d794b19017d25d635895b74d2b2c2934613c8e7c95cf18aff3760d6061d93865d5b67d1a738c843005785cf50c8e3a9173ccd6ac332d938b
   languageName: node
   linkType: hard
 
@@ -19494,6 +19490,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"plotly.js-locales@npm:^2.34.0":
+  version: 2.34.0
+  resolution: "plotly.js-locales@npm:2.34.0"
+  checksum: 88372c90dac2afcfc61a137c5ca1f5d23c5b4fd573f37f7b5ab1a32f87296817ddbf1af2f0d40c7b3c32f900bdab62b7c436aa7a3f97baaca6c3a418a52f9943
+  languageName: node
+  linkType: hard
+
 "pnp-webpack-plugin@npm:^1.7.0":
   version: 1.7.0
   resolution: "pnp-webpack-plugin@npm:1.7.0"
@@ -20311,7 +20314,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-hotkeys-hook@npm:^3.4.4":
+"react-hotkeys-hook@npm:^3.4.7":
   version: 3.4.7
   resolution: "react-hotkeys-hook@npm:3.4.7"
   dependencies:
@@ -20428,7 +20431,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-plotly.js@npm:^2.5.1":
+"react-plotly.js@npm:^2.6.0":
   version: 2.6.0
   resolution: "react-plotly.js@npm:2.6.0"
   dependencies:
@@ -20865,9 +20868,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"regl-line2d@npm:^3.1.2":
-  version: 3.1.2
-  resolution: "regl-line2d@npm:3.1.2"
+"regl-line2d@npm:^3.1.3":
+  version: 3.1.3
+  resolution: "regl-line2d@npm:3.1.3"
   dependencies:
     array-bounds: ^1.0.1
     array-find-index: ^1.0.2
@@ -20876,16 +20879,15 @@ __metadata:
     earcut: ^2.1.5
     es6-weak-map: ^2.0.3
     flatten-vertex-data: ^1.0.2
-    glslify: ^7.0.0
     object-assign: ^4.1.1
     parse-rect: ^1.2.0
     pick-by-alias: ^1.2.0
     to-float32: ^1.1.0
-  checksum: aa15125c922b3186993e4fd33df5f98e0e8daff14d59ebadc7e8f41d4f3453243a85481a306856f4bf72882db78b04bfe511a875b5b55eeecd5d1ad05b43f2fd
+  checksum: ab117fe9c20b5585be32d2ea9cd58924f0f9de2c60b8dccd6b91b0b00771b71d81e0649a169c14d502a412947bcc545a9002fe59df33b263dc79a0b980ffd8f1
   languageName: node
   linkType: hard
 
-"regl-scatter2d@npm:^3.2.3, regl-scatter2d@npm:^3.2.8":
+"regl-scatter2d@npm:^3.2.3, regl-scatter2d@npm:^3.3.1":
   version: 3.3.1
   resolution: "regl-scatter2d@npm:3.3.1"
   dependencies:
@@ -22593,7 +22595,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"supercluster@npm:^7.0.0":
+"supercluster@npm:^7.1.0":
   version: 7.1.5
   resolution: "supercluster@npm:7.1.5"
   dependencies:
