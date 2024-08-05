@@ -323,6 +323,8 @@ function ActionContentBlock(props: ActionContentBlockProps) {
       return (
         <ReportComparisonBlock plan={plan} block={block} action={action} />
       );
+    case 'IndicatorCausalChainBlock':
+      return null;
     default:
       console.error('Unknown action content block', block.__typename);
       return null;
