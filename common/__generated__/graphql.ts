@@ -1568,8 +1568,8 @@ export type CategoryTypeDatasetsBlock = StreamFieldInterface & {
   blocks: Array<StreamFieldInterface>;
   datasetSchema: DatasetSchema;
   field: Scalars['String'];
-  fieldHelpText?: Maybe<Scalars['String']>;
-  fieldLabel?: Maybe<Scalars['String']>;
+  heading?: Maybe<Scalars['String']>;
+  helpText?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['String']>;
   rawValue: Scalars['String'];
 };
@@ -3274,16 +3274,15 @@ export type PlanViewUrlArgs = {
   clientUrl?: InputMaybe<Scalars['String']>;
 };
 
-export type PlanDatasetsBlock = FieldBlockMetaInterface & StreamFieldInterface & {
+export type PlanDatasetsBlock = StreamFieldInterface & {
   __typename?: 'PlanDatasetsBlock';
   blockType: Scalars['String'];
   blocks: Array<StreamFieldInterface>;
   datasetSchema: DatasetSchema;
   field: Scalars['String'];
-  fieldHelpText?: Maybe<Scalars['String']>;
-  fieldLabel?: Maybe<Scalars['String']>;
+  heading?: Maybe<Scalars['String']>;
+  helpText?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['String']>;
-  meta?: Maybe<FieldBlockMetaData>;
   rawValue: Scalars['String'];
 };
 
@@ -8123,10 +8122,7 @@ export type GetActionDetailsQuery = (
         ) | null }
         & { __typename: 'IndicatorCausalChainBlock' }
       ) | (
-        { id?: string | null, fieldLabel?: string | null, fieldHelpText?: string | null, meta?: (
-          { restricted?: boolean | null, hidden?: boolean | null }
-          & { __typename?: 'FieldBlockMetaData' }
-        ) | null, datasetSchema: (
+        { id?: string | null, heading?: string | null, helpText?: string | null, datasetSchema: (
           { uuid: any }
           & { __typename?: 'DatasetSchema' }
         ) }
@@ -8636,10 +8632,7 @@ export type GetActionDetailsQuery = (
         ) | null }
         & { __typename: 'IndicatorCausalChainBlock' }
       ) | (
-        { id?: string | null, fieldLabel?: string | null, fieldHelpText?: string | null, meta?: (
-          { restricted?: boolean | null, hidden?: boolean | null }
-          & { __typename?: 'FieldBlockMetaData' }
-        ) | null, datasetSchema: (
+        { id?: string | null, heading?: string | null, helpText?: string | null, datasetSchema: (
           { uuid: any }
           & { __typename?: 'DatasetSchema' }
         ) }
@@ -9390,10 +9383,7 @@ type ActionMainContentBlocksFragment_IndicatorCausalChainBlock_Fragment = (
 );
 
 type ActionMainContentBlocksFragment_PlanDatasetsBlock_Fragment = (
-  { id?: string | null, fieldLabel?: string | null, fieldHelpText?: string | null, meta?: (
-    { restricted?: boolean | null, hidden?: boolean | null }
-    & { __typename?: 'FieldBlockMetaData' }
-  ) | null, datasetSchema: (
+  { id?: string | null, heading?: string | null, helpText?: string | null, datasetSchema: (
     { uuid: any }
     & { __typename?: 'DatasetSchema' }
   ) }
@@ -9957,9 +9947,15 @@ export type TemplatedCategoryPageFragmentFragment = (
         & { __typename?: 'AttributeType' }
       ) }
       & { __typename: 'CategoryPageAttributeTypeBlock' }
-    ) | { __typename: 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryTypeDatasetsBlock' } | (
+    ) | { __typename: 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' } | (
       { heading?: string | null, description?: string | null }
       & { __typename: 'CategoryPageContactFormBlock' }
+    ) | (
+      { id?: string | null, heading?: string | null, helpText?: string | null, datasetSchema: (
+        { uuid: any }
+        & { __typename?: 'DatasetSchema' }
+      ) }
+      & { __typename: 'CategoryTypeDatasetsBlock' }
     )> | null, layoutAside?: Array<(
       { attributeType: (
         { identifier: string }
@@ -10662,7 +10658,31 @@ export type GetContentPageQuery = (
           & { __typename: 'AttributeType' }
         ) }
         & { __typename: 'AttributeRichText' | 'AttributeText' }
-      )> | null }
+      )> | null, datasets?: Array<(
+        { uuid: any, schema: (
+          { uuid: any, timeResolution: DatasetSchemaTimeResolution, unit: string, dimensionCategories: Array<(
+            { order: number, category: (
+              { uuid: any, label: string, dimension: (
+                { name: string, uuid: any }
+                & { __typename?: 'BudgetDimension' }
+              ) }
+              & { __typename?: 'BudgetDimensionCategory' }
+            ) }
+            & { __typename?: 'DatasetSchemaDimensionCategory' }
+          )> }
+          & { __typename?: 'DatasetSchema' }
+        ), dataPoints: Array<(
+          { uuid: any, value?: number | null, date: any, dimensionCategories: Array<(
+            { uuid: any, label: string, dimension: (
+              { uuid: any }
+              & { __typename?: 'BudgetDimension' }
+            ) }
+            & { __typename?: 'BudgetDimensionCategory' }
+          )> }
+          & { __typename?: 'DataPoint' }
+        )> }
+        & { __typename?: 'Dataset' }
+      ) | null> | null }
       & { __typename?: 'Category' }
     ) | null, body?: Array<(
       { id?: string | null, blockType: string, field: string }
@@ -11019,9 +11039,15 @@ export type GetContentPageQuery = (
           & { __typename?: 'AttributeType' }
         ) }
         & { __typename: 'CategoryPageAttributeTypeBlock' }
-      ) | { __typename: 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryTypeDatasetsBlock' } | (
+      ) | { __typename: 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' } | (
         { heading?: string | null, description?: string | null }
         & { __typename: 'CategoryPageContactFormBlock' }
+      ) | (
+        { id?: string | null, heading?: string | null, helpText?: string | null, datasetSchema: (
+          { uuid: any }
+          & { __typename?: 'DatasetSchema' }
+        ) }
+        & { __typename: 'CategoryTypeDatasetsBlock' }
       )> | null, layoutAside?: Array<(
         { attributeType: (
           { identifier: string }

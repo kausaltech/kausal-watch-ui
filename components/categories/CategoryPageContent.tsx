@@ -111,7 +111,6 @@ const CategoryPageContent = ({
               />
             )}
       </MainContent>
-      <DataTable />
 
       {hasAside && (
         <AsideContent>

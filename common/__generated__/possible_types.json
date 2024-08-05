@@ -116,8 +116,7 @@
       "ActionResponsiblePartiesBlock",
       "ActionScheduleBlock",
       "ActionTasksBlock",
-      "IndicatorCausalChainBlock",
-      "PlanDatasetsBlock"
+      "IndicatorCausalChainBlock"
     ],
     "MenuItem": [
       "ExternalLinkMenuItem",

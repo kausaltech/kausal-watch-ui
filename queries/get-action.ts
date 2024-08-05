@@ -405,8 +405,8 @@ const GET_ACTION_DETAILS = gql`
     }
     ... on PlanDatasetsBlock {
       id
-      fieldLabel
-      fieldHelpText
+      heading
+      helpText
       datasetSchema {
         uuid
       }
