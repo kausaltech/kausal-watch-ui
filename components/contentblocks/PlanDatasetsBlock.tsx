@@ -15,7 +15,6 @@ import PopoverTip from 'components/common/PopoverTip';
 const TableContainer = styled.div`
   max-width: ${(props) => props.theme.breakpointSm};
   background-color: ${({ theme }) => theme.themeColors.white};
-  margin: ${(props) => props.theme.spaces.s100} auto;
   margin-bottom: ${(props) => props.theme.spaces.s600};
   padding: ${(props) => props.theme.spaces.s200} 0 0;
   border-collapse: collapse;
