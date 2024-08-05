@@ -534,7 +534,6 @@ function ActionContent(props: ActionContentProps) {
     action?.relatedIndicators.length > 0 &&
     detailsCombined?.some(isIndicatorCausalChainBlock);
 
-  // TODO: Inject a new mock block ActionBudgetBlock here
   const makeComponents = useCallback(
     (section: SectionIdentifier) => {
       const blocks = actionListPage[section];
@@ -610,30 +609,6 @@ function ActionContent(props: ActionContentProps) {
         }
       }
       emitGroupedBlocks();
-
-      //TODO: This is for DEMO purposes only. Remove this when the backend is ready.
-      if (section === 'detailsMainBottom') {
-        allSections.push(
-          <RestrictedBlockWrapper
-            key="TestingDataBlock"
-            isRestricted={false}
-            isHidden={false}
-          >
-            <ActionContentBlock
-              key="TestingDataBlock"
-              block={{
-                __typename: 'PlanDatasetsBlock',
-                heading: 'Budget',
-                helpText: 'This is a test block',
-                datasetSchema: {
-                  uuid: '7dc7175d-1f98-406b-b3ff-8880925b27ab',
-                },
-              }}
-              {...staticProps}
-            />
-          </RestrictedBlockWrapper>
-        );
-      }
       return allSections;
     },
     [actionListPage, action]
