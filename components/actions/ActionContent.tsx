@@ -36,6 +36,7 @@ import ActionContactPersonsBlock from 'components/actions/blocks/ActionContactPe
 import ActionResponsiblePartiesBlock from 'components/actions/blocks/ActionResponsiblePartiesBlock';
 import ActionScheduleBlock from 'components/actions/blocks/ActionScheduleBlock';
 import ReportComparisonBlock from 'components/actions/blocks/ReportComparisonBlock';
+import PlanDatasetsBlock from 'components/contentblocks/PlanDatasetsBlock';
 
 import {
   ActionStatusSummaryIdentifier,
@@ -297,6 +298,24 @@ function ActionContentBlock(props: ActionContentBlockProps) {
         <ActionAttribute
           attribute={attribute}
           attributeType={block.attributeType}
+        />
+      );
+    }
+    case 'PlanDatasetsBlock': {
+      const { heading, helpText, datasetSchema } = block;
+      const dataset =
+        action?.datasets && datasetSchema?.uuid
+          ? action.datasets.find(
+              (set) => set?.schema.uuid === datasetSchema.uuid
+            )
+          : undefined;
+      if (!dataset) return null;
+      return (
+        <PlanDatasetsBlock
+          heading={heading}
+          helpText={helpText}
+          data={dataset.dataPoints}
+          schema={dataset.schema}
         />
       );
     }
@@ -591,6 +610,30 @@ function ActionContent(props: ActionContentProps) {
         }
       }
       emitGroupedBlocks();
+
+      //TODO: This is for DEMO purposes only. Remove this when the backend is ready.
+      if (section === 'detailsMainBottom') {
+        allSections.push(
+          <RestrictedBlockWrapper
+            key="TestingDataBlock"
+            isRestricted={false}
+            isHidden={false}
+          >
+            <ActionContentBlock
+              key="TestingDataBlock"
+              block={{
+                __typename: 'PlanDatasetsBlock',
+                heading: 'Budget',
+                helpText: 'This is a test block',
+                datasetSchema: {
+                  uuid: '7dc7175d-1f98-406b-b3ff-8880925b27ab',
+                },
+              }}
+              {...staticProps}
+            />
+          </RestrictedBlockWrapper>
+        );
+      }
       return allSections;
     },
     [actionListPage, action]
