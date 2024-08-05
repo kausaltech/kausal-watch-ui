@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { Table } from 'reactstrap';
 import { getDateFormat } from 'utils/dates.utils';
 import { beautifyValue } from 'common/data/format';
+import { useTranslations } from 'next-intl';
 import { useLocale } from 'next-intl';
 import {
   type DatasetSchema,
@@ -23,23 +24,52 @@ const StyledTable = styled(Table)`
 
   thead th {
     text-align: right;
+
+    &:first-child {
+      text-align: left;
+    }
   }
   th,
   td {
     padding: 8px;
     text-align: left;
     vertical-align: top;
+    border-bottom: none;
+    border-color: ${(props) => props.theme.themeColors.light};
   }
 
   th {
     color: ${(props) => props.theme.headingsColor};
   }
   td {
-    border-bottom: none;
     text-align: right;
   }
-  .bold {
-    font-weight: ${(props) => props.theme.fontWeightBold};
+`;
+
+const DataRow = styled.tr`
+  th {
+    border-bottom: none;
+  }
+`;
+
+const SubheaderRow = styled.tr`
+  th {
+    padding-top: ${(props) => props.theme.spaces.s300};
+  }
+`;
+
+const TotalsRow = styled.tr`
+  font-weight: ${(props) => props.theme.fontWeightBold};
+
+  th {
+    border-top: solid 1px ${(props) => props.theme.themeColors.dark};
+    border-bottom: 0;
+    text-transform: capitalize;
+  }
+
+  td {
+    border-top: solid 1px ${(props) => props.theme.themeColors.dark};
+    border-bottom: double 3px ${(props) => props.theme.themeColors.dark};
   }
 `;
 
@@ -53,13 +83,14 @@ interface PlanDatasetsBlockProps {
 type TableRowContent = {
   label: string;
   cells?: {
-    value: string | null;
+    value: number | null | undefined;
   }[];
 };
 
 type TableContent = {
   label: string;
   rows: TableRowContent[];
+  totals: number[];
 }[];
 
 const getDimensionTypes = (
@@ -81,7 +112,7 @@ const getDatum = (
   data: DataPoint[],
   date: string,
   dimensions: string[]
-): string => {
+): number | null | undefined => {
   const datum = data.find(
     (item) =>
       item.date === date &&
@@ -89,12 +120,26 @@ const getDatum = (
         dimensions.includes(dimension.uuid)
       )
   );
-  return datum ? datum.value : 0;
+  return datum ? datum.value : undefined;
+};
+
+const sumDataPoints = (
+  data: DataPoint[],
+  date: string,
+  dimension1: string,
+  dimension2: { label: string; uuid: string }[]
+): number => {
+  const total = dimension2.reduce((acc, subDimension) => {
+    const datum = getDatum(data, date, [dimension1, subDimension.uuid]);
+    return acc + Number(datum);
+  }, 0);
+  return total;
 };
 
 const PlanDatasetsBlock: React.FC = (props: PlanDatasetsBlockProps) => {
   const { heading, helpText, data, schema } = props;
   const locale = useLocale();
+  const t = useTranslations();
   console.log('PlanDatasetBlock component', props, helpText);
 
   const { unit, timeResolution } = schema;
@@ -120,6 +165,9 @@ const PlanDatasetsBlock: React.FC = (props: PlanDatasetsBlockProps) => {
         value: getDatum(data, date, [dimension.uuid, subDimension.uuid]),
       })),
     })),
+    totals: dates.map((date) =>
+      sumDataPoints(data, date, dimension.uuid, dimensionsByType[1])
+    ),
   }));
 
   const title = heading;
@@ -134,6 +182,7 @@ const PlanDatasetsBlock: React.FC = (props: PlanDatasetsBlockProps) => {
 
   const headers = [unit, ...formattedDates];
 
+  console.log('tableData', tableData);
   return (
     <TableContainer>
       {title && <h3>{title}</h3>}
@@ -148,21 +197,27 @@ const PlanDatasetsBlock: React.FC = (props: PlanDatasetsBlockProps) => {
         <tbody>
           {tableData.map((table, tableIndex) => (
             <>
-              <tr key={tableIndex}>
-                <th colSpan={headers.length}>{table.label}</th>
-              </tr>
+              <SubheaderRow key={tableIndex}>
+                <th colSpan={headers.length}>
+                  <h4>{table.label}</h4>
+                </th>
+              </SubheaderRow>
               {table.rows.map((row, rowIndex) => (
-                <tr key={rowIndex}>
+                <DataRow key={rowIndex}>
                   <th>{row.label}</th>
                   {row.cells?.map((cell, cellIndex) => (
                     <td key={cellIndex}>
-                      {cell.value
-                        ? beautifyValue(parseFloat(cell.value), locale)
-                        : '-'}
+                      {cell.value ? beautifyValue(cell.value, locale) : '-'}
                     </td>
                   ))}
-                </tr>
+                </DataRow>
               ))}
+              <TotalsRow>
+                <th>{t('total')}</th>
+                {table.totals.map((total, totalIndex) => (
+                  <td key={totalIndex}>{beautifyValue(total, locale)}</td>
+                ))}
+              </TotalsRow>
             </>
           ))}
         </tbody>

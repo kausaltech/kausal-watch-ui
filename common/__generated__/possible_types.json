@@ -46,6 +46,7 @@
       "ActionRelatedIndicatorsBlock",
       "ActionTasksBlock",
       "IndicatorCausalChainBlock",
+      "PlanDatasetsBlock",
       "ReportComparisonBlock"
     ],
     "ActionMainContentSectionElementBlock": [
@@ -66,7 +67,8 @@
       "CategoryPageAttributeTypeBlock",
       "CategoryPageBodyBlock",
       "CategoryPageCategoryListBlock",
-      "CategoryPageContactFormBlock"
+      "CategoryPageContactFormBlock",
+      "CategoryTypeDatasetsBlock"
     ],
     "CategoryPageMainTopBlock": [
       "CategoryPageAttributeTypeBlock",
@@ -114,7 +116,8 @@
       "ActionResponsiblePartiesBlock",
       "ActionScheduleBlock",
       "ActionTasksBlock",
-      "IndicatorCausalChainBlock"
+      "IndicatorCausalChainBlock",
+      "PlanDatasetsBlock"
     ],
     "MenuItem": [
       "ExternalLinkMenuItem",
@@ -209,6 +212,7 @@
       "CategoryPageContactFormBlock",
       "CategoryPageProgressBlock",
       "CategoryTreeMapBlock",
+      "CategoryTypeDatasetsBlock",
       "CategoryTypeFilterBlock",
       "CharBlock",
       "ChoiceBlock",
@@ -238,6 +242,7 @@
       "OrganizationColumnBlock",
       "PageChooserBlock",
       "PageLinkBlock",
+      "PlanDatasetsBlock",
       "PlanFilterBlock",
       "PrimaryOrganizationFilterBlock",
       "QuestionAnswerBlock",
