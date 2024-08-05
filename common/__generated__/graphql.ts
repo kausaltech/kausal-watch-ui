@@ -7827,7 +7827,7 @@ export type GetActionDetailsQuery = (
           { restricted?: boolean | null, hidden?: boolean | null }
           & { __typename?: 'FieldBlockMetaData' }
         ) | null }
-        & { __typename: 'ActionContactFormBlock' | 'ActionDescriptionBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionMergedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionTasksBlock' | 'PlanDatasetsBlock' }
+        & { __typename: 'ActionContactFormBlock' | 'ActionDescriptionBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionMergedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionTasksBlock' }
       ) | (
         { id?: string | null, meta?: (
           { restricted?: boolean | null, hidden?: boolean | null }
@@ -8122,6 +8122,15 @@ export type GetActionDetailsQuery = (
           & { __typename?: 'FieldBlockMetaData' }
         ) | null }
         & { __typename: 'IndicatorCausalChainBlock' }
+      ) | (
+        { id?: string | null, fieldLabel?: string | null, fieldHelpText?: string | null, meta?: (
+          { restricted?: boolean | null, hidden?: boolean | null }
+          & { __typename?: 'FieldBlockMetaData' }
+        ) | null, datasetSchema: (
+          { uuid: any }
+          & { __typename?: 'DatasetSchema' }
+        ) }
+        & { __typename: 'PlanDatasetsBlock' }
       ) | (
         { id?: string | null, reportField?: string | null, reportType?: (
           { name: string }
@@ -8331,7 +8340,7 @@ export type GetActionDetailsQuery = (
           { restricted?: boolean | null, hidden?: boolean | null }
           & { __typename?: 'FieldBlockMetaData' }
         ) | null }
-        & { __typename: 'ActionContactFormBlock' | 'ActionDescriptionBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionMergedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionTasksBlock' | 'PlanDatasetsBlock' }
+        & { __typename: 'ActionContactFormBlock' | 'ActionDescriptionBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionMergedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionTasksBlock' }
       ) | (
         { id?: string | null, meta?: (
           { restricted?: boolean | null, hidden?: boolean | null }
@@ -8626,6 +8635,15 @@ export type GetActionDetailsQuery = (
           & { __typename?: 'FieldBlockMetaData' }
         ) | null }
         & { __typename: 'IndicatorCausalChainBlock' }
+      ) | (
+        { id?: string | null, fieldLabel?: string | null, fieldHelpText?: string | null, meta?: (
+          { restricted?: boolean | null, hidden?: boolean | null }
+          & { __typename?: 'FieldBlockMetaData' }
+        ) | null, datasetSchema: (
+          { uuid: any }
+          & { __typename?: 'DatasetSchema' }
+        ) }
+        & { __typename: 'PlanDatasetsBlock' }
       ) | (
         { id?: string | null, reportField?: string | null, reportType?: (
           { name: string }
@@ -9057,12 +9075,12 @@ type ActionAsideContentBlocksFragment_ActionResponsiblePartiesBlock_Fragment = (
 
 export type ActionAsideContentBlocksFragmentFragment = ActionAsideContentBlocksFragment_ActionContactPersonsBlock_ActionScheduleBlock_Fragment | ActionAsideContentBlocksFragment_ActionContentAttributeTypeBlock_Fragment | ActionAsideContentBlocksFragment_ActionContentCategoryTypeBlock_Fragment | ActionAsideContentBlocksFragment_ActionResponsiblePartiesBlock_Fragment;
 
-type ActionMainContentBlocksFragment_Xp2c0iqmK7CirsT3vp22fHLxiJbMi_7xVuUxoyHku_Fragment = (
+type ActionMainContentBlocksFragment_60920DqMhKMmAyaAImyPh5hRBnjMu8ul9clD1Z4hPw0_Fragment = (
   { id?: string | null, meta?: (
     { restricted?: boolean | null, hidden?: boolean | null }
     & { __typename?: 'FieldBlockMetaData' }
   ) | null }
-  & { __typename: 'ActionContactFormBlock' | 'ActionDescriptionBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionMergedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionTasksBlock' | 'PlanDatasetsBlock' }
+  & { __typename: 'ActionContactFormBlock' | 'ActionDescriptionBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionMergedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionTasksBlock' }
 );
 
 type ActionMainContentBlocksFragment_ActionContentAttributeTypeBlock_Fragment = (
@@ -9371,6 +9389,17 @@ type ActionMainContentBlocksFragment_IndicatorCausalChainBlock_Fragment = (
   & { __typename: 'IndicatorCausalChainBlock' }
 );
 
+type ActionMainContentBlocksFragment_PlanDatasetsBlock_Fragment = (
+  { id?: string | null, fieldLabel?: string | null, fieldHelpText?: string | null, meta?: (
+    { restricted?: boolean | null, hidden?: boolean | null }
+    & { __typename?: 'FieldBlockMetaData' }
+  ) | null, datasetSchema: (
+    { uuid: any }
+    & { __typename?: 'DatasetSchema' }
+  ) }
+  & { __typename: 'PlanDatasetsBlock' }
+);
+
 type ActionMainContentBlocksFragment_ReportComparisonBlock_Fragment = (
   { id?: string | null, reportField?: string | null, reportType?: (
     { name: string }
@@ -9577,7 +9606,7 @@ type ActionMainContentBlocksFragment_ReportComparisonBlock_Fragment = (
   & { __typename: 'ReportComparisonBlock' }
 );
 
-export type ActionMainContentBlocksFragmentFragment = ActionMainContentBlocksFragment_Xp2c0iqmK7CirsT3vp22fHLxiJbMi_7xVuUxoyHku_Fragment | ActionMainContentBlocksFragment_ActionContentAttributeTypeBlock_Fragment | ActionMainContentBlocksFragment_ActionContentCategoryTypeBlock_Fragment | ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment | ActionMainContentBlocksFragment_ActionDependenciesBlock_ActionRelatedActionsBlock_Fragment | ActionMainContentBlocksFragment_ActionOfficialNameBlock_Fragment | ActionMainContentBlocksFragment_IndicatorCausalChainBlock_Fragment | ActionMainContentBlocksFragment_ReportComparisonBlock_Fragment;
+export type ActionMainContentBlocksFragmentFragment = ActionMainContentBlocksFragment_60920DqMhKMmAyaAImyPh5hRBnjMu8ul9clD1Z4hPw0_Fragment | ActionMainContentBlocksFragment_ActionContentAttributeTypeBlock_Fragment | ActionMainContentBlocksFragment_ActionContentCategoryTypeBlock_Fragment | ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment | ActionMainContentBlocksFragment_ActionDependenciesBlock_ActionRelatedActionsBlock_Fragment | ActionMainContentBlocksFragment_ActionOfficialNameBlock_Fragment | ActionMainContentBlocksFragment_IndicatorCausalChainBlock_Fragment | ActionMainContentBlocksFragment_PlanDatasetsBlock_Fragment | ActionMainContentBlocksFragment_ReportComparisonBlock_Fragment;
 
 export type ReportComparisonBlockActionContentFragment = (
   { reportField?: string | null, reportType?: (

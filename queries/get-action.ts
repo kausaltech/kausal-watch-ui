@@ -403,6 +403,14 @@ const GET_ACTION_DETAILS = gql`
         }
       }
     }
+    ... on PlanDatasetsBlock {
+      id
+      fieldLabel
+      fieldHelpText
+      datasetSchema {
+        uuid
+      }
+    }
   }
 
   fragment ReportComparisonBlockActionContent on ReportComparisonBlock {

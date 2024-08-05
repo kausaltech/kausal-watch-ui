@@ -302,7 +302,7 @@ function ActionContentBlock(props: ActionContentBlockProps) {
       );
     }
     case 'PlanDatasetsBlock': {
-      const { heading, helpText, datasetSchema } = block;
+      const { fieldLabel, fieldHelpText, datasetSchema } = block;
       const dataset =
         action?.datasets && datasetSchema?.uuid
           ? action.datasets.find(
@@ -312,8 +312,8 @@ function ActionContentBlock(props: ActionContentBlockProps) {
       if (!dataset) return null;
       return (
         <PlanDatasetsBlock
-          heading={heading}
-          helpText={helpText}
+          heading={fieldLabel}
+          helpText={fieldHelpText}
           data={dataset.dataPoints}
           schema={dataset.schema}
         />

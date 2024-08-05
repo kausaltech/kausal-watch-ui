@@ -9,6 +9,8 @@ import {
   ActionDateFormat,
   DataPoint,
 } from 'common/__generated__/graphql';
+import { SectionHeader } from 'components/actions/ActionContent';
+import PopoverTip from 'components/common/PopoverTip';
 
 const TableContainer = styled.div`
   max-width: ${(props) => props.theme.breakpointSm};
@@ -140,11 +142,9 @@ const PlanDatasetsBlock: React.FC = (props: PlanDatasetsBlockProps) => {
   const { heading, helpText, data, schema } = props;
   const locale = useLocale();
   const t = useTranslations();
-  console.log('PlanDatasetBlock component', props, helpText);
 
-  const { unit, timeResolution } = schema;
+  const { unit } = schema;
   const dimensionTypes = getDimensionTypes(schema.dimensionCategories);
-  console.log('dimensions', dimensionTypes, timeResolution);
 
   const dimensionsByType = dimensionTypes.map((type) => {
     return schema.dimensionCategories
@@ -170,8 +170,6 @@ const PlanDatasetsBlock: React.FC = (props: PlanDatasetsBlockProps) => {
     ),
   }));
 
-  const title = heading;
-
   // TODO: Use timeResolution to format dates
   const formattedDates = dates.map((date) =>
     new Date(date).toLocaleDateString(
@@ -182,10 +180,14 @@ const PlanDatasetsBlock: React.FC = (props: PlanDatasetsBlockProps) => {
 
   const headers = [unit, ...formattedDates];
 
-  console.log('tableData', tableData);
   return (
     <TableContainer>
-      {title && <h3>{title}</h3>}
+      <SectionHeader>
+        {heading || schema.name}
+        {helpText && (
+          <PopoverTip identifier="related-actions-help" content={helpText} />
+        )}
+      </SectionHeader>
       <StyledTable>
         <thead>
           <tr>
