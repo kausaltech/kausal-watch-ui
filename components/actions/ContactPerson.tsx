@@ -83,12 +83,10 @@ const Avatar = styled.div<{
   width: 5em;
   height: 5em;
   border-radius: 50%;
-  background-color: ${(props) =>
-    !props.hasAvatar ? props.theme.themeColors.light : 'transparent'};
+  background-color: transparent;
   background-size: cover;
   background-position: center;
-  background-image: ${(props) =>
-    !props.hasAvatar ? 'none' : `url(${props.src})`};
+  background-image: ${(props) => `url(${props.src})`};
   border: ${(props) =>
     props.$isLeader
       ? `4px solid ${props.theme.brandDark}`
@@ -204,6 +202,7 @@ function ContactPerson({ person, leader = false }: ContactPersonProps) {
   const fullName = `${person.firstName} ${person.lastName}`;
   const role = leader ? t('contact-person-main') : '';
   const withoutAvatar = !plan.features.contactPersonsShowPicture;
+  const theme = useTheme();
   const hasAvatar = Boolean(person.avatarUrl);
 
   return (
@@ -211,7 +210,10 @@ function ContactPerson({ person, leader = false }: ContactPersonProps) {
       {plan.features.contactPersonsShowPicture ? (
         <>
           <Avatar
-            src={person.avatarUrl || ''}
+            src={
+              person.avatarUrl ||
+              getThemeStaticURL(theme.defaultAvatarUserImage)
+            }
             hasAvatar={hasAvatar}
             $isLeader={leader}
             aria-label={`${role} ${fullName}`}
