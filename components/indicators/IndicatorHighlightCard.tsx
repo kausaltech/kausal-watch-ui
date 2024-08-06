@@ -18,10 +18,10 @@ const IndicatorType = styled.div`
   color: ${(props) => props.theme.neutralDark};
 `;
 
-const IndicatorBg = styled.div`
+const IndicatorBg = styled.div<{ $level: string }>`
   height: ${(props) => props.theme.spaces.s600};
   background-color: ${(props) => {
-    switch (props.level) {
+    switch (props.$level) {
       case 'action':
         return props.theme.actionColor;
       case 'operational':
@@ -52,13 +52,13 @@ const StyledCard = styled(Card)`
   }
 `;
 
-const IndicatorValue = styled.div`
+const IndicatorValue = styled.div<{ $level: string }>`
   margin-top: ${(props) => props.theme.spaces.s050};
   font-size: ${(props) => props.theme.fontSizeXl};
   font-weight: ${(props) => props.theme.fontWeightBold};
   line-height: ${(props) => props.theme.lineHeightSm};
   color: ${(props) => {
-    switch (props.level) {
+    switch (props.$level) {
       case 'action':
         return readableColor(props.theme.actionColor);
       case 'operational':
@@ -114,9 +114,9 @@ function IndicatorHighlightCard({
     <StyledCard>
       <IndicatorLink id={objectid} prefetch={false}>
         <a>
-          <IndicatorBg level={level} />
+          <IndicatorBg $level={level} />
           <CardImgOverlay>
-            <IndicatorValue level={level} className="action-number">
+            <IndicatorValue $level={level} className="action-number">
               {typeof value === 'number' ? beautifyValue(value) : '-'}
               <IndicatorUnit>{unit === 'no unit' ? '' : unit}</IndicatorUnit>
             </IndicatorValue>

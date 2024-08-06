@@ -1,50 +1,117 @@
 'use client';
 
-import Plotly from '@kausal/plotly-custom/dist/plotly-custom';
-import { PlotParams } from 'react-plotly.js';
-import createPlotlyComponent from 'react-plotly.js/factory';
-import { useLocale } from 'next-intl';
+import React, { useEffect, useLayoutEffect, useRef } from 'react';
 
-window.Plotly = Plotly; // this is needed for the locale setting to work
-require('@kausal/plotly-custom/dist/plotly-locale-fi');
-require('@kausal/plotly-custom/dist/plotly-locale-sv');
-require('@kausal/plotly-custom/dist/plotly-locale-de');
-require('@kausal/plotly-custom/dist/plotly-locale-de-ch');
+import { useLocale } from 'next-intl';
+import Plotly from '@kausal/plotly-custom/dist/plotly-custom';
+import * as cs from 'plotly.js-locales/cs';
+import * as da from 'plotly.js-locales/da';
+import * as de from 'plotly.js-locales/de';
+import * as de_ch from 'plotly.js-locales/de-ch';
+import * as fi from 'plotly.js-locales/fi';
+import * as lv from 'plotly.js-locales/lv';
+import * as pl from 'plotly.js-locales/pl';
+import * as sv from 'plotly.js-locales/sv';
+
+import type { PlotParams } from 'react-plotly.js';
+import { Data, Layout, Config } from 'plotly.js';
+import createPlotlyComponent from 'react-plotly.js/factory';
+
+const locales = { sv, de, de_ch, cs, da, lv, pl, fi };
+
+const getSeparators = (locale: string): string | undefined => {
+  const separators = Intl.NumberFormat(locale)?.formatToParts(10000.1);
+  const decimalSeparator = separators?.find(
+    (part) => part?.type === 'decimal'
+  )?.value;
+  const groupSeparator = separators?.find(
+    (part) => part?.type === 'group'
+  )?.value;
+  if (decimalSeparator && groupSeparator)
+    return decimalSeparator + groupSeparator;
+  else return '.,';
+};
 
 const PlotlyPlot = createPlotlyComponent(Plotly);
 
-const getSeparators = (locale: string) => {
-  if (locale === 'fi') {
-    return ', ';
-  } else if (locale === 'sv') {
-    return '.,';
-  } else if (locale === 'en' || locale.slice(0, 2) === 'en') {
-    return '.,';
-  } else if (locale === 'de-CH') {
-    return '.,';
-  } else if (locale === 'de' || locale.slice(0, 2) === 'de') {
-    return ',.';
-  }
-  return '.,';
+type PlotProps = PlotParams & {
+  noValidate?: boolean;
 };
 
-export default function Plot(props: PlotParams) {
-  const { data, layout, config } = props;
-  const locale = useLocale();
+const Plot = (props: PlotProps) => {
+  const { data } = props;
+  const config: NonNullable<PlotParams['config']> = props.config || {};
+  const layout = props.layout || {};
 
-  const separators = getSeparators(locale);
-  const ret = Plotly.validate(data, layout, config);
+  const lang = useLocale();
+  config.locales = locales;
+  config.locale = lang;
 
-  if (ret && ret.length) {
-    console.warn('Plotly validation errors:');
-    console.warn(ret);
+  config.responsive = true;
+  if (!props.noValidate) {
+    // @ts-ignore
+    const ret = Plotly.validate(data, layout);
+    if (ret && ret.length) {
+      console.warn('Plotly validation returned errors');
+      console.log(ret);
+    }
   }
-
   props = {
     ...props,
-    config: { ...props.config, locale },
-    layout: { ...layout, separators },
+    config,
+    layout: { ...layout, separators: getSeparators(lang) },
   };
-
   return <PlotlyPlot {...props} />;
+};
+
+type UsePlotlyArgs = {
+  data: Partial<Data>[];
+  layout?: Partial<Layout>;
+  config?: Partial<Config>;
+  noValidate?: boolean;
+};
+
+export function usePlotlyBasic({
+  data,
+  layout,
+  config,
+  noValidate,
+}: UsePlotlyArgs) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  if (!noValidate) {
+    // @ts-ignore
+    const ret = Plotly.validate(data, layout);
+    if (ret && ret.length) {
+      console.warn('Plotly validation errors:');
+      console.log(ret);
+    }
+  }
+  useLayoutEffect(() => {
+    const { current } = ref;
+    if (current) {
+      Plotly.react(current, data, layout, config);
+    }
+  }, [ref, data, layout, config]);
+
+  useEffect(() => {
+    return () => {
+      const { current } = ref;
+      if (current) {
+        console.log('purge');
+        Plotly.purge(current);
+      }
+    };
+  }, [ref]);
+  return ref;
 }
+
+export function BasicPlot(
+  props: UsePlotlyArgs & React.HTMLAttributes<HTMLDivElement>
+) {
+  const { data, layout, config, noValidate, ...rest } = props;
+  const ref = usePlotlyBasic({ data, layout, config, noValidate });
+  return <div ref={ref} {...rest} />;
+}
+
+export default Plot;

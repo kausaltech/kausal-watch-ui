@@ -54,7 +54,7 @@ const OverlayContainer = styled.div`
     ${(props) => props.theme.spaces.s300};
 `;
 
-const IndicatorLevel = styled.span<{ level: string }>`
+const IndicatorLevel = styled.span<{ $level: string }>`
   a {
     display: inline-block;
     border-radius: ${(props) => props.theme.badgeBorderRadius};
@@ -64,7 +64,7 @@ const IndicatorLevel = styled.span<{ level: string }>`
     margin: ${(props) => props.theme.spaces.s150} 0 0;
 
     color: ${(props) => {
-      switch (props.level) {
+      switch (props.$level) {
         case 'action':
           return readableColor(props.theme.actionColor);
         case 'operational':
@@ -79,7 +79,7 @@ const IndicatorLevel = styled.span<{ level: string }>`
     }};
 
     background-color: ${(props) => {
-      switch (props.level) {
+      switch (props.$level) {
         case 'action':
           return props.theme.actionColor;
         case 'operational':
@@ -95,7 +95,7 @@ const IndicatorLevel = styled.span<{ level: string }>`
 
     &:hover {
       color: ${(props) => {
-        switch (props.level) {
+        switch (props.$level) {
           case 'action':
             return readableColor(props.theme.actionColor);
           case 'operational':
@@ -180,7 +180,7 @@ function IndicatorHero(props: IndicatorHeroProps) {
                       />
                     )}
                     {indicator.level && (
-                      <IndicatorLevel level={indicator.level}>
+                      <IndicatorLevel $level={indicator.level}>
                         <IndicatorListLink>
                           <a>{indicatorType}</a>
                         </IndicatorListLink>
