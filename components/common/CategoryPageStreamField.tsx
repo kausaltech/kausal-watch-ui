@@ -210,12 +210,16 @@ export const CategoryPageStreamField = ({
           : undefined;
       if (!dataset) return null;
       return (
-        <PlanDatasetsBlock
-          heading={heading}
-          helpText={helpText}
-          data={dataset.dataPoints}
-          schema={dataset.schema}
-        />
+        <Wrapper>
+          <Col {...columnProps} {...customColumnProps}>
+            <PlanDatasetsBlock
+              heading={heading}
+              helpText={helpText}
+              data={dataset.dataPoints}
+              schema={dataset.schema}
+            />
+          </Col>
+        </Wrapper>
       );
     }
 
