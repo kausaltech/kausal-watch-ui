@@ -51,6 +51,14 @@ const TEMPLATED_CATEGORY_PAGE_FRAGMENT = gql`
           heading
           description
         }
+        ... on CategoryTypeDatasetsBlock {
+          id
+          heading
+          helpText
+          datasetSchema {
+            uuid
+          }
+        }
       }
       layoutAside {
         __typename
@@ -182,6 +190,37 @@ const GET_CONTENT_PAGE = gql`
           }
           attributes {
             ...AttributesBlockAttributeWithNestedType
+          }
+          datasets {
+            schema {
+              uuid
+              timeResolution
+              unit
+              dimensionCategories {
+                order
+                category {
+                  uuid
+                  label
+                  dimension {
+                    name
+                    uuid
+                  }
+                }
+              }
+            }
+            uuid
+            dataPoints {
+              uuid
+              value
+              date
+              dimensionCategories {
+                uuid
+                label
+                dimension {
+                  uuid
+                }
+              }
+            }
           }
         }
         body {

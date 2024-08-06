@@ -8,6 +8,7 @@
       "ActionScheduleBlock"
     ],
     "ActionDashboardColumnBlock": [
+      "FieldColumnBlock",
       "IdentifierColumnBlock",
       "ImpactColumnBlock",
       "ImplementationPhaseColumnBlock",
@@ -45,6 +46,7 @@
       "ActionRelatedIndicatorsBlock",
       "ActionTasksBlock",
       "IndicatorCausalChainBlock",
+      "PlanDatasetsBlock",
       "ReportComparisonBlock"
     ],
     "ActionMainContentSectionElementBlock": [
@@ -65,13 +67,15 @@
       "CategoryPageAttributeTypeBlock",
       "CategoryPageBodyBlock",
       "CategoryPageCategoryListBlock",
-      "CategoryPageContactFormBlock"
+      "CategoryPageContactFormBlock",
+      "CategoryTypeDatasetsBlock"
     ],
     "CategoryPageMainTopBlock": [
       "CategoryPageAttributeTypeBlock",
       "CategoryPageProgressBlock"
     ],
     "DashboardColumnInterface": [
+      "FieldColumnBlock",
       "IdentifierColumnBlock",
       "ImpactColumnBlock",
       "ImplementationPhaseColumnBlock",
@@ -82,6 +86,18 @@
       "StatusColumnBlock",
       "TasksColumnBlock",
       "UpdatedAtColumnBlock"
+    ],
+    "DatasetSchemaScopeTypeNode": [
+      "CategoryType",
+      "Plan"
+    ],
+    "DatasetScopeTypeNode": [
+      "Action",
+      "Category"
+    ],
+    "DimensionScopeTypeNode": [
+      "CategoryType",
+      "Plan"
     ],
     "FieldBlockMetaInterface": [
       "ActionContactFormBlock",
@@ -195,6 +211,7 @@
       "CategoryPageContactFormBlock",
       "CategoryPageProgressBlock",
       "CategoryTreeMapBlock",
+      "CategoryTypeDatasetsBlock",
       "CategoryTypeFilterBlock",
       "CharBlock",
       "ChoiceBlock",
@@ -205,6 +222,7 @@
       "DocumentChooserBlock",
       "EmailBlock",
       "EmbedBlock",
+      "FieldColumnBlock",
       "FloatBlock",
       "FrontPageHeroBlock",
       "IdentifierColumnBlock",
@@ -223,6 +241,7 @@
       "OrganizationColumnBlock",
       "PageChooserBlock",
       "PageLinkBlock",
+      "PlanDatasetsBlock",
       "PlanFilterBlock",
       "PrimaryOrganizationFilterBlock",
       "QuestionAnswerBlock",

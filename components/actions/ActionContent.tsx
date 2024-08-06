@@ -36,6 +36,7 @@ import ActionContactPersonsBlock from 'components/actions/blocks/ActionContactPe
 import ActionResponsiblePartiesBlock from 'components/actions/blocks/ActionResponsiblePartiesBlock';
 import ActionScheduleBlock from 'components/actions/blocks/ActionScheduleBlock';
 import ReportComparisonBlock from 'components/actions/blocks/ReportComparisonBlock';
+import PlanDatasetsBlock from 'components/contentblocks/PlanDatasetsBlock';
 
 import {
   ActionStatusSummaryIdentifier,
@@ -300,10 +301,30 @@ function ActionContentBlock(props: ActionContentBlockProps) {
         />
       );
     }
+    case 'PlanDatasetsBlock': {
+      const { heading, helpText, datasetSchema } = block;
+      const dataset =
+        action?.datasets && datasetSchema?.uuid
+          ? action.datasets.find(
+              (set) => set?.schema.uuid === datasetSchema.uuid
+            )
+          : undefined;
+      if (!dataset) return null;
+      return (
+        <PlanDatasetsBlock
+          heading={heading}
+          helpText={helpText}
+          data={dataset.dataPoints}
+          schema={dataset.schema}
+        />
+      );
+    }
     case 'ReportComparisonBlock':
       return (
         <ReportComparisonBlock plan={plan} block={block} action={action} />
       );
+    case 'IndicatorCausalChainBlock':
+      return null;
     default:
       console.error('Unknown action content block', block.__typename);
       return null;

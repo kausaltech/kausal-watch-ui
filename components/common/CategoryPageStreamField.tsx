@@ -13,6 +13,7 @@ import CategoryListBlock from 'components/contentblocks/CategoryListBlock';
 import ExpandableFeedbackFormBlock from 'components/contentblocks/ExpandableFeedbackFormBlock';
 import StreamField from 'components/common/StreamField';
 import ActionStatusGraphsBlock from 'components/contentblocks/ActionStatusGraphsBlock';
+import PlanDatasetsBlock from 'components/contentblocks/PlanDatasetsBlock';
 import { ChartType } from 'components/dashboard/ActionStatusGraphs';
 
 export type CategoryPage = { __typename: 'CategoryPage' } & NonNullable<
@@ -197,6 +198,29 @@ export const CategoryPageStreamField = ({
       }
 
       return null;
+    }
+
+    case 'CategoryTypeDatasetsBlock': {
+      const { heading, helpText, datasetSchema } = block;
+      const dataset =
+        page.category?.datasets && datasetSchema?.uuid
+          ? page.category.datasets.find(
+              (set) => set?.schema.uuid === datasetSchema.uuid
+            )
+          : undefined;
+      if (!dataset) return null;
+      return (
+        <Wrapper>
+          <Col {...columnProps} {...customColumnProps}>
+            <PlanDatasetsBlock
+              heading={heading}
+              helpText={helpText}
+              data={dataset.dataPoints}
+              schema={dataset.schema}
+            />
+          </Col>
+        </Wrapper>
+      );
     }
 
     default:

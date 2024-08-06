@@ -220,6 +220,37 @@ const GET_ACTION_DETAILS = gql`
       attributes {
         ...AttributesBlockAttribute
       }
+      datasets {
+        schema {
+          uuid
+          timeResolution
+          unit
+          dimensionCategories {
+            order
+            category {
+              uuid
+              label
+              dimension {
+                name
+                uuid
+              }
+            }
+          }
+        }
+        uuid
+        dataPoints {
+          uuid
+          value
+          date
+          dimensionCategories {
+            uuid
+            label
+            dimension {
+              uuid
+            }
+          }
+        }
+      }
       plan {
         id
         shortName
@@ -370,6 +401,14 @@ const GET_ACTION_DETAILS = gql`
         ... on ReportComparisonBlock {
           ...ReportComparisonBlockActionContent
         }
+      }
+    }
+    ... on PlanDatasetsBlock {
+      id
+      heading
+      helpText
+      datasetSchema {
+        uuid
       }
     }
   }
