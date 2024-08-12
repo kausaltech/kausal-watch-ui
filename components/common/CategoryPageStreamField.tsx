@@ -128,6 +128,7 @@ export const CategoryPageStreamField = ({
             <ExpandableFeedbackFormBlock
               heading={block.heading || undefined}
               description={block.description || undefined}
+              categoryId={page.category?.id || undefined}
             />
           </Col>
         </Wrapper>
