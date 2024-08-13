@@ -1,13 +1,13 @@
 'use client';
 
 import React from 'react';
-import dynamic from 'next/dynamic';
-import { merge, uniq } from 'lodash';
-import styled from 'styled-components';
-import { useTheme } from 'styled-components';
-import { transparentize } from 'polished';
+
 import { splitLines } from 'common/utils';
+import { merge, uniq } from 'lodash';
+import dynamic from 'next/dynamic';
 import { Data, Layout } from 'plotly.js';
+import { transparentize } from 'polished';
+import styled, { useTheme } from 'styled-components';
 
 const PlotContainer = styled.div<{ $vizHeight: number }>`
   height: ${(props) => props.$vizHeight}px;
@@ -276,9 +276,6 @@ const createTraces: (params: CreateTracesParams) => TracesOutput = (params) => {
     }
   }
 
-  // Avoid repetitive years to set max value of xaxis ticks
-  layoutConfig.xaxis!.nticks = uniqueXValues.length;
-
   return {
     layoutConfig,
     traces: newTraces,
@@ -489,6 +486,7 @@ function IndicatorGraph(props: IndicatorGraphProps) {
       plotlyData.push({
         ...goalTrace,
         type: 'scatter',
+        cliponaxis: false,
         mode: goalTrace.scenario ? 'markers' : 'lines+markers',
         line: {
           width: 3,
