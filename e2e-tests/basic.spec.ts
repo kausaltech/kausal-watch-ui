@@ -1,5 +1,6 @@
-import { test as base, expect } from '@playwright/test';
-import { PlanContext, getIdentifiersToTest } from './context';
+import { expect, test as base } from '@playwright/test';
+
+import { getIdentifiersToTest, PlanContext } from './context';
 
 const test = base.extend<{ ctx: PlanContext }>({});
 
@@ -65,7 +66,7 @@ const testPlan = (planId: string) =>
       test.skip(!items || items.length === 0, 'No category pages for plan');
 
       const nav = page.locator('nav#global-navigation-bar');
-      const categoryTypeLink = nav.getByRole('link', {
+      const categoryTypeLink = nav.getByRole('button', {
         name: categoryTypeItem?.page.title,
         exact: true,
       });
@@ -109,10 +110,19 @@ const testPlan = (planId: string) =>
 
     test('static pages', async ({ page, ctx }) => {
       const staticPageItems = ctx.getStaticPageMenuItem();
-      test.skip(!staticPageItems, 'No static pages for plan');
 
+      test.skip(!staticPageItems, 'No static pages for plan');
       for (const staticPageItem of staticPageItems) {
         const nav = page.locator('nav#global-navigation-bar');
+
+        const parent = staticPageItem.parent;
+        if (parent?.page.__typename !== 'PlanRootPage') {
+          const parentButton = nav.getByRole('button', {
+            name: parent.page.title,
+            exact: true,
+          });
+          await parentButton.click();
+        }
 
         const staticPageLink = nav.getByRole('link', {
           name: staticPageItem?.page.title,
@@ -120,7 +130,8 @@ const testPlan = (planId: string) =>
         });
 
         await staticPageLink.click();
-        await expect(page.locator('main#main')).toBeVisible();
+
+        await expect(page.locator('main#main article')).toBeVisible();
       }
     });
 
