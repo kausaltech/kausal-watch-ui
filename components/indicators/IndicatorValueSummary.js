@@ -1,9 +1,11 @@
 import React from 'react';
-import { Row, Col } from 'reactstrap';
-import styled, { useTheme } from 'styled-components';
-import dayjs from '../../common/dayjs';
-import { beautifyValue } from '../../common/data/format';
+
 import { useLocale, useTranslations } from 'next-intl';
+import { Col, Row } from 'reactstrap';
+import styled, { useTheme } from 'styled-components';
+
+import { beautifyValue } from '../../common/data/format';
+import dayjs from '../../common/dayjs';
 
 const ValueSummary = styled.div`
   margin: 2em 0 0;
@@ -156,14 +158,13 @@ function IndicatorValueSummary(props) {
   let differenceDisplay = undefined;
   if (values.length > 0 && nextGoal) {
     const difference = nextGoal.value - values[values.length - 1].value;
-    const timeToGoal = `${dayjs(nextGoal.date)
-      .diff(now, 'years', true)
-      .toFixed(0)} ${' '} ${t('indicator-resolution-years')}`;
+    const timeToGoal = dayjs(now).to(dayjs(nextGoal.date));
     differenceDisplay = (
       <div className="mb-4">
         <ValueLabel>{t('indicator-time-to-goal')}</ValueLabel>
         <ValueDate>{timeToGoal}</ValueDate>
         <ValueDisplay>
+          {difference > 0 ? '+' : ''}
           {beautifyValue(difference, locale)}
           <ValueUnit>{diffUnitName}</ValueUnit>
         </ValueDisplay>
