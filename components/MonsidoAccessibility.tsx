@@ -27,9 +27,9 @@ const MonsidoAccessibility = ({ token }: Props) => {
           documentExt: [],
         },
       },
-      /* heatmap: {
+      heatmap: {
         enabled: true,
-      }, */
+      },
       pageCorrect: {
         enabled: true,
       },
