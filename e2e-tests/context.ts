@@ -284,24 +284,25 @@ export class PlanContext {
     const planIndicators = res.data!.planIndicators!;
     return new PlanContext(data, baseURL, planIndicators);
   }
+}
 
-  async checkAccessibility(page: Page) {
-    await page.waitForLoadState('networkidle');
-    const results = await new AxeBuilder({ page }).analyze();
-    const violationsToIgnore = ['frame-title'];
-    const criticalAndSeriousViolations = results.violations.filter(
-      (violation) =>
-        (violation.impact === 'critical' || violation.impact === 'serious') &&
-        !violationsToIgnore.includes(violation.id)
+export async function checkAccessibility(page: Page) {
+  await page.waitForLoadState('networkidle');
+  const results = await new AxeBuilder({ page }).analyze();
+  const violationsToIgnore = ['frame-title'];
+  const criticalAndSeriousViolations = results.violations.filter(
+    (violation) =>
+      (violation.impact === 'critical' || violation.impact === 'serious') &&
+      !violationsToIgnore.includes(violation.id)
+  );
+
+  if (criticalAndSeriousViolations.length > 0) {
+    console.error(
+      'Critical and serious accessibility violations:',
+      criticalAndSeriousViolations
     );
 
-    if (criticalAndSeriousViolations.length > 0) {
-      console.error(
-        'Critical and serious accessibility violations:',
-        criticalAndSeriousViolations
-      );
-    }
-    //expect(criticalAndSeriousViolations).toEqual([]);
+    expect(criticalAndSeriousViolations).toEqual([]);
   }
 }
 
