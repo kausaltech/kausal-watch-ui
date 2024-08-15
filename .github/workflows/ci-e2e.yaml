@@ -9,7 +9,7 @@ on:
       frontend_base_url:
         description: 'Base url for environment to run tests against'
         required: true
-        default: 'http://{planId}.watch.staging.kausal.tech'
+        default: 'http://{planId}.watch-test.kausal.tech'
       backend_base_url:
         description: 'Base url for backend API'
         required: true
@@ -65,7 +65,7 @@ jobs:
             IFS=',' read -ra PLAN_IDS <<< "$TEST_PLAN_IDENTIFIERS"
             for PLAN_ID in "${PLAN_IDS[@]}"
             do
-              FRONTEND_BASE_URL="http://${PLAN_ID}.watch.staging.kausal.tech"
+              FRONTEND_BASE_URL="http://${PLAN_ID}.watch-test.kausal.tech"
               echo "Running tests for plan $PLAN_ID with FRONTEND_BASE_URL=$FRONTEND_BASE_URL"
               echo "APLANS_API_BASE_URL=https://api.watch.kausal.tech/v1" >> $GITHUB_ENV
             done
@@ -123,7 +123,7 @@ jobs:
             IFS=',' read -ra PLAN_IDS <<< "$TEST_PLAN_IDENTIFIERS"
             for PLAN_ID in "${PLAN_IDS[@]}"
             do
-              FRONTEND_BASE_URL="http://${PLAN_ID}.watch.staging.kausal.tech"
+              FRONTEND_BASE_URL="http://${PLAN_ID}.watch-test.kausal.tech"
               echo "Running tests for plan $PLAN_ID with FRONTEND_BASE_URL=$FRONTEND_BASE_URL"
               echo "APLANS_API_BASE_URL=https://api.watch.kausal.tech/v1" >> $GITHUB_ENV
             done
