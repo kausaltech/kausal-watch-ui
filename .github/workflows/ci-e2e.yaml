@@ -21,6 +21,7 @@ on:
 jobs:
   e2e_test:
     name: Run tests
+    #if: github.event.schedule == '0 21 * * 1-5'
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
@@ -29,7 +30,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 20
 
       - name: Cache node modules
         uses: actions/cache@v3
@@ -86,6 +87,7 @@ jobs:
 
   accessibility_test:
     name: Run accessibility tests (Weekly)
+    #if: github.event.schedule == '0 21 * * 5'
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
@@ -94,7 +96,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 20
 
       - name: Install yarn
         run: |
