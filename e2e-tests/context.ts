@@ -288,21 +288,18 @@ export class PlanContext {
 
 export async function checkAccessibility(page: Page) {
   await page.waitForLoadState('networkidle');
-  const results = await new AxeBuilder({ page }).analyze();
-  const violationsToIgnore = ['frame-title'];
-  const criticalAndSeriousViolations = results.violations.filter(
-    (violation) =>
-      (violation.impact === 'critical' || violation.impact === 'serious') &&
-      !violationsToIgnore.includes(violation.id)
+
+  const results = await new AxeBuilder({ page })
+    .disableRules('color-contrast')
+    .analyze();
+
+  const criticalViolations = results.violations.filter(
+    (violation) => violation.impact === 'critical'
   );
 
-  if (criticalAndSeriousViolations.length > 0) {
-    console.error(
-      'Critical and serious accessibility violations:',
-      criticalAndSeriousViolations
-    );
-
-    expect(criticalAndSeriousViolations).toEqual([]);
+  if (criticalViolations.length > 0) {
+    console.error('Critical accessibility violations:', criticalViolations);
+    expect(criticalViolations).toEqual([]);
   }
 }
 

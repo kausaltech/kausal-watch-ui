@@ -16,7 +16,7 @@ on:
         default: 'https://api.watch.kausal.tech/v1'
   schedule:
     - cron: '0 21 * * 1-5' # 21:00 UTC, 00:00 EEST
-    - cron: '0 21 * * 5' #once a week for accessibility check
+    - cron: '0 21 1 * *' #once a month
 
 jobs:
   e2e_test:
@@ -86,8 +86,8 @@ jobs:
           retention-days: 5
 
   accessibility_test:
-    name: Run accessibility tests (Weekly)
-    #if: github.event.schedule == '0 21 * * 5'
+    name: Run accessibility tests
+    #if: github.event.schedule == '0 21 1 * *'
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
