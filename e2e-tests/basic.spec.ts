@@ -93,6 +93,7 @@ const testPlan = (planId: string) =>
         name: EmptyPageMenuItem?.page.title,
         exact: true,
       });
+      await emptyPageMenuLink.waitFor({ state: 'visible', timeout: 150000 });
       await emptyPageMenuLink.click();
 
       const firstItemLink = nav.getByRole('link', {
