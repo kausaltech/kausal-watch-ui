@@ -43,6 +43,7 @@ interface Props {
   context?: 'sidebar' | 'default';
   heading?: string;
   description?: string;
+  fields?: [];
 }
 
 const ExpandableFeedbackFormBlock = ({
@@ -51,6 +52,7 @@ const ExpandableFeedbackFormBlock = ({
   context = 'default',
   heading,
   description,
+  fields,
 }: Props) => {
   const t = useTranslations();
   const plan = usePlan();
@@ -92,6 +94,7 @@ const ExpandableFeedbackFormBlock = ({
           description=""
           prompt=""
           formContext={isAction ? 'action' : 'category'}
+          additionalFields={fields}
         />
       </Collapse>
     </FeedbackFormSection>

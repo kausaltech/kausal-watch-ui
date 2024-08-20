@@ -371,6 +371,23 @@ const GET_ACTION_DETAILS = gql`
     ... on ReportComparisonBlock {
       ...ReportComparisonBlockActionContent
     }
+    ... on ActionContactFormBlock {
+      heading
+      description
+      fields {
+        ... on FormFieldBlock {
+          fieldLabel
+          fieldType
+          fieldRequired
+          choices {
+            ... on FormChoiceBlock {
+              choiceLabel
+              choiceValue
+            }
+          }
+        }
+      }
+    }
     ... on ActionContentSectionBlock {
       id
       heading
@@ -400,6 +417,23 @@ const GET_ACTION_DETAILS = gql`
         }
         ... on ReportComparisonBlock {
           ...ReportComparisonBlockActionContent
+        }
+        ... on ActionContactFormBlock {
+          heading
+          description
+          fields {
+            ... on FormFieldBlock {
+              fieldLabel
+              fieldType
+              fieldRequired
+              choices {
+                ... on FormChoiceBlock {
+                  choiceLabel
+                  choiceValue
+                }
+              }
+            }
+          }
         }
       }
     }

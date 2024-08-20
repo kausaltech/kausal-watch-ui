@@ -50,6 +50,19 @@ const TEMPLATED_CATEGORY_PAGE_FRAGMENT = gql`
         ... on CategoryPageContactFormBlock {
           heading
           description
+          fields {
+            ... on FormFieldBlock {
+              fieldLabel
+              fieldType
+              fieldRequired
+              choices {
+                ... on FormChoiceBlock {
+                  choiceLabel
+                  choiceValue
+                }
+              }
+            }
+          }
         }
         ... on CategoryTypeDatasetsBlock {
           id
