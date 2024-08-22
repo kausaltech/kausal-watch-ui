@@ -146,7 +146,7 @@
   },
   "packageManager": "npm@10.5.1",
   "optionalDependencies": {
-    "@kausal/themes-private": "^0.5.10"
+    "@kausal/themes-private": "^0.5.11"
   },
   "lint-staged": {
     "*.{tsx,ts,js,css,scss,md,json}": "prettier --write"
