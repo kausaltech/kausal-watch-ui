@@ -41,7 +41,8 @@ const SegmentLabel = styled.span<{ portion: number }>`
   margin: ${(props) => props.theme.spaces.s050}
     ${(props) => props.theme.spaces.s050} 0 0;
   font-size: ${(props) => props.theme.fontSizeSm};
-  font-family: ${(props) => props.theme.fontFamilyTiny};
+  font-family: ${(props) =>
+    `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`};
   line-height: ${(props) => props.theme.lineHeightMd};
 
   span {

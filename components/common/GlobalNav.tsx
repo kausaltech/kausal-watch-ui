@@ -84,10 +84,35 @@ const BotNav = styled(Navbar)<{ $offsetTop?: number; $expanded: boolean }>`
 
   .container {
     flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    background-image: ${({ theme }) =>
+        `linear-gradient(to right, ${theme.themeColors.white}, ${theme.themeColors.white}),
+        linear-gradient(to right, ${theme.themeColors.white}, ${theme.themeColors.white})`},
+      linear-gradient(to right, rgba(0, 0, 0, 0.25), rgba(255, 255, 255, 0)),
+      linear-gradient(to left, rgba(0, 0, 0, 0.25), rgba(255, 255, 255, 0));
+    background-position:
+      left center,
+      right center,
+      left center,
+      right center;
+    background-repeat: no-repeat;
+    background-color: ${(props) => props.theme.themeColors.white};
+    background-size:
+      20px 100%,
+      20px 100%,
+      10px 100%,
+      10px 100%;
+    background-attachment: local, local, scroll, scroll;
   }
 
   .navbar-nav {
     padding: ${(props) => props.theme.spaces.s150} 0;
+    overflow: visible;
+  }
+
+  .navbar-collapse {
+    align-items: stretch;
   }
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
@@ -97,13 +122,20 @@ const BotNav = styled(Navbar)<{ $offsetTop?: number; $expanded: boolean }>`
 
     .nav-item {
       flex-direction: row;
+
+      &:last-child {
+        a {
+          margin-right: 0;
+        }
+      }
     }
   }
 `;
 
 const SiteTitle = styled.div`
   font-size: ${(props) => props.theme.fontSizeBase};
-  font-family: ${(props) => props.theme.brandNavFontFamily};
+  font-family: ${(props) =>
+    `${props.theme.brandNavFontFamily}, ${props.theme.fontFamilyFallback}`};
   line-height: 1;
   padding: ${(props) => props.theme.spaces.s150} 0
     ${(props) => props.theme.spaces.s150};
@@ -174,8 +206,10 @@ const EmptyLogo = styled.div`
 `;
 
 const NavLink = styled.div`
+  height: 100%;
   a {
-    display: block;
+    height: 100%;
+    display: flex;
     margin: 0 0 ${(props) => props.theme.spaces.s050}
       ${(props) => props.theme.spaces.s100};
     color: ${(props) => props.theme.neutralDark};
@@ -197,11 +231,13 @@ const NavLink = styled.div`
 `;
 
 const NavHighlighter = styled.span`
+  height: 100%;
   display: inline-block;
   padding: ${(props) => props.theme.spaces.s050} 0
     calc(${(props) => props.theme.spaces.s050} - 5px);
   border-bottom: 5px solid transparent;
   transition: border 200ms;
+  line-height: 1;
 
   &.active {
     border-bottom: 5px solid ${(props) => props.theme.brandDark};
@@ -210,6 +246,10 @@ const NavHighlighter = styled.span`
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     padding: ${(props) => props.theme.spaces.s150} 0
       calc(${(props) => props.theme.spaces.s150} - 5px);
+
+    &.external {
+      text-align: right;
+    }
   }
 
   .icon {
@@ -218,7 +258,8 @@ const NavHighlighter = styled.span`
 `;
 
 const StyledDropdownToggle = styled(DropdownToggle)`
-  display: block;
+  height: 100%;
+  display: flex;
   padding: 0;
   margin: 0 0 ${(props) => props.theme.spaces.s100}
     ${(props) => props.theme.spaces.s100};
@@ -240,9 +281,29 @@ const StyledDropdownToggle = styled(DropdownToggle)`
 `;
 
 const StyledDropdown = styled(UncontrolledDropdown)`
+  position: static;
   .dropdown-toggle.nav-link {
     padding-left: 0;
     padding-right: 0;
+    white-space: normal;
+
+    &::after {
+      align-self: center;
+      margin-top: 0;
+
+      @media (min-width: ${(props) => props.theme.breakpointMd}) {
+        align-self: flex-start;
+        margin-top: ${(props) => props.theme.spaces.s200};
+      }
+    }
+  }
+
+  &.show {
+    .dropdown-toggle.nav-link {
+      &::after {
+        border-top-color: ${(props) => props.theme.brandDark};
+      }
+    }
   }
 
   .dropdown-menu {
@@ -348,20 +409,22 @@ function DropdownList(props) {
           {parentName}
         </NavHighlighter>
       </StyledDropdownToggle>
-      <StyledDropdownMenu>
-        {items &&
-          items.map((child) => (
-            <DropdownItem key={child.id}>
-              <NavLink>
-                <NavigationLink slug={child.urlPath} onClick={onClickLink}>
-                  <NavHighlighter className="highlighter">
-                    {child.name}
-                  </NavHighlighter>
-                </NavigationLink>
-              </NavLink>
-            </DropdownItem>
-          ))}
-      </StyledDropdownMenu>
+      <div style={{ position: 'absolute' }}>
+        <StyledDropdownMenu>
+          {items &&
+            items.map((child) => (
+              <DropdownItem key={child.id}>
+                <NavLink>
+                  <NavigationLink slug={child.urlPath} onClick={onClickLink}>
+                    <NavHighlighter className="highlighter">
+                      {child.name}
+                    </NavHighlighter>
+                  </NavigationLink>
+                </NavLink>
+              </DropdownItem>
+            ))}
+        </StyledDropdownMenu>
+      </div>
     </StyledDropdown>
   );
 }
@@ -526,7 +589,7 @@ function GlobalNav(props) {
                 </SiteTitle>
               </HomeLink>
             </Link>
-            <PlanSelector />
+            <PlanSelector color={theme.brandNavColor} />
           </Site>
 
           <Nav navbar className="ml-auto d-none d-md-flex">
@@ -636,14 +699,14 @@ function GlobalNav(props) {
                 <CustomToolbar items={customToolbarItems} mobile />
               )}
             </Nav>
-            <Nav navbar>
+            <Nav navbar className="ms-md-5">
               <PlanVersionSelector plan={plan} />
               {externalItems.length > 0 &&
                 externalItems.map((item, index) => (
                   <NavItem key={`external${index}`}>
                     <NavLink>
                       <NavigationLink slug={item.url} onClick={handleClose}>
-                        <NavHighlighter className="highlighter">
+                        <NavHighlighter className="highlighter external">
                           {item.name}
                         </NavHighlighter>
                       </NavigationLink>

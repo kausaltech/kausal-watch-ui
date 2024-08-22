@@ -1,13 +1,22 @@
-import React, { useState, ReactElement } from 'react';
-import Zoom from 'react-medium-image-zoom';
-import parse, { domToReact } from 'html-react-parser';
-import { Collapse } from 'reactstrap';
-import Button from 'components/common/Button';
 import 'react-medium-image-zoom/dist/styles.css';
-import { usePlan } from 'context/plan';
-import styled from 'styled-components';
+
+import React, { ReactElement, useCallback, useState } from 'react';
+
+import Button from 'components/common/Button';
 import Icon from 'components/common/Icon';
+import { usePlan } from 'context/plan';
+import parse, {
+  DOMNode,
+  domToReact,
+  Element,
+  HTMLReactParserOptions,
+} from 'html-react-parser';
 import { useTranslations } from 'next-intl';
+import Zoom from 'react-medium-image-zoom';
+import { Collapse } from 'reactstrap';
+import styled from 'styled-components';
+
+import { withScope } from '@sentry/nextjs';
 
 const BreakPoint = styled.div<{ fade: boolean }>`
   text-align: center;
@@ -46,9 +55,8 @@ const ToggleButton = styled(Button)`
 `;
 
 type RichTextImageProps = {
-  attribs: {
-    src: string;
-    [key: string]: any;
+  attribs: React.JSX.IntrinsicElements['img'] & {
+    class?: string;
   };
 };
 
@@ -99,6 +107,7 @@ function RichTextImage(props: RichTextImageProps) {
 
   // eslint-disable-next-line @next/next/no-img-element
   const imgElement = (
+    // eslint-disable-next-line @next/next/no-img-element
     <img
       src={`${plan.serveFileBaseUrl}${src}`}
       alt={alt}
@@ -201,16 +210,13 @@ export default function RichText(props: RichTextProps) {
   const { html, isCollapsible, className, ...rest } = props;
   const plan = usePlan();
 
-  if (typeof html !== 'string') return <div />;
-
   // FIXME: Hacky hack to figure out if the rich text links are internal
-  const cutHttp = (url) => url.replace(/^https?:\/\//, '');
+  const cutHttp = (url: string) => url.replace(/^https?:\/\//, '');
   const currentDomain = plan.viewUrl ? cutHttp(plan.viewUrl.split('.')[0]) : '';
 
-  const options = {
-    replace: (domNode) => {
-      const { type, name, attribs, children } = domNode;
-      if (type !== 'tag') return null;
+  const replaceDomElement = useCallback(
+    (element: Element) => {
+      const { name, attribs, children } = element as Element;
       // Rewrite <a> tags to point to the FQDN
       if (name === 'a') {
         // File link
@@ -242,6 +248,28 @@ export default function RichText(props: RichTextProps) {
         }
       }
       return null;
+    },
+    [plan.serveFileBaseUrl, currentDomain]
+  );
+
+  if (typeof html !== 'string') return <div />;
+
+  const options: HTMLReactParserOptions = {
+    replace: (node: DOMNode) => {
+      if (node.type !== 'tag') return null;
+      const el = node as Element;
+      try {
+        return replaceDomElement(el);
+      } catch (err) {
+        withScope((scope) => {
+          scope.setExtra('type', el.type);
+          scope.setExtra('name', el.name);
+          scope.setExtra('attribs', el.attribs);
+          scope.captureException(err);
+        });
+        console.error(err);
+        return null;
+      }
     },
   };
 

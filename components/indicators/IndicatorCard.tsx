@@ -20,19 +20,22 @@ const IndicatorValues = styled.div`
 
 const IndicatorValueType = styled.div`
   font-size: ${(props) => props.theme.fontSizeSm};
-  font-family: ${(props) => props.theme.fontFamilyTiny};
+  font-family: ${(props) =>
+    `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`};
   font-weight: ${(props) => props.theme.fontWeightNormal};
 `;
 
 const IndicatorValueUnit = styled.span`
   font-size: ${(props) => props.theme.fontSizeSm};
-  font-family: ${(props) => props.theme.fontFamilyTiny};
+  font-family: ${(props) =>
+    `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`};
   font-weight: ${(props) => props.theme.fontWeightNormal};
 `;
 
 const IndicatorValueTime = styled.div`
   font-size: ${(props) => props.theme.fontSizeSm};
-  font-family: ${(props) => props.theme.fontFamilyTiny};
+  font-family: ${(props) =>
+    `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`};
   font-weight: ${(props) => props.theme.fontWeightNormal};
 `;
 
@@ -90,7 +93,8 @@ const StyledIndicator = styled(Card)<{ $level: string | null }>`
 
 const IndicatorType = styled.div`
   font-size: ${(props) => props.theme.fontSizeSm};
-  font-family: ${(props) => props.theme.fontFamilyTiny};
+  font-family: ${(props) =>
+    `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`}
   margin-bottom: 0.5em;
 `;
 

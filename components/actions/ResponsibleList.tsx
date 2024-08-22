@@ -40,7 +40,8 @@ const Address = styled.address`
   margin-top: 0.5em;
   margin-bottom: 0.5em;
   font-size: ${(props) => props.theme.fontSizeSm};
-  font-family: ${(props) => props.theme.fontFamilyTiny};
+  font-family: ${(props) =>
+    `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`};
 `;
 
 type ResponsibleBadgeProps = {

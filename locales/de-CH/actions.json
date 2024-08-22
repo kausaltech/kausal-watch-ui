@@ -14,5 +14,6 @@
     "actions-updated-help-months": "Anteil der Massnahmen, die innerhalb {count, plural, =1 {des letzten Monats} other {von # Monaten}} aktualisiert wurden",
     "related-actions": "Verbundene Massnahmen",
     "org-responsible-in-actions": "Verantwortlich für {actionCount} Massnahmen",
-    "inactive-actions": "Inaktive Massnahmen"
+    "inactive-actions": "Inaktive Massnahmen",
+    "action-timeline": "Frist"
 }

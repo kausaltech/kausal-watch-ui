@@ -66,6 +66,13 @@ const GET_PLAN_INFO = gql`
             parent {
               id
               page {
+                title
+                __typename
+              }
+            }
+            children {
+              id
+              page {
                 __typename
               }
             }
@@ -217,8 +224,8 @@ export class PlanContext {
     function isStaticPageItem(item: MainMenuItem): item is StaticPageMenuItem {
       if (item?.__typename !== 'PageMenuItem') return false;
       if (item.page.__typename !== 'StaticPage') return false;
-      if (item.parent.page.__typename !== 'PlanRootPage') return false;
-
+      if (item.children?.length) return false;
+      //if (item.parent.page.__typename !== 'PlanRootPage') return false;
       return true;
     }
     const items =

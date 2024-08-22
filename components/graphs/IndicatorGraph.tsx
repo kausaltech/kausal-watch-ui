@@ -1,16 +1,13 @@
 'use client';
 
 import React from 'react';
-import dynamic from 'next/dynamic';
-import { merge, uniq } from 'lodash';
-import styled from 'styled-components';
-import { useTheme } from 'styled-components';
-import { transparentize } from 'polished';
-import { splitLines } from 'common/utils';
-import { Layout } from 'plotly.js';
-import { PlotParams } from 'react-plotly.js';
 
-const log10 = Math.log(10);
+import { splitLines } from 'common/utils';
+import { merge, uniq } from 'lodash';
+import dynamic from 'next/dynamic';
+import { Data, Layout } from 'plotly.js';
+import { transparentize } from 'polished';
+import styled, { useTheme } from 'styled-components';
 
 const PlotContainer = styled.div<{ $vizHeight: number }>`
   height: ${(props) => props.$vizHeight}px;
@@ -27,7 +24,7 @@ const createLayout = (
   hasTimeDimension,
   subplotsNeeded,
   graphCustomBackground
-): Partial<PlotParams['layout']> => {
+): Partial<Layout> => {
   const fontFamily =
     '-apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, ' +
     'helvetica neue, helvetica, Ubuntu, roboto, noto, arial, sans-serif';
@@ -36,9 +33,8 @@ const createLayout = (
   const yaxes: NonNullable<Pick<Layout, 'yaxis'>> = {
     yaxis: {
       automargin: true,
-      hoverformat: `${config.maxDigits === 0 ? '' : '.'}${config.maxDigits}r`,
-      separatethousands: true,
-      tickformat: 'f',
+      hoverformat: ',.3r',
+      tickformat: ',.1r',
       fixedrange: true,
       tickfont: {
         family: fontFamily,
@@ -75,8 +71,7 @@ const createLayout = (
         xaxis: {
           automargin: true,
           fixedrange: true,
-          type: 'category',
-          tickangle: subplotsNeeded ? 'auto' : 90,
+          tickangle: (subplotsNeeded ? 'auto' : 90) as number | 'auto',
           tickfont: {
             family: fontFamily,
             size: 14,
@@ -89,9 +84,8 @@ const createLayout = (
           fixedrange: true,
           showgrid: false,
           showline: false,
-          nticks: config?.xTicksMax,
           tickformat: timeResolution === 'YEAR' ? '%Y' : '%b %Y',
-          tickmode: 'auto',
+          tickmode: 'auto' as const,
           tickfont: {
             family: fontFamily,
             size: 14,
@@ -151,36 +145,51 @@ const createLayout = (
   return newLayout;
 };
 
-function getSignificantDigitCount(n) {
-  let val = Math.abs(String(n).replace('.', '')); // remove decimal and make positive
-  if (val === 0) return 0;
-  while (val !== 0 && val % 10 === 0) val /= 10; // kill the 0s at the end of n
-
-  return Math.floor(Math.log(val) / log10) + 1; // get number of digits
+interface CreateTracesParams {
+  traces: any[];
+  unit: string;
+  plotColors: any;
+  styleCount?: number;
+  categoryCount: number;
+  hasTimeDimension: boolean;
+  timeResolution?: string;
+  lineShape: string;
+  useAreaGraph?: boolean | undefined;
+  graphCustomBackground?: string | undefined;
 }
 
-const createTraces = (
-  traces,
-  unit,
-  plotColors,
-  styleCount,
-  categoryCount,
-  hasTimeDimension,
-  timeResolution,
-  lineShape,
-  useAreaGraph
-) => {
+interface TracesOutput {
+  layoutConfig: any;
+  traces: Partial<Data>[];
+}
+
+const createTraces: (params: CreateTracesParams) => TracesOutput = (params) => {
+  const {
+    traces,
+    unit,
+    plotColors,
+    styleCount,
+    categoryCount,
+    hasTimeDimension,
+    timeResolution,
+    lineShape,
+    useAreaGraph,
+    graphCustomBackground,
+  } = params;
+
   // Figure out what we need to draw depending on dataset
   // and define trace and layout setup accordingly
   // First trace is always main/total
 
   const traceCount = traces.length;
 
-  if (!traceCount) return [];
-  let maxDigits = 0;
-  const layoutConfig = {
-    xaxis: {},
-  };
+  if (!traceCount)
+    return {
+      layoutConfig: undefined,
+      traces: [],
+    };
+
+  const layoutConfig: Partial<Layout> = { xaxis: {} };
 
   let numColors = plotColors.mainScale.length;
   let numSymbols = plotColors.symbols.length;
@@ -196,15 +205,9 @@ const createTraces = (
   const allXValues = [];
 
   const newTraces = traces.map((trace, idx) => {
-    const modTrace = { ...trace, cliponaxis: false };
-
-    trace.y.forEach((value) => {
-      // Determine the highest number of significant digits in the dataset
-      // to be able to set suitable number formating.
-      const digitCount = getSignificantDigitCount(value);
-      if (digitCount > maxDigits) maxDigits = digitCount;
-    });
-
+    // Here we are excluding some properties from the trace
+    const { xType, dataType, ...plotlyTrace } = trace;
+    const modTrace: Data = { ...plotlyTrace, cliponaxis: false };
     allXValues.push(...trace.x);
 
     // we have multiple categories in one time point - draw bar groups
@@ -218,8 +221,8 @@ const createTraces = (
             : plotColors.mainScale[idx % numColors],
       };
       layoutConfig.barmode = 'group';
-      layoutConfig.xaxis.type = 'category';
-      layoutConfig.xaxis.tickvals = null;
+      layoutConfig.xaxis!.type = 'category';
+      layoutConfig.xaxis!.tickvals = undefined;
     }
     // we have one or more categories as time series - draw lines and markers
     if (hasTimeDimension) {
@@ -258,7 +261,7 @@ const createTraces = (
     if (modTrace.type === 'scatter')
       modTrace.mode = trace.x.length > 30 ? 'lines' : 'lines+markers';
     const timeFormat = timeResolution === 'YEAR' ? '%Y' : '%x';
-    modTrace.hovertemplate = `(%{x|${timeFormat}})<br> ${trace.name}: %{y:f} ${unit}`;
+    modTrace.hovertemplate = `(%{x|${timeFormat}})<br> ${trace.name}: %{y:,.3r} ${unit}`;
     modTrace.hoverinfo = 'none';
     modTrace.hoverlabel = {
       bgcolor: plotColors.mainScale[idx % numColors],
@@ -269,13 +272,9 @@ const createTraces = (
   const uniqueXValues = uniq(allXValues.sort(), true);
   if (layoutConfig.xaxis?.type !== 'category') {
     if (uniqueXValues.length < 4) {
-      layoutConfig.xaxis.tickvals = uniqueXValues;
+      layoutConfig.xaxis!.tickvals = uniqueXValues;
     }
   }
-  layoutConfig.maxDigits = maxDigits > 3 ? 3 : maxDigits;
-
-  // Avoid repetitive years to set max value of xaxis ticks
-  layoutConfig.xTicksMax = uniqueXValues.length;
 
   return {
     layoutConfig,
@@ -377,7 +376,6 @@ function IndicatorGraph(props: IndicatorGraphProps) {
   const showTrendline = theme.settings?.graphs?.showTrendline ?? true;
   const graphCustomBackground = theme.settings?.graphs?.customBackground;
 
-  let mainTraces = [];
   let isComparison = false;
   const subplotsNeeded =
     specification.axes.filter((a) =>
@@ -390,7 +388,7 @@ function IndicatorGraph(props: IndicatorGraphProps) {
     specification.axes.filter((a) => a[0] === 'time').length > 0;
   const categoryCount =
     specification.axes.length > 0 ? specification.axes[0][1] : 0;
-  let styleCount = null;
+  let styleCount = undefined;
   const xAxisIsUsedForCategories =
     specification.axes[0] != null &&
     specification.axes[0][0] === 'categories' &&
@@ -415,9 +413,9 @@ function IndicatorGraph(props: IndicatorGraphProps) {
     // Shift to blue.
     plotColors.mainScale.shift();
   }
-  mainTraces = createTraces(
+  const mainTraces = createTraces({
     traces,
-    yRange.unit,
+    unit: yRange.unit,
     plotColors,
     styleCount,
     categoryCount,
@@ -425,8 +423,8 @@ function IndicatorGraph(props: IndicatorGraphProps) {
     timeResolution,
     lineShape,
     useAreaGraph,
-    graphCustomBackground
-  );
+    graphCustomBackground,
+  });
 
   if (subplotsNeeded) {
     const categoryDimensions = specification.dimensions.slice(0, categoryCount);
@@ -451,7 +449,7 @@ function IndicatorGraph(props: IndicatorGraphProps) {
       subplotRowCount,
       subplotHeaderTitles
     );
-    mainTraces.layoutConfig.xTicksMax = mainTraces.traces[0].length;
+    mainTraces.layoutConfig.xaxis.nticks = mainTraces.traces[0].length;
     mainTraces.traces.forEach((t, idx) => {
       const axisIndex = hasTimeDimension ? Math.floor(idx / 2) + 1 : idx + 1;
       if (!hasTimeDimension || idx > 1) {
@@ -488,6 +486,7 @@ function IndicatorGraph(props: IndicatorGraphProps) {
       plotlyData.push({
         ...goalTrace,
         type: 'scatter',
+        cliponaxis: false,
         mode: goalTrace.scenario ? 'markers' : 'lines+markers',
         line: {
           width: 3,

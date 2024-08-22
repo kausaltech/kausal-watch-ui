@@ -48,7 +48,7 @@ function ActionImpact({ identifier, name, max = 4, size = 'md' }) {
         return (
           <ImpactIcon
             key={item.key}
-            name="exclamationCircle"
+            name="exclamation-circle"
             className="icon-bad"
             $size={size}
           />
@@ -57,7 +57,7 @@ function ActionImpact({ identifier, name, max = 4, size = 'md' }) {
         return (
           <ImpactIcon
             key={item.key}
-            name="circleFull"
+            name="circle-full"
             className="icon-off"
             $size={size}
           />
@@ -66,7 +66,7 @@ function ActionImpact({ identifier, name, max = 4, size = 'md' }) {
         return (
           <ImpactIcon
             key={item.key}
-            name="circleFull"
+            name="circle-full"
             className="icon-on"
             $size={size}
           />

@@ -14,14 +14,14 @@ import { getIndicatorTranslation } from './IndicatorCard';
 
 export const isEmptyFilter = (val) => val == null || val === '';
 
-const IndicatorType = styled(Badge)`
+const IndicatorType = styled(Badge)<{ $level: string }>`
   border-radius: ${(props) => props.theme.badgeBorderRadius};
   padding: ${(props) => props.theme.badgePaddingY}
     ${(props) => props.theme.badgePaddingX};
   font-weight: ${(props) => props.theme.badgeFontWeight};
 
   color: ${(props) => {
-    switch (props.level) {
+    switch (props.$level) {
       case 'action':
         return readableColor(props.theme.actionColor);
       case 'operational':
@@ -35,7 +35,7 @@ const IndicatorType = styled(Badge)`
     }
   }};
   background-color: ${(props) => {
-    switch (props.level) {
+    switch (props.$level) {
       case 'action':
         return props.theme.actionColor;
       case 'operational':
@@ -209,15 +209,6 @@ const IndentableTableHeader = (props) => {
       </IndentableCellContentWrapper>
     </th>
   );
-};
-
-const Bullet = (props) => {
-  if (props.level === 0) {
-    return null;
-  }
-  const SYMBOLS = '▪▫•◦▸▹';
-  const symbol = SYMBOLS.charAt((props.level - 1) % SYMBOLS.length);
-  return <span>{symbol} </span>;
 };
 
 const levels = {
@@ -683,7 +674,7 @@ const IndicatorListFiltered = (props) => {
                       )}
                       {!allIndicatorsHaveSameLevel && (
                         <IndentableTableCell>
-                          <IndicatorType level={item.level}>
+                          <IndicatorType $level={item.level}>
                             {indicatorType || <span>-</span>}
                           </IndicatorType>
                         </IndentableTableCell>

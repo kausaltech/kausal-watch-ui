@@ -28,7 +28,8 @@ const HelpText = styled.p`
   margin-bottom: ${(props) => props.theme.spaces.s200};
   text-align: center;
   font-size: ${(props) => props.theme.fontSizeSm};
-  font-family: ${(props) => props.theme.fontFamilyTiny};
+  font-family: ${(props) =>
+    `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`};
   line-height: ${(props) => props.theme.lineHeightMd};
 `;
 
@@ -82,8 +83,6 @@ const StatusDonut = (props) => {
   const pieData = {
     values: [...data.values],
     labels: [...data.labels],
-    domain: { column: 0 },
-    hoverinfo: 'label+value+percent',
     hovertemplate: '%{label}<br>%{value}<br>%{percent:.0%}<extra></extra>',
     hole: 0.5,
     type: 'pie',
@@ -93,7 +92,6 @@ const StatusDonut = (props) => {
     marker: {
       colors: [...colors],
     },
-    autoMargin: true,
   };
   const pieLayout = {
     font: {

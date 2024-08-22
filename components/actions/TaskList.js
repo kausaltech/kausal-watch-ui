@@ -17,7 +17,8 @@ import { getDateFormat } from 'utils/dates.utils';
 
 const StyledDate = styled.span`
   font-size: ${(props) => props.theme.fontSizeSm};
-  font-family: ${(props) => props.theme.fontFamilyTiny};
+  font-family: ${(props) =>
+    `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`};
   margin-left: ${(props) => props.theme.spaces.s025};
 `;
 
@@ -51,7 +52,8 @@ const TaskContent = styled.div`
 
   .text-content {
     font-size: ${(props) => props.theme.fontSizeSm};
-    font-family: ${(props) => props.theme.fontFamilyTiny};
+    font-family: ${(props) =>
+      `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`}
 
     p:last-child {
       margin-bottom: 0;
@@ -84,7 +86,8 @@ const ListGroup = styled(BaseListGroup)`
   h4 {
     margin: 0;
     font-size: ${(props) => props.theme.fontSizeBase};
-    font-family: ${(props) => props.theme.fontFamily};
+    font-family: ${(props) =>
+      `${props.theme.fontFamily}, ${props.theme.fontFamilyFallback}`};
     font-weight: ${(props) => props.theme.fontWeightBold};
     line-height: ${(props) => props.theme.lineHeightMd};
     color: ${(props) => props.theme.themeColors.dark};

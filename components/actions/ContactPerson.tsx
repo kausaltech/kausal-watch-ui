@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import styled, { css } from 'styled-components';
+import styled, { css, useTheme } from 'styled-components';
 
 import { gql } from '@apollo/client';
 import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
@@ -13,6 +13,7 @@ import {
   PlanFeaturesContactPersonsPublicData,
 } from 'common/__generated__/graphql';
 import { useTranslations } from 'next-intl';
+import { getThemeStaticURL } from '@/common/theme';
 
 const Person = styled.div<{
   $isLeader: boolean;
@@ -61,7 +62,8 @@ const PersonRole = styled.div`
   margin-bottom: 0.5em;
   color: ${(props) => props.theme.themeColors.dark};
   font-size: ${(props) => props.theme.fontSizeSm};
-  font-family: ${(props) => props.theme.fontFamilyTiny};
+  font-family: ${(props) =>
+    `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`};
   font-weight: ${(props) => props.theme.fontWeightBold};
   line-height: ${(props) => props.theme.lineHeightSm};
 `;
@@ -70,20 +72,35 @@ const PersonOrg = styled.div`
   margin-bottom: 1em;
   color: ${(props) => props.theme.themeColors.dark};
   font-size: ${(props) => props.theme.fontSizeSm};
-  font-family: ${(props) => props.theme.fontFamilyTiny};
+  font-family: ${(props) =>
+    `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`};
   line-height: ${(props) => props.theme.lineHeightSm};
 `;
 
-const Avatar = styled.img`
+const Avatar = styled.div<{
+  src?: string;
+  hasAvatar: boolean;
+  $isLeader: boolean;
+}>`
   width: 5em;
   height: 5em;
+  border-radius: 50%;
+  background-color: transparent;
+  background-size: cover;
+  background-position: center;
+  background-image: ${(props) => `url(${props.src})`};
+  border: ${(props) =>
+    props.$isLeader
+      ? `4px solid ${props.theme.brandDark}`
+      : `2px solid ${props.theme.themeColors.light}`};
 `;
 
 const Address = styled.address`
   margin-top: 1em;
   margin-bottom: 0;
   font-size: ${(props) => props.theme.fontSizeSm};
-  font-family: ${(props) => props.theme.fontFamilyTiny};
+  font-family: ${(props) =>
+    `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`};
 `;
 
 const CollapseButton = styled(Button)`
@@ -188,20 +205,23 @@ function ContactPerson({ person, leader = false }: ContactPersonProps) {
   const fullName = `${person.firstName} ${person.lastName}`;
   const role = leader ? t('contact-person-main') : '';
   const withoutAvatar = !plan.features.contactPersonsShowPicture;
+  const theme = useTheme();
+  const hasAvatar = Boolean(person.avatarUrl);
 
   return (
     <Person $isLeader={leader} $withoutAvatar={withoutAvatar}>
       {plan.features.contactPersonsShowPicture ? (
-        <div>
+        <>
           <Avatar
             src={
               person.avatarUrl ||
-              '/static/themes/default/images/default-avatar-user.png'
+              getThemeStaticURL(theme.defaultAvatarUserImage)
             }
-            className="rounded-circle"
-            alt={`${role} ${fullName}`}
+            hasAvatar={hasAvatar}
+            $isLeader={leader}
+            aria-label={`${role} ${fullName}`}
           />
-        </div>
+        </>
       ) : (
         <span className="visually-hidden">{`${role} ${fullName}`}</span>
       )}

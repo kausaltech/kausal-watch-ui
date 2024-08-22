@@ -131,7 +131,8 @@ const ResultsHeader = styled.h2`
 const HitType = styled.div`
   margin-bottom: ${(props) => props.theme.spaces.s050};
   font-size: ${(props) => props.theme.fontSizeSm};
-  font-family: ${(props) => props.theme.fontFamilyTiny};
+  font-family: ${(props) =>
+    `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`};
   text-transform: uppercase;
   letter-spacing: 0.25px;
 `;
@@ -157,7 +158,8 @@ const StyledSearchResultItem = styled.li`
   h3 {
     margin: 0 0 ${(props) => props.theme.spaces.s050};
     font-size: ${(props) => props.theme.fontSizeBase};
-    font-family: ${(props) => props.theme.fontFamily};
+    font-family: ${(props) =>
+      `${props.theme.fontFamily}, ${props.theme.fontFamilyFallback}`};
     text-decoration: underline;
 
     &:hover {
@@ -173,9 +175,9 @@ const StyledSearchResultItem = styled.li`
 
 const ResultExcerpt = styled.div`
   font-size: ${(props) => props.theme.fontSizeSm};
-  font-family: ${(props) => props.theme.fontFamilyTiny};
-
-  em {
+  font-family: ${(props) =>
+      `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`}
+    em {
     font-style: normal;
     font-weight: ${(props) => props.theme.fontWeightBold};
   }

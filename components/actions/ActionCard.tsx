@@ -8,6 +8,7 @@ import { getStatusColorForAction } from 'common/ActionStatusSummary';
 import { ActionLink } from 'common/links';
 import { useTheme } from 'styled-components';
 import { getActionTermContext } from 'common/i18n';
+import { getThemeStaticURL } from '@/common/theme';
 import { usePlan } from 'context/plan';
 import PlanChip from 'components/plans/PlanChip';
 import {
@@ -142,7 +143,8 @@ const StyledActionPhase = styled.div<{
 const StatusName = styled.div`
   padding: ${(props) => props.theme.spaces.s050};
   font-size: ${(props) => props.theme.fontSizeSm};
-  font-family: ${(props) => props.theme.fontFamilyTiny};
+  font-family: ${(props) =>
+    `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`};
   line-height: 1;
 `;
 
@@ -173,7 +175,8 @@ const ActionOrgAvatar = styled.div`
 
 const ActionOrgName = styled.div`
   font-size: ${(props) => props.theme.fontSizeSm};
-  font-family: ${(props) => props.theme.fontFamilyTiny};
+  font-family: ${(props) =>
+    `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`}
   color: ${(props) => props.theme.themeColors.dark};
   line-height: 1;
 `;
@@ -375,7 +378,7 @@ function ActionCard({
             <OrgLogo
               src={
                 primaryOrg?.logo?.rendition?.src ||
-                '/static/themes/default/images/default-avatar-org.png'
+                getThemeStaticURL(theme.defaultAvatarOrgImage)
               }
               alt=""
             />

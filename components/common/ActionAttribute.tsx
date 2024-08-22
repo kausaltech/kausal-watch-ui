@@ -46,7 +46,8 @@ const AttributeContainer = styled.div<{ $fontSize?: string }>`
 const AttributeChoiceLabel = styled.div`
   margin-bottom: ${(props) => props.theme.spaces.s100};
   font-size: ${(props) => props.theme.fontSizeSm};
-  font-family: ${(props) => props.theme.fontFamilyTiny};
+  font-family: ${(props) =>
+    `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`};
   font-weight: 700;
 
   &.highlighted {
@@ -102,7 +103,7 @@ const ActionAttribute = (
                 (idx > 0 || !type.hasZeroOption) && (
                   <ScaleIcon
                     $active={idx <= valueIndex}
-                    name="circleFull"
+                    name="circle-full"
                     key={choice.identifier}
                   />
                 )

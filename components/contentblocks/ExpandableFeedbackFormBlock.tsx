@@ -39,6 +39,7 @@ const ContactTriggerButton = styled.button`
 
 interface Props {
   action?: ActionContentAction;
+  categoryId?: string;
   context?: 'sidebar' | 'default';
   heading?: string;
   description?: string;
@@ -46,6 +47,7 @@ interface Props {
 
 const ExpandableFeedbackFormBlock = ({
   action,
+  categoryId,
   context = 'default',
   heading,
   description,
@@ -57,13 +59,23 @@ const ExpandableFeedbackFormBlock = ({
   const toggle = () => setIsOpen(!isOpen);
   const size = context === 'sidebar' ? 'sm' : 'md';
 
+  const isAction = !!action;
+  const isCategory = !!categoryId;
+
+  const defaultHeading = isAction
+    ? t('feedback-on-action')
+    : t('feedback-on-category');
+  const defaultDescription = isAction
+    ? t('feedback-on-action-description')
+    : t('feedback-on-category-description');
+
   return (
     <FeedbackFormSection size={size}>
       <ContactTriggerButton color="link" onClick={toggle}>
         <Icon.Commenting width="2rem" height="2rem" />
         <div>
-          <h2>{heading || t('feedback-on-action')}</h2>
-          {description || t('feedback-on-action-description')}
+          <h2>{heading || defaultHeading}</h2>
+          {description || defaultDescription}
         </div>
         <Icon
           name={isOpen ? 'angle-down' : 'angle-right'}
@@ -74,11 +86,12 @@ const ExpandableFeedbackFormBlock = ({
       <Collapse isOpen={isOpen}>
         <FeedbackForm
           planIdentifier={plan.identifier}
-          actionId={action?.id}
+          actionId={isAction ? action.id : undefined}
+          categoryId={isCategory ? categoryId : undefined}
           heading=""
           description=""
           prompt=""
-          formContext="action"
+          formContext={isAction ? 'action' : 'category'}
         />
       </Collapse>
     </FeedbackFormSection>

@@ -8,6 +8,7 @@ import dayjs from '../../common/dayjs';
 import { usePlan } from '../../context/plan';
 import { useTranslations } from 'next-intl';
 import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
+import { getThemeStaticURL } from '@/common/theme';
 
 const ActionUpdate = styled.article`
   padding: ${(props) => props.theme.spaces.s100};
@@ -36,7 +37,8 @@ const AuthorName = styled.div`
 
 const UpdateDate = styled.div`
   font-size: ${(props) => props.theme.fontSizeSm};
-  font-family: ${(props) => props.theme.fontFamilyTiny};
+  font-family: ${(props) =>
+    `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`};
   font-weight: ${(props) => props.theme.fontWeightNormal};
   color: ${(props) => props.theme.themeColors.dark};
 `;
@@ -63,8 +65,7 @@ const GET_ACTION_UPDATES = gql`
 function ActionStatusUpdate(props) {
   const { author = null, date, title, content } = props;
 
-  const defaultAvatarUrl =
-    '/static/themes/default/images/default-avatar-user.png';
+  const defaultAvatarUrl = getThemeStaticURL(theme.defaultAvatarOrgImage);
 
   return (
     <ActionUpdate>

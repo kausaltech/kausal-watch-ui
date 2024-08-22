@@ -3,8 +3,8 @@ import { useTranslations } from 'next-intl';
 
 const OfficialText = styled.div`
   margin-bottom: ${(props) => props.theme.spaces.s300};
-  font-family: ${(props) => props.theme.fontFamilyContent};
-
+  font-family: ${(props) =>
+    `${props.theme.fontFamilyContent}, ${props.theme.fontFamilyFallback}`};
   .official-text-content {
     color: ${(props) => props.theme.neutralDark};
     padding-left: ${(props) => props.theme.spaces.s100};

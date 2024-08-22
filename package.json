@@ -39,8 +39,11 @@
     "next-auth": "beta",
     "next-intl": "^3.16.0",
     "next-runtime-env": "^3.2.2",
-    "pino": "^9.2.0",
     "polished": "^4.3.1",
+    "next-images": "^1.8.4",
+    "plotly.js-locales": "^2.34.0",
+    "popper.js": "^1.16.1",
+    "postinstall-postinstall": "^2.1.0",
     "prop-types": "^15.8.1",
     "proper-lockfile": "^4.1.2",
     "react": "18.3.1",
@@ -107,7 +110,7 @@
     "@testing-library/jest-dom": "^6.4.6",
     "@testing-library/react": "^16.0.0",
     "@types/node": "^20.14.10",
-    "@types/plotly.js": "^2.33.0",
+    "@types/plotly.js": "^2.33.3",
     "@types/react": "^18.3.3",
     "@types/react-plotly.js": "^2.6.3",
     "@types/styled-components": "^5.1.34",
@@ -143,7 +146,7 @@
   },
   "packageManager": "npm@10.5.1",
   "optionalDependencies": {
-    "@kausal/themes-private": "0.5.7"
+    "@kausal/themes-private": "^0.5.10"
   },
   "lint-staged": {
     "*.{tsx,ts,js,css,scss,md,json}": "prettier --write"

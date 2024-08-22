@@ -1,4 +1,5 @@
 import React, { createRef, Ref, useCallback, useMemo, useState } from 'react';
+import escapeStringRegexp from 'escape-string-regexp';
 import { Row, Col, Badge, CloseButton, FormGroup, Input } from 'reactstrap';
 import { debounce } from 'lodash';
 import styled from 'styled-components';
@@ -87,7 +88,8 @@ const FiltersList = styled.div`
 const FiltersHeader = styled.h2`
   margin-bottom: ${(props) => props.theme.spaces.s100};
   font-size: ${(props) => props.theme.fontSizeMd};
-  font-family: ${(props) => props.theme.fontFamily};
+  font-family: ${(props) =>
+    `${props.theme.fontFamily}, ${props.theme.fontFamilyFallback}`};
   font-weight: ${(props) => props.theme.fontWeightBold};
   color: ${(props) =>
     readableColor(
@@ -572,7 +574,10 @@ class ResponsiblePartyFilter extends DefaultFilter<string | undefined> {
   options: ActionListFilterOption[];
   orgById: Map<string, ActionListOrganization>;
 
-  constructor(orgs: ActionListOrganization[], private plan: PlanContextType) {
+  constructor(
+    orgs: ActionListOrganization[],
+    private plan: PlanContextType
+  ) {
     super();
     const sortedOrgs = sortDepthFirst(
       orgs,
@@ -816,7 +821,7 @@ class ActionNameFilter implements ActionListFilter<string | undefined> {
   }
 
   filterAction(value: string, action: ActionListAction) {
-    const searchStr = value.toLowerCase();
+    const searchStr = escapeStringRegexp(value.toLowerCase());
     if (this.hasActionIdentifiers) {
       if (action.identifier.toLowerCase().startsWith(searchStr)) return true;
     }

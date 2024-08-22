@@ -47,10 +47,12 @@ export const GlobalStyles = createGlobalStyle`
 
   h1 {
     font-size: ${(props) => props.theme.fontSizeXxl};
+    text-transform: ${(props) => props.theme.headingsTextTransform};
   }
 
   h2 {
     font-size: ${(props) => props.theme.fontSizeXl};
+    text-transform: ${(props) => props.theme.headingsTextTransform};
   }
 
   h3 {

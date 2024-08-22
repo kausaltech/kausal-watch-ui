@@ -58,5 +58,7 @@
   "other": "Other",
   "n-more-actions": "Plus {count} other {context, select, CASE_STUDY {{count, plural, =1 {case study} other {case studies}}} STRATEGY {{count, plural, =1 {strategy} other {strategies}}} other {{count, plural, =1 {action} other {actions}}}}",
   "action-dependencies": "{context, select, CASE_STUDY {Case study dependencies} STRATEGY {Strategy dependencies} other {Action dependencies}}",
-  "no-action-version-available": "No --{versionType}--- version available"
+  "no-action-version-available": "No --{versionType}--- version available",
+  "feedback-on-category": "Give feedback on this category",
+  "feedback-on-category-description": "You can leave a comment or feedback on this category"
 }
