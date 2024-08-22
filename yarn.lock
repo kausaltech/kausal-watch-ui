@@ -9966,6 +9966,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"chroma-js@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "chroma-js@npm:3.0.0"
+  checksum: b806e78d40124acee2705b764d365c6851722c2e0bbf650fa788e8031d4e8d1e7273e82b2b2421f86289f23a3d83587726ff150a1703a7e52758aea24c50f9a4
+  languageName: node
+  linkType: hard
+
 "chromatic@npm:^11.0.1":
   version: 11.0.1
   resolution: "chromatic@npm:11.0.1"
@@ -16879,6 +16886,7 @@ __metadata:
     babel-plugin-inline-react-svg: ^2.0.1
     babel-plugin-styled-components: ^2.0.7
     bootstrap: 5.2.3
+    chroma-js: ^3.0.0
     chromatic: ^11.0.1
     css-tree: ^2.1.0
     csstype: ^3.1.1
