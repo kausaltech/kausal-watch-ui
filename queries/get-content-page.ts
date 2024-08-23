@@ -53,6 +53,7 @@ const TEMPLATED_CATEGORY_PAGE_FRAGMENT = gql`
           description
           fields {
             ... on FormFieldBlock {
+              id
               fieldLabel
               fieldType
               fieldRequired

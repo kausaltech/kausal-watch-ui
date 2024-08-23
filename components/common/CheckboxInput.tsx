@@ -1,4 +1,5 @@
 import React from 'react';
+import { ControllerRenderProps } from 'react-hook-form/dist/types/controller';
 import {
   Input as BSInput,
   FormGroup,
@@ -37,7 +38,7 @@ type CheckboxInputProps = Omit<InputProps, 'type'> & {
   id: string;
   formFeedback?: string;
   value?: string[];
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange: ControllerRenderProps['onChange'];
 };
 
 const CheckboxInput = React.forwardRef<HTMLInputElement, CheckboxInputProps>(
@@ -54,15 +55,12 @@ const CheckboxInput = React.forwardRef<HTMLInputElement, CheckboxInputProps>(
 
     const handleChange =
       (optionValue: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
-        const newValue = e.target.checked
+        const isChecked = e.target.checked;
+        const newValue = isChecked
           ? [...value, optionValue]
           : value.filter((v) => v !== optionValue);
 
-        const event = {
-          target: { value: newValue },
-        };
-
-        onChange(event as React.ChangeEvent<HTMLInputElement>);
+        onChange(newValue);
       };
 
     return (
@@ -76,7 +74,6 @@ const CheckboxInput = React.forwardRef<HTMLInputElement, CheckboxInputProps>(
               value={option.value}
               checked={value.includes(option.value)}
               onChange={handleChange(option.value)}
-              innerRef={index === 0 ? ref : undefined}
               {...rest}
             />
             {option.label}

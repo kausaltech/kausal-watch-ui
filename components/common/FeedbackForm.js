@@ -102,7 +102,7 @@ const FeedbackForm = ({
             render={({ field: controllerField }) => (
               <TextInput
                 {...controllerField}
-                id={`dynamic-${field.fieldLabel}`}
+                id={`dynamic-${field.id}`}
                 label={`${field.fieldLabel}${
                   field.fieldRequired ? requiredMessage : ''
                 }`}
@@ -133,7 +133,7 @@ const FeedbackForm = ({
             render={({ field: controllerField }) => (
               <CheckboxInput
                 {...controllerField}
-                id={`dynamic-${field.fieldLabel}`}
+                id={`dynamic-${field.id}`}
                 heading={`${field.fieldLabel}${
                   field.fieldRequired ? requiredMessage : ''
                 }`}
@@ -163,7 +163,7 @@ const FeedbackForm = ({
             render={({ field: controllerField }) => (
               <SelectInput
                 {...controllerField}
-                id={`dynamic-${field.fieldLabel}`}
+                id={`dynamic-${field.id}`}
                 label={`${field.fieldLabel}${
                   field.fieldRequired ? requiredMessage : ''
                 }`}

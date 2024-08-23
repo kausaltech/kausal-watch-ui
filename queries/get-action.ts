@@ -377,6 +377,7 @@ const GET_ACTION_DETAILS = gql`
       description
       fields {
         ... on FormFieldBlock {
+          id
           fieldLabel
           fieldType
           fieldRequired
@@ -424,6 +425,7 @@ const GET_ACTION_DETAILS = gql`
           description
           fields {
             ... on FormFieldBlock {
+              id
               fieldLabel
               fieldType
               fieldRequired

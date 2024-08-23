@@ -520,7 +520,6 @@ function ActionContent(props: ActionContentProps) {
     {},
     [action, router]
   );
-
   const actionListPage = extraPlanData.actionListPage!;
 
   const updated = dayjs(action.updatedAt).format('L');
