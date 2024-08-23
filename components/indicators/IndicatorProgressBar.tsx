@@ -1,15 +1,14 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useEffect, useRef, useState } from 'react';
 
-import styled, { useTheme } from 'styled-components';
-import { readableColor } from 'polished';
-import { motion, animate, useInView, useAnimate } from 'framer-motion';
-
 import dayjs from 'common/dayjs';
+import { useWindowSize } from 'common/hooks/use-window-size';
 import { IndicatorLink } from 'common/links';
 import Switch from 'components/common/Switch';
-import { useWindowSize } from 'common/hooks/use-window-size';
+import { animate, motion, useAnimate, useInView } from 'framer-motion';
 import { useLocale, useTranslations } from 'next-intl';
+import { readableColor } from 'polished';
+import styled, { useTheme } from 'styled-components';
 
 const ProgressBarWrapper = styled.div`
   a {
@@ -303,6 +302,9 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
   // where the goal is towards reduction of a value
   // TODO: catch possible edge cases
 
+  // We cover the cases where goal is very low with MIN_BAR_WIDTH
+  // assuming the other values will always be larger for now
+  const MIN_BAR_WIDTH = 3;
   const startBar = {
     x: 0,
     y: topMargin,
@@ -314,9 +316,12 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
     w: roundedValues.latest * scale,
   };
   const goalBar = {
-    x: bars.w - roundedValues.goal * scale,
+    x: bars.w - Math.max(MIN_BAR_WIDTH, +roundedValues.goal * scale),
     y: topMargin + 2 * barHeight,
-    w: roundedValues.goal * scale,
+    w:
+      roundedValues.goal && +roundedValues.goal > 0
+        ? Math.max(MIN_BAR_WIDTH, +roundedValues.goal * scale)
+        : 0,
   };
 
   const reductionCounterFrom = 0;
