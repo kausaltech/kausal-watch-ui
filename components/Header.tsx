@@ -10,6 +10,7 @@ import GlobalNav from 'components/common/GlobalNav';
 import TopToolBar from './common/TopToolBar';
 import SkipToContent from 'components/common/SkipToContent';
 import ApplicationStateBanner from 'components/common/ApplicationStateBanner';
+import GoogleAnalytics from 'components/GoogleAnalytics';
 import { getActiveBranch } from 'common/links';
 import { useTheme } from 'styled-components';
 import { deploymentType } from '@/common/environment';
@@ -89,6 +90,8 @@ function Header() {
       }));
   }, [plan.mainMenu]);
 
+  const googleAnalyticsId = theme.settings?.googleAnalyticsId;
+
   return (
     <header style={{ position: 'relative' }}>
       <SkipToContent />
@@ -105,6 +108,7 @@ function Header() {
         customToolbarItems={theme.settings.customNavbarTools || []}
         sticky={theme.settings.stickyNavigation}
       />
+      {googleAnalyticsId && <GoogleAnalytics trackingId={googleAnalyticsId} />}
     </header>
   );
 }
