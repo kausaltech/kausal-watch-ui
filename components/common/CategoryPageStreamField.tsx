@@ -93,7 +93,7 @@ export const CategoryPageStreamField = ({
   const plan = usePlan();
   const columnProps =
     context === 'main' && hasAsideColumn ? TIGHT_COL_PROPS : DEFAULT_COL_PROPS;
-
+  console.log(block.id);
   switch (block.__typename) {
     case 'CategoryPageAttributeTypeBlock': {
       const withContainer = context === 'main';
@@ -129,6 +129,9 @@ export const CategoryPageStreamField = ({
               heading={block.heading || undefined}
               description={block.description || undefined}
               categoryId={page.category?.id || undefined}
+              fields={block.fields || undefined}
+              id={block.id}
+              pageId={page.id}
             />
           </Col>
         </Wrapper>

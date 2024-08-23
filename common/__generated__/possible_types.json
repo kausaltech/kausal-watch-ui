@@ -224,6 +224,8 @@
       "EmbedBlock",
       "FieldColumnBlock",
       "FloatBlock",
+      "FormChoiceBlock",
+      "FormFieldBlock",
       "FrontPageHeroBlock",
       "IdentifierColumnBlock",
       "ImageChooserBlock",
