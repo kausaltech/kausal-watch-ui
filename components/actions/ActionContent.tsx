@@ -182,11 +182,11 @@ type ActionContentBlockProps = {
     | ActionAsideContentBlocksFragmentFragment;
   action: ActionContentAction;
   section: SectionIdentifier;
+  pageId: number;
 };
 function ActionContentBlock(props: ActionContentBlockProps) {
-  const { block, action, section } = props;
+  const { block, action, section, pageId } = props;
   const plan = usePlan();
-
   switch (block.__typename) {
     case 'ActionDependenciesBlock':
       if (
@@ -267,7 +267,7 @@ function ActionContentBlock(props: ActionContentBlockProps) {
     case 'ActionScheduleBlock':
       return <ActionScheduleBlock action={action} plan={plan} />;
     case 'ActionContentSectionBlock':
-      const { heading, helpText, layout, blocks } = block;
+      const { heading, helpText, layout, blocks, pageid } = block;
       return (
         <ActionContentSectionBlock
           blocks={blocks}
@@ -276,10 +276,17 @@ function ActionContentBlock(props: ActionContentBlockProps) {
           heading={heading}
           layout={layout}
           helpText={helpText}
+          pageId={pageid}
         />
       );
     case 'ActionContactFormBlock': {
-      return <ExpandableFeedbackFormBlock {...block} action={action} />;
+      return (
+        <ExpandableFeedbackFormBlock
+          {...block}
+          action={action}
+          pageId={pageId}
+        />
+      );
     }
     case 'ActionContentCategoryTypeBlock': {
       const categories = action.categories.filter(
@@ -450,7 +457,7 @@ function ActionContentProgressContainer({
 }
 
 function ActionContentSectionBlock(props) {
-  const { blocks, action, section, heading, helpText, layout } = props;
+  const { blocks, action, section, heading, helpText, layout, pageid } = props;
 
   return (
     <ContentGroup $vertical={layout !== 'grid'}>
@@ -471,6 +478,7 @@ function ActionContentSectionBlock(props) {
                 block={block}
                 action={action}
                 section={section}
+                pageId={pageid}
               />
             </RestrictedBlockWrapper>
           </Col>
@@ -544,7 +552,6 @@ function ActionContent(props: ActionContentProps) {
       const allSections: JSX.Element[] = [];
       let previousSectionBlock: undefined | (typeof blocks)[0];
       let groupedBlocks: typeof blocks = [];
-
       const staticProps = {
         action,
         section,
@@ -604,6 +611,7 @@ function ActionContent(props: ActionContentProps) {
               <ActionContentBlock
                 key={block.id}
                 block={block}
+                pageId={actionListPage.id}
                 {...staticProps}
               />
             </RestrictedBlockWrapper>

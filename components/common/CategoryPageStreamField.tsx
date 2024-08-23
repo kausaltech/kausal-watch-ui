@@ -130,6 +130,8 @@ export const CategoryPageStreamField = ({
               description={block.description || undefined}
               categoryId={page.category?.id || undefined}
               fields={block.fields || undefined}
+              id={block.id}
+              pageId={page.id}
             />
           </Col>
         </Wrapper>

@@ -44,6 +44,8 @@ const FeedbackForm = ({
   prompt,
   formContext = null,
   additionalFields = [],
+  block_id,
+  pageId,
 }) => {
   const {
     control,
@@ -70,6 +72,7 @@ const FeedbackForm = ({
       email,
       comment,
       additionalFields: JSON.stringify(additionalResponse),
+      pageId,
       type: formContext,
       plan: planIdentifier,
       action: actionId,
@@ -297,6 +300,7 @@ FeedbackForm.propTypes = {
   prompt: PropTypes.string,
   formContext: PropTypes.string,
   additionalFields: PropTypes.arrayOf(PropTypes.object),
+  pageId: PropTypes.number,
 };
 
 export default FeedbackForm;

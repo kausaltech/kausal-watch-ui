@@ -266,6 +266,7 @@ const GET_ACTION_DETAILS = gql`
     }
     plan(id: $plan) {
       actionListPage {
+        id
         actionDateFormat
         taskDateFormat
         detailsMainTop {
