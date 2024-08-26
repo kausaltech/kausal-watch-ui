@@ -293,7 +293,6 @@ function CategoryPageHeaderBlock(props: Props) {
   const theme = useTheme();
   const t = useTranslations();
 
-  console.log(props);
   const showIdentifiers =
     !plan.primaryActionClassification?.hideCategoryIdentifiers;
 
