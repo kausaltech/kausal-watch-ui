@@ -1,10 +1,10 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
-import { Container, Row, Col } from 'reactstrap';
-import styled from 'styled-components';
-import { readableColor } from 'polished';
 import { useTranslations } from 'next-intl';
+import { readableColor } from 'polished';
+import PropTypes from 'prop-types';
+import { Col, Container, Row } from 'reactstrap';
+import styled from 'styled-components';
 
 const HeaderImage = styled.div`
   background-image: url(${(props) => props.image});
@@ -51,16 +51,12 @@ const ImageCredit = styled.span`
   position: absolute;
   top: 0;
   right: 0;
-  padding: 0.25rem 0.5rem;
+  padding: 0.1rem 0.25rem;
   background-color: rgba(255, 255, 255, 0.66);
   color: #000000;
   font-size: ${(props) => props.theme.fontSizeSm};
   font-family: ${(props) =>
-      `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`}
-    @media (min-width: ${(props) => props.theme.breakpointMd}) {
-    top: inherit;
-    bottom: 0;
-  }
+    `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`};
 `;
 
 const ContentPageHeaderBlock = (props) => {

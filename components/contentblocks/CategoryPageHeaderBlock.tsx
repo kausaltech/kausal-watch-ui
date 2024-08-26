@@ -1,27 +1,27 @@
-import React, { useContext } from 'react';
-import { gql } from '@apollo/client';
-import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
+import React from 'react';
 
-import { Container, Row, Col } from 'reactstrap';
-import styled from 'styled-components';
-import { Theme } from '@kausal/themes/types';
-import PlanContext, { usePlan } from 'context/plan';
-
-import AttributesBlock, { Attributes } from 'components/common/AttributesBlock';
-import { useTheme } from 'styled-components';
 import {
   CategoryPageMainTopBlock,
   CategoryTypePageLevelLayout,
   GetCategoryAttributeTypesQuery,
 } from 'common/__generated__/graphql';
+import { getBreadcrumbsFromCategoryHierarchy } from 'common/categories';
+import AttributesBlock, { Attributes } from 'components/common/AttributesBlock';
+import { Breadcrumbs } from 'components/common/Breadcrumbs';
 import CategoryPageStreamField, {
   CategoryPage,
 } from 'components/common/CategoryPageStreamField';
 import { ChartType } from 'components/dashboard/ActionStatusGraphs';
-import ActionStatusGraphsBlock from './ActionStatusGraphsBlock';
-import { Breadcrumbs } from 'components/common/Breadcrumbs';
-import { getBreadcrumbsFromCategoryHierarchy } from 'common/categories';
+import { usePlan } from 'context/plan';
 import { useTranslations } from 'next-intl';
+import { Col, Container, Row } from 'reactstrap';
+import styled, { useTheme } from 'styled-components';
+
+import { gql } from '@apollo/client';
+import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
+import { Theme } from '@kausal/themes/types';
+
+import ActionStatusGraphsBlock from './ActionStatusGraphsBlock';
 
 export const GET_CATEGORY_ATTRIBUTE_TYPES = gql`
   query GetCategoryAttributeTypes($plan: ID!) {
@@ -105,15 +105,11 @@ const ImageCredit = styled.span`
   position: absolute;
   top: 0;
   right: 0;
-  padding: 0.25rem 0.5rem;
+  padding: 0.1rem 0.25rem;
   background-color: rgba(255, 255, 255, 0.66);
   font-size: ${(props) => props.theme.fontSizeSm};
   font-family: ${(props) =>
     `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`};
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
-    top: inherit;
-    bottom: 0;
-  }
 `;
 
 const HeaderContent = styled.div<{
@@ -270,32 +266,34 @@ interface Props {
   iconImage;
   headerImage;
   imageAlign?: string;
-  color;
+  color?;
   attributes;
   typeId;
   level;
   layout?: CategoryTypePageLevelLayout['layoutMainTop'];
 }
 
-function CategoryPageHeaderBlock({
-  page,
-  title,
-  categoryId,
-  identifier,
-  lead,
-  iconImage,
-  headerImage,
-  imageAlign = 'center',
-  color,
-  attributes,
-  typeId,
-  level,
-  layout,
-}: Props) {
+function CategoryPageHeaderBlock(props: Props) {
+  const {
+    page,
+    title,
+    categoryId,
+    identifier,
+    lead,
+    iconImage,
+    headerImage,
+    imageAlign,
+    color,
+    attributes,
+    typeId,
+    level,
+    layout,
+  } = props;
   const plan = usePlan();
   const theme = useTheme();
   const t = useTranslations();
 
+  console.log(props);
   const showIdentifiers =
     !plan.primaryActionClassification?.hideCategoryIdentifiers;
 
