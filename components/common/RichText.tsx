@@ -61,6 +61,9 @@ type RichTextImageProps = {
 };
 
 const StyledRichText = styled.div`
+  // break words that can not fit on single line
+  overflow-wrap: break-word;
+
   .responsive-object {
     position: relative;
   }
