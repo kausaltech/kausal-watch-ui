@@ -297,6 +297,7 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
   //const hasStartValue = Math.abs(startValue - latestValue)/latestValue > 0.01;
   const hasStartValue = true;
   const showReduction = true; // show reduction if change is more than 20%
+  const hasGoal = isNormalized && !goalValue.normalizedValue ? false : true; // handle cases where we don't have normalized goal
 
   // For simplicity, currently only supports indicators
   // where the goal is towards reduction of a value
@@ -316,7 +317,7 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
     w: roundedValues.latest * scale,
   };
   const goalBar = {
-    x: bars.w - Math.max(MIN_BAR_WIDTH, +roundedValues.goal * scale),
+    x: bars.w - Math.max(MIN_BAR_WIDTH, +roundedValues.goal * scale) || 0,
     y: topMargin + 2 * barHeight,
     w:
       roundedValues.goal && +roundedValues.goal > 0
@@ -567,7 +568,7 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
               opacity={0}
               fill={latestColor}
             />
-            {goalValue && (
+            {hasGoal && (
               <line
                 className="latest-line"
                 y1={segmentsY}
@@ -605,21 +606,28 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
                 }
               />
             </g>
-            <motion.text
-              className="latest-text"
-              translateX={bars.w - latestBar.w}
-              translateY={segmentsY + barMargin * 3}
-              textAnchor="left"
-              opacity={0}
-            >
-              <SegmentHeader>{t('to-reduce')}</SegmentHeader>
-              <SegmentValue x="0" dy="16">
-                {formatValue(roundedValues.latest - roundedValues.goal, locale)}{' '}
-                {displayUnit}
-              </SegmentValue>
-            </motion.text>
+            {hasGoal && (
+              <>
+                <motion.text
+                  className="latest-text"
+                  translateX={bars.w - latestBar.w}
+                  translateY={segmentsY + barMargin * 3}
+                  textAnchor="left"
+                  opacity={0}
+                >
+                  <SegmentHeader>{t('to-reduce')}</SegmentHeader>
+                  <SegmentValue x="0" dy="16">
+                    {formatValue(
+                      roundedValues.latest - roundedValues.goal,
+                      locale
+                    )}{' '}
+                    {displayUnit}
+                  </SegmentValue>
+                </motion.text>
+              </>
+            )}
             {/* Goal bar */}
-            {goalValue && (
+            {hasGoal && (
               <BarBase
                 x={goalBar.x}
                 y={goalBar.y}
@@ -639,41 +647,46 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
                 strokeDasharray="2,4"
               />
             )}
-            <line
-              x1={goalBar.x}
-              y1={segmentsY}
-              x2={goalBar.x + goalBar.w}
-              y2={segmentsY}
-              stroke={goalColor}
-              strokeWidth="2"
-            />
-            <ValueGroup
-              textAnchor={goalBar.w > 120 ? 'start' : 'end'}
-              transform={`translate(${
-                goalBar.w > 120 ? goalBar.x + 4 : goalBar.x - 8
-              } ${goalBar.y})`}
-              date={graphValues.goalYear}
-              value={formatValue(roundedValues.goal, locale)}
-              unit={displayUnit}
-              locale={locale}
-              negative={
-                readableColor(
-                  startColor,
-                  theme.themeColors.black,
-                  theme.themeColors.white
-                ) === theme.themeColors.white || goalBar.w < 120
-              }
-            />
-            <text
-              transform={`translate(${spaceTextBlock(goalBar.x, [
-                '.reduced-text',
-                '.latest-text',
-              ])} ${segmentsY + barMargin * 3})`}
-              textAnchor="left"
-            >
-              <SegmentHeader>{t('bar-goal')}</SegmentHeader>
-              <SegmentValue></SegmentValue>
-            </text>
+            {hasGoal && (
+              <>
+                <line
+                  x1={goalBar.x}
+                  y1={segmentsY}
+                  x2={goalBar.x + goalBar.w}
+                  y2={segmentsY}
+                  stroke={goalColor}
+                  strokeWidth="2"
+                />
+
+                <ValueGroup
+                  textAnchor={goalBar.w > 120 ? 'start' : 'end'}
+                  transform={`translate(${
+                    goalBar.w > 120 ? goalBar.x + 4 : goalBar.x - 8
+                  } ${goalBar.y})`}
+                  date={graphValues.goalYear}
+                  value={formatValue(roundedValues.goal, locale)}
+                  unit={displayUnit}
+                  locale={locale}
+                  negative={
+                    readableColor(
+                      startColor,
+                      theme.themeColors.black,
+                      theme.themeColors.white
+                    ) === theme.themeColors.white || goalBar.w < 120
+                  }
+                />
+                <text
+                  transform={`translate(${spaceTextBlock(goalBar.x, [
+                    '.reduced-text',
+                    '.latest-text',
+                  ])} ${segmentsY + barMargin * 3})`}
+                  textAnchor="left"
+                >
+                  <SegmentHeader>{t('bar-goal')}</SegmentHeader>
+                  <SegmentValue></SegmentValue>
+                </text>
+              </>
+            )}
             <line
               x1={bars.w - 1}
               x2={bars.w - 1}
@@ -699,7 +712,7 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
             >
               <DateText>{graphValues.latestYear}</DateText>
             </text>
-            {goalValue && (
+            {hasGoal && (
               <text
                 transform={`translate(${canvas.w - 10} ${
                   goalBar.y + barHeight / 2
