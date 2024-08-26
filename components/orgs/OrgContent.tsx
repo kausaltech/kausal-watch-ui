@@ -1,17 +1,17 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useTranslations } from 'next-intl';
-import styled from 'styled-components';
-import { Container, Row, Col, Nav, NavItem } from 'reactstrap';
-import { useTheme } from 'styled-components';
 
+import { OrganizationDetailsQuery } from 'common/__generated__/graphql';
+import { OrganizationLink } from 'common/links';
+import RichText from 'components/common/RichText';
 import ActionStatusTable from 'components/dashboard/ActionStatusTable';
 import PlanChip from 'components/plans/PlanChip';
-import RichText from 'components/common/RichText';
 import { usePlan } from 'context/plan';
-import { OrganizationLink } from 'common/links';
-import { OrganizationDetailsQuery } from 'common/__generated__/graphql';
+import { useTranslations } from 'next-intl';
+import { readableColor } from 'polished';
+import { Col, Container, Nav, NavItem, Row } from 'reactstrap';
+import styled, { useTheme } from 'styled-components';
 
 const Tab = styled.button`
   background: ${(props) => props.theme.brandDark};
@@ -56,21 +56,26 @@ const HeaderContainer = styled(Container)`
 const OrgHeader = styled.div`
   padding: ${(props) => props.theme.spaces.s300} 0 0 0;
   background-color: ${(props) => props.theme.brandDark};
-  color: ${(props) => props.theme.themeColors.white};
+  color: ${(props) =>
+    readableColor(
+      props.theme.brandDark,
+      props.theme.themeColors.black,
+      props.theme.themeColors.white
+    )};
 
   h1 {
     margin-bottom: ${(props) => props.theme.spaces.s150};
-    color: ${(props) => props.theme.themeColors.white};
+    color: inherit;
     line-height: ${(props) => props.theme.lineHeightSm};
     font-size: ${(props) => props.theme.fontSizeXl};
   }
 
   a {
-    color: ${(props) => props.theme.themeColors.white};
+    color: inherit;
     line-height: ${(props) => props.theme.lineHeightSm};
 
     &:hover {
-      color: ${(props) => props.theme.themeColors.white};
+      color: inherit;
     }
   }
 
@@ -87,10 +92,12 @@ const SectionTitle = styled.p`
 
 const OrgLogo = styled.img`
   display: block;
+  background-color: aliceblue;
   margin-bottom: ${(props) => props.theme.spaces.s200};
   max-width: ${(props) => props.theme.spaces.s800};
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    width: 100%;
     max-width: 100%;
   }
 `;

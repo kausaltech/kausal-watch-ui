@@ -48,8 +48,23 @@ const TEMPLATED_CATEGORY_PAGE_FRAGMENT = gql`
           }
         }
         ... on CategoryPageContactFormBlock {
+          id
           heading
           description
+          fields {
+            ... on FormFieldBlock {
+              id
+              fieldLabel
+              fieldType
+              fieldRequired
+              choices {
+                ... on FormChoiceBlock {
+                  choiceLabel
+                  choiceValue
+                }
+              }
+            }
+          }
         }
         ... on CategoryTypeDatasetsBlock {
           id
@@ -130,6 +145,7 @@ const GET_CONTENT_PAGE = gql`
           identifier
           name
           categoryPage {
+            id
             urlPath
           }
           level {
@@ -180,6 +196,7 @@ const GET_CONTENT_PAGE = gql`
               }
             }
             categoryPage {
+              id
               title
               urlPath
             }

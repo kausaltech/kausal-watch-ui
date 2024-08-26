@@ -6,6 +6,8 @@ import { Alert, Spinner } from 'reactstrap';
 
 import Button from 'components/common/Button';
 import TextInput from 'components/common/TextInput';
+import SelectInput from 'components/common/SelectInput';
+import CheckboxInput from 'components/common/CheckboxInput';
 import { useTranslations } from 'next-intl';
 import { usePathname, useSearchParams } from 'next/navigation';
 
@@ -41,12 +43,16 @@ const FeedbackForm = ({
   description,
   prompt,
   formContext = null,
+  additionalFields = [],
+  block_id,
+  pageId,
 }) => {
   const {
     control,
     formState: { errors },
     handleSubmit,
   } = useForm();
+
   const t = useTranslations();
   const [sent, setSent] = useState(false);
   const onDismiss = () => setSent(false);
@@ -59,8 +65,14 @@ const FeedbackForm = ({
   ] = useMutation(CREATE_USER_FEEDBACK);
 
   const onSubmit = (formData) => {
+    const { name, email, comment, ...additionalResponse } = formData;
+
     const data = {
-      ...formData,
+      name,
+      email,
+      comment,
+      additionalFields: JSON.stringify(additionalResponse),
+      pageId,
       type: formContext,
       plan: planIdentifier,
       action: actionId,
@@ -71,6 +83,108 @@ const FeedbackForm = ({
     };
     setSent(true);
     createUserFeedback({ variables: { input: data } });
+  };
+
+  const renderAdditionalField = (field) => {
+    const requiredMessage = ` (${t('required-field')})`;
+
+    switch (field.fieldType) {
+      case 'text':
+        return (
+          <Controller
+            key={field.fieldLabel}
+            name={field.fieldLabel}
+            control={control}
+            defaultValue=""
+            rules={{
+              required: field.fieldRequired && t('error-field-required'),
+            }}
+            render={({ field: controllerField }) => (
+              <TextInput
+                {...controllerField}
+                id={`dynamic-${field.id}`}
+                label={`${field.fieldLabel}${
+                  field.fieldRequired ? requiredMessage : ''
+                }`}
+                type="text"
+                invalid={!!errors[field.fieldLabel]}
+                formFeedback={
+                  errors[field.fieldLabel] && t('error-field-required')
+                }
+              />
+            )}
+          />
+        );
+      case 'checkbox':
+        return (
+          <Controller
+            key={field.fieldLabel}
+            name={field.fieldLabel}
+            control={control}
+            defaultValue={[]}
+            rules={{
+              validate: (value) => {
+                if (field.fieldRequired && value.length === 0) {
+                  return false;
+                }
+                return true;
+              },
+            }}
+            render={({ field: controllerField }) => (
+              <CheckboxInput
+                {...controllerField}
+                id={`dynamic-${field.id}`}
+                heading={`${field.fieldLabel}${
+                  field.fieldRequired ? requiredMessage : ''
+                }`}
+                options={field.choices.map((choice) => ({
+                  value: choice.choiceValue,
+                  label: choice.choiceLabel,
+                }))}
+                value={controllerField.value}
+                invalid={!!errors[field.fieldLabel]}
+                formFeedback={
+                  errors[field.fieldLabel] && t('error-field-required')
+                }
+              />
+            )}
+          />
+        );
+      case 'dropdown':
+        return (
+          <Controller
+            key={field.fieldLabel}
+            name={field.fieldLabel}
+            control={control}
+            defaultValue=""
+            rules={{
+              required: field.fieldRequired && t('error-field-required'),
+            }}
+            render={({ field: controllerField }) => (
+              <SelectInput
+                {...controllerField}
+                id={`dynamic-${field.id}`}
+                label={`${field.fieldLabel}${
+                  field.fieldRequired ? requiredMessage : ''
+                }`}
+                options={[
+                  { value: '', label: '---------' },
+                  ...field.choices.map((choice) => ({
+                    value: choice.choiceValue,
+                    label: choice.choiceLabel,
+                  })),
+                ]}
+                invalid={!!errors[field.fieldLabel]}
+                formFeedback={
+                  errors[field.fieldLabel] && t('error-field-required')
+                }
+              />
+            )}
+          />
+        );
+      default:
+        return null;
+    }
   };
 
   return (
@@ -128,6 +242,9 @@ const FeedbackForm = ({
                 },
               }}
             />
+
+            {additionalFields.map(renderAdditionalField)}
+
             <Controller
               render={({ field }) => (
                 <TextInput
@@ -182,6 +299,8 @@ FeedbackForm.propTypes = {
   description: PropTypes.string,
   prompt: PropTypes.string,
   formContext: PropTypes.string,
+  additionalFields: PropTypes.arrayOf(PropTypes.object),
+  pageId: PropTypes.number,
 };
 
 export default FeedbackForm;

@@ -266,6 +266,7 @@ const GET_ACTION_DETAILS = gql`
     }
     plan(id: $plan) {
       actionListPage {
+        id
         actionDateFormat
         taskDateFormat
         detailsMainTop {
@@ -371,6 +372,24 @@ const GET_ACTION_DETAILS = gql`
     ... on ReportComparisonBlock {
       ...ReportComparisonBlockActionContent
     }
+    ... on ActionContactFormBlock {
+      heading
+      description
+      fields {
+        ... on FormFieldBlock {
+          id
+          fieldLabel
+          fieldType
+          fieldRequired
+          choices {
+            ... on FormChoiceBlock {
+              choiceLabel
+              choiceValue
+            }
+          }
+        }
+      }
+    }
     ... on ActionContentSectionBlock {
       id
       heading
@@ -400,6 +419,24 @@ const GET_ACTION_DETAILS = gql`
         }
         ... on ReportComparisonBlock {
           ...ReportComparisonBlockActionContent
+        }
+        ... on ActionContactFormBlock {
+          heading
+          description
+          fields {
+            ... on FormFieldBlock {
+              id
+              fieldLabel
+              fieldType
+              fieldRequired
+              choices {
+                ... on FormChoiceBlock {
+                  choiceLabel
+                  choiceValue
+                }
+              }
+            }
+          }
         }
       }
     }
