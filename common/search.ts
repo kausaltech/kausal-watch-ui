@@ -2,11 +2,20 @@ import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
 import { PlanContextFragment } from './__generated__/graphql';
 import { trackSearch } from '@/components/MatomoAnalytics';
 
-const GET_AUTOCOMPLETE_RESULTS = gql`
-  query GetAutocompleteResults($plan: ID!, $term: String!, $clientUrl: String) {
-    search(plan: $plan, autocomplete: $term, includeRelatedPlans: true) {
+const SEARCH_QUERY = gql`
+  query SearchQuery(
+    $plan: ID!
+    $query: String!
+    $onlyOtherPlans: Boolean
+    $clientUrl: String
+  ) {
+    search(
+      plan: $plan
+      query: $query
+      includeRelatedPlans: true
+      onlyOtherPlans: $onlyOtherPlans
+    ) {
       hits {
-        id
         title
         url(clientUrl: $clientUrl)
         highlight
@@ -19,11 +28,22 @@ const GET_AUTOCOMPLETE_RESULTS = gql`
           }
           name
           shortName
+          organization {
+            name
+          }
         }
         object {
           __typename
           ... on Action {
             identifier
+            primaryOrg {
+              name
+              logo {
+                rendition(size: "128x128", crop: true) {
+                  src
+                }
+              }
+            }
           }
           ... on Indicator {
             id
@@ -53,13 +73,14 @@ class WatchSearchAPIConnector {
     this.plan = plan;
   }
 
-  async onSearch(opts, queryConfig) {
+  async onSearch(opts) {
     const { searchTerm } = opts;
     const res = await this.apolloClient.query({
-      query: GET_AUTOCOMPLETE_RESULTS,
+      query: SEARCH_QUERY,
       variables: {
         plan: this.plan.identifier,
-        term: searchTerm,
+        query: searchTerm,
+        onlyOtherPlans: false,
         clientUrl: this.plan.viewUrl,
       },
     });
