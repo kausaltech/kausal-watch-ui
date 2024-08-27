@@ -1,25 +1,37 @@
 import React, { ReactNode } from 'react';
-import { TFunction } from '@/common/i18n';
-import { ActionListAction, ColumnBlock } from './dashboard.types';
+
 import { PlanContextFragment } from 'common/__generated__/graphql';
 import { getActionTaskTermContext, getActionTermContext } from 'common/i18n';
+import { ActionLink } from 'common/links';
+import ActionAttribute from 'components/common/ActionAttribute';
+
+import { TFunction } from '@/common/i18n';
+
+import PlanChip from '../plans/PlanChip';
 import {
   ImplementationPhaseTooltipContent,
   IndicatorsTooltipContent,
   LastUpdatedTooltipContent,
   OrganizationTooltipContent,
+  PlanTooltipContent,
   ResponsiblePartiesTooltipContent,
   TasksTooltipContent,
 } from './ActionTableTooltips';
-import StatusCell from './cells/StatusCell';
 import ImplementationPhaseCell from './cells/ImplementationPhaseCell';
-import { ActionLink } from 'common/links';
-import ActionAttribute from 'components/common/ActionAttribute';
-import OrganizationCell from './cells/OrganizationCell';
-import TasksStatusCell from './cells/TasksStatusCell';
-import ResponsiblePartiesCell from './cells/ResponsiblePartiesCell';
 import IndicatorsCell from './cells/IndicatorsCell';
+import OrganizationCell from './cells/OrganizationCell';
+import ResponsiblePartiesCell from './cells/ResponsiblePartiesCell';
+import StatusCell from './cells/StatusCell';
+import TasksStatusCell from './cells/TasksStatusCell';
 import UpdatedAtCell from './cells/UpdatedAtCell';
+import { ActionListAction, ColumnBlock } from './dashboard.types';
+
+const getPlanUrl = (mergedWith, actionPlan, planId) => {
+  if (mergedWith && mergedWith?.plan.id !== planId)
+    return mergedWith.plan.viewUrl;
+  if (actionPlan.id !== planId) return actionPlan.viewUrl;
+  return undefined;
+};
 
 interface Column {
   sortable?: boolean;
@@ -68,11 +80,22 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
     rowHeader: true,
     renderHeader: (t, plan, label) =>
       label || t('action-name-title', getActionTermContext(plan)),
-    renderCell: (action, _, planViewUrl) => (
-      <ActionLink action={action} planUrl={planViewUrl}>
-        {action.name}
-      </ActionLink>
-    ),
+    renderCell: (action, plan, planViewUrl) => {
+      const { mergedWith } = action;
+      const fromOtherPlan = action.plan ? action.plan.id !== plan.id : false;
+      const mergedWithActionFromOtherPlan =
+        mergedWith != null && mergedWith.plan.id !== plan.id;
+      return (
+        <ActionLink
+          action={action}
+          viewUrl={action.mergedWith?.viewUrl ?? action.viewUrl}
+          planUrl={getPlanUrl(mergedWith, action.plan, plan.id)}
+          crossPlan={fromOtherPlan || mergedWithActionFromOtherPlan}
+        >
+          <a>{action.name}</a>
+        </ActionLink>
+      );
+    },
   },
 
   OrganizationColumnBlock: {
@@ -148,5 +171,12 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
         /> // TODO: Render attribute content
       );
     },
+  },
+  PlanColumnBlock: {
+    renderHeader: (t, _, label) => label || t('plan'),
+    renderCell: (action, plan) => (
+      <PlanChip planImage={action.plan.image?.rendition?.src} size="lg" />
+    ),
+    renderTooltipContent: (action) => <PlanTooltipContent action={action} />,
   },
 };

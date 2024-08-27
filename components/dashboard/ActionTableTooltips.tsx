@@ -1,19 +1,21 @@
 import React, { useContext } from 'react';
-import styled from 'styled-components';
-import dayjs from 'common/dayjs';
-import { getActionTaskTermContext, getActionTermContext } from 'common/i18n';
-import Icon from 'components/common/Icon';
-import { ActionListAction } from './dashboard.types';
+
 import {
   ActionStatusSummaryIdentifier,
   PlanContextFragment,
 } from 'common/__generated__/graphql';
-import { getTaskCounts } from './cells/TasksStatusCell';
-import { useTheme } from 'styled-components';
-import { ActionTableContext } from './ActionStatusTable';
-import { usePlan } from 'context/plan';
+import dayjs from 'common/dayjs';
+import { getActionTaskTermContext, getActionTermContext } from 'common/i18n';
 import { PhaseTimeline } from 'components/actions/PhaseTimeline';
+import Icon from 'components/common/Icon';
+import PlanChip from 'components/plans/PlanChip';
+import { usePlan } from 'context/plan';
 import { useTranslations } from 'next-intl';
+import styled, { useTheme } from 'styled-components';
+
+import { ActionTableContext } from './ActionStatusTable';
+import { getTaskCounts } from './cells/TasksStatusCell';
+import { ActionListAction } from './dashboard.types';
 
 const TooltipTitle = styled.p`
   font-weight: ${(props) => props.theme.fontWeightBold};
@@ -291,6 +293,20 @@ export const LastUpdatedTooltipContent = ({ action }: TooltipProps) => {
     <div>
       <TooltipTitle>{t('latest-update')}</TooltipTitle>
       {dayjs(action.updatedAt).format('L')}
+    </div>
+  );
+};
+
+export const PlanTooltipContent = ({ action }: TooltipProps) => {
+  const t = useTranslations();
+
+  return (
+    <div>
+      <PlanChip
+        planShortName={action.plan?.shortName || action.plan?.name}
+        planImage={action.plan.image?.rendition?.src}
+        size="md"
+      />
     </div>
   );
 };

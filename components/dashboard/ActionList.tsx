@@ -1,26 +1,5 @@
-import React, { useCallback, useMemo, useEffect } from 'react';
-import dynamic from 'next/dynamic';
-import { gql } from '@apollo/client';
-import { Container, Row, Col, Alert } from 'reactstrap';
-import styled from 'styled-components';
-import { readableColor } from 'polished';
-import { getActionTermContext } from 'common/i18n';
-import {
-  constructOrgHierarchy,
-  mapResponsibleParties,
-  orgHasActions,
-} from 'common/organizations';
-import ErrorMessage from 'components/common/ErrorMessage';
-import { usePlan } from 'context/plan';
-import { useTheme } from 'styled-components';
-import RichText from 'components/common/RichText';
-import ActionListFilters, {
-  ActionListFilterSection,
-  Filters,
-  FilterValue,
-} from 'components/actions/ActionListFilters';
-import ActionCardList from 'components/actions/ActionCardList';
-import ActionStatusGraphs from './ActionStatusGraphs';
+import React, { useCallback, useEffect, useMemo } from 'react';
+
 import {
   ActionListPageFiltersFragment,
   ActionListPageView,
@@ -28,9 +7,40 @@ import {
 } from 'common/__generated__/graphql';
 import {
   constructCatHierarchy,
-  mapActionCategories,
   getCategoryString,
+  mapActionCategories,
 } from 'common/categories';
+import { getActionTermContext } from 'common/i18n';
+import {
+  constructOrgHierarchy,
+  mapResponsibleParties,
+  orgHasActions,
+} from 'common/organizations';
+import ActionCardList from 'components/actions/ActionCardList';
+import ActionListFilters, {
+  ActionListFilterSection,
+  Filters,
+  FilterValue,
+} from 'components/actions/ActionListFilters';
+import ErrorMessage from 'components/common/ErrorMessage';
+import RichText from 'components/common/RichText';
+import { usePlan } from 'context/plan';
+import { useTranslations } from 'next-intl';
+import dynamic from 'next/dynamic';
+import { readableColor } from 'polished';
+import { Alert, Col, Container, Row } from 'reactstrap';
+import styled, { useTheme } from 'styled-components';
+
+import { useWorkflowSelector } from '@/context/workflow-selector';
+import {
+  ACTION_TABLE_COLUMN_FRAGMENT,
+  ALL_ACTION_LIST_FILTERS,
+} from '@/fragments/action-list.fragment';
+import { mapActionsToExpandDependencies } from '@/utils/actions.utils';
+import { gql } from '@apollo/client';
+import { useSuspenseQuery } from '@apollo/experimental-nextjs-app-support/ssr';
+
+import ActionStatusGraphs from './ActionStatusGraphs';
 import {
   ActionListAction,
   ActionListCategory,
@@ -39,14 +49,6 @@ import {
   ActionListPrimaryOrg,
   ColumnConfig,
 } from './dashboard.types';
-import { useTranslations } from 'next-intl';
-import {
-  ACTION_TABLE_COLUMN_FRAGMENT,
-  ALL_ACTION_LIST_FILTERS,
-} from '@/fragments/action-list.fragment';
-import { useSuspenseQuery } from '@apollo/experimental-nextjs-app-support/ssr';
-import { mapActionsToExpandDependencies } from '@/utils/actions.utils';
-import { useWorkflowSelector } from '@/context/workflow-selector';
 
 // Legacy exports preserved after migrating types to dashboard.types
 export * from './dashboard.types';
@@ -564,19 +566,18 @@ const ActionList = (props: ActionListProps) => {
             >
               {t('actions-as-list')}
             </Tab>
-            {!includeRelatedPlans && (
-              <Tab
-                className={`nav-link ${displayDashboard ? 'active' : ''}`}
-                onClick={() => handleChange('view', 'dashboard')}
-                role="tab"
-                tabIndex={0}
-                aria-selected={displayDashboard}
-                aria-controls="dashboard-view"
-                id="dashboard-tab"
-              >
-                {t('dashboard')}
-              </Tab>
-            )}
+
+            <Tab
+              className={`nav-link ${displayDashboard ? 'active' : ''}`}
+              onClick={() => handleChange('view', 'dashboard')}
+              role="tab"
+              tabIndex={0}
+              aria-selected={displayDashboard}
+              aria-controls="dashboard-view"
+              id="dashboard-tab"
+            >
+              {t('dashboard')}
+            </Tab>
           </div>
         </Container>
       </IndicatorsTabs>
@@ -604,6 +605,7 @@ const ActionList = (props: ActionListProps) => {
                 actions={filteredActions}
                 orgs={orgs}
                 plan={plan}
+                hasRelatedPlans={includeRelatedPlans}
                 enableExport={true}
                 columns={columns}
               />
