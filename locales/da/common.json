@@ -88,7 +88,7 @@
     "no-actions": "Ingen handlinger",
     "number-of-search-results": "{count, plural, =1 {et hit} other {# hits}} til søgning",
     "operational-indicator": "Driftsindikator",
-    "other-plans-only": "Søg i alle andre planer",
+    "other-plans-only": "Søg kun i andre byers planer",
     "over-relative-time": "Over {relativeTime}",
     "page": "Side",
     "page-not-found": "Siden blev ikke fundet",
