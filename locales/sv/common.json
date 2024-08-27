@@ -159,7 +159,7 @@
     "no-reports": "Inga rapporter finns tillgängliga.",
     "number-of-search-results": "{count, plural, =1 {en träff} other {# träffar}} för sökning",
     "open": "öppna",
-    "other-plans-only": "Sök i alla andra planer",
+    "other-plans-only": "Sök endast bland andra städers planer",
     "search-from-plans": "Sök från planer",
     "select-sector-for-actions": "Välj en utsläppssektor för att se relaterade åtgärder",
     "no-status": "Ingen status",

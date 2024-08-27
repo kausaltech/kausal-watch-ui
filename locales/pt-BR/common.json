@@ -93,7 +93,7 @@
     "number-of-search-results": "{count, plural, =1 {um resultado} outros {# resultados}} para pesquisa",
     "open": "aberto",
     "operational-indicator": "Indicador operacional",
-    "other-plans-only": "Pesquisar todos os outros planos",
+    "other-plans-only": "Pesquise apenas nos planos de outras cidades",
     "over-relative-time": "Durante {relativeTime}",
     "page": "Página",
     "page-not-found": "Página não encontrada",

@@ -88,7 +88,7 @@
     "no-actions": "Ei toimenpiteitä",
     "number-of-search-results": "{count, plural, =1 {1 osuma} other {# osumaa}} haulle",
     "operational-indicator": "Toiminnallinen mittari",
-    "other-plans-only": "Hae kaikista muista toimenpideohjelmista",
+    "other-plans-only": "Hae vain muiden kaupunkien toimenpideohjelmista",
     "over-relative-time": "Yli {relativeTime}",
     "page": "Sivu",
     "page-not-found": "Sivua ei löydy",
