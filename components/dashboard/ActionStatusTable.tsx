@@ -1,4 +1,4 @@
-import React, { createContext, ReactNode, useState } from 'react';
+import React, { ReactNode, useState } from 'react';
 
 import { PlanContextFragment } from 'common/__generated__/graphql';
 import { actionStatusOrder } from 'common/data/actions';
@@ -15,16 +15,6 @@ import {
   ActionListOrganization,
   ColumnConfig,
 } from './dashboard.types';
-
-type TActionTableContext = {
-  plan?: PlanContextFragment;
-  planViewUrl?: string | null;
-};
-
-export const ActionTableContext = createContext<TActionTableContext>({
-  plan: undefined,
-  planViewUrl: undefined,
-});
 
 const TableWrapper = styled.div`
   width: 100%;
@@ -257,12 +247,7 @@ const ActionStatusTable = (props: Props) => {
     });
   }
   return (
-    <ActionTableContext.Provider
-      value={{
-        plan,
-        planViewUrl,
-      }}
-    >
+    <>
       <ToolBar>
         <ResetSorting>
           {sort.key && (
@@ -336,7 +321,7 @@ const ActionStatusTable = (props: Props) => {
           </tbody>
         </DashTable>
       </TableWrapper>
-    </ActionTableContext.Provider>
+    </>
   );
 };
 

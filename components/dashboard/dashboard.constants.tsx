@@ -111,12 +111,24 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
     sortable: true,
     headerKey: 'implementationPhase',
     renderHeader: (t, _, label) => label || t('action-implementation-phase'),
-    renderCell: (action, plan) => (
-      <ImplementationPhaseCell action={action} plan={plan} />
-    ),
-    renderTooltipContent: (action, plan) => (
-      <ImplementationPhaseTooltipContent action={action} plan={plan} />
-    ),
+    renderCell: (action, plan) => {
+      const fromOtherPlan = action.plan ? action.plan.id !== plan.id : false;
+      return (
+        <ImplementationPhaseCell
+          action={action}
+          plan={fromOtherPlan ? action.plan : plan}
+        />
+      );
+    },
+    renderTooltipContent: (action, plan) => {
+      const fromOtherPlan = action.plan ? action.plan.id !== plan.id : false;
+      return (
+        <ImplementationPhaseTooltipContent
+          action={action}
+          plan={fromOtherPlan ? action.plan : plan}
+        />
+      );
+    },
   },
 
   TasksColumnBlock: {
@@ -125,17 +137,29 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
     renderCell: (action, plan) => (
       <TasksStatusCell action={action} plan={plan} />
     ),
-    renderTooltipContent: (action, plan) => (
-      <TasksTooltipContent action={action} plan={plan} />
-    ),
+    renderTooltipContent: (action, plan) => {
+      const fromOtherPlan = action.plan ? action.plan.id !== plan.id : false;
+      return (
+        <TasksTooltipContent
+          action={action}
+          plan={fromOtherPlan ? action.plan : plan}
+        />
+      );
+    },
   },
 
   ResponsiblePartiesColumnBlock: {
     renderHeader: (t, _, label) => label || t('action-responsibles-short'),
     renderCell: (action) => <ResponsiblePartiesCell action={action} />,
-    renderTooltipContent: (action) => (
-      <ResponsiblePartiesTooltipContent action={action} />
-    ),
+    renderTooltipContent: (action, plan) => {
+      const fromOtherPlan = action.plan ? action.plan.id !== plan.id : false;
+      return (
+        <ResponsiblePartiesTooltipContent
+          action={action}
+          plan={fromOtherPlan ? action.plan : plan}
+        />
+      );
+    },
   },
 
   IndicatorsColumnBlock: {
@@ -173,10 +197,17 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
     },
   },
   PlanColumnBlock: {
-    renderHeader: (t, _, label) => label || t('plan'),
+    renderHeader: (t, _, label) => label || t('filter-plan'),
     renderCell: (action, plan) => (
-      <PlanChip planImage={action.plan.image?.rendition?.src} size="lg" />
+      <PlanChip
+        planImage={
+          action.plan?.image?.rendition?.src || plan?.image?.rendition?.src
+        }
+        size="lg"
+      />
     ),
-    renderTooltipContent: (action) => <PlanTooltipContent action={action} />,
+    renderTooltipContent: (action, plan) => (
+      <PlanTooltipContent action={action} plan={plan} />
+    ),
   },
 };

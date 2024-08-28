@@ -1,63 +1,60 @@
 'use client';
 
 import React, { useCallback, useEffect } from 'react';
-import { Container, Row, Col } from 'reactstrap';
-import styled, { css } from 'styled-components';
-import { useHotkeys } from 'react-hotkeys-hook';
-
-import { getActionLinkProps } from 'common/links';
-import dayjs from 'common/dayjs';
-import { getActionTermContext } from 'common/i18n';
-import { PlanContextType, usePlan } from 'context/plan';
-
-import { getBgImageAlignment, getActionImage } from 'common/images';
-import PopoverTip from 'components/common/PopoverTip';
-import IndicatorCausalVisualisation from 'components/indicators/IndicatorCausalVisualisation';
-import AttributesBlock from 'components/common/AttributesBlock';
-import CategoryTags from './CategoryTags';
-import ExpandableFeedbackFormBlock from 'components/contentblocks/ExpandableFeedbackFormBlock';
-import ActionStatus from './ActionStatus';
-import ActionImpact from './ActionImpact';
-import ActionHero from './ActionHero';
-import ActionPager from './ActionPager';
-import ActionUpdatesList from './ActionUpdatesList';
-import ActionVersionHistory from 'components/versioning/ActionVersionHistory';
-import EmissionScopeIcon from './EmissionScopeIcon';
-
-import ActionMergedActionsBlock from 'components/actions/blocks/ActionMergedActionsBlock';
-import ActionDescriptionBlock from 'components/actions/blocks/ActionDescriptionBlock';
-import ActionLeadParagraphBlock from 'components/actions/blocks/ActionLeadParagraphBlock';
-import ActionOfficialNameBlock from 'components/actions/blocks/ActionOfficialNameBlock';
-import ActionLinksBlock from 'components/actions/blocks/ActionLinksBlock';
-import ActionRelatedActionsBlock from 'components/actions/blocks/ActionRelatedActionsBlock';
-import ActionRelatedIndicatorsBlock from 'components/actions/blocks/ActionRelatedIndicatorsBlock';
-import ActionTasksBlock from 'components/actions/blocks/ActionTasksBlock';
-import ActionContactPersonsBlock from 'components/actions/blocks/ActionContactPersonsBlock';
-import ActionResponsiblePartiesBlock from 'components/actions/blocks/ActionResponsiblePartiesBlock';
-import ActionScheduleBlock from 'components/actions/blocks/ActionScheduleBlock';
-import ReportComparisonBlock from 'components/actions/blocks/ReportComparisonBlock';
-import PlanDatasetsBlock from 'components/contentblocks/PlanDatasetsBlock';
 
 import {
-  ActionStatusSummaryIdentifier,
   type ActionAsideContentBlocksFragmentFragment,
   type ActionMainContentBlocksFragmentFragment,
+  ActionStatusSummaryIdentifier,
   type GetActionDetailsQuery,
 } from 'common/__generated__/graphql';
-import { useTheme } from 'styled-components';
+import dayjs from 'common/dayjs';
+import { getActionTermContext } from 'common/i18n';
+import { getActionImage, getBgImageAlignment } from 'common/images';
+import { getActionLinkProps } from 'common/links';
+import ActionContactPersonsBlock from 'components/actions/blocks/ActionContactPersonsBlock';
+import ActionDescriptionBlock from 'components/actions/blocks/ActionDescriptionBlock';
+import ActionLeadParagraphBlock from 'components/actions/blocks/ActionLeadParagraphBlock';
+import ActionLinksBlock from 'components/actions/blocks/ActionLinksBlock';
+import ActionMergedActionsBlock from 'components/actions/blocks/ActionMergedActionsBlock';
+import ActionOfficialNameBlock from 'components/actions/blocks/ActionOfficialNameBlock';
+import ActionRelatedActionsBlock from 'components/actions/blocks/ActionRelatedActionsBlock';
+import ActionRelatedIndicatorsBlock from 'components/actions/blocks/ActionRelatedIndicatorsBlock';
+import ActionResponsiblePartiesBlock from 'components/actions/blocks/ActionResponsiblePartiesBlock';
+import ActionScheduleBlock from 'components/actions/blocks/ActionScheduleBlock';
+import ActionTasksBlock from 'components/actions/blocks/ActionTasksBlock';
+import ReportComparisonBlock from 'components/actions/blocks/ReportComparisonBlock';
 import ActionAttribute from 'components/common/ActionAttribute';
-import { PhaseTimeline } from './PhaseTimeline';
+import AttributesBlock from 'components/common/AttributesBlock';
+import PopoverTip from 'components/common/PopoverTip';
 import StatusBadge from 'components/common/StatusBadge';
+import ExpandableFeedbackFormBlock from 'components/contentblocks/ExpandableFeedbackFormBlock';
+import PlanDatasetsBlock from 'components/contentblocks/PlanDatasetsBlock';
+import IndicatorCausalVisualisation from 'components/indicators/IndicatorCausalVisualisation';
+import ActionVersionHistory from 'components/versioning/ActionVersionHistory';
+import { PlanContextType, usePlan } from 'context/plan';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
-import RestrictedBlockWrapper from './blocks/RestrictedBlockWrapper';
+import { useHotkeys } from 'react-hotkeys-hook';
+import { Col, Container, Row } from 'reactstrap';
+import styled, { css, useTheme } from 'styled-components';
+
 import { ACTION_CONTENT_MAIN_BOTTOM } from '@/constants/containers';
+import { useWorkflowSelector } from '@/context/workflow-selector';
+
+import ActionHero from './ActionHero';
+import ActionImpact from './ActionImpact';
+import ActionPager from './ActionPager';
+import ActionStatus from './ActionStatus';
+import ActionUpdatesList from './ActionUpdatesList';
 import {
   ActionDependenciesBlock,
   mapActionToDependencyGroups,
 } from './blocks/action-dependencies/ActionDependenciesBlock';
-
-import { useWorkflowSelector } from '@/context/workflow-selector';
+import RestrictedBlockWrapper from './blocks/RestrictedBlockWrapper';
+import CategoryTags from './CategoryTags';
+import EmissionScopeIcon from './EmissionScopeIcon';
+import { PhaseTimeline } from './PhaseTimeline';
 
 export type ActionContentAction = NonNullable<GetActionDetailsQuery['action']>;
 
@@ -440,6 +437,7 @@ function ActionContentProgressContainer({
       {!!action.implementationPhase && (
         <StyledProgressCard>
           <PhaseTimeline
+            phases={plan.actionImplementationPhases}
             activePhase={action.implementationPhase}
             isContinuous={action.scheduleContinuous}
           />

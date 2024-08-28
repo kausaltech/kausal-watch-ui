@@ -261,6 +261,17 @@ const actionFragment = gql`
           src
         }
       }
+      generalContent {
+        actionTaskTerm
+        organizationTerm
+      }
+      actionImplementationPhases {
+        id
+        identifier
+        name
+        order
+        color
+      }
     }
     plan @skip(if: $relatedPlanActions) {
       id

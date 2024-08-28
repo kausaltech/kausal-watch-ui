@@ -1,21 +1,16 @@
-import React, { useContext } from 'react';
+import React from 'react';
 
-import {
-  ActionStatusSummaryIdentifier,
-  PlanContextFragment,
-} from 'common/__generated__/graphql';
+import { ActionStatusSummaryIdentifier } from 'common/__generated__/graphql';
 import dayjs from 'common/dayjs';
 import { getActionTaskTermContext, getActionTermContext } from 'common/i18n';
 import { PhaseTimeline } from 'components/actions/PhaseTimeline';
 import Icon from 'components/common/Icon';
 import PlanChip from 'components/plans/PlanChip';
-import { usePlan } from 'context/plan';
 import { useTranslations } from 'next-intl';
 import styled, { useTheme } from 'styled-components';
 
-import { ActionTableContext } from './ActionStatusTable';
 import { getTaskCounts } from './cells/TasksStatusCell';
-import { ActionListAction } from './dashboard.types';
+import { ActionListAction, ActionListPlan } from './dashboard.types';
 
 const TooltipTitle = styled.p`
   font-weight: ${(props) => props.theme.fontWeightBold};
@@ -29,16 +24,6 @@ const ResponsibleTooltipList = styled.ul`
 `;
 
 const ResponsibleTooltipListItem = styled.li``;
-
-const PhasesTooltipList = styled.ul`
-  margin: 0;
-  padding: 0;
-  list-style: none;
-`;
-
-const PhasesTooltipListItem = styled.li<{ $active: boolean }>`
-  color: ${(props) => (props.$active ? '#333' : '#ccc')};
-`;
 
 const TaskTooltip = styled.div``;
 
@@ -56,17 +41,12 @@ const StatusLabel = styled.div<{ $color: string }>`
   }
 `;
 
-const Divider = styled.div`
-  margin: ${(props) => props.theme.spaces.s025} 0;
-  border-bottom: 1px solid ${(props) => props.theme.graphColors.grey030};
-`;
-
 interface TooltipProps {
   action: ActionListAction;
 }
 
 interface TooltipWithPlanProps extends TooltipProps {
-  plan: PlanContextFragment;
+  plan: ActionListPlan;
 }
 
 export const OrganizationTooltipContent = ({ action }: TooltipProps) => {
@@ -130,9 +110,9 @@ const StyledPhaseTimelineContainer = styled.div`
 
 export const ImplementationPhaseTooltipContent = ({
   action,
+  plan,
 }: TooltipWithPlanProps) => {
   const t = useTranslations();
-  const { plan } = useContext(ActionTableContext);
 
   const activePhase = action.implementationPhase;
   const merged = action.mergedWith;
@@ -182,6 +162,7 @@ export const ImplementationPhaseTooltipContent = ({
           <PhaseTimeline
             layout="vertical"
             activePhase={action.implementationPhase}
+            phases={plan.actionImplementationPhases}
             isContinuous={action.scheduleContinuous}
           />
         )}
@@ -190,10 +171,12 @@ export const ImplementationPhaseTooltipContent = ({
   );
 };
 
-export const ResponsiblePartiesTooltipContent = ({ action }: TooltipProps) => {
+export const ResponsiblePartiesTooltipContent = ({
+  action,
+  plan,
+}: TooltipWithPlanProps) => {
   const t = useTranslations();
   const theme = useTheme();
-  const plan = usePlan();
   const { organizationTerm } = plan.generalContent;
 
   const parties = action.responsibleParties;
@@ -297,14 +280,14 @@ export const LastUpdatedTooltipContent = ({ action }: TooltipProps) => {
   );
 };
 
-export const PlanTooltipContent = ({ action }: TooltipProps) => {
-  const t = useTranslations();
-
+export const PlanTooltipContent = ({ action, plan }: TooltipWithPlanProps) => {
   return (
     <div>
       <PlanChip
         planShortName={action.plan?.shortName || action.plan?.name}
-        planImage={action.plan.image?.rendition?.src}
+        planImage={
+          action.plan?.image?.rendition?.src || plan?.image?.rendition?.src
+        }
         size="md"
       />
     </div>
