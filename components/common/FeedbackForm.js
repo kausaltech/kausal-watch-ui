@@ -97,7 +97,7 @@ const FeedbackForm = ({
             control={control}
             defaultValue=""
             rules={{
-              required: field.fieldRequired && t('error-field-required'),
+              required: field.fieldRequired && t('required-field'),
             }}
             render={({ field: controllerField }) => (
               <TextInput
@@ -108,9 +108,7 @@ const FeedbackForm = ({
                 }`}
                 type="text"
                 invalid={!!errors[field.fieldLabel]}
-                formFeedback={
-                  errors[field.fieldLabel] && t('error-field-required')
-                }
+                formFeedback={errors[field.fieldLabel] && t('required-field')}
               />
             )}
           />
@@ -143,9 +141,7 @@ const FeedbackForm = ({
                 }))}
                 value={controllerField.value}
                 invalid={!!errors[field.fieldLabel]}
-                formFeedback={
-                  errors[field.fieldLabel] && t('error-field-required')
-                }
+                formFeedback={errors[field.fieldLabel] && t('required-field')}
               />
             )}
           />
@@ -158,7 +154,7 @@ const FeedbackForm = ({
             control={control}
             defaultValue=""
             rules={{
-              required: field.fieldRequired && t('error-field-required'),
+              required: field.fieldRequired && t('required-field'),
             }}
             render={({ field: controllerField }) => (
               <SelectInput
@@ -175,9 +171,7 @@ const FeedbackForm = ({
                   })),
                 ]}
                 invalid={!!errors[field.fieldLabel]}
-                formFeedback={
-                  errors[field.fieldLabel] && t('error-field-required')
-                }
+                formFeedback={errors[field.fieldLabel] && t('required-field')}
               />
             )}
           />
