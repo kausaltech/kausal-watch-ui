@@ -1,16 +1,17 @@
 import React, { ReactElement } from 'react';
-import styled from 'styled-components';
 
-import RichText from 'components/common/RichText';
-import Icon from 'components/common/Icon';
-import { CategoryContent } from 'components/actions/CategoryTags';
-import PopoverTip from 'components/common/PopoverTip';
 import {
   AttributesBlockAttributeFragment,
   AttributesBlockAttributeTypeFragment,
   AttributesBlockAttributeWithNestedTypeFragment,
 } from 'common/__generated__/graphql';
+import { CategoryContent } from 'components/actions/CategoryTags';
+import Icon from 'components/common/Icon';
+import PopoverTip from 'components/common/PopoverTip';
+import RichText from 'components/common/RichText';
 import { useLocale } from 'next-intl';
+import styled from 'styled-components';
+
 import {
   ATTRIBUTE_FRAGMENT,
   ATTRIBUTE_TYPE_FRAGMENT,
@@ -25,8 +26,12 @@ const ScaleIcon = styled(Icon)<{ $active?: boolean }>`
       : theme.themeColors.light} !important;
 `;
 
-const AttributeContainer = styled.div<{ $fontSize?: string }>`
-  margin-bottom: ${(props) => props.theme.spaces.s200};
+const AttributeContainer = styled.div<{
+  $fontSize?: string;
+  $noMargins?: boolean;
+}>`
+  margin-bottom: ${(props) =>
+    props?.$noMargins ? 0 : props.theme.spaces.s200};
 
   h3 {
     font-size: ${(props) => props.theme.fontSizeBase};
@@ -41,6 +46,10 @@ const AttributeContainer = styled.div<{ $fontSize?: string }>`
   .text-content > *:last-child {
     margin-bottom: 0;
   }
+`;
+
+const AttributeScaleContainer = styled.div`
+  display: flex;
 `;
 
 const AttributeChoiceLabel = styled.div`
@@ -73,6 +82,7 @@ type AttributeContentProps = {
   attributeType: AttributesBlockAttributeTypeFragment;
   fontSize: string;
   notitle?: boolean;
+  minimized?: boolean;
 };
 
 type AttributeContentNestedTypeProps = {
@@ -80,6 +90,7 @@ type AttributeContentNestedTypeProps = {
   attributeType: null | undefined;
   fontSize?: string;
   notitle?: boolean;
+  minimized?: boolean;
 };
 
 const ActionAttribute = (
@@ -87,9 +98,16 @@ const ActionAttribute = (
 ) => {
   const locale = useLocale();
 
-  const { attribute, attributeType, fontSize, notitle = false } = props;
+  const {
+    attribute,
+    attributeType,
+    fontSize,
+    notitle = false,
+    minimized = false,
+  } = props;
   const type = attributeType ?? attribute.type;
   let dataElement: ReactElement;
+  const MAX_MINIMIZED_TEXT_LENGTH = 50;
 
   switch (attribute.__typename) {
     case 'AttributeChoice':
@@ -99,17 +117,20 @@ const ActionAttribute = (
       // const choiceCount = contentType.choiceOptions.length;
       dataElement = (
         <div>
-          {type.format === 'ORDERED_CHOICE' &&
-            type.choiceOptions.map(
-              (choice, idx) =>
-                (idx > 0 || !type.hasZeroOption) && (
-                  <ScaleIcon
-                    $active={idx <= valueIndex}
-                    name="circle-full"
-                    key={choice.identifier}
-                  />
-                )
-            )}
+          {type.format === 'ORDERED_CHOICE' && (
+            <AttributeScaleContainer>
+              {type.choiceOptions.map(
+                (choice, idx) =>
+                  (idx > 0 || !type.hasZeroOption) && (
+                    <ScaleIcon
+                      $active={idx <= valueIndex}
+                      name="circle-full"
+                      key={choice.identifier}
+                    />
+                  )
+              )}
+            </AttributeScaleContainer>
+          )}
           {type.showChoiceNames && (
             <AttributeChoiceLabel
               className={
@@ -122,16 +143,28 @@ const ActionAttribute = (
               {attribute.choice?.name}
             </AttributeChoiceLabel>
           )}
-          {attribute.text ? <RichText html={attribute.text} /> : null}
+          {!minimized && attribute.text ? (
+            <RichText html={attribute.text} />
+          ) : null}
         </div>
       );
       break;
     case 'AttributeText':
       // FIXME: attribute.value is not HTML
-      dataElement = <RichText html={attribute.value} />;
+      dataElement = (
+        <RichText
+          html={attribute.value}
+          maxLength={minimized ? MAX_MINIMIZED_TEXT_LENGTH : undefined}
+        />
+      );
       break;
     case 'AttributeRichText':
-      dataElement = <RichText html={attribute.value} />;
+      dataElement = (
+        <RichText
+          html={attribute.value}
+          maxLength={minimized ? MAX_MINIMIZED_TEXT_LENGTH : undefined}
+        />
+      );
       break;
     case 'AttributeNumericValue':
       const formattedValue = attribute.numericValue?.toLocaleString(locale);
@@ -157,7 +190,7 @@ const ActionAttribute = (
   }
   // Render horizontal layout
   return (
-    <AttributeContainer $fontSize={fontSize}>
+    <AttributeContainer $fontSize={fontSize} $noMargins={notitle}>
       {!notitle && (
         <h3>
           {type.name}
