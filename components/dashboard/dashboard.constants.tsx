@@ -9,6 +9,7 @@ import { TFunction } from '@/common/i18n';
 
 import PlanChip from '../plans/PlanChip';
 import {
+  AttributeTooltipContent,
   ImplementationPhaseTooltipContent,
   IndicatorsTooltipContent,
   LastUpdatedTooltipContent,
@@ -39,7 +40,8 @@ interface Column {
   rowHeader?: boolean;
   renderTooltipContent?: (
     action: ActionListAction,
-    plan: PlanContextFragment
+    plan: PlanContextFragment,
+    attribute?: any // TODO: tighter type
   ) => ReactNode;
   headerClassName?: string;
   cellClassName?: string;
@@ -182,7 +184,6 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
   FieldColumnBlock: {
     renderHeader: (t, _, label) => label,
     renderCell: (action, _, __, attributeType) => {
-      //console.log('field column', action, attributeType);
       const attributeContent = action.attributes.find(
         (a) => a.type.id === attributeType.id
       );
@@ -192,7 +193,20 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
           attribute={attributeContent}
           attributeType={attributeType}
           notitle
+          minimized
         /> // TODO: Render attribute content
+      );
+    },
+    renderTooltipContent: (action, _, attributeType) => {
+      const attributeContent = action.attributes.find(
+        (a) => a.type.id === attributeType.id
+      );
+      if (!attributeContent) return null;
+      return (
+        <AttributeTooltipContent
+          attribute={attributeContent}
+          attributeType={attributeType}
+        />
       );
     },
   },

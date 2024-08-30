@@ -4,6 +4,7 @@ import { ActionStatusSummaryIdentifier } from 'common/__generated__/graphql';
 import dayjs from 'common/dayjs';
 import { getActionTaskTermContext, getActionTermContext } from 'common/i18n';
 import { PhaseTimeline } from 'components/actions/PhaseTimeline';
+import ActionAttribute from 'components/common/ActionAttribute';
 import Icon from 'components/common/Icon';
 import PlanChip from 'components/plans/PlanChip';
 import { useTranslations } from 'next-intl';
@@ -291,5 +292,18 @@ export const PlanTooltipContent = ({ action, plan }: TooltipWithPlanProps) => {
         size="md"
       />
     </div>
+  );
+};
+
+export const AttributeTooltipContent = ({
+  attribute,
+  attributeType,
+}: TooltipProps) => {
+  return (
+    <ActionAttribute
+      attribute={attribute}
+      attributeType={attributeType}
+      notitle
+    />
   );
 };
