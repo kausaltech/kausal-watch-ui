@@ -1,10 +1,10 @@
-import { useTheme } from 'styled-components';
-import { Container } from 'reactstrap';
-import styled from 'styled-components';
-import { readableColor } from 'polished';
 import RichText from 'components/common/RichText';
-import { Theme } from '@kausal/themes/types';
 import { useTranslations } from 'next-intl';
+import { readableColor } from 'polished';
+import { Container } from 'reactstrap';
+import styled, { useTheme } from 'styled-components';
+
+import { Theme } from '@kausal/themes/types';
 
 /**
  * Pulls the specified hero height from the theme if defined
@@ -146,15 +146,11 @@ const ImageCredit = styled.span`
   position: absolute;
   top: 0;
   right: 0;
-  padding: 0.25rem 0.5rem;
+  padding: 0.1rem 0.25rem;
   background-color: rgba(255, 255, 255, 0.66);
   font-size: ${(props) => props.theme.fontSizeSm};
   font-family: ${(props) =>
-      `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`}
-    @media (min-width: ${(props) => props.theme.breakpointMd}) {
-    top: inherit;
-    bottom: 0;
-  }
+    `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`};
 `;
 
 interface HeroFullImageProps {
