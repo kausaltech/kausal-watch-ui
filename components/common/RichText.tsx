@@ -104,44 +104,41 @@ const CompressIcon = styled(ICompress)`
 function RichTextImage(props: RichTextImageProps) {
   const plan = usePlan();
   const { attribs } = props;
-  const { src, alt, height, width, ...rest } = attribs;
-  rest.className = rest.class;
-  delete rest.class;
+  const {
+    src,
+    alt,
+    height,
+    width,
+    'data-original-src': originalSrc,
+    'data-original-width': originalWidth,
+    'data-original-height': originalHeight,
+    ...rest
+  } = attribs;
 
-  // eslint-disable-next-line @next/next/no-img-element
+  const imageUrl = src?.startsWith('http')
+    ? src
+    : `${plan.serveFileBaseUrl}${src}`;
+
+  if (!imageUrl) {
+    return null;
+  }
+
+  const origWidth = Number(originalWidth);
+  const applyZoom = !isNaN(origWidth) && origWidth > 1000;
+
   const imgElement = (
-    // eslint-disable-next-line @next/next/no-img-element
     <img
-      src={`${plan.serveFileBaseUrl}${src}`}
-      alt={alt}
+      src={imageUrl}
+      alt={alt || 'Image'}
       height={height}
       width={width}
-      className={rest.className}
+      className={rest.className || 'richtext-image full-width'}
+      {...rest}
     />
   );
 
-  const [origWidth, origHeight] = [
-    Number(rest['data-original-width']),
-    Number(rest['data-original-height']),
-  ];
-  if (!isNaN(origWidth) && !isNaN(origHeight) && rest['data-original-src']) {
-    if (origWidth > Number(height) * 1.2 || origHeight > Number(width) * 1.2) {
-      // Only stretch zoomed image full width if original has width > 1000px
-      const zoomImgAttribs =
-        origWidth > 1000
-          ? {
-              src: `${plan.serveFileBaseUrl}${rest['data-original-src']}`,
-              alt,
-              height: origHeight,
-              width: origWidth,
-            }
-          : {};
-      return (
-        <Zoom zoomImg={zoomImgAttribs} IconUnzoom={CompressIcon}>
-          {imgElement}
-        </Zoom>
-      );
-    }
+  if (applyZoom) {
+    return <Zoom IconUnzoom={CompressIcon}>{imgElement}</Zoom>;
   }
   return imgElement;
 }
@@ -219,7 +216,7 @@ export default function RichText(props: RichTextProps) {
 
   const replaceDomElement = useCallback(
     (element: Element) => {
-      const { name, attribs, children } = element as Element;
+      const { name, attribs, children } = element;
       // Rewrite <a> tags to point to the FQDN
       if (name === 'a') {
         // File link
@@ -245,10 +242,9 @@ export default function RichText(props: RichTextProps) {
             {domToReact(children, options)}
           </a>
         );
-      } else if (name === 'img') {
-        if (attribs.src && attribs.src[0] === '/') {
-          return <RichTextImage attribs={attribs} />;
-        }
+      }
+      if (name === 'img') {
+        return <RichTextImage attribs={attribs} />;
       }
       return null;
     },

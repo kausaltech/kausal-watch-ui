@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { NextIntlClientProvider, useMessages } from 'next-intl';
-
+import 'react-medium-image-zoom/dist/styles.css';
 import { StyledComponentsRegistry } from '@/styles/StyledComponentsRegistry';
 import { ApolloWrapper } from '@/components/providers/ApolloWrapper';
 import ThemeProvider from '@/components/providers/ThemeProvider';
