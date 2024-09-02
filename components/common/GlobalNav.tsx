@@ -1,32 +1,34 @@
 import React, { useEffect, useRef, useState } from 'react';
-import PropTypes from 'prop-types';
-import {
-  Collapse,
-  Navbar,
-  Nav,
-  NavItem,
-  UncontrolledDropdown,
-  DropdownToggle,
-  DropdownItem,
-  DropdownMenu,
-} from 'reactstrap';
-import debounce from 'lodash/debounce';
-import SVG from 'react-inlinesvg';
-import styled, { css, useTheme } from 'styled-components';
-import { useScrollPosition } from '@n8tb1t/use-scroll-position';
-import { transparentize } from 'polished';
-import { NavigationLink, Link } from 'common/links';
 
-import type { Theme } from '@kausal/themes/types';
-import { getThemeStaticURL } from '@/common/theme';
-import Icon from './Icon';
+import { isServer } from 'common/environment';
+import { Link, NavigationLink } from 'common/links';
 import PlanSelector from 'components/plans/PlanSelector';
 import PlanVersionSelector from 'components/versioning/PlanVersionSelector';
+import { usePlan } from 'context/plan';
+import debounce from 'lodash/debounce';
+import { useLocale, useTranslations } from 'next-intl';
+import { transparentize } from 'polished';
+import PropTypes from 'prop-types';
+import SVG from 'react-inlinesvg';
+import {
+  Collapse,
+  DropdownItem,
+  DropdownMenu,
+  DropdownToggle,
+  Nav,
+  Navbar,
+  NavItem,
+  UncontrolledDropdown,
+} from 'reactstrap';
+import styled, { css, useTheme } from 'styled-components';
+
+import { getThemeStaticURL } from '@/common/theme';
+import type { Theme } from '@kausal/themes/types';
+import { useScrollPosition } from '@n8tb1t/use-scroll-position';
+
+import Icon from './Icon';
 import LanguageSelector from './LanguageSelector';
 import NavbarSearch from './NavbarSearch';
-import { usePlan } from 'context/plan';
-import { isServer } from 'common/environment';
-import { useTranslations, useLocale } from 'next-intl';
 
 const getRootLink = (plan, locale, primaryLanguage) => {
   if (plan.parent && plan.parent.viewUrl) {
@@ -67,7 +69,7 @@ const TopNav = styled(Navbar)`
 `;
 
 const BotNav = styled(Navbar)<{ $offsetTop?: number; $expanded: boolean }>`
-  background-color: ${(props) => props.theme.themeColors.white};
+  background-color: ${(props) => props.theme.siteNavBackground};
   padding: 0;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.07);
 
@@ -204,14 +206,14 @@ const NavLink = styled.div`
     display: flex;
     margin: 0 0 ${(props) => props.theme.spaces.s050}
       ${(props) => props.theme.spaces.s100};
-    color: ${(props) => props.theme.neutralDark};
+    color: ${(props) => props.theme.siteNavColor};
 
     &:hover {
       text-decoration: none;
-      color: ${(props) => props.theme.neutralDark};
+      color: ${(props) => props.theme.siteNavColor};
 
       .highlighter {
-        border-bottom: 5px solid ${(props) => props.theme.brandDark};
+        border-bottom: 5px solid ${(props) => props.theme.siteNavHighlightColor};
       }
     }
 
@@ -232,7 +234,7 @@ const NavHighlighter = styled.span`
   line-height: 1;
 
   &.active {
-    border-bottom: 5px solid ${(props) => props.theme.brandDark};
+    border-bottom: 5px solid ${(props) => props.theme.siteNavHighlightColor};
   }
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
@@ -255,14 +257,14 @@ const StyledDropdownToggle = styled(DropdownToggle)`
   padding: 0;
   margin: 0 0 ${(props) => props.theme.spaces.s100}
     ${(props) => props.theme.spaces.s100};
-  color: ${(props) => props.theme.neutralDark};
+  color: ${(props) => props.theme.siteNavColor};
 
   &:hover {
     text-decoration: none;
-    color: ${(props) => props.theme.neutralDark};
+    color: ${(props) => props.theme.siteNavColor};
 
     .highlighter {
-      border-bottom: 5px solid ${(props) => props.theme.brandDark};
+      border-bottom: 5px solid ${(props) => props.theme.siteNavHighlightColor};
     }
   }
 
@@ -275,6 +277,7 @@ const StyledDropdownToggle = styled(DropdownToggle)`
 const StyledDropdown = styled(UncontrolledDropdown)`
   position: static;
   .dropdown-toggle.nav-link {
+    color: ${(props) => props.theme.siteNavColor};
     padding-left: 0;
     padding-right: 0;
     white-space: normal;
@@ -292,8 +295,9 @@ const StyledDropdown = styled(UncontrolledDropdown)`
 
   &.show {
     .dropdown-toggle.nav-link {
+      color: ${(props) => props.theme.siteNavColor};
       &::after {
-        border-top-color: ${(props) => props.theme.brandDark};
+        border-top-color: ${(props) => props.theme.sitenavHighlightColor};
       }
     }
   }
@@ -305,7 +309,7 @@ const StyledDropdown = styled(UncontrolledDropdown)`
   }
   .dropdown-item {
     margin: 0 0 0 ${(props) => props.theme.spaces.s150};
-    color: ${(props) => props.theme.neutralDark};
+    color: ${(props) => props.theme.siteNavColor};
 
     .highlighter {
       display: inline-block;
@@ -316,7 +320,8 @@ const StyledDropdown = styled(UncontrolledDropdown)`
     background-color: transparent;
 
       .highlighter {
-        border-bottom: 5px solid ${(props) => props.theme.brandDark};
+        border-bottom: 5px solid ${(props) =>
+          props.theme.siteNavHighlightColor};
       }
     }
   }
