@@ -1,9 +1,9 @@
-import { gql } from '@apollo/client';
-
 import {
   OrganizationDetailsQuery,
   OrganizationDetailsQueryVariables,
 } from '@/common/__generated__/graphql';
+import { gql } from '@apollo/client';
+
 import { ACTION_TABLE_COLUMN_FRAGMENT } from '../fragments/action-list.fragment';
 import { getClient } from '../utils/apollo-rsc-client';
 
@@ -54,7 +54,7 @@ const GET_ORG_DETAILS = gql`
       logo(parentFallback: true) {
         id
         altText
-        rendition(size: "128x128", crop: false) {
+        rendition(size: "255x255", crop: false) {
           id
           src
           alt
