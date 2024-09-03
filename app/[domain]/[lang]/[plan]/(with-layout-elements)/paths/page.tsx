@@ -1,6 +1,7 @@
 'use client';
 import { useMemo, useState } from 'react';
 
+import { usePlan } from 'context/plan';
 import { useTranslations } from 'next-intl';
 import { Card, CardBody, Col, Container, Row } from 'reactstrap';
 import styled from 'styled-components';
@@ -50,12 +51,14 @@ const findVisibleNodes = (allNodes, lastNodeId: string, visibleNodes) => {
 
 export default function PathsPage() {
   const t = useTranslations();
+  const plan = usePlan();
+  const pathsInstance = plan.kausalPathsInstanceUuid;
   const path = '';
   const { data } = useSuspenseQuery(GET_PAGE, {
     variables: { path, goal: null },
     context: {
       uri: '/api/graphql-paths',
-      headers: getHttpHeaders({ instanceIdentifier: 'sunnydale' }),
+      headers: getHttpHeaders({ instanceIdentifier: pathsInstance }),
     },
   });
 
