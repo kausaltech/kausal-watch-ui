@@ -194,7 +194,7 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
           attributeType={attributeType}
           notitle
           minimized
-        /> // TODO: Render attribute content
+        />
       );
     },
     renderTooltipContent: (action, _, attributeType) => {
