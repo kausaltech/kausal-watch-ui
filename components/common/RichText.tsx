@@ -148,19 +148,28 @@ type CollapsibleTextProps = {
   className?: string;
 };
 
-const CollapsibleText = (props: CollapsibleTextProps) => {
-  const { parsedContent, className, ...rest } = props;
-  const t = useTranslations();
-  const [isOpen, setIsOpen] = useState(false);
-  const toggle = () => setIsOpen(!isOpen);
-
-  const BREAK_POINT = 400; // characters at least visible
+const clipRichText = (
+  parsedContent: string | JSX.Element | JSX.Element[],
+  breakPoint: number
+) => {
+  if (typeof parsedContent === 'string') {
+    // Handle string input
+    if (parsedContent.length <= breakPoint) {
+      return { intro: parsedContent, restOfContent: '' };
+    }
+    // Find the last space before the breakpoint to avoid cutting words
+    const lastSpace = parsedContent.lastIndexOf(' ', breakPoint);
+    const splitIndex = lastSpace > 0 ? lastSpace : breakPoint;
+    return {
+      intro: parsedContent.slice(0, splitIndex) + '…',
+      restOfContent: parsedContent.slice(splitIndex),
+    };
+  }
   // Make sure we do not break inside html elements, only break after <p> tags
   const intro: ReactElement[] = [];
   const restOfContent: ReactElement[] = [];
   let previousNodeType: string | React.JSXElementConstructor<any> = '';
   let introLength = 0;
-
   Array.isArray(parsedContent) &&
     parsedContent.forEach((node, indx) => {
       if (indx === 0) {
@@ -168,7 +177,7 @@ const CollapsibleText = (props: CollapsibleTextProps) => {
         introLength += node.props?.children?.length ?? 0;
       }
       if (indx > 0 && restOfContent.length === 0) {
-        if (previousNodeType === 'p' && introLength > BREAK_POINT)
+        if (previousNodeType === 'p' && introLength > breakPoint)
           restOfContent.push(node);
         else {
           intro.push(node);
@@ -177,6 +186,17 @@ const CollapsibleText = (props: CollapsibleTextProps) => {
       } else if (restOfContent.length > 0) restOfContent.push(node);
       previousNodeType = node.type;
     });
+  return { intro, restOfContent };
+};
+
+const CollapsibleText = (props: CollapsibleTextProps) => {
+  const { parsedContent, className, ...rest } = props;
+  const t = useTranslations();
+  const [isOpen, setIsOpen] = useState(false);
+  const toggle = () => setIsOpen(!isOpen);
+
+  const BREAK_POINT = 400; // characters at least visible
+  const { intro, restOfContent } = clipRichText(parsedContent, BREAK_POINT);
 
   return (
     <div {...rest} className={`text-content ${className || ''}`}>
@@ -204,10 +224,17 @@ type RichTextProps = {
   html: string;
   className?: string;
   isCollapsible?: boolean;
+  maxLength?: number;
 };
 
 export default function RichText(props: RichTextProps) {
-  const { html, isCollapsible, className, ...rest } = props;
+  const {
+    html,
+    isCollapsible,
+    className,
+    maxLength = undefined,
+    ...rest
+  } = props;
   const plan = usePlan();
 
   // FIXME: Hacky hack to figure out if the rich text links are internal
@@ -281,7 +308,11 @@ export default function RichText(props: RichTextProps) {
 
   return (
     <div {...rest} className={`text-content clearfix ${className || ''}`}>
-      <StyledRichText>{parsedContent}</StyledRichText>
+      <StyledRichText>
+        {maxLength
+          ? clipRichText(parsedContent, maxLength).intro
+          : parsedContent}
+      </StyledRichText>
     </div>
   );
 }

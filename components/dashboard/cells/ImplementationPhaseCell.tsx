@@ -1,9 +1,8 @@
-import { ActionListAction } from '../dashboard.types';
-import styled from 'styled-components';
 import { PlanContextFragment } from 'common/__generated__/graphql';
-import { useContext } from 'react';
-import { ActionTableContext } from '../ActionStatusTable';
 import { PhaseTimeline } from 'components/actions/PhaseTimeline';
+import styled from 'styled-components';
+
+import { ActionListAction } from '../dashboard.types';
 
 interface Props {
   action: ActionListAction;
@@ -15,9 +14,7 @@ const StatusDisplay = styled.div`
   height: 100%;
 `;
 
-const ImplementationPhaseCell = ({ action }: Props) => {
-  const { plan } = useContext(ActionTableContext);
-
+const ImplementationPhaseCell = ({ action, plan }: Props) => {
   if (!plan) {
     return null;
   }
@@ -28,6 +25,7 @@ const ImplementationPhaseCell = ({ action }: Props) => {
         <PhaseTimeline
           layout="mini"
           activePhase={action.implementationPhase}
+          phases={plan.actionImplementationPhases}
           isContinuous={action.scheduleContinuous}
         />
       )}

@@ -1,8 +1,10 @@
 import React from 'react';
+
 import { transparentize } from 'polished';
 import styled, { useTheme } from 'styled-components';
-import { Theme } from '@kausal/themes/types';
+
 import { getThemeStaticURL } from '@/common/theme';
+import { Theme } from '@kausal/themes/types';
 
 const Tag = styled.div<{ $minWidth: string }>`
   display: flex;
@@ -67,15 +69,15 @@ interface PlanChipProps {
   /**
    * Short name of the plan
    */
-  planShortName: string;
+  planShortName?: string;
   /**
    * Organization name
    */
-  organization: string;
+  organization?: string;
   /**
    * Chip size
    */
-  size: 'xs' | 'sm' | 'md' | 'lg';
+  size?: 'xs' | 'sm' | 'md' | 'lg';
   /**
    * Is this a negative variant?
    */
@@ -113,23 +115,25 @@ const PlanChip = React.forwardRef<HTMLDivElement, PlanChipProps>(
       negative = false,
     } = props;
     const theme = useTheme();
-
+    const avatarOnly = !planShortName && !organization;
     return (
-      <Tag ref={ref} $minWidth={MIN_WIDTH[size]}>
+      <Tag ref={ref} $minWidth={avatarOnly ? 'auto' : MIN_WIDTH[size]}>
         <PlanAvatar
           src={planImage ?? getThemeStaticURL(theme.defaultAvatarOrgImage)}
           size={IMAGE_SIZES[size]}
           alt=""
         />
-        <PlanName $negative={negative}>
-          <PlanTitle
-            $weight={size === 'sm' ? 'fontWeightNormal' : 'fontWeightBold'}
-            $size={FONT_SIZES[size]}
-          >
-            {planShortName}
-          </PlanTitle>
-          <PlanOrg $negative={negative}>{organization}</PlanOrg>
-        </PlanName>
+        {!avatarOnly ? (
+          <PlanName $negative={negative}>
+            <PlanTitle
+              $weight={size === 'sm' ? 'fontWeightNormal' : 'fontWeightBold'}
+              $size={FONT_SIZES[size]}
+            >
+              {planShortName}
+            </PlanTitle>
+            <PlanOrg $negative={negative}>{organization}</PlanOrg>
+          </PlanName>
+        ) : null}
       </Tag>
     );
   }

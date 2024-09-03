@@ -1,19 +1,22 @@
-import get from 'lodash/get';
-import { useTheme } from 'styled-components';
-import Icon from 'components/common/Icon';
-import { usePlan } from 'context/plan';
-import styled, { css } from 'styled-components';
-import { ActionContentAction } from './ActionContent';
-import { Theme } from '@kausal/themes/types';
 import { RefObject, useEffect, useRef, useState } from 'react';
+
+import { ActionImplementationPhase } from 'common/__generated__/graphql';
+import Icon from 'components/common/Icon';
 import { debounce } from 'lodash';
+import get from 'lodash/get';
 import { useTranslations } from 'next-intl';
+import styled, { css, useTheme } from 'styled-components';
+
+import { Theme } from '@kausal/themes/types';
+
+import { ActionContentAction } from './ActionContent';
 
 // Used to determine the style of icon visualizing a phase, not to be confused with phase identifiers
 type PhaseType = 'done' | 'current' | 'todo';
 
 type PhaseTimelineProps = {
   activePhase: NonNullable<ActionContentAction['implementationPhase']>;
+  phases: ActionImplementationPhase[];
   layout?: 'vertical' | 'horizontal' | 'mini';
   isContinuous?: boolean;
 };
@@ -290,14 +293,14 @@ function useOverrideLayout<T extends HTMLElement>(
 
 export function PhaseTimeline({
   activePhase,
+  phases,
   layout = 'horizontal',
   isContinuous = false,
 }: PhaseTimelineProps) {
   const ref = useRef<HTMLUListElement>(null);
-  const plan = usePlan();
+
   const theme = useTheme();
   const t = useTranslations();
-  const phases = plan.actionImplementationPhases;
   const overriddenLayout = useOverrideLayout(layout, phases.length, ref);
   const isVertical = overriddenLayout === 'vertical';
   const isMini = overriddenLayout === 'mini';

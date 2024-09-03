@@ -1,30 +1,20 @@
-import React, { ReactNode, useState, createContext } from 'react';
-import { Table, Button } from 'reactstrap';
-import styled from 'styled-components';
-import { useTranslations } from 'next-intl';
+import React, { ReactNode, useState } from 'react';
 
-import Icon from 'components/common/Icon';
+import { PlanContextFragment } from 'common/__generated__/graphql';
 import { actionStatusOrder } from 'common/data/actions';
+import Icon from 'components/common/Icon';
 import ActionTableRow from 'components/dashboard/ActionTableRow';
+import { useTranslations } from 'next-intl';
+import { Button, Table } from 'reactstrap';
+import styled from 'styled-components';
 
 import ActionStatusExport from './ActionStatusExport';
+import { COLUMN_CONFIG } from './dashboard.constants';
 import {
   ActionListAction,
   ActionListOrganization,
   ColumnConfig,
 } from './dashboard.types';
-import { PlanContextFragment } from 'common/__generated__/graphql';
-import { COLUMN_CONFIG } from './dashboard.constants';
-
-type TActionTableContext = {
-  plan?: PlanContextFragment;
-  planViewUrl?: string | null;
-};
-
-export const ActionTableContext = createContext<TActionTableContext>({
-  plan: undefined,
-  planViewUrl: undefined,
-});
 
 const TableWrapper = styled.div`
   width: 100%;
@@ -182,6 +172,7 @@ interface Props {
   plan: PlanContextFragment;
   enableExport?: boolean;
   planViewUrl?: string | null;
+  hasRelatedPlans?: boolean;
 }
 
 interface Sort {
@@ -197,6 +188,7 @@ const ActionStatusTable = (props: Props) => {
     plan,
     enableExport = true,
     planViewUrl,
+    hasRelatedPlans = false,
   } = props;
 
   const orgMap = new Map(orgs.map((org) => [org.id, org]));
@@ -240,16 +232,22 @@ const ActionStatusTable = (props: Props) => {
    * in the Admin UI. Filter out the identifier column if disabled in the plan.
    */
   const filteredColumns = !plan.features.hasActionIdentifiers
-    ? columns.filter((column) => column.__typename !== 'IdentifierColumnBlock')
-    : columns;
+    ? [
+        ...columns.filter(
+          (column) => column.__typename !== 'IdentifierColumnBlock'
+        ),
+      ]
+    : [...columns];
 
+  // In multiplan situation we add column for the plan name
+  if (hasRelatedPlans) {
+    filteredColumns.unshift({
+      __typename: 'PlanColumnBlock',
+      columnLabel: '',
+    });
+  }
   return (
-    <ActionTableContext.Provider
-      value={{
-        plan,
-        planViewUrl,
-      }}
-    >
+    <>
       <ToolBar>
         <ResetSorting>
           {sort.key && (
@@ -285,7 +283,11 @@ const ActionStatusTable = (props: Props) => {
                       onClick={sortHandler(columnConfig.headerKey)}
                       className={columnConfig.headerClassName}
                     >
-                      {columnConfig.renderHeader(t, plan, column.columnLabel)}
+                      {columnConfig.renderHeader(
+                        t,
+                        plan,
+                        column.columnLabel || column?.attributeType?.name
+                      )}
                     </SortableTableHeader>
                   );
                 }
@@ -296,7 +298,11 @@ const ActionStatusTable = (props: Props) => {
                     scope="col"
                     className={columnConfig.headerClassName}
                   >
-                    {columnConfig.renderHeader(t, plan, column.columnLabel)}
+                    {columnConfig.renderHeader(
+                      t,
+                      plan,
+                      column.columnLabel || column?.attributeType?.name
+                    )}
                   </th>
                 );
               })}
@@ -315,7 +321,7 @@ const ActionStatusTable = (props: Props) => {
           </tbody>
         </DashTable>
       </TableWrapper>
-    </ActionTableContext.Provider>
+    </>
   );
 };
 

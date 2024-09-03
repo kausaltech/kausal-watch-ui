@@ -1,10 +1,11 @@
 import React, { useCallback, useState } from 'react';
-import styled from 'styled-components';
-import { UncontrolledTooltip } from 'reactstrap';
 
 import { PlanContextFragment } from 'common/__generated__/graphql';
-import { ActionListAction, ColumnConfig } from './dashboard.types';
+import { UncontrolledTooltip } from 'reactstrap';
+import styled from 'styled-components';
+
 import { COLUMN_CONFIG } from './dashboard.constants';
+import { ActionListAction, ColumnConfig } from './dashboard.types';
 
 const StyledRow = styled.tr`
   font-family: ${(props) =>
@@ -120,14 +121,19 @@ const ActionTableRow = ({ columns, action, plan, planViewUrl }: Props) => {
         const { renderTooltipContent, cellClassName, rowHeader, renderCell } =
           columnConfig;
         const hasTooltip = !!renderTooltipContent;
-        const content = renderCell(action, plan, planViewUrl);
+        const content = renderCell(
+          action,
+          plan,
+          planViewUrl,
+          column?.attributeType
+        );
         const id = `row-${action.id}-${i}`;
         const className = `${cellClassName} ${
           hasTooltip ? 'has-tooltip' : ''
         } ${rowHeader ? 'row-title' : ''}`;
         const tooltip = hasTooltip && (
           <UncontrolledTooltip container={rowEl ?? undefined} target={id}>
-            {renderTooltipContent(action, plan)}
+            {renderTooltipContent(action, plan, column?.attributeType)}
           </UncontrolledTooltip>
         );
 
