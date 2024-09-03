@@ -1,15 +1,16 @@
-import { gql, useMutation } from '@apollo/client';
-import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { useForm, Controller } from 'react-hook-form';
-import { Alert, Spinner } from 'reactstrap';
 
 import Button from 'components/common/Button';
-import TextInput from 'components/common/TextInput';
-import SelectInput from 'components/common/SelectInput';
 import CheckboxInput from 'components/common/CheckboxInput';
+import SelectInput from 'components/common/SelectInput';
+import TextInput from 'components/common/TextInput';
 import { useTranslations } from 'next-intl';
 import { usePathname, useSearchParams } from 'next/navigation';
+import PropTypes from 'prop-types';
+import { Controller, useForm } from 'react-hook-form';
+import { Alert, Spinner } from 'reactstrap';
+
+import { gql, useMutation } from '@apollo/client';
 
 const CREATE_USER_FEEDBACK = gql`
   mutation CreateUserFeedback($input: UserFeedbackMutationInput!) {
@@ -247,6 +248,8 @@ const FeedbackForm = ({
                   label={`${t('feedback')} (${t('required-field')})`}
                   invalid={errors.comment?.type === 'required'}
                   type="textarea"
+                  rows="3"
+                  style={{ height: 'auto' }}
                   formFeedback={errors.comment && t('error-feedback-required')}
                 />
               )}
