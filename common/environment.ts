@@ -23,5 +23,5 @@ export const authIssuer = process.env.NEXT_PUBLIC_AUTH_ISSUER;
 export const logGraphqlQueries =
   isServer && process.env.LOG_GRAPHQL_QUERIES === 'true';
 
-export const pathsInstanceOverride =
+export const pathsInstance =
   process.env.NEXT_PUBLIC_KAUSAL_PATHS_INSTANCE_UUID || 'sunnydale';
