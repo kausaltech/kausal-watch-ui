@@ -1,10 +1,14 @@
-import { getContentPage } from '@/queries/get-content-page';
-import { notFound } from 'next/navigation';
 import React from 'react';
-import { Content } from './ContentPage';
+
 import { Metadata, ResolvingMetadata } from 'next';
-import { getMetaDescription, getMetaImage } from '@/utils/metadata';
+import { notFound } from 'next/navigation';
+
+import { getContentPage } from '@/queries/get-content-page';
 import { tryRequest } from '@/utils/api.utils';
+import { getMetaDescription, getMetaImage } from '@/utils/metadata';
+
+import { Content } from './ContentPage';
+import { PathsContent } from './PathsPage';
 
 type Props = {
   params: { slug: string[]; plan: string };
@@ -44,11 +48,14 @@ export default async function ContentPage({ params }: Props) {
   const { slug, plan } = params;
   const path = getPath(slug);
 
+  // TODO: Get pathsInstance from plan data or move to child component
+  const pathsInstance = 'sunnydale';
+
   const { data } = await tryRequest(getContentPage(plan, path));
 
   if (!data?.planPage) {
     return notFound();
   }
-
+  if (pathsInstance) return <PathsContent page={data.planPage} />;
   return <Content page={data.planPage} />;
 }
