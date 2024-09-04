@@ -2,17 +2,19 @@ import React, { Suspense } from 'react';
 
 import { MultiUseImageFragmentFragment } from 'common/__generated__/graphql';
 import { CommonContentBlockProps } from 'common/blocks.types';
+import { beautifyValue } from 'common/data/format';
 import { Link } from 'common/links';
 import Card from 'components/common/Card';
 import { useFallbackCategories } from 'context/categories';
 import { readableColor } from 'polished';
 import { GET_ACTION_LIST } from 'queries/get-paths-actions';
-import { Col } from 'reactstrap';
+import { Col, Container, Row } from 'reactstrap';
 import styled from 'styled-components';
 
 import { usePlan } from '@/context/plan';
 import { CATEGORY_FRAGMENT } from '@/fragments/category.fragment';
-import { getHttpHeaders } from '@/utils/paths.utils';
+import { getHttpHeaders } from '@/utils/paths/paths.utils';
+import PathsActionNode from '@/utils/paths/PathsActionNode';
 import { useSuspenseQuery } from '@apollo/client';
 import { Theme } from '@kausal/themes/types';
 
@@ -113,12 +115,19 @@ const PATHS_WATCH_MOCK_MAP = {
   MP3: 'reduce_transportation_demand',
   MP4: 'shift_to_sustainable_transport_modes',
   MP5: 'improved_vehicle_fleet',
+  MP2: 'reduce_building_heat_demand',
+  MP1: 'heater_replacement_and_district_heat',
+  MP6: 'install_waste_treatment_ccs',
 };
 
 const getPathsActionForCategory = (category, actions) => {
-  return actions.find(
+  const pathsActionForCategory = actions.find(
     (action) => action.id === PATHS_WATCH_MOCK_MAP[category.identifier]
   );
+  if (!pathsActionForCategory) {
+    return null;
+  }
+  return new PathsActionNode(pathsActionForCategory);
 };
 
 const CategoryList = (props) => {
@@ -139,56 +148,54 @@ const CategoryList = (props) => {
     console.log('pathsAction', pathsAction);
     return {
       ...cat,
-      level: pathsAction?.decisionLevel,
-      unit:
-        pathsAction?.unit.htmlShort ||
-        pathsAction?.unit.htmlLong ||
-        pathsAction?.unit.short ||
-        pathsAction?.unit.long,
-      cumulativeForecast: pathsAction?.impactMetric.cumulativeForecastValue,
+      pathsAction: pathsAction,
     };
   });
 
   console.log('categoryData', categoryData);
   return (
-    <>
-      {categoryData
-        ?.filter((cat) => cat?.categoryPage?.live)
-        .map(
-          (cat) =>
-            cat.categoryPage && (
-              <Col
-                tag="li"
-                xs="12"
-                sm="6"
-                lg="4"
-                key={cat.id}
-                className="mb-5 d-flex align-items-stretch"
-              >
-                <Link href={cat.categoryPage.urlPath} legacyBehavior>
-                  <a className="card-wrapper">
-                    <Card
-                      colorEffect={cat.color ?? undefined}
-                      altText={cat.image?.altText}
-                    >
-                      <div>
-                        {cat.level}
-                        <CardHeader className="card-title">
-                          {!cat?.type.hideCategoryIdentifiers && (
-                            <Identifier>{cat.identifier}. </Identifier>
-                          )}
-                          {cat.name}
-                        </CardHeader>
-                        {cat.leadParagraph && <p>{cat.leadParagraph}</p>}
-                        {cat.cumulativeForecast} {cat.unit}
-                      </div>
-                    </Card>
-                  </a>
-                </Link>
-              </Col>
-            )
-        )}
-    </>
+    <Container>
+      <Row>
+        {categoryData
+          ?.filter((cat) => cat?.categoryPage?.live)
+          .map(
+            (cat) =>
+              cat.categoryPage && (
+                <Col
+                  tag="li"
+                  xs="12"
+                  sm="6"
+                  lg="4"
+                  key={cat.id}
+                  className="mb-5 d-flex align-items-stretch"
+                >
+                  <Link href={cat.categoryPage.urlPath} legacyBehavior>
+                    <a className="card-wrapper">
+                      <Card
+                        colorEffect={cat.color ?? undefined}
+                        altText={cat.image?.altText}
+                      >
+                        <div>
+                          <CardHeader className="card-title">
+                            {!cat?.type.hideCategoryIdentifiers && (
+                              <Identifier>{cat.identifier}. </Identifier>
+                            )}
+                            {cat.name}
+                          </CardHeader>
+                          {cat.leadParagraph && <p>{cat.leadParagraph}</p>}
+                          {beautifyValue(
+                            cat.pathsAction.getCumulativeImpact()
+                          )}{' '}
+                          {cat.pathsAction.getUnit()}
+                        </div>
+                      </Card>
+                    </a>
+                  </Link>
+                </Col>
+              )
+          )}
+      </Row>
+    </Container>
   );
 };
 
