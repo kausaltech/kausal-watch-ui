@@ -9,7 +9,7 @@ import styled from 'styled-components';
 import ContentLoader from '@/components/common/ContentLoader';
 import OutcomeCardSet from '@/components/paths/OutcomeCardSet';
 import GET_PAGE from '@/queries/get-paths-page';
-import { getHttpHeaders } from '@/utils/paths.utils';
+import { getHttpHeaders } from '@/utils/paths/paths.utils';
 import { useSuspenseQuery } from '@apollo/client';
 
 const ErrorBackground = styled.div`
