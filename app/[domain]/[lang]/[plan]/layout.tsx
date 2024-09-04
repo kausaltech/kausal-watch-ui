@@ -4,7 +4,7 @@ import { Metadata } from 'next';
 import { cookies, headers } from 'next/headers';
 import { notFound } from 'next/navigation';
 
-import { pathsInstanceOverride } from '@/common/environment';
+import { pathsInstance } from '@/common/environment';
 import { getThemeStaticURL, loadTheme } from '@/common/theme';
 import { SharedIcons } from '@/components/common/Icon';
 import { MatomoAnalytics } from '@/components/MatomoAnalytics';
@@ -113,7 +113,7 @@ export default async function PlanLayout({ params, children }: Props) {
   //const planData = data.plan;
   //WIP: Augment plan data with kausalPathsInstanceUuid until backend is updated
   const planData = { ...data.plan };
-  planData.kausalPathsInstanceUuid = pathsInstanceOverride;
+  planData.kausalPathsInstanceUuid = pathsInstance;
 
   return (
     <>
