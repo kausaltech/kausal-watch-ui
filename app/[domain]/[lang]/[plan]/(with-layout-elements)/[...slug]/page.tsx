@@ -10,6 +10,8 @@ import { Content } from './ContentPage';
 import { getMetaDescription, getMetaImage } from '@/utils/metadata';
 import { tryRequest } from '@/utils/api.utils';
 
+import { PathsContent } from './PathsPage';
+
 type Props = {
   params: { slug: string[]; plan: string };
 };
@@ -53,9 +55,12 @@ export default async function ContentPage({ params }: Props) {
   const { data } = await tryRequest<GetContentPageQuery>(
     getContentPage(plan, path)
   );
+  // TODO: Get pathsInstance from plan data or move to child component
+  const pathsInstance = 'sunnydale';
 
   if (!data?.planPage) {
     return notFound();
   }
+  if (pathsInstance) return <PathsContent page={data.planPage} />;
   return <Content page={data.planPage as GeneralPlanPage} />;
 }
