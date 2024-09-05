@@ -16939,6 +16939,7 @@ __metadata:
     react-medium-image-zoom: ^5.1.1
     react-plotly.js: ^2.6.0
     react-popper: ^2.3.0
+    react-range: ^1.10.0
     react-select: ^5.4.0
     react-sizeme: ^3.0.2
     reactstrap: 9.2.1
@@ -20481,6 +20482,16 @@ __metadata:
   version: 2.0.0
   resolution: "react-property@npm:2.0.0"
   checksum: 8a444df30ef0937689c7968dae2501a0ca523777169f450e1f7ef5beeb855d6509bd058bf612f6ed8f459aa35468335d356e50264492e1938586e59fdb988262
+  languageName: node
+  linkType: hard
+
+"react-range@npm:^1.10.0":
+  version: 1.10.0
+  resolution: "react-range@npm:1.10.0"
+  peerDependencies:
+    react: "*"
+    react-dom: "*"
+  checksum: 50dd2a7bdf011d74553a56f700da79d7a6cb9a45b31b719355dfb7331b124c364c59ae873d2f4b52b68aff8bf5869381f94fd63e1080e143c9892d1b95e33723
   languageName: node
   linkType: hard
 

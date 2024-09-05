@@ -1,6 +1,8 @@
 'use client';
-import { useEffect } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
+import { useTranslations } from 'next-intl';
+import { Popover, PopoverBody } from 'reactstrap';
 import styled from 'styled-components';
 
 import {
@@ -9,6 +11,9 @@ import {
   yearRangeVar,
 } from '@/context/paths/cache';
 import { usePaths } from '@/context/paths/paths';
+import { useReactiveVar } from '@apollo/client';
+
+import RangeSelector from './RangeSelector';
 
 const FloatingToolbar = styled.div`
   position: fixed;
@@ -22,6 +27,93 @@ const FloatingToolbar = styled.div`
   justify-content: space-between;
   align-items: center;
 `;
+
+const ButtonLabel = styled.div`
+  white-space: nowrap;
+  font-size: 0.8rem;
+`;
+
+const StyledButton = styled.button<{ ref: HTMLButtonElement }>`
+  width: 100%;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  font-weight: 400;
+  font-size: 0.9rem;
+  padding: ${({ theme }) => theme.spaces.s050};
+
+  &:focus {
+    box-shadow: 0 0 0 0.25rem ${(props) => props.theme.inputBtnFocusColor};
+  }
+`;
+
+const YearRangeSelector = (props) => {
+  const { minYear, maxYear, referenceYear } = props;
+  const inputReference = useRef<HTMLDivElement>(null);
+  const triggerReference = useRef<HTMLButtonElement>(null);
+  const [popoverOpen, setPopoverOpen] = useState(false);
+  const toggle = () => {
+    setPopoverOpen(!popoverOpen);
+    // Focus on the input when the popover is opened
+    setTimeout(() => {
+      if (popoverOpen) {
+        triggerReference?.current?.focus();
+      } else {
+        inputReference?.current?.focus();
+      }
+    }, 0);
+  };
+
+  // State of display settings
+  // Year range
+  const yearRange = useReactiveVar(yearRangeVar);
+
+  const setYearRange = useCallback(
+    (newRange: [number, number]) => {
+      yearRangeVar(newRange);
+    },
+    [yearRangeVar]
+  );
+  const t = useTranslations();
+
+  if (!yearRange) return <div>Loading...</div>;
+  return (
+    <div>
+      <ButtonLabel>{t('comparing-years')}</ButtonLabel>
+      <StyledButton
+        className="btn btn-light"
+        id="rangeSelector"
+        aria-expanded={popoverOpen}
+        aria-haspopup="dialog"
+        aria-controls="rangeSelectorPopover"
+        ref={triggerReference}
+      >
+        {`${yearRange[0]}–${yearRange[1]}`}
+      </StyledButton>
+      <Popover
+        placement="bottom"
+        isOpen={popoverOpen}
+        target="rangeSelector"
+        toggle={toggle}
+        trigger="click"
+        aria-modal="true"
+      >
+        <PopoverBody>
+          <div tabIndex={-1} ref={inputReference}>
+            <RangeSelector
+              min={minYear}
+              max={maxYear}
+              defaultMin={yearRange[0]}
+              defaultMax={yearRange[1]}
+              referenceYear={referenceYear}
+              handleChange={setYearRange}
+            />
+          </div>
+        </PopoverBody>
+      </Popover>
+    </div>
+  );
+};
 
 const PathsToolbar = () => {
   const paths = usePaths();
@@ -59,8 +151,11 @@ const PathsToolbar = () => {
   console.log('activeScenario', activeScenario);
   return (
     <FloatingToolbar>
-      {paths.instance.id} | Years: {yearRange[0]} - {yearRange[1]} | Goal:
-      {activeGoal?.label} | Scenario: {activeScenario.name}
+      <YearRangeSelector
+        minYear={paths.instance.minimumHistoricalYear}
+        maxYear={paths.instance.modelEndYear}
+        referenceYear={paths.instance.referenceYear}
+      />
     </FloatingToolbar>
   );
 };

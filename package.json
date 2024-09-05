@@ -59,6 +59,7 @@
     "react-medium-image-zoom": "^5.1.1",
     "react-plotly.js": "^2.6.0",
     "react-popper": "^2.3.0",
+    "react-range": "^1.10.0",
     "react-select": "^5.4.0",
     "react-sizeme": "^3.0.2",
     "reactstrap": "9.2.1",
