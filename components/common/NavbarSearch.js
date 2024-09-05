@@ -1,5 +1,5 @@
 'use client';
-import { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { InputGroup } from 'reactstrap';
 import { usePopper } from 'react-popper';
@@ -312,7 +312,7 @@ const ResultList = (props) => {
   );
 };
 
-function NavbarSearch() {
+const NavbarSearch = React.memo(() => {
   const plan = usePlan();
   const apolloClient = useApolloClient();
 
@@ -360,7 +360,7 @@ function NavbarSearch() {
       </WithSearch>
     </SearchProvider>
   );
-}
+});
 
 function Search({ isLoading, searchTerm, setSearchTerm, results }) {
   const searchInput = useRef();
