@@ -1,8 +1,11 @@
 import React, { useContext } from 'react';
 
-// import type { GetInstanceContextQuery } from 'common/__generated__/graphql';
-
-export type SiteContextScenario = any;
+import {
+  InstanceType,
+  NormalizationType,
+  ParameterInterface,
+  ScenarioType,
+} from '@/common/__generated__/paths/graphql';
 
 export type SiteI18nConfig = {
   locale: string;
@@ -12,11 +15,10 @@ export type SiteI18nConfig = {
 
 export type PathsContextType =
   | {
-      instance: any;
-      availableNormalizations: any[];
-      menuPages: any[];
-      parameters: any[];
-      scenarios: SiteContextScenario[];
+      instance: InstanceType;
+      availableNormalizations: NormalizationType[];
+      parameters: ParameterInterface[];
+      scenarios: ScenarioType[];
     }
   | undefined;
 

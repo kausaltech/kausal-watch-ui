@@ -65,14 +65,6 @@ const GET_INSTANCE_CONTEXT = gql`
       label
       isActive
     }
-    menuPages: pages(inMenu: true) {
-      id
-      title
-      urlPath
-      parent {
-        id
-      }
-    }
     parameters {
       ...ActionParameter
     }
