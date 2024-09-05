@@ -1,0 +1,21 @@
+{
+  "action-impact": "Massnahmenauswirkungen",
+  "action": "Massnahmenpaket",
+  "actions": "Massnahmenpakete",
+  "actions-available": "Massnahmen in Szenario",
+  "actions-influencing-this": "Für die Abschätzung der zukünftigen {{sector}} berücksichtigte Massnahmenpakete",
+  "plot-action-impact": "Massnahmenauswirkungen",
+  "plot-without-action": "Ohne diese Massnahme",
+  "table-action-impact": "Auswirkung der Massnahme",
+  "plot-total": "Total",
+  "actions-group-type": "Bereich",
+  "actions-count": "{{ count }} Massnahmenpakete",
+  "actions-as-comparison": "Vergleich Auswirkung",
+  "active-actions": "{{count}}/{{total}} aktive Massnahmenpakete",
+  "watch-action-list-title": "Massnahmen",
+  "outcome-sub-nodes": "Bereiche",
+  "outcome-sub-nodes-secondary": "Emissionsquellen",
+  "table-unit": "Masseinheit",
+  "tco2-e-inhabitant": "t CO<sub>2</sub>-Äquivalente/Einw./a",
+  "ktco2-e": "kt CO<sub>2</sub>-Äquivalente/a"
+}

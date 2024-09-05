@@ -84,7 +84,9 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
     case 'AccessibilityStatementContactInformationBlock':
     case 'AccessibilityStatementPreparationInformationBlock':
     default:
-      return <div id={id}>{`Component for ${__typename} does not exist`}</div>;
+      return (
+        <div id={id} hidden>{`Component for ${__typename} does not exist`}</div>
+      );
   }
 }
 
