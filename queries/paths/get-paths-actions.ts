@@ -33,8 +33,8 @@ const ACTION_PARAMETER_FRAGMENT = gql`
   }
 `;
 
-const GET_ACTION_LIST = gql`
-  query GetActionList($goal: ID) {
+const GET_PATHS_ACTION_LIST = gql`
+  query GetPathsActionList($goal: ID) {
     instance {
       id
       actionGroups {
@@ -146,4 +146,4 @@ const GET_ACTION_LIST = gql`
   ${ACTION_PARAMETER_FRAGMENT}
 `;
 
-export { ACTION_PARAMETER_FRAGMENT, GET_ACTION_LIST };
+export { ACTION_PARAMETER_FRAGMENT, GET_PATHS_ACTION_LIST };

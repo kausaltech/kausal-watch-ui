@@ -10,8 +10,11 @@ import SecondaryNavigation from 'components/common/SecondaryNavigation';
 import StreamField from 'components/common/StreamField';
 import CategoryPageHeaderBlock from 'components/contentblocks/CategoryPageHeaderBlock';
 import ContentPageHeaderBlock from 'components/contentblocks/ContentPageHeaderBlock';
+import PathsCategoryPageContent from 'components/paths/CategoryPageContent';
 import { Col, Container, Row } from 'reactstrap';
 import { useTheme } from 'styled-components';
+
+import { usePaths } from '@/context/paths/paths';
 
 export type GeneralPlanPage = NonNullable<GetContentPageQuery['planPage']>;
 
@@ -72,8 +75,7 @@ const PageHeaderBlock = ({ color, page }: PageHeaderBlockProps) => {
 
 export const Content = ({ page }: { page: GeneralPlanPage }) => {
   // TODO: Resolve shareImageUrl by pagetype
-  const { title, headerImage } = page;
-  const imageUrl = headerImage?.large.src;
+  const pathsInstance = usePaths();
   const theme = useTheme();
   const isCategoryPage = page.__typename === 'CategoryPage';
   const categoryColor =
@@ -87,45 +89,62 @@ export const Content = ({ page }: { page: GeneralPlanPage }) => {
       ? page?.parent?.children ?? []
       : [];
 
-  return (
-    <article>
-      <PageHeaderBlock
-        page={page}
-        color={isCategoryPage ? categoryColor : undefined}
-      />
+  if (pathsInstance)
+    return (
+      <article>
+        {isCategoryPage ? (
+          <PathsCategoryPageContent
+            page={page}
+            pageSectionColor={pageSectionColor}
+          />
+        ) : (
+          <div>Insert content page here</div>
+        )}
+      </article>
+    );
+  else
+    return (
+      <article>
+        <PageHeaderBlock
+          page={page}
+          color={isCategoryPage ? categoryColor : undefined}
+        />
 
-      {isCategoryPage ? (
-        <CategoryPageContent page={page} pageSectionColor={pageSectionColor} />
-      ) : (
-        <div className="content-area">
-          {page.leadContent && (
-            <Container className="my-5">
-              <Row>
-                <Col lg={{ size: 8, offset: 2 }} md={{ size: 10, offset: 1 }}>
-                  <RichText html={page.leadContent} />
-                </Col>
-              </Row>
-            </Container>
-          )}
+        {isCategoryPage ? (
+          <CategoryPageContent
+            page={page}
+            pageSectionColor={pageSectionColor}
+          />
+        ) : (
+          <div className="content-area">
+            {page.leadContent && (
+              <Container className="my-5">
+                <Row>
+                  <Col lg={{ size: 8, offset: 2 }} md={{ size: 10, offset: 1 }}>
+                    <RichText html={page.leadContent} />
+                  </Col>
+                </Row>
+              </Container>
+            )}
 
-          {siblings.length > 1 && (
-            <SecondaryNavigation
-              links={siblings}
-              activeLink={page.id}
-              title={page?.parent?.title || ''}
-            />
-          )}
+            {siblings.length > 1 && (
+              <SecondaryNavigation
+                links={siblings}
+                activeLink={page.id}
+                title={page?.parent?.title || ''}
+              />
+            )}
 
-          {page.body && (
-            <StreamField
-              page={page}
-              blocks={page.body}
-              color={pageSectionColor}
-              hasSidebar={siblings.length > 1}
-            />
-          )}
-        </div>
-      )}
-    </article>
-  );
+            {page.body && (
+              <StreamField
+                page={page}
+                blocks={page.body}
+                color={pageSectionColor}
+                hasSidebar={siblings.length > 1}
+              />
+            )}
+          </div>
+        )}
+      </article>
+    );
 };

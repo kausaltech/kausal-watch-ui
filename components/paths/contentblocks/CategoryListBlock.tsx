@@ -7,7 +7,6 @@ import { Link } from 'common/links';
 import Card from 'components/common/Card';
 import { useFallbackCategories } from 'context/categories';
 import { readableColor } from 'polished';
-import { GET_ACTION_LIST } from 'queries/get-paths-actions';
 import { Col, Container, Row } from 'reactstrap';
 import styled from 'styled-components';
 
