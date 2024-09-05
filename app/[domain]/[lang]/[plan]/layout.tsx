@@ -8,17 +8,17 @@ import { pathsInstance } from '@/common/environment';
 import { getThemeStaticURL, loadTheme } from '@/common/theme';
 import { SharedIcons } from '@/components/common/Icon';
 import { MatomoAnalytics } from '@/components/MatomoAnalytics';
+import PathsProvider from '@/components/providers/PathsProvider';
 import PlanProvider from '@/components/providers/PlanProvider';
 import ThemeProvider from '@/components/providers/ThemeProvider';
 import { SELECTED_WORKFLOW_COOKIE_KEY } from '@/constants/workflow';
 import { WorkflowProvider } from '@/context/workflow-selector';
 import { getPlan } from '@/queries/get-plan';
+import { getPathsInstance } from '@/queries/paths/get-paths-instance';
 import { GlobalStyles } from '@/styles/GlobalStyles';
 import { tryRequest } from '@/utils/api.utils';
 import { getMetaTitles } from '@/utils/metadata';
 import { captureException } from '@sentry/nextjs';
-
-import { UpdateApolloContext } from './UpdateApolloContext';
 
 type Props = {
   params: { plan: string; domain: string; lang: string };
@@ -115,6 +115,14 @@ export default async function PlanLayout({ params, children }: Props) {
   const planData = { ...data.plan };
   planData.kausalPathsInstanceUuid = pathsInstance;
 
+  let pathsData = undefined;
+  if (planData.kausalPathsInstanceUuid) {
+    const { data } = await tryRequest(
+      getPathsInstance(planData.kausalPathsInstanceUuid)
+    );
+    if (data?.instance) pathsData = data;
+  }
+
   return (
     <>
       {theme.name && (
@@ -133,13 +141,14 @@ export default async function PlanLayout({ params, children }: Props) {
         <GlobalStyles />
         <SharedIcons />
         <PlanProvider plan={planData}>
-          <WorkflowProvider
-            initialWorkflow={selectedWorkflow?.value as string | undefined}
-            workflowStates={data.workflowStates}
-          >
-            <UpdateApolloContext domain={domain} />
-            {children}
-          </WorkflowProvider>
+          <PathsProvider instance={pathsData}>
+            <WorkflowProvider
+              initialWorkflow={selectedWorkflow?.value as string | undefined}
+              workflowStates={data.workflowStates}
+            >
+              {children}
+            </WorkflowProvider>
+          </PathsProvider>
         </PlanProvider>
       </ThemeProvider>
     </>
