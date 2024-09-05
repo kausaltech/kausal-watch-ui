@@ -1,14 +1,14 @@
 'use client';
 import { useMemo, useState } from 'react';
 
-import { usePlan } from 'context/plan';
 import { useTranslations } from 'next-intl';
 import { Card, CardBody, Col, Container, Row } from 'reactstrap';
 import styled from 'styled-components';
 
 import ContentLoader from '@/components/common/ContentLoader';
 import OutcomeCardSet from '@/components/paths/OutcomeCardSet';
-import GET_PAGE from '@/queries/get-paths-page';
+import { usePaths } from '@/context/paths/paths';
+import GET_PAGE from '@/queries/paths/get-paths-page';
 import { getHttpHeaders } from '@/utils/paths/paths.utils';
 import { useSuspenseQuery } from '@apollo/client';
 
@@ -51,22 +51,21 @@ const findVisibleNodes = (allNodes, lastNodeId: string, visibleNodes) => {
 
 export default function PathsPage() {
   const t = useTranslations();
-  const plan = usePlan();
-  const pathsInstance = plan.kausalPathsInstanceUuid;
+  const pathsInstance = usePaths();
   const path = '';
   const { data } = useSuspenseQuery(GET_PAGE, {
     variables: { path, goal: null },
     context: {
       uri: '/api/graphql-paths',
-      headers: getHttpHeaders({ instanceIdentifier: pathsInstance }),
+      headers: getHttpHeaders({
+        instanceIdentifier: pathsInstance?.instance.id,
+      }),
     },
   });
 
   if (!data) {
     return <ContentLoader />;
   }
-
-  console.log('data', data);
 
   const { outcomeNode } = data.page;
   const { upstreamNodes } = outcomeNode;
