@@ -10,11 +10,18 @@ import { readableColor } from 'polished';
 import { Col, Container, Row } from 'reactstrap';
 import styled from 'styled-components';
 
+import {
+  activeGoalVar,
+  activeScenarioVar,
+  yearRangeVar,
+} from '@/context/paths/cache';
+import { usePaths } from '@/context/paths/paths';
 import { usePlan } from '@/context/plan';
 import { CATEGORY_FRAGMENT } from '@/fragments/category.fragment';
+import { GET_PATHS_ACTION_LIST } from '@/queries/paths/get-paths-actions';
 import { getHttpHeaders } from '@/utils/paths/paths.utils';
 import PathsActionNode from '@/utils/paths/PathsActionNode';
-import { useSuspenseQuery } from '@apollo/client';
+import { useReactiveVar, useSuspenseQuery } from '@apollo/client';
 import { Theme } from '@kausal/themes/types';
 
 const getColor = (theme: Theme, darkFallback = theme.themeColors.black) =>
@@ -132,8 +139,21 @@ const getPathsActionForCategory = (category, actions) => {
 const CategoryList = (props) => {
   const { categories } = props;
   const plan = usePlan();
-  const pathsInstance = plan.kausalPathsInstanceUuid;
-  const { data } = useSuspenseQuery(GET_ACTION_LIST, {
+  const paths = usePaths();
+  const activeGoal = useReactiveVar(activeGoalVar);
+  const activeScenario = useReactiveVar(activeScenarioVar);
+  const yearRange = useReactiveVar(yearRangeVar);
+
+  console.log(
+    'activeGoal',
+    activeGoal,
+    'activeScenario',
+    activeScenario,
+    'yearRange',
+    yearRange
+  );
+  const pathsInstance = paths.instance.id;
+  const { data } = useSuspenseQuery(GET_PATHS_ACTION_LIST, {
     variables: { goal: null },
     context: {
       uri: '/api/graphql-paths',
