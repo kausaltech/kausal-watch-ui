@@ -25,3 +25,6 @@ export const logGraphqlQueries =
 
 export const pathsInstance =
   process.env.NEXT_PUBLIC_KAUSAL_PATHS_INSTANCE_UUID || 'sunnydale';
+
+export const pathsApiUrl =
+  process.env.NEXT_PUBLIC_PATHS_API_URL || 'https://api.paths.kausal.dev/v1';
