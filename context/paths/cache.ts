@@ -1,12 +1,12 @@
-import { SiteContextScenario } from 'context/site';
-
+import {
+  InstanceGoalEntry,
+  ScenarioType,
+} from '@/common/__generated__/paths/graphql';
 import { makeVar } from '@apollo/client';
 
-import { InstanceGoal } from './instance';
-
 export const yearRangeVar = makeVar<[number, number]>(null!);
-export const activeScenarioVar = makeVar<SiteContextScenario>(null!);
-export const activeGoalVar = makeVar<InstanceGoal | null>(null);
+export const activeScenarioVar = makeVar<ScenarioType>(null!);
+export const activeGoalVar = makeVar<InstanceGoalEntry | null>(null);
 
 type SettingsVarType = {
   iconBase: string;
