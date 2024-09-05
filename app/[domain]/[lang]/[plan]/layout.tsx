@@ -120,7 +120,9 @@ export default async function PlanLayout({ params, children }: Props) {
     const { data } = await tryRequest(
       getPathsInstance(planData.kausalPathsInstanceUuid)
     );
-    if (data?.instance) pathsData = data;
+    if (data?.instance) {
+      pathsData = data;
+    }
   }
 
   return (

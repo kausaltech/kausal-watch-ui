@@ -1,9 +1,11 @@
 import { ReactNode } from 'react';
 
-import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { StyledMain } from './StyledMain';
+import Header from '@/components/Header';
+import PathsToolbar from '@/components/paths/PathsToolbar';
+
 import { JsonLd } from './JsonLd';
+import { StyledMain } from './StyledMain';
 
 type Props = {
   params: { domain: string };
@@ -21,6 +23,7 @@ export default function Layout({ children, params }: Props) {
       <Header />
       <StyledMain id="main">{children}</StyledMain>
       <Footer />
+      <PathsToolbar />
     </>
   );
 }
