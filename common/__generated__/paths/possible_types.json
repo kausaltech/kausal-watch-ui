@@ -1,0 +1,53 @@
+{
+  "possibleTypes": {
+    "NodeInterface": [
+      "ActionNode",
+      "Node"
+    ],
+    "PageInterface": [
+      "ActionListPage",
+      "InstanceRootPage",
+      "OutcomePage",
+      "Page",
+      "StaticPage"
+    ],
+    "ParameterInterface": [
+      "BoolParameterType",
+      "NumberParameterType",
+      "StringParameterType",
+      "UnknownParameterType"
+    ],
+    "SnippetObjectType": [
+      "InstanceSiteContent"
+    ],
+    "StreamFieldInterface": [
+      "BlockQuoteBlock",
+      "BooleanBlock",
+      "CardListBlock",
+      "CharBlock",
+      "ChoiceBlock",
+      "DateBlock",
+      "DateTimeBlock",
+      "DecimalBlock",
+      "DocumentChooserBlock",
+      "EmailBlock",
+      "EmbedBlock",
+      "FloatBlock",
+      "ImageChooserBlock",
+      "IntegerBlock",
+      "ListBlock",
+      "PageChooserBlock",
+      "RawHTMLBlock",
+      "RegexBlock",
+      "RichTextBlock",
+      "SnippetChooserBlock",
+      "StaticBlock",
+      "StreamBlock",
+      "StreamFieldBlock",
+      "StructBlock",
+      "TextBlock",
+      "TimeBlock",
+      "URLBlock"
+    ]
+  }
+}
