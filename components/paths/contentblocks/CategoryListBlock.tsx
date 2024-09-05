@@ -144,14 +144,6 @@ const CategoryList = (props) => {
   const activeScenario = useReactiveVar(activeScenarioVar);
   const yearRange = useReactiveVar(yearRangeVar);
 
-  console.log(
-    'activeGoal',
-    activeGoal,
-    'activeScenario',
-    activeScenario,
-    'yearRange',
-    yearRange
-  );
   const pathsInstance = paths.instance.id;
   const { data } = useSuspenseQuery(GET_PATHS_ACTION_LIST, {
     variables: { goal: null },
@@ -202,9 +194,13 @@ const CategoryList = (props) => {
                             {cat.name}
                           </CardHeader>
                           {cat.leadParagraph && <p>{cat.leadParagraph}</p>}
-                          {beautifyValue(
-                            cat.pathsAction.getCumulativeImpact()
-                          )}{' '}
+                          {yearRange ? (
+                            beautifyValue(
+                              cat.pathsAction.getYearlyImpact(yearRange[1])
+                            )
+                          ) : (
+                            <span>---</span>
+                          )}
                           {cat.pathsAction.getUnit()}
                         </div>
                       </Card>
