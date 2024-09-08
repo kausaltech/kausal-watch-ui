@@ -6,6 +6,7 @@ import { ErrorPage } from 'components/common/ErrorPage';
 import ActionCategoryFilterCardsBlock from 'components/contentblocks/ActionCategoryFilterCardsBlock';
 import ActionListBlock from 'components/contentblocks/ActionListBlock';
 import CategoryListBlock from 'components/paths/contentblocks/CategoryListBlock';
+import CategoryTypeListBlock from 'components/paths/contentblocks/CategoryTypeListBlock';
 import { usePlan } from 'context/plan';
 import { ColProps } from 'reactstrap';
 
@@ -48,11 +49,34 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
       } else if (pageCategory) {
         categories = pageCategory.children;
       }
-      console.log('CategoryListBlock', block);
       return (
         <CategoryListBlock
           id={id}
           categories={categories}
+          heading={heading ?? undefined}
+          lead={lead}
+        />
+      );
+    }
+
+    case 'CategoryLevelListBlock': {
+      const {
+        heading,
+        lead,
+        categoryType,
+        category,
+        listLevel,
+        groupingLevel,
+      } = block;
+      const categories = categoryType.categories.filter(
+        (cat) => cat.level.id === listLevel.id
+      );
+
+      return (
+        <CategoryTypeListBlock
+          id={id}
+          categories={categories}
+          groupByLevel={groupingLevel}
           heading={heading ?? undefined}
           lead={lead}
         />
@@ -100,7 +124,6 @@ interface StreamFieldProps {
 
 function StreamField(props: StreamFieldProps) {
   const { page, blocks, columnProps } = props;
-
   return (
     <div className={`custom-${page.slug}`}>
       {blocks.map((block, index) => (

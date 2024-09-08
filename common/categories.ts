@@ -32,7 +32,7 @@ export function constructCatHierarchy<
   const objsById: Map<string, CatType> = new Map();
   const ctsById = new Map();
 
-  let cts: CTType[] = ctsIn
+  const cts: CTType[] = ctsIn
     .filter((ctIn) => mapToCommonCategories === false || ctIn.common != null)
     .map((ctIn) => {
       // @ts-ignore
@@ -118,7 +118,7 @@ export function mapActionCategories<
         .map((cat) => {
           if (useCommonCategories && cat.common == null) return;
           const category = useCommonCategories ? cat.common : cat;
-          let catObj = categoriesById.get(category.id);
+          const catObj = categoriesById.get(category.id);
           if (!catObj) return null;
           const categoryPath: Cat[] = [];
           if (
@@ -190,7 +190,7 @@ export const getDeepParents = (category: Category): Category[] =>
     : [...getDeepParents(category.parent), category];
 
 /**
- * Converts a category with nested parents to a flat array of
+ * Converts a category with nested parents to a flat array ofr
  * parents starting with the top-level parent category.
  */
 export const getBreadcrumbsFromCategoryHierarchy = (
