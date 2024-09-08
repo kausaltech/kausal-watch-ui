@@ -21,7 +21,6 @@ import SecondaryNavigation from 'components/common/SecondaryNavigation';
 import StreamField from 'components/common/StreamField';
 import CategoryPageHeaderBlock from 'components/contentblocks/CategoryPageHeaderBlock';
 import ContentPageHeaderBlock from 'components/contentblocks/ContentPageHeaderBlock';
-import PathsCategoryPageContent from 'components/paths/CategoryPageContent';
 import { Col, Container, Row } from 'reactstrap';
 import { useTheme } from 'styled-components';
 
@@ -41,6 +40,7 @@ export type GeneralPlanPage =
   | StaticPage
   | EmptyPage
   | PageWithLeadContent;
+import PathsPageContent from '@/components/paths/PathsPageContent';
 import { usePaths } from '@/context/paths/paths';
 
 type PageHeaderBlockProps = {
@@ -113,6 +113,8 @@ export const Content = ({ page }: { page: GeneralPlanPage }) => {
     page.__typename === 'AccessibilityStatementPage' ||
     page.__typename === 'StaticPage' ||
     page.__typename === 'CategoryPage';
+
+  const isStaticPage = page.__typename === 'StaticPage';
   const categoryColor =
     isCategoryPage && (page.category?.color || page.category?.parent?.color);
   const pageSectionColor = categoryColor || theme.themeColors.light;
@@ -136,21 +138,12 @@ export const Content = ({ page }: { page: GeneralPlanPage }) => {
 
   // Restrict the secondary nav to be shown on StaticPages only currently
   const siblings =
-    hasSecondaryNav && page.__typename === 'StaticPage'
-      ? page?.parent?.children ?? []
-      : [];
+    hasSecondaryNav && isStaticPage ? page?.parent?.children ?? [] : [];
 
   if (pathsInstance)
     return (
       <article>
-        {isCategoryPage ? (
-          <PathsCategoryPageContent
-            page={page}
-            pageSectionColor={pageSectionColor}
-          />
-        ) : (
-          <div>Insert content page here</div>
-        )}
+        <PathsPageContent page={page} />
       </article>
     );
   else

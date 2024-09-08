@@ -1,7 +1,10 @@
 import images from '@/common/images';
 import { gql } from '@apollo/client';
 
-import { CATEGORY_FRAGMENT } from './category.fragment';
+import {
+  CATEGORY_FRAGMENT,
+  RECURSIVE_CATEGORY_FRAGMENT,
+} from './category.fragment';
 
 export const STREAM_FIELD_FRAGMENT = gql`
   fragment StreamFieldFragment on StreamFieldInterface {
@@ -102,7 +105,7 @@ export const STREAM_FIELD_FRAGMENT = gql`
         id
         hideCategoryIdentifiers
         categories {
-          ...CategoryFragment
+          ...CategoryRecursiveFragment
         }
       }
       category {
@@ -270,4 +273,5 @@ export const STREAM_FIELD_FRAGMENT = gql`
   }
   ${images.fragments.multiUseImage}
   ${CATEGORY_FRAGMENT}
+  ${RECURSIVE_CATEGORY_FRAGMENT}
 `;

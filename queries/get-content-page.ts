@@ -1,13 +1,13 @@
-import { gql } from '@apollo/client';
-
-import images from '@/common/images';
 import {
   GetContentPageQuery,
   GetContentPageQueryVariables,
 } from '@/common/__generated__/graphql';
-import { STREAM_FIELD_FRAGMENT } from '../fragments/stream-field.fragment';
+import images from '@/common/images';
+import { gql } from '@apollo/client';
+
 import { ATTRIBUTE_WITH_NESTED_TYPE_FRAGMENT } from '../fragments/action-attribute.fragment';
 import { CATEGORY_FRAGMENT } from '../fragments/category.fragment';
+import { STREAM_FIELD_FRAGMENT } from '../fragments/stream-field.fragment';
 import { getClient } from '../utils/apollo-rsc-client';
 
 export const getContentPage = async (plan: string, path: string) =>
@@ -247,6 +247,9 @@ const GET_CONTENT_PAGE = gql`
         body {
           ...StreamFieldFragment
         }
+      }
+      ... on CategoryTypePage {
+        contentType
       }
       lastPublishedAt
     }
