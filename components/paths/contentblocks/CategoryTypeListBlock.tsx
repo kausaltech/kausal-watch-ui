@@ -1,24 +1,36 @@
 'use client';
-import React, { Suspense } from 'react';
+import React from 'react';
 
-import { MultiUseImageFragmentFragment } from 'common/__generated__/graphql';
+import {
+  CategoryLevel,
+  MultiUseImageFragmentFragment,
+} from 'common/__generated__/graphql';
 import { CommonContentBlockProps } from 'common/blocks.types';
 import { beautifyValue } from 'common/data/format';
 import { Link } from 'common/links';
 import Card from 'components/common/Card';
 import { useFallbackCategories } from 'context/categories';
+import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { Col, Container, Row } from 'reactstrap';
 import styled from 'styled-components';
 
-import { yearRangeVar } from '@/context/paths/cache';
+import { getDeepParents } from '@/common/categories';
+import {
+  activeGoalVar,
+  activeScenarioVar,
+  yearRangeVar,
+} from '@/context/paths/cache';
 import { usePaths } from '@/context/paths/paths';
+import { usePlan } from '@/context/plan';
 import { CATEGORY_FRAGMENT } from '@/fragments/category.fragment';
 import { GET_PATHS_ACTION_LIST } from '@/queries/paths/get-paths-actions';
 import { getHttpHeaders } from '@/utils/paths/paths.utils';
 import PathsActionNode from '@/utils/paths/PathsActionNode';
-import { useReactiveVar, useSuspenseQuery } from '@apollo/client';
+import { useQuery, useReactiveVar } from '@apollo/client';
 import { Theme } from '@kausal/themes/types';
+
+import ActionParameters from '../ActionParameters';
 
 const getColor = (theme: Theme, darkFallback = theme.themeColors.black) =>
   theme.section.categoryList?.color ||
@@ -133,60 +145,76 @@ const getPathsActionForCategory = (category, actions) => {
 };
 
 const CategoryList = (props) => {
-  const { categories } = props;
+  const { categories, groups } = props;
+  const plan = usePlan();
   const paths = usePaths();
+  const activeGoal = useReactiveVar(activeGoalVar);
+  const activeScenario = useReactiveVar(activeScenarioVar);
   const yearRange = useReactiveVar(yearRangeVar);
-
-  const { data } = useSuspenseQuery(GET_PATHS_ACTION_LIST, {
+  const t = useTranslations();
+  const pathsInstance = paths.instance.id;
+  const { data, loading } = useQuery(GET_PATHS_ACTION_LIST, {
+    fetchPolicy: 'no-cache',
     variables: { goal: null },
     context: {
       uri: '/api/graphql-paths',
-      headers: getHttpHeaders({ instanceIdentifier: paths?.instance.id }),
+      headers: getHttpHeaders({ instanceIdentifier: pathsInstance }),
     },
   });
 
+  if (loading) {
+    return <div>Loading...</div>; // Or any loading indicator you prefer
+  }
+
   const categoryData = categories?.map((cat) => {
     const pathsAction = getPathsActionForCategory(cat, data.actions);
-    //console.log('pathsAction', pathsAction);
+
     return {
       ...cat,
       pathsAction: pathsAction,
     };
   });
-
-  //console.log('categoryData', categoryData);
   return (
-    <Container>
-      <Row>
-        {categoryData
-          ?.filter((cat) => cat?.categoryPage?.live)
-          .map(
-            (cat) =>
-              cat.categoryPage && (
-                <Col
-                  tag="li"
-                  xs="12"
-                  sm="6"
-                  lg="4"
-                  key={cat.id}
-                  className="mb-5 d-flex align-items-stretch"
-                >
-                  <Link href={cat.categoryPage.urlPath} legacyBehavior>
-                    <a className="card-wrapper">
-                      <Card
-                        colorEffect={cat.color ?? undefined}
-                        altText={cat.image?.altText}
-                      >
-                        <div>
-                          <CardHeader className="card-title">
-                            {!cat?.type.hideCategoryIdentifiers && (
-                              <Identifier>{cat.identifier}. </Identifier>
-                            )}
-                            {cat.name}
-                          </CardHeader>
-                          {cat.leadParagraph && <p>{cat.leadParagraph}</p>}
-                          {cat.pathsAction && (
-                            <div>
+    <>
+      {groups?.map((group) => (
+        <Row key={group?.id}>
+          <h4>{group.name}</h4>
+          {categoryData
+            ?.filter(
+              (cat) => cat?.categoryPage?.live && hasParent(cat, group.id)
+            )
+            .map(
+              (cat) =>
+                cat.categoryPage && (
+                  <Col
+                    tag="li"
+                    xs="12"
+                    sm="6"
+                    lg="4"
+                    key={cat.id}
+                    className="mb-5 d-flex align-items-stretch"
+                  >
+                    <Card
+                      colorEffect={cat.color ?? undefined}
+                      altText={cat.image?.altText}
+                    >
+                      <div>
+                        {' '}
+                        <Link href={cat.categoryPage.urlPath} legacyBehavior>
+                          <a className="card-wrapper">
+                            <CardHeader className="card-title">
+                              {!cat?.type.hideCategoryIdentifiers && (
+                                <Identifier>{cat.identifier}. </Identifier>
+                              )}
+                              {cat.name}
+                            </CardHeader>
+                          </a>
+                        </Link>
+                        {cat.leadParagraph && <p>{cat.leadParagraph}</p>}
+                        {cat.pathsAction && (
+                          <div>
+                            {t('impact')} {yearRange[1]}
+                            <h4>
                               {yearRange ? (
                                 beautifyValue(
                                   cat.pathsAction.getYearlyImpact(yearRange[1])
@@ -195,43 +223,77 @@ const CategoryList = (props) => {
                                 <span>---</span>
                               )}
                               {cat.pathsAction.getUnit()}
-                            </div>
-                          )}
-                        </div>
-                      </Card>
-                    </a>
-                  </Link>
-                </Col>
-              )
-          )}
-      </Row>
-    </Container>
+                            </h4>
+                            <ActionParameters
+                              parameters={cat.pathsAction.data.parameters}
+                            />
+                          </div>
+                        )}
+                      </div>
+                    </Card>
+                  </Col>
+                )
+            )}
+        </Row>
+      ))}
+    </>
   );
 };
 
-interface CategoryListBlockProps extends CommonContentBlockProps {
+interface CategoryTypeListBlockProps extends CommonContentBlockProps {
   categories?: Array<CategoryListBlockCategory>;
+  groupByLevel?: CategoryLevel;
   heading?: string;
   lead: string;
   style?: 'treemap' | 'cards';
 }
 
-const CategoryListBlock = (props: CategoryListBlockProps) => {
+const hasParent = (cat, parentId) => {
+  const catParents = getDeepParents(cat);
+  return catParents.some((parent) => parent.id === parentId);
+};
+
+const getParentCategoryOfLevel = (cat, levelId: string) => {
+  const catParents = getDeepParents(cat);
+  return catParents.find((parent) => parent.level.id === levelId);
+};
+
+const getParentCategoriesOfLevel = (cats, levelId: string) => {
+  const categoriesOfLevel = cats.map((cat) =>
+    getParentCategoryOfLevel(cat, levelId)
+  );
+  return categoriesOfLevel.filter(
+    (cat1, i, arr) => arr.findIndex((cat2) => cat2.id === cat1.id) === i
+  );
+};
+
+const CategoryTypeListBlock = (props: CategoryTypeListBlockProps) => {
   const fallbackCategories = useFallbackCategories();
-  const { id = '', categories = fallbackCategories, heading } = props;
-  //console.log('CategoryListBlock', props);
+  const {
+    id = '',
+    categories = fallbackCategories,
+    heading,
+    groupByLevel,
+  } = props;
+
   return (
     <CategoryListSection id={id}>
-      {heading && <h4>{heading}</h4>}
-      <Suspense fallback={<div>Loading...</div>}>
-        <CategoryList categories={categories} />
-      </Suspense>
+      <Container>
+        <Row>
+          <Col className="mb-4">{heading && <h2>{heading}</h2>}</Col>
+        </Row>
+
+        <CategoryList
+          categories={categories}
+          groups={getParentCategoriesOfLevel(categories, groupByLevel.id)}
+        />
+      </Container>
     </CategoryListSection>
   );
 };
 
-CategoryListBlock.fragments = {
+CategoryTypeListBlock.fragments = {
   category: CATEGORY_FRAGMENT,
 };
 
-export default CategoryListBlock;
+export default CategoryTypeListBlock;
