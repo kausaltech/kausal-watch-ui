@@ -13,7 +13,9 @@ import {
 import { usePaths } from '@/context/paths/paths';
 import { useReactiveVar } from '@apollo/client';
 
+import GoalSelector from './GoalSelector';
 import RangeSelector from './RangeSelector';
+import ScenarioSelector from './ScenarioSelector';
 
 const FloatingToolbar = styled.div`
   position: fixed;
@@ -24,8 +26,9 @@ const FloatingToolbar = styled.div`
   padding: 1rem;
   box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  justify-content: start;
+  align-items: start;
+  gap: 1rem;
 `;
 
 const ButtonLabel = styled.div`
@@ -33,7 +36,7 @@ const ButtonLabel = styled.div`
   font-size: 0.8rem;
 `;
 
-const StyledButton = styled.button<{ ref: HTMLButtonElement }>`
+const StyledButton = styled.button`
   width: 100%;
   text-align: left;
   white-space: nowrap;
@@ -50,7 +53,8 @@ const StyledButton = styled.button<{ ref: HTMLButtonElement }>`
 const YearRangeSelector = (props) => {
   const { minYear, maxYear, referenceYear } = props;
   const inputReference = useRef<HTMLDivElement>(null);
-  const triggerReference = useRef<HTMLButtonElement>(null);
+  const triggerReference = useRef<HTMLButtonElement | null>(null);
+
   const [popoverOpen, setPopoverOpen] = useState(false);
   const toggle = () => {
     setPopoverOpen(!popoverOpen);
@@ -63,6 +67,13 @@ const YearRangeSelector = (props) => {
       }
     }, 0);
   };
+
+  const setTriggerRef = useCallback(
+    (node: HTMLButtonElement | null) => {
+      triggerReference.current = node;
+    },
+    [triggerReference]
+  );
 
   // State of display settings
   // Year range
@@ -86,7 +97,7 @@ const YearRangeSelector = (props) => {
         aria-expanded={popoverOpen}
         aria-haspopup="dialog"
         aria-controls="rangeSelectorPopover"
-        ref={triggerReference}
+        ref={setTriggerRef}
       >
         {`${yearRange[0]}–${yearRange[1]}`}
       </StyledButton>
@@ -117,11 +128,14 @@ const YearRangeSelector = (props) => {
 
 const PathsToolbar = () => {
   const paths = usePaths();
-  if (!paths) return null;
+
+  const activeGoal = useReactiveVar(activeGoalVar);
+  const activeScenario = useReactiveVar(activeScenarioVar);
 
   useEffect(() => {
+    if (!paths) return;
     const { instance, scenarios } = paths;
-    const activeScenario = scenarios.find((sc) => sc.isActive);
+    const firstActiveScenario = scenarios.find((sc) => sc.isActive);
     const goals = instance.goals;
 
     if (!activeGoalVar()) {
@@ -131,26 +145,26 @@ const PathsToolbar = () => {
     }
 
     if (!activeScenarioVar()) {
-      activeScenarioVar(activeScenario);
+      activeScenarioVar(firstActiveScenario ?? undefined);
     }
 
     if (!yearRangeVar()) {
-      const yearRange: [number, number] = [
+      const initialYearRange: [number, number] = [
         instance.minimumHistoricalYear ?? instance.referenceYear ?? 2010,
         instance.targetYear ?? instance.modelEndYear,
       ];
-      yearRangeVar(yearRange);
+      yearRangeVar(initialYearRange);
     }
-  }, [paths.instance.id]);
+  }, [paths?.instance.id]);
 
-  const yearRange = yearRangeVar() || [0, 0];
-  const activeGoal = activeGoalVar();
-  const activeScenario = activeScenarioVar();
+  if (!paths) return null;
 
-  console.log('activeGoal', activeGoal);
-  console.log('activeScenario', activeScenario);
   return (
     <FloatingToolbar>
+      <GoalSelector />
+      <span>|</span>
+      <ScenarioSelector />
+      <span>|</span>
       <YearRangeSelector
         minYear={paths.instance.minimumHistoricalYear}
         maxYear={paths.instance.modelEndYear}
