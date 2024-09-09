@@ -39,6 +39,18 @@ const getColor = (theme: Theme, darkFallback = theme.themeColors.black) =>
 const getBackgroundColor = (theme: Theme) =>
   theme.section.categoryList?.background || theme.neutralLight;
 
+const GroupHeader = styled.h4`
+  border-left: 6px solid ${(props) => props.$color};
+  margin-bottom: 24px;
+`;
+
+const GroupIdentifierHeader = styled.div`
+  background-color: ${(props) => props.$color};
+  color: ${(props) => readableColor(props.$color || '#ffffff')};
+  padding: 6px;
+  margin-bottom: 12px;
+`;
+
 const CategoryListSection = styled.div`
   background-color: ${({ theme }) => getBackgroundColor(theme)};
   padding: ${(props) =>
@@ -144,6 +156,12 @@ const getPathsActionForCategory = (category, actions) => {
   return new PathsActionNode(pathsActionForCategory);
 };
 
+const getCategoryColor = (category) => {
+  // We have many ways to define the color of a category.
+  // For now get the color from category paths group data
+  return category.pathsAction?.data.group.color || '#eeeeee';
+};
+
 const CategoryList = (props) => {
   const { categories, groups } = props;
   const plan = usePlan();
@@ -168,17 +186,28 @@ const CategoryList = (props) => {
 
   const categoryData = categories?.map((cat) => {
     const pathsAction = getPathsActionForCategory(cat, data.actions);
-
     return {
       ...cat,
       pathsAction: pathsAction,
     };
   });
+
+  console.log('groups=', groups);
+  console.log('categories=', categoryData);
+
   return (
     <>
       {groups?.map((group) => (
         <Row key={group?.id}>
-          <h4>{group.name}</h4>
+          <GroupHeader
+            $color={getCategoryColor(
+              categoryData?.find(
+                (cat) => cat?.categoryPage?.live && hasParent(cat, group.id)
+              )
+            )}
+          >
+            {group.name}
+          </GroupHeader>
           {categoryData
             ?.filter(
               (cat) => cat?.categoryPage?.live && hasParent(cat, group.id)
@@ -195,9 +224,12 @@ const CategoryList = (props) => {
                     className="mb-5 d-flex align-items-stretch"
                   >
                     <Card
-                      colorEffect={cat.color ?? undefined}
+                      colorEffect={getCategoryColor(cat)}
                       altText={cat.image?.altText}
                     >
+                      <GroupIdentifierHeader $color={getCategoryColor(cat)}>
+                        {group.name}
+                      </GroupIdentifierHeader>
                       <div>
                         {' '}
                         <Link href={cat.categoryPage.urlPath} legacyBehavior>

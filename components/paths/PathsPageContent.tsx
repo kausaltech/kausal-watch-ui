@@ -63,7 +63,6 @@ const PathsPageContent = ({
     <>
       {isCategoryPage && (
         <ContentArea>
-          CATEGORY PAGE
           <MainContent>
             {page.body && <StreamField page={page} blocks={page.body} />}
           </MainContent>
@@ -71,7 +70,6 @@ const PathsPageContent = ({
       )}
       {isCategoryTypePage && (
         <ContentArea>
-          CATEGORY TYPE
           <MainContent>
             {page.body && (
               <StreamField page={page} blocks={categoryTypeStreamfield.data} />
@@ -81,7 +79,6 @@ const PathsPageContent = ({
       )}
       {!isCategoryTypePage && isStaticPage && (
         <ContentArea>
-          STATIC
           <MainContent>
             {page.body && <StreamField page={page} blocks={page.body} />}
           </MainContent>
