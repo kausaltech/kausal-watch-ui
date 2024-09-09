@@ -42,6 +42,7 @@ const FeedbackForm = ({
   categoryId = null,
   heading,
   description,
+  emailRequired = true,
   prompt,
   formContext = null,
   additionalFields = [],
@@ -221,8 +222,10 @@ const FeedbackForm = ({
                   {...field}
                   id="email-field"
                   autoComplete="email"
-                  label={`${t('email')} (${t('required-field')})`}
-                  invalid={errors.email?.type === 'required'}
+                  label={`${t('email')}${
+                    emailRequired ? ` (${t('required-field')})` : ''
+                  }`}
+                  invalid={emailRequired && errors.email?.type === 'required'}
                   formFeedback={errors.email && t('error-email-format')}
                 />
               )}
@@ -231,7 +234,7 @@ const FeedbackForm = ({
               control={control}
               defaultValue=""
               rules={{
-                required: true,
+                required: emailRequired,
                 pattern: {
                   value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                 },
@@ -294,6 +297,7 @@ FeedbackForm.propTypes = {
   categoryId: PropTypes.string,
   heading: PropTypes.string,
   description: PropTypes.string,
+  emailRequired: PropTypes.bool,
   prompt: PropTypes.string,
   formContext: PropTypes.string,
   additionalFields: PropTypes.arrayOf(PropTypes.object),
