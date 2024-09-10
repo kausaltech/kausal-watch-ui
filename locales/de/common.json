@@ -42,7 +42,7 @@
     "filter-impact": "Auswirkung",
     "filter-organization": "{context, select, DIVISION {Abteilung} other {Organisation}}",
     "filter-phase": "Phase",
-    "filter-plan": "Plan",
+    "filter-plan": "Maßnahmenplan",
     "filter-primary-organization": "{context, select, DIVISION {Leitende Abteilung} other {Primäre Organisation}}",
     "filter-result-actions": "{context, select, STRATEGY {Strategien} CASE_STUDY {Fallstudien} other {Maßnahmen}}",
     "filter-schedule": "Zeitplan",
