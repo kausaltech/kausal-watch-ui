@@ -1,27 +1,28 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
+
+import { usePlan } from 'context/plan';
+import { useSession } from 'next-auth/react';
+import { useTranslations } from 'next-intl';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import {
   Container,
   Dropdown,
-  DropdownToggle,
-  DropdownMenu,
   DropdownItem,
+  DropdownMenu,
+  DropdownToggle,
   Spinner,
 } from 'reactstrap';
 import styled from 'styled-components';
-import Icon from '@/components/common/Icon';
-import { usePathname, useSearchParams } from 'next/navigation';
-import { useTranslations } from 'next-intl';
-import { usePlan } from 'context/plan';
-import { useSession } from 'next-auth/react';
-import { useWorkflowSelector } from '@/context/workflow-selector';
-import { useRouter } from 'next/navigation';
-import { useApolloClient } from '@apollo/client';
+
 import {
   WorkflowState,
   WorkflowStateDescription,
 } from '@/common/__generated__/graphql';
+import Icon from '@/components/common/Icon';
+import { useWorkflowSelector } from '@/context/workflow-selector';
 import { useHandleSignOut } from '@/utils/auth.utils';
 import { hasSessionExpired } from '@/utils/session.utils';
+import { useApolloClient } from '@apollo/client';
 
 type StrictWorkflowStateDescription = {
   id: NonNullable<WorkflowStateDescription['id']>;
@@ -208,7 +209,7 @@ export const TopToolBar = () => {
           )}
           <DropdownItem onClick={() => handleSignOut()}>
             <StyledIcon
-              name="arrowRight"
+              name="arrow-right"
               className="icon"
               aria-label="sign-out"
             />
