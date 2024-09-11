@@ -249,7 +249,7 @@ function ResultItem(props) {
 }
 
 const ResultList = (props) => {
-  const { results, searchTerm, loading } = props;
+  const { results, searchTerm, loading, closeSearch } = props;
   const t = useTranslations();
   //const plan = usePlan();
   const counts = [
@@ -295,14 +295,14 @@ const ResultList = (props) => {
             href={`/search?q=${searchTerm}`}
             legacyBehavior
           >
-            <a>
+            <a onClick={closeSearch}>
               {t('see-all-results', { count: results.length })}
               <Icon.ArrowRight />
             </a>
           </Link>
         ) : (
           <Link prefetch={false} href={`/search`} legacyBehavior>
-            <a data-testId="search-advanced">
+            <a onClick={closeSearch} data-testId="search-advanced">
               {t('search-advanced')} <Icon.ArrowRight />
             </a>
           </Link>
@@ -374,10 +374,8 @@ function Search({ isLoading, searchTerm, setSearchTerm, results }) {
   const [searchOpen, setSearchOpen] = useState(false);
   const searchElement = useRef(null);
 
-  // Clear search term if the input is hidden
   const closeSearch = () => {
     setSearchOpen(false);
-    setSearchTerm('');
   };
 
   // Close results modal if clicked outside search ui
@@ -385,7 +383,6 @@ function Search({ isLoading, searchTerm, setSearchTerm, results }) {
     const handlePageClick = (e) => {
       if (!searchElement.current.contains(e.target)) {
         setSearchOpen(false);
-        setSearchTerm('');
       }
     };
 
@@ -480,6 +477,7 @@ function Search({ isLoading, searchTerm, setSearchTerm, results }) {
             searchTerm={searchTerm}
             anchor={searchElement}
             loading={isLoading}
+            closeSearch={closeSearch}
           />
         </ResultsBox>
       )}
