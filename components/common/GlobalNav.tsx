@@ -4,6 +4,7 @@ import { isServer } from 'common/environment';
 import { Link, NavigationLink } from 'common/links';
 import PlanSelector from 'components/plans/PlanSelector';
 import PlanVersionSelector from 'components/versioning/PlanVersionSelector';
+import { usePaths } from 'context/paths/paths';
 import { usePlan } from 'context/plan';
 import debounce from 'lodash/debounce';
 import { useLocale, useTranslations } from 'next-intl';
@@ -28,6 +29,7 @@ import { useScrollPosition } from '@n8tb1t/use-scroll-position';
 
 import Icon from './Icon';
 import LanguageSelector from './LanguageSelector';
+import NavBar from './NavBar';
 import NavbarSearch from './NavbarSearch';
 
 const getRootLink = (plan, locale, primaryLanguage) => {
@@ -513,6 +515,39 @@ const useStickyNavigation = (isStickyEnabled: boolean = false) => {
   };
 };
 
+const MOCK_PATHS_NAV = [
+  {
+    id: '12042',
+    name: 'Informationen zum Klimaschutz',
+    slug: 'informationen-zum-klimaschutz',
+    urlPath: '/informationen-zum-klimaschutz',
+    active: false,
+    children: null,
+  },
+  {
+    id: '12039',
+    name: 'Handlungsfelder',
+    slug: 'handlungsfelder',
+    urlPath: '/handlungsfelder',
+    active: false,
+  },
+  {
+    id: '21036',
+    name: 'Massnahmenpakete',
+    slug: 'indicators',
+    urlPath: '/massnahmenpakete',
+    active: false,
+    children: null,
+  },
+  {
+    id: '12035',
+    name: 'Massnahmen',
+    slug: 'actions',
+    urlPath: '/actions',
+    active: false,
+    children: null,
+  },
+];
 function GlobalNav(props) {
   const t = useTranslations();
   const theme = useTheme();
@@ -539,6 +574,8 @@ function GlobalNav(props) {
     isPrimaryNavSticky,
   } = useStickyNavigation(sticky);
 
+  console.log('PROPS', props);
+  const paths = usePaths();
   const OrgLogo = () => {
     const logoElement = theme.navLogoVisible ? (
       <SVG
@@ -611,109 +648,113 @@ function GlobalNav(props) {
           </NavbarToggler>
         </TopNav>
       </div>
-
-      <div ref={secondaryNavRef}>
-        <BotNav
-          $offsetTop={
-            isNavFixed && isPrimaryNavSticky && isOpen ? navHeight : undefined
-          }
-          $expanded={isOpen}
-          expand="md"
-          fixed={isNavFixed && (!isPrimaryNavSticky || isOpen) ? 'top' : ''}
-          id="global-navigation-bar"
-          container={fullwidth ? 'fluid' : true}
-          aria-label={t('nav-primary')}
-        >
-          <Collapse isOpen={isOpen} navbar>
-            <Nav navbar className="me-auto">
-              {homeLink && (
-                <NavItem active={activeBranch === ''}>
-                  <NavLink>
-                    <NavigationLink
-                      slug={plan.domain?.basePath ?? '/'}
-                      onClick={handleClose}
-                    >
-                      <NavHighlighter
-                        className={`highlighter ${
-                          activeBranch === '' ? 'active' : ''
-                        }`}
-                      >
-                        {homeLink === 'icon' ? (
-                          <Icon.Home width="1.5rem" height="1.5rem" />
-                        ) : (
-                          <span>{t('navigation-home')}</span>
-                        )}
-                      </NavHighlighter>
-                    </NavigationLink>
-                  </NavLink>
-                </NavItem>
-              )}
-              {navItems &&
-                navItems.map((page) =>
-                  page.children ? (
-                    <DropdownList
-                      onClickLink={handleClose}
-                      parentName={page.name}
-                      items={page.children}
-                      active={page.active}
-                      key={page.slug}
-                    />
-                  ) : (
-                    <NavItem key={page.slug} active={page.active}>
-                      <NavLink>
-                        <NavigationLink
-                          slug={page.urlPath}
-                          onClick={handleClose}
-                        >
-                          <NavHighlighter
-                            className={`highlighter ${page.active && 'active'}`}
-                          >
-                            {page.name}
-                          </NavHighlighter>
-                        </NavigationLink>
-                      </NavLink>
-                    </NavItem>
-                  )
-                )}
-              {plan.features.enableSearch && (
-                <NavItem className="d-md-none mb-2">
-                  <NavLink>
-                    <NavigationLink slug="/search" onClick={handleClose}>
-                      <NavHighlighter className="highlighter">
-                        <Icon.Search
-                          className="me-2"
-                          width="1.75rem"
-                          height="1.75rem"
-                        />
-                        {t('search')}
-                      </NavHighlighter>
-                    </NavigationLink>
-                  </NavLink>
-                </NavItem>
-              )}
-              <LanguageSelector mobile />
-              {customToolbarItems.length > 0 && (
-                <CustomToolbar items={customToolbarItems} mobile />
-              )}
-            </Nav>
-            <Nav navbar className="ms-md-5">
-              <PlanVersionSelector plan={plan} />
-              {externalItems.length > 0 &&
-                externalItems.map((item, index) => (
-                  <NavItem key={`external${index}`}>
+      {paths?.id && (
+        <div ref={secondaryNavRef}>
+          <BotNav
+            $offsetTop={
+              isNavFixed && isPrimaryNavSticky && isOpen ? navHeight : undefined
+            }
+            $expanded={isOpen}
+            expand="md"
+            fixed={isNavFixed && (!isPrimaryNavSticky || isOpen) ? 'top' : ''}
+            id="global-navigation-bar"
+            container={fullwidth ? 'fluid' : true}
+            aria-label={t('nav-primary')}
+          >
+            <Collapse isOpen={isOpen} navbar>
+              <Nav navbar className="me-auto">
+                {homeLink && (
+                  <NavItem active={activeBranch === ''}>
                     <NavLink>
-                      <NavigationLink slug={item.url} onClick={handleClose}>
-                        <NavHighlighter className="highlighter external">
-                          {item.name}
+                      <NavigationLink
+                        slug={plan.domain?.basePath ?? '/'}
+                        onClick={handleClose}
+                      >
+                        <NavHighlighter
+                          className={`highlighter ${
+                            activeBranch === '' ? 'active' : ''
+                          }`}
+                        >
+                          {homeLink === 'icon' ? (
+                            <Icon.Home width="1.5rem" height="1.5rem" />
+                          ) : (
+                            <span>{t('navigation-home')}</span>
+                          )}
                         </NavHighlighter>
                       </NavigationLink>
                     </NavLink>
                   </NavItem>
-                ))}
-            </Nav>
-          </Collapse>
-        </BotNav>
-      </div>
+                )}
+                {navItems &&
+                  navItems.map((page) =>
+                    page.children ? (
+                      <DropdownList
+                        onClickLink={handleClose}
+                        parentName={page.name}
+                        items={page.children}
+                        active={page.active}
+                        key={page.slug}
+                      />
+                    ) : (
+                      <NavItem key={page.slug} active={page.active}>
+                        <NavLink>
+                          <NavigationLink
+                            slug={page.urlPath}
+                            onClick={handleClose}
+                          >
+                            <NavHighlighter
+                              className={`highlighter ${
+                                page.active && 'active'
+                              }`}
+                            >
+                              {page.name}
+                            </NavHighlighter>
+                          </NavigationLink>
+                        </NavLink>
+                      </NavItem>
+                    )
+                  )}
+                {plan.features.enableSearch && (
+                  <NavItem className="d-md-none mb-2">
+                    <NavLink>
+                      <NavigationLink slug="/search" onClick={handleClose}>
+                        <NavHighlighter className="highlighter">
+                          <Icon.Search
+                            className="me-2"
+                            width="1.75rem"
+                            height="1.75rem"
+                          />
+                          {t('search')}
+                        </NavHighlighter>
+                      </NavigationLink>
+                    </NavLink>
+                  </NavItem>
+                )}
+                <LanguageSelector mobile />
+                {customToolbarItems.length > 0 && (
+                  <CustomToolbar items={customToolbarItems} mobile />
+                )}
+              </Nav>
+              <Nav navbar className="ms-md-5">
+                <PlanVersionSelector plan={plan} />
+                {externalItems.length > 0 &&
+                  externalItems.map((item, index) => (
+                    <NavItem key={`external${index}`}>
+                      <NavLink>
+                        <NavigationLink slug={item.url} onClick={handleClose}>
+                          <NavHighlighter className="highlighter external">
+                            {item.name}
+                          </NavHighlighter>
+                        </NavigationLink>
+                      </NavLink>
+                    </NavItem>
+                  ))}
+              </Nav>
+            </Collapse>
+          </BotNav>
+        </div>
+      )}
+      <NavBar navItems={MOCK_PATHS_NAV} />
       {isNavFixed && <NavSpacer $height={navHeight} />}
     </div>
   );
