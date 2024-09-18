@@ -87,5 +87,8 @@
     "filter-impact": "Επιπτώσεις",
     "indicator-affected-by": "Ο δείκτης αυτός επηρεάζεται από",
     "indicator-related-actions": "{context, select, CASE_STUDY {Μελέτες περιπτώσεων που επηρεάζουν τον δείκτη} STRATEGY {Στρατηγικές που επηρεάζουν τον δείκτη} other {Δράσεις που επηρεάζουν τον δείκτη}}",
-    "insight-filter-no-results": "Δεν υπάρχουν αποτελέσματα"
+    "insight-filter-no-results": "Δεν υπάρχουν αποτελέσματα",
+    "no-actions": "Καμία ενέργεια",
+    "open": "ανοιχτό",
+    "number-of-search-results": "{count, πληθυντικός, =1 {ένα χτύπημα} άλλα {# χτυπήματα}} για αναζήτηση"
 }
