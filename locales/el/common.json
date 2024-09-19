@@ -90,5 +90,20 @@
     "insight-filter-no-results": "Δεν υπάρχουν αποτελέσματα",
     "no-actions": "Καμία ενέργεια",
     "open": "ανοιχτό",
-    "number-of-search-results": "{count, πληθυντικός, =1 {ένα χτύπημα} άλλα {# χτυπήματα}} για αναζήτηση"
+    "number-of-search-results": "{count, πληθυντικός, =1 {ένα χτύπημα} άλλα {# χτυπήματα}} για αναζήτηση",
+    "percent-point-abbreviation": "p.p.",
+    "previous": "Προηγούμενο",
+    "read-more": "Διαβάστε περισσότερα",
+    "recently-updated-indicators": "Πρόσφατα ενημερωμένοι δείκτες",
+    "reduced": "Μειωμένο",
+    "reference": "Αναφορά",
+    "remove-filter": "Αφαιρέστε το φίλτρο",
+    "required-field": "Υποχρεωτικό πεδίο",
+    "responsible-parties": "{context, select, DIVISION {Υπεύθυνα τμήματα} other {Υπεύθυνοι οργανισμοί}}",
+    "search": "Αναζήτηση",
+    "page": "Σελίδα",
+    "page-not-found": "Η σελίδα δεν βρέθηκε",
+    "published-on": "Δημοσιεύθηκε στις",
+    "responsible-party-main": "Κύριος υπεύθυνος",
+    "recently-updated-actions": "{context, select, CASE_STUDY {Πρόσφατα ενημερωμένες μελέτες περιπτώσεων} STRATEGY {Προσφάτως ενημερωμένες στρατηγικές} other {Προσφάτως ενημερωμένες δράσεις}}"
 }
