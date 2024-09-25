@@ -1,9 +1,9 @@
 import React from 'react';
+
+import { MAX_CRUMB_LENGTH } from 'common/categories';
+import { Link } from 'common/links';
 import { UncontrolledTooltip } from 'reactstrap';
 import styled from 'styled-components';
-
-import { Link } from 'common/links';
-import { MAX_CRUMB_LENGTH } from 'common/categories';
 
 type TCrumb = {
   name: string;
@@ -60,7 +60,7 @@ function Crumb({ crumb }: { crumb: TCrumb }) {
   );
 }
 
-export function Breadcrumbs({ breadcrumbs }: Props) {
+export default function Breadcrumbs({ breadcrumbs }: Props) {
   return (
     <StyledContainer>
       {breadcrumbs.map((crumb) => (

@@ -3,13 +3,29 @@ import React from 'react';
 import { GetContentPageQuery } from 'common/__generated__/graphql';
 import { categoryTypeStreamfield } from 'components/paths/mock/pathsMockData';
 import StreamField from 'components/paths/StreamField';
+import { Container } from 'reactstrap';
 import styled, { css } from 'styled-components';
+
+import CategoryPageHeaderBlock from '@/components/paths/contentblocks/CategoryPageHeaderBlock';
 
 type GeneralPlanPage = NonNullable<GetContentPageQuery['planPage']>;
 
 type CategoryPage = { __typename: 'CategoryPage' } & GeneralPlanPage;
 
-const MainContent = styled.div``;
+const MainContent = styled.div`
+  position: relative;
+  padding-top: 100px;
+  &::after {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    z-index: -100;
+    height: 500px;
+    background-color: ${({ theme }) => theme.brandDark};
+    width: 100%;
+  }
+`;
 
 const columnLayout = css`
   display: flex;
@@ -40,12 +56,8 @@ const columnLayout = css`
   }
 `;
 
-const ContentArea = styled.div<{
-  $columnLayout?: boolean;
-  $backgroundColor?: string;
-}>`
-  ${({ $columnLayout }) => $columnLayout && columnLayout};
-  background-color: ${({ $backgroundColor }) => $backgroundColor};
+const ContentArea = styled.div`
+  margin-bottom: 100px;
 `;
 
 const PathsPageContent = ({
@@ -57,14 +69,23 @@ const PathsPageContent = ({
   //console.log('page', page);
   const isCategoryPage = page.__typename === 'CategoryPage';
   const isCategoryTypePage =
-    page.__typename === 'CategoryTypePage' || page.slug === 'massnahmenpakete';
+    page.__typename === 'CategoryTypePage' ||
+    page.slug === 'massnahmenpakete' ||
+    page.slug === 'handlungsfelder';
   const isStaticPage = page.__typename === 'StaticPage';
   return (
     <>
       {isCategoryPage && (
         <ContentArea>
           <MainContent>
-            {page.body && <StreamField page={page} blocks={page.body} />}
+            <Container>
+              <CategoryPageHeaderBlock
+                page={page}
+                title={page.title}
+                lead="Category page header title"
+              />
+              {page.body && <StreamField page={page} blocks={page.body} />}
+            </Container>
           </MainContent>
         </ContentArea>
       )}
