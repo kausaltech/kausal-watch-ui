@@ -1,15 +1,16 @@
 import React from 'react';
 
-import type { StreamFieldFragmentFragment } from 'common/__generated__/graphql';
-import { ErrorBoundary } from 'components/common/ErrorBoundary';
-import { ErrorPage } from 'components/common/ErrorPage';
-import ActionCategoryFilterCardsBlock from 'components/contentblocks/ActionCategoryFilterCardsBlock';
-import ActionListBlock from 'components/contentblocks/ActionListBlock';
-import CategoryListBlock from 'components/paths/contentblocks/CategoryListBlock';
-import CategoryTypeListBlock from 'components/paths/contentblocks/CategoryTypeListBlock';
-import { usePlan } from 'context/plan';
 import { ColProps } from 'reactstrap';
 
+import type { StreamFieldFragmentFragment } from '@/common/__generated__/graphql';
+import { ErrorBoundary } from '@/components/common/ErrorBoundary';
+import { ErrorPage } from '@/components/common/ErrorPage';
+import ActionCategoryFilterCardsBlock from '@/components/contentblocks/ActionCategoryFilterCardsBlock';
+import ActionListBlock from '@/components/contentblocks/ActionListBlock';
+import IndicatorGroupBlock from '@/components/contentblocks/IndicatorGroupBlock';
+import CategoryListBlock from '@/components/paths/contentblocks/CategoryListBlock';
+import CategoryTypeListBlock from '@/components/paths/contentblocks/CategoryTypeListBlock';
+import { usePlan } from '@/context/plan';
 import { STREAM_FIELD_FRAGMENT } from '@/fragments/stream-field.fragment';
 
 type StreamFieldBlockProps = {
@@ -87,14 +88,28 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
       const { cards } = block;
       return <ActionCategoryFilterCardsBlock id={id} cards={cards} />;
     }
+    case 'IndicatorGroupBlock': {
+      const { indicators, title } = block;
+
+      if (!indicators?.length) {
+        return null;
+      }
+
+      return (
+        <div className="mb-4">
+          <IndicatorGroupBlock
+            title={title ?? undefined}
+            indicators={indicators}
+          />
+        </div>
+      );
+    }
     case 'RichTextBlock':
     case 'QuestionAnswerBlock':
     case 'CharBlock':
-    case 'IndicatorGroupBlock':
     case 'FrontPageHeroBlock':
     case 'LargeImageBlock':
     case 'IndicatorShowcaseBlock':
-    case 'CardListBlock':
     case 'ActionHighlightsBlock':
     case 'ActionStatusGraphsBlock':
     case 'IndicatorHighlightsBlock':

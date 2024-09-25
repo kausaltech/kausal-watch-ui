@@ -4,23 +4,13 @@ import { GetContentPageQuery } from 'common/__generated__/graphql';
 import StreamField from 'components/paths/StreamField';
 import styled, { css } from 'styled-components';
 
+import CategoryPageHeaderBlock from '@/components/paths/contentblocks/CategoryPageHeaderBlock';
+
 type GeneralPlanPage = NonNullable<GetContentPageQuery['planPage']>;
 
 type CategoryPage = { __typename: 'CategoryPage' } & GeneralPlanPage;
 
 const MainContent = styled.div``;
-
-const AsideContent = styled.div`
-  position: sticky;
-  top: ${({ theme }) => theme.spaces.s200};
-  flex: 0 1 320px;
-  background-color: ${({ theme }) => theme.themeColors.white};
-  border-radius: ${({ theme }) => theme.cardBorderRadius};
-  padding: ${({ theme }) => `${theme.spaces.s200} ${theme.spaces.s100}`};
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-`;
 
 const columnLayout = css`
   display: flex;
@@ -77,6 +67,13 @@ const CategoryPageContent = ({
   return (
     <ContentArea>
       <MainContent>
+        <h1>Whaat?</h1>
+        <CategoryPageHeaderBlock
+          page={page}
+          title={page.title}
+          lead="fgfdhgdfhgfhfghf"
+        />
+        --
         {page.body && <StreamField page={page} blocks={page.body} />}
       </MainContent>
     </ContentArea>
