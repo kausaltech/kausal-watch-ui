@@ -311,10 +311,10 @@ const CategoryTypeListBlock = (props: CategoryTypeListBlockProps) => {
   return (
     <CategoryListSection id={id}>
       <Container>
+        <h3>FILTERS HERE</h3> <h3>SORTING HERE</h3>
         <Row>
           <Col className="mb-4">{heading && <h2>{heading}</h2>}</Col>
         </Row>
-
         <CategoryList
           categories={categories}
           groups={getParentCategoriesOfLevel(categories, groupByLevel.id)}
