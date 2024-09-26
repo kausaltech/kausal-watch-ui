@@ -12,6 +12,7 @@ import styled from 'styled-components';
 import { usePaths } from '@/context/paths/paths';
 
 import { ActionContentAction } from './ActionContent';
+import { ActionResponsiblePartiesBlock } from '@/common/__generated__/graphql';
 
 const Responsibles = styled.div`
   a {
@@ -95,7 +96,7 @@ function ResponsibleBadge({
               ariaLabel={ariaLabel}
               content={org.abbreviation || org.name}
               size={size}
-              color="brandDark"
+              color="badgeColor"
               isLink
             />
           </a>
@@ -107,7 +108,7 @@ function ResponsibleBadge({
           ariaLabel={ariaLabel}
           content={org.abbreviation || org.name}
           size={size}
-          color="brandDark"
+          color="badgeColor"
           isLink
         />
       )}
