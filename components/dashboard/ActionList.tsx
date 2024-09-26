@@ -252,6 +252,7 @@ const actionFragment = gql`
       id
       shortName
       name
+      shortIdentifier
       versionName
       viewUrl
       hideActionIdentifiers

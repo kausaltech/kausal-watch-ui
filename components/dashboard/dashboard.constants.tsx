@@ -212,14 +212,16 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
   },
   PlanColumnBlock: {
     renderHeader: (t, _, label) => label || t('filter-plan'),
-    renderCell: (action, plan) => (
-      <PlanChip
-        planImage={
-          action.plan?.image?.rendition?.src || plan?.image?.rendition?.src
-        }
-        size="lg"
-      />
-    ),
+    renderCell: (action, plan) =>
+      action.plan?.shortIdentifier ||
+      plan?.shortIdentifier || (
+        <PlanChip
+          planImage={
+            action.plan?.image?.rendition?.src || plan?.image?.rendition?.src
+          }
+          size="lg"
+        />
+      ),
     renderTooltipContent: (action, plan) => (
       <PlanTooltipContent action={action} plan={plan} />
     ),
