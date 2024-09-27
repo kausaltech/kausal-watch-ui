@@ -31,12 +31,18 @@ const createLayout = (
     'helvetica neue, helvetica, Ubuntu, roboto, noto, arial, sans-serif';
   const hasCategories = !hasTimeDimension;
 
+  // With Plotly you have choice between one significant digit precision for y axis ticks (.1r)
+  // then on smaller (first digit) ranges you get repeated numbers on ticks.
+  // With higher precision (.3r) you get more unique numbers but small numbers have decimals
+  // Like 0.0 whiich is not very nice.
+
   const yaxes: NonNullable<Pick<Layout, 'yaxis'>> = {
     yaxis: {
       automargin: true,
       hoverformat: ',.3r',
       tickformat: ',.1r',
       fixedrange: true,
+      nticks: 6,
       tickfont: {
         family: fontFamily,
         size: 14,
