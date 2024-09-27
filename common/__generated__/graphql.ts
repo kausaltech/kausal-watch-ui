@@ -2406,6 +2406,8 @@ export type Indicator = {
   common?: Maybe<CommonIndicator>;
   createdAt: Scalars['DateTime'];
   description?: Maybe<Scalars['String']>;
+  /** Which trend in the numerical values of this indicator's goals indicates improvement: when the values are increasing or decreasing? */
+  desiredTrend?: Maybe<IndicatorDesiredTrend>;
   dimensions: Array<IndicatorDimension>;
   goals?: Maybe<Array<Maybe<IndicatorGoal>>>;
   id: Scalars['ID'];
@@ -2426,6 +2428,7 @@ export type Indicator = {
   relatedActions: Array<ActionIndicator>;
   relatedCauses: Array<RelatedIndicator>;
   relatedEffects: Array<RelatedIndicator>;
+  showTrendline: Scalars['Boolean'];
   timeResolution: IndicatorTimeResolution;
   unit: Unit;
   updatedAt: Scalars['DateTime'];
@@ -2477,6 +2480,16 @@ export type IndicatorCausalChainBlock = FieldBlockMetaInterface & StreamFieldInt
   rawValue: Scalars['String'];
   value: Scalars['String'];
 };
+
+/** An enumeration. */
+export enum IndicatorDesiredTrend {
+  /** attempt to detect automatically */
+  A = 'A_',
+  /** decreasing */
+  Decreasing = 'DECREASING',
+  /** increasing */
+  Increasing = 'INCREASING'
+}
 
 /** Mapping of which dimensions an indicator has. */
 export type IndicatorDimension = {
@@ -4509,27 +4522,40 @@ export type MultiUseImageFragmentFragment = (
   & { __typename?: 'Image' }
 );
 
-export type GetAutocompleteResultsQueryVariables = Exact<{
+export type SearchQueryQueryVariables = Exact<{
   plan: Scalars['ID'];
-  term: Scalars['String'];
+  query: Scalars['String'];
+  onlyOtherPlans?: InputMaybe<Scalars['Boolean']>;
   clientUrl?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type GetAutocompleteResultsQuery = (
+export type SearchQueryQuery = (
   { search?: (
     { hits?: Array<(
-      { id?: string | null, title?: string | null, url?: string | null, highlight?: string | null, plan?: (
+      { title?: string | null, url?: string | null, highlight?: string | null, plan?: (
         { identifier: string, name: string, shortName?: string | null, image?: (
           { rendition?: (
             { src: string }
             & { __typename?: 'ImageRendition' }
           ) | null }
           & { __typename?: 'Image' }
-        ) | null }
+        ) | null, organization: (
+          { name: string }
+          & { __typename?: 'Organization' }
+        ) }
         & { __typename?: 'Plan' }
       ) | null, object?: (
-        { identifier: string }
+        { identifier: string, primaryOrg?: (
+          { name: string, logo?: (
+            { rendition?: (
+              { src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null }
+          & { __typename?: 'Organization' }
+        ) | null }
         & { __typename: 'Action' }
       ) | (
         { id: string }
@@ -4794,64 +4820,6 @@ export type CreateUserFeedbackMutation = (
   & { __typename?: 'Mutation' }
 );
 
-export type SearchQueryQueryVariables = Exact<{
-  plan: Scalars['ID'];
-  query: Scalars['String'];
-  onlyOtherPlans?: InputMaybe<Scalars['Boolean']>;
-  clientUrl?: InputMaybe<Scalars['String']>;
-}>;
-
-
-export type SearchQueryQuery = (
-  { search?: (
-    { hits?: Array<(
-      { title?: string | null, url?: string | null, highlight?: string | null, plan?: (
-        { identifier: string, name: string, shortName?: string | null, image?: (
-          { rendition?: (
-            { src: string }
-            & { __typename?: 'ImageRendition' }
-          ) | null }
-          & { __typename?: 'Image' }
-        ) | null, organization: (
-          { name: string }
-          & { __typename?: 'Organization' }
-        ) }
-        & { __typename?: 'Plan' }
-      ) | null, object?: (
-        { identifier: string, primaryOrg?: (
-          { name: string, logo?: (
-            { rendition?: (
-              { src: string }
-              & { __typename?: 'ImageRendition' }
-            ) | null }
-            & { __typename?: 'Image' }
-          ) | null }
-          & { __typename?: 'Organization' }
-        ) | null }
-        & { __typename: 'Action' }
-      ) | (
-        { id: string }
-        & { __typename: 'Indicator' }
-      ) | null, page?: (
-        { title: string }
-        & { __typename?: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PrivacyPolicyPage' | 'StaticPage' }
-      ) | (
-        { title: string, category?: (
-          { level?: (
-            { name: string }
-            & { __typename?: 'CategoryLevel' }
-          ) | null }
-          & { __typename?: 'Category' }
-        ) | null }
-        & { __typename?: 'CategoryPage' }
-      ) | null }
-      & { __typename?: 'SearchHit' }
-    ) | null> | null }
-    & { __typename?: 'SearchResults' }
-  ) | null }
-  & { __typename?: 'Query' }
-);
-
 export type GetActionListForBlockQueryVariables = Exact<{
   plan: Scalars['ID'];
   category?: InputMaybe<Scalars['ID']>;
@@ -5081,7 +5049,13 @@ export type ActionFragmentFragment = (
         & { __typename?: 'ImageRendition' }
       ) | null }
       & { __typename?: 'Image' }
-    ) | null }
+    ) | null, generalContent: (
+      { actionTaskTerm: SiteGeneralContentActionTaskTerm, organizationTerm: SiteGeneralContentOrganizationTerm }
+      & { __typename?: 'SiteGeneralContent' }
+    ), actionImplementationPhases: Array<(
+      { id: string, identifier: string, name: string, order: number, color?: string | null }
+      & { __typename?: 'ActionImplementationPhase' }
+    )> }
     & { __typename?: 'Plan' }
   ), schedule: Array<(
     { id: string }
@@ -5091,19 +5065,43 @@ export type ActionFragmentFragment = (
     & { __typename?: 'ActionImpact' }
   ) | null, attributes: Array<(
     { id: string, type: (
-      { id: string }
+      { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
+        { id: string, name: string, shortName?: string | null }
+        & { __typename?: 'Unit' }
+      ) | null }
       & { __typename?: 'AttributeType' }
     ) }
-    & { __typename: 'AttributeCategoryChoice' | 'AttributeNumericValue' | 'AttributeRichText' | 'AttributeText' }
+    & { __typename: 'AttributeCategoryChoice' }
   ) | (
-    { id: string, choice?: (
+    { text?: string | null, id: string, choice?: (
       { id: string, name: string }
       & { __typename?: 'AttributeTypeChoiceOption' }
     ) | null, type: (
-      { id: string }
+      { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
+        { id: string, name: string, shortName?: string | null }
+        & { __typename?: 'Unit' }
+      ) | null }
       & { __typename?: 'AttributeType' }
     ) }
     & { __typename: 'AttributeChoice' }
+  ) | (
+    { id: string, numericValue: number, type: (
+      { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
+        { id: string, name: string, shortName?: string | null }
+        & { __typename?: 'Unit' }
+      ) | null }
+      & { __typename?: 'AttributeType' }
+    ) }
+    & { __typename: 'AttributeNumericValue' }
+  ) | (
+    { value: string, id: string, type: (
+      { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
+        { id: string, name: string, shortName?: string | null }
+        & { __typename?: 'Unit' }
+      ) | null }
+      & { __typename?: 'AttributeType' }
+    ) }
+    & { __typename: 'AttributeRichText' | 'AttributeText' }
   )>, responsibleParties: Array<(
     { id: string, role?: ActionResponsiblePartyRole | null, organization: (
       { id: string, abbreviation: string, name: string }
@@ -5229,7 +5227,13 @@ export type DashboardActionListQuery = (
           & { __typename?: 'ImageRendition' }
         ) | null }
         & { __typename?: 'Image' }
-      ) | null }
+      ) | null, generalContent: (
+        { actionTaskTerm: SiteGeneralContentActionTaskTerm, organizationTerm: SiteGeneralContentOrganizationTerm }
+        & { __typename?: 'SiteGeneralContent' }
+      ), actionImplementationPhases: Array<(
+        { id: string, identifier: string, name: string, order: number, color?: string | null }
+        & { __typename?: 'ActionImplementationPhase' }
+      )> }
       & { __typename?: 'Plan' }
     ), schedule: Array<(
       { id: string }
@@ -5239,19 +5243,43 @@ export type DashboardActionListQuery = (
       & { __typename?: 'ActionImpact' }
     ) | null, attributes: Array<(
       { id: string, type: (
-        { id: string }
+        { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
+          { id: string, name: string, shortName?: string | null }
+          & { __typename?: 'Unit' }
+        ) | null }
         & { __typename?: 'AttributeType' }
       ) }
-      & { __typename: 'AttributeCategoryChoice' | 'AttributeNumericValue' | 'AttributeRichText' | 'AttributeText' }
+      & { __typename: 'AttributeCategoryChoice' }
     ) | (
-      { id: string, choice?: (
+      { text?: string | null, id: string, choice?: (
         { id: string, name: string }
         & { __typename?: 'AttributeTypeChoiceOption' }
       ) | null, type: (
-        { id: string }
+        { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
+          { id: string, name: string, shortName?: string | null }
+          & { __typename?: 'Unit' }
+        ) | null }
         & { __typename?: 'AttributeType' }
       ) }
       & { __typename: 'AttributeChoice' }
+    ) | (
+      { id: string, numericValue: number, type: (
+        { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
+          { id: string, name: string, shortName?: string | null }
+          & { __typename?: 'Unit' }
+        ) | null }
+        & { __typename?: 'AttributeType' }
+      ) }
+      & { __typename: 'AttributeNumericValue' }
+    ) | (
+      { value: string, id: string, type: (
+        { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
+          { id: string, name: string, shortName?: string | null }
+          & { __typename?: 'Unit' }
+        ) | null }
+        & { __typename?: 'AttributeType' }
+      ) }
+      & { __typename: 'AttributeRichText' | 'AttributeText' }
     )>, responsibleParties: Array<(
       { id: string, role?: ActionResponsiblePartyRole | null, organization: (
         { id: string, abbreviation: string, name: string }
@@ -5325,7 +5353,13 @@ export type DashboardActionListQuery = (
           & { __typename?: 'ImageRendition' }
         ) | null }
         & { __typename?: 'Image' }
-      ) | null }
+      ) | null, generalContent: (
+        { actionTaskTerm: SiteGeneralContentActionTaskTerm, organizationTerm: SiteGeneralContentOrganizationTerm }
+        & { __typename?: 'SiteGeneralContent' }
+      ), actionImplementationPhases: Array<(
+        { id: string, identifier: string, name: string, order: number, color?: string | null }
+        & { __typename?: 'ActionImplementationPhase' }
+      )> }
       & { __typename?: 'Plan' }
     ), schedule: Array<(
       { id: string }
@@ -5335,19 +5369,43 @@ export type DashboardActionListQuery = (
       & { __typename?: 'ActionImpact' }
     ) | null, attributes: Array<(
       { id: string, type: (
-        { id: string }
+        { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
+          { id: string, name: string, shortName?: string | null }
+          & { __typename?: 'Unit' }
+        ) | null }
         & { __typename?: 'AttributeType' }
       ) }
-      & { __typename: 'AttributeCategoryChoice' | 'AttributeNumericValue' | 'AttributeRichText' | 'AttributeText' }
+      & { __typename: 'AttributeCategoryChoice' }
     ) | (
-      { id: string, choice?: (
+      { text?: string | null, id: string, choice?: (
         { id: string, name: string }
         & { __typename?: 'AttributeTypeChoiceOption' }
       ) | null, type: (
-        { id: string }
+        { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
+          { id: string, name: string, shortName?: string | null }
+          & { __typename?: 'Unit' }
+        ) | null }
         & { __typename?: 'AttributeType' }
       ) }
       & { __typename: 'AttributeChoice' }
+    ) | (
+      { id: string, numericValue: number, type: (
+        { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
+          { id: string, name: string, shortName?: string | null }
+          & { __typename?: 'Unit' }
+        ) | null }
+        & { __typename?: 'AttributeType' }
+      ) }
+      & { __typename: 'AttributeNumericValue' }
+    ) | (
+      { value: string, id: string, type: (
+        { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit?: (
+          { id: string, name: string, shortName?: string | null }
+          & { __typename?: 'Unit' }
+        ) | null }
+        & { __typename?: 'AttributeType' }
+      ) }
+      & { __typename: 'AttributeRichText' | 'AttributeText' }
     )>, responsibleParties: Array<(
       { id: string, role?: ActionResponsiblePartyRole | null, organization: (
         { id: string, abbreviation: string, name: string }
@@ -5384,7 +5442,19 @@ export type DashboardActionListQuery = (
     ) | null }
     & { __typename?: 'Action' }
   )> | null, planPage?: { __typename: 'AccessibilityStatementPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PrivacyPolicyPage' | 'StaticPage' } | (
-    { dashboardColumns?: Array<{ __typename: 'FieldColumnBlock' } | (
+    { dashboardColumns?: Array<(
+      { columnLabel?: string | null, field: string, attributeType?: (
+        { id: string, format: AttributeTypeFormat, name: string, identifier: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
+          { id: string, identifier: string }
+          & { __typename?: 'AttributeTypeChoiceOption' }
+        )>, unit?: (
+          { id: string, name: string }
+          & { __typename?: 'Unit' }
+        ) | null }
+        & { __typename: 'AttributeType' }
+      ) | null }
+      & { __typename: 'FieldColumnBlock' }
+    ) | (
       { columnLabel?: string | null }
       & { __typename: 'IdentifierColumnBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorsColumnBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'ResponsiblePartiesColumnBlock' | 'StatusColumnBlock' | 'TasksColumnBlock' | 'UpdatedAtColumnBlock' }
     )> | null }
@@ -5635,7 +5705,7 @@ export type IndicatorGraphDataQuery = (
     )> }
     & { __typename?: 'Plan' }
   ) | null, indicator?: (
-    { id: string, name: string, timeResolution: IndicatorTimeResolution, reference?: string | null, minValue?: number | null, maxValue?: number | null, organization: (
+    { id: string, name: string, timeResolution: IndicatorTimeResolution, showTrendline: boolean, desiredTrend?: IndicatorDesiredTrend | null, reference?: string | null, minValue?: number | null, maxValue?: number | null, organization: (
       { id: string, name: string, abbreviation: string }
       & { __typename?: 'Organization' }
     ), quantity?: (
@@ -6418,7 +6488,19 @@ export type ActionListPageFiltersFragment = (
 );
 
 export type ActionTableColumnFragmentFragment = (
-  { dashboardColumns?: Array<{ __typename: 'FieldColumnBlock' } | (
+  { dashboardColumns?: Array<(
+    { columnLabel?: string | null, field: string, attributeType?: (
+      { id: string, format: AttributeTypeFormat, name: string, identifier: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
+        { id: string, identifier: string }
+        & { __typename?: 'AttributeTypeChoiceOption' }
+      )>, unit?: (
+        { id: string, name: string }
+        & { __typename?: 'Unit' }
+      ) | null }
+      & { __typename: 'AttributeType' }
+    ) | null }
+    & { __typename: 'FieldColumnBlock' }
+  ) | (
     { columnLabel?: string | null }
     & { __typename: 'IdentifierColumnBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorsColumnBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'ResponsiblePartiesColumnBlock' | 'StatusColumnBlock' | 'TasksColumnBlock' | 'UpdatedAtColumnBlock' }
   )> | null }
@@ -12030,7 +12112,7 @@ export type IndicatorDetailsQueryVariables = Exact<{
 
 export type IndicatorDetailsQuery = (
   { indicator?: (
-    { id: string, identifier?: string | null, name: string, level?: string | null, description?: string | null, timeResolution: IndicatorTimeResolution, organization: (
+    { id: string, identifier?: string | null, name: string, level?: string | null, description?: string | null, timeResolution: IndicatorTimeResolution, desiredTrend?: IndicatorDesiredTrend | null, organization: (
       { id: string, name: string, abbreviation: string, classification?: (
         { id: string, name: string }
         & { __typename?: 'OrganizationClass' }
@@ -12273,7 +12355,19 @@ export type OrganizationDetailsQuery = (
     & { __typename?: 'Organization' }
   ) | null, plan?: (
     { id: string, name: string, shortName?: string | null, versionName: string, viewUrl?: string | null, actionListPage?: (
-      { dashboardColumns?: Array<{ __typename: 'FieldColumnBlock' } | (
+      { dashboardColumns?: Array<(
+        { columnLabel?: string | null, field: string, attributeType?: (
+          { id: string, format: AttributeTypeFormat, name: string, identifier: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
+            { id: string, identifier: string }
+            & { __typename?: 'AttributeTypeChoiceOption' }
+          )>, unit?: (
+            { id: string, name: string }
+            & { __typename?: 'Unit' }
+          ) | null }
+          & { __typename: 'AttributeType' }
+        ) | null }
+        & { __typename: 'FieldColumnBlock' }
+      ) | (
         { columnLabel?: string | null }
         & { __typename: 'IdentifierColumnBlock' | 'ImpactColumnBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorsColumnBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'ResponsiblePartiesColumnBlock' | 'StatusColumnBlock' | 'TasksColumnBlock' | 'UpdatedAtColumnBlock' }
       )> | null }
