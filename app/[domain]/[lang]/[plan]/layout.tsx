@@ -4,7 +4,6 @@ import { Metadata } from 'next';
 import { cookies, headers } from 'next/headers';
 import { notFound } from 'next/navigation';
 
-import { pathsInstance } from '@/common/environment';
 import { getThemeStaticURL, loadTheme } from '@/common/theme';
 import { SharedIcons } from '@/components/common/Icon';
 import { MatomoAnalytics } from '@/components/MatomoAnalytics';
@@ -93,37 +92,38 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+async function getPathsData(pathsInstance: string) {
+  if (pathsInstance) {
+    const { data: pathsData } = await tryRequest(
+      getPathsInstance(pathsInstance)
+    );
+    if (pathsData?.instance) {
+      console.log('pathsData', pathsData);
+      return pathsData;
+    } else return { instance: { id: 'unknown' } };
+  }
+  return undefined;
+}
+
 export default async function PlanLayout({ params, children }: Props) {
   const { plan, domain } = params;
   const headersList = headers();
   const cookieStore = cookies();
   const protocol = headersList.get('x-forwarded-proto');
-  const { data } = await tryRequest(
+  const { data: planData } = await tryRequest(
     getPlan(domain, plan, `${protocol}://${domain}`)
   );
 
-  if (!data?.plan) {
+  if (!planData?.plan) {
     notFound();
   }
 
-  const theme = await loadTheme(data.plan.themeIdentifier || params.plan);
-  const matomoAnalyticsUrl = data.plan.domain?.matomoAnalyticsUrl ?? undefined;
+  const theme = await loadTheme(planData.plan.themeIdentifier || params.plan);
+  const matomoAnalyticsUrl =
+    planData.plan.domain?.matomoAnalyticsUrl ?? undefined;
   const selectedWorkflow = cookieStore.get(SELECTED_WORKFLOW_COOKIE_KEY);
 
-  //const planData = data.plan;
-  //WIP: Augment plan data with kausalPathsInstanceUuid until backend is updated
-  const planData = { ...data.plan };
-  planData.kausalPathsInstanceUuid = pathsInstance;
-
-  let pathsData = undefined;
-  if (planData.kausalPathsInstanceUuid) {
-    const { data } = await tryRequest(
-      getPathsInstance(planData.kausalPathsInstanceUuid)
-    );
-    if (data?.instance) {
-      pathsData = data;
-    }
-  }
+  const pathsData = await getPathsData(planData.plan?.kausalPathsInstanceUuid);
 
   return (
     <>
@@ -142,11 +142,11 @@ export default async function PlanLayout({ params, children }: Props) {
       <ThemeProvider theme={theme}>
         <GlobalStyles />
         <SharedIcons />
-        <PlanProvider plan={planData}>
+        <PlanProvider plan={planData.plan}>
           <PathsProvider instance={pathsData}>
             <WorkflowProvider
               initialWorkflow={selectedWorkflow?.value as string | undefined}
-              workflowStates={data.workflowStates}
+              workflowStates={planData.workflowStates}
             >
               {children}
             </WorkflowProvider>
