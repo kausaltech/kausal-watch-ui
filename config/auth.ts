@@ -45,9 +45,8 @@ export const {
         }
         return session;
       },
-      async redirect(params) {
-        // FIXME: Remove this when we start using real hostnames in the NextJS middleware.
-        return params.url;
+      redirect() {
+        return `${protocol}://${host}/`;
       },
     },
     providers: [

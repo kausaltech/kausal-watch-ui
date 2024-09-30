@@ -494,8 +494,6 @@ function SiteFooter(props: SiteFooterProps) {
   const absoluteLink = (link: string, slug: string) =>
     `${appendPort(link)}${slug}`;
 
-  const homeUrl = plan.viewUrl ? absoluteLink(plan.viewUrl, '/') : undefined;
-
   return (
     <StyledFooter className="site-footer">
       <Container>
@@ -617,7 +615,7 @@ function SiteFooter(props: SiteFooterProps) {
                   </NavigationLink>
                 </UtilityItem>
               ))}
-            {showUiLogin && homeUrl && (
+            {showUiLogin && (
               <UtilityItem>
                 <StyledButton
                   disabled={isAuthLoading}
@@ -625,7 +623,7 @@ function SiteFooter(props: SiteFooterProps) {
                   onClick={() =>
                     isAuthenticated
                       ? handleSignOut()
-                      : signIn('watch-oidc-provider', { redirectTo: homeUrl })
+                      : signIn('watch-oidc-provider')
                   }
                 >
                   {isAuthLoading ? (
