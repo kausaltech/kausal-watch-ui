@@ -1,6 +1,7 @@
-import NextAuth from 'next-auth';
-import type { OIDCConfig } from '@auth/core/providers';
 import { headers } from 'next/headers';
+
+import type { OIDCConfig } from '@auth/core/providers';
+import NextAuth from 'next-auth';
 
 type Profile = {
   name: string;
@@ -43,6 +44,10 @@ export const {
           }
         }
         return session;
+      },
+      async redirect(params) {
+        // FIXME: Remove this when we start using real hostnames in the NextJS middleware.
+        return params.url;
       },
     },
     providers: [

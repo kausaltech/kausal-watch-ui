@@ -1,19 +1,20 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { Container, Spinner } from 'reactstrap';
-import { transparentize } from 'polished';
-import SVG from 'react-inlinesvg';
-import styled from 'styled-components';
-import { NavigationLink, Link } from 'common/links';
-import Icon from './Icon';
-import PlanSelector from 'components/plans/PlanSelector';
-import { useTheme } from 'styled-components';
-import { useTranslations } from 'next-intl';
-import { usePlan } from '@/context/plan';
+
 import { signIn, useSession } from 'next-auth/react';
-import Button from './Button';
-import { useHandleSignOut } from '@/utils/auth.utils';
+import { useTranslations } from 'next-intl';
+import { transparentize } from 'polished';
+import PropTypes from 'prop-types';
+import SVG from 'react-inlinesvg';
+import { Container, Spinner } from 'reactstrap';
+import styled, { useTheme } from 'styled-components';
+
+import { Link, NavigationLink } from '@/common/links';
 import { getThemeStaticURL } from '@/common/theme';
+import PlanSelector from '@/components/plans/PlanSelector';
+import { usePlan } from '@/context/plan';
+import { useHandleSignOut } from '@/utils/auth.utils';
+import Button from './Button';
+import Icon from './Icon';
 
 const StyledButton = styled(Button)`
   &.btn-link {
@@ -493,6 +494,8 @@ function SiteFooter(props: SiteFooterProps) {
   const absoluteLink = (link: string, slug: string) =>
     `${appendPort(link)}${slug}`;
 
+  const homeUrl = plan.viewUrl ? absoluteLink(plan.viewUrl, '/') : undefined;
+
   return (
     <StyledFooter className="site-footer">
       <Container>
@@ -614,7 +617,7 @@ function SiteFooter(props: SiteFooterProps) {
                   </NavigationLink>
                 </UtilityItem>
               ))}
-            {showUiLogin && (
+            {showUiLogin && homeUrl && (
               <UtilityItem>
                 <StyledButton
                   disabled={isAuthLoading}
@@ -622,7 +625,7 @@ function SiteFooter(props: SiteFooterProps) {
                   onClick={() =>
                     isAuthenticated
                       ? handleSignOut()
-                      : signIn('watch-oidc-provider')
+                      : signIn('watch-oidc-provider', { redirectTo: homeUrl })
                   }
                 >
                   {isAuthLoading ? (
