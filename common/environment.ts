@@ -23,8 +23,5 @@ export const authIssuer = process.env.NEXT_PUBLIC_AUTH_ISSUER;
 export const logGraphqlQueries =
   isServer && process.env.LOG_GRAPHQL_QUERIES === 'true';
 
-export const pathsInstance =
-  process.env.NEXT_PUBLIC_KAUSAL_PATHS_INSTANCE_UUID || 'sunnydale';
-
 export const pathsApiUrl =
   process.env.NEXT_PUBLIC_PATHS_API_URL || 'https://api.paths.kausal.dev/v1';
