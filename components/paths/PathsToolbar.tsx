@@ -133,7 +133,7 @@ const PathsToolbar = () => {
   const activeScenario = useReactiveVar(activeScenarioVar);
 
   useEffect(() => {
-    if (!paths) return;
+    if (!paths || paths.instance.id === 'unknown') return;
     const { instance, scenarios } = paths;
     const firstActiveScenario = scenarios.find((sc) => sc.isActive);
     const goals = instance.goals;
@@ -158,6 +158,8 @@ const PathsToolbar = () => {
   }, [paths?.instance.id]);
 
   if (!paths) return null;
+  if (paths.instance.id === 'unknown')
+    return <FloatingToolbar>UNKNOWN PATHS INSTANCE SET</FloatingToolbar>;
 
   return (
     <FloatingToolbar>
