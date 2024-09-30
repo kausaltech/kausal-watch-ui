@@ -819,17 +819,11 @@ class ActionNameFilter implements ActionListFilter<string | undefined> {
 
   filterAction(value: string, action: ActionListAction) {
     const searchStr = escapeStringRegexp(value.toLowerCase());
+    let searchTarget = action.name.replace(/\u00AD/g, '').toLowerCase();
     if (this.hasActionIdentifiers) {
-      if (action.identifier.toLowerCase().startsWith(searchStr)) return true;
+      searchTarget = `${action.identifier.toLowerCase()} ${searchTarget}`;
     }
-    if (
-      action.name
-        .replace(/\u00AD/g, '')
-        .toLowerCase()
-        .search(searchStr) !== -1
-    )
-      return true;
-    return false;
+    return searchTarget.search(searchStr) !== -1;
   }
   getLabel(t: TFunction) {
     return t('filter-text', this.actionTermContext);
