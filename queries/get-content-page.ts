@@ -145,6 +145,7 @@ const GET_CONTENT_PAGE = gql`
           id
           identifier
           name
+          kausalPathsNodeUuid
           categoryPage {
             id
             urlPath
