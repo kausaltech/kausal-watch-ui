@@ -1,6 +1,7 @@
-import NextAuth from 'next-auth';
-import type { OIDCConfig } from '@auth/core/providers';
 import { headers } from 'next/headers';
+
+import type { OIDCConfig } from '@auth/core/providers';
+import NextAuth from 'next-auth';
 
 type Profile = {
   name: string;
@@ -43,6 +44,9 @@ export const {
           }
         }
         return session;
+      },
+      redirect() {
+        return `${protocol}://${host}/`;
       },
     },
     providers: [
