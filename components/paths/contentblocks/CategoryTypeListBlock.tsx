@@ -1,15 +1,11 @@
 'use client';
 import React from 'react';
 
-import {
-  CategoryLevel,
-  MultiUseImageFragmentFragment,
-} from 'common/__generated__/graphql';
+import { MultiUseImageFragmentFragment } from 'common/__generated__/graphql';
 import { CommonContentBlockProps } from 'common/blocks.types';
 import { beautifyValue } from 'common/data/format';
 import { Link } from 'common/links';
 import Card from 'components/common/Card';
-import { useFallbackCategories } from 'context/categories';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { Col, Container, Row } from 'reactstrap';
@@ -23,11 +19,14 @@ import {
 } from '@/context/paths/cache';
 import { usePaths } from '@/context/paths/paths';
 import { usePlan } from '@/context/plan';
-import { CATEGORY_FRAGMENT } from '@/fragments/category.fragment';
+import {
+  CATEGORY_FRAGMENT,
+  RECURSIVE_CATEGORY_FRAGMENT,
+} from '@/fragments/category.fragment';
 import { GET_PATHS_ACTION_LIST } from '@/queries/paths/get-paths-actions';
 import { getHttpHeaders } from '@/utils/paths/paths.utils';
 import PathsActionNode from '@/utils/paths/PathsActionNode';
-import { useQuery, useReactiveVar } from '@apollo/client';
+import { gql, useQuery, useReactiveVar } from '@apollo/client';
 import { Theme } from '@kausal/themes/types';
 
 import ActionParameters from '../ActionParameters';
@@ -38,6 +37,15 @@ const getColor = (theme: Theme, darkFallback = theme.themeColors.black) =>
 
 const getBackgroundColor = (theme: Theme) =>
   theme.section.categoryList?.background || theme.neutralLight;
+
+const GET_CATEGORIES_FOR_CATEGORY_TYPE_LIST = gql`
+  query GetCategoriesForCategoryTypeList($plan: ID!, $categoryType: ID!) {
+    planCategories(plan: $plan, categoryType: $categoryType) {
+      ...CategoryRecursiveFragment
+    }
+  }
+  ${RECURSIVE_CATEGORY_FRAGMENT}
+`;
 
 const GroupHeader = styled.h4`
   border-left: 6px solid ${(props) => props.$color};
@@ -137,18 +145,9 @@ export type CategoryListBlockCategory = {
   };
 };
 
-const PATHS_WATCH_MOCK_MAP = {
-  MP3: 'reduce_transportation_demand',
-  MP4: 'shift_to_sustainable_transport_modes',
-  MP5: 'improved_vehicle_fleet',
-  MP2: 'reduce_building_heat_demand',
-  MP1: 'heater_replacement_and_district_heat',
-  MP6: 'install_waste_treatment_ccs',
-};
-
 const getPathsActionForCategory = (category, actions) => {
   const pathsActionForCategory = actions.find(
-    (action) => action.id === PATHS_WATCH_MOCK_MAP[category.identifier]
+    (action) => action.id === category.kausalPathsNodeUuid
   );
   if (!pathsActionForCategory) {
     return null;
@@ -191,9 +190,6 @@ const CategoryList = (props) => {
       pathsAction: pathsAction,
     };
   });
-
-  console.log('groups=', groups);
-  console.log('categories=', categoryData);
 
   return (
     <>
@@ -274,7 +270,9 @@ const CategoryList = (props) => {
 
 interface CategoryTypeListBlockProps extends CommonContentBlockProps {
   categories?: Array<CategoryListBlockCategory>;
-  groupByLevel?: CategoryLevel;
+  groupByLevel?: string;
+  listByLevel?: string;
+  categoryType?: string;
   heading?: string;
   lead: string;
   style?: 'treemap' | 'cards';
@@ -290,7 +288,11 @@ const getParentCategoryOfLevel = (cat, levelId: string) => {
   return catParents.find((parent) => parent.level.id === levelId);
 };
 
-const getParentCategoriesOfLevel = (cats, levelId: string) => {
+const getParentCategoriesOfLevel = (cats, levelId: string | undefined) => {
+  if (!levelId) {
+    return [];
+  }
+  console.log('cats=', cats, levelId);
   const categoriesOfLevel = cats.map((cat) =>
     getParentCategoryOfLevel(cat, levelId)
   );
@@ -300,14 +302,29 @@ const getParentCategoriesOfLevel = (cats, levelId: string) => {
 };
 
 const CategoryTypeListBlock = (props: CategoryTypeListBlockProps) => {
-  const fallbackCategories = useFallbackCategories();
-  const {
-    id = '',
-    categories = fallbackCategories,
-    heading,
-    groupByLevel,
-  } = props;
+  const { id = '', heading, groupByLevel, listByLevel, categoryType } = props;
+  const plan = usePlan();
 
+  const { data, loading, error } = useQuery(
+    GET_CATEGORIES_FOR_CATEGORY_TYPE_LIST,
+    {
+      variables: {
+        plan: plan.identifier,
+        categoryType: categoryType,
+      },
+    }
+  );
+
+  if (loading) {
+    return <div>Loading...</div>; // Or any loading indicator you prefer
+  }
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
+
+  const categories = data.planCategories.filter(
+    (cat) => cat.level.id === listByLevel
+  );
   return (
     <CategoryListSection id={id}>
       <Container>
@@ -317,7 +334,7 @@ const CategoryTypeListBlock = (props: CategoryTypeListBlockProps) => {
         </Row>
         <CategoryList
           categories={categories}
-          groups={getParentCategoriesOfLevel(categories, groupByLevel.id)}
+          groups={getParentCategoriesOfLevel(categories, groupByLevel)}
         />
       </Container>
     </CategoryListSection>
