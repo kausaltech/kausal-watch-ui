@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-const DimensionalMetricFragment = gql`
+export const DimensionalMetricFragment = gql`
   fragment DimensionalMetric on DimensionalMetricType {
     id
     name
