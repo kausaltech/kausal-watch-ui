@@ -61,23 +61,18 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
     }
 
     case 'CategoryLevelListBlock': {
-      const {
-        heading,
-        lead,
-        categoryType,
-        category,
-        listLevel,
-        groupingLevel,
-      } = block;
-      const categories = categoryType.categories.filter(
-        (cat) => cat.level.id === listLevel.id
-      );
+      const { heading, lead } = block;
+
+      const categoryTypeIdentifier = 'handlungsfeld';
+      const categoryLevelId = '25';
+      const categoryGroupByLevelId = '23';
 
       return (
         <CategoryTypeListBlock
           id={id}
-          categories={categories}
-          groupByLevel={groupingLevel}
+          groupByLevel={categoryGroupByLevelId}
+          listByLevel={categoryLevelId}
+          categoryType={categoryTypeIdentifier}
           heading={heading ?? undefined}
           lead={lead}
         />
