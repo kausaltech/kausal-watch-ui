@@ -33,6 +33,55 @@ const ACTION_PARAMETER_FRAGMENT = gql`
   }
 `;
 
+const PATHS_ACTION_FRAGMENT = gql`
+  fragment pathsActionFragment on ActionNode {
+    id
+    name
+    goal
+    shortDescription
+    color
+    decisionLevel
+    unit {
+      htmlShort
+    }
+    parameters {
+      ...ActionParameter
+    }
+    quantity
+    inputNodes {
+      id
+    }
+    outputNodes {
+      id
+    }
+    impactMetric(goalId: $goal) {
+      id
+      name
+      unit {
+        htmlShort
+      }
+      cumulativeForecastValue
+      yearlyCumulativeUnit {
+        htmlShort
+      }
+      historicalValues {
+        year
+        value
+      }
+      forecastValues {
+        value
+        year
+      }
+    }
+    group {
+      id
+      name
+      color
+    }
+  }
+  ${ACTION_PARAMETER_FRAGMENT}
+`;
+
 const GET_PATHS_ACTION_LIST = gql`
   query GetPathsActionList($goal: ID) {
     instance {
@@ -47,103 +96,19 @@ const GET_PATHS_ACTION_LIST = gql`
       }
     }
     actions(onlyRoot: true) {
-      id
-      name
-      goal
-      shortDescription
-      color
-      decisionLevel
-      unit {
-        htmlShort
-      }
-      parameters {
-        ...ActionParameter
-      }
-      quantity
-      inputNodes {
-        id
-      }
-      outputNodes {
-        id
-      }
-      impactMetric(goalId: $goal) {
-        id
-        name
-        unit {
-          htmlShort
-        }
-        cumulativeForecastValue
-        yearlyCumulativeUnit {
-          htmlShort
-        }
-        historicalValues {
-          year
-          value
-        }
-        forecastValues {
-          value
-          year
-        }
-      }
-      group {
-        id
-        name
-        color
-      }
-    }
-    actionEfficiencyPairs {
-      id
-      label
-      plotLimitEfficiency
-      invertCost
-      invertImpact
-      efficiencyUnit {
-        htmlShort
-      }
-      costUnit {
-        htmlShort
-      }
-      impactUnit {
-        htmlShort
-      }
-      costNode {
-        id
-        name
-        shortDescription
-        unit {
-          short
-        }
-      }
-      impactNode {
-        id
-        name
-        shortDescription
-        unit {
-          short
-        }
-      }
-      actions {
-        action {
-          id
-          group {
-            id
-            name
-            color
-          }
-        }
-        efficiencyDivisor
-        costValues {
-          value
-          year
-        }
-        impactValues {
-          value
-          year
-        }
-      }
+      ...pathsActionFragment
     }
   }
-  ${ACTION_PARAMETER_FRAGMENT}
+  ${PATHS_ACTION_FRAGMENT}
 `;
 
-export { ACTION_PARAMETER_FRAGMENT, GET_PATHS_ACTION_LIST };
+const GET_PATHS_ACTION = gql`
+  query GetPathsAction($action: ID!, $goal: ID) {
+    action(id: $action) {
+      ...pathsActionFragment
+    }
+  }
+  ${PATHS_ACTION_FRAGMENT}
+`;
+
+export { ACTION_PARAMETER_FRAGMENT, GET_PATHS_ACTION, GET_PATHS_ACTION_LIST };
