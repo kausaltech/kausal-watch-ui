@@ -2,7 +2,7 @@ import { gql } from '@apollo/client';
 
 import { ACTION_PARAMETER_FRAGMENT } from './get-paths-actions';
 
-const DIMENSIONAL_METRIC_FRAGMENT = gql`
+export const DIMENSIONAL_METRIC_FRAGMENT = gql`
   fragment DimensionalMetric on DimensionalMetricType {
     id
     name
@@ -51,45 +51,7 @@ const DIMENSIONAL_METRIC_FRAGMENT = gql`
   }
 `;
 
-const DIMENSIONAL_FLOW_FRAGMENT = gql`
-  fragment DimensionalPlot on DimensionalFlowType {
-    id
-    unit {
-      htmlLong
-    }
-    nodes {
-      id
-      label
-      color
-    }
-    sources
-    links {
-      year
-      sources
-      targets
-      values
-      absoluteSourceValues
-    }
-  }
-`;
-
-const GET_ACTION_CONTENT = gql`
-  query GetActionContent($node: ID!, $goal: ID, $downstreamDepth: Int) {
-    action(id: $node) {
-      ...CausalGridNode
-      goal
-      description
-      dimensionalFlow {
-        ...DimensionalPlot
-      }
-      downstreamNodes(maxDepth: $downstreamDepth) {
-        ...CausalGridNode
-      }
-      decisionLevel
-    }
-  }
-  ${DIMENSIONAL_FLOW_FRAGMENT}
-
+export const CAUSAL_GRID_NODE_FRAGMENT = gql`
   fragment CausalGridNode on NodeInterface {
     id
     name
@@ -161,8 +123,26 @@ const GET_ACTION_CONTENT = gql`
       }
     }
   }
-  ${DIMENSIONAL_FLOW_FRAGMENT}
+  ${DIMENSIONAL_METRIC_FRAGMENT}
+`;
+
+const GET_NODE_CONTENT = gql`
+  query GetNodeContent($node: ID!, $goal: ID!) {
+    node(id: $node) {
+      ...CausalGridNode
+    }
+  }
+  ${CAUSAL_GRID_NODE_FRAGMENT}
   ${ACTION_PARAMETER_FRAGMENT}
 `;
 
-export { GET_ACTION_CONTENT };
+const GET_NODE_INFO = gql`
+  query GetNodeInfo($node: ID!) {
+    node(id: $node) {
+      id
+      name
+    }
+  }
+`;
+
+export { GET_NODE_CONTENT, GET_NODE_INFO };
