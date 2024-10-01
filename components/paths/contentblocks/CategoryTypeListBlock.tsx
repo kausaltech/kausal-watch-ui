@@ -3,10 +3,6 @@ import React from 'react';
 
 import { MultiUseImageFragmentFragment } from 'common/__generated__/graphql';
 import { CommonContentBlockProps } from 'common/blocks.types';
-import { beautifyValue } from 'common/data/format';
-import { Link } from 'common/links';
-import Card from 'components/common/Card';
-import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { Col, Container, Row } from 'reactstrap';
 import styled from 'styled-components';
@@ -29,7 +25,7 @@ import PathsActionNode from '@/utils/paths/PathsActionNode';
 import { gql, useQuery, useReactiveVar } from '@apollo/client';
 import { Theme } from '@kausal/themes/types';
 
-import ActionParameters from '../ActionParameters';
+import CategoryCard from '../CategoryCard';
 
 const getColor = (theme: Theme, darkFallback = theme.themeColors.black) =>
   theme.section.categoryList?.color ||
@@ -50,13 +46,6 @@ const GET_CATEGORIES_FOR_CATEGORY_TYPE_LIST = gql`
 const GroupHeader = styled.h4`
   border-left: 6px solid ${(props) => props.$color};
   margin-bottom: 24px;
-`;
-
-const GroupIdentifierHeader = styled.div`
-  background-color: ${(props) => props.$color};
-  color: ${(props) => readableColor(props.$color || '#ffffff')};
-  padding: 6px;
-  margin-bottom: 12px;
 `;
 
 const CategoryListSection = styled.div`
@@ -112,16 +101,6 @@ const CategoryListSection = styled.div`
   }
 `;
 
-const CardHeader = styled.h3`
-  color: ${(props) => props.theme.neutralDark};
-  font-size: ${(props) => props.theme.fontSizeMd};
-  line-height: ${(props) => props.theme.lineHeightMd};
-`;
-
-const Identifier = styled.span`
-  color: ${(props) => props.theme.textColor.tertiary};
-`;
-
 export type CategoryListBlockCategory = {
   id: string;
   image?: MultiUseImageFragmentFragment | null;
@@ -168,7 +147,7 @@ const CategoryList = (props) => {
   const activeGoal = useReactiveVar(activeGoalVar);
   const activeScenario = useReactiveVar(activeScenarioVar);
   const yearRange = useReactiveVar(yearRangeVar);
-  const t = useTranslations();
+
   const pathsInstance = paths.instance.id;
   const { data, loading } = useQuery(GET_PATHS_ACTION_LIST, {
     fetchPolicy: 'no-cache',
@@ -219,46 +198,11 @@ const CategoryList = (props) => {
                     key={cat.id}
                     className="mb-5 d-flex align-items-stretch"
                   >
-                    <Card
-                      colorEffect={getCategoryColor(cat)}
-                      altText={cat.image?.altText}
-                    >
-                      <GroupIdentifierHeader $color={getCategoryColor(cat)}>
-                        {group.name}
-                      </GroupIdentifierHeader>
-                      <div>
-                        {' '}
-                        <Link href={cat.categoryPage.urlPath} legacyBehavior>
-                          <a className="card-wrapper">
-                            <CardHeader className="card-title">
-                              {!cat?.type.hideCategoryIdentifiers && (
-                                <Identifier>{cat.identifier}. </Identifier>
-                              )}
-                              {cat.name}
-                            </CardHeader>
-                          </a>
-                        </Link>
-                        {cat.leadParagraph && <p>{cat.leadParagraph}</p>}
-                        {cat.pathsAction && (
-                          <div>
-                            {t('impact')} {yearRange[1]}
-                            <h4>
-                              {yearRange ? (
-                                beautifyValue(
-                                  cat.pathsAction.getYearlyImpact(yearRange[1])
-                                )
-                              ) : (
-                                <span>---</span>
-                              )}
-                              {cat.pathsAction.getUnit()}
-                            </h4>
-                            <ActionParameters
-                              parameters={cat.pathsAction.data.parameters}
-                            />
-                          </div>
-                        )}
-                      </div>
-                    </Card>
+                    <CategoryCard
+                      category={cat}
+                      group={group}
+                      pathsInstance={pathsInstance}
+                    />
                   </Col>
                 )
             )}
