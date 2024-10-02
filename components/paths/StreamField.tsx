@@ -61,11 +61,11 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
     }
 
     case 'CategoryLevelListBlock': {
-      const { heading, lead } = block;
-
-      const categoryTypeIdentifier = 'handlungsfeld';
-      const categoryLevelId = '25';
-      const categoryGroupByLevelId = '23';
+      const { heading, lead, listLevel, groupingLevel, categoryType } = block;
+      console.log('CategoryLevelListBlock', block);
+      const categoryTypeIdentifier = categoryType?.identifier;
+      const categoryLevelId = listLevel?.id;
+      const categoryGroupByLevelId = groupingLevel?.id;
 
       return (
         <CategoryTypeListBlock

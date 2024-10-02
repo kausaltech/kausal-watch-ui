@@ -66,7 +66,7 @@ const PathsPageContent = ({
   page: GeneralPlanPage;
   pageSectionColor?: string;
 }) => {
-  //console.log('page', page);
+  console.log('page', page);
   const isCategoryPage = page.__typename === 'CategoryPage';
   const isCategoryTypePage =
     page.__typename === 'CategoryTypePage' ||
@@ -92,9 +92,10 @@ const PathsPageContent = ({
       {isCategoryTypePage && (
         <ContentArea>
           <MainContent>
-            {page.body && (
-              <StreamField page={page} blocks={categoryTypeStreamfield.data} />
-            )}
+            <StreamField
+              page={page}
+              blocks={categoryTypeStreamfield[page.slug].data}
+            />
           </MainContent>
         </ContentArea>
       )}

@@ -1,9 +1,8 @@
 import { beautifyValue } from 'common/data/format';
 import { Link } from 'common/links';
-import Card from 'components/common/Card';
 import ActionParameters from 'components/paths/ActionParameters';
 import { useTranslations } from 'next-intl';
-import { readableColor } from 'polished';
+import { readableColor, transparentize } from 'polished';
 import styled from 'styled-components';
 
 import { activeGoalVar, yearRangeVar } from '@/context/paths/cache';
@@ -21,10 +20,26 @@ const GroupIdentifierHeader = styled.div`
   background-color: ${(props) => props.$color};
   color: ${(props) => readableColor(props.$color || '#ffffff')};
   padding: 6px;
-  margin-bottom: 12px;
+  margin-bottom: ${(props) => props.theme.spaces.s100};
 `;
 
+const Card = styled.div`
+  width: 100%;
+  transition: all 0.5s ease;
+  overflow: hidden;
+  border-width: ${(props) => props.theme.cardBorderWidth};
+  border-radius: ${(props) => props.theme.cardBorderRadius};
+  background-color: ${(props) => props.theme.cardBackground.primary};
+  color: ${(props) => props.theme.textColor.primary};
+  box-shadow: 2px 2px 8px
+    ${(props) => transparentize(0.9, props.theme.themeColors.dark)};
+`;
+
+const CardContentBlock = styled.div`
+  margin: ${({ theme }) => `0 ${theme.spaces.s100} ${theme.spaces.s100}`};
+`;
 const CardHeader = styled.h3`
+  margin: ${({ theme }) => `0 ${theme.spaces.s100} ${theme.spaces.s100}`};
   color: ${(props) => props.theme.neutralDark};
   font-size: ${(props) => props.theme.fontSizeMd};
   line-height: ${(props) => props.theme.lineHeightMd};
@@ -71,7 +86,7 @@ const PathsBasicNodeContent = (props) => {
           label.id === 'transportation_emissions:emission_scope:group:indirect'
       ).label;
       return (
-        <div>
+        <CardContentBlock>
           <div>{nodeMetric.getName()}</div>
           <div>
             {directLabel}: {thisYear.rows[0][0]}
@@ -79,7 +94,7 @@ const PathsBasicNodeContent = (props) => {
           <div>
             {indirectLabel}:{thisYear.rows[0][1]}
           </div>
-        </div>
+        </CardContentBlock>
       );
     } else {
       return <div>{data.node.__typename} not supported</div>;
@@ -112,7 +127,7 @@ const PathsActionNodeContent = (props) => {
   if (data) {
     const pathsAction = new PathsActionNode(data.action);
     return (
-      <div>
+      <CardContentBlock>
         {t('impact')} {yearRange[1]}
         <h4>
           {yearRange ? (
@@ -123,7 +138,7 @@ const PathsActionNodeContent = (props) => {
           {pathsAction.getUnit()}
         </h4>
         <ActionParameters parameters={data.action.parameters} />
-      </div>
+      </CardContentBlock>
     );
   }
   return null;
@@ -161,7 +176,11 @@ const CategoryCard = (props) => {
   const { category, group, pathsInstance } = props;
   return (
     <Card>
-      <GroupIdentifierHeader $color="#333">{group.name}</GroupIdentifierHeader>
+      {group && (
+        <GroupIdentifierHeader $color={category.color}>
+          {group.id !== 'all' ? group?.name : ' '}
+        </GroupIdentifierHeader>
+      )}
       <div>
         {' '}
         <Link href={category.categoryPage.urlPath} legacyBehavior>
@@ -174,7 +193,9 @@ const CategoryCard = (props) => {
             </CardHeader>
           </a>
         </Link>
-        {category.leadParagraph && <p>{category.leadParagraph}</p>}
+        {category.leadParagraph && (
+          <CardContentBlock>{category.leadParagraph}</CardContentBlock>
+        )}
         {category.kausalPathsNodeUuid && (
           <PathsNodeContent
             node={category.kausalPathsNodeUuid}
