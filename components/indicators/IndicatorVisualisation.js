@@ -324,6 +324,7 @@ const generateTrendTrace = (indicator, traces, goals, i18n) => {
     const formattedTrace = {
       x: predictedTrace.x.map((year) => `${year}-1-1`),
       y: predictedTrace.y,
+      name: i18n.t('current-trend'),
     };
     return [formattedTrace, calculateBounds(predictedTrace.y)];
   }
