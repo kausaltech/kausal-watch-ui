@@ -142,6 +142,7 @@ const getCategoryColor = (category) => {
 
 const CategoryList = (props) => {
   const { categories, groups } = props;
+  console.log('category list props', props);
   const plan = usePlan();
   const paths = usePaths();
   const activeGoal = useReactiveVar(activeGoalVar);
@@ -174,18 +175,22 @@ const CategoryList = (props) => {
     <>
       {groups?.map((group) => (
         <Row key={group?.id}>
-          <GroupHeader
-            $color={getCategoryColor(
-              categoryData?.find(
-                (cat) => cat?.categoryPage?.live && hasParent(cat, group.id)
-              )
-            )}
-          >
-            {group.name}
-          </GroupHeader>
+          {group?.id !== 'all' && (
+            <GroupHeader
+              $color={getCategoryColor(
+                categoryData?.find(
+                  (cat) => cat?.categoryPage?.live && hasParent(cat, group.id)
+                )
+              )}
+            >
+              {group.name}
+            </GroupHeader>
+          )}
           {categoryData
             ?.filter(
-              (cat) => cat?.categoryPage?.live && hasParent(cat, group.id)
+              (cat) =>
+                (cat?.categoryPage?.live && hasParent(cat, group.id)) ||
+                group.id === 'all'
             )
             .map(
               (cat) =>
@@ -234,7 +239,7 @@ const getParentCategoryOfLevel = (cat, levelId: string) => {
 
 const getParentCategoriesOfLevel = (cats, levelId: string | undefined) => {
   if (!levelId) {
-    return [];
+    return [{ id: 'all', name: 'All' }];
   }
   console.log('cats=', cats, levelId);
   const categoriesOfLevel = cats.map((cat) =>
@@ -249,6 +254,7 @@ const CategoryTypeListBlock = (props: CategoryTypeListBlockProps) => {
   const { id = '', heading, groupByLevel, listByLevel, categoryType } = props;
   const plan = usePlan();
 
+  console.log('categorytypelistblockprops', props);
   const { data, loading, error } = useQuery(
     GET_CATEGORIES_FOR_CATEGORY_TYPE_LIST,
     {
