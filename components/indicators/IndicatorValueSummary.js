@@ -60,6 +60,8 @@ function determineDesirableDirection(desiredTrend, values, goals) {
     return '-';
   }
 
+  // Default value for desiredTrend is `A_` that wil try to
+  // guess the desired trend based on values and goals
   if (!values.length || !goals.length) return null;
 
   const latestValue = values[values.length - 1];
