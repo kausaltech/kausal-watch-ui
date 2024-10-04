@@ -5707,7 +5707,7 @@ export type IndicatorGraphDataQuery = (
     )> }
     & { __typename?: 'Plan' }
   ) | null, indicator?: (
-    { id: string, name: string, timeResolution: IndicatorTimeResolution, reference?: string | null, minValue?: number | null, maxValue?: number | null, organization: (
+    { id: string, name: string, timeResolution: IndicatorTimeResolution, showTrendline: boolean, desiredTrend?: IndicatorDesiredTrend | null, reference?: string | null, minValue?: number | null, maxValue?: number | null, organization: (
       { id: string, name: string, abbreviation: string }
       & { __typename?: 'Organization' }
     ), quantity?: (
@@ -12114,7 +12114,7 @@ export type IndicatorDetailsQueryVariables = Exact<{
 
 export type IndicatorDetailsQuery = (
   { indicator?: (
-    { id: string, identifier?: string | null, name: string, level?: string | null, description?: string | null, timeResolution: IndicatorTimeResolution, organization: (
+    { id: string, identifier?: string | null, name: string, level?: string | null, description?: string | null, timeResolution: IndicatorTimeResolution, desiredTrend?: IndicatorDesiredTrend | null, organization: (
       { id: string, name: string, abbreviation: string, classification?: (
         { id: string, name: string }
         & { __typename?: 'OrganizationClass' }

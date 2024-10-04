@@ -52,7 +52,16 @@ const ChangeSymbol = styled.span`
     `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`};
 `;
 
-function determineDesirableDirection(values, goals) {
+function determineDesirableDirection(desiredTrend, values, goals) {
+  if (desiredTrend === 'INCREASING') {
+    return '+';
+  }
+  if (desiredTrend === 'DECREASING') {
+    return '-';
+  }
+
+  // Default value for desiredTrend is `A_` that wil try to
+  // guess the desired trend based on values and goals
   if (!values.length || !goals.length) return null;
 
   const latestValue = values[values.length - 1];
@@ -68,8 +77,13 @@ function IndicatorValueSummary(props) {
   const t = useTranslations();
   const locale = useLocale();
   const theme = useTheme();
-  const { timeResolution, values, goals, unit } = props;
-  const desirableDirection = determineDesirableDirection(values, goals);
+  const { timeResolution, values, goals, unit, desiredTrend } = props;
+
+  const desirableDirection = determineDesirableDirection(
+    desiredTrend,
+    values,
+    goals
+  );
   const shortUnitName =
     (unit.shortName || unit.name) === 'no unit'
       ? ''
@@ -158,14 +172,21 @@ function IndicatorValueSummary(props) {
   let differenceDisplay = undefined;
   if (values.length > 0 && nextGoal) {
     const difference = nextGoal.value - values[values.length - 1].value;
+    const goalReached =
+      desirableDirection === '+' ? difference <= 0 : difference >= 0;
     const timeToGoal = dayjs(now).to(dayjs(nextGoal.date));
+    const prefix = difference > 0 ? '+' : '-';
     differenceDisplay = (
       <div className="mb-4">
-        <ValueLabel>{t('indicator-time-to-goal')}</ValueLabel>
-        <ValueDate>{timeToGoal}</ValueDate>
+        <ValueLabel>
+          {t(
+            goalReached ? 'indicator-goal-exceeded' : 'indicator-time-to-goal'
+          )}
+        </ValueLabel>
+        <ValueDate>{goalReached ? '-' : timeToGoal}</ValueDate>
         <ValueDisplay>
-          {difference > 0 ? '+' : ''}
-          {beautifyValue(difference, locale)}
+          {goalReached ? '' : prefix}
+          {beautifyValue(Math.abs(difference), locale)}
           <ValueUnit>{diffUnitName}</ValueUnit>
         </ValueDisplay>
       </div>

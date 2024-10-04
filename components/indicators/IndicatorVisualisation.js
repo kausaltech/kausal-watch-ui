@@ -14,7 +14,6 @@ import { isEqual } from 'lodash';
 import { useLocale, useTranslations } from 'next-intl';
 import PropTypes from 'prop-types';
 import { Alert } from 'reactstrap';
-import styled from 'styled-components';
 
 import { gql } from '@apollo/client';
 import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
@@ -33,6 +32,8 @@ const GET_INDICATOR_GRAPH_DATA = gql`
       id
       name
       timeResolution
+      showTrendline
+      desiredTrend
       reference
       minValue
       maxValue
@@ -158,10 +159,6 @@ const GET_INDICATOR_GRAPH_DATA = gql`
       }
     }
   }
-`;
-
-const IndicatorVizHeader = styled.h2`
-  font-size: ${(props) => props.theme.fontSizeMd};
 `;
 
 function generateCube(dimensions, values, path) {
@@ -688,7 +685,7 @@ function IndicatorVisualisation({ indicatorId, indicatorLink }) {
     ? [[], []]
     : generateGoalTraces(indicator, scenarios, i18n);
   const [trendTrace, trendBounds] =
-    normalizeByPopulation || !hasTimeDimension
+    normalizeByPopulation || !hasTimeDimension || !indicator.showTrendline
       ? [null, null]
       : generateTrendTrace(indicator, traces, goalTraces, i18n);
 

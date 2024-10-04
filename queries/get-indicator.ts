@@ -1,9 +1,9 @@
-import { gql } from '@apollo/client';
-
 import {
   IndicatorDetailsQuery,
   IndicatorDetailsQueryVariables,
 } from '@/common/__generated__/graphql';
+import { gql } from '@apollo/client';
+
 import { CATEGORY_TYPE_FRAGMENT } from '../fragments/category-tags.fragment';
 import { getClient } from '../utils/apollo-rsc-client';
 
@@ -29,6 +29,7 @@ const GET_INDICATOR_DETAILS = gql`
       level(plan: $plan)
       description
       timeResolution
+      desiredTrend
       organization {
         id
         classification {

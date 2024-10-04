@@ -64,6 +64,7 @@
     "indicator-resolution-years": "vuotta",
     "indicator-time-no-goals": "Ei tavoitearvoja",
     "indicator-time-to-goal": "Tavoitteeseen matkaa",
+    "indicator-goal-exceeded": "Tavoite jo ylitetty",
     "indicator-value": "Havainto",
     "indicator": "Mittari",
     "indicators": "Mittarit",

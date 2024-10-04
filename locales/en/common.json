@@ -67,6 +67,7 @@
     "indicator-resolution-years": "years",
     "indicator-time-no-goals": "No goals",
     "indicator-time-to-goal": "Time to goal",
+    "indicator-goal-exceeded": "Goal already exceeded",
     "indicator-value": "Value",
     "indicator": "Indicator",
     "indicators": "Indicators",
