@@ -3,6 +3,7 @@ import { Link } from 'common/links';
 import ActionParameters from 'components/paths/ActionParameters';
 import { useTranslations } from 'next-intl';
 import { readableColor, transparentize } from 'polished';
+import { Spinner } from 'reactstrap';
 import styled from 'styled-components';
 
 import { activeGoalVar, yearRangeVar } from '@/context/paths/cache';
@@ -15,6 +16,11 @@ import { DimensionalMetric } from '@/utils/paths/metric';
 import { getHttpHeaders } from '@/utils/paths/paths.utils';
 import PathsActionNode from '@/utils/paths/PathsActionNode';
 import { useQuery, useReactiveVar } from '@apollo/client';
+
+const ContentLoader = styled(Spinner)`
+  margin: 0 auto;
+  //background-color: ${(props) => props.theme.themeColors.light};
+`;
 
 const GroupIdentifierHeader = styled.div`
   background-color: ${(props) => props.$color};
@@ -65,7 +71,7 @@ const PathsBasicNodeContent = (props) => {
   });
 
   if (loading) {
-    return <div>Loading...</div>; // Or any loading indicator you prefer
+    return <ContentLoader type="grow" />;
   }
   if (error) {
     return <div>Error: {error.message}</div>; // Handle error appropriately
@@ -119,7 +125,7 @@ const PathsActionNodeContent = (props) => {
   });
 
   if (loading) {
-    return <div>Loading...</div>; // Or any loading indicator you prefer
+    return <ContentLoader type="grow" />;
   }
   if (error) {
     return <div>Error: {error.message}</div>; // Handle error appropriately
@@ -157,7 +163,7 @@ const PathsNodeContent = (props) => {
   });
 
   if (loading) {
-    return <div>Loading...</div>; // Or any loading indicator you prefer
+    return <ContentLoader type="grow" />;
   }
   if (error) {
     return <div>Error: {error.message}</div>; // Handle error appropriately
@@ -177,7 +183,7 @@ const CategoryCard = (props) => {
   return (
     <Card>
       {group && (
-        <GroupIdentifierHeader $color={category.color}>
+        <GroupIdentifierHeader $color={group?.color || category?.color}>
           {group.id !== 'all' ? group?.name : ' '}
         </GroupIdentifierHeader>
       )}

@@ -176,13 +176,7 @@ const CategoryList = (props) => {
       {groups?.map((group) => (
         <Row key={group?.id}>
           {group?.id !== 'all' && (
-            <GroupHeader
-              $color={getCategoryColor(
-                categoryData?.find(
-                  (cat) => cat?.categoryPage?.live && hasParent(cat, group.id)
-                )
-              )}
-            >
+            <GroupHeader $color={group?.color || '#eeeeee'}>
               {group.name}
             </GroupHeader>
           )}
@@ -194,7 +188,7 @@ const CategoryList = (props) => {
             )
             .map(
               (cat) =>
-                cat.categoryPage && (
+                cat.categoryPage?.live && (
                   <Col
                     tag="li"
                     xs="12"
@@ -278,7 +272,8 @@ const CategoryTypeListBlock = (props: CategoryTypeListBlockProps) => {
   return (
     <CategoryListSection id={id}>
       <Container>
-        <h3>FILTERS HERE</h3> <h3>SORTING HERE</h3>
+        <h5>[FILTERS HERE]</h5> <h5>[SORTING HERE]</h5>
+        <h5>-----</h5>
         <Row>
           <Col className="mb-4">{heading && <h2>{heading}</h2>}</Col>
         </Row>
