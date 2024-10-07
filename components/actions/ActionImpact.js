@@ -1,4 +1,5 @@
 import React from 'react';
+
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
@@ -17,7 +18,7 @@ const ImpactIcon = styled(Icon)`
   }};
 
   &.icon-on {
-    fill: ${(props) => props.theme.brandDark} !important;
+    fill: ${(props) => props.theme.phaseTimelineColor} !important;
   }
 
   &.icon-off {

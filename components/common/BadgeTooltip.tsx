@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Badge, Tooltip } from 'reactstrap';
+
+import { readableColor, shade } from 'polished';
 import SVG from 'react-inlinesvg';
+import { Badge, Tooltip } from 'reactstrap';
 import styled from 'styled-components';
-import { shade, readableColor } from 'polished';
 
 const StyledBadge = styled(({ isLink, ...rest }) => <Badge {...rest} />)<{
   color: string;
@@ -104,7 +105,12 @@ interface BadgeContentProps {
   ariaLabel?: string;
   iconSvg?: string;
   iconImage?: string;
-  color?: 'brandDark' | 'brandLight' | 'neutralDark' | 'neutralLight';
+  color?:
+    | 'badgeColor'
+    | 'brandDark'
+    | 'brandLight'
+    | 'neutralDark'
+    | 'neutralLight';
   isLink: boolean;
   maxLines?: number;
 }
@@ -116,7 +122,7 @@ const BadgeContent = (props: BadgeContentProps) => {
     iconSvg,
     iconImage,
     ariaLabel,
-    color = 'brandDark',
+    color = 'badgeColor',
     isLink = false,
     maxLines,
   } = props;
