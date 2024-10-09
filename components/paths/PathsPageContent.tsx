@@ -1,11 +1,11 @@
 import React from 'react';
 
 import { GetContentPageQuery } from 'common/__generated__/graphql';
-import { categoryTypeStreamfield } from 'components/paths/mock/pathsMockData';
 import StreamField from 'components/paths/StreamField';
 import { Container } from 'reactstrap';
 import styled, { css } from 'styled-components';
 
+import { ActionListPage } from '@/app/[domain]/[lang]/[plan]/(with-layout-elements)/actions/ActionListPage';
 import CategoryPageHeaderBlock from '@/components/paths/contentblocks/CategoryPageHeaderBlock';
 
 type GeneralPlanPage = NonNullable<GetContentPageQuery['planPage']>;
@@ -68,11 +68,8 @@ const PathsPageContent = ({
 }) => {
   console.log('page', page);
   const isCategoryPage = page.__typename === 'CategoryPage';
-  const isCategoryTypePage =
-    page.__typename === 'CategoryTypePage' ||
-    page.slug === 'massnahmenpakete' ||
-    page.slug === 'handlungsfelder';
   const isStaticPage = page.__typename === 'StaticPage';
+  const isActionListPage = page.__typename === 'ActionListPage';
   return (
     <>
       {isCategoryPage && (
@@ -89,24 +86,19 @@ const PathsPageContent = ({
           </MainContent>
         </ContentArea>
       )}
-      {isCategoryTypePage && (
-        <ContentArea>
-          <MainContent>
-            <StreamField
-              page={page}
-              blocks={categoryTypeStreamfield[page.slug].data}
-            />
-          </MainContent>
-        </ContentArea>
-      )}
-      {!isCategoryTypePage && isStaticPage && (
+      {isStaticPage && (
         <ContentArea>
           <MainContent>
             {page.body && <StreamField page={page} blocks={page.body} />}
           </MainContent>
         </ContentArea>
       )}
-      {!isCategoryPage && !isCategoryTypePage && !isStaticPage && (
+      {isActionListPage && (
+        <ContentArea>
+          <ActionListPage actionListPage={page} />
+        </ContentArea>
+      )}
+      {!isActionListPage && !isCategoryPage && !isStaticPage && (
         <div>Unknown page type</div>
       )}
     </>
