@@ -315,6 +315,13 @@ export type CreateFrameworkConfigMutation = {
   ok: Scalars['Boolean'];
 };
 
+export type CreateNzcFrameworkConfigMutation = {
+  __typename?: 'CreateNZCFrameworkConfigMutation';
+  /** The created framework config instance. */
+  frameworkConfig?: Maybe<FrameworkConfig>;
+  ok: Scalars['Boolean'];
+};
+
 export type DateBlock = StreamFieldInterface & {
   __typename?: 'DateBlock';
   blockType: Scalars['String'];
@@ -488,7 +495,7 @@ export type ForecastMetricTypeHistoricalValuesArgs = {
 };
 
 /**
- * Represents a framework for Paths models
+ * Represents a framework for Paths models.
  *
  * A framework is a combination of a common computation model,
  * a set of measures (with their default, fallback values),
@@ -499,7 +506,8 @@ export type ForecastMetricTypeHistoricalValuesArgs = {
  * and description. It serves as the top-level container for related components
  * such as dimensions, sections, and measure templates.
  *
- * Attributes:
+ * Attributes
+ * ----------
  *     name (CharField): The name of the framework, limited to 200 characters.
  *     description (TextField): An optional description of the framework.
  */
@@ -518,7 +526,7 @@ export type Framework = {
 
 
 /**
- * Represents a framework for Paths models
+ * Represents a framework for Paths models.
  *
  * A framework is a combination of a common computation model,
  * a set of measures (with their default, fallback values),
@@ -529,7 +537,8 @@ export type Framework = {
  * and description. It serves as the top-level container for related components
  * such as dimensions, sections, and measure templates.
  *
- * Attributes:
+ * Attributes
+ * ----------
  *     name (CharField): The name of the framework, limited to 200 characters.
  *     description (TextField): An optional description of the framework.
  */
@@ -539,7 +548,7 @@ export type FrameworkConfigArgs = {
 
 
 /**
- * Represents a framework for Paths models
+ * Represents a framework for Paths models.
  *
  * A framework is a combination of a common computation model,
  * a set of measures (with their default, fallback values),
@@ -550,7 +559,8 @@ export type FrameworkConfigArgs = {
  * and description. It serves as the top-level container for related components
  * such as dimensions, sections, and measure templates.
  *
- * Attributes:
+ * Attributes
+ * ----------
  *     name (CharField): The name of the framework, limited to 200 characters.
  *     description (TextField): An optional description of the framework.
  */
@@ -560,7 +570,7 @@ export type FrameworkMeasureTemplateArgs = {
 
 
 /**
- * Represents a framework for Paths models
+ * Represents a framework for Paths models.
  *
  * A framework is a combination of a common computation model,
  * a set of measures (with their default, fallback values),
@@ -571,7 +581,8 @@ export type FrameworkMeasureTemplateArgs = {
  * and description. It serves as the top-level container for related components
  * such as dimensions, sections, and measure templates.
  *
- * Attributes:
+ * Attributes
+ * ----------
  *     name (CharField): The name of the framework, limited to 200 characters.
  *     description (TextField): An optional description of the framework.
  */
@@ -593,12 +604,25 @@ export type FrameworkConfig = {
   id: Scalars['ID'];
   instance?: Maybe<InstanceType>;
   measures: Array<Measure>;
-  organizationName: Scalars['String'];
+  organizationName?: Maybe<Scalars['String']>;
   /** URL for downloading a results file */
   resultsDownloadUrl?: Maybe<Scalars['String']>;
   uuid: Scalars['UUID'];
   /** Public URL for instance dashboard */
   viewUrl?: Maybe<Scalars['String']>;
+};
+
+export type FrameworkConfigInput = {
+  baselineYear: Scalars['Int'];
+  frameworkId: Scalars['ID'];
+  /** Identifier for the model instance. Needs to be unique. */
+  instanceIdentifier: Scalars['ID'];
+  /** Name for the framework configuration instance. Typically the name of the organization. */
+  name: Scalars['String'];
+  /** Name of the organization. If not set, it will be determined through the user's credentials, if possible. */
+  organizationName?: InputMaybe<Scalars['String']>;
+  /** UUID for the new framework config. If not set, will be generated automatically. */
+  uuid?: InputMaybe<Scalars['UUID']>;
 };
 
 /** An enumeration. */
@@ -697,8 +721,11 @@ export type InstanceBasicConfiguration = {
 export type InstanceFeaturesType = {
   __typename?: 'InstanceFeaturesType';
   baselineVisibleInGraphs: Scalars['Boolean'];
+  hideNodeDetails: Scalars['Boolean'];
+  maximumFractionDigits?: Maybe<Scalars['Int']>;
   showAccumulatedEffects: Scalars['Boolean'];
-  showSignificantDigits: Scalars['Int'];
+  showRefreshPrompt: Scalars['Boolean'];
+  showSignificantDigits?: Maybe<Scalars['Int']>;
 };
 
 export type InstanceGoalDimension = {
@@ -871,6 +898,11 @@ export type ListBlock = StreamFieldInterface & {
   rawValue: Scalars['String'];
 };
 
+export enum LowHigh {
+  High = 'HIGH',
+  Low = 'LOW'
+}
+
 /**
  * Represents the concrete measure for an organization-specific Instance.
  *
@@ -897,8 +929,9 @@ export type Measure = {
  */
 export type MeasureDataPoint = {
   __typename?: 'MeasureDataPoint';
+  defaultValue?: Maybe<Scalars['Float']>;
   id: Scalars['ID'];
-  value: Scalars['Float'];
+  value?: Maybe<Scalars['Float']>;
   year: Scalars['Int'];
 };
 
@@ -924,7 +957,8 @@ export type MeasureInput = {
  * which is used to hold the metadata for the organization-specific
  * measure instances.
  *
- * Attributes:
+ * Attributes
+ * ----------
  *     section (ForeignKey): A reference to the Section this measure template belongs to.
  */
 export type MeasureTemplate = {
@@ -950,7 +984,8 @@ export type MeasureTemplate = {
  * which is used to hold the metadata for the organization-specific
  * measure instances.
  *
- * Attributes:
+ * Attributes
+ * ----------
  *     section (ForeignKey): A reference to the Section this measure template belongs to.
  */
 export type MeasureTemplateMeasureArgs = {
@@ -1011,6 +1046,7 @@ export type Mutations = {
   __typename?: 'Mutations';
   activateScenario?: Maybe<ActivateScenarioMutation>;
   createFrameworkConfig?: Maybe<CreateFrameworkConfigMutation>;
+  createNzcFrameworkConfig?: Maybe<CreateNzcFrameworkConfigMutation>;
   deleteFrameworkConfig?: Maybe<DeleteFrameworkConfigMutation>;
   registerUser?: Maybe<RegisterUser>;
   resetParameter?: Maybe<ResetParameterMutation>;
@@ -1032,7 +1068,14 @@ export type MutationsCreateFrameworkConfigArgs = {
   frameworkId: Scalars['ID'];
   instanceIdentifier: Scalars['ID'];
   name: Scalars['String'];
+  organizationName?: InputMaybe<Scalars['String']>;
   uuid?: InputMaybe<Scalars['UUID']>;
+};
+
+
+export type MutationsCreateNzcFrameworkConfigArgs = {
+  configInput: FrameworkConfigInput;
+  nzcData: NzcCityEssentialData;
 };
 
 
@@ -1084,6 +1127,15 @@ export type MutationsUpdateMeasureDataPointArgs = {
 export type MutationsUpdateMeasureDataPointsArgs = {
   frameworkConfigId: Scalars['ID'];
   measures: Array<MeasureInput>;
+};
+
+export type NzcCityEssentialData = {
+  /** Population of the city */
+  population: Scalars['Int'];
+  /** Share of renewables in energy production (low or high) */
+  renewableMix: LowHigh;
+  /** Average yearly temperature (low or high) */
+  temperature: LowHigh;
 };
 
 export type Node = NodeInterface & {
@@ -1929,10 +1981,21 @@ export type UpdateMeasureDataPoints = {
   updatedDataPoints?: Maybe<Array<Maybe<MeasureDataPoint>>>;
 };
 
+export type UserFrameworkRole = {
+  __typename?: 'UserFrameworkRole';
+  frameworkId: Scalars['ID'];
+  orgId?: Maybe<Scalars['String']>;
+  orgSlug?: Maybe<Scalars['String']>;
+  roleId?: Maybe<Scalars['String']>;
+};
+
 export type UserType = {
   __typename?: 'UserType';
   email: Scalars['String'];
+  firstName: Scalars['String'];
+  frameworkRoles?: Maybe<Array<UserFrameworkRole>>;
   id: Scalars['ID'];
+  lastName: Scalars['String'];
 };
 
 export type YearlyValue = {
