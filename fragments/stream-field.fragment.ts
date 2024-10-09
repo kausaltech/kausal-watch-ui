@@ -135,6 +135,11 @@ export const STREAM_FIELD_FRAGMENT = gql`
         }
       }
     }
+    ... on PathsOutcomeBlock {
+      heading
+      helpText
+      outcomeNodeId
+    }
     ... on FrontPageHeroBlock {
       layout
       image {
