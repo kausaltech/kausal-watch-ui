@@ -8,14 +8,19 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 });
 const withNextIntl = require('next-intl/plugin')('./config/i18n.ts');
+const { withSentryConfig } = require('@sentry/nextjs');
 
 if (process.env.DOTENV_CONFIG_PATH) {
   // Load CI environment variables defined in Ansible
   require('dotenv').config({ path: process.env.DOTENV_CONFIG_PATH });
 }
 
+const isProd = process.env.NODE_ENV === 'production';
+
 const sentryAuthToken =
   secrets.SENTRY_AUTH_TOKEN || process.env.SENTRY_AUTH_TOKEN;
+
+const standaloneBuild = process.env.NEXTJS_STANDALONE_BUILD === '1';
 
 console.log(`
   ⚙ Kausal Watch UI
@@ -58,15 +63,20 @@ async function initializeThemes() {
 
 initializeThemes();
 
+const prodAssetPrefix = process.env.NEXTJS_ASSET_PREFIX;
+const sentryDebug = !isProd || process.env.SENTRY_DEBUG === '1';
+
 /**
  * @type {import('next').NextConfig}
  */
 let config = {
+  assetPrefix: isProd ? prodAssetPrefix : undefined,
   logging: {
     fetches: {
       fullUrl: true,
     },
   },
+  output: standaloneBuild ? 'standalone' : undefined,
   eslint: {
     // Warning: This allows production builds to successfully complete even if
     // your project has ESLint errors.
@@ -96,51 +106,39 @@ let config = {
 
     return config;
   },
+  experimental: {
+    outputFileTracingIncludes: standaloneBuild
+      ? {
+          '/': ['./node_modules/@kausal/themes*/**'],
+        }
+      : undefined,
+  },
 };
 
-module.exports = withNextIntl(config);
-
-if (sentryAuthToken) {
-  const { withSentryConfig } = require('@sentry/nextjs');
-
-  // Injected content via Sentry wizard below
-  module.exports = withSentryConfig(
-    module.exports,
-    {
-      // For all available options, see:
-      // https://github.com/getsentry/sentry-webpack-plugin#options
-      authToken: sentryAuthToken,
-
-      // Suppresses source map uploading logs during build
-      silent: true,
-      org: 'kausal',
-      project: 'watch-ui',
-      url: 'https://sentry.kausal.tech/',
+function initSentryWebpack(config) {
+  /**
+   * @type {import('@sentry/nextjs/types/config/types').SentryBuildOptions}
+   */
+  const sentryOptions = {
+    silent: false,
+    telemetry: false,
+    authToken: sentryAuthToken,
+    release: {
+      setCommits: {
+        auto: true,
+      },
     },
-    {
-      // For all available options, see:
-      // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
+    disableLogger: !sentryDebug,
+    widenClientFileUpload: true,
+    automaticVercelMonitors: false,
+    reactComponentAnnotation: {
+      enabled: true,
+    },
+  };
 
-      // Upload a larger set of source maps for prettier stack traces (increases build time)
-      widenClientFileUpload: true,
-
-      // Transpiles SDK to be compatible with IE11 (increases bundle size)
-      transpileClientSDK: true,
-
-      // Routes browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers (increases server load)
-      tunnelRoute: '/monitoring',
-
-      // Hides source maps from generated client bundles
-      hideSourceMaps: true,
-
-      // Automatically tree-shake Sentry logger statements to reduce bundle size
-      disableLogger: true,
-
-      // Enables automatic instrumentation of Vercel Cron Monitors.
-      // See the following for more information:
-      // https://docs.sentry.io/product/crons/
-      // https://vercel.com/docs/cron-jobs
-      automaticVercelMonitors: true,
-    }
-  );
+  // Make sure adding Sentry options is the last code to run before exporting, to
+  // ensure that your source maps include changes from all other Webpack plugins
+  return withSentryConfig(config, sentryOptions);
 }
+
+module.exports = initSentryWebpack(withNextIntl(config));
