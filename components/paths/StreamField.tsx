@@ -10,6 +10,7 @@ import ActionListBlock from '@/components/contentblocks/ActionListBlock';
 import IndicatorGroupBlock from '@/components/contentblocks/IndicatorGroupBlock';
 import CategoryListBlock from '@/components/paths/contentblocks/CategoryListBlock';
 import CategoryTypeListBlock from '@/components/paths/contentblocks/CategoryTypeListBlock';
+import PathsOutcomeBlock from '@/components/paths/contentblocks/PathsOutcomeBlock';
 import { usePlan } from '@/context/plan';
 import { STREAM_FIELD_FRAGMENT } from '@/fragments/stream-field.fragment';
 
@@ -85,6 +86,9 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
       );
     }
 
+    case 'PathsOutcomeBlock': {
+      return <PathsOutcomeBlock />;
+    }
     case 'ActionCategoryFilterCardsBlock': {
       const { cards } = block;
       return <ActionCategoryFilterCardsBlock id={id} cards={cards} />;
