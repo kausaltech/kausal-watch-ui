@@ -3,6 +3,7 @@ import {
   GetContentPageQueryVariables,
 } from '@/common/__generated__/graphql';
 import images from '@/common/images';
+import { ALL_ACTION_LIST_FILTERS } from '@/fragments/action-list.fragment';
 import { gql } from '@apollo/client';
 
 import { ATTRIBUTE_WITH_NESTED_TYPE_FRAGMENT } from '../fragments/action-attribute.fragment';
@@ -92,7 +93,11 @@ const TEMPLATED_CATEGORY_PAGE_FRAGMENT = gql`
 `;
 
 const GET_CONTENT_PAGE = gql`
-  query GetContentPage($plan: ID!, $path: String!) {
+  query GetContentPage(
+    $plan: ID!
+    $path: String!
+    $onlyWithActions: Boolean = true
+  ) {
     planPage(plan: $plan, path: $path) {
       __typename
       id
@@ -252,6 +257,13 @@ const GET_CONTENT_PAGE = gql`
       ... on CategoryTypePage {
         contentType
       }
+      ... on ActionListPage {
+        leadContent
+        defaultView
+        headingHierarchyDepth
+        includeRelatedPlans
+        ...ActionListPageFilters
+      }
       lastPublishedAt
     }
   }
@@ -260,6 +272,7 @@ const GET_CONTENT_PAGE = gql`
   ${images.fragments.multiUseImage}
   ${ATTRIBUTE_WITH_NESTED_TYPE_FRAGMENT}
   ${CATEGORY_FRAGMENT}
+  ${ALL_ACTION_LIST_FILTERS}
 
   fragment CategoryParentFragment on Category {
     parent {

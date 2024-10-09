@@ -24,7 +24,7 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
   const { id, page, block } = props;
   const { __typename } = block;
   const plan = usePlan();
-
+  console.log('rendering', props);
   switch (__typename) {
     case 'ActionListBlock': {
       const { categoryFilter } = block;
@@ -60,12 +60,18 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
       );
     }
 
-    case 'CategoryLevelListBlock': {
-      const { heading, lead, listLevel, groupingLevel, categoryType } = block;
+    case 'CategoryTypeLevelListBlock': {
+      const {
+        heading,
+        helpText,
+        categoryLevel,
+        groupByCategoryLevel,
+        categoryBlockType,
+      } = block;
       console.log('CategoryLevelListBlock', block);
-      const categoryTypeIdentifier = categoryType?.identifier;
-      const categoryLevelId = listLevel?.id;
-      const categoryGroupByLevelId = groupingLevel?.id;
+      const categoryTypeIdentifier = categoryBlockType?.identifier;
+      const categoryLevelId = categoryLevel?.id;
+      const categoryGroupByLevelId = groupByCategoryLevel?.id;
 
       return (
         <CategoryTypeListBlock
@@ -74,7 +80,7 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
           listByLevel={categoryLevelId}
           categoryType={categoryTypeIdentifier}
           heading={heading ?? undefined}
-          lead={lead}
+          lead={helpText}
         />
       );
     }
@@ -119,7 +125,9 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
     case 'AccessibilityStatementPreparationInformationBlock':
     default:
       return (
-        <div id={id} hidden>{`Component for ${__typename} does not exist`}</div>
+        <div id={id} hidden>
+          sdfdsfsdfsdfsd
+        </div>
       );
   }
 }
