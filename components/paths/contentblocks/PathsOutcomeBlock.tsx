@@ -49,7 +49,8 @@ const findVisibleNodes = (allNodes, lastNodeId: string, visibleNodes) => {
   return visibleNodes;
 };
 
-export default function PathsPage() {
+export default function PathsOutcomeBlock(props) {
+  const { heading, helpText, outcomeNodeId } = props;
   const t = useTranslations();
   const pathsInstance = usePaths();
   const path = '';
