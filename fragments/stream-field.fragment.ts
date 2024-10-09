@@ -101,7 +101,7 @@ export const STREAM_FIELD_FRAGMENT = gql`
       style
       heading
       lead
-      categoryType {
+      categoryType: categoryType {
         id
         hideCategoryIdentifiers
         categories {
@@ -112,6 +112,26 @@ export const STREAM_FIELD_FRAGMENT = gql`
         id
         children {
           ...CategoryFragment
+        }
+      }
+    }
+    ... on CategoryTypeLevelListBlock {
+      heading
+      helpText
+      categoryLevel {
+        id
+        name
+        namePlural
+      }
+      groupByCategoryLevel {
+        id
+      }
+      categoryBlockType: categoryType {
+        id
+        identifier
+        hideCategoryIdentifiers
+        categories {
+          ...CategoryRecursiveFragment
         }
       }
     }
@@ -244,7 +264,7 @@ export const STREAM_FIELD_FRAGMENT = gql`
           shortName
         }
       }
-      categoryType {
+      categoryType: categoryType {
         identifier
       }
     }
