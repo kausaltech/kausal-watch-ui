@@ -40,6 +40,7 @@
     "next-images": "^1.8.4",
     "next-intl": "^3.16.0",
     "next-runtime-env": "^3.2.2",
+    "pino": "^9.4.0",
     "plotly.js-locales": "^2.34.0",
     "polished": "^4.3.1",
     "prop-types": "^15.8.1",
