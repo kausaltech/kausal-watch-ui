@@ -15,18 +15,13 @@ COPY package*.json ./
 RUN \
   if [ ! -z "${NPM_REGISTRY_SERVER}" ] ; then \
     echo "@kausal:registry=${NPM_REGISTRY_SERVER}" >> $HOME/.npmrc ; \
+    echo "registry=https://registry.npmjs.org/" >> $HOME/.npmrc ; \
     echo "$(echo ${NPM_REGISTRY_SERVER} | sed -e 's/https://')/"':_authToken=${NPM_TOKEN}' >> $HOME/.npmrc ; \
     echo "Using custom registry at: ${NPM_REGISTRY_SERVER}" ; \
   fi
 
-
-ARG NPM_TOKEN
-ENV NPM_TOKEN=${NPM_TOKEN}
-
-RUN --mount=type=secret,id=NPM_TOKEN
-
 RUN --mount=type=secret,id=NPM_TOKEN --mount=type=cache,target=/npm-cache \
-  NPM_TOKEN=$( ([ -f /run/secrets/NPM_TOKEN ] && cat /run/secrets/NPM_TOKEN) || echo -n "${NPM_TOKEN}") \
+  NPM_TOKEN=$( ([ -f /run/secrets/NPM_TOKEN ] && cat /run/secrets/NPM_TOKEN) || echo -n "$NPM_TOKEN") \
     npm ci
 
 #
@@ -42,7 +37,7 @@ ARG NEXTJS_ASSET_PREFIX_PLACEHOLDER=__KAUSAL_ASSET_PREFIX_PLACEHOLDER__
 ENV NEXTJS_ASSET_PREFIX_PLACEHOLDER=${NEXTJS_ASSET_PREFIX_PLACEHOLDER}
 
 ARG BUILD_ID
-ARG SENTRY_PROJECT
+ARG SENTRY_PROJECT=watch-ui
 ARG SENTRY_RELEASE=${SENTRY_PROJECT}@${BUILD_ID}
 ENV BUILD_ID=${BUILD_ID} SENTRY_RELEASE=${SENTRY_RELEASE}
 
@@ -103,7 +98,7 @@ COPY ./docker/Caddyfile /etc/caddy/
 
 ARG BUILD_ID
 ARG SENTRY_RELEASE
-ARG SENTRY_PROJECT
+ARG SENTRY_PROJECT=watch-ui
 ENV \
   SENTRY_RELEASE=${SENTRY_RELEASE} \
   BUILD_ID=${BUILD_ID} \
