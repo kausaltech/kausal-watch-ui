@@ -340,6 +340,10 @@ const GET_ACTION_DETAILS = gql`
     ... on StreamFieldInterface {
       id
     }
+    ... on ActionDescriptionBlock {
+      fieldLabel
+      fieldHelpText
+    }
     ... on ActionDependenciesBlock {
       fieldLabel
       fieldHelpText
