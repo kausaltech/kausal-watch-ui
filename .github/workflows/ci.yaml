@@ -37,3 +37,20 @@ jobs:
       project_id: watch-ui
       build_id: ${{ needs.build.outputs.build_id }}
       deployment_env: ${{ needs.build.outputs.deployment_env }}
+
+  dokku-deploy:
+    needs: [build, deploy]
+    # FIXME: Should be configurable
+    if: needs.build.outputs.deployment_env == 'production' && vars.DOKKU_DEPLOY_PRODUCTION_GIT_URL != ''
+    runs-on: runner-prod
+    container:
+      image: dokku/ci-docker-image:latest
+    steps:
+      - name: Push to dokku
+        run: dokku-deploy
+        env:
+          GIT_REMOTE_URL: ${{ vars.DOKKU_DEPLOY_PRODUCTION_GIT_URL }}
+          SSH_PRIVATE_KEY: ${{ secrets.DOKKU_SSH_PRIVATE_KEY }}
+          DEPLOY_DOCKER_IMAGE: ${{ needs.build.outputs.image }}:${{ needs.build.outputs.image_tag }}
+          # For debugging
+          # TRACE: '1'
