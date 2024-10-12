@@ -3,6 +3,7 @@ import { Font, Style } from 'exceljs';
 //import slugify from 'slugify';
 import { DimensionalMetricFragment } from 'queries/paths/get-paths-page';
 
+import { InstanceGoalEntry } from '@/common/__generated__/paths/graphql';
 import { DocumentNode, gql } from '@apollo/client';
 
 type CatValue = number | null;
@@ -201,6 +202,7 @@ export class DimensionalMetric {
   }
 
   getName = () => this.data.name;
+  getUnit = () => this.data.unit.htmlShort;
   private createRows(
     rows: MetricRow[],
     dimsLeft: MetricDimension[],
@@ -358,7 +360,7 @@ export class DimensionalMetric {
    * @returns An object describing the _default_ category selections
    *   or `null` if the current goal does not have an effect on this cube.
    */
-  getChoicesForGoal(activeGoal: InstanceGoal) {
+  getChoicesForGoal(activeGoal: InstanceGoalEntry) {
     const metricDims = new Map(
       this.dimensions.map((dim) => [dim.originalId, dim])
     );
@@ -495,7 +497,7 @@ export class DimensionalMetric {
     }));
 
     const rows = categoryTypes[0].options.map((rowId) =>
-      categoryTypes[1].options.map((columnId) => {
+      categoryTypes[1]?.options.map((columnId) => {
         return (
           yearRows.find(
             (yearRow) =>
@@ -798,6 +800,47 @@ export class DimensionalMetric {
     link.download = `${filename}.xlsx`;
     link.click();
     URL.revokeObjectURL(link.href);
+  }
+
+  getDefaultSliceConfig(activeGoal: InstanceGoal | null) {
+    /**
+     * By default, we group by the first dimension `metric` has, whatever it is.
+     * @todo Is there a better way to select the default?
+     *
+     * If the currently selected goal has category selections for this metric,
+     * we might choose another dimension.
+     *
+     * NOTE: This is just the default -- the actually active filtering and
+     * grouping is controlled by the `sliceConfig` state below.
+     */
+    const defaultConfig: SliceConfig = {
+      dimensionId: this.dimensions[0]?.id,
+      categories: {},
+    };
+
+    if (!activeGoal) return defaultConfig;
+
+    const cubeDefault = this.getChoicesForGoal(activeGoal);
+    if (!cubeDefault) return defaultConfig;
+    defaultConfig.categories = cubeDefault;
+    /**
+     * Check if our default dimension to slice by is affected by the
+     * goal-based default filters. If so, we should choose another
+     * dimension.
+     */
+    if (
+      defaultConfig.dimensionId &&
+      Object.prototype.hasOwnProperty.call(
+        cubeDefault,
+        defaultConfig.dimensionId
+      )
+    ) {
+      const firstPossible = this.dimensions.find(
+        (dim) => !Object.prototype.hasOwnProperty.call(cubeDefault, dim.id)
+      );
+      defaultConfig.dimensionId = firstPossible?.id;
+    }
+    return defaultConfig;
   }
 
   static fragment: DocumentNode = DIMENSIONAL_METRIC_FRAGMENT;

@@ -78,28 +78,44 @@ const PathsBasicNodeContent = (props) => {
   }
   if (data) {
     if (data.node.metricDim) {
-      //console.log('basicnodedata', data);
       const nodeMetric = new DimensionalMetric(data.node.metricDim!);
-      //console.log('nodeMetric', nodeMetric);
-      //console.log('data from year', nodeMetric.getSingleYear(yearRange[1], {}));
-      const thisYear = nodeMetric.getSingleYear(yearRange[1], {});
-      const directLabel = thisYear.allLabels.find(
+      const defaultConfig = nodeMetric.getDefaultSliceConfig(activeGoal);
+      const thisYear = nodeMetric.getSingleYear(
+        yearRange[1],
+        defaultConfig.categories
+      );
+
+      const yearTotal =
+        thisYear.rows[0] &&
+        thisYear.rows.reduce(
+          (partialSum, a) => (a ? partialSum + a[0] : partialSum),
+          0
+        );
+      /*
+      console.log('default config', defaultConfig);
+      console.log('metric', nodeMetric);
+      console.log('this year', thisYear);
+      */
+      // TODO: Just get any label for now
+      const configCategories = Object.values(defaultConfig.categories)[0];
+      const label = thisYear.allLabels.find(
         (label) =>
-          label.id === 'transportation_emissions:emission_scope:group:direct'
-      ).label;
-      const indirectLabel = thisYear.allLabels.find(
-        (label) =>
-          label.id === 'transportation_emissions:emission_scope:group:indirect'
-      ).label;
+          label.id === configCategories?.categories[0] ||
+          label.id === configCategories?.groups[0]
+      )?.label;
+
+      const unit = nodeMetric.getUnit();
       return (
         <CardContentBlock>
           <div>{nodeMetric.getName()}</div>
-          <div>
-            {directLabel}: {thisYear.rows[0][0]}
-          </div>
-          <div>
-            {indirectLabel}:{thisYear.rows[0][1]}
-          </div>
+          {yearTotal && (
+            <>
+              <h5>{label}</h5>
+              <h4>
+                {yearTotal.toPrecision(3)} {unit}
+              </h4>
+            </>
+          )}
         </CardContentBlock>
       );
     } else {
