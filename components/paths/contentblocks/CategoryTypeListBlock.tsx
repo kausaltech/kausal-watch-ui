@@ -1,28 +1,21 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 
 import { MultiUseImageFragmentFragment } from 'common/__generated__/graphql';
 import { CommonContentBlockProps } from 'common/blocks.types';
+import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
-import { Col, Container, Row } from 'reactstrap';
+import { Col, Container, FormGroup, Input, Label, Row } from 'reactstrap';
 import styled from 'styled-components';
 
 import { getDeepParents } from '@/common/categories';
-import {
-  activeGoalVar,
-  activeScenarioVar,
-  yearRangeVar,
-} from '@/context/paths/cache';
 import { usePaths } from '@/context/paths/paths';
 import { usePlan } from '@/context/plan';
 import {
   CATEGORY_FRAGMENT,
   RECURSIVE_CATEGORY_FRAGMENT,
 } from '@/fragments/category.fragment';
-import { GET_PATHS_ACTION_LIST } from '@/queries/paths/get-paths-actions';
-import { getHttpHeaders } from '@/utils/paths/paths.utils';
-import PathsActionNode from '@/utils/paths/PathsActionNode';
-import { gql, useQuery, useReactiveVar } from '@apollo/client';
+import { gql, useQuery } from '@apollo/client';
 import { Theme } from '@kausal/themes/types';
 
 import CategoryCard from '../CategoryCard';
@@ -33,6 +26,18 @@ const getColor = (theme: Theme, darkFallback = theme.themeColors.black) =>
 
 const getBackgroundColor = (theme: Theme) =>
   theme.section.categoryList?.background || theme.neutralLight;
+
+const getSortOptions = (t: TFunction): SortActionsConfig[] => [
+  {
+    key: 'STANDARD',
+    label: t('actions-sort-default'),
+  },
+  {
+    key: 'IMPACT',
+    label: t('actions-sort-impact'),
+    sortKey: 'impactOnTargetYear',
+  },
+];
 
 const GET_CATEGORIES_FOR_CATEGORY_TYPE_LIST = gql`
   query GetCategoriesForCategoryTypeList($plan: ID!, $categoryType: ID!) {
@@ -124,55 +129,76 @@ export type CategoryListBlockCategory = {
   };
 };
 
-const getPathsActionForCategory = (category, actions) => {
-  const pathsActionForCategory = actions.find(
-    (action) => action.id === category.kausalPathsNodeUuid
-  );
-  if (!pathsActionForCategory) {
-    return null;
-  }
-  return new PathsActionNode(pathsActionForCategory);
-};
-
-const getCategoryColor = (category) => {
-  // We have many ways to define the color of a category.
-  // For now get the color from category paths group data
-  return category.pathsAction?.data.group.color || '#eeeeee';
-};
-
 const CategoryList = (props) => {
   const { categories, groups } = props;
-  console.log('category list props', props);
-  const plan = usePlan();
   const paths = usePaths();
-  const activeGoal = useReactiveVar(activeGoalVar);
-  const activeScenario = useReactiveVar(activeScenarioVar);
-  const yearRange = useReactiveVar(yearRangeVar);
+  const t = useTranslations();
 
-  const pathsInstance = paths.instance.id;
-  const { data, loading } = useQuery(GET_PATHS_ACTION_LIST, {
-    fetchPolicy: 'no-cache',
-    variables: { goal: null },
-    context: {
-      uri: '/api/graphql-paths',
-      headers: getHttpHeaders({ instanceIdentifier: pathsInstance }),
-    },
-  });
+  const pathsInstance = paths?.instance.id;
+  const sortOptions = getSortOptions(t);
 
-  if (loading) {
-    return <div>Loading...</div>; // Or any loading indicator you prefer
-  }
+  const [sortBy, setSortBy] = useState<SortActionsConfig>(sortOptions[0]);
+  const [categoriesData, setCategoriesData] = useState(categories);
+  const [categoriesPathsData, setCategoriesPathsData] = useState(
+    categories.map((cat) => {
+      return { id: cat.id, impact: null };
+    })
+  );
 
-  const categoryData = categories?.map((cat) => {
-    const pathsAction = getPathsActionForCategory(cat, data.actions);
-    return {
-      ...cat,
-      pathsAction: pathsAction,
-    };
-  });
+  const handleCardLoaded = (id, impact) => {
+    //console.log('handleCardLoaded', id, impact);
+    setCategoriesPathsData((prevCategories) => {
+      const updatedCategories = [...prevCategories];
+      const index = updatedCategories.findIndex((cat) => cat.id === id);
+      if (index !== -1) {
+        updatedCategories[index].impact = impact;
+      }
+      return updatedCategories;
+    });
+    console.log('categoriesPathsData', categoriesPathsData);
+    //setLoadedCards(prev => ({ ...prev, [id]: impact }));
+  };
+
+  const handleChangeSort = (sortBy: SortActionsBy) => {
+    console.log('sorting', sortBy);
+    const selectedSorter = sortOptions.find((option) => option.key === sortBy);
+    setSortBy(selectedSorter ?? sortOptions[0]);
+    const sortedCategories = [...categoriesData].sort(sortCategories);
+    console.log('sorted', sortedCategories);
+    setCategoriesData(sortedCategories);
+  };
+
+  const sortCategories = (a, b) => {
+    if (sortBy.key === 'IMPACT') {
+      const aValue = categoriesPathsData.find((cat) => cat.id === a.id)?.impact;
+      const bValue = categoriesPathsData.find((cat) => cat.id === b.id)?.impact;
+      console.log('aValue', aValue, 'bValue', bValue);
+      return aValue - bValue;
+    }
+    return 0;
+  };
 
   return (
     <>
+      <FormGroup>
+        <Label for="sort">{t('actions-sort-by')}</Label>
+        <Input
+          id="sort"
+          name="select"
+          type="select"
+          onChange={(e) => handleChangeSort(e.target.value as SortActionsBy)}
+          value={sortBy.key}
+        >
+          {sortOptions.map(
+            (sortOption) =>
+              !sortOption.isHidden && (
+                <option key={sortOption.key} value={sortOption.key}>
+                  {sortOption.label}
+                </option>
+              )
+          )}
+        </Input>
+      </FormGroup>
       {groups?.map((group) => (
         <Row key={group?.id}>
           {group?.id !== 'all' && (
@@ -180,7 +206,7 @@ const CategoryList = (props) => {
               {group.name}
             </GroupHeader>
           )}
-          {categoryData
+          {categoriesData
             ?.filter(
               (cat) =>
                 (cat?.categoryPage?.live && hasParent(cat, group.id)) ||
@@ -201,6 +227,7 @@ const CategoryList = (props) => {
                       category={cat}
                       group={group}
                       pathsInstance={pathsInstance}
+                      onLoaded={handleCardLoaded}
                     />
                   </Col>
                 )
@@ -272,8 +299,6 @@ const CategoryTypeListBlock = (props: CategoryTypeListBlockProps) => {
   return (
     <CategoryListSection id={id}>
       <Container>
-        <h5>[FILTERS HERE]</h5> <h5>[SORTING HERE]</h5>
-        <h5>-----</h5>
         <Row>
           <Col className="mb-4">{heading && <h2>{heading}</h2>}</Col>
         </Row>
