@@ -5,13 +5,17 @@ import { useTranslations } from 'next-intl';
 import { Card, CardBody, Col, Container, Row } from 'reactstrap';
 import styled from 'styled-components';
 
+import {
+  GetPageQuery,
+  GetPageQueryVariables,
+} from '@/common/__generated__/paths/graphql';
 import ContentLoader from '@/components/common/ContentLoader';
 import OutcomeCardSet from '@/components/paths/outcome/OutcomeCardSet';
 import { activeScenarioVar, yearRangeVar } from '@/context/paths/cache';
 import { usePaths } from '@/context/paths/paths';
 import GET_PAGE from '@/queries/paths/get-paths-page';
 import { getHttpHeaders } from '@/utils/paths/paths.utils';
-import { useReactiveVar, useSuspenseQuery } from '@apollo/client';
+import { useQuery, useReactiveVar } from '@apollo/client';
 
 const ErrorBackground = styled.div`
   background-color: ${(props) => props.theme.brandDark};
@@ -56,7 +60,7 @@ export default function PathsOutcomeBlock(props) {
   const yearRange = useReactiveVar(yearRangeVar);
   const activeScenario = useReactiveVar(activeScenarioVar);
   const path = '';
-  const { data } = useSuspenseQuery(GET_PAGE, {
+  const { data } = useQuery<GetPageQuery, GetPageQueryVariables>(GET_PAGE, {
     variables: { path, goal: null },
     context: {
       uri: '/api/graphql-paths',
@@ -108,7 +112,7 @@ export default function PathsOutcomeBlock(props) {
                     rootNode={node}
                     startYear={yearRange[0]}
                     endYear={yearRange[1]}
-                    activeScenario={activeScenario?.name}
+                    activeScenario={activeScenario?.name || ''}
                     parentColor="#666"
                     activeNodeId={
                       index < visibleNodes.length - 1
