@@ -2,7 +2,6 @@ import React from 'react';
 
 import { GetContentPageQuery } from 'common/__generated__/graphql';
 import StreamField from 'components/paths/StreamField';
-import { Container } from 'reactstrap';
 import styled, { css } from 'styled-components';
 
 import { ActionListPage } from '@/app/[domain]/[lang]/[plan]/(with-layout-elements)/actions/ActionListPage';
@@ -62,14 +61,12 @@ const PathsPageContent = ({
       {isCategoryPage && (
         <ContentArea>
           <MainContent>
-            <Container>
-              <CategoryPageHeaderBlock
-                page={page}
-                title={page.title}
-                lead="Category page header title"
-              />
-              {page.body && <StreamField page={page} blocks={page.body} />}
-            </Container>
+            <CategoryPageHeaderBlock
+              page={page}
+              title={page.title}
+              lead="Category page header title"
+            />
+            {page.body && <StreamField page={page} blocks={page.body} />}
           </MainContent>
         </ContentArea>
       )}
