@@ -1,7 +1,8 @@
 'use client';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { useTranslations } from 'next-intl';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { Card, CardBody, Col, Container, Row } from 'reactstrap';
 import styled from 'styled-components';
 
@@ -64,9 +65,37 @@ export default function PathsOutcomeBlock() {
   const yearRange = useReactiveVar(yearRangeVar);
   const activeScenario = useReactiveVar(activeScenarioVar);
   const path = '';
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+  const queryNodeId = searchParams.get('node') ?? undefined;
+
   const [lastActiveNodeId, setLastActiveNodeId] = useState<string | undefined>(
-    undefined
+    queryNodeId
   );
+
+  const createQueryString = useCallback(
+    (name: string, value: string) => {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set(name, value);
+
+      return params.toString();
+    },
+    [searchParams]
+  );
+
+  useEffect(() => {
+    if (queryNodeId === lastActiveNodeId) return;
+    if (lastActiveNodeId) {
+      router.replace(
+        pathname + '?' + createQueryString('node', lastActiveNodeId),
+        { scroll: false }
+      );
+    }
+    // router clear query ?
+  }, [lastActiveNodeId, queryNodeId]);
+
+  // router.push(pathname + '?' + createQueryString('sort', 'asc'))
   const queryResp = useQuery<GetPageQuery, GetPageQueryVariables>(GET_PAGE, {
     variables: { path, goal: null },
     fetchPolicy: 'cache-and-network',
@@ -96,7 +125,10 @@ export default function PathsOutcomeBlock() {
 
     allNodes.set(outcomeNode.id, outcomeNode);
     //setLastActiveNodeId(outcomeNode.id);
-    const activeNodeId = outcomeNode.id;
+    const activeNodeId =
+      lastActiveNodeId && allNodes.has(lastActiveNodeId)
+        ? lastActiveNodeId
+        : outcomeNode.id;
     // TODO: filtering out empty nodes, in some instances there are some -> investigate why
     const visibleNodes = findVisibleNodes(allNodes, activeNodeId, []).filter(
       (node) => node?.id
