@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 
-const { pathsApiUrl } = require('./common/environment');
+const { pathsGqlUrl } = require('./common/environment');
 
 const JS = '*.{js,jsx,ts,tsx,mjs}';
 
@@ -15,7 +15,7 @@ module.exports = {
     ],
     service: {
       name: 'kausal-paths',
-      url: `${pathsApiUrl}/graphql/`,
+      url: `${pathsGqlUrl}`,
     },
   },
 };

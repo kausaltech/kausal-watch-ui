@@ -1,11 +1,12 @@
 import { headers } from 'next/headers';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 import { captureException } from '@sentry/nextjs';
 
-export const dynamic = 'force-dynamic';
+import { forwardSetCookie, getClientCookieAsHeader } from '@/common/cookies';
+import { pathsGqlUrl } from '@/common/environment';
 
-const gqlUrl = 'https://api.paths.kausal.dev/v1/graphql/';
+export const dynamic = 'force-dynamic';
 
 const PASS_HEADERS = [
   'x-paths-instance-identifier',
@@ -18,9 +19,14 @@ const PASS_HEADERS = [
   'referer',
 ];
 
-export async function POST(request: Request) {
+const PATHS_COOKIE_PREFIX = 'paths_api_';
+
+export async function POST(request: NextRequest) {
   const headersList = headers();
   const requestData = await request.json();
+  const backendCookieHeader = getClientCookieAsHeader(request, {
+    prefix: PATHS_COOKIE_PREFIX,
+  });
 
   // Determine headers to send to the backend
   const backendHeaders: Record<string, string> = {};
@@ -29,9 +35,12 @@ export async function POST(request: Request) {
     if (value) backendHeaders[header] = value;
   });
   backendHeaders['Content-Type'] = 'application/json';
+  if (backendCookieHeader) {
+    backendHeaders['Cookie'] = backendCookieHeader;
+  }
 
   // Do the fetch from the backend
-  const backendResponse = await fetch(gqlUrl, {
+  const backendResponse = await fetch(pathsGqlUrl, {
     method: 'POST',
     headers: backendHeaders,
     body: JSON.stringify(requestData),
@@ -71,6 +80,7 @@ export async function POST(request: Request) {
 
   try {
     const data = await backendResponse.json();
+    forwardSetCookie(request, backendResponse, { prefix: PATHS_COOKIE_PREFIX });
     return NextResponse.json(data, { status: 200, headers: responseHeaders });
   } catch (error) {
     return NextResponse.json(
