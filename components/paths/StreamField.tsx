@@ -1,13 +1,15 @@
 import React from 'react';
 
-import { ColProps } from 'reactstrap';
+import { Col, ColProps, Container, Row } from 'reactstrap';
 
 import type { StreamFieldFragmentFragment } from '@/common/__generated__/graphql';
 import { ErrorBoundary } from '@/components/common/ErrorBoundary';
 import { ErrorPage } from '@/components/common/ErrorPage';
+import RichText from '@/components/common/RichText';
 import ActionCategoryFilterCardsBlock from '@/components/contentblocks/ActionCategoryFilterCardsBlock';
 import ActionListBlock from '@/components/contentblocks/ActionListBlock';
 import IndicatorGroupBlock from '@/components/contentblocks/IndicatorGroupBlock';
+import QuestionAnswerBlock from '@/components/contentblocks/QuestionAnswerBlock';
 import CategoryListBlock from '@/components/paths/contentblocks/CategoryListBlock';
 import CategoryTypeListBlock from '@/components/paths/contentblocks/CategoryTypeListBlock';
 import PathsOutcomeBlock from '@/components/paths/contentblocks/PathsOutcomeBlock';
@@ -116,8 +118,39 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
         </div>
       );
     }
-    case 'RichTextBlock':
-    case 'QuestionAnswerBlock':
+    case 'RichTextBlock': {
+      const { value } = block;
+      const COLLAPSIBLE_BREAKPOINT = 1200;
+      const isCollapsible =
+        page.__typename === 'CategoryPage' &&
+        value.length > COLLAPSIBLE_BREAKPOINT;
+      return (
+        <Container id={id}>
+          <Row>
+            <Col
+              xl={{ size: 6, offset: 3 }}
+              lg={{ size: 8, offset: 2 }}
+              md={{ size: 10, offset: 1 }}
+              className="my-4"
+            >
+              <RichText html={value} isCollapsible={isCollapsible} />
+            </Col>
+          </Row>
+        </Container>
+      );
+    }
+    case 'QuestionAnswerBlock': {
+      const { heading, questions } = block;
+
+      return (
+        <QuestionAnswerBlock
+          id={id}
+          heading={heading || ''}
+          questions={questions || []}
+          hasSidebar={false}
+        />
+      );
+    }
     case 'CharBlock':
     case 'FrontPageHeroBlock':
     case 'LargeImageBlock':
