@@ -3,7 +3,8 @@
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
 import * as Sentry from '@sentry/nextjs';
-import { deploymentType } from './common/environment';
+
+import { deploymentType, gqlUrl, pathsGqlUrl } from './common/environment';
 
 Sentry.init({
   environment: deploymentType,
@@ -15,6 +16,7 @@ Sentry.init({
   // Adjust this value in production, or use tracesSampler for greater control
   tracesSampleRate: 0.1,
 
+  tracePropagationTargets: ['localhost', /^\//, gqlUrl, pathsGqlUrl],
   // Setting this option to true will print useful information to the console while you're setting up Sentry.
   debug: false,
 });
