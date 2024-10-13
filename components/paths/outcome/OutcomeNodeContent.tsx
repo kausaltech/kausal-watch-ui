@@ -259,7 +259,7 @@ const OutcomeNodeContent = ({
                 id={`${node.id}-tab-year`}
                 tabIndex={0}
               >
-                <Icon name="chartTreeMap" /> {t('distribution')}
+                <Icon name="chart-tree-map" /> {t('distribution')}
               </NavLink>
             </DisplayTab>
           )}
@@ -274,7 +274,7 @@ const OutcomeNodeContent = ({
               id={`${node.id}-tab-graph`}
               tabIndex={0}
             >
-              <Icon name="chartArea" /> {t('time-series')}
+              <Icon name="chart-area" /> {t('time-series')}
             </NavLink>
           </DisplayTab>
           <DisplayTab role="presentation">
@@ -303,7 +303,7 @@ const OutcomeNodeContent = ({
                 id={`${node.id}-tab-info`}
                 tabIndex={0}
               >
-                <Icon name="circleInfo" /> {t('details')}
+                <Icon name="circle-info" /> {t('details')}
               </NavLink>
             </DisplayTab>
           )}
@@ -322,7 +322,7 @@ const OutcomeNodeContent = ({
             <ContentWrapper>{singleYearGraph}</ContentWrapper>
           )}
           {activeTabId === 'graph' && (
-            <ContentWrapper>---{outcomeGraph}</ContentWrapper>
+            <ContentWrapper>{outcomeGraph}</ContentWrapper>
           )}
           {activeTabId === 'info' && (
             <ContentWrapper>
