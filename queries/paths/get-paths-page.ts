@@ -131,9 +131,11 @@ const OUTCOME_NODE_FIELDS = gql`
         color
       }
     }
-    ...DimensionalNodeMetric
+    metricDim {
+      ...DimensionalMetric
+    }
   }
-  ${dimensionalNodePlotFragment}
+  ${DimensionalMetricFragment}
 `;
 
 const GET_PAGE = gql`
@@ -159,12 +161,6 @@ const GET_PAGE = gql`
             ...OutcomeNodeFields
           }
         }
-      }
-      ... on ActionListPage {
-        actionListLeadTitle: leadTitle
-        actionListLeadParagraph: leadParagraph
-        showOnlyMunicipalActions
-        defaultSortOrder
       }
     }
   }

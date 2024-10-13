@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
+import { PathsNodeLink } from 'common/links';
 import { useTranslations } from 'next-intl';
 import { Nav, NavItem, NavLink, TabContent } from 'reactstrap';
 import styled from 'styled-components';
 
+import type { OutcomeNodeFieldsFragment } from '@/common/__generated__/paths/graphql';
 import {
   beautifyValue,
   getMetricChange,
@@ -11,8 +13,12 @@ import {
 } from '@/common/paths/preprocess';
 import ContentLoader from '@/components/common/ContentLoader';
 import Icon from '@/components/common/Icon';
+import DataTable from '@/components/paths/graphs/DataTable';
+import DimensionalNodePlot from '@/components/paths/graphs/DimensionalNodePlot';
 import HighlightValue from '@/components/paths/HighlightValue';
+import OutcomeNodeDetails from '@/components/paths/outcome/OutcomeNodeDetails';
 import ScenarioBadge from '@/components/paths/ScenarioBadge';
+import { usePaths } from '@/context/paths/paths';
 
 const DisplayTab = styled(NavItem)`
   font-size: 0.9rem;
@@ -106,8 +112,8 @@ const CardSetSummary = styled.div`
 `;
 
 type OutcomeNodeContentProps = {
-  node: any;
-  subNodes: any[];
+  node: OutcomeNodeFieldsFragment;
+  subNodes: OutcomeNodeFieldsFragment[];
   color?: string | null;
   startYear: number;
   endYear: number;
@@ -124,10 +130,13 @@ const OutcomeNodeContent = ({
   activeScenario,
   refetching,
 }: OutcomeNodeContentProps) => {
+  //console.log('node', node);
   const t = useTranslations();
   const [activeTabId, setActiveTabId] = useState('graph');
-
-  const showDistribution = false;
+  const paths = usePaths();
+  const instance = paths?.instance;
+  if (!instance) return null;
+  const showDistribution = instance.id === 'zuerich' && subNodes.length > 1;
   const nodesTotal = getMetricValue(node, endYear);
   const nodesBase = getMetricValue(node, startYear);
   const lastMeasuredYear =
@@ -137,6 +146,40 @@ const OutcomeNodeContent = ({
   const isForecast = endYear > lastMeasuredYear;
   const outcomeChange = getMetricChange(nodesBase, nodesTotal);
   const unit = node.metric?.unit?.htmlLong || node.metric?.unit?.htmlShort;
+  const nodeName = node.shortName || node.name;
+  const showNodeLinks = !instance.features?.hideNodeDetails;
+  const maximumFractionDigits =
+    instance.features?.maximumFractionDigits ?? undefined;
+  const outcomeGraph = useMemo(
+    () =>
+      node.metricDim ? (
+        <DimensionalNodePlot
+          node={node}
+          metric={node.metricDim!}
+          startYear={startYear}
+          endYear={endYear}
+          color={color}
+          withControls={false}
+          baselineForecast={node.metric?.baselineForecastValues ?? undefined}
+          withReferenceYear
+          withTools={false}
+        />
+      ) : (
+        <h5>
+          {t('time-series')}, {t('coming-soon')}
+        </h5>
+      ),
+    [node, color, startYear, endYear]
+  );
+
+  const singleYearGraph = useMemo(
+    () => (
+      <div>
+        {/*<DimensionalBarGraph metric={node.metricDim!} endYear={endYear} />*/}
+      </div>
+    ),
+    [node, endYear, color]
+  );
 
   return (
     <div role="tabpanel" id={`tabpanel-${node.id}`}>
@@ -144,7 +187,11 @@ const OutcomeNodeContent = ({
         <div>
           <CardSetDescription>
             <h4>
-              <a>{node.shortName || node.name}</a>
+              {showNodeLinks ? (
+                <PathsNodeLink id={node}>{nodeName}</PathsNodeLink>
+              ) : (
+                nodeName
+              )}
             </h4>
             <CardSetDescriptionDetails>
               {startYear < lastMeasuredYear && (
@@ -169,7 +216,9 @@ const OutcomeNodeContent = ({
           {nodesTotal && (
             <HighlightValue
               className="figure"
-              displayValue={'' + beautifyValue(nodesTotal)}
+              displayValue={
+                '' + beautifyValue(nodesTotal, undefined, maximumFractionDigits)
+              }
               header={`${
                 isForecast
                   ? t('table-scenario-forecast')
@@ -242,20 +291,22 @@ const OutcomeNodeContent = ({
               <Icon name="table" /> {t('table')}
             </NavLink>
           </DisplayTab>
-          <DisplayTab role="presentation">
-            <NavLink
-              href="#"
-              onClick={() => setActiveTabId('info')}
-              active={activeTabId === 'info'}
-              role="tab"
-              aria-selected={activeTabId === 'info'}
-              aria-controls={`${node.id}-panel-info`}
-              id={`${node.id}-tab-info`}
-              tabIndex={0}
-            >
-              <Icon name="circleInfo" /> {t('details')}
-            </NavLink>
-          </DisplayTab>
+          {showNodeLinks && (
+            <DisplayTab role="presentation">
+              <NavLink
+                href="#"
+                onClick={() => setActiveTabId('info')}
+                active={activeTabId === 'info'}
+                role="tab"
+                aria-selected={activeTabId === 'info'}
+                aria-controls={`${node.id}-panel-info`}
+                id={`${node.id}-tab-info`}
+                tabIndex={0}
+              >
+                <Icon name="circleInfo" /> {t('details')}
+              </NavLink>
+            </DisplayTab>
+          )}
         </TabNavigation>
 
         {refetching && <ContentLoader />}
@@ -268,16 +319,26 @@ const OutcomeNodeContent = ({
           aria-labelledby={`${node.id}-tab-${activeTabId}}`}
         >
           {activeTabId === 'year' && (
-            <ContentWrapper>YEAR GRAPH HERE</ContentWrapper>
+            <ContentWrapper>{singleYearGraph}</ContentWrapper>
           )}
           {activeTabId === 'graph' && (
-            <ContentWrapper>GRAPH HERE</ContentWrapper>
+            <ContentWrapper>---{outcomeGraph}</ContentWrapper>
           )}
           {activeTabId === 'info' && (
-            <ContentWrapper>CONTENT HERE</ContentWrapper>
+            <ContentWrapper>
+              <OutcomeNodeDetails node={node} t={t} />
+            </ContentWrapper>
           )}
           {activeTabId === 'table' && (
-            <ContentWrapper tabIndex={0}>TABLE HERE</ContentWrapper>
+            <ContentWrapper tabIndex={0}>
+              <DataTable
+                node={node}
+                subNodes={subNodes}
+                color={color}
+                startYear={startYear}
+                endYear={endYear}
+              />
+            </ContentWrapper>
           )}
         </TabContent>
       </CardContent>
