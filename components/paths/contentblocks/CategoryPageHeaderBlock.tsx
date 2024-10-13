@@ -6,6 +6,7 @@ import { CategoryPage } from 'components/common/CategoryPageStreamField';
 import { usePaths } from 'context/paths/paths';
 import { usePlan } from 'context/plan';
 import { useTranslations } from 'next-intl';
+import { Container } from 'reactstrap';
 import styled, { useTheme } from 'styled-components';
 
 import { gql } from '@apollo/client';
@@ -28,6 +29,11 @@ export const GET_CATEGORY_ATTRIBUTE_TYPES = gql`
       }
     }
   }
+`;
+
+const Background = styled.div`
+  padding: 4rem 0 2em;
+  background-color: ${(props) => props.theme.brandDark};
 `;
 
 const PathsActionImpact = styled.div`
@@ -92,57 +98,61 @@ function CategoryPageHeaderBlock(props: Props) {
     level && !theme.settings.categories.categoryPageHideCategoryLabel;
 
   return (
-    <CategoryHeader>
-      <Breadcrumbs
-        breadcrumbs={[
-          {
-            id: '1',
-            name: 'Massnahmenpakete',
-            url: '/',
-          },
-          {
-            id: '2',
-            name: 'Pakete',
-            url: '/categories/',
-          },
-          {
-            id: '3',
-            name: title,
-            url: `/categories/${identifier}/`,
-          },
-        ]}
-      />
-      <h1>
-        {identifier && <Identifier>{identifier}.</Identifier>} {title}
-      </h1>
-      {hasPaths && (
-        <PathsActionImpact>
-          <div>
-            <h4>Emissions (2022)</h4>
-            <div>
+    <Background>
+      <Container>
+        <CategoryHeader>
+          <Breadcrumbs
+            breadcrumbs={[
+              {
+                id: '1',
+                name: 'Massnahmenpakete',
+                url: '/',
+              },
+              {
+                id: '2',
+                name: 'Pakete',
+                url: '/categories/',
+              },
+              {
+                id: '3',
+                name: title,
+                url: `/categories/${identifier}/`,
+              },
+            ]}
+          />
+          <h1>
+            {identifier && <Identifier>{identifier}.</Identifier>} {title}
+          </h1>
+          {hasPaths && (
+            <PathsActionImpact>
               <div>
-                Direct emissions<h5>XXX</h5>
+                <h4>Emissions (2022)</h4>
+                <div>
+                  <div>
+                    Direct emissions<h5>XXX</h5>
+                  </div>
+                  <div>
+                    Indirect emissions<h5>XXX</h5>
+                  </div>
+                </div>
               </div>
               <div>
-                Indirect emissions<h5>XXX</h5>
+                <h4>Emissions target (2024)</h4>
+                <div>
+                  <div>
+                    Direct emissions<h5>XXX</h5>
+                  </div>
+                  <div>
+                    Indirect emissions<h5>XXX</h5>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-          <div>
-            <h4>Emissions target (2024)</h4>
-            <div>
-              <div>
-                Direct emissions<h5>XXX</h5>
-              </div>
-              <div>
-                Indirect emissions<h5>XXX</h5>
-              </div>
-            </div>
-          </div>
-        </PathsActionImpact>
-      )}
-      {lead && <p>{lead}</p>}
-    </CategoryHeader>
+            </PathsActionImpact>
+          )}
+          {lead && <p>{lead}</p>}
+        </CategoryHeader>
+      </Container>
+    </Background>
   );
 }
 
