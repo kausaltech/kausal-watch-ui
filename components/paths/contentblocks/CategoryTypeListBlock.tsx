@@ -5,8 +5,9 @@ import { MultiUseImageFragmentFragment } from 'common/__generated__/graphql';
 import { CommonContentBlockProps } from 'common/blocks.types';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
+import ContentLoader from 'react-content-loader';
 import { Col, Container, FormGroup, Input, Label, Row } from 'reactstrap';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 
 import { getDeepParents } from '@/common/categories';
 import { usePaths } from '@/context/paths/paths';
@@ -48,28 +49,49 @@ const GET_CATEGORIES_FOR_CATEGORY_TYPE_LIST = gql`
   ${RECURSIVE_CATEGORY_FRAGMENT}
 `;
 
+const CategoryListContentLoader = (props) => {
+  const theme = useTheme();
+  return (
+    <ContentLoader
+      speed={1}
+      viewBox="0 0 600 80"
+      backgroundColor={theme.graphColors.grey010}
+      foregroundColor={theme.graphColors.grey030}
+      style={{ width: '100%' }}
+      {...props}
+    >
+      <rect x="0" y="88" rx="3" ry="3" width="178" height="6" />
+      <rect x="5" y="2" rx="3" ry="3" width="180" height="69" />
+      <rect x="211" y="1" rx="3" ry="3" width="180" height="69" />
+      <rect x="413" y="0" rx="3" ry="3" width="180" height="69" />
+    </ContentLoader>
+  );
+};
+
+const HeaderSection = styled.div`
+  padding: 4rem 0;
+  margin-bottom: 2rem;
+  background-color: ${(props) => props.theme.brandDark};
+  color: ${(props) => props.theme.themeColors.white};
+`;
+
+const StyledTitle = styled.h1`
+  margin-bottom: 2rem;
+  font-size: ${(props) => props.theme.fontSizeLg};
+  color: inherit;
+
+  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    font-size: ${(props) => props.theme.fontSizeXl};
+  }
+`;
+
 const GroupHeader = styled.h4`
   border-left: 6px solid ${(props) => props.$color};
   margin-bottom: 24px;
 `;
 
 const CategoryListSection = styled.div`
-  background-color: ${({ theme }) => getBackgroundColor(theme)};
-  padding: ${(props) =>
-    `${props.theme.spaces.s400} 0 ${props.theme.spaces.s100} 0`};
-  color: ${({ theme }) => getColor(theme)};
-
-  h2 {
-    font-size: ${(props) => props.theme.fontSizeLg};
-    color: ${({ theme }) => getColor(theme, theme.headingsColor)};
-  }
-
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
-    h2 {
-      font-size: ${(props) => props.theme.fontSizeXl};
-    }
-  }
-
+  padding-bottom: 6rem;
   a.card-wrapper {
     display: flex;
     width: 100%;
@@ -180,25 +202,31 @@ const CategoryList = (props) => {
 
   return (
     <>
-      <FormGroup>
-        <Label for="sort">{t('actions-sort-by')}</Label>
-        <Input
-          id="sort"
-          name="select"
-          type="select"
-          onChange={(e) => handleChangeSort(e.target.value as SortActionsBy)}
-          value={sortBy.key}
-        >
-          {sortOptions.map(
-            (sortOption) =>
-              !sortOption.isHidden && (
-                <option key={sortOption.key} value={sortOption.key}>
-                  {sortOption.label}
-                </option>
-              )
-          )}
-        </Input>
-      </FormGroup>
+      <Row>
+        <Col xs={{ size: 6, offset: 6 }} md={{ size: 2, offset: 10 }}>
+          <FormGroup>
+            <Label for="sort">{t('actions-sort-by')}</Label>
+            <Input
+              id="sort"
+              name="select"
+              type="select"
+              onChange={(e) =>
+                handleChangeSort(e.target.value as SortActionsBy)
+              }
+              value={sortBy.key}
+            >
+              {sortOptions.map(
+                (sortOption) =>
+                  !sortOption.isHidden && (
+                    <option key={sortOption.key} value={sortOption.key}>
+                      {sortOption.label}
+                    </option>
+                  )
+              )}
+            </Input>
+          </FormGroup>
+        </Col>
+      </Row>
       {groups?.map((group) => (
         <Row key={group?.id}>
           {group?.id !== 'all' && (
@@ -285,26 +313,31 @@ const CategoryTypeListBlock = (props: CategoryTypeListBlockProps) => {
     }
   );
 
-  if (loading) {
-    return <div>Loading...</div>; // Or any loading indicator you prefer
-  }
   if (error) {
     return <div>Error: {error.message}</div>;
   }
 
-  const categories = data.planCategories.filter(
-    (cat) => cat.level.id === listByLevel
-  );
+  const categories = data
+    ? data.planCategories.filter((cat) => cat.level.id === listByLevel)
+    : [];
+  const groups = getParentCategoriesOfLevel(categories, groupByLevel);
   return (
     <CategoryListSection id={id}>
+      <HeaderSection>
+        <Container>
+          <Row>
+            <Col className="mb-4">
+              {heading && <StyledTitle>{heading}</StyledTitle>}
+            </Col>
+          </Row>
+        </Container>
+      </HeaderSection>
       <Container>
-        <Row>
-          <Col className="mb-4">{heading && <h2>{heading}</h2>}</Col>
-        </Row>
-        <CategoryList
-          categories={categories}
-          groups={getParentCategoriesOfLevel(categories, groupByLevel)}
-        />
+        {loading ? (
+          <CategoryListContentLoader />
+        ) : (
+          <CategoryList categories={categories} groups={groups} />
+        )}
       </Container>
     </CategoryListSection>
   );
