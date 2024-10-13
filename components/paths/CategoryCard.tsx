@@ -5,8 +5,8 @@ import { Link } from 'common/links';
 import ActionParameters from 'components/paths/ActionParameters';
 import { useTranslations } from 'next-intl';
 import { readableColor, transparentize } from 'polished';
-import { Spinner } from 'reactstrap';
-import styled from 'styled-components';
+import ContentLoader from 'react-content-loader';
+import styled, { useTheme } from 'styled-components';
 
 import { activeGoalVar, yearRangeVar } from '@/context/paths/cache';
 import { GET_PATHS_ACTION } from '@/queries/paths/get-paths-actions';
@@ -18,11 +18,6 @@ import { DimensionalMetric } from '@/utils/paths/metric';
 import { getHttpHeaders } from '@/utils/paths/paths.utils';
 import PathsActionNode from '@/utils/paths/PathsActionNode';
 import { NetworkStatus, useQuery, useReactiveVar } from '@apollo/client';
-
-const ContentLoader = styled(Spinner)`
-  margin: 0 auto;
-  //background-color: ${(props) => props.theme.themeColors.light};
-`;
 
 const GroupIdentifierHeader = styled.div`
   background-color: ${(props) => props.$color};
@@ -57,6 +52,26 @@ const CardHeader = styled.h3`
 const Identifier = styled.span`
   color: ${(props) => props.theme.textColor.tertiary};
 `;
+
+const PathsContentLoader = (props) => {
+  const theme = useTheme();
+  return (
+    <ContentLoader
+      speed={1}
+      width={330}
+      height={80}
+      viewBox="0 0 330 80"
+      backgroundColor={theme.graphColors.grey010}
+      foregroundColor={theme.graphColors.grey030}
+      {...props}
+    >
+      <rect x="5" y="1" rx="3" ry="3" width="166" height="16" />
+      <rect x="0" y="88" rx="3" ry="3" width="178" height="6" />
+      <rect x="6" y="24" rx="3" ry="3" width="130" height="27" />
+      <rect x="4" y="61" rx="3" ry="3" width="166" height="16" />
+    </ContentLoader>
+  );
+};
 
 const PathsBasicNodeContent = (props) => {
   const { categoryId, node, pathsInstance, onLoaded } = props;
@@ -96,7 +111,7 @@ const PathsBasicNodeContent = (props) => {
   }, [activeGoal, data, yearRange]);
 
   if (loading && !refetching) {
-    return <ContentLoader type="grow" />;
+    return <PathsContentLoader />;
   }
   if (error) {
     return <div>Error: {error.message}</div>; // Handle error appropriately
@@ -177,7 +192,7 @@ const PathsActionNodeContent = (props) => {
   }, [activeGoal, data, yearRange]);
 
   if (loading && !refetching) {
-    return <ContentLoader type="grow" />;
+    return <PathsContentLoader />;
   }
   if (error) {
     return <div>Error: {error.message}</div>; // Handle error appropriately
@@ -212,7 +227,7 @@ const PathsNodeContent = (props) => {
   });
 
   if (loading) {
-    return <ContentLoader type="grow" />;
+    return <PathsContentLoader />;
   }
   if (error) {
     return <div>Error: {error.message}</div>; // Handle error appropriately
