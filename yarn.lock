@@ -16928,6 +16928,7 @@ __metadata:
     react: 18.2.0
     react-bootstrap-typeahead: ^6.0.0-alpha.11
     react-color: ^2.19.3
+    react-content-loader: ^7.0.2
     react-copy-to-clipboard: ^5.1.0
     react-dom: 18.2.0
     react-highlight-words: ^0.18.0
@@ -20229,6 +20230,15 @@ __metadata:
     react: ">=16.8.0"
     react-dom: ">=16.8.0"
   checksum: e432b7cb0df57e8f0bcdc3b012d2e93fcbcb6092c9e0f85654788d5ebfc4442536d8cc35b2418061ba3c4afb8b7788cc101c606d86a1732407921de7a9244c8d
+  languageName: node
+  linkType: hard
+
+"react-content-loader@npm:^7.0.2":
+  version: 7.0.2
+  resolution: "react-content-loader@npm:7.0.2"
+  peerDependencies:
+    react: ">=16.0.0"
+  checksum: 8f2f97cfb9a831cf487b8295fc60e05b153340a7bbaa2aa117c4af4c694ce0759313d8f538677ed231d3eb11d626e0561c416bc94f4ed158426bab5e8fa2ff67
   languageName: node
   linkType: hard
 

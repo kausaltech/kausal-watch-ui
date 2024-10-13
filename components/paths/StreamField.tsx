@@ -87,7 +87,14 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
     }
 
     case 'PathsOutcomeBlock': {
-      return <PathsOutcomeBlock />;
+      const { heading, helpText, outcomeNodeId } = block;
+      return (
+        <PathsOutcomeBlock
+          heading={heading}
+          helpText={helpText}
+          outcomenodeId={outcomeNodeId}
+        />
+      );
     }
     case 'ActionCategoryFilterCardsBlock': {
       const { cards } = block;
