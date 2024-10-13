@@ -135,56 +135,54 @@ const CategoryList = (props) => {
 
   //console.log('categoryData', categoryData);
   return (
-    <Container>
-      <Row>
-        {categories
-          ?.filter((cat) => cat?.categoryPage?.live)
-          .map(
-            (cat) =>
-              cat.categoryPage && (
-                <Col
-                  tag="li"
-                  xs="12"
-                  sm="6"
-                  lg="4"
-                  key={cat.id}
-                  className="mb-5 d-flex align-items-stretch"
-                >
-                  <Link href={cat.categoryPage.urlPath} legacyBehavior>
-                    <a className="card-wrapper">
-                      <Card
-                        colorEffect={cat.color ?? undefined}
-                        altText={cat.image?.altText}
-                      >
-                        <div>
-                          <CardHeader className="card-title">
-                            {!cat?.type.hideCategoryIdentifiers && (
-                              <Identifier>{cat.identifier}. </Identifier>
-                            )}
-                            {cat.name}
-                          </CardHeader>
-                          {cat.leadParagraph && <p>{cat.leadParagraph}</p>}
-                          {cat.pathsAction && (
-                            <div>
-                              {yearRange ? (
-                                beautifyValue(
-                                  cat.pathsAction.getYearlyImpact(yearRange[1])
-                                )
-                              ) : (
-                                <span>---</span>
-                              )}
-                              {cat.pathsAction.getUnit()}
-                            </div>
+    <Row>
+      {categories
+        ?.filter((cat) => cat?.categoryPage?.live)
+        .map(
+          (cat) =>
+            cat.categoryPage && (
+              <Col
+                tag="li"
+                xs="12"
+                sm="6"
+                lg="4"
+                key={cat.id}
+                className="mb-5 d-flex align-items-stretch"
+              >
+                <Link href={cat.categoryPage.urlPath} legacyBehavior>
+                  <a className="card-wrapper">
+                    <Card
+                      colorEffect={cat.color ?? undefined}
+                      altText={cat.image?.altText}
+                    >
+                      <div>
+                        <CardHeader className="card-title">
+                          {!cat?.type.hideCategoryIdentifiers && (
+                            <Identifier>{cat.identifier}. </Identifier>
                           )}
-                        </div>
-                      </Card>
-                    </a>
-                  </Link>
-                </Col>
-              )
-          )}
-      </Row>
-    </Container>
+                          {cat.name}
+                        </CardHeader>
+                        {cat.leadParagraph && <p>{cat.leadParagraph}</p>}
+                        {cat.pathsAction && (
+                          <div>
+                            {yearRange ? (
+                              beautifyValue(
+                                cat.pathsAction.getYearlyImpact(yearRange[1])
+                              )
+                            ) : (
+                              <span>---</span>
+                            )}
+                            {cat.pathsAction.getUnit()}
+                          </div>
+                        )}
+                      </div>
+                    </Card>
+                  </a>
+                </Link>
+              </Col>
+            )
+        )}
+    </Row>
   );
 };
 
@@ -201,10 +199,12 @@ const CategoryListBlock = (props: CategoryListBlockProps) => {
   //console.log('CategoryListBlock', props);
   return (
     <CategoryListSection id={id}>
-      {heading && <h4>{heading}</h4>}
-      <Suspense fallback={<div>Loading...</div>}>
-        <CategoryList categories={categories} />
-      </Suspense>
+      <Container>
+        {heading && <h4>{heading}</h4>}
+        <Suspense fallback={<div>Loading...</div>}>
+          <CategoryList categories={categories} />
+        </Suspense>
+      </Container>
     </CategoryListSection>
   );
 };
