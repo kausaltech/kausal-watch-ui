@@ -174,6 +174,7 @@ const OutcomeNodeContent = ({
   const singleYearGraph = useMemo(
     () => (
       <div>
+        <h3>COMING SOON</h3>
         {/*<DimensionalBarGraph metric={node.metricDim!} endYear={endYear} />*/}
       </div>
     ),
@@ -290,7 +291,8 @@ const OutcomeNodeContent = ({
               <Icon name="table" /> {t('table')}
             </NavLink>
           </DisplayTab>
-          {showNodeLinks && (
+          {/* TODO: Hide info tab for now as we can not link to paths actions inside watch */}
+          {showNodeLinks && false && (
             <DisplayTab role="presentation">
               <NavLink
                 href="#"
