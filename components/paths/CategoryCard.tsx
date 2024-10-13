@@ -17,7 +17,7 @@ import {
 import { DimensionalMetric } from '@/utils/paths/metric';
 import { getHttpHeaders } from '@/utils/paths/paths.utils';
 import PathsActionNode from '@/utils/paths/PathsActionNode';
-import { useQuery, useReactiveVar } from '@apollo/client';
+import { NetworkStatus, useQuery, useReactiveVar } from '@apollo/client';
 
 const ContentLoader = styled(Spinner)`
   margin: 0 auto;
@@ -43,8 +43,9 @@ const Card = styled.div`
     ${(props) => transparentize(0.9, props.theme.themeColors.dark)};
 `;
 
-const CardContentBlock = styled.div`
+const CardContentBlock = styled.div<{ $disabled?: boolean }>`
   margin: ${({ theme }) => `0 ${theme.spaces.s100} ${theme.spaces.s100}`};
+  opacity: ${({ $disabled = false }) => ($disabled ? 0.5 : 1)};
 `;
 const CardHeader = styled.h3`
   margin: ${({ theme }) => `0 ${theme.spaces.s100} ${theme.spaces.s100}`};
@@ -61,16 +62,19 @@ const PathsBasicNodeContent = (props) => {
   const { categoryId, node, pathsInstance, onLoaded } = props;
   const yearRange = useReactiveVar(yearRangeVar);
   const activeGoal = useReactiveVar(activeGoalVar);
-  const t = useTranslations();
+  // const t = useTranslations();
 
-  const { data, loading, error } = useQuery(GET_NODE_CONTENT, {
+  const { data, loading, error, networkStatus } = useQuery(GET_NODE_CONTENT, {
     fetchPolicy: 'no-cache',
     variables: { node: node, goal: activeGoal?.id },
+    notifyOnNetworkStatusChange: true,
     context: {
       uri: '/api/graphql-paths',
       headers: getHttpHeaders({ instanceIdentifier: pathsInstance }),
     },
   });
+
+  const refetching = networkStatus === NetworkStatus.refetch;
 
   useEffect(() => {
     if (data) {
@@ -91,7 +95,7 @@ const PathsBasicNodeContent = (props) => {
     }
   }, [activeGoal, data, yearRange]);
 
-  if (loading) {
+  if (loading && !refetching) {
     return <ContentLoader type="grow" />;
   }
   if (error) {
@@ -128,8 +132,7 @@ const PathsBasicNodeContent = (props) => {
       const unit = nodeMetric.getUnit();
 
       return (
-        <CardContentBlock>
-          <div>{nodeMetric.getName()}</div>
+        <CardContentBlock $disabled={refetching}>
           {yearTotal && (
             <>
               <h5>{label}</h5>
@@ -153,14 +156,17 @@ const PathsActionNodeContent = (props) => {
   const activeGoal = useReactiveVar(activeGoalVar);
   const t = useTranslations();
 
-  const { data, loading, error } = useQuery(GET_PATHS_ACTION, {
+  const { data, loading, error, networkStatus } = useQuery(GET_PATHS_ACTION, {
     fetchPolicy: 'no-cache',
     variables: { action: node, goal: activeGoal?.id },
+    notifyOnNetworkStatusChange: true,
     context: {
       uri: '/api/graphql-paths',
       headers: getHttpHeaders({ instanceIdentifier: pathsInstance }),
     },
   });
+
+  const refetching = networkStatus === NetworkStatus.refetch;
 
   useEffect(() => {
     if (data) {
@@ -170,7 +176,7 @@ const PathsActionNodeContent = (props) => {
     }
   }, [activeGoal, data, yearRange]);
 
-  if (loading) {
+  if (loading && !refetching) {
     return <ContentLoader type="grow" />;
   }
   if (error) {
@@ -180,7 +186,7 @@ const PathsActionNodeContent = (props) => {
     const pathsAction = new PathsActionNode(data.action);
     const impact = pathsAction.getYearlyImpact(yearRange[1]) || 0;
     return (
-      <CardContentBlock>
+      <CardContentBlock $disabled={refetching}>
         {t('impact')} {yearRange[1]}
         <h4>
           {yearRange ? beautifyValue(impact) : <span>---</span>}

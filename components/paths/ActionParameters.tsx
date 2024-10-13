@@ -17,7 +17,6 @@ const Parameters = styled.div`
 
 const ActionParameters = (props: { parameters: ParameterInterface[] }) => {
   const { parameters } = props;
-
   if (!parameters) {
     return null;
   }
