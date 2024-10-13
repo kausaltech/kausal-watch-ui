@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from 'react';
+
+import PopoverTip from 'components/common/PopoverTip';
+import Highlighter from 'react-highlight-words';
 import Select, {
   components,
   DropdownIndicatorProps,
   MultiValueProps,
+  OptionProps,
   Theme as SelectTheme,
   ValueContainerProps,
-  OptionProps,
 } from 'react-select';
-import styled, { DefaultTheme, useTheme } from 'styled-components';
-import Highlighter from 'react-highlight-words';
 import { FormGroup, Label as BSLabel } from 'reactstrap';
-import PopoverTip from 'components/common/PopoverTip';
+import styled, { DefaultTheme, useTheme } from 'styled-components';
 
 const Label = styled(BSLabel)`
   font-weight: ${(props) => props.theme.formLabelFontWeight};
@@ -262,7 +263,7 @@ type SelectDropdownProps<Option extends SelectDropdownOption> = Parameters<
 
 function SelectDropdown<
   Option extends SelectDropdownOption,
-  IsMulti extends boolean = false
+  IsMulti extends boolean
 >(props: SelectDropdownProps<Option>) {
   const {
     size,
@@ -272,7 +273,7 @@ function SelectDropdown<
     onChange,
     helpText,
     invert,
-    isMulti,
+    isMulti = false,
     ...rest
   } = props;
   const theme = useTheme();
