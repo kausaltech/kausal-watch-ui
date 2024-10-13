@@ -1,9 +1,12 @@
 import dayjs from 'dayjs';
 import { Font, Style } from 'exceljs';
-//import slugify from 'slugify';
-import { DimensionalMetricFragment } from 'queries/paths/get-paths-page';
 
-import { InstanceGoalEntry } from '@/common/__generated__/paths/graphql';
+//import slugify from 'slugify';
+//import { DimensionalMetricFragment } from 'queries/paths/get-paths-page';
+import {
+  DimensionalMetricFragment,
+  InstanceGoalEntry,
+} from '@/common/__generated__/paths/graphql';
 import { DocumentNode, gql } from '@apollo/client';
 
 type CatValue = number | null;
@@ -12,7 +15,7 @@ type DimValues = {
   categories: Map<string, CatValue[]>;
 };
 
-type Metric = NonNullable<typeof DimensionalMetricFragment>;
+type Metric = NonNullable<DimensionalMetricFragment>;
 
 type MetricDimensionInput = Metric['dimensions'][0];
 type MetricDimension = Omit<MetricDimensionInput, 'groups'> & {

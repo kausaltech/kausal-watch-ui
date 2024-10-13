@@ -1,6 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
 
-import type { DimensionalNodeMetricFragment } from 'common/__generated__/graphql';
+import type {
+  DimensionalNodeMetricFragment,
+  InstanceGoalEntry,
+} from 'common/__generated__/paths/graphql';
 import SelectDropdown from 'components/common/SelectDropdown';
 import { isEqual } from 'lodash';
 import { useTranslations } from 'next-intl';
@@ -95,7 +98,7 @@ type PlotData = { x: number[]; y: number[] };
 
 function getDefaultSliceConfig(
   cube: DimensionalMetric,
-  activeGoal: InstanceGoal | null
+  activeGoal: InstanceGoalEntry | null
 ) {
   /**
    * By default, we group by the first dimension `metric` has, whatever it is.
@@ -210,13 +213,14 @@ export default function DimensionalNodePlot({
   const paths = usePaths();
   const instance = paths?.instance;
   const referenceYear = instance?.referenceYear || undefined;
+  const minimumHistoricalYear = instance?.minimumHistoricalYear || undefined;
   const baselineName = ''; //TODO: get from instance
   const baselineVisibleInGraphs =
     instance?.features?.baselineVisibleInGraphs ?? false;
 
   const defaultColor = color || theme.graphColors.blue070;
   const shapes: Plotly.Layout['shapes'] = [];
-  const plotData: Partial<Plotly.PlotData>[] = [];
+  const plotData: Plotly.Data[] = [];
   const rangeMode = metric.stackable ? 'tozero' : 'normal';
   const filled = metric.stackable;
 
@@ -270,9 +274,9 @@ export default function DimensionalNodePlot({
     !cube.hasDimension('greenhouse_gases')
   ) {
     if (metric.unit.short === 't/Einw./a') {
-      longUnit = t('tco2-e-inhabitant');
+      longUnit = t.raw('tco2-e-inhabitant');
     } else if (metric.unit.short === 'kt/a') {
-      longUnit = t('ktco2-e');
+      longUnit = t.raw('ktco2-e');
     }
   }
 
@@ -383,15 +387,14 @@ export default function DimensionalNodePlot({
 
     if (goals.length === 1) {
       const goal = goals[goals.length - 1];
-
+      const x1 =
+        startYear === referenceYear ? minimumHistoricalYear : startYear;
+      const x2 = goal.year > usableEndYear ? usableEndYear : goal.year;
       plotData.push({
         xaxis: 'x2',
         showlegend: false,
         hoverinfo: 'skip',
-        x: [
-          startYear === referenceYear ? site.minYear : startYear,
-          goal.year > usableEndYear ? usableEndYear : goal.year,
-        ],
+        x: [x1 || 0, x2 || 0],
         y: [goal.value, goal.value],
         mode: 'lines',
         line: lineConfig,

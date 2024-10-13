@@ -23,6 +23,8 @@ import { GET_SCENARIOS } from '@/queries/paths/get-paths-scenarios';
 import { getHttpHeaders } from '@/utils/paths/paths.utils';
 import { gql, useMutation, useQuery } from '@apollo/client';
 
+const pathsQueries = 'active';
+
 const ACTIVATE_SCENARIO = gql`
   mutation ActivateScenario($scenarioId: ID!) {
     activateScenario(id: $scenarioId) {
@@ -78,7 +80,7 @@ const ScenarioSelector = () => {
         uri: '/api/graphql-paths',
         headers: getHttpHeaders({ instanceIdentifier: paths?.instance.id }),
       },
-      refetchQueries: ['GetPathsActionList', 'GetScenarios'],
+      refetchQueries: pathsQueries,
     });
 
   if (loading) {

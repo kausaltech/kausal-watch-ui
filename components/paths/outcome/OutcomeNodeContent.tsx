@@ -11,7 +11,6 @@ import {
   getMetricChange,
   getMetricValue,
 } from '@/common/paths/preprocess';
-import ContentLoader from '@/components/common/ContentLoader';
 import Icon from '@/components/common/Icon';
 import DataTable from '@/components/paths/graphs/DataTable';
 import DimensionalNodePlot from '@/components/paths/graphs/DimensionalNodePlot';
@@ -308,8 +307,6 @@ const OutcomeNodeContent = ({
             </DisplayTab>
           )}
         </TabNavigation>
-
-        {refetching && <ContentLoader />}
 
         <TabContent
           activeTab={activeTabId}
