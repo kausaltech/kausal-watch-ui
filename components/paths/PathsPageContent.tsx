@@ -14,17 +14,6 @@ type CategoryPage = { __typename: 'CategoryPage' } & GeneralPlanPage;
 
 const MainContent = styled.div`
   position: relative;
-  padding-top: 100px;
-  &::after {
-    content: '';
-    display: block;
-    position: absolute;
-    top: 0;
-    z-index: -100;
-    height: 500px;
-    background-color: ${({ theme }) => theme.brandDark};
-    width: 100%;
-  }
 `;
 
 const columnLayout = css`
@@ -56,9 +45,7 @@ const columnLayout = css`
   }
 `;
 
-const ContentArea = styled.div`
-  margin-bottom: 100px;
-`;
+const ContentArea = styled.div``;
 
 const PathsPageContent = ({
   page,
