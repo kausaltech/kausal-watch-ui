@@ -13,6 +13,7 @@ module.exports = {
       'context/paths/**/*.{js,ts,tsx}',
       'queries/paths/**/*.{js,ts,tsx}',
     ],
+    excludes: ['components/paths/contentblocks/**/*.{js,ts,tsx}'],
     service: {
       name: 'kausal-paths',
       url: `${pathsGqlUrl}`,
