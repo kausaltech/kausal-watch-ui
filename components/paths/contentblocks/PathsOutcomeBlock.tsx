@@ -6,11 +6,12 @@ import { Card, CardBody, Col, Container, Row } from 'reactstrap';
 import styled from 'styled-components';
 
 import ContentLoader from '@/components/common/ContentLoader';
-import OutcomeCardSet from '@/components/paths/OutcomeCardSet';
+import OutcomeCardSet from '@/components/paths/outcome/OutcomeCardSet';
+import { activeScenarioVar, yearRangeVar } from '@/context/paths/cache';
 import { usePaths } from '@/context/paths/paths';
 import GET_PAGE from '@/queries/paths/get-paths-page';
 import { getHttpHeaders } from '@/utils/paths/paths.utils';
-import { useSuspenseQuery } from '@apollo/client';
+import { useReactiveVar, useSuspenseQuery } from '@apollo/client';
 
 const ErrorBackground = styled.div`
   background-color: ${(props) => props.theme.brandDark};
@@ -31,7 +32,7 @@ const StyledCard = styled(Card)`
     margin-bottom: 2rem;
   }
 
-  svg {
+  svg.what-this {
     width: 4rem;
     margin-bottom: 2rem;
     fill: ${(props) => props.theme.brandDark};
@@ -53,6 +54,8 @@ export default function PathsOutcomeBlock(props) {
   const { heading, helpText, outcomeNodeId } = props;
   const t = useTranslations();
   const pathsInstance = usePaths();
+  const yearRange = useReactiveVar(yearRangeVar);
+  const activeScenario = useReactiveVar(activeScenarioVar);
   const path = '';
   const { data } = useSuspenseQuery(GET_PAGE, {
     variables: { path, goal: null },
@@ -104,9 +107,9 @@ export default function PathsOutcomeBlock(props) {
                     }
                     nodeMap={allNodes}
                     rootNode={node}
-                    startYear={1990}
-                    endYear={2020}
-                    activeScenario="ohyeah"
+                    startYear={yearRange[0]}
+                    endYear={yearRange[1]}
+                    activeScenario={activeScenario?.name}
                     parentColor="#666"
                     activeNodeId={
                       index < visibleNodes.length - 1

@@ -5,8 +5,8 @@ import styled from 'styled-components';
 
 import { setUniqueColors } from '@/common/paths/colors';
 import { getMetricValue, getOutcomeTotal } from '@/common/paths/preprocess';
-import OutcomeCard from '@/components/paths/OutcomeCard';
-import OutcomeNodeContent from '@/components/paths/OutcomeNodeContent';
+import OutcomeCard from '@/components/paths/outcome/OutcomeCard';
+import OutcomeNodeContent from '@/components/paths/outcome/OutcomeNodeContent';
 
 const CardSet = styled.div<{
   $color?: string;
