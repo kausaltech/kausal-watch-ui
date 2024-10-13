@@ -15,6 +15,11 @@ const watchConfigDocs = [
   ...apolloConfig.client.excludes.map((exclude) => `!${exclude}`),
 ];
 
+const pathsConfigDocs = [
+  ...pathsApolloConfig.client.includes,
+  ...pathsApolloConfig.client.excludes.map((exclude) => `!${exclude}`),
+];
+
 const config: CodegenConfig = {
   overwrite: true,
 
@@ -35,6 +40,7 @@ const config: CodegenConfig = {
     },
     'common/__generated__/paths/possible_types.json': {
       schema: pathsApolloConfig.client.service.url,
+      documents: pathsConfigDocs,
       plugins: ['fragment-matcher'],
       config: {
         useExplicitTyping: true,
@@ -42,6 +48,7 @@ const config: CodegenConfig = {
     },
     'common/__generated__/paths/graphql.ts': {
       schema: pathsApolloConfig.client.service.url,
+      documents: pathsConfigDocs,
       plugins: ['typescript', 'typescript-operations'],
       config: tsoConfig,
     },

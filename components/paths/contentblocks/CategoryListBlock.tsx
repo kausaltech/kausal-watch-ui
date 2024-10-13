@@ -12,12 +12,9 @@ import { Col, Container, Row } from 'reactstrap';
 import styled from 'styled-components';
 
 import { yearRangeVar } from '@/context/paths/cache';
-import { usePaths } from '@/context/paths/paths';
 import { CATEGORY_FRAGMENT } from '@/fragments/category.fragment';
-import { GET_PATHS_ACTION_LIST } from '@/queries/paths/get-paths-actions';
-import { getHttpHeaders } from '@/utils/paths/paths.utils';
 import PathsActionNode from '@/utils/paths/PathsActionNode';
-import { useReactiveVar, useSuspenseQuery } from '@apollo/client';
+import { useReactiveVar } from '@apollo/client';
 import { Theme } from '@kausal/themes/types';
 
 const getColor = (theme: Theme, darkFallback = theme.themeColors.black) =>
@@ -134,31 +131,13 @@ const getPathsActionForCategory = (category, actions) => {
 
 const CategoryList = (props) => {
   const { categories } = props;
-  const paths = usePaths();
   const yearRange = useReactiveVar(yearRangeVar);
-
-  const { data } = useSuspenseQuery(GET_PATHS_ACTION_LIST, {
-    variables: { goal: null },
-    context: {
-      uri: '/api/graphql-paths',
-      headers: getHttpHeaders({ instanceIdentifier: paths?.instance.id }),
-    },
-  });
-
-  const categoryData = categories?.map((cat) => {
-    const pathsAction = getPathsActionForCategory(cat, data.actions);
-    //console.log('pathsAction', pathsAction);
-    return {
-      ...cat,
-      pathsAction: pathsAction,
-    };
-  });
 
   //console.log('categoryData', categoryData);
   return (
     <Container>
       <Row>
-        {categoryData
+        {categories
           ?.filter((cat) => cat?.categoryPage?.live)
           .map(
             (cat) =>
