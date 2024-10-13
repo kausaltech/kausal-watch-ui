@@ -239,7 +239,7 @@ const ParameterWidget = (props: ParameterWidgetProps) => {
   const paths = usePaths();
   const [SetParameter, { loading: mutationLoading, error: mutationError }] =
     useMutation(SET_PARAMETER, {
-      refetchQueries: ['GetPathsActionList', 'GetScenarios'],
+      refetchQueries: 'active',
       context: {
         uri: '/api/graphql-paths',
         headers: getHttpHeaders({ instanceIdentifier: paths?.instance.id }),
