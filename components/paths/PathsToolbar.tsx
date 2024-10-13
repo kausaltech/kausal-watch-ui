@@ -29,6 +29,7 @@ const FloatingToolbar = styled.div`
   justify-content: start;
   align-items: start;
   gap: 1rem;
+  z-index: 255;
 `;
 
 const ButtonLabel = styled.div`
