@@ -20,7 +20,6 @@ const ErrorBackground = styled.div`
 
 const StyledCard = styled(Card)`
   margin-top: 5rem;
-  text-align: center;
   width: 100%;
   transition: all 0.5s ease;
   overflow: hidden;
