@@ -18,13 +18,24 @@ import GET_PAGE from '@/queries/paths/get-paths-page';
 import { getHttpHeaders } from '@/utils/paths/paths.utils';
 import { NetworkStatus, useQuery, useReactiveVar } from '@apollo/client';
 
-const ErrorBackground = styled.div`
+const Background = styled.div`
+  padding: 4rem 0 6rem;
   background-color: ${(props) => props.theme.brandDark};
+  color: ${(props) => props.theme.themeColors.white};
   min-height: 800px;
 `;
 
+const StyledTitle = styled.h1`
+  margin-bottom: 2rem;
+  font-size: ${(props) => props.theme.fontSizeLg};
+  color: inherit;
+
+  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    font-size: ${(props) => props.theme.fontSizeXl};
+  }
+`;
+
 const StyledCard = styled(Card)<{ $disabled?: boolean }>`
-  margin-top: 5rem;
   width: 100%;
   transition: all 0.5s ease;
   overflow: hidden;
@@ -58,8 +69,8 @@ const findVisibleNodes = (allNodes, lastNodeId: string, visibleNodes) => {
   return visibleNodes;
 };
 
-export default function PathsOutcomeBlock() {
-  //const { heading, helpText, outcomeNodeId } = props;
+export default function PathsOutcomeBlock(props) {
+  const { heading, helpText, outcomeNodeId } = props;
   const t = useTranslations();
   const pathsInstance = usePaths();
   const yearRange = useReactiveVar(yearRangeVar);
@@ -69,7 +80,7 @@ export default function PathsOutcomeBlock() {
   const router = useRouter();
   const pathname = usePathname();
   const queryNodeId = searchParams.get('node') ?? undefined;
-
+  console.log('PathsOutcomeBlock', props);
   const [lastActiveNodeId, setLastActiveNodeId] = useState<string | undefined>(
     queryNodeId
   );
@@ -137,10 +148,11 @@ export default function PathsOutcomeBlock() {
     //const outcomeType = visibleNodes[0].quantity;
 
     return (
-      <ErrorBackground className="mb-5">
+      <Background>
         <Container>
           <Row>
             <Col>
+              <StyledTitle>{heading}</StyledTitle>
               <StyledCard $disabled={refetching}>
                 <CardBody>
                   {visibleNodes.map((node, index) => (
@@ -173,7 +185,7 @@ export default function PathsOutcomeBlock() {
             </Col>
           </Row>
         </Container>
-      </ErrorBackground>
+      </Background>
     );
   }
 }
