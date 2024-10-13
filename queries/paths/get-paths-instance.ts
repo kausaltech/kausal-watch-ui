@@ -31,6 +31,8 @@ const GET_INSTANCE_CONTEXT = gql`
       leadParagraph
       features {
         baselineVisibleInGraphs
+        hideNodeDetails
+        maximumFractionDigits
         showAccumulatedEffects
         showSignificantDigits
       }
