@@ -155,7 +155,7 @@ const CategoryList = (props) => {
       }
       return updatedCategories;
     });
-    console.log('categoriesPathsData', categoriesPathsData);
+    //console.log('categoriesPathsData', categoriesPathsData);
     //setLoadedCards(prev => ({ ...prev, [id]: impact }));
   };
 
@@ -275,7 +275,6 @@ const CategoryTypeListBlock = (props: CategoryTypeListBlockProps) => {
   const { id = '', heading, groupByLevel, listByLevel, categoryType } = props;
   const plan = usePlan();
 
-  console.log('categorytypelistblockprops', props);
   const { data, loading, error } = useQuery(
     GET_CATEGORIES_FOR_CATEGORY_TYPE_LIST,
     {
