@@ -83,7 +83,7 @@ const SettingsPanelFull: React.FC = () => {
   const activeScenario = useReactiveVar(activeScenarioVar);
   const yearRange = useReactiveVar(yearRangeVar);
   const { instance, scenarios } = paths;
-  const [mode, setMode] = useState(MODE.LG);
+  const [mode, setMode] = useState(MODE.MD);
 
   useEffect(() => {
     if (!paths || paths.instance.id === 'unknown') return;
