@@ -189,21 +189,23 @@ const outcomeAsText = (
   t
 ) => {
   if (isForecast)
-    return t('outcome-bar-summary-forecast', {
-      scenarioName,
-      goalType,
-      selectedYear,
-      selectedYearValue,
-      nearestGoalYear,
-      nearestGoalValue,
+    return t.markup('outcome-bar-summary-forecast', {
+      scenarioName: 'sfsdfsd',
+      goalType: goalType,
+      selectedYear: selectedYear,
+      selectedYearValue: selectedYearValue,
+      nearestGoalYear: nearestGoalYear,
+      nearestGoalValue: nearestGoalValue,
+      strong: (chunks) => `<b>${chunks}</b>`,
       interpolation: { escapeValue: false },
     });
-  return t('outcome-bar-summary-historical', {
-    goalType,
-    selectedYear,
-    selectedYearDifference,
-    nearestGoalYear,
-    nearestGoalValue,
+  return t.markup('outcome-bar-summary-historical', {
+    goalType: goalType,
+    selectedYear: selectedYear,
+    selectedYearDifference: selectedYearDifference,
+    nearestGoalYear: nearestGoalYear,
+    nearestGoalValue: nearestGoalValue,
+    strong: (chunks) => `<b>${chunks}</b>`,
     interpolation: { escapeValue: false },
   });
 };
@@ -322,9 +324,9 @@ const GoalOutcomeBar: React.FC<GoalOutcomeBarProps> = (props) => {
   // FIXME: Nasty hack to show 'CO2e' where it might be applicable until
   // the backend gets proper support for unit specifiers.
   if (unit === 't∕(Einw.·a)') {
-    longUnit = t('tco2-e-inhabitant');
+    longUnit = t.raw('tco2-e-inhabitant');
   } else if (unit === 'kt∕a') {
-    longUnit = t('ktco2-e');
+    longUnit = t.raw('ktco2-e');
   }
 
   const verbalizedOutcome = outcomeAsText(

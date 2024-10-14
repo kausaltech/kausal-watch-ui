@@ -3,11 +3,13 @@ import {
   SetNormalizationMutation,
   SetNormalizationMutationVariables,
 } from 'common/__generated__/paths/graphql';
-import { GET_PARAMETERS } from 'queries/getParameters';
-import { useTranslation } from 'react-i18next';
+import { useTranslations } from 'next-intl';
+import { GET_PARAMETERS } from 'queries/paths/get-paths-parameters';
 import { FormGroup, Input, Label } from 'reactstrap';
 import styled from 'styled-components';
 
+import { usePaths } from '@/context/paths/paths';
+import { getHttpHeaders } from '@/utils/paths/paths.utils';
 import { gql, useMutation, useQuery } from '@apollo/client';
 
 const SwitchWrapper = styled.div`
@@ -32,11 +34,15 @@ type NormalizationWidgetProps = {
 };
 
 function NormalizationWidget(props: NormalizationWidgetProps) {
-  const { t } = useTranslation();
-
+  const t = useTranslations();
+  const paths = usePaths();
   const { loading, error, data, previousData, refetch, networkStatus } =
     useQuery<GetParametersQuery>(GET_PARAMETERS, {
       notifyOnNetworkStatusChange: true,
+      context: {
+        uri: '/api/graphql-paths',
+        headers: getHttpHeaders({ instanceIdentifier: paths?.instance.id }),
+      },
     });
 
   const [
@@ -45,6 +51,10 @@ function NormalizationWidget(props: NormalizationWidgetProps) {
   ] = useMutation<SetNormalizationMutation, SetNormalizationMutationVariables>(
     SET_NORMALIZATION_MUTATION,
     {
+      context: {
+        uri: '/api/graphql-paths',
+        headers: getHttpHeaders({ instanceIdentifier: paths?.instance.id }),
+      },
       refetchQueries: 'active',
     }
   );
