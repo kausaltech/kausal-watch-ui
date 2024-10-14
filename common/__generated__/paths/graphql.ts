@@ -2004,6 +2004,41 @@ export type YearlyValue = {
   year: Scalars['Int'];
 };
 
+export type GetInstanceGoalOutcomeQueryVariables = Exact<{
+  goal: Scalars['ID'];
+}>;
+
+
+export type GetInstanceGoalOutcomeQuery = (
+  { instance: (
+    { id: string, goals: Array<(
+      { values: Array<(
+        { year: number, goal?: number | null, actual?: number | null, isForecast: boolean, isInterpolated?: boolean | null }
+        & { __typename?: 'InstanceYearlyGoalType' }
+      )>, unit: (
+        { htmlShort: string }
+        & { __typename?: 'UnitType' }
+      ) }
+      & { __typename?: 'InstanceGoalEntry' }
+    )> }
+    & { __typename?: 'InstanceType' }
+  ) }
+  & { __typename?: 'Query' }
+);
+
+export type SetNormalizationFromWidgetMutationVariables = Exact<{
+  id?: InputMaybe<Scalars['ID']>;
+}>;
+
+
+export type SetNormalizationFromWidgetMutation = (
+  { setNormalizer?: (
+    { ok: boolean }
+    & { __typename?: 'SetNormalizerMutation' }
+  ) | null }
+  & { __typename?: 'Mutations' }
+);
+
 export type SetParameterMutationVariables = Exact<{
   parameterId: Scalars['ID'];
   boolValue?: InputMaybe<Scalars['Boolean']>;
@@ -2038,6 +2073,63 @@ export type ActivateScenarioMutation = (
       & { __typename?: 'ScenarioType' }
     ) | null }
     & { __typename?: 'ActivateScenarioMutation' }
+  ) | null }
+  & { __typename?: 'Mutations' }
+);
+
+export type SetGlobalParameterFromActionSummaryMutationVariables = Exact<{
+  parameterId: Scalars['ID'];
+  boolValue?: InputMaybe<Scalars['Boolean']>;
+  numberValue?: InputMaybe<Scalars['Float']>;
+  stringValue?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type SetGlobalParameterFromActionSummaryMutation = (
+  { setParameter?: (
+    { ok?: boolean | null, parameter?: (
+      { isCustomized: boolean, isCustomizable: boolean, boolValue?: boolean | null, boolDefaultValue?: boolean | null }
+      & { __typename?: 'BoolParameterType' }
+    ) | (
+      { isCustomized: boolean, isCustomizable: boolean }
+      & { __typename?: 'NumberParameterType' | 'StringParameterType' | 'UnknownParameterType' }
+    ) | null }
+    & { __typename?: 'SetParameterMutation' }
+  ) | null }
+  & { __typename?: 'Mutations' }
+);
+
+export type SetGlobalParameterMutationVariables = Exact<{
+  parameterId: Scalars['ID'];
+  boolValue?: InputMaybe<Scalars['Boolean']>;
+  numberValue?: InputMaybe<Scalars['Float']>;
+  stringValue?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type SetGlobalParameterMutation = (
+  { setParameter?: (
+    { ok?: boolean | null, parameter?: (
+      { isCustomized: boolean, isCustomizable: boolean, boolValue?: boolean | null, boolDefaultValue?: boolean | null }
+      & { __typename?: 'BoolParameterType' }
+    ) | (
+      { isCustomized: boolean, isCustomizable: boolean }
+      & { __typename?: 'NumberParameterType' | 'StringParameterType' | 'UnknownParameterType' }
+    ) | null }
+    & { __typename?: 'SetParameterMutation' }
+  ) | null }
+  & { __typename?: 'Mutations' }
+);
+
+export type SetNormalizationMutationVariables = Exact<{
+  id?: InputMaybe<Scalars['ID']>;
+}>;
+
+
+export type SetNormalizationMutation = (
+  { setNormalizer?: (
+    { ok: boolean }
+    & { __typename?: 'SetNormalizerMutation' }
   ) | null }
   & { __typename?: 'Mutations' }
 );
@@ -3388,6 +3480,44 @@ export type GetPageQuery = (
     ) }
     & { __typename: 'OutcomePage' }
   ) | null }
+  & { __typename?: 'Query' }
+);
+
+export type GetParametersQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetParametersQuery = (
+  { availableNormalizations: Array<(
+    { id: string, label: string, isActive: boolean }
+    & { __typename?: 'NormalizationType' }
+  )>, parameters: Array<(
+    { id: string, label?: string | null, description?: string | null, nodeRelativeId?: string | null, isCustomized: boolean, isCustomizable: boolean, boolValue?: boolean | null, boolDefaultValue?: boolean | null, node?: (
+      { id: string }
+      & { __typename?: 'ActionNode' | 'Node' }
+    ) | null }
+    & { __typename: 'BoolParameterType' }
+  ) | (
+    { minValue?: number | null, maxValue?: number | null, step?: number | null, id: string, label?: string | null, description?: string | null, nodeRelativeId?: string | null, isCustomized: boolean, isCustomizable: boolean, numberValue?: number | null, numberDefaultValue?: number | null, unit?: (
+      { htmlShort: string }
+      & { __typename?: 'UnitType' }
+    ) | null, node?: (
+      { id: string }
+      & { __typename?: 'ActionNode' | 'Node' }
+    ) | null }
+    & { __typename: 'NumberParameterType' }
+  ) | (
+    { id: string, label?: string | null, description?: string | null, nodeRelativeId?: string | null, isCustomized: boolean, isCustomizable: boolean, stringValue?: string | null, stringDefaultValue?: string | null, node?: (
+      { id: string }
+      & { __typename?: 'ActionNode' | 'Node' }
+    ) | null }
+    & { __typename: 'StringParameterType' }
+  ) | (
+    { id: string, label?: string | null, description?: string | null, nodeRelativeId?: string | null, isCustomized: boolean, isCustomizable: boolean, node?: (
+      { id: string }
+      & { __typename?: 'ActionNode' | 'Node' }
+    ) | null }
+    & { __typename: 'UnknownParameterType' }
+  )> }
   & { __typename?: 'Query' }
 );
 
