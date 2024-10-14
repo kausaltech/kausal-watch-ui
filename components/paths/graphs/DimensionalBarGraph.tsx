@@ -92,9 +92,9 @@ const DimensionalBarGraph = ({ metric, endYear }: DimensionalBarGraphProps) => {
     !cube.hasDimension('greenhouse_gases')
   ) {
     if (metric.unit.short === 't/Einw./a') {
-      longUnit = t('tco2-e-inhabitant');
+      longUnit = t.raw('tco2-e-inhabitant');
     } else if (metric.unit.short === 'kt/a') {
-      longUnit = t('ktco2-e');
+      longUnit = t.raw('ktco2-e');
     }
   }
 

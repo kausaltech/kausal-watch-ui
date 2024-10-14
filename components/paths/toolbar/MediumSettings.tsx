@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 
 import GoalSelector from 'components/paths/GoalSelector';
 import RangeSelector from 'components/paths/RangeSelector';
@@ -8,11 +8,7 @@ import { useTranslations } from 'next-intl';
 import { Col, Container, Popover, PopoverBody, Row } from 'reactstrap';
 import styled from 'styled-components';
 
-import {
-  activeGoalVar,
-  activeScenarioVar,
-  yearRangeVar,
-} from '@/context/paths/cache';
+import { yearRangeVar } from '@/context/paths/cache';
 import { usePaths } from '@/context/paths/paths';
 import { useReactiveVar } from '@apollo/client';
 
@@ -160,45 +156,7 @@ function getColumnSizes(hasMultipleGoals: boolean) {
 
 const MediumSettings = (props) => {
   const paths = usePaths();
-  const activeGoal = useReactiveVar(activeGoalVar);
-  const activeScenario = useReactiveVar(activeScenarioVar);
-  const yearRange = useReactiveVar(yearRangeVar);
-  const { instance, scenarios } = paths;
-  useEffect(() => {
-    if (!paths || paths.instance.id === 'unknown') return;
-
-    const firstActiveScenario = scenarios.find((sc) => sc.isActive);
-    const goals = instance.goals;
-
-    if (!activeGoal) {
-      const defaultGoal =
-        goals.length > 1 ? goals.find((goal) => goal.default) : goals[0];
-      activeGoalVar(defaultGoal ?? null);
-    }
-
-    if (!activeScenario) {
-      activeScenarioVar(firstActiveScenario ?? undefined);
-    }
-
-    if (!yearRange) {
-      const initialYearRange: [number, number] = [
-        instance.minimumHistoricalYear ?? instance.referenceYear ?? 2010,
-        instance.targetYear ?? instance.modelEndYear,
-      ];
-      yearRangeVar(initialYearRange);
-    }
-  }, [paths?.instance.id]);
-
-  /*
   const instance = paths?.instance;
-  // Target
-  const minYear = instance.minimumHistoricalYear;
-  const maxYear = instance.modelEndYear;
-  const referenceYear = instance.referenceYear;
-  const nrGoals = instance.goals.length;
-  const hasMultipleGoals = nrGoals > 1;
-  const columnSizes = getColumnSizes(hasMultipleGoals);
-*/
   const nrGoals = instance.goals.length;
   const hasMultipleGoals = nrGoals > 1;
   const columnSizes = getColumnSizes(hasMultipleGoals);
