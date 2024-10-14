@@ -1,23 +1,23 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-import { isEqual } from 'lodash';
-import { gql } from '@apollo/client';
-import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
-import { Alert } from 'reactstrap';
-import dayjs from 'common/dayjs';
-import styled from 'styled-components';
-import { linearRegression } from 'common/math';
 
+import dayjs from 'common/dayjs';
+import { linearRegression } from 'common/math';
 import { capitalizeFirstLetter } from 'common/utils';
-import { usePlan } from 'context/plan';
 import ContentLoader from 'components/common/ContentLoader';
-import IndicatorComparisonSelect from 'components/indicators/IndicatorComparisonSelect';
-import IndicatorNormalizationSelect from 'components/indicators/IndicatorNormalizationSelect';
+import RichText from 'components/common/RichText';
 import GraphAsTable from 'components/graphs/GraphAsTable';
 import IndicatorGraph from 'components/graphs/IndicatorGraph';
+import IndicatorComparisonSelect from 'components/indicators/IndicatorComparisonSelect';
+import IndicatorNormalizationSelect from 'components/indicators/IndicatorNormalizationSelect';
+import { usePlan } from 'context/plan';
+import { isEqual } from 'lodash';
 import { useLocale, useTranslations } from 'next-intl';
+import PropTypes from 'prop-types';
+import { Alert } from 'reactstrap';
+
+import { gql } from '@apollo/client';
+import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
 import { captureMessage } from '@sentry/nextjs';
-import RichText from 'components/common/RichText';
 
 const GET_INDICATOR_GRAPH_DATA = gql`
   query IndicatorGraphData($id: ID, $plan: ID) {
@@ -32,6 +32,8 @@ const GET_INDICATOR_GRAPH_DATA = gql`
       id
       name
       timeResolution
+      showTrendline
+      desiredTrend
       reference
       minValue
       maxValue
@@ -157,10 +159,6 @@ const GET_INDICATOR_GRAPH_DATA = gql`
       }
     }
   }
-`;
-
-const IndicatorVizHeader = styled.h2`
-  font-size: ${(props) => props.theme.fontSizeMd};
 `;
 
 function generateCube(dimensions, values, path) {
@@ -297,11 +295,7 @@ const generateTrendTrace = (indicator, traces, goals, i18n) => {
       .map((item) => {
         const { date, value, categories } = item;
         // Make yearly value dates YYYY-1-1 so plotly places them correctly on axis
-        const newDate =
-          indicator.timeResolution === 'YEAR'
-            ? `${date.split('-')[0]}-1-1`
-            : date;
-        return { date: newDate, value, categories };
+        return { date, value, categories };
       });
     const mainValues = values.filter((item) => !item.categories.length);
     const numberOfYears = Math.min(mainValues.length, 10);
@@ -323,7 +317,13 @@ const generateTrendTrace = (indicator, traces, goals, i18n) => {
     }
 
     predictedTrace.y = predictedTrace.x.map((year) => model.m * year + model.b);
-    return [predictedTrace, calculateBounds(predictedTrace.y)];
+    // We want the year format 2019-1-1 so plotly places them correctly on axis
+    const formattedTrace = {
+      x: predictedTrace.x.map((year) => `${year}-1-1`),
+      y: predictedTrace.y,
+      name: i18n.t('current-trend'),
+    };
+    return [formattedTrace, calculateBounds(predictedTrace.y)];
   }
   return [undefined, undefined];
 };
@@ -375,7 +375,7 @@ const generateGoalTraces = (indicator, planScenarios, i18n) => {
       x: goals.map((item) => {
         const newDate =
           indicator.timeResolution === 'YEAR'
-            ? `${item.date.split('-')[0]}`
+            ? `${item.date.split('-')[0]}-1-1`
             : item.date;
         return newDate;
       }),
@@ -686,7 +686,7 @@ function IndicatorVisualisation({ indicatorId, indicatorLink }) {
     ? [[], []]
     : generateGoalTraces(indicator, scenarios, i18n);
   const [trendTrace, trendBounds] =
-    normalizeByPopulation || !hasTimeDimension
+    normalizeByPopulation || !hasTimeDimension || !indicator.showTrendline
       ? [null, null]
       : generateTrendTrace(indicator, traces, goalTraces, i18n);
 

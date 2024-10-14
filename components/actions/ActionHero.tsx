@@ -1,19 +1,20 @@
 import React from 'react';
-import { Container, Row, Col } from 'reactstrap';
-import styled from 'styled-components';
-import { useTheme } from 'styled-components';
-import { useSession } from 'next-auth/react';
+
+import { Category } from 'common/__generated__/graphql';
+import { getBreadcrumbsFromCategoryHierarchy } from 'common/categories';
 import { getActionTermContext } from 'common/i18n';
 import { ActionLink, ActionListLink, OrganizationLink } from 'common/links';
-import { usePlan } from 'context/plan';
-
-import Icon from 'components/common/Icon';
-import { getBreadcrumbsFromCategoryHierarchy } from 'common/categories';
-import { Category } from 'common/__generated__/graphql';
 import { Breadcrumbs } from 'components/common/Breadcrumbs';
+import Icon from 'components/common/Icon';
+import { usePlan } from 'context/plan';
+import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
-import ActionLogBanner from './ActionLogBanner';
+import { Col, Container, Row } from 'reactstrap';
+import styled, { useTheme } from 'styled-components';
+
 import { getThemeStaticURL } from '@/common/theme';
+
+import ActionLogBanner from './ActionLogBanner';
 
 const Hero = styled.header<{ $bgColor: string }>`
   position: relative;
@@ -105,15 +106,11 @@ const ImageCredit = styled.span`
   position: absolute;
   top: 0;
   right: 0;
-  padding: 0.25rem 0.5rem;
+  padding: 0.1rem 0.25rem;
   background-color: rgba(255, 255, 255, 0.66);
   font-size: ${(props) => props.theme.fontSizeSm};
   font-family: ${(props) =>
-      `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`}
-    @media (min-width: ${(props) => props.theme.breakpointLg}) {
-    top: inherit;
-    bottom: 0;
-  }
+    `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`};
 `;
 
 const ActionHeadline = styled.h1`

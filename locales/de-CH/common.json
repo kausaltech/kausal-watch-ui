@@ -9,6 +9,8 @@
     "see-all-actions": "Alle Massnahmen anzeigen",
     "nav-actions-pager": "Massnahmen-Pager",
     "form-action-filters": "Massnahmenliste-Filter",
+    "filter-plan": "Plan",
+    "filter-plan-help": "Zeige Massnahmen in ausgewähltem Plan",
     "nav-footer": "Fusszeile",
     "indicator-related-actions": "Massnahmen, die sich auf diesen Indikator auswirken",
     "select-sector-for-actions": "Wähle en Emissionssektor, um zugehörigi Massnahme ahzuzeigen"

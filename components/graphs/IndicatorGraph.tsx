@@ -3,7 +3,7 @@
 import React from 'react';
 
 import { splitLines } from 'common/utils';
-import { merge, uniq } from 'lodash';
+import { merge } from 'lodash';
 import dynamic from 'next/dynamic';
 import { Data, Layout } from 'plotly.js';
 import { transparentize } from 'polished';
@@ -18,6 +18,7 @@ const CATEGORY_XAXIS_LABEL_EXTRA_MARGIN = 200;
 const createLayout = (
   theme,
   timeResolution,
+  xInterval,
   yRange,
   plotColors,
   config,
@@ -30,12 +31,18 @@ const createLayout = (
     'helvetica neue, helvetica, Ubuntu, roboto, noto, arial, sans-serif';
   const hasCategories = !hasTimeDimension;
 
+  // With Plotly you have choice between one significant digit precision for y axis ticks (.1r)
+  // then on smaller (first digit) ranges you get repeated numbers on ticks.
+  // With higher precision (.3r) you get more unique numbers but small numbers have decimals
+  // Like 0.0 whiich is not very nice.
+
   const yaxes: NonNullable<Pick<Layout, 'yaxis'>> = {
     yaxis: {
       automargin: true,
       hoverformat: ',.3r',
       tickformat: ',.1r',
       fixedrange: true,
+      nticks: 6,
       tickfont: {
         family: fontFamily,
         size: 14,
@@ -85,7 +92,8 @@ const createLayout = (
           showgrid: false,
           showline: false,
           tickformat: timeResolution === 'YEAR' ? '%Y' : '%b %Y',
-          tickmode: 'auto' as const,
+          tickmode: 'linear',
+          dtick: `M${xInterval}`,
           tickfont: {
             family: fontFamily,
             size: 14,
@@ -207,7 +215,7 @@ const createTraces: (params: CreateTracesParams) => TracesOutput = (params) => {
   const newTraces = traces.map((trace, idx) => {
     // Here we are excluding some properties from the trace
     const { xType, dataType, ...plotlyTrace } = trace;
-    const modTrace: Data = { ...plotlyTrace, cliponaxis: false };
+    const modTrace: Data = { ...plotlyTrace };
     allXValues.push(...trace.x);
 
     // we have multiple categories in one time point - draw bar groups
@@ -258,23 +266,23 @@ const createTraces: (params: CreateTracesParams) => TracesOutput = (params) => {
       };
     }
     // Leave out markers for long time series
-    if (modTrace.type === 'scatter')
-      modTrace.mode = trace.x.length > 30 ? 'lines' : 'lines+markers';
+    if (modTrace.type === 'scatter') {
+      if (trace.x.length > 30) {
+        modTrace.mode = 'lines';
+        delete modTrace.marker;
+      } else {
+        modTrace.mode = 'lines+markers';
+        modTrace.cliponaxis = false;
+      }
+    }
     const timeFormat = timeResolution === 'YEAR' ? '%Y' : '%x';
     modTrace.hovertemplate = `(%{x|${timeFormat}})<br> ${trace.name}: %{y:,.3r} ${unit}`;
-    modTrace.hoverinfo = 'none';
     modTrace.hoverlabel = {
       bgcolor: plotColors.mainScale[idx % numColors],
       namelength: 0,
     };
     return modTrace;
   });
-  const uniqueXValues = uniq(allXValues.sort(), true);
-  if (layoutConfig.xaxis?.type !== 'category') {
-    if (uniqueXValues.length < 4) {
-      layoutConfig.xaxis!.tickvals = uniqueXValues;
-    }
-  }
 
   return {
     layoutConfig,
@@ -301,6 +309,53 @@ function getSubplotHeaders(subPlotRowCount, names) {
     };
   });
 }
+
+// Since plotlyjs is not great with determining x axis range, we do it ourselves
+// Return nice interval in months depending on timeResolution
+// We want max 10 xticks
+const getXInterval = (dataset, timeResolution) => {
+  // Use flatMap to simplify the creation of allXValues
+  const allXValues = dataset.flatMap((trace) =>
+    trace.x.map((x) => new Date(x)).filter((d) => !isNaN(d.getTime()))
+  );
+
+  // It's a category dataset or all dates were invalid
+  if (allXValues.length === 0) return undefined;
+
+  const min = new Date(Math.min(...allXValues));
+  const max = new Date(Math.max(...allXValues));
+
+  // Simplified month calculation
+  const months =
+    (max.getFullYear() - min.getFullYear()) * 12 +
+    max.getMonth() -
+    min.getMonth();
+
+  const MAX_TICKS = 10;
+
+  if (timeResolution === 'YEAR') {
+    // For yearly data, ensure the interval is divisible by 12
+    return Math.max(12, Math.ceil(months / MAX_TICKS / 12) * 12);
+  } else {
+    // For other resolutions, use binary search to find the best interval
+    const possibleIntervals = [1, 2, 3, 4, 6, 12, 24, 36, 48, 60];
+    let low = 0;
+    let high = possibleIntervals.length - 1;
+
+    while (low <= high) {
+      const mid = Math.floor((low + high) / 2);
+      if (months / possibleIntervals[mid] <= MAX_TICKS) {
+        high = mid - 1;
+      } else {
+        low = mid + 1;
+      }
+    }
+
+    return (
+      possibleIntervals[low] || possibleIntervals[possibleIntervals.length - 1]
+    );
+  }
+};
 
 interface IndicatorGraphProps {
   yRange: any;
@@ -449,7 +504,6 @@ function IndicatorGraph(props: IndicatorGraphProps) {
       subplotRowCount,
       subplotHeaderTitles
     );
-    mainTraces.layoutConfig.xaxis.nticks = mainTraces.traces[0].length;
     mainTraces.traces.forEach((t, idx) => {
       const axisIndex = hasTimeDimension ? Math.floor(idx / 2) + 1 : idx + 1;
       if (!hasTimeDimension || idx > 1) {
@@ -484,15 +538,19 @@ function IndicatorGraph(props: IndicatorGraphProps) {
   if (!isComparison && goalTraces.length) {
     goalTraces.forEach((goalTrace, idx) => {
       plotlyData.push({
-        ...goalTrace,
+        x: goalTrace.x,
+        y: goalTrace.y,
+        name: goalTrace.name,
         type: 'scatter',
         cliponaxis: false,
         mode: goalTrace.scenario ? 'markers' : 'lines+markers',
-        line: {
-          width: 3,
-          dash: 'dash',
-          color: plotColors.goalScale[idx % plotColors.goalScale.length],
-        },
+        ...(!goalTrace.scenario && {
+          line: {
+            width: 3,
+            dash: 'dash',
+            color: plotColors.goalScale[idx % plotColors.goalScale.length],
+          },
+        }),
         marker: {
           size: 12,
           symbol: 'x',
@@ -511,6 +569,7 @@ function IndicatorGraph(props: IndicatorGraphProps) {
   const layout = createLayout(
     theme,
     timeResolution,
+    getXInterval(plotlyData, timeResolution),
     yRange,
     plotColors,
     layoutConfig,

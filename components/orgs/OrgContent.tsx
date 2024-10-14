@@ -14,7 +14,7 @@ import { Col, Container, Nav, NavItem, Row } from 'reactstrap';
 import styled, { useTheme } from 'styled-components';
 
 const Tab = styled.button`
-  background: ${(props) => props.theme.brandDark};
+  background: ${(props) => props.theme.orgPageBackgroundColor};
   color: ${(props) => props.theme.themeColors.white};
   padding: ${(props) => props.theme.spaces.s100};
   border-radius: ${(props) => props.theme.btnBorderRadius}
@@ -31,7 +31,7 @@ const Tab = styled.button`
     color: ${(props) => props.theme.brandLight};
   }
   &.active {
-    color: ${(props) => props.theme.brandDark};
+    color: ${(props) => props.theme.orgPageBackgroundColor};
     background: ${(props) => props.theme.themeColors.white};
     &:hover {
       color: ${(props) => props.theme.themeColors.black};
@@ -40,7 +40,7 @@ const Tab = styled.button`
 `;
 
 const OrgTabs = styled.div`
-  background-color: ${(props) => props.theme.brandDark};
+  background-color: ${(props) => props.theme.orgPageBackgroundColor};
   margin-bottom: 0;
 
   .nav {
@@ -55,10 +55,10 @@ const HeaderContainer = styled(Container)`
 
 const OrgHeader = styled.div`
   padding: ${(props) => props.theme.spaces.s300} 0 0 0;
-  background-color: ${(props) => props.theme.brandDark};
+  background-color: ${(props) => props.theme.orgPageBackgroundColor};
   color: ${(props) =>
     readableColor(
-      props.theme.brandDark,
+      props.theme.orgPageBackgroundColor,
       props.theme.themeColors.black,
       props.theme.themeColors.white
     )};
@@ -228,7 +228,7 @@ function OrgContent({ org, planFromOrgQuery }: Props) {
             <ActionStatusTable
               columns={
                 planFromOrgQuery.actionListPage?.__typename === 'ActionListPage'
-                  ? planFromOrgQuery.actionListPage.dashboardColumns ?? []
+                  ? (planFromOrgQuery.actionListPage.dashboardColumns ?? [])
                   : []
               }
               enableExport={false}

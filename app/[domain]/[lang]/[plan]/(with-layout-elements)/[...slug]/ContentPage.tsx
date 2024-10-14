@@ -1,22 +1,23 @@
 'use client';
 
 import React from 'react';
-import { Container, Row, Col } from 'reactstrap';
-import { useTheme } from 'styled-components';
-import RichText from 'components/common/RichText';
-import StreamField from 'components/common/StreamField';
+
+import { GetContentPageQuery } from 'common/__generated__/graphql';
 import { getBgImageAlignment } from 'common/images';
+import CategoryPageContent from 'components/categories/CategoryPageContent';
+import RichText from 'components/common/RichText';
+import SecondaryNavigation from 'components/common/SecondaryNavigation';
+import StreamField from 'components/common/StreamField';
 import CategoryPageHeaderBlock from 'components/contentblocks/CategoryPageHeaderBlock';
 import ContentPageHeaderBlock from 'components/contentblocks/ContentPageHeaderBlock';
-import SecondaryNavigation from 'components/common/SecondaryNavigation';
-import { GetContentPageQuery } from 'common/__generated__/graphql';
-import CategoryPageContent from 'components/categories/CategoryPageContent';
+import { Col, Container, Row } from 'reactstrap';
+import { useTheme } from 'styled-components';
 
 export type GeneralPlanPage = NonNullable<GetContentPageQuery['planPage']>;
 
 type PageHeaderBlockProps = {
   page: GeneralPlanPage;
-  color?: string | null;
+  color?: string | false | null | undefined;
 };
 
 const PageHeaderBlock = ({ color, page }: PageHeaderBlockProps) => {
@@ -83,14 +84,14 @@ export const Content = ({ page }: { page: GeneralPlanPage }) => {
   // Restrict the secondary nav to be shown on StaticPages only currently
   const siblings =
     hasSecondaryNav && page.__typename === 'StaticPage'
-      ? page?.parent?.children ?? []
+      ? (page?.parent?.children ?? [])
       : [];
 
   return (
     <article>
       <PageHeaderBlock
         page={page}
-        color={isCategoryPage ? pageSectionColor : undefined}
+        color={isCategoryPage ? categoryColor : undefined}
       />
 
       {isCategoryPage ? (

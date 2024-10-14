@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { Collapse, UncontrolledTooltip } from 'reactstrap';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { isServer } from 'common/environment';
+import React, { useEffect, useState } from 'react';
 
+import { isServer } from 'common/environment';
 import Icon from 'components/common/Icon';
-import { replaceHashWithoutScrolling } from '../../common/links';
 import { useTranslations } from 'next-intl';
 import { usePathname } from 'next/navigation';
+import PropTypes from 'prop-types';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { Collapse, UncontrolledTooltip } from 'reactstrap';
+import styled from 'styled-components';
+
+import { replaceHashWithoutScrolling } from '../../common/links';
 
 const Header = styled.h3<{ $small?: boolean }>`
   position: relative;
@@ -58,7 +59,9 @@ const TriggerIcon = styled.span`
   flex-grow: 0;
   flex-shrink: 0;
   margin-right: ${(props) => props.theme.spaces.s050};
-  color: ${(props) => props.theme.themeColors.dark};
+  color: ${(props) => props.theme.linkColor};
+  font-size: 2.5rem;
+  line-height: 1.75rem;
   font-weight: ${(props) => props.theme.fontWeightNormal};
   text-align: center;
 `;
@@ -71,7 +74,7 @@ const QuestionTrigger = styled.button`
   margin: 0 0 1em;
   text-align: left;
   font-size: inherit;
-  color: ${(props) => props.theme.linkColor};
+  color: ${(props) => props.theme.themeColors.black};
   font-weight: ${(props) => props.theme.fontWeightBold};
   line-height: ${(props) => props.theme.lineHeightMd};
   hyphens: manual;

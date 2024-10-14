@@ -7,12 +7,6 @@ type Props = {
   trackingId: string;
 };
 
-declare global {
-  interface Window {
-    dataLayer: any[];
-  }
-}
-
 const GoogleAnalytics = ({ trackingId }: Props) => {
   useEffect(() => {
     window.dataLayer = window.dataLayer || [];
@@ -24,11 +18,21 @@ const GoogleAnalytics = ({ trackingId }: Props) => {
   }, [trackingId]);
 
   return (
-    <Script
-      type="text/javascript"
-      async
-      src={`https://www.googletagmanager.com/gtag/js?id=${trackingId}`}
-    />
+    <>
+      <Script
+        async
+        src={`https://www.googletagmanager.com/gtag/js?id=${trackingId}`}
+        strategy="afterInteractive"
+      />
+      <Script id="google-analytics-inline" strategy="afterInteractive">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', '${trackingId}');
+        `}
+      </Script>
+    </>
   );
 };
 

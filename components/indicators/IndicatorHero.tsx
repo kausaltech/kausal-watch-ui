@@ -1,15 +1,16 @@
 import React from 'react';
-import { Container, Row, Col } from 'reactstrap';
-import styled from 'styled-components';
-import { getActionTermContext } from 'common/i18n';
-import { IndicatorListLink } from 'common/links';
-import OrgSelector from 'components/orgs/OrgSelector';
-import IndicatorValueSummary from 'components/indicators/IndicatorValueSummary';
-import { usePlan } from 'context/plan';
 
 import { IndicatorDetailsQuery } from 'common/__generated__/graphql';
-import { readableColor } from 'polished';
+import { getActionTermContext } from 'common/i18n';
+import { IndicatorListLink } from 'common/links';
+import IndicatorValueSummary from 'components/indicators/IndicatorValueSummary';
+import OrgSelector from 'components/orgs/OrgSelector';
+import { usePlan } from 'context/plan';
 import { useTranslations } from 'next-intl';
+import { readableColor } from 'polished';
+import { Col, Container, Row } from 'reactstrap';
+import styled from 'styled-components';
+
 import { getIndicatorTranslation } from './IndicatorCard';
 
 const Hero = styled.header`
@@ -177,6 +178,7 @@ function IndicatorHero(props: IndicatorHeroProps) {
                         values={indicator.values}
                         unit={indicator.unit}
                         goals={goals}
+                        desiredTrend={indicator.desiredTrend}
                       />
                     )}
                     {indicator.level && (

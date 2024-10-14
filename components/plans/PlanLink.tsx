@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { PlanContextType } from 'context/plan';
 import { useTheme } from 'styled-components';
 import PlanChip from './PlanChip';
-import { useLocalizedLink } from 'common/hooks/localize-link';
 
 const PlanDropdownItem = styled.a`
   display: block;
@@ -44,8 +43,7 @@ function appendPort(link?: string) {
 
 const PlanLink = ({ plan }: Props) => {
   const theme = useTheme();
-  const viewUrl = plan.viewUrl ?? undefined;
-  const localizedPlanUrl = useLocalizedLink(appendPort(viewUrl) ?? '');
+  const planUrl = appendPort(plan.viewUrl ?? undefined) ?? '';
 
   if (!plan.viewUrl) {
     return null;
@@ -54,14 +52,14 @@ const PlanLink = ({ plan }: Props) => {
   return (
     <PlanDropdownItem
       key={plan.identifier}
-      href={localizedPlanUrl}
+      href={planUrl}
       type="button"
       tabIndex={0}
       role="menuitem"
     >
       <PlanChip
         planImage={plan.image?.rendition?.src}
-        planShortName={plan.shortName}
+        planShortName={plan.shortName ?? undefined}
         organization={
           theme.settings?.multiplan?.hideLongPlanNames ? undefined : plan.name
         }

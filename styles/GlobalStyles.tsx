@@ -7,6 +7,12 @@ export const GlobalStyles = createGlobalStyle`
     scroll-behavior: auto !important;
   }
 
+  // Use themeable color on keyboard navigation focus
+  :focus-visible {
+    outline: 2px solid ${(props) => props.theme.inputBtnFocusColor};
+    outline-offset: 2px;
+  }
+
   body {
     font-family: ${(props) =>
       props.theme.fontFamily !== ''

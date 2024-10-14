@@ -1,12 +1,12 @@
-import styled from 'styled-components';
-import { PlanContextFragment } from 'common/__generated__/graphql';
 import { getActionTaskTermContext } from 'common/i18n';
-import { ActionListAction } from '../dashboard.types';
 import { useTranslations } from 'next-intl';
+import styled from 'styled-components';
+
+import { ActionListAction, ActionListPlan } from '../dashboard.types';
 
 interface Props {
   action: ActionListAction;
-  plan: PlanContextFragment;
+  plan: ActionListPlan;
 }
 
 export const getTaskCounts = (

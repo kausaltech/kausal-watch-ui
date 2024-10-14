@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
-import PropTypes, { bool } from 'prop-types';
-import { Alert, Badge, Table } from 'reactstrap';
-import styled from 'styled-components';
-import { readableColor } from 'polished';
-import { IndicatorLink } from '../../common/links';
-import Icon from '../common/Icon';
-import dayjs from '../../common/dayjs';
-import { getActionTermContext } from '../../common/i18n';
-import { beautifyValue } from '../../common/data/format';
+
 import { usePlan } from 'context/plan';
 import { useLocale, useTranslations } from 'next-intl';
+import { readableColor } from 'polished';
+import PropTypes from 'prop-types';
+import { Alert, Badge, Table } from 'reactstrap';
+import styled from 'styled-components';
+
+import { beautifyValue } from '../../common/data/format';
+import dayjs from '../../common/dayjs';
+import { getActionTermContext } from '../../common/i18n';
+import { IndicatorLink } from '../../common/links';
+import Icon from '../common/Icon';
 import { getIndicatorTranslation } from './IndicatorCard';
 
 export const isEmptyFilter = (val) => val == null || val === '';
@@ -463,7 +465,7 @@ const IndicatorListFiltered = (props) => {
               width="16px"
               height="16px"
               $expanded={expanded}
-              name="angleRight"
+              name="angle-right"
             />
           </ExpandButton>
         )}

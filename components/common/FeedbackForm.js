@@ -1,15 +1,16 @@
-import { gql, useMutation } from '@apollo/client';
-import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { useForm, Controller } from 'react-hook-form';
-import { Alert, Spinner } from 'reactstrap';
 
 import Button from 'components/common/Button';
-import TextInput from 'components/common/TextInput';
-import SelectInput from 'components/common/SelectInput';
 import CheckboxInput from 'components/common/CheckboxInput';
+import SelectInput from 'components/common/SelectInput';
+import TextInput from 'components/common/TextInput';
 import { useTranslations } from 'next-intl';
 import { usePathname, useSearchParams } from 'next/navigation';
+import PropTypes from 'prop-types';
+import { Controller, useForm } from 'react-hook-form';
+import { Alert, Spinner } from 'reactstrap';
+
+import { gql, useMutation } from '@apollo/client';
 
 const CREATE_USER_FEEDBACK = gql`
   mutation CreateUserFeedback($input: UserFeedbackMutationInput!) {
@@ -41,6 +42,7 @@ const FeedbackForm = ({
   categoryId = null,
   heading,
   description,
+  emailRequired = true,
   prompt,
   formContext = null,
   additionalFields = [],
@@ -97,7 +99,7 @@ const FeedbackForm = ({
             control={control}
             defaultValue=""
             rules={{
-              required: field.fieldRequired && t('error-field-required'),
+              required: field.fieldRequired && t('required-field'),
             }}
             render={({ field: controllerField }) => (
               <TextInput
@@ -108,9 +110,7 @@ const FeedbackForm = ({
                 }`}
                 type="text"
                 invalid={!!errors[field.fieldLabel]}
-                formFeedback={
-                  errors[field.fieldLabel] && t('error-field-required')
-                }
+                formFeedback={errors[field.fieldLabel] && t('required-field')}
               />
             )}
           />
@@ -143,9 +143,7 @@ const FeedbackForm = ({
                 }))}
                 value={controllerField.value}
                 invalid={!!errors[field.fieldLabel]}
-                formFeedback={
-                  errors[field.fieldLabel] && t('error-field-required')
-                }
+                formFeedback={errors[field.fieldLabel] && t('required-field')}
               />
             )}
           />
@@ -158,7 +156,7 @@ const FeedbackForm = ({
             control={control}
             defaultValue=""
             rules={{
-              required: field.fieldRequired && t('error-field-required'),
+              required: field.fieldRequired && t('required-field'),
             }}
             render={({ field: controllerField }) => (
               <SelectInput
@@ -175,9 +173,7 @@ const FeedbackForm = ({
                   })),
                 ]}
                 invalid={!!errors[field.fieldLabel]}
-                formFeedback={
-                  errors[field.fieldLabel] && t('error-field-required')
-                }
+                formFeedback={errors[field.fieldLabel] && t('required-field')}
               />
             )}
           />
@@ -226,8 +222,10 @@ const FeedbackForm = ({
                   {...field}
                   id="email-field"
                   autoComplete="email"
-                  label={`${t('email')} (${t('required-field')})`}
-                  invalid={errors.email?.type === 'required'}
+                  label={`${t('email')}${
+                    emailRequired ? ` (${t('required-field')})` : ''
+                  }`}
+                  invalid={emailRequired && errors.email?.type === 'required'}
                   formFeedback={errors.email && t('error-email-format')}
                 />
               )}
@@ -236,7 +234,7 @@ const FeedbackForm = ({
               control={control}
               defaultValue=""
               rules={{
-                required: true,
+                required: emailRequired,
                 pattern: {
                   value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                 },
@@ -253,6 +251,8 @@ const FeedbackForm = ({
                   label={`${t('feedback')} (${t('required-field')})`}
                   invalid={errors.comment?.type === 'required'}
                   type="textarea"
+                  rows="3"
+                  style={{ height: 'auto' }}
                   formFeedback={errors.comment && t('error-feedback-required')}
                 />
               )}
@@ -297,6 +297,7 @@ FeedbackForm.propTypes = {
   categoryId: PropTypes.string,
   heading: PropTypes.string,
   description: PropTypes.string,
+  emailRequired: PropTypes.bool,
   prompt: PropTypes.string,
   formContext: PropTypes.string,
   additionalFields: PropTypes.arrayOf(PropTypes.object),

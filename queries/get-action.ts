@@ -340,6 +340,10 @@ const GET_ACTION_DETAILS = gql`
     ... on StreamFieldInterface {
       id
     }
+    ... on ActionDescriptionBlock {
+      fieldLabel
+      fieldHelpText
+    }
     ... on ActionDependenciesBlock {
       fieldLabel
       fieldHelpText
@@ -375,6 +379,7 @@ const GET_ACTION_DETAILS = gql`
     ... on ActionContactFormBlock {
       heading
       description
+      emailRequired
       fields {
         ... on FormFieldBlock {
           id
@@ -423,6 +428,7 @@ const GET_ACTION_DETAILS = gql`
         ... on ActionContactFormBlock {
           heading
           description
+          emailRequired
           fields {
             ... on FormFieldBlock {
               id

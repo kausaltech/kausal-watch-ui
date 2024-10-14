@@ -88,7 +88,7 @@
     "no-actions": "Ninguna acción",
     "number-of-search-results": "{count, plural, =1 {un acierto para} other {# resultados de}} la búsqueda",
     "operational-indicator": "Indicador operativo",
-    "other-plans-only": "Buscar todos los demás planes",
+    "other-plans-only": "Busque solo en los planes de otras ciudades",
     "over-relative-time": "Más de {relativeTime}",
     "page": "Página",
     "page-not-found": "Página no encontrada",
