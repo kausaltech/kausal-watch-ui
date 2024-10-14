@@ -1,8 +1,11 @@
-'use client';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+import GoalSelector from 'components/paths/GoalSelector';
+import RangeSelector from 'components/paths/RangeSelector';
+import ScenarioSelector from 'components/paths/ScenarioSelector';
+import GoalOutcomeBar from 'components/paths/toolbar/GoalOutcomeBar';
 import { useTranslations } from 'next-intl';
-import { Popover, PopoverBody } from 'reactstrap';
+import { Col, Container, Popover, PopoverBody, Row } from 'reactstrap';
 import styled from 'styled-components';
 
 import {
@@ -13,23 +16,9 @@ import {
 import { usePaths } from '@/context/paths/paths';
 import { useReactiveVar } from '@apollo/client';
 
-import GoalSelector from './GoalSelector';
-import RangeSelector from './RangeSelector';
-import ScenarioSelector from './ScenarioSelector';
-
-const FloatingToolbar = styled.div`
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: #fff;
-  padding: 1rem;
-  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
-  display: flex;
-  justify-content: start;
-  align-items: start;
-  gap: 1rem;
-  z-index: 255;
+const PanelContent = styled.div`
+  padding: ${({ theme }) =>
+    `${theme.spaces.s150} ${theme.spaces.s050} ${theme.spaces.s050}`};
 `;
 
 const ButtonLabel = styled.div`
@@ -37,7 +26,31 @@ const ButtonLabel = styled.div`
   font-size: 0.8rem;
 `;
 
-const StyledButton = styled.button`
+const StyledRow = styled(Row)`
+  --bs-gutter-x: ${({ theme }) => theme.spaces.s100};
+
+  @media (max-width: ${(props) => props.theme.breakpointMd}) {
+    --bs-gutter-x: ${({ theme }) => theme.spaces.s050};
+  }
+`;
+
+const StyledDropdownCol = styled(Col)`
+  display: flex;
+  justify-content: stretch;
+  align-items: center;
+
+  > div {
+    width: 100%;
+  }
+`;
+
+const StyledOutcomeCol = styled(Col)`
+  @media (max-width: ${(props) => props.theme.breakpointMd}) {
+    display: none;
+  }
+`;
+
+const StyledButton = styled.button<{ ref: HTMLButtonElement }>`
   width: 100%;
   text-align: left;
   white-space: nowrap;
@@ -127,29 +140,47 @@ const YearRangeSelector = (props) => {
   );
 };
 
-const PathsToolbar = () => {
-  const paths = usePaths();
+function getColumnSizes(hasMultipleGoals: boolean) {
+  if (hasMultipleGoals) {
+    return {
+      scenario: { xs: 4, md: 2 },
+      yearRange: { xs: 3, md: 2 },
+      goal: { xs: 5, md: 3 },
+      outcome: { md: 5 },
+    };
+  }
 
+  return {
+    scenario: { xs: 6, md: 3 },
+    yearRange: { xs: 6, md: 3 },
+    goal: undefined,
+    outcome: { md: 6 },
+  };
+}
+
+const MediumSettings = (props) => {
+  const paths = usePaths();
   const activeGoal = useReactiveVar(activeGoalVar);
   const activeScenario = useReactiveVar(activeScenarioVar);
-
+  const yearRange = useReactiveVar(yearRangeVar);
+  const { instance, scenarios } = paths;
   useEffect(() => {
     if (!paths || paths.instance.id === 'unknown') return;
-    const { instance, scenarios } = paths;
+
     const firstActiveScenario = scenarios.find((sc) => sc.isActive);
     const goals = instance.goals;
 
-    if (!activeGoalVar()) {
+    if (!activeGoal) {
       const defaultGoal =
         goals.length > 1 ? goals.find((goal) => goal.default) : goals[0];
       activeGoalVar(defaultGoal ?? null);
     }
 
-    if (!activeScenarioVar()) {
+    if (!activeScenario) {
       activeScenarioVar(firstActiveScenario ?? undefined);
     }
 
-    if (!yearRangeVar()) {
+    if (!yearRange) {
       const initialYearRange: [number, number] = [
         instance.minimumHistoricalYear ?? instance.referenceYear ?? 2010,
         instance.targetYear ?? instance.modelEndYear,
@@ -158,23 +189,45 @@ const PathsToolbar = () => {
     }
   }, [paths?.instance.id]);
 
-  if (!paths) return null;
-  if (paths.instance.id === 'unknown')
-    return <FloatingToolbar>UNKNOWN PATHS INSTANCE SET</FloatingToolbar>;
-
+  /*
+  const instance = paths?.instance;
+  // Target
+  const minYear = instance.minimumHistoricalYear;
+  const maxYear = instance.modelEndYear;
+  const referenceYear = instance.referenceYear;
+  const nrGoals = instance.goals.length;
+  const hasMultipleGoals = nrGoals > 1;
+  const columnSizes = getColumnSizes(hasMultipleGoals);
+*/
+  const nrGoals = instance.goals.length;
+  const hasMultipleGoals = nrGoals > 1;
+  const columnSizes = getColumnSizes(hasMultipleGoals);
   return (
-    <FloatingToolbar>
-      <GoalSelector />
-      <span>|</span>
-      <ScenarioSelector />
-      <span>|</span>
-      <YearRangeSelector
-        minYear={paths.instance.minimumHistoricalYear}
-        maxYear={paths.instance.modelEndYear}
-        referenceYear={paths.instance.referenceYear}
-      />
-    </FloatingToolbar>
+    <Container fluid="xl">
+      <PanelContent>
+        <StyledRow>
+          <StyledDropdownCol {...columnSizes.scenario}>
+            <ScenarioSelector />
+          </StyledDropdownCol>
+          <StyledDropdownCol {...columnSizes.yearRange}>
+            <YearRangeSelector
+              minYear={instance.minimumHistoricalYear}
+              maxYear={instance.modelEndYear}
+              referenceYear={instance.referenceYear}
+            />
+          </StyledDropdownCol>
+          {hasMultipleGoals && (
+            <StyledDropdownCol {...columnSizes.goal}>
+              <GoalSelector />
+            </StyledDropdownCol>
+          )}
+          <StyledOutcomeCol className="text-right" {...columnSizes.outcome}>
+            <GoalOutcomeBar compact />
+          </StyledOutcomeCol>
+        </StyledRow>
+      </PanelContent>
+    </Container>
   );
 };
 
-export default PathsToolbar;
+export default MediumSettings;
