@@ -1,13 +1,19 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useTranslations } from 'next-intl';
-import { transparentize } from 'polished';
 import { Button } from 'reactstrap';
 import styled from 'styled-components';
 
 import Icon from '@/components/common/Icon';
+import {
+  activeGoalVar,
+  activeScenarioVar,
+  yearRangeVar,
+} from '@/context/paths/cache';
+import { usePaths } from '@/context/paths/paths';
+import { useReactiveVar } from '@apollo/client';
 
 import CompleteSettings from './CompleteSettings';
 import MediumSettings from './MediumSettings';
@@ -38,18 +44,6 @@ const FixedPanel = styled.aside`
 
   &.panel-lg {
     height: 95%;
-
-    &::before {
-      content: '';
-      position: fixed;
-      z-index: -50;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: ${(props) =>
-        transparentize(0.15, props.theme.graphColors.grey090)};
-    }
   }
 `;
 
@@ -84,11 +78,37 @@ const MODE = {
 };
 
 const SettingsPanelFull: React.FC = () => {
-  //const paths = usePaths();
-  //const instance = paths.instance;
-  // console.log("Site", "Instance", site, instance);
+  const paths = usePaths();
+  const activeGoal = useReactiveVar(activeGoalVar);
+  const activeScenario = useReactiveVar(activeScenarioVar);
+  const yearRange = useReactiveVar(yearRangeVar);
+  const { instance, scenarios } = paths;
+  const [mode, setMode] = useState(MODE.LG);
 
-  const [mode, setMode] = useState(MODE.MD);
+  useEffect(() => {
+    if (!paths || paths.instance.id === 'unknown') return;
+
+    const firstActiveScenario = scenarios.find((sc) => sc.isActive);
+    const goals = instance.goals;
+
+    if (!activeGoal) {
+      const defaultGoal =
+        goals.length > 1 ? goals.find((goal) => goal.default) : goals[0];
+      activeGoalVar(defaultGoal ?? null);
+    }
+
+    if (!activeScenario) {
+      activeScenarioVar(firstActiveScenario ?? undefined);
+    }
+
+    if (!yearRange) {
+      const initialYearRange: [number, number] = [
+        instance.minimumHistoricalYear ?? instance.referenceYear ?? 2010,
+        instance.targetYear ?? instance.modelEndYear,
+      ];
+      yearRangeVar(initialYearRange);
+    }
+  }, [paths?.instance.id]);
 
   const handleToggle = (e) => {
     e.preventDefault();
