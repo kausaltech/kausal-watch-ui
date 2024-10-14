@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
-import PathsToolbar from '@/components/paths/PathsToolbar';
+import SettingsPanelFull from '@/components/paths/toolbar/SettingsPanelFull';
 
 import { JsonLd } from './JsonLd';
 import { StyledMain } from './StyledMain';
@@ -23,7 +23,7 @@ export default function Layout({ children, params }: Props) {
       <Header />
       <StyledMain id="main">{children}</StyledMain>
       <Footer />
-      <PathsToolbar />
+      <SettingsPanelFull />
     </>
   );
 }

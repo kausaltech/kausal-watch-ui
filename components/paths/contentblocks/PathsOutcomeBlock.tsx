@@ -80,7 +80,7 @@ export default function PathsOutcomeBlock(props) {
   const router = useRouter();
   const pathname = usePathname();
   const queryNodeId = searchParams.get('node') ?? undefined;
-  console.log('PathsOutcomeBlock', props);
+  //console.log('PathsOutcomeBlock', props);
   const [lastActiveNodeId, setLastActiveNodeId] = useState<string | undefined>(
     queryNodeId
   );
