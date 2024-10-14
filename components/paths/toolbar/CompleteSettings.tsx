@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 
+import RangeSelector from 'components/paths/RangeSelector';
 import { useTranslations } from 'next-intl';
 import {
   Button,
@@ -13,14 +14,13 @@ import styled from 'styled-components';
 
 import Icon from '@/components/common/Icon';
 import GoalSelector from '@/components/paths/GoalSelector';
-import RangeSelector from '@/components/paths/RangeSelector';
 import ScenarioSelector from '@/components/paths/ScenarioSelector';
-//import ScenarioBadge from 'components/paths/ScenarioBadge';
-import GlobalParameters from '@/components/paths/toolbar/GlobalParameters';
 import GoalOutcomeBar from '@/components/paths/toolbar/GoalOutcomeBar';
 import { activeScenarioVar, yearRangeVar } from '@/context/paths/cache';
 import { usePaths } from '@/context/paths/paths';
 import { useReactiveVar } from '@apollo/client';
+
+import NormalizationWidget from '../NormalizationWidget';
 
 const SettingsHeader = styled.div`
   padding: 1rem 0;
@@ -80,16 +80,17 @@ const Card = styled.div`
 const CompleteSettings = (props) => {
   const t = useTranslations();
   const paths = usePaths();
-  const instance = useInstance();
+  const instance = paths?.instance;
   const activeScenario = useReactiveVar(activeScenarioVar);
 
   const hasGlobalParameters =
-    site.parameters.find((param) => param.isCustomizable) !== undefined;
-  const hasNormalizations = site.availableNormalizations.length > 0;
+    paths.parameters.find((param) => param.isCustomizable) !== undefined;
+  const hasNormalizations = paths.availableNormalizations.length > 0;
 
   // State of display settings
   // Year range
   const yearRange = useReactiveVar(yearRangeVar);
+
   const setYearRange = useCallback(
     (newRange: [number, number]) => {
       yearRangeVar(newRange);
@@ -101,7 +102,7 @@ const CompleteSettings = (props) => {
   const nrGoals = instance.goals.length;
 
   // Normalization
-  const availableNormalizations = site.availableNormalizations;
+  const availableNormalizations = paths.availableNormalizations;
   return (
     <>
       <SettingsHeader>
@@ -114,7 +115,7 @@ const CompleteSettings = (props) => {
           <SettingsSection>
             <AccordionHeader color="primary" id="display-toggler">
               <h4>{t('display')}</h4>
-              <Icon name="angleDown" width="24px" height="24px" />
+              <Icon name="angle-down" width="24px" height="24px" />
             </AccordionHeader>
             <UncontrolledCollapse toggler="#display-toggler" defaultOpen>
               <Card>
@@ -124,24 +125,20 @@ const CompleteSettings = (props) => {
                       <Col md="5">
                         <h5>{t('comparing-years')}</h5>
                         <RangeSelector
-                          min={site.minYear}
-                          max={site.maxYear}
+                          min={instance.minimumHistoricalYear}
+                          max={instance.modelEndYear}
+                          referenceYear={instance.referenceYear}
                           defaultMin={yearRange[0]}
                           defaultMax={yearRange[1]}
-                          referenceYear={
-                            instance.referenceYear ?? site.referenceYear
-                          }
                           handleChange={setYearRange}
                         />
                       </Col>
                       {hasNormalizations && (
                         <Col md="3">
                           <h5>{t('normalization')}</h5>
-                          {/*
                           <NormalizationWidget
                             availableNormalizations={availableNormalizations}
-                          />*/}
-                          (coming soon)
+                          />
                         </Col>
                       )}
                       {nrGoals > 1 && (
@@ -159,9 +156,9 @@ const CompleteSettings = (props) => {
           <SettingsSection>
             <AccordionHeader color="primary" id="scenario-toggler">
               <h4>
-                {t('scenario')}: {activeScenario.name}
+                {t('scenario')}: {activeScenario?.name}
               </h4>
-              <Icon name="angleDown" width="24px" height="24px" />
+              <Icon name="angle-down" width="24px" height="24px" />
             </AccordionHeader>
             <UncontrolledCollapse toggler="#scenario-toggler" defaultOpen>
               <Card>
@@ -179,7 +176,6 @@ const CompleteSettings = (props) => {
                     {hasGlobalParameters && (
                       <>
                         <h5>Global settings</h5>
-                        <GlobalParameters parameters={site.parameters} />
                       </>
                     )}
                   </Widget>
