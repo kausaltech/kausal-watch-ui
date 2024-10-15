@@ -3715,6 +3715,7 @@ export type Query = {
   planPage?: Maybe<PageInterface>;
   plansForHostname?: Maybe<Array<Maybe<PlanInterface>>>;
   relatedPlanActions?: Maybe<Array<Action>>;
+  relatedPlanIndicators?: Maybe<Array<Indicator>>;
   search?: Maybe<SearchResults>;
   workflowStates?: Maybe<Array<Maybe<WorkflowStateDescription>>>;
 };
@@ -3803,6 +3804,14 @@ export type QueryPlansForHostnameArgs = {
 
 
 export type QueryRelatedPlanActionsArgs = {
+  category?: InputMaybe<Scalars['ID']>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Scalars['String']>;
+  plan: Scalars['ID'];
+};
+
+
+export type QueryRelatedPlanIndicatorsArgs = {
   category?: InputMaybe<Scalars['ID']>;
   first?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<Scalars['String']>;
@@ -5660,6 +5669,7 @@ export type IndicatorHightlightListQuery = (
 
 export type IndicatorListQueryVariables = Exact<{
   plan: Scalars['ID'];
+  relatedPlanIndicators: Scalars['Boolean'];
 }>;
 
 
@@ -5745,7 +5755,49 @@ export type IndicatorListQuery = (
       & { __typename?: 'CommonIndicator' }
     ) | null }
     & { __typename?: 'Indicator' }
-  ) | null> | null }
+  ) | null> | null, relatedPlanIndicators?: Array<(
+    { id: string, name: string, level?: string | null, timeResolution: IndicatorTimeResolution, organization: (
+      { id: string, name: string }
+      & { __typename?: 'Organization' }
+    ), common?: (
+      { id: string, name: string, normalizations?: Array<(
+        { unit?: (
+          { shortName?: string | null }
+          & { __typename?: 'Unit' }
+        ) | null, normalizer?: (
+          { name: string, id: string, identifier?: string | null }
+          & { __typename?: 'CommonIndicator' }
+        ) | null }
+        & { __typename?: 'CommonIndicatorNormalization' }
+      ) | null> | null }
+      & { __typename?: 'CommonIndicator' }
+    ) | null, latestGraph?: (
+      { id: string }
+      & { __typename?: 'IndicatorGraph' }
+    ) | null, latestValue?: (
+      { id: string, date?: string | null, value: number, normalizedValues?: Array<(
+        { normalizerId?: string | null, value?: number | null }
+        & { __typename?: 'NormalizedValue' }
+      ) | null> | null }
+      & { __typename?: 'IndicatorValue' }
+    ) | null, unit: (
+      { shortName?: string | null }
+      & { __typename?: 'Unit' }
+    ), categories: Array<(
+      { id: string, name: string, parent?: (
+        { id: string }
+        & { __typename?: 'Category' }
+      ) | null, type: (
+        { id: string, identifier: string, name: string }
+        & { __typename?: 'CategoryType' }
+      ), common?: (
+        { id: string, identifier: string, name: string, order: number }
+        & { __typename?: 'CommonCategory' }
+      ) | null }
+      & { __typename?: 'Category' }
+    )> }
+    & { __typename?: 'Indicator' }
+  )> | null }
   & { __typename?: 'Query' }
 );
 
