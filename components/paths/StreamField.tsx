@@ -7,9 +7,9 @@ import { ErrorBoundary } from '@/components/common/ErrorBoundary';
 import { ErrorPage } from '@/components/common/ErrorPage';
 import RichText from '@/components/common/RichText';
 import ActionCategoryFilterCardsBlock from '@/components/contentblocks/ActionCategoryFilterCardsBlock';
-import ActionListBlock from '@/components/contentblocks/ActionListBlock';
 import IndicatorGroupBlock from '@/components/contentblocks/IndicatorGroupBlock';
 import QuestionAnswerBlock from '@/components/contentblocks/QuestionAnswerBlock';
+import ActionListBlock from '@/components/paths/contentblocks/ActionListBlock';
 import CategoryListBlock from '@/components/paths/contentblocks/CategoryListBlock';
 import CategoryTypeListBlock from '@/components/paths/contentblocks/CategoryTypeListBlock';
 import PathsOutcomeBlock from '@/components/paths/contentblocks/PathsOutcomeBlock';
@@ -30,9 +30,15 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
   console.log('rendering', props);
   switch (__typename) {
     case 'ActionListBlock': {
-      const { categoryFilter } = block;
+      const { categoryFilter, groupByCategoryLevel, heading, helpText } = block;
       return (
-        <ActionListBlock categoryId={categoryFilter?.id || page.category.id} />
+        <ActionListBlock
+          id={id}
+          heading={heading}
+          lead={helpText}
+          groupByLevel={groupByCategoryLevel}
+          categoryId={categoryFilter?.id || page.category.id}
+        />
       );
     }
     case 'CategoryListBlock': {
