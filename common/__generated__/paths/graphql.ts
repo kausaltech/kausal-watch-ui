@@ -2004,28 +2004,6 @@ export type YearlyValue = {
   year: Scalars['Int'];
 };
 
-export type GetInstanceGoalOutcomeQueryVariables = Exact<{
-  goal: Scalars['ID'];
-}>;
-
-
-export type GetInstanceGoalOutcomeQuery = (
-  { instance: (
-    { id: string, goals: Array<(
-      { values: Array<(
-        { year: number, goal?: number | null, actual?: number | null, isForecast: boolean, isInterpolated?: boolean | null }
-        & { __typename?: 'InstanceYearlyGoalType' }
-      )>, unit: (
-        { htmlShort: string }
-        & { __typename?: 'UnitType' }
-      ) }
-      & { __typename?: 'InstanceGoalEntry' }
-    )> }
-    & { __typename?: 'InstanceType' }
-  ) }
-  & { __typename?: 'Query' }
-);
-
 export type SetNormalizationFromWidgetMutationVariables = Exact<{
   id?: InputMaybe<Scalars['ID']>;
 }>;
@@ -2132,6 +2110,28 @@ export type SetNormalizationMutation = (
     & { __typename?: 'SetNormalizerMutation' }
   ) | null }
   & { __typename?: 'Mutations' }
+);
+
+export type GetInstanceGoalOutcomeQueryVariables = Exact<{
+  goal: Scalars['ID'];
+}>;
+
+
+export type GetInstanceGoalOutcomeQuery = (
+  { instance: (
+    { id: string, goals: Array<(
+      { values: Array<(
+        { year: number, goal?: number | null, actual?: number | null, isForecast: boolean, isInterpolated?: boolean | null }
+        & { __typename?: 'InstanceYearlyGoalType' }
+      )>, unit: (
+        { htmlShort: string }
+        & { __typename?: 'UnitType' }
+      ) }
+      & { __typename?: 'InstanceGoalEntry' }
+    )> }
+    & { __typename?: 'InstanceType' }
+  ) }
+  & { __typename?: 'Query' }
 );
 
 export type DimensionalMetricFragment = (

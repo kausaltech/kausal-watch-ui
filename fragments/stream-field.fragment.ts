@@ -73,8 +73,19 @@ export const STREAM_FIELD_FRAGMENT = gql`
       }
     }
     ... on ActionListBlock {
+      heading
+      helpText
       categoryFilter {
         id
+        type {
+          id
+        }
+      }
+      groupByCategoryLevel {
+        id
+        type {
+          id
+        }
       }
       heading
       helpText
