@@ -4769,10 +4769,148 @@ export type GetActionListQuery = (
       ) }
       & { __typename?: 'ActionDependencyRelationship' }
     )>, categories: Array<(
-      { id: string, identifier: string, name: string, iconSvgUrl?: string | null, type: (
-        { id: string }
+      { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+        { id: string, name: string, namePlural?: string | null }
+        & { __typename?: 'CategoryLevel' }
+      ) | null, image?: (
+        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, large?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, small?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, social?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, rendition?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null }
+        & { __typename?: 'Image' }
+      ) | null, iconImage?: (
+        { rendition?: (
+          { src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null }
+        & { __typename?: 'Image' }
+      ) | null, categoryPage?: (
+        { id?: string | null, title: string, urlPath: string, live: boolean }
+        & { __typename?: 'CategoryPage' }
+      ) | null, type: (
+        { id: string, identifier: string, hideCategoryIdentifiers: boolean }
         & { __typename?: 'CategoryType' }
-      ) }
+      ), parent?: (
+        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+              { id: string, name: string, namePlural?: string | null }
+              & { __typename?: 'CategoryLevel' }
+            ) | null, image?: (
+              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, large?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, small?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, social?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, rendition?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null }
+              & { __typename?: 'Image' }
+            ) | null, iconImage?: (
+              { rendition?: (
+                { src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null }
+              & { __typename?: 'Image' }
+            ) | null, categoryPage?: (
+              { id?: string | null, title: string, urlPath: string, live: boolean }
+              & { __typename?: 'CategoryPage' }
+            ) | null, type: (
+              { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+              & { __typename?: 'CategoryType' }
+            ) }
+            & { __typename?: 'Category' }
+          ) | null, level?: (
+            { id: string, name: string, namePlural?: string | null }
+            & { __typename?: 'CategoryLevel' }
+          ) | null, image?: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, large?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, small?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, social?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, rendition?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, iconImage?: (
+            { rendition?: (
+              { src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, categoryPage?: (
+            { id?: string | null, title: string, urlPath: string, live: boolean }
+            & { __typename?: 'CategoryPage' }
+          ) | null, type: (
+            { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+            & { __typename?: 'CategoryType' }
+          ) }
+          & { __typename?: 'Category' }
+        ) | null, level?: (
+          { id: string, name: string, namePlural?: string | null }
+          & { __typename?: 'CategoryLevel' }
+        ) | null, image?: (
+          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, large?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, small?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, social?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, rendition?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null }
+          & { __typename?: 'Image' }
+        ) | null, iconImage?: (
+          { rendition?: (
+            { src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null }
+          & { __typename?: 'Image' }
+        ) | null, categoryPage?: (
+          { id?: string | null, title: string, urlPath: string, live: boolean }
+          & { __typename?: 'CategoryPage' }
+        ) | null, type: (
+          { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+          & { __typename?: 'CategoryType' }
+        ) }
+        & { __typename?: 'Category' }
+      ) | null }
       & { __typename?: 'Category' }
     )>, statusSummary: (
       { identifier: ActionStatusSummaryIdentifier }
@@ -4877,10 +5015,148 @@ export type GetActionListForBlockQuery = (
       ) }
       & { __typename?: 'ActionDependencyRelationship' }
     )>, categories: Array<(
-      { id: string, identifier: string, name: string, iconSvgUrl?: string | null, type: (
-        { id: string }
+      { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+        { id: string, name: string, namePlural?: string | null }
+        & { __typename?: 'CategoryLevel' }
+      ) | null, image?: (
+        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, large?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, small?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, social?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, rendition?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null }
+        & { __typename?: 'Image' }
+      ) | null, iconImage?: (
+        { rendition?: (
+          { src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null }
+        & { __typename?: 'Image' }
+      ) | null, categoryPage?: (
+        { id?: string | null, title: string, urlPath: string, live: boolean }
+        & { __typename?: 'CategoryPage' }
+      ) | null, type: (
+        { id: string, identifier: string, hideCategoryIdentifiers: boolean }
         & { __typename?: 'CategoryType' }
-      ) }
+      ), parent?: (
+        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+              { id: string, name: string, namePlural?: string | null }
+              & { __typename?: 'CategoryLevel' }
+            ) | null, image?: (
+              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, large?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, small?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, social?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, rendition?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null }
+              & { __typename?: 'Image' }
+            ) | null, iconImage?: (
+              { rendition?: (
+                { src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null }
+              & { __typename?: 'Image' }
+            ) | null, categoryPage?: (
+              { id?: string | null, title: string, urlPath: string, live: boolean }
+              & { __typename?: 'CategoryPage' }
+            ) | null, type: (
+              { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+              & { __typename?: 'CategoryType' }
+            ) }
+            & { __typename?: 'Category' }
+          ) | null, level?: (
+            { id: string, name: string, namePlural?: string | null }
+            & { __typename?: 'CategoryLevel' }
+          ) | null, image?: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, large?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, small?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, social?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, rendition?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, iconImage?: (
+            { rendition?: (
+              { src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, categoryPage?: (
+            { id?: string | null, title: string, urlPath: string, live: boolean }
+            & { __typename?: 'CategoryPage' }
+          ) | null, type: (
+            { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+            & { __typename?: 'CategoryType' }
+          ) }
+          & { __typename?: 'Category' }
+        ) | null, level?: (
+          { id: string, name: string, namePlural?: string | null }
+          & { __typename?: 'CategoryLevel' }
+        ) | null, image?: (
+          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, large?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, small?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, social?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, rendition?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null }
+          & { __typename?: 'Image' }
+        ) | null, iconImage?: (
+          { rendition?: (
+            { src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null }
+          & { __typename?: 'Image' }
+        ) | null, categoryPage?: (
+          { id?: string | null, title: string, urlPath: string, live: boolean }
+          & { __typename?: 'CategoryPage' }
+        ) | null, type: (
+          { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+          & { __typename?: 'CategoryType' }
+        ) }
+        & { __typename?: 'Category' }
+      ) | null }
       & { __typename?: 'Category' }
     )>, statusSummary: (
       { identifier: ActionStatusSummaryIdentifier }
@@ -6319,10 +6595,148 @@ export type ActionCardFragment = (
     ) }
     & { __typename?: 'ActionDependencyRelationship' }
   )>, categories: Array<(
-    { id: string, identifier: string, name: string, iconSvgUrl?: string | null, type: (
-      { id: string }
+    { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+      { id: string, name: string, namePlural?: string | null }
+      & { __typename?: 'CategoryLevel' }
+    ) | null, image?: (
+      { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null, large?: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null, small?: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null, social?: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null, rendition?: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null }
+      & { __typename?: 'Image' }
+    ) | null, iconImage?: (
+      { rendition?: (
+        { src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null }
+      & { __typename?: 'Image' }
+    ) | null, categoryPage?: (
+      { id?: string | null, title: string, urlPath: string, live: boolean }
+      & { __typename?: 'CategoryPage' }
+    ) | null, type: (
+      { id: string, identifier: string, hideCategoryIdentifiers: boolean }
       & { __typename?: 'CategoryType' }
-    ) }
+    ), parent?: (
+      { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+            { id: string, name: string, namePlural?: string | null }
+            & { __typename?: 'CategoryLevel' }
+          ) | null, image?: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, large?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, small?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, social?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, rendition?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, iconImage?: (
+            { rendition?: (
+              { src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, categoryPage?: (
+            { id?: string | null, title: string, urlPath: string, live: boolean }
+            & { __typename?: 'CategoryPage' }
+          ) | null, type: (
+            { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+            & { __typename?: 'CategoryType' }
+          ) }
+          & { __typename?: 'Category' }
+        ) | null, level?: (
+          { id: string, name: string, namePlural?: string | null }
+          & { __typename?: 'CategoryLevel' }
+        ) | null, image?: (
+          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, large?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, small?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, social?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, rendition?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null }
+          & { __typename?: 'Image' }
+        ) | null, iconImage?: (
+          { rendition?: (
+            { src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null }
+          & { __typename?: 'Image' }
+        ) | null, categoryPage?: (
+          { id?: string | null, title: string, urlPath: string, live: boolean }
+          & { __typename?: 'CategoryPage' }
+        ) | null, type: (
+          { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+          & { __typename?: 'CategoryType' }
+        ) }
+        & { __typename?: 'Category' }
+      ) | null, level?: (
+        { id: string, name: string, namePlural?: string | null }
+        & { __typename?: 'CategoryLevel' }
+      ) | null, image?: (
+        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, large?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, small?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, social?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, rendition?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null }
+        & { __typename?: 'Image' }
+      ) | null, iconImage?: (
+        { rendition?: (
+          { src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null }
+        & { __typename?: 'Image' }
+      ) | null, categoryPage?: (
+        { id?: string | null, title: string, urlPath: string, live: boolean }
+        & { __typename?: 'CategoryPage' }
+      ) | null, type: (
+        { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+        & { __typename?: 'CategoryType' }
+      ) }
+      & { __typename?: 'Category' }
+    ) | null }
     & { __typename?: 'Category' }
   )>, statusSummary: (
     { identifier: ActionStatusSummaryIdentifier }
@@ -6909,9 +7323,18 @@ type StreamFieldFragment_ActionCategoryFilterCardsBlock_Fragment = (
 );
 
 type StreamFieldFragment_ActionListBlock_Fragment = (
-  { id?: string | null, blockType: string, field: string, categoryFilter?: (
-    { id: string }
+  { heading?: string | null, helpText?: string | null, id?: string | null, blockType: string, field: string, categoryFilter?: (
+    { id: string, type: (
+      { id: string }
+      & { __typename?: 'CategoryType' }
+    ) }
     & { __typename?: 'Category' }
+  ) | null, groupByCategoryLevel?: (
+    { id: string, type: (
+      { id: string }
+      & { __typename?: 'CategoryType' }
+    ) }
+    & { __typename?: 'CategoryLevel' }
   ) | null }
   & { __typename?: 'ActionListBlock' }
 );
@@ -7764,10 +8187,148 @@ export type GetActionDetailsQuery = (
         ) }
         & { __typename?: 'ActionDependencyRelationship' }
       )>, categories: Array<(
-        { id: string, identifier: string, name: string, iconSvgUrl?: string | null, type: (
-          { id: string }
+        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+          { id: string, name: string, namePlural?: string | null }
+          & { __typename?: 'CategoryLevel' }
+        ) | null, image?: (
+          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, large?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, small?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, social?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, rendition?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null }
+          & { __typename?: 'Image' }
+        ) | null, iconImage?: (
+          { rendition?: (
+            { src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null }
+          & { __typename?: 'Image' }
+        ) | null, categoryPage?: (
+          { id?: string | null, title: string, urlPath: string, live: boolean }
+          & { __typename?: 'CategoryPage' }
+        ) | null, type: (
+          { id: string, identifier: string, hideCategoryIdentifiers: boolean }
           & { __typename?: 'CategoryType' }
-        ) }
+        ), parent?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+                { id: string, name: string, namePlural?: string | null }
+                & { __typename?: 'CategoryLevel' }
+              ) | null, image?: (
+                { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null, large?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null, small?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null, social?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null, rendition?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null }
+                & { __typename?: 'Image' }
+              ) | null, iconImage?: (
+                { rendition?: (
+                  { src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null }
+                & { __typename?: 'Image' }
+              ) | null, categoryPage?: (
+                { id?: string | null, title: string, urlPath: string, live: boolean }
+                & { __typename?: 'CategoryPage' }
+              ) | null, type: (
+                { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+                & { __typename?: 'CategoryType' }
+              ) }
+              & { __typename?: 'Category' }
+            ) | null, level?: (
+              { id: string, name: string, namePlural?: string | null }
+              & { __typename?: 'CategoryLevel' }
+            ) | null, image?: (
+              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, large?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, small?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, social?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, rendition?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null }
+              & { __typename?: 'Image' }
+            ) | null, iconImage?: (
+              { rendition?: (
+                { src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null }
+              & { __typename?: 'Image' }
+            ) | null, categoryPage?: (
+              { id?: string | null, title: string, urlPath: string, live: boolean }
+              & { __typename?: 'CategoryPage' }
+            ) | null, type: (
+              { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+              & { __typename?: 'CategoryType' }
+            ) }
+            & { __typename?: 'Category' }
+          ) | null, level?: (
+            { id: string, name: string, namePlural?: string | null }
+            & { __typename?: 'CategoryLevel' }
+          ) | null, image?: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, large?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, small?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, social?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, rendition?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, iconImage?: (
+            { rendition?: (
+              { src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, categoryPage?: (
+            { id?: string | null, title: string, urlPath: string, live: boolean }
+            & { __typename?: 'CategoryPage' }
+          ) | null, type: (
+            { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+            & { __typename?: 'CategoryType' }
+          ) }
+          & { __typename?: 'Category' }
+        ) | null }
         & { __typename?: 'Category' }
       )>, statusSummary: (
         { identifier: ActionStatusSummaryIdentifier }
@@ -7824,10 +8385,148 @@ export type GetActionDetailsQuery = (
         ) }
         & { __typename?: 'ActionDependencyRelationship' }
       )>, categories: Array<(
-        { id: string, identifier: string, name: string, iconSvgUrl?: string | null, type: (
-          { id: string }
+        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+          { id: string, name: string, namePlural?: string | null }
+          & { __typename?: 'CategoryLevel' }
+        ) | null, image?: (
+          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, large?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, small?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, social?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, rendition?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null }
+          & { __typename?: 'Image' }
+        ) | null, iconImage?: (
+          { rendition?: (
+            { src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null }
+          & { __typename?: 'Image' }
+        ) | null, categoryPage?: (
+          { id?: string | null, title: string, urlPath: string, live: boolean }
+          & { __typename?: 'CategoryPage' }
+        ) | null, type: (
+          { id: string, identifier: string, hideCategoryIdentifiers: boolean }
           & { __typename?: 'CategoryType' }
-        ) }
+        ), parent?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+                { id: string, name: string, namePlural?: string | null }
+                & { __typename?: 'CategoryLevel' }
+              ) | null, image?: (
+                { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null, large?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null, small?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null, social?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null, rendition?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null }
+                & { __typename?: 'Image' }
+              ) | null, iconImage?: (
+                { rendition?: (
+                  { src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null }
+                & { __typename?: 'Image' }
+              ) | null, categoryPage?: (
+                { id?: string | null, title: string, urlPath: string, live: boolean }
+                & { __typename?: 'CategoryPage' }
+              ) | null, type: (
+                { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+                & { __typename?: 'CategoryType' }
+              ) }
+              & { __typename?: 'Category' }
+            ) | null, level?: (
+              { id: string, name: string, namePlural?: string | null }
+              & { __typename?: 'CategoryLevel' }
+            ) | null, image?: (
+              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, large?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, small?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, social?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, rendition?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null }
+              & { __typename?: 'Image' }
+            ) | null, iconImage?: (
+              { rendition?: (
+                { src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null }
+              & { __typename?: 'Image' }
+            ) | null, categoryPage?: (
+              { id?: string | null, title: string, urlPath: string, live: boolean }
+              & { __typename?: 'CategoryPage' }
+            ) | null, type: (
+              { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+              & { __typename?: 'CategoryType' }
+            ) }
+            & { __typename?: 'Category' }
+          ) | null, level?: (
+            { id: string, name: string, namePlural?: string | null }
+            & { __typename?: 'CategoryLevel' }
+          ) | null, image?: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, large?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, small?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, social?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, rendition?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, iconImage?: (
+            { rendition?: (
+              { src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, categoryPage?: (
+            { id?: string | null, title: string, urlPath: string, live: boolean }
+            & { __typename?: 'CategoryPage' }
+          ) | null, type: (
+            { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+            & { __typename?: 'CategoryType' }
+          ) }
+          & { __typename?: 'Category' }
+        ) | null }
         & { __typename?: 'Category' }
       )>, statusSummary: (
         { identifier: ActionStatusSummaryIdentifier }
@@ -7878,10 +8577,148 @@ export type GetActionDetailsQuery = (
         ) }
         & { __typename?: 'ActionDependencyRelationship' }
       )>, categories: Array<(
-        { id: string, identifier: string, name: string, iconSvgUrl?: string | null, type: (
-          { id: string }
+        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+          { id: string, name: string, namePlural?: string | null }
+          & { __typename?: 'CategoryLevel' }
+        ) | null, image?: (
+          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, large?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, small?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, social?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, rendition?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null }
+          & { __typename?: 'Image' }
+        ) | null, iconImage?: (
+          { rendition?: (
+            { src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null }
+          & { __typename?: 'Image' }
+        ) | null, categoryPage?: (
+          { id?: string | null, title: string, urlPath: string, live: boolean }
+          & { __typename?: 'CategoryPage' }
+        ) | null, type: (
+          { id: string, identifier: string, hideCategoryIdentifiers: boolean }
           & { __typename?: 'CategoryType' }
-        ) }
+        ), parent?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+                { id: string, name: string, namePlural?: string | null }
+                & { __typename?: 'CategoryLevel' }
+              ) | null, image?: (
+                { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null, large?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null, small?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null, social?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null, rendition?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null }
+                & { __typename?: 'Image' }
+              ) | null, iconImage?: (
+                { rendition?: (
+                  { src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null }
+                & { __typename?: 'Image' }
+              ) | null, categoryPage?: (
+                { id?: string | null, title: string, urlPath: string, live: boolean }
+                & { __typename?: 'CategoryPage' }
+              ) | null, type: (
+                { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+                & { __typename?: 'CategoryType' }
+              ) }
+              & { __typename?: 'Category' }
+            ) | null, level?: (
+              { id: string, name: string, namePlural?: string | null }
+              & { __typename?: 'CategoryLevel' }
+            ) | null, image?: (
+              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, large?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, small?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, social?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, rendition?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null }
+              & { __typename?: 'Image' }
+            ) | null, iconImage?: (
+              { rendition?: (
+                { src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null }
+              & { __typename?: 'Image' }
+            ) | null, categoryPage?: (
+              { id?: string | null, title: string, urlPath: string, live: boolean }
+              & { __typename?: 'CategoryPage' }
+            ) | null, type: (
+              { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+              & { __typename?: 'CategoryType' }
+            ) }
+            & { __typename?: 'Category' }
+          ) | null, level?: (
+            { id: string, name: string, namePlural?: string | null }
+            & { __typename?: 'CategoryLevel' }
+          ) | null, image?: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, large?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, small?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, social?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, rendition?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, iconImage?: (
+            { rendition?: (
+              { src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, categoryPage?: (
+            { id?: string | null, title: string, urlPath: string, live: boolean }
+            & { __typename?: 'CategoryPage' }
+          ) | null, type: (
+            { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+            & { __typename?: 'CategoryType' }
+          ) }
+          & { __typename?: 'Category' }
+        ) | null }
         & { __typename?: 'Category' }
       )>, statusSummary: (
         { identifier: ActionStatusSummaryIdentifier }
@@ -8158,10 +8995,148 @@ export type GetActionDetailsQuery = (
           ) }
           & { __typename?: 'ActionDependencyRelationship' }
         )>, categories: Array<(
-          { id: string, identifier: string, name: string, iconSvgUrl?: string | null, type: (
-            { id: string }
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+            { id: string, name: string, namePlural?: string | null }
+            & { __typename?: 'CategoryLevel' }
+          ) | null, image?: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, large?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, small?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, social?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, rendition?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, iconImage?: (
+            { rendition?: (
+              { src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, categoryPage?: (
+            { id?: string | null, title: string, urlPath: string, live: boolean }
+            & { __typename?: 'CategoryPage' }
+          ) | null, type: (
+            { id: string, identifier: string, hideCategoryIdentifiers: boolean }
             & { __typename?: 'CategoryType' }
-          ) }
+          ), parent?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+                { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+                  { id: string, name: string, namePlural?: string | null }
+                  & { __typename?: 'CategoryLevel' }
+                ) | null, image?: (
+                  { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename?: 'ImageRendition' }
+                  ) | null, large?: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename?: 'ImageRendition' }
+                  ) | null, small?: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename?: 'ImageRendition' }
+                  ) | null, social?: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename?: 'ImageRendition' }
+                  ) | null, rendition?: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename?: 'ImageRendition' }
+                  ) | null }
+                  & { __typename?: 'Image' }
+                ) | null, iconImage?: (
+                  { rendition?: (
+                    { src: string }
+                    & { __typename?: 'ImageRendition' }
+                  ) | null }
+                  & { __typename?: 'Image' }
+                ) | null, categoryPage?: (
+                  { id?: string | null, title: string, urlPath: string, live: boolean }
+                  & { __typename?: 'CategoryPage' }
+                ) | null, type: (
+                  { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+                  & { __typename?: 'CategoryType' }
+                ) }
+                & { __typename?: 'Category' }
+              ) | null, level?: (
+                { id: string, name: string, namePlural?: string | null }
+                & { __typename?: 'CategoryLevel' }
+              ) | null, image?: (
+                { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null, large?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null, small?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null, social?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null, rendition?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null }
+                & { __typename?: 'Image' }
+              ) | null, iconImage?: (
+                { rendition?: (
+                  { src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null }
+                & { __typename?: 'Image' }
+              ) | null, categoryPage?: (
+                { id?: string | null, title: string, urlPath: string, live: boolean }
+                & { __typename?: 'CategoryPage' }
+              ) | null, type: (
+                { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+                & { __typename?: 'CategoryType' }
+              ) }
+              & { __typename?: 'Category' }
+            ) | null, level?: (
+              { id: string, name: string, namePlural?: string | null }
+              & { __typename?: 'CategoryLevel' }
+            ) | null, image?: (
+              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, large?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, small?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, social?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, rendition?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null }
+              & { __typename?: 'Image' }
+            ) | null, iconImage?: (
+              { rendition?: (
+                { src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null }
+              & { __typename?: 'Image' }
+            ) | null, categoryPage?: (
+              { id?: string | null, title: string, urlPath: string, live: boolean }
+              & { __typename?: 'CategoryPage' }
+            ) | null, type: (
+              { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+              & { __typename?: 'CategoryType' }
+            ) }
+            & { __typename?: 'Category' }
+          ) | null }
           & { __typename?: 'Category' }
         )>, statusSummary: (
           { identifier: ActionStatusSummaryIdentifier }
@@ -8212,10 +9187,148 @@ export type GetActionDetailsQuery = (
           ) }
           & { __typename?: 'ActionDependencyRelationship' }
         )>, categories: Array<(
-          { id: string, identifier: string, name: string, iconSvgUrl?: string | null, type: (
-            { id: string }
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+            { id: string, name: string, namePlural?: string | null }
+            & { __typename?: 'CategoryLevel' }
+          ) | null, image?: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, large?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, small?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, social?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, rendition?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, iconImage?: (
+            { rendition?: (
+              { src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, categoryPage?: (
+            { id?: string | null, title: string, urlPath: string, live: boolean }
+            & { __typename?: 'CategoryPage' }
+          ) | null, type: (
+            { id: string, identifier: string, hideCategoryIdentifiers: boolean }
             & { __typename?: 'CategoryType' }
-          ) }
+          ), parent?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+                { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+                  { id: string, name: string, namePlural?: string | null }
+                  & { __typename?: 'CategoryLevel' }
+                ) | null, image?: (
+                  { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename?: 'ImageRendition' }
+                  ) | null, large?: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename?: 'ImageRendition' }
+                  ) | null, small?: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename?: 'ImageRendition' }
+                  ) | null, social?: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename?: 'ImageRendition' }
+                  ) | null, rendition?: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename?: 'ImageRendition' }
+                  ) | null }
+                  & { __typename?: 'Image' }
+                ) | null, iconImage?: (
+                  { rendition?: (
+                    { src: string }
+                    & { __typename?: 'ImageRendition' }
+                  ) | null }
+                  & { __typename?: 'Image' }
+                ) | null, categoryPage?: (
+                  { id?: string | null, title: string, urlPath: string, live: boolean }
+                  & { __typename?: 'CategoryPage' }
+                ) | null, type: (
+                  { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+                  & { __typename?: 'CategoryType' }
+                ) }
+                & { __typename?: 'Category' }
+              ) | null, level?: (
+                { id: string, name: string, namePlural?: string | null }
+                & { __typename?: 'CategoryLevel' }
+              ) | null, image?: (
+                { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null, large?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null, small?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null, social?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null, rendition?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null }
+                & { __typename?: 'Image' }
+              ) | null, iconImage?: (
+                { rendition?: (
+                  { src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null }
+                & { __typename?: 'Image' }
+              ) | null, categoryPage?: (
+                { id?: string | null, title: string, urlPath: string, live: boolean }
+                & { __typename?: 'CategoryPage' }
+              ) | null, type: (
+                { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+                & { __typename?: 'CategoryType' }
+              ) }
+              & { __typename?: 'Category' }
+            ) | null, level?: (
+              { id: string, name: string, namePlural?: string | null }
+              & { __typename?: 'CategoryLevel' }
+            ) | null, image?: (
+              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, large?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, small?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, social?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, rendition?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null }
+              & { __typename?: 'Image' }
+            ) | null, iconImage?: (
+              { rendition?: (
+                { src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null }
+              & { __typename?: 'Image' }
+            ) | null, categoryPage?: (
+              { id?: string | null, title: string, urlPath: string, live: boolean }
+              & { __typename?: 'CategoryPage' }
+            ) | null, type: (
+              { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+              & { __typename?: 'CategoryType' }
+            ) }
+            & { __typename?: 'Category' }
+          ) | null }
           & { __typename?: 'Category' }
         )>, statusSummary: (
           { identifier: ActionStatusSummaryIdentifier }
@@ -9398,10 +10511,148 @@ export type ActionDependenciesFragment = (
         ) }
         & { __typename?: 'ActionDependencyRelationship' }
       )>, categories: Array<(
-        { id: string, identifier: string, name: string, iconSvgUrl?: string | null, type: (
-          { id: string }
+        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+          { id: string, name: string, namePlural?: string | null }
+          & { __typename?: 'CategoryLevel' }
+        ) | null, image?: (
+          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, large?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, small?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, social?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, rendition?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null }
+          & { __typename?: 'Image' }
+        ) | null, iconImage?: (
+          { rendition?: (
+            { src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null }
+          & { __typename?: 'Image' }
+        ) | null, categoryPage?: (
+          { id?: string | null, title: string, urlPath: string, live: boolean }
+          & { __typename?: 'CategoryPage' }
+        ) | null, type: (
+          { id: string, identifier: string, hideCategoryIdentifiers: boolean }
           & { __typename?: 'CategoryType' }
-        ) }
+        ), parent?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+                { id: string, name: string, namePlural?: string | null }
+                & { __typename?: 'CategoryLevel' }
+              ) | null, image?: (
+                { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null, large?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null, small?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null, social?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null, rendition?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null }
+                & { __typename?: 'Image' }
+              ) | null, iconImage?: (
+                { rendition?: (
+                  { src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null }
+                & { __typename?: 'Image' }
+              ) | null, categoryPage?: (
+                { id?: string | null, title: string, urlPath: string, live: boolean }
+                & { __typename?: 'CategoryPage' }
+              ) | null, type: (
+                { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+                & { __typename?: 'CategoryType' }
+              ) }
+              & { __typename?: 'Category' }
+            ) | null, level?: (
+              { id: string, name: string, namePlural?: string | null }
+              & { __typename?: 'CategoryLevel' }
+            ) | null, image?: (
+              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, large?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, small?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, social?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, rendition?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null }
+              & { __typename?: 'Image' }
+            ) | null, iconImage?: (
+              { rendition?: (
+                { src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null }
+              & { __typename?: 'Image' }
+            ) | null, categoryPage?: (
+              { id?: string | null, title: string, urlPath: string, live: boolean }
+              & { __typename?: 'CategoryPage' }
+            ) | null, type: (
+              { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+              & { __typename?: 'CategoryType' }
+            ) }
+            & { __typename?: 'Category' }
+          ) | null, level?: (
+            { id: string, name: string, namePlural?: string | null }
+            & { __typename?: 'CategoryLevel' }
+          ) | null, image?: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, large?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, small?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, social?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, rendition?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, iconImage?: (
+            { rendition?: (
+              { src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, categoryPage?: (
+            { id?: string | null, title: string, urlPath: string, live: boolean }
+            & { __typename?: 'CategoryPage' }
+          ) | null, type: (
+            { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+            & { __typename?: 'CategoryType' }
+          ) }
+          & { __typename?: 'Category' }
+        ) | null }
         & { __typename?: 'Category' }
       )>, statusSummary: (
         { identifier: ActionStatusSummaryIdentifier }
@@ -9452,10 +10703,148 @@ export type ActionDependenciesFragment = (
         ) }
         & { __typename?: 'ActionDependencyRelationship' }
       )>, categories: Array<(
-        { id: string, identifier: string, name: string, iconSvgUrl?: string | null, type: (
-          { id: string }
+        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+          { id: string, name: string, namePlural?: string | null }
+          & { __typename?: 'CategoryLevel' }
+        ) | null, image?: (
+          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, large?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, small?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, social?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, rendition?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null }
+          & { __typename?: 'Image' }
+        ) | null, iconImage?: (
+          { rendition?: (
+            { src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null }
+          & { __typename?: 'Image' }
+        ) | null, categoryPage?: (
+          { id?: string | null, title: string, urlPath: string, live: boolean }
+          & { __typename?: 'CategoryPage' }
+        ) | null, type: (
+          { id: string, identifier: string, hideCategoryIdentifiers: boolean }
           & { __typename?: 'CategoryType' }
-        ) }
+        ), parent?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+                { id: string, name: string, namePlural?: string | null }
+                & { __typename?: 'CategoryLevel' }
+              ) | null, image?: (
+                { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null, large?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null, small?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null, social?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null, rendition?: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null }
+                & { __typename?: 'Image' }
+              ) | null, iconImage?: (
+                { rendition?: (
+                  { src: string }
+                  & { __typename?: 'ImageRendition' }
+                ) | null }
+                & { __typename?: 'Image' }
+              ) | null, categoryPage?: (
+                { id?: string | null, title: string, urlPath: string, live: boolean }
+                & { __typename?: 'CategoryPage' }
+              ) | null, type: (
+                { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+                & { __typename?: 'CategoryType' }
+              ) }
+              & { __typename?: 'Category' }
+            ) | null, level?: (
+              { id: string, name: string, namePlural?: string | null }
+              & { __typename?: 'CategoryLevel' }
+            ) | null, image?: (
+              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, large?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, small?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, social?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null, rendition?: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null }
+              & { __typename?: 'Image' }
+            ) | null, iconImage?: (
+              { rendition?: (
+                { src: string }
+                & { __typename?: 'ImageRendition' }
+              ) | null }
+              & { __typename?: 'Image' }
+            ) | null, categoryPage?: (
+              { id?: string | null, title: string, urlPath: string, live: boolean }
+              & { __typename?: 'CategoryPage' }
+            ) | null, type: (
+              { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+              & { __typename?: 'CategoryType' }
+            ) }
+            & { __typename?: 'Category' }
+          ) | null, level?: (
+            { id: string, name: string, namePlural?: string | null }
+            & { __typename?: 'CategoryLevel' }
+          ) | null, image?: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, large?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, small?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, social?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, rendition?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, iconImage?: (
+            { rendition?: (
+              { src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, categoryPage?: (
+            { id?: string | null, title: string, urlPath: string, live: boolean }
+            & { __typename?: 'CategoryPage' }
+          ) | null, type: (
+            { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+            & { __typename?: 'CategoryType' }
+          ) }
+          & { __typename?: 'Category' }
+        ) | null }
         & { __typename?: 'Category' }
       )>, statusSummary: (
         { identifier: ActionStatusSummaryIdentifier }
@@ -10534,9 +11923,18 @@ export type GetContentPageQuery = (
       ) | null> | null }
       & { __typename?: 'ActionCategoryFilterCardsBlock' }
     ) | (
-      { id?: string | null, blockType: string, field: string, categoryFilter?: (
-        { id: string }
+      { heading?: string | null, helpText?: string | null, id?: string | null, blockType: string, field: string, categoryFilter?: (
+        { id: string, type: (
+          { id: string }
+          & { __typename?: 'CategoryType' }
+        ) }
         & { __typename?: 'Category' }
+      ) | null, groupByCategoryLevel?: (
+        { id: string, type: (
+          { id: string }
+          & { __typename?: 'CategoryType' }
+        ) }
+        & { __typename?: 'CategoryLevel' }
       ) | null }
       & { __typename?: 'ActionListBlock' }
     ) | (
@@ -11599,9 +12997,18 @@ export type GetContentPageQuery = (
       ) | null> | null }
       & { __typename?: 'ActionCategoryFilterCardsBlock' }
     ) | (
-      { id?: string | null, blockType: string, field: string, categoryFilter?: (
-        { id: string }
+      { heading?: string | null, helpText?: string | null, id?: string | null, blockType: string, field: string, categoryFilter?: (
+        { id: string, type: (
+          { id: string }
+          & { __typename?: 'CategoryType' }
+        ) }
         & { __typename?: 'Category' }
+      ) | null, groupByCategoryLevel?: (
+        { id: string, type: (
+          { id: string }
+          & { __typename?: 'CategoryType' }
+        ) }
+        & { __typename?: 'CategoryLevel' }
       ) | null }
       & { __typename?: 'ActionListBlock' }
     ) | (
@@ -12274,9 +13681,18 @@ export type GetContentPageQuery = (
       ) | null> | null }
       & { __typename?: 'ActionCategoryFilterCardsBlock' }
     ) | (
-      { id?: string | null, blockType: string, field: string, categoryFilter?: (
-        { id: string }
+      { heading?: string | null, helpText?: string | null, id?: string | null, blockType: string, field: string, categoryFilter?: (
+        { id: string, type: (
+          { id: string }
+          & { __typename?: 'CategoryType' }
+        ) }
         & { __typename?: 'Category' }
+      ) | null, groupByCategoryLevel?: (
+        { id: string, type: (
+          { id: string }
+          & { __typename?: 'CategoryType' }
+        ) }
+        & { __typename?: 'CategoryLevel' }
       ) | null }
       & { __typename?: 'ActionListBlock' }
     ) | (
@@ -12958,9 +14374,18 @@ export type GetHomePageQuery = (
       ) | null> | null }
       & { __typename?: 'ActionCategoryFilterCardsBlock' }
     ) | (
-      { id?: string | null, blockType: string, field: string, categoryFilter?: (
-        { id: string }
+      { id?: string | null, heading?: string | null, helpText?: string | null, blockType: string, field: string, categoryFilter?: (
+        { id: string, type: (
+          { id: string }
+          & { __typename?: 'CategoryType' }
+        ) }
         & { __typename?: 'Category' }
+      ) | null, groupByCategoryLevel?: (
+        { id: string, type: (
+          { id: string }
+          & { __typename?: 'CategoryType' }
+        ) }
+        & { __typename?: 'CategoryLevel' }
       ) | null }
       & { __typename?: 'ActionListBlock' }
     ) | (
