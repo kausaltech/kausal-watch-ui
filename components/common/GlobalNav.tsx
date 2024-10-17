@@ -512,7 +512,6 @@ const useStickyNavigation = (isStickyEnabled: boolean = false) => {
     isPrimaryNavSticky,
   };
 };
-
 function GlobalNav(props) {
   const t = useTranslations();
   const theme = useTheme();
@@ -538,6 +537,8 @@ function GlobalNav(props) {
     secondaryNavRef,
     isPrimaryNavSticky,
   } = useStickyNavigation(sticky);
+
+  console.log('PROPS', props);
 
   const OrgLogo = () => {
     const logoElement = theme.navLogoVisible ? (

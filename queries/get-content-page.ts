@@ -1,13 +1,14 @@
-import { gql } from '@apollo/client';
-
-import images from '@/common/images';
 import {
   GetContentPageQuery,
   GetContentPageQueryVariables,
 } from '@/common/__generated__/graphql';
-import { STREAM_FIELD_FRAGMENT } from '../fragments/stream-field.fragment';
+import images from '@/common/images';
+import { ALL_ACTION_LIST_FILTERS } from '@/fragments/action-list.fragment';
+import { gql } from '@apollo/client';
+
 import { ATTRIBUTE_WITH_NESTED_TYPE_FRAGMENT } from '../fragments/action-attribute.fragment';
 import { CATEGORY_FRAGMENT } from '../fragments/category.fragment';
+import { STREAM_FIELD_FRAGMENT } from '../fragments/stream-field.fragment';
 import { getClient } from '../utils/apollo-rsc-client';
 
 export const getContentPage = async (plan: string, path: string) =>
@@ -89,7 +90,11 @@ const TEMPLATED_CATEGORY_PAGE_FRAGMENT = gql`
 `;
 
 const GET_CONTENT_PAGE = gql`
-  query GetContentPage($plan: ID!, $path: String!) {
+  query GetContentPage(
+    $plan: ID!
+    $path: String!
+    $onlyWithActions: Boolean = true
+  ) {
     planPage(plan: $plan, path: $path) {
       __typename
       id
@@ -145,6 +150,7 @@ const GET_CONTENT_PAGE = gql`
           id
           identifier
           name
+          kausalPathsNodeUuid
           categoryPage {
             id
             urlPath
@@ -245,6 +251,16 @@ const GET_CONTENT_PAGE = gql`
           ...StreamFieldFragment
         }
       }
+      ... on CategoryTypePage {
+        contentType
+      }
+      ... on ActionListPage {
+        leadContent
+        defaultView
+        headingHierarchyDepth
+        includeRelatedPlans
+        ...ActionListPageFilters
+      }
       lastPublishedAt
     }
   }
@@ -253,6 +269,7 @@ const GET_CONTENT_PAGE = gql`
   ${images.fragments.multiUseImage}
   ${ATTRIBUTE_WITH_NESTED_TYPE_FRAGMENT}
   ${CATEGORY_FRAGMENT}
+  ${ALL_ACTION_LIST_FILTERS}
 
   fragment CategoryParentFragment on Category {
     parent {

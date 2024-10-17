@@ -1,3 +1,5 @@
+import images from 'common/images';
+
 import { gql } from '@apollo/client';
 
 export const CATEGORY_FRAGMENT = gql`
@@ -7,6 +9,7 @@ export const CATEGORY_FRAGMENT = gql`
     name
     leadParagraph
     order
+    kausalPathsNodeUuid
     level {
       id
       name
@@ -36,6 +39,7 @@ export const CATEGORY_FRAGMENT = gql`
       hideCategoryIdentifiers
     }
   }
+  ${images.fragments.multiUseImage}
 `;
 
 export const RECURSIVE_CATEGORY_FRAGMENT = gql`

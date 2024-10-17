@@ -9966,6 +9966,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"chroma-js@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "chroma-js@npm:3.0.0"
+  checksum: b806e78d40124acee2705b764d365c6851722c2e0bbf650fa788e8031d4e8d1e7273e82b2b2421f86289f23a3d83587726ff150a1703a7e52758aea24c50f9a4
+  languageName: node
+  linkType: hard
+
 "chromatic@npm:^11.0.1":
   version: 11.0.1
   resolution: "chromatic@npm:11.0.1"
@@ -16879,6 +16886,7 @@ __metadata:
     babel-plugin-inline-react-svg: ^2.0.1
     babel-plugin-styled-components: ^2.0.7
     bootstrap: 5.2.3
+    chroma-js: ^3.0.0
     chromatic: ^11.0.1
     css-tree: ^2.1.0
     csstype: ^3.1.1
@@ -16920,6 +16928,7 @@ __metadata:
     react: 18.2.0
     react-bootstrap-typeahead: ^6.0.0-alpha.11
     react-color: ^2.19.3
+    react-content-loader: ^7.0.2
     react-copy-to-clipboard: ^5.1.0
     react-dom: 18.2.0
     react-highlight-words: ^0.18.0
@@ -16931,6 +16940,7 @@ __metadata:
     react-medium-image-zoom: ^5.1.1
     react-plotly.js: ^2.6.0
     react-popper: ^2.3.0
+    react-range: ^1.10.0
     react-select: ^5.4.0
     react-sizeme: ^3.0.2
     reactstrap: 9.2.1
@@ -20223,6 +20233,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-content-loader@npm:^7.0.2":
+  version: 7.0.2
+  resolution: "react-content-loader@npm:7.0.2"
+  peerDependencies:
+    react: ">=16.0.0"
+  checksum: 8f2f97cfb9a831cf487b8295fc60e05b153340a7bbaa2aa117c4af4c694ce0759313d8f538677ed231d3eb11d626e0561c416bc94f4ed158426bab5e8fa2ff67
+  languageName: node
+  linkType: hard
+
 "react-copy-to-clipboard@npm:^5.1.0":
   version: 5.1.0
   resolution: "react-copy-to-clipboard@npm:5.1.0"
@@ -20473,6 +20492,16 @@ __metadata:
   version: 2.0.0
   resolution: "react-property@npm:2.0.0"
   checksum: 8a444df30ef0937689c7968dae2501a0ca523777169f450e1f7ef5beeb855d6509bd058bf612f6ed8f459aa35468335d356e50264492e1938586e59fdb988262
+  languageName: node
+  linkType: hard
+
+"react-range@npm:^1.10.0":
+  version: 1.10.0
+  resolution: "react-range@npm:1.10.0"
+  peerDependencies:
+    react: "*"
+    react-dom: "*"
+  checksum: 50dd2a7bdf011d74553a56f700da79d7a6cb9a45b31b719355dfb7331b124c364c59ae873d2f4b52b68aff8bf5869381f94fd63e1080e143c9892d1b95e33723
   languageName: node
   linkType: hard
 
