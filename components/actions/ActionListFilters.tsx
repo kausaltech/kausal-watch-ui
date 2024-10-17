@@ -668,7 +668,6 @@ class CategoryFilter extends DefaultFilter<FilterValue> {
       (cat) => cat.parent,
       (cat) => cat.children
     );
-    console.log('sortedcats', sortedCats);
     this.catById = this.filterByCommonCategory
       ? new Map(sortedCats.map((c) => [c.common.id, c]))
       : new Map(sortedCats.map((c) => [c.id, c]));
