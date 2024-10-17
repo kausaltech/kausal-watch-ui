@@ -379,7 +379,8 @@ const GET_ACTION_DETAILS = gql`
     ... on ActionContactFormBlock {
       heading
       description
-      emailRequired
+      emailSetting
+      feedbackSetting
       fields {
         ... on FormFieldBlock {
           id
@@ -428,7 +429,8 @@ const GET_ACTION_DETAILS = gql`
         ... on ActionContactFormBlock {
           heading
           description
-          emailRequired
+          emailSetting
+          feedbackSetting
           fields {
             ... on FormFieldBlock {
               id

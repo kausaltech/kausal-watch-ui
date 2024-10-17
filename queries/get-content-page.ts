@@ -51,7 +51,8 @@ const TEMPLATED_CATEGORY_PAGE_FRAGMENT = gql`
           id
           heading
           description
-          emailRequired
+          emailSetting
+          feedbackSetting
           fields {
             ... on FormFieldBlock {
               id

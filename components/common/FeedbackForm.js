@@ -42,7 +42,8 @@ const FeedbackForm = ({
   categoryId = null,
   heading,
   description,
-  emailRequired = true,
+  emailSetting = 'required',
+  feedbackSetting = 'required',
   prompt,
   formContext = null,
   additionalFields = [],
@@ -71,8 +72,8 @@ const FeedbackForm = ({
 
     const data = {
       name,
-      email,
-      comment,
+      email: emailSetting !== 'excluded' ? email : undefined,
+      comment: feedbackSetting !== 'excluded' ? comment : undefined,
       additionalFields: JSON.stringify(additionalResponse),
       pageId,
       type: formContext,
@@ -86,7 +87,6 @@ const FeedbackForm = ({
     setSent(true);
     createUserFeedback({ variables: { input: data } });
   };
-
   const renderAdditionalField = (field) => {
     const requiredMessage = ` (${t('required-field')})`;
 
@@ -216,52 +216,70 @@ const FeedbackForm = ({
               control={control}
               defaultValue=""
             />
-            <Controller
-              render={({ field }) => (
-                <TextInput
-                  {...field}
-                  id="email-field"
-                  autoComplete="email"
-                  label={`${t('email')}${
-                    emailRequired ? ` (${t('required-field')})` : ''
-                  }`}
-                  invalid={emailRequired && errors.email?.type === 'required'}
-                  formFeedback={errors.email && t('error-email-format')}
-                />
-              )}
-              name="email"
-              id="email-field"
-              control={control}
-              defaultValue=""
-              rules={{
-                required: emailRequired,
-                pattern: {
-                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                },
-              }}
-            />
+            {emailSetting !== 'excluded' && (
+              <Controller
+                render={({ field }) => (
+                  <TextInput
+                    {...field}
+                    id="email-field"
+                    autoComplete="email"
+                    label={`${t('email')}${
+                      emailSetting === 'required'
+                        ? ` (${t('required-field')})`
+                        : ''
+                    }`}
+                    invalid={
+                      emailSetting === 'required' &&
+                      errors.email?.type === 'required'
+                    }
+                    formFeedback={errors.email && t('error-email-format')}
+                  />
+                )}
+                name="email"
+                id="email-field"
+                control={control}
+                defaultValue=""
+                rules={{
+                  required: emailSetting === 'required',
+                  pattern: {
+                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  },
+                }}
+              />
+            )}
 
             {additionalFields.map(renderAdditionalField)}
 
-            <Controller
-              render={({ field }) => (
-                <TextInput
-                  {...field}
-                  id="comment-field"
-                  label={`${t('feedback')} (${t('required-field')})`}
-                  invalid={errors.comment?.type === 'required'}
-                  type="textarea"
-                  rows="3"
-                  style={{ height: 'auto' }}
-                  formFeedback={errors.comment && t('error-feedback-required')}
-                />
-              )}
-              name="comment"
-              id="comment-field"
-              control={control}
-              rules={{ required: true }}
-              defaultValue=""
-            />
+            {feedbackSetting !== 'excluded' && (
+              <Controller
+                render={({ field }) => (
+                  <TextInput
+                    {...field}
+                    id="comment-field"
+                    label={`${t('feedback')}${
+                      feedbackSetting === 'required'
+                        ? ` (${t('required-field')})`
+                        : ''
+                    }`}
+                    invalid={
+                      feedbackSetting === 'required' &&
+                      errors.comment?.type === 'required'
+                    }
+                    type="textarea"
+                    rows="3"
+                    style={{ height: 'auto' }}
+                    formFeedback={
+                      errors.comment && t('error-feedback-required')
+                    }
+                  />
+                )}
+                name="comment"
+                id="comment-field"
+                control={control}
+                rules={{ required: feedbackSetting === 'required' }}
+                defaultValue=""
+              />
+            )}
             {mutationError && (
               <Alert
                 color="danger"
@@ -297,7 +315,8 @@ FeedbackForm.propTypes = {
   categoryId: PropTypes.string,
   heading: PropTypes.string,
   description: PropTypes.string,
-  emailRequired: PropTypes.bool,
+  emailSetting: PropTypes.oneOf(['required', 'optional', 'excluded']),
+  feedbackSetting: PropTypes.oneOf(['required', 'optional', 'excluded']),
   prompt: PropTypes.string,
   formContext: PropTypes.string,
   additionalFields: PropTypes.arrayOf(PropTypes.object),
