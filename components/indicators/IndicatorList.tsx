@@ -65,11 +65,9 @@ const collectCommonCategories = (indicators) => {
   }));
 };
 
-const includeRelatedPlanIndicators = true;
-
 const getFilterConfig = (categoryType, indicators, commonCategories) => ({
   mainFilters: [
-    ...(includeRelatedPlanIndicators
+    ...(commonCategories
       ? commonCategories.map(({ typeIdentifier, categories, type }) => ({
           __typename: 'CategoryTypeFilterBlock',
           field: 'category',
@@ -291,6 +289,7 @@ interface Filters {
 const filterIndicators = (
   indicators,
   filters: Filters,
+  includeRelatedPlans: boolean,
   categoryIdentifier?: string
 ) => {
   const filterByCategory = (indicator) => {
@@ -336,7 +335,7 @@ const filterIndicators = (
     const commonCategoryResult = filterByCommonCategory(indicator);
     const searchResult = filterBySearch(indicator);
     return (
-      (!includeRelatedPlanIndicators ? categoryResult : commonCategoryResult) &&
+      (!includeRelatedPlans ? categoryResult : commonCategoryResult) &&
       searchResult
     );
   });
@@ -353,12 +352,14 @@ interface Props {
   leadContent: IndicatorListPage['leadContent'];
   displayInsights: IndicatorListPage['displayInsights'];
   displayLevel: IndicatorListPage['displayLevel'];
+  includeRelatedPlans: IndicatorListPage['includeRelatedPlans'];
 }
 
 const IndicatorList = ({
   leadContent,
   displayInsights,
   displayLevel,
+  includeRelatedPlans,
 }: Props) => {
   const plan = usePlan();
   const t = useTranslations();
@@ -369,7 +370,7 @@ const IndicatorList = ({
     {
       variables: {
         plan: plan.identifier,
-        relatedPlanIndicators: includeRelatedPlanIndicators,
+        relatedPlanIndicators: includeRelatedPlans,
       },
     }
   );
@@ -418,9 +419,7 @@ const IndicatorList = ({
       leadContent: generalContent.indicatorListLeadContent,
       displayMunicipality,
       displayNormalizedValues,
-      relatedPlanIndicators: includeRelatedPlanIndicators
-        ? relatedPlanIndicators
-        : [],
+      relatedPlanIndicators: includeRelatedPlans ? relatedPlanIndicators : [],
     };
   };
 
@@ -429,13 +428,13 @@ const IndicatorList = ({
 
   const indicatorListProps = getIndicatorListProps(data);
 
-  const indicators = includeRelatedPlanIndicators
+  const indicators = includeRelatedPlans
     ? indicatorListProps.relatedPlanIndicators
     : indicatorListProps.indicators;
 
   const commonCategories = collectCommonCategories(indicators);
   const hierarchy = processCommonIndicatorHierarchy(
-    includeRelatedPlanIndicators
+    includeRelatedPlans
       ? indicatorListProps.relatedPlanIndicators
       : data?.planIndicators
   );
@@ -450,7 +449,7 @@ const IndicatorList = ({
     ? getFilterConfig(
         categoryType,
         indicators,
-        includeRelatedPlanIndicators ? commonCategories : []
+        includeRelatedPlans ? commonCategories : []
       )
     : {};
 
@@ -467,6 +466,7 @@ const IndicatorList = ({
   const filteredIndicators = filterIndicators(
     indicators,
     filters,
+    includeRelatedPlans,
     categoryType?.identifier
   );
 
@@ -496,7 +496,7 @@ const IndicatorList = ({
             category.type.id === categoryType?.id
           }
           displayLevel={displayLevel}
-          includePlanRelatedIndicators={includeRelatedPlanIndicators}
+          includePlanRelatedIndicators={includeRelatedPlans}
           commonCategories={commonCategories}
         />
       </Container>

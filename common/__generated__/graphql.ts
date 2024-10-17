@@ -2615,6 +2615,7 @@ export type IndicatorListPage = PageInterface & {
   goLiveAt?: Maybe<Scalars['DateTime']>;
   hasUnpublishedChanges: Scalars['Boolean'];
   id?: Maybe<Scalars['ID']>;
+  includeRelatedPlans?: Maybe<Scalars['Boolean']>;
   lastPublishedAt?: Maybe<Scalars['DateTime']>;
   latestRevision?: Maybe<Revision>;
   latestRevisionCreatedAt?: Maybe<Scalars['DateTime']>;
@@ -12226,7 +12227,7 @@ export type GetPlanPageIndicatorListQuery = (
     { id?: string | null, slug: string, title: string, lastPublishedAt?: any | null }
     & { __typename: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'Page' | 'PlanRootPage' | 'PrivacyPolicyPage' | 'StaticPage' }
   ) | (
-    { leadContent?: string | null, displayInsights?: boolean | null, displayLevel?: boolean | null, id?: string | null, slug: string, title: string, lastPublishedAt?: any | null }
+    { leadContent?: string | null, displayInsights?: boolean | null, includeRelatedPlans?: boolean | null, id?: string | null, slug: string, title: string, lastPublishedAt?: any | null }
     & { __typename: 'IndicatorListPage' }
   ) | null }
   & { __typename?: 'Query' }

@@ -29,6 +29,7 @@ export default async function ActionsPage({ params }: Props) {
       leadContent={data.planPage.leadContent}
       displayInsights={data.planPage.displayInsights}
       displayLevel={data.planPage.displayLevel}
+      includeRelatedPlans={data.planPage?.includeRelatedPlans}
     />
   );
 }
