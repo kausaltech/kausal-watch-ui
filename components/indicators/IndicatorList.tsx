@@ -490,6 +490,8 @@ const IndicatorList = ({ leadContent, displayInsights }: Props) => {
           shouldDisplayCategory={(category: Category) =>
             category.type.id === categoryType?.id
           }
+          includePlanRelatedIndicators={includeRelatedPlanIndicators}
+          commonCategories={commonCategories}
         />
       </Container>
     </>
