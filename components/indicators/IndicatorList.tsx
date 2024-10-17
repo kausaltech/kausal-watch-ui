@@ -292,17 +292,12 @@ const filterIndicators = (
   includeRelatedPlans: boolean,
   categoryIdentifier?: string
 ) => {
-  const filterByCategory = (indicator) => {
-    if (
-      !categoryIdentifier ||
-      !filters[getCategoryString(categoryIdentifier)]
-    ) {
-      return true;
-    }
-    return indicator.categories.some(
+  const filterByCategory = (indicator) =>
+    !categoryIdentifier ||
+    !filters[getCategoryString(categoryIdentifier)] ||
+    !!indicator.categories.find(
       ({ type, id }) => filters[getCategoryString(type.identifier)] === id
     );
-  };
 
   const filterByCommonCategory = (indicator) => {
     const activeFilters = Object.entries(filters).filter(
@@ -323,12 +318,9 @@ const filterIndicators = (
     });
   };
 
-  const filterBySearch = (indicator) => {
-    if (!filters['name']) {
-      return true;
-    }
-    return indicator.name.toLowerCase().includes(filters['name'].toLowerCase());
-  };
+  const filterBySearch = (indicator) =>
+    !filters['name'] ||
+    indicator.name.toLowerCase().includes(filters['name'].toLowerCase());
 
   return indicators.filter((indicator) => {
     const categoryResult = filterByCategory(indicator);
@@ -449,7 +441,7 @@ const IndicatorList = ({
     ? getFilterConfig(
         categoryType,
         indicators,
-        includeRelatedPlans ? commonCategories : []
+        includeRelatedPlans ? commonCategories : null
       )
     : {};
 
