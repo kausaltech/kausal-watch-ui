@@ -32,6 +32,7 @@ const getSortOptions = (t: TFunction): SortActionsConfig[] => [
   {
     key: 'STANDARD',
     label: t('actions-sort-default'),
+    sortKey: 'order',
   },
   {
     key: 'IMPACT',
@@ -181,23 +182,26 @@ const CategoryList = (props) => {
     //setLoadedCards(prev => ({ ...prev, [id]: impact }));
   };
 
-  const handleChangeSort = (sortBy: SortActionsBy) => {
-    console.log('sorting', sortBy);
-    const selectedSorter = sortOptions.find((option) => option.key === sortBy);
-    setSortBy(selectedSorter ?? sortOptions[0]);
-    const sortedCategories = [...categoriesData].sort(sortCategories);
-    console.log('sorted', sortedCategories);
+  const handleChangeSort = (sort: SortActionsBy) => {
+    const selectedSorter =
+      sortOptions.find((option) => option.key === sort) ?? sortOptions[0];
+    setSortBy(selectedSorter);
+    const sortedCategories = [...categoriesData].sort((a, b) => {
+      if (selectedSorter.key === 'IMPACT') {
+        const aValue = categoriesPathsData.find(
+          (cat) => cat.id === a.id
+        )?.impact;
+        const bValue = categoriesPathsData.find(
+          (cat) => cat.id === b.id
+        )?.impact;
+        return bValue - aValue;
+      }
+      if (selectedSorter.key === 'STANDARD') {
+        return a[selectedSorter.sortKey] - b[selectedSorter.sortKey];
+      }
+      return 0;
+    });
     setCategoriesData(sortedCategories);
-  };
-
-  const sortCategories = (a, b) => {
-    if (sortBy.key === 'IMPACT') {
-      const aValue = categoriesPathsData.find((cat) => cat.id === a.id)?.impact;
-      const bValue = categoriesPathsData.find((cat) => cat.id === b.id)?.impact;
-      console.log('aValue', aValue, 'bValue', bValue);
-      return aValue - bValue;
-    }
-    return 0;
   };
 
   return (
@@ -213,7 +217,7 @@ const CategoryList = (props) => {
               onChange={(e) =>
                 handleChangeSort(e.target.value as SortActionsBy)
               }
-              value={sortBy.key}
+              defaultValue={sortBy.key}
             >
               {sortOptions.map(
                 (sortOption) =>
