@@ -496,6 +496,8 @@ const IndicatorList = ({
             category.type.id === categoryType?.id
           }
           displayLevel={displayLevel}
+          includePlanRelatedIndicators={includeRelatedPlanIndicators}
+          commonCategories={commonCategories}
         />
       </Container>
     </>

@@ -5725,6 +5725,12 @@ export type IndicatorListQuery = (
         { id: string, identifier: string, order: number, name: string, parent?: (
           { id: string }
           & { __typename?: 'Category' }
+        ) | null, common?: (
+          { type: (
+            { identifier: string, name: string }
+            & { __typename?: 'CommonCategoryType' }
+          ) }
+          & { __typename?: 'CommonCategory' }
         ) | null }
         & { __typename?: 'Category' }
       )> }
@@ -5791,7 +5797,10 @@ export type IndicatorListQuery = (
         { id: string, identifier: string, name: string }
         & { __typename?: 'CategoryType' }
       ), common?: (
-        { id: string, identifier: string, name: string, order: number }
+        { id: string, identifier: string, name: string, order: number, type: (
+          { identifier: string, name: string }
+          & { __typename?: 'CommonCategoryType' }
+        ) }
         & { __typename?: 'CommonCategory' }
       ) | null }
       & { __typename?: 'Category' }
