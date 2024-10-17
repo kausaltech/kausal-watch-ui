@@ -402,6 +402,8 @@ const IndicatorListFiltered = (props) => {
     hierarchy,
     displayNormalizedValues,
     shouldDisplayCategory,
+    includePlanRelatedIndicators,
+    commonCategories,
   } = props;
 
   const locale = useLocale();
@@ -557,7 +559,17 @@ const IndicatorListFiltered = (props) => {
               </IndentableTableHeader>
             );
           }
-          if (someIndicatorsHaveCategories) {
+          if (includePlanRelatedIndicators) {
+            // Use common categories for columns
+            commonCategories.forEach((category) => {
+              headers.push(
+                <IndentableTableHeader key={`hr-${category.typeIdentifier}`}>
+                  {category.type.name}
+                </IndentableTableHeader>
+              );
+            });
+          } else if (someIndicatorsHaveCategories) {
+            // Existing code for regular categories
             headers.push(
               <IndentableTableHeader key="hr-themes">
                 {categoryColumnLabel || t('themes')}
@@ -692,19 +704,41 @@ const IndicatorListFiltered = (props) => {
                           </IndicatorLink>
                         </IndentableTableCell>
                       )}
-                      {someIndicatorsHaveCategories && (
-                        <IndentableTableCell>
-                          {item.categories.map((cat) => {
-                            if (cat && (shouldDisplayCategory?.(cat) ?? true))
-                              return (
-                                <StyledBadge key={cat.id}>
-                                  {cat.name}
-                                </StyledBadge>
-                              );
-                            return false;
-                          })}
-                        </IndentableTableCell>
-                      )}
+                      {includePlanRelatedIndicators
+                        ? commonCategories.map((commonCategory) => (
+                            <IndentableTableCell
+                              key={`cat-${commonCategory.typeIdentifier}`}
+                            >
+                              {item.categories
+                                .filter(
+                                  (cat) =>
+                                    cat.common &&
+                                    cat.common.type.identifier ===
+                                      commonCategory.typeIdentifier
+                                )
+                                .map((cat) => (
+                                  <StyledBadge key={cat.common.id}>
+                                    {cat.common.name}
+                                  </StyledBadge>
+                                ))}
+                            </IndentableTableCell>
+                          ))
+                        : someIndicatorsHaveCategories && (
+                            <IndentableTableCell>
+                              {item.categories.map((cat) => {
+                                if (
+                                  cat &&
+                                  (shouldDisplayCategory?.(cat) ?? true)
+                                )
+                                  return (
+                                    <StyledBadge key={cat.id}>
+                                      {cat.name}
+                                    </StyledBadge>
+                                  );
+                                return false;
+                              })}
+                            </IndentableTableCell>
+                          )}
                       <IndentableTableCell>
                         {item.latestValue && (
                           <IndicatorDate>
@@ -754,6 +788,8 @@ IndicatorListFiltered.propTypes = {
   categoryColumnLabel: PropTypes.string,
   indicators: PropTypes.arrayOf(PropTypes.object).isRequired,
   shouldDisplayCategory: PropTypes.func,
+  includePlanRelatedIndicators: PropTypes.bool,
+  commonCategories: PropTypes.arrayOf(PropTypes.object),
 };
 
 export default IndicatorListFiltered;
