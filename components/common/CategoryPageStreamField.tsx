@@ -128,8 +128,10 @@ export const CategoryPageStreamField = ({
             <ExpandableFeedbackFormBlock
               heading={block.heading || undefined}
               description={block.description || undefined}
-              emailSetting={block.emailSetting}
-              feedbackSetting={block.feedbackSetting}
+              emailVisible={block.emailVisible}
+              emailRequired={block.emailRequired}
+              feedbackVisible={block.feedbackVisible}
+              feedbackRequired={block.feedbackRequired}
               categoryId={page.category?.id || undefined}
               fields={block.fields || undefined}
               id={block.id}

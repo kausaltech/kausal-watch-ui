@@ -42,8 +42,10 @@ const FeedbackForm = ({
   categoryId = null,
   heading,
   description,
-  emailSetting = 'required',
-  feedbackSetting = 'required',
+  emailVisible = true,
+  emailRequired = true,
+  feedbackVisible = true,
+  feedbackRequired = true,
   prompt,
   formContext = null,
   additionalFields = [],
@@ -86,9 +88,7 @@ const FeedbackForm = ({
     );
 
     const isFormEffectivelyEmpty =
-      feedbackSetting !== 'required' &&
-      isCommentEmpty &&
-      areAllAdditionalFieldsEmpty;
+      !feedbackRequired && isCommentEmpty && areAllAdditionalFieldsEmpty;
 
     if (isFormEffectivelyEmpty) {
       setFormEmptyError(true);
@@ -97,8 +97,8 @@ const FeedbackForm = ({
 
     const data = {
       name,
-      email: emailSetting !== 'excluded' ? email : undefined,
-      comment: feedbackSetting !== 'excluded' ? comment : undefined,
+      email: emailVisible ? email : undefined,
+      comment: feedbackVisible ? comment : undefined,
       additionalFields: JSON.stringify(additionalResponse),
       pageId,
       type: formContext,
@@ -113,6 +113,7 @@ const FeedbackForm = ({
     setFormEmptyError(false);
     createUserFeedback({ variables: { input: data } });
   };
+
   const renderAdditionalField = (field) => {
     const requiredMessage = ` (${t('required-field')})`;
 
@@ -242,7 +243,7 @@ const FeedbackForm = ({
               control={control}
               defaultValue=""
             />
-            {emailSetting !== 'excluded' && (
+            {emailVisible && (
               <Controller
                 render={({ field }) => (
                   <TextInput
@@ -250,14 +251,9 @@ const FeedbackForm = ({
                     id="email-field"
                     autoComplete="email"
                     label={`${t('email')}${
-                      emailSetting === 'required'
-                        ? ` (${t('required-field')})`
-                        : ''
+                      emailRequired ? ` (${t('required-field')})` : ''
                     }`}
-                    invalid={
-                      emailSetting === 'required' &&
-                      errors.email?.type === 'required'
-                    }
+                    invalid={emailRequired && errors.email?.type === 'required'}
                     formFeedback={errors.email && t('error-email-format')}
                   />
                 )}
@@ -266,7 +262,7 @@ const FeedbackForm = ({
                 control={control}
                 defaultValue=""
                 rules={{
-                  required: emailSetting === 'required',
+                  required: emailRequired,
                   pattern: {
                     value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                   },
@@ -276,20 +272,17 @@ const FeedbackForm = ({
 
             {additionalFields.map(renderAdditionalField)}
 
-            {feedbackSetting !== 'excluded' && (
+            {feedbackVisible && (
               <Controller
                 render={({ field }) => (
                   <TextInput
                     {...field}
                     id="comment-field"
                     label={`${t('feedback')}${
-                      feedbackSetting === 'required'
-                        ? ` (${t('required-field')})`
-                        : ''
+                      feedbackRequired ? ` (${t('required-field')})` : ''
                     }`}
                     invalid={
-                      feedbackSetting === 'required' &&
-                      errors.comment?.type === 'required'
+                      feedbackRequired && errors.comment?.type === 'required'
                     }
                     type="textarea"
                     rows="3"
@@ -302,7 +295,7 @@ const FeedbackForm = ({
                 name="comment"
                 id="comment-field"
                 control={control}
-                rules={{ required: feedbackSetting === 'required' }}
+                rules={{ required: feedbackRequired }}
                 defaultValue=""
               />
             )}
@@ -351,8 +344,10 @@ FeedbackForm.propTypes = {
   categoryId: PropTypes.string,
   heading: PropTypes.string,
   description: PropTypes.string,
-  emailSetting: PropTypes.oneOf(['required', 'optional', 'excluded']),
-  feedbackSetting: PropTypes.oneOf(['required', 'optional', 'excluded']),
+  emailVisible: PropTypes.bool,
+  emailRequired: PropTypes.bool,
+  feedbackVisible: PropTypes.bool,
+  feedbackRequired: PropTypes.bool,
   prompt: PropTypes.string,
   formContext: PropTypes.string,
   additionalFields: PropTypes.arrayOf(PropTypes.object),
