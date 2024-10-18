@@ -318,8 +318,7 @@ export function getIdentifiersToTest(): string[] {
 
 export function getPageBaseUrlToTest(instanceId: string): string {
   let baseUrl =
-    process.env.TEST_PAGE_BASE_URL ||
-    `https://{instanceId}.watch.staging.kausal.tech`;
+    process.env.TEST_PAGE_BASE_URL || `http://{instanceId}.localhost:3000`;
   baseUrl = baseUrl.replace('{instanceId}', instanceId);
   return baseUrl;
 }

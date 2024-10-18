@@ -97,17 +97,18 @@ const testPlan = (planId: string) =>
     });
 
     test('empty page', async ({ page, ctx }) => {
-      const EmptyPageMenuItem = ctx.getEmptyPageMenuItem();
-      test.skip(!EmptyPageMenuItem, 'No empty pages for plan');
+      const emptyPageMenuItem = ctx.getEmptyPageMenuItem();
+      test.skip(!emptyPageMenuItem, 'No empty pages for plan');
 
-      const items = ctx.getEmptyPageChildrenItems(EmptyPageMenuItem?.page.id);
+      const items = ctx.getEmptyPageChildrenItems(emptyPageMenuItem?.page.id);
       test.skip(
         !items || items.length === 0,
         'No children category or content pages for plan'
       );
       const nav = page.locator('nav#global-navigation-bar');
-      const emptyPageMenuLink = nav.getByRole('link', {
-        name: EmptyPageMenuItem?.page.title,
+      await expect(nav).toBeVisible();
+      const emptyPageMenuLink = nav.getByRole('button', {
+        name: emptyPageMenuItem?.page.title,
         exact: true,
       });
       await emptyPageMenuLink.click();
