@@ -43,6 +43,9 @@ interface Props {
   context?: 'sidebar' | 'default';
   heading?: string;
   description?: string;
+  feedbackVisible?: boolean;
+  feedbackRequired?: boolean;
+  emailVisible?: boolean;
   emailRequired?: boolean;
   fields?: [];
   id: string;
@@ -55,7 +58,10 @@ const ExpandableFeedbackFormBlock = ({
   context = 'default',
   heading,
   description,
-  emailRequired,
+  feedbackVisible = true,
+  feedbackRequired = true,
+  emailVisible = true,
+  emailRequired = true,
   fields,
   id,
   pageId,
@@ -98,6 +104,9 @@ const ExpandableFeedbackFormBlock = ({
           categoryId={isCategory ? categoryId : undefined}
           heading=""
           description=""
+          feedbackVisible={feedbackVisible}
+          feedbackRequired={feedbackRequired}
+          emailVisible={emailVisible}
           emailRequired={emailRequired}
           prompt=""
           formContext={isAction ? 'action' : 'category'}
