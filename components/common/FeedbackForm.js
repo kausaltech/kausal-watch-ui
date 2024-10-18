@@ -58,7 +58,12 @@ const FeedbackForm = ({
 
   const t = useTranslations();
   const [sent, setSent] = useState(false);
-  const onDismiss = () => setSent(false);
+  const [formEmptyError, setFormEmptyError] = useState(false);
+  const onDismiss = () => {
+    setSent(false);
+    setFormEmptyError(false);
+  };
+
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
@@ -69,6 +74,26 @@ const FeedbackForm = ({
 
   const onSubmit = (formData) => {
     const { name, email, comment, ...additionalResponse } = formData;
+
+    const isCommentEmpty = !comment || comment.trim() === '';
+    const areAllAdditionalFieldsEmpty = Object.values(additionalResponse).every(
+      (value) => {
+        if (Array.isArray(value)) {
+          return value.length === 0;
+        }
+        return value === '' || value === null || value === undefined;
+      }
+    );
+
+    const isFormEffectivelyEmpty =
+      feedbackSetting !== 'required' &&
+      isCommentEmpty &&
+      areAllAdditionalFieldsEmpty;
+
+    if (isFormEffectivelyEmpty) {
+      setFormEmptyError(true);
+      return;
+    }
 
     const data = {
       name,
@@ -85,6 +110,7 @@ const FeedbackForm = ({
       ),
     };
     setSent(true);
+    setFormEmptyError(false);
     createUserFeedback({ variables: { input: data } });
   };
   const renderAdditionalField = (field) => {
@@ -290,6 +316,16 @@ const FeedbackForm = ({
               >
                 <h3>{t('feedback-error-header')}</h3>
                 <p>{t('feedback-error-content')}</p>
+              </Alert>
+            )}
+            {formEmptyError && (
+              <Alert
+                color="danger"
+                className="mt-3"
+                isOpen={formEmptyError}
+                toggle={onDismiss}
+              >
+                {t('form-effectively-empty-error')}
               </Alert>
             )}
             <Button type="submit" color="primary">
