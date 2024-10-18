@@ -316,16 +316,16 @@ export function getIdentifiersToTest(): string[] {
     .filter((s) => s);
 }
 
-export function getPageBaseUrlToTest(planId: string): string {
+export function getPageBaseUrlToTest(instanceId: string): string {
   let baseUrl =
     process.env.TEST_PAGE_BASE_URL ||
-    `https://{planId}.watch.staging.kausal.tech`;
-  baseUrl = baseUrl.replace('{planId}', planId);
+    `https://{instanceId}.watch.staging.kausal.tech`;
+  baseUrl = baseUrl.replace('{instanceId}', instanceId);
   return baseUrl;
 }
 
 export function displayConfiguration() {
-  console.log('Base URL: ', process.env.TEST_);
-  console.log('URL for Sunnydale: ', getPageBaseUrlToTest('sunnydale'));
+  console.log('Base URL: ', process.env.TEST_PAGE_BASE_URL);
+  console.log('  URL for Sunnydale: ', getPageBaseUrlToTest('sunnydale'));
   console.log('API base URL: ', API_BASE);
 }
