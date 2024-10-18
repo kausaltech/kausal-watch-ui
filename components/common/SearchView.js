@@ -1,89 +1,29 @@
 import { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
-import { gql } from '@apollo/client';
-import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
-import styled from 'styled-components';
-import { readableColor } from 'polished';
-import {
-  Container,
-  Row,
-  Col,
-  Input,
-  Label,
-  FormGroup,
-  Alert,
-} from 'reactstrap';
-import { Link } from 'common/links';
+
+import { useQuery } from '@apollo/client';
 import { getActionTermContext } from 'common/i18n';
-import TextInput from 'components/common/TextInput';
+import { Link } from 'common/links';
 import Button from 'components/common/Button';
+import TextInput from 'components/common/TextInput';
 import PlanChip from 'components/plans/PlanChip';
 import { usePlan } from 'context/plan';
-import ContentLoader from './ContentLoader';
 import { useTranslations } from 'next-intl';
-import { trackSearch } from '../MatomoAnalytics';
+import { readableColor } from 'polished';
+import PropTypes from 'prop-types';
+import {
+  Alert,
+  Col,
+  Container,
+  FormGroup,
+  Input,
+  Label,
+  Row,
+} from 'reactstrap';
+import styled from 'styled-components';
 
-const SEARCH_QUERY = gql`
-  query SearchQuery(
-    $plan: ID!
-    $query: String!
-    $onlyOtherPlans: Boolean
-    $clientUrl: String
-  ) {
-    search(
-      plan: $plan
-      query: $query
-      includeRelatedPlans: true
-      onlyOtherPlans: $onlyOtherPlans
-    ) {
-      hits {
-        title
-        url(clientUrl: $clientUrl)
-        highlight
-        plan {
-          identifier
-          image {
-            rendition(size: "128x128", crop: true) {
-              src
-            }
-          }
-          name
-          shortName
-          organization {
-            name
-          }
-        }
-        object {
-          __typename
-          ... on Action {
-            identifier
-            primaryOrg {
-              name
-              logo {
-                rendition(size: "128x128", crop: true) {
-                  src
-                }
-              }
-            }
-          }
-          ... on Indicator {
-            id
-          }
-        }
-        page {
-          title
-          ... on CategoryPage {
-            category {
-              level {
-                name
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`;
+import { SEARCH_QUERY } from '@/common/search';
+import { trackSearch } from '../MatomoAnalytics';
+import ContentLoader from './ContentLoader';
 
 const SearchSection = styled.div`
   padding-bottom: ${(props) => props.theme.spaces.s050};

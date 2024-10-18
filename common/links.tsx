@@ -1,11 +1,13 @@
-import React, { ReactElement, PropsWithChildren, ReactNode } from 'react';
-import { default as NextLink, LinkProps } from 'next/link';
-import { getCategoryString } from './categories';
-import { isAbsoluteUrl, stripLocaleAndPlan, stripSlashes } from '@/utils/urls';
-import { usePlan } from '@/context/plan';
-import { PlanContextFragment } from './__generated__/graphql';
-import { ACTIONS_PATH, INDICATORS_PATH } from '@/constants/routes';
+import React, { PropsWithChildren, ReactElement, ReactNode } from 'react';
+import NextLink, { LinkProps } from 'next/link';
+
 import { useLocale } from 'next-intl';
+
+import { ACTIONS_PATH, INDICATORS_PATH } from '@/constants/routes.mjs';
+import { usePlan } from '@/context/plan';
+import { isAbsoluteUrl, stripLocaleAndPlan, stripSlashes } from '@/utils/urls';
+import { PlanContextFragment } from './__generated__/graphql';
+import { getCategoryString } from './categories';
 
 export function usePrependPlanAndLocale(path: string) {
   const plan = usePlan();
@@ -83,7 +85,7 @@ export const replaceHashWithoutScrolling = (hash) =>
 export function IndicatorLink({
   id,
   ...other
-}: { id: string | number; children: ReactNode } & LinkProps) {
+}: { id: string | number; children: ReactNode } & Omit<LinkProps, 'href'>) {
   const href = usePrependPlanAndLocale(getIndicatorLinkProps(id).href);
 
   return <NextLink passHref {...other} href={href} legacyBehavior />;
