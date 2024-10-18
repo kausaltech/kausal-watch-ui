@@ -1,20 +1,21 @@
-import { ApolloClient, ApolloLink, InMemoryCache, from } from '@apollo/client';
-import { setContext } from '@apollo/client/link/context';
-import { registerApolloClient } from '@apollo/experimental-nextjs-app-support/rsc';
-import possibleTypes from '@/common/__generated__/possible_types.json';
+import { cookies, headers as getHeaders } from 'next/headers';
 
-import { cookies, headers as getHeaders, headers } from 'next/headers';
+import { ApolloClient, from, InMemoryCache } from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
+import { registerApolloClient } from '@apollo/experimental-nextjs-app-support';
+
+import possibleTypes from '@/common/__generated__/possible_types.json';
+import { getWildcardDomains } from '@/common/environment';
+import { auth } from '@/config/auth';
+import { SELECTED_WORKFLOW_COOKIE_KEY } from '@/constants/workflow';
 import {
   errorLink,
+  getHttpLink,
+  headersMiddleware,
   localeMiddleware,
   operationEnd,
   operationStart,
-  getHttpLink,
-  headersMiddleware,
 } from './apollo.utils';
-import { SELECTED_WORKFLOW_COOKIE_KEY } from '@/constants/workflow';
-import { auth } from '@/config/auth';
-import { wildcardDomains } from '@/common/environment';
 
 const authMiddleware = setContext(
   async (_, { headers: initialHeaders = {} }) => {
@@ -47,7 +48,7 @@ export const { getClient } = registerApolloClient(() => {
       locale,
       planDomain: domain,
       planIdentifier: plan,
-      wildcardDomains,
+      wildcardDomains: getWildcardDomains(),
       selectedWorkflow: versionCookie?.value,
     },
     connectToDevTools: false,

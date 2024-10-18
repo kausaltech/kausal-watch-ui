@@ -3,26 +3,29 @@
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
 import * as Sentry from '@sentry/nextjs';
-import { deploymentType, gqlUrl, sentryDsn } from './common/environment';
+
+import { SENTRY_TUNNEL_PUBLIC_PATH } from './constants/routes.mjs';
 
 Sentry.init({
-  environment: deploymentType,
-  dsn: sentryDsn,
+  environment: process.env.DEPLOYMENT_TYPE || 'development',
+  dsn: process.env.SENTRY_DSN,
+  tunnel: SENTRY_TUNNEL_PUBLIC_PATH,
   ignoreErrors: ['NEXT_NOT_FOUND'],
   // Adjust this value in production, or use tracesSampler for greater control
-  tracesSampleRate: 0.1,
+  tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1.0,
   // Setting this option to true will print useful information to the console while you're setting up Sentry.
-  debug: false,
+  debug: process.env.SENTRY_DEBUG === '1',
   replaysOnErrorSampleRate: 1.0,
   // You may want this to be 100% while in development and sample at a lower rate in production
-  replaysSessionSampleRate: 0,
+  replaysSessionSampleRate: process.env.SENTRY_DEBUG === '1' ? 1.0 : 0.0,
   // You can remove this option if you're not planning to use the Sentry Session Replay feature:
   integrations: [
     Sentry.replayIntegration({
       maskAllText: false,
       // Additional Replay configuration goes in here, for example:
       blockAllMedia: false,
-      networkDetailAllowUrls: [gqlUrl],
+      // FIXME networkDetailAllowUrls: [env.getRuntimeConfig().gqlUrl],
     }),
+    //Sentry.feedbackIntegration()
   ],
 });

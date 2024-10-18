@@ -1,23 +1,23 @@
 'use client';
 
-import { useLocale } from 'next-intl';
 import { ApolloLink, useApolloClient } from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
 import {
+  ApolloClient,
   ApolloNextAppProvider,
-  NextSSRInMemoryCache,
-  NextSSRApolloClient,
+  InMemoryCache,
   SSRMultipartLink,
-} from '@apollo/experimental-nextjs-app-support/ssr';
+} from '@apollo/experimental-nextjs-app-support';
+import { useSession } from 'next-auth/react';
+import { useLocale } from 'next-intl';
 
+import { getRuntimeConfig, isServer } from '@/common/environment';
 import {
   errorLink,
-  localeMiddleware,
   getHttpLink,
   headersMiddleware,
+  localeMiddleware,
 } from '../../utils/apollo.utils';
-import { isServer } from '@/common/environment';
-import { setContext } from '@apollo/client/link/context';
-import { useSession } from 'next-auth/react';
 
 const authMiddleware = setContext(
   (_, { sessionToken, headers: initialHeaders = {} }) => {
@@ -35,13 +35,13 @@ function makeClient(
   sessionToken?: string,
   wildcardDomains?: string[]
 ) {
-  return new NextSSRApolloClient({
+  return new ApolloClient({
     defaultContext: {
       locale: initialLocale,
       sessionToken,
       wildcardDomains,
     },
-    cache: new NextSSRInMemoryCache(),
+    cache: new InMemoryCache(),
     link: ApolloLink.from([
       errorLink,
       localeMiddleware,
@@ -75,17 +75,13 @@ function UpdateLocale({ children }: React.PropsWithChildren) {
 
 type Props = {
   initialLocale: string;
-  wildcardDomains: string[];
 } & React.PropsWithChildren;
 
-export function ApolloWrapper({
-  initialLocale,
-  wildcardDomains,
-  children,
-}: Props) {
+export function ApolloWrapper({ initialLocale, children }: Props) {
   const session = useSession();
   const token =
     session.status === 'authenticated' ? session.data.idToken : undefined;
+  const wildcardDomains = getRuntimeConfig().wildcardDomains;
 
   return (
     <ApolloNextAppProvider

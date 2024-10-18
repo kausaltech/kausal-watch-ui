@@ -1,17 +1,19 @@
-import { ReactNode } from 'react';
-import { NextIntlClientProvider, useMessages } from 'next-intl';
 import 'react-medium-image-zoom/dist/styles.css';
-import { StyledComponentsRegistry } from '@/styles/StyledComponentsRegistry';
-import { ApolloWrapper } from '@/components/providers/ApolloWrapper';
-import ThemeProvider from '@/components/providers/ThemeProvider';
-import defaultTheme from '@/public/static/themes/default/theme.json';
-import { DayjsLocaleProvider } from '@/common/dayjs';
 import '@/styles/default/main.scss';
-import { AuthProvider } from '@/components/providers/AuthProvider';
-import { auth } from '@/config/auth';
+
+import { ReactNode } from 'react';
 import Script from 'next/script';
-import { wildcardDomains } from '@/common/environment';
+
+import { NextIntlClientProvider, useMessages } from 'next-intl';
 import { PublicEnvScript } from 'next-runtime-env';
+
+import { DayjsLocaleProvider } from '@/common/dayjs';
+import { ApolloWrapper } from '@/components/providers/ApolloWrapper';
+import { AuthProvider } from '@/components/providers/AuthProvider';
+import ThemeProvider from '@/components/providers/ThemeProvider';
+import { auth } from '@/config/auth';
+import defaultTheme from '@/public/static/themes/default/theme.json';
+import { StyledComponentsRegistry } from '@/styles/StyledComponentsRegistry';
 
 type Props = {
   params: { lang: string };
@@ -44,10 +46,7 @@ export default function LangLayout({ params, children }: Props) {
             <StyledComponentsRegistry>
               <DayjsLocaleProvider locale={params.lang}>
                 <AsyncAuthProvider>
-                  <ApolloWrapper
-                    initialLocale={params.lang}
-                    wildcardDomains={wildcardDomains}
-                  >
+                  <ApolloWrapper initialLocale={params.lang}>
                     {children}
                   </ApolloWrapper>
                 </AsyncAuthProvider>

@@ -15,3 +15,9 @@ export const STATIC_ROUTES = [
 ];
 
 export const API_PROXY_PATH = '/api/graphql';
+
+export const SENTRY_TUNNEL_PUBLIC_PATH = '/sdk-events';
+export const API_SENTRY_TUNNEL_PATH = '/api/sentry-event';
+
+export const HEALTH_CHECK_ALIAS_PATH = '/_health';
+export const API_HEALTH_CHECK_PATH = '/api/health';

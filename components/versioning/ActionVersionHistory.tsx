@@ -1,11 +1,12 @@
-import React, { useState, useContext } from 'react';
-import styled from 'styled-components';
-import { Collapse, Button } from 'reactstrap';
+import React, { useState } from 'react';
 
 import { ActionLink } from 'common/links';
 import Icon from 'components/common/Icon';
-import { deploymentType } from '@/common/environment';
 import { useTranslations } from 'next-intl';
+import { Button, Collapse } from 'reactstrap';
+import styled from 'styled-components';
+
+import { isProductionDeployment } from '@/common/environment';
 import { ActionContentAction } from '../actions/ActionContent';
 
 const VersionHistory = styled.div`
@@ -64,7 +65,7 @@ const ActionVersionHistory = ({ action }: Props) => {
   const t = useTranslations();
   const [isOpen, setIsOpen] = useState(action.supersededBy ? true : false);
   const toggle = () => setIsOpen(!isOpen);
-  const isProduction = deploymentType === 'production';
+  const isProduction = isProductionDeployment();
 
   const versions: ActionVersions = [];
   const supersededActions = !isProduction

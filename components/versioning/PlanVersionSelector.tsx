@@ -1,14 +1,16 @@
-import React, { useContext } from 'react';
-import styled from 'styled-components';
-import {
-  UncontrolledDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-} from 'reactstrap';
+import React from 'react';
+
 import Icon from 'components/common/Icon';
 import { useTranslations } from 'next-intl';
-import { deploymentType } from '@/common/environment';
+import {
+  DropdownItem,
+  DropdownMenu,
+  DropdownToggle,
+  UncontrolledDropdown,
+} from 'reactstrap';
+import styled from 'styled-components';
+
+import { isProductionDeployment } from '@/common/environment';
 
 const VersionSelect = styled.div`
   display: flex;
@@ -88,7 +90,7 @@ const StyledDropdownToggle = styled(DropdownToggle)<{ islatest?: string }>`
 const PlanVersionSelector = (props) => {
   const { plan } = props;
   const t = useTranslations();
-  const isProduction = deploymentType === 'production';
+  const isProduction = isProductionDeployment();
 
   const supersededVersions = !isProduction
     ? plan.supersededPlans

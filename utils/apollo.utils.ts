@@ -1,14 +1,10 @@
 import { ApolloLink, HttpLink, Operation } from '@apollo/client';
-import {
-  gqlUrl,
-  isLocal,
-  isServer,
-  logGraphqlQueries,
-} from '@/common/environment';
-import { API_PROXY_PATH } from '@/constants/routes';
 import { onError } from '@apollo/client/link/error';
 import { captureException } from '@sentry/nextjs';
+
+import { getGqlUrl, isServer, logGraphqlQueries } from '@/common/environment';
 import { getLogger } from '@/common/log';
+import { API_PROXY_PATH } from '@/constants/routes.mjs';
 
 const logger = getLogger('graphql');
 
@@ -123,7 +119,7 @@ function fetchWithLogging(
  */
 export const getHttpLink = () =>
   new HttpLink({
-    uri: !isServer ? API_PROXY_PATH : gqlUrl,
+    uri: !isServer ? API_PROXY_PATH : getGqlUrl(),
     credentials: 'same-origin',
     fetchOptions: {
       mode: 'same-origin',

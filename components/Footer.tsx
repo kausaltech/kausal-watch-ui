@@ -1,16 +1,18 @@
 'use client';
 
 import React from 'react';
-import { useTheme } from 'styled-components';
+import { usePathname } from 'next/navigation';
+
 import { usePlan } from 'context/plan';
+import { useTranslations } from 'next-intl';
+import { useTheme } from 'styled-components';
+
+import { PlanContextFragment } from '@/common/__generated__/graphql';
+import { getDeploymentType } from '@/common/environment';
+import MonsidoAccessibility from '@/components/MonsidoAccessibility';
+import { getMetaTitles } from '@/utils/metadata';
 import ApplicationStateBanner from './common/ApplicationStateBanner';
 import SiteFooter, { UtilityLink } from './common/SiteFooter';
-import { deploymentType } from '@/common/environment';
-import { useTranslations } from 'next-intl';
-import { usePathname } from 'next/navigation';
-import { PlanContextFragment } from '@/common/__generated__/graphql';
-import { getMetaTitles } from '@/utils/metadata';
-import MonsidoAccessibility from '@/components/MonsidoAccessibility';
 
 type NavItem = NonNullable<PlanContextFragment['footer']>['items'][0];
 
@@ -136,9 +138,7 @@ function Footer() {
       icon: 'lock',
     });
   }
-
   const monsidoToken = theme.settings?.monsidoToken;
-
   return (
     <>
       <SiteFooter
@@ -155,7 +155,7 @@ function Footer() {
         footerStatement={footerStatement}
         ownerLinks={ownerLinks}
       />
-      <ApplicationStateBanner deploymentType={deploymentType} />
+      <ApplicationStateBanner deploymentType={getDeploymentType()} />
       {monsidoToken && <MonsidoAccessibility token={monsidoToken} />}
     </>
   );

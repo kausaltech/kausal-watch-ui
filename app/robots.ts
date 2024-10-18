@@ -1,17 +1,17 @@
 import { MetadataRoute } from 'next';
-import { deploymentType } from '@/common/environment';
+
+import { isProductionDeployment } from '@/common/environment';
 
 export default function robots(): MetadataRoute.Robots {
   return {
-    rules:
-      deploymentType === 'production'
-        ? {
-            userAgent: '*',
-            allow: '/',
-          }
-        : {
-            userAgent: '*',
-            disallow: '/',
-          },
+    rules: isProductionDeployment()
+      ? {
+          userAgent: '*',
+          allow: '/',
+        }
+      : {
+          userAgent: '*',
+          disallow: '/',
+        },
   };
 }

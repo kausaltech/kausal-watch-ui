@@ -22,7 +22,7 @@ export const {
     if (!url) {
       console.error('Invalid request url');
     }
-    return { providers: [] };
+    return { providers: [], trustHost: true };
   }
 
   return {

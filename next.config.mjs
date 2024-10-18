@@ -1,4 +1,17 @@
 /* eslint-disable no-restricted-syntax, @typescript-eslint/no-var-requires */
+import { createRequire } from 'node:module';
+import * as url from 'node:url';
+
+import {
+  API_HEALTH_CHECK_PATH,
+  API_SENTRY_TUNNEL_PATH,
+  HEALTH_CHECK_ALIAS_PATH,
+  SENTRY_TUNNEL_PUBLIC_PATH,
+} from './constants/routes.mjs';
+
+const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
+const require = createRequire(import.meta.url);
+
 const { secrets } = require('docker-secret');
 const { mkdir } = require('node:fs/promises');
 const lockfile = require('proper-lockfile');
@@ -18,6 +31,8 @@ const isProd = process.env.NODE_ENV === 'production';
 
 const sentryAuthToken =
   secrets.SENTRY_AUTH_TOKEN || process.env.SENTRY_AUTH_TOKEN;
+
+const sentryDebug = process.env.SENTRY_DEBUG === '1';
 
 async function initializeThemes() {
   const staticPath = path.join(__dirname, 'public', 'static');
@@ -88,7 +103,8 @@ let config = {
   },
   experimental: {
     instrumentationHook: true,
-    serverComponentsExternalPackages: ['@opentelemetry/instrumentation'],
+    // FIXME: Enable later
+    // serverComponentsExternalPackages: ['@opentelemetry/instrumentation'],
     outputFileTracingIncludes: standaloneBuild
       ? {
           '/': ['./node_modules/@kausal/themes*/**'],
@@ -100,53 +116,46 @@ let config = {
     // If a fixed Build ID was not provided, fall back to the default implementation.
     return null;
   },
-  webpack(config, { webpack }) {
+  webpack(config, { isServer, webpack }) {
+    const defines = {};
     if (process.env.NODE_ENV !== 'development') {
       // Disable Apollo Client development mode
-      config.plugins.push(
-        new webpack.DefinePlugin({
-          'globalThis.__DEV__': false,
-        })
-      );
+      defines['globalThis.__DEV__'] = false
     }
 
+    // Due to how the Sentry is pulled into the bundle on the browser side,
+    // we will need to do some nasty runtime search-and-replace to use the
+    // right value.
+    if (!isServer) {
+        const sentryDsnPlaceholder = process.env.SENTRY_DSN_PLACEHOLDER;
+        const sentryDsn = process.env.SENTRY_DSN;
+        defines['process.env.SENTRY_DSN'] = JSON.stringify(sentryDsnPlaceholder ?? sentryDsn ?? null);
+        defines['process.env.SENTRY_DEBUG'] = JSON.stringify(sentryDebug);
+        defines['process.env.DEPLOYMENT_TYPE'] = JSON.stringify(process.env.DEPLOYMENT_TYPE ?? process.env.NEXT_PUBLIC_DEPLOYMENT_TYPE ?? null);
+    }
+    config.plugins.push(new webpack.DefinePlugin(defines));
     return config;
   },
 };
 
-module.exports = withNextIntl(config);
-
-if (sentryAuthToken) {
+function wrapWithSentry(configIn) {
   const { withSentryConfig } = require('@sentry/nextjs');
+  const uploadEnabled = new Boolean(sentryAuthToken);
 
   /**
-   * @type {import('@sentry/nextjs').SentryWebpackPluginOptions}
-   */
-  const sentryWebpackOpts = {
-    // For all available options, see:
-    // https://github.com/getsentry/sentry-webpack-plugin#options
-    authToken: sentryAuthToken,
-    // Suppresses source map uploading logs during build
-    silent: false,
-    telemetry: false,
-    errorHandler: (err) => {
-      console.error(err);
-    },
-  };
-
-  /**
-   * @type {import('@sentry/nextjs/types/config/types').UserSentryOptions}
+   * @type {import('@sentry/nextjs').SentryBuildOptions}
    */
   const sentryConfig = {
     // For all available options, see:
     // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
+    authToken: sentryAuthToken,
+    silent: false,
+    errorHandler: (err) => {
+      console.error(err);
+    },
 
     // Upload a larger set of source maps for prettier stack traces (increases build time)
     widenClientFileUpload: true,
-    widenServerFileUpload: true,
-
-    // Transpiles SDK to be compatible with IE11 (increases bundle size)
-    transpileClientSDK: false,
 
     // Routes browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers (increases server load)
     // N.B. tunnelRoute is not supported in self-hosted Sentry setups.
@@ -154,20 +163,35 @@ if (sentryAuthToken) {
 
     // Hides source maps from generated client bundles
     hideSourceMaps: false,
-
+    bundleSizeOptimizations: {
+      excludeDebugStatements: !sentryDebug,
+      excludeReplayIframe: true,
+    },
+    reactComponentAnnotation: {
+      enabled: true,
+    },
+    telemetry: false,
     // Automatically tree-shake Sentry logger statements to reduce bundle size
-    disableLogger: true,
-
+    disableLogger: !sentryDebug,
+    excludeServerRoutes: [API_HEALTH_CHECK_PATH, HEALTH_CHECK_ALIAS_PATH, API_SENTRY_TUNNEL_PATH, SENTRY_TUNNEL_PUBLIC_PATH],
     automaticVercelMonitors: false,
+    sourcemaps: {
+      disable: !uploadEnabled,
+    },
+    release: {
+      create: uploadEnabled,
+    },
   };
   // Injected content via Sentry wizard below
-  module.exports = withSentryConfig(
-    module.exports,
-    sentryWebpackOpts,
+  return withSentryConfig(
+    configIn,
     sentryConfig
   );
 }
 
+config = wrapWithSentry(withNextIntl(config));
 if (process.env.ANALYZE === 'true') {
-  module.exports = withBundleAnalyzer(module.exports);
+  config = withBundleAnalyzer(config);
 }
+
+export default config;

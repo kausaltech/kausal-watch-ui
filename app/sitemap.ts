@@ -1,26 +1,27 @@
-import { MetadataRoute } from 'next';
 import { headers } from 'next/headers';
-import { ApolloClient, InMemoryCache, from, gql } from '@apollo/client';
 
-import possibleTypes from '@/common/__generated__/possible_types.json';
-import { GET_PLANS_BY_HOSTNAME } from '@/queries/get-plans';
+import { ApolloClient, from, gql, InMemoryCache } from '@apollo/client';
+import { MetadataRoute } from 'next';
+
 import {
   GetPlansByHostnameQuery,
   GetPlansByHostnameQueryVariables,
   GetSitemapQuery,
   GetSitemapQueryVariables,
 } from '@/common/__generated__/graphql';
+import possibleTypes from '@/common/__generated__/possible_types.json';
 import {
   ACTIONS_PATH,
   INDICATORS_PATH,
   STATIC_ROUTES,
-} from '@/constants/routes';
+} from '@/constants/routes.mjs';
+import { GET_PLANS_BY_HOSTNAME } from '@/queries/get-plans';
+import { tryRequest } from '@/utils/api.utils';
 import {
   getHttpLink,
   operationEnd,
   operationStart,
 } from '@/utils/apollo.utils';
-import { tryRequest } from '@/utils/api.utils';
 
 const apolloClient = new ApolloClient({
   cache: new InMemoryCache({

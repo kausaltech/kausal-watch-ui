@@ -19,25 +19,39 @@ type RuntimeConfig = {
   runtimeEnv: 'nodejs' | 'edge';
 };
 
+// These are not dependent on environment variables.
 export const isServer = typeof window === 'undefined';
-
-export const deploymentType: DeploymentType =
-  (env('NEXT_PUBLIC_DEPLOYMENT_TYPE') as DeploymentType | undefined) ||
-  'development';
-
 export const isLocal = process.env.NODE_ENV === 'development';
 
-export const apiUrl =
-  env('NEXT_PUBLIC_API_URL') || 'https://api.watch.kausal.tech/v1';
+export function getDeploymentType(): DeploymentType {
+  return (
+    (env('NEXT_PUBLIC_DEPLOYMENT_TYPE') as DeploymentType | undefined) ||
+    'development'
+  );
+}
 
-const WILDCARD_DOMAINS = env('NEXT_PUBLIC_WILDCARD_DOMAINS');
-export const wildcardDomains = WILDCARD_DOMAINS
-  ? WILDCARD_DOMAINS.split(',').map((s) => s.toLowerCase())
-  : isLocal
-  ? ['localhost']
-  : [];
+export function isProductionDeployment() {
+  return getDeploymentType() === 'production';
+}
 
-export const gqlUrl = `${apiUrl}/graphql/`;
+export function getApiUrl() {
+  return env('NEXT_PUBLIC_API_URL') || 'https://api.watch.kausal.tech/v1';
+}
+
+export const apiUrl = getApiUrl();
+
+export function getWildcardDomains(): string[] {
+  const domains = env('NEXT_PUBLIC_WILDCARD_DOMAINS');
+
+  // In dev mode, default to `localhost` being a wildcard domain.
+  if (!domains) return isLocal ? ['localhost'] : [];
+
+  return domains.split(',').map((s) => s.toLowerCase());
+}
+
+export function getGqlUrl() {
+  return `${getApiUrl()}/graphql/`;
+}
 
 export const authIssuer = env('NEXT_PUBLIC_AUTH_ISSUER');
 
@@ -49,11 +63,11 @@ export const logGraphqlQueries =
 export function getRuntimeConfig() {
   const config: RuntimeConfig = {
     isServer,
-    deploymentType,
     isLocal,
-    apiUrl,
-    gqlUrl,
-    wildcardDomains,
+    deploymentType: getDeploymentType(),
+    apiUrl: getApiUrl(),
+    gqlUrl: getGqlUrl(),
+    wildcardDomains: getWildcardDomains(),
     authIssuer,
     logGraphqlQueries,
     runtimeEnv: process.env.NEXT_RUNTIME as RuntimeConfig['runtimeEnv'],

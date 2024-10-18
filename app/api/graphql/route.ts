@@ -1,6 +1,8 @@
 import { headers } from 'next/headers';
+
 import { NextAuthRequest } from 'next-auth/lib';
-import { gqlUrl } from '@/common/environment';
+
+import { getGqlUrl } from '@/common/environment';
 
 export const dynamic = 'force-dynamic';
 
@@ -29,7 +31,7 @@ export const POST = async (request: NextAuthRequest) => {
     }
   });
 
-  const response = await fetch(gqlUrl, {
+  const response = await fetch(getGqlUrl(), {
     method: 'POST',
     headers: fetchHeaders,
     body: JSON.stringify(requestData),

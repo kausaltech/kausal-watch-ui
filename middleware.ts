@@ -1,21 +1,33 @@
-import createIntlMiddleware from 'next-intl/middleware';
 import { NextRequest, NextResponse } from 'next/server';
-import { ApolloClient, InMemoryCache, from } from '@apollo/client';
 
-import possibleTypes from './common/__generated__/possible_types.json';
-import { GET_PLANS_BY_HOSTNAME } from './queries/get-plans';
+import { ApolloClient, from, InMemoryCache } from '@apollo/client';
+import { loadDevMessages, loadErrorMessages } from '@apollo/client/dev';
+import { setContext } from '@apollo/client/link/context';
+import { captureException } from '@sentry/nextjs';
+import createIntlMiddleware from 'next-intl/middleware';
+
+import {
+  API_HEALTH_CHECK_PATH,
+  API_SENTRY_TUNNEL_PATH,
+  HEALTH_CHECK_ALIAS_PATH,
+  SENTRY_TUNNEL_PUBLIC_PATH,
+  UNPUBLISHED_PATH,
+} from '@/constants/routes.mjs';
 import {
   GetPlansByHostnameQuery,
   GetPlansByHostnameQueryVariables,
 } from './common/__generated__/graphql';
-import { stripLocaleAndPlan } from './utils/urls';
-import { UNPUBLISHED_PATH } from './constants/routes';
+import possibleTypes from './common/__generated__/possible_types.json';
+import { getClientIP } from './common/client-ip';
+import { getWildcardDomains } from './common/environment';
+import { getLogger } from './common/log';
+import { GET_PLANS_BY_HOSTNAME } from './queries/get-plans';
+import { tryRequest } from './utils/api.utils';
 import {
   getHttpLink,
   operationEnd,
   operationStart,
 } from './utils/apollo.utils';
-import { captureException } from '@sentry/nextjs';
 import {
   convertPathnameFromInvalidLocaleCasing,
   convertPathnameFromLegacy,
@@ -27,11 +39,7 @@ import {
   isRestrictedPlan,
   rewriteUrl,
 } from './utils/middleware.utils';
-import { tryRequest } from './utils/api.utils';
-import { setContext } from '@apollo/client/link/context';
-import { wildcardDomains } from './common/environment';
-import { loadErrorMessages, loadDevMessages } from '@apollo/client/dev';
-import { getLogger } from './common/log';
+import { stripLocaleAndPlan } from './utils/urls';
 
 if (process.env.NODE_ENV !== 'production') {
   loadDevMessages();
@@ -40,10 +48,9 @@ if (process.env.NODE_ENV !== 'production') {
 
 const logger = getLogger('middleware');
 
-logger.info(`Wildcard domains: ${wildcardDomains.join(', ')}`);
-
 const httpHeadersMiddleware = setContext(
   async (_, { headers: initialHeaders = {} }) => {
+    const wildcardDomains = getWildcardDomains();
     const headers = {
       ...initialHeaders,
     };
@@ -119,14 +126,24 @@ export async function middleware(request: NextRequest) {
   const hostname = hostUrl.hostname;
   const nextUrl = request.nextUrl;
 
-  if (pathname === '/_health') {
-    url.pathname = '/api/health';
+  if (pathname === HEALTH_CHECK_ALIAS_PATH) {
+    url.pathname = API_HEALTH_CHECK_PATH;
+    return NextResponse.rewrite(url);
+  }
 
+  // Proxying for Sentry events
+  if (pathname === SENTRY_TUNNEL_PUBLIC_PATH) {
+    url.pathname = API_SENTRY_TUNNEL_PATH;
     return NextResponse.rewrite(url);
   }
 
   logger.info(
-    { method: request.method, path: nextUrl.pathname, host },
+    {
+      method: request.method,
+      path: nextUrl.pathname,
+      host,
+      remote_ip: getClientIP(request),
+    },
     'middleware request'
   );
 
@@ -170,7 +187,7 @@ export async function middleware(request: NextRequest) {
       );
     } else {
       logger.warn(
-        { hostname, 'wildcard-domains': wildcardDomains },
+        { hostname, 'wildcard-domains': getWildcardDomains() },
         'No plans found for hostname'
       );
     }
