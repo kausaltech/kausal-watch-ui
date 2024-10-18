@@ -8,12 +8,13 @@
   },
   "author": "",
   "license": "AGPL-3.0-or-later",
+  "type": "module",
   "dependencies": {
-    "@apollo/client": "^3.10.4",
-    "@axe-core/playwright": "^4.9.1",
-    "@playwright/test": "^1.44.1",
+    "@apollo/client": "^3.11.8",
+    "@axe-core/playwright": "^4.10.0",
+    "@playwright/test": "^1.48.1",
     "dotenv": "^16.4.5",
-    "playwright": "^1.44.1",
+    "playwright": "^1.48.1",
     "react": "^18.3.1"
   },
   "importSorter": {

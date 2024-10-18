@@ -1,10 +1,10 @@
-import { Page, test as base, expect } from '@playwright/test';
+import { expect, Page, test as base } from '@playwright/test';
 
 import {
-  PlanContext,
   displayConfiguration,
   getIdentifiersToTest,
-} from '../context';
+  PlanContext,
+} from '../common/context';
 
 const test = base.extend<{ ctx: PlanContext }>({});
 

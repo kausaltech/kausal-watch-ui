@@ -1,12 +1,15 @@
-import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
-import { Page, expect } from '@playwright/test';
+import * as apollo from '@apollo/client';
+import AxeBuilder from '@axe-core/playwright';
+import { expect, Page } from '@playwright/test';
+
 import type {
   PlaywrightGetPlanBasicsQuery,
   PlaywrightGetPlanBasicsQueryVariables,
   PlaywrightGetPlanInfoQuery,
   PlaywrightGetPlanInfoQueryVariables,
-} from './__generated__/graphql';
-import AxeBuilder from '@axe-core/playwright';
+} from '../__generated__/graphql';
+
+const { ApolloClient, InMemoryCache, gql } = apollo.default as typeof apollo;
 
 const API_BASE =
   process.env.NEXT_PUBLIC_API_URL || 'https://api.watch.kausal.tech/v1';
