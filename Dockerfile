@@ -99,6 +99,7 @@ COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 
 COPY ./docker/start-server.sh /entrypoint.sh
 COPY ./docker/Caddyfile /etc/caddy/
+COPY ./docker/dokku-app.json ./app.json
 
 ARG BUILD_ID
 ARG SENTRY_RELEASE
