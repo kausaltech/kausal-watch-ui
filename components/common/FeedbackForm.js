@@ -83,7 +83,13 @@ const FeedbackForm = ({
         if (Array.isArray(value)) {
           return value.length === 0;
         }
-        return value === '' || value === null || value === undefined;
+        if (value == null) {
+          return true;
+        }
+        if (typeof value === 'string') {
+          return value.trim() === '';
+        }
+        return false;
       }
     );
 
