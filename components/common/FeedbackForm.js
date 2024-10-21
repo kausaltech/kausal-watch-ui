@@ -42,7 +42,10 @@ const FeedbackForm = ({
   categoryId = null,
   heading,
   description,
+  emailVisible = true,
   emailRequired = true,
+  feedbackVisible = true,
+  feedbackRequired = true,
   prompt,
   formContext = null,
   additionalFields = [],
@@ -57,7 +60,12 @@ const FeedbackForm = ({
 
   const t = useTranslations();
   const [sent, setSent] = useState(false);
-  const onDismiss = () => setSent(false);
+  const [formEmptyError, setFormEmptyError] = useState(false);
+  const onDismiss = () => {
+    setSent(false);
+    setFormEmptyError(false);
+  };
+
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
@@ -69,10 +77,34 @@ const FeedbackForm = ({
   const onSubmit = (formData) => {
     const { name, email, comment, ...additionalResponse } = formData;
 
+    const isCommentEmpty = !comment || comment.trim() === '';
+    const areAllAdditionalFieldsEmpty = Object.values(additionalResponse).every(
+      (value) => {
+        if (Array.isArray(value)) {
+          return value.length === 0;
+        }
+        if (value == null) {
+          return true;
+        }
+        if (typeof value === 'string') {
+          return value.trim() === '';
+        }
+        return false;
+      }
+    );
+
+    const isFormEffectivelyEmpty =
+      !feedbackRequired && isCommentEmpty && areAllAdditionalFieldsEmpty;
+
+    if (isFormEffectivelyEmpty) {
+      setFormEmptyError(true);
+      return;
+    }
+
     const data = {
       name,
-      email,
-      comment,
+      email: emailVisible ? email : undefined,
+      comment: feedbackVisible ? comment : undefined,
       additionalFields: JSON.stringify(additionalResponse),
       pageId,
       type: formContext,
@@ -84,6 +116,7 @@ const FeedbackForm = ({
       ),
     };
     setSent(true);
+    setFormEmptyError(false);
     createUserFeedback({ variables: { input: data } });
   };
 
@@ -216,52 +249,62 @@ const FeedbackForm = ({
               control={control}
               defaultValue=""
             />
-            <Controller
-              render={({ field }) => (
-                <TextInput
-                  {...field}
-                  id="email-field"
-                  autoComplete="email"
-                  label={`${t('email')}${
-                    emailRequired ? ` (${t('required-field')})` : ''
-                  }`}
-                  invalid={emailRequired && errors.email?.type === 'required'}
-                  formFeedback={errors.email && t('error-email-format')}
-                />
-              )}
-              name="email"
-              id="email-field"
-              control={control}
-              defaultValue=""
-              rules={{
-                required: emailRequired,
-                pattern: {
-                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                },
-              }}
-            />
+            {emailVisible && (
+              <Controller
+                render={({ field }) => (
+                  <TextInput
+                    {...field}
+                    id="email-field"
+                    autoComplete="email"
+                    label={`${t('email')}${
+                      emailRequired ? ` (${t('required-field')})` : ''
+                    }`}
+                    invalid={emailRequired && errors.email?.type === 'required'}
+                    formFeedback={errors.email && t('error-email-format')}
+                  />
+                )}
+                name="email"
+                id="email-field"
+                control={control}
+                defaultValue=""
+                rules={{
+                  required: emailRequired,
+                  pattern: {
+                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  },
+                }}
+              />
+            )}
 
             {additionalFields.map(renderAdditionalField)}
 
-            <Controller
-              render={({ field }) => (
-                <TextInput
-                  {...field}
-                  id="comment-field"
-                  label={`${t('feedback')} (${t('required-field')})`}
-                  invalid={errors.comment?.type === 'required'}
-                  type="textarea"
-                  rows="3"
-                  style={{ height: 'auto' }}
-                  formFeedback={errors.comment && t('error-feedback-required')}
-                />
-              )}
-              name="comment"
-              id="comment-field"
-              control={control}
-              rules={{ required: true }}
-              defaultValue=""
-            />
+            {feedbackVisible && (
+              <Controller
+                render={({ field }) => (
+                  <TextInput
+                    {...field}
+                    id="comment-field"
+                    label={`${t('feedback')}${
+                      feedbackRequired ? ` (${t('required-field')})` : ''
+                    }`}
+                    invalid={
+                      feedbackRequired && errors.comment?.type === 'required'
+                    }
+                    type="textarea"
+                    rows="3"
+                    style={{ height: 'auto' }}
+                    formFeedback={
+                      errors.comment && t('error-feedback-required')
+                    }
+                  />
+                )}
+                name="comment"
+                id="comment-field"
+                control={control}
+                rules={{ required: feedbackRequired }}
+                defaultValue=""
+              />
+            )}
             {mutationError && (
               <Alert
                 color="danger"
@@ -272,6 +315,16 @@ const FeedbackForm = ({
               >
                 <h3>{t('feedback-error-header')}</h3>
                 <p>{t('feedback-error-content')}</p>
+              </Alert>
+            )}
+            {formEmptyError && (
+              <Alert
+                color="danger"
+                className="mt-3"
+                isOpen={formEmptyError}
+                toggle={onDismiss}
+              >
+                {t('form-effectively-empty-error')}
               </Alert>
             )}
             <Button type="submit" color="primary">
@@ -297,7 +350,10 @@ FeedbackForm.propTypes = {
   categoryId: PropTypes.string,
   heading: PropTypes.string,
   description: PropTypes.string,
+  emailVisible: PropTypes.bool,
   emailRequired: PropTypes.bool,
+  feedbackVisible: PropTypes.bool,
+  feedbackRequired: PropTypes.bool,
   prompt: PropTypes.string,
   formContext: PropTypes.string,
   additionalFields: PropTypes.arrayOf(PropTypes.object),
