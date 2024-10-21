@@ -1,7 +1,10 @@
+import images from '@/common/images';
 import { gql } from '@apollo/client';
 
-import images from '@/common/images';
-import { CATEGORY_FRAGMENT } from './category.fragment';
+import {
+  CATEGORY_FRAGMENT,
+  RECURSIVE_CATEGORY_FRAGMENT,
+} from './category.fragment';
 
 export const STREAM_FIELD_FRAGMENT = gql`
   fragment StreamFieldFragment on StreamFieldInterface {
@@ -70,8 +73,19 @@ export const STREAM_FIELD_FRAGMENT = gql`
       }
     }
     ... on ActionListBlock {
+      heading
+      helpText
       categoryFilter {
         id
+        type {
+          id
+        }
+      }
+      groupByCategoryLevel {
+        id
+        type {
+          id
+        }
       }
     }
     ... on AdaptiveEmbedBlock {
@@ -93,11 +107,11 @@ export const STREAM_FIELD_FRAGMENT = gql`
       style
       heading
       lead
-      categoryType {
+      categoryType: categoryType {
         id
         hideCategoryIdentifiers
         categories {
-          ...CategoryFragment
+          ...CategoryRecursiveFragment
         }
       }
       category {
@@ -106,6 +120,31 @@ export const STREAM_FIELD_FRAGMENT = gql`
           ...CategoryFragment
         }
       }
+    }
+    ... on CategoryTypeLevelListBlock {
+      heading
+      helpText
+      categoryLevel {
+        id
+        name
+        namePlural
+      }
+      groupByCategoryLevel {
+        id
+      }
+      categoryBlockType: categoryType {
+        id
+        identifier
+        hideCategoryIdentifiers
+        categories {
+          ...CategoryRecursiveFragment
+        }
+      }
+    }
+    ... on PathsOutcomeBlock {
+      heading
+      helpText
+      outcomeNodeId
     }
     ... on FrontPageHeroBlock {
       layout
@@ -235,7 +274,7 @@ export const STREAM_FIELD_FRAGMENT = gql`
           shortName
         }
       }
-      categoryType {
+      categoryType: categoryType {
         identifier
       }
     }
@@ -264,4 +303,5 @@ export const STREAM_FIELD_FRAGMENT = gql`
   }
   ${images.fragments.multiUseImage}
   ${CATEGORY_FRAGMENT}
+  ${RECURSIVE_CATEGORY_FRAGMENT}
 `;
