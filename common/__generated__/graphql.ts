@@ -2604,6 +2604,7 @@ export type IndicatorListPage = PageInterface & {
   goLiveAt?: Maybe<Scalars['DateTime']>;
   hasUnpublishedChanges: Scalars['Boolean'];
   id?: Maybe<Scalars['ID']>;
+  includeRelatedPlans?: Maybe<Scalars['Boolean']>;
   lastPublishedAt?: Maybe<Scalars['DateTime']>;
   latestRevision?: Maybe<Revision>;
   latestRevisionCreatedAt?: Maybe<Scalars['DateTime']>;
@@ -3704,6 +3705,7 @@ export type Query = {
   planPage?: Maybe<PageInterface>;
   plansForHostname?: Maybe<Array<Maybe<PlanInterface>>>;
   relatedPlanActions?: Maybe<Array<Action>>;
+  relatedPlanIndicators?: Maybe<Array<Indicator>>;
   search?: Maybe<SearchResults>;
   workflowStates?: Maybe<Array<Maybe<WorkflowStateDescription>>>;
 };
@@ -3792,6 +3794,14 @@ export type QueryPlansForHostnameArgs = {
 
 
 export type QueryRelatedPlanActionsArgs = {
+  category?: InputMaybe<Scalars['ID']>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Scalars['String']>;
+  plan: Scalars['ID'];
+};
+
+
+export type QueryRelatedPlanIndicatorsArgs = {
   category?: InputMaybe<Scalars['ID']>;
   first?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<Scalars['String']>;
@@ -5639,6 +5649,7 @@ export type IndicatorHightlightListQuery = (
 
 export type IndicatorListQueryVariables = Exact<{
   plan: Scalars['ID'];
+  relatedPlanIndicators: Scalars['Boolean'];
 }>;
 
 
@@ -5694,6 +5705,12 @@ export type IndicatorListQuery = (
         { id: string, identifier: string, order: number, name: string, parent?: (
           { id: string }
           & { __typename?: 'Category' }
+        ) | null, common?: (
+          { type: (
+            { identifier: string, name: string }
+            & { __typename?: 'CommonCategoryType' }
+          ) }
+          & { __typename?: 'CommonCategory' }
         ) | null }
         & { __typename?: 'Category' }
       )> }
@@ -5724,7 +5741,52 @@ export type IndicatorListQuery = (
       & { __typename?: 'CommonIndicator' }
     ) | null }
     & { __typename?: 'Indicator' }
-  ) | null> | null }
+  ) | null> | null, relatedPlanIndicators?: Array<(
+    { id: string, name: string, level?: string | null, timeResolution: IndicatorTimeResolution, organization: (
+      { id: string, name: string }
+      & { __typename?: 'Organization' }
+    ), common?: (
+      { id: string, name: string, normalizations?: Array<(
+        { unit?: (
+          { shortName?: string | null }
+          & { __typename?: 'Unit' }
+        ) | null, normalizer?: (
+          { name: string, id: string, identifier?: string | null }
+          & { __typename?: 'CommonIndicator' }
+        ) | null }
+        & { __typename?: 'CommonIndicatorNormalization' }
+      ) | null> | null }
+      & { __typename?: 'CommonIndicator' }
+    ) | null, latestGraph?: (
+      { id: string }
+      & { __typename?: 'IndicatorGraph' }
+    ) | null, latestValue?: (
+      { id: string, date?: string | null, value: number, normalizedValues?: Array<(
+        { normalizerId?: string | null, value?: number | null }
+        & { __typename?: 'NormalizedValue' }
+      ) | null> | null }
+      & { __typename?: 'IndicatorValue' }
+    ) | null, unit: (
+      { shortName?: string | null }
+      & { __typename?: 'Unit' }
+    ), categories: Array<(
+      { id: string, name: string, parent?: (
+        { id: string }
+        & { __typename?: 'Category' }
+      ) | null, type: (
+        { id: string, identifier: string, name: string }
+        & { __typename?: 'CategoryType' }
+      ), common?: (
+        { id: string, identifier: string, name: string, order: number, type: (
+          { identifier: string, name: string }
+          & { __typename?: 'CommonCategoryType' }
+        ) }
+        & { __typename?: 'CommonCategory' }
+      ) | null }
+      & { __typename?: 'Category' }
+    )> }
+    & { __typename?: 'Indicator' }
+  )> | null }
   & { __typename?: 'Query' }
 );
 
@@ -12135,7 +12197,7 @@ export type GetPlanPageIndicatorListQuery = (
     { id?: string | null, slug: string, title: string, lastPublishedAt?: any | null }
     & { __typename: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'Page' | 'PlanRootPage' | 'PrivacyPolicyPage' | 'StaticPage' }
   ) | (
-    { leadContent?: string | null, displayInsights?: boolean | null, id?: string | null, slug: string, title: string, lastPublishedAt?: any | null }
+    { leadContent?: string | null, displayInsights?: boolean | null, includeRelatedPlans?: boolean | null, id?: string | null, slug: string, title: string, lastPublishedAt?: any | null }
     & { __typename: 'IndicatorListPage' }
   ) | null }
   & { __typename?: 'Query' }
