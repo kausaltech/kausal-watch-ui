@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { CategoryTypePageLevelLayout } from 'common/__generated__/graphql';
 import Breadcrumbs from 'components/common/Breadcrumbs';
@@ -6,10 +6,20 @@ import { CategoryPage } from 'components/common/CategoryPageStreamField';
 import { usePaths } from 'context/paths/paths';
 import { usePlan } from 'context/plan';
 import { useTranslations } from 'next-intl';
+import ContentLoader from 'react-content-loader';
 import { Container } from 'reactstrap';
 import styled, { useTheme } from 'styled-components';
 
-import { gql } from '@apollo/client';
+import { activeGoalVar, yearRangeVar } from '@/context/paths/cache';
+import { GET_PATHS_ACTION } from '@/queries/paths/get-paths-actions';
+import {
+  GET_NODE_CONTENT,
+  GET_NODE_INFO,
+} from '@/queries/paths/get-paths-node';
+import { DimensionalMetric } from '@/utils/paths/metric';
+import { getHttpHeaders } from '@/utils/paths/paths.utils';
+import PathsActionNode from '@/utils/paths/PathsActionNode';
+import { gql, NetworkStatus, useQuery, useReactiveVar } from '@apollo/client';
 
 export const GET_CATEGORY_ATTRIBUTE_TYPES = gql`
   query GetCategoryAttributeTypes($plan: ID!) {
@@ -30,6 +40,26 @@ export const GET_CATEGORY_ATTRIBUTE_TYPES = gql`
     }
   }
 `;
+
+const PathsContentLoader = (props) => {
+  const theme = useTheme();
+  return (
+    <ContentLoader
+      speed={1}
+      width={330}
+      height={80}
+      viewBox="0 0 330 80"
+      backgroundColor={theme.graphColors.grey010}
+      foregroundColor={theme.graphColors.grey030}
+      {...props}
+    >
+      <rect x="5" y="1" rx="3" ry="3" width="166" height="16" />
+      <rect x="0" y="88" rx="3" ry="3" width="178" height="6" />
+      <rect x="6" y="24" rx="3" ry="3" width="130" height="27" />
+      <rect x="4" y="61" rx="3" ry="3" width="166" height="16" />
+    </ContentLoader>
+  );
+};
 
 const Background = styled.div`
   padding: 4rem 0 2em;
@@ -84,10 +114,220 @@ interface Props {
   typeId;
   level;
   layout?: CategoryTypePageLevelLayout['layoutMainTop'];
+  pathsNodeId?: string;
 }
 
+const PathsBasicNodeContent = (props) => {
+  const { categoryId, node, pathsInstance } = props;
+  const yearRange = useReactiveVar(yearRangeVar);
+  const activeGoal = useReactiveVar(activeGoalVar);
+  // const t = useTranslations();
+
+  const { data, loading, error, networkStatus } = useQuery(GET_NODE_CONTENT, {
+    fetchPolicy: 'no-cache',
+    variables: { node: node, goal: activeGoal?.id },
+    notifyOnNetworkStatusChange: true,
+    context: {
+      uri: '/api/graphql-paths',
+      headers: getHttpHeaders({ instanceIdentifier: pathsInstance }),
+    },
+  });
+
+  const refetching = networkStatus === NetworkStatus.refetch;
+
+  useEffect(() => {
+    if (data) {
+      const nodeMetric = new DimensionalMetric(data.node.metricDim!);
+      const defaultConfig = nodeMetric.getDefaultSliceConfig(activeGoal);
+      const thisYear = nodeMetric.getSingleYear(
+        yearRange[1],
+        defaultConfig.categories
+      );
+
+      const yearTotal =
+        thisYear.rows[0] &&
+        thisYear.rows.reduce(
+          (partialSum, a) => (a ? partialSum + a[0] : partialSum),
+          0
+        );
+    }
+  }, [activeGoal, data, yearRange]);
+
+  if (loading && !refetching) {
+    return <PathsContentLoader />;
+  }
+  if (error) {
+    return <div>Error: {error.message}</div>; // Handle error appropriately
+  }
+  if (data) {
+    if (data.node.metricDim) {
+      const nodeMetric = new DimensionalMetric(data.node.metricDim!);
+      const defaultConfig = nodeMetric.getDefaultSliceConfig(activeGoal);
+      const thisYear = nodeMetric.getSingleYear(
+        yearRange[1],
+        defaultConfig.categories
+      );
+
+      const yearTotal =
+        thisYear.rows[0] &&
+        thisYear.rows.reduce(
+          (partialSum, a) => (a ? partialSum + a[0] : partialSum),
+          0
+        );
+      /*
+      console.log('default config', defaultConfig);
+      console.log('metric', nodeMetric);
+      console.log('this year', thisYear);
+      */
+      // TODO: Just get any label for now
+      const configCategories = Object.values(defaultConfig.categories)[0];
+      const label = thisYear.allLabels.find(
+        (label) =>
+          label.id === configCategories?.categories[0] ||
+          label.id === configCategories?.groups[0]
+      )?.label;
+
+      const unit = nodeMetric.getUnit();
+
+      return (
+        <PathsActionImpact>
+          <div>
+            <h4>{label}</h4>
+            <div>
+              <div>
+                {yearTotal.toPrecision(3)} {unit}
+              </div>
+              <div>
+                Indirect emissions<h5>XXX</h5>
+              </div>
+            </div>
+          </div>
+          <div>
+            <h4>Emissions target (2024)</h4>
+            <div>
+              <div>
+                Direct emissions<h5>XXX</h5>
+              </div>
+              <div>
+                Indirect emissions<h5>XXX</h5>
+              </div>
+            </div>
+          </div>
+        </PathsActionImpact>
+      );
+    } else {
+      return <div>{data.node.__typename} not supported</div>;
+    }
+  }
+  return null;
+};
+
+const PathsActionNodeContent = (props) => {
+  const { categoryId, node, pathsInstance } = props;
+  const yearRange = useReactiveVar(yearRangeVar);
+  const activeGoal = useReactiveVar(activeGoalVar);
+  const t = useTranslations();
+
+  const { data, loading, error, networkStatus } = useQuery(GET_PATHS_ACTION, {
+    fetchPolicy: 'no-cache',
+    variables: { action: node, goal: activeGoal?.id },
+    notifyOnNetworkStatusChange: true,
+    context: {
+      uri: '/api/graphql-paths',
+      headers: getHttpHeaders({ instanceIdentifier: pathsInstance }),
+    },
+  });
+
+  const refetching = networkStatus === NetworkStatus.refetch;
+
+  useEffect(() => {
+    if (data) {
+      const pathsAction = new PathsActionNode(data.action);
+      const impact = pathsAction.getYearlyImpact(yearRange[1]) || 0;
+    }
+  }, [activeGoal, data, yearRange]);
+
+  if (loading && !refetching) {
+    return <PathsContentLoader />;
+  }
+  if (error) {
+    return <div>Error: {error.message}</div>; // Handle error appropriately
+  }
+  if (data) {
+    const pathsAction = new PathsActionNode(data.action);
+    const impact = pathsAction.getYearlyImpact(yearRange[1]) || 0;
+    return (
+      <PathsActionImpact>
+        <div>
+          <h4>Emissions (2022)</h4>
+          <div>
+            <div>
+              Direct emissions<h5>{impact}</h5>
+            </div>
+            <div>
+              Indirect emissions<h5>XXX</h5>
+            </div>
+          </div>
+        </div>
+        <div>
+          <h4>Emissions target (2024)</h4>
+          <div>
+            <div>
+              Direct emissions<h5>XXX</h5>
+            </div>
+            <div>
+              Indirect emissions<h5>XXX</h5>
+            </div>
+          </div>
+        </div>
+      </PathsActionImpact>
+    );
+  }
+  return null;
+};
+
+const PathsNodeContent = (props) => {
+  const { categoryId, node, paths } = props;
+
+  const { data, loading, error } = useQuery(GET_NODE_INFO, {
+    fetchPolicy: 'no-cache',
+    variables: { node: node },
+    context: {
+      uri: '/api/graphql-paths',
+      headers: getHttpHeaders({ instanceIdentifier: paths }),
+    },
+  });
+
+  if (loading) {
+    return <PathsContentLoader />;
+  }
+  if (error) {
+    return <div>Error: {error.message}</div>; // Handle error appropriately
+  }
+  if (data) {
+    if (data.node.__typename === 'ActionNode') {
+      return (
+        <PathsActionNodeContent
+          categoryId={categoryId}
+          node={node}
+          pathsInstance={paths}
+        />
+      );
+    } else if (data.node.__typename) {
+      return (
+        <PathsBasicNodeContent
+          categoryId={categoryId}
+          node={node}
+          pathsInstance={paths}
+        />
+      );
+    }
+    return null;
+  }
+};
+
 function CategoryPageHeaderBlock(props: Props) {
-  const { title, identifier, lead, level } = props;
+  const { title, identifier, lead, level, pathsNodeId } = props;
   const plan = usePlan();
   const paths = usePaths();
   const theme = useTheme();
@@ -123,31 +363,12 @@ function CategoryPageHeaderBlock(props: Props) {
           <h1>
             {identifier && <Identifier>{identifier}.</Identifier>} {title}
           </h1>
-          {hasPaths && (
-            <PathsActionImpact>
-              <div>
-                <h4>Emissions (2022)</h4>
-                <div>
-                  <div>
-                    Direct emissions<h5>XXX</h5>
-                  </div>
-                  <div>
-                    Indirect emissions<h5>XXX</h5>
-                  </div>
-                </div>
-              </div>
-              <div>
-                <h4>Emissions target (2024)</h4>
-                <div>
-                  <div>
-                    Direct emissions<h5>XXX</h5>
-                  </div>
-                  <div>
-                    Indirect emissions<h5>XXX</h5>
-                  </div>
-                </div>
-              </div>
-            </PathsActionImpact>
+          {pathsNodeId && paths && (
+            <PathsNodeContent
+              categoryId={identifier}
+              node={pathsNodeId}
+              paths={paths.instance.id}
+            />
           )}
           {lead && <p>{lead}</p>}
         </CategoryHeader>
