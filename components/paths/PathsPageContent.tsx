@@ -65,6 +65,7 @@ const PathsPageContent = ({
               page={page}
               title={page.title}
               lead="Category page header title"
+              pathsNodeId={page.category?.kausalPathsNodeUuid}
             />
             {page.body && <StreamField page={page} blocks={page.body} />}
           </MainContent>
