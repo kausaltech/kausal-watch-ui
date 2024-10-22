@@ -70,7 +70,6 @@ const GoalSelector = () => {
         <DropdownItem header>{t('change-target')}</DropdownItem>
         {paths?.instance.goals.map((goal) => (
           <DropdownItem
-            disabled={goal.disabled}
             key={goal.id}
             active={goal.id === activeGoal?.id}
             onClick={() => selectGoal(goal)}
