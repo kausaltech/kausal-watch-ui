@@ -6,8 +6,14 @@ import ActionParameters from 'components/paths/ActionParameters';
 import { useTranslations } from 'next-intl';
 import { readableColor, transparentize } from 'polished';
 import ContentLoader from 'react-content-loader';
+import {
+  Sparklines,
+  SparklinesLine,
+  SparklinesReferenceLine,
+} from 'react-sparklines';
 import styled, { useTheme } from 'styled-components';
 
+import PopoverTip from '@/components/common/PopoverTip';
 import { activeGoalVar, yearRangeVar } from '@/context/paths/cache';
 import { GET_PATHS_ACTION } from '@/queries/paths/get-paths-actions';
 import {
@@ -74,6 +80,38 @@ const PathsContentLoader = (props) => {
   );
 };
 
+const IndicatorSparklineContainer = styled.div`
+  background-color: ${(props) => props.theme.themeColors.white};
+  padding: 0% ${(props) => props.theme.spaces.s100};
+  margin-bottom: ${(props) => props.theme.spaces.s100};
+  border-radius: 0.5rem;
+`;
+
+const IndicatorSparkline = (props) => {
+  const { indicator } = props;
+  const theme = useTheme();
+  return (
+    <IndicatorSparklineContainer>
+      Main indicator{' '}
+      <PopoverTip content={indicator.name} identifier={indicator.id} />
+      <Sparklines
+        data={[5, 10, 5, 20, 8, 15]}
+        limit={5}
+        width={100}
+        height={20}
+        margin={5}
+      >
+        <SparklinesLine
+          style={{ strokeWidth: 0.5, fill: 'none', stroke: theme.brandDark }}
+        />
+        <SparklinesReferenceLine
+          type="mean"
+          style={{ strokeWidth: 0.25, stroke: theme.graphColors.red050 }}
+        />
+      </Sparklines>
+    </IndicatorSparklineContainer>
+  );
+};
 const PathsBasicNodeContent = (props) => {
   const { categoryId, node, pathsInstance, onLoaded } = props;
   const yearRange = useReactiveVar(yearRangeVar);
@@ -107,7 +145,7 @@ const PathsBasicNodeContent = (props) => {
   }, [activeGoal, data, yearRange]);
 
   if (loading && !refetching) {
-    return <PathsContentLoader />;
+    return <PathsContentLoader style={{ marginBottom: '0.5rem' }} />;
   }
   if (error) {
     return <div>Error: {error.message}</div>; // Handle error appropriately
@@ -300,6 +338,11 @@ const CategoryCard = (props) => {
             paths={pathsInstance}
             onLoaded={onLoaded}
           />
+        )}
+        {category.indicators.length > 0 && (
+          <CardContentBlock>
+            <IndicatorSparkline indicator={category.indicators[0]} />
+          </CardContentBlock>
         )}
       </div>
     </Card>
