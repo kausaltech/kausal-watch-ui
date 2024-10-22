@@ -8,10 +8,10 @@ import { Metadata } from 'next';
 import { tryRequest } from '@/utils/api.utils';
 
 type Props = {
-  params: {
+  params: Promise<{
     plan: string;
     lang: string;
-  };
+  }>;
 };
 
 const isAccessibilityPageWithBody = (
@@ -21,7 +21,8 @@ const isAccessibilityPageWithBody = (
     planPage?.__typename === 'StaticPage') &&
   planPage?.body?.length;
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata(props: Props): Promise<Metadata> {
+  const params = await props.params;
   const t = await getTranslations({ locale: params.lang });
 
   return {
@@ -29,7 +30,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function ContentPage({ params }: Props) {
+export default async function ContentPage(props: Props) {
+  const params = await props.params;
   const { plan } = params;
 
   const { data } = await tryRequest(getContentPage(plan, '/accessibility'));

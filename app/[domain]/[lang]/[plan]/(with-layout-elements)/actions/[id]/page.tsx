@@ -13,24 +13,25 @@ import { tryRequest } from '@/utils/api.utils';
 import { SELECTED_WORKFLOW_COOKIE_KEY } from '@/constants/workflow';
 
 type Props = {
-  params: {
+  params: Promise<{
     id: string;
     lang: string;
     plan: string;
     domain: string;
-  };
+  }>;
 };
 
 export async function generateMetadata(
-  { params }: Props,
+  props: Props,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
+  const params = await props.params;
   const t = await getTranslations({ locale: params.lang });
 
   const { id, plan, domain } = params;
   const decodedId = decodeURIComponent(id);
-  const headersList = headers();
-  const cookiesList = cookies();
+  const headersList = await headers();
+  const cookiesList = await cookies();
   const protocol = headersList.get('x-forwarded-proto');
   const workflow = cookiesList.get(SELECTED_WORKFLOW_COOKIE_KEY);
 
@@ -71,10 +72,11 @@ export async function generateMetadata(
   };
 }
 
-export default async function ActionPage({ params }: Props) {
+export default async function ActionPage(props: Props) {
+  const params = await props.params;
   const { id, plan, domain } = params;
-  const headersList = headers();
-  const cookiesList = cookies();
+  const headersList = await headers();
+  const cookiesList = await cookies();
   const protocol = headersList.get('x-forwarded-proto');
   const workflow = cookiesList.get(SELECTED_WORKFLOW_COOKIE_KEY);
   const decodedId = decodeURIComponent(id);

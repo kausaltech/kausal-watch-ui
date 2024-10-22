@@ -7,10 +7,11 @@ import { notFound } from 'next/navigation';
 import { tryRequest } from '@/utils/api.utils';
 
 type Props = {
-  params: { plan: string; lang: string };
+  params: Promise<{ plan: string; lang: string }>;
 };
 
-export default async function ActionsPage({ params }: Props) {
+export default async function ActionsPage(props: Props) {
+  const params = await props.params;
   const { plan } = params;
 
   const { data: pageSettingsData } = await tryRequest(

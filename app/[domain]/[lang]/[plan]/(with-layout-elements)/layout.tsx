@@ -6,7 +6,7 @@ import { StyledMain } from './StyledMain';
 import { JsonLd } from './JsonLd';
 
 type Props = {
-  params: { domain: string };
+  params: Promise<{ domain: string }>;
   children: ReactNode;
 };
 
@@ -14,7 +14,11 @@ type Props = {
  * Route group to support adding a header, footer and other
  * layout elements that shouldn't be applied to embeds.
  */
-export default function Layout({ children, params }: Props) {
+export default async function Layout(props: Props) {
+  const params = await props.params;
+
+  const { children } = props;
+
   return (
     <>
       <JsonLd domain={params.domain} />

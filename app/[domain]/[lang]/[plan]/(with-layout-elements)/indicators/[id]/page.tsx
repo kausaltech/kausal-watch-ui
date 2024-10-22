@@ -9,17 +9,18 @@ import { isValidIndicatorId } from '@/utils/indicators';
 import { tryRequest } from '@/utils/api.utils';
 
 type Props = {
-  params: {
+  params: Promise<{
     id: string;
     plan: string;
     domain: string;
-  };
+  }>;
 };
 
 export async function generateMetadata(
-  { params }: Props,
+  props: Props,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
+  const params = await props.params;
   const { id, plan } = params;
 
   if (!isValidIndicatorId(id)) {
@@ -44,7 +45,8 @@ export async function generateMetadata(
   };
 }
 
-export default async function IndicatorPage({ params }: Props) {
+export default async function IndicatorPage(props: Props) {
+  const params = await props.params;
   const { id, plan, domain } = params;
 
   if (!isValidIndicatorId(id)) {

@@ -1,7 +1,7 @@
 import 'react-medium-image-zoom/dist/styles.css';
 import '@/styles/default/main.scss';
 
-import { type ReactNode } from 'react';
+import { type ReactNode, use } from 'react';
 import Script from 'next/script';
 
 import * as Sentry from '@sentry/nextjs';
@@ -18,7 +18,7 @@ import defaultTheme from '@/public/static/themes/default/theme.json';
 import { StyledComponentsRegistry } from '@/styles/StyledComponentsRegistry';
 
 type Props = {
-  params: { lang: string };
+  params: Promise<{ lang: string }>;
   children: ReactNode;
 };
 
@@ -39,7 +39,11 @@ export function generateMetadata(): Metadata {
   };
 }
 
-export default function LangLayout({ params, children }: Props) {
+export default function LangLayout(props: Props) {
+  const params = use(props.params);
+
+  const { children } = props;
+
   const messages = useMessages();
   console.log('root layout');
   console.log(Sentry.getActiveSpan()?.spanContext());

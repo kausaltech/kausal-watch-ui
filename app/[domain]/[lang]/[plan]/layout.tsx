@@ -18,12 +18,13 @@ import { SELECTED_WORKFLOW_COOKIE_KEY } from '@/constants/workflow';
 import { WorkflowProvider } from '@/context/workflow-selector';
 
 type Props = {
-  params: { plan: string; domain: string; lang: string };
+  params: Promise<{ plan: string; domain: string; lang: string }>;
   children: ReactNode;
 };
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const headersList = headers();
+export async function generateMetadata(props: Props): Promise<Metadata> {
+  const params = await props.params;
+  const headersList = await headers();
   const protocol = headersList.get('x-forwarded-proto');
   const urlHeader = headersList.get('x-url'); // The full user facing URL with path
   const origin = `${protocol}://${params.domain}`;
@@ -90,10 +91,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function PlanLayout({ params, children }: Props) {
+export default async function PlanLayout(props: Props) {
+  const params = await props.params;
+
+  const { children } = props;
+
   const { plan, domain } = params;
-  const headersList = headers();
-  const cookieStore = cookies();
+  const headersList = await headers();
+  const cookieStore = await cookies();
   const protocol = headersList.get('x-forwarded-proto');
   const { data } = await tryRequest(
     getPlan(domain, plan, `${protocol}://${domain}`)

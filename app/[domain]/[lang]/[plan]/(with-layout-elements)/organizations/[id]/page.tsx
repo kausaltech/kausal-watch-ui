@@ -7,16 +7,17 @@ import { OrganizationDetailsQuery } from '@/common/__generated__/graphql';
 import { tryRequest } from '@/utils/api.utils';
 
 type Props = {
-  params: {
+  params: Promise<{
     id: string;
     plan: string;
     domain: string;
-  };
+  }>;
 };
 
-export default async function OrganizationPage({ params }: Props) {
+export default async function OrganizationPage(props: Props) {
+  const params = await props.params;
   const { id, plan, domain } = params;
-  const headersList = headers();
+  const headersList = await headers();
   const protocol = headersList.get('x-forwarded-proto');
 
   const { data, error } = await tryRequest<OrganizationDetailsQuery>(

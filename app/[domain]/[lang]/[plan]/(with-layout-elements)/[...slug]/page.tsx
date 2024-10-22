@@ -7,16 +7,17 @@ import { getMetaDescription, getMetaImage } from '@/utils/metadata';
 import { tryRequest } from '@/utils/api.utils';
 
 type Props = {
-  params: { slug: string[]; plan: string };
+  params: Promise<{ slug: string[]; plan: string }>;
 };
 
 const getPath = (slug: string[]) =>
   `/${slug.map(decodeURIComponent).join('/')}`;
 
 export async function generateMetadata(
-  { params }: Props,
+  props: Props,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
+  const params = await props.params;
   const { slug, plan } = params;
   const path = getPath(slug);
 
@@ -40,7 +41,8 @@ export async function generateMetadata(
   };
 }
 
-export default async function ContentPage({ params }: Props) {
+export default async function ContentPage(props: Props) {
+  const params = await props.params;
   const { slug, plan } = params;
   const path = getPath(slug);
 

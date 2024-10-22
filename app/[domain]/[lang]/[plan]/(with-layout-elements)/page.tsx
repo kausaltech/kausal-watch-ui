@@ -4,10 +4,11 @@ import { RootPage } from './RootPage';
 import { tryRequest } from '@/utils/api.utils';
 
 type Props = {
-  params: { plan: string; lang: string };
+  params: Promise<{ plan: string; lang: string }>;
 };
 
-export default async function PlanPage({ params }: Props) {
+export default async function PlanPage(props: Props) {
+  const params = await props.params;
   const { data, error } = await tryRequest(getHomePage(params.plan));
 
   if (error || !data) {

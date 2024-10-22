@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, use } from 'react';
 import Icon from '@/components/common/Icon';
 import { Container } from 'reactstrap';
 import styled from 'styled-components';
@@ -70,12 +70,13 @@ const validateUrl = (
 };
 
 type Props = {
-  params: {
+  params: Promise<{
     slug: string[];
-  };
+  }>;
 };
 
-const EmbeddablePage = ({ params }: Props) => {
+const EmbeddablePage = (props: Props) => {
+  const params = use(props.params);
   const slug = params.slug.map(decodeURIComponent);
   const wrapperElement = useRef<HTMLDivElement>(null);
   const query = useSearchParams();

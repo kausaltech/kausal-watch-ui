@@ -11,7 +11,7 @@ export const dynamic = 'force-dynamic';
  * to prevent CORS issues and attach auth headers.
  */
 export const POST = async (request: NextAuthRequest) => {
-  const headersList = headers();
+  const headersList = await headers();
   const requestData = await request.json();
   const copyHeaders = [
     'user-agent',

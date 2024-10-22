@@ -1,4 +1,4 @@
-import { headers } from 'next/headers';
+import { headers, type UnsafeUnwrappedHeaders } from 'next/headers';
 
 import type { OIDCConfig } from '@auth/core/providers';
 import NextAuth from 'next-auth';
@@ -13,7 +13,7 @@ export const {
   handlers: { GET, POST },
   auth,
 } = NextAuth(() => {
-  const headersList = headers();
+  const headersList = headers() as unknown as UnsafeUnwrappedHeaders;
   const protocol = headersList.get('x-forwarded-proto');
   const host = headersList.get('host');
   const url = protocol && host ? `${protocol}://${host}/api/auth` : null;

@@ -1,4 +1,9 @@
-import { cookies, headers as getHeaders } from 'next/headers';
+import {
+  cookies,
+  headers as getHeaders,
+  type UnsafeUnwrappedCookies,
+  type UnsafeUnwrappedHeaders,
+} from 'next/headers';
 
 import { ApolloClient, from, InMemoryCache } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
@@ -34,8 +39,8 @@ const authMiddleware = setContext(
  * (which are also server-side rendered) use the separate useQuery hooks provided by ApolloWrapper.
  */
 export const { getClient } = registerApolloClient(() => {
-  const headers = getHeaders();
-  const cookiesList = cookies();
+  const headers = getHeaders() as unknown as UnsafeUnwrappedHeaders;
+  const cookiesList = cookies() as unknown as UnsafeUnwrappedCookies;
   const locale = headers.get('x-next-intl-locale') ?? undefined;
   const plan = headers.get('x-plan-identifier') ?? undefined;
   const domain = headers.get('x-plan-domain') ?? undefined;
