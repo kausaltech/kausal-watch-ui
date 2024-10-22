@@ -16,6 +16,7 @@ import {
   GET_NODE_CONTENT,
   GET_NODE_INFO,
 } from '@/queries/paths/get-paths-node';
+import { getScopeLabel, getScopeTotal } from '@/utils/paths/emissions';
 import { DimensionalMetric } from '@/utils/paths/metric';
 import { getHttpHeaders } from '@/utils/paths/paths.utils';
 import PathsActionNode from '@/utils/paths/PathsActionNode';
@@ -122,7 +123,7 @@ const PathsBasicNodeContent = (props) => {
   const yearRange = useReactiveVar(yearRangeVar);
   const activeGoal = useReactiveVar(activeGoalVar);
   // const t = useTranslations();
-
+  //console.log(activeGoal);
   const { data, loading, error, networkStatus } = useQuery(GET_NODE_CONTENT, {
     fetchPolicy: 'no-cache',
     variables: { node: node, goal: activeGoal?.id },
@@ -135,24 +136,6 @@ const PathsBasicNodeContent = (props) => {
 
   const refetching = networkStatus === NetworkStatus.refetch;
 
-  useEffect(() => {
-    if (data) {
-      const nodeMetric = new DimensionalMetric(data.node.metricDim!);
-      const defaultConfig = nodeMetric.getDefaultSliceConfig(activeGoal);
-      const thisYear = nodeMetric.getSingleYear(
-        yearRange[1],
-        defaultConfig.categories
-      );
-
-      const yearTotal =
-        thisYear.rows[0] &&
-        thisYear.rows.reduce(
-          (partialSum, a) => (a ? partialSum + a[0] : partialSum),
-          0
-        );
-    }
-  }, [activeGoal, data, yearRange]);
-
   if (loading && !refetching) {
     return <PathsContentLoader />;
   }
@@ -160,59 +143,65 @@ const PathsBasicNodeContent = (props) => {
     return <div>Error: {error.message}</div>; // Handle error appropriately
   }
   if (data) {
+    //console.log('data', data);
     if (data.node.metricDim) {
       const nodeMetric = new DimensionalMetric(data.node.metricDim!);
-      const defaultConfig = nodeMetric.getDefaultSliceConfig(activeGoal);
-      const thisYear = nodeMetric.getSingleYear(
-        yearRange[1],
-        defaultConfig.categories
-      );
 
-      const yearTotal =
-        thisYear.rows[0] &&
-        thisYear.rows.reduce(
-          (partialSum, a) => (a ? partialSum + a[0] : partialSum),
-          0
-        );
-      /*
-      console.log('default config', defaultConfig);
-      console.log('metric', nodeMetric);
-      console.log('this year', thisYear);
-      */
-      // TODO: Just get any label for now
-      const configCategories = Object.values(defaultConfig.categories)[0];
-      const label = thisYear.allLabels.find(
-        (label) =>
-          label.id === configCategories?.categories[0] ||
-          label.id === configCategories?.groups[0]
-      )?.label;
+      const indirectEmissions = getScopeTotal(
+        nodeMetric,
+        'indirect',
+        yearRange[1]
+      );
+      const directEmissions = getScopeTotal(nodeMetric, 'direct', yearRange[1]);
+
+      const indirectEmissionsLabel = getScopeLabel(nodeMetric, 'indirect');
+      const directEmissionsLabel = getScopeLabel(nodeMetric, 'direct');
 
       const unit = nodeMetric.getUnit();
 
+      const hasEmissionGoals = false;
       return (
         <PathsActionImpact>
           <div>
-            <h4>{label}</h4>
+            <h4>
+              {nodeMetric.getName()} ({yearRange[1]})
+            </h4>
             <div>
               <div>
-                {yearTotal.toPrecision(3)} {unit}
+                {directEmissionsLabel}
+                <h5>
+                  {directEmissions ? directEmissions.toPrecision(3) : 'XXX'}{' '}
+                  {unit}
+                </h5>
               </div>
-              <div>
-                Indirect emissions<h5>XXX</h5>
-              </div>
+              {indirectEmissions ? (
+                <div>
+                  {indirectEmissionsLabel}
+                  <h5>
+                    {indirectEmissions.toPrecision(3)} {unit}
+                  </h5>
+                </div>
+              ) : (
+                <div />
+              )}
             </div>
           </div>
-          <div>
-            <h4>Emissions target (2024)</h4>
+          {/* Hide targets now as we dont have them */}
+          {hasEmissionGoals ? (
             <div>
+              <h4>Emissions target (2024)</h4>
               <div>
-                Direct emissions<h5>XXX</h5>
-              </div>
-              <div>
-                Indirect emissions<h5>XXX</h5>
+                <div>
+                  Direct emissions<h5>XXX</h5>
+                </div>
+                <div>
+                  Indirect emissions<h5>XXX</h5>
+                </div>
               </div>
             </div>
-          </div>
+          ) : (
+            <div />
+          )}
         </PathsActionImpact>
       );
     } else {
@@ -259,7 +248,7 @@ const PathsActionNodeContent = (props) => {
     return (
       <PathsActionImpact>
         <div>
-          <h4>Emissions (2022)</h4>
+          <h4>Emissions ({yearRangeVar[1]})</h4>
           <div>
             <div>
               Direct emissions<h5>{impact}</h5>
@@ -270,7 +259,7 @@ const PathsActionNodeContent = (props) => {
           </div>
         </div>
         <div>
-          <h4>Emissions target (2024)</h4>
+          <h4>Emissions target</h4>
           <div>
             <div>
               Direct emissions<h5>XXX</h5>
@@ -363,6 +352,7 @@ function CategoryPageHeaderBlock(props: Props) {
           <h1>
             {identifier && <Identifier>{identifier}.</Identifier>} {title}
           </h1>
+          {lead && <p>{lead}</p>}
           {pathsNodeId && paths && (
             <PathsNodeContent
               categoryId={identifier}
@@ -370,7 +360,6 @@ function CategoryPageHeaderBlock(props: Props) {
               paths={paths.instance.id}
             />
           )}
-          {lead && <p>{lead}</p>}
         </CategoryHeader>
       </Container>
     </Background>

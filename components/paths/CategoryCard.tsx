@@ -14,6 +14,7 @@ import {
   GET_NODE_CONTENT,
   GET_NODE_INFO,
 } from '@/queries/paths/get-paths-node';
+import { getScopeLabel, getScopeTotal } from '@/utils/paths/emissions';
 import { DimensionalMetric } from '@/utils/paths/metric';
 import { getHttpHeaders } from '@/utils/paths/paths.utils';
 import PathsActionNode from '@/utils/paths/PathsActionNode';
@@ -94,18 +95,13 @@ const PathsBasicNodeContent = (props) => {
   useEffect(() => {
     if (data) {
       const nodeMetric = new DimensionalMetric(data.node.metricDim!);
-      const defaultConfig = nodeMetric.getDefaultSliceConfig(activeGoal);
-      const thisYear = nodeMetric.getSingleYear(
-        yearRange[1],
-        defaultConfig.categories
+      const indirectEmissions = getScopeTotal(
+        nodeMetric,
+        'indirect',
+        yearRange[1]
       );
-
-      const yearTotal =
-        thisYear.rows[0] &&
-        thisYear.rows.reduce(
-          (partialSum, a) => (a ? partialSum + a[0] : partialSum),
-          0
-        );
+      const directEmissions = getScopeTotal(nodeMetric, 'direct', yearRange[1]);
+      const yearTotal = indirectEmissions + directEmissions;
       onLoaded(categoryId, yearTotal || 0);
     }
   }, [activeGoal, data, yearRange]);
@@ -119,43 +115,60 @@ const PathsBasicNodeContent = (props) => {
   if (data) {
     if (data.node.metricDim) {
       const nodeMetric = new DimensionalMetric(data.node.metricDim!);
-      const defaultConfig = nodeMetric.getDefaultSliceConfig(activeGoal);
-      const thisYear = nodeMetric.getSingleYear(
-        yearRange[1],
-        defaultConfig.categories
-      );
 
-      const yearTotal =
-        thisYear.rows[0] &&
-        thisYear.rows.reduce(
-          (partialSum, a) => (a ? partialSum + a[0] : partialSum),
-          0
-        );
+      const indirectEmissions = getScopeTotal(
+        nodeMetric,
+        'indirect',
+        yearRange[1]
+      );
+      const directEmissions = getScopeTotal(nodeMetric, 'direct', yearRange[1]);
+
+      const indirectEmissionsLabel = getScopeLabel(nodeMetric, 'indirect');
+      const directEmissionsLabel = getScopeLabel(nodeMetric, 'direct');
+
       /*
       console.log('default config', defaultConfig);
       console.log('metric', nodeMetric);
       console.log('this year', thisYear);
       */
       // TODO: Just get any label for now
-      const configCategories = Object.values(defaultConfig.categories)[0];
-      const label = thisYear.allLabels.find(
-        (label) =>
-          label.id === configCategories?.categories[0] ||
-          label.id === configCategories?.groups[0]
-      )?.label;
 
       const unit = nodeMetric.getUnit();
 
       return (
         <CardContentBlock $disabled={refetching}>
-          {yearTotal && (
-            <>
-              <h5>{label}</h5>
-              <h4>
-                {yearTotal.toPrecision(3)} {unit}
-              </h4>
-            </>
-          )}
+          <div>
+            {directEmissions || indirectEmissions ? (
+              <div>
+                <h5>
+                  {nodeMetric.getName()} ({yearRange[1]})
+                </h5>
+                <h4>
+                  {(directEmissions + indirectEmissions).toPrecision(3)} {unit}
+                </h4>
+              </div>
+            ) : null}
+            {directEmissions ? (
+              <div>
+                {directEmissionsLabel}
+                <h5>
+                  {directEmissions && directEmissions.toPrecision(3)} {unit}
+                </h5>
+              </div>
+            ) : (
+              <div />
+            )}
+            {indirectEmissions ? (
+              <div>
+                {indirectEmissionsLabel}
+                <h5>
+                  {indirectEmissions.toPrecision(3)} {unit}
+                </h5>
+              </div>
+            ) : (
+              <div />
+            )}
+          </div>
         </CardContentBlock>
       );
     } else {
