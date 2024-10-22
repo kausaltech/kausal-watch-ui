@@ -1,6 +1,24 @@
-import pino, { DestinationStream, Logger, LoggerOptions } from 'pino';
+import type { DestinationStream, Logger, LoggerOptions } from 'pino';
+import pino from 'pino';
+
+import { isServer } from './environment';
 
 let rootLogger: Logger;
+
+const ENV_ATTR_MAP: Record<string, string> = {
+  CLUSTER_NAME: 'k8s.cluster.name',
+  NODE_NAME: 'k8s.node.name',
+  POD_NAME: 'k8s.pod.name',
+};
+
+export function getOtelAttributes() {
+  const definedVars = Object.entries(ENV_ATTR_MAP).filter(
+    ([varName]) => process.env[varName]
+  );
+  return Object.fromEntries(
+    definedVars.map(([varName, attrName]) => [attrName, process.env[varName]])
+  );
+}
 
 function setupEdgeLogging(options: LoggerOptions) {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -40,7 +58,9 @@ function initRootLogger() {
   const options: LoggerOptions = {
     level: logLevel,
     formatters: {},
-    base: {},
+    base: {
+      runtime: isServer ? (isEdgeRuntime ? 'edge' : 'nodejs') : 'browser',
+    },
   };
   if (
     process.env.PRODUCTION_LOG_MODE !== '1' &&
@@ -53,7 +73,7 @@ function initRootLogger() {
     rootLogger = pino(options, stream);
     return rootLogger;
   }
-  options.formatters!.level = (label, number) => ({ level: label });
+  options.formatters!.level = (label) => ({ level: label });
   if (isEdgeRuntime) {
     setupEdgeLogging(options);
   } else {

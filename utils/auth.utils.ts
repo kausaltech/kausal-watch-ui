@@ -3,7 +3,7 @@ import { useRouter } from 'next/navigation';
 
 import { signOut } from 'next-auth/react';
 
-import { authIssuer } from '@/common/environment';
+import { getAuthIssuer } from '@/common/environment';
 
 export function useHandleSignOut() {
   const router = useRouter();
@@ -13,6 +13,8 @@ export function useHandleSignOut() {
     return;
     // TODO: Make this use RP-initiated logout when KW backend supports it.
     // See reference implementation in nzc-data-studio
-    router.push(`${authIssuer}/logout?next=${encodeURI(window.location.href)}`);
+    router.push(
+      `${getAuthIssuer()}/logout?next=${encodeURI(window.location.href)}`
+    );
   }, [router]);
 }

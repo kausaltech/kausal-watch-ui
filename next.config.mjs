@@ -1,3 +1,4 @@
+// @ts-check
 /* eslint-disable no-restricted-syntax, @typescript-eslint/no-var-requires */
 import { createRequire } from 'node:module';
 import * as url from 'node:url';
@@ -97,6 +98,7 @@ let config = {
     ignoreBuildErrors: true,
   },
   productionBrowserSourceMaps: true,
+  swcMinify: false,
   compiler: {
     // Enables the styled-components SWC transform
     styledComponents: true,
@@ -104,7 +106,7 @@ let config = {
   experimental: {
     instrumentationHook: true,
     // FIXME: Enable later
-    // serverComponentsExternalPackages: ['@opentelemetry/instrumentation'],
+    serverComponentsExternalPackages: ['@opentelemetry/instrumentation'],
     outputFileTracingIncludes: standaloneBuild
       ? {
           '/': ['./node_modules/@kausal/themes*/**'],
@@ -120,19 +122,28 @@ let config = {
     const defines = {};
     if (process.env.NODE_ENV !== 'development') {
       // Disable Apollo Client development mode
-      defines['globalThis.__DEV__'] = false
+      defines['globalThis.__DEV__'] = false;
     }
 
     // Due to how the Sentry is pulled into the bundle on the browser side,
     // we will need to do some nasty runtime search-and-replace to use the
     // right value.
     if (!isServer) {
-        const sentryDsnPlaceholder = process.env.SENTRY_DSN_PLACEHOLDER;
-        const sentryDsn = process.env.SENTRY_DSN;
-        defines['process.env.SENTRY_DSN'] = JSON.stringify(sentryDsnPlaceholder ?? sentryDsn ?? null);
-        defines['process.env.SENTRY_DEBUG'] = JSON.stringify(sentryDebug);
-        defines['process.env.DEPLOYMENT_TYPE'] = JSON.stringify(process.env.DEPLOYMENT_TYPE ?? process.env.NEXT_PUBLIC_DEPLOYMENT_TYPE ?? null);
+      const sentryDsnPlaceholder = process.env.SENTRY_DSN_PLACEHOLDER;
+      const sentryDsn = process.env.SENTRY_DSN;
+      defines['process.env.SENTRY_DSN'] = JSON.stringify(
+        sentryDsnPlaceholder ?? sentryDsn ?? null
+      );
+      defines['process.env.SENTRY_DEBUG'] = JSON.stringify(
+        sentryDebug ? '1' : '0'
+      );
+      defines['process.env.DEPLOYMENT_TYPE'] = JSON.stringify(
+        process.env.DEPLOYMENT_TYPE ??
+          process.env.NEXT_PUBLIC_DEPLOYMENT_TYPE ??
+          null
+      );
     }
+    config.optimization.minimize = false;
     config.plugins.push(new webpack.DefinePlugin(defines));
     return config;
   },
@@ -140,7 +151,7 @@ let config = {
 
 function wrapWithSentry(configIn) {
   const { withSentryConfig } = require('@sentry/nextjs');
-  const uploadEnabled = new Boolean(sentryAuthToken);
+  const uploadEnabled = !!sentryAuthToken;
 
   /**
    * @type {import('@sentry/nextjs').SentryBuildOptions}
@@ -149,10 +160,7 @@ function wrapWithSentry(configIn) {
     // For all available options, see:
     // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
     authToken: sentryAuthToken,
-    silent: false,
-    errorHandler: (err) => {
-      console.error(err);
-    },
+    silent: !uploadEnabled,
 
     // Upload a larger set of source maps for prettier stack traces (increases build time)
     widenClientFileUpload: true,
@@ -173,8 +181,14 @@ function wrapWithSentry(configIn) {
     telemetry: false,
     // Automatically tree-shake Sentry logger statements to reduce bundle size
     disableLogger: !sentryDebug,
-    excludeServerRoutes: [API_HEALTH_CHECK_PATH, HEALTH_CHECK_ALIAS_PATH, API_SENTRY_TUNNEL_PATH, SENTRY_TUNNEL_PUBLIC_PATH],
+    excludeServerRoutes: [
+      API_HEALTH_CHECK_PATH,
+      HEALTH_CHECK_ALIAS_PATH,
+      API_SENTRY_TUNNEL_PATH,
+      SENTRY_TUNNEL_PUBLIC_PATH,
+    ],
     automaticVercelMonitors: false,
+    autoInstrumentMiddleware: false,
     sourcemaps: {
       disable: !uploadEnabled,
     },
@@ -183,10 +197,7 @@ function wrapWithSentry(configIn) {
     },
   };
   // Injected content via Sentry wizard below
-  return withSentryConfig(
-    configIn,
-    sentryConfig
-  );
+  return withSentryConfig(configIn, sentryConfig);
 }
 
 config = wrapWithSentry(withNextIntl(config));

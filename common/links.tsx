@@ -269,7 +269,7 @@ export function Link({
   const href = usePrependPlanAndLocale(rawHref);
 
   return (
-    <NextLink href={href} {...linkProps}>
+    <NextLink href={href} prefetch={false} {...linkProps}>
       {children}
     </NextLink>
   );

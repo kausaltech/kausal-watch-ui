@@ -1,9 +1,11 @@
 import 'react-medium-image-zoom/dist/styles.css';
 import '@/styles/default/main.scss';
 
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 import Script from 'next/script';
 
+import * as Sentry from '@sentry/nextjs';
+import type { Metadata } from 'next';
 import { NextIntlClientProvider, useMessages } from 'next-intl';
 import { PublicEnvScript } from 'next-runtime-env';
 
@@ -26,8 +28,21 @@ async function AsyncAuthProvider({ children }) {
   return <AuthProvider session={session}>{children}</AuthProvider>;
 }
 
+export function generateMetadata(): Metadata {
+  const traceData = Sentry.getTraceData();
+  const other: Metadata['other'] = {};
+  if (traceData.baggage) other.baggage = traceData.baggage;
+  if (traceData['sentry-trace'])
+    other['sentry-trace'] = traceData['sentry-trace'];
+  return {
+    other,
+  };
+}
+
 export default function LangLayout({ params, children }: Props) {
   const messages = useMessages();
+  console.log('root layout');
+  console.log(Sentry.getActiveSpan()?.spanContext());
 
   return (
     <html lang={params.lang}>

@@ -1,9 +1,9 @@
-import { getApiUrl } from './environment';
+import { getWatchApiUrl } from './environment';
 
 export const aplans = {
   get: async (path: string, { params }) => {
     const locale = params.language;
-    let url = `${getApiUrl()}/${path}`;
+    let url = `${getWatchApiUrl()}/${path}`;
 
     if (!url.endsWith('/')) url += '/';
     if (params) {

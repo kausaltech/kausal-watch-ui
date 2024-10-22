@@ -9,12 +9,10 @@ import { getWildcardDomains } from '@/common/environment';
 import { auth } from '@/config/auth';
 import { SELECTED_WORKFLOW_COOKIE_KEY } from '@/constants/workflow';
 import {
-  errorLink,
   getHttpLink,
   headersMiddleware,
   localeMiddleware,
-  operationEnd,
-  operationStart,
+  logOperationLink,
 } from './apollo.utils';
 
 const authMiddleware = setContext(
@@ -57,12 +55,10 @@ export const { getClient } = registerApolloClient(() => {
       possibleTypes: possibleTypes.possibleTypes,
     }),
     link: from([
-      operationStart,
-      errorLink,
+      logOperationLink,
       localeMiddleware,
       authMiddleware,
       headersMiddleware,
-      operationEnd,
       getHttpLink(),
     ]),
   });

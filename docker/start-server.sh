@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 set -e
 
@@ -14,37 +14,30 @@ if [ -z "$NEXT_PUBLIC_DEPLOYMENT_TYPE" ]; then
   export NEXT_PUBLIC_DEPLOYMENT_TYPE="$DEPLOYMENT_TYPE"
 fi
 
-replace_placeholder() {
-  placeholder="$1"
-  replacement="$2"
-
-  if [ -z "$placeholder" ] ; then
-    return
-  fi
-
-  # shellcheck disable=SC2086
-  echo Replacing \"$placeholder\" with \"$replacement\"
-
-  # shellcheck disable=SC2038
-  dotnext_files=$(find .next -name '*.json' -o -name '*.html' -o -name '*.js' -o -name '*.css' | xargs grep -l "$placeholder" | xargs)
-  if [ -f server.js ] ; then
-    dotnext_files="$dotnext_files server.js"
-  fi
-  for fn in $dotnext_files ; do
-    sed -e "s=$placeholder=$replacement=g" < "${fn}" > "${fn}.new"
-    mv "${fn}.new" "$fn"
-  done
-}
+if [ -z "$AUTH_SECRET" ]; then
+  echo "⚠️ AUTH_SECRET is not set; generating it dynamically."
+  AUTH_SECRET=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 32; echo)
+  export AUTH_SECRET
+fi
 
 PLACEHOLDERS_FN=runtime-placeholders.txt
 
-# Read and process .placeholders file
-if [ -f "$PLACEHOLDERS_FN" ]; then
-  while IFS='|' read -r env_var placeholder
-  do
+replace_placeholders() {
+  SED_ARGS=()
+  while IFS='|' read -r env_var placeholder ; do
     replacement=$(eval echo \$"$env_var")
-    replace_placeholder "$placeholder" "$replacement"
+    echo Replacing \""$placeholder"\" with \""$replacement"\"
+    SED_ARGS+=('-e' "s=$placeholder=$replacement=g")
   done < "$PLACEHOLDERS_FN"
+
+  while IFS= read -r fn ; do
+    sed "${SED_ARGS[@]}" < "${fn}" > "${fn}.new"
+    mv "${fn}.new" "$fn"
+  done < <(cat runtime-placeholder-files.txt)
+}
+
+if [ -f "$PLACEHOLDERS_FN" ]; then
+  replace_placeholders
 fi
 
 export PORT="${NEXTJS_PORT}"

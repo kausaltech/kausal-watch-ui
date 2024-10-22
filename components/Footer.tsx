@@ -7,12 +7,12 @@ import { usePlan } from 'context/plan';
 import { useTranslations } from 'next-intl';
 import { useTheme } from 'styled-components';
 
-import { PlanContextFragment } from '@/common/__generated__/graphql';
+import type { PlanContextFragment } from '@/common/__generated__/graphql';
 import { getDeploymentType } from '@/common/environment';
 import MonsidoAccessibility from '@/components/MonsidoAccessibility';
 import { getMetaTitles } from '@/utils/metadata';
 import ApplicationStateBanner from './common/ApplicationStateBanner';
-import SiteFooter, { UtilityLink } from './common/SiteFooter';
+import SiteFooter, { type UtilityLink } from './common/SiteFooter';
 
 type NavItem = NonNullable<PlanContextFragment['footer']>['items'][0];
 

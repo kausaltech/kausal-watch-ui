@@ -15,7 +15,7 @@ on:
         description: 'Base URL for backend API'
         required: true
         type: string
-        default: 'https://api.watch.kausal.tech/v1'
+        default: 'https://api.watch.kausal.tech'
       build_id:
         description: 'Unique ID for the build'
         required: true
@@ -53,16 +53,16 @@ jobs:
       image: harbor.kausal.tech/library/playwright:v1.48.1
     env:
       TEST_INSTANCE_IDENTIFIERS: ${{ inputs.instance_identifiers }}
-      NEXT_PUBLIC_API_URL: ${{ inputs.backend_base_url }}
+      WATCH_BACKEND_URL: ${{ inputs.backend_base_url }}
       TEST_PAGE_BASE_URL: 'http://{instanceId}.localhost:3000'
       CI: 1
     services:
       app:
         image: ${{ inputs.image }}
         env:
-          DEPLOYMENT_TYPE: testing
-          NEXT_PUBLIC_WILDCARD_DOMAINS: localhost
-          NEXT_PUBLIC_API_URL: ${{ inputs.backend_base_url }}
+          DEPLOYMENT_TYPE: ci
+          WILDCARD_DOMAINS: localhost
+          WATCH_BACKEND_URL: ${{ inputs.backend_base_url }}
           SENTRY_DSN: ${{ vars.SENTRY_DSN }}
           AUTH_SECRET: abcd
           AUTH_TRUST_HOST: true

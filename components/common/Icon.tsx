@@ -1,14 +1,16 @@
 'use client';
 
 import React from 'react';
+
 import SVG from 'react-inlinesvg';
 import { useTheme } from 'styled-components';
-import defaultTheme from '@/public/static/themes/default/theme.json';
+
 import { getThemeStaticURL } from '@/common/theme';
+import defaultTheme from '@/public/static/themes/default/theme.json';
 
 const makeIconId = (name: string): string => `symbol-icon-${name}`;
 
-export function HiddenReusableIcon(props) {
+export function HiddenReusableIcon(props: { name: string }) {
   // There needs to be one of these in the DOM for each available icon
   // so they can be referenced through the SVG use mechanism at the
   // site of use. Include the SharedIcons component to the layout add
@@ -29,7 +31,7 @@ export function HiddenReusableIcon(props) {
   );
 }
 
-export function SharedIcons(props: React.PropsWithChildren) {
+export function SharedIcons() {
   const iconReferences = Object.values(AvailableIcons);
   const hiddenIcons = iconReferences.map((iconRef) => (
     <HiddenReusableIcon key={iconRef} name={iconRef} />
@@ -106,7 +108,7 @@ type IconProps = {
   name?: ValidIconName;
 } & Props;
 
-const IconComponent = ({
+const IconComponent: React.FC<IconProps> = ({
   name = 'circle-outline',
   color = 'inherit',
   width = '1em',
@@ -135,7 +137,7 @@ type IconsInterface = {
   [K in keyof typeof AvailableIcons]: (props: Props) => JSX.Element;
 } & typeof IconComponent;
 
-for (const [key, val] of Object.entries(AvailableIcons)) {
+for (const key of Object.keys(AvailableIcons)) {
   const fn = (props: Props) => (
     <IconComponent name={AvailableIcons[key]} {...props} />
   );

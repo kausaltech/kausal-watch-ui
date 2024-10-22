@@ -1,8 +1,23 @@
-import { ApolloLink, HttpLink, Operation } from '@apollo/client';
+import {
+  ApolloLink,
+  HttpLink,
+  type NextLink,
+  type Operation,
+} from '@apollo/client';
 import { onError } from '@apollo/client/link/error';
 import { captureException } from '@sentry/nextjs';
+import { SentryLink } from 'apollo-link-sentry';
+import { type DirectiveNode, Kind } from 'graphql';
+import type { BaseLogger, Bindings } from 'pino';
 
-import { getGqlUrl, isServer, logGraphqlQueries } from '@/common/environment';
+import {
+  getWatchGraphQLUrl,
+  isLocal,
+  isProductionDeployment,
+  isServer,
+  logGraphqlQueries,
+} from '@/common/environment';
+import { nanoid } from '@/common/ids';
 import { getLogger } from '@/common/log';
 import { API_PROXY_PATH } from '@/constants/routes.mjs';
 
@@ -20,6 +35,7 @@ declare module '@apollo/client' {
     wildcardDomains?: string[];
     sessionToken?: string;
     start?: number;
+    logger?: BaseLogger;
   }
 }
 
@@ -29,13 +45,8 @@ function logError(
   error: unknown,
   sentryExtras: { [key: string]: unknown }
 ) {
-  const logContext = {
-    operation: operation.operationName,
-  };
-  logger.error(
-    { logContext, error },
-    `An error occurred while querying: ${message}`
-  );
+  const opLogger = operation.getContext().logger ?? logger;
+  opLogger.error({ error }, `An error occurred while querying: ${message}`);
   captureException(message, {
     extra: {
       query: operation.query,
@@ -46,45 +57,72 @@ function logError(
   });
 }
 
-export const errorLink = onError(
-  ({ networkError, graphQLErrors, operation }) => {
-    if (networkError) {
-      logError(operation, networkError.message, networkError, {
-        cause: networkError.cause,
-        name: networkError.name,
-      });
-    }
-
-    if (graphQLErrors) {
-      graphQLErrors.forEach((error) => {
-        logError(operation, error.message, error, {
-          errorPath: error.path,
-        });
-      });
-    }
+const logErrorLink = onError(({ networkError, graphQLErrors, operation }) => {
+  if (networkError) {
+    logError(operation, networkError.message, networkError, {
+      cause: networkError.cause,
+      name: networkError.name,
+    });
   }
-);
 
-export const operationStart = new ApolloLink((operation, forward) => {
-  operation.setContext({ start: Date.now() });
-  logger.info({ operation: operation.operationName }, 'Querying');
-  return forward(operation);
+  if (graphQLErrors) {
+    graphQLErrors.forEach((error) => {
+      logError(operation, error.message, error, {
+        errorPath: error.path,
+      });
+    });
+  }
 });
 
-export const operationEnd = new ApolloLink((operation, forward) => {
+const logOperation = new ApolloLink((operation, forward: NextLink) => {
+  const { setContext, operationName } = operation;
+  const queryId = nanoid(8);
+  const opLogger = logger.child(
+    { operation: operationName, queryId },
+    { level: !isServer && isProductionDeployment() ? 'fatal' : 'info' }
+  );
+  setContext({ start: Date.now(), logger: opLogger });
+  opLogger.info(`Starting GraphQL request ${operationName}`);
   return forward(operation).map((data) => {
+    const now = Date.now();
     const start = operation.getContext().start;
-    if (!start) {
-      return data;
+    const durationMs = start ? Math.round(now - start) : null;
+    const logContext: Bindings = {
+      duration: durationMs,
+    };
+    const durationStr =
+      durationMs != null ? `(took ${durationMs} ms)` : `<unknown duration>`;
+    if (isLocal) {
+      logContext.responseLength = JSON.stringify(data).length;
     }
-    const time = Math.round(Date.now() - start);
-    logger.info(
-      { operation: operation.operationName, duration: time / 1000 },
-      `Operation took ${time}ms`
-    );
+    const nrErrors = data.errors?.length;
+    if (nrErrors) {
+      opLogger.error(
+        { errorCount: nrErrors, ...logContext },
+        `Operation finished with errors ${durationStr}`
+      );
+    } else {
+      opLogger.info(
+        logContext,
+        `GraphQL request ${operationName} finished successfully ${durationStr}`
+      );
+    }
     return data;
   });
 });
+
+export const logOperationLink = ApolloLink.from([logOperation, logErrorLink]);
+
+export function createSentryLink() {
+  const uri = getWatchGraphQLUrl();
+  const sentryLink = new SentryLink({
+    uri,
+    attachBreadcrumbs: {
+      includeVariables: true,
+    },
+  });
+  return sentryLink;
+}
 
 /**
  * Log the outgoing GraphQL queries and variables server-side. Useful for debugging
@@ -119,7 +157,7 @@ function fetchWithLogging(
  */
 export const getHttpLink = () =>
   new HttpLink({
-    uri: !isServer ? API_PROXY_PATH : getGqlUrl(),
+    uri: !isServer ? API_PROXY_PATH : getWatchGraphQLUrl(),
     credentials: 'same-origin',
     fetchOptions: {
       mode: 'same-origin',
@@ -163,17 +201,17 @@ export const localeMiddleware = new ApolloLink((operation, forward) => {
     return forward(operation);
   }
 
-  const localeDirective = {
-    kind: 'Directive',
+  const localeDirective: DirectiveNode = {
+    kind: Kind.DIRECTIVE,
     name: {
-      kind: 'Name',
+      kind: Kind.NAME,
       value: 'locale',
     },
     arguments: [
       {
-        kind: 'Argument',
-        name: { kind: 'Name', value: 'lang' },
-        value: { kind: 'StringValue', value: locale, block: false },
+        kind: Kind.ARGUMENT,
+        name: { kind: Kind.NAME, value: 'lang' },
+        value: { kind: Kind.STRING, value: locale, block: false },
       },
     ],
   };

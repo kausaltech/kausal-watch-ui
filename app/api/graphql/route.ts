@@ -2,7 +2,7 @@ import { headers } from 'next/headers';
 
 import { NextAuthRequest } from 'next-auth/lib';
 
-import { getGqlUrl } from '@/common/environment';
+import { getWatchGraphQLUrl } from '@/common/environment';
 
 export const dynamic = 'force-dynamic';
 
@@ -31,7 +31,7 @@ export const POST = async (request: NextAuthRequest) => {
     }
   });
 
-  const response = await fetch(getGqlUrl(), {
+  const response = await fetch(getWatchGraphQLUrl(), {
     method: 'POST',
     headers: fetchHeaders,
     body: JSON.stringify(requestData),

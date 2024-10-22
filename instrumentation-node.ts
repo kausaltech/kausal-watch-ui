@@ -1,62 +1,81 @@
 import { PrometheusExporter } from '@opentelemetry/exporter-prometheus';
-//import { HostMetrics } from '@opentelemetry/host-metrics';
-import { registerInstrumentations } from '@opentelemetry/instrumentation';
-import { HttpInstrumentation } from '@opentelemetry/instrumentation-http';
-import { RuntimeNodeInstrumentation } from '@opentelemetry/instrumentation-runtime-node';
-import { UndiciInstrumentation } from '@opentelemetry/instrumentation-undici';
 import {
-  Resource,
   detectResourcesSync,
   envDetector,
   hostDetector,
   processDetector,
+  Resource,
 } from '@opentelemetry/resources';
 import { MeterProvider } from '@opentelemetry/sdk-metrics';
+import { NodeTracerProvider } from '@opentelemetry/sdk-trace-node';
 import {
-  SEMRESATTRS_SERVICE_NAME,
-  SEMRESATTRS_SERVICE_VERSION,
+  ATTR_SERVICE_NAME,
+  ATTR_SERVICE_VERSION,
 } from '@opentelemetry/semantic-conventions';
+import {
+  type NodeClient,
+  SentryContextManager,
+  validateOpenTelemetrySetup,
+} from '@sentry/nextjs';
+import {
+  SentryPropagator,
+  SentrySampler,
+  SentrySpanProcessor,
+} from '@sentry/opentelemetry';
 
-const metricsPort = process.env.METRICS_PORT
-  ? Number(process.env.METRICS_PORT)
-  : 9464;
+function getResources() {
+  const customResources = new Resource({
+    [ATTR_SERVICE_NAME]: process.env.SENTRY_PROJECT,
+    [ATTR_SERVICE_VERSION]: process.env.BUILD_ID,
+  });
+  return customResources;
+}
 
-const exporter = new PrometheusExporter({
-  port: metricsPort,
-});
-const detectedResources = detectResourcesSync({
-  detectors: [envDetector, processDetector, hostDetector],
-});
+export function initMetrics() {
+  const metricsPort = process.env.METRICS_PORT
+    ? Number(process.env.METRICS_PORT)
+    : 9464;
 
-const customResources = new Resource({
-  [SEMRESATTRS_SERVICE_NAME]: process.env.SENTRY_PROJECT,
-  [SEMRESATTRS_SERVICE_VERSION]: process.env.BUILD_ID,
-});
+  const exporter = new PrometheusExporter({
+    port: metricsPort,
+  });
+  const detectedResources = detectResourcesSync({
+    detectors: [envDetector, processDetector, hostDetector],
+  });
 
-const resources = detectedResources.merge(customResources);
+  const resources = detectedResources.merge(getResources());
 
-const meterProvider = new MeterProvider({
-  readers: [exporter],
-  resource: resources,
-});
+  const meterProvider = new MeterProvider({
+    readers: [exporter],
+    resource: resources,
+  });
+
+  console.log(`Prometheus metrics served at :${metricsPort}`);
+  exporter.startServer();
+  return meterProvider;
+}
 /*
 const hostMetrics = new HostMetrics({
     name: process.env.SENTRY_PROJECT!,
     meterProvider,
 });
 */
-registerInstrumentations({
-  meterProvider,
-  instrumentations: [
-    new HttpInstrumentation(),
-    new RuntimeNodeInstrumentation(),
-    new UndiciInstrumentation(),
-  ],
-});
 
-console.log(`Prometheus metrics served at :${metricsPort}`);
+export function registerTracer(sentryClient: NodeClient | undefined) {
+  const provider = new NodeTracerProvider({
+    sampler: sentryClient ? new SentrySampler(sentryClient) : undefined,
+  });
+  provider.addSpanProcessor(new SentrySpanProcessor());
+  provider.register({
+    // Ensure trace propagation works
+    // This relies on the SentrySampler for correct propagation
+    propagator: new SentryPropagator(),
+    // Ensure context & request isolation are correctly managed
+    contextManager: new SentryContextManager(),
+  });
+  validateOpenTelemetrySetup();
+}
 
-exporter.startServer();
 /*
 function initLogging() {
   // To start a logger, you first need to initialize the Logger provider.

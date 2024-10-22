@@ -16,6 +16,7 @@
     "jsx": "preserve",
     "strictNullChecks": true,
     "incremental": true,
+    "verbatimModuleSyntax": true,
     "plugins": [
       {
         "name": "next"

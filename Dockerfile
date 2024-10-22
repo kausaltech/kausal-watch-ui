@@ -41,6 +41,7 @@ ARG DEPLOYMENT_TYPE_PLACEHOLDER=__KAUSAL_DEPLOYMENT_TYPE_PLACEHOLDER__
 ARG BUILD_ID
 ARG SENTRY_PROJECT=watch-ui
 ARG SENTRY_RELEASE=${SENTRY_PROJECT}@${BUILD_ID}
+ARG SENTRY_DEBUG=0
 ENV BUILD_ID=${BUILD_ID} SENTRY_RELEASE=${SENTRY_RELEASE}
 
 WORKDIR /app
@@ -75,7 +76,7 @@ RUN --mount=type=secret,id=SENTRY_AUTH_TOKEN --mount=type=cache,target=/app/.nex
   NEXTJS_ASSET_PREFIX=${NEXTJS_ASSET_PREFIX_PLACEHOLDER} \
   SENTRY_DSN_PLACEHOLDER="${SENTRY_DSN_PLACEHOLDER}" \
   DEPLOYMENT_TYPE="${DEPLOYMENT_TYPE_PLACEHOLDER}" \
-  npm run build && /manage-nextjs-cache.sh save
+  npm run build --no-mangling && /manage-nextjs-cache.sh save
 
 
 FROM nextjs_base AS final
@@ -83,7 +84,7 @@ FROM nextjs_base AS final
 # Add nextjs user
 RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 nextjs && chown nextjs:nodejs /app
 
-RUN apk update && apk add --no-cache caddy multirun && rm -rf /var/cache/apk
+RUN apk update && apk add --no-cache bash caddy multirun && rm -rf /var/cache/apk
 
 # For non-standalone builds
 # COPY --chown=nextjs:nodejs --from=deps /app/node_modules ./node_modules
@@ -115,6 +116,12 @@ RUN \
   if [ -n "${SENTRY_DSN_PLACEHOLDER}" ] ; then echo "SENTRY_DSN|${SENTRY_DSN_PLACEHOLDER}" >> $PH_FN ; fi ;\
   if [ -n "${NEXTJS_ASSET_PREFIX_PLACEHOLDER}" ] ; then echo "NEXTJS_ASSET_PREFIX|${NEXTJS_ASSET_PREFIX_PLACEHOLDER}" >> $PH_FN ; fi ;\
   if [ -n "${DEPLOYMENT_TYPE_PLACEHOLDER}" ] ; then echo "DEPLOYMENT_TYPE|${DEPLOYMENT_TYPE_PLACEHOLDER}" >> $PH_FN ; fi
+
+RUN \
+  export PHF_FN=runtime-placeholder-files.txt ; \
+  export PHF_FILES=$(find .next -name '*.json' -o -name '*.html' -o -name '*.js' -o -name '*.css') ; \
+  grep -l -e "${SENTRY_DSN_PLACEHOLDER}" -e "${NEXTJS_ASSET_PREFIX_PLACEHOLDER}" -e "${DEPLOYMENT_TYPE_PLACEHOLDER}" $PHF_FILES > $PHF_FN ; \
+  echo server.js >> $PHF_FN
 
 ARG NEXTJS_PORT=3000
 ARG CADDY_PORT=3001

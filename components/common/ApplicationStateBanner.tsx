@@ -1,17 +1,36 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { usePlan } from 'context/plan';
-import PlanVersionBanner from 'components/versioning/PlanVersionBanner';
+
 import { AnnouncementBannerWithRichTextMessage } from 'components/common/AnnouncementBanner';
+import PlanVersionBanner from 'components/versioning/PlanVersionBanner';
+import { usePlan } from 'context/plan';
 import { useTranslations } from 'next-intl';
+import styled from 'styled-components';
+
+import type { DeploymentType } from '@/common/environment';
 
 const Banner = styled.div`
   padding: 8px 16px;
   text-align: right;
-  font-family: -apple-system, -apple-system, BlinkMacSystemFont, 'Segoe UI',
-    Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif,
-    helvetica neue, helvetica, Ubuntu, roboto, noto, segoe ui, arial, sans-serif;
+  font-family:
+    -apple-system,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    'Open Sans',
+    'Helvetica Neue',
+    sans-serif,
+    helvetica neue,
+    helvetica,
+    Ubuntu,
+    roboto,
+    noto,
+    segoe ui,
+    arial,
+    sans-serif;
   font-size: 12px;
   background-color: #000000;
   color: silver;
@@ -20,14 +39,14 @@ const Banner = styled.div`
   }
 `;
 
-const Label = styled.strong`
+const Label = styled.strong<{ $type: DeploymentType }>`
   color: goldenrod;
   margin-right: 0.5em;
 
   &:before {
     margin-right: 1em;
     content: ${(props) => {
-      switch (props.type) {
+      switch (props.$type) {
         case 'production':
           return '';
         case 'testing':
@@ -39,14 +58,17 @@ const Label = styled.strong`
   }
 `;
 
-function ApplicationStateBanner(props) {
-  const { deploymentType = 'development' } = props;
+function ApplicationStateBanner(props: { deploymentType: DeploymentType }) {
+  const { deploymentType: deploymentTypeIn = 'development' } = props;
   const t = useTranslations();
 
-  let typeLabel;
-  let typeMessage;
+  let typeLabel: string | null;
+  let typeMessage: string | null;
 
   const plan = usePlan();
+  // We treat the CI runs as production as far as the banner is concerned.
+  const deploymentType =
+    deploymentTypeIn === 'ci' ? 'production' : deploymentTypeIn;
 
   // Only show superseding versions in production if they are published
   let supersedingVersions = plan.supersedingPlans;
@@ -57,6 +79,7 @@ function ApplicationStateBanner(props) {
   switch (deploymentType) {
     case 'production':
       typeLabel = null;
+      typeMessage = null;
       break;
     case 'testing':
       typeLabel = t('instance-type-testing-label');
@@ -73,7 +96,7 @@ function ApplicationStateBanner(props) {
   const banner =
     typeLabel != null ? (
       <Banner>
-        <Label type={deploymentType}>{typeLabel.toUpperCase()}</Label>
+        <Label $type={deploymentType}>{typeLabel.toUpperCase()}</Label>
         {` ${typeMessage}`}
       </Banner>
     ) : null;
@@ -95,14 +118,5 @@ function ApplicationStateBanner(props) {
     </>
   );
 }
-
-ApplicationStateBanner.propTypes = {
-  deploymentType: PropTypes.oneOf([
-    'production',
-    'testing',
-    'staging',
-    'development',
-  ]),
-};
 
 export default ApplicationStateBanner;

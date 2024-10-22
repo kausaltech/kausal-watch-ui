@@ -1,9 +1,9 @@
 import { headers } from 'next/headers';
 
 import { ApolloClient, from, gql, InMemoryCache } from '@apollo/client';
-import { MetadataRoute } from 'next';
+import type { MetadataRoute } from 'next';
 
-import {
+import type {
   GetPlansByHostnameQuery,
   GetPlansByHostnameQueryVariables,
   GetSitemapQuery,
@@ -17,18 +17,14 @@ import {
 } from '@/constants/routes.mjs';
 import { GET_PLANS_BY_HOSTNAME } from '@/queries/get-plans';
 import { tryRequest } from '@/utils/api.utils';
-import {
-  getHttpLink,
-  operationEnd,
-  operationStart,
-} from '@/utils/apollo.utils';
+import { getHttpLink, logOperationLink } from '@/utils/apollo.utils';
 
 const apolloClient = new ApolloClient({
   cache: new InMemoryCache({
     // https://www.apollographql.com/docs/react/data/fragments/#defining-possibletypes-manually
     possibleTypes: possibleTypes.possibleTypes,
   }),
-  link: from([operationStart, operationEnd, getHttpLink()]),
+  link: from([logOperationLink, getHttpLink()]),
 });
 
 const GET_SITEMAP_CONTENTS = gql`

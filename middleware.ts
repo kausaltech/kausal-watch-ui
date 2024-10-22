@@ -3,9 +3,17 @@ import { NextRequest, NextResponse } from 'next/server';
 import { ApolloClient, from, InMemoryCache } from '@apollo/client';
 import { loadDevMessages, loadErrorMessages } from '@apollo/client/dev';
 import { setContext } from '@apollo/client/link/context';
-import { captureException } from '@sentry/nextjs';
+import * as Sentry from '@sentry/nextjs';
 import createIntlMiddleware from 'next-intl/middleware';
 
+import type {
+  GetPlansByHostnameQuery,
+  GetPlansByHostnameQueryVariables,
+} from '@/common/__generated__/graphql';
+import possibleTypes from '@/common/__generated__/possible_types.json';
+import { getClientIP } from '@/common/client-ip';
+import { getWildcardDomains } from '@/common/environment';
+import { getLogger } from '@/common/log';
 import {
   API_HEALTH_CHECK_PATH,
   API_SENTRY_TUNNEL_PATH,
@@ -13,21 +21,14 @@ import {
   SENTRY_TUNNEL_PUBLIC_PATH,
   UNPUBLISHED_PATH,
 } from '@/constants/routes.mjs';
+import { GET_PLANS_BY_HOSTNAME } from '@/queries/get-plans';
+import { tryRequest } from '@/utils/api.utils';
 import {
-  GetPlansByHostnameQuery,
-  GetPlansByHostnameQueryVariables,
-} from './common/__generated__/graphql';
-import possibleTypes from './common/__generated__/possible_types.json';
-import { getClientIP } from './common/client-ip';
-import { getWildcardDomains } from './common/environment';
-import { getLogger } from './common/log';
-import { GET_PLANS_BY_HOSTNAME } from './queries/get-plans';
-import { tryRequest } from './utils/api.utils';
-import {
+  createSentryLink,
   getHttpLink,
-  operationEnd,
-  operationStart,
-} from './utils/apollo.utils';
+  logOperationLink,
+} from '@/utils/apollo.utils';
+import { stripLocaleAndPlan } from '@/utils/urls';
 import {
   convertPathnameFromInvalidLocaleCasing,
   convertPathnameFromLegacy,
@@ -39,7 +40,6 @@ import {
   isRestrictedPlan,
   rewriteUrl,
 } from './utils/middleware.utils';
-import { stripLocaleAndPlan } from './utils/urls';
 
 if (process.env.NODE_ENV !== 'production') {
   loadDevMessages();
@@ -81,8 +81,8 @@ const apolloClient = new ApolloClient({
     possibleTypes: possibleTypes.possibleTypes,
   }),
   link: from([
-    operationStart,
-    operationEnd,
+    logOperationLink,
+    createSentryLink(),
     httpHeadersMiddleware,
     getHttpLink(),
   ]),
@@ -97,7 +97,7 @@ export const config = {
      * 3. /_static (inside /public)
      * 4. all root files inside /public
      */
-    '/((?!api/|_next/|_static/|static/|[\\w-]+\\.\\w+).*)',
+    '/((?!api/|_next/|_static/|static/).*)', // |[\\w-]+\\.\\w+).*)
   ],
 };
 
@@ -116,7 +116,7 @@ const clearCacheIfTimedOut = (function handleCacheTTL() {
   };
 })();
 
-export async function middleware(request: NextRequest) {
+async function handleRequest(request: NextRequest) {
   const url = request.nextUrl;
   const { pathname } = request.nextUrl;
 
@@ -137,20 +137,17 @@ export async function middleware(request: NextRequest) {
     return NextResponse.rewrite(url);
   }
 
-  logger.info(
-    {
-      method: request.method,
-      path: nextUrl.pathname,
-      host,
-      remote_ip: getClientIP(request),
-    },
-    'middleware request'
-  );
-
-  // Redirect the root application locally to `sunnydale` tenant
-  if (hostname === 'localhost') {
-    return NextResponse.redirect(new URL(`http://sunnydale.${host}`));
+  if (request.headers.has('x-plan-identifier')) {
+    console.log('middleware yes yes');
+    return NextResponse.next();
   }
+
+  logger.info({
+    method: request.method,
+    path: nextUrl.pathname,
+    host,
+    remote_ip: getClientIP(request),
+  });
 
   if (pathname === '/_invalidate-middleware-cache') {
     await apolloClient.clearStore();
@@ -180,7 +177,7 @@ export async function middleware(request: NextRequest) {
   );
   if (error || !data?.plansForHostname?.length) {
     if (error) {
-      captureException(error, { extra: { hostname, ...error } });
+      Sentry.captureException(error, { extra: { hostname, ...error } });
       logger.error(
         { error: error.toString(), hostname },
         'Unable to get plans for hostname'
@@ -223,6 +220,8 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL(newPathname, request.url));
   }
 
+  // Properly formatted requests
+  console.log(Sentry.getActiveSpan()?.spanContext());
   const handleI18nRouting = createIntlMiddleware({
     locales: [parsedPlan.primaryLanguage, ...(parsedPlan.otherLanguages ?? [])],
     defaultLocale: parsedPlan.primaryLanguage,
@@ -269,3 +268,5 @@ export async function middleware(request: NextRequest) {
     parsedPlan.identifier
   );
 }
+
+export const middleware = Sentry.wrapMiddlewareWithSentry(handleRequest);

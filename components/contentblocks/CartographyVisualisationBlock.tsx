@@ -1,10 +1,11 @@
+import 'mapbox-gl/dist/mapbox-gl.css';
+
 import React from 'react';
-import { Container, Col, Row } from 'reactstrap';
-import Map, { useControl, useMap, NavigationControl } from 'react-map-gl';
 
 import LegendControl from '@kausal/mapboxgl-legend';
-import 'mapbox-gl/dist/mapbox-gl.css';
-import { CommonContentBlockProps } from 'common/blocks.types';
+import { type CommonContentBlockProps } from 'common/blocks.types';
+import Map, { NavigationControl, useMap } from 'react-map-gl';
+import { Col, Container, Row } from 'reactstrap';
 
 interface CartographyVisualisationBlockProps extends CommonContentBlockProps {
   styleUrl: string;
@@ -85,7 +86,7 @@ const LegendWithOverrides = ({ styleOverrides }) => {
       .map((l) => l.id);
 
     const legend = new LegendControl({ layers: layersToAdd });
-    map.getMap().addControl(legend, 'top-left');
+    //map.getMap().addControl(legend, 'top-left');
     map.getMap().setStyle(style, { diff: false });
 
     mapLegendApplied = true;

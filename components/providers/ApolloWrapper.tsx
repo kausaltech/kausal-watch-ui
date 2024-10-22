@@ -13,10 +13,10 @@ import { useLocale } from 'next-intl';
 
 import { getRuntimeConfig, isServer } from '@/common/environment';
 import {
-  errorLink,
   getHttpLink,
   headersMiddleware,
   localeMiddleware,
+  logOperationLink,
 } from '../../utils/apollo.utils';
 
 const authMiddleware = setContext(
@@ -43,7 +43,7 @@ function makeClient(
     },
     cache: new InMemoryCache(),
     link: ApolloLink.from([
-      errorLink,
+      logOperationLink,
       localeMiddleware,
       authMiddleware,
       headersMiddleware,

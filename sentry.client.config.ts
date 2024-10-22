@@ -3,16 +3,20 @@
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
 import * as Sentry from '@sentry/nextjs';
+import type { SamplingContext } from '@sentry/types';
 
-import { SENTRY_TUNNEL_PUBLIC_PATH } from './constants/routes.mjs';
+import { getSentryTraceSampleRate } from './common/environment';
 
 Sentry.init({
-  environment: process.env.DEPLOYMENT_TYPE || 'development',
+  //environment: process.env.DEPLOYMENT_TYPE || 'development',
   dsn: process.env.SENTRY_DSN,
-  tunnel: SENTRY_TUNNEL_PUBLIC_PATH,
+  //tunnel: SENTRY_TUNNEL_PUBLIC_PATH,
   ignoreErrors: ['NEXT_NOT_FOUND'],
-  // Adjust this value in production, or use tracesSampler for greater control
-  tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1.0,
+  tracesSampler(ctx: SamplingContext) {
+    console.dir(ctx, { depth: 4 });
+    if (ctx.parentSampled !== undefined) return ctx.parentSampled;
+    return getSentryTraceSampleRate();
+  },
   // Setting this option to true will print useful information to the console while you're setting up Sentry.
   debug: process.env.SENTRY_DEBUG === '1',
   replaysOnErrorSampleRate: 1.0,

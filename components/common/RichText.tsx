@@ -2,6 +2,7 @@ import 'react-medium-image-zoom/dist/styles.css';
 
 import React, { ReactElement, useCallback, useState } from 'react';
 
+import { withScope } from '@sentry/nextjs';
 import Button from 'components/common/Button';
 import Icon from 'components/common/Icon';
 import { usePlan } from 'context/plan';
@@ -15,8 +16,6 @@ import { useTranslations } from 'next-intl';
 import Zoom from 'react-medium-image-zoom';
 import { Collapse } from 'reactstrap';
 import styled from 'styled-components';
-
-import { withScope } from '@sentry/nextjs';
 
 const BreakPoint = styled.div<{ fade: boolean }>`
   text-align: center;
@@ -104,6 +103,7 @@ const CompressIcon = styled(ICompress)`
 function RichTextImage(props: RichTextImageProps) {
   const plan = usePlan();
   const { attribs } = props;
+  console.log(attribs);
   const {
     src,
     alt,
@@ -112,8 +112,12 @@ function RichTextImage(props: RichTextImageProps) {
     'data-original-src': originalSrc,
     'data-original-width': originalWidth,
     'data-original-height': originalHeight,
+    class: originalClass,
+    className: originalClassName,
     ...rest
   } = attribs;
+
+  let className = originalClassName || originalClass;
 
   const imageUrl = src?.startsWith('http')
     ? src
@@ -127,12 +131,13 @@ function RichTextImage(props: RichTextImageProps) {
   const applyZoom = !isNaN(origWidth) && origWidth > 1000;
 
   const imgElement = (
+    // eslint-disable-next-line @next/next/no-img-element
     <img
       src={imageUrl}
       alt={alt || 'Image'}
       height={height}
       width={width}
-      className={rest.className || 'richtext-image full-width'}
+      className={className || 'richtext-image full-width'}
       {...rest}
     />
   );
