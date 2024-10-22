@@ -1,5 +1,7 @@
 import type { NextRequest } from 'next/server';
 
+import { ipAddress } from '@vercel/functions';
+
 function parseForwardedFor(value: string) {
   const forwardedIps = value.split(',').map((e) => {
     const ip = e.trim();
@@ -20,5 +22,5 @@ export function getClientIP(req: NextRequest) {
   if (forwardedFor) {
     return parseForwardedFor(forwardedFor);
   }
-  return req.ip;
+  return ipAddress(req);
 }
