@@ -45,6 +45,10 @@ const GET_CATEGORIES_FOR_CATEGORY_TYPE_LIST = gql`
   query GetCategoriesForCategoryTypeList($plan: ID!, $categoryType: ID!) {
     planCategories(plan: $plan, categoryType: $categoryType) {
       ...CategoryRecursiveFragment
+      indicators {
+        id
+        name
+      }
     }
   }
   ${RECURSIVE_CATEGORY_FRAGMENT}
