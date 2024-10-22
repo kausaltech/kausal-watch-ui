@@ -16943,6 +16943,7 @@ __metadata:
     react-range: ^1.10.0
     react-select: ^5.4.0
     react-sizeme: ^3.0.2
+    react-sparklines: ^1.7.0
     reactstrap: 9.2.1
     regenerator-runtime: ^0.13.9
     sass: ^1.51.0
@@ -20576,6 +20577,18 @@ __metadata:
     shallowequal: ^1.1.0
     throttle-debounce: ^3.0.1
   checksum: 97cb852c24bbd50acb310da89df564e0d069415f6635676dae3d3bdc583ece88090c0f2ee88a6b0dc36d2793af4a11e83bf6bbb41b86225dd0cf338e8f7e8552
+  languageName: node
+  linkType: hard
+
+"react-sparklines@npm:^1.7.0":
+  version: 1.7.0
+  resolution: "react-sparklines@npm:1.7.0"
+  dependencies:
+    prop-types: ^15.5.10
+  peerDependencies:
+    react: "*"
+    react-dom: "*"
+  checksum: 9d2f701031e56e0c7b49e3b56479cd7bc1b651c029c2d525d2b480cf6ebcecbdb4dfe83053e7bcdecee1c490f3e5b4cecfa8b48301860b679778d6df7758e480
   languageName: node
   linkType: hard
 
