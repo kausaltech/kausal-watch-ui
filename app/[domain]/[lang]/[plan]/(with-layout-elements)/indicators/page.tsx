@@ -28,6 +28,7 @@ export default async function ActionsPage({ params }: Props) {
     <IndicatorList
       leadContent={data.planPage.leadContent}
       displayInsights={data.planPage.displayInsights}
+      displayLevel={data.planPage.displayLevel}
     />
   );
 }

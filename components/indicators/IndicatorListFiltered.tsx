@@ -402,6 +402,7 @@ const IndicatorListFiltered = (props) => {
     hierarchy,
     displayNormalizedValues,
     shouldDisplayCategory,
+    displayLevel,
   } = props;
 
   const locale = useLocale();
@@ -539,7 +540,7 @@ const IndicatorListFiltered = (props) => {
               </IndentableTableHeader>
             );
           }
-          if (!allIndicatorsHaveSameLevel) {
+          if (!allIndicatorsHaveSameLevel && displayLevel) {
             headers.push(
               <IndentableTableHeader key="hr-type">
                 {t('type')}
@@ -674,7 +675,7 @@ const IndicatorListFiltered = (props) => {
                           )}
                         </IndentableTableCell>
                       )}
-                      {!allIndicatorsHaveSameLevel && (
+                      {!allIndicatorsHaveSameLevel && displayLevel && (
                         <IndentableTableCell>
                           <IndicatorType $level={item.level}>
                             {indicatorType || <span>-</span>}
@@ -754,6 +755,7 @@ IndicatorListFiltered.propTypes = {
   categoryColumnLabel: PropTypes.string,
   indicators: PropTypes.arrayOf(PropTypes.object).isRequired,
   shouldDisplayCategory: PropTypes.func,
+  displayLevel: PropTypes.bool,
 };
 
 export default IndicatorListFiltered;
