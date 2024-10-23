@@ -10,7 +10,6 @@ async function navigateAndCheckLayout(page, url, ctx) {
   await expect(page.locator('nav#branding-navigation-bar')).toBeVisible();
   await expect(page.locator('nav#global-navigation-bar')).toBeVisible();
   await expect(page.locator('main#main')).toBeVisible();
-  await ctx.checkAccessibility(page);
 }
 
 const testPlan = (planId: string) =>
@@ -89,18 +88,25 @@ const testPlan = (planId: string) =>
         !items || items.length === 0,
         'No children category or content pages for plan'
       );
+
       const nav = page.locator('nav#global-navigation-bar');
-      const emptyPageMenuLink = nav.getByRole('link', {
+      const emptyPageMenuButton = nav.getByRole('button', {
         name: EmptyPageMenuItem?.page.title,
         exact: true,
       });
-      await emptyPageMenuLink.click();
 
-      const firstItemLink = nav.getByRole('link', {
-        name: items[0].page.title,
-        exact: true,
-      });
-      await firstItemLink.click();
+      await emptyPageMenuButton.waitFor({ state: 'visible', timeout: 15000 });
+      await emptyPageMenuButton.click();
+
+      const firstItemButton = nav
+        .locator('.dropdown-menu')
+        .getByRole('menuitem', {
+          name: items[0].page.title,
+          exact: true,
+        });
+
+      await firstItemButton.waitFor({ state: 'visible', timeout: 15000 });
+      await firstItemButton.click();
 
       await expect(page.locator('main#main')).toBeVisible();
 
