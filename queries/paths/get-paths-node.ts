@@ -1,6 +1,37 @@
 import { gql } from '@apollo/client';
 
-import { ACTION_PARAMETER_FRAGMENT } from './get-paths-actions';
+export const ACTION_PARAMETER_FRAGMENT = gql`
+  fragment ActionParameter on ParameterInterface {
+    __typename
+    id
+    label
+    description
+    nodeRelativeId
+    node {
+      id
+    }
+    isCustomized
+    isCustomizable
+    ... on NumberParameterType {
+      numberValue: value
+      numberDefaultValue: defaultValue
+      minValue
+      maxValue
+      unit {
+        htmlShort
+      }
+      step
+    }
+    ... on BoolParameterType {
+      boolValue: value
+      boolDefaultValue: defaultValue
+    }
+    ... on StringParameterType {
+      stringValue: value
+      stringDefaultValue: defaultValue
+    }
+  }
+`;
 
 export const DIMENSIONAL_METRIC_FRAGMENT = gql`
   fragment DimensionalMetric on DimensionalMetricType {
@@ -139,6 +170,7 @@ const GET_NODE_CONTENT = gql`
 const GET_NODE_INFO = gql`
   query GetNodeInfo($node: ID!) {
     node(id: $node) {
+      __typename
       id
       name
     }
