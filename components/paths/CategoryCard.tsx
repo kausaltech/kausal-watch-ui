@@ -1,5 +1,3 @@
-import { useEffect } from 'react';
-
 import { beautifyValue } from 'common/data/format';
 import { Link } from 'common/links';
 import ActionParameters from 'components/paths/ActionParameters';
@@ -15,16 +13,12 @@ import styled, { useTheme } from 'styled-components';
 
 import PopoverTip from '@/components/common/PopoverTip';
 import { activeGoalVar, yearRangeVar } from '@/context/paths/cache';
-import { GET_PATHS_ACTION } from '@/queries/paths/get-paths-actions';
-import {
-  GET_NODE_CONTENT,
-  GET_NODE_INFO,
-} from '@/queries/paths/get-paths-node';
+import { GET_NODE_CONTENT } from '@/queries/paths/get-paths-node';
 import { getScopeLabel, getScopeTotal } from '@/utils/paths/emissions';
 import { DimensionalMetric } from '@/utils/paths/metric';
 import { getHttpHeaders } from '@/utils/paths/paths.utils';
 import PathsActionNode from '@/utils/paths/PathsActionNode';
-import { NetworkStatus, useQuery, useReactiveVar } from '@apollo/client';
+import { useQuery, useReactiveVar } from '@apollo/client';
 
 const GroupIdentifierHeader = styled.div`
   background-color: ${(props) => props.$color};
@@ -113,164 +107,100 @@ const IndicatorSparkline = (props) => {
   );
 };
 const PathsBasicNodeContent = (props) => {
-  const { categoryId, node, pathsInstance, onLoaded } = props;
+  const { categoryId, node, pathsInstance } = props;
   const yearRange = useReactiveVar(yearRangeVar);
   const activeGoal = useReactiveVar(activeGoalVar);
   // const t = useTranslations();
 
-  const { data, loading, error, networkStatus } = useQuery(GET_NODE_CONTENT, {
-    fetchPolicy: 'no-cache',
-    variables: { node: node, goal: activeGoal?.id },
-    notifyOnNetworkStatusChange: true,
-    context: {
-      uri: '/api/graphql-paths',
-      headers: getHttpHeaders({ instanceIdentifier: pathsInstance }),
-    },
-  });
+  if (node.metricDim) {
+    const nodeMetric = new DimensionalMetric(node.metricDim!);
 
-  const refetching = networkStatus === NetworkStatus.refetch;
+    const indirectEmissions = getScopeTotal(
+      nodeMetric,
+      'indirect',
+      yearRange[1]
+    );
+    const directEmissions = getScopeTotal(nodeMetric, 'direct', yearRange[1]);
 
-  useEffect(() => {
-    if (data) {
-      const nodeMetric = new DimensionalMetric(data.node.metricDim!);
-      const indirectEmissions = getScopeTotal(
-        nodeMetric,
-        'indirect',
-        yearRange[1]
-      );
-      const directEmissions = getScopeTotal(nodeMetric, 'direct', yearRange[1]);
-      const yearTotal = indirectEmissions + directEmissions;
-      onLoaded(categoryId, yearTotal || 0);
-    }
-  }, [activeGoal, data, yearRange]);
+    const indirectEmissionsLabel = getScopeLabel(nodeMetric, 'indirect');
+    const directEmissionsLabel = getScopeLabel(nodeMetric, 'direct');
 
-  if (loading && !refetching) {
-    return <PathsContentLoader style={{ marginBottom: '0.5rem' }} />;
-  }
-  if (error) {
-    return <div>Error: {error.message}</div>; // Handle error appropriately
-  }
-  if (data) {
-    if (data.node.metricDim) {
-      const nodeMetric = new DimensionalMetric(data.node.metricDim!);
-
-      const indirectEmissions = getScopeTotal(
-        nodeMetric,
-        'indirect',
-        yearRange[1]
-      );
-      const directEmissions = getScopeTotal(nodeMetric, 'direct', yearRange[1]);
-
-      const indirectEmissionsLabel = getScopeLabel(nodeMetric, 'indirect');
-      const directEmissionsLabel = getScopeLabel(nodeMetric, 'direct');
-
-      /*
+    /*
       console.log('default config', defaultConfig);
       console.log('metric', nodeMetric);
       console.log('this year', thisYear);
       */
-      // TODO: Just get any label for now
+    // TODO: Just get any label for now
 
-      const unit = nodeMetric.getUnit();
+    const unit = nodeMetric.getUnit();
 
-      return (
-        <CardContentBlock $disabled={refetching}>
-          <div>
-            {directEmissions || indirectEmissions ? (
-              <div>
-                <h5>
-                  {nodeMetric.getName()} ({yearRange[1]})
-                </h5>
-                <h4>
-                  {(directEmissions + indirectEmissions).toPrecision(3)} {unit}
-                </h4>
-              </div>
-            ) : null}
-            {directEmissions ? (
-              <div>
-                {directEmissionsLabel}
-                <h5>
-                  {directEmissions && directEmissions.toPrecision(3)} {unit}
-                </h5>
-              </div>
-            ) : (
-              <div />
-            )}
-            {indirectEmissions ? (
-              <div>
-                {indirectEmissionsLabel}
-                <h5>
-                  {indirectEmissions.toPrecision(3)} {unit}
-                </h5>
-              </div>
-            ) : (
-              <div />
-            )}
-          </div>
-        </CardContentBlock>
-      );
-    } else {
-      return <div>{data.node.__typename} not supported</div>;
-    }
+    return (
+      <CardContentBlock>
+        <div>
+          {directEmissions || indirectEmissions ? (
+            <div>
+              <h5>
+                {nodeMetric.getName()} ({yearRange[1]})
+              </h5>
+              <h4>
+                {(directEmissions + indirectEmissions).toPrecision(3)} {unit}
+              </h4>
+            </div>
+          ) : null}
+          {directEmissions ? (
+            <div>
+              {directEmissionsLabel}
+              <h5>
+                {directEmissions && directEmissions.toPrecision(3)} {unit}
+              </h5>
+            </div>
+          ) : (
+            <div />
+          )}
+          {indirectEmissions ? (
+            <div>
+              {indirectEmissionsLabel}
+              <h5>
+                {indirectEmissions.toPrecision(3)} {unit}
+              </h5>
+            </div>
+          ) : (
+            <div />
+          )}
+        </div>
+      </CardContentBlock>
+    );
+  } else {
+    return <div>{node.__typename} not supported</div>;
   }
-  return null;
 };
 
 const PathsActionNodeContent = (props) => {
   const { categoryId, node, pathsInstance, onLoaded } = props;
   const yearRange = useReactiveVar(yearRangeVar);
-  const activeGoal = useReactiveVar(activeGoalVar);
   const t = useTranslations();
 
-  const { data, loading, error, networkStatus } = useQuery(GET_PATHS_ACTION, {
-    fetchPolicy: 'no-cache',
-    variables: { action: node, goal: activeGoal?.id },
-    notifyOnNetworkStatusChange: true,
-    context: {
-      uri: '/api/graphql-paths',
-      headers: getHttpHeaders({ instanceIdentifier: pathsInstance }),
-    },
-  });
-
-  const refetching = networkStatus === NetworkStatus.refetch;
-
-  useEffect(() => {
-    if (data) {
-      const pathsAction = new PathsActionNode(data.action);
-      const impact = pathsAction.getYearlyImpact(yearRange[1]) || 0;
-      onLoaded(categoryId, impact);
-    }
-  }, [activeGoal, data, yearRange]);
-
-  if (loading && !refetching) {
-    return <PathsContentLoader />;
-  }
-  if (error) {
-    return <div>Error: {error.message}</div>; // Handle error appropriately
-  }
-  if (data) {
-    const pathsAction = new PathsActionNode(data.action);
-    const impact = pathsAction.getYearlyImpact(yearRange[1]) || 0;
-    return (
-      <CardContentBlock $disabled={refetching}>
-        {t('impact')} {yearRange[1]}
-        <h4>
-          {yearRange ? beautifyValue(impact) : <span>---</span>}
-          {pathsAction.getUnit()}
-        </h4>
-        <ActionParameters parameters={data.action.parameters} />
-      </CardContentBlock>
-    );
-  }
-  return null;
+  const pathsAction = new PathsActionNode(node);
+  const impact = pathsAction.getYearlyImpact(yearRange[1]) || 0;
+  return (
+    <CardContentBlock>
+      {t('impact')} {yearRange[1]}
+      <h4>
+        {yearRange ? beautifyValue(impact) : <span>---</span>}
+        {pathsAction.getUnit()}
+      </h4>
+      <ActionParameters parameters={node.parameters} />
+    </CardContentBlock>
+  );
 };
 
 const PathsNodeContent = (props) => {
   const { categoryId, node, paths, onLoaded } = props;
-
-  const { data, loading, error } = useQuery(GET_NODE_INFO, {
+  const activeGoal = useReactiveVar(activeGoalVar);
+  const { data, loading, error, networkStatus } = useQuery(GET_NODE_CONTENT, {
     fetchPolicy: 'no-cache',
-    variables: { node: node },
+    variables: { node: node, goal: activeGoal?.id },
+    notifyOnNetworkStatusChange: true,
     context: {
       uri: '/api/graphql-paths',
       headers: getHttpHeaders({ instanceIdentifier: paths }),
@@ -288,7 +218,7 @@ const PathsNodeContent = (props) => {
       return (
         <PathsActionNodeContent
           categoryId={categoryId}
-          node={node}
+          node={data.node}
           pathsInstance={paths}
           onLoaded={onLoaded}
         />
@@ -297,7 +227,7 @@ const PathsNodeContent = (props) => {
       return (
         <PathsBasicNodeContent
           categoryId={categoryId}
-          node={node}
+          node={data.node}
           pathsInstance={paths}
           onLoaded={onLoaded}
         />
