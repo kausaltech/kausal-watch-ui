@@ -595,6 +595,40 @@ const IndicatorListFiltered = (props) => {
             );
           }
 
+          const CommonCategoriesCell = ({ item, commonCategories }) => (
+            <>
+              {commonCategories.map((commonCategory) => (
+                <IndentableTableCell
+                  key={`cat-${commonCategory.typeIdentifier}`}
+                >
+                  {item.categories
+                    .filter(
+                      (cat) =>
+                        cat.common &&
+                        cat.common.type.identifier ===
+                          commonCategory.typeIdentifier
+                    )
+                    .map((cat) => (
+                      <StyledBadge key={cat.common.id}>
+                        {cat.common.name}
+                      </StyledBadge>
+                    ))}
+                </IndentableTableCell>
+              ))}
+            </>
+          );
+
+          const RegularCategoriesCell = ({ item, shouldDisplayCategory }) => (
+            <IndentableTableCell>
+              {item.categories.map((cat) => {
+                if (cat && (shouldDisplayCategory?.(cat) ?? true)) {
+                  return <StyledBadge key={cat.id}>{cat.name}</StyledBadge>;
+                }
+                return null;
+              })}
+            </IndentableTableCell>
+          );
+
           return (
             <React.Fragment key={`indicator-group-${idx}`}>
               {!indicatorNameColumnEnabled && (
@@ -705,41 +739,19 @@ const IndicatorListFiltered = (props) => {
                           </IndicatorLink>
                         </IndentableTableCell>
                       )}
-                      {includePlanRelatedIndicators
-                        ? commonCategories.map((commonCategory) => (
-                            <IndentableTableCell
-                              key={`cat-${commonCategory.typeIdentifier}`}
-                            >
-                              {item.categories
-                                .filter(
-                                  (cat) =>
-                                    cat.common &&
-                                    cat.common.type.identifier ===
-                                      commonCategory.typeIdentifier
-                                )
-                                .map((cat) => (
-                                  <StyledBadge key={cat.common.id}>
-                                    {cat.common.name}
-                                  </StyledBadge>
-                                ))}
-                            </IndentableTableCell>
-                          ))
-                        : someIndicatorsHaveCategories && (
-                            <IndentableTableCell>
-                              {item.categories.map((cat) => {
-                                if (
-                                  cat &&
-                                  (shouldDisplayCategory?.(cat) ?? true)
-                                )
-                                  return (
-                                    <StyledBadge key={cat.id}>
-                                      {cat.name}
-                                    </StyledBadge>
-                                  );
-                                return false;
-                              })}
-                            </IndentableTableCell>
-                          )}
+                      {includePlanRelatedIndicators ? (
+                        <CommonCategoriesCell
+                          item={item}
+                          commonCategories={commonCategories}
+                        />
+                      ) : (
+                        someIndicatorsHaveCategories && (
+                          <RegularCategoriesCell
+                            item={item}
+                            shouldDisplayCategory={shouldDisplayCategory}
+                          />
+                        )
+                      )}
                       <IndentableTableCell>
                         {item.latestValue && (
                           <IndicatorDate>

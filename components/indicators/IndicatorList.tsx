@@ -14,6 +14,9 @@ import ActionListFilters, {
 } from 'components/actions/ActionListFilters';
 import {
   Category,
+  CategoryType,
+  CommonCategory,
+  CommonCategoryType,
   Indicator,
   IndicatorListPage,
   IndicatorListQuery,
@@ -34,7 +37,7 @@ const createFilterUnusedCategories =
     );
 
 const createFilterUnusedCommonCategories =
-  (indicators: Indicator[]) => (commonCategory: any) =>
+  (indicators: Indicator[]) => (commonCategory: CommonCategory) =>
     indicators.find(({ categories }) =>
       categories.find(
         (category) =>
@@ -42,15 +45,29 @@ const createFilterUnusedCommonCategories =
       )
     );
 
-const collectCommonCategories = (indicators) => {
-  const commonCategories = {};
-  indicators.forEach((indicator) => {
-    indicator.categories.forEach((category) => {
+interface CommonCategoryGroup {
+  categories: Set<CommonCategory>;
+  type: CommonCategoryType;
+}
+
+interface CollectedCommonCategory {
+  typeIdentifier: string;
+  categories: CommonCategory[];
+  type: CommonCategoryType;
+}
+
+const collectCommonCategories = (
+  indicators: Indicator[]
+): CollectedCommonCategory[] => {
+  const commonCategories: Record<string, CommonCategoryGroup> = {};
+
+  indicators.forEach((indicator: Indicator) => {
+    indicator.categories.forEach((category: Category) => {
       if (category.common) {
-        const typeIdentifier = category.common.type.identifier;
+        const typeIdentifier: string = category.common.type.identifier;
         if (!commonCategories[typeIdentifier]) {
           commonCategories[typeIdentifier] = {
-            categories: new Set(),
+            categories: new Set<CommonCategory>(),
             type: { ...category.common.type },
           };
         }
@@ -58,14 +75,21 @@ const collectCommonCategories = (indicators) => {
       }
     });
   });
-  return Object.entries(commonCategories).map(([typeIdentifier, data]) => ({
-    typeIdentifier,
-    categories: Array.from(data?.categories),
-    type: data?.type,
-  }));
+
+  return Object.entries(commonCategories).map(
+    ([typeIdentifier, data]): CollectedCommonCategory => ({
+      typeIdentifier,
+      categories: Array.from(data?.categories),
+      type: data?.type,
+    })
+  );
 };
 
-const getFilterConfig = (categoryType, indicators, commonCategories) => ({
+const getFilterConfig = (
+  categoryType: CategoryType,
+  indicators: Indicator[],
+  commonCategories: CollectedCommonCategory[] | null
+) => ({
   mainFilters: [
     ...(commonCategories
       ? commonCategories.map(({ typeIdentifier, categories, type }) => ({
@@ -287,7 +311,7 @@ interface Filters {
 }
 
 const filterIndicators = (
-  indicators,
+  indicators: Indicator[],
   filters: Filters,
   includeRelatedPlans: boolean,
   categoryIdentifier?: string
@@ -333,7 +357,10 @@ const filterIndicators = (
   });
 };
 
-const getFirstUsableCategoryType = (categoryTypes, indicators) =>
+const getFirstUsableCategoryType = (
+  categoryTypes: CategoryType[],
+  indicators: Indicator[]
+): CategoryType | undefined =>
   categoryTypes.find((categoryType) =>
     indicators.find((indicator) =>
       indicator.categories.find(({ type }) => type.id === categoryType.id)
