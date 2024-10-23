@@ -1,3 +1,4 @@
+import { RECURSIVE_CATEGORY_FRAGMENT } from '@/fragments/category.fragment';
 import { gql } from '@apollo/client';
 
 export const ACTION_CARD_FRAGMENT = gql`
@@ -28,13 +29,7 @@ export const ACTION_CARD_FRAGMENT = gql`
     }
     completion
     categories {
-      id
-      identifier
-      name
-      iconSvgUrl
-      type {
-        id
-      }
+      ...CategoryRecursiveFragment
     }
     statusSummary {
       identifier
@@ -78,4 +73,5 @@ export const ACTION_CARD_FRAGMENT = gql`
       }
     }
   }
+  ${RECURSIVE_CATEGORY_FRAGMENT}
 `;

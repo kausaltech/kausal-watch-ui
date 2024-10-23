@@ -1,16 +1,17 @@
 import { cloneDeep } from 'lodash';
 
-import { ActionListAction } from '../components/dashboard/ActionList';
-import {
-  Plan,
-  Sentiment,
-  ActionStatusSummary,
-  ActionStatusSummaryIdentifier,
-} from './__generated__/graphql';
-import { getStatusSummary } from '../common/ActionStatusSummary';
 import type { Theme } from '@kausal/themes/types';
+
+import { getStatusSummary } from '../common/ActionStatusSummary';
+import { ActionListAction } from '../components/dashboard/ActionList';
 import type { Progress } from '../components/dashboard/ActionStatusGraphs';
 import type { PlanContextType } from '../context/plan';
+import {
+  ActionStatusSummary,
+  ActionStatusSummaryIdentifier,
+  Plan,
+  Sentiment,
+} from './__generated__/graphql';
 import { TFunction } from './i18n';
 
 // Clean up actionStatus so UI can handle edge cases
@@ -247,4 +248,4 @@ const getPhaseData = (
 
 type StatusSummary = Plan['actionStatusSummaries'][0];
 
-export { cleanActionStatus, getStatusData, getPhaseData };
+export { cleanActionStatus, getPhaseData, getStatusData };
