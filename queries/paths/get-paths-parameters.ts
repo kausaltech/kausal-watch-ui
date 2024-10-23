@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-import { ACTION_PARAMETER_FRAGMENT } from './get-paths-actions';
+import { ACTION_PARAMETER_FRAGMENT } from './get-paths-node';
 
 const GET_PARAMETERS = gql`
   query GetParameters {
