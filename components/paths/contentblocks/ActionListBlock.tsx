@@ -121,6 +121,7 @@ const actionsWithCategory = (
   actions: ActionCardFragment[],
   activeTab: string
 ) => {
+  if (!activeTab) return actions;
   return actions.filter((action) =>
     action.categories.findIndex((cat) => cat.id === activeTab)
   );
@@ -142,30 +143,30 @@ const TabbedActionList = (props: TabbedActionListProps) => {
 
   return (
     <>
-      <ActionTabs role="tablist" aria-labelledby="subactions">
-        {actionGroups.map((groupCategory) => (
-          <ActionTab
-            role="tab"
-            aria-selected={groupCategory.id === activeTab}
-            aria-controls={`action-content-${groupCategory.id}`}
-            id={`action-tab-${groupCategory.id}`}
-            tabIndex={0}
-            key={groupCategory.id}
-            onClick={() => setActiveTab(groupCategory.id)}
-            $isActive={groupCategory.id === activeTab}
-          >
-            <TabTitle>
-              <div>{groupCategory.name}</div>
-            </TabTitle>
-          </ActionTab>
-        ))}
-      </ActionTabs>
-      {activeTab !== 'null' && (
-        <ActionCardList
-          actions={actionsWithCategory(actions, activeTab)}
-          showOtherCategory={false}
-        />
+      {actionGroups.length > 1 && (
+        <ActionTabs role="tablist" aria-labelledby="subactions">
+          {actionGroups.map((groupCategory) => (
+            <ActionTab
+              role="tab"
+              aria-selected={groupCategory.id === activeTab}
+              aria-controls={`action-content-${groupCategory.id}`}
+              id={`action-tab-${groupCategory.id}`}
+              tabIndex={0}
+              key={groupCategory.id}
+              onClick={() => setActiveTab(groupCategory.id)}
+              $isActive={groupCategory.id === activeTab}
+            >
+              <TabTitle>
+                <div>{groupCategory.name}</div>
+              </TabTitle>
+            </ActionTab>
+          ))}
+        </ActionTabs>
       )}
+      <ActionCardList
+        actions={actionsWithCategory(actions, activeTab)}
+        showOtherCategory={false}
+      />
     </>
   );
 };

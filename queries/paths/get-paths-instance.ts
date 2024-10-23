@@ -2,7 +2,7 @@ import { getClient } from '@/utils/apollo-rsc-client';
 import { getHttpHeaders } from '@/utils/paths/paths.utils';
 import { gql } from '@apollo/client';
 
-import { ACTION_PARAMETER_FRAGMENT } from './get-paths-actions';
+import { ACTION_PARAMETER_FRAGMENT } from './get-paths-node';
 
 export const scenarioFragment = gql`
   fragment ScenarioFragment on ScenarioType {
