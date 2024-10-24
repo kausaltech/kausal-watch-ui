@@ -8,6 +8,7 @@
       "ActionScheduleBlock"
     ],
     "ActionDashboardColumnBlock": [
+      "EndDateColumnBlock",
       "FieldColumnBlock",
       "IdentifierColumnBlock",
       "ImpactColumnBlock",
@@ -16,6 +17,7 @@
       "NameColumnBlock",
       "OrganizationColumnBlock",
       "ResponsiblePartiesColumnBlock",
+      "StartDateColumnBlock",
       "StatusColumnBlock",
       "TasksColumnBlock",
       "UpdatedAtColumnBlock"
@@ -75,6 +77,7 @@
       "CategoryPageProgressBlock"
     ],
     "DashboardColumnInterface": [
+      "EndDateColumnBlock",
       "FieldColumnBlock",
       "IdentifierColumnBlock",
       "ImpactColumnBlock",
@@ -83,6 +86,7 @@
       "NameColumnBlock",
       "OrganizationColumnBlock",
       "ResponsiblePartiesColumnBlock",
+      "StartDateColumnBlock",
       "StatusColumnBlock",
       "TasksColumnBlock",
       "UpdatedAtColumnBlock"
@@ -223,6 +227,7 @@
       "DocumentChooserBlock",
       "EmailBlock",
       "EmbedBlock",
+      "EndDateColumnBlock",
       "FieldColumnBlock",
       "FloatBlock",
       "FormChoiceBlock",
@@ -259,6 +264,7 @@
       "ResponsiblePartiesColumnBlock",
       "ResponsiblePartyFilterBlock",
       "RichTextBlock",
+      "StartDateColumnBlock",
       "StaticBlock",
       "StatusColumnBlock",
       "StreamBlock",

@@ -1,3 +1,4 @@
+import dayjs from 'common/dayjs';
 import React, { ReactNode } from 'react';
 
 import { PlanContextFragment } from 'common/__generated__/graphql';
@@ -181,6 +182,23 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
       <LastUpdatedTooltipContent action={action} />
     ),
   },
+
+  StartDateColumnBlock: {
+    sortable: true,
+    headerKey: 'startDate',
+    renderHeader: (t, _, label) => label || t('action-start-date'),
+    renderCell: (action) =>
+      action.startDate != null && dayjs(action.startDate).format('l'),
+  },
+
+  EndDateColumnBlock: {
+    sortable: true,
+    headerKey: 'endDate',
+    renderHeader: (t, _, label) => label || t('action-end-date'),
+    renderCell: (action) =>
+      action.endDate != null && dayjs(action.endDate).format('l'),
+  },
+
   FieldColumnBlock: {
     renderHeader: (t, _, label) => label,
     renderCell: (action, _, __, attributeType) => {
