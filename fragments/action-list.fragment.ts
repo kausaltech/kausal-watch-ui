@@ -97,6 +97,12 @@ export const ACTION_TABLE_COLUMN_FRAGMENT = gql`
       ... on UpdatedAtColumnBlock {
         columnLabel
       }
+      ... on StartDateColumnBlock {
+        columnLabel
+      }
+      ... on EndDateColumnBlock {
+        columnLabel
+      }
       ... on OrganizationColumnBlock {
         columnLabel
       }
