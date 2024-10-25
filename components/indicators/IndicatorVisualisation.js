@@ -311,8 +311,8 @@ const generateTrendTrace = (indicator, traces, goals, i18n) => {
     const highestDataYear = traces[0].y[traces[0].y.length - 1];
     const highestGoalYear = Math.max(
       ...goals.map((goal) => {
-        const goalYear = goal.x[goal.x.length - 1];
-        return goalYear ? parseInt(goalYear.split('-')[0], 10) : NaN;
+        const goalDate = goal.x[goal.x.length - 1];
+        return goalDate ? new Date(goalDate).getFullYear() : NaN;
       })
     );
 
