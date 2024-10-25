@@ -205,9 +205,14 @@ const getFirstUsableCategoryType = (categoryTypes, indicators) =>
 interface Props {
   leadContent: IndicatorListPage['leadContent'];
   displayInsights: IndicatorListPage['displayInsights'];
+  displayLevel: IndicatorListPage['displayLevel'];
 }
 
-const IndicatorList = ({ leadContent, displayInsights }: Props) => {
+const IndicatorList = ({
+  leadContent,
+  displayInsights,
+  displayLevel,
+}: Props) => {
   const plan = usePlan();
   const t = useTranslations();
   const searchParams = useSearchParams();
@@ -327,6 +332,7 @@ const IndicatorList = ({ leadContent, displayInsights }: Props) => {
           shouldDisplayCategory={(category: Category) =>
             category.type.id === categoryType?.id
           }
+          displayLevel={displayLevel}
         />
       </Container>
     </>

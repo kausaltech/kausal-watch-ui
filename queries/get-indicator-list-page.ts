@@ -15,6 +15,7 @@ const GET_INDICATOR_LIST_PAGE = gql`
       ... on IndicatorListPage {
         leadContent
         displayInsights
+        displayLevel
       }
       lastPublishedAt
     }
