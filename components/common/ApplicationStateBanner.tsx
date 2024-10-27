@@ -1,12 +1,12 @@
 import React from 'react';
 
-import { AnnouncementBannerWithRichTextMessage } from 'components/common/AnnouncementBanner';
-import PlanVersionBanner from 'components/versioning/PlanVersionBanner';
-import { usePlan } from 'context/plan';
 import { useTranslations } from 'next-intl';
 import styled from 'styled-components';
 
 import type { DeploymentType } from '@/common/environment';
+import { AnnouncementBannerWithRichTextMessage } from '@/components/common/AnnouncementBanner';
+import PlanVersionBanner from '@/components/versioning/PlanVersionBanner';
+import { usePlan } from '@/context/plan';
 
 const Banner = styled.div`
   padding: 8px 16px;

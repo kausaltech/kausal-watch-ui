@@ -3,13 +3,13 @@
 import React from 'react';
 import { usePathname } from 'next/navigation';
 
-import { usePlan } from 'context/plan';
 import { useTranslations } from 'next-intl';
 import { useTheme } from 'styled-components';
 
 import type { PlanContextFragment } from '@/common/__generated__/graphql';
 import { getDeploymentType } from '@/common/environment';
 import MonsidoAccessibility from '@/components/MonsidoAccessibility';
+import { usePlan } from '@/context/plan';
 import { getMetaTitles } from '@/utils/metadata';
 import ApplicationStateBanner from './common/ApplicationStateBanner';
 import SiteFooter, { type UtilityLink } from './common/SiteFooter';

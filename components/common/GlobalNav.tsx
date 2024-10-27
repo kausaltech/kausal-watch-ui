@@ -1,10 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-import { isServer } from 'common/environment';
-import { Link, NavigationLink } from 'common/links';
-import PlanSelector from 'components/plans/PlanSelector';
-import PlanVersionSelector from 'components/versioning/PlanVersionSelector';
-import { usePlan } from 'context/plan';
+import type { Theme } from '@kausal/themes/types';
+import { useScrollPosition } from '@n8tb1t/use-scroll-position';
 import debounce from 'lodash/debounce';
 import { useLocale, useTranslations } from 'next-intl';
 import { transparentize } from 'polished';
@@ -22,10 +19,12 @@ import {
 } from 'reactstrap';
 import styled, { css, useTheme } from 'styled-components';
 
+import { isServer } from '@/common/environment';
+import { Link, NavigationLink } from '@/common/links';
 import { getThemeStaticURL } from '@/common/theme';
-import type { Theme } from '@kausal/themes/types';
-import { useScrollPosition } from '@n8tb1t/use-scroll-position';
-
+import PlanSelector from '@/components/plans/PlanSelector';
+import PlanVersionSelector from '@/components/versioning/PlanVersionSelector';
+import { usePlan } from '@/context/plan';
 import Icon from './Icon';
 import LanguageSelector from './LanguageSelector';
 import NavbarSearch from './NavbarSearch';

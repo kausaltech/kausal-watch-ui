@@ -1,31 +1,33 @@
-// @ts-check
-/* eslint-disable no-restricted-syntax, @typescript-eslint/no-var-requires */
+import { mkdir } from 'node:fs/promises';
 import { createRequire } from 'node:module';
+import path from 'node:path';
 import * as url from 'node:url';
+
+import bundleAnalyzer from '@next/bundle-analyzer';
+import type { NextConfigObject } from '@sentry/nextjs/build/types/config/types';
+import { secrets } from 'docker-secret';
+import dotenv from 'dotenv';
+import nextIntlPlugin from 'next-intl/plugin';
+import lockfile from 'proper-lockfile';
 
 import {
   API_HEALTH_CHECK_PATH,
   API_SENTRY_TUNNEL_PATH,
   HEALTH_CHECK_ALIAS_PATH,
   SENTRY_TUNNEL_PUBLIC_PATH,
-} from './constants/routes.mjs';
+} from '@/constants/routes.mjs';
 
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 const require = createRequire(import.meta.url);
 
-const { secrets } = require('docker-secret');
-const { mkdir } = require('node:fs/promises');
-const lockfile = require('proper-lockfile');
-
-const path = require('path');
-const withBundleAnalyzer = require('@next/bundle-analyzer')({
+const withBundleAnalyzer = bundleAnalyzer({
   enabled: process.env.ANALYZE === 'true',
 });
-const withNextIntl = require('next-intl/plugin')('./config/i18n.ts');
+const withNextIntl = nextIntlPlugin('./config/i18n.ts');
 
 if (process.env.DOTENV_CONFIG_PATH) {
   // Load CI environment variables defined in Ansible
-  require('dotenv').config({ path: process.env.DOTENV_CONFIG_PATH });
+  dotenv.config({ path: process.env.DOTENV_CONFIG_PATH });
 }
 
 const isProd = process.env.NODE_ENV === 'production';
@@ -74,10 +76,7 @@ const standaloneBuild = process.env.NEXTJS_STANDALONE_BUILD === '1';
 
 const prodAssetPrefix = process.env.NEXTJS_ASSET_PREFIX;
 
-/**
- * @type {import('next').NextConfig}
- */
-let config = {
+let config: NextConfigObject = {
   logging: {
     fetches: {
       fullUrl: true,
@@ -106,7 +105,7 @@ let config = {
   experimental: {
     instrumentationHook: true,
     // FIXME: Enable later
-    serverComponentsExternalPackages: ['@opentelemetry/instrumentation'],
+    serverExternalPackages: ['@opentelemetry/instrumentation'],
     outputFileTracingIncludes: standaloneBuild
       ? {
           '/': ['./node_modules/@kausal/themes*/**'],

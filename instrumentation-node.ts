@@ -22,6 +22,7 @@ import {
   SentrySampler,
   SentrySpanProcessor,
 } from '@sentry/opentelemetry';
+import type { Configuration } from '@vercel/otel';
 
 function getResources() {
   const customResources = new Resource({
@@ -74,6 +75,13 @@ export function registerTracer(sentryClient: NodeClient | undefined) {
     contextManager: new SentryContextManager(),
   });
   validateOpenTelemetrySetup();
+}
+
+export function getSentryOtelNodeConfig() {
+  const config: Partial<Configuration> = {
+    contextManager: new SentryContextManager(),
+  };
+  return config;
 }
 
 /*

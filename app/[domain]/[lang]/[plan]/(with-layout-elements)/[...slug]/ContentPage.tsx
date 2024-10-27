@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import { GetContentPageQuery } from 'common/__generated__/graphql';
+import type { GetContentPageQuery } from 'common/__generated__/graphql';
 import { getBgImageAlignment } from 'common/images';
 import CategoryPageContent from 'components/categories/CategoryPageContent';
 import RichText from 'components/common/RichText';

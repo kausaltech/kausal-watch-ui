@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useCallback, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 import {
   type ActionAsideContentBlocksFragmentFragment,
@@ -34,14 +35,12 @@ import IndicatorCausalVisualisation from 'components/indicators/IndicatorCausalV
 import ActionVersionHistory from 'components/versioning/ActionVersionHistory';
 import { PlanContextType, usePlan } from 'context/plan';
 import { useTranslations } from 'next-intl';
-import { useRouter } from 'next/navigation';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { Col, Container, Row } from 'reactstrap';
 import styled, { css, useTheme } from 'styled-components';
 
 import { ACTION_CONTENT_MAIN_BOTTOM } from '@/constants/containers';
 import { useWorkflowSelector } from '@/context/workflow-selector';
-
 import ActionHero from './ActionHero';
 import ActionImpact from './ActionImpact';
 import ActionPager from './ActionPager';

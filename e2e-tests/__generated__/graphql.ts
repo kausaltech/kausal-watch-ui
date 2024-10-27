@@ -20,6 +20,7 @@ export type Scalars = {
   UUID: { input: any; output: any; }
 };
 
+/** An enumeration. */
 export enum ActionContactPersonRole {
   /** Editor */
   Editor = 'EDITOR',
@@ -27,6 +28,7 @@ export enum ActionContactPersonRole {
   Moderator = 'MODERATOR'
 }
 
+/** An enumeration. */
 export enum ActionDateFormat {
   /** Day, month and year (31.12.2020) */
   Full = 'FULL',
@@ -36,6 +38,7 @@ export enum ActionDateFormat {
   Year = 'YEAR'
 }
 
+/** An enumeration. */
 export enum ActionIndicatorEffectType {
   /** decreases */
   Decreases = 'DECREASES',
@@ -48,6 +51,7 @@ export enum ActionListPageView {
   Dashboard = 'DASHBOARD'
 }
 
+/** An enumeration. */
 export enum ActionResponsiblePartyRole {
   /** Collaborator */
   Collaborator = 'COLLABORATOR',
@@ -57,6 +61,7 @@ export enum ActionResponsiblePartyRole {
   Primary = 'PRIMARY'
 }
 
+/** An enumeration. */
 export enum ActionStatusSummaryIdentifier {
   Cancelled = 'CANCELLED',
   Completed = 'COMPLETED',
@@ -70,6 +75,7 @@ export enum ActionStatusSummaryIdentifier {
   Undefined = 'UNDEFINED'
 }
 
+/** An enumeration. */
 export enum ActionTaskDateFormat {
   /** Day, month and year (31.12.2020) */
   Full = 'FULL',
@@ -79,6 +85,7 @@ export enum ActionTaskDateFormat {
   Year = 'YEAR'
 }
 
+/** An enumeration. */
 export enum ActionTaskState {
   /** cancelled */
   Cancelled = 'CANCELLED',
@@ -90,6 +97,7 @@ export enum ActionTaskState {
   NotStarted = 'NOT_STARTED'
 }
 
+/** An enumeration. */
 export enum ActionTimelinessIdentifier {
   Acceptable = 'ACCEPTABLE',
   Late = 'LATE',
@@ -97,6 +105,15 @@ export enum ActionTimelinessIdentifier {
   Stale = 'STALE'
 }
 
+/** An enumeration. */
+export enum ActionVisibility {
+  /** Internal */
+  Internal = 'INTERNAL',
+  /** Public */
+  Public = 'PUBLIC'
+}
+
+/** An enumeration. */
 export enum AttributeTypeFormat {
   /** Category */
   CategoryChoice = 'CATEGORY_CHOICE',
@@ -114,11 +131,13 @@ export enum AttributeTypeFormat {
   UnorderedChoice = 'UNORDERED_CHOICE'
 }
 
+/** An enumeration. */
 export enum CartographyProviderCredentialsProvider {
   /** MapBox */
   Mapbox = 'MAPBOX'
 }
 
+/** An enumeration. */
 export enum CategoryTypeSelectWidget {
   /** Multiple */
   Multiple = 'MULTIPLE',
@@ -126,6 +145,7 @@ export enum CategoryTypeSelectWidget {
   Single = 'SINGLE'
 }
 
+/** An enumeration. */
 export enum Comparison {
   Gt = 'GT',
   Lte = 'LTE'
@@ -145,6 +165,23 @@ export type CreateOrganizationMutationInput = {
   parent?: InputMaybe<Scalars['ID']['input']>;
 };
 
+/** An enumeration. */
+export enum DatasetSchemaTimeResolution {
+  /** Yearly */
+  Yearly = 'YEARLY'
+}
+
+/** An enumeration. */
+export enum IndicatorDesiredTrend {
+  /** attempt to detect automatically */
+  A = 'A_',
+  /** decreasing */
+  Decreasing = 'DECREASING',
+  /** increasing */
+  Increasing = 'INCREASING'
+}
+
+/** An enumeration. */
 export enum IndicatorLevelLevel {
   /** operational */
   Operational = 'OPERATIONAL',
@@ -154,6 +191,7 @@ export enum IndicatorLevelLevel {
   Tactical = 'TACTICAL'
 }
 
+/** An enumeration. */
 export enum IndicatorTimeResolution {
   /** day */
   Day = 'DAY',
@@ -163,21 +201,26 @@ export enum IndicatorTimeResolution {
   Year = 'YEAR'
 }
 
+/** An enumeration. */
 export enum PlanFeaturesContactPersonsPublicData {
   /** Show all information */
   All = 'ALL',
+  /** Show all information but only for authenticated users */
+  AllForAuthenticated = 'ALL_FOR_AUTHENTICATED',
   /** Show only name, role and affiliation */
   Name = 'NAME',
   /** Do not show contact persons publicly */
   None = 'NONE'
 }
 
+/** An enumeration. */
 export enum PublicationStatus {
   Published = 'PUBLISHED',
   Scheduled = 'SCHEDULED',
   Unpublished = 'UNPUBLISHED'
 }
 
+/** An enumeration. */
 export enum RelatedCommonIndicatorEffectType {
   /** decreases */
   Decreases = 'DECREASES',
@@ -187,6 +230,7 @@ export enum RelatedCommonIndicatorEffectType {
   PartOf = 'PART_OF'
 }
 
+/** An enumeration. */
 export enum RelatedIndicatorConfidenceLevel {
   /** high */
   High = 'HIGH',
@@ -196,6 +240,7 @@ export enum RelatedIndicatorConfidenceLevel {
   Medium = 'MEDIUM'
 }
 
+/** An enumeration. */
 export enum RelatedIndicatorEffectType {
   /** decreases */
   Decreases = 'DECREASES',
@@ -205,12 +250,14 @@ export enum RelatedIndicatorEffectType {
   PartOf = 'PART_OF'
 }
 
+/** An enumeration. */
 export enum Sentiment {
   Negative = 'NEGATIVE',
   Neutral = 'NEUTRAL',
   Positive = 'POSITIVE'
 }
 
+/** An enumeration. */
 export enum SiteGeneralContentActionTaskTerm {
   /** Milestone */
   Milestone = 'MILESTONE',
@@ -218,6 +265,7 @@ export enum SiteGeneralContentActionTaskTerm {
   Task = 'TASK'
 }
 
+/** An enumeration. */
 export enum SiteGeneralContentActionTerm {
   /** Action */
   Action = 'ACTION',
@@ -227,6 +275,7 @@ export enum SiteGeneralContentActionTerm {
   Strategy = 'STRATEGY'
 }
 
+/** An enumeration. */
 export enum SiteGeneralContentOrganizationTerm {
   /** Division */
   Division = 'DIVISION',
@@ -275,25 +324,20 @@ export type UpdatePlanMutationInput = {
 
 export type UserFeedbackMutationInput = {
   action?: InputMaybe<Scalars['ID']['input']>;
+  additionalFields?: InputMaybe<Scalars['String']['input']>;
+  category?: InputMaybe<Scalars['ID']['input']>;
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  comment: Scalars['String']['input'];
+  comment?: InputMaybe<Scalars['String']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
+  pageId?: InputMaybe<Scalars['String']['input']>;
   plan: Scalars['ID']['input'];
   type?: InputMaybe<Scalars['String']['input']>;
   url: Scalars['String']['input'];
 };
 
-export enum UserFeedbackType {
-  /** Accessibility */
-  Accessibility = 'ACCESSIBILITY',
-  /** Action */
-  Action = 'ACTION',
-  /** General */
-  A = 'A_'
-}
-
+/** An enumeration. */
 export enum WorkflowState {
   /** Approved */
   Approved = 'APPROVED',
@@ -303,6 +347,7 @@ export enum WorkflowState {
   Published = 'PUBLISHED'
 }
 
+/** An enumeration. */
 export enum WorkflowStateStatus {
   /** Approved */
   Approved = 'APPROVED',
@@ -319,7 +364,7 @@ export type PlaywrightGetPlanBasicsQueryVariables = Exact<{
 }>;
 
 
-export type PlaywrightGetPlanBasicsQuery = { __typename?: 'Query', plan?: { __typename?: 'Plan', id: string, identifier: string, primaryLanguage: string, otherLanguages?: Array<string> | null } | null };
+export type PlaywrightGetPlanBasicsQuery = { __typename?: 'Query', plan?: { __typename?: 'Plan', id: string, identifier: string, primaryLanguage: string, otherLanguages: Array<string> } | null };
 
 export type PlaywrightGetPlanInfoQueryVariables = Exact<{
   plan: Scalars['ID']['input'];
@@ -328,4 +373,4 @@ export type PlaywrightGetPlanInfoQueryVariables = Exact<{
 }>;
 
 
-export type PlaywrightGetPlanInfoQuery = { __typename?: 'Query', plan?: { __typename?: 'Plan', id: string, identifier: string, name: string, shortName?: string | null, primaryLanguage: string, otherLanguages?: Array<string> | null, parent?: { __typename?: 'Plan', identifier: string, name: string } | null, generalContent: { __typename?: 'SiteGeneralContent', id: string, siteTitle: string, siteDescription: string }, actionListPage?: { __typename?: 'ActionListPage', urlPath: string } | null, actions: Array<{ __typename?: 'Action', identifier: string, viewUrl: string }>, mainMenu?: { __typename?: 'MainMenu', items: Array<{ __typename: 'ExternalLinkMenuItem', linkText: string, url: string } | { __typename: 'PageMenuItem', page: { __typename?: 'AccessibilityStatementPage', id?: string | null, title: string, urlPath: string, slug: string } | { __typename?: 'ActionListPage', id?: string | null, title: string, urlPath: string, slug: string } | { __typename?: 'CategoryPage', id?: string | null, title: string, urlPath: string, slug: string } | { __typename?: 'CategoryTypePage', id?: string | null, title: string, urlPath: string, slug: string } | { __typename?: 'EmptyPage', id?: string | null, title: string, urlPath: string, slug: string } | { __typename?: 'ImpactGroupPage', id?: string | null, title: string, urlPath: string, slug: string } | { __typename?: 'IndicatorListPage', id?: string | null, title: string, urlPath: string, slug: string } | { __typename?: 'Page', id?: string | null, title: string, urlPath: string, slug: string } | { __typename?: 'PlanRootPage', id?: string | null, title: string, urlPath: string, slug: string } | { __typename?: 'PrivacyPolicyPage', id?: string | null, title: string, urlPath: string, slug: string } | { __typename?: 'StaticPage', id?: string | null, title: string, urlPath: string, slug: string }, parent?: { __typename?: 'PageMenuItem', id: string, page: { __typename: 'AccessibilityStatementPage' } | { __typename: 'ActionListPage' } | { __typename: 'CategoryPage' } | { __typename: 'CategoryTypePage' } | { __typename: 'EmptyPage' } | { __typename: 'ImpactGroupPage' } | { __typename: 'IndicatorListPage' } | { __typename: 'Page' } | { __typename: 'PlanRootPage' } | { __typename: 'PrivacyPolicyPage' } | { __typename: 'StaticPage' } } | null } | null> } | null } | null, planIndicators?: Array<{ __typename?: 'Indicator', id: string, name: string } | null> | null };
+export type PlaywrightGetPlanInfoQuery = { __typename?: 'Query', plan?: { __typename?: 'Plan', id: string, identifier: string, name: string, shortName?: string | null, primaryLanguage: string, otherLanguages: Array<string>, parent?: { __typename?: 'Plan', identifier: string, name: string } | null, generalContent: { __typename?: 'SiteGeneralContent', id: string, siteTitle: string, siteDescription: string }, actionListPage?: { __typename?: 'ActionListPage', urlPath: string } | null, actions: Array<{ __typename?: 'Action', identifier: string, viewUrl: string }>, mainMenu?: { __typename?: 'MainMenu', items: Array<{ __typename: 'ExternalLinkMenuItem', linkText: string, url: string } | { __typename: 'PageMenuItem', page: { __typename?: 'AccessibilityStatementPage', id?: string | null, title: string, urlPath: string, slug: string } | { __typename?: 'ActionListPage', id?: string | null, title: string, urlPath: string, slug: string } | { __typename?: 'CategoryPage', id?: string | null, title: string, urlPath: string, slug: string } | { __typename?: 'CategoryTypePage', id?: string | null, title: string, urlPath: string, slug: string } | { __typename?: 'EmptyPage', id?: string | null, title: string, urlPath: string, slug: string } | { __typename?: 'ImpactGroupPage', id?: string | null, title: string, urlPath: string, slug: string } | { __typename?: 'IndicatorListPage', id?: string | null, title: string, urlPath: string, slug: string } | { __typename?: 'Page', id?: string | null, title: string, urlPath: string, slug: string } | { __typename?: 'PlanRootPage', id?: string | null, title: string, urlPath: string, slug: string } | { __typename?: 'PrivacyPolicyPage', id?: string | null, title: string, urlPath: string, slug: string } | { __typename?: 'StaticPage', id?: string | null, title: string, urlPath: string, slug: string }, parent?: { __typename?: 'PageMenuItem', id: string, page: { __typename: 'AccessibilityStatementPage', title: string } | { __typename: 'ActionListPage', title: string } | { __typename: 'CategoryPage', title: string } | { __typename: 'CategoryTypePage', title: string } | { __typename: 'EmptyPage', title: string } | { __typename: 'ImpactGroupPage', title: string } | { __typename: 'IndicatorListPage', title: string } | { __typename: 'Page', title: string } | { __typename: 'PlanRootPage', title: string } | { __typename: 'PrivacyPolicyPage', title: string } | { __typename: 'StaticPage', title: string } } | null, children?: Array<{ __typename?: 'PageMenuItem', id: string, page: { __typename: 'AccessibilityStatementPage' } | { __typename: 'ActionListPage' } | { __typename: 'CategoryPage' } | { __typename: 'CategoryTypePage' } | { __typename: 'EmptyPage' } | { __typename: 'ImpactGroupPage' } | { __typename: 'IndicatorListPage' } | { __typename: 'Page' } | { __typename: 'PlanRootPage' } | { __typename: 'PrivacyPolicyPage' } | { __typename: 'StaticPage' } } | null> | null } | null> } | null } | null, planIndicators?: Array<{ __typename?: 'Indicator', id: string, name: string } | null> | null };

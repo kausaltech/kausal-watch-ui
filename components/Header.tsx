@@ -3,24 +3,28 @@
 import React, { useMemo } from 'react';
 import { usePathname } from 'next/navigation';
 
-import { getActiveBranch } from 'common/links';
-import ApplicationStateBanner from 'components/common/ApplicationStateBanner';
-import GlobalNav from 'components/common/GlobalNav';
-import SkipToContent from 'components/common/SkipToContent';
-import GoogleAnalytics from 'components/GoogleAnalytics';
-import { usePlan } from 'context/plan';
 import { useSession } from 'next-auth/react';
 import { useLocale } from 'next-intl';
 import { useTheme } from 'styled-components';
 
 import { getDeploymentType } from '@/common/environment';
+import { getActiveBranch } from '@/common/links';
+import ApplicationStateBanner from '@/components/common/ApplicationStateBanner';
+import GlobalNav from '@/components/common/GlobalNav';
+import SkipToContent from '@/components/common/SkipToContent';
+import GoogleAnalytics from '@/components/GoogleAnalytics';
+import { type PlanContextType, usePlan } from '@/context/plan';
 import { getMetaTitles } from '@/utils/metadata';
 import TopToolBar from './common/TopToolBar';
 
-const getMenuStructure = (pages, rootId, activeBranch) => {
+const getMenuStructure = (
+  pages: PageMenuItem[],
+  rootId: string,
+  activeBranch: string
+) => {
   const menuLevelItems = [];
   pages.forEach((page) => {
-    if (page.parent.id === rootId) {
+    if (page.parent?.id === rootId) {
       menuLevelItems.push({
         id: `${page.id}`,
         name: page.page.title,
@@ -34,8 +38,8 @@ const getMenuStructure = (pages, rootId, activeBranch) => {
   return menuLevelItems.length > 0 ? menuLevelItems : null;
 };
 
-function createLocalizeMenuItem(currentLocale, primaryLocale) {
-  return function (menuItem) {
+function createLocalizeMenuItem(currentLocale: string, primaryLocale: string) {
+  return function (menuItem: PageMenuItem) {
     if (currentLocale === primaryLocale) {
       return menuItem;
     }
@@ -50,8 +54,12 @@ function createLocalizeMenuItem(currentLocale, primaryLocale) {
   };
 }
 
+type PageMenuItem = NonNullable<PlanContextType['mainMenu']>['items'][0] & {
+  __typename: 'PageMenuItem';
+};
+
 function Header() {
-  const pathname = usePathname();
+  const pathname = usePathname()!;
   const locale = useLocale();
   const plan = usePlan();
   const theme = useTheme();
@@ -63,18 +71,20 @@ function Header() {
   const navLinks = useMemo(() => {
     let links = [];
 
-    const pageMenuItems = plan.mainMenu.items
-      .filter((item) => item.__typename == 'PageMenuItem')
+    const pageMenuItems = plan
+      .mainMenu!.items.filter(
+        (item): item is PageMenuItem => item!.__typename == 'PageMenuItem'
+      )
       .map(createLocalizeMenuItem(locale, plan.primaryLanguage));
 
     if (pageMenuItems.length > 0) {
       // find one menu item with root as parent to access the id of the rootPage
       const rootItemIndex = pageMenuItems.findIndex(
-        (page) => page.parent.page.__typename === 'PlanRootPage'
+        (page) => page.parent?.page.__typename === 'PlanRootPage'
       );
       const staticPages = getMenuStructure(
         pageMenuItems,
-        pageMenuItems[rootItemIndex].parent.id,
+        pageMenuItems[rootItemIndex].parent!.id,
         activeBranch
       );
       links = links.concat(staticPages);

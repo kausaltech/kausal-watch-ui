@@ -67,7 +67,7 @@ export function getWatchBackendUrl() {
 }
 
 export function getWatchApiUrl() {
-  return env('NEXT_PUBLIC_API_URL') || 'https://api.watch.kausal.tech/v1';
+  return env('NEXT_PUBLIC_API_URL') || `${getWatchBackendUrl()}/v1`;
 }
 
 export function getWildcardDomains(): string[] {

@@ -7,7 +7,7 @@ import {
 } from '@sentry/opentelemetry';
 import type { IntegrationFn } from '@sentry/types';
 import { serializeEnvelope } from '@sentry/utils';
-import { registerOTel } from '@vercel/otel';
+import { type Configuration, registerOTel } from '@vercel/otel';
 import { makeEnvPublic } from 'next-runtime-env';
 
 import {
@@ -102,21 +102,36 @@ async function initSentry() {
 }
 
 export const register = async () => {
+  const isNode = process.env.NEXT_RUNTIME === 'nodejs';
   const runtimeConfig = getRuntimeConfig();
   makeEnvPublic(getPublicEnvVariableNames());
-  if (process.env.NEXT_RUNTIME === 'nodejs') {
+  if (isNode) {
     logger.info(`Initializing app (build id '${runtimeConfig.buildId})'`);
     logger.info(runtimeConfig, 'Runtime config');
+  } else {
+    logger.info(
+      `Initializing edge runtime (build id '${runtimeConfig.buildId})'`
+    );
   }
   const sentryClient = await initSentry();
+  let sentryOtel: Configuration | {};
+  if (process.env.NEXT_RUNTIME === 'nodejs') {
+    const nodeOtel = await import('./instrumentation-node');
+
+    sentryOtel = nodeOtel.getSentryOtelNodeConfig();
+  } else {
+    sentryOtel = {};
+  }
   registerOTel({
     serviceName: 'next-app',
-    contextManager: new Sentry.SentryContextManager(),
+    ...sentryOtel,
     propagators: [new SentryPropagator()],
     traceSampler: new SentrySampler(sentryClient as NodeClient),
     spanProcessors: [new SentrySpanProcessor()],
   });
-  Sentry.validateOpenTelemetrySetup();
+  if (process.env.NEXT_RUNTIME === 'nodejs') {
+    Sentry.validateOpenTelemetrySetup();
+  }
   return;
   if (process.env.NEXT_RUNTIME === 'nodejs') {
     const nodeOtel = await import('./instrumentation-node');
