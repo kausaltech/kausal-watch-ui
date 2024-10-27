@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import { splitLines } from 'common/utils';
+import { splitLines } from '@/common/utils';
 import { merge } from 'lodash';
 import dynamic from 'next/dynamic';
 import { Data, Layout } from 'plotly.js';

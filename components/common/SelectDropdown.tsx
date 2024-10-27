@@ -10,7 +10,7 @@ import Select, {
 import styled, { DefaultTheme, useTheme } from 'styled-components';
 import Highlighter from 'react-highlight-words';
 import { FormGroup, Label as BSLabel } from 'reactstrap';
-import PopoverTip from 'components/common/PopoverTip';
+import PopoverTip from '@/components/common/PopoverTip';
 
 const Label = styled(BSLabel)`
   font-weight: ${(props) => props.theme.formLabelFontWeight};
@@ -61,8 +61,8 @@ function getSelectStyles<Option extends SelectDropdownOption>(
       borderColor: isDisabled
         ? theme.graphColors.grey050
         : isFocused
-        ? theme.inputBtnFocusColor
-        : theme.themeColors.dark,
+          ? theme.inputBtnFocusColor
+          : theme.themeColors.dark,
       borderWidth: theme.inputBorderWidth,
       borderRadius: theme.inputBorderRadius,
       lineHeight: theme.inputLineHeight,
@@ -106,13 +106,13 @@ function getSelectStyles<Option extends SelectDropdownOption>(
         color: isSelected
           ? theme.themeColors.white
           : isFocused
-          ? theme.themeColors.black
-          : theme.themeColors.black,
+            ? theme.themeColors.black
+            : theme.themeColors.black,
         backgroundColor: isSelected
           ? theme.graphColors.grey080
           : isFocused
-          ? theme.graphColors.grey010
-          : theme.inputBg,
+            ? theme.graphColors.grey010
+            : theme.inputBg,
         margin: 0,
         padding: 0,
       };
@@ -262,7 +262,7 @@ type SelectDropdownProps<Option extends SelectDropdownOption> = Parameters<
 
 function SelectDropdown<
   Option extends SelectDropdownOption,
-  IsMulti extends boolean = false
+  IsMulti extends boolean = false,
 >(props: SelectDropdownProps<Option>) {
   const {
     size,

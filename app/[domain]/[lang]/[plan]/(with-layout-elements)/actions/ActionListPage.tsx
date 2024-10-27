@@ -2,8 +2,8 @@
 
 import React, { useCallback, useMemo, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
-import ActionList from 'components/dashboard/ActionList';
-import { Filters, FilterValue } from 'components/actions/ActionListFilters';
+import ActionList from '@/components/dashboard/ActionList';
+import { Filters, FilterValue } from '@/components/actions/ActionListFilters';
 import { GetActionListPageQuery } from '@/common/__generated__/graphql';
 import { useUpdateSearchParams } from '@/common/hooks/update-search-params';
 

@@ -1,10 +1,10 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useEffect, useRef, useState } from 'react';
 
-import dayjs from 'common/dayjs';
-import { useWindowSize } from 'common/hooks/use-window-size';
-import { IndicatorLink } from 'common/links';
-import Switch from 'components/common/Switch';
+import dayjs from '@/common/dayjs';
+import { useWindowSize } from '@/common/hooks/use-window-size';
+import { IndicatorLink } from '@/common/links';
+import Switch from '@/components/common/Switch';
 import { animate, motion, Segment, useAnimate, useInView } from 'framer-motion';
 import { useLocale, useTranslations } from 'next-intl';
 import { readableColor } from 'polished';

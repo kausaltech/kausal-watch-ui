@@ -1,5 +1,5 @@
 import React from 'react';
-import dayjs from 'common/dayjs';
+import dayjs from '@/common/dayjs';
 import styled from 'styled-components';
 import { Badge } from 'reactstrap';
 import { useLocale, useTranslations } from 'next-intl';

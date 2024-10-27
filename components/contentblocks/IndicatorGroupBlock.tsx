@@ -2,13 +2,13 @@ import React from 'react';
 import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
 import { readableColor } from 'polished';
-import { IndicatorGroupBlock as TIndicatorGroupBlock } from 'common/__generated__/graphql';
-import Icon from 'components/common/Icon';
+import { IndicatorGroupBlock as TIndicatorGroupBlock } from '@/common/__generated__/graphql';
+import Icon from '@/components/common/Icon';
 
-import { IndicatorLink, IndicatorListLink } from 'common/links';
-import IndicatorHighlightCard from 'components/indicators/IndicatorHighlightCard';
-import IndicatorVisualisation from 'components/indicators/IndicatorVisualisation';
-import Button from 'components/common/Button';
+import { IndicatorLink, IndicatorListLink } from '@/common/links';
+import IndicatorHighlightCard from '@/components/indicators/IndicatorHighlightCard';
+import IndicatorVisualisation from '@/components/indicators/IndicatorVisualisation';
+import Button from '@/components/common/Button';
 import { useTranslations } from 'next-intl';
 
 const IndicatorGraphSection = styled.div`

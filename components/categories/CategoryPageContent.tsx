@@ -2,11 +2,11 @@ import React from 'react';
 import { Container, Row } from 'reactstrap';
 import styled, { css } from 'styled-components';
 
-import StreamField from 'components/common/StreamField';
-import { GetContentPageQuery } from 'common/__generated__/graphql';
+import StreamField from '@/components/common/StreamField';
+import { GetContentPageQuery } from '@/common/__generated__/graphql';
 import CategoryPageStreamField, {
   checkAttributeHasValueByType,
-} from 'components/common/CategoryPageStreamField';
+} from '@/components/common/CategoryPageStreamField';
 
 type GeneralPlanPage = NonNullable<GetContentPageQuery['planPage']>;
 

@@ -4,15 +4,17 @@ import {
   CategoryPageMainTopBlock,
   CategoryTypePageLevelLayout,
   GetCategoryAttributeTypesQuery,
-} from 'common/__generated__/graphql';
-import { getBreadcrumbsFromCategoryHierarchy } from 'common/categories';
-import AttributesBlock, { Attributes } from 'components/common/AttributesBlock';
-import { Breadcrumbs } from 'components/common/Breadcrumbs';
+} from '@/common/__generated__/graphql';
+import { getBreadcrumbsFromCategoryHierarchy } from '@/common/categories';
+import AttributesBlock, {
+  Attributes,
+} from '@/components/common/AttributesBlock';
+import { Breadcrumbs } from '@/components/common/Breadcrumbs';
 import CategoryPageStreamField, {
   CategoryPage,
-} from 'components/common/CategoryPageStreamField';
-import { ChartType } from 'components/dashboard/ActionStatusGraphs';
-import { usePlan } from 'context/plan';
+} from '@/components/common/CategoryPageStreamField';
+import { ChartType } from '@/components/dashboard/ActionStatusGraphs';
+import { usePlan } from '@/context/plan';
 import { useTranslations } from 'next-intl';
 import { Col, Container, Row } from 'reactstrap';
 import styled, { useTheme } from 'styled-components';

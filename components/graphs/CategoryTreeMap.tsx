@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import dynamic from 'next/dynamic';
 import { readableColor } from 'polished';
 
-import { GetCategoriesForTreeMapQuery } from 'common/__generated__/graphql';
+import { GetCategoriesForTreeMapQuery } from '@/common/__generated__/graphql';
 import { useTranslations } from 'next-intl';
 
 function makeTrace(catsIn, i18n, unit, heading) {

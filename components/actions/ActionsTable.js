@@ -2,12 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Table } from 'reactstrap';
 
-import { getActionTermContext } from 'common/i18n';
-import { ActionLink } from 'common/links';
-import { usePlan } from 'context/plan';
-import { getStatusSummary } from 'common/ActionStatusSummary';
-import StatusBadge from 'components/common/StatusBadge';
-import ActionImpact from 'components/actions/ActionImpact';
+import { getActionTermContext } from '@/common/i18n';
+import { ActionLink } from '@/common/links';
+import { usePlan } from '@/context/plan';
+import { getStatusSummary } from '@/common/ActionStatusSummary';
+import StatusBadge from '@/components/common/StatusBadge';
+import ActionImpact from '@/components/actions/ActionImpact';
 import { useTranslations } from 'next-intl';
 
 function ActionsTable(props) {

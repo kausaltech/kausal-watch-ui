@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { gql } from '@apollo/client';
 import { Row, Col, Media } from 'reactstrap';
-import RichText from 'components/common/RichText';
+import RichText from '@/components/common/RichText';
 import dayjs from '../../common/dayjs';
 import { usePlan } from '../../context/plan';
 import { useTranslations } from 'next-intl';

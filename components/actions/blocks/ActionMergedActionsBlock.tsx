@@ -1,10 +1,13 @@
 import styled from 'styled-components';
 import { Row, Col, Badge } from 'reactstrap';
 import { readableColor } from 'polished';
-import { getActionTermContext } from 'common/i18n';
-import { usePlan } from 'context/plan';
-import type { ActionContentAction } from 'components/actions/ActionContent';
-import { ActionSection, SectionHeader } from 'components/actions/ActionContent';
+import { getActionTermContext } from '@/common/i18n';
+import { usePlan } from '@/context/plan';
+import type { ActionContentAction } from '@/components/actions/ActionContent';
+import {
+  ActionSection,
+  SectionHeader,
+} from '@/components/actions/ActionContent';
 import { useTranslations } from 'next-intl';
 
 const ActionNumberBadge = styled(Badge)`

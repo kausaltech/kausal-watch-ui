@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import { useTheme } from 'styled-components';
-import Icon from 'components/common/Icon';
+import Icon from '@/components/common/Icon';
 import { ActionListAction } from '../dashboard.types';
 
 const ResponsibleList = styled.div`

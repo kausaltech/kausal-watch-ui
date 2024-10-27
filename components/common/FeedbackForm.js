@@ -1,9 +1,9 @@
 import { useState } from 'react';
 
-import Button from 'components/common/Button';
-import CheckboxInput from 'components/common/CheckboxInput';
-import SelectInput from 'components/common/SelectInput';
-import TextInput from 'components/common/TextInput';
+import Button from '@/components/common/Button';
+import CheckboxInput from '@/components/common/CheckboxInput';
+import SelectInput from '@/components/common/SelectInput';
+import TextInput from '@/components/common/TextInput';
 import { useTranslations } from 'next-intl';
 import { usePathname, useSearchParams } from 'next/navigation';
 import PropTypes from 'prop-types';

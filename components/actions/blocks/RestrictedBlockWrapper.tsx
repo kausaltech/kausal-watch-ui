@@ -1,7 +1,7 @@
 import React from 'react';
 import { ReactNode } from 'react';
 import styled from 'styled-components';
-import Icon from 'components/common/Icon';
+import Icon from '@/components/common/Icon';
 import { transparentize } from 'polished';
 
 const WrapperContainer = styled.div`

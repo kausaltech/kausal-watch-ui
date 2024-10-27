@@ -2,12 +2,12 @@ import React from 'react';
 import { setLightness } from 'polished';
 import styled from 'styled-components';
 import { useTheme } from 'styled-components';
-import type { PlanContextType } from 'context/plan';
+import type { PlanContextType } from '@/context/plan';
 
 import {
   ActionWithStatusSummary,
   getStatusColorForAction,
-} from 'common/ActionStatusSummary';
+} from '@/common/ActionStatusSummary';
 
 type StatusProps = {
   $subtle?: boolean;

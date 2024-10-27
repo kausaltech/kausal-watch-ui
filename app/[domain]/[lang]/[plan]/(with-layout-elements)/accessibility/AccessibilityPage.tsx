@@ -6,10 +6,10 @@ import { useTranslations } from 'next-intl';
 import styled from 'styled-components';
 import { readableColor } from 'polished';
 
-import { usePlan } from 'context/plan';
-import AccessibilityStatementComplianceStatusBlock from 'components/contentblocks/AccessibilityStatementComplianceStatusBlock';
-import AccessibilityStatementContactInformationBlock from 'components/contentblocks/AccessibilityStatementContactInformationBlock';
-import AccessibilityStatementPreparationInformationBlock from 'components/contentblocks/AccessibilityStatementPreparationInformationBlock';
+import { usePlan } from '@/context/plan';
+import AccessibilityStatementComplianceStatusBlock from '@/components/contentblocks/AccessibilityStatementComplianceStatusBlock';
+import AccessibilityStatementContactInformationBlock from '@/components/contentblocks/AccessibilityStatementContactInformationBlock';
+import AccessibilityStatementPreparationInformationBlock from '@/components/contentblocks/AccessibilityStatementPreparationInformationBlock';
 
 const HeaderBg = styled.div`
   background-color: ${(props) => props.theme.brandDark};

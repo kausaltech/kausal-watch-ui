@@ -2,7 +2,7 @@ import React from 'react';
 import { Container, Row, Col } from 'reactstrap';
 import styled, { useTheme } from 'styled-components';
 import { readableColor } from 'polished';
-import Card from 'components/common/Card';
+import Card from '@/components/common/Card';
 
 const CardListSection = styled.div`
   background-color: ${(props) => props.theme.brandDark};

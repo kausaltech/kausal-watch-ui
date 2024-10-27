@@ -3,9 +3,9 @@ import 'react-medium-image-zoom/dist/styles.css';
 import React, { ReactElement, useCallback, useState } from 'react';
 
 import { withScope } from '@sentry/nextjs';
-import Button from 'components/common/Button';
-import Icon from 'components/common/Icon';
-import { usePlan } from 'context/plan';
+import Button from '@/components/common/Button';
+import Icon from '@/components/common/Icon';
+import { usePlan } from '@/context/plan';
 import parse, {
   DOMNode,
   domToReact,

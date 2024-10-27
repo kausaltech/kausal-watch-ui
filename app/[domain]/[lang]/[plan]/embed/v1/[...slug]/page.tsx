@@ -1,15 +1,16 @@
 'use client';
 
-import React, { useEffect, useRef, use } from 'react';
-import Icon from '@/components/common/Icon';
-import { Container } from 'reactstrap';
-import styled from 'styled-components';
-import { useTheme } from 'styled-components';
-import { debounce } from 'lodash';
-import EmbedContext, { InvalidEmbedAddressError } from '@/context/embed';
+import React, { use, useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
-import * as Sentry from '@sentry/nextjs';
 import { useSearchParams } from 'next/navigation';
+
+import * as Sentry from '@sentry/nextjs';
+import { debounce } from 'lodash';
+import { Container } from 'reactstrap';
+import styled, { useTheme } from 'styled-components';
+
+import Icon from '@/components/common/Icon';
+import EmbedContext, { InvalidEmbedAddressError } from '@/context/embed';
 
 const postHeight = (height: number, embId: string) => {
   window.parent.postMessage({ source: embId, height }, '*');
@@ -39,19 +40,19 @@ const UnknownEmbedPlaceholder = () => {
 };
 
 const RecentActionsEmbed = dynamic(
-  () => import('components/embed/RecentActionsEmbed'),
+  () => import('@/components/embed/RecentActionsEmbed'),
   {
     // TODO: try to enable real React 18 mode and enable suspense
     //suspense: true,
   }
 );
 
-const ActionEmbed = dynamic(() => import('components/embed/ActionEmbed'), {
+const ActionEmbed = dynamic(() => import('@/components/embed/ActionEmbed'), {
   //suspense: true,
 });
 
 const IndicatorEmbed = dynamic(
-  () => import('components/embed/IndicatorEmbed'),
+  () => import('@/components/embed/IndicatorEmbed'),
   {
     //suspense: true,
   }

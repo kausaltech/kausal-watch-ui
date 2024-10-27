@@ -1,4 +1,4 @@
-import { getActionTaskTermContext } from 'common/i18n';
+import { getActionTaskTermContext } from '@/common/i18n';
 import { useTranslations } from 'next-intl';
 import styled from 'styled-components';
 

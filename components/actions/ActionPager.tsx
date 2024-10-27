@@ -4,7 +4,7 @@ import { ActionLink, ActionLinkProps } from '../../common/links';
 import Icon from '../common/Icon';
 import Button from '../common/Button';
 import { getActionTermContext } from '../../common/i18n';
-import { usePlan } from 'context/plan';
+import { usePlan } from '@/context/plan';
 import { useTranslations } from 'next-intl';
 
 const Pager = styled.div`

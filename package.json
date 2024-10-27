@@ -4,6 +4,7 @@
   "version": "2.4.2",
   "author": "Tero Tikkanen <tero.tikkanen@kausal.tech>",
   "dependencies": {
+    "@apollo/client": "^3",
     "@apollo/experimental-nextjs-app-support": "^0.11.5",
     "@elastic/react-search-ui": "^1.21.5",
     "@kausal/mapboxgl-legend": "^1.7.2",
@@ -114,7 +115,7 @@
     "@types/node": "^22.8.1",
     "@types/plotly.js": "^2.33.4",
     "@types/proper-lockfile": "^4.1.4",
-    "@types/react": "npm:types-react@19.0.0-alpha.3",
+    "@types/react": "npm:types-react@^19.0.0-alpha.3",
     "@types/react-plotly.js": "^2.6.3",
     "@types/styled-components": "^5.1.34",
     "@typescript-eslint/eslint-plugin": "^8.11.0",
@@ -181,10 +182,15 @@
     ]
   },
   "overrides": {
-    "@types/react": "npm:types-react@19.0.0-alpha.3",
-    "next": "npm:next@15.0.0",
-    "@apollo/client": "npm:@apollo/client@3.10",
+    "@n8tb1t/use-scroll-position": {
+      "react": "npm:react@19.0.0-rc-65a56d0e-20241020"
+    },
+    "@testing-library/react": {
+      "react": "npm:react@19.0.0-rc-65a56d0e-20241020",
+      "@types/react": "*"
+    },
     "react": "npm:react@19.0.0-rc-65a56d0e-20241020",
-    "react-dom": "npm:react@19.0.0-rc-65a56d0e-20241020"
+    "react-dom": "npm:react@19.0.0-rc-65a56d0e-20241020",
+    "next": "npm:next@15"
   }
 }

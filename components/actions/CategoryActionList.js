@@ -5,10 +5,10 @@ import styled from 'styled-components';
 import { gql } from '@apollo/client';
 import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
 
-import ActionCard from 'components/actions/ActionCard';
-import ContentLoader from 'components/common/ContentLoader';
-import ErrorMessage from 'components/common/ErrorMessage';
-import { usePlan } from 'context/plan';
+import ActionCard from '@/components/actions/ActionCard';
+import ContentLoader from '@/components/common/ContentLoader';
+import ErrorMessage from '@/components/common/ErrorMessage';
+import { usePlan } from '@/context/plan';
 import { useTranslations } from 'next-intl';
 import { getActionTermContext } from '@/common/i18n';
 

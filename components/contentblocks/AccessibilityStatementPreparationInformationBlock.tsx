@@ -1,11 +1,11 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import dayjs from 'common/dayjs';
 
-import { Container, Row, Col } from 'reactstrap';
-import accessibilityStatementData from 'public/static/accessibility';
-import { CommonContentBlockProps } from 'common/blocks.types';
 import { useLocale, useTranslations } from 'next-intl';
+import { Col, Container, Row } from 'reactstrap';
+
+import type { CommonContentBlockProps } from '@/common/blocks.types';
+import dayjs from '@/common/dayjs';
+import accessibilityStatementData from '@/public/static/accessibility';
 
 const AccessibilityStatementPreparationInformationBlock = ({
   id = '',

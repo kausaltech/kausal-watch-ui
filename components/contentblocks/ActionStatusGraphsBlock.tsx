@@ -4,15 +4,15 @@ import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
 
 import { Container, Row, Col } from 'reactstrap';
 
-import ContentLoader from 'components/common/ContentLoader';
-import ErrorMessage from 'components/common/ErrorMessage';
-import PlanContext, { usePlan } from 'context/plan';
+import ContentLoader from '@/components/common/ContentLoader';
+import ErrorMessage from '@/components/common/ErrorMessage';
+import PlanContext, { usePlan } from '@/context/plan';
 import { useTheme } from 'styled-components';
 
 import ActionStatusGraphs, {
   ActionsStatusGraphsProps,
-} from 'components/dashboard/ActionStatusGraphs';
-import { CommonContentBlockProps } from 'common/blocks.types';
+} from '@/components/dashboard/ActionStatusGraphs';
+import { CommonContentBlockProps } from '@/common/blocks.types';
 import { useTranslations } from 'next-intl';
 
 const GET_ACTION_LIST_FOR_GRAPHS = gql`

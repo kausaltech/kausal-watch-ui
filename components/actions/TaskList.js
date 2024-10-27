@@ -8,12 +8,12 @@ import {
 } from 'reactstrap';
 import styled from 'styled-components';
 import { useTheme } from 'styled-components';
-import dayjs from 'common/dayjs';
-import Icon from 'components/common/Icon';
-import RichText from 'components/common/RichText';
+import dayjs from '@/common/dayjs';
+import Icon from '@/components/common/Icon';
+import RichText from '@/components/common/RichText';
 import { useLocale, useTranslations } from 'next-intl';
-import { usePlan } from 'context/plan';
-import { getDateFormat } from 'utils/dates.utils';
+import { usePlan } from '@/context/plan';
+import { getDateFormat } from '@/utils/dates.utils';
 
 const StyledDate = styled.span`
   font-size: ${(props) => props.theme.fontSizeSm};

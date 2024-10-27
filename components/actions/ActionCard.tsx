@@ -3,18 +3,18 @@ import { transparentize } from 'polished';
 import SVG from 'react-inlinesvg';
 import styled, { css } from 'styled-components';
 
-import { cleanActionStatus } from 'common/preprocess';
-import { getStatusColorForAction } from 'common/ActionStatusSummary';
-import { ActionLink } from 'common/links';
+import { cleanActionStatus } from '@/common/preprocess';
+import { getStatusColorForAction } from '@/common/ActionStatusSummary';
+import { ActionLink } from '@/common/links';
 import { useTheme } from 'styled-components';
-import { getActionTermContext } from 'common/i18n';
+import { getActionTermContext } from '@/common/i18n';
 import { getThemeStaticURL } from '@/common/theme';
-import { usePlan } from 'context/plan';
-import PlanChip from 'components/plans/PlanChip';
+import { usePlan } from '@/context/plan';
+import PlanChip from '@/components/plans/PlanChip';
 import {
   ActionCardFragment,
   PlanContextFragment,
-} from 'common/__generated__/graphql';
+} from '@/common/__generated__/graphql';
 import { useTranslations } from 'next-intl';
 import { ACTION_CARD_FRAGMENT } from '@/fragments/action-card.fragment';
 import { captureException } from '@sentry/nextjs';

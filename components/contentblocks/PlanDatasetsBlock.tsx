@@ -1,16 +1,16 @@
 import styled from 'styled-components';
 import { Table } from 'reactstrap';
-import { getDateFormat } from 'utils/dates.utils';
-import { beautifyValue } from 'common/data/format';
+import { getDateFormat } from '@/utils/dates.utils';
+import { beautifyValue } from '@/common/data/format';
 import { useTranslations } from 'next-intl';
 import { useLocale } from 'next-intl';
 import {
   type DatasetSchema,
   ActionDateFormat,
   DataPoint,
-} from 'common/__generated__/graphql';
-import { SectionHeader } from 'components/actions/ActionContent';
-import PopoverTip from 'components/common/PopoverTip';
+} from '@/common/__generated__/graphql';
+import { SectionHeader } from '@/components/actions/ActionContent';
+import PopoverTip from '@/components/common/PopoverTip';
 
 const TableContainer = styled.div`
   max-width: ${(props) => props.theme.breakpointSm};

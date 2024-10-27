@@ -1,10 +1,10 @@
 'use client';
 
-import { usePlan } from 'context/plan';
+import { usePlan } from '@/context/plan';
 import styled from 'styled-components';
 import { Card, CardBody, Container, Row, Col } from 'reactstrap';
-import { Link } from 'common/links';
-import Button from 'components/common/Button';
+import { Link } from '@/common/links';
+import Button from '@/components/common/Button';
 import { useTranslations } from 'next-intl';
 import { redirect } from 'next/navigation';
 

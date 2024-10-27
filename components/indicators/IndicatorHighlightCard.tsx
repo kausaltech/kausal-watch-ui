@@ -1,11 +1,11 @@
 import React from 'react';
 import { Card, CardImgOverlay, CardBody, CardTitle } from 'reactstrap';
 import styled from 'styled-components';
-import { getActionTermContext } from 'common/i18n';
-import { IndicatorLink } from 'common/links';
-import { usePlan } from 'context/plan';
+import { getActionTermContext } from '@/common/i18n';
+import { IndicatorLink } from '@/common/links';
+import { usePlan } from '@/context/plan';
 import { readableColor } from 'polished';
-import { beautifyValue } from 'common/data/format';
+import { beautifyValue } from '@/common/data/format';
 import { useTranslations } from 'next-intl';
 import { getIndicatorTranslation } from './IndicatorCard';
 

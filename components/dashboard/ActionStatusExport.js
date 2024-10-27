@@ -1,6 +1,6 @@
-import { getActionTaskTermContext, getActionTermContext } from 'common/i18n';
-import { cleanActionStatus } from 'common/preprocess';
-import { usePlan } from 'context/plan';
+import { getActionTaskTermContext, getActionTermContext } from '@/common/i18n';
+import { cleanActionStatus } from '@/common/preprocess';
+import { usePlan } from '@/context/plan';
 import { useTranslations } from 'next-intl';
 import {
   UncontrolledDropdown,

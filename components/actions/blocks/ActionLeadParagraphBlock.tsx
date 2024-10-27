@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import { ActionSection } from 'components/actions/ActionContent';
-import RichText from 'components/common/RichText';
+import { ActionSection } from '@/components/actions/ActionContent';
+import RichText from '@/components/common/RichText';
 
 const LeadParagraph = styled.div`
   font-size: 110%;

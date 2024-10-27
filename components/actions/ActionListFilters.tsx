@@ -6,12 +6,12 @@ import styled from 'styled-components';
 import { readableColor } from 'polished';
 import { ButtonGroup, Button as RButton, Collapse } from 'reactstrap';
 
-import { getActionTermContext } from 'common/i18n';
+import { getActionTermContext } from '@/common/i18n';
 import { useTheme } from 'styled-components';
-import TextInput from 'components/common/TextInput';
-import Button from 'components/common/Button';
-import { PlanContextType, usePlan } from 'context/plan';
-import PopoverTip from 'components/common/PopoverTip';
+import TextInput from '@/components/common/TextInput';
+import Button from '@/components/common/Button';
+import { PlanContextType, usePlan } from '@/context/plan';
+import PopoverTip from '@/components/common/PopoverTip';
 import {
   ActionListAction,
   ActionListActionAttributeTypeFilterBlock,
@@ -19,23 +19,23 @@ import {
   ActionListCategoryTypeFilterBlock,
   ActionListOrganization,
   ActionListPrimaryOrg,
-} from 'components/dashboard/ActionList';
+} from '@/components/dashboard/ActionList';
 import {
   ActionListFilterFragment,
   ActionListPageFiltersFragment,
   CategoryTypeSelectWidget,
-} from 'common/__generated__/graphql';
+} from '@/common/__generated__/graphql';
 import { TFunction } from '@/common/i18n';
 import SelectDropdown, {
   SelectDropdownOption,
-} from 'components/common/SelectDropdown';
+} from '@/components/common/SelectDropdown';
 import {
   CategoryHierarchyMember,
   CategoryTypeHierarchy,
   constructCatHierarchy,
   getCategoryString,
-} from 'common/categories';
-import Icon from 'components/common/Icon';
+} from '@/common/categories';
+import Icon from '@/components/common/Icon';
 import { createFilter } from 'react-select';
 import { useTranslations } from 'next-intl';
 

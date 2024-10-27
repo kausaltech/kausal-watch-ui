@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 
-import dayjs from 'common/dayjs';
-import { linearRegression } from 'common/math';
-import { capitalizeFirstLetter } from 'common/utils';
-import ContentLoader from 'components/common/ContentLoader';
-import RichText from 'components/common/RichText';
-import GraphAsTable from 'components/graphs/GraphAsTable';
-import IndicatorGraph from 'components/graphs/IndicatorGraph';
-import IndicatorComparisonSelect from 'components/indicators/IndicatorComparisonSelect';
-import IndicatorNormalizationSelect from 'components/indicators/IndicatorNormalizationSelect';
-import { usePlan } from 'context/plan';
+import dayjs from '@/common/dayjs';
+import { linearRegression } from '@/common/math';
+import { capitalizeFirstLetter } from '@/common/utils';
+import ContentLoader from '@/components/common/ContentLoader';
+import RichText from '@/components/common/RichText';
+import GraphAsTable from '@/components/graphs/GraphAsTable';
+import IndicatorGraph from '@/components/graphs/IndicatorGraph';
+import IndicatorComparisonSelect from '@/components/indicators/IndicatorComparisonSelect';
+import IndicatorNormalizationSelect from '@/components/indicators/IndicatorNormalizationSelect';
+import { usePlan } from '@/context/plan';
 import { isEqual } from 'lodash';
 import { useLocale, useTranslations } from 'next-intl';
 import PropTypes from 'prop-types';

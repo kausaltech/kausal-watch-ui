@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from 'react';
 
-import { usePlan } from 'context/plan';
+import { usePlan } from '@/context/plan';
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';

@@ -1,7 +1,7 @@
 import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
-import { Link } from 'common/links';
-import Icon from 'components/common/Icon';
+import { Link } from '@/common/links';
+import Icon from '@/components/common/Icon';
 
 const NavigationContainer = styled(Container)`
   @media (min-width: ${(props) => props.theme.breakpointLg}) {

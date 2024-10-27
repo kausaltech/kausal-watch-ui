@@ -1,10 +1,10 @@
 import { memoize } from 'lodash';
 import type { Theme } from '@kausal/themes/types';
-import type { PlanContextType } from 'context/plan';
+import type { PlanContextType } from '@/context/plan';
 import type {
   ActionStatusSummary,
   ActionStatusSummaryIdentifier,
-} from 'common/__generated__/graphql';
+} from '@/common/__generated__/graphql';
 
 export type MinimalActionStatusSummary = {
   identifier: ActionStatusSummaryIdentifier;

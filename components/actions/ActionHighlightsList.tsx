@@ -7,12 +7,12 @@ import {
   ActionHightlightListQuery,
   ActionHightlightListQueryVariables,
   PlanContextFragment,
-} from 'common/__generated__/graphql';
-import EmbedContext from 'context/embed';
-import Button from 'components/common/Button';
-import { getActionTermContext } from 'common/i18n';
-import { ActionListLink } from 'common/links';
-import images, { getActionImage } from 'common/images';
+} from '@/common/__generated__/graphql';
+import EmbedContext from '@/context/embed';
+import Button from '@/components/common/Button';
+import { getActionTermContext } from '@/common/i18n';
+import { ActionListLink } from '@/common/links';
+import images, { getActionImage } from '@/common/images';
 
 import ActionHighlightCard from './ActionHighlightCard';
 import Icon from '../common/Icon';

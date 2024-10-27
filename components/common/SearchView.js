@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 
 import { useQuery } from '@apollo/client';
-import { getActionTermContext } from 'common/i18n';
-import { Link } from 'common/links';
-import Button from 'components/common/Button';
-import TextInput from 'components/common/TextInput';
-import PlanChip from 'components/plans/PlanChip';
-import { usePlan } from 'context/plan';
+import { getActionTermContext } from '@/common/i18n';
+import { Link } from '@/common/links';
+import Button from '@/components/common/Button';
+import TextInput from '@/components/common/TextInput';
+import PlanChip from '@/components/plans/PlanChip';
+import { usePlan } from '@/context/plan';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import PropTypes from 'prop-types';

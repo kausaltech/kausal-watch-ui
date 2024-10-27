@@ -1,9 +1,9 @@
 import React, { ReactNode } from 'react';
 
-import { PlanContextFragment } from 'common/__generated__/graphql';
-import { getActionTaskTermContext, getActionTermContext } from 'common/i18n';
-import { ActionLink } from 'common/links';
-import ActionAttribute from 'components/common/ActionAttribute';
+import { PlanContextFragment } from '@/common/__generated__/graphql';
+import { getActionTaskTermContext, getActionTermContext } from '@/common/i18n';
+import { ActionLink } from '@/common/links';
+import ActionAttribute from '@/components/common/ActionAttribute';
 
 import { TFunction } from '@/common/i18n';
 

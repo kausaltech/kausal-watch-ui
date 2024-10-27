@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import dayjs from 'common/dayjs';
+import dayjs from '@/common/dayjs';
 import { Table, Collapse, Button } from 'reactstrap';
-import { beautifyValue } from 'common/data/format';
-import Icon from 'components/common/Icon';
+import { beautifyValue } from '@/common/data/format';
+import Icon from '@/components/common/Icon';
 import { useTranslations } from 'next-intl';
 
 const CollapsibleTable = styled.div`

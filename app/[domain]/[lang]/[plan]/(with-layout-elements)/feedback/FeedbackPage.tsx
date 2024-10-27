@@ -5,8 +5,8 @@ import styled from 'styled-components';
 import { readableColor } from 'polished';
 import { useTranslations } from 'next-intl';
 
-import { usePlan } from 'context/plan';
-import FeedbackForm from 'components/common/FeedbackForm';
+import { usePlan } from '@/context/plan';
+import FeedbackForm from '@/components/common/FeedbackForm';
 
 const HeaderBg = styled.div`
   background-color: ${(props) => props.theme.brandDark};

@@ -1,14 +1,14 @@
 import React, { ReactElement, useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { usePlan } from 'context/plan';
+import { usePlan } from '@/context/plan';
 import { useTheme } from 'styled-components';
 import { captureException } from '@sentry/nextjs';
 
-import { aplans } from 'common/api';
+import { aplans } from '@/common/api';
 import { Alert } from 'reactstrap';
-import ContentLoader from 'components/common/ContentLoader';
-import IndicatorCard from 'components/indicators/IndicatorCard';
-import Connector from 'components/indicators/Connector';
+import ContentLoader from '@/components/common/ContentLoader';
+import IndicatorCard from '@/components/indicators/IndicatorCard';
+import Connector from '@/components/indicators/Connector';
 import { useLocale } from 'next-intl';
 
 const CausalChain = styled.div`

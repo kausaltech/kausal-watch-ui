@@ -3,7 +3,7 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import React from 'react';
 
 import LegendControl from '@kausal/mapboxgl-legend';
-import { type CommonContentBlockProps } from 'common/blocks.types';
+import { type CommonContentBlockProps } from '@/common/blocks.types';
 import Map, { NavigationControl, useMap } from 'react-map-gl';
 import { Col, Container, Row } from 'reactstrap';
 

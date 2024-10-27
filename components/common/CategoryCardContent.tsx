@@ -1,9 +1,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import styled from 'styled-components';
-import { Link } from 'common/links';
-import Icon from 'components/common/Icon';
-import { GetCategoriesForTreeMapQuery } from 'common/__generated__/graphql';
+import { Link } from '@/common/links';
+import Icon from '@/components/common/Icon';
+import { GetCategoriesForTreeMapQuery } from '@/common/__generated__/graphql';
 import { useTranslations } from 'next-intl';
 
 const CardContent = styled(motion.div)`

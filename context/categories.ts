@@ -1,5 +1,5 @@
 import { useContext, createContext } from 'react';
-import type { CategoryListBlockCategory } from 'components/contentblocks/CategoryListBlock';
+import type { CategoryListBlockCategory } from '@/components/contentblocks/CategoryListBlock';
 
 type CategoriesContext = Array<CategoryListBlockCategory>;
 

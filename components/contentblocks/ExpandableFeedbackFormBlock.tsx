@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 
 import { Collapse } from 'reactstrap';
-import Icon from 'components/common/Icon';
-import { usePlan } from 'context/plan';
-import FeedbackForm from 'components/common/FeedbackForm';
-import { ActionContentAction } from 'components/actions/ActionContent';
+import Icon from '@/components/common/Icon';
+import { usePlan } from '@/context/plan';
+import FeedbackForm from '@/components/common/FeedbackForm';
+import { ActionContentAction } from '@/components/actions/ActionContent';
 import { useTranslations } from 'next-intl';
 
 const FeedbackFormSection = styled.div`

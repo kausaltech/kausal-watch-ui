@@ -5,12 +5,12 @@ import styled from 'styled-components';
 import { gql } from '@apollo/client';
 import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
 
-import { getActionTermContext } from 'common/i18n';
-import ActionCard from 'components/actions/ActionCard';
-import ActionCardList from 'components/actions/ActionCardList';
-import ContentLoader from 'components/common/ContentLoader';
-import ErrorMessage from 'components/common/ErrorMessage';
-import PlanContext, { usePlan } from 'context/plan';
+import { getActionTermContext } from '@/common/i18n';
+import ActionCard from '@/components/actions/ActionCard';
+import ActionCardList from '@/components/actions/ActionCardList';
+import ContentLoader from '@/components/common/ContentLoader';
+import ErrorMessage from '@/components/common/ErrorMessage';
+import PlanContext, { usePlan } from '@/context/plan';
 import { useTranslations } from 'next-intl';
 import { mapActionsToExpandDependencies } from '@/utils/actions.utils';
 import { useWorkflowSelector } from '@/context/workflow-selector';

@@ -1,4 +1,4 @@
-import RichText from 'components/common/RichText';
+import RichText from '@/components/common/RichText';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { Container } from 'reactstrap';

@@ -1,7 +1,7 @@
 import { RefObject, useEffect, useRef, useState } from 'react';
 
-import { ActionImplementationPhase } from 'common/__generated__/graphql';
-import Icon from 'components/common/Icon';
+import { ActionImplementationPhase } from '@/common/__generated__/graphql';
+import Icon from '@/components/common/Icon';
 import { debounce } from 'lodash';
 import get from 'lodash/get';
 import { useTranslations } from 'next-intl';

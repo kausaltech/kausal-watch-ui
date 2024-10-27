@@ -2,15 +2,15 @@ import React, { useContext } from 'react';
 import { Card, CardBody, CardTitle, Badge } from 'reactstrap';
 import styled from 'styled-components';
 import { transparentize } from 'polished';
-import PlanContext, { usePlan } from 'context/plan';
+import PlanContext, { usePlan } from '@/context/plan';
 import { useTheme } from 'styled-components';
-import EmbedContext from 'context/embed';
-import { cleanActionStatus } from 'common/preprocess';
+import EmbedContext from '@/context/embed';
+import { cleanActionStatus } from '@/common/preprocess';
 import { ActionHighlightListAction } from './ActionHighlightsList';
-import { getStatusColorForAction } from 'common/ActionStatusSummary';
-import { ActionLink } from 'common/links';
-import Icon from 'components/common/Icon';
-import ActionStatus from 'components/actions/ActionStatus';
+import { getStatusColorForAction } from '@/common/ActionStatusSummary';
+import { ActionLink } from '@/common/links';
+import Icon from '@/components/common/Icon';
+import ActionStatus from '@/components/actions/ActionStatus';
 
 const StyledCard = styled(Card)`
   width: 100%;

@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
 import { readableColor } from 'polished';
-import { Link } from 'common/links';
+import { Link } from '@/common/links';
 
-import Icon from 'components/common/Icon';
-import IndicatorVisualisation from 'components/indicators/IndicatorVisualisation';
+import Icon from '@/components/common/Icon';
+import IndicatorVisualisation from '@/components/indicators/IndicatorVisualisation';
 import { useTranslations } from 'next-intl';
 
 const IndicatorGraphSection = styled.div`

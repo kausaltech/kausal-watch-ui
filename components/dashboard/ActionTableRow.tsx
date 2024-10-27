@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 
-import { PlanContextFragment } from 'common/__generated__/graphql';
+import { PlanContextFragment } from '@/common/__generated__/graphql';
 import { UncontrolledTooltip } from 'reactstrap';
 import styled from 'styled-components';
 

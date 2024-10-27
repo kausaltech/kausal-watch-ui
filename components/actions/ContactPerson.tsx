@@ -6,12 +6,12 @@ import { gql } from '@apollo/client';
 import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
 
 import { Button, Collapse } from 'reactstrap';
-import Icon from 'components/common/Icon';
-import { usePlan } from 'context/plan';
+import Icon from '@/components/common/Icon';
+import { usePlan } from '@/context/plan';
 import {
   PlanContextFragment,
   PlanFeaturesContactPersonsPublicData,
-} from 'common/__generated__/graphql';
+} from '@/common/__generated__/graphql';
 import { useTranslations } from 'next-intl';
 import { getThemeStaticURL } from '@/common/theme';
 

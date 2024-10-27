@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { usePlan } from 'context/plan';
+import { usePlan } from '@/context/plan';
 import { useLocale, useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import PropTypes from 'prop-types';

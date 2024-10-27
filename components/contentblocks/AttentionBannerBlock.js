@@ -1,9 +1,9 @@
 import React, { useContext } from 'react';
 import { Container, UncontrolledAlert } from 'reactstrap';
 import styled from 'styled-components';
-import PlanContext, { usePlan } from 'context/plan';
-import Button from 'components/common/Button';
-import Icon from 'components/common/Icon';
+import PlanContext, { usePlan } from '@/context/plan';
+import Button from '@/components/common/Button';
+import Icon from '@/components/common/Icon';
 
 const AttentionBanner = styled.div`
   background-color: ${(props) => props.theme.brandDark};

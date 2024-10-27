@@ -4,12 +4,12 @@ import { useRouter } from 'next/navigation';
 
 import { useApolloClient } from '@apollo/client';
 import { SearchProvider, WithSearch } from '@elastic/react-search-ui';
-import { getActionTermContext } from 'common/i18n';
-import { Link, usePrependPlanAndLocale } from 'common/links';
-import WatchSearchAPIConnector from 'common/search';
-import Icon from 'components/common/Icon';
-import PlanChip from 'components/plans/PlanChip';
-import { usePlan } from 'context/plan';
+import { getActionTermContext } from '@/common/i18n';
+import { Link, usePrependPlanAndLocale } from '@/common/links';
+import WatchSearchAPIConnector from '@/common/search';
+import Icon from '@/components/common/Icon';
+import PlanChip from '@/components/plans/PlanChip';
+import { usePlan } from '@/context/plan';
 import { useTranslations } from 'next-intl';
 import { usePopper } from 'react-popper';
 import { InputGroup } from 'reactstrap';

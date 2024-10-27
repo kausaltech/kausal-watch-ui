@@ -2,7 +2,7 @@ import React from 'react';
 import { Container, Row, Col, Nav, NavItem } from 'reactstrap';
 import styled from 'styled-components';
 import { readableColor } from 'polished';
-import RichText from 'components/common/RichText';
+import RichText from '@/components/common/RichText';
 import { NavigationLink } from '../../common/links';
 import { useTranslations } from 'next-intl';
 import { usePathname } from 'next/navigation';

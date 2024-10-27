@@ -1,7 +1,7 @@
-import { usePlan } from 'context/plan';
+import { usePlan } from '@/context/plan';
 import RestrictedBlockWrapper from './RestrictedBlockWrapper';
-import { ActionSection } from 'components/actions/ActionContent';
-import ContactPersons from 'components/actions/ContactPersons';
+import { ActionSection } from '@/components/actions/ActionContent';
+import ContactPersons from '@/components/actions/ContactPersons';
 
 const ActionContactPersonsBlock = (props) => {
   const { contactPersons } = props;

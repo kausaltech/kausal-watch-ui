@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { UncontrolledDropdown, DropdownToggle, DropdownMenu } from 'reactstrap';
-import OrgChip from 'components/orgs/OrgChip';
-import Icon from 'components/common/Icon';
+import OrgChip from '@/components/orgs/OrgChip';
+import Icon from '@/components/common/Icon';
 
 const OrgSelect = styled.div`
   display: flex;

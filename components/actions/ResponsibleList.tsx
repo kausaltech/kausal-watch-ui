@@ -1,12 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
-import { OrganizationLink } from 'common/links';
-import { slugify } from 'common/utils';
+import { OrganizationLink } from '@/common/links';
+import { slugify } from '@/common/utils';
 import BadgeTooltip, {
   BadgeTooltipProps,
-} from 'components/common/BadgeTooltip';
+} from '@/components/common/BadgeTooltip';
 import { ActionContentAction } from './ActionContent';
-import { usePlan } from 'context/plan';
+import { usePlan } from '@/context/plan';
 import { useTranslations } from 'next-intl';
 
 const Responsibles = styled.div`

@@ -2,14 +2,14 @@
 
 import React from 'react';
 
-import type { GetContentPageQuery } from 'common/__generated__/graphql';
-import { getBgImageAlignment } from 'common/images';
-import CategoryPageContent from 'components/categories/CategoryPageContent';
-import RichText from 'components/common/RichText';
-import SecondaryNavigation from 'components/common/SecondaryNavigation';
-import StreamField from 'components/common/StreamField';
-import CategoryPageHeaderBlock from 'components/contentblocks/CategoryPageHeaderBlock';
-import ContentPageHeaderBlock from 'components/contentblocks/ContentPageHeaderBlock';
+import type { GetContentPageQuery } from '@/common/__generated__/graphql';
+import { getBgImageAlignment } from '@/common/images';
+import CategoryPageContent from '@/components/categories/CategoryPageContent';
+import RichText from '@/components/common/RichText';
+import SecondaryNavigation from '@/components/common/SecondaryNavigation';
+import StreamField from '@/components/common/StreamField';
+import CategoryPageHeaderBlock from '@/components/contentblocks/CategoryPageHeaderBlock';
+import ContentPageHeaderBlock from '@/components/contentblocks/ContentPageHeaderBlock';
 import { Col, Container, Row } from 'reactstrap';
 import { useTheme } from 'styled-components';
 

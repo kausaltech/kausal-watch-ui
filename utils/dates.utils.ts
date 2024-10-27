@@ -1,4 +1,4 @@
-import { ActionDateFormat } from 'common/__generated__/graphql';
+import { ActionDateFormat } from '@/common/__generated__/graphql';
 
 export function getDateFormat(
   format?: ActionDateFormat

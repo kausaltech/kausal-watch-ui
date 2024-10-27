@@ -5,23 +5,23 @@ import React, { useState } from 'react';
 import { gql } from '@apollo/client';
 import { Container } from 'reactstrap';
 
-import ContentLoader from 'components/common/ContentLoader';
+import ContentLoader from '@/components/common/ContentLoader';
 import { usePlan } from '../../context/plan';
-import ErrorMessage from 'components/common/ErrorMessage';
+import ErrorMessage from '@/components/common/ErrorMessage';
 
 import IndicatorsHero from './IndicatorsHero';
 import IndicatorListFiltered from './IndicatorListFiltered';
 import ActionListFilters, {
   ActionListFilterSection,
   FilterValue,
-} from 'components/actions/ActionListFilters';
+} from '@/components/actions/ActionListFilters';
 import {
   Category,
   Indicator,
   IndicatorListPage,
   IndicatorListQuery,
-} from 'common/__generated__/graphql';
-import { getCategoryString } from 'common/categories';
+} from '@/common/__generated__/graphql';
+import { getCategoryString } from '@/common/categories';
 import { processCommonIndicatorHierarchy } from './process-indicators';
 import { useTranslations } from 'next-intl';
 import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';

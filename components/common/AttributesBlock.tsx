@@ -6,7 +6,7 @@ import {
   AttributesBlockAttributeFragment,
   AttributesBlockAttributeTypeFragment,
   AttributesBlockAttributeWithNestedTypeFragment,
-} from 'common/__generated__/graphql';
+} from '@/common/__generated__/graphql';
 import ActionAttribute from './ActionAttribute';
 import RestrictedBlockWrapper from '../actions/blocks/RestrictedBlockWrapper';
 

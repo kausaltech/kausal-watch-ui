@@ -4,27 +4,27 @@ import {
   ActionListPageFiltersFragment,
   ActionListPageView,
   DashboardActionListQuery,
-} from 'common/__generated__/graphql';
+} from '@/common/__generated__/graphql';
 import {
   constructCatHierarchy,
   getCategoryString,
   mapActionCategories,
-} from 'common/categories';
-import { getActionTermContext } from 'common/i18n';
+} from '@/common/categories';
+import { getActionTermContext } from '@/common/i18n';
 import {
   constructOrgHierarchy,
   mapResponsibleParties,
   orgHasActions,
-} from 'common/organizations';
-import ActionCardList from 'components/actions/ActionCardList';
+} from '@/common/organizations';
+import ActionCardList from '@/components/actions/ActionCardList';
 import ActionListFilters, {
   ActionListFilterSection,
   Filters,
   FilterValue,
-} from 'components/actions/ActionListFilters';
-import ErrorMessage from 'components/common/ErrorMessage';
-import RichText from 'components/common/RichText';
-import { usePlan } from 'context/plan';
+} from '@/components/actions/ActionListFilters';
+import ErrorMessage from '@/components/common/ErrorMessage';
+import RichText from '@/components/common/RichText';
+import { usePlan } from '@/context/plan';
 import { useTranslations } from 'next-intl';
 import dynamic from 'next/dynamic';
 import { readableColor } from 'polished';

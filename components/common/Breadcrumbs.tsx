@@ -2,8 +2,8 @@ import React from 'react';
 import { UncontrolledTooltip } from 'reactstrap';
 import styled from 'styled-components';
 
-import { Link } from 'common/links';
-import { MAX_CRUMB_LENGTH } from 'common/categories';
+import { Link } from '@/common/links';
+import { MAX_CRUMB_LENGTH } from '@/common/categories';
 
 type TCrumb = {
   name: string;

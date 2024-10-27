@@ -1,20 +1,20 @@
 import React from 'react';
 import { Container, Row, Col, ColProps } from 'reactstrap';
-import { usePlan } from 'context/plan';
-import { attributeHasValue } from 'components/common/AttributesBlock';
+import { usePlan } from '@/context/plan';
+import { attributeHasValue } from '@/components/common/AttributesBlock';
 import { useTheme } from 'styled-components';
 import {
   CategoryPageMainBottomBlock,
   CategoryPageMainTopBlock,
   GetContentPageQuery,
-} from 'common/__generated__/graphql';
-import ActionAttribute from 'components/common/ActionAttribute';
-import CategoryListBlock from 'components/contentblocks/CategoryListBlock';
-import ExpandableFeedbackFormBlock from 'components/contentblocks/ExpandableFeedbackFormBlock';
-import StreamField from 'components/common/StreamField';
-import ActionStatusGraphsBlock from 'components/contentblocks/ActionStatusGraphsBlock';
-import PlanDatasetsBlock from 'components/contentblocks/PlanDatasetsBlock';
-import { ChartType } from 'components/dashboard/ActionStatusGraphs';
+} from '@/common/__generated__/graphql';
+import ActionAttribute from '@/components/common/ActionAttribute';
+import CategoryListBlock from '@/components/contentblocks/CategoryListBlock';
+import ExpandableFeedbackFormBlock from '@/components/contentblocks/ExpandableFeedbackFormBlock';
+import StreamField from '@/components/common/StreamField';
+import ActionStatusGraphsBlock from '@/components/contentblocks/ActionStatusGraphsBlock';
+import PlanDatasetsBlock from '@/components/contentblocks/PlanDatasetsBlock';
+import { ChartType } from '@/components/dashboard/ActionStatusGraphs';
 
 export type CategoryPage = { __typename: 'CategoryPage' } & NonNullable<
   GetContentPageQuery['planPage']

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Icon from 'components/common/Icon';
+import Icon from '@/components/common/Icon';
 import { useTranslations } from 'next-intl';
 import {
   DropdownItem,

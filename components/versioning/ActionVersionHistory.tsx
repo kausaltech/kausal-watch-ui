@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
-import { ActionLink } from 'common/links';
-import Icon from 'components/common/Icon';
+import { ActionLink } from '@/common/links';
+import Icon from '@/components/common/Icon';
 import { useTranslations } from 'next-intl';
 import { Button, Collapse } from 'reactstrap';
 import styled from 'styled-components';

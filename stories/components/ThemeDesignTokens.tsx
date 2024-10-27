@@ -1,9 +1,11 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { Container, Table } from 'reactstrap';
+import React, { useEffect, useState } from 'react';
+
 import _ from 'lodash';
-import { useTheme } from 'styled-components';
 import { ChromePicker } from 'react-color';
-import defaultTheme from 'public/static/themes/default/theme.json';
+import { Container, Table } from 'reactstrap';
+import { useTheme } from 'styled-components';
+
+import defaultTheme from '@/public/static/themes/default/theme.json';
 
 const ColorPicker = (props) => {
   const { color, handleChange, isDefault } = props;

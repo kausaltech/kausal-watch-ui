@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import DropDown from 'components/common/DropDown';
+import DropDown from '@/components/common/DropDown';
 import { useTranslations } from 'next-intl';
 
 const CompareChooser = styled.div`

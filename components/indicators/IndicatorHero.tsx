@@ -1,11 +1,11 @@
 import React from 'react';
 
-import { IndicatorDetailsQuery } from 'common/__generated__/graphql';
-import { getActionTermContext } from 'common/i18n';
-import { IndicatorListLink } from 'common/links';
-import IndicatorValueSummary from 'components/indicators/IndicatorValueSummary';
-import OrgSelector from 'components/orgs/OrgSelector';
-import { usePlan } from 'context/plan';
+import { IndicatorDetailsQuery } from '@/common/__generated__/graphql';
+import { getActionTermContext } from '@/common/i18n';
+import { IndicatorListLink } from '@/common/links';
+import IndicatorValueSummary from '@/components/indicators/IndicatorValueSummary';
+import OrgSelector from '@/components/orgs/OrgSelector';
+import { usePlan } from '@/context/plan';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { Col, Container, Row } from 'reactstrap';

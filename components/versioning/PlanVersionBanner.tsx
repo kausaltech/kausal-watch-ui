@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { useTranslations } from 'next-intl';
-import Icon from 'components/common/Icon';
-import AnnouncementBanner from 'components/common/AnnouncementBanner';
+import Icon from '@/components/common/Icon';
+import AnnouncementBanner from '@/components/common/AnnouncementBanner';
 
 const VersionNote = styled.div`
   display: flex;

@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
-import RichText from 'components/common/RichText';
-import IndicatorProgressBar from 'components/indicators/IndicatorProgressBar';
-import IndicatorVisualisation from 'components/indicators/IndicatorVisualisation';
+import RichText from '@/components/common/RichText';
+import IndicatorProgressBar from '@/components/indicators/IndicatorProgressBar';
+import IndicatorVisualisation from '@/components/indicators/IndicatorVisualisation';
 
 const IndicatorShowcase = styled.div`
   padding: ${(props) => props.theme.spaces.s400} 0;

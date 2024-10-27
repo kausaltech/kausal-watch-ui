@@ -9,11 +9,11 @@ import {
 } from 'reactstrap';
 import styled from 'styled-components';
 import { readableColor, shade } from 'polished';
-import IndicatorVisualisation from 'components/indicators/IndicatorVisualisation';
-import { ActionLink, IndicatorLink } from 'common/links';
-import Icon from 'components/common/Icon';
-import PlanContext, { usePlan } from 'context/plan';
-import { SectionHeader } from 'components/actions/ActionContent';
+import IndicatorVisualisation from '@/components/indicators/IndicatorVisualisation';
+import { ActionLink, IndicatorLink } from '@/common/links';
+import Icon from '@/components/common/Icon';
+import PlanContext, { usePlan } from '@/context/plan';
+import { SectionHeader } from '@/components/actions/ActionContent';
 import { useTranslations } from 'next-intl';
 
 const IndicatorsSection = styled.div`

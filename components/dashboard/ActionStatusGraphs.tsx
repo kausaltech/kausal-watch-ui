@@ -1,22 +1,22 @@
 import React from 'react';
 import styled from 'styled-components';
 import { transparentize } from 'polished';
-import { getPhaseData, getStatusData } from 'common/preprocess';
+import { getPhaseData, getStatusData } from '@/common/preprocess';
 import { useTheme } from 'styled-components';
 import type { Theme } from '@kausal/themes/types';
-import { usePlan } from 'context/plan';
+import { usePlan } from '@/context/plan';
 
-import { getStatusSummary } from 'common/ActionStatusSummary';
-import StatusDonut from 'components/graphs/StatusDonut';
+import { getStatusSummary } from '@/common/ActionStatusSummary';
+import StatusDonut from '@/components/graphs/StatusDonut';
 
 import {
   Sentiment,
   ActionTimeliness,
   ActionTimelinessIdentifier,
   Comparison,
-} from 'common/__generated__/graphql';
+} from '@/common/__generated__/graphql';
 import type { ActionListAction } from './ActionList';
-import BarChart from 'components/common/BarChart';
+import BarChart from '@/components/common/BarChart';
 import { TFunction } from '@/common/i18n';
 import dayjs from '@/common/dayjs';
 import { useTranslations, useLocale } from 'next-intl';
@@ -31,8 +31,8 @@ const StatusDonutsWrapper = styled.div`
     props.theme.themeColors.white
   }, ${props.theme.themeColors.white}),
     linear-gradient(to right, ${props.theme.themeColors.white}, ${
-    props.theme.themeColors.white
-  }),
+      props.theme.themeColors.white
+    }),
     linear-gradient(to right, rgba(0, 0, 0, 0.25), ${transparentize(
       0,
       props.theme.themeColors.white
@@ -41,10 +41,18 @@ const StatusDonutsWrapper = styled.div`
       0,
       props.theme.themeColors.white
     )})`};
-  background-position: left center, right center, left center, right center;
+  background-position:
+    left center,
+    right center,
+    left center,
+    right center;
   background-repeat: no-repeat;
   background-color: ${(props) => props.theme.themeColors.white};
-  background-size: 20px 100%, 20px 100%, 10px 100%, 10px 100%;
+  background-size:
+    20px 100%,
+    20px 100%,
+    10px 100%,
+    10px 100%;
   background-attachment: local, local, scroll, scroll;
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {

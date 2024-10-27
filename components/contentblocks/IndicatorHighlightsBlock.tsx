@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
 import { Container } from 'reactstrap';
 import styled from 'styled-components';
-import PlanContext, { usePlan } from 'context/plan';
+import PlanContext, { usePlan } from '@/context/plan';
 
-import IndicatorHighlightsList from 'components/indicators/IndicatorHighlightsList';
-import { CommonContentBlockProps } from 'common/blocks.types';
+import IndicatorHighlightsList from '@/components/indicators/IndicatorHighlightsList';
+import { CommonContentBlockProps } from '@/common/blocks.types';
 
 const IndicatorsSection = styled.div`
   background-color: ${(props) => props.theme.themeColors.white};

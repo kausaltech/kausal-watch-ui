@@ -1,12 +1,12 @@
 import React from 'react';
 
-import { Category } from 'common/__generated__/graphql';
-import { getBreadcrumbsFromCategoryHierarchy } from 'common/categories';
-import { getActionTermContext } from 'common/i18n';
-import { ActionLink, ActionListLink, OrganizationLink } from 'common/links';
-import { Breadcrumbs } from 'components/common/Breadcrumbs';
-import Icon from 'components/common/Icon';
-import { usePlan } from 'context/plan';
+import { Category } from '@/common/__generated__/graphql';
+import { getBreadcrumbsFromCategoryHierarchy } from '@/common/categories';
+import { getActionTermContext } from '@/common/i18n';
+import { ActionLink, ActionListLink, OrganizationLink } from '@/common/links';
+import { Breadcrumbs } from '@/components/common/Breadcrumbs';
+import Icon from '@/components/common/Icon';
+import { usePlan } from '@/context/plan';
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import { Col, Container, Row } from 'reactstrap';

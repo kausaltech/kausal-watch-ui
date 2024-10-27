@@ -1,9 +1,9 @@
 import React from 'react';
 import { Container, Row, Col } from 'reactstrap';
 
-import { usePlan } from 'context/plan';
-import FeedbackForm from 'components/common/FeedbackForm';
-import { CommonContentBlockProps } from 'common/blocks.types';
+import { usePlan } from '@/context/plan';
+import FeedbackForm from '@/components/common/FeedbackForm';
+import { CommonContentBlockProps } from '@/common/blocks.types';
 import { useTranslations } from 'next-intl';
 
 const AccessibilityStatementContactFormBlock = ({

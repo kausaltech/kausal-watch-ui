@@ -1,6 +1,6 @@
 import { ActionListAction } from '../dashboard.types';
 import styled, { useTheme } from 'styled-components';
-import Icon from 'components/common/Icon';
+import Icon from '@/components/common/Icon';
 
 interface Props {
   action: ActionListAction;

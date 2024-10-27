@@ -1,4 +1,4 @@
-import dayjs from 'common/dayjs';
+import dayjs from '@/common/dayjs';
 import styled from 'styled-components';
 
 import { ActionListAction } from '../dashboard.types';

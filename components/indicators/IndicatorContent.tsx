@@ -6,13 +6,13 @@ import styled from 'styled-components';
 import { useTranslations } from 'next-intl';
 
 import { IndicatorDetailsQuery } from '@/common/__generated__/graphql';
-import { usePlan } from 'context/plan';
-import { getActionTermContext } from 'common/i18n';
-import RichText from 'components/common/RichText';
-import CategoryTags from 'components/actions/CategoryTags';
-import IndicatorVisualisation from 'components/indicators/IndicatorVisualisation';
-import ActionsTable from 'components/actions/ActionsTable';
-import CausalNavigation from 'components/indicators/CausalNavigation';
+import { usePlan } from '@/context/plan';
+import { getActionTermContext } from '@/common/i18n';
+import RichText from '@/components/common/RichText';
+import CategoryTags from '@/components/actions/CategoryTags';
+import IndicatorVisualisation from '@/components/indicators/IndicatorVisualisation';
+import ActionsTable from '@/components/actions/ActionsTable';
+import CausalNavigation from '@/components/indicators/CausalNavigation';
 import IndicatorHero from './IndicatorHero';
 
 const Section = styled.section`

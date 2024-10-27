@@ -1,4 +1,4 @@
-import { stripTrailingSlash } from 'common/utils';
+import { stripTrailingSlash } from '@/common/utils';
 
 describe('stripTrailingSlash', () => {
   it('strips trailing slashes', () => {

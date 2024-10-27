@@ -1,5 +1,5 @@
-import { PlanContextFragment } from 'common/__generated__/graphql';
-import { PhaseTimeline } from 'components/actions/PhaseTimeline';
+import { PlanContextFragment } from '@/common/__generated__/graphql';
+import { PhaseTimeline } from '@/components/actions/PhaseTimeline';
 import styled from 'styled-components';
 
 import { ActionListAction } from '../dashboard.types';

@@ -4,12 +4,12 @@ import { gql } from '@apollo/client';
 import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
 import { Row, Col } from 'reactstrap';
 import styled from 'styled-components';
-import ContentLoader from 'components/common/ContentLoader';
-import { IndicatorListLink } from 'common/links';
-import type { IndicatorHightlightListQuery } from 'common/__generated__/graphql';
+import ContentLoader from '@/components/common/ContentLoader';
+import { IndicatorListLink } from '@/common/links';
+import type { IndicatorHightlightListQuery } from '@/common/__generated__/graphql';
 import IndicatorHighlightCard from './IndicatorHighlightCard';
-import Icon from 'components/common/Icon';
-import Button from 'components/common/Button';
+import Icon from '@/components/common/Icon';
+import Button from '@/components/common/Button';
 import { useTranslations } from 'next-intl';
 
 export const GET_INDICATOR_HIGHLIGHTS = gql`

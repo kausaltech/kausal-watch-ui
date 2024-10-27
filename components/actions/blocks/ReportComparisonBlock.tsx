@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import dayjs from 'common/dayjs';
+import dayjs from '@/common/dayjs';
 
 import styled from 'styled-components';
 import { Row, Col, Button, Collapse } from 'reactstrap';
-import ActionAttribute from 'components/common/ActionAttribute';
-import Icon from 'components/common/Icon';
+import ActionAttribute from '@/components/common/ActionAttribute';
+import Icon from '@/components/common/Icon';
 import { useTranslations } from 'next-intl';
 
 const ReportSection = styled.div`
@@ -57,10 +57,18 @@ const ReportFieldComparison = styled.div`
     linear-gradient(to right, white, white),
     linear-gradient(to right, rgba(0, 0, 0, 0.25), rgba(255, 255, 255, 0)),
     linear-gradient(to left, rgba(0, 0, 0, 0.25), rgba(255, 255, 255, 0));
-  background-position: left center, right center, left center, right center;
+  background-position:
+    left center,
+    right center,
+    left center,
+    right center;
   background-repeat: no-repeat;
   background-color: white;
-  background-size: 20px 100%, 20px 100%, 10px 100%, 10px 100%;
+  background-size:
+    20px 100%,
+    20px 100%,
+    10px 100%,
+    10px 100%;
   background-attachment: local, local, scroll, scroll;
 `;
 

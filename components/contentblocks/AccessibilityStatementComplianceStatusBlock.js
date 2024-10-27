@@ -1,8 +1,9 @@
 import React from 'react';
 
-import { Container, Row, Col } from 'reactstrap';
-import accessibilityStatementData from 'public/static/accessibility';
 import { useLocale, useTranslations } from 'next-intl';
+import { Col, Container, Row } from 'reactstrap';
+
+import accessibilityStatementData from '@/public/static/accessibility';
 
 function getComplianceStatusText(t, complianceStatus) {
   switch (complianceStatus) {

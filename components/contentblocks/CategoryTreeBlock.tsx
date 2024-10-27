@@ -3,17 +3,17 @@ import { concat } from 'lodash';
 import styled from 'styled-components';
 import { readableColor } from 'polished';
 import { Container, Row, Col } from 'reactstrap';
-import ContentLoader from 'components/common/ContentLoader';
+import ContentLoader from '@/components/common/ContentLoader';
 import { gql } from '@apollo/client';
 import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
-import CategoryTreeMap from 'components/graphs/CategoryTreeMap';
-import CategoryCardContent from 'components/common/CategoryCardContent';
+import CategoryTreeMap from '@/components/graphs/CategoryTreeMap';
+import CategoryCardContent from '@/components/common/CategoryCardContent';
 
-import { usePlan } from 'context/plan';
-import CategoryActionList from 'components/actions/CategoryActionList';
-import ErrorMessage from 'components/common/ErrorMessage';
-import { GetCategoriesForTreeMapQuery } from 'common/__generated__/graphql';
-import { CommonContentBlockProps } from 'common/blocks.types';
+import { usePlan } from '@/context/plan';
+import CategoryActionList from '@/components/actions/CategoryActionList';
+import ErrorMessage from '@/components/common/ErrorMessage';
+import { GetCategoriesForTreeMapQuery } from '@/common/__generated__/graphql';
+import { CommonContentBlockProps } from '@/common/blocks.types';
 
 const CategoryListSection = styled.div`
   background-color: ${(props) => props.theme.neutralLight};

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { PlanContextType } from 'context/plan';
+import { PlanContextType } from '@/context/plan';
 import { useTheme } from 'styled-components';
 import PlanChip from './PlanChip';
 

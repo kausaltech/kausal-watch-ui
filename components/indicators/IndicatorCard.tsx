@@ -2,10 +2,10 @@ import React from 'react';
 import { Card, CardBody, CardTitle } from 'reactstrap';
 import { readableColor } from 'polished';
 import styled from 'styled-components';
-import dayjs from 'common/dayjs';
-import { TFunction, getActionTermContext } from 'common/i18n';
-import { IndicatorLink } from 'common/links';
-import { usePlan } from 'context/plan';
+import dayjs from '@/common/dayjs';
+import { TFunction, getActionTermContext } from '@/common/i18n';
+import { IndicatorLink } from '@/common/links';
+import { usePlan } from '@/context/plan';
 import { useLocale, useTranslations } from 'next-intl';
 
 const IndicatorValueDisplay = styled.div`

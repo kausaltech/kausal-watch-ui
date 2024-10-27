@@ -2,8 +2,8 @@ import styled, { useTheme } from 'styled-components';
 import { CSSProperties } from 'react';
 import { transparentize } from 'polished';
 import { UncontrolledDropdown, DropdownToggle, DropdownMenu } from 'reactstrap';
-import { usePlan } from 'context/plan';
-import Icon from 'components/common/Icon';
+import { usePlan } from '@/context/plan';
+import Icon from '@/components/common/Icon';
 import { getThemeStaticURL } from '@/common/theme';
 
 import PlanLink from './PlanLink';

@@ -1,6 +1,6 @@
 import { Spinner } from 'reactstrap';
 import styled from 'styled-components';
-import dayjs from 'common/dayjs';
+import dayjs from '@/common/dayjs';
 import { useTranslations } from 'next-intl';
 import { useWorkflowSelector } from '@/context/workflow-selector';
 

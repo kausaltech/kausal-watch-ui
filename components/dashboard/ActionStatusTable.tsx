@@ -1,9 +1,9 @@
 import React, { ReactNode, useState } from 'react';
 
-import { PlanContextFragment } from 'common/__generated__/graphql';
-import { actionStatusOrder } from 'common/data/actions';
-import Icon from 'components/common/Icon';
-import ActionTableRow from 'components/dashboard/ActionTableRow';
+import { PlanContextFragment } from '@/common/__generated__/graphql';
+import { actionStatusOrder } from '@/common/data/actions';
+import Icon from '@/components/common/Icon';
+import ActionTableRow from '@/components/dashboard/ActionTableRow';
 import { useTranslations } from 'next-intl';
 import { Button, Table } from 'reactstrap';
 import styled from 'styled-components';

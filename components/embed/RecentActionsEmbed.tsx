@@ -1,5 +1,5 @@
-import ActionHighlightsList from 'components/actions/ActionHighlightsList';
-import { usePlan } from 'context/plan';
+import ActionHighlightsList from '@/components/actions/ActionHighlightsList';
+import { usePlan } from '@/context/plan';
 import { useSearchParams } from 'next/navigation';
 
 const DEFAULT_COUNT = 3;

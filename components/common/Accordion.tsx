@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
-import { isServer } from 'common/environment';
-import Icon from 'components/common/Icon';
+import { isServer } from '@/common/environment';
+import Icon from '@/components/common/Icon';
 import { useTranslations } from 'next-intl';
 import { usePathname } from 'next/navigation';
 import PropTypes from 'prop-types';
