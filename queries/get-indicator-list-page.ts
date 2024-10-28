@@ -16,6 +16,7 @@ const GET_INDICATOR_LIST_PAGE = gql`
         leadContent
         displayInsights
         displayLevel
+        includeRelatedPlans
       }
       lastPublishedAt
     }
