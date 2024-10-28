@@ -53,12 +53,14 @@
     "action-task-hide-comment": "Απόκρυψη λεπτομερειών",
     "action-task-show-comment": "Εμφάνιση λεπτομερειών",
     "feedback-on-action": "Δώστε ανατροφοδότηση σχετικά με αυτή τη δράση",
-    "action-draft": "Σχέδιο",
+    "action-draft": "Προσχέδιο",
     "logo": "Λογότυπο",
     "other": "Άλλα",
     "action-dependencies": "{context, select, CASE_STUDY {Εξαρτήσεις της μελέτης περίπτωσης} STRATEGY {Αναρτήσεις στρατηγικής} other {Αναρτήσεις δράσης}}",
     "no-action-version-available": "Δεν υπάρχει διαθέσιμη έκδοση --{versionType}---",
     "n-more-actions": "Plus {count} other {context, select, CASE_STUDY {{count, plural, =1 {case study} other {case studies}}} STRATEGY {{count, plural, =1 {strategy} other {strategies}}} other {{count, plural, =1 {action} other {actions}}}}",
     "feedback-on-category": "Ανατροφοδοτήστε αυτή την κατηγορία",
-    "feedback-on-category-description": "Μπορείτε να αφήσετε ένα σχόλιο ή σχόλιο σε αυτή την κατηγορία"
+    "feedback-on-category-description": "Μπορείτε να αφήσετε ένα σχόλιο ή σχόλιο σε αυτή την κατηγορία",
+    "action-end-date": "Τέλος",
+    "action-start-date": "Έναρξη"
 }
