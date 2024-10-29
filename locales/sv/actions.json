@@ -56,5 +56,6 @@
     "other": "Annat",
     "logo": "Logotyp",
     "inactive-actions": "Inaktiva åtgärder",
-    "no-action-version-available": "Ingen {versionType}-version tillgänglig"
+    "no-action-version-available": "Ingen {versionType}-version tillgänglig",
+    "late": "Sen"
 }
