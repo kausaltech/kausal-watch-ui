@@ -4,6 +4,7 @@ import Button from 'components/common/Button';
 import Icon from 'components/common/Icon';
 import { useTranslations } from 'next-intl';
 import { getTrackBackground, Range } from 'react-range';
+import { Tooltip } from 'react-tooltip';
 import styled, { useTheme } from 'styled-components';
 
 import { ParameterInterface } from '@/common/__generated__/paths/graphql';
@@ -195,10 +196,17 @@ type BoolWidgetProps = {
   handleChange: (opts: { parameterId: string; boolValue: boolean }) => void;
   loading: boolean;
   WidgetWrapper: typeof WidgetWrapper;
+  hideLabel?: boolean;
 };
 
 export const BoolWidget = (props: BoolWidgetProps) => {
-  const { parameter, handleChange, loading, WidgetWrapper } = props;
+  const {
+    parameter,
+    handleChange,
+    loading,
+    WidgetWrapper,
+    hideLabel = false,
+  } = props;
   const { id, boolValue, isCustomized, isCustomizable } = parameter;
   const t = useTranslations();
 
@@ -219,11 +227,16 @@ export const BoolWidget = (props: BoolWidgetProps) => {
         }
         disabled={!isCustomizable || loading}
         style={{ transform: 'scale(1.5)' }}
+        data-tooltip-id="my-tooltip"
+        data-tooltip-content={parameter.description || label}
       />
-      <label className="form-check-label" htmlFor={id!}>
-        {label}
-        {isCustomized ? '*' : ''}
-      </label>
+      {!hideLabel && (
+        <label className="form-check-label" htmlFor={id!}>
+          {label}
+          {isCustomized ? '*' : ''}
+        </label>
+      )}
+      {hideLabel && <Tooltip id="my-tooltip" />}
     </WidgetWrapper>
   );
 };
@@ -282,6 +295,17 @@ const ParameterWidget = (props: ParameterWidgetProps) => {
           handleChange={handleUserSelection}
           loading={mutationLoading}
           WidgetWrapper={props.WidgetWrapper ?? WidgetWrapper}
+        />
+      );
+
+    case 'EnableParameterType':
+      return (
+        <BoolWidget
+          parameter={parameter}
+          handleChange={handleUserSelection}
+          loading={mutationLoading}
+          WidgetWrapper={props.WidgetWrapper ?? WidgetWrapper}
+          hideLabel={true}
         />
       );
 
