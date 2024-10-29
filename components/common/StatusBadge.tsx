@@ -14,7 +14,7 @@ type StatusProps = {
   $statusColor: string;
 };
 
-const StyledStatusBadge = styled.div<StatusProps>`
+export const StyledStatusBadge = styled.div<StatusProps>`
   display: inline-block;
   border: ${({ $subtle, $statusColor }) =>
     $subtle ? 'none' : `2px solid ${$statusColor}`};
@@ -28,7 +28,7 @@ const StyledStatusBadgeWithReason = styled(StyledStatusBadge)`
   display: block;
 `;
 
-const StyledStatusIndicator = styled.div<StatusProps>`
+export const StyledStatusIndicator = styled.div<StatusProps>`
   background: ${({ $statusColor }) => $statusColor};
   border-radius: 10px;
   width: 10px;
@@ -36,7 +36,7 @@ const StyledStatusIndicator = styled.div<StatusProps>`
   flex-shrink: 0;
 `;
 
-const StyledStatusLabel = styled.div<{ $subtle?: boolean }>`
+export const StyledStatusLabel = styled.div<{ $subtle?: boolean }>`
   color: ${({ theme }) => theme.textColor.primary};
   font-size: ${({ theme }) => theme.fontSizeSm};
   line-height: ${({ theme }) => theme.lineHeightSm};
@@ -44,7 +44,7 @@ const StyledStatusLabel = styled.div<{ $subtle?: boolean }>`
     $subtle ? theme.fontWeightNormal : theme.fontWeightBold};
 `;
 
-const StyledStatusWrapper = styled.div`
+export const StyledStatusWrapper = styled.div`
   display: flex;
   gap: ${({ theme }) => theme.spaces.s050};
   align-items: center;
