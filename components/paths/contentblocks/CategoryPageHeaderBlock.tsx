@@ -3,18 +3,22 @@ import React from 'react';
 import { CategoryTypePageLevelLayout } from 'common/__generated__/graphql';
 import Breadcrumbs from 'components/common/Breadcrumbs';
 import { CategoryPage } from 'components/common/CategoryPageStreamField';
+import ActionParameters from 'components/paths/ActionParameters';
 import { usePaths } from 'context/paths/paths';
 import ContentLoader from 'react-content-loader';
 import { Container } from 'reactstrap';
 import styled, { useTheme } from 'styled-components';
 
+import { ActionNode } from '@/common/__generated__/paths/graphql';
 import { activeGoalVar, yearRangeVar } from '@/context/paths/cache';
 import { GET_NODE_CONTENT } from '@/queries/paths/get-paths-node';
 import { getScopeLabel, getScopeTotal } from '@/utils/paths/emissions';
 import { DimensionalMetric } from '@/utils/paths/metric';
 import { getHttpHeaders } from '@/utils/paths/paths.utils';
 import PathsActionNode from '@/utils/paths/PathsActionNode';
-import { gql, useQuery, useReactiveVar } from '@apollo/client';
+import { gql, NetworkStatus, useQuery, useReactiveVar } from '@apollo/client';
+
+import HighlightValue from '../HighlightValue';
 
 export const GET_CATEGORY_ATTRIBUTE_TYPES = gql`
   query GetCategoryAttributeTypes($plan: ID!) {
@@ -61,25 +65,12 @@ const Background = styled.div`
   background-color: ${(props) => props.theme.brandDark};
 `;
 
-const PathsActionImpact = styled.div`
+const PathsActionImpact = styled.div<{ $disabled: boolean }>`
   display: flex;
   margin-right: 1rem;
   gap: 1rem;
   align-content: stretch;
   align-items: stretch;
-
-  > div {
-    padding: 1rem;
-    background: #fff;
-    flex: 50% 0 0;
-
-    > div {
-      display: flex;
-      > div {
-        margin-right: 1rem;
-      }
-    }
-  }
 `;
 
 const CategoryHeader = styled.div`
@@ -113,7 +104,7 @@ interface Props {
 }
 
 const PathsBasicNodeContent = (props) => {
-  const { categoryId, node, pathsInstance } = props;
+  const { categoryId, node, pathsInstance, refetching } = props;
   const yearRange = useReactiveVar(yearRangeVar);
 
   if (node.metricDim) {
@@ -133,30 +124,29 @@ const PathsBasicNodeContent = (props) => {
 
     const hasEmissionGoals = false;
     return (
-      <PathsActionImpact>
+      <PathsActionImpact $disabled={refetching}>
+        <h4>
+          {nodeMetric.getName()} ({yearRange[1]})
+        </h4>
         <div>
-          <h4>
-            {nodeMetric.getName()} ({yearRange[1]})
-          </h4>
-          <div>
-            <div>
-              {directEmissionsLabel}
-              <h5>
-                {directEmissions ? directEmissions.toPrecision(3) : 'XXX'}{' '}
-                {unit}
-              </h5>
-            </div>
-            {indirectEmissions ? (
-              <div>
-                {indirectEmissionsLabel}
-                <h5>
-                  {indirectEmissions.toPrecision(3)} {unit}
-                </h5>
-              </div>
-            ) : (
-              <div />
-            )}
-          </div>
+          <HighlightValue
+            displayValue={
+              directEmissions ? directEmissions.toPrecision(3) : 'XXX'
+            }
+            header={directEmissionsLabel}
+            unit={nodeMetric.getUnit() || ''}
+            size="lg"
+            muted={refetching}
+          />
+          <HighlightValue
+            displayValue={
+              indirectEmissions ? indirectEmissions.toPrecision(3) : 'XXX'
+            }
+            header={indirectEmissionsLabel}
+            unit={nodeMetric.getUnit() || ''}
+            size="lg"
+            muted={refetching}
+          />
         </div>
         {/* Hide targets now as we dont have them */}
         {hasEmissionGoals ? (
@@ -181,31 +171,37 @@ const PathsBasicNodeContent = (props) => {
   }
 };
 
-const PathsActionNodeContent = (props) => {
-  const { categoryId, node, pathsInstance } = props;
+type PathsActionNodeContentProps = {
+  node: ActionNode;
+  refetching: boolean;
+};
+
+const PathsActionNodeContent = (props: PathsActionNodeContentProps) => {
+  const { node, refetching } = props;
   const yearRange = useReactiveVar(yearRangeVar);
 
   const pathsAction = new PathsActionNode(node);
 
   const impact = pathsAction.getYearlyImpact(yearRange[1]) || 0;
+
   return (
-    <PathsActionImpact>
+    <PathsActionImpact $disabled={refetching}>
       <div>
-        <h4>Impact ({yearRange[1]})</h4>
-        <div>
-          <div>
-            Direct emissions
-            <h5>
-              {`${impact.toPrecision(3)} `}
-              <span
-                dangerouslySetInnerHTML={{ __html: pathsAction.getUnit() }}
-              />
-            </h5>
-          </div>
-        </div>
+        <HighlightValue
+          displayValue={impact.toPrecision(3)}
+          header={`Impact (${yearRange[1]})`}
+          unit={pathsAction.getUnit() || ''}
+          size="lg"
+          muted={refetching || !pathsAction.isEnabled()}
+          mutedReason={
+            !pathsAction.isEnabled() ? 'Not included in scenario' : ''
+          }
+        />
       </div>
       <div>
-        <div></div>
+        <div>
+          <ActionParameters parameters={node.parameters} />
+        </div>
       </div>
     </PathsActionImpact>
   );
@@ -225,8 +221,8 @@ const PathsNodeContent = (props) => {
       headers: getHttpHeaders({ instanceIdentifier: paths }),
     },
   });
-
-  if (loading) {
+  const refetching = networkStatus === NetworkStatus.refetch;
+  if (loading && !refetching) {
     return <PathsContentLoader />;
   }
   if (error) {
@@ -236,11 +232,7 @@ const PathsNodeContent = (props) => {
     console.log('paths node content', data);
     if (data.node.__typename === 'ActionNode') {
       return (
-        <PathsActionNodeContent
-          categoryId={categoryId}
-          node={data.node}
-          pathsInstance={paths}
-        />
+        <PathsActionNodeContent node={data.node} refetching={refetching} />
       );
     } else if (data.node.__typename) {
       return (
@@ -248,6 +240,7 @@ const PathsNodeContent = (props) => {
           categoryId={categoryId}
           node={data.node}
           pathsInstance={paths}
+          refetching={refetching}
         />
       );
     }
