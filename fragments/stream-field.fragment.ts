@@ -138,6 +138,10 @@ export const STREAM_FIELD_FRAGMENT = gql`
         hideCategoryIdentifiers
         categories {
           ...CategoryRecursiveFragment
+          indicators {
+            id
+            name
+          }
         }
       }
     }
