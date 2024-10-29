@@ -140,6 +140,10 @@ function parseTimestamp(timestamp) {
   return dayjs(timestamp).format(timeFormat);
 }
 
+const isTaskLate = (task, completed) => {
+  return !completed && new Date(task.dueAt) < new Date();
+};
+
 const Task = (props) => {
   const t = useTranslations();
   const locale = useLocale();
@@ -154,7 +158,7 @@ const Task = (props) => {
     getDateFormat(dateFormat)
   );
 
-  const isLate = !completed && new Date(task.dueAt) < new Date();
+  const isLate = isTaskLate(task, completed);
 
   return (
     <TaskWrapper>
@@ -229,7 +233,7 @@ function TaskList(props) {
     return sortedTasks
       .filter((item) => item.state === state)
       .map((item) => {
-        const isLate = !completed && new Date(item.dueAt) < new Date();
+        const isLate = isTaskLate(item, completed);
         return (
           <ListGroupItem
             key={item.id}
