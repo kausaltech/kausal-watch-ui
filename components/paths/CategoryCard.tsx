@@ -1,3 +1,13 @@
+import React, { useEffect, useState } from 'react';
+
+import {
+  Category,
+  CategoryFragmentFragment,
+} from 'common/__generated__/graphql';
+import {
+  ActionNode,
+  CausalGridNodeFragment,
+} from 'common/__generated__/paths/graphql';
 import { beautifyValue } from 'common/data/format';
 import { Link } from 'common/links';
 import ActionParameters from 'components/paths/ActionParameters';
@@ -12,15 +22,18 @@ import {
 import styled, { useTheme } from 'styled-components';
 
 import PopoverTip from '@/components/common/PopoverTip';
+import HighlightValue from '@/components/paths/HighlightValue';
 import { activeGoalVar, yearRangeVar } from '@/context/paths/cache';
 import { GET_NODE_CONTENT } from '@/queries/paths/get-paths-node';
 import { getScopeLabel, getScopeTotal } from '@/utils/paths/emissions';
 import { DimensionalMetric } from '@/utils/paths/metric';
 import { getHttpHeaders } from '@/utils/paths/paths.utils';
 import PathsActionNode from '@/utils/paths/PathsActionNode';
-import { useQuery, useReactiveVar } from '@apollo/client';
+import { NetworkStatus, useQuery, useReactiveVar } from '@apollo/client';
 
-const GroupIdentifierHeader = styled.div`
+const GroupIdentifierHeader = styled.div<{
+  $color?: string | null | undefined;
+}>`
   background-color: ${(props) => props.$color};
   color: ${(props) => readableColor(props.$color || '#ffffff')};
   padding: 6px;
@@ -106,97 +119,138 @@ const IndicatorSparkline = (props) => {
     </IndicatorSparklineContainer>
   );
 };
-const PathsBasicNodeContent = (props) => {
-  const { categoryId, node, pathsInstance } = props;
-  const yearRange = useReactiveVar(yearRangeVar);
-  const activeGoal = useReactiveVar(activeGoalVar);
-  // const t = useTranslations();
 
-  if (node.metricDim) {
-    const nodeMetric = new DimensionalMetric(node.metricDim!);
-
-    const indirectEmissions = getScopeTotal(
-      nodeMetric,
-      'indirect',
-      yearRange[1]
-    );
-    const directEmissions = getScopeTotal(nodeMetric, 'direct', yearRange[1]);
-
-    const indirectEmissionsLabel = getScopeLabel(nodeMetric, 'indirect');
-    const directEmissionsLabel = getScopeLabel(nodeMetric, 'direct');
-
-    /*
-      console.log('default config', defaultConfig);
-      console.log('metric', nodeMetric);
-      console.log('this year', thisYear);
-      */
-    // TODO: Just get any label for now
-
-    const unit = nodeMetric.getUnit();
-
-    return (
-      <CardContentBlock>
-        <div>
-          {directEmissions || indirectEmissions ? (
-            <div>
-              <h5>
-                {nodeMetric.getName()} ({yearRange[1]})
-              </h5>
-              <h4>
-                {(directEmissions + indirectEmissions).toPrecision(3)} {unit}
-              </h4>
-            </div>
-          ) : null}
-          {directEmissions ? (
-            <div>
-              {directEmissionsLabel}
-              <h5>
-                {directEmissions && directEmissions.toPrecision(3)} {unit}
-              </h5>
-            </div>
-          ) : (
-            <div />
-          )}
-          {indirectEmissions ? (
-            <div>
-              {indirectEmissionsLabel}
-              <h5>
-                {indirectEmissions.toPrecision(3)} {unit}
-              </h5>
-            </div>
-          ) : (
-            <div />
-          )}
-        </div>
-      </CardContentBlock>
-    );
-  } else {
-    return <div>{node.__typename} not supported</div>;
-  }
+type PathsBasicNodeContentProps = {
+  categoryId: string;
+  node: CausalGridNodeFragment;
+  onLoaded: (id: string, impact: number) => void;
 };
 
-const PathsActionNodeContent = (props) => {
-  const { categoryId, node, pathsInstance, onLoaded } = props;
-  const yearRange = useReactiveVar(yearRangeVar);
-  const t = useTranslations();
+type Emissions = {
+  total: { value: number | null; label: string | null };
+  indirect: { value: number | null; label: string | null };
+  direct: { value: number | null; label: string | null };
+};
 
-  const pathsAction = new PathsActionNode(node);
-  const impact = pathsAction.getYearlyImpact(yearRange[1]) || 0;
+const PathsBasicNodeContent = (props: PathsBasicNodeContentProps) => {
+  const { categoryId, node, onLoaded } = props;
+  const yearRange = useReactiveVar(yearRangeVar);
+
+  const [emissions, setEmissions] = useState<Emissions>({
+    total: { value: null, label: null },
+    indirect: { value: null, label: null },
+    direct: { value: null, label: null },
+  });
+
+  const [unit, setUnit] = useState<string | null>(null);
+
+  useEffect(() => {
+    const nodeMetric = new DimensionalMetric(node.metricDim!);
+    const indirect = getScopeTotal(nodeMetric, 'indirect', yearRange[1]);
+    const direct = getScopeTotal(nodeMetric, 'direct', yearRange[1]);
+    setEmissions({
+      total: { value: indirect + direct, label: nodeMetric.getName() },
+      indirect: {
+        value: indirect,
+        label: getScopeLabel(nodeMetric, 'indirect'),
+      },
+      direct: { value: direct, label: getScopeLabel(nodeMetric, 'direct') },
+    });
+    setUnit(nodeMetric.getUnit());
+    onLoaded(categoryId, indirect + direct);
+    // using exhausive deps here causes an infinite loop
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [yearRange[1]]);
+
   return (
     <CardContentBlock>
-      {t('impact')} {yearRange[1]}
-      <h4>
-        {yearRange ? beautifyValue(impact) : <span>---</span>}
-        {pathsAction.getUnit()}
-      </h4>
+      <div>
+        {emissions.total.value ? (
+          <div>
+            <HighlightValue
+              displayValue={emissions.total.value.toPrecision(3) || ''}
+              header={`${emissions.total.label} (${yearRange[1]})`}
+              unit={unit || ''}
+              size="md"
+            />
+          </div>
+        ) : null}
+        {emissions.direct.value ? (
+          <div>
+            <HighlightValue
+              displayValue={emissions.direct.value.toPrecision(3)}
+              header={emissions.direct.label || ''}
+              unit={unit || ''}
+              size="sm"
+            />
+          </div>
+        ) : (
+          <div />
+        )}
+        {emissions.indirect.value ? (
+          <div>
+            <HighlightValue
+              displayValue={emissions.indirect.value.toPrecision(3)}
+              header={emissions.direct.label || ''}
+              unit={unit || ''}
+              size="sm"
+            />
+          </div>
+        ) : (
+          <div />
+        )}
+      </div>
+    </CardContentBlock>
+  );
+};
+
+type PathsActionNodeContentProps = {
+  categoryId: string;
+  node: ActionNode;
+  refetching: boolean;
+  onLoaded: (id: string, impact: number) => void;
+};
+
+const PathsActionNodeContent = (props: PathsActionNodeContentProps) => {
+  const { categoryId, node, refetching = false, onLoaded } = props;
+  const t = useTranslations();
+
+  const yearRange = useReactiveVar(yearRangeVar);
+  const pathsAction = new PathsActionNode(node);
+  const impact = pathsAction.getYearlyImpact(yearRange[1]) || 0;
+
+  useEffect(() => {
+    onLoaded(categoryId, impact);
+    // Using exhaustive deps here causes an infinite loop
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [yearRange[1]]);
+
+  return (
+    <CardContentBlock>
+      <HighlightValue
+        displayValue={pathsAction.isEnabled() ? beautifyValue(impact) : '-'}
+        header={`${t('impact')} ${yearRange[1]}`}
+        unit={pathsAction.getUnit() || ''}
+        size="md"
+        muted={refetching || !pathsAction.isEnabled()}
+        mutedReason={!pathsAction.isEnabled() ? 'Not included in scenario' : ''}
+      />
       <ActionParameters parameters={node.parameters} />
     </CardContentBlock>
   );
 };
 
-const PathsNodeContent = (props) => {
+type PathsNodeContentProps = {
+  categoryId: string;
+  node: string;
+  paths: string;
+  onLoaded: (id: string, impact: number) => void;
+};
+
+const PathsNodeContent = React.memo((props: PathsNodeContentProps) => {
   const { categoryId, node, paths, onLoaded } = props;
   const activeGoal = useReactiveVar(activeGoalVar);
+
   const { data, loading, error, networkStatus } = useQuery(GET_NODE_CONTENT, {
     fetchPolicy: 'no-cache',
     variables: { node: node, goal: activeGoal?.id },
@@ -207,7 +261,9 @@ const PathsNodeContent = (props) => {
     },
   });
 
-  if (loading) {
+  const refetching = networkStatus === NetworkStatus.refetch;
+
+  if (loading && !refetching) {
     return <PathsContentLoader />;
   }
   if (error) {
@@ -219,8 +275,8 @@ const PathsNodeContent = (props) => {
         <PathsActionNodeContent
           categoryId={categoryId}
           node={data.node}
-          pathsInstance={paths}
           onLoaded={onLoaded}
+          refetching={refetching}
         />
       );
     } else if (data.node.__typename) {
@@ -228,17 +284,26 @@ const PathsNodeContent = (props) => {
         <PathsBasicNodeContent
           categoryId={categoryId}
           node={data.node}
-          pathsInstance={paths}
           onLoaded={onLoaded}
         />
       );
     }
     return null;
   }
+});
+
+PathsNodeContent.displayName = 'PathsNodeContent';
+
+type CategoryCardProps = {
+  category: Category;
+  group?: CategoryFragmentFragment;
+  pathsInstance?: string;
+  onLoaded: (id: string, impact: number) => void;
 };
 
-const CategoryCard = (props) => {
+const CategoryCard = (props: CategoryCardProps) => {
   const { category, group, pathsInstance, onLoaded } = props;
+
   return (
     <Card>
       {group && (
@@ -248,7 +313,7 @@ const CategoryCard = (props) => {
       )}
       <div>
         {' '}
-        <Link href={category.categoryPage.urlPath} legacyBehavior>
+        <Link href={category?.categoryPage?.urlPath || ''} legacyBehavior>
           <a className="card-wrapper">
             <CardHeader className="card-title">
               {!category?.type.hideCategoryIdentifiers && (
@@ -261,7 +326,7 @@ const CategoryCard = (props) => {
         {category.leadParagraph && (
           <CardContentBlock>{category.leadParagraph}</CardContentBlock>
         )}
-        {category.kausalPathsNodeUuid && (
+        {category.kausalPathsNodeUuid && pathsInstance && (
           <PathsNodeContent
             categoryId={category.id}
             node={category.kausalPathsNodeUuid}
@@ -269,7 +334,7 @@ const CategoryCard = (props) => {
             onLoaded={onLoaded}
           />
         )}
-        {category.indicators.length > 0 && (
+        {category.indicators?.length > 0 && (
           <CardContentBlock>
             <IndicatorSparkline indicator={category.indicators[0]} />
           </CardContentBlock>

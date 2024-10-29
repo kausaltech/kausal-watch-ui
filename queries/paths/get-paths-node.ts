@@ -89,6 +89,7 @@ export const CAUSAL_GRID_NODE_FRAGMENT = gql`
     shortDescription
     color
     targetYearGoal
+    isVisible
     unit {
       htmlShort
     }
@@ -99,6 +100,7 @@ export const CAUSAL_GRID_NODE_FRAGMENT = gql`
       id
     }
     ... on ActionNode {
+      isEnabled
       group {
         id
         name

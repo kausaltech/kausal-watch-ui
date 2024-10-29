@@ -2,7 +2,12 @@ import React from 'react';
 
 import { Col, ColProps, Container, Row } from 'reactstrap';
 
-import type { StreamFieldFragmentFragment } from '@/common/__generated__/graphql';
+import type {
+  CategoryPage,
+  Page,
+  StreamFieldBlock,
+  StreamFieldFragmentFragment,
+} from '@/common/__generated__/graphql';
 import { ErrorBoundary } from '@/components/common/ErrorBoundary';
 import { ErrorPage } from '@/components/common/ErrorPage';
 import RichText from '@/components/common/RichText';
@@ -13,12 +18,11 @@ import ActionListBlock from '@/components/paths/contentblocks/ActionListBlock';
 import CategoryListBlock from '@/components/paths/contentblocks/CategoryListBlock';
 import CategoryTypeListBlock from '@/components/paths/contentblocks/CategoryTypeListBlock';
 import PathsOutcomeBlock from '@/components/paths/contentblocks/PathsOutcomeBlock';
-import { usePlan } from '@/context/plan';
 import { STREAM_FIELD_FRAGMENT } from '@/fragments/stream-field.fragment';
 
 type StreamFieldBlockProps = {
   id: string;
-  page: any;
+  page: Page | CategoryPage;
   block: StreamFieldFragmentFragment;
   columnProps?: ColProps;
 };
@@ -26,7 +30,6 @@ type StreamFieldBlockProps = {
 function StreamFieldBlock(props: StreamFieldBlockProps) {
   const { id, page, block } = props;
   const { __typename } = block;
-  const plan = usePlan();
   console.log('rendering', props);
   switch (__typename) {
     case 'ActionListBlock': {
@@ -37,7 +40,7 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
           heading={heading}
           lead={helpText}
           groupByLevel={groupByCategoryLevel}
-          categoryId={categoryFilter?.id || page.category.id}
+          categoryId={categoryFilter?.id || page?.category.id}
         />
       );
     }
@@ -78,16 +81,19 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
         categoryBlockType,
       } = block;
       console.log('CategoryLevelListBlock', block);
-      const categoryTypeIdentifier = categoryBlockType?.identifier;
-      const categoryLevelId = categoryLevel?.id;
-      const categoryGroupByLevelId = groupByCategoryLevel?.id;
 
+      const allPlanCategories = categoryBlockType?.categories;
+      const categories = allPlanCategories
+        ? allPlanCategories.filter(
+            (cat) => cat?.level?.id === categoryLevel?.id
+          )
+        : [];
+      if (!categories.length) return null;
       return (
         <CategoryTypeListBlock
           id={id}
-          groupByLevel={categoryGroupByLevelId}
-          listByLevel={categoryLevelId}
-          categoryType={categoryTypeIdentifier}
+          groupByLevelId={groupByCategoryLevel?.id}
+          categories={categories}
           heading={heading ?? undefined}
           lead={helpText}
         />
@@ -184,8 +190,8 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
 
 interface StreamFieldProps {
   color: string;
-  page: any;
-  blocks: any;
+  page: Page | CategoryPage;
+  blocks: StreamFieldFragmentFragment[];
   hasSidebar?: boolean;
   columnProps?: ColProps;
 }
