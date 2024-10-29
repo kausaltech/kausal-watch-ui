@@ -167,16 +167,22 @@ const CategoryTypeListBlock = (props: CategoryTypeListBlockProps) => {
       [...categories].sort((a, b) => {
         if (sortBy.key === 'IMPACT') {
           // if cat has no impact make sure it gets sorted to the bottom
-          const aValue =
-            categoriesPathsData.find((cat) => cat.id === a.id)?.impact ||
-            Number.NEGATIVE_INFINITY;
-          const bValue =
-            categoriesPathsData.find((cat) => cat.id === b.id)?.impact ||
-            Number.NEGATIVE_INFINITY;
-          return bValue - aValue;
+          const aValue = categoriesPathsData.find(
+            (cat) => cat.id === a.id
+          )?.impact;
+          const bValue = categoriesPathsData.find(
+            (cat) => cat.id === b.id
+          )?.impact;
+          // Let's use an absolute value here until we figure out how to handle pos/neg impact
+          // Make sure no impact value are sorted to the bottom
+          if (!aValue && !bValue) return 0;
+          if (!aValue) return 1;
+          if (!bValue) return -1;
+          return Math.abs(bValue) - Math.abs(aValue);
         }
         if (sortBy.key === 'STANDARD') {
-          return b[sortBy.sortKey] - a[sortBy.sortKey];
+          // smallest order first
+          return a[sortBy.sortKey] - b[sortBy.sortKey];
         }
         return 0;
       }),
