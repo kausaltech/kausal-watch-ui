@@ -55,5 +55,6 @@
     "action-draft": "Udkast",
     "other": "Anden",
     "inactive-actions": "Inaktive handlinger",
-    "no-action-version-available": "Ingen {versionType}-version tilgængelig"
+    "no-action-version-available": "Ingen {versionType}-version tilgængelig",
+    "late": "Sent"
 }
