@@ -67,6 +67,27 @@ const Identifier = styled.span`
   color: ${(props) => props.theme.textColor.tertiary};
 `;
 
+const Values = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 10px;
+`;
+
+const TotalValue = styled.div`
+  flex: 100% 0 0;
+`;
+
+const SubValue = styled.div`
+  flex: 45% 1 0;
+`;
+
+const ParametersWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 45% 1 0;
+  align-items: flex-end;
+`;
+
 const PathsContentLoader = (props) => {
   const theme = useTheme();
   return (
@@ -130,6 +151,7 @@ type Emissions = {
   total: { value: number | null; label: string | null };
   indirect: { value: number | null; label: string | null };
   direct: { value: number | null; label: string | null };
+  goal: { value: number | null; label: string | null };
 };
 
 const PathsBasicNodeContent = (props: PathsBasicNodeContentProps) => {
@@ -140,6 +162,7 @@ const PathsBasicNodeContent = (props: PathsBasicNodeContentProps) => {
     total: { value: null, label: null },
     indirect: { value: null, label: null },
     direct: { value: null, label: null },
+    goal: { value: null, label: null },
   });
 
   const [unit, setUnit] = useState<string | null>(null);
@@ -155,6 +178,8 @@ const PathsBasicNodeContent = (props: PathsBasicNodeContentProps) => {
         label: getScopeLabel(nodeMetric, 'indirect'),
       },
       direct: { value: direct, label: getScopeLabel(nodeMetric, 'direct') },
+      // TODO: handle having goals
+      goal: { value: null, label: null },
     });
     setUnit(nodeMetric.getUnit());
     onLoaded(categoryId, indirect + direct);
@@ -164,42 +189,38 @@ const PathsBasicNodeContent = (props: PathsBasicNodeContentProps) => {
 
   return (
     <CardContentBlock>
-      <div>
+      <Values>
         {emissions.total.value ? (
-          <div>
+          <TotalValue>
             <HighlightValue
               displayValue={emissions.total.value.toPrecision(3) || ''}
               header={`${emissions.total.label} (${yearRange[1]})`}
               unit={unit || ''}
               size="md"
             />
-          </div>
+          </TotalValue>
         ) : null}
         {emissions.direct.value ? (
-          <div>
+          <SubValue>
             <HighlightValue
               displayValue={emissions.direct.value.toPrecision(3)}
               header={emissions.direct.label || ''}
               unit={unit || ''}
               size="sm"
             />
-          </div>
-        ) : (
-          <div />
-        )}
+          </SubValue>
+        ) : null}
         {emissions.indirect.value ? (
-          <div>
+          <SubValue>
             <HighlightValue
               displayValue={emissions.indirect.value.toPrecision(3)}
               header={emissions.direct.label || ''}
               unit={unit || ''}
               size="sm"
             />
-          </div>
-        ) : (
-          <div />
-        )}
-      </div>
+          </SubValue>
+        ) : null}
+      </Values>
     </CardContentBlock>
   );
 };
@@ -227,15 +248,23 @@ const PathsActionNodeContent = (props: PathsActionNodeContentProps) => {
 
   return (
     <CardContentBlock>
-      <HighlightValue
-        displayValue={pathsAction.isEnabled() ? beautifyValue(impact) : '-'}
-        header={`${t('impact')} ${yearRange[1]}`}
-        unit={pathsAction.getUnit() || ''}
-        size="md"
-        muted={refetching || !pathsAction.isEnabled()}
-        mutedReason={!pathsAction.isEnabled() ? 'Not included in scenario' : ''}
-      />
-      <ActionParameters parameters={node.parameters} />
+      <Values>
+        <SubValue>
+          <HighlightValue
+            displayValue={pathsAction.isEnabled() ? beautifyValue(impact) : '-'}
+            header={`${t('impact')} ${yearRange[1]}`}
+            unit={pathsAction.getUnit() || ''}
+            size="md"
+            muted={refetching || !pathsAction.isEnabled()}
+            mutedReason={
+              !pathsAction.isEnabled() ? 'Not included in scenario' : ''
+            }
+          />
+        </SubValue>
+        <ParametersWrapper>
+          <ActionParameters parameters={node.parameters} />
+        </ParametersWrapper>
+      </Values>
     </CardContentBlock>
   );
 };
@@ -270,6 +299,7 @@ const PathsNodeContent = React.memo((props: PathsNodeContentProps) => {
     return <div>Error: {error.message}</div>; // Handle error appropriately
   }
   if (data) {
+    console.log(data);
     if (data.node.__typename === 'ActionNode') {
       return (
         <PathsActionNodeContent

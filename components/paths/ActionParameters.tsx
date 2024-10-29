@@ -17,13 +17,18 @@ const Parameters = styled.div`
 
 const ActionParameters = (props: { parameters: ParameterInterface[] }) => {
   const { parameters } = props;
+  console.log('parameters', parameters);
   if (!parameters) {
     return null;
   }
   // Separate mandatory on/off parameter with standard id
-  const actionParameterSwitch = parameters.find(
+  const actionParameterSwitchParameter = parameters.find(
     (param) => param.node && param.id === `${param.node.id}.enabled`
-  ) as (ParameterInterface & { __typename: 'BoolParameterType' }) | null;
+  );
+  const actionParameterSwitch = {
+    ...actionParameterSwitchParameter,
+    __typename: 'EnableParameterType',
+  } as ParameterInterface;
   const actionOtherParameters = parameters.filter(
     (param) => param.id !== actionParameterSwitch?.id
   );
