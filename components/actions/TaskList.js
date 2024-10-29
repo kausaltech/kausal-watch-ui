@@ -14,6 +14,13 @@ import RichText from 'components/common/RichText';
 import { useLocale, useTranslations } from 'next-intl';
 import { usePlan } from 'context/plan';
 import { getDateFormat } from 'utils/dates.utils';
+import { setLightness } from 'polished';
+import {
+  StyledStatusBadge,
+  StyledStatusWrapper,
+  StyledStatusIndicator,
+  StyledStatusLabel,
+} from 'components/common/StatusBadge';
 
 const StyledDate = styled.span`
   font-size: ${(props) => props.theme.fontSizeSm};
@@ -100,6 +107,14 @@ const ListGroupTitle = styled.h3`
 
 const ListGroupItem = styled(BaseListGroupItem)`
   padding: ${(props) => props.theme.spaces.s050};
+  background: ${(props) =>
+    props.isLate
+      ? setLightness(0.95, props.theme.taskStatusColors.late)
+      : 'transparent'};
+  border: ${(props) =>
+    props.isLate ? `1px solid ${props.theme.taskStatusColors.late}` : 'none'};
+  border-radius: ${(props) => props.theme.cardBorderRadius};
+  margin-bottom: 8px;
 
   &:first-child {
     border-top-left-radius: ${(props) => props.theme.cardBorderRadius};
@@ -114,6 +129,10 @@ const ListGroupItem = styled(BaseListGroupItem)`
   &.state--cancelled .task-header {
     text-decoration: line-through;
   }
+`;
+
+const StyledStatusBadgeNoBorder = styled(StyledStatusBadge)`
+  border: none;
 `;
 
 function parseTimestamp(timestamp) {
@@ -134,6 +153,8 @@ const Task = (props) => {
     locale,
     getDateFormat(dateFormat)
   );
+
+  const isLate = !completed && new Date(task.dueAt) < new Date();
 
   return (
     <TaskWrapper>
@@ -178,6 +199,17 @@ const Task = (props) => {
           </>
         )}
       </TaskContent>
+      {isLate && (
+        <StyledStatusBadgeNoBorder
+          style={{ marginLeft: 'auto' }}
+          $statusColor={theme.taskStatusColors.late}
+        >
+          <StyledStatusWrapper>
+            <StyledStatusIndicator $statusColor={theme.taskStatusColors.late} />
+            <StyledStatusLabel>{t('late')}</StyledStatusLabel>
+          </StyledStatusWrapper>
+        </StyledStatusBadgeNoBorder>
+      )}
     </TaskWrapper>
   );
 };
@@ -196,11 +228,18 @@ function TaskList(props) {
   function filterTasks(state, completed) {
     return sortedTasks
       .filter((item) => item.state === state)
-      .map((item) => (
-        <ListGroupItem key={item.id} className={`state--${item.state}`}>
-          <Task task={item} theme={theme} completed={completed} />
-        </ListGroupItem>
-      ));
+      .map((item) => {
+        const isLate = !completed && new Date(item.dueAt) < new Date();
+        return (
+          <ListGroupItem
+            key={item.id}
+            className={`state--${item.state}`}
+            isLate={isLate}
+          >
+            <Task task={item} theme={theme} completed={completed} />
+          </ListGroupItem>
+        );
+      });
   }
 
   const notStartedTasks = filterTasks('NOT_STARTED', false);
