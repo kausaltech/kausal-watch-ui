@@ -19,12 +19,15 @@ const StyledBadge = styled(({ isLink, ...rest }) => <Badge {...rest} />)<{
   padding: ${(props) => props.theme.badgePaddingY}
     ${(props) => props.theme.badgePaddingX};
   font-weight: ${(props) => props.theme.badgeFontWeight};
+  line-height: 1.5;
   max-width: 100%;
   word-break: break-all;
   word-break: break-word;
   hyphens: manual;
   white-space: normal;
   text-align: left;
+  display: inline-flex;
+  align-items: center;
 
   &:hover {
     background-color: ${(props) =>
