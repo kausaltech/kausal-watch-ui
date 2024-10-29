@@ -55,5 +55,6 @@
     "action-task-show-comment": "Rādīt informāciju",
     "action-draft": "Projekts",
     "inactive-actions": "Neaktīvas rīcības",
-    "no-action-version-available": "Nav pieejama {versionType} versija"
+    "no-action-version-available": "Nav pieejama {versionType} versija",
+    "late": "Vēlā"
 }
