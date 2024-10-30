@@ -68,7 +68,9 @@ const YearRange = styled.div<{ $size?: string }>`
 
 const MutedReason = styled.div`
   font-size: 0.75rem;
-  color: ${({ theme }) => theme.textColor.tertiary};
+  padding: 0.25rem 0.5rem;
+  background-color: ${({ theme }) => theme.themeColors.dark};
+  color: ${({ theme }) => theme.themeColors.white};
   margin-bottom: 0.25rem;
 `;
 
@@ -98,14 +100,16 @@ const HighlightValue = (props: HighlightValueProps) => {
   const toggle = () => setTooltipOpen(!tooltipOpen);
 
   return (
-    <TotalValue className={className} $size={size} $muted={muted} id={id}>
+    <>
       {mutedReason ? <MutedReason>{mutedReason}</MutedReason> : null}
-      <YearRange $size={size}>
-        <span dangerouslySetInnerHTML={{ __html: header }} />
-      </YearRange>
-      {displayValue}
-      <TotalUnit dangerouslySetInnerHTML={{ __html: unit }} $size={size} />
-    </TotalValue>
+      <TotalValue className={className} $size={size} $muted={muted} id={id}>
+        <YearRange $size={size}>
+          <span dangerouslySetInnerHTML={{ __html: header }} />
+        </YearRange>
+        {displayValue}
+        <TotalUnit dangerouslySetInnerHTML={{ __html: unit }} $size={size} />
+      </TotalValue>
+    </>
   );
 };
 

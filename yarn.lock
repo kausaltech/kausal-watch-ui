@@ -13600,6 +13600,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"echarts@npm:^5.5.1":
+  version: 5.5.1
+  resolution: "echarts@npm:5.5.1"
+  dependencies:
+    tslib: 2.3.0
+    zrender: 5.6.0
+  checksum: 1b8e00a9492157d6faa58483add07bac7560e273e8716bd62d6e75777809dbe43106cd5bceb7e0deebf36ae100356395e2be07ce3a21442496241e25a219482f
+  languageName: node
+  linkType: hard
+
 "ee-first@npm:1.1.1":
   version: 1.1.1
   resolution: "ee-first@npm:1.1.1"
@@ -18610,6 +18620,7 @@ __metadata:
     dayjs: ^1.11.1
     docker-secret: ^1.2.4
     dotenv: ^16.0.0
+    echarts: ^5.5.1
     escape-string-regexp: ^5.0.0
     eslint: 8.56.0
     eslint-config-next: 14.0.4
@@ -25205,6 +25216,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"tslib@npm:2.3.0":
+  version: 2.3.0
+  resolution: "tslib@npm:2.3.0"
+  checksum: 8869694c26e4a7b56d449662fd54a4f9ba872c889d991202c74462bd99f10e61d5bd63199566c4284c0f742277736292a969642cc7b590f98727a7cae9529122
+  languageName: node
+  linkType: hard
+
 "tslib@npm:2.5.0":
   version: 2.5.0
   resolution: "tslib@npm:2.5.0"
@@ -26787,5 +26805,14 @@ __metadata:
     compress-commons: ^4.1.2
     readable-stream: ^3.6.0
   checksum: 33bd5ee7017656c2ad728b5d4ba510e15bd65ce1ec180c5bbdc7a5f063256353ec482e6a2bc74de7515219d8494147924b9aae16e63fdaaf37cdf7d1ee8df125
+  languageName: node
+  linkType: hard
+
+"zrender@npm:5.6.0":
+  version: 5.6.0
+  resolution: "zrender@npm:5.6.0"
+  dependencies:
+    tslib: 2.3.0
+  checksum: 58875a8ed8b813c739f6b6e727eb5eead39b66278143ff231cdd270349a5743af034f7f20567c7895eecb1cadbdae499e17708d96f1faae958ad3acdb3d46687
   languageName: node
   linkType: hard

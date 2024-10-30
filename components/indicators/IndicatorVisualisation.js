@@ -19,7 +19,7 @@ import { gql } from '@apollo/client';
 import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
 import { captureMessage } from '@sentry/nextjs';
 
-const GET_INDICATOR_GRAPH_DATA = gql`
+export const GET_INDICATOR_GRAPH_DATA = gql`
   query IndicatorGraphData($id: ID, $plan: ID) {
     plan(id: $plan) {
       scenarios {
