@@ -2593,6 +2593,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@formatjs/intl-localematcher@npm:0.5.6":
+  version: 0.5.6
+  resolution: "@formatjs/intl-localematcher@npm:0.5.6"
+  dependencies:
+    tslib: 2
+  checksum: f109874af02364023b401161ee9d2fec369a334034843062a5d44f903aa6832a65c7b17112bbb0dd847b4283f521337a9ab8755570391e9c08e32ef4f502afd4
+  languageName: node
+  linkType: hard
+
 "@formatjs/intl-localematcher@npm:^0.2.32":
   version: 0.2.32
   resolution: "@formatjs/intl-localematcher@npm:0.2.32"
@@ -11123,7 +11132,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"classnames@npm:^2.2.0, classnames@npm:^2.2.3, classnames@npm:^2.2.6, classnames@npm:^2.3.0":
+"classnames@npm:^2.2.0, classnames@npm:^2.2.3, classnames@npm:^2.2.6":
   version: 2.5.1
   resolution: "classnames@npm:2.5.1"
   checksum: da424a8a6f3a96a2e87d01a432ba19315503294ac7e025f9fece656db6b6a0f7b5003bb1fbb51cbb0d9624d964f1b9bb35a51c73af9b2434c7b292c42231c1e5
@@ -17593,7 +17602,6 @@ __metadata:
     react-select: ^5.4.0
     react-sizeme: ^3.0.2
     react-sparklines: ^1.7.0
-    react-tooltip: ^5.28.0
     reactstrap: 9.2.1
     regenerator-runtime: ^0.13.9
     sass: ^1.51.0
@@ -20970,6 +20978,40 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-stately@npm:^3.33.0":
+  version: 3.33.0
+  resolution: "react-stately@npm:3.33.0"
+  dependencies:
+    "@react-stately/calendar": ^3.5.5
+    "@react-stately/checkbox": ^3.6.9
+    "@react-stately/collections": ^3.11.0
+    "@react-stately/color": ^3.8.0
+    "@react-stately/combobox": ^3.10.0
+    "@react-stately/data": ^3.11.7
+    "@react-stately/datepicker": ^3.10.3
+    "@react-stately/dnd": ^3.4.3
+    "@react-stately/form": ^3.0.6
+    "@react-stately/list": ^3.11.0
+    "@react-stately/menu": ^3.8.3
+    "@react-stately/numberfield": ^3.9.7
+    "@react-stately/overlays": ^3.6.11
+    "@react-stately/radio": ^3.10.8
+    "@react-stately/searchfield": ^3.5.7
+    "@react-stately/select": ^3.6.8
+    "@react-stately/selection": ^3.17.0
+    "@react-stately/slider": ^3.5.8
+    "@react-stately/table": ^3.12.3
+    "@react-stately/tabs": ^3.6.10
+    "@react-stately/toggle": ^3.7.8
+    "@react-stately/tooltip": ^3.4.13
+    "@react-stately/tree": ^3.8.5
+    "@react-types/shared": ^3.25.0
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0
+  checksum: c9707c08b4b482a178c658a26f26a41a058ee4dc7880b5d32934246b9664533bffcfbed6c5ee64c74f36648e466f55f8468562e53f72ffef7adc565298c526bb
+  languageName: node
+  linkType: hard
+
 "react-style-singleton@npm:^2.2.1":
   version: 2.2.1
   resolution: "react-style-singleton@npm:2.2.1"
@@ -20984,19 +21026,6 @@ __metadata:
     "@types/react":
       optional: true
   checksum: 7ee8ef3aab74c7ae1d70ff34a27643d11ba1a8d62d072c767827d9ff9a520905223e567002e0bf6c772929d8ea1c781a3ba0cc4a563e92b1e3dc2eaa817ecbe8
-  languageName: node
-  linkType: hard
-
-"react-tooltip@npm:^5.28.0":
-  version: 5.28.0
-  resolution: "react-tooltip@npm:5.28.0"
-  dependencies:
-    "@floating-ui/dom": ^1.6.1
-    classnames: ^2.3.0
-  peerDependencies:
-    react: ">=16.14.0"
-    react-dom: ">=16.14.0"
-  checksum: 4d1efae0fbd39ec7f1414bb325582cca2f7541a8d464b61bf3a7c5e119821868aa2d47c28509e7ea3cca844a9655feb56fc466def0edaa8db07ce427146ef3b0
   languageName: node
   linkType: hard
 
