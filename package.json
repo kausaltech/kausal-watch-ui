@@ -25,6 +25,7 @@
     "dayjs": "^1.11.1",
     "docker-secret": "^1.2.4",
     "dotenv": "^16.0.0",
+    "echarts": "^5.5.1",
     "escape-string-regexp": "^5.0.0",
     "express-robots-txt": "^1.0.0",
     "fontfaceobserver": "^2.1.0",

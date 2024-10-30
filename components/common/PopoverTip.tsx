@@ -7,7 +7,7 @@ import styled from 'styled-components';
 
 import Tooltip from './Tooltip';
 
-const InfoButton = styled(Button)`
+const InfoButton = styled(Button)<{ $invert: string }>`
   padding: 0 0.25rem 0.1rem;
   line-height: 0.5rem;
   opacity: 0.75;
@@ -43,7 +43,7 @@ const PopoverTip = (props: PopoverTipProps) => {
     <>
       <TooltipTrigger>
         <InfoButton
-          invert={invert.toString()}
+          $invert={invert.toString()}
           id={id}
           aria-describedby={
             tooltipOpen ? `tt-content-${identifier}` : undefined
