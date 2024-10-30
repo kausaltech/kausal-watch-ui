@@ -248,7 +248,7 @@ const CategoryTypeListBlock = (props: CategoryTypeListBlockProps) => {
                       sm="6"
                       lg="4"
                       key={cat.id}
-                      className="mb-5 d-flex align-items-stretch"
+                      className="mb-5 d-flex"
                     >
                       <CategoryCard
                         category={cat as Category}
