@@ -15,10 +15,11 @@ const StyledTooltip = styled(AriaTooltip)`
   color: ${({ theme }) => theme.themeColors.white};
   forced-color-adjust: none;
   outline: none;
-  padding: 2px 8px;
+  padding: 10px 8px;
   max-width: 250px;
   /* fixes FF gap */
   transform: translate3d(0, 0, 0);
+  line-height: ${({ theme }) => theme.lineHeightSm};
 
   &[data-placement='top'] {
     margin-bottom: 8px;
