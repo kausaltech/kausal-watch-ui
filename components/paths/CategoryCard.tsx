@@ -326,7 +326,8 @@ const CategoryCard = (props: CategoryCardProps) => {
               </CardHeader>
             </a>
           </Link>
-          {category.leadParagraph && (
+          {/* Leave this out for now */}
+          {category.leadParagraph && false && (
             <CardContentBlock>{category.leadParagraph}</CardContentBlock>
           )}
         </CardHeaderBlock>
