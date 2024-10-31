@@ -86,8 +86,6 @@ const BotNav = styled(Navbar)<{ $offsetTop?: number; $expanded: boolean }>`
 
   .container {
     flex-wrap: nowrap;
-    overflow-x: auto;
-    overflow-y: hidden;
     background-image: ${({ theme }) =>
         `linear-gradient(to right, ${theme.themeColors.white}, ${theme.themeColors.white}),
         linear-gradient(to right, ${theme.themeColors.white}, ${theme.themeColors.white})`},
@@ -698,6 +696,7 @@ function GlobalNav(props) {
             </Nav>
             <Nav navbar className="ms-md-5">
               <PlanVersionSelector plan={plan} />
+
               {externalItems.length > 0 &&
                 externalItems.map((item, index) => (
                   <NavItem key={`external${index}`}>
