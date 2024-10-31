@@ -89,13 +89,13 @@ const BotNav = styled(Navbar)<{ $offsetTop?: number; $expanded: boolean }>`
     overflow-x: auto;
     overflow-y: hidden;
     background-image: ${({ theme }) =>
-        `linear-gradient(to right, ${theme.themeColors.white}, ${theme.themeColors.white}),
-        linear-gradient(to right, ${theme.themeColors.white}, ${theme.themeColors.white})`},
+        `linear-gradient(to right, ${theme.siteNavBackground}, ${theme.siteNavBackground}),
+        linear-gradient(to right, ${theme.siteNavBackground}, ${theme.siteNavBackground})`},
       linear-gradient(to right, rgba(0, 0, 0, 0.25), rgba(255, 255, 255, 0)),
       linear-gradient(to left, rgba(0, 0, 0, 0.25), rgba(255, 255, 255, 0));
     background-position: left center, right center, left center, right center;
     background-repeat: no-repeat;
-    background-color: ${(props) => props.theme.themeColors.white};
+    background-color: ${(props) => props.theme.siteNavBackground};
     background-size: 20px 100%, 20px 100%, 10px 100%, 10px 100%;
     background-attachment: local, local, scroll, scroll;
   }
