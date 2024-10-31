@@ -538,8 +538,6 @@ function GlobalNav(props) {
     isPrimaryNavSticky,
   } = useStickyNavigation(sticky);
 
-  console.log('PROPS', props);
-
   const OrgLogo = () => {
     const logoElement = theme.navLogoVisible ? (
       <SVG

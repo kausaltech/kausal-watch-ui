@@ -82,12 +82,12 @@ const SettingsPanelFull: React.FC = () => {
   const activeGoal = useReactiveVar(activeGoalVar);
   const activeScenario = useReactiveVar(activeScenarioVar);
   const yearRange = useReactiveVar(yearRangeVar);
-  const { instance, scenarios } = paths;
+
   const [mode, setMode] = useState(MODE.MD);
 
   useEffect(() => {
     if (!paths || paths.instance.id === 'unknown') return;
-
+    const { instance, scenarios } = paths;
     const firstActiveScenario = scenarios.find((sc) => sc.isActive);
     const goals = instance.goals;
 
@@ -110,6 +110,7 @@ const SettingsPanelFull: React.FC = () => {
     }
   }, [paths?.instance.id]);
 
+  if (!paths || paths.instance.id === 'unknown') return null;
   const handleToggle = (e) => {
     e.preventDefault();
     if (mode === MODE.LG) {
