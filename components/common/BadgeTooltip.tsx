@@ -26,8 +26,6 @@ const StyledBadge = styled(({ isLink, ...rest }) => <Badge {...rest} />)<{
   hyphens: manual;
   white-space: normal;
   text-align: left;
-  display: inline-flex;
-  align-items: center;
 
   &:hover {
     background-color: ${(props) =>
