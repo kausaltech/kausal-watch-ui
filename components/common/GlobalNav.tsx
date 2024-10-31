@@ -696,7 +696,6 @@ function GlobalNav(props) {
             </Nav>
             <Nav navbar className="ms-md-5">
               <PlanVersionSelector plan={plan} />
-
               {externalItems.length > 0 &&
                 externalItems.map((item, index) => (
                   <NavItem key={`external${index}`}>
