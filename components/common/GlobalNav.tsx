@@ -86,6 +86,8 @@ const BotNav = styled(Navbar)<{ $offsetTop?: number; $expanded: boolean }>`
 
   .container {
     flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
     background-image: ${({ theme }) =>
         `linear-gradient(to right, ${theme.themeColors.white}, ${theme.themeColors.white}),
         linear-gradient(to right, ${theme.themeColors.white}, ${theme.themeColors.white})`},

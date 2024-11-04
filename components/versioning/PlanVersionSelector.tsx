@@ -148,7 +148,7 @@ const PlanVersionSelector = (props) => {
           {activeVersion.versionName}
           <Icon.AngleDown />
         </StyledDropdownToggle>
-        <DropdownMenu>
+        <DropdownMenu container="body">
           <DropdownItem header>{t('versions-list')}</DropdownItem>
           {allVersions.reverse().map((v) => (
             <VersionDropdownItem
