@@ -192,7 +192,6 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
     }
     case 'ActionListBlock': {
       const { categoryFilter } = block;
-      console.log('actionlistblock', block);
       return (
         <ActionListBlock
           categoryId={categoryFilter?.id || page.category.id}
