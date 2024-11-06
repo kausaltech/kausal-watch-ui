@@ -1,19 +1,20 @@
-import React, { useContext, useEffect } from 'react';
-import PropTypes from 'prop-types';
-import { Container, Row, Col } from 'reactstrap';
-import styled from 'styled-components';
-import { gql } from '@apollo/client';
-import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
+import React, { useEffect } from 'react';
 
 import { getActionTermContext } from 'common/i18n';
 import ActionCard from 'components/actions/ActionCard';
 import ActionCardList from 'components/actions/ActionCardList';
 import ContentLoader from 'components/common/ContentLoader';
 import ErrorMessage from 'components/common/ErrorMessage';
-import PlanContext, { usePlan } from 'context/plan';
+import { usePlan } from 'context/plan';
 import { useTranslations } from 'next-intl';
-import { mapActionsToExpandDependencies } from '@/utils/actions.utils';
+import PropTypes from 'prop-types';
+import { Container } from 'reactstrap';
+import styled from 'styled-components';
+
 import { useWorkflowSelector } from '@/context/workflow-selector';
+import { mapActionsToExpandDependencies } from '@/utils/actions.utils';
+import { gql } from '@apollo/client';
+import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
 
 const GET_ACTION_LIST_FOR_BLOCK = gql`
   query GetActionListForBlock(
@@ -48,8 +49,14 @@ const SectionHeader = styled.h2`
   }
 `;
 
+type ActionListBlockProps = {
+  id?: string;
+  categoryId?: string;
+  heading?: string;
+  lead?: string;
+};
 const ActionListBlock = (props) => {
-  const { id = '', categoryId, color } = props;
+  const { id = '', categoryId, heading, lead } = props;
   const t = useTranslations();
 
   const plan = usePlan();
@@ -77,11 +84,16 @@ const ActionListBlock = (props) => {
   const actionsWithDependencies =
     planActions?.map(mapActionsToExpandDependencies) ?? [];
 
-  const heading = t('actions', getActionTermContext(plan));
+  const displayHeader = heading
+    ? heading
+    : t('actions', getActionTermContext(plan));
   return (
     <ActionListSection id={id}>
       <Container>
-        {heading && <SectionHeader>{heading}</SectionHeader>}
+        {/* Terrible hack to be able to hide header completely if it's set to '-' */}
+        {displayHeader && displayHeader !== '-' ? (
+          <SectionHeader>{displayHeader}</SectionHeader>
+        ) : null}
         <ActionCardList
           actions={actionsWithDependencies}
           groupBy={groupBy}

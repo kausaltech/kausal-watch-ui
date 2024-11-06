@@ -1,33 +1,34 @@
 import React from 'react';
-import { Container, Row, Col, ColProps } from 'reactstrap';
-import { gql } from '@apollo/client';
-import { ColumnProps } from 'reactstrap/types/lib/Col';
-import { usePlan } from 'context/plan';
-import images, { getBgImageAlignment } from 'common/images';
-import RichText from 'components/common/RichText';
-import QuestionAnswerBlock from 'components/contentblocks/QuestionAnswerBlock';
-import ActionListBlock from 'components/contentblocks/ActionListBlock';
-import CategoryListBlock from 'components/contentblocks/CategoryListBlock';
-import CategoryTreeBlock from 'components/contentblocks/CategoryTreeBlock';
-import IndicatorGroupBlock from 'components/contentblocks/IndicatorGroupBlock';
-import FrontPageHeroBlock from 'components/contentblocks/FrontPageHeroBlock';
-import IndicatorShowcaseBlock from 'components/contentblocks/IndicatorShowcaseBlock';
-import CardListBlock from 'components/contentblocks/CardListBlock';
-import ActionHighlightsBlock from 'components/contentblocks/ActionHighlightsBlock';
-import ActionStatusGraphsBlock from 'components/contentblocks/ActionStatusGraphsBlock';
-import IndicatorHighlightsBlock from 'components/contentblocks/IndicatorHighlightsBlock';
-import RelatedIndicatorsBlock from 'components/contentblocks/RelatedIndicatorsBlock';
-import RelatedPlanListBlock from 'components/contentblocks/RelatedPlanListBlock';
-import ActionCategoryFilterCardsBlock from 'components/contentblocks/ActionCategoryFilterCardsBlock';
-import AccessibilityStatementComplianceStatusBlock from 'components/contentblocks/AccessibilityStatementComplianceStatusBlock';
-import AccessibilityStatementPreparationInformationBlock from 'components/contentblocks/AccessibilityStatementPreparationInformationBlock';
-import AccessibilityStatementContactFormBlock from 'components/contentblocks/AccessibilityStatementContactFormBlock';
-import AccessibilityStatementContactInformationBlock from 'components/contentblocks/AccessibilityStatementContactInformationBlock';
 
 import type { StreamFieldFragmentFragment } from 'common/__generated__/graphql';
+import { getBgImageAlignment } from 'common/images';
+import RichText from 'components/common/RichText';
+import AccessibilityStatementComplianceStatusBlock from 'components/contentblocks/AccessibilityStatementComplianceStatusBlock';
+import AccessibilityStatementContactFormBlock from 'components/contentblocks/AccessibilityStatementContactFormBlock';
+import AccessibilityStatementContactInformationBlock from 'components/contentblocks/AccessibilityStatementContactInformationBlock';
+import AccessibilityStatementPreparationInformationBlock from 'components/contentblocks/AccessibilityStatementPreparationInformationBlock';
+import ActionCategoryFilterCardsBlock from 'components/contentblocks/ActionCategoryFilterCardsBlock';
+import ActionHighlightsBlock from 'components/contentblocks/ActionHighlightsBlock';
+import ActionListBlock from 'components/contentblocks/ActionListBlock';
+import ActionStatusGraphsBlock from 'components/contentblocks/ActionStatusGraphsBlock';
+import CardListBlock from 'components/contentblocks/CardListBlock';
 import CartographyVisualisationBlock from 'components/contentblocks/CartographyVisualisationBlock';
+import CategoryListBlock from 'components/contentblocks/CategoryListBlock';
+import CategoryTreeBlock from 'components/contentblocks/CategoryTreeBlock';
+import FrontPageHeroBlock from 'components/contentblocks/FrontPageHeroBlock';
+import IndicatorGroupBlock from 'components/contentblocks/IndicatorGroupBlock';
+import IndicatorHighlightsBlock from 'components/contentblocks/IndicatorHighlightsBlock';
+import IndicatorShowcaseBlock from 'components/contentblocks/IndicatorShowcaseBlock';
+import QuestionAnswerBlock from 'components/contentblocks/QuestionAnswerBlock';
+import RelatedIndicatorsBlock from 'components/contentblocks/RelatedIndicatorsBlock';
+import RelatedPlanListBlock from 'components/contentblocks/RelatedPlanListBlock';
+import { usePlan } from 'context/plan';
+import { Col, ColProps, Container, Row } from 'reactstrap';
+import { ColumnProps } from 'reactstrap/types/lib/Col';
 import styled, { useTheme } from 'styled-components';
+
 import { STREAM_FIELD_FRAGMENT } from '@/fragments/stream-field.fragment';
+
 import { ErrorBoundary } from './ErrorBoundary';
 import { ErrorPage } from './ErrorPage';
 
@@ -191,10 +192,13 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
     }
     case 'ActionListBlock': {
       const { categoryFilter } = block;
+      console.log('actionlistblock', block);
       return (
         <ActionListBlock
           categoryId={categoryFilter?.id || page.category.id}
           color={color}
+          heading={block.heading}
+          lead={block.helpText}
         />
       );
     }
