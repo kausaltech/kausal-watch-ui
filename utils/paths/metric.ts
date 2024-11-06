@@ -206,6 +206,17 @@ export class DimensionalMetric {
 
   getName = () => this.data.name;
   getUnit = () => this.data.unit.htmlShort;
+  getForecastFrom = () => this.data.forecastFrom;
+
+  getHistoricalYears = () =>
+    this.data.years.filter((year) =>
+      this.data.forecastFrom ? year < this.data.forecastFrom : true
+    );
+  getForecastYears = () =>
+    this.data.years.filter((year) =>
+      this.data.forecastFrom ? year >= this.data.forecastFrom : false
+    );
+
   private createRows(
     rows: MetricRow[],
     dimsLeft: MetricDimension[],
