@@ -512,19 +512,24 @@ export class DimensionalMetric {
 
     const rows = categoryTypes[0].options.map((rowId) =>
       categoryTypes[1]?.options.map((columnId) => {
-        return (
-          yearRows.find(
-            (yearRow) =>
-              ((categoryTypes[0].type === 'group' &&
-                yearRow.dimCats[categoryTypes[0].id].group === rowId) ||
-                (categoryTypes[0].type === 'category' &&
-                  yearRow.dimCats[categoryTypes[0].id].id === rowId)) &&
-              ((categoryTypes[1].type === 'group' &&
-                yearRow.dimCats[categoryTypes[1].id].group === columnId) ||
-                (categoryTypes[1].type === 'category' &&
-                  yearRow.dimCats[categoryTypes[1].id].id === columnId))
-          )?.value ?? null
-        );
+        // We collect multiple rows as for groups we need values of all their categories
+        const matchingRows = yearRows.filter((yearRow) => {
+          const rowCategory0 = yearRow.dimCats[categoryTypes[0].id];
+          const rowCategory1 = yearRow.dimCats[categoryTypes[1].id];
+          const matchRow =
+            (categoryTypes[0].type === 'group' &&
+              rowCategory0.group === rowId) ||
+            (categoryTypes[0].type === 'category' && rowCategory0.id === rowId);
+          const matchCol =
+            (categoryTypes[1].type === 'group' &&
+              rowCategory1.group === columnId) ||
+            (categoryTypes[1].type === 'category' &&
+              rowCategory1.id === columnId);
+          return matchRow && matchCol;
+        });
+        return matchingRows.length
+          ? matchingRows.reduce((a, b) => (b.value ? a + b.value : 0), 0)
+          : null;
       })
     );
 

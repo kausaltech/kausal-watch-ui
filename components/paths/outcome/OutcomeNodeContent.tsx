@@ -14,6 +14,7 @@ import {
 import Icon from '@/components/common/Icon';
 import DataTable from '@/components/paths/graphs/DataTable';
 import DimensionalNodePlot from '@/components/paths/graphs/DimensionalNodePlot';
+import DimensionalPieGraph from '@/components/paths/graphs/DimensionalPieGraph';
 import HighlightValue from '@/components/paths/HighlightValue';
 import OutcomeNodeDetails from '@/components/paths/outcome/OutcomeNodeDetails';
 import ScenarioBadge from '@/components/paths/ScenarioBadge';
@@ -135,7 +136,7 @@ const OutcomeNodeContent = ({
   const paths = usePaths();
   const instance = paths?.instance;
   if (!instance) return null;
-  const showDistribution = instance.id === 'zuerich' && subNodes.length > 1;
+  const showDistribution = subNodes.length > 1;
   const nodesTotal = getMetricValue(node, endYear);
   const nodesBase = getMetricValue(node, startYear);
   const lastMeasuredYear =
@@ -174,8 +175,7 @@ const OutcomeNodeContent = ({
   const singleYearGraph = useMemo(
     () => (
       <div>
-        <h3>COMING SOON</h3>
-        {/*<DimensionalBarGraph metric={node.metricDim!} endYear={endYear} />*/}
+        <DimensionalPieGraph metric={node.metricDim!} endYear={endYear} />
       </div>
     ),
     [node, endYear, color]
