@@ -1,6 +1,6 @@
+import images from '@/common/images';
 import { gql } from '@apollo/client';
 
-import images from '@/common/images';
 import { CATEGORY_FRAGMENT } from './category.fragment';
 
 export const STREAM_FIELD_FRAGMENT = gql`
@@ -71,6 +71,11 @@ export const STREAM_FIELD_FRAGMENT = gql`
     }
     ... on ActionListBlock {
       categoryFilter {
+        id
+      }
+      heading
+      helpText
+      groupByCategoryLevel {
         id
       }
     }

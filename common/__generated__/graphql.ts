@@ -6998,9 +6998,12 @@ type StreamFieldFragment_ActionCategoryFilterCardsBlock_Fragment = (
 );
 
 type StreamFieldFragment_ActionListBlock_Fragment = (
-  { id?: string | null, blockType: string, field: string, categoryFilter?: (
+  { heading?: string | null, helpText?: string | null, id?: string | null, blockType: string, field: string, categoryFilter?: (
     { id: string }
     & { __typename?: 'Category' }
+  ) | null, groupByCategoryLevel?: (
+    { id: string }
+    & { __typename?: 'CategoryLevel' }
   ) | null }
   & { __typename?: 'ActionListBlock' }
 );
@@ -10360,9 +10363,12 @@ export type GetContentPageQuery = (
       ) | null> | null }
       & { __typename?: 'ActionCategoryFilterCardsBlock' }
     ) | (
-      { id?: string | null, blockType: string, field: string, categoryFilter?: (
+      { heading?: string | null, helpText?: string | null, id?: string | null, blockType: string, field: string, categoryFilter?: (
         { id: string }
         & { __typename?: 'Category' }
+      ) | null, groupByCategoryLevel?: (
+        { id: string }
+        & { __typename?: 'CategoryLevel' }
       ) | null }
       & { __typename?: 'ActionListBlock' }
     ) | (
@@ -11068,9 +11074,12 @@ export type GetContentPageQuery = (
       ) | null> | null }
       & { __typename?: 'ActionCategoryFilterCardsBlock' }
     ) | (
-      { id?: string | null, blockType: string, field: string, categoryFilter?: (
+      { heading?: string | null, helpText?: string | null, id?: string | null, blockType: string, field: string, categoryFilter?: (
         { id: string }
         & { __typename?: 'Category' }
+      ) | null, groupByCategoryLevel?: (
+        { id: string }
+        & { __typename?: 'CategoryLevel' }
       ) | null }
       & { __typename?: 'ActionListBlock' }
     ) | (
@@ -11470,9 +11479,12 @@ export type GetContentPageQuery = (
       ) | null> | null }
       & { __typename?: 'ActionCategoryFilterCardsBlock' }
     ) | (
-      { id?: string | null, blockType: string, field: string, categoryFilter?: (
+      { heading?: string | null, helpText?: string | null, id?: string | null, blockType: string, field: string, categoryFilter?: (
         { id: string }
         & { __typename?: 'Category' }
+      ) | null, groupByCategoryLevel?: (
+        { id: string }
+        & { __typename?: 'CategoryLevel' }
       ) | null }
       & { __typename?: 'ActionListBlock' }
     ) | (
@@ -11887,9 +11899,12 @@ export type GetHomePageQuery = (
       ) | null> | null }
       & { __typename?: 'ActionCategoryFilterCardsBlock' }
     ) | (
-      { id?: string | null, blockType: string, field: string, categoryFilter?: (
+      { id?: string | null, heading?: string | null, helpText?: string | null, blockType: string, field: string, categoryFilter?: (
         { id: string }
         & { __typename?: 'Category' }
+      ) | null, groupByCategoryLevel?: (
+        { id: string }
+        & { __typename?: 'CategoryLevel' }
       ) | null }
       & { __typename?: 'ActionListBlock' }
     ) | (
