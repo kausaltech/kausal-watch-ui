@@ -6,15 +6,15 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { Card, CardBody, Col, Container, Row } from 'reactstrap';
 import styled from 'styled-components';
 
-import {
-  GetPageQuery,
-  GetPageQueryVariables,
-} from '@/common/__generated__/paths/graphql';
 import ContentLoader from '@/components/common/ContentLoader';
 import OutcomeCardSet from '@/components/paths/outcome/OutcomeCardSet';
-import { activeScenarioVar, yearRangeVar } from '@/context/paths/cache';
+import {
+  activeGoalVar,
+  activeScenarioVar,
+  yearRangeVar,
+} from '@/context/paths/cache';
 import { usePaths } from '@/context/paths/paths';
-import GET_PAGE from '@/queries/paths/get-paths-page';
+import { GET_OUTCOME_NODE } from '@/queries/paths/get-paths-page';
 import { getHttpHeaders } from '@/utils/paths/paths.utils';
 import { NetworkStatus, useQuery, useReactiveVar } from '@apollo/client';
 
@@ -74,6 +74,7 @@ export default function PathsOutcomeBlock(props) {
   const t = useTranslations();
   const pathsInstance = usePaths();
   const yearRange = useReactiveVar(yearRangeVar);
+  const activeGoal = useReactiveVar(activeGoalVar);
   const activeScenario = useReactiveVar(activeScenarioVar);
   const path = '';
   const searchParams = useSearchParams();
@@ -107,8 +108,8 @@ export default function PathsOutcomeBlock(props) {
   }, [lastActiveNodeId, queryNodeId]);
 
   // router.push(pathname + '?' + createQueryString('sort', 'asc'))
-  const queryResp = useQuery<GetPageQuery, GetPageQueryVariables>(GET_PAGE, {
-    variables: { path, goal: null },
+  const queryResp = useQuery(GET_OUTCOME_NODE, {
+    variables: { node: 'net_emissions', goal: activeGoal?.id ?? null },
     fetchPolicy: 'cache-and-network',
     notifyOnNetworkStatusChange: true,
     context: {
@@ -128,8 +129,8 @@ export default function PathsOutcomeBlock(props) {
     return <ContentLoader />;
   }
 
-  if (data?.page) {
-    const outcomeNode = data.page?.outcomeNode ?? null;
+  if (data?.node) {
+    const outcomeNode = data.node ?? null;
     const upstreamNodes = outcomeNode?.upstreamNodes ?? [];
 
     const allNodes = new Map(upstreamNodes.map((node) => [node.id, node]));
