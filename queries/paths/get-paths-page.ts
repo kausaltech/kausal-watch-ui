@@ -138,6 +138,18 @@ const OUTCOME_NODE_FIELDS = gql`
   ${DimensionalMetricFragment}
 `;
 
+export const GET_OUTCOME_NODE = gql`
+  ${OUTCOME_NODE_FIELDS}
+  query GetOutcomeNodeContent($node: ID!, $goal: ID) {
+    node(id: $node) {
+      ...OutcomeNodeFields
+      upstreamNodes(sameQuantity: true, sameUnit: true, includeActions: false) {
+        ...OutcomeNodeFields
+      }
+    }
+  }
+`;
+
 const GET_PAGE = gql`
   ${OUTCOME_NODE_FIELDS}
   query GetPage($path: String!, $goal: ID) {
